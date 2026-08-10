@@ -53,6 +53,9 @@ jobs:
       - name: Reject duplicate YAML mapping keys
         run: python scripts/validate_yaml_duplicates.py
 
+      - name: Validate official Update Radar source registry
+        run: python scripts/validate_update_sources.py
+
       - name: Validate reference, shared, section, and run records
         run: python scripts/validate_records.py
 
