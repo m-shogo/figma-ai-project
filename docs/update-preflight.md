@@ -1,143 +1,261 @@
-# Update Preflight — Run Before Using Figma/Agents
+# Update Preflight — Automated Official Update Radar
 
-Last designed: **2026-08-10 JST**
+Last revised: **2026-08-11 JST**
 
-AI/Figma toolingは高速に変化するため、**重要なbenchmark / 実案件runの開始前に最低1回、最新updateを確認する。**
-
-目的は最新機能を追いかけること自体ではなく、古い失敗・workaround・CAUTIONを現在の環境へ持ち込まないこと。
-
-## Required preflight
-
-### 1. Figma release notes
-
-最初に確認:
-
-- https://www.figma.com/release-notes/
-- https://developers.figma.com/docs/figma-mcp-server/
-- https://developers.figma.com/docs/figma-mcp-server/tools-and-prompts/
-
-見るもの:
-
-- MCP tool追加/変更
-- design context変更
-- write-to-canvas変更
-- Code Connect変更
-- Auto Layout変更
-- variables/tokens変更
-- code → canvas / capture変更
-- Skills変更
-- rate/access/plan変更
-- font/image handling変更
-
-### 2. Agent/client current docs
-
-今回使うものだけ確認:
-
-- Codex
-- Claude Code
-- Cursor
-
-見るもの:
-
-- model/client更新
-- MCP support
-- rules/instructions
-- browser/visual tools
-- context handling
-- new skills/plugins
-
-### 3. Community fresh scan
-
-最近30–60日を優先し:
-
-- Zenn
-- Qiita
-- X / Twitter
-- Figma Forum
-- GitHub Issues/Discussions
-- Reddit
-
-から:
-
-- 新しい成功例
-- 新しい失敗例
-- workaround
-- previously-fixed issues
-- practical workflow
-
-を探す。
-
-`docs/research-radar.md` のquery bankを使う。
-
-## Preflight output
-
-run recordに最低限保存:
-
-```yaml
-tooling_preflight:
-  checked_at: ""
-  figma_release_notes_checked: true
-  figma_mcp_docs_checked: true
-  agent_docs_checked: true
-  community_scan_checked: true
-  changes_relevant_to_run: []
-  rules_to_retest: []
-  new_hypotheses: []
-  blockers_or_limits: []
-```
-
-## Retest trigger
-
-過去に以下だったrule:
-
-- CAUTION
-- DEFERRED
-- RETIRED
-- known limitation
-- workaround required
-
-に関係するupdateを見つけた場合、**その古い判断をそのまま適用しない。**
-
-`RETEST_NOW` candidateへ戻す。
-
-## Example — Auto Layout
-
-2026-07-24のFigma releaseではAuto LayoutとCSSの差を縮める更新が公開された。
-
-このような変更があれば、過去の:
-
-- Auto Layout translation mismatch
-- layout workaround
-- code handoff mismatch
-
-に関するnegative findingsを再確認する。
-
-古いexperiment evidenceは削除しないが、current recommendationの重みは再計算する。
-
-## Example — Code → Canvas
-
-2026-07-16のupdateでは、code-backed screenをcanvasへ戻す際に既存variablesへのbindingが増え、より多くのframeがAuto Layout付きで取り込まれるようになった。
-
-したがって、過去の:
-
-- hardcoded valuesが大量に入る
-- imported frameのmanual cleanupが多い
-
-というfindingが現在も同じとは仮定しない。
-
-## Skip policy
-
-軽微な文書編集など、Figma/agent capabilityと無関係な作業では毎回web scanする必要はない。
-
-しかし以下では必須:
-
-- 新しいbenchmark開始
-- 新しいreferenceで初run
-- agent/clientを久しぶりに使用
-- old limitation/workaroundを前提にする
-- significant Figma→Code / Code→Figma作業
-- 30日以上前のtool knowledgeに依存する
+AI/Figma/Web Platform tooling changes quickly. Production must not depend on a human remembering to search release notes before every run.
 
 ## Core rule
 
-**Use current capabilities first; preserve old evidence as history, not as permanent truth.**
+**Manual web search is not the normal workflow.**
+
+The repository continuously maintains a machine-readable Update Radar:
+
+```text
+Official upstream sources
+→ scheduled fetch
+→ normalized fingerprint
+→ previous snapshot diff
+→ impact / RETEST category
+→ persisted evidence
+→ planned Run preflight pin
+→ experiment / replay before rule promotion
+```
+
+Company Policy and Proven Playbook are **not** silently rewritten from news alone.
+
+---
+
+## Scheduled collection
+
+Canonical workflow:
+
+- `.github/workflows/update-radar.yml`
+
+Default schedule:
+
+- daily at 12:17 JST
+- manual `workflow_dispatch` remains available for debugging/recovery, not ordinary use
+
+If upstream fingerprints did not meaningfully change, do not create a no-op repository commit.
+
+When meaningful changes or fetch failures exist, maintain the rolling Update Radar issue and preserve machine-readable evidence under:
+
+- `research/update-radar/latest.json`
+- `research/update-radar/latest.md`
+- `research/update-radar/state.json`
+- `research/update-radar/history/` for changed snapshots
+
+---
+
+## Source registry
+
+Canonical registry:
+
+- `config/update-sources.yaml`
+
+Current automatic lanes include:
+
+### Figma
+
+- Figma Release Notes
+- Figma MCP docs
+- Figma MCP tools/prompts
+
+Watch for:
+
+- MCP tools
+- design context / metadata / screenshot semantics
+- Code Connect
+- Variables / Components
+- Auto Layout / Grid
+- code ↔ canvas workflows
+- image/font handling
+- Dev Mode / annotations
+- Skills / agent workflows
+
+### MCP
+
+- official Model Context Protocol specification releases
+- current official specification
+
+### Coding agents
+
+- OpenAI/Codex official release information
+- Claude Code official releases/feed
+- Cursor official changelog
+
+### CSS / Web Platform
+
+- W3C WebDX `web-features`
+- MDN Browser Compat Data
+- browser platform release/status sources
+
+Watch especially:
+
+- reset/base assumptions
+- `dvh/svh/lvh`
+- safe-area / VisualViewport / virtual keyboard
+- hover/pointer/touch
+- scroll / Scroll Snap / sticky
+- animation / View Transitions / scroll-driven animation
+- Grid/Flex/Container Queries/Subgrid
+- color spaces / gradients
+- forms / native controls
+
+### Browser/device lanes
+
+When active Company Policy contains those environments, include vendor-specific evidence such as:
+
+- Safari / WebKit
+- Chromium / Chrome / Edge
+- Firefox / Gecko
+
+Do not classify device behavior from viewport width alone.
+
+### Accessibility
+
+- W3C WAI updates
+
+Track WCAG/ARIA/focus/keyboard/target-size/contrast/motion guidance that can affect implementation or QA.
+
+### Design systems
+
+- Design Tokens specification/community-group releases
+
+### WordPress / ACF
+
+- WordPress releases
+- WordPress Developer Blog
+- ACF official releases
+- ACF official changelog
+
+This lane is collected automatically because CMS/ACF work is part of the intended implementation scope.
+
+---
+
+## Run preflight without manual searching
+
+For a planned Run:
+
+```text
+python scripts/apply_radar_preflight.py <run.yaml> --apply
+python scripts/start_section_run.py <run.yaml> --apply
+```
+
+`apply_radar_preflight.py` verifies that:
+
+- Radar snapshot is fresh enough
+- Figma release source succeeded
+- Figma MCP docs succeeded
+- MCP lane succeeded
+- CSS/Web Platform lane succeeded
+- Accessibility lane succeeded
+- the actual agent lane succeeded
+- browser/device-specific required lanes succeeded when active
+
+It then pins:
+
+- snapshot path
+- snapshot SHA-256
+- generated timestamp
+- required active lanes
+- relevant upstream changes
+- RETEST candidates
+- non-blocking source warnings
+
+`start_section_run.py` re-checks the pinned snapshot hash and freshness immediately before changing `PLANNED → RUNNING`.
+
+A human does not check four booleans manually in the normal path.
+
+---
+
+## Freshness policy
+
+Current default planned-run maximum age:
+
+- **36 hours**
+
+This tolerates scheduled-run timing while ensuring a production run cannot silently depend on an old Radar snapshot.
+
+The value is a current operational default, not a permanent web-platform truth.
+
+---
+
+## Source failure policy
+
+Do not solve a broken official source by silently pretending it was checked.
+
+If every source for a required lane fails:
+
+```text
+Run start = BLOCKED
+```
+
+Fix/replace the source adapter or wait for the official source to recover.
+
+One redundant source failing is a warning if the required lane still has trustworthy official evidence.
+
+---
+
+## Change semantics
+
+An upstream change is **not** an automatic best-practice change.
+
+```text
+UPSTREAM_CHANGE
+→ RETEST_CANDIDATE
+→ targeted local experiment
+→ clean replay
+→ evidence promotion
+→ optional Company Policy / Playbook revision
+```
+
+Examples:
+
+- Figma Auto Layout semantics change → retest layout translation assumptions
+- Safari viewport change → retest environment compatibility rules
+- MDN/BCD support data change → retest CSS feature adoption against Required Environment Profiles
+- Claude/Codex/Cursor context or worktree changes → retest agent-specific execution assumptions
+- ACF Blocks change → retest CMS implementation rule only where applicable
+
+Old evidence remains history; it is not deleted.
+
+---
+
+## Community information
+
+Community/practitioner sources can be automatically added as discovery lanes later, but they are never higher authority than official sources.
+
+They are **not a production start gate**.
+
+A community signal may create a hypothesis; an experiment decides whether it becomes a rule.
+
+---
+
+## Noise control
+
+The Radar must avoid becoming a news archive.
+
+Rules:
+
+- store fingerprints, structured items, compact excerpts and impact categories
+- do not persist duplicate announcements as independent evidence
+- do not commit only because the fetch timestamp changed
+- prefer affected-domain filtering
+- keep one rolling actionable issue rather than one issue per release
+- keep raw upstream facts separate from promoted rules
+
+---
+
+## Completion criterion
+
+The update system is doing its job when a production agent can begin with:
+
+```text
+current Company Policy
++ current Environment Contract
++ current official Update Radar snapshot
++ relevant RETEST candidates
+```
+
+without asking the user to search the web or manually verify release-note checkboxes.
