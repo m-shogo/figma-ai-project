@@ -28,11 +28,14 @@ def candidate_contracts() -> list[Path]:
     return list(dict.fromkeys(found))
 
 
-def require_evidence(errors: list[str], label: str, state: str, evidence: Any, none_value: str = "NONE") -> None:
-    if state in {"UNKNOWN", none_value}:
+def require_frozen_evidence(errors: list[str], label: str, state: str, evidence: Any) -> None:
+    if state == "UNKNOWN":
         return
     if not isinstance(evidence, list) or not evidence:
-        errors.append(f"figma_profile.{label}={state} requires non-empty evidence")
+        errors.append(
+            f"frozen figma_profile.{label}={state} requires non-empty evidence; "
+            "NONE must mean inspected-and-absent, not not-inspected"
+        )
 
 
 def validate_contract(path: Path) -> list[str]:
@@ -53,22 +56,12 @@ def validate_contract(path: Path) -> list[str]:
     annotations = profile.get("annotations", {})
     assets = profile.get("assets", {})
 
-    require_evidence(errors, "components.level", str(components.get("level", "UNKNOWN")), components.get("evidence"))
-    require_evidence(errors, "variables.level", str(variables.get("level", "UNKNOWN")), variables.get("evidence"))
-    require_evidence(errors, "auto_layout.coverage", str(auto_layout.get("coverage", "UNKNOWN")), auto_layout.get("evidence"))
-    require_evidence(errors, "semantic_naming.quality", str(naming.get("quality", "UNKNOWN")), naming.get("evidence"), none_value="__NO_NONE__")
-    require_evidence(errors, "code_connect.level", str(code_connect.get("level", "UNKNOWN")), code_connect.get("evidence"))
-    require_evidence(errors, "annotations.level", str(annotations.get("level", "UNKNOWN")), annotations.get("evidence"))
-    require_evidence(errors, "assets.level", str(assets.get("level", "UNKNOWN")), assets.get("evidence"))
-
     coverage = str(auto_layout.get("coverage", "UNKNOWN"))
     generation = str(auto_layout.get("generation", "UNKNOWN"))
     if coverage == "NONE" and generation != "NONE":
         errors.append("figma_profile.auto_layout.generation must be NONE when coverage=NONE")
-    if coverage != "NONE" and coverage != "UNKNOWN" and generation == "NONE":
+    if coverage not in {"NONE", "UNKNOWN"} and generation == "NONE":
         errors.append("figma_profile.auto_layout.generation cannot be NONE when Auto Layout is observed")
-    if generation not in {"NONE", "UNKNOWN"} and not auto_layout.get("evidence"):
-        errors.append(f"figma_profile.auto_layout.generation={generation} requires evidence")
 
     cc_level = str(code_connect.get("level", "UNKNOWN"))
     mapped = code_connect.get("mapped_components", [])
@@ -99,6 +92,55 @@ def validate_contract(path: Path) -> list[str]:
                     f"frozen shared contract cannot keep figma_profile.{label}=UNKNOWN; "
                     "record NONE when inspected and absent"
                 )
+
+        require_frozen_evidence(
+            errors,
+            "components.level",
+            str(components.get("level", "UNKNOWN")),
+            components.get("evidence"),
+        )
+        require_frozen_evidence(
+            errors,
+            "variables.level",
+            str(variables.get("level", "UNKNOWN")),
+            variables.get("evidence"),
+        )
+        require_frozen_evidence(
+            errors,
+            "auto_layout.coverage",
+            coverage,
+            auto_layout.get("evidence"),
+        )
+        require_frozen_evidence(
+            errors,
+            "auto_layout.generation",
+            generation,
+            auto_layout.get("evidence"),
+        )
+        require_frozen_evidence(
+            errors,
+            "semantic_naming.quality",
+            str(naming.get("quality", "UNKNOWN")),
+            naming.get("evidence"),
+        )
+        require_frozen_evidence(
+            errors,
+            "code_connect.level",
+            cc_level,
+            code_connect.get("evidence"),
+        )
+        require_frozen_evidence(
+            errors,
+            "annotations.level",
+            str(annotations.get("level", "UNKNOWN")),
+            annotations.get("evidence"),
+        )
+        require_frozen_evidence(
+            errors,
+            "assets.level",
+            str(assets.get("level", "UNKNOWN")),
+            assets.get("evidence"),
+        )
 
         if not profile.get("strategy_decisions"):
             errors.append(
