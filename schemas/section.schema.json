@@ -69,16 +69,17 @@
             "properties": {
               "component_path": { "type": "string" },
               "style_path": { "type": "string" },
-              "allowed_paths": { "type": "array", "items": { "type": "string" } },
+              "allowed_paths": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
               "shared_files_read_only": { "type": "boolean" }
             },
             "additionalProperties": true
           },
           "worker": {
             "type": "object",
-            "required": ["status", "agent", "model", "base_commit", "output_commit", "proposed_shared_changes"],
+            "required": ["status", "parallel_group", "agent", "model", "base_commit", "output_commit", "proposed_shared_changes"],
             "properties": {
               "status": { "enum": ["PLANNED", "READY", "RUNNING", "BLOCKED", "COMPLETE"] },
+              "parallel_group": { "type": "string" },
               "agent": { "type": "string" },
               "model": { "type": "string" },
               "base_commit": { "type": "string" },
