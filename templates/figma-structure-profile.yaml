@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 reference_id: REF-XXXX
 captured_at: ""
 figma_tooling_snapshot: ""
@@ -6,7 +6,7 @@ figma_tooling_snapshot: ""
 page:
   file_key: ""
   page_or_frame_node_id: ""
-  auto_layout_generation: UNKNOWN # LEGACY | UPDATED_2026 | MIXED | UNKNOWN
+  auto_layout_generation: UNKNOWN # LEGACY | UPDATED_2026 | MIXED | UNDETERMINED | UNKNOWN
   notes: []
 
 sections: []
@@ -14,34 +14,41 @@ sections: []
 #   figma_node_ids: []
 #   signals:
 #     components:
+#       state: UNKNOWN # UNKNOWN | NONE | OBSERVED | UNDETERMINED
 #       confidence: NONE # NONE | LOW | MEDIUM | HIGH
 #       evidence: []
 #       instance_count: null
 #       detached_or_repeated_patterns: []
 #     variables:
+#       state: UNKNOWN
 #       confidence: NONE
 #       evidence: []
 #       bound_property_coverage: null
 #       modes_observed: []
 #     auto_layout:
+#       state: UNKNOWN
 #       confidence: NONE
 #       evidence: []
 #       container_coverage: null
 #       absolute_child_ratio: null
-#       generation: UNKNOWN # LEGACY | UPDATED_2026 | MIXED | UNKNOWN
+#       generation: UNKNOWN # LEGACY | UPDATED_2026 | MIXED | UNDETERMINED | UNKNOWN
 #     semantic_naming:
+#       state: UNKNOWN
 #       confidence: NONE
 #       evidence: []
 #       generic_name_ratio: null
 #     code_connect:
+#       state: UNKNOWN
 #       confidence: NONE
 #       evidence: []
 #       mapped_component_coverage: null
 #     assets:
+#       state: UNKNOWN
 #       confidence: NONE
 #       evidence: []
 #       exact_sources_available: []
 #     responsive_mapping:
+#       state: UNKNOWN
 #       confidence: NONE
 #       evidence: []
 #   recommended_translation_mode: UNKNOWN # STRUCTURE_FIRST | HYBRID | VISUAL_FIRST | CODEBASE_FIRST | UNKNOWN
