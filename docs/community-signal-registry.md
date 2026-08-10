@@ -29,7 +29,7 @@ Evidence policy: `docs/evidence-policy.md`
 
 - Source type: experienced practitioner / Zenn
 - Source: https://zenn.dev/imkohenauser/articles/cursor-agent-client-work
-- Published: 2026-06-06, page observed updated in July 2026
+- Published: 2026-06-06, updated 2026-06-20
 - Evidence: E0
 - Priority: **HIGH**
 
@@ -198,7 +198,7 @@ font supportは短期間で改善されうる。referenceごとにfont preflight
 - Source type: practitioner / Zenn + Figma first-party
 - Sources:
   - https://zenn.dev/daishiro/articles/figma-code-to-canvas-trial
-  - https://www.figma.com/blog/introducing-claude-code-to-figma/
+  - https://www.figma.com/blog/the-future-of-design-is-code-and-canvas/
 - Published: 2026-02
 - Evidence: E0
 - Priority: **MEDIUM**
@@ -296,14 +296,176 @@ endpoint screenshot一致とintermediate-width robustnessを必ず分けて測�
 
 ---
 
+## CS-010 — Figma internal structure may strongly affect generated implementation
+
+- Source type: practitioner controlled comparison / Zenn
+- Source: https://zenn.dev/yokkomystery/articles/3904e7db644ea1
+- Published: 2026-03-27, updated 2026-03-28
+- Evidence: E0
+- Priority: **HIGH**
+
+### Signal
+
+同じ見た目のlogin screenを、片方はAuto Layout/Variables/Components/semantic namingあり、もう片方はabsolute positioning/hardcoded HEX/default layer namesで作り、Figma MCP→Flutter codeを比較した実験報告では、structured側が大幅に高い評価になったとしている。
+
+記事内評価は35点満点でstructured 32、messy 10。
+
+### Why it matters
+
+「Figma screenshotの見た目が同じならagentへの入力も同じ」ではない可能性を示す。
+
+### Do not conclude yet
+
+- single practitioner experiment
+- Flutter / specific agent/model条件
+- scoring methodはrepo独自
+
+### Proposed experiment
+
+reference designを変えず、可能なら同じvisual appearanceでstructure-only variationを作れる研究用testで:
+
+- semantic structure
+- Auto Layout
+- variables
+- componentization
+
+の寄与を分けて測る。
+
+実案件referenceを勝手に変更してこの実験をしない。
+
+---
+
+## CS-011 — Auto Layout discipline may improve code translation
+
+- Source type: experienced practitioner / Zenn
+- Source: https://zenn.dev/ryutagoto/articles/figma-mcp-auto-layout-for-code
+- Published: 2026-05-11
+- Evidence: E0
+- Priority: **HIGH, but update-sensitive**
+
+### Signal
+
+Figma MCP経由でcodeに落としやすいdesign dataを作る運用として「Auto Layoutから逸脱させない」方針に至ったという実務報告。
+
+### Why it matters
+
+layout semanticsがCSS/native layoutへ翻訳される時のdrift削減候補。
+
+### Update sensitivity
+
+2026-07-24にFigma自身がAuto LayoutをCSSへ近づける更新を出しているため、この記事の観測条件と現在条件は同一ではない。
+
+**古い成功をそのままDEFAULTにせず、新Auto Layout generationで再試験する価値が高い。**
+
+### Proposed experiment
+
+- legacy Auto Layout reference when available
+- updated Auto Layout reference
+
+をenvironment metadata付きで比較する。
+
+---
+
+## CS-012 — Real-browser screenshot loop is repeatedly reported as useful
+
+- Source type: experienced practitioner / Zenn
+- Source: https://zenn.dev/reality_tech/articles/1d6df6811715fb
+- Published: 2026-01-07
+- Evidence: E0
+- Priority: **HIGH**
+
+### Signal
+
+Figma MCP contextが大きくなりやすい問題に対し、task分割とPlaywrightによるbrowser screenshot comparisonを組み合わせるworkflowが紹介されている。
+
+### Why it matters
+
+本repoの:
+
+- staged workflow
+- deterministic capture
+- Verify phase
+
+と独立した現場経験が一致する。
+
+### Do not conclude yet
+
+Playwrightそのものを永久必須にしない。将来client内蔵browser/visual toolingがより良くなる可能性がある。
+
+必要なのは `real rendered output + exact viewport + preserved evidence`。
+
+---
+
+## CS-013 — Project-specific design-system mapping rules can bridge MCP output to native conventions
+
+- Source type: production-oriented practitioner / Zenn
+- Source: https://zenn.dev/dely_jp/articles/2cc6637e4d0aad
+- Published: 2026-04-07
+- Evidence: E0
+- Priority: **HIGH for mature design systems**
+
+### Signal
+
+Figma URLからCompose codeを生成するPoCで、Figma MCP出力だけではproject固有design systemへ準拠しにくく、mapping ruleを追加することで実装を既存theme/componentへ寄せる運用が紹介されている。
+
+### Why it matters
+
+C3 codebase-aware context / agent adapters / Code Connectが効く領域と重なる。
+
+### Proposed experiment
+
+- structured Figma only
+- + project mapping rules
+- + Code Connect where available
+
+でduplicate primitive、token reuse、First-passを比較する。
+
+---
+
+## CS-014 — Small iterative canvas writes may be more reliable than giant writes
+
+- Source type: practitioner / Qiita
+- Source: https://qiita.com/toguri/items/472a611e9a3f70a499f2
+- Published: 2026-03-28
+- Evidence: E0
+- Priority: **MEDIUM-HIGH for Code→Figma/write workflows**
+
+### Signal
+
+`use_figma`実運用のハマりどころとして、1回のscriptでやりすぎず小さく進めることやAuto Layout sizing設定順が挙げられている。
+
+### Why it matters
+
+Figma write workflowsでのatomic/incremental operation設計候補。
+
+### Update sensitivity
+
+MCP/use_figmaはbetaで改善が速い。現在のFigma skill docsもincremental workを推奨するが、API behavior自体が変わる可能性がある。
+
+### Proposed experiment
+
+大規模writeが必要になった時だけ:
+
+- one giant call
+- section/component incremental calls
+
+のfailure/retry/context costを比較する。
+
+---
+
 # Current high-priority research queue
 
 1. Progressive Disclosureの粒度
-2. Skill/procedure固定の効果
-3. Code Connect coverageと改善量
-4. CJK/font preflight
-5. harnessあり/なしのFirst-pass差
-6. code→Figma comparison loopの価値
-7. agent/clientごとのtool reliability
+2. structured vs visually-equivalent messy Figmaの寄与
+3. updated Auto Layout generationの影響
+4. Skill/procedure固定の効果
+5. Code Connect coverageと改善量
+6. project design-system mapping ruleの効果
+7. CJK/font preflight
+8. real-browser verification loop
+9. harnessあり/なしのFirst-pass差
+10. code→Figma comparison loopの価値
+11. incremental canvas write strategy
+12. agent/clientごとのtool reliability
 
 この順序も固定ではない。新releaseや複数community signalが出たらpriorityを再計算する。
