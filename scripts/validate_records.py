@@ -54,6 +54,22 @@ def file_sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def load_linked_yaml(value: str, label: str) -> tuple[Path | None, dict[str, Any] | None, list[str]]:
+    if not value:
+        return None, None, []
+    try:
+        path = repo_path(value)
+    except ValueError as exc:
+        return None, None, [str(exc)]
+    if not path.is_file():
+        return path, None, [f"{label} does not exist: {value}"]
+    try:
+        data = load_yaml(path)
+    except Exception as exc:
+        return path, None, [f"cannot load {label} {value}: {exc}"]
+    return path, data, []
+
+
 def semantic_reference_errors(data: dict[str, Any]) -> list[str]:
     errors: list[str] = []
     freeze = data.get("freeze", {})
@@ -116,24 +132,6 @@ def semantic_shared_errors(data: dict[str, Any]) -> list[str]:
     return errors
 
 
-def load_linked_shared_contract(data: dict[str, Any]) -> tuple[Path | None, dict[str, Any] | None, list[str]]:
-    errors: list[str] = []
-    value = data.get("shared_contract", "")
-    if not value:
-        return None, None, errors
-    try:
-        path = repo_path(value)
-    except ValueError as exc:
-        return None, None, [str(exc)]
-    if not path.is_file():
-        return path, None, [f"shared_contract does not exist: {value}"]
-    try:
-        contract = load_yaml(path)
-    except Exception as exc:
-        return path, None, [f"cannot load shared_contract {value}: {exc}"]
-    return path, contract, errors
-
-
 def semantic_section_errors(data: dict[str, Any]) -> list[str]:
     errors: list[str] = []
     sections = data.get("sections", [])
@@ -146,13 +144,16 @@ def semantic_section_errors(data: dict[str, Any]) -> list[str]:
 
     active_statuses = {"READY", "RUNNING", "COMPLETE"}
     active = [section for section in sections if section.get("worker", {}).get("status") in active_statuses]
-    contract_path, contract, link_errors = load_linked_shared_contract(data)
+
+    contract_value = data.get("shared_contract", "")
+    contract_path, contract, link_errors = load_linked_yaml(contract_value, "shared_contract")
     errors.extend(link_errors)
 
-    if data.get("shared_contract_sha256"):
+    expected_hash = data.get("shared_contract_sha256", "")
+    if expected_hash:
         if contract_path and contract_path.is_file():
             actual = file_sha256(contract_path)
-            if actual != data["shared_contract_sha256"]:
+            if actual != expected_hash:
                 errors.append("shared_contract_sha256 does not match the linked shared contract")
     elif active:
         errors.append("active section workers require shared_contract_sha256")
@@ -198,9 +199,10 @@ def semantic_section_errors(data: dict[str, Any]) -> list[str]:
 
 def semantic_run_errors(data: dict[str, Any]) -> list[str]:
     errors: list[str] = []
-
     status = data.get("status")
-    if status in {"RUNNING", "COMPLETE"}:
+    active = status in {"RUNNING", "COMPLETE"}
+
+    if active:
         preflight = data.get("tooling_preflight", {})
         required_checks = (
             "figma_release_notes_checked",
@@ -213,6 +215,72 @@ def semantic_run_errors(data: dict[str, Any]) -> list[str]:
         for check in required_checks:
             if preflight.get(check) is not True:
                 errors.append(f"RUNNING/COMPLETE run requires tooling_preflight.{check}=true")
+
+    coordination = data.get("coordination", {})
+    scope = coordination.get("scope")
+    if active and scope == "SECTION":
+        if not coordination.get("section_id"):
+            errors.append("active SECTION run requires coordination.section_id")
+        if not coordination.get("shared_contract_path"):
+            errors.append("active SECTION run requires coordination.shared_contract_path")
+        if not coordination.get("shared_contract_sha256"):
+            errors.append("active SECTION run requires coordination.shared_contract_sha256")
+        if not coordination.get("section_manifest_path"):
+            errors.append("active SECTION run requires coordination.section_manifest_path")
+        if not coordination.get("foundation_commit"):
+            errors.append("active SECTION run requires coordination.foundation_commit")
+
+    if active and scope == "INTEGRATION":
+        if not coordination.get("shared_contract_path"):
+            errors.append("active INTEGRATION run requires coordination.shared_contract_path")
+        if not coordination.get("shared_contract_sha256"):
+            errors.append("active INTEGRATION run requires coordination.shared_contract_sha256")
+        if not coordination.get("section_manifest_path"):
+            errors.append("active INTEGRATION run requires coordination.section_manifest_path")
+        if not coordination.get("foundation_commit"):
+            errors.append("active INTEGRATION run requires coordination.foundation_commit")
+
+    contract = None
+    contract_path = None
+    if coordination.get("shared_contract_path"):
+        contract_path, contract, link_errors = load_linked_yaml(
+            coordination["shared_contract_path"], "coordination.shared_contract_path"
+        )
+        errors.extend(link_errors)
+        if contract_path and contract_path.is_file() and coordination.get("shared_contract_sha256"):
+            actual_hash = file_sha256(contract_path)
+            if actual_hash != coordination["shared_contract_sha256"]:
+                errors.append("run shared_contract_sha256 does not match linked shared contract")
+
+    if active and scope in {"SECTION", "INTEGRATION"} and contract is not None:
+        if contract.get("status") != "FROZEN" or contract.get("freeze", {}).get("ready") is not True:
+            errors.append("active SECTION/INTEGRATION run requires a frozen shared contract")
+        if contract.get("reference_id") != data.get("reference", {}).get("reference_id"):
+            errors.append("run reference_id must match shared contract reference_id")
+        if contract.get("foundation", {}).get("commit") != coordination.get("foundation_commit"):
+            errors.append("run foundation_commit must match shared contract foundation.commit")
+
+    manifest = None
+    if coordination.get("section_manifest_path"):
+        _, manifest, link_errors = load_linked_yaml(
+            coordination["section_manifest_path"], "coordination.section_manifest_path"
+        )
+        errors.extend(link_errors)
+
+    if active and scope == "SECTION" and manifest is not None:
+        if manifest.get("reference_id") != data.get("reference", {}).get("reference_id"):
+            errors.append("SECTION run reference_id must match section manifest reference_id")
+        if manifest.get("shared_contract_sha256") != coordination.get("shared_contract_sha256"):
+            errors.append("SECTION run shared contract hash must match section manifest")
+        if manifest.get("foundation_commit") != coordination.get("foundation_commit"):
+            errors.append("SECTION run foundation commit must match section manifest")
+        section_ids = {section.get("section_id") for section in manifest.get("sections", [])}
+        if coordination.get("section_id") not in section_ids:
+            errors.append("coordination.section_id is not present in section manifest")
+
+    if active and scope == "SECTION":
+        if data.get("code", {}).get("starting_commit") != coordination.get("foundation_commit"):
+            errors.append("SECTION run code.starting_commit must equal coordination.foundation_commit")
 
     execution = data.get("execution", {})
     actual = execution.get("actual_repair_rounds", 0)
