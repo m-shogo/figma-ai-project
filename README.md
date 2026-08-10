@@ -24,6 +24,28 @@ AI coding agents（Codex / Claude Code / Cursor など）と Figma を往復し�
 7. prompt / context / Design System / Code Connect / workflow を1変数ずつ改善する
 8. clean baseline から再実行する
 9. 別画面・別案件でも効いた知識だけ playbook に昇格する
+10. tooling更新に応じて古い知識を再検証する
+
+## Non-static knowledge
+
+このrepoは「2026年時点の正解」を永久保存する場所ではありません。
+
+Figma、MCP、Codex、Claude Code、Cursor、画像理解は進化するため:
+
+- 1回失敗しても永久禁止しない
+- 1回成功してもbest practiceにしない
+- EvidenceをE0→E5で段階昇格する
+- CAUTION/DEFERREDもmajor update時に再試験する
+- 重要run前にFigma release notesとcurrent MCP docsを確認する
+- 公式だけでなくZenn/Qiita/X/Forum/GitHub/Reddit等の現場signalも拾う
+- community情報は仮説として実験で検証する
+
+詳しくは:
+
+- `docs/evidence-policy.md`
+- `docs/update-preflight.md`
+- `docs/research-radar.md`
+- `docs/community-signal-registry.md`
 
 ## North Star Metrics
 
@@ -37,7 +59,7 @@ AI coding agents（Codex / Claude Code / Cursor など）と Figma を往復し�
 
 ## Current phase
 
-**FOUNDATION READY — reference design待ち。デザインには触れず、再現実験の下地は初期版まで完成。**
+**FOUNDATION READY — reference design待ち。デザインには触れず、再現実験の下地を構築済み。**
 
 Reference が来るまでやらないこと:
 
@@ -46,11 +68,23 @@ Reference が来るまでやらないこと:
 - 色・component・画面構成を仮定する
 - referenceを模したダミーデザインをFigmaへ作る
 
-Reference受領後は `docs/reference-contract.md` → `templates/reference-manifest.yaml` の順でfreezeしてからEXP-0001へ進む。
+Reference受領後は:
+
+```text
+Update Preflight
+→ Reference Contract
+→ Frozen Manifest
+→ COMMON baseline
+→ evidence-driven experiments
+```
+
+の順で進む。
 
 ## Research Loop
 
 ```text
+Latest tooling/community scan
+   ↓
 Reference Figma (external source of truth)
    ↓ freeze
 Reference Contract
@@ -72,6 +106,8 @@ Targeted Repair
 Clean Re-run
    ↓
 Candidate → Proven Playbook
+   ↓
+tool/model update → retest when relevant
 ```
 
 ## Repository Structure
@@ -80,11 +116,17 @@ Candidate → Proven Playbook
 .
 ├── README.md
 ├── AGENTS.md
+├── CLAUDE.md
 ├── docs/
 │   ├── workflow.md
+│   ├── update-preflight.md
+│   ├── evidence-policy.md
+│   ├── research-radar.md
+│   ├── community-signal-registry.md
 │   ├── reference-contract.md
 │   ├── context-package.md
 │   ├── run-contract.md
+│   ├── benchmark-plan.md
 │   ├── evaluation-rubric.md
 │   ├── visual-verification.md
 │   ├── rework-metrics.md
@@ -92,7 +134,11 @@ Candidate → Proven Playbook
 │   ├── knowledge-promotion.md
 │   ├── portability.md
 │   ├── agent-adapters.md
-│   └── source-registry.md
+│   ├── source-registry.md
+│   ├── future-platform.md
+│   └── image-only-research-track.md
+├── research/
+│   └── figma-updates/
 ├── prompts/
 │   ├── figma-to-code.md
 │   ├── 01-inspect.md
@@ -104,6 +150,11 @@ Candidate → Proven Playbook
 │   ├── run-record.yaml
 │   ├── experiment.md
 │   └── failure-record.md
+├── schemas/
+│   ├── reference.schema.json
+│   └── run.schema.json
+├── scripts/
+│   └── validate_records.py
 ├── playbook/
 │   ├── candidates/
 │   └── proven/
@@ -120,10 +171,11 @@ Candidate → Proven Playbook
 - giant prompt に全部詰めない。Inspect → Implement → Verify → Repair を分離する
 - Verifyではまず差分を固定し、勝手にrepairさせない
 - 失敗したpromptやrepairも削除しない
-- 一度の成功は一般則にしない
+- 一度の成功/失敗を一般則にしない
 - agent/model固有のコツと、agent非依存の原則を分離する
 - First-passを必ず保存し、Finalだけで評価しない
 - reference designは改善対象ではなく source of truth として扱う
+- old limitationはlatest update確認後に適用する
 
 ## Scoring
 
@@ -138,11 +190,69 @@ Final Composite = /100 (すべて測定後のみ)
 
 「最終的に綺麗になったが何度も作り直した」を高評価にしない。
 
+## Current Figma update sensitivity
+
+Figmaの機能は短期間で大きく変わる。
+
+例として2026年7月には:
+
+- Auto LayoutをCSSへ近づける更新
+- code-backed screenをcanvasへ戻す際のvariable binding改善
+- imported frameのAuto Layout改善
+- AI image editの並列化
+
+などが入っている。
+
+そのため、古いexperimentは履歴として保持しつつ、current recommendationは最新環境で再評価する。
+
+Dated snapshot: `research/figma-updates/2026-08-10.md`
+
 ## Design readiness gate
 
 Reference を受け取ったら、実装開始前に `docs/reference-contract.md` の項目を満たす。
 
 **Reference contract が未完成なら、見た目を推測して実装を始めない。**
+
+## Future: visual workbench / dashboard
+
+最終成果はprompt集だけに限定しない。
+
+実験データが貯まり必要性が確認できたら:
+
+- Figma reference
+- user-uploaded images
+- agent outputs
+- PC/SP/intermediate screenshots
+- first-pass/final
+- side-by-side / overlay / diff
+- AI visual review
+- failure history
+- prompt/context/tool versions
+- update/retest radar
+
+を1画面で扱うdashboard/workbenchへ発展させる。
+
+詳細: `docs/future-platform.md`
+
+## Future: image-only reproduction
+
+Figma structured contextが無い場合でも、将来的には:
+
+```text
+image(s)
+→ layout/structure hypothesis
+→ editable Figma / native code
+→ browser render
+→ visual diff
+→ AI + human correction
+→ clean replay
+```
+
+を高精度化する独立研究トラックを持つ。
+
+現時点で難しいことも、model/tool更新で再試験する。
+
+詳細: `docs/image-only-research-track.md`
 
 ## Portable outcome
 
@@ -154,4 +264,4 @@ Observation → Candidate → Proven を通過したruleだけを `playbook/` �
 
 このリポジトリは結論集ではありません。
 
-**失敗 → 原因特定 → 小さな改善 → clean rerun → 再現確認**を繰り返し、次の案件ほど戻りを減らすための学習システムです。
+**最新情報 → 仮説 → 失敗/成功 → 原因特定 → 小さな改善 → clean rerun → 再現確認 → tooling更新で再評価**を繰り返し、次の案件ほど戻りを減らすための学習システムです。
