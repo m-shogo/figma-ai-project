@@ -1,0 +1,101 @@
+schema_version: 1
+experiment_id: EXP-XXXX
+run_id: RUN-XXXX
+run_class: COMMON # COMMON | OPTIMIZED | REPLAY
+status: PLANNED # PLANNED | RUNNING | BLOCKED | COMPLETE | INVALID
+started_at: ""
+completed_at: ""
+
+reference:
+  reference_id: REF-XXXX
+  manifest_path: ""
+  figma_nodes: []
+
+agent:
+  client: "" # codex | claude-code | cursor | other
+  model: ""
+  model_alias: ""
+  client_version: ""
+  instruction_sources: []
+  mcp_mode: ""
+  mcp_notes: ""
+
+code:
+  repository: ""
+  starting_commit: ""
+  target_route: ""
+  first_pass_commit: ""
+  final_commit: ""
+
+context:
+  tier: C0
+  prompt_version: ""
+  prompt_hash: ""
+  figma_design_context: false
+  figma_metadata: false
+  figma_screenshots: false
+  figma_components: false
+  figma_variables: false
+  figma_annotations: false
+  code_connect: false
+  files_read: []
+  figma_nodes_inspected: []
+  tool_calls: null
+
+execution:
+  workflow: STAGED # STAGED | ONE_SHOT
+  max_repair_rounds: 0
+  actual_repair_rounds: 0
+  assumptions: []
+  blockers: []
+
+captures:
+  first_pass: []
+  final: []
+# - frame_id: pc-main
+#   viewport: "1440x900"
+#   path: ""
+#   captured_at: ""
+
+scores:
+  first_pass:
+    visual: null
+    structural: null
+    robustness: null
+    rework_cost: null
+    reproducibility: null
+    total: null
+  final:
+    visual: null
+    structural: null
+    robustness: null
+    rework_cost: null
+    reproducibility: null
+    total: null
+
+failures: []
+# - failure_id: F-001
+#   severity: S2
+#   primary: SPACING
+#   secondary: []
+#   confidence: HIGH
+
+repairs: []
+# - round: 1
+#   failure_ids: [F-001]
+#   root_cause: ""
+#   result: ""
+#   regression: false
+
+replay:
+  required: false
+  source_run: ""
+  result: NOT_RUN # NOT_RUN | REPRODUCED | NOT_REPRODUCED
+
+lessons:
+  observations: []
+  candidate_rules: []
+  agent_specific: []
+  project_specific: []
+
+notes: ""
