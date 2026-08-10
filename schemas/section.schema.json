@@ -22,12 +22,18 @@
           "order": { "type": "integer" },
           "figma": {
             "type": "object",
-            "required": ["pc_node_id", "sp_node_id", "other_node_ids", "semantic_name_source"],
+            "required": ["logical_role", "pc_node_id", "sp_node_id", "other_node_ids", "semantic_name_source", "boundary_source", "boundary_confidence", "boundary_evidence", "pc_sp_mapping_confidence", "mapping_evidence"],
             "properties": {
+              "logical_role": { "type": "string" },
               "pc_node_id": { "type": "string" },
               "sp_node_id": { "type": "string" },
               "other_node_ids": { "type": "array", "items": { "type": "string" } },
-              "semantic_name_source": { "enum": ["FIGMA", "AI_CANDIDATE", "OWNER"] }
+              "semantic_name_source": { "enum": ["FIGMA", "AI_CANDIDATE", "OWNER"] },
+              "boundary_source": { "enum": ["FIGMA_SECTION", "FIGMA_TOP_LEVEL", "SEMANTIC_STRUCTURE", "AI_CANDIDATE", "OWNER"] },
+              "boundary_confidence": { "enum": ["HIGH", "MEDIUM", "LOW"] },
+              "boundary_evidence": { "type": "array" },
+              "pc_sp_mapping_confidence": { "enum": ["HIGH", "MEDIUM", "LOW", "NOT_APPLICABLE"] },
+              "mapping_evidence": { "type": "array" }
             },
             "additionalProperties": true
           },
