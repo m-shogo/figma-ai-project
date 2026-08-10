@@ -1,31 +1,40 @@
-# Phase 03 — Verify
+# Phase 03 — Section Verify
 
-目的: **first-passを変更せずに、referenceとの差分を証拠付きで確定する。**
+目的: **section first-passを変更せず、referenceとの差分とcontract違反を証拠付きで確定する。**
 
 このphaseでは原則コード修正禁止。
 
 ## Prompt
 
 ```text
-Verify the recorded FIRST_PASS against the frozen Figma reference.
+Verify the recorded SECTION FIRST_PASS against the frozen Figma reference and frozen Shared Contract.
 
 Do not repair code in this phase.
 Do not redesign the reference.
 Your job is diagnosis and evidence collection only.
 
-Reference:
-- <REFERENCE_MANIFEST>
-- exact Figma target(s): <FIGMA_TARGETS>
-
-Implementation:
+Inputs:
+- run record: <RUN_RECORD>
+- frozen reference: <REFERENCE_MANIFEST>
+- frozen shared contract: <SHARED_CONTRACT>
+- shared contract SHA-256: <SHARED_CONTRACT_HASH>
+- section manifest entry: <SECTION_ENTRY>
 - first-pass commit/state: <FIRST_PASS_REF>
 - target route: <TARGET_ROUTE>
 
+Consistency verification first:
+1. Confirm shared contract hash matches the run/section manifest.
+2. Confirm the run started from the verified foundation commit.
+3. Confirm changed files are within allowed paths.
+4. Confirm shared files were not mutated.
+5. Confirm no unapproved breakpoint was added.
+
 Visual verification:
-1. Render the exact acceptance viewport(s) from the reference manifest in a real browser.
-2. Capture implementation screenshots using stable deterministic content.
-3. Compare each capture against its exact reference screenshot.
-4. If responsive behavior matters between endpoints, inspect the manifest-required intermediate widths.
+1. Render exact section/page acceptance viewport(s) in a real browser.
+2. Capture implementation screenshots with deterministic content.
+3. Compare against exact section reference screenshots.
+4. Verify behavior at the specified shared breakpoint boundary when applicable.
+5. Inspect additional intermediate widths only when required by the reference/contract.
 
 Inspect at minimum:
 - geometry / proportions / alignment
@@ -33,22 +42,23 @@ Inspect at minimum:
 - typography / wrapping
 - colors / opacity
 - border / radius / effects
-- exact assets and crop
+- exact assets / crop
 - layer/stacking order
-- visibility/order changes
+- visibility/order changes at shared breakpoint(s)
 - overflow/clipping
-- interaction/state behavior required by the manifest
+- required state/interaction behavior
 
 Structural verification:
-- existing component reuse
+- existing/shared component reuse
 - token/theme reuse
-- responsive rule quality
-- duplicate primitives
+- breakpoint contract compliance
+- duplicate shared primitives
 - semantic/accessibility structure
-- repository architecture constraints
+- allowed-path isolation
 
 For every material mismatch, create a failure candidate containing:
 - observation
+- section ID
 - viewport/state
 - severity S0-S4
 - primary failure taxonomy category
@@ -60,11 +70,13 @@ For every material mismatch, create a failure candidate containing:
 - smallest repair scope
 
 Then produce:
-1. First-pass score using docs/evaluation-rubric.md
-2. Ordered failure list (highest severity first)
-3. Failures safe to repair independently
-4. Failures that share one root cause
-5. Any reference ambiguity discovered
+1. Section First-pass Fidelity using docs/evaluation-rubric.md
+2. Contract Compliance diagnostics
+3. Ordered failure list
+4. Failures safe to repair independently
+5. Failures that require coordinator/shared change
+6. Any breakpoint exception proposal with evidence
+7. Any reference ambiguity discovered
 
 Stop after diagnosis. Do not change code.
 ```
@@ -74,7 +86,8 @@ Stop after diagnosis. Do not change code.
 VerifyとRepairを同時に行うと:
 
 - original mismatchが消える
+- contract violationの発生源が追えない
 - repair前後の比較ができない
-- どのroot causeが効いたか分からない
+- root cause attributionが弱くなる
 
 診断を固定してから次phaseへ進む。
