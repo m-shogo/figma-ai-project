@@ -129,10 +129,62 @@ PC/SP endpointは合うが途中幅で破綻。
 
 ---
 
-## Section / integration failures
+## Section discovery failures
 
 ### SECTION_BOUNDARY_WRONG
-Figmaの論理sectionを誤って切り分け、責務/背景/spacing/interactionが別workerへ分断された。
+Section boundaryが不適切だったが、over/under splitのどちらかにまだ特定できていない総称。
+
+可能なら以下のより具体的categoryをprimaryにする。
+
+### SECTION_OVER_SPLIT
+本来1つのimplementation責務として扱うべきregionを細かく分けすぎた。
+
+Symptoms:
+
+- shared background/overlapを別workerへ分断
+- same component compositionを複数sectionへ分割
+- integration fixが大量発生
+
+### SECTION_UNDER_SPLIT
+独立して実装・検証できる複数regionを1つの巨大Sectionへまとめすぎた。
+
+Symptoms:
+
+- context過多
+- worker scopeが広すぎる
+- repair attributionが難しい
+- safe parallelismを失う
+
+### PC_SP_MAPPING_MISS
+PC SectionとSP Sectionを別の論理regionへ誤対応した。
+
+Examples:
+
+- Content01 PCをContent02 SPへmapping
+- SPだけgroupingが異なるのにorderだけで誤対応
+
+### SECTION_MAPPING_LOW_CONFIDENCE_BYPASS
+PC/SP mapping confidenceがLOWのまま、追加調査せずparallel productionへ進めた。
+
+### SECTION_BOUNDARY_LOW_CONFIDENCE_BYPASS
+Section boundary confidenceがLOWのまま、追加調査せずparallel productionへ進めた。
+
+### HIDDEN_SECTION_DEPENDENCY
+Section Aが実際にはSection Bのoutput/shared behaviorへ依存していたがmanifestでdependencyを表現できていなかった。
+
+### COUPLING_CLASS_MISS
+Integration couplingをLOW/MEDIUM/HIGHで誤分類した。
+
+Example:
+
+- cross-section absolute decorationをLOWと判断し同時実装して衝突
+
+### SECTION_DISCOVERY_EVIDENCE_WEAK
+HIGH/MEDIUM confidenceを付けたが、metadata/text/assets/component relation等の根拠が不足していた。
+
+---
+
+## Section / integration failures
 
 ### FOUNDATION_MISMATCH
 workerがverified foundation commit以外から開始した。
@@ -142,6 +194,17 @@ section workerがmanifestで許可されていないfileを変更した。
 
 ### SHARED_FILE_MUTATION
 section workerがread-onlyのtoken/font/global CSS/shared component/root composition等を直接変更した。
+
+### WORKER_ISOLATION_COLLISION
+同じparallel groupのworkerが同じbranch/worktree/sandbox identityを共有した、またはshared working treeを並列利用した。
+
+### WORKER_ISOLATION_UNVERIFIED
+新しいisolation mechanismを`OTHER`として使ったが、parallel-safe evidence/notesが無い。
+
+### CONTRACT_LINEAGE_MISMATCH
+Section outputがmanifestのShared Contract hashと異なるcontract revisionで生成された。
+
+`CONTRACT_STALE`の具体的なparallel worker surfaceとして使ってよい。
 
 ### SECTION_ORDER
 統合時のsection順序がreferenceと異なる。
@@ -158,8 +221,14 @@ section単体のfont値は近いが、ページ全体のheading/body hierarchy�
 ### PARALLEL_MERGE_CONFLICT
 parallel output同士が同じsurfaceを変更し、clean integrationできない。
 
+### PARALLEL_PATH_COLLISION
+同じparallel groupでallowed write scopeが重複/包含し、競合が予測可能だった。
+
 ### PARALLEL_RULE_DRIFT
 parallel worker間で同じshared ruleの異なる解釈/duplicateが発生した。
+
+### UNSAFE_PARALLEL_SCHEDULING
+Dependency/high coupling/LOW discovery confidence等を無視して同時実行した。
 
 ### INTEGRATION_REGRESSION
 section統合後に、単体では存在しなかったvisual/behavior regressionが発生した。
@@ -266,6 +335,7 @@ Examples:
 - wrong shared contract hash
 - wrong foundation commit
 - COMMON比較なのに異なるbreakpoint contract
+- concurrent workersが同じworking tree/refを共有
 
 ---
 
@@ -314,5 +384,25 @@ evidence:
 root_cause: "section contextにnested Auto Layout gapが含まれていなかった"
 confidence: HIGH
 repair: "nested node contextを追加してsectionだけrepair"
+replay_required: true
+```
+
+## Example — PC/SP mapping miss
+
+```yaml
+failure_id: F-006
+severity: S3
+primary: PC_SP_MAPPING_MISS
+secondary:
+  - SECTION_DISCOVERY_EVIDENCE_WEAK
+surface: S04
+observation: "PC Content02にSP Content03を対応付けて実装した"
+evidence:
+  - "PC/SP metadata"
+  - "text anchor inventory"
+  - "section screenshots"
+root_cause: "page orderだけでmappingし、text/component/asset evidenceを確認しなかった"
+confidence: HIGH
+repair: "mappingを修正し、discovery promptへmulti-signal requirementを追加"
 replay_required: true
 ```
