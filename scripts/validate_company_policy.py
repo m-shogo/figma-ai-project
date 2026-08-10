@@ -1,0 +1,150 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
+import hashlib
+import json
+import sys
+from pathlib import Path
+from typing import Any
+
+import yaml
+from jsonschema import Draft202012Validator
+
+ROOT = Path(__file__).resolve().parents[1]
+POLICY_SCHEMA = ROOT / "schemas" / "company-policy.schema.json"
+EXPECTED_PRECEDENCE = [
+    "COMPANY_POLICY",
+    "EXISTING_CODEBASE",
+    "FIGMA_IMPLEMENTATION_EVIDENCE",
+    "AGENT_INFERENCE",
+]
+
+
+def load_yaml(path: Path) -> dict[str, Any]:
+    value = yaml.safe_load(path.read_text(encoding="utf-8"))
+    if not isinstance(value, dict):
+        raise ValueError("top-level YAML value must be an object")
+    return value
+
+
+def sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def schema_errors(data: dict[str, Any]) -> list[str]:
+    schema = json.loads(POLICY_SCHEMA.read_text(encoding="utf-8"))
+    validator = Draft202012Validator(schema)
+    return [error.message for error in sorted(validator.iter_errors(data), key=lambda e: list(e.path))]
+
+
+def semantic_policy_errors(data: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    precedence = data.get("precedence", {}).get("implementation_constraints", [])
+    if precedence != EXPECTED_PRECEDENCE:
+        errors.append(
+            "implementation precedence must be COMPANY_POLICY > EXISTING_CODEBASE > FIGMA_IMPLEMENTATION_EVIDENCE > AGENT_INFERENCE"
+        )
+
+    if data.get("status") == "ACTIVE":
+        browser = data.get("browser_support", {})
+        if not (browser.get("browserslist") or browser.get("explicit_minimums") or browser.get("test_matrix")):
+            errors.append("ACTIVE Company Policy requires an explicit browser support contract")
+        update = data.get("update_policy", {})
+        if update.get("significant_run_preflight") is not True:
+            errors.append("ACTIVE Company Policy requires significant_run_preflight=true")
+    return errors
+
+
+def candidate_policies() -> list[Path]:
+    found = [ROOT / "templates" / "company-policy.yaml"]
+    for base in (ROOT / "policies", ROOT / "contracts", ROOT / "experiments"):
+        if not base.exists():
+            continue
+        for path in sorted(base.rglob("*.yaml")):
+            if path.name == "company-policy.yaml" or path.name.endswith("company-policy.yaml"):
+                found.append(path)
+    return list(dict.fromkeys(found))
+
+
+def candidate_shared_contracts() -> list[Path]:
+    found = [ROOT / "templates" / "shared-contract.yaml"]
+    for base in (ROOT / "contracts", ROOT / "experiments"):
+        if not base.exists():
+            continue
+        for path in sorted(base.rglob("*.yaml")):
+            if path.name == "shared-contract.yaml" or path.name.endswith("shared-contract.yaml"):
+                found.append(path)
+    return list(dict.fromkeys(found))
+
+
+def validate_frozen_contract(path: Path, data: dict[str, Any]) -> list[str]:
+    if data.get("status") != "FROZEN":
+        return []
+    errors: list[str] = []
+    binding = data.get("company_policy", {})
+    if binding.get("status") != "BOUND" or binding.get("precedence_verified") is not True:
+        errors.append("FROZEN Shared Contract requires BOUND Company Policy with precedence_verified=true")
+        return errors
+
+    raw_path = str(binding.get("path", "")).strip()
+    expected_hash = str(binding.get("sha256", "")).strip()
+    if not raw_path or not expected_hash:
+        errors.append("FROZEN Shared Contract requires Company Policy path and sha256")
+        return errors
+
+    policy_path = (ROOT / raw_path).resolve()
+    if ROOT != policy_path and ROOT not in policy_path.parents:
+        errors.append("Company Policy path escapes repository root")
+        return errors
+    if not policy_path.is_file():
+        errors.append(f"Company Policy file does not exist: {raw_path}")
+        return errors
+    if sha256(policy_path) != expected_hash:
+        errors.append("Company Policy sha256 mismatch")
+        return errors
+
+    policy = load_yaml(policy_path)
+    if policy.get("status") != "ACTIVE":
+        errors.append("FROZEN Shared Contract must bind an ACTIVE Company Policy")
+    if str(policy.get("policy_id", "")) != str(binding.get("policy_id", "")):
+        errors.append("Shared Contract company policy_id does not match linked policy")
+    errors.extend(f"linked Company Policy: {error}" for error in semantic_policy_errors(policy))
+    return errors
+
+
+def main() -> int:
+    failures = 0
+    for path in candidate_policies():
+        try:
+            data = load_yaml(path)
+            errors = [*schema_errors(data), *semantic_policy_errors(data)]
+        except Exception as exc:
+            errors = [str(exc)]
+        rel = path.relative_to(ROOT)
+        if errors:
+            failures += 1
+            print(f"FAIL {rel}")
+            for error in errors:
+                print(f"  - {error}")
+        else:
+            print(f"PASS {rel}")
+
+    for path in candidate_shared_contracts():
+        try:
+            errors = validate_frozen_contract(path, load_yaml(path))
+        except Exception as exc:
+            errors = [str(exc)]
+        rel = path.relative_to(ROOT)
+        if errors:
+            failures += 1
+            print(f"FAIL {rel} company-policy-lineage")
+            for error in errors:
+                print(f"  - {error}")
+        else:
+            print(f"PASS {rel} company-policy-lineage")
+
+    return 1 if failures else 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
