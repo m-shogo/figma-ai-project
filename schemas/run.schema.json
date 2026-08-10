@@ -3,7 +3,7 @@
   "$id": "https://example.invalid/figma-ai-project/run.schema.json",
   "title": "Figma AI Run Record",
   "type": "object",
-  "required": ["schema_version", "experiment_id", "run_id", "run_class", "status", "tooling_preflight", "reference", "agent", "code", "context", "execution", "captures", "scores", "rework", "failures", "repairs", "replay", "lessons"],
+  "required": ["schema_version", "experiment_id", "run_id", "run_class", "status", "tooling_preflight", "reference", "coordination", "agent", "code", "context", "execution", "captures", "scores", "rework", "failures", "repairs", "replay", "lessons"],
   "properties": {
     "schema_version": { "type": "integer", "minimum": 1 },
     "experiment_id": { "type": "string", "minLength": 1 },
@@ -35,6 +35,19 @@
         "reference_id": { "type": "string", "minLength": 1 },
         "manifest_path": { "type": "string" },
         "figma_nodes": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": true
+    },
+    "coordination": {
+      "type": "object",
+      "required": ["scope", "section_id", "shared_contract_path", "shared_contract_sha256", "section_manifest_path", "foundation_commit"],
+      "properties": {
+        "scope": { "enum": ["SECTION", "INTEGRATION", "PAGE_BENCHMARK"] },
+        "section_id": { "type": "string" },
+        "shared_contract_path": { "type": "string" },
+        "shared_contract_sha256": { "type": "string" },
+        "section_manifest_path": { "type": "string" },
+        "foundation_commit": { "type": "string" }
       },
       "additionalProperties": true
     },
