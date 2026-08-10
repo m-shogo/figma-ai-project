@@ -35,7 +35,8 @@ class BootstrapExperimentTests(unittest.TestCase):
             self.assertEqual("REF-TEST", contract["reference_id"])
             self.assertEqual("DRAFT", contract["status"])
             self.assertFalse(contract["freeze"]["ready"])
-            self.assertEqual("UNKNOWN", contract["breakpoints"]["mode"])
+            self.assertEqual("GLOBAL_SPECIFIED", contract["breakpoints"]["mode"])
+            self.assertEqual("UNKNOWN", contract["breakpoints"]["source"])
             self.assertEqual([], contract["breakpoints"]["values"])
 
             sections = load(target / "section-manifest.yaml")
