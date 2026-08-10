@@ -101,6 +101,19 @@ def validate_run(data: dict[str, Any]) -> list[str]:
     if scope not in SECTION_SCOPES:
         return errors
 
+    contract_path, contract_link_errors = linked_file(
+        str(coordination.get("shared_contract_path", "")),
+        "coordination.shared_contract_path",
+    )
+    errors.extend(contract_link_errors)
+    errors.extend(
+        require_hash(
+            contract_path,
+            str(coordination.get("shared_contract_sha256", "")),
+            "shared contract",
+        )
+    )
+
     manifest_path, manifest_link_errors = linked_file(
         str(coordination.get("section_manifest_path", "")),
         "coordination.section_manifest_path",
@@ -113,6 +126,41 @@ def validate_run(data: dict[str, Any]) -> list[str]:
             "section manifest",
         )
     )
+
+    profile_path, profile_link_errors = linked_file(
+        str(coordination.get("figma_structure_profile_path", "")),
+        "coordination.figma_structure_profile_path",
+    )
+    errors.extend(profile_link_errors)
+    errors.extend(
+        require_hash(
+            profile_path,
+            str(coordination.get("figma_structure_profile_sha256", "")),
+            "Figma Structure Profile",
+        )
+    )
+
+    contract: dict[str, Any] | None = None
+    if contract_path and contract_path.is_file():
+        try:
+            contract = load_yaml(contract_path)
+            if contract.get("reference_id") != reference.get("reference_id"):
+                errors.append("run reference_id does not match shared contract reference_id")
+            foundation = contract.get("foundation", {})
+            if isinstance(foundation, dict) and foundation.get("commit"):
+                if foundation.get("commit") != coordination.get("foundation_commit"):
+                    errors.append("run foundation commit does not match shared contract foundation.commit")
+        except Exception as exc:
+            errors.append(f"cannot read shared contract: {exc}")
+
+    profile: dict[str, Any] | None = None
+    if profile_path and profile_path.is_file():
+        try:
+            profile = load_yaml(profile_path)
+            if profile.get("reference_id") != reference.get("reference_id"):
+                errors.append("run reference_id does not match Figma Structure Profile reference_id")
+        except Exception as exc:
+            errors.append(f"cannot read Figma Structure Profile: {exc}")
 
     if manifest_path is None or not manifest_path.is_file():
         return errors
@@ -130,6 +178,13 @@ def validate_run(data: dict[str, Any]) -> list[str]:
     if manifest.get("foundation_commit") != coordination.get("foundation_commit"):
         errors.append("run foundation commit does not match section manifest")
 
+    manifest_profile_path = str(manifest.get("figma_structure_profile", ""))
+    manifest_profile_hash = str(manifest.get("figma_structure_profile_sha256", ""))
+    if manifest_profile_path != str(coordination.get("figma_structure_profile_path", "")):
+        errors.append("run Figma Structure Profile path does not match section manifest")
+    if manifest_profile_hash != str(coordination.get("figma_structure_profile_sha256", "")):
+        errors.append("run Figma Structure Profile hash does not match section manifest")
+
     if scope == "INTEGRATION":
         return errors
 
@@ -145,6 +200,16 @@ def validate_run(data: dict[str, Any]) -> list[str]:
     if section is None:
         errors.append(f"SECTION run section_id not found in manifest: {section_id}")
         return errors
+
+    if profile is not None:
+        profile_section = next(
+            (item for item in profile.get("sections", []) if item.get("section_id") == section_id),
+            None,
+        )
+        if profile_section is None:
+            errors.append(f"SECTION run section_id not found in Figma Structure Profile: {section_id}")
+        elif profile_section.get("recommended_translation_mode") == "UNKNOWN":
+            errors.append("SECTION run cannot use UNKNOWN recommended_translation_mode")
 
     worker = section.get("worker", {})
     isolation = worker.get("isolation", {})
