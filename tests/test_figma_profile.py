@@ -69,14 +69,24 @@ class FigmaProfileTests(unittest.TestCase):
         errors = validate(data)
         self.assertTrue(any("variables.level=UNKNOWN" in error for error in errors), errors)
 
-    def test_none_is_distinct_from_unknown(self) -> None:
+    def test_none_is_distinct_from_unknown_when_inspection_evidence_exists(self) -> None:
+        data = base_contract()
+        data["figma_profile"]["code_connect"] = {
+            "level": "NONE",
+            "mapped_components": [],
+            "evidence": ["inspected target nodes and found no Code Connect mappings"],
+        }
+        self.assertEqual(validate(data), [])
+
+    def test_none_without_evidence_is_rejected_when_frozen(self) -> None:
         data = base_contract()
         data["figma_profile"]["code_connect"] = {
             "level": "NONE",
             "mapped_components": [],
             "evidence": [],
         }
-        self.assertEqual(validate(data), [])
+        errors = validate(data)
+        self.assertTrue(any("NONE" in error and "evidence" in error for error in errors), errors)
 
     def test_observed_code_connect_requires_mapped_components(self) -> None:
         data = base_contract()
@@ -103,9 +113,13 @@ class FigmaProfileTests(unittest.TestCase):
         data["freeze"] = {"ready": False}
         for key in ("components", "variables", "code_connect", "annotations", "assets"):
             data["figma_profile"][key]["level"] = "UNKNOWN"
+            data["figma_profile"][key]["evidence"] = []
+        data["figma_profile"]["code_connect"]["mapped_components"] = []
         data["figma_profile"]["auto_layout"]["coverage"] = "UNKNOWN"
         data["figma_profile"]["auto_layout"]["generation"] = "UNKNOWN"
+        data["figma_profile"]["auto_layout"]["evidence"] = []
         data["figma_profile"]["semantic_naming"]["quality"] = "UNKNOWN"
+        data["figma_profile"]["semantic_naming"]["evidence"] = []
         data["figma_profile"]["captured_at"] = ""
         data["figma_profile"]["source_nodes"] = []
         data["figma_profile"]["strategy_decisions"] = []
