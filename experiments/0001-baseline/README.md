@@ -1,141 +1,129 @@
-# EXP-0001 — Baseline Responsive Product Landing
+# EXP-0001 — Frozen Reference Agent Baseline
 
-Status: READY_TO_RUN
+Status: **WAITING_FOR_REFERENCE**
 
 ## Purpose
 
-最初の題材は、特定案件の見た目に寄りすぎず、Figma→AI実装で頻出する要素を1画面に含める。
+最初の実験は、ユーザーが既に決めている Figma の PC / SP reference を使う。
 
-この実験の目的は「最高のLPを作る」ことではなく、今後の比較用baselineを作ること。
+このrepo側では画面構成・色・寸法・contentを発明しない。
 
-## Reference Design Requirements
+Reference が届くまでは run を開始せず、比較基盤だけ準備する。
 
-同じ内容を Desktop / Mobile で設計する。
+## Before reference arrives
 
-### Sections
+- [x] project mission / boundary
+- [x] common agent rules
+- [ ] reference contract
+- [ ] context package format
+- [ ] run contract
+- [ ] staged prompts
+- [ ] failure taxonomy
+- [ ] knowledge promotion criteria
+- [ ] official source registry
+- [ ] run record template
 
-1. Header
-   - logo
-   - 3 nav items
-   - primary CTA
-2. Hero
-   - eyebrow
-   - heading
-   - body
-   - two CTAs
-   - product visual placeholder
-3. Feature cards ×3
-4. Compact signup form
-5. Footer
+## Reference intake gate
 
-### Design constraints
+Reference受領後に以下を固定する。
 
-- 8pt-based spacing system
-- reusable Button component
-- reusable Feature Card component
-- semantic color variables
-- text styles
-- Auto Layout
-- no random one-off spacing values unless visually required
-- native Figma layers; do not flatten the UI
+- Figma file URL
+- target node(s)
+- PC frame(s)
+- SP frame(s)
+- exact viewport sizes
+- relevant states / variants
+- source assets
+- component/library relationships
+- design variables/tokens if present
+- annotations / behavior notes if present
+- reference screenshot(s)
+- capture timestamp
 
-### Desktop target
+詳細は `docs/reference-contract.md`。
 
-- frame width: 1440
-- content max width: approximately 1200
-- feature cards: 3 columns
-- hero: 2-column composition
+## Phase A — Common baseline
 
-### Mobile target
+Codex / Claude Code / Cursor に同じ frozen reference、同じcode baseline、同じcontext tier、同じacceptance criteriaを渡す。
 
-- frame width: 390
-- feature cards: 1 column
-- hero: stacked
-- header navigation collapses / simplifies intentionally
-- CTA hierarchy preserved
+目的:
 
-## Controlled content
+- agentそのものの差
+- reference/contextの読み落とし傾向
+- first-passで発生するfailure class
 
-Use the same fixture text and asset placeholders for every agent.
+保存する:
 
-### Product
-
-Name: `Orbit Notes`
-
-Eyebrow: `THINK CLEARLY`
-
-Heading: `Ideas move faster when your workspace stays simple.`
-
-Body: `Capture rough thoughts, connect decisions, and keep the next step visible without turning your notes into another project to manage.`
-
-Primary CTA: `Start free`
-
-Secondary CTA: `See how it works`
-
-Features:
-
-1. `Capture fast` — `Save an idea before context disappears.`
-2. `Connect decisions` — `Keep notes, rationale, and follow-ups together.`
-3. `Find the next step` — `Turn unfinished thinking into visible action.`
-
-Form heading: `Get product updates`
-
-Input placeholder: `you@example.com`
-
-Submit: `Join the list`
-
-## Phase A — Common prompt baseline
-
-Run Codex / Claude Code / Cursor with the same `prompts/figma-to-code.md` baseline and the same reference node.
-
-Do not provide agent-specific tricks.
-
-Measure:
-
+- inspect output
+- first-pass code commit
+- exact viewport screenshots
 - first-pass score
+- assumptions
 - failure categories
+
+## Phase B — Context experiments
+
+同じ clean baseline から、contextだけを1段ずつ増やす。
+
+候補:
+
+1. screenshot + minimal brief
+2. structured Figma context
+3. components / variables / Auto Layout details
+4. annotations / responsive invariants
+5. Code Connect / actual code component mappings
+
+一度に複数条件を変えない。
+
+## Phase C — Prompt segmentation
+
+同じ context で比較する。
+
+- one-shot prompt
+- Inspect → Implement → Verify
+- Inspect → Implement → Verify → targeted Repair
+
+見る指標:
+
+- First-pass Fidelity
+- Rework Cost
+- assumption count
 - repair rounds
-- final score
+- context usage
 
-## Phase B — Structured-context baseline
+## Phase D — Agent-optimized run
 
-Repeat from clean code baseline, adding explicit:
+COMMON実験とは分けて、各agentに合ったinstruction storage / MCP / workflowを使用する。
 
-- component metadata
-- variables/tokens
-- responsive contract
-- exact screenshots
+目的はランキングではなく、実務でのbest achievable qualityを測ること。
 
-Compare against Phase A.
+## Phase E — Clean rerun
 
-## Phase C — Code Connect
+効果があった改善は必ず clean baseline から再実行する。
 
-Once a small real component library exists, map Button / Card and repeat.
+修正済みコードの上で良くなっただけなら、prompt/contextの学習としては未証明。
 
-Primary question:
+## Initial hypotheses
 
-> Does component mapping reduce structural drift and duplicate implementation enough to lower human rework?
+Design-specific hypothesis は reference を見てから追加する。
 
-## First hypotheses
+先に検証できる一般仮説:
 
-H1. Structured Figma context will improve Structural Fidelity more than Visual Fidelity.
-
-H2. Exact screenshot verification will improve Visual Fidelity but can introduce visual-only hacks unless structural acceptance criteria are explicit.
-
-H3. Explicit PC→SP invariants will reduce responsive mistakes more than simply providing two screenshots.
-
-H4. Small staged prompts (inspect → implement → verify) will be more reproducible than one giant prompt.
-
-H5. Agent-specific optimized prompts may outperform a common prompt, but generalizable rules should be extracted separately.
+- H1: screenshot only より structured context の方が structural drift を減らす
+- H2: exact screenshot verification は visual mismatch 発見に効く
+- H3: staged workflow は giant prompt より failure attribution がしやすい
+- H4: Code Connect が存在する案件では duplicate component 実装を減らせる可能性がある
+- H5: clean rerun を通らない改善は playbook に昇格させない方がよい
 
 ## Completion condition
 
-EXP-0001 is complete only after at least:
+EXP-0001 は以下が揃うまで完了しない。
 
-- 1 fixed Figma reference
-- 3 agent runs OR documented reason an agent could not run
-- Desktop + Mobile + intermediate width capture for each run
+- frozen reference contract
+- 3 agent common baseline、または実行不能理由
+- PC + SP + 必要な中間幅のcapture
 - first-pass scoring
 - failure classification
-- at least one clean re-run using an improved instruction
-- candidate lessons written down
+- 少なくとも1つのisolated improvement
+- clean rerun
+- reusable / agent-specific / project-only lessonsの分離
