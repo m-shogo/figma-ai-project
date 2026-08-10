@@ -18,6 +18,75 @@ Reference design はこのrepoが決めない。
 - referenceを受け取ったら freeze contract を作るまで実装を開始しない
 - experiment途中で reference design を勝手に修正しない
 
+## Production execution default — section first
+
+現時点のproduction defaultはページ全体を1 workerへ丸投げしない。
+
+```text
+Frozen reference
+→ Global reconnaissance
+→ Shared contract DRAFT
+→ Section manifest
+→ Shared foundation implementation
+→ Foundation verification
+→ Shared contract FROZEN + hash
+→ Parallel section workers
+→ Coordinator integration
+→ Global verification
+```
+
+section例:
+
+- Header
+- MainVisual
+- Content01
+- Content02
+- Footer
+
+詳しくは `docs/section-execution.md`。
+
+Whole-page one-shotは永久禁止ではなく、tool/model進化を測るresearch cohortとして残す。
+
+## Breakpoint source of truth
+
+案件側にデザイナー / 会社 / design system / existing productのbreakpoint指定がある場合、**その指定を全section共通で使う。**
+
+AIは:
+
+- breakpoint sourceを特定する
+- exact value/query semanticsをshared contractへ記録する
+- sectionごとのbehaviorを実装する
+- boundaryで破綻しないか検証する
+
+AIが独断で慣習値やsection固有breakpointを追加しない。
+
+必要に見える場合は `PROPOSE_BREAKPOINT_EXCEPTION` として証拠付き提案に留める。
+
+詳しくは `docs/responsive-breakpoint-policy.md`。
+
+## Shared contract rule
+
+Parallel section implementation前に `templates/shared-contract.yaml` をfreezeする。
+
+Shared contractには最低限:
+
+- codebase/style architecture
+- fonts
+- tokens
+- container/gutter
+- shared components
+- breakpoint source + values
+- asset policy
+- accessibility baseline
+- coordinator-only/shared paths
+- verified foundation commit
+
+を含める。
+
+Section manifest/run recordはshared contractのSHA-256とfoundation commitを保持する。
+
+**異なるcontract hash / foundation commitのsection outputを無条件で混ぜない。**
+
 ## Update-aware rule — mandatory for significant runs
 
 Figma / MCP / Codex / Claude Code / Cursor は高速に進化する。
@@ -96,38 +165,51 @@ external signal → hypothesis → experiment → replay → promotion
 
 ## Mandatory Loop
 
-すべてのデザイン再現実験は次を守る。
+すべてのproduction-orientedデザイン再現実験は次を守る。
 
 0. Tooling update preflight
-1. Reference を freeze する
-2. 実行条件を記録する
-3. Inspect run を残す
-4. First-pass implementation を保存する
-5. Reference と exact viewport で比較する
-6. 差分を failure taxonomy で分類する
-7. 一度に1つの原因クラスを修正する
-8. 再評価する
-9. clean baseline から再実行する
-10. 汎用化できる知識だけ昇格する
+1. Referenceをfreeze
+2. Global reconnaissance
+3. Shared contract DRAFT
+4. Section manifest作成
+5. Shared foundation実装
+6. Foundation verification
+7. Shared contract FROZEN + hash
+8. Section-scoped Inspect run
+9. First-pass implementation保存
+10. Exact viewportで比較
+11. Integration verification
+12. Failure taxonomyで分類
+13. Targeted repair
+14. 再評価
+15. Clean baselineから再実行
+16. 汎用化できる知識だけ昇格
+
+PAGE_BENCHMARKではsection-firstの一部を意図的に外してよいが、run recordで明示する。
 
 ## Do Not
 
-- reference がないのに架空画面を作る
-- screenshotだけを見て構造を推測し、Figma metadata を読めるのに読まない
-- PC/SP を無関係な2画面として別々にハードコードする
+- referenceがないのに架空画面を作る
+- screenshotだけを見て構造を推測し、Figma metadataを読めるのに読まない
+- PC/SPを無関係な2画面として別々にハードコードする
+- company/designer指定breakpointをAI判断で置換する
+- section workerが独自breakpointを追加する
+- section workerがshared token/font/container/componentを無断変更する
+- contract hashが違うsection outputをそのまま統合する
 - 失敗した prompt / run / repair理由を消す
 - 1回成功したテクニックを即「ベストプラクティス」と呼ぶ
 - 1回失敗したテクニックを永久禁止にする
-- agent/model 固有挙動を汎用ルールとして混ぜる
+- agent/model固有挙動を汎用ルールとして混ぜる
 - 古いtool limitationをupdate確認なしで現在へ適用する
 - 見た目の一致だけで合格にする
-- giant prompt にすべてを詰め込む
-- unrelated redesign / UX improvement を行う
-- visual hack で structural mismatch を隠す
+- giant promptにすべてを詰め込む
+- unrelated redesign / UX improvementを行う
+- visual hackでstructural mismatchを隠す
 
 ## Prefer
 
 - current Figma MCP structured context
+- broad metadata → relevant section node のprogressive disclosure
 - components / variants
 - variables / tokens
 - Auto Layout / sizing semantics
@@ -137,7 +219,9 @@ external signal → hypothesis → experiment → replay → promotion
 - screenshots as visual ground truth
 - browser rendering at exact viewport sizes
 - deterministic fixture content
-- Inspect → Implement → Verify → Repair の小さいphase
+- section-scoped Inspect → Implement → Verify → Repair
+- immutable shared contract for parallel workers
+- shared foundation before parallelism
 - machine-readable experiment metadata
 - clean re-run
 - recent official + practitioner research before important runs
@@ -150,6 +234,10 @@ external signal → hypothesis → experiment → replay → promotion
 - tooling update preflight
 - experiment id
 - run id
+- run scope: SECTION / INTEGRATION / PAGE_BENCHMARK
+- section id when applicable
+- shared contract path/hash
+- foundation commit
 - date/time
 - agent
 - exact model/alias if known
@@ -187,7 +275,7 @@ clean replay等で再現した仮説。
 
 ### Proven Playbook
 
-異なる画面/案件でも再現し、First-pass または Rework Cost の改善が測定できたもの。
+異なる画面/案件でも再現し、First-passまたはRework Costの改善が測定できたもの。
 
 現在Provenでもtool updateで再評価可能。
 
@@ -195,10 +283,12 @@ clean replay等で再現した仮説。
 
 ## When Comparing Agents
 
-Codex / Claude Code / Cursor などを比較するときは、可能な限り以下を揃える。
+Codex / Claude Code / Cursorなどを比較するときは、可能な限り以下を揃える。
 
 - same frozen Figma reference
-- same codebase commit
+- same section boundary / node
+- same shared contract hash
+- same verified foundation commit
 - same assets
 - same target viewports
 - same acceptance criteria
@@ -231,11 +321,13 @@ Promptだけを最終成果にしない。
 
 ## Definition of Done for an Experiment
 
-- before / after を比較できる
-- first-pass を保存している
+- before / afterを比較できる
+- first-passを保存している
+- run scopeが明確
+- shared contract/foundationが追跡できる
 - なぜ改善したか説明できる
-- clean rerun で改善が再現した
-- reusable lesson と project-specific lesson が分離されている
-- unresolved issue が明示されている
-- reference design を変更していない
+- clean rerunで改善が再現した
+- reusable lessonとproject-specific lessonが分離されている
+- unresolved issueが明示されている
+- reference designを変更していない
 - run開始時点のtooling/current knowledgeが記録されている
