@@ -1,4 +1,4 @@
-schema_version: 4
+schema_version: 5
 experiment_id: EXP-XXXX
 run_id: RUN-XXXX
 run_class: COMMON # COMMON | OPTIMIZED | REPLAY
@@ -25,6 +25,7 @@ reference:
 coordination:
   scope: SECTION # SECTION | INTEGRATION | PAGE_BENCHMARK
   section_id: ""
+  parallel_group: ""
   shared_contract_path: ""
   shared_contract_sha256: ""
   section_manifest_path: ""
@@ -99,6 +100,12 @@ rework:
   post_first_pass_lines_added: null
   post_first_pass_lines_deleted: null
   rebuild_count: 0
+  integration_only_failures: 0
+  shared_contract_revisions: 0
+  foundation_rebuilds: 0
+  merge_conflicts: 0
+  affected_section_count: 0
+  contract_violations: 0
   severity_counts:
     S1: 0
     S2: 0
