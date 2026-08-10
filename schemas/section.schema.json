@@ -42,12 +42,15 @@
           },
           "dependencies": {
             "type": "object",
-            "required": ["shared_components", "tokens", "fonts", "assets"],
+            "required": ["section_ids", "shared_components", "tokens", "fonts", "assets", "integration_coupling", "coupling_notes"],
             "properties": {
+              "section_ids": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
               "shared_components": { "type": "array" },
               "tokens": { "type": "array" },
               "fonts": { "type": "array" },
-              "assets": { "type": "array" }
+              "assets": { "type": "array" },
+              "integration_coupling": { "enum": ["LOW", "MEDIUM", "HIGH"] },
+              "coupling_notes": { "type": "array" }
             },
             "additionalProperties": true
           },
