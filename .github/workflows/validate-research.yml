@@ -7,6 +7,7 @@ on:
       - "schemas/**"
       - "scripts/**"
       - "tests/**"
+      - "config/**"
       - "policies/**/*.yaml"
       - "references/**/*.yaml"
       - "experiments/**/*.yaml"
@@ -14,12 +15,14 @@ on:
       - "research/**/*.yaml"
       - "requirements-dev.txt"
       - ".github/workflows/validate-research.yml"
+      - ".github/workflows/update-radar.yml"
   pull_request:
     paths:
       - "templates/**"
       - "schemas/**"
       - "scripts/**"
       - "tests/**"
+      - "config/**"
       - "policies/**/*.yaml"
       - "references/**/*.yaml"
       - "experiments/**/*.yaml"
@@ -27,6 +30,7 @@ on:
       - "research/**/*.yaml"
       - "requirements-dev.txt"
       - ".github/workflows/validate-research.yml"
+      - ".github/workflows/update-radar.yml"
 
 permissions:
   contents: read
