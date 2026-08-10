@@ -1,4 +1,4 @@
-schema_version: 6
+schema_version: 7
 contract_id: CONTRACT-XXXX
 reference_id: REF-XXXX
 status: DRAFT # DRAFT | FROZEN | SUPERSEDED
@@ -11,6 +11,55 @@ company_policy:
   policy_id: ""
   status: UNBOUND # UNBOUND | BOUND
   precedence_verified: false
+  conflicts: []
+
+environment_contract:
+  status: UNRESOLVED # UNRESOLVED | RESOLVED
+  required_profiles: [] # exact Company Policy environment profile ids
+  canonical_profile: ""
+  runtime_detection:
+    strategy: "" # copied/resolved from Company Policy + existing project
+    feature_detection_required: true
+    ua_sniffing_policy: ""
+    notes: []
+  foundation:
+    reset_source: ""
+    reset_paths: []
+    base_paths: []
+    environment_paths: []
+    device_specific_full_reset: false
+    notes: []
+  viewport:
+    meta_policy: ""
+    unit_policy: ""
+    safe_area_policy: ""
+    virtual_keyboard_policy: ""
+    notes: []
+  interaction:
+    smooth_scroll_policy: ""
+    hover_pointer_policy: ""
+    touch_policy: ""
+    scroll_lock_policy: ""
+    reduced_motion_policy: ""
+    notes: []
+  effective_overrides: []
+  # - profile_id: ios-safari-touch
+  #   reset_profile: BASE_PLUS_ENVIRONMENT
+  #   smooth_scroll: INHERIT
+  #   hover_profile: TOUCH_FIRST
+  #   touch_profile: BROWSER_NATIVE
+  #   viewport_profile: DYNAMIC_SAFE_AREA
+  #   scroll_lock_profile: MOBILE_OVERLAY
+  #   animation_profile: INHERIT
+  #   image_profile: INHERIT
+  #   evidence: []
+  qa:
+    section_capture: CANONICAL_PLUS_DIFFERENCES # CANONICAL_ONLY | CANONICAL_PLUS_DIFFERENCES | ALL_REQUIRED
+    boundary_capture: CANONICAL_PLUS_DIFFERENCES
+    full_page_capture: ALL_REQUIRED # CANONICAL_ONLY | CANONICAL_PLUS_DIFFERENCES | ALL_REQUIRED
+    interaction_qa: ALL_RELEVANT_REQUIRED # CANONICAL_ONLY | ALL_RELEVANT_REQUIRED
+    real_device_policy: FROM_COMPANY_PROFILE
+    notes: []
   conflicts: []
 
 figma_profile:
@@ -66,12 +115,6 @@ breakpoints:
   source: UNKNOWN # OWNER | COMPANY | DESIGN_SYSTEM | EXISTING_CODE | FIGMA | MULTIPLE | UNKNOWN
   source_refs: []
   values: []
-  # - name: mobile
-  #   media_query: ""
-  #   min_width_px: null
-  #   max_width_px: null
-  #   source_ref: ""
-  #   notes: ""
   worker_override: PROPOSE_ONLY # PROPOSE_ONLY | OWNER_ALLOWED
   validation_viewports: []
 
@@ -94,26 +137,7 @@ tokens:
   other: []
 
 component_resolution: []
-# - id: button-primary
-#   figma_component: "Button"
-#   figma_node_id: ""
-#   resolution: REUSE_EXISTING # REUSE_EXISTING | REUSE_CODE_CONNECT | EXTEND_EXISTING | CREATE_SHARED | IMPLEMENT_SECTION_LOCAL | UNRESOLVED
-#   code_path: ""
-#   prop_mapping: {}
-#   consumers: []
-#   evidence: []
-#   notes: []
-
 token_resolution: []
-# - id: color-text-primary
-#   figma_variable: "Text/Primary"
-#   figma_collection: "Semantic"
-#   resolution: MAP_VARIABLE_TO_EXISTING # REUSE_EXISTING_TOKEN | MAP_VARIABLE_TO_EXISTING | CREATE_SHARED_TOKEN | KEEP_SECTION_LOCAL | PRESERVE_MODE_MAPPING | UNRESOLVED
-#   code_token: ""
-#   mode_mapping: {}
-#   consumers: []
-#   evidence: []
-#   notes: []
 
 layout:
   container_rules: []
@@ -125,13 +149,6 @@ layout:
   notes: []
 
 shared_components: []
-# Final shared component inventory produced by component_resolution.
-# - id: Button
-#   figma_node_id: ""
-#   code_path: ""
-#   code_connect: false
-#   variant_contract: []
-#   notes: []
 
 assets:
   source_policy: EXACT_WHEN_AVAILABLE
@@ -175,6 +192,9 @@ integration:
     - background_continuity
     - asset_quality
     - company_policy_compliance
+    - environment_profile_compliance
+    - input_capability_behavior
+    - safe_area_dynamic_viewport
     - section_boundary_capture
 
 unknowns: []
