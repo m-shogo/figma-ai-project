@@ -15,7 +15,7 @@
       "properties": {
         "file_key": { "type": "string" },
         "page_or_frame_node_id": { "type": "string" },
-        "auto_layout_generation": { "enum": ["LEGACY", "UPDATED_2026", "MIXED", "UNDETERMINED", "UNKNOWN"] },
+        "auto_layout_generation": { "enum": ["NONE", "LEGACY", "UPDATED_2026", "MIXED", "UNDETERMINED", "UNKNOWN"] },
         "notes": { "type": "array" }
       },
       "additionalProperties": true
@@ -115,7 +115,7 @@
           "properties": {
             "container_coverage": { "$ref": "#/$defs/coverage" },
             "absolute_child_ratio": { "$ref": "#/$defs/coverage" },
-            "generation": { "enum": ["LEGACY", "UPDATED_2026", "MIXED", "UNDETERMINED", "UNKNOWN"] }
+            "generation": { "enum": ["NONE", "LEGACY", "UPDATED_2026", "MIXED", "UNDETERMINED", "UNKNOWN"] }
           }
         }
       ]
