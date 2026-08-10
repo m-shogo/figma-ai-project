@@ -15,7 +15,7 @@ from validate_figma_profile import validate_contract  # noqa: E402
 
 def base_contract() -> dict:
     return {
-        "schema_version": 3,
+        "schema_version": 5,
         "contract_id": "CONTRACT-1",
         "reference_id": "REF-1",
         "status": "FROZEN",
@@ -68,6 +68,17 @@ class FigmaProfileTests(unittest.TestCase):
         data["figma_profile"]["variables"]["level"] = "UNKNOWN"
         errors = validate(data)
         self.assertTrue(any("variables.level=UNKNOWN" in error for error in errors), errors)
+
+    def test_undetermined_is_allowed_when_inspected_and_evidenced(self) -> None:
+        data = base_contract()
+        data["figma_profile"]["auto_layout"]["generation"] = "UNDETERMINED"
+        data["figma_profile"]["auto_layout"]["evidence"] = [
+            "layout semantics inspected; current MCP does not expose generation reliably"
+        ]
+        data["figma_profile"]["strategy_decisions"] = [
+            "Auto Layout generation undetermined; use observed node semantics and retest after MCP update"
+        ]
+        self.assertEqual(validate(data), [])
 
     def test_none_is_distinct_from_unknown_when_inspection_evidence_exists(self) -> None:
         data = base_contract()
