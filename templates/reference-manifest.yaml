@@ -1,0 +1,77 @@
+schema_version: 1
+reference_id: REF-XXXX
+status: WAITING_FOR_REFERENCE
+
+figma:
+  file_url: ""
+  file_key: ""
+  node_ids: []
+  branch_or_version: ""
+  captured_at: ""
+
+frames: []
+# Example after reference arrives:
+# frames:
+#   - id: pc-main
+#     role: PC
+#     node_id: ""
+#     figma_width: null
+#     figma_height: null
+#     acceptance_viewport:
+#       width: null
+#       height: null
+#     screenshot: ""
+#   - id: sp-main
+#     role: SP
+#     node_id: ""
+#     figma_width: null
+#     figma_height: null
+#     acceptance_viewport:
+#       width: null
+#       height: null
+#     screenshot: ""
+
+states: []
+
+structure:
+  components: []
+  component_sets: []
+  variables: []
+  typography: []
+  auto_layout_notes: []
+  annotations: []
+  dev_resources: []
+
+assets: []
+# - id: hero-image
+#   kind: image
+#   source: figma
+#   exact_asset_required: true
+#   crop_behavior: ""
+
+responsive:
+  invariants: []
+  transitions: []
+  ordering_rules: []
+  visibility_rules: []
+  wrapping_rules: []
+  container_rules: []
+  unknowns: []
+
+owner_notes: []
+material_unknowns: []
+
+code_baseline:
+  repository: ""
+  base_branch: ""
+  starting_commit: ""
+  target_route: ""
+  framework: ""
+  package_manager: ""
+  design_system_paths: []
+  token_paths: []
+
+freeze:
+  ready: false
+  frozen_at: ""
+  notes: ""
