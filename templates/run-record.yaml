@@ -1,4 +1,4 @@
-schema_version: 3
+schema_version: 4
 experiment_id: EXP-XXXX
 run_id: RUN-XXXX
 run_class: COMMON # COMMON | OPTIMIZED | REPLAY
@@ -21,6 +21,14 @@ reference:
   reference_id: REF-XXXX
   manifest_path: ""
   figma_nodes: []
+
+coordination:
+  scope: SECTION # SECTION | INTEGRATION | PAGE_BENCHMARK
+  section_id: ""
+  shared_contract_path: ""
+  shared_contract_sha256: ""
+  section_manifest_path: ""
+  foundation_commit: ""
 
 agent:
   client: "" # codex | claude-code | cursor | other
@@ -66,7 +74,7 @@ captures:
   verify: []
   final: []
 # - frame_id: pc-main
-#   viewport: "<from reference manifest>"
+#   viewport: "<from reference/shared contract>"
 #   path: ""
 #   captured_at: ""
 
