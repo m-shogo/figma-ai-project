@@ -14,7 +14,7 @@ import yaml
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_RADAR = ROOT / "research/update-radar/latest.json"
 AGENT_LANES = {"codex": "CODEX", "claude-code": "CLAUDE_CODE", "cursor": "CURSOR"}
-BASE_LANES = {"FIGMA", "MCP", "WEB_PLATFORM"}
+BASE_LANES = {"FIGMA", "MCP", "WEB_PLATFORM", "ACCESSIBILITY"}
 
 
 def load_yaml(path: Path) -> dict:
