@@ -1,4 +1,4 @@
-schema_version: 2
+schema_version: 3
 policy_id: COMPANY-POLICY-XXXX
 company: ""
 project_scope: ""
@@ -158,7 +158,6 @@ responsive:
     color_gamut_when_relevant: true
     dynamic_range_when_relevant: false
     notes: []
-  container_policy: ""
   viewport_units_policy: "" # legacy free-text field; prefer viewport_units above
   container_queries: ALLOW_WHEN_SUPPORTED # ALLOW_WHEN_SUPPORTED | FORBID | EXISTING_ONLY
   notes: []
@@ -217,6 +216,28 @@ interaction:
     scroll_jacking_allowed: false
     performance_budget_notes: []
     notes: []
+
+accessibility:
+  standard: WCAG_2_2
+  conformance: AA # A | AA | AAA | COMPANY_CUSTOM
+  semantic_html_required: true
+  keyboard_all_interactive: true
+  focus_visible_required: true
+  focus_not_obscured_required: true
+  skip_link_required_when_relevant: true
+  target_size_min_css_px: 24
+  target_size_exception_policy: WCAG_2_2
+  resize_text_percent: 200
+  reflow_400_percent_required: true
+  horizontal_scroll_exception_policy: WCAG_2_2
+  zoom_must_not_be_disabled: true
+  hover_focus_content_policy: DISMISSIBLE_HOVERABLE_PERSISTENT
+  screen_reader_smoke_required_for_complex_widgets: true
+  accessible_name_required: true
+  form_label_error_policy: REQUIRED
+  contrast_policy: WCAG_CONFORMANCE
+  live_region_policy: EXISTING_OR_SEMANTIC_FIRST
+  notes: []
 
 figma_handoff:
   read_annotations: true
@@ -311,6 +332,7 @@ integration:
     - global_overflow
     - input_capability_behavior
     - safe_area_and_dynamic_viewport
+    - accessibility_focus_and_target_size
   notes: []
 
 update_policy:
