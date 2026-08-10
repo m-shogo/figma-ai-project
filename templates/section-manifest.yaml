@@ -1,4 +1,4 @@
-schema_version: 4
+schema_version: 5
 reference_id: REF-XXXX
 page_id: ""
 shared_contract: ""
@@ -39,6 +39,9 @@ sections: []
 #   worker:
 #     status: PLANNED # PLANNED | READY | RUNNING | BLOCKED | COMPLETE
 #     parallel_group: "" # same non-empty group = intended concurrent execution
+#     isolation:
+#       mode: UNASSIGNED # UNASSIGNED | BRANCH_WORKTREE | AGENT_SANDBOX | SERIAL_SHARED_TREE | OTHER
+#       ref: "" # branch/worktree/sandbox identity; unique inside a parallel group
 #     agent: ""
 #     model: ""
 #     base_commit: ""
