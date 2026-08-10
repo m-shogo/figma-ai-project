@@ -1,0 +1,200 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
+import hashlib
+import sys
+from pathlib import Path
+from typing import Any
+
+import yaml
+
+ROOT = Path(__file__).resolve().parents[1]
+ACTIVE = {"RUNNING", "COMPLETE"}
+SECTION_SCOPES = {"SECTION", "INTEGRATION"}
+
+
+def load_yaml(path: Path) -> dict[str, Any]:
+    value = yaml.safe_load(path.read_text(encoding="utf-8"))
+    if not isinstance(value, dict):
+        raise ValueError("top-level YAML value must be an object")
+    return value
+
+
+def file_sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def repo_path(value: str) -> Path:
+    path = (ROOT / value).resolve()
+    if ROOT != path and ROOT not in path.parents:
+        raise ValueError(f"path escapes repository root: {value}")
+    return path
+
+
+def linked_file(value: str, label: str) -> tuple[Path | None, list[str]]:
+    text = value.strip()
+    if not text:
+        return None, [f"{label} is required"]
+    try:
+        path = repo_path(text)
+    except ValueError as exc:
+        return None, [str(exc)]
+    if not path.is_file():
+        return path, [f"{label} does not exist: {text}"]
+    return path, []
+
+
+def require_hash(path: Path | None, expected: str, label: str) -> list[str]:
+    errors: list[str] = []
+    if not expected.strip():
+        errors.append(f"{label} sha256 is required")
+        return errors
+    if path is None or not path.is_file():
+        return errors
+    actual = file_sha256(path)
+    if actual != expected:
+        errors.append(f"{label} sha256 mismatch: expected {expected}, actual {actual}")
+    return errors
+
+
+def candidate_runs() -> list[Path]:
+    found: list[Path] = [ROOT / "templates" / "run-record.yaml"]
+    for base in (ROOT / "experiments", ROOT / "references", ROOT / "contracts"):
+        if not base.exists():
+            continue
+        for path in sorted(base.rglob("*.yaml")):
+            if path.name == "run.yaml" or path.name.endswith("run.yaml"):
+                found.append(path)
+    return list(dict.fromkeys(found))
+
+
+def validate_run(data: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    status = str(data.get("status", "PLANNED"))
+    if status not in ACTIVE:
+        return errors
+
+    reference = data.get("reference", {})
+    coordination = data.get("coordination", {})
+    scope = str(coordination.get("scope", ""))
+
+    reference_path, link_errors = linked_file(
+        str(reference.get("manifest_path", "")), "reference.manifest_path"
+    )
+    errors.extend(link_errors)
+    errors.extend(
+        require_hash(
+            reference_path,
+            str(reference.get("manifest_sha256", "")),
+            "reference manifest",
+        )
+    )
+
+    if reference_path and reference_path.is_file():
+        try:
+            reference_data = load_yaml(reference_path)
+            if reference_data.get("reference_id") != reference.get("reference_id"):
+                errors.append("run reference_id does not match linked reference manifest")
+        except Exception as exc:
+            errors.append(f"cannot read reference manifest: {exc}")
+
+    if scope not in SECTION_SCOPES:
+        return errors
+
+    manifest_path, manifest_link_errors = linked_file(
+        str(coordination.get("section_manifest_path", "")),
+        "coordination.section_manifest_path",
+    )
+    errors.extend(manifest_link_errors)
+    errors.extend(
+        require_hash(
+            manifest_path,
+            str(coordination.get("section_manifest_sha256", "")),
+            "section manifest",
+        )
+    )
+
+    if manifest_path is None or not manifest_path.is_file():
+        return errors
+
+    try:
+        manifest = load_yaml(manifest_path)
+    except Exception as exc:
+        errors.append(f"cannot read section manifest: {exc}")
+        return errors
+
+    if manifest.get("reference_id") != reference.get("reference_id"):
+        errors.append("run reference_id does not match section manifest reference_id")
+    if manifest.get("shared_contract_sha256") != coordination.get("shared_contract_sha256"):
+        errors.append("run shared contract hash does not match section manifest")
+    if manifest.get("foundation_commit") != coordination.get("foundation_commit"):
+        errors.append("run foundation commit does not match section manifest")
+
+    if scope == "INTEGRATION":
+        return errors
+
+    section_id = str(coordination.get("section_id", "")).strip()
+    if not section_id:
+        errors.append("SECTION run requires coordination.section_id")
+        return errors
+
+    section = next(
+        (item for item in manifest.get("sections", []) if item.get("section_id") == section_id),
+        None,
+    )
+    if section is None:
+        errors.append(f"SECTION run section_id not found in manifest: {section_id}")
+        return errors
+
+    worker = section.get("worker", {})
+    isolation = worker.get("isolation", {})
+
+    if worker.get("contract_sha256") != coordination.get("shared_contract_sha256"):
+        errors.append("section worker contract_sha256 does not match run shared contract hash")
+
+    run_group = str(coordination.get("parallel_group", "")).strip()
+    worker_group = str(worker.get("parallel_group", "")).strip()
+    if run_group != worker_group:
+        errors.append(
+            f"run parallel_group {run_group!r} does not match section worker group {worker_group!r}"
+        )
+
+    run_mode = str(coordination.get("isolation_mode", "")).strip()
+    worker_mode = str(isolation.get("mode", "")).strip()
+    if run_mode != worker_mode:
+        errors.append(
+            f"run isolation_mode {run_mode!r} does not match section worker mode {worker_mode!r}"
+        )
+
+    run_ref = str(coordination.get("isolation_ref", "")).strip()
+    worker_ref = str(isolation.get("ref", "")).strip()
+    if run_ref != worker_ref:
+        errors.append(
+            f"run isolation_ref {run_ref!r} does not match section worker ref {worker_ref!r}"
+        )
+
+    return errors
+
+
+def main() -> int:
+    failures = 0
+    for path in candidate_runs():
+        try:
+            errors = validate_run(load_yaml(path))
+        except Exception as exc:
+            errors = [str(exc)]
+
+        relative = path.relative_to(ROOT)
+        if errors:
+            failures += 1
+            print(f"FAIL {relative}")
+            for error in errors:
+                print(f"  - {error}")
+        else:
+            print(f"PASS {relative}")
+
+    return 1 if failures else 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
