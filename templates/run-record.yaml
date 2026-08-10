@@ -1,10 +1,21 @@
-schema_version: 2
+schema_version: 3
 experiment_id: EXP-XXXX
 run_id: RUN-XXXX
 run_class: COMMON # COMMON | OPTIMIZED | REPLAY
 status: PLANNED # PLANNED | RUNNING | BLOCKED | COMPLETE | INVALID
 started_at: ""
 completed_at: ""
+
+tooling_preflight:
+  checked_at: ""
+  figma_release_notes_checked: false
+  figma_mcp_docs_checked: false
+  agent_docs_checked: false
+  community_scan_checked: false
+  changes_relevant_to_run: []
+  rules_to_retest: []
+  new_hypotheses: []
+  blockers_or_limits: []
 
 reference:
   reference_id: REF-XXXX
