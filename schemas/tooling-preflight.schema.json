@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/figma-ai-project/tooling-preflight.schema.json",
+  "title": "Tooling Update Preflight",
+  "type": "object",
+  "required": ["schema_version", "preflight_id", "status", "checked_at", "run_or_experiment", "figma", "agent", "field_signals", "impact", "readiness"],
+  "properties": {
+    "schema_version": {"type": "integer", "minimum": 1},
+    "preflight_id": {"type": "string", "minLength": 1},
+    "status": {"enum": ["DRAFT", "READY", "STALE"]},
+    "checked_at": {"type": "string"},
+    "run_or_experiment": {"type": "string"},
+    "figma": {
+      "type": "object",
+      "required": ["release_notes", "mcp_docs", "current_capabilities", "relevant_changes", "old_rules_to_retest"],
+      "properties": {
+        "release_notes": {"$ref": "#/$defs/singleSourceCheck"},
+        "mcp_docs": {"$ref": "#/$defs/multiSourceCheck"},
+        "current_capabilities": {"type": "array", "items": {"$ref": "#/$defs/capability"}},
+        "relevant_changes": {"type": "array"},
+        "old_rules_to_retest": {"type": "array"}
+      },
+      "additionalProperties": true
+    },
+    "agent": {
+      "type": "object",
+      "required": ["client", "model", "docs", "current_capabilities", "relevant_changes"],
+      "properties": {
+        "client": {"type": "string"},
+        "model": {"type": "string"},
+        "docs": {"$ref": "#/$defs/multiSourceCheck"},
+        "current_capabilities": {"type": "array", "items": {"$ref": "#/$defs/capability"}},
+        "relevant_changes": {"type": "array"}
+      },
+      "additionalProperties": true
+    },
+    "field_signals": {
+      "type": "object",
+      "required": ["status", "checked_sources", "recent_signals", "hypotheses_to_test", "notes"],
+      "properties": {
+        "status": {"enum": ["PENDING", "CHECKED", "UNAVAILABLE"]},
+        "checked_sources": {"type": "array"},
+        "recent_signals": {"type": "array"},
+        "hypotheses_to_test": {"type": "array"},
+        "notes": {"type": "array"}
+      },
+      "additionalProperties": true
+    },
+    "impact": {
+      "type": "object",
+      "required": ["workflow_changes_required", "retest_now", "keep_current_for_now", "blockers"],
+      "properties": {
+        "workflow_changes_required": {"type": "array"},
+        "retest_now": {"type": "array"},
+        "keep_current_for_now": {"type": "array"},
+        "blockers": {"type": "array"}
+      },
+      "additionalProperties": true
+    },
+    "readiness": {
+      "type": "object",
+      "required": ["ready_for_significant_run", "notes"],
+      "properties": {
+        "ready_for_significant_run": {"type": "boolean"},
+        "notes": {"type": "array"}
+      },
+      "additionalProperties": true
+    }
+  },
+  "$defs": {
+    "checkStatus": {"enum": ["PENDING", "CHECKED", "UNAVAILABLE"]},
+    "singleSourceCheck": {
+      "type": "object",
+      "required": ["status", "source", "observed_latest_date", "notes"],
+      "properties": {
+        "status": {"$ref": "#/$defs/checkStatus"},
+        "source": {"type": "string"},
+        "observed_latest_date": {"type": "string"},
+        "notes": {"type": "array"}
+      },
+      "additionalProperties": true
+    },
+    "multiSourceCheck": {
+      "type": "object",
+      "required": ["status", "sources", "notes"],
+      "properties": {
+        "status": {"$ref": "#/$defs/checkStatus"},
+        "sources": {"type": "array"},
+        "notes": {"type": "array"}
+      },
+      "additionalProperties": true
+    },
+    "capability": {
+      "type": "object",
+      "required": ["capability", "status", "evidence"],
+      "properties": {
+        "capability": {"type": "string", "minLength": 1},
+        "status": {"enum": ["AVAILABLE", "LIMITED", "UNAVAILABLE", "UNKNOWN"]},
+        "evidence": {"type": "array"}
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}
