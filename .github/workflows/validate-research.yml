@@ -47,6 +47,9 @@ jobs:
       - name: Validate actual Figma capability profile before contract freeze
         run: python scripts/validate_figma_profile.py
 
+      - name: Validate component and token resolution tables
+        run: python scripts/validate_resolution_tables.py
+
       - name: Validate frozen breakpoint contract semantics
         run: python scripts/validate_breakpoint_contract.py
 
