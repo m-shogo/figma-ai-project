@@ -1,4 +1,4 @@
-schema_version: 2
+schema_version: 3
 reference_id: REF-XXXX
 status: WAITING_FOR_REFERENCE
 
@@ -54,6 +54,11 @@ assets: []
 #   crop_behavior: ""
 
 responsive:
+  breakpoint_evidence:
+    source: UNKNOWN # OWNER | COMPANY | DESIGN_SYSTEM | EXISTING_CODE | FIGMA | MULTIPLE | UNKNOWN
+    source_refs: []
+    values: []
+    notes: []
   invariants: []
   transitions: []
   ordering_rules: []
