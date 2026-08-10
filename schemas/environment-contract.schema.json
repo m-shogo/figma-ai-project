@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/figma-ai-project/environment-contract.schema.json",
+  "title": "Effective Device and Browser Environment Contract",
+  "type": "object",
+  "required": ["status", "required_profiles", "canonical_profile", "runtime_detection", "foundation", "viewport", "interaction", "effective_overrides", "qa", "conflicts"],
+  "properties": {
+    "status": {"enum": ["UNRESOLVED", "RESOLVED"]},
+    "required_profiles": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "canonical_profile": {"type": "string"},
+    "runtime_detection": {
+      "type": "object",
+      "required": ["strategy", "feature_detection_required", "ua_sniffing_policy", "notes"],
+      "properties": {
+        "strategy": {"type": "string"},
+        "feature_detection_required": {"type": "boolean"},
+        "ua_sniffing_policy": {"type": "string"},
+        "notes": {"type": "array"}
+      },
+      "additionalProperties": true
+    },
+    "foundation": {
+      "type": "object",
+      "required": ["reset_source", "reset_paths", "base_paths", "environment_paths", "device_specific_full_reset", "notes"],
+      "properties": {
+        "reset_source": {"type": "string"},
+        "reset_paths": {"type": "array", "items": {"type": "string"}},
+        "base_paths": {"type": "array", "items": {"type": "string"}},
+        "environment_paths": {"type": "array", "items": {"type": "string"}},
+        "device_specific_full_reset": {"type": "boolean"},
+        "notes": {"type": "array"}
+      },
+      "additionalProperties": true
+    },
+    "viewport": {"type": "object"},
+    "interaction": {"type": "object"},
+    "effective_overrides": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["profile_id", "reset_profile", "smooth_scroll", "hover_profile", "touch_profile", "viewport_profile", "scroll_lock_profile", "animation_profile", "image_profile", "evidence"],
+        "properties": {
+          "profile_id": {"type": "string", "minLength": 1},
+          "reset_profile": {"type": "string"},
+          "smooth_scroll": {"type": "string"},
+          "hover_profile": {"type": "string"},
+          "touch_profile": {"type": "string"},
+          "viewport_profile": {"type": "string"},
+          "scroll_lock_profile": {"type": "string"},
+          "animation_profile": {"type": "string"},
+          "image_profile": {"type": "string"},
+          "evidence": {"type": "array"}
+        },
+        "additionalProperties": true
+      }
+    },
+    "qa": {
+      "type": "object",
+      "required": ["section_capture", "boundary_capture", "full_page_capture", "interaction_qa", "real_device_policy", "notes"],
+      "properties": {
+        "section_capture": {"enum": ["CANONICAL_ONLY", "CANONICAL_PLUS_DIFFERENCES", "ALL_REQUIRED"]},
+        "boundary_capture": {"enum": ["CANONICAL_ONLY", "CANONICAL_PLUS_DIFFERENCES", "ALL_REQUIRED"]},
+        "full_page_capture": {"enum": ["CANONICAL_ONLY", "CANONICAL_PLUS_DIFFERENCES", "ALL_REQUIRED"]},
+        "interaction_qa": {"enum": ["CANONICAL_ONLY", "ALL_RELEVANT_REQUIRED"]},
+        "real_device_policy": {"type": "string"},
+        "notes": {"type": "array"}
+      },
+      "additionalProperties": true
+    },
+    "conflicts": {"type": "array"}
+  },
+  "additionalProperties": true
+}
