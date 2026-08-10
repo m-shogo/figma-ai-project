@@ -37,6 +37,70 @@ def schema_errors(data: dict[str, Any]) -> list[str]:
     return [error.message for error in sorted(validator.iter_errors(data), key=lambda e: list(e.path))]
 
 
+def environment_errors(data: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    browser = data.get("browser_support", {})
+    profiles = browser.get("environment_profiles", [])
+    if not isinstance(profiles, list):
+        return ["browser_support.environment_profiles must be an array"]
+
+    ids = [str(item.get("id", "")).strip() for item in profiles if isinstance(item, dict)]
+    if len(ids) != len(set(ids)):
+        errors.append("environment profile ids must be unique")
+
+    runtime = browser.get("runtime_detection", {})
+    if runtime.get("feature_detection_required") is not True:
+        errors.append("runtime detection must require feature detection")
+    if runtime.get("width_only_device_classification_forbidden") is not True:
+        errors.append("width-only device classification must be forbidden")
+
+    required_profiles = [item for item in profiles if isinstance(item, dict) and item.get("role") == "REQUIRED"]
+    if data.get("status") == "ACTIVE" and not required_profiles:
+        errors.append("ACTIVE Company Policy requires at least one REQUIRED environment profile")
+
+    required_ids = {str(item.get("id", "")).strip() for item in required_profiles}
+    canonical = str(data.get("visual_tolerance", {}).get("canonical_environment_profile", "")).strip()
+    if data.get("status") == "ACTIVE":
+        if not canonical:
+            errors.append("ACTIVE Company Policy requires visual_tolerance.canonical_environment_profile")
+        elif canonical not in required_ids:
+            errors.append("canonical_environment_profile must reference a REQUIRED environment profile")
+
+    responsive = data.get("responsive", {})
+    input_queries = responsive.get("input_capability_queries", {})
+    if input_queries.get("hover_pointer_required") is not True:
+        errors.append("responsive policy must require hover/pointer capability queries")
+    if input_queries.get("width_only_hover_inference_forbidden") is not True:
+        errors.append("responsive policy must forbid inferring hover from viewport width")
+
+    viewport_meta = responsive.get("viewport_meta", {})
+    safe_area = responsive.get("safe_area", {})
+    if viewport_meta.get("viewport_fit") == "COVER" and safe_area.get("policy") == "NONE":
+        errors.append("viewport-fit=cover requires a safe-area policy")
+
+    css = data.get("css", {})
+    layers = css.get("foundation_layers", {})
+    if layers:
+        if layers.get("reset_required") is not True or layers.get("base_required") is not True:
+            errors.append("Foundation must include shared reset and base layers")
+        if layers.get("environment_required") is not True:
+            errors.append("Foundation must include an environment adaptation layer")
+        if layers.get("focus_styles_may_be_removed") is True:
+            errors.append("Company Policy must not allow unconditional removal of focus styles")
+
+    interaction = data.get("interaction", {})
+    smooth = interaction.get("smooth_scroll", {})
+    if smooth.get("required_for_anchor_navigation") is True and smooth.get("respect_reduced_motion") is not True:
+        errors.append("required smooth scrolling must respect prefers-reduced-motion")
+    touch = interaction.get("touch", {})
+    if touch.get("browser_gestures_preserved_by_default") is not True:
+        errors.append("browser touch gestures must be preserved by default")
+    if touch.get("touch_action_none_requires_evidence") is not True:
+        errors.append("touch-action:none must require evidence")
+
+    return errors
+
+
 def semantic_policy_errors(data: dict[str, Any]) -> list[str]:
     errors: list[str] = []
     precedence = data.get("precedence", {}).get("implementation_constraints", [])
@@ -52,6 +116,8 @@ def semantic_policy_errors(data: dict[str, Any]) -> list[str]:
         update = data.get("update_policy", {})
         if update.get("significant_run_preflight") is not True:
             errors.append("ACTIVE Company Policy requires significant_run_preflight=true")
+
+    errors.extend(environment_errors(data))
     return errors
 
 
