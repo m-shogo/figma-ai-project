@@ -1,0 +1,219 @@
+schema_version: 1
+policy_id: COMPANY-POLICY-XXXX
+company: ""
+project_scope: ""
+status: DRAFT # DRAFT | ACTIVE | SUPERSEDED
+created_at: ""
+updated_at: ""
+
+precedence:
+  implementation_constraints:
+    - COMPANY_POLICY
+    - EXISTING_CODEBASE
+    - FIGMA_IMPLEMENTATION_EVIDENCE
+    - AGENT_INFERENCE
+  visual_design_source: FIGMA_REFERENCE
+  conflict_policy: RECORD_AND_ESCALATE # RECORD_AND_ESCALATE | OWNER_DECIDES
+  notes: []
+
+browser_support:
+  browserslist: []
+  # Example only after company approval:
+  # - "> 0.5%"
+  # - "last 2 versions"
+  # - "Firefox ESR"
+  # - "not dead"
+  explicit_minimums: []
+  test_matrix: []
+  mobile_devices: []
+  webviews: []
+  javascript_required: true
+  progressive_enhancement: REQUIRED # REQUIRED | PREFERRED | OPTIONAL
+  unsupported_behavior: DOCUMENT # DOCUMENT | BLOCK | BEST_EFFORT
+  notes: []
+
+stack:
+  frameworks_allowed: []
+  cms_allowed: []
+  package_manager: ""
+  build_tool: ""
+  language_policy: []
+  notes: []
+
+project_structure:
+  source_root: ""
+  section_unit: ADAPT_TO_STACK # ADAPT_TO_STACK | COMPONENT | TEMPLATE_PART | ACF_BLOCK | INCLUDE | OTHER
+  folder_rules: []
+  naming_rules: []
+  shared_paths: []
+  section_paths: []
+  generated_paths: []
+  forbidden_patterns: []
+  notes: []
+
+css:
+  strategy: EXISTING_PROJECT_FIRST
+  reset_policy: EXISTING_FIRST # EXISTING_FIRST | COMPANY_RESET | MODERN_NORMALIZE | NORMALIZE | NONE
+  reset_path: ""
+  box_sizing_border_box: true
+  scss_allowed: false
+  custom_properties_for_shared_tokens: true
+  nesting_policy: ""
+  specificity_policy: ""
+  utility_policy: ""
+  notes: []
+
+responsive:
+  breakpoint_source: COMPANY_OR_EXISTING
+  breakpoints: []
+  container_policy: ""
+  viewport_units_policy: ""
+  container_queries: ALLOW_WHEN_SUPPORTED # ALLOW_WHEN_SUPPORTED | FORBID | EXISTING_ONLY
+  notes: []
+
+interaction:
+  smooth_scroll:
+    required_for_anchor_navigation: true
+    implementation: NATIVE_CSS_FIRST # NATIVE_CSS_FIRST | EXISTING_LIBRARY | CUSTOM
+    respect_reduced_motion: true
+    fixed_header_offset_required: true
+    notes: []
+  hover:
+    required_when_specified: true
+    hover_capability_gate: true
+    keyboard_focus_equivalent: true
+    touch_fallback_required: true
+    notes: []
+  hamburger_navigation:
+    pattern: DISCLOSURE_NAVIGATION # DISCLOSURE_NAVIGATION | MODAL_DRAWER | EXISTING
+    escape_closes: true
+    restore_focus: true
+    body_scroll_lock_when_overlay: true
+    use_aria_menu_role: false
+    notes: []
+  carousel:
+    simple_preference: CSS_SCROLL_SNAP
+    complex_preference: APPROVED_LIBRARY
+    approved_libraries: []
+    autoplay_default: false
+    pause_control_if_autoplay: true
+    pause_on_focus_if_autoplay: true
+    pause_on_hover_if_autoplay: true
+    reduced_motion_disables_autoplay: true
+    keyboard_operable: true
+    notes: []
+  animation:
+    simple_preference: CSS
+    react_preference: EXISTING_OR_MOTION
+    complex_scroll_preference: EXISTING_OR_GSAP
+    approved_libraries: []
+    reduced_motion_required: true
+    scroll_jacking_allowed: false
+    performance_budget_notes: []
+    notes: []
+
+figma_handoff:
+  read_annotations: true
+  read_prototype_interactions: true
+  read_comments_when_accessible: true
+  comments_are_authoritative: false
+  annotation_priority: IMPLEMENTATION_EVIDENCE
+  comment_priority: SUPPLEMENTARY_EVIDENCE
+  cross_section_comment_policy: GLOBAL_OR_BOUNDARY_EVIDENCE
+  dev_resources: true
+  unresolved_instruction_policy: RECORD_CONFLICT
+  notes: []
+
+cms:
+  wordpress:
+    enabled: false
+    theme_type: UNKNOWN # CLASSIC | BLOCK | HYBRID | UNKNOWN
+    acf_enabled: false
+    acf_architecture: EXISTING_PROJECT # EXISTING_PROJECT | ACF_BLOCKS | TEMPLATE_FIELDS | FLEXIBLE_CONTENT | HYBRID
+    acf_block_api_version: ""
+    image_field_return_format: ID # ID | ARRAY | URL | EXISTING_PROJECT
+    escape_output: true
+    template_part_policy: ""
+    flexible_content_policy: ""
+    repeater_policy: ""
+    block_bindings_policy: ""
+    notes: []
+
+images:
+  exact_source_preferred: true
+  responsive_images_required: true
+  intrinsic_dimensions_required: true
+  alt_required: true
+  lazy_loading_policy: BELOW_FOLD
+  priority_image_policy: EXPLICIT
+  picture_for_art_direction: true
+  object_fit_allowed: true
+  focal_point_policy: PRESERVE_REFERENCE
+  svg_policy: ""
+  formats_allowed: []
+  wordpress_attachment_id_preferred: true
+  notes: []
+
+gradients:
+  structured_figma_paint_required_when_available: true
+  capture_type: true
+  capture_handles_or_transform: true
+  capture_stops: true
+  capture_stop_alpha: true
+  capture_layer_opacity: true
+  capture_blend_mode: true
+  variable_binding_when_available: true
+  screenshot_only_inference: LAST_RESORT
+  browser_color_space_policy: COMPANY_BROWSER_SUPPORT
+  notes: []
+
+visual_tolerance:
+  canonical_browser: ""
+  canonical_os: ""
+  canonical_dpr: null
+  geometry_css_px: 1.0
+  isolated_geometry_css_px_max: 2.0
+  repeated_drift_is_failure: true
+  text_wrap_must_match: true
+  typography_block_geometry_must_match: true
+  antialiasing_pixel_diff_ignored: true
+  gradient_shadow_raster_policy: PERCEPTUAL_DIFF
+  owner_override_allowed: true
+  notes: []
+
+integration:
+  section_capture_required: true
+  boundary_capture_required: true
+  full_page_capture_required: true
+  adjacent_boundary_default: true
+  high_coupling_cluster_capture: true
+  cumulative_capture_optional: true
+  required_checks:
+    - section_order
+    - boundary_spacing
+    - container_alignment
+    - background_continuity
+    - typography_continuity
+    - z_index_continuity
+    - responsive_continuity
+    - global_overflow
+  notes: []
+
+update_policy:
+  significant_run_preflight: true
+  periodic_review_cadence: QUARTERLY # MONTHLY | QUARTERLY | RELEASE_TRIGGERED | MANUAL
+  release_triggered_retest: true
+  sources:
+    - Figma release notes
+    - Figma developer/MCP docs
+    - MDN / web platform compatibility
+    - W3C/WAI accessibility guidance
+    - WordPress/ACF official docs when applicable
+    - approved library official changelogs/docs
+  community_sources_allowed: true
+  community_signal_requires_validation: true
+  notes: []
+
+unknowns: []
+conflicts: []
+approvals: []
