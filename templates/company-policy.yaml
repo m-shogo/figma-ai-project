@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 policy_id: COMPANY-POLICY-XXXX
 company: ""
 project_scope: ""
@@ -18,15 +18,60 @@ precedence:
 
 browser_support:
   browserslist: []
-  # Example only after company approval:
-  # - "> 0.5%"
-  # - "last 2 versions"
-  # - "Firefox ESR"
-  # - "not dead"
   explicit_minimums: []
   test_matrix: []
-  mobile_devices: []
-  webviews: []
+  mobile_devices: [] # legacy/simple inventory; environment_profiles is canonical for device-specific behavior
+  webviews: [] # legacy/simple inventory; environment_profiles is canonical for device-specific behavior
+  environment_profiles: []
+  # - id: ios-safari-touch
+  #   role: REQUIRED # REQUIRED | SUPPORTED | BEST_EFFORT
+  #   device_class: MOBILE # DESKTOP | LAPTOP | TABLET | MOBILE | FOLDABLE | TV | OTHER
+  #   os: iOS
+  #   os_version: ""
+  #   browser: Safari
+  #   browser_version: ""
+  #   engine: WebKit
+  #   webview: false
+  #   viewport:
+  #     width_css_px: null
+  #     height_css_px: null
+  #     orientation: BOTH # PORTRAIT | LANDSCAPE | BOTH | ANY
+  #     dpr: null
+  #   input:
+  #     primary_hover: NONE # HOVER | NONE | UNKNOWN
+  #     any_hover: NONE # HOVER | NONE | UNKNOWN
+  #     primary_pointer: COARSE # FINE | COARSE | NONE | UNKNOWN
+  #     any_pointer: COARSE # FINE | COARSE | MULTIPLE | NONE | UNKNOWN
+  #     touch: true
+  #   environment:
+  #     safe_area: REQUIRED # REQUIRED | TEST | NOT_REQUIRED | UNKNOWN
+  #     dynamic_viewport: REQUIRED # REQUIRED | TEST | NOT_REQUIRED | UNKNOWN
+  #     virtual_keyboard: TEST # REQUIRED | TEST | NOT_REQUIRED | UNKNOWN
+  #     color_gamut: UNKNOWN # SRGB | P3 | REC2020 | UNKNOWN
+  #     forced_colors: UNKNOWN # REQUIRED | TEST | NOT_REQUIRED | UNKNOWN
+  #   qa:
+  #     real_device: REQUIRED # REQUIRED | PREFERRED | OPTIONAL
+  #     emulation: SUPPLEMENTARY # ALLOWED | SUPPLEMENTARY | FORBIDDEN
+  #     visual: true
+  #     interaction: true
+  #     keyboard: false
+  #   overrides:
+  #     reset_profile: BASE_PLUS_ENVIRONMENT
+  #     smooth_scroll: INHERIT # INHERIT | ENABLED | DISABLED | CUSTOM
+  #     hover_profile: TOUCH_FIRST
+  #     touch_profile: BROWSER_NATIVE
+  #     viewport_profile: DYNAMIC_SAFE_AREA
+  #     scroll_lock_profile: MOBILE_OVERLAY
+  #     animation_profile: INHERIT
+  #     image_profile: INHERIT
+  #   notes: []
+  runtime_detection:
+    default: CAPABILITY_FIRST # CAPABILITY_FIRST | FEATURE_FIRST | COMPANY_EXPLICIT
+    feature_detection_required: true
+    css_supports_preferred: true
+    ua_sniffing: BUG_FIX_ONLY # FORBID | BUG_FIX_ONLY | COMPANY_ALLOWED
+    width_only_device_classification_forbidden: true
+    notes: []
   javascript_required: true
   progressive_enhancement: REQUIRED # REQUIRED | PREFERRED | OPTIONAL
   unsupported_behavior: DOCUMENT # DOCUMENT | BLOCK | BEST_EFFORT
@@ -55,6 +100,19 @@ css:
   strategy: EXISTING_PROJECT_FIRST
   reset_policy: EXISTING_FIRST # EXISTING_FIRST | COMPANY_RESET | MODERN_NORMALIZE | NORMALIZE | NONE
   reset_path: ""
+  foundation_layers:
+    reset_required: true
+    base_required: true
+    environment_required: true
+    tokens_required: true
+    device_specific_full_reset: false
+    environment_overrides_allowed: true
+    focus_styles_may_be_removed: false
+    form_controls_font_inherit: true
+    text_size_adjust_policy: EXISTING_OR_ENVIRONMENT_PROFILE
+    appearance_policy: EXISTING_OR_COMPONENT
+    scrollbar_layout_shift_policy: TEST_TARGET_MATRIX
+    notes: []
   box_sizing_border_box: true
   scss_allowed: false
   custom_properties_for_shared_tokens: true
@@ -67,7 +125,41 @@ responsive:
   breakpoint_source: COMPANY_OR_EXISTING
   breakpoints: []
   container_policy: ""
-  viewport_units_policy: ""
+  viewport_meta:
+    width_device_width: true
+    initial_scale: 1.0
+    viewport_fit: AUTO # AUTO | CONTAIN | COVER
+    interactive_widget: DEFAULT # DEFAULT | RESIZES_VISUAL | RESIZES_CONTENT | OVERLAYS_CONTENT
+    notes: []
+  viewport_units:
+    policy: DYNAMIC_WHEN_NEEDED # EXISTING | LEGACY_VH | DYNAMIC_WHEN_NEEDED | COMPANY_EXPLICIT
+    allow_svh_lvh_dvh: true
+    fallback_required_by_target_matrix: true
+    notes: []
+  safe_area:
+    policy: APPLY_WHEN_NEEDED # APPLY_WHEN_NEEDED | ALWAYS_FOR_COVER | EXISTING_ONLY | NONE
+    fallback_required: true
+    notes: []
+  virtual_keyboard:
+    policy: TEST_INTERACTIVE_UI # TEST_INTERACTIVE_UI | VISUAL_VIEWPORT_WHEN_NEEDED | EXISTING_ONLY | IGNORE
+    notes: []
+  input_capability_queries:
+    hover_pointer_required: true
+    any_hover_pointer_when_secondary_input_matters: true
+    width_only_hover_inference_forbidden: true
+    notes: []
+  user_preference_queries:
+    reduced_motion_required: true
+    contrast_when_relevant: true
+    forced_colors_when_relevant: true
+    color_scheme_when_relevant: true
+    notes: []
+  output_capability_queries:
+    color_gamut_when_relevant: true
+    dynamic_range_when_relevant: false
+    notes: []
+  container_policy: ""
+  viewport_units_policy: "" # legacy free-text field; prefer viewport_units above
   container_queries: ALLOW_WHEN_SUPPORTED # ALLOW_WHEN_SUPPORTED | FORBID | EXISTING_ONLY
   notes: []
 
@@ -77,12 +169,25 @@ interaction:
     implementation: NATIVE_CSS_FIRST # NATIVE_CSS_FIRST | EXISTING_LIBRARY | CUSTOM
     respect_reduced_motion: true
     fixed_header_offset_required: true
+    per_environment_override_allowed: true
+    polyfill_only_if_policy_requires: true
     notes: []
   hover:
     required_when_specified: true
     hover_capability_gate: true
     keyboard_focus_equivalent: true
     touch_fallback_required: true
+    primary_vs_any_input_distinguished: true
+    notes: []
+  touch:
+    browser_gestures_preserved_by_default: true
+    touch_action_none_requires_evidence: true
+    pinch_zoom_must_not_be_disabled_without_requirement: true
+    notes: []
+  scroll_lock:
+    body_lock_strategy: EXISTING_OR_ENVIRONMENT_PROFILE
+    overscroll_behavior_requires_target_check: true
+    visual_viewport_check_for_keyboard_overlays: true
     notes: []
   hamburger_navigation:
     pattern: DISCLOSURE_NAVIGATION # DISCLOSURE_NAVIGATION | MODAL_DRAWER | EXISTING
@@ -101,6 +206,7 @@ interaction:
     pause_on_hover_if_autoplay: true
     reduced_motion_disables_autoplay: true
     keyboard_operable: true
+    touch_gesture_qa_required: true
     notes: []
   animation:
     simple_preference: CSS
@@ -152,6 +258,8 @@ images:
   svg_policy: ""
   formats_allowed: []
   wordpress_attachment_id_preferred: true
+  per_environment_profile_allowed: true
+  color_gamut_sensitive_assets: RECORD_WHEN_RELEVANT
   notes: []
 
 gradients:
@@ -165,12 +273,15 @@ gradients:
   variable_binding_when_available: true
   screenshot_only_inference: LAST_RESORT
   browser_color_space_policy: COMPANY_BROWSER_SUPPORT
+  output_gamut_qa_when_relevant: true
   notes: []
 
 visual_tolerance:
   canonical_browser: ""
   canonical_os: ""
   canonical_dpr: null
+  canonical_environment_profile: ""
+  environment_specific_baselines_allowed: true
   geometry_css_px: 1.0
   isolated_geometry_css_px_max: 2.0
   repeated_drift_is_failure: true
@@ -188,6 +299,7 @@ integration:
   adjacent_boundary_default: true
   high_coupling_cluster_capture: true
   cumulative_capture_optional: true
+  per_environment_capture_required_for_required_profiles: true
   required_checks:
     - section_order
     - boundary_spacing
@@ -197,12 +309,16 @@ integration:
     - z_index_continuity
     - responsive_continuity
     - global_overflow
+    - input_capability_behavior
+    - safe_area_and_dynamic_viewport
   notes: []
 
 update_policy:
   significant_run_preflight: true
   periodic_review_cadence: QUARTERLY # MONTHLY | QUARTERLY | RELEASE_TRIGGERED | MANUAL
   release_triggered_retest: true
+  environment_matrix_retest_on_browser_major: true
+  environment_matrix_retest_on_os_major: true
   sources:
     - Figma release notes
     - Figma developer/MCP docs
