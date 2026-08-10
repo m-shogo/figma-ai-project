@@ -30,17 +30,31 @@
     },
     "reference": {
       "type": "object",
-      "required": ["reference_id", "manifest_path", "figma_nodes"],
+      "required": ["reference_id", "manifest_path", "manifest_sha256", "figma_nodes"],
       "properties": {
         "reference_id": { "type": "string", "minLength": 1 },
         "manifest_path": { "type": "string" },
+        "manifest_sha256": { "type": "string" },
         "figma_nodes": { "type": "array", "items": { "type": "string" } }
       },
       "additionalProperties": true
     },
     "coordination": {
       "type": "object",
-      "required": ["scope", "section_id", "parallel_group", "shared_contract_path", "shared_contract_sha256", "section_manifest_path", "foundation_commit"],
+      "required": [
+        "scope",
+        "section_id",
+        "parallel_group",
+        "shared_contract_path",
+        "shared_contract_sha256",
+        "section_manifest_path",
+        "section_manifest_sha256",
+        "figma_structure_profile_path",
+        "figma_structure_profile_sha256",
+        "foundation_commit",
+        "isolation_mode",
+        "isolation_ref"
+      ],
       "properties": {
         "scope": { "enum": ["SECTION", "INTEGRATION", "PAGE_BENCHMARK"] },
         "section_id": { "type": "string" },
@@ -48,7 +62,12 @@
         "shared_contract_path": { "type": "string" },
         "shared_contract_sha256": { "type": "string" },
         "section_manifest_path": { "type": "string" },
-        "foundation_commit": { "type": "string" }
+        "section_manifest_sha256": { "type": "string" },
+        "figma_structure_profile_path": { "type": "string" },
+        "figma_structure_profile_sha256": { "type": "string" },
+        "foundation_commit": { "type": "string" },
+        "isolation_mode": { "enum": ["", "BRANCH_WORKTREE", "AGENT_SANDBOX", "SERIAL_SHARED_TREE", "OTHER"] },
+        "isolation_ref": { "type": "string" }
       },
       "additionalProperties": true
     },
