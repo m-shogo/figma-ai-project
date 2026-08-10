@@ -1,4 +1,4 @@
-schema_version: 5
+schema_version: 6
 reference_id: REF-XXXX
 page_id: ""
 shared_contract: ""
@@ -38,10 +38,13 @@ sections: []
 #     shared_files_read_only: true
 #   worker:
 #     status: PLANNED # PLANNED | READY | RUNNING | BLOCKED | COMPLETE
-#     parallel_group: "" # same non-empty group = intended concurrent execution
+#     parallel_group: "" # same non-empty group = intended concurrent execution wave
+#     contract_sha256: "" # exact Shared Contract hash this worker output was built against
 #     isolation:
 #       mode: UNASSIGNED # UNASSIGNED | BRANCH_WORKTREE | AGENT_SANDBOX | SERIAL_SHARED_TREE | OTHER
-#       ref: "" # branch/worktree/sandbox identity; unique inside a parallel group
+#       ref: "" # branch/worktree/sandbox identity; unique inside a concurrent group
+#       parallel_safe: false # OTHER requires explicit true + notes before concurrent use
+#       notes: []
 #     agent: ""
 #     model: ""
 #     base_commit: ""
