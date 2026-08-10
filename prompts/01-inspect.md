@@ -1,61 +1,80 @@
-# Phase 01 — Inspect
+# Phase 01 — Section Inspect
 
-目的: **コードを触る前に、referenceと既存codebaseの実装契約を作る。**
+目的: **担当sectionだけを、frozen shared contractとverified foundation上で実装できる状態まで理解する。**
 
 このphaseではコード変更禁止。
 
 ## Prompt
 
 ```text
-Inspect the frozen Figma reference and the existing codebase for this reproduction run.
+Inspect only the assigned Figma section for this reproduction run.
 
 Do not edit code in this phase.
+Do not inspect unrelated sections unless needed to resolve a shared dependency.
 Do not redesign, simplify, or improve the reference.
-Do not invent missing design values when they can be retrieved from Figma or the repository.
+Do not invent shared values or breakpoints.
 
 Inputs:
-- experiment/run metadata: <RUN_RECORD>
-- reference contract: <REFERENCE_MANIFEST>
-- Figma target: <FIGMA_URL / NODE_IDS>
-- context tier: <CONTEXT_TIER>
-- starting code commit: <STARTING_COMMIT>
+- run record: <RUN_RECORD>
+- frozen reference manifest: <REFERENCE_MANIFEST>
+- frozen shared contract: <SHARED_CONTRACT>
+- shared contract SHA-256: <SHARED_CONTRACT_HASH>
+- section manifest entry: <SECTION_ENTRY>
+- verified foundation commit: <FOUNDATION_COMMIT>
+- exact Figma section node(s): <SECTION_NODE_IDS>
 - target route: <TARGET_ROUTE>
 
-Figma inspection:
-1. Retrieve structured design context for the exact target node(s).
-2. If the result is too large/truncated, map structure first and fetch only relevant child nodes.
-3. Inspect relevant components, variants/properties, variables/tokens, typography, Auto Layout/sizing, assets, annotations, and states available under this context tier.
-4. Capture/inspect the exact reference screenshots required by the manifest.
-5. Identify PC/SP or other responsive invariants from the provided reference; mark anything genuinely unresolved as UNKNOWN instead of guessing.
+Preflight consistency:
+1. Confirm the run uses the expected shared contract hash.
+2. Confirm code starts from the verified foundation commit.
+3. Confirm the section ID/node IDs match the section manifest.
+4. Confirm allowed write paths and shared read-only paths.
+
+Figma section inspection:
+1. Retrieve structured design context for the exact section node(s).
+2. If the section is still large, inspect child nodes progressively instead of requesting the entire page.
+3. Inspect section-local:
+   - component instances / variants / properties
+   - relevant variables/tokens
+   - typography
+   - Auto Layout / Grid / fixed-hug-fill / min-max behavior
+   - exact assets / crop
+   - states / interactions / annotations
+4. Inspect exact PC/SP section screenshots.
+5. Describe what changes at the shared breakpoint(s).
+
+Breakpoint rule:
+- Use the Shared Contract values exactly.
+- Do not infer or propose a different threshold just because the section might look better elsewhere.
+- If the specified breakpoint appears to create a material issue, record evidence for PROPOSE_BREAKPOINT_EXCEPTION; do not implement it.
 
 Codebase inspection:
-1. Identify the existing target route/page entrypoint.
-2. Find existing components that correspond to the Figma design.
-3. Find existing tokens/theme/utilities that should be reused.
-4. Find existing layout/routing/state/data patterns that must be preserved.
-5. Do not create a parallel design system.
+1. Inspect only relevant existing shared components/tokens/helpers and target section files.
+2. Identify exact shared components to reuse.
+3. Confirm no duplicate component/token is needed.
+4. Confirm the section can be implemented inside allowed paths.
 
-Return an implementation brief with exactly these sections:
-- Reference summary
-- Existing code reuse map
-- Responsive invariants
-- Exact assets to reuse
-- States/behaviors to preserve
+Return exactly:
+- Section reference summary
+- Shared dependencies to reuse
+- Section-local component/layout plan
+- Responsive behavior at shared breakpoint(s)
+- Exact assets/crop
+- States/behaviors
 - Material UNKNOWNs
-- Risks likely to cause visual/structural drift
-- Proposed implementation boundaries
-
-Also report the evidence/context you actually inspected so the run is reproducible.
+- Proposed shared changes, if any
+- Proposed breakpoint exception, if any
+- Risks likely to cause mismatch
+- Evidence/context actually inspected
 
 Stop after the brief. Do not implement yet.
 ```
 
 ## Pass condition
 
-Inspect phase is usable when:
-
-- target reference is correctly identified
-- existing reuse candidates are listed
-- important responsive rules are explicit or marked UNKNOWN
-- no design values were silently invented
+- exact section/reference is identified
+- contract hash/foundation are confirmed
+- shared dependencies are mapped
+- responsive behavior uses the shared breakpoint contract
+- no shared value/breakpoint was silently invented
 - no code was changed
