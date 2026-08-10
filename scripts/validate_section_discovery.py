@@ -2,14 +2,14 @@
 from __future__ import annotations
 
 import sys
-from collections import defaultdict
 from pathlib import Path
 from typing import Any
 
 import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
-ACTIVE = {"READY", "RUNNING", "COMPLETE"}
+RECORDED = {"READY", "RUNNING", "COMPLETE"}
+EXECUTING = {"READY", "RUNNING"}
 
 
 def load_yaml(path: Path) -> dict[str, Any]:
@@ -33,14 +33,12 @@ def candidate_manifests() -> list[Path]:
 def validate_manifest(path: Path) -> list[str]:
     data = load_yaml(path)
     errors: list[str] = []
-    groups: dict[str, list[tuple[int, str, dict[str, Any]]]] = defaultdict(list)
 
     for index, section in enumerate(data.get("sections", [])):
         section_id = str(section.get("section_id", f"index-{index}"))
         figma = section.get("figma", {})
         worker = section.get("worker", {})
         status = str(worker.get("status", "PLANNED"))
-        group = str(worker.get("parallel_group", "")).strip()
 
         boundary_confidence = str(figma.get("boundary_confidence", "LOW"))
         boundary_evidence = figma.get("boundary_evidence", [])
@@ -48,46 +46,40 @@ def validate_manifest(path: Path) -> list[str]:
         mapping_evidence = figma.get("mapping_evidence", [])
         sp_node_id = str(figma.get("sp_node_id", "")).strip()
 
-        if status in ACTIVE:
+        if status in RECORDED:
             if boundary_confidence in {"HIGH", "MEDIUM"}:
                 if not isinstance(boundary_evidence, list) or not boundary_evidence:
                     errors.append(
                         f"sections[{index}] {section_id}: {boundary_confidence} boundary confidence "
                         "requires non-empty boundary_evidence"
                     )
+
             if mapping_confidence in {"HIGH", "MEDIUM"}:
                 if not isinstance(mapping_evidence, list) or not mapping_evidence:
                     errors.append(
                         f"sections[{index}] {section_id}: {mapping_confidence} PC/SP mapping confidence "
                         "requires non-empty mapping_evidence"
                     )
+                if not sp_node_id:
+                    errors.append(
+                        f"sections[{index}] {section_id}: {mapping_confidence} PC/SP mapping requires sp_node_id"
+                    )
+
             if mapping_confidence == "NOT_APPLICABLE" and sp_node_id:
                 errors.append(
                     f"sections[{index}] {section_id}: mapping is NOT_APPLICABLE but sp_node_id is present"
                 )
-            if mapping_confidence in {"HIGH", "MEDIUM"} and not sp_node_id:
-                errors.append(
-                    f"sections[{index}] {section_id}: {mapping_confidence} PC/SP mapping requires sp_node_id"
-                )
 
-            if group:
-                groups[group].append((index, section_id, figma))
-
-    for group, members in sorted(groups.items()):
-        if len(members) <= 1:
-            continue
-        for _, section_id, figma in members:
-            boundary_confidence = str(figma.get("boundary_confidence", "LOW"))
-            mapping_confidence = str(figma.get("pc_sp_mapping_confidence", "LOW"))
+        if status in EXECUTING:
             if boundary_confidence == "LOW":
                 errors.append(
-                    f"parallel group {group}: {section_id} has LOW boundary confidence; "
-                    "resolve or isolate it before concurrent execution"
+                    f"sections[{index}] {section_id}: LOW boundary confidence cannot enter {status}; "
+                    "deepen Figma evidence or obtain owner confirmation first"
                 )
             if mapping_confidence == "LOW":
                 errors.append(
-                    f"parallel group {group}: {section_id} has LOW PC/SP mapping confidence; "
-                    "resolve or isolate it before concurrent execution"
+                    f"sections[{index}] {section_id}: LOW PC/SP mapping confidence cannot enter {status}; "
+                    "deepen mapping evidence or obtain owner confirmation first"
                 )
 
     return errors
