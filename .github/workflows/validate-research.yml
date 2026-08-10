@@ -44,6 +44,9 @@ jobs:
       - name: Validate reference, shared, section, and run records
         run: python scripts/validate_records.py
 
+      - name: Validate frozen breakpoint contract semantics
+        run: python scripts/validate_breakpoint_contract.py
+
       - name: Validate section discovery evidence and mapping confidence
         run: python scripts/validate_section_discovery.py
 
@@ -53,5 +56,5 @@ jobs:
       - name: Validate parallel worker git and sandbox isolation
         run: python scripts/validate_parallel_isolation.py
 
-      - name: Test section execution planner
+      - name: Test section execution planner and validators
         run: python -m unittest discover -s tests -p 'test_*.py'
