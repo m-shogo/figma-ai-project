@@ -56,5 +56,8 @@ jobs:
       - name: Validate parallel worker git and sandbox isolation
         run: python scripts/validate_parallel_isolation.py
 
+      - name: Validate immutable run evidence lineage
+        run: python scripts/validate_run_lineage.py
+
       - name: Test section execution planner and validators
         run: python -m unittest discover -s tests -p 'test_*.py'
