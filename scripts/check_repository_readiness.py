@@ -37,6 +37,7 @@ CHECKS: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("parallel_paths", ("scripts/validate_parallel_paths.py",)),
     ("parallel_isolation", ("scripts/validate_parallel_isolation.py",)),
     ("run_lineage", ("scripts/validate_run_lineage.py",)),
+    ("capture_environment", ("scripts/validate_capture_environment.py",)),
     ("unit_tests", ("-m", "unittest", "discover", "-s", "tests", "-p", "test_*.py")),
 )
 
