@@ -3,7 +3,7 @@
   "$id": "https://example.invalid/figma-ai-project/shared-contract.schema.json",
   "title": "Figma AI Shared Implementation Contract",
   "type": "object",
-  "required": ["schema_version", "contract_id", "reference_id", "status", "figma_profile", "codebase", "styling", "breakpoints", "fonts", "tokens", "layout", "shared_components", "assets", "accessibility", "foundation", "parallel_execution", "integration", "unknowns", "conflicts", "freeze"],
+  "required": ["schema_version", "contract_id", "reference_id", "status", "figma_profile", "codebase", "styling", "breakpoints", "fonts", "tokens", "component_resolution", "token_resolution", "layout", "shared_components", "assets", "accessibility", "foundation", "parallel_execution", "integration", "unknowns", "conflicts", "freeze"],
   "properties": {
     "schema_version": { "type": "integer", "minimum": 1 },
     "contract_id": { "type": "string", "minLength": 1 },
@@ -146,6 +146,44 @@
     },
     "fonts": { "type": "object" },
     "tokens": { "type": "object" },
+    "component_resolution": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "figma_component", "figma_node_id", "resolution", "code_path", "prop_mapping", "consumers", "evidence", "notes"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "figma_component": { "type": "string" },
+          "figma_node_id": { "type": "string" },
+          "resolution": { "enum": ["REUSE_EXISTING", "REUSE_CODE_CONNECT", "EXTEND_EXISTING", "CREATE_SHARED", "IMPLEMENT_SECTION_LOCAL", "UNRESOLVED"] },
+          "code_path": { "type": "string" },
+          "prop_mapping": { "type": "object" },
+          "consumers": { "type": "array" },
+          "evidence": { "type": "array" },
+          "notes": { "type": "array" }
+        },
+        "additionalProperties": true
+      }
+    },
+    "token_resolution": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "figma_variable", "figma_collection", "resolution", "code_token", "mode_mapping", "consumers", "evidence", "notes"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "figma_variable": { "type": "string" },
+          "figma_collection": { "type": "string" },
+          "resolution": { "enum": ["REUSE_EXISTING_TOKEN", "MAP_VARIABLE_TO_EXISTING", "CREATE_SHARED_TOKEN", "KEEP_SECTION_LOCAL", "PRESERVE_MODE_MAPPING", "UNRESOLVED"] },
+          "code_token": { "type": "string" },
+          "mode_mapping": { "type": "object" },
+          "consumers": { "type": "array" },
+          "evidence": { "type": "array" },
+          "notes": { "type": "array" }
+        },
+        "additionalProperties": true
+      }
+    },
     "layout": { "type": "object" },
     "shared_components": { "type": "array" },
     "assets": { "type": "object" },
