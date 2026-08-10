@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 contract_id: CONTRACT-XXXX
 reference_id: REF-XXXX
 status: DRAFT # DRAFT | FROZEN | SUPERSEDED
@@ -81,6 +81,14 @@ accessibility:
   semantic_html: true
   keyboard_baseline: true
   focus_policy: ""
+  notes: []
+
+foundation:
+  status: NOT_BUILT # NOT_BUILT | BUILT | VERIFIED
+  base_commit: ""
+  commit: ""
+  changed_paths: []
+  checks: []
   notes: []
 
 parallel_execution:
