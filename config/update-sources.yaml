@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 
 policy:
   official_sources_first: true
@@ -118,6 +118,17 @@ lanes:
         topics: [chrome, blink, css, web-platform]
         impacts: [CSS, WEB_PLATFORM, CHROMIUM_SUPPORT]
 
+  ACCESSIBILITY:
+    required_for_significant_run: true
+    sources:
+      - id: w3c-wai-news
+        authority: OFFICIAL
+        kind: HTML_DIGEST
+        url: https://www.w3.org/WAI/news/
+        include_keywords: [WCAG, ARIA, accessibility, focus, keyboard, target size, contrast, motion]
+        topics: [wcag, wai-aria, accessibility, keyboard, focus, contrast]
+        impacts: [ACCESSIBILITY, INTERACTION, SEMANTICS, QA]
+
   DESIGN_SYSTEMS:
     required_for_significant_run: false
     sources:
@@ -128,6 +139,42 @@ lanes:
         url: https://api.github.com/repos/design-tokens/community-group/releases?per_page=12
         topics: [design-tokens, variables, interoperability]
         impacts: [TOKENS, DESIGN_SYSTEM, FIGMA_VARIABLES]
+
+  WORDPRESS_ACF:
+    required_for_significant_run: false
+    activation:
+      company_cms_any:
+        wordpress_enabled: true
+        acf_enabled: true
+    sources:
+      - id: wordpress-releases
+        authority: OFFICIAL
+        kind: HTML_DIGEST
+        url: https://wordpress.org/news/category/releases/
+        include_keywords: [release, security, block, editor, theme, media, image, accessibility]
+        topics: [wordpress, core, blocks, themes, media]
+        impacts: [WORDPRESS, CMS, BLOCKS, IMAGES, ACCESSIBILITY]
+      - id: wordpress-developer-news
+        authority: OFFICIAL
+        kind: HTML_DIGEST
+        url: https://developer.wordpress.org/news/
+        include_keywords: [block, theme, template, media, image, CSS, React, API, accessibility]
+        topics: [wordpress, development, blocks, themes, api]
+        impacts: [WORDPRESS, CMS, BLOCKS, FRONTEND_ARCHITECTURE]
+      - id: acf-releases
+        authority: OFFICIAL
+        kind: GITHUB_RELEASES
+        repo: AdvancedCustomFields/acf
+        url: https://api.github.com/repos/AdvancedCustomFields/acf/releases?per_page=12
+        topics: [acf, blocks, fields, inline-editing, wordpress]
+        impacts: [ACF, WORDPRESS, CMS, BLOCKS]
+      - id: acf-changelog
+        authority: OFFICIAL
+        kind: HTML_DIGEST
+        url: https://www.advancedcustomfields.com/changelog/
+        include_keywords: [Blocks, Repeater, Flexible Content, Image, Inline Editing, Block Bindings, security]
+        topics: [acf, blocks, repeater, flexible-content, images]
+        impacts: [ACF, WORDPRESS, CMS, BLOCKS, IMAGES]
 
   SAFARI_WEBKIT:
     activation:
@@ -198,3 +245,5 @@ retest_keyword_map:
     keywords: [context, compaction, agent, subagent, rules, instructions, skill, hook]
   PARALLEL_EXECUTION:
     keywords: [parallel, worktree, sandbox, background agent, multi-repo, isolation]
+  WORDPRESS_ACF:
+    keywords: [wordpress, acf, block.json, repeater, flexible content, block bindings, inline editing]
