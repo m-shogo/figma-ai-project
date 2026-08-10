@@ -27,6 +27,7 @@ class CheckResult:
 CHECKS: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("records", ("scripts/validate_records.py",)),
     ("company_policy", ("scripts/validate_company_policy.py",)),
+    ("environment_contract", ("scripts/validate_environment_contract.py",)),
     ("global_figma_profile", ("scripts/validate_figma_profile.py",)),
     ("section_figma_profiles", ("scripts/validate_figma_structure_profiles.py",)),
     ("section_profile_lineage", ("scripts/validate_figma_structure_profile.py",)),
