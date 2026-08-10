@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/figma-ai-project/shared-contract.schema.json",
+  "title": "Figma AI Shared Implementation Contract",
+  "type": "object",
+  "required": ["schema_version", "contract_id", "reference_id", "status", "codebase", "styling", "breakpoints", "fonts", "tokens", "layout", "shared_components", "assets", "accessibility", "parallel_execution", "integration", "unknowns", "conflicts", "freeze"],
+  "properties": {
+    "schema_version": { "type": "integer", "minimum": 1 },
+    "contract_id": { "type": "string", "minLength": 1 },
+    "reference_id": { "type": "string", "minLength": 1 },
+    "status": { "enum": ["DRAFT", "FROZEN", "SUPERSEDED"] },
+    "created_at": { "type": "string" },
+    "updated_at": { "type": "string" },
+    "codebase": {
+      "type": "object",
+      "required": ["repository", "starting_commit", "framework", "styling_architecture", "global_style_paths", "design_system_paths", "token_paths", "shared_component_paths"],
+      "properties": {
+        "repository": { "type": "string" },
+        "starting_commit": { "type": "string" },
+        "framework": { "type": "string" },
+        "styling_architecture": { "type": "string" },
+        "global_style_paths": { "type": "array", "items": { "type": "string" } },
+        "design_system_paths": { "type": "array", "items": { "type": "string" } },
+        "token_paths": { "type": "array", "items": { "type": "string" } },
+        "shared_component_paths": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": true
+    },
+    "styling": {
+      "type": "object",
+      "required": ["strategy", "scss_allowed", "raw_value_policy", "notes"],
+      "properties": {
+        "strategy": { "enum": ["EXISTING_PROJECT", "CSS_MODULES_NATIVE", "TAILWIND", "CSS_IN_JS", "OTHER"] },
+        "scss_allowed": { "type": "boolean" },
+        "raw_value_policy": { "type": "string" },
+        "css_module_naming": { "type": "string" },
+        "notes": { "type": "array" }
+      },
+      "additionalProperties": true
+    },
+    "breakpoints": {
+      "type": "object",
+      "required": ["mode", "source", "source_refs", "values", "worker_override", "validation_viewports"],
+      "properties": {
+        "mode": { "enum": ["GLOBAL_SPECIFIED", "SECTION_SPECIFIED", "INTRINSIC_ONLY", "NONE", "UNKNOWN"] },
+        "source": { "enum": ["OWNER", "COMPANY", "DESIGN_SYSTEM", "EXISTING_CODE", "FIGMA", "MULTIPLE", "UNKNOWN"] },
+        "source_refs": { "type": "array", "items": { "type": "string" } },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "media_query", "min_width_px", "max_width_px", "source_ref", "notes"],
+            "properties": {
+              "name": { "type": "string", "minLength": 1 },
+              "media_query": { "type": "string" },
+              "min_width_px": { "type": ["integer", "null"], "minimum": 0 },
+              "max_width_px": { "type": ["integer", "null"], "minimum": 0 },
+              "source_ref": { "type": "string" },
+              "notes": { "type": "string" }
+            },
+            "additionalProperties": true
+          }
+        },
+        "worker_override": { "enum": ["PROPOSE_ONLY", "OWNER_ALLOWED"] },
+        "validation_viewports": { "type": "array" }
+      },
+      "additionalProperties": true
+    },
+    "fonts": { "type": "object" },
+    "tokens": { "type": "object" },
+    "layout": { "type": "object" },
+    "shared_components": { "type": "array" },
+    "assets": { "type": "object" },
+    "accessibility": { "type": "object" },
+    "parallel_execution": {
+      "type": "object",
+      "required": ["shared_files_read_only_for_workers", "coordinator_only_paths", "allowed_worker_change_policy", "shared_change_protocol", "breakpoint_exception_protocol"],
+      "properties": {
+        "shared_files_read_only_for_workers": { "type": "boolean" },
+        "coordinator_only_paths": { "type": "array", "items": { "type": "string" } },
+        "allowed_worker_change_policy": { "type": "string" },
+        "shared_change_protocol": { "type": "string" },
+        "breakpoint_exception_protocol": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "integration": {
+      "type": "object",
+      "required": ["root_composition_path", "required_checks"],
+      "properties": {
+        "root_composition_path": { "type": "string" },
+        "required_checks": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": true
+    },
+    "unknowns": { "type": "array" },
+    "conflicts": { "type": "array" },
+    "freeze": {
+      "type": "object",
+      "required": ["ready", "frozen_at", "notes"],
+      "properties": {
+        "ready": { "type": "boolean" },
+        "frozen_at": { "type": "string" },
+        "notes": { "type": "string" }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}
