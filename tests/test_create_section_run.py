@@ -21,7 +21,13 @@ def write_yaml(root: Path, relative: str, data: dict) -> Path:
     return path
 
 
-def fixture(root: Path, *, worker_status: str = "READY", isolation_mode: str = "BRANCH_WORKTREE") -> tuple[Path, Path, Path, Path, Path]:
+def fixture(
+    root: Path,
+    *,
+    worker_status: str = "READY",
+    isolation_mode: str = "BRANCH_WORKTREE",
+    bind_company: bool = False,
+) -> tuple[Path, Path, Path, Path, Path]:
     reference_path = write_yaml(
         root,
         "references/ref/reference.yaml",
@@ -34,16 +40,40 @@ def fixture(root: Path, *, worker_status: str = "READY", isolation_mode: str = "
         },
     )
 
-    contract_path = write_yaml(
-        root,
-        "contracts/shared-contract.yaml",
-        {
-            "reference_id": "REF-1",
-            "status": "FROZEN",
-            "freeze": {"ready": True},
-            "foundation": {"status": "VERIFIED", "commit": "foundation-123"},
-        },
-    )
+    contract: dict = {
+        "reference_id": "REF-1",
+        "status": "FROZEN",
+        "freeze": {"ready": True},
+        "foundation": {"status": "VERIFIED", "commit": "foundation-123"},
+    }
+    if bind_company:
+        policy_path = write_yaml(
+            root,
+            "policies/company-policy.yaml",
+            {
+                "policy_id": "POLICY-1",
+                "status": "ACTIVE",
+            },
+        )
+        policy_hash = hashlib.sha256(policy_path.read_bytes()).hexdigest()
+        contract["company_policy"] = {
+            "path": "policies/company-policy.yaml",
+            "policy_id": "POLICY-1",
+            "sha256": policy_hash,
+            "status": "BOUND",
+            "precedence_verified": True,
+        }
+        contract["environment_contract"] = {
+            "status": "RESOLVED",
+            "required_profiles": ["desktop-safari", "ios-safari"],
+            "canonical_profile": "desktop-safari",
+            "effective_overrides": [
+                {"profile_id": "desktop-safari"},
+                {"profile_id": "ios-safari"},
+            ],
+        }
+
+    contract_path = write_yaml(root, "contracts/shared-contract.yaml", contract)
     contract_hash = hashlib.sha256(contract_path.read_bytes()).hexdigest()
 
     profile_path = write_yaml(
@@ -115,6 +145,7 @@ class CreateSectionRunTests(unittest.TestCase):
                 model="model-current",
             )
 
+            self.assertEqual(record["schema_version"], 9)
             self.assertEqual(record["status"], "PLANNED")
             self.assertEqual(record["coordination"]["scope"], "SECTION")
             self.assertEqual(record["coordination"]["foundation_commit"], "foundation-123")
@@ -133,6 +164,30 @@ class CreateSectionRunTests(unittest.TestCase):
             self.assertEqual(record["reference"]["figma_nodes"], ["pc:1", "sp:1"])
             self.assertEqual(record["code"]["starting_commit"], "foundation-123")
             self.assertEqual(record["code"]["repository"], "m-shogo/example")
+            self.assertEqual(record["coordination"]["required_environment_profiles"], [])
+
+    def test_company_bound_run_pins_resolved_environment_profiles(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            reference_path, _, _, manifest_path, _ = fixture(root, bind_company=True)
+            record = build_run_record(
+                root=root,
+                manifest_path=manifest_path,
+                reference_path=reference_path,
+                experiment_id="EXP-1",
+                run_id="RUN-1",
+                section_id="S01",
+                agent_client="codex",
+                model="",
+            )
+            self.assertEqual(record["coordination"]["company_policy_id"], "POLICY-1")
+            self.assertEqual(
+                record["coordination"]["required_environment_profiles"],
+                ["desktop-safari", "ios-safari"],
+            )
+            self.assertEqual(
+                record["coordination"]["canonical_environment_profile"], "desktop-safari"
+            )
 
     def test_planned_worker_is_rejected_until_isolation_is_ready(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -167,11 +222,45 @@ class CreateSectionRunTests(unittest.TestCase):
                     model="",
                 )
 
-    def test_serial_shared_tree_is_not_production_ready(self) -> None:
+    def test_serial_shared_tree_is_allowed_for_singleton_wave(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             reference_path, _, _, manifest_path, _ = fixture(root, isolation_mode="SERIAL_SHARED_TREE")
-            with self.assertRaisesRegex(ValueError, "isolation mode is not production-ready"):
+            record = build_run_record(
+                root=root,
+                manifest_path=manifest_path,
+                reference_path=reference_path,
+                experiment_id="EXP-1",
+                run_id="RUN-1",
+                section_id="S01",
+                agent_client="codex",
+                model="",
+            )
+            self.assertEqual(record["coordination"]["isolation_mode"], "SERIAL_SHARED_TREE")
+
+    def test_serial_shared_tree_is_rejected_for_multi_section_wave(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            reference_path, _, _, manifest_path, _ = fixture(root, isolation_mode="SERIAL_SHARED_TREE")
+            manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
+            second = {
+                "section_id": "S02",
+                "worker": {
+                    "status": "PLANNED",
+                    "parallel_group": "wave-01",
+                    "contract_sha256": manifest["sections"][0]["worker"]["contract_sha256"],
+                    "base_commit": "foundation-123",
+                    "isolation": {
+                        "mode": "SERIAL_SHARED_TREE",
+                        "ref": "section/S02",
+                        "parallel_safe": False,
+                        "notes": [],
+                    },
+                },
+            }
+            manifest["sections"].append(second)
+            manifest_path.write_text(yaml.safe_dump(manifest, sort_keys=False), encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "singleton execution wave"):
                 build_run_record(
                     root=root,
                     manifest_path=manifest_path,
