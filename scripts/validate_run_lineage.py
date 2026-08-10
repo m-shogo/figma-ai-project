@@ -68,6 +68,43 @@ def candidate_runs() -> list[Path]:
     return list(dict.fromkeys(found))
 
 
+def validate_company_policy_lineage(
+    contract: dict[str, Any], coordination: dict[str, Any]
+) -> list[str]:
+    errors: list[str] = []
+    binding = contract.get("company_policy", {})
+    if not isinstance(binding, dict) or binding.get("status") != "BOUND":
+        return errors
+
+    expected_path = str(binding.get("path", ""))
+    expected_hash = str(binding.get("sha256", ""))
+    expected_id = str(binding.get("policy_id", ""))
+    run_path = str(coordination.get("company_policy_path", ""))
+    run_hash = str(coordination.get("company_policy_sha256", ""))
+    run_id = str(coordination.get("company_policy_id", ""))
+
+    if run_path != expected_path:
+        errors.append("run Company Policy path does not match Shared Contract binding")
+    if run_hash != expected_hash:
+        errors.append("run Company Policy hash does not match Shared Contract binding")
+    if run_id != expected_id:
+        errors.append("run Company Policy id does not match Shared Contract binding")
+
+    policy_path, link_errors = linked_file(run_path, "coordination.company_policy_path")
+    errors.extend(link_errors)
+    errors.extend(require_hash(policy_path, run_hash, "Company Policy"))
+    if policy_path and policy_path.is_file():
+        try:
+            policy = load_yaml(policy_path)
+            if str(policy.get("policy_id", "")) != run_id:
+                errors.append("run Company Policy id does not match linked policy file")
+            if policy.get("status") != "ACTIVE":
+                errors.append("active run must use an ACTIVE Company Policy")
+        except Exception as exc:
+            errors.append(f"cannot read Company Policy: {exc}")
+    return errors
+
+
 def validate_run(data: dict[str, Any]) -> list[str]:
     errors: list[str] = []
     status = str(data.get("status", "PLANNED"))
@@ -150,6 +187,7 @@ def validate_run(data: dict[str, Any]) -> list[str]:
             if isinstance(foundation, dict) and foundation.get("commit"):
                 if foundation.get("commit") != coordination.get("foundation_commit"):
                     errors.append("run foundation commit does not match shared contract foundation.commit")
+            errors.extend(validate_company_policy_lineage(contract, coordination))
         except Exception as exc:
             errors.append(f"cannot read shared contract: {exc}")
 
