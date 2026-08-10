@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 experiment_id: EXP-XXXX
 run_id: RUN-XXXX
 run_class: COMMON # COMMON | OPTIMIZED | REPLAY
@@ -48,30 +48,43 @@ execution:
   actual_repair_rounds: 0
   assumptions: []
   blockers: []
+  human_intervention: none
 
 captures:
   first_pass: []
+  verify: []
   final: []
 # - frame_id: pc-main
-#   viewport: "1440x900"
+#   viewport: "<from reference manifest>"
 #   path: ""
 #   captured_at: ""
 
 scores:
-  first_pass:
-    visual: null
-    structural: null
-    robustness: null
-    rework_cost: null
-    reproducibility: null
-    total: null
-  final:
-    visual: null
-    structural: null
-    robustness: null
-    rework_cost: null
-    reproducibility: null
-    total: null
+  first_pass_fidelity:
+    visual: null # /40
+    structural: null # /25
+    robustness: null # /15
+    total: null # /80
+  final_fidelity:
+    visual: null # /40
+    structural: null # /25
+    robustness: null # /15
+    total: null # /80
+  rework_efficiency: null # /10; only after repair/stop
+  reproducibility: null # /10; N/A/null until clean replay
+  final_composite: null # /100 only when all components exist
+
+rework:
+  repair_rounds: 0
+  post_first_pass_files_changed: null
+  post_first_pass_lines_added: null
+  post_first_pass_lines_deleted: null
+  rebuild_count: 0
+  severity_counts:
+    S1: 0
+    S2: 0
+    S3: 0
+    S4: 0
 
 failures: []
 # - failure_id: F-001
