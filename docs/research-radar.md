@@ -1,252 +1,372 @@
-# Research Radar — Figma × AI Coding Agents
+# Research Radar — Automation-first Figma × AI Update Research
 
-Last designed: **2026-08-10 JST**
+Last revised: **2026-08-11 JST**
 
-目的: Figma / Codex / Claude Code / Cursor が進化しても、古い成功体験や失敗体験に固定されないよう、**最新signalを効率よく拾って実験候補へ変換する**。
+目的: Figma / MCP / Codex / Claude Code / Cursor / Web Platform / browser / accessibility / WordPress・ACF の変化を、人間の手動検索に依存せず検知し、**必要な実装ルールだけを再試験へ戻す**。
 
-## What to monitor
+この文書は「毎回どんな検索語でWeb検索するか」ではなく、Scheduled Official Update Radarをproductionの入口として扱う。
 
-### Capability changes
+## Canonical operating model
 
-- new Figma MCP tools
-- write-to-canvas changes
-- `get_design_context`
-- `get_metadata`
-- `get_screenshot`
-- `use_figma`
-- `generate_figma_design`
-- Code Connect
-- Skills
-- component/library search
-- variables/token behavior
-- plan/seat/rate-limit changes
+通常運用:
 
-### Agent/client changes
+```text
+Official source registry
+→ daily GitHub Actions
+→ fetch
+→ normalize / relevant-subset extraction
+→ canonical fingerprint
+→ previous snapshot diff
+→ impact / RETEST classification
+→ persisted evidence
+→ run-specific relevance filtering
+→ preflight SHA-256 pin
+→ local experiment / clean replay
+→ evidence promotion
+```
 
-- Codex model/client updates
-- Claude Code model/client updates
-- Cursor agent/rules/indexing updates
-- MCP configuration changes
-- context-window / compaction behavior
-- visual/browser tooling changes
+Canonical files:
 
-### Practical quality signals
+- `config/update-sources.yaml`
+- `scripts/validate_update_sources.py`
+- `scripts/fetch_update_radar.py`
+- `.github/workflows/update-radar.yml`
+- `scripts/update_radar_issue.py`
+- `scripts/apply_radar_preflight.py`
+- `scripts/start_section_run.py`
+- `docs/update-preflight.md`
 
-- pixel fidelity
-- responsive behavior
-- component reuse
-- design-token reuse
-- font/CJK handling
-- image crop/assets
-- large-page context truncation
-- code → Figma round-trip
-- auth/connectivity
-- token/cost/time
-- prompt/harness patterns
+**Manual web search is not the normal production gate.**
 
-## Source lanes
+---
 
-### Lane A — Official capability truth
+## Daily collection
 
-Check first for feature existence/current semantics:
+`.github/workflows/update-radar.yml` runs every day at **12:17 JST**.
 
-- Figma Developer Docs
-- Figma Blog / release notes
-- OpenAI Codex docs/changelog
-- Anthropic Claude Code docs/changelog
-- Cursor docs/changelog
-- official GitHub repositories
+```text
+official source fetch
+→ normalized evidence
+→ fingerprint comparison
+→ changed / first observation / fetch error classification
+→ RETEST candidate generation
+→ evidence persistence when meaningful
+```
 
-### Lane B — Practitioner workflows
+No upstream change means no no-op commit merely because time advanced.
 
-High-value discovery:
+Persisted state:
 
-- Zenn
-- Qiita
+- `research/update-radar/latest.json`
+- `research/update-radar/latest.md`
+- `research/update-radar/state.json`
+- `research/update-radar/history/`
+
+`workflow_dispatch` is recovery/debugging support, not a human daily checklist.
+
+---
+
+## Registry contract
+
+`config/update-sources.yaml` is the machine-readable source registry.
+
+`python scripts/validate_update_sources.py` rejects malformed registry state before network access, including:
+
+- duplicate source IDs
+- unsupported source kinds
+- non-official authority in the production Radar registry
+- non-HTTPS or malformed URLs
+- missing/invalid `topics`
+- missing/invalid `impacts`
+- invalid `include_keywords`
+- optional browser lane without explicit Company Policy profile activation
+
+The registry validator is also part of repository readiness and CI.
+
+Community/practitioner discovery belongs outside this production-official registry unless a future contract explicitly introduces a separate non-gating lane.
+
+---
+
+## Automatic source lanes
+
+### Figma
+
+- Figma Release Notes
+- Figma MCP docs
+- Figma MCP tools/prompts
+
+Typical impact:
+
+- `FIGMA_MCP`
+- `AGENT_CONTEXT`
+- `LAYOUT`
+- `COLOR_GRADIENT`
+
+### MCP
+
+- Model Context Protocol official specification/releases
+
+Typical impact:
+
+- `FIGMA_MCP`
+- `AGENT_CONTEXT`
+- `PARALLEL_EXECUTION`
+
+### Coding agents
+
+- OpenAI / Codex official updates
+- Claude Code official releases/feed
+- Cursor official changelog
+
+Typical impact:
+
+- agent context/tool behavior
+- MCP integration
+- isolation/worktree behavior
+- parallel execution assumptions
+
+### CSS / Web Platform
+
+- W3C WebDX `web-features`
+- MDN Browser Compat Data
+- Chrome/Chromium platform status when relevant
+
+Typical impact:
+
+- `CSS_RESET`
+- `VIEWPORT_SAFE_AREA`
+- `INPUT_CAPABILITY`
+- `SCROLL`
+- `ANIMATION`
+- `LAYOUT`
+- `COLOR_GRADIENT`
+
+### Accessibility
+
+- W3C WAI official updates
+
+Typical impact:
+
+- `ACCESSIBILITY`
+- interaction/focus/keyboard/motion QA
+
+### Design systems
+
+- Design Tokens related official/specification releases
+
+### WordPress / ACF
+
+- WordPress releases
+- WordPress Developer Blog
+- ACF official releases/changelog
+
+Typical impact:
+
+- `WORDPRESS_ACF`
+
+### Browser-specific lanes
+
+Activated from Company Policy Required Environment Profiles, not viewport width:
+
+- Safari / WebKit
+- Chromium / Chrome / Edge
+- Firefox / Gecko
+
+A 390px iPhone Safari profile and a desktop Chrome profile resized to 390px do not activate the same environment evidence merely because width matches.
+
+---
+
+## Fingerprint noise control
+
+Large/dynamic sources must not turn every unrelated upstream mutation into a production RETEST.
+
+For filtered JSON sources:
+
+```text
+large upstream JSON
+→ extract records/subtrees matching source include_keywords
+→ canonical JSON serialization
+→ subset fingerprint
+```
+
+Do **not** mix a whole-document hash back into a keyword-filtered fingerprint.
+
+Therefore:
+
+- unrelated Chrome Status feature update → no change for a CSS/viewport-filtered digest
+- relevant viewport/safe-area feature update → fingerprint changes
+- no matching record → stable empty subset until a relevant record appears
+
+Dynamic HTML sources should follow the same principle: fingerprint the stable/relevant content rather than navigation chrome, timestamps, personalization, or unrelated page sections. Add source-specific extraction when generic visible-text filtering proves noisy.
+
+---
+
+## Change semantics
+
+A source fingerprint change means:
+
+```text
+UPSTREAM_CHANGE
+→ RETEST_CANDIDATE
+```
+
+It does **not** mean:
+
+```text
+NEW_BEST_PRACTICE
+```
+
+Promotion path:
+
+```text
+UPSTREAM_CHANGE
+→ RETEST_CANDIDATE
+→ local targeted experiment
+→ clean replay
+→ evidence promotion
+→ Company Policy / Proven Playbook revision candidate
+```
+
+One release note does not silently rewrite Company Policy.
+
+---
+
+## Run-specific relevance
+
+The global snapshot may contain changes for many stacks and browsers. A concrete production run only receives the subset relevant to that run.
+
+`apply_radar_preflight.py` determines required lanes from:
+
+- Figma/MCP/Web Platform/Accessibility baseline
+- actual agent client
+- active Company Policy Required Environment Profiles
+
+Then:
+
+```text
+snapshot changes
+→ changes_relevant_to_run
+→ category union
+→ rules_to_retest
+```
+
+Example:
+
+- React + Codex + Safari run: WordPress release does not become a run RETEST solely because it exists in the global snapshot.
+- WordPress/ACF run: the applicable CMS lane can participate when the run contract requires it.
+
+This separation prevents global Radar breadth from becoming local implementation noise.
+
+---
+
+## Production preflight
+
+Normal start path:
+
+```text
+python scripts/apply_radar_preflight.py <run.yaml> --apply
+python scripts/start_section_run.py <run.yaml> --apply
+```
+
+Current freshness default: **36 hours**.
+
+Preflight pins at least:
+
+- Radar path
+- Radar SHA-256
+- generated timestamp
+- required active lanes
+- official-source completeness
+- run-relevant changes
+- `rules_to_retest`
+- source warnings
+
+Required official lane unavailable → **fail closed**.
+
+Community scan missing → does **not** block production start.
+
+---
+
+## RETEST categories
+
+Current registry can classify changes into categories including:
+
+- `CSS_RESET`
+- `VIEWPORT_SAFE_AREA`
+- `INPUT_CAPABILITY`
+- `SCROLL`
+- `ANIMATION`
+- `LAYOUT`
+- `COLOR_GRADIENT`
+- `ACCESSIBILITY`
+- `FIGMA_MCP`
+- `AGENT_CONTEXT`
+- `PARALLEL_EXECUTION`
+- `WORDPRESS_ACF`
+
+Categories are routing metadata for experiments, not permanent truth labels.
+
+---
+
+## Optional manual/community discovery
+
+Manual/community research remains useful for **finding hypotheses that official sources do not expose clearly**, especially practical failure modes.
+
+Possible sources:
+
+- Zenn / Qiita
 - engineering blogs
-- personal technical blogs
-- conference writeups
-- YouTube/transcript when concrete workflow evidence exists
-
-### Lane C — Fast social signals
-
-Newest pain/workaround discovery:
-
-- X / Twitter
-- Figma Community Forum
+- Figma Forum
 - GitHub Issues/Discussions
-- Reddit
-- Hacker News where relevant
+- Reddit / Hacker News
+- X / social posts
+- conference talks / videos with reproducible details
 
-Single social posts are low-confidence but high-freshness.
+Rules:
 
-### Lane D — Benchmarks / research
+1. It is optional discovery, not the normal production start gate.
+2. Community signal begins at external-signal maturity; it does not outrank official sources.
+3. Record version/date/environment when it materially affects the claim.
+4. Convert useful signals into measurable experiments.
+5. Search counterexamples before promoting a strong claim.
 
-- first-party evals
-- arXiv / papers
-- benchmark repositories
-
-Use to generate measurable hypotheses, not to replace own experiments.
-
-## Search query bank
-
-Rotate queries instead of searching one generic phrase.
-
-### Core
+Useful optional queries may include:
 
 ```text
-"Figma MCP" design to code
-"Figma MCP" Cursor
-"Figma MCP" "Claude Code"
-"Figma MCP" Codex
-"use_figma" Figma
-"generate_figma_design" Figma
-"Code Connect" MCP agent
-```
-
-### Quality / failure
-
-```text
-"Figma MCP" inaccurate
-"Figma MCP" pixel perfect
 "Figma MCP" responsive
-"Figma MCP" token
 "Figma MCP" component reuse
-"Figma MCP" font
-"Figma MCP" Japanese
-"Figma MCP" bug
+"Figma MCP" token
+"Figma MCP" Japanese font
 "Figma MCP" workaround
+site:zenn.dev "Figma MCP"
+site:forum.figma.com MCP
 ```
 
-### Japanese community
+Do not run this query bank mechanically before every production implementation.
 
-```text
-site:zenn.dev Figma MCP Cursor
-site:zenn.dev Figma MCP Claude Code
-site:zenn.dev Figma MCP Codex
-site:qiita.com Figma MCP
-site:zenn.dev Code Connect Figma AI
-```
+---
 
-### Social
+## Evidence output
 
-```text
-site:x.com "Figma MCP" Cursor
-site:x.com "Figma MCP" "Claude Code"
-site:x.com "Figma MCP" Codex
-site:reddit.com "Figma MCP"
-site:forum.figma.com MCP Claude Cursor Codex
-```
+The Radar should remain compact and actionable.
 
-### Freshness terms
+Prefer:
 
-Add current month/year, new tool names, or known release names to avoid stale setup articles.
+- structured source identity
+- canonical fingerprint
+- concise relevant excerpt/items
+- matched keywords
+- impact categories
+- RETEST categories
+- changed/first-observation/fetch-error state
 
-## Efficient scan process
+Avoid:
 
-### Step 1 — Fresh scan
+- accumulating hundreds of undigested links
+- duplicating one release announcement across many sources
+- treating publication count as corroboration
+- promoting rules directly from news
 
-Look first at approximately recent 30–60 days for fast-moving tooling.
+## Final rule
 
-### Step 2 — Counterexample scan
-
-For every strong success claim, search failure/limitation reports.
-
-For every strong failure claim, search newer fixes/success reports.
-
-### Step 3 — Version check
-
-Record:
-
-- publish date
-- update date if present
-- tool/client/model/version
-- remote/local MCP
-- plan/seat where relevant
-
-### Step 4 — Deduplicate
-
-Ten articles repeating one release announcement are one capability signal, not ten independent confirmations.
-
-Prefer independent hands-on evidence.
-
-### Step 5 — Convert to hypothesis
-
-Do not save generic summary only.
-
-Each useful signal becomes:
-
-```text
-Observed claim
-→ conditions
-→ possible confounders
-→ measurable hypothesis
-→ proposed experiment
-```
-
-## Priority scoring
-
-Use a lightweight dynamic score, not a permanent ranking.
-
-### Impact: 0–3
-
-- 0: cosmetic/minor
-- 1: local convenience
-- 2: meaningful rework/fidelity effect
-- 3: could materially change default workflow
-
-### Freshness: 0–3
-
-- 3: ≤30 days
-- 2: 31–90 days
-- 1: 91–180 days
-- 0: older unless newly reverified
-
-### Corroboration: 0–3
-
-- 0: one anecdote
-- 1: multiple related reports
-- 2: independent practitioner + official/benchmark support
-- 3: own experiment also reproduces
-
-### Relevance: 0–3
-
-- 3: directly reduces Figma→Code rework
-- 2: adjacent workflow improvement
-- 1: niche condition
-- 0: low relevance
-
-```text
-Radar Priority = Impact + Freshness + Corroboration + Relevance
-```
-
-Score is triage only. It does not promote evidence maturity.
-
-## Retest queue
-
-Keep a separate queue for old negative findings.
-
-Examples:
-
-- font limitation
-- client missing tool
-- MCP auth instability
-- poor responsive inference
-- large-frame truncation
-
-When related tooling changes, move them back to `RETEST_NOW` instead of assuming the old failure still holds.
-
-## Research output
-
-Each scan should produce at most:
-
-- 3–7 genuinely new signals
-- changed/invalidated old signals
-- top experiments worth running
-- source dates/links
-
-Avoid accumulating hundreds of undigested links.
-
-## Rule
-
-**The radar optimizes what to test next; experiments decide what we believe.**
+**Automation detects what may need retesting; controlled experiments decide what this repository believes.**
