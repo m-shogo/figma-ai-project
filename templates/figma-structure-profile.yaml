@@ -1,0 +1,54 @@
+schema_version: 1
+reference_id: REF-XXXX
+captured_at: ""
+figma_tooling_snapshot: ""
+
+page:
+  file_key: ""
+  page_or_frame_node_id: ""
+  auto_layout_generation: UNKNOWN # LEGACY | UPDATED_2026 | MIXED | UNKNOWN
+  notes: []
+
+sections: []
+# - section_id: S01
+#   figma_node_ids: []
+#   signals:
+#     components:
+#       confidence: NONE # NONE | LOW | MEDIUM | HIGH
+#       evidence: []
+#       instance_count: null
+#       detached_or_repeated_patterns: []
+#     variables:
+#       confidence: NONE
+#       evidence: []
+#       bound_property_coverage: null
+#       modes_observed: []
+#     auto_layout:
+#       confidence: NONE
+#       evidence: []
+#       container_coverage: null
+#       absolute_child_ratio: null
+#       generation: UNKNOWN # LEGACY | UPDATED_2026 | MIXED | UNKNOWN
+#     semantic_naming:
+#       confidence: NONE
+#       evidence: []
+#       generic_name_ratio: null
+#     code_connect:
+#       confidence: NONE
+#       evidence: []
+#       mapped_component_coverage: null
+#     assets:
+#       confidence: NONE
+#       evidence: []
+#       exact_sources_available: []
+#     responsive_mapping:
+#       confidence: NONE
+#       evidence: []
+#   recommended_translation_mode: UNKNOWN # STRUCTURE_FIRST | HYBRID | VISUAL_FIRST | CODEBASE_FIRST | UNKNOWN
+#   mode_reasoning_evidence: []
+#   trusted_structure: []
+#   untrusted_or_missing_structure: []
+#   codebase_reuse_priority: []
+#   unresolved_questions: []
+
+notes: []
