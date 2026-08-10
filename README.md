@@ -4,41 +4,141 @@ AI coding agents（Codex / Claude Code / Cursor など）と Figma を往復し�
 
 ## Important boundary
 
-この repo はデザインそのものを決める場所ではありません。
+このrepoはデザインそのものを決める場所ではありません。
 
-- Reference Figma はユーザー/案件側で決定する
-- AI は reference design を勝手に作り直さない
-- reference が未提示の期間は、実験基盤・評価・prompt・context設計・tooling調査だけを進める
-- reference が提示されたら freeze して、同じ原本を使って比較する
+- Reference Figmaはユーザー/案件側で決定する
+- AIはreference designを勝手に作り直さない
+- reference未提示時はtooling / workflow / evaluation / prompt / research基盤だけ進める
+- reference受領後は証拠をfreezeしてから実装準備へ進む
+- design変更とagent/workflow改善を同じexperimentへ混ぜない
+
+---
+
+## Current production direction
+
+現時点の本命は**section-first + shared foundation + safe parallel implementation**。
+
+ページ全体を1agentへ丸ごと実装させるのではなく:
+
+```text
+Figma reference
+  ↓
+Tooling update preflight
+  ↓
+Reference freeze
+  ↓
+Global reconnaissance
+  ↓
+Shared Contract DRAFT
+  ↓
+Section Manifest
+  ↓
+Shared Foundation build / verify
+  ↓
+Shared Contract FROZEN + SHA-256
+  ↓
+Header / MainVisual / Content01 / ... / Footer
+  ↓ safe parallel
+Section workers
+  ↓
+Coordinator integration
+  ↓
+PC / SP / specified breakpoint verification
+  ↓
+Targeted repair
+  ↓
+Clean replay / knowledge promotion
+```
+
+Whole-page one-shotは永久禁止しない。Figma/MCP/modelが進化した時に再検証する`PAGE_BENCHMARK`として残す。
+
+---
+
+## Breakpoint policy
+
+実務ではデザイナー/会社/design system/既存productの指定がsource of truthになることが多い。
+
+Production default:
+
+```text
+GLOBAL_SPECIFIED
+```
+
+全sectionが同じbreakpoint contractを使用する。
+
+AIは:
+
+- breakpoint sourceを特定
+- exact value / media-query semanticsを記録
+- 指定境界で各sectionのbehaviorを実装
+- boundaryで破綻しないか検証
+
+する。
+
+AIが独断で「ここで壊れるから768px」などのthresholdを追加しない。
+
+必要に見える場合は`PROPOSE_BREAKPOINT_EXCEPTION`として提案に留める。
+
+詳細: `docs/responsive-breakpoint-policy.md`
+
+---
+
+## Shared Contract / Foundation
+
+並列section workerが別々のdesign ruleを作らないため、共通情報をmachine-readableなShared Contractに集約する。
+
+含むもの:
+
+- styling architecture
+- fonts
+- colors / spacing / radius / effects等のtokens
+- global breakpoint source/value
+- container / gutter / layout primitives
+- shared components / Code Connect mappings
+- asset policy
+- accessibility baseline
+- coordinator-only paths
+- verified foundation commit
+
+Foundation verification後にcontractをfreezeし、SHA-256をSection Manifest/Run Recordへ保存する。
+
+**異なるcontract hash / foundation commitのsection outputを同条件として混ぜない。**
+
+---
 
 ## Goal
 
-目標は「一発生成できた」という偶然ではなく、**同じ条件なら同等品質を再現できる工程**を作ることです。
+目標は「一発生成できた」という偶然ではなく、**同じ条件なら同等品質へ戻れる工程**を作ること。
 
-1. Reference Figma を構造ごと取得する
-2. AI に渡す context を再現可能な package にする
-3. Codex / Claude Code / Cursor などで実装する
-4. 原本と exact viewport で比較する
-5. 差分を定量・定性で記録する
-6. 原因を分類する
-7. prompt / context / Design System / Code Connect / workflow を1変数ずつ改善する
-8. clean baseline から再実行する
-9. 別画面・別案件でも効いた知識だけ playbook に昇格する
-10. tooling更新に応じて古い知識を再検証する
+1. Reference Figmaと案件ルールを証拠としてfreeze
+2. 全体構造/components/variables/fonts/breakpointsを調査
+3. Shared Contract + Shared Foundationを固定
+4. Figma pageを論理sectionへ切り分け
+5. sectionごとに必要contextだけ渡して実装
+6. 安全なsectionは並列化
+7. coordinatorが全体整合性を検証
+8. exact viewport/breakpointで原本と比較
+9. failureを原因分類
+10. prompt/context/tool/workflowを1変数ずつ改善
+11. clean baselineから再実行
+12. 別section/別案件でも効いた知識だけplaybookへ昇格
+13. tool更新後に古い知識を再検証
+
+---
 
 ## Non-static knowledge
 
-このrepoは「2026年時点の正解」を永久保存する場所ではありません。
+このrepoは「2026年時点の正解」を永久保存する場所ではない。
 
-Figma、MCP、Codex、Claude Code、Cursor、画像理解は進化するため:
+Figma、MCP、Codex、Claude Code、Cursor、vision/model/browser capabilitiesは進化する。
 
 - 1回失敗しても永久禁止しない
 - 1回成功してもbest practiceにしない
-- EvidenceをE0→E5で段階昇格する
-- CAUTION/DEFERREDもmajor update時に再試験する
-- 重要run前にFigma release notesとcurrent MCP docsを確認する
-- 公式だけでなくZenn/Qiita/X/Forum/GitHub/Reddit等の現場signalも拾う
-- community情報は仮説として実験で検証する
+- EvidenceをE0→E5で段階昇格
+- CAUTION/DEFERREDもmajor update時に再試験
+- 重要run前にFigma release notes/current MCP docsを最低1回確認
+- Zenn/Qiita/X/Forum/GitHub/Reddit等のfield signalも収集
+- community情報は仮説として自分たちで検証
 
 詳しくは:
 
@@ -47,68 +147,133 @@ Figma、MCP、Codex、Claude Code、Cursor、画像理解は進化するため:
 - `docs/research-radar.md`
 - `docs/community-signal-registry.md`
 
+---
+
 ## North Star Metrics
 
-- **First-pass Fidelity**: 初回出力でどこまで原本に近いか
-- **Visual Fidelity**: geometry / spacing / typography / color / assets の一致度
-- **Structural Fidelity**: component / token / responsive / semantic structure の一致度
-- **Rework Efficiency**: 人間またはAIの修正回数・修正量が少ないか
-- **Reproducibility**: clean rerun しても同等結果へ戻れるか
-- **Context Efficiency**: 余計なcontextを増やさず精度を出せたか
-- **Portability**: 別案件へそのまま持っていける知識か
+- **First-pass Fidelity** — 初回出力でどこまで原本に近いか
+- **Visual Fidelity** — geometry / spacing / typography / color / assets
+- **Structural Fidelity** — components / tokens / breakpoint contract / semantic structure
+- **Rework Efficiency** — section・integration・shared foundationの戻りが少ないか
+- **Integration Load** — 並列sectionを統合するための追加修正量
+- **Contract Compliance** — shared rule/breakpoint/foundationから逸脱していないか
+- **Reproducibility** — clean rerunしても同等結果へ戻れるか
+- **Context Efficiency** — 必要以上のFigma/code contextを渡していないか
+- **Portability** — 別section/案件でも使える知識か
+
+---
 
 ## Current phase
 
-**FOUNDATION READY — reference design待ち。デザインには触れず、再現実験の下地を構築済み。**
+**FOUNDATION READY — reference design待ち。デザイン自体には触れず、再現実験基盤を整備中。**
 
-Reference が来るまでやらないこと:
+Reference受領前にやらないこと:
 
 - 架空LPを作る
 - PC/SP寸法をこちらで決める
-- 色・component・画面構成を仮定する
+- 色/component/画面構成を仮定する
+- breakpointを勝手に決める
 - referenceを模したダミーデザインをFigmaへ作る
 
-Reference受領後は:
+Reference受領後の入口:
 
 ```text
 Update Preflight
-→ Reference Contract
-→ Frozen Manifest
-→ COMMON baseline
-→ evidence-driven experiments
+→ Reference Manifest
+→ Global Reconnaissance
+→ Shared Contract DRAFT
+→ Section Manifest
+→ Shared Foundation
+→ Contract Freeze
+→ SECTION runs
+→ INTEGRATION run
 ```
 
-の順で進む。
+---
 
-## Research Loop
+## Three run scopes
+
+### SECTION
+
+Header / MainVisual / Content等のproduction work unit。
+
+比較条件:
+
+- same reference
+- same section node
+- same Shared Contract hash
+- same foundation commit
+- same breakpoint contract
+
+### INTEGRATION
+
+複数sectionを1pageにした時の:
+
+- cross-section spacing
+- container alignment
+- background continuity
+- typography hierarchy
+- z-index
+- breakpoint continuity
+- overflow
+
+を評価する。
+
+### PAGE_BENCHMARK
+
+Whole-page one-shot等の能力研究。
+
+SECTION/INTEGRATIONのproduction scoreと混ぜない。
+
+---
+
+## Context architecture
+
+Production SECTION runでは、入力を2層に分ける。
+
+### Coordination Envelope — 必須土台
+
+- frozen reference
+- section ID/node
+- Shared Contract path/hash
+- Section Manifest
+- verified foundation commit
+- project/designer/company guidance
+- acceptance viewport
+
+### Context Tier C0–C4 — 実験変数
+
+- C0: visual/minimal
+- C1: structured Figma
+- C2: explicit section contract
+- C3: codebase-aware
+- C4: Code Connect/design-system-connected
+
+Context量を比較するためにShared Contractまで消さない。Shared Contractの有無を測る場合は専用ablation experimentとして行う。
+
+---
+
+## CSS direction
+
+SCSSを前提にしない。
+
+既存projectのstyle architectureを最優先。
+
+新規React/Next/Vite系のcurrent default候補:
 
 ```text
-Latest tooling/community scan
-   ↓
-Reference Figma (external source of truth)
-   ↓ freeze
-Reference Contract
-   ↓
-Context Package
-   ↓
-Inspect
-   ↓
-First-pass Implementation
-   ↓ preserve
-Exact Viewport Capture
-   ↓
-Verify (diagnosis only)
-   ↓
-Failure Classification
-   ↓
-Targeted Repair
-   ↓
-Clean Re-run
-   ↓
-Candidate → Proven Playbook
-   ↓
-tool/model update → retest when relevant
+CSS Modules
++ native CSS
++ CSS Custom Properties for tokens
++ project-wide specified breakpoint contract
++ section-scoped files
 ```
+
+Breakpointの数値管理は既存project utility/PostCSS/custom-media等を優先し、section workerが各自でmedia-query値を決めない。
+
+詳細: `docs/css-strategy.md`
+
+---
 
 ## Repository Structure
 
@@ -119,10 +284,9 @@ tool/model update → retest when relevant
 ├── CLAUDE.md
 ├── docs/
 │   ├── workflow.md
-│   ├── update-preflight.md
-│   ├── evidence-policy.md
-│   ├── research-radar.md
-│   ├── community-signal-registry.md
+│   ├── section-execution.md
+│   ├── responsive-breakpoint-policy.md
+│   ├── css-strategy.md
 │   ├── reference-contract.md
 │   ├── context-package.md
 │   ├── run-contract.md
@@ -131,27 +295,39 @@ tool/model update → retest when relevant
 │   ├── visual-verification.md
 │   ├── rework-metrics.md
 │   ├── failure-taxonomy.md
+│   ├── evidence-policy.md
+│   ├── update-preflight.md
+│   ├── research-radar.md
+│   ├── community-signal-registry.md
 │   ├── knowledge-promotion.md
 │   ├── portability.md
 │   ├── agent-adapters.md
 │   ├── source-registry.md
+│   ├── figma-update-adoption-2025-2026.md
 │   ├── future-platform.md
 │   └── image-only-research-track.md
 ├── research/
 │   └── figma-updates/
 ├── prompts/
-│   ├── figma-to-code.md
+│   ├── 00-global-reconnaissance.md
+│   ├── 00-shared-foundation.md
 │   ├── 01-inspect.md
 │   ├── 02-implement.md
 │   ├── 03-verify.md
-│   └── 04-repair.md
+│   ├── 04-repair.md
+│   ├── 05-integrate.md
+│   └── figma-to-code.md
 ├── templates/
 │   ├── reference-manifest.yaml
+│   ├── shared-contract.yaml
+│   ├── section-manifest.yaml
 │   ├── run-record.yaml
 │   ├── experiment.md
 │   └── failure-record.md
 ├── schemas/
 │   ├── reference.schema.json
+│   ├── shared-contract.schema.json
+│   ├── section.schema.json
 │   └── run.schema.json
 ├── scripts/
 │   └── validate_records.py
@@ -162,85 +338,92 @@ tool/model update → retest when relevant
     └── 0001-baseline/README.md
 ```
 
+---
+
 ## Core Policy
 
-- screenshotだけで済ませず、読める場合は Figma structured context を優先する
-- screenshot は visual ground truth として必ず別レイヤーで使う
-- design system / component / token / Code Connect を既存実装へ接続する
-- PC と SP を別画面としてハードコードせず、referenceから responsive invariants を抽出する
-- giant prompt に全部詰めない。Inspect → Implement → Verify → Repair を分離する
-- Verifyではまず差分を固定し、勝手にrepairさせない
-- 失敗したpromptやrepairも削除しない
+- screenshotだけで済ませず、読める場合はstructured Figma contextを使う
+- 大pageはmetadata→section→必要childのprogressive disclosure
+- screenshotはvisual ground truthとして別レイヤーで使う
+- components/variables/Auto Layout/Grid/semantic naming/Code Connectの有無を実際に調べて実装方法を変える
+- company/designer指定breakpointを全sectionの共通契約にする
+- shared foundationを先にfreezeしてからsection並列
+- section workerはshared filesをread-onlyにする
+- Verifyではまず差分を固定し、修正と混ぜない
+- First-passを必ず保存
+- Integration Reworkを隠さない
 - 一度の成功/失敗を一般則にしない
-- agent/model固有のコツと、agent非依存の原則を分離する
-- First-passを必ず保存し、Finalだけで評価しない
-- reference designは改善対象ではなく source of truth として扱う
-- old limitationはlatest update確認後に適用する
+- old limitationはlatest update確認後に適用
+
+---
 
 ## Scoring
-
-評価は段階式。
 
 ```text
 First-pass Fidelity = Visual 40 + Structural 25 + Robustness 15 = /80
 Rework Efficiency = /10
 Reproducibility = /10 (clean replay後のみ)
-Final Composite = /100 (すべて測定後のみ)
+Final Composite = /100
 ```
 
-「最終的に綺麗になったが何度も作り直した」を高評価にしない。
+ただし`SECTION / INTEGRATION / PAGE_BENCHMARK`は別cohort。同じ点数を直接rankingしない。
+
+Finalが高くてもsection/integration/shared foundationの修正量が多ければ高評価にしない。
+
+---
 
 ## Current Figma update sensitivity
 
-Figmaの機能は短期間で大きく変わる。
+Figmaの機能は短期間で変わる。
 
-例として2026年7月には:
+Recent examples recorded in this repo include:
 
-- Auto LayoutをCSSへ近づける更新
-- code-backed screenをcanvasへ戻す際のvariable binding改善
-- imported frameのAuto Layout改善
-- AI image editの並列化
+- remote MCP / design-context workflows
+- Code Connect improvements
+- code → editable Figma roundtrip
+- asset download workflows
+- reusable agent skills
+- code-backed screen variable binding
+- updated Auto Layout closer to CSS
+- legacy/new Auto Layout coexistence
 
-などが入っている。
+古いexperimentは履歴として保持し、current recommendationは重要run前に再評価する。
 
-そのため、古いexperimentは履歴として保持しつつ、current recommendationは最新環境で再評価する。
+詳しくは `docs/figma-update-adoption-2025-2026.md`。
 
-Dated snapshot: `research/figma-updates/2026-08-10.md`
-
-## Design readiness gate
-
-Reference を受け取ったら、実装開始前に `docs/reference-contract.md` の項目を満たす。
-
-**Reference contract が未完成なら、見た目を推測して実装を始めない。**
+---
 
 ## Future: visual workbench / dashboard
 
-最終成果はprompt集だけに限定しない。
+Prompt集だけを最終成果に限定しない。
 
 実験データが貯まり必要性が確認できたら:
 
 - Figma reference
 - user-uploaded images
+- section manifests
 - agent outputs
-- PC/SP/intermediate screenshots
+- PC/SP/breakpoint screenshots
 - first-pass/final
 - side-by-side / overlay / diff
 - AI visual review
 - failure history
-- prompt/context/tool versions
+- contract hash/tool/model versions
 - update/retest radar
 
-を1画面で扱うdashboard/workbenchへ発展させる。
+を同じEvidence Bundleとして扱うworkbenchへ発展させる。
 
 詳細: `docs/future-platform.md`
 
+---
+
 ## Future: image-only reproduction
 
-Figma structured contextが無い場合でも、将来的には:
+Structured Figma contextが無い場合も、将来的には:
 
 ```text
 image(s)
-→ layout/structure hypothesis
+→ layout/section/component hypothesis
 → editable Figma / native code
 → browser render
 → visual diff
@@ -250,18 +433,16 @@ image(s)
 
 を高精度化する独立研究トラックを持つ。
 
-現時点で難しいことも、model/tool更新で再試験する。
+現時点で難しくてもmodel/tool更新で再試験する。
 
 詳細: `docs/image-only-research-track.md`
 
-## Portable outcome
-
-実験ログをそのまま他案件へコピーしない。
-
-Observation → Candidate → Proven を通過したruleだけを `playbook/` に昇格し、最終的には別repoへ小さいinstruction packageとして導入できる状態を目指す。
+---
 
 ## Research principle
 
-このリポジトリは結論集ではありません。
+このrepoは結論集ではない。
 
-**最新情報 → 仮説 → 失敗/成功 → 原因特定 → 小さな改善 → clean rerun → 再現確認 → tooling更新で再評価**を繰り返し、次の案件ほど戻りを減らすための学習システムです。
+**最新情報 → 仮説 → section単位で試す → integrationまで確認 → failure原因特定 → 小さな改善 → clean replay → 別section/案件で再現 → tooling更新で再評価**
+
+を繰り返し、次の案件ほど人間の戻りを減らす学習システムを目指す。
