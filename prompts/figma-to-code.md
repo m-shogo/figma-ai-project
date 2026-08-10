@@ -1,66 +1,68 @@
-# Prompt Pattern — Figma → Code
+# Figma → Code Prompt Architecture
 
-このファイルは完成promptではなく、実験で更新するベースライン。
+このファイルは巨大な完成promptではなく、runを再現可能にする**入口**。
 
-## Baseline
+原則として以下を順番に使う。
 
-```text
-Implement the specified Figma node in the existing application.
+1. `01-inspect.md`
+2. `02-implement.md`
+3. `03-verify.md`
+4. `04-repair.md` — 必要なfailure classだけ
 
-Primary goal:
-- Match the reference visually at the required Desktop and Mobile viewports.
-- Preserve the design structure rather than approximating the screenshot.
-- Minimize human rework after your first pass.
+## Why staged
 
-Before editing code:
-1. Inspect the target Figma node using structured design context.
-2. Identify components, variants, variables/tokens, typography, assets, Auto Layout/sizing, and responsive behavior.
-3. Inspect the existing codebase and reuse existing components/tokens when they correspond to the design.
-4. State only material ambiguities that cannot be resolved from Figma or the codebase. Otherwise proceed.
+one-shotで「読んで・作って・比較して・直して」を全部やらせると:
 
-Implementation rules:
-- Do not treat Desktop and Mobile as unrelated hardcoded pages.
-- Infer and implement the responsive rules that connect them.
-- Reuse existing project components before creating duplicates.
-- Reuse design tokens instead of introducing near-duplicate raw values when possible.
-- Preserve semantic HTML and accessibility.
-- Do not use screenshot/image replacement for UI that should be native code.
-- Do not make unrelated design improvements; the reference is the target.
+- first-passが消える
+- agentが何を誤読したか追えない
+- repairの効果が分からない
+- 同じ失敗を次回防ぐruleへ変換しにくい
 
-Verification:
-1. Render the exact required Desktop viewport.
-2. Render the exact required Mobile viewport.
-3. Check at least one intermediate width.
-4. Compare geometry, spacing, typography, colors/effects, assets/crop, wrapping, and responsive order.
-5. Fix visible or structural mismatches before declaring completion.
+このrepoでは **First-pass preservation と failure attribution** を優先する。
 
-At the end report:
-- files changed
-- reused components/tokens
-- responsive rules implemented
-- remaining mismatches or uncertainties
-- any deliberate deviation from Figma and why
-```
-
-## Variables to supply per experiment
+## Common inputs
 
 ```text
+EXPERIMENT_ID=
+RUN_ID=
+REFERENCE_MANIFEST=
 FIGMA_URL=
-FIGMA_NODE=
-DESKTOP_VIEWPORT=
-MOBILE_VIEWPORT=
-INTERMEDIATE_VIEWPORT=
+TARGET_NODE_IDS=
+CONTEXT_TIER=
+TARGET_REPOSITORY=
+STARTING_COMMIT=
 TARGET_ROUTE=
 FRAMEWORK=
+ACCEPTANCE_VIEWPORTS=
 MAX_REPAIR_ROUNDS=
 ```
 
-## Research notes
+値はreference manifest/run recordから埋める。prompt内に案件固有情報を永久保存しない。
 
-評価時は、以下の変更を一度に混ぜず A/B する。
+## COMMON vs OPTIMIZED
 
-- screenshot only vs structured context
-- structured context vs context + Code Connect
-- generic prompt vs explicit responsive contract
-- one huge prompt vs inspect → implement → verify stages
-- agent self-review only vs screenshot comparison
+### COMMON
+
+Codex / Claude Code / Cursor へ同じstage prompt、同じcontext tierを使用。
+
+### OPTIMIZED
+
+この4段構造は維持しつつ、agent固有skills/rules/commandへ最適化してよい。
+
+結果はCOMMONと別cohortとして記録する。
+
+## One-shot baseline
+
+staged workflow自体の効果を検証する場合のみ、比較用にone-shotを実行してよい。
+
+その場合も:
+
+- first-passを保存可能にする
+- reference/context tierを同一にする
+- one-shotであることをrun metadataへ記録する
+
+## Rule
+
+**Design factをprompt architectureへ埋め込まない。**
+
+デザイン固有の値はreference manifest、実装固有の値はrun record、汎用workflowだけをpromptsへ置く。
