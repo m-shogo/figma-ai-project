@@ -3,7 +3,7 @@
   "$id": "https://example.invalid/figma-ai-project/run.schema.json",
   "title": "Figma AI Run Record",
   "type": "object",
-  "required": ["schema_version", "experiment_id", "run_id", "run_class", "status", "reference", "agent", "code", "context", "execution", "captures", "scores", "rework", "failures", "repairs", "replay", "lessons"],
+  "required": ["schema_version", "experiment_id", "run_id", "run_class", "status", "tooling_preflight", "reference", "agent", "code", "context", "execution", "captures", "scores", "rework", "failures", "repairs", "replay", "lessons"],
   "properties": {
     "schema_version": { "type": "integer", "minimum": 1 },
     "experiment_id": { "type": "string", "minLength": 1 },
@@ -12,6 +12,22 @@
     "status": { "enum": ["PLANNED", "RUNNING", "BLOCKED", "COMPLETE", "INVALID"] },
     "started_at": { "type": "string" },
     "completed_at": { "type": "string" },
+    "tooling_preflight": {
+      "type": "object",
+      "required": ["checked_at", "figma_release_notes_checked", "figma_mcp_docs_checked", "agent_docs_checked", "community_scan_checked", "changes_relevant_to_run", "rules_to_retest", "new_hypotheses", "blockers_or_limits"],
+      "properties": {
+        "checked_at": { "type": "string" },
+        "figma_release_notes_checked": { "type": "boolean" },
+        "figma_mcp_docs_checked": { "type": "boolean" },
+        "agent_docs_checked": { "type": "boolean" },
+        "community_scan_checked": { "type": "boolean" },
+        "changes_relevant_to_run": { "type": "array" },
+        "rules_to_retest": { "type": "array" },
+        "new_hypotheses": { "type": "array" },
+        "blockers_or_limits": { "type": "array" }
+      },
+      "additionalProperties": true
+    },
     "reference": {
       "type": "object",
       "required": ["reference_id", "manifest_path", "figma_nodes"],
