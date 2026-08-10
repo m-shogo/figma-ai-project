@@ -1,9 +1,40 @@
-schema_version: 2
+schema_version: 3
 contract_id: CONTRACT-XXXX
 reference_id: REF-XXXX
 status: DRAFT # DRAFT | FROZEN | SUPERSEDED
 created_at: ""
 updated_at: ""
+
+figma_profile:
+  captured_at: ""
+  source_nodes: []
+  components:
+    level: UNKNOWN # NONE | SPARSE | PARTIAL | SYSTEMATIC | UNKNOWN
+    evidence: []
+  variables:
+    level: UNKNOWN # NONE | SPARSE | PARTIAL | SYSTEMATIC | UNKNOWN
+    modes_observed: []
+    aliases_observed: false
+    evidence: []
+  auto_layout:
+    coverage: UNKNOWN # NONE | LOW | MEDIUM | HIGH | MIXED | UNKNOWN
+    generation: UNKNOWN # NONE | LEGACY | UPDATED_2026 | MIXED | UNKNOWN
+    grid_observed: false
+    evidence: []
+  semantic_naming:
+    quality: UNKNOWN # LOW | MEDIUM | HIGH | UNKNOWN
+    evidence: []
+  code_connect:
+    level: UNKNOWN # NONE | PARTIAL | STRONG | UNKNOWN
+    mapped_components: []
+    evidence: []
+  annotations:
+    level: UNKNOWN # NONE | PARTIAL | STRONG | UNKNOWN
+    evidence: []
+  assets:
+    level: UNKNOWN # NONE | PARTIAL | STRONG | UNKNOWN
+    evidence: []
+  strategy_decisions: []
 
 codebase:
   repository: ""
