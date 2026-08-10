@@ -1,280 +1,232 @@
 # Figma Structure Profiling
 
-同じ見た目でも、Figma内部が:
+同じ見た目でもFigma内部構造はSectionごとに違うことがある。
 
-- Auto Layout中心
-- Variablesでbinding済み
-- Components/Variants中心
-- semantic naming済み
+- Headerはproduction componentに強く対応
+- MainVisualはAuto Layoutとfreeformが混在
+- ContentはVariables/Componentsが整理済み
+- Editorial sectionはvisual intent中心
 
-なのか、
+そのため、**ページ全体のCapability Profileと、SectionごとのStructure Profileを分ける。**
 
-- absolute/freeform中心
-- raw color/spacing
-- detached/one-off layers
-- `Frame 123`中心
+---
 
-なのかで、AIへ渡すべき情報と実装戦略は変わる。
+## Two profile layers
 
-**Figma機能を使っていると仮定しない。実際のtarget nodeを調査してから戦略を選ぶ。**
+### 1. Global Figma Capability Profile
+
+Canonical: `docs/figma-capability-profile.md`
+
+責務:
+
+- target page/reference全体で何が利用/取得可能か
+- Components / Variables / Auto Layout / Code Connect等の全体成熟度
+- Shared Foundationへ効くstrategy
+- component/token resolutionの前提
+- tooling limitation / UNDETERMINED
+
+保存先: Shared Contract `figma_profile`
+
+Global Profileは「全Sectionを同じ方法で実装する命令」ではない。
+
+### 2. Per-section Figma Structure Profile
+
+責務:
+
+- そのSectionでどのFigma structureを信頼できるか
+- PC/SP nodeごとの局所signal
+- codebase reuse優先度
+- Section固有translation mode
+
+保存先: `templates/figma-structure-profile.yaml`
+
+Section Manifestはprofile path + SHA-256を固定する。
+
+**Globalは共有戦略、Section Profileは局所差分/translation戦略。**
+
+同じ情報を二重source-of-truthにしない。
+
+---
+
+## Epistemic state and confidence are separate
+
+各signalは2軸で記録する。
+
+### `state`
+
+- `UNKNOWN` — まだ十分に調査していない
+- `NONE` — 調査した結果、そのSectionには存在しない
+- `OBSERVED` — signalを観測した
+- `UNDETERMINED` — 調査したがcurrent MCP/API/client/権限では確定不能
+
+### `confidence`
+
+- `NONE`
+- `LOW`
+- `MEDIUM`
+- `HIGH`
+
+Example:
+
+```yaml
+components:
+  state: OBSERVED
+  confidence: HIGH
+  evidence:
+    - "Component instance inventory"
+
+auto_layout:
+  state: UNDETERMINED
+  confidence: HIGH
+  evidence:
+    - "layout properties取得済みだがgeneration metadataはcurrent MCPでは確定不能"
+  generation: UNDETERMINED
+```
+
+`UNDETERMINED`は失敗ではない。Conservative strategyで進み、tool update時に`RETEST_NOW`へ戻す。
 
 ---
 
 ## Principle
 
-Figma structureは重要なdesign intent evidenceだが、**source code DOM/CSSを機械的にコピーすべき構造そのものではない。**
+Figma structureはdesign intent evidenceだが、source code DOM/CSSそのものではない。
 
-例:
-
-- Figma Auto Layoutあり → Flex/Grid intentの強いsignal
-- Auto Layoutなし → `position:absolute`が正解、とは限らない
+- Auto Layoutあり → Flex/Grid intentの強いsignal
+- Auto Layoutなし → absolute positioning命令ではない
 - Variables bindingあり → project token mapping候補
-- raw HEX → 必ずglobal token化、とは限らない
+- raw HEX → 必ずglobal token化ではない
 - Figma Componentあり → code component reuse候補
-- Componentなし → native divを毎回作る、とは限らない
+- Componentなし → code component不要ではない
 
 Target codebase/design systemも同時に見る。
 
 ---
 
-# Structure signals to inspect
+## Signals to inspect per Section
 
-## 1. Components / Variants
-
-確認:
+### Components / Variants
 
 - component instances
 - component sets
 - variants/properties
-- detached instances
-- repeated visually identical groups
-- Code Connect mappings
+- detached/repeated patterns
 - corresponding existing code components
 
-### Strong signal
+Strong mappingは`docs/component-resolution.md`へ渡す。
 
-Figma component + code component/Code Connectが対応。
+### Variables / Modes
 
-→ component reuseを最優先。
-
-### Weak/no component signal
-
-Figmaでone-offでもcodebaseに既存componentがある可能性を確認する。
-
-Figmaの構造不足を理由にduplicate code componentを作らない。
-
----
-
-## 2. Variables / Modes
-
-確認:
-
-- color variables
-- spacing/number variables
-- typography-related variables where used
-- modes
-- aliases
+- bound properties
+- color/spacing/number/typography variables
+- modes/aliases
 - raw values
-- variable binding coverage
 
-### Bound value
+Global resolutionは`docs/token-mapping.md`へ渡す。
 
-→ existing project token/design-system mappingを調査。
+Section Profileは**このSectionで実際にどの程度使われているか**を記録する。
 
-### Unbound value
+### Auto Layout / Grid / Sizing
 
-→ one-offなのか、Figma側の未整理なのか、codebase tokenに既に存在するのか確認。
-
-Raw valueを自動的に新global tokenへ昇格しない。
-
----
-
-## 3. Auto Layout / Grid / Sizing
-
-確認:
-
-- Auto Layout usage
-- updated vs legacy generation
-- Grid flow
-- horizontal/vertical/wrap
+- horizontal / vertical / Grid / wrap
 - gap/padding
-- fixed / hug / fill
+- fixed/hug/fill
 - min/max
-- alignment
 - nested layout
-- intentional absolute/freeform children
+- intentional absolute/freeform
+- generation when observable
 
-### Auto Layout rich
+Generationがcurrent toolで確定できなければ`UNDETERMINED`。
 
-→ Flex/Grid translationの信頼度を上げる。
+### Semantic naming
 
-### Auto Layout poor
+- semantic Section/frame/component/layer names
+- generic names比率
 
-→ screenshot + sibling alignment + codebase layout patternsからdesign intentを再構築する。
+Nameが弱ければhierarchy + screenshot + text/assets/component identityを併用する。
 
-**Auto Layoutが無いことをabsolute positioning命令として解釈しない。**
+### Code Connect
 
----
+- mapped components
+- mapped coverage
 
-## 4. Semantic naming
+No mappingなら`NONE` + evidence。存在しないことと未調査を混同しない。
 
-確認:
+### Assets
 
-- section/frame names
-- component/layer names
-- generic names (`Frame 123`, `Group 8`)
-- repeated naming patterns
-- annotations/dev resources
+- exact image/vector/icon source
+- crop/focal behavior
 
-Semantic namesは:
+Exact sourceがあるのにscreenshot crop/再生成へ置換しない。
 
-- section discovery
-- component mapping
-- asset identification
-- interaction intent
+### Responsive mapping
 
-のconfidenceを上げる。
-
-Source Figma layerをAIが勝手にrenameする必要はない。
-
----
-
-## 5. Assets
-
-確認:
-
-- image fills
-- SVG/vector/icon
-- masks
-- crop/focal point
-- duplicated image layers
-- exportable/source assets
-
-Structured assetが取れる場合はsourceを使う。
-
-Screenshot cropから再生成しない。
-
----
-
-## 6. Responsive evidence
-
-Figma structure profileとbreakpoint contractを混ぜない。
-
-Profileが見るもの:
-
-- PC/SP node correspondence
-- layout behavior difference
+- PC/SP logical correspondence
+- order/visibility/layout change
 - fixed/hug/fill evidence
-- visibility/order difference
 
-Breakpoint値は:
-
-- owner/company
-- design system
-- existing code
-- Figma annotation
-
-等のShared Contract sourceから取る。
+Breakpoint値そのものはShared Contractのsource of truthを使う。
 
 ---
 
-# Translation modes
+## Translation modes
 
-Sectionごとにmodeを選べる。
+### STRUCTURE_FIRST
 
-## STRUCTURE_FIRST
-
-Use when:
-
-- Auto Layout/Gridが十分
-- Components/Variantsが明確
-- Variables bindingが比較的強い
-- semantic structureが読みやすい
-
-Priority:
+Use when Section内でAuto Layout/Grid等のstructured layoutをMEDIUM/HIGH confidenceで観測し、信頼できる構造が十分ある。
 
 ```text
 structured Figma
-→ Code Connect / codebase mapping
+→ component/token/codebase mapping
 → screenshot verification
 ```
 
-Figma structureをdesign intentとして積極利用する。
-
----
-
-## HYBRID
+### HYBRID
 
 最も一般的な候補。
 
-例:
-
-- layoutはAuto Layout
-- 色はraw値多め
-- componentは一部だけ
-- namingはmixed
-
-Priority:
-
 ```text
-信頼できるFigma structure
+trusted Figma structure
 + codebase conventions
 + screenshot ground truth
 ```
 
-情報源ごとにconfidenceを分ける。
+信頼できる部分だけstructureを使い、弱い部分はvisual/codebase evidenceへ切り替える。
 
----
-
-## VISUAL_FIRST
+### VISUAL_FIRST
 
 Use when:
 
-- flat/imported/legacy design
-- Auto Layoutがほぼない
-- generic layer names
-- repeated visual elementsがcomponent化されていない
-- structureをそのままcodeへ写すと明らかに脆い
-
-Priority:
+- flat/imported/legacy/freeform
+- structure signalが弱い/UNDETERMINED
+- generic layersが多い
+- structureをそのままcode化すると脆い
 
 ```text
-reference screenshot/geometry
+reference visual/geometry
 + content hierarchy
 + existing codebase/design system
-+ selected Figma values/assets
++ exact Figma values/assets
 ```
 
-ただしimage-as-UIへ逃げない。
+Visual-firstはimage-as-UIではない。Native semantic codeを作りbrowser renderで比較する。
 
-Visual-first = screenshotを1枚貼る、ではない。
-
-Native semantic codeを作り、browser renderで比較する。
-
----
-
-## CODEBASE_FIRST
+### CODEBASE_FIRST
 
 Use when:
 
-- mature production design systemが存在
-- Figma側component mappingが弱い/古い
-- codebase componentが正しい実装制約を持つ
-- reference visualを既存component props/themeで再現可能
-
-Priority:
+- mature production design systemがある
+- Figma mappingが弱い/古い
+- existing code componentが正しいimplementation constraintを持つ
 
 ```text
-reference visual/intent
-→ existing production components/tokens
+reference intent
+→ existing production component/token
 → Figma structure as supporting evidence
 ```
 
-Figma構造へ合わせるためにproduction architectureを壊さない。
-
 ---
 
-# Profile is per section
+## Per-section variation is expected
 
 1ページ内でも:
 
@@ -282,133 +234,98 @@ Figma構造へ合わせるためにproduction architectureを壊さない。
 Header        → CODEBASE_FIRST
 MainVisual    → HYBRID
 Content01     → STRUCTURE_FIRST
-Editorial art section → VISUAL_FIRST
+Editorial art → VISUAL_FIRST
 Footer        → CODEBASE_FIRST
 ```
 
-のように異なってよい。
+でよい。
 
-「このFigma fileは全部STRUCTURE_FIRST」と一括決定しない。
+Global Capability ProfileがSYSTEMATICでも、特定Sectionだけflat/freeformならそのSectionはHYBRID/VISUAL_FIRSTになり得る。
+
+逆もある。
 
 ---
 
-# Evidence levels
-
-Profileでは各signalにconfidenceを持つ。
+## Profiling lifecycle
 
 ```text
-NONE
-LOW
-MEDIUM
-HIGH
+Reference Freeze
+→ Global Capability Profile
+→ Section Discovery / PC-SP mapping
+→ Per-section Structure Profile DRAFT
+→ targeted Figma inspection
+→ translation mode recommendation
+→ Structure Profile fingerprint
+→ Section Manifest path/hash binding
+→ active Section worker
 ```
 
-例:
+探索中:
 
-```yaml
-signals:
-  components: HIGH
-  variables: MEDIUM
-  auto_layout: HIGH
-  semantic_naming: LOW
-  code_connect: NONE
-```
+- `UNKNOWN`可
+- translation mode `UNKNOWN`可
 
-Modeはheuristic recommendationであり永久正解ではない。
+Active worker開始時:
+
+- relevant signalsの`UNKNOWN`不可
+- `NONE/OBSERVED/UNDETERMINED`はevidence必須
+- translation mode確定必須
+- mode reasoning evidence必須
+- profile SHA-256がSection Manifest/Run Recordと一致必須
+
+この二段階で、探索を硬直化せずproduction lineageだけ厳密にする。
 
 ---
 
-# Suggested measurements
+## Suggested measurements
 
-将来MCP metadataから自動化できる候補:
+Toolingから取れる時だけ記録する。
 
-- component instance count / repeated pattern count
-- Code Connect mapped instance coverage
+- component instance count
+- Code Connect mapped coverage
 - variable-bound property coverage
 - Auto Layout container coverage
 - absolute-position child ratio
 - generic layer-name ratio
-- semantic top-level section name ratio
-- asset source availability
+- exact asset source availability
 - PC/SP mapping confidence
 
-Coverage値の取得可能性はFigma/MCP更新に合わせて再評価する。
-
-取得できないmetricを推測で埋めない。
+取得できないmetricを推測で埋めない。Current toolで確定不能なら`UNDETERMINED`として記録する。
 
 ---
 
-# Implementation strategy matrix
+## Failure attribution
 
-| Figma signal | Preferred action |
-|---|---|
-| Component + Code Connect | production component reuse first |
-| Component only | map to existing code component before creating new |
-| Variables bound | map to project token/theme |
-| Raw repeated values | token candidate; do not auto-promote |
-| Strong Auto Layout | translate intent to Flex/Grid |
-| Weak Auto Layout | reconstruct layout from visual + codebase evidence |
-| Semantic names | use for discovery/mapping confidence |
-| Generic names | do not trust names; use hierarchy + screenshot |
-| Exact asset available | use source asset |
-| Weak structure overall | VISUAL_FIRST/HYBRID, not screenshot-as-UI |
+Profileにより、同じvisual mismatchでも原因を分けられる。
+
+Example: spacing mismatch
+
+- observed Auto Layout gapをagentが無視 → `CONTEXT_IGNORED`
+- Auto Layout NONE → inference/layout translation issue
+- Auto Layout UNDETERMINED → tooling limitation + conservative strategy failureの可能性
+- project token mapping違い → `TOKEN_REUSE_MISS`
+
+Figma整理不足を全部agent failureへ押し付けず、structured evidenceを無視したagentも見逃さない。
 
 ---
 
-# Failure attribution
+## Update-aware rule
 
-Profileを残すとfailure原因を分けやすい。
+今日VISUAL_FIRSTだったSectionが、将来Figma/MCP/vision updateでSTRUCTURE_FIRST相当に変わる可能性がある。
 
-例:
+保存する:
 
-```text
-Spacing mismatch
-```
+- profile captured_at
+- Figma/tooling snapshot
+- profile SHA-256
+- evidence
+- UNDETERMINED理由
 
-でも:
+Major update後:
 
-- Auto Layout gapをagentが無視 → CONTEXT_IGNORED
-- Auto Layout自体が無い → STRUCTURE_WEAK / inference issue
-- project token mappingが違う → TOKEN_REUSE_MISS
+- old profileを履歴として保持
+- relevant Sectionだけre-profile
+- new profile revision/hashを作る
+- old/newを別cohortとして比較
 
-と原因が違う。
-
-Figmaの整理不足をagent failureへ全部押し付けない。
-
-逆にstructured dataがあるのに使わなかった場合も明確になる。
-
----
-
-# Update-aware rule
-
-今日VISUAL_FIRSTだったFigma/import workflowが、将来Figma updateやvision/MCP improvementでSTRUCTURE_FIRST相当に変わる可能性がある。
-
-したがって:
-
-- tool/model/dateをprofileへ残す
-- old profileを永久固定しない
-- major Figma/MCP update後に再profile可能
-- screenshot-only能力も定期的に再benchmark
-
-する。
-
----
-
-# Relation to section-first execution
-
-Recommended flow:
-
-```text
-Global Figma metadata
-→ Section discovery
-→ Section structure profile
-→ Translation mode selection
-→ Shared Contract/Foundation
-→ Section Inspect
-→ Section implementation
-→ Browser verification
-```
-
-つまり**sectionを切った後、各sectionのFigma構造を見て実装方法まで変える。**
-
-これが「全sectionへ同じprompt/translation法を機械的に適用する」よりcurrent defaultとして妥当。
+一度のprofile結果を永久固定しない。
