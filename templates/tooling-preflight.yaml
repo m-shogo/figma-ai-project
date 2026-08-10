@@ -1,0 +1,49 @@
+schema_version: 1
+preflight_id: PREFLIGHT-XXXX
+status: DRAFT # DRAFT | READY | STALE
+checked_at: ""
+run_or_experiment: ""
+
+figma:
+  release_notes:
+    status: PENDING # PENDING | CHECKED | UNAVAILABLE
+    source: "https://www.figma.com/release-notes/"
+    observed_latest_date: ""
+    notes: []
+  mcp_docs:
+    status: PENDING
+    sources: []
+    notes: []
+  current_capabilities: []
+  # - capability: design_context
+  #   status: AVAILABLE # AVAILABLE | LIMITED | UNAVAILABLE | UNKNOWN
+  #   evidence: []
+  relevant_changes: []
+  old_rules_to_retest: []
+
+agent:
+  client: "" # codex | claude-code | cursor | other
+  model: ""
+  docs:
+    status: PENDING # PENDING | CHECKED | UNAVAILABLE
+    sources: []
+    notes: []
+  current_capabilities: []
+  relevant_changes: []
+
+field_signals:
+  status: PENDING # PENDING | CHECKED | UNAVAILABLE
+  checked_sources: [] # Zenn / Qiita / X / GitHub / forums / practitioner blogs etc.
+  recent_signals: []
+  hypotheses_to_test: []
+  notes: []
+
+impact:
+  workflow_changes_required: []
+  retest_now: []
+  keep_current_for_now: []
+  blockers: []
+
+readiness:
+  ready_for_significant_run: false
+  notes: []
