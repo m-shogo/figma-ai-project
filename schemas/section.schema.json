@@ -3,13 +3,15 @@
   "$id": "https://example.invalid/figma-ai-project/section.schema.json",
   "title": "Figma AI Section Execution Manifest",
   "type": "object",
-  "required": ["schema_version", "reference_id", "page_id", "shared_contract", "shared_contract_sha256", "foundation_commit", "sections", "integration"],
+  "required": ["schema_version", "reference_id", "page_id", "shared_contract", "shared_contract_sha256", "figma_structure_profile", "figma_structure_profile_sha256", "foundation_commit", "sections", "integration"],
   "properties": {
     "schema_version": { "type": "integer", "minimum": 1 },
     "reference_id": { "type": "string", "minLength": 1 },
     "page_id": { "type": "string" },
     "shared_contract": { "type": "string" },
     "shared_contract_sha256": { "type": "string" },
+    "figma_structure_profile": { "type": "string" },
+    "figma_structure_profile_sha256": { "type": "string" },
     "foundation_commit": { "type": "string" },
     "sections": {
       "type": "array",
