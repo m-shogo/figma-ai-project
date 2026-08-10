@@ -1,32 +1,44 @@
 # Section-first Execution
 
-Figma → code の実務標準は、ページ全体を1回で生成することではなく、**全体の共通契約を先に固定し、論理section単位で実装し、最後に統合する**方式とする。
+Figma → code のproduction defaultは、ページ全体を1回で生成することではなく、**全体の共通契約を先に確定し、論理section単位で実装し、最後に統合する**方式とする。
 
 Figma公式MCP docsも large/heavy frame を一括処理せず、Header / Sidebar / Card のような smaller logical chunks に分けることを推奨している。
+
+Whole-page one-shotは能力進化を測るresearch benchmarkとして残すが、現時点のproduction defaultではない。
 
 ## Core architecture
 
 ```text
-Figma page/frame
+Frozen Figma reference
   ↓
 0. Global reconnaissance
   ↓
-1. Shared design/code contract
+1. Shared contract DRAFT
   ↓
-2. Section manifest
+2. Section manifest DRAFT
   ↓
 3. Shared foundation implementation
   ↓
-4. Parallel section implementation
+4. Foundation verification
   ↓
-5. Integration
+5. Shared contract FROZEN + hash
   ↓
-6. Global visual/responsive verification
+6. Section manifest binds contract hash + foundation commit
   ↓
-7. Targeted section repair
+7. Parallel section implementation
   ↓
-8. Final global verification
+8. Integration
+  ↓
+9. Global visual / responsive verification
+  ↓
+10. Targeted section repair
+  ↓
+11. Final global verification
 ```
+
+重要なのは、**parallel workerを開始する前にshared contractとfoundation commitをfreezeすること**。
+
+---
 
 ## 0. Global reconnaissance — coordinator only
 
@@ -35,23 +47,37 @@ Figma page/frame
 ### Read first
 
 1. target codebase/framework/style architecture
-2. Figma page/frame metadata
-3. top-level hierarchy and likely section boundaries
-4. subscribed libraries/design-system context
-5. reusable components/component sets/variants
-6. variables/tokens/modes
-7. typography/font availability
-8. Auto Layout/grid/sizing behavior
-9. responsive PC/SP relationships
-10. assets/images/icons/crop behavior
-11. states/interactions/annotations/dev resources
-12. existing code components/tokens/routes
+2. company / project / designer implementation rules
+3. existing global breakpoint definitions
+4. Figma page/frame metadata
+5. top-level hierarchy and likely section boundaries
+6. subscribed libraries/design-system context
+7. reusable components/component sets/variants
+8. variables/tokens/modes
+9. typography/font availability
+10. Auto Layout/grid/sizing behavior
+11. PC/SP responsive relationships
+12. assets/images/icons/crop behavior
+13. states/interactions/annotations/dev resources
+14. existing code components/tokens/routes
 
-`get_metadata` 等の sparse hierarchy を先に使い、大frameへ最初から full `get_design_context` を投げない。
+大frameへ最初からfull contextを投げず、可能なら sparse hierarchy / metadata でsection候補を絞ってから relevant node を深掘りする。
 
-## 1. Shared design/code contract
+### Breakpoint rule
 
-section workerを起動する前に、全workerが読む immutable contract を作る。
+デザイナー / 会社 / design system / existing productでbreakpoint指定がある場合、それをsource of truthとして先に取得する。
+
+AIはreference画像から別thresholdを発明しない。
+
+詳しくは `docs/responsive-breakpoint-policy.md`。
+
+---
+
+## 1. Shared contract DRAFT
+
+`templates/shared-contract.yaml` を作る。
+
+section workerを起動する前に、全workerが共有すべきものを1箇所へ集約する。
 
 最低限:
 
@@ -59,27 +85,36 @@ section workerを起動する前に、全workerが読む immutable contract を�
 - styling strategy
 - global CSS/token entry points
 - font loading policy
-- color tokens
-- spacing tokens
-- radius/effect tokens
+- color/spacing/radius/effect tokens
 - typography roles
 - container widths/gutters
 - layout primitives
+- **global breakpoint source + exact values/query semantics**
 - responsive invariants
-- breakpoint evidence / UNKNOWNs
 - shared component inventory
 - Code Connect mappings if available
 - asset policy
 - accessibility baseline
 - file/folder conventions
+- coordinator-only files
 
 ### Important
 
-workerごとに色・font-size・breakpoint・Buttonを再発明させない。
+workerごとに以下を再発明させない。
 
-## 2. Section manifest
+- colors
+- spacing scale
+- font setup
+- container
+- breakpoint
+- Buttonなどshared component
+- z-index scale
 
-Figmaから自動/半自動で section boundaries を抽出してmanifest化する。
+---
+
+## 2. Section manifest DRAFT
+
+Figmaから自動/半自動でsection boundariesを抽出し、`templates/section-manifest.yaml`へ保存する。
 
 例:
 
@@ -94,46 +129,111 @@ S05 Footer
 各sectionは:
 
 - Figma node ID
-- PC node/state
-- SP node/state if separate
+- PC/SP node/state
 - screenshot evidence
+- relevant structured context
 - section-specific components
 - section-specific assets
-- relevant variables
-- responsive behavior
-- dependencies on shared components
+- shared component dependencies
+- token/font dependencies
+- responsive changes at the **shared breakpoint**
 - output code path
+- allowed write paths
 
 を持つ。
 
-Figma layer名がsemanticならそのまま利用する。`Frame 123` 等しかない場合は、metadata + screenshotからAIが**候補名/境界を提案**してmanifestへ保存する。原本のlayer名を勝手に書き換える必要はない。
+Figma layer名がsemanticならそのまま利用する。`Frame 123`等しかない場合はmetadata + screenshotからAIが候補名/境界を提案してmanifestへ保存する。原本layer名を勝手に変更する必要はない。
 
-## 3. Shared foundation — serial first
+section manifestにbreakpoint数値を複製しない。shared contractを参照する。
 
-並列sectionより先に、共通基盤だけは1回作る。
+---
 
-Recommended implementation order:
+## 3. Shared foundation — serial
+
+並列sectionより先に共通基盤だけ作る。
+
+Recommended order:
 
 1. font loading
-2. CSS reset/base assumptions if project requires
-3. CSS custom properties / project token bindings
-4. page container/gutter primitives
-5. spacing/layout primitives
-6. shared components already present in Figma/codebase
-7. shared asset helpers
+2. existing reset/base integration if needed
+3. project tokens / CSS custom properties binding
+4. global breakpoint implementation/source binding
+5. page container/gutter primitives
+6. spacing/layout primitives
+7. shared components
+8. shared asset helpers
+9. shared accessibility primitives if applicable
 
-このphase完了commitを section workers の共通baseにする。
+### Existing project first
 
-## 4. Parallel section implementation
+既存projectに既に正本がある場合は新しく複製しない。
 
-shared foundationが固定されたら sectionを並列化してよい。
+- existing breakpoint utility
+- existing typography
+- existing tokens
+- existing Button/Input/etc.
 
-### Worker contract
+を再利用し、shared contractには参照先を記録する。
 
-各workerへ渡すもの:
+---
 
-- shared contract
-- foundation commit
+## 4. Foundation verification
+
+parallel開始前にfoundationだけ検証する。
+
+最低限:
+
+- build/type/lint
+- fonts load correctly
+- token references resolve
+- shared components render
+- global container/gutter behavior
+- company/designer-specified breakpoints are represented exactly
+- no duplicate design-system primitive created unnecessarily
+
+既存基盤をそのまま使う場合でも `VERIFIED` として確認する。
+
+---
+
+## 5. Freeze shared contract
+
+Foundation verification後:
+
+```text
+foundation.status = VERIFIED
+foundation.commit = <verified commit>
+status = FROZEN
+freeze.ready = true
+```
+
+にする。
+
+そのファイルのSHA-256をsection manifestへ保存する。
+
+これによりparallel worker全員が:
+
+- 同じshared rules
+- 同じfoundation commit
+- 同じbreakpoints
+- 同じcomponents/tokens
+
+から開始したことを証明できる。
+
+shared contractを更新したらhashが変わるため、古いsection worker outputを無条件で統合しない。
+
+---
+
+## 6. Parallel section implementation
+
+shared contract + foundationが固定されたらsectionを並列化してよい。
+
+### Worker input
+
+各workerへ渡す:
+
+- frozen shared contract
+- shared contract hash
+- verified foundation commit
 - section manifest entry
 - exact Figma section node(s)
 - section screenshot(s)
@@ -143,109 +243,162 @@ shared foundationが固定されたら sectionを並列化してよい。
 
 ### Isolation rule
 
-原則としてsection workerは:
+原則section workerは:
 
 - shared token fileを変更しない
+- font setupを変更しない
 - root page compositionを変更しない
 - 他sectionのCSSを変更しない
-- global breakpointを勝手に追加しない
+- global breakpoint値を変更/追加しない
 - duplicate shared componentを作らない
+- global z-index/container ruleを勝手に追加しない
 
-新しい共通ruleが必要なら `PROPOSE_SHARED_CHANGE` としてcoordinatorへ返す。
+新しい共通ruleが必要なら:
+
+```text
+PROPOSE_SHARED_CHANGE
+```
+
+新しいbreakpointが必要に見えるなら:
+
+```text
+PROPOSE_BREAKPOINT_EXCEPTION
+```
+
+として証拠とscopeをcoordinatorへ返す。
+
+worker自身では適用しない。
 
 ### Why
 
-並列化の最大リスクは速度ではなく**design drift / merge conflict / duplicate rules**。
+並列化の最大リスクは処理速度ではなく:
 
-shared surfaceをread-onlyにすることで並列実装しても整合性を保つ。
+- design drift
+- duplicate rules
+- merge conflict
+- breakpoint drift
+- foundation version drift
 
-## 5. Integration — coordinator
+shared surfaceをread-onlyにして抑える。
 
-section workersの出力をpage orderへ接続する。
+---
 
-ここで初めて確認する:
+## 7. Responsive implementation
 
-- section間vertical rhythm
-- background continuation
-- container alignment
-- shared heading/button consistency
-- z-index/layer overlap
-- responsive transitions between sections
-- page-level navigation/anchor behavior
-- global overflow
+### Production default
 
-section単体が100点でもページ全体で崩れるため、integration scoreを別に持つ。
+```text
+GLOBAL_SPECIFIED
+```
 
-## 6. Responsive strategy
+会社/デザイナー/design systemの共通breakpointを全sectionへ適用する。
 
-PC/SPを完全に別実装しない。
+sectionごとに異なるのはbreakpoint値ではなく、その境界で起こるbehavior:
 
-まずFigmaから:
-
-- invariants
 - reorder
 - hide/show
-- wrap
-- container width
-- min/max
+- stack
+- column count
+- alignment
 - image crop
-- fixed/hug/fill
-- grid/flex behavior
+- typography/layout changes
 
-を抽出する。
+など。
 
-### Breakpoints
+### AI role
 
-`768pxだから`のような慣習値を先に決めない。
+AIは指定breakpointを探すのではなく:
 
-優先順位:
+1. sourceを確認
+2. exact query/valueを共有契約へ記録
+3. section behaviorをFigmaから読む
+4. boundary前後で破綻を検証
+5. 必要なら例外を提案
 
-1. existing product breakpoints
-2. explicit Figma/design-system breakpoint definitions
-3. observed transition requirements between provided frames
-4. intrinsic CSS (`flex`, `grid`, `minmax`, `clamp`, container behavior)
-5. only then evidence-backed new media/container query threshold
+する。
 
-UNKNOWNなら記録して最小仮定で実装する。
+### Intrinsic CSS
 
-## 7. Information order: inspect vs implement
+共通breakpointを増やさず、design intentに沿って:
+
+- flex/grid
+- wrap
+- min/max
+- minmax
+- clamp
+- fluid sizing
+
+を使うことは可能。
+
+---
+
+## 8. Information order: inspect vs implement
 
 「何を見る順」と「何を書く順」は違う。
 
 ### Inspect order
 
-1. codebase/style system
-2. page metadata / section boundaries
-3. components + variants
-4. variables/tokens
-5. fonts/typography
-6. Auto Layout/grid/sizing
-7. PC/SP responsive relationships
-8. assets/crops
-9. states/interactions/annotations
-10. section-specific exceptions
+1. codebase/style/design-system rules
+2. company/designer breakpoint specification
+3. page metadata / section boundaries
+4. components + variants + Code Connect
+5. variables/tokens/modes
+6. fonts/typography
+7. Auto Layout/grid/sizing
+8. PC/SP behavior at specified breakpoints
+9. assets/crops
+10. states/interactions/annotations
+11. section-specific exceptions
 
 ### Implementation order
 
-1. tokens/fonts
-2. layout/container primitives
-3. shared components
-4. section components
-5. section layout
-6. responsive rules
-7. page integration
-8. visual repair
+1. fonts/tokens
+2. breakpoint/shared responsive foundation
+3. layout/container primitives
+4. shared components
+5. section components
+6. section layout
+7. section responsive behavior
+8. page integration
+9. visual repair
 
-componentsを先に**調査**するが、component codeが消費するtoken/fontを先に**実装**する。
+componentsを先に**調査**するが、component codeが消費するtoken/font/breakpoint foundationを先に**実装**する。
 
-## 8. Section consistency gates
+---
 
-各section merge前:
+## 9. Integration — coordinator
 
-- no undeclared raw color if token exists
+section workerのoutputをpage orderへ接続する。
+
+ここで確認する:
+
+- section order
+- cross-section vertical rhythm
+- background continuation
+- container alignment
+- shared heading/button consistency
+- z-index/layer overlap
+- **same breakpoint contract across all sections**
+- responsive transition continuity
+- page-level navigation/anchor behavior
+- global overflow
+- asset continuity
+
+section単体が高品質でもページ全体で崩れるため、integration evidenceを必ず残す。
+
+---
+
+## 10. Section consistency gates
+
+各section integration前:
+
+- shared contract hash一致
+- foundation commit一致
+- no undeclared raw color if mapped token exists
 - no duplicate font declaration
-- no new arbitrary breakpoint without evidence
+- no unapproved breakpoint
 - no duplicate shared component
+- allowed pathだけ変更
 - container alignment matches shared contract
 - screenshots captured at required viewport
 - section-level mismatch recorded
@@ -254,32 +407,59 @@ page integration後:
 
 - shared visual rhythm
 - cross-section spacing
+- breakpoint boundary behavior
 - global responsive behavior
 - typography hierarchy
 - asset quality/crop
 - accessibility basics
+- overflow/z-index/background continuity
 
-## 9. Parallelism policy
+---
+
+## 11. Parallelism policy
 
 ### Safe to parallelize
 
-- independent content sections
+- independent content sections after foundation freeze
 - local visual repair in separate files
 - asset extraction for separate nodes
 - evidence capture
+- section-level verification
 
-### Usually serial/coordinated
+### Serial/coordinated
 
+- breakpoint policy
 - token definitions
 - font setup
 - shared components
 - global container/grid
 - root page composition
-- breakpoint policy
+- shared z-index strategy
 - global navigation
+- shared contract changes
 
-## 10. Research exception
+---
 
-Whole-page one-shot may still be run as an experiment to measure how capabilities change over time.
+## 12. Contract change during parallel work
 
-It is **not** a permanent ban; it is simply not the current production default. If future models/MCP materially improve large-frame handling, re-test it against section-first execution.
+shared contract変更が承認された場合:
+
+1. section workerを新規開始しない
+2. coordinatorがshared changeを実装
+3. foundation再検証
+4. new foundation commit
+5. contract revision + new hash
+6. 既存sectionへの影響を判定
+7. affected sectionだけrebase/re-run
+
+全sectionを無条件で作り直す必要はないが、**異なるcontract hashの成果物をそのまま混ぜない。**
+
+---
+
+## 13. Research exception
+
+Whole-page one-shotやAI-inferred breakpointは永久禁止ではない。
+
+major model/MCP/Figma update後にresearch cohortとして再テストできる。
+
+ただしproductionでは、案件側に明示breakpointがある限りその指定が優先される。
