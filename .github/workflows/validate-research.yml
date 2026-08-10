@@ -1,0 +1,41 @@
+name: Validate research records
+
+on:
+  push:
+    paths:
+      - "templates/**"
+      - "schemas/**"
+      - "scripts/**"
+      - "references/**/*.yaml"
+      - "experiments/**/*.yaml"
+      - "requirements-dev.txt"
+      - ".github/workflows/validate-research.yml"
+  pull_request:
+    paths:
+      - "templates/**"
+      - "schemas/**"
+      - "scripts/**"
+      - "references/**/*.yaml"
+      - "experiments/**/*.yaml"
+      - "requirements-dev.txt"
+      - ".github/workflows/validate-research.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install validation dependencies
+        run: python -m pip install -r requirements-dev.txt
+
+      - name: Validate reference and run records
+        run: python scripts/validate_records.py
