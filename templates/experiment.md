@@ -10,7 +10,7 @@ PLANNED / WAITING_FOR_REFERENCE / RUNNING / COMPLETE / INVALID
 
 例:
 
-- C1 structured context → C2 explicit responsive contract でFirst-passは改善するか
+- C1 structured context → C2 explicit responsive contract でFirst-pass Fidelityは改善するか
 - one-shot → staged workflow でrepair roundsは減るか
 
 ## Hypothesis
@@ -20,7 +20,7 @@ PLANNED / WAITING_FOR_REFERENCE / RUNNING / COMPLETE / INVALID
 ## Frozen Reference
 
 - Reference ID:
-- Manifest: `references/.../reference.yaml`
+- Manifest:
 - Figma file/node(s):
 - Starting code commit:
 
@@ -53,13 +53,10 @@ Design固有の寸法・色・構造をここで新しく決めない。Referenc
 
 ## First-pass comparison
 
-### Metrics
-
-- Visual Fidelity:
-- Structural Fidelity:
-- Robustness:
-- Rework Cost:
-- First-pass total:
+- Visual Fidelity /40:
+- Structural Fidelity /25:
+- Robustness /15:
+- **First-pass Fidelity /80:**
 
 ### Failure profile
 
@@ -67,16 +64,26 @@ Design固有の寸法・色・構造をここで新しく決めない。Referenc
 |---|---|---|---|
 | | | | |
 
-## Repair / replay
+## Repair outcome
 
-改善を試した場合:
+- Final Fidelity /80:
+- Fidelity Gain:
+- Rework Efficiency /10:
+- Repair rounds:
+- Post-first-pass churn:
+- Human intervention:
 
-- isolated change:
-- affected failure class:
-- before:
-- after:
-- clean replay run:
-- reproduced: yes / no
+## Clean replay
+
+- Replay run:
+- Reproduced: yes / no / not-run
+- Reproducibility /10: N/A until replay
+
+## Final Composite
+
+Only when First-pass Fidelity + Rework Efficiency + Reproducibility are all available:
+
+- **Final Composite /100:**
 
 ## Result
 
