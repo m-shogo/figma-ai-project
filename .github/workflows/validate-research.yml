@@ -7,6 +7,7 @@ on:
       - "schemas/**"
       - "scripts/**"
       - "tests/**"
+      - "policies/**/*.yaml"
       - "references/**/*.yaml"
       - "experiments/**/*.yaml"
       - "contracts/**/*.yaml"
@@ -18,6 +19,7 @@ on:
       - "schemas/**"
       - "scripts/**"
       - "tests/**"
+      - "policies/**/*.yaml"
       - "references/**/*.yaml"
       - "experiments/**/*.yaml"
       - "contracts/**/*.yaml"
@@ -43,6 +45,9 @@ jobs:
 
       - name: Validate reference, shared, section, and run records
         run: python scripts/validate_records.py
+
+      - name: Validate company implementation policy and frozen lineage
+        run: python scripts/validate_company_policy.py
 
       - name: Validate actual Figma capability profile before contract freeze
         run: python scripts/validate_figma_profile.py
