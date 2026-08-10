@@ -18,31 +18,41 @@ AI coding agents（Codex / Claude Code / Cursorなど）とFigmaを使い、**�
 ## Current production workflow
 
 ```text
-Tooling Update Preflight
+Scheduled Official Update Radar
+  ↓
+Company Policy ACTIVE + SHA-256
+  ↓
+Required Device / Browser Environment Profiles
   ↓
 Reference Freeze
   ↓
-Global Reconnaissance
+Existing Codebase Reconnaissance
   ↓
-Figma Capability Profile
+Effective Environment Contract
+  ↓
+Global Figma Capability Profile
   ↓
 Shared Contract DRAFT
   ↓
 Section Discovery + PC/SP Mapping
   ↓
-Component / Token Resolution
+Per-section Figma Structure Profile
+  ↓
+Component / Token / Interaction Resolution
   ↓
 Shared Foundation Build + Verify
   ↓
-Shared Contract FROZEN + SHA-256
+Shared Contract FROZEN
   ↓
 Safe Execution Wave Planning
   ↓
-Isolated Parallel SECTION Runs
+Isolated / serial-safe SECTION workers
   ↓
-Coordinator INTEGRATION Run
+SECTION → BOUNDARY → CLUSTER when needed
   ↓
-PC / SP / Specified Breakpoint Verification
+Coordinator INTEGRATION
+  ↓
+Full Page verification across ALL REQUIRED environments
   ↓
 Targeted Repair
   ↓
@@ -62,6 +72,27 @@ Production defaultは**section-first**です。
 - Footer
 
 ページ全体を1agentへ丸投げする方式は永久禁止ではなく、将来のmodel/MCP進化を測る`PAGE_BENCHMARK`として残します。
+
+### Automated Update Radar
+
+通常のproduction runで人間がrelease notesを手動検索することをdefaultにしません。
+
+```text
+config/update-sources.yaml
+→ .github/workflows/update-radar.yml  # daily 12:17 JST
+→ research/update-radar/latest.json
+→ python scripts/apply_radar_preflight.py <run.yaml> --apply
+→ python scripts/start_section_run.py <run.yaml> --apply
+```
+
+Registryは`python scripts/validate_update_sources.py`でnetworkアクセス前に検証します。
+
+Current freshness defaultは**36 hours**。Required official laneが取得不能ならfail-closedです。Community/practitioner scanは仮説探索には使えますがproduction start gateではありません。
+
+Canonical:
+
+- `docs/update-preflight.md`
+- `docs/research-radar.md`
 
 ---
 
@@ -184,6 +215,8 @@ Current preferred isolation:
 
 - separate branch/worktree
 - agent-provided isolated sandbox
+
+`SERIAL_SHARED_TREE`はplannerがsingleton Waveであることを証明した場合のみ許可します。
 
 新しいisolation方式も永久禁止せず、parallel-safe evidence付きで将来対応できます。
 
@@ -310,9 +343,9 @@ E0 External Signal
 
 - 1回失敗 → 永久禁止にしない
 - 1回成功 → best practiceにしない
-- major update → old CAUTION/limitationを再試験
-- official docs + Zenn/Qiita/X/Forum/GitHub/Reddit等のfield signalを併用
-- community情報はE0として仮説化し、自分たちで検証
+- official upstream change → `RETEST_CANDIDATE`、自動rule変更ではない
+- Scheduled Official Update Radarを通常の更新検知入口にする
+- community情報はoptionalなE0仮説探索として扱い、自分たちで検証する
 
 Canonical:
 
@@ -330,7 +363,9 @@ Machine-readable recordsはCIで検証します。
 
 Current validation includes:
 
+- Update Radar source registry validation
 - schema/semantic record validation
+- Company Policy / Required Environment Contract validation
 - Figma Capability Profile freeze gate
 - component/token resolution gate
 - breakpoint contract semantics
@@ -338,9 +373,16 @@ Current validation includes:
 - dependency/write-path conflicts
 - parallel worker isolation
 - immutable run evidence lineage
+- capture environment lineage / required coverage
 - section planner/validator unit tests
 
 Workflow: `.github/workflows/validate-research.yml`
+
+Local/readiness entrypoint:
+
+```text
+python scripts/check_repository_readiness.py
+```
 
 CIは研究を硬直化するためではなく、**同じexperiment条件を後から再現できるようにするため**のものです。
 
@@ -417,6 +459,6 @@ AI + human review
 
 このrepoは結論集ではありません。
 
-**最新情報 → 観測 → 仮説 → section実験 → integration確認 → 原因分類 → 小さな改善 → clean replay → 別reference/案件で再現 → tool更新で再評価**
+**Scheduled official updates → 観測 → RETEST仮説 → section実験 → integration確認 → 原因分類 → 小さな改善 → clean replay → 別reference/案件で再現 → tool更新で再評価**
 
 を繰り返し、次の案件ほど速く、正確に、人間の戻りが少ない実装工程へ育てます。
