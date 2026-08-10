@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/figma-ai-project/section.schema.json",
+  "title": "Figma AI Section Execution Manifest",
+  "type": "object",
+  "required": ["schema_version", "reference_id", "page_id", "shared_contract", "shared_contract_sha256", "foundation_commit", "sections", "integration"],
+  "properties": {
+    "schema_version": { "type": "integer", "minimum": 1 },
+    "reference_id": { "type": "string", "minLength": 1 },
+    "page_id": { "type": "string" },
+    "shared_contract": { "type": "string" },
+    "shared_contract_sha256": { "type": "string" },
+    "foundation_commit": { "type": "string" },
+    "sections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["section_id", "name", "order", "figma", "evidence", "dependencies", "responsive", "implementation", "worker"],
+        "properties": {
+          "section_id": { "type": "string", "minLength": 1 },
+          "name": { "type": "string", "minLength": 1 },
+          "order": { "type": "integer" },
+          "figma": {
+            "type": "object",
+            "required": ["pc_node_id", "sp_node_id", "other_node_ids", "semantic_name_source"],
+            "properties": {
+              "pc_node_id": { "type": "string" },
+              "sp_node_id": { "type": "string" },
+              "other_node_ids": { "type": "array", "items": { "type": "string" } },
+              "semantic_name_source": { "enum": ["FIGMA", "AI_CANDIDATE", "OWNER"] }
+            },
+            "additionalProperties": true
+          },
+          "evidence": {
+            "type": "object",
+            "required": ["screenshots", "metadata_capture"],
+            "properties": {
+              "screenshots": { "type": "array" },
+              "metadata_capture": { "type": "string" }
+            },
+            "additionalProperties": true
+          },
+          "dependencies": {
+            "type": "object",
+            "required": ["shared_components", "tokens", "fonts", "assets"],
+            "properties": {
+              "shared_components": { "type": "array" },
+              "tokens": { "type": "array" },
+              "fonts": { "type": "array" },
+              "assets": { "type": "array" }
+            },
+            "additionalProperties": true
+          },
+          "responsive": {
+            "type": "object",
+            "required": ["uses_shared_breakpoints", "invariants", "transitions", "unknowns", "breakpoint_exception_proposals"],
+            "properties": {
+              "uses_shared_breakpoints": { "type": "boolean" },
+              "invariants": { "type": "array" },
+              "transitions": { "type": "array" },
+              "unknowns": { "type": "array" },
+              "breakpoint_exception_proposals": { "type": "array" }
+            },
+            "additionalProperties": true
+          },
+          "implementation": {
+            "type": "object",
+            "required": ["component_path", "style_path", "allowed_paths", "shared_files_read_only"],
+            "properties": {
+              "component_path": { "type": "string" },
+              "style_path": { "type": "string" },
+              "allowed_paths": { "type": "array", "items": { "type": "string" } },
+              "shared_files_read_only": { "type": "boolean" }
+            },
+            "additionalProperties": true
+          },
+          "worker": {
+            "type": "object",
+            "required": ["status", "agent", "model", "base_commit", "output_commit", "proposed_shared_changes"],
+            "properties": {
+              "status": { "enum": ["PLANNED", "READY", "RUNNING", "BLOCKED", "COMPLETE"] },
+              "agent": { "type": "string" },
+              "model": { "type": "string" },
+              "base_commit": { "type": "string" },
+              "output_commit": { "type": "string" },
+              "proposed_shared_changes": { "type": "array" }
+            },
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "integration": {
+      "type": "object",
+      "required": ["root_composition_path", "required_checks"],
+      "properties": {
+        "root_composition_path": { "type": "string" },
+        "required_checks": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}
