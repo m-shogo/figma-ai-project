@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 reference_id: REF-XXXX
 status: WAITING_FOR_REFERENCE
 
@@ -8,6 +8,10 @@ figma:
   node_ids: []
   branch_or_version: ""
   captured_at: ""
+  environment:
+    auto_layout_generation: UNKNOWN # LEGACY | UPDATED_2026 | MIXED | UNKNOWN
+    variable_modes_observed: []
+    relevant_feature_notes: []
 
 frames: []
 # Example after reference arrives:
