@@ -30,26 +30,14 @@ AI coding agents（Codex / Claude Code / Cursor など）と Figma を往復し�
 - **First-pass Fidelity**: 初回出力でどこまで原本に近いか
 - **Visual Fidelity**: geometry / spacing / typography / color / assets の一致度
 - **Structural Fidelity**: component / token / responsive / semantic structure の一致度
-- **Rework Cost**: 人間またはAIの修正回数・修正量
+- **Rework Efficiency**: 人間またはAIの修正回数・修正量が少ないか
 - **Reproducibility**: clean rerun しても同等結果へ戻れるか
 - **Context Efficiency**: 余計なcontextを増やさず精度を出せたか
 - **Portability**: 別案件へそのまま持っていける知識か
 
 ## Current phase
 
-**FOUNDATION — reference design待ち。デザインには触れず、再現実験の下地を構築中。**
-
-今やること:
-
-- reference freeze contract
-- context package format
-- agent run contract
-- staged prompt architecture
-- visual / structural evaluation
-- failure taxonomy
-- knowledge promotion rules
-- official tooling source registry
-- agent-specific adapter strategy
+**FOUNDATION READY — reference design待ち。デザインには触れず、再現実験の下地は初期版まで完成。**
 
 Reference が来るまでやらないこと:
 
@@ -57,6 +45,8 @@ Reference が来るまでやらないこと:
 - PC/SP寸法をこちらで決める
 - 色・component・画面構成を仮定する
 - referenceを模したダミーデザインをFigmaへ作る
+
+Reference受領後は `docs/reference-contract.md` → `templates/reference-manifest.yaml` の順でfreezeしてからEXP-0001へ進む。
 
 ## Research Loop
 
@@ -67,21 +57,21 @@ Reference Contract
    ↓
 Context Package
    ↓
-Inspect Prompt
+Inspect
    ↓
-Implementation Run
-   ↓
+First-pass Implementation
+   ↓ preserve
 Exact Viewport Capture
    ↓
-Visual + Structural Compare
+Verify (diagnosis only)
    ↓
 Failure Classification
    ↓
-One-variable Repair / Prompt Improvement
+Targeted Repair
    ↓
 Clean Re-run
    ↓
-Promote reproduced knowledge
+Candidate → Proven Playbook
 ```
 
 ## Repository Structure
@@ -96,8 +86,11 @@ Promote reproduced knowledge
 │   ├── context-package.md
 │   ├── run-contract.md
 │   ├── evaluation-rubric.md
+│   ├── visual-verification.md
+│   ├── rework-metrics.md
 │   ├── failure-taxonomy.md
 │   ├── knowledge-promotion.md
+│   ├── portability.md
 │   ├── agent-adapters.md
 │   └── source-registry.md
 ├── prompts/
@@ -111,6 +104,9 @@ Promote reproduced knowledge
 │   ├── run-record.yaml
 │   ├── experiment.md
 │   └── failure-record.md
+├── playbook/
+│   ├── candidates/
+│   └── proven/
 └── experiments/
     └── 0001-baseline/README.md
 ```
@@ -122,17 +118,37 @@ Promote reproduced knowledge
 - design system / component / token / Code Connect を既存実装へ接続する
 - PC と SP を別画面としてハードコードせず、referenceから responsive invariants を抽出する
 - giant prompt に全部詰めない。Inspect → Implement → Verify → Repair を分離する
+- Verifyではまず差分を固定し、勝手にrepairさせない
 - 失敗したpromptやrepairも削除しない
 - 一度の成功は一般則にしない
 - agent/model固有のコツと、agent非依存の原則を分離する
-- 最終見た目だけでなく First-pass と Rework Cost を必ず残す
+- First-passを必ず保存し、Finalだけで評価しない
 - reference designは改善対象ではなく source of truth として扱う
+
+## Scoring
+
+評価は段階式。
+
+```text
+First-pass Fidelity = Visual 40 + Structural 25 + Robustness 15 = /80
+Rework Efficiency = /10
+Reproducibility = /10 (clean replay後のみ)
+Final Composite = /100 (すべて測定後のみ)
+```
+
+「最終的に綺麗になったが何度も作り直した」を高評価にしない。
 
 ## Design readiness gate
 
 Reference を受け取ったら、実装開始前に `docs/reference-contract.md` の項目を満たす。
 
 **Reference contract が未完成なら、見た目を推測して実装を始めない。**
+
+## Portable outcome
+
+実験ログをそのまま他案件へコピーしない。
+
+Observation → Candidate → Proven を通過したruleだけを `playbook/` に昇格し、最終的には別repoへ小さいinstruction packageとして導入できる状態を目指す。
 
 ## Research principle
 
