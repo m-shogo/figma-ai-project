@@ -1,6 +1,50 @@
 # Agent Run Contract
 
-Codex / Claude Code / Cursor の比較で「agent差」と「条件差」を混同しないための契約。
+Codex / Claude Code / Cursorの比較で「agent差」と「条件差」を混同しないための契約。
+
+Production-oriented比較の最小単位は、原則として**同じsection + 同じShared Contract + 同じverified foundation**。
+
+---
+
+## Run scopes
+
+### SECTION
+
+通常のproduction implementation/比較単位。
+
+固定する:
+
+- same frozen reference revision
+- same section ID / exact Figma node(s)
+- same Shared Contract SHA-256
+- same verified foundation commit
+- same breakpoint contract
+- same assets
+- same acceptance viewport/state
+
+### INTEGRATION
+
+複数sectionを統合したページ全体の整合性を見る。
+
+SECTION scoreと直接rankingしない。
+
+固定する:
+
+- same reference revision
+- same section output set/cohort
+- same Shared Contract hash
+- same foundation lineage
+- same integration acceptance conditions
+
+### PAGE_BENCHMARK
+
+Whole-page one-shotなど、現在のproduction default以外を研究するscope。
+
+section-firstと比較できるが、SECTION runのagent rankingへ混ぜない。
+
+Tool/model/MCPが進化したら再テスト可能。
+
+---
 
 ## Run classes
 
@@ -8,16 +52,20 @@ Codex / Claude Code / Cursor の比較で「agent差」と「条件差」を混�
 
 agent間比較用。
 
-固定する:
+SECTIONの場合、最低限固定する:
 
+- same run scope
 - same frozen reference
-- same starting code commit
+- same section ID/node
+- same Shared Contract hash
+- same verified foundation commit
 - same context tier
-- same common prompt version
-- same target viewport(s)
+- same common prompt version/hash
+- same target viewport/state
 - same acceptance criteria
 - same max repair rounds
 - same dependency policy
+- same breakpoint source/value
 
 agent固有の裏技・追加rules・前runの学びは入れない。
 
@@ -28,65 +76,165 @@ agent固有の裏技・追加rules・前runの学びは入れない。
 許可する:
 
 - agent固有instructions
-- agent固有skills/plugins
-- agentに適したprompt segmentation
+- skills/plugins
+- prompt segmentation
 - client固有MCP workflow
+- agent向けtool-use optimization
 
-COMMONとOPTIMIZEDを同じランキングに混ぜない。
+ただし:
+
+- reference
+- section
+- Shared Contract
+- foundation
+- company/designer breakpoint
+
+は勝手に変えない。
+
+COMMONとOPTIMIZEDを同じrankingに混ぜない。
 
 ### REPLAY
 
 学習したruleの再現性確認。
 
-- clean starting commit
+SECTION Replayでは:
+
+- same reference revision
+- same section
+- same frozen Shared Contract
+- same clean verified foundation
 - fresh session/context
-- promoted candidate ruleだけ追加
-- previous generated codeは参照しない
+- candidate ruleだけ追加
+- previous generated/repair codeは参照しない
 
-## Run phases
+を守る。
 
-### P0 — Preflight
+---
+
+## Production preparation phases
+
+SECTION run開始前にcoordinatorが完了していること:
+
+### G0 — Tooling Preflight
+
+- current Figma release/MCP docs確認
+- agent/client current docs確認
+- recent community signal確認
+
+### G1 — Reference Freeze
 
 - reference ready
-- starting SHA clean
-- required MCP/tools connected
-- exact model/client version recorded if known
-- target route runnable
+- external breakpoint evidence/source記録
+- code baseline固定
+
+### G2 — Global Reconnaissance
+
+- codebase/design system
+- company/designer responsive rules
+- top-level Figma structure
+- components/variables/fonts/assets
+- section boundaries
+
+を調査する。
+
+### G3 — Shared Contract DRAFT
+
+- styling
+- fonts
+- tokens
+- global breakpoint
+- container/gutter
+- shared components
+- asset policy
+
+を正規化する。
+
+### G4 — Shared Foundation
+
+共通実装を作成/再利用しverifyする。
+
+### G5 — Contract Freeze
+
+```text
+foundation.status = VERIFIED
+Shared Contract = FROZEN
+contract hash fixed
+section manifest binds hash + foundation commit
+```
+
+ここまでがSECTION parallel開始gate。
+
+---
+
+## SECTION run phases
+
+### P0 — Section Preflight
+
+確認:
+
+- section manifest entry exists
+- Shared Contract hash matches
+- foundation commit matches
+- code starts from foundation commit
+- allowed paths known
+- shared paths read-only
+- exact section Figma node available
 
 ### P1 — Inspect
 
 コード変更禁止。
 
-agentは:
+担当sectionだけを中心に:
 
-- Figma structure
-- responsive behavior
-- assets
-- design-system mapping
-- codebase reuse targets
-- unknowns
+- structured Figma context
+- relevant components/variants
+- relevant variables/tokens
+- local Auto Layout/Grid/sizing
+- assets/crop
+- states
+- behavior at shared breakpoint
+- code reuse targets
 
 をまとめる。
 
+必要contextはprogressive disclosureで取得し、他sectionを念のため全部読まない。
+
 ### P2 — Implement
 
-Inspect結果とfrozen contextだけを使ってfirst passを作る。
+Inspect結果とfrozen contractを使ってfirst-passを作る。
 
-**この時点を必ず保存する。**
+Workerは:
+
+- allowed pathのみ変更
+- shared files変更禁止
+- global breakpoint追加/変更禁止
+- shared component重複作成禁止
+
+を守る。
+
+**FIRST_PASSを必ず保存する。**
 
 ### P3 — Verify
 
 - exact reference viewport(s)
-- relevant intermediate widths
+- specified breakpoint boundary
 - visual comparison
 - structural checks
+- contract compliance
 - overflow/wrapping/state checks
+
+コードは原則直さない。
 
 ### P4 — Repair
 
-failure class単位で修正する。
+failure class/root cause単位で修正。
 
-max repair roundsを超えない。
+shared変更が必要ならworker内で直接直さず:
+
+- `PROPOSE_SHARED_CHANGE`
+- `PROPOSE_BREAKPOINT_EXCEPTION`
+
+へ戻す。
 
 ### P5 — Record
 
@@ -94,41 +242,70 @@ max repair roundsを超えない。
 - failures
 - repairs
 - assumptions
+- context use
+- contract compliance
 - reusable lessons
 
 ### P6 — Replay when warranted
 
-Candidate improvementをclean baselineから再実行する。
+Candidate improvementをsame clean foundationから再実行する。
+
+---
+
+## INTEGRATION run phases
+
+Coordinatorが:
+
+1. section output lineage検証
+2. same contract hash確認
+3. same foundation確認
+4. root composition
+5. full-page capture
+6. cross-section failure診断
+7. integration repair
+
+を行う。
+
+Section単体の成功がintegration reworkへ押し付けられていないか別記録する。
+
+---
 
 ## First-pass preservation
 
-最重要ルール:
+最重要ルール。
 
-agentが自己修正を何度もしてから「完成しました」と言った状態だけ残さない。
+保存:
 
-可能なら:
-
-- first-pass commit
+- first-pass commit/state
 - first-pass screenshot
 - first-pass score
 - first-pass failure list
+- run scope
+- section ID
+- contract hash
+- foundation commit
 
-を保存する。
+Finalだけ残すと「戻りが減ったか」を測れない。
 
-First-passを失うと「戻りが減ったか」を測れない。
+---
 
 ## Fairness rules
 
-比較runでは次を禁止する。
+COMMON比較では禁止:
 
-- Claudeだけにhuman repair hintを与える
+- Claudeだけhuman repair hintあり
 - Cursorだけ前agentのdiffを見る
-- CodexだけCode Connectを有効にする
-- agentごとにstarting commitが違う
-- viewport条件が違う
-- repair round上限が違う
+- CodexだけCode Connect有効
+- agentごとにsection nodeが違う
+- Shared Contract hashが違う
+- foundation commitが違う
+- breakpoint contractが違う
+- viewport/stateが違う
+- repair budgetが違う
 
-違いを入れる場合は、新しいexperiment variableとして明示する。
+違いを入れる場合はexperiment variableとして明示する。
+
+---
 
 ## One-variable principle
 
@@ -136,36 +313,64 @@ First-passを失うと「戻りが減ったか」を測れない。
 
 例:
 
-- context C1 → C2
-- one-shot → staged prompt
+- C1 → C2
+- whole-page context → section progressive disclosure
+- no Shared Contract → frozen Shared Contract
+- serial → safe parallel
 - Code Connect off → on
-- annotation absent → present
+- staged procedure off → on
 
-model更新など不可避の変化はrun metadataへ記録する。
+model/client/Figma updateなど制御不能な差はmetadataへ記録する。
+
+---
+
+## Contract changes during runs
+
+Shared Contract/Foundationが変わったら同一条件runではなくなる。
+
+Parallel実装中に変更承認された場合:
+
+1. new worker start停止
+2. coordinatorがshared change
+3. foundation再verify
+4. new foundation commit
+5. new contract revision/hash
+6. affected section特定
+7. affected sectionだけ更新/re-run
+
+旧hashのrunを新hash cohortへ混ぜない。
+
+---
 
 ## Stop conditions
 
-repairを止める条件:
+Repair停止条件:
 
-- acceptanceに到達
+- acceptance到達
 - max repair rounds到達
-- reference ambiguityでこれ以上評価不能
+- reference/shared-rule ambiguityで評価不能
 - environment/tool blocker
 - repairが別failure classを悪化させ続ける
+- shared changeが必要でsection worker scopeを超える
 
 止めた理由もdata。
 
+---
+
 ## Result interpretation
 
-「Agent A 93点、B 90点」で即優劣を決めない。
+「Agent A 76/80、B 73/80」で即優劣を決めない。
 
 見る順序:
 
-1. First-pass
-2. failure profile
-3. Rework Cost
-4. clean replay stability
-5. context cost
-6. portability
+1. same scope/cohortか
+2. First-pass Fidelity
+3. failure profile
+4. contract compliance
+5. Rework Efficiency
+6. integration load
+7. clean replay stability
+8. context cost
+9. portability
 
-1回の最高点より、再現性のある工程を優先する。
+**1回の最高点より、同じcontractで再現する工程を優先する。**
