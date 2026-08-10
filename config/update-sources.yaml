@@ -1,0 +1,200 @@
+schema_version: 1
+
+policy:
+  official_sources_first: true
+  community_sources_are_discovery_only: true
+  auto_mutate_company_policy: false
+  auto_mutate_proven_playbook: false
+  changed_signal_default: RETEST_CANDIDATE
+  fetch_timeout_seconds: 30
+  max_items_per_feed: 12
+
+lanes:
+  FIGMA:
+    required_for_significant_run: true
+    sources:
+      - id: figma-release-notes
+        authority: OFFICIAL
+        kind: HTML_DIGEST
+        url: https://www.figma.com/release-notes/
+        topics: [figma, design, dev-mode, auto-layout, variables, components, images, motion, make, agent]
+        impacts: [FIGMA_STRUCTURE, FIGMA_TO_CODE, CODE_TO_FIGMA, DESIGN_HANDOFF, VISUAL_FIDELITY]
+      - id: figma-mcp-docs
+        authority: OFFICIAL
+        kind: HTML_DIGEST
+        url: https://developers.figma.com/docs/figma-mcp-server/
+        topics: [figma, mcp, tools, skills, code-connect]
+        impacts: [MCP, FIGMA_TO_CODE, CODE_TO_FIGMA, CONTEXT_RETRIEVAL]
+      - id: figma-mcp-tools
+        authority: OFFICIAL
+        kind: HTML_DIGEST
+        url: https://developers.figma.com/docs/figma-mcp-server/tools-and-prompts/
+        topics: [figma, mcp, tools, prompts]
+        impacts: [MCP, FIGMA_TO_CODE, CODE_TO_FIGMA, CONTEXT_RETRIEVAL]
+
+  MCP:
+    required_for_significant_run: true
+    sources:
+      - id: mcp-spec-releases
+        authority: OFFICIAL
+        kind: GITHUB_RELEASES
+        repo: modelcontextprotocol/modelcontextprotocol
+        url: https://api.github.com/repos/modelcontextprotocol/modelcontextprotocol/releases?per_page=12
+        topics: [mcp, specification, protocol, transport, tools, resources, prompts]
+        impacts: [MCP, CLIENT_SERVER_COMPAT, TOOL_SEMANTICS]
+      - id: mcp-spec-latest
+        authority: OFFICIAL
+        kind: HTML_DIGEST
+        url: https://modelcontextprotocol.io/specification/latest
+        topics: [mcp, specification]
+        impacts: [MCP, CLIENT_SERVER_COMPAT, TOOL_SEMANTICS]
+
+  CODEX:
+    required_for_significant_run: true
+    sources:
+      - id: openai-product-release-notes
+        authority: OFFICIAL
+        kind: HTML_DIGEST
+        url: https://openai.com/products/release-notes/
+        include_keywords: [Codex, browser, agent, worktree, MCP, plugin, skill, model]
+        topics: [codex, model, browser, agents, worktrees, plugins, skills]
+        impacts: [AGENT_CAPABILITY, VISUAL_BROWSER_TOOLING, PARALLEL_EXECUTION, CONTEXT_HANDLING]
+      - id: openai-codex-changelog
+        authority: OFFICIAL
+        kind: HTML_DIGEST
+        url: https://help.openai.com/en/articles/11428266-codex-changelog/
+        topics: [codex, agent, github, environment]
+        impacts: [AGENT_CAPABILITY, GIT_WORKFLOW, CONTEXT_HANDLING]
+
+  CLAUDE_CODE:
+    required_for_significant_run: true
+    sources:
+      - id: claude-code-releases
+        authority: OFFICIAL
+        kind: GITHUB_RELEASES
+        repo: anthropics/claude-code
+        url: https://api.github.com/repos/anthropics/claude-code/releases?per_page=12
+        topics: [claude-code, mcp, skills, hooks, agents, context, browser]
+        impacts: [AGENT_CAPABILITY, MCP, PARALLEL_EXECUTION, CONTEXT_HANDLING]
+      - id: claude-code-feed
+        authority: OFFICIAL
+        kind: XML_FEED
+        url: https://raw.githubusercontent.com/anthropics/claude-code/main/feed.xml
+        topics: [claude-code, releases]
+        impacts: [AGENT_CAPABILITY, MCP, CONTEXT_HANDLING]
+
+  CURSOR:
+    required_for_significant_run: true
+    sources:
+      - id: cursor-changelog
+        authority: OFFICIAL
+        kind: HTML_DIGEST
+        url: https://cursor.com/changelog
+        include_keywords: [MCP, agent, design, browser, rules, hooks, skill, worktree, model, context]
+        topics: [cursor, mcp, agents, design-mode, browser, rules, hooks, skills]
+        impacts: [AGENT_CAPABILITY, MCP, VISUAL_BROWSER_TOOLING, PARALLEL_EXECUTION, CONTEXT_HANDLING]
+
+  WEB_PLATFORM:
+    required_for_significant_run: true
+    sources:
+      - id: web-features-releases
+        authority: OFFICIAL
+        kind: GITHUB_RELEASES
+        repo: web-platform-dx/web-features
+        url: https://api.github.com/repos/web-platform-dx/web-features/releases?per_page=12
+        topics: [baseline, css, html, web-api, browser-support]
+        impacts: [CSS, WEB_PLATFORM, BROWSER_SUPPORT, FEATURE_ADOPTION]
+      - id: mdn-browser-compat-data-releases
+        authority: OFFICIAL
+        kind: GITHUB_RELEASES
+        repo: mdn/browser-compat-data
+        url: https://api.github.com/repos/mdn/browser-compat-data/releases?per_page=12
+        topics: [css, browser-support, compatibility, web-api]
+        impacts: [CSS, BROWSER_SUPPORT, FEATURE_DETECTION]
+      - id: chrome-status-features
+        authority: OFFICIAL
+        kind: JSON_DIGEST
+        url: https://chromestatus.com/features.json
+        topics: [chrome, blink, css, web-platform]
+        impacts: [CSS, WEB_PLATFORM, CHROMIUM_SUPPORT]
+
+  DESIGN_SYSTEMS:
+    required_for_significant_run: false
+    sources:
+      - id: design-tokens-spec
+        authority: OFFICIAL
+        kind: GITHUB_RELEASES
+        repo: design-tokens/community-group
+        url: https://api.github.com/repos/design-tokens/community-group/releases?per_page=12
+        topics: [design-tokens, variables, interoperability]
+        impacts: [TOKENS, DESIGN_SYSTEM, FIGMA_VARIABLES]
+
+  SAFARI_WEBKIT:
+    activation:
+      company_profile_any:
+        browsers: [Safari]
+        engines: [WebKit]
+    sources:
+      - id: safari-release-notes
+        authority: OFFICIAL
+        kind: HTML_DIGEST
+        url: https://developer.apple.com/documentation/safari-release-notes
+        include_keywords: [CSS, Animations, Accessibility, Web API, WebKit, viewport, scroll, forms]
+        topics: [safari, webkit, ios, ipados, css, viewport, accessibility]
+        impacts: [CSS, DEVICE_ENVIRONMENT, SAFARI, IOS, WEBVIEW, ACCESSIBILITY]
+
+  CHROMIUM:
+    activation:
+      company_profile_any:
+        browsers: [Chrome, Edge]
+        engines: [Blink, Chromium]
+    sources:
+      - id: chrome-status-features-targeted
+        authority: OFFICIAL
+        kind: JSON_DIGEST
+        url: https://chromestatus.com/features.json
+        topics: [chrome, blink, css, web-platform]
+        impacts: [CSS, DEVICE_ENVIRONMENT, CHROMIUM_SUPPORT]
+      - id: edge-web-platform-release-notes
+        authority: OFFICIAL
+        kind: HTML_DIGEST
+        url: https://learn.microsoft.com/en-us/microsoft-edge/web-platform/release-notes/
+        topics: [edge, chromium, webview2, css, web-platform]
+        impacts: [CSS, DEVICE_ENVIRONMENT, EDGE, WEBVIEW]
+
+  FIREFOX_GECKO:
+    activation:
+      company_profile_any:
+        browsers: [Firefox]
+        engines: [Gecko]
+    sources:
+      - id: firefox-developer-releases
+        authority: OFFICIAL
+        kind: HTML_DIGEST
+        url: https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Releases
+        topics: [firefox, gecko, css, web-platform, accessibility]
+        impacts: [CSS, DEVICE_ENVIRONMENT, FIREFOX, ACCESSIBILITY]
+
+retest_keyword_map:
+  CSS_RESET:
+    keywords: [reset, normalize, user agent stylesheet, box-sizing, appearance, text-size-adjust]
+  VIEWPORT_SAFE_AREA:
+    keywords: [viewport, dvh, svh, lvh, safe-area, visual viewport, virtual keyboard, interactive-widget]
+  INPUT_CAPABILITY:
+    keywords: [hover, pointer, touch, touch-action, wheel, trackpad]
+  SCROLL:
+    keywords: [scroll, scroll-behavior, scroll snap, overscroll, scroll-driven, scroll-triggered, sticky]
+  ANIMATION:
+    keywords: [animation, motion, transition, timeline, view transition]
+  LAYOUT:
+    keywords: [auto layout, grid, flex, container query, subgrid, sizing, anchor positioning]
+  COLOR_GRADIENT:
+    keywords: [gradient, color, p3, gamut, contrast-color, color-mix, alpha]
+  ACCESSIBILITY:
+    keywords: [accessibility, focus, keyboard, aria, forced colors, contrast, target size]
+  FIGMA_MCP:
+    keywords: [figma mcp, get_design_context, get_metadata, code connect, write to canvas, skill]
+  AGENT_CONTEXT:
+    keywords: [context, compaction, agent, subagent, rules, instructions, skill, hook]
+  PARALLEL_EXECUTION:
+    keywords: [parallel, worktree, sandbox, background agent, multi-repo, isolation]
