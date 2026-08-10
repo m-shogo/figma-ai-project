@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import sys
 import tempfile
 import unittest
+from datetime import datetime, timezone
 from pathlib import Path
 from unittest.mock import patch
 
@@ -62,6 +64,7 @@ def fixture(root: Path) -> dict:
     return {
         "status": "PLANNED",
         "tooling_preflight": {
+            "mode": "LEGACY_MANUAL",
             "checked_at": "2026-08-10T19:00:00+09:00",
             "figma_release_notes_checked": True,
             "figma_mcp_docs_checked": True,
@@ -90,12 +93,19 @@ def fixture(root: Path) -> dict:
     }
 
 
+def make_radar(root: Path) -> tuple[Path, str]:
+    path = root / "research/update-radar/latest.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps({"generated_at": datetime.now(timezone.utc).isoformat()}), encoding="utf-8")
+    return path, hashlib.sha256(path.read_bytes()).hexdigest()
+
+
 class StartSectionRunTests(unittest.TestCase):
     def validate_start(self, root: Path, data: dict) -> dict:
-        with patch.object(lineage, "ROOT", root):
+        with patch.object(lineage, "ROOT", root), patch.object(starter, "ROOT", root):
             return starter.start(data)
 
-    def test_complete_preflight_and_valid_lineage_can_start(self) -> None:
+    def test_complete_legacy_preflight_and_valid_lineage_can_start(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             data = fixture(root)
@@ -103,12 +113,54 @@ class StartSectionRunTests(unittest.TestCase):
             self.assertEqual(started["status"], "RUNNING")
             self.assertEqual(data["status"], "PLANNED")
 
-    def test_incomplete_preflight_is_rejected(self) -> None:
+    def test_legacy_preflight_still_requires_community_flag(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             data = fixture(root)
             data["tooling_preflight"]["community_scan_checked"] = False
             with self.assertRaisesRegex(ValueError, "community_scan_checked"):
+                self.validate_start(root, data)
+
+    def test_automated_preflight_does_not_require_manual_community_scan(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            data = fixture(root)
+            radar_path, radar_hash = make_radar(root)
+            data["tooling_preflight"] = {
+                "mode": "AUTOMATED_UPDATE_RADAR",
+                "checked_at": datetime.now(timezone.utc).isoformat(),
+                "update_radar_path": radar_path.relative_to(root).as_posix(),
+                "update_radar_sha256": radar_hash,
+                "update_radar_generated_at": datetime.now(timezone.utc).isoformat(),
+                "update_radar_max_age_hours": 36,
+                "official_sources_complete": True,
+                "figma_release_notes_checked": True,
+                "figma_mcp_docs_checked": True,
+                "agent_docs_checked": True,
+                "community_scan_checked": False,
+            }
+            started = self.validate_start(root, data)
+            self.assertEqual(started["status"], "RUNNING")
+
+    def test_automated_preflight_rejects_changed_radar_fingerprint(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            data = fixture(root)
+            radar_path, radar_hash = make_radar(root)
+            data["tooling_preflight"] = {
+                "mode": "AUTOMATED_UPDATE_RADAR",
+                "checked_at": datetime.now(timezone.utc).isoformat(),
+                "update_radar_path": radar_path.relative_to(root).as_posix(),
+                "update_radar_sha256": radar_hash,
+                "update_radar_generated_at": datetime.now(timezone.utc).isoformat(),
+                "update_radar_max_age_hours": 36,
+                "official_sources_complete": True,
+                "figma_release_notes_checked": True,
+                "figma_mcp_docs_checked": True,
+                "agent_docs_checked": True,
+            }
+            radar_path.write_text('{"changed": true}', encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "SHA-256 changed"):
                 self.validate_start(root, data)
 
     def test_missing_checked_at_is_rejected(self) -> None:
