@@ -1,4 +1,4 @@
-schema_version: 3
+schema_version: 4
 reference_id: REF-XXXX
 page_id: ""
 shared_contract: ""
@@ -18,10 +18,13 @@ sections: []
 #     screenshots: []
 #     metadata_capture: ""
 #   dependencies:
+#     section_ids: [] # sections whose implementation/output must exist first
 #     shared_components: []
 #     tokens: []
 #     fonts: []
 #     assets: []
+#     integration_coupling: LOW # LOW | MEDIUM | HIGH
+#     coupling_notes: []
 #   responsive:
 #     uses_shared_breakpoints: true
 #     invariants: []
