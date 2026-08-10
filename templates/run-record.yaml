@@ -1,4 +1,4 @@
-schema_version: 9
+schema_version: 10
 experiment_id: EXP-XXXX
 run_id: RUN-XXXX
 run_class: COMMON # COMMON | OPTIMIZED | REPLAY
@@ -7,11 +7,19 @@ started_at: ""
 completed_at: ""
 
 tooling_preflight:
+  mode: AUTOMATED_UPDATE_RADAR # AUTOMATED_UPDATE_RADAR | LEGACY_MANUAL
   checked_at: ""
+  update_radar_path: ""
+  update_radar_sha256: ""
+  update_radar_generated_at: ""
+  update_radar_max_age_hours: 36
+  official_sources_complete: false
+  active_lanes: []
+  source_warnings: []
   figma_release_notes_checked: false
   figma_mcp_docs_checked: false
   agent_docs_checked: false
-  community_scan_checked: false
+  community_scan_checked: false # optional discovery signal; not a production start gate in AUTOMATED_UPDATE_RADAR mode
   changes_relevant_to_run: []
   rules_to_retest: []
   new_hypotheses: []
@@ -85,38 +93,28 @@ captures:
   first_pass: []
   verify: []
   final: []
-# Capture example:
-# - capture_id: CAP-001
-#   scope: SECTION # SECTION | BOUNDARY | CLUSTER | FULL_PAGE
-#   target_id: S01 # S01 / B01 / C01 / PAGE
-#   frame_id: pc-main
-#   environment_profile_id: mac-safari
+# - capture_id: section-s01-iphone
+#   evidence_scope: SECTION # SECTION | BOUNDARY | CLUSTER | FULL_PAGE | INTERACTION
+#   environment_profile_id: iphone-safari
+#   frame_id: sp-main
+#   viewport:
+#     width_css_px: 390
+#     height_css_px: 844
 #   runtime:
 #     browser: Safari
 #     browser_version: ""
-#     os: macOS
+#     os: iOS
 #     os_version: ""
-#     engine: WebKit
-#     webview: false
-#     viewport_width_css_px: 1440
-#     viewport_height_css_px: 1200
-#     dpr: 2
+#     dpr: 3
 #     zoom: 1.0
 #     text_scale: 1.0
-#     orientation: LANDSCAPE
-#   input_state:
-#     primary_hover: HOVER
-#     primary_pointer: FINE
-#     touch: false
-#   preferences:
+#     hover: NONE
+#     pointer: COARSE
 #     reduced_motion: NO_PREFERENCE
-#     forced_colors: NONE
-#     contrast: NO_PREFERENCE
 #     color_scheme: LIGHT
+#     forced_colors: NONE
 #   path: ""
 #   captured_at: ""
-#   deterministic: true
-#   notes: []
 
 scores:
   first_pass_fidelity:
