@@ -21,7 +21,7 @@
           "type": "object",
           "required": ["level", "evidence"],
           "properties": {
-            "level": { "enum": ["NONE", "SPARSE", "PARTIAL", "SYSTEMATIC", "UNKNOWN"] },
+            "level": { "enum": ["NONE", "SPARSE", "PARTIAL", "SYSTEMATIC", "UNDETERMINED", "UNKNOWN"] },
             "evidence": { "type": "array" }
           },
           "additionalProperties": true
@@ -30,7 +30,7 @@
           "type": "object",
           "required": ["level", "modes_observed", "aliases_observed", "evidence"],
           "properties": {
-            "level": { "enum": ["NONE", "SPARSE", "PARTIAL", "SYSTEMATIC", "UNKNOWN"] },
+            "level": { "enum": ["NONE", "SPARSE", "PARTIAL", "SYSTEMATIC", "UNDETERMINED", "UNKNOWN"] },
             "modes_observed": { "type": "array" },
             "aliases_observed": { "type": "boolean" },
             "evidence": { "type": "array" }
@@ -41,8 +41,8 @@
           "type": "object",
           "required": ["coverage", "generation", "grid_observed", "evidence"],
           "properties": {
-            "coverage": { "enum": ["NONE", "LOW", "MEDIUM", "HIGH", "MIXED", "UNKNOWN"] },
-            "generation": { "enum": ["NONE", "LEGACY", "UPDATED_2026", "MIXED", "UNKNOWN"] },
+            "coverage": { "enum": ["NONE", "LOW", "MEDIUM", "HIGH", "MIXED", "UNDETERMINED", "UNKNOWN"] },
+            "generation": { "enum": ["NONE", "LEGACY", "UPDATED_2026", "MIXED", "UNDETERMINED", "UNKNOWN"] },
             "grid_observed": { "type": "boolean" },
             "evidence": { "type": "array" }
           },
@@ -52,7 +52,7 @@
           "type": "object",
           "required": ["quality", "evidence"],
           "properties": {
-            "quality": { "enum": ["LOW", "MEDIUM", "HIGH", "UNKNOWN"] },
+            "quality": { "enum": ["LOW", "MEDIUM", "HIGH", "UNDETERMINED", "UNKNOWN"] },
             "evidence": { "type": "array" }
           },
           "additionalProperties": true
@@ -61,7 +61,7 @@
           "type": "object",
           "required": ["level", "mapped_components", "evidence"],
           "properties": {
-            "level": { "enum": ["NONE", "PARTIAL", "STRONG", "UNKNOWN"] },
+            "level": { "enum": ["NONE", "PARTIAL", "STRONG", "UNDETERMINED", "UNKNOWN"] },
             "mapped_components": { "type": "array" },
             "evidence": { "type": "array" }
           },
@@ -71,7 +71,7 @@
           "type": "object",
           "required": ["level", "evidence"],
           "properties": {
-            "level": { "enum": ["NONE", "PARTIAL", "STRONG", "UNKNOWN"] },
+            "level": { "enum": ["NONE", "PARTIAL", "STRONG", "UNDETERMINED", "UNKNOWN"] },
             "evidence": { "type": "array" }
           },
           "additionalProperties": true
@@ -80,7 +80,7 @@
           "type": "object",
           "required": ["level", "evidence"],
           "properties": {
-            "level": { "enum": ["NONE", "PARTIAL", "STRONG", "UNKNOWN"] },
+            "level": { "enum": ["NONE", "PARTIAL", "STRONG", "UNDETERMINED", "UNKNOWN"] },
             "evidence": { "type": "array" }
           },
           "additionalProperties": true
