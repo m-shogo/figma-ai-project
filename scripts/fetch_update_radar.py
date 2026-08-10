@@ -287,16 +287,63 @@ def parse_html(payload: bytes, include_keywords: list[str]) -> tuple[str, list[d
     return title, [], canonical
 
 
+def _json_scalar_text(value: Any) -> str:
+    if isinstance(value, str):
+        return normalize_text(value)
+    if value is None or isinstance(value, (bool, int, float)):
+        return str(value)
+    return ""
+
+
+def relevant_json_subset(value: Any, include_keywords: Iterable[str]) -> Any | None:
+    terms = [str(keyword).strip().casefold() for keyword in include_keywords if str(keyword).strip()]
+    if not terms:
+        return value
+
+    def matches(text: str) -> bool:
+        folded = text.casefold()
+        return any(term in folded for term in terms)
+
+    def extract(node: Any) -> Any | None:
+        if isinstance(node, dict):
+            direct_text = " ".join(
+                _json_scalar_text(child)
+                for child in node.values()
+                if not isinstance(child, (dict, list))
+            )
+            if direct_text and matches(direct_text):
+                return node
+
+            kept: dict[str, Any] = {}
+            for key, child in node.items():
+                if not isinstance(child, (dict, list)):
+                    continue
+                relevant = extract(child)
+                if relevant is not None:
+                    kept[str(key)] = relevant
+            return kept or None
+
+        if isinstance(node, list):
+            kept_items = []
+            for child in node:
+                relevant = extract(child)
+                if relevant is not None:
+                    kept_items.append(relevant)
+            return kept_items or None
+
+        text = _json_scalar_text(node)
+        return node if text and matches(text) else None
+
+    return extract(value)
+
+
 def parse_json_digest(payload: bytes, include_keywords: list[str]) -> tuple[str, list[dict[str, Any]], str]:
     data = json.loads(payload.decode("utf-8"))
-    canonical = json.dumps(data, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-    visible = normalize_text(canonical)
-    if include_keywords:
-        _, snippet = keyword_snippets(visible, include_keywords, radius=500, limit=24)
-        visible = snippet or visible[:12000]
-    else:
-        visible = visible[:12000]
-    return "", [], visible + "\n" + sha256_text(canonical)
+    subset = relevant_json_subset(data, include_keywords)
+    if include_keywords and subset is None:
+        subset = [] if isinstance(data, list) else {}
+    canonical = json.dumps(subset, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    return "", [], canonical
 
 
 def retest_categories(text: str, keyword_map: dict[str, Any]) -> list[str]:
