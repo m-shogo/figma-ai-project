@@ -1,0 +1,114 @@
+schema_version: 1
+contract_id: CONTRACT-XXXX
+reference_id: REF-XXXX
+status: DRAFT # DRAFT | FROZEN | SUPERSEDED
+created_at: ""
+updated_at: ""
+
+codebase:
+  repository: ""
+  starting_commit: ""
+  framework: ""
+  styling_architecture: ""
+  global_style_paths: []
+  design_system_paths: []
+  token_paths: []
+  shared_component_paths: []
+
+styling:
+  strategy: EXISTING_PROJECT # EXISTING_PROJECT | CSS_MODULES_NATIVE | TAILWIND | CSS_IN_JS | OTHER
+  scss_allowed: false
+  raw_value_policy: RECORD_ONE_OFFS
+  css_module_naming: ""
+  notes: []
+
+breakpoints:
+  mode: GLOBAL_SPECIFIED # GLOBAL_SPECIFIED | SECTION_SPECIFIED | INTRINSIC_ONLY | NONE | UNKNOWN
+  source: UNKNOWN # OWNER | COMPANY | DESIGN_SYSTEM | EXISTING_CODE | FIGMA | MULTIPLE | UNKNOWN
+  source_refs: []
+  values: []
+  # - name: mobile
+  #   media_query: ""
+  #   min_width_px: null
+  #   max_width_px: null
+  #   source_ref: ""
+  #   notes: ""
+  worker_override: PROPOSE_ONLY # PROPOSE_ONLY | OWNER_ALLOWED
+  validation_viewports: []
+
+fonts:
+  sources: []
+  families: []
+  roles: []
+  loading_policy: ""
+  fallback_policy: ""
+  cjk_notes: []
+
+tokens:
+  source_of_truth: ""
+  color: []
+  spacing: []
+  radius: []
+  typography: []
+  effects: []
+  z_index: []
+  other: []
+
+layout:
+  container_rules: []
+  gutter_rules: []
+  page_grid: []
+  spacing_rhythm: []
+  auto_layout_generation: UNKNOWN # LEGACY | UPDATED_2026 | MIXED | UNKNOWN
+  intrinsic_layout_allowed: true
+  notes: []
+
+shared_components: []
+# - id: Button
+#   figma_node_id: ""
+#   code_path: ""
+#   code_connect: false
+#   variant_contract: []
+#   notes: []
+
+assets:
+  source_policy: EXACT_WHEN_AVAILABLE
+  extraction_method: ""
+  shared_assets: []
+  image_crop_rules: []
+
+accessibility:
+  semantic_html: true
+  keyboard_baseline: true
+  focus_policy: ""
+  notes: []
+
+parallel_execution:
+  shared_files_read_only_for_workers: true
+  coordinator_only_paths: []
+  allowed_worker_change_policy: SECTION_SCOPED
+  shared_change_protocol: PROPOSE_SHARED_CHANGE
+  breakpoint_exception_protocol: PROPOSE_BREAKPOINT_EXCEPTION
+
+integration:
+  root_composition_path: ""
+  required_checks:
+    - section_order
+    - container_alignment
+    - cross_section_spacing
+    - typography_consistency
+    - shared_component_consistency
+    - breakpoint_consistency
+    - responsive_continuity
+    - global_overflow
+    - z_index_continuity
+    - background_continuity
+    - asset_quality
+
+unknowns: []
+conflicts: []
+
+freeze:
+  ready: false
+  frozen_at: ""
+  notes: ""
