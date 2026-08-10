@@ -49,6 +49,9 @@ jobs:
       - name: Validate company implementation policy and frozen lineage
         run: python scripts/validate_company_policy.py
 
+      - name: Validate resolved device/browser environment contract
+        run: python scripts/validate_environment_contract.py
+
       - name: Validate actual Figma capability profile before contract freeze
         run: python scripts/validate_figma_profile.py
 
