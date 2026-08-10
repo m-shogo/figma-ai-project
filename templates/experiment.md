@@ -1,128 +1,107 @@
-# EXP-XXXX — <title>
+# EXP-XXXX — <single variable under test>
+
+## Status
+
+PLANNED / WAITING_FOR_REFERENCE / RUNNING / COMPLETE / INVALID
+
+## Question
+
+このexperimentで何を1つ切り分けるか。
+
+例:
+
+- C1 structured context → C2 explicit responsive contract でFirst-passは改善するか
+- one-shot → staged workflow でrepair roundsは減るか
 
 ## Hypothesis
 
-What specific change do we expect to improve fidelity or reduce rework?
+期待する変化と、効くと予想するmetric/failure classを書く。
 
-## Reference
+## Frozen Reference
 
-- Figma file:
-- Node ID:
-- Version/branch:
-- Desktop viewport:
-- Mobile viewport:
-- Fixture/content:
+- Reference ID:
+- Manifest: `references/.../reference.yaml`
+- Figma file/node(s):
+- Starting code commit:
 
-## Environment
+Design固有の寸法・色・構造をここで新しく決めない。Reference manifestを参照する。
 
-- Date:
-- Agent:
-- Model:
-- Agent version:
-- Figma MCP mode/version if known:
-- Framework:
-- Browser/runtime:
+## Independent variable
 
-## Inputs
+今回変えるものを1つ。
 
-### Starting prompt
+## Controlled variables
 
-```text
-<prompt>
-```
+変えないもの:
 
-### Context supplied
+- reference
+- starting commit
+- viewport(s)
+- assets
+- acceptance criteria
+- agent/model if same-agent A/B
+- context tier except the tested dimension
+- repair budget
 
-- [ ] Figma structured context
-- [ ] screenshot
-- [ ] variables/tokens
-- [ ] component metadata
-- [ ] Code Connect
-- [ ] source code
-- [ ] existing design system rules
-- [ ] assets
+## Runs
 
-Notes:
+| Run ID | Class | Agent | Model | Context | Workflow | Result |
+|---|---|---|---|---|---|---|
+| | | | | | | |
 
-## First Pass
+各run詳細は `templates/run-record.yaml` 形式で保存する。
 
-- Commit/output:
-- Files changed:
-- Agent assumptions:
-- Human intervention before first render: none / describe
+## First-pass comparison
 
-### Scores
+### Metrics
 
-- Visual Fidelity /40:
-- Structural Fidelity /25:
-- Robustness /15:
-- Rework Cost /10:
-- Reproducibility /10:
-- **First-pass total /100:**
+- Visual Fidelity:
+- Structural Fidelity:
+- Robustness:
+- Rework Cost:
+- First-pass total:
 
-## Failures
+### Failure profile
 
-| Category | Severity | Evidence | Suspected cause |
+| Failure | Severity | Primary category | Root cause confidence |
 |---|---|---|---|
 | | | | |
 
-## Repair rounds
+## Repair / replay
 
-### Repair 1
+改善を試した場合:
 
-Prompt:
+- isolated change:
+- affected failure class:
+- before:
+- after:
+- clean replay run:
+- reproduced: yes / no
 
-```text
-<repair prompt>
-```
+## Result
 
-Result:
+Hypothesis: supported / not-supported / inconclusive
 
-### Repair 2
-
-Prompt:
-
-```text
-<repair prompt>
-```
-
-Result:
-
-## Final Scores
-
-- Visual Fidelity /40:
-- Structural Fidelity /25:
-- Robustness /15:
-- Rework Cost /10:
-- Reproducibility /10:
-- **Final total /100:**
-- Repair Gain:
-
-## Clean Re-run
-
-Did the improved instruction/context reproduce the gain from a clean baseline?
-
-- yes / no / not run
-- result:
+根拠:
 
 ## Lessons
 
-### Observations
+### Observation
 
 - 
 
-### Candidate reusable rules
+### Candidate rule
 
 - 
 
-### Agent-specific findings
+### Agent-specific
 
 - 
 
-### Project-specific findings
+### Project-only
 
 - 
 
-## Next experiment
+## Next smallest experiment
 
-What single uncertainty should the next experiment isolate?
+次に切り分ける不確実性を1つだけ書く。
