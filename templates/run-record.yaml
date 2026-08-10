@@ -1,4 +1,4 @@
-schema_version: 6
+schema_version: 7
 experiment_id: EXP-XXXX
 run_id: RUN-XXXX
 run_class: COMMON # COMMON | OPTIMIZED | REPLAY
@@ -31,6 +31,8 @@ coordination:
   shared_contract_sha256: ""
   section_manifest_path: ""
   section_manifest_sha256: ""
+  figma_structure_profile_path: ""
+  figma_structure_profile_sha256: ""
   foundation_commit: ""
   isolation_mode: "" # BRANCH_WORKTREE | AGENT_SANDBOX | SERIAL_SHARED_TREE | OTHER | empty when N/A
   isolation_ref: ""
