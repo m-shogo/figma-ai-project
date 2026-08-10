@@ -2,171 +2,335 @@
 
 目的: 「見た感じ近い」を、run間で比較可能な証拠へ変える。
 
-## Principle
+Screenshot comparisonは重要だが、**撮影条件・run scope・Shared Contractが違えばdiff自体がノイズになる。**
 
-Screenshot comparison は重要だが、**撮影条件が違えばdiff自体がノイズになる**。
+---
 
-Reference/implementationのcapture条件を固定する。
+## 1. Evidence identity
 
-## Capture contract
+各captureには最低限:
 
-各captureで記録する。
+- experiment/run ID
+- run scope: SECTION / INTEGRATION / PAGE_BENCHMARK
+- section ID when applicable
+- reference revision
+- Shared Contract SHA-256 when applicable
+- foundation commit
+- implementation commit/state
+- frame/reference ID
+- viewport width/height
+- state
+- capture timestamp
 
-- frame/reference id
+を紐付ける。
+
+異なるcontract hashのcaptureを「同条件before/after」として扱わない。
+
+---
+
+## 2. Capture environment
+
+各captureで記録:
+
 - viewport width/height
 - browser + version if known
 - device pixel ratio
-- page zoom = 100%
+- zoom = 100%
 - locale
-- timezone when content depends on time
+- timezone when relevant
 - theme/color mode
 - fixture/data state
-- auth state if relevant
+- auth state
 - scroll position
 - reduced motion / animation policy
-- capture timestamp
-- implementation commit
-
-## Before capture
+- font loading state
 
 ### Stable content
 
-- random値を固定
-- current time依存表示を固定または記録
-- network responseをfixture化できる場合は固定
-- carousel/auto-rotationを停止または既知stateへ
-- loading終了を待つ
-- webfontロード完了を待つ
+- random値固定
+- current-time依存固定/記録
+- network dataをfixture化できる場合は固定
+- carousel/auto-rotation停止または既知state
+- loading完了
+- webfontロード完了
 
 ### Stable motion
 
-comparison screenshotでは原則animation/transitionsを停止する。
+静止画comparisonでは原則animation/transitions停止。
 
-ただしmotion自体がreference requirementなら、静止画比較とは別のbehavior evidenceとして扱う。
+Motion自体がrequirementなら別behavior evidenceとして扱う。
 
-### Stable viewport
+---
 
-Reference manifestのexact viewportを使用する。
+## 3. Viewport source of truth
 
-「だいたいPC」「iPhoneっぽい幅」では比較しない。
+### Reference viewports
 
-## Capture sets
+Reference Manifestのexact acceptance viewportを使う。
 
-### Required
+「だいたいPC」「iPhoneっぽい幅」は使わない。
 
-Reference manifestでacceptance対象になっている各frame/state。
+### Breakpoint boundaries
 
-### Intermediate
+デザイナー/会社/design system/既存product指定breakpointはShared Contractから取得する。
 
-Responsive verificationに必要な場合、**Implement前に幅を固定してrun recordへ記録**する。
+AIがimplementationを見てから都合のよいbreakpointを選ばない。
 
-選び方:
+最低限、responsive behaviorがある場合:
 
-1. known breakpointの直前/直後
-2. PC/SPの間でlayout transitionが起きる領域
-3. long textなどでwrapが起きる幅
-4. reference情報がない場合は探索幅として明示し、acceptance referenceと混同しない
+1. PC reference viewport
+2. SP reference viewport
+3. 指定breakpoint境界
+4. 必要なら境界直前/直後
+
+を確認する。
+
+例えばquery semanticsが`max-width`なら、実ブラウザで意味のある境界をproject単位に定義してcaptureする。
+
+1px前後比較がbrowser/device semantics上意味を持つかは環境に依存するため、**Shared Contractのexact media queryを正本にし、capture値はverification metadataとして固定**する。
+
+### Intermediate widths
+
+追加幅は:
+
+- company/designer指定test width
+- explicit reference state
+- shared contractで決めたvalidation viewport
+- long text/wrap検証
+- known layout risk
+
+のために使う。
 
 実装結果を見てから都合の良い幅だけ選ばない。
 
-## Comparison layers
+探索目的なら`EXPLORATORY`と明示しacceptance captureと混ぜない。
 
-### Layer A — side by side
+---
 
-人間/agentがreferenceとimplementationを並べる。
+## 4. SECTION capture
+
+担当sectionのfirst-passを評価する。
+
+必要に応じてpage内のsection cropとfull viewportの両方を保存する。
+
+### Section crop
+
+細部比較に向く:
+
+- local geometry
+- typography
+- spacing
+- asset/crop
+- component state
+
+### Full viewport including section
+
+sectionがpage/containerへどう乗るかを見る:
+
+- shared gutter
+- viewport-relative alignment
+- sticky/fixed behavior
+- background bleed
+
+SECTION scoreではcross-section spacingを過剰に評価しない。そこはINTEGRATIONで見る。
+
+---
+
+## 5. INTEGRATION capture
+
+全section統合後に必須。
 
 見るもの:
 
+- section order
+- cross-section spacing/rhythm
+- container alignment
+- background continuity
+- page-wide typography hierarchy
+- z-index/overlap
+- navigation relationships
+- full-page overflow
+- shared breakpoint continuity
+
+### Recommended set
+
+```text
+integration/
+  pc-viewport.png
+  sp-viewport.png
+  pc-full-page.png
+  sp-full-page.png
+  breakpoint-<name>.png
+```
+
+Full-page captureは長いページで細部確認が難しいため、viewport captureの代替ではなく補助。
+
+---
+
+## 6. Comparison layers
+
+### Layer A — Side by side
+
+Reference / implementationを同条件で並べる。
+
+見る:
+
 - hierarchy
-- section proportion
+- geometry
 - typography
-- spacing rhythm
+- spacing
 - asset/crop
 
-### Layer B — overlay / pixel diff
+### Layer B — Overlay / pixel diff
 
-可能な環境では同寸法へ揃えoverlay/diffを作る。
+同寸法に揃えoverlay/diff。
 
 用途:
 
 - offset
 - width/height drift
-- line wrap drift
-- repeated spacing mismatch
+- line-wrap drift
+- repeated spacing drift
 
-注意:
+font anti-aliasing、OS/browser/subpixel差があるためpixel diffだけで合否を決めない。
 
-font anti-aliasing、OS/browser rendering、sub-pixel差でnoiseが出るため、pixel diff単独を合否判定にしない。
+### Layer C — Structural / contract evidence
 
-### Layer C — structural evidence
+Visual一致とは別に:
 
-Visualが一致しても以下を別確認する。
-
-- reused component
+- correct shared components
 - tokens
-- responsive structure
-- semantic HTML
-- accessibility
-- state logic
+- Shared Contract hash
+- foundation commit
+- approved breakpoint query
+- semantic HTML/accessibility
+- allowed-path isolation
 
-## Evidence naming
+を確認する。
 
-推奨:
+---
+
+## 7. Breakpoint verification
+
+Responsive確認は「AIがbreakpointを発見する試験」ではない。
+
+**指定breakpointで期待behaviorが発火することを証明する。**
+
+チェック例:
+
+- Header nav visibility
+- MainVisual stacking/order
+- Content columns
+- image crop/position
+- typography/wrap
+- section spacing
+
+Failure例:
+
+- 1sectionだけ別threshold
+- `min-width`/`max-width`方向違い
+- boundaryで両stateが同時表示
+- boundaryでどちらも非表示
+- section間で切替timingがズレる
+
+`BREAKPOINT_CONTRACT_VIOLATION` / `BREAKPOINT_BOUNDARY`として記録する。
+
+---
+
+## 8. First-pass preservation
+
+Repair前captureを上書きしない。
 
 ```text
 artifacts/
-  EXP-0001/
-    RUN-CODEX-C2-001/
+  EXP-XXXX/
+    RUN-XXXX/
       first-pass/
-        pc-main.png
-        sp-main.png
       verify/
-        pc-main-diff.png
-        sp-main-diff.png
+      repair-01/
       final/
-        pc-main.png
-        sp-main.png
 ```
 
-## First-pass rule
+SECTIONならsection IDをpath/file名へ含める。
 
-Repair前のcaptureを上書きしない。
+INTEGRATIONは別run/evidence bundleとして残す。
 
-`first-pass/` と `final/` は必ず分離する。
+---
 
-## Diagnostic ordering
+## 9. Evidence bundle for AI review
 
-大きいdifferenceから直す。
+将来Dashboard/AI visual reviewへ渡しやすいよう、1runのevidenceをまとめる。
 
-1. wrong structure/layout model
-2. container geometry
-3. typography/wrapping
-4. repeated spacing/token errors
-5. assets/crop
-6. local decoration
+候補:
 
-親layoutが間違っている状態で1px単位の装飾修正を始めない。
+- reference screenshot
+- first-pass screenshot
+- overlay/diff
+- detail crops
+- reference manifest
+- Shared Contract summary/hash
+- section manifest entry
+- failure records
+- run metadata
 
-## Verification output
+AIには画像だけでなく、**どのsection・どのbreakpoint・どのcontractの比較か**も渡す。
 
-Verify phaseは最低限以下を返す。
+---
+
+## 10. Diagnostic ordering
+
+大きいdifferenceから見る。
+
+1. wrong contract/reference/section lineage
+2. wrong structure/layout model
+3. container geometry
+4. breakpoint contract/behavior
+5. typography/wrapping
+6. repeated spacing/token errors
+7. assets/crop
+8. local decoration
+
+親layout/contractが間違っている状態で1px装飾修正を始めない。
+
+---
+
+## 11. Verification output
+
+SECTION Verifyは最低限:
 
 - capture inventory
+- scope/section ID
+- contract hash/foundation
 - first-pass score
+- Contract Compliance
 - ordered failure records
 - highest-impact root cause
-- areas already matching and protected from repair
-- reference ambiguity if any
+- areas already matching
+- proposed shared/breakpoint changes if any
 
-## Current tooling direction
+INTEGRATION Verifyは追加で:
 
-Browser-based projectsでは、Playwright等のreal-browser captureを第一候補にする。
+- included section outputs
+- cross-section failures
+- breakpoint continuity
+- integration-only repair candidates
 
-特定toolを永久固定はしない。重要なのは:
+を返す。
 
-- exact viewport
+---
+
+## 12. Current tooling direction
+
+Browser-based projectではPlaywright等のreal-browser captureを第一候補にする。
+
+特定toolは永久固定しない。
+
+重要条件:
+
+- exact source-of-truth viewport/breakpoint
 - deterministic state
 - evidence preservation
+- scope/lineage metadata
 - reference comparison
 
-の4条件。
+Tooling更新時はより効率的なcapture/diff手段を再評価する。
