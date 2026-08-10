@@ -41,8 +41,9 @@ Canonical:
 ## Production default
 
 ```text
-Update Preflight
-→ Company Policy ACTIVE + Required Environment Profiles
+Scheduled Official Update Radar
+→ Company Policy ACTIVE + SHA-256
+→ Required Environment Profiles
 → Reference Freeze
 → Existing Codebase / Compatibility Reconnaissance
 → Effective Environment Contract DRAFT
@@ -55,7 +56,7 @@ Update Preflight
 → Environment Contract RESOLVED
 → Shared Contract FROZEN + Company Policy SHA-256
 → Safe Wave Planning
-→ Isolated SECTION Workers
+→ Isolated / singleton serial-safe SECTION Workers
 → SECTION Capture in canonical + material-difference environments
 → BOUNDARY / CLUSTER Capture
 → Coordinator INTEGRATION
@@ -336,20 +337,45 @@ CSS Modules
 
 ## Update-aware rule
 
-Significant run前に:
+Significant production runで、人間またはagentが毎回release notesを手動検索することをdefaultにしない。
 
-- Company Policy / Required Environment Matrix
-- Figma release notes / MCP docs
-- current agent/client docs
-- MDN/platform compatibility relevant to company targets
-- WordPress/ACF/library official docs when applicable
-- recent practitioner/community signals
+通常経路:
 
-を確認する。
+```text
+Scheduled Official Update Radar
+→ validate_update_sources.py
+→ daily official-source snapshot
+→ apply_radar_preflight.py
+→ start_section_run.py
+```
 
-Required browser major / OS major / relevant web-platform changeもRETEST trigger。
+Preflightは少なくとも:
 
-古いlimitation/workaroundを自動で現在へ適用しない。関連updateがあれば`RETEST_NOW`。
+- Radar freshness / SHA-256
+- Figma release source
+- Figma MCP source
+- MCP
+- Web Platform
+- Accessibility
+- actual agent lane
+- Company Policy Required Environmentに対応するbrowser-specific lane
+
+を自動確認する。
+
+Current freshness defaultは36 hours。Required official lane取得不能はfail-closed。
+
+Global snapshot全体をそのままRETESTへ流さず、`changes_relevant_to_run → rules_to_retest`でrunごとに絞る。
+
+Community/practitioner searchはoptional discoveryでありproduction start gateではない。Community signalは仮説化し、local experiment / clean replayなしでCompany Policyへ昇格させない。
+
+Required browser major / OS major / relevant web-platform changeはRETEST候補になりうる。
+
+古いlimitation/workaroundを自動で現在へ適用しない。関連upstream changeがあれば`RETEST_CANDIDATE`として再試験する。
+
+Canonical:
+
+- `docs/update-preflight.md`
+- `docs/research-radar.md`
 
 ## Evidence maturity
 
@@ -415,10 +441,20 @@ FIRST_PASSを消さない。
 - 1–2px magic numberでroot causeを隠す
 - 1回成功をbest practiceにする
 - 1回失敗を永久禁止にする
+- upstream newsだけでCompany Policy/Playbookを書き換える
+- production開始前の手動community scanを必須化する
 
 ## CI
 
 Machine-readable contractsは`.github/workflows/validate-research.yml`で検証する。
+
+ValidationにはUpdate Radar source registry、Company Policy、Environment Contract、capture environment lineage等を含める。
+
+Repository-level entrypoint:
+
+```text
+python scripts/check_repository_readiness.py
+```
 
 Validationはtoolを永久固定するためではなく、**Company Policy・Environment Contract・experiment lineage・再現条件を壊さないため**に使う。
 
