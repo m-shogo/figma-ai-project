@@ -145,8 +145,13 @@ class CreateSectionRunTests(unittest.TestCase):
                 model="model-current",
             )
 
-            self.assertEqual(record["schema_version"], 9)
+            self.assertEqual(record["schema_version"], 10)
             self.assertEqual(record["status"], "PLANNED")
+            self.assertEqual(record["tooling_preflight"]["mode"], "AUTOMATED_UPDATE_RADAR")
+            self.assertEqual(record["tooling_preflight"]["update_radar_max_age_hours"], 36)
+            self.assertFalse(record["tooling_preflight"]["official_sources_complete"])
+            self.assertEqual(record["tooling_preflight"]["active_lanes"], [])
+            self.assertEqual(record["tooling_preflight"]["source_warnings"], [])
             self.assertEqual(record["coordination"]["scope"], "SECTION")
             self.assertEqual(record["coordination"]["foundation_commit"], "foundation-123")
             self.assertEqual(

@@ -285,7 +285,7 @@ def build_run_record(
 
     code_baseline = reference.get("code_baseline", {})
     return {
-        "schema_version": 9,
+        "schema_version": 10,
         "experiment_id": experiment_id,
         "run_id": run_id,
         "run_class": run_class,
@@ -293,7 +293,15 @@ def build_run_record(
         "started_at": "",
         "completed_at": "",
         "tooling_preflight": {
+            "mode": "AUTOMATED_UPDATE_RADAR",
             "checked_at": "",
+            "update_radar_path": "",
+            "update_radar_sha256": "",
+            "update_radar_generated_at": "",
+            "update_radar_max_age_hours": 36,
+            "official_sources_complete": False,
+            "active_lanes": [],
+            "source_warnings": [],
             "figma_release_notes_checked": False,
             "figma_mcp_docs_checked": False,
             "agent_docs_checked": False,

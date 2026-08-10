@@ -58,6 +58,40 @@ class ApplyRadarPreflightTests(unittest.TestCase):
             self.assertEqual(preflight["rules_to_retest"], ["VIEWPORT_SAFE_AREA"])
             self.assertEqual(preflight["update_radar_sha256"], hashlib.sha256(path.read_bytes()).hexdigest())
 
+    def test_retests_are_derived_only_from_changes_relevant_to_run(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            path = root / "research/update-radar/latest.json"
+            path.parent.mkdir(parents=True)
+            value = snapshot()
+            value["active_lanes"].append("WORDPRESS_ACF")
+            value["sources"].append(
+                {
+                    "source_id": "wordpress-releases",
+                    "lane": "WORDPRESS_ACF",
+                    "fingerprint": "wp",
+                    "error": "",
+                }
+            )
+            value["changes"].append(
+                {
+                    "source_id": "wordpress-releases",
+                    "lane": "WORDPRESS_ACF",
+                    "retest_categories": ["WORDPRESS_ACF"],
+                }
+            )
+            value["summary"]["retest_categories"] = ["VIEWPORT_SAFE_AREA", "WORDPRESS_ACF"]
+            path.write_text(json.dumps(value), encoding="utf-8")
+            run = {"agent": {"client": "codex"}, "tooling_preflight": {}}
+            with patch.object(radar, "ROOT", root):
+                updated = radar.apply(run, value, path, 36)
+            preflight = updated["tooling_preflight"]
+            self.assertEqual(
+                [row["source_id"] for row in preflight["changes_relevant_to_run"]],
+                ["safari-release-notes"],
+            )
+            self.assertEqual(preflight["rules_to_retest"], ["VIEWPORT_SAFE_AREA"])
+
     def test_stale_snapshot_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

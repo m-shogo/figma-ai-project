@@ -11,6 +11,7 @@ import yaml
 import scripts.validate_company_policy as policy
 
 
+ROOT = Path(__file__).resolve().parents[1]
 EXPECTED = [
     "COMPANY_POLICY",
     "EXISTING_CODEBASE",
@@ -20,13 +21,18 @@ EXPECTED = [
 
 
 def active_policy() -> dict:
-    return {
-        "policy_id": "COMPANY-1",
-        "status": "ACTIVE",
-        "precedence": {"implementation_constraints": EXPECTED},
-        "browser_support": {"browserslist": ["last 2 versions"]},
-        "update_policy": {"significant_run_preflight": True},
-    }
+    data = yaml.safe_load((ROOT / "templates/company-policy.yaml").read_text(encoding="utf-8"))
+    data["policy_id"] = "COMPANY-1"
+    data["status"] = "ACTIVE"
+    data["browser_support"]["browserslist"] = ["last 2 versions"]
+    data["browser_support"]["environment_profiles"] = [
+        {
+            "id": "desktop-chrome",
+            "role": "REQUIRED",
+        }
+    ]
+    data["visual_tolerance"]["canonical_environment_profile"] = "desktop-chrome"
+    return data
 
 
 class CompanyPolicyTests(unittest.TestCase):
@@ -41,7 +47,9 @@ class CompanyPolicyTests(unittest.TestCase):
 
     def test_active_policy_requires_browser_support_contract(self) -> None:
         data = active_policy()
-        data["browser_support"] = {"browserslist": [], "explicit_minimums": [], "test_matrix": []}
+        data["browser_support"]["browserslist"] = []
+        data["browser_support"]["explicit_minimums"] = []
+        data["browser_support"]["test_matrix"] = []
         errors = policy.semantic_policy_errors(data)
         self.assertTrue(any("browser support contract" in error for error in errors))
 
