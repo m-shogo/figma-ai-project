@@ -41,3 +41,6 @@ jobs:
 
       - name: Validate reference, shared, section, and run records
         run: python scripts/validate_records.py
+
+      - name: Validate parallel section write isolation
+        run: python scripts/validate_parallel_paths.py
