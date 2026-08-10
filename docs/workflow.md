@@ -1,465 +1,550 @@
-# Workflow — Figma ↔ AI Reproduction Lab
+# Workflow — Company → Existing → Figma → Section Execution
 
-このworkflowは **reference designを作る工程ではなく、既に決まったreferenceを再現する工程**。
+このworkflowは、既に決まっているFigma referenceを**会社ルールと既存codebaseに適合させながら高精度に実装する工程**。
 
-Production defaultはsection-first。Whole-page one-shotはbenchmarkとして別扱い。
+Visual/design source of truthはFigma。
 
-関連契約:
+Technical implementation precedenceは:
 
-- Reference: `docs/reference-contract.md`
-- Breakpoints: `docs/responsive-breakpoint-policy.md`
-- Section execution: `docs/section-execution.md`
-- CSS: `docs/css-strategy.md`
-- Context: `docs/context-package.md`
-- Run fairness: `docs/run-contract.md`
-- Verification: `docs/visual-verification.md`
-- Failures: `docs/failure-taxonomy.md`
-- Evaluation: `docs/evaluation-rubric.md`
-- Knowledge: `docs/knowledge-promotion.md`
+```text
+COMPANY POLICY
+→ EXISTING CODEBASE / DESIGN SYSTEM
+→ FIGMA IMPLEMENTATION EVIDENCE
+→ AGENT INFERENCE
+```
+
+Company PolicyとFigma visual/behaviorが衝突した場合は勝手にredesignせず`CONFLICT`として扱う。
+
+Production defaultはsection-first。Whole-page one-shotは`PAGE_BENCHMARK`として別cohort。
+
+Canonical related docs:
+
+- `docs/company-policy-contract.md`
+- `docs/reference-contract.md`
+- `docs/figma-capability-profile.md`
+- `docs/figma-structure-profiling.md`
+- `docs/figma-instruction-evidence.md`
+- `docs/component-resolution.md`
+- `docs/token-mapping.md`
+- `docs/web-interaction-policy.md`
+- `docs/wordpress-acf-policy.md`
+- `docs/image-gradient-visual-tolerance.md`
+- `docs/section-execution.md`
+- `docs/section-integration-ladder.md`
+- `docs/responsive-breakpoint-policy.md`
+- `docs/context-package.md`
+- `docs/visual-verification.md`
 
 ---
 
-## 0. Tooling update preflight
+## 0. Tooling / policy update preflight
 
-重要run前に:
+Significant run前にcurrent stateを確認する。
 
-- Figma release notes
-- current Figma MCP docs/tools
-- current agent/client docs
-- recent practitioner/community signals
+Minimum:
 
-を確認する。
+1. ACTIVE Company Policy / browser support
+2. current Figma release notes / MCP docs
+3. current agent/client docs
+4. current browser/platform support relevant to Company targets
+5. WordPress/ACF/library official docs when applicable
+6. recent practitioner/community signals
 
-過去のfailure/workaroundを現在も正しいと自動仮定しない。
+古いlimitation/workaroundを自動で現在へ適用しない。
 
 ---
 
-## 1. Freeze the external reference
+## 1. Activate and pin Company Policy
 
-`templates/reference-manifest.yaml` を作成する。
+`templates/company-policy.yaml`
+
+Company Policyで最低限決める/確認する:
+
+- browser support / QA matrix
+- framework/CMS
+- CSS/reset
+- breakpoints
+- folder/section-unit conventions
+- approved libraries
+- smooth scroll
+- hover/focus
+- hamburger/menu
+- carousel/autoplay
+- animation/reduced motion
+- comments/annotations handling
+- ACF/WordPress architecture
+- images/SVG
+- gradients
+- visual tolerance
+- integration capture policy
+- update/retest cadence
+
+Policyを`ACTIVE`にし、SHA-256をShared Contract/Runへpinする。
+
+---
+
+## 2. Freeze external reference
+
+`templates/reference-manifest.yaml`
 
 固定する:
 
-- Figma file / target node(s)
-- actual PC/SP/other reference frames
-- exact acceptance viewport(s)
-- states / variants
-- assets
-- component / variable / layout information
-- responsive behavior
-- breakpoint evidence/source
-- target codebase starting commit
-- material UNKNOWNs
+- Figma file / nodes
+- PC/SP/other frames
+- exact acceptance viewport/state
+- assets/crops
+- interaction states
+- responsive evidence
+- codebase starting commit
+- material UNKNOWNs/conflicts
 
-repo側から1440/390/768などを発明しない。
-
-途中で原本が変わったらreference revisionを分ける。
+Referenceをrepo側から発明しない。
 
 ---
 
-## 2. Global reconnaissance — no implementation
+## 3. Existing Codebase Reconnaissance — before Figma translation
 
-Coordinatorがページ全体を調査する。
+まず既存projectを読む。
 
-順序:
+Examples:
 
-1. codebase/style/design-system rules
-2. company/designer breakpoint specification
-3. Figma top-level metadata/hierarchy
-4. section boundaries
-5. components/variants/Code Connect
-6. variables/tokens/modes
-7. fonts/typography
-8. Auto Layout/Grid/sizing
-9. PC/SP behavior
-10. assets/states/annotations
-
-大frameはmetadata等で狭めてからsection nodeを深く読む。
-
----
-
-## 3. Build Shared Contract DRAFT
-
-`templates/shared-contract.yaml`
-
-全sectionで共通化する:
-
+- framework/runtime
+- package manager/build
+- browserslist
+- reset/base CSS
 - styling architecture
-- fonts
-- tokens
-- container/gutter
-- breakpoint source + exact values/query
-- shared components
-- assets
-- accessibility baseline
-- coordinator-only paths
+- tokens/design system
+- component library
+- breakpoint definitions
+- JS interaction utilities
+- carousel/motion libraries
+- image helpers/CDN
+- PHP/template parts
+- WordPress/ACF architecture
+- folder/naming/lint rules
 
-breakpointは案件指定を優先する。
+目的はFigmaから既存機構を重複生成しないこと。
 
 ---
 
-## 4. Build Section Manifest DRAFT
+## 4. Global Figma Reconnaissance / Capability Profile
 
-`templates/section-manifest.yaml`
+全体をinspection-onlyで読む。
 
-例:
+- metadata/hierarchy
+- section boundary candidates
+- Components/Variants
+- Variables/Modes
+- Auto Layout/Grid/Sizing
+- semantic naming
+- Code Connect
+- annotations
+- prototype interactions
+- assets
+- comments access when available
+- PC/SP relationship
+
+`UNKNOWN / NONE / UNDETERMINED`を区別する。
+
+---
+
+## 5. Shared Contract DRAFT
+
+Company + Existing + Global Figma evidenceをnormalizeする。
+
+含む:
+
+- Company Policy path/hash/id
+- browser/breakpoint contract
+- styling/reset
+- fonts/tokens
+- container/gutter/layout
+- shared components
+- interaction defaults
+- asset/image rules
+- CMS/folder conventions
+- accessibility
+- coordinator-only paths
+- conflicts/unknowns
+
+---
+
+## 6. Section Discovery + PC/SP Mapping
+
+Figma metadata/contextからlogical sectionsを抽出する。
+
+Example:
 
 ```text
 S01 Header
-S02 MainVisual
+S02 Hero
 S03 Content01
 S04 Content02
 S05 Footer
 ```
 
-各sectionへ:
+記録:
 
-- exact Figma node
-- PC/SP evidence
-- relevant context
+- exact nodes
+- boundary confidence/evidence
+- PC/SP mapping confidence/evidence
 - dependencies
-- responsive behavior at shared breakpoint
-- allowed code paths
+- integration coupling
+- allowed paths
 
-を割り当てる。
-
----
-
-## 5. Implement shared foundation — serial
-
-section並列より先に:
-
-1. fonts
-2. tokens
-3. global breakpoint binding
-4. container/gutter/layout primitives
-5. shared components
-6. shared asset helpers
-
-を実装/確認する。
-
-既存projectに正本があれば再利用する。
+人間に毎回node URLを手で切り出させることをdefaultにしない。
 
 ---
 
-## 6. Verify foundation and freeze contract
+## 7. Per-section Figma Structure Profile
 
-Foundationで:
+SectionごとにFigmaの内部品質/構造を読む。
+
+Translation mode:
+
+- STRUCTURE_FIRST
+- HYBRID
+- VISUAL_FIRST
+- CODEBASE_FIRST
+
+同じページ内でmodeが違ってよい。
+
+Section Profile path/hashをSection Manifest/Runへpinする。
+
+---
+
+## 8. Resolve components / tokens / interactions / instructions
+
+Before implementation:
+
+### Components
+
+`REUSE_EXISTING / REUSE_CODE_CONNECT / EXTEND_EXISTING / CREATE_SHARED / IMPLEMENT_SECTION_LOCAL`
+
+### Tokens
+
+`REUSE_EXISTING_TOKEN / MAP_VARIABLE_TO_EXISTING / CREATE_SHARED_TOKEN / KEEP_SECTION_LOCAL / PRESERVE_MODE_MAPPING`
+
+### Interactions
+
+- Figma prototype
+- component state/variant
+- annotation
+- relevant comment
+- Company defaults
+
+からhover/menu/slider/animation等を解決する。
+
+### Comments
+
+Commentsを:
+
+- GLOBAL
+- SECTION
+- BOUNDARY
+- UNKNOWN
+
+へmappingする。
+
+Boundary commentをSection localへ押し込まない。
+
+---
+
+## 9. Build shared foundation — serial/coordinated
+
+Parallel workerより先に:
+
+1. reset/base if needed
+2. fonts
+3. tokens/theme
+4. company/browser breakpoint binding
+5. container/gutter/layout primitives
+6. shared components
+7. shared interaction utilities
+8. image/assets helpers
+9. CMS/common helpers
+
+を実装/reuseする。
+
+既存projectの正本を最優先。
+
+---
+
+## 10. Verify foundation / freeze Shared Contract
+
+確認:
 
 - build/type/lint
+- browser-target build output when applicable
+- reset/base impact
 - font loading
-- token resolution
-- shared component rendering
-- global container
-- specified breakpoint consistency
-
-を確認する。
+- token/component resolution
+- global container/breakpoints
+- shared interaction baseline
+- image helper behavior
+- Company Policy compliance
 
 成功後:
 
 ```text
 foundation.status = VERIFIED
-foundation.commit = <commit>
-shared contract status = FROZEN
-freeze.ready = true
+shared contract = FROZEN
+company_policy = BOUND
 ```
 
-Shared contract SHA-256をSection Manifestへ保存する。
-
-ここがparallel開始gate。
+Actual SHA-256をSection Manifest/Runへpinする。
 
 ---
 
-## 7. Section-scoped Inspect
+## 11. Safe Wave Planning / worker activation
 
-各workerは担当sectionだけを深く読む。
+Safe Waveは:
 
-Input:
+- dependency
+- allowed write paths
+- integration coupling
+- boundary confidence
+- PC/SP mapping confidence
 
-- frozen shared contract + hash
+で決める。
+
+Concurrent workersは別branch/worktree/sandbox等で隔離する。
+
+Singleton/serial executionを必要以上に禁止しない。
+
+---
+
+## 12. Section Inspect — no code edits
+
+Worker input:
+
+- ACTIVE Company Policy
+- frozen Reference
+- frozen Shared Contract
+- Section Manifest entry
+- Section Structure Profile
 - verified foundation commit
-- section manifest entry
-- exact Figma node(s)
-- screenshot evidence
-- relevant structured context
+- section-mapped comments/annotations/interactions
+- exact Figma nodes/screenshots
 
-このphaseではコードを変更しない。
-
-記録:
-
-- shared component reuse
-- local layout
-- assets
-- section behavior at shared breakpoint
-- UNKNOWNs
+Company → Existing → Figmaのprecedenceを再確認する。
 
 ---
 
-## 8. Section FIRST_PASS implementation
+## 13. Section FIRST_PASS implementation
 
-Workerはallowed paths内だけ変更する。
+Section Implementation Unitはstackへ合わせる。
 
-変更禁止/提案のみ:
+Examples:
 
-- shared tokens
-- fonts
-- root composition
-- global breakpoints
-- shared components
-- other sections
-
-必要なら:
-
-- `PROPOSE_SHARED_CHANGE`
-- `PROPOSE_BREAKPOINT_EXCEPTION`
-
-を返す。
-
-FIRST_PASS commit/stateを保存する。
-
----
-
-## 9. Section evidence capture
-
-Reference exact viewport/stateでcaptureする。
-
-- stable content
-- webfont loaded
-- deterministic data
-- animation policy fixed
-
-PC/SPと必要な状態を保存する。
-
----
-
-## 10. Section Verify — diagnosis only
-
-原則コードを直さず比較する。
-
-### Visual
-
-- geometry
-- spacing
-- typography/wrapping
-- color/effects
-- asset/crop
-- layer order
-
-### Structural
-
-- component reuse
-- token reuse
-- shared breakpoint compliance
-- semantic hierarchy
-- accessibility
-- allowed-path isolation
-
-Mismatchをfailure record化する。
-
----
-
-## 11. Parallel section execution
-
-Foundation freeze後、独立sectionは並列実装してよい。
-
-安全条件:
-
-- same shared contract hash
-- same foundation commit
-- disjoint allowed paths
-- shared files read-only
-- no independent breakpoint changes
-
-満たせないsectionはserial/coordinatedへ戻す。
-
----
-
-## 12. Coordinator integration
-
-Section outputを統合する。
-
-確認:
-
-- section order
-- cross-section spacing/rhythm
-- background continuity
-- container alignment
-- typography consistency
-- shared component consistency
-- breakpoint consistency
-- z-index/layer overlap
-- global overflow
-- responsive continuity
-
-Section単体の一致だけで完成扱いしない。
-
----
-
-## 13. Global capture / Verify
-
-統合後のページをPC/SPおよび指定breakpoint境界でcaptureする。
-
-目的:
-
-- section間のズレ
-- breakpoint boundary failure
-- accumulated spacing error
-- full-page overflow
-- shared rule drift
-
-を見つける。
-
----
-
-## 14. Score FIRST_PASS
-
-`docs/evaluation-rubric.md`
+### React
 
 ```text
-First-pass Fidelity /80
-= Visual /40
-+ Structural /25
-+ Robustness /15
+sections/Hero/Hero.tsx
+sections/Hero/Hero.module.css
 ```
 
-section runとintegration runのscopeを混ぜず記録する。
+### WordPress classic
 
-この時点ではReproducibilityを採点しない。
+```text
+template-parts/sections/hero.php
+assets/css/sections/hero.css
+assets/js/sections/hero.js
+```
 
----
+### ACF/native block
 
-## 15. Classify root causes
+```text
+blocks/hero/block.json
+blocks/hero/render.php
+blocks/hero/style.css
+```
 
-`docs/failure-taxonomy.md`
+Workerはallowed pathsだけ変更する。
 
-- severity
-- primary/secondary category
-- evidence
-- root cause
-- confidence
-- repair scope
+Shared changeは`PROPOSE_SHARED_CHANGE`。
 
-を記録する。
-
-「なんとなく違う」で終わらせない。
-
----
-
-## 16. Targeted Repair
-
-同じroot causeを共有するfailureだけまとめる。
-
-Repair後:
-
-- affected section/viewportを再capture
-- regression確認
-- integrationへの影響確認
-
-Shared contract変更が必要ならworker内で直さずcoordinatorへ戻す。
+FIRST_PASSを保存し、visual tuning前にstopする。
 
 ---
 
-## 17. Shared contract change handling
+## 14. SECTION capture / verify
 
-Parallel開始後にshared changeが承認された場合:
+Exact reference viewport/stateでSectionをcaptureする。
 
-1. new workers開始停止
-2. shared change実装
-3. foundation再verify
-4. new foundation commit
-5. contract revision/new hash
-6. affected section特定
-7. affected outputだけ更新/re-run
+Sectionは可能な限り実page shell/context内でrenderする。
 
-異なるcontract hashを無条件で統合しない。
+Check:
 
----
+- geometry/spacing
+- typography/wrap
+- colors/gradients/effects
+- image crop
+- local responsive behavior
+- hover/focus/menu/slider/animation state
+- CMS-generated markup when applicable
+- Company Policy compliance
 
-## 18. Final Fidelity / Rework
-
-Acceptance到達またはstop時に:
-
-- Final Fidelity /80
-- Rework Efficiency /10
-- repair rounds
-- post-first-pass churn
-- human intervention
-- remaining failures
-
-を保存する。
+Universal `2pxまでOK`を使わずcategory-awareに評価する。
 
 ---
 
-## 19. Clean Replay
+## 15. BOUNDARY capture — required by default
 
-有望な改善はfresh context + clean foundationから再実行する。
+Adjacent sections:
 
-既に修理済みcodeを見せない。
+```text
+B01 = S01 ↔ S02
+B02 = S02 ↔ S03
+B03 = S03 ↔ S04
+```
 
-Replay後にReproducibility /10を評価する。
+Check:
+
+- bottom/top spacing
+- margin collapse/box model
+- background continuity
+- container/full-bleed transition
+- decorative overlap
+- z-index
+- sticky/fixed interaction
+- typography rhythm
+- anchor offset/smooth scroll
+
+Section単体PASS + Boundary FAILを区別する。
 
 ---
 
-## 20. Promote knowledge
+## 16. High-coupling CLUSTER capture
+
+必要な場合のみ:
+
+- Header + drawer + Hero
+- Hero + floating CTA + next content
+- sticky story sections
+- slider + external caption/pagination
+- cross-section animation
+
+HIGH couplingを独立Section完成扱いしない。
+
+---
+
+## 17. Cumulative prefix capture — conditional
+
+User-facing pattern:
+
+```text
+S01
+S01+S02
+S01+S02+S03
+...
+```
+
+Default必須にはしない。
+
+Use when:
+
+- vertical rhythm accumulates
+- sticky position depends on upstream height
+- scroll progress depends on page length
+- cumulative geometry error matters
+
+---
+
+## 18. Coordinator integration / Full Page capture
+
+Coordinator owns root composition/include order。
+
+Full page PC/SP + specified breakpoint boundaryを必ずcaptureする。
+
+Check:
+
+- section order
+- accumulated spacing
+- global container
+- backgrounds
+- typography hierarchy
+- fixed/sticky/z-index
+- overflow
+- anchor navigation
+- smooth scroll offset
+- page-level animation
+- responsive continuity
+- Company Policy/browser behavior
+
+---
+
+## 19. Failure classification / Targeted Repair
+
+First inspect root cause before adding magic numbers。
+
+For 1–2px drift inspect:
+
+1. font
+2. reset/box-sizing
+3. container/gutter
+4. line-height
+5. image aspect/crop
+6. Figma sizing semantics
+7. token resolution
+8. browser/DPR rendering
+
+Shared causeならSection local hackではなくFoundation/Contractへ戻す。
+
+---
+
+## 20. Replay / Knowledge Promotion
+
+Promising improvement:
+
+- fresh context
+- clean foundation
+- same Company Policy revision
+- same reference
+- same Structure Profile/Contract
+
+でreplayする。
+
+Knowledge:
 
 ```text
 Observation
-  ↓
-Candidate Rule
-  ↓
-Proven Playbook
+→ Candidate Rule
+→ Proven Playbook
 ```
 
-別案件へ持ち出せるものだけ昇格する。
-
-Tool/model更新で再評価可能。
+Tool/browser/Figma/WordPress/library updateで再評価可能にする。
 
 ---
 
-## Run scopes
+## Evidence tree
 
-### SECTION
+```text
+Company Policy
+└ Page
+  ├ S01
+  ├ B01 S01↔S02
+  ├ S02
+  ├ B02 S02↔S03
+  ├ S03
+  ├ Cluster when needed
+  └ Full Page
+```
 
-通常のproduction comparison。
-
-同じsection / contract hash / foundation commitでagentやcontextを比較する。
-
-### INTEGRATION
-
-複数sectionを統合したページ全体の整合性を評価する。
-
-### PAGE_BENCHMARK
-
-Whole-page one-shot等を研究するための例外scope。
-
-Production defaultと混ぜない。
+Dashboardは将来このtreeをそのまま可視化する。
 
 ---
 
-## Comparison cohorts
+## Experiment completion
 
-### COMMON
-
-同一reference / section / foundation / shared contract / context / prompt / viewport / repair budget。
-
-### OPTIMIZED
-
-agent固有rules/skills/MCP workflowを使用可。
-
-### REPLAY
-
-Candidate ruleの再現性確認。
-
----
-
-## Definition of a useful experiment
-
-- tooling preflightがある
-- referenceがfreezeされている
-- shared contract/foundationが追跡可能
-- run scopeが明確
-- first-pass evidenceがある
-- integration evidenceがある
-- failure root causeが追える
+- ACTIVE Company Policyがpinされている
+- referenceを変えていない
+- tooling update preflightがある
+- FIRST_PASSを保存
+- Section evidenceがある
+- Boundary/Cluster evidenceがある where applicable
+- Full Page evidenceがある
+- lineageが追跡可能
+- failures/reworkのscopeが分かる
 - clean replayできる
-- project-specificとportable knowledgeが分かれている
+- portable/project-specific knowledgeが分離される
