@@ -1,6 +1,6 @@
 # Figma Capability Profile
 
-目的は、Figmaの一般的なbest practiceを一律に押し付けず、**今回のreferenceが実際にComponents / Variables / Auto Layout / semantic naming / Code Connect等をどこまで使っているかを先に観測し、その成熟度に合わせて実装戦略を変える**こと。
+目的は、一般的なFigma best practiceを一律に押し付けず、**今回のreferenceが実際にComponents / Variables / Auto Layout / semantic naming / Code Connect等をどこまで使っているかを先に観測し、その状態に合わせて実装戦略を変える**こと。
 
 ## Core rule
 
@@ -11,12 +11,47 @@ Capability Profile
   ↓
 Choose implementation strategy
   ↓
+Component / Token Resolution
+  ↓
 Shared Contract / Foundation
   ↓
 Section workers
 ```
 
-「FigmaではVariablesを使うべき」だから存在しないVariablesをAIが発明する、という流れにしない。
+「Variablesを使うべきだから存在しないVariablesをAIが発明する」のような流れにしない。
+
+## Epistemic states
+
+Capability値には、機能の有無だけでなく**何が分かっているか**を含める。
+
+### `UNKNOWN`
+
+まだ十分に調査していない / 未解決。
+
+Production freeze前に解消する。
+
+### `NONE`
+
+調査した結果、そのtarget/referenceには存在しない。
+
+FROZEN contractでは「何を確認してNONEと判断したか」のevidenceを残す。
+
+### `UNDETERMINED`
+
+調査はしたが、**現在のMCP/API/client/権限/metadataでは確定できない**。
+
+これはNONEではない。
+
+FROZEN contractでも、以下を残せば許容する:
+
+- inspection evidence
+- current limitation
+- conservative implementation strategy
+- future retest trigger
+
+Figma/MCP/model更新時には`RETEST_NOW`候補へ戻す。
+
+この区別により「今取れない情報」を永久制約にしない。
 
 ---
 
@@ -24,7 +59,7 @@ Section workers
 
 ### Components
 
-`NONE | SPARSE | PARTIAL | SYSTEMATIC | UNKNOWN`
+`NONE | SPARSE | PARTIAL | SYSTEMATIC | UNDETERMINED | UNKNOWN`
 
 見るもの:
 
@@ -36,28 +71,32 @@ Section workers
 
 #### SYSTEMATIC
 
-Figma側のcomponent systemを強く尊重する。
+Figma側component systemを強く尊重する。
 
-- variant/propertyを取得
-- Code Connectがあれば優先
+- variant/property取得
+- Code Connectがあれば確認
 - codebase既存componentとmapping
-- raw duplicate componentを作らない
+- duplicate raw componentを避ける
 
 #### PARTIAL / SPARSE
 
-存在するcomponentは再利用候補だが、page全体がcomponent system化されていると仮定しない。
+存在するcomponentは利用するが、page全体がsystem化されていると仮定しない。
 
 #### NONE
 
-Figmaにcomponentが無いことを理由に、codeも巨大1componentへしない。
+Figmaにcomponentが無くても、code側の自然なarchitecture/reuseは維持する。ただしFigmaに無いことを理由に巨大design systemを新設しない。
 
-Code側のarchitecture/reuse requirementに従う。ただし「Figmaに無いから」という理由だけで大規模design systemを新設しない。
+#### UNDETERMINED
+
+Component/library情報を現在のtoolでは完全に取得できない等。
+
+見えている範囲だけ利用し、見えない範囲を存在しないと扱わない。
 
 ---
 
 ### Variables
 
-`NONE | SPARSE | PARTIAL | SYSTEMATIC | UNKNOWN`
+`NONE | SPARSE | PARTIAL | SYSTEMATIC | UNDETERMINED | UNKNOWN`
 
 見るもの:
 
@@ -68,23 +107,11 @@ Code側のarchitecture/reuse requirementに従う。ただし「Figmaに無い�
 - aliases
 - scopes
 
-#### SYSTEMATIC
+SYSTEMATIC/PARTIAL/SPARSEでは `docs/token-mapping.md` に従う。
 
-- aliases/modesを可能な限り保持
-- existing code tokensへsemantic mapping
-- raw valueへ無条件flattenしない
+NONEなら既存code token systemを優先し、Figma variable mappingを捏造しない。
 
-#### PARTIAL / SPARSE
-
-使われている箇所のみ意味を保持する。
-
-足りない値をすべて新global tokenにしない。
-
-#### NONE
-
-Target codebaseに既存token systemがあればそちらを優先。
-
-既存tokenにも一致しないone-off値はsection-local valueとして記録できる。
+UNDETERMINEDなら取得できたvalue/semanticだけを使い、alias/modeを勝手に確定しない。
 
 ---
 
@@ -92,11 +119,11 @@ Target codebaseに既存token systemがあればそちらを優先。
 
 Coverage:
 
-`NONE | LOW | MEDIUM | HIGH | MIXED | UNKNOWN`
+`NONE | LOW | MEDIUM | HIGH | MIXED | UNDETERMINED | UNKNOWN`
 
 Generation:
 
-`NONE | LEGACY | UPDATED_2026 | MIXED | UNKNOWN`
+`NONE | LEGACY | UPDATED_2026 | MIXED | UNDETERMINED | UNKNOWN`
 
 見るもの:
 
@@ -115,35 +142,27 @@ Flex/Grid等へlayout semanticsを比較的直接translateする候補。
 
 #### MIXED / LEGACY
 
-nodeごとに挙動を読む。
-
-古いworkaroundを全frameへ適用しない。
+nodeごとに挙動を読む。古いworkaroundを全frameへ適用しない。
 
 #### LOW / NONE
 
-Auto Layoutが無いことを「absolute positioningをそのままcode化する理由」にしない。
+Auto Layoutが無いことを「absolute positioningをそのままcode化する理由」にしない。Visual intentとcode maintainabilityを見て自然なCSSへ翻訳する。
 
-Visual/reference intentとcode maintainabilityを両方見て最小の自然なCSS layoutへ翻訳する。
+#### UNDETERMINED generation
+
+現在のtoolから新旧世代を確実に判別できない場合。
+
+見えているlayout semanticsそのものを優先し、generation固有workaroundは安易に適用しない。Figma更新時に再調査する。
 
 ---
 
 ### Semantic naming
 
-`LOW | MEDIUM | HIGH | UNKNOWN`
+`LOW | MEDIUM | HIGH | UNDETERMINED | UNKNOWN`
 
-見るもの:
+HIGHならSection discoveryのstrong signal。
 
-- Header/Hero/Footer等のrole names
-- meaningful component/layer names
-- `Frame 123`等のgeneric names比率
-
-#### HIGH
-
-Section discovery/context retrievalのstrong signalにできる。
-
-#### LOW
-
-名前だけに依存せず:
+LOWなら名前だけに依存せず:
 
 - hierarchy
 - screenshot
@@ -157,49 +176,27 @@ Section discovery/context retrievalのstrong signalにできる。
 
 ### Code Connect
 
-`NONE | PARTIAL | STRONG | UNKNOWN`
+`NONE | PARTIAL | STRONG | UNDETERMINED | UNKNOWN`
 
-#### STRONG
+STRONG/PARTIALは `docs/component-resolution.md` に従い、実mappingのcoverageとprop/variant対応を確認する。
 
-mappingされたproduction componentを第一候補にする。
+NONEはblockerではない。Structured Figma context + codebase inspectionへfallbackする。
 
-Prop/variant mappingまで取得して再利用する。
-
-#### PARTIAL
-
-mapped componentだけ利用し、coverage外まで無理に同じ扱いにしない。
-
-#### NONE
-
-blockerではない。
-
-Structured Figma context + existing codebase inspectionで実装する。
-
-Code Connectを作ること自体が目的にならない。
+UNDETERMINEDは「無い」と扱わず、現在確認できた範囲だけ利用する。
 
 ---
 
 ### Annotations / dev intent
 
-`NONE | PARTIAL | STRONG | UNKNOWN`
+`NONE | PARTIAL | STRONG | UNDETERMINED | UNKNOWN`
 
-存在する場合:
-
-- interaction
-- responsive intent
-- accessibility
-- state
-- implementation note
-
-のevidenceとして使用する。
-
-存在しない場合、勝手な仕様を補完しない。
+存在する場合はinteraction/responsive/accessibility/state/implementation intentのevidenceとして使用する。
 
 ---
 
 ### Asset access
 
-`NONE | PARTIAL | STRONG | UNKNOWN`
+`NONE | PARTIAL | STRONG | UNDETERMINED | UNKNOWN`
 
 見るもの:
 
@@ -208,77 +205,60 @@ Code Connectを作ること自体が目的にならない。
 - download/export availability
 - image crop/focal behavior
 
-Exact assetが取得できるのにplaceholder/再生成へ置換しない。
+Exact assetを取得できるのにplaceholder/再生成へ置換しない。
 
 ---
 
-## Strategy matrix
+## Strategy decisions
 
-Profileを見たあと、Shared Contractへ`strategy_decisions`を残す。
+Profile取得後、Shared Contractの`figma_profile.strategy_decisions`へ、**観測結果が実装へどう効くか**を記録する。
 
 Example:
 
 ```yaml
 figma_profile:
   strategy_decisions:
-    - "Figma Variables systematic → existing CSS token layerへsemantic mapping"
+    - "Variables systematic → existing token layerへsemantic mapping"
     - "Code Connect partial → mapped Button/Inputのみproduction component reuse"
-    - "Auto Layout mixed → section nodeごとにgeneration/semantics確認"
+    - "Auto Layout generation undetermined → node semanticsを優先しgeneration固有hackを避ける"
     - "Semantic naming low → section boundaryはmetadata + screenshot multi-signal"
 ```
 
-これによりSection workerが同じ判断をやり直さない。
-
----
+Section workerはこの判断をやり直さない。
 
 ## What profile is NOT
 
 ### Quality scoreではない
 
-Components/Variablesを使っていないFigmaが「悪い」とは判定しない。
-
-目的は**実装方法を合わせること**。
+Components/Variablesを使っていないFigmaを低品質と判定しない。目的は**実装方法を合わせること**。
 
 ### Permanent recommendationではない
 
-Figma/MCP/modelが更新されたら読み取り能力や最適戦略は変わる。
-
-Significant run前にUpdate Preflightを行う。
+Figma/MCP/model更新で読み取り能力も最適戦略も変わる。Significant run前にUpdate Preflightを行う。
 
 ### Code architectureの唯一のsourceではない
 
-Target repositoryに既存component/token/style systemがある場合、Figma profileとcodebase architectureを両方見てShared Contractを決める。
-
----
+Target repositoryのexisting component/token/style systemも同時にsourceとして扱う。
 
 ## Freeze gate
 
-Shared ContractをFROZENにする前に、少なくとも:
+Shared ContractをFROZENにする前に:
 
-- Components level
-- Variables level
-- Auto Layout coverage/generation
-- Semantic naming quality
-- Code Connect level
-- Annotations level
-- Asset access level
+- `UNKNOWN`は解消する
+- absentなら`NONE` + evidence
+- current toolで確定不能なら`UNDETERMINED` + evidence + conservative strategy + retest trigger
+- Components/Variablesが観測された場合はresolution tableを作る
+- strategy decisionsを残す
 
-を`UNKNOWN`から解消する。
-
-存在しなければ`NONE`と記録する。
-
-**「調べていない」と「使われていない」を区別する。**
-
----
+**「未調査」「存在しない」「今は判別できない」を混同しない。**
 
 ## Research opportunities
 
-実験データが貯まったら:
-
-- profile別に最適prompt/contextを比較
-- Variables SYSTEMATIC案件でtoken mapping効果を測定
+- profile別の最適prompt/context
+- Variables SYSTEMATIC/PARTIAL/NONE別のmapping効果
 - Semantic naming LOW/HIGHでSection Discovery精度比較
-- Auto Layout LEGACY/UPDATEDでCSS translation failure差比較
-- Code Connect coverage別のrework差比較
+- Auto Layout LEGACY/UPDATED/UNDETERMINEDでfailure差比較
+- Code Connect coverage別rework
+- UNDETERMINEDだった項目がtool update後にどれだけ解決したか
 
-を行う。
+を継続的に検証する。
