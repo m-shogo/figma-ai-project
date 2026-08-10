@@ -3,7 +3,7 @@
   "$id": "https://example.invalid/figma-ai-project/shared-contract.schema.json",
   "title": "Figma AI Shared Implementation Contract",
   "type": "object",
-  "required": ["schema_version", "contract_id", "reference_id", "status", "codebase", "styling", "breakpoints", "fonts", "tokens", "layout", "shared_components", "assets", "accessibility", "parallel_execution", "integration", "unknowns", "conflicts", "freeze"],
+  "required": ["schema_version", "contract_id", "reference_id", "status", "codebase", "styling", "breakpoints", "fonts", "tokens", "layout", "shared_components", "assets", "accessibility", "foundation", "parallel_execution", "integration", "unknowns", "conflicts", "freeze"],
   "properties": {
     "schema_version": { "type": "integer", "minimum": 1 },
     "contract_id": { "type": "string", "minLength": 1 },
@@ -72,6 +72,19 @@
     "shared_components": { "type": "array" },
     "assets": { "type": "object" },
     "accessibility": { "type": "object" },
+    "foundation": {
+      "type": "object",
+      "required": ["status", "base_commit", "commit", "changed_paths", "checks", "notes"],
+      "properties": {
+        "status": { "enum": ["NOT_BUILT", "BUILT", "VERIFIED"] },
+        "base_commit": { "type": "string" },
+        "commit": { "type": "string" },
+        "changed_paths": { "type": "array", "items": { "type": "string" } },
+        "checks": { "type": "array" },
+        "notes": { "type": "array" }
+      },
+      "additionalProperties": true
+    },
     "parallel_execution": {
       "type": "object",
       "required": ["shared_files_read_only_for_workers", "coordinator_only_paths", "allowed_worker_change_policy", "shared_change_protocol", "breakpoint_exception_protocol"],
