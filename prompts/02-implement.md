@@ -1,6 +1,6 @@
 # Phase 02 — Section Implement
 
-目的: Section Inspect briefから、**人間の途中介入なしで担当sectionのfirst-passを作る**。
+目的: Section Inspect briefから、**pinned Structure Profileのtranslation strategyを使い、人間の途中介入なしで担当SectionのFIRST_PASSを作る**。
 
 ## Prompt
 
@@ -11,61 +11,90 @@ Inputs:
 - frozen reference manifest: <REFERENCE_MANIFEST>
 - frozen shared contract: <SHARED_CONTRACT>
 - shared contract SHA-256: <SHARED_CONTRACT_HASH>
+- Figma Structure Profile: <FIGMA_STRUCTURE_PROFILE>
+- Figma Structure Profile SHA-256: <FIGMA_STRUCTURE_PROFILE_HASH>
+- exact section structure profile entry: <SECTION_STRUCTURE_PROFILE>
 - verified foundation commit: <FOUNDATION_COMMIT>
 - section manifest entry: <SECTION_ENTRY>
 - approved inspect brief: <INSPECT_BRIEF>
 
-Source of truth order:
+Authority:
 1. frozen reference + owner/company/design guidance
-2. frozen shared contract
-3. section manifest
-4. Figma structured context for the assigned section
-5. existing repository contracts/components
-6. reference screenshots
-7. your inference only for non-material unresolved details
+2. frozen Shared Contract implementation decisions
+3. Section Manifest ownership/dependency contract
+4. existing repository contracts that must be preserved
+
+Evidence interpretation is translation-mode dependent; do not use one fixed source order for every section.
+
+STRUCTURE_FIRST:
+- translate trusted structured Figma semantics into native code/CSS
+- preserve component/token resolutions
+- verify against screenshots
+
+HYBRID:
+- use trusted_structure directly
+- use screenshot/codebase evidence for untrusted/missing/UNDETERMINED structure
+- do not silently promote weak evidence to hard structure
+
+VISUAL_FIRST:
+- reconstruct semantic native code from reference visual geometry/content/assets + codebase conventions
+- use weak Figma structure only as supporting evidence
+- never paste the screenshot as the UI
+
+CODEBASE_FIRST:
+- compose the approved existing production components/tokens first
+- configure them to match reference visual/behavior
+- use Figma structure as supporting evidence where trustworthy
+
+Signal states:
+- OBSERVED → use according to evidence/confidence
+- NONE → capability was inspected and absent; do not fabricate a mapping
+- UNDETERMINED → use the conservative fallback from the Inspect brief and record the limitation
+- UNKNOWN → stop; active implementation should never receive unresolved profile state
 
 Scope rules:
-- Modify only section manifest allowed paths.
-- Treat shared files as read-only.
-- Do not edit root composition.
-- Do not edit other sections.
+- Modify only Section Manifest allowed paths.
+- Treat shared files, resolution tables, root composition, and other sections as read-only.
 - Do not redesign or "improve" the UI.
-- Reuse existing/shared components, tokens, fonts, and utilities.
-- Do not create duplicate design-system primitives.
+- Do not create duplicate shared primitives.
+- Do not alter the pinned Structure Profile during the worker run.
+
+Component/token rules:
+- Follow Shared Contract component_resolution and token_resolution exactly.
+- Do not locally change REUSE/EXTEND/CREATE/LOCAL decisions.
+- Missing shared primitive → PROPOSE_SHARED_CHANGE, not direct shared mutation.
 
 Breakpoint rules:
-- Use the Shared Contract breakpoint values/query semantics exactly.
-- Implement section-specific behavior at those shared boundaries.
-- Do not add a new local breakpoint.
-- If a new threshold appears necessary, stop that change and report PROPOSE_BREAKPOINT_EXCEPTION with evidence.
-
-Shared-change rules:
-- If a missing shared token/component/layout primitive is required, do not mutate shared files.
-- Report PROPOSE_SHARED_CHANGE with the minimal requested change and affected sections.
+- Use Shared Contract breakpoint values/query semantics exactly.
+- Implement this Section's behavior at those shared boundaries.
+- Do not add a new local threshold.
+- Necessary-looking exception → PROPOSE_BREAKPOINT_EXCEPTION with evidence.
 
 Responsive rules:
-- Treat PC/SP as one responsive section implementation.
-- Preserve Figma ordering, visibility, wrapping, layout, and crop behavior.
-- Use intrinsic CSS where it matches the reference without inventing a new breakpoint.
+- Treat PC/SP as one logical Section implementation.
+- Preserve ordering, visibility, wrapping, layout, and crop behavior.
+- Intrinsic CSS is allowed between approved breakpoints when it matches the reference; it is not permission to invent a new breakpoint.
 
 Implementation quality:
 - Preserve semantic HTML/accessibility conventions.
-- Do not replace native UI with screenshots/images.
-- Avoid brittle screenshot-only absolute-position hacks unless the design intentionally overlaps/layers elements.
-- Keep image assets/crops faithful to the reference.
+- Use exact source assets when available.
+- Avoid brittle screenshot-only absolute positioning unless overlap/layering is intentional evidence-backed design behavior.
+- Keep local code consistent with the pinned foundation and styling architecture.
 
-First-pass preservation:
-- Complete one coherent section implementation pass.
-- Run only basic checks required to make the section runnable.
+FIRST_PASS preservation:
+- Complete one coherent Section pass.
+- Run only basic checks needed to make it runnable.
 - Do not perform iterative visual tuning.
 - Stop before repair.
 
 At the end report:
 - section ID
+- translation mode actually followed
 - files changed
 - confirmation all paths were allowed
 - shared components/tokens reused
 - local components created and why
+- UNDETERMINED fallbacks used
 - shared breakpoint behavior implemented
 - assumptions
 - proposed shared changes/exceptions
@@ -77,8 +106,10 @@ Do not begin visual repair.
 
 ## Pass condition
 
-- runnable section first-pass exists
+- runnable Section FIRST_PASS exists
 - all writes are section-scoped
-- shared contract/foundation remain unchanged
+- Shared Contract/Foundation/Structure Profile remain unchanged
+- selected translation mode is traceable
+- component/token resolutions are respected
 - specified breakpoint contract is respected
-- first-pass can be captured before repair
+- FIRST_PASS can be captured before repair
