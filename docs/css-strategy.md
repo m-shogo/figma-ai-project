@@ -2,43 +2,134 @@
 
 SCSSを前提にしない。
 
-このrepoのdefaultは「どの案件でも必ず同じCSS技術を使う」ことではなく、**既存codebaseへ最小摩擦でFigmaの構造を写せる方法を選ぶ**こと。
+このrepoのdefaultは「どの案件でも同じCSS技術を強制する」ことではなく、**既存codebaseへ最小摩擦でFigmaの構造と案件ルールを写す方法を選ぶ**こと。
 
 ## Decision order
 
 1. Existing project styling architecture
-2. Existing design-system/token architecture
-3. Framework conventions
-4. Figma structure and responsive requirements
-5. Only then choose/add a styling mechanism
+2. Company / project coding rules
+3. Existing design-system/token/breakpoint architecture
+4. Framework conventions
+5. Figma structure and responsive requirements
+6. Only then choose/add a styling mechanism
 
 新規技術を導入するために既存projectを崩さない。
 
-## Current default for a new React/Next/Vite-style web implementation
+---
+
+## Current default for a new React / Next / Vite-style web implementation
 
 **CSS Modules + native CSS + CSS Custom Properties** を第一候補にする。
 
 ```text
-styles/tokens.css          # global/shared variables
-styles/base.css            # only truly global base rules
-components/Button/
-  Button.tsx
-  Button.module.css
-sections/Hero/
-  Hero.tsx
-  Hero.module.css
+styles/
+  base.css
+  tokens.css
+components/
+  Button/
+    Button.tsx
+    Button.module.css
+sections/
+  Header/
+    Header.tsx
+    Header.module.css
+  MainVisual/
+    MainVisual.tsx
+    MainVisual.module.css
 ```
 
-### Why this is a strong default
+### Why
 
 - section workerのCSS scopeを隔離しやすい
-- shared tokenだけCSS custom propertiesで共有できる
-- Figma VariablesをCSS variablesへ比較的素直にmapできる
-- Auto LayoutをFlex/Gridへ直接translateしやすい
-- arbitrary valueをsection間で増殖させにくい
-- parallel section implementation時にmerge conflictを減らしやすい
-- browser DevTools / computed styleで差分を追いやすい
+- shared tokenだけCustom Propertiesで共有できる
+- Figma Variablesをtokenへmapしやすい
+- Auto LayoutをFlex/Gridへtranslateしやすい
+- parallel section implementation時のmerge conflictを減らせる
+- browser DevTools/computed styleで差分を追いやすい
 - SCSS compile layerが不要
+- sectionごとのvisual repairを局所化しやすい
+
+ただし既存projectが別方式なら既存方式を優先する。
+
+---
+
+## Shared values vs section-local CSS
+
+### Shared / coordinator-owned
+
+- fonts
+- design tokens
+- global breakpoint contract
+- page container/gutter
+- z-index scale when shared
+- reset/base rules
+- shared components
+
+### Section-local
+
+- section composition
+- local grid/flex rules
+- section-only spacing when truly one-off
+- section-specific responsive behavior **at shared breakpoints**
+- local image crop/position
+
+workerはshared surfaceを勝手に変更しない。
+
+---
+
+## Breakpoints
+
+Production defaultは `docs/responsive-breakpoint-policy.md` に従う。
+
+### Rule
+
+デザイナー / 会社 / design system / existing productの指定値をページ全体で共有する。
+
+section workerが:
+
+```css
+@media (...独自の値...) { }
+```
+
+を勝手に追加しない。
+
+新しいthresholdが必要に見える場合は `PROPOSE_BREAKPOINT_EXCEPTION`。
+
+### Important CSS detail
+
+CSS Custom Propertiesはcolor/spacing等の共有には向いているが、通常のmedia query条件そのものを単純に:
+
+```css
+@media (max-width: var(--breakpoint-mobile))
+```
+
+のようなruntime variableとして一元化する用途には使えない。
+
+そのためbreakpoint値の一元化はproject architectureに合わせる。
+
+Current preference order:
+
+1. existing project breakpoint utility/token pipeline
+2. existing PostCSS/custom-media等の仕組み
+3. existing shared stylesheet convention
+4. project-specific generation/lint step
+5. 最小構成では同一値の使用をCIで検証
+
+**SCSSを使わないためにbreakpoint整合性を捨てない。**
+
+### Validation idea
+
+実装repoが決まったら、必要に応じて:
+
+- CSS/TSをscan
+- shared contractにないmedia query thresholdを検出
+- CIで`UNAPPROVED_BREAKPOINT`としてfail/warn
+
+するadapterを作る。
+
+現時点ではtarget repoが未確定なので、特定bundlerへ依存するlinterはまだ実装しない。
+
+---
 
 ## Native CSS primitives to prefer
 
@@ -53,53 +144,72 @@ Figmaのlayout intentに応じて:
 - `aspect-ratio`
 - logical properties where project convention allows
 - CSS Custom Properties
-- media queries
-- container queries for component-local responsiveness where appropriate
+- media queries using the shared contract
+- container queries when project/design rules explicitly support them
 
-updated Auto Layout / Grid / fixed-hug-fill/min-max behaviorと対応関係を記録して、absolute positioningをdefaultにしない。
+absolute positioningをdefaultにしない。
 
-## Responsive rule split
+ただし意図的overlapやart-directed layoutではabsolute positioningが正解の場合もある。
 
-### Page/global behavior
+---
 
-Use page-level media queries when:
+## Intrinsic responsiveness
 
-- global navigation changes
-- page shell/gutter changes
-- cross-section layout changes
-- explicit product breakpoint exists
+指定breakpointの間でも自然に伸縮させるため:
 
-### Component-local behavior
+- flex shrink/grow
+- wrap
+- grid `minmax()`
+- fluid width
+- max-width
+- clamp
 
-Consider container queries/intrinsic layout when:
+は使える。
 
-- Cardなど同じcomponentが異なるcontainer幅で使われる
-- breakpointがviewportではなくavailable spaceに依存する
-- Figma componentのmin/max/fill/wrap intentと一致する
+これは「新しいbreakpointを追加する」こととは別。
 
-ただし既存projectがcontainer queriesを使っていない場合、導入コストも評価する。
+ただしFigma原本が固定レイアウトを意図している箇所を勝手にfluid化しない。
+
+---
+
+## Container queries
+
+使う候補:
+
+- component reuse先によってavailable widthが変わる
+- design system側でcontainer-query方針がある
+- viewport breakpointよりcomponent boundaryがsource of truth
+
+ただし会社/デザイナーがviewport breakpointを一括指定している案件で、AI判断だけでcontainer queryへ置換しない。
+
+研究対象として比較することはできる。
+
+---
 
 ## Tailwind
 
 ### Use when
 
-- target codebase already uses Tailwind as a primary system
+- target codebase already uses Tailwind asprimary system
 - design tokens/theme are already mapped
 - existing components follow Tailwind conventions
 
-### Do not introduce only because Figma MCP examples look Tailwind-like
+### Do not introduce only because MCP output resembles Tailwind
 
-Figma MCPの`get_design_context`はagentが読みやすいintermediate representationであり、production styling architectureを指定するものではない。
+`get_design_context`の表現はproduction styling architectureを指定するものではない。
 
 新規案件でTailwindを選ぶかは別experimentにする。
 
-Risks for this project goal if unmanaged:
+Potential risks when unmanaged:
 
 - arbitrary values proliferation
 - section workerごとのutility expression drift
-- Figma variable namingとcode token namingの対応が見えにくくなる場合
+- breakpoint prefix drift
+- Figma variable名とcode token名の対応が見えにくくなる
 
-ただしexisting Tailwind projectでは逆にreuse/convention fidelityが高くなる可能性があるため禁止しない。
+一方existing Tailwind projectでは既存theme/breakpoint/component conventionsを再利用できるため有力。
+
+---
 
 ## CSS-in-JS / typed styling
 
@@ -109,11 +219,13 @@ vanilla-extract等は以下なら候補:
 - typed token integrationに明確な価値がある
 - design system規模が大きい
 
-Figma再現だけのために追加依存を増やさない。
+Figma再現だけのために依存を増やさない。
+
+---
 
 ## Token mapping
 
-Figma variableをraw valueへflattenしない。
+Figma variableを無条件にraw valueへflattenしない。
 
 Preferred mapping example:
 
@@ -138,6 +250,8 @@ section CSS:
 
 ただしtarget projectに既存token APIがあるならそれをsource of truthにする。
 
+---
+
 ## Raw values
 
 Raw px/rem/colorを完全禁止しない。
@@ -146,9 +260,15 @@ Allowed when:
 
 - Figmaにone-off値が実在
 - matching tokenがない
-- introducing a global token would be dishonest
+- global token化するとdesign intentを偽る
 
-Record repeated raw values; 複数sectionで繰り返されたらtoken candidateとして検討する。
+Repeated raw valueは記録し、複数sectionで繰り返されたらtoken candidateにする。
+
+**breakpoint raw valuesだけは別扱い。**
+
+案件指定がある場合はshared contractに一致する値だけを使う。
+
+---
 
 ## Fonts
 
@@ -164,16 +284,29 @@ Record:
 - line-height/letter-spacing
 - CJK-specific behavior
 
-font mismatchはlayout/line-wrapを連鎖的に壊すため後回しにしない。
+font mismatchはline-wrap、section height、responsive layoutを連鎖的に壊すため後回しにしない。
 
-## CSS choice is re-evaluated
+---
 
-このdocumentはcurrent defaultであり永久ルールではない。
+## Current new-project recommendation
+
+SCSSを使わない新規Web案件なら、現時点の第一候補:
+
+```text
+CSS Modules
++ native CSS
++ CSS Custom Properties for tokens
++ project-wide specified breakpoint contract
++ section-scoped files
++ CI check for shared-rule drift when needed
+```
+
+ただしこれはcurrent defaultであり永久ルールではない。
 
 Re-test after:
 
 - major Figma Auto Layout/MCP changes
-- browser/CSS platform changes
+- CSS/browser platform changes
 - framework changes
-- new codebase conventions
+- company coding-standard changes
 - repeated evidence that another style system improves fidelity/rework
