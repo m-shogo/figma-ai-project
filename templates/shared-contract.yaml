@@ -1,4 +1,4 @@
-schema_version: 3
+schema_version: 4
 contract_id: CONTRACT-XXXX
 reference_id: REF-XXXX
 status: DRAFT # DRAFT | FROZEN | SUPERSEDED
@@ -85,6 +85,28 @@ tokens:
   z_index: []
   other: []
 
+component_resolution: []
+# - id: button-primary
+#   figma_component: "Button"
+#   figma_node_id: ""
+#   resolution: REUSE_EXISTING # REUSE_EXISTING | REUSE_CODE_CONNECT | EXTEND_EXISTING | CREATE_SHARED | IMPLEMENT_SECTION_LOCAL | UNRESOLVED
+#   code_path: ""
+#   prop_mapping: {}
+#   consumers: []
+#   evidence: []
+#   notes: []
+
+token_resolution: []
+# - id: color-text-primary
+#   figma_variable: "Text/Primary"
+#   figma_collection: "Semantic"
+#   resolution: MAP_VARIABLE_TO_EXISTING # REUSE_EXISTING_TOKEN | MAP_VARIABLE_TO_EXISTING | CREATE_SHARED_TOKEN | KEEP_SECTION_LOCAL | PRESERVE_MODE_MAPPING | UNRESOLVED
+#   code_token: ""
+#   mode_mapping: {}
+#   consumers: []
+#   evidence: []
+#   notes: []
+
 layout:
   container_rules: []
   gutter_rules: []
@@ -95,6 +117,7 @@ layout:
   notes: []
 
 shared_components: []
+# Final shared component inventory produced by component_resolution.
 # - id: Button
 #   figma_node_id: ""
 #   code_path: ""
