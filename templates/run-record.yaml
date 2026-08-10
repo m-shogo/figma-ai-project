@@ -1,4 +1,4 @@
-schema_version: 8
+schema_version: 9
 experiment_id: EXP-XXXX
 run_id: RUN-XXXX
 run_class: COMMON # COMMON | OPTIMIZED | REPLAY
@@ -36,6 +36,8 @@ coordination:
   section_manifest_sha256: ""
   figma_structure_profile_path: ""
   figma_structure_profile_sha256: ""
+  required_environment_profiles: [] # exact REQUIRED profile ids copied from resolved Environment Contract
+  canonical_environment_profile: ""
   foundation_commit: ""
   isolation_mode: "" # BRANCH_WORKTREE | AGENT_SANDBOX | SERIAL_SHARED_TREE | OTHER | empty when N/A
   isolation_ref: ""
@@ -83,10 +85,38 @@ captures:
   first_pass: []
   verify: []
   final: []
-# - frame_id: pc-main
-#   viewport: "<from reference/shared contract>"
+# Capture example:
+# - capture_id: CAP-001
+#   scope: SECTION # SECTION | BOUNDARY | CLUSTER | FULL_PAGE
+#   target_id: S01 # S01 / B01 / C01 / PAGE
+#   frame_id: pc-main
+#   environment_profile_id: mac-safari
+#   runtime:
+#     browser: Safari
+#     browser_version: ""
+#     os: macOS
+#     os_version: ""
+#     engine: WebKit
+#     webview: false
+#     viewport_width_css_px: 1440
+#     viewport_height_css_px: 1200
+#     dpr: 2
+#     zoom: 1.0
+#     text_scale: 1.0
+#     orientation: LANDSCAPE
+#   input_state:
+#     primary_hover: HOVER
+#     primary_pointer: FINE
+#     touch: false
+#   preferences:
+#     reduced_motion: NO_PREFERENCE
+#     forced_colors: NONE
+#     contrast: NO_PREFERENCE
+#     color_scheme: LIGHT
 #   path: ""
 #   captured_at: ""
+#   deterministic: true
+#   notes: []
 
 scores:
   first_pass_fidelity:
