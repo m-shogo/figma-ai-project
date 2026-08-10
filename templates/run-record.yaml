@@ -1,4 +1,4 @@
-schema_version: 7
+schema_version: 8
 experiment_id: EXP-XXXX
 run_id: RUN-XXXX
 run_class: COMMON # COMMON | OPTIMIZED | REPLAY
@@ -27,6 +27,9 @@ coordination:
   scope: SECTION # SECTION | INTEGRATION | PAGE_BENCHMARK
   section_id: ""
   parallel_group: ""
+  company_policy_path: "" # direct pin for dashboard/filtering; empty only for legacy/unbound research runs
+  company_policy_id: ""
+  company_policy_sha256: ""
   shared_contract_path: ""
   shared_contract_sha256: ""
   section_manifest_path: ""
