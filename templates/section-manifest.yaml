@@ -1,4 +1,4 @@
-schema_version: 6
+schema_version: 7
 reference_id: REF-XXXX
 page_id: ""
 shared_contract: ""
@@ -10,10 +10,16 @@ sections: []
 #   name: Header
 #   order: 10
 #   figma:
+#     logical_role: ""
 #     pc_node_id: ""
 #     sp_node_id: ""
 #     other_node_ids: []
 #     semantic_name_source: FIGMA # FIGMA | AI_CANDIDATE | OWNER
+#     boundary_source: FIGMA_TOP_LEVEL # FIGMA_SECTION | FIGMA_TOP_LEVEL | SEMANTIC_STRUCTURE | AI_CANDIDATE | OWNER
+#     boundary_confidence: HIGH # HIGH | MEDIUM | LOW
+#     boundary_evidence: []
+#     pc_sp_mapping_confidence: HIGH # HIGH | MEDIUM | LOW | NOT_APPLICABLE
+#     mapping_evidence: []
 #   evidence:
 #     screenshots: []
 #     metadata_capture: ""
