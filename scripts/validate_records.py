@@ -65,6 +65,22 @@ def semantic_reference_errors(data: dict[str, Any]) -> list[str]:
 
 def semantic_run_errors(data: dict[str, Any]) -> list[str]:
     errors: list[str] = []
+
+    status = data.get("status")
+    if status in {"RUNNING", "COMPLETE"}:
+        preflight = data.get("tooling_preflight", {})
+        required_checks = (
+            "figma_release_notes_checked",
+            "figma_mcp_docs_checked",
+            "agent_docs_checked",
+            "community_scan_checked",
+        )
+        if not preflight.get("checked_at"):
+            errors.append("RUNNING/COMPLETE run requires tooling_preflight.checked_at")
+        for check in required_checks:
+            if preflight.get(check) is not True:
+                errors.append(f"RUNNING/COMPLETE run requires tooling_preflight.{check}=true")
+
     execution = data.get("execution", {})
     actual = execution.get("actual_repair_rounds", 0)
     maximum = execution.get("max_repair_rounds", 0)
@@ -109,7 +125,7 @@ def semantic_run_errors(data: dict[str, Any]) -> list[str]:
             if abs(composite - expected) > 1e-9:
                 errors.append(f"scores.final_composite must equal {expected}")
 
-    if data.get("status") == "COMPLETE" and first_total is None:
+    if status == "COMPLETE" and first_total is None:
         errors.append("COMPLETE run requires a first-pass fidelity score")
     return errors
 
@@ -132,7 +148,6 @@ def main() -> int:
     run_schema = load_json(RUN_SCHEMA)
     failures = 0
 
-    # Templates must always parse and match their schema shape.
     targets = [
         (ROOT / "templates" / "reference-manifest.yaml", "reference"),
         (ROOT / "templates" / "run-record.yaml", "run"),
@@ -148,7 +163,7 @@ def main() -> int:
                 errors.extend(semantic_reference_errors(data))
             else:
                 errors.extend(semantic_run_errors(data))
-        except Exception as exc:  # validation should fail closed with useful path context
+        except Exception as exc:
             errors = [str(exc)]
 
         if errors:
