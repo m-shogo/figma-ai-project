@@ -1,196 +1,257 @@
 # Workflow — Figma ↔ AI Reproduction Lab
 
-## 0. Freeze the reference
+このworkflowは **reference designを作る工程ではなく、既に決まったreferenceを再現する工程**。
 
-実験前に reference を固定する。
+詳細契約:
 
-- Figma file URL
-- node ID
-- version / branch if applicable
-- Desktop viewport
-- Mobile viewport
-- fixture content
+- Reference: `docs/reference-contract.md`
+- Context: `docs/context-package.md`
+- Run fairness: `docs/run-contract.md`
+- Verification: `docs/visual-verification.md`
+- Failures: `docs/failure-taxonomy.md`
+- Evaluation: `docs/evaluation-rubric.md`
+- Knowledge: `docs/knowledge-promotion.md`
+
+## 0. Freeze the external reference
+
+Referenceを受け取ったら `templates/reference-manifest.yaml` を複製し、実際のFigma値を記録する。
+
+固定する:
+
+- Figma file / target node(s)
+- actual PC/SP/other reference frames
+- exact acceptance viewport(s)
+- states / variants
 - assets
+- component / variable / layout information
+- responsive invariants / material UNKNOWNs
+- target codebase starting commit
 
-途中で原本を変えた場合は同一実験として扱わない。
+**repo側から1440/390などの値を発明しない。**
 
-## 1. Inspect before generating
+途中で原本が変わったらreference revisionを分ける。
 
-優先順位:
+## 1. Select experiment variable
 
-1. Figma structured design context
-2. component / variant information
-3. variables / tokens
-4. Auto Layout and sizing behavior
-5. Code Connect mappings
-6. exact assets
-7. screenshot
-
-Screenshot は視覚的 ground truth として重要だが、構造情報の代替ではない。
-
-### Capture the design contract
-
-最低限、以下を明文化する。
-
-- page/frame hierarchy
-- typography family / weight / size / line-height
-- spacing scale
-- colors
-- radii
-- shadows/effects
-- grids
-- image crop behavior
-- reusable components
-- states
-- PC → SP で何が変化するか
-- fixed / hug / fill に相当する挙動
-- min/max width
-- wrapping order
-
-## 2. Create an implementation brief
-
-agent に渡す前に、Figma情報を「実装契約」に変換する。
-
-悪い例:
-
-> このFigma通りに作って。
-
-良い例:
-
-- visual target
-- structural target
-- reuse requirements
-- responsive invariants
-- allowed libraries
-- forbidden shortcuts
-- exact viewport acceptance tests
-- verification steps
-
-## 3. First-pass generation
-
-最初の生成は、なるべく人間が途中で介入しない。
-
-記録する:
-
-- agent / model
-- prompt
-- context
-- elapsed interaction rounds
-- files changed
-- assumptions made by agent
-
-目的は「最高品質を出す」だけでなく、**どこまで自走できたかを測ること**。
-
-## 4. Render exact viewports
-
-最低2系統:
-
-- Desktop reference viewport
-- Mobile reference viewport
-
-必要なら追加:
-
-- intermediate width
-- text expansion fixture
-- long label fixture
-- empty state
-- loading / error state
-
-Responsive の正しさは PC/SP 2枚だけでなく、その間で壊れないかも確認する。
-
-## 5. Compare
-
-比較は2系統に分ける。
-
-### Visual comparison
-
-- geometry
-- spacing
-- typography
-- colors
-- assets
-- borders
-- shadows
-- crop
-- visual hierarchy
-
-### Structural comparison
-
-- semantic components
-- design token reuse
-- responsive rules
-- duplication
-- DOM/component hierarchy
-- content robustness
-- accessibility
-
-## 6. Classify failures
-
-失敗を「なんとなく違う」で終わらせない。
-
-主な分類:
-
-- CONTEXT_MISSING
-- CONTEXT_IGNORED
-- TYPOGRAPHY
-- SPACING
-- COLOR_TOKEN
-- COMPONENT_REUSE
-- RESPONSIVE
-- ASSET
-- IMAGE_CROP
-- STATE
-- AUTO_LAYOUT_TRANSLATION
-- CODE_CONNECT_MISS
-- AGENT_ASSUMPTION
-- PROMPT_AMBIGUITY
-- FRAMEWORK_CONSTRAINT
-- VISUAL_ONLY_HACK
-- OVERFITTING
-
-複数指定可。
-
-## 7. Repair one class at a time
-
-repair prompt は差分を絞る。
-
-悪い例:
-
-> もっとFigmaに近づけて。
-
-良い例:
-
-> Desktop card grid の horizontal gap が reference 24px 相当なのに 32px になっている。Mobile は 16px。grid column rule は維持し、spacing token 経由で修正。その他の typography / colors は変更しない。
-
-この方式で「何が効いたか」を追跡可能にする。
-
-## 8. Re-run from clean baseline
-
-重要な改善は、修正済みコードだけで評価しない。
-
-改善した prompt / context / rule を使い、**clean baseline からもう一度生成**する。
-
-これで「修理が上手くなった」のか「初回精度が上がった」のかを分離できる。
-
-## 9. Promote knowledge
-
-再現した知識だけを共通playbookへ昇格する。
+一度に変える研究変数を原則1つ決める。
 
 例:
 
-- Observation: screenshotだけだとSPのwrap順を誤った
-- Candidate: Auto Layout + parent sizingを明示すると改善した
-- Proven: 3題材×2agentで再現し、RESPONSIVE score が平均改善
+- C0 → C1 structured context
+- C1 → C2 explicit design contract
+- one-shot → staged workflow
+- Code Connect off → on
+- common → agent-specific optimization
 
-## Recommended comparison matrix
+model/client更新など制御不能な差はmetadataへ残す。
 
-| Run | Agent | Prompt | Context | Goal |
-|---|---|---|---|---|
-| A | Codex | common | minimal | baseline |
-| B | Claude Code | common | minimal | baseline |
-| C | Cursor | common | minimal | baseline |
-| D | Codex | optimized | structured | best achievable |
-| E | Claude Code | optimized | structured | best achievable |
-| F | Cursor | optimized | structured | best achievable |
+## 2. Create run record
 
-「モデル勝負」ではなく、**どの情報と区切りが精度を上げたか**を見る。
+`templates/run-record.yaml` をrunごとに作る。
+
+固定する:
+
+- reference id
+- agent/client/model
+- starting commit
+- context tier
+- prompt version
+- viewport(s)
+- max repair rounds
+- instruction sources
+- MCP mode/access
+
+COMMON比較では条件を揃える。
+
+## 3. Inspect — no code changes
+
+`prompts/01-inspect.md`
+
+agentはまず:
+
+- exact Figma structured context
+- components / variants
+- variables / tokens
+- Auto Layout / sizing
+- exact assets
+- annotations / states
+- responsive invariants
+- existing repo components/tokens
+
+を調べ、implementation briefを作る。
+
+大きいfileは broad metadata → relevant child node の順で狭く読む。
+
+解決不能なものだけ `UNKNOWN` とする。
+
+## 4. Implement — preserve FIRST_PASS
+
+`prompts/02-implement.md`
+
+Inspect briefから1回目のcoherent implementationを作る。
+
+このphaseではvisual tuningを繰り返さない。
+
+保存する:
+
+- first-pass commit/state
+- files changed
+- reused components/tokens
+- assumptions
+- basic build/type/lint result
+
+**FIRST_PASSを失わない。**
+
+## 5. Capture deterministic evidence
+
+Reference manifestのexact viewport/stateで実ブラウザcaptureを行う。
+
+- stable content
+- webfont loaded
+- deterministic data
+- stable scroll/state
+- animation policy fixed
+
+Repair前captureを `first-pass/` として保存する。
+
+中間幅が必要な場合はrun条件として先に固定する。
+
+## 6. Verify — diagnosis only
+
+`prompts/03-verify.md`
+
+このphaseでは原則コードを直さない。
+
+比較:
+
+### Visual
+
+- geometry
+- spacing
+- typography / wrapping
+- color / opacity
+- border / radius / effects
+- assets / crop
+- layer order
+- responsive ordering/visibility
+
+### Structural
+
+- component reuse
+- token reuse
+- responsive rules
+- semantic hierarchy
+- accessibility
+- existing project architecture
+
+Material mismatchごとにfailure record候補を作る。
+
+## 7. Score FIRST_PASS
+
+`docs/evaluation-rubric.md`
+
+```text
+First-pass Fidelity /80
+= Visual /40
++ Structural /25
++ Robustness /15
+```
+
+この時点ではReproducibilityを採点しない。
+
+## 8. Classify root causes
+
+`docs/failure-taxonomy.md`
+
+記録する:
+
+- severity S0-S4
+- primary category
+- secondary category
+- evidence
+- suspected root cause
+- confidence HIGH/MEDIUM/LOW
+- smallest repair scope
+
+「なんとなく違う」で終わらせない。
+
+## 9. Targeted Repair
+
+`prompts/04-repair.md`
+
+同じroot causeを共有するfailureだけまとめてよい。
+
+Repair後:
+
+- affected viewportを再capture
+- targeted failure改善を確認
+- neighboring matched areaのregression確認
+- repair roundを保存
+
+別failure classへ勝手に広げない。
+
+## 10. Stop / Final Fidelity / Rework
+
+acceptance到達またはstop condition時に:
+
+- Final Fidelity /80
+- Rework Efficiency /10
+- repair rounds
+- post-first-pass churn
+- human intervention
+- remaining failures
+
+を記録する。
+
+Finalが高くても戻りが多ければ成功扱いしない。
+
+## 11. Clean Replay
+
+有望なprompt/context/workflow改善は、同じstarting commit + fresh contextからやり直す。
+
+既に修正されたcodeは見せない。
+
+Replay後に初めて `Reproducibility /10` を評価する。
+
+## 12. Promote knowledge
+
+```text
+Observation
+  ↓ isolated improvement + clean replay
+Candidate Rule
+  ↓ different reference/contextでも再現
+Proven Playbook
+```
+
+別案件へ持ち出せるruleだけ `playbook/` へ昇格する。
+
+## Comparison cohorts
+
+### COMMON
+
+同一reference / code baseline / context tier / prompt / viewport / repair budget。
+
+Codex / Claude Code / Cursor のfailure傾向を比較する。
+
+### OPTIMIZED
+
+agent固有rules/skills/MCP workflowを使ってよい。
+
+COMMONと混ぜず、実務上のbest achievable workflowとして測る。
+
+### REPLAY
+
+candidate ruleの再現性確認。
+
+## Definition of a useful experiment
+
+「完成した」だけでは不十分。
+
+- first-pass evidenceがある
+- failure root causeが追える
+- change variableが明確
+- repair前後が残っている
+- clean replayできる
+- project-specificとportable knowledgeが分かれている
+
+この状態なら、失敗も価値あるデータになる。
