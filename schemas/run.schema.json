@@ -1,0 +1,168 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/figma-ai-project/run.schema.json",
+  "title": "Figma AI Run Record",
+  "type": "object",
+  "required": ["schema_version", "experiment_id", "run_id", "run_class", "status", "reference", "agent", "code", "context", "execution", "captures", "scores", "rework", "failures", "repairs", "replay", "lessons"],
+  "properties": {
+    "schema_version": { "type": "integer", "minimum": 1 },
+    "experiment_id": { "type": "string", "minLength": 1 },
+    "run_id": { "type": "string", "minLength": 1 },
+    "run_class": { "enum": ["COMMON", "OPTIMIZED", "REPLAY"] },
+    "status": { "enum": ["PLANNED", "RUNNING", "BLOCKED", "COMPLETE", "INVALID"] },
+    "started_at": { "type": "string" },
+    "completed_at": { "type": "string" },
+    "reference": {
+      "type": "object",
+      "required": ["reference_id", "manifest_path", "figma_nodes"],
+      "properties": {
+        "reference_id": { "type": "string", "minLength": 1 },
+        "manifest_path": { "type": "string" },
+        "figma_nodes": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": true
+    },
+    "agent": {
+      "type": "object",
+      "required": ["client", "model", "instruction_sources", "mcp_mode"],
+      "properties": {
+        "client": { "type": "string" },
+        "model": { "type": "string" },
+        "model_alias": { "type": "string" },
+        "client_version": { "type": "string" },
+        "instruction_sources": { "type": "array", "items": { "type": "string" } },
+        "mcp_mode": { "type": "string" },
+        "mcp_notes": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "code": {
+      "type": "object",
+      "required": ["repository", "starting_commit", "target_route", "first_pass_commit", "final_commit"],
+      "properties": {
+        "repository": { "type": "string" },
+        "starting_commit": { "type": "string" },
+        "target_route": { "type": "string" },
+        "first_pass_commit": { "type": "string" },
+        "final_commit": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "context": {
+      "type": "object",
+      "required": ["tier", "prompt_version", "prompt_hash", "code_connect", "files_read", "figma_nodes_inspected"],
+      "properties": {
+        "tier": { "enum": ["C0", "C1", "C2", "C3", "C4"] },
+        "prompt_version": { "type": "string" },
+        "prompt_hash": { "type": "string" },
+        "figma_design_context": { "type": "boolean" },
+        "figma_metadata": { "type": "boolean" },
+        "figma_screenshots": { "type": "boolean" },
+        "figma_components": { "type": "boolean" },
+        "figma_variables": { "type": "boolean" },
+        "figma_annotations": { "type": "boolean" },
+        "code_connect": { "type": "boolean" },
+        "files_read": { "type": "array", "items": { "type": "string" } },
+        "figma_nodes_inspected": { "type": "array", "items": { "type": "string" } },
+        "tool_calls": { "type": ["integer", "null"], "minimum": 0 }
+      },
+      "additionalProperties": true
+    },
+    "execution": {
+      "type": "object",
+      "required": ["workflow", "max_repair_rounds", "actual_repair_rounds", "assumptions", "blockers", "human_intervention"],
+      "properties": {
+        "workflow": { "enum": ["STAGED", "ONE_SHOT"] },
+        "max_repair_rounds": { "type": "integer", "minimum": 0 },
+        "actual_repair_rounds": { "type": "integer", "minimum": 0 },
+        "assumptions": { "type": "array" },
+        "blockers": { "type": "array" },
+        "human_intervention": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "captures": {
+      "type": "object",
+      "required": ["first_pass", "verify", "final"],
+      "properties": {
+        "first_pass": { "type": "array" },
+        "verify": { "type": "array" },
+        "final": { "type": "array" }
+      },
+      "additionalProperties": true
+    },
+    "scores": {
+      "type": "object",
+      "required": ["first_pass_fidelity", "final_fidelity", "rework_efficiency", "reproducibility", "final_composite"],
+      "properties": {
+        "first_pass_fidelity": { "$ref": "#/$defs/fidelity" },
+        "final_fidelity": { "$ref": "#/$defs/fidelity" },
+        "rework_efficiency": { "type": ["number", "null"], "minimum": 0, "maximum": 10 },
+        "reproducibility": { "type": ["number", "null"], "minimum": 0, "maximum": 10 },
+        "final_composite": { "type": ["number", "null"], "minimum": 0, "maximum": 100 }
+      },
+      "additionalProperties": true
+    },
+    "rework": {
+      "type": "object",
+      "required": ["repair_rounds", "rebuild_count", "severity_counts"],
+      "properties": {
+        "repair_rounds": { "type": "integer", "minimum": 0 },
+        "post_first_pass_files_changed": { "type": ["integer", "null"], "minimum": 0 },
+        "post_first_pass_lines_added": { "type": ["integer", "null"], "minimum": 0 },
+        "post_first_pass_lines_deleted": { "type": ["integer", "null"], "minimum": 0 },
+        "rebuild_count": { "type": "integer", "minimum": 0 },
+        "severity_counts": {
+          "type": "object",
+          "required": ["S1", "S2", "S3", "S4"],
+          "properties": {
+            "S1": { "type": "integer", "minimum": 0 },
+            "S2": { "type": "integer", "minimum": 0 },
+            "S3": { "type": "integer", "minimum": 0 },
+            "S4": { "type": "integer", "minimum": 0 }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "failures": { "type": "array" },
+    "repairs": { "type": "array" },
+    "replay": {
+      "type": "object",
+      "required": ["required", "source_run", "result"],
+      "properties": {
+        "required": { "type": "boolean" },
+        "source_run": { "type": "string" },
+        "result": { "enum": ["NOT_RUN", "REPRODUCED", "NOT_REPRODUCED"] }
+      },
+      "additionalProperties": true
+    },
+    "lessons": {
+      "type": "object",
+      "required": ["observations", "candidate_rules", "agent_specific", "project_specific"],
+      "properties": {
+        "observations": { "type": "array" },
+        "candidate_rules": { "type": "array" },
+        "agent_specific": { "type": "array" },
+        "project_specific": { "type": "array" }
+      },
+      "additionalProperties": true
+    },
+    "notes": { "type": "string" }
+  },
+  "$defs": {
+    "fidelity": {
+      "type": "object",
+      "required": ["visual", "structural", "robustness", "total"],
+      "properties": {
+        "visual": { "type": ["number", "null"], "minimum": 0, "maximum": 40 },
+        "structural": { "type": ["number", "null"], "minimum": 0, "maximum": 25 },
+        "robustness": { "type": ["number", "null"], "minimum": 0, "maximum": 15 },
+        "total": { "type": ["number", "null"], "minimum": 0, "maximum": 80 }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}
