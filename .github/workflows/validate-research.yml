@@ -44,6 +44,9 @@ jobs:
       - name: Validate reference, shared, section, and run records
         run: python scripts/validate_records.py
 
+      - name: Validate actual Figma capability profile before contract freeze
+        run: python scripts/validate_figma_profile.py
+
       - name: Validate frozen breakpoint contract semantics
         run: python scripts/validate_breakpoint_contract.py
 
