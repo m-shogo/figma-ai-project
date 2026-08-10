@@ -1,7 +1,8 @@
-schema_version: 1
+schema_version: 2
 reference_id: REF-XXXX
 page_id: ""
 shared_contract: ""
+shared_contract_sha256: ""
 foundation_commit: ""
 
 sections: []
@@ -22,9 +23,11 @@ sections: []
 #     fonts: []
 #     assets: []
 #   responsive:
+#     uses_shared_breakpoints: true
 #     invariants: []
 #     transitions: []
 #     unknowns: []
+#     breakpoint_exception_proposals: []
 #   implementation:
 #     component_path: ""
 #     style_path: ""
@@ -45,6 +48,10 @@ integration:
     - container_alignment
     - cross_section_spacing
     - typography_consistency
+    - shared_component_consistency
+    - breakpoint_consistency
     - responsive_continuity
     - global_overflow
+    - z_index_continuity
+    - background_continuity
     - asset_quality
