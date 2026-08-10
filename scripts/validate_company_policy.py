@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-import sys
 from pathlib import Path
 from typing import Any
 
@@ -34,7 +33,47 @@ def sha256(path: Path) -> str:
 def schema_errors(data: dict[str, Any]) -> list[str]:
     schema = json.loads(POLICY_SCHEMA.read_text(encoding="utf-8"))
     validator = Draft202012Validator(schema)
-    return [error.message for error in sorted(validator.iter_errors(data), key=lambda e: list(e.path))]
+    return [
+        error.message
+        for error in sorted(validator.iter_errors(data), key=lambda e: list(e.path))
+    ]
+
+
+def accessibility_errors(data: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    accessibility = data.get("accessibility", {})
+    standard = str(accessibility.get("standard", ""))
+    conformance = str(accessibility.get("conformance", ""))
+
+    if data.get("status") != "ACTIVE":
+        return errors
+
+    if accessibility.get("semantic_html_required") is not True:
+        errors.append("ACTIVE Company Policy requires semantic_html_required=true")
+    if accessibility.get("keyboard_all_interactive") is not True:
+        errors.append("ACTIVE Company Policy requires keyboard operation for all interactive controls")
+    if accessibility.get("focus_visible_required") is not True:
+        errors.append("ACTIVE Company Policy requires visible keyboard focus")
+    if accessibility.get("focus_not_obscured_required") is not True:
+        errors.append("ACTIVE Company Policy requires focus not obscured by author-created content")
+    if accessibility.get("zoom_must_not_be_disabled") is not True:
+        errors.append("ACTIVE Company Policy must not disable browser zoom")
+    if accessibility.get("accessible_name_required") is not True:
+        errors.append("ACTIVE Company Policy requires accessible names for interactive controls")
+
+    if standard == "WCAG_2_2" and conformance in {"AA", "AAA"}:
+        if float(accessibility.get("target_size_min_css_px", 0) or 0) < 24:
+            errors.append("WCAG 2.2 AA/AAA policy requires target_size_min_css_px >= 24")
+        if float(accessibility.get("resize_text_percent", 0) or 0) < 200:
+            errors.append("WCAG 2.2 AA/AAA policy requires resize_text_percent >= 200")
+        if accessibility.get("reflow_400_percent_required") is not True:
+            errors.append("WCAG 2.2 AA/AAA policy requires 400% reflow verification")
+
+    if standard == "WCAG_2_2" and conformance == "AAA":
+        if float(accessibility.get("target_size_min_css_px", 0) or 0) < 44:
+            errors.append("WCAG 2.2 AAA policy requires target_size_min_css_px >= 44")
+
+    return errors
 
 
 def environment_errors(data: dict[str, Any]) -> list[str]:
@@ -44,7 +83,11 @@ def environment_errors(data: dict[str, Any]) -> list[str]:
     if not isinstance(profiles, list):
         return ["browser_support.environment_profiles must be an array"]
 
-    ids = [str(item.get("id", "")).strip() for item in profiles if isinstance(item, dict)]
+    ids = [
+        str(item.get("id", "")).strip()
+        for item in profiles
+        if isinstance(item, dict)
+    ]
     if len(ids) != len(set(ids)):
         errors.append("environment profile ids must be unique")
 
@@ -54,17 +97,27 @@ def environment_errors(data: dict[str, Any]) -> list[str]:
     if runtime.get("width_only_device_classification_forbidden") is not True:
         errors.append("width-only device classification must be forbidden")
 
-    required_profiles = [item for item in profiles if isinstance(item, dict) and item.get("role") == "REQUIRED"]
+    required_profiles = [
+        item
+        for item in profiles
+        if isinstance(item, dict) and item.get("role") == "REQUIRED"
+    ]
     if data.get("status") == "ACTIVE" and not required_profiles:
         errors.append("ACTIVE Company Policy requires at least one REQUIRED environment profile")
 
     required_ids = {str(item.get("id", "")).strip() for item in required_profiles}
-    canonical = str(data.get("visual_tolerance", {}).get("canonical_environment_profile", "")).strip()
+    canonical = str(
+        data.get("visual_tolerance", {}).get("canonical_environment_profile", "")
+    ).strip()
     if data.get("status") == "ACTIVE":
         if not canonical:
-            errors.append("ACTIVE Company Policy requires visual_tolerance.canonical_environment_profile")
+            errors.append(
+                "ACTIVE Company Policy requires visual_tolerance.canonical_environment_profile"
+            )
         elif canonical not in required_ids:
-            errors.append("canonical_environment_profile must reference a REQUIRED environment profile")
+            errors.append(
+                "canonical_environment_profile must reference a REQUIRED environment profile"
+            )
 
     responsive = data.get("responsive", {})
     input_queries = responsive.get("input_capability_queries", {})
@@ -90,7 +143,10 @@ def environment_errors(data: dict[str, Any]) -> list[str]:
 
     interaction = data.get("interaction", {})
     smooth = interaction.get("smooth_scroll", {})
-    if smooth.get("required_for_anchor_navigation") is True and smooth.get("respect_reduced_motion") is not True:
+    if (
+        smooth.get("required_for_anchor_navigation") is True
+        and smooth.get("respect_reduced_motion") is not True
+    ):
         errors.append("required smooth scrolling must respect prefers-reduced-motion")
     touch = interaction.get("touch", {})
     if touch.get("browser_gestures_preserved_by_default") is not True:
@@ -111,13 +167,18 @@ def semantic_policy_errors(data: dict[str, Any]) -> list[str]:
 
     if data.get("status") == "ACTIVE":
         browser = data.get("browser_support", {})
-        if not (browser.get("browserslist") or browser.get("explicit_minimums") or browser.get("test_matrix")):
+        if not (
+            browser.get("browserslist")
+            or browser.get("explicit_minimums")
+            or browser.get("test_matrix")
+        ):
             errors.append("ACTIVE Company Policy requires an explicit browser support contract")
         update = data.get("update_policy", {})
         if update.get("significant_run_preflight") is not True:
             errors.append("ACTIVE Company Policy requires significant_run_preflight=true")
 
     errors.extend(environment_errors(data))
+    errors.extend(accessibility_errors(data))
     return errors
 
 
@@ -127,7 +188,9 @@ def candidate_policies() -> list[Path]:
         if not base.exists():
             continue
         for path in sorted(base.rglob("*.yaml")):
-            if path.name == "company-policy.yaml" or path.name.endswith("company-policy.yaml"):
+            if path.name == "company-policy.yaml" or path.name.endswith(
+                "company-policy.yaml"
+            ):
                 found.append(path)
     return list(dict.fromkeys(found))
 
@@ -138,7 +201,9 @@ def candidate_shared_contracts() -> list[Path]:
         if not base.exists():
             continue
         for path in sorted(base.rglob("*.yaml")):
-            if path.name == "shared-contract.yaml" or path.name.endswith("shared-contract.yaml"):
+            if path.name == "shared-contract.yaml" or path.name.endswith(
+                "shared-contract.yaml"
+            ):
                 found.append(path)
     return list(dict.fromkeys(found))
 
@@ -148,8 +213,13 @@ def validate_frozen_contract(path: Path, data: dict[str, Any]) -> list[str]:
         return []
     errors: list[str] = []
     binding = data.get("company_policy", {})
-    if binding.get("status") != "BOUND" or binding.get("precedence_verified") is not True:
-        errors.append("FROZEN Shared Contract requires BOUND Company Policy with precedence_verified=true")
+    if (
+        binding.get("status") != "BOUND"
+        or binding.get("precedence_verified") is not True
+    ):
+        errors.append(
+            "FROZEN Shared Contract requires BOUND Company Policy with precedence_verified=true"
+        )
         return errors
 
     raw_path = str(binding.get("path", "")).strip()
@@ -174,7 +244,9 @@ def validate_frozen_contract(path: Path, data: dict[str, Any]) -> list[str]:
         errors.append("FROZEN Shared Contract must bind an ACTIVE Company Policy")
     if str(policy.get("policy_id", "")) != str(binding.get("policy_id", "")):
         errors.append("Shared Contract company policy_id does not match linked policy")
-    errors.extend(f"linked Company Policy: {error}" for error in semantic_policy_errors(policy))
+    errors.extend(
+        f"linked Company Policy: {error}" for error in semantic_policy_errors(policy)
+    )
     return errors
 
 
