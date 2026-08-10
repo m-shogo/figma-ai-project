@@ -1,51 +1,87 @@
 # figma-ai-project
 
-AI coding agents (Codex / Claude Code / Cursor など) と Figma を往復しながら、**PC / SP のデザインをできるだけ高い再現性で実装し、手直し量を継続的に減らすための研究・実践リポジトリ**です。
+AI coding agents（Codex / Claude Code / Cursor など）と Figma を往復しながら、**既に決まっている PC / SP デザインを高い再現性で実装し、人間の手直し量を継続的に減らすための研究・実践リポジトリ**です。
+
+## Important boundary
+
+この repo はデザインそのものを決める場所ではありません。
+
+- Reference Figma はユーザー/案件側で決定する
+- AI は reference design を勝手に作り直さない
+- reference が未提示の期間は、実験基盤・評価・prompt・context設計・tooling調査だけを進める
+- reference が提示されたら freeze して、同じ原本を使って比較する
 
 ## Goal
 
-このプロジェクトのゴールは「一発生成」ではありません。
+目標は「一発生成できた」という偶然ではなく、**同じ条件なら同等品質を再現できる工程**を作ることです。
 
-1. Figma の設計を構造ごと理解する
-2. AI に実装させる
-3. 原本と比較する
-4. どこがズレたかを定量・定性で記録する
-5. 原因を分類する
-6. プロンプト / コンテキスト / Design System / Code Connect / 実装手順を修正する
-7. 同じ入力で再実行し、再現性が上がったか確認する
-8. 成功した知識を他案件でも使える形に昇格する
-
-最終的には、案件固有のデザインを覚えるのではなく、**Figma → AI → Code / Code → Figma の精度を上げる汎用ノウハウ**を蓄積します。
+1. Reference Figma を構造ごと取得する
+2. AI に渡す context を再現可能な package にする
+3. Codex / Claude Code / Cursor などで実装する
+4. 原本と exact viewport で比較する
+5. 差分を定量・定性で記録する
+6. 原因を分類する
+7. prompt / context / Design System / Code Connect / workflow を1変数ずつ改善する
+8. clean baseline から再実行する
+9. 別画面・別案件でも効いた知識だけ playbook に昇格する
 
 ## North Star Metrics
 
-- Visual Fidelity: 見た目の一致度
-- Structural Fidelity: Auto Layout / component / token / responsive structure の一致度
-- Rework Cost: 人間が手直しした量
-- First-pass Quality: 1回目の出力品質
-- Reproducibility: 同じ条件で再実行したときの安定度
-- Portability: 別案件へ流用できる知識の割合
+- **First-pass Fidelity**: 初回出力でどこまで原本に近いか
+- **Visual Fidelity**: geometry / spacing / typography / color / assets の一致度
+- **Structural Fidelity**: component / token / responsive / semantic structure の一致度
+- **Rework Cost**: 人間またはAIの修正回数・修正量
+- **Reproducibility**: clean rerun しても同等結果へ戻れるか
+- **Context Efficiency**: 余計なcontextを増やさず精度を出せたか
+- **Portability**: 別案件へそのまま持っていける知識か
+
+## Current phase
+
+**FOUNDATION — reference design待ち。デザインには触れず、再現実験の下地を構築中。**
+
+今やること:
+
+- reference freeze contract
+- context package format
+- agent run contract
+- staged prompt architecture
+- visual / structural evaluation
+- failure taxonomy
+- knowledge promotion rules
+- official tooling source registry
+- agent-specific adapter strategy
+
+Reference が来るまでやらないこと:
+
+- 架空LPを作る
+- PC/SP寸法をこちらで決める
+- 色・component・画面構成を仮定する
+- referenceを模したダミーデザインをFigmaへ作る
 
 ## Research Loop
 
 ```text
-Reference Figma
+Reference Figma (external source of truth)
+   ↓ freeze
+Reference Contract
    ↓
-Context extraction
+Context Package
    ↓
-Agent prompt + implementation
+Inspect Prompt
    ↓
-PC / SP render
+Implementation Run
    ↓
-Visual + structural comparison
+Exact Viewport Capture
    ↓
-Failure classification
+Visual + Structural Compare
    ↓
-Prompt / context / token / component / workflow improvement
+Failure Classification
    ↓
-Re-run
+One-variable Repair / Prompt Improvement
    ↓
-Promote proven knowledge to playbook
+Clean Re-run
+   ↓
+Promote reproduced knowledge
 ```
 
 ## Repository Structure
@@ -55,52 +91,51 @@ Promote proven knowledge to playbook
 ├── README.md
 ├── AGENTS.md
 ├── docs/
-│   ├── principles.md
 │   ├── workflow.md
+│   ├── reference-contract.md
+│   ├── context-package.md
+│   ├── run-contract.md
 │   ├── evaluation-rubric.md
+│   ├── failure-taxonomy.md
 │   ├── knowledge-promotion.md
-│   └── research-log.md
+│   ├── agent-adapters.md
+│   └── source-registry.md
 ├── prompts/
 │   ├── figma-to-code.md
-│   ├── code-to-figma.md
-│   └── visual-repair.md
-├── experiments/
-│   └── 0001-baseline/README.md
-└── templates/
-    ├── experiment.md
-    └── failure-record.md
+│   ├── 01-inspect.md
+│   ├── 02-implement.md
+│   ├── 03-verify.md
+│   └── 04-repair.md
+├── templates/
+│   ├── reference-manifest.yaml
+│   ├── run-record.yaml
+│   ├── experiment.md
+│   └── failure-record.md
+└── experiments/
+    └── 0001-baseline/README.md
 ```
 
 ## Core Policy
 
-- Figma screenshot だけを真似しない。可能な限り構造、variables、components、responsive rules まで読む。
-- 「見た目が近い」と「保守可能で同じ設計思想」は分けて評価する。
-- PC と SP を別々にハードコードせず、どのルールが breakpoint で変化するかを明示する。
-- 失敗を消さない。失敗理由と修正前後を残す。
-- 1回の成功を一般則にしない。複数実験で再現したものだけを playbook に昇格する。
-- モデル固有テクニックと、どの agent でも効く一般原則を分離する。
-- prompt を巨大化して解決しない。必要な context を必要なタイミングで渡す。
-- Figma component / variable / Code Connect が使える場合は、画像認識だけより優先する。
+- screenshotだけで済ませず、読める場合は Figma structured context を優先する
+- screenshot は visual ground truth として必ず別レイヤーで使う
+- design system / component / token / Code Connect を既存実装へ接続する
+- PC と SP を別画面としてハードコードせず、referenceから responsive invariants を抽出する
+- giant prompt に全部詰めない。Inspect → Implement → Verify → Repair を分離する
+- 失敗したpromptやrepairも削除しない
+- 一度の成功は一般則にしない
+- agent/model固有のコツと、agent非依存の原則を分離する
+- 最終見た目だけでなく First-pass と Rework Cost を必ず残す
+- reference designは改善対象ではなく source of truth として扱う
 
-## Initial Experiment
+## Design readiness gate
 
-最初は 1 つの小さな題材で進めます。
+Reference を受け取ったら、実装開始前に `docs/reference-contract.md` の項目を満たす。
 
-- Desktop: 1440px 前後
-- Mobile: 390px 前後
-- Header
-- Hero
-- CTA
-- Card list
-- Form / input
-- Footer
+**Reference contract が未完成なら、見た目を推測して実装を始めない。**
 
-この程度の構成なら、typography、spacing、component、image、responsive、状態差分を一通り評価できます。
+## Research principle
 
-詳しい進め方は `docs/workflow.md` と `experiments/0001-baseline/README.md` を参照してください。
+このリポジトリは結論集ではありません。
 
-## Current Direction
-
-2026-08 時点では、Figma の公式 MCP は structured design context の取得だけでなく、native Figma content の作成・更新も扱える方向へ拡張されています。したがって本プロジェクトでは、単なる screenshot-to-code ではなく、**Figma MCP + design system + Code Connect + visual verification** を中心に研究します。
-
-> このリポジトリは結論集ではなく、再現可能な実験によって結論を更新し続けるための場所です。
+**失敗 → 原因特定 → 小さな改善 → clean rerun → 再現確認**を繰り返し、次の案件ほど戻りを減らすための学習システムです。
