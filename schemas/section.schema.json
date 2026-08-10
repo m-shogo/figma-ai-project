@@ -79,16 +79,19 @@
           },
           "worker": {
             "type": "object",
-            "required": ["status", "parallel_group", "isolation", "agent", "model", "base_commit", "output_commit", "proposed_shared_changes"],
+            "required": ["status", "parallel_group", "contract_sha256", "isolation", "agent", "model", "base_commit", "output_commit", "proposed_shared_changes"],
             "properties": {
               "status": { "enum": ["PLANNED", "READY", "RUNNING", "BLOCKED", "COMPLETE"] },
               "parallel_group": { "type": "string" },
+              "contract_sha256": { "type": "string" },
               "isolation": {
                 "type": "object",
-                "required": ["mode", "ref"],
+                "required": ["mode", "ref", "parallel_safe", "notes"],
                 "properties": {
                   "mode": { "enum": ["UNASSIGNED", "BRANCH_WORKTREE", "AGENT_SANDBOX", "SERIAL_SHARED_TREE", "OTHER"] },
-                  "ref": { "type": "string" }
+                  "ref": { "type": "string" },
+                  "parallel_safe": { "type": "boolean" },
+                  "notes": { "type": "array" }
                 },
                 "additionalProperties": true
               },
