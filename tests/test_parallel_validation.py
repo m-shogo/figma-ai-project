@@ -6,7 +6,7 @@ from pathlib import Path
 
 import yaml
 
-from scripts.validate_parallel_paths import validate_manifest
+from scripts.validate_parallel_paths import protected_paths, validate_manifest
 
 
 def section(
@@ -65,7 +65,7 @@ def section(
 
 def manifest(sections: list[dict]) -> dict:
     return {
-        "schema_version": 4,
+        "schema_version": 6,
         "reference_id": "REF-TEST",
         "page_id": "PAGE-TEST",
         "shared_contract": "contracts/test/shared-contract.yaml",
@@ -157,6 +157,42 @@ class ParallelValidationTests(unittest.TestCase):
             manifest([section("S01", group="P1", allowed_paths=["src/sections/*"])])
         )
         self.assertTrue(any("not a glob" in error for error in errors))
+
+    def test_root_composition_is_coordinator_owned(self) -> None:
+        data = manifest([section("S01", group="P1", allowed_paths=["src/pages/Home"] )])
+        data["integration"]["root_composition_path"] = "src/pages/Home/index.tsx"
+        errors = self.validate(data)
+        self.assertTrue(any("root composition" in error for error in errors))
+
+    def test_shared_contract_protected_roots_are_derived(self) -> None:
+        data = manifest([])
+        contract = {
+            "codebase": {
+                "global_style_paths": ["src/styles/global.css"],
+                "token_paths": ["src/styles/tokens"],
+                "shared_component_paths": ["src/components/shared"],
+                "design_system_paths": ["src/design-system"],
+            },
+            "foundation": {"changed_paths": ["src/app/providers.tsx"]},
+            "parallel_execution": {"coordinator_only_paths": ["src/app/page.tsx"]},
+            "integration": {"root_composition_path": "src/app/layout.tsx"},
+        }
+        errors: list[str] = []
+        roots = protected_paths(data, contract, errors)
+        rendered = {path.as_posix() for _, path in roots}
+        self.assertEqual([], errors)
+        self.assertTrue(
+            {
+                "src/styles/global.css",
+                "src/styles/tokens",
+                "src/components/shared",
+                "src/design-system",
+                "src/app/providers.tsx",
+                "src/app/page.tsx",
+                "src/app/layout.tsx",
+            }
+            <= rendered
+        )
 
 
 if __name__ == "__main__":
