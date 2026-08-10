@@ -75,6 +75,31 @@ def find_section(manifest: dict[str, Any], section_id: str) -> dict[str, Any]:
     return matches[0]
 
 
+def resolve_company_policy(
+    root: Path, contract: dict[str, Any]
+) -> tuple[str, str, str]:
+    binding = contract.get("company_policy", {})
+    if not isinstance(binding, dict) or binding.get("status") != "BOUND":
+        return "", "", ""
+
+    raw_path = str(binding.get("path", "")).strip()
+    expected_hash = str(binding.get("sha256", "")).strip()
+    expected_id = str(binding.get("policy_id", "")).strip()
+    if not raw_path or not expected_hash or not expected_id:
+        raise ValueError("BOUND Company Policy requires path, policy_id, and sha256")
+
+    policy_path = resolve(root, raw_path, "Company Policy")
+    actual_hash = sha256(policy_path)
+    if actual_hash != expected_hash:
+        raise ValueError("Shared Contract Company Policy hash is stale")
+    policy = load_yaml(policy_path)
+    if str(policy.get("policy_id", "")) != expected_id:
+        raise ValueError("Shared Contract Company Policy id does not match linked policy")
+    if policy.get("status") != "ACTIVE":
+        raise ValueError("BOUND Company Policy must be ACTIVE before creating a production run")
+    return relative(root, policy_path), expected_id, actual_hash
+
+
 def validate_prepared_lineage(
     root: Path,
     manifest_path: Path,
@@ -82,7 +107,7 @@ def validate_prepared_lineage(
     reference_path: Path,
     reference: dict[str, Any],
     section: dict[str, Any],
-) -> tuple[Path, Path, str, str, str]:
+) -> tuple[Path, Path, str, str, str, tuple[str, str, str]]:
     contract_path = resolve(root, str(manifest.get("shared_contract", "")), "Shared Contract")
     profile_path = resolve(root, str(manifest.get("figma_structure_profile", "")), "Figma Structure Profile")
 
@@ -132,9 +157,10 @@ def validate_prepared_lineage(
         raise ValueError(f"Section worker isolation mode is not production-ready: {mode}")
     if not isolation_ref:
         raise ValueError("Section worker isolation.ref is required")
-    if mode == "OTHER":
-        if isolation.get("parallel_safe") is not True or not isolation.get("notes"):
-            raise ValueError("OTHER isolation requires parallel_safe=true and safety notes")
+    if mode == "OTHER" and (
+        isolation.get("parallel_safe") is not True or not isolation.get("notes")
+    ):
+        raise ValueError("OTHER isolation requires parallel_safe=true and safety notes")
 
     profile_section = next(
         (item for item in profile.get("sections", []) if item.get("section_id") == section.get("section_id")),
@@ -145,7 +171,15 @@ def validate_prepared_lineage(
     if profile_section.get("recommended_translation_mode") == "UNKNOWN":
         raise ValueError("Section Figma Structure Profile translation mode is still UNKNOWN")
 
-    return contract_path, profile_path, contract_hash, profile_hash, manifest_hash
+    company_policy = resolve_company_policy(root, contract)
+    return (
+        contract_path,
+        profile_path,
+        contract_hash,
+        profile_hash,
+        manifest_hash,
+        company_policy,
+    )
 
 
 def build_run_record(
@@ -169,22 +203,34 @@ def build_run_record(
     reference = load_yaml(reference_path)
     section = find_section(manifest, section_id)
 
-    contract_path, profile_path, contract_hash, profile_hash, manifest_hash = validate_prepared_lineage(
+    (
+        contract_path,
+        profile_path,
+        contract_hash,
+        profile_hash,
+        manifest_hash,
+        company_policy,
+    ) = validate_prepared_lineage(
         root, manifest_path, manifest, reference_path, reference, section
     )
+    company_policy_path, company_policy_id, company_policy_hash = company_policy
 
     worker = section.get("worker", {})
     isolation = worker.get("isolation", {})
     figma = section.get("figma", {})
     node_ids = [
         str(node).strip()
-        for node in [figma.get("pc_node_id", ""), figma.get("sp_node_id", ""), *figma.get("other_node_ids", [])]
+        for node in [
+            figma.get("pc_node_id", ""),
+            figma.get("sp_node_id", ""),
+            *figma.get("other_node_ids", []),
+        ]
         if str(node).strip()
     ]
 
     code_baseline = reference.get("code_baseline", {})
     return {
-        "schema_version": 7,
+        "schema_version": 8,
         "experiment_id": experiment_id,
         "run_id": run_id,
         "run_class": run_class,
@@ -212,6 +258,9 @@ def build_run_record(
             "scope": "SECTION",
             "section_id": section_id,
             "parallel_group": worker.get("parallel_group", ""),
+            "company_policy_path": company_policy_path,
+            "company_policy_id": company_policy_id,
+            "company_policy_sha256": company_policy_hash,
             "shared_contract_path": relative(root, contract_path),
             "shared_contract_sha256": contract_hash,
             "section_manifest_path": relative(root, manifest_path),
@@ -263,8 +312,18 @@ def build_run_record(
         },
         "captures": {"first_pass": [], "verify": [], "final": []},
         "scores": {
-            "first_pass_fidelity": {"visual": None, "structural": None, "robustness": None, "total": None},
-            "final_fidelity": {"visual": None, "structural": None, "robustness": None, "total": None},
+            "first_pass_fidelity": {
+                "visual": None,
+                "structural": None,
+                "robustness": None,
+                "total": None,
+            },
+            "final_fidelity": {
+                "visual": None,
+                "structural": None,
+                "robustness": None,
+                "total": None,
+            },
             "rework_efficiency": None,
             "reproducibility": None,
             "final_composite": None,
@@ -297,7 +356,9 @@ def build_run_record(
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Create a pinned SECTION run record from prepared execution manifests")
+    parser = argparse.ArgumentParser(
+        description="Create a pinned SECTION run record from prepared execution manifests"
+    )
     parser.add_argument("--section-manifest", required=True, type=Path)
     parser.add_argument("--reference-manifest", required=True, type=Path)
     parser.add_argument("--experiment-id", required=True)
@@ -305,8 +366,12 @@ def main() -> int:
     parser.add_argument("--section-id", required=True)
     parser.add_argument("--agent", required=True, dest="agent_client")
     parser.add_argument("--model", default="")
-    parser.add_argument("--run-class", choices=["COMMON", "OPTIMIZED", "REPLAY"], default="COMMON")
-    parser.add_argument("--context-tier", choices=["C0", "C1", "C2", "C3", "C4"], default="C1")
+    parser.add_argument(
+        "--run-class", choices=["COMMON", "OPTIMIZED", "REPLAY"], default="COMMON"
+    )
+    parser.add_argument(
+        "--context-tier", choices=["C0", "C1", "C2", "C3", "C4"], default="C1"
+    )
     parser.add_argument("--max-repair-rounds", type=int, default=2)
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--force", action="store_true")
@@ -315,8 +380,16 @@ def main() -> int:
     if args.max_repair_rounds < 0:
         raise ValueError("--max-repair-rounds must be >= 0")
 
-    manifest_path = args.section_manifest if args.section_manifest.is_absolute() else ROOT / args.section_manifest
-    reference_path = args.reference_manifest if args.reference_manifest.is_absolute() else ROOT / args.reference_manifest
+    manifest_path = (
+        args.section_manifest
+        if args.section_manifest.is_absolute()
+        else ROOT / args.section_manifest
+    )
+    reference_path = (
+        args.reference_manifest
+        if args.reference_manifest.is_absolute()
+        else ROOT / args.reference_manifest
+    )
     output_path = args.output if args.output.is_absolute() else ROOT / args.output
 
     record = build_run_record(
@@ -335,9 +408,13 @@ def main() -> int:
     write_yaml_atomic(output_path, record, overwrite=args.force)
     print(f"CREATED {relative(ROOT, output_path)}")
     print(f"Reference SHA-256: {record['reference']['manifest_sha256']}")
+    if record["coordination"]["company_policy_sha256"]:
+        print(f"Company Policy SHA-256: {record['coordination']['company_policy_sha256']}")
     print(f"Shared Contract SHA-256: {record['coordination']['shared_contract_sha256']}")
     print(f"Section Manifest SHA-256: {record['coordination']['section_manifest_sha256']}")
-    print(f"Structure Profile SHA-256: {record['coordination']['figma_structure_profile_sha256']}")
+    print(
+        f"Structure Profile SHA-256: {record['coordination']['figma_structure_profile_sha256']}"
+    )
     return 0
 
 
