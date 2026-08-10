@@ -6,6 +6,7 @@ on:
       - "templates/**"
       - "schemas/**"
       - "scripts/**"
+      - "tests/**"
       - "references/**/*.yaml"
       - "experiments/**/*.yaml"
       - "contracts/**/*.yaml"
@@ -16,6 +17,7 @@ on:
       - "templates/**"
       - "schemas/**"
       - "scripts/**"
+      - "tests/**"
       - "references/**/*.yaml"
       - "experiments/**/*.yaml"
       - "contracts/**/*.yaml"
@@ -42,5 +44,8 @@ jobs:
       - name: Validate reference, shared, section, and run records
         run: python scripts/validate_records.py
 
-      - name: Validate parallel section write isolation
+      - name: Validate parallel section write isolation and dependencies
         run: python scripts/validate_parallel_paths.py
+
+      - name: Test section execution planner
+        run: python -m unittest discover -s tests -p 'test_*.py'
