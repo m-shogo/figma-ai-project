@@ -3,7 +3,7 @@
   "$id": "https://example.invalid/figma-ai-project/company-policy.schema.json",
   "title": "Company Implementation Policy",
   "type": "object",
-  "required": ["schema_version", "policy_id", "company", "project_scope", "status", "precedence", "browser_support", "stack", "project_structure", "css", "responsive", "interaction", "figma_handoff", "cms", "images", "gradients", "visual_tolerance", "integration", "update_policy", "unknowns", "conflicts", "approvals"],
+  "required": ["schema_version", "policy_id", "company", "project_scope", "status", "precedence", "browser_support", "stack", "project_structure", "css", "responsive", "interaction", "accessibility", "figma_handoff", "cms", "images", "gradients", "visual_tolerance", "integration", "update_policy", "unknowns", "conflicts", "approvals"],
   "properties": {
     "schema_version": {"type": "integer", "minimum": 1},
     "policy_id": {"type": "string", "minLength": 1},
@@ -32,10 +32,7 @@
         "test_matrix": {"type": "array"},
         "mobile_devices": {"type": "array"},
         "webviews": {"type": "array"},
-        "environment_profiles": {
-          "type": "array",
-          "items": {"$ref": "#/$defs/environmentProfile"}
-        },
+        "environment_profiles": {"type": "array", "items": {"$ref": "#/$defs/environmentProfile"}},
         "runtime_detection": {
           "type": "object",
           "required": ["default", "feature_detection_required", "css_supports_preferred", "ua_sniffing", "width_only_device_classification_forbidden", "notes"],
@@ -96,6 +93,33 @@
       "additionalProperties": true
     },
     "interaction": {"type": "object"},
+    "accessibility": {
+      "type": "object",
+      "required": ["standard", "conformance", "semantic_html_required", "keyboard_all_interactive", "focus_visible_required", "focus_not_obscured_required", "skip_link_required_when_relevant", "target_size_min_css_px", "target_size_exception_policy", "resize_text_percent", "reflow_400_percent_required", "horizontal_scroll_exception_policy", "zoom_must_not_be_disabled", "hover_focus_content_policy", "screen_reader_smoke_required_for_complex_widgets", "accessible_name_required", "form_label_error_policy", "contrast_policy", "live_region_policy", "notes"],
+      "properties": {
+        "standard": {"enum": ["WCAG_2_2", "COMPANY_CUSTOM"]},
+        "conformance": {"enum": ["A", "AA", "AAA", "COMPANY_CUSTOM"]},
+        "semantic_html_required": {"type": "boolean"},
+        "keyboard_all_interactive": {"type": "boolean"},
+        "focus_visible_required": {"type": "boolean"},
+        "focus_not_obscured_required": {"type": "boolean"},
+        "skip_link_required_when_relevant": {"type": "boolean"},
+        "target_size_min_css_px": {"type": "number", "minimum": 0},
+        "target_size_exception_policy": {"type": "string"},
+        "resize_text_percent": {"type": "number", "minimum": 100},
+        "reflow_400_percent_required": {"type": "boolean"},
+        "horizontal_scroll_exception_policy": {"type": "string"},
+        "zoom_must_not_be_disabled": {"type": "boolean"},
+        "hover_focus_content_policy": {"type": "string"},
+        "screen_reader_smoke_required_for_complex_widgets": {"type": "boolean"},
+        "accessible_name_required": {"type": "boolean"},
+        "form_label_error_policy": {"type": "string"},
+        "contrast_policy": {"type": "string"},
+        "live_region_policy": {"type": "string"},
+        "notes": {"type": "array"}
+      },
+      "additionalProperties": true
+    },
     "figma_handoff": {"type": "object"},
     "cms": {"type": "object"},
     "images": {"type": "object"},
