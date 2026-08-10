@@ -16,7 +16,8 @@
         "file_key": { "type": "string" },
         "node_ids": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
         "branch_or_version": { "type": "string" },
-        "captured_at": { "type": "string" }
+        "captured_at": { "type": "string" },
+        "environment": { "type": "object" }
       },
       "additionalProperties": true
     },
@@ -50,8 +51,19 @@
     "assets": { "type": "array" },
     "responsive": {
       "type": "object",
-      "required": ["invariants", "transitions", "ordering_rules", "visibility_rules", "wrapping_rules", "container_rules", "unknowns"],
+      "required": ["breakpoint_evidence", "invariants", "transitions", "ordering_rules", "visibility_rules", "wrapping_rules", "container_rules", "unknowns"],
       "properties": {
+        "breakpoint_evidence": {
+          "type": "object",
+          "required": ["source", "source_refs", "values", "notes"],
+          "properties": {
+            "source": { "enum": ["OWNER", "COMPANY", "DESIGN_SYSTEM", "EXISTING_CODE", "FIGMA", "MULTIPLE", "UNKNOWN"] },
+            "source_refs": { "type": "array", "items": { "type": "string" } },
+            "values": { "type": "array" },
+            "notes": { "type": "array" }
+          },
+          "additionalProperties": true
+        },
         "invariants": { "type": "array" },
         "transitions": { "type": "array" },
         "ordering_rules": { "type": "array" },
