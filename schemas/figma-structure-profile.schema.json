@@ -1,0 +1,159 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/figma-ai-project/figma-structure-profile.schema.json",
+  "title": "Figma Structure Profile",
+  "type": "object",
+  "required": ["schema_version", "reference_id", "captured_at", "figma_tooling_snapshot", "page", "sections", "notes"],
+  "properties": {
+    "schema_version": { "type": "integer", "minimum": 1 },
+    "reference_id": { "type": "string", "minLength": 1 },
+    "captured_at": { "type": "string" },
+    "figma_tooling_snapshot": { "type": "string" },
+    "page": {
+      "type": "object",
+      "required": ["file_key", "page_or_frame_node_id", "auto_layout_generation", "notes"],
+      "properties": {
+        "file_key": { "type": "string" },
+        "page_or_frame_node_id": { "type": "string" },
+        "auto_layout_generation": { "enum": ["LEGACY", "UPDATED_2026", "MIXED", "UNKNOWN"] },
+        "notes": { "type": "array" }
+      },
+      "additionalProperties": true
+    },
+    "sections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "section_id",
+          "figma_node_ids",
+          "signals",
+          "recommended_translation_mode",
+          "mode_reasoning_evidence",
+          "trusted_structure",
+          "untrusted_or_missing_structure",
+          "codebase_reuse_priority",
+          "unresolved_questions"
+        ],
+        "properties": {
+          "section_id": { "type": "string", "minLength": 1 },
+          "figma_node_ids": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+          "signals": {
+            "type": "object",
+            "required": ["components", "variables", "auto_layout", "semantic_naming", "code_connect", "assets", "responsive_mapping"],
+            "properties": {
+              "components": { "$ref": "#/$defs/componentSignal" },
+              "variables": { "$ref": "#/$defs/variableSignal" },
+              "auto_layout": { "$ref": "#/$defs/autoLayoutSignal" },
+              "semantic_naming": { "$ref": "#/$defs/semanticSignal" },
+              "code_connect": { "$ref": "#/$defs/codeConnectSignal" },
+              "assets": { "$ref": "#/$defs/assetSignal" },
+              "responsive_mapping": { "$ref": "#/$defs/baseSignal" }
+            },
+            "additionalProperties": true
+          },
+          "recommended_translation_mode": {
+            "enum": ["STRUCTURE_FIRST", "HYBRID", "VISUAL_FIRST", "CODEBASE_FIRST", "UNKNOWN"]
+          },
+          "mode_reasoning_evidence": { "type": "array" },
+          "trusted_structure": { "type": "array" },
+          "untrusted_or_missing_structure": { "type": "array" },
+          "codebase_reuse_priority": { "type": "array" },
+          "unresolved_questions": { "type": "array" }
+        },
+        "additionalProperties": true
+      }
+    },
+    "notes": { "type": "array" }
+  },
+  "$defs": {
+    "confidence": { "enum": ["NONE", "LOW", "MEDIUM", "HIGH"] },
+    "coverage": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
+    "baseSignal": {
+      "type": "object",
+      "required": ["confidence", "evidence"],
+      "properties": {
+        "confidence": { "$ref": "#/$defs/confidence" },
+        "evidence": { "type": "array" }
+      },
+      "additionalProperties": true
+    },
+    "componentSignal": {
+      "allOf": [
+        { "$ref": "#/$defs/baseSignal" },
+        {
+          "type": "object",
+          "required": ["instance_count", "detached_or_repeated_patterns"],
+          "properties": {
+            "instance_count": { "type": ["integer", "null"], "minimum": 0 },
+            "detached_or_repeated_patterns": { "type": "array" }
+          }
+        }
+      ]
+    },
+    "variableSignal": {
+      "allOf": [
+        { "$ref": "#/$defs/baseSignal" },
+        {
+          "type": "object",
+          "required": ["bound_property_coverage", "modes_observed"],
+          "properties": {
+            "bound_property_coverage": { "$ref": "#/$defs/coverage" },
+            "modes_observed": { "type": "array" }
+          }
+        }
+      ]
+    },
+    "autoLayoutSignal": {
+      "allOf": [
+        { "$ref": "#/$defs/baseSignal" },
+        {
+          "type": "object",
+          "required": ["container_coverage", "absolute_child_ratio", "generation"],
+          "properties": {
+            "container_coverage": { "$ref": "#/$defs/coverage" },
+            "absolute_child_ratio": { "$ref": "#/$defs/coverage" },
+            "generation": { "enum": ["LEGACY", "UPDATED_2026", "MIXED", "UNKNOWN"] }
+          }
+        }
+      ]
+    },
+    "semanticSignal": {
+      "allOf": [
+        { "$ref": "#/$defs/baseSignal" },
+        {
+          "type": "object",
+          "required": ["generic_name_ratio"],
+          "properties": {
+            "generic_name_ratio": { "$ref": "#/$defs/coverage" }
+          }
+        }
+      ]
+    },
+    "codeConnectSignal": {
+      "allOf": [
+        { "$ref": "#/$defs/baseSignal" },
+        {
+          "type": "object",
+          "required": ["mapped_component_coverage"],
+          "properties": {
+            "mapped_component_coverage": { "$ref": "#/$defs/coverage" }
+          }
+        }
+      ]
+    },
+    "assetSignal": {
+      "allOf": [
+        { "$ref": "#/$defs/baseSignal" },
+        {
+          "type": "object",
+          "required": ["exact_sources_available"],
+          "properties": {
+            "exact_sources_available": { "type": "array" }
+          }
+        }
+      ]
+    }
+  },
+  "additionalProperties": true
+}
