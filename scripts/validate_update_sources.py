@@ -35,14 +35,14 @@ def _string_list_errors(value: Any, label: str, *, nonempty: bool = True) -> lis
 
 def _activation_errors(lane_name: str, lane: dict[str, Any]) -> list[str]:
     required = lane.get("required_for_significant_run")
-    if not isinstance(required, bool):
-        return [f"lane {lane_name}: required_for_significant_run must be boolean"]
-    if required:
+    if required is not None and not isinstance(required, bool):
+        return [f"lane {lane_name}: required_for_significant_run must be boolean when present"]
+    if required is True:
         return []
 
     activation = lane.get("activation")
     if not isinstance(activation, dict):
-        return [f"lane {lane_name}: optional lane requires activation"]
+        return [f"lane {lane_name}: conditional lane requires activation"]
     profile_any = activation.get("company_profile_any")
     if not isinstance(profile_any, dict):
         return [f"lane {lane_name}: activation.company_profile_any is required"]
