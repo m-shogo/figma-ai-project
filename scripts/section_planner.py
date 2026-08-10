@@ -101,11 +101,7 @@ def topological_layers(sections: dict[str, Section]) -> list[list[Section]]:
     layers: list[list[Section]] = []
 
     while remaining:
-        ready_ids = [
-            sid
-            for sid in remaining
-            if sections[sid].dependencies <= resolved
-        ]
+        ready_ids = [sid for sid in remaining if sections[sid].dependencies <= resolved]
         if not ready_ids:
             blocked_by = {
                 sid: sorted(sections[sid].dependencies - resolved)
@@ -126,38 +122,39 @@ def topological_layers(sections: dict[str, Section]) -> list[list[Section]]:
 
 
 def partition_parallel(layer: list[Section]) -> list[list[Section]]:
-    groups: list[list[Section]] = []
-    for section in layer:
-        placed = False
-        for group in groups:
-            if all(not sections_conflict(section, member) for member in group):
-                group.append(section)
-                placed = True
-                break
-        if not placed:
-            groups.append([section])
-    return groups
+    """Split one dependency layer into sequential, internally concurrency-safe batches."""
+    batches: list[list[Section]] = []
+    pending = list(layer)
+    while pending:
+        batch: list[Section] = []
+        deferred: list[Section] = []
+        for section in pending:
+            if all(not sections_conflict(section, member) for member in batch):
+                batch.append(section)
+            else:
+                deferred.append(section)
+        batches.append(batch)
+        pending = deferred
+    return batches
 
 
 def build_plan(data: dict[str, Any]) -> dict[str, Any]:
     sections = parse_sections(data)
-    layers = topological_layers(sections)
+    dependency_layers = topological_layers(sections)
     waves: list[dict[str, Any]] = []
 
-    for wave_index, layer in enumerate(layers, start=1):
-        groups = partition_parallel(layer)
-        waves.append(
-            {
-                "wave": wave_index,
-                "groups": [
-                    {
-                        "recommended_parallel_group": f"wave-{wave_index:02d}-{chr(97 + group_index)}",
-                        "sections": [section.section_id for section in group],
-                    }
-                    for group_index, group in enumerate(groups)
-                ],
-            }
-        )
+    wave_index = 1
+    for dependency_layer_index, layer in enumerate(dependency_layers, start=1):
+        for batch in partition_parallel(layer):
+            waves.append(
+                {
+                    "wave": wave_index,
+                    "dependency_layer": dependency_layer_index,
+                    "recommended_parallel_group": f"wave-{wave_index:02d}",
+                    "sections": [section.section_id for section in batch],
+                }
+            )
+            wave_index += 1
 
     return {
         "reference_id": data.get("reference_id", ""),
@@ -188,10 +185,11 @@ def main() -> int:
 
     print(f"Reference: {plan['reference_id']}  Page: {plan['page_id']}")
     for wave in plan["waves"]:
-        print(f"Wave {wave['wave']}")
-        for group in wave["groups"]:
-            joined = ", ".join(group["sections"])
-            print(f"  {group['recommended_parallel_group']}: {joined}")
+        joined = ", ".join(wave["sections"])
+        print(
+            f"Wave {wave['wave']} ({wave['recommended_parallel_group']}, "
+            f"dependency-layer {wave['dependency_layer']}): {joined}"
+        )
     if plan["blocked_sections"]:
         print("Blocked: " + ", ".join(plan["blocked_sections"]))
     return 0
