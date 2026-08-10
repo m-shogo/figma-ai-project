@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/figma-ai-project/company-policy.schema.json",
+  "title": "Company Implementation Policy",
+  "type": "object",
+  "required": ["schema_version", "policy_id", "company", "project_scope", "status", "precedence", "browser_support", "stack", "project_structure", "css", "responsive", "interaction", "figma_handoff", "cms", "images", "gradients", "visual_tolerance", "integration", "update_policy", "unknowns", "conflicts", "approvals"],
+  "properties": {
+    "schema_version": {"type": "integer", "minimum": 1},
+    "policy_id": {"type": "string", "minLength": 1},
+    "company": {"type": "string"},
+    "project_scope": {"type": "string"},
+    "status": {"enum": ["DRAFT", "ACTIVE", "SUPERSEDED"]},
+    "created_at": {"type": "string"},
+    "updated_at": {"type": "string"},
+    "precedence": {
+      "type": "object",
+      "required": ["implementation_constraints", "visual_design_source", "conflict_policy", "notes"],
+      "properties": {
+        "implementation_constraints": {"type": "array", "items": {"enum": ["COMPANY_POLICY", "EXISTING_CODEBASE", "FIGMA_IMPLEMENTATION_EVIDENCE", "AGENT_INFERENCE"]}, "minItems": 4, "uniqueItems": true},
+        "visual_design_source": {"enum": ["FIGMA_REFERENCE"]},
+        "conflict_policy": {"enum": ["RECORD_AND_ESCALATE", "OWNER_DECIDES"]},
+        "notes": {"type": "array"}
+      },
+      "additionalProperties": true
+    },
+    "browser_support": {"type": "object"},
+    "stack": {"type": "object"},
+    "project_structure": {"type": "object"},
+    "css": {"type": "object"},
+    "responsive": {"type": "object"},
+    "interaction": {"type": "object"},
+    "figma_handoff": {"type": "object"},
+    "cms": {"type": "object"},
+    "images": {"type": "object"},
+    "gradients": {"type": "object"},
+    "visual_tolerance": {
+      "type": "object",
+      "required": ["canonical_browser", "canonical_os", "canonical_dpr", "geometry_css_px", "isolated_geometry_css_px_max", "repeated_drift_is_failure", "text_wrap_must_match", "typography_block_geometry_must_match", "antialiasing_pixel_diff_ignored", "gradient_shadow_raster_policy", "owner_override_allowed", "notes"],
+      "properties": {
+        "canonical_browser": {"type": "string"},
+        "canonical_os": {"type": "string"},
+        "canonical_dpr": {"type": ["number", "null"], "minimum": 0},
+        "geometry_css_px": {"type": "number", "minimum": 0},
+        "isolated_geometry_css_px_max": {"type": "number", "minimum": 0},
+        "repeated_drift_is_failure": {"type": "boolean"},
+        "text_wrap_must_match": {"type": "boolean"},
+        "typography_block_geometry_must_match": {"type": "boolean"},
+        "antialiasing_pixel_diff_ignored": {"type": "boolean"},
+        "gradient_shadow_raster_policy": {"type": "string"},
+        "owner_override_allowed": {"type": "boolean"},
+        "notes": {"type": "array"}
+      },
+      "additionalProperties": true
+    },
+    "integration": {"type": "object"},
+    "update_policy": {"type": "object"},
+    "unknowns": {"type": "array"},
+    "conflicts": {"type": "array"},
+    "approvals": {"type": "array"}
+  },
+  "additionalProperties": true
+}
