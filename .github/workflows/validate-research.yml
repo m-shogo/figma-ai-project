@@ -47,6 +47,12 @@ jobs:
       - name: Validate actual Figma capability profile before contract freeze
         run: python scripts/validate_figma_profile.py
 
+      - name: Validate per-section Figma structure profiles
+        run: python scripts/validate_figma_structure_profiles.py
+
+      - name: Validate per-section Figma structure profile lineage
+        run: python scripts/validate_figma_structure_profile.py
+
       - name: Validate component and token resolution tables
         run: python scripts/validate_resolution_tables.py
 
