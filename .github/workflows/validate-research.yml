@@ -79,5 +79,8 @@ jobs:
       - name: Validate immutable run evidence lineage
         run: python scripts/validate_run_lineage.py
 
+      - name: Validate capture environment lineage and required coverage
+        run: python scripts/validate_capture_environment.py
+
       - name: Test section execution planner and validators
         run: python -m unittest discover -s tests -p 'test_*.py'
