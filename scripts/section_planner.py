@@ -20,6 +20,8 @@ class Section:
     dependencies: frozenset[str]
     write_scopes: tuple[PurePosixPath, ...]
     coupling: str
+    boundary_confidence: str
+    mapping_confidence: str
     status: str
 
 
@@ -47,11 +49,28 @@ def scopes_overlap(left: PurePosixPath, right: PurePosixPath) -> bool:
     return left.parts[:n] == right.parts[:n]
 
 
+def section_risk_flags(section: Section) -> list[str]:
+    flags: list[str] = []
+    if not section.write_scopes:
+        flags.append("UNKNOWN_WRITE_SCOPE")
+    if section.coupling == "HIGH":
+        flags.append("HIGH_INTEGRATION_COUPLING")
+    if section.boundary_confidence == "LOW":
+        flags.append("LOW_BOUNDARY_CONFIDENCE")
+    if section.mapping_confidence == "LOW":
+        flags.append("LOW_PC_SP_MAPPING_CONFIDENCE")
+    return flags
+
+
 def sections_conflict(left: Section, right: Section) -> bool:
-    # Unknown ownership is not safe to parallelize.
+    # Unknown ownership or low-confidence discovery is not safe to parallelize yet.
     if not left.write_scopes or not right.write_scopes:
         return True
     if left.coupling == "HIGH" or right.coupling == "HIGH":
+        return True
+    if left.boundary_confidence == "LOW" or right.boundary_confidence == "LOW":
+        return True
+    if left.mapping_confidence == "LOW" or right.mapping_confidence == "LOW":
         return True
     return any(scopes_overlap(a, b) for a in left.write_scopes for b in right.write_scopes)
 
@@ -64,6 +83,7 @@ def parse_sections(data: dict[str, Any]) -> dict[str, Section]:
             raise ValueError(f"sections[{index}] has no section_id")
         if section_id in parsed:
             raise ValueError(f"duplicate section_id: {section_id}")
+        figma = raw.get("figma", {})
         dependencies = raw.get("dependencies", {})
         implementation = raw.get("implementation", {})
         worker = raw.get("worker", {})
@@ -74,6 +94,8 @@ def parse_sections(data: dict[str, Any]) -> dict[str, Section]:
             dependencies=frozenset(str(value) for value in dependencies.get("section_ids", [])),
             write_scopes=scopes,
             coupling=str(dependencies.get("integration_coupling", "LOW")),
+            boundary_confidence=str(figma.get("boundary_confidence", "LOW")),
+            mapping_confidence=str(figma.get("pc_sp_mapping_confidence", "LOW")),
             status=str(worker.get("status", "PLANNED")),
         )
 
@@ -152,6 +174,11 @@ def build_plan(data: dict[str, Any]) -> dict[str, Any]:
                     "dependency_layer": dependency_layer_index,
                     "recommended_parallel_group": f"wave-{wave_index:02d}",
                     "sections": [section.section_id for section in batch],
+                    "constraints": {
+                        section.section_id: section_risk_flags(section)
+                        for section in batch
+                        if section_risk_flags(section)
+                    },
                 }
             )
             wave_index += 1
@@ -190,6 +217,8 @@ def main() -> int:
             f"Wave {wave['wave']} ({wave['recommended_parallel_group']}, "
             f"dependency-layer {wave['dependency_layer']}): {joined}"
         )
+        for section_id, flags in wave.get("constraints", {}).items():
+            print(f"  {section_id} constraints: {', '.join(flags)}")
     if plan["blocked_sections"]:
         print("Blocked: " + ", ".join(plan["blocked_sections"]))
     return 0
