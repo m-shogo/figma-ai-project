@@ -18,12 +18,25 @@ def section(
     paths: list[str] | None = None,
     coupling: str = "LOW",
     status: str = "PLANNED",
+    boundary_confidence: str = "HIGH",
+    mapping_confidence: str = "HIGH",
 ) -> dict:
     return {
         "section_id": section_id,
         "name": section_id,
         "order": order,
-        "figma": {"pc_node_id": "", "sp_node_id": "", "other_node_ids": [], "semantic_name_source": "FIGMA"},
+        "figma": {
+            "logical_role": "content",
+            "pc_node_id": "",
+            "sp_node_id": "",
+            "other_node_ids": [],
+            "semantic_name_source": "FIGMA",
+            "boundary_source": "FIGMA_TOP_LEVEL",
+            "boundary_confidence": boundary_confidence,
+            "boundary_evidence": [],
+            "pc_sp_mapping_confidence": mapping_confidence,
+            "mapping_evidence": [],
+        },
         "evidence": {"screenshots": [], "metadata_capture": ""},
         "dependencies": {
             "section_ids": depends_on or [],
@@ -80,6 +93,7 @@ class SectionPlannerTests(unittest.TestCase):
             section("S02", order=20, paths=["src/b"]),
         ]))
         self.assertEqual([wave["sections"] for wave in plan["waves"]], [["S01"], ["S02"]])
+        self.assertIn("UNKNOWN_WRITE_SCOPE", plan["waves"][0]["constraints"]["S01"])
 
     def test_high_coupling_section_is_isolated(self) -> None:
         plan = build_plan(manifest([
@@ -87,6 +101,22 @@ class SectionPlannerTests(unittest.TestCase):
             section("S02", order=20, paths=["src/b"]),
         ]))
         self.assertEqual([wave["sections"] for wave in plan["waves"]], [["S01"], ["S02"]])
+
+    def test_low_boundary_confidence_is_not_parallelized(self) -> None:
+        plan = build_plan(manifest([
+            section("S01", order=10, paths=["src/a"], boundary_confidence="LOW"),
+            section("S02", order=20, paths=["src/b"]),
+        ]))
+        self.assertEqual([wave["sections"] for wave in plan["waves"]], [["S01"], ["S02"]])
+        self.assertIn("LOW_BOUNDARY_CONFIDENCE", plan["waves"][0]["constraints"]["S01"])
+
+    def test_low_pc_sp_mapping_confidence_is_not_parallelized(self) -> None:
+        plan = build_plan(manifest([
+            section("S01", order=10, paths=["src/a"], mapping_confidence="LOW"),
+            section("S02", order=20, paths=["src/b"]),
+        ]))
+        self.assertEqual([wave["sections"] for wave in plan["waves"]], [["S01"], ["S02"]])
+        self.assertIn("LOW_PC_SP_MAPPING_CONFIDENCE", plan["waves"][0]["constraints"]["S01"])
 
     def test_complete_dependency_is_already_satisfied(self) -> None:
         plan = build_plan(manifest([
