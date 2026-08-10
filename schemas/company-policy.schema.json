@@ -23,11 +23,78 @@
       },
       "additionalProperties": true
     },
-    "browser_support": {"type": "object"},
+    "browser_support": {
+      "type": "object",
+      "required": ["browserslist", "explicit_minimums", "test_matrix", "environment_profiles", "runtime_detection", "javascript_required", "progressive_enhancement", "unsupported_behavior", "notes"],
+      "properties": {
+        "browserslist": {"type": "array", "items": {"type": "string"}},
+        "explicit_minimums": {"type": "array"},
+        "test_matrix": {"type": "array"},
+        "mobile_devices": {"type": "array"},
+        "webviews": {"type": "array"},
+        "environment_profiles": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/environmentProfile"}
+        },
+        "runtime_detection": {
+          "type": "object",
+          "required": ["default", "feature_detection_required", "css_supports_preferred", "ua_sniffing", "width_only_device_classification_forbidden", "notes"],
+          "properties": {
+            "default": {"enum": ["CAPABILITY_FIRST", "FEATURE_FIRST", "COMPANY_EXPLICIT"]},
+            "feature_detection_required": {"type": "boolean"},
+            "css_supports_preferred": {"type": "boolean"},
+            "ua_sniffing": {"enum": ["FORBID", "BUG_FIX_ONLY", "COMPANY_ALLOWED"]},
+            "width_only_device_classification_forbidden": {"type": "boolean"},
+            "notes": {"type": "array"}
+          },
+          "additionalProperties": true
+        },
+        "javascript_required": {"type": "boolean"},
+        "progressive_enhancement": {"enum": ["REQUIRED", "PREFERRED", "OPTIONAL"]},
+        "unsupported_behavior": {"enum": ["DOCUMENT", "BLOCK", "BEST_EFFORT"]},
+        "notes": {"type": "array"}
+      },
+      "additionalProperties": true
+    },
     "stack": {"type": "object"},
     "project_structure": {"type": "object"},
-    "css": {"type": "object"},
-    "responsive": {"type": "object"},
+    "css": {
+      "type": "object",
+      "properties": {
+        "foundation_layers": {
+          "type": "object",
+          "properties": {
+            "reset_required": {"type": "boolean"},
+            "base_required": {"type": "boolean"},
+            "environment_required": {"type": "boolean"},
+            "tokens_required": {"type": "boolean"},
+            "device_specific_full_reset": {"type": "boolean"},
+            "environment_overrides_allowed": {"type": "boolean"},
+            "focus_styles_may_be_removed": {"type": "boolean"},
+            "form_controls_font_inherit": {"type": "boolean"},
+            "text_size_adjust_policy": {"type": "string"},
+            "appearance_policy": {"type": "string"},
+            "scrollbar_layout_shift_policy": {"type": "string"},
+            "notes": {"type": "array"}
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "responsive": {
+      "type": "object",
+      "properties": {
+        "viewport_meta": {"type": "object"},
+        "viewport_units": {"type": "object"},
+        "safe_area": {"type": "object"},
+        "virtual_keyboard": {"type": "object"},
+        "input_capability_queries": {"type": "object"},
+        "user_preference_queries": {"type": "object"},
+        "output_capability_queries": {"type": "object"}
+      },
+      "additionalProperties": true
+    },
     "interaction": {"type": "object"},
     "figma_handoff": {"type": "object"},
     "cms": {"type": "object"},
@@ -40,6 +107,8 @@
         "canonical_browser": {"type": "string"},
         "canonical_os": {"type": "string"},
         "canonical_dpr": {"type": ["number", "null"], "minimum": 0},
+        "canonical_environment_profile": {"type": "string"},
+        "environment_specific_baselines_allowed": {"type": "boolean"},
         "geometry_css_px": {"type": "number", "minimum": 0},
         "isolated_geometry_css_px_max": {"type": "number", "minimum": 0},
         "repeated_drift_is_failure": {"type": "boolean"},
@@ -57,6 +126,87 @@
     "unknowns": {"type": "array"},
     "conflicts": {"type": "array"},
     "approvals": {"type": "array"}
+  },
+  "$defs": {
+    "environmentProfile": {
+      "type": "object",
+      "required": ["id", "role", "device_class", "os", "browser", "engine", "webview", "viewport", "input", "environment", "qa", "overrides", "notes"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "role": {"enum": ["REQUIRED", "SUPPORTED", "BEST_EFFORT"]},
+        "device_class": {"enum": ["DESKTOP", "LAPTOP", "TABLET", "MOBILE", "FOLDABLE", "TV", "OTHER"]},
+        "os": {"type": "string", "minLength": 1},
+        "os_version": {"type": "string"},
+        "browser": {"type": "string", "minLength": 1},
+        "browser_version": {"type": "string"},
+        "engine": {"type": "string"},
+        "webview": {"type": "boolean"},
+        "viewport": {
+          "type": "object",
+          "required": ["width_css_px", "height_css_px", "orientation", "dpr"],
+          "properties": {
+            "width_css_px": {"type": ["number", "null"], "minimum": 0},
+            "height_css_px": {"type": ["number", "null"], "minimum": 0},
+            "orientation": {"enum": ["PORTRAIT", "LANDSCAPE", "BOTH", "ANY"]},
+            "dpr": {"type": ["number", "null"], "minimum": 0}
+          },
+          "additionalProperties": true
+        },
+        "input": {
+          "type": "object",
+          "required": ["primary_hover", "any_hover", "primary_pointer", "any_pointer", "touch"],
+          "properties": {
+            "primary_hover": {"enum": ["HOVER", "NONE", "UNKNOWN"]},
+            "any_hover": {"enum": ["HOVER", "NONE", "UNKNOWN"]},
+            "primary_pointer": {"enum": ["FINE", "COARSE", "NONE", "UNKNOWN"]},
+            "any_pointer": {"enum": ["FINE", "COARSE", "MULTIPLE", "NONE", "UNKNOWN"]},
+            "touch": {"type": ["boolean", "null"]}
+          },
+          "additionalProperties": true
+        },
+        "environment": {
+          "type": "object",
+          "required": ["safe_area", "dynamic_viewport", "virtual_keyboard", "color_gamut", "forced_colors"],
+          "properties": {
+            "safe_area": {"enum": ["REQUIRED", "TEST", "NOT_REQUIRED", "UNKNOWN"]},
+            "dynamic_viewport": {"enum": ["REQUIRED", "TEST", "NOT_REQUIRED", "UNKNOWN"]},
+            "virtual_keyboard": {"enum": ["REQUIRED", "TEST", "NOT_REQUIRED", "UNKNOWN"]},
+            "color_gamut": {"enum": ["SRGB", "P3", "REC2020", "UNKNOWN"]},
+            "forced_colors": {"enum": ["REQUIRED", "TEST", "NOT_REQUIRED", "UNKNOWN"]}
+          },
+          "additionalProperties": true
+        },
+        "qa": {
+          "type": "object",
+          "required": ["real_device", "emulation", "visual", "interaction", "keyboard"],
+          "properties": {
+            "real_device": {"enum": ["REQUIRED", "PREFERRED", "OPTIONAL"]},
+            "emulation": {"enum": ["ALLOWED", "SUPPLEMENTARY", "FORBIDDEN"]},
+            "visual": {"type": "boolean"},
+            "interaction": {"type": "boolean"},
+            "keyboard": {"type": "boolean"}
+          },
+          "additionalProperties": true
+        },
+        "overrides": {
+          "type": "object",
+          "required": ["reset_profile", "smooth_scroll", "hover_profile", "touch_profile", "viewport_profile", "scroll_lock_profile", "animation_profile", "image_profile"],
+          "properties": {
+            "reset_profile": {"type": "string"},
+            "smooth_scroll": {"enum": ["INHERIT", "ENABLED", "DISABLED", "CUSTOM"]},
+            "hover_profile": {"type": "string"},
+            "touch_profile": {"type": "string"},
+            "viewport_profile": {"type": "string"},
+            "scroll_lock_profile": {"type": "string"},
+            "animation_profile": {"type": "string"},
+            "image_profile": {"type": "string"}
+          },
+          "additionalProperties": true
+        },
+        "notes": {"type": "array"}
+      },
+      "additionalProperties": true
+    }
   },
   "additionalProperties": true
 }
