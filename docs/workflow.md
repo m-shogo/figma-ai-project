@@ -2,9 +2,14 @@
 
 このworkflowは **reference designを作る工程ではなく、既に決まったreferenceを再現する工程**。
 
-詳細契約:
+Production defaultはsection-first。Whole-page one-shotはbenchmarkとして別扱い。
+
+関連契約:
 
 - Reference: `docs/reference-contract.md`
+- Breakpoints: `docs/responsive-breakpoint-policy.md`
+- Section execution: `docs/section-execution.md`
+- CSS: `docs/css-strategy.md`
 - Context: `docs/context-package.md`
 - Run fairness: `docs/run-contract.md`
 - Verification: `docs/visual-verification.md`
@@ -12,9 +17,26 @@
 - Evaluation: `docs/evaluation-rubric.md`
 - Knowledge: `docs/knowledge-promotion.md`
 
-## 0. Freeze the external reference
+---
 
-Referenceを受け取ったら `templates/reference-manifest.yaml` を複製し、実際のFigma値を記録する。
+## 0. Tooling update preflight
+
+重要run前に:
+
+- Figma release notes
+- current Figma MCP docs/tools
+- current agent/client docs
+- recent practitioner/community signals
+
+を確認する。
+
+過去のfailure/workaroundを現在も正しいと自動仮定しない。
+
+---
+
+## 1. Freeze the external reference
+
+`templates/reference-manifest.yaml` を作成する。
 
 固定する:
 
@@ -24,129 +46,272 @@ Referenceを受け取ったら `templates/reference-manifest.yaml` を複製し�
 - states / variants
 - assets
 - component / variable / layout information
-- responsive invariants / material UNKNOWNs
+- responsive behavior
+- breakpoint evidence/source
 - target codebase starting commit
+- material UNKNOWNs
 
-**repo側から1440/390などの値を発明しない。**
+repo側から1440/390/768などを発明しない。
 
 途中で原本が変わったらreference revisionを分ける。
 
-## 1. Select experiment variable
+---
 
-一度に変える研究変数を原則1つ決める。
+## 2. Global reconnaissance — no implementation
+
+Coordinatorがページ全体を調査する。
+
+順序:
+
+1. codebase/style/design-system rules
+2. company/designer breakpoint specification
+3. Figma top-level metadata/hierarchy
+4. section boundaries
+5. components/variants/Code Connect
+6. variables/tokens/modes
+7. fonts/typography
+8. Auto Layout/Grid/sizing
+9. PC/SP behavior
+10. assets/states/annotations
+
+大frameはmetadata等で狭めてからsection nodeを深く読む。
+
+---
+
+## 3. Build Shared Contract DRAFT
+
+`templates/shared-contract.yaml`
+
+全sectionで共通化する:
+
+- styling architecture
+- fonts
+- tokens
+- container/gutter
+- breakpoint source + exact values/query
+- shared components
+- assets
+- accessibility baseline
+- coordinator-only paths
+
+breakpointは案件指定を優先する。
+
+---
+
+## 4. Build Section Manifest DRAFT
+
+`templates/section-manifest.yaml`
 
 例:
 
-- C0 → C1 structured context
-- C1 → C2 explicit design contract
-- one-shot → staged workflow
-- Code Connect off → on
-- common → agent-specific optimization
+```text
+S01 Header
+S02 MainVisual
+S03 Content01
+S04 Content02
+S05 Footer
+```
 
-model/client更新など制御不能な差はmetadataへ残す。
+各sectionへ:
 
-## 2. Create run record
+- exact Figma node
+- PC/SP evidence
+- relevant context
+- dependencies
+- responsive behavior at shared breakpoint
+- allowed code paths
 
-`templates/run-record.yaml` をrunごとに作る。
+を割り当てる。
 
-固定する:
+---
 
-- reference id
-- agent/client/model
-- starting commit
-- context tier
-- prompt version
-- viewport(s)
-- max repair rounds
-- instruction sources
-- MCP mode/access
+## 5. Implement shared foundation — serial
 
-COMMON比較では条件を揃える。
+section並列より先に:
 
-## 3. Inspect — no code changes
+1. fonts
+2. tokens
+3. global breakpoint binding
+4. container/gutter/layout primitives
+5. shared components
+6. shared asset helpers
 
-`prompts/01-inspect.md`
+を実装/確認する。
 
-agentはまず:
+既存projectに正本があれば再利用する。
 
-- exact Figma structured context
-- components / variants
-- variables / tokens
-- Auto Layout / sizing
-- exact assets
-- annotations / states
-- responsive invariants
-- existing repo components/tokens
+---
 
-を調べ、implementation briefを作る。
+## 6. Verify foundation and freeze contract
 
-大きいfileは broad metadata → relevant child node の順で狭く読む。
+Foundationで:
 
-解決不能なものだけ `UNKNOWN` とする。
+- build/type/lint
+- font loading
+- token resolution
+- shared component rendering
+- global container
+- specified breakpoint consistency
 
-## 4. Implement — preserve FIRST_PASS
+を確認する。
 
-`prompts/02-implement.md`
+成功後:
 
-Inspect briefから1回目のcoherent implementationを作る。
+```text
+foundation.status = VERIFIED
+foundation.commit = <commit>
+shared contract status = FROZEN
+freeze.ready = true
+```
 
-このphaseではvisual tuningを繰り返さない。
+Shared contract SHA-256をSection Manifestへ保存する。
 
-保存する:
+ここがparallel開始gate。
 
-- first-pass commit/state
-- files changed
-- reused components/tokens
-- assumptions
-- basic build/type/lint result
+---
 
-**FIRST_PASSを失わない。**
+## 7. Section-scoped Inspect
 
-## 5. Capture deterministic evidence
+各workerは担当sectionだけを深く読む。
 
-Reference manifestのexact viewport/stateで実ブラウザcaptureを行う。
+Input:
+
+- frozen shared contract + hash
+- verified foundation commit
+- section manifest entry
+- exact Figma node(s)
+- screenshot evidence
+- relevant structured context
+
+このphaseではコードを変更しない。
+
+記録:
+
+- shared component reuse
+- local layout
+- assets
+- section behavior at shared breakpoint
+- UNKNOWNs
+
+---
+
+## 8. Section FIRST_PASS implementation
+
+Workerはallowed paths内だけ変更する。
+
+変更禁止/提案のみ:
+
+- shared tokens
+- fonts
+- root composition
+- global breakpoints
+- shared components
+- other sections
+
+必要なら:
+
+- `PROPOSE_SHARED_CHANGE`
+- `PROPOSE_BREAKPOINT_EXCEPTION`
+
+を返す。
+
+FIRST_PASS commit/stateを保存する。
+
+---
+
+## 9. Section evidence capture
+
+Reference exact viewport/stateでcaptureする。
 
 - stable content
 - webfont loaded
 - deterministic data
-- stable scroll/state
 - animation policy fixed
 
-Repair前captureを `first-pass/` として保存する。
+PC/SPと必要な状態を保存する。
 
-中間幅が必要な場合はrun条件として先に固定する。
+---
 
-## 6. Verify — diagnosis only
+## 10. Section Verify — diagnosis only
 
-`prompts/03-verify.md`
-
-このphaseでは原則コードを直さない。
-
-比較:
+原則コードを直さず比較する。
 
 ### Visual
 
 - geometry
 - spacing
-- typography / wrapping
-- color / opacity
-- border / radius / effects
-- assets / crop
+- typography/wrapping
+- color/effects
+- asset/crop
 - layer order
-- responsive ordering/visibility
 
 ### Structural
 
 - component reuse
 - token reuse
-- responsive rules
+- shared breakpoint compliance
 - semantic hierarchy
 - accessibility
-- existing project architecture
+- allowed-path isolation
 
-Material mismatchごとにfailure record候補を作る。
+Mismatchをfailure record化する。
 
-## 7. Score FIRST_PASS
+---
+
+## 11. Parallel section execution
+
+Foundation freeze後、独立sectionは並列実装してよい。
+
+安全条件:
+
+- same shared contract hash
+- same foundation commit
+- disjoint allowed paths
+- shared files read-only
+- no independent breakpoint changes
+
+満たせないsectionはserial/coordinatedへ戻す。
+
+---
+
+## 12. Coordinator integration
+
+Section outputを統合する。
+
+確認:
+
+- section order
+- cross-section spacing/rhythm
+- background continuity
+- container alignment
+- typography consistency
+- shared component consistency
+- breakpoint consistency
+- z-index/layer overlap
+- global overflow
+- responsive continuity
+
+Section単体の一致だけで完成扱いしない。
+
+---
+
+## 13. Global capture / Verify
+
+統合後のページをPC/SPおよび指定breakpoint境界でcaptureする。
+
+目的:
+
+- section間のズレ
+- breakpoint boundary failure
+- accumulated spacing error
+- full-page overflow
+- shared rule drift
+
+を見つける。
+
+---
+
+## 14. Score FIRST_PASS
 
 `docs/evaluation-rubric.md`
 
@@ -157,42 +322,62 @@ First-pass Fidelity /80
 + Robustness /15
 ```
 
+section runとintegration runのscopeを混ぜず記録する。
+
 この時点ではReproducibilityを採点しない。
 
-## 8. Classify root causes
+---
+
+## 15. Classify root causes
 
 `docs/failure-taxonomy.md`
 
-記録する:
-
-- severity S0-S4
-- primary category
-- secondary category
+- severity
+- primary/secondary category
 - evidence
-- suspected root cause
-- confidence HIGH/MEDIUM/LOW
-- smallest repair scope
+- root cause
+- confidence
+- repair scope
+
+を記録する。
 
 「なんとなく違う」で終わらせない。
 
-## 9. Targeted Repair
+---
 
-`prompts/04-repair.md`
+## 16. Targeted Repair
 
-同じroot causeを共有するfailureだけまとめてよい。
+同じroot causeを共有するfailureだけまとめる。
 
 Repair後:
 
-- affected viewportを再capture
-- targeted failure改善を確認
-- neighboring matched areaのregression確認
-- repair roundを保存
+- affected section/viewportを再capture
+- regression確認
+- integrationへの影響確認
 
-別failure classへ勝手に広げない。
+Shared contract変更が必要ならworker内で直さずcoordinatorへ戻す。
 
-## 10. Stop / Final Fidelity / Rework
+---
 
-acceptance到達またはstop condition時に:
+## 17. Shared contract change handling
+
+Parallel開始後にshared changeが承認された場合:
+
+1. new workers開始停止
+2. shared change実装
+3. foundation再verify
+4. new foundation commit
+5. contract revision/new hash
+6. affected section特定
+7. affected outputだけ更新/re-run
+
+異なるcontract hashを無条件で統合しない。
+
+---
+
+## 18. Final Fidelity / Rework
+
+Acceptance到達またはstop時に:
 
 - Final Fidelity /80
 - Rework Efficiency /10
@@ -201,57 +386,80 @@ acceptance到達またはstop condition時に:
 - human intervention
 - remaining failures
 
-を記録する。
+を保存する。
 
-Finalが高くても戻りが多ければ成功扱いしない。
+---
 
-## 11. Clean Replay
+## 19. Clean Replay
 
-有望なprompt/context/workflow改善は、同じstarting commit + fresh contextからやり直す。
+有望な改善はfresh context + clean foundationから再実行する。
 
-既に修正されたcodeは見せない。
+既に修理済みcodeを見せない。
 
-Replay後に初めて `Reproducibility /10` を評価する。
+Replay後にReproducibility /10を評価する。
 
-## 12. Promote knowledge
+---
+
+## 20. Promote knowledge
 
 ```text
 Observation
-  ↓ isolated improvement + clean replay
+  ↓
 Candidate Rule
-  ↓ different reference/contextでも再現
+  ↓
 Proven Playbook
 ```
 
-別案件へ持ち出せるruleだけ `playbook/` へ昇格する。
+別案件へ持ち出せるものだけ昇格する。
+
+Tool/model更新で再評価可能。
+
+---
+
+## Run scopes
+
+### SECTION
+
+通常のproduction comparison。
+
+同じsection / contract hash / foundation commitでagentやcontextを比較する。
+
+### INTEGRATION
+
+複数sectionを統合したページ全体の整合性を評価する。
+
+### PAGE_BENCHMARK
+
+Whole-page one-shot等を研究するための例外scope。
+
+Production defaultと混ぜない。
+
+---
 
 ## Comparison cohorts
 
 ### COMMON
 
-同一reference / code baseline / context tier / prompt / viewport / repair budget。
-
-Codex / Claude Code / Cursor のfailure傾向を比較する。
+同一reference / section / foundation / shared contract / context / prompt / viewport / repair budget。
 
 ### OPTIMIZED
 
-agent固有rules/skills/MCP workflowを使ってよい。
-
-COMMONと混ぜず、実務上のbest achievable workflowとして測る。
+agent固有rules/skills/MCP workflowを使用可。
 
 ### REPLAY
 
-candidate ruleの再現性確認。
+Candidate ruleの再現性確認。
+
+---
 
 ## Definition of a useful experiment
 
-「完成した」だけでは不十分。
-
+- tooling preflightがある
+- referenceがfreezeされている
+- shared contract/foundationが追跡可能
+- run scopeが明確
 - first-pass evidenceがある
+- integration evidenceがある
 - failure root causeが追える
-- change variableが明確
-- repair前後が残っている
 - clean replayできる
 - project-specificとportable knowledgeが分かれている
-
-この状態なら、失敗も価値あるデータになる。
