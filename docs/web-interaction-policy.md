@@ -2,15 +2,27 @@
 
 Company Policy / existing projectが優先。以下は**未指定時のcurrent production candidate**であり永久ルールではない。
 
+Canonical environment model: `docs/device-environment-policy.md`
+
 ## Decision order
 
 ```text
-Company approved implementation
+Company approved implementation + Required Environment Profiles
 → Existing project/library
 → Native platform primitive
 → Approved specialist library
 → Custom implementation only when justified
 ```
+
+Runtime判定は原則:
+
+```text
+capability / feature detection
+→ Required Environment QA
+→ proven browser-specific fix
+```
+
+UA sniffingを一般的なdevice classificationへ使わない。
 
 ---
 
@@ -32,38 +44,102 @@ html {
 
 Fixed/sticky headerがある場合はtarget側の`scroll-margin-top`またはscroll containerの`scroll-padding-top`で隠れを防ぐ。
 
-これは「ページ全体へ慣性scroll engineを入れる」こととは別。
+### Important distinction
 
-Lenis等のscroll-jacking/inertial scrollingは標準装備にしない。Reference/Company Policyで必要な時だけ別評価する。
+Native smooth scrollのduration/easingはuser agent側が決める。
+
+したがって:
+
+```text
+ordinary anchor navigation
+!=
+Figma-specified cinematic/controlled scroll choreography
+```
+
+後者をnative smooth scrollで「再現済み」と扱わない。
+
+Device/Environment Profileごとに:
+
+- `INHERIT`
+- `ENABLED`
+- `DISABLED`
+- `CUSTOM`
+
+を持てる。
+
+Unsupported targetのためだけにJS polyfill/libraryを自動追加しない。Company Policyが必要とした時だけ選定する。
+
+Lenis等のinertial/full-page scroll behaviorは標準装備にしない。Reference/Company Policyで必要な時だけ別評価する。
 
 ---
 
-## Reset / base CSS
+## Reset / base / environment CSS
 
 Universal packageを無条件導入しない。
 
 Priority:
 
-1. existing project reset/base
-2. company house reset
-3. company browser matrixに合うmodern normalize/reset
-4. minimal local reset
+1. existing project reset/base/environment
+2. company house foundation
+3. company browser matrixに合うnormalize/reset
+4. minimal local foundation
 
-最低候補:
+Logical layers:
+
+```text
+reset
+→ base
+→ environment adaptation
+→ tokens/shared primitives
+```
+
+### Reset candidate responsibility
 
 - box-sizing policy
 - body margin
-- media max-inline-size policy where appropriate
-- form typography inheritance where company standard
-- button/input baseline
-- reduced-motion handling
-- visually-hidden utility if required
+- form baseline
+- project-approved normalization
 
-Reset自体がvisual driftを生むため、Reference実装開始後に勝手に差し替えない。
+### Base candidate responsibility
+
+- body/typography baseline
+- media baseline
+- form font inheritance where required
+- semantic utility baseline
+
+### Environment adaptation responsibility
+
+- hover/pointer
+- reduced motion
+- safe area
+- svh/lvh/dvh
+- virtual keyboard
+- touch-action
+- forced colors/contrast
+- color gamut when material
+- proven browser-specific fixes
+
+**Deviceごとにreset全文を複製することをdefaultにしない。**
+
+Reset/Foundation自体がvisual driftを生むため、Reference実装開始後にworkerが勝手に差し替えない。
 
 ---
 
-## Hover
+## Feature detection
+
+CSS feature supportは`@supports`等を優先候補にする。
+
+ただしfeature queryは:
+
+- browserがdeclarationをparseできるか
+
+を主に判定するもので、partial implementationやbrowser bugを完全には検出できない。
+
+したがってRequired Environment QAを省略しない。
+
+---
+
+## Hover / pointer
 
 Hoverは理解可能なinteraction evidenceとして扱う。
 
@@ -80,11 +156,87 @@ Weak evidence:
 - visual convention only
 - agent inference
 
-Hover styleは原則`@media (hover: hover)`等でhover-capable primary inputへ限定する。
+### Primary input
+
+```css
+@media (hover: hover) and (pointer: fine) {
+  /* primary precise pointer */
+}
+```
+
+### Any available input
+
+Secondary mouse/trackpad等を考慮する必要がある場合だけ`any-hover`/`any-pointer`を使う。
+
+例:
+
+- touch-first tablet + trackpad
+
+を単純なSP widthでtouch-onlyと決めない。
 
 Interactive elementにはkeyboard focus equivalentを持たせる。Hoverだけに重要情報を置かない。
 
 Touchではhoverを必須状態としない。
+
+---
+
+## Touch gestures
+
+Browser native pan/pinchをdefaultで守る。
+
+`touch-action: none`はcustom gesture ownershipが明確なcomponentに限定する。
+
+理由:
+
+- browser scrollingを奪う可能性
+- pinch zoomを阻害する可能性
+- accessibilityへ影響し得る
+
+Slider/dragはreal touch environmentで:
+
+- horizontal gesture
+- vertical page scroll
+- nested scroll
+- pointer cancellation
+
+をQAする。
+
+---
+
+## Mobile viewport / keyboard
+
+Fixed CTA / modal / full-height hero / formsではlayout viewportとvisual viewportの差を考慮する。
+
+Required mobile environmentで:
+
+- browser toolbar expansion/collapse
+- `svh/lvh/dvh`
+- safe area
+- software keyboard
+- orientation
+
+を必要範囲でQAする。
+
+`100vh`だけをfullscreen solutionとして固定しない。
+
+Viewport meta `interactive-widget`を変更する場合はCompany Policyで明示する。
+
+---
+
+## Scroll lock / overscroll
+
+Hamburger overlay/modal等のbody scroll lockはenvironment-sensitive。
+
+Priority:
+
+1. existing proven project strategy
+2. target browser/OS QA
+3. preserve focus/keyboard/viewport behavior
+4. specialist workaround only when evidence exists
+
+`overscroll-behavior`単体を万能なscroll-lock solutionとして扱わない。
+
+SupportはRequired Environment Matrixで確認する。
 
 ---
 
@@ -103,6 +255,8 @@ Typical website navigationのdefaultはDisclosure Navigation。
 ARIA `menu` / `menubar` roleは通常のsite navigationへ安易に使わない。
 
 Full-screen modal drawerで背景を完全に操作不可にする必要がある場合はCompany browser matrixを確認したうえでnative `<dialog>`/`inert`等を候補にする。
+
+Mobile environmentではsoftware keyboard/visual viewport/scroll lockも併せてQAする。
 
 ---
 
@@ -126,11 +280,13 @@ Use when:
 - no thumbs/controller synchronization
 - no complex virtualized behavior
 
+Touch environmentではgesture conflictを必ずQAする。
+
 ### Complex carousel
 
 既存/approved libraryを優先する。
 
-Current candidate example: Swiper when company allows it.
+Current candidate example: Swiper when company allows it and its supported-browser baseline satisfies Company Policy.
 
 必要moduleだけimportする。
 
@@ -144,7 +300,7 @@ Reference/requirementで必要な場合:
 
 - stop/start control
 - focus enters → pause
-- hover → pause
+- hover-capable environment → pause on hover
 - reduced motion → initial autoplay disabled
 - keyboard operation
 - accessible current slide/controls
@@ -182,12 +338,48 @@ Pin/scrub/multi-element timeline/scrollytelling等は既存採用があるか、
 
 Non-essential animationは`prefers-reduced-motion`を必ず設計に含める。
 
+Device Profileではなくuser-preference stateとして扱う。
+
 ### Performance
 
 - unnecessary layout-thrashingを避ける
 - transform/opacity等、自然に効率的な表現を優先候補にする
 - `will-change`を常時大量付与しない
 - 実測無しのpremature optimizationをしない
+
+---
+
+## Forms / platform-native appearance
+
+Form controlsはOS/browser差がある。
+
+`appearance: none`をresetとして全controlへ一律適用しない。
+
+Custom designが必要なcomponentだけ明示的にstylingし、Required Environmentで:
+
+- keyboard
+- focus
+- native picker/input behavior
+- zoom/text sizing
+
+を確認する。
+
+`text-size-adjust`もmobile-specific behaviorのため、Company/Existing resetまたはEnvironment Profileで扱う。
+
+---
+
+## Accessibility preference states
+
+Deviceとは別軸で:
+
+- reduced motion
+- higher/lower contrast
+- forced colors
+- color scheme when relevant
+
+を扱う。
+
+同一device/browser profileでもpreference stateを変えたQAを持てる。
 
 ---
 
