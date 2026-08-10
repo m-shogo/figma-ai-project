@@ -190,7 +190,7 @@ absolute positioningをdefaultにしない。
 
 ### Use when
 
-- target codebase already uses Tailwind asprimary system
+- target codebase already uses Tailwind as primary system
 - design tokens/theme are already mapped
 - existing components follow Tailwind conventions
 
