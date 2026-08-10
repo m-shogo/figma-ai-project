@@ -26,22 +26,25 @@ Visual/design source of truthは引き続きFigma reference。
 
 ## Why a separate Company Policy exists
 
-同じFigmaでも会社によって正解は変わる。
+同じFigmaでも会社・対象環境によって正解は変わる。
 
 例:
 
 - Safariの最低version
 - Android WebView対応
+- iPhone safe-area / virtual keyboard
+- iPad touch + trackpad
+- Windows forced-colors
 - WordPress classic / block theme
 - ACF Blocksの可否
 - Swiper/GSAP等のapproved library
-- reset CSS
+- reset/base/environment CSS
 - breakpoint
 - folder naming
 - image format/SVG policy
 - accessibility baseline
 - pixel tolerance
-- browser QA matrix
+- browser/device QA matrix
 
 これらをFigmaから推測しない。
 
@@ -56,13 +59,21 @@ Visual/design source of truthは引き続きFigma reference。
 ```text
 Company Policy
 ├ Browser Support
+│  ├ Browserslist
+│  ├ Minimum versions
+│  ├ Required Environment Profiles
+│  └ Real-device / Emulation QA
 ├ Stack / CMS
-├ CSS / Reset / Breakpoints
+├ CSS Foundation
+│  ├ Reset
+│  ├ Base
+│  └ Environment adaptation
+├ Breakpoints / Viewport / Safe Area
 ├ Approved Libraries
 ├ Interaction Defaults
-├ Accessibility
+├ Accessibility / User Preferences
 ├ Figma Handoff
-├ Images / SVG
+├ Images / SVG / Output Gamut
 ├ Gradients
 ├ Visual Tolerance
 ├ Folder / Section Unit
@@ -89,17 +100,99 @@ Effective Rules
 
 ---
 
-## Browser support
+## Browser support is not only a browser list
 
-Browser supportは「最新2versionぐらい」の口約束ではなく、次の3層で固定する。
+Browser supportは次の4層で固定する。
 
 1. Browserslist/query contract
 2. explicit minimum versions / exceptional WebViews
-3. actual QA browser/device matrix
+3. Required Environment Profiles
+4. actual QA browser/device matrix
 
 Browserslist configはBabel/Autoprefixer等の複数toolで共有できるため、既存会社configがあれば最優先する。
 
-Baseline/MDNは機能の一般的な普及度を見る補助情報。会社固有のtarget browserの代替にはしない。
+ただしBrowserslistだけでは:
+
+- input capability
+- DPR
+- safe-area
+- virtual keyboard
+- real-device QA
+- device-specific interaction override
+
+までは表せない。
+
+そのためCompany Policyでは`environment_profiles`を別に持つ。
+
+Canonical: `docs/device-environment-policy.md`
+
+---
+
+## Environment Profile
+
+`PC/SP`やviewport widthだけをdevice判定に使わない。
+
+ProfileはQA/compatibility identityとして:
+
+- device class
+- OS/version
+- browser/version/engine
+- WebView
+- CSS viewport/DPR
+- primary/any hover
+- primary/any pointer
+- touch
+- safe-area
+- dynamic viewport
+- virtual keyboard
+- color gamut/forced colors when relevant
+- real-device/emulation policy
+- environment-specific implementation overrides
+
+を持てる。
+
+Runtimeは原則capability/feature detection。
+
+UA sniffingはCompany Policyで明示的に認めたbug fix等へ限定する。
+
+---
+
+## CSS Foundation
+
+Deviceごとにreset.css全部を複製することをdefaultにしない。
+
+Logical layers:
+
+```text
+reset
+→ base
+→ environment adaptation
+→ tokens/shared primitives
+```
+
+Existing repoのfile structureがあればそれを使う。
+
+### Reset
+
+Cross-browser baseline差。
+
+### Base
+
+Project-wide body/form/media/typography semantics。
+
+### Environment adaptation
+
+- hover/pointer
+- reduced motion
+- safe area
+- dynamic viewport units
+- software keyboard
+- touch-action
+- forced colors/contrast
+- color gamut
+- proven browser-specific workaround
+
+を扱う。
 
 ---
 
@@ -112,7 +205,7 @@ Company Policyに明記されていない項目は、既存codebaseを次のsour
 - package.json / lockfile
 - browserslist config
 - PostCSS/Babel/Vite/Webpack config
-- reset/base CSS
+- reset/base/environment CSS
 - component library
 - JS utilities
 - PHP/template-part conventions
@@ -167,6 +260,7 @@ Materialな仕様を「良しなに」で確定しない。
 
 - Figma prototypeはblur-heavyだが会社browser matrixで不適合
 - Figmaのasset形式がcompany policyで禁止
+- Figmaではhover前提だがRequired environmentはtouch-only
 
 → visual intentを保つ代替を提案し、勝手に決定しない。
 
@@ -182,6 +276,41 @@ FigmaのPC/SP/interaction/commentsが矛盾。
 
 → confidenceを下げ、Conflictへ。
 
+### ENVIRONMENT_CONFLICT
+
+Required environment同士で同一実装が成立しない。
+
+例:
+
+- desktop hover stateがtouch fallbackを持たない
+- fullscreen heightがmobile browser UIで破綻
+- scroll lockがWebViewだけ破綻
+
+→ environment profileごとのevidenceを残し、shared solutionまたはapproved overrideへ。
+
+---
+
+## Visual baseline
+
+Screenshot/Pixels比較はenvironment identityを固定する。
+
+最低限:
+
+```text
+browser
+OS
+CSS viewport
+DPR
+font availability
+zoom/text scale
+```
+
+を固定する。
+
+Company Policyでは`canonical_environment_profile`を選ぶ。
+
+異なるbrowser/OS/DPRのraw pixel diffを同じ基準でrankingしない。
+
 ---
 
 ## Policy lifecycle
@@ -194,6 +323,17 @@ DRAFT
 
 重要runはACTIVE policyのpath + SHA-256をpinする。
 
+ACTIVEにする前に最低限:
+
+- browser support contract
+- 1つ以上のREQUIRED environment profile
+- canonical environment profile
+- feature/capability detection policy
+- reset/base/environment foundation policy
+- update preflight
+
+を確定する。
+
 Company Policyが更新されたら古いrunの意味を後から書き換えない。新revisionとして扱う。
 
 ---
@@ -205,6 +345,8 @@ Company Policy内の技術defaultも永久固定しない。
 最低retest trigger:
 
 - supported browser policy change
+- Required browser major update
+- Required OS major update
 - Figma/MCP major update
 - WordPress/ACF major update
 - approved UI library major update
@@ -212,3 +354,9 @@ Company Policy内の技術defaultも永久固定しない。
 - repeated production failure
 
 通常のproduction default候補は定期reviewし、old approachも履歴として残す。
+
+Canonical:
+
+- `docs/device-environment-policy.md`
+- `docs/web-interaction-policy.md`
+- `docs/update-preflight.md`
