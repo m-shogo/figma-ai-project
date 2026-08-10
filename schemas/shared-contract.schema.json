@@ -3,7 +3,7 @@
   "$id": "https://example.invalid/figma-ai-project/shared-contract.schema.json",
   "title": "Figma AI Shared Implementation Contract",
   "type": "object",
-  "required": ["schema_version", "contract_id", "reference_id", "status", "codebase", "styling", "breakpoints", "fonts", "tokens", "layout", "shared_components", "assets", "accessibility", "foundation", "parallel_execution", "integration", "unknowns", "conflicts", "freeze"],
+  "required": ["schema_version", "contract_id", "reference_id", "status", "figma_profile", "codebase", "styling", "breakpoints", "fonts", "tokens", "layout", "shared_components", "assets", "accessibility", "foundation", "parallel_execution", "integration", "unknowns", "conflicts", "freeze"],
   "properties": {
     "schema_version": { "type": "integer", "minimum": 1 },
     "contract_id": { "type": "string", "minLength": 1 },
@@ -11,6 +11,84 @@
     "status": { "enum": ["DRAFT", "FROZEN", "SUPERSEDED"] },
     "created_at": { "type": "string" },
     "updated_at": { "type": "string" },
+    "figma_profile": {
+      "type": "object",
+      "required": ["captured_at", "source_nodes", "components", "variables", "auto_layout", "semantic_naming", "code_connect", "annotations", "assets", "strategy_decisions"],
+      "properties": {
+        "captured_at": { "type": "string" },
+        "source_nodes": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "components": {
+          "type": "object",
+          "required": ["level", "evidence"],
+          "properties": {
+            "level": { "enum": ["NONE", "SPARSE", "PARTIAL", "SYSTEMATIC", "UNKNOWN"] },
+            "evidence": { "type": "array" }
+          },
+          "additionalProperties": true
+        },
+        "variables": {
+          "type": "object",
+          "required": ["level", "modes_observed", "aliases_observed", "evidence"],
+          "properties": {
+            "level": { "enum": ["NONE", "SPARSE", "PARTIAL", "SYSTEMATIC", "UNKNOWN"] },
+            "modes_observed": { "type": "array" },
+            "aliases_observed": { "type": "boolean" },
+            "evidence": { "type": "array" }
+          },
+          "additionalProperties": true
+        },
+        "auto_layout": {
+          "type": "object",
+          "required": ["coverage", "generation", "grid_observed", "evidence"],
+          "properties": {
+            "coverage": { "enum": ["NONE", "LOW", "MEDIUM", "HIGH", "MIXED", "UNKNOWN"] },
+            "generation": { "enum": ["NONE", "LEGACY", "UPDATED_2026", "MIXED", "UNKNOWN"] },
+            "grid_observed": { "type": "boolean" },
+            "evidence": { "type": "array" }
+          },
+          "additionalProperties": true
+        },
+        "semantic_naming": {
+          "type": "object",
+          "required": ["quality", "evidence"],
+          "properties": {
+            "quality": { "enum": ["LOW", "MEDIUM", "HIGH", "UNKNOWN"] },
+            "evidence": { "type": "array" }
+          },
+          "additionalProperties": true
+        },
+        "code_connect": {
+          "type": "object",
+          "required": ["level", "mapped_components", "evidence"],
+          "properties": {
+            "level": { "enum": ["NONE", "PARTIAL", "STRONG", "UNKNOWN"] },
+            "mapped_components": { "type": "array" },
+            "evidence": { "type": "array" }
+          },
+          "additionalProperties": true
+        },
+        "annotations": {
+          "type": "object",
+          "required": ["level", "evidence"],
+          "properties": {
+            "level": { "enum": ["NONE", "PARTIAL", "STRONG", "UNKNOWN"] },
+            "evidence": { "type": "array" }
+          },
+          "additionalProperties": true
+        },
+        "assets": {
+          "type": "object",
+          "required": ["level", "evidence"],
+          "properties": {
+            "level": { "enum": ["NONE", "PARTIAL", "STRONG", "UNKNOWN"] },
+            "evidence": { "type": "array" }
+          },
+          "additionalProperties": true
+        },
+        "strategy_decisions": { "type": "array" }
+      },
+      "additionalProperties": true
+    },
     "codebase": {
       "type": "object",
       "required": ["repository", "starting_commit", "framework", "styling_architecture", "global_style_paths", "design_system_paths", "token_paths", "shared_component_paths"],
