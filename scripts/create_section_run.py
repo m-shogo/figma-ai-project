@@ -12,7 +12,7 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 READY_STATES = {"READY", "RUNNING"}
-SAFE_ISOLATION_MODES = {"BRANCH_WORKTREE", "AGENT_SANDBOX", "OTHER"}
+SAFE_PARALLEL_ISOLATION_MODES = {"BRANCH_WORKTREE", "AGENT_SANDBOX", "OTHER"}
 
 
 def load_yaml(path: Path) -> dict[str, Any]:
@@ -75,6 +75,14 @@ def find_section(manifest: dict[str, Any], section_id: str) -> dict[str, Any]:
     return matches[0]
 
 
+def group_size(manifest: dict[str, Any], group: str) -> int:
+    return sum(
+        1
+        for section in manifest.get("sections", [])
+        if str(section.get("worker", {}).get("parallel_group", "")).strip() == group
+    )
+
+
 def resolve_company_policy(
     root: Path, contract: dict[str, Any]
 ) -> tuple[str, str, str]:
@@ -100,6 +108,37 @@ def resolve_company_policy(
     return relative(root, policy_path), expected_id, actual_hash
 
 
+def resolve_environment_contract(
+    contract: dict[str, Any], company_policy: tuple[str, str, str]
+) -> tuple[list[str], str]:
+    env = contract.get("environment_contract", {})
+    company_bound = bool(company_policy[0])
+
+    if not company_bound:
+        return [], ""
+    if not isinstance(env, dict) or env.get("status") != "RESOLVED":
+        raise ValueError("BOUND Company Policy requires a RESOLVED Environment Contract")
+
+    required = [str(value).strip() for value in env.get("required_profiles", []) if str(value).strip()]
+    canonical = str(env.get("canonical_profile", "")).strip()
+    if not required:
+        raise ValueError("Resolved Environment Contract requires at least one REQUIRED profile")
+    if len(required) != len(set(required)):
+        raise ValueError("Resolved Environment Contract required profile ids must be unique")
+    if not canonical or canonical not in required:
+        raise ValueError("Resolved Environment Contract canonical profile must be one of REQUIRED profiles")
+
+    override_ids = {
+        str(item.get("profile_id", "")).strip()
+        for item in env.get("effective_overrides", [])
+        if isinstance(item, dict) and str(item.get("profile_id", "")).strip()
+    }
+    if override_ids != set(required):
+        raise ValueError("Resolved Environment Contract requires one effective override per REQUIRED profile")
+
+    return required, canonical
+
+
 def validate_prepared_lineage(
     root: Path,
     manifest_path: Path,
@@ -107,7 +146,15 @@ def validate_prepared_lineage(
     reference_path: Path,
     reference: dict[str, Any],
     section: dict[str, Any],
-) -> tuple[Path, Path, str, str, str, tuple[str, str, str]]:
+) -> tuple[
+    Path,
+    Path,
+    str,
+    str,
+    str,
+    tuple[str, str, str],
+    tuple[list[str], str],
+]:
     contract_path = resolve(root, str(manifest.get("shared_contract", "")), "Shared Contract")
     profile_path = resolve(root, str(manifest.get("figma_structure_profile", "")), "Figma Structure Profile")
 
@@ -153,8 +200,12 @@ def validate_prepared_lineage(
     isolation = worker.get("isolation", {})
     mode = str(isolation.get("mode", "UNASSIGNED"))
     isolation_ref = str(isolation.get("ref", "")).strip()
-    if mode not in SAFE_ISOLATION_MODES:
+    if mode == "SERIAL_SHARED_TREE":
+        if group_size(manifest, group) != 1:
+            raise ValueError("SERIAL_SHARED_TREE is allowed only for a singleton execution wave")
+    elif mode not in SAFE_PARALLEL_ISOLATION_MODES:
         raise ValueError(f"Section worker isolation mode is not production-ready: {mode}")
+
     if not isolation_ref:
         raise ValueError("Section worker isolation.ref is required")
     if mode == "OTHER" and (
@@ -172,6 +223,7 @@ def validate_prepared_lineage(
         raise ValueError("Section Figma Structure Profile translation mode is still UNKNOWN")
 
     company_policy = resolve_company_policy(root, contract)
+    environment = resolve_environment_contract(contract, company_policy)
     return (
         contract_path,
         profile_path,
@@ -179,6 +231,7 @@ def validate_prepared_lineage(
         profile_hash,
         manifest_hash,
         company_policy,
+        environment,
     )
 
 
@@ -210,10 +263,12 @@ def build_run_record(
         profile_hash,
         manifest_hash,
         company_policy,
+        environment,
     ) = validate_prepared_lineage(
         root, manifest_path, manifest, reference_path, reference, section
     )
     company_policy_path, company_policy_id, company_policy_hash = company_policy
+    required_environment_profiles, canonical_environment_profile = environment
 
     worker = section.get("worker", {})
     isolation = worker.get("isolation", {})
@@ -230,7 +285,7 @@ def build_run_record(
 
     code_baseline = reference.get("code_baseline", {})
     return {
-        "schema_version": 8,
+        "schema_version": 9,
         "experiment_id": experiment_id,
         "run_id": run_id,
         "run_class": run_class,
@@ -267,6 +322,8 @@ def build_run_record(
             "section_manifest_sha256": manifest_hash,
             "figma_structure_profile_path": relative(root, profile_path),
             "figma_structure_profile_sha256": profile_hash,
+            "required_environment_profiles": required_environment_profiles,
+            "canonical_environment_profile": canonical_environment_profile,
             "foundation_commit": manifest.get("foundation_commit", ""),
             "isolation_mode": isolation.get("mode", ""),
             "isolation_ref": isolation.get("ref", ""),
@@ -410,6 +467,13 @@ def main() -> int:
     print(f"Reference SHA-256: {record['reference']['manifest_sha256']}")
     if record["coordination"]["company_policy_sha256"]:
         print(f"Company Policy SHA-256: {record['coordination']['company_policy_sha256']}")
+        print(
+            "Environment Profiles: "
+            + ", ".join(record["coordination"]["required_environment_profiles"])
+        )
+        print(
+            f"Canonical Environment: {record['coordination']['canonical_environment_profile']}"
+        )
     print(f"Shared Contract SHA-256: {record['coordination']['shared_contract_sha256']}")
     print(f"Section Manifest SHA-256: {record['coordination']['section_manifest_sha256']}")
     print(
