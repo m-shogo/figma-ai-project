@@ -44,11 +44,11 @@ class UpdateSourceRegistryTests(unittest.TestCase):
         self.assertTrue(any("topics must not be empty" in error for error in errors))
         self.assertTrue(any("impacts must contain only non-empty strings" in error for error in errors))
 
-    def test_optional_lane_requires_explicit_company_profile_activation(self) -> None:
+    def test_conditional_lane_requires_explicit_company_profile_activation(self) -> None:
         data = current_registry()
         data["lanes"]["SAFARI_WEBKIT"].pop("activation")
         errors = registry.registry_errors(data)
-        self.assertTrue(any("SAFARI_WEBKIT: optional lane requires activation" in error for error in errors))
+        self.assertTrue(any("SAFARI_WEBKIT: conditional lane requires activation" in error for error in errors))
 
     def test_browser_lane_activation_uses_required_environment_profiles_not_width(self) -> None:
         lane = current_registry()["lanes"]["SAFARI_WEBKIT"]
