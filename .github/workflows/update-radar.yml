@@ -38,7 +38,7 @@ jobs:
 
       - name: Validate generated contracts
         run: |
-          python scripts/validate_yaml_unique_keys.py
+          python scripts/validate_yaml_duplicates.py
           python scripts/validate_company_policy.py
 
       - name: Decide whether upstream meaningfully changed
