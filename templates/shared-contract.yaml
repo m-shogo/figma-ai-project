@@ -1,9 +1,17 @@
-schema_version: 5
+schema_version: 6
 contract_id: CONTRACT-XXXX
 reference_id: REF-XXXX
 status: DRAFT # DRAFT | FROZEN | SUPERSEDED
 created_at: ""
 updated_at: ""
+
+company_policy:
+  path: ""
+  sha256: ""
+  policy_id: ""
+  status: UNBOUND # UNBOUND | BOUND
+  precedence_verified: false
+  conflicts: []
 
 figma_profile:
   captured_at: ""
@@ -166,6 +174,8 @@ integration:
     - z_index_continuity
     - background_continuity
     - asset_quality
+    - company_policy_compliance
+    - section_boundary_capture
 
 unknowns: []
 conflicts: []
