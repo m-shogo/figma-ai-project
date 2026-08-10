@@ -1,4 +1,4 @@
-schema_version: 2
+schema_version: 3
 reference_id: REF-XXXX
 captured_at: ""
 figma_tooling_snapshot: ""
@@ -6,7 +6,7 @@ figma_tooling_snapshot: ""
 page:
   file_key: ""
   page_or_frame_node_id: ""
-  auto_layout_generation: UNKNOWN # LEGACY | UPDATED_2026 | MIXED | UNDETERMINED | UNKNOWN
+  auto_layout_generation: UNKNOWN # NONE | LEGACY | UPDATED_2026 | MIXED | UNDETERMINED | UNKNOWN
   notes: []
 
 sections: []
@@ -31,7 +31,7 @@ sections: []
 #       evidence: []
 #       container_coverage: null
 #       absolute_child_ratio: null
-#       generation: UNKNOWN # LEGACY | UPDATED_2026 | MIXED | UNDETERMINED | UNKNOWN
+#       generation: UNKNOWN # NONE | LEGACY | UPDATED_2026 | MIXED | UNDETERMINED | UNKNOWN
 #     semantic_naming:
 #       state: UNKNOWN
 #       confidence: NONE
