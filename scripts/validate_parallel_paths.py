@@ -82,12 +82,112 @@ def find_dependency_cycle(graph: dict[str, set[str]]) -> list[str] | None:
     return None
 
 
+def load_linked_contract(data: dict[str, Any]) -> dict[str, Any] | None:
+    value = str(data.get("shared_contract", "")).strip()
+    if not value:
+        return None
+    candidate = (ROOT / value).resolve()
+    if ROOT != candidate and ROOT not in candidate.parents:
+        return None
+    if not candidate.is_file():
+        return None
+    try:
+        return load_yaml(candidate)
+    except Exception:
+        # validate_records.py owns malformed/missing linked-contract errors.
+        return None
+
+
+def _collect_paths(values: list[Any], *, label: str, errors: list[str]) -> list[tuple[str, PurePosixPath]]:
+    collected: list[tuple[str, PurePosixPath]] = []
+    for raw in values:
+        text = str(raw).strip()
+        if not text:
+            continue
+        try:
+            collected.append((label, normalize(text)))
+        except ValueError as exc:
+            errors.append(f"protected path {label}: {exc}")
+    return collected
+
+
+def protected_paths(data: dict[str, Any], contract: dict[str, Any] | None, errors: list[str]) -> list[tuple[str, PurePosixPath]]:
+    """Return coordinator/shared roots that section workers must not own."""
+    protected: list[tuple[str, PurePosixPath]] = []
+
+    integration_path = str(data.get("integration", {}).get("root_composition_path", "")).strip()
+    if integration_path:
+        protected.extend(_collect_paths([integration_path], label="section-manifest root composition", errors=errors))
+
+    if contract is None:
+        return protected
+
+    codebase = contract.get("codebase", {})
+    parallel = contract.get("parallel_execution", {})
+    foundation = contract.get("foundation", {})
+    integration = contract.get("integration", {})
+
+    protected.extend(
+        _collect_paths(
+            parallel.get("coordinator_only_paths", []),
+            label="explicit coordinator-only",
+            errors=errors,
+        )
+    )
+    protected.extend(
+        _collect_paths(
+            codebase.get("global_style_paths", []),
+            label="global style",
+            errors=errors,
+        )
+    )
+    protected.extend(
+        _collect_paths(codebase.get("token_paths", []), label="token source", errors=errors)
+    )
+    protected.extend(
+        _collect_paths(
+            codebase.get("shared_component_paths", []),
+            label="shared component",
+            errors=errors,
+        )
+    )
+    protected.extend(
+        _collect_paths(
+            codebase.get("design_system_paths", []),
+            label="design system",
+            errors=errors,
+        )
+    )
+    protected.extend(
+        _collect_paths(
+            foundation.get("changed_paths", []),
+            label="verified foundation",
+            errors=errors,
+        )
+    )
+
+    contract_root = str(integration.get("root_composition_path", "")).strip()
+    if contract_root:
+        protected.extend(
+            _collect_paths([contract_root], label="shared-contract root composition", errors=errors)
+        )
+
+    # Deduplicate identical roots while retaining the first, most specific label.
+    deduped: dict[str, tuple[str, PurePosixPath]] = {}
+    for label, path in protected:
+        deduped.setdefault(path.as_posix(), (label, path))
+    return list(deduped.values())
+
+
 def validate_manifest(path: Path) -> list[str]:
     data = load_yaml(path)
     errors: list[str] = []
     sections = data.get("sections", [])
     ids = [str(section.get("section_id", "")) for section in sections]
     known_ids = {section_id for section_id in ids if section_id}
+
+    contract = load_linked_contract(data)
+    protected = protected_paths(data, contract, errors)
 
     graph: dict[str, set[str]] = {}
     group_members: dict[str, list[str]] = defaultdict(list)
@@ -135,6 +235,15 @@ def validate_manifest(path: Path) -> list[str]:
                         f"sections[{i}] {section_id}: redundant/overlapping allowed paths "
                         f"{left.as_posix()} and {right.as_posix()}"
                     )
+
+        if status in ACTIVE:
+            for allowed in normalized:
+                for protected_label, protected_path in protected:
+                    if path_overlaps(allowed, protected_path):
+                        errors.append(
+                            f"sections[{i}] {section_id}: allowed path {allowed.as_posix()} overlaps "
+                            f"protected {protected_label} path {protected_path.as_posix()}"
+                        )
 
         if status in ACTIVE and group:
             group_members[group].append(section_id)
