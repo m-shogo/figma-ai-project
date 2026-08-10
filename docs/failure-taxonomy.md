@@ -2,7 +2,9 @@
 
 「なんか違う」「AIっぽい」で終わらせず、再発防止できる原因単位に分解する。
 
-1 failure record に複数categoryを付けてよいが、**primary cause** は1つ選ぶ。
+1 failure recordに複数categoryを付けてよいが、**primary causeは1つ選ぶ。**
+
+---
 
 ## Context failures
 
@@ -20,6 +22,14 @@ context過多で重要条件が埋もれた疑い。
 
 ### REFERENCE_AMBIGUITY
 原本だけでは複数解釈が成立する。
+
+### CONTRACT_MISSING
+Shared Contractが必要なrunなのに作成/提供されていない。
+
+### CONTRACT_STALE
+worker/runが現在のShared Contract hashと異なるrevisionを使用した。
+
+---
 
 ## Visual failures
 
@@ -47,6 +57,11 @@ fit / fill / focal point / clipping mismatch。
 ### LAYER_ORDER
 z-index / overlap / stacking mismatch。
 
+### BACKGROUND_CONTINUITY
+section境界でbackground/decoration/bleedが不自然に切れた。
+
+---
+
 ## Structural failures
 
 ### COMPONENT_REUSE_MISS
@@ -59,7 +74,7 @@ z-index / overlap / stacking mismatch。
 既存token/variableを使わずraw valueを増やした。
 
 ### COMPONENT_PROP_MISS
-Figma variant/property と code prop の対応を誤った。
+Figma variant/propertyとcode propの対応を誤った。
 
 ### CODE_CONNECT_MISS
 利用可能なmappingを使えなかった/誤読した。
@@ -70,13 +85,32 @@ DOM/component hierarchy/meaningがreference意図と不整合。
 ### ACCESSIBILITY
 semantic HTML / label / focus / contrast / interaction accessibility。
 
+### DUPLICATE_SHARED_PRIMITIVE
+shared Button/token/container/helper等が既にあるのにsection内で重複実装した。
+
+---
+
 ## Responsive failures
 
 ### RESPONSIVE_INVARIANT
 幅が変わっても維持すべき性質を壊した。
 
 ### BREAKPOINT_GUESS
-根拠なくbreakpointを選び不自然になった。
+明示sourceを確認せず慣習値や推測値を選んだ。
+
+案件指定がある場合は原則S2以上のworkflow/implementation failureとして扱う。
+
+### BREAKPOINT_CONTRACT_VIOLATION
+Shared Contractと異なるbreakpoint値/query directionを使用した。
+
+例:
+
+- globalは`max-width: X`なのに1sectionだけ別値
+- `min-width`/`max-width`の向きを誤った
+- legacy breakpoint utilityを混ぜた
+
+### BREAKPOINT_BOUNDARY
+指定breakpoint自体は正しいが、境界直前/直後でgap/overlap/visibility等が破綻した。
 
 ### WRAP_ORDER
 折返し/並び順が異なる。
@@ -93,6 +127,45 @@ max-width/min-width/padding behavior mismatch。
 ### INTERMEDIATE_WIDTH
 PC/SP endpointは合うが途中幅で破綻。
 
+---
+
+## Section / integration failures
+
+### SECTION_BOUNDARY_WRONG
+Figmaの論理sectionを誤って切り分け、責務/背景/spacing/interactionが別workerへ分断された。
+
+### FOUNDATION_MISMATCH
+workerがverified foundation commit以外から開始した。
+
+### ALLOWED_PATH_VIOLATION
+section workerがmanifestで許可されていないfileを変更した。
+
+### SHARED_FILE_MUTATION
+section workerがread-onlyのtoken/font/global CSS/shared component/root composition等を直接変更した。
+
+### SECTION_ORDER
+統合時のsection順序がreferenceと異なる。
+
+### CROSS_SECTION_SPACING
+section単体は合うがsection間のvertical rhythm/gapが異なる。
+
+### CONTAINER_ALIGNMENT_DRIFT
+sectionごとにcontent edge/container基準がズレた。
+
+### TYPOGRAPHY_HIERARCHY_DRIFT
+section単体のfont値は近いが、ページ全体のheading/body hierarchyが不整合。
+
+### PARALLEL_MERGE_CONFLICT
+parallel output同士が同じsurfaceを変更し、clean integrationできない。
+
+### PARALLEL_RULE_DRIFT
+parallel worker間で同じshared ruleの異なる解釈/duplicateが発生した。
+
+### INTEGRATION_REGRESSION
+section統合後に、単体では存在しなかったvisual/behavior regressionが発生した。
+
+---
+
 ## State / behavior failures
 
 ### STATE_MISSING
@@ -106,6 +179,8 @@ hover/click/open/close/scroll behavior mismatch。
 
 ### DATA_STATE_MISMATCH
 loading/empty/error/data behavior mismatch。
+
+---
 
 ## Agent / workflow failures
 
@@ -134,7 +209,15 @@ repairが別の一致箇所を壊した。
 特定viewport/screenshotだけに合わせたhack。
 
 ### VISUAL_ONLY_HACK
-画像化/absolute positioning等で構造問題を隠した。
+画像化/不必要なabsolute positioning等で構造問題を隠した。
+
+### SHARED_CHANGE_BYPASS
+`PROPOSE_SHARED_CHANGE` / coordinator reviewを経ずshared contract/foundationを変更した。
+
+### BREAKPOINT_EXCEPTION_BYPASS
+`PROPOSE_BREAKPOINT_EXCEPTION`を経ずsection固有thresholdを追加した。
+
+---
 
 ## Environment failures
 
@@ -153,22 +236,38 @@ agent client固有制限。
 ### DEPENDENCY_ENV
 install/runtime/build environment問題。
 
+### FONT_ENVIRONMENT
+必要fontがclient/MCP/browser/build environmentで利用できず、typography/layoutが崩れた。
+
+Tool/model/Figma updateで解消される可能性があるため永久rule化しない。
+
+---
+
 ## Severity
 
 ### S0 — Observation
-見た目にほぼ影響なし。
+見た目/構造にほぼ影響なし。
 
 ### S1 — Minor
 局所調整で直る。
 
 ### S2 — Material
-明確にreferenceと違い、repairが必要。
+明確にreference/contractと違いrepairが必要。
 
 ### S3 — Major
-section/component単位の作り直し。
+section/component単位の作り直し、またはshared foundation再構築が必要。
 
 ### S4 — Invalid run
-比較条件が壊れ、run自体を実験データとして扱いにくい。
+比較条件が壊れrun自体を実験データとして扱いにくい。
+
+Examples:
+
+- wrong reference revision
+- wrong shared contract hash
+- wrong foundation commit
+- COMMON比較なのに異なるbreakpoint contract
+
+---
 
 ## Root-cause confidence
 
@@ -178,21 +277,42 @@ section/component単位の作り直し。
 
 LOWのままplaybook ruleへ昇格しない。
 
-## Example
+---
+
+## Example — breakpoint drift
 
 ```yaml
 failure_id: F-004
 severity: S2
-primary: RESPONSIVE_INVARIANT
+primary: BREAKPOINT_CONTRACT_VIOLATION
+secondary:
+  - SHARED_FILE_MUTATION
+surface: S03-Content01
+observation: "Content01だけcompany指定と異なるmedia queryを追加"
+evidence:
+  - "shared-contract.yaml"
+  - "Content01.module.css"
+root_cause: "workerがglobal breakpointをlocal optimizationとして上書きした"
+confidence: HIGH
+repair: "shared breakpointへ戻しboundary captureを追加"
+replay_required: true
+```
+
+## Example — section visual mismatch
+
+```yaml
+failure_id: F-005
+severity: S2
+primary: SPACING
 secondary:
   - CONTEXT_MISSING
-surface: mobile
-observation: "SPでCTA順序がreferenceと逆"
+surface: S02-MainVisual
+observation: "SPでCTA間gapがreferenceより大きい"
 evidence:
   - "reference screenshot"
   - "implementation screenshot"
-root_cause: "PC→SP ordering ruleがcontext packageに明示されていなかった"
+root_cause: "section contextにnested Auto Layout gapが含まれていなかった"
 confidence: HIGH
-repair: "responsive contractへordering invariantを追加"
+repair: "nested node contextを追加してsectionだけrepair"
 replay_required: true
 ```
