@@ -115,6 +115,7 @@ lanes:
         authority: OFFICIAL
         kind: JSON_DIGEST
         url: https://chromestatus.com/features.json
+        include_keywords: [CSS, viewport, scroll, animation, grid, flex, color, form, accessibility]
         topics: [chrome, blink, css, web-platform]
         impacts: [CSS, WEB_PLATFORM, CHROMIUM_SUPPORT]
 
@@ -130,7 +131,7 @@ lanes:
         impacts: [ACCESSIBILITY, INTERACTION, SEMANTICS, QA]
 
   DESIGN_SYSTEMS:
-    required_for_significant_run: false
+    required_for_significant_run: true
     sources:
       - id: design-tokens-spec
         authority: OFFICIAL
@@ -141,11 +142,7 @@ lanes:
         impacts: [TOKENS, DESIGN_SYSTEM, FIGMA_VARIABLES]
 
   WORDPRESS_ACF:
-    required_for_significant_run: false
-    activation:
-      company_cms_any:
-        wordpress_enabled: true
-        acf_enabled: true
+    required_for_significant_run: true
     sources:
       - id: wordpress-releases
         authority: OFFICIAL
@@ -200,6 +197,7 @@ lanes:
         authority: OFFICIAL
         kind: JSON_DIGEST
         url: https://chromestatus.com/features.json
+        include_keywords: [CSS, viewport, scroll, animation, grid, flex, color, form, accessibility]
         topics: [chrome, blink, css, web-platform]
         impacts: [CSS, DEVICE_ENVIRONMENT, CHROMIUM_SUPPORT]
       - id: edge-web-platform-release-notes
