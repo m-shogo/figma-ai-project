@@ -1,4 +1,4 @@
-schema_version: 4
+schema_version: 5
 contract_id: CONTRACT-XXXX
 reference_id: REF-XXXX
 status: DRAFT # DRAFT | FROZEN | SUPERSEDED
@@ -9,30 +9,30 @@ figma_profile:
   captured_at: ""
   source_nodes: []
   components:
-    level: UNKNOWN # NONE | SPARSE | PARTIAL | SYSTEMATIC | UNKNOWN
+    level: UNKNOWN # NONE | SPARSE | PARTIAL | SYSTEMATIC | UNDETERMINED | UNKNOWN
     evidence: []
   variables:
-    level: UNKNOWN # NONE | SPARSE | PARTIAL | SYSTEMATIC | UNKNOWN
+    level: UNKNOWN # NONE | SPARSE | PARTIAL | SYSTEMATIC | UNDETERMINED | UNKNOWN
     modes_observed: []
     aliases_observed: false
     evidence: []
   auto_layout:
-    coverage: UNKNOWN # NONE | LOW | MEDIUM | HIGH | MIXED | UNKNOWN
-    generation: UNKNOWN # NONE | LEGACY | UPDATED_2026 | MIXED | UNKNOWN
+    coverage: UNKNOWN # NONE | LOW | MEDIUM | HIGH | MIXED | UNDETERMINED | UNKNOWN
+    generation: UNKNOWN # NONE | LEGACY | UPDATED_2026 | MIXED | UNDETERMINED | UNKNOWN
     grid_observed: false
     evidence: []
   semantic_naming:
-    quality: UNKNOWN # LOW | MEDIUM | HIGH | UNKNOWN
+    quality: UNKNOWN # LOW | MEDIUM | HIGH | UNDETERMINED | UNKNOWN
     evidence: []
   code_connect:
-    level: UNKNOWN # NONE | PARTIAL | STRONG | UNKNOWN
+    level: UNKNOWN # NONE | PARTIAL | STRONG | UNDETERMINED | UNKNOWN
     mapped_components: []
     evidence: []
   annotations:
-    level: UNKNOWN # NONE | PARTIAL | STRONG | UNKNOWN
+    level: UNKNOWN # NONE | PARTIAL | STRONG | UNDETERMINED | UNKNOWN
     evidence: []
   assets:
-    level: UNKNOWN # NONE | PARTIAL | STRONG | UNKNOWN
+    level: UNKNOWN # NONE | PARTIAL | STRONG | UNDETERMINED | UNKNOWN
     evidence: []
   strategy_decisions: []
 
@@ -112,7 +112,7 @@ layout:
   gutter_rules: []
   page_grid: []
   spacing_rhythm: []
-  auto_layout_generation: UNKNOWN # LEGACY | UPDATED_2026 | MIXED | UNKNOWN
+  auto_layout_generation: UNKNOWN # LEGACY | UPDATED_2026 | MIXED | UNDETERMINED | UNKNOWN
   intrinsic_layout_allowed: true
   notes: []
 
