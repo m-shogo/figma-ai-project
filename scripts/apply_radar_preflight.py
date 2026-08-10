@@ -92,6 +92,12 @@ def apply(run: dict, snapshot: dict, radar_path: Path, max_age_hours: float) -> 
         row for row in snapshot.get("changes", [])
         if isinstance(row, dict) and row.get("lane") in lanes
     ]
+    rules_to_retest = sorted({
+        str(category)
+        for row in changes
+        for category in row.get("retest_categories", [])
+        if str(category).strip()
+    })
 
     preflight = dict(run.get("tooling_preflight", {}))
     preflight.update({
@@ -109,7 +115,7 @@ def apply(run: dict, snapshot: dict, radar_path: Path, max_age_hours: float) -> 
         "agent_docs_checked": True,
         "community_scan_checked": False,
         "changes_relevant_to_run": changes,
-        "rules_to_retest": list(snapshot.get("summary", {}).get("retest_categories", [])),
+        "rules_to_retest": rules_to_retest,
         "blockers_or_limits": [],
     })
     updated = dict(run)
