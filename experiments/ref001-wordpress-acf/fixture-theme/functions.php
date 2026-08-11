@@ -34,6 +34,7 @@ function ref001_learning_enqueue_assets() {
 		'header'        => 'ref001-header.css',
 		'reason-geometry' => 'ref001-reason-geometry.css',
 		'education'     => 'ref001-education.css',
+		'education-geometry' => 'ref001-education-geometry.css',
 		'cta'           => 'ref001-cta.css',
 		'student-voice' => 'ref001-student-voice.css',
 		'messages'      => 'ref001-messages.css',
