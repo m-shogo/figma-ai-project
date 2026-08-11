@@ -33,6 +33,11 @@ class Ref001VisualPreviewHarnessTests(unittest.TestCase):
         self.assertNotIn("glob( $theme_root . '/assets/css/*.css' )", source)
         self.assertNotIn("sort( $styles )", source)
 
+    def test_preview_theme_assets_use_absolute_document_root_urls(self) -> None:
+        source = (PREVIEW / "index.php").read_text(encoding="utf-8")
+        self.assertIn("return '/fixture-theme/'", source)
+        self.assertNotIn("return '../fixture-theme/'", source)
+
     def test_capture_script_generates_both_acceptance_widths(self) -> None:
         source = (PREVIEW / "capture.sh").read_text(encoding="utf-8")
         self.assertIn('--viewport-size="1380,900"', source)
@@ -40,6 +45,15 @@ class Ref001VisualPreviewHarnessTests(unittest.TestCase):
         self.assertIn("ref001-pc-1380.png", source)
         self.assertIn("ref001-sp-375.png", source)
         self.assertIn("--full-page", source)
+
+    def test_course_asset_check_requires_all_seven_pictograms_to_decode(self) -> None:
+        source = (PREVIEW / "asset-check.mjs").read_text(encoding="utf-8")
+        shell = (PREVIEW / "asset-check.sh").read_text(encoding="utf-8")
+        self.assertIn(".ref001-course-card__icon img", source)
+        self.assertIn("naturalWidth", source)
+        self.assertIn("status !== 200", source)
+        self.assertIn("results.length !== 7", source)
+        self.assertIn("asset-check.mjs", shell)
 
     def test_generated_captures_are_not_committed(self) -> None:
         ignore = (PREVIEW / ".gitignore").read_text(encoding="utf-8")
