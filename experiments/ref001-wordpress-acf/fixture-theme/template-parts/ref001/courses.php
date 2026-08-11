@@ -4,9 +4,9 @@
  *
  * Figma strategy: HYBRID.
  * CMS contract: seven fixed institutional course identities. Page ACF owns
- * description/recommendation copy only. Identity, order, color and icon source
- * remain code/domain-owned so the eventual target theme can replace this
- * fixture with a shared Course model without migrating page content.
+ * description/recommendation copy only. Identity, order, color and exact Figma
+ * pictogram source remain code/domain-owned so the eventual target theme can
+ * replace this fixture with a shared Course model without migrating page content.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -101,6 +101,7 @@ foreach ( $course_contract as $course ) {
 		'title' => $course['title'],
 		'color' => $course['color'],
 		'figma_icon_node' => $course['figma_icon_node'],
+		'icon_asset' => 'assets/images/courses/' . str_replace( '_', '-', $course['key'] ) . '.svg',
 		'description' => ref001_get_field( $field_prefix . '_description', $course['description'] ),
 		'recommendations' => array(
 			ref001_get_field( $field_prefix . '_recommendation_1', $course['recommendations'][0] ),
@@ -124,7 +125,14 @@ foreach ( $course_contract as $course ) {
 			<li class="ref001-courses__item" style="--ref001-course-color: <?php echo esc_attr( $course['color'] ); ?>;">
 				<article class="ref001-course-card">
 					<div class="ref001-course-card__identity">
-						<div class="ref001-course-card__icon" data-figma-icon-node="<?php echo esc_attr( $course['figma_icon_node'] ); ?>" aria-hidden="true"></div>
+						<div class="ref001-course-card__icon" data-figma-icon-node="<?php echo esc_attr( $course['figma_icon_node'] ); ?>">
+							<img
+								src="<?php echo esc_url( get_theme_file_uri( $course['icon_asset'] ) ); ?>"
+								alt=""
+								loading="lazy"
+								decoding="async"
+							>
+						</div>
 						<div class="ref001-course-card__heading">
 							<h3><?php echo esc_html( $course['title'] ); ?></h3>
 							<span class="ref001-course-card__marker" aria-hidden="true"></span>
