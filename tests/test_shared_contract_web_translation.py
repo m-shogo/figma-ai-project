@@ -13,6 +13,32 @@ class SharedContractWebTranslationTests(unittest.TestCase):
     def setUp(self) -> None:
         self.data = yaml.safe_load(TEMPLATE.read_text(encoding="utf-8"))
 
+    def test_decision_preflight_covers_recurring_time_sinks_before_section_work(self) -> None:
+        preflight = self.data["decision_preflight"]
+        self.assertEqual("UNRESOLVED", preflight["status"])
+        self.assertTrue(preflight["must_resolve_before_section_work"])
+        self.assertTrue(preflight["repeated_time_sink_promotes_to_preflight"])
+
+        items = preflight["items"]
+        self.assertTrue(
+            {
+                "target_runtime",
+                "responsive_contract",
+                "typography_contract",
+                "figma_capabilities",
+                "asset_contract",
+                "interaction_contract",
+                "content_cms_contract",
+                "qa_contract",
+            }.issubset(items)
+        )
+        self.assertTrue(items["typography_contract"]["natural_wrap_default"])
+        self.assertTrue(items["typography_contract"]["one_line_or_truncation_requires_evidence"])
+        self.assertFalse(items["interaction_contract"]["invent_missing_behavior"])
+        self.assertFalse(items["qa_contract"]["horizontal_overflow_allowed"])
+        self.assertTrue(items["qa_contract"]["actual_artifact_visual_review_required"])
+        self.assertIn("Do not invent a temporary value", preflight["unresolved_behavior"])
+
     def test_static_frame_fidelity_does_not_override_web_runtime_safety(self) -> None:
         policy = self.data["web_translation"]
         self.assertEqual("PROHIBITED", policy["static_frame_overfit"])
@@ -46,6 +72,7 @@ class SharedContractWebTranslationTests(unittest.TestCase):
         checks = set(self.data["integration"]["required_checks"])
         self.assertTrue(
             {
+                "preflight_decisions_resolved",
                 "text_runtime_safety",
                 "line_box_spacing_diagnostics",
                 "font_availability_diagnostics",
