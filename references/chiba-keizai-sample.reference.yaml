@@ -1,0 +1,242 @@
+schema_version: 1
+reference_id: REF-001-CHIBA-KEIZAI-SAMPLE
+status: DRAFT
+
+figma:
+  file_url: "https://www.figma.com/design/ZYTdtw4wCgkcBy2cVnhxVI/sample?node-id=21376-1600&p=f&t=zduaKdUu0MIWPh7D-0"
+  file_key: ZYTdtw4wCgkcBy2cVnhxVI
+  node_ids:
+    - "21376:1600"
+    - "21376:4401"
+    - "21376:5162"
+    - "280:2"
+    - "21376:5757"
+    - "21376:4918"
+    - "21376:5723"
+    - "21376:4886"
+    - "21376:5690"
+    - "21376:4852"
+    - "21376:5559"
+    - "21376:4720"
+    - "21376:5558"
+    - "21376:4719"
+    - "21376:5457"
+    - "21376:4650"
+    - "21376:5437"
+    - "21376:4629"
+    - "21376:5436"
+    - "21376:4628"
+    - "21376:5211"
+    - "21376:4403"
+    - "21376:5164"
+    - "21376:4919"
+    - "21376:5187"
+    - "21376:4942"
+    - "21376:5163"
+    - "21376:4402"
+  captured_at: "2026-08-11T10:55:00+09:00"
+  component_source_url: "https://www.figma.com/design/ZYTdtw4wCgkcBy2cVnhxVI/sample?node-id=280-2&p=f&t=zduaKdUu0MIWPh7D-0"
+  component_page_node_id: "280:2"
+  environment:
+    client: ChatGPT Figma connector
+    code_connect:
+      state: UNDETERMINED
+      reason: "Figma MCP returned a plan/seat limitation for Code Connect lookup; absence cannot be inferred."
+
+frames:
+  - id: top-pc
+    role: desktop-page
+    node_id: "21376:5162"
+    figma_width: 1380
+    figma_height: 7714
+    acceptance_viewport:
+      width: 1380
+      height: null
+  - id: top-sp
+    role: mobile-page
+    node_id: "21376:4401"
+    figma_width: 375
+    figma_height: 10817
+    acceptance_viewport:
+      width: 375
+      height: null
+
+structure:
+  page_node_id: "21376:1600"
+  page_name: AI
+  responsive_frame_placement: SAME_PAGE_SEPARATE_TOP_LEVEL_FRAMES
+  discovery_method:
+    - direct-child order
+    - semantic names
+    - text anchors
+    - component identity
+    - visual/structural context
+  discovery_finding: "Layer names alone are insufficient: the SP student-voice group is named Group 338, while the SP messages group is named voice. Text anchors and page order resolve the pairing."
+  section_pairs:
+    - id: header
+      pc_node_id: "21376:5757"
+      sp_node_id: "21376:4918"
+      mapping_confidence: HIGH
+      provisional_strategy: STRUCTURE_FIRST
+      evidence:
+        - "PC/SP Header nodes are semantically named and resolve to component-like structures."
+        - "Shared logo and token usage are visible in design context."
+    - id: main-visual
+      pc_node_id: "21376:5723"
+      sp_node_id: "21376:4886"
+      mapping_confidence: HIGH
+      provisional_strategy: HYBRID
+      evidence:
+        - "PC/SP main visuals share semantic content but rely on masks, image crops, vectors, and absolute positioning."
+        - "The SP node contains some large internal dimensions, so raw Figma coordinates must not be copied blindly into production CSS."
+    - id: reason
+      pc_node_id: "21376:5690"
+      sp_node_id: "21376:4852"
+      mapping_confidence: HIGH
+      provisional_strategy: STRUCTURE_FIRST
+      evidence:
+        - "The same three semantic cards are horizontal on PC and vertically stacked on SP."
+        - "Responsive intent can be translated structurally instead of reproducing absolute coordinates."
+    - id: education
+      pc_node_id: "21376:5559"
+      sp_node_id: "21376:4720"
+      mapping_confidence: HIGH
+      provisional_strategy: INSPECT_BEFORE_IMPLEMENT
+      evidence:
+        - "Same semantic layer name and matching position immediately before the first CTA."
+    - id: cta-after-education
+      pc_node_id: "21376:5558"
+      sp_node_id: "21376:4719"
+      mapping_confidence: HIGH
+      provisional_strategy: COMPONENT_FIRST
+      evidence:
+        - "Both are CTA instances at the same section boundary."
+    - id: student-voice
+      pc_node_id: "21376:5457"
+      sp_node_id: "21376:4650"
+      mapping_confidence: HIGH
+      provisional_strategy: INSPECT_BEFORE_IMPLEMENT
+      evidence:
+        - "Shared student-profile text anchors include 入学の決め手, 印象に残った授業, and 受験生へのひとこと."
+        - "SP layer name is Group 338, demonstrating that semantic name alone would miss the correct mapping."
+    - id: messages
+      pc_node_id: "21376:5437"
+      sp_node_id: "21376:4629"
+      mapping_confidence: HIGH
+      provisional_strategy: INSPECT_BEFORE_IMPLEMENT
+      evidence:
+        - "Shared # MESSAGES heading, senior-student profile copy, indicators, and image structure resolve the pair."
+        - "SP layer is named voice despite matching the PC messages section, so text anchors override the misleading name."
+    - id: cta-before-courses
+      pc_node_id: "21376:5436"
+      sp_node_id: "21376:4628"
+      mapping_confidence: HIGH
+      provisional_strategy: COMPONENT_FIRST
+      evidence:
+        - "Both are CTA instances at the same section boundary."
+    - id: courses
+      pc_node_id: "21376:5211"
+      sp_node_id: "21376:4403"
+      mapping_confidence: HIGH
+      provisional_strategy: INSPECT_BEFORE_IMPLEMENT
+      evidence:
+        - "Both contain seven course groups and matching course/recommendation text anchors."
+        - "SP layer name is Group 339 while PC is misspelled cources; content identity resolves the mapping."
+    - id: links
+      pc_node_id: "21376:5164"
+      sp_node_id: "21376:4919"
+      mapping_confidence: HIGH
+      provisional_strategy: STRUCTURE_FIRST
+      evidence:
+        - "Same semantic layer name and same position near the end of the page."
+    - id: cta-value
+      pc_node_id: "21376:5187"
+      sp_node_id: "21376:4942"
+      mapping_confidence: HIGH
+      provisional_strategy: INSPECT_BEFORE_IMPLEMENT
+      evidence:
+        - "Same semantic layer name between links and Footer."
+    - id: footer
+      pc_node_id: "21376:5163"
+      sp_node_id: "21376:4402"
+      mapping_confidence: HIGH
+      provisional_strategy: COMPONENT_FIRST
+      evidence:
+        - "Both are Footer instances and corresponding PC/SP definitions exist on the components page."
+  non_content_sp_nodes:
+    - node_id: "21376:4966"
+      name: Status-Bar_W
+      treatment: "Reference-only device/status chrome; determine production inclusion from target requirements rather than treating it as a website section."
+  component_evidence:
+    page_node_id: "280:2"
+    observed:
+      - "Header / Header_sp"
+      - "Footer / Footer_sp"
+      - "breadcrumb PC/SP"
+      - "button default/hover"
+      - "pager default/hover"
+      - "category variants"
+      - "export assets"
+  variable_evidence:
+    observed: true
+    examples:
+      - "color/foreground/main--colorpurple=#8473aa"
+      - "color/foreground/sec--colorblue=#38a1db"
+      - "color/foreground/sec--colororange=#f5971a"
+      - "color/background/base--light-beige=#f6f5ef"
+      - "content-width/contents--100%=375"
+      - "content-width/contents--top=343"
+      - "radius/max=999"
+      - "font/Poppins"
+      - "font/Zen Kaku Gothic New"
+
+responsive:
+  breakpoint_evidence:
+    source: UNKNOWN
+    source_refs:
+      - "Figma:21376:5162"
+      - "Figma:21376:4401"
+    values: []
+    notes:
+      - "Figma provides 1380px PC and 375px SP reference frames, but those reference widths do not prove the production breakpoint threshold."
+      - "Resolve the actual breakpoint from owner/company/design-system/target-code evidence before freezing."
+  invariants:
+    - "All visible website-content top-level sections now have high-confidence PC/SP pairings."
+    - "Content identity and order remain useful even when corresponding PC/SP layer names differ."
+  transitions:
+    - "Reason changes from a three-column PC presentation to a vertical SP stack."
+    - "Several later sections substantially change height/composition on SP and require section-level inspection rather than page-wide coordinate translation."
+  ordering_rules:
+    - "Preserve the semantic page order Header → MainVisual → Reason → Education → CTA → Student Voice → Messages → CTA → Courses → Links → CTA Value → Footer."
+  visibility_rules: []
+  wrapping_rules: []
+  container_rules: []
+  unknowns:
+    - "Production breakpoint value/query semantics."
+    - "Deep layout behavior and interaction/state details for sections not yet inspected with design context."
+
+owner_notes:
+  - "Keep PC/SP on the same Figma page as a provisional working convention for this run; promote to a project rule only after real-run evidence accumulates."
+  - "Do not redesign the supplied Figma; implementation fidelity is the objective."
+
+material_unknowns:
+  - "Target implementation repository URL has not been supplied yet."
+  - "Target repository branch and starting commit are unresolved."
+  - "Target framework, styling architecture, package manager, existing components, and code tokens must be inferred from the target repository rather than guessed."
+  - "Code Connect availability/mapping is UNDETERMINED because the current Figma plan/seat blocks MCP Code Connect lookup."
+  - "Production breakpoint contract is unresolved; PC/SP frame widths alone are not breakpoint evidence."
+
+code_baseline:
+  repository: ""
+  base_branch: ""
+  starting_commit: ""
+  target_route: ""
+  framework: ""
+  package_manager: ""
+  design_system_paths: []
+  token_paths: []
+
+freeze:
+  ready: false
+  frozen_at: ""
+  notes: "Figma reference captured and top-level PC/SP section mapping completed. Keep DRAFT until the target code baseline and material responsive/codebase unknowns are resolved."
