@@ -1,0 +1,196 @@
+.ref001-messages {
+	position: relative;
+	width: 1160px;
+	max-width: calc(100% - 32px);
+	height: 440px;
+	margin: 0 auto;
+	color: #333;
+	font-family: "Zen Kaku Gothic New", sans-serif;
+	overflow: hidden;
+}
+
+.ref001-messages__copy {
+	position: relative;
+	width: 500px;
+	height: 440px;
+	z-index: 1;
+}
+
+.ref001-messages__header {
+	padding-top: 0;
+}
+
+.ref001-messages__kicker {
+	display: inline-block;
+	margin: 0;
+	padding: 2px 8px;
+	background: #fffc68;
+	font-family: Poppins, sans-serif;
+	font-size: 20px;
+	line-height: 1;
+	letter-spacing: .05em;
+}
+
+.ref001-messages__header h2 {
+	margin: 24px 0 0;
+	font-size: 30px;
+	font-weight: 500;
+	line-height: 1;
+	letter-spacing: .06em;
+}
+
+.ref001-messages__header strong {
+	font-size: 42px;
+	font-weight: 500;
+}
+
+.ref001-messages__headline {
+	position: absolute;
+	left: 0;
+	top: 152px;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 11px;
+	color: #fff;
+	font-size: 28px;
+	font-weight: 500;
+	line-height: 1;
+	letter-spacing: .05em;
+	white-space: nowrap;
+}
+
+.ref001-messages__headline span {
+	display: inline-block;
+	padding: 10px 24px 11px;
+	background: #333;
+}
+
+.ref001-messages__profile {
+	position: absolute;
+	left: 0;
+	top: 286px;
+	margin: 0;
+	color: #8473aa;
+	font-size: 16px;
+	line-height: 1.6;
+	letter-spacing: .05em;
+}
+
+.ref001-messages__indicator {
+	position: absolute;
+	left: 165px;
+	bottom: 7px;
+	display: grid;
+	grid-template-columns: 24px 20px 146px 20px 24px;
+	align-items: center;
+	gap: 18px;
+	font-family: Poppins, sans-serif;
+	font-size: 24px;
+	line-height: 1;
+}
+
+.ref001-messages__arrow--prev {
+	color: rgb(150 150 150 / 50%);
+}
+
+.ref001-messages__arrow--next {
+	color: #8473aa;
+}
+
+.ref001-messages__progress {
+	position: relative;
+	display: block;
+	height: 2px;
+	background: rgb(150 150 150 / 50%);
+}
+
+.ref001-messages__progress i {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 44px;
+	height: 2px;
+	background: #38a1db;
+}
+
+.ref001-messages__image {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 660px;
+	height: 440px;
+	background: #f2f2f2;
+	outline: 1px dashed rgb(51 51 51 / 12%);
+}
+
+/* FIXTURE-ONLY: Figma gives a 375 endpoint, not a production breakpoint. */
+@media (max-width: 600px) {
+	.ref001-messages {
+		width: 343px;
+		height: 538px;
+	}
+
+	.ref001-messages__copy {
+		width: 343px;
+		height: 538px;
+	}
+
+	.ref001-messages__kicker {
+		font-size: 20px;
+	}
+
+	.ref001-messages__header h2 {
+		margin-top: 24px;
+		font-size: 24px;
+		line-height: 1;
+	}
+
+	.ref001-messages__header strong {
+		font-size: 32px;
+	}
+
+	.ref001-messages__image {
+		top: 116px;
+		left: 0;
+		right: auto;
+		width: 343px;
+		height: 229px;
+	}
+
+	.ref001-messages__headline {
+		top: 283px;
+		left: -8px;
+		gap: 8px;
+		font-size: 22px;
+		line-height: 1;
+		letter-spacing: .05em;
+		white-space: normal;
+	}
+
+	.ref001-messages__headline span {
+		padding: 7px 16px;
+		white-space: nowrap;
+	}
+
+	.ref001-messages__headline span:first-child {
+		width: 308px;
+	}
+
+	.ref001-messages__headline span:last-child {
+		width: auto;
+	}
+
+	.ref001-messages__profile {
+		top: 419px;
+		font-size: 16px;
+	}
+
+	.ref001-messages__indicator {
+		left: 85px;
+		bottom: 0;
+		grid-template-columns: 16px 16px 146px 16px 16px;
+		gap: 12px;
+		font-size: 20px;
+	}
+}
