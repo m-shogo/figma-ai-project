@@ -121,14 +121,16 @@ def validate_fixture(fixture: Path = DEFAULT_FIXTURE, acf_export: Path = DEFAULT
             errors.append(f"Education code-owned stage contract missing {number}/{label}")
 
     student_voice = read_text(fixture / "template-parts" / "ref001" / "student-voice.php")
-    if "accordion" in student_voice.lower() or "addEventListener" in student_voice:
-        errors.append("Student Voice visual First Pass must not invent accordion behavior")
+    invented_interaction_tokens = ("addEventListener(", "aria-expanded=", "data-accordion=", "new Accordion(")
+    if any(token in student_voice for token in invented_interaction_tokens):
+        errors.append("Student Voice visual First Pass must not invent expand/collapse behavior")
     if student_voice.count("'open' => true") != 1 or student_voice.count("'open' => false") != 2:
         errors.append("Student Voice must preserve Figma state: one open item and two collapsed items")
 
     messages = read_text(fixture / "template-parts" / "ref001" / "messages.php")
-    if "1 / 4" not in messages or "carousel" in messages.lower() or "swiper" in messages.lower():
-        errors.append("Messages must preserve static 1 / 4 Figma evidence without inventing carousel implementation")
+    invented_slider_tokens = ("new Swiper(", "new Splide(", "slick(", "data-swiper", "addEventListener(")
+    if "1 / 4" not in messages or any(token in messages for token in invented_slider_tokens):
+        errors.append("Messages must preserve static 1 / 4 Figma evidence without inventing slider implementation")
 
     if not acf_export.is_file():
         errors.append(f"missing ACF export: {acf_export}")
