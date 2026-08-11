@@ -10,6 +10,7 @@ on:
       - "tests/test_controlled_run_phase.py"
       - "experiments/ref001-clean-run/**"
       - "docs/sanitized-clean-run-workspace.md"
+      - "docs/ref001-clean-run-agent-handoff.md"
       - ".github/workflows/ref001-clean-run-package.yml"
   push:
     branches: [so]
@@ -18,6 +19,7 @@ on:
       - "scripts/controlled_run_phase.py"
       - "experiments/ref001-clean-run/**"
       - "docs/sanitized-clean-run-workspace.md"
+      - "docs/ref001-clean-run-agent-handoff.md"
       - ".github/workflows/ref001-clean-run-package.yml"
 
 permissions:
@@ -57,15 +59,18 @@ jobs:
           experiments/ref001-clean-run/workspace.yaml
           --output "$RUNNER_TEMP/ref001-clean-run"
 
-      - name: Prove repaired REF-001 answer is absent
+      - name: Prove blind handoff is present and repaired answer is absent
         shell: bash
         run: |
           set -euo pipefail
+          test -f "$RUNNER_TEMP/ref001-clean-run/.sanitized-run-workspace.json"
+          test -f "$RUNNER_TEMP/ref001-clean-run/docs/ref001-clean-run-agent-handoff.md"
+          test -f "$RUNNER_TEMP/ref001-clean-run/scripts/controlled_run_phase.py"
           test ! -e "$RUNNER_TEMP/ref001-clean-run/experiments/ref001-wordpress-acf/fixture-theme"
           test ! -e "$RUNNER_TEMP/ref001-clean-run/experiments/ref001-wordpress-acf/visual-preview"
           test ! -e "$RUNNER_TEMP/ref001-clean-run/research/figma-web-friction"
           ! find "$RUNNER_TEMP/ref001-clean-run/scripts" -type f -iname '*ref001*' -print -quit | grep -q .
-          echo "PASS repaired REF-001 implementation and answer-bearing evidence are absent"
+          echo "PASS blind handoff/gates/manifest present; repaired REF-001 implementation and answer-bearing evidence absent"
 
       - name: Upload clean-run handoff artifact
         uses: actions/upload-artifact@v4
@@ -73,4 +78,5 @@ jobs:
           name: ref001-clean-run-${{ github.sha }}
           path: ${{ runner.temp }}/ref001-clean-run
           if-no-files-found: error
+          include-hidden-files: true
           retention-days: 14
