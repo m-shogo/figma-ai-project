@@ -18,10 +18,15 @@ get_header();
 	class="ref001-page"
 	data-reference-id="REF-001-CHIBA-KEIZAI-SAMPLE"
 	data-fixture-completeness="partial"
+	data-visual-section-sequence="figma-order"
 >
 	<?php get_template_part( 'template-parts/ref001/main-visual' ); ?>
 	<?php get_template_part( 'template-parts/ref001/reason' ); ?>
 	<?php get_template_part( 'template-parts/ref001/education' ); ?>
+	<?php get_template_part( 'template-parts/ref001/cta' ); ?>
+	<?php get_template_part( 'template-parts/ref001/student-voice' ); ?>
+	<?php get_template_part( 'template-parts/ref001/messages' ); ?>
+	<?php get_template_part( 'template-parts/ref001/cta' ); ?>
 	<?php get_template_part( 'template-parts/ref001/courses' ); ?>
 	<?php get_template_part( 'template-parts/ref001/links' ); ?>
 	<?php get_template_part( 'template-parts/ref001/cta-value' ); ?>
