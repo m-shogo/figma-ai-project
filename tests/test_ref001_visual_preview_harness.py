@@ -38,18 +38,25 @@ class Ref001VisualPreviewHarnessTests(unittest.TestCase):
         self.assertIn("return '/fixture-theme/'", source)
         self.assertNotIn("return '../fixture-theme/'", source)
 
-    def test_capture_script_generates_both_acceptance_widths(self) -> None:
-        source = (PREVIEW / "capture.sh").read_text(encoding="utf-8")
-        self.assertIn('--viewport-size="1380,900"', source)
-        self.assertIn('--viewport-size="375,844"', source)
+    def test_capture_generates_both_acceptance_widths_after_scrolling_assets(self) -> None:
+        shell = (PREVIEW / "capture.sh").read_text(encoding="utf-8")
+        source = (PREVIEW / "capture.mjs").read_text(encoding="utf-8")
+        self.assertIn("capture.mjs", shell)
+        self.assertIn("width: 1380", source)
+        self.assertIn("height: 900", source)
+        self.assertIn("width: 375", source)
+        self.assertIn("height: 844", source)
         self.assertIn("ref001-pc-1380.png", source)
         self.assertIn("ref001-sp-375.png", source)
-        self.assertIn("--full-page", source)
+        self.assertIn("window.scrollTo", source)
+        self.assertIn("image.decode", source)
+        self.assertIn("fullPage: true", source)
 
     def test_course_asset_check_requires_all_seven_pictograms_to_decode(self) -> None:
         source = (PREVIEW / "asset-check.mjs").read_text(encoding="utf-8")
         shell = (PREVIEW / "asset-check.sh").read_text(encoding="utf-8")
         self.assertIn(".ref001-course-card__icon img", source)
+        self.assertIn("scrollIntoViewIfNeeded", source)
         self.assertIn("naturalWidth", source)
         self.assertIn("status !== 200", source)
         self.assertIn("results.length !== 7", source)
