@@ -52,6 +52,18 @@ def validate_fixture(fixture: Path = DEFAULT_FIXTURE, acf_export: Path = DEFAULT
     if "figma.com/api/mcp/asset" in joined:
         errors.append("fixture must not commit expiring Figma MCP asset URLs")
 
+    legacy_breakpoint_pattern = re.compile(r"@media\s*\(\s*(?:max-width:\s*600px|min-width:\s*601px)\s*\)")
+    legacy_breakpoint_files = [
+        str(path.relative_to(fixture))
+        for path, source in sources.items()
+        if path.suffix == ".css" and legacy_breakpoint_pattern.search(source)
+    ]
+    if legacy_breakpoint_files:
+        errors.append(
+            "fixture CSS must not retain the obsolete 600px production seam; use owner 768px contract: "
+            + ", ".join(legacy_breakpoint_files)
+        )
+
     js_files = sorted(fixture.rglob("*.js")) + sorted(fixture.rglob("*.mjs"))
     if js_files:
         errors.append("visual-first static-state wave must not add JavaScript before interaction integration")
@@ -255,21 +267,25 @@ def validate_fixture(fixture: Path = DEFAULT_FIXTURE, acf_export: Path = DEFAULT
         errors.append("Education must retain measured SP 335px-card / 140x79 media evidence")
 
     cta_styles = read_text(css_files["cta"])
+    if "@media (max-width: 767px)" not in cta_styles:
+        errors.append("shared CTA must use the owner-resolved 768px responsive contract")
     if "height: 328px" not in cta_styles or "height: 350px" not in cta_styles:
         errors.append("shared CTA must retain measured PC/SP heights")
     if "grid-template-columns: repeat(2, 261px)" not in cta_styles or "grid-template-columns: 261px" not in cta_styles:
         errors.append("shared CTA must retain measured PC/SP button geometry")
 
     voice_styles = read_text(css_files["student-voice"])
-    for measurement in ("height: 591px", "height: 290px", "height: 1032px", "height: 262px", "width: 311px"):
+    for measurement in ("height: 591px", "height: 290px", "height: 1032px", "height: 262px"):
         if measurement not in voice_styles:
             errors.append(f"Student Voice must retain measured visual-state geometry: {measurement}")
+    if "width: min(343px, calc(100% - 32px))" not in voice_styles or "width: 100%" not in voice_styles:
+        errors.append("Student Voice must preserve the 343/311px SP endpoint while allowing narrower runtime contraction")
 
     messages_styles = read_text(css_files["messages"])
     if "height: 440px" not in messages_styles or "height: 538px" not in messages_styles:
         errors.append("Messages must retain measured PC/SP section heights")
-    if "width: 660px" not in messages_styles or "width: 343px" not in messages_styles:
-        errors.append("Messages must retain measured PC/SP current-item image slots")
+    if "width: 660px" not in messages_styles or "width: min(343px, calc(100% - 32px))" not in messages_styles:
+        errors.append("Messages must preserve the 660/343px supplied image slots while allowing narrower runtime contraction")
 
     courses_styles = read_text(css_files["courses"])
     if "@media (max-width: 767px)" not in courses_styles:
@@ -290,8 +306,8 @@ def validate_fixture(fixture: Path = DEFAULT_FIXTURE, acf_export: Path = DEFAULT
     cta_value_styles = read_text(css_files["cta-value"])
     if "height: 328px" not in cta_value_styles or "width: min(1340px, calc(100% - 40px))" not in cta_value_styles:
         errors.append("CTA Value PC First Pass must retain measured section/frame geometry")
-    if "width: 343px" not in cta_value_styles or "height: 364px" not in cta_value_styles:
-        errors.append("CTA Value SP First Pass must retain measured inner-frame geometry")
+    if "width: min(343px, calc(100% - 32px))" not in cta_value_styles or "height: 364px" not in cta_value_styles:
+        errors.append("CTA Value must preserve the 343px SP inner-frame endpoint while allowing narrower runtime contraction")
 
     header_styles = read_text(css_files["header"])
     if "height: 94px" not in header_styles or "height: 67px" not in header_styles:
