@@ -83,6 +83,17 @@ Messages displays `1 / 4` with previous/next affordances, but the inspected Figm
 
 Baseline decision: do not invent messages 2–4, do not create four placeholder CMS records, and do not choose a slider library yet.
 
+### H11 — A composited bitmap is not a single imageHash
+
+Student Voice and CTA Value independently proved the same boundary: one final visible bitmap can be built from a Mask/Group containing multiple IMAGE fills, including color plus mono/offset layers. Exporting or persisting only one raw `imageHash` loses part of the supplied Figma visual.
+
+Baseline decision: when multiple IMAGE fills participate in one final visible masked/grouped visual, use the final visible group export as Visual QA evidence. Keep the underlying CMS/media ownership decision separate; a QA group export does not automatically become a production WordPress field or attachment. If inspection proves the visual is only one canonical IMAGE fill, the raw image source can remain sufficient.
+
+Observed twice before promotion to this hypothesis:
+
+- Student Voice item 2 / item 3 / classroom final Mask groups
+- CTA Value PC/SP left/right person groups, where color plus mono/offset layers form the final people composites
+
 ## Education First Pass — implemented
 
 Education is now the third implemented learning section after MV and Reason.
