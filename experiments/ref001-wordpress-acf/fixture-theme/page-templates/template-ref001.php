@@ -13,10 +13,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 get_header();
 ?>
-<main id="primary" class="ref001-page" data-reference-id="REF-001-CHIBA-KEIZAI-SAMPLE">
+<main
+	id="primary"
+	class="ref001-page"
+	data-reference-id="REF-001-CHIBA-KEIZAI-SAMPLE"
+	data-fixture-completeness="partial"
+>
 	<?php get_template_part( 'template-parts/ref001/main-visual' ); ?>
 	<?php get_template_part( 'template-parts/ref001/reason' ); ?>
 	<?php get_template_part( 'template-parts/ref001/education' ); ?>
+	<?php get_template_part( 'template-parts/ref001/courses' ); ?>
 </main>
 <?php
 get_footer();
