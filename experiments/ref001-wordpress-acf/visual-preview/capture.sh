@@ -25,16 +25,9 @@ done
 
 curl -fsS "$URL" >/dev/null
 
-npx --yes playwright@1.55.0 screenshot \
-	--viewport-size="1380,900" \
-	--full-page \
+cd "$SCRIPT_DIR"
+npx --yes --package=playwright@1.55.0 node capture.mjs \
 	"$URL" \
-	"$OUTPUT_DIR/ref001-pc-1380.png"
-
-npx --yes playwright@1.55.0 screenshot \
-	--viewport-size="375,844" \
-	--full-page \
-	"$URL" \
-	"$OUTPUT_DIR/ref001-sp-375.png"
+	"$OUTPUT_DIR"
 
 printf 'REF-001 visual captures written to %s\n' "$OUTPUT_DIR"
