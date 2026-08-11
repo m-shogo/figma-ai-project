@@ -12,13 +12,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 $messages_composite_root  = dirname( __DIR__, 2 ) . '/assets/images/visual-qa/messages/';
 $messages_composite_parts = array(
-	'messages-mask-group.part01.b64',
-	'messages-mask-group.part02.b64',
-	'messages-mask-group.part03.b64',
-	'messages-mask-group.part04.b64',
-	'messages-mask-group.part05.b64',
-	'messages-mask-group.part06.b64',
-	'messages-mask-group.part07.b64',
+	'messages-mask-group-v025.part01.b64',
+	'messages-mask-group-v025.part02.b64',
+	'messages-mask-group-v025.part03.b64',
+	'messages-mask-group-v025.part04.b64',
+	'messages-mask-group-v025.part05.b64',
+	'messages-mask-group-v025.part06.b64',
+	'messages-mask-group-v025.part07.b64',
+	'messages-mask-group-v025.part08.b64',
+	'messages-mask-group-v025.part09.b64',
+	'messages-mask-group-v025.part10.b64',
+	'messages-mask-group-v025.part11.b64',
+	'messages-mask-group-v025.part12.b64',
+	'messages-mask-group-v025.part13.b64',
 );
 $messages_composite_b64 = '';
 foreach ( $messages_composite_parts as $messages_composite_part ) {
