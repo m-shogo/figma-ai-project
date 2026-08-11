@@ -153,21 +153,27 @@ const fixtureSpecs = [
 ];
 
 const messagesFixtureSpec = {
-  key: 'messages-mask-group',
+  key: 'messages-mask-group-v025',
   paths: [
-    '../fixture-theme/assets/images/visual-qa/messages/messages-mask-group.part01.b64',
-    '../fixture-theme/assets/images/visual-qa/messages/messages-mask-group.part02.b64',
-    '../fixture-theme/assets/images/visual-qa/messages/messages-mask-group.part03.b64',
-    '../fixture-theme/assets/images/visual-qa/messages/messages-mask-group.part04.b64',
-    '../fixture-theme/assets/images/visual-qa/messages/messages-mask-group.part05.b64',
-    '../fixture-theme/assets/images/visual-qa/messages/messages-mask-group.part06.b64',
-    '../fixture-theme/assets/images/visual-qa/messages/messages-mask-group.part07.b64',
+    '../fixture-theme/assets/images/visual-qa/messages/messages-mask-group-v025.part01.b64',
+    '../fixture-theme/assets/images/visual-qa/messages/messages-mask-group-v025.part02.b64',
+    '../fixture-theme/assets/images/visual-qa/messages/messages-mask-group-v025.part03.b64',
+    '../fixture-theme/assets/images/visual-qa/messages/messages-mask-group-v025.part04.b64',
+    '../fixture-theme/assets/images/visual-qa/messages/messages-mask-group-v025.part05.b64',
+    '../fixture-theme/assets/images/visual-qa/messages/messages-mask-group-v025.part06.b64',
+    '../fixture-theme/assets/images/visual-qa/messages/messages-mask-group-v025.part07.b64',
+    '../fixture-theme/assets/images/visual-qa/messages/messages-mask-group-v025.part08.b64',
+    '../fixture-theme/assets/images/visual-qa/messages/messages-mask-group-v025.part09.b64',
+    '../fixture-theme/assets/images/visual-qa/messages/messages-mask-group-v025.part10.b64',
+    '../fixture-theme/assets/images/visual-qa/messages/messages-mask-group-v025.part11.b64',
+    '../fixture-theme/assets/images/visual-qa/messages/messages-mask-group-v025.part12.b64',
+    '../fixture-theme/assets/images/visual-qa/messages/messages-mask-group-v025.part13.b64',
   ],
-  partLengths: [2400, 2400, 2400, 2400, 2400, 2400, 1040],
+  partLengths: [3500, 3500, 3500, 3500, 3500, 3500, 3500, 3500, 3500, 3500, 3500, 3500, 1828],
   format: 'jpeg',
-  base64Length: 15440,
-  charCodeSum32: 1332210,
-  decodedByteLength: 11579,
+  base64Length: 43828,
+  charCodeSum32: 3773912,
+  decodedByteLength: 32871,
   startBytes: [255, 216],
   endBytes: [255, 217],
 };
@@ -329,7 +335,7 @@ const messagesResults = await inspectBackgroundPixels(
 );
 console.log(JSON.stringify({ messagesComposite: messagesResults }, null, 2));
 const messagesFailures = messagesResults.filter(
-  (asset) => !asset.decoded || asset.naturalWidth < 80 || asset.naturalHeight < 50 || asset.visiblePixels <= 0 || asset.channelRange < 20,
+  (asset) => !asset.decoded || asset.naturalWidth < 160 || asset.naturalHeight < 100 || asset.visiblePixels <= 0 || asset.channelRange < 20,
 );
 
 await page.locator('.ref001-cta-value').scrollIntoViewIfNeeded();
