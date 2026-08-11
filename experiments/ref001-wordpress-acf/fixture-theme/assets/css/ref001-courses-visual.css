@@ -20,6 +20,9 @@
  * - list content width=279; 10x10 checkbox + 11px gap; 13px / 1.4
  * - recommendation block starts y=139 on the two 320px cards and y=118 on
  *   the five 299px cards. Absolute internals preserve the locked card heights.
+ *
+ * Owner responsive contract: mobile <= 767px. The measured 231/311px widths
+ * resolve exactly at 375px and contract intrinsically below that endpoint.
  */
 
 .ref001-courses__title strong {
@@ -228,7 +231,7 @@
 	transform-origin: center;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 767px) {
 	.ref001-courses__title strong {
 		font-size: 24px;
 	}
@@ -267,7 +270,7 @@
 	.ref001-course-card__description {
 		left: 96px;
 		top: 60px;
-		width: 231px;
+		width: min(231px, calc(100% - 112px));
 		margin: 0;
 		font-size: 16px;
 		line-height: 1.3;
@@ -277,7 +280,7 @@
 	.ref001-course-card__recommendations {
 		left: 16px;
 		top: 118px;
-		width: 311px;
+		width: calc(100% - 32px);
 		height: 157px;
 	}
 
@@ -294,7 +297,7 @@
 
 	.ref001-course-card__recommendations ul {
 		top: 21px;
-		width: 311px;
+		width: 100%;
 		height: 136px;
 		gap: 12px;
 		padding: 36px 16px 16px;
