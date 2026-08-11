@@ -14,6 +14,7 @@ on:
       - "references/**/*.json"
       - "experiments/**/*.yaml"
       - "experiments/**/*.json"
+      - "experiments/ref001-wordpress-acf/fixture-theme/**"
       - "contracts/**/*.yaml"
       - "contracts/**/*.json"
       - "research/**/*.yaml"
@@ -33,6 +34,7 @@ on:
       - "references/**/*.json"
       - "experiments/**/*.yaml"
       - "experiments/**/*.json"
+      - "experiments/ref001-wordpress-acf/fixture-theme/**"
       - "contracts/**/*.yaml"
       - "contracts/**/*.json"
       - "research/**/*.yaml"
@@ -69,6 +71,9 @@ jobs:
 
       - name: Validate ACF export artifacts
         run: python scripts/validate_acf_export.py
+
+      - name: Validate REF-001 WordPress learning fixture
+        run: python scripts/validate_wordpress_learning_fixture.py
 
       - name: Validate implementation profile pins on active runs
         run: python scripts/validate_run_implementation_profile.py
