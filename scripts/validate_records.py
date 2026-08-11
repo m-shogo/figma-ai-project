@@ -98,7 +98,6 @@ def semantic_shared_errors(data: dict[str, Any]) -> list[str]:
     freeze = data.get("freeze", {})
     if not freeze.get("ready"):
         return errors
-
     if data.get("status") != "FROZEN":
         errors.append("freeze.ready=true requires shared contract status=FROZEN")
 
@@ -106,7 +105,6 @@ def semantic_shared_errors(data: dict[str, Any]) -> list[str]:
     foundation = data.get("foundation", {})
     breakpoints = data.get("breakpoints", {})
     parallel = data.get("parallel_execution", {})
-
     if not codebase.get("starting_commit"):
         errors.append("frozen shared contract requires codebase.starting_commit")
     if foundation.get("status") != "VERIFIED":
@@ -118,7 +116,6 @@ def semantic_shared_errors(data: dict[str, Any]) -> list[str]:
     if codebase.get("starting_commit") and foundation.get("base_commit"):
         if codebase["starting_commit"] != foundation["base_commit"]:
             errors.append("foundation.base_commit must equal codebase.starting_commit")
-
     if breakpoints.get("mode") == "UNKNOWN":
         errors.append("frozen shared contract cannot keep breakpoints.mode=UNKNOWN")
     if breakpoints.get("mode") in {"GLOBAL_SPECIFIED", "SECTION_SPECIFIED"}:
@@ -126,7 +123,6 @@ def semantic_shared_errors(data: dict[str, Any]) -> list[str]:
             errors.append("specified breakpoints require a non-UNKNOWN source")
         if not breakpoints.get("values"):
             errors.append("specified breakpoints require at least one breakpoint value")
-
     if parallel.get("shared_files_read_only_for_workers") is not True:
         errors.append("frozen shared contract requires shared files to be read-only for section workers")
     return errors
@@ -144,17 +140,14 @@ def semantic_section_errors(data: dict[str, Any]) -> list[str]:
 
     active_statuses = {"READY", "RUNNING", "COMPLETE"}
     active = [section for section in sections if section.get("worker", {}).get("status") in active_statuses]
-
     contract_value = data.get("shared_contract", "")
     contract_path, contract, link_errors = load_linked_yaml(contract_value, "shared_contract")
     errors.extend(link_errors)
 
     expected_hash = data.get("shared_contract_sha256", "")
     if expected_hash:
-        if contract_path and contract_path.is_file():
-            actual = file_sha256(contract_path)
-            if actual != expected_hash:
-                errors.append("shared_contract_sha256 does not match the linked shared contract")
+        if contract_path and contract_path.is_file() and file_sha256(contract_path) != expected_hash:
+            errors.append("shared_contract_sha256 does not match the linked shared contract")
     elif active:
         errors.append("active section workers require shared_contract_sha256")
 
@@ -169,12 +162,10 @@ def semantic_section_errors(data: dict[str, Any]) -> list[str]:
         if active:
             if contract.get("status") != "FROZEN" or contract.get("freeze", {}).get("ready") is not True:
                 errors.append("active section workers require a frozen shared contract")
-            contract_foundation = contract.get("foundation", {}).get("commit")
-            if contract_foundation != data.get("foundation_commit"):
+            if contract.get("foundation", {}).get("commit") != data.get("foundation_commit"):
                 errors.append("section manifest foundation_commit must match shared contract foundation.commit")
 
     global_breakpoints = bool(contract and contract.get("breakpoints", {}).get("mode") == "GLOBAL_SPECIFIED")
-
     for i, section in enumerate(sections):
         worker = section.get("worker", {})
         status = worker.get("status")
@@ -182,7 +173,6 @@ def semantic_section_errors(data: dict[str, Any]) -> list[str]:
             continue
         implementation = section.get("implementation", {})
         responsive = section.get("responsive", {})
-
         if implementation.get("shared_files_read_only") is not True:
             errors.append(f"sections[{i}] active worker requires shared_files_read_only=true")
         if not implementation.get("allowed_paths"):
@@ -193,7 +183,6 @@ def semantic_section_errors(data: dict[str, Any]) -> list[str]:
             errors.append(f"sections[{i}] COMPLETE worker requires output_commit")
         if global_breakpoints and responsive.get("uses_shared_breakpoints") is not True:
             errors.append(f"sections[{i}] must use shared breakpoints from the global contract")
-
     return errors
 
 
@@ -204,41 +193,43 @@ def semantic_run_errors(data: dict[str, Any]) -> list[str]:
 
     if active:
         preflight = data.get("tooling_preflight", {})
-        required_checks = (
+        mode = str(preflight.get("mode", "LEGACY_MANUAL"))
+        required_checks = [
             "figma_release_notes_checked",
             "figma_mcp_docs_checked",
             "agent_docs_checked",
-            "community_scan_checked",
-        )
+        ]
+        if mode != "AUTOMATED_UPDATE_RADAR":
+            required_checks.append("community_scan_checked")
         if not preflight.get("checked_at"):
             errors.append("RUNNING/COMPLETE run requires tooling_preflight.checked_at")
         for check in required_checks:
             if preflight.get(check) is not True:
                 errors.append(f"RUNNING/COMPLETE run requires tooling_preflight.{check}=true")
+        if mode == "AUTOMATED_UPDATE_RADAR" and preflight.get("official_sources_complete") is not True:
+            errors.append("AUTOMATED_UPDATE_RADAR run requires official_sources_complete=true")
 
     coordination = data.get("coordination", {})
     scope = coordination.get("scope")
     if active and scope == "SECTION":
-        if not coordination.get("section_id"):
-            errors.append("active SECTION run requires coordination.section_id")
-        if not coordination.get("shared_contract_path"):
-            errors.append("active SECTION run requires coordination.shared_contract_path")
-        if not coordination.get("shared_contract_sha256"):
-            errors.append("active SECTION run requires coordination.shared_contract_sha256")
-        if not coordination.get("section_manifest_path"):
-            errors.append("active SECTION run requires coordination.section_manifest_path")
-        if not coordination.get("foundation_commit"):
-            errors.append("active SECTION run requires coordination.foundation_commit")
-
+        for field in (
+            "section_id",
+            "shared_contract_path",
+            "shared_contract_sha256",
+            "section_manifest_path",
+            "foundation_commit",
+        ):
+            if not coordination.get(field):
+                errors.append(f"active SECTION run requires coordination.{field}")
     if active and scope == "INTEGRATION":
-        if not coordination.get("shared_contract_path"):
-            errors.append("active INTEGRATION run requires coordination.shared_contract_path")
-        if not coordination.get("shared_contract_sha256"):
-            errors.append("active INTEGRATION run requires coordination.shared_contract_sha256")
-        if not coordination.get("section_manifest_path"):
-            errors.append("active INTEGRATION run requires coordination.section_manifest_path")
-        if not coordination.get("foundation_commit"):
-            errors.append("active INTEGRATION run requires coordination.foundation_commit")
+        for field in (
+            "shared_contract_path",
+            "shared_contract_sha256",
+            "section_manifest_path",
+            "foundation_commit",
+        ):
+            if not coordination.get(field):
+                errors.append(f"active INTEGRATION run requires coordination.{field}")
 
     contract = None
     contract_path = None
@@ -248,8 +239,7 @@ def semantic_run_errors(data: dict[str, Any]) -> list[str]:
         )
         errors.extend(link_errors)
         if contract_path and contract_path.is_file() and coordination.get("shared_contract_sha256"):
-            actual_hash = file_sha256(contract_path)
-            if actual_hash != coordination["shared_contract_sha256"]:
+            if file_sha256(contract_path) != coordination["shared_contract_sha256"]:
                 errors.append("run shared_contract_sha256 does not match linked shared contract")
 
     if active and scope in {"SECTION", "INTEGRATION"} and contract is not None:
@@ -296,7 +286,7 @@ def semantic_run_errors(data: dict[str, Any]) -> list[str]:
         block = scores.get(name, {})
         values = [block.get("visual"), block.get("structural"), block.get("robustness")]
         total = block.get("total")
-        if all(v is not None for v in values):
+        if all(value is not None for value in values):
             expected = sum(values)
             if total is None:
                 errors.append(f"scores.{name}.total is required when all components are scored")
@@ -326,8 +316,13 @@ def semantic_run_errors(data: dict[str, Any]) -> list[str]:
             if abs(composite - expected) > 1e-9:
                 errors.append(f"scores.final_composite must equal {expected}")
 
-    if status == "COMPLETE" and first_total is None:
-        errors.append("COMPLETE run requires a first-pass fidelity score")
+    if status == "COMPLETE":
+        if first_total is None:
+            errors.append("COMPLETE run requires a first-pass fidelity score")
+        if not str(data.get("code", {}).get("first_pass_commit", "")).strip():
+            errors.append("COMPLETE run requires code.first_pass_commit")
+        if not data.get("captures", {}).get("first_pass"):
+            errors.append("COMPLETE run requires captures.first_pass evidence")
     return errors
 
 
@@ -364,7 +359,6 @@ def main() -> int:
         "run": semantic_run_errors,
     }
     failures = 0
-
     targets = [
         (ROOT / "templates" / "reference-manifest.yaml", "reference"),
         (ROOT / "templates" / "shared-contract.yaml", "shared"),
@@ -372,7 +366,6 @@ def main() -> int:
         (ROOT / "templates" / "run-record.yaml", "run"),
         *candidate_files(),
     ]
-
     seen: set[Path] = set()
     for path, kind in targets:
         if path in seen:
@@ -384,7 +377,6 @@ def main() -> int:
             errors.extend(semantic_checks[kind](data))
         except Exception as exc:
             errors = [str(exc)]
-
         if errors:
             failures += 1
             print(f"FAIL {path.relative_to(ROOT)}")
@@ -392,7 +384,6 @@ def main() -> int:
                 print(f"  - {error}")
         else:
             print(f"PASS {path.relative_to(ROOT)}")
-
     return 1 if failures else 0
 
 
