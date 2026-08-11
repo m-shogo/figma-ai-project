@@ -17,12 +17,23 @@
     min-height:0;
     padding:0;
   }
+  .ref-reason__intro { margin-bottom:12px; }
+  .ref-reason-card__media { height:240px; }
+  .ref-reason-card__body { min-height:123px; }
   .ref-reason + .ref-education { margin-top:96px; }
 
-  /* Figma's education cards extend wider than the generic 1160px text rail;
-   * widening only this grid prevents list wrapping from inflating the section. */
+  /* Figma uses the normal 1160px text rail for the Education heading, while
+   * the four cards extend to a wider 1250px presentation rail. Keeping those
+   * responsibilities separate also prevents the heading from wrapping. */
   .ref-education .ref-content {
-    width:min(1250px,calc(100% - 64px));
+    width:min(1160px,calc(100% - 64px));
+  }
+  .ref-education__head { grid-template-columns:270px 1fr; }
+  .ref-education__steps {
+    width:min(1250px,calc(100vw - 64px));
+    position:relative;
+    left:50%;
+    transform:translateX(-50%);
   }
 
   .ref-shared-cta + .ref-voice { margin-top:96px; }
