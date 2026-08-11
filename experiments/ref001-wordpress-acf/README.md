@@ -94,6 +94,24 @@ Observed twice before promotion to this hypothesis:
 - Student Voice item 2 / item 3 / classroom final Mask groups
 - CTA Value PC/SP left/right person groups, where color plus mono/offset layers form the final people composites
 
+### H12 — Figma fidelity does not mean forcing static-frame behavior onto the web
+
+Figma gives exact evidence for a supplied static frame. A browser is a runtime: fonts can fall back, glyph metrics can differ, copy can change, viewport widths can vary, and content must remain readable without creating page-level overflow.
+
+Baseline decision: preserve the design intent and supplied endpoint geometry, but do not force screenshot parity with brittle CSS that makes the implementation worse as a website.
+
+Practical boundary:
+
+- exact section position/height, major composition, media crop, explicit art direction, and supplied PC/SP endpoint structure remain hard visual evidence
+- ordinary body/supporting copy remains reflowable; a small line-wrap difference caused by unavailable font metrics is acceptable when meaning and composition remain intact
+- `white-space: nowrap` must not be introduced merely to stop a line from wrapping like the Figma screenshot; use it only when one-line behavior is itself a real UI/content requirement and overflow has been proven safe
+- do not shrink text, distort tracking, widen a container beyond the viewport, clip readable content, or add arbitrary hard breaks solely to hide font-rendering differences
+- page-level horizontal scrolling is a failure at the supplied PC/SP acceptance widths
+- Figma frame width is endpoint evidence, not proof of the production breakpoint or every in-between responsive state
+- visual QA must distinguish hard mismatches from runtime-tolerant differences instead of blindly optimizing every pixel delta
+
+Observed failure that promoted this rule: Main Visual supporting copy was temporarily given `white-space: nowrap` only to prevent a fallback-font line break. That matched one static screenshot more closely but was the wrong Web translation because it could create overflow and overfit unavailable font metrics. The constraint was removed and a horizontal-overflow browser gate was added instead.
+
 ## Education First Pass — implemented
 
 Education is now the third implemented learning section after MV and Reason.
@@ -198,6 +216,7 @@ The fixture checks now also protect:
 - measured PC 281px/40px geometry evidence
 - measured SP 335px card / 140×79 media evidence
 - continued prohibition on Repeater API in the fixed-cardinality baseline
+- page-level horizontal overflow at the supplied 1380px / 375px acceptance widths
 
 Structural validation does not replace a real WordPress/ACF import smoke.
 
