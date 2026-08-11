@@ -116,7 +116,7 @@ Do not silently install/upgrade ACF just to make this learning script pass.
 If the target project's approved runtime does not expose `acf json import`:
 
 1. record `ACF_JSON_IMPORT_COMMAND_UNAVAILABLE`
-2. use the project's approved ACF Tools Admin import path if permitted
+2. use the project's approved **ACF Tools admin import** path if permitted
 3. preserve the actual ACF/WordPress/plugin versions in evidence
 4. continue to the seed step only after the field groups really exist
 
