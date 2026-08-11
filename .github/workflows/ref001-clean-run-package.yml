@@ -1,0 +1,76 @@
+name: Build REF-001 clean-run package
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "scripts/build_sanitized_run_workspace.py"
+      - "scripts/controlled_run_phase.py"
+      - "tests/test_build_sanitized_run_workspace.py"
+      - "tests/test_controlled_run_phase.py"
+      - "experiments/ref001-clean-run/**"
+      - "docs/sanitized-clean-run-workspace.md"
+      - ".github/workflows/ref001-clean-run-package.yml"
+  push:
+    branches: [so]
+    paths:
+      - "scripts/build_sanitized_run_workspace.py"
+      - "scripts/controlled_run_phase.py"
+      - "experiments/ref001-clean-run/**"
+      - "docs/sanitized-clean-run-workspace.md"
+      - ".github/workflows/ref001-clean-run-package.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout clean source
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-dev.txt
+
+      - name: Install validation dependencies
+        run: python -m pip install -r requirements-dev.txt
+
+      - name: Validate sanitized selection
+        run: >-
+          python scripts/build_sanitized_run_workspace.py validate
+          experiments/ref001-clean-run/workspace.yaml
+
+      - name: Build sanitized workspace outside repository
+        run: >-
+          python scripts/build_sanitized_run_workspace.py build
+          experiments/ref001-clean-run/workspace.yaml
+          --output "$RUNNER_TEMP/ref001-clean-run"
+
+      - name: Audit generated handoff before upload
+        run: >-
+          python scripts/build_sanitized_run_workspace.py audit
+          experiments/ref001-clean-run/workspace.yaml
+          --output "$RUNNER_TEMP/ref001-clean-run"
+
+      - name: Prove repaired REF-001 answer is absent
+        shell: bash
+        run: |
+          set -euo pipefail
+          test ! -e "$RUNNER_TEMP/ref001-clean-run/experiments/ref001-wordpress-acf/fixture-theme"
+          test ! -e "$RUNNER_TEMP/ref001-clean-run/experiments/ref001-wordpress-acf/visual-preview"
+          test ! -e "$RUNNER_TEMP/ref001-clean-run/research/figma-web-friction"
+          ! find "$RUNNER_TEMP/ref001-clean-run/scripts" -type f -iname '*ref001*' -print -quit | grep -q .
+          echo "PASS repaired REF-001 implementation and answer-bearing evidence are absent"
+
+      - name: Upload clean-run handoff artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ref001-clean-run-${{ github.sha }}
+          path: ${{ runner.temp }}/ref001-clean-run
+          if-no-files-found: error
+          retention-days: 14

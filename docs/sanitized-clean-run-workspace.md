@@ -34,6 +34,20 @@ Explicitly absent:
 
 This does **not** retroactively turn the repaired REF-001 fixture into RUN A. The next controlled experiment must generate a new FIRST PASS inside a sanitized workspace and freeze it before repairs begin.
 
+## Automatic GitHub handoff artifact
+
+`.github/workflows/ref001-clean-run-package.yml` builds the sanitized workspace on relevant pull requests, after relevant changes land on `so`, and on manual workflow dispatch.
+
+The workflow:
+
+1. validates the allowlist
+2. builds the workspace under the runner temp directory, outside the source checkout
+3. audits hashes and forbidden paths
+4. explicitly proves the repaired REF-001 fixture, visual-preview folder, friction analysis, and REF-specific scripts are absent
+5. uploads `ref001-clean-run-<commit>` as a 14-day GitHub Actions artifact
+
+That artifact is the preferred handoff to a fresh isolated agent/context. Do not give the blind implementation agent a full checkout of this repaired repository and merely tell it not to look at the answer.
+
 ## Validate selection
 
 ```bash
@@ -83,13 +97,64 @@ Audit fails on:
 
 It refuses to recursively build inside the source repository and refuses to delete an arbitrary directory.
 
+## Controlled-run phase gate
+
+A clean folder alone is not enough. The first implementation must be captured **before** repair work starts.
+
+Create a real run record from `templates/run-record.yaml` in the clean workspace. Before implementation begins:
+
+```bash
+python scripts/controlled_run_phase.py experiments/<experiment>/<run>.run.yaml \
+  --phase FIRST_PASS_BUILD
+```
+
+When the initial implementation is complete, record all three required baseline inputs in the run record:
+
+- `code.first_pass_commit`
+- at least one `captures.first_pass` evidence entry
+- `scores.first_pass_fidelity.total`
+
+Then confirm freeze readiness and create the immutable snapshot:
+
+```bash
+python scripts/controlled_run_phase.py experiments/<experiment>/<run>.run.yaml \
+  --phase FIRST_PASS_FREEZE
+
+python scripts/first_pass_evidence.py freeze \
+  experiments/<experiment>/<run>.run.yaml \
+  --tooling-revision <figma-ai-project-revision>
+```
+
+Before **any** repair commit, the repair gate must pass:
+
+```bash
+python scripts/controlled_run_phase.py experiments/<experiment>/<run>.run.yaml \
+  --phase REPAIR
+```
+
+`REPAIR` fails closed if the FIRST PASS snapshot is absent or if the run record's pinned baseline evidence no longer matches the immutable snapshot. This prevents an agent from quietly changing its “first pass” after seeing failures.
+
+Before final completion/evaluation:
+
+```bash
+python scripts/controlled_run_phase.py experiments/<experiment>/<run>.run.yaml \
+  --phase FINALIZE
+```
+
+If `code.final_commit` appears before a valid FIRST PASS snapshot, the phase gate reports the run as invalid rather than manufacturing a baseline after the fact.
+
 ## Controlled experiment sequence
 
 ```text
-sanitized workspace
-→ new RUN A (new optimized workflow experiment)
-→ freeze FIRST PASS before any repair
+sanitized workspace / Actions handoff artifact
+→ fresh isolated agent/context
+→ new RUN A (optimized workflow experiment)
+→ FIRST_PASS_BUILD gate
+→ first implementation commit + screenshots + score
+→ FIRST_PASS_FREEZE gate + immutable snapshot
+→ REPAIR gate
 → targeted repair/final verification
+→ FINALIZE gate
 → new sanitized workspace from the same frozen coordination/treatment
 → RUN B / REPLAY with previous final code and repair diff still absent
 → compare first-pass fidelity, rework, and reproducibility
