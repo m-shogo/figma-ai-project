@@ -1,0 +1,175 @@
+/*
+ * REF-001 Main Visual typography fidelity repair.
+ *
+ * Exact Figma text nodes are positioned relative to the MV frame rather than
+ * approximated through a centered 500px parent box. Figma has no text-shadow on
+ * the slogan. `ケイザイ` and `おもしろい。` use a 1.5px #333 stroke.
+ *
+ * The production font-loading pipeline remains unresolved; this fixture names
+ * the observed Figma families and falls back safely without shipping font files.
+ */
+
+.ref001-mv__copy {
+	position: absolute;
+	inset: 0;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	transform: none;
+	z-index: 2;
+}
+
+.ref001-mv__slogan {
+	position: absolute;
+	inset: 0;
+	height: 100%;
+	margin: 0;
+	font-family: "A P-OTF Futo Go B101 Pr6N", "Zen Kaku Gothic New", sans-serif;
+}
+
+.ref001-mv__quote,
+.ref001-mv__economy,
+.ref001-mv__surprise,
+.ref001-mv__fun,
+.ref001-mv__lead {
+	position: absolute;
+	margin: 0;
+	transform: none;
+	text-shadow: none;
+}
+
+.ref001-mv__quote {
+	top: 106px;
+	width: 53px;
+	height: 190px;
+	color: #8473aa;
+	font-family: "A P-OTF RyuminKO+ ProN", "Yu Mincho", serif;
+	font-size: 119px;
+	font-weight: 800;
+	line-height: 1.6;
+	letter-spacing: .02em;
+}
+
+.ref001-mv__quote--open {
+	left: 471px;
+}
+
+.ref001-mv__quote--close {
+	left: 830px;
+}
+
+.ref001-mv__economy {
+	left: 519px;
+	top: 150px;
+	width: 309px;
+	height: 123px;
+	color: #fff;
+	font-size: 77px;
+	font-weight: 400;
+	line-height: 1.6;
+	letter-spacing: .02em;
+	-webkit-text-stroke: 1.5px #333;
+	paint-order: stroke fill;
+}
+
+.ref001-mv__surprise {
+	left: 503px;
+	top: 263px;
+	width: 355px;
+	height: 70px;
+	color: #000;
+	font-size: 44px;
+	font-weight: 400;
+	line-height: 1.6;
+	letter-spacing: 0;
+}
+
+.ref001-mv__fun {
+	left: 496px;
+	top: 323px;
+	width: 444px;
+	height: 114px;
+	color: #fff;
+	font-size: 71px;
+	font-weight: 400;
+	line-height: 1.6;
+	letter-spacing: .05em;
+	-webkit-text-stroke: 1.5px #333;
+	paint-order: stroke fill;
+}
+
+.ref001-mv__lead {
+	left: 481px;
+	top: 452px;
+	width: 419px;
+	height: 120px;
+	color: #000;
+	font-family: "Zen Kaku Gothic New", sans-serif;
+	font-size: 20px;
+	font-weight: 500;
+	line-height: 2;
+	letter-spacing: .05em;
+	text-align: center;
+}
+
+/* FIXTURE-ONLY: exact supplied 375px endpoint, not production breakpoint evidence. */
+@media (max-width: 600px) {
+	.ref001-mv__quote {
+		top: 127px;
+		width: 45px;
+		height: 160px;
+		font-size: 100px;
+		line-height: 1.6;
+		letter-spacing: .02em;
+	}
+
+	.ref001-mv__quote--open {
+		left: 16px;
+	}
+
+	.ref001-mv__quote--close {
+		left: 317px;
+	}
+
+	.ref001-mv__economy {
+		left: 56px;
+		top: 154px;
+		width: 265px;
+		height: 106px;
+		font-size: 66px;
+		line-height: 1.6;
+		letter-spacing: .02em;
+	}
+
+	.ref001-mv__surprise {
+		left: 47px;
+		top: 257px;
+		width: 258px;
+		height: 32px;
+		font-size: 32px;
+		line-height: 1;
+		letter-spacing: 0;
+	}
+
+	.ref001-mv__fun {
+		left: 16px;
+		top: 305px;
+		width: 375px;
+		height: 60px;
+		font-size: 60px;
+		line-height: 1;
+		letter-spacing: .05em;
+	}
+
+	.ref001-mv__lead {
+		left: 16px;
+		top: 381px;
+		width: 343px;
+		height: 84px;
+		font-size: 14px;
+		line-height: 2;
+		letter-spacing: 0;
+		text-align: center;
+	}
+}
