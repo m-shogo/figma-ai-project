@@ -1,0 +1,33 @@
+name: Generate REF-001 ACF import bundle
+
+on:
+  pull_request:
+    paths:
+      - "scripts/build_ref001_acf_import_bundle.py"
+      - "scripts/validate_acf_export.py"
+      - "experiments/ref001-wordpress-acf/artifacts/acf-export.json"
+      - "experiments/ref001-wordpress-acf/artifacts/courses.acf-export.json"
+      - ".github/workflows/ref001-acf-bundle-generate.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate import bundle
+        run: python scripts/build_ref001_acf_import_bundle.py --output /tmp/acf-import-bundle.json
+
+      - name: Validate generated import bundle
+        run: python scripts/validate_acf_export.py /tmp/acf-import-bundle.json
+
+      - name: Upload generated import bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: ref001-acf-import-bundle
+          path: /tmp/acf-import-bundle.json
+          if-no-files-found: error
+          retention-days: 1
