@@ -1,0 +1,45 @@
+schema_version: 1
+workspace_id: REF-001-OPTIMIZED-CLEAN-RUN-V1
+reference_id: REF-001-CHIBA-KEIZAI-SAMPLE
+purpose: CLEAN_RUN_SOURCE_AND_REPLAY_BASELINE
+
+# This is intentionally an allowlist. A clean agent receives current workflow
+# knowledge and frozen reference evidence, but not the repaired REF-001 answer.
+include_paths:
+  - config
+  - docs
+  - templates
+  - scripts
+  - requirements-dev.txt
+  - references/chiba-keizai-sample.reference.yaml
+  - references/chiba-keizai-sample.structure-profile.yaml
+  - references/chiba-keizai-sample.variable-mode-audit.yaml
+  - references/chiba-keizai-sample.courses-structure-evidence.yaml
+  - experiments/ref001-wordpress-acf/implementation-profile.yaml
+
+# REF-001-specific validators/builders encode repaired implementation details
+# and therefore are not valid clean-run inputs.
+exclude_globs:
+  - scripts/*ref001*
+  - scripts/**/*ref001*
+  - scripts/__pycache__/*
+  - scripts/**/__pycache__/*
+
+# Defense in depth: these paths must never appear in the generated workspace,
+# even if include_paths is broadened later.
+forbidden_globs:
+  - experiments/ref001-wordpress-acf/fixture-theme/*
+  - experiments/ref001-wordpress-acf/fixture-theme/**/*
+  - experiments/ref001-wordpress-acf/visual-preview/*
+  - experiments/ref001-wordpress-acf/visual-preview/**/*
+  - experiments/ref001-wordpress-acf/artifacts/*
+  - experiments/ref001-wordpress-acf/artifacts/**/*
+  - experiments/ref001-wordpress-acf/fixture-content.yaml
+  - experiments/ref001-wordpress-acf/acf-content-model.yaml
+  - experiments/ref001-wordpress-acf/courses-content-model.yaml
+  - experiments/ref001-wordpress-acf/courses-fixture-content.yaml
+  - experiments/ref001-wordpress-acf/README.md
+  - research/figma-web-friction/*
+  - research/figma-web-friction/**/*
+  - tests/test_ref001_*
+  - tests/**/test_ref001_*
