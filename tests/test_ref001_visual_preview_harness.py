@@ -59,7 +59,7 @@ class Ref001VisualPreviewHarnessTests(unittest.TestCase):
         self.assertIn("scrollIntoViewIfNeeded", source)
         self.assertIn("naturalWidth", source)
         self.assertIn("status !== 200", source)
-        self.assertIn("results.length !== 7", source)
+        self.assertIn("courseResults.length !== 7", source)
         self.assertIn("asset-check.mjs", shell)
 
     def test_generated_captures_are_not_committed(self) -> None:
