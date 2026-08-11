@@ -1,0 +1,215 @@
+/*
+ * REF-001 Main Visual Open Campus CTA detail fidelity repair.
+ *
+ * Exact Figma evidence:
+ * PC group 21378:8046 = 240×240
+ * - orange circle: 0,0 / 240×240
+ * - note layer bounds: front 29,7 / back 27,9 / text 47,21
+ * - OPEN CAMPUS: 48,67 / 146×84
+ * - status: 78,163 / 92×22
+ * - arrow circle: 184,184 / 48×48
+ * - arrow glyph: 200.32,202.02 / 14×13
+ *
+ * SP group 21376:4898 = 189×192
+ * - orange circle: 19,22 / 170×170
+ * - note layer bounds: front 2,0 / back 0,2 / text 22,13
+ * - OPEN CAMPUS: 45,54 / 119×68
+ * - status: 76,130 / 67×16
+ * - arrow circle: 145,148 / 36×36
+ * - arrow glyph: 158,161 / 11×10
+ *
+ * The 600px switch remains FIXTURE-ONLY.
+ */
+
+.ref001-mv__open-campus {
+	width: 240px;
+	height: 240px;
+	background: none;
+	border-radius: 0;
+	text-align: left;
+}
+
+.ref001-mv__open-campus::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 240px;
+	height: 240px;
+	border-radius: 50%;
+	background: var(--ref001-orange);
+}
+
+.ref001-mv__open-campus-note {
+	position: absolute;
+	left: 27px;
+	top: 7px;
+	width: 189px;
+	height: 49px;
+	padding: 0;
+	border: 0;
+	border-radius: 0;
+	background: transparent;
+	transform: none;
+	font-size: 14px;
+	line-height: 1;
+	white-space: nowrap;
+	z-index: 2;
+}
+
+.ref001-mv__open-campus-note-shapes,
+.ref001-mv__open-campus-note-back,
+.ref001-mv__open-campus-note-front,
+.ref001-mv__open-campus-note-copy {
+	position: absolute;
+}
+
+.ref001-mv__open-campus-note-shapes {
+	inset: 0;
+}
+
+.ref001-mv__open-campus-note-back {
+	left: 0;
+	top: 2px;
+	width: 187px;
+	height: 47px;
+}
+
+.ref001-mv__open-campus-note-front {
+	left: 2px;
+	top: 0;
+	width: 187px;
+	height: 47px;
+}
+
+.ref001-mv__open-campus-note-copy {
+	left: 20px;
+	top: 14px;
+	width: 147px;
+	height: 14px;
+	color: var(--ref001-black);
+	font-family: "Zen Kaku Gothic New", sans-serif;
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 1;
+	letter-spacing: .05em;
+	text-align: center;
+}
+
+.ref001-mv__open-campus-main {
+	left: 48px;
+	top: 67px;
+	width: 146px;
+	height: 84px;
+	transform: none;
+	text-align: center;
+}
+
+.ref001-mv__open-campus-status {
+	left: 78px;
+	top: 163px;
+	bottom: auto;
+	width: 92px;
+	height: 22px;
+	transform: none;
+	font-size: 22px;
+	line-height: 1;
+	text-align: center;
+}
+
+.ref001-mv__open-campus-arrow {
+	position: absolute;
+	left: 184px;
+	top: 184px;
+	right: auto;
+	bottom: auto;
+	display: block;
+	width: 48px;
+	height: 48px;
+	border: 1px solid var(--ref001-orange);
+	border-radius: 50%;
+	background: var(--ref001-white);
+	font-size: 0;
+}
+
+.ref001-mv__open-campus-arrow picture,
+.ref001-mv__open-campus-arrow img {
+	position: absolute;
+	display: block;
+}
+
+.ref001-mv__open-campus-arrow picture {
+	inset: 0;
+}
+
+.ref001-mv__open-campus-arrow img {
+	left: 16.32px;
+	top: 18.02px;
+	width: 14px;
+	height: 13px;
+	max-width: none;
+}
+
+/* FIXTURE-ONLY: exact supplied 375px endpoint, not production breakpoint evidence. */
+@media (max-width: 600px) {
+	.ref001-mv__open-campus {
+		right: 16px;
+		bottom: 0;
+		width: 189px;
+		height: 192px;
+	}
+
+	.ref001-mv__open-campus::before {
+		left: 19px;
+		top: 22px;
+		width: 170px;
+		height: 170px;
+	}
+
+	.ref001-mv__open-campus-note {
+		left: 0;
+		top: 0;
+		width: 189px;
+		height: 49px;
+		font-size: 14px;
+	}
+
+	.ref001-mv__open-campus-note-copy {
+		left: 22px;
+		top: 13px;
+	}
+
+	.ref001-mv__open-campus-main {
+		left: 45px;
+		top: 54px;
+		width: 119px;
+		height: 68px;
+		font-size: 26px;
+		line-height: 1.3;
+	}
+
+	.ref001-mv__open-campus-status {
+		left: 76px;
+		top: 130px;
+		bottom: auto;
+		width: 67px;
+		height: 16px;
+		font-size: 16px;
+	}
+
+	.ref001-mv__open-campus-arrow {
+		left: 145px;
+		top: 148px;
+		right: auto;
+		bottom: auto;
+		width: 36px;
+		height: 36px;
+	}
+
+	.ref001-mv__open-campus-arrow img {
+		left: 13px;
+		top: 13px;
+		width: 11px;
+		height: 10px;
+	}
+}
