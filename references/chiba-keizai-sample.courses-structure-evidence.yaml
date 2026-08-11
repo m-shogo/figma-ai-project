@@ -1,0 +1,187 @@
+schema_version: 1
+reference_id: REF-001-CHIBA-KEIZAI-SAMPLE
+section_id: courses
+status: MEASURED
+captured_at: "2026-08-11T12:34:00+09:00"
+figma:
+  file_key: ZYTdtw4wCgkcBy2cVnhxVI
+  pc_node_id: "21378:7505"
+  sp_node_id: "21376:4403"
+  pc_name: cources
+  sp_name: Group 339
+  pc_size: { width: 1380, height: 1514 }
+  sp_size: { width: 375, height: 2515 }
+
+responsive_modes:
+  pc: { collection: template, mode_id: "3:0", mode_name: PC }
+  sp: { collection: template, mode_id: "4003:0", mode_name: SP }
+
+structure:
+  item_count: 7
+  item_identity_source: FIGMA_TEXT_AND_ORDER
+  components:
+    pc_instance_count: 0
+    sp_instance_count: 0
+  images:
+    pc_image_fill_count: 0
+    sp_image_fill_count: 0
+    note: "Course pictograms are vector/SVG artwork rather than bitmap image fills."
+  prototype_reactions:
+    pc_count: 0
+    sp_count: 0
+    interpretation: "No click/navigation/accordion/carousel behavior is proven by the inspected Courses nodes."
+  auto_layout:
+    pc_count: 22
+    sp_count: 8
+    trusted_patterns:
+      - "Each PC recommendation list is VERTICAL Auto Layout with 12px spacing."
+      - "Each PC recommendation row is HORIZONTAL Auto Layout with 10px spacing."
+      - "Each SP recommendation list is VERTICAL Auto Layout with 12px spacing."
+    caution:
+      - "Outer PC two-column placement and centered final card are manually composed."
+      - "SP card internals use less Auto Layout than PC and need visual verification."
+
+geometry:
+  pc:
+    card_width: 560
+    card_height: 271
+    column_x: [110, 710]
+    horizontal_gap: 40
+    row_y: [5325, 5636, 5947]
+    vertical_gap: 40
+    final_card:
+      course_index: 7
+      x: 410
+      placement: CENTERED_SINGLE_CARD
+    icon_block: { width: 100, height: 100 }
+    recommendation_box:
+      width: 496
+      height: 102
+      inset_x: 32
+  sp:
+    card_width: 343
+    card_heights:
+      course_1: 320
+      course_2: 299
+      course_3: 299
+      course_4: 299
+      course_5: 320
+      course_6: 299
+      course_7: 299
+    x: 16
+    interpretation: "Height differences are content-driven; do not hard-code seven unrelated heights unless visual QA proves necessary."
+
+heading:
+  kicker_text_as_designed: "# COURCES"
+  title: "未来につながる７つのコース"
+  note: "Figma uses the typo COURCES. Preserve visual source during First Pass; content correction is an owner/editor decision, not an implementation inference."
+
+course_identity_contract:
+  source: FIXED_DOMAIN_COLLECTION_CANDIDATE
+  editor_add_remove: false
+  editor_reorder: false
+  identity_fields_page_acf: false
+  rationale:
+    - "The design explicitly presents a seven-course institutional structure rather than an arbitrary list of cards."
+    - "Course names, colors, icons and order may belong to a shared domain model in the eventual WordPress theme; target-code reconnaissance must get first chance to supply them."
+  courses:
+    - index: 1
+      id: public-service
+      title: "公務員コース"
+      color_variable: "color/cource/公務員"
+      color: "#fabf12"
+      description: "国家公務員、地方公務員、公安職、公益法人などを目指すコース"
+      recommendations:
+        - "経済や地域の課題を解決し、安心して暮らせる街をつくりたい人"
+        - "試験対策だけでなく実務で役立つ生きた経済の知識を身につけたい人"
+    - index: 2
+      id: accounting
+      title: "会計コース"
+      color_variable: "color/cource/会計"
+      color: "#f29800"
+      description: "税理士、公認会計士、その他経理部門などを目指すコース"
+      recommendations:
+        - "企業の「お金」のプロとして、専門資格を在学中に武器にしたい人"
+        - "数字の強さを活かして、企業の経営を裏から支えたい人"
+    - index: 3
+      id: business-management
+      title: "ビジネス経営コース"
+      color_variable: "color/cource/ビジネス経営"
+      color: "#ed6c4e"
+      description: "ビジネスパーソン、ビジネスリーダーを目指すコース"
+      recommendations:
+        - "自由なアイデアを形にして、起業やヒット商品開発に挑戦したい人"
+        - "リーダーシップや、実践的なマーケティングを学びたい人"
+    - index: 4
+      id: finance
+      title: "金融コース"
+      color_variable: "color/cource/金融"
+      color: "#df4473"
+      description: "銀行業界、証券業界などを目指すコース"
+      recommendations:
+        - "経済の仕組みを深く学び、人や企業の夢を「融資」で応援したい人"
+        - "地元・千葉をはじめとする地域経済の活性化に貢献したい人"
+    - index: 5
+      id: teaching
+      title: "教職コース"
+      color_variable: "color/cource/教職"
+      color: "#00a5e3"
+      description: "中学（社会）・高校（公民）の免許取得、教員を目指すコース"
+      recommendations:
+        - "「社会や経済の面白さ」をわかりやすく伝えられる先生になりたい人"
+        - "教職課程と経済の専門知識を両立させた視野を持つ教育者を目指す人"
+    - index: 6
+      id: curator
+      title: "学芸員コース"
+      color_variable: "color/cource/学芸員"
+      color: "#28b6aa"
+      description: "学芸員資格の取得、関連する仕事を目指すコース"
+      recommendations:
+        - "歴史や文化の魅力を、展示や企画を通して多くの人に伝えたい人"
+        - "経済の視点も持ち合わせた「文化の専門家」を目指したい人"
+    - index: 7
+      id: it
+      title: "ITコース"
+      color_variable: "color/cource/IT"
+      color: "#8cc66c"
+      description: "ITスキルを駆使するビジネスパーソンを目指すコース"
+      recommendations:
+        - "プログラミングだけでなく、AIやデータでビジネスを変革したい人"
+        - "ITの最先端技術×経済の知識で、DX時代に最適な人材になりたい人"
+
+translation:
+  recommended_mode: HYBRID
+  trusted_structure:
+    - "Exactly seven supplied course identities and their order."
+    - "Each card has title, one description and exactly two recommendation rows."
+    - "PC recommendation lists use explicit Auto Layout; SP list spacing is also explicit."
+    - "PC grid is two columns with a centered seventh card; SP is a single vertical stack."
+  visual_verification_required:
+    - "Course pictogram SVG/vector fidelity and per-course icon proportions."
+    - "Speech-bubble recommendation label shape."
+    - "Manual PC outer card placement and SP internal wrapping."
+  unknowns:
+    - "Whether the production WordPress codebase already owns Course data as CPT/taxonomy/options/config/template data."
+    - "Whether any course card becomes a link in production; no interaction is proven in the inspected Figma nodes."
+    - "Whether the Figma kicker typo COURCES should be corrected by content owners."
+
+cms_learning_baseline:
+  page_acf_ownership: PAGE_COPY_OVER_FIXED_DOMAIN_IDENTITIES
+  code_or_domain_owned:
+    - course identity/title
+    - course order
+    - course color/token
+    - course pictogram/icon identity
+    - section heading/kicker presentation
+  page_acf_candidates_per_course:
+    - description
+    - recommendation_1
+    - recommendation_2
+  field_count_if_learning_fixture_is_extended: 21
+  prohibited_baseline_choices:
+    - ACF_REPEATER
+    - EDITABLE_COURSE_COUNT
+    - EDITABLE_COURSE_ORDER
+    - PAGE_ACF_COURSE_COLOR
+    - PAGE_ACF_COURSE_ICON
+  target_code_precedence: "If the actual theme has a shared course domain model, reuse/map it before creating page-local duplicated data."
