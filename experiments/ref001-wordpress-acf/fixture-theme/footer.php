@@ -3,8 +3,8 @@
  * REF-001 shared Footer visual First Pass.
  *
  * This reproduces the shared Figma Footer component structure only. Production
- * destinations, social URLs, logo asset plumbing, and page-top behavior are
- * deliberately deferred until the final WordPress integration pass.
+ * destinations, social URLs, and page-top behavior are deliberately deferred
+ * until the final WordPress integration pass.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -18,8 +18,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 	data-global-ownership-status="deferred"
 >
 	<div class="ref001-footer__profile">
-		<div class="ref001-footer__logo" data-asset-status="deferred" aria-label="千葉経済大学">
-			<span class="ref001-footer__logo-mark" aria-hidden="true">CK</span>
+		<div class="ref001-footer__logo" aria-label="千葉経済大学">
+			<img
+				class="ref001-footer__logo-mark"
+				src="<?php echo esc_url( get_theme_file_uri( 'assets/images/ref001-footer-logo-mark.svg' ) ); ?>"
+				alt=""
+				width="56"
+				height="61"
+				data-figma-node="21057:625"
+			>
 			<span class="ref001-footer__logo-copy">
 				<strong>千葉経済大学</strong>
 				<small>CHIBA KEIZAI</small>
