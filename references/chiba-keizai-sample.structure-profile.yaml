@@ -1,0 +1,231 @@
+schema_version: 3
+reference_id: REF-001-CHIBA-KEIZAI-SAMPLE
+captured_at: "2026-08-11T11:32:00+09:00"
+figma_tooling_snapshot: "ChatGPT Figma connector / Plugin API structural inspection after responsive Variable Mode correction"
+
+page:
+  file_key: ZYTdtw4wCgkcBy2cVnhxVI
+  page_or_frame_node_id: "21376:1600"
+  auto_layout_generation: UNDETERMINED
+  notes:
+    - "The file mixes manual groups/components with explicit Auto Layout frames; the generation/version of observed Auto Layout cannot be proven from the available Plugin API evidence."
+    - "PC and SP responsive roots are separate visible top-level Frames on the same AI page and explicitly pin template=PC / template=SP respectively."
+
+sections:
+  - section_id: header
+    figma_node_ids:
+      - "21378:8066"
+      - "21376:4918"
+    signals:
+      components:
+        state: OBSERVED
+        confidence: HIGH
+        evidence:
+          - "PC Header is INSTANCE 21378:8066 mapped to main component 280:267."
+          - "SP Header is INSTANCE 21376:4918 mapped to main component 280:193."
+          - "Both corresponding component definitions live on the supplied components page."
+        instance_count: 2
+        detached_or_repeated_patterns: []
+      variables:
+        state: OBSERVED
+        confidence: HIGH
+        evidence:
+          - "PC Header resolves template mode 3:0 (PC); SP Header resolves 4003:0 (SP)."
+          - "PC inspection found 6 variable-bound descendants covering fills/font families; SP inspection found a variable-bound base fill."
+        bound_property_coverage: null
+        modes_observed:
+          - "template/PC=3:0"
+          - "template/SP=4003:0"
+      auto_layout:
+        state: NONE
+        confidence: HIGH
+        evidence:
+          - "Structural inspection found 0 Auto Layout containers in both Header instances; component/logo Frames resolve layoutMode=NONE."
+        container_coverage: 0
+        absolute_child_ratio: 0
+        generation: NONE
+      semantic_naming:
+        state: OBSERVED
+        confidence: MEDIUM
+        evidence:
+          - "Root/component concepts are semantic (Header, Header_sp, logo, btn_oc, btn_doc), but most internal vector/rectangle layers retain generic names."
+          - "Measured generic-name counts were 34/42 nodes on PC and 30/33 nodes on SP, so inner-layer names are not reliable enough to drive code structure alone."
+        generic_name_ratio: 0.85
+      code_connect:
+        state: UNDETERMINED
+        confidence: LOW
+        evidence:
+          - "Code Connect lookup is plan/seat-limited in the current Figma environment; absence cannot be inferred."
+        mapped_component_coverage: null
+      assets:
+        state: UNKNOWN
+        confidence: NONE
+        evidence: []
+        exact_sources_available: []
+      responsive_mapping:
+        state: OBSERVED
+        confidence: HIGH
+        evidence:
+          - "PC/SP roots and Header instances are explicitly paired in REF-001 and resolve the correct responsive Variable Modes."
+          - "PC Header is 1380x94 and SP Header is 375x67 with corresponding logo/header responsibilities."
+    recommended_translation_mode: HYBRID
+    mode_reasoning_evidence:
+      - "Component identity and variable bindings are trustworthy implementation evidence."
+      - "Internal layout is not Auto Layout and generic child naming is high, so raw child geometry should not be translated as semantic code structure."
+    trusted_structure:
+      - "Reuse the Header/Header_sp component identity and semantic responsibilities."
+      - "Preserve PC/SP variable/token intent and observed button/logo content."
+    untrusted_or_missing_structure:
+      - "Internal groups/rectangles do not provide a trustworthy responsive layout model."
+      - "Component internals need visual/context verification rather than coordinate transcription."
+    codebase_reuse_priority:
+      - "If the target codebase already has header/navigation/logo/button primitives, map Figma component evidence onto those before creating duplicates."
+    unresolved_questions:
+      - "Production navigation/menu interaction and breakpoint behavior must come from target code/company evidence or Figma prototype/annotation evidence, not the 1380/375 reference widths alone."
+
+  - section_id: main-visual
+    figma_node_ids:
+      - "21378:8032"
+      - "21376:4886"
+    signals:
+      components:
+        state: NONE
+        confidence: HIGH
+        evidence:
+          - "Structural inspection found 0 component instances in both current Main Visual groups."
+        instance_count: 0
+        detached_or_repeated_patterns:
+          - "CTA-like circular composition is a manual Group rather than a Component instance in the current MV."
+      variables:
+        state: OBSERVED
+        confidence: HIGH
+        evidence:
+          - "PC MV inspection found 18 variable-bound descendants; SP found 20."
+          - "Responsive width, fills, strokes, radius and font-family bindings are present; PC resolves template=PC and SP resolves template=SP."
+        bound_property_coverage: null
+        modes_observed:
+          - "template/PC=3:0"
+          - "template/SP=4003:0"
+      auto_layout:
+        state: NONE
+        confidence: HIGH
+        evidence:
+          - "MV roots are Groups and structural inspection found no Auto Layout containers in either PC or SP composition."
+        container_coverage: 0
+        absolute_child_ratio: 0
+        generation: NONE
+      semantic_naming:
+        state: OBSERVED
+        confidence: MEDIUM
+        evidence:
+          - "Meaningful grouping exists at bg, Mask group, cta and txt level, while vectors/rectangles remain generic."
+          - "PC and SP share matching semantic copy and corresponding group order."
+        generic_name_ratio: 0.34
+      code_connect:
+        state: UNDETERMINED
+        confidence: LOW
+        evidence:
+          - "Code Connect lookup is plan/seat-limited in the current Figma environment; absence cannot be inferred."
+        mapped_component_coverage: null
+      assets:
+        state: OBSERVED
+        confidence: MEDIUM
+        evidence:
+          - "Both PC/SP MVs contain paired Mask groups and image-bearing visual composition that must be exported/resolved as exact assets or faithful crops during section inspection."
+        exact_sources_available: []
+      responsive_mapping:
+        state: OBSERVED
+        confidence: HIGH
+        evidence:
+          - "PC/SP text anchors and composition correspond, but dimensions change substantially."
+          - "SP MV root itself remains 1380px wide inside the 375px page context while responsive vectors resolve to 375px, demonstrating that raw group width is not a production CSS width contract."
+    recommended_translation_mode: HYBRID
+    mode_reasoning_evidence:
+      - "Text identity, variable bindings, layer order and image/mask intent are useful structure."
+      - "The visual relies on manual Groups, vectors and masks with no Auto Layout; exact composition requires visual verification rather than direct coordinate-to-CSS translation."
+    trusted_structure:
+      - "Preserve the paired copy, visual layers, mask/image intent, CTA semantic content and responsive Variable Mode evidence."
+      - "Use Figma assets/crops and visual comparison as primary evidence for the composed hero."
+    untrusted_or_missing_structure:
+      - "Do not interpret the SP root's 1380px group width as the website viewport/container width."
+      - "Manual mask/vector geometry is not a reusable responsive layout specification by itself."
+    codebase_reuse_priority:
+      - "Reuse target-project image/hero/CTA primitives where they preserve the supplied visual behavior; do not create a new generic hero abstraction before repo reconnaissance."
+    unresolved_questions:
+      - "Exact image export/crop sources and any MV interaction/animation must be resolved during section inspection."
+
+  - section_id: reason
+    figma_node_ids:
+      - "21378:7999"
+      - "21376:4852"
+    signals:
+      components:
+        state: NONE
+        confidence: HIGH
+        evidence:
+          - "Structural inspection found no Component instances in the current PC/SP Reason groups."
+        instance_count: 0
+        detached_or_repeated_patterns:
+          - "Three repeated reason cards are structurally repeated Frames but are not Component instances."
+      variables:
+        state: OBSERVED
+        confidence: HIGH
+        evidence:
+          - "PC inspection found 17 variable-bound descendants and SP found 21; fills/font families and responsive mode resolution are present."
+          - "PC Reason resolves template=PC; SP Reason resolves template=SP."
+        bound_property_coverage: null
+        modes_observed:
+          - "template/PC=3:0"
+          - "template/SP=4003:0"
+      auto_layout:
+        state: OBSERVED
+        confidence: HIGH
+        evidence:
+          - "PC Reason contains 5/5 Auto Layout-capable containers in active Auto Layout, including reasons as HORIZONTAL."
+          - "SP Reason contains 5/5 Auto Layout-capable containers in active Auto Layout, including reasons as VERTICAL with 16px item spacing."
+          - "Card title Frames use HORIZONTAL Auto Layout; SP observed title padding is 8px vertical / 24px horizontal."
+        container_coverage: 1
+        absolute_child_ratio: 0
+        generation: UNDETERMINED
+      semantic_naming:
+        state: OBSERVED
+        confidence: HIGH
+        evidence:
+          - "The root/reasons/title semantic layers and matching Japanese text anchors reliably identify the three cards and heading across PC/SP."
+        generic_name_ratio: 0.27
+      code_connect:
+        state: UNDETERMINED
+        confidence: LOW
+        evidence:
+          - "Code Connect lookup is plan/seat-limited in the current Figma environment; absence cannot be inferred."
+        mapped_component_coverage: null
+      assets:
+        state: UNKNOWN
+        confidence: NONE
+        evidence: []
+        exact_sources_available: []
+      responsive_mapping:
+        state: OBSERVED
+        confidence: HIGH
+        evidence:
+          - "The same three reason cards and heading copy appear in both viewports."
+          - "The primary responsive transition is directly encoded by Auto Layout: HORIZONTAL on PC → VERTICAL on SP."
+    recommended_translation_mode: STRUCTURE_FIRST
+    mode_reasoning_evidence:
+      - "Both responsive variants encode their primary card layout with Auto Layout and share clear semantic content."
+      - "The PC→SP transition is explicit structural evidence rather than an inferred breakpoint redesign."
+    trusted_structure:
+      - "Translate the three-card reasons container as one responsive layout whose direction changes according to the eventual project breakpoint contract."
+      - "Preserve card ordering, title/body hierarchy, spacing intent and variable/token mappings."
+    untrusted_or_missing_structure:
+      - "The actual production breakpoint threshold is still unknown; reference widths 1380/375 are acceptance viewports, not breakpoint values."
+      - "Auto Layout generation/version cannot be proven, but the active layout semantics are directly inspectable."
+    codebase_reuse_priority:
+      - "Prefer existing target-project grid/stack/container primitives if they match the observed HORIZONTAL→VERTICAL behavior."
+    unresolved_questions:
+      - "Resolve the real breakpoint/query semantics from company/design-system/existing-code evidence before Shared Contract freeze."
+
+notes:
+  - "This profile records the first three real sections after the responsive Variable Mode failure was corrected."
+  - "Initial Header STRUCTURE_FIRST hypothesis was revised to HYBRID because live structural evidence showed component identity but no internal Auto Layout; the project should promote rules from measured evidence rather than first impressions."
+  - "Reason remains STRUCTURE_FIRST because the PC/SP direction change is explicitly encoded by Auto Layout in both variants."
