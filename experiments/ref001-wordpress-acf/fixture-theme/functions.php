@@ -37,6 +37,7 @@ function ref001_learning_enqueue_assets() {
 		'education-geometry' => 'ref001-education-geometry.css',
 		'cta'           => 'ref001-cta.css',
 		'student-voice' => 'ref001-student-voice.css',
+		'student-voice-profile-fidelity' => 'ref001-student-voice-profile-fidelity.css',
 		'messages'      => 'ref001-messages.css',
 		'middle-geometry' => 'ref001-middle-geometry.css',
 		'courses'       => 'ref001-courses.css',
