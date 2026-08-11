@@ -2,19 +2,14 @@
  * REF-001 Courses — learning First Pass.
  *
  * Measured Figma evidence:
- * - PC cards: 560×271, 40px horizontal/vertical gap, two columns
- * - seventh IT card is centered on the final row
- * - PC icon slot: 100×100 with exact Figma SVG pictograms
+ * - PC cards: 560×271, 40px gap, two columns; seventh card centered
+ * - PC icon slot: 100×100
  * - SP cards: 343px wide, content-driven heights around 299–320px
- * - SP icon slot: 64×64; exact per-course frame sizes are preserved below
+ * - SP icon slot: 64×64
  * - recommendation list gap: 12px
  *
- * Six course pictograms reuse the same normalized vector network between PC/SP.
- * The supplied SP Curator card is a Figma source anomaly: it visibly uses the
- * school/Teaching pictogram instead of the PC Curator artwork. First Pass keeps
- * that mismatch intentionally for source fidelity and flags it in the markup.
- *
- * The 600px media query remains FIXTURE-ONLY, not production breakpoint evidence.
+ * Owner responsive contract: mobile is below 768px. 375/1380 are exact visual
+ * endpoints; intermediate desktop widths use intrinsic grid reflow.
  */
 
 .ref001-courses {
@@ -68,16 +63,18 @@
 
 .ref001-courses__grid {
 	display: grid;
-	grid-template-columns: repeat(2, 560px);
+	grid-template-columns: repeat(auto-fit, minmax(min(500px, 100%), 560px));
+	justify-content: center;
 	gap: 40px;
-	width: 1160px;
+	width: min(1160px, calc(100% - 40px));
 	margin: 0 auto;
 	padding: 0;
 	list-style: none;
 }
 
 .ref001-courses__item {
-	width: 560px;
+	width: 100%;
+	max-width: 560px;
 	margin: 0;
 }
 
@@ -88,7 +85,7 @@
 
 .ref001-course-card {
 	position: relative;
-	width: 560px;
+	width: 100%;
 	min-height: 271px;
 	padding: 28px 32px 32px 156px;
 	background: var(--ref001-white);
@@ -208,13 +205,13 @@
 	background: var(--ref001-course-color);
 }
 
-@media (max-width: 600px) {
+@media (max-width: 767px) {
 	.ref001-courses {
 		padding: 64px 0 72px;
 	}
 
 	.ref001-courses__header {
-		width: 343px;
+		width: min(343px, calc(100% - 32px));
 		margin-bottom: 40px;
 	}
 
@@ -245,23 +242,24 @@
 		display: flex;
 		flex-direction: column;
 		gap: 32px;
-		width: 343px;
+		width: min(343px, calc(100% - 32px));
 	}
 
 	.ref001-courses__item,
 	.ref001-courses__item:nth-child(7) {
-		width: 343px;
+		width: 100%;
+		max-width: none;
 	}
 
 	.ref001-course-card {
-		width: 343px;
+		width: 100%;
 		min-height: 299px;
-		padding: 24px 20px 24px;
+		padding: 24px 20px;
 	}
 
 	.ref001-course-card__identity {
 		display: grid;
-		grid-template-columns: 64px 1fr;
+		grid-template-columns: 64px minmax(0, 1fr);
 		gap: 16px;
 		align-items: center;
 		min-height: 64px;
@@ -278,36 +276,15 @@
 		max-height: none;
 	}
 
-	.ref001-courses__item[data-course-key="public_service"] .ref001-course-card__icon img {
-		width: 31px;
-		height: 40px;
-	}
-
-	.ref001-courses__item[data-course-key="accounting"] .ref001-course-card__icon img {
-		width: 30px;
-		height: 40px;
-	}
-
-	.ref001-courses__item[data-course-key="business_management"] .ref001-course-card__icon img {
-		width: 40px;
-		height: 40px;
-	}
-
-	.ref001-courses__item[data-course-key="finance"] .ref001-course-card__icon img {
-		width: 39px;
-		height: 40px;
-	}
-
+	.ref001-courses__item[data-course-key="public_service"] .ref001-course-card__icon img { width: 31px; height: 40px; }
+	.ref001-courses__item[data-course-key="accounting"] .ref001-course-card__icon img { width: 30px; height: 40px; }
+	.ref001-courses__item[data-course-key="business_management"] .ref001-course-card__icon img { width: 40px; height: 40px; }
+	.ref001-courses__item[data-course-key="finance"] .ref001-course-card__icon img { width: 39px; height: 40px; }
 	.ref001-courses__item[data-course-key="teaching"] .ref001-course-card__icon img,
 	.ref001-courses__item[data-course-key="curator"] .ref001-course-card__icon img,
-	.ref001-courses__item[data-course-key="it"] .ref001-course-card__icon img {
-		width: 48px;
-		height: 34px;
-	}
+	.ref001-courses__item[data-course-key="it"] .ref001-course-card__icon img { width: 48px; height: 34px; }
 
-	.ref001-course-card__heading h3 {
-		font-size: 22px;
-	}
+	.ref001-course-card__heading h3 { font-size: 22px; }
 
 	.ref001-course-card__description {
 		min-height: 0;
@@ -320,16 +297,12 @@
 		padding-top: 14px;
 	}
 
-	.ref001-course-card__recommend-label {
-		left: 12px;
-	}
+	.ref001-course-card__recommend-label { left: 12px; }
 
 	.ref001-course-card__recommendations ul {
 		min-height: 0;
 		padding: 28px 20px 16px 44px;
 	}
 
-	.ref001-course-card__recommendations li {
-		font-size: 13px;
-	}
+	.ref001-course-card__recommendations li { font-size: 13px; }
 }
