@@ -61,6 +61,9 @@ jobs:
       - name: Validate implementation target profiles and Shared Contract binding
         run: python scripts/validate_implementation_profile.py
 
+      - name: Validate implementation profile pins on active runs
+        run: python scripts/validate_run_implementation_profile.py
+
       - name: Validate reference, shared, section, and run records
         run: python scripts/validate_records.py
 
