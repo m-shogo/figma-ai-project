@@ -76,26 +76,90 @@
 	margin: 0;
 	font-size: 22px;
 	font-weight: 500;
-	line-height: 1.4;
+	line-height: 1;
 	letter-spacing: .05em;
 }
 
-.ref001-links__item--orange .ref001-links__label {
-	font-size: 18px;
+.ref001-links__label--numbers {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	line-height: 1.4;
 }
 
-.ref001-links__item--instagram .ref001-links__label {
+.ref001-links__numbers-top {
+	font-size: 18px;
+	line-height: 1.4;
+}
+
+.ref001-links__numbers-main {
+	font-size: 22px;
+	line-height: 1.4;
+}
+
+.ref001-links__label--instagram {
 	font-family: Poppins, sans-serif;
 	font-size: 20px;
+	font-weight: 400;
 	line-height: 1;
+	letter-spacing: .05em;
+	transform: translateY(-7px);
+}
+
+.ref001-links__instagram-line {
+	display: inline;
+}
+
+.ref001-links__instagram-line + .ref001-links__instagram-line::before {
+	content: " ";
 }
 
 .ref001-links__sub {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 7px;
 	margin: 10px 0 0;
 	font-family: Poppins, sans-serif;
 	font-size: 14px;
+	font-weight: 400;
 	line-height: 1;
 	letter-spacing: .05em;
+	transform: translateY(-7px);
+}
+
+.ref001-links__instagram-icon {
+	position: relative;
+	box-sizing: border-box;
+	width: 13px;
+	height: 13px;
+	flex: 0 0 13px;
+	border: 1.2px solid currentColor;
+	border-radius: 3.5px;
+}
+
+.ref001-links__instagram-icon::before {
+	content: "";
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	width: 4px;
+	height: 4px;
+	box-sizing: border-box;
+	border: 1px solid currentColor;
+	border-radius: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.ref001-links__instagram-icon::after {
+	content: "";
+	position: absolute;
+	right: 2px;
+	top: 2px;
+	width: 1.5px;
+	height: 1.5px;
+	border-radius: 50%;
+	background: currentColor;
 }
 
 .ref001-links__arrow {
@@ -108,10 +172,6 @@
 	font-size: 29px;
 	font-weight: 300;
 	line-height: 1;
-}
-
-.ref001-links__item--instagram .ref001-links__arrow {
-	top: 160px;
 }
 
 /* FIXTURE-ONLY: 1380/375 Figma endpoints do not prove the production breakpoint. */
@@ -147,18 +207,42 @@
 		letter-spacing: .05em;
 	}
 
-	.ref001-links__item--orange .ref001-links__label {
+	.ref001-links__numbers-top {
 		font-size: 13px;
+		line-height: 1.4;
 	}
 
-	.ref001-links__item--instagram .ref001-links__label {
+	.ref001-links__numbers-main {
+		font-size: 16px;
+		line-height: 1.4;
+	}
+
+	.ref001-links__label--instagram {
 		font-size: 16px;
 		line-height: 1;
+		transform: none;
+	}
+
+	.ref001-links__instagram-line {
+		display: block;
+	}
+
+	.ref001-links__instagram-line + .ref001-links__instagram-line::before {
+		content: none;
 	}
 
 	.ref001-links__sub {
+		gap: 5px;
 		margin-top: 9px;
 		font-size: 12px;
+		transform: none;
+	}
+
+	.ref001-links__instagram-icon {
+		width: 12px;
+		height: 12px;
+		flex-basis: 12px;
+		border-radius: 3px;
 	}
 
 	.ref001-links__arrow {
