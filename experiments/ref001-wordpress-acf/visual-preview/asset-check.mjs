@@ -62,6 +62,68 @@ await page.locator('.ref001-student-voice').scrollIntoViewIfNeeded();
 await page.waitForTimeout(100);
 
 const compositeResults = await page.locator('[data-figma-composite-node]:not([data-figma-composite-node=""])').evaluateAll(async (elements) => {
+  async function inspectSource(src) {
+    const inspection = {
+      kind: src.startsWith('data:') ? 'data-uri' : 'url',
+      srcLength: src.length,
+      srcPrefix: src.slice(0, 48),
+      srcTail: src.slice(-24),
+      base64Length: null,
+      decodedByteLength: null,
+      startBytes: null,
+      endBytes: null,
+      base64DecodeError: null,
+      fetchByteLength: null,
+      fetchStartBytes: null,
+      fetchEndBytes: null,
+      imageBitmapDecoded: null,
+      imageBitmapWidth: null,
+      imageBitmapHeight: null,
+      imageBitmapError: null,
+    };
+
+    if (src.startsWith('data:')) {
+      const comma = src.indexOf(',');
+      const header = comma >= 0 ? src.slice(0, comma) : '';
+      const payload = comma >= 0 ? src.slice(comma + 1) : '';
+      inspection.base64Length = payload.length;
+      if (header.includes(';base64')) {
+        try {
+          const raw = atob(payload);
+          inspection.decodedByteLength = raw.length;
+          inspection.startBytes = raw.length >= 2 ? [raw.charCodeAt(0), raw.charCodeAt(1)] : [];
+          inspection.endBytes = raw.length >= 2 ? [raw.charCodeAt(raw.length - 2), raw.charCodeAt(raw.length - 1)] : [];
+        } catch (error) {
+          inspection.base64DecodeError = String(error);
+        }
+      }
+    }
+
+    try {
+      const response = await fetch(src);
+      const blob = await response.blob();
+      const bytes = new Uint8Array(await blob.arrayBuffer());
+      inspection.fetchByteLength = bytes.length;
+      inspection.fetchStartBytes = bytes.length >= 2 ? [bytes[0], bytes[1]] : [];
+      inspection.fetchEndBytes = bytes.length >= 2 ? [bytes[bytes.length - 2], bytes[bytes.length - 1]] : [];
+      try {
+        const bitmap = await createImageBitmap(blob);
+        inspection.imageBitmapDecoded = true;
+        inspection.imageBitmapWidth = bitmap.width;
+        inspection.imageBitmapHeight = bitmap.height;
+        bitmap.close();
+      } catch (error) {
+        inspection.imageBitmapDecoded = false;
+        inspection.imageBitmapError = String(error);
+      }
+    } catch (error) {
+      inspection.imageBitmapDecoded = false;
+      inspection.imageBitmapError = `fetch: ${String(error)}`;
+    }
+
+    return inspection;
+  }
+
   return Promise.all(elements.map(async (element) => {
     const nodeId = element.dataset.figmaCompositeNode || '';
     const backgroundImage = getComputedStyle(element).backgroundImage;
@@ -69,8 +131,19 @@ const compositeResults = await page.locator('[data-figma-composite-node]:not([da
     const src = match ? match[1] : '';
 
     if (!src) {
-      return { nodeId, decoded: false, naturalWidth: 0, naturalHeight: 0, visiblePixels: 0, channelRange: 0, reason: 'no-background-url' };
+      return {
+        nodeId,
+        decoded: false,
+        naturalWidth: 0,
+        naturalHeight: 0,
+        visiblePixels: 0,
+        channelRange: 0,
+        reason: 'no-background-url',
+        source: null,
+      };
     }
+
+    const source = await inspectSource(src);
 
     return new Promise((resolve) => {
       const image = new Image();
@@ -99,12 +172,31 @@ const compositeResults = await page.locator('[data-figma-composite-node]:not([da
             visiblePixels,
             channelRange: visiblePixels > 0 ? maxChannel - minChannel : 0,
             reason: null,
+            source,
           });
         } catch (error) {
-          resolve({ nodeId, decoded: false, naturalWidth: image.naturalWidth, naturalHeight: image.naturalHeight, visiblePixels: 0, channelRange: 0, reason: String(error) });
+          resolve({
+            nodeId,
+            decoded: false,
+            naturalWidth: image.naturalWidth,
+            naturalHeight: image.naturalHeight,
+            visiblePixels: 0,
+            channelRange: 0,
+            reason: String(error),
+            source,
+          });
         }
       };
-      image.onerror = () => resolve({ nodeId, decoded: false, naturalWidth: 0, naturalHeight: 0, visiblePixels: 0, channelRange: 0, reason: 'decode-error' });
+      image.onerror = () => resolve({
+        nodeId,
+        decoded: false,
+        naturalWidth: 0,
+        naturalHeight: 0,
+        visiblePixels: 0,
+        channelRange: 0,
+        reason: 'decode-error',
+        source,
+      });
       image.src = src;
     });
   }));
