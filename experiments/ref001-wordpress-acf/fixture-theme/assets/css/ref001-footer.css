@@ -302,3 +302,10 @@
 		text-align: center;
 	}
 }
+
+/* Below the supplied 375px endpoint, keep the one-line copyright utility inside the viewport without changing the 375px Figma acceptance geometry. */
+@media (max-width: 374px) {
+	.ref001-footer__copyright {
+		font-size: 3.2vw;
+	}
+}
