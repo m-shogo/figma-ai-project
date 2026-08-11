@@ -18,6 +18,16 @@ def load_export(path: Path) -> list[dict[str, Any]]:
     return value
 
 
+def layout_entries(layouts: Any) -> list[tuple[str, Any]]:
+    if layouts is None:
+        return []
+    if isinstance(layouts, list):
+        return [(str(index), value) for index, value in enumerate(layouts)]
+    if isinstance(layouts, dict):
+        return [(str(key), value) for key, value in layouts.items()]
+    return [("<invalid>", layouts)]
+
+
 def validate_fields(fields: list[Any], *, seen_keys: set[str], path: str) -> list[str]:
     errors: list[str] = []
     for index, field in enumerate(fields):
@@ -38,29 +48,31 @@ def validate_fields(fields: list[Any], *, seen_keys: set[str], path: str) -> lis
             errors.append(f"{label}.type is required")
         if not field_label:
             errors.append(f"{label}.label is required")
+
         sub_fields = field.get("sub_fields")
         if sub_fields is not None:
             if not isinstance(sub_fields, list):
                 errors.append(f"{label}.sub_fields must be an array")
             else:
                 errors.extend(validate_fields(sub_fields, seen_keys=seen_keys, path=f"{label}.sub_fields"))
+
         layouts = field.get("layouts")
-        if isinstance(layouts, list):
-            for layout_index, layout in enumerate(layouts):
-                if not isinstance(layout, dict):
-                    errors.append(f"{label}.layouts[{layout_index}] must be an object")
-                    continue
-                layout_fields = layout.get("sub_fields", [])
-                if not isinstance(layout_fields, list):
-                    errors.append(f"{label}.layouts[{layout_index}].sub_fields must be an array")
-                else:
-                    errors.extend(
-                        validate_fields(
-                            layout_fields,
-                            seen_keys=seen_keys,
-                            path=f"{label}.layouts[{layout_index}].sub_fields",
-                        )
+        for layout_key, layout in layout_entries(layouts):
+            layout_label = f"{label}.layouts[{layout_key}]"
+            if not isinstance(layout, dict):
+                errors.append(f"{layout_label} must be an object")
+                continue
+            layout_fields = layout.get("sub_fields", [])
+            if not isinstance(layout_fields, list):
+                errors.append(f"{layout_label}.sub_fields must be an array")
+            else:
+                errors.extend(
+                    validate_fields(
+                        layout_fields,
+                        seen_keys=seen_keys,
+                        path=f"{layout_label}.sub_fields",
                     )
+                )
     return errors
 
 
