@@ -1,0 +1,26 @@
+/*
+ * REF-001 lower-page external spacing repair.
+ *
+ * The supplied sections are separate Figma groups with explicit whitespace
+ * between them. Their internal heights already match browser QA.
+ *
+ * PC:
+ * - Courses bottom 6625 -> Links top 6697 = 72px
+ * - Links bottom 6957 -> CTA Value top 7029 = 72px
+ *
+ * SP website coordinates (40px status bar removed):
+ * - Courses bottom 9411 -> Links top 9467 = 56px
+ * - Links bottom 9810 -> CTA Value top 9866 = 56px
+ */
+
+.ref001-courses + .ref001-links,
+.ref001-links + .ref001-cta-value {
+	margin-top: 72px;
+}
+
+@media (max-width: 600px) {
+	.ref001-courses + .ref001-links,
+	.ref001-links + .ref001-cta-value {
+		margin-top: 56px;
+	}
+}
