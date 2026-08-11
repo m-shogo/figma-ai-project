@@ -1,0 +1,111 @@
+.ref001-header {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	box-sizing: border-box;
+	width: 100%;
+	height: 94px;
+	padding: 0 48px;
+	background: #fff;
+	color: #333;
+	font-family: "Zen Kaku Gothic New", sans-serif;
+}
+
+.ref001-header__logo {
+	display: flex;
+	align-items: center;
+	gap: 9px;
+	width: 187px;
+	height: 47px;
+}
+
+.ref001-header__logo-mark {
+	width: 43px;
+	height: 47px;
+	object-fit: contain;
+	flex: 0 0 auto;
+}
+
+.ref001-header__logo-copy {
+	display: flex;
+	flex-direction: column;
+	gap: 3px;
+}
+
+.ref001-header__logo-copy strong {
+	font-size: 18px;
+	font-weight: 700;
+	line-height: 1;
+	letter-spacing: .08em;
+	white-space: nowrap;
+}
+
+.ref001-header__logo-copy small {
+	align-self: center;
+	color: #563c91;
+	font-family: Poppins, sans-serif;
+	font-size: 7px;
+	font-weight: 600;
+	line-height: 1;
+	letter-spacing: .06em;
+}
+
+.ref001-header__actions {
+	display: grid;
+	grid-template-columns: repeat(2, 201px);
+	gap: 16px;
+	margin-right: 0;
+}
+
+.ref001-header__action {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+	height: 46px;
+	color: #fff;
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 1;
+	letter-spacing: .05em;
+}
+
+.ref001-header__action--document {
+	background: #38a1db;
+}
+
+.ref001-header__action--oc {
+	background: #8473aa;
+}
+
+/* FIXTURE-ONLY: the supplied SP Header is a separate 375×67 state. */
+@media (max-width: 600px) {
+	.ref001-header {
+		height: 67px;
+		padding: 0 16px;
+	}
+
+	.ref001-header__logo {
+		gap: 7px;
+		width: 140px;
+		height: 35px;
+	}
+
+	.ref001-header__logo-mark {
+		width: 32px;
+		height: 35px;
+	}
+
+	.ref001-header__logo-copy strong {
+		font-size: 14px;
+	}
+
+	.ref001-header__logo-copy small {
+		font-size: 6px;
+	}
+
+	.ref001-header__actions {
+		display: none;
+	}
+}
