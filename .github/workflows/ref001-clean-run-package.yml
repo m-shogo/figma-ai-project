@@ -6,20 +6,29 @@ on:
     paths:
       - "scripts/build_sanitized_run_workspace.py"
       - "scripts/controlled_run_phase.py"
+      - "scripts/validate_human_editability.py"
       - "tests/test_build_sanitized_run_workspace.py"
       - "tests/test_controlled_run_phase.py"
+      - "tests/test_validate_human_editability.py"
       - "experiments/ref001-clean-run/**"
       - "docs/sanitized-clean-run-workspace.md"
       - "docs/ref001-clean-run-agent-handoff.md"
+      - "docs/human-editability.md"
+      - "templates/run-record.yaml"
+      - "templates/shared-contract.yaml"
       - ".github/workflows/ref001-clean-run-package.yml"
   push:
     branches: [so]
     paths:
       - "scripts/build_sanitized_run_workspace.py"
       - "scripts/controlled_run_phase.py"
+      - "scripts/validate_human_editability.py"
       - "experiments/ref001-clean-run/**"
       - "docs/sanitized-clean-run-workspace.md"
       - "docs/ref001-clean-run-agent-handoff.md"
+      - "docs/human-editability.md"
+      - "templates/run-record.yaml"
+      - "templates/shared-contract.yaml"
       - ".github/workflows/ref001-clean-run-package.yml"
 
 permissions:
@@ -41,6 +50,9 @@ jobs:
 
       - name: Install validation dependencies
         run: python -m pip install -r requirements-dev.txt
+
+      - name: Validate Human Editability contract
+        run: python scripts/validate_human_editability.py
 
       - name: Validate sanitized selection
         run: >-
@@ -65,7 +77,11 @@ jobs:
           set -euo pipefail
           test -f "$RUNNER_TEMP/ref001-clean-run/.sanitized-run-workspace.json"
           test -f "$RUNNER_TEMP/ref001-clean-run/docs/ref001-clean-run-agent-handoff.md"
+          test -f "$RUNNER_TEMP/ref001-clean-run/docs/human-editability.md"
           test -f "$RUNNER_TEMP/ref001-clean-run/scripts/controlled_run_phase.py"
+          test -f "$RUNNER_TEMP/ref001-clean-run/scripts/validate_human_editability.py"
+          test -f "$RUNNER_TEMP/ref001-clean-run/templates/run-record.yaml"
+          test -f "$RUNNER_TEMP/ref001-clean-run/templates/shared-contract.yaml"
           test ! -e "$RUNNER_TEMP/ref001-clean-run/experiments/ref001-wordpress-acf/fixture-theme"
           test ! -e "$RUNNER_TEMP/ref001-clean-run/experiments/ref001-wordpress-acf/visual-preview"
           test ! -e "$RUNNER_TEMP/ref001-clean-run/research/figma-web-friction"
