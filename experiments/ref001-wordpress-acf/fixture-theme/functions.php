@@ -12,6 +12,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Enqueue the REF-001 fixture stylesheets only for the learning Page template.
+ *
+ * Visual-first rule: empty ACF fields must not prevent Figma comparison.
+ * Lightweight Figma-derived fixture media is therefore allowed as a fallback;
+ * real WordPress Media/ACF values replace it later without changing layout CSS.
  */
 function ref001_learning_enqueue_assets() {
 	if ( ! is_page_template( 'page-templates/template-ref001.php' ) ) {
@@ -22,49 +26,77 @@ function ref001_learning_enqueue_assets() {
 		'ref001-learning',
 		get_theme_file_uri( 'assets/css/ref001.css' ),
 		array(),
-		'0.6.0'
+		'0.7.0'
+	);
+
+	wp_enqueue_style(
+		'ref001-learning-header',
+		get_theme_file_uri( 'assets/css/ref001-header.css' ),
+		array( 'ref001-learning' ),
+		'0.7.0'
+	);
+
+	wp_enqueue_style(
+		'ref001-learning-mv-visual',
+		get_theme_file_uri( 'assets/css/ref001-mv-visual.css' ),
+		array( 'ref001-learning' ),
+		'0.7.0'
 	);
 
 	wp_enqueue_style(
 		'ref001-learning-education',
 		get_theme_file_uri( 'assets/css/ref001-education.css' ),
 		array( 'ref001-learning' ),
-		'0.6.0'
+		'0.7.0'
+	);
+
+	wp_enqueue_style(
+		'ref001-learning-middle',
+		get_theme_file_uri( 'assets/css/ref001-middle.css' ),
+		array( 'ref001-learning' ),
+		'0.7.0'
+	);
+
+	wp_enqueue_style(
+		'ref001-learning-messages',
+		get_theme_file_uri( 'assets/css/ref001-messages.css' ),
+		array( 'ref001-learning-middle' ),
+		'0.7.0'
 	);
 
 	wp_enqueue_style(
 		'ref001-learning-courses',
 		get_theme_file_uri( 'assets/css/ref001-courses.css' ),
 		array( 'ref001-learning' ),
-		'0.6.0'
+		'0.7.0'
 	);
 
 	wp_enqueue_style(
 		'ref001-learning-links',
 		get_theme_file_uri( 'assets/css/ref001-links.css' ),
 		array( 'ref001-learning' ),
-		'0.6.0'
+		'0.7.0'
 	);
 
 	wp_enqueue_style(
 		'ref001-learning-cta-value',
 		get_theme_file_uri( 'assets/css/ref001-cta-value.css' ),
 		array( 'ref001-learning' ),
-		'0.6.0'
+		'0.7.0'
 	);
 
 	wp_enqueue_style(
 		'ref001-learning-footer',
 		get_theme_file_uri( 'assets/css/ref001-footer.css' ),
 		array( 'ref001-learning' ),
-		'0.6.0'
+		'0.7.0'
 	);
 }
 add_action( 'wp_enqueue_scripts', 'ref001_learning_enqueue_assets' );
 
 /**
  * Read a Page-level ACF value without making the fixture fatal when ACF is
- * temporarily unavailable during structural testing.
+ * temporarily unavailable during structural or visual testing.
  *
  * @param string $name    ACF field name.
  * @param mixed  $default Value returned when ACF or the field is unavailable.
