@@ -5,6 +5,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PREVIEW = ROOT / "experiments" / "ref001-wordpress-acf" / "visual-preview"
+WORKFLOW = ROOT / ".github" / "workflows" / "ref001-visual-qa.yml"
 
 
 class Ref001VisualPreviewHarnessTests(unittest.TestCase):
@@ -61,6 +62,15 @@ class Ref001VisualPreviewHarnessTests(unittest.TestCase):
         self.assertIn("status !== 200", source)
         self.assertIn("courseResults.length !== 7", source)
         self.assertIn("asset-check.mjs", shell)
+
+    def test_visual_qa_requires_zero_body_and_section_geometry_delta(self) -> None:
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        self.assertIn("Require exact geometry match", workflow)
+        self.assertIn("capture.bodyHeightDelta !== 0", workflow)
+        self.assertIn("row.delta.top !== 0 || row.delta.height !== 0", workflow)
+        self.assertIn("process.exit(1)", workflow)
+        self.assertIn("every body/section delta must be 0px", workflow)
+        self.assertIn("if: always()", workflow)
 
     def test_generated_captures_are_not_committed(self) -> None:
         ignore = (PREVIEW / ".gitignore").read_text(encoding="utf-8")
