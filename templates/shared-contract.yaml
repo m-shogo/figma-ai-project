@@ -1,9 +1,74 @@
-schema_version: 7
+schema_version: 8
 contract_id: CONTRACT-XXXX
 reference_id: REF-XXXX
 status: DRAFT # DRAFT | FROZEN | SUPERSEDED
 created_at: ""
 updated_at: ""
+
+decision_preflight:
+  status: UNRESOLVED # UNRESOLVED | RESOLVED
+  must_resolve_before_section_work: true
+  repeated_time_sink_promotes_to_preflight: true
+  items:
+    target_runtime:
+      status: UNKNOWN # UNKNOWN | UNRESOLVED | RESOLVED
+      framework_or_template_family: ""
+      production_repo_or_fixture_scope: ""
+      evidence: []
+    responsive_contract:
+      status: UNKNOWN
+      breakpoint_source: UNKNOWN # OWNER | COMPANY | DESIGN_SYSTEM | EXISTING_CODE | FIGMA | MULTIPLE | UNKNOWN
+      breakpoint_values: []
+      figma_acceptance_widths: []
+      runtime_safety_widths: []
+      boundary_probe_policy: ""
+      evidence: []
+    typography_contract:
+      status: UNKNOWN
+      font_source: ""
+      fallback_policy: ""
+      line_height_policy: ""
+      natural_wrap_default: true
+      one_line_or_truncation_requires_evidence: true
+      minor_fallback_wrap_difference_tolerated: true
+      notes: []
+    figma_capabilities:
+      status: UNKNOWN
+      effective_variable_modes: []
+      auto_layout_coverage: UNKNOWN
+      auto_layout_generation: UNKNOWN # LEGACY | UPDATED_2026 | MIXED | UNDETERMINED | UNKNOWN
+      component_and_token_evidence: []
+    asset_contract:
+      status: UNKNOWN
+      exact_source_policy: EXACT_WHEN_AVAILABLE
+      crop_focal_policy: ""
+      mask_composite_authority: ""
+      export_runtime_validation: ""
+      cms_media_ownership: ""
+      notes: []
+    interaction_contract:
+      status: UNKNOWN
+      known_behaviors: []
+      unresolved_behaviors: []
+      keyboard_touch_motion_requirements: []
+      invent_missing_behavior: false
+    content_cms_contract:
+      status: UNKNOWN
+      code_owned_content: []
+      cms_owned_content: []
+      unknown_records_must_not_be_invented: true
+      notes: []
+    qa_contract:
+      status: UNKNOWN
+      pixel_acceptance_endpoints: []
+      intermediate_runtime_safety: []
+      horizontal_overflow_allowed: false
+      readable_text_clipping_allowed: false
+      actual_artifact_visual_review_required: true
+      notes: []
+  unresolved_behavior: >-
+    If a material decision is still missing, mark only that item UNRESOLVED and request/resolve the smallest owner decision needed.
+    Do not invent a temporary value that is likely to cause section rework later.
 
 company_policy:
   path: ""
@@ -210,6 +275,7 @@ parallel_execution:
 integration:
   root_composition_path: ""
   required_checks:
+    - preflight_decisions_resolved
     - section_order
     - container_alignment
     - cross_section_spacing
