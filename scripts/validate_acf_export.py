@@ -130,7 +130,11 @@ def candidate_paths() -> list[Path]:
         if not base.exists():
             continue
         for path in sorted(base.rglob("*.json")):
-            if path.name == "acf-export.json" or path.name.endswith(".acf-export.json"):
+            if (
+                path.name == "acf-export.json"
+                or path.name.endswith(".acf-export.json")
+                or path.name == "acf-import-bundle.json"
+            ):
                 found.append(path)
     return list(dict.fromkeys(found))
 
@@ -150,7 +154,7 @@ def main() -> int:
         "paths",
         nargs="*",
         type=Path,
-        help="ACF export JSON paths; when omitted, validate all repository acf-export.json artifacts",
+        help="ACF export JSON paths; when omitted, validate all repository ACF export/bundle artifacts",
     )
     args = parser.parse_args()
 
