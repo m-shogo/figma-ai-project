@@ -11,6 +11,8 @@ from typing import Any
 
 import yaml
 
+from audit_figma_variable_modes import audit_record
+from plan_figma_variable_mode_remediation import build_remediation_plan
 from validate_implementation_profile import load_yaml as load_profile_yaml
 from validate_implementation_profile import semantic_errors as implementation_profile_semantic_errors
 from validate_run_lineage import validate_run
@@ -157,6 +159,78 @@ def implementation_profile_errors(data: dict[str, Any]) -> list[str]:
     return errors
 
 
+def sibling_variable_mode_audit_path(reference_manifest_path: Path) -> Path:
+    name = reference_manifest_path.name
+    if name.endswith(".reference.yaml"):
+        return reference_manifest_path.with_name(name[: -len(".reference.yaml")] + ".variable-mode-audit.yaml")
+    if name == "reference.yaml":
+        return reference_manifest_path.with_name("variable-mode-audit.yaml")
+    return reference_manifest_path.with_name(reference_manifest_path.stem + ".variable-mode-audit.yaml")
+
+
+def figma_variable_mode_errors(data: dict[str, Any]) -> list[str]:
+    reference = data.get("reference", {})
+    raw_manifest = str(reference.get("manifest_path", "")).strip() if isinstance(reference, dict) else ""
+    if not raw_manifest:
+        return []
+
+    manifest_path = repo_path(raw_manifest)
+    if not manifest_path.is_file():
+        return []  # linked-reference validation owns the missing-manifest error
+
+    manifest = load_yaml(manifest_path)
+    audit_path = sibling_variable_mode_audit_path(manifest_path)
+    configured = manifest.get("figma", {}).get("variable_mode_audit", {})
+    required = False
+    if isinstance(configured, dict):
+        configured_path = str(configured.get("path", "")).strip()
+        required = configured.get("required") is True
+        if configured_path:
+            audit_path = repo_path(configured_path)
+
+    if not audit_path.is_file():
+        if required:
+            return [f"Figma Variable Mode audit is required but missing: {audit_path.relative_to(ROOT)}"]
+        return []
+
+    audit = load_yaml(audit_path)
+    errors: list[str] = []
+    if str(audit.get("reference_id", "")) != str(reference.get("reference_id", "")):
+        errors.append("Figma Variable Mode audit reference_id does not match run reference_id")
+        return errors
+
+    reference_captured_at = str(manifest.get("figma", {}).get("captured_at", "")).strip()
+    audit_captured_at = str(audit.get("captured_at", "")).strip()
+    if reference_captured_at and audit_captured_at:
+        try:
+            if parse_time(audit_captured_at) < parse_time(reference_captured_at):
+                errors.append("Figma Variable Mode audit is older than the linked Reference capture; refresh the audit")
+        except Exception as exc:
+            errors.append(f"invalid Figma Variable Mode audit/reference timestamp: {exc}")
+
+    findings = audit_record(audit)
+    blocking = [item for item in findings if item.get("severity") == "ERROR"]
+    if not blocking:
+        return errors
+
+    plan = build_remediation_plan(audit)
+    for item in blocking:
+        errors.append(
+            f"Figma Variable Mode {item['code']} at {item.get('node_id') or '<unknown>'}: {item['message']}"
+        )
+
+    if plan.get("safe_to_auto_apply") and plan.get("actions"):
+        actions = ", ".join(
+            f"{action['action']} node={action['node_id']} mode={action['mode_id']}"
+            for action in plan["actions"]
+        )
+        errors.append(f"safe Figma remediation available: {actions}; apply with a Figma-capable agent, then refresh/re-audit")
+    elif plan.get("blocked"):
+        reasons = ", ".join(str(item.get("reason", "UNKNOWN")) for item in plan["blocked"])
+        errors.append(f"Figma remediation requires inspection: {reasons}")
+    return errors
+
+
 def start(data: dict[str, Any]) -> dict[str, Any]:
     status = str(data.get("status", "PLANNED"))
     if status != "PLANNED":
@@ -166,6 +240,7 @@ def start(data: dict[str, Any]) -> dict[str, Any]:
 
     errors = implementation_profile_errors(data)
     errors.extend(preflight_errors(data))
+    errors.extend(figma_variable_mode_errors(data))
     if errors:
         raise ValueError("section start gate incomplete:\n- " + "\n- ".join(errors))
 
@@ -180,7 +255,7 @@ def start(data: dict[str, Any]) -> dict[str, Any]:
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Transition a pinned SECTION run from PLANNED to RUNNING after Implementation Profile and tooling preflight validation"
+        description="Transition a pinned SECTION run from PLANNED to RUNNING after Implementation Profile, tooling, and Figma responsive-mode validation"
     )
     parser.add_argument("run_record", type=Path)
     parser.add_argument("--apply", action="store_true")
