@@ -122,7 +122,7 @@ foreach ( $course_contract as $course ) {
 		<p class="ref001-courses__kicker"># COURCES</p>
 		<h2 id="ref001-courses-title" class="ref001-courses__title">
 			<span class="ref001-courses__paren" aria-hidden="true">（</span>
-			<span>未来につながる<strong>７つのコース</strong></span>
+			<span>未来につながる<strong><span class="ref001-courses__count">７</span>つのコース</strong></span>
 			<span class="ref001-courses__paren" aria-hidden="true">）</span>
 		</h2>
 	</header>
