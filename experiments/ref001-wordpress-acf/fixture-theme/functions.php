@@ -43,6 +43,7 @@ function ref001_learning_enqueue_assets() {
 		'courses-geometry' => 'ref001-courses-geometry.css',
 		'links'         => 'ref001-links.css',
 		'cta-value'     => 'ref001-cta-value.css',
+		'lower-geometry' => 'ref001-lower-geometry.css',
 		'footer'        => 'ref001-footer.css',
 	);
 
