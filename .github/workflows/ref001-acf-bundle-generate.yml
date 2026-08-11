@@ -10,24 +10,41 @@ on:
       - ".github/workflows/ref001-acf-bundle-generate.yml"
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   generate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
 
-      - name: Generate import bundle
-        run: python scripts/build_ref001_acf_import_bundle.py --output /tmp/acf-import-bundle.json
+      - name: Generate committed import bundle
+        run: python scripts/build_ref001_acf_import_bundle.py
 
       - name: Validate generated import bundle
-        run: python scripts/validate_acf_export.py /tmp/acf-import-bundle.json
+        run: python scripts/validate_acf_export.py experiments/ref001-wordpress-acf/artifacts/acf-import-bundle.json
+
+      - name: Commit generated bundle to same-repository PR branch
+        if: github.event.pull_request.head.repo.full_name == github.repository
+        run: |
+          target=experiments/ref001-wordpress-acf/artifacts/acf-import-bundle.json
+          if git diff --quiet -- "$target" && git ls-files --error-unmatch "$target" >/dev/null 2>&1; then
+            echo "Bundle is already current"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$target"
+          git commit -m "Generate REF-001 ACF import bundle"
+          git push origin "HEAD:${{ github.head_ref }}"
 
       - name: Upload generated import bundle
         uses: actions/upload-artifact@v4
         with:
           name: ref001-acf-import-bundle
-          path: /tmp/acf-import-bundle.json
+          path: experiments/ref001-wordpress-acf/artifacts/acf-import-bundle.json
           if-no-files-found: error
           retention-days: 1
