@@ -1,0 +1,218 @@
+schema_version: 11
+experiment_id: EXP-REF001-BLIND-CLEAN-20260812
+run_id: RUN-REF001-BLIND-CLEAN-20260812-A
+run_class: OPTIMIZED
+status: RUNNING
+started_at: "2026-08-12T02:30:00+09:00"
+completed_at: ""
+
+tooling_preflight:
+  mode: LEGACY_MANUAL
+  checked_at: "2026-08-12T02:42:00+09:00"
+  update_radar_path: ""
+  update_radar_sha256: ""
+  update_radar_generated_at: ""
+  update_radar_max_age_hours: 36
+  official_sources_complete: true
+  active_lanes:
+    - FIGMA_RELEASE_NOTES
+    - FIGMA_PLUGIN_API
+    - FIGMA_MCP
+    - COMMUNITY_DISCOVERY
+  source_warnings:
+    - "Community evidence is discovery-only; current Figma official documentation and live target nodes remain authoritative."
+  figma_release_notes_checked: true
+  figma_mcp_docs_checked: true
+  agent_docs_checked: true
+  community_scan_checked: true
+  changes_relevant_to_run:
+    - "Figma introduced updated Auto Layout behavior in July 2026; existing frames can remain legacy while newer/updated frames can use the 2026 behavior, so generation is classified per actual target node rather than by file age."
+  rules_to_retest:
+    - "Classify Auto Layout generation as LEGACY, UPDATED_2026, MIXED, or UNDETERMINED from live node evidence."
+    - "Treat Figma structure as design evidence rather than a mechanical DOM mapping."
+  new_hypotheses:
+    - "Section-level live inspection plus explicit variable-mode/crop/composite evidence should reduce first-pass repair without harming human editability."
+  blockers_or_limits:
+    - "The sanitized Implementation Profile intentionally leaves the production WordPress theme/runtime route unresolved; this run uses a clean isolated WordPress-compatible fixture/harness and does not invent production integration details."
+
+reference:
+  reference_id: REF-001-CHIBA-KEIZAI-SAMPLE
+  manifest_path: "references/chiba-keizai-sample.reference.yaml"
+  manifest_sha256: "b36d81243057fa75dca15ef642f51e9c85b7ba691cb6bcf8c39612a2def85bae"
+  figma_nodes:
+    - "21384:8173"
+    - "21376:4401"
+
+coordination:
+  scope: PAGE_BENCHMARK
+  section_id: ""
+  parallel_group: "REF001-BLIND-CLEAN-FIRST-PASS"
+  company_policy_path: ""
+  company_policy_id: ""
+  company_policy_sha256: ""
+  implementation_profile_path: "experiments/ref001-wordpress-acf/implementation-profile.yaml"
+  implementation_profile_sha256: "9fa81a28f5f81761164cde04638d29553a19d6035bf1681b648f579b271caad0"
+  implementation_profile_id: "IMPL-REF001-WORDPRESS-ACF"
+  implementation_family: "WORDPRESS"
+  implementation_variant: "FIXED_PAGE_TEMPLATE_ACF_CLEAN_FIXTURE"
+  shared_contract_path: ""
+  shared_contract_sha256: ""
+  section_manifest_path: ""
+  section_manifest_sha256: ""
+  figma_structure_profile_path: "references/chiba-keizai-sample.structure-profile.yaml"
+  figma_structure_profile_sha256: ""
+  required_environment_profiles: []
+  canonical_environment_profile: ""
+  foundation_commit: "9e8556b1e9e21ddbd864c48ee80804ec34fa3fe3"
+  isolation_mode: AGENT_SANDBOX
+  isolation_ref: "agent/ref001-blind-clean-first-pass-20260812"
+
+agent:
+  client: other
+  model: "GPT-5.6 Sol"
+  model_alias: ""
+  client_version: ""
+  instruction_sources:
+    - "Pasted text(4).txt sha256:325821db52ba67ec33e193eb405620f8549d938db67ed09dadd39720f4adc831"
+    - "CI sanitized artifact sha256:39347e7c8d018f0153a60b067dbedd66455596844b1df5ffdf932379e987b01b"
+    - "live Figma file ZYTdtw4wCgkcBy2cVnhxVI"
+  mcp_mode: "CONNECTED_GITHUB_FIGMA"
+  mcp_notes: "GitHub repository-wide answer search disabled for Blind boundary; live Figma inspected through official MCP."
+
+code:
+  repository: "m-shogo/figma-ai-project"
+  starting_commit: "9e8556b1e9e21ddbd864c48ee80804ec34fa3fe3"
+  target_route: "/ (isolated clean fixture harness only; production WordPress route unresolved)"
+  first_pass_commit: ""
+  final_commit: ""
+
+context:
+  tier: C0
+  prompt_version: "REF001-BLIND-CLEAN-20260812"
+  prompt_hash: "325821db52ba67ec33e193eb405620f8549d938db67ed09dadd39720f4adc831"
+  figma_design_context: true
+  figma_metadata: true
+  figma_screenshots: false
+  figma_components: true
+  figma_variables: true
+  figma_annotations: false
+  code_connect: false
+  files_read:
+    - ".sanitized-run-workspace.json"
+    - "docs/ref001-clean-run-agent-handoff.md"
+    - "docs/human-editability.md"
+    - "experiments/ref001-clean-run/workspace.yaml"
+    - "references/chiba-keizai-sample.reference.yaml"
+    - "references/chiba-keizai-sample.structure-profile.yaml"
+    - "references/chiba-keizai-sample.variable-mode-audit.yaml"
+    - "references/chiba-keizai-sample.courses-structure-evidence.yaml"
+    - "references/chiba-keizai-sample.remaining-structure-evidence.yaml"
+    - "experiments/ref001-wordpress-acf/implementation-profile.yaml"
+    - "templates/run-record.yaml"
+    - "templates/shared-contract.yaml"
+    - "scripts/controlled_run_phase.py"
+    - "scripts/first_pass_evidence.py"
+    - "scripts/validate_human_editability.py"
+  figma_nodes_inspected:
+    - "21384:8173"
+    - "21376:4401"
+  tool_calls: null
+
+execution:
+  workflow: STAGED
+  max_repair_rounds: 8
+  actual_repair_rounds: 0
+  assumptions:
+    - "The isolated clean fixture may define harness-only bootstrap behavior but must not claim unresolved production theme ownership."
+    - "Only 375px and 1380px are exact visual acceptance endpoints; other required widths are runtime-safety probes."
+  blockers:
+    - "Production WordPress repository/theme/runtime integration remains unresolved by sanitized evidence and is intentionally not invented."
+  human_intervention: none
+
+human_editability:
+  status: PENDING
+  score: null
+  dimensions:
+    discoverability: null
+    locality_of_change: null
+    intent_readability: null
+    change_safety_reuse: null
+    cms_content_ownership_clarity: null
+  blockers: []
+  change_drills: []
+  evidence: []
+
+captures:
+  first_pass: []
+  verify: []
+  final: []
+
+deliverables:
+  acf:
+    required: true
+    export_json:
+      required: true
+      target_repo_path: "experiments/ref001-blind-clean-20260812/implementation/acf-export.json"
+      evidence_json_path: "experiments/ref001-blind-clean-20260812/evidence/acf-export.json"
+      validation_status: PENDING
+    local_json:
+      required: false
+      target_repo_dir: ""
+      evidence_files: []
+    import_smoke:
+      required: true
+      status: PENDING
+      method: ADMIN_UI
+      evidence: []
+      accepted_methods:
+        - ADMIN_UI
+
+scores:
+  first_pass_fidelity:
+    visual: null
+    structural: null
+    robustness: null
+    total: null
+  final_fidelity:
+    visual: null
+    structural: null
+    robustness: null
+    total: null
+  rework_efficiency: null
+  reproducibility: null
+  final_composite: null
+
+rework:
+  repair_rounds: 0
+  post_first_pass_files_changed: null
+  post_first_pass_lines_added: null
+  post_first_pass_lines_deleted: null
+  rebuild_count: 0
+  integration_only_failures: 0
+  shared_contract_revisions: 0
+  foundation_rebuilds: 0
+  merge_conflicts: 0
+  affected_section_count: 0
+  contract_violations: 0
+  severity_counts:
+    S1: 0
+    S2: 0
+    S3: 0
+    S4: 0
+
+failures: []
+repairs: []
+
+replay:
+  required: false
+  source_run: ""
+  result: NOT_RUN
+
+lessons:
+  observations:
+    - "This is a blind optimized clean rerun; the historical source run record is intentionally absent from the sanitized workspace, so tooling-level REPLAY pairing is not fabricated."
+  candidate_rules: []
+  agent_specific: []
+  project_specific: []
+
+notes: "BLIND_CONTEXT_CLEAN. The prior broken uploaded artifact was replaced by the green CI-generated self-contained sanitized artifact before FIRST_PASS_BUILD. No repaired REF-001 implementation evidence has been inspected."
