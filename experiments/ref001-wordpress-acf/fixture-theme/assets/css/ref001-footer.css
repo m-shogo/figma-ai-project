@@ -84,21 +84,118 @@
 	align-items: center;
 	gap: 32px;
 	margin-top: 36px;
+	line-height: 1;
+}
+
+.ref001-footer__sns-icon {
+	position: relative;
+	display: block;
+	box-sizing: border-box;
+	flex: 0 0 auto;
+	color: #333;
+}
+
+.ref001-footer__sns-icon--facebook {
+	width: 28px;
+	height: 28px;
+	border-radius: 50%;
+	background: #333;
+}
+
+.ref001-footer__sns-icon--facebook::before {
+	content: "f";
+	position: absolute;
+	left: 50%;
+	bottom: -1px;
+	transform: translateX(-47%);
+	color: #fff;
 	font-family: Arial, sans-serif;
-	font-size: 28px;
+	font-size: 24px;
 	font-weight: 700;
 	line-height: 1;
 }
 
-.ref001-footer__line {
-	display: grid;
-	place-items: center;
+.ref001-footer__sns-icon--youtube {
+	width: 29px;
+	height: 20px;
+	border-radius: 5px;
+	background: #333;
+}
+
+.ref001-footer__sns-icon--youtube::before {
+	content: "";
+	position: absolute;
+	left: 11px;
+	top: 6px;
+	width: 0;
+	height: 0;
+	border-top: 4px solid transparent;
+	border-bottom: 4px solid transparent;
+	border-left: 7px solid #fff;
+}
+
+.ref001-footer__sns-icon--instagram {
+	width: 25px;
+	height: 25px;
+	border: 2.5px solid #333;
+	border-radius: 7px;
+}
+
+.ref001-footer__sns-icon--instagram::before {
+	content: "";
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	box-sizing: border-box;
+	width: 9px;
+	height: 9px;
+	border: 2px solid #333;
+	border-radius: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.ref001-footer__sns-icon--instagram::after {
+	content: "";
+	position: absolute;
+	right: 4px;
+	top: 4px;
+	width: 3px;
+	height: 3px;
+	border-radius: 50%;
+	background: #333;
+}
+
+.ref001-footer__sns-icon--line {
 	width: 28px;
 	height: 28px;
 	border-radius: 8px;
 	background: #020b4a;
+}
+
+.ref001-footer__sns-icon--line::before {
+	content: "LINE";
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -55%);
 	color: #fff;
-	font-size: 8px;
+	font-family: Arial, sans-serif;
+	font-size: 7px;
+	font-weight: 700;
+	line-height: 1;
+	letter-spacing: -.04em;
+}
+
+.ref001-footer__sns-icon--line::after {
+	content: "";
+	position: absolute;
+	left: 7px;
+	bottom: -3px;
+	width: 0;
+	height: 0;
+	border-top: 6px solid #020b4a;
+	border-right: 5px solid transparent;
+	transform: rotate(12deg);
 }
 
 .ref001-footer__copyright {
