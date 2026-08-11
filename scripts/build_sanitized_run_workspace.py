@@ -85,7 +85,7 @@ def resolve_profile_path(profile_path: Path, root: Path) -> Path:
     return resolved
 
 
-def collect_source_files(root: Path, profile: dict[str, Any]) -> list[Path]:
+def collect_source_files(root: Path, profile: dict[str, Any], profile_path: Path | None = None) -> list[Path]:
     root = root.resolve()
     errors = validate_profile(profile)
     if errors:
@@ -118,6 +118,15 @@ def collect_source_files(root: Path, profile: dict[str, Any]) -> list[Path]:
 
     if not collected:
         raise ValueError("workspace profile selected zero source files")
+
+    if profile_path is not None:
+        resolved_profile = profile_path.resolve()
+        if resolved_profile != root and root not in resolved_profile.parents:
+            raise ValueError(f"workspace profile escapes repository root: {profile_path}")
+        relative_profile = resolved_profile.relative_to(root).as_posix()
+        if matches_any(relative_profile, forbidden):
+            raise ValueError(f"workspace profile is forbidden from sanitized output: {relative_profile}")
+        collected[relative_profile] = resolved_profile
 
     leaked = [relative for relative in collected if matches_any(relative, forbidden)]
     if leaked:
@@ -259,7 +268,7 @@ def build_workspace(root: Path, profile_path: Path, output: Path, *, replace: bo
     root = root.resolve()
     profile_path = resolve_profile_path(profile_path, root)
     profile = load_profile(profile_path)
-    files = collect_source_files(root, profile)
+    files = collect_source_files(root, profile, profile_path)
     validate_output_location(root, output)
     output = output.resolve()
     prepare_output(output, replace=replace, expected_workspace_id=str(profile["workspace_id"]))
@@ -304,7 +313,7 @@ def main() -> int:
             raise ValueError("invalid workspace profile: " + "; ".join(errors))
 
         if args.command == "validate":
-            files = collect_source_files(ROOT, profile)
+            files = collect_source_files(ROOT, profile, profile_path)
             manifest = selection_manifest(ROOT, profile_path, profile, files)
             print(
                 f"PASS {manifest['workspace_id']} sanitized selection: "
