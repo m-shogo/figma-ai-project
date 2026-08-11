@@ -14,10 +14,10 @@ const targets = {
       { key: 'mv', selector: '[data-figma-pc="21378:8032"]', top: 94, height: 714 },
       { key: 'reason', selector: '[data-figma-pc="21378:7999"]', top: 886, height: 559 },
       { key: 'education', selector: '[data-figma-pc="21378:7868"]', top: 1541, height: 684 },
-      { key: 'cta_1', selector: '[data-figma-pc="21378:7867"]', index: 0, top: 2225, height: 328 },
+      { key: 'cta_1', selector: '.ref001-cta', index: 0, figmaNode: '21378:7867', top: 2225, height: 328 },
       { key: 'student_voice', selector: '[data-figma-pc="21378:7766"]', visualTop: 2649, visualHeight: 1393 },
       { key: 'messages', selector: '[data-figma-pc="21378:7746"]', top: 4225, height: 440 },
-      { key: 'cta_2', selector: '[data-figma-pc="21378:7867"]', index: 1, top: 4783, height: 328 },
+      { key: 'cta_2', selector: '.ref001-cta', index: 1, figmaNode: '21378:7730', top: 4783, height: 328 },
       { key: 'courses', selector: '[data-figma-pc="21378:7505"]', top: 5111, height: 1514 },
       { key: 'links', selector: '[data-figma-pc="21378:7458"]', top: 6697, height: 260 },
       { key: 'cta_value', selector: '[data-figma-pc="21378:7481"]', top: 7029, height: 328 },
@@ -33,10 +33,10 @@ const targets = {
       { key: 'mv', selector: '[data-figma-sp="21376:4886"]', top: 67, height: 724 },
       { key: 'reason', selector: '[data-figma-sp="21376:4852"]', top: 847, height: 1295 },
       { key: 'education', selector: '[data-figma-sp="21376:4720"]', top: 2198, height: 1534 },
-      { key: 'cta_1', selector: '[data-figma-sp="21376:4719"]', index: 0, top: 3732, height: 350 },
+      { key: 'cta_1', selector: '.ref001-cta', index: 0, figmaNode: '21376:4719', top: 3732, height: 350 },
       { key: 'student_voice', selector: '[data-figma-sp="21376:4650"]', visualTop: 4138, visualHeight: 1758 },
       { key: 'messages', selector: '[data-figma-sp="21376:4629"]', top: 5952, height: 538 },
-      { key: 'cta_2', selector: '[data-figma-sp="21376:4719"]', index: 1, top: 6546, height: 350 },
+      { key: 'cta_2', selector: '.ref001-cta', index: 1, figmaNode: '21376:4628', top: 6546, height: 350 },
       { key: 'courses', selector: '[data-figma-sp="21376:4403"]', top: 6896, height: 2515 },
       { key: 'links', selector: '[data-figma-sp="21376:4919"]', top: 9467, height: 343 },
       { key: 'cta_value', selector: '[data-figma-sp="21376:4942"]', top: 9866, height: 396 },
@@ -60,13 +60,13 @@ for (const [mode, spec] of Object.entries(targets)) {
     const count = await nodes.count();
     const index = target.index ?? 0;
     if (count <= index) {
-      rows.push({ key: target.key, status: 'MISSING', selector: target.selector });
+      rows.push({ key: target.key, status: 'MISSING', selector: target.selector, figmaNode: target.figmaNode });
       continue;
     }
 
     const box = await nodes.nth(index).boundingBox();
     if (!box) {
-      rows.push({ key: target.key, status: 'NO_BOX', selector: target.selector });
+      rows.push({ key: target.key, status: 'NO_BOX', selector: target.selector, figmaNode: target.figmaNode });
       continue;
     }
 
@@ -79,6 +79,7 @@ for (const [mode, spec] of Object.entries(targets)) {
       key: target.key,
       status: 'OK',
       selector: target.selector,
+      figmaNode: target.figmaNode,
       actual: { top: actualTop, height: actualHeight },
       figma: { top: expectedTop, height: expectedHeight },
       delta: {
@@ -87,7 +88,9 @@ for (const [mode, spec] of Object.entries(targets)) {
       },
       note: target.visualTop !== undefined
         ? 'Figma value is visible-group geometry; wrapper may intentionally include leading whitespace.'
-        : undefined,
+        : target.figmaNode !== undefined
+          ? 'Repeated visual component measured by rendered occurrence; figmaNode records the supplied instance evidence.'
+          : undefined,
     });
   }
 
