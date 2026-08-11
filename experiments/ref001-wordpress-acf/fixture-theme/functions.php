@@ -28,18 +28,19 @@ function ref001_learning_enqueue_assets() {
 	);
 
 	$section_styles = array(
-		'mv-vector'     => 'ref001-mv-vector.css',
-		'mv-cta-detail' => 'ref001-mv-cta-detail.css',
-		'mv-type'       => 'ref001-mv-type.css',
-		'header'        => 'ref001-header.css',
-		'education'     => 'ref001-education.css',
-		'cta'           => 'ref001-cta.css',
-		'student-voice' => 'ref001-student-voice.css',
-		'messages'      => 'ref001-messages.css',
-		'courses'       => 'ref001-courses.css',
-		'links'         => 'ref001-links.css',
-		'cta-value'     => 'ref001-cta-value.css',
-		'footer'        => 'ref001-footer.css',
+		'mv-vector'        => 'ref001-mv-vector.css',
+		'mv-cta-detail'    => 'ref001-mv-cta-detail.css',
+		'mv-type'          => 'ref001-mv-type.css',
+		'header'           => 'ref001-header.css',
+		'reason-geometry'  => 'ref001-reason-geometry.css',
+		'education'        => 'ref001-education.css',
+		'cta'              => 'ref001-cta.css',
+		'student-voice'    => 'ref001-student-voice.css',
+		'messages'         => 'ref001-messages.css',
+		'courses'          => 'ref001-courses.css',
+		'links'            => 'ref001-links.css',
+		'cta-value'        => 'ref001-cta-value.css',
+		'footer'           => 'ref001-footer.css',
 	);
 
 	foreach ( $section_styles as $handle_suffix => $file ) {
