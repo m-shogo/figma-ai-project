@@ -1,0 +1,272 @@
+[
+  {
+    "key": "group_ref001_courses",
+    "title": "REF-001 Courses",
+    "fields": [
+      {
+        "key": "field_ref001_course_public_service_description",
+        "label": "公務員コース 説明",
+        "name": "course_public_service_description",
+        "type": "textarea",
+        "instructions": "コース名・順序・色・アイコンは固定ドメイン情報です。このフィールドはページ上の説明文のみ編集します。",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "100", "class": "", "id": ""},
+        "default_value": "",
+        "maxlength": 140,
+        "rows": 2,
+        "new_lines": ""
+      },
+      {
+        "key": "field_ref001_course_public_service_recommendation_1",
+        "label": "公務員コース おすすめ1",
+        "name": "course_public_service_recommendation_1",
+        "type": "text",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "50", "class": "", "id": ""},
+        "default_value": "",
+        "maxlength": 100
+      },
+      {
+        "key": "field_ref001_course_public_service_recommendation_2",
+        "label": "公務員コース おすすめ2",
+        "name": "course_public_service_recommendation_2",
+        "type": "text",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "50", "class": "", "id": ""},
+        "default_value": "",
+        "maxlength": 100
+      },
+      {
+        "key": "field_ref001_course_accounting_description",
+        "label": "会計コース 説明",
+        "name": "course_accounting_description",
+        "type": "textarea",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "100", "class": "", "id": ""},
+        "default_value": "",
+        "maxlength": 140,
+        "rows": 2,
+        "new_lines": ""
+      },
+      {
+        "key": "field_ref001_course_accounting_recommendation_1",
+        "label": "会計コース おすすめ1",
+        "name": "course_accounting_recommendation_1",
+        "type": "text",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "50", "class": "", "id": ""},
+        "default_value": "",
+        "maxlength": 100
+      },
+      {
+        "key": "field_ref001_course_accounting_recommendation_2",
+        "label": "会計コース おすすめ2",
+        "name": "course_accounting_recommendation_2",
+        "type": "text",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "50", "class": "", "id": ""},
+        "default_value": "",
+        "maxlength": 100
+      },
+      {
+        "key": "field_ref001_course_business_management_description",
+        "label": "ビジネス経営コース 説明",
+        "name": "course_business_management_description",
+        "type": "textarea",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "100", "class": "", "id": ""},
+        "default_value": "",
+        "maxlength": 140,
+        "rows": 2,
+        "new_lines": ""
+      },
+      {
+        "key": "field_ref001_course_business_management_recommendation_1",
+        "label": "ビジネス経営コース おすすめ1",
+        "name": "course_business_management_recommendation_1",
+        "type": "text",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "50", "class": "", "id": ""},
+        "default_value": "",
+        "maxlength": 100
+      },
+      {
+        "key": "field_ref001_course_business_management_recommendation_2",
+        "label": "ビジネス経営コース おすすめ2",
+        "name": "course_business_management_recommendation_2",
+        "type": "text",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "50", "class": "", "id": ""},
+        "default_value": "",
+        "maxlength": 100
+      },
+      {
+        "key": "field_ref001_course_finance_description",
+        "label": "金融コース 説明",
+        "name": "course_finance_description",
+        "type": "textarea",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "100", "class": "", "id": ""},
+        "default_value": "",
+        "maxlength": 140,
+        "rows": 2,
+        "new_lines": ""
+      },
+      {
+        "key": "field_ref001_course_finance_recommendation_1",
+        "label": "金融コース おすすめ1",
+        "name": "course_finance_recommendation_1",
+        "type": "text",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "50", "class": "", "id": ""},
+        "default_value": "",
+        "maxlength": 100
+      },
+      {
+        "key": "field_ref001_course_finance_recommendation_2",
+        "label": "金融コース おすすめ2",
+        "name": "course_finance_recommendation_2",
+        "type": "text",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "50", "class": "", "id": ""},
+        "default_value": "",
+        "maxlength": 100
+      },
+      {
+        "key": "field_ref001_course_teaching_description",
+        "label": "教職コース 説明",
+        "name": "course_teaching_description",
+        "type": "textarea",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "100", "class": "", "id": ""},
+        "default_value": "",
+        "maxlength": 140,
+        "rows": 2,
+        "new_lines": ""
+      },
+      {
+        "key": "field_ref001_course_teaching_recommendation_1",
+        "label": "教職コース おすすめ1",
+        "name": "course_teaching_recommendation_1",
+        "type": "text",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "50", "class": "", "id": ""},
+        "default_value": "",
+        "maxlength": 100
+      },
+      {
+        "key": "field_ref001_course_teaching_recommendation_2",
+        "label": "教職コース おすすめ2",
+        "name": "course_teaching_recommendation_2",
+        "type": "text",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "50", "class": "", "id": ""},
+        "default_value": "",
+        "maxlength": 100
+      },
+      {
+        "key": "field_ref001_course_curator_description",
+        "label": "学芸員コース 説明",
+        "name": "course_curator_description",
+        "type": "textarea",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "100", "class": "", "id": ""},
+        "default_value": "",
+        "maxlength": 140,
+        "rows": 2,
+        "new_lines": ""
+      },
+      {
+        "key": "field_ref001_course_curator_recommendation_1",
+        "label": "学芸員コース おすすめ1",
+        "name": "course_curator_recommendation_1",
+        "type": "text",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "50", "class": "", "id": ""},
+        "default_value": "",
+        "maxlength": 100
+      },
+      {
+        "key": "field_ref001_course_curator_recommendation_2",
+        "label": "学芸員コース おすすめ2",
+        "name": "course_curator_recommendation_2",
+        "type": "text",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "50", "class": "", "id": ""},
+        "default_value": "",
+        "maxlength": 100
+      },
+      {
+        "key": "field_ref001_course_it_description",
+        "label": "ITコース 説明",
+        "name": "course_it_description",
+        "type": "textarea",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "100", "class": "", "id": ""},
+        "default_value": "",
+        "maxlength": 140,
+        "rows": 2,
+        "new_lines": ""
+      },
+      {
+        "key": "field_ref001_course_it_recommendation_1",
+        "label": "ITコース おすすめ1",
+        "name": "course_it_recommendation_1",
+        "type": "text",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "50", "class": "", "id": ""},
+        "default_value": "",
+        "maxlength": 100
+      },
+      {
+        "key": "field_ref001_course_it_recommendation_2",
+        "label": "ITコース おすすめ2",
+        "name": "course_it_recommendation_2",
+        "type": "text",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "50", "class": "", "id": ""},
+        "default_value": "",
+        "maxlength": 100
+      }
+    ],
+    "location": [
+      [
+        {
+          "param": "page_template",
+          "operator": "==",
+          "value": "page-templates/template-ref001.php"
+        }
+      ]
+    ],
+    "menu_order": 10,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": [],
+    "active": true,
+    "description": "Learning-only section field group. Seven course identities/order/colors/icons remain domain/code-owned; this group exposes page-local descriptive copy only.",
+    "show_in_rest": 0
+  }
+]

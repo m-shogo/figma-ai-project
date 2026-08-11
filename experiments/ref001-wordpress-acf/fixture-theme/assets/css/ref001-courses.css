@@ -1,0 +1,282 @@
+/*
+ * REF-001 Courses — learning First Pass.
+ *
+ * Measured Figma evidence:
+ * - PC cards: 560×271, 40px horizontal/vertical gap, two columns
+ * - seventh IT card is centered on the final row
+ * - PC icon slot: 100×100
+ * - SP cards: 343px wide, content-driven heights around 299–320px
+ * - recommendation list gap: 12px
+ *
+ * Exact vector pictograms are a known asset-persistence sub-step. The icon
+ * slot/color is preserved here; do not hand-redraw substitute icons.
+ * The 600px media query remains FIXTURE-ONLY, not production breakpoint evidence.
+ */
+
+.ref001-courses {
+	padding: 88px 0 104px;
+	background: var(--ref001-light-beige);
+}
+
+.ref001-courses__header {
+	width: min(1160px, calc(100% - 40px));
+	margin: 0 auto 56px;
+	text-align: center;
+}
+
+.ref001-courses__kicker {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0 0 22px;
+	padding: 2px 8px;
+	background: var(--ref001-yellow);
+	font-family: Poppins, Arial, sans-serif;
+	font-size: 20px;
+	line-height: 1;
+	letter-spacing: 0.05em;
+}
+
+.ref001-courses__title {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 28px;
+	margin: 0;
+	font-size: 30px;
+	font-weight: 500;
+	line-height: 1.2;
+	letter-spacing: 0.04em;
+}
+
+.ref001-courses__title strong {
+	font-size: 42px;
+	font-weight: 500;
+}
+
+.ref001-courses__paren {
+	color: var(--ref001-white);
+	font-family: Poppins, Arial, sans-serif;
+	font-size: 50px;
+	font-weight: 500;
+	-webkit-text-stroke: 1px var(--ref001-black);
+}
+
+.ref001-courses__grid {
+	display: grid;
+	grid-template-columns: repeat(2, 560px);
+	gap: 40px;
+	width: 1160px;
+	margin: 0 auto;
+	padding: 0;
+	list-style: none;
+}
+
+.ref001-courses__item {
+	width: 560px;
+	margin: 0;
+}
+
+.ref001-courses__item:nth-child(7) {
+	grid-column: 1 / -1;
+	justify-self: center;
+}
+
+.ref001-course-card {
+	position: relative;
+	width: 560px;
+	min-height: 271px;
+	padding: 28px 32px 32px 156px;
+	background: var(--ref001-white);
+}
+
+.ref001-course-card__identity {
+	min-height: 74px;
+}
+
+.ref001-course-card__icon {
+	position: absolute;
+	left: 32px;
+	top: 28px;
+	width: 100px;
+	height: 100px;
+	background: var(--ref001-course-color);
+}
+
+.ref001-course-card__heading {
+	display: inline-flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 3px;
+}
+
+.ref001-course-card__heading h3 {
+	margin: 0;
+	font-size: 24px;
+	font-weight: 500;
+	line-height: 1.25;
+	letter-spacing: 0.04em;
+}
+
+.ref001-course-card__marker {
+	display: block;
+	width: 100%;
+	height: 6px;
+	background: var(--ref001-course-color);
+}
+
+.ref001-course-card__description {
+	min-height: 48px;
+	margin: 7px 0 18px;
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 1.65;
+	letter-spacing: 0.03em;
+}
+
+.ref001-course-card__recommendations {
+	position: relative;
+	margin-left: -124px;
+	padding-top: 14px;
+}
+
+.ref001-course-card__recommend-label {
+	position: absolute;
+	left: 16px;
+	top: 0;
+	z-index: 1;
+	margin: 0;
+	padding: 5px 12px;
+	border: 1px solid var(--ref001-black);
+	border-radius: 999px;
+	background: var(--ref001-white);
+	font-size: 13px;
+	font-weight: 500;
+	line-height: 1;
+	white-space: nowrap;
+}
+
+.ref001-course-card__recommendations ul {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	min-height: 102px;
+	margin: 0;
+	padding: 26px 24px 16px 48px;
+	background: #edf7fb;
+	list-style: none;
+}
+
+.ref001-course-card__recommendations li {
+	position: relative;
+	margin: 0;
+	font-size: 13px;
+	font-weight: 500;
+	line-height: 1.45;
+	letter-spacing: 0.02em;
+}
+
+.ref001-course-card__recommendations li::before {
+	content: "";
+	position: absolute;
+	left: -22px;
+	top: 0.38em;
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	background: var(--ref001-course-color);
+}
+
+@media (max-width: 600px) {
+	.ref001-courses {
+		padding: 64px 0 72px;
+	}
+
+	.ref001-courses__header {
+		width: 343px;
+		margin-bottom: 40px;
+	}
+
+	.ref001-courses__kicker {
+		margin-bottom: 20px;
+	}
+
+	.ref001-courses__title {
+		gap: 8px;
+		font-size: 24px;
+		line-height: 1.25;
+	}
+
+	.ref001-courses__title > span:nth-child(2) {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.ref001-courses__title strong {
+		font-size: 32px;
+	}
+
+	.ref001-courses__paren {
+		font-size: 42px;
+	}
+
+	.ref001-courses__grid {
+		display: flex;
+		flex-direction: column;
+		gap: 32px;
+		width: 343px;
+	}
+
+	.ref001-courses__item,
+	.ref001-courses__item:nth-child(7) {
+		width: 343px;
+	}
+
+	.ref001-course-card {
+		width: 343px;
+		min-height: 299px;
+		padding: 24px 20px 24px;
+	}
+
+	.ref001-course-card__identity {
+		display: grid;
+		grid-template-columns: 64px 1fr;
+		gap: 16px;
+		align-items: center;
+		min-height: 64px;
+	}
+
+	.ref001-course-card__icon {
+		position: static;
+		width: 64px;
+		height: 64px;
+	}
+
+	.ref001-course-card__heading h3 {
+		font-size: 22px;
+	}
+
+	.ref001-course-card__description {
+		min-height: 0;
+		margin: 14px 0 18px;
+		font-size: 14px;
+	}
+
+	.ref001-course-card__recommendations {
+		margin-left: 0;
+		padding-top: 14px;
+	}
+
+	.ref001-course-card__recommend-label {
+		left: 12px;
+	}
+
+	.ref001-course-card__recommendations ul {
+		min-height: 0;
+		padding: 28px 20px 16px 44px;
+	}
+
+	.ref001-course-card__recommendations li {
+		font-size: 13px;
+	}
+}

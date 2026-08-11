@@ -31,9 +31,10 @@ if ( '' === $payload_path || ! is_file( $payload_path ) ) {
 
 $payload_raw = file_get_contents( $payload_path );
 $payload     = json_decode( $payload_raw, true );
+$schema_version = is_array( $payload ) ? (int) ( $payload['schema_version'] ?? 0 ) : 0;
 
-if ( ! is_array( $payload ) || 1 !== (int) ( $payload['schema_version'] ?? 0 ) ) {
-	WP_CLI::error( 'Seed payload must be a schema_version=1 JSON object.' );
+if ( ! is_array( $payload ) || ! in_array( $schema_version, array( 1, 2 ), true ) ) {
+	WP_CLI::error( 'Seed payload must be a supported schema_version=1 or schema_version=2 JSON object.' );
 }
 
 $page = $payload['page'] ?? null;
@@ -149,10 +150,11 @@ if ( $failed > 0 ) {
 
 WP_CLI::success(
 	sprintf(
-		'Seed complete: updated=%d skipped=%d failed=0 page_id=%d template=%s',
+		'Seed complete: updated=%d skipped=%d failed=0 page_id=%d template=%s schema=%d',
 		$updated,
 		$skipped,
 		$post_id,
-		$template
+		$template,
+		$schema_version
 	)
 );

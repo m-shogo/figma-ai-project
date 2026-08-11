@@ -18,11 +18,14 @@ import build_ref001_wordpress_seed as builder  # noqa: E402
 class Ref001WordPressSeedTests(unittest.TestCase):
     def test_real_fixture_builds_stable_field_key_payload(self) -> None:
         payload = builder.build_payload()
+        self.assertEqual(2, payload["schema_version"])
         self.assertEqual("REF-001-CHIBA-KEIZAI-SAMPLE", payload["reference_id"])
         self.assertEqual("ref001-learning", payload["page"]["slug"])
         self.assertEqual("page-templates/template-ref001.php", payload["page"]["template"])
-        self.assertEqual(26, payload["summary"]["ready_field_count"])
+        self.assertEqual(47, payload["summary"]["ready_field_count"])
         self.assertEqual(9, payload["summary"]["unresolved_field_count"])
+        self.assertEqual(2, payload["summary"]["content_source_count"])
+        self.assertEqual(2, payload["summary"]["acf_export_count"])
 
         fields = {row["field_name"]: row for row in payload["fields"]}
         self.assertEqual("field_ref001_mv_lead", fields["mv_lead"]["field_key"])
@@ -42,10 +45,21 @@ class Ref001WordPressSeedTests(unittest.TestCase):
             fields["education_3_image"]["figma_evidence"]["figma_image_hash"],
         )
 
-    def test_payload_carries_source_fingerprints(self) -> None:
+        self.assertEqual(
+            "field_ref001_course_it_description",
+            fields["course_it_description"]["field_key"],
+        )
+        self.assertEqual("READY", fields["course_it_description"]["status"])
+
+    def test_payload_carries_modular_source_fingerprints(self) -> None:
         payload = builder.build_payload()
-        self.assertEqual(64, len(payload["source"]["fixture_content_sha256"]))
-        self.assertEqual(64, len(payload["source"]["acf_export_sha256"]))
+        sources = payload["sources"]
+        self.assertEqual(2, len(sources["fixture_contents"]))
+        self.assertEqual(2, len(sources["acf_exports"]))
+        for group in ("fixture_contents", "acf_exports"):
+            for source in sources[group]:
+                self.assertTrue(source["path"])
+                self.assertEqual(64, len(source["sha256"]))
 
     def test_unknown_fixture_field_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -61,7 +75,7 @@ class Ref001WordPressSeedTests(unittest.TestCase):
             export_path.write_text(json.dumps(export, ensure_ascii=False), encoding="utf-8")
 
             with self.assertRaisesRegex(ValueError, "unknown ACF field"):
-                builder.build_payload(content_path, export_path)
+                builder.build_payload((content_path,), (export_path,))
 
     def test_media_placeholder_must_map_to_image_field(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -77,7 +91,25 @@ class Ref001WordPressSeedTests(unittest.TestCase):
             export_path.write_text(json.dumps(export, ensure_ascii=False), encoding="utf-8")
 
             with self.assertRaisesRegex(ValueError, "must map to an ACF image field"):
-                builder.build_payload(content_path, export_path)
+                builder.build_payload((content_path,), (export_path,))
+
+    def test_duplicate_content_field_across_sources_is_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            first = yaml.safe_load(builder.CONTENT_PATH.read_text(encoding="utf-8"))
+            second = {
+                "schema_version": 1,
+                "reference_id": first["reference_id"],
+                "acf_values": {"mv_lead": "duplicate"},
+                "media_placeholders": {},
+            }
+            first_path = root / "first.yaml"
+            second_path = root / "second.yaml"
+            first_path.write_text(yaml.safe_dump(first, allow_unicode=True, sort_keys=False), encoding="utf-8")
+            second_path.write_text(yaml.safe_dump(second, allow_unicode=True, sort_keys=False), encoding="utf-8")
+
+            with self.assertRaisesRegex(ValueError, "duplicate fixture content field"):
+                builder.build_payload((first_path, second_path), (builder.ACF_EXPORT_PATH,))
 
     def test_render_is_deterministic_and_sorted_by_field_name(self) -> None:
         payload = builder.build_payload()
