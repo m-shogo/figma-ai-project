@@ -217,7 +217,7 @@
       "required": ["capture_id", "scope", "target_id", "frame_id", "environment_profile_id", "runtime", "input_state", "preferences", "path", "captured_at", "deterministic", "notes"],
       "properties": {
         "capture_id": { "type": "string", "minLength": 1 },
-        "scope": { "enum": ["SECTION", "BOUNDARY", "CLUSTER", "FULL_PAGE"] },
+        "scope": { "enum": ["SECTION", "BOUNDARY", "CLUSTER", "FULL_PAGE", "INTERACTION"] },
         "target_id": { "type": "string", "minLength": 1 },
         "frame_id": { "type": "string" },
         "environment_profile_id": { "type": "string", "minLength": 1 },
