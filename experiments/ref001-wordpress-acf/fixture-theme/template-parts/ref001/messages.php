@@ -10,10 +10,24 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$messages_composite_path = dirname( __DIR__, 2 ) . '/assets/images/visual-qa/messages/messages-mask-group.b64';
-$messages_composite_b64  = '';
-if ( is_readable( $messages_composite_path ) ) {
-	$messages_composite_b64 = preg_replace( '/\s+/', '', (string) file_get_contents( $messages_composite_path ) );
+$messages_composite_root  = dirname( __DIR__, 2 ) . '/assets/images/visual-qa/messages/';
+$messages_composite_parts = array(
+	'messages-mask-group.part01.b64',
+	'messages-mask-group.part02.b64',
+	'messages-mask-group.part03.b64',
+	'messages-mask-group.part04.b64',
+	'messages-mask-group.part05.b64',
+	'messages-mask-group.part06.b64',
+	'messages-mask-group.part07.b64',
+);
+$messages_composite_b64 = '';
+foreach ( $messages_composite_parts as $messages_composite_part ) {
+	$messages_composite_path = $messages_composite_root . $messages_composite_part;
+	if ( ! is_readable( $messages_composite_path ) ) {
+		$messages_composite_b64 = '';
+		break;
+	}
+	$messages_composite_b64 .= preg_replace( '/\s+/', '', (string) file_get_contents( $messages_composite_path ) );
 }
 ?>
 <section
