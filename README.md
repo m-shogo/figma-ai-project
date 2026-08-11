@@ -11,7 +11,35 @@ AI coding agents（Codex / Claude Code / Cursorなど）とFigmaを使い、**�
 - reference受領後も勝手なredesignをしない
 - design変更とagent/workflow改善を同じexperimentへ混ぜない
 
-現在は**reference design待ち**。デザイン自体には触れず、再現・検証・学習基盤を整備しています。
+## Current project state
+
+現在は**実referenceを使った学習・検証段階**です。
+
+REF-001（千葉経済大学sample）では、FigmaのPC/SP referenceを使ったWordPress + ACF learning fixtureについて、HeaderからFooterまでのfull-page visual/runtime実装とQAまで到達しています。
+
+現在確認済みの主要contract:
+
+- exact visual acceptance: PC `1380px` / SP `375px`
+- owner-resolved production breakpoint: `768px`
+  - mobile `<= 767px`
+  - desktop `>= 768px`
+- latest validated full-page geometry delta: PC/SPとも`0`
+- page-level horizontal overflow / readable-text clipping等のruntime safety gate: PASS
+- ACF learning artifact: main baseline + Coursesを1ファイルでimportできるbundleを生成・drift検証可能
+
+一方で、**production実装が完成したという意味ではありません**。
+
+- 実案件のtarget WordPress theme repository / branch / starting commitは未接続
+- Header / Footer / global CTA等のproduction ownershipはtarget repo確認前なのでfreezeしない
+- Student Voiceのinteraction、Messages 2–4やcarousel behavior等はevidence不足のまま`UNDETERMINED`
+- 現在の修復済みfixtureはformal FIRST PASS保存前に改善を重ねたため、後付けでFIRST PASS扱いしない
+- Clean Replayはまだ`NOT RUN`。reproducibilityを実証済みとは扱わない
+
+Canonical current evidence:
+
+- `references/chiba-keizai-sample.reference.yaml`
+- `experiments/ref001-wordpress-acf/README.md`
+- `experiments/ref001-wordpress-acf/artifacts/README.md`
 
 ---
 
@@ -373,6 +401,9 @@ Current validation includes:
 - dependency/write-path conflicts
 - parallel worker isolation
 - immutable run evidence lineage
+- ACF export validation + deterministic REF-001 import-bundle drift gate
+- immutable FIRST PASS evidence validation when evidence exists
+- Clean Replay pair comparability validation when a pair exists
 - capture environment lineage / required coverage
 - section planner/validator unit tests
 
@@ -383,6 +414,12 @@ Local/readiness entrypoint:
 ```text
 python scripts/check_repository_readiness.py
 ```
+
+Readiness output is tri-state:
+
+- `PASS` — applicable gate passed
+- `SKIP` — evidence/pair does not exist yet; successful but **not proof that the stage was executed**
+- `FAIL` — applicable gate failed
 
 CIは研究を硬直化するためではなく、**同じexperiment条件を後から再現できるようにするため**のものです。
 
