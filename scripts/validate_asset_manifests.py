@@ -11,6 +11,9 @@ from typing import Any, Iterable
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST_SUFFIX = ".asset.json"
 ALLOWED_FORMATS = {"png", "jpeg", "gif", "webp", "svg"}
+SOURCE_EPHEMERAL = "FIGMA_MCP_EPHEMERAL_ASSET"
+SOURCE_PLUGIN_RENDERED = "FIGMA_PLUGIN_RENDERED_EXPORT"
+ALLOWED_SOURCE_KINDS = {SOURCE_EPHEMERAL, SOURCE_PLUGIN_RENDERED}
 
 
 class AssetManifestError(ValueError):
@@ -50,6 +53,64 @@ def load_manifest(path: Path) -> dict[str, Any]:
     return value
 
 
+def validate_source_provenance(data: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    source_kind = str(data.get("source_kind", "")).strip()
+    if source_kind not in ALLOWED_SOURCE_KINDS:
+        errors.append(f"source_kind must be one of {sorted(ALLOWED_SOURCE_KINDS)}")
+        return errors
+
+    if data.get("source_url_persisted") is not False:
+        errors.append("source_url_persisted must be false")
+
+    figma = data.get("figma")
+    if not isinstance(figma, dict):
+        errors.append("figma must be an object")
+        figma = {}
+    for key in ("file_key", "node_id", "logical_name"):
+        if not str(figma.get(key, "")).strip():
+            errors.append(f"figma.{key} is required")
+
+    security = data.get("security")
+    if not isinstance(security, dict):
+        errors.append("security must be an object")
+        return errors
+
+    if source_kind == SOURCE_EPHEMERAL:
+        if security.get("source_url_storage") != "PROHIBITED":
+            errors.append("security.source_url_storage must be PROHIBITED")
+        if security.get("source_url_transport") != "STDIN_OR_ENV_ONLY":
+            errors.append("security.source_url_transport must be STDIN_OR_ENV_ONLY")
+        return errors
+
+    if security.get("source_url_storage") != "NOT_APPLICABLE":
+        errors.append("security.source_url_storage must be NOT_APPLICABLE for plugin rendered exports")
+    if security.get("source_url_transport") != "NOT_USED":
+        errors.append("security.source_url_transport must be NOT_USED for plugin rendered exports")
+    if security.get("transport") != "FIGMA_PLUGIN_BASE64_CHUNKS":
+        errors.append("security.transport must be FIGMA_PLUGIN_BASE64_CHUNKS")
+
+    if figma.get("export_method") != "node.exportAsync":
+        errors.append("figma.export_method must be node.exportAsync for plugin rendered exports")
+    if figma.get("export_format") not in {"PNG", "JPG"}:
+        errors.append("figma.export_format must be PNG or JPG for plugin rendered exports")
+
+    provenance = data.get("provenance")
+    if not isinstance(provenance, dict):
+        errors.append("provenance must be an object for plugin rendered exports")
+    else:
+        if provenance.get("asset_semantics") != "RENDERED_VISIBLE_NODE_NOT_RAW_SOURCE":
+            errors.append(
+                "provenance.asset_semantics must be RENDERED_VISIBLE_NODE_NOT_RAW_SOURCE"
+            )
+        if provenance.get("cms_source_authority") is not False:
+            errors.append("provenance.cms_source_authority must be false")
+        if provenance.get("intended_use") != "VISUAL_FIXTURE":
+            errors.append("provenance.intended_use must be VISUAL_FIXTURE")
+
+    return errors
+
+
 def validate_manifest(path: Path, *, root: Path = ROOT) -> list[str]:
     try:
         data = load_manifest(path)
@@ -59,10 +120,7 @@ def validate_manifest(path: Path, *, root: Path = ROOT) -> list[str]:
     errors: list[str] = []
     if data.get("schema_version") != 1:
         errors.append("schema_version must be 1")
-    if data.get("source_kind") != "FIGMA_MCP_EPHEMERAL_ASSET":
-        errors.append("source_kind must be FIGMA_MCP_EPHEMERAL_ASSET")
-    if data.get("source_url_persisted") is not False:
-        errors.append("source_url_persisted must be false")
+    errors.extend(validate_source_provenance(data))
 
     artifact = data.get("artifact")
     if not isinstance(artifact, dict):
@@ -95,15 +153,6 @@ def validate_manifest(path: Path, *, root: Path = ROOT) -> list[str]:
     detected_format = str(artifact.get("detected_format", "")).strip().lower()
     if detected_format not in ALLOWED_FORMATS:
         errors.append(f"artifact.detected_format must be one of {sorted(ALLOWED_FORMATS)}")
-
-    security = data.get("security")
-    if not isinstance(security, dict):
-        errors.append("security must be an object")
-    else:
-        if security.get("source_url_storage") != "PROHIBITED":
-            errors.append("security.source_url_storage must be PROHIBITED")
-        if security.get("source_url_transport") != "STDIN_OR_ENV_ONLY":
-            errors.append("security.source_url_transport must be STDIN_OR_ENV_ONLY")
 
     return errors
 
