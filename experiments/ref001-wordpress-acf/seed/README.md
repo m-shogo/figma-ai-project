@@ -47,6 +47,12 @@ python scripts/probe_ref001_acf_runtime.py \
   --require-ready
 ```
 
+The probe performs the same explicit WP-CLI capability check that can be run manually:
+
+```bash
+wp cli has-command "acf json import"
+```
+
 The probe records:
 
 - WP-CLI availability
