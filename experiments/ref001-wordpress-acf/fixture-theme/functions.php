@@ -12,6 +12,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Enqueue the REF-001 fixture stylesheets only for the learning Page template.
+ *
+ * Visual-first rule: the fixture must remain inspectable before editors enter
+ * ACF values. `ref001-visual-fixtures.css` therefore supplies low-resolution
+ * Figma-derived fallbacks only for missing-media placeholders. Real ACF media
+ * automatically wins because the placeholder is no longer rendered.
  */
 function ref001_learning_enqueue_assets() {
 	if ( ! is_page_template( 'page-templates/template-ref001.php' ) ) {
@@ -22,21 +27,38 @@ function ref001_learning_enqueue_assets() {
 		'ref001-learning',
 		get_theme_file_uri( 'assets/css/ref001.css' ),
 		array(),
-		'0.2.0'
+		'0.3.0'
 	);
 
 	wp_enqueue_style(
 		'ref001-learning-education',
 		get_theme_file_uri( 'assets/css/ref001-education.css' ),
 		array( 'ref001-learning' ),
-		'0.2.0'
+		'0.3.0'
+	);
+
+	wp_enqueue_style(
+		'ref001-learning-courses',
+		get_theme_file_uri( 'assets/css/ref001-courses.css' ),
+		array( 'ref001-learning' ),
+		'0.3.0'
+	);
+
+	wp_enqueue_style(
+		'ref001-learning-visual-fixtures',
+		get_theme_file_uri( 'assets/css/ref001-visual-fixtures.css' ),
+		array( 'ref001-learning' ),
+		'0.3.0'
 	);
 }
 add_action( 'wp_enqueue_scripts', 'ref001_learning_enqueue_assets' );
 
 /**
  * Read a Page-level ACF value without making the fixture fatal when ACF is
- * temporarily unavailable during structural testing.
+ * temporarily unavailable during structural or visual testing.
+ *
+ * The fallback is intentional: Figma-derived fixture copy is the visual source
+ * before admin entry; an actual ACF value replaces it without changing markup.
  *
  * @param string $name    ACF field name.
  * @param mixed  $default Value returned when ACF or the field is unavailable.
