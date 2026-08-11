@@ -60,6 +60,18 @@ const fixtureSpecs = [
     endBytes: [255, 217],
   },
   {
+    key: 'messages-mask-group',
+    path: '../fixture-theme/assets/images/visual-qa/messages/messages-mask-group.b64',
+    format: 'jpeg',
+    lineCount: 1,
+    lastLineLength: 15440,
+    base64Length: 15440,
+    charCodeSum32: 1332210,
+    decodedByteLength: 11579,
+    startBytes: [255, 216],
+    endBytes: [255, 217],
+  },
+  {
     key: 'cta-value-pc-left',
     path: '../fixture-theme/assets/images/visual-qa/cta-value/pc-left.b64',
     format: 'png',
@@ -254,13 +266,24 @@ async function inspectBackgroundPixels(selector, nodeAttribute) {
 await page.locator('.ref001-student-voice').scrollIntoViewIfNeeded();
 await page.waitForTimeout(100);
 const studentVoiceResults = await inspectBackgroundPixels(
-  '[data-figma-composite-node]:not([data-figma-composite-node=""])',
+  '.ref001-student-voice [data-figma-composite-node]:not([data-figma-composite-node=""])',
   'data-figma-composite-node',
 );
 console.log(JSON.stringify({ studentVoiceComposites: studentVoiceResults }, null, 2));
 
 const studentVoiceFailures = studentVoiceResults.filter(
   (asset) => !asset.decoded || asset.naturalWidth <= 0 || asset.naturalHeight <= 0 || asset.visiblePixels <= 0 || asset.channelRange < 20,
+);
+
+await page.locator('.ref001-messages').scrollIntoViewIfNeeded();
+await page.waitForTimeout(100);
+const messagesResults = await inspectBackgroundPixels(
+  '.ref001-messages__image[data-figma-composite-node]',
+  'data-figma-composite-node',
+);
+console.log(JSON.stringify({ messagesComposite: messagesResults }, null, 2));
+const messagesFailures = messagesResults.filter(
+  (asset) => !asset.decoded || asset.naturalWidth < 80 || asset.naturalHeight < 50 || asset.visiblePixels <= 0 || asset.channelRange < 20,
 );
 
 await page.locator('.ref001-cta-value').scrollIntoViewIfNeeded();
@@ -306,6 +329,16 @@ if (studentVoiceResults.length !== 3) {
 
 if (studentVoiceFailures.length > 0) {
   console.error(`Student Voice composite decode/pixel failures: ${studentVoiceFailures.length}`);
+  process.exit(1);
+}
+
+if (messagesResults.length !== 1) {
+  console.error(`Expected 1 Messages composite fixture, found ${messagesResults.length}.`);
+  process.exit(1);
+}
+
+if (messagesFailures.length > 0) {
+  console.error(`Messages composite decode/pixel failures: ${messagesFailures.length}`);
   process.exit(1);
 }
 
