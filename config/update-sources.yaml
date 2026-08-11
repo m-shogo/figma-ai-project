@@ -31,6 +31,13 @@ lanes:
         url: https://developers.figma.com/docs/figma-mcp-server/tools-and-prompts/
         topics: [figma, mcp, tools, prompts]
         impacts: [MCP, FIGMA_TO_CODE, CODE_TO_FIGMA, CONTEXT_RETRIEVAL]
+      - id: figma-code-connect-releases
+        authority: OFFICIAL
+        kind: GITHUB_RELEASES
+        repo: figma/code-connect
+        url: https://api.github.com/repos/figma/code-connect/releases?per_page=12
+        topics: [figma, code-connect, components, variants, props, templates, parserless, design-system]
+        impacts: [FIGMA_TO_CODE, DESIGN_SYSTEM, COMPONENT_REUSE, CONTEXT_RETRIEVAL]
 
   MCP:
     required_for_significant_run: true
@@ -238,7 +245,7 @@ retest_keyword_map:
   ACCESSIBILITY:
     keywords: [accessibility, focus, keyboard, aria, forced colors, contrast, target size]
   FIGMA_MCP:
-    keywords: [figma mcp, get_design_context, get_metadata, code connect, write to canvas, skill]
+    keywords: [figma mcp, get_design_context, get_metadata, code connect, parserless, template, variant, write to canvas, skill]
   AGENT_CONTEXT:
     keywords: [context, compaction, agent, subagent, rules, instructions, skill, hook]
   PARALLEL_EXECUTION:

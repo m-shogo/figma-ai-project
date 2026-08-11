@@ -94,6 +94,7 @@ Community/practitioner discovery belongs outside this production-official regist
 - Figma Release Notes
 - Figma MCP docs
 - Figma MCP tools/prompts
+- Figma Code Connect official releases
 
 Typical impact:
 

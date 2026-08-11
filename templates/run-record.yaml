@@ -93,28 +93,37 @@ captures:
   first_pass: []
   verify: []
   final: []
-# - capture_id: section-s01-iphone
-#   evidence_scope: SECTION # SECTION | BOUNDARY | CLUSTER | FULL_PAGE | INTERACTION
-#   environment_profile_id: iphone-safari
+# - capture_id: interaction-nav-toggle-iphone
+#   scope: INTERACTION # SECTION | BOUNDARY | CLUSTER | FULL_PAGE | INTERACTION
+#   target_id: nav-toggle
 #   frame_id: sp-main
-#   viewport:
-#     width_css_px: 390
-#     height_css_px: 844
+#   environment_profile_id: iphone-safari
 #   runtime:
 #     browser: Safari
 #     browser_version: ""
 #     os: iOS
 #     os_version: ""
+#     engine: WebKit
+#     webview: false
+#     viewport_width_css_px: 390
+#     viewport_height_css_px: 844
 #     dpr: 3
 #     zoom: 1.0
 #     text_scale: 1.0
-#     hover: NONE
-#     pointer: COARSE
+#     orientation: PORTRAIT
+#   input_state:
+#     primary_hover: NONE
+#     primary_pointer: COARSE
+#     touch: true
+#   preferences:
 #     reduced_motion: NO_PREFERENCE
-#     color_scheme: LIGHT
 #     forced_colors: NONE
+#     contrast: NO_PREFERENCE
+#     color_scheme: LIGHT
 #   path: ""
 #   captured_at: ""
+#   deterministic: true
+#   notes: []
 
 scores:
   first_pass_fidelity:
