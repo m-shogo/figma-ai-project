@@ -402,3 +402,10 @@
 		font-size: 18px;
 	}
 }
+
+/* Supplied SP acceptance endpoint: the fluid open-content box resolves to the measured 311px class-photo width at 375px. */
+@media (width: 375px) {
+	.ref001-student-voice__class-photo {
+		width: 311px;
+	}
+}
