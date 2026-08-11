@@ -259,6 +259,40 @@ Compositeも同scope同士で比較する。
 
 ---
 
+# E. Human Editability — mandatory gate + diagnostic /10
+
+`docs/human-editability.md` をcanonical policyとする。
+
+これは「最終スクリーンショットは合うが、人が後で直せない」実装をproduction成功扱いしないための独立gate。
+
+Current dimensions:
+
+- Discoverability — /2
+- Locality of change — /2
+- Intent readability — /2
+- Change safety / reuse — /2
+- CMS / content ownership clarity — /2
+
+Current policy:
+
+- new run schemaでは `COMPLETE` に Human Editability `PASS` が必要
+- diagnostic scoreは `>= 8/10`
+- mandatory blockerが1つでもあればscoreに関係なくFAIL
+- PAGE/INTEGRATIONはimmutable FIRST PASS snapshotのdisposable copyで最低3つのrelevant Change Drillを行う
+- SECTIONはscopeに合う最低1つのChange Drillを行う
+- Change Drillのtemporary diffはFIRST PASSへ戻さない
+- repair後も再評価し、visual fidelityのためにeditabilityを悪化させた場合はregressionとして扱う
+
+### Why not add it to the current /100 immediately?
+
+既存experimentとの時系列比較を壊さないため。
+
+Human Editabilityは現在、**100点の外にある必須gate**として導入する。REF-001 clean replayおよび別referenceで測定し、十分なデータが揃った後にComposite weight再設計を検討する。
+
+これは重要度が低いという意味ではない。むしろ `FAIL` の場合はCompositeが高くてもproduction-ready扱いしない。
+
+---
+
 # Diagnostic metrics
 
 Compositeには直接足さず原因分析に使う。
@@ -321,6 +355,19 @@ agentがreference/codebase/company rulesから確定できず仮定した数。
 
 取得できたのに推測したものは `AGENT_ASSUMPTION`。
 
+## Human Editability diagnostics
+
+- section-to-code discoverability evidence
+- located paths per Change Drill
+- changed paths per Change Drill
+- unexpected paths per Change Drill
+- unrelated regression count
+- duplicate shared implementation findings
+- CMS/code ownership ambiguity
+- non-obvious workaround rationale gaps
+
+単純なfile count/LOCを万能maintainability指標として使わない。project-native ownershipに対して変更範囲が予測可能かを見る。
+
 ## Portability
 
 - PROJECT_ONLY
@@ -336,13 +383,16 @@ agentがreference/codebase/company rulesから確定できず仮定した数。
 1. run scope確定
 2. FIRST_PASS capture
 3. First-pass Fidelity /80
-4. failure taxonomy
-5. repair rounds
-6. Final Fidelity /80
-7. Rework Efficiency /10
-8. integration run when applicable
-9. clean replay
-10. Reproducibility /10
-11. Final Composite /100
+4. FIRST PASS freeze
+5. Human Editability audit + disposable Change Drills
+6. failure taxonomy
+7. repair rounds
+8. Final Fidelity /80
+9. final Human Editability re-check
+10. Rework Efficiency /10
+11. integration run when applicable
+12. clean replay
+13. Reproducibility /10
+14. Final Composite /100
 
-この順序を守り、final qualityでfirst-passやintegrationの弱さを隠さない。
+この順序を守り、final qualityでfirst-pass、maintainability、integrationの弱さを隠さない。
