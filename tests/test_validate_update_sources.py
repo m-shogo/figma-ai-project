@@ -22,6 +22,26 @@ class UpdateSourceRegistryTests(unittest.TestCase):
     def test_current_registry_is_valid(self) -> None:
         self.assertEqual([], registry.registry_errors(current_registry()))
 
+    def test_figma_lane_tracks_current_layout_and_typography_semantics(self) -> None:
+        data = current_registry()
+        source_ids = {source["id"] for source in data["lanes"]["FIGMA"]["sources"]}
+        self.assertTrue(
+            {
+                "figma-auto-layout-current",
+                "figma-auto-layout-flexbox-generation",
+                "figma-grid-auto-layout-current",
+                "figma-text-properties-current",
+            }.issubset(source_ids)
+        )
+
+        retest = data["retest_keyword_map"]
+        self.assertIn("FIGMA_LAYOUT_GENERATION", retest)
+        self.assertIn("TYPOGRAPHY_RUNTIME", retest)
+        self.assertIn("ASSET_FIDELITY", retest)
+        self.assertIn("line-height", retest["TYPOGRAPHY_RUNTIME"]["keywords"])
+        self.assertIn("vertical trim", retest["TYPOGRAPHY_RUNTIME"]["keywords"])
+        self.assertIn("legacy auto layout", retest["FIGMA_LAYOUT_GENERATION"]["keywords"])
+
     def test_duplicate_source_id_is_rejected_across_lanes(self) -> None:
         data = current_registry()
         duplicate = copy.deepcopy(data["lanes"]["FIGMA"]["sources"][0])
