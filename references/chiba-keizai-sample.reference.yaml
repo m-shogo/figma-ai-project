@@ -34,7 +34,7 @@ figma:
     - "21376:4942"
     - "21378:7457"
     - "21376:4402"
-  captured_at: "2026-08-11T11:32:00+09:00"
+  captured_at: "2026-08-11T12:24:00+09:00"
   component_source_url: "https://www.figma.com/design/ZYTdtw4wCgkcBy2cVnhxVI/sample?node-id=280-2&p=f&t=zduaKdUu0MIWPh7D-0"
   component_page_node_id: "280:2"
   structure_profile_path: "references/chiba-keizai-sample.structure-profile.yaml"
@@ -70,7 +70,7 @@ structure:
   page_node_id: "21376:1600"
   page_name: AI
   responsive_frame_placement: SAME_PAGE_SEPARATE_TOP_LEVEL_FRAMES
-  responsive_mode_finding: "The AI page itself resolves template=SP, while the visible desktop and mobile roots now explicitly pin template=PC and template=SP respectively. Root pins isolate each responsive subtree."
+  responsive_mode_finding: "The AI page itself resolves template=SP, while the visible desktop and mobile roots explicitly pin template=PC and template=SP respectively. Root pins isolate each responsive subtree."
   discovery_method:
     - direct-child order
     - semantic names
@@ -79,7 +79,7 @@ structure:
     - visual/structural context
     - current root visibility
     - responsive variable mode resolution
-  discovery_finding: "Layer names alone are insufficient: the SP student-voice group is named Group 338, while the SP messages group is named voice. Text anchors and page order resolve the pairing."
+  discovery_finding: "Layer names alone are insufficient: the SP student-voice group is named Group 338, while the SP messages group is named voice. Text anchors, state labels, page order, and content identity resolve the pairings."
   section_pairs:
     - id: header
       pc_node_id: "21378:8066"
@@ -89,7 +89,7 @@ structure:
       evidence:
         - "PC/SP Header roots are Component Instances and resolve the expected responsive Variable Modes."
         - "Live structure profiling found no Auto Layout inside either Header instance and a high ratio of generic internal layer names, so component identity is trusted but raw child geometry is not treated as semantic code structure."
-        - "Detailed evidence is frozen in references/chiba-keizai-sample.structure-profile.yaml."
+        - "Detailed evidence is in references/chiba-keizai-sample.structure-profile.yaml."
     - id: main-visual
       pc_node_id: "21378:8032"
       sp_node_id: "21376:4886"
@@ -98,7 +98,7 @@ structure:
       evidence:
         - "PC/SP main visuals share semantic content but rely on masks, image crops, vectors, and manual grouping."
         - "The SP MV Group remains 1380px wide inside the 375px reference while responsive children resolve SP values, so raw Figma group dimensions must not be copied blindly into production CSS."
-        - "Detailed evidence is frozen in references/chiba-keizai-sample.structure-profile.yaml."
+        - "PC/SP foreground image sources were hash-compared and can share WordPress attachment fields when content ownership matches."
     - id: reason
       pc_node_id: "21378:7999"
       sp_node_id: "21376:4852"
@@ -107,14 +107,16 @@ structure:
       evidence:
         - "The same three semantic cards are horizontal on PC and vertically stacked on SP."
         - "Live profiling found 5/5 Auto Layout-capable containers active in both variants; the reasons container explicitly changes HORIZONTAL on PC to VERTICAL on SP."
-        - "Detailed evidence is frozen in references/chiba-keizai-sample.structure-profile.yaml."
+        - "Detailed evidence is in references/chiba-keizai-sample.structure-profile.yaml."
     - id: education
       pc_node_id: "21378:7868"
       sp_node_id: "21376:4720"
       mapping_confidence: HIGH
-      provisional_strategy: INSPECT_BEFORE_IMPLEMENT
+      provisional_strategy: HYBRID
       evidence:
-        - "Same semantic layer name and matching position immediately before the first CTA."
+        - "PC/SP contain the same fixed semantic progression 01/スタート → 02/学ぶ → 03/出会う → 04/ゴール."
+        - "Both variants contain 22 Auto Layout containers inside stage lists/labels, while the outer stage-and-arrow composition remains manually grouped."
+        - "Some stages retain alternate/underlay image layers, so canonical CMS media must be selected rather than exposing every Figma image layer."
     - id: cta-after-education
       pc_node_id: "21378:7867"
       sp_node_id: "21376:4719"
@@ -127,17 +129,21 @@ structure:
       pc_node_id: "21378:7766"
       sp_node_id: "21376:4650"
       mapping_confidence: HIGH
-      provisional_strategy: INSPECT_BEFORE_IMPLEMENT
+      provisional_strategy: HYBRID
       evidence:
-        - "Shared student-profile text anchors include 入学の決め手, 印象に残った授業, and 受験生へのひとこと."
-        - "SP layer name is Group 338, demonstrating that semantic name alone would miss the correct mapping."
+        - "Both PC/SP contain three student summary groups; item 1 is supplied as an expanded visual state and items 2/3 are collapsed."
+        - "Only item 1 contains expanded detail content in the supplied Figma state."
+        - "No prototype reactions were found in the inspected section, so visual open/collapsed states do not yet prove an accordion interaction contract."
+        - "SP layer name is Group 338, demonstrating that text/state/content identity must override a generic root name."
     - id: messages
       pc_node_id: "21378:7746"
       sp_node_id: "21376:4629"
       mapping_confidence: HIGH
-      provisional_strategy: INSPECT_BEFORE_IMPLEMENT
+      provisional_strategy: HYBRID
       evidence:
-        - "Shared # MESSAGES heading, senior-student profile copy, indicators, and image structure resolve the pair."
+        - "PC/SP show the same current message, profile, 1/4 indicator, arrow affordances, and shared underlying image hash."
+        - "The inspected node contains content for only one of the four indicated records and no prototype reactions."
+        - "Carousel/slider behavior and the other three message records remain unresolved and must not be invented."
         - "SP layer is named voice despite matching the PC messages section, so text anchors override the misleading name."
     - id: cta-before-courses
       pc_node_id: "21378:7730"
@@ -219,12 +225,17 @@ responsive:
       - "Figma provides 1380px PC and 375px SP reference frames, but those reference widths do not prove the production breakpoint threshold."
       - "Resolve the actual breakpoint from owner/company/design-system/target-code evidence before freezing."
   invariants:
-    - "All visible website-content top-level sections now have high-confidence PC/SP pairings."
+    - "All visible website-content top-level sections have high-confidence PC/SP pairings."
     - "Content identity and order remain useful even when corresponding PC/SP layer names differ."
     - "Visible PC/SP roots explicitly pin their expected template Variable Mode before implementation."
+    - "Education preserves semantic stage order 01→04 across PC/SP."
+    - "Student Voice preserves three supplied summary items across PC/SP, with only item 1 supplied as expanded detail."
+    - "Messages PC/SP share the same current item source/content even though only one of four indicated records is present."
   transitions:
     - "Reason changes from a three-column PC presentation to a vertical SP stack."
-    - "Several later sections substantially change height/composition on SP and require section-level inspection rather than page-wide coordinate translation."
+    - "Education changes from a horizontal four-stage progression to a tall vertical SP composition while preserving stage order."
+    - "Student Voice expanded/collapsed presentations become substantially taller on SP."
+    - "Messages changes from a large right-side image composition to a 343px-class SP image crop while keeping the current 1/4 state."
   ordering_rules:
     - "Preserve the semantic page order Header → MainVisual → Reason → Education → CTA → Student Voice → Messages → CTA → Courses → Links → CTA Value → Footer."
   visibility_rules: []
@@ -232,13 +243,16 @@ responsive:
   container_rules: []
   unknowns:
     - "Production breakpoint value/query semantics."
-    - "Deep layout behavior and interaction/state details for sections not yet inspected with design context."
+    - "Student Voice interaction contract: disclosure/navigation/default state/keyboard/animation."
+    - "Messages records 2–4 and carousel/slider behavior."
+    - "Deep layout/interaction details for Courses, CTA Value, and remaining not-yet-profiled sections."
 
 owner_notes:
   - "Keep PC/SP on the same Figma page as a provisional working convention for this run; promote to a project rule only after real-run evidence accumulates."
   - "Do not redesign the supplied Figma; implementation fidelity is the objective."
   - "The visible PC root was re-captured after the owner corrected template mode inheritance; use current visible-root IDs rather than hidden pre-fix copies."
   - "Implementation target is WordPress fixed-page template + ACF. The target theme repository still must be inspected before theme-specific choices are frozen."
+  - "Learning-first rule: missing interaction/content evidence stays BLOCKED/UNDETERMINED rather than being filled with plausible CMS or JavaScript architecture."
 
 material_unknowns:
   - "A separate target WordPress theme repository/code baseline has not been supplied; this repository is the Figma-to-code research/workflow project."
@@ -248,6 +262,8 @@ material_unknowns:
   - "Actual page slug/template filename and global-vs-page ownership for Header/CTA content are unresolved."
   - "Code Connect availability/mapping is UNDETERMINED because the current Figma plan/seat blocks MCP Code Connect lookup."
   - "Production breakpoint contract is unresolved; PC/SP frame widths alone are not breakpoint evidence."
+  - "Student Voice interaction behavior and complete expanded content for items 2/3 are unresolved."
+  - "Messages content for records 2–4 and slider/carousel behavior are unresolved."
 
 code_baseline:
   repository: ""
@@ -262,4 +278,4 @@ code_baseline:
 freeze:
   ready: false
   frozen_at: ""
-  notes: "WordPress + ACF implementation family is owner-resolved. Keep DRAFT until the target theme baseline, template contract, ACF runtime/tier, and responsive/codebase unknowns are resolved."
+  notes: "WordPress + ACF implementation family is owner-resolved. Six sections now have measured Structure Profiles, but keep DRAFT until the target theme baseline, template contract, ACF runtime/tier, breakpoint contract, and material interaction/content unknowns are resolved."
