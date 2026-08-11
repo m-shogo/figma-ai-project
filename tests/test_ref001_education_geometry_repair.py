@@ -15,9 +15,10 @@ class Ref001EducationGeometryRepairTests(unittest.TestCase):
         self.assertIn("grid-row: 1 / span 2", css)
         self.assertIn("grid-row: 1", css)
 
-    def test_repair_is_pc_only_so_sp_first_pass_is_untouched(self) -> None:
+    def test_repair_is_desktop_only_at_owner_resolved_boundary(self) -> None:
         css = (THEME / "assets" / "css" / "ref001-education-geometry.css").read_text(encoding="utf-8")
-        self.assertIn("@media (min-width: 601px)", css)
+        self.assertIn("@media (min-width: 768px)", css)
+        self.assertNotIn("@media (min-width: 601px)", css)
         self.assertNotIn("max-width: 600px", css)
 
     def test_repair_is_enqueued_immediately_after_education_first_pass(self) -> None:
