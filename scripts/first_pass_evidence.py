@@ -184,6 +184,10 @@ def main() -> int:
         return 0
 
     targets = [args.run_record if args.run_record.is_absolute() else ROOT / args.run_record] if args.run_record else candidate_runs()
+    if not targets:
+        print("SKIP FIRST-PASS validation: no run records found; no immutable FIRST PASS evidence exists yet")
+        return 0
+
     failures = 0
     for path in targets:
         errors = validate_run_file(path)

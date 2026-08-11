@@ -191,9 +191,9 @@ def validate_replay_file(replay_path: Path) -> list[str]:
     return errors
 
 
-def candidate_replays() -> list[Path]:
+def candidate_replays(root: Path = ROOT) -> list[Path]:
     found: list[Path] = []
-    for base in (ROOT / "experiments", ROOT / "references", ROOT / "contracts"):
+    for base in (root / "experiments", root / "references", root / "contracts"):
         if not base.exists():
             continue
         for path in sorted(base.rglob("*.yaml")):
@@ -230,6 +230,10 @@ def main() -> int:
         return 0
 
     targets = [resolve(args.replay_run)] if args.replay_run else candidate_replays()
+    if not targets:
+        print("SKIP clean-replay-pair validation: no REPLAY run records found; reproducibility has not been tested yet")
+        return 0
+
     failures = 0
     for path in targets:
         errors = validate_replay_file(path)

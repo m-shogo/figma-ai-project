@@ -117,10 +117,10 @@ jobs:
       - name: Validate immutable run evidence lineage
         run: python scripts/validate_run_lineage.py
 
-      - name: Validate immutable FIRST PASS evidence snapshots
+      - name: Validate existing immutable FIRST PASS evidence snapshots
         run: python scripts/first_pass_evidence.py validate
 
-      - name: Validate clean replay pair comparability
+      - name: Validate existing clean replay pair comparability
         run: python scripts/prepare_clean_replay.py validate
 
       - name: Validate capture environment lineage and required coverage

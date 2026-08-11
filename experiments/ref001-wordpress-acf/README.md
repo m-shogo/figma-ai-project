@@ -2,7 +2,48 @@
 
 Purpose: learn from a real Figma → WordPress fixed-page-template + ACF translation before freezing production rules.
 
-This experiment is deliberately slower than a one-shot implementation. It separates visual evidence, CMS/editorial decisions, field configuration, page content, target-theme reconnaissance, an intentionally imperfect implementation fixture, and database seeding so later Clean Replay can prove whether the workflow actually improved first-pass fidelity.
+This experiment intentionally separates four things that are easy to mix together:
+
+1. Figma visual evidence
+2. Web/runtime translation
+3. CMS/editorial ownership
+4. reproducibility evidence from a clean replay
+
+A visually complete learning fixture does **not** mean the production WordPress contract is frozen, and a repaired final fixture does **not** count as a preserved FIRST PASS.
+
+## Current verified state
+
+As of the PR #57 / #58 validation sequence:
+
+- the learning fixture renders the full supplied page sequence:
+  - Header
+  - Main Visual
+  - Reason
+  - Education
+  - CTA
+  - Student Voice
+  - Messages
+  - CTA
+  - Courses
+  - Links
+  - CTA Value
+  - Footer
+- exact Figma visual acceptance endpoints remain:
+  - PC: `1380px`
+  - SP: `375px`
+- production breakpoint is owner-confirmed at `768px`:
+  - mobile: `<= 767px`
+  - desktop: `>= 768px`
+- the latest validated PC/SP Visual QA artifact had:
+  - page body geometry delta: `0`
+  - section geometry deltas: `0`
+  - no page-level horizontal overflow failure
+  - no readable-text clipping / unsafe nowrap failure reported by the text-runtime gate
+- intermediate widths are runtime-safety probes rather than additional pixel-perfect Figma targets
+- the repaired full-page fixture is a **learning fixture**, not the target production theme
+- no Figma design mutation was required for these Web-side repairs
+
+This is a strong final visual/runtime result, but it is **not yet Clean Replay evidence** because no formal source run with immutable FIRST PASS evidence was preserved before the iterative repair sequence.
 
 ## Resolved by owner
 
@@ -10,6 +51,8 @@ This experiment is deliberately slower than a one-shot implementation. It separa
 - implementation unit: fixed Page template
 - content fields: ACF
 - production breakpoint: `768px` (`mobile <= 767px`, `desktop >= 768px`)
+
+The canonical Reference Manifest records the breakpoint source as `OWNER`. Figma's `375px / 1380px` frames remain visual acceptance evidence, not breakpoint-threshold evidence.
 
 ## Still intentionally unresolved
 
@@ -20,6 +63,8 @@ This experiment is deliberately slower than a one-shot implementation. It separa
 - ACF PRO availability
 - existing ACF Local JSON architecture
 - existing header/global CTA ownership
+- Student Voice interaction contract
+- Messages records 2–4 and slider/carousel behavior
 
 Do not freeze or invent these from the research repository.
 
@@ -38,6 +83,22 @@ Figma is the visual specification; the Web implementation is a responsive runtim
 - no page-level horizontal scrolling, readable-text clipping, viewport-widening hacks, or overflow hiding used merely to conceal a layout defect
 
 The old 600px fixture seam is not a production contract and must not be reintroduced.
+
+## Section evidence status
+
+| Section | Visual fixture | Structure / evidence note | Product/CMS unknowns |
+|---|---|---|---|
+| Header | Implemented | PC/SP component identity observed | production global ownership unresolved |
+| Main Visual | Implemented | masks/crops/vectors/manual grouping require hybrid translation | production media ownership still follows target theme |
+| Reason | Implemented | strong repeated structure / Auto Layout evidence | fixed-cardinality baseline remains intentional |
+| Education | Implemented | fixed semantic 01→04 progression; mixed outer/manual + inner Auto Layout | editable media/title/bullets only in current ACF baseline |
+| CTA | Implemented | supplied repeated boundary/component evidence | production global destination/ownership unresolved |
+| Student Voice | Implemented visual states | supplied item 1 open + items 2/3 collapsed | interaction contract and complete expanded content unresolved |
+| Messages | Implemented supplied current state | current item and `1 / 4` evidence preserved | records 2–4 and carousel behavior unresolved |
+| Courses | Implemented | seven supplied course structures represented | CMS model remains separate/experimental |
+| Links | Implemented | supplied end-page visual structure represented | destinations remain production-owned |
+| CTA Value | Implemented | final visible composites used for Visual QA where needed | production media ownership remains separate |
+| Footer | Implemented | PC/SP footer/component evidence represented | production global ownership unresolved |
 
 ## Hypotheses under test
 
@@ -67,7 +128,7 @@ Baseline decision: no page-local Header ACF fields.
 
 ### H5 — Field schema and page content are separate deliverables
 
-`artifacts/acf-export.json` contains portable field-group definitions. `fixture-content.yaml` contains disposable First Pass page values.
+`artifacts/acf-export.json` contains portable field-group definitions. `fixture-content.yaml` contains disposable learning values.
 
 Do not misuse ACF field defaults as a page-content migration mechanism.
 
@@ -105,12 +166,12 @@ Student Voice and CTA Value independently proved the same boundary: one final vi
 
 Baseline decision: when multiple IMAGE fills participate in one final visible masked/grouped visual, use the final visible group export as Visual QA evidence. Keep the underlying CMS/media ownership decision separate; a QA group export does not automatically become a production WordPress field or attachment. If inspection proves the visual is only one canonical IMAGE fill, the raw image source can remain sufficient.
 
-Observed twice before promotion to this hypothesis:
+Observed examples:
 
 - Student Voice item 2 / item 3 / classroom final Mask groups
 - CTA Value PC/SP left/right person groups, where color plus mono/offset layers form the final people composites
 
-### H12 — Figma fidelity does not mean forcing static-frame behavior onto the web
+### H12 — Figma fidelity does not mean forcing static-frame behavior onto the Web
 
 Figma gives exact evidence for a supplied static frame. A browser is a runtime: fonts can fall back, glyph metrics can differ, copy can change, viewport widths can vary, and content must remain readable without creating page-level overflow.
 
@@ -128,9 +189,9 @@ Practical boundary:
 
 Observed failure that promoted this rule: Main Visual supporting copy was temporarily given `white-space: nowrap` only to prevent a fallback-font line break. That matched one static screenshot more closely but was the wrong Web translation because it could create overflow and overfit unavailable font metrics. The constraint was removed and a horizontal-overflow browser gate was added instead.
 
-## Education First Pass — implemented
+## Education learning evidence
 
-Education is now the third implemented learning section after MV and Reason.
+Education was the third staged section implemented during the earlier learning pass. These measurements remain useful evidence, but this section is **historical stage context**, not the current overall implementation status.
 
 Measured evidence applied:
 
@@ -145,16 +206,14 @@ Measured evidence applied:
 - internal list gap: 12px
 - PC is horizontal; SP is vertical
 
-Implementation choices:
+Implementation choices retained from that stage:
 
-- `artifacts/acf-export.json` now contains flat basic fields for Education rather than Repeater/Group/Flexible Content
+- `artifacts/acf-export.json` contains flat basic fields for Education rather than Repeater/Group/Flexible Content
 - `fixture-content.yaml` contains Education text values and four canonical media placeholders
 - stage number/label/order are code-owned in `template-parts/ref001/education.php`
-- Education gets its own `assets/css/ref001-education.css`
-- SP card heights are content-driven rather than hard-coded separately for each stage
 - the fixture validator rejects ACF fields such as `education_1_number`, `education_1_label`, or `education_1_order`
 
-Canonical stage media was selected from the currently visible foreground layers:
+Canonical stage media selected from the visible foreground layers:
 
 - 01: `経営学科 1` — `cc1525625b72a6cf17e6b0b462eb48ef5391709e`
 - 02: `授業風景 1` — `fb075b4159fa8fefba6861ddca85f226e5c9bf71`
@@ -163,7 +222,7 @@ Canonical stage media was selected from the currently visible foreground layers:
 
 Retained underlays/alternates are not CMS fields.
 
-## Student Voice — still evidence-gated
+## Student Voice — visual state implemented, interaction still evidence-gated
 
 Measured evidence:
 
@@ -174,9 +233,9 @@ Measured evidence:
 
 Translation mode: `HYBRID`.
 
-Do not invent expanded content for items 2/3. Do not yet freeze an accordion/disclosure architecture.
+The supplied visual state is represented in the learning fixture. Do not invent expanded content for items 2/3, and do not freeze an accordion/disclosure architecture until interaction evidence exists.
 
-## Messages — still evidence-gated
+## Messages — supplied state implemented, records/behavior still evidence-gated
 
 Measured evidence:
 
@@ -188,35 +247,41 @@ Measured evidence:
 
 Translation mode: `HYBRID`.
 
-Do not create four ACF records or add a carousel dependency yet.
+The supplied `1 / 4` visual state is represented in the learning fixture. Do not create records 2–4 or add a carousel dependency until that product/content contract is supplied.
 
 ## Current artifacts
 
-- `implementation-profile.yaml` — DRAFT WordPress/ACF target profile
-- `acf-content-model.yaml` — Figma → CMS ownership decisions/evidence through Education / Student Voice / Messages
-- `artifacts/acf-export.json` — importable learning prototype with stable keys for MV + Reason + Education
-- `fixture-content.yaml` — First Pass values for MV + Reason + Education, separate from field schema
-- `fixture-theme/` — learning-only WordPress theme implementing MV + Reason + Education
-- `seed/seed-ref001.php` — WP-CLI seed runner using stable ACF field keys
+- `implementation-profile.yaml` — DRAFT WordPress/ACF target profile; target-theme-dependent values remain unresolved
+- `acf-content-model.yaml` — Figma → CMS ownership decisions/evidence for the current baseline
+- `artifacts/acf-export.json` — importable basic-field learning prototype for the main MV + Reason + Education ACF baseline
+- `artifacts/courses.acf-export.json` — separate Courses learning export; do not treat its existence as proof of the final production CMS architecture
+- `fixture-content.yaml` — disposable learning values for the main ACF baseline
+- `fixture-theme/` — full-page visual/runtime learning fixture; **not** a production WordPress theme
+- `visual-preview/` — browser capture, geometry, asset, and text-runtime QA harness
+- `seed/seed-ref001.php` — WP-CLI seed runner using stable ACF field keys for the scoped seed baseline
 - `seed/README.md` — capability-gated import/seed procedure
 - `scripts/build_ref001_wordpress_seed.py` — deterministic schema+content → seed payload builder
 
-## Seed pipeline
+## ACF / seed scope
 
-Build a deterministic payload:
+The visual fixture is now much broader than the current main ACF export. Do not equate full-page visual coverage with finalized CMS coverage.
+
+Build the current scoped seed payload with:
 
 ```bash
 python scripts/build_ref001_wordpress_seed.py --output /tmp/ref001-seed.json
 ```
 
-Current expected payload state after Education:
+For the main MV + Reason + Education baseline, the previously validated payload expectation remains:
 
 - 26 READY text fields
 - 9 UNRESOLVED image attachments
 
-Media remains unresolved until real WordPress attachment IDs exist.
+Media remains unresolved until real WordPress attachment IDs exist. Courses has separate learning artifacts and must not be silently merged into the production ACF contract without target-theme/editor requirements.
 
 ## Validation
+
+Core structural validation:
 
 ```bash
 python scripts/validate_acf_export.py
@@ -224,14 +289,44 @@ python scripts/validate_wordpress_learning_fixture.py
 python -m unittest discover -s tests -p 'test_*.py'
 ```
 
-The fixture checks now also protect:
+Visual/runtime QA is enforced by `.github/workflows/ref001-visual-qa.yml`, including browser capture, geometry measurement, asset decode checks, and text/runtime safety checks.
 
-- owner-resolved `768px` production breakpoint and rejection of the obsolete `600/601px` seam in fixture CSS
-- Figma exact acceptance at `375px / 1380px` while intermediate widths remain runtime-safety probes
-- Education template/style inclusion
-- all fixed Education fields
-- code-owned 01→04 stage identity/order
-- measured PC 281px/40px geometry evidence
-- measured SP 335px card / 140×79 media evidence
-- continued prohibition on Repeater API in the fixed-cardinality baseline
-- page-level horizontal overflow across the runtime-safety viewport suite
+The fixture checks protect, among other things:
+
+- owner-resolved `768px` production breakpoint and rejection of the obsolete `600/601px` seam
+- Figma exact acceptance at `375px / 1380px`
+- runtime-safety behavior around and away from the breakpoint
+- full supplied section order
+- measured section geometry
+- natural text wrapping unless one-line behavior is actually evidenced
+- page-level horizontal overflow / readable-text clipping safety
+- exact or final-visible-composite asset evidence where needed
+- continued prohibition on inventing missing interaction/content contracts
+
+## Clean Replay readiness
+
+**Status: NOT READY / NOT RUN.**
+
+Reason:
+
+- there is currently no formal non-REPLAY run record with `status: COMPLETE`
+- there is no immutable `*.first-pass.json` snapshot for the repaired REF-001 fixture
+- the existing fixture went through many targeted repair iterations before formal FIRST PASS preservation was established
+- therefore the current repaired fixture must **not** be retroactively labeled as FIRST PASS
+- production-oriented SECTION replay also remains blocked by the unresolved target theme/code baseline and other freeze dependencies
+
+CI validation of replay pair comparability is only meaningful when a REPLAY pair exists. Empty validation now reports an explicit `SKIP` instead of silently looking like reproduced evidence.
+
+### What the next valid replay needs
+
+1. start from a fresh isolation/base that does not expose the current final/repair diff
+2. create a formal run record before implementation
+3. pin the same reference revision, implementation profile, environment contract, and relevant scope
+4. build a true FIRST PASS without consulting the repaired output
+5. capture and score FIRST PASS
+6. freeze immutable FIRST PASS evidence immediately
+7. only then repair/finalize
+8. prepare a separate REPLAY run from another fresh isolation
+9. compare first-pass fidelity, repair rounds/failure profile, and reproducibility
+
+The goal is not to prove that the current fixture can eventually reach visual parity again. The goal is to prove that the learned workflow produces a **better first pass with less rework** under controlled conditions.
