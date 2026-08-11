@@ -29,6 +29,8 @@ get_header();
 	<?php /* Student Voice / Messages / intervening CTA visuals are the next visual-first wave. */ ?>
 
 	<?php get_template_part( 'template-parts/ref001/courses' ); ?>
+	<?php get_template_part( 'template-parts/ref001/links' ); ?>
+	<?php get_template_part( 'template-parts/ref001/cta-value' ); ?>
 </main>
 <?php
 get_footer();
