@@ -11,6 +11,7 @@ on:
     paths:
       - 'experiments/ref001-blind-clean-20260812/tools/human-editability-drills.py'
       - 'experiments/ref001-blind-clean-20260812/run.yaml'
+      - 'experiments/ref001-blind-clean-20260812/implementation/README.md'
 
 permissions:
   contents: write
@@ -23,9 +24,9 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Verify frozen FIRST PASS before disposable drills
+      - name: Verify finalized run and frozen FIRST PASS before disposable drills
         run: |
-          python scripts/controlled_run_phase.py experiments/ref001-blind-clean-20260812/run.yaml --phase REPAIR
+          python scripts/controlled_run_phase.py experiments/ref001-blind-clean-20260812/run.yaml --phase FINALIZE
           python scripts/first_pass_evidence.py validate experiments/ref001-blind-clean-20260812/run.yaml
       - name: Run disposable FIRST PASS editability drills
         env:
