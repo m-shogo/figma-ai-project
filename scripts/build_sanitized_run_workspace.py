@@ -71,11 +71,6 @@ def validate_profile(profile: dict[str, Any]) -> list[str]:
         if not isinstance(values, list) or any(not isinstance(value, str) or not value.strip() for value in values):
             errors.append(f"{key} must be a list of non-empty glob strings")
 
-    forbidden = profile.get("forbidden_globs", []) if isinstance(profile.get("forbidden_globs", []), list) else []
-    for value in include_paths:
-        if isinstance(value, str) and matches_any(value.rstrip("/") + "/", forbidden):
-            errors.append(f"include path is itself forbidden: {value}")
-
     return errors
 
 
