@@ -1,0 +1,59 @@
+name: REF001 Finalize Record
+
+on:
+  push:
+    branches:
+      - agent/ref001-blind-clean-first-pass-20260812
+    paths:
+      - '.github/workflows/ref001-finalize-record.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  finalize-record:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: requirements-dev.txt
+      - name: Install validation dependencies
+        run: python -m pip install -r requirements-dev.txt
+      - name: Verify FINALIZE gate and immutable FIRST PASS
+        run: |
+          python scripts/controlled_run_phase.py experiments/ref001-blind-clean-20260812/run.yaml --phase FINALIZE
+          python scripts/first_pass_evidence.py validate experiments/ref001-blind-clean-20260812/run.yaml
+      - name: Finalize truthful BLOCKED run record
+        run: python experiments/ref001-blind-clean-20260812/tools/finalize-run.py
+      - name: Validate ACF implementation and evidence copies
+        run: |
+          python scripts/validate_acf_export.py experiments/ref001-blind-clean-20260812/implementation/acf-export.json
+          python scripts/validate_acf_export.py experiments/ref001-blind-clean-20260812/evidence/acf-export.json
+      - name: Validate Human Editability
+        run: python scripts/validate_human_editability.py
+      - name: Validate run deliverables
+        run: python scripts/validate_run_deliverables.py
+      - name: Validate all research records
+        run: python scripts/validate_records.py
+      - name: Diff hygiene
+        run: git diff --check
+      - name: Persist finalized record
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            experiments/ref001-blind-clean-20260812/run.yaml \
+            experiments/ref001-blind-clean-20260812/evidence/acf-export.json \
+            experiments/ref001-blind-clean-20260812/evidence/final-measurement.yaml
+          if git diff --cached --quiet; then
+            echo 'Finalized record already current.'
+            exit 0
+          fi
+          git commit -m 'Finalize REF-001 Blind Clean Replay evidence'
+          git push
