@@ -14,15 +14,15 @@ if ( PHP_SAPI !== 'cli-server' ) {
 	exit( 'REF-001 visual preview is development-server only.' );
 }
 
-$experiment_root = dirname( __DIR__ );
-$theme_root      = $experiment_root . '/fixture-theme';
+$experiment_root        = dirname( __DIR__ );
+$theme_root             = $experiment_root . '/fixture-theme';
+$ref001_preview_styles  = array();
 
 define( 'ABSPATH', $theme_root . '/' );
 define( 'REF001_VISUAL_PREVIEW', true );
 
 function add_action() {}
 function is_page_template() { return true; }
-function wp_enqueue_style() {}
 function wp_body_open() {}
 function wp_footer() {}
 function language_attributes() { echo 'lang="ja"'; }
@@ -41,6 +41,21 @@ function absint( $value ) { return abs( (int) $value ); }
 function sanitize_html_class( $value ) { return preg_replace( '/[^A-Za-z0-9_-]/', '', (string) $value ); }
 function get_field() { return null; }
 function wp_get_attachment_image() { return ''; }
+
+/**
+ * Capture the real fixture theme's enqueue order instead of loading CSS by
+ * filename. Visual QA must reproduce WordPress cascade order exactly; repair
+ * layers are otherwise liable to be overwritten by the baseline stylesheet.
+ */
+function wp_enqueue_style( $handle, $src, $deps = array(), $version = false, $media = 'all' ) {
+	global $ref001_preview_styles;
+	$ref001_preview_styles[ $handle ] = array(
+		'src'     => $src,
+		'deps'    => $deps,
+		'version' => $version,
+		'media'   => $media,
+	);
+}
 
 function get_theme_file_uri( $path = '' ) {
 	return '../fixture-theme/' . ltrim( (string) $path, '/' );
@@ -65,15 +80,19 @@ function get_template_part( $slug ) {
 }
 
 function wp_head() {
-	global $theme_root;
-	$styles = glob( $theme_root . '/assets/css/*.css' );
-	sort( $styles );
-	foreach ( $styles as $path ) {
-		echo '<style data-ref001-css="' . esc_attr( basename( $path ) ) . '">';
-		echo file_get_contents( $path );
-		echo '</style>';
+	global $ref001_preview_styles;
+	foreach ( $ref001_preview_styles as $handle => $style ) {
+		$href = $style['src'];
+		if ( false !== $style['version'] && '' !== (string) $style['version'] ) {
+			$href .= '?ver=' . rawurlencode( (string) $style['version'] );
+		}
+		echo '<link rel="stylesheet" data-ref001-style="' . esc_attr( $handle ) . '" href="' . esc_url( $href ) . '" media="' . esc_attr( $style['media'] ) . '">';
 	}
 }
 
 require $theme_root . '/functions.php';
+
+// WordPress would invoke this through wp_enqueue_scripts before wp_head().
+ref001_learning_enqueue_assets();
+
 include $theme_root . '/page-templates/template-ref001.php';
