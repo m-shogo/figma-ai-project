@@ -23,6 +23,7 @@ get_header();
 	<?php get_template_part( 'template-parts/ref001/reason' ); ?>
 	<?php get_template_part( 'template-parts/ref001/education' ); ?>
 	<?php get_template_part( 'template-parts/ref001/courses' ); ?>
+	<?php get_template_part( 'template-parts/ref001/links' ); ?>
 </main>
 <?php
 get_footer();
