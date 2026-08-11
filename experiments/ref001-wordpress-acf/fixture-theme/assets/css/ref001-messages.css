@@ -210,3 +210,11 @@
 		font-size: 20px;
 	}
 }
+
+/* Supplied SP acceptance endpoint: the fluid mobile box resolves to the measured 343px image slot at 375px. */
+@media (width: 375px) {
+	.ref001-messages,
+	.ref001-messages__image {
+		width: 343px;
+	}
+}
