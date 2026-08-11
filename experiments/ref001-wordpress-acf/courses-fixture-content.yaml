@@ -1,0 +1,46 @@
+schema_version: 1
+reference_id: REF-001-CHIBA-KEIZAI-SAMPLE
+section_id: courses
+purpose: DISPOSABLE_WORDPRESS_FIRST_PASS_CONTENT_EXTENSION
+status: DRAFT
+
+acf_values:
+  course_public_service_description: "国家公務員、地方公務員、公安職、公益法人などを目指すコース"
+  course_public_service_recommendation_1: "経済や地域の課題を解決し、安心して暮らせる街をつくりたい人"
+  course_public_service_recommendation_2: "試験対策だけでなく実務で役立つ生きた経済の知識を身につけたい人"
+  course_accounting_description: "税理士、公認会計士、その他経理部門などを目指すコース"
+  course_accounting_recommendation_1: "企業の「お金」のプロとして、専門資格を在学中に武器にしたい人"
+  course_accounting_recommendation_2: "数字の強さを活かして、企業の経営を裏から支えたい人"
+  course_business_management_description: "ビジネスパーソン、ビジネスリーダーを目指すコース"
+  course_business_management_recommendation_1: "自由なアイデアを形にして、起業やヒット商品開発に挑戦したい人"
+  course_business_management_recommendation_2: "リーダーシップや、実践的なマーケティングを学びたい人"
+  course_finance_description: "銀行業界、証券業界などを目指すコース"
+  course_finance_recommendation_1: "経済の仕組みを深く学び、人や企業の夢を「融資」で応援したい人"
+  course_finance_recommendation_2: "地元・千葉をはじめとする地域経済の活性化に貢献したい人"
+  course_teaching_description: "中学（社会）・高校（公民）の免許取得、教員を目指すコース"
+  course_teaching_recommendation_1: "「社会や経済の面白さ」をわかりやすく伝えられる先生になりたい人"
+  course_teaching_recommendation_2: "教職課程と経済の専門知識を両立させた視野を持つ教育者を目指す人"
+  course_curator_description: "学芸員資格の取得、関連する仕事を目指すコース"
+  course_curator_recommendation_1: "歴史や文化の魅力を、展示や企画を通して多くの人に伝えたい人"
+  course_curator_recommendation_2: "経済の視点も持ち合わせた「文化の専門家」を目指したい人"
+  course_it_description: "ITスキルを駆使するビジネスパーソンを目指すコース"
+  course_it_recommendation_1: "プログラミングだけでなく、AIやデータでビジネスを変革したい人"
+  course_it_recommendation_2: "ITの最先端技術×経済の知識で、DX時代に最適な人材になりたい人"
+
+code_or_domain_owned:
+  heading_kicker: "# COURCES"
+  heading_title: "未来につながる７つのコース"
+  course_identities:
+    - { key: public-service, title: "公務員コース", color: "#fabf12", icon_node_id: "21378:7722" }
+    - { key: accounting, title: "会計コース", color: "#f29800", icon_node_id: "21378:7683" }
+    - { key: business-management, title: "ビジネス経営コース", color: "#ed6c4e", icon_node_id: "21378:7655" }
+    - { key: finance, title: "金融コース", color: "#df4473", icon_node_id: "21378:7623" }
+    - { key: teaching, title: "教職コース", color: "#00a5e3", icon_node_id: "21378:7594" }
+    - { key: curator, title: "学芸員コース", color: "#28b6aa", icon_node_id: "21378:7565" }
+    - { key: it, title: "ITコース", color: "#8cc66c", icon_node_id: "21378:7533" }
+  note: "Identity/order/color/icon are not Page ACF in the learning baseline. If the real target theme already owns Course domain data, that source takes precedence."
+
+interaction:
+  state: NONE_OBSERVED
+  link_urls: null
+  note: "No prototype reactions were found. Do not make cards clickable in the learning baseline."
