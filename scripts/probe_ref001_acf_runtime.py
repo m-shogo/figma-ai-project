@@ -4,7 +4,6 @@ from __future__ import annotations
 import argparse
 import json
 import re
-import shutil
 import subprocess
 import sys
 from dataclasses import dataclass
@@ -78,10 +77,10 @@ def load_item_keys(path: Path) -> list[str]:
         if not isinstance(item, dict):
             continue
         key = str(item.get("key", ""))
-        if key.startswith(("group_", "post_type_", "taxonomy_", "ui_options_page_")):
+        if key.startswith("group_"):
             keys.append(key)
     if not keys:
-        raise ValueError("ACF import file contains no importable top-level item keys")
+        raise ValueError("ACF import file contains no field-group keys")
     return keys
 
 
@@ -101,7 +100,7 @@ def build_verify_php(keys: Sequence[str]) -> str:
     return (
         f"$keys = json_decode('{encoded}', true); "
         "foreach ($keys as $key) { "
-        "$item = function_exists('acf_get_field_group') && str_starts_with($key, 'group_') "
+        "$item = function_exists('acf_get_field_group') && strpos($key, 'group_') === 0 "
         "? acf_get_field_group($key) : null; "
         "echo $key . ':' . ($item ? '1' : '0') . PHP_EOL; }"
     )
