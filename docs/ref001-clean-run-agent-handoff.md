@@ -10,6 +10,8 @@ The experiment is successful only if the workflow itself produces a strong first
 
 Reimplement REF-001 as a high-fidelity responsive WordPress fixed Page template with ACF, then measure the quality of the **first complete implementation before repair**.
 
+A visually accurate result is not enough. The implementation must also remain understandable and safely editable by a human engineer after handoff. Read and follow `docs/human-editability.md`.
+
 Reference identity:
 
 - reference: `REF-001-CHIBA-KEIZAI-SAMPLE`
@@ -78,6 +80,25 @@ Do not treat Figma construction style as DOM instructions. Translate demonstrate
 
 Do not invent missing Variables, interactions, carousel records, routes, links, CMS ownership, or alternate media merely to make the implementation look complete.
 
+## Human-editable architecture — mandatory
+
+Use the target/project-native structure first. Do not optimize only for screenshot parity.
+
+The result must make it reasonably obvious to a human:
+
+- which file owns each visible section
+- which styles are shared versus section-local
+- where the breakpoint contract is owned
+- which values are design tokens/shared values versus evidenced one-offs
+- which content is CMS/editor-owned versus code-owned art direction
+- where a shared CTA/component should be changed once rather than copied
+
+Do not create a component/file for every Figma layer. Do not collapse unrelated sections into one generated monolith when project conventions support meaningful section boundaries.
+
+Raw px, absolute positioning, negative offsets, or `!important` are not automatically forbidden, but non-obvious/repeated uses must have a defensible reason. Never use global overflow hiding or specificity escalation merely to conceal a layout defect.
+
+If project ownership is not self-evident, maintain a small section-to-code navigation map as described in `docs/human-editability.md`.
+
 ## Web translation defaults
 
 Use the current project rules in `docs/` and `templates/`.
@@ -107,7 +128,7 @@ Do not assume:
 
 Prefer fixed fields for fixed semantic cardinality unless evidence requires editor-controlled add/remove/reorder behavior.
 
-Keep field schema separate from disposable fixture content.
+Keep field schema separate from disposable fixture content. If the eventual target theme supports ACF Local JSON, prefer a version-controlled field-schema workflow that matches that target architecture; do not invent production Local JSON ownership before the target theme is known.
 
 ## Interaction boundary
 
@@ -167,6 +188,38 @@ python scripts/first_pass_evidence.py freeze \
 
 Do **not** repair the implementation until the immutable snapshot exists.
 
+### FIRST PASS Human Editability audit
+
+After FIRST PASS is frozen, evaluate the frozen snapshot before repair.
+
+Record in `human_editability`:
+
+- five dimension scores (`/2` each)
+- `/10` diagnostic total
+- blockers
+- evidence
+- task-based change drills
+
+Run at least three relevant PAGE-level drills from `docs/human-editability.md`, using a disposable branch/worktree/sandbox created from the immutable FIRST PASS commit. Do not commit those temporary drill changes back into FIRST PASS.
+
+Recommended REF-001 drills:
+
+1. one section-local spacing/crop adjustment
+2. one genuinely editor-owned ACF content/image change with ownership identified
+3. one shared CTA change that should update all intended uses
+4. optionally a responsive behavior drill that preserves the owner-defined 768px breakpoint
+5. optionally an asset replacement drill with a different aspect ratio
+
+A drill must record located/changed/unexpected paths and whether unrelated visual/runtime regressions occurred.
+
+Validate the record while working:
+
+```bash
+python scripts/validate_human_editability.py
+```
+
+A `COMPLETE` run using the new record schema requires Human Editability `PASS`, score `>= 8/10`, no blockers, and the required passing change drills.
+
 Before the first repair commit:
 
 ```bash
@@ -186,6 +239,7 @@ python scripts/controlled_run_phase.py experiments/<experiment>/<run>.run.yaml \
 The comparison needs more than a final score. Record enough evidence to determine whether the workflow actually improved:
 
 - first-pass visual / structural / robustness scores
+- Human Editability score/status/blockers/change drills
 - full-page 375 and 1380 captures
 - runtime-safety result for intermediate widths
 - first-pass implementation commit
@@ -201,15 +255,17 @@ Do not hide a bad FIRST PASS. A weak baseline is useful evidence if it is frozen
 
 ## Repair phase
 
-After FIRST PASS is frozen:
+After FIRST PASS is frozen and its Human Editability audit is recorded:
 
 1. inspect actual browser captures, not only CI status
 2. rank the largest visible/runtime failures
 3. repair root causes instead of stacking screenshot hacks
 4. keep exact 375/1380 geometry where evidence is hard
 5. keep intermediate widths safe and natural
-6. rerun regression/visual/runtime QA after each meaningful repair group
-7. record repair rounds and changed-file/rework metrics
+6. preserve or improve Human Editability; do not trade maintainability for screenshot hacks
+7. rerun regression/visual/runtime QA after each meaningful repair group
+8. record repair rounds and changed-file/rework metrics
+9. re-evaluate final Human Editability after repair
 
 ## Completion criteria
 
@@ -221,6 +277,7 @@ A run can be finalized only when:
 - intermediate runtime probes have no page overflow/readable-text escape failures
 - required ACF JSON exists and validates
 - unresolved interactions/content remain explicit rather than invented
+- Human Editability is PASS with required change-drill evidence
 - final score and rework metrics are recorded
 - final browser artifacts have been visually inspected, not merely reported GREEN by CI
 
@@ -232,6 +289,10 @@ Do not give RUN B the RUN A final implementation or repair diff.
 
 A different isolated agent/context should perform the blind replay. The agent that already inspected the repaired answer is not a valid blind replay implementer.
 
-The question being measured is:
+The questions being measured are:
 
 > Did the learned workflow improve first-pass fidelity and reduce rework when starting again from the same design evidence?
+
+and:
+
+> Did it also produce code that a human can find, understand, and safely change without introducing unrelated regressions?
