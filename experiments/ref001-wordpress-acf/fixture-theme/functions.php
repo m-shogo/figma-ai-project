@@ -40,6 +40,7 @@ function ref001_learning_enqueue_assets() {
 		'messages'      => 'ref001-messages.css',
 		'middle-geometry' => 'ref001-middle-geometry.css',
 		'courses'       => 'ref001-courses.css',
+		'courses-geometry' => 'ref001-courses-geometry.css',
 		'links'         => 'ref001-links.css',
 		'cta-value'     => 'ref001-cta-value.css',
 		'footer'        => 'ref001-footer.css',
