@@ -15,6 +15,17 @@ import first_pass_evidence as evidence  # noqa: E402
 import prepare_clean_replay as replay  # noqa: E402
 
 
+def coordination(isolation: str, *, environment: list[str] | None = None, impl_hash: str = "impl-sha") -> dict:
+    return {
+        "scope": "SECTION",
+        "section_id": "S01",
+        "required_environment_profiles": environment or ["ios-safari", "desktop-chrome"],
+        "implementation_profile_id": "IMPL-1",
+        "implementation_profile_sha256": impl_hash,
+        "isolation_ref": isolation,
+    }
+
+
 def write_run(path: Path, *, run_id: str, run_class: str, isolation: str, status: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     data = {
@@ -23,12 +34,7 @@ def write_run(path: Path, *, run_id: str, run_class: str, isolation: str, status
         "run_class": run_class,
         "status": status,
         "reference": {"reference_id": "REF-1", "manifest_sha256": "ref-sha"},
-        "coordination": {
-            "scope": "SECTION",
-            "section_id": "S01",
-            "required_environment_profiles": ["ios-safari", "desktop-chrome"],
-            "isolation_ref": isolation,
-        },
+        "coordination": coordination(isolation),
         "code": {
             "repository": "m-shogo/example",
             "starting_commit": "foundation",
@@ -86,13 +92,13 @@ class CleanReplayTests(unittest.TestCase):
             "run_id": "RUN-A",
             "run_class": "COMMON",
             "reference": {"reference_id": "REF", "manifest_sha256": "sha"},
-            "coordination": {"scope": "SECTION", "section_id": "S01", "required_environment_profiles": ["ios"], "isolation_ref": "same"},
+            "coordination": coordination("same", environment=["ios"]),
             "code": {"repository": "repo"},
         }
         run_b = {
             "run_class": "REPLAY",
             "reference": {"reference_id": "REF", "manifest_sha256": "sha"},
-            "coordination": {"scope": "SECTION", "section_id": "S01", "required_environment_profiles": ["ios"], "isolation_ref": "same"},
+            "coordination": coordination("same", environment=["ios"]),
             "code": {"repository": "repo"},
             "replay": {
                 "source_run": "a.yaml",
@@ -112,13 +118,13 @@ class CleanReplayTests(unittest.TestCase):
             "run_id": "RUN-A",
             "run_class": "COMMON",
             "reference": {"reference_id": "REF", "manifest_sha256": "sha-a"},
-            "coordination": {"scope": "SECTION", "section_id": "S01", "required_environment_profiles": ["ios"], "isolation_ref": "a"},
+            "coordination": coordination("a", environment=["ios"]),
             "code": {"repository": "repo"},
         }
         run_b = {
             "run_class": "REPLAY",
             "reference": {"reference_id": "REF", "manifest_sha256": "sha-b"},
-            "coordination": {"scope": "SECTION", "section_id": "S01", "required_environment_profiles": ["android"], "isolation_ref": "b"},
+            "coordination": coordination("b", environment=["android"]),
             "code": {"repository": "repo"},
             "replay": {
                 "source_run": "a.yaml",
@@ -134,18 +140,44 @@ class CleanReplayTests(unittest.TestCase):
         self.assertTrue(any("Reference Manifest" in error for error in errors))
         self.assertTrue(any("Required Environment" in error for error in errors))
 
-    def test_leakage_flags_must_be_false(self) -> None:
+    def test_implementation_profile_drift_is_rejected(self) -> None:
         source = {
             "run_id": "RUN-A",
             "run_class": "COMMON",
             "reference": {"reference_id": "REF", "manifest_sha256": "sha"},
-            "coordination": {"scope": "SECTION", "section_id": "S01", "required_environment_profiles": [], "isolation_ref": "a"},
+            "coordination": coordination("a", environment=["ios"], impl_hash="impl-a"),
             "code": {"repository": "repo"},
         }
         run_b = {
             "run_class": "REPLAY",
             "reference": {"reference_id": "REF", "manifest_sha256": "sha"},
-            "coordination": {"scope": "SECTION", "section_id": "S01", "required_environment_profiles": [], "isolation_ref": "b"},
+            "coordination": coordination("b", environment=["ios"], impl_hash="impl-b"),
+            "code": {"repository": "repo"},
+            "replay": {
+                "source_run": "a.yaml",
+                "source_run_sha256": "sha",
+                "source_run_id": "RUN-A",
+                "fresh_isolation": True,
+                "source_final_code_exposed": False,
+                "source_repair_diff_exposed": False,
+                "project_specific_values_exposed": False,
+            },
+        }
+        errors = replay.pair_errors(source, run_b)
+        self.assertTrue(any("Implementation Profile SHA-256" in error for error in errors))
+
+    def test_leakage_flags_must_be_false(self) -> None:
+        source = {
+            "run_id": "RUN-A",
+            "run_class": "COMMON",
+            "reference": {"reference_id": "REF", "manifest_sha256": "sha"},
+            "coordination": coordination("a", environment=[]),
+            "code": {"repository": "repo"},
+        }
+        run_b = {
+            "run_class": "REPLAY",
+            "reference": {"reference_id": "REF", "manifest_sha256": "sha"},
+            "coordination": coordination("b", environment=[]),
             "code": {"repository": "repo"},
             "replay": {
                 "source_run": "a.yaml",
