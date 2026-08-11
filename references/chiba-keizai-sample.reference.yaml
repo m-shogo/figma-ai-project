@@ -37,6 +37,7 @@ figma:
   captured_at: "2026-08-11T11:32:00+09:00"
   component_source_url: "https://www.figma.com/design/ZYTdtw4wCgkcBy2cVnhxVI/sample?node-id=280-2&p=f&t=zduaKdUu0MIWPh7D-0"
   component_page_node_id: "280:2"
+  structure_profile_path: "references/chiba-keizai-sample.structure-profile.yaml"
   variable_mode_audit:
     required: true
     path: "references/chiba-keizai-sample.variable-mode-audit.yaml"
@@ -84,18 +85,20 @@ structure:
       pc_node_id: "21378:8066"
       sp_node_id: "21376:4918"
       mapping_confidence: HIGH
-      provisional_strategy: STRUCTURE_FIRST
+      provisional_strategy: HYBRID
       evidence:
-        - "PC/SP Header nodes are semantically named and resolve to component-like structures."
-        - "Shared logo and token usage are visible in design context."
+        - "PC/SP Header roots are Component Instances and resolve the expected responsive Variable Modes."
+        - "Live structure profiling found no Auto Layout inside either Header instance and a high ratio of generic internal layer names, so component identity is trusted but raw child geometry is not treated as semantic code structure."
+        - "Detailed evidence is frozen in references/chiba-keizai-sample.structure-profile.yaml."
     - id: main-visual
       pc_node_id: "21378:8032"
       sp_node_id: "21376:4886"
       mapping_confidence: HIGH
       provisional_strategy: HYBRID
       evidence:
-        - "PC/SP main visuals share semantic content but rely on masks, image crops, vectors, and absolute positioning."
-        - "The SP node contains some large internal dimensions, so raw Figma coordinates must not be copied blindly into production CSS."
+        - "PC/SP main visuals share semantic content but rely on masks, image crops, vectors, and manual grouping."
+        - "The SP MV Group remains 1380px wide inside the 375px reference while responsive children resolve SP values, so raw Figma group dimensions must not be copied blindly into production CSS."
+        - "Detailed evidence is frozen in references/chiba-keizai-sample.structure-profile.yaml."
     - id: reason
       pc_node_id: "21378:7999"
       sp_node_id: "21376:4852"
@@ -103,7 +106,8 @@ structure:
       provisional_strategy: STRUCTURE_FIRST
       evidence:
         - "The same three semantic cards are horizontal on PC and vertically stacked on SP."
-        - "Responsive intent can be translated structurally instead of reproducing absolute coordinates."
+        - "Live profiling found 5/5 Auto Layout-capable containers active in both variants; the reasons container explicitly changes HORIZONTAL on PC to VERTICAL on SP."
+        - "Detailed evidence is frozen in references/chiba-keizai-sample.structure-profile.yaml."
     - id: education
       pc_node_id: "21378:7868"
       sp_node_id: "21376:4720"
