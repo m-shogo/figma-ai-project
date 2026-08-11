@@ -1,0 +1,39 @@
+rule_id: CR-REF001-002
+statement: >-
+  Do not infer interaction behavior or hidden record cardinality from static visual affordances,
+  counters, arrows, or collapsed/open states alone; keep behavior and missing data UNDETERMINED
+  until prototype reactions, source content, product requirements, or equivalent evidence exists.
+evidence_maturity: E2
+recommendation: OPTIONAL
+scope:
+  - PATTERN_LEVEL
+first_observed_at: "2026-08-11"
+last_verified_at: "2026-08-12"
+verified_tooling:
+  figma_mcp: "Figma MCP connected; REF-001 file ZYTdtw4wCgkcBy2cVnhxVI"
+  agents:
+    - "GPT-5.6 Sol"
+target_failure:
+  - INTERACTION_INVENTION
+  - CMS_DATA_INVENTION
+  - UNSUPPORTED_PRODUCT_BEHAVIOR
+evidence_runs:
+  - "experiments/ref001-wordpress-acf/README.md#h9--a-visual-state-is-not-automatically-an-interaction-contract"
+  - "experiments/ref001-wordpress-acf/README.md#h10--a-displayed-total-is-not-complete-cms-source-data"
+  - "experiments/ref001-blind-clean-20260812/evidence/final-measurement.yaml"
+metric_effect:
+  first_pass_delta: null
+  repair_round_delta: null
+  observed:
+    - "Blind Clean Replay recorded interaction_inventions: 0."
+    - "Blind Clean Replay recorded cms_inventions: 0."
+    - "Student Voice stayed as supplied static states and Messages did not fabricate records 2-4 or carousel behavior."
+known_limits:
+  - "Verified on one reference family only; not yet cross-reference or cross-agent evidence."
+  - "Once product requirements, prototype reactions, or backend/source data establish the behavior, implementation should follow that stronger evidence."
+  - "This rule does not prohibit implementing accessible native behavior when the behavior itself is part of the supplied contract."
+retest_triggers:
+  - "new Figma interaction metadata becomes available through MCP/API"
+  - "major Figma prototype inspection capability change"
+  - "new reference containing explicit interaction and hidden-record evidence"
+  - "major agent/model generation change"

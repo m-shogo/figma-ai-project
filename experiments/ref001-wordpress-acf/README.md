@@ -2,6 +2,8 @@
 
 Purpose: learn from a real Figma → WordPress fixed-page-template + ACF translation before freezing production rules.
 
+> **Post-hoc status note (2026-08-12):** a separate Blind Clean Replay has now been completed and merged under `experiments/ref001-blind-clean-20260812/`. Historical `NOT READY / NOT RUN` wording later in this document is intentionally preserved as the state of this repaired fixture before that separate replay; do not reinterpret this historical fixture as the frozen FIRST PASS.
+
 This experiment intentionally separates four things that are easy to mix together:
 
 1. Figma visual evidence
