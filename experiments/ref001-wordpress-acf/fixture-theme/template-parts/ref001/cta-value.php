@@ -10,6 +10,32 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
+$ref001_load_cta_value_fixture = static function ( $file_name ) {
+	$path = dirname( __DIR__, 2 ) . '/assets/images/visual-qa/cta-value/' . $file_name;
+	if ( ! is_readable( $path ) ) {
+		return '';
+	}
+
+	return (string) preg_replace( '/\s+/', '', (string) file_get_contents( $path ) );
+};
+
+$cta_value_people = array(
+	'left' => array(
+		'pc'      => $ref001_load_cta_value_fixture( 'pc-left.b64' ),
+		'sp'      => $ref001_load_cta_value_fixture( 'sp-left.b64' ),
+		'pc_node' => '21378:7489',
+		'sp_node' => '21376:4958',
+		'hash'    => '6b082e6c3630c06394f659125e8ab1a5dfedb588',
+	),
+	'right' => array(
+		'pc'      => $ref001_load_cta_value_fixture( 'pc-right.b64' ),
+		'sp'      => $ref001_load_cta_value_fixture( 'sp-right.b64' ),
+		'pc_node' => '21378:7485',
+		'sp_node' => '21376:4962',
+		'hash'    => '9f70f5f08727bc3367f4fe1f3ed848d7c82c41ba',
+	),
+);
 ?>
 <section
 	class="ref001-cta-value"
@@ -19,18 +45,27 @@ if ( ! defined( 'ABSPATH' ) ) {
 	data-interaction-status="deferred"
 >
 	<div class="ref001-cta-value__frame">
-		<div
-			class="ref001-cta-value__person ref001-cta-value__person--left"
-			aria-hidden="true"
-			data-asset-status="deferred"
-			data-figma-image-hash="6b082e6c3630c06394f659125e8ab1a5dfedb588"
-		></div>
-		<div
-			class="ref001-cta-value__person ref001-cta-value__person--right"
-			aria-hidden="true"
-			data-asset-status="deferred"
-			data-figma-image-hash="9f70f5f08727bc3367f4fe1f3ed848d7c82c41ba"
-		></div>
+		<?php foreach ( $cta_value_people as $side => $person ) : ?>
+			<?php
+			$person_style = '';
+			if ( $person['pc'] && $person['sp'] ) {
+				$person_style = sprintf(
+					'--ref001-person-pc:url(data:image/png;base64,%1$s);--ref001-person-sp:url(data:image/png;base64,%2$s);',
+					$person['pc'],
+					$person['sp']
+				);
+			}
+			?>
+			<div
+				class="ref001-cta-value__person ref001-cta-value__person--<?php echo esc_attr( $side ); ?>"
+				aria-hidden="true"
+				data-asset-status="deferred"
+				data-figma-image-hash="<?php echo esc_attr( $person['hash'] ); ?>"
+				data-figma-composite-pc="<?php echo esc_attr( $person['pc_node'] ); ?>"
+				data-figma-composite-sp="<?php echo esc_attr( $person['sp_node'] ); ?>"
+				<?php if ( $person_style ) : ?>style="<?php echo esc_attr( $person_style ); ?>"<?php endif; ?>
+			></div>
+		<?php endforeach; ?>
 
 		<div class="ref001-cta-value__content">
 			<h2 id="ref001-cta-value-title" class="ref001-cta-value__title">
