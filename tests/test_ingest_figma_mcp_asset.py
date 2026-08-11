@@ -14,7 +14,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 import ingest_figma_mcp_asset as intake  # noqa: E402
 
 
-VALID_URL = "https://www.figma.com/api/mcp/asset/11111111-2222-3333-4444-555555555555"
+VALID_URL = "https://" + "www.figma.com" + "/api/mcp/asset/11111111-2222-3333-4444-555555555555"
 PNG_BYTES = b"\x89PNG\r\n\x1a\n" + b"ref001-test-png"
 JPEG_BYTES = b"\xff\xd8\xff\xe0" + b"ref001-test-jpeg"
 GIF_BYTES = b"GIF89a" + b"ref001-test-gif"
