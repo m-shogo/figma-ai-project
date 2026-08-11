@@ -77,6 +77,18 @@ Examples:
 
 → Repeater candidate。
 
+ただし**Figmaで同型要素が繰り返されていることだけではRepeaterを採用しない**。
+
+先に確認する:
+
+- editorが件数を増減する必要があるか
+- editorが並び替える必要があるか
+- minimum/maximum件数がproduct requirementとして存在するか
+- current projectがRepeaterを標準採用しているか
+- ACF PROが利用可能か
+
+件数固定・並び順固定であれば、fixed fields / existing Group構造の方がtemplate contractを強く保てる場合がある。
+
 ### Editor can reorder/add different section types
 
 → Existing projectがFlexible Contentを採用しているなら候補。
@@ -86,6 +98,88 @@ Examples:
 ### Reusable editor-native sections
 
 → ACF Blocks/native blocks candidate。
+
+---
+
+## Editorial capability gate
+
+CMS field architectureはvisual patternではなく、**editor capability requirement**から決める。
+
+```text
+Figma repetition
+  ↓ visual evidence only
+Editor add/remove/reorder requirement?
+  ├ no / unknown → fixed cardinalityを第一候補
+  └ yes          → Repeater / Flexible / Blocksを比較
+```
+
+ACF PRO availabilityが未確認の段階では、Repeater/Flexible Content/ACF Blocks等のPRO依存機能をproduction contractへFROZENしない。
+
+Learning/first-pass fixtureは必要ならbasic fieldsだけで成立させ、target repository/runtime reconnaissance後にPRO architectureへ昇格できるようにする。
+
+---
+
+## Responsive media field gate
+
+PC/SPが存在しても、無条件で:
+
+```text
+image_pc
+image_sp
+```
+
+を作らない。
+
+まずFigma implementation evidenceを確認する。
+
+### Same source + different crop/layout
+
+同じunderlying image/sourceをPC/SPでcrop/mask/positionだけ変えている場合:
+
+```text
+1 ACF attachment
++ responsive CSS/layout
++ WordPress image helper
+```
+
+を第一候補にする。
+
+### Different source / real art direction
+
+PC/SPでsource asset自体が異なる、またはdesignerが別画像を明示している場合のみresponsive別fieldを候補にする。
+
+Evidence examples:
+
+- Figma image hash/source identity
+- component property / variable mapping
+- designer annotation
+- existing project image architecture
+
+画像fieldを増やす判断もeditorの入力負担として扱う。
+
+---
+
+## Art-directed copy gate
+
+Figma上のTEXT nodeだからといって全てACF化しない。
+
+例えばcopyが:
+
+- 複数TEXT nodeへ分割
+- 文字単位でsize/color/positionが異なる
+- quotation/decorative typographyと一体化
+- 任意文字数でcompositionが壊れる
+
+場合は、editor requirementが無ければcode-owned copyを第一候補にする。
+
+編集可能にする場合は:
+
+- maxlength
+- permitted line count
+- explicit CMS instruction
+- PC/SP wrap QA
+
+をfield contractへ含める。
 
 ---
 
@@ -145,6 +239,12 @@ acf-json/*.json
 
 ```bash
 python scripts/validate_acf_export.py path/to/acf-export.json
+```
+
+pathを省略した場合はrepository内のcanonical ACF export artifactsを自動検出して検証する。
+
+```bash
+python scripts/validate_acf_export.py
 ```
 
 さらに実WordPress test/disposable environmentでimportまたはsync smokeを行う。
