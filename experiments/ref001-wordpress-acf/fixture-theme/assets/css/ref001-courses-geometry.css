@@ -1,11 +1,38 @@
 /*
- * REF-001 Courses box-model repair — pass 1.
+ * REF-001 Courses geometry repair.
  *
- * The First Pass treated supplied Figma card widths/heights as content-box
- * minimums, so padding expanded every card beyond the design dimensions.
- * Repair the box model first, then let browser geometry reveal any remaining
- * section/header spacing drift before changing those values.
+ * Pass 1 fixed the core box-model bug: Figma card dimensions must include
+ * padding. Browser QA reduced section drift from +252/+293px to +44/+30px.
+ *
+ * Pass 2 resolves the remaining section spacing directly from the supplied
+ * card-start and section-bottom coordinates.
+ *
+ * PC Figma:
+ * - kicker starts 72px inside section
+ * - card grid starts at section-relative y=214
+ * - natural header height is 106px, so header->grid gap = 36px
+ * - grid = 4×271 + 3×40 = 1204px
+ * - bottom whitespace = 96px
+ * - total = 72 + 106 + 36 + 1204 + 96 = 1514px
+ *
+ * SP Figma:
+ * - kicker starts 56px inside section
+ * - card grid starts at section-relative y=204
+ * - natural header height is 114px, so header->grid gap = 34px
+ * - card heights = 320/299/299/299/320/299/299 with 6×20px gaps
+ * - grid = 2255px
+ * - bottom whitespace = 56px
+ * - total = 56 + 114 + 34 + 2255 + 56 = 2515px
  */
+
+.ref001-courses {
+	box-sizing: border-box;
+	padding: 72px 0 96px;
+}
+
+.ref001-courses__header {
+	margin-bottom: 36px;
+}
 
 .ref001-course-card {
 	box-sizing: border-box;
@@ -14,6 +41,14 @@
 }
 
 @media (max-width: 600px) {
+	.ref001-courses {
+		padding: 56px 0;
+	}
+
+	.ref001-courses__header {
+		margin-bottom: 34px;
+	}
+
 	.ref001-courses__grid {
 		gap: 20px;
 	}
