@@ -15,7 +15,10 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
 import start_section_run as starter  # noqa: E402
+import validate_implementation_profile as impl  # noqa: E402
 import validate_run_lineage as lineage  # noqa: E402
+
+TARGET_CONFIG = yaml.safe_load((ROOT / "config" / "implementation-targets.yaml").read_text(encoding="utf-8"))
 
 
 def write_yaml(root: Path, relative: str, data: dict) -> tuple[Path, str]:
@@ -25,14 +28,97 @@ def write_yaml(root: Path, relative: str, data: dict) -> tuple[Path, str]:
     return path, hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def implementation_profile() -> dict:
+    data = {
+        "schema_version": 1,
+        "profile_id": "IMPL-1",
+        "status": "FROZEN",
+        "selection": {"mode": "AUTO_EXISTING", "family": "AUTO_EXISTING", "variant": "", "selected_by": "test", "notes": []},
+        "repository": {
+            "repository": "m-shogo/example",
+            "starting_commit": "baseline",
+            "target_route_or_template": "/demo",
+            "inspected": True,
+            "evidence_paths": ["package.json"],
+        },
+        "resolution": {
+            "detected_family": "STATIC_WEB",
+            "detected_variant": "",
+            "confidence": "HIGH",
+            "evidence": ["package.json absent; index.html present"],
+            "conflicts": [],
+            "conflict_resolution": "MATCHED",
+        },
+        "effective": {
+            "family": "STATIC_WEB",
+            "variant": "",
+            "language_runtime": "HTML/CSS/JavaScript",
+            "package_manager": "none",
+            "build_tool": "none",
+            "styling_architecture": "CSS",
+            "component_system": "semantic partials",
+            "routing": "static paths",
+            "data_source": "static",
+            "image_pipeline": "static assets",
+            "form_handling": "none",
+            "i18n": "none",
+            "test_harness": "browser capture",
+            "rendering_mode": "STATIC",
+            "notes": [],
+        },
+        "platform": {
+            "static_web": {
+                "html_strategy": "SEMANTIC_HTML",
+                "script_strategy": "VANILLA_JS",
+                "partial_strategy": "NONE",
+                "output_contract": "static files",
+            },
+            "php_template": {},
+            "wordpress": {"enabled": False, "acf": {"enabled": False}},
+            "js_framework": {},
+        },
+        "delivery_requirements": {
+            "source_code_required": True,
+            "acf": {
+                "required": False,
+                "export_json": {"required": False, "format": "ACF_EXPORT_ARRAY", "target_repo_path": "", "evidence_copy_required": True},
+                "local_json": {"required": False, "target_repo_dir": ""},
+                "import_or_sync_smoke_required": False,
+                "accepted_methods": [],
+            },
+        },
+        "checklist": [],
+        "unknowns": [],
+        "conflicts": [],
+        "freeze": {"ready": True, "frozen_at": "2026-08-11T09:00:00+09:00", "notes": []},
+    }
+    data["checklist"] = [
+        {"id": check_id, "status": "PASS", "evidence": ["fixture"], "notes": []}
+        for check_id in impl.required_check_ids(data, TARGET_CONFIG)
+    ]
+    return data
+
+
 def fixture(root: Path) -> dict:
     _, ref_hash = write_yaml(root, "references/ref/reference.yaml", {"reference_id": "REF-1"})
+    profile_path, implementation_hash = write_yaml(root, "implementation-profiles/profile.yaml", implementation_profile())
     _, contract_hash = write_yaml(
         root,
         "contracts/shared-contract.yaml",
-        {"reference_id": "REF-1", "foundation": {"commit": "foundation"}},
+        {
+            "reference_id": "REF-1",
+            "foundation": {"commit": "foundation"},
+            "implementation_profile": {
+                "path": profile_path.relative_to(root).as_posix(),
+                "sha256": implementation_hash,
+                "profile_id": "IMPL-1",
+                "status": "BOUND",
+                "family": "STATIC_WEB",
+                "variant": "",
+            },
+        },
     )
-    _, profile_hash = write_yaml(
+    _, figma_profile_hash = write_yaml(
         root,
         "profiles/figma-structure-profile.yaml",
         {
@@ -47,7 +133,7 @@ def fixture(root: Path) -> dict:
             "reference_id": "REF-1",
             "shared_contract_sha256": contract_hash,
             "figma_structure_profile": "profiles/figma-structure-profile.yaml",
-            "figma_structure_profile_sha256": profile_hash,
+            "figma_structure_profile_sha256": figma_profile_hash,
             "foundation_commit": "foundation",
             "sections": [
                 {
@@ -80,12 +166,17 @@ def fixture(root: Path) -> dict:
             "scope": "SECTION",
             "section_id": "S01",
             "parallel_group": "wave-01",
+            "implementation_profile_path": "implementation-profiles/profile.yaml",
+            "implementation_profile_sha256": implementation_hash,
+            "implementation_profile_id": "IMPL-1",
+            "implementation_family": "STATIC_WEB",
+            "implementation_variant": "",
             "shared_contract_path": "contracts/shared-contract.yaml",
             "shared_contract_sha256": contract_hash,
             "section_manifest_path": "experiments/exp/section-manifest.yaml",
             "section_manifest_sha256": manifest_hash,
             "figma_structure_profile_path": "profiles/figma-structure-profile.yaml",
-            "figma_structure_profile_sha256": profile_hash,
+            "figma_structure_profile_sha256": figma_profile_hash,
             "foundation_commit": "foundation",
             "isolation_mode": "BRANCH_WORKTREE",
             "isolation_ref": "wt-S01",
@@ -112,6 +203,14 @@ class StartSectionRunTests(unittest.TestCase):
             started = self.validate_start(root, data)
             self.assertEqual(started["status"], "RUNNING")
             self.assertEqual(data["status"], "PLANNED")
+
+    def test_missing_implementation_profile_pin_is_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            data = fixture(root)
+            data["coordination"]["implementation_profile_path"] = ""
+            with self.assertRaisesRegex(ValueError, "pinned Implementation Profile"):
+                self.validate_start(root, data)
 
     def test_legacy_preflight_still_requires_community_flag(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -171,7 +270,7 @@ class StartSectionRunTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "checked_at"):
                 self.validate_start(root, data)
 
-    def test_stale_profile_hash_is_rejected_at_start_time(self) -> None:
+    def test_stale_figma_profile_hash_is_rejected_at_start_time(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             data = fixture(root)
