@@ -25,6 +25,7 @@ class Ref001AcfImportBundleTests(unittest.TestCase):
             ["group_ref001_top_page", "group_ref001_courses"],
             [item["key"] for item in actual],
         )
+        self.assertEqual([35, 21], [len(item.get("fields", [])) for item in actual])
 
     def test_bundle_is_valid_portable_acf_json(self) -> None:
         actual = bundle.build_bundle()
@@ -35,6 +36,11 @@ class Ref001AcfImportBundleTests(unittest.TestCase):
         decoded = json.loads(rendered)
         self.assertEqual(actual, decoded)
         self.assertTrue(rendered.endswith("\n"))
+
+    def test_committed_bundle_exactly_matches_deterministic_sources(self) -> None:
+        self.assertTrue(bundle.DEFAULT_OUTPUT.is_file())
+        expected = bundle.render_bundle(bundle.build_bundle())
+        self.assertEqual(expected, bundle.DEFAULT_OUTPUT.read_text(encoding="utf-8"))
 
     def test_both_groups_target_the_same_learning_page_template(self) -> None:
         actual = bundle.build_bundle()
