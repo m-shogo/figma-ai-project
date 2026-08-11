@@ -6,8 +6,10 @@ status: DRAFT
 page:
   post_type: page
   title: "REF-001 Top Page"
+  slug: "ref001-learning"
+  status: draft
   template_placeholder: "page-templates/template-ref001.php"
-  note: "Template filename is a learning placeholder until the actual target theme repository is inspected."
+  note: "Template filename and slug are learning-fixture identifiers until the actual target theme repository/route is inspected."
 
 acf_values:
   mv_lead: "７つのコース制で“ミライ”を見つけ、資格取得支援で“チカラ”をつける。千葉の経済と就職に強い学びがここにある。"
