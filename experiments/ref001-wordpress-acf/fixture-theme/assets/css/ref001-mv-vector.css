@@ -14,7 +14,8 @@
  * - light-yellow base starts at section y=0, source 1380×696 clipped by viewport
  * - exact visible vector nodes are 375×704 and start at section y=0
  *
- * The 600px switch remains FIXTURE-ONLY.
+ * Owner responsive contract: mobile <= 767px; 375/1380 are the exact supplied
+ * endpoints and intermediate widths are runtime-safety probes.
  */
 
 .ref001-mv__background {
@@ -57,8 +58,7 @@
 	z-index: 0;
 }
 
-/* FIXTURE-ONLY: exact 375px endpoint, not production breakpoint evidence. */
-@media (max-width: 600px) {
+@media (max-width: 767px) {
 	.ref001-mv__background {
 		inset: 0;
 		background: none;
