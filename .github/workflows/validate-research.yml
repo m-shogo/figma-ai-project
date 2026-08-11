@@ -72,6 +72,9 @@ jobs:
       - name: Validate ACF export artifacts
         run: python scripts/validate_acf_export.py
 
+      - name: Check deterministic REF-001 ACF import bundle
+        run: python scripts/build_ref001_acf_import_bundle.py --check
+
       - name: Validate REF-001 WordPress learning fixture
         run: python scripts/validate_wordpress_learning_fixture.py
 
