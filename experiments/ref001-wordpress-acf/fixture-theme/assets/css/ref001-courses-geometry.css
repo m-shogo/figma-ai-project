@@ -1,0 +1,31 @@
+/*
+ * REF-001 Courses box-model repair — pass 1.
+ *
+ * The First Pass treated supplied Figma card widths/heights as content-box
+ * minimums, so padding expanded every card beyond the design dimensions.
+ * Repair the box model first, then let browser geometry reveal any remaining
+ * section/header spacing drift before changing those values.
+ */
+
+.ref001-course-card {
+	box-sizing: border-box;
+	height: 271px;
+	min-height: 0;
+}
+
+@media (max-width: 600px) {
+	.ref001-courses__grid {
+		gap: 20px;
+	}
+
+	.ref001-course-card {
+		width: 343px;
+		height: 299px;
+		min-height: 0;
+	}
+
+	.ref001-courses__item:nth-child(1) .ref001-course-card,
+	.ref001-courses__item:nth-child(5) .ref001-course-card {
+		height: 320px;
+	}
+}
