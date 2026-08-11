@@ -81,15 +81,24 @@ class Ref001VisualPreviewHarnessTests(unittest.TestCase):
         self.assertIn("unintentional clipping", source)
         self.assertIn("ref001-text-runtime.json", shell)
 
-    def test_text_runtime_check_probes_intermediate_widths_without_freezing_breakpoints(self) -> None:
+    def test_text_runtime_check_uses_owner_breakpoint_and_boundary_probes(self) -> None:
         source = (PREVIEW / "text-runtime-check.mjs").read_text(encoding="utf-8")
+        self.assertIn("breakpoint_px: 768", source)
         self.assertIn("role: 'FIGMA_ACCEPTANCE'", source)
         self.assertIn("role: 'RUNTIME_SAFETY'", source)
-        self.assertIn("role: 'FIXTURE_SEAM_SAFETY'", source)
-        for width in (320, 360, 375, 390, 430, 599, 600, 601, 768, 1024, 1200, 1380):
+        self.assertIn("role: 'BREAKPOINT_BOUNDARY'", source)
+        for width in (320, 360, 375, 390, 430, 767, 768, 769, 1024, 1200, 1380):
             self.assertIn(f"width: {width}", source)
-        self.assertIn("do NOT define production", source)
-        self.assertIn("runtime-safety width", source)
+        for stale_width in (599, 600, 601):
+            self.assertNotIn(f"width: {stale_width}", source)
+        self.assertIn("Owner-resolved production breakpoint: 768px", source)
+
+    def test_runtime_report_names_dom_overflow_offenders(self) -> None:
+        source = (PREVIEW / "text-runtime-check.mjs").read_text(encoding="utf-8")
+        self.assertIn("overflowElements", source)
+        self.assertIn("rightOverflowPx", source)
+        self.assertIn("leftOverflowPx", source)
+        self.assertIn("ownScrollOverflowPx", source)
 
     def test_messages_heading_uses_web_native_balancing_instead_of_nowrap(self) -> None:
         source = (FIXTURE_CSS / "ref001-messages.css").read_text(encoding="utf-8")
