@@ -1,0 +1,44 @@
+/*
+ * REF-001 Education PC geometry repair.
+ *
+ * Browser QA exposed a +117px PC section-height drift. The supplied Figma
+ * composition proves the outer arithmetic already closes exactly:
+ * 72 top + 112 header + 40 gap + 380 cards + 80 bottom = 684.
+ *
+ * The First Pass grid left `subheading` and `intro` on implicit rows, expanding
+ * the header from 112px to 229px. Pin the intended two 56px rows and place each
+ * child explicitly. SP switches the header to flex, so this repair is PC-only.
+ */
+
+@media (min-width: 601px) {
+	.ref001-education__header {
+		grid-template-rows: repeat(2, 56px);
+		height: 112px;
+		min-height: 112px;
+	}
+
+	.ref001-education__kicker {
+		grid-column: 1;
+		grid-row: 1;
+	}
+
+	.ref001-education__title {
+		grid-column: 1;
+		grid-row: 1 / span 2;
+	}
+
+	.ref001-education__lead-rule {
+		grid-column: 2;
+		grid-row: 1 / span 2;
+	}
+
+	.ref001-education__subheading {
+		grid-column: 2;
+		grid-row: 1;
+	}
+
+	.ref001-education__intro {
+		grid-column: 2;
+		grid-row: 1 / span 2;
+	}
+}
