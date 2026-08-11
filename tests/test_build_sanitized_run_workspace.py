@@ -144,6 +144,7 @@ class SanitizedRunWorkspaceTests(unittest.TestCase):
         self.assertFalse(any(path.startswith("experiments/ref001-wordpress-acf/artifacts/") for path in relative))
         self.assertFalse(any(path.startswith("research/figma-web-friction/") for path in relative))
         self.assertFalse(any("ref001" in Path(path).name.lower() and path.startswith("scripts/") for path in relative))
+        self.assertNotIn("scripts/validate_wordpress_learning_fixture.py", relative)
 
 
 if __name__ == "__main__":
