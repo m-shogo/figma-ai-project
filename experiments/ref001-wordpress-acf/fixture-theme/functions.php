@@ -18,7 +18,7 @@ function ref001_learning_enqueue_assets() {
 		return;
 	}
 
-	$version = '0.10.3';
+	$version = '0.10.4';
 
 	wp_enqueue_style(
 		'ref001-learning',

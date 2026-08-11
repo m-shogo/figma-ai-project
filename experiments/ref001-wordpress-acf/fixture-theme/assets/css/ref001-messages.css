@@ -37,6 +37,7 @@
 	font-weight: 500;
 	line-height: 1;
 	letter-spacing: .06em;
+	white-space: nowrap;
 }
 
 .ref001-messages__header strong {
@@ -60,10 +61,14 @@
 	white-space: nowrap;
 }
 
-.ref001-messages__headline span {
+.ref001-messages__headline-line {
 	display: inline-block;
 	padding: 10px 24px 11px;
 	background: #333;
+}
+
+.ref001-messages__headline-line--sp {
+	display: none;
 }
 
 .ref001-messages__profile {
@@ -121,7 +126,7 @@
 	width: 660px;
 	height: 440px;
 	background: #f2f2f2;
-	outline: 1px dashed rgb(51 51 51 / 12%);
+	outline: none;
 }
 
 /* FIXTURE-ONLY: Figma gives a 375 endpoint, not a production breakpoint. */
@@ -144,6 +149,8 @@
 		margin-top: 24px;
 		font-size: 24px;
 		line-height: 1;
+		letter-spacing: 2px;
+		white-space: nowrap;
 	}
 
 	.ref001-messages__header strong {
@@ -168,21 +175,31 @@
 		white-space: normal;
 	}
 
-	.ref001-messages__headline span {
+	.ref001-messages__headline-line {
+		box-sizing: content-box;
 		padding: 7px 16px;
 		white-space: nowrap;
 	}
 
-	.ref001-messages__headline span:first-child {
+	.ref001-messages__headline-line--pc {
+		display: none;
+	}
+
+	.ref001-messages__headline-line--sp {
+		display: inline-block;
+	}
+
+	.ref001-messages__headline-line--first,
+	.ref001-messages__headline-line--second {
 		width: 308px;
 	}
 
-	.ref001-messages__headline span:last-child {
-		width: auto;
+	.ref001-messages__headline-line--third {
+		width: 176px;
 	}
 
 	.ref001-messages__profile {
-		top: 419px;
+		top: 423px;
 		font-size: 16px;
 	}
 

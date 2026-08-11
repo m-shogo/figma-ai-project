@@ -6,44 +6,79 @@ const url = process.argv[2] || 'http://127.0.0.1:8765/visual-preview/';
 const PNG_SIGNATURE = [137, 80, 78, 71, 13, 10, 26, 10];
 const PNG_IEND = [73, 69, 78, 68, 174, 66, 96, 130];
 
-function readChunkedFixture(spec) {
-  const fixtureUrl = new URL(spec.path, import.meta.url);
-  const text = readFileSync(fixtureUrl, 'utf8').trim();
-  const lines = text.split(/\r?\n/);
-  const base64 = lines.join('');
+function summarizeFixtureBytes(spec, base64, extra = {}) {
   let charCodeSum32 = 0;
   for (const character of base64) {
     charCodeSum32 = (charCodeSum32 + character.charCodeAt(0)) >>> 0;
   }
 
   const bytes = Buffer.from(base64, 'base64');
-  const report = {
-    key: spec.key,
+  return {
+    report: {
+      key: spec.key,
+      base64Length: base64.length,
+      charCodeSum32,
+      decodedByteLength: bytes.length,
+      startBytes: [...bytes.subarray(0, spec.startBytes.length)],
+      endBytes: [...bytes.subarray(-spec.endBytes.length)],
+      width: spec.format === 'png' && bytes.length >= 24 ? bytes.readUInt32BE(16) : null,
+      height: spec.format === 'png' && bytes.length >= 24 ? bytes.readUInt32BE(20) : null,
+      ...extra,
+    },
+    bytes,
+    charCodeSum32,
+  };
+}
+
+function validateFixtureSummary(spec, summary) {
+  return (
+    summary.report.base64Length === spec.base64Length &&
+    summary.charCodeSum32 === spec.charCodeSum32 &&
+    summary.bytes.length === spec.decodedByteLength &&
+    summary.report.startBytes.every((value, index) => value === spec.startBytes[index]) &&
+    summary.report.endBytes.every((value, index) => value === spec.endBytes[index]) &&
+    (spec.width === undefined || summary.report.width === spec.width) &&
+    (spec.height === undefined || summary.report.height === spec.height)
+  );
+}
+
+function readChunkedFixture(spec) {
+  const fixtureUrl = new URL(spec.path, import.meta.url);
+  const text = readFileSync(fixtureUrl, 'utf8').trim();
+  const lines = text.split(/\r?\n/);
+  const base64 = lines.join('');
+  const summary = summarizeFixtureBytes(spec, base64, {
     lineCount: lines.length,
     lineLengths: lines.map((line) => line.length),
-    base64Length: base64.length,
-    charCodeSum32,
-    decodedByteLength: bytes.length,
-    startBytes: [...bytes.subarray(0, spec.startBytes.length)],
-    endBytes: [...bytes.subarray(-spec.endBytes.length)],
-    width: spec.format === 'png' && bytes.length >= 24 ? bytes.readUInt32BE(16) : null,
-    height: spec.format === 'png' && bytes.length >= 24 ? bytes.readUInt32BE(20) : null,
-  };
+  });
 
   const expectedFullLineCount = spec.lineCount - 1;
   const valid =
     lines.length === spec.lineCount &&
     lines.slice(0, expectedFullLineCount).every((line) => line.length === 80) &&
     lines.at(-1)?.length === spec.lastLineLength &&
-    base64.length === spec.base64Length &&
-    charCodeSum32 === spec.charCodeSum32 &&
-    bytes.length === spec.decodedByteLength &&
-    report.startBytes.every((value, index) => value === spec.startBytes[index]) &&
-    report.endBytes.every((value, index) => value === spec.endBytes[index]) &&
-    (spec.width === undefined || report.width === spec.width) &&
-    (spec.height === undefined || report.height === spec.height);
+    validateFixtureSummary(spec, summary);
 
-  return { report, valid };
+  return { report: summary.report, valid };
+}
+
+function readMultipartFixture(spec) {
+  const parts = spec.paths.map((path) => {
+    const fixtureUrl = new URL(path, import.meta.url);
+    return readFileSync(fixtureUrl, 'utf8').replace(/\s+/g, '');
+  });
+  const base64 = parts.join('');
+  const summary = summarizeFixtureBytes(spec, base64, {
+    partCount: parts.length,
+    partLengths: parts.map((part) => part.length),
+  });
+
+  const valid =
+    parts.length === spec.partLengths.length &&
+    parts.every((part, index) => part.length === spec.partLengths[index]) &&
+    validateFixtureSummary(spec, summary);
+
+  return { report: summary.report, valid };
 }
 
 const fixtureSpecs = [
@@ -117,12 +152,35 @@ const fixtureSpecs = [
   },
 ];
 
-const fixtureChecks = fixtureSpecs.map(readChunkedFixture);
-console.log(JSON.stringify({ chunkedCompositeFixtures: fixtureChecks.map(({ report }) => report) }, null, 2));
+const messagesFixtureSpec = {
+  key: 'messages-mask-group',
+  paths: [
+    '../fixture-theme/assets/images/visual-qa/messages/messages-mask-group.part01.b64',
+    '../fixture-theme/assets/images/visual-qa/messages/messages-mask-group.part02.b64',
+    '../fixture-theme/assets/images/visual-qa/messages/messages-mask-group.part03.b64',
+    '../fixture-theme/assets/images/visual-qa/messages/messages-mask-group.part04.b64',
+    '../fixture-theme/assets/images/visual-qa/messages/messages-mask-group.part05.b64',
+    '../fixture-theme/assets/images/visual-qa/messages/messages-mask-group.part06.b64',
+    '../fixture-theme/assets/images/visual-qa/messages/messages-mask-group.part07.b64',
+  ],
+  partLengths: [2400, 2400, 2400, 2400, 2400, 2400, 1040],
+  format: 'jpeg',
+  base64Length: 15440,
+  charCodeSum32: 1332210,
+  decodedByteLength: 11579,
+  startBytes: [255, 216],
+  endBytes: [255, 217],
+};
+
+const fixtureChecks = [
+  ...fixtureSpecs.map(readChunkedFixture),
+  readMultipartFixture(messagesFixtureSpec),
+];
+console.log(JSON.stringify({ compositeFixtures: fixtureChecks.map(({ report }) => report) }, null, 2));
 
 const invalidFixtures = fixtureChecks.filter(({ valid }) => !valid);
 if (invalidFixtures.length > 0) {
-  console.error(`Chunked composite fixture integrity failures: ${invalidFixtures.length}`);
+  console.error(`Composite fixture integrity failures: ${invalidFixtures.length}`);
   process.exit(1);
 }
 
@@ -254,13 +312,24 @@ async function inspectBackgroundPixels(selector, nodeAttribute) {
 await page.locator('.ref001-student-voice').scrollIntoViewIfNeeded();
 await page.waitForTimeout(100);
 const studentVoiceResults = await inspectBackgroundPixels(
-  '[data-figma-composite-node]:not([data-figma-composite-node=""])',
+  '.ref001-student-voice [data-figma-composite-node]:not([data-figma-composite-node=""])',
   'data-figma-composite-node',
 );
 console.log(JSON.stringify({ studentVoiceComposites: studentVoiceResults }, null, 2));
 
 const studentVoiceFailures = studentVoiceResults.filter(
   (asset) => !asset.decoded || asset.naturalWidth <= 0 || asset.naturalHeight <= 0 || asset.visiblePixels <= 0 || asset.channelRange < 20,
+);
+
+await page.locator('.ref001-messages').scrollIntoViewIfNeeded();
+await page.waitForTimeout(100);
+const messagesResults = await inspectBackgroundPixels(
+  '.ref001-messages__image[data-figma-composite-node]',
+  'data-figma-composite-node',
+);
+console.log(JSON.stringify({ messagesComposite: messagesResults }, null, 2));
+const messagesFailures = messagesResults.filter(
+  (asset) => !asset.decoded || asset.naturalWidth < 80 || asset.naturalHeight < 50 || asset.visiblePixels <= 0 || asset.channelRange < 20,
 );
 
 await page.locator('.ref001-cta-value').scrollIntoViewIfNeeded();
@@ -306,6 +375,16 @@ if (studentVoiceResults.length !== 3) {
 
 if (studentVoiceFailures.length > 0) {
   console.error(`Student Voice composite decode/pixel failures: ${studentVoiceFailures.length}`);
+  process.exit(1);
+}
+
+if (messagesResults.length !== 1) {
+  console.error(`Expected 1 Messages composite fixture, found ${messagesResults.length}.`);
+  process.exit(1);
+}
+
+if (messagesFailures.length > 0) {
+  console.error(`Messages composite decode/pixel failures: ${messagesFailures.length}`);
   process.exit(1);
 }
 
