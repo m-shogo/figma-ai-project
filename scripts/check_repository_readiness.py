@@ -20,8 +20,34 @@ class CheckResult:
     stderr: str
 
     @property
+    def skipped(self) -> bool:
+        if self.returncode != 0:
+            return False
+        return any(
+            line.lstrip().startswith("SKIP ")
+            for stream in (self.stdout, self.stderr)
+            for line in stream.splitlines()
+        )
+
+    @property
+    def failed(self) -> bool:
+        return self.returncode != 0
+
+    @property
     def passed(self) -> bool:
+        return not self.failed and not self.skipped
+
+    @property
+    def successful(self) -> bool:
         return self.returncode == 0
+
+    @property
+    def status(self) -> str:
+        if self.failed:
+            return "FAIL"
+        if self.skipped:
+            return "SKIP"
+        return "PASS"
 
 
 CHECKS: tuple[tuple[str, tuple[str, ...]], ...] = (
@@ -83,20 +109,28 @@ def main() -> int:
     for name, command in CHECKS:
         result = run_check(name, command)
         results.append(result)
-        if args.fail_fast and not result.passed:
+        if args.fail_fast and result.failed:
             break
 
     passed = sum(result.passed for result in results)
-    failed = len(results) - passed
+    skipped = sum(result.skipped for result in results)
+    failed = sum(result.failed for result in results)
+    successful = passed + skipped
 
     if args.json:
         payload = {
             "passed": passed,
+            "skipped": skipped,
             "failed": failed,
+            "successful": successful,
             "results": [
                 {
                     **asdict(result),
+                    "status": result.status,
                     "passed": result.passed,
+                    "skipped": result.skipped,
+                    "failed": result.failed,
+                    "successful": result.successful,
                 }
                 for result in results
             ],
@@ -104,14 +138,18 @@ def main() -> int:
         print(json.dumps(payload, ensure_ascii=False, indent=2))
     else:
         for result in results:
-            status = "PASS" if result.passed else "FAIL"
-            print(f"{status} {result.name}")
-            if not result.passed:
+            print(f"{result.status} {result.name}")
+            if result.skipped:
                 if result.stdout.strip():
                     print(result.stdout.rstrip())
                 if result.stderr.strip():
                     print(result.stderr.rstrip(), file=sys.stderr)
-        print(f"\nSummary: {passed} passed / {failed} failed")
+            elif result.failed:
+                if result.stdout.strip():
+                    print(result.stdout.rstrip())
+                if result.stderr.strip():
+                    print(result.stderr.rstrip(), file=sys.stderr)
+        print(f"\nSummary: {passed} passed / {skipped} skipped / {failed} failed")
 
     return 1 if failed else 0
 
