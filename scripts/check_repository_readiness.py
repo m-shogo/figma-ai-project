@@ -26,6 +26,7 @@ class CheckResult:
 
 CHECKS: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("update_sources", ("scripts/validate_update_sources.py",)),
+    ("implementation_profile", ("scripts/validate_implementation_profile.py",)),
     ("records", ("scripts/validate_records.py",)),
     ("company_policy", ("scripts/validate_company_policy.py",)),
     ("environment_contract", ("scripts/validate_environment_contract.py",)),
@@ -41,6 +42,7 @@ CHECKS: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("first_pass_evidence", ("scripts/first_pass_evidence.py", "validate")),
     ("clean_replay_pairs", ("scripts/prepare_clean_replay.py", "validate")),
     ("capture_environment", ("scripts/validate_capture_environment.py",)),
+    ("run_deliverables", ("scripts/validate_run_deliverables.py",)),
     ("unit_tests", ("-m", "unittest", "discover", "-s", "tests", "-p", "test_*.py")),
 )
 
