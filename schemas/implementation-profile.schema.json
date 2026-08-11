@@ -1,0 +1,157 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/figma-ai-project/implementation-profile.schema.json",
+  "title": "Implementation Target Profile",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "profile_id",
+    "status",
+    "selection",
+    "repository",
+    "resolution",
+    "effective",
+    "platform",
+    "delivery_requirements",
+    "checklist",
+    "unknowns",
+    "conflicts",
+    "freeze"
+  ],
+  "properties": {
+    "schema_version": {"type": "integer", "minimum": 1},
+    "profile_id": {"type": "string", "minLength": 1},
+    "status": {"enum": ["DRAFT", "RESOLVED", "FROZEN"]},
+    "created_at": {"type": "string"},
+    "updated_at": {"type": "string"},
+    "selection": {
+      "type": "object",
+      "required": ["mode", "family", "variant", "selected_by", "notes"],
+      "properties": {
+        "mode": {"enum": ["AUTO_EXISTING", "EXPLICIT"]},
+        "family": {"enum": ["AUTO_EXISTING", "STATIC_WEB", "PHP_TEMPLATE", "WORDPRESS", "JS_FRAMEWORK", "OTHER"]},
+        "variant": {"type": "string"},
+        "selected_by": {"type": "string"},
+        "notes": {"type": "array"}
+      },
+      "additionalProperties": true
+    },
+    "repository": {
+      "type": "object",
+      "required": ["repository", "starting_commit", "target_route_or_template", "inspected", "evidence_paths"],
+      "properties": {
+        "repository": {"type": "string"},
+        "starting_commit": {"type": "string"},
+        "target_route_or_template": {"type": "string"},
+        "inspected": {"type": "boolean"},
+        "evidence_paths": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": true
+    },
+    "resolution": {
+      "type": "object",
+      "required": ["detected_family", "detected_variant", "confidence", "evidence", "conflicts", "conflict_resolution"],
+      "properties": {
+        "detected_family": {"type": "string"},
+        "detected_variant": {"type": "string"},
+        "confidence": {"enum": ["NONE", "LOW", "MEDIUM", "HIGH"]},
+        "evidence": {"type": "array"},
+        "conflicts": {"type": "array"},
+        "conflict_resolution": {"enum": ["NONE", "MATCHED", "COMPANY_OVERRIDE", "REPOSITORY_OVERRIDE", "OWNER_APPROVED"]}
+      },
+      "additionalProperties": true
+    },
+    "effective": {
+      "type": "object",
+      "required": ["family", "variant", "language_runtime", "package_manager", "build_tool", "styling_architecture", "component_system", "routing", "data_source", "image_pipeline", "form_handling", "i18n", "test_harness", "rendering_mode", "notes"],
+      "properties": {
+        "family": {"type": "string"},
+        "variant": {"type": "string"},
+        "language_runtime": {"type": "string"},
+        "package_manager": {"type": "string"},
+        "build_tool": {"type": "string"},
+        "styling_architecture": {"type": "string"},
+        "component_system": {"type": "string"},
+        "routing": {"type": "string"},
+        "data_source": {"type": "string"},
+        "image_pipeline": {"type": "string"},
+        "form_handling": {"type": "string"},
+        "i18n": {"type": "string"},
+        "test_harness": {"type": "string"},
+        "rendering_mode": {"type": "string"},
+        "notes": {"type": "array"}
+      },
+      "additionalProperties": true
+    },
+    "platform": {"type": "object", "additionalProperties": true},
+    "delivery_requirements": {
+      "type": "object",
+      "required": ["source_code_required", "acf"],
+      "properties": {
+        "source_code_required": {"type": "boolean"},
+        "acf": {
+          "type": "object",
+          "required": ["required", "export_json", "local_json", "import_or_sync_smoke_required", "accepted_methods"],
+          "properties": {
+            "required": {"type": "boolean"},
+            "export_json": {
+              "type": "object",
+              "required": ["required", "format", "target_repo_path", "evidence_copy_required"],
+              "properties": {
+                "required": {"type": "boolean"},
+                "format": {"enum": ["ACF_EXPORT_ARRAY"]},
+                "target_repo_path": {"type": "string"},
+                "evidence_copy_required": {"type": "boolean"}
+              },
+              "additionalProperties": true
+            },
+            "local_json": {
+              "type": "object",
+              "required": ["required", "target_repo_dir"],
+              "properties": {
+                "required": {"type": "boolean"},
+                "target_repo_dir": {"type": "string"}
+              },
+              "additionalProperties": true
+            },
+            "import_or_sync_smoke_required": {"type": "boolean"},
+            "accepted_methods": {
+              "type": "array",
+              "items": {"enum": ["ADMIN_UI", "WP_CLI_IMPORT", "LOCAL_JSON_SYNC", "WP_CLI_SYNC", "OTHER"]},
+              "uniqueItems": true
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "checklist": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "status", "evidence", "notes"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "status": {"enum": ["TODO", "PASS", "BLOCKED"]},
+          "evidence": {"type": "array"},
+          "notes": {"type": "array"}
+        },
+        "additionalProperties": true
+      }
+    },
+    "unknowns": {"type": "array"},
+    "conflicts": {"type": "array"},
+    "freeze": {
+      "type": "object",
+      "required": ["ready", "frozen_at", "notes"],
+      "properties": {
+        "ready": {"type": "boolean"},
+        "frozen_at": {"type": "string"},
+        "notes": {"type": "array"}
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}
