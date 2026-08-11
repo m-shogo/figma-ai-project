@@ -24,12 +24,13 @@ const scenarios = [
 ];
 
 const browser = await chromium.launch({ headless: true });
-const report = { schema_version: 3, url, scenarios: {} };
+const report = { schema_version: 4, url, scenarios: {} };
 let failed = false;
 
 for (const scenario of scenarios) {
   const page = await browser.newPage({ viewport: scenario.viewport });
   await page.goto(url, { waitUntil: 'networkidle' });
+  await page.evaluate(() => document.fonts.ready);
 
   const result = await page.evaluate(() => {
     const round = (value) => Math.round(value * 10) / 10;
@@ -71,6 +72,21 @@ for (const scenario of scenarios) {
       const intentionalTruncation =
         style.textOverflow === 'ellipsis' || element.dataset.intentionalTruncation === 'true';
 
+      const primaryFontFamily = style.fontFamily
+        .split(',')[0]
+        ?.trim()
+        .replace(/^['"]|['"]$/g, '') || null;
+      let primaryFontLoaded = null;
+      if (primaryFontFamily) {
+        try {
+          primaryFontLoaded = document.fonts.check(
+            `${fontSizePx || 16}px "${primaryFontFamily.replaceAll('"', '\\"')}"`,
+          );
+        } catch {
+          primaryFontLoaded = null;
+        }
+      }
+
       const range = document.createRange();
       range.selectNodeContents(element);
       const rangeRects = Array.from(range.getClientRects()).filter(
@@ -101,12 +117,21 @@ for (const scenario of scenarios) {
         },
         font: {
           family: style.fontFamily,
+          primaryFamily: primaryFontFamily,
+          primaryLoaded: primaryFontLoaded,
           sizePx: fontSizePx,
+          weight: style.fontWeight,
+          stretch: style.fontStretch,
           lineHeightPx,
           lineHeightRatio: lineHeightRatio === null ? null : Math.round(lineHeightRatio * 1000) / 1000,
           lineBoxExtraPx: lineBoxExtraPx === null ? null : round(lineBoxExtraPx),
           halfLeadingApproxPx: halfLeadingApproxPx === null ? null : round(halfLeadingApproxPx),
           letterSpacing: style.letterSpacing,
+          opticalSizing: style.fontOpticalSizing,
+          variationSettings: style.fontVariationSettings,
+          featureSettings: style.fontFeatureSettings,
+          kerning: style.fontKerning,
+          synthesis: style.fontSynthesis,
         },
         textRange: {
           topInsetPx: rangeTopInsetPx === null ? null : round(rangeTopInsetPx),
@@ -138,6 +163,12 @@ for (const scenario of scenarios) {
       .sort((a, b) => (b.font.lineBoxExtraPx ?? 0) - (a.font.lineBoxExtraPx ?? 0))
       .slice(0, 40);
 
+    const missingPrimaryFonts = text
+      .filter((item) => item.font.primaryFamily && item.font.primaryLoaded === false)
+      .map((item) => item.font.primaryFamily)
+      .filter((family, index, families) => families.indexOf(family) === index)
+      .sort();
+
     const nowrapElements = text
       .filter((item) => ['nowrap', 'pre'].includes(item.whiteSpace))
       .slice(0, 80);
@@ -148,6 +179,7 @@ for (const scenario of scenarios) {
       bodyScrollWidth: document.body?.scrollWidth ?? 0,
       pageOverflowPx: Math.max(0, pageOverflow),
       textElementCount: text.length,
+      missingPrimaryFonts,
       failures,
       leadingCandidates,
       nowrapElements,
