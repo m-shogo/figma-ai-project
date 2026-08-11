@@ -1,0 +1,144 @@
+schema_version: 1
+reference_id: REF-001-CHIBA-KEIZAI-SAMPLE
+status: DRAFT
+
+figma:
+  file_url: "https://www.figma.com/design/ZYTdtw4wCgkcBy2cVnhxVI/sample?node-id=21376-1600&p=f&t=zduaKdUu0MIWPh7D-0"
+  file_key: ZYTdtw4wCgkcBy2cVnhxVI
+  node_ids:
+    - "21376:1600"
+    - "21376:4401"
+    - "21376:5162"
+    - "280:2"
+    - "21376:5757"
+    - "21376:4918"
+    - "21376:5723"
+    - "21376:4886"
+    - "21376:5690"
+    - "21376:4852"
+  captured_at: "2026-08-11T10:55:00+09:00"
+  component_source_url: "https://www.figma.com/design/ZYTdtw4wCgkcBy2cVnhxVI/sample?node-id=280-2&p=f&t=zduaKdUu0MIWPh7D-0"
+  component_page_node_id: "280:2"
+  environment:
+    client: ChatGPT Figma connector
+    code_connect:
+      state: UNDETERMINED
+      reason: "Figma MCP returned a plan/seat limitation for Code Connect lookup; absence cannot be inferred."
+
+frames:
+  - id: top-pc
+    role: desktop-page
+    node_id: "21376:5162"
+    figma_width: 1380
+    figma_height: 7714
+    acceptance_viewport:
+      width: 1380
+      height: null
+  - id: top-sp
+    role: mobile-page
+    node_id: "21376:4401"
+    figma_width: 375
+    figma_height: 10817
+    acceptance_viewport:
+      width: 375
+      height: null
+
+structure:
+  page_node_id: "21376:1600"
+  page_name: AI
+  responsive_frame_placement: SAME_PAGE_SEPARATE_TOP_LEVEL_FRAMES
+  section_pairs:
+    - id: header
+      pc_node_id: "21376:5757"
+      sp_node_id: "21376:4918"
+      mapping_confidence: HIGH
+      provisional_strategy: STRUCTURE_FIRST
+      evidence:
+        - "PC/SP Header nodes are semantically named and resolve to component-like structures."
+        - "Shared logo and token usage are visible in design context."
+    - id: main-visual
+      pc_node_id: "21376:5723"
+      sp_node_id: "21376:4886"
+      mapping_confidence: HIGH
+      provisional_strategy: HYBRID
+      evidence:
+        - "PC/SP main visuals share semantic content but rely on masks, image crops, vectors, and absolute positioning."
+        - "The SP node contains some large internal dimensions, so raw Figma coordinates must not be copied blindly into production CSS."
+    - id: reason
+      pc_node_id: "21376:5690"
+      sp_node_id: "21376:4852"
+      mapping_confidence: HIGH
+      provisional_strategy: STRUCTURE_FIRST
+      evidence:
+        - "The same three semantic cards are horizontal on PC and vertically stacked on SP."
+        - "Responsive intent can be translated structurally instead of reproducing absolute coordinates."
+  component_evidence:
+    page_node_id: "280:2"
+    observed:
+      - "Header / Header_sp"
+      - "Footer / Footer_sp"
+      - "breadcrumb PC/SP"
+      - "button default/hover"
+      - "pager default/hover"
+      - "category variants"
+      - "export assets"
+  variable_evidence:
+    observed: true
+    examples:
+      - "color/foreground/main--colorpurple=#8473aa"
+      - "color/foreground/sec--colorblue=#38a1db"
+      - "color/foreground/sec--colororange=#f5971a"
+      - "color/background/base--light-beige=#f6f5ef"
+      - "content-width/contents--100%=375"
+      - "content-width/contents--top=343"
+      - "radius/max=999"
+      - "font/Poppins"
+      - "font/Zen Kaku Gothic New"
+
+responsive:
+  breakpoint_evidence:
+    source: UNKNOWN
+    source_refs:
+      - "Figma:21376:5162"
+      - "Figma:21376:4401"
+    values: []
+    notes:
+      - "Figma provides 1380px PC and 375px SP reference frames, but those reference widths do not prove the production breakpoint threshold."
+      - "Resolve the actual breakpoint from owner/company/design-system/target-code evidence before freezing."
+  invariants:
+    - "Header, MainVisual, and Reason have high-confidence PC/SP semantic pairings."
+  transitions:
+    - "Reason changes from a three-column PC presentation to a vertical SP stack."
+  ordering_rules: []
+  visibility_rules: []
+  wrapping_rules: []
+  container_rules: []
+  unknowns:
+    - "Production breakpoint value/query semantics."
+    - "Full-page PC/SP mapping beyond the sections already inspected."
+
+owner_notes:
+  - "Keep PC/SP on the same Figma page as a provisional working convention for this run; promote to a project rule only after real-run evidence accumulates."
+  - "Do not redesign the supplied Figma; implementation fidelity is the objective."
+
+material_unknowns:
+  - "Target implementation repository URL has not been supplied yet."
+  - "Target repository branch and starting commit are unresolved."
+  - "Target framework, styling architecture, package manager, existing components, and code tokens must be inferred from the target repository rather than guessed."
+  - "Code Connect availability/mapping is UNDETERMINED because the current Figma plan/seat blocks MCP Code Connect lookup."
+  - "Production breakpoint contract is unresolved; PC/SP frame widths alone are not breakpoint evidence."
+
+code_baseline:
+  repository: ""
+  base_branch: ""
+  starting_commit: ""
+  target_route: ""
+  framework: ""
+  package_manager: ""
+  design_system_paths: []
+  token_paths: []
+
+freeze:
+  ready: false
+  frozen_at: ""
+  notes: "Figma reference captured. Keep DRAFT until the target code baseline and material responsive/codebase unknowns are resolved."
