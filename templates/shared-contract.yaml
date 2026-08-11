@@ -1,4 +1,4 @@
-schema_version: 8
+schema_version: 9
 contract_id: CONTRACT-XXXX
 reference_id: REF-XXXX
 status: DRAFT # DRAFT | FROZEN | SUPERSEDED
@@ -7,7 +7,10 @@ updated_at: ""
 
 decision_preflight:
   status: UNRESOLVED # UNRESOLVED | RESOLVED
-  must_resolve_before_section_work: true
+  strategy: COST_BASED
+  block_only_expensive_irreversible_or_cross_cutting: true
+  low_cost_reversible_default_without_owner_wait: true
+  continue_independent_safe_work_while_waiting: true
   repeated_time_sink_promotes_to_preflight: true
   items:
     target_runtime:
@@ -41,9 +44,18 @@ decision_preflight:
     asset_contract:
       status: UNKNOWN
       exact_source_policy: EXACT_WHEN_AVAILABLE
-      crop_focal_policy: ""
+      placeholder_element_default: img
+      media_fit_default: cover
+      picture_default: false
+      picture_requires_reason: true
+      picture_reasons:
+        - art_direction
+        - responsive_source_or_crop_difference
+        - delivery_format_requirement
+        - demonstrated_runtime_reason
+      crop_focal_policy: PRESERVE_WHEN_EVIDENCED
       mask_composite_authority: ""
-      export_runtime_validation: ""
+      export_runtime_validation: WHEN_COMPLEX
       cms_media_ownership: ""
       notes: []
     interaction_contract:
@@ -67,8 +79,10 @@ decision_preflight:
       actual_artifact_visual_review_required: true
       notes: []
   unresolved_behavior: >-
-    If a material decision is still missing, mark only that item UNRESOLVED and request/resolve the smallest owner decision needed.
-    Do not invent a temporary value that is likely to cause section rework later.
+    Only block when the missing decision is expensive to reverse, cross-cutting, or material to the next implementation step.
+    For cheap reversible choices, use the safe modern default and continue without waiting for owner input.
+    While waiting for CI, inspection, generation, or another result, continue independent safe work.
+    Never invent a temporary value when it is likely to cause substantial rework later.
 
 company_policy:
   path: ""
@@ -232,6 +246,10 @@ web_translation:
     notes: []
   assets:
     exact_source_preferred: true
+    default_markup: img
+    default_fit_for_cropped_media_box: cover
+    picture_is_opt_in: true
+    picture_requires_demonstrated_reason: true
     source_identity_separate_from_crop_transform: true
     exported_asset_requires_runtime_validation_when_complex: true
     final_visible_composite_allowed_for_visual_qa: true
@@ -275,7 +293,7 @@ parallel_execution:
 integration:
   root_composition_path: ""
   required_checks:
-    - preflight_decisions_resolved
+    - material_preflight_decisions_resolved
     - section_order
     - container_alignment
     - cross_section_spacing
