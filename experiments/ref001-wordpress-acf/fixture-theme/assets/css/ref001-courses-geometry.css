@@ -10,7 +10,7 @@
  * PC Figma:
  * - kicker starts 72px inside section
  * - card grid starts at section-relative y=214
- * - natural header height is 106px, so header->grid gap = 36px
+ * - header height = 106px, so header->grid gap = 36px
  * - grid = 4×271 + 3×40 = 1204px
  * - bottom whitespace = 96px
  * - total = 72 + 106 + 36 + 1204 + 96 = 1514px
@@ -18,11 +18,15 @@
  * SP Figma:
  * - kicker starts 56px inside section
  * - card grid starts at section-relative y=204
- * - natural header height is 114px, so header->grid gap = 34px
+ * - header height = 114px, so header->grid gap = 34px
  * - card heights = 320/299/299/299/320/299/299 with 6×20px gaps
  * - grid = 2255px
  * - bottom whitespace = 56px
  * - total = 56 + 114 + 34 + 2255 + 56 = 2515px
+ *
+ * Header heights are explicit rather than relying on font-derived natural
+ * height. Section-internal typography can then be repaired without silently
+ * moving every downstream section.
  */
 
 .ref001-courses {
@@ -31,6 +35,7 @@
 }
 
 .ref001-courses__header {
+	height: 106px;
 	margin-bottom: 36px;
 }
 
@@ -46,6 +51,7 @@
 	}
 
 	.ref001-courses__header {
+		height: 114px;
 		margin-bottom: 34px;
 	}
 
