@@ -19,6 +19,28 @@ def validate_fixture(fixture: Path = DEFAULT_FIXTURE, acf_export: Path = DEFAULT
     errors: list[str] = []
     education_part = fixture / "template-parts" / "ref001" / "education.php"
     education_css = fixture / "assets" / "css" / "ref001-education.css"
+    visual_parts = [
+        "main-visual",
+        "reason",
+        "education",
+        "cta",
+        "student-voice",
+        "messages",
+        "courses",
+        "links",
+        "cta-value",
+    ]
+    visual_styles = [
+        "ref001.css",
+        "ref001-shell.css",
+        "ref001-education.css",
+        "ref001-middle.css",
+        "ref001-messages.css",
+        "ref001-courses.css",
+        "ref001-bottom.css",
+        "ref001-visual-fixtures.css",
+    ]
+
     required = [
         fixture / "style.css",
         fixture / "functions.php",
@@ -26,13 +48,11 @@ def validate_fixture(fixture: Path = DEFAULT_FIXTURE, acf_export: Path = DEFAULT
         fixture / "footer.php",
         fixture / "index.php",
         fixture / TEMPLATE_RELATIVE_PATH,
-        fixture / "template-parts" / "ref001" / "main-visual.php",
-        fixture / "template-parts" / "ref001" / "reason.php",
-        education_part,
-        fixture / "assets" / "css" / "ref001.css",
-        education_css,
         fixture / "README.md",
     ]
+    required.extend(fixture / "template-parts" / "ref001" / f"{name}.php" for name in visual_parts)
+    required.extend(fixture / "assets" / "css" / name for name in visual_styles)
+
     missing = [path for path in required if not path.is_file()]
     if missing:
         errors.extend(f"missing fixture file: {path}" for path in missing)
@@ -44,6 +64,8 @@ def validate_fixture(fixture: Path = DEFAULT_FIXTURE, acf_export: Path = DEFAULT
 
     if "figma.com/api/mcp/asset" in joined:
         errors.append("fixture must not commit expiring Figma MCP asset URLs")
+    if "truncated for brevity" in joined:
+        errors.append("visual fixture must not contain truncated/incomplete embedded asset data")
 
     repeater_patterns = {
         "have_rows(": "have_rows()",
@@ -60,21 +82,53 @@ def validate_fixture(fixture: Path = DEFAULT_FIXTURE, acf_export: Path = DEFAULT
         errors.append("learning Page template must declare Template Name")
     if not re.search(r"Template\s+Post\s+Type:\s*page\b", template, flags=re.IGNORECASE):
         errors.append("learning Page template must declare Template Post Type: page")
-    if "get_template_part( 'template-parts/ref001/education' )" not in template:
-        errors.append("learning Page template must include the Education template part")
+    if 'data-fixture-completeness="partial"' not in template:
+        errors.append("visual-first fixture must remain explicitly partial until screenshot QA freezes First Pass")
+
+    expected_sequence = [
+        "main-visual",
+        "reason",
+        "education",
+        "cta",
+        "student-voice",
+        "messages",
+        "cta",
+        "courses",
+        "links",
+        "cta-value",
+    ]
+    cursor = 0
+    for name in expected_sequence:
+        token = f"get_template_part( 'template-parts/ref001/{name}' )"
+        found = template.find(token, cursor)
+        if found < 0:
+            errors.append(f"visual-first Page sequence missing or out of order: {name}")
+            break
+        cursor = found + len(token)
 
     functions = read_text(fixture / "functions.php")
     if TEMPLATE_RELATIVE_PATH not in functions or "is_page_template" not in functions:
         errors.append("fixture asset enqueue must target the canonical REF-001 Page template")
     if "wp_get_attachment_image(" not in functions:
         errors.append("fixture images must use the WordPress attachment image helper")
-    if "assets/css/ref001-education.css" not in functions:
-        errors.append("fixture must enqueue the Education stylesheet through WordPress")
+    for stylesheet in visual_styles:
+        if f"assets/css/{stylesheet}" not in functions:
+            errors.append(f"visual-first fixture stylesheet is not enqueued: {stylesheet}")
 
     education_source = read_text(education_part)
     for number, label in (("01", "スタート"), ("02", "学ぶ"), ("03", "出会う"), ("04", "ゴール")):
         if f"'number' => '{number}'" not in education_source or f"'label' => '{label}'" not in education_source:
             errors.append(f"Education code-owned stage contract missing {number}/{label}")
+
+    student_voice = read_text(fixture / "template-parts" / "ref001" / "student-voice.php")
+    if "accordion" in student_voice.lower() or "addEventListener" in student_voice:
+        errors.append("Student Voice visual First Pass must not invent accordion behavior")
+    if student_voice.count("'open' => true") != 1 or student_voice.count("'open' => false") != 2:
+        errors.append("Student Voice must preserve Figma state: one open item and two collapsed items")
+
+    messages = read_text(fixture / "template-parts" / "ref001" / "messages.php")
+    if "1 / 4" not in messages or "carousel" in messages.lower() or "swiper" in messages.lower():
+        errors.append("Messages must preserve static 1 / 4 Figma evidence without inventing carousel implementation")
 
     if not acf_export.is_file():
         errors.append(f"missing ACF export: {acf_export}")
