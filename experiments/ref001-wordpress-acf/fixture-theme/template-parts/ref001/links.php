@@ -19,7 +19,8 @@ $link_cards = array(
 	),
 	array(
 		'key' => 'numbers',
-		'label' => '数字で見る\n千葉経済大学',
+		'label_top' => '数字で見る',
+		'label_main' => '千葉経済大学',
 		'tone' => 'orange',
 	),
 	array(
@@ -47,11 +48,24 @@ $link_cards = array(
 			<li class="ref001-links__item ref001-links__item--<?php echo esc_attr( $card['tone'] ); ?>" data-destination-status="deferred">
 				<div class="ref001-links__shadow" aria-hidden="true"></div>
 				<div class="ref001-links__face">
-					<p class="ref001-links__label">
-						<?php echo nl2br( esc_html( $card['label'] ) ); ?>
-					</p>
+					<?php if ( 'numbers' === $card['key'] ) : ?>
+						<p class="ref001-links__label ref001-links__label--numbers">
+							<span class="ref001-links__numbers-top"><?php echo esc_html( $card['label_top'] ); ?></span>
+							<span class="ref001-links__numbers-main"><?php echo esc_html( $card['label_main'] ); ?></span>
+						</p>
+					<?php elseif ( 'instagram' === $card['key'] ) : ?>
+						<p class="ref001-links__label ref001-links__label--instagram">
+							<span class="ref001-links__instagram-line">Official</span><span class="ref001-links__instagram-line">Instagram</span>
+						</p>
+					<?php else : ?>
+						<p class="ref001-links__label"><?php echo esc_html( $card['label'] ); ?></p>
+					<?php endif; ?>
+
 					<?php if ( ! empty( $card['sub'] ) ) : ?>
-						<p class="ref001-links__sub"><span aria-hidden="true">◎</span> <?php echo esc_html( $card['sub'] ); ?></p>
+						<p class="ref001-links__sub">
+							<span class="ref001-links__instagram-icon" aria-hidden="true"></span>
+							<span><?php echo esc_html( $card['sub'] ); ?></span>
+						</p>
 					<?php endif; ?>
 					<span class="ref001-links__arrow" aria-hidden="true">→</span>
 				</div>
