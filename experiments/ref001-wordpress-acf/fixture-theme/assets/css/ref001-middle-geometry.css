@@ -18,6 +18,9 @@
  * SP Education content currently overflows its supplied 1534px endpoint by
  * 10px. Preserve the content but pin the flow box to the supplied section
  * height so CTA1 starts at the correct coordinate.
+ *
+ * Owner responsive contract: mobile <= 767px; 375/1380 are the exact geometry
+ * endpoints and intermediate widths are runtime-safety probes.
  */
 
 .ref001-cta + .ref001-student-voice {
@@ -32,7 +35,7 @@
 	margin-top: 118px;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 767px) {
 	.ref001-education {
 		height: 1534px;
 		min-height: 0;
