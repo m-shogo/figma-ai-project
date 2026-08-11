@@ -7,16 +7,17 @@
  * - title: x=132, width=188
  * - profile: x=72, width=240
  *
- * The base mobile bubble padding correctly positions the title, so only the
- * profile paragraph is shifted back 60px and widened. State-specific vertical
- * positions preserve the supplied 3-line open title and 2-line closed titles.
+ * The base mobile bubble padding correctly positions the title. The profile is
+ * absolutely positioned 24px from the bubble border instead of inheriting the
+ * title's 84px content inset. State-specific vertical positions preserve the
+ * supplied 3-line open title and 2-line closed titles.
  */
 
 @media (max-width: 767px) {
 	.ref001-student-voice__bubble p {
 		position: absolute;
-		left: -60px;
-		width: min(240px, calc(100% + 76px));
+		left: 24px;
+		width: min(240px, calc(100% - 48px));
 		margin: 0;
 		font-size: 14px;
 		line-height: 1.6;
