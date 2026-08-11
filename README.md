@@ -32,14 +32,23 @@ REF-001（千葉経済大学sample）では、FigmaのPC/SP referenceを使っ�
 - 実案件のtarget WordPress theme repository / branch / starting commitは未接続
 - Header / Footer / global CTA等のproduction ownershipはtarget repo確認前なのでfreezeしない
 - Student Voiceのinteraction、Messages 2–4やcarousel behavior等はevidence不足のまま`UNDETERMINED`
-- 現在の修復済みfixtureはformal FIRST PASS保存前に改善を重ねたため、後付けでFIRST PASS扱いしない
-- Clean Replayはまだ`NOT RUN`。reproducibilityを実証済みとは扱わない
+- historicalの修復済みfixtureはformal FIRST PASS保存前に改善を重ねたため、今後も後付けでFIRST PASS扱いしない
+- separate Blind Clean Replay `RUN-REF001-BLIND-CLEAN-20260812-A` は実行済みで、immutable FIRST PASSを保存した
+- Blind FIRST PASS fidelity: `57 / 80`、post-freeze visual repair: `2 rounds`、final fidelity: `67 / 80`
+- Clean Replay final geometry: PC `1380px` / SP `375px` ともsemantic section top/height `0px` delta
+- required 11 runtime widthsでhorizontal overflow / readable-text clipping / runtime errorは`0`
+- Human Editability change drills: `10 / 10`
+- run statusはmedia transfer / production WordPress target / real ACF ADMIN_UI smoke未解決のため、誇張せず`BLOCKED`
+- Clean Replay後の事後比較から3 ruleを`E2 / OPTIONAL` Candidateへ昇格した
 
 Canonical current evidence:
 
 - `references/chiba-keizai-sample.reference.yaml`
 - `experiments/ref001-wordpress-acf/README.md`
-- `experiments/ref001-wordpress-acf/artifacts/README.md`
+- `experiments/ref001-blind-clean-20260812/run.yaml`
+- `experiments/ref001-blind-clean-20260812/evidence/final-measurement.yaml`
+- `docs/ref001-clean-replay-postmortem.md`
+- `playbook/candidates/README.md`
 
 ---
 
