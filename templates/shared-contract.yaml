@@ -13,6 +13,14 @@ company_policy:
   precedence_verified: false
   conflicts: []
 
+implementation_profile:
+  path: ""
+  sha256: ""
+  profile_id: ""
+  status: UNBOUND # UNBOUND | BOUND
+  family: ""
+  variant: ""
+
 environment_contract:
   status: UNRESOLVED # UNRESOLVED | RESOLVED
   required_profiles: [] # exact Company Policy environment profile ids
