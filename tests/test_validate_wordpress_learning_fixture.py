@@ -119,7 +119,7 @@ class WordPressLearningFixtureTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             fixture, acf_export = self.copy_fixture(directory)
             functions = fixture / "functions.php"
-            source = functions.read_text(encoding="utf-8").replace("assets/css/ref001-courses.css", "assets/css/missing-courses.css")
+            source = functions.read_text(encoding="utf-8").replace("ref001-courses.css", "missing-courses.css")
             functions.write_text(source, encoding="utf-8")
             errors = validator.validate_fixture(fixture, acf_export)
             self.assertTrue(any("ref001-courses.css" in error for error in errors))
