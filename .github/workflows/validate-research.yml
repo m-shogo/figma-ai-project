@@ -62,6 +62,12 @@ jobs:
       - name: Install validation dependencies
         run: python -m pip install -r requirements-dev.txt
 
+      - name: Reject persisted Figma MCP asset URLs
+        run: python scripts/validate_no_figma_mcp_asset_urls.py
+
+      - name: Validate persisted Figma asset manifests
+        run: python scripts/validate_asset_manifests.py
+
       - name: Reject duplicate YAML mapping keys
         run: python scripts/validate_yaml_duplicates.py
 
