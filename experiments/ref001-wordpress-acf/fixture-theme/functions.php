@@ -22,21 +22,28 @@ function ref001_learning_enqueue_assets() {
 		'ref001-learning',
 		get_theme_file_uri( 'assets/css/ref001.css' ),
 		array(),
-		'0.3.0'
+		'0.4.0'
 	);
 
 	wp_enqueue_style(
 		'ref001-learning-education',
 		get_theme_file_uri( 'assets/css/ref001-education.css' ),
 		array( 'ref001-learning' ),
-		'0.3.0'
+		'0.4.0'
 	);
 
 	wp_enqueue_style(
 		'ref001-learning-courses',
 		get_theme_file_uri( 'assets/css/ref001-courses.css' ),
 		array( 'ref001-learning' ),
-		'0.3.0'
+		'0.4.0'
+	);
+
+	wp_enqueue_style(
+		'ref001-learning-links',
+		get_theme_file_uri( 'assets/css/ref001-links.css' ),
+		array( 'ref001-learning' ),
+		'0.4.0'
 	);
 }
 add_action( 'wp_enqueue_scripts', 'ref001_learning_enqueue_assets' );
