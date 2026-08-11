@@ -28,6 +28,8 @@ Hybrid
 
 のどれを使っているかを確認する。
 
+この判断は `Implementation Profile` でFROZENにしてからSection実装へ進む。
+
 ---
 
 ## Section implementation unit
@@ -110,6 +112,61 @@ Usually code/design-system owned:
 
 ---
 
+## ACF delivery is part of implementation
+
+**ACFを使う案件では、PHP/templateだけ完成しても納品完了ではない。**
+
+最低限、portableな:
+
+```text
+acf-export.json
+```
+
+を生成する。
+
+このJSONはfield group/fieldのstable keyを保持し、別WordPress環境へimportできる構造にする。
+
+既存projectがLocal JSONを使う場合は原則:
+
+```text
+acf-export.json
++
+acf-json/*.json
+```
+
+の両方を維持する。
+
+- `acf-export.json`: 明示的なportable/import bundle
+- `acf-json/*.json`: theme/plugin内でversion control/syncする既存architecture
+
+詳細contract: `docs/acf-json-delivery.md`
+
+構造検証:
+
+```bash
+python scripts/validate_acf_export.py path/to/acf-export.json
+```
+
+さらに実WordPress test/disposable environmentでimportまたはsync smokeを行う。
+
+Implementation Profileで許可された方法だけを使う:
+
+- ACF Tools admin import
+- ACF/WP-CLI JSON import when installed version supports it
+- Local JSON sync
+- ACF/WP-CLI JSON sync when supported
+- explicit OTHER with evidence
+
+Completed RunはJSON evidence + smoke PASSが揃わない限り `scripts/validate_run_deliverables.py` で失敗する。
+
+### Stable keys
+
+Repair/Clean Replayで`group_*` / `field_*` keyを理由なく作り直さない。
+
+Key変更が必要ならfield migrationとして扱い、単なるvisual repairへ混ぜない。
+
+---
+
 ## Images
 
 ACF image fieldのreturn formatはCompany/existing projectに従う。
@@ -153,6 +210,7 @@ Current projectでACF Blocksを採用する場合:
 - render callback/template boundaryを明確にする
 - editor previewとfrontend outputの差をQAする
 - block API versionはcurrent project/support matrixに合わせる
+- fieldsを使うならACF JSON deliveryも残す
 
 ---
 

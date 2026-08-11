@@ -72,6 +72,16 @@ def pair_errors(source: dict[str, Any], replay: dict[str, Any], *, source_path: 
     ):
         errors.append("clean replay must use the same Required Environment profile set")
 
+    source_impl_id = str(source_coord.get("implementation_profile_id", "")).strip()
+    replay_impl_id = str(replay_coord.get("implementation_profile_id", "")).strip()
+    source_impl_hash = str(source_coord.get("implementation_profile_sha256", "")).strip()
+    replay_impl_hash = str(replay_coord.get("implementation_profile_sha256", "")).strip()
+    if source_impl_id or replay_impl_id or source_impl_hash or replay_impl_hash:
+        if not source_impl_id or not replay_impl_id or source_impl_id != replay_impl_id:
+            errors.append("clean replay must use the same Implementation Profile id")
+        if not source_impl_hash or not replay_impl_hash or source_impl_hash != replay_impl_hash:
+            errors.append("clean replay must use the same frozen Implementation Profile SHA-256")
+
     source_code = source.get("code", {})
     replay_code = replay.get("code", {})
     if source_code.get("repository") != replay_code.get("repository"):

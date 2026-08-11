@@ -1,0 +1,133 @@
+schema_version: 1
+
+selector:
+  initial_control: RADIO
+  default: AUTO_EXISTING
+  options:
+    - id: AUTO_EXISTING
+      label: Existing Project / Auto Detect
+      description: Inspect the existing repository first and resolve the effective implementation target from evidence.
+    - id: STATIC_WEB
+      label: Static Web
+      description: Semantic HTML with existing or selected CSS/SCSS and vanilla JavaScript/TypeScript.
+    - id: PHP_TEMPLATE
+      label: PHP Template
+      description: Plain PHP or a server-side template engine such as Blade or Twig.
+    - id: WORDPRESS
+      label: WordPress
+      description: Classic, Block, or Hybrid theme; ACF is resolved separately when present.
+    - id: JS_FRAMEWORK
+      label: JS Framework
+      description: React/Next/Vue/Nuxt/Svelte/SvelteKit/Astro or another component framework.
+    - id: OTHER
+      label: Other
+      description: Explicitly document a target not covered by the standard families.
+
+conditional_selectors:
+  PHP_TEMPLATE:
+    control: RADIO
+    options: [PLAIN_PHP, BLADE, TWIG, OTHER]
+  WORDPRESS:
+    control: RADIO
+    options: [AUTO_EXISTING, CLASSIC, BLOCK, HYBRID]
+  JS_FRAMEWORK:
+    control: RADIO
+    options: [AUTO_EXISTING, REACT, NEXT, VUE, NUXT, SVELTE, SVELTEKIT, ASTRO, OTHER]
+
+common_checklist:
+  - REPOSITORY_BASELINE
+  - TARGET_ROUTE_OR_TEMPLATE
+  - LANGUAGE_AND_RUNTIME
+  - BUILD_AND_PACKAGE_MANAGER
+  - STYLING_ARCHITECTURE
+  - COMPONENT_REUSE_POLICY
+  - ROUTING_DECISION
+  - DATA_SOURCE_DECISION
+  - IMAGE_ASSET_PIPELINE
+  - FORM_HANDLING_DECISION
+  - I18N_DECISION
+  - TEST_HARNESS_DECISION
+  - REQUIRED_ENVIRONMENT_MATRIX
+  - ACCESSIBILITY_BASELINE
+
+family_checklists:
+  STATIC_WEB:
+    - HTML_SEMANTICS
+    - CSS_OR_SCSS_STRATEGY
+    - VANILLA_JS_OR_TS_STRATEGY
+    - PARTIAL_INCLUDE_STRATEGY
+    - STATIC_ASSET_PATHS
+    - BUILD_OUTPUT_CONTRACT
+  PHP_TEMPLATE:
+    - PHP_TEMPLATE_ENGINE
+    - SERVER_FRAMEWORK_OR_CUSTOM_RUNTIME
+    - TEMPLATE_ESCAPING
+    - ROUTE_CONTROLLER_DATA_CONTRACT
+    - TEMPLATE_PARTIAL_STRATEGY
+    - SERVER_ASSET_PIPELINE
+  WORDPRESS:
+    - WORDPRESS_VERSION
+    - PHP_VERSION
+    - WORDPRESS_THEME_TYPE
+    - WORDPRESS_TEMPLATE_UNIT
+    - WORDPRESS_EDITOR_MODEL
+    - WORDPRESS_ASSET_ENQUEUE
+    - WORDPRESS_IMAGE_HELPERS
+    - WORDPRESS_ESCAPING
+    - WORDPRESS_THEME_JSON_DECISION
+    - WORDPRESS_BLOCK_JSON_DECISION
+    - WORDPRESS_CPT_TAXONOMY_DECISION
+  JS_FRAMEWORK:
+    - FRAMEWORK_AND_VERSION
+    - ROUTER_MODE
+    - RENDERING_MODE
+    - SERVER_CLIENT_BOUNDARY
+    - COMPONENT_LIBRARY_REUSE
+    - STATE_MANAGEMENT_DECISION
+    - DATA_FETCH_CACHE_DECISION
+    - FRAMEWORK_IMAGE_PIPELINE
+    - HYDRATION_OR_ISLANDS_DECISION
+  OTHER:
+    - TARGET_RUNTIME_DESCRIPTION
+    - TARGET_COMPONENT_OR_TEMPLATE_MODEL
+    - TARGET_BUILD_AND_DEPLOY_CONTRACT
+
+variant_checklists:
+  NEXT:
+    - NEXT_ROUTER_MODE
+    - NEXT_SERVER_CLIENT_COMPONENTS
+    - NEXT_RENDERING_CACHE_REVALIDATION
+    - NEXT_IMAGE_COMPONENT_POLICY
+  NUXT:
+    - NUXT_RENDERING_MODE
+    - NUXT_DATA_FETCHING
+    - NUXT_IMAGE_POLICY
+  SVELTEKIT:
+    - SVELTEKIT_LOAD_ACTIONS
+    - SVELTEKIT_RENDERING_MODE
+  ASTRO:
+    - ASTRO_OUTPUT_MODE
+    - ASTRO_ISLAND_HYDRATION
+  BLADE:
+    - LARAVEL_BLADE_COMPONENT_POLICY
+  TWIG:
+    - TWIG_COMPONENT_OR_INCLUDE_POLICY
+
+conditional_checklists:
+  WORDPRESS_ACF:
+    - ACF_VERSION_AND_LICENSE_TIER
+    - ACF_ARCHITECTURE
+    - ACF_FIELD_GROUP_OWNERSHIP
+    - ACF_IMAGE_RETURN_FORMAT
+    - ACF_REPEATER_FLEXIBLE_BLOCK_DECISION
+    - ACF_KEY_STABILITY
+    - ACF_EXPORT_JSON_REQUIREMENT
+    - ACF_LOCAL_JSON_REQUIREMENT
+    - ACF_IMPORT_OR_SYNC_SMOKE_PLAN
+
+rules:
+  existing_project_first: true
+  company_policy_may_override_user_selection: true
+  repository_evidence_may_raise_conflict: true
+  explicit_conflict_resolution_required_before_freeze: true
+  acf_requires_importable_json_delivery: true

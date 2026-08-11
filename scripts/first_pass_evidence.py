@@ -65,6 +65,8 @@ def first_pass_payload(run: dict[str, Any], tooling_revision: str) -> dict[str, 
         "tooling_revision": tooling_revision,
         "reference_manifest_sha256": str(reference.get("manifest_sha256", "")),
         "company_policy_sha256": str(coordination.get("company_policy_sha256", "")),
+        "implementation_profile_id": str(coordination.get("implementation_profile_id", "")),
+        "implementation_profile_sha256": str(coordination.get("implementation_profile_sha256", "")),
         "required_environment_profiles": sorted(
             str(value) for value in coordination.get("required_environment_profiles", [])
         ),
@@ -93,6 +95,8 @@ def validate_snapshot(run: dict[str, Any], snapshot: dict[str, Any]) -> list[str
     expected = {
         "reference_manifest_sha256": str(reference.get("manifest_sha256", "")),
         "company_policy_sha256": str(coordination.get("company_policy_sha256", "")),
+        "implementation_profile_id": str(coordination.get("implementation_profile_id", "")),
+        "implementation_profile_sha256": str(coordination.get("implementation_profile_sha256", "")),
         "required_environment_profiles": sorted(
             str(value) for value in coordination.get("required_environment_profiles", [])
         ),
@@ -179,12 +183,7 @@ def main() -> int:
         print(f"FROZEN {output.relative_to(ROOT)} sha256={file_sha256(output)}")
         return 0
 
-    targets = []
-    if args.run_record:
-        targets = [args.run_record if args.run_record.is_absolute() else ROOT / args.run_record]
-    else:
-        targets = candidate_runs()
-
+    targets = [args.run_record if args.run_record.is_absolute() else ROOT / args.run_record] if args.run_record else candidate_runs()
     failures = 0
     for path in targets:
         errors = validate_run_file(path)
@@ -194,7 +193,7 @@ def main() -> int:
             for error in errors:
                 print(f"  - {error}")
         else:
-            print(f"PASS {path.relative_to(ROOT)} first-pass-evidence")
+            print(f"PASS {path.relative_to(ROOT)} FIRST-PASS")
     return 1 if failures else 0
 
 

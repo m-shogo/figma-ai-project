@@ -1,0 +1,119 @@
+schema_version: 1
+profile_id: IMPLEMENTATION-PROFILE-XXXX
+status: DRAFT # DRAFT | RESOLVED | FROZEN
+created_at: ""
+updated_at: ""
+
+selection:
+  mode: AUTO_EXISTING # AUTO_EXISTING | EXPLICIT
+  family: AUTO_EXISTING # AUTO_EXISTING | STATIC_WEB | PHP_TEMPLATE | WORDPRESS | JS_FRAMEWORK | OTHER
+  variant: ""
+  selected_by: ""
+  notes: []
+
+repository:
+  repository: ""
+  starting_commit: ""
+  target_route_or_template: ""
+  inspected: false
+  evidence_paths: []
+
+resolution:
+  detected_family: ""
+  detected_variant: ""
+  confidence: NONE # NONE | LOW | MEDIUM | HIGH
+  evidence: []
+  conflicts: []
+  conflict_resolution: NONE # NONE | MATCHED | COMPANY_OVERRIDE | REPOSITORY_OVERRIDE | OWNER_APPROVED
+
+effective:
+  family: ""
+  variant: ""
+  language_runtime: ""
+  package_manager: ""
+  build_tool: ""
+  styling_architecture: ""
+  component_system: ""
+  routing: ""
+  data_source: ""
+  image_pipeline: ""
+  form_handling: ""
+  i18n: ""
+  test_harness: ""
+  rendering_mode: ""
+  notes: []
+
+platform:
+  static_web:
+    html_strategy: ""
+    script_strategy: ""
+    partial_strategy: ""
+    output_contract: ""
+  php_template:
+    engine: "" # PLAIN_PHP | BLADE | TWIG | OTHER
+    framework_runtime: ""
+    escaping_strategy: ""
+    route_data_contract: ""
+    partial_strategy: ""
+  wordpress:
+    enabled: false
+    wordpress_version: ""
+    php_version: ""
+    theme_type: UNKNOWN # CLASSIC | BLOCK | HYBRID | UNKNOWN
+    template_unit: ""
+    editor_model: ""
+    asset_enqueue: ""
+    image_helpers: ""
+    theme_json: ""
+    block_json: ""
+    cpt_taxonomy: ""
+    acf:
+      enabled: false
+      version: ""
+      pro: null
+      architecture: "" # TEMPLATE_FIELDS | REPEATER | FLEXIBLE_CONTENT | ACF_BLOCKS | HYBRID | EXISTING_PROJECT
+      field_group_ownership: ""
+      image_return_format: "" # ID | ARRAY | URL | EXISTING_PROJECT
+      local_json_policy: "" # REQUIRED | EXISTING_PROJECT | OPTIONAL | NONE
+      local_json_dir: ""
+      stable_keys_required: true
+      notes: []
+  js_framework:
+    framework: "" # REACT | NEXT | VUE | NUXT | SVELTE | SVELTEKIT | ASTRO | OTHER
+    version: ""
+    router_mode: ""
+    rendering_mode: ""
+    server_client_boundary: ""
+    state_management: ""
+    data_fetch_cache: ""
+    image_policy: ""
+    hydration_or_islands: ""
+
+delivery_requirements:
+  source_code_required: true
+  acf:
+    required: false
+    export_json:
+      required: false
+      format: ACF_EXPORT_ARRAY
+      target_repo_path: ""
+      evidence_copy_required: true
+    local_json:
+      required: false
+      target_repo_dir: ""
+    import_or_sync_smoke_required: false
+    accepted_methods: [] # ADMIN_UI | WP_CLI_IMPORT | LOCAL_JSON_SYNC | WP_CLI_SYNC | OTHER
+
+checklist: []
+# - id: REPOSITORY_BASELINE
+#   status: TODO # TODO | PASS | BLOCKED
+#   evidence: []
+#   notes: []
+
+unknowns: []
+conflicts: []
+
+freeze:
+  ready: false
+  frozen_at: ""
+  notes: []

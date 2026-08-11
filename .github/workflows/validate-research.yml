@@ -9,6 +9,7 @@ on:
       - "tests/**"
       - "config/**"
       - "policies/**/*.yaml"
+      - "implementation-profiles/**/*.yaml"
       - "references/**/*.yaml"
       - "experiments/**/*.yaml"
       - "contracts/**/*.yaml"
@@ -24,6 +25,7 @@ on:
       - "tests/**"
       - "config/**"
       - "policies/**/*.yaml"
+      - "implementation-profiles/**/*.yaml"
       - "references/**/*.yaml"
       - "experiments/**/*.yaml"
       - "contracts/**/*.yaml"
@@ -55,6 +57,12 @@ jobs:
 
       - name: Validate official Update Radar source registry
         run: python scripts/validate_update_sources.py
+
+      - name: Validate implementation target profiles and Shared Contract binding
+        run: python scripts/validate_implementation_profile.py
+
+      - name: Validate implementation profile pins on active runs
+        run: python scripts/validate_run_implementation_profile.py
 
       - name: Validate reference, shared, section, and run records
         run: python scripts/validate_records.py
@@ -100,6 +108,9 @@ jobs:
 
       - name: Validate capture environment lineage and required coverage
         run: python scripts/validate_capture_environment.py
+
+      - name: Validate completed implementation deliverables
+        run: python scripts/validate_run_deliverables.py
 
       - name: Test section execution planner and validators
         run: python -m unittest discover -s tests -p 'test_*.py'
