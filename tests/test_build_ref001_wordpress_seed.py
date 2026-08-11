@@ -21,8 +21,8 @@ class Ref001WordPressSeedTests(unittest.TestCase):
         self.assertEqual("REF-001-CHIBA-KEIZAI-SAMPLE", payload["reference_id"])
         self.assertEqual("ref001-learning", payload["page"]["slug"])
         self.assertEqual("page-templates/template-ref001.php", payload["page"]["template"])
-        self.assertEqual(8, payload["summary"]["ready_field_count"])
-        self.assertEqual(5, payload["summary"]["unresolved_field_count"])
+        self.assertEqual(26, payload["summary"]["ready_field_count"])
+        self.assertEqual(9, payload["summary"]["unresolved_field_count"])
 
         fields = {row["field_name"]: row for row in payload["fields"]}
         self.assertEqual("field_ref001_mv_lead", fields["mv_lead"]["field_key"])
@@ -30,6 +30,17 @@ class Ref001WordPressSeedTests(unittest.TestCase):
         self.assertEqual("field_ref001_mv_left_person_image", fields["mv_left_person_image"]["field_key"])
         self.assertEqual("UNRESOLVED", fields["mv_left_person_image"]["status"])
         self.assertIsNone(fields["mv_left_person_image"]["value"])
+
+        self.assertEqual("field_ref001_education_1_title", fields["education_1_title"]["field_key"])
+        self.assertEqual("READY", fields["education_1_title"]["status"])
+        self.assertEqual("field_ref001_education_4_bullet_3", fields["education_4_bullet_3"]["field_key"])
+        self.assertEqual("READY", fields["education_4_bullet_3"]["status"])
+        self.assertEqual("field_ref001_education_3_image", fields["education_3_image"]["field_key"])
+        self.assertEqual("UNRESOLVED", fields["education_3_image"]["status"])
+        self.assertEqual(
+            "befe413ae4704994a80e0d7456914cd7c884073d",
+            fields["education_3_image"]["figma_evidence"]["figma_image_hash"],
+        )
 
     def test_payload_carries_source_fingerprints(self) -> None:
         payload = builder.build_payload()
