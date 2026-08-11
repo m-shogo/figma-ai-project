@@ -1,0 +1,33 @@
+/*
+ * REF-001 Student Voice mobile profile fidelity repair.
+ *
+ * Figma SP evidence (21376:4650) keeps the title indented beside the portrait,
+ * but the profile/school copy returns left inside the speech bubble:
+ * - bubble border: x=48, width=288
+ * - title: x=132, width=188
+ * - profile: x=72, width=240
+ *
+ * The base mobile bubble padding correctly positions the title, so only the
+ * profile paragraph is shifted back 60px and widened. State-specific vertical
+ * positions preserve the supplied 3-line open title and 2-line closed titles.
+ */
+
+@media (max-width: 767px) {
+	.ref001-student-voice__bubble p {
+		position: absolute;
+		left: -60px;
+		width: min(240px, calc(100% + 76px));
+		margin: 0;
+		font-size: 14px;
+		line-height: 1.6;
+		letter-spacing: .05em;
+	}
+
+	.ref001-student-voice__item--open .ref001-student-voice__bubble p {
+		top: 99px;
+	}
+
+	.ref001-student-voice__item--closed .ref001-student-voice__bubble p {
+		top: 78px;
+	}
+}
