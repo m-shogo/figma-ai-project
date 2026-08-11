@@ -9,6 +9,13 @@ CSS = THEME / "assets" / "css" / "ref001-courses-visual.css"
 TEMPLATE = THEME / "template-parts" / "ref001" / "courses.php"
 
 
+def split_responsive_css(css: str) -> tuple[str, str]:
+    marker = "@media (max-width: 767px)"
+    assert marker in css, "Courses CSS must use the owner-resolved 768px breakpoint contract"
+    desktop, mobile = css.split(marker, 1)
+    return desktop, mobile
+
+
 class Ref001CoursesInternalVisualRepairTests(unittest.TestCase):
     def test_visual_repair_loads_after_geometry_and_before_following_section(self) -> None:
         functions = (THEME / "functions.php").read_text(encoding="utf-8")
@@ -30,15 +37,16 @@ class Ref001CoursesInternalVisualRepairTests(unittest.TestCase):
 
     def test_pc_internal_positions_follow_supplied_figma_coordinates(self) -> None:
         css = CSS.read_text(encoding="utf-8")
-        self.assertIn("left: 124px", css)
-        self.assertIn("top: 24px", css)
-        self.assertIn("top: 60px", css)
-        self.assertIn("width: 396px", css)
-        self.assertIn("left: 32px", css)
-        self.assertIn("top: 124px", css)
-        self.assertIn("width: 496px", css)
-        self.assertIn("height: 102px", css)
-        self.assertIn("padding: 40px 20px 16px", css)
+        desktop, _ = split_responsive_css(css)
+        self.assertIn("left: 124px", desktop)
+        self.assertIn("top: 24px", desktop)
+        self.assertIn("top: 60px", desktop)
+        self.assertIn("width: 396px", desktop)
+        self.assertIn("left: 32px", desktop)
+        self.assertIn("top: 124px", desktop)
+        self.assertIn("width: 496px", desktop)
+        self.assertIn("height: 102px", desktop)
+        self.assertIn("padding: 40px 20px 16px", desktop)
 
     def test_course_titles_and_markers_match_figma_scale(self) -> None:
         css = CSS.read_text(encoding="utf-8")
@@ -59,19 +67,22 @@ class Ref001CoursesInternalVisualRepairTests(unittest.TestCase):
         self.assertNotIn("var(--ref001-course-color)", checkbox_rule)
         self.assertIn("#ef8590", css)
 
-    def test_sp_internals_use_supplied_72px_icon_and_311px_recommendation_base(self) -> None:
+    def test_sp_internals_preserve_375_endpoint_and_contract_below_it(self) -> None:
         css = CSS.read_text(encoding="utf-8")
-        media = css.split("@media (max-width: 600px)", 1)[1]
-        self.assertIn("width: 72px", media)
-        self.assertIn("height: 72px", media)
-        self.assertIn("left: 96px", media)
-        self.assertIn("width: 231px", media)
-        self.assertIn("width: 311px", media)
-        self.assertIn("height: 136px", media)
-        self.assertIn("top: 118px", media)
-        self.assertIn("top: 139px", media)
-        self.assertIn("padding: 36px 16px 16px", media)
-        self.assertIn("min-height: 36px", media)
+        _, mobile = split_responsive_css(css)
+        self.assertNotIn("@media (max-width: 600px)", css)
+        self.assertIn("width: 72px", mobile)
+        self.assertIn("height: 72px", mobile)
+        self.assertIn("left: 96px", mobile)
+        # At 375px the intrinsic expressions resolve to the supplied 231px text
+        # and 311px recommendation widths, while narrower runtime widths can contract.
+        self.assertIn("width: min(231px, calc(100% - 112px))", mobile)
+        self.assertIn("width: calc(100% - 32px)", mobile)
+        self.assertIn("height: 136px", mobile)
+        self.assertIn("top: 118px", mobile)
+        self.assertIn("top: 139px", mobile)
+        self.assertIn("padding: 36px 16px 16px", mobile)
+        self.assertIn("min-height: 36px", mobile)
 
     def test_heading_separates_emphasized_seven_from_suffix(self) -> None:
         template = TEMPLATE.read_text(encoding="utf-8")
