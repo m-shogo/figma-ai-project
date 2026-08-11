@@ -1,0 +1,209 @@
+schema_version: 1
+research_id: FIGMA-WEB-FRICTION-2026-08-11
+as_of: "2026-08-11"
+status: ACTIVE_RESEARCH
+purpose: >-
+  Separate historical Figma limitations from current Figma/Web translation risks so
+  agents do not promote stale forum complaints into permanent implementation rules.
+
+principles:
+  - "A complaint is evidence of a failure mode, not permanent evidence of current platform capability."
+  - "Current official documentation outranks historical community workarounds for capability status."
+  - "Community reports remain useful for discovering failure modes that official docs may not expose."
+  - "Feature generation is scoped per capability/node; do not infer a whole file's behavior from file age."
+  - "When current capability cannot be observed through the available MCP/API, use UNDETERMINED rather than guessing from chronology."
+
+status_legend:
+  RESOLVED_BY_PLATFORM: historical limitation now covered by current Figma capability
+  TRANSITIONAL: old and new semantics can coexist or the feature is still evolving
+  CURRENT_FRICTION: still relevant to present Figma-to-Web translation
+  TOOLING_FRICTION: primarily an MCP/agent/handoff reliability issue
+  WEB_RUNTIME_DIFFERENCE: expected browser/runtime difference, not necessarily a Figma defect
+
+eras:
+  - era: "2021-2022"
+    label: "early Auto Layout / handoff gap"
+    findings:
+      - topic: auto_layout_wrap
+        historical_problem: "Auto Layout could not wrap children onto multiple lines."
+        current_status: RESOLVED_BY_PLATFORM
+        current_rule: "Do not retain no-wrap-era hacks; current horizontal/vertical Auto Layout supports wrap."
+        sources:
+          - authority: COMMUNITY_HISTORICAL
+            url: "https://forum.figma.com/suggest-a-feature-11/launched-wrap-elements-in-auto-layout-to-multiple-lines-20107"
+          - authority: OFFICIAL_CURRENT
+            url: "https://help.figma.com/hc/en-us/articles/360040451373-Guide-to-auto-layout"
+      - topic: min_max_dimensions
+        historical_problem: "Auto Layout lacked min/max width and height, causing invisible-frame and variant workarounds."
+        current_status: RESOLVED_BY_PLATFORM
+        current_rule: "Inspect current min/max semantics before translating old fixed-width hacks."
+        sources:
+          - authority: COMMUNITY_HISTORICAL
+            url: "https://forum.figma.com/suggest-a-feature-11/launched-min-and-max-width-for-auto-layout-13043"
+          - authority: OFFICIAL_CURRENT
+            url: "https://help.figma.com/hc/en-us/articles/360040451373-Guide-to-auto-layout"
+      - topic: figma_vs_css_model
+        historical_problem: "Auto Layout intentionally did not map one-to-one to CSS Flexbox."
+        current_status: TRANSITIONAL
+        current_rule: "Never assume an old Auto Layout workaround is required on an updated 2026 layout node."
+        sources:
+          - authority: COMMUNITY_HISTORICAL
+            url: "https://forum.figma.com/suggest-a-feature-11/launched-wrap-elements-in-auto-layout-to-multiple-lines-20107"
+          - authority: OFFICIAL_CURRENT
+            url: "https://help.figma.com/hc/en-us/articles/42031586813719-Use-auto-layout-with-CSS-Flexbox-in-mind"
+
+  - era: "2023-2024"
+    label: "Dev Mode / Variables / Auto Layout v5"
+    findings:
+      - topic: auto_layout_v5
+        historical_problem: "Earlier Plugin API evidence could not express current min/max, wrap, sizing and truncation semantics."
+        current_status: RESOLVED_BY_PLATFORM
+        current_rule: "Use current node sizing/wrap/truncation properties when available; do not reconstruct them from geometry alone."
+        sources:
+          - authority: OFFICIAL_RELEASE
+            url: "https://developers.figma.com/docs/plugins/updates/2023/06/30/version-1-update-69/"
+      - topic: typography_variables
+        historical_problem: "Typography bindings were less observable/expressive through the Plugin API."
+        current_status: RESOLVED_BY_PLATFORM
+        current_rule: "Inspect typography variable bindings and modes when present instead of flattening them to raw values."
+        sources:
+          - authority: OFFICIAL_RELEASE
+            url: "https://developers.figma.com/docs/plugins/updates/2024/04/16/version-1-update-91/"
+      - topic: line_height_font_metrics
+        historical_problem: "Auto line-height and font updates can change visible spacing even when the design token name is unchanged."
+        current_status: WEB_RUNTIME_DIFFERENCE
+        current_rule: >-
+          Treat line-height as layout rhythm evidence, but compare visible spacing/baseline intent rather than blindly matching
+          a Figma text bounding box. Explicit project line-height is more reproducible than relying on font-defined Auto values.
+        sources:
+          - authority: OFFICIAL_CURRENT
+            url: "https://help.figma.com/hc/en-us/articles/360039956634-Explore-text-properties"
+          - authority: COMMUNITY_CURRENT
+            url: "https://forum.figma.com/report-a-problem-6/intermittent-line-height-decrease-when-clicking-on-text-36903"
+
+  - era: "2025"
+    label: "Grid expansion / richer responsive layout"
+    findings:
+      - topic: grid_beta_complaints
+        historical_problem: "Initial Grid Auto Layout beta lacked capabilities users expected from CSS Grid, including some Hug/min-max behavior."
+        current_status: TRANSITIONAL
+        current_rule: "Date-stamp Grid complaints; retest against the current node before applying a beta-era workaround."
+        sources:
+          - authority: COMMUNITY_HISTORICAL
+            url: "https://forum.figma.com/share-your-feedback-26/config-2025-grid-auto-layout-flow-let-s-hear-what-you-think-40316"
+          - authority: OFFICIAL_CURRENT
+            url: "https://help.figma.com/hc/en-us/articles/31289469907863-Use-the-grid-auto-layout-flow"
+      - topic: grid_hug_fr
+        historical_problem: "Grid containers/tracks had fewer intrinsic sizing choices in early releases."
+        current_status: RESOLVED_BY_PLATFORM
+        current_rule: "Current Grid can expose Hug and fractional track semantics; inspect them before choosing CSS Grid tracks."
+        sources:
+          - authority: OFFICIAL_RELEASE
+            url: "https://developers.figma.com/docs/plugins/updates/2025/11/06/version-1-update-120/"
+      - topic: svg_complex_effects
+        historical_problem: "Complex SVG exports can differ from the Figma canvas for angular gradients, masks, strokes or effects."
+        current_status: CURRENT_FRICTION
+        current_rule: >-
+          Validate the exported/runtime asset in a browser. Do not assume that an SVG file is authoritative merely because
+          Figma exported it; preserve final visible-group evidence for QA when composition semantics require it.
+        sources:
+          - authority: COMMUNITY_CURRENT
+            url: "https://forum.figma.com/report-a-problem-6/gradients-not-exporting-properly-in-svg-36592"
+          - authority: COMMUNITY_CURRENT
+            url: "https://forum.figma.com/ask-the-community-7/why-do-my-exported-svgs-from-figma-break-or-look-different-in-the-browser-41305"
+
+  - era: "2026"
+    label: "Flexbox-aligned Auto Layout / MCP and Agent era"
+    findings:
+      - topic: updated_auto_layout
+        historical_problem: "Legacy Auto Layout padding, strokes, fill sizing and auto-gap behavior can differ from CSS Flexbox."
+        current_status: TRANSITIONAL
+        current_rule: >-
+          Record LEGACY / UPDATED_2026 / MIXED / UNDETERMINED per reference evidence. Updated nodes map padding, strokes,
+          fill sizing and auto-gap more directly to CSS; legacy nodes may not. Do not infer generation from file date.
+        sources:
+          - authority: OFFICIAL_CURRENT
+            url: "https://help.figma.com/hc/en-us/articles/42031586813719-Use-auto-layout-with-CSS-Flexbox-in-mind"
+      - topic: percent_responsive_constraints
+        historical_problem: "Figma min/max values still do not express every CSS responsive constraint, such as percentage max-width use cases."
+        current_status: CURRENT_FRICTION
+        current_rule: >-
+          Figma frame values are endpoint/intent evidence. Web may use intrinsic sizing, percentages, clamp(), container behavior
+          or other native CSS when that preserves the demonstrated responsive intent better than literal px transfer.
+        sources:
+          - authority: COMMUNITY_CURRENT
+            url: "https://forum.figma.com/suggest-a-feature-11/allow-percentage-values-for-min-max-width-on-auto-layout-frames-54791"
+      - topic: variable_mode_visibility
+        historical_problem: "Responsive variable modes can be present while UI/Dev Mode surfaces base or stale-looking values."
+        current_status: CURRENT_FRICTION
+        current_rule: "Pin and verify the effective mode on the actual visible reference root before reading responsive values."
+        sources:
+          - authority: OFFICIAL_CURRENT
+            url: "https://help.figma.com/hc/en-us/articles/27882809912471-Variables-in-Dev-Mode"
+          - authority: COMMUNITY_CURRENT
+            url: "https://forum.figma.com/suggest-a-feature-11/text-style-picker-should-show-resolved-values-for-active-variable-mode-53479"
+      - topic: agent_asset_substitution
+        historical_problem: "AI recreation can substitute images/icons or create empty frames as spacing rather than preserving supplied assets/layout semantics."
+        current_status: TOOLING_FRICTION
+        current_rule: >-
+          Exact supplied assets and semantic spacing primitives have priority. Never replace an available image/icon merely because
+          an AI-generated alternative is visually similar, and never use empty spacer frames when native layout gap/padding expresses intent.
+        sources:
+          - authority: COMMUNITY_CURRENT
+            url: "https://forum.figma.com/share-your-feedback-26/figma-agent-feedback-auto-layout-and-screen-recreation-issues-55223"
+          - authority: OFFICIAL_CURRENT
+            url: "https://developers.figma.com/docs/figma-mcp-server/structure-figma-file/"
+      - topic: mcp_not_final_code
+        historical_problem: "Teams may treat MCP output as production-ready code or assume the server understands their design system automatically."
+        current_status: TOOLING_FRICTION
+        current_rule: "Treat MCP as structured design context; the agent must still adapt to the real codebase and verified design-system mappings."
+        sources:
+          - authority: OFFICIAL_CURRENT
+            url: "https://developers.figma.com/docs/figma-mcp-server/mcp-vs-agent/"
+      - topic: font_rendering_and_optical_sizing
+        historical_problem: "Variable-font optical sizing, fallback fonts and browser rendering can alter glyph width/weight relative to Figma."
+        current_status: WEB_RUNTIME_DIFFERENCE
+        current_rule: >-
+          Verify the actual production font file/axes before tuning layout. Do not compensate for a fallback-font mismatch with nowrap,
+          distorted tracking, arbitrary width changes or clipping.
+        sources:
+          - authority: COMMUNITY_CURRENT
+            url: "https://forum.figma.com/ask-the-community-7/css-summary-why-fonts-look-different-in-figma-vs-the-browser-thinner-bolder-wrong-stroke-width-etc-54711"
+
+current_translation_risks:
+  typography:
+    - line_height_and_vertical_trim
+    - font_fallback_and_variable_axes
+    - text_width_and_natural_wrap
+    - paragraph_spacing_and_baseline_rhythm
+  layout:
+    - mixed_auto_layout_generations
+    - fixed_hug_fill_to_css_intrinsic_sizing
+    - min_max_unit_semantics
+    - absolute_canvas_position_vs_document_flow
+    - stroke_padding_box_model_semantics
+  responsive:
+    - endpoint_frames_are_not_breakpoint_proof
+    - intermediate_width_behavior
+    - active_variable_mode_inheritance
+  assets:
+    - complex_svg_export_semantics
+    - masks_and_composite_bitmap_authority
+    - image_crop_and_focal_point
+  components:
+    - figma_component_is_not_automatically_dom_component
+    - code_connect_coverage_and_variant_mapping
+  interaction:
+    - visible_state_is_not_behavior_contract
+    - hover_touch_keyboard_and_reduced_motion
+  ai_tooling:
+    - exact_asset_preservation
+    - no_empty_spacer_frames
+    - mcp_context_is_not_final_code
+
+promotion_rules:
+  - "Promote a community complaint into a workflow rule only after current capability is checked against official docs or direct observation."
+  - "If a historical limitation is resolved, retain it only as migration/legacy evidence, not as a default workaround."
+  - "If old and new semantics coexist, require generation evidence or mark UNDETERMINED."
+  - "Prefer browser-safe intrinsic behavior over static-frame overfitting when the difference is caused by runtime font/content variability."
+  - "Hard failures remain missing/wrong assets, clipping, page-level horizontal overflow, wrong major composition, incorrect supplied endpoint geometry, and invented interaction/content."
