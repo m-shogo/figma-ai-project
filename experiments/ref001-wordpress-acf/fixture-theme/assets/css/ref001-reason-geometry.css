@@ -1,0 +1,226 @@
+/*
+ * REF-001 Reason geometry fidelity repair.
+ *
+ * This layer removes the initial generic card treatment and aligns the section
+ * to measured Figma structure/boundaries without changing ACF architecture.
+ *
+ * PC evidence:
+ * - MV ends at page y=808
+ * - Reason group starts y=886: 78px boundary gap
+ * - Reason group 1160×559
+ * - cards start at section y=121
+ * - cards x=0/400/800, each 360×318, 40px gaps
+ * - image masks 360×240
+ * - body text y=277, 360×41
+ * - Education starts y=1541: 96px after Reason group
+ *
+ * SP evidence:
+ * - MV ends y=831
+ * - Reason starts y=887: 56px boundary gap
+ * - Reason group 345×1295
+ * - cards are 343px wide and stack vertically with 16px gaps
+ * - image masks 343×229
+ * - body text y=268, 343×88
+ * - Education starts y=2238: 56px after Reason group
+ *
+ * The 600px switch remains FIXTURE-ONLY.
+ */
+
+.ref001-reason {
+	position: relative;
+	box-sizing: border-box;
+	width: 1160px;
+	max-width: calc(100% - 32px);
+	height: 559px;
+	margin: 78px auto 96px;
+	padding: 0;
+	background: transparent;
+}
+
+.ref001-reason__header {
+	position: absolute;
+	inset: 0;
+	margin: 0;
+	text-align: left;
+}
+
+.ref001-reason__kicker {
+	position: absolute;
+	left: 3px;
+	top: 0;
+	margin: 0;
+	font-size: 20px;
+	line-height: 1;
+}
+
+.ref001-reason__header h2 {
+	position: absolute;
+	left: 0;
+	top: 40px;
+	width: 538px;
+	margin: 0;
+	font-size: 30px;
+	font-weight: 500;
+	line-height: 1.4;
+	letter-spacing: .05em;
+	text-align: left;
+}
+
+.ref001-reason__intro {
+	position: absolute;
+	left: 587px;
+	top: 4px;
+	width: 573px;
+	margin: 0;
+	font-size: 20px;
+	font-weight: 500;
+	line-height: 2;
+	letter-spacing: .05em;
+	text-align: left;
+}
+
+.ref001-reason__grid {
+	position: absolute;
+	left: 0;
+	top: 121px;
+	display: grid;
+	grid-template-columns: repeat(3, 360px);
+	gap: 40px;
+	width: 1160px;
+}
+
+.ref001-reason-card {
+	position: relative;
+	box-sizing: border-box;
+	width: 360px;
+	height: 318px;
+	padding: 0;
+	border: 0;
+	border-radius: 0;
+	background: transparent;
+	box-shadow: none;
+	overflow: visible;
+}
+
+.ref001-reason-card__media {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 360px;
+	height: 240px;
+	border-radius: 0;
+	background: #f5f5f5;
+	overflow: hidden;
+}
+
+.ref001-reason-card__media img,
+.ref001-reason-card__missing-media {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.ref001-reason-card__missing-media {
+	border: 0;
+	background: #f5f5f5;
+}
+
+.ref001-reason-card h3 {
+	position: absolute;
+	left: 24px;
+	top: 218px;
+	z-index: 1;
+	display: inline-block;
+	max-width: 312px;
+	margin: 0;
+	padding: 8px 14px;
+	border-radius: 0;
+	background: #8473aa;
+	color: #fff;
+	font-size: 18px;
+	font-weight: 500;
+	line-height: 1.35;
+	letter-spacing: .05em;
+}
+
+.ref001-reason-card__body {
+	position: absolute;
+	left: 0;
+	top: 277px;
+	width: 360px;
+	height: 41px;
+	margin: 0;
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 1.5;
+	letter-spacing: .05em;
+}
+
+/* FIXTURE-ONLY: exact supplied 375px endpoint, not production breakpoint evidence. */
+@media (max-width: 600px) {
+	.ref001-reason {
+		width: 345px;
+		max-width: calc(100% - 30px);
+		height: 1295px;
+		margin: 56px auto;
+	}
+
+	.ref001-reason__kicker {
+		left: 3px;
+		top: 0;
+	}
+
+	.ref001-reason__header h2 {
+		left: 0;
+		top: 40px;
+		width: 343px;
+		font-size: 28px;
+		line-height: 1.35;
+	}
+
+	.ref001-reason__intro {
+		left: 0;
+		top: 91px;
+		width: 343px;
+		font-size: 16px;
+		line-height: 1.7;
+		letter-spacing: .04em;
+	}
+
+	.ref001-reason__grid {
+		left: 0;
+		top: 168px;
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+		width: 343px;
+	}
+
+	.ref001-reason-card {
+		width: 343px;
+		height: 365px;
+	}
+
+	.ref001-reason-card__media {
+		width: 343px;
+		height: 229px;
+	}
+
+	.ref001-reason-card h3 {
+		left: 16px;
+		top: 207px;
+		max-width: 311px;
+		padding: 8px 12px;
+		font-size: 17px;
+		line-height: 1.35;
+	}
+
+	.ref001-reason-card__body {
+		left: 0;
+		top: 268px;
+		width: 343px;
+		height: 88px;
+		font-size: 14px;
+		line-height: 1.6;
+	}
+}
