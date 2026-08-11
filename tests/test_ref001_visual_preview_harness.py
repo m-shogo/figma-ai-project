@@ -61,6 +61,21 @@ class Ref001VisualPreviewHarnessTests(unittest.TestCase):
         self.assertIn("overflow.bodyScrollWidth > overflow.viewportWidth", source)
         self.assertIn("has horizontal page overflow", source)
 
+    def test_text_runtime_check_records_leading_and_rejects_unintentional_clipping(self) -> None:
+        source = (PREVIEW / "text-runtime-check.mjs").read_text(encoding="utf-8")
+        shell = (PREVIEW / "text-runtime-check.sh").read_text(encoding="utf-8")
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        self.assertIn("text-runtime-check.mjs", shell)
+        self.assertIn("Check Web text runtime safety", workflow)
+        self.assertIn("lineHeightRatio", source)
+        self.assertIn("lineBoxExtraPx", source)
+        self.assertIn("renderedLines", source)
+        self.assertIn("intentionalTruncation", source)
+        self.assertIn("nowrapOverflow", source)
+        self.assertIn("pageOverflowPx", source)
+        self.assertIn("unintentional clipping", source)
+        self.assertIn("ref001-text-runtime.json", shell)
+
     def test_course_asset_check_requires_all_seven_pictograms_to_decode(self) -> None:
         source = (PREVIEW / "asset-check.mjs").read_text(encoding="utf-8")
         shell = (PREVIEW / "asset-check.sh").read_text(encoding="utf-8")
