@@ -129,15 +129,15 @@
 	outline: none;
 }
 
-/* FIXTURE-ONLY: Figma gives a 375 endpoint, not a production breakpoint. */
-@media (max-width: 600px) {
+/* Owner responsive contract: mobile <= 767px; 375px remains the exact Figma endpoint. */
+@media (max-width: 767px) {
 	.ref001-messages {
-		width: 343px;
+		width: min(343px, calc(100% - 32px));
 		height: 538px;
 	}
 
 	.ref001-messages__copy {
-		width: 343px;
+		width: 100%;
 		height: 538px;
 	}
 
@@ -160,7 +160,7 @@
 		top: 116px;
 		left: 0;
 		right: auto;
-		width: 343px;
+		width: 100%;
 		height: 229px;
 	}
 
@@ -190,11 +190,11 @@
 
 	.ref001-messages__headline-line--first,
 	.ref001-messages__headline-line--second {
-		width: 308px;
+		width: min(308px, calc(100% - 32px));
 	}
 
 	.ref001-messages__headline-line--third {
-		width: 176px;
+		width: min(176px, calc(100% - 32px));
 	}
 
 	.ref001-messages__profile {
@@ -203,7 +203,7 @@
 	}
 
 	.ref001-messages__indicator {
-		left: 85px;
+		left: min(85px, calc(100% - 258px));
 		bottom: 0;
 		grid-template-columns: 16px 16px 146px 16px 16px;
 		gap: 12px;
