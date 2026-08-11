@@ -1,0 +1,47 @@
+/*
+ * REF-001 Reason visual repair.
+ *
+ * The immutable First Pass put the Figma inter-section whitespace inside the
+ * Reason section as padding. Browser geometry proved that this made the
+ * measured section start too early and made its own box too tall.
+ *
+ * Figma PC evidence (21378:7999):
+ * - MV ends at y=808; Reason starts at y=886 => 78px external gap
+ * - Reason height 559px
+ * - Education starts at y=1541 => 96px external gap after Reason
+ * - cards begin 195px below Reason top
+ *
+ * Figma SP evidence (21376:4852), excluding the 40px iOS status bar:
+ * - MV ends at y=791; Reason starts at y=847 => 56px external gap
+ * - Reason height 1295px
+ * - kicker begins 40px inside the Reason box
+ * - Education starts at y=2198 => 56px external gap after Reason
+ *
+ * Keep these as endpoint acceptance geometry only. The 600px switch remains a
+ * fixture interpolation rule, not a production breakpoint contract.
+ */
+
+.ref001-reason {
+	height: 559px;
+	margin: 78px auto 96px;
+	padding: 0;
+}
+
+/* The original 48px bottom margin put the card row 18px below Figma. */
+.ref001-reason__intro {
+	margin-bottom: 30px;
+}
+
+@media (max-width: 600px) {
+	.ref001-reason {
+		height: 1295px;
+		margin: 56px auto;
+		padding: 40px 0 0;
+		overflow: visible;
+	}
+
+	/* SP card stack starts at Figma-relative y=296; trim four First Pass px. */
+	.ref001-reason__intro {
+		margin-bottom: 36px;
+	}
+}
