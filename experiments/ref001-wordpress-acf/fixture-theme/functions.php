@@ -14,9 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Enqueue the REF-001 fixture stylesheets only for the learning Page template.
  *
  * Visual-first rule: the fixture must remain inspectable before editors enter
- * ACF values. `ref001-visual-fixtures.css` therefore supplies low-resolution
- * Figma-derived fallbacks only for missing-media placeholders. Real ACF media
- * automatically wins because the placeholder is no longer rendered.
+ * ACF values. Figma-derived fixture values/media are therefore allowed as
+ * learning-only fallbacks; real ACF values later replace them without changing
+ * section markup.
  */
 function ref001_learning_enqueue_assets() {
 	if ( ! is_page_template( 'page-templates/template-ref001.php' ) ) {
@@ -27,6 +27,13 @@ function ref001_learning_enqueue_assets() {
 		'ref001-learning',
 		get_theme_file_uri( 'assets/css/ref001.css' ),
 		array(),
+		'0.3.0'
+	);
+
+	wp_enqueue_style(
+		'ref001-learning-shell',
+		get_theme_file_uri( 'assets/css/ref001-shell.css' ),
+		array( 'ref001-learning' ),
 		'0.3.0'
 	);
 
