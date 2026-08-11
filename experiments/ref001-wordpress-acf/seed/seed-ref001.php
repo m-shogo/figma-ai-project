@@ -8,6 +8,9 @@
  *
  * The optional positional "create" allows creation of a DRAFT fixture Page.
  * Without it, a missing Page is a hard failure.
+ *
+ * Do not introduce PHP-version-specific convenience functions here until the
+ * target theme's PHP support contract has been inspected and frozen.
  */
 
 if ( ! defined( 'WP_CLI' ) || ! WP_CLI ) {
@@ -92,13 +95,13 @@ foreach ( $fields as $row ) {
 		continue;
 	}
 
-	$field_key  = (string) ( $row['field_key'] ?? '' );
-	$field_name = (string) ( $row['field_name'] ?? '' );
-	$field_type = (string) ( $row['field_type'] ?? '' );
-	$field_value = $row['value'] ?? null;
+	$field_key    = (string) ( $row['field_key'] ?? '' );
+	$field_name   = (string) ( $row['field_name'] ?? '' );
+	$field_type   = (string) ( $row['field_type'] ?? '' );
+	$field_value  = $row['value'] ?? null;
 	$field_status = (string) ( $row['status'] ?? '' );
 
-	if ( ! str_starts_with( $field_key, 'field_' ) ) {
+	if ( 0 !== strpos( $field_key, 'field_' ) ) {
 		++$failed;
 		WP_CLI::warning( sprintf( 'Skipping %s: stable field key is missing.', $field_name ?: '<unnamed>' ) );
 		continue;
