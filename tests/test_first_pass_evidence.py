@@ -25,6 +25,8 @@ def write_run(path: Path) -> None:
                 "reference": {"manifest_sha256": "ref-sha"},
                 "coordination": {
                     "company_policy_sha256": "policy-sha",
+                    "implementation_profile_id": "IMPL-1",
+                    "implementation_profile_sha256": "impl-sha",
                     "required_environment_profiles": ["ios", "desktop"],
                 },
                 "code": {
@@ -62,6 +64,8 @@ class FirstPassEvidenceTests(unittest.TestCase):
             payload = json.loads(snapshot.read_text(encoding="utf-8"))
             self.assertEqual(payload["run_id"], "RUN-A")
             self.assertEqual(payload["first_pass_commit"], "first-pass")
+            self.assertEqual(payload["implementation_profile_id"], "IMPL-1")
+            self.assertEqual(payload["implementation_profile_sha256"], "impl-sha")
             self.assertEqual(payload["tooling_revision"], "figma-ai-project@abc123")
             with self.assertRaisesRegex(ValueError, "immutable"):
                 evidence.freeze(path, "figma-ai-project@def456")
@@ -87,6 +91,17 @@ class FirstPassEvidenceTests(unittest.TestCase):
             path.write_text(yaml.safe_dump(run, sort_keys=False), encoding="utf-8")
             errors = evidence.validate_run_file(path)
             self.assertTrue(any("first_pass_fidelity" in error for error in errors))
+
+    def test_snapshot_detects_implementation_profile_mutation(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "run.yaml"
+            write_run(path)
+            evidence.freeze(path, "tooling@1")
+            run = yaml.safe_load(path.read_text(encoding="utf-8"))
+            run["coordination"]["implementation_profile_sha256"] = "changed-impl-sha"
+            path.write_text(yaml.safe_dump(run, sort_keys=False), encoding="utf-8")
+            errors = evidence.validate_run_file(path)
+            self.assertTrue(any("implementation_profile_sha256" in error for error in errors))
 
     def test_first_pass_commit_requires_snapshot(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
