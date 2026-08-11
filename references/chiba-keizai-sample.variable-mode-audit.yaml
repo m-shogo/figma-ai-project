@@ -1,0 +1,71 @@
+schema_version: 1
+reference_id: REF-001-CHIBA-KEIZAI-SAMPLE
+captured_at: "2026-08-11T11:32:00+09:00"
+source: "ChatGPT Figma connector / Plugin API inspection after owner-applied frame mode fix"
+same_page_responsive: true
+
+responsive_collection:
+  id: "VariableCollectionId:64:671"
+  name: template
+  modes:
+    desktop:
+      id: "3:0"
+      name: PC
+    mobile:
+      id: "4003:0"
+      name: SP
+
+page:
+  node_id: "21376:1600"
+  name: AI
+  explicit_mode_id: "4003:0"
+  note: "Page still explicitly resolves template=SP. This is acceptable for the paired roots below because both roots explicitly pin their own responsive mode."
+
+roots:
+  - node_id: "21384:8173"
+    name: "Top@2x"
+    role: desktop-page
+    expected_viewport: desktop
+    width: 1380
+    height: 7714
+    explicit_mode_id: "3:0"
+    resolved_mode_id: "3:0"
+    evidence:
+      - "Owner explicitly set template=PC on the PC top frame after the CTA corruption was diagnosed."
+      - "The CTA instance now resolves template=PC and its img/mask width returned from 375 to 1380 without manual width override."
+    descendants:
+      - node_id: "I21378:7867;21035:65"
+        name: img
+        width: 1380
+        bound_to_responsive_collection: true
+        resolved_mode_id: "3:0"
+      - node_id: "I21378:7867;21035:66"
+        name: mask
+        width: 1380
+        bound_to_responsive_collection: true
+        resolved_mode_id: "3:0"
+        variable_bindings:
+          width: "VariableID:4004:644"
+
+  - node_id: "21376:4401"
+    name: "Top_sp@2x"
+    role: mobile-page
+    expected_viewport: mobile
+    width: 375
+    height: 10817
+    explicit_mode_id: "4003:0"
+    resolved_mode_id: "4003:0"
+    descendants: []
+
+observed_failure_before_fix:
+  pc_root_node_id: "21378:7456"
+  pc_root_width: 1380
+  pc_root_explicit_mode_id: null
+  pc_root_resolved_mode_id: "4003:0"
+  cta_instance_node_id: "21378:7867"
+  cta_root_width: 1380
+  cta_mask_node_id: "I21378:7867;21035:66"
+  cta_mask_width: 375
+  cta_mask_resolved_mode_id: "4003:0"
+  root_instance_overrides: 0
+  diagnosis: "The PC CTA was not manually resized. The PC root inherited the AI page's SP mode, so variable-bound descendants resolved SP values while non-variable PC-positioned children kept their PC coordinates."
