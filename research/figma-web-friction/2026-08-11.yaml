@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 research_id: FIGMA-WEB-FRICTION-2026-08-11
 as_of: "2026-08-11"
 status: ACTIVE_RESEARCH
@@ -12,6 +12,7 @@ principles:
   - "Community reports remain useful for discovering failure modes that official docs may not expose."
   - "Feature generation is scoped per capability/node; do not infer a whole file's behavior from file age."
   - "When current capability cannot be observed through the available MCP/API, use UNDETERMINED rather than guessing from chronology."
+  - "If a decision repeatedly consumes implementation time, promote it into the preflight contract instead of rediscovering it section-by-section."
 
 status_legend:
   RESOLVED_BY_PLATFORM: historical limitation now covered by current Figma capability
@@ -200,6 +201,98 @@ current_translation_risks:
     - exact_asset_preservation
     - no_empty_spacer_frames
     - mcp_context_is_not_final_code
+
+observed_time_sinks:
+  - id: breakpoint_not_decided_upfront
+    symptom: >-
+      PC/SP acceptance frames were available, but no production breakpoint had been fixed. A fixture-only 600px seam was introduced,
+      then runtime QA later exposed large overflow at 601-1200px.
+    resolved_for_ref001:
+      production_breakpoint_px: 768
+      owner_decision: true
+    preflight_rule: >-
+      Resolve the production breakpoint source/value before section implementation. Acceptance frame widths must not be promoted into
+      breakpoints, and temporary fixture seams must be visibly marked as temporary.
+  - id: figma_text_box_vs_web_line_box
+    symptom: >-
+      Time was spent trying to make browser line breaks match Figma exactly even though line-height, font metrics, fallback fonts and
+      browser shaping change the rendered line box and glyph width.
+    preflight_rule: >-
+      Decide typography fidelity policy before implementation: natural wrap by default; exact one-line/truncation only with evidence;
+      diagnose line-height/half-leading separately from margin/gap; tolerate minor fallback-font wrap differences that do not damage layout.
+  - id: nowrap_used_as_visual_patch
+    symptom: >-
+      A heading was temporarily forced with nowrap to mimic the Figma frame, causing real overflow with the runtime font.
+    preflight_rule: >-
+      Do not use nowrap as a screenshot-matching patch. One-line behavior must be an explicit product/content requirement and must pass
+      target-width overflow checks.
+  - id: image_source_vs_visible_composite
+    symptom: >-
+      Raw IMAGE hashes did not always equal the visible bitmap because masks/groups combined multiple IMAGE fills.
+    preflight_rule: >-
+      Determine asset authority before implementation: raw source identity, crop/focal transform, final visible composite for Visual QA,
+      and production CMS/media ownership are separate decisions.
+  - id: connector_binary_transfer_integrity
+    symptom: >-
+      Long binary/base64 transfer through the connector was truncated or mutated, creating debugging work unrelated to visual intent.
+    preflight_rule: >-
+      For deterministic QA fixtures, select a transfer/storage strategy before large asset work and verify encoded length, checksum,
+      decoded signature and browser decode instead of trusting successful upload/write calls.
+  - id: auto_layout_generation_guessing
+    symptom: >-
+      2026 Auto Layout behavior differs from legacy behavior, but current Plugin API evidence for REF-001 does not expose a reliable
+      layout generation/version property.
+    preflight_rule: >-
+      Record LEGACY / UPDATED_2026 / MIXED / UNDETERMINED before using generation-specific behavior. If the tool cannot prove it, use
+      UNDETERMINED and observable node semantics instead of guessing from file age.
+  - id: variable_mode_effective_value
+    symptom: >-
+      Responsive Variables can make a visible subtree differ from base-looking values, so inspecting the wrong mode wastes section work.
+    preflight_rule: >-
+      Pin/verify the effective Variable mode on each supplied reference root before extracting dimensions or tokens.
+  - id: static_state_used_as_interaction_spec
+    symptom: >-
+      Student Voice / Messages visible states could invite guessing accordion/slider behavior that Figma evidence did not establish.
+    preflight_rule: >-
+      Resolve interaction ownership before implementation. If prototype/annotation/product evidence is missing, mark behavior UNRESOLVED
+      and implement only the supplied static state rather than inventing a library or content records.
+  - id: endpoint_only_qa
+    symptom: >-
+      Exact 375/1380 geometry can be green while intermediate widths are unusable.
+    preflight_rule: >-
+      Define both fidelity endpoints and Web runtime safety widths at the start. Pixel comparison is only for supplied reference endpoints;
+      intermediate widths test overflow, clipping, responsive continuity and interaction safety.
+  - id: ci_green_without_visual_review
+    symptom: >-
+      Earlier automation could pass while captures were visually blank or internally wrong.
+    preflight_rule: >-
+      A visual PR is not complete from status checks alone. Inspect actual PC/SP artifacts after CI and before merge.
+
+upfront_decision_gate:
+  purpose: "Turn repeated debugging/decision time into explicit inputs before section workers begin."
+  required_before_section_work:
+    - decision: target_runtime
+      must_resolve: [framework_or_template_family, production_repo_or_fixture_scope]
+    - decision: responsive_contract
+      must_resolve: [breakpoint_source, breakpoint_values, acceptance_widths, runtime_safety_widths]
+    - decision: typography_contract
+      must_resolve: [font_source, fallback_policy, line_height_policy, natural_wrap_policy, truncation_policy]
+    - decision: figma_capabilities
+      must_resolve: [effective_variable_modes, auto_layout_coverage, auto_layout_generation_or_undetermined, component_and_token_evidence]
+    - decision: asset_contract
+      must_resolve: [exact_source_policy, crop_focal_policy, mask_composite_authority, export_runtime_validation]
+    - decision: interaction_contract
+      must_resolve: [known_behaviors, unresolved_behaviors, keyboard_touch_motion_requirements]
+    - decision: content_cms_contract
+      must_resolve: [code_owned_content, cms_owned_content, unknown_records_must_not_be_invented]
+    - decision: qa_contract
+      must_resolve: [pixel_acceptance_endpoints, intermediate_runtime_safety, overflow_policy, artifact_visual_review]
+  unresolved_behavior: >-
+    If one of these decisions is material to the next implementation step and evidence is missing, mark it UNRESOLVED and surface the
+    smallest owner decision needed. Do not silently invent a value and then spend later work undoing it.
+  learning_loop: >-
+    Whenever a new issue consumes repeated diagnosis time, record the cause, the earlier decision that would have prevented it, and add
+    that decision to this gate only if it generalizes beyond a one-off bug.
 
 promotion_rules:
   - "Promote a community complaint into a workflow rule only after current capability is checked against official docs or direct observation."
