@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import argparse
 import re
-import sys
 from pathlib import Path
 from typing import Any
 
@@ -17,6 +16,13 @@ DESKTOP_NAME_RE = re.compile(r"(^|[\s_/@-])(pc|desktop|web)(?=$|[\s_/@-])", re.I
 MOBILE_NAME_RE = re.compile(r"(^|[\s_/@-])(sp|mobile|phone)(?=$|[\s_/@-])", re.IGNORECASE)
 
 
+def optional_text(value: Any) -> str | None:
+    if value is None:
+        return None
+    text = str(value).strip()
+    return text or None
+
+
 def load_yaml(path: Path) -> dict[str, Any]:
     value = yaml.safe_load(path.read_text(encoding="utf-8"))
     if not isinstance(value, dict):
@@ -27,9 +33,8 @@ def load_yaml(path: Path) -> dict[str, Any]:
 def candidate_records() -> list[Path]:
     found: list[Path] = []
     for base in (ROOT / "references", ROOT / "experiments", ROOT / "contracts"):
-        if not base.exists():
-            continue
-        found.extend(sorted(base.rglob("*.variable-mode-audit.yaml")))
+        if base.exists():
+            found.extend(sorted(base.rglob("*.variable-mode-audit.yaml")))
     return list(dict.fromkeys(found))
 
 
@@ -37,15 +42,14 @@ def mode_for_viewport(record: dict[str, Any], viewport: str) -> str | None:
     modes = record.get("responsive_collection", {}).get("modes", {})
     entry = modes.get(viewport, {}) if isinstance(modes, dict) else {}
     if isinstance(entry, str):
-        return entry.strip() or None
+        return optional_text(entry)
     if isinstance(entry, dict):
-        value = entry.get("id") or entry.get("mode_id")
-        return str(value).strip() if value else None
+        return optional_text(entry.get("id") or entry.get("mode_id"))
     return None
 
 
 def infer_expected_viewport(root: dict[str, Any]) -> tuple[str | None, str, list[str]]:
-    explicit = str(root.get("expected_viewport", "")).strip().lower()
+    explicit = (optional_text(root.get("expected_viewport")) or "").lower()
     if explicit:
         if explicit not in RESPONSIVE_VIEWPORTS:
             return None, "INVALID", [f"expected_viewport={explicit}"]
@@ -53,8 +57,7 @@ def infer_expected_viewport(root: dict[str, Any]) -> tuple[str | None, str, list
 
     strong: set[str] = set()
     evidence: list[str] = []
-
-    role = str(root.get("role", "")).strip().lower()
+    role = (optional_text(root.get("role")) or "").lower()
     if role in DESKTOP_ROLE_TOKENS:
         strong.add("desktop")
         evidence.append(f"role={role}")
@@ -62,7 +65,7 @@ def infer_expected_viewport(root: dict[str, Any]) -> tuple[str | None, str, list
         strong.add("mobile")
         evidence.append(f"role={role}")
 
-    name = str(root.get("name", ""))
+    name = optional_text(root.get("name")) or ""
     if DESKTOP_NAME_RE.search(name):
         strong.add("desktop")
         evidence.append(f"name={name!r} signals desktop")
@@ -88,7 +91,6 @@ def infer_expected_viewport(root: dict[str, Any]) -> tuple[str | None, str, list
             return "mobile", "LOW", [f"width={width} only"]
         if width >= 1024:
             return "desktop", "LOW", [f"width={width} only"]
-
     return None, "UNKNOWN", evidence
 
 
@@ -112,21 +114,19 @@ def finding(
 def audit_record(record: dict[str, Any]) -> list[dict[str, Any]]:
     findings: list[dict[str, Any]] = []
     collection = record.get("responsive_collection", {})
-    collection_id = str(collection.get("id", "")).strip()
+    collection_id = optional_text(collection.get("id")) if isinstance(collection, dict) else None
     if not collection_id:
         return [finding("ERROR", "MISSING_RESPONSIVE_COLLECTION", "", "responsive_collection.id is required")]
 
     desktop_mode = mode_for_viewport(record, "desktop")
     mobile_mode = mode_for_viewport(record, "mobile")
     if not desktop_mode or not mobile_mode or desktop_mode == mobile_mode:
-        return [
-            finding(
-                "ERROR",
-                "INVALID_RESPONSIVE_MODE_MAP",
-                "",
-                "responsive_collection.modes must define distinct desktop and mobile mode ids",
-            )
-        ]
+        return [finding(
+            "ERROR",
+            "INVALID_RESPONSIVE_MODE_MAP",
+            "",
+            "responsive_collection.modes must define distinct desktop and mobile mode ids",
+        )]
 
     same_page = bool(record.get("same_page_responsive", False))
     roots = record.get("roots", [])
@@ -134,98 +134,72 @@ def audit_record(record: dict[str, Any]) -> list[dict[str, Any]]:
         return [finding("ERROR", "MISSING_RESPONSIVE_ROOTS", "", "roots must contain at least one responsive root")]
 
     seen_expected: set[str] = set()
+    correctly_pinned: set[str] = set()
+
     for index, root in enumerate(roots):
         if not isinstance(root, dict):
             findings.append(finding("ERROR", "INVALID_ROOT", "", f"roots[{index}] must be an object"))
             continue
 
-        node_id = str(root.get("node_id", f"roots[{index}]"))
+        node_id = optional_text(root.get("node_id")) or f"roots[{index}]"
         viewport, confidence, signals = infer_expected_viewport(root)
         if confidence == "INVALID":
-            findings.append(
-                finding("ERROR", "INVALID_EXPECTED_VIEWPORT", node_id, "expected_viewport must be desktop or mobile", evidence=signals)
-            )
+            findings.append(finding(
+                "ERROR", "INVALID_EXPECTED_VIEWPORT", node_id,
+                "expected_viewport must be desktop or mobile", evidence=signals,
+            ))
             continue
         if confidence == "AMBIGUOUS":
-            findings.append(
-                finding(
-                    "WARNING",
-                    "AMBIGUOUS_VIEWPORT",
-                    node_id,
-                    "viewport evidence conflicts; do not auto-change Figma mode",
-                    evidence=signals,
-                )
-            )
+            findings.append(finding(
+                "WARNING", "AMBIGUOUS_VIEWPORT", node_id,
+                "viewport evidence conflicts; do not auto-change Figma mode", evidence=signals,
+            ))
             continue
         if viewport is None:
-            findings.append(
-                finding(
-                    "WARNING",
-                    "UNKNOWN_VIEWPORT",
-                    node_id,
-                    "viewport could not be inferred; obtain reference/owner evidence before changing Figma mode",
-                    evidence=signals,
-                )
-            )
+            findings.append(finding(
+                "WARNING", "UNKNOWN_VIEWPORT", node_id,
+                "viewport could not be inferred; obtain reference/owner evidence before changing Figma mode",
+                evidence=signals,
+            ))
             continue
         if confidence == "LOW":
-            findings.append(
-                finding(
-                    "WARNING",
-                    "LOW_CONFIDENCE_VIEWPORT",
-                    node_id,
-                    "width is the only viewport signal; width alone is not sufficient for automatic mode mutation",
-                    evidence=signals,
-                )
-            )
+            findings.append(finding(
+                "WARNING", "LOW_CONFIDENCE_VIEWPORT", node_id,
+                "width is the only viewport signal; width alone is not sufficient for automatic mode mutation",
+                evidence=signals,
+            ))
             continue
 
         seen_expected.add(viewport)
         expected_mode = desktop_mode if viewport == "desktop" else mobile_mode
-        explicit_mode = str(root.get("explicit_mode_id", "")).strip() or None
-        resolved_mode = str(root.get("resolved_mode_id", "")).strip() or None
+        explicit_mode = optional_text(root.get("explicit_mode_id"))
+        resolved_mode = optional_text(root.get("resolved_mode_id"))
 
         if same_page and explicit_mode is None:
-            findings.append(
-                finding(
-                    "ERROR",
-                    "RESPONSIVE_ROOT_MODE_NOT_PINNED",
-                    node_id,
-                    f"{viewport} root shares a page with another viewport but does not explicitly pin the responsive collection mode",
-                    evidence=[f"expected_mode={expected_mode}", *signals],
-                )
-            )
+            findings.append(finding(
+                "ERROR", "RESPONSIVE_ROOT_MODE_NOT_PINNED", node_id,
+                f"{viewport} root shares a page with another viewport but does not explicitly pin the responsive collection mode",
+                evidence=[f"expected_mode={expected_mode}", *signals],
+            ))
         elif explicit_mode is not None and explicit_mode != expected_mode:
-            findings.append(
-                finding(
-                    "ERROR",
-                    "ROOT_EXPLICIT_MODE_MISMATCH",
-                    node_id,
-                    f"{viewport} root explicitly pins mode {explicit_mode}, expected {expected_mode}",
-                    evidence=signals,
-                )
-            )
+            findings.append(finding(
+                "ERROR", "ROOT_EXPLICIT_MODE_MISMATCH", node_id,
+                f"{viewport} root explicitly pins mode {explicit_mode}, expected {expected_mode}", evidence=signals,
+            ))
+        elif explicit_mode == expected_mode:
+            correctly_pinned.add(viewport)
 
         if resolved_mode is None:
-            findings.append(
-                finding(
-                    "ERROR",
-                    "ROOT_RESOLVED_MODE_UNKNOWN",
-                    node_id,
-                    f"cannot prove the effective responsive mode for the {viewport} root",
-                    evidence=signals,
-                )
-            )
+            findings.append(finding(
+                "ERROR", "ROOT_RESOLVED_MODE_UNKNOWN", node_id,
+                f"cannot prove the effective responsive mode for the {viewport} root", evidence=signals,
+            ))
         elif resolved_mode != expected_mode:
-            findings.append(
-                finding(
-                    "ERROR",
-                    "ROOT_RESOLVED_MODE_MISMATCH",
-                    node_id,
-                    f"{viewport} root resolves responsive mode {resolved_mode}, expected {expected_mode}",
-                    evidence=[f"width={root.get('width')}", *signals],
-                )
-            )
+            findings.append(finding(
+                "ERROR", "ROOT_RESOLVED_MODE_MISMATCH", node_id,
+                f"{viewport} root resolves responsive mode {resolved_mode}, expected {expected_mode}",
+                evidence=[f"width={root.get('width')}", *signals],
+            ))
 
         descendants = root.get("descendants", [])
         if not isinstance(descendants, list):
@@ -234,14 +208,15 @@ def audit_record(record: dict[str, Any]) -> list[dict[str, Any]]:
 
         for child_index, child in enumerate(descendants):
             if not isinstance(child, dict):
-                findings.append(
-                    finding("ERROR", "INVALID_DESCENDANT", node_id, f"descendants[{child_index}] must be an object")
-                )
+                findings.append(finding(
+                    "ERROR", "INVALID_DESCENDANT", node_id,
+                    f"descendants[{child_index}] must be an object",
+                ))
                 continue
             if not bool(child.get("bound_to_responsive_collection", False)):
                 continue
-            child_id = str(child.get("node_id", f"{node_id}/descendants[{child_index}]"))
-            child_mode = str(child.get("resolved_mode_id", "")).strip() or None
+            child_id = optional_text(child.get("node_id")) or f"{node_id}/descendants[{child_index}]"
+            child_mode = optional_text(child.get("resolved_mode_id"))
             if child_mode != expected_mode:
                 child_evidence = [
                     f"root={node_id}",
@@ -250,35 +225,33 @@ def audit_record(record: dict[str, Any]) -> list[dict[str, Any]]:
                 ]
                 if "width" in child:
                     child_evidence.append(f"width={child.get('width')}")
-                findings.append(
-                    finding(
-                        "ERROR",
-                        "DESCENDANT_MODE_MISMATCH",
-                        child_id,
-                        "a variable-bound descendant resolves a different responsive mode than its logical root",
-                        evidence=child_evidence,
-                    )
-                )
+                findings.append(finding(
+                    "ERROR", "DESCENDANT_MODE_MISMATCH", child_id,
+                    "a variable-bound descendant resolves a different responsive mode than its logical root",
+                    evidence=child_evidence,
+                ))
 
-    if same_page and {"desktop", "mobile"}.issubset(seen_expected):
+    if same_page and {"desktop", "mobile"}.issubset(seen_expected) and {"desktop", "mobile"}.issubset(correctly_pinned):
         page = record.get("page", {})
-        page_mode = str(page.get("explicit_mode_id", "")).strip() if isinstance(page, dict) else ""
+        page_mode = optional_text(page.get("explicit_mode_id")) if isinstance(page, dict) else None
         if page_mode:
-            findings.append(
-                finding(
-                    "INFO",
-                    "PAGE_MODE_SHADOWED_BY_ROOT_PINS",
-                    str(page.get("node_id", "")),
-                    "page-level mode may remain set because both responsive roots explicitly pin their own modes",
-                    evidence=[f"page_mode={page_mode}"],
-                )
-            )
+            findings.append(finding(
+                "INFO",
+                "PAGE_MODE_SHADOWED_BY_ROOT_PINS",
+                optional_text(page.get("node_id")) or "",
+                "page-level mode may remain set because both responsive roots explicitly pin their own modes",
+                evidence=[f"page_mode={page_mode}"],
+            ))
 
     return findings
 
 
 def validate_record(record: dict[str, Any]) -> list[str]:
-    return [f"{item['code']} {item['node_id']}: {item['message']}" for item in audit_record(record) if item["severity"] == "ERROR"]
+    return [
+        f"{item['code']} {item['node_id']}: {item['message']}"
+        for item in audit_record(record)
+        if item["severity"] == "ERROR"
+    ]
 
 
 def print_findings(path: Path, findings: list[dict[str, Any]]) -> bool:
