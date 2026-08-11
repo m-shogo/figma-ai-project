@@ -5,12 +5,16 @@ on:
     branches:
       - agent/ref001-blind-clean-first-pass-20260812
     paths:
-      - 'experiments/ref001-blind-clean-20260812/**'
+      - 'experiments/ref001-blind-clean-20260812/implementation/**'
+      - 'experiments/ref001-blind-clean-20260812/tools/**'
+      - 'experiments/ref001-blind-clean-20260812/run.yaml'
       - '.ref001-first-pass-payload.tar.xz'
       - '.github/workflows/ref001-blind-clean-runtime.yml'
   pull_request:
     paths:
-      - 'experiments/ref001-blind-clean-20260812/**'
+      - 'experiments/ref001-blind-clean-20260812/implementation/**'
+      - 'experiments/ref001-blind-clean-20260812/tools/**'
+      - 'experiments/ref001-blind-clean-20260812/run.yaml'
       - '.github/workflows/ref001-blind-clean-runtime.yml'
 
 permissions:
@@ -57,6 +61,18 @@ jobs:
           cp experiments/ref001-blind-clean-20260812/tools/capture-first-pass.mjs /tmp/ref001-playwright/capture-first-pass.mjs
           cd /tmp/ref001-playwright
           REF001_CAPTURE_DIR="$GITHUB_WORKSPACE/experiments/ref001-blind-clean-20260812/evidence/runtime" node capture-first-pass.mjs
+      - name: Persist FIRST PASS runtime evidence
+        if: github.event_name == 'push'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add experiments/ref001-blind-clean-20260812/evidence/runtime
+          if git diff --cached --quiet; then
+            echo 'No runtime evidence changes to persist.'
+            exit 0
+          fi
+          git commit -m 'Persist REF-001 FIRST PASS runtime evidence'
+          git push
       - name: Upload FIRST PASS runtime evidence
         if: always()
         uses: actions/upload-artifact@v4
