@@ -1,0 +1,67 @@
+name: REF001 Blind Clean Runtime
+
+on:
+  push:
+    branches:
+      - agent/ref001-blind-clean-first-pass-20260812
+    paths:
+      - 'experiments/ref001-blind-clean-20260812/**'
+      - '.ref001-first-pass-payload.tar.xz'
+      - '.github/workflows/ref001-blind-clean-runtime.yml'
+  pull_request:
+    paths:
+      - 'experiments/ref001-blind-clean-20260812/**'
+      - '.github/workflows/ref001-blind-clean-runtime.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  validate-and-capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Materialize FIRST PASS payload
+        if: hashFiles('.ref001-first-pass-payload.tar.xz') != ''
+        run: |
+          tar -xJf .ref001-first-pass-payload.tar.xz
+          rm .ref001-first-pass-payload.tar.xz
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Build REF-001 clean FIRST PASS implementation'
+          git push
+      - name: PHP syntax
+        run: find experiments/ref001-blind-clean-20260812/implementation/theme -name '*.php' -print0 | xargs -0 -n1 php -l
+      - name: Validate ACF export
+        run: python scripts/validate_acf_export.py experiments/ref001-blind-clean-20260812/implementation/acf-export.json
+      - name: Install Playwright in temp workspace
+        run: |
+          mkdir -p /tmp/ref001-playwright
+          cd /tmp/ref001-playwright
+          npm init -y >/dev/null 2>&1
+          npm install playwright@1.54.2 >/dev/null
+          npx playwright install --with-deps chromium
+      - name: Start clean fixture
+        run: |
+          php -S 127.0.0.1:8765 -t experiments/ref001-blind-clean-20260812/implementation/theme > /tmp/ref001-php.log 2>&1 &
+          echo $! > /tmp/ref001-php.pid
+          for i in $(seq 1 20); do curl -fsS http://127.0.0.1:8765/preview.php >/dev/null && exit 0; sleep 1; done
+          cat /tmp/ref001-php.log
+          exit 1
+      - name: Capture runtime probes
+        env:
+          NODE_PATH: /tmp/ref001-playwright/node_modules
+        run: |
+          cp experiments/ref001-blind-clean-20260812/tools/capture-first-pass.mjs /tmp/ref001-playwright/capture-first-pass.mjs
+          cd /tmp/ref001-playwright
+          REF001_CAPTURE_DIR="$GITHUB_WORKSPACE/experiments/ref001-blind-clean-20260812/evidence/runtime" node capture-first-pass.mjs
+      - name: Upload FIRST PASS runtime evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ref001-blind-clean-first-pass-runtime
+          path: experiments/ref001-blind-clean-20260812/evidence/runtime
+          if-no-files-found: error
+          retention-days: 14
