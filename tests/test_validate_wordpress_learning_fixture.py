@@ -67,6 +67,42 @@ class WordPressLearningFixtureTests(unittest.TestCase):
             errors = validator.validate_fixture(fixture, acf_export)
             self.assertTrue(any("must return attachment ID" in error for error in errors))
 
+    def test_missing_education_stage_field_is_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            fixture, acf_export = self.copy_fixture(directory)
+            data = json.loads(acf_export.read_text(encoding="utf-8"))
+            data[0]["fields"] = [
+                field
+                for field in data[0]["fields"]
+                if field.get("name") != "education_4_bullet_3"
+            ]
+            acf_export.write_text(json.dumps(data), encoding="utf-8")
+            errors = validator.validate_fixture(fixture, acf_export)
+            self.assertTrue(any("fixed four-stage Education ACF contract" in error for error in errors))
+
+    def test_education_stage_number_cannot_become_editor_field(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            fixture, acf_export = self.copy_fixture(directory)
+            data = json.loads(acf_export.read_text(encoding="utf-8"))
+            data[0]["fields"].append(
+                {
+                    "key": "field_ref001_education_1_number",
+                    "label": "Stage number",
+                    "name": "education_1_number",
+                    "type": "text",
+                }
+            )
+            acf_export.write_text(json.dumps(data), encoding="utf-8")
+            errors = validator.validate_fixture(fixture, acf_export)
+            self.assertTrue(any("stage identity/order must remain code-owned" in error for error in errors))
+
+    def test_education_template_part_is_required(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            fixture, acf_export = self.copy_fixture(directory)
+            (fixture / "template-parts" / "ref001" / "education.php").unlink()
+            errors = validator.validate_fixture(fixture, acf_export)
+            self.assertTrue(any("education.php" in error for error in errors))
+
 
 if __name__ == "__main__":
     unittest.main()
