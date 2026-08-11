@@ -25,9 +25,10 @@ get_header();
 	<?php get_template_part( 'template-parts/ref001/main-visual' ); ?>
 	<?php get_template_part( 'template-parts/ref001/reason' ); ?>
 	<?php get_template_part( 'template-parts/ref001/education' ); ?>
-
-	<?php /* Student Voice / Messages / intervening CTA visuals are the next visual-first wave. */ ?>
-
+	<?php get_template_part( 'template-parts/ref001/cta' ); ?>
+	<?php get_template_part( 'template-parts/ref001/student-voice' ); ?>
+	<?php get_template_part( 'template-parts/ref001/messages' ); ?>
+	<?php get_template_part( 'template-parts/ref001/cta' ); ?>
 	<?php get_template_part( 'template-parts/ref001/courses' ); ?>
 	<?php get_template_part( 'template-parts/ref001/links' ); ?>
 	<?php get_template_part( 'template-parts/ref001/cta-value' ); ?>
