@@ -2,7 +2,7 @@
 
 Purpose: learn from a real Figma → WordPress fixed-page-template + ACF translation before freezing production rules.
 
-This experiment is deliberately slower than a one-shot implementation. It separates visual evidence, CMS/editorial decisions, field configuration, page content, and target-theme reconnaissance so later Clean Replay can prove whether the workflow actually improved first-pass fidelity.
+This experiment is deliberately slower than a one-shot implementation. It separates visual evidence, CMS/editorial decisions, field configuration, page content, target-theme reconnaissance, and an intentionally imperfect implementation fixture so later Clean Replay can prove whether the workflow actually improved first-pass fidelity.
 
 ## Resolved by owner
 
@@ -14,7 +14,7 @@ This experiment is deliberately slower than a one-shot implementation. It separa
 
 - target theme repository / branch / starting commit
 - Classic vs Hybrid theme classification
-- exact Page template filename or slug-specialized template
+- exact production Page template filename or slug-specialized template
 - WordPress/PHP/ACF versions
 - ACF PRO availability
 - existing ACF Local JSON architecture
@@ -63,12 +63,40 @@ Baseline decision: no page-local Header ACF fields.
 
 Do not misuse ACF field defaults as a page-content migration mechanism.
 
+### H6 — Retained Figma layers do not all become CMS inputs
+
+MV mask groups contain older underlay image layers plus foreground replacement images. The masks themselves are plain rectangles.
+
+Baseline decision: expose the foreground person images to ACF and implement the crop as web layout. Do not create fields for every retained design layer until real content ownership proves they are needed.
+
 ## Current artifacts
 
 - `implementation-profile.yaml` — DRAFT WordPress/ACF target profile
 - `acf-content-model.yaml` — Figma → CMS ownership decisions/evidence
 - `artifacts/acf-export.json` — importable learning prototype with stable keys
 - `fixture-content.yaml` — First Pass content fixture, separate from field schema
+- `fixture-theme/` — learning-only WordPress theme implementing MV + Reason
+
+## Learning First Pass fixture
+
+`fixture-theme/` is intentionally not a production theme.
+
+Current implementation:
+
+- fixed Page template: `page-templates/template-ref001.php`
+- MV: HYBRID translation using ACF foreground attachments + code-owned art-directed slogan
+- Reason: STRUCTURE_FIRST translation using fixed three ACF card field sets
+- neutral WordPress header/footer shell rather than inventing the unresolved global Figma Header
+- temporary responsive switch labeled as fixture-only; 1380/375 reference widths do not define the production breakpoint
+
+Known First Pass visual blockers are preserved rather than hidden:
+
+- exact Figma image binaries are not yet persisted into a WordPress Media environment
+- MV vector/background artwork is approximated in CSS
+- production font pipeline is unresolved
+- Header/Footer visual integration is unresolved
+
+See `fixture-theme/README.md` for the detailed scope and limitations.
 
 ## Validation
 
@@ -78,20 +106,33 @@ Repository ACF exports are auto-discovered:
 python scripts/validate_acf_export.py
 ```
 
-CI validates all canonical `acf-export.json` / `*.acf-export.json` artifacts.
+The learning fixture has focused regression checks:
 
-This structural validator does not replace a real WordPress/ACF import smoke.
+```bash
+python scripts/validate_wordpress_learning_fixture.py
+```
 
-## Next implementation stage
+These checks reject:
 
-Once the target theme repository is supplied/connected:
+- expiring Figma MCP asset URLs in committed fixture code
+- accidental ACF Repeater API use in the fixed-cardinality baseline
+- ACF Page Template location drift
+- image fields that stop returning attachment IDs
 
-1. inspect theme type, template hierarchy, build/CSS conventions, existing Header/Footer and ACF architecture
-2. resolve/freeze Implementation Profile
-3. reconcile ACF JSON location rule and field naming/key conventions
-4. import/sync ACF JSON in a disposable WordPress environment
-5. seed `fixture-content.yaml` values separately
-6. implement Header → MV → Reason as section-level First Pass
-7. capture PC 1380 / SP 375 and interaction states
-8. preserve immutable First Pass before repair
-9. run Clean Replay with the same frozen inputs
+CI runs both validators and the unit test suite.
+
+Structural validation does not replace a real WordPress/ACF import smoke.
+
+## Next learning stage
+
+Before production freeze:
+
+1. install the learning fixture in a disposable WordPress environment
+2. import `acf-export.json`
+3. seed `fixture-content.yaml` separately
+4. populate exact media attachments when they can be persisted safely
+5. capture immutable 1380px / 375px MV + Reason First Pass
+6. classify visual, structural, CMS, and environment failures
+7. repair only after First Pass evidence is frozen
+8. run a clean replay of the fixture flow
+9. when the real target theme repository is supplied, perform repository reconnaissance and replace fixture assumptions with existing-theme conventions
