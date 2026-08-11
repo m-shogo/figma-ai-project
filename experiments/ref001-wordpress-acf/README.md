@@ -2,7 +2,7 @@
 
 Purpose: learn from a real Figma → WordPress fixed-page-template + ACF translation before freezing production rules.
 
-This experiment is deliberately slower than a one-shot implementation. It separates visual evidence, CMS/editorial decisions, field configuration, page content, target-theme reconnaissance, and an intentionally imperfect implementation fixture so later Clean Replay can prove whether the workflow actually improved first-pass fidelity.
+This experiment is deliberately slower than a one-shot implementation. It separates visual evidence, CMS/editorial decisions, field configuration, page content, target-theme reconnaissance, an intentionally imperfect implementation fixture, and database seeding so later Clean Replay can prove whether the workflow actually improved first-pass fidelity.
 
 ## Resolved by owner
 
@@ -69,6 +69,12 @@ MV mask groups contain older underlay image layers plus foreground replacement i
 
 Baseline decision: expose the foreground person images to ACF and implement the crop as web layout. Do not create fields for every retained design layer until real content ownership proves they are needed.
 
+### H7 — New ACF values should be seeded through stable field keys
+
+A fixture Page may have no existing ACF reference meta yet. The seed pipeline therefore joins `fixture-content.yaml` to the stable keys in `acf-export.json` and calls `update_field( $field_key, ... )` rather than directly writing visible meta names.
+
+The seed script reads each scalar value back after the write. Missing media attachment IDs stay unresolved instead of being replaced with fake values.
+
 ## Current artifacts
 
 - `implementation-profile.yaml` — DRAFT WordPress/ACF target profile
@@ -76,6 +82,9 @@ Baseline decision: expose the foreground person images to ACF and implement the 
 - `artifacts/acf-export.json` — importable learning prototype with stable keys
 - `fixture-content.yaml` — First Pass content fixture, separate from field schema
 - `fixture-theme/` — learning-only WordPress theme implementing MV + Reason
+- `seed/seed-ref001.php` — WP-CLI seed runner using stable ACF field keys
+- `seed/README.md` — capability-gated import/seed procedure
+- `scripts/build_ref001_wordpress_seed.py` — deterministic schema+content → seed payload builder
 
 ## Learning First Pass fixture
 
@@ -98,6 +107,25 @@ Known First Pass visual blockers are preserved rather than hidden:
 
 See `fixture-theme/README.md` for the detailed scope and limitations.
 
+## Seed pipeline
+
+Build a deterministic payload from the field schema and content fixture:
+
+```bash
+python scripts/build_ref001_wordpress_seed.py --output /tmp/ref001-seed.json
+```
+
+Then follow `seed/README.md`.
+
+Important behavior:
+
+- ACF CLI import is capability-detected; it is not assumed
+- Page creation is opt-in
+- fixture Page defaults to draft
+- stable `field_*` keys are used for new values
+- media remains unresolved until real WordPress attachment IDs exist
+- seed runner avoids PHP 8-only string helpers because target PHP support is not yet frozen
+
 ## Validation
 
 Repository ACF exports are auto-discovered:
@@ -112,14 +140,18 @@ The learning fixture has focused regression checks:
 python scripts/validate_wordpress_learning_fixture.py
 ```
 
+The unit suite also validates deterministic seed generation and the seed script's field-key/update behavior.
+
 These checks reject:
 
 - expiring Figma MCP asset URLs in committed fixture code
 - accidental ACF Repeater API use in the fixed-cardinality baseline
 - ACF Page Template location drift
 - image fields that stop returning attachment IDs
-
-CI runs both validators and the unit test suite.
+- fixture content names not present in the ACF export
+- media placeholders mapped to non-image fields
+- direct ACF value writes that bypass the field-key seed path
+- accidental PHP 8 string-helper dependency before target PHP reconnaissance
 
 Structural validation does not replace a real WordPress/ACF import smoke.
 
@@ -128,8 +160,8 @@ Structural validation does not replace a real WordPress/ACF import smoke.
 Before production freeze:
 
 1. install the learning fixture in a disposable WordPress environment
-2. import `acf-export.json`
-3. seed `fixture-content.yaml` separately
+2. capability-check ACF JSON import and import/sync the field group
+3. build and run the field-key seed payload
 4. populate exact media attachments when they can be persisted safely
 5. capture immutable 1380px / 375px MV + Reason First Pass
 6. classify visual, structural, CMS, and environment failures
