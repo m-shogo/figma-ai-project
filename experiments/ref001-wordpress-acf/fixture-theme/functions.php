@@ -31,6 +31,7 @@ function ref001_learning_enqueue_assets() {
 		'mv-vector'     => 'ref001-mv-vector.css',
 		'mv-cta-detail' => 'ref001-mv-cta-detail.css',
 		'mv-type'       => 'ref001-mv-type.css',
+		'mv-desktop-fluid' => 'ref001-mv-desktop-fluid.css',
 		'header'        => 'ref001-header.css',
 		'reason-geometry' => 'ref001-reason-geometry.css',
 		'education'     => 'ref001-education.css',
