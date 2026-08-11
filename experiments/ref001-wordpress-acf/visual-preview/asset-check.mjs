@@ -12,6 +12,27 @@ page.on('response', (response) => {
 
 await page.goto(url, { waitUntil: 'networkidle' });
 
+// Course pictograms sit far below the initial viewport. Scroll the real section
+// into view before judging whether the browser loaded/decoded the persisted SVGs.
+await page.locator('.ref001-courses').scrollIntoViewIfNeeded();
+await page.waitForTimeout(150);
+
+await page.locator('.ref001-course-card__icon img').evaluateAll(async (images) => {
+  await Promise.all(images.map(async (image) => {
+    try {
+      if (!image.complete) {
+        await new Promise((resolve) => {
+          image.addEventListener('load', resolve, { once: true });
+          image.addEventListener('error', resolve, { once: true });
+        });
+      }
+      if (image.decode) await image.decode();
+    } catch {
+      // Report failed dimensions/status below.
+    }
+  }));
+});
+
 const assets = await page.locator('.ref001-course-card__icon img').evaluateAll((images) =>
   images.map((image) => ({
     src: image.currentSrc || image.src,
