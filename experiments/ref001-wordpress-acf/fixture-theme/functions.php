@@ -27,42 +27,56 @@ function ref001_learning_enqueue_assets() {
 		'ref001-learning',
 		get_theme_file_uri( 'assets/css/ref001.css' ),
 		array(),
-		'0.4.0'
+		'0.5.0'
 	);
 
 	wp_enqueue_style(
 		'ref001-learning-shell',
 		get_theme_file_uri( 'assets/css/ref001-shell.css' ),
 		array( 'ref001-learning' ),
-		'0.4.0'
+		'0.5.0'
 	);
 
 	wp_enqueue_style(
 		'ref001-learning-education',
 		get_theme_file_uri( 'assets/css/ref001-education.css' ),
 		array( 'ref001-learning' ),
-		'0.4.0'
+		'0.5.0'
+	);
+
+	wp_enqueue_style(
+		'ref001-learning-middle',
+		get_theme_file_uri( 'assets/css/ref001-middle.css' ),
+		array( 'ref001-learning' ),
+		'0.5.0'
+	);
+
+	wp_enqueue_style(
+		'ref001-learning-messages',
+		get_theme_file_uri( 'assets/css/ref001-messages.css' ),
+		array( 'ref001-learning-middle' ),
+		'0.5.0'
 	);
 
 	wp_enqueue_style(
 		'ref001-learning-courses',
 		get_theme_file_uri( 'assets/css/ref001-courses.css' ),
 		array( 'ref001-learning' ),
-		'0.4.0'
+		'0.5.0'
 	);
 
 	wp_enqueue_style(
 		'ref001-learning-bottom',
 		get_theme_file_uri( 'assets/css/ref001-bottom.css' ),
 		array( 'ref001-learning' ),
-		'0.4.0'
+		'0.5.0'
 	);
 
 	wp_enqueue_style(
 		'ref001-learning-visual-fixtures',
 		get_theme_file_uri( 'assets/css/ref001-visual-fixtures.css' ),
 		array( 'ref001-learning' ),
-		'0.4.0'
+		'0.5.0'
 	);
 }
 add_action( 'wp_enqueue_scripts', 'ref001_learning_enqueue_assets' );
