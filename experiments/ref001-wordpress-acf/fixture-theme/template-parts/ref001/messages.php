@@ -24,8 +24,7 @@ $messages_composite_parts = array(
 	'messages-mask-group-v025.part10.b64',
 	'messages-mask-group-v025.part11.b64',
 	'messages-mask-group-v025.part12.b64',
-	'messages-mask-group-v025.part13a.b64',
-	'messages-mask-group-v025.part13b.b64',
+	'messages-mask-group-v025.part13.b64',
 );
 $messages_composite_b64 = '';
 foreach ( $messages_composite_parts as $messages_composite_part ) {
