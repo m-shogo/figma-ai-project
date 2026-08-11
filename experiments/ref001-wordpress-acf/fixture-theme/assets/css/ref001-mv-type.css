@@ -111,6 +111,7 @@
 	line-height: 2;
 	letter-spacing: .05em;
 	text-align: center;
+	white-space: nowrap;
 }
 
 /* FIXTURE-ONLY: exact supplied 375px endpoint, not production breakpoint evidence. */
