@@ -1,0 +1,69 @@
+name: REF-001 visual QA
+
+on:
+  pull_request:
+    branches:
+      - so
+    paths:
+      - '.github/workflows/ref001-visual-qa.yml'
+      - 'experiments/ref001-wordpress-acf/**'
+      - 'tests/test_ref001_visual_*.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  visual-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Show runtime versions
+        run: |
+          php -v
+          node --version
+          npm --version
+
+      - name: Install Playwright Chromium
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Measure against Figma geometry
+        run: |
+          bash experiments/ref001-wordpress-acf/visual-preview/measure.sh
+
+      - name: Capture PC and SP screenshots
+        run: |
+          bash experiments/ref001-wordpress-acf/visual-preview/capture.sh
+
+      - name: Summarize geometry drift
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const path = 'experiments/ref001-wordpress-acf/visual-preview/captures/ref001-measure.json';
+          const report = JSON.parse(fs.readFileSync(path, 'utf8'));
+          for (const [mode, capture] of Object.entries(report.captures)) {
+            console.log(`\n[${mode}] body delta: ${capture.bodyHeightDelta}px`);
+            for (const row of capture.sections) {
+              if (row.status !== 'OK') {
+                console.log(`${row.key}: ${row.status}`);
+                continue;
+              }
+              console.log(`${row.key}: top ${row.delta.top}px / height ${row.delta.height}px`);
+            }
+          }
+          NODE
+
+      - name: Upload visual QA artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ref001-visual-qa
+          path: experiments/ref001-wordpress-acf/visual-preview/captures/
+          if-no-files-found: error
+          retention-days: 14
