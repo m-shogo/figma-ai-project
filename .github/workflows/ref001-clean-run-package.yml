@@ -63,13 +63,14 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          test -f "$RUNNER_TEMP/ref001-clean-run/.sanitized-run-workspace.json"
           test -f "$RUNNER_TEMP/ref001-clean-run/docs/ref001-clean-run-agent-handoff.md"
           test -f "$RUNNER_TEMP/ref001-clean-run/scripts/controlled_run_phase.py"
           test ! -e "$RUNNER_TEMP/ref001-clean-run/experiments/ref001-wordpress-acf/fixture-theme"
           test ! -e "$RUNNER_TEMP/ref001-clean-run/experiments/ref001-wordpress-acf/visual-preview"
           test ! -e "$RUNNER_TEMP/ref001-clean-run/research/figma-web-friction"
           ! find "$RUNNER_TEMP/ref001-clean-run/scripts" -type f -iname '*ref001*' -print -quit | grep -q .
-          echo "PASS blind handoff/gates present; repaired REF-001 implementation and answer-bearing evidence absent"
+          echo "PASS blind handoff/gates/manifest present; repaired REF-001 implementation and answer-bearing evidence absent"
 
       - name: Upload clean-run handoff artifact
         uses: actions/upload-artifact@v4
@@ -77,4 +78,5 @@ jobs:
           name: ref001-clean-run-${{ github.sha }}
           path: ${{ runner.temp }}/ref001-clean-run
           if-no-files-found: error
+          include-hidden-files: true
           retention-days: 14
