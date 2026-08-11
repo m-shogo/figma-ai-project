@@ -38,6 +38,11 @@ coordination:
   company_policy_path: "" # direct pin for dashboard/filtering; empty only for legacy/unbound research runs
   company_policy_id: ""
   company_policy_sha256: ""
+  implementation_profile_path: "" # filled by pin_implementation_profile.py
+  implementation_profile_sha256: ""
+  implementation_profile_id: ""
+  implementation_family: ""
+  implementation_variant: ""
   shared_contract_path: ""
   shared_contract_sha256: ""
   section_manifest_path: ""
@@ -124,6 +129,25 @@ captures:
 #   captured_at: ""
 #   deterministic: true
 #   notes: []
+
+deliverables:
+  acf:
+    required: false
+    export_json:
+      required: false
+      target_repo_path: ""
+      evidence_json_path: ""
+      validation_status: NOT_REQUIRED # NOT_REQUIRED | PENDING | PASS | FAIL
+    local_json:
+      required: false
+      target_repo_dir: ""
+      evidence_files: []
+    import_smoke:
+      required: false
+      status: NOT_REQUIRED # NOT_REQUIRED | PENDING | PASS | FAIL
+      method: "" # ADMIN_UI | WP_CLI_IMPORT | LOCAL_JSON_SYNC | WP_CLI_SYNC | OTHER
+      evidence: []
+      accepted_methods: []
 
 scores:
   first_pass_fidelity:
