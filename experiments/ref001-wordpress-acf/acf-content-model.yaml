@@ -1,7 +1,7 @@
-schema_version: 1
+schema_version: 2
 reference_id: REF-001-CHIBA-KEIZAI-SAMPLE
 implementation_profile_id: IMPL-REF001-WORDPRESS-ACF
-captured_at: "2026-08-11T11:58:00+09:00"
+captured_at: "2026-08-11T12:24:00+09:00"
 status: LEARNING_DRAFT
 
 principles:
@@ -10,10 +10,12 @@ principles:
   - "ACF PRO-only architecture is not introduced while the target site's license/tier is unknown."
   - "Do not duplicate PC/SP image fields when both responsive variants use the same underlying image source and only crop/layout differs."
   - "Highly art-directed text can remain code-owned when arbitrary editing would destroy the composition."
+  - "A visible open/collapsed or carousel-like state is not an interaction specification unless prototype, annotation, owner, or target-code evidence defines the behavior."
+  - "Retained alternate/underlay Figma image layers are design evidence, not automatic CMS fields."
 
 responsive_media_evidence:
   method: FIGMA_IMAGE_HASH_COMPARISON
-  finding: "Corresponding PC/SP hero image layers use identical underlying image hashes."
+  finding: "Corresponding PC/SP hero image layers use identical underlying image hashes. Messages also uses the same image hash in PC/SP."
   pairs:
     - logical_source: hero_right_underlay
       pc_node_id: "21378:8038"
@@ -31,7 +33,11 @@ responsive_media_evidence:
       pc_node_id: "21378:8044"
       sp_node_id: "21376:4897"
       image_hash: "ffaba0f1b80cd073b4f47d201eac19a7aa1dced0"
-  decision: "Do not create responsive duplicate ACF image fields. Final logical field count still requires target-theme/content ownership inspection because Figma retains underlay/replacement layers."
+    - logical_source: messages_current_image
+      pc_node_id: "21378:7762"
+      sp_node_id: "21376:4645"
+      image_hash: "0cd34d406c04a31f4a32bc2628d184f80db47fad"
+  decision: "Do not create responsive duplicate ACF image fields when Figma proves a shared source. Final logical field counts still require content ownership inspection because Figma can retain alternate/underlay layers."
 
 sections:
   - section_id: header
@@ -128,13 +134,208 @@ sections:
       - "PC horizontal / SP vertical layout"
       - "card image masks/crops and spacing"
 
+  - section_id: education
+    figma_nodes:
+      pc: "21378:7868"
+      sp: "21376:4720"
+    page_acf_ownership: CONTENT_FIELDS_FIXED_ORDERED_PROGRESSION
+    evidence:
+      - "PC/SP both contain four ordered semantic stages 01→04 with matching labels, titles, bullets, and image roles."
+      - "Internal bullet lists use active Auto Layout in both PC/SP, while the top-level stage composition remains manually grouped."
+      - "The sequence communicates an educational progression, not an arbitrary sortable card list."
+    editor_candidates:
+      - id: education_intro
+        type: textarea
+        rationale: "Supporting section introduction is content-owned and can be edited with wrap QA."
+      - id: education_1_image
+        type: image
+        return_format: ID
+      - id: education_1_title
+        type: text
+        observed: "大学1年生の自分"
+      - id: education_1_bullet_1
+        type: text
+        observed: "将来がまだ見えない"
+      - id: education_1_bullet_2
+        type: text
+        observed: "学科選択制度で基礎を学ぶ"
+      - id: education_1_bullet_3
+        type: text
+        observed: "７つのコースで目標を明確に"
+      - id: education_1_bullet_4
+        type: text
+        observed: "資格取得支援でスキルを発見"
+      - id: education_2_image
+        type: image
+        return_format: ID
+      - id: education_2_title
+        type: text
+        observed: "世の中の仕組みを知る"
+      - id: education_2_bullet_1
+        type: text
+        observed: "ヒット商品の裏側"
+      - id: education_2_bullet_2
+        type: text
+        observed: "トクするお金のルール"
+      - id: education_2_bullet_3
+        type: text
+        observed: "AIで仕事はどうなる"
+      - id: education_3_image
+        type: image
+        return_format: ID
+      - id: education_3_title
+        type: text
+        observed: "先生と一緒に考える"
+      - id: education_3_bullet_1
+        type: text
+        observed: "教職員との距離が近い"
+      - id: education_3_bullet_2
+        type: text
+        observed: "悩みを相談しやすい"
+      - id: education_3_bullet_3
+        type: text
+        observed: "個人に合わせた進路のサポート"
+      - id: education_4_image
+        type: image
+        return_format: ID
+      - id: education_4_title
+        type: text
+        observed: "望んだ将来を実現させる"
+      - id: education_4_bullet_1
+        type: text
+        observed: "４年間の学びを進路につなげる"
+      - id: education_4_bullet_2
+        type: text
+        observed: "経験を社会で発揮する"
+      - id: education_4_bullet_3
+        type: text
+        observed: "自分らしい未来を見つける"
+    cardinality:
+      figma_count: 4
+      editor_add_remove: false
+      editor_reorder: false
+      current_decision: FIXED_FOUR_STAGES
+      repeater_candidate: NOT_BASELINE
+      rationale:
+        - "01/スタート → 02/学ぶ → 03/出会う → 04/ゴール is semantic progression encoded by the design."
+        - "Allowing arbitrary add/remove/reorder would change the authored story rather than merely changing content."
+    code_owned:
+      - "# EDUCATION kicker"
+      - "４年間の学び section heading"
+      - "stage numbers 01/02/03/04"
+      - "stage semantic labels スタート/学ぶ/出会う/ゴール"
+      - "arrows between stages"
+      - "card frames, gradient shadows, masks, spacing, and PC/SP composition"
+    retained_layer_warning:
+      - "Stage 01 PC retains an additional older/underlay image that is absent in SP."
+      - "Stage 03 SP retains staff/就職相談 layers plus the foreground replacement image."
+      - "Do not create one ACF field per retained image layer; select the canonical content image during implementation/visual QA."
+    unresolved:
+      - "Canonical foreground image for stages with retained alternates must be confirmed during implementation asset inspection."
+
+  - section_id: student-voice
+    figma_nodes:
+      pc: "21378:7766"
+      sp: "21376:4650"
+    page_acf_ownership: PARTIAL_FIXED_THREE_SUMMARIES
+    evidence:
+      - "Both PC/SP have three direct student groups: item 1 is named 1_open and visually expanded; items 2 and 3 are collapsed summaries."
+      - "No prototype reaction was found inside the inspected Student Voice nodes."
+      - "Only item 1 contains expanded detail content in the supplied Figma state."
+    summary_candidates:
+      - item: 1
+        headline: "まだやりたいことが決まっていなくても大丈夫だった。"
+        profile: "経営学部ITコース3年 Mさん / 千葉県立生浜高等学校出身"
+      - item: 2
+        headline: "将来の仕事が、大学生活の中で見えてきました。"
+        profile: "経営学部ITコース3年 Mさん / 千葉県立生浜高等学校出身"
+      - item: 3
+        headline: "学芸員になる夢を、安心して目指せると思った。"
+        profile: "経営学部学芸員コース3年 Mさん / 千葉県立生浜高等学校出身"
+    expanded_item_1_candidates:
+      - id: student_voice_1_detail
+        type: textarea
+        observed: "千葉経済大学のオープンキャンパスでは、多様なコースから自分の将来が広がると分かったことが決め手です！"
+      - id: student_voice_1_memorable_class
+        type: text
+        observed: "フィールドワークの授業が本当に楽しい！"
+      - id: student_voice_1_admission_reason
+        type: text
+        observed: "少人数授業で先生との距離が近いこと"
+      - id: student_voice_1_message
+        type: textarea
+        observed: "目標が決まっている人もまだ迷っている人も、ぜひ一度オープンキャンパスに参加してみてください。実際に大学の雰囲気を感じることで、自分に合った学びがきっと見つかると思います。"
+      - id: student_voice_1_detail_image
+        type: image
+        return_format: ID
+    interaction:
+      candidate: EXPAND_COLLAPSE
+      state: UNDETERMINED
+      evidence:
+        - "Visual groups encode one open state and two collapsed states, and collapsed items show もっと見る."
+        - "No prototype reactions were found in the inspected nodes, so click/keyboard behavior, multi-open policy, default state, animation, and URL state are not proven."
+      production_decision: BLOCKED
+    cardinality:
+      figma_count: 3
+      editor_add_remove: UNDETERMINED
+      editor_reorder: UNDETERMINED
+      current_decision: FIXED_THREE_SUMMARY_SLOTS_WHILE_LEARNING
+      repeater_candidate: BLOCKED_UNTIL_EDITOR_REQUIREMENT_AND_COMPLETE_CONTENT_EXIST
+    unresolved:
+      - "Expanded content for items 2 and 3 is not present in the supplied Figma state; do not invent it."
+      - "Expand/collapse interaction contract is not proven by Figma prototype evidence."
+      - "Canonical per-student image ownership must distinguish repeated underlay/residue from foreground portraits."
+
+  - section_id: messages
+    figma_nodes:
+      pc: "21378:7746"
+      sp: "21376:4629"
+    page_acf_ownership: BLOCKED_PENDING_CONTENT_AND_INTERACTION
+    evidence:
+      - "PC/SP show the same current message and the same underlying image hash."
+      - "The indicator visibly encodes current=1 and total=4 with previous/next arrows."
+      - "The inspected Figma node contains content for one message only and no prototype reactions."
+    current_item:
+      headline: "大学で培った企画力を武器に、今はIT企業のマーケターとして挑戦の毎日です！"
+      profile: "経営学科ビジネス経営コース3年 Tさん / 千葉県立生浜高等学校出身"
+      image_hash: "0cd34d406c04a31f4a32bc2628d184f80db47fad"
+      responsive_strategy: SINGLE_ATTACHMENT_SHARED_PC_SP
+    data_cardinality:
+      visible_indicator_total: 4
+      supplied_item_content_count: 1
+      completeness: INCOMPLETE
+      decision: DO_NOT_CREATE_FOUR_PLACEHOLDER_ITEMS
+    interaction:
+      candidate: CAROUSEL_OR_SLIDER
+      state: UNDETERMINED
+      evidence:
+        - "Indicator, progress line, and previous/next arrows imply a multi-item presentation."
+        - "No prototype reaction was found, and no autoplay/loop/swipe/keyboard/animation/library behavior is specified."
+      production_decision: BLOCKED
+    current_editor_candidates_if_single_state_fixture_is_needed:
+      - id: messages_1_image
+        type: image
+        return_format: ID
+      - id: messages_1_headline
+        type: textarea
+      - id: messages_1_profile
+        type: textarea
+    unresolved:
+      - "Content/source for messages 2–4 is missing from the inspected Figma state."
+      - "Actual carousel behavior and target-project slider/library reuse are unresolved."
+      - "Do not add a slider library or ACF Repeater/Flexible architecture until the target codebase and complete content source are inspected."
+
 prototype_delivery:
   acf_export_path: "experiments/ref001-wordpress-acf/artifacts/acf-export.json"
   template_location_placeholder: "page-templates/template-ref001.php"
-  warning: "The prototype JSON is intentionally not a frozen production field group. Its template filename and final field ownership must be reconciled with the actual target theme repository."
+  warning: "The prototype JSON is intentionally not a frozen production field group. Wave-2 modeling adds evidence but does not automatically expand the JSON until each section's CMS contract is sufficiently complete."
 
 learning_notes:
   - "CMS flexibility is a product/editorial requirement, not something that can be inferred from visual repetition alone."
   - "Responsive variants can share one media field even when crop geometry differs substantially."
   - "Art-directed text is not automatically a CMS field just because it is text in Figma."
   - "Global/shared Figma components should trigger target-code reconnaissance before page-level ACF field creation."
+  - "An ordered pedagogical progression should not become editor-reorderable just because its stages look like repeated cards."
+  - "A visible open/collapsed design state does not prove accordion behavior when no prototype/annotation/codebase interaction evidence exists."
+  - "An indicator showing 1/4 proves a presented total, not that the current Figma node contains four complete CMS records."
+  - "Missing source content must remain UNKNOWN/BLOCKED rather than being filled with invented placeholder records."

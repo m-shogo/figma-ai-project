@@ -1,6 +1,6 @@
 schema_version: 3
 reference_id: REF-001-CHIBA-KEIZAI-SAMPLE
-captured_at: "2026-08-11T11:32:00+09:00"
+captured_at: "2026-08-11T12:24:00+09:00"
 figma_tooling_snapshot: "ChatGPT Figma connector / Plugin API structural inspection after responsive Variable Mode correction"
 
 page:
@@ -31,7 +31,7 @@ sections:
         confidence: HIGH
         evidence:
           - "PC Header resolves template mode 3:0 (PC); SP Header resolves 4003:0 (SP)."
-          - "PC inspection found 6 variable-bound descendants covering fills/font families; SP inspection found a variable-bound base fill."
+          - "PC inspection found variable-bound fills/font families; SP inspection found a variable-bound base fill."
         bound_property_coverage: null
         modes_observed:
           - "template/PC=3:0"
@@ -49,7 +49,6 @@ sections:
         confidence: MEDIUM
         evidence:
           - "Root/component concepts are semantic (Header, Header_sp, logo, btn_oc, btn_doc), but most internal vector/rectangle layers retain generic names."
-          - "Measured generic-name counts were 34/42 nodes on PC and 30/33 nodes on SP, so inner-layer names are not reliable enough to drive code structure alone."
         generic_name_ratio: 0.85
       code_connect:
         state: UNDETERMINED
@@ -100,7 +99,6 @@ sections:
         state: OBSERVED
         confidence: HIGH
         evidence:
-          - "PC MV inspection found 18 variable-bound descendants; SP found 20."
           - "Responsive width, fills, strokes, radius and font-family bindings are present; PC resolves template=PC and SP resolves template=SP."
         bound_property_coverage: null
         modes_observed:
@@ -131,7 +129,8 @@ sections:
         state: OBSERVED
         confidence: MEDIUM
         evidence:
-          - "Both PC/SP MVs contain paired Mask groups and image-bearing visual composition that must be exported/resolved as exact assets or faithful crops during section inspection."
+          - "PC/SP image fills were inspected and corresponding foreground sources share identical image hashes while masks/crops differ."
+          - "MV mask nodes are simple rectangles, but the vector/background composition still needs exact asset or visual reconstruction evidence."
         exact_sources_available: []
       responsive_mapping:
         state: OBSERVED
@@ -145,14 +144,14 @@ sections:
       - "The visual relies on manual Groups, vectors and masks with no Auto Layout; exact composition requires visual verification rather than direct coordinate-to-CSS translation."
     trusted_structure:
       - "Preserve the paired copy, visual layers, mask/image intent, CTA semantic content and responsive Variable Mode evidence."
-      - "Use Figma assets/crops and visual comparison as primary evidence for the composed hero."
+      - "Use shared PC/SP image-source evidence to avoid duplicate responsive CMS fields."
     untrusted_or_missing_structure:
       - "Do not interpret the SP root's 1380px group width as the website viewport/container width."
       - "Manual mask/vector geometry is not a reusable responsive layout specification by itself."
     codebase_reuse_priority:
       - "Reuse target-project image/hero/CTA primitives where they preserve the supplied visual behavior; do not create a new generic hero abstraction before repo reconnaissance."
     unresolved_questions:
-      - "Exact image export/crop sources and any MV interaction/animation must be resolved during section inspection."
+      - "Exact image import/persistence and any MV interaction/animation must be resolved during section inspection/runtime integration."
 
   - section_id: reason
     figma_node_ids:
@@ -171,8 +170,7 @@ sections:
         state: OBSERVED
         confidence: HIGH
         evidence:
-          - "PC inspection found 17 variable-bound descendants and SP found 21; fills/font families and responsive mode resolution are present."
-          - "PC Reason resolves template=PC; SP Reason resolves template=SP."
+          - "PC Reason resolves template=PC; SP Reason resolves template=SP and both contain variable-bound fills/fonts."
         bound_property_coverage: null
         modes_observed:
           - "template/PC=3:0"
@@ -181,8 +179,8 @@ sections:
         state: OBSERVED
         confidence: HIGH
         evidence:
-          - "PC Reason contains 5/5 Auto Layout-capable containers in active Auto Layout, including reasons as HORIZONTAL."
-          - "SP Reason contains 5/5 Auto Layout-capable containers in active Auto Layout, including reasons as VERTICAL with 16px item spacing."
+          - "PC Reason contains 5/5 active Auto Layout containers, including reasons as HORIZONTAL."
+          - "SP Reason contains 5/5 active Auto Layout containers, including reasons as VERTICAL with 16px item spacing."
           - "Card title Frames use HORIZONTAL Auto Layout; SP observed title padding is 8px vertical / 24px horizontal."
         container_coverage: 1
         absolute_child_ratio: 0
@@ -200,9 +198,10 @@ sections:
           - "Code Connect lookup is plan/seat-limited in the current Figma environment; absence cannot be inferred."
         mapped_component_coverage: null
       assets:
-        state: UNKNOWN
-        confidence: NONE
-        evidence: []
+        state: OBSERVED
+        confidence: MEDIUM
+        evidence:
+          - "Three card image fills and rectangular mask/crop geometry are directly inspectable in PC/SP."
         exact_sources_available: []
       responsive_mapping:
         state: OBSERVED
@@ -225,7 +224,232 @@ sections:
     unresolved_questions:
       - "Resolve the real breakpoint/query semantics from company/design-system/existing-code evidence before Shared Contract freeze."
 
+  - section_id: education
+    figma_node_ids:
+      - "21378:7868"
+      - "21376:4720"
+    signals:
+      components:
+        state: NONE
+        confidence: HIGH
+        evidence:
+          - "Structural inspection found 0 Component instances in Education PC/SP."
+        instance_count: 0
+        detached_or_repeated_patterns:
+          - "Four numbered stage Groups repeat a visual pattern but encode a fixed semantic progression."
+      variables:
+        state: OBSERVED
+        confidence: MEDIUM
+        evidence:
+          - "Education PC resolves template=PC and SP resolves template=SP at the section root."
+          - "Section colors/backgrounds and typography use the same observed design-variable system."
+        bound_property_coverage: null
+        modes_observed:
+          - "template/PC=3:0"
+          - "template/SP=4003:0"
+      auto_layout:
+        state: OBSERVED
+        confidence: HIGH
+        evidence:
+          - "Structural inspection found 22 Auto Layout containers in both PC and SP Education sections."
+          - "Per-stage bullet lists use VERTICAL Auto Layout with 12px spacing and each list row uses HORIZONTAL Auto Layout."
+          - "Top-level stage Groups/arrows are manually composed rather than one responsive Auto Layout container."
+        container_coverage: null
+        absolute_child_ratio: null
+        generation: UNDETERMINED
+      semantic_naming:
+        state: OBSERVED
+        confidence: HIGH
+        evidence:
+          - "Direct Groups 1/2/3/4, list/li labels, stage titles and 01–04 labels preserve clear semantic order across PC/SP."
+          - "Image layers include some alternate/underlay names that should not be treated as canonical content solely from naming."
+        generic_name_ratio: null
+      code_connect:
+        state: UNDETERMINED
+        confidence: LOW
+        evidence:
+          - "Code Connect lookup is plan/seat-limited in the current Figma environment; absence cannot be inferred."
+        mapped_component_coverage: null
+      assets:
+        state: OBSERVED
+        confidence: MEDIUM
+        evidence:
+          - "PC contains 6 image fills and SP 7; corresponding stages include retained alternate/underlay layers in some states."
+          - "Stage 01 PC has an additional underlay image absent in SP; Stage 03 SP has extra staff/consultation layers beyond the foreground replacement."
+        exact_sources_available: []
+      responsive_mapping:
+        state: OBSERVED
+        confidence: HIGH
+        evidence:
+          - "The same four semantic stages and bullet content are present in PC/SP."
+          - "PC lays the four stages horizontally with arrows; SP stacks the stages vertically and changes section height from 684 to 1534."
+    recommended_translation_mode: HYBRID
+    mode_reasoning_evidence:
+      - "Internal list structure is trustworthy Auto Layout evidence, while the outer four-stage composition and connector geometry are manual."
+      - "The implementation should preserve the semantic 01→04 progression but use visual QA for PC/SP outer composition rather than copying absolute coordinates."
+    trusted_structure:
+      - "Preserve fixed stage order 01 Start → 02 Learn → 03 Meet → 04 Goal."
+      - "Translate each stage's title and bullet list semantically; internal list direction/spacing is explicit Auto Layout evidence."
+      - "Preserve the PC horizontal / SP vertical narrative transition at the eventual project breakpoint."
+    untrusted_or_missing_structure:
+      - "Do not expose retained alternate/underlay image layers as separate CMS fields without content-ownership evidence."
+      - "Outer stage/arrows geometry is manually positioned and needs visual verification."
+    codebase_reuse_priority:
+      - "Reuse existing target-project ordered-step/timeline/list primitives only if they preserve the supplied four-stage story and visual hierarchy."
+    unresolved_questions:
+      - "Canonical foreground image must be selected for stages with retained alternate layers."
+      - "Production breakpoint threshold remains unresolved."
+
+  - section_id: student-voice
+    figma_node_ids:
+      - "21378:7766"
+      - "21376:4650"
+    signals:
+      components:
+        state: NONE
+        confidence: HIGH
+        evidence:
+          - "Student Voice PC/SP are Groups with no Component instances observed in structural inspection."
+        instance_count: 0
+        detached_or_repeated_patterns:
+          - "Three repeated student summary Groups are present; item 1 is an expanded visual state while items 2/3 are collapsed summaries."
+      variables:
+        state: OBSERVED
+        confidence: MEDIUM
+        evidence:
+          - "Student Voice PC resolves template=PC and SP resolves template=SP."
+          - "Observed fills/typography use the same page variable system."
+        bound_property_coverage: null
+        modes_observed:
+          - "template/PC=3:0"
+          - "template/SP=4003:0"
+      auto_layout:
+        state: OBSERVED
+        confidence: MEDIUM
+        evidence:
+          - "PC structural inspection found 7 Auto Layout containers and SP found 3, mainly label/title strips rather than the full item layout."
+          - "Overall expanded/collapsed cards remain manually grouped with speech bubbles, masks, and positioned detail areas."
+        container_coverage: null
+        absolute_child_ratio: null
+        generation: UNDETERMINED
+      semantic_naming:
+        state: OBSERVED
+        confidence: MEDIUM
+        evidence:
+          - "Direct groups explicitly encode 1_open, 2, 3 and title on PC; SP mirrors the same direct order even though the root is generically named Group 338."
+          - "Text anchors identify headline, profile, admission reason, memorable class, and message content."
+        generic_name_ratio: null
+      code_connect:
+        state: UNDETERMINED
+        confidence: LOW
+        evidence:
+          - "Code Connect lookup is plan/seat-limited in the current Figma environment; absence cannot be inferred."
+        mapped_component_coverage: null
+      assets:
+        state: OBSERVED
+        confidence: MEDIUM
+        evidence:
+          - "Student portraits and item-1 course/detail imagery are image fills; repeated portrait underlay hashes appear across more than one group."
+          - "Image-layer repetition therefore cannot be equated directly with distinct CMS records."
+        exact_sources_available: []
+      responsive_mapping:
+        state: OBSERVED
+        confidence: HIGH
+        evidence:
+          - "Both PC/SP expose three student items with item 1 expanded and items 2/3 collapsed."
+          - "Expanded item 1 grows from 591px PC to 1032px SP while collapsed items remain compact summaries."
+    recommended_translation_mode: HYBRID
+    mode_reasoning_evidence:
+      - "Semantic item/state identity is strong enough to guide markup, but most spatial composition and the open/collapsed detail layout are manual."
+      - "No prototype reactions were found, so visual states must not be promoted into a confirmed accordion interaction contract."
+    trusted_structure:
+      - "Preserve three supplied summary items and the fact that item 1 has a supplied expanded visual state."
+      - "Preserve item-1 detail hierarchy: profile, detail copy, memorable class, admission reason, applicant message, and detail image."
+    untrusted_or_missing_structure:
+      - "Expanded content for items 2/3 is not supplied and must not be invented."
+      - "Click, keyboard, multi-open, initial-state, animation and URL-state behavior are not specified by the inspected Figma nodes."
+    codebase_reuse_priority:
+      - "If the target theme already has an accessible disclosure/accordion primitive, consider it only after owner/prototype/code evidence confirms expand/collapse behavior."
+    unresolved_questions:
+      - "Whether もっと見る is interactive disclosure, navigation to another page, or a presentation-only state is unresolved."
+      - "Editor cardinality/reordering requirement for the three student items is unresolved."
+
+  - section_id: messages
+    figma_node_ids:
+      - "21378:7746"
+      - "21376:4629"
+    signals:
+      components:
+        state: NONE
+        confidence: HIGH
+        evidence:
+          - "Messages PC/SP are manually composed Groups with no Component instance observed in the inspected section."
+        instance_count: 0
+        detached_or_repeated_patterns:
+          - "A 1/4 indicator suggests multiple records, but the inspected section contains only the current record's content."
+      variables:
+        state: OBSERVED
+        confidence: MEDIUM
+        evidence:
+          - "Messages PC resolves template=PC and SP resolves template=SP."
+          - "Observed colors/typography use the same variable system as surrounding sections."
+        bound_property_coverage: null
+        modes_observed:
+          - "template/PC=3:0"
+          - "template/SP=4003:0"
+      auto_layout:
+        state: OBSERVED
+        confidence: LOW
+        evidence:
+          - "Only a small heading/kicker frame uses Auto Layout in the inspected PC/SP section; primary image/copy/indicator composition is manually positioned."
+        container_coverage: null
+        absolute_child_ratio: null
+        generation: UNDETERMINED
+      semantic_naming:
+        state: OBSERVED
+        confidence: MEDIUM
+        evidence:
+          - "PC root is messages and has indicator/title/img semantic groups; SP root is misleadingly named voice but content anchors and position resolve the pair."
+          - "Indicator text explicitly shows current 1 and total 4."
+        generic_name_ratio: null
+      code_connect:
+        state: UNDETERMINED
+        confidence: LOW
+        evidence:
+          - "Code Connect lookup is plan/seat-limited in the current Figma environment; absence cannot be inferred."
+        mapped_component_coverage: null
+      assets:
+        state: OBSERVED
+        confidence: HIGH
+        evidence:
+          - "PC image node 21378:7762 and SP image node 21376:4645 share image hash 0cd34d406c04a31f4a32bc2628d184f80db47fad."
+          - "The same source is cropped to different PC/SP presentation boxes."
+        exact_sources_available: []
+      responsive_mapping:
+        state: OBSERVED
+        confidence: HIGH
+        evidence:
+          - "PC/SP show the same headline, profile, current indicator state and underlying image source."
+          - "Image presentation changes from a large right-side PC composition to a 343px-wide SP crop."
+    recommended_translation_mode: HYBRID
+    mode_reasoning_evidence:
+      - "Current-item content and responsive image-source identity are trustworthy, but carousel behavior and additional items are absent from the inspected node."
+      - "Manual composition requires visual verification and interaction must remain evidence-gated."
+    trusted_structure:
+      - "Preserve current state 1/4, current headline/profile, current image source and previous/progress/next visual affordances."
+      - "Use one attachment source per message across PC/SP when the image hash is shared."
+    untrusted_or_missing_structure:
+      - "Content for messages 2–4 is absent from the inspected Figma node."
+      - "No prototype reactions specify autoplay, loop, swipe, keyboard, transition, duration or slider library."
+    codebase_reuse_priority:
+      - "Inspect the target theme for an existing accessible carousel/slider before adding any library, and only after interaction/content completeness is established."
+    unresolved_questions:
+      - "Source content for messages 2–4 is missing."
+      - "Carousel/slider behavior remains a candidate, not a confirmed implementation contract."
+
 notes:
-  - "This profile records the first three real sections after the responsive Variable Mode failure was corrected."
-  - "Initial Header STRUCTURE_FIRST hypothesis was revised to HYBRID because live structural evidence showed component identity but no internal Auto Layout; the project should promote rules from measured evidence rather than first impressions."
+  - "This profile now covers the first six real content sections after the responsive Variable Mode failure was corrected."
+  - "Initial Header STRUCTURE_FIRST hypothesis was revised to HYBRID because live structural evidence showed component identity but no internal Auto Layout; rules are promoted from measured evidence rather than first impressions."
   - "Reason remains STRUCTURE_FIRST because the PC/SP direction change is explicitly encoded by Auto Layout in both variants."
+  - "Education is HYBRID: internal lists are structurally trustworthy, while the outer timeline/card composition is manual."
+  - "Student Voice and Messages demonstrate a separate lesson: visual states and counters are evidence about presentation, not sufficient evidence for interaction behavior or complete CMS data."
