@@ -1,4 +1,4 @@
-schema_version: 10
+schema_version: 11
 experiment_id: EXP-XXXX
 run_id: RUN-XXXX
 run_class: COMMON # COMMON | OPTIMIZED | REPLAY
@@ -93,6 +93,28 @@ execution:
   assumptions: []
   blockers: []
   human_intervention: none
+
+human_editability:
+  status: PENDING # PENDING | PASS | FAIL | NOT_APPLICABLE
+  score: null # /10 diagnostic; intentionally separate from the historical /100 composite
+  dimensions:
+    discoverability: null # /2
+    locality_of_change: null # /2
+    intent_readability: null # /2
+    change_safety_reuse: null # /2
+    cms_content_ownership_clarity: null # /2
+  blockers: []
+  change_drills: []
+  # - drill_id: HE-LOCAL-001
+  #   task: "Adjust one section-local visual property in a disposable snapshot"
+  #   snapshot_commit: ""
+  #   located_paths: []
+  #   changed_paths: []
+  #   unexpected_paths: []
+  #   regression_status: NOT_RUN
+  #   result: PASS # PASS | FAIL | NOT_APPLICABLE
+  #   notes: []
+  evidence: []
 
 captures:
   first_pass: []

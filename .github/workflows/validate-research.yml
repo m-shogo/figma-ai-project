@@ -18,6 +18,7 @@ on:
       - "contracts/**/*.yaml"
       - "contracts/**/*.json"
       - "research/**/*.yaml"
+      - "docs/human-editability.md"
       - "requirements-dev.txt"
       - ".github/workflows/validate-research.yml"
       - ".github/workflows/update-radar.yml"
@@ -38,6 +39,7 @@ on:
       - "contracts/**/*.yaml"
       - "contracts/**/*.json"
       - "research/**/*.yaml"
+      - "docs/human-editability.md"
       - "requirements-dev.txt"
       - ".github/workflows/validate-research.yml"
       - ".github/workflows/update-radar.yml"
@@ -83,6 +85,9 @@ jobs:
 
       - name: Validate reference, shared, section, and run records
         run: python scripts/validate_records.py
+
+      - name: Validate Human Editability contract and run evidence
+        run: python scripts/validate_human_editability.py
 
       - name: Validate company implementation policy and frozen lineage
         run: python scripts/validate_company_policy.py

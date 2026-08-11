@@ -257,6 +257,8 @@ C2 → C3。
 - same section without mapping
 - same section with mapping
 
+を見る。
+
 見るもの:
 
 - correct component reuse
@@ -280,6 +282,8 @@ Same agent/section/context:
 
 - ONE_SHOT prompt
 - STAGED Inspect → Implement → Verify
+
+を見る。
 
 見るもの:
 
@@ -376,6 +380,82 @@ agent ranking自体を最終目的にしない。
 
 ---
 
+## BENCH-16 — Human Editability / change-surface stability
+
+High-fidelity outputが人間の保守性を犠牲にしていないかを独立比較する。
+
+Canonical policy: `docs/human-editability.md`
+
+### Measurement timing
+
+FIRST PASSをimmutableにfreezeした後、そのsnapshotのdisposable copyでChange Drillを行う。
+
+Canonical FIRST PASSへtemporary drill diffを混ぜない。
+
+### Minimum drills for PAGE/INTEGRATION
+
+同じ種類のtaskをrun間で比較できるよう、referenceに適用可能な範囲で固定する。
+
+1. section-local visual adjustment
+2. content/CMS ownership adjustment
+3. shared component adjustment
+4. responsive behavior adjustment when relevant
+5. asset replacement when relevant
+
+最低3つのrelevant drillを実施する。
+
+### Compare
+
+- Human Editability /10
+- PASS/FAIL blockers
+- files needed to locate ownership
+- actual changed paths
+- unexpected changed paths
+- unrelated visual/runtime regression
+- duplicate shared implementation count/findings
+- CMS/code ownership ambiguity
+- non-obvious workaround rationale gaps
+- time-to-locate/time-to-change when reliably measurable
+
+### Important controls
+
+- same frozen reference
+- same scope
+- same shared contract
+- same foundation
+- same drill definition
+- same immutable FIRST PASS treatment
+
+### Do not optimize the wrong proxy
+
+以下を単独KPIにしない:
+
+- minimum LOC
+- minimum file count
+- maximum component count
+- zero raw px
+- zero absolute positioning
+- zero `!important` without context
+
+これらはproject/design intentによって正当な場合がある。
+
+目的は、**human-recognizable ownershipと予測可能なchange surface**。
+
+### Promotion rule
+
+Human Editability ruleをProven候補へ上げるのは:
+
+- FIRST PASS fidelityを悪化させない
+- repair量を増やさない
+- change drillのblast radius/regressionを減らす
+- 別sectionまたは別referenceでも再現する
+
+場合。
+
+逆に「コードが綺麗に見えるがFigma fidelity/reworkが悪化する」抽象化は昇格させない。
+
+---
+
 # Current decision tree
 
 ```text
@@ -400,6 +480,10 @@ breakpoint driftがある？
 parallel integration failureが多い？
   ├─ yes → shared surface/allowed pathsを縮める
   └─ no → safe parallelismを拡大
+
+Human Editability blocker/change-drill regressionがある？
+  ├─ yes → ownership/locality/abstractionを修正してreplay
+  └─ no → fidelityとreworkが維持されるか別referenceへ展開
 ```
 
 ---
@@ -413,5 +497,6 @@ parallel integration failureが多い？
 - foundation commitが違うrunを同条件として比較しない
 - model update直後に古い細かいランキングへ固執しない
 - 該当しないCode Connect機能を無理にbenchmarkしない
+- maintainabilityを単純なLOC/file-countだけで最適化しない
 
 目的はrun数ではなく、**次案件で人間の戻りを減らす因果関係を最短で見つけること**。
