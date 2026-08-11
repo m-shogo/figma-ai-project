@@ -1,0 +1,21 @@
+{
+  "captures_sha256": "18509cff695305f99d3d47abfbdda0b02bf941951d319c895351d99c36a6d3de",
+  "code_starting_commit": "9e8556b1e9e21ddbd864c48ee80804ec34fa3fe3",
+  "company_policy_sha256": "",
+  "experiment_id": "EXP-REF001-BLIND-CLEAN-20260812",
+  "first_pass_commit": "46eb326383ac7aff1cb023100a801b968df9f9bc",
+  "first_pass_fidelity": {
+    "robustness": 15,
+    "structural": 24,
+    "total": 57,
+    "visual": 18
+  },
+  "frozen_at": "2026-08-11T18:38:58+00:00",
+  "implementation_profile_id": "IMPL-REF001-WORDPRESS-ACF",
+  "implementation_profile_sha256": "9fa81a28f5f81761164cde04638d29553a19d6035bf1681b648f579b271caad0",
+  "reference_manifest_sha256": "b36d81243057fa75dca15ef642f51e9c85b7ba691cb6bcf8c39612a2def85bae",
+  "required_environment_profiles": [],
+  "run_id": "RUN-REF001-BLIND-CLEAN-20260812-A",
+  "schema_version": 1,
+  "tooling_revision": "7a37ca493f9532c8cb22f4e71a4ca6c65050fa88"
+}
