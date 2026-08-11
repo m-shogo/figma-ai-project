@@ -25,11 +25,28 @@ for (const width of widths) {
       const r=el.getBoundingClientRect();
       return r.left < -0.5 || r.right > innerWidth + 0.5;
     }).map(el=>({text:el.textContent.trim().replace(/\s+/g,' ').slice(0,90),left:+el.getBoundingClientRect().left.toFixed(1),right:+el.getBoundingClientRect().right.toFixed(1),className:String(el.className||'')}));
+    const overflowElements=[...document.querySelectorAll('body *')].map(el=>{
+      const r=el.getBoundingClientRect();
+      if(r.width <= 0 || r.height <= 0 || (r.left >= -0.5 && r.right <= innerWidth + 0.5)) return null;
+      const style=getComputedStyle(el);
+      return {
+        tag:el.tagName.toLowerCase(),
+        className:String(el.className||''),
+        left:+r.left.toFixed(1),
+        right:+r.right.toFixed(1),
+        width:+r.width.toFixed(1),
+        position:style.position,
+        overflowX:style.overflowX,
+        boxShadow:style.boxShadow,
+        text:(el.textContent||'').trim().replace(/\s+/g,' ').slice(0,80)
+      };
+    }).filter(Boolean).slice(0,60);
     return {
       bodyHeight:Math.round(Math.max(body.scrollHeight,de.scrollHeight)),
       scrollWidth:Math.round(Math.max(body.scrollWidth,de.scrollWidth)),
       pageOverflowPx:Math.max(0,Math.round(Math.max(body.scrollWidth,de.scrollWidth)-innerWidth)),
       readableTextClipping:clipped,
+      overflowElements,
       primaryFonts:{
         zenKakuGothicNew:document.fonts.check('16px "Zen Kaku Gothic New"'),
         poppins:document.fonts.check('16px Poppins')
@@ -40,7 +57,7 @@ for (const width of widths) {
   metrics.width=width;
   metrics.runtimeErrors=runtimeErrors;
   results.push(metrics);
-  if(width===375 || width===1380){
+  if(width===320 || width===375 || width===1380){
     await page.screenshot({path:path.join(outDir,`first-pass-${width}.png`),fullPage:true});
   }
   await page.close();
@@ -49,6 +66,10 @@ await browser.close();
 await fs.writeFile(path.join(outDir,'runtime-probes.json'),JSON.stringify(results,null,2)+'\n');
 const summary=results.map(x=>({width:x.width,bodyHeight:x.bodyHeight,pageOverflowPx:x.pageOverflowPx,readableTextClipping:x.readableTextClipping.length,primaryFonts:x.primaryFonts,runtimeErrors:x.runtimeErrors.length}));
 console.log(JSON.stringify(summary,null,2));
+for (const result of results.filter(x=>x.pageOverflowPx>0)) {
+  console.log(`OVERFLOW ELEMENTS @ ${result.width}px`);
+  console.log(JSON.stringify(result.overflowElements,null,2));
+}
 const hardFailures=results.flatMap(x=>{
   const f=[];
   if(x.pageOverflowPx>0) f.push(`${x.width}:overflow=${x.pageOverflowPx}`);
