@@ -22,6 +22,18 @@ def load_yaml(path: Path) -> dict[str, Any]:
     return value
 
 
+def selector_family_ids(config: dict[str, Any] | None = None) -> list[str]:
+    registry = config if config is not None else load_yaml(TARGETS)
+    options = registry.get("selector", {}).get("options", [])
+    ids = [str(item.get("id", "")).strip() for item in options if isinstance(item, dict)]
+    ids = [family_id for family_id in ids if family_id]
+    if not ids:
+        raise ValueError("implementation target registry defines no selector options")
+    if len(ids) != len(set(ids)):
+        raise ValueError("implementation target registry contains duplicate selector ids")
+    return ids
+
+
 def atomic_write(path: Path, value: dict[str, Any], *, force: bool) -> None:
     if path.exists() and not force:
         raise ValueError(f"output already exists: {path}; pass --force to replace")
@@ -53,7 +65,7 @@ def checklist_ids(config: dict[str, Any], family: str, variant: str, acf: bool) 
 def build_profile(*, profile_id: str, family: str, variant: str, acf: bool, selected_by: str) -> dict[str, Any]:
     template = deepcopy(load_yaml(TEMPLATE))
     config = load_yaml(TARGETS)
-    valid_families = {str(item.get("id")) for item in config.get("selector", {}).get("options", [])}
+    valid_families = set(selector_family_ids(config))
     if family not in valid_families:
         raise ValueError(f"unsupported implementation family: {family}")
     conditional = config.get("conditional_selectors", {}).get(family, {}).get("options", [])
@@ -102,14 +114,16 @@ def build_profile(*, profile_id: str, family: str, variant: str, acf: bool, sele
 
 
 def main() -> int:
+    config = load_yaml(TARGETS)
+    family_choices = selector_family_ids(config)
+    default_family = str(config.get("selector", {}).get("default", "AUTO_EXISTING"))
+    if default_family not in family_choices:
+        raise ValueError(f"selector default is not a registered implementation family: {default_family}")
+
     parser = argparse.ArgumentParser(description="Create a DRAFT Implementation Profile from the canonical target selector")
     parser.add_argument("output", type=Path)
     parser.add_argument("--profile-id", required=True)
-    parser.add_argument(
-        "--family",
-        default="AUTO_EXISTING",
-        choices=["AUTO_EXISTING", "STATIC_WEB", "PHP_TEMPLATE", "WORDPRESS", "JS_FRAMEWORK", "OTHER"],
-    )
+    parser.add_argument("--family", default=default_family, choices=family_choices)
     parser.add_argument("--variant", default="")
     parser.add_argument("--acf", action="store_true")
     parser.add_argument("--selected-by", default="owner-or-agent")
