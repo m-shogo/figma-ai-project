@@ -1,0 +1,116 @@
+/*
+ * REF-001 post-freeze visual repair.
+ *
+ * These overrides are intentionally separated from FIRST PASS CSS so the
+ * immutable baseline remains inspectable. Values below come from live Figma
+ * section geometry at the two exact acceptance endpoints (1380 / 375).
+ * Intermediate widths remain governed by responsive-continuity.css.
+ */
+
+/* Desktop endpoint geometry: preserve section-local bounds and represent
+ * intentional page whitespace as margins between semantic sections. */
+@media (min-width:768px) {
+  .ref-mv { height:714px; }
+
+  .ref-mv + .ref-reason { margin-top:78px; }
+  .ref-reason {
+    min-height:0;
+    padding:0;
+  }
+  .ref-reason + .ref-education { margin-top:96px; }
+
+  /* Figma's education cards extend wider than the generic 1160px text rail;
+   * widening only this grid prevents list wrapping from inflating the section. */
+  .ref-education .ref-content {
+    width:min(1250px,calc(100% - 64px));
+  }
+
+  .ref-shared-cta + .ref-voice { margin-top:96px; }
+  .ref-voice {
+    padding-top:0;
+    padding-bottom:36px;
+  }
+
+  .ref-voice + .ref-messages { margin-top:183px; }
+  .ref-messages {
+    height:440px;
+    min-height:0;
+    padding:0;
+  }
+  .ref-messages__head { top:0; }
+  .ref-messages__body { min-height:440px; }
+  .ref-messages__copy { padding-top:158px; }
+
+  .ref-messages + .ref-shared-cta { margin-top:118px; }
+
+  .ref-courses {
+    min-height:1514px;
+    padding-bottom:66px;
+  }
+  .ref-courses + .ref-links { margin-top:72px; }
+  .ref-links {
+    height:260px;
+    padding:0;
+  }
+  .ref-links + .ref-cta-value { margin-top:72px; }
+}
+
+/* Mobile endpoint geometry: 56px is the repeated page rhythm visible between
+ * independent sections. The 40px Figma Status-Bar_W remains device chrome and
+ * is not represented here. */
+@media (max-width:767px) {
+  .ref-mv { height:724px; }
+
+  .ref-mv + .ref-reason { margin-top:56px; }
+  .ref-reason {
+    min-height:0;
+    padding:0;
+  }
+  .ref-reason__intro { margin-bottom:28px; }
+  .ref-reason + .ref-education { margin-top:56px; }
+
+  .ref-shared-cta + .ref-voice { margin-top:56px; }
+  .ref-voice {
+    padding-top:0;
+    padding-bottom:51px;
+  }
+
+  .ref-voice + .ref-messages { margin-top:56px; }
+  .ref-messages {
+    height:538px;
+    min-height:538px;
+    padding:0 8px;
+  }
+  .ref-messages__head {
+    position:static;
+  }
+  .ref-messages__head h2 {
+    margin:20px 0 28px;
+  }
+  .ref-messages__body {
+    display:flex;
+    flex-direction:column;
+    min-height:0;
+    width:100%;
+  }
+  .ref-messages__photo {
+    order:-1;
+    width:100%;
+    height:168px;
+    margin:0;
+  }
+  .ref-messages__copy {
+    padding:0;
+    margin-top:7px;
+  }
+  .ref-messages__indicator { margin-top:24px; }
+
+  .ref-messages + .ref-shared-cta { margin-top:56px; }
+
+  .ref-courses + .ref-links { margin-top:56px; }
+  .ref-links {
+    height:343px;
+    padding:0;
+  }
+  .ref-links + .ref-cta-value { margin-top:56px; }
+}
