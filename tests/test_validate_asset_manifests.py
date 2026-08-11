@@ -14,6 +14,7 @@ import validate_asset_manifests as validator  # noqa: E402
 
 
 PNG_BYTES = b"\x89PNG\r\n\x1a\n" + b"asset-integrity-test"
+JPEG_BYTES = b"\xff\xd8\xff\xe0" + b"rendered-asset-test"
 
 
 def manifest_for(asset: Path, root: Path) -> dict:
@@ -41,6 +42,38 @@ def manifest_for(asset: Path, root: Path) -> dict:
     }
 
 
+def rendered_manifest_for(asset: Path, root: Path) -> dict:
+    return {
+        "schema_version": 1,
+        "source_kind": "FIGMA_PLUGIN_RENDERED_EXPORT",
+        "source_url_persisted": False,
+        "figma": {
+            "file_key": "ZYTdtw4wCgkcBy2cVnhxVI",
+            "node_id": "21378:7980",
+            "logical_name": "education-01-visible-composite",
+            "export_method": "node.exportAsync",
+            "export_format": "JPG",
+        },
+        "artifact": {
+            "path": str(asset.relative_to(root)),
+            "sha256": hashlib.sha256(JPEG_BYTES).hexdigest(),
+            "size_bytes": len(JPEG_BYTES),
+            "content_type": "image/jpeg",
+            "detected_format": "jpeg",
+        },
+        "security": {
+            "source_url_storage": "NOT_APPLICABLE",
+            "source_url_transport": "NOT_USED",
+            "transport": "FIGMA_PLUGIN_BASE64_CHUNKS",
+        },
+        "provenance": {
+            "asset_semantics": "RENDERED_VISIBLE_NODE_NOT_RAW_SOURCE",
+            "cms_source_authority": False,
+            "intended_use": "VISUAL_FIXTURE",
+        },
+    }
+
+
 class ManifestValidationTests(unittest.TestCase):
     def make_fixture(self, directory: str) -> tuple[Path, Path, dict]:
         root = Path(directory)
@@ -52,10 +85,55 @@ class ManifestValidationTests(unittest.TestCase):
         manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
         return root, manifest_path, manifest
 
+    def make_rendered_fixture(self, directory: str) -> tuple[Path, Path, dict]:
+        root = Path(directory)
+        asset = root / "assets" / "education.jpg"
+        asset.parent.mkdir(parents=True)
+        asset.write_bytes(JPEG_BYTES)
+        manifest = rendered_manifest_for(asset, root)
+        manifest_path = asset.with_name(asset.name + ".asset.json")
+        manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+        return root, manifest_path, manifest
+
     def test_valid_manifest_passes(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root, manifest_path, _ = self.make_fixture(directory)
             self.assertEqual(validator.validate_manifest(manifest_path, root=root), [])
+
+    def test_valid_plugin_rendered_manifest_passes(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path, _ = self.make_rendered_fixture(directory)
+            self.assertEqual(validator.validate_manifest(manifest_path, root=root), [])
+
+    def test_rendered_asset_cannot_claim_cms_source_authority(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path, manifest = self.make_rendered_fixture(directory)
+            manifest["provenance"]["cms_source_authority"] = True
+            manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+            errors = validator.validate_manifest(manifest_path, root=root)
+            self.assertIn("provenance.cms_source_authority must be false", errors)
+
+    def test_rendered_asset_requires_url_less_transport(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path, manifest = self.make_rendered_fixture(directory)
+            manifest["security"]["source_url_transport"] = "STDIN_OR_ENV_ONLY"
+            manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+            errors = validator.validate_manifest(manifest_path, root=root)
+            self.assertIn(
+                "security.source_url_transport must be NOT_USED for plugin rendered exports",
+                errors,
+            )
+
+    def test_rendered_asset_requires_visible_node_semantics(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path, manifest = self.make_rendered_fixture(directory)
+            manifest["provenance"]["asset_semantics"] = "RAW_SOURCE"
+            manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+            errors = validator.validate_manifest(manifest_path, root=root)
+            self.assertIn(
+                "provenance.asset_semantics must be RENDERED_VISIBLE_NODE_NOT_RAW_SOURCE",
+                errors,
+            )
 
     def test_hash_drift_fails(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
