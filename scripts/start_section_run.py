@@ -11,9 +11,12 @@ from typing import Any
 
 import yaml
 
+from validate_implementation_profile import load_yaml as load_profile_yaml
+from validate_implementation_profile import semantic_errors as implementation_profile_semantic_errors
 from validate_run_lineage import validate_run
 
 ROOT = Path(__file__).resolve().parents[1]
+TARGETS_PATH = ROOT / "config" / "implementation-targets.yaml"
 LEGACY_REQUIRED_PREFLIGHT = (
     "figma_release_notes_checked",
     "figma_mcp_docs_checked",
@@ -48,6 +51,13 @@ def file_sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def repo_path(value: str) -> Path:
+    path = (ROOT / value).resolve()
+    if path != ROOT and ROOT not in path.parents:
+        raise ValueError(f"path escapes repository root: {value}")
+    return path
+
+
 def parse_time(value: str) -> datetime:
     parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
     if parsed.tzinfo is None:
@@ -68,10 +78,7 @@ def automated_preflight_errors(preflight: dict[str, Any]) -> list[str]:
         errors.append("automated preflight requires radar path/hash/generated_at")
         return errors
 
-    radar_path = (ROOT / raw_path).resolve()
-    if radar_path != ROOT and ROOT not in radar_path.parents:
-        errors.append("update radar path escapes repository root")
-        return errors
+    radar_path = repo_path(raw_path)
     if not radar_path.is_file():
         errors.append(f"update radar snapshot does not exist: {raw_path}")
         return errors
@@ -109,6 +116,47 @@ def preflight_errors(data: dict[str, Any]) -> list[str]:
     return errors
 
 
+def implementation_profile_errors(data: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    coordination = data.get("coordination", {})
+    raw_profile = str(coordination.get("implementation_profile_path", "")).strip()
+    expected_hash = str(coordination.get("implementation_profile_sha256", "")).strip()
+    expected_id = str(coordination.get("implementation_profile_id", "")).strip()
+    if not raw_profile or not expected_hash or not expected_id:
+        return ["SECTION run requires pinned Implementation Profile path/hash/id; run pin_implementation_profile.py"]
+
+    profile_path = repo_path(raw_profile)
+    if not profile_path.is_file():
+        return [f"Implementation Profile does not exist: {raw_profile}"]
+    if file_sha256(profile_path) != expected_hash:
+        errors.append("Implementation Profile SHA-256 changed after run pin")
+        return errors
+
+    profile = load_profile_yaml(profile_path)
+    if str(profile.get("profile_id", "")) != expected_id:
+        errors.append("run implementation_profile_id does not match linked profile")
+    if profile.get("status") != "FROZEN" or profile.get("freeze", {}).get("ready") is not True:
+        errors.append("run requires FROZEN Implementation Profile")
+    errors.extend(implementation_profile_semantic_errors(profile, load_profile_yaml(TARGETS_PATH)))
+
+    raw_contract = str(coordination.get("shared_contract_path", "")).strip()
+    if raw_contract:
+        contract_path = repo_path(raw_contract)
+        if contract_path.is_file():
+            contract = load_yaml(contract_path)
+            binding = contract.get("implementation_profile", {})
+            if not isinstance(binding, dict) or binding.get("status") != "BOUND":
+                errors.append("Shared Contract must bind the same Implementation Profile")
+            else:
+                if binding.get("path") != raw_profile:
+                    errors.append("run Implementation Profile path differs from Shared Contract binding")
+                if binding.get("sha256") != expected_hash:
+                    errors.append("run Implementation Profile hash differs from Shared Contract binding")
+                if binding.get("profile_id") != expected_id:
+                    errors.append("run Implementation Profile id differs from Shared Contract binding")
+    return errors
+
+
 def start(data: dict[str, Any]) -> dict[str, Any]:
     status = str(data.get("status", "PLANNED"))
     if status != "PLANNED":
@@ -116,9 +164,10 @@ def start(data: dict[str, Any]) -> dict[str, Any]:
     if data.get("coordination", {}).get("scope") != "SECTION":
         raise ValueError("start_section_run.py only starts SECTION runs")
 
-    errors = preflight_errors(data)
+    errors = implementation_profile_errors(data)
+    errors.extend(preflight_errors(data))
     if errors:
-        raise ValueError("preflight incomplete:\n- " + "\n- ".join(errors))
+        raise ValueError("section start gate incomplete:\n- " + "\n- ".join(errors))
 
     candidate = dict(data)
     candidate["status"] = "RUNNING"
@@ -131,7 +180,7 @@ def start(data: dict[str, Any]) -> dict[str, Any]:
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Transition a pinned SECTION run from PLANNED to RUNNING after verified automated or legacy preflight evidence"
+        description="Transition a pinned SECTION run from PLANNED to RUNNING after Implementation Profile and tooling preflight validation"
     )
     parser.add_argument("run_record", type=Path)
     parser.add_argument("--apply", action="store_true")
