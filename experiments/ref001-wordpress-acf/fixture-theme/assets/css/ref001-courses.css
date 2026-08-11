@@ -4,12 +4,16 @@
  * Measured Figma evidence:
  * - PC cards: 560×271, 40px horizontal/vertical gap, two columns
  * - seventh IT card is centered on the final row
- * - PC icon slot: 100×100
+ * - PC icon slot: 100×100 with exact Figma SVG pictograms
  * - SP cards: 343px wide, content-driven heights around 299–320px
+ * - SP icon slot: 64×64; exact per-course frame sizes are preserved below
  * - recommendation list gap: 12px
  *
- * Exact vector pictograms are a known asset-persistence sub-step. The icon
- * slot/color is preserved here; do not hand-redraw substitute icons.
+ * Six course pictograms reuse the same normalized vector network between PC/SP.
+ * The supplied SP Curator card is a Figma source anomaly: it visibly uses the
+ * school/Teaching pictogram instead of the PC Curator artwork. First Pass keeps
+ * that mismatch intentionally for source fidelity and flags it in the markup.
+ *
  * The 600px media query remains FIXTURE-ONLY, not production breakpoint evidence.
  */
 
@@ -98,9 +102,26 @@
 	position: absolute;
 	left: 32px;
 	top: 28px;
+	display: grid;
+	place-items: center;
 	width: 100px;
 	height: 100px;
 	background: var(--ref001-course-color);
+}
+
+.ref001-course-card__icon picture {
+	display: grid;
+	place-items: center;
+	width: 100%;
+	height: 100%;
+}
+
+.ref001-course-card__icon img {
+	display: block;
+	width: auto;
+	height: auto;
+	max-width: 56px;
+	max-height: 56px;
 }
 
 .ref001-course-card__heading {
@@ -250,6 +271,38 @@
 		position: static;
 		width: 64px;
 		height: 64px;
+	}
+
+	.ref001-course-card__icon img {
+		max-width: none;
+		max-height: none;
+	}
+
+	.ref001-courses__item[data-course-key="public_service"] .ref001-course-card__icon img {
+		width: 31px;
+		height: 40px;
+	}
+
+	.ref001-courses__item[data-course-key="accounting"] .ref001-course-card__icon img {
+		width: 30px;
+		height: 40px;
+	}
+
+	.ref001-courses__item[data-course-key="business_management"] .ref001-course-card__icon img {
+		width: 40px;
+		height: 40px;
+	}
+
+	.ref001-courses__item[data-course-key="finance"] .ref001-course-card__icon img {
+		width: 39px;
+		height: 40px;
+	}
+
+	.ref001-courses__item[data-course-key="teaching"] .ref001-course-card__icon img,
+	.ref001-courses__item[data-course-key="curator"] .ref001-course-card__icon img,
+	.ref001-courses__item[data-course-key="it"] .ref001-course-card__icon img {
+		width: 48px;
+		height: 34px;
 	}
 
 	.ref001-course-card__heading h3 {

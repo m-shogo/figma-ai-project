@@ -4,9 +4,9 @@
  *
  * Figma strategy: HYBRID.
  * CMS contract: seven fixed institutional course identities. Page ACF owns
- * description/recommendation copy only. Identity, order, color and icon source
- * remain code/domain-owned so the eventual target theme can replace this
- * fixture with a shared Course model without migrating page content.
+ * description/recommendation copy only. Identity, order, color and exact Figma
+ * pictogram source remain code/domain-owned so the eventual target theme can
+ * replace this fixture with a shared Course model without migrating page content.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -74,6 +74,8 @@ $course_contract = array(
 		'title' => '学芸員コース',
 		'color' => '#28b6aa',
 		'figma_icon_node' => '21378:7565',
+		'figma_sp_icon_node' => '21376:4587',
+		'responsive_icon_status' => 'FIGMA_SOURCE_ANOMALY',
 		'description' => '学芸員資格の取得、関連する仕事を目指すコース',
 		'recommendations' => array(
 			'歴史や文化の魅力を、展示や企画を通して多くの人に伝えたい人',
@@ -96,11 +98,17 @@ $course_contract = array(
 $courses = array();
 foreach ( $course_contract as $course ) {
 	$field_prefix = 'course_' . $course['key'];
+	$icon_asset = 'assets/images/courses/' . str_replace( '_', '-', $course['key'] ) . '.svg';
+	$icon_asset_sp = 'curator' === $course['key'] ? 'assets/images/courses/teaching.svg' : $icon_asset;
 	$courses[] = array(
 		'key' => $course['key'],
 		'title' => $course['title'],
 		'color' => $course['color'],
 		'figma_icon_node' => $course['figma_icon_node'],
+		'figma_sp_icon_node' => isset( $course['figma_sp_icon_node'] ) ? $course['figma_sp_icon_node'] : '',
+		'responsive_icon_status' => isset( $course['responsive_icon_status'] ) ? $course['responsive_icon_status'] : 'SAME_VECTOR_RESIZED',
+		'icon_asset' => $icon_asset,
+		'icon_asset_sp' => $icon_asset_sp,
 		'description' => ref001_get_field( $field_prefix . '_description', $course['description'] ),
 		'recommendations' => array(
 			ref001_get_field( $field_prefix . '_recommendation_1', $course['recommendations'][0] ),
@@ -121,10 +129,29 @@ foreach ( $course_contract as $course ) {
 
 	<ol class="ref001-courses__grid">
 		<?php foreach ( $courses as $course ) : ?>
-			<li class="ref001-courses__item" style="--ref001-course-color: <?php echo esc_attr( $course['color'] ); ?>;">
+			<li
+				class="ref001-courses__item"
+				style="--ref001-course-color: <?php echo esc_attr( $course['color'] ); ?>;"
+				data-course-key="<?php echo esc_attr( $course['key'] ); ?>"
+				data-responsive-icon-status="<?php echo esc_attr( $course['responsive_icon_status'] ); ?>"
+			>
 				<article class="ref001-course-card">
 					<div class="ref001-course-card__identity">
-						<div class="ref001-course-card__icon" data-figma-icon-node="<?php echo esc_attr( $course['figma_icon_node'] ); ?>" aria-hidden="true"></div>
+						<div
+							class="ref001-course-card__icon"
+							data-figma-icon-node="<?php echo esc_attr( $course['figma_icon_node'] ); ?>"
+							<?php if ( $course['figma_sp_icon_node'] ) : ?>data-figma-sp-icon-node="<?php echo esc_attr( $course['figma_sp_icon_node'] ); ?>"<?php endif; ?>
+						>
+							<picture>
+								<source media="(max-width: 600px)" srcset="<?php echo esc_url( get_theme_file_uri( $course['icon_asset_sp'] ) ); ?>">
+								<img
+									src="<?php echo esc_url( get_theme_file_uri( $course['icon_asset'] ) ); ?>"
+									alt=""
+									loading="lazy"
+									decoding="async"
+								>
+							</picture>
+						</div>
 						<div class="ref001-course-card__heading">
 							<h3><?php echo esc_html( $course['title'] ); ?></h3>
 							<span class="ref001-course-card__marker" aria-hidden="true"></span>
