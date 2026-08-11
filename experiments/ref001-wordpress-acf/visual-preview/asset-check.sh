@@ -3,11 +3,8 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 EXPERIMENT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-OUTPUT_DIR="${1:-$SCRIPT_DIR/captures}"
 PORT="${REF001_PREVIEW_PORT:-8765}"
 URL="http://127.0.0.1:${PORT}/visual-preview/"
-
-mkdir -p "$OUTPUT_DIR"
 
 php -S "127.0.0.1:${PORT}" -t "$EXPERIMENT_ROOT" >"${TMPDIR:-/tmp}/ref001-visual-preview-php.log" 2>&1 &
 SERVER_PID=$!
@@ -22,12 +19,7 @@ for _ in {1..30}; do
 	fi
 	sleep 0.2
 done
-
 curl -fsS "$URL" >/dev/null
 
 cd "$SCRIPT_DIR"
-npx --yes --package=playwright@1.55.0 node capture.mjs \
-	"$URL" \
-	"$OUTPUT_DIR"
-
-printf 'REF-001 visual captures written to %s\n' "$OUTPUT_DIR"
+npx --yes --package=playwright@1.55.0 node asset-check.mjs "$URL"

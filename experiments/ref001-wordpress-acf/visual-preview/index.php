@@ -14,9 +14,9 @@ if ( PHP_SAPI !== 'cli-server' ) {
 	exit( 'REF-001 visual preview is development-server only.' );
 }
 
-$experiment_root        = dirname( __DIR__ );
-$theme_root             = $experiment_root . '/fixture-theme';
-$ref001_preview_styles  = array();
+$experiment_root       = dirname( __DIR__ );
+$theme_root            = $experiment_root . '/fixture-theme';
+$ref001_preview_styles = array();
 
 define( 'ABSPATH', $theme_root . '/' );
 define( 'REF001_VISUAL_PREVIEW', true );
@@ -57,8 +57,15 @@ function wp_enqueue_style( $handle, $src, $deps = array(), $version = false, $me
 	);
 }
 
+/**
+ * Mirror the fixture theme's public URL from the preview document root.
+ *
+ * Use an absolute web path rather than a document-relative `../` URL. Both can
+ * point to the same file today, but the absolute form is deterministic for
+ * `<img>`, `<source srcset>`, CSS links, and future nested preview routes.
+ */
 function get_theme_file_uri( $path = '' ) {
-	return '../fixture-theme/' . ltrim( (string) $path, '/' );
+	return '/fixture-theme/' . ltrim( (string) $path, '/' );
 }
 
 function get_header() {
