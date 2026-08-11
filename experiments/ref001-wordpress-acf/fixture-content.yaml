@@ -1,0 +1,66 @@
+schema_version: 1
+reference_id: REF-001-CHIBA-KEIZAI-SAMPLE
+purpose: DISPOSABLE_WORDPRESS_FIRST_PASS_CONTENT
+status: DRAFT
+
+page:
+  post_type: page
+  title: "REF-001 Top Page"
+  template_placeholder: "page-templates/template-ref001.php"
+  note: "Template filename is a learning placeholder until the actual target theme repository is inspected."
+
+acf_values:
+  mv_lead: "７つのコース制で“ミライ”を見つけ、資格取得支援で“チカラ”をつける。千葉の経済と就職に強い学びがここにある。"
+  reason_intro: "学生一人ひとりに寄り添う教育と、地域に根ざした実践的な学びで、将来につながる力を育みます。"
+  reason_1_title: "少人数教育"
+  reason_1_body: "一人ひとりに目が届く少人数教育。質問や相談もしやすい環境です。"
+  reason_2_title: "充実のキャリア支援"
+  reason_2_body: "キャリア支援と企業連携により、希望進路の実現をサポートします。"
+  reason_3_title: "地域連携・インターンシップ"
+  reason_3_body: "地域企業・自治体との実践的な学びで、社会で活きる力を養います。"
+
+media_placeholders:
+  mv_left_person_image:
+    desired_role: foreground_person
+    figma_pc_node_id: "21378:8044"
+    figma_sp_node_id: "21376:4897"
+    figma_image_hash: "ffaba0f1b80cd073b4f47d201eac19a7aa1dced0"
+    wp_attachment_id: null
+  mv_right_person_image:
+    desired_role: foreground_person
+    figma_pc_node_id: "21378:8039"
+    figma_sp_node_id: "21376:4893"
+    figma_image_hash: "cdb53715ec7a8c016428e42d818ab2dd40d3abc0"
+    wp_attachment_id: null
+  reason_1_image:
+    figma_node_id: "21378:8004"
+    wp_attachment_id: null
+  reason_2_image:
+    figma_node_id: "21378:8012"
+    wp_attachment_id: null
+  reason_3_image:
+    figma_node_id: "21378:8020"
+    wp_attachment_id: null
+
+code_owned_reference_copy:
+  mv_slogan:
+    text: "ケイザイって、想像以上におもしろい。"
+    rationale: "Art-directed copy is split into multiple Figma text layers with typography/position dependencies; not an ACF field in the learning baseline."
+  reason_section_heading:
+    text: "千葉経済大学が選ばれる理由"
+    rationale: "Heading composition includes decorative punctuation and typography; keep code-owned for baseline, revisit only with explicit editorial requirement."
+  reason_kicker:
+    text: "# REASON"
+    rationale: "Decorative section label."
+
+shared_or_global_reference_copy:
+  document_request_label: "資料請求"
+  open_campus_label: "オープンキャンパス"
+  mv_open_campus_label: "OPEN CAMPUS"
+  mv_open_campus_status: "開催中！"
+  note: "Do not create page ACF fields until target theme reconnaissance resolves whether these belong to header/menu/options/global config."
+
+separation_rule:
+  acf_export: "Field definitions/configuration only."
+  fixture_content: "Disposable first-pass page values only."
+  production_content_migration: "Separate concern; not implied by ACF field-group import."

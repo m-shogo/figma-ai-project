@@ -1,0 +1,140 @@
+schema_version: 1
+reference_id: REF-001-CHIBA-KEIZAI-SAMPLE
+implementation_profile_id: IMPL-REF001-WORDPRESS-ACF
+captured_at: "2026-08-11T11:58:00+09:00"
+status: LEARNING_DRAFT
+
+principles:
+  - "Only editor-owned content/config becomes ACF data; Figma layout values stay in code/design tokens."
+  - "A repeated visual pattern is not sufficient evidence for an ACF Repeater. Editor-controlled cardinality/reordering must be established separately."
+  - "ACF PRO-only architecture is not introduced while the target site's license/tier is unknown."
+  - "Do not duplicate PC/SP image fields when both responsive variants use the same underlying image source and only crop/layout differs."
+  - "Highly art-directed text can remain code-owned when arbitrary editing would destroy the composition."
+
+responsive_media_evidence:
+  method: FIGMA_IMAGE_HASH_COMPARISON
+  finding: "Corresponding PC/SP hero image layers use identical underlying image hashes."
+  pairs:
+    - logical_source: hero_right_underlay
+      pc_node_id: "21378:8038"
+      sp_node_id: "21376:4892"
+      image_hash: "274992b070931355c21319805898d587aa1c25f5"
+    - logical_source: hero_right_foreground
+      pc_node_id: "21378:8039"
+      sp_node_id: "21376:4893"
+      image_hash: "cdb53715ec7a8c016428e42d818ab2dd40d3abc0"
+    - logical_source: hero_left_underlay
+      pc_node_id: "21378:8043"
+      sp_node_id: "21376:4896"
+      image_hash: "368a0d75dffaf7a9057811e9f02106b4b19a2d78"
+    - logical_source: hero_left_foreground
+      pc_node_id: "21378:8044"
+      sp_node_id: "21376:4897"
+      image_hash: "ffaba0f1b80cd073b4f47d201eac19a7aa1dced0"
+  decision: "Do not create responsive duplicate ACF image fields. Final logical field count still requires target-theme/content ownership inspection because Figma retains underlay/replacement layers."
+
+sections:
+  - section_id: header
+    figma_nodes:
+      pc: "21378:8066"
+      sp: "21376:4918"
+    page_acf_ownership: NONE_BY_DEFAULT
+    reasoning:
+      - "Header is a shared Figma component/instance, not page-local content evidence."
+      - "Logo, document-request CTA, and open-campus CTA should first be resolved against the existing theme header, menu, options, or global configuration."
+    candidate_page_fields: []
+    code_or_global_owned:
+      - logo
+      - document_request_label
+      - document_request_url
+      - open_campus_label
+      - open_campus_url
+    unresolved:
+      - "Existing target theme's global header/CTA ownership."
+
+  - section_id: main-visual
+    figma_nodes:
+      pc: "21378:8032"
+      sp: "21376:4886"
+    page_acf_ownership: PARTIAL
+    editor_candidates:
+      - id: mv_left_person_image
+        type: image
+        return_format: ID
+        rationale: "Primary content photography may need editor replacement while WordPress attachment helpers preserve image metadata."
+        responsive_strategy: SINGLE_ATTACHMENT_SHARED_PC_SP
+      - id: mv_right_person_image
+        type: image
+        return_format: ID
+        rationale: "Primary content photography may need editor replacement while WordPress attachment helpers preserve image metadata."
+        responsive_strategy: SINGLE_ATTACHMENT_SHARED_PC_SP
+      - id: mv_lead
+        type: textarea
+        rationale: "Supporting explanatory copy can change without redefining the visual system, subject to wrap QA."
+    code_owned:
+      - id: mv_art_directed_slogan
+        figma_text: "ケイザイって、想像以上におもしろい。"
+        rationale: "The slogan is decomposed across multiple individually positioned text nodes, quotation marks, type sizes, and colors. Arbitrary CMS editing would break the art-directed composition."
+      - id: mv_background_shapes
+        rationale: "Vectors, masks, gradients, colors, and geometry are design implementation, not content."
+      - id: mv_open_campus_labels
+        rationale: "CTA labels are visually composed and likely global; resolve the destination/ownership from the target theme before adding page fields."
+    unresolved:
+      - "Which of the retained Figma underlay/replacement image layers are true editor-owned sources versus historical design residue."
+      - "Whether open-campus URL is global or page-specific."
+
+  - section_id: reason
+    figma_nodes:
+      pc: "21378:7999"
+      sp: "21376:4852"
+    page_acf_ownership: CONTENT_FIELDS_FIXED_CARDINALITY
+    editor_candidates:
+      - id: reason_intro
+        type: textarea
+        rationale: "Section explanatory copy is content-owned."
+      - id: reason_1_image
+        type: image
+        return_format: ID
+      - id: reason_1_title
+        type: text
+      - id: reason_1_body
+        type: textarea
+      - id: reason_2_image
+        type: image
+        return_format: ID
+      - id: reason_2_title
+        type: text
+      - id: reason_2_body
+        type: textarea
+      - id: reason_3_image
+        type: image
+        return_format: ID
+      - id: reason_3_title
+        type: text
+      - id: reason_3_body
+        type: textarea
+    cardinality:
+      figma_count: 3
+      editor_add_remove: UNDETERMINED
+      editor_reorder: UNDETERMINED
+      current_decision: FIXED_THREE_FIELDS
+      repeater_candidate: BLOCKED_UNTIL_EDITOR_REQUIREMENT_AND_ACF_PRO_CONFIRMED
+      rationale:
+        - "Figma proves a three-item visual pattern, not that editors should change its cardinality."
+        - "Repeater is an ACF PRO feature; license/tier is currently unresolved."
+    code_owned:
+      - "# REASON decorative label styling"
+      - "parentheses and heading typography"
+      - "PC horizontal / SP vertical layout"
+      - "card image masks/crops and spacing"
+
+prototype_delivery:
+  acf_export_path: "experiments/ref001-wordpress-acf/artifacts/acf-export.json"
+  template_location_placeholder: "page-templates/template-ref001.php"
+  warning: "The prototype JSON is intentionally not a frozen production field group. Its template filename and final field ownership must be reconciled with the actual target theme repository."
+
+learning_notes:
+  - "CMS flexibility is a product/editorial requirement, not something that can be inferred from visual repetition alone."
+  - "Responsive variants can share one media field even when crop geometry differs substantially."
+  - "Art-directed text is not automatically a CMS field just because it is text in Figma."
+  - "Global/shared Figma components should trigger target-code reconnaissance before page-level ACF field creation."

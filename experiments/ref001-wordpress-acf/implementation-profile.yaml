@@ -1,0 +1,177 @@
+schema_version: 1
+profile_id: IMPL-REF001-WORDPRESS-ACF
+status: DRAFT
+created_at: "2026-08-11T11:58:00+09:00"
+updated_at: "2026-08-11T11:58:00+09:00"
+
+selection:
+  mode: EXPLICIT
+  family: WORDPRESS
+  variant: AUTO_EXISTING
+  selected_by: OWNER
+  notes:
+    - "Owner specified that REF-001 is implemented as a WordPress fixed-page template using ACF."
+    - "Do not infer Classic/Hybrid theme type until the actual target theme repository is inspected."
+
+repository:
+  repository: ""
+  starting_commit: ""
+  target_route_or_template: ""
+  inspected: false
+  evidence_paths: []
+
+resolution:
+  detected_family: WORDPRESS
+  detected_variant: ""
+  confidence: HIGH
+  evidence:
+    - "Owner explicitly selected WordPress fixed-page template + ACF."
+    - "Figma reference and section structure are captured in references/chiba-keizai-sample.reference.yaml."
+  conflicts: []
+  conflict_resolution: MATCHED
+
+effective:
+  family: WORDPRESS
+  variant: ""
+  language_runtime: "PHP / HTML / CSS / JavaScript"
+  package_manager: ""
+  build_tool: ""
+  styling_architecture: ""
+  component_system: "WordPress template parts; exact existing-theme convention unresolved"
+  routing: "WordPress Page template hierarchy"
+  data_source: "WordPress Page + ACF fields"
+  image_pipeline: "WordPress attachment IDs + wp_get_attachment_image(); existing image helpers take precedence"
+  form_handling: ""
+  i18n: ""
+  test_harness: "WordPress page-shell visual capture; exact environment unresolved"
+  rendering_mode: "SERVER_RENDERED_PHP"
+  notes:
+    - "Figma MCP React/Tailwind output is reference-only and must be translated into the target theme conventions."
+    - "No Tailwind or JS framework dependency is authorized by this profile."
+
+platform:
+  static_web:
+    html_strategy: ""
+    script_strategy: ""
+    partial_strategy: ""
+    output_contract: ""
+  php_template:
+    engine: ""
+    framework_runtime: ""
+    escaping_strategy: ""
+    route_data_contract: ""
+    partial_strategy: ""
+  wordpress:
+    enabled: true
+    wordpress_version: ""
+    php_version: ""
+    theme_type: UNKNOWN
+    template_unit: FIXED_PAGE_TEMPLATE
+    editor_model: ACF_FIELDS
+    asset_enqueue: "EXISTING_PROJECT"
+    image_helpers: "wp_get_attachment_image() / existing project helpers"
+    theme_json: "EXISTING_PROJECT"
+    block_json: "NOT_PLANNED_FOR_FIXED_PAGE_TEMPLATE_UNLESS_EXISTING_PROJECT_REQUIRES"
+    cpt_taxonomy: "NOT_REQUIRED_BY_CURRENT_REFERENCE"
+    acf:
+      enabled: true
+      version: ""
+      pro: null
+      architecture: TEMPLATE_FIELDS
+      field_group_ownership: PAGE_SPECIFIC_CONTENT_ONLY
+      image_return_format: ID
+      local_json_policy: EXISTING_PROJECT
+      local_json_dir: ""
+      stable_keys_required: true
+      notes:
+        - "ACF version/license tier is intentionally unresolved until target repository/runtime reconnaissance."
+        - "Do not introduce Repeater/Flexible Content/ACF Blocks solely because Figma visually repeats a pattern."
+        - "When PRO availability is unknown, the learning prototype stays compatible with basic field types."
+  js_framework:
+    framework: ""
+    version: ""
+    router_mode: ""
+    rendering_mode: ""
+    server_client_boundary: ""
+    state_management: ""
+    data_fetch_cache: ""
+    image_policy: ""
+    hydration_or_islands: ""
+
+delivery_requirements:
+  source_code_required: true
+  acf:
+    required: true
+    export_json:
+      required: true
+      format: ACF_EXPORT_ARRAY
+      target_repo_path: "acf-export.json"
+      evidence_copy_required: true
+    local_json:
+      required: false
+      target_repo_dir: ""
+    import_or_sync_smoke_required: true
+    accepted_methods:
+      - ADMIN_UI
+
+checklist:
+  - id: TARGET_ROUTE_OR_TEMPLATE
+    status: BLOCKED
+    evidence: []
+    notes:
+      - "Actual theme repository/template filename is not connected yet."
+  - id: WORDPRESS_TEMPLATE_UNIT
+    status: PASS
+    evidence:
+      - "Owner specified WordPress fixed-page template."
+    notes: []
+  - id: ACF_ARCHITECTURE
+    status: PASS
+    evidence:
+      - "Fixed page content is modeled as template fields first; flexible editor architectures are not assumed."
+    notes: []
+  - id: ACF_IMAGE_RETURN_FORMAT
+    status: PASS
+    evidence:
+      - "Image ID is the learning default so WordPress attachment helpers can preserve responsive image metadata."
+    notes: []
+  - id: ACF_REPEATER_FLEXIBLE_BLOCK_DECISION
+    status: PASS
+    evidence:
+      - "No editor add/remove/reorder requirement has been supplied; repeated Figma cards alone do not authorize Repeater/Flexible Content."
+    notes:
+      - "Re-evaluate after actual editor requirements and ACF PRO tier are known."
+  - id: ACF_EXPORT_JSON_REQUIREMENT
+    status: PASS
+    evidence:
+      - "Portable acf-export.json is required by project delivery policy."
+    notes: []
+  - id: ACF_LOCAL_JSON_REQUIREMENT
+    status: BLOCKED
+    evidence: []
+    notes:
+      - "Follow the target theme if it already uses acf-json or custom save/load paths."
+  - id: ACF_IMPORT_OR_SYNC_SMOKE_PLAN
+    status: PASS
+    evidence:
+      - "Admin import is the baseline method that does not assume ACF 6.8+ WP-CLI availability."
+    notes:
+      - "WP_CLI_IMPORT/WP_CLI_SYNC may be added after installed ACF version is verified."
+
+unknowns:
+  - "Target WordPress theme repository, branch, and starting commit."
+  - "Actual page slug and whether the theme uses page-{slug}.php or a selectable custom Page Template."
+  - "Classic vs Hybrid theme classification."
+  - "WordPress and PHP versions."
+  - "ACF version and whether ACF PRO is licensed/enabled."
+  - "Existing ACF field naming/key conventions and Local JSON save/load paths."
+  - "Existing header/global CTA ownership (theme options, options page, menu, hard-coded config, or another source)."
+  - "Editor requirement for changing card count/order."
+
+conflicts: []
+
+freeze:
+  ready: false
+  frozen_at: ""
+  notes:
+    - "Family and CMS model are owner-resolved, but repository-dependent technical decisions remain intentionally unfrozen."

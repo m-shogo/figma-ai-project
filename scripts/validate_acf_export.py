@@ -6,6 +6,8 @@ import json
 from pathlib import Path
 from typing import Any
 
+ROOT = Path(__file__).resolve().parents[1]
+
 
 def load_export(path: Path) -> list[dict[str, Any]]:
     value = json.loads(path.read_text(encoding="utf-8"))
@@ -122,20 +124,54 @@ def validate_path(path: Path) -> list[str]:
     return validate_export(items)
 
 
+def candidate_paths() -> list[Path]:
+    found: list[Path] = []
+    for base in (ROOT / "experiments", ROOT / "references", ROOT / "contracts"):
+        if not base.exists():
+            continue
+        for path in sorted(base.rglob("*.json")):
+            if path.name == "acf-export.json" or path.name.endswith(".acf-export.json"):
+                found.append(path)
+    return list(dict.fromkeys(found))
+
+
+def display_path(path: Path) -> str:
+    try:
+        return path.resolve().relative_to(ROOT.resolve()).as_posix()
+    except ValueError:
+        return str(path)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Validate the portable ACF export JSON delivered with a WordPress/ACF implementation"
+        description="Validate portable ACF export JSON delivered with WordPress/ACF implementations"
     )
-    parser.add_argument("path", type=Path)
+    parser.add_argument(
+        "paths",
+        nargs="*",
+        type=Path,
+        help="ACF export JSON paths; when omitted, validate all repository acf-export.json artifacts",
+    )
     args = parser.parse_args()
-    errors = validate_path(args.path)
-    if errors:
-        print(f"FAIL {args.path}")
-        for error in errors:
-            print(f"  - {error}")
-        return 1
-    print(f"PASS {args.path}")
-    return 0
+
+    paths = args.paths or candidate_paths()
+    if not paths:
+        print("PASS no ACF export artifacts found")
+        return 0
+
+    failures = 0
+    for path in paths:
+        candidate = path if path.is_absolute() else ROOT / path
+        errors = validate_path(candidate)
+        label = display_path(candidate)
+        if errors:
+            failures += 1
+            print(f"FAIL {label}")
+            for error in errors:
+                print(f"  - {error}")
+        else:
+            print(f"PASS {label}")
+    return 1 if failures else 0
 
 
 if __name__ == "__main__":

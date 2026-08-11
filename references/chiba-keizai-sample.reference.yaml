@@ -238,11 +238,14 @@ owner_notes:
   - "Keep PC/SP on the same Figma page as a provisional working convention for this run; promote to a project rule only after real-run evidence accumulates."
   - "Do not redesign the supplied Figma; implementation fidelity is the objective."
   - "The visible PC root was re-captured after the owner corrected template mode inheritance; use current visible-root IDs rather than hidden pre-fix copies."
+  - "Implementation target is WordPress fixed-page template + ACF. The target theme repository still must be inspected before theme-specific choices are frozen."
 
 material_unknowns:
-  - "A separate target website implementation repository/code baseline has not been supplied; this repository is the Figma-to-code research/workflow project."
-  - "Target website repository branch and starting commit are unresolved."
-  - "Target framework, styling architecture, package manager, existing components, and code tokens must be inferred from the eventual target repository rather than guessed."
+  - "A separate target WordPress theme repository/code baseline has not been supplied; this repository is the Figma-to-code research/workflow project."
+  - "Target WordPress theme branch and starting commit are unresolved."
+  - "Classic vs Hybrid theme type, styling/build architecture, existing components, template parts, and code tokens must be inferred from the target theme rather than guessed."
+  - "WordPress/PHP/ACF versions, ACF PRO availability, ACF Local JSON paths, and existing field/key conventions are unresolved."
+  - "Actual page slug/template filename and global-vs-page ownership for Header/CTA content are unresolved."
   - "Code Connect availability/mapping is UNDETERMINED because the current Figma plan/seat blocks MCP Code Connect lookup."
   - "Production breakpoint contract is unresolved; PC/SP frame widths alone are not breakpoint evidence."
 
@@ -251,7 +254,7 @@ code_baseline:
   base_branch: ""
   starting_commit: ""
   target_route: ""
-  framework: ""
+  framework: "WordPress + ACF fixed-page template"
   package_manager: ""
   design_system_paths: []
   token_paths: []
@@ -259,4 +262,4 @@ code_baseline:
 freeze:
   ready: false
   frozen_at: ""
-  notes: "Figma reference re-captured after responsive Variable Mode correction. Keep DRAFT until the target website code baseline and material responsive/codebase unknowns are resolved."
+  notes: "WordPress + ACF implementation family is owner-resolved. Keep DRAFT until the target theme baseline, template contract, ACF runtime/tier, and responsive/codebase unknowns are resolved."
