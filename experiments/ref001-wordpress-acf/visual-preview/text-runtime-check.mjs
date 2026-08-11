@@ -11,14 +11,17 @@ const endpoints = [
 ];
 
 const browser = await chromium.launch({ headless: true });
-const report = { schema_version: 1, url, endpoints: {} };
+const report = { schema_version: 2, url, endpoints: {} };
 let failed = false;
+
+const round1 = (value) => Math.round(value * 10) / 10;
 
 for (const endpoint of endpoints) {
   const page = await browser.newPage({ viewport: endpoint.viewport });
   await page.goto(url, { waitUntil: 'networkidle' });
 
   const result = await page.evaluate(() => {
+    const round = (value) => Math.round(value * 10) / 10;
     const root = document.documentElement;
     const viewportWidth = root.clientWidth;
     const pageOverflow = Math.max(root.scrollWidth, document.body?.scrollWidth ?? 0) - viewportWidth;
@@ -49,6 +52,7 @@ for (const endpoint of endpoints) {
       const lineHeightPx = Number.isFinite(parsedLineHeight) ? parsedLineHeight : null;
       const lineHeightRatio = lineHeightPx && fontSizePx ? lineHeightPx / fontSizePx : null;
       const lineBoxExtraPx = lineHeightPx && fontSizePx ? lineHeightPx - fontSizePx : null;
+      const halfLeadingApproxPx = lineBoxExtraPx === null ? null : lineBoxExtraPx / 2;
       const widthOverflowPx = element.clientWidth > 0 ? element.scrollWidth - element.clientWidth : 0;
       const heightOverflowPx = element.clientHeight > 0 ? element.scrollHeight - element.clientHeight : 0;
       const clippedX = widthOverflowPx > 1 && ['hidden', 'clip'].includes(style.overflowX);
@@ -58,12 +62,20 @@ for (const endpoint of endpoints) {
 
       const range = document.createRange();
       range.selectNodeContents(element);
+      const rangeRects = Array.from(range.getClientRects()).filter(
+        (rangeRect) => rangeRect.width > 0 && rangeRect.height > 0,
+      );
       const lineTops = [];
-      for (const lineRect of Array.from(range.getClientRects())) {
-        if (lineRect.width <= 0 || lineRect.height <= 0) continue;
+      for (const lineRect of rangeRects) {
         const top = Math.round(lineRect.top * 2) / 2;
         if (!lineTops.some((existing) => Math.abs(existing - top) <= 1)) lineTops.push(top);
       }
+      const rangeTop = rangeRects.length ? Math.min(...rangeRects.map((item) => item.top)) : null;
+      const rangeBottom = rangeRects.length ? Math.max(...rangeRects.map((item) => item.bottom)) : null;
+      const rangeTopInsetPx = rangeTop === null ? null : rangeTop - rect.top;
+      const rangeBottomInsetPx = rangeBottom === null ? null : rect.bottom - rangeBottom;
+      const rangeVisualHeightPx =
+        rangeTop === null || rangeBottom === null ? null : Math.max(0, rangeBottom - rangeTop);
 
       return {
         tag: element.tagName.toLowerCase(),
@@ -71,18 +83,24 @@ for (const endpoint of endpoints) {
         className: typeof element.className === 'string' ? element.className : null,
         text: element.textContent?.trim().replace(/\s+/g, ' ').slice(0, 160) || '',
         box: {
-          x: Math.round(rect.x * 10) / 10,
-          y: Math.round(rect.y * 10) / 10,
-          width: Math.round(rect.width * 10) / 10,
-          height: Math.round(rect.height * 10) / 10,
+          x: round(rect.x),
+          y: round(rect.y),
+          width: round(rect.width),
+          height: round(rect.height),
         },
         font: {
           family: style.fontFamily,
           sizePx: fontSizePx,
           lineHeightPx,
           lineHeightRatio: lineHeightRatio === null ? null : Math.round(lineHeightRatio * 1000) / 1000,
-          lineBoxExtraPx: lineBoxExtraPx === null ? null : Math.round(lineBoxExtraPx * 10) / 10,
+          lineBoxExtraPx: lineBoxExtraPx === null ? null : round(lineBoxExtraPx),
+          halfLeadingApproxPx: halfLeadingApproxPx === null ? null : round(halfLeadingApproxPx),
           letterSpacing: style.letterSpacing,
+        },
+        textRange: {
+          topInsetPx: rangeTopInsetPx === null ? null : round(rangeTopInsetPx),
+          bottomInsetPx: rangeBottomInsetPx === null ? null : round(rangeBottomInsetPx),
+          visualHeightPx: rangeVisualHeightPx === null ? null : round(rangeVisualHeightPx),
         },
         whiteSpace: style.whiteSpace,
         overflowX: style.overflowX,
@@ -125,6 +143,8 @@ for (const endpoint of endpoints) {
     };
   });
 
+  // Keep the top-level summary stable while the detailed report captures
+  // approximate half-leading and text-range insets for spacing diagnosis.
   report.endpoints[endpoint.key] = result;
   console.log(JSON.stringify({ endpoint: endpoint.key, ...result }, null, 2));
 
