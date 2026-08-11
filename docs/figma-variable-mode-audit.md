@@ -125,7 +125,13 @@ Audit one captured record:
 python scripts/audit_figma_variable_modes.py path/to/reference.variable-mode-audit.yaml
 ```
 
-The same check is part of repository readiness and CI.
+Generate a machine-readable remediation plan:
+
+```bash
+python scripts/plan_figma_variable_mode_remediation.py path/to/reference.variable-mode-audit.yaml
+```
+
+The same audit check is part of repository readiness and CI.
 
 ## Figma/MCP capture guidance
 
@@ -145,17 +151,61 @@ For descendants, do not dump the whole page indiscriminately. Target nodes that 
 
 This stays consistent with Progressive Disclosure: root audit first, then targeted descendants only when the root or visual evidence is suspicious.
 
-## Auto-fix policy
+## Evidence-gated remediation plan
 
-Detection can be automatic. Mutation must remain evidence-gated.
+Detection is automatic. Mutation is allowed only when the plan can prove the logical viewport from authoritative reference evidence.
 
-Safe auto-fix candidate:
+`plan_figma_variable_mode_remediation.py` emits actions such as:
 
-- root has authoritative PC/SP mapping from frozen reference evidence
-- responsive collection and expected mode ID are known
-- no conflicting semantic/geometry evidence
-- write permission exists
+```json
+{
+  "action": "SET_EXPLICIT_VARIABLE_MODE",
+  "node_id": "21378:7456",
+  "collection_id": "VariableCollectionId:64:671",
+  "mode_id": "3:0",
+  "expected_viewport": "desktop"
+}
+```
 
-Otherwise produce a remediation plan rather than changing Figma.
+A Figma-capable agent may apply the action only when `safe_to_auto_apply=true`.
 
-A future Figma adapter may execute the remediation plan with the Plugin API, but the audit logic itself remains tool-independent and testable in CI.
+Safe auto-fix requires:
+
+- `expected_viewport` is authoritative reference/owner mapping, not width-only inference
+- responsive collection and exact expected mode ID are known
+- no conflicting viewport evidence
+- the root is unpinned, pinned to the wrong mode, or resolves the wrong mode in a way that a root pin can safely correct
+- Figma write permission exists
+
+The planner intentionally does **not** auto-fix:
+
+- width-only viewport guesses
+- semantic name versus geometry conflicts
+- descendant-only mismatches when the root is already correctly pinned
+- a root whose explicit expected mode is already correct but effective resolution still disagrees
+
+Those cases enter `blocked` and require targeted Figma inspection instead of a blind rewrite.
+
+## Apply → verify loop
+
+For a safe plan, the Figma-capable agent should execute:
+
+```text
+capture audit
+  ↓
+audit mismatch
+  ↓
+generate remediation plan
+  ↓
+apply SET_EXPLICIT_VARIABLE_MODE
+  ↓
+re-read root explicit/resolved modes
+  ↓
+re-audit variable-bound descendants
+  ↓
+section screenshot / visual check
+  ↓
+continue implementation only after PASS
+```
+
+This keeps automated repair reversible and evidence-based. The CI logic remains tool-independent; ChatGPT/Cursor/Claude/Codex adapters can execute the same plan through whichever Figma MCP/write capability is available.
