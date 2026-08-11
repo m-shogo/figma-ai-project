@@ -47,7 +47,7 @@ $left_image_id  = ref001_get_field( 'mv_left_person_image', 0 );
 $right_image_id = ref001_get_field( 'mv_right_person_image', 0 );
 $lead            = ref001_get_field(
 	'mv_lead',
-	'７つのコース制で“ミライ”を見つけ、資格取得支援で“チカラ”をつける。千葉の経済と就職に強い学びがここにある。'
+	"７つのコース制で“ミライ”を見つけ、\n資格取得支援で“チカラ”をつける。\n千葉の経済と就職に強い学びがここにある。"
 );
 
 $left_image = ref001_get_attachment_image(
