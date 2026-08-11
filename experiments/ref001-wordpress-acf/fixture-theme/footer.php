@@ -49,10 +49,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 		</div>
 
 		<div class="ref001-footer__sns" aria-label="公式SNS" data-destinations="deferred">
-			<span aria-hidden="true">f</span>
-			<span aria-hidden="true">▶</span>
-			<span aria-hidden="true">◎</span>
-			<span class="ref001-footer__line" aria-hidden="true">LINE</span>
+			<span class="ref001-footer__sns-icon ref001-footer__sns-icon--facebook" aria-hidden="true"></span>
+			<span class="ref001-footer__sns-icon ref001-footer__sns-icon--youtube" aria-hidden="true"></span>
+			<span class="ref001-footer__sns-icon ref001-footer__sns-icon--instagram" aria-hidden="true"></span>
+			<span class="ref001-footer__sns-icon ref001-footer__sns-icon--line" aria-hidden="true"></span>
 		</div>
 	</div>
 
