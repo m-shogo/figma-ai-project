@@ -51,16 +51,6 @@ environment_contract:
     reduced_motion_policy: ""
     notes: []
   effective_overrides: []
-  # - profile_id: ios-safari-touch
-  #   reset_profile: BASE_PLUS_ENVIRONMENT
-  #   smooth_scroll: INHERIT
-  #   hover_profile: TOUCH_FIRST
-  #   touch_profile: BROWSER_NATIVE
-  #   viewport_profile: DYNAMIC_SAFE_AREA
-  #   scroll_lock_profile: MOBILE_OVERLAY
-  #   animation_profile: INHERIT
-  #   image_profile: INHERIT
-  #   evidence: []
   qa:
     section_capture: CANONICAL_PLUS_DIFFERENCES # CANONICAL_ONLY | CANONICAL_PLUS_DIFFERENCES | ALL_REQUIRED
     boundary_capture: CANONICAL_PLUS_DIFFERENCES
@@ -156,6 +146,38 @@ layout:
   intrinsic_layout_allowed: true
   notes: []
 
+web_translation:
+  static_frame_overfit: PROHIBITED
+  typography:
+    natural_wrap_default: true
+    one_line_or_truncation_requires_evidence: true
+    fallback_font_wrap_difference_tolerated: true
+    line_box_spacing_diagnosis_required: true
+    browser_native_heading_balance_allowed: true
+    notes: []
+  responsive:
+    figma_endpoints_define_acceptance_frames_not_breakpoints: true
+    intermediate_width_runtime_safety_required: true
+    intrinsic_css_allowed_when_it_preserves_demonstrated_intent: true
+    notes: []
+  overflow:
+    page_horizontal_overflow: PROHIBITED
+    readable_text_clipping: PROHIBITED
+    intentional_clipping_requires_evidence: true
+    notes: []
+  assets:
+    exact_source_preferred: true
+    source_identity_separate_from_crop_transform: true
+    exported_asset_requires_runtime_validation_when_complex: true
+    final_visible_composite_allowed_for_visual_qa: true
+    cms_media_ownership_separate_from_visual_qa: true
+    notes: []
+  generation:
+    historical_complaint_is_not_current_capability_proof: true
+    generation_specific_workaround_requires_evidence: true
+    undetermined_is_preferred_to_guessing: true
+    notes: []
+
 shared_components: []
 
 assets:
@@ -192,13 +214,19 @@ integration:
     - container_alignment
     - cross_section_spacing
     - typography_consistency
+    - text_runtime_safety
+    - line_box_spacing_diagnostics
+    - font_availability_diagnostics
     - shared_component_consistency
     - breakpoint_consistency
     - responsive_continuity
+    - intermediate_width_runtime_safety
     - global_overflow
+    - readable_text_clipping
     - z_index_continuity
     - background_continuity
     - asset_quality
+    - exported_asset_runtime_fidelity
     - company_policy_compliance
     - environment_profile_compliance
     - input_capability_behavior
