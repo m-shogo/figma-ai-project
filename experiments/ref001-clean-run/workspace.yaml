@@ -18,10 +18,12 @@ include_paths:
   - experiments/ref001-wordpress-acf/implementation-profile.yaml
 
 # REF-001-specific validators/builders encode repaired implementation details
-# and therefore are not valid clean-run inputs.
+# and therefore are not valid clean-run inputs. The WordPress learning-fixture
+# validator is also answer-bearing even though its filename is not REF-specific.
 exclude_globs:
   - scripts/*ref001*
   - scripts/**/*ref001*
+  - scripts/validate_wordpress_learning_fixture.py
   - scripts/__pycache__/*
   - scripts/**/__pycache__/*
 
@@ -41,5 +43,6 @@ forbidden_globs:
   - experiments/ref001-wordpress-acf/README.md
   - research/figma-web-friction/*
   - research/figma-web-friction/**/*
+  - scripts/validate_wordpress_learning_fixture.py
   - tests/test_ref001_*
   - tests/**/test_ref001_*

@@ -69,6 +69,7 @@ jobs:
           test ! -e "$RUNNER_TEMP/ref001-clean-run/experiments/ref001-wordpress-acf/fixture-theme"
           test ! -e "$RUNNER_TEMP/ref001-clean-run/experiments/ref001-wordpress-acf/visual-preview"
           test ! -e "$RUNNER_TEMP/ref001-clean-run/research/figma-web-friction"
+          test ! -e "$RUNNER_TEMP/ref001-clean-run/scripts/validate_wordpress_learning_fixture.py"
           ! find "$RUNNER_TEMP/ref001-clean-run/scripts" -type f -iname '*ref001*' -print -quit | grep -q .
           echo "PASS blind handoff/gates/manifest present; repaired REF-001 implementation and answer-bearing evidence absent"
 
