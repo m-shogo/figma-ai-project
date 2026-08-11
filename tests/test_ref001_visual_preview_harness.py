@@ -63,6 +63,19 @@ class Ref001VisualPreviewHarnessTests(unittest.TestCase):
         self.assertIn("courseResults.length !== 7", source)
         self.assertIn("asset-check.mjs", shell)
 
+    def test_mv_final_group_fixtures_have_dedicated_browser_gate(self) -> None:
+        source = (PREVIEW / "mv-asset-check.mjs").read_text(encoding="utf-8")
+        shell = (PREVIEW / "asset-check.sh").read_text(encoding="utf-8")
+        self.assertIn("mv-asset-check.mjs", shell)
+        self.assertIn("21378:8041", source)
+        self.assertIn("21378:8036", source)
+        self.assertIn("21376:4894", source)
+        self.assertIn("21376:4890", source)
+        self.assertIn("charCodeSum32", source)
+        self.assertIn("currentSrc", source)
+        self.assertIn("channelRange < 20", source)
+        self.assertIn("Main Visual final-group fixture integrity check failed", source)
+
     def test_visual_qa_requires_zero_body_and_section_geometry_delta(self) -> None:
         workflow = WORKFLOW.read_text(encoding="utf-8")
         self.assertIn("Require exact geometry match", workflow)
