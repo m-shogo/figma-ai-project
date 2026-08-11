@@ -29,9 +29,10 @@ class WordPressLearningFixtureTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             fixture, acf_export = self.copy_fixture(directory)
             target = fixture / "template-parts" / "ref001" / "main-visual.php"
+            ephemeral_url = "https://" + "www.figma.com" + "/api/mcp/asset/temporary.png"
             target.write_text(
                 target.read_text(encoding="utf-8")
-                + '\n<img src="https://www.figma.com/api/mcp/asset/temporary.png" alt="">\n',
+                + f'\n<img src="{ephemeral_url}" alt="">\n',
                 encoding="utf-8",
             )
             errors = validator.validate_fixture(fixture, acf_export)
