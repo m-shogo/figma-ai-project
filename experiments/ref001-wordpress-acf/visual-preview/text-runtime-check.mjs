@@ -5,26 +5,25 @@ import path from 'node:path';
 const url = process.argv[2] || 'http://127.0.0.1:8765/visual-preview/';
 const output = process.argv[3] || 'captures/ref001-text-runtime.json';
 
-// 375 / 1380 are the supplied Figma acceptance endpoints. The additional
-// widths are Web-runtime safety probes only: they do NOT define production
-// breakpoints and are never compared pixel-for-pixel with Figma.
+// Owner-resolved production breakpoint: 768px.
+// 375 / 1380 remain the supplied Figma pixel-acceptance endpoints.
+// Other widths only test Web runtime safety; they are not pixel-matched to Figma.
 const scenarios = [
   { key: 'w320', role: 'RUNTIME_SAFETY', viewport: { width: 320, height: 844 } },
   { key: 'w360', role: 'RUNTIME_SAFETY', viewport: { width: 360, height: 844 } },
   { key: 'sp', role: 'FIGMA_ACCEPTANCE', viewport: { width: 375, height: 844 } },
   { key: 'w390', role: 'RUNTIME_SAFETY', viewport: { width: 390, height: 844 } },
   { key: 'w430', role: 'RUNTIME_SAFETY', viewport: { width: 430, height: 900 } },
-  { key: 'w599', role: 'FIXTURE_SEAM_SAFETY', viewport: { width: 599, height: 900 } },
-  { key: 'w600', role: 'FIXTURE_SEAM_SAFETY', viewport: { width: 600, height: 900 } },
-  { key: 'w601', role: 'FIXTURE_SEAM_SAFETY', viewport: { width: 601, height: 900 } },
-  { key: 'w768', role: 'RUNTIME_SAFETY', viewport: { width: 768, height: 900 } },
+  { key: 'w767', role: 'BREAKPOINT_BOUNDARY', viewport: { width: 767, height: 900 } },
+  { key: 'w768', role: 'BREAKPOINT_BOUNDARY', viewport: { width: 768, height: 900 } },
+  { key: 'w769', role: 'BREAKPOINT_BOUNDARY', viewport: { width: 769, height: 900 } },
   { key: 'w1024', role: 'RUNTIME_SAFETY', viewport: { width: 1024, height: 900 } },
   { key: 'w1200', role: 'RUNTIME_SAFETY', viewport: { width: 1200, height: 900 } },
   { key: 'pc', role: 'FIGMA_ACCEPTANCE', viewport: { width: 1380, height: 900 } },
 ];
 
 const browser = await chromium.launch({ headless: true });
-const report = { schema_version: 4, url, scenarios: {} };
+const report = { schema_version: 5, breakpoint_px: 768, url, scenarios: {} };
 let failed = false;
 
 for (const scenario of scenarios) {
@@ -36,15 +35,12 @@ for (const scenario of scenarios) {
     const round = (value) => Math.round(value * 10) / 10;
     const root = document.documentElement;
     const viewportWidth = root.clientWidth;
-    const pageOverflow = Math.max(root.scrollWidth, document.body?.scrollWidth ?? 0) - viewportWidth;
+    const documentScrollWidth = root.scrollWidth;
+    const bodyScrollWidth = document.body?.scrollWidth ?? 0;
+    const pageOverflowPx = Math.max(0, Math.max(documentScrollWidth, bodyScrollWidth) - viewportWidth);
 
-    const candidates = Array.from(document.body.querySelectorAll('*')).filter((element) => {
+    const visibleHtmlElements = Array.from(document.body.querySelectorAll('*')).filter((element) => {
       if (!(element instanceof HTMLElement)) return false;
-      if (element.getAttribute('aria-hidden') === 'true') return false;
-      const ownText = Array.from(element.childNodes).some(
-        (node) => node.nodeType === Node.TEXT_NODE && node.textContent?.trim(),
-      );
-      if (!ownText) return false;
       const style = getComputedStyle(element);
       const rect = element.getBoundingClientRect();
       return (
@@ -56,7 +52,37 @@ for (const scenario of scenarios) {
       );
     });
 
-    const text = candidates.map((element) => {
+    const overflowElements = visibleHtmlElements
+      .map((element) => {
+        const rect = element.getBoundingClientRect();
+        const rightOverflowPx = Math.max(0, rect.right - viewportWidth);
+        const leftOverflowPx = Math.max(0, -rect.left);
+        const ownScrollOverflowPx = Math.max(0, element.scrollWidth - element.clientWidth);
+        return {
+          tag: element.tagName.toLowerCase(),
+          id: element.id || null,
+          className: typeof element.className === 'string' ? element.className : null,
+          box: { x: round(rect.x), width: round(rect.width), right: round(rect.right) },
+          rightOverflowPx: round(rightOverflowPx),
+          leftOverflowPx: round(leftOverflowPx),
+          ownScrollOverflowPx,
+        };
+      })
+      .filter((item) => item.rightOverflowPx > 1 || item.leftOverflowPx > 1 || item.ownScrollOverflowPx > 1)
+      .sort((a, b) =>
+        Math.max(b.rightOverflowPx, b.leftOverflowPx, b.ownScrollOverflowPx) -
+        Math.max(a.rightOverflowPx, a.leftOverflowPx, a.ownScrollOverflowPx),
+      )
+      .slice(0, 40);
+
+    const textCandidates = visibleHtmlElements.filter((element) => {
+      if (element.getAttribute('aria-hidden') === 'true') return false;
+      return Array.from(element.childNodes).some(
+        (node) => node.nodeType === Node.TEXT_NODE && node.textContent?.trim(),
+      );
+    });
+
+    const text = textCandidates.map((element) => {
       const style = getComputedStyle(element);
       const rect = element.getBoundingClientRect();
       const fontSizePx = Number.parseFloat(style.fontSize) || 0;
@@ -109,12 +135,7 @@ for (const scenario of scenarios) {
         id: element.id || null,
         className: typeof element.className === 'string' ? element.className : null,
         text: element.textContent?.trim().replace(/\s+/g, ' ').slice(0, 160) || '',
-        box: {
-          x: round(rect.x),
-          y: round(rect.y),
-          width: round(rect.width),
-          height: round(rect.height),
-        },
+        box: { x: round(rect.x), y: round(rect.y), width: round(rect.width), height: round(rect.height) },
         font: {
           family: style.fontFamily,
           primaryFamily: primaryFontFamily,
@@ -153,31 +174,25 @@ for (const scenario of scenarios) {
     });
 
     const failures = text.filter(
-      (item) =>
-        item.nowrapOverflow ||
-        ((item.clippedX || item.clippedY) && !item.intentionalTruncation),
+      (item) => item.nowrapOverflow || ((item.clippedX || item.clippedY) && !item.intentionalTruncation),
     );
-
     const leadingCandidates = text
       .filter((item) => item.font.lineHeightRatio !== null && item.font.lineHeightRatio >= 1.5)
       .sort((a, b) => (b.font.lineBoxExtraPx ?? 0) - (a.font.lineBoxExtraPx ?? 0))
       .slice(0, 40);
-
     const missingPrimaryFonts = text
       .filter((item) => item.font.primaryFamily && item.font.primaryLoaded === false)
       .map((item) => item.font.primaryFamily)
       .filter((family, index, families) => families.indexOf(family) === index)
       .sort();
-
-    const nowrapElements = text
-      .filter((item) => ['nowrap', 'pre'].includes(item.whiteSpace))
-      .slice(0, 80);
+    const nowrapElements = text.filter((item) => ['nowrap', 'pre'].includes(item.whiteSpace)).slice(0, 80);
 
     return {
       viewportWidth,
-      documentScrollWidth: root.scrollWidth,
-      bodyScrollWidth: document.body?.scrollWidth ?? 0,
-      pageOverflowPx: Math.max(0, pageOverflow),
+      documentScrollWidth,
+      bodyScrollWidth,
+      pageOverflowPx,
+      overflowElements,
       textElementCount: text.length,
       missingPrimaryFonts,
       failures,
@@ -186,17 +201,10 @@ for (const scenario of scenarios) {
     };
   });
 
-  report.scenarios[scenario.key] = {
-    role: scenario.role,
-    viewport: scenario.viewport,
-    ...result,
-  };
+  report.scenarios[scenario.key] = { role: scenario.role, viewport: scenario.viewport, ...result };
   console.log(JSON.stringify({ scenario: scenario.key, role: scenario.role, ...result }, null, 2));
 
-  if (result.pageOverflowPx > 0 || result.failures.length > 0) {
-    failed = true;
-  }
-
+  if (result.pageOverflowPx > 0 || result.failures.length > 0) failed = true;
   await page.close();
 }
 
@@ -206,7 +214,7 @@ fs.writeFileSync(output, JSON.stringify(report, null, 2) + '\n');
 
 if (failed) {
   console.error(
-    'REF-001 Web text runtime gate failed: page overflow, unintentional clipping, or overflowing nowrap text was detected at an acceptance or runtime-safety width.',
+    'REF-001 Web text runtime gate failed: page overflow, unintentional clipping, or overflowing nowrap text was detected at an acceptance, breakpoint-boundary, or runtime-safety width.',
   );
   process.exit(1);
 }
