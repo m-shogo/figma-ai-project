@@ -1,6 +1,42 @@
+import { readFileSync } from 'node:fs';
 import { chromium } from 'playwright';
 
 const url = process.argv[2] || 'http://127.0.0.1:8765/visual-preview/';
+const classroomFixtureUrl = new URL(
+  '../fixture-theme/assets/images/visual-qa/student-voice/classroom-mask-group.b64',
+  import.meta.url,
+);
+const classroomFixtureText = readFileSync(classroomFixtureUrl, 'utf8').trim();
+const classroomFixtureLines = classroomFixtureText.split(/\r?\n/);
+const classroomFixtureBase64 = classroomFixtureLines.join('');
+let classroomFixtureCharCodeSum32 = 0;
+for (const character of classroomFixtureBase64) {
+  classroomFixtureCharCodeSum32 = (classroomFixtureCharCodeSum32 + character.charCodeAt(0)) >>> 0;
+}
+const classroomFixtureBytes = Buffer.from(classroomFixtureBase64, 'base64');
+const classroomFixtureReport = {
+  lineCount: classroomFixtureLines.length,
+  lineLengths: classroomFixtureLines.map((line) => line.length),
+  base64Length: classroomFixtureBase64.length,
+  charCodeSum32: classroomFixtureCharCodeSum32,
+  decodedByteLength: classroomFixtureBytes.length,
+  startBytes: [...classroomFixtureBytes.subarray(0, 2)],
+  endBytes: [...classroomFixtureBytes.subarray(-2)],
+};
+
+console.log(JSON.stringify({ classroomCompositeFixture: classroomFixtureReport }, null, 2));
+
+const classroomFixtureValid =
+  classroomFixtureLines.length === 30 &&
+  classroomFixtureLines.slice(0, -1).every((line) => line.length === 80) &&
+  classroomFixtureLines.at(-1)?.length === 40 &&
+  classroomFixtureBase64.length === 2360 &&
+  classroomFixtureCharCodeSum32 === 197156 &&
+  classroomFixtureBytes.length === 1770 &&
+  classroomFixtureBytes[0] === 255 &&
+  classroomFixtureBytes[1] === 216 &&
+  classroomFixtureBytes.at(-2) === 255 &&
+  classroomFixtureBytes.at(-1) === 217;
 
 const browser = await chromium.launch({ headless: true });
 const page = await browser.newPage({ viewport: { width: 1380, height: 900 } });
@@ -209,6 +245,11 @@ const compositeFailures = compositeResults.filter(
 );
 
 await browser.close();
+
+if (!classroomFixtureValid) {
+  console.error('Student Voice classroom chunked fixture integrity check failed.');
+  process.exit(1);
+}
 
 if (results.length !== 7) {
   console.error(`Expected 7 Course pictogram images, found ${results.length}.`);
