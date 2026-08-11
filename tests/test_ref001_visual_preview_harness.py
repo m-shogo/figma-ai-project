@@ -23,7 +23,15 @@ class Ref001VisualPreviewHarnessTests(unittest.TestCase):
         source = (PREVIEW / "index.php").read_text(encoding="utf-8")
         self.assertIn("page-templates/template-ref001.php", source)
         self.assertIn("function get_template_part", source)
-        self.assertIn("glob( $theme_root . '/assets/css/*.css' )", source)
+        self.assertIn("ref001_learning_enqueue_assets();", source)
+
+    def test_preview_uses_real_wordpress_enqueue_order(self) -> None:
+        source = (PREVIEW / "index.php").read_text(encoding="utf-8")
+        self.assertIn("function wp_enqueue_style", source)
+        self.assertIn("$ref001_preview_styles[ $handle ]", source)
+        self.assertIn("data-ref001-style", source)
+        self.assertNotIn("glob( $theme_root . '/assets/css/*.css' )", source)
+        self.assertNotIn("sort( $styles )", source)
 
     def test_capture_script_generates_both_acceptance_widths(self) -> None:
         source = (PREVIEW / "capture.sh").read_text(encoding="utf-8")
