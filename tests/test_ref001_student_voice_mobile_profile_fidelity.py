@@ -22,10 +22,11 @@ class Ref001StudentVoiceMobileProfileFidelityTests(unittest.TestCase):
     def test_sp_profile_uses_supplied_independent_text_column(self) -> None:
         css = CSS.read_text(encoding="utf-8")
         self.assertIn("@media (max-width: 767px)", css)
-        self.assertIn("left: -60px", css)
-        self.assertIn("width: min(240px, calc(100% + 76px))", css)
+        self.assertIn("left: 24px", css)
+        self.assertIn("width: min(240px, calc(100% - 48px))", css)
         self.assertIn("font-size: 14px", css)
         self.assertIn("line-height: 1.6", css)
+        self.assertNotIn("left: -60px", css)
 
     def test_open_and_closed_states_preserve_figma_vertical_offsets(self) -> None:
         css = CSS.read_text(encoding="utf-8")
