@@ -1,0 +1,976 @@
+[
+  {
+    "key": "group_ref001_top_page",
+    "title": "REF-001 Top Page",
+    "fields": [
+      {
+        "key": "field_ref001_mv_left_person_image",
+        "label": "MV 左人物画像",
+        "name": "mv_left_person_image",
+        "type": "image",
+        "instructions": "PC/SPで同一素材を使用します。別々のレスポンシブ画像は登録しません。被写体がトリミングされても成立する余白を含む画像を選択してください。",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "50",
+          "class": "",
+          "id": ""
+        },
+        "return_format": "id",
+        "library": "all",
+        "preview_size": "medium"
+      },
+      {
+        "key": "field_ref001_mv_right_person_image",
+        "label": "MV 右人物画像",
+        "name": "mv_right_person_image",
+        "type": "image",
+        "instructions": "PC/SPで同一素材を使用します。別々のレスポンシブ画像は登録しません。被写体がトリミングされても成立する余白を含む画像を選択してください。",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "50",
+          "class": "",
+          "id": ""
+        },
+        "return_format": "id",
+        "library": "all",
+        "preview_size": "medium"
+      },
+      {
+        "key": "field_ref001_mv_lead",
+        "label": "MV リード文",
+        "name": "mv_lead",
+        "type": "textarea",
+        "instructions": "Figmaの3行程度のボリュームを基準にします。大幅な文字量変更はPC/SP両方で折り返しQAが必要です。",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": "",
+        "rows": 4,
+        "placeholder": "",
+        "new_lines": ""
+      },
+      {
+        "key": "field_ref001_reason_intro",
+        "label": "選ばれる理由 リード文",
+        "name": "reason_intro",
+        "type": "textarea",
+        "instructions": "見出し・# REASON装飾はテンプレート側で管理し、このフィールドは説明文のみを編集します。",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": "",
+        "rows": 3,
+        "placeholder": "",
+        "new_lines": ""
+      },
+      {
+        "key": "field_ref001_reason_1_image",
+        "label": "理由1 画像",
+        "name": "reason_1_image",
+        "type": "image",
+        "instructions": "カード表示は約3:2でトリミングします。",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "33",
+          "class": "",
+          "id": ""
+        },
+        "return_format": "id",
+        "library": "all",
+        "preview_size": "medium"
+      },
+      {
+        "key": "field_ref001_reason_1_title",
+        "label": "理由1 タイトル",
+        "name": "reason_1_title",
+        "type": "text",
+        "instructions": "短い見出しを想定しています。長文化した場合はPC/SPのラベル幅QAが必要です。",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "33",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": 40,
+        "placeholder": ""
+      },
+      {
+        "key": "field_ref001_reason_1_body",
+        "label": "理由1 本文",
+        "name": "reason_1_body",
+        "type": "textarea",
+        "instructions": "カード本文。プレーンテキストとして出力します。",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "34",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": 120,
+        "rows": 3,
+        "placeholder": "",
+        "new_lines": ""
+      },
+      {
+        "key": "field_ref001_reason_2_image",
+        "label": "理由2 画像",
+        "name": "reason_2_image",
+        "type": "image",
+        "instructions": "カード表示は約3:2でトリミングします。",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "33",
+          "class": "",
+          "id": ""
+        },
+        "return_format": "id",
+        "library": "all",
+        "preview_size": "medium"
+      },
+      {
+        "key": "field_ref001_reason_2_title",
+        "label": "理由2 タイトル",
+        "name": "reason_2_title",
+        "type": "text",
+        "instructions": "短い見出しを想定しています。長文化した場合はPC/SPのラベル幅QAが必要です。",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "33",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": 40,
+        "placeholder": ""
+      },
+      {
+        "key": "field_ref001_reason_2_body",
+        "label": "理由2 本文",
+        "name": "reason_2_body",
+        "type": "textarea",
+        "instructions": "カード本文。プレーンテキストとして出力します。",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "34",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": 120,
+        "rows": 3,
+        "placeholder": "",
+        "new_lines": ""
+      },
+      {
+        "key": "field_ref001_reason_3_image",
+        "label": "理由3 画像",
+        "name": "reason_3_image",
+        "type": "image",
+        "instructions": "カード表示は約3:2でトリミングします。",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "33",
+          "class": "",
+          "id": ""
+        },
+        "return_format": "id",
+        "library": "all",
+        "preview_size": "medium"
+      },
+      {
+        "key": "field_ref001_reason_3_title",
+        "label": "理由3 タイトル",
+        "name": "reason_3_title",
+        "type": "text",
+        "instructions": "短い見出しを想定しています。長文化した場合はPC/SPのラベル幅QAが必要です。",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "33",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": 40,
+        "placeholder": ""
+      },
+      {
+        "key": "field_ref001_reason_3_body",
+        "label": "理由3 本文",
+        "name": "reason_3_body",
+        "type": "textarea",
+        "instructions": "カード本文。プレーンテキストとして出力します。",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "34",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": 120,
+        "rows": 3,
+        "placeholder": "",
+        "new_lines": ""
+      },
+      {
+        "key": "field_ref001_education_intro",
+        "label": "4年間の学び リード文",
+        "name": "education_intro",
+        "type": "textarea",
+        "instructions": "『将来、これから探しても大丈夫』の補足説明文です。見出し・段階番号・段階ラベルは固定のストーリー構造としてテンプレート側で管理します。",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": 180,
+        "rows": 3,
+        "placeholder": "",
+        "new_lines": ""
+      },
+      {
+        "key": "field_ref001_education_1_image",
+        "label": "学び01 画像",
+        "name": "education_1_image",
+        "type": "image",
+        "instructions": "01/スタートの代表画像。Figmaに残る旧画像・下敷きレイヤーではなく、現在見えているcanonical foregroundを登録します。",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "30",
+          "class": "",
+          "id": ""
+        },
+        "return_format": "id",
+        "library": "all",
+        "preview_size": "medium"
+      },
+      {
+        "key": "field_ref001_education_1_title",
+        "label": "学び01 タイトル",
+        "name": "education_1_title",
+        "type": "text",
+        "instructions": "段階番号01と『スタート』は変更できません。",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "30",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": 40,
+        "placeholder": ""
+      },
+      {
+        "key": "field_ref001_education_1_bullet_1",
+        "label": "学び01 箇条書き1",
+        "name": "education_1_bullet_1",
+        "type": "text",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "40",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": 60,
+        "placeholder": ""
+      },
+      {
+        "key": "field_ref001_education_1_bullet_2",
+        "label": "学び01 箇条書き2",
+        "name": "education_1_bullet_2",
+        "type": "text",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "33",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": 60,
+        "placeholder": ""
+      },
+      {
+        "key": "field_ref001_education_1_bullet_3",
+        "label": "学び01 箇条書き3",
+        "name": "education_1_bullet_3",
+        "type": "text",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "33",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": 60,
+        "placeholder": ""
+      },
+      {
+        "key": "field_ref001_education_1_bullet_4",
+        "label": "学び01 箇条書き4",
+        "name": "education_1_bullet_4",
+        "type": "text",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "34",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": 60,
+        "placeholder": ""
+      },
+      {
+        "key": "field_ref001_education_2_image",
+        "label": "学び02 画像",
+        "name": "education_2_image",
+        "type": "image",
+        "instructions": "02/学ぶの代表画像。段階番号・ラベルは固定です。",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "30",
+          "class": "",
+          "id": ""
+        },
+        "return_format": "id",
+        "library": "all",
+        "preview_size": "medium"
+      },
+      {
+        "key": "field_ref001_education_2_title",
+        "label": "学び02 タイトル",
+        "name": "education_2_title",
+        "type": "text",
+        "instructions": "段階番号02と『学ぶ』は変更できません。",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "30",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": 40,
+        "placeholder": ""
+      },
+      {
+        "key": "field_ref001_education_2_bullet_1",
+        "label": "学び02 箇条書き1",
+        "name": "education_2_bullet_1",
+        "type": "text",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "40",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": 60,
+        "placeholder": ""
+      },
+      {
+        "key": "field_ref001_education_2_bullet_2",
+        "label": "学び02 箇条書き2",
+        "name": "education_2_bullet_2",
+        "type": "text",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "50",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": 60,
+        "placeholder": ""
+      },
+      {
+        "key": "field_ref001_education_2_bullet_3",
+        "label": "学び02 箇条書き3",
+        "name": "education_2_bullet_3",
+        "type": "text",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "50",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": 60,
+        "placeholder": ""
+      },
+      {
+        "key": "field_ref001_education_3_image",
+        "label": "学び03 画像",
+        "name": "education_3_image",
+        "type": "image",
+        "instructions": "03/出会うの代表画像。Figmaの複数候補から現在見える差し替えforegroundをcanonicalとして扱います。",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "30",
+          "class": "",
+          "id": ""
+        },
+        "return_format": "id",
+        "library": "all",
+        "preview_size": "medium"
+      },
+      {
+        "key": "field_ref001_education_3_title",
+        "label": "学び03 タイトル",
+        "name": "education_3_title",
+        "type": "text",
+        "instructions": "段階番号03と『出会う』は変更できません。",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "30",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": 40,
+        "placeholder": ""
+      },
+      {
+        "key": "field_ref001_education_3_bullet_1",
+        "label": "学び03 箇条書き1",
+        "name": "education_3_bullet_1",
+        "type": "text",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "40",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": 60,
+        "placeholder": ""
+      },
+      {
+        "key": "field_ref001_education_3_bullet_2",
+        "label": "学び03 箇条書き2",
+        "name": "education_3_bullet_2",
+        "type": "text",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "50",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": 60,
+        "placeholder": ""
+      },
+      {
+        "key": "field_ref001_education_3_bullet_3",
+        "label": "学び03 箇条書き3",
+        "name": "education_3_bullet_3",
+        "type": "text",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "50",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": 60,
+        "placeholder": ""
+      },
+      {
+        "key": "field_ref001_education_4_image",
+        "label": "学び04 画像",
+        "name": "education_4_image",
+        "type": "image",
+        "instructions": "04/ゴールの代表画像。段階番号・ラベルは固定です。",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "30",
+          "class": "",
+          "id": ""
+        },
+        "return_format": "id",
+        "library": "all",
+        "preview_size": "medium"
+      },
+      {
+        "key": "field_ref001_education_4_title",
+        "label": "学び04 タイトル",
+        "name": "education_4_title",
+        "type": "text",
+        "instructions": "段階番号04と『ゴール』は変更できません。",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "30",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": 40,
+        "placeholder": ""
+      },
+      {
+        "key": "field_ref001_education_4_bullet_1",
+        "label": "学び04 箇条書き1",
+        "name": "education_4_bullet_1",
+        "type": "text",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "40",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": 60,
+        "placeholder": ""
+      },
+      {
+        "key": "field_ref001_education_4_bullet_2",
+        "label": "学び04 箇条書き2",
+        "name": "education_4_bullet_2",
+        "type": "text",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "50",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": 60,
+        "placeholder": ""
+      },
+      {
+        "key": "field_ref001_education_4_bullet_3",
+        "label": "学び04 箇条書き3",
+        "name": "education_4_bullet_3",
+        "type": "text",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "50",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": 60,
+        "placeholder": ""
+      }
+    ],
+    "location": [
+      [
+        {
+          "param": "page_template",
+          "operator": "==",
+          "value": "page-templates/template-ref001.php"
+        }
+      ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": [
+      "the_content"
+    ],
+    "active": true,
+    "description": "REF-001 WordPress/ACF learning prototype. Education uses four fixed ordered stages; Repeater/reordering is intentionally not part of the baseline. Reconcile template filename, ACF runtime/tier, and existing theme conventions before production freeze.",
+    "show_in_rest": 0
+  },
+  {
+    "key": "group_ref001_courses",
+    "title": "REF-001 Courses",
+    "fields": [
+      {
+        "key": "field_ref001_course_public_service_description",
+        "label": "公務員コース 説明",
+        "name": "course_public_service_description",
+        "type": "textarea",
+        "instructions": "コース名・順序・色・アイコンは固定ドメイン情報です。このフィールドはページ上の説明文のみ編集します。",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "100",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": 140,
+        "rows": 2,
+        "new_lines": ""
+      },
+      {
+        "key": "field_ref001_course_public_service_recommendation_1",
+        "label": "公務員コース おすすめ1",
+        "name": "course_public_service_recommendation_1",
+        "type": "text",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "50",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": 100
+      },
+      {
+        "key": "field_ref001_course_public_service_recommendation_2",
+        "label": "公務員コース おすすめ2",
+        "name": "course_public_service_recommendation_2",
+        "type": "text",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "50",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": 100
+      },
+      {
+        "key": "field_ref001_course_accounting_description",
+        "label": "会計コース 説明",
+        "name": "course_accounting_description",
+        "type": "textarea",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "100",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": 140,
+        "rows": 2,
+        "new_lines": ""
+      },
+      {
+        "key": "field_ref001_course_accounting_recommendation_1",
+        "label": "会計コース おすすめ1",
+        "name": "course_accounting_recommendation_1",
+        "type": "text",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "50",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": 100
+      },
+      {
+        "key": "field_ref001_course_accounting_recommendation_2",
+        "label": "会計コース おすすめ2",
+        "name": "course_accounting_recommendation_2",
+        "type": "text",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "50",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": 100
+      },
+      {
+        "key": "field_ref001_course_business_management_description",
+        "label": "ビジネス経営コース 説明",
+        "name": "course_business_management_description",
+        "type": "textarea",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "100",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": 140,
+        "rows": 2,
+        "new_lines": ""
+      },
+      {
+        "key": "field_ref001_course_business_management_recommendation_1",
+        "label": "ビジネス経営コース おすすめ1",
+        "name": "course_business_management_recommendation_1",
+        "type": "text",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "50",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": 100
+      },
+      {
+        "key": "field_ref001_course_business_management_recommendation_2",
+        "label": "ビジネス経営コース おすすめ2",
+        "name": "course_business_management_recommendation_2",
+        "type": "text",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "50",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": 100
+      },
+      {
+        "key": "field_ref001_course_finance_description",
+        "label": "金融コース 説明",
+        "name": "course_finance_description",
+        "type": "textarea",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "100",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": 140,
+        "rows": 2,
+        "new_lines": ""
+      },
+      {
+        "key": "field_ref001_course_finance_recommendation_1",
+        "label": "金融コース おすすめ1",
+        "name": "course_finance_recommendation_1",
+        "type": "text",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "50",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": 100
+      },
+      {
+        "key": "field_ref001_course_finance_recommendation_2",
+        "label": "金融コース おすすめ2",
+        "name": "course_finance_recommendation_2",
+        "type": "text",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "50",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": 100
+      },
+      {
+        "key": "field_ref001_course_teaching_description",
+        "label": "教職コース 説明",
+        "name": "course_teaching_description",
+        "type": "textarea",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "100",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": 140,
+        "rows": 2,
+        "new_lines": ""
+      },
+      {
+        "key": "field_ref001_course_teaching_recommendation_1",
+        "label": "教職コース おすすめ1",
+        "name": "course_teaching_recommendation_1",
+        "type": "text",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "50",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": 100
+      },
+      {
+        "key": "field_ref001_course_teaching_recommendation_2",
+        "label": "教職コース おすすめ2",
+        "name": "course_teaching_recommendation_2",
+        "type": "text",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "50",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": 100
+      },
+      {
+        "key": "field_ref001_course_curator_description",
+        "label": "学芸員コース 説明",
+        "name": "course_curator_description",
+        "type": "textarea",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "100",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": 140,
+        "rows": 2,
+        "new_lines": ""
+      },
+      {
+        "key": "field_ref001_course_curator_recommendation_1",
+        "label": "学芸員コース おすすめ1",
+        "name": "course_curator_recommendation_1",
+        "type": "text",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "50",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": 100
+      },
+      {
+        "key": "field_ref001_course_curator_recommendation_2",
+        "label": "学芸員コース おすすめ2",
+        "name": "course_curator_recommendation_2",
+        "type": "text",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "50",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": 100
+      },
+      {
+        "key": "field_ref001_course_it_description",
+        "label": "ITコース 説明",
+        "name": "course_it_description",
+        "type": "textarea",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "100",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": 140,
+        "rows": 2,
+        "new_lines": ""
+      },
+      {
+        "key": "field_ref001_course_it_recommendation_1",
+        "label": "ITコース おすすめ1",
+        "name": "course_it_recommendation_1",
+        "type": "text",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "50",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": 100
+      },
+      {
+        "key": "field_ref001_course_it_recommendation_2",
+        "label": "ITコース おすすめ2",
+        "name": "course_it_recommendation_2",
+        "type": "text",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "50",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": 100
+      }
+    ],
+    "location": [
+      [
+        {
+          "param": "page_template",
+          "operator": "==",
+          "value": "page-templates/template-ref001.php"
+        }
+      ]
+    ],
+    "menu_order": 10,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": [],
+    "active": true,
+    "description": "Learning-only section field group. Seven course identities/order/colors/icons remain domain/code-owned; this group exposes page-local descriptive copy only.",
+    "show_in_rest": 0
+  }
+]
