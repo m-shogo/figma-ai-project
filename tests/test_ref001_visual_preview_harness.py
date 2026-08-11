@@ -81,6 +81,16 @@ class Ref001VisualPreviewHarnessTests(unittest.TestCase):
         self.assertIn("unintentional clipping", source)
         self.assertIn("ref001-text-runtime.json", shell)
 
+    def test_text_runtime_check_probes_intermediate_widths_without_freezing_breakpoints(self) -> None:
+        source = (PREVIEW / "text-runtime-check.mjs").read_text(encoding="utf-8")
+        self.assertIn("role: 'FIGMA_ACCEPTANCE'", source)
+        self.assertIn("role: 'RUNTIME_SAFETY'", source)
+        self.assertIn("role: 'FIXTURE_SEAM_SAFETY'", source)
+        for width in (320, 360, 375, 390, 430, 599, 600, 601, 768, 1024, 1200, 1380):
+            self.assertIn(f"width: {width}", source)
+        self.assertIn("do NOT define production", source)
+        self.assertIn("runtime-safety width", source)
+
     def test_messages_heading_uses_web_native_balancing_instead_of_nowrap(self) -> None:
         source = (FIXTURE_CSS / "ref001-messages.css").read_text(encoding="utf-8")
         heading_block = source.split(".ref001-messages__header h2 {", 1)[1].split("}", 1)[0]
