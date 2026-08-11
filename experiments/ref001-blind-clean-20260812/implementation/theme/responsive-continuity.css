@@ -18,3 +18,8 @@
   }
   .ref-link-tile { width:100%; }
 }
+
+@media (max-width:340px) {
+  .ref-portrait--left { left:0; }
+  .ref-portrait--right { right:0; }
+}
