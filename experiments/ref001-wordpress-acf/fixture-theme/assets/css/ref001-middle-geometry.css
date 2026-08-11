@@ -1,0 +1,46 @@
+/*
+ * REF-001 middle-page geometry repair.
+ *
+ * Browser QA proved the shared CTA / Student Voice / Messages section heights
+ * already match Figma. The remaining drift came from missing external space
+ * between otherwise-correct section boxes.
+ *
+ * PC Figma gaps:
+ * - CTA1 bottom 2553 -> Student Voice visible top 2649 = 96px
+ * - Student Voice bottom 4042 -> Messages top 4225 = 183px
+ * - Messages bottom 4665 -> CTA2 top 4783 = 118px
+ *
+ * SP Figma gaps (website coordinates after removing the 40px iOS status bar):
+ * - CTA1 bottom 4082 -> Student Voice top 4138 = 56px
+ * - Student Voice bottom 5896 -> Messages top 5952 = 56px
+ * - Messages bottom 6490 -> CTA2 top 6546 = 56px
+ *
+ * SP Education content currently overflows its supplied 1534px endpoint by
+ * 10px. Preserve the content but pin the flow box to the supplied section
+ * height so CTA1 starts at the correct coordinate.
+ */
+
+.ref001-cta + .ref001-student-voice {
+	margin-top: 96px;
+}
+
+.ref001-student-voice + .ref001-messages {
+	margin-top: 183px;
+}
+
+.ref001-messages + .ref001-cta {
+	margin-top: 118px;
+}
+
+@media (max-width: 600px) {
+	.ref001-education {
+		height: 1534px;
+		min-height: 0;
+	}
+
+	.ref001-cta + .ref001-student-voice,
+	.ref001-student-voice + .ref001-messages,
+	.ref001-messages + .ref001-cta {
+		margin-top: 56px;
+	}
+}
