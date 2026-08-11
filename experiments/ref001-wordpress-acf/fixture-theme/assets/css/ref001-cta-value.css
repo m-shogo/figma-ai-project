@@ -99,6 +99,7 @@
 	position: absolute;
 	bottom: -2px;
 	pointer-events: none;
+	background-image: var(--ref001-person-pc, none);
 	background-repeat: no-repeat;
 	background-position: bottom center;
 	background-size: contain;
@@ -178,6 +179,10 @@
 
 	.ref001-cta-value__action {
 		height: 64px;
+	}
+
+	.ref001-cta-value__person {
+		background-image: var(--ref001-person-sp, var(--ref001-person-pc, none));
 	}
 
 	.ref001-cta-value__person--left {
