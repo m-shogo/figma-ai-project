@@ -1,0 +1,314 @@
+/*
+ * REF-001 Courses internal visual repair.
+ *
+ * Scope: visual content inside the already geometry-locked card/section boxes.
+ * Do not set section/card width or height here. `ref001-courses-geometry.css`
+ * remains the authority for the exact 1380/375 endpoint geometry.
+ *
+ * Supplied Figma evidence (PC `21378:7505`):
+ * - icon block: 100x100 flush to card top-left
+ * - title: 20px / 1.0, marker 8px high at 30% course-color opacity
+ * - description: x=124, y=60, width=396, 16px / 1.3
+ * - recommendation base: x=32, y=145, 496x102
+ * - list: x=52, y=185, 11x10 check + 10px gap, 13px type, 12px row gap
+ * - recommendation bubble: 187px supplied Union treatment
+ *
+ * Supplied Figma evidence (SP `21376:4403`):
+ * - icon block: 72x72 flush to card top-left
+ * - title/description: x=96; y=24 / 60
+ * - recommendation base: x=16, width=311, height=136
+ * - list content width=279; 10x10 checkbox + 11px gap; 13px / 1.4
+ * - recommendation block starts y=139 on the two 320px cards and y=118 on
+ *   the five 299px cards. Absolute internals preserve the locked card heights.
+ */
+
+.ref001-courses__title strong {
+	font-size: 30px;
+	font-weight: 500;
+}
+
+.ref001-courses__count {
+	display: inline-block;
+	margin-right: 2px;
+	background: linear-gradient(90deg, #38a1db 0%, #8473aa 100%);
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: transparent;
+	font-size: 42px;
+	font-weight: 900;
+	line-height: 1;
+}
+
+.ref001-course-card {
+	padding: 0;
+}
+
+.ref001-course-card__identity {
+	min-height: 0;
+}
+
+.ref001-course-card__icon {
+	left: 0;
+	top: 0;
+	width: 100px;
+	height: 100px;
+}
+
+.ref001-course-card__heading {
+	position: absolute;
+	left: 124px;
+	top: 24px;
+	display: block;
+	z-index: 1;
+}
+
+.ref001-course-card__heading h3 {
+	position: relative;
+	z-index: 1;
+	margin: 0;
+	font-size: 20px;
+	font-weight: 500;
+	line-height: 1;
+	letter-spacing: 1px;
+	white-space: nowrap;
+}
+
+.ref001-course-card__marker {
+	position: absolute;
+	left: 0;
+	top: 15px;
+	z-index: 0;
+	height: 8px;
+	opacity: 0.3;
+	background: var(--ref001-course-color);
+}
+
+.ref001-courses__item[data-course-key="public_service"] .ref001-course-card__marker {
+	width: 125px;
+}
+
+.ref001-courses__item[data-course-key="accounting"] .ref001-course-card__marker,
+.ref001-courses__item[data-course-key="finance"] .ref001-course-card__marker,
+.ref001-courses__item[data-course-key="teaching"] .ref001-course-card__marker {
+	width: 104px;
+}
+
+.ref001-courses__item[data-course-key="business_management"] .ref001-course-card__marker {
+	width: 188px;
+}
+
+.ref001-courses__item[data-course-key="curator"] .ref001-course-card__marker {
+	width: 125px;
+}
+
+.ref001-courses__item[data-course-key="it"] .ref001-course-card__marker {
+	width: 81px;
+}
+
+.ref001-course-card__description {
+	position: absolute;
+	left: 124px;
+	top: 60px;
+	width: 396px;
+	min-height: 0;
+	margin: 0;
+	font-size: 16px;
+	font-weight: 500;
+	line-height: 1.3;
+	letter-spacing: 0.05em;
+}
+
+.ref001-course-card__recommendations {
+	position: absolute;
+	left: 32px;
+	top: 124px;
+	width: 496px;
+	height: 123px;
+	margin: 0;
+	padding: 0;
+}
+
+.ref001-course-card__recommend-label {
+	position: absolute;
+	left: 20px;
+	top: 0;
+	z-index: 2;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-sizing: border-box;
+	width: 187px;
+	height: 34px;
+	margin: 0;
+	padding: 0 14px;
+	border: 1px solid rgba(51, 51, 51, 0.72);
+	border-radius: 999px;
+	background: #fff;
+	box-shadow: 2px 2px 0 rgba(51, 51, 51, 0.14);
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 1;
+	letter-spacing: 0.7px;
+	white-space: nowrap;
+}
+
+.ref001-course-card__recommend-label::before,
+.ref001-course-card__recommend-label::after {
+	content: "";
+	position: absolute;
+	left: 68px;
+	width: 0;
+	height: 0;
+	border-left: 6px solid transparent;
+	border-right: 6px solid transparent;
+}
+
+.ref001-course-card__recommend-label::before {
+	bottom: -8px;
+	border-top: 8px solid rgba(51, 51, 51, 0.72);
+}
+
+.ref001-course-card__recommend-label::after {
+	bottom: -7px;
+	border-top: 8px solid #fff;
+}
+
+.ref001-course-card__recommendations ul {
+	position: absolute;
+	left: 0;
+	top: 21px;
+	display: flex;
+	flex-direction: column;
+	box-sizing: border-box;
+	width: 496px;
+	height: 102px;
+	min-height: 0;
+	gap: 12px;
+	margin: 0;
+	padding: 40px 20px 16px;
+	background: #edfdff;
+	list-style: none;
+}
+
+.ref001-course-card__recommendations li {
+	position: relative;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin: 0;
+	font-size: 13px;
+	font-weight: 500;
+	line-height: 1;
+	letter-spacing: 0.65px;
+}
+
+.ref001-course-card__recommendations li::before {
+	content: "";
+	position: static;
+	flex: 0 0 10px;
+	box-sizing: border-box;
+	width: 10px;
+	height: 10px;
+	border: 1px solid rgba(150, 150, 150, 0.5);
+	border-radius: 0;
+	background: #fff;
+}
+
+.ref001-course-card__recommendations li::after {
+	content: "";
+	position: absolute;
+	left: 3px;
+	top: 1px;
+	box-sizing: border-box;
+	width: 7px;
+	height: 4px;
+	border-left: 1px solid #ef8590;
+	border-bottom: 1px solid #ef8590;
+	transform: rotate(-45deg);
+	transform-origin: center;
+}
+
+@media (max-width: 600px) {
+	.ref001-courses__title strong {
+		font-size: 24px;
+	}
+
+	.ref001-courses__count {
+		font-size: 32px;
+	}
+
+	.ref001-course-card__identity {
+		display: block;
+		min-height: 0;
+	}
+
+	.ref001-course-card__icon {
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 72px;
+		height: 72px;
+	}
+
+	.ref001-course-card__heading {
+		left: 96px;
+		top: 24px;
+	}
+
+	.ref001-course-card__heading h3 {
+		font-size: 20px;
+	}
+
+	.ref001-courses__item[data-course-key="accounting"] .ref001-course-card__marker {
+		width: 102px;
+	}
+
+	.ref001-course-card__description {
+		left: 96px;
+		top: 60px;
+		width: 231px;
+		margin: 0;
+		font-size: 16px;
+		line-height: 1.3;
+		letter-spacing: 0.05em;
+	}
+
+	.ref001-course-card__recommendations {
+		left: 16px;
+		top: 118px;
+		width: 311px;
+		height: 157px;
+	}
+
+	.ref001-courses__item:nth-child(1) .ref001-course-card__recommendations,
+	.ref001-courses__item:nth-child(5) .ref001-course-card__recommendations {
+		top: 139px;
+	}
+
+	.ref001-course-card__recommend-label {
+		left: 16px;
+		width: 187px;
+		height: 34px;
+	}
+
+	.ref001-course-card__recommendations ul {
+		top: 21px;
+		width: 311px;
+		height: 136px;
+		gap: 12px;
+		padding: 36px 16px 16px;
+	}
+
+	.ref001-course-card__recommendations li {
+		align-items: flex-start;
+		gap: 11px;
+		min-height: 36px;
+		font-size: 13px;
+		line-height: 1.4;
+		letter-spacing: 0.65px;
+	}
+
+	.ref001-course-card__recommendations li::after {
+		top: 3px;
+	}
+}
