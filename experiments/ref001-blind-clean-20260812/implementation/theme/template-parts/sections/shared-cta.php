@@ -1,0 +1,1 @@
+<section class="ref-shared-cta" data-section="shared-cta"><div class="ref-shared-cta__inner"><h2>＼ 千葉経済大学をもっと知ろう！ ／</h2><div class="ref-shared-cta__actions"><span class="ref-action ref-action--blue"><span>▣</span>資料請求</span><span class="ref-action ref-action--purple"><span>⚑</span>オープンキャンパス</span></div></div></section>

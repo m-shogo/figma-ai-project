@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "run_id": "RUN-REF001-BLIND-CLEAN-20260812-A",
+  "audited_snapshot_commit": "46eb326383ac7aff1cb023100a801b968df9f9bc",
+  "disposable_mode": "GIT_DETACHED_WORKTREE",
+  "canonical_first_pass_mutated": false,
+  "drills": [
+    {
+      "drill_id": "HE-DRILL-LOCAL-STUDENT-VOICE",
+      "task": "Increase only the desktop Student Voice detail-column gap by 4px without touching unrelated sections.",
+      "snapshot_commit": "46eb326383ac7aff1cb023100a801b968df9f9bc",
+      "located_paths": [
+        "experiments/ref001-blind-clean-20260812/implementation/theme/template-parts/sections/student-voice.php",
+        "experiments/ref001-blind-clean-20260812/implementation/theme/style.css"
+      ],
+      "changed_paths": [
+        "experiments/ref001-blind-clean-20260812/implementation/theme/style.css"
+      ],
+      "unexpected_paths": [],
+      "regression_status": "PASS_SCOPED_SELECTOR_NO_UNRELATED_PATHS",
+      "result": "PASS",
+      "notes": [
+        "The Student Voice template and its .ref-voice scoped rules are directly discoverable.",
+        "The disposable diff remains in the section style owner only; no unrelated implementation file changes.",
+        "git diff --check passes; the canonical FIRST PASS worktree is discarded after the drill."
+      ]
+    },
+    {
+      "drill_id": "HE-DRILL-ACF-REASON-INTRO",
+      "task": "Change the editor-owned Reason intro through its fixture/source-of-truth path and verify the rendered page reflects it without layout-code edits.",
+      "snapshot_commit": "46eb326383ac7aff1cb023100a801b968df9f9bc",
+      "located_paths": [
+        "experiments/ref001-blind-clean-20260812/implementation/acf-export.json",
+        "experiments/ref001-blind-clean-20260812/implementation/theme/inc/fixture-content.php",
+        "experiments/ref001-blind-clean-20260812/implementation/theme/template-parts/sections/reason.php"
+      ],
+      "changed_paths": [
+        "experiments/ref001-blind-clean-20260812/implementation/theme/inc/fixture-content.php"
+      ],
+      "unexpected_paths": [],
+      "regression_status": "PASS_RENDERED_EDITOR_VALUE_WITHOUT_LAYOUT_CHANGE",
+      "result": "PASS",
+      "notes": [
+        "reason_intro exists in the importable ACF schema.",
+        "Fixture content mirrors editor-owned values for the isolated clean harness; the rendered preview resolves the changed value.",
+        "No CSS/template schema file needed modification for the content-only drill."
+      ]
+    },
+    {
+      "drill_id": "HE-DRILL-SHARED-CTA",
+      "task": "Change the shared CTA heading once and verify both intended page instances update through the same partial.",
+      "snapshot_commit": "46eb326383ac7aff1cb023100a801b968df9f9bc",
+      "located_paths": [
+        "experiments/ref001-blind-clean-20260812/implementation/theme/page-ref001-clean.php",
+        "experiments/ref001-blind-clean-20260812/implementation/theme/template-parts/sections/shared-cta.php"
+      ],
+      "changed_paths": [
+        "experiments/ref001-blind-clean-20260812/implementation/theme/template-parts/sections/shared-cta.php"
+      ],
+      "unexpected_paths": [],
+      "regression_status": "PASS_ONE_OWNER_TWO_RENDERED_INSTANCES",
+      "result": "PASS",
+      "notes": [
+        "Disposable render contained the changed shared CTA marker 2 time(s); expected exactly 2.",
+        "Only the shared CTA partial changed; no copied patch was required at either call site."
+      ]
+    }
+  ],
+  "all_pass": true,
+  "recommended_dimensions": {
+    "discoverability": 2,
+    "locality_of_change": 2,
+    "intent_readability": 2,
+    "change_safety_reuse": 2,
+    "cms_content_ownership_clarity": 2
+  },
+  "recommended_score": 10,
+  "notes": [
+    "Audit executed against the immutable FIRST PASS code commit, not repaired code.",
+    "The Figma media-byte transfer limitation is tracked as visual/integration evidence; it did not require ambiguous CMS ownership or duplicated section code in these drills."
+  ]
+}

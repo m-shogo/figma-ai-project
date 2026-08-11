@@ -1,0 +1,494 @@
+schema_version: 11
+experiment_id: EXP-REF001-BLIND-CLEAN-20260812
+run_id: RUN-REF001-BLIND-CLEAN-20260812-A
+run_class: OPTIMIZED
+status: BLOCKED
+started_at: '2026-08-12T02:30:00+09:00'
+completed_at: ''
+tooling_preflight:
+  mode: LEGACY_MANUAL
+  checked_at: '2026-08-12T02:42:00+09:00'
+  update_radar_path: ''
+  update_radar_sha256: ''
+  update_radar_generated_at: ''
+  update_radar_max_age_hours: 36
+  official_sources_complete: true
+  active_lanes:
+  - FIGMA_RELEASE_NOTES
+  - FIGMA_PLUGIN_API
+  - FIGMA_MCP
+  - COMMUNITY_DISCOVERY
+  source_warnings:
+  - Community evidence is discovery-only; current Figma official documentation and live target nodes remain authoritative.
+  figma_release_notes_checked: true
+  figma_mcp_docs_checked: true
+  agent_docs_checked: true
+  community_scan_checked: true
+  changes_relevant_to_run:
+  - Figma introduced updated Auto Layout behavior in July 2026; existing frames can remain legacy while newer/updated frames
+    can use the 2026 behavior, so generation is classified per actual target node rather than by file age.
+  rules_to_retest:
+  - Classify Auto Layout generation as LEGACY, UPDATED_2026, MIXED, or UNDETERMINED from live node evidence.
+  - Treat Figma structure as design evidence rather than a mechanical DOM mapping.
+  new_hypotheses:
+  - Section-level live inspection plus explicit variable-mode/crop/composite evidence should reduce first-pass repair without
+    harming human editability.
+  blockers_or_limits:
+  - The sanitized Implementation Profile intentionally leaves the production WordPress theme/runtime route unresolved; this
+    run uses a clean isolated WordPress-compatible fixture/harness and does not invent production integration details.
+  - Figma MCP media URLs are short-lived; FIRST PASS does not commit those temporary URLs and therefore uses semantic media
+    placeholders until a persistent asset transfer path is available.
+reference:
+  reference_id: REF-001-CHIBA-KEIZAI-SAMPLE
+  manifest_path: references/chiba-keizai-sample.reference.yaml
+  manifest_sha256: b36d81243057fa75dca15ef642f51e9c85b7ba691cb6bcf8c39612a2def85bae
+  figma_nodes:
+  - 21384:8173
+  - 21376:4401
+coordination:
+  scope: PAGE_BENCHMARK
+  section_id: ''
+  parallel_group: REF001-BLIND-CLEAN-FIRST-PASS
+  company_policy_path: ''
+  company_policy_id: ''
+  company_policy_sha256: ''
+  implementation_profile_path: experiments/ref001-wordpress-acf/implementation-profile.yaml
+  implementation_profile_sha256: 9fa81a28f5f81761164cde04638d29553a19d6035bf1681b648f579b271caad0
+  implementation_profile_id: IMPL-REF001-WORDPRESS-ACF
+  implementation_family: WORDPRESS
+  implementation_variant: FIXED_PAGE_TEMPLATE_ACF_CLEAN_FIXTURE
+  shared_contract_path: ''
+  shared_contract_sha256: ''
+  section_manifest_path: ''
+  section_manifest_sha256: ''
+  figma_structure_profile_path: references/chiba-keizai-sample.structure-profile.yaml
+  figma_structure_profile_sha256: ''
+  required_environment_profiles: []
+  canonical_environment_profile: ''
+  foundation_commit: 9e8556b1e9e21ddbd864c48ee80804ec34fa3fe3
+  isolation_mode: AGENT_SANDBOX
+  isolation_ref: agent/ref001-blind-clean-first-pass-20260812
+agent:
+  client: other
+  model: GPT-5.6 Sol
+  model_alias: ''
+  client_version: ''
+  instruction_sources:
+  - Pasted text(4).txt sha256:325821db52ba67ec33e193eb405620f8549d938db67ed09dadd39720f4adc831
+  - CI sanitized artifact sha256:39347e7c8d018f0153a60b067dbedd66455596844b1df5ffdf932379e987b01b
+  - live Figma file ZYTdtw4wCgkcBy2cVnhxVI
+  mcp_mode: CONNECTED_GITHUB_FIGMA
+  mcp_notes: GitHub repository-wide answer search disabled for Blind boundary; live Figma inspected through official MCP.
+code:
+  repository: m-shogo/figma-ai-project
+  starting_commit: 9e8556b1e9e21ddbd864c48ee80804ec34fa3fe3
+  target_route: / (isolated clean fixture harness only; production WordPress route unresolved)
+  first_pass_commit: 46eb326383ac7aff1cb023100a801b968df9f9bc
+  final_commit: 4974d36eb4775ce01d9ebde3d9dc8ca24aa9193f
+context:
+  tier: C0
+  prompt_version: REF001-BLIND-CLEAN-20260812
+  prompt_hash: 325821db52ba67ec33e193eb405620f8549d938db67ed09dadd39720f4adc831
+  figma_design_context: true
+  figma_metadata: true
+  figma_screenshots: true
+  figma_components: true
+  figma_variables: true
+  figma_annotations: false
+  code_connect: false
+  files_read:
+  - .sanitized-run-workspace.json
+  - docs/ref001-clean-run-agent-handoff.md
+  - docs/human-editability.md
+  - experiments/ref001-clean-run/workspace.yaml
+  - references/chiba-keizai-sample.reference.yaml
+  - references/chiba-keizai-sample.structure-profile.yaml
+  - references/chiba-keizai-sample.variable-mode-audit.yaml
+  - references/chiba-keizai-sample.courses-structure-evidence.yaml
+  - references/chiba-keizai-sample.remaining-structure-evidence.yaml
+  - experiments/ref001-wordpress-acf/implementation-profile.yaml
+  - templates/run-record.yaml
+  - templates/shared-contract.yaml
+  - scripts/controlled_run_phase.py
+  - scripts/first_pass_evidence.py
+  - scripts/validate_human_editability.py
+  figma_nodes_inspected:
+  - 21384:8173
+  - 21376:4401
+  tool_calls: null
+execution:
+  workflow: STAGED
+  max_repair_rounds: 8
+  actual_repair_rounds: 2
+  assumptions:
+  - The isolated clean fixture may define harness-only bootstrap behavior but must not claim unresolved production theme ownership.
+  - Only 375px and 1380px are exact visual acceptance endpoints; other required widths are runtime-safety probes.
+  blockers:
+  - Production WordPress repository/theme/runtime integration remains unresolved by sanitized evidence and is intentionally
+    not invented.
+  - Persistent transfer of Figma source image bytes is unresolved in this isolated tool environment; visual placeholders are
+    explicit evidence, not silent substitutions.
+  - An actual ACF ADMIN_UI import smoke requires a WordPress+ACF admin runtime not present in the sanitized clean fixture.
+  human_intervention: none
+human_editability:
+  status: PASS
+  score: 10
+  dimensions:
+    discoverability: 2
+    locality_of_change: 2
+    intent_readability: 2
+    change_safety_reuse: 2
+    cms_content_ownership_clarity: 2
+  blockers: []
+  change_drills:
+  - drill_id: HE-DRILL-LOCAL-STUDENT-VOICE
+    task: Increase only the desktop Student Voice detail-column gap by 4px without touching unrelated sections.
+    snapshot_commit: 46eb326383ac7aff1cb023100a801b968df9f9bc
+    located_paths:
+    - experiments/ref001-blind-clean-20260812/implementation/theme/template-parts/sections/student-voice.php
+    - experiments/ref001-blind-clean-20260812/implementation/theme/style.css
+    changed_paths:
+    - experiments/ref001-blind-clean-20260812/implementation/theme/style.css
+    unexpected_paths: []
+    regression_status: PASS_SCOPED_SELECTOR_NO_UNRELATED_PATHS
+    result: PASS
+    notes:
+    - The Student Voice template and its .ref-voice scoped rules are directly discoverable.
+    - The disposable diff remains in the section style owner only; no unrelated implementation file changes.
+    - git diff --check passes; the canonical FIRST PASS worktree is discarded after the drill.
+  - drill_id: HE-DRILL-ACF-REASON-INTRO
+    task: Change the editor-owned Reason intro through its fixture/source-of-truth path and verify the rendered page reflects
+      it without layout-code edits.
+    snapshot_commit: 46eb326383ac7aff1cb023100a801b968df9f9bc
+    located_paths:
+    - experiments/ref001-blind-clean-20260812/implementation/acf-export.json
+    - experiments/ref001-blind-clean-20260812/implementation/theme/inc/fixture-content.php
+    - experiments/ref001-blind-clean-20260812/implementation/theme/template-parts/sections/reason.php
+    changed_paths:
+    - experiments/ref001-blind-clean-20260812/implementation/theme/inc/fixture-content.php
+    unexpected_paths: []
+    regression_status: PASS_RENDERED_EDITOR_VALUE_WITHOUT_LAYOUT_CHANGE
+    result: PASS
+    notes:
+    - reason_intro exists in the importable ACF schema.
+    - Fixture content mirrors editor-owned values for the isolated clean harness; the rendered preview resolves the changed
+      value.
+    - No CSS/template schema file needed modification for the content-only drill.
+  - drill_id: HE-DRILL-SHARED-CTA
+    task: Change the shared CTA heading once and verify both intended page instances update through the same partial.
+    snapshot_commit: 46eb326383ac7aff1cb023100a801b968df9f9bc
+    located_paths:
+    - experiments/ref001-blind-clean-20260812/implementation/theme/page-ref001-clean.php
+    - experiments/ref001-blind-clean-20260812/implementation/theme/template-parts/sections/shared-cta.php
+    changed_paths:
+    - experiments/ref001-blind-clean-20260812/implementation/theme/template-parts/sections/shared-cta.php
+    unexpected_paths: []
+    regression_status: PASS_ONE_OWNER_TWO_RENDERED_INSTANCES
+    result: PASS
+    notes:
+    - Disposable render contained the changed shared CTA marker 2 time(s); expected exactly 2.
+    - Only the shared CTA partial changed; no copied patch was required at either call site.
+  evidence:
+  - experiments/ref001-blind-clean-20260812/evidence/human-editability-drills.json
+  - experiments/ref001-blind-clean-20260812/implementation/README.md
+  - experiments/ref001-blind-clean-20260812/implementation/acf-export.json
+captures:
+  first_pass:
+  - capture_id: ref001-first-pass-pc-1380
+    scope: FULL_PAGE
+    target_id: REF-001-PC
+    frame_id: 21384:8173
+    environment_profile_id: github-actions-ubuntu-chromium-playwright-1x
+    deterministic: true
+    runtime:
+      browser: Chromium
+      browser_version: Playwright 1.54.2 bundled Chromium
+      os: Linux
+      os_version: GitHub-hosted-ubuntu
+      engine: Chromium
+      webview: false
+      viewport_width_css_px: 1380
+      viewport_height_css_px: 900
+      dpr: 1
+      zoom: 1.0
+      text_scale: 1.0
+      orientation: LANDSCAPE
+    path: experiments/ref001-blind-clean-20260812/evidence/runtime/first-pass-1380.png
+    input_state:
+      primary_hover: HOVER
+      primary_pointer: FINE
+      touch: false
+    preferences:
+      reduced_motion: NO_PREFERENCE
+      forced_colors: NONE
+      contrast: NO_PREFERENCE
+      color_scheme: LIGHT
+    captured_at: '2026-08-12T03:28:37+09:00'
+    notes:
+    - GitHub-hosted Ubuntu Chromium capture; viewport-only Playwright context, no mobile device emulation.
+    - FIRST PASS evidence captured before completed-page visual repair.
+  - capture_id: ref001-first-pass-sp-375
+    scope: FULL_PAGE
+    target_id: REF-001-SP
+    frame_id: 21376:4401
+    environment_profile_id: github-actions-ubuntu-chromium-playwright-1x
+    deterministic: true
+    runtime:
+      browser: Chromium
+      browser_version: Playwright 1.54.2 bundled Chromium
+      os: Linux
+      os_version: GitHub-hosted-ubuntu
+      engine: Chromium
+      webview: false
+      viewport_width_css_px: 375
+      viewport_height_css_px: 900
+      dpr: 1
+      zoom: 1.0
+      text_scale: 1.0
+      orientation: PORTRAIT
+    path: experiments/ref001-blind-clean-20260812/evidence/runtime/first-pass-375.png
+    input_state:
+      primary_hover: HOVER
+      primary_pointer: FINE
+      touch: false
+    preferences:
+      reduced_motion: NO_PREFERENCE
+      forced_colors: NONE
+      contrast: NO_PREFERENCE
+      color_scheme: LIGHT
+    captured_at: '2026-08-12T03:28:37+09:00'
+    notes:
+    - GitHub-hosted Ubuntu Chromium capture; viewport-only Playwright context, no mobile device emulation.
+    - FIRST PASS evidence captured before completed-page visual repair.
+  - capture_id: ref001-first-pass-runtime-probes
+    scope: BOUNDARY
+    target_id: REF-001-RUNTIME
+    frame_id: ''
+    environment_profile_id: github-actions-ubuntu-chromium-playwright-1x
+    deterministic: true
+    runtime:
+      browser: Chromium
+      browser_version: Playwright 1.54.2 bundled Chromium
+      os: Linux
+      os_version: GitHub-hosted-ubuntu
+      engine: Chromium
+      webview: false
+      viewport_width_css_px: 320
+      viewport_height_css_px: 900
+      dpr: 1
+      zoom: 1.0
+      text_scale: 1.0
+      orientation: PORTRAIT
+    path: experiments/ref001-blind-clean-20260812/evidence/runtime/runtime-probes.json
+    input_state:
+      primary_hover: HOVER
+      primary_pointer: FINE
+      touch: false
+    preferences:
+      reduced_motion: NO_PREFERENCE
+      forced_colors: NONE
+      contrast: NO_PREFERENCE
+      color_scheme: LIGHT
+    captured_at: '2026-08-12T03:28:37+09:00'
+    notes:
+    - GitHub-hosted Ubuntu Chromium capture; viewport-only Playwright context, no mobile device emulation.
+    - FIRST PASS evidence captured before completed-page visual repair.
+  verify: []
+  final:
+  - capture_id: ref001-final-pc-1380
+    scope: FULL_PAGE
+    target_id: REF-001-PC
+    frame_id: 21384:8173
+    environment_profile_id: github-actions-ubuntu-chromium-playwright-1x
+    deterministic: true
+    runtime:
+      browser: Chromium
+      browser_version: Playwright 1.54.2 bundled Chromium
+      os: Linux
+      os_version: GitHub-hosted-ubuntu
+      engine: Chromium
+      webview: false
+      viewport_width_css_px: 1380
+      viewport_height_css_px: 900
+      dpr: 1
+      zoom: 1.0
+      text_scale: 1.0
+      orientation: LANDSCAPE
+    input_state:
+      primary_hover: HOVER
+      primary_pointer: FINE
+      touch: false
+    preferences:
+      reduced_motion: NO_PREFERENCE
+      forced_colors: NONE
+      contrast: NO_PREFERENCE
+      color_scheme: LIGHT
+    path: experiments/ref001-blind-clean-20260812/evidence/final/latest/first-pass-1380.png
+    captured_at: '2026-08-12T04:00:38+09:00'
+    notes:
+    - Final deterministic capture produced by GitHub Actions run 31525674545.
+    - 375px and 1380px are exact Figma acceptance endpoints; other widths are runtime-safety evidence.
+    - Photographic/composite media remains an explicit placeholder where persistent Figma source bytes could not be transferred
+      safely.
+  - capture_id: ref001-final-sp-375
+    scope: FULL_PAGE
+    target_id: REF-001-SP
+    frame_id: 21376:4401
+    environment_profile_id: github-actions-ubuntu-chromium-playwright-1x
+    deterministic: true
+    runtime:
+      browser: Chromium
+      browser_version: Playwright 1.54.2 bundled Chromium
+      os: Linux
+      os_version: GitHub-hosted-ubuntu
+      engine: Chromium
+      webview: false
+      viewport_width_css_px: 375
+      viewport_height_css_px: 900
+      dpr: 1
+      zoom: 1.0
+      text_scale: 1.0
+      orientation: PORTRAIT
+    input_state:
+      primary_hover: HOVER
+      primary_pointer: FINE
+      touch: false
+    preferences:
+      reduced_motion: NO_PREFERENCE
+      forced_colors: NONE
+      contrast: NO_PREFERENCE
+      color_scheme: LIGHT
+    path: experiments/ref001-blind-clean-20260812/evidence/final/latest/first-pass-375.png
+    captured_at: '2026-08-12T04:00:38+09:00'
+    notes:
+    - Final deterministic capture produced by GitHub Actions run 31525674545.
+    - 375px and 1380px are exact Figma acceptance endpoints; other widths are runtime-safety evidence.
+    - Photographic/composite media remains an explicit placeholder where persistent Figma source bytes could not be transferred
+      safely.
+  - capture_id: ref001-final-runtime-probes
+    scope: BOUNDARY
+    target_id: REF-001-RUNTIME
+    frame_id: ''
+    environment_profile_id: github-actions-ubuntu-chromium-playwright-1x
+    deterministic: true
+    runtime:
+      browser: Chromium
+      browser_version: Playwright 1.54.2 bundled Chromium
+      os: Linux
+      os_version: GitHub-hosted-ubuntu
+      engine: Chromium
+      webview: false
+      viewport_width_css_px: 320
+      viewport_height_css_px: 900
+      dpr: 1
+      zoom: 1.0
+      text_scale: 1.0
+      orientation: PORTRAIT
+    input_state:
+      primary_hover: HOVER
+      primary_pointer: FINE
+      touch: false
+    preferences:
+      reduced_motion: NO_PREFERENCE
+      forced_colors: NONE
+      contrast: NO_PREFERENCE
+      color_scheme: LIGHT
+    path: experiments/ref001-blind-clean-20260812/evidence/final/latest/runtime-probes.json
+    captured_at: '2026-08-12T04:00:38+09:00'
+    notes:
+    - Final deterministic capture produced by GitHub Actions run 31525674545.
+    - 375px and 1380px are exact Figma acceptance endpoints; other widths are runtime-safety evidence.
+    - Photographic/composite media remains an explicit placeholder where persistent Figma source bytes could not be transferred
+      safely.
+deliverables:
+  acf:
+    required: true
+    export_json:
+      required: true
+      target_repo_path: experiments/ref001-blind-clean-20260812/implementation/acf-export.json
+      evidence_json_path: experiments/ref001-blind-clean-20260812/evidence/acf-export.json
+      validation_status: PASS
+    local_json:
+      required: false
+      target_repo_dir: ''
+      evidence_files: []
+    import_smoke:
+      required: true
+      status: PENDING
+      method: ADMIN_UI
+      evidence: []
+      accepted_methods:
+      - ADMIN_UI
+scores:
+  first_pass_fidelity:
+    visual: 18
+    structural: 24
+    robustness: 15
+    total: 57
+  final_fidelity:
+    visual: 27
+    structural: 25
+    robustness: 15
+    total: 67
+  rework_efficiency: null
+  reproducibility: null
+  final_composite: null
+rework:
+  repair_rounds: 2
+  post_first_pass_files_changed: 3
+  post_first_pass_lines_added: 129
+  post_first_pass_lines_deleted: 1
+  rebuild_count: 0
+  integration_only_failures: 0
+  shared_contract_revisions: 0
+  foundation_rebuilds: 0
+  merge_conflicts: 0
+  affected_section_count: 7
+  contract_violations: 0
+  severity_counts:
+    S1: 0
+    S2: 0
+    S3: 0
+    S4: 0
+failures: []
+repairs: []
+replay:
+  required: false
+  source_run: ''
+  result: NOT_RUN
+lessons:
+  observations:
+  - This is a blind optimized clean rerun; the historical source run record is intentionally absent from the sanitized workspace,
+    so tooling-level REPLAY pairing is not fabricated.
+  - 'FIRST PASS endpoint body geometry is already close: PC +48px (+0.62%); SP +38px (+0.35%) after excluding the Figma-only
+    40px device status bar.'
+  - All required runtime probes pass after implementation-only continuity debugging; no completed-page visual repair has occurred
+    before freeze.
+  - The dominant FIRST PASS visual gap is missing persistent media bytes, not structural/CMS or responsive failure.
+  - After two post-freeze visual repair rounds, 375px and 1380px endpoint body/section geometry match live Figma exactly (0px
+    top/height delta for every semantic section).
+  - All required runtime widths 320/360/375/390/430/767/768/769/1024/1200/1380 pass with zero horizontal overflow, zero readable
+    text clipping, primary fonts present, and zero runtime errors.
+  - Human Editability scored 10/10 on the immutable FIRST PASS commit with three disposable change drills passing.
+  - 'The remaining dominant visual mismatch is photographic/composite media: the tool environment exposed only short-lived
+    Figma asset URLs and could not persist their bytes safely into Git, so placeholders remain explicit rather than leaking
+    temporary URLs or fabricating images.'
+  - The run remains BLOCKED rather than COMPLETE because the owner-selected Implementation Profile requires a real ACF ADMIN_UI
+    import smoke and target WordPress theme/runtime reconnaissance that are not present in the sanitized workspace.
+  candidate_rules:
+  - Treat intentional whitespace between Figma sections as page rhythm first; do not automatically absorb it into section-local
+    padding, because that creates cascading section-top drift.
+  - Keep shared text rails and section-specific presentation rails separate when the Figma heading width and card-grid width
+    intentionally differ.
+  - Persistent media-byte transfer is a first-class prerequisite for image-heavy Figma-to-Web fidelity; never commit short-lived
+    asset URLs as a workaround.
+  agent_specific:
+  - This connector/runtime could inspect Figma media identity/crops and receive short-lived URLs, but could not resolve those
+    URLs into durable bytes for Git.
+  project_specific:
+  - REF-001 production WordPress theme, route, ACF version/license, and admin import environment remain intentionally unresolved
+    by the sanitized handoff.
+notes: BLIND_CONTEXT_CLEAN. FIRST PASS remains immutable at 46eb326383ac7aff1cb023100a801b968df9f9bc. Final implementation
+  code is 4974d36eb4775ce01d9ebde3d9dc8ca24aa9193f. Two repair rounds achieved exact 375/1380 semantic section geometry and
+  all required runtime probes are clean. Status is BLOCKED only for persistent Figma media bytes and the Implementation Profile's
+  required real WordPress/ACF ADMIN_UI smoke; neither is fabricated.

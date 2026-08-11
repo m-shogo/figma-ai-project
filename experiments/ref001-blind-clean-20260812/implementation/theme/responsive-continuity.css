@@ -1,0 +1,32 @@
+/*
+ * Runtime continuity owner for widths between the exact Figma endpoints.
+ * Exact visual acceptance remains 375px / 1380px; this file prevents
+ * the desktop/mobile endpoint layouts from overflowing intermediate widths.
+ */
+@media (min-width:768px) {
+  .ref-courses__grid {
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:clamp(16px,2.9vw,40px);
+  }
+}
+
+@media (max-width:767px) {
+  .ref-links__grid {
+    grid-template-columns:repeat(2,minmax(0,155px));
+    gap:clamp(10px,5vw,19px);
+    width:100%;
+  }
+  .ref-link-tile { width:100%; }
+}
+
+@media (max-width:340px) {
+  .ref-mv__person--left { left:0; }
+  .ref-mv__person--right { right:0; }
+  .ref-portrait--left { left:0; }
+  .ref-portrait--right { right:0; }
+  .ref-footer__copyright {
+    white-space:normal;
+    padding-inline:8px;
+    line-height:1.25;
+  }
+}

@@ -1,0 +1,74 @@
+schema_version: 1
+run_id: RUN-REF001-BLIND-CLEAN-20260812-A
+blind_status: CLEAN
+first_pass_code_commit: 46eb326383ac7aff1cb023100a801b968df9f9bc
+final_code_commit: 4974d36eb4775ce01d9ebde3d9dc8ca24aa9193f
+final_capture_workflow_run_id: 31525674545
+repair_rounds: 2
+endpoint_geometry:
+  pc_1380:
+    figma_body_height_px: 7714
+    web_body_height_px: 7714
+    body_height_delta_px: 0
+    section_top_mae_px: 0
+    section_height_mae_px: 0
+    all_section_geometry_exact: true
+  sp_375:
+    figma_root_height_px: 10817
+    figma_device_chrome_px: 40
+    figma_web_content_height_px: 10777
+    web_body_height_px: 10777
+    body_height_delta_px: 0
+    section_top_mae_px: 0
+    section_height_mae_px: 0
+    all_section_geometry_exact: true
+runtime_safety:
+  widths:
+  - 320
+  - 360
+  - 375
+  - 390
+  - 430
+  - 767
+  - 768
+  - 769
+  - 1024
+  - 1200
+  - 1380
+  horizontal_overflow_failures: 0
+  readable_text_clipping_failures: 0
+  missing_primary_font_failures: 0
+  runtime_error_failures: 0
+  breakpoint_boundary_767_768_769: PASS
+fidelity:
+  first_pass:
+    visual: 18
+    structural: 24
+    robustness: 15
+    total: 57
+  final:
+    visual: 27
+    structural: 25
+    robustness: 15
+    total: 67
+  visual_media_blocker: OPEN
+  visual_media_blocker_note: Geometry, typography hierarchy, colors, responsive structure, and CMS ownership are represented;
+    source photographic/composite bytes remain placeholders because durable transfer from Figma was unavailable.
+rework:
+  post_freeze_visual_repair_rounds: 2
+  implementation_files_changed: 3
+  implementation_lines_added: 129
+  implementation_lines_deleted: 1
+  owner_blocking_questions: 0
+  interaction_inventions: 0
+  cms_inventions: 0
+human_editability:
+  status: PASS
+  score: 10
+  drill_count: 3
+  all_drills_pass: true
+blocking_dependencies:
+- Persistent source-image/composite bytes from Figma are not transferable in the current connector/runtime without storing
+  short-lived URLs.
+- Target production WordPress theme/route/runtime is not identified in the sanitized Implementation Profile.
+- Required ACF ADMIN_UI import smoke cannot run without a real WordPress + ACF admin environment.

@@ -1,0 +1,119 @@
+schema_version: 1
+run_id: RUN-REF001-BLIND-CLEAN-20260812-A
+measured_at: "2026-08-12T03:33:24+09:00"
+blind_status: CLEAN
+first_pass_code_commit: "46eb326383ac7aff1cb023100a801b968df9f9bc"
+first_pass_runtime_evidence_commit: "5d43fefd43fbabf20065ecb087c10935f861e02a"
+
+figma_authority:
+  file_key: ZYTdtw4wCgkcBy2cVnhxVI
+  pc_root: "21384:8173"
+  sp_root: "21376:4401"
+  exact_acceptance_widths: [1380, 375]
+  sp_device_chrome_px: 40
+  pc_root_height_px: 7714
+  sp_root_height_px: 10817
+  sp_web_content_height_px: 10777
+
+runtime_capture:
+  github_actions_run_id: 31522832981
+  github_actions_artifact_id: 9113740701
+  artifact_digest: "sha256:29359f3418fa9a10d80579aceec441f9730cf9ebf4de8b3104527d48eebee298"
+  persisted_paths:
+    - experiments/ref001-blind-clean-20260812/evidence/runtime/first-pass-1380.png
+    - experiments/ref001-blind-clean-20260812/evidence/runtime/first-pass-375.png
+    - experiments/ref001-blind-clean-20260812/evidence/runtime/first-pass-320.png
+    - experiments/ref001-blind-clean-20260812/evidence/runtime/runtime-probes.json
+
+endpoint_geometry:
+  pc_1380:
+    web_body_height_px: 7762
+    figma_body_height_px: 7714
+    body_height_delta_px: 48
+    body_height_delta_pct: 0.6222
+    section_top_mae_px: 41.75
+    section_height_mae_px: 66.58
+    sections:
+      header: {figma_top: 0, web_top: 0, top_delta: 0, figma_height: 94, web_height: 94, height_delta: 0}
+      main_visual: {figma_top: 94, web_top: 94, top_delta: 0, figma_height: 714, web_height: 696, height_delta: -18}
+      reason: {figma_top: 886, web_top: 790, top_delta: -96, figma_height: 559, web_height: 751, height_delta: 192}
+      education: {figma_top: 1541, web_top: 1541, top_delta: 0, figma_height: 684, web_height: 744, height_delta: 60}
+      shared_cta_1: {figma_top: 2225, web_top: 2285, top_delta: 60, figma_height: 328, web_height: 328, height_delta: 0}
+      student_voice: {figma_top: 2649, web_top: 2613, top_delta: -36, figma_height: 1393, web_height: 1453, height_delta: 60}
+      messages: {figma_top: 4225, web_top: 4066, top_delta: -159, figma_height: 440, web_height: 729, height_delta: 289}
+      shared_cta_2: {figma_top: 4783, web_top: 4795, top_delta: 12, figma_height: 328, web_height: 328, height_delta: 0}
+      courses: {figma_top: 5111, web_top: 5123, top_delta: 12, figma_height: 1514, web_height: 1544, height_delta: 30}
+      links: {figma_top: 6697, web_top: 6667, top_delta: -30, figma_height: 260, web_height: 410, height_delta: 150}
+      cta_value: {figma_top: 7029, web_top: 7077, top_delta: 48, figma_height: 328, web_height: 328, height_delta: 0}
+      footer: {figma_top: 7357, web_top: 7405, top_delta: 48, figma_height: 357, web_height: 357, height_delta: 0}
+  sp_375:
+    accounting: "Figma top coordinates normalized by subtracting the 40px Status-Bar_W device chrome."
+    web_body_height_px: 10815
+    figma_web_content_height_px: 10777
+    body_height_delta_px: 38
+    body_height_delta_pct: 0.3526
+    section_top_mae_px: 30.92
+    section_height_mae_px: 35.83
+    sections:
+      header: {figma_top: 0, web_top: 0, top_delta: 0, figma_height: 67, web_height: 67, height_delta: 0}
+      main_visual: {figma_top: 67, web_top: 67, top_delta: 0, figma_height: 724, web_height: 740, height_delta: 16}
+      reason: {figma_top: 847, web_top: 807, top_delta: -40, figma_height: 1295, web_height: 1425, height_delta: 130}
+      education: {figma_top: 2198, web_top: 2232, top_delta: 34, figma_height: 1534, web_height: 1534, height_delta: 0}
+      shared_cta_1: {figma_top: 3732, web_top: 3766, top_delta: 34, figma_height: 350, web_height: 350, height_delta: 0}
+      student_voice: {figma_top: 4138, web_top: 4116, top_delta: -22, figma_height: 1758, web_height: 1763, height_delta: 5}
+      messages: {figma_top: 5952, web_top: 5879, top_delta: -73, figma_height: 538, web_height: 703, height_delta: 165}
+      shared_cta_2: {figma_top: 6546, web_top: 6582, top_delta: 36, figma_height: 350, web_height: 350, height_delta: 0}
+      courses: {figma_top: 6896, web_top: 6932, top_delta: 36, figma_height: 2515, web_height: 2515, height_delta: 0}
+      links: {figma_top: 9467, web_top: 9447, top_delta: -20, figma_height: 343, web_height: 457, height_delta: 114}
+      cta_value: {figma_top: 9866, web_top: 9904, top_delta: 38, figma_height: 396, web_height: 396, height_delta: 0}
+      footer: {figma_top: 10262, web_top: 10300, top_delta: 38, figma_height: 515, web_height: 515, height_delta: 0}
+
+runtime_safety:
+  widths: [320, 360, 375, 390, 430, 767, 768, 769, 1024, 1200, 1380]
+  horizontal_overflow_failures: 0
+  readable_text_clipping_failures: 0
+  missing_primary_font_failures: 0
+  runtime_error_failures: 0
+  breakpoint_boundary_767_768_769: PASS
+
+first_pass_fidelity:
+  visual: 18
+  structural: 24
+  robustness: 15
+  total: 57
+  rationale:
+    visual:
+      - "Layout, typography hierarchy, color families and endpoint geometry are recognizably aligned, but major photographic/composite assets are semantic placeholders because the isolated agent environment could not persist Figma's short-lived image bytes into Git without leaking temporary URLs."
+      - "The placeholder limitation materially affects the MV, Reason, Education, Student Voice, Messages and CTA Value pixels, so the visual score is intentionally not inflated."
+    structural:
+      - "All required sections are present in the mandated order; shared CTA is one implementation reused twice; seven Courses remain fixed domain structure; Header/Footer are global responsibilities; no Figma-layer-to-DOM mechanical mapping was used."
+      - "No interaction destinations, accordion/carousel behavior, or ACF repeater cardinality were invented."
+    robustness:
+      - "All eleven required viewport probes pass with zero horizontal overflow, zero readable clipping, both primary font checks passing, and zero runtime errors."
+
+build_accounting:
+  first_pass_started_at: "2026-08-12T02:30:00+09:00"
+  first_green_runtime_capture_at: "2026-08-12T03:28:37+09:00"
+  approximate_first_pass_duration_minutes: 59
+  files_created_or_modified_to_first_pass_commit: 23
+  diff_additions: 527
+  diff_deletions: 0
+  owner_blocking_questions: 0
+  interaction_inventions: 0
+  cms_inventions: 0
+  repair_iterations_before_freeze: 0
+  runtime_debug_iterations_before_freeze: 6
+
+unresolved_evidence:
+  - id: ASSET-PERSISTENCE
+    scope: visual
+    status: OPEN
+    note: "Live Figma image/mask identity and crop intent were inspected, but short-lived MCP asset URLs were not committed. FIRST PASS uses explicit semantic placeholders rather than fabricating media or leaking temporary URLs."
+  - id: PRODUCTION-WP-INTEGRATION
+    scope: integration
+    status: OPEN
+    note: "The sanitized implementation profile does not identify a production WordPress theme/repository/runtime route, so this run remains an isolated WordPress-compatible fixture and does not invent production ownership."
+  - id: ACF-ADMIN-IMPORT-SMOKE
+    scope: cms
+    status: OPEN
+    note: "ACF export syntax/shape validator passes; an actual WordPress admin import smoke test requires a WordPress+ACF admin runtime not present in the sanitized fixture."
