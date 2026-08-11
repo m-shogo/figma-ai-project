@@ -12,6 +12,7 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 TARGETS_PATH = ROOT / "config" / "implementation-targets.yaml"
+TEMPLATE_PATH = ROOT / "templates" / "implementation-profile.yaml"
 
 
 def load_yaml(path: Path) -> dict[str, Any]:
@@ -21,15 +22,19 @@ def load_yaml(path: Path) -> dict[str, Any]:
     return value
 
 
+def utc_now() -> str:
+    return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+
+
 def normalize_bool_choice(value: str) -> bool | None:
     normalized = value.strip().upper()
     if normalized == "ENABLED":
         return True
     if normalized == "DISABLED":
         return False
-    if normalized in {"", "UNCHANGED"}:
+    if normalized in {"", "AUTO_EXISTING", "UNCHANGED"}:
         return None
-    raise ValueError("--acf must be ENABLED, DISABLED, or UNCHANGED")
+    raise ValueError("--acf must be ENABLED, DISABLED, or AUTO_EXISTING")
 
 
 def selector_option_ids(config: dict[str, Any]) -> set[str]:
@@ -86,16 +91,37 @@ def validate_selection(config: dict[str, Any], *, family: str, variant: str, acf
     allowed = allowed_variants(config, family)
     if allowed:
         if not variant:
-            if "AUTO_EXISTING" in allowed:
-                return
-            raise ValueError(f"{family} requires --variant from: {', '.join(sorted(allowed))}")
-        if variant not in allowed:
+            if "AUTO_EXISTING" not in allowed:
+                raise ValueError(f"{family} requires --variant from: {', '.join(sorted(allowed))}")
+        elif variant not in allowed:
             raise ValueError(f"unsupported {family} variant {variant}; expected one of: {', '.join(sorted(allowed))}")
     elif variant:
         raise ValueError(f"{family} does not accept --variant")
 
     if acf_choice is not None and family != "WORDPRESS":
         raise ValueError("--acf can only be configured for WORDPRESS")
+
+
+def initialize_profile(profile_id: str, *, now: str | None = None) -> dict[str, Any]:
+    profile_id = profile_id.strip()
+    if not profile_id:
+        raise ValueError("--profile-id is required when creating a new implementation profile")
+    profile = load_yaml(TEMPLATE_PATH)
+    timestamp = now or utc_now()
+    profile["profile_id"] = profile_id
+    profile["status"] = "DRAFT"
+    profile["created_at"] = timestamp
+    profile["updated_at"] = timestamp
+    return profile
+
+
+def load_or_initialize_profile(path: Path, profile_id: str, *, now: str | None = None) -> tuple[dict[str, Any], bool]:
+    if path.is_file():
+        profile = load_yaml(path)
+        if profile_id and profile.get("profile_id") != profile_id:
+            raise ValueError("--profile-id does not match the existing implementation profile")
+        return profile, False
+    return initialize_profile(profile_id, now=now), True
 
 
 def materialize_checklist(
@@ -214,6 +240,9 @@ def configure_profile(
             wordpress["theme_type"] = variant
         elif variant == "AUTO_EXISTING" and not str(wordpress.get("theme_type", "")).strip():
             wordpress["theme_type"] = "UNKNOWN"
+    elif wordpress.get("acf", {}).get("enabled") is True or updated.get("delivery_requirements", {}).get("acf", {}).get("required") is True:
+        configure_acf_delivery(updated, False)
+
     if family == "JS_FRAMEWORK" and variant not in {"", "AUTO_EXISTING"}:
         js_framework["framework"] = variant
     if family == "PHP_TEMPLATE" and variant:
@@ -243,8 +272,7 @@ def configure_profile(
     )
 
     updated.setdefault("delivery_requirements", {}).setdefault("source_code_required", True)
-    timestamp = now or datetime.now(timezone.utc).replace(microsecond=0).isoformat()
-    updated["updated_at"] = timestamp
+    updated["updated_at"] = now or utc_now()
     return updated
 
 
@@ -262,6 +290,10 @@ def show_options(config: dict[str, Any]) -> None:
         print(f"- {item.get('id')}: {item.get('label')} — {item.get('description')}")
     for family, block in config.get("conditional_selectors", {}).items():
         print(f"{family} ({block.get('control', '')}): {', '.join(str(v) for v in block.get('options', []))}")
+    for feature, block in config.get("conditional_feature_selectors", {}).items():
+        options = block.get("options", [])
+        ids = [str(item.get("id")) if isinstance(item, dict) else str(item) for item in options]
+        print(f"{feature} ({block.get('control', '')}): {', '.join(ids)}")
 
 
 def main() -> int:
@@ -269,11 +301,12 @@ def main() -> int:
         description="Materialize implementation-target selection into a DRAFT Implementation Profile without inventing repository evidence"
     )
     parser.add_argument("profile", type=Path, nargs="?")
+    parser.add_argument("--profile-id", default="", help="required when creating a new profile path")
     parser.add_argument("--family", default="")
     parser.add_argument("--variant", default="")
-    parser.add_argument("--acf", default="UNCHANGED", help="ENABLED | DISABLED | UNCHANGED")
+    parser.add_argument("--acf", default="AUTO_EXISTING", help="ENABLED | DISABLED | AUTO_EXISTING")
     parser.add_argument("--selected-by", default="OWNER")
-    parser.add_argument("--apply", action="store_true", help="write the configured profile; default is dry-run YAML to stdout")
+    parser.add_argument("--apply", action="store_true", help="write/create the configured profile; default is dry-run YAML to stdout")
     parser.add_argument("--show-options", action="store_true", help="show the radio-selector options and exit")
     args = parser.parse_args()
 
@@ -288,9 +321,7 @@ def main() -> int:
         parser.error("--family is required")
 
     path = args.profile if args.profile.is_absolute() else ROOT / args.profile
-    if not path.is_file():
-        raise ValueError(f"implementation profile does not exist: {path}")
-    profile = load_yaml(path)
+    profile, created = load_or_initialize_profile(path, args.profile_id)
     acf_choice = normalize_bool_choice(args.acf)
     updated = configure_profile(
         profile,
@@ -303,8 +334,10 @@ def main() -> int:
     rendered = render_yaml(updated)
 
     if args.apply:
+        path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(rendered, encoding="utf-8")
-        print(f"UPDATED {path.resolve().relative_to(ROOT.resolve()).as_posix()}")
+        action = "CREATED" if created else "UPDATED"
+        print(f"{action} {path.resolve().relative_to(ROOT.resolve()).as_posix()}")
     else:
         print(rendered, end="")
     return 0
