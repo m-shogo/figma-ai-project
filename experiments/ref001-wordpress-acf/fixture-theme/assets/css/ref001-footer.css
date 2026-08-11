@@ -21,20 +21,10 @@
 }
 
 .ref001-footer__logo-mark {
-	display: grid;
-	place-items: center;
-	width: 48px;
-	height: 48px;
-	background: linear-gradient(135deg, #38a1db 0 50%, #8473aa 50% 100%);
-	color: #fff;
-	font-family: Georgia, serif;
-	font-size: 18px;
-	line-height: 1;
-	transform: rotate(45deg);
-}
-
-.ref001-footer__logo-mark::first-letter {
-	transform: rotate(-45deg);
+	width: 56px;
+	height: 61px;
+	object-fit: contain;
+	flex: 0 0 auto;
 }
 
 .ref001-footer__logo-copy {
