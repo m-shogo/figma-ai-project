@@ -34,6 +34,7 @@ tooling_preflight:
     - "Section-level live inspection plus explicit variable-mode/crop/composite evidence should reduce first-pass repair without harming human editability."
   blockers_or_limits:
     - "The sanitized Implementation Profile intentionally leaves the production WordPress theme/runtime route unresolved; this run uses a clean isolated WordPress-compatible fixture/harness and does not invent production integration details."
+    - "Figma MCP media URLs are short-lived; FIRST PASS does not commit those temporary URLs and therefore uses semantic media placeholders until a persistent asset transfer path is available."
 
 reference:
   reference_id: REF-001-CHIBA-KEIZAI-SAMPLE
@@ -83,7 +84,7 @@ code:
   repository: "m-shogo/figma-ai-project"
   starting_commit: "9e8556b1e9e21ddbd864c48ee80804ec34fa3fe3"
   target_route: "/ (isolated clean fixture harness only; production WordPress route unresolved)"
-  first_pass_commit: ""
+  first_pass_commit: "46eb326383ac7aff1cb023100a801b968df9f9bc"
   final_commit: ""
 
 context:
@@ -92,7 +93,7 @@ context:
   prompt_hash: "325821db52ba67ec33e193eb405620f8549d938db67ed09dadd39720f4adc831"
   figma_design_context: true
   figma_metadata: true
-  figma_screenshots: false
+  figma_screenshots: true
   figma_components: true
   figma_variables: true
   figma_annotations: false
@@ -127,6 +128,8 @@ execution:
     - "Only 375px and 1380px are exact visual acceptance endpoints; other required widths are runtime-safety probes."
   blockers:
     - "Production WordPress repository/theme/runtime integration remains unresolved by sanitized evidence and is intentionally not invented."
+    - "Persistent transfer of Figma source image bytes is unresolved in this isolated tool environment; visual placeholders are explicit evidence, not silent substitutions."
+    - "An actual ACF ADMIN_UI import smoke requires a WordPress+ACF admin runtime not present in the sanitized clean fixture."
   human_intervention: none
 
 human_editability:
@@ -143,7 +146,67 @@ human_editability:
   evidence: []
 
 captures:
-  first_pass: []
+  first_pass:
+    - capture_id: ref001-first-pass-pc-1380
+      scope: FULL_PAGE
+      target_id: REF-001-PC
+      frame_id: "21384:8173"
+      environment_profile_id: ""
+      deterministic: true
+      runtime:
+        browser: Chromium
+        browser_version: "Playwright 1.54.2 bundled Chromium"
+        os: Linux
+        os_version: GitHub-hosted-ubuntu
+        engine: Chromium
+        webview: false
+        viewport_width_css_px: 1380
+        viewport_height_css_px: 900
+        dpr: 1
+        zoom: 1.0
+        text_scale: 1.0
+        orientation: PORTRAIT
+      path: experiments/ref001-blind-clean-20260812/evidence/runtime/first-pass-1380.png
+    - capture_id: ref001-first-pass-sp-375
+      scope: FULL_PAGE
+      target_id: REF-001-SP
+      frame_id: "21376:4401"
+      environment_profile_id: ""
+      deterministic: true
+      runtime:
+        browser: Chromium
+        browser_version: "Playwright 1.54.2 bundled Chromium"
+        os: Linux
+        os_version: GitHub-hosted-ubuntu
+        engine: Chromium
+        webview: false
+        viewport_width_css_px: 375
+        viewport_height_css_px: 900
+        dpr: 1
+        zoom: 1.0
+        text_scale: 1.0
+        orientation: PORTRAIT
+      path: experiments/ref001-blind-clean-20260812/evidence/runtime/first-pass-375.png
+    - capture_id: ref001-first-pass-runtime-probes
+      scope: BOUNDARY
+      target_id: REF-001-RUNTIME
+      frame_id: ""
+      environment_profile_id: ""
+      deterministic: true
+      runtime:
+        browser: Chromium
+        browser_version: "Playwright 1.54.2 bundled Chromium"
+        os: Linux
+        os_version: GitHub-hosted-ubuntu
+        engine: Chromium
+        webview: false
+        viewport_width_css_px: 320
+        viewport_height_css_px: 900
+        dpr: 1
+        zoom: 1.0
+        text_scale: 1.0
+        orientation: PORTRAIT
+      path: experiments/ref001-blind-clean-20260812/evidence/runtime/runtime-probes.json
   verify: []
   final: []
 
@@ -154,7 +217,7 @@ deliverables:
       required: true
       target_repo_path: "experiments/ref001-blind-clean-20260812/implementation/acf-export.json"
       evidence_json_path: "experiments/ref001-blind-clean-20260812/evidence/acf-export.json"
-      validation_status: PENDING
+      validation_status: PASS
     local_json:
       required: false
       target_repo_dir: ""
@@ -169,10 +232,10 @@ deliverables:
 
 scores:
   first_pass_fidelity:
-    visual: null
-    structural: null
-    robustness: null
-    total: null
+    visual: 18
+    structural: 24
+    robustness: 15
+    total: 57
   final_fidelity:
     visual: null
     structural: null
@@ -211,8 +274,11 @@ replay:
 lessons:
   observations:
     - "This is a blind optimized clean rerun; the historical source run record is intentionally absent from the sanitized workspace, so tooling-level REPLAY pairing is not fabricated."
+    - "FIRST PASS endpoint body geometry is already close: PC +48px (+0.62%); SP +38px (+0.35%) after excluding the Figma-only 40px device status bar."
+    - "All required runtime probes pass after implementation-only continuity debugging; no completed-page visual repair has occurred before freeze."
+    - "The dominant FIRST PASS visual gap is missing persistent media bytes, not structural/CMS or responsive failure."
   candidate_rules: []
   agent_specific: []
   project_specific: []
 
-notes: "BLIND_CONTEXT_CLEAN. The prior broken uploaded artifact was replaced by the green CI-generated self-contained sanitized artifact before FIRST_PASS_BUILD. No repaired REF-001 implementation evidence has been inspected."
+notes: "BLIND_CONTEXT_CLEAN. FIRST PASS code baseline is 46eb326383ac7aff1cb023100a801b968df9f9bc. Runtime evidence is persisted under experiments/ref001-blind-clean-20260812/evidence/runtime and quantified in evidence/first-pass-measurement.yaml. No repaired REF-001 implementation evidence has been inspected and no completed-page visual repair has occurred before FIRST_PASS_FREEZE."
