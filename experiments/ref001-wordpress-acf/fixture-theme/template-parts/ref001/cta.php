@@ -1,0 +1,24 @@
+<?php
+/**
+ * REF-001 repeated CTA visual First Pass.
+ *
+ * Visual-only. Destinations and global ownership stay deferred until the real
+ * WordPress target theme is known.
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+$ref001_cta_background = 'data:image/jpeg;base64,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';
+?>
+<section class="ref001-cta" data-figma-pc="21378:7867" data-figma-sp="21376:4719" data-interaction-status="deferred">
+	<div class="ref001-cta__photo" style="background-image:url('<?php echo esc_attr( $ref001_cta_background ); ?>')" aria-hidden="true"></div>
+	<div class="ref001-cta__overlay" aria-hidden="true"></div>
+	<div class="ref001-cta__content">
+		<h2 class="ref001-cta__title">千葉経済大学を<span>もっと知ろう！</span></h2>
+		<div class="ref001-cta__actions" data-destinations="deferred">
+			<span class="ref001-cta__button ref001-cta__button--document"><i aria-hidden="true">▣</i><span>資料請求</span></span>
+			<span class="ref001-cta__button ref001-cta__button--oc"><i aria-hidden="true">⚑</i><span>オープンキャンパス</span></span>
+		</div>
+	</div>
+</section>
