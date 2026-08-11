@@ -53,6 +53,14 @@ class Ref001VisualPreviewHarnessTests(unittest.TestCase):
         self.assertIn("image.decode", source)
         self.assertIn("fullPage: true", source)
 
+    def test_capture_rejects_page_level_horizontal_overflow(self) -> None:
+        source = (PREVIEW / "capture.mjs").read_text(encoding="utf-8")
+        self.assertIn("document.documentElement.scrollWidth", source)
+        self.assertIn("document.body?.scrollWidth", source)
+        self.assertIn("overflow.documentScrollWidth > overflow.viewportWidth", source)
+        self.assertIn("overflow.bodyScrollWidth > overflow.viewportWidth", source)
+        self.assertIn("has horizontal page overflow", source)
+
     def test_course_asset_check_requires_all_seven_pictograms_to_decode(self) -> None:
         source = (PREVIEW / "asset-check.mjs").read_text(encoding="utf-8")
         shell = (PREVIEW / "asset-check.sh").read_text(encoding="utf-8")
