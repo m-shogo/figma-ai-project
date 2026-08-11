@@ -13,6 +13,13 @@ FIXTURE_ROOT = THEME / "assets" / "images" / "visual-qa" / "messages"
 FIXTURE_PARTS = tuple(FIXTURE_ROOT / f"messages-mask-group.part{index:02d}.b64" for index in range(1, 8))
 
 
+def split_responsive_css(css: str) -> tuple[str, str]:
+    marker = "@media (max-width: 767px)"
+    assert marker in css, "Messages CSS must use the owner-resolved 768px breakpoint contract"
+    desktop, mobile = css.split(marker, 1)
+    return desktop, mobile
+
+
 class Ref001MessagesInternalVisualRepairTests(unittest.TestCase):
     def test_final_mask_group_is_the_visual_qa_authority(self) -> None:
         template = TEMPLATE.read_text(encoding="utf-8")
@@ -33,15 +40,17 @@ class Ref001MessagesInternalVisualRepairTests(unittest.TestCase):
         self.assertEqual(decoded[:2], bytes((255, 216)))
         self.assertEqual(decoded[-2:], bytes((255, 217)))
 
-    def test_sp_title_stays_on_the_supplied_single_line(self) -> None:
+    def test_sp_title_preserves_type_scale_without_forcing_static_wrap(self) -> None:
         css = CSS.read_text(encoding="utf-8")
-        media = css.split("@media (max-width: 600px)", 1)[1]
-        self.assertIn(".ref001-messages__header h2", media)
-        self.assertIn("white-space: nowrap", media)
-        self.assertIn("font-size: 24px", media)
-        self.assertIn("font-size: 32px", media)
+        _, mobile = split_responsive_css(css)
+        self.assertNotIn("@media (max-width: 600px)", css)
+        self.assertIn(".ref001-messages__header h2", mobile)
+        self.assertIn("font-size: 24px", mobile)
+        self.assertIn("font-size: 32px", mobile)
+        header_rule = mobile.split(".ref001-messages__header h2", 1)[1].split("}", 1)[0]
+        self.assertNotIn("white-space: nowrap", header_rule)
 
-    def test_sp_headline_uses_three_supplied_black_bars(self) -> None:
+    def test_sp_headline_uses_three_supplied_black_bars_without_fixed_viewport_overflow(self) -> None:
         template = TEMPLATE.read_text(encoding="utf-8")
         self.assertIn("ref001-messages__headline-line--pc", template)
         self.assertIn("ref001-messages__headline-line--second", template)
@@ -50,18 +59,25 @@ class Ref001MessagesInternalVisualRepairTests(unittest.TestCase):
         self.assertIn("挑戦の毎日です！", template)
 
         css = CSS.read_text(encoding="utf-8")
-        media = css.split("@media (max-width: 600px)", 1)[1]
-        self.assertIn("gap: 8px", media)
-        self.assertIn("padding: 7px 16px", media)
-        self.assertIn("width: 308px", media)
-        self.assertIn("width: 176px", media)
-        self.assertIn(".ref001-messages__headline-line--pc {\n\t\tdisplay: none", media)
-        self.assertIn(".ref001-messages__headline-line--sp {\n\t\tdisplay: inline-block", media)
+        _, mobile = split_responsive_css(css)
+        self.assertIn("gap: 8px", mobile)
+        self.assertIn("padding: 7px 16px", mobile)
+        self.assertIn("width: min(308px, calc(100% - 32px))", mobile)
+        self.assertIn("width: min(176px, calc(100% - 32px))", mobile)
+        self.assertIn(".ref001-messages__headline-line--pc {\n\t\tdisplay: none", mobile)
+        self.assertIn(".ref001-messages__headline-line--sp {\n\t\tdisplay: inline-block", mobile)
 
     def test_sp_profile_uses_supplied_relative_y(self) -> None:
         css = CSS.read_text(encoding="utf-8")
-        media = css.split("@media (max-width: 600px)", 1)[1]
-        self.assertIn(".ref001-messages__profile {\n\t\ttop: 423px", media)
+        _, mobile = split_responsive_css(css)
+        self.assertIn(".ref001-messages__profile {\n\t\ttop: 423px", mobile)
+
+    def test_375_endpoint_records_exact_image_slot_while_mobile_remains_fluid(self) -> None:
+        css = CSS.read_text(encoding="utf-8")
+        _, mobile = split_responsive_css(css)
+        self.assertIn("width: min(343px, calc(100% - 32px))", mobile)
+        self.assertIn("@media (width: 375px)", mobile)
+        self.assertIn("width: 343px", mobile)
 
     def test_browser_gate_scopes_student_voice_and_checks_messages_pixels(self) -> None:
         source = (PREVIEW / "asset-check.mjs").read_text(encoding="utf-8")

@@ -1,9 +1,88 @@
-schema_version: 7
+schema_version: 9
 contract_id: CONTRACT-XXXX
 reference_id: REF-XXXX
 status: DRAFT # DRAFT | FROZEN | SUPERSEDED
 created_at: ""
 updated_at: ""
+
+decision_preflight:
+  status: UNRESOLVED # UNRESOLVED | RESOLVED
+  strategy: COST_BASED
+  block_only_expensive_irreversible_or_cross_cutting: true
+  low_cost_reversible_default_without_owner_wait: true
+  continue_independent_safe_work_while_waiting: true
+  repeated_time_sink_promotes_to_preflight: true
+  items:
+    target_runtime:
+      status: UNKNOWN # UNKNOWN | UNRESOLVED | RESOLVED
+      framework_or_template_family: ""
+      production_repo_or_fixture_scope: ""
+      evidence: []
+    responsive_contract:
+      status: UNKNOWN
+      breakpoint_source: UNKNOWN # OWNER | COMPANY | DESIGN_SYSTEM | EXISTING_CODE | FIGMA | MULTIPLE | UNKNOWN
+      breakpoint_values: []
+      figma_acceptance_widths: []
+      runtime_safety_widths: []
+      boundary_probe_policy: ""
+      evidence: []
+    typography_contract:
+      status: UNKNOWN
+      font_source: ""
+      fallback_policy: ""
+      line_height_policy: ""
+      natural_wrap_default: true
+      one_line_or_truncation_requires_evidence: true
+      minor_fallback_wrap_difference_tolerated: true
+      notes: []
+    figma_capabilities:
+      status: UNKNOWN
+      effective_variable_modes: []
+      auto_layout_coverage: UNKNOWN
+      auto_layout_generation: UNKNOWN # LEGACY | UPDATED_2026 | MIXED | UNDETERMINED | UNKNOWN
+      component_and_token_evidence: []
+    asset_contract:
+      status: UNKNOWN
+      exact_source_policy: EXACT_WHEN_AVAILABLE
+      placeholder_element_default: img
+      media_fit_default: cover
+      picture_default: false
+      picture_requires_reason: true
+      picture_reasons:
+        - art_direction
+        - responsive_source_or_crop_difference
+        - delivery_format_requirement
+        - demonstrated_runtime_reason
+      crop_focal_policy: PRESERVE_WHEN_EVIDENCED
+      mask_composite_authority: ""
+      export_runtime_validation: WHEN_COMPLEX
+      cms_media_ownership: ""
+      notes: []
+    interaction_contract:
+      status: UNKNOWN
+      known_behaviors: []
+      unresolved_behaviors: []
+      keyboard_touch_motion_requirements: []
+      invent_missing_behavior: false
+    content_cms_contract:
+      status: UNKNOWN
+      code_owned_content: []
+      cms_owned_content: []
+      unknown_records_must_not_be_invented: true
+      notes: []
+    qa_contract:
+      status: UNKNOWN
+      pixel_acceptance_endpoints: []
+      intermediate_runtime_safety: []
+      horizontal_overflow_allowed: false
+      readable_text_clipping_allowed: false
+      actual_artifact_visual_review_required: true
+      notes: []
+  unresolved_behavior: >-
+    Only block when the missing decision is expensive to reverse, cross-cutting, or material to the next implementation step.
+    For cheap reversible choices, use the safe modern default and continue without waiting for owner input.
+    While waiting for CI, inspection, generation, or another result, continue independent safe work.
+    Never invent a temporary value when it is likely to cause substantial rework later.
 
 company_policy:
   path: ""
@@ -51,16 +130,6 @@ environment_contract:
     reduced_motion_policy: ""
     notes: []
   effective_overrides: []
-  # - profile_id: ios-safari-touch
-  #   reset_profile: BASE_PLUS_ENVIRONMENT
-  #   smooth_scroll: INHERIT
-  #   hover_profile: TOUCH_FIRST
-  #   touch_profile: BROWSER_NATIVE
-  #   viewport_profile: DYNAMIC_SAFE_AREA
-  #   scroll_lock_profile: MOBILE_OVERLAY
-  #   animation_profile: INHERIT
-  #   image_profile: INHERIT
-  #   evidence: []
   qa:
     section_capture: CANONICAL_PLUS_DIFFERENCES # CANONICAL_ONLY | CANONICAL_PLUS_DIFFERENCES | ALL_REQUIRED
     boundary_capture: CANONICAL_PLUS_DIFFERENCES
@@ -156,6 +225,42 @@ layout:
   intrinsic_layout_allowed: true
   notes: []
 
+web_translation:
+  static_frame_overfit: PROHIBITED
+  typography:
+    natural_wrap_default: true
+    one_line_or_truncation_requires_evidence: true
+    fallback_font_wrap_difference_tolerated: true
+    line_box_spacing_diagnosis_required: true
+    browser_native_heading_balance_allowed: true
+    notes: []
+  responsive:
+    figma_endpoints_define_acceptance_frames_not_breakpoints: true
+    intermediate_width_runtime_safety_required: true
+    intrinsic_css_allowed_when_it_preserves_demonstrated_intent: true
+    notes: []
+  overflow:
+    page_horizontal_overflow: PROHIBITED
+    readable_text_clipping: PROHIBITED
+    intentional_clipping_requires_evidence: true
+    notes: []
+  assets:
+    exact_source_preferred: true
+    default_markup: img
+    default_fit_for_cropped_media_box: cover
+    picture_is_opt_in: true
+    picture_requires_demonstrated_reason: true
+    source_identity_separate_from_crop_transform: true
+    exported_asset_requires_runtime_validation_when_complex: true
+    final_visible_composite_allowed_for_visual_qa: true
+    cms_media_ownership_separate_from_visual_qa: true
+    notes: []
+  generation:
+    historical_complaint_is_not_current_capability_proof: true
+    generation_specific_workaround_requires_evidence: true
+    undetermined_is_preferred_to_guessing: true
+    notes: []
+
 shared_components: []
 
 assets:
@@ -188,17 +293,24 @@ parallel_execution:
 integration:
   root_composition_path: ""
   required_checks:
+    - material_preflight_decisions_resolved
     - section_order
     - container_alignment
     - cross_section_spacing
     - typography_consistency
+    - text_runtime_safety
+    - line_box_spacing_diagnostics
+    - font_availability_diagnostics
     - shared_component_consistency
     - breakpoint_consistency
     - responsive_continuity
+    - intermediate_width_runtime_safety
     - global_overflow
+    - readable_text_clipping
     - z_index_continuity
     - background_continuity
     - asset_quality
+    - exported_asset_runtime_fidelity
     - company_policy_compliance
     - environment_profile_compliance
     - input_capability_behavior

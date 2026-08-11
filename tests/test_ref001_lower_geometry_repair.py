@@ -14,9 +14,10 @@ class Ref001LowerGeometryRepairTests(unittest.TestCase):
         self.assertIn(".ref001-links + .ref001-cta-value", css)
         self.assertIn("margin-top: 72px", css)
 
-    def test_sp_uses_two_supplied_56px_gaps(self) -> None:
+    def test_sp_uses_two_supplied_56px_gaps_at_owner_resolved_boundary(self) -> None:
         css = (THEME / "assets" / "css" / "ref001-lower-geometry.css").read_text(encoding="utf-8")
-        self.assertIn("@media (max-width: 600px)", css)
+        self.assertIn("@media (max-width: 767px)", css)
+        self.assertNotIn("@media (max-width: 600px)", css)
         self.assertIn("margin-top: 56px", css)
 
     def test_lower_repair_loads_after_link_and_cta_value_first_pass_styles(self) -> None:

@@ -7,8 +7,9 @@
  * - SP section: 375×1534, 335px card base with 8px shadow offset
  * - SP media: 140×79, list gap 12px, card heights emerge from 3/4 bullet counts
  *
- * The 600px switch remains FIXTURE-ONLY. It exists to exercise the supplied
- * 375px endpoint and is not production breakpoint evidence.
+ * Production breakpoint contract: 768px. The supplied 375px / 1380px frames
+ * remain the exact visual acceptance endpoints; widths between them use native
+ * grid wrapping rather than a second invented breakpoint.
  */
 
 .ref001-education {
@@ -20,7 +21,7 @@
 
 .ref001-education__header {
 	display: grid;
-	grid-template-columns: 263px 547px;
+	grid-template-columns: minmax(220px, 263px) minmax(0, 547px);
 	column-gap: 24px;
 	width: min(1180px, calc(100% - 40px));
 	min-height: 112px;
@@ -64,7 +65,7 @@
 .ref001-education__intro {
 	grid-column: 2;
 	margin-left: 43px;
-	width: 504px;
+	width: min(504px, calc(100% - 43px));
 }
 
 .ref001-education__subheading {
@@ -83,7 +84,7 @@
 	position: absolute;
 	left: 0;
 	bottom: -8px;
-	width: 402px;
+	width: min(402px, 100%);
 	height: 8px;
 	background: var(--ref001-orange);
 	z-index: 0;
@@ -101,9 +102,10 @@
 
 .ref001-education__stages {
 	display: grid;
-	grid-template-columns: repeat(4, 281px);
+	grid-template-columns: repeat(auto-fit, 281px);
+	justify-content: center;
 	gap: 40px;
-	width: 1244px;
+	width: min(1244px, calc(100% - 40px));
 	margin: 0 auto;
 	padding: 0;
 	list-style: none;
@@ -252,7 +254,7 @@
 	text-align: center;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 767px) {
 	.ref001-education {
 		min-height: 1534px;
 		padding: 56px 0 29px;
@@ -262,7 +264,7 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		width: 343px;
+		width: min(343px, calc(100% - 32px));
 		min-height: 262px;
 		margin: 0 auto 32px;
 		text-align: center;
@@ -281,7 +283,7 @@
 
 	.ref001-education__lead-rule {
 		order: 3;
-		width: 343px;
+		width: 100%;
 		height: 1px;
 		border: 0;
 		border-top: 1px solid var(--ref001-blue);
@@ -312,7 +314,7 @@
 	.ref001-education__subheading::after {
 		left: 50%;
 		bottom: -7px;
-		width: 293px;
+		width: min(293px, 100%);
 		height: 8px;
 		transform: translateX(-50%);
 	}
@@ -320,7 +322,7 @@
 	.ref001-education__intro {
 		order: 5;
 		align-self: stretch;
-		width: 343px;
+		width: 100%;
 		margin: 22px 0 0;
 		font-size: 16px;
 		line-height: 1.6;
@@ -331,16 +333,16 @@
 		display: flex;
 		flex-direction: column;
 		gap: 28px;
-		width: 343px;
+		width: min(343px, calc(100% - 32px));
 		margin: 0 auto;
 	}
 
 	.ref001-education__stage {
-		width: 343px;
+		width: 100%;
 	}
 
 	.ref001-education__card {
-		width: 335px;
+		width: calc(100% - 8px);
 		height: auto;
 		min-height: 244px;
 		padding: 54px 16px 34px;
@@ -358,7 +360,7 @@
 
 	.ref001-education__summary {
 		display: grid;
-		grid-template-columns: 140px 147px;
+		grid-template-columns: minmax(0, 140px) minmax(0, 147px);
 		column-gap: 16px;
 		align-items: center;
 	}
@@ -366,6 +368,7 @@
 	.ref001-education__media {
 		order: initial;
 		width: 140px;
+		max-width: 100%;
 		height: 79px;
 	}
 
@@ -379,7 +382,7 @@
 
 	.ref001-education__bullets {
 		gap: 12px;
-		width: 233px;
+		width: min(233px, calc(100% - 35px));
 		margin: 18px 0 0 35px;
 	}
 

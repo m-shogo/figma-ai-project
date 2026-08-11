@@ -41,6 +41,10 @@ jobs:
         run: |
           bash experiments/ref001-wordpress-acf/visual-preview/capture.sh
 
+      - name: Check Web text runtime safety
+        run: |
+          bash experiments/ref001-wordpress-acf/visual-preview/text-runtime-check.sh
+
       - name: Check persisted visual assets load in browser
         run: |
           bash experiments/ref001-wordpress-acf/visual-preview/asset-check.sh

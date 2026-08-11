@@ -11,6 +11,9 @@
  * SP website coordinates (40px status bar removed):
  * - Courses bottom 9411 -> Links top 9467 = 56px
  * - Links bottom 9810 -> CTA Value top 9866 = 56px
+ *
+ * Owner responsive contract: mobile <= 767px; 375/1380 remain the supplied
+ * geometry endpoints and intermediate widths are runtime-safety probes.
  */
 
 .ref001-courses + .ref001-links,
@@ -18,7 +21,7 @@
 	margin-top: 72px;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 767px) {
 	.ref001-courses + .ref001-links,
 	.ref001-links + .ref001-cta-value {
 		margin-top: 56px;

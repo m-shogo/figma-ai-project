@@ -18,7 +18,8 @@
  * - arrow circle: 145,148 / 36×36
  * - arrow glyph: 158,161 / 11×10
  *
- * The 600px switch remains FIXTURE-ONLY.
+ * Owner responsive contract: mobile <= 767px; 375/1380 are the exact supplied
+ * endpoints and intermediate widths are runtime-safety probes.
  */
 
 .ref001-mv__open-campus {
@@ -150,8 +151,7 @@
 	max-width: none;
 }
 
-/* FIXTURE-ONLY: exact supplied 375px endpoint, not production breakpoint evidence. */
-@media (max-width: 600px) {
+@media (max-width: 767px) {
 	.ref001-mv__open-campus {
 		right: 16px;
 		bottom: 0;

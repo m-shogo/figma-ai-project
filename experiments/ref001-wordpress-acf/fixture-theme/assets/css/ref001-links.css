@@ -1,12 +1,12 @@
 .ref001-links {
-	width: 1112px;
-	max-width: calc(100% - 32px);
+	width: min(1112px, calc(100% - 32px));
 	margin: 0 auto;
 }
 
 .ref001-links__grid {
 	display: grid;
-	grid-template-columns: repeat(4, 260px);
+	grid-template-columns: repeat(auto-fit, 260px);
+	justify-content: center;
 	gap: 24px;
 	margin: 0;
 	padding: 0;
@@ -27,12 +27,7 @@
 	border-radius: 50%;
 }
 
-.ref001-links__shadow {
-	top: 10px;
-	left: 10px;
-	background: var(--ref001-link-shadow);
-}
-
+.ref001-links__shadow { top: 10px; left: 10px; background: var(--ref001-link-shadow); }
 .ref001-links__face {
 	top: 0;
 	left: 0;
@@ -48,71 +43,18 @@
 	text-align: center;
 }
 
-.ref001-links__item--purple {
-	--ref001-link-face: #eee7ff;
-	--ref001-link-shadow: #8473aa;
-	--ref001-link-accent: #8473aa;
-}
+.ref001-links__item--purple { --ref001-link-face: #eee7ff; --ref001-link-shadow: #8473aa; --ref001-link-accent: #8473aa; }
+.ref001-links__item--orange { --ref001-link-face: #ffebd1; --ref001-link-shadow: #f5971a; --ref001-link-accent: #f5971a; }
+.ref001-links__item--instagram { --ref001-link-face: #ffdbe0; --ref001-link-shadow: linear-gradient(147deg, #4c64d3 14%, #cf2e92 32%, #f26939 59%, #ffdd83 86%); --ref001-link-accent: #8473aa; }
+.ref001-links__item--line { --ref001-link-face: #eafff3; --ref001-link-shadow: #06c755; --ref001-link-accent: #06c755; }
 
-.ref001-links__item--orange {
-	--ref001-link-face: #ffebd1;
-	--ref001-link-shadow: #f5971a;
-	--ref001-link-accent: #f5971a;
-}
-
-.ref001-links__item--instagram {
-	--ref001-link-face: #ffdbe0;
-	--ref001-link-shadow: linear-gradient(147deg, #4c64d3 14%, #cf2e92 32%, #f26939 59%, #ffdd83 86%);
-	--ref001-link-accent: #8473aa;
-}
-
-.ref001-links__item--line {
-	--ref001-link-face: #eafff3;
-	--ref001-link-shadow: #06c755;
-	--ref001-link-accent: #06c755;
-}
-
-.ref001-links__label {
-	margin: 0;
-	font-size: 22px;
-	font-weight: 500;
-	line-height: 1;
-	letter-spacing: .05em;
-}
-
-.ref001-links__label--numbers {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	line-height: 1.4;
-}
-
-.ref001-links__numbers-top {
-	font-size: 18px;
-	line-height: 1.4;
-}
-
-.ref001-links__numbers-main {
-	font-size: 22px;
-	line-height: 1.4;
-}
-
-.ref001-links__label--instagram {
-	font-family: Poppins, sans-serif;
-	font-size: 20px;
-	font-weight: 400;
-	line-height: 1;
-	letter-spacing: .05em;
-	transform: translateY(-7px);
-}
-
-.ref001-links__instagram-line {
-	display: inline;
-}
-
-.ref001-links__instagram-line + .ref001-links__instagram-line::before {
-	content: " ";
-}
+.ref001-links__label { margin: 0; font-size: 22px; font-weight: 500; line-height: 1; letter-spacing: .05em; }
+.ref001-links__label--numbers { display: flex; flex-direction: column; align-items: center; line-height: 1.4; }
+.ref001-links__numbers-top { font-size: 18px; line-height: 1.4; }
+.ref001-links__numbers-main { font-size: 22px; line-height: 1.4; }
+.ref001-links__label--instagram { font-family: Poppins, sans-serif; font-size: 20px; font-weight: 400; line-height: 1; letter-spacing: .05em; transform: translateY(-7px); }
+.ref001-links__instagram-line { display: inline; }
+.ref001-links__instagram-line + .ref001-links__instagram-line::before { content: " "; }
 
 .ref001-links__sub {
 	display: flex;
@@ -137,7 +79,6 @@
 	border: 1.2px solid currentColor;
 	border-radius: 3.5px;
 }
-
 .ref001-links__instagram-icon::before {
 	content: "";
 	position: absolute;
@@ -150,7 +91,6 @@
 	border-radius: 50%;
 	transform: translate(-50%, -50%);
 }
-
 .ref001-links__instagram-icon::after {
 	content: "";
 	position: absolute;
@@ -174,87 +114,26 @@
 	line-height: 1;
 }
 
-/* FIXTURE-ONLY: 1380/375 Figma endpoints do not prove the production breakpoint. */
-@media (max-width: 600px) {
-	.ref001-links {
-		width: 343px;
-		max-width: calc(100% - 32px);
-	}
-
+/* Owner breakpoint contract: mobile below 768px. */
+@media (max-width: 767px) {
+	.ref001-links { width: min(343px, calc(100% - 32px)); }
 	.ref001-links__grid {
-		grid-template-columns: repeat(2, 162px);
+		grid-template-columns: repeat(2, minmax(0, 162px));
 		gap: 19px;
 	}
-
-	.ref001-links__item {
-		width: 162px;
-		height: 162px;
-	}
-
+	.ref001-links__item { width: 100%; height: auto; aspect-ratio: 1; }
 	.ref001-links__shadow,
-	.ref001-links__face {
-		width: 155px;
-		height: 155px;
-	}
-
-	.ref001-links__shadow {
-		top: 7px;
-		left: 7px;
-	}
-
-	.ref001-links__label {
-		font-size: 16px;
-		letter-spacing: .05em;
-	}
-
-	.ref001-links__numbers-top {
-		font-size: 13px;
-		line-height: 1.4;
-	}
-
-	.ref001-links__numbers-main {
-		font-size: 16px;
-		line-height: 1.4;
-	}
-
-	.ref001-links__label--instagram {
-		font-size: 16px;
-		line-height: 1;
-		transform: none;
-	}
-
-	.ref001-links__instagram-line {
-		display: block;
-	}
-
-	.ref001-links__instagram-line + .ref001-links__instagram-line::before {
-		content: none;
-	}
-
-	.ref001-links__sub {
-		gap: 5px;
-		margin-top: 9px;
-		font-size: 12px;
-		transform: none;
-	}
-
-	.ref001-links__instagram-icon {
-		width: 12px;
-		height: 12px;
-		flex-basis: 12px;
-		border-radius: 3px;
-	}
-
-	.ref001-links__arrow {
-		top: 91px;
-		font-size: 24px;
-	}
-
-	.ref001-links__item--orange .ref001-links__arrow {
-		top: 104px;
-	}
-
-	.ref001-links__item--instagram .ref001-links__arrow {
-		top: 108px;
-	}
+	.ref001-links__face { width: calc(100% - 7px); height: calc(100% - 7px); }
+	.ref001-links__shadow { top: 7px; left: 7px; }
+	.ref001-links__label { font-size: 16px; }
+	.ref001-links__numbers-top { font-size: 13px; }
+	.ref001-links__numbers-main { font-size: 16px; }
+	.ref001-links__label--instagram { font-size: 16px; transform: none; }
+	.ref001-links__instagram-line { display: block; }
+	.ref001-links__instagram-line + .ref001-links__instagram-line::before { content: none; }
+	.ref001-links__sub { gap: 5px; margin-top: 9px; font-size: 12px; transform: none; }
+	.ref001-links__instagram-icon { width: 12px; height: 12px; flex-basis: 12px; border-radius: 3px; }
+	.ref001-links__arrow { top: 56%; font-size: 24px; }
+	.ref001-links__item--orange .ref001-links__arrow { top: 64%; }
+	.ref001-links__item--instagram .ref001-links__arrow { top: 67%; }
 }

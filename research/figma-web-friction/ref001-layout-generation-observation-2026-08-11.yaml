@@ -1,0 +1,68 @@
+schema_version: 1
+observation_id: REF001-AUTO-LAYOUT-GENERATION-2026-08-11
+as_of: "2026-08-11"
+reference_id: REF-001
+figma_file_key: ZYTdtw4wCgkcBy2cVnhxVI
+status: VERIFIED_UNDETERMINED
+
+question: >-
+  Can the current Plugin API evidence identify whether the actual REF-001 Auto Layout
+  nodes use the legacy layout generation or the Flexbox-aligned 2026 generation?
+
+inspection:
+  root_node: "21376:4401"
+  sampled_auto_layout_nodes: 40
+  observed_properties:
+    - layoutMode
+    - layoutWrap
+    - primaryAxisSizingMode
+    - counterAxisSizingMode
+    - layoutSizingHorizontal
+    - layoutSizingVertical
+    - strokesIncludedInLayout
+  generation_property_probe: layoutVersion
+  nodes_exposing_generation_property: 0
+  result: UNDETERMINED
+
+sample_evidence:
+  - node: "21376:4408"
+    name: list
+    layoutMode: VERTICAL
+    layoutSizingHorizontal: HUG
+    layoutSizingVertical: HUG
+    layoutWrap: NO_WRAP
+    strokesIncludedInLayout: false
+    layoutVersion_exposed: false
+  - node: "21376:4726"
+    name: li
+    layoutMode: HORIZONTAL
+    layoutSizingHorizontal: FILL
+    layoutSizingVertical: HUG
+    layoutWrap: NO_WRAP
+    strokesIncludedInLayout: false
+    layoutVersion_exposed: false
+  - node: "21376:4919"
+    name: links
+    layoutMode: HORIZONTAL
+    layoutSizingHorizontal: FIXED
+    layoutSizingVertical: HUG
+    layoutWrap: WRAP
+    strokesIncludedInLayout: false
+    layoutVersion_exposed: false
+
+current_official_context:
+  updated_auto_layout_default_for_new_frames_from: "2026-07"
+  legacy_and_updated_versions_can_coexist: true
+  switching_supported_until: "2027-01"
+  source: "https://help.figma.com/hc/en-us/articles/42031586813719-Use-auto-layout-with-CSS-Flexbox-in-mind"
+
+implementation_rule:
+  - "Do not infer REF-001 Auto Layout generation from file age, node id, visual appearance, or current date."
+  - "Use directly observable HUG/FILL/FIXED/wrap/padding/gap semantics where they are reliable."
+  - "Do not apply a legacy-only or updated-2026-only workaround unless direct evidence requires it."
+  - "If Figma exposes layout generation to MCP/Plugin API later, retest this observation rather than preserving UNDETERMINED forever."
+
+retest_trigger:
+  - "Plugin API exposes a layout-generation/version property."
+  - "MCP design context starts reporting legacy vs updated Auto Layout."
+  - "Figma removes the legacy/update coexistence period or changes migration behavior."

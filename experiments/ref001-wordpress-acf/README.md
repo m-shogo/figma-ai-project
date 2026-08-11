@@ -9,6 +9,7 @@ This experiment is deliberately slower than a one-shot implementation. It separa
 - implementation family: WordPress
 - implementation unit: fixed Page template
 - content fields: ACF
+- production breakpoint: `768px` (`mobile <= 767px`, `desktop >= 768px`)
 
 ## Still intentionally unresolved
 
@@ -19,9 +20,24 @@ This experiment is deliberately slower than a one-shot implementation. It separa
 - ACF PRO availability
 - existing ACF Local JSON architecture
 - existing header/global CTA ownership
-- production breakpoints
 
 Do not freeze or invent these from the research repository.
+
+## Responsive / Web runtime contract
+
+Figma is the visual specification; the Web implementation is a responsive runtime specification.
+
+- production breakpoint is owner-confirmed at `768px`: mobile `<= 767px`, desktop `>= 768px`
+- Figma exact visual acceptance remains `375px` SP and `1380px` PC
+- widths such as `320 / 360 / 390 / 430 / 767 / 768 / 769 / 1024 / 1200` are runtime-safety probes, not additional pixel-perfect Figma targets
+- ordinary copy uses natural wrapping by default; do not add `white-space: nowrap` merely because a supplied Figma frame renders one line
+- typography QA prioritizes line-height, font metrics, visible ink/baseline rhythm, and spacing to adjacent content over forcing identical fallback-font line breaks
+- preflight is cost-based: resolve cross-cutting, expensive-to-reverse decisions up front; use safe modern defaults for cheap/reversible details
+- ordinary media defaults to `<img>`; use `object-fit: cover` for evidenced cropped media boxes
+- `<picture>` is opt-in only when SP/PC art direction, source-format delivery, or another concrete runtime requirement proves it is needed
+- no page-level horizontal scrolling, readable-text clipping, viewport-widening hacks, or overflow hiding used merely to conceal a layout defect
+
+The old 600px fixture seam is not a production contract and must not be reintroduced.
 
 ## Hypotheses under test
 
@@ -106,7 +122,7 @@ Practical boundary:
 - ordinary body/supporting copy remains reflowable; a small line-wrap difference caused by unavailable font metrics is acceptable when meaning and composition remain intact
 - `white-space: nowrap` must not be introduced merely to stop a line from wrapping like the Figma screenshot; use it only when one-line behavior is itself a real UI/content requirement and overflow has been proven safe
 - do not shrink text, distort tracking, widen a container beyond the viewport, clip readable content, or add arbitrary hard breaks solely to hide font-rendering differences
-- page-level horizontal scrolling is a failure at the supplied PC/SP acceptance widths
+- page-level horizontal scrolling is a failure at every runtime-safety viewport, not only the supplied PC/SP endpoints
 - Figma frame width is endpoint evidence, not proof of the production breakpoint or every in-between responsive state
 - visual QA must distinguish hard mismatches from runtime-tolerant differences instead of blindly optimizing every pixel delta
 
@@ -210,22 +226,12 @@ python -m unittest discover -s tests -p 'test_*.py'
 
 The fixture checks now also protect:
 
+- owner-resolved `768px` production breakpoint and rejection of the obsolete `600/601px` seam in fixture CSS
+- Figma exact acceptance at `375px / 1380px` while intermediate widths remain runtime-safety probes
 - Education template/style inclusion
 - all fixed Education fields
 - code-owned 01→04 stage identity/order
 - measured PC 281px/40px geometry evidence
 - measured SP 335px card / 140×79 media evidence
 - continued prohibition on Repeater API in the fixed-cardinality baseline
-- page-level horizontal overflow at the supplied 1380px / 375px acceptance widths
-
-Structural validation does not replace a real WordPress/ACF import smoke.
-
-## Next learning stage
-
-1. merge the Education First Pass implementation after CI
-2. inspect Courses next only if it has sufficiently complete content/structure evidence
-3. keep Student Voice and Messages blocked until their missing interaction/content evidence is resolved
-4. when a disposable WordPress runtime is available, import ACF JSON, seed 26 READY values, attach exact media, and capture immutable 1380px / 375px First Pass evidence
-5. repair only after First Pass is frozen
-6. run Clean Replay
-7. when the real target theme repository is supplied, replace fixture assumptions with existing-theme conventions
+- page-level horizontal overflow across the runtime-safety viewport suite

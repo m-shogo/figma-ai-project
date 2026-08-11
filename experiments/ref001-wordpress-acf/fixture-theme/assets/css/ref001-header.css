@@ -79,8 +79,8 @@
 	background: #8473aa;
 }
 
-/* FIXTURE-ONLY: the supplied SP Header is a separate 375×67 state. */
-@media (max-width: 600px) {
+/* Owner responsive contract: mobile <= 767px; the supplied SP Header is 375×67. */
+@media (max-width: 767px) {
 	.ref001-header {
 		height: 67px;
 		padding: 0 16px;

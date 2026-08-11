@@ -19,6 +19,55 @@ lanes:
         url: https://www.figma.com/release-notes/
         topics: [figma, design, dev-mode, auto-layout, variables, components, images, motion, make, agent]
         impacts: [FIGMA_STRUCTURE, FIGMA_TO_CODE, CODE_TO_FIGMA, DESIGN_HANDOFF, VISUAL_FIDELITY]
+      - id: figma-auto-layout-current
+        authority: OFFICIAL
+        kind: HTML_DIGEST
+        url: https://help.figma.com/hc/en-us/articles/360040451373-Guide-to-auto-layout
+        include_keywords: [Auto layout, Hug contents, Fill container, Fixed, Minimum, Maximum, wrap, grid]
+        topics: [figma, auto-layout, responsive, sizing, wrap, min-max]
+        impacts: [FIGMA_STRUCTURE, FIGMA_TO_CODE, CSS, RESPONSIVE_LAYOUT]
+      - id: figma-auto-layout-flexbox-generation
+        authority: OFFICIAL
+        kind: HTML_DIGEST
+        url: https://help.figma.com/hc/en-us/articles/42031586813719-Use-auto-layout-with-CSS-Flexbox-in-mind
+        include_keywords: [Flexbox, legacy, padding, stroke, border-box, fill container, gap]
+        topics: [figma, auto-layout, flexbox, generation, box-model]
+        impacts: [FIGMA_STRUCTURE, FIGMA_TO_CODE, CSS, RESPONSIVE_LAYOUT]
+      - id: figma-grid-auto-layout-current
+        authority: OFFICIAL
+        kind: HTML_DIGEST
+        url: https://help.figma.com/hc/en-us/articles/31289469907863-Use-the-grid-auto-layout-flow
+        include_keywords: [Grid, Hug contents, Fill container, Minimum, Maximum, fr, track]
+        topics: [figma, auto-layout, grid, sizing, responsive]
+        impacts: [FIGMA_STRUCTURE, FIGMA_TO_CODE, CSS, RESPONSIVE_LAYOUT]
+      - id: figma-text-properties-current
+        authority: OFFICIAL
+        kind: HTML_DIGEST
+        url: https://help.figma.com/hc/en-us/articles/360039956634-Explore-text-properties
+        include_keywords: [Line height, Vertical trim, Auto, tracking, truncation, max lines]
+        topics: [figma, typography, line-height, vertical-trim, wrapping, truncation]
+        impacts: [FIGMA_STRUCTURE, FIGMA_TO_CODE, CSS, TYPOGRAPHY, VISUAL_FIDELITY]
+      - id: figma-export-formats-current
+        authority: OFFICIAL
+        kind: HTML_DIGEST
+        url: https://help.figma.com/hc/en-us/articles/13402894554519-Export-formats-and-settings
+        include_keywords: [PNG, JPG, SVG, background blur, strokes, glyphs, simplify stroke, alpha, color profile]
+        topics: [figma, export, svg, png, gradients, strokes, color-profile]
+        impacts: [FIGMA_TO_CODE, ASSET_FIDELITY, VISUAL_FIDELITY, WEB_PLATFORM]
+      - id: figma-image-crop-current
+        authority: OFFICIAL
+        kind: HTML_DIGEST
+        url: https://help.figma.com/hc/en-us/articles/360040675194-Crop-an-image
+        include_keywords: [crop, non-destructive, reposition, resize, rotate, aspect ratio]
+        topics: [figma, images, crop, focal-point, responsive-media]
+        impacts: [FIGMA_TO_CODE, IMAGES, ASSET_FIDELITY, VISUAL_FIDELITY]
+      - id: figma-variables-dev-mode-current
+        authority: OFFICIAL
+        kind: HTML_DIGEST
+        url: https://help.figma.com/hc/en-us/articles/27882809912471-Variables-in-Dev-Mode
+        include_keywords: [variable mode, aliases, raw value, suggested variables, CSS, font weight]
+        topics: [figma, variables, modes, aliases, dev-mode, tokens]
+        impacts: [FIGMA_STRUCTURE, FIGMA_TO_CODE, TOKENS, DESIGN_SYSTEM]
       - id: figma-mcp-docs
         authority: OFFICIAL
         kind: HTML_DIGEST
@@ -240,6 +289,14 @@ retest_keyword_map:
     keywords: [animation, motion, transition, timeline, view transition]
   LAYOUT:
     keywords: [auto layout, grid, flex, container query, subgrid, sizing, anchor positioning]
+  FIGMA_LAYOUT_GENERATION:
+    keywords: [legacy auto layout, updated auto layout, flexbox, border-box, stroke, padding, fill container, hug contents, wrap, grid, min width, max width]
+  TYPOGRAPHY_RUNTIME:
+    keywords: [line-height, line height, vertical trim, text-box-trim, font metrics, optical sizing, fallback font, variable font, text wrap, truncation, text-wrap, balance, pretty]
+  ASSET_FIDELITY:
+    keywords: [svg, png, mask, gradient, stroke, export, vector, image crop, image fill, focal point, alpha, color profile, asset]
+  VARIABLE_MODE_RUNTIME:
+    keywords: [variable mode, modes, alias, resolved value, raw value, suggested variable, responsive mode]
   COLOR_GRADIENT:
     keywords: [gradient, color, p3, gamut, contrast-color, color-mix, alpha]
   ACCESSIBILITY:

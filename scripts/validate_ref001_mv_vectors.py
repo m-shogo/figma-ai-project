@@ -67,20 +67,24 @@ def validate() -> list[str]:
         return errors
 
     css = MV_CSS.read_text(encoding="utf-8")
+    marker = "@media (max-width: 767px)"
     required_css_tokens = (
         ".ref001-mv__background-base",
         "height: 696px;",
         "background: rgb(255 250 234 / 10%);",
         "top: 40px;",
         "height: 636px;",
+        "background: none;",
+        marker,
         "width: 375px;",
         "height: 704px;",
-        "background: none;",
-        "FIXTURE-ONLY",
     )
     for token in required_css_tokens:
         if token not in css:
-            errors.append(f"Main Visual vector CSS missing measured evidence: {token}")
+            errors.append(f"Main Visual vector CSS missing measured/runtime evidence: {token}")
+
+    if "@media (max-width: 600px)" in css or "FIXTURE-ONLY" in css:
+        errors.append("Main Visual vector CSS must not retain the obsolete 600px fixture seam")
 
     if "linear-gradient" in css:
         errors.append("exact MV vector repair stylesheet must not reintroduce gradient approximation")

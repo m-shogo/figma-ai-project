@@ -6,6 +6,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 PREVIEW = ROOT / "experiments" / "ref001-wordpress-acf" / "visual-preview"
 WORKFLOW = ROOT / ".github" / "workflows" / "ref001-visual-qa.yml"
+FIXTURE_CSS = ROOT / "experiments" / "ref001-wordpress-acf" / "fixture-theme" / "assets" / "css"
 
 
 class Ref001VisualPreviewHarnessTests(unittest.TestCase):
@@ -60,6 +61,50 @@ class Ref001VisualPreviewHarnessTests(unittest.TestCase):
         self.assertIn("overflow.documentScrollWidth > overflow.viewportWidth", source)
         self.assertIn("overflow.bodyScrollWidth > overflow.viewportWidth", source)
         self.assertIn("has horizontal page overflow", source)
+
+    def test_text_runtime_check_records_leading_and_rejects_unintentional_clipping(self) -> None:
+        source = (PREVIEW / "text-runtime-check.mjs").read_text(encoding="utf-8")
+        shell = (PREVIEW / "text-runtime-check.sh").read_text(encoding="utf-8")
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        self.assertIn("text-runtime-check.mjs", shell)
+        self.assertIn("Check Web text runtime safety", workflow)
+        self.assertIn("lineHeightRatio", source)
+        self.assertIn("lineBoxExtraPx", source)
+        self.assertIn("halfLeadingApproxPx", source)
+        self.assertIn("rangeTopInsetPx", source)
+        self.assertIn("rangeBottomInsetPx", source)
+        self.assertIn("textRange", source)
+        self.assertIn("renderedLines", source)
+        self.assertIn("intentionalTruncation", source)
+        self.assertIn("nowrapOverflow", source)
+        self.assertIn("pageOverflowPx", source)
+        self.assertIn("unintentional clipping", source)
+        self.assertIn("ref001-text-runtime.json", shell)
+
+    def test_text_runtime_check_uses_owner_breakpoint_and_boundary_probes(self) -> None:
+        source = (PREVIEW / "text-runtime-check.mjs").read_text(encoding="utf-8")
+        self.assertIn("breakpoint_px: 768", source)
+        self.assertIn("role: 'FIGMA_ACCEPTANCE'", source)
+        self.assertIn("role: 'RUNTIME_SAFETY'", source)
+        self.assertIn("role: 'BREAKPOINT_BOUNDARY'", source)
+        for width in (320, 360, 375, 390, 430, 767, 768, 769, 1024, 1200, 1380):
+            self.assertIn(f"width: {width}", source)
+        for stale_width in (599, 600, 601):
+            self.assertNotIn(f"width: {stale_width}", source)
+        self.assertIn("Owner-resolved production breakpoint: 768px", source)
+
+    def test_runtime_report_names_dom_overflow_offenders(self) -> None:
+        source = (PREVIEW / "text-runtime-check.mjs").read_text(encoding="utf-8")
+        self.assertIn("overflowElements", source)
+        self.assertIn("rightOverflowPx", source)
+        self.assertIn("leftOverflowPx", source)
+        self.assertIn("ownScrollOverflowPx", source)
+
+    def test_messages_heading_uses_web_native_balancing_instead_of_nowrap(self) -> None:
+        source = (FIXTURE_CSS / "ref001-messages.css").read_text(encoding="utf-8")
+        heading_block = source.split(".ref001-messages__header h2 {", 1)[1].split("}", 1)[0]
+        self.assertNotIn("white-space: nowrap", heading_block)
+        self.assertIn("text-wrap: balance", heading_block)
 
     def test_course_asset_check_requires_all_seven_pictograms_to_decode(self) -> None:
         source = (PREVIEW / "asset-check.mjs").read_text(encoding="utf-8")

@@ -83,7 +83,7 @@
 
 .ref001-student-voice__summary {
 	display: grid;
-	grid-template-columns: 160px 1fr;
+	grid-template-columns: 160px minmax(0, 1fr);
 	gap: 85px;
 	align-items: start;
 }
@@ -138,7 +138,7 @@
 .ref001-student-voice__open-content {
 	position: relative;
 	display: grid;
-	grid-template-columns: 404px 1fr;
+	grid-template-columns: minmax(0, 404px) minmax(0, 1fr);
 	column-gap: 40px;
 	margin-top: 40px;
 }
@@ -151,6 +151,7 @@
 }
 
 .ref001-student-voice__detail {
+	min-width: 0;
 	padding-top: 20px;
 }
 
@@ -174,7 +175,7 @@
 
 .ref001-student-voice__points dl > div {
 	display: grid;
-	grid-template-columns: 154px 1fr;
+	grid-template-columns: 154px minmax(0, 1fr);
 	align-items: center;
 	gap: 20px;
 }
@@ -203,7 +204,7 @@
 .ref001-student-voice__message {
 	grid-column: 1 / -1;
 	display: grid;
-	grid-template-columns: 240px 1fr;
+	grid-template-columns: 240px minmax(0, 1fr);
 	align-items: start;
 	gap: 38px;
 	margin-top: 28px;
@@ -223,6 +224,7 @@
 }
 
 .ref001-student-voice__message p {
+	min-width: 0;
 	margin: 0;
 	font-size: 16px;
 	line-height: 1.6;
@@ -244,8 +246,8 @@
 	font-weight: 300;
 }
 
-/* FIXTURE-ONLY: Figma gives a 375 endpoint, not a production breakpoint. */
-@media (max-width: 600px) {
+/* Owner responsive contract: mobile <= 767px; 375px remains the exact Figma endpoint. */
+@media (max-width: 767px) {
 	.ref001-student-voice__header {
 		height: 162px;
 	}
@@ -262,7 +264,7 @@
 	}
 
 	.ref001-student-voice__title > span:nth-child(2) {
-		width: 280px;
+		width: min(280px, calc(100% - 70px));
 	}
 
 	.ref001-student-voice__title strong {
@@ -276,7 +278,7 @@
 	}
 
 	.ref001-student-voice__list {
-		width: 343px;
+		width: min(343px, calc(100% - 32px));
 	}
 
 	.ref001-student-voice__item + .ref001-student-voice__item {
@@ -312,7 +314,7 @@
 		position: absolute;
 		left: 16px;
 		top: 0;
-		width: 288px;
+		width: min(288px, calc(100% - 23px));
 		height: 160px;
 		padding: 24px 16px 16px 84px;
 		box-shadow: 7px 8px 0 rgb(255 255 255 / 70%);
@@ -340,7 +342,7 @@
 	}
 
 	.ref001-student-voice__class-photo {
-		width: 311px;
+		width: 100%;
 		height: 175px;
 	}
 
@@ -398,5 +400,12 @@
 	.ref001-student-voice__more {
 		margin-top: 26px;
 		font-size: 18px;
+	}
+}
+
+/* Supplied SP acceptance endpoint: the fluid open-content box resolves to the measured 311px class-photo width at 375px. */
+@media (width: 375px) {
+	.ref001-student-voice__class-photo {
+		width: 311px;
 	}
 }

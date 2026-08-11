@@ -228,8 +228,8 @@
 	display: none;
 }
 
-/* FIXTURE-ONLY: 1380/375 Figma endpoints do not prove the production breakpoint. */
-@media (max-width: 600px) {
+/* Owner responsive contract: mobile <= 767px; 375/1380 remain exact Figma endpoints. */
+@media (max-width: 767px) {
 	.ref001-footer {
 		height: 515px;
 	}
@@ -300,5 +300,12 @@
 		font-size: 12px;
 		letter-spacing: .05em;
 		text-align: center;
+	}
+}
+
+/* Below the supplied 375px endpoint, keep the one-line copyright utility inside the viewport without changing the 375px Figma acceptance geometry. */
+@media (max-width: 374px) {
+	.ref001-footer__copyright {
+		font-size: 3.2vw;
 	}
 }
