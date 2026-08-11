@@ -65,6 +65,43 @@ class FigmaWebFrictionResearchTests(unittest.TestCase):
         self.assertIn("historical limitation is resolved", promotion)
         self.assertIn("UNDETERMINED", promotion)
 
+    def test_time_sinks_are_promoted_into_upfront_decisions(self) -> None:
+        time_sinks = {item["id"]: item for item in self.data["observed_time_sinks"]}
+        required = {
+            "breakpoint_not_decided_upfront",
+            "figma_text_box_vs_web_line_box",
+            "nowrap_used_as_visual_patch",
+            "image_source_vs_visible_composite",
+            "connector_binary_transfer_integrity",
+            "auto_layout_generation_guessing",
+            "variable_mode_effective_value",
+            "static_state_used_as_interaction_spec",
+            "endpoint_only_qa",
+            "ci_green_without_visual_review",
+        }
+        self.assertTrue(required.issubset(time_sinks))
+        self.assertEqual(
+            768,
+            time_sinks["breakpoint_not_decided_upfront"]["resolved_for_ref001"]["production_breakpoint_px"],
+        )
+
+        gate = self.data["upfront_decision_gate"]
+        decisions = {item["decision"] for item in gate["required_before_section_work"]}
+        self.assertTrue(
+            {
+                "target_runtime",
+                "responsive_contract",
+                "typography_contract",
+                "figma_capabilities",
+                "asset_contract",
+                "interaction_contract",
+                "content_cms_contract",
+                "qa_contract",
+            }.issubset(decisions)
+        )
+        self.assertIn("UNRESOLVED", gate["unresolved_behavior"])
+        self.assertIn("repeated diagnosis time", gate["learning_loop"])
+
     def test_ref001_layout_generation_remains_explicitly_undetermined(self) -> None:
         observation = yaml.safe_load(OBSERVATION.read_text(encoding="utf-8"))
         self.assertEqual("VERIFIED_UNDETERMINED", observation["status"])
