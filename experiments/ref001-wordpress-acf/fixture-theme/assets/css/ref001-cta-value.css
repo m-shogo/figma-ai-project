@@ -199,3 +199,10 @@
 		height: 137px;
 	}
 }
+
+/* Supplied SP acceptance endpoint: preserve the measured 343px inner frame while smaller widths remain fluid. */
+@media (width: 375px) {
+	.ref001-cta-value__frame {
+		width: 343px;
+	}
+}
