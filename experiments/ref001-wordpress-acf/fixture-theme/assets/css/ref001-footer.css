@@ -228,8 +228,8 @@
 	display: none;
 }
 
-/* FIXTURE-ONLY: 1380/375 Figma endpoints do not prove the production breakpoint. */
-@media (max-width: 600px) {
+/* Owner responsive contract: mobile <= 767px; 375/1380 remain exact Figma endpoints. */
+@media (max-width: 767px) {
 	.ref001-footer {
 		height: 515px;
 	}
