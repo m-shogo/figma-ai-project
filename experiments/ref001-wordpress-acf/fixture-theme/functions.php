@@ -18,7 +18,7 @@ function ref001_learning_enqueue_assets() {
 		return;
 	}
 
-	$version = '0.10.2';
+	$version = '0.10.3';
 
 	wp_enqueue_style(
 		'ref001-learning',
@@ -41,6 +41,7 @@ function ref001_learning_enqueue_assets() {
 		'middle-geometry' => 'ref001-middle-geometry.css',
 		'courses'       => 'ref001-courses.css',
 		'courses-geometry' => 'ref001-courses-geometry.css',
+		'courses-visual' => 'ref001-courses-visual.css',
 		'links'         => 'ref001-links.css',
 		'cta-value'     => 'ref001-cta-value.css',
 		'lower-geometry' => 'ref001-lower-geometry.css',
