@@ -5,6 +5,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
@@ -74,6 +75,28 @@ class AcfExportValidationTests(unittest.TestCase):
             path.write_text(json.dumps(valid_export()[0]), encoding="utf-8")
             errors = validator.validate_path(path)
             self.assertTrue(any("top-level JSON array" in error for error in errors))
+
+    def test_candidate_paths_discovers_canonical_exports(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            canonical = root / "experiments" / "exp-1" / "artifacts" / "acf-export.json"
+            canonical.parent.mkdir(parents=True)
+            canonical.write_text(json.dumps(valid_export()), encoding="utf-8")
+            unrelated = root / "experiments" / "exp-1" / "artifacts" / "capture.json"
+            unrelated.write_text("{}", encoding="utf-8")
+
+            with patch.object(validator, "ROOT", root):
+                self.assertEqual([canonical], validator.candidate_paths())
+
+    def test_candidate_paths_supports_named_acf_export_evidence(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            named = root / "references" / "ref-1" / "first-pass.acf-export.json"
+            named.parent.mkdir(parents=True)
+            named.write_text(json.dumps(valid_export()), encoding="utf-8")
+
+            with patch.object(validator, "ROOT", root):
+                self.assertEqual([named], validator.candidate_paths())
 
 
 if __name__ == "__main__":
