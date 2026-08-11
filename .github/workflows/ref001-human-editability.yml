@@ -1,0 +1,47 @@
+name: REF001 Human Editability Audit
+
+on:
+  push:
+    branches:
+      - agent/ref001-blind-clean-first-pass-20260812
+    paths:
+      - '.github/workflows/ref001-human-editability.yml'
+      - 'experiments/ref001-blind-clean-20260812/tools/human-editability-drills.py'
+  pull_request:
+    paths:
+      - 'experiments/ref001-blind-clean-20260812/tools/human-editability-drills.py'
+      - 'experiments/ref001-blind-clean-20260812/run.yaml'
+
+permissions:
+  contents: write
+
+jobs:
+  audit-first-pass:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify frozen FIRST PASS before disposable drills
+        run: |
+          python scripts/controlled_run_phase.py experiments/ref001-blind-clean-20260812/run.yaml --phase REPAIR
+          python scripts/first_pass_evidence.py validate experiments/ref001-blind-clean-20260812/run.yaml
+      - name: Run disposable FIRST PASS editability drills
+        env:
+          REF001_FIRST_PASS_COMMIT: 46eb326383ac7aff1cb023100a801b968df9f9bc
+        run: python experiments/ref001-blind-clean-20260812/tools/human-editability-drills.py
+      - name: Persist audit evidence
+        if: github.event_name == 'push'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add experiments/ref001-blind-clean-20260812/evidence/human-editability-drills.json
+          if git diff --cached --quiet; then
+            echo 'Human Editability evidence already current.'
+            exit 0
+          fi
+          git commit -m 'Record REF-001 Human Editability drills'
+          git push
+      - name: Validate Human Editability record contracts
+        run: python scripts/validate_human_editability.py
