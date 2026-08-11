@@ -81,6 +81,15 @@ class Ref001VisualPreviewHarnessTests(unittest.TestCase):
         self.assertIn("unintentional clipping", source)
         self.assertIn("ref001-text-runtime.json", shell)
 
+    def test_text_runtime_check_rejects_readable_text_escaping_viewport(self) -> None:
+        source = (PREVIEW / "text-runtime-check.mjs").read_text(encoding="utf-8")
+        self.assertIn("viewportLeftEscapePx", source)
+        self.assertIn("viewportRightEscapePx", source)
+        self.assertIn("viewportEscape", source)
+        self.assertIn("intentionalViewportOverflow", source)
+        self.assertIn("item.viewportEscape", source)
+        self.assertIn("readable text escaping the viewport", source)
+
     def test_text_runtime_check_uses_owner_breakpoint_and_boundary_probes(self) -> None:
         source = (PREVIEW / "text-runtime-check.mjs").read_text(encoding="utf-8")
         self.assertIn("breakpoint_px: 768", source)

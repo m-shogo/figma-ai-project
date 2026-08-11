@@ -1,0 +1,38 @@
+/*
+ * REF-001 Main Visual desktop runtime-width repair.
+ *
+ * The supplied PC Figma endpoint is 1380px wide with an x-center of 690px.
+ * `ref001-mv-type.css` records the exact endpoint x coordinates. Using those
+ * coordinates unchanged immediately above the 768px breakpoint makes readable
+ * MV text leave the viewport and get clipped by the art-directed MV container.
+ *
+ * Translate only the desktop x coordinates into center-relative positions.
+ * At 1380px these resolve to the exact supplied values, while every desktop
+ * runtime width keeps the same composition centered without scaling typography.
+ */
+
+@media (min-width: 768px) {
+	.ref001-mv__quote--open {
+		left: calc(50% - 219px); /* 690 - 219 = Figma x 471 at 1380px */
+	}
+
+	.ref001-mv__quote--close {
+		left: calc(50% + 140px); /* 690 + 140 = Figma x 830 at 1380px */
+	}
+
+	.ref001-mv__economy {
+		left: calc(50% - 171px); /* 690 - 171 = Figma x 519 at 1380px */
+	}
+
+	.ref001-mv__surprise {
+		left: calc(50% - 187px); /* 690 - 187 = Figma x 503 at 1380px */
+	}
+
+	.ref001-mv__fun {
+		left: calc(50% - 194px); /* 690 - 194 = Figma x 496 at 1380px */
+	}
+
+	.ref001-mv__lead {
+		left: calc(50% - 209px); /* 690 - 209 = Figma x 481 at 1380px */
+	}
+}

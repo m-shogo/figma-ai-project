@@ -97,6 +97,11 @@ for (const scenario of scenarios) {
       const clippedY = heightOverflowPx > 1 && ['hidden', 'clip'].includes(style.overflowY);
       const intentionalTruncation =
         style.textOverflow === 'ellipsis' || element.dataset.intentionalTruncation === 'true';
+      const intentionalViewportOverflow = element.dataset.intentionalViewportOverflow === 'true';
+      const viewportLeftEscapePx = Math.max(0, -rect.left);
+      const viewportRightEscapePx = Math.max(0, rect.right - viewportWidth);
+      const viewportEscape =
+        !intentionalViewportOverflow && (viewportLeftEscapePx > 1 || viewportRightEscapePx > 1);
 
       const primaryFontFamily = style.fontFamily
         .split(',')[0]
@@ -169,12 +174,19 @@ for (const scenario of scenarios) {
         clippedX,
         clippedY,
         intentionalTruncation,
+        intentionalViewportOverflow,
+        viewportLeftEscapePx: round(viewportLeftEscapePx),
+        viewportRightEscapePx: round(viewportRightEscapePx),
+        viewportEscape,
         nowrapOverflow: ['nowrap', 'pre'].includes(style.whiteSpace) && widthOverflowPx > 1,
       };
     });
 
     const failures = text.filter(
-      (item) => item.nowrapOverflow || ((item.clippedX || item.clippedY) && !item.intentionalTruncation),
+      (item) =>
+        item.viewportEscape ||
+        item.nowrapOverflow ||
+        ((item.clippedX || item.clippedY) && !item.intentionalTruncation),
     );
     const leadingCandidates = text
       .filter((item) => item.font.lineHeightRatio !== null && item.font.lineHeightRatio >= 1.5)
@@ -214,7 +226,7 @@ fs.writeFileSync(output, JSON.stringify(report, null, 2) + '\n');
 
 if (failed) {
   console.error(
-    'REF-001 Web text runtime gate failed: page overflow, unintentional clipping, or overflowing nowrap text was detected at an acceptance, breakpoint-boundary, or runtime-safety width.',
+    'REF-001 Web text runtime gate failed: page overflow, readable text escaping the viewport, unintentional clipping, or overflowing nowrap text was detected at an acceptance, breakpoint-boundary, or runtime-safety width.',
   );
   process.exit(1);
 }
