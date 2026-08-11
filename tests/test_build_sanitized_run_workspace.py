@@ -55,14 +55,24 @@ class SanitizedRunWorkspaceTests(unittest.TestCase):
             )
 
             manifest = builder.build_workspace(root, profile_path, output)
-            self.assertEqual(1, manifest["file_count"])
+            self.assertEqual(2, manifest["file_count"])
             self.assertTrue((output / "docs" / "workflow.md").is_file())
+            self.assertTrue((output / "workspace.yaml").is_file())
             self.assertFalse((output / "answer").exists())
             self.assertEqual([], builder.audit_workspace(output, builder.load_profile(profile_path)))
 
             stored = json.loads((output / builder.MANIFEST_NAME).read_text(encoding="utf-8"))
-            self.assertEqual("docs/workflow.md", stored["files"][0]["path"])
-            self.assertEqual(builder.file_sha256(output / "docs" / "workflow.md"), stored["files"][0]["sha256"])
+            stored_files = {entry["path"]: entry for entry in stored["files"]}
+            self.assertEqual({"docs/workflow.md", "workspace.yaml"}, set(stored_files))
+            self.assertEqual(
+                builder.file_sha256(output / "docs" / "workflow.md"),
+                stored_files["docs/workflow.md"]["sha256"],
+            )
+            self.assertEqual(
+                builder.file_sha256(output / "workspace.yaml"),
+                stored_files["workspace.yaml"]["sha256"],
+            )
+            self.assertEqual(stored_files["workspace.yaml"]["sha256"], stored["profile_sha256"])
 
     def test_audit_rejects_unmanifested_contamination(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -133,9 +143,10 @@ class SanitizedRunWorkspaceTests(unittest.TestCase):
     def test_ref001_profile_selects_evidence_not_repaired_answer(self) -> None:
         profile_path = ROOT / "experiments" / "ref001-clean-run" / "workspace.yaml"
         profile = builder.load_profile(profile_path)
-        files = builder.collect_source_files(ROOT, profile)
+        files = builder.collect_source_files(ROOT, profile, profile_path)
         relative = {path.relative_to(ROOT).as_posix() for path in files}
 
+        self.assertIn("experiments/ref001-clean-run/workspace.yaml", relative)
         self.assertIn("references/chiba-keizai-sample.reference.yaml", relative)
         self.assertIn("experiments/ref001-wordpress-acf/implementation-profile.yaml", relative)
         self.assertIn("docs/context-package.md", relative)
