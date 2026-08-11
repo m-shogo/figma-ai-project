@@ -7,10 +7,29 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from create_implementation_profile import build_profile  # noqa: E402
+from create_implementation_profile import build_profile, load_yaml, selector_family_ids, TARGETS  # noqa: E402
 
 
 class CreateImplementationProfileTests(unittest.TestCase):
+    def test_selector_families_come_from_canonical_registry(self) -> None:
+        config = load_yaml(TARGETS)
+        expected = [item["id"] for item in config["selector"]["options"]]
+        self.assertEqual(selector_family_ids(config), expected)
+        self.assertIn(config["selector"]["default"], expected)
+
+    def test_duplicate_selector_ids_are_rejected(self) -> None:
+        with self.assertRaisesRegex(ValueError, "duplicate selector ids"):
+            selector_family_ids(
+                {
+                    "selector": {
+                        "options": [
+                            {"id": "STATIC_WEB"},
+                            {"id": "STATIC_WEB"},
+                        ]
+                    }
+                }
+            )
+
     def test_wordpress_acf_selection_preloads_delivery_contract(self) -> None:
         profile = build_profile(
             profile_id="IMPL-WP",
