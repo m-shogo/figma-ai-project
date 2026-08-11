@@ -24,7 +24,7 @@ class Ref001ReasonGeometryRepairTests(unittest.TestCase):
     def test_repair_is_enqueued_after_baseline(self) -> None:
         functions = (THEME / "functions.php").read_text(encoding="utf-8")
         base = functions.index("get_theme_file_uri( 'assets/css/ref001.css' )")
-        repair = functions.index("'reason-geometry'  => 'ref001-reason-geometry.css'")
+        repair = functions.index("'reason-geometry' => 'ref001-reason-geometry.css'")
         self.assertLess(base, repair)
 
 
