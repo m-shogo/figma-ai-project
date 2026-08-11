@@ -75,8 +75,10 @@ structure:
     - direct-child order
     - semantic names
     - text anchors
-    - component identity
-    - visual/structural context
+    - assets
+    - page order
+    - child structure
+    - screenshot evidence
     - current root visibility
     - responsive variable mode resolution
   discovery_finding: "Layer names alone are insufficient: the SP student-voice group is named Group 338, while the SP messages group is named voice. Text anchors, state labels, page order, and content identity resolve the pairings."
@@ -216,14 +218,22 @@ structure:
 
 responsive:
   breakpoint_evidence:
-    source: UNKNOWN
+    source: OWNER
     source_refs:
-      - "Figma:21384:8173"
-      - "Figma:21376:4401"
-    values: []
+      - "Owner decision recorded 2026-08-11: production breakpoint is 768px; mobile <= 767px, desktop >= 768px."
+    values:
+      - name: mobile
+        media_query: "(max-width: 767px)"
+        min_width_px: null
+        max_width_px: 767
+      - name: desktop
+        media_query: "(min-width: 768px)"
+        min_width_px: 768
+        max_width_px: null
     notes:
-      - "Figma provides 1380px PC and 375px SP reference frames, but those reference widths do not prove the production breakpoint threshold."
-      - "Resolve the actual breakpoint from owner/company/design-system/target-code evidence before freezing."
+      - "Figma provides 1380px PC and 375px SP reference frames; those remain exact visual acceptance endpoints, not breakpoint evidence."
+      - "The production threshold was resolved separately by the owner and is therefore recorded with source=OWNER rather than inferred from Figma frame widths."
+      - "Runtime safety probes should include 767/768/769 around the resolved boundary in addition to representative widths."
   invariants:
     - "All visible website-content top-level sections have high-confidence PC/SP pairings."
     - "Content identity and order remain useful even when corresponding PC/SP layer names differ."
@@ -242,7 +252,6 @@ responsive:
   wrapping_rules: []
   container_rules: []
   unknowns:
-    - "Production breakpoint value/query semantics."
     - "Student Voice interaction contract: disclosure/navigation/default state/keyboard/animation."
     - "Messages records 2–4 and carousel/slider behavior."
     - "Deep layout/interaction details for Courses, CTA Value, and remaining not-yet-profiled sections."
@@ -252,6 +261,7 @@ owner_notes:
   - "Do not redesign the supplied Figma; implementation fidelity is the objective."
   - "The visible PC root was re-captured after the owner corrected template mode inheritance; use current visible-root IDs rather than hidden pre-fix copies."
   - "Implementation target is WordPress fixed-page template + ACF. The target theme repository still must be inspected before theme-specific choices are frozen."
+  - "Production breakpoint is owner-resolved at 768px: mobile <= 767px and desktop >= 768px; 375/1380 remain visual acceptance endpoints."
   - "Learning-first rule: missing interaction/content evidence stays BLOCKED/UNDETERMINED rather than being filled with plausible CMS or JavaScript architecture."
 
 material_unknowns:
@@ -261,7 +271,6 @@ material_unknowns:
   - "WordPress/PHP/ACF versions, ACF PRO availability, ACF Local JSON paths, and existing field/key conventions are unresolved."
   - "Actual page slug/template filename and global-vs-page ownership for Header/CTA content are unresolved."
   - "Code Connect availability/mapping is UNDETERMINED because the current Figma plan/seat blocks MCP Code Connect lookup."
-  - "Production breakpoint contract is unresolved; PC/SP frame widths alone are not breakpoint evidence."
   - "Student Voice interaction behavior and complete expanded content for items 2/3 are unresolved."
   - "Messages content for records 2–4 and slider/carousel behavior are unresolved."
 
@@ -278,4 +287,4 @@ code_baseline:
 freeze:
   ready: false
   frozen_at: ""
-  notes: "WordPress + ACF implementation family is owner-resolved. Six sections now have measured Structure Profiles, but keep DRAFT until the target theme baseline, template contract, ACF runtime/tier, breakpoint contract, and material interaction/content unknowns are resolved."
+  notes: "WordPress + ACF implementation family and the owner breakpoint contract are resolved. Keep DRAFT until the target theme baseline, template contract, ACF runtime/tier, and material interaction/content unknowns are resolved."
