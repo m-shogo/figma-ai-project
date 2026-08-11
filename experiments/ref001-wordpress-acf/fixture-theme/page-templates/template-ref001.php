@@ -5,6 +5,9 @@
  *
  * Learning-only fixed Page template for the REF-001 Figma → WordPress + ACF
  * experiment. Production theme conventions must replace this fixture later.
+ *
+ * VISUAL FIRST: Figma-derived fixture values render before admin/ACF entry so
+ * PC/SP comparison can happen immediately. ACF remains the later override layer.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -22,6 +25,10 @@ get_header();
 	<?php get_template_part( 'template-parts/ref001/main-visual' ); ?>
 	<?php get_template_part( 'template-parts/ref001/reason' ); ?>
 	<?php get_template_part( 'template-parts/ref001/education' ); ?>
+	<?php get_template_part( 'template-parts/ref001/cta' ); ?>
+	<?php get_template_part( 'template-parts/ref001/student-voice' ); ?>
+	<?php get_template_part( 'template-parts/ref001/messages' ); ?>
+	<?php get_template_part( 'template-parts/ref001/cta' ); ?>
 	<?php get_template_part( 'template-parts/ref001/courses' ); ?>
 	<?php get_template_part( 'template-parts/ref001/links' ); ?>
 	<?php get_template_part( 'template-parts/ref001/cta-value' ); ?>
