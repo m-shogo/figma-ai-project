@@ -11,8 +11,11 @@ on:
       - "policies/**/*.yaml"
       - "implementation-profiles/**/*.yaml"
       - "references/**/*.yaml"
+      - "references/**/*.json"
       - "experiments/**/*.yaml"
+      - "experiments/**/*.json"
       - "contracts/**/*.yaml"
+      - "contracts/**/*.json"
       - "research/**/*.yaml"
       - "requirements-dev.txt"
       - ".github/workflows/validate-research.yml"
@@ -27,8 +30,11 @@ on:
       - "policies/**/*.yaml"
       - "implementation-profiles/**/*.yaml"
       - "references/**/*.yaml"
+      - "references/**/*.json"
       - "experiments/**/*.yaml"
+      - "experiments/**/*.json"
       - "contracts/**/*.yaml"
+      - "contracts/**/*.json"
       - "research/**/*.yaml"
       - "requirements-dev.txt"
       - ".github/workflows/validate-research.yml"
@@ -60,6 +66,9 @@ jobs:
 
       - name: Validate implementation target profiles and Shared Contract binding
         run: python scripts/validate_implementation_profile.py
+
+      - name: Validate ACF export artifacts
+        run: python scripts/validate_acf_export.py
 
       - name: Validate implementation profile pins on active runs
         run: python scripts/validate_run_implementation_profile.py
