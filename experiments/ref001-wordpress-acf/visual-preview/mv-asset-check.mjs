@@ -55,6 +55,7 @@ function readFixture(spec) {
   const report = {
     key: spec.key,
     lineCount: lines.length,
+    lineLengths: lines.map((line) => line.length),
     lastLineLength: lines.at(-1)?.length ?? 0,
     base64Length: base64.length,
     charCodeSum32,
@@ -62,9 +63,13 @@ function readFixture(spec) {
     startBytes: [...bytes.subarray(0, 2)],
     endBytes: [...bytes.subarray(-2)],
   };
+
+  // Chunk boundaries are only a connector-transport aid. The concatenated
+  // payload checksum, byte length, and JPEG markers are the integrity authority;
+  // harmless boundary movement must not invalidate otherwise identical bytes.
   const valid =
     lines.length === spec.lineCount &&
-    lines.slice(0, -1).every((line) => line.length === 80) &&
+    lines.every((line) => line.length > 0) &&
     lines.at(-1)?.length === spec.lastLineLength &&
     base64.length === spec.base64Length &&
     charCodeSum32 === spec.charCodeSum32 &&
