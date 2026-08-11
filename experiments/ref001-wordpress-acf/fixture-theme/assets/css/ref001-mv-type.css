@@ -113,13 +113,13 @@
 	text-align: center;
 }
 
-/* FIXTURE-ONLY: exact supplied 375px endpoint, not production breakpoint evidence. */
-@media (max-width: 600px) {
+/* Owner responsive contract: mobile <= 767px; 375px remains the exact Figma endpoint. */
+@media (max-width: 767px) {
 	.ref001-mv__quote {
 		top: 127px;
 		width: 45px;
 		height: 160px;
-		font-size: 100px;
+		font-size: min(100px, 26.6667vw);
 		line-height: 1.6;
 		letter-spacing: .02em;
 	}
@@ -129,25 +129,26 @@
 	}
 
 	.ref001-mv__quote--close {
-		left: 317px;
+		left: auto;
+		right: 13px;
 	}
 
 	.ref001-mv__economy {
-		left: 56px;
+		left: max(16px, calc(50% - 131.5px));
 		top: 154px;
 		width: 265px;
 		height: 106px;
-		font-size: 66px;
+		font-size: min(66px, 17.6vw);
 		line-height: 1.6;
 		letter-spacing: .02em;
 	}
 
 	.ref001-mv__surprise {
-		left: 47px;
+		left: max(16px, calc(50% - 140.5px));
 		top: 257px;
 		width: 258px;
 		height: 32px;
-		font-size: 32px;
+		font-size: min(32px, 8.5333vw);
 		line-height: 1;
 		letter-spacing: 0;
 	}
@@ -155,9 +156,9 @@
 	.ref001-mv__fun {
 		left: 16px;
 		top: 305px;
-		width: 375px;
+		width: min(375px, calc(100% - 32px));
 		height: 60px;
-		font-size: 60px;
+		font-size: min(60px, 16vw);
 		line-height: 1;
 		letter-spacing: .05em;
 	}
@@ -165,7 +166,7 @@
 	.ref001-mv__lead {
 		left: 16px;
 		top: 381px;
-		width: 343px;
+		width: min(343px, calc(100% - 32px));
 		height: 84px;
 		font-size: 14px;
 		line-height: 2;
