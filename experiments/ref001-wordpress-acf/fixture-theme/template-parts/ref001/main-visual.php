@@ -7,8 +7,9 @@
  * The art-directed slogan remains code-owned because the Figma composition
  * splits it across multiple independently positioned typography layers.
  *
- * The cyan/lavender background geometry is persisted from the exact Figma
- * Vector nodes. Person bitmap binaries remain unresolved attachment inputs.
+ * The cyan/lavender background geometry and Open Campus CTA vector details are
+ * persisted from exact Figma exports. Person bitmap binaries remain unresolved
+ * attachment inputs.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -82,10 +83,28 @@ $right_image = ref001_get_attachment_image(
 		<p class="ref001-mv__lead"><?php echo nl2br( esc_html( $lead ) ); ?></p>
 	</div>
 
-	<div class="ref001-mv__open-campus" aria-label="大学の雰囲気を体験。OPEN CAMPUS 開催中。">
-		<span class="ref001-mv__open-campus-note">大学の雰囲気を体験！</span>
+	<div
+		class="ref001-mv__open-campus"
+		aria-label="大学の雰囲気を体験。OPEN CAMPUS 開催中。"
+		data-figma-pc="21378:8046"
+		data-figma-sp="21376:4898"
+	>
+		<span class="ref001-mv__open-campus-note">
+			<span class="ref001-mv__open-campus-note-shapes" aria-hidden="true">
+				<img class="ref001-mv__open-campus-note-back" src="<?php echo esc_url( get_theme_file_uri( 'assets/images/mv/mv-oc-note-back.svg' ) ); ?>" alt="" width="187" height="47">
+				<img class="ref001-mv__open-campus-note-front" src="<?php echo esc_url( get_theme_file_uri( 'assets/images/mv/mv-oc-note-front.svg' ) ); ?>" alt="" width="187" height="47">
+			</span>
+			<span class="ref001-mv__open-campus-note-copy">大学の雰囲気を体験！</span>
+		</span>
+
 		<span class="ref001-mv__open-campus-main">OPEN<br>CAMPUS</span>
 		<span class="ref001-mv__open-campus-status">開催中！</span>
-		<span class="ref001-mv__open-campus-arrow" aria-hidden="true">→</span>
+
+		<span class="ref001-mv__open-campus-arrow" aria-hidden="true">
+			<picture>
+				<source media="(max-width: 600px)" srcset="<?php echo esc_url( get_theme_file_uri( 'assets/images/mv/mv-oc-arrow-sp.svg' ) ); ?>">
+				<img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/mv/mv-oc-arrow-pc.svg' ) ); ?>" alt="" width="14" height="13">
+			</picture>
+		</span>
 	</div>
 </section>
