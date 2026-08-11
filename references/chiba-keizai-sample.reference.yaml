@@ -8,35 +8,39 @@ figma:
   node_ids:
     - "21376:1600"
     - "21376:4401"
-    - "21376:5162"
+    - "21384:8173"
     - "280:2"
-    - "21376:5757"
+    - "21378:8066"
     - "21376:4918"
-    - "21376:5723"
+    - "21378:8032"
     - "21376:4886"
-    - "21376:5690"
+    - "21378:7999"
     - "21376:4852"
-    - "21376:5559"
+    - "21378:7868"
     - "21376:4720"
-    - "21376:5558"
+    - "21378:7867"
     - "21376:4719"
-    - "21376:5457"
+    - "21378:7766"
     - "21376:4650"
-    - "21376:5437"
+    - "21378:7746"
     - "21376:4629"
-    - "21376:5436"
+    - "21378:7730"
     - "21376:4628"
-    - "21376:5211"
+    - "21378:7505"
     - "21376:4403"
-    - "21376:5164"
+    - "21378:7458"
     - "21376:4919"
-    - "21376:5187"
+    - "21378:7481"
     - "21376:4942"
-    - "21376:5163"
+    - "21378:7457"
     - "21376:4402"
-  captured_at: "2026-08-11T10:55:00+09:00"
+  captured_at: "2026-08-11T11:32:00+09:00"
   component_source_url: "https://www.figma.com/design/ZYTdtw4wCgkcBy2cVnhxVI/sample?node-id=280-2&p=f&t=zduaKdUu0MIWPh7D-0"
   component_page_node_id: "280:2"
+  variable_mode_audit:
+    required: true
+    path: "references/chiba-keizai-sample.variable-mode-audit.yaml"
+    policy: "Same-page PC/SP roots must resolve their expected responsive mode before section implementation starts."
   environment:
     client: ChatGPT Figma connector
     code_connect:
@@ -46,7 +50,7 @@ figma:
 frames:
   - id: top-pc
     role: desktop-page
-    node_id: "21376:5162"
+    node_id: "21384:8173"
     figma_width: 1380
     figma_height: 7714
     acceptance_viewport:
@@ -65,16 +69,19 @@ structure:
   page_node_id: "21376:1600"
   page_name: AI
   responsive_frame_placement: SAME_PAGE_SEPARATE_TOP_LEVEL_FRAMES
+  responsive_mode_finding: "The AI page itself resolves template=SP, while the visible desktop and mobile roots now explicitly pin template=PC and template=SP respectively. Root pins isolate each responsive subtree."
   discovery_method:
     - direct-child order
     - semantic names
     - text anchors
     - component identity
     - visual/structural context
+    - current root visibility
+    - responsive variable mode resolution
   discovery_finding: "Layer names alone are insufficient: the SP student-voice group is named Group 338, while the SP messages group is named voice. Text anchors and page order resolve the pairing."
   section_pairs:
     - id: header
-      pc_node_id: "21376:5757"
+      pc_node_id: "21378:8066"
       sp_node_id: "21376:4918"
       mapping_confidence: HIGH
       provisional_strategy: STRUCTURE_FIRST
@@ -82,7 +89,7 @@ structure:
         - "PC/SP Header nodes are semantically named and resolve to component-like structures."
         - "Shared logo and token usage are visible in design context."
     - id: main-visual
-      pc_node_id: "21376:5723"
+      pc_node_id: "21378:8032"
       sp_node_id: "21376:4886"
       mapping_confidence: HIGH
       provisional_strategy: HYBRID
@@ -90,7 +97,7 @@ structure:
         - "PC/SP main visuals share semantic content but rely on masks, image crops, vectors, and absolute positioning."
         - "The SP node contains some large internal dimensions, so raw Figma coordinates must not be copied blindly into production CSS."
     - id: reason
-      pc_node_id: "21376:5690"
+      pc_node_id: "21378:7999"
       sp_node_id: "21376:4852"
       mapping_confidence: HIGH
       provisional_strategy: STRUCTURE_FIRST
@@ -98,21 +105,22 @@ structure:
         - "The same three semantic cards are horizontal on PC and vertically stacked on SP."
         - "Responsive intent can be translated structurally instead of reproducing absolute coordinates."
     - id: education
-      pc_node_id: "21376:5559"
+      pc_node_id: "21378:7868"
       sp_node_id: "21376:4720"
       mapping_confidence: HIGH
       provisional_strategy: INSPECT_BEFORE_IMPLEMENT
       evidence:
         - "Same semantic layer name and matching position immediately before the first CTA."
     - id: cta-after-education
-      pc_node_id: "21376:5558"
+      pc_node_id: "21378:7867"
       sp_node_id: "21376:4719"
       mapping_confidence: HIGH
       provisional_strategy: COMPONENT_FIRST
       evidence:
         - "Both are CTA instances at the same section boundary."
+        - "PC CTA instance resolves template=PC after the root-mode correction; its variable-bound img/mask returned from 375 to 1380 without manual width override."
     - id: student-voice
-      pc_node_id: "21376:5457"
+      pc_node_id: "21378:7766"
       sp_node_id: "21376:4650"
       mapping_confidence: HIGH
       provisional_strategy: INSPECT_BEFORE_IMPLEMENT
@@ -120,7 +128,7 @@ structure:
         - "Shared student-profile text anchors include 入学の決め手, 印象に残った授業, and 受験生へのひとこと."
         - "SP layer name is Group 338, demonstrating that semantic name alone would miss the correct mapping."
     - id: messages
-      pc_node_id: "21376:5437"
+      pc_node_id: "21378:7746"
       sp_node_id: "21376:4629"
       mapping_confidence: HIGH
       provisional_strategy: INSPECT_BEFORE_IMPLEMENT
@@ -128,14 +136,15 @@ structure:
         - "Shared # MESSAGES heading, senior-student profile copy, indicators, and image structure resolve the pair."
         - "SP layer is named voice despite matching the PC messages section, so text anchors override the misleading name."
     - id: cta-before-courses
-      pc_node_id: "21376:5436"
+      pc_node_id: "21378:7730"
       sp_node_id: "21376:4628"
       mapping_confidence: HIGH
       provisional_strategy: COMPONENT_FIRST
       evidence:
-        - "Both are CTA instances at the same section boundary."
+        - "Both occupy the corresponding CTA boundary before Courses."
+        - "Current PC node is a Group rather than an Instance, so implementation must inspect the canonical component relationship instead of assuming both PC CTAs have identical Figma structure."
     - id: courses
-      pc_node_id: "21376:5211"
+      pc_node_id: "21378:7505"
       sp_node_id: "21376:4403"
       mapping_confidence: HIGH
       provisional_strategy: INSPECT_BEFORE_IMPLEMENT
@@ -143,21 +152,21 @@ structure:
         - "Both contain seven course groups and matching course/recommendation text anchors."
         - "SP layer name is Group 339 while PC is misspelled cources; content identity resolves the mapping."
     - id: links
-      pc_node_id: "21376:5164"
+      pc_node_id: "21378:7458"
       sp_node_id: "21376:4919"
       mapping_confidence: HIGH
       provisional_strategy: STRUCTURE_FIRST
       evidence:
         - "Same semantic layer name and same position near the end of the page."
     - id: cta-value
-      pc_node_id: "21376:5187"
+      pc_node_id: "21378:7481"
       sp_node_id: "21376:4942"
       mapping_confidence: HIGH
       provisional_strategy: INSPECT_BEFORE_IMPLEMENT
       evidence:
         - "Same semantic layer name between links and Footer."
     - id: footer
-      pc_node_id: "21376:5163"
+      pc_node_id: "21378:7457"
       sp_node_id: "21376:4402"
       mapping_confidence: HIGH
       provisional_strategy: COMPONENT_FIRST
@@ -179,13 +188,18 @@ structure:
       - "export assets"
   variable_evidence:
     observed: true
+    responsive_collection:
+      id: "VariableCollectionId:64:671"
+      name: template
+      desktop_mode_id: "3:0"
+      mobile_mode_id: "4003:0"
     examples:
       - "color/foreground/main--colorpurple=#8473aa"
       - "color/foreground/sec--colorblue=#38a1db"
       - "color/foreground/sec--colororange=#f5971a"
       - "color/background/base--light-beige=#f6f5ef"
-      - "content-width/contents--100%=375"
-      - "content-width/contents--top=343"
+      - "content-width/contents--100%=1380 in PC mode / 375 in SP mode"
+      - "content-width/contents--top=343 observed in SP context"
       - "radius/max=999"
       - "font/Poppins"
       - "font/Zen Kaku Gothic New"
@@ -194,7 +208,7 @@ responsive:
   breakpoint_evidence:
     source: UNKNOWN
     source_refs:
-      - "Figma:21376:5162"
+      - "Figma:21384:8173"
       - "Figma:21376:4401"
     values: []
     notes:
@@ -203,6 +217,7 @@ responsive:
   invariants:
     - "All visible website-content top-level sections now have high-confidence PC/SP pairings."
     - "Content identity and order remain useful even when corresponding PC/SP layer names differ."
+    - "Visible PC/SP roots explicitly pin their expected template Variable Mode before implementation."
   transitions:
     - "Reason changes from a three-column PC presentation to a vertical SP stack."
     - "Several later sections substantially change height/composition on SP and require section-level inspection rather than page-wide coordinate translation."
@@ -218,11 +233,12 @@ responsive:
 owner_notes:
   - "Keep PC/SP on the same Figma page as a provisional working convention for this run; promote to a project rule only after real-run evidence accumulates."
   - "Do not redesign the supplied Figma; implementation fidelity is the objective."
+  - "The visible PC root was re-captured after the owner corrected template mode inheritance; use current visible-root IDs rather than hidden pre-fix copies."
 
 material_unknowns:
-  - "Target implementation repository URL has not been supplied yet."
-  - "Target repository branch and starting commit are unresolved."
-  - "Target framework, styling architecture, package manager, existing components, and code tokens must be inferred from the target repository rather than guessed."
+  - "A separate target website implementation repository/code baseline has not been supplied; this repository is the Figma-to-code research/workflow project."
+  - "Target website repository branch and starting commit are unresolved."
+  - "Target framework, styling architecture, package manager, existing components, and code tokens must be inferred from the eventual target repository rather than guessed."
   - "Code Connect availability/mapping is UNDETERMINED because the current Figma plan/seat blocks MCP Code Connect lookup."
   - "Production breakpoint contract is unresolved; PC/SP frame widths alone are not breakpoint evidence."
 
@@ -239,4 +255,4 @@ code_baseline:
 freeze:
   ready: false
   frozen_at: ""
-  notes: "Figma reference captured and top-level PC/SP section mapping completed. Keep DRAFT until the target code baseline and material responsive/codebase unknowns are resolved."
+  notes: "Figma reference re-captured after responsive Variable Mode correction. Keep DRAFT until the target website code baseline and material responsive/codebase unknowns are resolved."
