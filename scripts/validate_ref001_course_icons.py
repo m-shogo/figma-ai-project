@@ -20,6 +20,8 @@ EXPECTED = {
     "it.svg": (56, 40, "21378_7533"),
 }
 
+SVG_XMLNS = 'xmlns="http://www.w3.org/2000/svg"'
+
 
 def validate() -> list[str]:
     errors: list[str] = []
@@ -35,8 +37,15 @@ def validate() -> list[str]:
             errors.append(f"unexpected outer dimensions for {filename}: expected {width}x{height}")
         if node_token not in source:
             errors.append(f"{filename} does not retain its exported Figma node clip identifier")
-        if "figma.com/api/mcp/asset" in source or "http://" in source or "https://" in source.replace(
-            'xmlns="http://www.w3.org/2000/svg"', ""
+
+        # The standard SVG XML namespace is not a network dependency. Remove it
+        # before looking for actual remote URLs so a valid self-contained SVG is
+        # not rejected just because xmlns uses the http URI form.
+        remote_check = source.replace(SVG_XMLNS, "")
+        if (
+            "figma.com/api/mcp/asset" in remote_check
+            or "http://" in remote_check
+            or "https://" in remote_check
         ):
             errors.append(f"{filename} must be self-contained and must not use remote asset URLs")
         if 'fill="white"' not in source and 'stroke="white"' not in source:
