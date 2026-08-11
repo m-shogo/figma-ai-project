@@ -825,7 +825,7 @@
     "runtimeErrors": []
   },
   {
-    "bodyHeight": 8242,
+    "bodyHeight": 8181,
     "scrollWidth": 768,
     "pageOverflowPx": 0,
     "readableTextClipping": [],
@@ -854,78 +854,78 @@
         "name": "reason",
         "index": 2,
         "top": 886,
-        "height": 653,
-        "bottom": 1539
+        "height": 640,
+        "bottom": 1526
       },
       {
         "name": "education",
         "index": 3,
-        "top": 1635,
-        "height": 872,
-        "bottom": 2507
+        "top": 1622,
+        "height": 824,
+        "bottom": 2446
       },
       {
         "name": "shared-cta",
         "index": 4,
-        "top": 2507,
+        "top": 2446,
         "height": 328,
-        "bottom": 2835
+        "bottom": 2774
       },
       {
         "name": "student-voice",
         "index": 5,
-        "top": 2931,
+        "top": 2870,
         "height": 1632,
-        "bottom": 4562
+        "bottom": 4501
       },
       {
         "name": "messages",
         "index": 6,
-        "top": 4745,
+        "top": 4684,
         "height": 440,
-        "bottom": 5185
+        "bottom": 5124
       },
       {
         "name": "shared-cta",
         "index": 7,
-        "top": 5303,
+        "top": 5242,
         "height": 328,
-        "bottom": 5631
+        "bottom": 5570
       },
       {
         "name": "courses",
         "index": 8,
-        "top": 5631,
+        "top": 5570,
         "height": 1522,
-        "bottom": 7153
+        "bottom": 7092
       },
       {
         "name": "links",
         "index": 9,
-        "top": 7225,
+        "top": 7164,
         "height": 260,
-        "bottom": 7485
+        "bottom": 7424
       },
       {
         "name": "cta-value",
         "index": 10,
-        "top": 7557,
+        "top": 7496,
         "height": 328,
-        "bottom": 7885
+        "bottom": 7824
       },
       {
         "name": "footer",
         "index": 11,
-        "top": 7885,
+        "top": 7824,
         "height": 357,
-        "bottom": 8242
+        "bottom": 8181
       }
     ],
     "width": 768,
     "runtimeErrors": []
   },
   {
-    "bodyHeight": 8243,
+    "bodyHeight": 8181,
     "scrollWidth": 769,
     "pageOverflowPx": 0,
     "readableTextClipping": [],
@@ -954,78 +954,78 @@
         "name": "reason",
         "index": 2,
         "top": 886,
-        "height": 653,
-        "bottom": 1539
+        "height": 640,
+        "bottom": 1526
       },
       {
         "name": "education",
         "index": 3,
-        "top": 1635,
-        "height": 872,
-        "bottom": 2507
+        "top": 1622,
+        "height": 824,
+        "bottom": 2446
       },
       {
         "name": "shared-cta",
         "index": 4,
-        "top": 2507,
+        "top": 2446,
         "height": 328,
-        "bottom": 2835
+        "bottom": 2774
       },
       {
         "name": "student-voice",
         "index": 5,
-        "top": 2931,
+        "top": 2870,
         "height": 1632,
-        "bottom": 4562
+        "bottom": 4501
       },
       {
         "name": "messages",
         "index": 6,
-        "top": 4745,
+        "top": 4684,
         "height": 440,
-        "bottom": 5185
+        "bottom": 5124
       },
       {
         "name": "shared-cta",
         "index": 7,
-        "top": 5303,
+        "top": 5242,
         "height": 328,
-        "bottom": 5631
+        "bottom": 5570
       },
       {
         "name": "courses",
         "index": 8,
-        "top": 5631,
+        "top": 5570,
         "height": 1522,
-        "bottom": 7154
+        "bottom": 7092
       },
       {
         "name": "links",
         "index": 9,
-        "top": 7226,
+        "top": 7164,
         "height": 260,
-        "bottom": 7486
+        "bottom": 7424
       },
       {
         "name": "cta-value",
         "index": 10,
-        "top": 7558,
+        "top": 7496,
         "height": 328,
-        "bottom": 7886
+        "bottom": 7824
       },
       {
         "name": "footer",
         "index": 11,
-        "top": 7886,
+        "top": 7824,
         "height": 357,
-        "bottom": 8243
+        "bottom": 8181
       }
     ],
     "width": 769,
     "runtimeErrors": []
   },
   {
-    "bodyHeight": 7830,
+    "bodyHeight": 7756,
     "scrollWidth": 1024,
     "pageOverflowPx": 0,
     "readableTextClipping": [],
@@ -1054,78 +1054,78 @@
         "name": "reason",
         "index": 2,
         "top": 886,
-        "height": 581,
-        "bottom": 1467
+        "height": 568,
+        "bottom": 1454
       },
       {
         "name": "education",
         "index": 3,
-        "top": 1563,
-        "height": 778,
-        "bottom": 2341
+        "top": 1550,
+        "height": 717,
+        "bottom": 2267
       },
       {
         "name": "shared-cta",
         "index": 4,
-        "top": 2341,
+        "top": 2267,
         "height": 328,
-        "bottom": 2669
+        "bottom": 2595
       },
       {
         "name": "student-voice",
         "index": 5,
-        "top": 2765,
+        "top": 2691,
         "height": 1393,
-        "bottom": 4158
+        "bottom": 4084
       },
       {
         "name": "messages",
         "index": 6,
-        "top": 4341,
+        "top": 4267,
         "height": 440,
-        "bottom": 4781
+        "bottom": 4707
       },
       {
         "name": "shared-cta",
         "index": 7,
-        "top": 4899,
+        "top": 4825,
         "height": 328,
-        "bottom": 5227
+        "bottom": 5153
       },
       {
         "name": "courses",
         "index": 8,
-        "top": 5227,
+        "top": 5153,
         "height": 1514,
-        "bottom": 6741
+        "bottom": 6667
       },
       {
         "name": "links",
         "index": 9,
-        "top": 6813,
+        "top": 6739,
         "height": 260,
-        "bottom": 7073
+        "bottom": 6999
       },
       {
         "name": "cta-value",
         "index": 10,
-        "top": 7145,
+        "top": 7071,
         "height": 328,
-        "bottom": 7473
+        "bottom": 7399
       },
       {
         "name": "footer",
         "index": 11,
-        "top": 7473,
+        "top": 7399,
         "height": 357,
-        "bottom": 7830
+        "bottom": 7756
       }
     ],
     "width": 1024,
     "runtimeErrors": []
   },
   {
-    "bodyHeight": 7810,
+    "bodyHeight": 7727,
     "scrollWidth": 1200,
     "pageOverflowPx": 0,
     "readableTextClipping": [],
@@ -1154,78 +1154,78 @@
         "name": "reason",
         "index": 2,
         "top": 886,
-        "height": 581,
-        "bottom": 1467
+        "height": 559,
+        "bottom": 1445
       },
       {
         "name": "education",
         "index": 3,
-        "top": 1563,
-        "height": 759,
-        "bottom": 2321
+        "top": 1541,
+        "height": 698,
+        "bottom": 2238
       },
       {
         "name": "shared-cta",
         "index": 4,
-        "top": 2321,
+        "top": 2238,
         "height": 328,
-        "bottom": 2649
+        "bottom": 2566
       },
       {
         "name": "student-voice",
         "index": 5,
-        "top": 2745,
+        "top": 2662,
         "height": 1393,
-        "bottom": 4138
+        "bottom": 4055
       },
       {
         "name": "messages",
         "index": 6,
-        "top": 4321,
+        "top": 4238,
         "height": 440,
-        "bottom": 4761
+        "bottom": 4678
       },
       {
         "name": "shared-cta",
         "index": 7,
-        "top": 4879,
+        "top": 4796,
         "height": 328,
-        "bottom": 5207
+        "bottom": 5124
       },
       {
         "name": "courses",
         "index": 8,
-        "top": 5207,
+        "top": 5124,
         "height": 1514,
-        "bottom": 6721
+        "bottom": 6638
       },
       {
         "name": "links",
         "index": 9,
-        "top": 6793,
+        "top": 6710,
         "height": 260,
-        "bottom": 7053
+        "bottom": 6970
       },
       {
         "name": "cta-value",
         "index": 10,
-        "top": 7125,
+        "top": 7042,
         "height": 328,
-        "bottom": 7453
+        "bottom": 7370
       },
       {
         "name": "footer",
         "index": 11,
-        "top": 7453,
+        "top": 7370,
         "height": 357,
-        "bottom": 7810
+        "bottom": 7727
       }
     ],
     "width": 1200,
     "runtimeErrors": []
   },
   {
-    "bodyHeight": 7784,
+    "bodyHeight": 7714,
     "scrollWidth": 1380,
     "pageOverflowPx": 0,
     "readableTextClipping": [],
@@ -1254,71 +1254,71 @@
         "name": "reason",
         "index": 2,
         "top": 886,
-        "height": 581,
-        "bottom": 1467
+        "height": 559,
+        "bottom": 1445
       },
       {
         "name": "education",
         "index": 3,
-        "top": 1563,
-        "height": 732,
-        "bottom": 2295
+        "top": 1541,
+        "height": 684,
+        "bottom": 2225
       },
       {
         "name": "shared-cta",
         "index": 4,
-        "top": 2295,
+        "top": 2225,
         "height": 328,
-        "bottom": 2623
+        "bottom": 2553
       },
       {
         "name": "student-voice",
         "index": 5,
-        "top": 2719,
+        "top": 2649,
         "height": 1393,
-        "bottom": 4112
+        "bottom": 4042
       },
       {
         "name": "messages",
         "index": 6,
-        "top": 4295,
+        "top": 4225,
         "height": 440,
-        "bottom": 4735
+        "bottom": 4665
       },
       {
         "name": "shared-cta",
         "index": 7,
-        "top": 4853,
+        "top": 4783,
         "height": 328,
-        "bottom": 5181
+        "bottom": 5111
       },
       {
         "name": "courses",
         "index": 8,
-        "top": 5181,
+        "top": 5111,
         "height": 1514,
-        "bottom": 6695
+        "bottom": 6625
       },
       {
         "name": "links",
         "index": 9,
-        "top": 6767,
+        "top": 6697,
         "height": 260,
-        "bottom": 7027
+        "bottom": 6957
       },
       {
         "name": "cta-value",
         "index": 10,
-        "top": 7099,
+        "top": 7029,
         "height": 328,
-        "bottom": 7427
+        "bottom": 7357
       },
       {
         "name": "footer",
         "index": 11,
-        "top": 7427,
+        "top": 7357,
         "height": 357,
-        "bottom": 7784
+        "bottom": 7714
       }
     ],
     "width": 1380,
