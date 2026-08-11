@@ -11,6 +11,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+$classroom_composite_path = dirname( __DIR__, 2 ) . '/assets/images/visual-qa/student-voice/classroom-mask-group.b64';
+$classroom_composite_b64  = '';
+if ( is_readable( $classroom_composite_path ) ) {
+	$classroom_composite_b64 = preg_replace( '/\s+/', '', (string) file_get_contents( $classroom_composite_path ) );
+}
+
 $voices = array(
 	array(
 		'state' => 'open',
@@ -81,6 +87,7 @@ $voices = array(
 							data-asset-status="deferred"
 							data-figma-image-hash="12c4c3b3e824e6f191ac8a273fdfadb64912383b"
 							data-figma-composite-node="21378:7849"
+							<?php if ( $classroom_composite_b64 ) : ?>style="background-image:url(data:image/jpeg;base64,<?php echo esc_attr( $classroom_composite_b64 ); ?>)"<?php endif; ?>
 							aria-hidden="true"
 						></div>
 						<div class="ref001-student-voice__detail">
