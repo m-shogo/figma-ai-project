@@ -20,6 +20,24 @@ acf_values:
   reason_2_body: "キャリア支援と企業連携により、希望進路の実現をサポートします。"
   reason_3_title: "地域連携・インターンシップ"
   reason_3_body: "地域企業・自治体との実践的な学びで、社会で活きる力を養います。"
+  education_intro: "千葉経済大学では、経済や経営を学びながら、世の中の仕組みを知り、自分の興味や可能性を見つけていきます。"
+  education_1_title: "大学1年生の自分"
+  education_1_bullet_1: "将来がまだ見えない"
+  education_1_bullet_2: "学科選択制度で基礎を学ぶ"
+  education_1_bullet_3: "７つのコースで目標を明確に"
+  education_1_bullet_4: "資格取得支援でスキルを発見"
+  education_2_title: "世の中の仕組みを知る"
+  education_2_bullet_1: "ヒット商品の裏側"
+  education_2_bullet_2: "トクするお金のルール"
+  education_2_bullet_3: "AIで仕事はどうなる"
+  education_3_title: "先生と一緒に考える"
+  education_3_bullet_1: "教職員との距離が近い"
+  education_3_bullet_2: "悩みを相談しやすい"
+  education_3_bullet_3: "個人に合わせた進路のサポート"
+  education_4_title: "望んだ将来を実現させる"
+  education_4_bullet_1: "４年間の学びを進路につなげる"
+  education_4_bullet_2: "経験を社会で発揮する"
+  education_4_bullet_3: "自分らしい未来を見つける"
 
 media_placeholders:
   mv_left_person_image:
@@ -43,6 +61,30 @@ media_placeholders:
   reason_3_image:
     figma_node_id: "21378:8020"
     wp_attachment_id: null
+  education_1_image:
+    desired_role: canonical_stage_foreground
+    figma_pc_node_id: "21378:7983"
+    figma_sp_node_id: "21376:4837"
+    figma_image_hash: "cc1525625b72a6cf17e6b0b462eb48ef5391709e"
+    wp_attachment_id: null
+  education_2_image:
+    desired_role: canonical_stage_foreground
+    figma_pc_node_id: "21378:7949"
+    figma_sp_node_id: "21376:4804"
+    figma_image_hash: "fb075b4159fa8fefba6861ddca85f226e5c9bf71"
+    wp_attachment_id: null
+  education_3_image:
+    desired_role: canonical_stage_foreground_replacement
+    figma_pc_node_id: "21378:7919"
+    figma_sp_node_id: "21376:4773"
+    figma_image_hash: "befe413ae4704994a80e0d7456914cd7c884073d"
+    wp_attachment_id: null
+  education_4_image:
+    desired_role: canonical_stage_foreground
+    figma_pc_node_id: "21378:7891"
+    figma_sp_node_id: "21376:4743"
+    figma_image_hash: "a8cc1ee3c99ba387556b087061c20090dc1209cb"
+    wp_attachment_id: null
 
 code_owned_reference_copy:
   mv_slogan:
@@ -54,6 +96,22 @@ code_owned_reference_copy:
   reason_kicker:
     text: "# REASON"
     rationale: "Decorative section label."
+  education_section_heading:
+    text: "４年間の学び"
+    rationale: "Section identity is part of the fixed narrative structure."
+  education_subheading:
+    text: "将来、これから探しても大丈夫"
+    rationale: "Art-directed subheading with decorative underline/connector; keep fixed in learning baseline."
+  education_kicker:
+    text: "# EDUCATION"
+    rationale: "Decorative section label."
+  education_stage_contract:
+    values:
+      - { number: "01", label: "スタート" }
+      - { number: "02", label: "学ぶ" }
+      - { number: "03", label: "出会う" }
+      - { number: "04", label: "ゴール" }
+    rationale: "The design encodes a fixed semantic progression; editors can change stage content but not stage order/identity in the learning baseline."
 
 shared_or_global_reference_copy:
   document_request_label: "資料請求"

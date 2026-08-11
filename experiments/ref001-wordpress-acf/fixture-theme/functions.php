@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Enqueue the REF-001 fixture stylesheet only for the learning Page template.
+ * Enqueue the REF-001 fixture stylesheets only for the learning Page template.
  */
 function ref001_learning_enqueue_assets() {
 	if ( ! is_page_template( 'page-templates/template-ref001.php' ) ) {
@@ -22,7 +22,14 @@ function ref001_learning_enqueue_assets() {
 		'ref001-learning',
 		get_theme_file_uri( 'assets/css/ref001.css' ),
 		array(),
-		'0.1.0'
+		'0.2.0'
+	);
+
+	wp_enqueue_style(
+		'ref001-learning-education',
+		get_theme_file_uri( 'assets/css/ref001-education.css' ),
+		array( 'ref001-learning' ),
+		'0.2.0'
 	);
 }
 add_action( 'wp_enqueue_scripts', 'ref001_learning_enqueue_assets' );
