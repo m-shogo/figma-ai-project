@@ -1,0 +1,92 @@
+/* REF-001 visual-first shared shell. FIXTURE-ONLY until target theme ownership is known. */
+
+.ref001-site-header {
+	position: relative;
+	z-index: 20;
+	width: 100%;
+	height: 94px;
+	background: #fff;
+}
+
+.ref001-site-header__inner {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;
+	height: 94px;
+	padding: 0 48px;
+}
+
+.ref001-site-header__brand {
+	display: block;
+	width: 187px;
+	height: 47px;
+	flex: 0 0 auto;
+}
+
+.ref001-site-header__brand img {
+	display: block;
+	width: 187px;
+	height: 47px;
+	object-fit: contain;
+}
+
+.ref001-site-header__actions {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+}
+
+.ref001-site-header__action {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+	width: 201px;
+	height: 46px;
+	color: #fff;
+	text-decoration: none;
+	font-family: "Zen Kaku Gothic New", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 1;
+	letter-spacing: 0.05em;
+}
+
+.ref001-site-header__action--document {
+	background: #38a1db;
+}
+
+.ref001-site-header__action--oc {
+	background: #8473aa;
+}
+
+.ref001-site-header__action-icon {
+	display: inline-grid;
+	place-items: center;
+	width: 16px;
+	font-size: 13px;
+	line-height: 1;
+}
+
+@media (max-width: 600px) {
+	.ref001-site-header {
+		height: 67px;
+	}
+
+	.ref001-site-header__inner {
+		height: 67px;
+		padding: 0 16px;
+	}
+
+	.ref001-site-header__brand,
+	.ref001-site-header__brand img {
+		width: 140px;
+		height: 35px;
+	}
+
+	/* The supplied SP Figma Header intentionally contains logo only. */
+	.ref001-site-header__actions {
+		display: none;
+	}
+}
