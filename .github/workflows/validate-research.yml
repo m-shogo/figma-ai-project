@@ -76,6 +76,9 @@ jobs:
       - name: Validate actual Figma capability profile before contract freeze
         run: python scripts/validate_figma_profile.py
 
+      - name: Audit responsive Figma Variable Mode inheritance
+        run: python scripts/audit_figma_variable_modes.py
+
       - name: Validate per-section Figma structure profiles
         run: python scripts/validate_figma_structure_profiles.py
 

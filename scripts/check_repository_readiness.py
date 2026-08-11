@@ -32,6 +32,7 @@ CHECKS: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("company_policy", ("scripts/validate_company_policy.py",)),
     ("environment_contract", ("scripts/validate_environment_contract.py",)),
     ("global_figma_profile", ("scripts/validate_figma_profile.py",)),
+    ("figma_variable_modes", ("scripts/audit_figma_variable_modes.py",)),
     ("section_figma_profiles", ("scripts/validate_figma_structure_profiles.py",)),
     ("section_profile_lineage", ("scripts/validate_figma_structure_profile.py",)),
     ("component_token_resolution", ("scripts/validate_resolution_tables.py",)),
