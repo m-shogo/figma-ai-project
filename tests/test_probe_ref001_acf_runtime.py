@@ -59,11 +59,11 @@ class ImportFileTests(unittest.TestCase):
                 probe.load_item_keys(path),
             )
 
-    def test_rejects_non_importable_payload(self) -> None:
+    def test_rejects_payload_without_field_groups(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "empty.json"
             path.write_text('[{"key":"field_x"}]', encoding="utf-8")
-            with self.assertRaisesRegex(ValueError, "no importable"):
+            with self.assertRaisesRegex(ValueError, "no field-group"):
                 probe.load_item_keys(path)
 
 
