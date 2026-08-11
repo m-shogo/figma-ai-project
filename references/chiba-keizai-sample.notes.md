@@ -21,34 +21,64 @@ Both are visible top-level Frames on the same `AI` page. Other page frames are m
 
 Same-page placement is useful evidence for PC/SP discovery in this run, but it remains a provisional convention rather than a permanent project rule.
 
-## Inspected section pairs
+## Full top-level section pairing
+
+The visible website-content sections can now be paired with HIGH confidence using direct-child order plus semantic/text/component evidence:
+
+| Section | PC | SP | Important evidence |
+|---|---|---|---|
+| Header | `21376:5757` | `21376:4918` | matching Header instances |
+| Main Visual | `21376:5723` | `21376:4886` | matching MV content/composition |
+| Reason | `21376:5690` | `21376:4852` | same three reasons |
+| Education | `21376:5559` | `21376:4720` | same semantic name/order |
+| CTA 1 | `21376:5558` | `21376:4719` | corresponding CTA instances |
+| Student Voice | `21376:5457` | `21376:4650` | shared profile/question text anchors |
+| Messages | `21376:5437` | `21376:4629` | `# MESSAGES`, same profile copy/indicator |
+| CTA 2 | `21376:5436` | `21376:4628` | corresponding CTA instances |
+| Courses | `21376:5211` | `21376:4403` | seven matching course groups/text anchors |
+| Links | `21376:5164` | `21376:4919` | same semantic name/end-page position |
+| CTA Value | `21376:5187` | `21376:4942` | same semantic name/end-page position |
+| Footer | `21376:5163` | `21376:4402` | matching Footer instances |
+
+The SP-only `Status-Bar_W` node (`21376:4966`) is reference/device chrome and is not automatically treated as website content. Its production inclusion must come from target requirements.
+
+### Important discovery result: names are not enough
+
+This real file immediately validates multi-signal discovery:
+
+- PC Student Voice is named `voice`, but the corresponding SP group is just `Group 338`.
+- PC Messages is named `messages`, but the corresponding SP group is misleadingly named `voice`.
+- PC Courses is misspelled `cources`, while the corresponding SP group is `Group 339`.
+
+Text anchors and page order recover the correct mappings. A name-only algorithm would pair at least one of these sections incorrectly.
+
+## Inspected implementation strategies
 
 ### Header
 
 - PC: `21376:5757`
 - SP: `21376:4918`
-- Pair confidence: HIGH
-- Provisional implementation strategy: `STRUCTURE_FIRST`
+- Provisional strategy: `STRUCTURE_FIRST`
 
-Evidence: semantic names are clear, component-like structures are present, and the same logo/token semantics are visible across PC/SP.
+Semantic names are clear, component-like structures are present, and the same logo/token semantics are visible across PC/SP.
 
 ### Main Visual
 
 - PC: `21376:5723`
 - SP: `21376:4886`
-- Pair confidence: HIGH
-- Provisional implementation strategy: `HYBRID`
+- Provisional strategy: `HYBRID`
 
-Evidence: masks, exact image crops, decorative vectors, and absolute positioning materially contribute to fidelity. The SP context also exposes large internal dimensions inherited from the composition. Production code should preserve the visual relationship without blindly copying every Figma coordinate.
+Masks, exact image crops, decorative vectors, and absolute positioning materially contribute to fidelity. The SP context also exposes large internal dimensions inherited from the composition. Production code should preserve the visual relationship without blindly copying every Figma coordinate.
 
 ### Reason
 
 - PC: `21376:5690`
 - SP: `21376:4852`
-- Pair confidence: HIGH
-- Provisional implementation strategy: `STRUCTURE_FIRST`
+- Provisional strategy: `STRUCTURE_FIRST`
 
-Evidence: the same three semantic cards change from a horizontal PC presentation to a vertical SP stack. This is a strong candidate for natural responsive layout translation.
+The same three semantic cards change from a horizontal PC presentation to a vertical SP stack. This is a strong candidate for natural responsive layout translation.
+
+The remaining sections are mapped but intentionally remain `INSPECT_BEFORE_IMPLEMENT`/component-first candidates until their detailed design context is inspected. This keeps discovery separate from implementation assumptions.
 
 ## Component evidence
 
