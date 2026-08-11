@@ -1,0 +1,243 @@
+schema_version: 1
+reference_id: REF-001-CHIBA-KEIZAI-SAMPLE
+status: MEASURED
+captured_at: "2026-08-12T02:08:00+09:00"
+source: "ChatGPT Figma connector / Plugin API live read-only audit"
+
+scope:
+  purpose: "Complete the clean-run evidence for sections that were only lightly profiled in the earlier unified structure profile."
+  precedence:
+    - "Live Figma evidence in this file supplements references/chiba-keizai-sample.structure-profile.yaml."
+    - "Owner-resolved production breakpoint is authoritative: mobile <= 767px, desktop >= 768px."
+    - "375px SP and 1380px PC remain exact Figma visual-acceptance endpoints, not additional breakpoint definitions."
+  figma:
+    file_key: ZYTdtw4wCgkcBy2cVnhxVI
+    pc_root: { node_id: "21384:8173", width: 1380, height: 7714, explicit_template_mode: "3:0", resolved_template_mode: "3:0" }
+    sp_root: { node_id: "21376:4401", width: 375, height: 10817, explicit_template_mode: "4003:0", resolved_template_mode: "4003:0" }
+
+interaction_audit:
+  inspected_roots:
+    - "21378:8066"
+    - "21376:4918"
+    - "21378:7867"
+    - "21376:4719"
+    - "21378:7730"
+    - "21376:4628"
+    - "21378:7458"
+    - "21376:4919"
+    - "21378:7481"
+    - "21376:4942"
+    - "21378:7457"
+    - "21376:4402"
+  prototype_reactions_total: 0
+  text_hyperlinks_total: 0
+  interpretation:
+    - "Visible button/link/page-top affordances in these sections do not prove hrefs, routes, click handlers, slider behavior, or page-top behavior."
+    - "Do not invent destinations or interactions during FIRST PASS. Resolve them only from target-code, content-owner, prototype, or annotation evidence."
+
+sections:
+  - section_id: cta-after-education
+    pc_node_id: "21378:7867"
+    sp_node_id: "21376:4719"
+    node_types: { pc: INSTANCE, sp: INSTANCE }
+    component_evidence:
+      pc_main_component: { node_id: "21035:67", name: "cta" }
+      sp_main_component: { node_id: "21150:388", name: "cta_sp" }
+    responsive_modes: { pc: "3:0", sp: "4003:0" }
+    geometry:
+      pc: { width: 1380, height: 328 }
+      sp: { width: 375, height: 350 }
+    auto_layout_count: { pc: 0, sp: 0 }
+    image_evidence:
+      shared_background_image_hash: "67cfc40813123d6e50eab0af3d734369afca8798"
+      note: "PC/SP use the same source image with viewport-specific composition; separate CMS media is not justified by crop differences alone."
+    semantic_children:
+      - img
+      - mask
+      - btn_oc
+      - btn_doc
+      - heading
+      - decorative_vectors
+    translation:
+      recommended_mode: COMPONENT_FIRST
+      trusted:
+        - "One shared CTA responsibility across PC/SP."
+        - "Same heading and two visible actions."
+        - "Same underlying background source across responsive variants."
+      do_not_infer:
+        - "Action hrefs/routes."
+        - "Separate PC/SP image ownership."
+        - "Absolute Figma child coordinates as runtime layout rules."
+
+  - section_id: cta-before-courses
+    pc_node_id: "21378:7730"
+    sp_node_id: "21376:4628"
+    node_types: { pc: GROUP, sp: INSTANCE }
+    component_evidence:
+      pc: "Manual Group with the same visible CTA child semantics/copy/background source as the earlier CTA."
+      sp_main_component: { node_id: "21150:388", name: "cta_sp" }
+    responsive_modes: { pc: "3:0", sp: "4003:0" }
+    geometry:
+      pc: { width: 1380, height: 328 }
+      sp: { width: 375, height: 350 }
+    auto_layout_count: { pc: 0, sp: 0 }
+    image_evidence:
+      shared_background_image_hash: "67cfc40813123d6e50eab0af3d734369afca8798"
+      matches_cta_after_education: true
+    translation:
+      recommended_mode: HYBRID
+      trusted:
+        - "This is the same semantic CTA family as the earlier occurrence."
+        - "Reuse one Web implementation when target-theme ownership permits it."
+      do_not_infer:
+        - "PC Group versus SP Instance is not a DOM/component contract."
+        - "A second page-local CMS schema."
+        - "Action destinations."
+
+  - section_id: courses-revalidation
+    pc_node_id: "21378:7505"
+    sp_node_id: "21376:4403"
+    node_types: { pc: GROUP, sp: GROUP }
+    responsive_modes: { pc: "3:0", sp: "4003:0" }
+    geometry:
+      pc: { width: 1380, height: 1514 }
+      sp: { width: 375, height: 2515 }
+    item_count: 7
+    component_instance_count: { pc: 0, sp: 0 }
+    bitmap_image_fill_count: { pc: 0, sp: 0 }
+    auto_layout_count: { pc: 22, sp: 8 }
+    auto_layout_evidence:
+      pc:
+        - "Seven VERTICAL recommendation lists at 12px spacing."
+        - "Fourteen HORIZONTAL recommendation rows at 10px spacing."
+        - "Heading kicker Auto Layout."
+      sp:
+        - "Seven VERTICAL recommendation lists at 12px spacing."
+        - "Heading kicker Auto Layout."
+      outer_layout: "Manual: PC two-column cards plus centered seventh card; SP single vertical stack."
+    interaction: { prototype_reactions: 0 }
+    detail_record: "references/chiba-keizai-sample.courses-structure-evidence.yaml"
+    interpretation:
+      - "Live counts still match the dedicated Courses evidence record."
+      - "Seven repeated Figma cards do not authorize ACF Repeater/editor-controlled cardinality/order."
+      - "Course pictograms are vector/SVG artwork rather than raster CMS images."
+
+  - section_id: links
+    pc_node_id: "21378:7458"
+    sp_node_id: "21376:4919"
+    node_types: { pc: FRAME, sp: FRAME }
+    responsive_modes: { pc: "3:0", sp: "4003:0" }
+    visible_item_count: 4
+    bitmap_image_fill_count: { pc: 0, sp: 0 }
+    auto_layout:
+      pc:
+        mode: HORIZONTAL
+        wrap: NO_WRAP
+        item_spacing: 24
+        counter_axis_spacing: 0
+      sp:
+        mode: HORIZONTAL
+        wrap: WRAP
+        item_spacing: 19
+        counter_axis_spacing: 19
+    visible_labels:
+      - "キャンパス紹介"
+      - "数字で見る千葉経済大学"
+      - "Official Instagram / ckckoho"
+      - "LINE登録"
+    interaction: { prototype_reactions: 0, text_hyperlinks: 0 }
+    translation:
+      recommended_mode: STRUCTURE_FIRST
+      trusted:
+        - "PC one-row layout and SP 2x2 wrap are directly encoded by Auto Layout."
+        - "Visible text identity is stronger than inconsistent internal tile numbering."
+      do_not_infer:
+        - "Actual href/route destinations."
+        - "Tile numbering as semantic IDs."
+        - "A CMS collection solely because four tiles repeat visually."
+
+  - section_id: cta-value
+    pc_node_id: "21378:7481"
+    sp_node_id: "21376:4942"
+    node_types: { pc: FRAME, sp: FRAME }
+    responsive_modes: { pc: "3:0", sp: "4003:0" }
+    geometry:
+      pc: { width: 1380, height: 328 }
+      sp: { width: 375, height: 396 }
+    auto_layout_count: { pc: 0, sp: 0 }
+    visible_semantics:
+      - mask
+      - img_curator
+      - img_civil
+      - btn_doc
+      - btn_oc
+      - heading
+      - decorative_vectors
+    image_layers:
+      curator_color: "6b082e6c3630c06394f659125e8ab1a5dfedb588"
+      curator_mono: "5bbe541c05b43e0f29b2c001c185ed0e1fef7a2b"
+      civil_color: "9f70f5f08727bc3367f4fe1f3ed848d7c82c41ba"
+      civil_mono: "492378b1703a6941cd23ebdf8427c785fce351f3"
+      hidden_bg_pattern:
+        image_hash: "3e640301a0cb04b2622f71a974e83b5a63adbb19"
+        visible: false
+        scale_mode: TILE
+    interaction: { prototype_reactions: 0, text_hyperlinks: 0 }
+    translation:
+      recommended_mode: HYBRID
+      trusted:
+        - "PC/SP use the same four visible portrait source layers with different composition."
+        - "The section is a layered visual composite rather than one raw imageHash authority."
+      do_not_infer:
+        - "Hidden bg-pattern as editor-owned media."
+        - "Separate PC/SP portrait fields solely due responsive placement."
+        - "CTA destinations."
+      open_decision:
+        - "Choose separate semantic DOM layers versus an exported composite from maintainability/CMS ownership plus visual QA; do not decide from imageHash alone."
+
+  - section_id: footer
+    pc_node_id: "21378:7457"
+    sp_node_id: "21376:4402"
+    node_types: { pc: INSTANCE, sp: INSTANCE }
+    component_evidence:
+      pc_main_component: { node_id: "280:368", name: "プロパティ1=default", component_set_id: "280:367", component_set_name: "Footer" }
+      sp_main_component: { node_id: "280:75", name: "Footer_sp" }
+    responsive_modes:
+      pc: { resolved: "3:0", explicit: null }
+      sp: { resolved: "4003:0", explicit: "4003:0" }
+    geometry:
+      pc: { width: 1380, height: 357 }
+      sp: { width: 375, height: 515 }
+    bitmap_image_fill_count: { pc: 0, sp: 0 }
+    auto_layout:
+      count: { pc: 2, sp: 2 }
+      pc:
+        sns: { mode: HORIZONTAL, item_spacing: 32 }
+        related_site_links: { mode: HORIZONTAL, item_spacing: 20 }
+      sp:
+        sns: { mode: HORIZONTAL, item_spacing: 32 }
+        related_site_links: { mode: VERTICAL, item_spacing: 24 }
+    visible_content:
+      - logo_or_profile
+      - postal_address_and_phone
+      - related_site_links
+      - social_icons
+      - copyright
+      - page_top_affordance
+    interaction: { prototype_reactions: 0, text_hyperlinks: 0 }
+    translation:
+      recommended_mode: COMPONENT_FIRST
+      trusted:
+        - "Global Footer responsibility and PC/SP component identity."
+        - "SP changes related-site links to vertical while social links remain horizontal."
+        - "Copyright must remain readable at narrow runtime widths rather than clipped or used to widen the viewport."
+      do_not_infer:
+        - "Site/social URLs."
+        - "Page-top click/scroll behavior."
+        - "Runtime icon library solely from visible icon-font glyphs."
+        - "Page-local CMS ownership for global footer content."
+
+clean_run_guidance:
+  - "This file contains live Figma evidence only; it is not derived from the repaired REF-001 PHP/CSS implementation."
+  - "Use it to reduce owner-blocking guesses, not to bypass section-by-section live Figma inspection when additional detail is needed."
+  - "FIRST PASS remains one uninterrupted build until immutable freeze; do not use completed-page comparison to repair before freeze."
