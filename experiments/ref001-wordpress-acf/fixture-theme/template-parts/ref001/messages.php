@@ -9,6 +9,12 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
+$messages_composite_path = dirname( __DIR__, 2 ) . '/assets/images/visual-qa/messages/messages-mask-group.b64';
+$messages_composite_b64  = '';
+if ( is_readable( $messages_composite_path ) ) {
+	$messages_composite_b64 = preg_replace( '/\s+/', '', (string) file_get_contents( $messages_composite_path ) );
+}
 ?>
 <section
 	class="ref001-messages"
@@ -26,9 +32,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<h2 id="ref001-messages-title">力をつけ活躍する<strong>先輩たち</strong></h2>
 		</header>
 
-		<div class="ref001-messages__headline">
-			<span>大学で培った企画力を武器に、</span>
-			<span>今はIT企業のマーケターとして挑戦の毎日です！</span>
+		<div
+			class="ref001-messages__headline"
+			aria-label="大学で培った企画力を武器に、今はIT企業のマーケターとして挑戦の毎日です！"
+		>
+			<span class="ref001-messages__headline-line ref001-messages__headline-line--first" aria-hidden="true">大学で培った企画力を武器に、</span>
+			<span class="ref001-messages__headline-line ref001-messages__headline-line--pc" aria-hidden="true">今はIT企業のマーケターとして挑戦の毎日です！</span>
+			<span class="ref001-messages__headline-line ref001-messages__headline-line--sp ref001-messages__headline-line--second" aria-hidden="true">今はIT企業のマーケターとして</span>
+			<span class="ref001-messages__headline-line ref001-messages__headline-line--sp ref001-messages__headline-line--third" aria-hidden="true">挑戦の毎日です！</span>
 		</div>
 
 		<p class="ref001-messages__profile">経営学科ビジネス経営コース3年 Tさん<br>千葉県立生浜高等学校出身</p>
@@ -46,6 +57,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 		class="ref001-messages__image"
 		data-asset-status="deferred"
 		data-figma-image-hash="0cd34d406c04a31f4a32bc2628d184f80db47fad"
+		data-figma-composite-node="21378:7760"
+		<?php if ( $messages_composite_b64 ) : ?>style="background-image:url(data:image/jpeg;base64,<?php echo esc_attr( $messages_composite_b64 ); ?>)"<?php endif; ?>
 		aria-hidden="true"
 	></div>
 </section>
