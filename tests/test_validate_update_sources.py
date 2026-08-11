@@ -22,7 +22,7 @@ class UpdateSourceRegistryTests(unittest.TestCase):
     def test_current_registry_is_valid(self) -> None:
         self.assertEqual([], registry.registry_errors(current_registry()))
 
-    def test_figma_lane_tracks_current_layout_and_typography_semantics(self) -> None:
+    def test_figma_lane_tracks_current_layout_typography_asset_and_mode_semantics(self) -> None:
         data = current_registry()
         source_ids = {source["id"] for source in data["lanes"]["FIGMA"]["sources"]}
         self.assertTrue(
@@ -31,6 +31,9 @@ class UpdateSourceRegistryTests(unittest.TestCase):
                 "figma-auto-layout-flexbox-generation",
                 "figma-grid-auto-layout-current",
                 "figma-text-properties-current",
+                "figma-export-formats-current",
+                "figma-image-crop-current",
+                "figma-variables-dev-mode-current",
             }.issubset(source_ids)
         )
 
@@ -38,9 +41,13 @@ class UpdateSourceRegistryTests(unittest.TestCase):
         self.assertIn("FIGMA_LAYOUT_GENERATION", retest)
         self.assertIn("TYPOGRAPHY_RUNTIME", retest)
         self.assertIn("ASSET_FIDELITY", retest)
+        self.assertIn("VARIABLE_MODE_RUNTIME", retest)
         self.assertIn("line-height", retest["TYPOGRAPHY_RUNTIME"]["keywords"])
         self.assertIn("vertical trim", retest["TYPOGRAPHY_RUNTIME"]["keywords"])
+        self.assertIn("text-wrap", retest["TYPOGRAPHY_RUNTIME"]["keywords"])
         self.assertIn("legacy auto layout", retest["FIGMA_LAYOUT_GENERATION"]["keywords"])
+        self.assertIn("image crop", retest["ASSET_FIDELITY"]["keywords"])
+        self.assertIn("variable mode", retest["VARIABLE_MODE_RUNTIME"]["keywords"])
 
     def test_duplicate_source_id_is_rejected_across_lanes(self) -> None:
         data = current_registry()
