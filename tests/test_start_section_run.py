@@ -19,6 +19,9 @@ import validate_implementation_profile as impl  # noqa: E402
 import validate_run_lineage as lineage  # noqa: E402
 
 TARGET_CONFIG = yaml.safe_load((ROOT / "config" / "implementation-targets.yaml").read_text(encoding="utf-8"))
+PC_MODE = "3:0"
+SP_MODE = "4003:0"
+COLLECTION_ID = "VariableCollectionId:64:671"
 
 
 def write_yaml(root: Path, relative: str, data: dict) -> tuple[Path, str]:
@@ -184,6 +187,67 @@ def fixture(root: Path) -> dict:
     }
 
 
+def good_variable_mode_audit(captured_at: str = "2026-08-11T10:00:00+09:00") -> dict:
+    return {
+        "schema_version": 1,
+        "reference_id": "REF-1",
+        "captured_at": captured_at,
+        "same_page_responsive": True,
+        "responsive_collection": {
+            "id": COLLECTION_ID,
+            "name": "template",
+            "modes": {
+                "desktop": {"id": PC_MODE, "name": "PC"},
+                "mobile": {"id": SP_MODE, "name": "SP"},
+            },
+        },
+        "page": {"node_id": "1:1", "explicit_mode_id": SP_MODE},
+        "roots": [
+            {
+                "node_id": "2:1",
+                "name": "Desktop / Top",
+                "expected_viewport": "desktop",
+                "width": 1380,
+                "explicit_mode_id": PC_MODE,
+                "resolved_mode_id": PC_MODE,
+                "descendants": [],
+            },
+            {
+                "node_id": "2:2",
+                "name": "Mobile / Top",
+                "expected_viewport": "mobile",
+                "width": 375,
+                "explicit_mode_id": SP_MODE,
+                "resolved_mode_id": SP_MODE,
+                "descendants": [],
+            },
+        ],
+    }
+
+
+def attach_variable_mode_audit(
+    root: Path,
+    data: dict,
+    audit: dict | None,
+    *,
+    required: bool = True,
+    reference_captured_at: str = "2026-08-11T09:00:00+09:00",
+) -> None:
+    manifest_path = root / data["reference"]["manifest_path"]
+    audit_relative = "references/ref/variable-mode-audit.yaml"
+    manifest = {
+        "reference_id": "REF-1",
+        "figma": {
+            "captured_at": reference_captured_at,
+            "variable_mode_audit": {"required": required, "path": audit_relative},
+        },
+    }
+    manifest_path.write_text(yaml.safe_dump(manifest, sort_keys=False), encoding="utf-8")
+    data["reference"]["manifest_sha256"] = hashlib.sha256(manifest_path.read_bytes()).hexdigest()
+    if audit is not None:
+        write_yaml(root, audit_relative, audit)
+
+
 def make_radar(root: Path) -> tuple[Path, str]:
     path = root / "research/update-radar/latest.json"
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -203,6 +267,46 @@ class StartSectionRunTests(unittest.TestCase):
             started = self.validate_start(root, data)
             self.assertEqual(started["status"], "RUNNING")
             self.assertEqual(data["status"], "PLANNED")
+
+    def test_valid_required_variable_mode_audit_allows_start(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            data = fixture(root)
+            attach_variable_mode_audit(root, data, good_variable_mode_audit())
+            started = self.validate_start(root, data)
+            self.assertEqual(started["status"], "RUNNING")
+
+    def test_required_variable_mode_audit_missing_blocks_start(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            data = fixture(root)
+            attach_variable_mode_audit(root, data, None, required=True)
+            with self.assertRaisesRegex(ValueError, "Variable Mode audit is required but missing"):
+                self.validate_start(root, data)
+
+    def test_variable_mode_mismatch_blocks_start_and_surfaces_safe_remediation(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            data = fixture(root)
+            audit = good_variable_mode_audit()
+            audit["roots"][0]["explicit_mode_id"] = None
+            audit["roots"][0]["resolved_mode_id"] = SP_MODE
+            attach_variable_mode_audit(root, data, audit)
+            with self.assertRaisesRegex(ValueError, "safe Figma remediation available: SET_EXPLICIT_VARIABLE_MODE"):
+                self.validate_start(root, data)
+
+    def test_variable_mode_audit_older_than_reference_blocks_start(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            data = fixture(root)
+            attach_variable_mode_audit(
+                root,
+                data,
+                good_variable_mode_audit("2026-08-11T08:59:00+09:00"),
+                reference_captured_at="2026-08-11T09:00:00+09:00",
+            )
+            with self.assertRaisesRegex(ValueError, "audit is older than the linked Reference capture"):
+                self.validate_start(root, data)
 
     def test_missing_implementation_profile_pin_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
