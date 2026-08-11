@@ -1,0 +1,196 @@
+.ref001-cta-value {
+	position: relative;
+	width: 100%;
+	height: 328px;
+	background:
+		repeating-linear-gradient(0deg, transparent 0 19px, rgb(132 115 170 / 6%) 19px 20px),
+		repeating-linear-gradient(90deg, transparent 0 19px, rgb(56 161 219 / 6%) 19px 20px),
+		linear-gradient(77deg, #e4deff 0%, #d2faff 100%);
+	overflow: hidden;
+}
+
+.ref001-cta-value__frame {
+	position: relative;
+	width: min(1340px, calc(100% - 40px));
+	height: 288px;
+	margin: 20px auto;
+	box-sizing: border-box;
+	border: 2px solid #8473aa;
+}
+
+.ref001-cta-value__content {
+	position: absolute;
+	top: 58px;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 542px;
+	z-index: 2;
+}
+
+.ref001-cta-value__title {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 26px;
+	margin: 0;
+	color: #333;
+	font-family: "Zen Kaku Gothic New", sans-serif;
+	font-size: 32px;
+	font-weight: 500;
+	line-height: 1;
+	letter-spacing: .05em;
+	white-space: nowrap;
+}
+
+.ref001-cta-value__title-text {
+	position: relative;
+	z-index: 1;
+}
+
+.ref001-cta-value__title-text::after {
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: -2px;
+	height: 16px;
+	background: #fffc68;
+	z-index: -1;
+}
+
+.ref001-cta-value__slash {
+	font-size: 29px;
+	font-weight: 300;
+}
+
+.ref001-cta-value__sp-break {
+	display: none;
+}
+
+.ref001-cta-value__actions {
+	display: grid;
+	grid-template-columns: repeat(2, 261px);
+	gap: 20px;
+	margin-top: 40px;
+}
+
+.ref001-cta-value__action {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 12px;
+	height: 64px;
+	color: #fff;
+	font-family: "Zen Kaku Gothic New", sans-serif;
+	font-size: 16px;
+	font-weight: 500;
+	letter-spacing: .05em;
+}
+
+.ref001-cta-value__action--document {
+	background: #38a1db;
+}
+
+.ref001-cta-value__action--oc {
+	background: #8473aa;
+}
+
+.ref001-cta-value__person {
+	position: absolute;
+	bottom: -2px;
+	pointer-events: none;
+	background-repeat: no-repeat;
+	background-position: bottom center;
+	background-size: contain;
+	z-index: 1;
+}
+
+.ref001-cta-value__person--left {
+	left: 82px;
+	width: 280px;
+	height: 294px;
+}
+
+.ref001-cta-value__person--right {
+	right: 32px;
+	width: 335px;
+	height: 293px;
+}
+
+/* FIXTURE-ONLY: 1380/375 Figma endpoints do not prove the production breakpoint. */
+@media (max-width: 600px) {
+	.ref001-cta-value {
+		height: 396px;
+		background:
+			repeating-linear-gradient(0deg, transparent 0 19px, rgb(132 115 170 / 6%) 19px 20px),
+			repeating-linear-gradient(90deg, transparent 0 19px, rgb(56 161 219 / 6%) 19px 20px),
+			linear-gradient(87deg, #e4deff 0%, #d2faff 100%);
+	}
+
+	.ref001-cta-value__frame {
+		width: 343px;
+		height: 364px;
+		margin: 16px auto;
+	}
+
+	.ref001-cta-value__content {
+		top: 40px;
+		width: 280px;
+	}
+
+	.ref001-cta-value__title {
+		gap: 18px;
+		font-size: 24px;
+		line-height: 1.3;
+		letter-spacing: .05em;
+	}
+
+	.ref001-cta-value__title-text {
+		text-align: center;
+	}
+
+	.ref001-cta-value__title-text::after {
+		display: none;
+	}
+
+	.ref001-cta-value__title-text {
+		background:
+			linear-gradient(#fffc68, #fffc68) 50% 21px / 160px 12px no-repeat,
+			linear-gradient(#fffc68, #fffc68) 50% 51px / 201px 12px no-repeat;
+	}
+
+	.ref001-cta-value__slash {
+		align-self: flex-start;
+		margin-top: 11px;
+		font-size: 28px;
+	}
+
+	.ref001-cta-value__sp-break {
+		display: inline;
+	}
+
+	.ref001-cta-value__actions {
+		grid-template-columns: 240px;
+		gap: 16px;
+		justify-content: center;
+		margin-top: 25px;
+	}
+
+	.ref001-cta-value__action {
+		height: 64px;
+	}
+
+	.ref001-cta-value__person--left {
+		left: -16px;
+		bottom: -16px;
+		width: 114px;
+		height: 144px;
+	}
+
+	.ref001-cta-value__person--right {
+		right: -16px;
+		bottom: -16px;
+		width: 110px;
+		height: 137px;
+	}
+}

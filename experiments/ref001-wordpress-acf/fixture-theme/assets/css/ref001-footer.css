@@ -1,0 +1,207 @@
+.ref001-footer {
+	position: relative;
+	height: 357px;
+	background: #fff;
+	color: #333;
+	font-family: "Zen Kaku Gothic New", sans-serif;
+}
+
+.ref001-footer__profile {
+	position: absolute;
+	left: 80px;
+	top: 72px;
+}
+
+.ref001-footer__logo {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	width: 240px;
+	height: 61px;
+}
+
+.ref001-footer__logo-mark {
+	width: 56px;
+	height: 61px;
+	object-fit: contain;
+	flex: 0 0 auto;
+}
+
+.ref001-footer__logo-copy {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+}
+
+.ref001-footer__logo-copy strong {
+	font-size: 22px;
+	font-weight: 700;
+	letter-spacing: .08em;
+	white-space: nowrap;
+}
+
+.ref001-footer__logo-copy small {
+	align-self: center;
+	color: #563c91;
+	font-family: Poppins, sans-serif;
+	font-size: 9px;
+	font-weight: 600;
+	letter-spacing: .06em;
+}
+
+.ref001-footer__address {
+	margin: 32px 0 0;
+	font-size: 16px;
+	font-weight: 500;
+	line-height: 1.3;
+	letter-spacing: .05em;
+}
+
+.ref001-footer__external {
+	position: absolute;
+	top: 95px;
+	right: 77px;
+}
+
+.ref001-footer__site-links {
+	display: flex;
+	align-items: center;
+	gap: 20px;
+	font-size: 16px;
+	font-weight: 500;
+	line-height: 1.6;
+	letter-spacing: .05em;
+}
+
+.ref001-footer__separator {
+	color: #858585;
+	font-size: 14px;
+}
+
+.ref001-footer__sns {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	gap: 32px;
+	margin-top: 36px;
+	font-family: Arial, sans-serif;
+	font-size: 28px;
+	font-weight: 700;
+	line-height: 1;
+}
+
+.ref001-footer__line {
+	display: grid;
+	place-items: center;
+	width: 28px;
+	height: 28px;
+	border-radius: 8px;
+	background: #020b4a;
+	color: #fff;
+	font-size: 8px;
+}
+
+.ref001-footer__copyright {
+	position: absolute;
+	left: 80px;
+	top: 271px;
+	margin: 0;
+	font-family: Poppins, sans-serif;
+	font-size: 14px;
+	line-height: 1;
+	letter-spacing: .05em;
+	white-space: nowrap;
+}
+
+.ref001-footer__pagetop {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	display: grid;
+	place-items: center;
+	width: 50px;
+	height: 50px;
+	background: linear-gradient(90deg, #8473aa 0%, #38a1db 100%);
+	color: #fff;
+	font-family: sans-serif;
+	font-size: 20px;
+}
+
+.ref001-footer__sp-only {
+	display: none;
+}
+
+/* FIXTURE-ONLY: 1380/375 Figma endpoints do not prove the production breakpoint. */
+@media (max-width: 600px) {
+	.ref001-footer {
+		height: 515px;
+	}
+
+	.ref001-footer__profile {
+		left: 0;
+		top: 56px;
+		width: 100%;
+		text-align: center;
+	}
+
+	.ref001-footer__logo {
+		justify-content: center;
+		width: 240px;
+		margin: 0 auto;
+	}
+
+	.ref001-footer__logo-copy strong {
+		font-size: 24px;
+	}
+
+	.ref001-footer__address {
+		margin-top: 24px;
+		font-size: 14px;
+		line-height: 1.3;
+		letter-spacing: .05em;
+	}
+
+	.ref001-footer__pc-inline {
+		display: none;
+	}
+
+	.ref001-footer__sp-only {
+		display: block;
+	}
+
+	.ref001-footer__external {
+		top: 253px;
+		right: 0;
+		width: 100%;
+	}
+
+	.ref001-footer__site-links {
+		flex-direction: column;
+		gap: 24px;
+		font-size: 16px;
+		line-height: 1;
+	}
+
+	.ref001-footer__separator {
+		width: 40px;
+		height: 1px;
+		overflow: hidden;
+		background: #d9d9d9;
+		font-size: 0;
+	}
+
+	.ref001-footer__sns {
+		justify-content: center;
+		gap: 32px;
+		margin-top: 38px;
+	}
+
+	.ref001-footer__copyright {
+		left: 50%;
+		top: 437px;
+		transform: translateX(-50%);
+		font-size: 12px;
+		letter-spacing: .05em;
+		text-align: center;
+	}
+}

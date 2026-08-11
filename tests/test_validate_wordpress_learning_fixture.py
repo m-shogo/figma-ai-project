@@ -103,6 +103,36 @@ class WordPressLearningFixtureTests(unittest.TestCase):
             errors = validator.validate_fixture(fixture, acf_export)
             self.assertTrue(any("education.php" in error for error in errors))
 
+    def test_courses_existing_files_must_be_wired_into_template(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            fixture, acf_export = self.copy_fixture(directory)
+            template = fixture / validator.TEMPLATE_RELATIVE_PATH
+            source = template.read_text(encoding="utf-8").replace(
+                "\t<?php get_template_part( 'template-parts/ref001/courses' ); ?>\n",
+                "",
+            )
+            template.write_text(source, encoding="utf-8")
+            errors = validator.validate_fixture(fixture, acf_export)
+            self.assertTrue(any("must include the courses template part" in error for error in errors))
+
+    def test_courses_stylesheet_must_be_enqueued(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            fixture, acf_export = self.copy_fixture(directory)
+            functions = fixture / "functions.php"
+            source = functions.read_text(encoding="utf-8").replace("assets/css/ref001-courses.css", "assets/css/missing-courses.css")
+            functions.write_text(source, encoding="utf-8")
+            errors = validator.validate_fixture(fixture, acf_export)
+            self.assertTrue(any("ref001-courses.css" in error for error in errors))
+
+    def test_partial_fixture_cannot_silently_claim_full_page(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            fixture, acf_export = self.copy_fixture(directory)
+            template = fixture / validator.TEMPLATE_RELATIVE_PATH
+            source = template.read_text(encoding="utf-8").replace('data-fixture-completeness="partial"', 'data-fixture-completeness="full"')
+            template.write_text(source, encoding="utf-8")
+            errors = validator.validate_fixture(fixture, acf_export)
+            self.assertTrue(any("data-fixture-completeness=partial" in error for error in errors))
+
 
 if __name__ == "__main__":
     unittest.main()
