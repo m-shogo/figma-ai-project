@@ -1,0 +1,20 @@
+/*
+ * REF-001 VISUAL-QA-FIXTURE-ONLY Student Voice composite previews.
+ *
+ * These lightweight JPEGs are exported from the final visible Figma Mask groups
+ * rather than from a single IMAGE fill. The raw-hash preview sheet remains a
+ * fallback. Replace these QA fixtures with real WordPress Media later.
+ */
+.ref001-student-voice__portrait[data-figma-composite-node="21378:7826"] {
+	background-image: url("../images/visual-qa/student-voice/item2-mask-group.jpg");
+}
+
+.ref001-student-voice__portrait[data-figma-composite-node="21378:7795"] {
+	background-image: url("../images/visual-qa/student-voice/item3-mask-group.jpg");
+}
+
+/*
+ * Classroom composite data is assembled by the PHP fixture from the verified
+ * line-chunked .b64 evidence file. Keeping it out of one long CSS token makes
+ * transfer corruption measurable and repairable without touching geometry.
+ */
