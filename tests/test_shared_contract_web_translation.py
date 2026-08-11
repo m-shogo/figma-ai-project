@@ -13,10 +13,13 @@ class SharedContractWebTranslationTests(unittest.TestCase):
     def setUp(self) -> None:
         self.data = yaml.safe_load(TEMPLATE.read_text(encoding="utf-8"))
 
-    def test_decision_preflight_covers_recurring_time_sinks_before_section_work(self) -> None:
+    def test_decision_preflight_blocks_only_expensive_rework(self) -> None:
         preflight = self.data["decision_preflight"]
         self.assertEqual("UNRESOLVED", preflight["status"])
-        self.assertTrue(preflight["must_resolve_before_section_work"])
+        self.assertEqual("COST_BASED", preflight["strategy"])
+        self.assertTrue(preflight["block_only_expensive_irreversible_or_cross_cutting"])
+        self.assertTrue(preflight["low_cost_reversible_default_without_owner_wait"])
+        self.assertTrue(preflight["continue_independent_safe_work_while_waiting"])
         self.assertTrue(preflight["repeated_time_sink_promotes_to_preflight"])
 
         items = preflight["items"]
@@ -37,7 +40,23 @@ class SharedContractWebTranslationTests(unittest.TestCase):
         self.assertFalse(items["interaction_contract"]["invent_missing_behavior"])
         self.assertFalse(items["qa_contract"]["horizontal_overflow_allowed"])
         self.assertTrue(items["qa_contract"]["actual_artifact_visual_review_required"])
-        self.assertIn("Do not invent a temporary value", preflight["unresolved_behavior"])
+        self.assertIn("cheap reversible choices", preflight["unresolved_behavior"])
+        self.assertIn("continue independent safe work", preflight["unresolved_behavior"])
+
+    def test_default_image_path_stays_simple_until_picture_has_a_reason(self) -> None:
+        asset_contract = self.data["decision_preflight"]["items"]["asset_contract"]
+        self.assertEqual("img", asset_contract["placeholder_element_default"])
+        self.assertEqual("cover", asset_contract["media_fit_default"])
+        self.assertFalse(asset_contract["picture_default"])
+        self.assertTrue(asset_contract["picture_requires_reason"])
+        self.assertIn("art_direction", asset_contract["picture_reasons"])
+        self.assertIn("responsive_source_or_crop_difference", asset_contract["picture_reasons"])
+
+        assets = self.data["web_translation"]["assets"]
+        self.assertEqual("img", assets["default_markup"])
+        self.assertEqual("cover", assets["default_fit_for_cropped_media_box"])
+        self.assertTrue(assets["picture_is_opt_in"])
+        self.assertTrue(assets["picture_requires_demonstrated_reason"])
 
     def test_static_frame_fidelity_does_not_override_web_runtime_safety(self) -> None:
         policy = self.data["web_translation"]
@@ -72,7 +91,7 @@ class SharedContractWebTranslationTests(unittest.TestCase):
         checks = set(self.data["integration"]["required_checks"])
         self.assertTrue(
             {
-                "preflight_decisions_resolved",
+                "material_preflight_decisions_resolved",
                 "text_runtime_safety",
                 "line_box_spacing_diagnostics",
                 "font_availability_diagnostics",
