@@ -19,6 +19,8 @@ def validate_fixture(fixture: Path = DEFAULT_FIXTURE, acf_export: Path = DEFAULT
     errors: list[str] = []
     education_part = fixture / "template-parts" / "ref001" / "education.php"
     education_css = fixture / "assets" / "css" / "ref001-education.css"
+    courses_part = fixture / "template-parts" / "ref001" / "courses.php"
+    courses_css = fixture / "assets" / "css" / "ref001-courses.css"
     required = [
         fixture / "style.css",
         fixture / "functions.php",
@@ -29,8 +31,10 @@ def validate_fixture(fixture: Path = DEFAULT_FIXTURE, acf_export: Path = DEFAULT
         fixture / "template-parts" / "ref001" / "main-visual.php",
         fixture / "template-parts" / "ref001" / "reason.php",
         education_part,
+        courses_part,
         fixture / "assets" / "css" / "ref001.css",
         education_css,
+        courses_css,
         fixture / "README.md",
     ]
     missing = [path for path in required if not path.is_file()]
@@ -60,21 +64,45 @@ def validate_fixture(fixture: Path = DEFAULT_FIXTURE, acf_export: Path = DEFAULT
         errors.append("learning Page template must declare Template Name")
     if not re.search(r"Template\s+Post\s+Type:\s*page\b", template, flags=re.IGNORECASE):
         errors.append("learning Page template must declare Template Post Type: page")
-    if "get_template_part( 'template-parts/ref001/education' )" not in template:
-        errors.append("learning Page template must include the Education template part")
+
+    expected_template_parts = ("main-visual", "reason", "education", "courses")
+    for part in expected_template_parts:
+        needle = f"get_template_part( 'template-parts/ref001/{part}' )"
+        if needle not in template:
+            errors.append(f"learning Page template must include the {part} template part")
+
+    if 'data-fixture-completeness="partial"' not in template:
+        errors.append("incomplete learning Page must remain explicitly marked data-fixture-completeness=partial")
 
     functions = read_text(fixture / "functions.php")
     if TEMPLATE_RELATIVE_PATH not in functions or "is_page_template" not in functions:
         errors.append("fixture asset enqueue must target the canonical REF-001 Page template")
     if "wp_get_attachment_image(" not in functions:
         errors.append("fixture images must use the WordPress attachment image helper")
-    if "assets/css/ref001-education.css" not in functions:
-        errors.append("fixture must enqueue the Education stylesheet through WordPress")
+    for stylesheet in ("assets/css/ref001-education.css", "assets/css/ref001-courses.css"):
+        if stylesheet not in functions:
+            errors.append(f"fixture must enqueue stylesheet through WordPress: {stylesheet}")
 
     education_source = read_text(education_part)
     for number, label in (("01", "スタート"), ("02", "学ぶ"), ("03", "出会う"), ("04", "ゴール")):
         if f"'number' => '{number}'" not in education_source or f"'label' => '{label}'" not in education_source:
             errors.append(f"Education code-owned stage contract missing {number}/{label}")
+
+    courses_source = read_text(courses_part)
+    expected_courses = (
+        "公務員コース",
+        "会計コース",
+        "ビジネス経営コース",
+        "金融コース",
+        "教職コース",
+        "学芸員コース",
+        "ITコース",
+    )
+    for title in expected_courses:
+        if title not in courses_source:
+            errors.append(f"Courses fixed-domain contract missing: {title}")
+    if "<a " in courses_source or "href=" in courses_source:
+        errors.append("Courses First Pass must not invent course links before URL ownership is resolved")
 
     if not acf_export.is_file():
         errors.append(f"missing ACF export: {acf_export}")
@@ -156,6 +184,14 @@ def validate_fixture(fixture: Path = DEFAULT_FIXTURE, acf_export: Path = DEFAULT
         errors.append("Education PC First Pass must retain measured four-card 281px/40px layout evidence")
     if "width: 335px" not in education_styles or "width: 140px" not in education_styles or "height: 79px" not in education_styles:
         errors.append("Education SP First Pass must retain measured card/media geometry evidence")
+
+    courses_styles = read_text(courses_css)
+    if "FIXTURE-ONLY" not in courses_styles or "@media (max-width: 600px)" not in courses_styles:
+        errors.append("Courses responsive switch must remain explicitly labeled FIXTURE-ONLY")
+    if "grid-template-columns: repeat(2, 560px)" not in courses_styles or "gap: 40px" not in courses_styles:
+        errors.append("Courses PC First Pass must retain measured 560px two-column / 40px-gap evidence")
+    if "width: 343px" not in courses_styles:
+        errors.append("Courses SP First Pass must retain measured 343px card width evidence")
 
     return errors
 
