@@ -23,3 +23,4 @@ curl -fsS "$URL" >/dev/null
 
 cd "$SCRIPT_DIR"
 npx --yes --package=playwright@1.55.0 node asset-check.mjs "$URL"
+npx --yes --package=playwright@1.55.0 node mv-asset-check.mjs "$URL"
