@@ -117,6 +117,9 @@ jobs:
       - name: Validate parallel worker git and sandbox isolation
         run: python scripts/validate_parallel_isolation.py
 
+      - name: Validate sanitized REF-001 clean-run workspace selection
+        run: python scripts/build_sanitized_run_workspace.py validate experiments/ref001-clean-run/workspace.yaml
+
       - name: Validate immutable run evidence lineage
         run: python scripts/validate_run_lineage.py
 
