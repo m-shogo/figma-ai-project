@@ -45,6 +45,10 @@ function ref001_learning_enqueue_assets() {
 		'cta-value'     => 'ref001-cta-value.css',
 		'lower-geometry' => 'ref001-lower-geometry.css',
 		'footer'        => 'ref001-footer.css',
+		'visual-media' => 'ref001-visual-media.css',
+		'visual-media-education' => 'ref001-visual-media-education.css',
+		'visual-media-cta-messages' => 'ref001-visual-media-cta-messages.css',
+		'visual-media-voice' => 'ref001-visual-media-voice.css',
 	);
 
 	foreach ( $section_styles as $handle_suffix => $file ) {
