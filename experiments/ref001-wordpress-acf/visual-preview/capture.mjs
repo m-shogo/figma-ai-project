@@ -45,6 +45,24 @@ for (const capture of captures) {
     }));
   });
 
+  // Figma is a static frame; the browser is a fluid runtime. Pixel fidelity
+  // must never be bought by introducing page-level horizontal scrolling.
+  const overflow = await page.evaluate(() => ({
+    viewportWidth: document.documentElement.clientWidth,
+    documentScrollWidth: document.documentElement.scrollWidth,
+    bodyScrollWidth: document.body?.scrollWidth ?? 0,
+  }));
+  console.log(JSON.stringify({ capture: capture.name, horizontalOverflow: overflow }));
+  if (
+    overflow.documentScrollWidth > overflow.viewportWidth ||
+    overflow.bodyScrollWidth > overflow.viewportWidth
+  ) {
+    throw new Error(
+      `${capture.name} has horizontal page overflow: viewport=${overflow.viewportWidth}, ` +
+      `document=${overflow.documentScrollWidth}, body=${overflow.bodyScrollWidth}`,
+    );
+  }
+
   await page.evaluate(() => window.scrollTo(0, 0));
   await page.screenshot({
     path: `${outputDir}/${capture.name}`,
