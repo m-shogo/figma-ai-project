@@ -5,19 +5,30 @@ import path from 'node:path';
 const url = process.argv[2] || 'http://127.0.0.1:8765/visual-preview/';
 const output = process.argv[3] || 'captures/ref001-text-runtime.json';
 
-const endpoints = [
-  { key: 'pc', viewport: { width: 1380, height: 900 } },
-  { key: 'sp', viewport: { width: 375, height: 844 } },
+// 375 / 1380 are the supplied Figma acceptance endpoints. The additional
+// widths are Web-runtime safety probes only: they do NOT define production
+// breakpoints and are never compared pixel-for-pixel with Figma.
+const scenarios = [
+  { key: 'w320', role: 'RUNTIME_SAFETY', viewport: { width: 320, height: 844 } },
+  { key: 'w360', role: 'RUNTIME_SAFETY', viewport: { width: 360, height: 844 } },
+  { key: 'sp', role: 'FIGMA_ACCEPTANCE', viewport: { width: 375, height: 844 } },
+  { key: 'w390', role: 'RUNTIME_SAFETY', viewport: { width: 390, height: 844 } },
+  { key: 'w430', role: 'RUNTIME_SAFETY', viewport: { width: 430, height: 900 } },
+  { key: 'w599', role: 'FIXTURE_SEAM_SAFETY', viewport: { width: 599, height: 900 } },
+  { key: 'w600', role: 'FIXTURE_SEAM_SAFETY', viewport: { width: 600, height: 900 } },
+  { key: 'w601', role: 'FIXTURE_SEAM_SAFETY', viewport: { width: 601, height: 900 } },
+  { key: 'w768', role: 'RUNTIME_SAFETY', viewport: { width: 768, height: 900 } },
+  { key: 'w1024', role: 'RUNTIME_SAFETY', viewport: { width: 1024, height: 900 } },
+  { key: 'w1200', role: 'RUNTIME_SAFETY', viewport: { width: 1200, height: 900 } },
+  { key: 'pc', role: 'FIGMA_ACCEPTANCE', viewport: { width: 1380, height: 900 } },
 ];
 
 const browser = await chromium.launch({ headless: true });
-const report = { schema_version: 2, url, endpoints: {} };
+const report = { schema_version: 3, url, scenarios: {} };
 let failed = false;
 
-const round1 = (value) => Math.round(value * 10) / 10;
-
-for (const endpoint of endpoints) {
-  const page = await browser.newPage({ viewport: endpoint.viewport });
+for (const scenario of scenarios) {
+  const page = await browser.newPage({ viewport: scenario.viewport });
   await page.goto(url, { waitUntil: 'networkidle' });
 
   const result = await page.evaluate(() => {
@@ -143,10 +154,12 @@ for (const endpoint of endpoints) {
     };
   });
 
-  // Keep the top-level summary stable while the detailed report captures
-  // approximate half-leading and text-range insets for spacing diagnosis.
-  report.endpoints[endpoint.key] = result;
-  console.log(JSON.stringify({ endpoint: endpoint.key, ...result }, null, 2));
+  report.scenarios[scenario.key] = {
+    role: scenario.role,
+    viewport: scenario.viewport,
+    ...result,
+  };
+  console.log(JSON.stringify({ scenario: scenario.key, role: scenario.role, ...result }, null, 2));
 
   if (result.pageOverflowPx > 0 || result.failures.length > 0) {
     failed = true;
@@ -161,7 +174,7 @@ fs.writeFileSync(output, JSON.stringify(report, null, 2) + '\n');
 
 if (failed) {
   console.error(
-    'REF-001 Web text runtime gate failed: page overflow, unintentional clipping, or overflowing nowrap text was detected.',
+    'REF-001 Web text runtime gate failed: page overflow, unintentional clipping, or overflowing nowrap text was detected at an acceptance or runtime-safety width.',
   );
   process.exit(1);
 }
