@@ -1,0 +1,39 @@
+rule_id: CR-REF001-003
+statement: >-
+  Visual repetition in Figma does not by itself authorize a reorderable CMS collection;
+  when item count/order has semantic meaning and no editor add/remove/reorder requirement is evidenced,
+  prefer fixed fields or code-owned identity/order over inventing Repeater/Flexible Content.
+evidence_maturity: E2
+recommendation: OPTIONAL
+scope:
+  - PATTERN_LEVEL
+first_observed_at: "2026-08-11"
+last_verified_at: "2026-08-12"
+verified_tooling:
+  figma_mcp: "Figma MCP connected; REF-001 file ZYTdtw4wCgkcBy2cVnhxVI"
+  agents:
+    - "GPT-5.6 Sol"
+target_failure:
+  - CMS_OVERMODELING
+  - EDITOR_CONTRACT_INVENTION
+  - SEMANTIC_ORDER_DRIFT
+evidence_runs:
+  - "experiments/ref001-wordpress-acf/README.md#h1--figma-repetition-does-not-imply-acf-repeater"
+  - "experiments/ref001-wordpress-acf/README.md#h8--ordered-progression-is-different-from-a-reorderable-collection"
+  - "experiments/ref001-blind-clean-20260812/evidence/final-measurement.yaml"
+metric_effect:
+  first_pass_delta: null
+  repair_round_delta: null
+  observed:
+    - "Blind Clean Replay recorded cms_inventions: 0."
+    - "Reason stayed fixed-cardinality, Education retained semantic 01-04 order, and Courses retained seven code/domain-owned identities/order/colors."
+    - "The same clean implementation passed Human Editability 10/10 with three disposable change drills."
+known_limits:
+  - "Verified on one reference family only; not yet cross-reference or cross-agent evidence."
+  - "If editors genuinely need add/remove/reorder behavior, fixed fields become the wrong model and a collection architecture should be selected from that stronger requirement."
+  - "ACF PRO availability and target-project field conventions still take precedence in production integration."
+retest_triggers:
+  - "target project supplies explicit editor cardinality/reordering requirements"
+  - "new reference uses dynamic collection semantics"
+  - "major ACF/editor architecture change"
+  - "major agent/model generation change"
