@@ -8,9 +8,11 @@
  * The First Pass grid left `subheading` and `intro` on implicit rows, expanding
  * the header from 112px to 229px. Pin the intended two 56px rows and place each
  * child explicitly. SP switches the header to flex, so this repair is PC-only.
+ *
+ * Owner responsive contract: desktop >= 768px.
  */
 
-@media (min-width: 601px) {
+@media (min-width: 768px) {
 	.ref001-education__header {
 		grid-template-rows: repeat(2, 56px);
 		height: 112px;
