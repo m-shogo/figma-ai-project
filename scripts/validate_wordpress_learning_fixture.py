@@ -21,45 +21,24 @@ def validate_fixture(fixture: Path = DEFAULT_FIXTURE, acf_export: Path = DEFAULT
     parts = {
         name: fixture / "template-parts" / "ref001" / f"{name}.php"
         for name in (
-            "main-visual",
-            "reason",
-            "education",
-            "cta",
-            "student-voice",
-            "messages",
-            "courses",
-            "links",
-            "cta-value",
+            "main-visual", "reason", "education", "cta", "student-voice",
+            "messages", "courses", "links", "cta-value",
         )
     }
     css_files = {
         name: fixture / "assets" / "css" / f"ref001-{name}.css"
         for name in (
-            "header",
-            "education",
-            "cta",
-            "student-voice",
-            "messages",
-            "courses",
-            "links",
-            "cta-value",
-            "footer",
+            "header", "education", "cta", "student-voice", "messages",
+            "courses", "links", "cta-value", "footer",
         )
     }
     footer_logo_mark = fixture / "assets" / "images" / "ref001-footer-logo-mark.svg"
 
     required = [
-        fixture / "style.css",
-        fixture / "functions.php",
-        fixture / "header.php",
-        fixture / "footer.php",
-        fixture / "index.php",
-        fixture / TEMPLATE_RELATIVE_PATH,
-        fixture / "assets" / "css" / "ref001.css",
-        footer_logo_mark,
-        fixture / "README.md",
-        *parts.values(),
-        *css_files.values(),
+        fixture / "style.css", fixture / "functions.php", fixture / "header.php",
+        fixture / "footer.php", fixture / "index.php", fixture / TEMPLATE_RELATIVE_PATH,
+        fixture / "assets" / "css" / "ref001.css", footer_logo_mark,
+        fixture / "README.md", *parts.values(), *css_files.values(),
     ]
     missing = [path for path in required if not path.is_file()]
     if missing:
@@ -78,9 +57,7 @@ def validate_fixture(fixture: Path = DEFAULT_FIXTURE, acf_export: Path = DEFAULT
         errors.append("visual-first static-state wave must not add JavaScript before interaction integration")
 
     repeater_patterns = {
-        "have_rows(": "have_rows()",
-        "the_row(": "the_row()",
-        "get_sub_field(": "get_sub_field()",
+        "have_rows(": "have_rows()", "the_row(": "the_row()", "get_sub_field(": "get_sub_field()",
     }
     for token, label in repeater_patterns.items():
         if token in joined:
@@ -95,22 +72,11 @@ def validate_fixture(fixture: Path = DEFAULT_FIXTURE, acf_export: Path = DEFAULT
 
     actual_sequence = re.findall(r"get_template_part\(\s*'template-parts/ref001/([^']+)'\s*\)", template)
     expected_sequence = [
-        "main-visual",
-        "reason",
-        "education",
-        "cta",
-        "student-voice",
-        "messages",
-        "cta",
-        "courses",
-        "links",
-        "cta-value",
+        "main-visual", "reason", "education", "cta", "student-voice",
+        "messages", "cta", "courses", "links", "cta-value",
     ]
     if actual_sequence != expected_sequence:
-        errors.append(
-            "learning Page template must preserve Figma section order: "
-            + " -> ".join(expected_sequence)
-        )
+        errors.append("learning Page template must preserve Figma section order: " + " -> ".join(expected_sequence))
     for part in dict.fromkeys(expected_sequence):
         if part not in actual_sequence:
             errors.append(f"learning Page template must include the {part} template part")
@@ -162,10 +128,8 @@ def validate_fixture(fixture: Path = DEFAULT_FIXTURE, acf_export: Path = DEFAULT
         if text not in voice_source:
             errors.append(f"Student Voice supplied state missing text: {text}")
     for image_hash in (
-        "7a0569464ece1a5ffe4e6c5a1e50fb4b5efaac0c",
-        "33aab97f8b6328f273150c0578bc5b6230d0c5e2",
-        "8c372ab3f8d02f36020b3b7c1bd719545105ff26",
-        "12c4c3b3e824e6f191ac8a273fdfadb64912383b",
+        "7a0569464ece1a5ffe4e6c5a1e50fb4b5efaac0c", "33aab97f8b6328f273150c0578bc5b6230d0c5e2",
+        "8c372ab3f8d02f36020b3b7c1bd719545105ff26", "12c4c3b3e824e6f191ac8a273fdfadb64912383b",
     ):
         if image_hash not in voice_source:
             errors.append(f"Student Voice must retain unresolved Figma image evidence: {image_hash}")
@@ -175,11 +139,8 @@ def validate_fixture(fixture: Path = DEFAULT_FIXTURE, acf_export: Path = DEFAULT
 
     messages_source = read_text(parts["messages"])
     for marker in (
-        'data-current-item="1"',
-        'data-visible-total="4"',
-        'data-supplied-item-count="1"',
-        'data-interaction-status="deferred"',
-        'data-slider-status="deferred"',
+        'data-current-item="1"', 'data-visible-total="4"', 'data-supplied-item-count="1"',
+        'data-interaction-status="deferred"', 'data-slider-status="deferred"',
     ):
         if marker not in messages_source:
             errors.append(f"Messages static evidence missing marker: {marker}")
@@ -189,16 +150,10 @@ def validate_fixture(fixture: Path = DEFAULT_FIXTURE, acf_export: Path = DEFAULT
         errors.append("Messages static First Pass must not invent slider controls")
 
     courses_source = read_text(parts["courses"])
-    expected_courses = (
-        "公務員コース",
-        "会計コース",
-        "ビジネス経営コース",
-        "金融コース",
-        "教職コース",
-        "学芸員コース",
-        "ITコース",
-    )
-    for title in expected_courses:
+    for title in (
+        "公務員コース", "会計コース", "ビジネス経営コース", "金融コース",
+        "教職コース", "学芸員コース", "ITコース",
+    ):
         if title not in courses_source:
             errors.append(f"Courses fixed-domain contract missing: {title}")
     if "<a " in courses_source or "href=" in courses_source:
@@ -215,10 +170,7 @@ def validate_fixture(fixture: Path = DEFAULT_FIXTURE, acf_export: Path = DEFAULT
         errors.append("CTA Value visual pass must explicitly defer destination integration")
     if "<a " in cta_value_source or "href=" in cta_value_source:
         errors.append("CTA Value visual pass must not invent href values")
-    for image_hash in (
-        "6b082e6c3630c06394f659125e8ab1a5dfedb588",
-        "9f70f5f08727bc3367f4fe1f3ed848d7c82c41ba",
-    ):
+    for image_hash in ("6b082e6c3630c06394f659125e8ab1a5dfedb588", "9f70f5f08727bc3367f4fe1f3ed848d7c82c41ba"):
         if image_hash not in cta_value_source:
             errors.append(f"CTA Value must retain unresolved Figma image evidence: {image_hash}")
 
@@ -237,13 +189,11 @@ def validate_fixture(fixture: Path = DEFAULT_FIXTURE, acf_export: Path = DEFAULT
     if not acf_export.is_file():
         errors.append(f"missing ACF export: {acf_export}")
         return errors
-
     try:
         export = json.loads(read_text(acf_export))
     except Exception as exc:
         errors.append(f"cannot load ACF export: {exc}")
         return errors
-
     if not isinstance(export, list) or not export or not isinstance(export[0], dict):
         errors.append("ACF export must contain a field group array")
         return errors
@@ -263,17 +213,9 @@ def validate_fixture(fixture: Path = DEFAULT_FIXTURE, acf_export: Path = DEFAULT
     if not isinstance(fields, list):
         errors.append("ACF field group fields must be an array")
         return errors
+    by_name = {str(field.get("name", "")): field for field in fields if isinstance(field, dict) and field.get("name")}
 
-    by_name = {
-        str(field.get("name", "")): field
-        for field in fields
-        if isinstance(field, dict) and field.get("name")
-    }
-    expected_reason_fields = {
-        f"reason_{index}_{suffix}"
-        for index in (1, 2, 3)
-        for suffix in ("image", "title", "body")
-    }
+    expected_reason_fields = {f"reason_{index}_{suffix}" for index in (1, 2, 3) for suffix in ("image", "title", "body")}
     missing_reason = sorted(expected_reason_fields - set(by_name))
     if missing_reason:
         errors.append("fixed three-card ACF contract missing fields: " + ", ".join(missing_reason))
@@ -288,32 +230,29 @@ def validate_fixture(fixture: Path = DEFAULT_FIXTURE, acf_export: Path = DEFAULT
         errors.append("fixed four-stage Education ACF contract missing fields: " + ", ".join(missing_education))
 
     forbidden_editor_stage_fields = {
-        f"education_{stage}_{suffix}"
-        for stage in (1, 2, 3, 4)
-        for suffix in ("number", "label", "order")
+        f"education_{stage}_{suffix}" for stage in (1, 2, 3, 4) for suffix in ("number", "label", "order")
     }
     leaked_stage_contract = sorted(forbidden_editor_stage_fields & set(by_name))
     if leaked_stage_contract:
-        errors.append(
-            "Education stage identity/order must remain code-owned, not ACF-editable: "
-            + ", ".join(leaked_stage_contract)
-        )
+        errors.append("Education stage identity/order must remain code-owned, not ACF-editable: " + ", ".join(leaked_stage_contract))
 
     for name, field in by_name.items():
         if field.get("type") == "image" and field.get("return_format") != "id":
             errors.append(f"ACF image field {name} must return attachment ID in the learning baseline")
 
+    # Owner-resolved responsive contract. 375/1380 are visual acceptance endpoints;
+    # the actual mobile/desktop switch is 768px (mobile <= 767px).
     base_css = read_text(fixture / "assets" / "css" / "ref001.css")
-    if "FIXTURE-ONLY" not in base_css or "@media (max-width: 600px)" not in base_css:
-        errors.append("temporary responsive switch must remain explicitly labeled FIXTURE-ONLY")
+    if "@media (max-width: 767px)" not in base_css:
+        errors.append("base REF-001 CSS must use the owner-resolved 768px responsive contract")
 
     education_styles = read_text(css_files["education"])
-    if "FIXTURE-ONLY" not in education_styles or "@media (max-width: 600px)" not in education_styles:
-        errors.append("Education responsive switch must remain explicitly labeled FIXTURE-ONLY")
-    if "grid-template-columns: repeat(4, 281px)" not in education_styles or "gap: 40px" not in education_styles:
-        errors.append("Education PC First Pass must retain measured four-card 281px/40px layout evidence")
-    if "width: 335px" not in education_styles or "width: 140px" not in education_styles or "height: 79px" not in education_styles:
-        errors.append("Education SP First Pass must retain measured card/media geometry evidence")
+    if "@media (max-width: 767px)" not in education_styles:
+        errors.append("Education must use the owner-resolved 768px responsive contract")
+    if "281px" not in education_styles or "gap: 40px" not in education_styles:
+        errors.append("Education must retain measured PC 281px-card / 40px-gap evidence")
+    if "width: 140px" not in education_styles or "height: 79px" not in education_styles or "335px" not in education_styles:
+        errors.append("Education must retain measured SP 335px-card / 140x79 media evidence")
 
     cta_styles = read_text(css_files["cta"])
     if "height: 328px" not in cta_styles or "height: 350px" not in cta_styles:
@@ -333,18 +272,20 @@ def validate_fixture(fixture: Path = DEFAULT_FIXTURE, acf_export: Path = DEFAULT
         errors.append("Messages must retain measured PC/SP current-item image slots")
 
     courses_styles = read_text(css_files["courses"])
-    if "FIXTURE-ONLY" not in courses_styles or "@media (max-width: 600px)" not in courses_styles:
-        errors.append("Courses responsive switch must remain explicitly labeled FIXTURE-ONLY")
-    if "grid-template-columns: repeat(2, 560px)" not in courses_styles or "gap: 40px" not in courses_styles:
-        errors.append("Courses PC First Pass must retain measured 560px two-column / 40px-gap evidence")
-    if "width: 343px" not in courses_styles:
-        errors.append("Courses SP First Pass must retain measured 343px card width evidence")
+    if "@media (max-width: 767px)" not in courses_styles:
+        errors.append("Courses must use the owner-resolved 768px responsive contract")
+    if "560px" not in courses_styles or "gap: 40px" not in courses_styles:
+        errors.append("Courses must retain measured PC 560px-card / 40px-gap evidence")
+    if "343px" not in courses_styles:
+        errors.append("Courses must retain measured SP 343px card evidence")
 
     links_styles = read_text(css_files["links"])
-    if "grid-template-columns: repeat(4, 260px)" not in links_styles or "gap: 24px" not in links_styles:
-        errors.append("Links PC First Pass must retain measured four-circle geometry")
-    if "grid-template-columns: repeat(2, 162px)" not in links_styles or "gap: 19px" not in links_styles:
-        errors.append("Links SP First Pass must retain measured two-by-two geometry")
+    if "@media (max-width: 767px)" not in links_styles:
+        errors.append("Links must use the owner-resolved 768px responsive contract")
+    if "260px" not in links_styles or "gap: 24px" not in links_styles:
+        errors.append("Links PC First Pass must retain measured four-circle geometry evidence")
+    if "162px" not in links_styles or "gap: 19px" not in links_styles:
+        errors.append("Links SP First Pass must retain measured two-by-two geometry evidence")
 
     cta_value_styles = read_text(css_files["cta-value"])
     if "height: 328px" not in cta_value_styles or "width: min(1340px, calc(100% - 40px))" not in cta_value_styles:
