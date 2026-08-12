@@ -323,7 +323,7 @@
   function updateIssueLink(feedback, reviewed, total, actionableCount) {
     const link = $('#create-issue');
     if (!link) return;
-    const repository = assist.manifest.feedback?.issue_repository;
+    const repository = assist.manifest.feedback?.issue_repository || document.body.dataset.issueRepository;
     if (!repository || !actionableCount) {
       link.removeAttribute('href');
       link.setAttribute('aria-disabled', 'true');
