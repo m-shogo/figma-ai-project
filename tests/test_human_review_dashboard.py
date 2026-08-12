@@ -24,6 +24,18 @@ class HumanReviewDashboardBuildTests(unittest.TestCase):
             self.assertTrue((site / "ref-001/latest/preview/human-review-repair.css").is_file())
             self.assertTrue((site / "ref-001/latest/preview/assets/images/dummy/image-pc.svg").is_file())
             self.assertTrue((site / "ref-001/latest/preview/assets/images/dummy/image-sp.svg").is_file())
+            self.assertTrue(
+                (
+                    site
+                    / "ref-001/latest/preview/assets/images/ref001/rendered/sp/student-voice-01-21376-4709.png"
+                ).is_file()
+            )
+            self.assertTrue(
+                (
+                    site
+                    / "ref-001/latest/preview/assets/images/ref001/rendered/sp/student-voice-04-21376-4663.png"
+                ).is_file()
+            )
             self.assertTrue((site / "ref-001/latest/preview/assets/icons/document.svg").is_file())
             self.assertTrue((site / "ref-001/latest/preview/assets/icons/course-7.svg").is_file())
             self.assertTrue((site / "ref-001/runs/run-2/review/index.html").is_file())
@@ -76,11 +88,18 @@ class HumanReviewDashboardBuildTests(unittest.TestCase):
             self.assertIn('data-asset-slot="main-visual-left"', preview)
             self.assertIn('assets/images/dummy/image-pc.svg', preview)
             self.assertIn('assets/images/dummy/image-sp.svg', preview)
+            self.assertIn('assets/images/ref001/rendered/sp/student-voice-01-21376-4709.png', preview)
+            self.assertIn('assets/images/ref001/rendered/sp/student-voice-04-21376-4663.png', preview)
             self.assertIn('assets/icons/document.svg', preview)
             self.assertIn('assets/icons/open-campus.svg', preview)
             self.assertIn('assets/icons/course-1.svg', preview)
             self.assertIn('assets/icons/course-7.svg', preview)
+            self.assertIn('assets/icons/facebook-outline.svg', preview)
+            self.assertIn('assets/icons/youtube-outline.svg', preview)
+            self.assertIn('assets/icons/instagram-outline.svg', preview)
+            self.assertIn('assets/icons/line-outline.svg', preview)
             self.assertIn('<a href="#" class="ref-action', preview)
+            self.assertIn('class="ref-footer__sns-link"', preview)
             self.assertNotIn('>▣<', preview)
             self.assertNotIn('>⚑<', preview)
             self.assertNotIn('data-icon=', preview)
