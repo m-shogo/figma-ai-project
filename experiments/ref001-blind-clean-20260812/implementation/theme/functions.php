@@ -5,8 +5,39 @@ function ref001_get(string $key, $fallback = '') { if (function_exists('get_fiel
 function ref001_e($value): void { echo htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8'); }
 function ref001_section(string $name): void { require __DIR__ . '/template-parts/sections/' . $name . '.php'; }
 function ref001_course_domain(): array { return require __DIR__ . '/inc/course-domain.php'; }
+function ref001_assets(): array { static $assets; if ($assets === null) { $assets = require __DIR__ . '/inc/asset-map.php'; } return $assets; }
+function ref001_asset_url(string $path): string {
+    if (REF001_FIXTURE_MODE || !function_exists('get_stylesheet_directory_uri')) return $path;
+    return rtrim(get_stylesheet_directory_uri(), '/') . '/' . ltrim($path, '/');
+}
+function ref001_icon_url(string $key): string {
+    $assets = ref001_assets();
+    return ref001_asset_url($assets['icons'][$key] ?? '');
+}
+function ref001_link_url(string $key): string {
+    $assets = ref001_assets();
+    return (string)($assets['links'][$key] ?? '#');
+}
+function ref001_picture(string $slot, string $class = '', string $alt = '', bool $eager = false): void {
+    $assets = ref001_assets();
+    $entry = $assets['images'][$slot] ?? null;
+    if (!is_array($entry) || empty($entry['pc']) || empty($entry['sp'])) return;
+    $pc = ref001_asset_url((string)$entry['pc']);
+    $sp = ref001_asset_url((string)$entry['sp']);
+    $loading = $eager ? 'eager' : 'lazy';
+    echo '<picture class="ref-picture ' . htmlspecialchars($class, ENT_QUOTES, 'UTF-8') . '" data-asset-slot="' . htmlspecialchars($slot, ENT_QUOTES, 'UTF-8') . '">';
+    echo '<source media="(max-width:767px)" srcset="' . htmlspecialchars($sp, ENT_QUOTES, 'UTF-8') . '">';
+    echo '<img src="' . htmlspecialchars($pc, ENT_QUOTES, 'UTF-8') . '" alt="' . htmlspecialchars($alt, ENT_QUOTES, 'UTF-8') . '" loading="' . $loading . '" decoding="async">';
+    echo '</picture>';
+}
+function ref001_icon(string $key, string $class = ''): void {
+    $url = ref001_icon_url($key);
+    if ($url === '') return;
+    echo '<img class="ref-svg-icon ' . htmlspecialchars($class, ENT_QUOTES, 'UTF-8') . '" src="' . htmlspecialchars($url, ENT_QUOTES, 'UTF-8') . '" alt="" aria-hidden="true">';
+}
 if (function_exists('add_action')) { add_action('wp_enqueue_scripts', function(){
     wp_enqueue_style('ref001-clean-first-pass', get_stylesheet_uri(), [], '0.1.0');
     wp_enqueue_style('ref001-clean-responsive-continuity', get_stylesheet_directory_uri() . '/responsive-continuity.css', ['ref001-clean-first-pass'], '0.1.0');
     wp_enqueue_style('ref001-clean-visual-repair', get_stylesheet_directory_uri() . '/visual-repair.css', ['ref001-clean-responsive-continuity'], '0.1.0');
+    wp_enqueue_style('ref001-human-review-repair', get_stylesheet_directory_uri() . '/human-review-repair.css', ['ref001-clean-visual-repair'], '0.1.0');
 }); }

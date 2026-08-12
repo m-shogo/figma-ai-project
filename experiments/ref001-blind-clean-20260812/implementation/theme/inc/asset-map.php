@@ -1,0 +1,45 @@
+<?php
+return [
+    'images' => [
+        'main-visual-left' => ['pc' => 'assets/images/dummy/image-pc.svg', 'sp' => 'assets/images/dummy/image-sp.svg'],
+        'main-visual-right' => ['pc' => 'assets/images/dummy/image-pc.svg', 'sp' => 'assets/images/dummy/image-sp.svg'],
+        'reason-1' => ['pc' => 'assets/images/dummy/image-pc.svg', 'sp' => 'assets/images/dummy/image-sp.svg'],
+        'reason-2' => ['pc' => 'assets/images/dummy/image-pc.svg', 'sp' => 'assets/images/dummy/image-sp.svg'],
+        'reason-3' => ['pc' => 'assets/images/dummy/image-pc.svg', 'sp' => 'assets/images/dummy/image-sp.svg'],
+        'education-1' => ['pc' => 'assets/images/dummy/image-pc.svg', 'sp' => 'assets/images/dummy/image-sp.svg'],
+        'education-2' => ['pc' => 'assets/images/dummy/image-pc.svg', 'sp' => 'assets/images/dummy/image-sp.svg'],
+        'education-3' => ['pc' => 'assets/images/dummy/image-pc.svg', 'sp' => 'assets/images/dummy/image-sp.svg'],
+        'education-4' => ['pc' => 'assets/images/dummy/image-pc.svg', 'sp' => 'assets/images/dummy/image-sp.svg'],
+        'voice-1-avatar' => ['pc' => 'assets/images/dummy/image-pc.svg', 'sp' => 'assets/images/dummy/image-sp.svg'],
+        'voice-1-detail' => ['pc' => 'assets/images/dummy/image-pc.svg', 'sp' => 'assets/images/dummy/image-sp.svg'],
+        'voice-2-avatar' => ['pc' => 'assets/images/dummy/image-pc.svg', 'sp' => 'assets/images/dummy/image-sp.svg'],
+        'voice-3-avatar' => ['pc' => 'assets/images/dummy/image-pc.svg', 'sp' => 'assets/images/dummy/image-sp.svg'],
+        'messages-photo' => ['pc' => 'assets/images/dummy/image-pc.svg', 'sp' => 'assets/images/dummy/image-sp.svg'],
+        'cta-person-left' => ['pc' => 'assets/images/dummy/image-pc.svg', 'sp' => 'assets/images/dummy/image-sp.svg'],
+        'cta-person-right' => ['pc' => 'assets/images/dummy/image-pc.svg', 'sp' => 'assets/images/dummy/image-sp.svg'],
+    ],
+    'icons' => [
+        'document' => 'assets/icons/document.svg',
+        'open-campus' => 'assets/icons/open-campus.svg',
+        'arrow-left' => 'assets/icons/arrow-left.svg',
+        'arrow-right' => 'assets/icons/arrow-right.svg',
+        'check' => 'assets/icons/check.svg',
+        'course-1' => 'assets/icons/course-1.svg',
+        'course-2' => 'assets/icons/course-2.svg',
+        'course-3' => 'assets/icons/course-3.svg',
+        'course-4' => 'assets/icons/course-4.svg',
+        'course-5' => 'assets/icons/course-5.svg',
+        'course-6' => 'assets/icons/course-6.svg',
+        'course-7' => 'assets/icons/course-7.svg',
+    ],
+    // Destinations are unresolved in this isolated replay fixture. Keep them
+    // centralized so production integration can replace them without touching templates.
+    'links' => [
+        'document' => '#',
+        'open-campus' => '#',
+        'campus' => '#',
+        'numbers' => '#',
+        'instagram' => '#',
+        'line' => '#',
+    ],
+];

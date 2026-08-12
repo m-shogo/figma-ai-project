@@ -21,6 +21,11 @@ class HumanReviewDashboardBuildTests(unittest.TestCase):
             self.assertTrue((site / "ref-001/latest/review/review-assist.js").is_file())
             self.assertTrue((site / "ref-001/latest/review/review-assist.css").is_file())
             self.assertTrue((site / "ref-001/latest/preview/index.html").is_file())
+            self.assertTrue((site / "ref-001/latest/preview/human-review-repair.css").is_file())
+            self.assertTrue((site / "ref-001/latest/preview/assets/images/dummy/image-pc.svg").is_file())
+            self.assertTrue((site / "ref-001/latest/preview/assets/images/dummy/image-sp.svg").is_file())
+            self.assertTrue((site / "ref-001/latest/preview/assets/icons/document.svg").is_file())
+            self.assertTrue((site / "ref-001/latest/preview/assets/icons/course-7.svg").is_file())
             self.assertTrue((site / "ref-001/runs/run-2/review/index.html").is_file())
             self.assertTrue((site / "ref-001/runs/run-2/review/review-assist.js").is_file())
             self.assertTrue((site / "ref-001/runs/run-2/preview/index.html").is_file())
@@ -60,6 +65,26 @@ class HumanReviewDashboardBuildTests(unittest.TestCase):
             self.assertIn("data-ref001-page", preview)
             self.assertNotIn("Human Visual Review", preview)
             self.assertIn("Automated Final Preview", preview)
+            self.assertIn("human-review-repair.css", preview)
+
+    def test_preview_uses_swappable_pc_sp_images_focused_svg_assets_and_anchor_ctas(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            site = builder.build_site(output=Path(directory) / "site")
+            preview = (site / "ref-001/latest/preview/index.html").read_text(encoding="utf-8")
+            self.assertIn('<picture class="ref-picture', preview)
+            self.assertIn('media="(max-width:767px)"', preview)
+            self.assertIn('data-asset-slot="main-visual-left"', preview)
+            self.assertIn('assets/images/dummy/image-pc.svg', preview)
+            self.assertIn('assets/images/dummy/image-sp.svg', preview)
+            self.assertIn('assets/icons/document.svg', preview)
+            self.assertIn('assets/icons/open-campus.svg', preview)
+            self.assertIn('assets/icons/course-1.svg', preview)
+            self.assertIn('assets/icons/course-7.svg', preview)
+            self.assertIn('<a href="#" class="ref-action', preview)
+            self.assertNotIn('>▣<', preview)
+            self.assertNotIn('>⚑<', preview)
+            self.assertNotIn('data-icon=', preview)
+            self.assertNotIn('fontawesome', preview.lower())
 
     def test_dashboard_uses_live_figma_embed_and_browser_local_feedback(self) -> None:
         app = (ROOT / "review-dashboard/app/app.js").read_text(encoding="utf-8")

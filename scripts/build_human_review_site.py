@@ -16,7 +16,8 @@ DEFAULT_MANIFEST = ROOT / "review-dashboard" / "manifests" / "ref001-run-2.json"
 APP_DIR = ROOT / "review-dashboard" / "app"
 THEME_DIR = ROOT / "experiments" / "ref001-blind-clean-20260812" / "implementation" / "theme"
 PREVIEW_PHP = THEME_DIR / "preview.php"
-PREVIEW_CSS = ["style.css", "responsive-continuity.css", "visual-repair.css"]
+PREVIEW_CSS = ["style.css", "responsive-continuity.css", "visual-repair.css", "human-review-repair.css"]
+PREVIEW_ASSETS = THEME_DIR / "assets"
 
 
 class ReviewBuildError(RuntimeError):
@@ -89,6 +90,9 @@ def write_preview(destination: Path, html: str) -> None:
     (destination / "index.html").write_text(html, encoding="utf-8")
     for name in PREVIEW_CSS:
         shutil.copy2(require_file(THEME_DIR / name, name), destination / name)
+    if not PREVIEW_ASSETS.is_dir():
+        raise ReviewBuildError(f"missing preview assets directory: {PREVIEW_ASSETS}")
+    shutil.copytree(PREVIEW_ASSETS, destination / "assets", dirs_exist_ok=True)
 
 
 def copy_app(destination: Path) -> None:
