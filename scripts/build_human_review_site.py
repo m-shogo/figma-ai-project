@@ -18,6 +18,7 @@ THEME_DIR = ROOT / "experiments" / "ref001-blind-clean-20260812" / "implementati
 PREVIEW_PHP = THEME_DIR / "preview.php"
 PREVIEW_CSS = ["style.css", "responsive-continuity.css", "visual-repair.css", "human-review-repair.css"]
 PREVIEW_ASSETS = THEME_DIR / "assets"
+REF001_RENDERED_ASSETS = ROOT / "implementation" / "theme" / "assets" / "images" / "ref001" / "rendered"
 
 
 class ReviewBuildError(RuntimeError):
@@ -93,6 +94,16 @@ def write_preview(destination: Path, html: str) -> None:
     if not PREVIEW_ASSETS.is_dir():
         raise ReviewBuildError(f"missing preview assets directory: {PREVIEW_ASSETS}")
     shutil.copytree(PREVIEW_ASSETS, destination / "assets", dirs_exist_ok=True)
+
+    # Rendered Figma composites are normalized outside the isolated replay fixture
+    # so they have one durable repository location. Merge them into the static
+    # preview's normal theme-relative asset path without duplicating source bytes.
+    if REF001_RENDERED_ASSETS.is_dir():
+        shutil.copytree(
+            REF001_RENDERED_ASSETS,
+            destination / "assets" / "images" / "ref001" / "rendered",
+            dirs_exist_ok=True,
+        )
 
 
 def copy_app(destination: Path) -> None:
@@ -202,7 +213,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def main() -> int:
-    args = parse_args()
+    args = parser().parse_args()
     try:
         output = build_site(manifest_path=args.manifest.resolve(), output=args.output)
     except ReviewBuildError as exc:
