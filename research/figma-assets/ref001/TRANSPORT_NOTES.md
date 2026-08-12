@@ -101,6 +101,8 @@ Rules for future runs:
 6. **Report progress by completed durable outcomes.** Exported bytes, temporary URLs, local reconstruction, or queued Drive tasks are intermediate states. Count an asset only when durable Git bytes exist and read-back validation passes.
 7. **Separate exploration from production work.** If an experiment is worth trying, keep the existing path untouched and run the experiment in a reversible side lane. Do not let exploration block the primary deliverable.
 8. **For REF-001 specifically, finish raster materialization before unrelated roadmap work.** Do not switch to broader learning, Run 3, or unrelated cleanup while the 32-asset inventory is incomplete.
+9. **Re-evaluate after meaningful capability changes, not by habit.** If Figma, ChatGPT, GitHub, Drive, the MCP runtime, or the bridge gains a new capability that could materially improve fidelity, throughput, or maintainability, it is valid to revisit the transport design. Treat this as a fresh bounded comparison, not as permission to silently replace the proven lane.
+10. **A capability re-evaluation must preserve the current winner.** Keep the established path operational, state the new idea before using it for production, test one representative asset, compare measurable results, and switch only when the new path clearly wins without reducing fidelity or safety.
 
 ## REF-001 lessons
 
