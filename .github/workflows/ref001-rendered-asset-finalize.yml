@@ -1,0 +1,76 @@
+name: REF001 Rendered Asset Finalize
+
+on:
+  push:
+    branches:
+      - agent/figma-plugin-rendered-asset-transfer
+    paths:
+      - '.github/workflows/ref001-rendered-asset-finalize.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Materialize if needed
+        run: |
+          set -euo pipefail
+          asset='research/figma-assets/ref001/node-21384-8173.png'
+          manifest="${asset}.asset.json"
+          if test -f "$asset" && test -f "$manifest"; then
+            echo 'durable asset already exists; validating instead of rewriting'
+          else
+            test -d tmp/ref001-plugin-asset/chunks
+            python scripts/materialize_figma_rendered_asset.py \
+              --chunk-dir tmp/ref001-plugin-asset/chunks \
+              --output "$asset" \
+              --file-key ZYTdtw4wCgkcBy2cVnhxVI \
+              --node-id 21384:8173 \
+              --logical-name ref001-rendered-node-21384-8173 \
+              --expected-format png \
+              --min-bytes 100000
+          fi
+
+      - name: Validate durable asset before cleanup
+        run: |
+          test -s research/figma-assets/ref001/node-21384-8173.png
+          test -s research/figma-assets/ref001/node-21384-8173.png.asset.json
+          python scripts/validate_figma_asset_manifests.py
+          python scripts/validate_no_figma_mcp_asset_urls.py
+
+      - name: Remove all branch-only staging
+        run: |
+          rm -rf tmp/ref001-plugin-asset
+          rm -f .github/workflows/ref001-rendered-asset-materialize.yml
+          rm -f .github/workflows/ref001-rendered-asset-finalize.yml
+
+      - name: Validate final tree
+        run: |
+          python scripts/validate_no_figma_asset_staging.py
+          python scripts/validate_no_figma_mcp_asset_urls.py
+          python scripts/validate_figma_asset_manifests.py
+          python -m unittest tests.test_ingest_figma_mcp_asset tests.test_materialize_figma_rendered_asset tests.test_validate_no_figma_asset_staging tests.test_final_tree_figma_asset_staging
+          git diff --check
+
+      - name: Commit finalized tree
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          if git diff --cached --quiet; then
+            echo 'final tree already materialized and clean'
+          else
+            git commit -m 'Finalize durable REF-001 rendered asset transfer'
+            git push
+          fi
