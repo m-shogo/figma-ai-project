@@ -1,20 +1,58 @@
 # Update Radar — Latest Official Source Scan
 
-Generated: `2026-08-11T04:41:43+00:00`
+Generated: `2026-08-12T05:04:35+00:00`
 
 Active lanes: ACCESSIBILITY, CLAUDE_CODE, CODEX, CURSOR, DESIGN_SYSTEMS, FIGMA, MCP, WEB_PLATFORM, WORDPRESS_ACF
 
 ## Summary
 
-- Sources checked: 20
-- Changed since previous snapshot: 0
-- First observations: 17
+- Sources checked: 27
+- Changed since previous snapshot: 5
+- First observations: 7
 - Fetch errors: 3
-- RETEST candidates: none
+- RETEST candidates: ACCESSIBILITY, AGENT_CONTEXT, ANIMATION, ASSET_FIDELITY, COLOR_GRADIENT, CSS_RESET, FIGMA_LAYOUT_GENERATION, FIGMA_MCP, INPUT_CAPABILITY, LAYOUT, PARALLEL_EXECUTION, SCROLL
 
 ## Changed sources
 
-No previously-known source fingerprint changed.
+### figma-release-notes
+
+- Lane: `FIGMA`
+- Latest title: Figma product news and release notes
+- Impacts: FIGMA_STRUCTURE, FIGMA_TO_CODE, CODE_TO_FIGMA, DESIGN_HANDOFF, VISUAL_FIDELITY
+- RETEST: INPUT_CAPABILITY, ANIMATION, LAYOUT, FIGMA_LAYOUT_GENERATION, ASSET_FIDELITY, COLOR_GRADIENT, ACCESSIBILITY, FIGMA_MCP, AGENT_CONTEXT
+- Source: https://www.figma.com/release-notes/
+
+### claude-code-releases
+
+- Lane: `CLAUDE_CODE`
+- Latest title: v2.1.228
+- Impacts: AGENT_CAPABILITY, MCP, PARALLEL_EXECUTION, CONTEXT_HANDLING
+- RETEST: CSS_RESET, INPUT_CAPABILITY, SCROLL, ASSET_FIDELITY, COLOR_GRADIENT, ACCESSIBILITY, FIGMA_MCP, AGENT_CONTEXT, PARALLEL_EXECUTION
+- Source: https://api.github.com/repos/anthropics/claude-code/releases?per_page=12
+
+### claude-code-feed
+
+- Lane: `CLAUDE_CODE`
+- Latest title: Claude Code v2.1.228
+- Impacts: AGENT_CAPABILITY, MCP, CONTEXT_HANDLING
+- RETEST: CSS_RESET, INPUT_CAPABILITY, SCROLL, ASSET_FIDELITY, COLOR_GRADIENT, ACCESSIBILITY, FIGMA_MCP, AGENT_CONTEXT, PARALLEL_EXECUTION
+- Source: https://raw.githubusercontent.com/anthropics/claude-code/main/feed.xml
+
+### web-features-releases
+
+- Lane: `WEB_PLATFORM`
+- Latest title: web-features@next
+- Impacts: CSS, WEB_PLATFORM, BROWSER_SUPPORT, FEATURE_ADOPTION
+- RETEST: CSS_RESET, LAYOUT, ASSET_FIDELITY, COLOR_GRADIENT, ACCESSIBILITY, AGENT_CONTEXT
+- Source: https://api.github.com/repos/web-platform-dx/web-features/releases?per_page=12
+
+### mdn-browser-compat-data-releases
+
+- Lane: `WEB_PLATFORM`
+- Latest title: @mdn/browser-compat-data@next
+- Impacts: CSS, BROWSER_SUPPORT, FEATURE_DETECTION
+- RETEST: CSS_RESET, ASSET_FIDELITY, AGENT_CONTEXT
+- Source: https://api.github.com/repos/mdn/browser-compat-data/releases?per_page=12
 
 ## Fetch errors
 
