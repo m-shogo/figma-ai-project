@@ -83,6 +83,27 @@ The probe intentionally emits:
 
 because a CLI capability check cannot prove browser interaction that never happened.
 
+## REF-001 execution order
+
+For REF-001, use the generic runtime capability probe first, then the REF-001-specific import-readiness probe:
+
+```bash
+python scripts/probe_wordpress_acf_runtime.py \
+  --wp-path /path/to/wordpress \
+  --require-runtime-ready
+
+python scripts/probe_ref001_acf_runtime.py \
+  --wp-path /path/to/wordpress \
+  --require-ready
+```
+
+These probes intentionally answer different questions:
+
+- `probe_wordpress_acf_runtime.py` verifies the supplied runtime can bootstrap WordPress/ACF, identifies the active theme and ACF edition/version, and confirms an administrator exists for a later browser smoke.
+- `probe_ref001_acf_runtime.py` verifies the REF-001 deterministic bundle can use the installed ACF JSON CLI path and, only with explicit disposable-runtime acknowledgement, can perform the separate CLI import/readback smoke.
+
+Neither probe upgrades `admin_ui_smoke_executed` to true. Browser `ADMIN_UI_SMOKE_PASS` remains a separate evidence step.
+
 ## Required next step for `ADMIN_UI_SMOKE_PASS`
 
 When the actual target runtime and credentials are available, the browser smoke must use that target and the deterministic import bundle for the run. At minimum, evidence must show:
