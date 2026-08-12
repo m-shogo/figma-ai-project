@@ -58,7 +58,10 @@ jobs:
         run: python scripts/validate_no_figma_mcp_asset_urls.py
 
       - name: Validate durable Figma asset manifests when present
-        run: python scripts/validate_figma_asset_manifests.py
+        run: python scripts/validate_asset_manifests.py
+
+      - name: Reject transient Figma asset staging
+        run: python scripts/validate_no_figma_asset_staging.py
 
       - name: Upload review backup artifact
         uses: actions/upload-artifact@v5
