@@ -213,7 +213,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def main() -> int:
-    args = parser().parse_args()
+    args = parse_args()
     try:
         output = build_site(manifest_path=args.manifest.resolve(), output=args.output)
     except ReviewBuildError as exc:
