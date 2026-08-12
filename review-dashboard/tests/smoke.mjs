@@ -44,13 +44,11 @@ try {
   invariant(initialFigma?.startsWith('https://embed.figma.com/design/'), 'live Figma embed URL missing');
   invariant(initialFigma?.includes('node-id=21384-8173'), 'initial Figma root node mismatch');
 
-  // 1 = green. Green auto-advance must move PC -> SP for the same section.
   await page.keyboard.press('1');
   await waitForProgress(page, '1 / 26確認済み');
   await waitForLabel(page, 'Full Page / SP');
   invariant(await page.locator('#web-viewport-label').textContent() === '375px', 'green auto-advance did not switch PC -> SP');
 
-  // 2 = yellow. Differences stay put so a human can add a short comment.
   await page.keyboard.press('2');
   await waitForProgress(page, '2 / 26確認済み');
   await waitForLabel(page, 'Full Page / SP');
@@ -68,13 +66,11 @@ try {
   // Shortcuts are intentionally disabled while typing in text fields. Move focus back to review chrome first.
   await page.locator('#feedback-title').click();
 
-  // Arrow shortcuts traverse section-major PC/SP order without mutating feedback.
   await page.keyboard.press('ArrowRight');
   await waitForLabel(page, 'Header / PC');
   await page.keyboard.press('ArrowLeft');
   await waitForLabel(page, 'Full Page / SP');
 
-  // N / button goes to the next unreviewed item.
   await page.keyboard.press('n');
   await waitForLabel(page, 'Header / PC');
   await page.keyboard.press('u');
@@ -84,7 +80,6 @@ try {
   await page.waitForTimeout(50);
   invariant(await page.locator('[data-section="full-page"]').isVisible(), 'unreviewed-only filter did not restore section');
 
-  // P/S viewport shortcuts keep the current section.
   await page.keyboard.press('s');
   await waitForLabel(page, 'Header / SP');
   await page.keyboard.press('p');
@@ -122,7 +117,6 @@ try {
   invariant(clipboard.includes('余白'), 'all-feedback category missing');
   invariant(clipboard.includes('smoke: SPの余白を確認'), 'all-feedback comment missing');
 
-  // Bulk-green only fills genuinely empty items and must preserve yellow/red/comments.
   page.once('dialog', async (dialog) => dialog.accept());
   await page.locator('#bulk-green').click();
   await page.waitForLoadState('domcontentloaded');
@@ -142,7 +136,8 @@ try {
 
   await page.setViewportSize({ width: 390, height: 844 });
   await page.reload({ waitUntil: 'domcontentloaded' });
-  await page.waitForSelector('#section-nav button');
+  // On mobile the section rail is intentionally collapsed; only DOM attachment is required before opening it.
+  await page.waitForSelector('#section-nav button', { state: 'attached' });
   await page.locator('[data-mobile-panel="figma"]').click();
   invariant(await page.locator('#figma-panel').evaluate((node) => node.classList.contains('is-mobile-active')), 'mobile Figma tab did not activate');
   await page.locator('[data-mobile-panel="web"]').click();
