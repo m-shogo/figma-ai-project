@@ -1,0 +1,207 @@
+{
+  "schema_version": 1,
+  "reference_id": "REF-001",
+  "run_id": "RUN-REF001-BLIND-CLEAN-20260812-A",
+  "run_slug": "run-2",
+  "run_label": "Run 2 — Automated Final",
+  "human_feedback_status": "PENDING",
+  "human_review_status": "PENDING",
+  "figma": {
+    "file_key": "ZYTdtw4wCgkcBy2cVnhxVI",
+    "file_name": "sample",
+    "pc_root": "21384:8173",
+    "sp_root": "21376:4401",
+    "design_url": "https://www.figma.com/design/ZYTdtw4wCgkcBy2cVnhxVI/sample",
+    "embed_host": "figma-ai-project-review"
+  },
+  "viewports": {
+    "pc": {
+      "label": "PC 1380",
+      "width": 1380,
+      "web_height": 7714,
+      "figma_root_height": 7714,
+      "figma_device_chrome_px": 0,
+      "web_capture_source": "experiments/ref001-blind-clean-20260812/evidence/final/latest/first-pass-1380.png",
+      "figma_capture_source": "research/figma-assets/ref001/node-21384-8173.png"
+    },
+    "sp": {
+      "label": "SP 375",
+      "width": 375,
+      "web_height": 10777,
+      "figma_root_height": 10817,
+      "figma_device_chrome_px": 40,
+      "web_capture_source": "experiments/ref001-blind-clean-20260812/evidence/final/latest/first-pass-375.png",
+      "figma_capture_source": "research/figma-assets/ref001/node-21376-4401.png"
+    }
+  },
+  "metrics": {
+    "first_pass_fidelity": 57,
+    "automated_final_fidelity": 67,
+    "post_freeze_repair_rounds": 2,
+    "pc_section_geometry_delta_px": 0,
+    "sp_section_geometry_delta_px": 0,
+    "runtime_failures": 0,
+    "human_editability": 10,
+    "owner_blocking_questions": 0,
+    "interaction_inventions": 0,
+    "cms_inventions": 0
+  },
+  "sections": [
+    {
+      "id": "full-page",
+      "label": "Full Page",
+      "web_selector": null,
+      "web_index": 0,
+      "figma_pc_node": "21384:8173",
+      "figma_sp_node": "21376:4401",
+      "geometry": {
+        "pc": {"top": 0, "height": 7714},
+        "sp": {"top": 0, "height": 10777}
+      }
+    },
+    {
+      "id": "header",
+      "label": "Header",
+      "web_selector": ".ref-header",
+      "web_index": 0,
+      "figma_pc_node": "21378:8066",
+      "figma_sp_node": "21376:4918",
+      "geometry": {
+        "pc": {"top": 0, "height": 94},
+        "sp": {"top": 0, "height": 67}
+      }
+    },
+    {
+      "id": "main-visual",
+      "label": "Main Visual",
+      "web_selector": ".ref-mv",
+      "web_index": 0,
+      "figma_pc_node": "21378:8032",
+      "figma_sp_node": "21376:4886",
+      "geometry": {
+        "pc": {"top": 94, "height": 714},
+        "sp": {"top": 67, "height": 724}
+      }
+    },
+    {
+      "id": "reason",
+      "label": "Reason",
+      "web_selector": ".ref-reason",
+      "web_index": 0,
+      "figma_pc_node": "21378:7999",
+      "figma_sp_node": "21376:4852",
+      "geometry": {
+        "pc": {"top": 886, "height": 559},
+        "sp": {"top": 847, "height": 1295}
+      }
+    },
+    {
+      "id": "education",
+      "label": "Education",
+      "web_selector": ".ref-education",
+      "web_index": 0,
+      "figma_pc_node": "21378:7868",
+      "figma_sp_node": "21376:4720",
+      "geometry": {
+        "pc": {"top": 1541, "height": 684},
+        "sp": {"top": 2198, "height": 1534}
+      }
+    },
+    {
+      "id": "shared-cta-1",
+      "label": "Shared CTA 1",
+      "web_selector": ".ref-shared-cta",
+      "web_index": 0,
+      "figma_pc_node": "21378:7867",
+      "figma_sp_node": "21376:4719",
+      "geometry": {
+        "pc": {"top": 2225, "height": 328},
+        "sp": {"top": 3732, "height": 350}
+      }
+    },
+    {
+      "id": "student-voice",
+      "label": "Student Voice",
+      "web_selector": ".ref-voice",
+      "web_index": 0,
+      "figma_pc_node": "21378:7766",
+      "figma_sp_node": "21376:4650",
+      "geometry": {
+        "pc": {"top": 2649, "height": 1393},
+        "sp": {"top": 4138, "height": 1758}
+      }
+    },
+    {
+      "id": "messages",
+      "label": "Messages",
+      "web_selector": ".ref-messages",
+      "web_index": 0,
+      "figma_pc_node": "21378:7746",
+      "figma_sp_node": "21376:4629",
+      "geometry": {
+        "pc": {"top": 4225, "height": 440},
+        "sp": {"top": 5952, "height": 538}
+      }
+    },
+    {
+      "id": "shared-cta-2",
+      "label": "Shared CTA 2",
+      "web_selector": ".ref-shared-cta",
+      "web_index": 1,
+      "figma_pc_node": "21378:7730",
+      "figma_sp_node": "21376:4628",
+      "geometry": {
+        "pc": {"top": 4783, "height": 328},
+        "sp": {"top": 6546, "height": 350}
+      }
+    },
+    {
+      "id": "courses",
+      "label": "Courses",
+      "web_selector": ".ref-courses",
+      "web_index": 0,
+      "figma_pc_node": "21378:7505",
+      "figma_sp_node": "21376:4403",
+      "geometry": {
+        "pc": {"top": 5111, "height": 1514},
+        "sp": {"top": 6896, "height": 2515}
+      }
+    },
+    {
+      "id": "links",
+      "label": "Links",
+      "web_selector": ".ref-links",
+      "web_index": 0,
+      "figma_pc_node": "21378:7458",
+      "figma_sp_node": "21376:4919",
+      "geometry": {
+        "pc": {"top": 6697, "height": 260},
+        "sp": {"top": 9467, "height": 343}
+      }
+    },
+    {
+      "id": "cta-value",
+      "label": "CTA Value",
+      "web_selector": ".ref-cta-value",
+      "web_index": 0,
+      "figma_pc_node": "21378:7481",
+      "figma_sp_node": "21376:4942",
+      "geometry": {
+        "pc": {"top": 7029, "height": 328},
+        "sp": {"top": 9866, "height": 396}
+      }
+    },
+    {
+      "id": "footer",
+      "label": "Footer",
+      "web_selector": ".ref-footer",
+      "web_index": 0,
+      "figma_pc_node": "21378:7457",
+      "figma_sp_node": "21376:4402",
+      "geometry": {
+        "pc": {"top": 7357, "height": 357},
+        "sp": {"top": 10262, "height": 515}
+      }
+    }
+  ]
+}

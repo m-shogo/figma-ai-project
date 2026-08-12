@@ -1,0 +1,138 @@
+name: Publish Human Review Dashboard
+
+on:
+  push:
+    branches:
+      - so
+    paths:
+      - 'review-dashboard/**'
+      - 'scripts/build_human_review_site.py'
+      - 'scripts/validate_human_review_site.py'
+      - 'tests/test_human_review_dashboard.py'
+      - 'experiments/ref001-blind-clean-20260812/implementation/**'
+      - 'experiments/ref001-blind-clean-20260812/evidence/final/latest/**'
+      - 'research/figma-assets/ref001/**'
+      - '.github/workflows/publish-human-review.yml'
+  pull_request:
+    paths:
+      - 'review-dashboard/**'
+      - 'scripts/build_human_review_site.py'
+      - 'scripts/validate_human_review_site.py'
+      - 'tests/test_human_review_dashboard.py'
+      - 'experiments/ref001-blind-clean-20260812/implementation/**'
+      - 'experiments/ref001-blind-clean-20260812/evidence/final/latest/**'
+      - 'research/figma-assets/ref001/**'
+      - '.github/workflows/publish-human-review.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: human-review-pages-${{ github.event_name == 'pull_request' && github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Show runtime versions
+        run: |
+          python --version
+          php --version
+          node --version
+
+      - name: Build static Review Dashboard and Artifact Preview
+        run: python scripts/build_human_review_site.py --output _site
+
+      - name: Validate generated review site
+        run: python scripts/validate_human_review_site.py _site
+
+      - name: Run focused dashboard tests
+        run: python -m unittest tests.test_human_review_dashboard
+
+      - name: Reject short-lived Figma asset locators
+        run: python scripts/validate_no_figma_mcp_asset_urls.py
+
+      - name: Validate durable Figma asset manifests when present
+        run: python scripts/validate_asset_manifests.py
+
+      - name: Reject transient Figma asset staging
+        run: python scripts/validate_no_figma_asset_staging.py
+
+      - name: Install browser smoke runtime
+        run: |
+          mkdir -p /tmp/ref001-review-playwright
+          cd /tmp/ref001-review-playwright
+          npm init -y >/dev/null 2>&1
+          npm install playwright@1.54.2 >/dev/null
+          npx playwright install --with-deps chromium >/dev/null
+
+      - name: Browser smoke — PC, SP, sections, persistence, copy, mobile
+        run: |
+          python -m http.server 8877 --directory _site >/tmp/ref001-review-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
+          for i in $(seq 1 20); do
+            if curl -fsS http://127.0.0.1:8877/ref-001/latest/review/ >/dev/null; then
+              break
+            fi
+            sleep 0.5
+          done
+          curl -fsS http://127.0.0.1:8877/ref-001/latest/review/ >/dev/null || { cat /tmp/ref001-review-http.log; exit 1; }
+          cp review-dashboard/tests/smoke.mjs /tmp/ref001-review-playwright/smoke.mjs
+          cd /tmp/ref001-review-playwright
+          REVIEW_URL='http://127.0.0.1:8877/ref-001/latest/review/' \
+          REVIEW_SMOKE_DIR='/tmp/ref001-review-smoke' \
+          node smoke.mjs
+
+      - name: Upload browser smoke screenshots
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: ref001-human-review-smoke-${{ github.sha }}
+          path: /tmp/ref001-review-smoke
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Upload review backup artifact
+        uses: actions/upload-artifact@v5
+        with:
+          name: ref001-human-review-${{ github.sha }}
+          path: _site
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Upload GitHub Pages artifact
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+
+  deploy:
+    if: github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      actions: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v6
+        with:
+          enablement: true
+
+      - name: Deploy Human Review Dashboard
+        id: deployment
+        uses: actions/deploy-pages@v5

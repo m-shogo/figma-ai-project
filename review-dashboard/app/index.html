@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>REF-001 Human Review</title>
+  <link rel="stylesheet" href="./app.css">
+</head>
+<body data-manifest="./manifest.json">
+  <header class="review-header">
+    <div class="review-header__identity">
+      <p class="eyebrow">Human Visual Review</p>
+      <h1 id="reference-title">REF-001</h1>
+      <p id="run-label" class="run-label">Loading…</p>
+    </div>
+    <div class="review-header__actions">
+      <label class="field field--compact">
+        <span>Run</span>
+        <select id="run-select" aria-label="Run selector">
+          <option value="current">Current run</option>
+        </select>
+      </label>
+      <a id="preview-link" class="button button--primary" href="../preview/" target="_blank" rel="noopener">成果物だけ見る ↗</a>
+    </div>
+  </header>
+
+  <div class="review-toolbar" aria-label="Review controls">
+    <div class="segmented" id="viewport-switch" aria-label="Viewport">
+      <button type="button" data-viewport="pc" class="is-active">PC 1380</button>
+      <button type="button" data-viewport="sp">SP 375</button>
+    </div>
+    <div class="segmented" id="mode-switch" aria-label="Comparison mode">
+      <button type="button" data-mode="side-by-side" class="is-active">Side by Side</button>
+      <button type="button" data-mode="overlay">Overlay</button>
+      <button type="button" data-mode="web-only">Web Only</button>
+      <button type="button" data-mode="figma-only">Figma Only</button>
+    </div>
+    <span id="overlay-status" class="status-note" aria-live="polite"></span>
+  </div>
+
+  <main class="review-layout">
+    <aside class="section-rail" aria-label="Section navigation">
+      <div class="section-rail__head">
+        <span>Section</span>
+        <button id="section-menu-toggle" class="plain-button" type="button" aria-expanded="false">一覧</button>
+      </div>
+      <nav id="section-nav" class="section-nav"></nav>
+    </aside>
+
+    <section class="review-main">
+      <div class="mobile-panel-tabs" id="mobile-panel-tabs" aria-label="Mobile comparison panel">
+        <button type="button" data-mobile-panel="web" class="is-active">Web</button>
+        <button type="button" data-mobile-panel="figma">Figma</button>
+      </div>
+
+      <div id="normal-review" class="compare-grid">
+        <article id="web-panel" class="compare-panel compare-panel--web">
+          <header class="compare-panel__header">
+            <div>
+              <strong>LIVE WEB OUTPUT</strong>
+              <span>実際の成果物</span>
+            </div>
+            <span id="web-viewport-label" class="viewport-label">1380px</span>
+          </header>
+          <div id="web-stage" class="live-stage">
+            <div id="web-scale-box" class="live-stage__scale-box">
+              <iframe id="web-frame" title="REF-001 live Web preview" src="../preview/"></iframe>
+            </div>
+          </div>
+        </article>
+
+        <article id="figma-panel" class="compare-panel compare-panel--figma">
+          <header class="compare-panel__header">
+            <div>
+              <strong>FIGMA REFERENCE</strong>
+              <span>正解 — live Figma</span>
+            </div>
+            <span class="viewport-label">Source of truth</span>
+          </header>
+          <div class="figma-stage">
+            <iframe id="figma-frame" title="Live Figma reference" allowfullscreen></iframe>
+          </div>
+        </article>
+      </div>
+
+      <section id="overlay-review" class="overlay-review" hidden>
+        <header class="overlay-review__header">
+          <div>
+            <strong>PIXEL / OVERLAY REVIEW</strong>
+            <span>deterministic Web capture + Figma capture</span>
+          </div>
+          <div class="overlay-controls">
+            <label>Figma <input id="overlay-opacity" type="range" min="0" max="100" value="50" aria-label="Overlay opacity"> Web</label>
+            <button id="blink-toggle" class="button" type="button">Blink</button>
+          </div>
+        </header>
+        <div id="overlay-crop" class="overlay-crop">
+          <div id="overlay-canvas" class="overlay-canvas">
+            <img id="overlay-figma" alt="Figma deterministic capture">
+            <img id="overlay-web" alt="Web deterministic capture">
+          </div>
+        </div>
+        <p id="overlay-help" class="helper-text"></p>
+      </section>
+
+      <section class="feedback-card" aria-labelledby="feedback-title">
+        <div class="feedback-card__intro">
+          <div>
+            <p class="eyebrow">Human signal</p>
+            <h2 id="feedback-title">見た感じをそのまま教えてください</h2>
+          </div>
+          <p>理由は分からなくても大丈夫です。「何か違う」だけでも重要なフィードバックです。</p>
+        </div>
+
+        <div class="verdict-group" id="verdict-group" role="group" aria-label="判定">
+          <button type="button" data-verdict="almost_same">✅ ほぼ同じ</button>
+          <button type="button" data-verdict="slightly_different">🟡 少し違う</button>
+          <button type="button" data-verdict="clearly_different">🔴 明らかに違う</button>
+        </div>
+
+        <fieldset class="category-fieldset">
+          <legend>気になる種類 <span>任意・複数可</span></legend>
+          <div id="category-chips" class="category-chips"></div>
+        </fieldset>
+
+        <label class="comment-field">
+          <span>気になったところ <small>専門用語や数値は不要です</small></span>
+          <textarea id="feedback-comment" rows="4" placeholder="例：人物がFigmaより右に見える。見出しが少し細い気がする。"></textarea>
+        </label>
+
+        <div class="feedback-actions">
+          <span id="save-status" class="save-status" aria-live="polite">ブラウザ内に自動保存</span>
+          <div>
+            <button id="copy-current" class="button" type="button">このFBをコピー</button>
+            <button id="copy-all" class="button button--primary" type="button">全FBをコピー</button>
+          </div>
+        </div>
+      </section>
+
+      <details class="advanced-details">
+        <summary>Advanced / Automated QA</summary>
+        <dl id="metrics-list" class="metrics-list"></dl>
+        <p>Human Reviewは自動QAとは別です。この画面で実際に付けた評価だけをHuman Feedbackとして扱います。</p>
+      </details>
+    </section>
+  </main>
+
+  <footer class="review-footer">
+    <span>Human feedback: <strong id="human-feedback-status">PENDING</strong></span>
+    <span id="current-section-label">Full Page / PC</span>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+  <script src="./app.js" defer></script>
+</body>
+</html>
