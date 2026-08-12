@@ -31,6 +31,10 @@ return [
         'course-5' => 'assets/icons/course-5.svg',
         'course-6' => 'assets/icons/course-6.svg',
         'course-7' => 'assets/icons/course-7.svg',
+        'facebook' => 'assets/icons/facebook-outline.svg',
+        'youtube' => 'assets/icons/youtube-outline.svg',
+        'instagram' => 'assets/icons/instagram-outline.svg',
+        'line' => 'assets/icons/line-outline.svg',
     ],
     // Destinations are unresolved in this isolated replay fixture. Keep them
     // centralized so production integration can replace them without touching templates.
@@ -39,6 +43,8 @@ return [
         'open-campus' => '#',
         'campus' => '#',
         'numbers' => '#',
+        'facebook' => '#',
+        'youtube' => '#',
         'instagram' => '#',
         'line' => '#',
     ],
