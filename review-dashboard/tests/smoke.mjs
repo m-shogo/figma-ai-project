@@ -46,7 +46,7 @@ try {
   invariant((await page.locator('#current-section-label').textContent())?.includes('Student Voice / SP'), 'section status label failed');
 
   await page.locator('[data-verdict="slightly_different"]').click();
-  await page.locator('input[data-category][value="spacing"]').check();
+  await page.locator('label:has(input[data-category][value="spacing"]) span').click();
   await page.locator('#feedback-comment').fill('smoke: SPの余白を確認');
   await page.waitForTimeout(300);
   await page.reload({ waitUntil: 'domcontentloaded' });
