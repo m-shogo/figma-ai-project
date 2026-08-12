@@ -104,6 +104,22 @@ Rules for future runs:
 9. **Re-evaluate after meaningful capability changes, not by habit.** If Figma, ChatGPT, GitHub, Drive, the MCP runtime, or the bridge gains a new capability that could materially improve fidelity, throughput, or maintainability, it is valid to revisit the transport design. Treat this as a fresh bounded comparison, not as permission to silently replace the proven lane.
 10. **A capability re-evaluation must preserve the current winner.** Keep the established path operational, state the new idea before using it for production, test one representative asset, compare measurable results, and switch only when the new path clearly wins without reducing fidelity or safety.
 
+## Status-reporting gate — mandatory
+
+Before answering any user question such as `できた?`, `終わった?`, `どう?`, `5分経ったけど?`, or before saying that a task is waiting on the 5-minute trigger, re-check the live state instead of relying on remembered intermediate state.
+
+Mandatory checks for REF-001 raster status:
+
+1. **Drive task contents:** a task folder existing is not enough. Verify that both the image file and `manifest.json` exist in the task folder before calling it queued.
+2. **Git durable bytes:** verify the canonical target path exists on `agent/ref001-figma-raster-assets`. Do not infer delivery from a Drive folder, export success, or elapsed time.
+3. **PR / branch state:** re-read PR #87 or the current branch head before reporting completion counts.
+4. **Completion count:** derive the count from canonical Git assets / validator state, not from memory or stale PR prose.
+5. **Trigger semantics:** the 5-minute trigger only processes tasks that were already complete in `incoming`; elapsed time alone never advances an empty or incomplete task folder.
+6. **Tool availability:** never claim Figma, Google Drive, GitHub, or another connected tool is unavailable without first checking the live tool/connector state in the current turn.
+7. **No generic handoff fallback during active work:** do not tell the user to move chats or paste a handoff merely because execution became confusing. First inspect the current live tools and current repo/queue state.
+
+If any of these checks disagree, report the disagreement explicitly and treat the least-complete durable state as authoritative.
+
 ## REF-001 lessons
 
 - Final visible mask/group renders are the visual fixture authority, not arbitrary raw source photos.
