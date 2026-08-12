@@ -1,0 +1,96 @@
+name: REF001 Rendered Asset Materialize
+
+on:
+  push:
+    branches:
+      - agent/figma-plugin-rendered-asset-transfer
+    paths:
+      - '.github/workflows/ref001-rendered-asset-materialize.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Decode staged render and write durable lineage
+        run: |
+          set -euo pipefail
+          test -d tmp/ref001-plugin-asset/chunks
+          mapfile -t chunks < <(find tmp/ref001-plugin-asset/chunks -maxdepth 1 -type f -name '*.b64' | sort)
+          test "${#chunks[@]}" -gt 0
+          mkdir -p research/figma-assets/ref001
+          python - <<'PY'
+          from __future__ import annotations
+
+          import base64
+          import hashlib
+          import sys
+          from pathlib import Path
+
+          ROOT = Path.cwd()
+          sys.path.insert(0, str(ROOT / 'scripts'))
+          import ingest_figma_mcp_asset as intake
+
+          chunks = sorted((ROOT / 'tmp/ref001-plugin-asset/chunks').glob('*.b64'))
+          if not chunks:
+              raise SystemExit('no staged chunks')
+
+          encoded = ''.join(path.read_text(encoding='ascii').strip() for path in chunks)
+          try:
+              payload = base64.b64decode(encoded, validate=True)
+          except Exception as exc:
+              raise SystemExit(f'invalid staged base64: {type(exc).__name__}') from exc
+
+          detected = intake.sniff_format(payload, 'image/png')
+          if detected != 'png':
+              raise SystemExit(f'expected png, detected {detected or "unknown"}')
+          if len(payload) < 100_000:
+              raise SystemExit(f'rendered asset unexpectedly small: {len(payload)} bytes')
+
+          output = ROOT / 'research/figma-assets/ref001/node-21384-8173.png'
+          output.write_bytes(payload)
+          digest = hashlib.sha256(payload).hexdigest()
+          result = intake.DownloadResult(
+              sha256=digest,
+              size_bytes=len(payload),
+              content_type='image/png',
+              detected_format='png',
+          )
+          manifest = intake.build_manifest(
+              output=output,
+              result=result,
+              file_key='ZYTdtw4wCgkcBy2cVnhxVI',
+              node_id='21384:8173',
+              logical_name='ref001-rendered-node-21384-8173',
+          )
+          manifest.setdefault('lineage', {})['materialization'] = 'PLUGIN_RENDERED_BASE64_STAGING'
+          manifest['lineage']['staging_committed_in_final_tree'] = False
+          intake.write_manifest(output.with_name(output.name + '.asset.json'), manifest)
+          print(f'materialized bytes={len(payload)} sha256={digest}')
+          PY
+
+      - name: Remove temporary staging and workflow
+        run: |
+          rm -rf tmp/ref001-plugin-asset
+          rm -f .github/workflows/ref001-rendered-asset-materialize.yml
+
+      - name: Validate no ephemeral URL signature and asset integrity
+        run: |
+          python scripts/validate_no_figma_mcp_asset_urls.py
+          python scripts/validate_figma_asset_manifests.py
+          git diff --check
+
+      - name: Commit durable rendered asset only
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Materialize REF-001 rendered Figma asset'
+          git push
