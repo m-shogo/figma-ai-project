@@ -18,8 +18,11 @@ class HumanReviewDashboardBuildTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             site = builder.build_site(output=Path(directory) / "site")
             self.assertTrue((site / "ref-001/latest/review/index.html").is_file())
+            self.assertTrue((site / "ref-001/latest/review/review-assist.js").is_file())
+            self.assertTrue((site / "ref-001/latest/review/review-assist.css").is_file())
             self.assertTrue((site / "ref-001/latest/preview/index.html").is_file())
             self.assertTrue((site / "ref-001/runs/run-2/review/index.html").is_file())
+            self.assertTrue((site / "ref-001/runs/run-2/review/review-assist.js").is_file())
             self.assertTrue((site / "ref-001/runs/run-2/preview/index.html").is_file())
             self.assertTrue((site / ".nojekyll").is_file())
             self.assertEqual([], validator.validate_site(site))
@@ -67,6 +70,33 @@ class HumanReviewDashboardBuildTests(unittest.TestCase):
         self.assertIn('data-mode="overlay"', html)
         self.assertIn('data-mobile-panel="web"', html)
         self.assertIn("全FBをコピー", html)
+
+    def test_dashboard_has_zero_friction_review_layer(self) -> None:
+        assist = (ROOT / "review-dashboard/app/review-assist.js").read_text(encoding="utf-8")
+        html = (ROOT / "review-dashboard/app/index.html").read_text(encoding="utf-8")
+        css = (ROOT / "review-dashboard/app/review-assist.css").read_text(encoding="utf-8")
+        for needle in (
+            "navigateNextUnreviewed",
+            "bulkMarkCurrentViewportGreen",
+            "ArrowRight",
+            "almost_same",
+            "issues/new",
+            "Review progress",
+        ):
+            self.assertIn(needle, assist)
+        for needle in (
+            'id="review-progress"',
+            'id="next-unreviewed"',
+            'id="auto-advance-green"',
+            'id="unreviewed-only"',
+            'id="bulk-green"',
+            'id="create-issue"',
+            'data-issue-repository="m-shogo/figma-ai-project"',
+            'src="./review-assist.js"',
+        ):
+            self.assertIn(needle, html)
+        self.assertIn("has-difference", css)
+        self.assertIn("compact-toggle", css)
 
 
 if __name__ == "__main__":

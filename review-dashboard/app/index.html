@@ -6,8 +6,9 @@
   <meta name="robots" content="noindex,nofollow">
   <title>REF-001 Human Review</title>
   <link rel="stylesheet" href="./app.css">
+  <link rel="stylesheet" href="./review-assist.css">
 </head>
-<body data-manifest="./manifest.json">
+<body data-manifest="./manifest.json" data-issue-repository="m-shogo/figma-ai-project">
   <header class="review-header">
     <div class="review-header__identity">
       <p class="eyebrow">Human Visual Review</p>
@@ -36,6 +37,20 @@
       <button type="button" data-mode="web-only">Web Only</button>
       <button type="button" data-mode="figma-only">Figma Only</button>
     </div>
+    <div class="review-progress" aria-label="Review progress">
+      <span id="review-progress-label">0 / 26確認済み</span>
+      <progress id="review-progress" max="26" value="0">0 / 26</progress>
+    </div>
+    <button id="next-unreviewed" class="compact-button" type="button">次の未確認</button>
+    <label class="compact-toggle" title="✅ ほぼ同じを選んだ時だけ次の未確認へ自動で進みます">
+      <input id="auto-advance-green" type="checkbox" checked>
+      <span>✅で自動送り</span>
+    </label>
+    <label class="compact-toggle">
+      <input id="unreviewed-only" type="checkbox">
+      <span>未確認だけ</span>
+    </label>
+    <button id="bulk-green" class="compact-button" type="button">このViewportの未入力を一括✅</button>
     <span id="overlay-status" class="status-note" aria-live="polite"></span>
   </div>
 
@@ -46,6 +61,7 @@
         <button id="section-menu-toggle" class="plain-button" type="button" aria-expanded="false">一覧</button>
       </div>
       <nav id="section-nav" class="section-nav"></nav>
+      <p class="shortcut-hint">1/2/3 判定 · ←/→ 移動 · P/S · N 未確認 · U 絞込</p>
     </aside>
 
     <section class="review-main">
@@ -114,9 +130,9 @@
         </div>
 
         <div class="verdict-group" id="verdict-group" role="group" aria-label="判定">
-          <button type="button" data-verdict="almost_same">✅ ほぼ同じ</button>
-          <button type="button" data-verdict="slightly_different">🟡 少し違う</button>
-          <button type="button" data-verdict="clearly_different">🔴 明らかに違う</button>
+          <button type="button" data-verdict="almost_same"><kbd>1</kbd> ✅ ほぼ同じ</button>
+          <button type="button" data-verdict="slightly_different"><kbd>2</kbd> 🟡 少し違う</button>
+          <button type="button" data-verdict="clearly_different"><kbd>3</kbd> 🔴 明らかに違う</button>
         </div>
 
         <fieldset class="category-fieldset">
@@ -133,7 +149,8 @@
           <span id="save-status" class="save-status" aria-live="polite">ブラウザ内に自動保存</span>
           <div>
             <button id="copy-current" class="button" type="button">このFBをコピー</button>
-            <button id="copy-all" class="button button--primary" type="button">全FBをコピー</button>
+            <button id="copy-all" class="button" type="button">全FBをコピー</button>
+            <a id="create-issue" class="button button--primary" target="_blank" rel="noopener" aria-disabled="true">修正依頼なし</a>
           </div>
         </div>
       </section>
@@ -153,5 +170,6 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
   <script src="./app.js" defer></script>
+  <script src="./review-assist.js" defer></script>
 </body>
 </html>

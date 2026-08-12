@@ -42,12 +42,16 @@ def validate_site(root: Path) -> list[str]:
         latest_review / "index.html",
         latest_review / "app.css",
         latest_review / "app.js",
+        latest_review / "review-assist.css",
+        latest_review / "review-assist.js",
         latest_review / "manifest.json",
         latest_preview / "index.html",
         latest_preview / "style.css",
         latest_preview / "responsive-continuity.css",
         latest_preview / "visual-repair.css",
         run_review / "index.html",
+        run_review / "review-assist.css",
+        run_review / "review-assist.js",
         run_review / "manifest.json",
         run_preview / "index.html",
     ]
@@ -104,15 +108,22 @@ def validate_site(root: Path) -> list[str]:
         errors.append("Artifact Preview must not include Human Review UI")
 
     app_js = text(latest_review / "app.js")
+    assist_js = text(latest_review / "review-assist.js")
     app_html = text(latest_review / "index.html")
-    for needle, message in [
-        ("embed.figma.com/design/", "live Figma embed missing"),
-        ("localStorage", "feedback persistence missing"),
-        ("navigator.clipboard", "Clipboard feedback copy missing"),
-        ("data-mode=\"overlay\"", "Overlay control missing"),
-        ("data-mobile-panel=\"web\"", "mobile Web/Figma panel switch missing"),
+    for needle, message, source in [
+        ("embed.figma.com/design/", "live Figma embed missing", app_js),
+        ("localStorage", "feedback persistence missing", app_js),
+        ("navigator.clipboard", "Clipboard feedback copy missing", app_js),
+        ('data-mode="overlay"', "Overlay control missing", app_html),
+        ('data-mobile-panel="web"', "mobile Web/Figma panel switch missing", app_html),
+        ('id="review-progress"', "review progress control missing", app_html),
+        ('id="next-unreviewed"', "next-unreviewed control missing", app_html),
+        ('id="create-issue"', "GitHub issue prefill control missing", app_html),
+        ("navigateNextUnreviewed", "zero-friction next-unreviewed behavior missing", assist_js),
+        ("bulkMarkCurrentViewportGreen", "safe viewport bulk-green behavior missing", assist_js),
+        ("issues/new", "GitHub issue prefill URL missing", assist_js),
+        ("ArrowRight", "keyboard navigation shortcut missing", assist_js),
     ]:
-        source = app_js if needle in {"embed.figma.com/design/", "localStorage", "navigator.clipboard"} else app_html
         if needle not in source:
             errors.append(message)
 

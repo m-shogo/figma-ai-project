@@ -93,7 +93,7 @@ def write_preview(destination: Path, html: str) -> None:
 
 def copy_app(destination: Path) -> None:
     destination.mkdir(parents=True, exist_ok=True)
-    for name in ("index.html", "app.css", "app.js"):
+    for name in ("index.html", "app.css", "app.js", "review-assist.css", "review-assist.js"):
         shutil.copy2(require_file(APP_DIR / name, f"dashboard {name}"), destination / name)
 
 
