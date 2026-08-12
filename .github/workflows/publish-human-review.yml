@@ -35,7 +35,7 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -44,6 +44,7 @@ jobs:
         run: |
           python --version
           php --version
+          node --version
 
       - name: Build static Review Dashboard and Artifact Preview
         run: python scripts/build_human_review_site.py --output _site
@@ -62,6 +63,41 @@ jobs:
 
       - name: Reject transient Figma asset staging
         run: python scripts/validate_no_figma_asset_staging.py
+
+      - name: Install browser smoke runtime
+        run: |
+          mkdir -p /tmp/ref001-review-playwright
+          cd /tmp/ref001-review-playwright
+          npm init -y >/dev/null 2>&1
+          npm install playwright@1.54.2 >/dev/null
+          npx playwright install --with-deps chromium >/dev/null
+
+      - name: Browser smoke — PC, SP, sections, persistence, copy, mobile
+        run: |
+          python -m http.server 8877 --directory _site >/tmp/ref001-review-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
+          for i in $(seq 1 20); do
+            if curl -fsS http://127.0.0.1:8877/ref-001/latest/review/ >/dev/null; then
+              break
+            fi
+            sleep 0.5
+          done
+          curl -fsS http://127.0.0.1:8877/ref-001/latest/review/ >/dev/null || { cat /tmp/ref001-review-http.log; exit 1; }
+          cp review-dashboard/tests/smoke.mjs /tmp/ref001-review-playwright/smoke.mjs
+          cd /tmp/ref001-review-playwright
+          REVIEW_URL='http://127.0.0.1:8877/ref-001/latest/review/' \
+          REVIEW_SMOKE_DIR='/tmp/ref001-review-smoke' \
+          node smoke.mjs
+
+      - name: Upload browser smoke screenshots
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: ref001-human-review-smoke-${{ github.sha }}
+          path: /tmp/ref001-review-smoke
+          if-no-files-found: warn
+          retention-days: 14
 
       - name: Upload review backup artifact
         uses: actions/upload-artifact@v5
