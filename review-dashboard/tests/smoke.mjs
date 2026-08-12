@@ -65,6 +65,9 @@ try {
   invariant(issueBody.includes('Full Page / SP'), 'issue prefill is missing actionable section');
   invariant(issueBody.includes('smoke: Full Page SPの余白を確認'), 'issue prefill is missing latest comment');
 
+  // Shortcuts are intentionally disabled while typing in text fields. Move focus back to review chrome first.
+  await page.locator('#feedback-title').click();
+
   // Arrow shortcuts traverse section-major PC/SP order without mutating feedback.
   await page.keyboard.press('ArrowRight');
   await waitForLabel(page, 'Header / PC');
