@@ -8,7 +8,9 @@ on:
       - 'review-dashboard/**'
       - 'scripts/build_human_review_site.py'
       - 'scripts/validate_human_review_site.py'
+      - 'scripts/validate_ref001_asset_map.py'
       - 'tests/test_human_review_dashboard.py'
+      - 'tests/test_ref001_asset_map.py'
       - 'experiments/ref001-blind-clean-20260812/implementation/**'
       - 'experiments/ref001-blind-clean-20260812/evidence/final/latest/**'
       - 'implementation/theme/assets/images/ref001/rendered/**'
@@ -19,7 +21,9 @@ on:
       - 'review-dashboard/**'
       - 'scripts/build_human_review_site.py'
       - 'scripts/validate_human_review_site.py'
+      - 'scripts/validate_ref001_asset_map.py'
       - 'tests/test_human_review_dashboard.py'
+      - 'tests/test_ref001_asset_map.py'
       - 'experiments/ref001-blind-clean-20260812/implementation/**'
       - 'experiments/ref001-blind-clean-20260812/evidence/final/latest/**'
       - 'implementation/theme/assets/images/ref001/rendered/**'
@@ -47,6 +51,11 @@ jobs:
           python --version
           php --version
           node --version
+
+      - name: Validate incremental REF-001 asset wiring
+        run: |
+          python scripts/validate_ref001_asset_map.py
+          python -m unittest tests.test_ref001_asset_map
 
       - name: Build static Review Dashboard and Artifact Preview
         run: python scripts/build_human_review_site.py --output _site
