@@ -7,6 +7,7 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
+import capture_target_git_baseline as git_baseline
 import probe_ref001_acf_runtime as ref001_probe
 import probe_wordpress_acf_runtime as runtime_probe
 import scan_wordpress_target as target_scan
@@ -36,8 +37,15 @@ def coordinate(
     runtime_runner: runtime_probe.Runner = runtime_probe.subprocess_runner,
     runtime_executable_lookup=runtime_probe.shutil.which,
     ref001_runner: ref001_probe.Runner | None = None,
+    git_runner: git_baseline.Runner | None = None,
+    git_executable_lookup=git_baseline.shutil.which,
 ) -> dict:
     recon = target_scan.scan(target_repo)
+    repository_git = git_baseline.capture(
+        target_repo,
+        runner=git_runner,
+        executable_lookup=git_executable_lookup,
+    )
 
     runtime: dict
     ref001: dict
@@ -81,6 +89,10 @@ def coordinate(
         theme_consistency = "UNDETERMINED"
 
     binding_blockers: list[str] = []
+    if repository_git.get("state") != "OBSERVED":
+        binding_blockers.append(f"TARGET_GIT_BASELINE_{repository_git.get('state', 'UNDETERMINED')}")
+    elif repository_git.get("dirty") is True:
+        binding_blockers.append("TARGET_GIT_WORKTREE_DIRTY")
     if recon.get("selection_state") != "UNAMBIGUOUS":
         binding_blockers.append(f"THEME_SELECTION_{recon.get('selection_state', 'UNDETERMINED')}")
     if wp_path is None:
@@ -105,26 +117,29 @@ def coordinate(
             "theme_consistency": theme_consistency,
             "static_theme_stylesheet_slug": static_slug,
             "runtime_theme_stylesheet_slug": runtime_slug,
+            "starting_commit": repository_git.get("head", "") if repository_git.get("state") == "OBSERVED" else "",
         },
         "completion_readiness": {
             "ready": False,
             "blockers": completion_blockers,
             "admin_ui_smoke_executed": False,
         },
+        "target_git_baseline": repository_git,
         "target_reconnaissance": recon,
         "runtime_capability": runtime,
         "ref001_import_preflight": ref001,
         "claim_boundary": (
-            "READY_FOR_PRODUCTION_BINDING_REVIEW means the supplied repository and runtime evidence are coherent enough "
-            "to begin explicit production ownership binding. It never means production implementation or the required "
-            "browser ADMIN_UI smoke is complete. No target files, plugins, users, field groups, or database records are mutated."
+            "READY_FOR_PRODUCTION_BINDING_REVIEW means the supplied repository has a reproducible clean Git HEAD and "
+            "the repository/runtime evidence is coherent enough to begin explicit production ownership binding. It never "
+            "means production implementation or the required browser ADMIN_UI smoke is complete. No target files, plugins, "
+            "users, field groups, or database records are mutated."
         ),
     }
 
 
 def parser() -> argparse.ArgumentParser:
     value = argparse.ArgumentParser(
-        description="Coordinate read-only WordPress target reconnaissance, runtime capability, and REF-001 ACF preflight."
+        description="Coordinate read-only target Git baseline, WordPress reconnaissance, runtime capability, and REF-001 ACF preflight."
     )
     value.add_argument("target_repo", type=Path)
     value.add_argument("--wp-path", type=Path)
