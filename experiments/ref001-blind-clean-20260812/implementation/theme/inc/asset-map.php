@@ -8,7 +8,7 @@ return [
         'reason-3' => ['pc' => 'assets/images/dummy/image-pc.svg', 'sp' => 'assets/images/dummy/image-sp.svg'],
         'education-1' => ['pc' => 'assets/images/dummy/image-pc.svg', 'sp' => 'assets/images/dummy/image-sp.svg'],
         'education-2' => ['pc' => 'assets/images/dummy/image-pc.svg', 'sp' => 'assets/images/dummy/image-sp.svg'],
-        'education-3' => ['pc' => 'assets/images/dummy/image-pc.svg', 'sp' => 'assets/images/dummy/image-sp.svg'],
+        'education-3' => ['pc' => 'assets/images/dummy/image-pc.svg', 'sp' => 'assets/images/ref001/rendered/sp/education-3-21376-4769.png'],
         'education-4' => ['pc' => 'assets/images/dummy/image-pc.svg', 'sp' => 'assets/images/dummy/image-sp.svg'],
         'voice-1-avatar' => ['pc' => 'assets/images/dummy/image-pc.svg', 'sp' => 'assets/images/ref001/rendered/sp/student-voice-01-21376-4709.png'],
         'voice-1-detail' => ['pc' => 'assets/images/dummy/image-pc.svg', 'sp' => 'assets/images/dummy/image-sp.svg'],
