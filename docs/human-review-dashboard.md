@@ -9,15 +9,15 @@ Human ReviewはAI visual QAの別名ではない。ユーザー本人からfeedb
 REF-001の通常確認用URLは固定する。
 
 ```text
-/ref001/latest/review/
-/ref001/latest/preview/
+/ref-001/latest/review/
+/ref-001/latest/preview/
 ```
 
 run履歴も残す。
 
 ```text
-/ref001/runs/run-2/review/
-/ref001/runs/run-2/preview/
+/ref-001/runs/run-2/review/
+/ref-001/runs/run-2/preview/
 ```
 
 `latest`は人がブックマークする入口、`runs/*`は研究比較用。
@@ -172,6 +172,7 @@ PR:
 build
 → validate
 → focused tests
+→ browser smoke
 → backup artifact
 ```
 
@@ -180,6 +181,7 @@ build
 ```text
 build
 → validate
+→ browser smoke
 → Pages artifact
 → configure Pages
 → deploy
