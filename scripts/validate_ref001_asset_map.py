@@ -9,6 +9,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_MAP = ROOT / "experiments/ref001-blind-clean-20260812/implementation/theme/inc/asset-map.php"
+DEFAULT_REGISTRY = ROOT / "research/figma-assets/ref001/rendered-asset-registry.json"
 CANONICAL_THEME = ROOT / "implementation/theme"
 DUMMY_BY_VIEWPORT = {
     "pc": "assets/images/dummy/image-pc.svg",
@@ -33,6 +34,7 @@ EXPECTED_SLOTS = {
     "cta-person-right",
 }
 RENDERED_PREFIX = "assets/images/ref001/rendered/"
+CANONICAL_PREFIX = "implementation/theme/"
 
 
 class ValidationError(RuntimeError):
@@ -66,9 +68,70 @@ def load_images(asset_map: Path) -> dict[str, dict[str, str]]:
     return payload
 
 
-def validate(asset_map: Path, *, require_complete: bool = False) -> tuple[list[str], dict[str, int]]:
-    images = load_images(asset_map)
+def load_registry(registry_path: Path) -> tuple[dict[tuple[str, str], dict[str, object]], list[str]]:
     errors: list[str] = []
+    try:
+        payload = json.loads(registry_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise ValidationError(f"cannot load rendered asset registry: {exc}") from exc
+    assets = payload.get("assets") if isinstance(payload, dict) else None
+    if not isinstance(assets, list):
+        raise ValidationError("rendered asset registry assets must be an array")
+    if payload.get("reference_id") != "REF-001":
+        errors.append("registry reference_id must be REF-001")
+    policy = payload.get("asset_policy", {})
+    if not isinstance(policy, dict) or policy.get("expected_assets") != 32:
+        errors.append("registry asset_policy.expected_assets must be 32")
+
+    index: dict[tuple[str, str], dict[str, object]] = {}
+    seen_nodes: set[tuple[str, str]] = set()
+    for i, asset in enumerate(assets):
+        if not isinstance(asset, dict):
+            errors.append(f"registry asset #{i + 1} must be an object")
+            continue
+        slot = asset.get("slot")
+        viewport = asset.get("viewport")
+        node_id = asset.get("node_id")
+        path = asset.get("path")
+        if slot not in EXPECTED_SLOTS or viewport not in {"pc", "sp"}:
+            errors.append(f"registry asset #{i + 1} has invalid slot/viewport: {slot}.{viewport}")
+            continue
+        key = (str(slot), str(viewport))
+        if key in index:
+            errors.append(f"registry duplicate assignment: {slot}.{viewport}")
+            continue
+        if not isinstance(node_id, str) or not node_id:
+            errors.append(f"registry {slot}.{viewport}: node_id required")
+        else:
+            node_key = (str(viewport), node_id)
+            if node_key in seen_nodes:
+                errors.append(f"registry duplicate node within viewport: {viewport}.{node_id}")
+            seen_nodes.add(node_key)
+        if not isinstance(path, str) or not path.startswith(CANONICAL_PREFIX + RENDERED_PREFIX + f"{viewport}/"):
+            errors.append(f"registry {slot}.{viewport}: invalid canonical path: {path}")
+        index[key] = asset
+
+    expected_keys = {(slot, viewport) for slot in EXPECTED_SLOTS for viewport in ("pc", "sp")}
+    missing = sorted(expected_keys - set(index))
+    extra = sorted(set(index) - expected_keys)
+    if missing:
+        errors.append("registry missing assignments: " + ", ".join(f"{s}.{v}" for s, v in missing))
+    if extra:
+        errors.append("registry unexpected assignments: " + ", ".join(f"{s}.{v}" for s, v in extra))
+    if len(assets) != 32:
+        errors.append(f"registry must contain exactly 32 assets, got {len(assets)}")
+    return index, errors
+
+
+def validate(
+    asset_map: Path,
+    *,
+    registry_path: Path = DEFAULT_REGISTRY,
+    require_complete: bool = False,
+) -> tuple[list[str], dict[str, int]]:
+    images = load_images(asset_map)
+    registry, registry_errors = load_registry(registry_path)
+    errors: list[str] = list(registry_errors)
     actual = set(images)
     missing_slots = sorted(EXPECTED_SLOTS - actual)
     extra_slots = sorted(actual - EXPECTED_SLOTS)
@@ -107,6 +170,16 @@ def validate(asset_map: Path, *, require_complete: bool = False) -> tuple[list[s
             if not value.startswith(expected_viewport_prefix):
                 errors.append(f"{slot}.{viewport}: rendered asset is classified under wrong viewport: {value}")
                 continue
+
+            registry_asset = registry.get((slot, viewport))
+            if registry_asset is not None:
+                expected_map_value = str(registry_asset["path"])[len(CANONICAL_PREFIX):]
+                if value != expected_map_value:
+                    errors.append(
+                        f"{slot}.{viewport}: asset map path differs from registry: {value} != {expected_map_value}"
+                    )
+                    continue
+
             canonical = CANONICAL_THEME / value
             if not canonical.is_file():
                 errors.append(f"{slot}.{viewport}: canonical rendered file missing: {canonical.relative_to(ROOT)}")
@@ -125,13 +198,18 @@ def validate(asset_map: Path, *, require_complete: bool = False) -> tuple[list[s
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Validate REF-001 PC/SP rendered asset wiring")
     parser.add_argument("--asset-map", type=Path, default=DEFAULT_MAP)
+    parser.add_argument("--registry", type=Path, default=DEFAULT_REGISTRY)
     parser.add_argument("--require-complete", action="store_true")
     return parser.parse_args()
 
 
 def main() -> int:
     args = parse_args()
-    errors, counts = validate(args.asset_map.resolve(), require_complete=args.require_complete)
+    errors, counts = validate(
+        args.asset_map.resolve(),
+        registry_path=args.registry.resolve(),
+        require_complete=args.require_complete,
+    )
     if errors:
         for error in errors:
             print(f"FAIL {error}")
