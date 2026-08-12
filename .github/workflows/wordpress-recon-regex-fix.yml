@@ -1,0 +1,42 @@
+name: WordPress Recon Regex Fix
+
+on:
+  push:
+    branches:
+      - agent/wordpress-target-reconnaissance
+    paths:
+      - '.github/workflows/wordpress-recon-regex-fix.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Support one-line CSS theme headers
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path=Path('scripts/scan_wordpress_target.py')
+          text=path.read_text(encoding='utf-8')
+          old='THEME_NAME_RE = re.compile(r"(?mi)^\\s*Theme Name\\s*:\\s*(.+?)\\s*$")'
+          new='THEME_NAME_RE = re.compile(r"(?mi)^[\\s/*#]*Theme Name\\s*:\\s*(.+?)(?:\\s*\\*/)?\\s*$")'
+          if old not in text:
+              raise SystemExit('theme header regex anchor not found')
+          path.write_text(text.replace(old,new,1),encoding='utf-8')
+          PY
+          python -m unittest tests.test_scan_wordpress_target
+          git diff --check
+      - name: Remove one-shot workflow and commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          rm -f .github/workflows/wordpress-recon-regex-fix.yml
+          git add -A
+          git commit -m 'Harden WordPress theme header detection'
+          git push
