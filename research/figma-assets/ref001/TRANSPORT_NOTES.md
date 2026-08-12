@@ -1,6 +1,6 @@
 # REF-001 exact Figma raster transport notes
 
-Updated: 2026-08-12
+Updated: 2026-08-13
 
 ## Authority
 
@@ -86,6 +86,21 @@ Figma final visible node render
 ```
 
 Short-lived Figma MCP asset URLs are transport-only and must never be persisted in Git, manifests, docs, or long-lived artifacts.
+
+## Decision discipline learned from the REF-001 stall
+
+The REF-001 raster work stalled because a working, user-provided transport lane already existed, but alternative transport ideas were explored without first presenting them as optional experiments and without proving that the existing bridge was insufficient. The problem was not Google Drive. The problem was decision discipline.
+
+Rules for future runs:
+
+1. **Inspect the existing lane before inventing a new one.** If the user has already provided a bridge, script, workflow, schema, or repository specifically for the task, read its current rules and treat it as the default path.
+2. **Do not silently replace a working path with an experiment.** A new idea may be tested only after stating the idea, expected benefit, risk, rollback, and success criterion to the user when it would change the agreed execution path.
+3. **Experiments must be bounded.** Use one small probe with a hard stop. If it does not clearly beat the current path, abandon it immediately and return to the established lane.
+4. **Never generalize from convenience.** A route that looks simpler in theory is not better until it wins on the actual constraints: fidelity, throughput, durability, secret safety, and maintainability.
+5. **Preserve user intent over agent curiosity.** Once the user has chosen or explicitly assisted with a transport design, implementation should prioritize completing that design, not exploring adjacent architectures.
+6. **Report progress by completed durable outcomes.** Exported bytes, temporary URLs, local reconstruction, or queued Drive tasks are intermediate states. Count an asset only when durable Git bytes exist and read-back validation passes.
+7. **Separate exploration from production work.** If an experiment is worth trying, keep the existing path untouched and run the experiment in a reversible side lane. Do not let exploration block the primary deliverable.
+8. **For REF-001 specifically, finish raster materialization before unrelated roadmap work.** Do not switch to broader learning, Run 3, or unrelated cleanup while the 32-asset inventory is incomplete.
 
 ## REF-001 lessons
 
