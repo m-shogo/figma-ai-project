@@ -5,7 +5,8 @@
     </header>
     <div class="ref-content ref-messages__body">
         <div class="ref-messages__copy">
-            <p class="ref-messages__quote"><span>大学で培った企画力を武器に、</span><br><span>今はIT企業のマーケターとして挑戦の毎日です！</span></p>
+            <p class="ref-messages__quote ref-messages__quote--pc"><span>大学で培った企画力を武器に、</span><span>今はIT企業のマーケターとして挑戦の毎日です！</span></p>
+            <p class="ref-messages__quote ref-messages__quote--sp"><span>大学で培った企画力を武器に、</span><span>今はIT企業のマーケターとして</span><span>挑戦の毎日です！</span></p>
             <p class="ref-messages__profile"><?php ref001_e(ref001_get('message_profile')); ?><br><?php ref001_e(ref001_get('message_school')); ?></p>
             <div class="ref-messages__indicator" aria-hidden="true">
                 <?php ref001_icon('arrow-left', 'ref-messages__arrow'); ?>
