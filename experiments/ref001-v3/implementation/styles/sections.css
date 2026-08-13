@@ -239,7 +239,7 @@
 
 /* Reason — Figma 21378:7999 / 21376:4852 */
 .v3-reason {
-  padding: 96px 0 64px;
+  padding: 78px 0 96px;
   background: #fff;
 }
 
@@ -248,7 +248,7 @@
   font-size: 16px;
   line-height: 1.6;
   letter-spacing: 0.05em;
-  margin: 22px auto 36px;
+  margin: 22px auto 18px;
   max-width: 760px;
 }
 
@@ -300,7 +300,7 @@
 /* Education — Figma 21378:7868 / 21376:4720 */
 .v3-education {
   background: var(--v3-beige);
-  padding: 72px 0;
+  padding: 72px 0 80px;
 }
 
 .v3-education .v3-kicker {
@@ -566,7 +566,15 @@
 
 /* Student voice — Figma 21378:7766 */
 .v3-voice {
-  padding: 96px 0 0;
+  padding: 96px 0 183px;
+}
+
+.v3-voice .v3-heading {
+  margin-bottom: 14px;
+}
+
+.v3-voice-item + .v3-voice-item {
+  margin-top: 40px;
 }
 
 .v3-voice-item {
@@ -704,7 +712,7 @@
 
 /* Messages — Figma 21378:7746 */
 .v3-messages {
-  padding: 0;
+  padding: 0 0 118px;
   position: relative;
 }
 
@@ -817,7 +825,7 @@
 /* Courses — Figma 21378:7505 / 21376:4403 */
 .v3-courses {
   background: var(--v3-beige);
-  padding: 72px 0 96px;
+  padding: 72px 0 68px;
 }
 
 .v3-courses .v3-heading {
@@ -934,7 +942,7 @@
 
 /* Links — Figma 21378:7458 / 21376:4919 */
 .v3-links {
-  padding: 80px 0;
+  padding: 77px 0;
 }
 
 .v3-links__grid {

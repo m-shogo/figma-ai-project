@@ -67,7 +67,7 @@
   }
 
   .v3-mv {
-    height: 740px;
+    height: 724px;
   }
 
   .v3-mv__person {
@@ -154,11 +154,12 @@
   }
 
   .v3-reason {
-    padding: 60px 0 68px;
+    padding: 56px 0;
   }
 
   .v3-reason__intro {
     text-align: left;
+    margin: 8px 0 16px;
   }
 
   .v3-reason__cards {
@@ -178,8 +179,8 @@
   }
 
   .v3-reason-card__body {
-    min-height: 108px;
-    padding: 36px 20px 22px;
+    min-height: 106px;
+    padding: 32px 24px 22px;
   }
 
   .v3-reason-card__title {
@@ -188,7 +189,7 @@
   }
 
   .v3-education {
-    padding: 56px 0 72px;
+    padding: 56px 0 29px;
   }
 
   .v3-education__head {
@@ -235,7 +236,7 @@
   .v3-education__steps {
     width: calc(100% - 32px);
     grid-template-columns: 1fr;
-    gap: 44px;
+    gap: 36px;
   }
 
   .v3-edu-card {
@@ -250,12 +251,16 @@
     min-height: 277px;
   }
 
+  .v3-edu-card:nth-child(2) {
+    min-height: 250px;
+  }
+
   .v3-edu-card__next {
     display: block;
     right: auto;
     left: 50%;
     top: auto;
-    bottom: -29px;
+    bottom: -26px;
     transform: translateX(-50%) rotate(90deg);
   }
 
@@ -304,12 +309,24 @@
   }
 
   .v3-voice {
-    padding-top: 56px;
+    padding: 56px 0;
+  }
+
+  .v3-voice .v3-heading {
+    margin-bottom: 20px;
   }
 
   .v3-voice-item {
     padding: 32px 0;
     min-height: 0;
+  }
+
+  .v3-voice-item + .v3-voice-item {
+    margin-top: 20px;
+  }
+
+  .v3-voice-item--open {
+    min-height: 1032px;
   }
 
   .v3-voice-item--collapsed {
@@ -384,7 +401,7 @@
   }
 
   .v3-messages {
-    padding: 72px 0 44px;
+    padding: 48px 0;
   }
 
   .v3-messages__layout {
@@ -399,7 +416,11 @@
 
   .v3-messages .v3-heading {
     order: 1;
-    margin-bottom: 20px;
+    margin-bottom: 8px;
+  }
+
+  .v3-messages .v3-heading__title {
+    margin-top: 12px;
   }
 
   .v3-messages__quote--copy {
@@ -409,7 +430,8 @@
   .v3-messages__stage {
     order: 2;
     max-width: none;
-    margin-bottom: 14px;
+    margin-bottom: 0;
+    padding-bottom: 62px;
   }
 
   .v3-messages__photo {
@@ -421,8 +443,9 @@
   .v3-messages__quote--on-photo {
     display: block;
     position: absolute;
-    left: 0;
-    bottom: 8px;
+    left: -8px;
+    top: 167px;
+    bottom: auto;
     z-index: 2;
     margin: 0;
     font-size: 16px;
@@ -433,7 +456,8 @@
     height: 36px;
     line-height: 36px;
     padding: 0 12px;
-    margin-bottom: 4px;
+    margin-bottom: 8px;
+    white-space: nowrap;
   }
 
   .v3-messages__quote--on-photo span:nth-child(1),
@@ -452,13 +476,21 @@
 
   .v3-messages__indicator {
     order: 4;
-    margin: 32px auto 0;
+    margin: 24px auto 0;
     justify-content: center;
     font-size: 20px;
   }
 
   .v3-courses {
     padding: 56px 0;
+  }
+
+  .v3-courses .v3-heading {
+    margin-bottom: 16px;
+  }
+
+  .v3-courses .v3-heading__title {
+    margin-top: 8px;
   }
 
   .v3-courses__title-line {
@@ -492,6 +524,11 @@
     padding: 24px 16px 20px 96px;
   }
 
+  .v3-course:nth-child(1),
+  .v3-course:nth-child(5) {
+    min-height: 320px;
+  }
+
   .v3-course__icon {
     width: 72px;
     height: 72px;
@@ -517,19 +554,8 @@
     padding: 38px 16px 14px;
   }
 
-  .v3-course__rec-label {
-    border: 1px solid #333;
-    border-radius: 999px;
-    background: #fff;
-    padding: 6px 14px;
-  }
-
-  .v3-course__rec-label::after {
-    display: none;
-  }
-
   .v3-links {
-    padding: 64px 0;
+    padding: 56px 0;
   }
 
   .v3-links__grid {
