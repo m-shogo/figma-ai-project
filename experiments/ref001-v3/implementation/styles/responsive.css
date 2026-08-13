@@ -94,28 +94,29 @@
   .v3-mv__person {
     width: 335px;
     height: 220px;
-    max-width: 90%;
+    max-width: none;
   }
 
   .v3-mv__person--left {
     top: 0;
-    left: -10%;
+    left: 40px;
   }
 
   .v3-mv__person--right {
-    right: -5%;
+    left: 0;
+    right: auto;
     top: auto;
     bottom: 0;
   }
 
   .v3-mv__copy {
     width: calc(100% - 32px);
-    padding-top: 180px;
+    padding-top: 127px;
   }
 
   .v3-mv__planes {
-    top: 90px;
-    height: 42%;
+    top: 0;
+    height: 704px;
   }
 
   .v3-mv__quotes {
@@ -541,7 +542,7 @@
   }
 
   .v3-courses {
-    padding: 36px 0 37px;
+    padding: 36px 0 35px;
   }
 
   .v3-courses .v3-heading {
@@ -611,6 +612,15 @@
     width: auto;
     margin-left: -80px;
     padding: 38px 16px 14px;
+  }
+
+  .v3-course__rec-label {
+    min-width: 187px;
+    min-height: 47px;
+    display: grid;
+    place-items: center;
+    padding: 0 16px;
+    box-sizing: border-box;
   }
 
   .v3-links {
