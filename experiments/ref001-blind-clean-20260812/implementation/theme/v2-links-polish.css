@@ -23,6 +23,9 @@
 @media (min-width:768px){
   .ref-link-tile{width:260px;height:260px}
   .ref-link-tile__shadow{left:10px;top:10px;width:250px;height:250px}
+  /* Figma PC wraps the Instagram gradient in -scale-y-100 + rotate-180. The
+   * circle geometry is unchanged; the transform only restores gradient direction. */
+  .ref-link-tile--instagram .ref-link-tile__shadow{transform:scaleY(-1) rotate(180deg)}
   .ref-link-tile__face{width:250px;height:250px}
   .ref-link-tile__copy{top:110px;font-size:22px}
   .ref-link-tile--numbers .ref-link-tile__copy{top:82px;font-size:22px;line-height:1.4}
@@ -53,6 +56,8 @@
   .ref-links__grid{--group-size:162px;--face-size:155px;display:grid!important;grid-template-columns:repeat(2,var(--group-size))!important;grid-template-rows:repeat(2,var(--group-size));width:343px!important;max-width:calc(100vw - 32px);height:343px;column-gap:19px!important;row-gap:19px!important;justify-content:center;align-content:start}
   .ref-link-tile{width:var(--group-size);height:var(--group-size)}
   .ref-link-tile__shadow{left:7px;top:7px;width:var(--face-size);height:var(--face-size)}
+  /* Figma SP applies -scale-y-100 to the Instagram gradient wrapper. */
+  .ref-link-tile--instagram .ref-link-tile__shadow{transform:scaleY(-1)}
   .ref-link-tile__face{width:var(--face-size);height:var(--face-size);border-width:1px}
   .ref-link-tile__copy{top:60px;font-size:16px}
   .ref-link-tile--numbers .ref-link-tile__copy{top:45px;font-size:16px;line-height:1.4}
