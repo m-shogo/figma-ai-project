@@ -37,19 +37,19 @@
 /* Continuity contract: retain each authored tile unchanged, but reflow to 2x2
  * until the four-up 1112px Figma group can fit without document overflow. */
 @media (min-width:768px) and (max-width:1143px){
-  .ref-links{height:672px;padding:64px 0}
+  .ref-links{height:544px;padding:0}
   .ref-links__grid{display:grid!important;width:544px!important;height:544px;grid-template-columns:repeat(2,260px)!important;grid-template-rows:repeat(2,260px);column-gap:24px!important;row-gap:24px!important;justify-content:center;align-content:start}
 }
 
-/* Exact PC acceptance geometry. */
+/* Exact PC acceptance geometry. External 72px rhythm is owned by visual-repair.css. */
 @media (min-width:1144px){
-  .ref-links{height:404px;padding:72px 0}
+  .ref-links{height:260px;padding:0}
   .ref-links__grid{display:flex!important;width:1112px!important;height:260px;gap:24px!important;justify-content:flex-start;align-items:flex-start}
 }
 
-/* Exact SP acceptance geometry. */
+/* Exact SP acceptance geometry. External 56px rhythm is owned by visual-repair.css. */
 @media (max-width:767px){
-  .ref-links{height:455px;padding:56px 0}
+  .ref-links{height:343px;padding:0}
   .ref-links__grid{--group-size:162px;--face-size:155px;display:grid!important;grid-template-columns:repeat(2,var(--group-size))!important;grid-template-rows:repeat(2,var(--group-size));width:343px!important;max-width:calc(100vw - 32px);height:343px;column-gap:19px!important;row-gap:19px!important;justify-content:center;align-content:start}
   .ref-link-tile{width:var(--group-size);height:var(--group-size)}
   .ref-link-tile__shadow{left:7px;top:7px;width:var(--face-size);height:var(--face-size)}
@@ -68,7 +68,7 @@
 }
 
 @media (max-width:360px){
-  .ref-links{height:calc(100vw + 80px)}
+  .ref-links{height:calc(100vw - 32px)}
   .ref-links__grid{--group-size:calc((100vw - 51px)/2);--face-size:calc(var(--group-size) - 7px);width:calc(100vw - 32px)!important;height:calc(100vw - 32px)}
   .ref-link-tile__copy{top:38%;font-size:clamp(13px,4.2vw,16px)}
   .ref-link-tile--numbers .ref-link-tile__copy{top:29%;font-size:clamp(13px,4.2vw,16px)}
