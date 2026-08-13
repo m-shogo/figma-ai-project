@@ -90,6 +90,15 @@ return [
             'silhouette' => 'green',
         ],
     ],
+    'local' => [
+        'logo-mark' => 'assets/brand/logo-mark.svg',
+        'logo-ck' => 'assets/brand/logo-ck.svg',
+        'logo-name' => 'assets/brand/logo-name.svg',
+        'logo-name-en' => 'assets/brand/logo-name-en.svg',
+        'cta-campus-wash' => 'assets/cta/campus-wash.png',
+        'mv-plane-back' => 'assets/mv/plane-back.svg',
+        'mv-plane-front' => 'assets/mv/plane-front.svg',
+    ],
     'icons' => [
         'document' => 'assets/icons/document.svg',
         'open-campus' => 'assets/icons/open-campus.svg',

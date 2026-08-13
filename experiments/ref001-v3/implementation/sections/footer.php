@@ -1,14 +1,10 @@
 <?php
 $d = v3_data()['footer'];
-$brand = v3_data()['brand'];
 ?>
 <footer class="v3-footer" data-section="footer" data-figma-pc="<?php v3_e($d['figma']['pc']); ?>" data-figma-sp="<?php v3_e($d['figma']['sp']); ?>">
   <div class="v3-footer__inner">
     <div class="v3-footer__profile">
-      <div class="v3-brand">
-        <div class="v3-brand__mark" aria-hidden="true"><span><?php v3_e($brand['mark']); ?></span></div>
-        <div class="v3-brand__text"><?php v3_e($brand['name']); ?><span class="v3-brand__sub"><?php v3_e($brand['nameEn']); ?></span></div>
-      </div>
+      <?php v3_component('brand'); ?>
       <p class="v3-footer__address"><?php echo nl2br(htmlspecialchars($d['address'], ENT_QUOTES, 'UTF-8'), false); ?></p>
     </div>
     <div class="v3-footer__aside">

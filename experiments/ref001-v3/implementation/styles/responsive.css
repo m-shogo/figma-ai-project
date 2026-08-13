@@ -30,22 +30,35 @@
     display: none;
   }
 
-  .v3-brand__mark {
-    width: 28px;
-    height: 28px;
+  .v3-brand__logo {
+    width: 133px;
+    height: 33px;
   }
 
-  .v3-brand__mark span {
-    font-size: 13px;
+  .v3-brand__piece--mark {
+    width: 30.8px;
+    height: 33px;
   }
 
-  .v3-brand__text {
-    font-size: 15px;
+  .v3-brand__piece--ck {
+    left: 5.2px;
+    top: 11.8px;
+    width: 19.6px;
+    height: 9.8px;
   }
 
-  .v3-brand__sub {
-    font-size: 6px;
-    margin-top: 3px;
+  .v3-brand__piece--name {
+    left: 38.2px;
+    top: 6.7px;
+    width: 94.8px;
+    height: 13.4px;
+  }
+
+  .v3-brand__piece--en {
+    left: 66px;
+    top: 25.1px;
+    width: 41.5px;
+    height: 4.3px;
   }
 
   .v3-mv {
@@ -73,13 +86,21 @@
     padding-top: 180px;
   }
 
+  .v3-mv__planes {
+    top: 90px;
+    height: 42%;
+  }
+
   .v3-mv__quotes {
     font-size: 48px;
   }
 
-  .v3-mv__word,
-  .v3-mv__end {
+  .v3-mv__word {
     font-size: 42px;
+  }
+
+  .v3-mv__end {
+    font-size: 36px;
   }
 
   .v3-mv__mid {

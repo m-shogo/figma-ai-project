@@ -70,38 +70,47 @@
 .v3-brand {
   display: flex;
   align-items: center;
-  gap: 10px;
 }
 
-.v3-brand__mark {
-  width: 38px;
-  height: 38px;
-  background: linear-gradient(135deg, var(--v3-blue) 0 50%, var(--v3-purple) 50%);
-  transform: rotate(45deg);
-  display: grid;
-  place-items: center;
-}
-
-.v3-brand__mark span {
-  transform: rotate(-45deg);
-  font-family: Georgia, serif;
-  color: #fff;
-  font-size: 18px;
-}
-
-.v3-brand__text {
-  line-height: 1.05;
-  font-weight: 900;
-  font-size: 20px;
-  letter-spacing: 0.08em;
-}
-
-.v3-brand__sub {
+.v3-brand__logo {
+  position: relative;
+  width: 187px;
+  height: 47px;
   display: block;
-  text-align: center;
-  color: #50348f;
-  font-size: 8px;
-  font-family: var(--v3-font-en);
-  letter-spacing: 0.04em;
-  margin-top: 5px;
+  flex: none;
+}
+
+.v3-brand__piece {
+  position: absolute;
+  display: block;
+  max-width: none;
+  height: auto;
+}
+
+.v3-brand__piece--mark {
+  left: 0;
+  top: 0;
+  width: 43.3px;
+  height: 47px;
+}
+
+.v3-brand__piece--ck {
+  left: 7.3px;
+  top: 16.6px;
+  width: 27.6px;
+  height: 13.8px;
+}
+
+.v3-brand__piece--name {
+  left: 53.7px;
+  top: 9.4px;
+  width: 133.3px;
+  height: 18.8px;
+}
+
+.v3-brand__piece--en {
+  left: 92.8px;
+  top: 35.3px;
+  width: 58.4px;
+  height: 6.1px;
 }

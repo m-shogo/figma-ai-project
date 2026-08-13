@@ -2,6 +2,10 @@
 $d = v3_data()['mainVisual'];
 ?>
 <section class="v3-mv" data-section="main-visual" data-figma-pc="<?php v3_e($d['figma']['pc']); ?>" data-figma-sp="<?php v3_e($d['figma']['sp']); ?>">
+  <div class="v3-mv__planes" aria-hidden="true">
+    <img class="v3-mv__plane v3-mv__plane--back" src="assets/mv/plane-back.svg" alt="" width="1380" height="636">
+    <img class="v3-mv__plane v3-mv__plane--front" src="assets/mv/plane-front.svg" alt="" width="1380" height="636">
+  </div>
   <div class="v3-mv__people" aria-hidden="true">
     <?php v3_picture('main-visual-left', 'v3-mv__person v3-mv__person--left', '', true); ?>
     <?php v3_picture('main-visual-right', 'v3-mv__person v3-mv__person--right', '', true); ?>

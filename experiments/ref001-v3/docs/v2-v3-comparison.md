@@ -71,11 +71,9 @@ CTA people show person + yellow (left) / green (right) silhouettes on transparen
 These are expected; pixel-perfect close-out stays on the V2 track.
 
 - Licensed Figma display fonts (A-OTF Ryumin / Futo Go) are substituted with Zen Kaku Gothic New
-- Header logo is a CSS mark, not the exact Figma vector
-- Shared CTA uses a gradient, not the full photographic wash
-- Main visual geometric background planes are simplified
 - Some card/title geometry still differs by more than 1px from Figma
 - Student Voice collapsed/open interaction remains UNDETERMINED (visible states only)
+- Shared CTA campus wash is a V3-local Figma export (not part of the canonical 32 WebP set)
 
 ## Design improvements vs V2
 
