@@ -9,11 +9,12 @@
 .ref-voice__head .ref-bracket-title::before{left:0}
 .ref-voice__head .ref-bracket-title::after{right:0}
 
-.ref-voice-item{padding:0}
-.ref-voice-item--open{background:var(--ref-light-blue)}
-.ref-voice-item--collapsed:nth-of-type(2){background:var(--ref-light-yellow)}
-.ref-voice-item--collapsed:nth-of-type(3){background:var(--ref-light-blue)}
-.ref-voice-item>.ref-content{position:relative}
+/* Figma colors the 1160/343px card bases, not the whole viewport strip. */
+.ref-voice-item{padding:0;background:transparent!important}
+.ref-voice-item>.ref-content{position:relative;height:100%}
+.ref-voice-item--open>.ref-content{background:var(--ref-light-blue)}
+.ref-voice-item--collapsed:nth-of-type(2)>.ref-content{background:var(--ref-light-yellow)}
+.ref-voice-item--collapsed:nth-of-type(3)>.ref-content{background:var(--ref-light-blue)}
 .ref-voice-item__top{position:relative;display:block}
 .ref-avatar{position:absolute;z-index:3;border-radius:50%;overflow:hidden}
 .ref-avatar img{width:100%;height:100%;object-fit:cover}
