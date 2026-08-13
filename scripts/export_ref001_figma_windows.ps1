@@ -1,7 +1,7 @@
 param(
     [switch]$Commit,
     [switch]$Push,
-    [string]$Branch = "agent/ref001-windows-local-export",
+    [string]$Branch = "agent/ref001-figma-raster-assets",
     [string]$BackupBranch = "backup/ref001-drive-bridge-assets-20260813"
 )
 
