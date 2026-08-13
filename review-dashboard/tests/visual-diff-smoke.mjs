@@ -26,9 +26,18 @@ try {
   }, null, { timeout: 15000 });
 
   invariant(!(await page.locator('#visual-diff-review').isHidden()), 'Visual Diff panel did not open');
-  invariant((await page.locator('#diff-ratio').textContent())?.startsWith('差分 '), 'Visual Diff ratio missing');
+  const ratioText = await page.locator('#diff-ratio').textContent();
+  invariant(ratioText?.startsWith('差分 '), 'Visual Diff ratio missing');
   invariant((await page.locator('#diff-bbox').textContent())?.length > 3, 'Visual Diff bbox missing');
   invariant((await page.locator('#diff-scale').textContent()) === '解析 1:1', 'Student Voice should be analyzed 1:1');
+  invariant(await page.locator('#diff-hotspots').count() === 1, 'Visual Diff hotspot panel missing');
+
+  const ratioPercent = Number.parseFloat((ratioText || '').replace('差分 ', '').replace('%', ''));
+  const standardHotspotCount = await page.locator('#diff-hotspots button').count();
+  if (Number.isFinite(ratioPercent) && ratioPercent >= 1) {
+    invariant(standardHotspotCount > 0, 'Material diff should expose prioritized hotspots');
+    invariant(standardHotspotCount <= 5, `hotspot list should stay bounded, got ${standardHotspotCount}`);
+  }
 
   await page.locator('[data-diff-sensitivity="loose"]').click();
   await page.waitForFunction(() => document.querySelector('#diff-status')?.textContent?.includes('/ Loose'));
@@ -37,6 +46,8 @@ try {
   await page.locator('[data-diff-sensitivity="strict"]').click();
   await page.waitForFunction(() => document.querySelector('#diff-status')?.textContent?.includes('/ Strict'));
   invariant((await page.locator('#diff-profile-label').textContent())?.includes('threshold 0.08'), 'Strict threshold drifted');
+  const strictHotspotCount = await page.locator('#diff-hotspots button').count();
+  invariant(strictHotspotCount <= 5, `Strict hotspot list should stay bounded, got ${strictHotspotCount}`);
 
   await page.screenshot({ path: path.join(evidenceDir, 'visual-diff-student-voice-sp.png'), fullPage: true });
 
@@ -46,6 +57,8 @@ try {
     perceptualDiffCanvas: true,
     diffRatio: true,
     diffBoundingBox: true,
+    prioritizedHotspots: true,
+    boundedHotspotList: true,
     sectionCrop: true,
   }, null, 2));
 } finally {
