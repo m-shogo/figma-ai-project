@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "reference_id": "REF-001",
+  "source": {
+    "figma_file_key": "ZYTdtw4wCgkcBy2cVnhxVI",
+    "figma_page_id": "21376:1600",
+    "figma_page_name": "AI",
+    "source_frames": {
+      "pc": {"node_id":"21384:8173","name":"Top@2x","width":1380,"height":7714},
+      "sp": {"node_id":"21376:4401","name":"Top_sp@2x","width":375,"height":10817}
+    }
+  },
+  "asset_policy": {
+    "render_semantics": "FINAL_VISIBLE_GROUP_OR_MASK",
+    "raw_source_images_allowed": false,
+    "pc_sp_separate": true,
+    "transport": "FIGMA_TO_MAC_LOCAL_TO_GIT",
+    "target_branch": "agent/ref001-figma-raster-assets",
+    "target_root": "implementation/theme/assets/images/ref001/rendered",
+    "expected_logical_slots": 16,
+    "expected_assets": 32
+  },
+  "assets": [
+    {"slot":"main-visual-left","viewport":"pc","node_id":"21378:8041","node_name":"Mask group","width":570,"height":614,"path":"implementation/theme/assets/images/ref001/rendered/pc/main-visual-left-21378-8041.png"},
+    {"slot":"main-visual-left","viewport":"sp","node_id":"21376:4894","node_name":"Mask group","width":335,"height":220,"path":"implementation/theme/assets/images/ref001/rendered/sp/main-visual-left-21376-4894.png"},
+    {"slot":"main-visual-right","viewport":"pc","node_id":"21378:8036","node_name":"Mask group","width":570,"height":614,"path":"implementation/theme/assets/images/ref001/rendered/pc/main-visual-right-21378-8036.png"},
+    {"slot":"main-visual-right","viewport":"sp","node_id":"21376:4890","node_name":"Mask group","width":335,"height":220,"path":"implementation/theme/assets/images/ref001/rendered/sp/main-visual-right-21376-4890.png"},
+    {"slot":"reason-1","viewport":"pc","node_id":"21378:8002","node_name":"Mask group","width":360,"height":240,"path":"implementation/theme/assets/images/ref001/rendered/pc/reason-1-21378-8002.png"},
+    {"slot":"reason-1","viewport":"sp","node_id":"21376:4855","node_name":"Mask group","width":343,"height":229,"path":"implementation/theme/assets/images/ref001/rendered/sp/reason-1-21376-4855.png"},
+    {"slot":"reason-2","viewport":"pc","node_id":"21378:8010","node_name":"Mask group","width":360,"height":240,"path":"implementation/theme/assets/images/ref001/rendered/pc/reason-2-21378-8010.png"},
+    {"slot":"reason-2","viewport":"sp","node_id":"21376:4864","node_name":"Mask group","width":343,"height":229,"path":"implementation/theme/assets/images/ref001/rendered/sp/reason-2-21376-4864.png"},
+    {"slot":"reason-3","viewport":"pc","node_id":"21378:8018","node_name":"Mask group","width":360,"height":240,"path":"implementation/theme/assets/images/ref001/rendered/pc/reason-3-21378-8018.png"},
+    {"slot":"reason-3","viewport":"sp","node_id":"21376:4872","node_name":"Mask group","width":343,"height":229,"path":"implementation/theme/assets/images/ref001/rendered/sp/reason-3-21376-4872.png"},
+    {"slot":"education-1","viewport":"pc","node_id":"21378:7980","node_name":"Mask group","width":233,"height":131,"path":"implementation/theme/assets/images/ref001/rendered/pc/education-1-21378-7980.png"},
+    {"slot":"education-1","viewport":"sp","node_id":"21376:4835","node_name":"Mask group","width":140,"height":79,"path":"implementation/theme/assets/images/ref001/rendered/sp/education-1-21376-4835.png"},
+    {"slot":"education-2","viewport":"pc","node_id":"21378:7946","node_name":"Mask group","width":233,"height":131,"path":"implementation/theme/assets/images/ref001/rendered/pc/education-2-21378-7946.png"},
+    {"slot":"education-2","viewport":"sp","node_id":"21376:4801","node_name":"Mask group","width":140,"height":79,"path":"implementation/theme/assets/images/ref001/rendered/sp/education-2-21376-4801.png"},
+    {"slot":"education-3","viewport":"pc","node_id":"21378:7917","node_name":"Mask group","width":233,"height":131,"path":"implementation/theme/assets/images/ref001/rendered/pc/education-3-21378-7917.png"},
+    {"slot":"education-3","viewport":"sp","node_id":"21376:4769","node_name":"Mask group","width":140,"height":79,"path":"implementation/theme/assets/images/ref001/rendered/sp/education-3-21376-4769.png"},
+    {"slot":"education-4","viewport":"pc","node_id":"21378:7889","node_name":"Mask group","width":233,"height":131,"path":"implementation/theme/assets/images/ref001/rendered/pc/education-4-21378-7889.png"},
+    {"slot":"education-4","viewport":"sp","node_id":"21376:4741","node_name":"Mask group","width":140,"height":79,"path":"implementation/theme/assets/images/ref001/rendered/sp/education-4-21376-4741.png"},
+    {"slot":"voice-1-avatar","viewport":"pc","node_id":"21378:7857","node_name":"Mask group","width":160,"height":160,"path":"implementation/theme/assets/images/ref001/rendered/pc/voice-1-avatar-21378-7857.png"},
+    {"slot":"voice-1-avatar","viewport":"sp","node_id":"21376:4709","node_name":"Mask group","width":84,"height":84,"path":"implementation/theme/assets/images/ref001/rendered/sp/student-voice-01-21376-4709.png","materialized":true},
+    {"slot":"voice-1-detail","viewport":"pc","node_id":"21378:7849","node_name":"Mask group","width":404,"height":227,"path":"implementation/theme/assets/images/ref001/rendered/pc/voice-1-detail-21378-7849.png"},
+    {"slot":"voice-1-detail","viewport":"sp","node_id":"21376:4701","node_name":"Mask group","width":311,"height":175,"path":"implementation/theme/assets/images/ref001/rendered/sp/voice-1-detail-21376-4701.png"},
+    {"slot":"voice-2-avatar","viewport":"pc","node_id":"21378:7826","node_name":"Mask group","width":160,"height":160,"path":"implementation/theme/assets/images/ref001/rendered/pc/voice-2-avatar-21378-7826.png"},
+    {"slot":"voice-2-avatar","viewport":"sp","node_id":"21376:4678","node_name":"Mask group","width":84,"height":84,"path":"implementation/theme/assets/images/ref001/rendered/sp/student-voice-02-21376-4678.png","queued":true},
+    {"slot":"voice-3-avatar","viewport":"pc","node_id":"21378:7795","node_name":"Mask group","width":160,"height":160,"path":"implementation/theme/assets/images/ref001/rendered/pc/voice-3-avatar-21378-7795.png"},
+    {"slot":"voice-3-avatar","viewport":"sp","node_id":"21376:4663","node_name":"Mask group","width":84,"height":84,"path":"implementation/theme/assets/images/ref001/rendered/sp/student-voice-04-21376-4663.png","materialized":true},
+    {"slot":"messages-photo","viewport":"pc","node_id":"21378:7760","node_name":"Mask group","width":660,"height":440,"path":"implementation/theme/assets/images/ref001/rendered/pc/messages-photo-21378-7760.png"},
+    {"slot":"messages-photo","viewport":"sp","node_id":"21376:4643","node_name":"Mask group","width":343,"height":229,"path":"implementation/theme/assets/images/ref001/rendered/sp/messages-photo-21376-4643.png"},
+    {"slot":"cta-person-left","viewport":"pc","node_id":"21378:7489","node_name":"img_curator","width":280,"height":294,"path":"implementation/theme/assets/images/ref001/rendered/pc/cta-person-left-21378-7489.png"},
+    {"slot":"cta-person-left","viewport":"sp","node_id":"21376:4958","node_name":"img_curator","width":114,"height":144,"path":"implementation/theme/assets/images/ref001/rendered/sp/cta-person-left-21376-4958.png"},
+    {"slot":"cta-person-right","viewport":"pc","node_id":"21378:7485","node_name":"img_civil","width":335,"height":293,"path":"implementation/theme/assets/images/ref001/rendered/pc/cta-person-right-21378-7485.png"},
+    {"slot":"cta-person-right","viewport":"sp","node_id":"21376:4962","node_name":"img_civil","width":110,"height":137,"path":"implementation/theme/assets/images/ref001/rendered/sp/cta-person-right-21376-4962.png"}
+  ]
+}

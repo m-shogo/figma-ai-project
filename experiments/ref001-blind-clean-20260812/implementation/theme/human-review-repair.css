@@ -23,10 +23,14 @@
 /* CTA Value: reserve a clear 240px central action lane on mobile. */
 .ref-portrait img{object-position:center top}.ref-cta-value__actions{position:relative;z-index:3}.ref-cta-value .ref-action{min-height:64px;justify-content:center}
 
+/* Footer SNS: semantic anchors with swappable outline SVG assets. */
+.ref-footer__sns{display:flex;align-items:center;gap:12px}.ref-footer__sns-link{display:grid;place-items:center;width:40px;height:40px;border:1px solid currentColor;border-radius:50%;color:inherit;text-decoration:none;transition:opacity .2s ease,transform .2s ease}.ref-footer__sns-link:hover{opacity:.68;transform:translateY(-1px)}.ref-footer__sns-link:focus-visible{outline:2px solid currentColor;outline-offset:3px}.ref-footer__sns-icon{width:22px;height:22px;object-fit:contain}
+
 @media (max-width:767px){
   .ref-mv__hero-main{font-size:66px;line-height:1.6}.ref-mv__hero-sub{font-size:32px;line-height:1}.ref-mv__hero-end{font-size:60px;line-height:1;margin-top:16px}.ref-mv__desc{font-size:14px;line-height:2}.ref-mv__oc-kicker{font-size:14px}
   .ref-reason-card__body{padding-top:18px!important}.ref-reason-card__title{margin-bottom:8px!important}
   .ref-messages__head{position:static!important}.ref-messages__head h2,.ref-messages__head h2 strong{font-weight:500}.ref-messages__photo{height:168px!important;margin:0 0 12px!important}.ref-messages__copy{padding:0!important;margin-top:0!important}.ref-messages__quote{margin-top:0}
   .ref-courses__grid{gap:24px}.ref-course__icon-svg{max-width:48px;max-height:48px}.ref-course__rec li{grid-template-columns:12px minmax(0,1fr);gap:6px}
   .ref-portrait{width:68px!important;height:145px!important;bottom:0!important}.ref-portrait--left{left:0!important}.ref-portrait--right{right:0!important}.ref-cta-value__inner{z-index:4}.ref-cta-value__actions{width:240px;margin:26px auto 0!important;gap:16px!important}.ref-cta-value .ref-action{width:240px!important;min-height:64px}.ref-cta-value h2{position:relative;z-index:4}
+  .ref-footer__sns{gap:10px}.ref-footer__sns-link{width:36px;height:36px}.ref-footer__sns-icon{width:20px;height:20px}
 }
