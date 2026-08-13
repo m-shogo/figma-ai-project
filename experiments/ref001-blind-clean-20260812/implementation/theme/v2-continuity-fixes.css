@@ -1,0 +1,16 @@
+/* REF-001 V2 — narrow-width continuity gates.
+ * Figma acceptance endpoint is 375px; below that, preserve the authored
+ * proportions fluidly instead of allowing fixed 343px endpoint boxes to overflow.
+ */
+@media (max-width:360px){
+  .ref-mv__copy{left:16px;width:calc(100vw - 32px)}
+  .ref-mv__hero{width:100%}
+  .ref-mv__hero-main{left:0;width:100%;font-size:clamp(84px,26.25vw,100px)}
+  .ref-mv__hero-main strong{font-size:clamp(55px,17.3vw,66px);vertical-align:clamp(14px,4.5vw,17px)}
+  .ref-mv__hero-sub{left:9%;width:82%;font-size:clamp(27px,8.4vw,32px)}
+  .ref-mv__hero-end{left:0;width:100%;font-size:clamp(50px,15.7vw,60px)}
+  .ref-mv__desc{left:0;width:100%}
+
+  .ref-speech h3{width:calc(100% - 60px);font-size:15px}
+  .ref-speech p{width:100%}
+}
