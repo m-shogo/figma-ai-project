@@ -66,7 +66,7 @@ return [
         'kicker' => '# STUDENTS_VOICE',
         'titlePrefix' => '私が千葉経済大学を',
         'titleStrong' => '選んだ理由',
-        'moreLabel' => '＋ もっと見る',
+        'moreLabel' => 'もっと見る',
         'items' => [
             [
                 'open' => true,

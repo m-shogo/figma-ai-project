@@ -146,6 +146,11 @@
     gap: 16px;
   }
 
+  .v3-reason-card,
+  .v3-reason-card__media {
+    width: 100%;
+  }
+
   .v3-education {
     padding: 56px 0 72px;
   }
@@ -164,14 +169,33 @@
     text-align: left;
   }
 
+  .v3-education__intro::before {
+    display: none;
+  }
+
+  .v3-education__intro h3::after {
+    width: 100%;
+  }
+
+  .v3-education .v3-heading__title {
+    font-size: 32px;
+  }
+
   .v3-education__steps {
+    width: calc(100% - 32px);
     grid-template-columns: 1fr;
     gap: 38px;
   }
 
   .v3-edu-card {
+    width: 100%;
+    max-width: none;
     min-height: 244px;
     padding: 64px 24px 20px 16px;
+  }
+
+  .v3-edu-card__next {
+    display: none;
   }
 
   .v3-edu-card h3 {
@@ -218,6 +242,7 @@
 
   .v3-voice-item {
     padding: 32px 0;
+    min-height: 0;
   }
 
   .v3-voice-item__top {
@@ -228,9 +253,12 @@
 
   .v3-avatar {
     width: 84px;
+    height: 84px;
   }
 
   .v3-speech {
+    width: auto;
+    min-height: 0;
     padding: 18px 16px 14px;
     box-shadow: 7px 8px 0 #fff;
   }
@@ -250,6 +278,7 @@
   }
 
   .v3-voice-open__photo {
+    width: 100%;
     height: 175px;
   }
 
@@ -265,19 +294,26 @@
     font-size: 13px;
   }
 
+  .v3-voice-open__advice strong {
+    width: max-content;
+    height: auto;
+    padding: 9px 18px;
+    margin-bottom: 10px;
+  }
+
   .v3-messages {
     padding: 72px 0 44px;
   }
 
-  .v3-messages__body {
+  .v3-messages__layout {
     display: flex;
     flex-direction: column;
     min-height: 0;
   }
 
   .v3-messages__photo {
-    height: 228px;
     width: 100%;
+    height: 228px;
     order: -1;
     margin-bottom: 12px;
   }
@@ -328,6 +364,7 @@
   }
 
   .v3-course__rec {
+    width: auto;
     margin-left: -80px;
     padding: 38px 16px 14px;
   }
@@ -345,8 +382,20 @@
 
   .v3-link-tile {
     width: 155px;
+    height: 155px;
     font-size: 16px;
     box-shadow: 7px 7px 0 var(--tile-shadow);
+  }
+
+  .v3-link-tile--instagram::before {
+    left: 7px;
+    top: 7px;
+    width: 155px;
+    height: 155px;
+  }
+
+  .v3-link-tile--instagram .v3-link-tile__label {
+    font-size: 13px;
   }
 
   .v3-cta-value {
@@ -380,6 +429,16 @@
     line-height: 1.3;
   }
 
+  .v3-cta-value h2::after {
+    width: 100%;
+    height: 12px;
+  }
+
+  .v3-cta-value__slash {
+    width: 10px;
+    height: 18px;
+  }
+
   .v3-cta-value__actions {
     display: grid;
     gap: 16px;
@@ -402,7 +461,13 @@
 
   .v3-footer__profile .v3-brand {
     margin: auto;
-    width: max-content;
+  }
+
+  .v3-footer .v3-brand,
+  .v3-footer .v3-brand__logo {
+    transform: none;
+    width: 133px;
+    height: 33px;
   }
 
   .v3-footer__related {
@@ -410,6 +475,10 @@
     justify-content: center;
     gap: 24px;
     margin-top: 38px;
+  }
+
+  .v3-footer__related-sep {
+    display: none;
   }
 
   .v3-footer__sns {

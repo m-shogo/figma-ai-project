@@ -9,7 +9,8 @@ $d = v3_data()['footer'];
     </div>
     <div class="v3-footer__aside">
       <div class="v3-footer__related">
-        <?php foreach ($d['related'] as $label): ?>
+        <?php foreach ($d['related'] as $i => $label): ?>
+          <?php if ($i > 0): ?><span class="v3-footer__related-sep" aria-hidden="true">/</span><?php endif; ?>
           <span><?php v3_e($label); ?></span>
         <?php endforeach; ?>
       </div>
