@@ -76,7 +76,7 @@ jobs:
         run: |
           python -m pip install --disable-pip-version-check pillow
           python scripts/build_ref001_section_diff_report.py _site/ref-001/latest/review/section-diffs
-          python scripts/build_ref001_section_diff_report.py _site/ref-001/runs/run-2/review/section-diffs
+          cp -R _site/ref-001/latest/review/section-diffs _site/ref-001/runs/run-2/review/
           test -f _site/ref-001/latest/review/section-diffs/pc-student-voice-diff.png
           test -f _site/ref-001/latest/review/section-diffs/sp-student-voice-diff.png
           test -f _site/ref-001/latest/review/section-diffs/report.json
