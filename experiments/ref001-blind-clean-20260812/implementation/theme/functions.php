@@ -42,4 +42,5 @@ if (function_exists('add_action')) { add_action('wp_enqueue_scripts', function()
     wp_enqueue_style('ref001-human-review-repair', get_stylesheet_directory_uri() . '/human-review-repair.css', ['ref001-clean-visual-repair'], '0.1.0');
     wp_enqueue_style('ref001-v2-visual-polish', get_stylesheet_directory_uri() . '/v2-visual-polish.css', ['ref001-human-review-repair'], '0.1.0');
     wp_enqueue_style('ref001-v2-education-polish', get_stylesheet_directory_uri() . '/v2-education-polish.css', ['ref001-v2-visual-polish'], '0.1.0');
+    wp_enqueue_style('ref001-v2-student-voice-polish', get_stylesheet_directory_uri() . '/v2-student-voice-polish.css', ['ref001-v2-education-polish'], '0.1.0');
 }); }
