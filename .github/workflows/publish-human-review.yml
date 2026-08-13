@@ -67,19 +67,86 @@ jobs:
           python scripts/validate_ref001_asset_map.py
           python -m unittest tests.test_ref001_asset_map
 
+      - name: Install browser capture runtime
+        run: |
+          mkdir -p /tmp/ref001-review-playwright
+          cd /tmp/ref001-review-playwright
+          npm init -y >/dev/null 2>&1
+          npm install playwright@1.54.2 >/dev/null
+          npx playwright install --with-deps chromium >/dev/null
+
+      - name: Stage canonical rendered assets for fresh review capture
+        run: |
+          SOURCE='implementation/theme/assets/images/ref001/rendered'
+          DEST='experiments/ref001-blind-clean-20260812/implementation/theme/assets/images/ref001/rendered'
+          if [ -d "$SOURCE" ]; then
+            mkdir -p "$DEST"
+            cp -R "$SOURCE"/. "$DEST"/
+          fi
+
+      - name: Capture fresh runtime for this commit
+        env:
+          NODE_PATH: /tmp/ref001-review-playwright/node_modules
+        run: |
+          php -S 127.0.0.1:8765 -t experiments/ref001-blind-clean-20260812/implementation/theme >/tmp/ref001-review-php.log 2>&1 &
+          echo $! >/tmp/ref001-review-php.pid
+          for i in $(seq 1 20); do
+            if curl -fsS http://127.0.0.1:8765/preview.php >/dev/null; then
+              break
+            fi
+            sleep 0.5
+          done
+          curl -fsS http://127.0.0.1:8765/preview.php >/dev/null || { cat /tmp/ref001-review-php.log; exit 1; }
+          cp experiments/ref001-blind-clean-20260812/tools/capture-first-pass.mjs /tmp/ref001-review-playwright/capture-review.mjs
+          cd /tmp/ref001-review-playwright
+          REF001_CAPTURE_DIR='/tmp/ref001-review-runtime' node capture-review.mjs
+          test -f /tmp/ref001-review-runtime/first-pass-1380.png
+          test -f /tmp/ref001-review-runtime/first-pass-375.png
+          test -f /tmp/ref001-review-runtime/runtime-probes.json
+
       - name: Build static Review Dashboard and Artifact Preview
         run: |
           python scripts/build_human_review_site.py --output _site
           python scripts/attach_visual_baseline.py --output _site
 
-      - name: Build section-local visual diff report
+      - name: Build section-local visual diff report from fresh runtime
         run: |
           python -m pip install --disable-pip-version-check pillow
-          python scripts/build_ref001_section_diff_report.py _site/ref-001/latest/review/section-diffs
+          python scripts/build_ref001_section_diff_report.py _site/ref-001/latest/review/section-diffs --runtime-evidence-dir /tmp/ref001-review-runtime
           cp -R _site/ref-001/latest/review/section-diffs _site/ref-001/runs/run-2/review/
           test -f _site/ref-001/latest/review/section-diffs/pc-student-voice-diff.png
           test -f _site/ref-001/latest/review/section-diffs/sp-student-voice-diff.png
           test -f _site/ref-001/latest/review/section-diffs/report.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path('_site/ref-001/latest/review/section-diffs/report.json').read_text())
+          assert report['runtime_source'] == 'fresh runtime from this CI run'
+          rows = report['sections']
+          print('## REF-001 fresh Section Diff')
+          print()
+          print('| Viewport | Section | Diff | Web/Figma height |')
+          print('|---|---|---:|---:|')
+          for row in sorted(rows, key=lambda item: item['ratio'], reverse=True):
+              print(f"| {row['viewport']} | {row['label']} | {row['ratio']*100:.2f}% | {row['web_height']}/{row['figma_height']}px |")
+          PY
+
+      - name: Publish Section Diff summary to Actions
+        shell: bash
+        run: |
+          python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          from pathlib import Path
+          report = json.loads(Path('_site/ref-001/latest/review/section-diffs/report.json').read_text())
+          rows = report['sections']
+          print('## 🧩 REF-001 fresh Section Diff')
+          print('Compared against a fresh screenshot captured from this exact commit. Diff percentage is advisory; Human Review remains final.')
+          print()
+          print('| Viewport | Section | Diff | Web/Figma height |')
+          print('|---|---|---:|---:|')
+          for row in sorted(rows, key=lambda item: item['ratio'], reverse=True):
+              print(f"| {row['viewport']} | {row['label']} | {row['ratio']*100:.2f}% | {row['web_height']}/{row['figma_height']}px |")
+          PY
 
       - name: Validate generated review site
         run: python scripts/validate_human_review_site.py _site
@@ -95,14 +162,6 @@ jobs:
 
       - name: Reject transient Figma asset staging
         run: python scripts/validate_no_figma_asset_staging.py
-
-      - name: Install browser smoke runtime
-        run: |
-          mkdir -p /tmp/ref001-review-playwright
-          cd /tmp/ref001-review-playwright
-          npm init -y >/dev/null 2>&1
-          npm install playwright@1.54.2 >/dev/null
-          npx playwright install --with-deps chromium >/dev/null
 
       - name: Browser smoke — PC, SP, sections, persistence, copy, mobile, visual diff, baseline regression
         run: |

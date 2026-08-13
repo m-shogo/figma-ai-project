@@ -1,15 +1,30 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import argparse
 import json
 import subprocess
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+
+parser = argparse.ArgumentParser(description='Build REF-001 section-local visual diff report.')
+parser.add_argument('output', nargs='?', default='_site/ref-001/latest/review/section-diffs')
+parser.add_argument(
+    '--runtime-evidence-dir',
+    help='Optional fresh runtime evidence directory. When omitted, use committed final/latest evidence.',
+)
+args = parser.parse_args()
+
 manifest = json.loads((ROOT / 'review-dashboard/manifests/ref001-run-2.json').read_text(encoding='utf-8'))
-probes = json.loads((ROOT / 'experiments/ref001-blind-clean-20260812/evidence/final/latest/runtime-probes.json').read_text(encoding='utf-8'))
-out = Path(sys.argv[1] if len(sys.argv) > 1 else '_site/ref-001/latest/review/section-diffs').resolve()
+default_evidence = ROOT / 'experiments/ref001-blind-clean-20260812/evidence/final/latest'
+runtime_evidence = Path(args.runtime_evidence_dir).resolve() if args.runtime_evidence_dir else default_evidence
+probes_path = runtime_evidence / 'runtime-probes.json'
+if not probes_path.is_file():
+    raise SystemExit(f'missing runtime probes: {probes_path}')
+probes = json.loads(probes_path.read_text(encoding='utf-8'))
+out = Path(args.output).resolve()
 out.mkdir(parents=True, exist_ok=True)
 probe_by_width = {int(item['width']): item for item in probes}
 rows = []
@@ -17,7 +32,10 @@ rows = []
 for viewport_key in ('pc', 'sp'):
     viewport = manifest['viewports'][viewport_key]
     width = int(viewport['width'])
-    web_full = ROOT / viewport['web_capture_source']
+    committed_web = ROOT / viewport['web_capture_source']
+    web_full = runtime_evidence / committed_web.name
+    if not web_full.is_file():
+        raise SystemExit(f'missing runtime capture for {viewport_key}: {web_full}')
     figma_full = ROOT / viewport['figma_capture_source']
     actual = probe_by_width[width]['sections']
     by_name = {}
@@ -47,7 +65,8 @@ for row in rows:
     stem = f'{row["viewport"].lower()}-{row["id"]}'
     cards.append(f'<article><h2>{row["label"]} / {row["viewport"]}</h2><p>差分 {row["ratio"]*100:.2f}% · 高さ Web {row["web_height"]}px / Figma {row["figma_height"]}px</p><div><figure><figcaption>Web</figcaption><img src="./{stem}-web.png"></figure><figure><figcaption>Figma</figcaption><img src="./{stem}-figma.png"></figure><figure><figcaption>Diff</figcaption><img src="./{stem}-diff.png"></figure></div></article>')
 style = 'body{font:14px system-ui;margin:20px;background:#f5f5f5;color:#222}header{position:sticky;top:0;background:#fff;padding:12px 16px;border:1px solid #ddd;z-index:2}article{background:#fff;border:1px solid #ddd;border-radius:10px;padding:14px;margin:16px 0}article>div{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}figure{margin:0}img{width:100%;height:auto;display:block;border:1px solid #ddd}@media(max-width:800px){article>div{grid-template-columns:1fr}}'
-html = f'<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>REF-001 Section Diff</title><style>{style}</style><header><strong>REF-001 Section-local Visual Diff</strong><div>各Sectionを実Top/Heightで個別に位置合わせ。上のSectionの縦ズレを下へ伝播させないStandard差分です。</div></header>' + ''.join(cards)
+source_label = 'fresh runtime from this CI run' if args.runtime_evidence_dir else 'committed final/latest runtime'
+html = f'<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>REF-001 Section Diff</title><style>{style}</style><header><strong>REF-001 Section-local Visual Diff</strong><div>各Sectionを実Top/Heightで個別に位置合わせ。上のSectionの縦ズレを下へ伝播させないStandard差分です。</div><div>Web source: {source_label}</div></header>' + ''.join(cards)
 (out/'index.html').write_text(html, encoding='utf-8')
-(out/'report.json').write_text(json.dumps(rows, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
-print(f'PASS section-local diff report: {len(rows)} sections')
+(out/'report.json').write_text(json.dumps({'runtime_source': source_label, 'sections': rows}, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
+print(f'PASS section-local diff report: {len(rows)} sections; source={source_label}')
