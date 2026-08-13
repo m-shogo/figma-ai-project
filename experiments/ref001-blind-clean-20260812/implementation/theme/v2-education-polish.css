@@ -7,6 +7,9 @@
 .ref-edu-card::before,.ref-edu-card::after{content:"";position:absolute;pointer-events:none}
 .ref-edu-card::before{inset:8px -8px -8px 8px;background:linear-gradient(90deg,var(--ref-blue),var(--ref-purple));z-index:0}
 .ref-edu-card::after{inset:0;background:#fff;border:1px solid var(--ref-text);z-index:1}
+/* Old first-pass mobile CSS hid the last card's ::after because that pseudo was
+ * previously used as a flow arrow. V2 now owns the face pseudo, so keep it. */
+.ref-edu-card:last-child::after{display:block!important}
 .ref-edu-card>h3,.ref-edu-card>.ref-picture,.ref-edu-card>ul,.ref-edu-card>.ref-edu-card__badge{z-index:2}
 .ref-edu-card>h3,.ref-edu-card>.ref-picture,.ref-edu-card>ul{position:relative}
 .ref-edu-card__badge{display:flex;position:absolute;align-items:center;gap:8px;z-index:3;font-family:var(--ref-font-jp);line-height:1;white-space:nowrap}
@@ -52,7 +55,9 @@
   .ref-education__intro h3{display:inline;font-size:20px;line-height:1;letter-spacing:.05em;background:linear-gradient(transparent 66%,var(--ref-orange) 0)}
   .ref-education__intro p{font-size:16px;line-height:1.6;letter-spacing:.05em;margin:24px 0 0;text-align:left}
 
-  .ref-education__steps{position:absolute!important;left:4px!important;top:350px!important;display:flex!important;flex-direction:column;width:335px!important;max-width:calc(100% - 8px);transform:none!important;margin:0!important;gap:0!important}
+  /* Content rail already begins at page x=16. Figma cards also begin at x=16,
+   * so there is no additional local 4px inset. */
+  .ref-education__steps{position:absolute!important;left:0!important;top:350px!important;display:flex!important;flex-direction:column;width:335px!important;max-width:100%;transform:none!important;margin:0!important;gap:0!important}
   .ref-edu-card{flex:none;width:335px;max-width:100%;padding:0}
   .ref-edu-card:nth-of-type(1){height:277px;min-height:277px}
   .ref-edu-card:nth-of-type(2){height:250px;min-height:250px}
@@ -70,7 +75,7 @@
 
 @media (max-width:360px){
   .ref-education .ref-content{width:calc(100vw - 32px)!important}
-  .ref-education__steps{left:4px!important;width:calc(100% - 8px)!important}
+  .ref-education__steps{left:0!important;width:100%!important}
   .ref-edu-card{width:100%}
   .ref-edu-card h3{left:48%;width:46%}
   .ref-edu-card__media{left:16px;width:42%}
