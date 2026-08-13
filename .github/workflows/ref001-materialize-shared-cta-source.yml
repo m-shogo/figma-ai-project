@@ -29,7 +29,7 @@ jobs:
           import urllib.parse
           import urllib.request
 
-          TARGET_SHA = 'e95de3af2e6c761a277471db42344c0d3ef0a61b6700fa2a14be1d157855020e'
+          TARGET_SHA = '6acba9f34b47d0c5548a6b7221ec80eb52a46436c71c64b5a32e366dfeb1d366'
           TARGET_BYTES = 2066644
           BASE = 'https://www.cku.ac.jp/'
           API = urllib.parse.urljoin(BASE, 'wp-json/wp/v2/media')
