@@ -51,6 +51,7 @@ jobs:
           python --version
           php --version
           node --version
+          node --check review-dashboard/app/visual-diff.js
 
       - name: Validate incremental REF-001 asset wiring
         run: |
@@ -83,7 +84,7 @@ jobs:
           npm install playwright@1.54.2 >/dev/null
           npx playwright install --with-deps chromium >/dev/null
 
-      - name: Browser smoke — PC, SP, sections, persistence, copy, mobile
+      - name: Browser smoke — PC, SP, sections, persistence, copy, mobile, visual diff
         run: |
           python -m http.server 8877 --directory _site >/tmp/ref001-review-http.log 2>&1 &
           SERVER_PID=$!
@@ -96,10 +97,14 @@ jobs:
           done
           curl -fsS http://127.0.0.1:8877/ref-001/latest/review/ >/dev/null || { cat /tmp/ref001-review-http.log; exit 1; }
           cp review-dashboard/tests/smoke.mjs /tmp/ref001-review-playwright/smoke.mjs
+          cp review-dashboard/tests/visual-diff-smoke.mjs /tmp/ref001-review-playwright/visual-diff-smoke.mjs
           cd /tmp/ref001-review-playwright
           REVIEW_URL='http://127.0.0.1:8877/ref-001/latest/review/' \
           REVIEW_SMOKE_DIR='/tmp/ref001-review-smoke' \
           node smoke.mjs
+          REVIEW_URL='http://127.0.0.1:8877/ref-001/latest/review/' \
+          REVIEW_SMOKE_DIR='/tmp/ref001-review-smoke' \
+          node visual-diff-smoke.mjs
 
       - name: Upload browser smoke screenshots
         if: always()

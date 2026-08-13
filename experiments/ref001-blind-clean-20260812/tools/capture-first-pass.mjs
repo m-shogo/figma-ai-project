@@ -6,9 +6,10 @@ const widths=[320,360,375,390,430,767,768,769,1024,1200,1380];
 const outDir=process.env.REF001_CAPTURE_DIR||path.resolve('experiments/ref001-blind-clean-20260812/evidence/runtime');
 await fs.mkdir(outDir,{recursive:true});
 const browser=await chromium.launch({headless:true});
+const browserVersion=browser.version();
 const results=[];
 for(const width of widths){
-  const page=await browser.newPage({viewport:{width,height:900},deviceScaleFactor:1});
+  const page=await browser.newPage({viewport:{width,height:900},deviceScaleFactor:1,reducedMotion:'reduce',colorScheme:'light'});
   const runtimeErrors=[];
   page.on('pageerror',e=>runtimeErrors.push(`pageerror:${e.message}`));
   page.on('console',m=>{if(m.type()==='error')runtimeErrors.push(`console:${m.text()}`)});
@@ -56,13 +57,16 @@ for(const width of widths){
     }
     return{bodyHeight:Math.round(Math.max(body.scrollHeight,de.scrollHeight)),scrollWidth:sw(),pageOverflowPx:Math.max(0,sw()-innerWidth),readableTextClipping:clipped,overflowElements,overflowDiagnostics,imageFailures,primaryFonts:{zenKakuGothicNew:document.fonts.check('16px "Zen Kaku Gothic New"'),poppins:document.fonts.check('16px Poppins')},sections};
   });
-  metrics.width=width;metrics.runtimeErrors=runtimeErrors;results.push(metrics);
-  if([320,375,1380].includes(width))await page.screenshot({path:path.join(outDir,`first-pass-${width}.png`),fullPage:true});
+  metrics.width=width;
+  metrics.runtimeErrors=runtimeErrors;
+  metrics.captureEnvironment={browser:'chromium',browserVersion,platform:process.platform,deviceScaleFactor:1,reducedMotion:'reduce',colorScheme:'light'};
+  results.push(metrics);
+  if([320,375,1380].includes(width))await page.screenshot({path:path.join(outDir,`first-pass-${width}.png`),fullPage:true,animations:'disabled',caret:'hide'});
   await page.close();
 }
 await browser.close();
 await fs.writeFile(path.join(outDir,'runtime-probes.json'),JSON.stringify(results,null,2)+'\n');
-const summary=results.map(x=>({width:x.width,bodyHeight:x.bodyHeight,pageOverflowPx:x.pageOverflowPx,readableTextClipping:x.readableTextClipping.length,imageFailures:x.imageFailures.length,primaryFonts:x.primaryFonts,runtimeErrors:x.runtimeErrors.length}));
+const summary=results.map(x=>({width:x.width,bodyHeight:x.bodyHeight,pageOverflowPx:x.pageOverflowPx,readableTextClipping:x.readableTextClipping.length,imageFailures:x.imageFailures.length,primaryFonts:x.primaryFonts,runtimeErrors:x.runtimeErrors.length,captureEnvironment:x.captureEnvironment}));
 console.log(JSON.stringify(summary,null,2));
 for(const r of results.filter(x=>x.pageOverflowPx>0)){console.log(`OVERFLOW DEBUG @ ${r.width}px`);console.log(JSON.stringify({elements:r.overflowElements,diagnostics:r.overflowDiagnostics},null,2))}
 for(const r of results.filter(x=>x.imageFailures.length)){console.log(`IMAGE DEBUG @ ${r.width}px`);console.log(JSON.stringify(r.imageFailures,null,2))}

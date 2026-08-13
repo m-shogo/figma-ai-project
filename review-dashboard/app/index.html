@@ -7,6 +7,7 @@
   <title>REF-001 Human Review</title>
   <link rel="stylesheet" href="./app.css">
   <link rel="stylesheet" href="./review-assist.css">
+  <link rel="stylesheet" href="./visual-diff.css">
 </head>
 <body data-manifest="./manifest.json" data-issue-repository="m-shogo/figma-ai-project">
   <header class="review-header">
@@ -36,6 +37,15 @@
       <button type="button" data-mode="overlay">Overlay</button>
       <button type="button" data-mode="web-only">Web Only</button>
       <button type="button" data-mode="figma-only">Figma Only</button>
+    </div>
+    <button id="visual-diff-toggle" class="compact-button visual-diff-trigger" type="button">🔴 Visual Diff</button>
+    <div class="diff-sensitivity" aria-label="Visual diff sensitivity">
+      <span>感度</span>
+      <div id="diff-sensitivity" class="segmented">
+        <button type="button" data-diff-sensitivity="loose" aria-pressed="false">Loose</button>
+        <button type="button" data-diff-sensitivity="standard" class="is-active" aria-pressed="true">Standard</button>
+        <button type="button" data-diff-sensitivity="strict" aria-pressed="false">Strict</button>
+      </div>
     </div>
     <div class="review-progress" aria-label="Review progress">
       <span id="review-progress-label">0 / 26確認済み</span>
@@ -120,6 +130,27 @@
         <p id="overlay-help" class="helper-text"></p>
       </section>
 
+      <section id="visual-diff-review" class="visual-diff-review" hidden>
+        <header class="visual-diff-review__header">
+          <div>
+            <strong>PERCEPTUAL VISUAL DIFF</strong>
+            <span id="diff-status">Figma / Webの見た目差分を解析</span>
+          </div>
+          <div class="visual-diff-meta">
+            <span id="diff-profile-label" class="visual-diff-chip">Standard · threshold 0.14</span>
+            <span id="diff-ratio" class="visual-diff-chip">差分 —</span>
+            <span id="diff-bbox" class="visual-diff-chip">範囲 —</span>
+            <span id="diff-scale" class="visual-diff-chip">解析 —</span>
+          </div>
+        </header>
+        <div class="visual-diff-crop">
+          <canvas id="visual-diff-canvas" class="visual-diff-canvas" hidden></canvas>
+          <div id="visual-diff-empty" class="visual-diff-empty">Visual Diffを選ぶと、差分を赤で表示します。</div>
+        </div>
+        <div id="diff-hotspots" class="visual-diff-hotspots" aria-live="polite" hidden></div>
+        <p id="visual-diff-help" class="visual-diff-help">赤は修正候補を探すための地図です。差分率だけで自動FAILにはしません。</p>
+      </section>
+
       <section class="feedback-card" aria-labelledby="feedback-title">
         <div class="feedback-card__intro">
           <div>
@@ -171,5 +202,6 @@
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
   <script src="./app.js" defer></script>
   <script src="./review-assist.js" defer></script>
+  <script src="./visual-diff.js" defer></script>
 </body>
 </html>
