@@ -1,0 +1,66 @@
+/* REF-001 V2 — Links fidelity owner.
+ * Figma PC 21378:7458 / SP 21376:4919.
+ * A tile is a clickable group: authored face + independently offset shadow.
+ */
+.ref-links__grid{margin-inline:auto}
+.ref-link-tile{position:relative;display:block;flex:none;width:auto;aspect-ratio:auto;border:0;border-radius:0;box-shadow:none;background:transparent;color:#333;text-decoration:none;letter-spacing:.05em}
+.ref-link-tile__shadow,.ref-link-tile__face{position:absolute;display:block;border-radius:50%}
+.ref-link-tile__shadow{background:var(--tile-shadow)}
+.ref-link-tile--instagram .ref-link-tile__shadow{opacity:.7;background:linear-gradient(147.380759deg,#4c64d3 13.902%,#cf2e92 31.809%,#f26939 59.027%,#ffdd83 85.528%)}
+.ref-link-tile__face{left:0;top:0;box-sizing:border-box;background:var(--tile-bg);border:1px solid #333}
+.ref-link-tile__copy,.ref-link-tile__instagram-copy,.ref-link-tile__arrow{position:absolute;display:block;left:0;right:0;text-align:center;z-index:1}
+.ref-link-tile__copy{font-family:var(--ref-font-jp);font-weight:500;line-height:1}
+.ref-link-tile__arrow{line-height:0;color:var(--tile-accent)}
+.ref-link-tile__arrow .ref-svg-icon{display:block;margin:auto;object-fit:contain}
+.ref-link-tile__numbers-kicker{display:block;font-family:var(--ref-font-jp);font-weight:500;letter-spacing:.05em}
+.ref-link-tile__instagram-copy{font-family:var(--ref-font-en);font-weight:400;line-height:1}
+.ref-link-tile__instagram-copy small{display:flex;align-items:center;justify-content:center;font-family:var(--ref-font-en);font-weight:400;line-height:1;letter-spacing:.05em}
+.ref-link-tile__instagram-icon{display:block;object-fit:contain}
+
+@media (min-width:768px){
+  .ref-links{height:404px;padding:72px 0}
+  .ref-links__grid{display:flex;width:1112px;height:260px;gap:24px;justify-content:flex-start;align-items:flex-start}
+  .ref-link-tile{width:260px;height:260px}
+  .ref-link-tile__shadow{left:10px;top:10px;width:250px;height:250px}
+  .ref-link-tile__face{width:250px;height:250px}
+  .ref-link-tile__copy{top:110px;font-size:22px}
+  .ref-link-tile--numbers .ref-link-tile__copy{top:82px;font-size:22px;line-height:1.4}
+  .ref-link-tile__numbers-kicker{font-size:18px;line-height:1.4;margin:0}
+  .ref-link-tile__arrow{top:164px}
+  .ref-link-tile__arrow .ref-svg-icon{width:20px;height:19px}
+  .ref-link-tile__instagram-copy{top:92px;font-size:20px;letter-spacing:.05em}
+  .ref-link-tile__instagram-copy small{gap:8px;margin-top:12px;font-size:14px}
+  .ref-link-tile__instagram-icon{width:16px;height:16px}
+}
+
+@media (max-width:767px){
+  .ref-links{height:455px;padding:56px 0}
+  .ref-links__grid{--group-size:162px;--face-size:155px;display:grid!important;grid-template-columns:repeat(2,var(--group-size))!important;grid-template-rows:repeat(2,var(--group-size));width:343px!important;max-width:calc(100vw - 32px);height:343px;column-gap:19px!important;row-gap:19px!important;justify-content:center;align-content:start}
+  .ref-link-tile{width:var(--group-size);height:var(--group-size)}
+  .ref-link-tile__shadow{left:7px;top:7px;width:var(--face-size);height:var(--face-size)}
+  .ref-link-tile__face{width:var(--face-size);height:var(--face-size);border-width:1px}
+  .ref-link-tile__copy{top:60px;font-size:16px}
+  .ref-link-tile--numbers .ref-link-tile__copy{top:45px;font-size:16px;line-height:1.4}
+  .ref-link-tile__numbers-kicker{font-size:13px;line-height:1.4}
+  .ref-link-tile__arrow{top:91px}
+  .ref-link-tile--numbers .ref-link-tile__arrow{top:104px}
+  .ref-link-tile--instagram .ref-link-tile__arrow{top:108px}
+  .ref-link-tile__arrow .ref-svg-icon{width:16px;height:15px}
+  .ref-link-tile__instagram-copy{top:39px;font-size:16px;line-height:1;letter-spacing:.05em}
+  .ref-link-tile__instagram-title{display:block;width:100px;margin:auto;white-space:normal;line-height:1}
+  .ref-link-tile__instagram-copy small{gap:5px;margin-top:11px;font-size:12px}
+  .ref-link-tile__instagram-icon{width:14px;height:14px}
+}
+
+@media (max-width:360px){
+  .ref-links__grid{--group-size:calc((100vw - 51px)/2);--face-size:calc(var(--group-size) - 7px);width:calc(100vw - 32px)!important;height:calc(var(--group-size)*2 + 19px)}
+  .ref-links{height:calc(var(--group-size,134.5px)*2 + 131px)}
+  .ref-link-tile__copy{top:38%;font-size:clamp(13px,4.2vw,16px)}
+  .ref-link-tile--numbers .ref-link-tile__copy{top:29%;font-size:clamp(13px,4.2vw,16px)}
+  .ref-link-tile__numbers-kicker{font-size:clamp(11px,3.45vw,13px)}
+  .ref-link-tile__arrow{top:61%}
+  .ref-link-tile--numbers .ref-link-tile__arrow{top:69%}
+  .ref-link-tile--instagram .ref-link-tile__arrow{top:71%}
+  .ref-link-tile__instagram-copy{top:25%;font-size:clamp(13px,4.2vw,16px)}
+  .ref-link-tile__instagram-copy small{font-size:clamp(10px,3.2vw,12px)}
+}
