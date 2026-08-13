@@ -110,6 +110,9 @@
   .ref-mv__hero-end{left:0;width:100%;font-size:clamp(50px,15.7vw,60px)}
   .ref-mv__desc{left:0;width:100%}
 
+  /* 305px is needed at the authored 375px endpoint; cap one pixel earlier at
+   * 320 so the absolute profile box ends exactly on, never beyond, the viewport. */
+  .ref-messages__profile{width:304px;max-width:calc(100vw - 16px)}
   .ref-speech h3{width:calc(100% - 60px);font-size:15px}
   .ref-speech p{width:100%}
 
