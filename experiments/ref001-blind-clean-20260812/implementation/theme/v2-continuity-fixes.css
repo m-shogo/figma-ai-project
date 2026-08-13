@@ -16,16 +16,20 @@
 .ref-mv__oc-arrow{display:none!important}
 .ref-mv__oc::after{content:'';position:absolute;right:8px;bottom:8px;box-sizing:border-box;width:48px;height:48px;border:1px solid var(--ref-orange);border-radius:50%;background:#fff url('assets/icons/ref001-mv-arrow-black.svg') center/14px 13px no-repeat}
 
-/* Figma's bracket glyphs are ASCII parentheses in Poppins, not the full-width
- * Japanese parentheses from the generic first pass. Matching the actual glyph
- * removes the visible inward drift on Reason / Student Voice / Courses without
- * moving any title box or changing section geometry. */
+/* Figma's bracket glyphs are ASCII Poppins Medium with a white fill and 1px
+ * #333 stroke, not the full-width Japanese parentheses from the generic pass. */
 .ref-reason__head .ref-bracket-title::before,
 .ref-voice__head .ref-bracket-title::before,
 .ref-courses__head .ref-bracket-title::before{content:'('}
 .ref-reason__head .ref-bracket-title::after,
 .ref-voice__head .ref-bracket-title::after,
 .ref-courses__head .ref-bracket-title::after{content:')'}
+.ref-reason__head .ref-bracket-title::before,.ref-reason__head .ref-bracket-title::after,
+.ref-voice__head .ref-bracket-title::before,.ref-voice__head .ref-bracket-title::after,
+.ref-courses__head .ref-bracket-title::before,.ref-courses__head .ref-bracket-title::after{font-family:var(--ref-font-en);font-weight:500;letter-spacing:.05em}
+
+/* Reason card labels are authored Zen Kaku Gothic New Medium: 20px PC / 18px SP. */
+.ref-reason-card__title{font-weight:500}
 
 /* Shared CTA uses white buttons, while the reusable header action SVGs are
  * authored white. Reuse their exact paths as masks so the CTA icons inherit the
@@ -69,6 +73,7 @@
    * 9px early. Min-height fixes the authored endpoint while allowing narrower
    * viewports to grow naturally when text reflows. */
   .ref-reason{min-height:1295px}
+  .ref-reason-card__title{font-size:18px!important}
 
   .ref-edu-flow-arrow{transform:none;flex-direction:column;position:relative;left:3px}
   .ref-edu-flow-arrow::before,.ref-edu-flow-arrow::after{transform:rotate(45deg);margin:-1px 0}
