@@ -103,15 +103,17 @@
 
 .v3-mv__quotes {
   color: var(--v3-purple);
+  font-family: var(--v3-font-quote);
   font-size: 119px;
   line-height: 1;
-  font-weight: 500;
+  font-weight: 800;
   vertical-align: -0.28em;
 }
 
 .v3-mv__word {
   display: inline;
   color: #fff;
+  font-family: var(--v3-font-display);
   -webkit-text-stroke: 1px #333;
   paint-order: stroke fill;
   text-shadow: 0 0 18px rgba(132, 115, 170, 0.35);
@@ -123,6 +125,7 @@
 .v3-mv__end {
   display: block;
   color: #fff;
+  font-family: var(--v3-font-display);
   -webkit-text-stroke: 1px #333;
   paint-order: stroke fill;
   text-shadow: 0 0 18px rgba(132, 115, 170, 0.35);
@@ -133,6 +136,7 @@
 
 .v3-mv__mid {
   display: block;
+  font-family: var(--v3-font-display);
   font-size: 44px;
   letter-spacing: 0.05em;
   margin: 4px 0 8px;

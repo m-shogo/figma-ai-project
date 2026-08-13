@@ -154,7 +154,11 @@
   }
 
   .v3-reason {
-    padding: 56px 0;
+    padding: 40px 0;
+  }
+
+  .v3-reason .v3-heading__title {
+    margin-top: 12px;
   }
 
   .v3-reason__intro {
@@ -309,7 +313,7 @@
   }
 
   .v3-voice {
-    padding: 56px 0;
+    padding: 48px 0;
   }
 
   .v3-voice .v3-heading {
@@ -401,7 +405,7 @@
   }
 
   .v3-messages {
-    padding: 48px 0;
+    padding: 40px 0;
   }
 
   .v3-messages__layout {
@@ -482,15 +486,15 @@
   }
 
   .v3-courses {
-    padding: 56px 0;
+    padding: 40px 0;
   }
 
   .v3-courses .v3-heading {
-    margin-bottom: 16px;
+    margin-bottom: 8px;
   }
 
   .v3-courses .v3-heading__title {
-    margin-top: 8px;
+    margin-top: 4px;
   }
 
   .v3-courses__title-line {
@@ -646,7 +650,7 @@
   }
 
   .v3-footer__inner {
-    padding: 56px 16px 120px;
+    padding: 56px 16px 108px;
     display: block;
     text-align: center;
   }

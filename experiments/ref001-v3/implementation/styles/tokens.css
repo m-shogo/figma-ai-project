@@ -15,4 +15,8 @@
   --v3-font-heading: "Zen Kaku Gothic New", "Noto Sans CJK JP", sans-serif;
   --v3-font-body: "Zen Kaku Gothic New", "Noto Sans CJK JP", sans-serif;
   --v3-font-en: "Poppins", Arial, sans-serif;
+  /* Figma MV “ ” = A P-OTF RyuminKO+ ProN EB. Licensed; not shipped. */
+  --v3-font-quote: "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", serif;
+  /* Figma MV ケイザイ / おもしろい。 = A P-OTF Futo Go B101 Pr6N M. Licensed; not shipped. */
+  --v3-font-display: "Zen Kaku Gothic New", "Noto Sans CJK JP", sans-serif;
 }

@@ -18,6 +18,7 @@
 
 .v3-heading__title {
   margin: 24px 0 0;
+  font-family: var(--v3-font-heading);
   font-weight: 500;
   letter-spacing: 0.06em;
   font-size: 30px;
