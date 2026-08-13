@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Validate staged REF-001 Figma PNG exports and install them atomically.
+"""Validate the historical REF-001 1x PNG staging workflow.
 
 The Figma connector/REST download step must put the 32 rendered PNGs in a
 temporary directory using the canonical basenames from the registry.  This
-script never handles a Figma token or temporary render URL.
+script never handles a Figma token or temporary render URL. The current WebP
+registry is handled by materialize_ref001_webp_assets.py instead.
 """
 
 from __future__ import annotations
@@ -133,6 +134,11 @@ def main() -> None:
         fail("sips is required for macOS image decoding")
 
     registry = json.loads(REGISTRY.read_text(encoding="utf-8"))
+    if registry.get("asset_policy", {}).get("canonical_format") != "png":
+        fail(
+            "this historical PNG installer does not apply to the current registry; "
+            "use scripts/materialize_ref001_webp_assets.py"
+        )
     assets = registry.get("assets", [])
     if len(assets) != 32:
         fail(f"registry must define 32 assets; got {len(assets)}")

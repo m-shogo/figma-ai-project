@@ -1,0 +1,705 @@
+{
+  "schema_version": 1,
+  "reference_id": "REF-001",
+  "created_at_utc": "2026-08-13T05:00:51.945431+00:00",
+  "source": {
+    "figma_file_key": "ZYTdtw4wCgkcBy2cVnhxVI",
+    "method": "FIGMA_PNG_STAGING_TO_MAC_LOCAL_LOSSLESS_WEBP",
+    "pc_scale": 1,
+    "sp_scale": 3,
+    "cta_alpha_method": "FIGMA_ORIGINAL_RGBA_SOURCE_WITH_RECORDED_LAYER_PLACEMENT"
+  },
+  "encoder": {
+    "name": "cwebp",
+    "mode": "lossless",
+    "exact_transparent_rgb": true,
+    "preset": "z9"
+  },
+  "transport": {
+    "google_drive_used": false,
+    "temporary_urls_persisted": false
+  },
+  "validation": {
+    "assets": 32,
+    "pc_assets": 16,
+    "sp_assets": 16,
+    "webp_decode": "PASS",
+    "dimensions": "PASS",
+    "lossless_rgba_roundtrip": "PASS",
+    "cta_transparency": "PASS"
+  },
+  "assets": [
+    {
+      "slot": "main-visual-left",
+      "viewport": "pc",
+      "node_id": "21378:8041",
+      "path": "implementation/theme/assets/images/ref001/rendered/pc/main-visual-left-21378-8041.webp",
+      "display_width": 570,
+      "display_height": 614,
+      "source_width": 570,
+      "source_height": 614,
+      "scale": 1,
+      "staging_sha256": "249f3be585c0e607cc727b068c2588ad791dd459e9d4ede3e21c70ddf278bb77",
+      "webp_sha256": "8fc1767dc92b296f647872f19a7b635b40d6b63819d938056ad217a8985f2498",
+      "webp_bytes": 200278,
+      "lossless_rgba_match": true,
+      "alpha_extrema": [
+        255,
+        255
+      ],
+      "transparent_pixels_required": false,
+      "canonical_path": "implementation/theme/assets/images/ref001/rendered/pc/main-visual-left-21378-8041.webp"
+    },
+    {
+      "slot": "main-visual-left",
+      "viewport": "sp",
+      "node_id": "21376:4894",
+      "path": "implementation/theme/assets/images/ref001/rendered/sp/main-visual-left-21376-4894.webp",
+      "display_width": 335,
+      "display_height": 220,
+      "source_width": 1005,
+      "source_height": 660,
+      "scale": 3,
+      "staging_sha256": "17ca0b58052529cb16f6182871d4eb9a00dec176b75d3b98445fb267de2c8143",
+      "webp_sha256": "3d7f7b926ecbf436c4155602dee5ad62b3ef51699e967ac4ba99a5ad9969ee6a",
+      "webp_bytes": 192994,
+      "lossless_rgba_match": true,
+      "alpha_extrema": [
+        255,
+        255
+      ],
+      "transparent_pixels_required": false,
+      "canonical_path": "implementation/theme/assets/images/ref001/rendered/sp/main-visual-left-21376-4894.webp"
+    },
+    {
+      "slot": "main-visual-right",
+      "viewport": "pc",
+      "node_id": "21378:8036",
+      "path": "implementation/theme/assets/images/ref001/rendered/pc/main-visual-right-21378-8036.webp",
+      "display_width": 570,
+      "display_height": 614,
+      "source_width": 570,
+      "source_height": 614,
+      "scale": 1,
+      "staging_sha256": "4fb8d4a85a95bd654ccfe9248595ef03f05925b233e6ae60d4729df19c08bded",
+      "webp_sha256": "169b9d578e3216c919dfc2502f5e9db172691243774928dfb0cdbf81d5474823",
+      "webp_bytes": 302228,
+      "lossless_rgba_match": true,
+      "alpha_extrema": [
+        255,
+        255
+      ],
+      "transparent_pixels_required": false,
+      "canonical_path": "implementation/theme/assets/images/ref001/rendered/pc/main-visual-right-21378-8036.webp"
+    },
+    {
+      "slot": "main-visual-right",
+      "viewport": "sp",
+      "node_id": "21376:4890",
+      "path": "implementation/theme/assets/images/ref001/rendered/sp/main-visual-right-21376-4890.webp",
+      "display_width": 335,
+      "display_height": 220,
+      "source_width": 1005,
+      "source_height": 660,
+      "scale": 3,
+      "staging_sha256": "63a4b7cf96b38704c69a5ec558b07076fd2539e531cbb651d3dd886280c16e8b",
+      "webp_sha256": "d2908fa856de55b2694a2cd1fce10845f676a17c225384526ce96e25fa802ddc",
+      "webp_bytes": 530958,
+      "lossless_rgba_match": true,
+      "alpha_extrema": [
+        255,
+        255
+      ],
+      "transparent_pixels_required": false,
+      "canonical_path": "implementation/theme/assets/images/ref001/rendered/sp/main-visual-right-21376-4890.webp"
+    },
+    {
+      "slot": "reason-1",
+      "viewport": "pc",
+      "node_id": "21378:8002",
+      "path": "implementation/theme/assets/images/ref001/rendered/pc/reason-1-21378-8002.webp",
+      "display_width": 360,
+      "display_height": 240,
+      "source_width": 360,
+      "source_height": 240,
+      "scale": 1,
+      "staging_sha256": "897e4ffafb06c378a0084139e36187a9ccec53815d6780626dd011bf0d542885",
+      "webp_sha256": "7645752479bb054c9c5beda9ea301fb942767a432a3996115a33af5172d35843",
+      "webp_bytes": 63182,
+      "lossless_rgba_match": true,
+      "alpha_extrema": [
+        255,
+        255
+      ],
+      "transparent_pixels_required": false,
+      "canonical_path": "implementation/theme/assets/images/ref001/rendered/pc/reason-1-21378-8002.webp"
+    },
+    {
+      "slot": "reason-1",
+      "viewport": "sp",
+      "node_id": "21376:4855",
+      "path": "implementation/theme/assets/images/ref001/rendered/sp/reason-1-21376-4855.webp",
+      "display_width": 343,
+      "display_height": 229,
+      "source_width": 1029,
+      "source_height": 687,
+      "scale": 3,
+      "staging_sha256": "d7500ce4c9a7de2237f1422d3609437a2a69eeba71095f483abe1c4a8ada6964",
+      "webp_sha256": "5559525d56a002dec96bd371ac379a99e1716762880843e94ca00693a712f0d5",
+      "webp_bytes": 319642,
+      "lossless_rgba_match": true,
+      "alpha_extrema": [
+        255,
+        255
+      ],
+      "transparent_pixels_required": false,
+      "canonical_path": "implementation/theme/assets/images/ref001/rendered/sp/reason-1-21376-4855.webp"
+    },
+    {
+      "slot": "reason-2",
+      "viewport": "pc",
+      "node_id": "21378:8010",
+      "path": "implementation/theme/assets/images/ref001/rendered/pc/reason-2-21378-8010.webp",
+      "display_width": 360,
+      "display_height": 240,
+      "source_width": 360,
+      "source_height": 240,
+      "scale": 1,
+      "staging_sha256": "b5ef5a4ef41725aa260ba52455d46465924511e97bbc8bda1550ef087b2ffff7",
+      "webp_sha256": "131724b475d2d396b2c19775efe0c5efe369ded1225cd49700e704fb6862ed67",
+      "webp_bytes": 90072,
+      "lossless_rgba_match": true,
+      "alpha_extrema": [
+        255,
+        255
+      ],
+      "transparent_pixels_required": false,
+      "canonical_path": "implementation/theme/assets/images/ref001/rendered/pc/reason-2-21378-8010.webp"
+    },
+    {
+      "slot": "reason-2",
+      "viewport": "sp",
+      "node_id": "21376:4864",
+      "path": "implementation/theme/assets/images/ref001/rendered/sp/reason-2-21376-4864.webp",
+      "display_width": 343,
+      "display_height": 229,
+      "source_width": 1029,
+      "source_height": 687,
+      "scale": 3,
+      "staging_sha256": "3b051a37969a8e60603ddfa02f9a1d419c544a55b16a2195196c4756c5fa8a48",
+      "webp_sha256": "6de0233d97c523afe5c83ae1f74e9fe3349b36cf134f77590c274aa34fbcf013",
+      "webp_bytes": 488076,
+      "lossless_rgba_match": true,
+      "alpha_extrema": [
+        255,
+        255
+      ],
+      "transparent_pixels_required": false,
+      "canonical_path": "implementation/theme/assets/images/ref001/rendered/sp/reason-2-21376-4864.webp"
+    },
+    {
+      "slot": "reason-3",
+      "viewport": "pc",
+      "node_id": "21378:8018",
+      "path": "implementation/theme/assets/images/ref001/rendered/pc/reason-3-21378-8018.webp",
+      "display_width": 360,
+      "display_height": 240,
+      "source_width": 360,
+      "source_height": 240,
+      "scale": 1,
+      "staging_sha256": "2e144988c08fb5ffd31943cfe308b926daa89806c77d50bef36f8e4db046dcc0",
+      "webp_sha256": "5de17fef9ad2bed918505a2f31ba653707ac0a70e42148fe92c6f70167d3244c",
+      "webp_bytes": 91514,
+      "lossless_rgba_match": true,
+      "alpha_extrema": [
+        255,
+        255
+      ],
+      "transparent_pixels_required": false,
+      "canonical_path": "implementation/theme/assets/images/ref001/rendered/pc/reason-3-21378-8018.webp"
+    },
+    {
+      "slot": "reason-3",
+      "viewport": "sp",
+      "node_id": "21376:4872",
+      "path": "implementation/theme/assets/images/ref001/rendered/sp/reason-3-21376-4872.webp",
+      "display_width": 343,
+      "display_height": 229,
+      "source_width": 1029,
+      "source_height": 687,
+      "scale": 3,
+      "staging_sha256": "ee21e53a44527ec62223d6385c0a2d1e0fdce16e3c6333d81c51b22e09c97b9f",
+      "webp_sha256": "29bb11f0aa4a2008c4dedff3387912e37e8461c40dd54e95668264333922b14d",
+      "webp_bytes": 150726,
+      "lossless_rgba_match": true,
+      "alpha_extrema": [
+        255,
+        255
+      ],
+      "transparent_pixels_required": false,
+      "canonical_path": "implementation/theme/assets/images/ref001/rendered/sp/reason-3-21376-4872.webp"
+    },
+    {
+      "slot": "education-1",
+      "viewport": "pc",
+      "node_id": "21378:7980",
+      "path": "implementation/theme/assets/images/ref001/rendered/pc/education-1-21378-7980.webp",
+      "display_width": 233,
+      "display_height": 131,
+      "source_width": 233,
+      "source_height": 131,
+      "scale": 1,
+      "staging_sha256": "6b703bb6886b5f13cf85b150960b9fefcfb346f60774e7d417837a48e0f9af19",
+      "webp_sha256": "69cb17b53f2ff5eada1fceed7b8873d4c7779e1ea5b4c9402149dee9fc36d363",
+      "webp_bytes": 35798,
+      "lossless_rgba_match": true,
+      "alpha_extrema": [
+        255,
+        255
+      ],
+      "transparent_pixels_required": false,
+      "canonical_path": "implementation/theme/assets/images/ref001/rendered/pc/education-1-21378-7980.webp"
+    },
+    {
+      "slot": "education-1",
+      "viewport": "sp",
+      "node_id": "21376:4835",
+      "path": "implementation/theme/assets/images/ref001/rendered/sp/education-1-21376-4835.webp",
+      "display_width": 140,
+      "display_height": 79,
+      "source_width": 420,
+      "source_height": 237,
+      "scale": 3,
+      "staging_sha256": "8a8619b24b52db81f07fd14abd87e05279ade64ba1b2643d8f38d87966db52e5",
+      "webp_sha256": "73acb3e0120f4d3caa0cec69edddedc949d068dfb340070f2107bb4e3d25fd86",
+      "webp_bytes": 92364,
+      "lossless_rgba_match": true,
+      "alpha_extrema": [
+        255,
+        255
+      ],
+      "transparent_pixels_required": false,
+      "canonical_path": "implementation/theme/assets/images/ref001/rendered/sp/education-1-21376-4835.webp"
+    },
+    {
+      "slot": "education-2",
+      "viewport": "pc",
+      "node_id": "21378:7946",
+      "path": "implementation/theme/assets/images/ref001/rendered/pc/education-2-21378-7946.webp",
+      "display_width": 233,
+      "display_height": 131,
+      "source_width": 233,
+      "source_height": 131,
+      "scale": 1,
+      "staging_sha256": "a32e4ac16e8def0a32523ffd0e822ca7acf12b58674acd3c0c7ab14a6458862c",
+      "webp_sha256": "88104360eb60e15b03bf9d5532f3df5c5b837c329cf758e750718df86309f02e",
+      "webp_bytes": 42626,
+      "lossless_rgba_match": true,
+      "alpha_extrema": [
+        255,
+        255
+      ],
+      "transparent_pixels_required": false,
+      "canonical_path": "implementation/theme/assets/images/ref001/rendered/pc/education-2-21378-7946.webp"
+    },
+    {
+      "slot": "education-2",
+      "viewport": "sp",
+      "node_id": "21376:4801",
+      "path": "implementation/theme/assets/images/ref001/rendered/sp/education-2-21376-4801.webp",
+      "display_width": 140,
+      "display_height": 79,
+      "source_width": 420,
+      "source_height": 237,
+      "scale": 3,
+      "staging_sha256": "bd62a5134190cdbc4f6298b0de4d6003580dfbbe2e12086fcc89b189145aee40",
+      "webp_sha256": "4c5df579a211aaa0bfc8b1ddbe96112c66aa20ab896d6aa6c3e5e2f5f758b245",
+      "webp_bytes": 117284,
+      "lossless_rgba_match": true,
+      "alpha_extrema": [
+        255,
+        255
+      ],
+      "transparent_pixels_required": false,
+      "canonical_path": "implementation/theme/assets/images/ref001/rendered/sp/education-2-21376-4801.webp"
+    },
+    {
+      "slot": "education-3",
+      "viewport": "pc",
+      "node_id": "21378:7917",
+      "path": "implementation/theme/assets/images/ref001/rendered/pc/education-3-21378-7917.webp",
+      "display_width": 233,
+      "display_height": 131,
+      "source_width": 233,
+      "source_height": 131,
+      "scale": 1,
+      "staging_sha256": "526b7c01b6b74be47af97f9e042da5d5c60f13519d1b07b09b0a8348da699c79",
+      "webp_sha256": "a3e6a02465102708670b8c6af003a181c55197ffc39dca5f308b41caa0d46371",
+      "webp_bytes": 31740,
+      "lossless_rgba_match": true,
+      "alpha_extrema": [
+        255,
+        255
+      ],
+      "transparent_pixels_required": false,
+      "canonical_path": "implementation/theme/assets/images/ref001/rendered/pc/education-3-21378-7917.webp"
+    },
+    {
+      "slot": "education-3",
+      "viewport": "sp",
+      "node_id": "21376:4769",
+      "path": "implementation/theme/assets/images/ref001/rendered/sp/education-3-21376-4769.webp",
+      "display_width": 140,
+      "display_height": 79,
+      "source_width": 420,
+      "source_height": 237,
+      "scale": 3,
+      "staging_sha256": "f65cdffcf23ee336d4ab1fb5a0aea0f52dad9c81644ae5e7f1b04d646ec1a3a5",
+      "webp_sha256": "090f155f4371b52097b43495e76ff7fe6b2be0ba47a02b5ab063aacaa22ab32a",
+      "webp_bytes": 87658,
+      "lossless_rgba_match": true,
+      "alpha_extrema": [
+        255,
+        255
+      ],
+      "transparent_pixels_required": false,
+      "canonical_path": "implementation/theme/assets/images/ref001/rendered/sp/education-3-21376-4769.webp"
+    },
+    {
+      "slot": "education-4",
+      "viewport": "pc",
+      "node_id": "21378:7889",
+      "path": "implementation/theme/assets/images/ref001/rendered/pc/education-4-21378-7889.webp",
+      "display_width": 233,
+      "display_height": 131,
+      "source_width": 233,
+      "source_height": 131,
+      "scale": 1,
+      "staging_sha256": "ad49f1027c05768572729fd326ed44c5d54c66418dae4b4118da4804c19cad89",
+      "webp_sha256": "71c66580679868b0a8a2cf2522568c2a9a96b30f037775cff54c02cfaf4731b3",
+      "webp_bytes": 33130,
+      "lossless_rgba_match": true,
+      "alpha_extrema": [
+        255,
+        255
+      ],
+      "transparent_pixels_required": false,
+      "canonical_path": "implementation/theme/assets/images/ref001/rendered/pc/education-4-21378-7889.webp"
+    },
+    {
+      "slot": "education-4",
+      "viewport": "sp",
+      "node_id": "21376:4741",
+      "path": "implementation/theme/assets/images/ref001/rendered/sp/education-4-21376-4741.webp",
+      "display_width": 140,
+      "display_height": 79,
+      "source_width": 420,
+      "source_height": 237,
+      "scale": 3,
+      "staging_sha256": "44086c49d27666f8bbfd2d734900adf15cd1a96b55a51f42da17eaf16046d821",
+      "webp_sha256": "5a6d483df3cf7b8ac5ac3e856eccfad6a6ac9c9e2dfc10b634935d47307685c7",
+      "webp_bytes": 81008,
+      "lossless_rgba_match": true,
+      "alpha_extrema": [
+        255,
+        255
+      ],
+      "transparent_pixels_required": false,
+      "canonical_path": "implementation/theme/assets/images/ref001/rendered/sp/education-4-21376-4741.webp"
+    },
+    {
+      "slot": "voice-1-avatar",
+      "viewport": "pc",
+      "node_id": "21378:7857",
+      "path": "implementation/theme/assets/images/ref001/rendered/pc/voice-1-avatar-21378-7857.webp",
+      "display_width": 160,
+      "display_height": 160,
+      "source_width": 160,
+      "source_height": 160,
+      "scale": 1,
+      "staging_sha256": "8d7b9890a4aa937ddde6c6499b017520a0dc6c57a00884d3d385482b54df90f8",
+      "webp_sha256": "a29410d212e602a52a6b04a52ee56473906fefe1744929d49436ca12b4fce7e7",
+      "webp_bytes": 21472,
+      "lossless_rgba_match": true,
+      "alpha_extrema": [
+        255,
+        255
+      ],
+      "transparent_pixels_required": false,
+      "canonical_path": "implementation/theme/assets/images/ref001/rendered/pc/voice-1-avatar-21378-7857.webp"
+    },
+    {
+      "slot": "voice-1-avatar",
+      "viewport": "sp",
+      "node_id": "21376:4709",
+      "path": "implementation/theme/assets/images/ref001/rendered/sp/student-voice-01-21376-4709.webp",
+      "display_width": 84,
+      "display_height": 84,
+      "source_width": 252,
+      "source_height": 252,
+      "scale": 3,
+      "staging_sha256": "8b88399c4658d5b31b21c14b1bc14e311190e613a612e4f49b4ca256422e8499",
+      "webp_sha256": "cc0dc27016c090983615fed3ae7bfd254263104558a180bc93a4c059cdc27cac",
+      "webp_bytes": 46580,
+      "lossless_rgba_match": true,
+      "alpha_extrema": [
+        255,
+        255
+      ],
+      "transparent_pixels_required": false,
+      "canonical_path": "implementation/theme/assets/images/ref001/rendered/sp/student-voice-01-21376-4709.webp"
+    },
+    {
+      "slot": "voice-1-detail",
+      "viewport": "pc",
+      "node_id": "21378:7849",
+      "path": "implementation/theme/assets/images/ref001/rendered/pc/voice-1-detail-21378-7849.webp",
+      "display_width": 404,
+      "display_height": 227,
+      "source_width": 404,
+      "source_height": 227,
+      "scale": 1,
+      "staging_sha256": "3d69d82a09775606d310ddbd2c1281f2daae287271730c245112fb15c79caa32",
+      "webp_sha256": "67a780389e15443f5830ee2266e01dfb5286a00ecee189ade789f14ece5a137b",
+      "webp_bytes": 106000,
+      "lossless_rgba_match": true,
+      "alpha_extrema": [
+        255,
+        255
+      ],
+      "transparent_pixels_required": false,
+      "canonical_path": "implementation/theme/assets/images/ref001/rendered/pc/voice-1-detail-21378-7849.webp"
+    },
+    {
+      "slot": "voice-1-detail",
+      "viewport": "sp",
+      "node_id": "21376:4701",
+      "path": "implementation/theme/assets/images/ref001/rendered/sp/voice-1-detail-21376-4701.webp",
+      "display_width": 311,
+      "display_height": 175,
+      "source_width": 933,
+      "source_height": 525,
+      "scale": 3,
+      "staging_sha256": "7a4236ecfc23220d66faa6cb79bae465b697596f28e394b7ab2454b0b88b2cfe",
+      "webp_sha256": "16b1f189a490381b5c118199e569e9f52f3a3ebfb2a41ec973370373a816d068",
+      "webp_bytes": 411008,
+      "lossless_rgba_match": true,
+      "alpha_extrema": [
+        255,
+        255
+      ],
+      "transparent_pixels_required": false,
+      "canonical_path": "implementation/theme/assets/images/ref001/rendered/sp/voice-1-detail-21376-4701.webp"
+    },
+    {
+      "slot": "voice-2-avatar",
+      "viewport": "pc",
+      "node_id": "21378:7826",
+      "path": "implementation/theme/assets/images/ref001/rendered/pc/voice-2-avatar-21378-7826.webp",
+      "display_width": 160,
+      "display_height": 160,
+      "source_width": 160,
+      "source_height": 160,
+      "scale": 1,
+      "staging_sha256": "fc0518d3cd893f60257f1a0bb1ef376d42f35ad4a313bf337620316d474f135b",
+      "webp_sha256": "e68c80c51bf61fb3e34445f7ee05f59a0137b52be7ab959a049fb54dbcb95538",
+      "webp_bytes": 19060,
+      "lossless_rgba_match": true,
+      "alpha_extrema": [
+        255,
+        255
+      ],
+      "transparent_pixels_required": false,
+      "canonical_path": "implementation/theme/assets/images/ref001/rendered/pc/voice-2-avatar-21378-7826.webp"
+    },
+    {
+      "slot": "voice-2-avatar",
+      "viewport": "sp",
+      "node_id": "21376:4678",
+      "path": "implementation/theme/assets/images/ref001/rendered/sp/student-voice-02-21376-4678.webp",
+      "display_width": 84,
+      "display_height": 84,
+      "source_width": 252,
+      "source_height": 252,
+      "scale": 3,
+      "staging_sha256": "3990be87e06ed1319e875708a78df58de07ff57b5bdd62fd30f039085c8f3ae3",
+      "webp_sha256": "73e0cac197de8afffbc8203f54f9fecf9f5b6fc4f13b1f5413266a36b2241305",
+      "webp_bytes": 39182,
+      "lossless_rgba_match": true,
+      "alpha_extrema": [
+        255,
+        255
+      ],
+      "transparent_pixels_required": false,
+      "canonical_path": "implementation/theme/assets/images/ref001/rendered/sp/student-voice-02-21376-4678.webp"
+    },
+    {
+      "slot": "voice-3-avatar",
+      "viewport": "pc",
+      "node_id": "21378:7795",
+      "path": "implementation/theme/assets/images/ref001/rendered/pc/voice-3-avatar-21378-7795.webp",
+      "display_width": 160,
+      "display_height": 160,
+      "source_width": 160,
+      "source_height": 160,
+      "scale": 1,
+      "staging_sha256": "7a3dcee583f18a3ae520bb629df089ebdedf54858905f283b72af2740c13df87",
+      "webp_sha256": "62f780622507c5801598ff21a2c6f9ffbffdcc7a0bbeea34db3734ffc9ff7abf",
+      "webp_bytes": 18160,
+      "lossless_rgba_match": true,
+      "alpha_extrema": [
+        255,
+        255
+      ],
+      "transparent_pixels_required": false,
+      "canonical_path": "implementation/theme/assets/images/ref001/rendered/pc/voice-3-avatar-21378-7795.webp"
+    },
+    {
+      "slot": "voice-3-avatar",
+      "viewport": "sp",
+      "node_id": "21376:4663",
+      "path": "implementation/theme/assets/images/ref001/rendered/sp/student-voice-04-21376-4663.webp",
+      "display_width": 84,
+      "display_height": 84,
+      "source_width": 252,
+      "source_height": 252,
+      "scale": 3,
+      "staging_sha256": "c5f0d6743edfa65e7ad6cf8ae774eca36f052e6a1496f37a8d8fa631ade1847f",
+      "webp_sha256": "6eb095b451d3966098c979872d4bf3af2ee18a74ea687eb70bfa61249d5264c7",
+      "webp_bytes": 36652,
+      "lossless_rgba_match": true,
+      "alpha_extrema": [
+        255,
+        255
+      ],
+      "transparent_pixels_required": false,
+      "canonical_path": "implementation/theme/assets/images/ref001/rendered/sp/student-voice-04-21376-4663.webp"
+    },
+    {
+      "slot": "messages-photo",
+      "viewport": "pc",
+      "node_id": "21378:7760",
+      "path": "implementation/theme/assets/images/ref001/rendered/pc/messages-photo-21378-7760.webp",
+      "display_width": 660,
+      "display_height": 440,
+      "source_width": 660,
+      "source_height": 440,
+      "scale": 1,
+      "staging_sha256": "d344dce02220e7c637c836ce5a1e17a34fdb7da28763bf1782ef878eead0268c",
+      "webp_sha256": "e97b6ff29cbc635b864aef6e37151d534c3b979408da6418de83385c04570325",
+      "webp_bytes": 252652,
+      "lossless_rgba_match": true,
+      "alpha_extrema": [
+        255,
+        255
+      ],
+      "transparent_pixels_required": false,
+      "canonical_path": "implementation/theme/assets/images/ref001/rendered/pc/messages-photo-21378-7760.webp"
+    },
+    {
+      "slot": "messages-photo",
+      "viewport": "sp",
+      "node_id": "21376:4643",
+      "path": "implementation/theme/assets/images/ref001/rendered/sp/messages-photo-21376-4643.webp",
+      "display_width": 343,
+      "display_height": 228.6666717529297,
+      "source_width": 1029,
+      "source_height": 686,
+      "scale": 3,
+      "staging_sha256": "c93f4dde272e0668b5f136052c3b73ea8cfc3b988e07253f345df3d237026171",
+      "webp_sha256": "6d567b5cf854b380532f4ed770b1fcaec9bab2429bccaeba1910c8f8f831dc83",
+      "webp_bytes": 502192,
+      "lossless_rgba_match": true,
+      "alpha_extrema": [
+        255,
+        255
+      ],
+      "transparent_pixels_required": false,
+      "canonical_path": "implementation/theme/assets/images/ref001/rendered/sp/messages-photo-21376-4643.webp"
+    },
+    {
+      "slot": "cta-person-left",
+      "viewport": "pc",
+      "node_id": "21378:7489",
+      "path": "implementation/theme/assets/images/ref001/rendered/pc/cta-person-left-21378-7489.webp",
+      "display_width": 280,
+      "display_height": 294,
+      "source_width": 280,
+      "source_height": 294,
+      "scale": 1,
+      "staging_sha256": "07562ef2e30f4544ae38f6fbdfa573f7df00af987ac353ef37832e6f97eed7c1",
+      "webp_sha256": "e0d2961cc301808500d7954e888e98410d63735d4efecb66d2e1e07e32d2dc66",
+      "webp_bytes": 67656,
+      "lossless_rgba_match": true,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels_required": true,
+      "canonical_path": "implementation/theme/assets/images/ref001/rendered/pc/cta-person-left-21378-7489.webp"
+    },
+    {
+      "slot": "cta-person-left",
+      "viewport": "sp",
+      "node_id": "21376:4958",
+      "path": "implementation/theme/assets/images/ref001/rendered/sp/cta-person-left-21376-4958.webp",
+      "display_width": 114,
+      "display_height": 144,
+      "source_width": 342,
+      "source_height": 432,
+      "scale": 3,
+      "staging_sha256": "07562ef2e30f4544ae38f6fbdfa573f7df00af987ac353ef37832e6f97eed7c1",
+      "webp_sha256": "69ca5110b02f394079c959e79d881129e95f784503b4f24ec219e43d984d1217",
+      "webp_bytes": 114638,
+      "lossless_rgba_match": true,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels_required": true,
+      "canonical_path": "implementation/theme/assets/images/ref001/rendered/sp/cta-person-left-21376-4958.webp"
+    },
+    {
+      "slot": "cta-person-right",
+      "viewport": "pc",
+      "node_id": "21378:7485",
+      "path": "implementation/theme/assets/images/ref001/rendered/pc/cta-person-right-21378-7485.webp",
+      "display_width": 335,
+      "display_height": 293,
+      "source_width": 335,
+      "source_height": 293,
+      "scale": 1,
+      "staging_sha256": "e3bc9205e6a93862e4a5fe441ff6c1de48b2f4067ca4bd673fe5e3e7ea95e935",
+      "webp_sha256": "fb8d1fcea5b01bc90c45e528c1df08608586a2cf70fc77744d3de07e5264a8a0",
+      "webp_bytes": 55804,
+      "lossless_rgba_match": true,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels_required": true,
+      "canonical_path": "implementation/theme/assets/images/ref001/rendered/pc/cta-person-right-21378-7485.webp"
+    },
+    {
+      "slot": "cta-person-right",
+      "viewport": "sp",
+      "node_id": "21376:4962",
+      "path": "implementation/theme/assets/images/ref001/rendered/sp/cta-person-right-21376-4962.webp",
+      "display_width": 110,
+      "display_height": 137,
+      "source_width": 330,
+      "source_height": 411,
+      "scale": 3,
+      "staging_sha256": "e3bc9205e6a93862e4a5fe441ff6c1de48b2f4067ca4bd673fe5e3e7ea95e935",
+      "webp_sha256": "c1b5c9b8ded7f25b115618a265ab45346530f2e211ac9ce9fe3f284a13ea4596",
+      "webp_bytes": 99188,
+      "lossless_rgba_match": true,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "transparent_pixels_required": true,
+      "canonical_path": "implementation/theme/assets/images/ref001/rendered/sp/cta-person-right-21376-4962.webp"
+    }
+  ]
+}

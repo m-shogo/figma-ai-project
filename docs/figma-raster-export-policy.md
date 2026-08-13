@@ -22,7 +22,8 @@ Prefer a local filesystem-capable coding agent such as Codex or Claude Code:
 Figma official connector / API / Desktop MCP
   -> local temporary staging directory
   -> complete inventory validation
-  -> PNG decode + dimension checks
+  -> format decode + dimension / alpha checks
+  -> WebP conversion when fidelity is preserved
   -> byte / normalized pixel comparison when a prior asset exists
   -> live-Figma visual QA for pixel differences
   -> canonical repository paths
@@ -111,15 +112,18 @@ For each asset, keep a machine-readable registry containing at least:
 
 Rules:
 
-- final visible mask/group/node render is authoritative for raster delivery
-- raw source photos are not interchangeable with the final visible node
+- final visible mask/group/node render is authoritative by default
+- a documented raw-source exception is allowed when a final group bakes in a
+  background or decoration that must remain editable in HTML/CSS; preserve the
+  original alpha and reproduce the Figma crop from recorded geometry
+- raw source photos are otherwise not interchangeable with the final visible node
 - PC and SP are independent assets
 - never infer SP from PC, or PC from SP, when both exist in Figma
 - never hand-maintain a second node/path list when a registry already exists
 
 ## Staging and atomic promotion
 
-Do not write each downloaded PNG directly into the canonical site directory.
+Do not write each downloaded raster directly into the canonical site directory.
 
 Use this order:
 
@@ -136,20 +140,31 @@ A partial 11/32 or 31/32 replacement is a failure state, not progress to publish
 The canonical tree should stay untouched if inventory validation, PNG validation,
 dimensions, mapping, or required comparison fails.
 
-## PNG integrity gates
+## Format, WebP, scale, and alpha gates
 
-A file is not considered valid merely because macOS Preview or a browser happens
-to display it.
+A file is not considered valid merely because macOS Preview or one browser
+happens to display it. Canonical photographic raster assets should use WebP
+when decoded visual fidelity is preserved. Figma PNG exports may remain as
+temporary staging inputs.
 
 At minimum verify:
 
 - non-zero byte length
-- PNG signature
-- IHDR presence
+- actual encoded format matches the extension and registry
 - expected width / height
-- terminating IEND
 - successful normal decode
 - SHA-256
+
+For lossless WebP conversion, compare decoded RGBA before and after encoding.
+For transparent assets, require an encoded alpha channel and real transparent
+pixels. Do not accept an all-opaque RGBA file merely because its decoder reports
+an alpha-capable pixel format.
+
+SP source rasters must be exported at 3x their exact Figma visible dimensions;
+CSS must continue to display them at 1x geometry. Preserve fractional Figma
+dimensions and use one recorded rounding rule instead of rounding the display
+dimension first. Runtime QA should verify natural/rendered ratios as well as
+the selected PC/SP source.
 
 When practical, decode with more than one normal decoder/library. Decoder
 disagreement is a compatibility warning and must be investigated before
@@ -309,7 +324,7 @@ Hard failures include:
 - missing expected asset
 - duplicate or wrong node mapping
 - PC/SP mismatch
-- PNG signature / IHDR / IEND failure
+- format signature / container failure
 - dimension mismatch
 - decoder failure
 - visual mismatch with live Figma
@@ -347,7 +362,7 @@ A Figma raster refresh is complete only when all applicable items are true:
 
 - exact inventory exported
 - final visible Figma nodes used
-- structural PNG validation passed
+- structural format validation passed
 - decoding passed
 - dimensions and registry mapping passed
 - prior assets compared when relevant

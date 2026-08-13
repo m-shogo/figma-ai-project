@@ -1,5 +1,9 @@
 # REF-001 Mac local Figma export
 
+> Historical PNG materialization record. The current canonical WebP / SP 3x /
+> CTA alpha workflow is documented in `WEBP_SP3X_ALPHA.md`. Do not run the old
+> PNG installer against the current WebP registry.
+
 The canonical REF-001 raster assets were refreshed through this path:
 
 ```text

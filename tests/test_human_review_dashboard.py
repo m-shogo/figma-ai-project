@@ -27,13 +27,13 @@ class HumanReviewDashboardBuildTests(unittest.TestCase):
             self.assertTrue(
                 (
                     site
-                    / "ref-001/latest/preview/assets/images/ref001/rendered/sp/student-voice-01-21376-4709.png"
+                    / "ref-001/latest/preview/assets/images/ref001/rendered/sp/student-voice-01-21376-4709.webp"
                 ).is_file()
             )
             self.assertTrue(
                 (
                     site
-                    / "ref-001/latest/preview/assets/images/ref001/rendered/sp/student-voice-04-21376-4663.png"
+                    / "ref-001/latest/preview/assets/images/ref001/rendered/sp/student-voice-04-21376-4663.webp"
                 ).is_file()
             )
             self.assertTrue((site / "ref-001/latest/preview/assets/icons/document.svg").is_file())
@@ -86,10 +86,10 @@ class HumanReviewDashboardBuildTests(unittest.TestCase):
             self.assertIn('<picture class="ref-picture', preview)
             self.assertIn('media="(max-width:767px)"', preview)
             self.assertIn('data-asset-slot="main-visual-left"', preview)
-            self.assertIn('assets/images/ref001/rendered/pc/main-visual-left-21378-8041.png', preview)
-            self.assertIn('assets/images/ref001/rendered/sp/main-visual-left-21376-4894.png', preview)
-            self.assertIn('assets/images/ref001/rendered/sp/student-voice-01-21376-4709.png', preview)
-            self.assertIn('assets/images/ref001/rendered/sp/student-voice-04-21376-4663.png', preview)
+            self.assertIn('assets/images/ref001/rendered/pc/main-visual-left-21378-8041.webp', preview)
+            self.assertIn('assets/images/ref001/rendered/sp/main-visual-left-21376-4894.webp', preview)
+            self.assertIn('assets/images/ref001/rendered/sp/student-voice-01-21376-4709.webp', preview)
+            self.assertIn('assets/images/ref001/rendered/sp/student-voice-04-21376-4663.webp', preview)
             self.assertNotIn('assets/images/dummy/image-pc.svg', preview)
             self.assertNotIn('assets/images/dummy/image-sp.svg', preview)
             self.assertIn('assets/icons/document.svg', preview)
