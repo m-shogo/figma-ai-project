@@ -1,21 +1,29 @@
 # REF-001 raster asset notes
 
-Current canonical policy:
+Current canonical policy and implementation:
 
 - `../../../docs/figma-raster-export-policy.md`
+- `WEBP_SP3X_ALPHA.md`
+- `webp-export-report.json`
+- `webp-runtime-qa.json`
 - `MAC_LOCAL_EXPORT.md`
 - `mac-local-export-report.json`
 
 ## Current source of truth
 
-The current REF-001 canonical raster refresh is the completed Mac-local export
-on `agent/ref001-figma-raster-assets`.
+The current REF-001 canonical raster set uses lossless WebP. PC assets retain
+their Figma 1x source geometry, while every SP asset is exported at 3x its exact
+Figma visible dimensions. CTA people use the original Figma RGBA source layers
+on transparent canvases; CTA background and color-silhouette decoration are not
+baked into the assets.
 
 Inventory:
 
 - PC: 16
 - SP: 16
-- total: 32 PNGs
+- total: 32 WebP files
+- SP source scale: 3x
+- CTA transparent people: 4/4
 
 The previous Drive/GAS-delivered state is preserved only as rollback/comparison
 evidence at:

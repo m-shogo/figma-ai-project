@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "reference_id": "REF-001",
+  "browser": "Google Chrome",
+  "preview": "generated local human-review preview",
+  "widths": [320, 360, 375, 390, 430, 767, 768, 769, 1024, 1200, 1380],
+  "results": {
+    "widths_checked": 11,
+    "assets_per_width": 16,
+    "webp_loaded_per_width": 16,
+    "failed_images": 0,
+    "horizontal_overflow_widths": [],
+    "sp_source_widths": [320, 360, 375, 390, 430, 767],
+    "pc_source_widths": [768, 769, 1024, 1200, 1380],
+    "breakpoint": "max-width: 767px",
+    "status": "PASS"
+  },
+  "cta": {
+    "sp_375": {
+      "left": {"natural": [342, 432], "rendered": [114, 144], "ratio": [3, 3]},
+      "right": {"natural": [330, 411], "rendered": [110, 137], "ratio": [3, 3]}
+    },
+    "pc_1380": {
+      "left": {"natural": [280, 294], "rendered": [280, 294], "ratio": [1, 1]},
+      "right": {"natural": [335, 293], "rendered": [335, 293], "ratio": [1, 1]}
+    },
+    "transparent_edge_visual_qa": "PASS",
+    "backgrounds_checked": ["transparent", "white", "black", "checkerboard"]
+  },
+  "visual_qa": {
+    "pc_1380": "PASS",
+    "sp_375": "PASS",
+    "layout_breakage": "NONE",
+    "notes": "All 16 lazy-loaded assets were forced into view before measurement. Generic Object errors came from the Chrome QA extension/injected harness; the preview itself contains no scripts and all asset requests completed with valid natural dimensions."
+  }
+}

@@ -2,9 +2,13 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
+import re
+import struct
 import subprocess
 import sys
+from decimal import Decimal, ROUND_HALF_UP
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -39,6 +43,38 @@ CANONICAL_PREFIX = "implementation/theme/"
 
 class ValidationError(RuntimeError):
     pass
+
+
+def inspect_webp(path: Path) -> tuple[int, int, bool]:
+    data = path.read_bytes()
+    if len(data) < 20 or data[:4] != b"RIFF" or data[8:12] != b"WEBP":
+        raise ValidationError(f"invalid WebP RIFF header: {path.relative_to(ROOT)}")
+    declared_size = struct.unpack("<I", data[4:8])[0] + 8
+    if declared_size != len(data):
+        raise ValidationError(f"invalid WebP RIFF size: {path.relative_to(ROOT)}")
+    offset = 12
+    while offset + 8 <= len(data):
+        fourcc = data[offset : offset + 4]
+        size = struct.unpack("<I", data[offset + 4 : offset + 8])[0]
+        payload = data[offset + 8 : offset + 8 + size]
+        if len(payload) != size:
+            raise ValidationError(f"truncated WebP chunk: {path.relative_to(ROOT)}")
+        if fourcc == b"VP8L" and len(payload) >= 5 and payload[0] == 0x2F:
+            bits = int.from_bytes(payload[1:5], "little")
+            return (bits & 0x3FFF) + 1, ((bits >> 14) & 0x3FFF) + 1, bool((bits >> 28) & 1)
+        if fourcc == b"VP8X" and len(payload) >= 10:
+            width = int.from_bytes(payload[4:7], "little") + 1
+            height = int.from_bytes(payload[7:10], "little") + 1
+            return width, height, bool(payload[0] & 0x10)
+        if fourcc == b"VP8 " and len(payload) >= 10 and payload[3:6] == b"\x9d\x01\x2a":
+            width, height = struct.unpack("<HH", payload[6:10])
+            return width & 0x3FFF, height & 0x3FFF, False
+        offset += 8 + size + (size & 1)
+    raise ValidationError(f"WebP image payload not found: {path.relative_to(ROOT)}")
+
+
+def scaled_dimension(value: object, scale: int) -> int:
+    return int((Decimal(str(value)) * scale).quantize(Decimal("1"), rounding=ROUND_HALF_UP))
 
 
 def load_images(asset_map: Path) -> dict[str, dict[str, str]]:
@@ -82,6 +118,8 @@ def load_registry(registry_path: Path) -> tuple[dict[tuple[str, str], dict[str, 
     policy = payload.get("asset_policy", {})
     if not isinstance(policy, dict) or policy.get("expected_assets") != 32:
         errors.append("registry asset_policy.expected_assets must be 32")
+    elif policy.get("canonical_format") != "webp" or policy.get("sp_scale") != 3:
+        errors.append("registry asset_policy must require canonical WebP and SP scale 3")
 
     index: dict[tuple[str, str], dict[str, object]] = {}
     seen_nodes: set[tuple[str, str]] = set()
@@ -109,6 +147,33 @@ def load_registry(registry_path: Path) -> tuple[dict[tuple[str, str], dict[str, 
             seen_nodes.add(node_key)
         if not isinstance(path, str) or not path.startswith(CANONICAL_PREFIX + RENDERED_PREFIX + f"{viewport}/"):
             errors.append(f"registry {slot}.{viewport}: invalid canonical path: {path}")
+        elif not path.endswith(".webp") or asset.get("format") != "webp":
+            errors.append(f"registry {slot}.{viewport}: canonical format/path must be WebP")
+        scale = asset.get("scale")
+        expected_scale = 3 if viewport == "sp" else 1
+        if scale != expected_scale:
+            errors.append(f"registry {slot}.{viewport}: scale must be {expected_scale}")
+        for field in ("display_width", "display_height", "source_width", "source_height"):
+            if not isinstance(asset.get(field), (int, float)) or asset[field] <= 0:
+                errors.append(f"registry {slot}.{viewport}: {field} must be a positive number")
+        if isinstance(scale, int) and all(
+            isinstance(asset.get(field), (int, float))
+            for field in ("display_width", "display_height", "source_width", "source_height")
+        ):
+            expected_size = (
+                scaled_dimension(asset["display_width"], scale),
+                scaled_dimension(asset["display_height"], scale),
+            )
+            actual_size = (int(asset["source_width"]), int(asset["source_height"]))
+            if actual_size != expected_size:
+                errors.append(
+                    f"registry {slot}.{viewport}: source size {actual_size} != scaled display {expected_size}"
+                )
+        digest = asset.get("sha256")
+        if not isinstance(digest, str) or not re.fullmatch(r"[0-9a-f]{64}", digest):
+            errors.append(f"registry {slot}.{viewport}: sha256 required")
+        if str(slot).startswith("cta-person-") and asset.get("alpha_required") is not True:
+            errors.append(f"registry {slot}.{viewport}: CTA alpha_required must be true")
         index[key] = asset
 
     expected_keys = {(slot, viewport) for slot in EXPECTED_SLOTS for viewport in ("pc", "sp")}
@@ -183,6 +248,22 @@ def validate(
             canonical = CANONICAL_THEME / value
             if not canonical.is_file():
                 errors.append(f"{slot}.{viewport}: canonical rendered file missing: {canonical.relative_to(ROOT)}")
+                continue
+            try:
+                width, height, has_alpha = inspect_webp(canonical)
+            except (OSError, ValidationError) as exc:
+                errors.append(f"{slot}.{viewport}: {exc}")
+                continue
+            expected_size = (int(registry_asset["source_width"]), int(registry_asset["source_height"]))
+            if (width, height) != expected_size:
+                errors.append(f"{slot}.{viewport}: WebP dimensions {(width, height)} != {expected_size}")
+                continue
+            actual_sha256 = hashlib.sha256(canonical.read_bytes()).hexdigest()
+            if actual_sha256 != registry_asset.get("sha256"):
+                errors.append(f"{slot}.{viewport}: WebP SHA-256 differs from registry")
+                continue
+            if registry_asset.get("alpha_required") and not has_alpha:
+                errors.append(f"{slot}.{viewport}: CTA WebP has no encoded alpha")
                 continue
             rendered_paths.append(value)
             counts["rendered"] += 1

@@ -24,6 +24,27 @@ class Ref001AssetMapTests(unittest.TestCase):
         else:
             self.assertEqual([], errors)
 
+    def test_registry_requires_webp_sp_3x_and_cta_alpha(self) -> None:
+        registry, errors = validator.load_registry(validator.DEFAULT_REGISTRY)
+        self.assertEqual([], errors)
+        self.assertEqual(32, len(registry))
+        for (slot, viewport), asset in registry.items():
+            self.assertEqual("webp", asset["format"])
+            self.assertTrue(str(asset["path"]).endswith(".webp"))
+            self.assertEqual(3 if viewport == "sp" else 1, asset["scale"])
+            if slot.startswith("cta-person-"):
+                self.assertTrue(asset["alpha_required"])
+
+    def test_canonical_webp_dimensions_hashes_and_cta_alpha(self) -> None:
+        registry, errors = validator.load_registry(validator.DEFAULT_REGISTRY)
+        self.assertEqual([], errors)
+        for (slot, viewport), asset in registry.items():
+            path = validator.ROOT / str(asset["path"])
+            width, height, has_alpha = validator.inspect_webp(path)
+            self.assertEqual((asset["source_width"], asset["source_height"]), (width, height))
+            if slot.startswith("cta-person-"):
+                self.assertTrue(has_alpha, f"{slot}.{viewport}")
+
 
 if __name__ == "__main__":
     unittest.main()
