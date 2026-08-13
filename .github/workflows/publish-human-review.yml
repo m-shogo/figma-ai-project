@@ -152,5 +152,3 @@ jobs:
       - name: Deploy Human Review Dashboard
         id: deployment
         uses: actions/deploy-pages@v5
-        with:
-          path: _site
