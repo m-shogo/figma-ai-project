@@ -70,6 +70,13 @@
 .ref-mv__oc small{position:absolute;color:#333;font-family:var(--ref-font-jp);font-weight:500;line-height:1;white-space:nowrap}
 .ref-mv__oc-arrow{position:absolute;box-sizing:border-box;background:#fff;border:1px solid var(--ref-orange);border-radius:50%;object-fit:contain;margin:0}
 
+/* Links — preserve the four-circle geometry but match Figma's internal text
+ * hierarchy and use the real Instagram brand glyph. */
+.ref-link-tile__numbers-kicker{display:block;font-family:var(--ref-font-jp);font-size:18px;line-height:1.4;margin:0 0 2px;letter-spacing:.05em}
+.ref-link-tile__instagram-copy{font-family:var(--ref-font-en);font-size:20px;line-height:1;letter-spacing:.05em}
+.ref-link-tile__instagram-copy small{display:flex;align-items:center;justify-content:center;gap:7px;margin-top:12px;font-family:var(--ref-font-en);font-size:14px;line-height:1;letter-spacing:.05em}
+.ref-link-tile__instagram-icon{width:16px;height:16px;object-fit:contain}
+
 @media (min-width:1300px){
   .ref-mv{overflow:visible}
   .ref-mv__copy{position:absolute;left:471px;top:106px;width:469px;margin:0;padding:0;text-align:center}
@@ -106,4 +113,9 @@
   .ref-mv__oc b{position:absolute;left:0;right:0;top:27px;font-size:26px;color:#fff}
   .ref-mv__oc small{left:57px;bottom:36px;font-size:16px}
   .ref-mv__oc-arrow{right:8px;bottom:8px;width:36px;height:36px;padding:11px}
+
+  .ref-link-tile__numbers-kicker{font-size:14px}
+  .ref-link-tile__instagram-copy{font-size:14px}
+  .ref-link-tile__instagram-copy small{gap:5px;margin-top:8px;font-size:11px}
+  .ref-link-tile__instagram-icon{width:13px;height:13px}
 }
