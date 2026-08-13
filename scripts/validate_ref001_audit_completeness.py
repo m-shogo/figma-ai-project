@@ -13,6 +13,7 @@ BASELINE_DIR = ROOT / "review-dashboard/baselines/ref001"
 SECTION_DIR = SITE / "ref-001/latest/review/section-diffs"
 REVIEW_DIR = SITE / "ref-001/latest/review"
 WORKFLOW = ROOT / ".github/workflows/publish-human-review.yml"
+RENDERED_DIR = ROOT / "implementation/theme/assets/images/ref001/rendered"
 
 EXPECTED_WIDTHS = [320, 360, 375, 390, 430, 767, 768, 769, 1024, 1200, 1380]
 REQUIRED_LAYERS = [
@@ -121,8 +122,8 @@ mark("font_readiness", fonts_ok, {"required": ["Zen Kaku Gothic New", "Poppins"]
 
 # 6. Asset evidence and validators must stay part of the audit contract.
 asset_registry = ROOT / "research/figma-assets/ref001/rendered-asset-registry.json"
-pc_assets = list((ROOT / "experiments/ref001-blind-clean-20260812/implementation/theme/assets/images/ref001/rendered/pc").glob("*.webp"))
-sp_assets = list((ROOT / "experiments/ref001-blind-clean-20260812/implementation/theme/assets/images/ref001/rendered/sp").glob("*.webp"))
+pc_assets = list((RENDERED_DIR / "pc").glob("*.webp"))
+sp_assets = list((RENDERED_DIR / "sp").glob("*.webp"))
 asset_ok = asset_registry.is_file() and len(pc_assets) >= 16 and len(sp_assets) >= 16
 require(asset_registry.is_file(), "rendered asset registry missing")
 require(len(pc_assets) >= 16, f"PC rendered asset set incomplete: {len(pc_assets)}")
