@@ -38,18 +38,21 @@
 }
 
 @media (max-width:767px){
-  .ref-education{padding:56px 0 29px}
-  .ref-education .ref-content{width:343px;max-width:calc(100% - 32px)}
-  .ref-education__head{display:block;margin:0}
-  .ref-education__title{text-align:center}
+  /* Exact SP Figma frame 21376:4720: 1534px. The content is intentionally
+   * positioned from authored section-local coordinates so normal-flow text
+   * metrics cannot add phantom height downstream. */
+  .ref-education{height:1534px;min-height:1534px;padding:0}
+  .ref-education .ref-content{position:relative;width:343px;max-width:calc(100% - 32px);height:1534px}
+  .ref-education__head{display:block;position:static;margin:0}
+  .ref-education__title{position:absolute;left:0;right:0;top:56px;text-align:center}
   .ref-education__title .ref-kicker{font-size:20px;line-height:1;padding:2px 8px}
-  .ref-education__title h2{font-size:32px;line-height:1;margin:20px 0 0;font-weight:500;letter-spacing:.05em}
-  .ref-education__intro{position:relative;border:0;border-top:1px solid #7fc9ed;padding:40px 0 0;margin-top:52px}
+  .ref-education__title h2{font-size:32px;line-height:1;margin:16px 0 0;font-weight:500;letter-spacing:.05em}
+  .ref-education__intro{position:absolute;left:0;right:0;top:152px;height:142px;border:0;border-top:1px solid #7fc9ed;padding:44px 0 0;margin:0}
   .ref-education__intro::before{content:"";position:absolute;left:50%;top:-7px;width:13px;height:13px;background:var(--ref-beige);border-left:1px solid #7fc9ed;border-top:1px solid #7fc9ed;transform:translateX(-50%) rotate(45deg)}
   .ref-education__intro h3{display:inline;font-size:20px;line-height:1;letter-spacing:.05em;background:linear-gradient(transparent 66%,var(--ref-orange) 0)}
-  .ref-education__intro p{font-size:16px;line-height:1.6;letter-spacing:.05em;margin:17px 0 0;text-align:left}
+  .ref-education__intro p{font-size:16px;line-height:1.6;letter-spacing:.05em;margin:24px 0 0;text-align:left}
 
-  .ref-education__steps{display:flex!important;flex-direction:column;width:335px!important;max-width:100%;left:auto!important;transform:none!important;margin:52px auto 0;gap:0!important}
+  .ref-education__steps{position:absolute!important;left:4px!important;top:350px!important;display:flex!important;flex-direction:column;width:335px!important;max-width:calc(100% - 8px);transform:none!important;margin:0!important;gap:0!important}
   .ref-edu-card{flex:none;width:335px;max-width:100%;padding:0}
   .ref-edu-card:nth-of-type(1){height:277px;min-height:277px}
   .ref-edu-card:nth-of-type(2){height:250px;min-height:250px}
@@ -66,7 +69,8 @@
 }
 
 @media (max-width:360px){
-  .ref-education .ref-content,.ref-education__steps{width:calc(100vw - 32px)!important}
+  .ref-education .ref-content{width:calc(100vw - 32px)!important}
+  .ref-education__steps{left:4px!important;width:calc(100% - 8px)!important}
   .ref-edu-card{width:100%}
   .ref-edu-card h3{left:48%;width:46%}
   .ref-edu-card__media{left:16px;width:42%}
