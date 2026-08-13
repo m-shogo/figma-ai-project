@@ -415,7 +415,7 @@
   pointer-events: none;
 }
 
-@media (max-width: 1308px) {
+@media (min-width: 768px) and (max-width: 1308px) {
   .v3-edu-card__next {
     display: none;
   }
@@ -749,6 +749,7 @@
   line-height: 49px;
   margin-bottom: 11px;
   letter-spacing: 0.05em;
+  white-space: nowrap;
 }
 
 .v3-messages__profile {
@@ -759,6 +760,12 @@
   margin-top: 24px;
 }
 
+.v3-messages__stage {
+  position: relative;
+  width: 100%;
+  max-width: 660px;
+}
+
 .v3-messages__photo {
   width: 100%;
   max-width: 660px;
@@ -766,7 +773,13 @@
   background: transparent;
 }
 
+.v3-messages__quote--on-photo {
+  display: none;
+}
+
 .v3-messages__photo img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
 }
 
@@ -817,6 +830,10 @@
   background-clip: text;
   color: transparent;
   font-weight: 900;
+}
+
+.v3-courses__title-line {
+  display: inline;
 }
 
 .v3-courses__grid {
@@ -993,6 +1010,10 @@
 .v3-link-tile--instagram .v3-link-tile__label {
   font-family: var(--v3-font-en);
   font-size: 20px;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  gap: 0.35em;
 }
 
 .v3-link-tile__handle {
@@ -1155,6 +1176,10 @@
   line-height: 1.3;
   letter-spacing: 0.05em;
   margin-top: 32px;
+}
+
+.v3-footer__address--sp {
+  display: none;
 }
 
 .v3-footer__related {

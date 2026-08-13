@@ -5,7 +5,8 @@ $d = v3_data()['footer'];
   <div class="v3-footer__inner">
     <div class="v3-footer__profile">
       <?php v3_component('brand'); ?>
-      <p class="v3-footer__address"><?php echo nl2br(htmlspecialchars($d['address'], ENT_QUOTES, 'UTF-8'), false); ?></p>
+      <p class="v3-footer__address v3-footer__address--pc"><?php echo nl2br(htmlspecialchars($d['address'], ENT_QUOTES, 'UTF-8'), false); ?></p>
+      <p class="v3-footer__address v3-footer__address--sp"><?php echo nl2br(htmlspecialchars($d['addressSp'], ENT_QUOTES, 'UTF-8'), false); ?></p>
     </div>
     <div class="v3-footer__aside">
       <div class="v3-footer__related">

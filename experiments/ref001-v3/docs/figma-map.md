@@ -11,8 +11,8 @@ Page: `21376:1600` (AI)
 | Reason | `21378:7999` | reason 1160×559 | `21376:4852` | reason 345×1295 |
 | Education | `21378:7868` | education 1380×684 | `21376:4720` | education 375×1534 |
 | CTA #1 | `21378:7867` | cta 1380×328 | `21376:4719` | cta_sp 375×350 |
-| StudentVoice | `21378:7766` | voice 1160×1393 | `21376:4629` | voice 351×538 |
-| Messages | `21378:7746` | messages 1160×440 | `21376:4650` | Group 338 |
+| StudentVoice | `21378:7766` | voice 1160×1393 | `21376:4650` | Group 338 / STUDENTS_VOICE |
+| Messages | `21378:7746` | messages 1160×440 | `21376:4629` | MESSAGES |
 | CTA #2 | `21378:7730` | cta 1380×328 | `21376:4628` | cta_sp 375×350 |
 | Courses | `21378:7505` | cources 1380×1514 | `21376:4403` | Group 339 375×2515 |
 | Links | `21378:7458` | links 1112×260 | `21376:4919` | links 343×343 |

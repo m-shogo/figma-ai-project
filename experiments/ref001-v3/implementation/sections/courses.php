@@ -2,8 +2,8 @@
 $d = v3_data()['courses'];
 $courses = v3_courses();
 $titleHtml = htmlspecialchars($d['titlePrefix'], ENT_QUOTES, 'UTF-8')
-    . '<strong>' . htmlspecialchars($d['titleStrong'], ENT_QUOTES, 'UTF-8') . '</strong>'
-    . htmlspecialchars($d['titleSuffix'], ENT_QUOTES, 'UTF-8');
+    . '<span class="v3-courses__title-line"><strong>' . htmlspecialchars($d['titleStrong'], ENT_QUOTES, 'UTF-8') . '</strong>'
+    . htmlspecialchars($d['titleSuffix'], ENT_QUOTES, 'UTF-8') . '</span>';
 ?>
 <section class="v3-courses" data-section="courses" data-figma-pc="<?php v3_e($d['figma']['pc']); ?>" data-figma-sp="<?php v3_e($d['figma']['sp']); ?>">
   <div class="v3-content">

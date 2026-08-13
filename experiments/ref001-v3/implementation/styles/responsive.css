@@ -13,6 +13,11 @@
     display: inline;
   }
 
+  .v3-heading__title strong::before {
+    content: "";
+    display: block;
+  }
+
   .v3-heading__bracket {
     font-size: 42px;
     margin: 0 6px;
@@ -30,31 +35,31 @@
     display: none;
   }
 
-  .v3-brand__logo {
+  .v3-header .v3-brand__logo {
     width: 133px;
     height: 33px;
   }
 
-  .v3-brand__piece--mark {
+  .v3-header .v3-brand__piece--mark {
     width: 30.8px;
     height: 33px;
   }
 
-  .v3-brand__piece--ck {
+  .v3-header .v3-brand__piece--ck {
     left: 5.2px;
     top: 11.8px;
     width: 19.6px;
     height: 9.8px;
   }
 
-  .v3-brand__piece--name {
+  .v3-header .v3-brand__piece--name {
     left: 38.2px;
     top: 6.7px;
     width: 94.8px;
     height: 13.4px;
   }
 
-  .v3-brand__piece--en {
+  .v3-header .v3-brand__piece--en {
     left: 66px;
     top: 25.1px;
     width: 41.5px;
@@ -161,9 +166,25 @@
     gap: 16px;
   }
 
-  .v3-reason-card,
+  .v3-reason-card {
+    width: 100%;
+    max-width: 343px;
+    margin-inline: auto;
+  }
+
   .v3-reason-card__media {
     width: 100%;
+    height: 229px;
+  }
+
+  .v3-reason-card__body {
+    min-height: 108px;
+    padding: 36px 20px 22px;
+  }
+
+  .v3-reason-card__title {
+    font-size: 18px;
+    padding: 7px 18px;
   }
 
   .v3-education {
@@ -185,37 +206,63 @@
   }
 
   .v3-education__intro::before {
-    display: none;
+    display: block;
+    width: 16px;
+    height: 16px;
+    left: 50%;
+    top: -9px;
+    margin-left: -8px;
+    background: var(--v3-beige);
+    border-top: 1px solid #7fc9ed;
+    border-left: 1px solid #7fc9ed;
+    transform: rotate(45deg);
+  }
+
+  .v3-education__intro h3 {
+    font-size: 20px;
   }
 
   .v3-education__intro h3::after {
-    width: 100%;
+    width: 293px;
+    max-width: 100%;
   }
 
   .v3-education .v3-heading__title {
     font-size: 32px;
+    white-space: normal;
   }
 
   .v3-education__steps {
     width: calc(100% - 32px);
     grid-template-columns: 1fr;
-    gap: 38px;
+    gap: 44px;
   }
 
   .v3-edu-card {
-    width: 100%;
-    max-width: none;
+    width: 335px;
+    max-width: 100%;
     min-height: 244px;
+    margin-inline: auto;
     padding: 64px 24px 20px 16px;
   }
 
+  .v3-edu-card:first-child {
+    min-height: 277px;
+  }
+
   .v3-edu-card__next {
-    display: none;
+    display: block;
+    right: auto;
+    left: 50%;
+    top: auto;
+    bottom: -29px;
+    transform: translateX(-50%) rotate(90deg);
   }
 
   .v3-edu-card h3 {
     text-align: left;
     margin-left: 160px;
+    width: 147px;
     min-height: 45px;
     font-size: 18px;
   }
@@ -265,6 +312,10 @@
     min-height: 0;
   }
 
+  .v3-voice-item--collapsed {
+    min-height: 262px;
+  }
+
   .v3-voice-item__top {
     grid-template-columns: 84px minmax(0, 1fr);
     gap: 16px;
@@ -277,10 +328,15 @@
   }
 
   .v3-speech {
-    width: auto;
-    min-height: 0;
+    width: 288px;
+    max-width: 100%;
+    min-height: 160px;
     padding: 18px 16px 14px;
     box-shadow: 7px 8px 0 #fff;
+  }
+
+  .v3-voice-item--collapsed .v3-speech {
+    min-height: 138px;
   }
 
   .v3-speech h3 {
@@ -298,8 +354,10 @@
   }
 
   .v3-voice-open__photo {
-    width: 100%;
+    width: 311px;
+    max-width: 100%;
     height: 175px;
+    margin-inline: auto;
   }
 
   .v3-pointbox strong {
@@ -315,10 +373,14 @@
   }
 
   .v3-voice-open__advice strong {
-    width: max-content;
-    height: auto;
-    padding: 9px 18px;
+    width: 199px;
+    height: 52px;
+    padding: 0;
     margin-bottom: 10px;
+  }
+
+  .v3-voice-more {
+    font-size: 18px;
   }
 
   .v3-messages {
@@ -331,24 +393,90 @@
     min-height: 0;
   }
 
+  .v3-messages__copy {
+    display: contents;
+  }
+
+  .v3-messages .v3-heading {
+    order: 1;
+    margin-bottom: 20px;
+  }
+
+  .v3-messages__quote--copy {
+    display: none;
+  }
+
+  .v3-messages__stage {
+    order: 2;
+    max-width: none;
+    margin-bottom: 14px;
+  }
+
   .v3-messages__photo {
     width: 100%;
-    height: 228px;
-    order: -1;
-    margin-bottom: 12px;
+    max-width: none;
+    height: 229px;
   }
 
-  .v3-messages__quote {
-    font-size: 22px;
-    line-height: 2;
+  .v3-messages__quote--on-photo {
+    display: block;
+    position: absolute;
+    left: 0;
+    bottom: 8px;
+    z-index: 2;
+    margin: 0;
+    font-size: 16px;
+    line-height: 36px;
   }
 
-  .v3-messages__quote span {
+  .v3-messages__quote--on-photo span {
+    height: 36px;
+    line-height: 36px;
     padding: 0 12px;
+    margin-bottom: 4px;
+  }
+
+  .v3-messages__quote--on-photo span:nth-child(1),
+  .v3-messages__quote--on-photo span:nth-child(2) {
+    width: min(340px, 100%);
+  }
+
+  .v3-messages__quote--on-photo span:nth-child(3) {
+    width: min(208px, 100%);
+  }
+
+  .v3-messages__profile {
+    order: 3;
+    margin-top: 0;
+  }
+
+  .v3-messages__indicator {
+    order: 4;
+    margin: 32px auto 0;
+    justify-content: center;
+    font-size: 20px;
   }
 
   .v3-courses {
     padding: 56px 0;
+  }
+
+  .v3-courses__title-line {
+    display: block;
+  }
+
+  .v3-courses .v3-heading__title strong::before {
+    display: none;
+  }
+
+  .v3-courses .v3-heading__title strong {
+    display: inline;
+    background: none;
+    -webkit-background-clip: unset;
+    background-clip: unset;
+    color: var(--v3-blue);
+    -webkit-text-fill-color: var(--v3-blue);
+    font-size: 32px;
   }
 
   .v3-courses__grid {
@@ -389,6 +517,17 @@
     padding: 38px 16px 14px;
   }
 
+  .v3-course__rec-label {
+    border: 1px solid #333;
+    border-radius: 999px;
+    background: #fff;
+    padding: 6px 14px;
+  }
+
+  .v3-course__rec-label::after {
+    display: none;
+  }
+
   .v3-links {
     padding: 64px 0;
   }
@@ -407,6 +546,10 @@
     box-shadow: 7px 7px 0 var(--tile-shadow);
   }
 
+  .v3-link-tile__lead {
+    font-size: 13px;
+  }
+
   .v3-link-tile--instagram::before {
     left: 7px;
     top: 7px;
@@ -415,7 +558,10 @@
   }
 
   .v3-link-tile--instagram .v3-link-tile__label {
-    font-size: 13px;
+    flex-direction: column;
+    gap: 0;
+    font-size: 16px;
+    line-height: 1.3;
   }
 
   .v3-cta-value {
@@ -480,29 +626,54 @@
   }
 
   .v3-footer__profile .v3-brand {
+    width: 240px;
+    height: 61px;
     margin: auto;
   }
 
-  .v3-footer .v3-brand,
   .v3-footer .v3-brand__logo {
-    transform: none;
-    width: 133px;
-    height: 33px;
+    width: 187px;
+    height: 47px;
+    transform: scale(1.283);
+    transform-origin: top left;
+  }
+
+  .v3-footer__address--pc {
+    display: none;
+  }
+
+  .v3-footer__address--sp {
+    display: block;
+    font-size: 14px;
+    line-height: 1.3;
+    letter-spacing: 0.05em;
+    max-width: 280px;
+    margin: 24px auto 0;
   }
 
   .v3-footer__related {
-    display: grid;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
     gap: 24px;
     margin-top: 38px;
   }
 
   .v3-footer__related-sep {
-    display: none;
+    display: block;
+    width: 40px;
+    height: 1px;
+    margin: 0;
+    background: #d9d9d9;
+    color: transparent;
+    font-size: 0;
+    overflow: hidden;
   }
 
   .v3-footer__sns {
     justify-content: center;
+    gap: 32px;
   }
 
   .v3-footer__copyright {
@@ -510,6 +681,6 @@
     right: 0;
     bottom: 66px;
     text-align: center;
-    font-size: 11px;
+    font-size: 12px;
   }
 }

@@ -9,7 +9,13 @@ $d = v3_data()['links'];
           <span class="v3-link-tile__label">
             <?php
             $lines = preg_split("/\r\n|\n/", (string) $item['label']);
-            if (count($lines) > 1):
+            if ($item['key'] === 'instagram'):
+                foreach (preg_split('/\s+/', (string) $item['label']) as $word):
+                    ?>
+              <span class="v3-link-tile__ig-word"><?php v3_e($word); ?></span>
+                    <?php
+                endforeach;
+            elseif (count($lines) > 1):
                 ?>
               <small class="v3-link-tile__lead"><?php v3_e($lines[0]); ?></small>
               <?php v3_e($lines[1]); ?>
