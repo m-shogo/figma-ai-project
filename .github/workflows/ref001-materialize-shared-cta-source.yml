@@ -19,135 +19,75 @@ jobs:
           ref: agent/ref001-v2-visual-completion
           fetch-depth: 1
 
-      - name: Find exact WordPress media source by Figma SHA-256
+      - name: Materialize exact WordPress source by Figma SHA-256
         shell: bash
         run: |
           python3 - <<'PY'
           import hashlib
           import json
           import pathlib
-          import re
-          import time
           import urllib.parse
           import urllib.request
-          import urllib.error
 
           TARGET_SHA = 'e95de3af2e6c761a277471db42344c0d3ef0a61b6700fa2a14be1d157855020e'
           TARGET_BYTES = 2066644
-          TARGET_W, TARGET_H = 2760, 911
           BASE = 'https://www.cku.ac.jp/'
           API = urllib.parse.urljoin(BASE, 'wp-json/wp/v2/media')
           OUT = pathlib.Path('experiments/ref001-blind-clean-20260812/implementation/theme/assets/images/ref001/backgrounds/shared-cta-campus-source.jpg')
           UA = 'Mozilla/5.0 REF001-Figma-source-verifier/1.0'
 
-          def request(url, timeout=25):
-              req = urllib.request.Request(url, headers={'User-Agent': UA, 'Accept': '*/*'})
-              return urllib.request.urlopen(req, timeout=timeout)
+          def fetch(url):
+              absolute = urllib.parse.urljoin(BASE, url)
+              req = urllib.request.Request(absolute, headers={'User-Agent': UA, 'Accept': '*/*'})
+              with urllib.request.urlopen(req, timeout=25) as res:
+                  return res.read(), absolute
 
-          def get_bytes(url):
-              with request(url) as res:
-                  return res.read(), dict(res.headers)
+          query = API + '?' + urllib.parse.urlencode({'search': 'acces', 'per_page': 100, 'media_type': 'image'})
+          raw, _ = fetch(query)
+          items = json.loads(raw.decode('utf-8'))
+          if not items:
+              raise SystemExit('WordPress media search for acces returned no items')
 
-          def get_json(url):
-              with request(url) as res:
-                  return json.loads(res.read().decode('utf-8')), dict(res.headers)
-
-          def candidate_urls(item):
-              urls = []
-              if item.get('source_url'):
-                  urls.append(item['source_url'])
+          for item in items:
               details = item.get('media_details') or {}
+              urls = []
+              source = item.get('source_url') or ''
+              if source:
+                  urls.append(source)
               original = details.get('original_image')
-              if original and item.get('source_url'):
-                  urls.append(urllib.parse.urljoin(item['source_url'], original))
-              sizes = details.get('sizes') or {}
-              for size in sizes.values():
+              if original and source:
+                  source_abs = urllib.parse.urljoin(BASE, source)
+                  urls.append(urllib.parse.urljoin(source_abs, original))
+              for size in (details.get('sizes') or {}).values():
                   if isinstance(size, dict) and size.get('source_url'):
                       urls.append(size['source_url'])
+
+              print('candidate id=', item.get('id'), 'slug=', item.get('slug'), 'reported=', details.get('width'), 'x', details.get('height'))
               seen = set()
-              return [u for u in urls if u and not (u in seen or seen.add(u))]
-
-          def likely(item):
-              details = item.get('media_details') or {}
-              w, h = details.get('width'), details.get('height')
-              src = item.get('source_url') or ''
-              slug = item.get('slug') or ''
-              title = ((item.get('title') or {}).get('rendered') or '')
-              hay = f'{src} {slug} {title}'.lower()
-              return (w == TARGET_W and h == TARGET_H) or bool(re.search(r'acces|access|campus', hay))
-
-          checked_urls = set()
-          checked_media = set()
-
-          def test_item(item, why):
-              mid = item.get('id')
-              if mid in checked_media and why != 'dimension-pass':
-                  return False
-              checked_media.add(mid)
-              details = item.get('media_details') or {}
-              print('candidate', why, 'id=', mid, 'slug=', item.get('slug'), 'dims=', details.get('width'), 'x', details.get('height'), 'src=', item.get('source_url'))
-              for url in candidate_urls(item):
-                  if url in checked_urls:
+              for candidate in urls:
+                  absolute = urllib.parse.urljoin(BASE, candidate)
+                  if absolute in seen:
                       continue
-                  checked_urls.add(url)
+                  seen.add(absolute)
                   try:
-                      data, headers = get_bytes(url)
+                      data, absolute = fetch(absolute)
                   except Exception as exc:
-                      print('  skip', url, exc)
+                      print('skip', absolute, exc)
                       continue
                   digest = hashlib.sha256(data).hexdigest()
-                  print('  fetched', len(data), digest, url)
+                  print('fetched', len(data), digest, absolute)
                   if digest == TARGET_SHA:
                       if len(data) != TARGET_BYTES:
                           raise SystemExit('SHA matched but byte length unexpectedly differs')
                       OUT.parent.mkdir(parents=True, exist_ok=True)
                       OUT.write_bytes(data)
-                      print('MATCH', url)
-                      return True
-              return False
-
-          # Search filenames/titles first; Figma layer is named "acces 1".
-          for term in ('acces', 'access', 'campus', 'キャンパス'):
-              url = API + '?' + urllib.parse.urlencode({'search': term, 'per_page': 100, 'media_type': 'image'})
-              try:
-                  items, headers = get_json(url)
-              except Exception as exc:
-                  print('search failed', term, exc)
-                  continue
-              print('search', term, 'count', len(items))
-              for item in items:
-                  if test_item(item, 'search:'+term):
+                      print('MATCH', absolute)
                       raise SystemExit(0)
 
-          # Then inspect media metadata page-by-page, but only download original
-          # binaries when dimensions or names make them plausible. This keeps
-          # public-site traffic bounded while still finding unlinked legacy media.
-          max_pages = 60
-          for page in range(1, max_pages + 1):
-              url = API + '?' + urllib.parse.urlencode({'per_page': 100, 'page': page, 'media_type': 'image', 'orderby': 'id', 'order': 'desc'})
-              try:
-                  items, headers = get_json(url)
-              except urllib.error.HTTPError as exc:
-                  if exc.code == 400:
-                      print('pagination ended at page', page)
-                      break
-                  raise
-              print('page', page, 'items', len(items))
-              if not items:
-                  break
-              for item in items:
-                  if likely(item) and test_item(item, 'dimension-pass'):
-                      raise SystemExit(0)
-              total_pages = int(headers.get('X-WP-TotalPages', headers.get('x-wp-totalpages', '0')) or 0)
-              if total_pages and page >= total_pages:
-                  break
-              time.sleep(0.05)
-
-          raise SystemExit(f'exact Figma source not found; inspected {len(checked_media)} candidate media and downloaded {len(checked_urls)} candidate URLs')
+          raise SystemExit('acces media was found, but no candidate matched the exact Figma SHA-256')
           PY
 
       - name: Commit exact source
-        if: success()
         shell: bash
         run: |
           git config user.name "github-actions[bot]"
