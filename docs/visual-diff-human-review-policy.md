@@ -18,26 +18,36 @@ Use free / self-hosted tooling by default.
 
 Do not make paid visual-regression SaaS a production dependency. External services such as Chromatic or Percy may be researched for workflow ideas, but their paid infrastructure is not required for this project.
 
+## Two comparison questions
+
+Human Review deliberately keeps two different questions separate:
+
+1. **Figma → Current Web** — does the implementation still match the design source of truth?
+2. **Approved Baseline → Current Web** — did a later change break a Web state that a human had already accepted?
+
+The second comparison is a lightweight regression guard, not a second design source of truth. Figma remains authoritative.
+
 ## Current implementation — do now
 
 ### 1. Deterministic captures
 
 Capture the same required viewport/environment repeatedly with the browser/runtime pinned by CI. Wait for fonts and images before capture. Disable screenshot-time animations/caret where possible so false positives do not dominate review.
 
-### 2. Four review views
+### 2. Human Review views
 
-Human Review should make these complementary views available when deterministic Figma/Web captures exist:
+Human Review should make these complementary views available when deterministic captures exist:
 
 - Live Web / Figma side-by-side
 - Overlay / blink
-- Perceptual Visual Diff
+- staged perceptual Figma Visual Diff
+- lightweight Approved Baseline Regression Diff
 - normal human judgement + feedback
 
 No one view is authoritative by itself.
 
-### 3. Staged sensitivity
+### 3. Staged Figma sensitivity
 
-Use three explicit sensitivity levels:
+Use three explicit sensitivity levels for Figma → Web comparison:
 
 - `Loose` — find large material differences quickly; suppress sparse noise strongly.
 - `Standard` — normal review default; intended for shape, crop, position, spacing, and clear text-layout differences.
@@ -45,13 +55,28 @@ Use three explicit sensitivity levels:
 
 Strict is advisory and must not become the default automatic merge gate.
 
-### 4. Hotspot prioritization
+### 4. Approved Baseline regression
 
-Visual Diff should prioritize a small number of the largest connected difference regions. The reviewer should inspect these before scanning the entire red map.
+Keep the regression layer intentionally smaller than the Figma review layer.
+
+- PC baseline: 1380 deterministic Web capture.
+- SP baseline: 375 deterministic Web capture.
+- comparison profile: Standard only (`0.14`).
+- baseline lives in the repository under `review-dashboard/baselines/ref001/`.
+- initial baseline is the V2 state accepted after PR #95.
+- baseline promotion requires an explicit human-approved commit.
+- use `scripts/promote_visual_baseline.py --approved-commit <sha> [--approved-after-pr <number>]` only after Human Review accepts the new state.
+- baseline difference is informational; it is not a hard merge gate.
+
+Do not auto-promote a baseline merely because CI is green or because a machine diff score improved.
+
+### 5. Hotspot prioritization
+
+Figma Visual Diff should prioritize a small number of the largest connected difference regions. The reviewer should inspect these before scanning the entire red map.
 
 Hotspot ranking is a navigation aid, not an automatic diagnosis. Do not claim that a hotspot is a crop/typography/position bug until the actual Figma and implementation are inspected.
 
-### 5. Review-first metrics
+### 6. Review-first metrics
 
 Useful metrics include:
 
@@ -59,6 +84,7 @@ Useful metrics include:
 - largest difference bounding box
 - top difference hotspots
 - analysis scale
+- approved-baseline regression ratio
 - runtime overflow/image/font errors
 
 These metrics provide evidence. They are not a universal pass/fail threshold.
@@ -70,9 +96,10 @@ Automated repair should stop and hand off to Human Review when all of the follow
 1. required runtime widths have no overflow, image failures, or runtime errors;
 2. required fonts/assets are loaded;
 3. PC/SP page and section geometry are materially aligned with the Figma reference;
-4. `Standard` Visual Diff has no unexplained large hotspot that a reasonable reviewer would notice immediately;
-5. remaining difference is predominantly text antialiasing, rasterization/subpixel behavior, or isolated small edge noise;
-6. a further change would mainly optimize machine diff score rather than improve human-visible fidelity.
+4. `Standard` Figma Visual Diff has no unexplained large hotspot that a reasonable reviewer would notice immediately;
+5. Approved Baseline Diff has no unexplained material regression introduced by the current change;
+6. remaining difference is predominantly text antialiasing, rasterization/subpixel behavior, or isolated small edge noise;
+7. a further change would mainly optimize machine diff score rather than improve human-visible fidelity.
 
 A human may still request a final repair after this handoff. That feedback takes precedence over the automated stop rule.
 

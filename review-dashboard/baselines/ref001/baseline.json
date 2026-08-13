@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "reference_id": "REF-001",
+  "approved_source_commit": "03729d665513dfcaeb255edc5276217d63b30bc1",
+  "approved_after_pr": 95,
+  "purpose": "Human-approved-enough V2 regression baseline. Final visual judgement remains Human Review.",
+  "captures": {
+    "pc": "review-dashboard/baselines/ref001/web-pc.png",
+    "sp": "review-dashboard/baselines/ref001/web-sp.png"
+  },
+  "policy": {
+    "comparison": "baseline-vs-current-web",
+    "default_threshold": 0.14,
+    "hard_gate": false,
+    "promotion_requires_human_approval": true
+  }
+}
