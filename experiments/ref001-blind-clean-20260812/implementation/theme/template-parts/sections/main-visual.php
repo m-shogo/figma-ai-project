@@ -5,7 +5,7 @@
   </div>
   <div class="ref-content ref-mv__copy">
     <h1 class="ref-mv__hero">
-      <span class="ref-mv__hero-main">“<strong>ケイザイ</strong>”</span>
+      <span class="ref-mv__hero-main"><span class="ref-mv__quote ref-mv__quote--left">“</span><strong>ケイザイ</strong><span class="ref-mv__quote ref-mv__quote--right">”</span></span>
       <span class="ref-mv__hero-sub">って、想像以上に</span>
       <span class="ref-mv__hero-end">おもしろい。</span>
     </h1>
