@@ -35,6 +35,14 @@
 .ref-shared-cta .ref-action--blue::before{width:16px;height:13px;-webkit-mask-image:url('assets/icons/document.svg');mask-image:url('assets/icons/document.svg')}
 .ref-shared-cta .ref-action--purple::before{width:13px;height:14px;-webkit-mask-image:url('assets/icons/open-campus.svg');mask-image:url('assets/icons/open-campus.svg')}
 
+/* Education uses the same ~14px list metric on PC/SP. The source Figma rows
+ * advance exactly 27px and the long 03/04 labels remain single-line. The flow
+ * marker is a black double-chevron, not the reusable purple arrow asset. */
+.ref-edu-card ul{font-size:14px;line-height:1;gap:13px}
+.ref-edu-flow-arrow{gap:0}
+.ref-edu-flow-arrow__glyph{display:none}
+.ref-edu-flow-arrow::before,.ref-edu-flow-arrow::after{content:'';display:block;flex:0 0 auto;width:8px;height:8px;border-right:1px solid #333;border-bottom:1px solid #333;transform:rotate(-45deg);margin:0 -1px}
+
 /* Links — <img> cannot inherit currentColor from its parent. Reuse the exact
  * arrow SVG geometry as a mask so each Figma-authored tile accent is preserved. */
 .ref-link-tile__arrow .ref-svg-icon{display:none!important}
@@ -44,6 +52,11 @@
   /* Figma PC badge top is y=568 global / 474 within the 714px MV. The inherited
    * -18px bottom offset placed the whole 240px badge 18px too low. */
   .ref-mv__oc{bottom:0}
+
+  /* The PC intro divider has a small authored left-facing notch at its midpoint.
+   * Keep it as CSS geometry so the surrounding copy remains editable. */
+  .ref-education__intro{position:relative}
+  .ref-education__intro::before{content:'';position:absolute;left:-9px;top:50%;width:13px;height:13px;background:var(--ref-beige);border-left:1px solid #7fc9ed;border-bottom:1px solid #7fc9ed;transform:translateY(-50%) rotate(45deg)}
 }
 
 @media (max-width:767px){
@@ -57,14 +70,8 @@
    * viewports to grow naturally when text reflows. */
   .ref-reason{min-height:1295px}
 
-  /* Figma education rows render at ~14px and advance exactly 27px. Keeping that
-   * metric prevents the long 03/04 labels from wrapping while leaving authored
-   * card heights untouched. The flow marker is a black double-chevron glyph in
-   * Figma, not two purple right-arrow assets rotated as a group. */
-  .ref-edu-card ul{font-size:14px;line-height:1;gap:13px}
-  .ref-edu-flow-arrow{transform:none;flex-direction:column;gap:0;position:relative;left:3px}
-  .ref-edu-flow-arrow__glyph{display:none}
-  .ref-edu-flow-arrow::before,.ref-edu-flow-arrow::after{content:'';display:block;width:8px;height:8px;border-right:1px solid #333;border-bottom:1px solid #333;transform:rotate(45deg);margin:-1px 0}
+  .ref-edu-flow-arrow{transform:none;flex-direction:column;position:relative;left:3px}
+  .ref-edu-flow-arrow::before,.ref-edu-flow-arrow::after{transform:rotate(45deg);margin:-1px 0}
 
   .ref-link-tile__arrow::before{width:16px;height:15px}
 }
