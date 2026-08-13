@@ -1,0 +1,57 @@
+/* REF-001 V2 — Shared CTA fidelity owner.
+ * Figma PC: 21378:7867 / 21378:7730. SP: 21376:4719 / 21376:4628.
+ * The campus image is the exact 2760x911 JPEG used by the Figma image fill.
+ * Keep the photo raw and reproduce Figma's crop + 80% blue→purple overlay in
+ * CSS so future designers can tune geometry/overlay without baking text/UI.
+ */
+.ref-shared-cta{
+  position:relative;
+  display:block;
+  overflow:hidden;
+  color:#fff;
+  background-color:var(--ref-purple);
+  background-image:
+    linear-gradient(90deg,rgba(56,161,219,.80) 0%,rgba(132,115,170,.80) 100%),
+    url('assets/images/ref001/backgrounds/shared-cta-campus-source.jpg');
+  background-repeat:no-repeat,no-repeat;
+}
+.ref-shared-cta__inner{position:absolute;inset:0;text-align:center}
+.ref-shared-cta h2{position:absolute;margin:0;font-weight:500;letter-spacing:.05em;color:#fff;text-shadow:0 0 20px var(--ref-purple)}
+.ref-shared-cta h2::before,.ref-shared-cta h2::after{content:"";position:absolute;width:25px;height:1px;background:#fff;top:50%}
+.ref-shared-cta h2::before{left:-41px;transform:rotate(53deg)}
+.ref-shared-cta h2::after{right:-41px;transform:rotate(-53deg)}
+.ref-shared-cta__actions{position:absolute;display:flex;margin:0;gap:20px}
+.ref-shared-cta .ref-action{box-sizing:border-box;width:260px;height:64px;min-height:64px;padding:0;background:#fff;font-size:16px;line-height:1;letter-spacing:.05em;gap:16px}
+.ref-shared-cta .ref-action__icon{width:16px;height:16px;object-fit:contain}
+
+@media (min-width:768px){
+  .ref-shared-cta{
+    height:328px;
+    /* Figma raw-image rectangle: x=-22 y=-12 w=1632 h=539. */
+    background-size:100% 100%,1632px 539px;
+    background-position:0 0,-22px -12px;
+  }
+  .ref-shared-cta h2{left:50%;top:96px;transform:translateX(-50%);font-size:32px;line-height:1;white-space:nowrap}
+  .ref-shared-cta__actions{left:50%;top:168px;transform:translateX(-50%);width:540px}
+}
+
+@media (max-width:767px){
+  .ref-shared-cta{
+    height:350px;
+    /* Figma SP raw-image rectangle: x=-372 y=-12 w=1128 h=372. */
+    background-size:100% 100%,1128px 372px;
+    background-position:0 0,-372px -12px;
+  }
+  .ref-shared-cta h2{left:50%;top:56px;transform:translateX(-50%);width:176px;font-size:24px;line-height:1.3;white-space:normal}
+  .ref-shared-cta h2::before,.ref-shared-cta h2::after{width:43px}
+  .ref-shared-cta h2::before{left:-55px;top:34px;transform:rotate(67deg)}
+  .ref-shared-cta h2::after{right:-55px;top:34px;transform:rotate(-67deg)}
+  .ref-shared-cta__actions{left:57px;right:57px;top:150px;display:grid;grid-template-columns:1fr;gap:16px;transform:none}
+  .ref-shared-cta .ref-action{width:100%;height:64px;min-height:64px}
+}
+
+@media (max-width:360px){
+  .ref-shared-cta__actions{left:calc((100vw - min(262px,calc(100vw - 32px)))/2);right:auto;width:min(262px,calc(100vw - 32px))}
+  .ref-shared-cta h2::before{left:-45px}
+  .ref-shared-cta h2::after{right:-45px}
+}
