@@ -102,11 +102,10 @@
 }
 
 /* SP endpoint: Section Diff shows four human-visible type-position residuals.
- * Correct the independently-positioned lines instead of shifting the whole MV,
- * which would reintroduce downstream drift. Keep narrow <=360 continuity rules
- * below as the final authority for the smallest runtime widths. */
+ * Keep the authored purple quote marks anchored; only the Japanese display face
+ * needs compensating for its unavailable proprietary Figma font metrics. */
 @media (min-width:361px) and (max-width:767px){
-  .ref-mv__hero-main{left:-12px;top:4px}
+  .ref-mv__hero-main strong{position:relative;left:-12px;top:4px}
   .ref-mv__hero-sub{top:128px}
   .ref-mv__oc b{top:34px}
   .ref-mv__oc small{bottom:46px}
