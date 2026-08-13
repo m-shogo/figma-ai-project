@@ -48,5 +48,6 @@ if (function_exists('add_action')) { add_action('wp_enqueue_scripts', function()
     wp_enqueue_style('ref001-v2-header-polish', get_stylesheet_directory_uri() . '/v2-header-polish.css', ['ref001-v2-courses-polish'], '0.1.0');
     wp_enqueue_style('ref001-v2-links-polish', get_stylesheet_directory_uri() . '/v2-links-polish.css', ['ref001-v2-header-polish'], '0.1.0');
     wp_enqueue_style('ref001-v2-shared-cta-polish', get_stylesheet_directory_uri() . '/v2-shared-cta-polish.css', ['ref001-v2-links-polish'], '0.1.0');
-    wp_enqueue_style('ref001-v2-continuity-fixes', get_stylesheet_directory_uri() . '/v2-continuity-fixes.css', ['ref001-v2-shared-cta-polish'], '0.1.0');
+    wp_enqueue_style('ref001-v2-cta-value-polish', get_stylesheet_directory_uri() . '/v2-cta-value-polish.css', ['ref001-v2-shared-cta-polish'], '0.1.0');
+    wp_enqueue_style('ref001-v2-continuity-fixes', get_stylesheet_directory_uri() . '/v2-continuity-fixes.css', ['ref001-v2-cta-value-polish'], '0.1.0');
 }); }
