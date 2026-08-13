@@ -1,0 +1,56 @@
+/* REF-001 V2 — Messages fidelity owner.
+ * Figma PC: 21378:7746 / SP: 21376:4629.
+ */
+
+.ref-messages__head h2{font-weight:500;letter-spacing:.05em;white-space:nowrap}
+.ref-messages__head h2 span,.ref-messages__head h2 strong{font-weight:500}
+.ref-messages__quote{margin:0;color:#fff;letter-spacing:.05em}
+.ref-messages__quote span{background:#333;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.ref-messages__profile{color:var(--ref-purple);font-size:16px;line-height:1.6;letter-spacing:.05em;margin:0}
+.ref-messages__indicator{font-family:var(--ref-font-en);font-weight:500}
+.ref-messages__arrow{width:14px;height:13px;object-fit:contain}
+.ref-messages__bar{width:146px;height:2px;background:rgba(150,150,150,.5);position:relative}
+.ref-messages__bar::before{content:"";position:absolute;left:0;top:0;width:44px;height:2px;background:var(--ref-blue)}
+
+@media (min-width:1300px){
+  .ref-messages{height:440px;min-height:440px;padding:0}
+  .ref-messages__head{left:calc((100% - 1160px)/2);top:0;height:86px}
+  .ref-messages__head .ref-kicker{font-size:20px}
+  .ref-messages__head h2{margin:20px 0 0;font-size:30px;line-height:42px}
+  .ref-messages__head h2 strong{font-size:42px}
+
+  .ref-messages__body{display:grid;grid-template-columns:500px 660px;width:1160px;height:440px;min-height:440px;align-items:start}
+  .ref-messages__copy{position:relative;height:440px;padding:0}
+  .ref-messages__photo{width:660px;height:440px;margin:0}
+  .ref-messages__photo img{width:100%;height:100%;object-fit:contain}
+
+  .ref-messages__quote{position:absolute;left:0;top:146px;width:684px;font-size:28px;line-height:60px;white-space:nowrap;z-index:3}
+  .ref-messages__quote span{padding:5px 24px}
+  .ref-messages__profile{position:absolute;left:0;top:291px;width:293px}
+  .ref-messages__indicator{position:absolute;left:165px;top:408px;display:grid;grid-template-columns:16px 16px 146px 16px 16px;column-gap:22px;align-items:center;margin:0;font-size:24px;line-height:31px}
+}
+
+@media (max-width:767px){
+  .ref-messages{height:538px;min-height:538px;padding:0 8px}
+  .ref-messages__head{position:static!important;height:76px;margin-left:8px}
+  .ref-messages__head .ref-kicker{font-size:20px}
+  .ref-messages__head h2{margin:20px 0 0!important;font-size:24px;line-height:32px}
+  .ref-messages__head h2 strong{font-size:32px}
+
+  .ref-messages__body{display:block;position:relative;width:343px;max-width:calc(100vw - 32px);height:422px;min-height:0;margin:40px auto 0}
+  .ref-messages__photo{position:absolute;left:0;top:0;width:343px;max-width:100%;height:229px!important;margin:0!important}
+  .ref-messages__photo img{width:100%;height:100%;object-fit:contain}
+  .ref-messages__copy{position:absolute;inset:0;padding:0!important;margin:0!important;z-index:2}
+
+  .ref-messages__quote{position:absolute;left:-8px;top:153px;width:340px;font-size:22px;line-height:44px;white-space:normal}
+  .ref-messages__quote span{padding:3px 16px}
+  .ref-messages__profile{position:absolute;left:0;top:307px;width:293px}
+  .ref-messages__indicator{position:absolute;left:85px;top:395px;display:grid;grid-template-columns:14px 13px 146px 13px 14px;column-gap:16px;align-items:center;margin:0;font-size:20px;line-height:27px}
+}
+
+@media (max-width:360px){
+  .ref-messages__body{width:calc(100vw - 32px)}
+  .ref-messages__photo{width:100%}
+  .ref-messages__quote{width:calc(100vw - 35px)}
+  .ref-messages__indicator{left:50%;transform:translateX(-50%)}
+}
