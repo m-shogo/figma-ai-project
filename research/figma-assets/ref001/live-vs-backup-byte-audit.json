@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "reference_id": "REF-001",
+  "audited_at": "2026-08-13T03:01:00Z",
+  "source": {
+    "figma_file_key": "ZYTdtw4wCgkcBy2cVnhxVI",
+    "figma_page_id": "21376:1600",
+    "export_method": "Figma Plugin API node.exportAsync PNG scale=1",
+    "backup_branch": "backup/ref001-drive-bridge-assets-20260813"
+  },
+  "summary": {
+    "assets": 32,
+    "exact_byte_matches": 4,
+    "byte_differences": 28,
+    "pc_exact": 0,
+    "sp_exact": 4,
+    "interpretation": "Git blob SHA equality proves exact bytes. Inequality does not by itself prove a visual difference because PNG encoders/compression may differ."
+  },
+  "assets": [
+    {"slot":"main-visual-left","viewport":"pc","node_id":"21378:8041","file":"main-visual-left-21378-8041.png","figma_export":{"width":570,"height":614,"bytes":320038,"git_blob_sha1":"d3e2883797b9b62f8cfe51b89cc2756e123508e6"},"backup_git":{"bytes":486557,"git_blob_sha1":"a2681f5e14c94f08326729a923fe13b50073cf05"},"exact_byte_match":false},
+    {"slot":"main-visual-right","viewport":"pc","node_id":"21378:8036","file":"main-visual-right-21378-8036.png","figma_export":{"width":570,"height":614,"bytes":501335,"git_blob_sha1":"8efa94079c64f32df04b3f6728cf27ce989cd88a"},"backup_git":{"bytes":708028,"git_blob_sha1":"a445bb57c23bb76eb81c9a50647221ca420f8fb7"},"exact_byte_match":false},
+    {"slot":"reason-1","viewport":"pc","node_id":"21378:8002","file":"reason-1-21378-8002.png","figma_export":{"width":360,"height":240,"bytes":103074,"git_blob_sha1":"8854ed309595af26fa09e519960116ca375aede4"},"backup_git":{"bytes":133101,"git_blob_sha1":"02dc2868f0183fe62ba35325023fcf606cc40aa7"},"exact_byte_match":false},
+    {"slot":"reason-2","viewport":"pc","node_id":"21378:8010","file":"reason-2-21378-8010.png","figma_export":{"width":360,"height":240,"bytes":142922,"git_blob_sha1":"41da62ff1b0d1ffc671d4b9dcbd88ca8d9182c92"},"backup_git":{"bytes":194690,"git_blob_sha1":"7fddf1e71b05a0e350e2ba913d3480a8eb9464f4"},"exact_byte_match":false},
+    {"slot":"reason-3","viewport":"pc","node_id":"21378:8018","file":"reason-3-21378-8018.png","figma_export":{"width":360,"height":240,"bytes":141672,"git_blob_sha1":"b735133715fea8c9d18cd4d42520c855ee7d12cc"},"backup_git":{"bytes":203493,"git_blob_sha1":"4430cd44004a8ccf64264a85e69540c2be5ff0ba"},"exact_byte_match":false},
+    {"slot":"education-1","viewport":"pc","node_id":"21378:7980","file":"education-1-21378-7980.png","figma_export":{"width":233,"height":131,"bytes":54224,"git_blob_sha1":"634395a09f55c70adffcbd495a2b3fb1a10b8247"},"backup_git":{"bytes":75208,"git_blob_sha1":"3a2926a196915ddf8ae8a038f9b03f7574a618ff"},"exact_byte_match":false},
+    {"slot":"education-2","viewport":"pc","node_id":"21378:7946","file":"education-2-21378-7946.png","figma_export":{"width":233,"height":131,"bytes":64666,"git_blob_sha1":"a3c3d6a0ce1a2f6cb5771e5217b59f3e7ed3bed5"},"backup_git":{"bytes":85828,"git_blob_sha1":"62085fbb1966fdc774f62b21bbeb8aeb19e81e55"},"exact_byte_match":false},
+    {"slot":"education-3","viewport":"pc","node_id":"21378:7917","file":"education-3-21378-7917.png","figma_export":{"width":233,"height":131,"bytes":50270,"git_blob_sha1":"cde5c60646b747595a33c3c93ab1797470dab58a"},"backup_git":{"bytes":63774,"git_blob_sha1":"79fc1b2e95a41b09220054d4c3e58f874099cade"},"exact_byte_match":false},
+    {"slot":"education-4","viewport":"pc","node_id":"21378:7889","file":"education-4-21378-7889.png","figma_export":{"width":233,"height":131,"bytes":51726,"git_blob_sha1":"d485130e8440e9569dab0d55e9b4da722a91d29f"},"backup_git":{"bytes":78251,"git_blob_sha1":"0bf7e36ebcd548de1995a206280d73ae854ed7a8"},"exact_byte_match":false},
+    {"slot":"voice-1-avatar","viewport":"pc","node_id":"21378:7857","file":"voice-1-avatar-21378-7857.png","figma_export":{"width":160,"height":160,"bytes":34496,"git_blob_sha1":"969274281dd996ea48c62ece1c687e04408b13ae"},"backup_git":{"bytes":38744,"git_blob_sha1":"8448b860643c77e993af1cbd92474eafb655890a"},"exact_byte_match":false},
+    {"slot":"voice-1-detail","viewport":"pc","node_id":"21378:7849","file":"voice-1-detail-21378-7849.png","figma_export":{"width":404,"height":227,"bytes":165258,"git_blob_sha1":"ae328d1a4b7706f9c0750a3ee055bedfd0b91ed5"},"backup_git":{"bytes":216566,"git_blob_sha1":"2250052d1f4ceb250d147f31895c31b89271c74c"},"exact_byte_match":false},
+    {"slot":"voice-2-avatar","viewport":"pc","node_id":"21378:7826","file":"voice-2-avatar-21378-7826.png","figma_export":{"width":160,"height":160,"bytes":31253,"git_blob_sha1":"3ad1553ff9de5302a1347f46b2010afb87f808a3"},"backup_git":{"bytes":35000,"git_blob_sha1":"59d84bfa2de8134b93e35e43f589d3e6d56e80ab"},"exact_byte_match":false},
+    {"slot":"voice-3-avatar","viewport":"pc","node_id":"21378:7795","file":"voice-3-avatar-21378-7795.png","figma_export":{"width":160,"height":160,"bytes":29673,"git_blob_sha1":"c22f889c72b572b093b6fc5a03478bb3ee2409f4"},"backup_git":{"bytes":35207,"git_blob_sha1":"2fb5beb27eafc968f3ecfe128fdbcc2c906151db"},"exact_byte_match":false},
+    {"slot":"messages-photo","viewport":"pc","node_id":"21378:7760","file":"messages-photo-21378-7760.png","figma_export":{"width":660,"height":440,"bytes":400864,"git_blob_sha1":"59c11155c9dfb431f78bdf593ae7c51a8be1cae7"},"backup_git":{"bytes":633737,"git_blob_sha1":"cdca029ce5e445ca4641a3ed4f8511318ffca1e0"},"exact_byte_match":false},
+    {"slot":"cta-person-left","viewport":"pc","node_id":"21378:7489","file":"cta-person-left-21378-7489.png","figma_export":{"width":280,"height":294,"bytes":107713,"git_blob_sha1":"6f2da71e6847a5c57205c66c36ca9fb4c9d982d9"},"backup_git":{"bytes":134047,"git_blob_sha1":"ade79f3cc1c8ea537b845951f59c88f82b8f771e"},"exact_byte_match":false},
+    {"slot":"cta-person-right","viewport":"pc","node_id":"21378:7485","file":"cta-person-right-21378-7485.png","figma_export":{"width":335,"height":293,"bytes":95797,"git_blob_sha1":"47d3c22608fd8bc01dda3165adb022277ff86364"},"backup_git":{"bytes":116614,"git_blob_sha1":"296195a5d872d3408e81926c451d823dd3a58062"},"exact_byte_match":false},
+    {"slot":"main-visual-left","viewport":"sp","node_id":"21376:4894","file":"main-visual-left-21376-4894.png","figma_export":{"width":335,"height":220,"bytes":88672,"git_blob_sha1":"b11d83144590c2999dae9f13e14e5c6a2afc7955"},"backup_git":{"bytes":113210,"git_blob_sha1":"539d31055a72c305b8c2c806dbca951f8427d55b"},"exact_byte_match":false},
+    {"slot":"main-visual-right","viewport":"sp","node_id":"21376:4890","file":"main-visual-right-21376-4890.png","figma_export":{"width":335,"height":220,"bytes":112122,"git_blob_sha1":"385e5e36f4c00dfa4da681bfadd81d2ffd4838f7"},"backup_git":{"bytes":167133,"git_blob_sha1":"f9c9aeaa7175c84b5a04e258b3f883bf50b5d1e3"},"exact_byte_match":false},
+    {"slot":"reason-1","viewport":"sp","node_id":"21376:4855","file":"reason-1-21376-4855.png","figma_export":{"width":343,"height":229,"bytes":94993,"git_blob_sha1":"9ad895727988ed3b922a36f9882f0045ab57bd58"},"backup_git":{"bytes":123026,"git_blob_sha1":"026daf773651233ec5bcd1a15ae842c3a7400c95"},"exact_byte_match":false},
+    {"slot":"reason-2","viewport":"sp","node_id":"21376:4864","file":"reason-2-21376-4864.png","figma_export":{"width":343,"height":229,"bytes":131724,"git_blob_sha1":"7cd977d445ff9fb2bbcf6bbcf5ccfd9ecbadc95f"},"backup_git":{"bytes":179242,"git_blob_sha1":"80bdac702055cb3ccce9da8800eaebc9fc601bb7"},"exact_byte_match":false},
+    {"slot":"reason-3","viewport":"sp","node_id":"21376:4872","file":"reason-3-21376-4872.png","figma_export":{"width":343,"height":229,"bytes":131913,"git_blob_sha1":"67acefa43e49b314b160ca877bd28ab5cc462e00"},"backup_git":{"bytes":187161,"git_blob_sha1":"25a15e20d89c302de6365c5b367db4eb15bf2a49"},"exact_byte_match":false},
+    {"slot":"education-1","viewport":"sp","node_id":"21376:4835","file":"education-1-21376-4835.png","figma_export":{"width":140,"height":79,"bytes":22621,"git_blob_sha1":"3d61edba66021572396091ec9f7ae0edf1385be3"},"backup_git":{"bytes":22621,"git_blob_sha1":"8f08a873f451e31a093f074a65bfa91e6dca0585"},"exact_byte_match":false},
+    {"slot":"education-2","viewport":"sp","node_id":"21376:4801","file":"education-2-21376-4801.png","figma_export":{"width":140,"height":79,"bytes":26493,"git_blob_sha1":"0f2be294e3e80ee303e2ac7ab015f2258ccba3d6"},"backup_git":{"bytes":33122,"git_blob_sha1":"cf21ec905eb8df38a95f14d4ba2b3419c00b70c1"},"exact_byte_match":false},
+    {"slot":"education-3","viewport":"sp","node_id":"21376:4769","file":"education-3-21376-4769.png","figma_export":{"width":140,"height":79,"bytes":20456,"git_blob_sha1":"39a6f1e3faf043324871b26f44e036753547ac4e"},"backup_git":{"bytes":20456,"git_blob_sha1":"39a6f1e3faf043324871b26f44e036753547ac4e"},"exact_byte_match":true},
+    {"slot":"education-4","viewport":"sp","node_id":"21376:4741","file":"education-4-21376-4741.png","figma_export":{"width":140,"height":79,"bytes":21209,"git_blob_sha1":"90bc126f05c3ce42eecd8d246366903d80391633"},"backup_git":{"bytes":21209,"git_blob_sha1":"90bc126f05c3ce42eecd8d246366903d80391633"},"exact_byte_match":true},
+    {"slot":"voice-1-avatar","viewport":"sp","node_id":"21376:4709","file":"student-voice-01-21376-4709.png","figma_export":{"width":84,"height":84,"bytes":11575,"git_blob_sha1":"b27969344ee1cf93c2746c27cbe751af75b9ec25"},"backup_git":{"bytes":11575,"git_blob_sha1":"b27969344ee1cf93c2746c27cbe751af75b9ec25"},"exact_byte_match":true},
+    {"slot":"voice-1-detail","viewport":"sp","node_id":"21376:4701","file":"voice-1-detail-21376-4701.png","figma_export":{"width":311,"height":175,"bytes":105915,"git_blob_sha1":"db553fa2dd21da3944c085b754141ddb16092cca"},"backup_git":{"bytes":135025,"git_blob_sha1":"a6ca0e3473115cda3ce425ec0314e2a079493e28"},"exact_byte_match":false},
+    {"slot":"voice-2-avatar","viewport":"sp","node_id":"21376:4678","file":"student-voice-02-21376-4678.png","figma_export":{"width":84,"height":84,"bytes":11141,"git_blob_sha1":"2d6cd52463490b093bf66bf65be6533b0150e8d2"},"backup_git":{"bytes":11141,"git_blob_sha1":"37c410780d39f30c6525d46b96dfa8b248a8107d"},"exact_byte_match":false},
+    {"slot":"voice-3-avatar","viewport":"sp","node_id":"21376:4663","file":"student-voice-04-21376-4663.png","figma_export":{"width":84,"height":84,"bytes":10874,"git_blob_sha1":"868b77d62834f19ea11452ea86a83fbd7f43c748"},"backup_git":{"bytes":10874,"git_blob_sha1":"868b77d62834f19ea11452ea86a83fbd7f43c748"},"exact_byte_match":true},
+    {"slot":"messages-photo","viewport":"sp","node_id":"21376:4643","file":"messages-photo-21376-4643.png","figma_export":{"width":343,"height":228.6666717529297,"bytes":135884,"git_blob_sha1":"404736b3f10325531e1573d4abc4aa48f15cf3df"},"backup_git":{"bytes":200551,"git_blob_sha1":"616f7c5e57242483124d4eb85a7bfed10e462846"},"exact_byte_match":false},
+    {"slot":"cta-person-left","viewport":"sp","node_id":"21376:4958","file":"cta-person-left-21376-4958.png","figma_export":{"width":114,"height":144,"bytes":25540,"git_blob_sha1":"9592f4699857d722113406e2c2eeaf72f09e404c"},"backup_git":{"bytes":29590,"git_blob_sha1":"ff6c1b7f348f53400517ed19bc53837bdd37f536"},"exact_byte_match":false},
+    {"slot":"cta-person-right","viewport":"sp","node_id":"21376:4962","file":"cta-person-right-21376-4962.png","figma_export":{"width":110,"height":137,"bytes":23288,"git_blob_sha1":"cb7c259bce90b7c84db0de1459c7894ee3e4b509"},"backup_git":{"bytes":26789,"git_blob_sha1":"bc9884b7e4974a4ac93f70e894be15fb60cf6234"},"exact_byte_match":false}
+  ],
+  "notes": [
+    "This audit does not persist short-lived Figma asset URLs.",
+    "The Figma-side hash is computed from the exact exported PNG bytes using Git's blob SHA-1 framing, so it can be compared directly with GitHub tree blob SHA values.",
+    "The existing backup is not byte-identical to a fresh Figma Plugin API 1x export for 28 of 32 assets.",
+    "A Windows-local export remains required before promotion because the planned Windows script uses the Figma REST image export path, which may produce different PNG bytes while remaining visually equivalent.",
+    "Do not classify a byte mismatch as a visual failure without pixel/visual QA."
+  ]
+}

@@ -54,7 +54,11 @@ try {
   await waitForLabel(page, 'Full Page / SP');
   await page.locator('label:has(input[data-category][value="spacing"]) span').click();
   await page.locator('#feedback-comment').fill('smoke: Full Page SPの余白を確認');
-  await page.waitForTimeout(300);
+  await page.waitForFunction(() => {
+    const href = document.querySelector('#create-issue')?.getAttribute('href');
+    if (!href) return false;
+    return (new URL(href).searchParams.get('body') || '').includes('smoke: Full Page SPの余白を確認');
+  });
 
   const issueHref = await page.locator('#create-issue').getAttribute('href');
   invariant(issueHref?.startsWith('https://github.com/m-shogo/figma-ai-project/issues/new?'), 'GitHub issue prefill URL missing');
