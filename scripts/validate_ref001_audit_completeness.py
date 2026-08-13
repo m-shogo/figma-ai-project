@@ -56,7 +56,11 @@ def read_json(path: Path):
 manifest = read_json(MANIFEST) or {}
 runtime = read_json(RUNTIME) or []
 baseline = read_json(BASELINE_DIR / "baseline.json") or {}
-section_report = read_json(SECTION_DIR / "report.json") or []
+section_report_raw = read_json(SECTION_DIR / "report.json") or []
+# Backward compatible: older reports are a top-level list; newer reports may carry
+# capture-source metadata beside the section rows.
+section_report = section_report_raw.get("sections", []) if isinstance(section_report_raw, dict) else section_report_raw
+section_runtime_source = section_report_raw.get("runtime_source") if isinstance(section_report_raw, dict) else None
 
 # 1. Full-page source-of-truth evidence.
 viewports = manifest.get("viewports", {})
@@ -88,7 +92,7 @@ for section in review_sections:
         geometry = section.get("geometry", {}).get(vp, {})
         require(int(geometry.get("height", 0)) > 0, f"missing section geometry: {vp}/{sid}")
         require(bool(section.get(f"figma_{vp}_node")), f"missing Figma node: {vp}/{sid}")
-mark("section_local_diff", section_ok, {"sections": len(review_sections), "comparisons": expected_section_rows})
+mark("section_local_diff", section_ok, {"sections": len(review_sections), "comparisons": expected_section_rows, "runtimeSource": section_runtime_source})
 
 # 3. Human-approved regression baseline is explicit and immutable unless promoted.
 baseline_ok = all((BASELINE_DIR / name).is_file() for name in ("baseline.json", "web-pc.png", "web-sp.png"))
