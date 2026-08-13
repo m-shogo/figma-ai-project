@@ -21,7 +21,7 @@
 .ref-courses__grid{column-gap:40px;row-gap:40px}.ref-course__icon:after{content:none!important}.ref-course__icon-svg{max-width:56px;max-height:56px;width:auto;height:auto}.ref-course__rec li{display:grid;grid-template-columns:12px minmax(0,1fr);gap:8px;align-items:start}.ref-course__rec li:before{content:none!important}.ref-course__check{width:12px;height:10px;margin-top:2px}
 
 /* CTA Value: reserve a clear 240px central action lane on mobile. */
-.ref-portrait img{object-position:center top}.ref-cta-value__actions{position:relative;z-index:3}.ref-cta-value .ref-action{min-height:64px;justify-content:center}
+.ref-picture.ref-portrait{background-color:transparent;background-image:none}.ref-portrait img{object-position:center top}.ref-cta-value__actions{position:relative;z-index:3}.ref-cta-value .ref-action{min-height:64px;justify-content:center}
 
 /* Footer SNS: semantic anchors with swappable outline SVG assets. */
 .ref-footer__sns{display:flex;align-items:center;gap:12px}.ref-footer__sns-link{display:grid;place-items:center;width:40px;height:40px;border:1px solid currentColor;border-radius:50%;color:inherit;text-decoration:none;transition:opacity .2s ease,transform .2s ease}.ref-footer__sns-link:hover{opacity:.68;transform:translateY(-1px)}.ref-footer__sns-link:focus-visible{outline:2px solid currentColor;outline-offset:3px}.ref-footer__sns-icon{width:22px;height:22px;object-fit:contain}

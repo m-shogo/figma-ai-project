@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "reference_id": "REF-001",
+  "scope": "CTA left/right people only",
+  "method": "Original Figma RGBA image sources composed in Figma layer order on transparent group-sized canvases",
+  "background_removal": "not used",
+  "assets": [
+    {
+      "slot": "cta-person-left",
+      "viewport": "pc",
+      "group": {"node_id": "21378:7489", "size": [280, 294]},
+      "layers": [
+        {"role": "mask", "node_id": "21378:7490", "offset": [0, 0], "size": [280, 294]},
+        {"role": "colored_silhouette", "node_id": "21378:7491", "offset": [20, -1], "size": [260, 522], "raw_sha256": "768ba7a71ce9ac70a7b8eb72ecd70cf66c5162d9b74f3264dd65757bad161a55"},
+        {"role": "person", "node_id": "21378:7492", "offset": [0, -1], "size": [260, 521], "raw_sha256": "07562ef2e30f4544ae38f6fbdfa573f7df00af987ac353ef37832e6f97eed7c1"}
+      ],
+      "raw_source_alpha": {"size": [2041, 4096], "transparent": 3510136, "partial": 78756, "opaque": 4849800},
+      "direct_node_export_alpha_range": [255, 255],
+      "canonical": {"size": [280, 294], "transparent": 30874, "partial": 3311, "opaque": 48135, "signature_rgb": [255, 192, 0], "signature_pixels": 6645, "sha256": "cabdea145dafae6883f02a70973d35bcccdd9785093ee93af9a0903e36d49904"}
+    },
+    {
+      "slot": "cta-person-right",
+      "viewport": "pc",
+      "group": {"node_id": "21378:7485", "size": [335, 293]},
+      "layers": [
+        {"role": "mask", "node_id": "21378:7486", "offset": [0, 0], "size": [335, 293]},
+        {"role": "colored_silhouette", "node_id": "21378:7487", "offset": [20, 0], "size": [261.9989318847656, 757], "raw_sha256": "ef51653571f85f9b6d2a412c47f7c52936a88e60d33f2a821e90b4ad67108719"},
+        {"role": "person", "node_id": "21378:7488", "offset": [0, 0], "size": [262, 758], "raw_sha256": "e3bc9205e6a93862e4a5fe441ff6c1de48b2f4067ca4bd673fe5e3e7ea95e935"}
+      ],
+      "raw_source_alpha": {"size": [1274, 3681], "transparent": 2021402, "partial": 55029, "opaque": 2668192},
+      "direct_node_export_alpha_range": [255, 255],
+      "canonical": {"size": [335, 293], "transparent": 52307, "partial": 3526, "opaque": 42322, "signature_rgb": [103, 199, 101], "signature_pixels": 6042, "sha256": "d010575e9ecef40c1b4091b04480c92a5876085c39b2b492798db7ce3fcd9ad0"}
+    },
+    {
+      "slot": "cta-person-left",
+      "viewport": "sp",
+      "group": {"node_id": "21376:4958", "visible_size": [114, 144], "source_size": [342, 432], "source_scale": 3},
+      "layers": [
+        {"role": "mask", "node_id": "21376:4959", "offset": [0, 0], "size": [114, 144]},
+        {"role": "colored_silhouette", "node_id": "21376:4960", "offset": [-22.5238094329834, -0.5235025882720947], "size": [136.21875, 273.3718566894531], "raw_sha256": "768ba7a71ce9ac70a7b8eb72ecd70cf66c5162d9b74f3264dd65757bad161a55"},
+        {"role": "person", "node_id": "21376:4961", "offset": [-33, -0.5235025882720947], "size": [136.08824157714844, 273.1099548339844], "raw_sha256": "07562ef2e30f4544ae38f6fbdfa573f7df00af987ac353ef37832e6f97eed7c1"}
+      ],
+      "raw_source_alpha": {"size": [2041, 4096], "transparent": 3510136, "partial": 78756, "opaque": 4849800},
+      "direct_node_export_alpha_range": [255, 255],
+      "canonical": {"size": [342, 432], "transparent": 54771, "partial": 4572, "opaque": 88401, "signature_rgb": [255, 192, 0], "signature_pixels": 15670, "sha256": "ffe2216c11392fd7cf6e8a00d9b402764e331dd3ee6193ae8bd3a8d11c40219d"}
+    },
+    {
+      "slot": "cta-person-right",
+      "viewport": "sp",
+      "group": {"node_id": "21376:4962", "visible_size": [110, 137], "source_size": [330, 411], "source_scale": 3},
+      "layers": [
+        {"role": "mask", "node_id": "21376:4963", "offset": [0, 0], "size": [110, 137]},
+        {"role": "colored_silhouette", "node_id": "21376:4964", "offset": [9.356414794921875, 0], "size": [122.56866455078125, 354.1407165527344], "raw_sha256": "ef51653571f85f9b6d2a412c47f7c52936a88e60d33f2a821e90b4ad67108719"},
+        {"role": "person", "node_id": "21376:4965", "offset": [0, 0], "size": [122.64988708496094, 354.3753967285156], "raw_sha256": "e3bc9205e6a93862e4a5fe441ff6c1de48b2f4067ca4bd673fe5e3e7ea95e935"}
+      ],
+      "raw_source_alpha": {"size": [1274, 3681], "transparent": 2021402, "partial": 55029, "opaque": 2668192},
+      "direct_node_export_alpha_range": [255, 255],
+      "canonical": {"size": [330, 411], "transparent": 52320, "partial": 4535, "opaque": 78775, "signature_rgb": [103, 199, 101], "signature_pixels": 8490, "sha256": "a4b47026f90022c318b1327674ffe7c73735407c0bffb8843ac7a09f7ce7d7d5"}
+    }
+  ],
+  "qa": {
+    "alpha_backgrounds": ["transparent", "white", "black", "checkerboard"],
+    "colored_silhouettes_present": "PASS",
+    "cta_background_omitted": "PASS",
+    "transparent_edges": "PASS",
+    "figma_runtime_pc_1380": "PASS",
+    "figma_runtime_sp_375": "PASS",
+    "runtime_dimensions": {
+      "pc_left": {"natural": [280, 294], "rendered": [280, 294]},
+      "pc_right": {"natural": [335, 293], "rendered": [335, 293]},
+      "sp_left": {"natural": [342, 432], "rendered": [114, 144]},
+      "sp_right": {"natural": [330, 411], "rendered": [110, 137]}
+    },
+    "proofs": ["qa/cta-person-checkerboard.png", "qa/cta-figma-runtime-comparison.png"]
+  }
+}

@@ -24,6 +24,8 @@
       "left": {"natural": [280, 294], "rendered": [280, 294], "ratio": [1, 1]},
       "right": {"natural": [335, 293], "rendered": [335, 293], "ratio": [1, 1]}
     },
+    "composition": "person plus colored silhouette on a transparent canvas; CTA section background omitted",
+    "portrait_container_background": "transparent",
     "transparent_edge_visual_qa": "PASS",
     "backgrounds_checked": ["transparent", "white", "black", "checkerboard"]
   },

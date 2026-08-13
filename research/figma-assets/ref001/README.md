@@ -6,6 +6,9 @@ Current canonical policy and implementation:
 - `WEBP_SP3X_ALPHA.md`
 - `webp-export-report.json`
 - `webp-runtime-qa.json`
+- `cta-layer-audit.json`
+- `qa/cta-person-checkerboard.png`
+- `qa/cta-figma-runtime-comparison.png`
 - `MAC_LOCAL_EXPORT.md`
 - `mac-local-export-report.json`
 
@@ -13,9 +16,9 @@ Current canonical policy and implementation:
 
 The current REF-001 canonical raster set uses lossless WebP. PC assets retain
 their Figma 1x source geometry, while every SP asset is exported at 3x its exact
-Figma visible dimensions. CTA people use the original Figma RGBA source layers
-on transparent canvases; CTA background and color-silhouette decoration are not
-baked into the assets.
+Figma visible dimensions. CTA assets composite the original Figma RGBA person
+and colored-silhouette source layers on transparent canvases; the CTA section
+background is not baked into the assets.
 
 Inventory:
 
