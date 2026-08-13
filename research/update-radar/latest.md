@@ -1,50 +1,50 @@
 # Update Radar — Latest Official Source Scan
 
-Generated: `2026-08-12T05:04:35+00:00`
+Generated: `2026-08-13T05:07:56+00:00`
 
 Active lanes: ACCESSIBILITY, CLAUDE_CODE, CODEX, CURSOR, DESIGN_SYSTEMS, FIGMA, MCP, WEB_PLATFORM, WORDPRESS_ACF
 
 ## Summary
 
 - Sources checked: 27
-- Changed since previous snapshot: 5
-- First observations: 7
+- Changed since previous snapshot: 6
+- First observations: 0
 - Fetch errors: 3
-- RETEST candidates: ACCESSIBILITY, AGENT_CONTEXT, ANIMATION, ASSET_FIDELITY, COLOR_GRADIENT, CSS_RESET, FIGMA_LAYOUT_GENERATION, FIGMA_MCP, INPUT_CAPABILITY, LAYOUT, PARALLEL_EXECUTION, SCROLL
+- RETEST candidates: ACCESSIBILITY, AGENT_CONTEXT, ASSET_FIDELITY, COLOR_GRADIENT, CSS_RESET, FIGMA_LAYOUT_GENERATION, FIGMA_MCP, INPUT_CAPABILITY, LAYOUT, PARALLEL_EXECUTION, VARIABLE_MODE_RUNTIME, WORDPRESS_ACF
 
 ## Changed sources
 
-### figma-release-notes
+### figma-code-connect-releases
 
 - Lane: `FIGMA`
-- Latest title: Figma product news and release notes
-- Impacts: FIGMA_STRUCTURE, FIGMA_TO_CODE, CODE_TO_FIGMA, DESIGN_HANDOFF, VISUAL_FIDELITY
-- RETEST: INPUT_CAPABILITY, ANIMATION, LAYOUT, FIGMA_LAYOUT_GENERATION, ASSET_FIDELITY, COLOR_GRADIENT, ACCESSIBILITY, FIGMA_MCP, AGENT_CONTEXT
-- Source: https://www.figma.com/release-notes/
+- Latest title: Code Connect 1.5.3
+- Impacts: FIGMA_TO_CODE, DESIGN_SYSTEM, COMPONENT_REUSE, CONTEXT_RETRIEVAL
+- RETEST: LAYOUT, FIGMA_LAYOUT_GENERATION, ACCESSIBILITY, FIGMA_MCP
+- Source: https://api.github.com/repos/figma/code-connect/releases?per_page=12
 
 ### claude-code-releases
 
 - Lane: `CLAUDE_CODE`
-- Latest title: v2.1.228
+- Latest title: v2.1.229
 - Impacts: AGENT_CAPABILITY, MCP, PARALLEL_EXECUTION, CONTEXT_HANDLING
-- RETEST: CSS_RESET, INPUT_CAPABILITY, SCROLL, ASSET_FIDELITY, COLOR_GRADIENT, ACCESSIBILITY, FIGMA_MCP, AGENT_CONTEXT, PARALLEL_EXECUTION
+- RETEST: CSS_RESET, INPUT_CAPABILITY, ASSET_FIDELITY, COLOR_GRADIENT, ACCESSIBILITY, FIGMA_MCP, AGENT_CONTEXT, PARALLEL_EXECUTION
 - Source: https://api.github.com/repos/anthropics/claude-code/releases?per_page=12
 
 ### claude-code-feed
 
 - Lane: `CLAUDE_CODE`
-- Latest title: Claude Code v2.1.228
+- Latest title: Claude Code v2.1.229
 - Impacts: AGENT_CAPABILITY, MCP, CONTEXT_HANDLING
-- RETEST: CSS_RESET, INPUT_CAPABILITY, SCROLL, ASSET_FIDELITY, COLOR_GRADIENT, ACCESSIBILITY, FIGMA_MCP, AGENT_CONTEXT, PARALLEL_EXECUTION
+- RETEST: CSS_RESET, INPUT_CAPABILITY, ASSET_FIDELITY, COLOR_GRADIENT, ACCESSIBILITY, FIGMA_MCP, AGENT_CONTEXT, PARALLEL_EXECUTION
 - Source: https://raw.githubusercontent.com/anthropics/claude-code/main/feed.xml
 
-### web-features-releases
+### cursor-changelog
 
-- Lane: `WEB_PLATFORM`
-- Latest title: web-features@next
-- Impacts: CSS, WEB_PLATFORM, BROWSER_SUPPORT, FEATURE_ADOPTION
-- RETEST: CSS_RESET, LAYOUT, ASSET_FIDELITY, COLOR_GRADIENT, ACCESSIBILITY, AGENT_CONTEXT
-- Source: https://api.github.com/repos/web-platform-dx/web-features/releases?per_page=12
+- Lane: `CURSOR`
+- Latest title: What's New in Cursor — Latest Updates & Release Notes
+- Impacts: AGENT_CAPABILITY, MCP, VISUAL_BROWSER_TOOLING, PARALLEL_EXECUTION, CONTEXT_HANDLING
+- RETEST: VARIABLE_MODE_RUNTIME, FIGMA_MCP, AGENT_CONTEXT
+- Source: https://cursor.com/changelog
 
 ### mdn-browser-compat-data-releases
 
@@ -53,6 +53,14 @@ Active lanes: ACCESSIBILITY, CLAUDE_CODE, CODEX, CURSOR, DESIGN_SYSTEMS, FIGMA, 
 - Impacts: CSS, BROWSER_SUPPORT, FEATURE_DETECTION
 - RETEST: CSS_RESET, ASSET_FIDELITY, AGENT_CONTEXT
 - Source: https://api.github.com/repos/mdn/browser-compat-data/releases?per_page=12
+
+### wordpress-releases
+
+- Lane: `WORDPRESS_ACF`
+- Latest title: Releases – WordPress News
+- Impacts: WORDPRESS, CMS, BLOCKS, IMAGES, ACCESSIBILITY
+- RETEST: ACCESSIBILITY, WORDPRESS_ACF
+- Source: https://wordpress.org/news/category/releases/
 
 ## Fetch errors
 
