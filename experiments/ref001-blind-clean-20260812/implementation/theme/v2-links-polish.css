@@ -17,9 +17,10 @@
 .ref-link-tile__instagram-copy small{display:flex;align-items:center;justify-content:center;font-family:var(--ref-font-en);font-weight:400;line-height:1;letter-spacing:.05em}
 .ref-link-tile__instagram-icon{display:block;object-fit:contain}
 
+/* Shared desktop/tablet tile metrics. The authored PC group itself is 260px:
+ * a 250px face plus a 10px offset shadow. Only the parent flow changes at the
+ * intermediate widths where four groups cannot physically fit. */
 @media (min-width:768px){
-  .ref-links{height:404px;padding:72px 0}
-  .ref-links__grid{display:flex;width:1112px;height:260px;gap:24px;justify-content:flex-start;align-items:flex-start}
   .ref-link-tile{width:260px;height:260px}
   .ref-link-tile__shadow{left:10px;top:10px;width:250px;height:250px}
   .ref-link-tile__face{width:250px;height:250px}
@@ -33,6 +34,20 @@
   .ref-link-tile__instagram-icon{width:16px;height:16px}
 }
 
+/* Continuity contract: retain each authored tile unchanged, but reflow to 2x2
+ * until the four-up 1112px Figma group can fit without document overflow. */
+@media (min-width:768px) and (max-width:1143px){
+  .ref-links{height:672px;padding:64px 0}
+  .ref-links__grid{display:grid!important;width:544px!important;height:544px;grid-template-columns:repeat(2,260px)!important;grid-template-rows:repeat(2,260px);column-gap:24px!important;row-gap:24px!important;justify-content:center;align-content:start}
+}
+
+/* Exact PC acceptance geometry. */
+@media (min-width:1144px){
+  .ref-links{height:404px;padding:72px 0}
+  .ref-links__grid{display:flex!important;width:1112px!important;height:260px;gap:24px!important;justify-content:flex-start;align-items:flex-start}
+}
+
+/* Exact SP acceptance geometry. */
 @media (max-width:767px){
   .ref-links{height:455px;padding:56px 0}
   .ref-links__grid{--group-size:162px;--face-size:155px;display:grid!important;grid-template-columns:repeat(2,var(--group-size))!important;grid-template-rows:repeat(2,var(--group-size));width:343px!important;max-width:calc(100vw - 32px);height:343px;column-gap:19px!important;row-gap:19px!important;justify-content:center;align-content:start}
