@@ -87,6 +87,14 @@
   .ref-reason-card__title{font-size:18px!important}
   .ref-reason__cards{position:relative;top:7px}
 
+  /* Exact Figma SP text styles use 5% tracking on the Reason intro/cards. */
+  .ref-reason__intro,.ref-reason-card__title,.ref-reason-card__text{letter-spacing:.05em}
+
+  /* Figma Student Voice SP 21376:4650: speech cards are 288x160 open and
+   * 288x138 collapsed. Their x/top/padding were already correct. */
+  .ref-speech{width:288px;height:160px}
+  .ref-voice-item--collapsed .ref-speech{height:138px}
+
   .ref-edu-flow-arrow{transform:none;flex-direction:column;position:relative;left:3px}
   .ref-edu-flow-arrow::before,.ref-edu-flow-arrow::after{transform:rotate(45deg);margin:-1px 0}
 
@@ -123,6 +131,7 @@
   /* 305px is needed at the authored 375px endpoint; cap one pixel earlier at
    * 320 so the absolute profile box ends exactly on, never beyond, the viewport. */
   .ref-messages__profile{width:304px;max-width:calc(100vw - 16px)}
+  .ref-speech{width:calc(100% - 48px)}
   .ref-speech h3{width:calc(100% - 60px);font-size:15px}
   .ref-speech p{width:100%}
 
