@@ -1,0 +1,18 @@
+:root {
+  --v3-text: #333;
+  --v3-purple: #8473aa;
+  --v3-blue: #38a1db;
+  --v3-orange: #f5971a;
+  --v3-yellow: #fffc68;
+  --v3-beige: #f6f5ef;
+  --v3-light-blue: #edfdff;
+  --v3-light-yellow: #fffaea;
+  --v3-white: #fff;
+  --v3-content-width: 1160px;
+  --v3-edge: 16px;
+  --v3-section-gap: 40px;
+  --v3-breakpoint-sp: 767px;
+  --v3-font-heading: "Zen Kaku Gothic New", "Noto Sans CJK JP", sans-serif;
+  --v3-font-body: "Zen Kaku Gothic New", "Noto Sans CJK JP", sans-serif;
+  --v3-font-en: "Poppins", Arial, sans-serif;
+}

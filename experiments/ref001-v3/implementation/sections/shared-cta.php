@@ -1,0 +1,15 @@
+<?php
+$d = v3_data()['sharedCta'];
+$instance = $section['instance'] ?? 1;
+$figmaPc = $section['figmaPc'] ?? $d['figma']['pc'][0];
+$figmaSp = $section['figmaSp'] ?? $d['figma']['sp'][0];
+?>
+<section class="v3-shared-cta" data-section="shared-cta" data-cta-instance="<?php v3_e((string) $instance); ?>" data-figma-pc="<?php v3_e($figmaPc); ?>" data-figma-sp="<?php v3_e($figmaSp); ?>">
+  <div class="v3-shared-cta__inner">
+    <h2>＼ <?php v3_e($d['title']); ?> ／</h2>
+    <div class="v3-shared-cta__actions">
+      <?php v3_component('cta-button', ['key' => 'document', 'label' => '資料請求', 'icon' => 'document', 'tone' => 'blue']); ?>
+      <?php v3_component('cta-button', ['key' => 'open-campus', 'label' => 'オープンキャンパス', 'icon' => 'open-campus', 'tone' => 'purple']); ?>
+    </div>
+  </div>
+</section>

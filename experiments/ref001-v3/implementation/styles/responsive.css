@@ -1,0 +1,405 @@
+@media (max-width: 767px) {
+  .v3-content {
+    width: calc(100% - 32px);
+  }
+
+  .v3-heading__title {
+    font-size: 24px;
+    line-height: 1.3;
+  }
+
+  .v3-heading__title strong {
+    font-size: 32px;
+    display: inline;
+  }
+
+  .v3-heading__bracket {
+    font-size: 42px;
+    margin: 0 6px;
+  }
+
+  .v3-header {
+    height: 67px;
+  }
+
+  .v3-header__inner {
+    padding: 0 16px;
+  }
+
+  .v3-header__actions {
+    display: none;
+  }
+
+  .v3-brand__mark {
+    width: 28px;
+    height: 28px;
+  }
+
+  .v3-brand__mark span {
+    font-size: 13px;
+  }
+
+  .v3-brand__text {
+    font-size: 15px;
+  }
+
+  .v3-brand__sub {
+    font-size: 6px;
+    margin-top: 3px;
+  }
+
+  .v3-mv {
+    height: 740px;
+  }
+
+  .v3-mv__person {
+    width: 60%;
+    height: 37%;
+  }
+
+  .v3-mv__person--left {
+    top: 0;
+    left: -10%;
+  }
+
+  .v3-mv__person--right {
+    right: -5%;
+    top: auto;
+    bottom: 0;
+  }
+
+  .v3-mv__copy {
+    width: calc(100% - 32px);
+    padding-top: 180px;
+  }
+
+  .v3-mv__quotes {
+    font-size: 48px;
+  }
+
+  .v3-mv__word,
+  .v3-mv__end {
+    font-size: 42px;
+  }
+
+  .v3-mv__mid {
+    font-size: 22px;
+  }
+
+  .v3-mv__desc {
+    font-size: 15px;
+    width: 100%;
+    max-width: none;
+  }
+
+  .v3-mv__oc {
+    width: 110px;
+    height: 110px;
+    right: 16px;
+    bottom: 24px;
+  }
+
+  .v3-mv__oc-kicker {
+    font-size: 8px;
+    padding: 4px 8px;
+  }
+
+  .v3-mv__oc-title {
+    font-size: 13px;
+  }
+
+  .v3-mv__oc-status {
+    font-size: 11px;
+  }
+
+  .v3-reason {
+    padding: 60px 0 68px;
+  }
+
+  .v3-reason__intro {
+    text-align: left;
+  }
+
+  .v3-reason__cards {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .v3-education {
+    padding: 56px 0 72px;
+  }
+
+  .v3-education__head {
+    display: block;
+    text-align: center;
+    margin-bottom: 34px;
+  }
+
+  .v3-education__intro {
+    margin-top: 34px;
+    border-left: 0;
+    border-top: 1px solid #7fc9ed;
+    padding: 26px 0 0;
+    text-align: left;
+  }
+
+  .v3-education__steps {
+    grid-template-columns: 1fr;
+    gap: 38px;
+  }
+
+  .v3-edu-card {
+    min-height: 244px;
+    padding: 64px 24px 20px 16px;
+  }
+
+  .v3-edu-card h3 {
+    text-align: left;
+    margin-left: 160px;
+    min-height: 45px;
+    font-size: 18px;
+  }
+
+  .v3-edu-card__media {
+    position: absolute;
+    left: 16px;
+    top: 54px;
+    width: 140px;
+    height: 79px;
+    margin: 0;
+  }
+
+  .v3-shared-cta {
+    height: 350px;
+    padding: 0 16px;
+  }
+
+  .v3-shared-cta h2 {
+    font-size: 24px;
+    line-height: 1.3;
+    max-width: 220px;
+    margin: 0 auto 30px;
+  }
+
+  .v3-shared-cta__actions {
+    display: grid;
+    gap: 16px;
+    justify-items: center;
+  }
+
+  .v3-shared-cta .v3-btn {
+    width: min(262px, 100%);
+  }
+
+  .v3-voice {
+    padding-top: 56px;
+  }
+
+  .v3-voice-item {
+    padding: 32px 0;
+  }
+
+  .v3-voice-item__top {
+    grid-template-columns: 84px minmax(0, 1fr);
+    gap: 16px;
+    align-items: start;
+  }
+
+  .v3-avatar {
+    width: 84px;
+  }
+
+  .v3-speech {
+    padding: 18px 16px 14px;
+    box-shadow: 7px 8px 0 #fff;
+  }
+
+  .v3-speech h3 {
+    font-size: 16px;
+    line-height: 1.3;
+  }
+
+  .v3-speech p {
+    font-size: 12px;
+  }
+
+  .v3-voice-open {
+    display: block;
+    margin-top: 22px;
+  }
+
+  .v3-voice-open__photo {
+    height: 175px;
+  }
+
+  .v3-pointbox strong {
+    display: block;
+    width: max-content;
+    margin: 0 0 6px;
+  }
+
+  .v3-voice-open__advice {
+    display: block;
+    margin-top: 18px;
+    font-size: 13px;
+  }
+
+  .v3-messages {
+    padding: 72px 0 44px;
+  }
+
+  .v3-messages__body {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .v3-messages__photo {
+    height: 228px;
+    width: 100%;
+    order: -1;
+    margin-bottom: 12px;
+  }
+
+  .v3-messages__quote {
+    font-size: 22px;
+    line-height: 2;
+  }
+
+  .v3-messages__quote span {
+    padding: 0 12px;
+  }
+
+  .v3-courses {
+    padding: 56px 0;
+  }
+
+  .v3-courses__grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .v3-course,
+  .v3-course:nth-child(7) {
+    width: 100%;
+    min-height: 299px;
+    grid-column: auto;
+    padding: 24px 16px 20px 96px;
+  }
+
+  .v3-course__icon {
+    width: 72px;
+    height: 72px;
+  }
+
+  .v3-course__icon-svg {
+    width: 30px;
+    height: 30px;
+  }
+
+  .v3-course h3 {
+    font-size: 16px;
+  }
+
+  .v3-course__desc {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .v3-course__rec {
+    margin-left: -80px;
+    padding: 38px 16px 14px;
+  }
+
+  .v3-links {
+    padding: 64px 0;
+  }
+
+  .v3-links__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 155px));
+    gap: 19px;
+    justify-content: center;
+  }
+
+  .v3-link-tile {
+    width: 155px;
+    font-size: 16px;
+    box-shadow: 7px 7px 0 var(--tile-shadow);
+  }
+
+  .v3-cta-value {
+    height: 396px;
+    align-items: flex-start;
+  }
+
+  .v3-cta-value__border {
+    inset: 16px;
+  }
+
+  .v3-portrait--left {
+    width: 114px;
+    height: 144px;
+    left: 0;
+  }
+
+  .v3-portrait--right {
+    width: 110px;
+    height: 137px;
+    right: 0;
+  }
+
+  .v3-cta-value__inner {
+    margin-top: 58px;
+    padding: 0 16px;
+  }
+
+  .v3-cta-value h2 {
+    font-size: 24px;
+    line-height: 1.3;
+  }
+
+  .v3-cta-value__actions {
+    display: grid;
+    gap: 16px;
+    justify-items: center;
+  }
+
+  .v3-cta-value .v3-btn {
+    width: min(240px, 100%);
+  }
+
+  .v3-footer {
+    min-height: 515px;
+  }
+
+  .v3-footer__inner {
+    padding: 56px 16px 120px;
+    display: block;
+    text-align: center;
+  }
+
+  .v3-footer__profile .v3-brand {
+    margin: auto;
+    width: max-content;
+  }
+
+  .v3-footer__related {
+    display: grid;
+    justify-content: center;
+    gap: 24px;
+    margin-top: 38px;
+  }
+
+  .v3-footer__sns {
+    justify-content: center;
+  }
+
+  .v3-footer__copyright {
+    left: 0;
+    right: 0;
+    bottom: 66px;
+    text-align: center;
+    font-size: 11px;
+  }
+}

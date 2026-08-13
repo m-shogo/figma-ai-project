@@ -1,0 +1,61 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Zen+Kaku+Gothic+New:wght@500;900&display=swap");
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--v3-white);
+  color: var(--v3-text);
+  font-family: var(--v3-font-body);
+}
+
+html {
+  overflow-x: hidden;
+}
+
+body {
+  min-width: 0;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: inherit;
+}
+
+.v3-page {
+  width: 100%;
+  min-width: 0;
+  overflow: clip;
+}
+
+.v3-content {
+  width: min(var(--v3-content-width), calc(100% - 32px));
+  margin-inline: auto;
+}
+
+.v3-picture {
+  display: block;
+  overflow: hidden;
+}
+
+.v3-picture > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.v3-icon {
+  display: block;
+  flex: none;
+}
