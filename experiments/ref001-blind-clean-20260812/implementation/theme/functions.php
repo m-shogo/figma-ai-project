@@ -40,4 +40,5 @@ if (function_exists('add_action')) { add_action('wp_enqueue_scripts', function()
     wp_enqueue_style('ref001-clean-responsive-continuity', get_stylesheet_directory_uri() . '/responsive-continuity.css', ['ref001-clean-first-pass'], '0.1.0');
     wp_enqueue_style('ref001-clean-visual-repair', get_stylesheet_directory_uri() . '/visual-repair.css', ['ref001-clean-responsive-continuity'], '0.1.0');
     wp_enqueue_style('ref001-human-review-repair', get_stylesheet_directory_uri() . '/human-review-repair.css', ['ref001-clean-visual-repair'], '0.1.0');
+    wp_enqueue_style('ref001-v2-visual-polish', get_stylesheet_directory_uri() . '/v2-visual-polish.css', ['ref001-human-review-repair'], '0.1.0');
 }); }
