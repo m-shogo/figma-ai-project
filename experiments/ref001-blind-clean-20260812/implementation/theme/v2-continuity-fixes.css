@@ -40,9 +40,9 @@
 .ref-shared-cta .ref-action--blue::before{width:16px;height:13px;-webkit-mask-image:url('assets/icons/document.svg');mask-image:url('assets/icons/document.svg')}
 .ref-shared-cta .ref-action--purple::before{width:13px;height:14px;-webkit-mask-image:url('assets/icons/open-campus.svg');mask-image:url('assets/icons/open-campus.svg')}
 
-/* Education uses the same ~14px list metric on PC/SP. The source Figma rows
- * advance exactly 27px and the long 03/04 labels remain single-line. The flow
- * marker is a black double-chevron, not the reusable purple arrow asset. */
+/* Education PC and narrow continuity use the observed ~14px list metric. The
+ * authored 375px endpoint is 15px / 5% tracking and is restored separately so
+ * the 320px continuity layout does not inherit a new wrap risk. */
 .ref-edu-card ul{font-size:14px;line-height:1;gap:13px}
 .ref-edu-flow-arrow{gap:0}
 .ref-edu-flow-arrow__glyph{display:none}
@@ -109,10 +109,13 @@
   .ref-link-tile__arrow::before{width:16px;height:15px}
 }
 
-/* SP endpoint: Section Diff shows four human-visible type-position residuals.
- * Keep the authored purple quote marks anchored; only the Japanese display face
- * needs compensating for its unavailable proprietary Figma font metrics. */
+/* SP endpoint: Section Diff shows human-visible endpoint type-position residuals.
+ * Keep 320px continuity independent where the authored 375px type can wrap. */
 @media (min-width:361px) and (max-width:767px){
+  /* Figma Education SP 21376:4720: list text is 15px / 5% tracking with a 12px
+   * flex gap. Restore only this endpoint range; card geometry stays unchanged. */
+  .ref-edu-card ul{font-size:15px;gap:12px}
+
   .ref-mv__hero-main strong{position:relative;left:-12px;top:4px}
   .ref-mv__hero-sub{top:128px}
   .ref-mv__oc b{top:34px}
