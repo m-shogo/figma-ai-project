@@ -1,7 +1,40 @@
-/* REF-001 V2 — narrow-width continuity gates.
- * Figma acceptance endpoint is 375px; below that, preserve the authored
- * proportions fluidly instead of allowing fixed 343px endpoint boxes to overflow.
+/* REF-001 V2 — narrow-width continuity gates + final endpoint fidelity residuals.
+ * Figma acceptance endpoints are PC 1380px / SP 375px. Keep section-owned
+ * geometry intact; this last-loaded layer only fixes cross-cutting residuals
+ * that must win after the individual V2 section owners.
  */
+
+/* Main Visual — use the exact Figma-authored diagonal vector field rather than
+ * the generic first-pass gradients. The light-yellow base exists at 10% opacity
+ * in Figma; the exported vector field starts 40px below the PC MV top. */
+.ref-mv{background:rgba(255,250,234,.1)}
+.ref-mv::before{content:'';position:absolute;inset:auto;left:0;top:40px;width:100%;height:636px;background:url('assets/icons/ref001-mv-bg-pc.svg') center/100% 100% no-repeat;opacity:1}
+
+/* Main Visual OC arrow — the shared arrow asset is intentionally purple for
+ * other uses, while this Figma badge uses the same glyph in #333. Draw a local
+ * badge circle with the exact exported glyph so the shared asset stays stable. */
+.ref-mv__oc-arrow{display:none!important}
+.ref-mv__oc::after{content:'';position:absolute;right:8px;bottom:8px;box-sizing:border-box;width:48px;height:48px;border:1px solid var(--ref-orange);border-radius:50%;background:#fff url('assets/icons/ref001-mv-arrow-black.svg') center/14px 13px no-repeat}
+
+/* Links — <img> cannot inherit currentColor from its parent. Reuse the exact
+ * arrow SVG geometry as a mask so each Figma-authored tile accent is preserved. */
+.ref-link-tile__arrow .ref-svg-icon{display:none!important}
+.ref-link-tile__arrow::before{content:'';display:block;width:20px;height:19px;margin:auto;background:var(--tile-accent);-webkit-mask:url('assets/icons/arrow-right.svg') center/contain no-repeat;mask:url('assets/icons/arrow-right.svg') center/contain no-repeat}
+
+@media (max-width:767px){
+  /* Figma Top_sp@2x vector field is 375x704 and begins at the MV top. */
+  .ref-mv::before{top:0;height:704px;background-image:url('assets/icons/ref001-mv-bg-sp.svg')}
+  .ref-mv__oc::after{width:36px;height:36px;background-size:11px 10px}
+
+  /* Figma Reason node 21376:4852 is exactly 1295px high. Natural browser flow
+   * was 1286px at 375, causing every downstream section and body height to be
+   * 9px early. Min-height fixes the authored endpoint while allowing narrower
+   * viewports to grow naturally when text reflows. */
+  .ref-reason{min-height:1295px}
+
+  .ref-link-tile__arrow::before{width:16px;height:15px}
+}
+
 @media (max-width:360px){
   .ref-mv__copy{left:16px;width:calc(100vw - 32px)}
   .ref-mv__hero{width:100%}
