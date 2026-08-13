@@ -1,11 +1,12 @@
 [
   {
-    "bodyHeight": 11172,
+    "bodyHeight": 10781,
     "scrollWidth": 320,
     "pageOverflowPx": 0,
     "readableTextClipping": [],
     "overflowElements": [],
     "overflowDiagnostics": null,
+    "imageFailures": [],
     "primaryFonts": {
       "zenKakuGothicNew": true,
       "poppins": true
@@ -29,128 +30,84 @@
         "name": "reason",
         "index": 2,
         "top": 847,
-        "height": 1405,
-        "bottom": 2252
+        "height": 1354,
+        "bottom": 2201
       },
       {
         "name": "education",
         "index": 3,
-        "top": 2308,
-        "height": 1596,
-        "bottom": 3904
+        "top": 2257,
+        "height": 1534,
+        "bottom": 3791
       },
       {
         "name": "shared-cta",
         "index": 4,
-        "top": 3904,
+        "top": 3791,
         "height": 350,
-        "bottom": 4254
+        "bottom": 4141
       },
       {
         "name": "student-voice",
         "index": 5,
-        "top": 4310,
-        "height": 1953,
-        "bottom": 6263
+        "top": 4197,
+        "height": 1758,
+        "bottom": 5955
       },
       {
         "name": "messages",
         "index": 6,
-        "top": 6319,
+        "top": 6011,
         "height": 538,
-        "bottom": 6857
+        "bottom": 6549
       },
       {
         "name": "shared-cta",
         "index": 7,
-        "top": 6913,
+        "top": 6605,
         "height": 350,
-        "bottom": 7263
+        "bottom": 6955
       },
       {
         "name": "courses",
         "index": 8,
-        "top": 7263,
-        "height": 2543,
-        "bottom": 9806
+        "top": 6955,
+        "height": 2515,
+        "bottom": 9470
       },
       {
         "name": "links",
         "index": 9,
-        "top": 9862,
-        "height": 343,
-        "bottom": 10205
+        "top": 9526,
+        "height": 288,
+        "bottom": 9814
       },
       {
         "name": "cta-value",
         "index": 10,
-        "top": 10261,
+        "top": 9870,
         "height": 396,
-        "bottom": 10657
+        "bottom": 10266
       },
       {
         "name": "footer",
         "index": 11,
-        "top": 10657,
+        "top": 10266,
         "height": 515,
-        "bottom": 11172
+        "bottom": 10781
       }
     ],
     "width": 320,
     "runtimeErrors": []
   },
   {
-    "bodyHeight": 10869,
+    "bodyHeight": 10762,
     "scrollWidth": 360,
     "pageOverflowPx": 0,
     "readableTextClipping": [],
-    "overflowElements": [
-      {
-        "tag": "div",
-        "className": "ref-mv__person ref-mv__person--left ref-media ref-media--cool",
-        "left": -36,
-        "right": 180,
-        "width": 216,
-        "position": "absolute",
-        "overflowX": "hidden",
-        "boxShadow": "none",
-        "text": ""
-      },
-      {
-        "tag": "div",
-        "className": "ref-mv__person ref-mv__person--right ref-media ref-media--warm",
-        "left": 162,
-        "right": 378,
-        "width": 216,
-        "position": "absolute",
-        "overflowX": "hidden",
-        "boxShadow": "none",
-        "text": ""
-      },
-      {
-        "tag": "div",
-        "className": "ref-portrait ref-portrait--left",
-        "left": -5,
-        "right": 120,
-        "width": 125,
-        "position": "absolute",
-        "overflowX": "visible",
-        "boxShadow": "none",
-        "text": ""
-      },
-      {
-        "tag": "div",
-        "className": "ref-portrait ref-portrait--right",
-        "left": 240,
-        "right": 365,
-        "width": 125,
-        "position": "absolute",
-        "overflowX": "visible",
-        "boxShadow": "none",
-        "text": ""
-      }
-    ],
+    "overflowElements": [],
     "overflowDiagnostics": null,
+    "imageFailures": [],
     "primaryFonts": {
       "zenKakuGothicNew": true,
       "poppins": true
@@ -174,71 +131,71 @@
         "name": "reason",
         "index": 2,
         "top": 847,
-        "height": 1305,
-        "bottom": 2152
+        "height": 1295,
+        "bottom": 2142
       },
       {
         "name": "education",
         "index": 3,
-        "top": 2208,
+        "top": 2198,
         "height": 1534,
-        "bottom": 3742
+        "bottom": 3732
       },
       {
         "name": "shared-cta",
         "index": 4,
-        "top": 3742,
+        "top": 3732,
         "height": 350,
-        "bottom": 4092
+        "bottom": 4082
       },
       {
         "name": "student-voice",
         "index": 5,
-        "top": 4148,
-        "height": 1812,
-        "bottom": 5960
+        "top": 4138,
+        "height": 1758,
+        "bottom": 5896
       },
       {
         "name": "messages",
         "index": 6,
-        "top": 6016,
+        "top": 5952,
         "height": 538,
-        "bottom": 6554
+        "bottom": 6490
       },
       {
         "name": "shared-cta",
         "index": 7,
-        "top": 6610,
+        "top": 6546,
         "height": 350,
-        "bottom": 6960
+        "bottom": 6896
       },
       {
         "name": "courses",
         "index": 8,
-        "top": 6960,
-        "height": 2543,
-        "bottom": 9503
+        "top": 6896,
+        "height": 2515,
+        "bottom": 9411
       },
       {
         "name": "links",
         "index": 9,
-        "top": 9559,
-        "height": 343,
-        "bottom": 9902
+        "top": 9467,
+        "height": 328,
+        "bottom": 9795
       },
       {
         "name": "cta-value",
         "index": 10,
-        "top": 9958,
+        "top": 9851,
         "height": 396,
-        "bottom": 10354
+        "bottom": 10247
       },
       {
         "name": "footer",
         "index": 11,
-        "top": 10354,
+        "top": 10247,
         "height": 515,
-        "bottom": 10869
+        "bottom": 10762
       }
     ],
     "width": 360,
@@ -249,53 +206,9 @@
     "scrollWidth": 375,
     "pageOverflowPx": 0,
     "readableTextClipping": [],
-    "overflowElements": [
-      {
-        "tag": "div",
-        "className": "ref-mv__person ref-mv__person--left ref-media ref-media--cool",
-        "left": -37.5,
-        "right": 187.5,
-        "width": 225,
-        "position": "absolute",
-        "overflowX": "hidden",
-        "boxShadow": "none",
-        "text": ""
-      },
-      {
-        "tag": "div",
-        "className": "ref-mv__person ref-mv__person--right ref-media ref-media--warm",
-        "left": 168.8,
-        "right": 393.8,
-        "width": 225,
-        "position": "absolute",
-        "overflowX": "hidden",
-        "boxShadow": "none",
-        "text": ""
-      },
-      {
-        "tag": "div",
-        "className": "ref-portrait ref-portrait--left",
-        "left": -5,
-        "right": 120,
-        "width": 125,
-        "position": "absolute",
-        "overflowX": "visible",
-        "boxShadow": "none",
-        "text": ""
-      },
-      {
-        "tag": "div",
-        "className": "ref-portrait ref-portrait--right",
-        "left": 255,
-        "right": 380,
-        "width": 125,
-        "position": "absolute",
-        "overflowX": "visible",
-        "boxShadow": "none",
-        "text": ""
-      }
-    ],
+    "overflowElements": [],
     "overflowDiagnostics": null,
+    "imageFailures": [],
     "primaryFonts": {
       "zenKakuGothicNew": true,
       "poppins": true
@@ -394,53 +307,9 @@
     "scrollWidth": 390,
     "pageOverflowPx": 0,
     "readableTextClipping": [],
-    "overflowElements": [
-      {
-        "tag": "div",
-        "className": "ref-mv__person ref-mv__person--left ref-media ref-media--cool",
-        "left": -39,
-        "right": 195,
-        "width": 234,
-        "position": "absolute",
-        "overflowX": "hidden",
-        "boxShadow": "none",
-        "text": ""
-      },
-      {
-        "tag": "div",
-        "className": "ref-mv__person ref-mv__person--right ref-media ref-media--warm",
-        "left": 175.5,
-        "right": 409.5,
-        "width": 234,
-        "position": "absolute",
-        "overflowX": "hidden",
-        "boxShadow": "none",
-        "text": ""
-      },
-      {
-        "tag": "div",
-        "className": "ref-portrait ref-portrait--left",
-        "left": -5,
-        "right": 120,
-        "width": 125,
-        "position": "absolute",
-        "overflowX": "visible",
-        "boxShadow": "none",
-        "text": ""
-      },
-      {
-        "tag": "div",
-        "className": "ref-portrait ref-portrait--right",
-        "left": 270,
-        "right": 395,
-        "width": 125,
-        "position": "absolute",
-        "overflowX": "visible",
-        "boxShadow": "none",
-        "text": ""
-      }
-    ],
+    "overflowElements": [],
     "overflowDiagnostics": null,
+    "imageFailures": [],
     "primaryFonts": {
       "zenKakuGothicNew": true,
       "poppins": true
@@ -535,57 +404,13 @@
     "runtimeErrors": []
   },
   {
-    "bodyHeight": 10733,
+    "bodyHeight": 10777,
     "scrollWidth": 430,
     "pageOverflowPx": 0,
     "readableTextClipping": [],
-    "overflowElements": [
-      {
-        "tag": "div",
-        "className": "ref-mv__person ref-mv__person--left ref-media ref-media--cool",
-        "left": -43,
-        "right": 215,
-        "width": 258,
-        "position": "absolute",
-        "overflowX": "hidden",
-        "boxShadow": "none",
-        "text": ""
-      },
-      {
-        "tag": "div",
-        "className": "ref-mv__person ref-mv__person--right ref-media ref-media--warm",
-        "left": 193.5,
-        "right": 451.5,
-        "width": 258,
-        "position": "absolute",
-        "overflowX": "hidden",
-        "boxShadow": "none",
-        "text": ""
-      },
-      {
-        "tag": "div",
-        "className": "ref-portrait ref-portrait--left",
-        "left": -5,
-        "right": 120,
-        "width": 125,
-        "position": "absolute",
-        "overflowX": "visible",
-        "boxShadow": "none",
-        "text": ""
-      },
-      {
-        "tag": "div",
-        "className": "ref-portrait ref-portrait--right",
-        "left": 310,
-        "right": 435,
-        "width": 125,
-        "position": "absolute",
-        "overflowX": "visible",
-        "boxShadow": "none",
-        "text": ""
-      }
-    ],
+    "overflowElements": [],
     "overflowDiagnostics": null,
+    "imageFailures": [],
     "primaryFonts": {
       "zenKakuGothicNew": true,
       "poppins": true
@@ -609,128 +434,84 @@
         "name": "reason",
         "index": 2,
         "top": 847,
-        "height": 1269,
-        "bottom": 2116
+        "height": 1295,
+        "bottom": 2142
       },
       {
         "name": "education",
         "index": 3,
-        "top": 2172,
+        "top": 2198,
         "height": 1534,
-        "bottom": 3706
+        "bottom": 3732
       },
       {
         "name": "shared-cta",
         "index": 4,
-        "top": 3706,
+        "top": 3732,
         "height": 350,
-        "bottom": 4056
+        "bottom": 4082
       },
       {
         "name": "student-voice",
         "index": 5,
-        "top": 4112,
-        "height": 1740,
-        "bottom": 5852
+        "top": 4138,
+        "height": 1758,
+        "bottom": 5896
       },
       {
         "name": "messages",
         "index": 6,
-        "top": 5908,
+        "top": 5952,
         "height": 538,
-        "bottom": 6446
+        "bottom": 6490
       },
       {
         "name": "shared-cta",
         "index": 7,
-        "top": 6502,
+        "top": 6546,
         "height": 350,
-        "bottom": 6852
+        "bottom": 6896
       },
       {
         "name": "courses",
         "index": 8,
-        "top": 6852,
+        "top": 6896,
         "height": 2515,
-        "bottom": 9367
+        "bottom": 9411
       },
       {
         "name": "links",
         "index": 9,
-        "top": 9423,
+        "top": 9467,
         "height": 343,
-        "bottom": 9766
+        "bottom": 9810
       },
       {
         "name": "cta-value",
         "index": 10,
-        "top": 9822,
+        "top": 9866,
         "height": 396,
-        "bottom": 10218
+        "bottom": 10262
       },
       {
         "name": "footer",
         "index": 11,
-        "top": 10218,
+        "top": 10262,
         "height": 515,
-        "bottom": 10733
+        "bottom": 10777
       }
     ],
     "width": 430,
     "runtimeErrors": []
   },
   {
-    "bodyHeight": 10679,
+    "bodyHeight": 10777,
     "scrollWidth": 767,
     "pageOverflowPx": 0,
     "readableTextClipping": [],
-    "overflowElements": [
-      {
-        "tag": "div",
-        "className": "ref-mv__person ref-mv__person--left ref-media ref-media--cool",
-        "left": -76.7,
-        "right": 383.5,
-        "width": 460.2,
-        "position": "absolute",
-        "overflowX": "hidden",
-        "boxShadow": "none",
-        "text": ""
-      },
-      {
-        "tag": "div",
-        "className": "ref-mv__person ref-mv__person--right ref-media ref-media--warm",
-        "left": 345.2,
-        "right": 805.3,
-        "width": 460.2,
-        "position": "absolute",
-        "overflowX": "hidden",
-        "boxShadow": "none",
-        "text": ""
-      },
-      {
-        "tag": "div",
-        "className": "ref-portrait ref-portrait--left",
-        "left": -5,
-        "right": 120,
-        "width": 125,
-        "position": "absolute",
-        "overflowX": "visible",
-        "boxShadow": "none",
-        "text": ""
-      },
-      {
-        "tag": "div",
-        "className": "ref-portrait ref-portrait--right",
-        "left": 647,
-        "right": 772,
-        "width": 125,
-        "position": "absolute",
-        "overflowX": "visible",
-        "boxShadow": "none",
-        "text": ""
-      }
-    ],
+    "overflowElements": [],
     "overflowDiagnostics": null,
+    "imageFailures": [],
     "primaryFonts": {
       "zenKakuGothicNew": true,
       "poppins": true
@@ -754,83 +535,84 @@
         "name": "reason",
         "index": 2,
         "top": 847,
-        "height": 1215,
-        "bottom": 2062
+        "height": 1295,
+        "bottom": 2142
       },
       {
         "name": "education",
         "index": 3,
-        "top": 2118,
+        "top": 2198,
         "height": 1534,
-        "bottom": 3652
+        "bottom": 3732
       },
       {
         "name": "shared-cta",
         "index": 4,
-        "top": 3652,
+        "top": 3732,
         "height": 350,
-        "bottom": 4002
+        "bottom": 4082
       },
       {
         "name": "student-voice",
         "index": 5,
-        "top": 4058,
-        "height": 1740,
-        "bottom": 5798
+        "top": 4138,
+        "height": 1758,
+        "bottom": 5896
       },
       {
         "name": "messages",
         "index": 6,
-        "top": 5854,
+        "top": 5952,
         "height": 538,
-        "bottom": 6392
+        "bottom": 6490
       },
       {
         "name": "shared-cta",
         "index": 7,
-        "top": 6448,
+        "top": 6546,
         "height": 350,
-        "bottom": 6798
+        "bottom": 6896
       },
       {
         "name": "courses",
         "index": 8,
-        "top": 6798,
+        "top": 6896,
         "height": 2515,
-        "bottom": 9313
+        "bottom": 9411
       },
       {
         "name": "links",
         "index": 9,
-        "top": 9369,
+        "top": 9467,
         "height": 343,
-        "bottom": 9712
+        "bottom": 9810
       },
       {
         "name": "cta-value",
         "index": 10,
-        "top": 9768,
+        "top": 9866,
         "height": 396,
-        "bottom": 10164
+        "bottom": 10262
       },
       {
         "name": "footer",
         "index": 11,
-        "top": 10164,
+        "top": 10262,
         "height": 515,
-        "bottom": 10679
+        "bottom": 10777
       }
     ],
     "width": 767,
     "runtimeErrors": []
   },
   {
-    "bodyHeight": 8181,
+    "bodyHeight": 8592,
     "scrollWidth": 768,
     "pageOverflowPx": 0,
     "readableTextClipping": [],
     "overflowElements": [],
     "overflowDiagnostics": null,
+    "imageFailures": [],
     "primaryFonts": {
       "zenKakuGothicNew": true,
       "poppins": true
@@ -854,83 +636,84 @@
         "name": "reason",
         "index": 2,
         "top": 886,
-        "height": 640,
-        "bottom": 1526
+        "height": 530,
+        "bottom": 1416
       },
       {
         "name": "education",
         "index": 3,
-        "top": 1622,
-        "height": 824,
-        "bottom": 2446
+        "top": 1512,
+        "height": 1310,
+        "bottom": 2822
       },
       {
         "name": "shared-cta",
         "index": 4,
-        "top": 2446,
+        "top": 2822,
         "height": 328,
-        "bottom": 2774
+        "bottom": 3150
       },
       {
         "name": "student-voice",
         "index": 5,
-        "top": 2870,
-        "height": 1632,
-        "bottom": 4501
+        "top": 3246,
+        "height": 1390,
+        "bottom": 4636
       },
       {
         "name": "messages",
         "index": 6,
-        "top": 4684,
+        "top": 4819,
         "height": 440,
-        "bottom": 5124
+        "bottom": 5259
       },
       {
         "name": "shared-cta",
         "index": 7,
-        "top": 5242,
+        "top": 5377,
         "height": 328,
-        "bottom": 5570
+        "bottom": 5705
       },
       {
         "name": "courses",
         "index": 8,
-        "top": 5570,
-        "height": 1522,
-        "bottom": 7092
+        "top": 5705,
+        "height": 1514,
+        "bottom": 7219
       },
       {
         "name": "links",
         "index": 9,
-        "top": 7164,
-        "height": 260,
-        "bottom": 7424
+        "top": 7291,
+        "height": 544,
+        "bottom": 7835
       },
       {
         "name": "cta-value",
         "index": 10,
-        "top": 7496,
+        "top": 7907,
         "height": 328,
-        "bottom": 7824
+        "bottom": 8235
       },
       {
         "name": "footer",
         "index": 11,
-        "top": 7824,
+        "top": 8235,
         "height": 357,
-        "bottom": 8181
+        "bottom": 8592
       }
     ],
     "width": 768,
     "runtimeErrors": []
   },
   {
-    "bodyHeight": 8181,
+    "bodyHeight": 8592,
     "scrollWidth": 769,
     "pageOverflowPx": 0,
     "readableTextClipping": [],
     "overflowElements": [],
     "overflowDiagnostics": null,
+    "imageFailures": [],
     "primaryFonts": {
       "zenKakuGothicNew": true,
       "poppins": true
@@ -954,83 +737,84 @@
         "name": "reason",
         "index": 2,
         "top": 886,
-        "height": 640,
-        "bottom": 1526
+        "height": 530,
+        "bottom": 1416
       },
       {
         "name": "education",
         "index": 3,
-        "top": 1622,
-        "height": 824,
-        "bottom": 2446
+        "top": 1512,
+        "height": 1310,
+        "bottom": 2822
       },
       {
         "name": "shared-cta",
         "index": 4,
-        "top": 2446,
+        "top": 2822,
         "height": 328,
-        "bottom": 2774
+        "bottom": 3150
       },
       {
         "name": "student-voice",
         "index": 5,
-        "top": 2870,
-        "height": 1632,
-        "bottom": 4501
+        "top": 3246,
+        "height": 1390,
+        "bottom": 4636
       },
       {
         "name": "messages",
         "index": 6,
-        "top": 4684,
+        "top": 4819,
         "height": 440,
-        "bottom": 5124
+        "bottom": 5259
       },
       {
         "name": "shared-cta",
         "index": 7,
-        "top": 5242,
+        "top": 5377,
         "height": 328,
-        "bottom": 5570
+        "bottom": 5705
       },
       {
         "name": "courses",
         "index": 8,
-        "top": 5570,
-        "height": 1522,
-        "bottom": 7092
+        "top": 5705,
+        "height": 1514,
+        "bottom": 7219
       },
       {
         "name": "links",
         "index": 9,
-        "top": 7164,
-        "height": 260,
-        "bottom": 7424
+        "top": 7291,
+        "height": 544,
+        "bottom": 7835
       },
       {
         "name": "cta-value",
         "index": 10,
-        "top": 7496,
+        "top": 7907,
         "height": 328,
-        "bottom": 7824
+        "bottom": 8235
       },
       {
         "name": "footer",
         "index": 11,
-        "top": 7824,
+        "top": 8235,
         "height": 357,
-        "bottom": 8181
+        "bottom": 8592
       }
     ],
     "width": 769,
     "runtimeErrors": []
   },
   {
-    "bodyHeight": 7756,
+    "bodyHeight": 8393,
     "scrollWidth": 1024,
     "pageOverflowPx": 0,
     "readableTextClipping": [],
     "overflowElements": [],
     "overflowDiagnostics": null,
+    "imageFailures": [],
     "primaryFonts": {
       "zenKakuGothicNew": true,
       "poppins": true
@@ -1054,83 +838,84 @@
         "name": "reason",
         "index": 2,
         "top": 886,
-        "height": 568,
-        "bottom": 1454
+        "height": 486,
+        "bottom": 1372
       },
       {
         "name": "education",
         "index": 3,
-        "top": 1550,
-        "height": 717,
-        "bottom": 2267
+        "top": 1468,
+        "height": 1155,
+        "bottom": 2623
       },
       {
         "name": "shared-cta",
         "index": 4,
-        "top": 2267,
+        "top": 2623,
         "height": 328,
-        "bottom": 2595
+        "bottom": 2951
       },
       {
         "name": "student-voice",
         "index": 5,
-        "top": 2691,
-        "height": 1393,
-        "bottom": 4084
+        "top": 3047,
+        "height": 1390,
+        "bottom": 4437
       },
       {
         "name": "messages",
         "index": 6,
-        "top": 4267,
+        "top": 4620,
         "height": 440,
-        "bottom": 4707
+        "bottom": 5060
       },
       {
         "name": "shared-cta",
         "index": 7,
-        "top": 4825,
+        "top": 5178,
         "height": 328,
-        "bottom": 5153
+        "bottom": 5506
       },
       {
         "name": "courses",
         "index": 8,
-        "top": 5153,
+        "top": 5506,
         "height": 1514,
-        "bottom": 6667
+        "bottom": 7020
       },
       {
         "name": "links",
         "index": 9,
-        "top": 6739,
-        "height": 260,
-        "bottom": 6999
+        "top": 7092,
+        "height": 544,
+        "bottom": 7636
       },
       {
         "name": "cta-value",
         "index": 10,
-        "top": 7071,
+        "top": 7708,
         "height": 328,
-        "bottom": 7399
+        "bottom": 8036
       },
       {
         "name": "footer",
         "index": 11,
-        "top": 7399,
+        "top": 8036,
         "height": 357,
-        "bottom": 7756
+        "bottom": 8393
       }
     ],
     "width": 1024,
     "runtimeErrors": []
   },
   {
-    "bodyHeight": 7727,
+    "bodyHeight": 8024,
     "scrollWidth": 1200,
     "pageOverflowPx": 0,
     "readableTextClipping": [],
     "overflowElements": [],
     "overflowDiagnostics": null,
+    "imageFailures": [],
     "primaryFonts": {
       "zenKakuGothicNew": true,
       "poppins": true
@@ -1154,71 +939,71 @@
         "name": "reason",
         "index": 2,
         "top": 886,
-        "height": 559,
-        "bottom": 1445
+        "height": 443,
+        "bottom": 1329
       },
       {
         "name": "education",
         "index": 3,
-        "top": 1541,
-        "height": 698,
-        "bottom": 2238
+        "top": 1425,
+        "height": 1113,
+        "bottom": 2538
       },
       {
         "name": "shared-cta",
         "index": 4,
-        "top": 2238,
+        "top": 2538,
         "height": 328,
-        "bottom": 2566
+        "bottom": 2866
       },
       {
         "name": "student-voice",
         "index": 5,
-        "top": 2662,
-        "height": 1393,
-        "bottom": 4055
+        "top": 2962,
+        "height": 1390,
+        "bottom": 4352
       },
       {
         "name": "messages",
         "index": 6,
-        "top": 4238,
+        "top": 4535,
         "height": 440,
-        "bottom": 4678
+        "bottom": 4975
       },
       {
         "name": "shared-cta",
         "index": 7,
-        "top": 4796,
+        "top": 5093,
         "height": 328,
-        "bottom": 5124
+        "bottom": 5421
       },
       {
         "name": "courses",
         "index": 8,
-        "top": 5124,
+        "top": 5421,
         "height": 1514,
-        "bottom": 6638
+        "bottom": 6935
       },
       {
         "name": "links",
         "index": 9,
-        "top": 6710,
+        "top": 7007,
         "height": 260,
-        "bottom": 6970
+        "bottom": 7267
       },
       {
         "name": "cta-value",
         "index": 10,
-        "top": 7042,
+        "top": 7339,
         "height": 328,
-        "bottom": 7370
+        "bottom": 7667
       },
       {
         "name": "footer",
         "index": 11,
-        "top": 7370,
+        "top": 7667,
         "height": 357,
-        "bottom": 7727
+        "bottom": 8024
       }
     ],
     "width": 1200,
@@ -1231,6 +1016,7 @@
     "readableTextClipping": [],
     "overflowElements": [],
     "overflowDiagnostics": null,
+    "imageFailures": [],
     "primaryFonts": {
       "zenKakuGothicNew": true,
       "poppins": true

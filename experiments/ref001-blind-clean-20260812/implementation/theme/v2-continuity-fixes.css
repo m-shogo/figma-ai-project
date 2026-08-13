@@ -15,6 +15,38 @@
  * badge circle with the exact exported glyph so the shared asset stays stable. */
 .ref-mv__oc-arrow{display:none!important}
 .ref-mv__oc::after{content:'';position:absolute;right:8px;bottom:8px;box-sizing:border-box;width:48px;height:48px;border:1px solid var(--ref-orange);border-radius:50%;background:#fff url('assets/icons/ref001-mv-arrow-black.svg') center/14px 13px no-repeat}
+.ref-mv__oc b{-webkit-text-stroke:1px #333;text-stroke:1px #333}
+
+/* Figma's bracket glyphs are ASCII Poppins Medium with a white fill and 1px
+ * #333 stroke, not the full-width Japanese parentheses from the generic pass. */
+.ref-reason__head .ref-bracket-title::before,
+.ref-voice__head .ref-bracket-title::before,
+.ref-courses__head .ref-bracket-title::before{content:'('}
+.ref-reason__head .ref-bracket-title::after,
+.ref-voice__head .ref-bracket-title::after,
+.ref-courses__head .ref-bracket-title::after{content:')'}
+.ref-reason__head .ref-bracket-title::before,.ref-reason__head .ref-bracket-title::after,
+.ref-voice__head .ref-bracket-title::before,.ref-voice__head .ref-bracket-title::after,
+.ref-courses__head .ref-bracket-title::before,.ref-courses__head .ref-bracket-title::after{font-family:var(--ref-font-en);font-weight:500;letter-spacing:.05em}
+
+/* Reason card labels are authored Zen Kaku Gothic New Medium: 20px PC / 18px SP. */
+.ref-reason-card__title{font-weight:500}
+
+/* Shared CTA uses white buttons, while the reusable header action SVGs are
+ * authored white. Reuse their exact paths as masks so the CTA icons inherit the
+ * Figma blue/purple button text colours instead of disappearing white-on-white. */
+.ref-shared-cta .ref-action__icon{display:none}
+.ref-shared-cta .ref-action::before{content:'';display:block;flex:0 0 auto;background:currentColor;-webkit-mask-position:center;mask-position:center;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-size:contain;mask-size:contain}
+.ref-shared-cta .ref-action--blue::before{width:16px;height:13px;-webkit-mask-image:url('assets/icons/document.svg');mask-image:url('assets/icons/document.svg')}
+.ref-shared-cta .ref-action--purple::before{width:13px;height:14px;-webkit-mask-image:url('assets/icons/open-campus.svg');mask-image:url('assets/icons/open-campus.svg')}
+
+/* Education uses the same ~14px list metric on PC/SP. The source Figma rows
+ * advance exactly 27px and the long 03/04 labels remain single-line. The flow
+ * marker is a black double-chevron, not the reusable purple arrow asset. */
+.ref-edu-card ul{font-size:14px;line-height:1;gap:13px}
+.ref-edu-flow-arrow{gap:0}
+.ref-edu-flow-arrow__glyph{display:none}
+.ref-edu-flow-arrow::before,.ref-edu-flow-arrow::after{content:'';display:block;flex:0 0 auto;width:8px;height:8px;border-right:1px solid #333;border-bottom:1px solid #333;transform:rotate(-45deg);margin:0 -1px}
 
 /* Links — <img> cannot inherit currentColor from its parent. Reuse the exact
  * arrow SVG geometry as a mask so each Figma-authored tile accent is preserved. */
@@ -25,6 +57,16 @@
   /* Figma PC badge top is y=568 global / 474 within the 714px MV. The inherited
    * -18px bottom offset placed the whole 240px badge 18px too low. */
   .ref-mv__oc{bottom:0}
+
+  /* The PC intro divider has a small authored left-facing notch at its midpoint.
+   * Keep it as CSS geometry so the surrounding copy remains editable. */
+  .ref-education__intro{position:relative}
+  .ref-education__intro::before{content:'';position:absolute;left:-9px;top:50%;width:13px;height:13px;background:var(--ref-beige);border-left:1px solid #7fc9ed;border-bottom:1px solid #7fc9ed;transform:translateY(-50%) rotate(45deg)}
+
+  /* Figma card groups begin at local y=224; the generic grid flow placed them
+   * at y=202. Keep the 684px section envelope fixed and move only the card rail. */
+  .ref-education__steps{top:22px}
+  .ref-education__intro p{max-width:492px}
 }
 
 @media (max-width:767px){
@@ -32,11 +74,29 @@
   .ref-mv::before{top:0;height:704px;background-image:url('assets/icons/ref001-mv-bg-sp.svg')}
   .ref-mv__oc::after{width:36px;height:36px;background-size:11px 10px}
 
+  /* The proprietary Figma display face and the web fallback have different
+   * ascender metrics. Moving only this independently-positioned line 21px up
+   * aligns its visible glyph bounds while leaving the description untouched. */
+  .ref-mv__hero-end{top:157px}
+
   /* Figma Reason node 21376:4852 is exactly 1295px high. Natural browser flow
    * was 1286px at 375, causing every downstream section and body height to be
-   * 9px early. Min-height fixes the authored endpoint while allowing narrower
-   * viewports to grow naturally when text reflows. */
+   * 9px early. The cards themselves begin at local y=256, 7px below the current
+   * browser position, so adjust that rail without changing the section envelope. */
   .ref-reason{min-height:1295px}
+  .ref-reason-card__title{font-size:18px!important}
+  .ref-reason__cards{position:relative;top:7px}
+
+  .ref-edu-flow-arrow{transform:none;flex-direction:column;position:relative;left:3px}
+  .ref-edu-flow-arrow::before,.ref-edu-flow-arrow::after{transform:rotate(45deg);margin:-1px 0}
+
+  /* human-review-repair added a 26px margin after the action stack became
+   * absolutely positioned. Figma buttons are authored at local y=154/234. */
+  .ref-cta-value__actions{margin:0!important}
+
+  /* Keep the explicit Figma two-line profile break; browser font metrics were
+   * otherwise wrapping the final ん onto a third line. */
+  .ref-messages__profile{width:305px}
 
   .ref-link-tile__arrow::before{width:16px;height:15px}
 }
@@ -50,6 +110,9 @@
   .ref-mv__hero-end{left:0;width:100%;font-size:clamp(50px,15.7vw,60px)}
   .ref-mv__desc{left:0;width:100%}
 
+  /* 305px is needed at the authored 375px endpoint; cap one pixel earlier at
+   * 320 so the absolute profile box ends exactly on, never beyond, the viewport. */
+  .ref-messages__profile{width:304px;max-width:calc(100vw - 16px)}
   .ref-speech h3{width:calc(100% - 60px);font-size:15px}
   .ref-speech p{width:100%}
 
