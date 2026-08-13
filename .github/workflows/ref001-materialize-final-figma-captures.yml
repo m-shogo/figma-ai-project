@@ -1,0 +1,57 @@
+name: REF001 Materialize Final Figma Captures
+
+on:
+  push:
+    branches:
+      - agent/ref001-v2-final-micro-qa
+    paths:
+      - .github/workflows/ref001-materialize-final-figma-captures.yml
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: agent/ref001-v2-final-micro-qa
+          fetch-depth: 1
+
+      - name: Download exact Figma acceptance frames
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p research/figma-assets/ref001
+          curl --fail --location --retry 2 --silent --show-error \
+            'https://www.figma.com/api/mcp/asset/31767094-393e-4e40-882a-2d329fc13aa1.png' \
+            -o research/figma-assets/ref001/node-21384-8173.png
+          curl --fail --location --retry 2 --silent --show-error \
+            'https://www.figma.com/api/mcp/asset/56232cfd-4d1e-407c-ae34-889dbe192604.png' \
+            -o research/figma-assets/ref001/node-21376-4401.png
+          python3 - <<'PY'
+          import pathlib, struct
+          expected = {
+              pathlib.Path('research/figma-assets/ref001/node-21384-8173.png'): (1380, 7714),
+              pathlib.Path('research/figma-assets/ref001/node-21376-4401.png'): (375, 10817),
+          }
+          for path, dims in expected.items():
+              data = path.read_bytes()[:24]
+              if data[:8] != b'\x89PNG\r\n\x1a\n':
+                  raise SystemExit(f'not png: {path}')
+              actual = struct.unpack('>II', data[16:24])
+              if actual != dims:
+                  raise SystemExit(f'wrong dimensions: {path}: {actual} != {dims}')
+              print(path, actual)
+          PY
+
+      - name: Commit durable review captures
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/figma-assets/ref001/node-21384-8173.png research/figma-assets/ref001/node-21376-4401.png
+          git diff --cached --quiet && exit 0
+          git commit -m 'evidence: materialize final Figma acceptance captures'
+          git push origin HEAD:agent/ref001-v2-final-micro-qa
