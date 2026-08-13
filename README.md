@@ -15,7 +15,7 @@ AI coding agents（Codex / Claude Code / Cursorなど）とFigmaを使い、**�
 
 現在は**実referenceを使った学習・検証段階**です。
 
-REF-001（千葉経済大学sample）では、FigmaのPC/SP referenceを使ったWordPress + ACF learning fixtureについて、HeaderからFooterまでのfull-page visual/runtime実装とQAまで到達しています。
+REF-001（sample）では、FigmaのPC/SP referenceを使ったWordPress + ACF learning fixtureについて、HeaderからFooterまでのfull-page visual/runtime実装とQAまで到達しています。
 
 現在確認済みの主要contract:
 
