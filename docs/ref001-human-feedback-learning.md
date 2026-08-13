@@ -74,6 +74,22 @@ Reusable gate:
 - a section is not complete when only 1380 and 375 match
 - it must also have zero horizontal overflow and no destructive wrap/crop changes across the intermediate matrix
 
+#### New evidence: endpoint fidelity and continuity are separate contracts
+
+The Links section exposed a specific repeatable failure. The exact PC Figma group is 1112px wide (four 260px visual groups with 24px gaps). Applying that exact group at every width from the desktop breakpoint upward made the 1380px endpoint correct while producing deterministic overflow at 768, 769, and 1024px.
+
+The correct model is:
+- **acceptance endpoint contract** — use the exact authored geometry where it physically fits (1380 / 375)
+- **continuity contract** — between authored endpoints, preserve each component's visual identity but reflow or interpolate the parent layout
+
+For Links, the individual 260px desktop tile remains unchanged at tablet widths, but the parent reflows from 4-up to 2x2 until the 1112px four-up group fits again.
+
+Reusable gate:
+- before activating fixed endpoint geometry across a breakpoint range, calculate its minimum intrinsic width
+- if `intrinsicWidth > availableViewportWidth`, define a continuity layout instead of clipping/hiding overflow
+- never solve this class of failure with `overflow-x: hidden`
+- run the full viewport matrix immediately after every endpoint-exact layout change, not only at the end of the section
+
 ### 4. Icons, logos and decorative vectors — high-value feedback despite fewer items
 
 Footer SNS was a clear example: generic hand-authored outline icons were semantically correct but visually wrong. The circular chrome was invented and not present in Figma.
@@ -121,11 +137,13 @@ For every section from the next run onward:
 4. implement semantic structure using existing project patterns
 5. materialize exact assets before styling substitutes
 6. match endpoint internal geometry
-7. run intermediate-width continuity checks immediately
-8. capture runtime screenshot
-9. classify every remaining mismatch using the taxonomy above
-10. fix the root category only
-11. record whether the feedback is local or generalizable
+7. calculate the endpoint layout's minimum intrinsic width before extending it across a breakpoint range
+8. define the intermediate continuity layout when the endpoint composition cannot fit
+9. run intermediate-width continuity checks immediately
+10. capture runtime screenshot
+11. classify every remaining mismatch using the taxonomy above
+12. fix the root category only
+13. record whether the feedback is local or generalizable
 
 ## Feedback ledger format
 
