@@ -2,6 +2,7 @@
   'use strict';
 
   const MAX_ANALYSIS_PIXELS = 3000000;
+  const HOTSPOT_LIMIT = 5;
   const PROFILES = {
     loose: { label: 'Loose', threshold: 0.20, minNeighbors: 2 },
     standard: { label: 'Standard', threshold: 0.14, minNeighbors: 1 },
@@ -48,6 +49,11 @@
       state.sensitivity = button.dataset.diffSensitivity;
       updateSensitivityButtons();
       if (state.active) renderDiff();
+    });
+
+    $('#diff-hotspots')?.addEventListener('click', (event) => {
+      const button = event.target.closest('[data-hotspot-analysis-y]');
+      if (button) focusHotspot(button);
     });
 
     document.addEventListener('click', (event) => {
@@ -148,12 +154,17 @@
     const status = $('#diff-status');
     const canvas = $('#visual-diff-canvas');
     const empty = $('#visual-diff-empty');
+    const hotspotPanel = $('#diff-hotspots');
     if (!review || !status || !canvas || !empty) return;
 
     review.classList.add('visual-diff-loading');
     status.textContent = '解析中…';
     empty.hidden = true;
     canvas.hidden = true;
+    if (hotspotPanel) {
+      hotspotPanel.hidden = true;
+      hotspotPanel.innerHTML = '';
+    }
 
     try {
       const viewportKey = currentViewportKey();
@@ -232,10 +243,15 @@
         }
       }
 
+      const hotspots = findHotspots(mask, width, height, analysisScale, HOTSPOT_LIMIT);
       canvas.width = width;
       canvas.height = height;
-      canvas.getContext('2d').putImageData(output, 0, 0);
+      const canvasContext = canvas.getContext('2d');
+      canvasContext.putImageData(output, 0, 0);
+      drawHotspotBoxes(canvasContext, hotspots);
       canvas.hidden = false;
+      renderHotspots(hotspots, analysisScale);
+
       const ratio = mask.length ? changed / mask.length : 0;
       const bbox = changed ? {
         x: Math.round(minX / analysisScale),
@@ -252,12 +268,13 @@
         ? `解析 ${Math.round(analysisScale * 100)}%縮小`
         : '解析 1:1';
       status.textContent = `${section.label} / ${viewportKey.toUpperCase()} / ${profile.label}`;
-      $('#visual-diff-help').innerHTML = helpText(profile, ratio, analysisScale);
+      $('#visual-diff-help').innerHTML = helpText(profile, ratio, analysisScale, hotspots.length);
     } catch (error) {
       canvas.hidden = true;
       empty.hidden = false;
       empty.textContent = `Diffを生成できませんでした。${String(error)}`;
       status.textContent = 'Diff unavailable';
+      if (hotspotPanel) hotspotPanel.hidden = true;
     } finally {
       if (token === state.renderToken) review.classList.remove('visual-diff-loading');
     }
@@ -292,7 +309,146 @@
     }
   }
 
-  function helpText(profile, ratio, analysisScale) {
+  function findHotspots(mask, width, height, analysisScale, limit) {
+    if (!mask.length || width < 1 || height < 1) return [];
+    const tileSize = Math.max(8, Math.round(24 * analysisScale));
+    const columns = Math.ceil(width / tileSize);
+    const rows = Math.ceil(height / tileSize);
+    const counts = new Uint32Array(columns * rows);
+
+    for (let pixel = 0; pixel < mask.length; pixel += 1) {
+      if (!mask[pixel]) continue;
+      const x = pixel % width;
+      const y = Math.floor(pixel / width);
+      const tileX = Math.floor(x / tileSize);
+      const tileY = Math.floor(y / tileSize);
+      counts[tileY * columns + tileX] += 1;
+    }
+
+    const minTilePixels = Math.max(3, Math.round(tileSize * tileSize * 0.02));
+    const minHotspotPixels = Math.max(8, Math.round(tileSize * tileSize * 0.06));
+    const visited = new Uint8Array(counts.length);
+    const queue = new Int32Array(counts.length);
+    const hotspots = [];
+
+    for (let start = 0; start < counts.length; start += 1) {
+      if (visited[start] || counts[start] < minTilePixels) continue;
+      let head = 0;
+      let tail = 0;
+      queue[tail++] = start;
+      visited[start] = 1;
+      let redPixels = 0;
+      let minTileX = columns;
+      let minTileY = rows;
+      let maxTileX = -1;
+      let maxTileY = -1;
+
+      while (head < tail) {
+        const index = queue[head++];
+        const tileX = index % columns;
+        const tileY = Math.floor(index / columns);
+        redPixels += counts[index];
+        if (tileX < minTileX) minTileX = tileX;
+        if (tileY < minTileY) minTileY = tileY;
+        if (tileX > maxTileX) maxTileX = tileX;
+        if (tileY > maxTileY) maxTileY = tileY;
+
+        for (let dy = -1; dy <= 1; dy += 1) {
+          for (let dx = -1; dx <= 1; dx += 1) {
+            if (dx === 0 && dy === 0) continue;
+            const nextX = tileX + dx;
+            const nextY = tileY + dy;
+            if (nextX < 0 || nextX >= columns || nextY < 0 || nextY >= rows) continue;
+            const next = nextY * columns + nextX;
+            if (visited[next] || counts[next] < minTilePixels) continue;
+            visited[next] = 1;
+            queue[tail++] = next;
+          }
+        }
+      }
+
+      if (redPixels < minHotspotPixels) continue;
+      const analysisX = minTileX * tileSize;
+      const analysisY = minTileY * tileSize;
+      const analysisWidth = Math.min(width, (maxTileX + 1) * tileSize) - analysisX;
+      const analysisHeight = Math.min(height, (maxTileY + 1) * tileSize) - analysisY;
+      hotspots.push({
+        redPixels,
+        analysisX,
+        analysisY,
+        analysisWidth,
+        analysisHeight,
+        x: Math.round(analysisX / analysisScale),
+        y: Math.round(analysisY / analysisScale),
+        width: Math.round(analysisWidth / analysisScale),
+        height: Math.round(analysisHeight / analysisScale),
+        sourcePixelEstimate: Math.round(redPixels / Math.max(0.0001, analysisScale * analysisScale)),
+      });
+    }
+
+    return hotspots
+      .sort((a, b) => b.redPixels - a.redPixels)
+      .slice(0, limit)
+      .map((hotspot, index) => ({ ...hotspot, rank: index + 1 }));
+  }
+
+  function drawHotspotBoxes(context, hotspots) {
+    if (!hotspots.length) return;
+    context.save();
+    context.lineWidth = 2;
+    context.strokeStyle = 'rgba(255, 214, 0, .95)';
+    context.fillStyle = 'rgba(20, 20, 20, .92)';
+    context.font = 'bold 11px sans-serif';
+    for (const hotspot of hotspots) {
+      const x = hotspot.analysisX + 1;
+      const y = hotspot.analysisY + 1;
+      const width = Math.max(1, hotspot.analysisWidth - 2);
+      const height = Math.max(1, hotspot.analysisHeight - 2);
+      context.strokeRect(x, y, width, height);
+      const label = `#${hotspot.rank}`;
+      const labelWidth = context.measureText(label).width + 8;
+      context.fillRect(x, y, labelWidth, 18);
+      context.fillStyle = '#fff';
+      context.fillText(label, x + 4, y + 13);
+      context.fillStyle = 'rgba(20, 20, 20, .92)';
+    }
+    context.restore();
+  }
+
+  function renderHotspots(hotspots, analysisScale) {
+    const panel = $('#diff-hotspots');
+    if (!panel) return;
+    if (!hotspots.length) {
+      panel.hidden = true;
+      panel.innerHTML = '';
+      return;
+    }
+    panel.hidden = false;
+    panel.innerHTML = [
+      '<strong>優先して見る差分</strong>',
+      `<span>大きな赤い塊を上位${hotspots.length}件に整理。クリックでその位置へ移動します。</span>`,
+      '<div class="visual-diff-hotspots__list">',
+      ...hotspots.map((hotspot) => (
+        `<button type="button" data-hotspot-analysis-y="${hotspot.analysisY}" title="x${hotspot.x} y${hotspot.y} ${hotspot.width}×${hotspot.height}">`
+        + `<b>#${hotspot.rank}</b> x${hotspot.x} y${hotspot.y} · ${hotspot.width}×${hotspot.height} · 約${hotspot.sourcePixelEstimate.toLocaleString()}px`
+        + '</button>'
+      )),
+      '</div>',
+      analysisScale < 0.999 ? '<small>座標は元画像基準に換算しています。</small>' : '',
+    ].join('');
+  }
+
+  function focusHotspot(button) {
+    const canvas = $('#visual-diff-canvas');
+    const crop = $('.visual-diff-crop');
+    if (!canvas || !crop || canvas.hidden) return;
+    const analysisY = Number(button.dataset.hotspotAnalysisY || 0);
+    const displayScale = canvas.getBoundingClientRect().height / Math.max(1, canvas.height);
+    const target = Math.max(0, analysisY * displayScale - crop.clientHeight * 0.25);
+    crop.scrollTo({ top: target, behavior: 'smooth' });
+  }
+
+  function helpText(profile, ratio, analysisScale, hotspotCount) {
     const scaleNote = analysisScale < 0.999
       ? `Full-page等の大きな画像はブラウザ負荷を抑えるため${Math.round(analysisScale * 100)}%で解析しています。Section比較は原則1:1です。`
       : 'このSectionは1:1ピクセルで解析しています。';
@@ -301,6 +457,9 @@
       : ratio > 0.05
         ? '<strong>まとまった赤い輪郭・面が修正候補です。</strong>'
         : '文字輪郭だけの細かな赤はFigma/Chromeの描画差の可能性が高く、基本は追い込みすぎません。';
-    return `${signal} ${profile.label}は知覚色差threshold ${profile.threshold.toFixed(2)}。${profile.minNeighbors ? `孤立ノイズを近傍${profile.minNeighbors}px未満で抑制。` : '孤立ノイズも残す仕上げ確認用。'} ${scaleNote} Diff率は自動PASS/FAILには使いません。`;
+    const hotspotNote = hotspotCount
+      ? `上位${hotspotCount}件のHotspotは確認順を決めるための補助で、原因の自動断定はしません。`
+      : '大きなHotspotが無ければ、残差を機械スコアだけで追い込みません。';
+    return `${signal} ${profile.label}は知覚色差threshold ${profile.threshold.toFixed(2)}。${profile.minNeighbors ? `孤立ノイズを近傍${profile.minNeighbors}px未満で抑制。` : '孤立ノイズも残す仕上げ確認用。'} ${hotspotNote} ${scaleNote} Diff率は自動PASS/FAILには使いません。`;
   }
 })();
