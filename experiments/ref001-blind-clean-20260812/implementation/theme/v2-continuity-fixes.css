@@ -13,4 +13,10 @@
 
   .ref-speech h3{width:calc(100% - 60px);font-size:15px}
   .ref-speech p{width:100%}
+
+  /* The 375px MESSAGES heading is intentionally one line in Figma. Scale that
+   * line below the authored endpoint rather than letting its strong fragment
+   * establish a 350px document scroll width on a 320px viewport. */
+  .ref-messages__head h2{font-size:clamp(20px,6.4vw,24px);letter-spacing:.035em}
+  .ref-messages__head h2 strong{font-size:clamp(27px,8.53vw,32px)}
 }
