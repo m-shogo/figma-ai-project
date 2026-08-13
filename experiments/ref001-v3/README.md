@@ -40,3 +40,4 @@ Canonical rasters are served from `implementation/theme/assets/images/ref001/ren
 - CTA people keep transparent silhouettes; section background is not baked into the image
 - URLs without Figma destinations remain `#` / `UNRESOLVED`
 - SP Figma frame includes a 40px status bar; the website does not paint device chrome
+- The dedicated V3 GitHub Actions workflow is stored at `docs/github-actions-ref001-v3-runtime.yml` until a token with `workflow` scope can install it under `.github/workflows/`

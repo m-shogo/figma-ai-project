@@ -1,0 +1,65 @@
+# Intended GitHub Actions workflow for REF-001 V3.
+# Not installed under .github/workflows in this PR because the current
+# GitHub OAuth token lacks the `workflow` scope. Re-add at that path
+# when a token with workflow permission is available.
+name: REF001 V3 Runtime
+
+on:
+  push:
+    branches:
+      - agent/ref001-v3
+    paths:
+      - 'experiments/ref001-v3/**'
+      - 'implementation/theme/assets/images/ref001/rendered/**'
+      - '.github/workflows/ref001-v3-runtime.yml'
+  pull_request:
+    paths:
+      - 'experiments/ref001-v3/**'
+      - 'implementation/theme/assets/images/ref001/rendered/**'
+      - '.github/workflows/ref001-v3-runtime.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate-and-capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: PHP syntax
+        run: find experiments/ref001-v3/implementation -name '*.php' -print0 | xargs -0 -n1 php -l
+      - name: Validate V3 canonical asset wiring
+        run: python experiments/ref001-v3/tools/qa-assets.py
+      - name: Install Playwright in temp workspace
+        run: |
+          mkdir -p /tmp/ref001-v3-playwright
+          cd /tmp/ref001-v3-playwright
+          npm init -y >/dev/null 2>&1
+          npm install playwright@1.54.2 >/dev/null
+          npx playwright install --with-deps chromium
+      - name: Start V3 fixture from repository root
+        run: |
+          php -S 127.0.0.1:8766 -t . > /tmp/ref001-v3-php.log 2>&1 &
+          echo $! > /tmp/ref001-v3-php.pid
+          for i in $(seq 1 20); do
+            curl -fsS http://127.0.0.1:8766/experiments/ref001-v3/implementation/preview.php >/dev/null && exit 0
+            sleep 1
+          done
+          cat /tmp/ref001-v3-php.log
+          exit 1
+      - name: Capture V3 runtime probes
+        env:
+          NODE_PATH: /tmp/ref001-v3-playwright/node_modules
+        run: |
+          cp experiments/ref001-v3/tools/capture.mjs /tmp/ref001-v3-playwright/capture.mjs
+          cd /tmp/ref001-v3-playwright
+          V3_CAPTURE_DIR="$GITHUB_WORKSPACE/experiments/ref001-v3/qa/runtime" node capture.mjs
+      - name: Upload V3 runtime evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ref001-v3-runtime
+          path: experiments/ref001-v3/qa/runtime
+          if-no-files-found: error
+          retention-days: 14
