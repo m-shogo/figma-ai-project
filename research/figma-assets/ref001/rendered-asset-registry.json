@@ -490,7 +490,7 @@
       "viewport": "pc",
       "node_id": "21378:7489",
       "node_name": "img_curator",
-      "source_semantics": "ORIGINAL_RGBA_PERSON_LAYER_CROPPED_TO_VISIBLE_GROUP",
+      "source_semantics": "ORIGINAL_RGBA_COLORED_SILHOUETTE_AND_PERSON_LAYERS_CROPPED_TO_VISIBLE_GROUP",
       "format": "webp",
       "scale": 1,
       "display_width": 280,
@@ -500,24 +500,38 @@
       "path": "implementation/theme/assets/images/ref001/rendered/pc/cta-person-left-21378-7489.webp",
       "legacy_png_path": "implementation/theme/assets/images/ref001/rendered/pc/cta-person-left-21378-7489.png",
       "alpha_required": true,
-      "alpha_source": {
-        "node_id": "21378:7492",
-        "placement": {
-          "x": 0,
-          "y": -1,
-          "width": 260,
-          "height": 521
+      "cta_layers": [
+        {
+          "role": "colored_silhouette",
+          "node_id": "21378:7491",
+          "placement": {
+            "x": 20,
+            "y": -1,
+            "width": 260,
+            "height": 522
+          }
+        },
+        {
+          "role": "person",
+          "node_id": "21378:7492",
+          "placement": {
+            "x": 0,
+            "y": -1,
+            "width": 260,
+            "height": 521
+          }
         }
-      },
-      "background_and_color_silhouette_omitted": true,
-      "sha256": "e0d2961cc301808500d7954e888e98410d63735d4efecb66d2e1e07e32d2dc66"
+      ],
+      "cta_background_omitted": true,
+      "colored_silhouette_included": true,
+      "sha256": "cabdea145dafae6883f02a70973d35bcccdd9785093ee93af9a0903e36d49904"
     },
     {
       "slot": "cta-person-left",
       "viewport": "sp",
       "node_id": "21376:4958",
       "node_name": "img_curator",
-      "source_semantics": "ORIGINAL_RGBA_PERSON_LAYER_CROPPED_TO_VISIBLE_GROUP",
+      "source_semantics": "ORIGINAL_RGBA_COLORED_SILHOUETTE_AND_PERSON_LAYERS_CROPPED_TO_VISIBLE_GROUP",
       "format": "webp",
       "scale": 3,
       "display_width": 114,
@@ -527,24 +541,38 @@
       "path": "implementation/theme/assets/images/ref001/rendered/sp/cta-person-left-21376-4958.webp",
       "legacy_png_path": "implementation/theme/assets/images/ref001/rendered/sp/cta-person-left-21376-4958.png",
       "alpha_required": true,
-      "alpha_source": {
-        "node_id": "21376:4961",
-        "placement": {
-          "x": -33,
-          "y": -0.5234375,
-          "width": 136.08824157714844,
-          "height": 273.1099548339844
+      "cta_layers": [
+        {
+          "role": "colored_silhouette",
+          "node_id": "21376:4960",
+          "placement": {
+            "x": -22.5238094329834,
+            "y": -0.5235025882720947,
+            "width": 136.21875,
+            "height": 273.3718566894531
+          }
+        },
+        {
+          "role": "person",
+          "node_id": "21376:4961",
+          "placement": {
+            "x": -33,
+            "y": -0.5235025882720947,
+            "width": 136.08824157714844,
+            "height": 273.1099548339844
+          }
         }
-      },
-      "background_and_color_silhouette_omitted": true,
-      "sha256": "69ca5110b02f394079c959e79d881129e95f784503b4f24ec219e43d984d1217"
+      ],
+      "cta_background_omitted": true,
+      "colored_silhouette_included": true,
+      "sha256": "ffe2216c11392fd7cf6e8a00d9b402764e331dd3ee6193ae8bd3a8d11c40219d"
     },
     {
       "slot": "cta-person-right",
       "viewport": "pc",
       "node_id": "21378:7485",
       "node_name": "img_civil",
-      "source_semantics": "ORIGINAL_RGBA_PERSON_LAYER_CROPPED_TO_VISIBLE_GROUP",
+      "source_semantics": "ORIGINAL_RGBA_COLORED_SILHOUETTE_AND_PERSON_LAYERS_CROPPED_TO_VISIBLE_GROUP",
       "format": "webp",
       "scale": 1,
       "display_width": 335,
@@ -554,24 +582,38 @@
       "path": "implementation/theme/assets/images/ref001/rendered/pc/cta-person-right-21378-7485.webp",
       "legacy_png_path": "implementation/theme/assets/images/ref001/rendered/pc/cta-person-right-21378-7485.png",
       "alpha_required": true,
-      "alpha_source": {
-        "node_id": "21378:7488",
-        "placement": {
-          "x": 0,
-          "y": 0,
-          "width": 262,
-          "height": 758
+      "cta_layers": [
+        {
+          "role": "colored_silhouette",
+          "node_id": "21378:7487",
+          "placement": {
+            "x": 20,
+            "y": 0,
+            "width": 261.9989318847656,
+            "height": 757
+          }
+        },
+        {
+          "role": "person",
+          "node_id": "21378:7488",
+          "placement": {
+            "x": 0,
+            "y": 0,
+            "width": 262,
+            "height": 758
+          }
         }
-      },
-      "background_and_color_silhouette_omitted": true,
-      "sha256": "fb8d1fcea5b01bc90c45e528c1df08608586a2cf70fc77744d3de07e5264a8a0"
+      ],
+      "cta_background_omitted": true,
+      "colored_silhouette_included": true,
+      "sha256": "d010575e9ecef40c1b4091b04480c92a5876085c39b2b492798db7ce3fcd9ad0"
     },
     {
       "slot": "cta-person-right",
       "viewport": "sp",
       "node_id": "21376:4962",
       "node_name": "img_civil",
-      "source_semantics": "ORIGINAL_RGBA_PERSON_LAYER_CROPPED_TO_VISIBLE_GROUP",
+      "source_semantics": "ORIGINAL_RGBA_COLORED_SILHOUETTE_AND_PERSON_LAYERS_CROPPED_TO_VISIBLE_GROUP",
       "format": "webp",
       "scale": 3,
       "display_width": 110,
@@ -581,34 +623,68 @@
       "path": "implementation/theme/assets/images/ref001/rendered/sp/cta-person-right-21376-4962.webp",
       "legacy_png_path": "implementation/theme/assets/images/ref001/rendered/sp/cta-person-right-21376-4962.png",
       "alpha_required": true,
-      "alpha_source": {
-        "node_id": "21376:4965",
-        "placement": {
-          "x": 0,
-          "y": 0,
-          "width": 122.64988708496094,
-          "height": 354.3753967285156
+      "cta_layers": [
+        {
+          "role": "colored_silhouette",
+          "node_id": "21376:4964",
+          "placement": {
+            "x": 9.356414794921875,
+            "y": 0,
+            "width": 122.56866455078125,
+            "height": 354.1407165527344
+          }
+        },
+        {
+          "role": "person",
+          "node_id": "21376:4965",
+          "placement": {
+            "x": 0,
+            "y": 0,
+            "width": 122.64988708496094,
+            "height": 354.3753967285156
+          }
         }
-      },
-      "background_and_color_silhouette_omitted": true,
-      "sha256": "c1b5c9b8ded7f25b115618a265ab45346530f2e211ac9ce9fe3f284a13ea4596"
+      ],
+      "cta_background_omitted": true,
+      "colored_silhouette_included": true,
+      "sha256": "a4b47026f90022c318b1327674ffe7c73735407c0bffb8843ac7a09f7ce7d7d5"
     }
   ],
   "cta_alpha_sources": {
     "cta-person-left": {
-      "figma_image_hash": "5bbe541c05b43e0f29b2c001c185ed0e1fef7a2b",
-      "sha256": "07562ef2e30f4544ae38f6fbdfa573f7df00af987ac353ef37832e6f97eed7c1",
-      "source_dimensions": {
-        "width": 2041,
-        "height": 4096
+      "colored_silhouette": {
+        "figma_image_hash": "6b082e6c3630c06394f659125e8ab1a5dfedb588",
+        "sha256": "768ba7a71ce9ac70a7b8eb72ecd70cf66c5162d9b74f3264dd65757bad161a55",
+        "source_dimensions": {
+          "width": 2041,
+          "height": 4096
+        }
+      },
+      "person": {
+        "figma_image_hash": "5bbe541c05b43e0f29b2c001c185ed0e1fef7a2b",
+        "sha256": "07562ef2e30f4544ae38f6fbdfa573f7df00af987ac353ef37832e6f97eed7c1",
+        "source_dimensions": {
+          "width": 2041,
+          "height": 4096
+        }
       }
     },
     "cta-person-right": {
-      "figma_image_hash": "492378b1703a6941cd23ebdf8427c785fce351f3",
-      "sha256": "e3bc9205e6a93862e4a5fe441ff6c1de48b2f4067ca4bd673fe5e3e7ea95e935",
-      "source_dimensions": {
-        "width": 1274,
-        "height": 3681
+      "colored_silhouette": {
+        "figma_image_hash": "9f70f5f08727bc3367f4fe1f3ed848d7c82c41ba",
+        "sha256": "ef51653571f85f9b6d2a412c47f7c52936a88e60d33f2a821e90b4ad67108719",
+        "source_dimensions": {
+          "width": 1274,
+          "height": 3681
+        }
+      },
+      "person": {
+        "figma_image_hash": "492378b1703a6941cd23ebdf8427c785fce351f3",
+        "sha256": "e3bc9205e6a93862e4a5fe441ff6c1de48b2f4067ca4bd673fe5e3e7ea95e935",
+        "source_dimensions": {
+          "width": 1274,
+          "height": 3681
+        }
       }
     }
   }

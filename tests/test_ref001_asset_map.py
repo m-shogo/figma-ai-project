@@ -34,6 +34,12 @@ class Ref001AssetMapTests(unittest.TestCase):
             self.assertEqual(3 if viewport == "sp" else 1, asset["scale"])
             if slot.startswith("cta-person-"):
                 self.assertTrue(asset["alpha_required"])
+                self.assertTrue(asset["colored_silhouette_included"])
+                self.assertTrue(asset["cta_background_omitted"])
+                self.assertEqual(
+                    ["colored_silhouette", "person"],
+                    [layer["role"] for layer in asset["cta_layers"]],
+                )
 
     def test_canonical_webp_dimensions_hashes_and_cta_alpha(self) -> None:
         registry, errors = validator.load_registry(validator.DEFAULT_REGISTRY)

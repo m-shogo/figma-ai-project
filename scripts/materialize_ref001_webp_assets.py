@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Build and atomically install REF-001 lossless WebP assets.
 
-Inputs are the complete Figma PNG staging export plus the two original
-high-resolution transparent CTA person images.  The CTA sources are composed
-onto transparent canvases using placement geometry recorded in the registry;
-no background removal or generative image processing is performed here.
+Inputs are the complete Figma PNG staging export plus the four original
+high-resolution transparent CTA person and colored-silhouette images. The CTA
+layers are composed onto transparent canvases using placement geometry recorded
+in the registry; no background removal or generative image processing is used.
 """
 
 from __future__ import annotations
@@ -55,15 +55,20 @@ def load_rgba(path: Path, expected_size: tuple[int, int] | None = None) -> Image
     return image
 
 
-def compose_cta(source: Image.Image, asset: dict[str, object]) -> Image.Image:
+def compose_cta(sources: dict[str, Image.Image], asset: dict[str, object]) -> Image.Image:
     scale = int(asset["scale"])
-    placement = asset.get("alpha_source", {}).get("placement")
-    if not isinstance(placement, dict):
-        fail(f"missing CTA alpha placement for {asset['slot']}.{asset['viewport']}")
-    person_size = (scaled(placement["width"], scale), scaled(placement["height"], scale))
-    person = source.resize(person_size, Image.Resampling.LANCZOS)
     canvas = Image.new("RGBA", (int(asset["source_width"]), int(asset["source_height"])), (0, 0, 0, 0))
-    canvas.alpha_composite(person, dest=(scaled(placement["x"], scale), scaled(placement["y"], scale)))
+    layers = asset.get("cta_layers")
+    if not isinstance(layers, list) or [layer.get("role") for layer in layers] != ["colored_silhouette", "person"]:
+        fail(f"missing ordered CTA silhouette/person layers for {asset['slot']}.{asset['viewport']}")
+    for layer in layers:
+        placement = layer.get("placement")
+        role = str(layer["role"])
+        if not isinstance(placement, dict) or role not in sources:
+            fail(f"invalid CTA {role} placement for {asset['slot']}.{asset['viewport']}")
+        size = (scaled(placement["width"], scale), scaled(placement["height"], scale))
+        rendered = sources[role].resize(size, Image.Resampling.LANCZOS)
+        canvas.alpha_composite(rendered, dest=(scaled(placement["x"], scale), scaled(placement["y"], scale)))
     return canvas
 
 
@@ -98,6 +103,8 @@ def main() -> None:
     parser.add_argument("staging_dir", type=Path)
     parser.add_argument("--cta-left-source", type=Path, required=True)
     parser.add_argument("--cta-right-source", type=Path, required=True)
+    parser.add_argument("--cta-left-color-source", type=Path, required=True)
+    parser.add_argument("--cta-right-color-source", type=Path, required=True)
     parser.add_argument("--report", type=Path, default=DEFAULT_REPORT)
     parser.add_argument("--apply", action="store_true")
     args = parser.parse_args()
@@ -111,17 +118,25 @@ def main() -> None:
         fail(f"registry must define 32 assets; got {len(assets)}")
 
     alpha_sources = {
-        "cta-person-left": args.cta_left_source,
-        "cta-person-right": args.cta_right_source,
+        "cta-person-left": {
+            "person": args.cta_left_source,
+            "colored_silhouette": args.cta_left_color_source,
+        },
+        "cta-person-right": {
+            "person": args.cta_right_source,
+            "colored_silhouette": args.cta_right_color_source,
+        },
     }
-    decoded_alpha_sources: dict[str, Image.Image] = {}
-    for slot, path in alpha_sources.items():
-        expected_hash = registry["cta_alpha_sources"][slot]["sha256"]
-        if sha256(path) != expected_hash:
-            fail(f"CTA raw source hash mismatch for {slot}")
-        decoded_alpha_sources[slot] = load_rgba(path)
-        if decoded_alpha_sources[slot].getchannel("A").getextrema()[0] == 255:
-            fail(f"CTA raw source lacks transparent pixels: {slot}")
+    decoded_alpha_sources: dict[str, dict[str, Image.Image]] = {}
+    for slot, role_paths in alpha_sources.items():
+        decoded_alpha_sources[slot] = {}
+        for role, path in role_paths.items():
+            expected_hash = registry["cta_alpha_sources"][slot][role]["sha256"]
+            if sha256(path) != expected_hash:
+                fail(f"CTA raw source hash mismatch for {slot}.{role}")
+            decoded_alpha_sources[slot][role] = load_rgba(path)
+            if decoded_alpha_sources[slot][role].getchannel("A").getextrema()[0] == 255:
+                fail(f"CTA raw source lacks transparent pixels: {slot}.{role}")
 
     report_assets: list[dict[str, object]] = []
     prepared: dict[str, bytes] = {}
@@ -136,7 +151,9 @@ def main() -> None:
 
             if str(asset["slot"]).startswith("cta-person-"):
                 source_image = compose_cta(decoded_alpha_sources[str(asset["slot"])], asset)
-                staged_sha = sha256(alpha_sources[str(asset["slot"])])
+                staged_sha = {
+                    role: sha256(path) for role, path in alpha_sources[str(asset["slot"])].items()
+                }
             else:
                 source_image = load_rgba(staged_png, expected_size)
                 staged_sha = sha256(staged_png)
@@ -192,7 +209,7 @@ def main() -> None:
             "method": "FIGMA_PNG_STAGING_TO_MAC_LOCAL_LOSSLESS_WEBP",
             "pc_scale": 1,
             "sp_scale": 3,
-            "cta_alpha_method": "FIGMA_ORIGINAL_RGBA_SOURCE_WITH_RECORDED_LAYER_PLACEMENT",
+            "cta_alpha_method": "FIGMA_ORIGINAL_RGBA_PERSON_AND_COLORED_SILHOUETTE_WITH_RECORDED_LAYER_PLACEMENT",
         },
         "encoder": {"name": "cwebp", "mode": "lossless", "exact_transparent_rgb": True, "preset": "z9"},
         "transport": {"google_drive_used": False, "temporary_urls_persisted": False},
@@ -204,6 +221,7 @@ def main() -> None:
             "dimensions": "PASS",
             "lossless_rgba_roundtrip": "PASS",
             "cta_transparency": "PASS",
+            "cta_colored_silhouettes": "PASS",
         },
         "assets": report_assets,
     }
