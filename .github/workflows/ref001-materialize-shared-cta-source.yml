@@ -1,0 +1,119 @@
+name: REF001 Materialize Shared CTA Source
+
+on:
+  push:
+    branches:
+      - agent/ref001-v2-visual-completion
+    paths:
+      - .github/workflows/ref001-materialize-shared-cta-source.yml
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/ref001-v2-visual-completion
+          fetch-depth: 1
+
+      - name: Find exact public source by Figma SHA-256
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import hashlib
+          import html.parser
+          import pathlib
+          import re
+          import urllib.parse
+          import urllib.request
+
+          TARGET_SHA = 'e95de3af2e6c761a277471db42344c0d3ef0a61b6700fa2a14be1d157855020e'
+          START = 'https://www.cku.ac.jp/'
+          OUT = pathlib.Path('experiments/ref001-blind-clean-20260812/implementation/theme/assets/images/ref001/backgrounds/shared-cta-campus-source.jpg')
+          UA = 'Mozilla/5.0 REF001-Figma-source-verifier/1.0'
+
+          def fetch(url):
+              req = urllib.request.Request(url, headers={'User-Agent': UA})
+              with urllib.request.urlopen(req, timeout=20) as res:
+                  return res.read(), res.headers.get_content_type()
+
+          class Links(html.parser.HTMLParser):
+              def __init__(self):
+                  super().__init__()
+                  self.styles = []
+                  self.assets = []
+              def handle_starttag(self, tag, attrs):
+                  attrs = dict(attrs)
+                  if tag == 'link' and 'stylesheet' in attrs.get('rel', '').lower() and attrs.get('href'):
+                      self.styles.append(attrs['href'])
+                  for key in ('src', 'data-src', 'data-lazy-src'):
+                      if attrs.get(key): self.assets.append(attrs[key])
+                  if attrs.get('srcset'):
+                      self.assets += [part.strip().split()[0] for part in attrs['srcset'].split(',') if part.strip()]
+
+          html_bytes, _ = fetch(START)
+          parser = Links()
+          parser.feed(html_bytes.decode('utf-8', 'ignore'))
+
+          styles = [urllib.parse.urljoin(START, href) for href in parser.styles]
+          seen_styles = set()
+          candidate_urls = {urllib.parse.urljoin(START, src) for src in parser.assets}
+          css_url_re = re.compile(r'url\(\s*["\']?([^"\')]+)', re.I)
+          import_re = re.compile(r'@import\s+(?:url\()?\s*["\']([^"\']+)', re.I)
+
+          while styles:
+              css_url = styles.pop()
+              if css_url in seen_styles:
+                  continue
+              seen_styles.add(css_url)
+              try:
+                  css_bytes, _ = fetch(css_url)
+              except Exception as exc:
+                  print('skip css', css_url, exc)
+                  continue
+              text = css_bytes.decode('utf-8', 'ignore')
+              for raw in css_url_re.findall(text):
+                  if raw.startswith('data:'):
+                      continue
+                  candidate_urls.add(urllib.parse.urljoin(css_url, raw.strip()))
+              for raw in import_re.findall(text):
+                  styles.append(urllib.parse.urljoin(css_url, raw.strip()))
+
+          # The exact Figma raw source is a 2,066,644-byte JPEG. Check all
+          # same-site referenced raster assets byte-for-byte; dimensions alone
+          # are not accepted as proof.
+          checked = 0
+          for url in sorted(candidate_urls):
+              parsed = urllib.parse.urlparse(url)
+              if parsed.netloc not in {'www.cku.ac.jp', 'cku.ac.jp'}:
+                  continue
+              if not re.search(r'\.(?:jpe?g|png|webp)(?:$|\?)', url, re.I):
+                  continue
+              try:
+                  data, ctype = fetch(url)
+              except Exception:
+                  continue
+              checked += 1
+              digest = hashlib.sha256(data).hexdigest()
+              if digest == TARGET_SHA:
+                  OUT.parent.mkdir(parents=True, exist_ok=True)
+                  OUT.write_bytes(data)
+                  print('MATCH', url)
+                  print('bytes', len(data), 'sha256', digest)
+                  break
+          else:
+              raise SystemExit(f'exact Figma source not found; checked {checked} same-site raster assets')
+          PY
+
+      - name: Commit exact source
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add experiments/ref001-blind-clean-20260812/implementation/theme/assets/images/ref001/backgrounds/shared-cta-campus-source.jpg
+          git diff --cached --quiet && exit 0
+          git commit -m "assets: materialize exact shared CTA campus source"
+          git push origin HEAD:agent/ref001-v2-visual-completion
