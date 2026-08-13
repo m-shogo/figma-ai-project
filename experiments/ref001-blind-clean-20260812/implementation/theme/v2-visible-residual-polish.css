@@ -1,0 +1,19 @@
+/* REF-001 V2 — high-confidence visible residual fixes.
+ * Keep this file small: only differences verified against exact Figma geometry.
+ */
+@media (max-width:767px){
+  /* Figma Student Voice SP (21376:4650): speech card is 288x160;
+   * collapsed cards are 288x138. Existing x/top and padding already match. */
+  .ref-speech{width:288px;height:160px}
+  .ref-voice-item--collapsed .ref-speech{height:138px}
+
+  /* Figma Reason SP (21376:4852): these text blocks use 5% tracking. */
+  .ref-reason__intro,
+  .ref-reason-card__title,
+  .ref-reason-card__text{letter-spacing:.05em}
+}
+
+@media (max-width:360px){
+  /* Preserve the existing narrow-screen overflow guard. */
+  .ref-speech{width:calc(100% - 48px)}
+}
