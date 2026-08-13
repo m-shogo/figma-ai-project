@@ -1,0 +1,54 @@
+name: REF001 Audit Completeness
+
+on:
+  push:
+    branches: [so]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install audit image runtime
+        run: python -m pip install --disable-pip-version-check pillow
+
+      - name: Build Human Review evidence
+        run: |
+          python scripts/build_human_review_site.py --output _site
+          python scripts/attach_visual_baseline.py --output _site
+          python scripts/build_ref001_section_diff_report.py _site/ref-001/latest/review/section-diffs
+          cp -R _site/ref-001/latest/review/section-diffs _site/ref-001/runs/run-2/review/
+
+      - name: Validate audit completeness
+        run: python scripts/validate_ref001_audit_completeness.py _site
+
+      - name: Verify published audit evidence
+        run: |
+          test -f _site/ref-001/latest/review/audit-completeness.json
+          test -f _site/ref-001/runs/run-2/review/audit-completeness.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report=json.loads(Path('_site/ref-001/latest/review/audit-completeness.json').read_text())
+          assert report['status']=='PASS', report
+          assert report['policy']['humanFinalJudgementRequired'] is True
+          print('PASS audit completeness evidence')
+          PY
+
+      - name: Upload audit evidence
+        uses: actions/upload-artifact@v5
+        with:
+          name: ref001-audit-completeness-${{ github.sha }}
+          path: |
+            _site/ref-001/latest/review/audit-completeness.json
+            _site/ref-001/latest/review/section-diffs/report.json
+          if-no-files-found: error
+          retention-days: 14
