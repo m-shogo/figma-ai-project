@@ -8,6 +8,9 @@ on:
       - 'review-dashboard/**'
       - 'scripts/build_human_review_site.py'
       - 'scripts/attach_visual_baseline.py'
+      - 'scripts/build_ref001_section_diff_report.py'
+      - 'scripts/crop_png.py'
+      - 'scripts/diff_png.py'
       - 'scripts/validate_human_review_site.py'
       - 'scripts/validate_ref001_asset_map.py'
       - 'tests/test_human_review_dashboard.py'
@@ -22,6 +25,9 @@ on:
       - 'review-dashboard/**'
       - 'scripts/build_human_review_site.py'
       - 'scripts/attach_visual_baseline.py'
+      - 'scripts/build_ref001_section_diff_report.py'
+      - 'scripts/crop_png.py'
+      - 'scripts/diff_png.py'
       - 'scripts/validate_human_review_site.py'
       - 'scripts/validate_ref001_asset_map.py'
       - 'tests/test_human_review_dashboard.py'
@@ -66,6 +72,15 @@ jobs:
           python scripts/build_human_review_site.py --output _site
           python scripts/attach_visual_baseline.py --output _site
 
+      - name: Build section-local visual diff report
+        run: |
+          python -m pip install --disable-pip-version-check pillow
+          python scripts/build_ref001_section_diff_report.py _site/ref-001/latest/review/section-diffs
+          python scripts/build_ref001_section_diff_report.py _site/ref-001/runs/run-2/review/section-diffs
+          test -f _site/ref-001/latest/review/section-diffs/pc-student-voice-diff.png
+          test -f _site/ref-001/latest/review/section-diffs/sp-student-voice-diff.png
+          test -f _site/ref-001/latest/review/section-diffs/report.json
+
       - name: Validate generated review site
         run: python scripts/validate_human_review_site.py _site
 
@@ -101,6 +116,7 @@ jobs:
             sleep 0.5
           done
           curl -fsS http://127.0.0.1:8877/ref-001/latest/review/ >/dev/null || { cat /tmp/ref001-review-http.log; exit 1; }
+          curl -fsS http://127.0.0.1:8877/ref-001/latest/review/section-diffs/ >/dev/null
           cp review-dashboard/tests/smoke.mjs /tmp/ref001-review-playwright/smoke.mjs
           cp review-dashboard/tests/visual-diff-smoke.mjs /tmp/ref001-review-playwright/visual-diff-smoke.mjs
           cp review-dashboard/tests/baseline-diff-smoke.mjs /tmp/ref001-review-playwright/baseline-diff-smoke.mjs
