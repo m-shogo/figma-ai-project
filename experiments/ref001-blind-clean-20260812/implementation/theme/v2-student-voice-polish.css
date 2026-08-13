@@ -28,7 +28,7 @@
 .ref-pointbox p{letter-spacing:.05em}
 .ref-pointbox strong{font-weight:500}
 .ref-voice-open__advice strong{font-weight:500}
-.ref-voice-open__advice span{letter-spacing:.05em}
+.ref-voice-open__advice span{letter-spacing:.05em;white-space:pre-line}
 .ref-voice-more{font-weight:500;letter-spacing:.05em}
 
 @media (min-width:1300px){
@@ -60,7 +60,10 @@
   .ref-pointbox p{display:grid;grid-template-columns:174px 1fr;gap:16px;align-items:center;margin:0;font-size:16px;line-height:1}
   .ref-pointbox strong{display:grid;place-items:center;width:174px;height:24px;margin:0;padding:0;background:var(--ref-blue);color:#fff}
   .ref-voice-open__advice{display:grid;grid-template-columns:240px 1fr;gap:34px;margin:33px 56px 0;align-items:center}
-  .ref-voice-open__advice strong{display:grid;place-items:center;width:240px;height:50px;margin:0;padding:0;border-radius:999px;background:var(--ref-purple);color:#fff;font-size:18px}
+  /* Figma PC callout is a 234x50 pill with a small right-pointing tail; the
+   * grid track remains 240px so the following copy keeps its authored x=440. */
+  .ref-voice-open__advice strong{position:relative;display:grid;place-items:center;width:234px;height:50px;margin:0;padding:0;border-radius:999px;background:var(--ref-purple);color:#fff;font-size:18px;overflow:visible}
+  .ref-voice-open__advice strong::after{content:"";position:absolute;right:-7px;top:19px;width:8px;height:13px;background:var(--ref-purple);clip-path:polygon(0 0,100% 50%,0 100%)}
   .ref-voice-open__advice span{font-size:16px;line-height:1.6}
   .ref-voice-more{margin:40px 0 0;text-align:center;font-size:18px;line-height:1;color:var(--ref-blue)}
 }
@@ -96,7 +99,12 @@
   .ref-pointbox p{display:block;margin:0;font-size:16px;line-height:1.4}
   .ref-pointbox strong{display:grid;place-items:center;width:174px;height:24px;margin:0 0 8px;padding:0;background:var(--ref-blue);color:#fff;font-size:16px}
   .ref-voice-open__advice{display:block;width:311px;margin:21px auto 0}
-  .ref-voice-open__advice strong{display:grid;place-items:center;width:199px;height:52px;margin:0;padding:0;border-radius:999px;background:var(--ref-purple);color:#fff;font-size:16px}
+  /* Figma SP uses a 199x44 capsule plus an 8px bottom tail. Keep a 52px flow
+   * box so the following paragraph stays at the exact authored baseline. */
+  .ref-voice-open__advice strong{position:relative;display:grid;place-items:center;box-sizing:border-box;width:199px;height:52px;margin:0;padding:0 0 8px;border-radius:0;background:transparent;color:#fff;font-size:16px;overflow:visible}
+  .ref-voice-open__advice strong::before{content:"";position:absolute;left:0;top:0;width:199px;height:44px;border-radius:999px;background:var(--ref-purple);z-index:-1}
+  .ref-voice-open__advice strong::after{content:"";position:absolute;left:103px;top:44px;width:8px;height:8px;background:var(--ref-purple);clip-path:polygon(0 0,100% 0,50% 100%);z-index:-1}
+  .ref-voice-open__advice strong{isolation:isolate}
   .ref-voice-open__advice span{display:block;margin-top:8px;font-size:16px;line-height:1.6}
   .ref-voice-more{margin:24px 0 0;text-align:center;font-size:18px;line-height:1;color:var(--ref-blue)}
 }
