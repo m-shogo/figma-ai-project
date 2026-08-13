@@ -29,6 +29,10 @@
   font-weight: 500;
 }
 
+.v3-heading__break {
+  display: none;
+}
+
 .v3-heading__bracket {
   font-family: var(--v3-font-en);
   font-size: 50px;

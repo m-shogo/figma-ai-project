@@ -1,6 +1,7 @@
 <?php
 $d = v3_data()['reason'];
 $titleHtml = htmlspecialchars($d['titlePrefix'], ENT_QUOTES, 'UTF-8')
+    . '<br class="v3-heading__break">'
     . '<strong>' . htmlspecialchars($d['titleStrong'], ENT_QUOTES, 'UTF-8') . '</strong>';
 ?>
 <section class="v3-reason" data-section="reason" data-figma-pc="<?php v3_e($d['figma']['pc']); ?>" data-figma-sp="<?php v3_e($d['figma']['sp']); ?>">

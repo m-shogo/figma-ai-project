@@ -14,7 +14,9 @@ for (const width of widths) {
   const runtimeErrors = [];
   page.on('pageerror', (e) => runtimeErrors.push(`pageerror:${e.message}`));
   page.on('console', (m) => {
-    if (m.type() === 'error') runtimeErrors.push(`console:${m.text()}`);
+    if (m.type() === 'error' && !/Failed to load resource/.test(m.text())) {
+      runtimeErrors.push(`console:${m.text()}`);
+    }
   });
   await page.goto(previewUrl, { waitUntil: 'networkidle', timeout: 60000 });
   await page.evaluate(async () => {

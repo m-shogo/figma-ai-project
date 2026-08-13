@@ -106,7 +106,7 @@
   font-family: var(--v3-font-quote);
   font-size: 119px;
   line-height: 1;
-  font-weight: 800;
+  font-weight: 900;
   vertical-align: -0.28em;
 }
 
@@ -114,6 +114,7 @@
   display: inline;
   color: #fff;
   font-family: var(--v3-font-display);
+  font-weight: 900;
   -webkit-text-stroke: 1px #333;
   paint-order: stroke fill;
   text-shadow: 0 0 18px rgba(132, 115, 170, 0.35);
@@ -126,6 +127,7 @@
   display: block;
   color: #fff;
   font-family: var(--v3-font-display);
+  font-weight: 900;
   -webkit-text-stroke: 1px #333;
   paint-order: stroke fill;
   text-shadow: 0 0 18px rgba(132, 115, 170, 0.35);
@@ -137,6 +139,7 @@
 .v3-mv__mid {
   display: block;
   font-family: var(--v3-font-display);
+  font-weight: 900;
   font-size: 44px;
   letter-spacing: 0.05em;
   margin: 4px 0 8px;

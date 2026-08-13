@@ -13,9 +13,30 @@
     display: inline;
   }
 
+  .v3-heading__break {
+    display: unset;
+  }
+
   .v3-heading__title strong::before {
-    content: "";
-    display: block;
+    display: none;
+  }
+
+  .v3-reason .v3-heading__title,
+  .v3-voice .v3-heading__title {
+    font-size: 32px;
+    line-height: 41px;
+  }
+
+  .v3-reason .v3-heading__title strong,
+  .v3-voice .v3-heading__title strong {
+    font-size: 32px;
+  }
+
+  .v3-reason .v3-heading__bracket,
+  .v3-voice .v3-heading__bracket {
+    font-size: 42px;
+    line-height: 0;
+    vertical-align: middle;
   }
 
   .v3-heading__bracket {
@@ -153,17 +174,28 @@
     bottom: 8px;
   }
 
+  /* Figma SP white gutters are 56px between named frames (web Y = Figma Y − 40 status bar). */
+  .v3-reason,
+  .v3-education,
+  .v3-voice,
+  .v3-messages,
+  .v3-messages + .v3-shared-cta,
+  .v3-links,
+  .v3-cta-value {
+    margin-top: 56px;
+  }
+
   .v3-reason {
-    padding: 40px 0;
+    padding: 0;
   }
 
   .v3-reason .v3-heading__title {
-    margin-top: 12px;
+    margin-top: 16px;
   }
 
   .v3-reason__intro {
     text-align: left;
-    margin: 8px 0 16px;
+    margin: 24px 0 30px;
   }
 
   .v3-reason__cards {
@@ -184,7 +216,15 @@
 
   .v3-reason-card__body {
     min-height: 106px;
-    padding: 32px 24px 22px;
+    padding: 32px 24px 24px;
+  }
+
+  .v3-reason-card:first-child .v3-reason-card__body {
+    min-height: 108px;
+  }
+
+  .v3-reason-card__text {
+    margin: 0;
   }
 
   .v3-reason-card__title {
@@ -193,7 +233,7 @@
   }
 
   .v3-education {
-    padding: 56px 0 29px;
+    padding: 56px 0 39px;
   }
 
   .v3-education__head {
@@ -313,11 +353,15 @@
   }
 
   .v3-voice {
-    padding: 48px 0;
+    padding: 0;
   }
 
   .v3-voice .v3-heading {
-    margin-bottom: 20px;
+    margin-bottom: 40px;
+  }
+
+  .v3-voice .v3-heading__title {
+    margin-top: 16px;
   }
 
   .v3-voice-item {
@@ -405,7 +449,7 @@
   }
 
   .v3-messages {
-    padding: 40px 0;
+    padding: 0;
   }
 
   .v3-messages__layout {
@@ -420,11 +464,22 @@
 
   .v3-messages .v3-heading {
     order: 1;
-    margin-bottom: 8px;
+    margin-bottom: 40px;
   }
 
   .v3-messages .v3-heading__title {
-    margin-top: 12px;
+    margin-top: 20px;
+    font-size: 24px;
+    line-height: 32px;
+  }
+
+  .v3-messages .v3-heading__title strong {
+    display: inline;
+    font-size: 24px;
+  }
+
+  .v3-messages .v3-heading__title strong::before {
+    display: none;
   }
 
   .v3-messages__quote--copy {
@@ -475,18 +530,18 @@
 
   .v3-messages__profile {
     order: 3;
-    margin-top: 0;
+    margin: 16px 0 0;
   }
 
   .v3-messages__indicator {
     order: 4;
-    margin: 24px auto 0;
+    margin: 34px auto 0;
     justify-content: center;
     font-size: 20px;
   }
 
   .v3-courses {
-    padding: 40px 0;
+    padding: 36px 0 37px;
   }
 
   .v3-courses .v3-heading {
@@ -559,12 +614,12 @@
   }
 
   .v3-links {
-    padding: 56px 0;
+    padding: 7px 0;
   }
 
   .v3-links__grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 155px));
+    grid-template-columns: repeat(2, 162px);
     gap: 19px;
     justify-content: center;
   }
