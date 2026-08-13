@@ -24,5 +24,5 @@ $d = v3_data()['footer'];
     </div>
   </div>
   <div class="v3-footer__copyright"><?php v3_e($d['copyright']); ?></div>
-  <a class="v3-footer__pagetop" href="#top" aria-label="ページ先頭へ">⌃</a>
+  <a class="v3-footer__pagetop" href="#top" aria-label="ページ先頭へ"><span class="v3-footer__pagetop-icon" aria-hidden="true"></span></a>
 </footer>

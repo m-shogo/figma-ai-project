@@ -6,7 +6,11 @@ $d = v3_data()['ctaValue'];
   <?php v3_picture($d['leftPerson'], 'v3-portrait v3-portrait--left', ''); ?>
   <?php v3_picture($d['rightPerson'], 'v3-portrait v3-portrait--right', ''); ?>
   <div class="v3-cta-value__inner">
-    <h2><span class="v3-cta-value__slash" aria-hidden="true"></span><?php v3_e($d['title']); ?><span class="v3-cta-value__slash v3-cta-value__slash--end" aria-hidden="true"></span></h2>
+    <h2>
+      <img class="v3-cta-value__slash" src="assets/cta/slash-purple.svg" alt="" width="21" height="27" aria-hidden="true">
+      <span><?php v3_e($d['title']); ?></span>
+      <img class="v3-cta-value__slash v3-cta-value__slash--end" src="assets/cta/slash-purple.svg" alt="" width="21" height="27" aria-hidden="true">
+    </h2>
     <div class="v3-cta-value__actions">
       <?php v3_component('cta-button', ['key' => 'document', 'label' => '資料請求', 'icon' => 'document', 'tone' => 'blue']); ?>
       <?php v3_component('cta-button', ['key' => 'open-campus', 'label' => 'オープンキャンパス', 'icon' => 'open-campus', 'tone' => 'purple']); ?>

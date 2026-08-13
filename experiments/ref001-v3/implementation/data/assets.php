@@ -98,6 +98,10 @@ return [
         'cta-campus-wash' => 'assets/cta/campus-wash.png',
         'mv-plane-back' => 'assets/mv/plane-back.svg',
         'mv-plane-front' => 'assets/mv/plane-front.svg',
+        'mv-oc-kicker-fill' => 'assets/mv/oc-kicker-fill.svg',
+        'mv-oc-kicker-line' => 'assets/mv/oc-kicker-line.svg',
+        'cta-slash-left' => 'assets/cta/slash-left.svg',
+        'cta-slash-purple' => 'assets/cta/slash-purple.svg',
     ],
     'icons' => [
         'document' => 'assets/icons/document.svg',

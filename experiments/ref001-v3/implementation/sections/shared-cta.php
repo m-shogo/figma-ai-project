@@ -8,7 +8,11 @@ $figmaSp = $section['figmaSp'] ?? $d['figma']['sp'][0];
   <img class="v3-shared-cta__wash" src="assets/cta/campus-wash.png" alt="" aria-hidden="true" width="1380" height="328">
   <div class="v3-shared-cta__veil" aria-hidden="true"></div>
   <div class="v3-shared-cta__inner">
-    <h2>＼ <?php v3_e($d['title']); ?> ／</h2>
+    <h2>
+      <img class="v3-shared-cta__slash" src="assets/cta/slash-left.svg" alt="" width="21" height="27" aria-hidden="true">
+      <span><?php v3_e($d['title']); ?></span>
+      <img class="v3-shared-cta__slash v3-shared-cta__slash--end" src="assets/cta/slash-left.svg" alt="" width="21" height="27" aria-hidden="true">
+    </h2>
     <div class="v3-shared-cta__actions">
       <?php v3_component('cta-button', ['key' => 'document', 'label' => '資料請求', 'icon' => 'document', 'tone' => 'blue']); ?>
       <?php v3_component('cta-button', ['key' => 'open-campus', 'label' => 'オープンキャンパス', 'icon' => 'open-campus', 'tone' => 'purple']); ?>
