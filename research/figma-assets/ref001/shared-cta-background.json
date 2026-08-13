@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "assetId": "ref001-shared-cta-campus-source",
+  "role": "raw-source-css-crop",
+  "figma": {
+    "fileKey": "ZYTdtw4wCgkcBy2cVnhxVI",
+    "pageNodeId": "21376:1600",
+    "pcInstanceNodeId": "21378:7867",
+    "spInstanceNodeId": "21376:4719",
+    "imageFillHash": "67cfc40813123d6e50eab0af3d734369afca8798",
+    "sourceWidth": 2760,
+    "sourceHeight": 911,
+    "sourceByteLength": 2066644,
+    "sourceSha256": "6acba9f34b47d0c5548a6b7221ec80eb52a46436c71c64b5a32e366dfeb1d366"
+  },
+  "repository": {
+    "path": "experiments/ref001-blind-clean-20260812/implementation/theme/assets/images/ref001/backgrounds/shared-cta-campus-source.jpg"
+  },
+  "sourceVerification": {
+    "publicOriginalUrl": "https://www.cku.ac.jp/wp/wp-content/uploads/2022/12/acces.jpg",
+    "verifiedAt": "2026-08-13",
+    "proof": "Figma getImageByHash bytes and the official WordPress original are byte-for-byte identical by SHA-256, byte length, and 2760x911 dimensions."
+  },
+  "authoredCrops": {
+    "pc": {
+      "section": {"width": 1380, "height": 328},
+      "imageRect": {"x": -22, "y": -12, "width": 1632, "height": 539}
+    },
+    "sp": {
+      "section": {"width": 375, "height": 350},
+      "imageRect": {"x": -372, "y": -12, "width": 1128, "height": 372}
+    }
+  },
+  "overlay": {
+    "direction": "left-to-right",
+    "start": "#38A1DB",
+    "end": "#8473AA",
+    "opacity": 0.8
+  },
+  "policyRationale": "Use the raw source as a documented raster-policy exception because the Figma final visible CTA group also contains an editable gradient overlay and live text/buttons. CSS owns crop and overlay geometry; the JPEG owns image identity."
+}

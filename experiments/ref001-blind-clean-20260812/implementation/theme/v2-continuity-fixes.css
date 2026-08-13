@@ -21,6 +21,12 @@
 .ref-link-tile__arrow .ref-svg-icon{display:none!important}
 .ref-link-tile__arrow::before{content:'';display:block;width:20px;height:19px;margin:auto;background:var(--tile-accent);-webkit-mask:url('assets/icons/arrow-right.svg') center/contain no-repeat;mask:url('assets/icons/arrow-right.svg') center/contain no-repeat}
 
+@media (min-width:1300px){
+  /* Figma PC badge top is y=568 global / 474 within the 714px MV. The inherited
+   * -18px bottom offset placed the whole 240px badge 18px too low. */
+  .ref-mv__oc{bottom:0}
+}
+
 @media (max-width:767px){
   /* Figma Top_sp@2x vector field is 375x704 and begins at the MV top. */
   .ref-mv::before{top:0;height:704px;background-image:url('assets/icons/ref001-mv-bg-sp.svg')}
