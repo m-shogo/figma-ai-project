@@ -1,0 +1,23 @@
+/* REF-001 V2 — Reason fidelity owner.
+ * Figma PC: 21378:7999 / SP: 21376:4852.
+ */
+
+@media (min-width:1300px){
+  /* Exact PC frame is 1160x559. Keep section-local authored coordinates
+   * independent from font-flow height so downstream sections start at y1541. */
+  .ref-reason{height:559px;min-height:559px;padding:0}
+  .ref-reason .ref-content{position:relative;width:1160px;height:559px}
+  .ref-reason__head{position:absolute;inset:0 0 auto;height:147px;text-align:center}
+  .ref-reason__head .ref-kicker{position:absolute;left:50%;top:0;transform:translateX(-50%);font-size:20px;line-height:1}
+  .ref-reason__head h2{position:absolute;left:50%;top:44px;transform:translateX(-50%);width:632px;margin:0;font-size:30px;line-height:42px;white-space:nowrap}
+  .ref-reason__head h2 strong{font-size:42px;line-height:42px}
+  .ref-reason__head .ref-bracket-title::before,.ref-reason__head .ref-bracket-title::after{font-size:50px;line-height:1}
+  .ref-reason__intro{position:absolute;left:202px;top:126px;width:756px;max-width:none;margin:0!important;font-size:16px;line-height:21px;letter-spacing:.05em;text-align:center;white-space:nowrap}
+
+  .ref-reason__cards{position:absolute;left:0;top:195px;width:1160px;height:364px;display:grid;grid-template-columns:repeat(3,360px);gap:40px}
+  .ref-reason-card{width:360px;height:364px}
+  .ref-reason-card__media{width:360px;height:240px}
+  .ref-reason-card__body{height:124px;min-height:124px;padding:40px 24px 26px!important}
+  .ref-reason-card__title{top:-20px!important;left:24px!important;font-size:20px;line-height:1;padding:8px 24px}
+  .ref-reason-card__text{width:312px;font-size:16px;line-height:1.6;letter-spacing:.05em}
+}
