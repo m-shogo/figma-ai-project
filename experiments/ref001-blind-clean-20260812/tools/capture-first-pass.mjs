@@ -14,6 +14,30 @@ for(const width of widths){
   page.on('console',m=>{if(m.type()==='error')runtimeErrors.push(`console:${m.text()}`)});
   await page.goto('http://127.0.0.1:8765/preview.php',{waitUntil:'networkidle',timeout:60000});
   await page.evaluate(async()=>{await document.fonts.ready});
+
+  // Full-page screenshots are not guaranteed to trigger native lazy loading.
+  // Exercise the real page from top to bottom first so visual evidence contains
+  // every canonical raster asset instead of gray unloaded placeholders.
+  await page.evaluate(async()=>{
+    const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+    const height=Math.max(document.body.scrollHeight,document.documentElement.scrollHeight);
+    const step=Math.max(400,Math.floor(innerHeight*.75));
+    for(let y=0;y<height;y+=step){scrollTo(0,y);await sleep(35)}
+    scrollTo(0,Math.max(0,height-innerHeight));
+    await sleep(80);
+    await Promise.all([...document.images].map(img=>{
+      if(img.complete)return Promise.resolve();
+      return new Promise(resolve=>{
+        const done=()=>resolve();
+        img.addEventListener('load',done,{once:true});
+        img.addEventListener('error',done,{once:true});
+        setTimeout(done,3000);
+      });
+    }));
+    scrollTo(0,0);
+    await sleep(80);
+  });
+
   const metrics=await page.evaluate(()=>{
     const body=document.body,de=document.documentElement;
     const sw=()=>Math.round(Math.max(body.scrollWidth,de.scrollWidth));
@@ -21,6 +45,7 @@ for(const width of widths){
     const candidates=[...document.querySelectorAll('p,h1,h2,h3,li,span')].filter(el=>el.textContent.trim().length>0);
     const clipped=candidates.filter(el=>{const r=el.getBoundingClientRect();return r.left<-.5||r.right>innerWidth+.5}).map(el=>({text:el.textContent.trim().replace(/\s+/g,' ').slice(0,90),left:+el.getBoundingClientRect().left.toFixed(1),right:+el.getBoundingClientRect().right.toFixed(1),className:String(el.className||'')}));
     const overflowElements=[...document.querySelectorAll('body *')].map(el=>{const r=el.getBoundingClientRect();if(r.width<=0||r.height<=0||(r.left>=-.5&&r.right<=innerWidth+.5))return null;const s=getComputedStyle(el);return{tag:el.tagName.toLowerCase(),className:String(el.className||''),left:+r.left.toFixed(1),right:+r.right.toFixed(1),width:+r.width.toFixed(1),position:s.position,overflowX:s.overflowX,boxShadow:s.boxShadow,text:(el.textContent||'').trim().replace(/\s+/g,' ').slice(0,80)}}).filter(Boolean).slice(0,60);
+    const imageFailures=[...document.images].filter(img=>!img.complete||img.naturalWidth===0||img.naturalHeight===0).map(img=>({slot:img.closest('[data-asset-slot]')?.dataset.assetSlot||null,src:img.currentSrc||img.src||'',complete:img.complete,naturalWidth:img.naturalWidth,naturalHeight:img.naturalHeight}));
     let overflowDiagnostics=null;
     if(innerWidth===320&&sw()>innerWidth){
       const baseline=sw();
@@ -29,7 +54,7 @@ for(const width of widths){
       for(const el of document.querySelectorAll('header,[data-section],footer')){const prev=el.style.display;el.style.display='none';sectionIsolation.push({name:el.dataset.section||el.className||el.tagName,scrollWidth:sw()});el.style.display=prev}
       overflowDiagnostics={baseline,withoutPseudos,sectionIsolation};
     }
-    return{bodyHeight:Math.round(Math.max(body.scrollHeight,de.scrollHeight)),scrollWidth:sw(),pageOverflowPx:Math.max(0,sw()-innerWidth),readableTextClipping:clipped,overflowElements,overflowDiagnostics,primaryFonts:{zenKakuGothicNew:document.fonts.check('16px "Zen Kaku Gothic New"'),poppins:document.fonts.check('16px Poppins')},sections};
+    return{bodyHeight:Math.round(Math.max(body.scrollHeight,de.scrollHeight)),scrollWidth:sw(),pageOverflowPx:Math.max(0,sw()-innerWidth),readableTextClipping:clipped,overflowElements,overflowDiagnostics,imageFailures,primaryFonts:{zenKakuGothicNew:document.fonts.check('16px "Zen Kaku Gothic New"'),poppins:document.fonts.check('16px Poppins')},sections};
   });
   metrics.width=width;metrics.runtimeErrors=runtimeErrors;results.push(metrics);
   if([320,375,1380].includes(width))await page.screenshot({path:path.join(outDir,`first-pass-${width}.png`),fullPage:true});
@@ -37,8 +62,9 @@ for(const width of widths){
 }
 await browser.close();
 await fs.writeFile(path.join(outDir,'runtime-probes.json'),JSON.stringify(results,null,2)+'\n');
-const summary=results.map(x=>({width:x.width,bodyHeight:x.bodyHeight,pageOverflowPx:x.pageOverflowPx,readableTextClipping:x.readableTextClipping.length,primaryFonts:x.primaryFonts,runtimeErrors:x.runtimeErrors.length}));
+const summary=results.map(x=>({width:x.width,bodyHeight:x.bodyHeight,pageOverflowPx:x.pageOverflowPx,readableTextClipping:x.readableTextClipping.length,imageFailures:x.imageFailures.length,primaryFonts:x.primaryFonts,runtimeErrors:x.runtimeErrors.length}));
 console.log(JSON.stringify(summary,null,2));
 for(const r of results.filter(x=>x.pageOverflowPx>0)){console.log(`OVERFLOW DEBUG @ ${r.width}px`);console.log(JSON.stringify({elements:r.overflowElements,diagnostics:r.overflowDiagnostics},null,2))}
-const hardFailures=results.flatMap(x=>{const f=[];if(x.pageOverflowPx>0)f.push(`${x.width}:overflow=${x.pageOverflowPx}`);if(x.runtimeErrors.length)f.push(`${x.width}:runtimeErrors=${x.runtimeErrors.length}`);return f});
+for(const r of results.filter(x=>x.imageFailures.length)){console.log(`IMAGE DEBUG @ ${r.width}px`);console.log(JSON.stringify(r.imageFailures,null,2))}
+const hardFailures=results.flatMap(x=>{const f=[];if(x.pageOverflowPx>0)f.push(`${x.width}:overflow=${x.pageOverflowPx}`);if(x.imageFailures.length)f.push(`${x.width}:imageFailures=${x.imageFailures.length}`);if(x.runtimeErrors.length)f.push(`${x.width}:runtimeErrors=${x.runtimeErrors.length}`);return f});
 if(hardFailures.length){console.error('Runtime probe hard failures:',hardFailures.join(', '));process.exitCode=1}

@@ -34,3 +34,71 @@
   .ref-portrait{width:68px!important;height:145px!important;bottom:0!important}.ref-portrait--left{left:0!important}.ref-portrait--right{right:0!important}.ref-cta-value__inner{z-index:4}.ref-cta-value__actions{width:240px;margin:26px auto 0!important;gap:16px!important}.ref-cta-value .ref-action{width:240px!important;min-height:64px}.ref-cta-value h2{position:relative;z-index:4}
   .ref-footer__sns{gap:10px}.ref-footer__sns-link{width:36px;height:36px}.ref-footer__sns-icon{width:20px;height:20px}
 }
+
+/*
+ * Post-materialization visual QA (2026-08-13)
+ *
+ * The canonical PNGs are renders of the final visible Figma mask/group nodes.
+ * They must therefore be displayed at those node bounds at the exact acceptance
+ * endpoints instead of being cropped a second time by legacy placeholder boxes.
+ * This keeps asset correctness separate from CSS/layout correctness and leaves
+ * the mapping easy for a human to inspect later.
+ */
+@media (min-width:1300px){
+  /* Figma Top@2x: left 570x614 at (0,94), right 570x614 at (810,174). */
+  .ref-mv__person{width:570px;height:614px;clip-path:none!important;bottom:auto}
+  .ref-mv__person--left{left:0;right:auto;top:0}
+  .ref-mv__person--right{left:auto;right:0;top:80px}
+  .ref-mv__person img{object-fit:contain;object-position:center}
+
+  /* Figma Reason cards: title straddles the image/body boundary without covering subject matter. */
+  .ref-reason-card__body{position:relative;min-height:124px;padding:40px 24px 26px!important}
+  .ref-reason-card__title{position:absolute!important;top:-20px!important;left:24px!important;margin:0!important}
+
+  /* Figma Education cards: 281px base + 40px rhythm => 233px image rail. */
+  .ref-education__steps{width:min(1244px,calc(100vw - 64px));grid-template-columns:repeat(4,minmax(0,281px));gap:40px;justify-content:center}
+  .ref-edu-card__media{width:233px;height:131px}
+
+  /* Figma Messages image node is the full 660x440 final visible mask. */
+  .ref-messages__head{top:0}
+  .ref-messages__copy{padding-top:152px}
+  .ref-messages__photo{width:660px;height:440px;margin:0}
+  .ref-messages__photo img{object-fit:contain}
+
+  /* Figma CTA people are independent final nodes, not one shared portrait size. */
+  .ref-portrait--left{width:280px;height:294px;left:104px;right:auto;bottom:0}
+  .ref-portrait--right{width:335px;height:293px;left:auto;right:54px;bottom:0}
+  .ref-portrait img{object-fit:contain;object-position:center top}
+}
+
+@media (max-width:767px){
+  /* Restore the exact Figma Reason geometry after the earlier collision repair. */
+  .ref-reason-card__body{position:relative;min-height:106px;padding:30px 24px 22px!important}
+  .ref-reason-card__title{position:absolute!important;top:-18px!important;left:24px!important;margin:0!important}
+
+  /* Figma Top_sp@2x excluding the 40px device status bar. */
+  .ref-mv__person{clip-path:none!important;height:auto;aspect-ratio:335/220}
+  .ref-mv__person--left{width:89.333333%;left:10.666667%;right:auto;top:0;bottom:auto}
+  .ref-mv__person--right{width:89.333333%;left:0;right:auto;top:auto;bottom:21px}
+  .ref-mv__person img{object-fit:contain;object-position:center}
+
+  /* Figma mobile Messages: 76px title, 40px gap, then a 343x229 image.
+   * The quote intentionally overlaps the lower part of that final masked image. */
+  .ref-messages__head{height:76px;margin-left:8px}
+  .ref-messages__head h2{margin:20px 0 0}
+  .ref-messages__body{display:block;position:relative;height:422px;margin-top:40px}
+  .ref-messages__photo{position:absolute;left:0;top:0;width:100%;height:229px!important;margin:0!important}
+  .ref-messages__photo img{object-fit:contain}
+  .ref-messages__copy{position:absolute;left:0;right:0;top:160px;padding:0!important;margin:0!important;z-index:2}
+  .ref-messages__quote{margin:0 0 0 -8px}
+  .ref-messages__profile{margin-top:14px}
+  .ref-messages__indicator{margin-top:24px}
+
+  /* Figma mobile course cards use a 20px vertical rhythm. */
+  .ref-courses__grid{gap:20px}
+
+  /* Figma mobile CTA nodes: left 114x144, right 110x137. */
+  .ref-portrait--left{width:114px!important;height:144px!important;left:0!important;right:auto!important;bottom:0!important}
+  .ref-portrait--right{width:110px!important;height:137px!important;left:auto!important;right:0!important;bottom:0!important}
+  .ref-portrait img{object-fit:contain;object-position:center top}
+}
