@@ -9,7 +9,9 @@ on:
       - 'experiments/ref001-blind-clean-20260812/tools/**'
       - 'experiments/ref001-blind-clean-20260812/run.yaml'
       - 'implementation/theme/assets/images/ref001/rendered/**'
+      - 'scripts/ref001_ci_impact.py'
       - 'scripts/validate_ref001_asset_map.py'
+      - 'tests/test_ref001_ci_impact.py'
       - 'tests/test_ref001_asset_map.py'
       - 'tests/test_ref001_v2_logo_contract.py'
       - '.github/workflows/ref001-blind-clean-runtime.yml'
@@ -19,7 +21,9 @@ on:
       - 'experiments/ref001-blind-clean-20260812/tools/**'
       - 'experiments/ref001-blind-clean-20260812/run.yaml'
       - 'implementation/theme/assets/images/ref001/rendered/**'
+      - 'scripts/ref001_ci_impact.py'
       - 'scripts/validate_ref001_asset_map.py'
+      - 'tests/test_ref001_ci_impact.py'
       - 'tests/test_ref001_asset_map.py'
       - 'tests/test_ref001_v2_logo_contract.py'
       - '.github/workflows/ref001-blind-clean-runtime.yml'
@@ -33,28 +37,76 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Classify V2 CI impact
+        id: impact
+        env:
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          BEFORE_SHA: ${{ github.event.before }}
+          CURRENT_SHA: ${{ github.sha }}
+        run: |
+          BASE_SHA="${PR_BASE_SHA:-$BEFORE_SHA}"
+          HEAD_SHA="${PR_HEAD_SHA:-$CURRENT_SHA}"
+          python scripts/ref001_ci_impact.py \
+            --base "$BASE_SHA" \
+            --head "$HEAD_SHA" \
+            --github-output "$GITHUB_OUTPUT"
+
+      - name: Publish V2 CI impact summary
+        env:
+          MODE: ${{ steps.impact.outputs.mode }}
+          WIDTHS: ${{ steps.impact.outputs.widths }}
+          RUN_BROWSER: ${{ steps.impact.outputs.run_browser }}
+          RUN_STRESS: ${{ steps.impact.outputs.run_stress }}
+          REASON: ${{ steps.impact.outputs.reason }}
+        run: |
+          {
+            echo '## ⚡ REF-001 V2 CI impact'
+            echo
+            echo "- Mode: \`$MODE\`"
+            echo "- Viewports: \`${WIDTHS:-none}\`"
+            echo "- Browser capture: \`$RUN_BROWSER\`"
+            echo "- Variable-content stress: \`$RUN_STRESS\`"
+            echo "- Reason: $REASON"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Test V2 CI impact router
+        run: python -m unittest tests.test_ref001_ci_impact
+
       - name: Enforce immutable FIRST PASS before finalization
         run: python scripts/controlled_run_phase.py experiments/ref001-blind-clean-20260812/run.yaml --phase FINALIZE
+
       - name: Verify immutable FIRST PASS snapshot
         run: python scripts/first_pass_evidence.py validate experiments/ref001-blind-clean-20260812/run.yaml
+
       - name: PHP syntax
         run: find experiments/ref001-blind-clean-20260812/implementation/theme -name '*.php' -print0 | xargs -0 -n1 php -l
+
       - name: Validate V2 outlined university logo contract
         run: python -m unittest tests.test_ref001_v2_logo_contract
+
       - name: Validate ACF export
         run: python scripts/validate_acf_export.py experiments/ref001-blind-clean-20260812/implementation/acf-export.json
+
       - name: Validate incremental REF-001 asset wiring
         run: |
           python scripts/validate_ref001_asset_map.py
           python -m unittest tests.test_ref001_asset_map
+
       - name: Install Playwright in temp workspace
+        if: steps.impact.outputs.run_browser == 'true'
         run: |
           mkdir -p /tmp/ref001-playwright
           cd /tmp/ref001-playwright
           npm init -y >/dev/null 2>&1
           npm install playwright@1.54.2 >/dev/null
           npx playwright install --with-deps chromium
+
       - name: Stage canonical rendered assets for fixture runtime
+        if: steps.impact.outputs.run_browser == 'true'
         run: |
           SOURCE='implementation/theme/assets/images/ref001/rendered'
           DEST='experiments/ref001-blind-clean-20260812/implementation/theme/assets/images/ref001/rendered'
@@ -62,29 +114,54 @@ jobs:
             mkdir -p "$DEST"
             cp -R "$SOURCE"/. "$DEST"/
           fi
+
       - name: Start clean fixture
+        if: steps.impact.outputs.run_browser == 'true'
         run: |
           php -S 127.0.0.1:8765 -t experiments/ref001-blind-clean-20260812/implementation/theme > /tmp/ref001-php.log 2>&1 &
           echo $! > /tmp/ref001-php.pid
           for i in $(seq 1 20); do curl -fsS http://127.0.0.1:8765/preview.php >/dev/null && exit 0; sleep 1; done
           cat /tmp/ref001-php.log
           exit 1
-      - name: Capture final runtime probes
+
+      - name: Capture impact-scoped runtime probes
+        if: steps.impact.outputs.run_browser == 'true'
         env:
           NODE_PATH: /tmp/ref001-playwright/node_modules
+          REF001_WIDTHS: ${{ steps.impact.outputs.widths }}
+          REF001_SCREENSHOTS: ${{ steps.impact.outputs.screenshots }}
         run: |
           cp experiments/ref001-blind-clean-20260812/tools/capture-first-pass.mjs /tmp/ref001-playwright/capture-runtime.mjs
+          python - <<'PY'
+          import os
+          from pathlib import Path
+
+          path = Path('/tmp/ref001-playwright/capture-runtime.mjs')
+          source = path.read_text()
+          widths = [int(value) for value in os.environ['REF001_WIDTHS'].split(',') if value]
+          screenshots = [int(value) for value in os.environ['REF001_SCREENSHOTS'].split(',') if value]
+          old_widths = 'const widths=[320,360,375,390,430,767,768,769,1024,1200,1380];'
+          old_screenshots = 'const screenshotWidths=new Set([320,375,430,767,768,1024,1200,1380]);'
+          if old_widths not in source or old_screenshots not in source:
+              raise SystemExit('capture-first-pass.mjs contract changed; refusing scoped patch')
+          source = source.replace(old_widths, f'const widths={widths};', 1)
+          source = source.replace(old_screenshots, f'const screenshotWidths=new Set({screenshots});', 1)
+          path.write_text(source)
+          PY
           cd /tmp/ref001-playwright
           REF001_CAPTURE_DIR="$GITHUB_WORKSPACE/experiments/ref001-blind-clean-20260812/evidence/final/latest" node capture-runtime.mjs
+
       - name: Validate variable-content stress
+        if: steps.impact.outputs.run_stress == 'true'
         env:
           NODE_PATH: /tmp/ref001-playwright/node_modules
         run: |
           cp experiments/ref001-blind-clean-20260812/tools/stress-variable-content.mjs /tmp/ref001-playwright/stress-variable-content.mjs
           cd /tmp/ref001-playwright
           REF001_STRESS_DIR="$GITHUB_WORKSPACE/experiments/ref001-blind-clean-20260812/evidence/final/latest/stress" node stress-variable-content.mjs
+
       - name: Persist final runtime evidence
-        if: github.event_name == 'push'
+        if: github.event_name == 'push' && steps.impact.outputs.run_browser == 'true'
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
@@ -95,8 +172,9 @@ jobs:
           fi
           git commit -m 'Persist REF-001 final runtime evidence'
           git push
+
       - name: Upload final runtime evidence
-        if: always()
+        if: always() && steps.impact.outputs.run_browser == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: ref001-blind-clean-final-runtime

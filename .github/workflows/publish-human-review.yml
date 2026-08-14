@@ -11,9 +11,11 @@ on:
       - 'scripts/build_ref001_section_diff_report.py'
       - 'scripts/crop_png.py'
       - 'scripts/diff_png.py'
+      - 'scripts/ref001_ci_impact.py'
       - 'scripts/validate_human_review_site.py'
       - 'scripts/validate_ref001_asset_map.py'
       - 'tests/test_human_review_dashboard.py'
+      - 'tests/test_ref001_ci_impact.py'
       - 'tests/test_ref001_asset_map.py'
       - 'experiments/ref001-blind-clean-20260812/implementation/**'
       - 'experiments/ref001-blind-clean-20260812/evidence/final/latest/**'
@@ -28,9 +30,11 @@ on:
       - 'scripts/build_ref001_section_diff_report.py'
       - 'scripts/crop_png.py'
       - 'scripts/diff_png.py'
+      - 'scripts/ref001_ci_impact.py'
       - 'scripts/validate_human_review_site.py'
       - 'scripts/validate_ref001_asset_map.py'
       - 'tests/test_human_review_dashboard.py'
+      - 'tests/test_ref001_ci_impact.py'
       - 'tests/test_ref001_asset_map.py'
       - 'experiments/ref001-blind-clean-20260812/implementation/**'
       - 'experiments/ref001-blind-clean-20260812/evidence/final/latest/**'
@@ -53,8 +57,48 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Route PR Human Review
+        id: impact
+        env:
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          BEFORE_SHA: ${{ github.event.before }}
+          CURRENT_SHA: ${{ github.sha }}
+        run: |
+          BASE_SHA="${PR_BASE_SHA:-$BEFORE_SHA}"
+          HEAD_SHA="${PR_HEAD_SHA:-$CURRENT_SHA}"
+          python scripts/ref001_ci_impact.py \
+            --base "$BASE_SHA" \
+            --head "$HEAD_SHA" \
+            --github-output "$GITHUB_OUTPUT"
+
+      - name: Explain Human Review routing
+        env:
+          RUN_PR_REVIEW: ${{ steps.impact.outputs.run_human_review_pr }}
+          MODE: ${{ steps.impact.outputs.mode }}
+          REASON: ${{ steps.impact.outputs.reason }}
+        run: |
+          {
+            echo '## 🧭 REF-001 Human Review routing'
+            echo
+            if [ "$GITHUB_EVENT_NAME" = 'pull_request' ] && [ "$RUN_PR_REVIEW" != 'true' ]; then
+              echo 'PR full Human Review: **deferred** — V2 Runtime owns impact-scoped browser QA here; full Human Review runs after merge to `so`.'
+            else
+              echo 'Full Human Review: **enabled**.'
+            fi
+            echo
+            echo "- Runtime impact mode: \`$MODE\`"
+            echo "- Reason: $REASON"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Test V2 CI impact router
+        run: python -m unittest tests.test_ref001_ci_impact
 
       - name: Show runtime versions
+        if: github.event_name != 'pull_request' || steps.impact.outputs.run_human_review_pr == 'true'
         run: |
           python --version
           php --version
@@ -63,11 +107,13 @@ jobs:
           node --check review-dashboard/app/baseline-review.js
 
       - name: Validate incremental REF-001 asset wiring
+        if: github.event_name != 'pull_request' || steps.impact.outputs.run_human_review_pr == 'true'
         run: |
           python scripts/validate_ref001_asset_map.py
           python -m unittest tests.test_ref001_asset_map
 
       - name: Install browser capture runtime
+        if: github.event_name != 'pull_request' || steps.impact.outputs.run_human_review_pr == 'true'
         run: |
           mkdir -p /tmp/ref001-review-playwright
           cd /tmp/ref001-review-playwright
@@ -76,6 +122,7 @@ jobs:
           npx playwright install --with-deps chromium >/dev/null
 
       - name: Stage canonical rendered assets for fresh review capture
+        if: github.event_name != 'pull_request' || steps.impact.outputs.run_human_review_pr == 'true'
         run: |
           SOURCE='implementation/theme/assets/images/ref001/rendered'
           DEST='experiments/ref001-blind-clean-20260812/implementation/theme/assets/images/ref001/rendered'
@@ -85,6 +132,7 @@ jobs:
           fi
 
       - name: Capture fresh runtime for this commit
+        if: github.event_name != 'pull_request' || steps.impact.outputs.run_human_review_pr == 'true'
         env:
           NODE_PATH: /tmp/ref001-review-playwright/node_modules
         run: |
@@ -105,11 +153,13 @@ jobs:
           test -f /tmp/ref001-review-runtime/runtime-probes.json
 
       - name: Build static Review Dashboard and Artifact Preview
+        if: github.event_name != 'pull_request' || steps.impact.outputs.run_human_review_pr == 'true'
         run: |
           python scripts/build_human_review_site.py --output _site
           python scripts/attach_visual_baseline.py --output _site
 
       - name: Build section-local visual diff report from fresh runtime
+        if: github.event_name != 'pull_request' || steps.impact.outputs.run_human_review_pr == 'true'
         run: |
           python -m pip install --disable-pip-version-check pillow
           python scripts/build_ref001_section_diff_report.py _site/ref-001/latest/review/section-diffs --runtime-evidence-dir /tmp/ref001-review-runtime
@@ -132,6 +182,7 @@ jobs:
           PY
 
       - name: Publish Section Diff summary to Actions
+        if: github.event_name != 'pull_request' || steps.impact.outputs.run_human_review_pr == 'true'
         shell: bash
         run: |
           python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
@@ -149,21 +200,27 @@ jobs:
           PY
 
       - name: Validate generated review site
+        if: github.event_name != 'pull_request' || steps.impact.outputs.run_human_review_pr == 'true'
         run: python scripts/validate_human_review_site.py _site
 
       - name: Run focused dashboard tests
+        if: github.event_name != 'pull_request' || steps.impact.outputs.run_human_review_pr == 'true'
         run: python -m unittest tests.test_human_review_dashboard
 
       - name: Reject short-lived Figma asset locators
+        if: github.event_name != 'pull_request' || steps.impact.outputs.run_human_review_pr == 'true'
         run: python scripts/validate_no_figma_mcp_asset_urls.py
 
       - name: Validate durable Figma asset manifests when present
+        if: github.event_name != 'pull_request' || steps.impact.outputs.run_human_review_pr == 'true'
         run: python scripts/validate_asset_manifests.py
 
       - name: Reject transient Figma asset staging
+        if: github.event_name != 'pull_request' || steps.impact.outputs.run_human_review_pr == 'true'
         run: python scripts/validate_no_figma_asset_staging.py
 
       - name: Browser smoke — PC, SP, sections, persistence, copy, mobile, visual diff, baseline regression
+        if: github.event_name != 'pull_request' || steps.impact.outputs.run_human_review_pr == 'true'
         run: |
           python -m http.server 8877 --directory _site >/tmp/ref001-review-http.log 2>&1 &
           SERVER_PID=$!
@@ -191,7 +248,7 @@ jobs:
           node baseline-diff-smoke.mjs
 
       - name: Upload browser smoke screenshots
-        if: always()
+        if: always() && (github.event_name != 'pull_request' || steps.impact.outputs.run_human_review_pr == 'true')
         uses: actions/upload-artifact@v5
         with:
           name: ref001-human-review-smoke-${{ github.sha }}
@@ -200,6 +257,7 @@ jobs:
           retention-days: 14
 
       - name: Upload review backup artifact
+        if: github.event_name != 'pull_request' || steps.impact.outputs.run_human_review_pr == 'true'
         uses: actions/upload-artifact@v5
         with:
           name: ref001-human-review-${{ github.sha }}
