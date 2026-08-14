@@ -1,0 +1,173 @@
+/* REF-001 V2 — variable-content speech layout.
+ * Keep the authored 1380/375 geometry as minimums, but let semantic CMS/ACF
+ * copy grow the speech rail, item, and section instead of clipping/overlapping.
+ * Loaded after the endpoint fidelity layers so only fixed-height assumptions
+ * are relaxed; the accepted outline anatomy remains owned by
+ * v2-speech-fluid-experiment.css.
+ */
+
+.ref-speech h3,
+.ref-speech p{
+  overflow-wrap:anywhere;
+}
+
+@media (min-width:1300px){
+  .ref-voice{
+    height:auto;
+    min-height:1393px;
+  }
+
+  .ref-voice-item--open{
+    height:auto;
+    min-height:591px;
+  }
+
+  .ref-voice-item--collapsed{
+    height:auto;
+    min-height:290px;
+  }
+
+  .ref-voice-item--open>.ref-content{
+    height:auto;
+    min-height:591px;
+  }
+
+  .ref-voice-item--collapsed>.ref-content{
+    height:auto;
+    min-height:290px;
+  }
+
+  .ref-voice-item__top{
+    height:auto;
+    min-height:200px;
+    box-sizing:border-box;
+    padding-top:40px;
+  }
+
+  .ref-speech{
+    position:relative;
+    left:auto;
+    top:auto;
+    width:859px;
+    height:auto;
+    min-height:168px;
+    margin:0 0 -8px 245px;
+  }
+
+  .ref-voice-item--collapsed .ref-speech{
+    height:auto;
+    min-height:168px;
+  }
+
+  .ref-speech h3{
+    white-space:normal;
+  }
+}
+
+@media (min-width:768px) and (max-width:1299px){
+  /* Continuity band: endpoint styling leaves the speech box absolutely
+   * positioned, so longer copy grows visually but its parent rail never grows.
+   * Put only the speech rail back into normal flow; keep the existing fluid
+   * content width and endpoint-specific 375/1380 compositions untouched. */
+  .ref-voice{
+    height:auto;
+  }
+
+  .ref-voice-item--open,
+  .ref-voice-item--collapsed,
+  .ref-voice-item--open>.ref-content,
+  .ref-voice-item--collapsed>.ref-content{
+    height:auto;
+  }
+
+  .ref-voice-item--open,
+  .ref-voice-item--open>.ref-content{
+    min-height:591px;
+  }
+
+  .ref-voice-item--collapsed,
+  .ref-voice-item--collapsed>.ref-content{
+    min-height:290px;
+  }
+
+  .ref-voice-item__top{
+    height:auto;
+    min-height:200px;
+    box-sizing:border-box;
+    padding-top:40px;
+  }
+
+  .ref-speech{
+    position:relative;
+    left:auto;
+    top:auto;
+    width:100%;
+    height:auto;
+    min-height:168px;
+    margin:0;
+  }
+
+  .ref-voice-item--collapsed .ref-speech{
+    height:auto;
+    min-height:168px;
+  }
+
+  .ref-speech h3{
+    white-space:normal;
+  }
+}
+
+@media (max-width:767px){
+  .ref-voice{
+    height:auto;
+    min-height:1758px;
+  }
+
+  .ref-voice-item--open{
+    height:auto;
+    min-height:1032px;
+  }
+
+  .ref-voice-item--collapsed{
+    height:auto;
+    min-height:262px;
+  }
+
+  .ref-voice-item--open>.ref-content{
+    height:auto;
+    min-height:1032px;
+  }
+
+  .ref-voice-item--collapsed>.ref-content{
+    height:auto;
+    min-height:262px;
+  }
+
+  .ref-voice-item__top{
+    height:auto;
+    min-height:218px;
+    box-sizing:border-box;
+    padding-top:50px;
+  }
+
+  .ref-speech{
+    position:relative;
+    left:auto;
+    top:auto;
+    width:288px;
+    height:auto;
+    min-height:160px;
+    margin:0 0 8px 32px;
+  }
+
+  .ref-voice-item--collapsed .ref-speech{
+    height:auto;
+    min-height:138px;
+  }
+}
+
+@media (max-width:360px){
+  .ref-speech{
+    width:calc(100% - 48px);
+  }
+}
