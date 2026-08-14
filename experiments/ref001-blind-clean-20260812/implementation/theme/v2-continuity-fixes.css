@@ -79,6 +79,13 @@
    * aligns its visible glyph bounds while leaving the description untouched. */
   .ref-mv__hero-end{top:157px}
 
+  /* Figma's closing quote is an independently positioned text node whose
+   * bounding box ends at x=362 on the 375px SP frame. Browser inline flow puts
+   * the fallback glyph about 17px too far right (x=334.3..383.3), clipping it
+   * at 320/360/375. Correct only that glyph; keep the authored left quote and
+   * Japanese display-line compensation unchanged. */
+  .ref-mv__quote--right{position:relative;left:-17px}
+
   /* Figma Reason node 21376:4852 is exactly 1295px high. Natural browser flow
    * was 1286px at 375, causing every downstream section and body height to be
    * 9px early. The cards themselves begin at local y=256, 7px below the current
