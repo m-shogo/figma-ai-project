@@ -1,0 +1,128 @@
+/* REF-001 V2 — intermediate desktop owner.
+ *
+ * Breakpoint contract:
+ *   <= 767px  : SP design
+ *   >= 768px  : PC design language
+ *   1380px    : exact PC Figma acceptance endpoint
+ *
+ * Several V2 fidelity files intentionally apply their exact 1380px geometry
+ * only at >=1300px. Without an explicit 768-1299 owner, those widths fall back
+ * to the old generic FIRST PASS layout and can visibly collapse even though the
+ * exact 375/1380 endpoints are healthy. This layer owns only that middle band.
+ * It keeps the PC information architecture/visual language and makes fixed PC
+ * rails fluid; it does not create a third tablet design.
+ */
+
+@media (min-width:768px) and (max-width:1299px){
+  .ref-content{width:min(1160px,calc(100% - 64px))}
+
+  /* REASON --------------------------------------------------------------- */
+  .ref-reason{height:auto;min-height:0;padding:0}
+  .ref-reason .ref-content{position:relative;width:min(1160px,calc(100% - 64px));height:auto}
+  .ref-reason__head{position:relative;height:auto;text-align:center}
+  .ref-reason__head .ref-kicker{position:static;transform:none;font-size:20px;line-height:1}
+  .ref-reason__head h2{position:relative!important;left:auto!important;right:auto!important;top:auto!important;transform:none!important;width:min(590px,100%);height:auto;margin:24px auto 18px;font-size:30px;line-height:1.3;white-space:normal}
+  .ref-reason__title-lead{display:inline;font-size:30px;line-height:1.3}
+  .ref-reason__head h2 strong{display:inline;font-size:clamp(34px,3.6vw,42px);line-height:1.3}
+  .ref-reason__head .ref-bracket-title::before,.ref-reason__head .ref-bracket-title::after{font-size:clamp(42px,4vw,50px)}
+  .ref-reason__intro{position:static!important;left:auto!important;top:auto!important;width:min(756px,100%);max-width:none;margin:0 auto 36px!important;font-size:16px;line-height:1.6;text-align:center;white-space:normal}
+  .ref-reason__cards{position:static!important;left:auto!important;top:auto!important;width:100%;height:auto;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(20px,3vw,40px)}
+  .ref-reason-card{width:auto;height:auto}
+  .ref-reason-card__media{width:100%;height:auto;aspect-ratio:3/2}
+  .ref-reason-card__body{height:auto;min-height:124px;padding:28px clamp(16px,2vw,24px) 24px!important}
+  .ref-reason-card__title{font-size:clamp(16px,1.8vw,20px);line-height:1.15;padding:8px clamp(12px,1.8vw,24px)}
+  .ref-reason-card__text{width:auto;font-size:clamp(14px,1.5vw,16px);line-height:1.6}
+
+  /* EDUCATION ------------------------------------------------------------ */
+  .ref-education{height:auto;min-height:684px;padding:72px 0}
+  .ref-education__head{grid-template-columns:minmax(220px,270px) minmax(0,1fr);gap:clamp(20px,3vw,42px);align-items:center;margin-bottom:38px}
+  .ref-education__title h2{font-size:clamp(32px,3.7vw,42px);line-height:1;margin:24px 0 0;font-weight:500;letter-spacing:.05em;white-space:nowrap}
+  .ref-education__intro{position:relative;padding-left:clamp(24px,3vw,43px);border-left:2px solid #7fc9ed}
+  .ref-education__intro h3{font-size:clamp(20px,2.2vw,24px);line-height:1}
+  .ref-education__intro p{font-size:15px;line-height:1.6;letter-spacing:.05em;margin:14px 0 0}
+  .ref-education__steps{display:flex!important;width:100%!important;left:auto!important;top:22px;transform:none!important;margin:0!important;gap:0!important;align-items:stretch}
+  .ref-edu-card{flex:1 1 0;width:auto;min-width:0;height:auto;min-height:380px;padding:0 clamp(10px,1.7vw,24px) 22px}
+  .ref-edu-flow-arrow{flex:0 0 clamp(16px,3vw,40px);width:clamp(16px,3vw,40px);height:auto;min-height:380px}
+  .ref-edu-card__badge{top:0;left:0;padding:10px clamp(8px,1.2vw,16px);font-size:clamp(13px,1.5vw,18px)}
+  .ref-edu-card h3{font-size:clamp(15px,1.7vw,20px);line-height:1.2;margin:68px 0 0;min-height:40px}
+  .ref-edu-card__media{display:block;width:100%;height:auto;aspect-ratio:233/131;margin:12px 0 0;overflow:hidden}
+  .ref-edu-card ul{width:100%;margin-top:14px;font-size:clamp(11px,1.25vw,14px);gap:10px}
+
+  /* STUDENT VOICE -------------------------------------------------------- */
+  .ref-voice-item>.ref-content{width:min(1160px,calc(100% - 64px))}
+  .ref-voice-item__top{display:grid;grid-template-columns:clamp(120px,16vw,160px) minmax(0,1fr);gap:clamp(24px,4vw,85px);align-items:start;box-sizing:border-box;min-height:200px;padding:40px clamp(24px,4vw,56px) 0}
+  .ref-avatar{position:relative;left:auto;top:auto;width:100%;max-width:160px;height:auto;aspect-ratio:1;justify-self:center}
+  .ref-speech{position:relative;left:auto;top:auto;width:auto;min-width:0;height:auto;min-height:168px;margin:0;padding:clamp(24px,3vw,34px) clamp(28px,5vw,66px) 22px}
+  .ref-voice-item--collapsed .ref-speech{height:auto;min-height:168px}
+  .ref-speech::before{left:-15px;top:58px}
+  .ref-speech h3{width:auto;margin:0 0 14px;font-size:clamp(18px,2vw,24px);line-height:1.25;white-space:normal}
+  .ref-speech p{width:auto;margin:0;font-size:clamp(14px,1.5vw,16px);line-height:1.6}
+  .ref-voice-open__detail{display:grid;grid-template-columns:minmax(240px,38%) minmax(0,1fr);gap:clamp(24px,4vw,40px);margin:40px clamp(24px,4vw,56px) 0;align-items:start}
+  .ref-voice-open__photo{width:100%;height:auto;aspect-ratio:404/227;margin:0}
+  .ref-voice-open__copy{width:auto;font-size:16px;line-height:1.6}
+  .ref-pointbox{width:auto;height:auto;margin:0;padding:24px;display:grid;grid-template-rows:auto auto;row-gap:16px}
+  .ref-pointbox p{display:grid;grid-template-columns:minmax(130px,174px) minmax(0,1fr);gap:16px;align-items:center;margin:0;font-size:15px;line-height:1.25}
+  .ref-pointbox strong{width:auto;min-width:0;height:24px;margin:0;padding:0 12px}
+  .ref-voice-open__advice{display:grid;grid-template-columns:minmax(180px,240px) minmax(0,1fr);gap:clamp(20px,3vw,34px);margin:33px clamp(24px,4vw,56px) 0;align-items:center}
+  .ref-voice-open__advice strong{width:100%;max-width:234px;height:50px;margin:0;padding:0}
+  .ref-voice-open__advice span{font-size:15px;line-height:1.6}
+
+  /* MESSAGES ------------------------------------------------------------- */
+  .ref-messages{height:440px;min-height:440px;padding:0}
+  .ref-messages__head{left:32px;top:0;height:86px}
+  .ref-messages__head .ref-kicker{font-size:20px}
+  .ref-messages__head h2{margin:20px 0 0;font-size:clamp(26px,2.7vw,30px);line-height:42px}
+  .ref-messages__head h2 strong{font-size:clamp(34px,3.6vw,42px)}
+  .ref-messages__body{display:grid;grid-template-columns:minmax(300px,43%) minmax(0,57%);width:calc(100% - 64px);height:440px;min-height:440px;margin:0 auto;align-items:start}
+  .ref-messages__copy{position:relative;height:440px;padding:0}
+  .ref-messages__photo{width:100%;height:440px;margin:0}
+  .ref-messages__photo img{width:100%;height:100%;object-fit:contain}
+  .ref-messages__quote--sp{display:none}
+  .ref-messages__quote--pc{display:block;position:absolute;left:0;top:158px;width:min(684px,calc(100vw - 96px));font-size:clamp(20px,2.25vw,28px);line-height:49px;z-index:3}
+  .ref-messages__quote--pc span{height:49px;padding:0 clamp(14px,2vw,24px);margin:0 0 11px}
+  .ref-messages__quote--pc span:nth-child(1){width:min(440px,68vw)}
+  .ref-messages__quote--pc span:nth-child(2){width:min(684px,calc(100vw - 96px));margin-bottom:0}
+  .ref-messages__profile{position:absolute;left:0;top:291px;width:293px}
+  .ref-messages__indicator{position:absolute;left:clamp(80px,14vw,165px);top:408px;display:grid;grid-template-columns:16px 16px minmax(80px,146px) 16px 16px;column-gap:clamp(10px,1.7vw,22px);align-items:center;margin:0;font-size:22px;line-height:31px}
+
+  /* COURSES -------------------------------------------------------------- */
+  .ref-courses{height:auto;min-height:0;padding:72px 0 66px}
+  .ref-courses .ref-content{width:min(1160px,calc(100% - 64px))}
+  .ref-courses__head{height:94px;margin-bottom:48px}
+  .ref-courses__head .ref-kicker{font-size:20px}
+  .ref-courses__head .ref-bracket-title{width:min(551px,100%);margin-top:20px;font-size:30px;line-height:42px}
+  .ref-courses__head .ref-bracket-title strong{font-size:clamp(36px,3.6vw,42px)}
+  .ref-courses__head .ref-bracket-title::before,.ref-courses__head .ref-bracket-title::after{font-size:clamp(42px,4vw,50px)}
+  .ref-courses__grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;grid-auto-rows:285px;column-gap:clamp(20px,3vw,40px)!important;row-gap:32px;justify-content:center;width:100%}
+  .ref-course,.ref-course:nth-child(7){width:100%;height:285px;min-height:285px}
+  .ref-course:nth-child(7){grid-column:1/-1;width:calc((100% - clamp(20px,3vw,40px))/2);justify-self:center}
+  .ref-course__icon{width:clamp(76px,8vw,100px);height:clamp(76px,8vw,100px)}
+  .ref-course__icon-svg{max-width:clamp(42px,4.5vw,56px);max-height:clamp(40px,4.5vw,56px)}
+  .ref-course h3{left:clamp(96px,10vw,124px);top:24px;right:20px;font-size:clamp(16px,1.7vw,20px);line-height:1.2}
+  .ref-course__desc{left:clamp(96px,10vw,124px);top:62px;right:20px;width:auto;font-size:clamp(13px,1.35vw,16px);line-height:1.35}
+  .ref-course__rec{left:16px;top:155px;width:calc(100% - 32px);height:106px;padding:40px 16px 14px}
+  .ref-course__rec-label{left:16px;width:min(189px,calc(100% - 32px));height:49px}
+  .ref-course__rec ul{width:100%;gap:9px;font-size:clamp(11px,1.15vw,13px)}
+  .ref-course__rec li{gap:8px;line-height:1.3}
+
+  /* LINKS ---------------------------------------------------------------- */
+  .ref-links{height:auto;min-height:220px;padding:0}
+  .ref-links__grid{display:grid!important;width:min(1088px,calc(100% - 64px))!important;height:auto!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;grid-template-rows:none!important;gap:clamp(12px,1.8vw,24px)!important;margin:0 auto;justify-content:center;align-items:start}
+  .ref-link-tile{width:100%;height:auto;aspect-ratio:1}
+  .ref-link-tile__shadow{left:4%;top:4%;width:96%;height:96%}
+  .ref-link-tile__face{width:96%;height:96%}
+  .ref-link-tile__copy{top:43%;font-size:clamp(14px,1.7vw,22px)}
+  .ref-link-tile--numbers .ref-link-tile__copy{top:31%;font-size:clamp(14px,1.7vw,22px)}
+  .ref-link-tile__numbers-kicker{font-size:clamp(12px,1.4vw,18px)}
+  .ref-link-tile__arrow{top:63%}
+  .ref-link-tile__instagram-copy{top:35%;font-size:clamp(13px,1.55vw,20px)}
+  .ref-link-tile__instagram-copy small{font-size:clamp(10px,1.1vw,14px)}
+
+  /* CTA VALUE ------------------------------------------------------------ */
+  .ref-portrait--left{width:clamp(150px,20vw,260px);height:auto;aspect-ratio:280/294;left:clamp(24px,7vw,104px);right:auto;bottom:0}
+  .ref-portrait--right{width:clamp(170px,24vw,310px);height:auto;aspect-ratio:335/293;right:clamp(18px,4vw,54px);left:auto;bottom:0}
+  .ref-portrait img{object-fit:contain;object-position:center top}
+  .ref-cta-value h2{max-width:46vw}
+  .ref-cta-value__actions{width:min(540px,52vw);gap:clamp(12px,2vw,20px)}
+  .ref-cta-value .ref-action{min-width:0;width:100%}
+}
