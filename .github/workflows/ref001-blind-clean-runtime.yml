@@ -72,6 +72,13 @@ jobs:
           cp experiments/ref001-blind-clean-20260812/tools/capture-first-pass.mjs /tmp/ref001-playwright/capture-runtime.mjs
           cd /tmp/ref001-playwright
           REF001_CAPTURE_DIR="$GITHUB_WORKSPACE/experiments/ref001-blind-clean-20260812/evidence/final/latest" node capture-runtime.mjs
+      - name: Observe variable-content stress
+        env:
+          NODE_PATH: /tmp/ref001-playwright/node_modules
+        run: |
+          cp experiments/ref001-blind-clean-20260812/tools/stress-variable-content.mjs /tmp/ref001-playwright/stress-variable-content.mjs
+          cd /tmp/ref001-playwright
+          REF001_STRESS_DIR="$GITHUB_WORKSPACE/experiments/ref001-blind-clean-20260812/evidence/final/latest/stress" node stress-variable-content.mjs
       - name: Persist final runtime evidence
         if: github.event_name == 'push'
         run: |
