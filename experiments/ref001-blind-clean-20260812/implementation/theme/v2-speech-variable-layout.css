@@ -150,19 +150,26 @@
     padding-top:50px;
   }
 
+  /* Figma's SP speech composition is a 288px outline plus a same-size white
+   * plane offset 7px right / 8px down. The composite envelope is therefore
+   * 295px wide and 168px tall (146px collapsed), while the stretchable anatomy
+   * in v2-speech-fluid-experiment.css intentionally draws the inner 288x160 /
+   * 288x138 layers with calc(100% - 7px/8px). Keep the semantic wrapper at the
+   * composite size; removing the former 8px bottom margin preserves the exact
+   * 218px top rail while allowing longer CMS copy to grow naturally. */
   .ref-speech{
     position:relative;
     left:auto;
     top:auto;
-    width:288px;
+    width:295px;
     height:auto;
-    min-height:160px;
-    margin:0 0 8px 32px;
+    min-height:168px;
+    margin:0 0 0 32px;
   }
 
   .ref-voice-item--collapsed .ref-speech{
     height:auto;
-    min-height:138px;
+    min-height:146px;
   }
 }
 
