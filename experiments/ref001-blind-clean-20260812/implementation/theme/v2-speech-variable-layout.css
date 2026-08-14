@@ -64,6 +64,59 @@
   }
 }
 
+@media (min-width:768px) and (max-width:1299px){
+  /* Continuity band: endpoint styling leaves the speech box absolutely
+   * positioned, so longer copy grows visually but its parent rail never grows.
+   * Put only the speech rail back into normal flow; keep the existing fluid
+   * content width and endpoint-specific 375/1380 compositions untouched. */
+  .ref-voice{
+    height:auto;
+  }
+
+  .ref-voice-item--open,
+  .ref-voice-item--collapsed,
+  .ref-voice-item--open>.ref-content,
+  .ref-voice-item--collapsed>.ref-content{
+    height:auto;
+  }
+
+  .ref-voice-item--open,
+  .ref-voice-item--open>.ref-content{
+    min-height:591px;
+  }
+
+  .ref-voice-item--collapsed,
+  .ref-voice-item--collapsed>.ref-content{
+    min-height:290px;
+  }
+
+  .ref-voice-item__top{
+    height:auto;
+    min-height:200px;
+    box-sizing:border-box;
+    padding-top:40px;
+  }
+
+  .ref-speech{
+    position:relative;
+    left:auto;
+    top:auto;
+    width:100%;
+    height:auto;
+    min-height:168px;
+    margin:0;
+  }
+
+  .ref-voice-item--collapsed .ref-speech{
+    height:auto;
+    min-height:168px;
+  }
+
+  .ref-speech h3{
+    white-space:normal;
+  }
+}
+
 @media (max-width:767px){
   .ref-voice{
     height:auto;
