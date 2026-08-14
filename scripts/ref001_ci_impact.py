@@ -102,7 +102,8 @@ class Impact:
 
 
 def _normalize(path: str) -> str:
-    return path.strip().replace("\\", "/").lstrip("./")
+    normalized = path.strip().replace("\\", "/")
+    return normalized[2:] if normalized.startswith("./") else normalized
 
 
 def needs_pr_human_review(paths: Iterable[str]) -> bool:
