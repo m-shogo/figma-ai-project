@@ -85,6 +85,26 @@
   .ref-messages__profile{position:absolute;left:0;top:291px;width:293px}
   .ref-messages__indicator{position:absolute;left:clamp(80px,14vw,165px);top:408px;display:grid;grid-template-columns:16px 16px minmax(80px,146px) 16px 16px;column-gap:clamp(10px,1.7vw,22px);align-items:center;margin:0;font-size:22px;line-height:31px}
 
+  /* COURSES -------------------------------------------------------------- */
+  .ref-courses{height:auto;min-height:0;padding:72px 0 66px}
+  .ref-courses .ref-content{width:min(1160px,calc(100% - 64px))}
+  .ref-courses__head{height:94px;margin-bottom:48px}
+  .ref-courses__head .ref-kicker{font-size:20px}
+  .ref-courses__head .ref-bracket-title{width:min(551px,100%);margin-top:20px;font-size:30px;line-height:42px}
+  .ref-courses__head .ref-bracket-title strong{font-size:clamp(36px,3.6vw,42px)}
+  .ref-courses__head .ref-bracket-title::before,.ref-courses__head .ref-bracket-title::after{font-size:clamp(42px,4vw,50px)}
+  .ref-courses__grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;grid-auto-rows:285px;column-gap:clamp(20px,3vw,40px)!important;row-gap:32px;justify-content:center;width:100%}
+  .ref-course,.ref-course:nth-child(7){width:100%;height:285px;min-height:285px}
+  .ref-course:nth-child(7){grid-column:1/-1;width:calc((100% - clamp(20px,3vw,40px))/2);justify-self:center}
+  .ref-course__icon{width:clamp(76px,8vw,100px);height:clamp(76px,8vw,100px)}
+  .ref-course__icon-svg{max-width:clamp(42px,4.5vw,56px);max-height:clamp(40px,4.5vw,56px)}
+  .ref-course h3{left:clamp(96px,10vw,124px);top:24px;right:20px;font-size:clamp(16px,1.7vw,20px);line-height:1.2}
+  .ref-course__desc{left:clamp(96px,10vw,124px);top:62px;right:20px;width:auto;font-size:clamp(13px,1.35vw,16px);line-height:1.35}
+  .ref-course__rec{left:16px;top:155px;width:calc(100% - 32px);height:106px;padding:40px 16px 14px}
+  .ref-course__rec-label{left:16px;width:min(189px,calc(100% - 32px));height:49px}
+  .ref-course__rec ul{width:100%;gap:9px;font-size:clamp(11px,1.15vw,13px)}
+  .ref-course__rec li{gap:8px;line-height:1.3}
+
   /* LINKS ---------------------------------------------------------------- */
   .ref-links{height:auto;min-height:220px;padding:0}
   .ref-links__grid{display:grid!important;width:min(1088px,calc(100% - 64px))!important;height:auto!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;grid-template-rows:none!important;gap:clamp(12px,1.8vw,24px)!important;margin:0 auto;justify-content:center;align-items:start}
