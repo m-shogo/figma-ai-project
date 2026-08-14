@@ -12,6 +12,7 @@ class Ref001CiImpactTests(unittest.TestCase):
         self.assertEqual(impact.widths, (375, 768, 1380))
         self.assertTrue(impact.run_browser)
         self.assertFalse(impact.run_stress)
+        self.assertFalse(impact.run_human_review_pr)
 
     def test_section_template_uses_breakpoint_boundaries_and_stress(self):
         impact = classify([
@@ -20,6 +21,7 @@ class Ref001CiImpactTests(unittest.TestCase):
         self.assertEqual(impact.mode, "section")
         self.assertEqual(impact.widths, (375, 767, 768, 1380))
         self.assertTrue(impact.run_stress)
+        self.assertFalse(impact.run_human_review_pr)
 
     def test_header_template_is_section_risk(self):
         impact = classify([
@@ -55,6 +57,19 @@ class Ref001CiImpactTests(unittest.TestCase):
         ])
         self.assertEqual(impact.mode, "full")
 
+    def test_human_review_workflow_change_runs_pr_human_review(self):
+        impact = classify([".github/workflows/publish-human-review.yml"])
+        self.assertEqual(impact.mode, "full")
+        self.assertTrue(impact.run_human_review_pr)
+
+    def test_review_dashboard_change_runs_pr_human_review(self):
+        impact = classify(["review-dashboard/app/visual-diff.js"])
+        self.assertTrue(impact.run_human_review_pr)
+
+    def test_figma_reference_change_runs_pr_human_review(self):
+        impact = classify(["research/figma-assets/ref001/reference.json"])
+        self.assertTrue(impact.run_human_review_pr)
+
     def test_test_only_change_skips_browser(self):
         impact = classify(["tests/test_ref001_v2_logo_contract.py"])
         self.assertEqual(impact.mode, "static")
@@ -78,6 +93,7 @@ class Ref001CiImpactTests(unittest.TestCase):
         impact = classify([])
         self.assertEqual(impact.mode, "full")
         self.assertTrue(impact.run_browser)
+        self.assertTrue(impact.run_human_review_pr)
 
 
 if __name__ == "__main__":
