@@ -42,6 +42,7 @@
    * composition scale with the card on wider/narrower phones:
    * title x=172/w=147, media x=16/w=140, list x=51/w=233. */
   .ref-edu-card h3{left:51.3433%;width:43.8806%}
+  .ref-edu-card__title-line{display:block}
   .ref-edu-card__media{left:4.7761%;width:41.791%}
   .ref-edu-card ul{left:15.2239%;width:69.5522%}
 
