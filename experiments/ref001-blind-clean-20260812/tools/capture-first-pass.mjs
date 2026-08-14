@@ -3,8 +3,9 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 
 const widths=[320,360,375,390,430,767,768,769,1024,1200,1380];
+const fluidMobileWidths=new Set([390,430,767]);
 const intermediateDesktopWidths=new Set([768,769,1024,1200]);
-const screenshotWidths=new Set([320,375,768,1024,1200,1380]);
+const screenshotWidths=new Set([320,375,430,767,768,1024,1200,1380]);
 const outDir=process.env.REF001_CAPTURE_DIR||path.resolve('experiments/ref001-blind-clean-20260812/evidence/runtime');
 await fs.mkdir(outDir,{recursive:true});
 const browser=await chromium.launch({headless:true});
@@ -41,7 +42,7 @@ for(const width of widths){
     await sleep(80);
   });
 
-  const metrics=await page.evaluate((isIntermediateDesktop)=>{
+  const metrics=await page.evaluate(({isIntermediateDesktop,isFluidMobile})=>{
     const body=document.body,de=document.documentElement;
     const sw=()=>Math.round(Math.max(body.scrollWidth,de.scrollWidth));
     const rect=selector=>document.querySelector(selector)?.getBoundingClientRect()||null;
@@ -60,6 +61,16 @@ for(const width of widths){
     }
 
     const layoutContractFailures=[];
+    let fluidMobile=null;
+    if(isFluidMobile){
+      const expectedRail=Math.min(560,innerWidth-32);
+      const railSelectors=['.ref-mv__copy','.ref-education .ref-content','.ref-voice-item--open>.ref-content','.ref-messages__body','.ref-courses .ref-content'];
+      const rails=railSelectors.map(selector=>{const r=rect(selector);return{selector,width:r?+r.width.toFixed(1):null,left:r?+r.left.toFixed(1):null,right:r?+r.right.toFixed(1):null}});
+      const railFailures=rails.filter(x=>x.width===null||Math.abs(x.width-expectedRail)>1.5).map(x=>`${x.selector}:${x.width}`);
+      fluidMobile={expectedRail,rails,railFailures};
+      if(railFailures.length)layoutContractFailures.push(`fluid-mobile-rails=${railFailures.join('|')}`);
+    }
+
     let intermediateDesktop=null;
     if(isIntermediateDesktop){
       const reasonHeading=rect('.ref-reason__head h2');
@@ -93,8 +104,8 @@ for(const width of widths){
       if(courseCards.length!==7||courseCompositionFailures.length)layoutContractFailures.push(`courses=${courseCompositionFailures.join('|')||`count-${courseCards.length}`}`);
     }
 
-    return{bodyHeight:Math.round(Math.max(body.scrollHeight,de.scrollHeight)),scrollWidth:sw(),pageOverflowPx:Math.max(0,sw()-innerWidth),readableTextClipping:clipped,overflowElements,overflowDiagnostics,imageFailures,intermediateDesktop,layoutContractFailures,primaryFonts:{zenKakuGothicNew:document.fonts.check('16px "Zen Kaku Gothic New"'),poppins:document.fonts.check('16px Poppins')},sections};
-  },intermediateDesktopWidths.has(width));
+    return{bodyHeight:Math.round(Math.max(body.scrollHeight,de.scrollHeight)),scrollWidth:sw(),pageOverflowPx:Math.max(0,sw()-innerWidth),readableTextClipping:clipped,overflowElements,overflowDiagnostics,imageFailures,fluidMobile,intermediateDesktop,layoutContractFailures,primaryFonts:{zenKakuGothicNew:document.fonts.check('16px "Zen Kaku Gothic New"'),poppins:document.fonts.check('16px Poppins')},sections};
+  },{isIntermediateDesktop:intermediateDesktopWidths.has(width),isFluidMobile:fluidMobileWidths.has(width)});
   metrics.width=width;
   metrics.runtimeErrors=runtimeErrors;
   metrics.captureEnvironment={browser:'chromium',browserVersion,platform:process.platform,deviceScaleFactor:1,reducedMotion:'reduce',colorScheme:'light'};
@@ -104,10 +115,10 @@ for(const width of widths){
 }
 await browser.close();
 await fs.writeFile(path.join(outDir,'runtime-probes.json'),JSON.stringify(results,null,2)+'\n');
-const summary=results.map(x=>({width:x.width,bodyHeight:x.bodyHeight,pageOverflowPx:x.pageOverflowPx,readableTextClipping:x.readableTextClipping.length,imageFailures:x.imageFailures.length,layoutContractFailures:x.layoutContractFailures.length,intermediateDesktop:x.intermediateDesktop,primaryFonts:x.primaryFonts,runtimeErrors:x.runtimeErrors.length,captureEnvironment:x.captureEnvironment}));
+const summary=results.map(x=>({width:x.width,bodyHeight:x.bodyHeight,pageOverflowPx:x.pageOverflowPx,readableTextClipping:x.readableTextClipping.length,imageFailures:x.imageFailures.length,layoutContractFailures:x.layoutContractFailures.length,fluidMobile:x.fluidMobile,intermediateDesktop:x.intermediateDesktop,primaryFonts:x.primaryFonts,runtimeErrors:x.runtimeErrors.length,captureEnvironment:x.captureEnvironment}));
 console.log(JSON.stringify(summary,null,2));
 for(const r of results.filter(x=>x.pageOverflowPx>0)){console.log(`OVERFLOW DEBUG @ ${r.width}px`);console.log(JSON.stringify({elements:r.overflowElements,diagnostics:r.overflowDiagnostics},null,2))}
 for(const r of results.filter(x=>x.imageFailures.length)){console.log(`IMAGE DEBUG @ ${r.width}px`);console.log(JSON.stringify(r.imageFailures,null,2))}
-for(const r of results.filter(x=>x.layoutContractFailures.length)){console.log(`LAYOUT CONTRACT DEBUG @ ${r.width}px`);console.log(JSON.stringify({intermediateDesktop:r.intermediateDesktop,failures:r.layoutContractFailures},null,2))}
+for(const r of results.filter(x=>x.layoutContractFailures.length)){console.log(`LAYOUT CONTRACT DEBUG @ ${r.width}px`);console.log(JSON.stringify({fluidMobile:r.fluidMobile,intermediateDesktop:r.intermediateDesktop,failures:r.layoutContractFailures},null,2))}
 const hardFailures=results.flatMap(x=>{const f=[];if(x.pageOverflowPx>0)f.push(`${x.width}:overflow=${x.pageOverflowPx}`);if(x.imageFailures.length)f.push(`${x.width}:imageFailures=${x.imageFailures.length}`);if(x.runtimeErrors.length)f.push(`${x.width}:runtimeErrors=${x.runtimeErrors.length}`);if(x.layoutContractFailures.length)f.push(`${x.width}:layout=${x.layoutContractFailures.join('|')}`);return f});
 if(hardFailures.length){console.error('Runtime probe hard failures:',hardFailures.join(', '));process.exitCode=1}
