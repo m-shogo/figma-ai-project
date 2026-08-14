@@ -53,4 +53,5 @@ if (function_exists('add_action')) { add_action('wp_enqueue_scripts', function()
     wp_enqueue_style('ref001-v2-continuity-fixes', get_stylesheet_directory_uri() . '/v2-continuity-fixes.css', ['ref001-v2-cta-value-polish'], '0.1.0');
     wp_enqueue_style('ref001-v2-hotspot-repair', get_stylesheet_directory_uri() . '/v2-hotspot-repair.css', ['ref001-v2-continuity-fixes'], '0.1.0');
     wp_enqueue_style('ref001-v2-footer-sns-position', get_stylesheet_directory_uri() . '/v2-footer-sns-position.css', ['ref001-v2-hotspot-repair'], '0.1.0');
+    wp_enqueue_style('ref001-v2-speech-fluid-experiment', get_stylesheet_directory_uri() . '/v2-speech-fluid-experiment.css', ['ref001-v2-footer-sns-position'], '0.1.0');
 }); }
