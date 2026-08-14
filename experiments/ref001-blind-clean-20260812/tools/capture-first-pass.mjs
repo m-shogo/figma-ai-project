@@ -3,7 +3,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 
 const widths=[320,360,375,390,430,767,768,769,1024,1200,1380];
-const fluidMobileWidths=new Set([390,430,767]);
+const fluidMobileWidths=new Set([375,390,430,767]);
 const intermediateDesktopWidths=new Set([768,769,1024,1200]);
 const screenshotWidths=new Set([320,375,430,767,768,1024,1200,1380]);
 const outDir=process.env.REF001_CAPTURE_DIR||path.resolve('experiments/ref001-blind-clean-20260812/evidence/runtime');
@@ -67,8 +67,51 @@ for(const width of widths){
       const railSelectors=['.ref-mv__copy','.ref-education .ref-content','.ref-voice-item--open>.ref-content','.ref-messages__body','.ref-courses .ref-content'];
       const rails=railSelectors.map(selector=>{const r=rect(selector);return{selector,width:r?+r.width.toFixed(1):null,left:r?+r.left.toFixed(1):null,right:r?+r.right.toFixed(1):null}});
       const railFailures=rails.filter(x=>x.width===null||Math.abs(x.width-expectedRail)>1.5).map(x=>`${x.selector}:${x.width}`);
-      fluidMobile={expectedRail,rails,railFailures};
+
+      // A fluid outer rail must not erase authored child-component anchors.
+      // 375px is the Figma reference: CTA Value is 240px and Shared CTA is
+      // 262px there. Above 375px each may grow, but only up to its readable cap.
+      const expectedCtaValue=Math.min(300,Math.max(240,240+(innerWidth-375)*.55));
+      const expectedSharedCta=Math.min(360,Math.max(262,262+(innerWidth-375)*.55));
+      const ctaValueActions=rect('.ref-cta-value__actions');
+      const sharedCtaActions=rect('.ref-shared-cta__actions');
+      const componentAnchorFailures=[];
+      if(!ctaValueActions||Math.abs(ctaValueActions.width-expectedCtaValue)>1.5)componentAnchorFailures.push(`cta-value:${ctaValueActions?+ctaValueActions.width.toFixed(1):null}/${+expectedCtaValue.toFixed(1)}`);
+      if(!sharedCtaActions||Math.abs(sharedCtaActions.width-expectedSharedCta)>1.5)componentAnchorFailures.push(`shared-cta:${sharedCtaActions?+sharedCtaActions.width.toFixed(1):null}/${+expectedSharedCta.toFixed(1)}`);
+
+      // SP copy has an authored semantic two-line rhythm. Keep the text live,
+      // but make the line boundary explicit so wide phones cannot pull "も"
+      // onto line one and narrow phones cannot invent a third line.
+      const sharedCta=document.querySelector('.ref-shared-cta');
+      const sharedLines=sharedCta?[...sharedCta.querySelectorAll('.ref-shared-cta__line')]:[];
+      const expectedLineText=['千葉経済大学を','もっと知ろう！'];
+      const sharedLineRects=sharedLines.map(el=>el.getBoundingClientRect());
+      const sharedLineFailures=[];
+      if(sharedLines.length!==2)sharedLineFailures.push(`count-${sharedLines.length}`);
+      sharedLines.forEach((el,index)=>{
+        if((el.textContent||'').trim()!==expectedLineText[index])sharedLineFailures.push(`${index+1}:text`);
+        const r=sharedLineRects[index];
+        if(!r||r.width<=0||r.height<=0)sharedLineFailures.push(`${index+1}:rect`);
+        if(getComputedStyle(el).display!=='block')sharedLineFailures.push(`${index+1}:display`);
+      });
+      if(sharedLineRects.length===2&&Math.abs(sharedLineRects[1].top-sharedLineRects[0].top)<10)sharedLineFailures.push('same-line');
+
+      fluidMobile={
+        expectedRail,
+        rails,
+        railFailures,
+        componentAnchors:{
+          expectedCtaValue:+expectedCtaValue.toFixed(1),
+          actualCtaValue:ctaValueActions?+ctaValueActions.width.toFixed(1):null,
+          expectedSharedCta:+expectedSharedCta.toFixed(1),
+          actualSharedCta:sharedCtaActions?+sharedCtaActions.width.toFixed(1):null,
+          failures:componentAnchorFailures,
+        },
+        sharedCtaLines:{count:sharedLines.length,failures:sharedLineFailures},
+      };
       if(railFailures.length)layoutContractFailures.push(`fluid-mobile-rails=${railFailures.join('|')}`);
+      if(componentAnchorFailures.length)layoutContractFailures.push(`fluid-component-anchors=${componentAnchorFailures.join('|')}`);
+      if(sharedLineFailures.length)layoutContractFailures.push(`shared-cta-lines=${sharedLineFailures.join('|')}`);
     }
 
     let intermediateDesktop=null;
@@ -97,11 +140,23 @@ for(const width of widths){
         if(!inside(rec)||rec.width<cr.width*.8||rec.top<cr.top+135)courseCompositionFailures.push(`${index+1}:rec`);
       }
 
-      intermediateDesktop={reasonOverlapPx,educationCardTopSpreadPx,voiceAvatarSpeechOverlapPx,courseCompositionFailures};
+      // The intermediate desktop MV must own the entire OPEN CAMPUS badge.
+      // Previously its orange shell survived while OPEN/CAMPUS and 開催中！
+      // fell outside/behind the badge; a pure overflow check could not see that.
+      const mvBadge=rect('.ref-mv__oc');
+      const mvBadgeTitle=rect('.ref-mv__oc b');
+      const mvBadgeStatus=rect('.ref-mv__oc small');
+      const mvBadgeTextFailures=[];
+      const insideBadge=(r)=>mvBadge&&r&&r.width>0&&r.height>0&&r.left>=mvBadge.left-1&&r.right<=mvBadge.right+1&&r.top>=mvBadge.top-1&&r.bottom<=mvBadge.bottom+1;
+      if(!insideBadge(mvBadgeTitle))mvBadgeTextFailures.push('title');
+      if(!insideBadge(mvBadgeStatus))mvBadgeTextFailures.push('status');
+
+      intermediateDesktop={reasonOverlapPx,educationCardTopSpreadPx,voiceAvatarSpeechOverlapPx,courseCompositionFailures,mvBadgeTextFailures};
       if(reasonOverlapPx===null||reasonOverlapPx>.5)layoutContractFailures.push(`reason-heading-overlap=${reasonOverlapPx}`);
       if(educationCardTopSpreadPx===null||educationCardTopSpreadPx>2)layoutContractFailures.push(`education-row-spread=${educationCardTopSpreadPx}`);
       if(voiceAvatarSpeechOverlapPx===null||voiceAvatarSpeechOverlapPx>.5)layoutContractFailures.push(`voice-avatar-speech-overlap=${voiceAvatarSpeechOverlapPx}`);
       if(courseCards.length!==7||courseCompositionFailures.length)layoutContractFailures.push(`courses=${courseCompositionFailures.join('|')||`count-${courseCards.length}`}`);
+      if(mvBadgeTextFailures.length)layoutContractFailures.push(`mv-badge=${mvBadgeTextFailures.join('|')}`);
     }
 
     return{bodyHeight:Math.round(Math.max(body.scrollHeight,de.scrollHeight)),scrollWidth:sw(),pageOverflowPx:Math.max(0,sw()-innerWidth),readableTextClipping:clipped,overflowElements,overflowDiagnostics,imageFailures,fluidMobile,intermediateDesktop,layoutContractFailures,primaryFonts:{zenKakuGothicNew:document.fonts.check('16px "Zen Kaku Gothic New"'),poppins:document.fonts.check('16px Poppins')},sections};
