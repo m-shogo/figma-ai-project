@@ -71,7 +71,8 @@ Consider several techniques instead of defaulting to one recipe:
 - `border-image` / 9-slice — useful when authored edges can safely stretch or repeat; reject when stretching distorts a distinctive tail/gap;
 - SVG overlay — useful for fixed adornment; avoid stretching a full fixed path when its distinctive geometry would deform;
 - mask/clip-path — useful when the silhouette is the main contract and content remains inside a flexible box;
-- emerging `border-shape` / percentage-based `shape()` — track as external E0 evidence until browser support and local runs justify production use.
+- emerging `border-shape` / percentage-based `shape()` — track as external E0 evidence until browser support and local runs justify production use;
+- CSS Anchor Positioning — promising for keeping a fixed tail or connector aligned to a nearby avatar while the bubble grows. Treat it as E0 until the full `position-anchor` stack is sufficiently compatible with the project's browser contract; `anchor()` itself reached Baseline 2026 before every related property did.
 
 The best technique is the one that preserves the authored invariant while allowing the intended variable dimension to change.
 
