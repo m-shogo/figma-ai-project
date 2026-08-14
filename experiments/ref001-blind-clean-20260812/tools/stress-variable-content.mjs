@@ -2,7 +2,10 @@ import { chromium } from 'playwright';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
-const widths = [375, 1380];
+// Cover both authored endpoints and the continuity seams around the SP/PC split.
+// A variable-content repair is not complete if only 375/1380 survive while the
+// same CMS copy breaks at tablet widths.
+const widths = [320, 375, 767, 768, 1024, 1299, 1300, 1380];
 const outDir = process.env.REF001_STRESS_DIR || path.resolve('experiments/ref001-blind-clean-20260812/evidence/stress/latest');
 await fs.mkdir(outDir, { recursive: true });
 
@@ -76,4 +79,4 @@ for (const width of widths) {
 await browser.close();
 await fs.writeFile(path.join(outDir, 'variable-content-stress.json'), JSON.stringify({ mode: 'soft-observation', results }, null, 2) + '\n');
 console.log(JSON.stringify({ mode: 'soft-observation', results }, null, 2));
-console.log('Variable-content stress probe is observational only; promote to a hard gate after the layout is proven robust.');
+console.log('Variable-content stress probe is observational only; promote to a hard gate after the full continuity matrix is proven robust.');
