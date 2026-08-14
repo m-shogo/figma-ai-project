@@ -62,11 +62,11 @@
   .ref-voice-item>.ref-content{width:var(--ref-sp-fluid-rail);max-width:none}
   /* Figma SP comment border is x=48/w=288 inside the 343px content rail.
    * Keep the authored 32px left inset and 23px right inset rather than the
-   * broader 295px first-pass bubble. The internal title/profile widths are
-   * derived from the speech content box so 375px resolves to 188/240px, then
-   * can grow naturally on wider phones. */
-  .ref-speech{width:calc(100% - 55px);height:160px}
-  .ref-voice-item--collapsed .ref-speech{height:138px}
+   * broader 295px first-pass bubble. Height remains owned by the variable-copy
+   * layer as auto + the authored 160/138px minimums, so CMS text can grow
+   * without clipping. The internal title/profile widths resolve to 188/240px
+   * at 375px and grow naturally on wider phones. */
+  .ref-speech{width:calc(100% - 55px)}
   .ref-speech h3{width:min(320px,calc(100% - 50px))}
   .ref-speech p{width:calc(100% + 2px)}
   .ref-voice-open__photo,
