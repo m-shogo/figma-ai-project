@@ -42,6 +42,8 @@ for (const width of widths) {
         ? item.querySelector('.ref-voice-open__detail')
         : item?.querySelector('.ref-voice-more');
       const nextRect = nextBlock?.getBoundingClientRect() || null;
+      const scrollOverflowX = Math.max(0, bubble.scrollWidth - bubble.clientWidth);
+      const visualOverflowX = Math.max(0, contentRight - rect.right, rect.left - contentLeft);
       return {
         index,
         open: Boolean(item?.classList.contains('ref-voice-item--open')),
@@ -50,8 +52,8 @@ for (const width of widths) {
         clientWidth: bubble.clientWidth,
         scrollHeight: bubble.scrollHeight,
         clientHeight: bubble.clientHeight,
-        horizontalOverflowPx: px(Math.max(0, contentRight - rect.right, rect.left - contentLeft)),
-        verticalOverflowPx: px(Math.max(0, contentBottom - rect.bottom)),
+        horizontalOverflowPx: px(Math.max(scrollOverflowX, visualOverflowX)),
+        verticalOverflowPx: px(Math.max(0, bubble.scrollHeight - bubble.clientHeight, contentBottom - rect.bottom)),
         nextBlockOverlapPx: nextRect ? px(Math.max(0, contentBottom - nextRect.top)) : 0,
         topContainerOverflowPx: top ? px(Math.max(0, contentBottom - top.getBoundingClientRect().bottom)) : 0,
       };
