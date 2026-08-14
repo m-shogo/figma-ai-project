@@ -48,6 +48,32 @@ Human Review also confirmed that the outline anatomy moved visibly closer to Fig
 
 Reusable condition: multiple CSS backgrounds are useful when the authored shape can be decomposed into independently stretchable lines/planes and fixed adornments.
 
+### C — content-driven parent chain
+
+Result: accepted in PR #113 after stress observation exposed two different failure modes.
+
+Observed before repair:
+
+- SP 375: fixed speech heights produced about 237px vertical overflow in the open card and about 176px in each collapsed card, with collisions into following content;
+- PC 1380: the authored endpoint `nowrap` assumption produced about 1819px horizontal overflow in the open card and about 752px in collapsed cards when copy was deliberately lengthened.
+
+The repair did not make only the speech element `height:auto`. It relaxed the whole ownership chain while retaining authored endpoint dimensions as minimums:
+
+`speech -> top rail -> item/content -> Student Voice section`
+
+PC also allows the title to wrap under stress. After repair, the same stress fixture reported zero horizontal overflow, zero vertical overflow, zero local-container overflow and zero next-block collision at both 375 and 1380.
+
+The normal authored fixture remained stable at the acceptance endpoints:
+
+- body height: 10777px at 375 and 7714px at 1380;
+- Student Voice height: 1758px SP and 1393px PC;
+- fresh Section Diff remained effectively unchanged: about 7.51% SP and 3.25% PC;
+- direct Human Review of the fresh Web/Figma crops showed no new material visual regression.
+
+At 320px the normal page becomes taller because the narrower viewport legitimately wraps content; horizontal overflow remains zero. Treat safe content-driven growth below an authored endpoint as continuity behavior, not as a regression merely because total page height differs.
+
+Reusable rule: when a variable child is allowed to grow, every fixed-height ancestor that owns its flow must be audited. Preserve exact authored dimensions as `min-height` where appropriate, then let the parent chain grow. A fixed child converted to `auto` inside fixed ancestors is not a variable-content solution.
+
 ## Variable-content QA must be separate from Figma acceptance QA
 
 The normal Figma fixture proves fidelity for the authored content. It does not prove that longer CMS/ACF content will remain safe.
@@ -61,6 +87,8 @@ Use a separate stress probe that deliberately lengthens content and records:
 - PC/SP screenshots and structured measurements.
 
 Start this probe as observation-only. Promote it to a hard CI gate only after the variable layout has been repaired and the expected limits are stable. This prevents a new validator from blocking development before the underlying contract is understood.
+
+A stress probe is itself production tooling and must be validated. REF-001 initially missed the PC failure because descendant bounding boxes did not expose the element's full scrollable overflow. Comparing `scrollWidth/clientWidth` and `scrollHeight/clientHeight` closed that blind spot. Validate the measuring instrument before trusting a PASS.
 
 ## Candidate techniques and adoption boundary
 
