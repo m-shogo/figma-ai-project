@@ -99,7 +99,9 @@
   .ref-link-tile__instagram-copy small{font-size:clamp(10px,3.2vw,13px)}
 
   /* CTA VALUE ----------------------------------------------------------- */
-  .ref-cta-value__actions{width:min(300px,calc(100vw - 64px));grid-template-columns:1fr}
+  /* Keep the authored 375px action lane exact (240px), then let it grow on
+   * wider phones instead of freezing the whole SP composition at that width. */
+  .ref-cta-value__actions{width:clamp(240px,calc(240px + (100vw - 375px)*.55),300px);grid-template-columns:1fr}
   .ref-cta-value .ref-action{width:100%!important}
 }
 
