@@ -25,10 +25,25 @@
 
 @media (min-width:1300px){
   .ref-education__head{grid-template-columns:263px 1fr;gap:14px;align-items:center;margin-bottom:38px}
-  .ref-education__title h2{font-size:42px;line-height:1;margin:24px 0 0 -10px;font-weight:500;letter-spacing:.05em;white-space:nowrap}
-  .ref-education__intro{padding-left:43px;border-left:2px solid #7fc9ed}
-  .ref-education__intro h3{font-size:24px;line-height:1;margin:0;display:inline;background:linear-gradient(transparent 70%,var(--ref-orange) 0)}
-  .ref-education__intro p{font-size:16px;line-height:1.6;letter-spacing:.05em;margin:14px 0 0;max-width:610px}
+  /* Figma PC title group is authored lower than the generic grid alignment:
+   * kicker local y=85 and h2 text-box local y=129. Relative offsets preserve
+   * normal flow, so the already-correct card rail at local y=224 does not move. */
+  .ref-education__title .ref-kicker{position:relative;top:12px}
+  .ref-education__title h2{position:relative;top:8px;font-size:42px;line-height:1;margin:24px 0 0 -10px;font-weight:500;letter-spacing:.05em;white-space:nowrap}
+
+  /* Figma uses a 20x112 decorative vector frame at x=387 whose visible vertical
+   * stroke sits at x=406. The first-pass border was drawn at x=387 instead.
+   * Keep the text rail at x=430, but own the line/notch as section-local CSS
+   * decoration so all heading/body copy remains live and editable. */
+  .ref-education .ref-education__intro{position:relative;padding-left:43px;border-left:0}
+  .ref-education .ref-education__intro::after{content:"";position:absolute;left:19px;top:0;width:1px;height:112px;background:#7fc9ed;pointer-events:none}
+  .ref-education .ref-education__intro::before{content:"";position:absolute;left:2px;top:calc(50% + 7px);width:16px;height:16px;background:var(--ref-beige);border-left:1px solid #7fc9ed;border-bottom:1px solid #7fc9ed;transform:translateY(-50%) rotate(45deg);pointer-events:none}
+
+  .ref-education__intro h3{position:relative;top:10px;display:inline-block;isolation:isolate;font-size:24px;line-height:1;margin:0;background:none}
+  /* Figma underline is an authored 402x8 bar, intentionally wider than the
+   * heading glyphs. A pseudo keeps that geometry independent from copy width. */
+  .ref-education__intro h3::after{content:"";position:absolute;left:0;bottom:-4px;width:402px;height:8px;background:var(--ref-orange);z-index:-1;pointer-events:none}
+  .ref-education__intro p{position:relative;top:9px;font-size:16px;line-height:1.6;letter-spacing:.05em;margin:14px 0 0;max-width:492px}
 
   .ref-education__steps{display:flex!important;width:1244px!important;left:auto!important;transform:none!important;margin-left:-46px;gap:0!important;align-items:center}
   .ref-edu-card{flex:0 0 281px;width:281px;height:380px;min-height:380px;padding:0 24px 22px}
