@@ -1,6 +1,6 @@
 <section class="ref-shared-cta" data-section="shared-cta">
     <div class="ref-shared-cta__inner">
-        <h2>千葉経済大学をもっと知ろう！</h2>
+        <h2><span class="ref-shared-cta__line">千葉経済大学を</span><span class="ref-shared-cta__line">もっと知ろう！</span></h2>
         <div class="ref-shared-cta__actions">
             <a href="<?php ref001_e(ref001_link_url('document')); ?>" class="ref-action ref-action--blue" data-link-status="UNRESOLVED"><?php ref001_icon('document', 'ref-action__icon'); ?><span>資料請求</span></a>
             <a href="<?php ref001_e(ref001_link_url('open-campus')); ?>" class="ref-action ref-action--purple" data-link-status="UNRESOLVED"><?php ref001_icon('open-campus', 'ref-action__icon'); ?><span>オープンキャンパス</span></a>
