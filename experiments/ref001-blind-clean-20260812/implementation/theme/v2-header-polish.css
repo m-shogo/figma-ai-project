@@ -1,14 +1,10 @@
 /* REF-001 V2 — Header fidelity owner.
  * Figma PC instance 21378:8066 / SP instance 21376:4918.
- * The original first pass invented a rotated CSS diamond. Reuse the exact
- * Figma-derived CK vector mark already committed for the footer instead.
+ * The university logo is the exact Figma vector artwork, including outlined
+ * Japanese/English lettering, exported as one SVG asset.
  */
-.ref-header-logo{display:flex;align-items:flex-start;position:relative;flex:none}
-.ref-header-logo__mark{display:block;flex:none}
-.ref-header-logo__type{position:relative;flex:none;height:100%}
-.ref-header-logo__jp,.ref-header-logo__en{position:absolute;display:block;white-space:nowrap;line-height:1}
-.ref-header-logo__jp{font-family:var(--ref-font-jp);font-weight:900;color:#231815;letter-spacing:.07em}
-.ref-header-logo__en{font-family:var(--ref-font-en);font-weight:500;color:#46277d;letter-spacing:.04em;text-align:center}
+.ref-header-logo{display:block;position:relative;flex:none}
+.ref-header-logo__image{display:block;width:100%;height:100%}
 .ref-header__actions .ref-action{font-size:14px;line-height:1;letter-spacing:.05em;gap:16px;padding:0}
 .ref-header__actions .ref-action__icon{display:block;width:16px;height:16px;object-fit:contain}
 
@@ -16,10 +12,6 @@
   .ref-header{height:94px}
   .ref-header__inner{height:94px;padding:0 48px}
   .ref-header-logo{width:187px;height:47px}
-  .ref-header-logo__mark{width:43.3px;height:47px}
-  .ref-header-logo__type{width:143.7px}
-  .ref-header-logo__jp{left:10px;top:12px;font-size:18px;width:134px}
-  .ref-header-logo__en{left:42px;top:36px;font-size:6.5px;width:72px}
   .ref-header__actions{display:flex;gap:16px}
   .ref-header__actions .ref-action{width:201px;height:46px;min-height:46px}
 }
@@ -28,9 +20,5 @@
   .ref-header{height:67px}
   .ref-header__inner{height:67px;padding:0 16px;display:flex;align-items:center}
   .ref-header-logo{width:140px;height:35px}
-  .ref-header-logo__mark{width:32.45px;height:35px}
-  .ref-header-logo__type{width:107.55px}
-  .ref-header-logo__jp{left:8px;top:8px;font-size:14px;width:100px;letter-spacing:.06em}
-  .ref-header-logo__en{left:31px;top:27px;font-size:5px;width:57px}
   .ref-header__actions{display:none!important}
 }
