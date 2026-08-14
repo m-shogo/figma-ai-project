@@ -77,6 +77,22 @@ for (const width of widths) {
 }
 
 await browser.close();
-await fs.writeFile(path.join(outDir, 'variable-content-stress.json'), JSON.stringify({ mode: 'soft-observation', results }, null, 2) + '\n');
-console.log(JSON.stringify({ mode: 'soft-observation', results }, null, 2));
-console.log('Variable-content stress probe is observational only; promote to a hard gate after the full continuity matrix is proven robust.');
+
+const failures = results.filter(result => result.hasStressFailure);
+const report = { mode: 'hard-gate', results };
+await fs.writeFile(path.join(outDir, 'variable-content-stress.json'), JSON.stringify(report, null, 2) + '\n');
+console.log(JSON.stringify(report, null, 2));
+
+if (failures.length) {
+  const details = failures.map(result => {
+    const bad = result.bubbles
+      .filter(b => b.horizontalOverflowPx > 0.5 || b.verticalOverflowPx > 0.5 || b.nextBlockOverlapPx > 0.5 || b.topContainerOverflowPx > 0.5)
+      .map(b => `bubble${b.index}[x=${b.horizontalOverflowPx},y=${b.verticalOverflowPx},next=${b.nextBlockOverlapPx},top=${b.topContainerOverflowPx}]`)
+      .join(' ');
+    return `${result.viewport}px ${bad}`;
+  });
+  console.error(`Variable-content stress gate failed: ${details.join('; ')}`);
+  process.exitCode = 1;
+} else {
+  console.log(`PASS variable-content stress gate viewports=${widths.join(',')}`);
+}
