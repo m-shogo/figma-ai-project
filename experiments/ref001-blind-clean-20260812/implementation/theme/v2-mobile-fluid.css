@@ -44,9 +44,12 @@
   /* SHARED CTA ---------------------------------------------------------- */
   /* The Figma SP title is visually two lines. The available Web fallback is
    * slightly wider than the design font, so give the live heading a small
-   * compensated box instead of accepting a third line. Buttons stay at the
-   * authored 262px lane at 375px, then grow only on wider phones. */
+   * compensated box and preserve the authored semantic line boundary instead
+   * of allowing a third line or pulling the next word upward on wide phones.
+   * Buttons stay at the authored 262px lane at 375px, then grow only on wider
+   * phones. */
   .ref-shared-cta h2{width:clamp(190px,calc(190px + (100vw - 375px)*.25),220px)}
+  .ref-shared-cta__line{display:block}
   .ref-shared-cta__actions{left:50%;right:auto;width:clamp(262px,calc(262px + (100vw - 375px)*.55),360px);transform:translateX(-50%)}
 
   /* STUDENT VOICE ------------------------------------------------------- */
