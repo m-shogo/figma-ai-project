@@ -4,7 +4,9 @@ from __future__ import annotations
 import argparse
 import json
 import re
+from html.parser import HTMLParser
 from pathlib import Path
+from urllib.parse import urlsplit
 
 EPHEMERAL_FIGMA_ASSET = re.compile(r"https://(?:www\.)?figma\.com/api/mcp/asset/", re.IGNORECASE)
 REQUIRED_SECTIONS = [
@@ -24,8 +26,49 @@ REQUIRED_SECTIONS = [
 ]
 
 
+class StylesheetHrefParser(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__()
+        self.hrefs: list[str] = []
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        if tag.lower() != "link":
+            return
+        values = {key.lower(): value for key, value in attrs if key}
+        rel = (values.get("rel") or "").lower().split()
+        href = values.get("href")
+        if "stylesheet" in rel and href:
+            self.hrefs.append(href)
+
+
 def text(path: Path) -> str:
     return path.read_text(encoding="utf-8")
+
+
+def local_stylesheet_hrefs(html: str) -> list[str]:
+    parser = StylesheetHrefParser()
+    parser.feed(html)
+    return [
+        href
+        for href in parser.hrefs
+        if not urlsplit(href).scheme and not urlsplit(href).netloc and not href.startswith("//")
+    ]
+
+
+def validate_preview_stylesheets(preview_root: Path, html: str, label: str) -> list[str]:
+    errors: list[str] = []
+    hrefs = local_stylesheet_hrefs(html)
+    if not hrefs:
+        return [f"{label} preview must reference at least one local stylesheet"]
+    for href in hrefs:
+        parsed = urlsplit(href)
+        relative = Path(parsed.path)
+        if not parsed.path or relative.is_absolute() or ".." in relative.parts:
+            errors.append(f"{label} preview has unsafe stylesheet reference: {href}")
+            continue
+        if not (preview_root / relative).is_file():
+            errors.append(f"{label} preview stylesheet referenced by HTML is missing: {href}")
+    return errors
 
 
 def validate_site(root: Path) -> list[str]:
@@ -102,10 +145,13 @@ def validate_site(root: Path) -> list[str]:
             errors.append(f"{viewport} deterministic Figma capture path does not exist")
 
     preview_html = text(latest_preview / "index.html")
+    run_preview_html = text(run_preview / "index.html")
     if "data-ref001-page" not in preview_html:
         errors.append("Artifact Preview does not contain the actual REF-001 page marker")
     if "Human Visual Review" in preview_html:
         errors.append("Artifact Preview must not include Human Review UI")
+    errors.extend(validate_preview_stylesheets(latest_preview, preview_html, "latest"))
+    errors.extend(validate_preview_stylesheets(run_preview, run_preview_html, "run-2"))
 
     app_js = text(latest_review / "app.js")
     assist_js = text(latest_review / "review-assist.js")
