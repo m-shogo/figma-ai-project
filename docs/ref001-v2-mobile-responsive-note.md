@@ -1,0 +1,1 @@
+REF-001 V2 mobile layout uses the SP composition through 767px, but the 375px Figma frame is only the reference endpoint. Mobile content rails must remain fluid between 320px and 767px rather than freezing 375px-authored constants. PC composition starts at 768px. This note exists to prevent future endpoint-fidelity patches from reintroducing fixed-width mobile rails.
