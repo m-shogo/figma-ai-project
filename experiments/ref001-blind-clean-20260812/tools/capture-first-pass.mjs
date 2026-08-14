@@ -70,10 +70,27 @@ for(const width of widths){
       const reasonOverlapPx=reasonHeading&&reasonIntro?Math.max(0,reasonHeading.bottom-reasonIntro.top):null;
       const educationCardTopSpreadPx=educationCards.length?Math.max(...educationCards.map(r=>r.top))-Math.min(...educationCards.map(r=>r.top)):null;
       const voiceAvatarSpeechOverlapPx=voiceAvatar&&voiceSpeech?Math.max(0,Math.min(voiceAvatar.right,voiceSpeech.right)-Math.max(voiceAvatar.left,voiceSpeech.left)):null;
-      intermediateDesktop={reasonOverlapPx,educationCardTopSpreadPx,voiceAvatarSpeechOverlapPx};
+
+      const courseCards=[...document.querySelectorAll('.ref-course')];
+      const courseCompositionFailures=[];
+      for(const [index,card] of courseCards.entries()){
+        const cr=card.getBoundingClientRect();
+        const icon=card.querySelector('.ref-course__icon')?.getBoundingClientRect()||null;
+        const title=card.querySelector('h3')?.getBoundingClientRect()||null;
+        const desc=card.querySelector('.ref-course__desc')?.getBoundingClientRect()||null;
+        const rec=card.querySelector('.ref-course__rec')?.getBoundingClientRect()||null;
+        const inside=(r)=>r&&r.width>0&&r.height>0&&r.left>=cr.left-1&&r.right<=cr.right+1&&r.top>=cr.top-1&&r.bottom<=cr.bottom+1;
+        if(!inside(icon)||icon.width<70||icon.height<70)courseCompositionFailures.push(`${index+1}:icon`);
+        if(!inside(title)||title.left<cr.left+88)courseCompositionFailures.push(`${index+1}:title`);
+        if(!inside(desc)||desc.left<cr.left+88)courseCompositionFailures.push(`${index+1}:desc`);
+        if(!inside(rec)||rec.width<cr.width*.8||rec.top<cr.top+135)courseCompositionFailures.push(`${index+1}:rec`);
+      }
+
+      intermediateDesktop={reasonOverlapPx,educationCardTopSpreadPx,voiceAvatarSpeechOverlapPx,courseCompositionFailures};
       if(reasonOverlapPx===null||reasonOverlapPx>.5)layoutContractFailures.push(`reason-heading-overlap=${reasonOverlapPx}`);
       if(educationCardTopSpreadPx===null||educationCardTopSpreadPx>2)layoutContractFailures.push(`education-row-spread=${educationCardTopSpreadPx}`);
       if(voiceAvatarSpeechOverlapPx===null||voiceAvatarSpeechOverlapPx>.5)layoutContractFailures.push(`voice-avatar-speech-overlap=${voiceAvatarSpeechOverlapPx}`);
+      if(courseCards.length!==7||courseCompositionFailures.length)layoutContractFailures.push(`courses=${courseCompositionFailures.join('|')||`count-${courseCards.length}`}`);
     }
 
     return{bodyHeight:Math.round(Math.max(body.scrollHeight,de.scrollHeight)),scrollWidth:sw(),pageOverflowPx:Math.max(0,sw()-innerWidth),readableTextClipping:clipped,overflowElements,overflowDiagnostics,imageFailures,intermediateDesktop,layoutContractFailures,primaryFonts:{zenKakuGothicNew:document.fonts.check('16px "Zen Kaku Gothic New"'),poppins:document.fonts.check('16px Poppins')},sections};
