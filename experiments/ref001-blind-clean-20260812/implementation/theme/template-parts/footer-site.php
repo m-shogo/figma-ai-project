@@ -2,7 +2,7 @@
     <div class="ref-footer__inner">
         <div class="ref-footer__profile">
             <div class="ref-footer-logo">
-                <img class="ref-footer-logo__image" src="<?php ref001_e(ref001_asset_url('assets/icons/university-logo-outlined.svg')); ?>" alt="千葉経済大学 CHIBA KEIZAI">
+                <img class="ref-footer-logo__image" src="<?php ref001_e(ref001_asset_url('assets/icons/university-logo-outlined.svg')); ?>" width="240" height="61" alt="千葉経済大学 CHIBA KEIZAI">
             </div>
             <div class="ref-footer__address">
                 <span class="ref-footer__address--pc">〒263-0021　千葉市稲毛区轟町3-59-5<br>Tel.043-253-9111（大代表）/043-253-5524（入試広報センター）</span>
