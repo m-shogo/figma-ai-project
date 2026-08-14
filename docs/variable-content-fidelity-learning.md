@@ -50,7 +50,7 @@ Reusable condition: multiple CSS backgrounds are useful when the authored shape 
 
 ### C — content-driven parent chain
 
-Result: accepted in PR #113 after stress observation exposed two different failure modes.
+Result: accepted in PR #113 after stress observation exposed different failure modes and then exposed a breakpoint-boundary leak.
 
 Observed before repair:
 
@@ -61,18 +61,31 @@ The repair did not make only the speech element `height:auto`. It relaxed the wh
 
 `speech -> top rail -> item/content -> Student Voice section`
 
-PC also allows the title to wrap under stress. After repair, the same stress fixture reported zero horizontal overflow, zero vertical overflow, zero local-container overflow and zero next-block collision at both 375 and 1380.
+PC also allows the title to wrap under stress. The first repaired run passed at 375 and 1380, but that was not enough evidence. Expanding the stress matrix to `320 / 375 / 767 / 768 / 1024 / 1299 / 1300 / 1380` exposed a continuity-band failure at 768–1299: the speech box itself grew safely, but it remained absolutely positioned there, so the top rail and following block did not receive its height.
+
+The tablet fix put only the speech rail back into normal flow in the 768–1299 band and extended the same parent-chain ownership rule without changing the exact 375/1380 endpoint compositions.
+
+After that repair, all eight stress viewports reported:
+
+- zero horizontal overflow;
+- zero vertical overflow;
+- zero local top-container overflow;
+- zero collision with the following authored block.
 
 The normal authored fixture remained stable at the acceptance endpoints:
 
 - body height: 10777px at 375 and 7714px at 1380;
 - Student Voice height: 1758px SP and 1393px PC;
-- fresh Section Diff remained effectively unchanged: about 7.51% SP and 3.25% PC;
+- fresh Section Diff remained effectively unchanged: about 7.51% SP and 3.25% PC before the continuity-only tablet extension;
 - direct Human Review of the fresh Web/Figma crops showed no new material visual regression.
 
 At 320px the normal page becomes taller because the narrower viewport legitimately wraps content; horizontal overflow remains zero. Treat safe content-driven growth below an authored endpoint as continuity behavior, not as a regression merely because total page height differs.
 
-Reusable rule: when a variable child is allowed to grow, every fixed-height ancestor that owns its flow must be audited. Preserve exact authored dimensions as `min-height` where appropriate, then let the parent chain grow. A fixed child converted to `auto` inside fixed ancestors is not a variable-content solution.
+Reusable rules:
+
+- when a variable child is allowed to grow, every fixed-height ancestor that owns its flow must be audited; preserve exact authored dimensions as `min-height` where appropriate, then let the parent chain grow;
+- a fixed child converted to `auto` inside fixed ancestors is not a variable-content solution;
+- do not stress-test only the authored acceptance endpoints. Include both sides of every breakpoint and representative widths inside each continuity band, because endpoint passes can hide deterministic seam failures.
 
 ## Variable-content QA must be separate from Figma acceptance QA
 
