@@ -37,9 +37,13 @@
   .ref-education .ref-content{width:var(--ref-sp-fluid-rail);max-width:none}
   .ref-education__steps{left:0!important;width:calc(100% - 8px)!important;max-width:none}
   .ref-edu-card{width:100%;max-width:none}
-  .ref-edu-card h3{left:48%;width:46%}
-  .ref-edu-card__media{left:16px;width:42%}
-  .ref-edu-card ul{left:15%;width:76%}
+  /* Figma SP card face is 335px at the 375px reference. Preserve the exact
+   * authored child anchors as proportions of that face, then let the same
+   * composition scale with the card on wider/narrower phones:
+   * title x=172/w=147, media x=16/w=140, list x=51/w=233. */
+  .ref-edu-card h3{left:51.3433%;width:43.8806%}
+  .ref-edu-card__media{left:4.7761%;width:41.791%}
+  .ref-edu-card ul{left:15.2239%;width:69.5522%}
 
   /* SHARED CTA ---------------------------------------------------------- */
   /* The Figma SP title is visually two lines. The available Web fallback is
