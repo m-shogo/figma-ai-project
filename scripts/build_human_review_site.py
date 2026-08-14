@@ -8,21 +8,37 @@ import os
 import shutil
 import subprocess
 from datetime import datetime, timezone
+from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_MANIFEST = ROOT / "review-dashboard" / "manifests" / "ref001-run-2.json"
 APP_DIR = ROOT / "review-dashboard" / "app"
 THEME_DIR = ROOT / "experiments" / "ref001-blind-clean-20260812" / "implementation" / "theme"
 PREVIEW_PHP = THEME_DIR / "preview.php"
-PREVIEW_CSS = ["style.css", "responsive-continuity.css", "visual-repair.css", "human-review-repair.css"]
 PREVIEW_ASSETS = THEME_DIR / "assets"
 REF001_RENDERED_ASSETS = ROOT / "implementation" / "theme" / "assets" / "images" / "ref001" / "rendered"
 
 
 class ReviewBuildError(RuntimeError):
     pass
+
+
+class PreviewStylesheetParser(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__()
+        self.hrefs: list[str] = []
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        if tag.lower() != "link":
+            return
+        values = {key.lower(): value for key, value in attrs if key}
+        rel = (values.get("rel") or "").lower().split()
+        href = values.get("href")
+        if "stylesheet" in rel and href:
+            self.hrefs.append(href)
 
 
 def utc_now() -> str:
@@ -52,6 +68,27 @@ def repo_path(value: str) -> Path:
     except ValueError as exc:
         raise ReviewBuildError(f"manifest path escapes repository: {value}") from exc
     return path
+
+
+def local_preview_stylesheets(html: str) -> list[str]:
+    parser = PreviewStylesheetParser()
+    parser.feed(html)
+    stylesheets: list[str] = []
+    seen: set[str] = set()
+    for href in parser.hrefs:
+        parsed = urlsplit(href)
+        if parsed.scheme or parsed.netloc or href.startswith("//"):
+            continue
+        relative = Path(parsed.path)
+        if not parsed.path or relative.is_absolute() or ".." in relative.parts:
+            raise ReviewBuildError(f"unsafe local preview stylesheet reference: {href}")
+        normalized = relative.as_posix()
+        if normalized not in seen:
+            seen.add(normalized)
+            stylesheets.append(normalized)
+    if not stylesheets:
+        raise ReviewBuildError("rendered preview does not reference any local stylesheets")
+    return stylesheets
 
 
 def render_preview_html() -> str:
@@ -89,8 +126,19 @@ def render_preview_html() -> str:
 def write_preview(destination: Path, html: str) -> None:
     destination.mkdir(parents=True, exist_ok=True)
     (destination / "index.html").write_text(html, encoding="utf-8")
-    for name in PREVIEW_CSS:
-        shutil.copy2(require_file(THEME_DIR / name, name), destination / name)
+
+    # preview.php owns the stylesheet order. Copy every local stylesheet it emits
+    # instead of maintaining a second hard-coded list that can silently drift.
+    for relative_name in local_preview_stylesheets(html):
+        source = (THEME_DIR / relative_name).resolve()
+        try:
+            source.relative_to(THEME_DIR.resolve())
+        except ValueError as exc:
+            raise ReviewBuildError(f"preview stylesheet escapes theme directory: {relative_name}") from exc
+        target = destination / relative_name
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(require_file(source, f"preview stylesheet {relative_name}"), target)
+
     if not PREVIEW_ASSETS.is_dir():
         raise ReviewBuildError(f"missing preview assets directory: {PREVIEW_ASSETS}")
     shutil.copytree(PREVIEW_ASSETS, destination / "assets", dirs_exist_ok=True)

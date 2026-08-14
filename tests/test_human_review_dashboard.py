@@ -79,6 +79,26 @@ class HumanReviewDashboardBuildTests(unittest.TestCase):
             self.assertIn("Automated Final Preview", preview)
             self.assertIn("human-review-repair.css", preview)
 
+    def test_preview_publishes_every_stylesheet_emitted_by_preview_php(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            site = builder.build_site(output=Path(directory) / "site")
+            preview_root = site / "ref-001/latest/preview"
+            preview = (preview_root / "index.html").read_text(encoding="utf-8")
+            stylesheets = builder.local_preview_stylesheets(preview)
+            self.assertGreater(len(stylesheets), 4)
+            for expected in (
+                "v2-visual-polish.css",
+                "v2-continuity-fixes.css",
+                "v2-hotspot-repair.css",
+                "v2-footer-sns-position.css",
+                "v2-speech-fluid-experiment.css",
+                "v2-speech-variable-layout.css",
+            ):
+                self.assertIn(expected, stylesheets)
+            for stylesheet in stylesheets:
+                self.assertTrue((preview_root / stylesheet).is_file(), stylesheet)
+            self.assertEqual([], validator.validate_site(site))
+
     def test_preview_uses_swappable_pc_sp_images_focused_svg_assets_and_anchor_ctas(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             site = builder.build_site(output=Path(directory) / "site")
