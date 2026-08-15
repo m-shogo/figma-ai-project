@@ -1,16 +1,16 @@
 # Update Radar — Latest Official Source Scan
 
-Generated: `2026-08-14T05:04:50+00:00`
+Generated: `2026-08-15T03:55:57+00:00`
 
 Active lanes: ACCESSIBILITY, CLAUDE_CODE, CODEX, CURSOR, DESIGN_SYSTEMS, FIGMA, MCP, WEB_PLATFORM, WORDPRESS_ACF
 
 ## Summary
 
 - Sources checked: 27
-- Changed since previous snapshot: 7
+- Changed since previous snapshot: 6
 - First observations: 0
 - Fetch errors: 3
-- RETEST candidates: ACCESSIBILITY, AGENT_CONTEXT, ANIMATION, ASSET_FIDELITY, COLOR_GRADIENT, CSS_RESET, FIGMA_LAYOUT_GENERATION, FIGMA_MCP, INPUT_CAPABILITY, LAYOUT, PARALLEL_EXECUTION, TYPOGRAPHY_RUNTIME, VARIABLE_MODE_RUNTIME, VIEWPORT_SAFE_AREA, WORDPRESS_ACF
+- RETEST candidates: ACCESSIBILITY, AGENT_CONTEXT, ANIMATION, ASSET_FIDELITY, COLOR_GRADIENT, CSS_RESET, FIGMA_LAYOUT_GENERATION, FIGMA_MCP, INPUT_CAPABILITY, LAYOUT, PARALLEL_EXECUTION, TYPOGRAPHY_RUNTIME, VARIABLE_MODE_RUNTIME
 
 ## Changed sources
 
@@ -19,32 +19,32 @@ Active lanes: ACCESSIBILITY, CLAUDE_CODE, CODEX, CURSOR, DESIGN_SYSTEMS, FIGMA, 
 - Lane: `FIGMA`
 - Latest title: Figma product news and release notes
 - Impacts: FIGMA_STRUCTURE, FIGMA_TO_CODE, CODE_TO_FIGMA, DESIGN_HANDOFF, VISUAL_FIDELITY
-- RETEST: INPUT_CAPABILITY, ANIMATION, LAYOUT, FIGMA_LAYOUT_GENERATION, ASSET_FIDELITY, COLOR_GRADIENT, ACCESSIBILITY, FIGMA_MCP, AGENT_CONTEXT
+- RETEST: INPUT_CAPABILITY, ANIMATION, LAYOUT, FIGMA_LAYOUT_GENERATION, TYPOGRAPHY_RUNTIME, ASSET_FIDELITY, COLOR_GRADIENT, ACCESSIBILITY, FIGMA_MCP, AGENT_CONTEXT
 - Source: https://www.figma.com/release-notes/
+
+### figma-text-properties-current
+
+- Lane: `FIGMA`
+- Latest title: Explore text properties – Figma Learn - Help Center
+- Impacts: FIGMA_STRUCTURE, FIGMA_TO_CODE, CSS, TYPOGRAPHY, VISUAL_FIDELITY
+- RETEST: INPUT_CAPABILITY, LAYOUT, FIGMA_LAYOUT_GENERATION, TYPOGRAPHY_RUNTIME, ACCESSIBILITY
+- Source: https://help.figma.com/hc/en-us/articles/360039956634-Explore-text-properties
 
 ### claude-code-releases
 
 - Lane: `CLAUDE_CODE`
-- Latest title: v2.1.232
+- Latest title: v2.1.233
 - Impacts: AGENT_CAPABILITY, MCP, PARALLEL_EXECUTION, CONTEXT_HANDLING
-- RETEST: CSS_RESET, ASSET_FIDELITY, VARIABLE_MODE_RUNTIME, COLOR_GRADIENT, ACCESSIBILITY, FIGMA_MCP, AGENT_CONTEXT, PARALLEL_EXECUTION
+- RETEST: ASSET_FIDELITY, VARIABLE_MODE_RUNTIME, ACCESSIBILITY, FIGMA_MCP, AGENT_CONTEXT, PARALLEL_EXECUTION
 - Source: https://api.github.com/repos/anthropics/claude-code/releases?per_page=12
 
 ### claude-code-feed
 
 - Lane: `CLAUDE_CODE`
-- Latest title: Claude Code v2.1.232
+- Latest title: Claude Code v2.1.233
 - Impacts: AGENT_CAPABILITY, MCP, CONTEXT_HANDLING
-- RETEST: CSS_RESET, ASSET_FIDELITY, VARIABLE_MODE_RUNTIME, COLOR_GRADIENT, ACCESSIBILITY, FIGMA_MCP, AGENT_CONTEXT, PARALLEL_EXECUTION
+- RETEST: ASSET_FIDELITY, VARIABLE_MODE_RUNTIME, ACCESSIBILITY, FIGMA_MCP, AGENT_CONTEXT, PARALLEL_EXECUTION
 - Source: https://raw.githubusercontent.com/anthropics/claude-code/main/feed.xml
-
-### cursor-changelog
-
-- Lane: `CURSOR`
-- Latest title: What's New in Cursor — Latest Updates & Release Notes
-- Impacts: AGENT_CAPABILITY, MCP, VISUAL_BROWSER_TOOLING, PARALLEL_EXECUTION, CONTEXT_HANDLING
-- RETEST: VARIABLE_MODE_RUNTIME, FIGMA_MCP, AGENT_CONTEXT
-- Source: https://cursor.com/changelog
 
 ### web-features-releases
 
@@ -57,18 +57,10 @@ Active lanes: ACCESSIBILITY, CLAUDE_CODE, CODEX, CURSOR, DESIGN_SYSTEMS, FIGMA, 
 ### mdn-browser-compat-data-releases
 
 - Lane: `WEB_PLATFORM`
-- Latest title: v8.0.11
+- Latest title: @mdn/browser-compat-data@next
 - Impacts: CSS, BROWSER_SUPPORT, FEATURE_DETECTION
 - RETEST: CSS_RESET, INPUT_CAPABILITY, TYPOGRAPHY_RUNTIME, ASSET_FIDELITY, ACCESSIBILITY, AGENT_CONTEXT
 - Source: https://api.github.com/repos/mdn/browser-compat-data/releases?per_page=12
-
-### wordpress-developer-news
-
-- Lane: `WORDPRESS_ACF`
-- Latest title: WordPress Developer Blog – A site for plugin and theme developers, freelancers, and agency developers
-- Impacts: WORDPRESS, CMS, BLOCKS, FRONTEND_ARCHITECTURE
-- RETEST: VIEWPORT_SAFE_AREA, FIGMA_LAYOUT_GENERATION, ACCESSIBILITY, FIGMA_MCP, AGENT_CONTEXT, WORDPRESS_ACF
-- Source: https://developer.wordpress.org/news/
 
 ## Fetch errors
 
