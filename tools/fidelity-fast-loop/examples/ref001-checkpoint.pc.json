@@ -1,0 +1,49 @@
+{
+  "mode": "CHECKPOINT",
+  "url": "http://127.0.0.1:8765/preview.php",
+  "viewportKind": "desktop",
+  "viewport": {"width": 1380, "height": 900},
+  "dpr": 1,
+  "sourceFingerprint": {
+    "figmaFile": "ZYTdtw4wCgkcBy2cVnhxVI",
+    "figmaFrame": "38:80",
+    "implementationRoot": "experiments/ref001-blind-clean-20260812/implementation/theme/template-parts/sections"
+  },
+  "sections": [
+    {
+      "id": "reason",
+      "figmaNodeId": "21008:371",
+      "selector": "[data-section=\"reason\"]",
+      "riskSignals": ["mask", "image_composition"],
+      "reference": {"x":110,"y":886,"width":1160,"height":559,"bottom":1445}
+    },
+    {
+      "id": "education",
+      "figmaNodeId": "21013:217",
+      "selector": "[data-section=\"education\"]",
+      "riskSignals": ["image_composition", "responsive_delta"],
+      "reference": {"x":0,"y":1541,"width":1380,"height":684,"bottom":2225}
+    },
+    {
+      "id": "student-voice",
+      "figmaNodeId": "21034:43",
+      "selector": "[data-section=\"student-voice\"]",
+      "riskSignals": ["overlap", "image_composition", "responsive_delta"],
+      "reference": {"x":110,"y":2649,"width":1160,"height":1393,"bottom":4042}
+    },
+    {
+      "id": "messages",
+      "figmaNodeId": "21035:68",
+      "selector": "[data-section=\"messages\"]",
+      "riskSignals": ["image_composition", "typography"],
+      "reference": {"x":110,"y":4225,"width":1160,"height":440,"bottom":4665}
+    },
+    {
+      "id": "courses",
+      "figmaNodeId": "21038:95",
+      "selector": "[data-section=\"courses\"]",
+      "riskSignals": ["image_composition", "responsive_delta"],
+      "reference": {"x":0,"y":5111,"width":1380,"height":1514,"bottom":6625}
+    }
+  ]
+}

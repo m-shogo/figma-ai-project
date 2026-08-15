@@ -1,0 +1,22 @@
+name: Fidelity Fast Loop
+on:
+  pull_request:
+    paths:
+      - 'tools/fidelity-fast-loop/**'
+      - '.github/workflows/fidelity-fast-loop.yml'
+  workflow_dispatch:
+jobs:
+  light:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - name: Unit tests
+        run: |
+          cd tools/fidelity-fast-loop
+          python -m unittest -v test_fast_loop.py
+      - name: Syntax
+        run: |
+          python -m py_compile tools/fidelity-fast-loop/*.py
+          node --check tools/fidelity-fast-loop/capture-section.mjs
