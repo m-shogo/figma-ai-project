@@ -37,10 +37,8 @@ async function runViewport(name, width, height) {
       const r = el.getBoundingClientRect();
       return { x: r.x + scrollX, y: r.y + scrollY, width: r.width, height: r.height, bottom: r.bottom + scrollY };
     };
-    const weekdayCandidates = [...document.querySelectorAll('thead th')]
-      .map((el) => el.textContent.trim())
-      .filter(Boolean);
-    const weekdays = weekdayCandidates.slice(0, 7);
+    const weekdayNodes = [...document.querySelectorAll('[data-ref002-weekday]')];
+    const weekdays = weekdayNodes.map((el) => el.textContent.trim());
     return {
       document: {
         clientWidth: document.documentElement.clientWidth,
@@ -55,9 +53,10 @@ async function runViewport(name, width, height) {
       calendar: box('#calendar'),
       month: document.querySelector('.calendar-month')?.textContent.trim(),
       weekdays,
+      weekdayCodes: weekdayNodes.map((el) => el.dataset.ref002Weekday),
       eventCount: window.__ref002Calendar.getEvents().length,
       mountedEventCount: document.querySelectorAll('[data-ref002-event="true"]').length,
-      renderedDates: document.querySelectorAll('[data-date]').length,
+      renderedDates: document.querySelectorAll('[data-ref002-date]').length,
       view: window.__ref002Calendar.view.type,
       hookView: document.querySelector('[data-ref002-view]')?.dataset.ref002View || null,
       status: document.documentElement.dataset.calendarStatus
@@ -69,7 +68,7 @@ async function runViewport(name, width, height) {
   assert(evidence.view === 'dayGridMonth', `${name}: expected dayGridMonth, got ${evidence.view}`);
   assert(evidence.month === '8月', `${name}: expected 8月, got ${evidence.month}`);
   assert(evidence.weekdays.length === 7, `${name}: expected 7 weekday headers, got ${evidence.weekdays.length}`);
-  assert(evidence.weekdays[0].startsWith('月'), `${name}: calendar is not Monday-first: ${evidence.weekdays.join(',')}`);
+  assert(evidence.weekdayCodes[0] === '1', `${name}: calendar is not Monday-first: ${evidence.weekdayCodes.join(',')}`);
   assert(evidence.eventCount === 18, `${name}: expected 18 FullCalendar Event Objects, got ${evidence.eventCount}`);
   assert(evidence.mountedEventCount >= 18, `${name}: expected rendered event hooks, got ${evidence.mountedEventCount}`);
   assert(evidence.renderedDates >= 30, `${name}: expected rendered date cells, got ${evidence.renderedDates}`);
