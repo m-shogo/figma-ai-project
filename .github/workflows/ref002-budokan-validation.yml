@@ -1,0 +1,140 @@
+name: REF002 Budokan FullCalendar Validation
+
+on:
+  pull_request:
+    paths:
+      - 'experiments/ref002-budokan-fullcalendar-validation/**'
+      - '.github/workflows/ref002-budokan-validation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  first-pass-web-runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Validate deterministic Web benchmark contract
+        run: |
+          python3 -m json.tool experiments/ref002-budokan-fullcalendar-validation/evidence/first-pass-contract.json >/dev/null
+          grep -q "new FullCalendar.Calendar" experiments/ref002-budokan-fullcalendar-validation/app.js
+          grep -q "dayGridMonth" experiments/ref002-budokan-fullcalendar-validation/app.js
+          grep -q "listMonth" experiments/ref002-budokan-fullcalendar-validation/app.js
+          if grep -q "updateSize" experiments/ref002-budokan-fullcalendar-validation/app.js; then
+            echo 'Legacy FullCalendar updateSize workaround is not allowed without measured evidence.' >&2
+            exit 1
+          fi
+
+      - name: Install browser runtime
+        run: |
+          mkdir -p /tmp/ref002-playwright
+          cd /tmp/ref002-playwright
+          npm init -y >/dev/null 2>&1
+          npm install playwright@1.54.2 >/dev/null
+          npx playwright install --with-deps chromium
+          ln -s /tmp/ref002-playwright/node_modules "$GITHUB_WORKSPACE/experiments/ref002-budokan-fullcalendar-validation/node_modules"
+
+      - name: Start static FIRST_PASS fixture
+        run: |
+          python3 -m http.server 8772 \
+            --bind 127.0.0.1 \
+            --directory experiments/ref002-budokan-fullcalendar-validation \
+            > /tmp/ref002-http.log 2>&1 &
+          echo $! > /tmp/ref002-http.pid
+          for i in $(seq 1 20); do
+            curl -fsS http://127.0.0.1:8772/ >/dev/null && exit 0
+            sleep 1
+          done
+          cat /tmp/ref002-http.log
+          exit 1
+
+      - name: Exercise real FullCalendar at PC and SP
+        run: |
+          node experiments/ref002-budokan-fullcalendar-validation/qa.mjs \
+            http://127.0.0.1:8772/ \
+            /tmp/ref002-budokan
+
+      - name: Compare FIRST_PASS section geometry with authored Figma boundaries
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          runtime = json.loads(Path('/tmp/ref002-budokan/first-pass-runtime.json').read_text())
+          rows = {r['name']: r['evidence'] for r in runtime['results']}
+          pc = rows['pc']
+          sp = rows['sp']
+
+          # PC Figma structured authority: header 0-100, hero 100-740, events 740-1688.
+          assert abs(pc['header']['height'] - 100) <= 0.5, pc['header']
+          assert abs(pc['hero']['y'] - 100) <= 0.5 and abs(pc['hero']['height'] - 640) <= 0.5, pc['hero']
+          assert abs(pc['eventSection']['y'] - 740) <= 0.5, pc['eventSection']
+          assert abs(pc['eventList']['width'] - 660) <= 0.5, pc['eventList']
+          assert abs(pc['calendarPanel']['width'] - 420) <= 0.5, pc['calendarPanel']
+
+          # SP runtime removes Figma's 40px status/device chrome.
+          assert abs(sp['header']['height'] - 60) <= 0.5, sp['header']
+          assert abs(sp['eventList']['width'] - 327) <= 0.5, sp['eventList']
+          assert abs(sp['calendarPanel']['width'] - 327) <= 0.5, sp['calendarPanel']
+
+          learned = {
+            'pc': {
+              'headerHeightDeltaPx': pc['header']['height'] - 100,
+              'heroYDeltaPx': pc['hero']['y'] - 100,
+              'heroHeightDeltaPx': pc['hero']['height'] - 640,
+              'eventsYDeltaPx': pc['eventSection']['y'] - 740,
+              'eventListWidthDeltaPx': pc['eventList']['width'] - 660,
+              'calendarWidthDeltaPx': pc['calendarPanel']['width'] - 420,
+            },
+            'sp': {
+              'headerHeightDeltaPx': sp['header']['height'] - 60,
+              'eventListWidthDeltaPx': sp['eventList']['width'] - 327,
+              'calendarWidthDeltaPx': sp['calendarPanel']['width'] - 327,
+            }
+          }
+          Path('/tmp/ref002-budokan/first-pass-deltas.json').write_text(json.dumps(learned, indent=2))
+          print(json.dumps(learned, indent=2))
+          PY
+
+      - name: Capture Fast Loop cause evidence for real Web event section
+        run: |
+          cat > /tmp/ref002-events-pc.json <<'JSON'
+          {
+            "id":"ref002-budokan-events-pc-first-pass",
+            "figma":{"fileKey":"RfAQQ28V1HGaeIcpgRmQq1","nodeId":"894:19272"},
+            "implementation":{"url":"http://127.0.0.1:8772/","selector":".events-section","index":0},
+            "viewport":{"width":1380,"height":1000,"dpr":1},
+            "reference":{"measurement":"/tmp/ref002-events-pc.measurement.json"},
+            "environment":{"readySelector":".calendar-ready","stabilityFrames":3,"stabilityTolerancePx":0.25,"stabilityTimeoutMs":1500},
+            "probes":[".event-list",".event-card",".calendar-panel","#calendar"],
+            "mode":"FAST"
+          }
+          JSON
+          node tools/implementation-intake/section_capture.mjs \
+            /tmp/ref002-events-pc.json \
+            /tmp/ref002-budokan/events-pc-first-pass.png \
+            /tmp/ref002-budokan/events-pc-first-pass.measurement.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          m = json.loads(Path('/tmp/ref002-budokan/events-pc-first-pass.measurement.json').read_text())
+          assert m['captureStability']['stable'] is True, m['captureStability']
+          assert m['environment']['devicePixelRatio'] == 1
+          assert m['box']['y'] == 740, m['box']
+          assert m['typographyFingerprint']['lineRects'], 'missing typography evidence'
+          assert m['matchedRuleSummary']['totalObserved'] > 0, m['matchedRuleSummary']
+          kinds = {row['kind'] for row in m['semanticRegions']}
+          assert 'text' in kinds, kinds
+          PY
+
+      - name: Upload FIRST_PASS evidence before any repair
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ref002-budokan-first-pass
+          path: |
+            /tmp/ref002-budokan
+          if-no-files-found: warn
+          retention-days: 7
