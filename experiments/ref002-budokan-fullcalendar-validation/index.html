@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>日本武道館 — REF-002 First Pass</title>
+  <title>日本武道館 — REF-002 Web Validation</title>
   <meta name="robots" content="noindex,nofollow,noarchive">
   <link rel="preconnect" href="https://cdn.jsdelivr.net">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@7.0.2/skeleton.css">
@@ -45,7 +45,7 @@
 
   <main>
     <section class="hero" data-section="hero" aria-label="日本武道館メインビジュアル">
-      <div class="hero-image" role="img" aria-label="日本武道館の館内"></div>
+      <div class="hero-image asset-pending" data-asset-status="pending" role="img" aria-label="日本武道館の館内。Figma実画像は未materialize"></div>
       <div class="important-notice">
         <span class="important-label">重要なお知らせ</span>
         <time datetime="2025-04-01">2025.04.01</time>
@@ -57,39 +57,53 @@
     <section class="events-section" id="events" data-section="events">
       <div class="events-inner">
         <header class="section-heading">
-          <p class="section-kicker">EVENT</p>
-          <h1>大会・イベント</h1>
-          <p class="section-lead">日本武道館で開催される大会・イベントをご案内します。</p>
+          <h1>大会・イベント情報</h1>
+          <p class="section-kicker"><i aria-hidden="true"></i>Event</p>
         </header>
 
         <div class="events-layout">
-          <div class="event-list" aria-label="注目の大会・イベント">
-            <article class="event-card event-card--purple">
-              <div class="event-photo event-photo--one" role="img" aria-label="大会イメージ"></div>
-              <div class="event-card-body">
-                <span class="event-category">大会</span>
-                <h2>イベントタイトルが入りますイベントタイトルが入ります</h2>
-                <p>イベントの概要テキストが入ります。開催内容や見どころなどを紹介します。</p>
-                <time datetime="2023-08-18">2023.08.18</time>
-                <a class="event-more" href="#" aria-label="イベント詳細を見る">→</a>
-              </div>
-            </article>
-            <article class="event-card event-card--blue">
-              <div class="event-photo event-photo--two" role="img" aria-label="イベントイメージ"></div>
-              <div class="event-card-body">
-                <span class="event-category">イベント</span>
-                <h2>イベントタイトルが入りますイベントタイトルが入ります</h2>
-                <p>イベントの概要テキストが入ります。開催内容や見どころなどを紹介します。</p>
-                <time datetime="2023-08-23">2023.08.23</time>
-                <a class="event-more" href="#" aria-label="イベント詳細を見る">→</a>
-              </div>
-            </article>
-          </div>
+          <section class="event-list" aria-label="注目の大会・募集">
+            <div class="event-list-label"><span aria-hidden="true">⌂</span><strong>注目の大会・募集</strong></div>
+            <div class="event-list-articles">
+              <article class="event-row">
+                <div class="event-photo asset-pending event-photo--one" data-asset-status="pending" role="img" aria-label="武道学園の写真。Figma実画像は未materialize"></div>
+                <div class="event-copy">
+                  <div class="event-labels"><span class="status status--open">募集中</span><span class="category">カテゴリー</span></div>
+                  <p class="event-date">開催日：2026.00.00～00.00</p>
+                  <h2>武道学園 入学案内</h2>
+                </div>
+              </article>
+              <article class="event-row">
+                <div class="event-photo asset-pending event-photo--two" data-asset-status="pending" role="img" aria-label="少年少女武道錬成大会の写真。Figma実画像は未materialize"></div>
+                <div class="event-copy">
+                  <div class="event-labels"><span class="status status--open">開催中</span><span class="category">カテゴリー</span></div>
+                  <p class="event-date">開催日：2026.00.00～00.00</p>
+                  <h2>昭和100年記念 令和8年度 全日本少年少女武道錬成大会</h2>
+                </div>
+              </article>
+              <article class="event-row">
+                <div class="event-photo asset-pending event-photo--three" data-asset-status="pending" role="img" aria-label="全日本書初め大展覧会の写真。Figma実画像は未materialize"></div>
+                <div class="event-copy">
+                  <div class="event-labels"><span class="status status--closed">受付終了</span><span class="category">カテゴリー</span></div>
+                  <p class="event-date">開催日：2026.00.00～00.00</p>
+                  <h2>第62回全日本書初め大展覧会</h2>
+                </div>
+              </article>
+              <article class="event-row">
+                <div class="event-photo asset-pending event-photo--four" data-asset-status="pending" role="img" aria-label="武道学園の写真。Figma実画像は未materialize"></div>
+                <div class="event-copy">
+                  <div class="event-labels"><span class="status status--open">募集中</span><span class="category">カテゴリー</span></div>
+                  <p class="event-date">開催日：2026.00.00～00.00</p>
+                  <h2>武道学園 入学案内</h2>
+                </div>
+              </article>
+            </div>
+          </section>
 
           <aside class="calendar-panel" aria-label="イベントカレンダー">
             <div class="calendar-view-switch" role="tablist" aria-label="カレンダー表示切替">
-              <button type="button" role="tab" aria-selected="true" data-calendar-view="dayGridMonth">カレンダー</button>
-              <button type="button" role="tab" aria-selected="false" data-calendar-view="listMonth">リスト</button>
+              <button type="button" role="tab" aria-selected="true" data-calendar-view="dayGridMonth">▣ <span>カレンダー表示</span></button>
+              <button type="button" role="tab" aria-selected="false" data-calendar-view="listMonth">☷ <span>リスト表示</span></button>
             </div>
             <div class="calendar-toolbar">
               <button type="button" class="calendar-nav calendar-prev" aria-label="前月">←</button>
@@ -98,10 +112,11 @@
             </div>
             <div id="calendar" aria-label="2023年8月の大会・イベント"></div>
             <div class="calendar-legend" aria-label="イベント種別">
-              <span><i class="legend-dot legend-dot--neutral"></i>大会・行事</span>
-              <span><i class="legend-dot legend-dot--blue"></i>武道関連</span>
-              <span><i class="legend-dot legend-dot--yellow"></i>一般イベント</span>
+              <span><i class="legend-dot legend-dot--neutral"></i>イベント種別</span>
+              <span><i class="legend-dot legend-dot--blue"></i>イベント種別</span>
+              <span><i class="legend-dot legend-dot--yellow"></i>イベント種別</span>
             </div>
+            <a class="all-events-link" href="#"><i aria-hidden="true">→</i><span>イベント一覧を表示</span></a>
           </aside>
         </div>
       </div>
