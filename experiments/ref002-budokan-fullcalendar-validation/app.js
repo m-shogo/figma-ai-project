@@ -35,11 +35,11 @@
     }
 
     const monthLabel = document.querySelector('.calendar-month');
-    const viewButtons = [...document.querySelectorAll('[data-calendar-view]')];
+    const viewButtons = [...document.querySelectorAll('[data-ref002-calendar-view]')];
 
     const syncViewTabs = (viewType) => {
       viewButtons.forEach((candidate) => {
-        candidate.setAttribute('aria-selected', String(candidate.dataset.calendarView === viewType));
+        candidate.setAttribute('aria-selected', String(candidate.dataset.ref002CalendarView === viewType));
       });
       document.documentElement.dataset.calendarUiView = viewType;
     };
@@ -96,7 +96,7 @@
 
     viewButtons.forEach((button) => {
       button.addEventListener('click', () => {
-        const requestedView = button.dataset.calendarView;
+        const requestedView = button.dataset.ref002CalendarView;
         syncViewTabs(requestedView);
         calendar.changeView(requestedView);
         syncViewTabs(calendar.view.type);
