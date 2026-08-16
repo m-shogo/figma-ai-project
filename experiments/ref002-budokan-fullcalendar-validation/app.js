@@ -41,6 +41,7 @@
       viewButtons.forEach((candidate) => {
         candidate.setAttribute('aria-selected', String(candidate.dataset.calendarView === viewType));
       });
+      document.documentElement.dataset.calendarUiView = viewType;
     };
 
     const calendar = new FullCalendar.Calendar(calendarEl, {
@@ -67,6 +68,7 @@
       },
       dayCellDidMount(info) {
         info.el.dataset.ref002Date = localDateKey(info.date);
+        info.el.dataset.ref002DayOfWeek = String(info.date.getDay());
       },
       eventDidMount(info) {
         const kind = info.event.extendedProps.kind || 'neutral';
@@ -76,6 +78,7 @@
       },
       viewDidMount(info) {
         info.el.dataset.ref002View = info.view.type;
+        syncViewTabs(info.view.type);
       },
       datesSet(info) {
         const date = info.view.currentStart || calendar.getDate();
@@ -93,9 +96,11 @@
 
     viewButtons.forEach((button) => {
       button.addEventListener('click', () => {
-        const view = button.dataset.calendarView;
-        syncViewTabs(view);
-        calendar.changeView(view);
+        const requestedView = button.dataset.calendarView;
+        syncViewTabs(requestedView);
+        calendar.changeView(requestedView);
+        syncViewTabs(calendar.view.type);
+        requestAnimationFrame(() => syncViewTabs(calendar.view.type));
       });
     });
 
