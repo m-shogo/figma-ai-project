@@ -20,10 +20,7 @@ jobs:
       - name: Guard Wave 2 source
         run: |
           node --check experiments/ref002-budokan-fullcalendar-validation/qa-wave2.mjs
-          if grep -R "https://www.figma.com/api/mcp/asset/" experiments/ref002-budokan-fullcalendar-validation; then
-            echo 'Short-lived Figma MCP asset URL persisted in validation source.' >&2
-            exit 1
-          fi
+          # Repository-wide validate-research owns the short-lived Figma URL leak gate.
 
       - name: Install Chromium runtime
         run: |
