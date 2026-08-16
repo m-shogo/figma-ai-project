@@ -1,0 +1,57 @@
+name: REF002 Budokan Wave 4 News QA
+
+on:
+  pull_request:
+    paths:
+      - 'experiments/ref002-budokan-fullcalendar-validation/news-section.html'
+      - 'experiments/ref002-budokan-fullcalendar-validation/wave4-news.css'
+      - 'experiments/ref002-budokan-fullcalendar-validation/qa-wave4.mjs'
+      - '.github/workflows/ref002-budokan-wave4.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  news-responsive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+      - name: Validate Wave 4 source
+        run: node --check experiments/ref002-budokan-fullcalendar-validation/qa-wave4.mjs
+      - name: Install Chromium runtime
+        run: |
+          mkdir -p /tmp/ref002-playwright
+          cd /tmp/ref002-playwright
+          npm init -y >/dev/null 2>&1
+          npm install playwright@1.54.2 >/dev/null
+          npx playwright install --with-deps chromium
+          ln -s /tmp/ref002-playwright/node_modules "$GITHUB_WORKSPACE/node_modules"
+      - name: Start section fixture
+        run: |
+          python3 -m http.server 8772 --bind 127.0.0.1 --directory experiments/ref002-budokan-fullcalendar-validation >/tmp/ref002-wave4-http.log 2>&1 &
+          for i in $(seq 1 20); do curl -fsS http://127.0.0.1:8772/news-section.html >/dev/null && exit 0; sleep 1; done
+          cat /tmp/ref002-wave4-http.log; exit 1
+      - name: Verify PC and SP News geometry
+        run: node experiments/ref002-budokan-fullcalendar-validation/qa-wave4.mjs http://127.0.0.1:8772/news-section.html /tmp/ref002-budokan-wave4
+      - name: Verify no invented tab behavior
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          data=json.loads(Path('/tmp/ref002-budokan-wave4/news-wave4-evidence.json').read_text())
+          assert data['interactionEvidence']['prototypeReactionsObserved']==0
+          assert data['interactionEvidence']['filterBehaviorImplemented'] is False
+          assert data['pc']['evidence']['assetPending']==0
+          assert data['sp']['evidence']['assetPending']==0
+          print(json.dumps(data['interactionEvidence'],indent=2,ensure_ascii=False))
+          PY
+      - name: Upload Wave 4 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ref002-budokan-wave4-news
+          path: /tmp/ref002-budokan-wave4
+          if-no-files-found: warn
+          retention-days: 7
