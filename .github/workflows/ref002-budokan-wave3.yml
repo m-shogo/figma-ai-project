@@ -1,0 +1,80 @@
+name: REF002 Budokan Wave 3 About QA
+
+on:
+  pull_request:
+    paths:
+      - 'experiments/ref002-budokan-fullcalendar-validation/**'
+      - '.github/workflows/ref002-budokan-wave3.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  about-responsive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Validate Wave 3 source
+        run: |
+          node --check experiments/ref002-budokan-fullcalendar-validation/wave3.js
+          node --check experiments/ref002-budokan-fullcalendar-validation/qa-wave3.mjs
+
+      - name: Install Chromium runtime
+        run: |
+          mkdir -p /tmp/ref002-playwright
+          cd /tmp/ref002-playwright
+          npm init -y >/dev/null 2>&1
+          npm install playwright@1.54.2 >/dev/null
+          npx playwright install --with-deps chromium
+          ln -s /tmp/ref002-playwright/node_modules "$GITHUB_WORKSPACE/node_modules"
+
+      - name: Start Web fixture
+        run: |
+          python3 -m http.server 8772 \
+            --bind 127.0.0.1 \
+            --directory experiments/ref002-budokan-fullcalendar-validation \
+            > /tmp/ref002-wave3-http.log 2>&1 &
+          for i in $(seq 1 20); do
+            curl -fsS http://127.0.0.1:8772/ >/dev/null && exit 0
+            sleep 1
+          done
+          cat /tmp/ref002-wave3-http.log
+          exit 1
+
+      - name: Verify PC grid and authored SP native carousel
+        run: |
+          node experiments/ref002-budokan-fullcalendar-validation/qa-wave3.mjs \
+            http://127.0.0.1:8772/ \
+            /tmp/ref002-budokan-wave3
+
+      - name: Verify responsive content and overflow contract
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('/tmp/ref002-budokan-wave3/about-wave3-evidence.json')
+          data=json.loads(p.read_text())
+          pc=data['pc']['evidence']
+          sp=data['sp']['evidence']
+          assert abs(pc['section']['y']-2696)<=0.75
+          assert abs(pc['section']['height']-1179)<=0.75
+          assert abs(sp['section']['y']-4144)<=0.75
+          assert abs(sp['section']['height']-1053)<=0.75
+          assert sp['scroll']['scrollWidth'] > sp['scroll']['clientWidth']
+          assert sp['document']['scrollWidth'] <= sp['document']['clientWidth'] + 1
+          assert len([x for x in pc['cards'] if x['display'] != 'none']) == 6
+          assert len([x for x in sp['cards'] if x['display'] != 'none']) == 3
+          print(json.dumps({'pcAbout':pc['section'],'spAbout':sp['section'],'spScroll':sp['scroll']},indent=2))
+          PY
+
+      - name: Upload Wave 3 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ref002-budokan-wave3-about
+          path: /tmp/ref002-budokan-wave3
+          if-no-files-found: warn
+          retention-days: 7
