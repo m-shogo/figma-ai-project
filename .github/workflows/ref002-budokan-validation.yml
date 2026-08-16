@@ -11,7 +11,7 @@ permissions:
   contents: read
 
 jobs:
-  first-pass-web-runtime:
+  repair-wave-web-runtime:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -25,6 +25,10 @@ jobs:
             echo 'Legacy FullCalendar updateSize workaround is not allowed without measured evidence.' >&2
             exit 1
           fi
+          if grep -R "https://www.figma.com/api/mcp/asset/" experiments/ref002-budokan-fullcalendar-validation; then
+            echo 'Short-lived Figma MCP asset URL persisted in REF-002 source.' >&2
+            exit 1
+          fi
 
       - name: Install browser runtime
         run: |
@@ -35,7 +39,7 @@ jobs:
           npx playwright install --with-deps chromium
           ln -s /tmp/ref002-playwright/node_modules "$GITHUB_WORKSPACE/experiments/ref002-budokan-fullcalendar-validation/node_modules"
 
-      - name: Start static FIRST_PASS fixture
+      - name: Start current Web fixture
         run: |
           python3 -m http.server 8772 \
             --bind 127.0.0.1 \
@@ -55,83 +59,106 @@ jobs:
             http://127.0.0.1:8772/ \
             /tmp/ref002-budokan
 
-      - name: Compare FIRST_PASS section geometry with authored Figma boundaries
+      - name: Compare Repair Wave 1 geometry with concrete Figma nodes
         run: |
           python3 - <<'PY'
           import json
           from pathlib import Path
-          runtime = json.loads(Path('/tmp/ref002-budokan/first-pass-runtime.json').read_text())
+          runtime = json.loads(Path('/tmp/ref002-budokan/repair-wave-1-runtime.json').read_text())
+          assert runtime['visualComplete'] is False
           rows = {r['name']: r['evidence'] for r in runtime['results']}
+          assert set(rows) == {'pc', 'sp'}, rows.keys()
           pc = rows['pc']
           sp = rows['sp']
 
-          # PC Figma structured authority: header 0-100, hero 100-740, events 740-1688.
-          assert abs(pc['header']['height'] - 100) <= 0.5, pc['header']
-          assert abs(pc['hero']['y'] - 100) <= 0.5 and abs(pc['hero']['height'] - 640) <= 0.5, pc['hero']
-          assert abs(pc['eventSection']['y'] - 740) <= 0.5, pc['eventSection']
-          assert abs(pc['eventList']['width'] - 660) <= 0.5, pc['eventList']
-          assert abs(pc['calendarPanel']['width'] - 420) <= 0.5, pc['calendarPanel']
-
-          # SP runtime removes Figma's 40px status/device chrome.
-          assert abs(sp['header']['height'] - 60) <= 0.5, sp['header']
-          assert abs(sp['eventList']['width'] - 327) <= 0.5, sp['eventList']
-          assert abs(sp['calendarPanel']['width'] - 327) <= 0.5, sp['calendarPanel']
-
-          learned = {
+          authority = {
             'pc': {
-              'headerHeightDeltaPx': pc['header']['height'] - 100,
-              'heroYDeltaPx': pc['hero']['y'] - 100,
-              'heroHeightDeltaPx': pc['hero']['height'] - 640,
-              'eventsYDeltaPx': pc['eventSection']['y'] - 740,
-              'eventListWidthDeltaPx': pc['eventList']['width'] - 660,
-              'calendarWidthDeltaPx': pc['calendarPanel']['width'] - 420,
+              'headerHeight': 100,
+              'heroY': 100,
+              'heroHeight': 640,
+              'eventsY': 740,
+              'eventListWidth': 660,
+              'eventListHeight': 744,
+              'calendarWidth': 420,
+              'calendarHeight': 706,
             },
             'sp': {
-              'headerHeightDeltaPx': sp['header']['height'] - 60,
-              'eventListWidthDeltaPx': sp['eventList']['width'] - 327,
-              'calendarWidthDeltaPx': sp['calendarPanel']['width'] - 327,
-            }
+              'headerHeight': 60,
+              'eventListWidth': 327,
+              'eventListHeight': 656,
+              'calendarWidth': 327,
+              'calendarHeight': 674,
+            },
           }
-          Path('/tmp/ref002-budokan/first-pass-deltas.json').write_text(json.dumps(learned, indent=2))
-          print(json.dumps(learned, indent=2))
+
+          deltas = {
+            'pc': {
+              'headerHeightDeltaPx': pc['header']['height'] - authority['pc']['headerHeight'],
+              'heroYDeltaPx': pc['hero']['y'] - authority['pc']['heroY'],
+              'heroHeightDeltaPx': pc['hero']['height'] - authority['pc']['heroHeight'],
+              'eventsYDeltaPx': pc['eventSection']['y'] - authority['pc']['eventsY'],
+              'eventListWidthDeltaPx': pc['eventList']['width'] - authority['pc']['eventListWidth'],
+              'eventListHeightDeltaPx': pc['eventList']['height'] - authority['pc']['eventListHeight'],
+              'calendarWidthDeltaPx': pc['calendarPanel']['width'] - authority['pc']['calendarWidth'],
+              'calendarHeightDeltaPx': pc['calendarPanel']['height'] - authority['pc']['calendarHeight'],
+            },
+            'sp': {
+              'headerHeightDeltaPx': sp['header']['height'] - authority['sp']['headerHeight'],
+              'eventListWidthDeltaPx': sp['eventList']['width'] - authority['sp']['eventListWidth'],
+              'eventListHeightDeltaPx': sp['eventList']['height'] - authority['sp']['eventListHeight'],
+              'calendarWidthDeltaPx': sp['calendarPanel']['width'] - authority['sp']['calendarWidth'],
+              'calendarHeightDeltaPx': sp['calendarPanel']['height'] - authority['sp']['calendarHeight'],
+            },
+          }
+
+          # Keep every pixel delta as evidence. These hard checks only protect authored outer geometry.
+          for viewport, values in deltas.items():
+            for key, value in values.items():
+              assert abs(value) <= 0.5, f'{viewport} {key}: {value:+.3f}px'
+
+          assert pc['assetPendingCount'] > 0 and sp['assetPendingCount'] > 0
+          Path('/tmp/ref002-budokan/repair-wave-1-deltas.json').write_text(json.dumps(deltas, indent=2))
+          print(json.dumps(deltas, indent=2))
           PY
 
       - name: Capture Fast Loop cause evidence for real Web event section
         run: |
           cat > /tmp/ref002-events-pc.json <<'JSON'
           {
-            "id":"ref002-budokan-events-pc-first-pass",
-            "figma":{"fileKey":"RfAQQ28V1HGaeIcpgRmQq1","nodeId":"894:19272"},
+            "version":1,
+            "id":"ref002-budokan-events-pc-repair-wave-1",
+            "mode":"FAST",
+            "figma":{"fileKey":"RfAQQ28V1HGaeIcpgRmQq1","nodeId":"894:19272","revision":"observed-2026-08-17"},
             "implementation":{"url":"http://127.0.0.1:8772/","selector":".events-section","index":0},
             "viewport":{"width":1380,"height":1000,"dpr":1},
             "reference":{"measurement":"/tmp/ref002-events-pc.measurement.json"},
-            "environment":{"readySelector":".calendar-ready","stabilityFrames":3,"stabilityTolerancePx":0.25,"stabilityTimeoutMs":1500},
-            "probes":[".event-list",".event-card",".calendar-panel","#calendar"],
-            "mode":"FAST"
+            "environment":{"locale":"ja-JP","timezone":"Asia/Tokyo","waitUntil":"networkidle","readySelector":"html.calendar-ready","stabilityFrames":3,"stabilityTolerancePx":0.25,"stabilityTimeoutMs":1500},
+            "probes":[".event-list",".event-row",".calendar-panel","#calendar"],
+            "repairHistory":[]
           }
           JSON
           node tools/implementation-intake/section_capture.mjs \
             /tmp/ref002-events-pc.json \
-            /tmp/ref002-budokan/events-pc-first-pass.png \
-            /tmp/ref002-budokan/events-pc-first-pass.measurement.json
+            /tmp/ref002-budokan/events-pc-repair-wave-1.png \
+            /tmp/ref002-budokan/events-pc-repair-wave-1.measurement.json
           python3 - <<'PY'
           import json
           from pathlib import Path
-          m = json.loads(Path('/tmp/ref002-budokan/events-pc-first-pass.measurement.json').read_text())
+          m = json.loads(Path('/tmp/ref002-budokan/events-pc-repair-wave-1.measurement.json').read_text())
           assert m['captureStability']['stable'] is True, m['captureStability']
           assert m['environment']['devicePixelRatio'] == 1
-          assert m['box']['y'] == 740, m['box']
+          assert abs(m['box']['y'] - 740) <= 0.5, m['box']
           assert m['typographyFingerprint']['lineRects'], 'missing typography evidence'
           assert m['matchedRuleSummary']['totalObserved'] > 0, m['matchedRuleSummary']
           kinds = {row['kind'] for row in m['semanticRegions']}
           assert 'text' in kinds, kinds
           PY
 
-      - name: Upload FIRST_PASS evidence before any repair
+      - name: Upload Repair Wave 1 evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ref002-budokan-first-pass
+          name: ref002-budokan-repair-wave-1
           path: |
             /tmp/ref002-budokan
           if-no-files-found: warn
