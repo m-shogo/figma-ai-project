@@ -37,6 +37,12 @@
     const monthLabel = document.querySelector('.calendar-month');
     const viewButtons = [...document.querySelectorAll('[data-calendar-view]')];
 
+    const syncViewTabs = (viewType) => {
+      viewButtons.forEach((candidate) => {
+        candidate.setAttribute('aria-selected', String(candidate.dataset.calendarView === viewType));
+      });
+    };
+
     const calendar = new FullCalendar.Calendar(calendarEl, {
       initialView: 'dayGridMonth',
       initialDate: '2023-08-01',
@@ -76,6 +82,7 @@
         monthLabel.textContent = `${date.getMonth() + 1}月`;
         document.documentElement.dataset.calendarView = info.view.type;
         document.documentElement.dataset.calendarMonth = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+        syncViewTabs(info.view.type);
       }
     });
 
@@ -87,10 +94,8 @@
     viewButtons.forEach((button) => {
       button.addEventListener('click', () => {
         const view = button.dataset.calendarView;
+        syncViewTabs(view);
         calendar.changeView(view);
-        viewButtons.forEach((candidate) => {
-          candidate.setAttribute('aria-selected', String(candidate === button));
-        });
       });
     });
 
