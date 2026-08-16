@@ -1,0 +1,84 @@
+name: REF002 Budokan Wave 2 Coordinate QA
+
+on:
+  pull_request:
+    paths:
+      - 'experiments/ref002-budokan-fullcalendar-validation/**'
+      - '.github/workflows/ref002-budokan-wave2.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  coordinate-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Guard Wave 2 source
+        run: |
+          node --check experiments/ref002-budokan-fullcalendar-validation/qa-wave2.mjs
+          if grep -R "https://www.figma.com/api/mcp/asset/" experiments/ref002-budokan-fullcalendar-validation; then
+            echo 'Short-lived Figma MCP asset URL persisted in validation source.' >&2
+            exit 1
+          fi
+
+      - name: Install Chromium runtime
+        run: |
+          mkdir -p /tmp/ref002-playwright
+          cd /tmp/ref002-playwright
+          npm init -y >/dev/null 2>&1
+          npm install playwright@1.54.2 >/dev/null
+          npx playwright install --with-deps chromium
+          ln -s /tmp/ref002-playwright/node_modules "$GITHUB_WORKSPACE/node_modules"
+
+      - name: Start Web fixture
+        run: |
+          python3 -m http.server 8772 \
+            --bind 127.0.0.1 \
+            --directory experiments/ref002-budokan-fullcalendar-validation \
+            > /tmp/ref002-wave2-http.log 2>&1 &
+          for i in $(seq 1 20); do
+            curl -fsS http://127.0.0.1:8772/ >/dev/null && exit 0
+            sleep 1
+          done
+          cat /tmp/ref002-wave2-http.log
+          exit 1
+
+      - name: Verify device-chrome root-cause repair and next section boundaries
+        run: |
+          node experiments/ref002-budokan-fullcalendar-validation/qa-wave2.mjs \
+            http://127.0.0.1:8772/ \
+            /tmp/ref002-budokan-wave2
+
+      - name: Verify one-owner repair propagated through downstream SP sections
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('/tmp/ref002-budokan-wave2/repair-wave-2-coordinate-evidence.json')
+          data = json.loads(p.read_text())
+          assert data['repair']['owner'] == '.hero@SP'
+          assert data['repair']['before']['downstreamOffsetPx'] == 40
+          for viewport in ('pc', 'sp'):
+              for scope, props in data[viewport]['deltas'].items():
+                  for prop, delta in props.items():
+                      assert abs(delta) <= 0.5, (viewport, scope, prop, delta)
+          assert data['sp']['deltas']['events']['y'] == 0
+          assert data['sp']['deltas']['eventList']['y'] == 0
+          assert data['sp']['deltas']['calendar']['y'] == 0
+          assert data['sp']['deltas']['sns']['y'] == 0
+          assert data['sp']['deltas']['purpose']['y'] == 0
+          print(json.dumps(data['sp']['deltas'], indent=2))
+          PY
+
+      - name: Upload Wave 2 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ref002-budokan-wave2-coordinate
+          path: /tmp/ref002-budokan-wave2
+          if-no-files-found: warn
+          retention-days: 7
