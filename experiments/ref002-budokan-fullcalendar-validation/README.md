@@ -13,8 +13,10 @@ This fixture intentionally validates a **real responsive Web page**, not a graph
 - final SP visual truth: `2270:5570`
 - PC event/calendar section: `894:19272`
 - SP event/calendar section: `1399:12408`
-- PC calendar: `894:19362`
-- SP calendar: `1399:11920`
+- PC event list: `894:19280` = `660×744`
+- SP event list: `1399:11837` = `327×656`
+- PC calendar: `894:19362` = `420×706`
+- SP calendar: `1399:11920` = `327×674`
 
 Figma's SP frame contains 40px device/status chrome. Web runtime geometry normalizes that chrome out.
 
@@ -27,17 +29,33 @@ Figma's SP frame contains 40px device/status chrome. Web runtime geometry normal
 
 Do not promote a one-off FullCalendar override into a global Figma-to-Web rule.
 
-## FIRST_PASS
+## FIRST_PASS evidence
 
-The first implementation wave deliberately stops after:
+The first implementation commit is intentionally preserved as `11d95c675b5b99f2dfd86b210c004367f76a8085` before repair.
 
-1. Header PC/SP
-2. Hero PC/SP
-3. Important notice
-4. Event cards PC/SP
-5. Real FullCalendar PC/SP
+That first pass exposed real mistakes instead of hiding them:
 
-Later sections are deferred so FIRST_PASS evidence is not overwritten before diagnosis.
+1. the event area was incorrectly interpreted as two large cards; direct node re-observation showed four authored rows
+2. static CI grepped for a JavaScript literal even though the behavior was data-driven
+3. browser QA assumed private FullCalendar DOM classes/tags
+4. initial metadata summary dimensions for the SP list/calendar were wrong and were corrected by re-reading the concrete target nodes
+
+These failures are evidence. They are not promoted to global rules until clean replay or cross-reference supports them.
+
+## Repair Wave 1
+
+The current repair wave corrects the event/calendar structure while preserving unresolved asset fidelity as an explicit state:
+
+- four event rows
+- PC vertical featured-event label
+- SP horizontal featured-event label
+- exact authored list geometry
+- real FullCalendar month/list interaction
+- public FullCalendar API + documented render hooks for QA instrumentation
+- no persisted short-lived Figma asset URL
+- Figma image slots remain `ASSET_PENDING` until approved bytes can be materialized with provenance
+
+An `ASSET_PENDING` slot is never counted as visual fidelity completion.
 
 ## FullCalendar contract
 
@@ -57,13 +75,13 @@ Deterministic Figma-comparison state:
 - list tab → `listMonth`
 - previous/next month controls remain functional
 
-The authored Figma August grid places day 1 on Tuesday, which is consistent with August 2023. This date exists only to make Visual QA deterministic; it is not a production content assumption.
+The authored Figma August grid places day 1 on Tuesday. August 2023 is therefore used only to make the Visual QA fixture deterministic; it is not production content authority.
 
-FullCalendar v7 uses its current container resize behavior. Do not add legacy `calendar.updateSize()` calls unless a measured runtime failure justifies a compatibility repair.
+### Library compatibility learning
 
-## Temporary assets
+QA must not treat private `fc-*` DOM/CSS shape as test authority. Runtime assertions use the public Calendar API and documented render hooks, with our own stable `data-ref002-*` instrumentation.
 
-The FIRST_PASS uses short-lived Figma MCP asset URLs for the hero and two event photos. This branch is a temporary validation branch and must not be merged as a production asset implementation. A production implementation would materialize approved assets with provenance before merge.
+Likewise, do not carry a legacy `calendar.updateSize()` workaround into v7 without a measured runtime failure that actually requires a compatibility repair.
 
 ## QA
 
@@ -71,13 +89,17 @@ The FIRST_PASS uses short-lived Figma MCP asset URLs for the hero and two event 
 
 - no horizontal overflow
 - FullCalendar initialized
-- 8月 deterministic initial month
+- deterministic `8月` initial month
 - seven weekday columns, Monday first
 - authored fixture events render
-- PC event list ≈660px and calendar ≈420px
-- SP event list/calendar ≈327px
-- calendar/list view toggle works
+- PC event list `660px` and calendar `420px`
+- SP event list/calendar `327px`
+- calendar/list view toggle works both functionally and visually
 - prev/next month works
 - runtime screenshots and geometry evidence are uploaded
 
-After FIRST_PASS is preserved, run the #132 Section Capture / Visual Cause tooling against the same Web fixture, diagnose the first material divergences, and repair the smallest correct owner.
+The #132 Section Capture / Visual Cause tooling then captures the same real Web event section, including stability, document-space geometry, typography, semantic regions, and CSS-owner evidence.
+
+## Promotion gate
+
+Only proven learnings are folded back into #132. This validation fixture itself is not a production feature and should not be merged into `so` after the learning loop is complete.
