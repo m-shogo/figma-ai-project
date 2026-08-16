@@ -1,0 +1,56 @@
+name: REF002 Budokan Wave 5 Partner QA
+
+on:
+  pull_request:
+    paths:
+      - 'experiments/ref002-budokan-fullcalendar-validation/partner-section.html'
+      - 'experiments/ref002-budokan-fullcalendar-validation/wave5-partner.css'
+      - 'experiments/ref002-budokan-fullcalendar-validation/qa-wave5.mjs'
+      - '.github/workflows/ref002-budokan-wave5.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  partner-responsive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+      - run: node --check experiments/ref002-budokan-fullcalendar-validation/qa-wave5.mjs
+      - name: Install Chromium
+        run: |
+          mkdir -p /tmp/ref002-playwright && cd /tmp/ref002-playwright
+          npm init -y >/dev/null 2>&1
+          npm install playwright@1.54.2 >/dev/null
+          npx playwright install --with-deps chromium
+          ln -s /tmp/ref002-playwright/node_modules "$GITHUB_WORKSPACE/node_modules"
+      - name: Start fixture
+        run: |
+          python3 -m http.server 8772 --bind 127.0.0.1 --directory experiments/ref002-budokan-fullcalendar-validation >/tmp/ref002-wave5-http.log 2>&1 &
+          for i in $(seq 1 20); do curl -fsS http://127.0.0.1:8772/partner-section.html >/dev/null && exit 0; sleep 1; done
+          cat /tmp/ref002-wave5-http.log; exit 1
+      - name: Verify 4x3 to 2x6 responsive partner grid
+        run: node experiments/ref002-budokan-fullcalendar-validation/qa-wave5.mjs http://127.0.0.1:8772/partner-section.html /tmp/ref002-budokan-wave5
+      - name: Verify pending-logo and semantic-item contract
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('/tmp/ref002-budokan-wave5/partner-wave5-evidence.json').read_text())
+          assert d['visualComplete'] is False
+          assert d['pc']['evidence']['pending']==12
+          assert d['sp']['evidence']['pending']==12
+          assert len(d['pc']['evidence']['items'])==12
+          assert len(d['sp']['evidence']['items'])==12
+          print(json.dumps({'pcList':d['pc']['evidence']['list'],'spList':d['sp']['evidence']['list']},indent=2))
+          PY
+      - name: Upload Wave 5 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ref002-budokan-wave5-partner
+          path: /tmp/ref002-budokan-wave5
+          if-no-files-found: warn
+          retention-days: 7
