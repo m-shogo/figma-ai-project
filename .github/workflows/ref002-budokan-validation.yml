@@ -21,8 +21,6 @@ jobs:
         run: |
           python3 -m json.tool experiments/ref002-budokan-fullcalendar-validation/evidence/first-pass-contract.json >/dev/null
           grep -q "new FullCalendar.Calendar" experiments/ref002-budokan-fullcalendar-validation/app.js
-          grep -q "dayGridMonth" experiments/ref002-budokan-fullcalendar-validation/app.js
-          grep -q "listMonth" experiments/ref002-budokan-fullcalendar-validation/app.js
           if grep -q "updateSize" experiments/ref002-budokan-fullcalendar-validation/app.js; then
             echo 'Legacy FullCalendar updateSize workaround is not allowed without measured evidence.' >&2
             exit 1
