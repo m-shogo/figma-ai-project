@@ -18,8 +18,8 @@ async function stateSnapshot(page) {
     uiView: document.documentElement.dataset.calendarUiView || null,
     htmlView: document.documentElement.dataset.calendarView || null,
     month: document.querySelector('.calendar-month')?.textContent.trim() || null,
-    tabs: [...document.querySelectorAll('[data-calendar-view]')].map((el) => ({
-      view: el.dataset.calendarView,
+    tabs: [...document.querySelectorAll('[data-ref002-calendar-view]')].map((el) => ({
+      view: el.dataset.ref002CalendarView,
       selected: el.getAttribute('aria-selected')
     }))
   }));
@@ -95,17 +95,17 @@ async function runViewport(name, width, height) {
     assert(Math.abs(evidence.eventList.width - expectedWidth.list) <= 2, `${name}: event list width ${evidence.eventList.width}`);
     assert(Math.abs(evidence.calendarPanel.width - expectedWidth.calendar) <= 2, `${name}: calendar panel width ${evidence.calendarPanel.width}`);
 
-    await page.locator('[data-calendar-view="listMonth"]').click();
+    await page.locator('[data-ref002-calendar-view="listMonth"]').click();
     await page.waitForFunction(() => window.__ref002Calendar?.view?.type === 'listMonth');
     await page.waitForFunction(() => {
-      const tab = document.querySelector('[data-calendar-view="listMonth"]');
+      const tab = document.querySelector('[data-ref002-calendar-view="listMonth"]');
       return document.documentElement.dataset.calendarUiView === 'listMonth' && tab?.getAttribute('aria-selected') === 'true';
     }, null, { timeout: 5000 });
     const listState = await stateSnapshot(page);
     assert(listState.view === 'listMonth' && listState.uiView === 'listMonth', `${name}: list state mismatch ${JSON.stringify(listState)}`);
     interactions.listToggle = listState;
 
-    await page.locator('[data-calendar-view="dayGridMonth"]').click();
+    await page.locator('[data-ref002-calendar-view="dayGridMonth"]').click();
     await page.waitForFunction(() => window.__ref002Calendar?.view?.type === 'dayGridMonth');
     await page.waitForFunction(() => document.documentElement.dataset.calendarUiView === 'dayGridMonth');
 
