@@ -111,7 +111,6 @@ jobs:
             },
           }
 
-          # Keep every pixel delta as evidence. These hard checks only protect authored outer geometry.
           for viewport, values in deltas.items():
             for key, value in values.items():
               assert abs(value) <= 0.5, f'{viewport} {key}: {value:+.3f}px'
@@ -141,9 +140,11 @@ jobs:
             /tmp/ref002-events-pc.json \
             /tmp/ref002-budokan/events-pc-repair-wave-1.png \
             /tmp/ref002-budokan/events-pc-repair-wave-1.measurement.json
-          python3 - <<'PY'
+          PYTHONPATH=tools/implementation-intake python3 - <<'PY'
           import json
           from pathlib import Path
+          from evidence_visibility import classify_stylesheet_visibility
+
           m = json.loads(Path('/tmp/ref002-budokan/events-pc-repair-wave-1.measurement.json').read_text())
           assert m['captureStability']['stable'] is True, m['captureStability']
           assert m['environment']['devicePixelRatio'] == 1
@@ -152,6 +153,14 @@ jobs:
           assert m['matchedRuleSummary']['totalObserved'] > 0, m['matchedRuleSummary']
           kinds = {row['kind'] for row in m['semanticRegions']}
           assert 'text' in kinds, kinds
+
+          visibility = classify_stylesheet_visibility(m['stylesheetDiagnostics'])
+          assert visibility['kind'] == 'partial', visibility
+          assert visibility['blockedExternalStylesheets'] >= 3, visibility
+          assert visibility['canClaimCompleteCssOwnership'] is False, visibility
+          assert visibility['cssOwnerConfidenceCeiling'] < 1.0, visibility
+          Path('/tmp/ref002-budokan/stylesheet-visibility.json').write_text(json.dumps(visibility, indent=2))
+          print(json.dumps(visibility, indent=2))
           PY
 
       - name: Upload Repair Wave 1 evidence
