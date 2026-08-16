@@ -25,10 +25,7 @@ jobs:
             echo 'Legacy FullCalendar updateSize workaround is not allowed without measured evidence.' >&2
             exit 1
           fi
-          if grep -R "https://www.figma.com/api/mcp/asset/" experiments/ref002-budokan-fullcalendar-validation; then
-            echo 'Short-lived Figma MCP asset URL persisted in REF-002 source.' >&2
-            exit 1
-          fi
+          # Repository-wide validate-research owns the short-lived Figma URL leak gate.
 
       - name: Install browser runtime
         run: |
@@ -72,25 +69,9 @@ jobs:
           sp = rows['sp']
 
           authority = {
-            'pc': {
-              'headerHeight': 100,
-              'heroY': 100,
-              'heroHeight': 640,
-              'eventsY': 740,
-              'eventListWidth': 660,
-              'eventListHeight': 744,
-              'calendarWidth': 420,
-              'calendarHeight': 706,
-            },
-            'sp': {
-              'headerHeight': 60,
-              'eventListWidth': 327,
-              'eventListHeight': 656,
-              'calendarWidth': 327,
-              'calendarHeight': 674,
-            },
+            'pc': {'headerHeight':100,'heroY':100,'heroHeight':640,'eventsY':740,'eventListWidth':660,'eventListHeight':744,'calendarWidth':420,'calendarHeight':706},
+            'sp': {'headerHeight':60,'eventListWidth':327,'eventListHeight':656,'calendarWidth':327,'calendarHeight':674},
           }
-
           deltas = {
             'pc': {
               'headerHeightDeltaPx': pc['header']['height'] - authority['pc']['headerHeight'],
@@ -110,11 +91,9 @@ jobs:
               'calendarHeightDeltaPx': sp['calendarPanel']['height'] - authority['sp']['calendarHeight'],
             },
           }
-
           for viewport, values in deltas.items():
             for key, value in values.items():
               assert abs(value) <= 0.5, f'{viewport} {key}: {value:+.3f}px'
-
           assert pc['assetPendingCount'] > 0 and sp['assetPendingCount'] > 0
           Path('/tmp/ref002-budokan/repair-wave-1-deltas.json').write_text(json.dumps(deltas, indent=2))
           print(json.dumps(deltas, indent=2))
@@ -144,7 +123,6 @@ jobs:
           import json
           from pathlib import Path
           from evidence_visibility import classify_stylesheet_visibility
-
           m = json.loads(Path('/tmp/ref002-budokan/events-pc-repair-wave-1.measurement.json').read_text())
           assert m['captureStability']['stable'] is True, m['captureStability']
           assert m['environment']['devicePixelRatio'] == 1
@@ -153,7 +131,6 @@ jobs:
           assert m['matchedRuleSummary']['totalObserved'] > 0, m['matchedRuleSummary']
           kinds = {row['kind'] for row in m['semanticRegions']}
           assert 'text' in kinds, kinds
-
           visibility = classify_stylesheet_visibility(m['stylesheetDiagnostics'])
           assert visibility['kind'] == 'partial', visibility
           assert visibility['blockedExternalStylesheets'] >= 3, visibility
@@ -168,7 +145,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ref002-budokan-repair-wave-1
-          path: |
-            /tmp/ref002-budokan
+          path: /tmp/ref002-budokan
           if-no-files-found: warn
           retention-days: 7
