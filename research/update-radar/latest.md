@@ -1,58 +1,18 @@
 # Update Radar — Latest Official Source Scan
 
-Generated: `2026-08-15T03:55:57+00:00`
+Generated: `2026-08-16T04:01:20+00:00`
 
 Active lanes: ACCESSIBILITY, CLAUDE_CODE, CODEX, CURSOR, DESIGN_SYSTEMS, FIGMA, MCP, WEB_PLATFORM, WORDPRESS_ACF
 
 ## Summary
 
 - Sources checked: 27
-- Changed since previous snapshot: 6
+- Changed since previous snapshot: 1
 - First observations: 0
 - Fetch errors: 3
-- RETEST candidates: ACCESSIBILITY, AGENT_CONTEXT, ANIMATION, ASSET_FIDELITY, COLOR_GRADIENT, CSS_RESET, FIGMA_LAYOUT_GENERATION, FIGMA_MCP, INPUT_CAPABILITY, LAYOUT, PARALLEL_EXECUTION, TYPOGRAPHY_RUNTIME, VARIABLE_MODE_RUNTIME
+- RETEST candidates: ACCESSIBILITY, AGENT_CONTEXT, ASSET_FIDELITY, CSS_RESET, INPUT_CAPABILITY, TYPOGRAPHY_RUNTIME
 
 ## Changed sources
-
-### figma-release-notes
-
-- Lane: `FIGMA`
-- Latest title: Figma product news and release notes
-- Impacts: FIGMA_STRUCTURE, FIGMA_TO_CODE, CODE_TO_FIGMA, DESIGN_HANDOFF, VISUAL_FIDELITY
-- RETEST: INPUT_CAPABILITY, ANIMATION, LAYOUT, FIGMA_LAYOUT_GENERATION, TYPOGRAPHY_RUNTIME, ASSET_FIDELITY, COLOR_GRADIENT, ACCESSIBILITY, FIGMA_MCP, AGENT_CONTEXT
-- Source: https://www.figma.com/release-notes/
-
-### figma-text-properties-current
-
-- Lane: `FIGMA`
-- Latest title: Explore text properties – Figma Learn - Help Center
-- Impacts: FIGMA_STRUCTURE, FIGMA_TO_CODE, CSS, TYPOGRAPHY, VISUAL_FIDELITY
-- RETEST: INPUT_CAPABILITY, LAYOUT, FIGMA_LAYOUT_GENERATION, TYPOGRAPHY_RUNTIME, ACCESSIBILITY
-- Source: https://help.figma.com/hc/en-us/articles/360039956634-Explore-text-properties
-
-### claude-code-releases
-
-- Lane: `CLAUDE_CODE`
-- Latest title: v2.1.233
-- Impacts: AGENT_CAPABILITY, MCP, PARALLEL_EXECUTION, CONTEXT_HANDLING
-- RETEST: ASSET_FIDELITY, VARIABLE_MODE_RUNTIME, ACCESSIBILITY, FIGMA_MCP, AGENT_CONTEXT, PARALLEL_EXECUTION
-- Source: https://api.github.com/repos/anthropics/claude-code/releases?per_page=12
-
-### claude-code-feed
-
-- Lane: `CLAUDE_CODE`
-- Latest title: Claude Code v2.1.233
-- Impacts: AGENT_CAPABILITY, MCP, CONTEXT_HANDLING
-- RETEST: ASSET_FIDELITY, VARIABLE_MODE_RUNTIME, ACCESSIBILITY, FIGMA_MCP, AGENT_CONTEXT, PARALLEL_EXECUTION
-- Source: https://raw.githubusercontent.com/anthropics/claude-code/main/feed.xml
-
-### web-features-releases
-
-- Lane: `WEB_PLATFORM`
-- Latest title: web-features@next
-- Impacts: CSS, WEB_PLATFORM, BROWSER_SUPPORT, FEATURE_ADOPTION
-- RETEST: CSS_RESET, LAYOUT, ASSET_FIDELITY, COLOR_GRADIENT, ACCESSIBILITY, AGENT_CONTEXT
-- Source: https://api.github.com/repos/web-platform-dx/web-features/releases?per_page=12
 
 ### mdn-browser-compat-data-releases
 
