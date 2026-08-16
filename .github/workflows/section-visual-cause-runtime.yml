@@ -1,0 +1,238 @@
+name: Section Visual Cause Runtime
+
+on:
+  pull_request:
+    paths:
+      - 'tools/implementation-intake/fast_visual_qa.py'
+      - 'tools/implementation-intake/visual_cause.py'
+      - 'tools/implementation-intake/cause_bundle.py'
+      - 'tools/implementation-intake/multiscale_diff.py'
+      - 'tools/implementation-intake/section_capture.mjs'
+      - 'tools/implementation-intake/failure_benchmark.py'
+      - 'tools/implementation-intake/failure-archetypes.json'
+      - '.github/workflows/section-visual-cause-runtime.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  real-ref001-read-only-cause-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install image and browser runtime
+        run: |
+          python3 -m pip install --quiet pillow
+          mkdir -p /tmp/ref001-playwright
+          cd /tmp/ref001-playwright
+          npm init -y >/dev/null 2>&1
+          npm install playwright@1.54.2 >/dev/null
+          npx playwright install --with-deps chromium
+          ln -s /tmp/ref001-playwright/node_modules "$GITHUB_WORKSPACE/tools/implementation-intake/node_modules"
+
+      - name: Stage canonical rendered assets for read-only fixture
+        run: |
+          SOURCE='implementation/theme/assets/images/ref001/rendered'
+          DEST='experiments/ref001-blind-clean-20260812/implementation/theme/assets/images/ref001/rendered'
+          if [ -d "$SOURCE" ]; then
+            mkdir -p "$DEST"
+            cp -R "$SOURCE"/. "$DEST"/
+          fi
+
+      - name: Start existing REF-001 fixture read-only
+        run: |
+          php -S 127.0.0.1:8765 -t experiments/ref001-blind-clean-20260812/implementation/theme > /tmp/ref001-php.log 2>&1 &
+          echo $! > /tmp/ref001-php.pid
+          for i in $(seq 1 20); do
+            curl -fsS http://127.0.0.1:8765/preview.php >/dev/null && exit 0
+            sleep 1
+          done
+          cat /tmp/ref001-php.log
+          exit 1
+
+      - name: Crop authored Education reference from committed Figma root
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          source = Path('research/figma-assets/ref001/node-21384-8173.png')
+          target = Path('/tmp/education-figma.png')
+          with Image.open(source) as image:
+              assert image.size == (1380, 7714), image.size
+              crop = image.crop((0, 1541, 1380, 2225))
+              assert crop.size == (1380, 684), crop.size
+              crop.save(target)
+          PY
+
+      - name: Capture clean Education with cause evidence
+        run: |
+          cat > /tmp/education-clean-contract.json <<'JSON'
+          {
+            "id":"ref001-education-clean-runtime",
+            "figma":{"fileKey":"ZYTdtw4wCgkcBy2cVnhxVI","nodeId":"21378:7868"},
+            "implementation":{"url":"http://127.0.0.1:8765/preview.php","selector":".ref-education","index":0},
+            "viewport":{"width":1380,"height":900,"dpr":1},
+            "reference":{"image":"/tmp/education-figma.png","measurement":"/tmp/education-clean.measurement.json"},
+            "environment":{"readySelector":".ref-education","stabilityFrames":3,"stabilityTolerancePx":0.25,"stabilityTimeoutMs":900},
+            "probes":["h2",".ref-edu-card"],
+            "mode":"CHECKPOINT",
+            "multiScaleDiff":true,
+            "repairCandidates":[
+              {"id":"no-op-transform","css":".ref-education{transform:none!important;}"},
+              {"id":"worse-child-shift","css":".ref-education .ref-content{transform:translateX(24px)!important;}"}
+            ]
+          }
+          JSON
+          node tools/implementation-intake/section_capture.mjs \
+            /tmp/education-clean-contract.json \
+            /tmp/education-clean.png \
+            /tmp/education-clean.measurement.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          m = json.loads(Path('/tmp/education-clean.measurement.json').read_text())
+          assert m['captureStability']['stable'] is True
+          assert m['typographyFingerprint']['lineRects']
+          assert m['matchedRuleSummary']['totalObserved'] > 0, m['matchedRuleSummary']
+          assert any(sheet['accessible'] and sheet['ruleCount'] > 0 for sheet in m['stylesheetDiagnostics'])
+          assert m['environment']['browserVersion']
+          assert m['environment']['devicePixelRatio'] == 1
+          assert m['box']['y'] == 1541
+          assert m['images']
+          kinds = {row['kind'] for row in m['semanticRegions']}
+          assert 'text' in kinds and 'image' in kinds
+          PY
+
+      - name: Run real Figma-to-Web cause loop and reject harmful counterfactual
+        run: |
+          python3 tools/implementation-intake/fast_visual_qa.py run \
+            /tmp/education-clean-contract.json \
+            --output /tmp/education-fast-loop > /tmp/education-fast-loop.stdout.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path('/tmp/education-fast-loop/report.json').read_text())
+          assert report['diagnosis']['causeEvidence']['captureStability']['stable'] is True
+          assert report['multiScaleDiff']['classification']['kind'] == 'structural-difference-persists'
+          ratio = report['diagnosis']['pixelDiffRatio']
+          assert 0.053 <= ratio <= 0.056, ratio
+          cf = report['counterfactualRepairs']
+          candidates = {row['id']: row for row in cf['candidates']}
+          assert candidates['no-op-transform']['decisionReason'] == 'no-visual-gain'
+          assert candidates['worse-child-shift']['accepted'] is False
+          assert candidates['worse-child-shift']['decisionReason'] == 'visual-regression'
+          assert candidates['worse-child-shift']['pixelDiffRatio'] >= 0.16
+          PY
+
+      - name: Measure DPR 1x versus 2x behavior
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          contract = json.loads(Path('/tmp/education-clean-contract.json').read_text())
+          contract['id'] = 'ref001-education-dpr2'
+          contract['viewport']['dpr'] = 2
+          contract['repairCandidates'] = []
+          contract['multiScaleDiff'] = False
+          Path('/tmp/education-dpr2-contract.json').write_text(json.dumps(contract))
+          PY
+          node tools/implementation-intake/section_capture.mjs \
+            /tmp/education-dpr2-contract.json \
+            /tmp/education-dpr2-device.png \
+            /tmp/education-dpr2.measurement.json
+          python3 - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          source = Path('/tmp/education-dpr2-device.png')
+          target = Path('/tmp/education-dpr2-css.png')
+          with Image.open(source).convert('RGB') as image:
+              assert image.size == (2760, 1368), image.size
+              image.resize((1380, 684), Image.Resampling.LANCZOS).save(target)
+          PY
+          python3 scripts/diff_png.py \
+            /tmp/education-dpr2-css.png \
+            /tmp/education-figma.png \
+            /tmp/education-dpr2-diff.png \
+            0.14 > /tmp/education-dpr2-ratio.txt
+          python3 - <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+          sys.path.insert(0, 'tools/implementation-intake')
+          from visual_cause import classify_dpr_variance
+          report = json.loads(Path('/tmp/education-fast-loop/report.json').read_text())
+          ratio1 = float(report['diagnosis']['pixelDiffRatio'])
+          ratio2 = float(Path('/tmp/education-dpr2-ratio.txt').read_text().strip())
+          result = classify_dpr_variance({'1': ratio1, '2': ratio2})
+          Path('/tmp/education-dpr-classification.json').write_text(json.dumps(result, indent=2))
+          assert result['kind'] != 'insufficient-dpr-evidence'
+          m = json.loads(Path('/tmp/education-dpr2.measurement.json').read_text())
+          assert m['environment']['devicePixelRatio'] == 2
+          PY
+
+      - name: Inject controlled runtime fault and locate exact CSS owner
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          clean = json.loads(Path('/tmp/education-clean-contract.json').read_text())
+          clean['id'] = 'ref001-education-controlled-fault'
+          clean['environment']['injectCss'] = '.ref-education{transform:translateX(12px)!important;}'
+          clean['repairCandidates'] = []
+          Path('/tmp/education-fault-contract.json').write_text(json.dumps(clean))
+          PY
+          node tools/implementation-intake/section_capture.mjs \
+            /tmp/education-fault-contract.json \
+            /tmp/education-fault.png \
+            /tmp/education-fault.measurement.json
+          python3 tools/implementation-intake/fast_visual_qa.py diagnose \
+            /tmp/education-clean.measurement.json \
+            /tmp/education-fault.measurement.json > /tmp/education-fault-diagnosis.json
+          python3 tools/implementation-intake/cause_bundle.py \
+            /tmp/education-clean.measurement.json \
+            /tmp/education-fault.measurement.json \
+            --output /tmp/education-fault-cause-bundle.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          result = json.loads(Path('/tmp/education-fault-diagnosis.json').read_text())
+          x = next(item for item in result['differences'] if item['property'] == 'x')
+          assert 11.5 <= x['deltaPx'] <= 12.5, x
+          css_groups = result['causeEvidence']['cssRootCandidates']
+          x_group = next(group for group in css_groups if group['difference']['property'] == 'x')
+          top = x_group['candidates'][0]
+          assert 'transform' in top['overlap'], top
+          assert 'transform' in top['important'], top
+          bundle = json.loads(Path('/tmp/education-fault-cause-bundle.json').read_text())
+          assert bundle['semanticRegions']['semanticStructureMismatch'] is False
+          assert bundle['assetProvenance']['likelyCause'] == 'asset-provenance-aligned'
+          PY
+
+      - name: Verify fixture source stayed untouched
+        run: |
+          git diff --exit-code -- experiments/ref001-blind-clean-20260812/implementation implementation/theme/assets/images/ref001
+
+      - name: Upload cause-loop evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: section-visual-cause-ref001-read-only
+          path: |
+            /tmp/education-figma.png
+            /tmp/education-clean.png
+            /tmp/education-clean.measurement.json
+            /tmp/education-fast-loop
+            /tmp/education-dpr2-device.png
+            /tmp/education-dpr2-css.png
+            /tmp/education-dpr2-diff.png
+            /tmp/education-dpr2.measurement.json
+            /tmp/education-dpr-classification.json
+            /tmp/education-fault.png
+            /tmp/education-fault.measurement.json
+            /tmp/education-fault-diagnosis.json
+            /tmp/education-fault-cause-bundle.json
+          if-no-files-found: warn
+          retention-days: 7

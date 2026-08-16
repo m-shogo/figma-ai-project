@@ -1,0 +1,163 @@
+{
+  "version": 1,
+  "questions": [
+    {
+      "id": "target.runtime",
+      "category": "target",
+      "severity": "blocking",
+      "prompt": "What are we implementing?",
+      "type": "single",
+      "options": ["html", "wordpress", "react", "other"],
+      "why": "Selects the implementation/runtime contract before code is generated."
+    },
+    {
+      "id": "target.pageType",
+      "category": "target",
+      "severity": "blocking",
+      "prompt": "What kind of page is this?",
+      "type": "single",
+      "options": ["standalone-lp", "existing-theme-page", "front-page", "fixed-page", "archive", "single", "custom-template", "app-screen", "other"],
+      "why": "Prevents a standalone LP from being forced into a company theme pattern, or vice versa."
+    },
+    {
+      "id": "integration.mode",
+      "category": "integration",
+      "severity": "blocking",
+      "prompt": "How should existing repository architecture be treated?",
+      "type": "single",
+      "options": ["isolated", "adapt-existing", "new-project", "undetermined"],
+      "why": "Determines whether existing CSS/JS/template/component conventions are authoritative."
+    },
+    {
+      "id": "cms.mode",
+      "category": "cms",
+      "severity": "blocking",
+      "prompt": "How editable should content be from the CMS?",
+      "type": "single",
+      "options": ["none", "text-and-images", "selected-sections", "full-content", "undetermined"],
+      "when": {"target.runtime": ["wordpress"]},
+      "why": "Visual repetition alone must not decide CMS ownership."
+    },
+    {
+      "id": "cms.acf",
+      "category": "cms",
+      "severity": "blocking",
+      "prompt": "What is the ACF contract?",
+      "type": "single",
+      "options": ["none", "acf-free", "acf-pro", "existing-project-contract", "undetermined"],
+      "when": {"target.runtime": ["wordpress"]},
+      "why": "Controls field capabilities and deliverables without silently assuming ACF Pro."
+    },
+    {
+      "id": "cms.repetitionPolicy",
+      "category": "cms",
+      "severity": "review",
+      "prompt": "How should repeated-looking content be modeled?",
+      "type": "single",
+      "options": ["decide-per-collection", "fixed", "repeater-allowed", "post-type-allowed", "inherit-existing", "undetermined"],
+      "when": {"target.runtime": ["wordpress"]},
+      "why": "Visual repetition is evidence, not automatic permission to create a Repeater."
+    },
+    {
+      "id": "cms.flexibleContentPolicy",
+      "category": "cms",
+      "severity": "review",
+      "prompt": "May Flexible Content be introduced?",
+      "type": "single",
+      "options": ["forbidden", "allowed-if-required", "inherit-existing", "undetermined"],
+      "when": {"cms.acf": ["acf-pro", "existing-project-contract"]},
+      "why": "Avoids turning one page into an unnecessary page-builder architecture."
+    },
+    {
+      "id": "responsive.references",
+      "category": "responsive",
+      "severity": "blocking",
+      "prompt": "Which Figma responsive references exist?",
+      "type": "multi",
+      "options": ["desktop", "mobile", "tablet", "none"],
+      "why": "Reference widths are evidence; intermediate widths are a separate robustness problem."
+    },
+    {
+      "id": "responsive.intermediate",
+      "category": "responsive",
+      "severity": "review",
+      "prompt": "How should widths without a Figma reference be handled?",
+      "type": "single",
+      "options": ["infer-fluidly", "project-breakpoint-contract", "explicit-design-needed", "undetermined"],
+      "why": "Prevents blindly reusing breakpoints from another project."
+    },
+    {
+      "id": "assets.pcSp",
+      "category": "assets",
+      "severity": "review",
+      "prompt": "What is the desktop/mobile asset policy?",
+      "type": "single",
+      "options": ["same-asset-crop", "separate-assets", "mixed-by-slot", "inspect-figma", "undetermined"],
+      "why": "Avoids replacing authored PC/SP compositions with an assumed shared crop."
+    },
+    {
+      "id": "assets.exportAuthority",
+      "category": "assets",
+      "severity": "review",
+      "prompt": "Which representation is authoritative for Figma visuals?",
+      "type": "single",
+      "options": ["semantic-web", "figma-vector", "figma-rendered-raster", "decide-per-asset", "inherit-existing", "undetermined"],
+      "why": "Separates editable text from authored identity, vectors, masks, and composites."
+    },
+    {
+      "id": "interaction.slider",
+      "category": "interaction",
+      "severity": "review",
+      "prompt": "How should slider/carousel behavior be decided?",
+      "type": "single",
+      "options": ["reuse-existing-library", "swiper-if-needed", "css-scroll-snap-if-simple", "evidence-required", "no-slider", "undetermined"],
+      "why": "A slider-looking Figma frame does not prove autoplay, loop, drag, navigation, or pagination."
+    },
+    {
+      "id": "qa.visualReference",
+      "category": "qa",
+      "severity": "blocking",
+      "prompt": "What is the visual fidelity reference?",
+      "type": "single",
+      "options": ["figma-frame", "approved-screenshot", "existing-site", "none", "undetermined"],
+      "why": "Pixel fidelity needs a concrete reference; robustness states must not be diffed against nonexistent Figma states."
+    },
+    {
+      "id": "qa.cmsMutation",
+      "category": "qa",
+      "severity": "review",
+      "prompt": "Should CMS mutation robustness be required?",
+      "type": "single",
+      "options": ["required", "not-required", "inherit-existing", "undetermined"],
+      "when": {"target.runtime": ["wordpress"]},
+      "why": "Separates Figma baseline fidelity from edit/add/remove/reorder robustness."
+    },
+    {
+      "id": "deliverables.acfJson",
+      "category": "deliverables",
+      "severity": "review",
+      "prompt": "What ACF field-definition deliverable is required?",
+      "type": "single",
+      "options": ["local-json", "portable-export", "both", "inherit-existing", "none", "undetermined"],
+      "when": {"cms.acf": ["acf-pro", "acf-free", "existing-project-contract"]},
+      "why": "Prevents PHP templates from being delivered without reproducible field definitions."
+    },
+    {
+      "id": "editability.human",
+      "category": "editability",
+      "severity": "blocking",
+      "prompt": "What level of human editability is required after AI implementation?",
+      "type": "single",
+      "options": ["high", "normal", "throwaway-prototype", "undetermined"],
+      "why": "High fidelity must not silently produce code that humans cannot safely maintain."
+    },
+    {
+      "id": "constraints.prohibitedChanges",
+      "category": "constraints",
+      "severity": "review",
+      "prompt": "Are there explicit implementation prohibitions or protected areas?",
+      "type": "text-list",
+      "why": "Captures constraints such as V2/V3 protected paths, existing class names, libraries, or template ownership."
+    }
+  ]
+}
