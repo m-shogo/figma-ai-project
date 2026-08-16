@@ -1,24 +1,24 @@
 (() => {
   const fixtureEvents = [
-    ['2023-08-01', 'イベント名', 'event-neutral'],
-    ['2023-08-02', 'イベント名', 'event-neutral'],
-    ['2023-08-03', 'イベント名', 'event-neutral'],
-    ['2023-08-10', 'イベント名', 'event-neutral'],
-    ['2023-08-12', 'イベント名', 'event-neutral'],
-    ['2023-08-13', 'イベント名', 'event-yellow'],
-    ['2023-08-14', 'イベント名', 'event-neutral'],
-    ['2023-08-16', 'イベント名', 'event-neutral'],
-    ['2023-08-18', 'イベント名', 'event-blue'],
-    ['2023-08-19', 'イベント名', 'event-neutral'],
-    ['2023-08-20', 'イベント名', 'event-yellow'],
-    ['2023-08-21', 'イベント名', 'event-neutral'],
-    ['2023-08-22', 'イベント名', 'event-neutral'],
-    ['2023-08-23', 'イベント名', 'event-blue'],
-    ['2023-08-25', 'イベント名', 'event-neutral'],
-    ['2023-08-26', 'イベント名', 'event-neutral'],
-    ['2023-08-27', 'イベント名', 'event-yellow'],
-    ['2023-08-29', 'イベント名', 'event-neutral']
-  ].map(([start, title, className]) => ({ start, title, classNames: [className], allDay: true }));
+    ['2023-08-01', 'イベント名', 'neutral'],
+    ['2023-08-02', 'イベント名', 'neutral'],
+    ['2023-08-03', 'イベント名', 'neutral'],
+    ['2023-08-10', 'イベント名', 'neutral'],
+    ['2023-08-12', 'イベント名', 'neutral'],
+    ['2023-08-13', 'イベント名', 'yellow'],
+    ['2023-08-14', 'イベント名', 'neutral'],
+    ['2023-08-16', 'イベント名', 'neutral'],
+    ['2023-08-18', 'イベント名', 'blue'],
+    ['2023-08-19', 'イベント名', 'neutral'],
+    ['2023-08-20', 'イベント名', 'yellow'],
+    ['2023-08-21', 'イベント名', 'neutral'],
+    ['2023-08-22', 'イベント名', 'neutral'],
+    ['2023-08-23', 'イベント名', 'blue'],
+    ['2023-08-25', 'イベント名', 'neutral'],
+    ['2023-08-26', 'イベント名', 'neutral'],
+    ['2023-08-27', 'イベント名', 'yellow'],
+    ['2023-08-29', 'イベント名', 'neutral']
+  ].map(([start, title, kind]) => ({ start, title, allDay: true, extendedProps: { kind } }));
 
   function initCalendar() {
     const calendarEl = document.getElementById('calendar');
@@ -45,6 +45,16 @@
       dayHeaderFormat: { weekday: 'short' },
       dayCellContent(arg) {
         return { html: `<span>${arg.date.getDate()}</span>` };
+      },
+      eventClass(info) {
+        return ['ref002-calendar-event', `event-${info.event.extendedProps.kind || 'neutral'}`];
+      },
+      eventDidMount(info) {
+        info.el.dataset.ref002Event = 'true';
+        info.el.dataset.ref002EventKind = info.event.extendedProps.kind || 'neutral';
+      },
+      viewDidMount(info) {
+        info.el.dataset.ref002View = info.view.type;
       },
       datesSet(info) {
         const date = info.view.currentStart || calendar.getDate();
