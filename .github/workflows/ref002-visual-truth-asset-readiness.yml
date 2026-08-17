@@ -1,0 +1,77 @@
+name: REF002 Visual Truth and Asset Readiness
+
+on:
+  pull_request:
+    paths:
+      - 'tools/implementation-intake/visual_truth_guard.py'
+      - 'tools/implementation-intake/test_visual_truth_guard.py'
+      - 'tools/implementation-intake/REF002_VISUAL_TRUTH_ASSET_LEARNING.md'
+      - '.github/workflows/ref002-visual-truth-asset-readiness.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Compile and run focused Fast Loop guards
+        working-directory: tools/implementation-intake
+        run: |
+          python3 -m py_compile visual_truth_guard.py test_visual_truth_guard.py
+          python3 -m unittest -v test_visual_truth_guard.py
+      - name: Prove existing materializer record requires durable bytes
+        working-directory: tools/implementation-intake
+        run: |
+          python3 - <<'PY'
+          import tempfile
+          from pathlib import Path
+          from fast_loop_next import materialize_bytes
+          from visual_truth_guard import durable_asset_state
+
+          with tempfile.TemporaryDirectory() as tmp:
+              root = Path(tmp)
+              record = materialize_bytes(b'ref002-ci-fixture', root, 'events-card', '.png', {
+                  'figmaFileKey': 'RfAQQ28V1HGaeIcpgRmQq1',
+                  'nodeId': '894:19313',
+              })
+              assert durable_asset_state(record, root)['state'] == 'ASSET_READY'
+              (root / record['path']).unlink()
+              pending = durable_asset_state(record, root)
+              assert pending['state'] == 'ASSET_PENDING'
+              assert pending['reason'] == 'durable-bytes-not-present'
+          PY
+      - name: Prove REF-002 wrapper normalization decision
+        working-directory: tools/implementation-intake
+        run: |
+          python3 - <<'PY'
+          from visual_truth_guard import diagnose_reference_wrapper
+
+          pc = diagnose_reference_wrapper(1381, [
+              {'id': f'pc-{i}', 'x': 1, 'width': 1380}
+              for i in range(8)
+          ])
+          assert pc['kind'] == 'wrapper-only-gutter'
+          assert pc['comparisonCrop'] == {'x': 1.0, 'width': 1380.0}
+          assert pc['runtimeTargetWidth'] == 1380.0
+          assert pc['mutateRuntime'] is False
+
+          sp = diagnose_reference_wrapper(375, [
+              {'id': f'sp-{i}', 'x': 0, 'width': 375}
+              for i in range(3)
+          ])
+          assert sp['kind'] == 'aligned'
+          assert sp['normalizeReference'] is False
+          PY
+      - name: Ephemeral Figma asset URL leak guard
+        run: |
+          if grep -R -E --line-number 'https://www\.figma\.com/api/mcp/asset/[0-9a-fA-F-]{20,}' \
+            tools/implementation-intake/visual_truth_guard.py \
+            tools/implementation-intake/test_visual_truth_guard.py \
+            tools/implementation-intake/REF002_VISUAL_TRUTH_ASSET_LEARNING.md \
+            .github/workflows/ref002-visual-truth-asset-readiness.yml; then
+            echo 'Concrete short-lived Figma asset URL must not be committed.'
+            exit 1
+          fi
