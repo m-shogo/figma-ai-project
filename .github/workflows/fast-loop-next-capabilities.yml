@@ -1,0 +1,238 @@
+name: Fast Loop Next Capabilities
+
+on:
+  pull_request:
+    paths:
+      - 'tools/implementation-intake/fast_loop_next.py'
+      - 'tools/implementation-intake/advanced_capture.mjs'
+      - 'tools/implementation-intake/test_fast_loop_next.py'
+      - 'tools/implementation-intake/NEXT_CAPABILITIES.md'
+      - '.github/workflows/fast-loop-next-capabilities.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Syntax and integrated Fast Loop unit tests
+        run: |
+          python3 -m py_compile tools/implementation-intake/fast_loop_next.py tools/implementation-intake/test_fast_loop_next.py
+          cd tools/implementation-intake
+          python3 -m unittest -v \
+            test_fast_visual_qa.py \
+            test_probe_adapter.py \
+            test_component_candidates.py \
+            test_fast_loop_ops.py \
+            test_micro_diff.py \
+            test_visual_cause.py \
+            test_figma_intent.py \
+            test_fast_loop_next.py
+          python3 failure_benchmark.py failure-archetypes.json --output /tmp/failure-benchmark.json
+          python3 - <<'PY'
+          import json
+          result=json.load(open('/tmp/failure-benchmark.json'))
+          assert result['summary']['failed'] == 0
+          assert result['summary']['total'] >= 15
+          PY
+          node --check advanced_capture.mjs
+      - name: Planner smoke
+        working-directory: tools/implementation-intake
+        run: |
+          cat > /tmp/next-contract.json <<'JSON'
+          {
+            "implementation":{"url":"http://127.0.0.1:8765/","selector":"#fixture"},
+            "viewport":{"width":390,"height":844,"dpr":3},
+            "riskSignals":["font","grid"],
+            "semanticRisk":true,
+            "interactionStates":[{"id":"default"},{"id":"open","actions":[{"type":"click","selector":".toggle"}]}],
+            "containerSelectors":[".card"],
+            "responsiveContinuum":{"min":320,"max":1380,"knownBreakpoints":[768],"maxProbes":9},
+            "assetMaterialization":true,
+            "humanRepairLearning":true,
+            "repairCandidates":[{"id":"a"}],
+            "figmaEvidence":{"codeConnectAvailable":false,"codeConnectError":"example-unavailable-capability"}
+          }
+          JSON
+          python3 fast_loop_next.py plan /tmp/next-contract.json --output /tmp/next-plan.json
+          python3 - <<'PY'
+          import json
+          p=json.load(open('/tmp/next-plan.json'))
+          assert p['policy']['allOnByDefault'] is False
+          assert p['browserPlan']['browsers'] == ['chromium','webkit','firefox']
+          assert 'asset-materializer' in p['activated']
+          assert 'interaction-state-matrix' in p['activated']
+          assert p['figmaEvidence']['codeConnect']['state'] == 'UNDETERMINED'
+          assert {767,768,769}.issubset(set(p['responsiveWidths']))
+          PY
+      - name: Asset and bridge manifest smoke
+        working-directory: tools/implementation-intake
+        run: |
+          printf 'fixture-bytes' > /tmp/asset.png
+          python3 fast_loop_next.py materialize-file /tmp/asset.png --output-root /tmp/materialized --logical-id fixture > /tmp/materialized.json
+          SHA="$(python3 - <<'PY'
+          import json
+          print(json.load(open('/tmp/materialized.json'))['sha256'])
+          PY
+          )"
+          python3 fast_loop_next.py bridge-manifest --source-file asset.png --sha256 "$SHA" --task-id fast-loop-fixture --repo m-shogo/figma-ai-project --branch agent/fixture --path assets/asset.png --output /tmp/manifest.json
+          python3 - <<'PY'
+          import json
+          m=json.load(open('/tmp/manifest.json'))
+          assert m['version'] == 1
+          assert len(m['sha256']) == 64
+          assert 'api/mcp/asset/' not in json.dumps(m)
+          PY
+      - name: Concrete ephemeral URL leak guard
+        run: |
+          if grep -R -E --line-number 'https://www\.figma\.com/api/mcp/asset/[0-9a-fA-F-]{20,}' tools/implementation-intake .github/workflows/fast-loop-next-capabilities.yml; then
+            echo 'Concrete short-lived Figma asset URL must not be committed.'
+            exit 1
+          fi
+
+  browser-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install Playwright Chromium
+        run: |
+          mkdir -p /tmp/fast-loop-playwright
+          cd /tmp/fast-loop-playwright
+          npm init -y >/dev/null 2>&1
+          npm install playwright@1.54.2 >/dev/null
+          npx playwright install --with-deps chromium
+          ln -s /tmp/fast-loop-playwright/node_modules "$GITHUB_WORKSPACE/tools/implementation-intake/node_modules"
+      - name: Start interaction/container fixture
+        run: |
+          mkdir -p /tmp/advanced-fixture
+          cat > /tmp/advanced-fixture/index.html <<'HTML'
+          <!doctype html><html lang="ja"><head><meta charset="utf-8"><style>
+          #fixture{container:fast-loop / inline-size;width:600px;padding:16px}.card{container-type:inline-size;width:320px}#panel[hidden]{display:none}
+          </style></head><body><main id="fixture"><h1>Fast Loop</h1><div class="card"><button class="toggle" aria-expanded="false" aria-controls="panel">詳細</button><div id="panel" hidden>内容</div></div><p id="downstream">downstream</p></main><script>
+          document.querySelector('.toggle').addEventListener('click',(event)=>{const button=event.currentTarget;const panel=document.querySelector('#panel');panel.hidden=false;panel.style.height='180px';button.setAttribute('aria-expanded','true')})
+          </script></body></html>
+          HTML
+          python3 -m http.server 8765 --directory /tmp/advanced-fixture >/tmp/advanced-fixture.log 2>&1 &
+          for i in $(seq 1 20); do curl -fsS http://127.0.0.1:8765/ >/dev/null && exit 0; sleep 1; done
+          cat /tmp/advanced-fixture.log
+          exit 1
+      - name: Exercise state ARIA font container and layout-shift capture
+        run: |
+          cat > /tmp/advanced-config.json <<'JSON'
+          {
+            "implementation":{"url":"http://127.0.0.1:8765/","selector":"#fixture"},
+            "viewport":{"width":800,"height":700,"dpr":1},
+            "browsers":["chromium"],
+            "outputDir":"/tmp/advanced-output",
+            "trace":{"onFailure":true},
+            "semantic":{"ariaSnapshot":true},
+            "fontProvenance":true,
+            "containerSelectors":[".card"],
+            "states":[
+              {"id":"default","assertions":[{"type":"attribute","selector":".toggle","name":"aria-expanded","value":"false"}]},
+              {"id":"open","actions":[{"type":"click","selector":".toggle"},{"type":"wait","ms":100}],"assertions":[{"type":"attribute","selector":".toggle","name":"aria-expanded","value":"true"},{"type":"visible","selector":"#panel","value":true}]}
+            ]
+          }
+          JSON
+          node tools/implementation-intake/advanced_capture.mjs /tmp/advanced-config.json /tmp/advanced-output/report.json
+          python3 - <<'PY'
+          import json
+          r=json.load(open('/tmp/advanced-output/report.json'))
+          assert r['passed'] is True
+          b=r['results'][0]
+          assert len(b['states']) == 2
+          assert b['states'][0]['aria']['supported'] is True
+          assert b['states'][0]['containerEvidence']['.card']
+          assert b['states'][0]['fontProvenance']['computedFamily']
+          assert b['states'][1]['layoutShifts'], b['states'][1]
+          assert b['trace'] is None
+          PY
+      - name: Keep trace only for expected failure
+        run: |
+          python3 - <<'PY'
+          import json
+          c=json.load(open('/tmp/advanced-config.json'))
+          c['states']=[{"id":"bad","assertions":[{"type":"attribute","selector":".toggle","name":"aria-expanded","value":"never"}]}]
+          open('/tmp/advanced-failing-config.json','w').write(json.dumps(c))
+          PY
+          set +e
+          node tools/implementation-intake/advanced_capture.mjs /tmp/advanced-failing-config.json /tmp/advanced-output/failing-report.json
+          STATUS=$?
+          set -e
+          test "$STATUS" -ne 0
+          test -s /tmp/advanced-output/chromium-trace.zip
+          python3 - <<'PY'
+          import json
+          r=json.load(open('/tmp/advanced-output/failing-report.json'))
+          assert r['passed'] is False
+          assert r['results'][0]['trace'].endswith('chromium-trace.zip')
+          PY
+      - name: Upload browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fast-loop-next-capabilities-browser-smoke
+          path: /tmp/advanced-output
+          if-no-files-found: error
+          retention-days: 7
+
+  cross-browser-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install Playwright Chromium WebKit Firefox
+        run: |
+          mkdir -p /tmp/fast-loop-playwright
+          cd /tmp/fast-loop-playwright
+          npm init -y >/dev/null 2>&1
+          npm install playwright@1.54.2 >/dev/null
+          npx playwright install --with-deps chromium webkit firefox
+          ln -s /tmp/fast-loop-playwright/node_modules "$GITHUB_WORKSPACE/tools/implementation-intake/node_modules"
+      - name: Start portable fixture
+        run: |
+          mkdir -p /tmp/cross-browser-fixture
+          cat > /tmp/cross-browser-fixture/index.html <<'HTML'
+          <!doctype html><html lang="ja"><head><meta charset="utf-8"><style>#fixture{width:360px;padding:16px}.card{container-type:inline-size}</style></head><body><main id="fixture"><h1>Cross browser</h1><div class="card"><button aria-label="確認">確認</button></div></main></body></html>
+          HTML
+          python3 -m http.server 8766 --directory /tmp/cross-browser-fixture >/tmp/cross-browser-fixture.log 2>&1 &
+          for i in $(seq 1 20); do curl -fsS http://127.0.0.1:8766/ >/dev/null && exit 0; sleep 1; done
+          exit 1
+      - name: Capture same semantic contract on all engines
+        run: |
+          cat > /tmp/cross-browser-config.json <<'JSON'
+          {
+            "implementation":{"url":"http://127.0.0.1:8766/","selector":"#fixture"},
+            "viewport":{"width":800,"height":600,"dpr":1},
+            "browsers":["chromium","webkit","firefox"],
+            "outputDir":"/tmp/cross-browser-output",
+            "trace":{"onFailure":true},
+            "semantic":{"ariaSnapshot":true},
+            "fontProvenance":true,
+            "containerSelectors":[".card"],
+            "states":[{"id":"default","assertions":[{"type":"visible","selector":"button","value":true}]}]
+          }
+          JSON
+          node tools/implementation-intake/advanced_capture.mjs /tmp/cross-browser-config.json /tmp/cross-browser-output/report.json
+          python3 - <<'PY'
+          import json
+          r=json.load(open('/tmp/cross-browser-output/report.json'))
+          assert r['passed'] is True, r
+          assert [x['browser'] for x in r['results']] == ['chromium','webkit','firefox']
+          for row in r['results']:
+              assert row['states'][0]['box']['visible'] is True
+              assert row['states'][0]['aria']['supported'] is True
+              assert row['trace'] is None
+          PY
+      - name: Upload cross-browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fast-loop-next-capabilities-cross-browser
+          path: /tmp/cross-browser-output
+          if-no-files-found: error
+          retention-days: 7
