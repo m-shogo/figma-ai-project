@@ -1,0 +1,137 @@
+{
+  "version": 1,
+  "project": {
+    "name": "example-standalone-lp",
+    "profileStatus": "draft"
+  },
+  "answers": {
+    "target.runtime": {
+      "value": "wordpress",
+      "source": "human",
+      "confidence": 1.0,
+      "evidence": "Project requirement",
+      "decidedBy": "owner"
+    },
+    "target.pageType": {
+      "value": "standalone-lp",
+      "source": "human",
+      "confidence": 1.0,
+      "evidence": "One-page independent LP",
+      "decidedBy": "owner"
+    },
+    "integration.mode": {
+      "value": "isolated",
+      "source": "repo-observation",
+      "confidence": 0.9,
+      "evidence": "No company theme integration required",
+      "decidedBy": "ai"
+    },
+    "cms.mode": {
+      "value": "selected-sections",
+      "source": "human",
+      "confidence": 1.0,
+      "evidence": "Only explicitly owned content is CMS-editable",
+      "decidedBy": "owner"
+    },
+    "cms.acf": {
+      "value": "acf-pro",
+      "source": "human",
+      "confidence": 1.0,
+      "evidence": "Project contract",
+      "decidedBy": "owner"
+    },
+    "cms.repetitionPolicy": {
+      "value": "decide-per-collection",
+      "source": "policy",
+      "confidence": 1.0,
+      "evidence": "Visual repetition is not CMS repetition evidence",
+      "decidedBy": "policy"
+    },
+    "responsive.references": {
+      "value": ["desktop", "mobile"],
+      "source": "figma-observation",
+      "confidence": 1.0,
+      "evidence": "Both reference frames exist",
+      "decidedBy": "ai"
+    },
+    "responsive.intermediate": {
+      "value": "infer-fluidly",
+      "source": "human",
+      "confidence": 1.0,
+      "evidence": "Intermediate widths should remain robust without inventing new designs",
+      "decidedBy": "owner"
+    },
+    "assets.pcSp": {
+      "value": "inspect-figma",
+      "source": "policy",
+      "confidence": 1.0,
+      "evidence": "Resolve each slot from authored Figma evidence",
+      "decidedBy": "policy"
+    },
+    "assets.exportAuthority": {
+      "value": "decide-per-asset",
+      "source": "policy",
+      "confidence": 1.0,
+      "evidence": "Text/vector/raster identity is classified before representation",
+      "decidedBy": "policy"
+    },
+    "interaction.slider": {
+      "value": "evidence-required",
+      "source": "policy",
+      "confidence": 1.0,
+      "evidence": "Do not invent autoplay/loop/navigation behavior",
+      "decidedBy": "policy"
+    },
+    "qa.visualReference": {
+      "value": "figma-frame",
+      "source": "human",
+      "confidence": 1.0,
+      "evidence": "Figma is visual authority",
+      "decidedBy": "owner"
+    },
+    "qa.cmsMutation": {
+      "value": "required",
+      "source": "policy",
+      "confidence": 1.0,
+      "evidence": "CMS robustness is a separate QA layer",
+      "decidedBy": "policy"
+    },
+    "deliverables.acfJson": {
+      "value": "both",
+      "source": "human",
+      "confidence": 1.0,
+      "evidence": "Local JSON plus portable export required",
+      "decidedBy": "owner"
+    },
+    "editability.human": {
+      "value": "high",
+      "source": "human",
+      "confidence": 1.0,
+      "evidence": "Humans must be able to maintain and adjust the implementation",
+      "decidedBy": "owner"
+    },
+    "constraints.prohibitedChanges": {
+      "value": ["Do not modify unrelated implementation paths"],
+      "source": "human",
+      "confidence": 1.0,
+      "evidence": "Scope protection",
+      "decidedBy": "owner"
+    }
+  },
+  "collections": [
+    {
+      "id": "feature-cards",
+      "figmaCount": 4,
+      "cmsOwnership": "repeater",
+      "editableFields": ["title", "body", "image", "link"],
+      "evidence": "Project owner requires add/remove/reorder in WordPress"
+    },
+    {
+      "id": "trust-badges",
+      "figmaCount": 3,
+      "cmsOwnership": "fixed",
+      "editableFields": [],
+      "evidence": "Decorative authored composition; no CMS ownership requirement"
+    }
+  ]
+}
