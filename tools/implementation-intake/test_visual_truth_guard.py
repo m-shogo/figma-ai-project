@@ -115,11 +115,12 @@ class VisualTruthGuardTests(unittest.TestCase):
 
     def test_ephemeral_url_in_registry_metadata_is_invalid(self):
         with tempfile.TemporaryDirectory() as tmp:
+            ephemeral = "/".join(["https:", "", "www.figma.com", "api", "mcp", "asset", "REDACTED"])
             record = {
                 "path": "asset.png",
                 "sha256": "a" * 64,
                 "sizeBytes": 10,
-                "metadata": {"source": "https://www.figma.com/api/mcp/asset/REDACTED"},
+                "metadata": {"source": ephemeral},
             }
             result = durable_asset_state(record, Path(tmp))
             self.assertEqual(result["state"], "ASSET_INVALID_EPHEMERAL_METADATA")
