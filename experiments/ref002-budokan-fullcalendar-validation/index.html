@@ -12,13 +12,16 @@
   <link rel="stylesheet" href="./styles.css">
   <link rel="stylesheet" href="./wave2.css">
   <link rel="stylesheet" href="./wave3.css">
+  <link rel="stylesheet" href="./wave4-news.css">
+  <link rel="stylesheet" href="./wave5-partner.css">
+  <link rel="stylesheet" href="./wave6-lower.css">
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@7.0.2/all/global.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@7.0.2/themes/classic/global.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@7.0.2/locales/ja/global.js" defer></script>
   <script src="./app.js" defer></script>
   <script src="./wave3.js" defer></script>
 </head>
-<body>
+<body id="top">
   <header class="site-header" data-section="header">
     <div class="header-top" aria-label="関連団体">
       <a href="#">公益財団法人 日本武道館</a>
@@ -26,16 +29,16 @@
       <a href="#">日本古武道協会</a>
     </div>
     <div class="header-main">
-      <a class="brand" href="#" aria-label="日本武道館 トップ">
+      <a class="brand" href="#top" aria-label="日本武道館 トップ">
         <span class="brand-mark" aria-hidden="true">●</span>
         <span class="brand-copy"><strong>日本武道館</strong><small>NIPPON BUDOKAN</small></span>
       </a>
       <nav class="global-nav" aria-label="メインナビゲーション">
         <a href="#about">日本武道館について</a>
         <a href="#events">大会・イベント</a>
-        <a href="#budo">武道について</a>
-        <a href="#learn">武道を学びたい</a>
-        <a href="#promotion">武道の普及・振興</a>
+        <a href="#purpose">目的から探す</a>
+        <a href="#news">お知らせ</a>
+        <a href="#partner">公式パートナー</a>
       </nav>
       <div class="header-actions">
         <a href="#access">アクセス</a>
@@ -109,7 +112,6 @@
           <div class="about-actions"><a href="#"><span aria-hidden="true">PDF</span>パンフレット（PDF／10MB）</a><a href="#"><span aria-hidden="true">▶</span>ご紹介動画</a></div>
         </div>
       </div>
-
       <div class="about-cards-viewport" data-ref002-about-scroller tabindex="0" aria-label="日本武道館についてのコンテンツ">
         <div class="about-cards-track">
           <article class="about-card" data-about-card="1"><div class="about-card-photo asset-pending about-card-photo--1" data-asset-status="pending"><div class="about-card-caption"><span>書道文化の継承</span><span>武道の普及・振興と</span></div></div><a href="#"><i aria-hidden="true">→</i>日本武道館とは</a></article>
@@ -122,6 +124,52 @@
       </div>
       <div class="about-scroll-indicator" aria-hidden="true"><span></span></div>
     </section>
+
+    <section class="news-section" id="news" data-section="news">
+      <div class="news-inner">
+        <header class="news-header"><div class="news-title"><h1>お知らせ</h1><p><i aria-hidden="true"></i>News</p></div><a class="news-more news-more--sp" href="#news-list"><i aria-hidden="true">→</i><span>一覧を表示</span></a></header>
+        <aside class="news-sidebar"><nav class="news-categories" aria-label="お知らせカテゴリ"><a href="#news-list" aria-current="page">すべて</a><a href="#news-list">武道</a><a href="#news-list">書道</a><a href="#news-list">刊行物</a><a href="#news-list">研修</a><a href="#news-list">事務局</a></nav><a class="news-more news-more--pc" href="#news-list"><i aria-hidden="true">→</i><span>一覧を表示</span></a></aside>
+        <div class="news-list" id="news-list">
+          <article class="news-row"><div class="news-meta"><time datetime="2025-01-01">2025.00.00</time><span>刊行物</span></div><a href="#">日本武道協議会設立45周年記念「少年少女武道指導書」を刊行しました。</a></article>
+          <article class="news-row"><div class="news-meta"><time datetime="2025-01-01">2025.00.00</time><span>事務局</span></div><a href="#">令和7年度職員採用（新卒）の応募受付は終了しました。</a></article>
+          <article class="news-row"><div class="news-meta"><time datetime="2025-01-01">2025.00.00</time><span>武道</span></div><a href="#">11月30日(日)にシンガポールで日本武道演武大会が開催されます。</a></article>
+          <article class="news-row"><div class="news-meta"><time datetime="2025-01-01">2025.00.00</time><span>書道</span></div><a href="#">第62回全日本書初め大展覧会特設ページを開設しました。</a></article>
+          <article class="news-row"><div class="news-meta"><time datetime="2025-01-01">2025.00.00</time><span>事務局</span></div><a href="#">料金の改定について（令和7年10月1日より）</a></article>
+        </div>
+      </div>
+    </section>
+
+    <div class="post-news-gap" aria-hidden="true"></div>
+
+    <section class="partner-section" id="partner" data-section="partner">
+      <div class="partner-inner">
+        <header class="partner-copy"><div><h1>公式パートナー</h1><p class="partner-kicker"><i></i>Official partner</p></div><p class="partner-intro">日本武道館の活動を支える企業や団体</p><a class="partner-more partner-more--pc" href="#partner-list"><i>→</i>公式パートナー一覧</a></header>
+        <div class="partner-list" id="partner-list">
+          <div class="partner-item"><span class="partner-logo" data-asset-status="pending">01</span><span>全日本柔道連盟</span></div><div class="partner-item"><span class="partner-logo" data-asset-status="pending">02</span><span>全日本剣道連盟</span></div><div class="partner-item"><span class="partner-logo" data-asset-status="pending">03</span><span>全日本弓道連盟</span></div><div class="partner-item"><span class="partner-logo" data-asset-status="pending">04</span><span>日本相撲連盟</span></div>
+          <div class="partner-item"><span class="partner-logo" data-asset-status="pending">05</span><span>全日本空手道連盟</span></div><div class="partner-item"><span class="partner-logo" data-asset-status="pending">06</span><span>合気会</span></div><div class="partner-item"><span class="partner-logo" data-asset-status="pending">07</span><span>少林寺拳法連盟</span></div><div class="partner-item"><span class="partner-logo" data-asset-status="pending">08</span><span>全日本なぎなた</span></div>
+          <div class="partner-item"><span class="partner-logo" data-asset-status="pending">09</span><span>全日本銃剣道連盟</span></div><div class="partner-item"><span class="partner-logo" data-asset-status="pending">10</span><span>日本武道協議会</span></div><div class="partner-item"><span class="partner-logo" data-asset-status="pending">11</span><span>日本古武道協会</span></div><div class="partner-item"><span class="partner-logo" data-asset-status="pending">12</span><span>株式会社光洋商事</span></div>
+        </div>
+        <a class="partner-more partner-more--sp" href="#partner-list"><i>→</i>公式パートナー一覧</a>
+      </div>
+    </section>
+
+    <section class="instagram-section" id="instagram" data-section="instagram">
+      <div class="instagram-inner"><div class="instagram-title"><h2>月刊「武道」編集部</h2><p><i aria-hidden="true"></i>Instagram</p></div><p class="instagram-intro">日本武道館が主催する武道・書道に関する事業や大会などの情報を発信します</p></div>
+      <div class="instagram-grid" aria-label="Instagram投稿">
+        <div class="instagram-thumb asset-pending" data-asset-status="pending" role="img" aria-label="大会会場の投稿画像"></div><div class="instagram-thumb asset-pending" data-asset-status="pending" role="img" aria-label="武道競技の投稿画像"></div><div class="instagram-thumb asset-pending" data-asset-status="pending" role="img" aria-label="空手家の投稿画像"></div><div class="instagram-thumb asset-pending" data-asset-status="pending" role="img" aria-label="日本武道館の投稿画像"></div><div class="instagram-thumb asset-pending" data-asset-status="pending" role="img" aria-label="高円宮杯の投稿画像"></div>
+      </div>
+    </section>
+
+    <section class="banner-section" data-section="banner" data-asset-status="pending">
+      <div class="banner-inner"><a class="banner-link" href="#"><span class="octo-arrow">→</span><span>スポーツくじ</span><span class="external-mark">□</span></a><a class="banner-link" href="#"><span class="octo-arrow">→</span><span>日本宝くじ協会</span><span class="external-mark">□</span></a></div>
+    </section>
   </main>
+
+  <footer class="site-footer" data-section="footer">
+    <div class="footer-main"><div class="footer-inner"><div class="footer-left"><div class="footer-brand-block"><div class="footer-logo asset-pending" data-asset-status="pending"><span class="footer-logo-mark">●</span><span>日本武道館</span></div><div class="footer-address-row"><span>〒102-8321 東京都千代田区北の丸公園2番3号</span><a class="footer-access" id="access" href="#">▣ アクセスについて</a></div></div><nav class="footer-links" aria-label="フッターナビゲーション"><ul><li>日本武道館について</li><li>武道振興・普及事業</li><li>書道普及・奨励事業</li><li>武道刊行物事業</li><li>研修センター</li></ul><ul><li>よくあるご質問</li><li>お問い合わせ</li><li>パンフレットのご案内</li><li>個人情報保護方針</li><li>業務・財務に関する資料</li></ul></nav></div><div class="footer-map asset-pending" data-asset-status="pending" role="img" aria-label="日本武道館周辺地図"></div></div></div>
+    <div class="footer-bottom"><div class="footer-copyright">©2016 NIPPON BUDOKAN,All rights reserved</div><a class="footer-pagetop" href="#top"><span>↑</span><span>Page Top</span></a></div>
+  </footer>
+
+  <a class="mobile-purpose-menu" href="#purpose"><span class="mobile-purpose-inner"><span class="mobile-purpose-label"><span>☷</span><span>目的から探す</span></span><span class="mobile-purpose-chevron">⌃</span></span></a>
 </body>
 </html>
