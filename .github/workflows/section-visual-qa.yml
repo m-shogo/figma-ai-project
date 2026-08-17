@@ -1,0 +1,219 @@
+name: Section Visual QA Fast Loop
+
+on:
+  pull_request:
+    paths:
+      - 'tools/implementation-intake/fast_visual_qa.py'
+      - 'tools/implementation-intake/probe_adapter.py'
+      - 'tools/implementation-intake/component_candidates.py'
+      - 'tools/implementation-intake/fast_loop_ops.py'
+      - 'tools/implementation-intake/micro_diff.py'
+      - 'tools/implementation-intake/visual_cause.py'
+      - 'tools/implementation-intake/cause_bundle.py'
+      - 'tools/implementation-intake/figma_intent.py'
+      - 'tools/implementation-intake/multiscale_diff.py'
+      - 'tools/implementation-intake/failure_benchmark.py'
+      - 'tools/implementation-intake/failure-archetypes.json'
+      - 'tools/implementation-intake/section_capture.mjs'
+      - 'tools/implementation-intake/section-visual-qa.example.json'
+      - 'tools/implementation-intake/test_fast_visual_qa.py'
+      - 'tools/implementation-intake/test_probe_adapter.py'
+      - 'tools/implementation-intake/test_component_candidates.py'
+      - 'tools/implementation-intake/test_fast_loop_ops.py'
+      - 'tools/implementation-intake/test_micro_diff.py'
+      - 'tools/implementation-intake/test_visual_cause.py'
+      - 'tools/implementation-intake/test_figma_intent.py'
+      - 'tools/implementation-intake/FAST_VISUAL_QA.md'
+      - 'tools/implementation-intake/PROBE_ADAPTER.md'
+      - 'tools/implementation-intake/COMPONENT_DISCOVERY.md'
+      - 'tools/implementation-intake/FAST_LOOP_OPERATIONS.md'
+      - 'tools/implementation-intake/MICRO_DIFF_LEARNING.md'
+      - 'tools/implementation-intake/VISUAL_CAUSE_ENGINE.md'
+      - '.github/workflows/section-visual-qa.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  light-fast-loop:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Python syntax
+        run: >-
+          python3 -m py_compile
+          tools/implementation-intake/fast_visual_qa.py
+          tools/implementation-intake/probe_adapter.py
+          tools/implementation-intake/component_candidates.py
+          tools/implementation-intake/fast_loop_ops.py
+          tools/implementation-intake/micro_diff.py
+          tools/implementation-intake/visual_cause.py
+          tools/implementation-intake/cause_bundle.py
+          tools/implementation-intake/figma_intent.py
+          tools/implementation-intake/multiscale_diff.py
+          tools/implementation-intake/failure_benchmark.py
+          tools/implementation-intake/test_fast_visual_qa.py
+          tools/implementation-intake/test_probe_adapter.py
+          tools/implementation-intake/test_component_candidates.py
+          tools/implementation-intake/test_fast_loop_ops.py
+          tools/implementation-intake/test_micro_diff.py
+          tools/implementation-intake/test_visual_cause.py
+          tools/implementation-intake/test_figma_intent.py
+      - name: Unit tests
+        working-directory: tools/implementation-intake
+        run: python3 -m unittest -v test_fast_visual_qa.py test_probe_adapter.py test_component_candidates.py test_fast_loop_ops.py test_micro_diff.py test_visual_cause.py test_figma_intent.py
+      - name: Failure archetype benchmark
+        run: |
+          python3 -m json.tool tools/implementation-intake/failure-archetypes.json >/dev/null
+          python3 tools/implementation-intake/failure_benchmark.py \
+            tools/implementation-intake/failure-archetypes.json \
+            --output /tmp/failure-benchmark.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          result = json.loads(Path('/tmp/failure-benchmark.json').read_text())
+          assert result['summary']['failed'] == 0
+          assert result['summary']['total'] >= 15
+          PY
+      - name: Figma intent guardrail smoke
+        working-directory: tools/implementation-intake
+        run: |
+          python3 - <<'PY'
+          from figma_intent import analyze_figma_intent
+          observed = analyze_figma_intent({
+              'layoutMode':'VERTICAL',
+              'layoutSizingHorizontal':'FILL',
+              'layoutSizingVertical':'HUG',
+              'itemSpacing':24,
+              'boundVariables':{'itemSpacing':{'id':'space-24'}},
+          }, {'space-24':'--space-24'})
+          assert observed['layout']['available'] is True
+          assert any(row['cssCandidate'] == 'content-driven-height' for row in observed['layout']['implementationHypotheses'])
+          assert observed['variables']['nextAction'] == 'reuse-observed-design-tokens'
+          unknown = analyze_figma_intent({'width':1380,'height':684})
+          assert unknown['layout']['available'] is False
+          PY
+      - name: Example section contract
+        run: |
+          python3 -m json.tool tools/implementation-intake/section-visual-qa.example.json >/dev/null
+          python3 tools/implementation-intake/fast_visual_qa.py validate tools/implementation-intake/section-visual-qa.example.json
+      - name: REF-001 read-only probe adapter
+        run: |
+          python3 tools/implementation-intake/probe_adapter.py \
+            review-dashboard/manifests/ref001-run-2.json \
+            experiments/ref001-blind-clean-20260812/evidence/final/latest/runtime-probes.json \
+            --output /tmp/ref001-fast-loop-adapter.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          result = json.loads(Path('/tmp/ref001-fast-loop-adapter.json').read_text())
+          pc = result['referenceViewports']['PC']
+          sp = result['referenceViewports']['SP']
+          assert pc['referenceWidth'] == 1380
+          assert sp['referenceWidth'] == 375
+          assert sp['figmaDeviceChromePx'] == 40
+          assert pc['boundaryPattern']['pattern'] == 'aligned'
+          assert sp['boundaryPattern']['pattern'] == 'aligned'
+          assert result['policy']['referenceGeometryComparedOnlyAtAuthoredWidths'] is True
+          assert result['policy']['intermediateWidthsAreRuntimeHealthOnly'] is True
+          assert result['policy']['figmaDeviceChromeIsNormalizedByManifestGeometry'] is True
+          assert pc['referenceProbeHealth']['pass'] is True
+          assert sp['referenceProbeHealth']['pass'] is True
+          assert result['intermediateRuntime']
+          assert result['allIntermediateRuntimeHealthy'] is True
+          PY
+      - name: Real REF-001 responsive topology observation
+        working-directory: tools/implementation-intake
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          from visual_cause import detect_breakpoint_topology
+          probes = json.loads(Path('../../experiments/ref001-blind-clean-20260812/evidence/final/latest/runtime-probes.json').read_text())
+          observations = []
+          for probe in probes:
+              reason = next(section for section in probe['sections'] if section['name'] == 'reason')
+              observations.append({'width': probe['width'], 'signature': {'composition': 'stacked' if reason['height'] > 900 else 'wide'}})
+          result = detect_breakpoint_topology(observations)
+          assert any(t['between'] == [767, 768] for t in result['transitions'])
+          PY
+      - name: Candidate discovery smoke
+        run: |
+          cat > /tmp/component-scope.json <<'JSON'
+          {"include":["tools/implementation-intake/**"],"exclude":[],"protected":["experiments/**"]}
+          JSON
+          python3 tools/implementation-intake/component_candidates.py . 'Fast Visual QA' --scope /tmp/component-scope.json --max-files 100 --output /tmp/component-candidates.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          result = json.loads(Path('/tmp/component-candidates.json').read_text())
+          assert result['decision'] == 'compatibility-observation-required'
+          assert all(item['requiresCompatibilityObservation'] for item in result['candidates'])
+          assert all(not path.startswith('experiments/') for path in result['scan']['filesRead'])
+          PY
+      - name: Evidence cache and strategy ledger smoke
+        run: |
+          cat > /tmp/evidence.json <<'JSON'
+          {"height":400}
+          JSON
+          python3 tools/implementation-intake/fast_loop_ops.py cache-put /tmp/evidence-cache.json --key figma:hero --source-hash rev-1 --value /tmp/evidence.json
+          cat > /tmp/items.json <<'JSON'
+          [{"key":"figma:hero","sourceHash":"rev-1"},{"key":"repo:header","sourceHash":"sha-2"}]
+          JSON
+          python3 tools/implementation-intake/fast_loop_ops.py cache-plan /tmp/evidence-cache.json /tmp/items.json --budget 1 --output /tmp/cache-plan.json
+          cat > /tmp/metrics.json <<'JSON'
+          {"implementationSeconds":90,"repairCount":2,"sectionCaptureCount":4,"fullCaptureCount":1,"finalVisualScore":97}
+          JSON
+          cat > /tmp/feedback.json <<'JSON'
+          {"helpfulQa":["section-boundary"],"wastedQa":[],"lateDiscoveries":[],"reworkSections":["hero"]}
+          JSON
+          python3 tools/implementation-intake/fast_loop_ops.py record /tmp/strategy-ledger.json --project fixture --strategy section-first --metrics /tmp/metrics.json --feedback /tmp/feedback.json --at 2026-08-15T00:00:00Z
+          python3 tools/implementation-intake/fast_loop_ops.py summary /tmp/strategy-ledger.json --output /tmp/strategy-summary.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          plan = json.loads(Path('/tmp/cache-plan.json').read_text())
+          summary = json.loads(Path('/tmp/strategy-summary.json').read_text())
+          assert plan['reuse'] == ['figma:hero']
+          assert plan['observe'] == ['repo:header']
+          assert summary['strategies']['section-first']['runs'] == 1
+          assert 'winner' not in summary
+          PY
+      - name: Pixel-difference severity learning on real REF-001 geometry
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          manifest = json.loads(Path('review-dashboard/manifests/ref001-run-2.json').read_text())
+          sections = {section['id']: section for section in manifest['sections']}
+          injected = [('reason',5),('education',8),('student-voice',16),('messages',24)]
+          reports = []
+          for section_id, delta in injected:
+              height = sections[section_id]['geometry']['pc']['height']
+              reports.append({'id':section_id,'viewport':'PC','diagnosis':{'differences':[{'category':'section-boundary','property':'height','deltaPx':delta,'referenceSizePx':height}]}})
+          reports.append({'id':'education-check-icon','viewport':'PC','diagnosis':{'differences':[{'category':'size','property':'width','deltaPx':2,'referenceSizePx':11}]}})
+          Path('/tmp/pixel-diffs.json').write_text(json.dumps({'source':{'kind':'controlled-fault-injection-on-real-ref001-reference-geometry','fileKey':manifest['figma']['file_key'],'mutatesV2':False},'reports':reports}))
+          PY
+          python3 tools/implementation-intake/micro_diff.py /tmp/pixel-diffs.json --output /tmp/pixel-learning.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          result = json.loads(Path('/tmp/pixel-learning.json').read_text())
+          absolute = result['summary']['absoluteSeverityCounts']
+          impact = result['summary']['impactSeverityCounts']
+          assert result['policy']['fourPxIncluded'] is True
+          assert result['summary']['differenceCount'] == 5
+          assert absolute['micro'] == 1
+          assert absolute['small-material'] == 2
+          assert absolute['material'] == 1
+          assert absolute['major'] == 1
+          assert impact['material'] == 2
+          assert result['summary']['relativeEscalationCount'] == 1
+          tiny = next(x for x in result['observations'] if x['sectionId'] == 'education-check-icon')
+          assert tiny['absoluteKind'] == 'micro'
+          assert tiny['impactKind'] == 'material'
+          assert result['source']['mutatesV2'] is False
+          PY
+      - name: Capture script syntax
+        run: node --check tools/implementation-intake/section_capture.mjs

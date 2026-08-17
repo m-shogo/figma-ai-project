@@ -1,0 +1,134 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "id": "render-shadow-overflow",
+      "kind": "render-bounds",
+      "layoutBox": {"x": 100, "y": 100, "width": 200, "height": 100},
+      "renderBox": {"x": 92, "y": 96, "width": 216, "height": 112},
+      "expect": "figma-render-effect-overflow"
+    },
+    {
+      "id": "font-wrap-growth",
+      "kind": "typography",
+      "reference": {
+        "fontFamily": "A",
+        "lineHeight": "24px",
+        "lineRects": [{"width": 100}, {"width": 80}],
+        "glyphMetrics": {"width": 180}
+      },
+      "actual": {
+        "fontFamily": "B",
+        "lineHeight": "26px",
+        "lineRects": [{"width": 160}, {"width": 20}, {"width": 10}],
+        "glyphMetrics": {"width": 190}
+      },
+      "expect": "font-loading-or-font-selection"
+    },
+    {
+      "id": "unstable-layout",
+      "kind": "stability",
+      "samples": [
+        {"x": 0, "y": 0, "width": 100, "height": 100},
+        {"x": 0, "y": 0, "width": 100, "height": 102},
+        {"x": 0, "y": 0, "width": 100, "height": 102.1}
+      ],
+      "expect": false
+    },
+    {
+      "id": "major-height-owner",
+      "kind": "css-root",
+      "difference": {"category": "section-boundary", "property": "height", "deltaPx": 24},
+      "rules": [
+        {"selector": ".section", "href": "layout.css", "declarations": {"min-height": "500px", "padding-bottom": "24px"}},
+        {"selector": ".section h2", "href": "type.css", "declarations": {"color": "#000"}}
+      ],
+      "expect": ".section"
+    },
+    {
+      "id": "cascade-important-transform-owner",
+      "kind": "css-root-property",
+      "difference": {"category": "position", "property": "x", "deltaPx": 12},
+      "rules": [
+        {"selector": ".section", "sourceOrder": 10, "declarations": {"padding-left": "0px", "padding-right": "0px"}},
+        {"selector": ".section", "sourceOrder": 200, "declarations": {"transform": "translateX(12px)"}, "priorities": {"transform": "important"}}
+      ],
+      "expect": "transform"
+    },
+    {
+      "id": "rejected-literal-repair",
+      "kind": "counterfactual",
+      "baseline": 0.0796,
+      "candidates": [{"id": "literal-union", "pixelDiffRatio": 0.0813, "runtimePass": true}],
+      "expect": null
+    },
+    {
+      "id": "accepted-owner-repair",
+      "kind": "counterfactual",
+      "baseline": 0.0696,
+      "candidates": [{"id": "owner-only", "pixelDiffRatio": 0.0544, "runtimePass": true}],
+      "expect": "owner-only"
+    },
+    {
+      "id": "aa-edge-noise",
+      "kind": "multiscale",
+      "ratios": {"1.0": 0.10, "0.5": 0.03, "0.25": 0.01},
+      "expect": "edge-rasterization-dominant"
+    },
+    {
+      "id": "persistent-structure",
+      "kind": "multiscale",
+      "ratios": {"1.0": 0.10, "0.5": 0.08, "0.25": 0.06},
+      "expect": "structural-difference-persists"
+    },
+    {
+      "id": "wrong-asset-provenance",
+      "kind": "asset-provenance",
+      "reference": [{"src":"/a.webp","naturalWidth":400,"naturalHeight":200,"objectFit":"cover","objectPosition":"50% 50%"}],
+      "actual": [{"src":"/b.webp","naturalWidth":300,"naturalHeight":300,"objectFit":"cover","objectPosition":"50% 50%"}],
+      "expect": "wrong-asset-or-slot-mapping"
+    },
+    {
+      "id": "dpr-raster-sensitive",
+      "kind": "dpr",
+      "ratios": {"1": 0.03, "2": 0.08},
+      "expect": "dpr-rasterization-sensitive"
+    },
+    {
+      "id": "missing-semantic-control",
+      "kind": "semantic",
+      "reference": [{"kind":"text"},{"kind":"image"},{"kind":"control"}],
+      "actual": [{"kind":"text"},{"kind":"image"}],
+      "expect": true
+    },
+    {
+      "id": "prediction-overconfidence",
+      "kind": "calibration",
+      "records": [
+        {"predictedCause":"typography","actualCause":"typography","confidence":0.9},
+        {"predictedCause":"asset","actualCause":"layout","confidence":0.9}
+      ],
+      "expect": 0.5
+    },
+    {
+      "id": "information-value-priority",
+      "kind": "observation-priority",
+      "items": [
+        {"id":"safe","uncertainty":0.1,"severity":"micro","captureCost":1},
+        {"id":"risky","uncertainty":0.9,"severity":"major","sharedPatternPotential":0.8,"priorFailureRate":0.7,"lateDiscoveryRisk":0.8,"changed":true,"captureCost":1}
+      ],
+      "expect": "risky"
+    },
+    {
+      "id": "responsive-switch",
+      "kind": "breakpoint",
+      "observations": [
+        {"width": 375, "signature": {"composition": "sp", "columns": 1}},
+        {"width": 767, "signature": {"composition": "sp", "columns": 1}},
+        {"width": 768, "signature": {"composition": "pc", "columns": 4}},
+        {"width": 1380, "signature": {"composition": "pc", "columns": 4}}
+      ],
+      "expect": [767, 768]
+    }
+  ]
+}

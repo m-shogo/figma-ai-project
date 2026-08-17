@@ -1,0 +1,99 @@
+name: Implementation Intake Preflight
+
+on:
+  pull_request:
+    paths:
+      - 'tools/implementation-intake/**'
+      - '.github/workflows/implementation-intake.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Python syntax
+        run: python3 -m py_compile tools/implementation-intake/intake.py tools/implementation-intake/adaptive.py tools/implementation-intake/governance.py tools/implementation-intake/risk_registry.py tools/implementation-intake/profile_ops.py tools/implementation-intake/render_form.py tools/implementation-intake/test_intake.py tools/implementation-intake/test_adaptive.py tools/implementation-intake/test_governance.py tools/implementation-intake/test_systemic.py
+      - name: JSON syntax
+        run: |
+          python3 -m json.tool tools/implementation-intake/questions.json >/dev/null
+          python3 -m json.tool tools/implementation-intake/profile.example.json >/dev/null
+      - name: Unit tests
+        working-directory: tools/implementation-intake
+        run: python3 -m unittest -v test_intake.py test_adaptive.py test_governance.py test_systemic.py
+      - name: Validate example profile
+        run: python3 tools/implementation-intake/intake.py validate tools/implementation-intake/profile.example.json
+      - name: Example preflight and question budget
+        run: |
+          python3 tools/implementation-intake/intake.py preflight tools/implementation-intake/profile.example.json
+          python3 tools/implementation-intake/adaptive.py budget tools/implementation-intake/profile.example.json --limit 3 --output /tmp/question-budget.json
+      - name: Compile definition of done and QA router
+        run: |
+          python3 tools/implementation-intake/intake.py compile tools/implementation-intake/profile.example.json --output /tmp/definition-of-done.json
+          python3 tools/implementation-intake/adaptive.py route tools/implementation-intake/profile.example.json --output /tmp/qa-route.json
+          grep -q 'wordpress-runtime-smoke' /tmp/definition-of-done.json
+          grep -q 'visual-fidelity' /tmp/qa-route.json
+      - name: Evidence coverage impact and progressive decisions
+        run: |
+          python3 tools/implementation-intake/adaptive.py report tools/implementation-intake/profile.example.json --as-of 2026-08-14T00:00:00Z --output /tmp/adaptive-report.json
+          python3 tools/implementation-intake/adaptive.py impact tools/implementation-intake/profile.example.json --changed cms.acf --output /tmp/impact.json
+          python3 tools/implementation-intake/adaptive.py evolve tools/implementation-intake/profile.example.json --question responsive.intermediate --value project-breakpoint-contract --state confirmed --source human --confidence 1 --evidence 'CI decision change' --reason 'CI exercise' --output /tmp/evolved.json
+          grep -q 'evidenceCoverage' /tmp/adaptive-report.json
+          grep -q 'acf-field-definition-validation' /tmp/impact.json
+          grep -q 'decisionHistory' /tmp/evolved.json
+      - name: Overlay reconnaissance learning complexity and reverse audit
+        run: |
+          cat > /tmp/overlay.json <<'JSON'
+          {"name":"company-example","answers":{"target.runtime":{"value":"html"},"interaction.slider":{"value":"css-scroll-snap"}}}
+          JSON
+          python3 tools/implementation-intake/adaptive.py overlay tools/implementation-intake/profile.example.json /tmp/overlay.json --output /tmp/overlayed.json
+          python3 tools/implementation-intake/adaptive.py learn /tmp/learning.json --question assets.pcSp --kind late-discovery --note 'CI exercise' --output /tmp/learning.json
+          cat > /tmp/complexity.json <<'JSON'
+          {"sections":[{"id":"hero","implementationFiles":8,"abstractions":5,"conditionalBranches":4,"figmaStructuralNodes":3}]}
+          JSON
+          python3 tools/implementation-intake/adaptive.py complexity /tmp/complexity.json --output /tmp/complexity-report.json
+          cat > /tmp/observed.json <<'JSON'
+          {"implementationDirectives":[],"executedChecks":[]}
+          JSON
+          python3 tools/implementation-intake/adaptive.py reverse-audit tools/implementation-intake/profile.example.json /tmp/observed.json --output /tmp/reverse-audit.json
+          grep -q 'high' /tmp/complexity-report.json
+          grep -q 'missingChecks' /tmp/reverse-audit.json
+      - name: Confidence decay learned budget ownership map and scoped recheck
+        run: |
+          python3 tools/implementation-intake/governance.py decay tools/implementation-intake/profile.example.json --as-of 2026-08-14T00:00:00Z --output /tmp/decay.json
+          python3 tools/implementation-intake/governance.py learned-budget tools/implementation-intake/profile.example.json /tmp/learning.json --limit 3 --output /tmp/learned-budget.json
+          cat > /tmp/ownership.json <<'JSON'
+          {"ownership":[{"id":"hero","type":"section","owners":["templates/hero.php","assets/css/hero.css"],"humanEditable":true,"figmaNode":"hero-node","evidence":"Figma section mapping"}]}
+          JSON
+          python3 tools/implementation-intake/governance.py ownership /tmp/ownership.json --output /tmp/ownership-report.json
+          python3 tools/implementation-intake/governance.py recheck tools/implementation-intake/profile.example.json --changed cms.acf --ledger /tmp/learning.json --output /tmp/recheck.json
+          grep -q 'needsRecheck' /tmp/decay.json
+          grep -q '100.0' /tmp/ownership-report.json
+          grep -q 'only impacted' /tmp/recheck.json
+      - name: Latent delivery risk registry
+        run: |
+          cat > /tmp/project-facts.json <<'JSON'
+          {"figma":{"referenceRevision":"fixture-revision"},"content":{"ready":true},"accessibility":{"standard":"project-contract"},"browser":{"support":"project-contract"},"performance":{"budget":"project-contract"},"forms":{"present":false},"analytics":{"tracking":false},"thirdParty":{"scripts":[]},"assets":{"licenseProvenance":"approved-project-assets"},"fonts":{"licenseProvenance":"approved-project-fonts"},"edgeStates":{"inventory":"recorded"},"deployment":{"environment":"fixture"},"seo":{"indexing":false},"localization":{"languages":["ja"]}}
+          JSON
+          python3 tools/implementation-intake/risk_registry.py tools/implementation-intake/profile.example.json /tmp/project-facts.json --output /tmp/risk-report.json
+          grep -q '"blocking": \[\]' /tmp/risk-report.json
+      - name: Profile schema merge and secret safety
+        run: |
+          python3 tools/implementation-intake/profile_ops.py compat tools/implementation-intake/profile.example.json --output /tmp/compat.json
+          python3 tools/implementation-intake/profile_ops.py sanitize tools/implementation-intake/profile.example.json --output /tmp/sanitized.json
+          grep -q '"supported": true' /tmp/compat.json
+          grep -q '"safe": true' /tmp/sanitized.json
+      - name: Render adaptive questionnaire
+        run: |
+          python3 tools/implementation-intake/render_form.py tools/implementation-intake/profile.example.json --output /tmp/implementation-intake.html
+          grep -q 'implementation-profile.json' /tmp/implementation-intake.html
+          grep -q 'low-confidence observations' /tmp/implementation-intake.html
+          grep -q 'CMS Collection Ownership' /tmp/implementation-intake.html
+          grep -q 'overrideLedger' /tmp/implementation-intake.html
+      - name: Decision lock round trip
+        run: |
+          python3 tools/implementation-intake/intake.py lock tools/implementation-intake/profile.example.json --output /tmp/implementation-profile.lock.json
+          python3 tools/implementation-intake/intake.py check-lock tools/implementation-intake/profile.example.json --lock /tmp/implementation-profile.lock.json

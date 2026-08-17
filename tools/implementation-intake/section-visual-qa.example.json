@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "id": "hero-pc",
+  "mode": "FAST",
+  "figma": {
+    "fileKey": "REPLACE_WITH_FIGMA_FILE_KEY",
+    "nodeId": "1:2",
+    "revision": "observed-revision-or-export-hash"
+  },
+  "implementation": {
+    "url": "http://127.0.0.1:3000/",
+    "selector": "[data-section=hero]",
+    "index": 0
+  },
+  "viewport": {
+    "width": 1380,
+    "height": 900,
+    "dpr": 1
+  },
+  "reference": {
+    "image": "references/hero-pc.png",
+    "measurement": "references/hero-pc.measurement.json"
+  },
+  "environment": {
+    "locale": "ja-JP",
+    "timezone": "Asia/Tokyo",
+    "waitUntil": "networkidle",
+    "readySelector": "body[data-ready=true]"
+  },
+  "risk": {
+    "signals": {
+      "absolutePositioning": 1,
+      "mask": false,
+      "imageComposition": 1,
+      "overlap": false,
+      "specialTypography": false,
+      "pcSpStructureGap": false,
+      "slider": false,
+      "interaction": false,
+      "rasterVectorMix": false,
+      "unusualCrop": true,
+      "responsiveAmbiguity": false
+    }
+  },
+  "probes": ["h1", ".hero-media"],
+  "repairHistory": [0.18, 0.11],
+  "pixelThreshold": 0.14
+}
