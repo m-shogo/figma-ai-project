@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-08-16T04:01:20+00:00",
+  "updated_at": "2026-08-17T04:04:27+00:00",
   "fingerprints": {
     "figma-release-notes": "6347b81aa123b1b735601911495aed8164550bbaec3deaabbd18ae863b9898bd",
     "figma-auto-layout-current": "9f549da5798e1af9cdcdd2914ad0e3c97206f93a17fa5e0fec762bfedad6baaf",
@@ -19,7 +19,7 @@
     "claude-code-feed": "a3e2f6c673c2807afae897c829e1314f78cf7e70e2442d1befe85b1f85b3862e",
     "cursor-changelog": "aaaf615de3796d8e0f753ba84281d7d19070bfd01d2196f048844c7ad1b490aa",
     "web-features-releases": "473a11b1362c7cdb3a01d69f6e6f1c2e0622d9d14a05dc5b9a3f44ef38be1810",
-    "mdn-browser-compat-data-releases": "75595f7c1a430fe1d2958844e027d57ae500c35a487e747ba3e5e6e0e0514934",
+    "mdn-browser-compat-data-releases": "52338b0faf732262ef6b8466b00c27319488b39cf052601e9413191558c93711",
     "w3c-wai-news": "f9ccd2fb4b5e1a4aad980570d677e70eea9038086773fc36a059faf9393d2379",
     "design-tokens-spec": "e7526f9a4360fd590555d5b3a1107042f18a6ace66a09cbbfd266f86621266fb",
     "wordpress-releases": "b8ad1b6a1fd3333e8375e2b4f518b446f425efee284f60499f17bef6f77b1377",

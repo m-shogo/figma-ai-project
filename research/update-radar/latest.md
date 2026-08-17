@@ -1,6 +1,6 @@
 # Update Radar — Latest Official Source Scan
 
-Generated: `2026-08-16T04:01:20+00:00`
+Generated: `2026-08-17T04:04:27+00:00`
 
 Active lanes: ACCESSIBILITY, CLAUDE_CODE, CODEX, CURSOR, DESIGN_SYSTEMS, FIGMA, MCP, WEB_PLATFORM, WORDPRESS_ACF
 
