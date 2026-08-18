@@ -6,7 +6,7 @@
   <div class="ref-content ref-mv__copy">
     <h1 class="ref-mv__hero">
       <span class="ref-mv__hero-main"><span class="ref-mv__quote ref-mv__quote--left">“</span><strong>ケイザイ</strong><span class="ref-mv__quote ref-mv__quote--right">”</span></span>
-      <span class="ref-mv__hero-sub">って、想像以上に</span>
+      <span class="ref-mv__hero-sub">って<span class="ref-mv__hero-comma">、</span>想像以上に</span>
       <span class="ref-mv__hero-end">おもしろい。</span>
     </h1>
     <p class="ref-mv__desc">７つのコース制で“ミライ”を見つけ、<br>資格取得支援で“チカラ”をつける。<br>千葉の経済と就職に強い学びがここにある。</p>
