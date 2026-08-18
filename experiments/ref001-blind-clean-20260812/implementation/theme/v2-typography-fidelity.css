@@ -1,0 +1,193 @@
+/* REF-001 V2 — canonical Figma typography endpoint owner.
+ * Authority: AI page PC Top@2x 21384:8173 (1380px) / SP Top_sp@2x 21376:4401 (375px).
+ *
+ * This file intentionally loads last. It does not own section geometry. It only
+ * resolves computed typography at the two authored Figma acceptance endpoints.
+ * Intermediate widths keep the existing adaptive/fluid rules.
+ *
+ * Figma PERCENT letter spacing maps directly to em: 5%=.05em, 3%=.03em,
+ * 2%=.02em, 1%=.01em, -16%=-.16em.
+ */
+
+/* Shared authored type primitives. */
+.ref-kicker{font-family:var(--ref-font-en);font-weight:400;letter-spacing:.05em}
+.ref-header__actions .ref-action,
+.ref-shared-cta .ref-action,
+.ref-cta-value .ref-action{font-weight:500}
+
+@media (min-width:1300px){
+  /* HEADER ------------------------------------------------------------ */
+  .ref-header__actions .ref-action{font-size:14px;line-height:1;letter-spacing:.05em}
+
+  /* MAIN VISUAL ------------------------------------------------------- */
+  .ref-mv__quote{font-size:119px;line-height:1.6;letter-spacing:.02em;font-weight:600}
+  .ref-mv__hero-main strong{font-size:77px;line-height:1.6;letter-spacing:.02em;font-weight:500}
+  .ref-mv__hero-sub{font-size:44px;line-height:1.6;letter-spacing:.05em;font-weight:500}
+  .ref-mv__hero-comma{letter-spacing:-.16em}
+  .ref-mv__hero-end{font-size:71px;line-height:1.6;letter-spacing:.05em;font-weight:500}
+  .ref-mv__desc{font-size:20px;line-height:2;letter-spacing:.05em;font-weight:500}
+  .ref-mv__oc-kicker{font-size:14px;line-height:1;letter-spacing:.05em;font-weight:500}
+  .ref-mv__oc b{font-size:32px;line-height:1.3;letter-spacing:.05em;font-weight:600}
+  .ref-mv__oc small{font-size:22px;line-height:1;letter-spacing:.05em;font-weight:500}
+
+  /* REASON ------------------------------------------------------------ */
+  .ref-reason__head .ref-kicker{font-size:20px;line-height:1}
+  .ref-reason__title-lead{font-size:30px;line-height:1;letter-spacing:.05em;font-weight:500}
+  .ref-reason__head h2 strong{font-size:42px;line-height:1;letter-spacing:.05em;font-weight:500}
+  .ref-reason__head .ref-bracket-title::before,.ref-reason__head .ref-bracket-title::after{font-size:50px;line-height:1;letter-spacing:.05em;font-weight:500}
+  .ref-reason__intro{font-size:16px;line-height:1.3;letter-spacing:.05em;font-weight:500}
+  .ref-reason-card__title{font-size:20px;line-height:1;letter-spacing:.05em;font-weight:500}
+  .ref-reason-card__text{font-size:16px;line-height:1.6;letter-spacing:.05em;font-weight:500}
+
+  /* EDUCATION --------------------------------------------------------- */
+  .ref-education__title .ref-kicker{font-size:20px;line-height:1}
+  .ref-education__title h2{font-size:42px;line-height:1;letter-spacing:.05em;font-weight:500}
+  .ref-education__intro h3{font-size:24px;line-height:1;letter-spacing:.05em;font-weight:500}
+  .ref-education__intro p{font-size:16px;line-height:1.6;letter-spacing:.05em;font-weight:500}
+  .ref-edu-card__number{font-size:22px;line-height:1;letter-spacing:.05em;font-weight:500}
+  .ref-edu-card__badge small,.ref-edu-card__phase{font-size:14px;line-height:1;letter-spacing:.05em;font-weight:500}
+  .ref-edu-card h3{font-size:20px;line-height:1;letter-spacing:.05em;font-weight:500}
+  .ref-edu-card li span{font-size:15px;line-height:1;letter-spacing:.05em;font-weight:500}
+  /* Two PC-only Figma text runs use 1% tracking. */
+  .ref-edu-card:nth-of-type(3) li:nth-child(3) span,
+  .ref-edu-card:nth-of-type(4) li:nth-child(1) span{letter-spacing:.01em}
+
+  /* SHARED CTA -------------------------------------------------------- */
+  .ref-shared-cta h2{font-size:32px;line-height:1;letter-spacing:.05em;font-weight:500}
+  .ref-shared-cta .ref-action{font-size:16px;line-height:1;letter-spacing:.05em;font-weight:500}
+
+  /* STUDENT VOICE ----------------------------------------------------- */
+  .ref-voice__head .ref-kicker{font-size:20px;line-height:1}
+  .ref-voice__head .ref-bracket-title{font-size:30px;line-height:1;letter-spacing:.05em;font-weight:500}
+  .ref-voice__head .ref-bracket-title strong{font-size:42px;line-height:1;letter-spacing:.05em;font-weight:500}
+  .ref-voice__head .ref-bracket-title::before,.ref-voice__head .ref-bracket-title::after{font-size:50px;line-height:1;letter-spacing:.05em;font-weight:500}
+  .ref-speech h3{font-size:24px;line-height:1;letter-spacing:.05em;font-weight:500}
+  .ref-speech p,.ref-voice-open__copy,.ref-voice-open__copy>p{font-size:16px;line-height:1.6;letter-spacing:.05em;font-weight:500}
+  .ref-pointbox p,.ref-pointbox strong{font-size:16px;line-height:1;letter-spacing:.05em;font-weight:500}
+  .ref-voice-open__advice strong{font-size:18px;line-height:1;letter-spacing:.05em;font-weight:500}
+  .ref-voice-open__advice span{font-size:16px;line-height:1.6;letter-spacing:.05em;font-weight:500}
+  .ref-voice-more{font-size:18px;line-height:1;letter-spacing:.05em;font-weight:500}
+
+  /* MESSAGES ---------------------------------------------------------- */
+  .ref-messages__head .ref-kicker{font-size:20px;line-height:1}
+  .ref-messages__head h2 span{font-size:30px;line-height:1;letter-spacing:.05em;font-weight:500}
+  .ref-messages__head h2 strong{font-size:42px;line-height:1;letter-spacing:.05em;font-weight:500}
+  .ref-messages__quote--pc{font-size:28px;line-height:2.1;letter-spacing:.05em;font-weight:500}
+  .ref-messages__profile{font-size:16px;line-height:1.6;letter-spacing:.05em;font-weight:500}
+  .ref-messages__indicator{font-size:24px;line-height:1.3;letter-spacing:.05em;font-weight:500}
+
+  /* COURSES ----------------------------------------------------------- */
+  .ref-courses__head .ref-kicker{font-size:20px;line-height:1}
+  .ref-courses__title-line{font-size:30px;line-height:1;letter-spacing:.05em;font-weight:500}
+  .ref-courses__head .ref-bracket-title strong{font-size:42px;line-height:1;letter-spacing:.05em;font-weight:900}
+  .ref-courses__head .ref-bracket-title::before,.ref-courses__head .ref-bracket-title::after{font-size:50px;line-height:1;letter-spacing:.05em;font-weight:500}
+  .ref-course h3{font-size:20px;line-height:1;letter-spacing:.05em;font-weight:500}
+  .ref-course__desc{font-size:16px;line-height:1.3;letter-spacing:.05em;font-weight:500}
+  .ref-course:nth-child(3) .ref-course__desc,.ref-course:nth-child(7) .ref-course__desc{letter-spacing:.03em}
+  .ref-course__rec-label{font-size:14px;line-height:1;letter-spacing:.05em;font-weight:500}
+  .ref-course__rec li{font-size:13px;line-height:1;letter-spacing:.05em;font-weight:500}
+
+  /* LINKS ------------------------------------------------------------- */
+  .ref-link-tile__copy{font-size:22px;line-height:1;letter-spacing:.05em;font-weight:500}
+  .ref-link-tile--numbers .ref-link-tile__copy{font-size:22px;line-height:1.4;letter-spacing:.05em}
+  .ref-link-tile--numbers .ref-link-tile__numbers-kicker{font-size:18px;line-height:1.4;letter-spacing:.05em;font-weight:500}
+  .ref-link-tile__instagram-copy{font-size:20px;line-height:1;letter-spacing:.05em;font-weight:400}
+  .ref-link-tile__instagram-copy small{font-size:14px;line-height:1;letter-spacing:.05em;font-weight:400}
+
+  /* CTA VALUE --------------------------------------------------------- */
+  .ref-cta-value h2{font-size:32px;line-height:1;letter-spacing:.05em;font-weight:500}
+  .ref-cta-value .ref-action{font-size:16px;line-height:1;letter-spacing:.05em;font-weight:500}
+
+  /* FOOTER ------------------------------------------------------------ */
+  .ref-footer__address{font-size:16px;line-height:1.3;letter-spacing:.05em;font-weight:500}
+  .ref-footer__related{font-size:16px;line-height:1.6;letter-spacing:.05em;font-weight:500}
+  .ref-footer__copyright{font-family:var(--ref-font-en);font-size:14px;line-height:1;letter-spacing:.05em;font-weight:400}
+}
+
+/* Canonical SP acceptance band includes the authored 375px Figma frame while
+ * leaving <=360 narrow-phone compensations and >=391 wider-phone fluid scaling
+ * under their existing owners. */
+@media (min-width:361px) and (max-width:390px){
+  /* MAIN VISUAL ------------------------------------------------------- */
+  .ref-mv__quote{font-size:100px;line-height:1.6;letter-spacing:.02em;font-weight:600}
+  .ref-mv__hero-main strong{font-size:66px;line-height:1.6;letter-spacing:.02em;font-weight:500}
+  .ref-mv__hero-sub{font-size:32px;line-height:1;letter-spacing:.05em;font-weight:500}
+  .ref-mv__hero-comma{letter-spacing:-.16em}
+  .ref-mv__hero-end{font-size:60px;line-height:1;letter-spacing:.05em;font-weight:500}
+  .ref-mv__desc{font-size:14px;line-height:2;letter-spacing:0px;font-weight:500}
+  .ref-mv__oc-kicker{font-size:14px;line-height:1;letter-spacing:.05em;font-weight:500}
+  .ref-mv__oc b{font-size:26px;line-height:1.3;letter-spacing:.05em;font-weight:600}
+  .ref-mv__oc small{font-size:16px;line-height:1;letter-spacing:.05em;font-weight:500}
+
+  /* REASON ------------------------------------------------------------ */
+  .ref-reason__head .ref-kicker{font-size:20px;line-height:1}
+  .ref-reason__title-lead{font-size:24px;line-height:1.3;letter-spacing:.05em;font-weight:500}
+  .ref-reason__head h2 strong{font-size:32px;line-height:1.3;letter-spacing:.05em;font-weight:500}
+  .ref-reason__head .ref-bracket-title::before,.ref-reason__head .ref-bracket-title::after{font-size:42px;line-height:1;letter-spacing:.05em;font-weight:500}
+  .ref-reason__intro{font-size:16px;line-height:1.6;letter-spacing:.05em;font-weight:500}
+  .ref-reason-card__title{font-size:18px;line-height:1;letter-spacing:.05em;font-weight:500}
+  .ref-reason-card__text{font-size:16px;line-height:1.6;letter-spacing:.05em;font-weight:500}
+
+  /* EDUCATION --------------------------------------------------------- */
+  .ref-education__title .ref-kicker{font-size:20px;line-height:1}
+  .ref-education__title h2{font-size:32px;line-height:1;letter-spacing:.05em;font-weight:500}
+  .ref-education__intro h3{font-size:20px;line-height:1;letter-spacing:.05em;font-weight:500}
+  .ref-education__intro p{font-size:16px;line-height:1.6;letter-spacing:.05em;font-weight:500}
+  .ref-edu-card__number{font-size:22px;line-height:1;letter-spacing:.05em;font-weight:500}
+  .ref-edu-card__badge small,.ref-edu-card__phase{font-size:14px;line-height:1;letter-spacing:.05em;font-weight:500}
+  .ref-edu-card h3{font-size:18px;line-height:1.3;letter-spacing:.05em;font-weight:500}
+  .ref-edu-card:first-of-type h3{line-height:1}
+  .ref-edu-card li span{font-size:15px;line-height:1;letter-spacing:.05em;font-weight:500}
+
+  /* SHARED CTA -------------------------------------------------------- */
+  .ref-shared-cta h2{font-size:24px;line-height:1.3;letter-spacing:.05em;font-weight:500}
+  .ref-shared-cta .ref-action{font-size:16px;line-height:1;letter-spacing:.05em;font-weight:500}
+
+  /* STUDENT VOICE ----------------------------------------------------- */
+  .ref-voice__head .ref-kicker{font-size:20px;line-height:1}
+  .ref-voice__head .ref-bracket-title{font-size:24px;line-height:1.3;letter-spacing:.05em;font-weight:500}
+  .ref-voice__head .ref-bracket-title strong{font-size:32px;line-height:1.3;letter-spacing:.05em;font-weight:500}
+  .ref-voice__head .ref-bracket-title::before,.ref-voice__head .ref-bracket-title::after{font-size:42px;line-height:1;letter-spacing:.05em;font-weight:500}
+  .ref-speech h3{font-size:16px;line-height:1.3;letter-spacing:.05em;font-weight:500}
+  .ref-speech p{font-size:14px;line-height:1.6;letter-spacing:.05em;font-weight:500}
+  .ref-voice-open__copy,.ref-voice-open__copy>p{font-size:16px;line-height:1.6;letter-spacing:.05em;font-weight:500}
+  .ref-pointbox p{font-size:16px;line-height:1.4;letter-spacing:.05em;font-weight:500}
+  .ref-pointbox strong{font-size:16px;line-height:1;letter-spacing:.05em;font-weight:500}
+  .ref-voice-open__advice strong{font-size:16px;line-height:1;letter-spacing:.05em;font-weight:500}
+  .ref-voice-open__advice span{font-size:16px;line-height:1.6;letter-spacing:.05em;font-weight:500}
+  .ref-voice-more{font-size:18px;line-height:1;letter-spacing:.05em;font-weight:500}
+
+  /* MESSAGES ---------------------------------------------------------- */
+  .ref-messages__head .ref-kicker{font-size:20px;line-height:1}
+  .ref-messages__head h2 span{font-size:24px;line-height:1;letter-spacing:.05em;font-weight:500}
+  .ref-messages__head h2 strong{font-size:32px;line-height:1;letter-spacing:.05em;font-weight:500}
+  .ref-messages__quote--sp{font-size:22px;line-height:2;letter-spacing:.05em;font-weight:500}
+  .ref-messages__profile{font-size:16px;line-height:1.6;letter-spacing:.05em;font-weight:500}
+  .ref-messages__indicator{font-size:20px;line-height:1.3;letter-spacing:.05em;font-weight:500}
+
+  /* COURSES ----------------------------------------------------------- */
+  .ref-courses__head .ref-kicker{font-size:20px;line-height:1}
+  .ref-courses__title-line{font-size:24px;line-height:1.3;letter-spacing:.05em;font-weight:500}
+  .ref-courses__head .ref-bracket-title strong{font-size:32px;line-height:1.3;letter-spacing:.05em;font-weight:900}
+  .ref-courses__head .ref-bracket-title::before,.ref-courses__head .ref-bracket-title::after{font-size:42px;line-height:1;letter-spacing:.05em;font-weight:500}
+  .ref-course h3{font-size:20px;line-height:1;letter-spacing:.05em;font-weight:500}
+  .ref-course__desc{font-size:16px;line-height:1.3;letter-spacing:.05em;font-weight:500}
+  .ref-course__rec-label{font-size:14px;line-height:1;letter-spacing:.05em;font-weight:500}
+  .ref-course__rec li{font-size:13px;line-height:1.4;letter-spacing:.05em;font-weight:500}
+
+  /* LINKS ------------------------------------------------------------- */
+  .ref-link-tile__copy{font-size:16px;line-height:1;letter-spacing:.05em;font-weight:500}
+  .ref-link-tile--numbers .ref-link-tile__copy{font-size:16px;line-height:1.4;letter-spacing:.05em}
+  .ref-link-tile--numbers .ref-link-tile__numbers-kicker{font-size:13px;line-height:1.4;letter-spacing:.05em;font-weight:500}
+  .ref-link-tile__instagram-copy{font-size:16px;line-height:1;letter-spacing:.05em;font-weight:400}
+  .ref-link-tile__instagram-copy small{font-size:12px;line-height:1;letter-spacing:.05em;font-weight:400}
+
+  /* CTA VALUE --------------------------------------------------------- */
+  .ref-cta-value h2{font-size:24px;line-height:1.3;letter-spacing:.05em;font-weight:500}
+  .ref-cta-value .ref-action{font-size:16px;line-height:1;letter-spacing:.05em;font-weight:500}
+
+  /* FOOTER ------------------------------------------------------------ */
+  .ref-footer__address{font-size:14px;line-height:1.3;letter-spacing:.05em;font-weight:500}
+  .ref-footer__related{font-size:16px;line-height:1;letter-spacing:.05em;font-weight:500}
+  .ref-footer__copyright{font-family:var(--ref-font-en);font-size:12px;line-height:1;letter-spacing:.05em;font-weight:400}
+}
