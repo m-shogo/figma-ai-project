@@ -7,7 +7,7 @@ const outDir = process.argv[3] || '/tmp/ref001-human-polish';
 await fs.mkdir(outDir, { recursive: true });
 
 const browser = await chromium.launch({ headless: true });
-const report = { url, viewports: [], interaction: null };
+const report = { url, viewports: [], desktopLock: null, interaction: null };
 let failed = false;
 
 async function settle(page) {
@@ -19,33 +19,40 @@ async function settle(page) {
   }, null, { timeout: 15000 }).catch(() => {});
 }
 
+function activePhotoMetrics() {
+  const messages = document.querySelector('[data-section="messages"]');
+  const active = messages?.dataset.activeSlide || '1';
+  const picture = document.querySelector(`.ref-messages__slide[data-message-slide="${active}"] .ref-messages__photo`);
+  const photo = picture?.querySelector('img');
+  const photoBox = photo?.getBoundingClientRect();
+  return photo ? {
+    slide: active,
+    slot: picture?.dataset.assetSlot || '',
+    complete: photo.complete,
+    naturalWidth: photo.naturalWidth,
+    naturalHeight: photo.naturalHeight,
+    currentSrc: photo.currentSrc,
+    display: getComputedStyle(photo).display,
+    opacity: getComputedStyle(photo).opacity,
+    box: photoBox ? { x: photoBox.x, y: photoBox.y, width: photoBox.width, height: photoBox.height } : null,
+  } : null;
+}
+
 try {
   for (const mode of [{ name: 'pc', width: 1380, height: 1000 }, { name: 'sp', width: 375, height: 844 }]) {
     const page = await browser.newPage({ viewport: { width: mode.width, height: mode.height }, deviceScaleFactor: 1, locale: 'ja-JP', timezoneId: 'Asia/Tokyo' });
     const pageErrors = [];
     page.on('pageerror', error => pageErrors.push(String(error)));
     await settle(page);
-    const metrics = await page.evaluate(() => {
-      const photo = document.querySelector('.ref-messages__photo--static img');
-      const photoBox = photo?.getBoundingClientRect();
-      return {
-        scrollWidth: document.documentElement.scrollWidth,
-        clientWidth: document.documentElement.clientWidth,
-        scrollHeight: document.documentElement.scrollHeight,
-        transitionMs: document.documentElement.dataset.ref001TransitionMs || '',
-        messagesStatus: document.querySelector('[data-section="messages"]')?.dataset.interactionStatus || '',
-        activeMessage: document.querySelector('[data-section="messages"]')?.dataset.activeSlide || '',
-        messagePhoto: photo ? {
-          complete: photo.complete,
-          naturalWidth: photo.naturalWidth,
-          naturalHeight: photo.naturalHeight,
-          currentSrc: photo.currentSrc,
-          display: getComputedStyle(photo).display,
-          opacity: getComputedStyle(photo).opacity,
-          box: photoBox ? { x: photoBox.x, y: photoBox.y, width: photoBox.width, height: photoBox.height } : null,
-        } : null,
-      };
-    });
+    const metrics = await page.evaluate(activePhotoMetrics => ({
+      scrollWidth: document.documentElement.scrollWidth,
+      clientWidth: document.documentElement.clientWidth,
+      scrollHeight: document.documentElement.scrollHeight,
+      transitionMs: document.documentElement.dataset.ref001TransitionMs || '',
+      messagesStatus: document.querySelector('[data-section="messages"]')?.dataset.interactionStatus || '',
+      activeMessage: document.querySelector('[data-section="messages"]')?.dataset.activeSlide || '',
+      messagePhoto: activePhotoMetrics(),
+    }), activePhotoMetrics);
     await page.screenshot({ fullPage: true, path: path.join(outDir, `${mode.name}-initial.png`) });
     const errors = [];
     if (pageErrors.length) errors.push(`page errors: ${pageErrors.join(' | ')}`);
@@ -56,6 +63,31 @@ try {
       errors.push(`messages photo not visibly loaded: ${JSON.stringify(metrics.messagePhoto)}`);
     }
     report.viewports.push({ ...mode, ...metrics, pageErrors, errors });
+    if (errors.length) failed = true;
+    await page.close();
+  }
+
+  /* User-approved breakpoint policy: from 768px up, retain the PC canvas and
+   * intentionally allow horizontal viewport scrolling instead of inventing a
+   * fluid tablet layout. */
+  {
+    const page = await browser.newPage({ viewport: { width: 768, height: 900 }, deviceScaleFactor: 1, locale: 'ja-JP', timezoneId: 'Asia/Tokyo' });
+    await settle(page);
+    const metrics = await page.evaluate(() => ({
+      bodyMinWidth: getComputedStyle(document.body).minWidth,
+      pageMinWidth: getComputedStyle(document.querySelector('.ref-page')).minWidth,
+      clientWidth: document.documentElement.clientWidth,
+      scrollWidth: document.documentElement.scrollWidth,
+      reasonCardWidth: document.querySelector('.ref-reason-card')?.getBoundingClientRect().width || 0,
+      courseWidth: document.querySelector('.ref-course')?.getBoundingClientRect().width || 0,
+    }));
+    const errors = [];
+    if (metrics.bodyMinWidth !== '1280px') errors.push(`body min-width ${metrics.bodyMinWidth}`);
+    if (metrics.pageMinWidth !== '1280px') errors.push(`page min-width ${metrics.pageMinWidth}`);
+    if (metrics.scrollWidth < 1280) errors.push(`desktop canvas ${metrics.scrollWidth}`);
+    if (Math.abs(metrics.reasonCardWidth - 360) > 0.5) errors.push(`reason card width ${metrics.reasonCardWidth}`);
+    if (Math.abs(metrics.courseWidth - 560) > 0.5) errors.push(`course width ${metrics.courseWidth}`);
+    report.desktopLock = { ...metrics, errors };
     if (errors.length) failed = true;
     await page.close();
   }
@@ -134,10 +166,16 @@ try {
 
   const messages = page.locator('[data-section="messages"]');
   const activeBefore = await messages.getAttribute('data-active-slide');
+  const imageBefore = await page.evaluate(activePhotoMetrics => activePhotoMetrics(), activePhotoMetrics);
   await messages.locator('.ref-messages__next').click();
   await page.waitForTimeout(400);
   const activeAfter = await messages.getAttribute('data-active-slide');
+  const imageAfter = await page.evaluate(activePhotoMetrics => activePhotoMetrics(), activePhotoMetrics);
   if (!activeAfter || activeAfter === activeBefore) errors.push(`messages next did not move ${activeBefore} -> ${activeAfter}`);
+  if (!imageBefore?.currentSrc || !imageAfter?.currentSrc || imageBefore.currentSrc === imageAfter.currentSrc) {
+    errors.push(`messages image did not change: ${JSON.stringify(imageBefore)} -> ${JSON.stringify(imageAfter)}`);
+  }
+  if (!imageAfter?.complete || imageAfter.naturalWidth <= 0) errors.push(`next message image not loaded: ${JSON.stringify(imageAfter)}`);
 
   await page.evaluate(() => window.scrollTo(0, 1200));
   await page.waitForTimeout(100);
@@ -148,7 +186,7 @@ try {
   const scrollAfterTop = await page.evaluate(() => window.scrollY);
   if (scrollAfterTop > 3) errors.push(`page top ended at ${scrollAfterTop}`);
 
-  report.interaction = { initial, headerBefore, headerAfter, ocBefore, ocAfter, voiceAfter, messages: { activeBefore, activeAfter }, pageTop: { visible: pageTopVisible, scrollAfterTop }, pageErrors, errors };
+  report.interaction = { initial, headerBefore, headerAfter, ocBefore, ocAfter, voiceAfter, messages: { activeBefore, activeAfter, imageBefore, imageAfter }, pageTop: { visible: pageTopVisible, scrollAfterTop }, pageErrors, errors };
   if (errors.length) failed = true;
   await fs.writeFile(path.join(outDir, 'pc-after-interactions.png'), await page.screenshot({ fullPage: true }));
   await page.close();
@@ -158,6 +196,8 @@ try {
 
 await fs.writeFile(path.join(outDir, 'report.json'), JSON.stringify(report, null, 2));
 for (const viewport of report.viewports) console.log(`[${viewport.name}] ${viewport.errors.length ? 'FAIL' : 'PASS'} width=${viewport.scrollWidth}/${viewport.clientWidth} status=${viewport.messagesStatus} photo=${JSON.stringify(viewport.messagePhoto)}`);
+console.log(`desktop-lock=${report.desktopLock?.errors?.length ? 'FAIL' : 'PASS'} ${JSON.stringify(report.desktopLock)}`);
 console.log(`interaction=${report.interaction?.errors?.length ? 'FAIL' : 'PASS'}`);
+for (const error of report.desktopLock?.errors || []) console.error(error);
 for (const error of report.interaction?.errors || []) console.error(error);
 if (failed) process.exit(1);
