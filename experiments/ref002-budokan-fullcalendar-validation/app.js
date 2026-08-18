@@ -20,12 +20,53 @@
     ['2023-08-29', 'イベント名', 'neutral']
   ].map(([start, title, kind]) => ({ start, title, allDay: true, extendedProps: { kind } }));
 
+  const partnerAssetPaths = Array.from(
+    { length: 12 },
+    (_, index) => `./assets/partner/partner-${String(index + 1).padStart(3, '0')}.png`
+  );
+
   const localDateKey = (date) => {
     const y = date.getFullYear();
     const m = String(date.getMonth() + 1).padStart(2, '0');
     const d = String(date.getDate()).padStart(2, '0');
     return `${y}-${m}-${d}`;
   };
+
+  function initDurablePartnerAssets() {
+    const slots = [...document.querySelectorAll('.partner-logo[data-asset-status="pending"]')];
+    if (slots.length !== partnerAssetPaths.length) {
+      document.documentElement.dataset.partnerAssetStatus = 'slot-mismatch';
+      return;
+    }
+
+    let loaded = 0;
+    slots.forEach((slot, index) => {
+      const image = document.createElement('img');
+      image.src = partnerAssetPaths[index];
+      image.alt = '';
+      image.width = 40;
+      image.height = 40;
+      image.decoding = 'sync';
+
+      image.addEventListener('load', () => {
+        slot.removeAttribute('data-asset-status');
+        slot.dataset.assetStatus = 'ready';
+        slot.classList.add('asset-ready');
+        loaded += 1;
+        document.documentElement.dataset.partnerAssetReady = String(loaded);
+        if (loaded === partnerAssetPaths.length) {
+          document.documentElement.dataset.partnerAssetStatus = 'ready';
+        }
+      }, { once: true });
+
+      image.addEventListener('error', () => {
+        slot.dataset.assetStatus = 'error';
+        document.documentElement.dataset.partnerAssetStatus = 'error';
+      }, { once: true });
+
+      slot.replaceChildren(image);
+    });
+  }
 
   function initCalendar() {
     const calendarEl = document.getElementById('calendar');
@@ -109,5 +150,8 @@
     document.documentElement.dataset.calendarStatus = 'ready';
   }
 
-  window.addEventListener('DOMContentLoaded', initCalendar, { once: true });
+  window.addEventListener('DOMContentLoaded', () => {
+    initDurablePartnerAssets();
+    initCalendar();
+  }, { once: true });
 })();
