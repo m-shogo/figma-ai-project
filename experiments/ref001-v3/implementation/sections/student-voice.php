@@ -9,7 +9,8 @@ $titleHtml = htmlspecialchars($d['titlePrefix'], ENT_QUOTES, 'UTF-8')
     <?php v3_component('section-heading', ['kicker' => $d['kicker'], 'titleHtml' => $titleHtml, 'modifier' => 'v3-heading--center']); ?>
   </div>
   <?php foreach ($d['items'] as $item): ?>
-    <article class="v3-voice-item<?php echo !empty($item['open']) ? ' v3-voice-item--open' : ' v3-voice-item--collapsed'; ?>">
+    <?php $open = !empty($item['open']); ?>
+    <article class="v3-voice-item<?php echo $open ? ' v3-voice-item--open' : ' v3-voice-item--collapsed'; ?>">
       <div class="v3-content">
         <div class="v3-voice-item__top">
           <?php v3_picture($item['avatar'], 'v3-avatar', ''); ?>
@@ -18,7 +19,8 @@ $titleHtml = htmlspecialchars($d['titlePrefix'], ENT_QUOTES, 'UTF-8')
             <p><?php v3_e($item['profile']); ?><br><?php v3_e($item['school']); ?></p>
           </div>
         </div>
-        <?php if (!empty($item['open'])): ?>
+        <details class="v3-voice-details"<?php echo $open ? ' open' : ''; ?><?php echo !empty($item['dummy']) ? ' data-dummy="true"' : ''; ?>>
+          <summary class="v3-voice-more"><?php v3_e($d['moreLabel']); ?></summary>
           <div class="v3-voice-open">
             <?php v3_picture($item['detail'], 'v3-voice-open__photo', ''); ?>
             <div class="v3-voice-open__copy">
@@ -33,9 +35,7 @@ $titleHtml = htmlspecialchars($d['titlePrefix'], ENT_QUOTES, 'UTF-8')
             <strong><?php v3_e($item['adviceLabel']); ?></strong>
             <span><?php v3_e($item['advice']); ?></span>
           </div>
-        <?php else: ?>
-          <p class="v3-voice-more"><?php v3_e($d['moreLabel']); ?></p>
-        <?php endif; ?>
+        </details>
       </div>
     </article>
   <?php endforeach; ?>

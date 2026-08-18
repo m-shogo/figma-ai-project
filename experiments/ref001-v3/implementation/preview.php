@@ -10,5 +10,6 @@ require_once __DIR__ . '/inc/bootstrap.php';
 </head>
 <body class="v3-body" id="top">
 <?php require __DIR__ . '/page.php'; ?>
+<script src="scripts/voice.js" defer></script>
 </body>
 </html>

@@ -700,6 +700,10 @@
   font-weight: 500;
 }
 
+.v3-voice-details {
+  margin: 0;
+}
+
 .v3-voice-more {
   display: flex;
   align-items: center;
@@ -708,6 +712,16 @@
   color: var(--v3-blue);
   font-size: 16px;
   margin: 28px 0 0;
+  cursor: pointer;
+  list-style: none;
+}
+
+.v3-voice-more::-webkit-details-marker {
+  display: none;
+}
+
+.v3-voice-details[open] > .v3-voice-more {
+  display: none;
 }
 
 .v3-voice-more::before {

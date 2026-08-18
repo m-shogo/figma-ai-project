@@ -1,7 +1,5 @@
-# Intended GitHub Actions workflow for REF-001 V3.
-# Not installed under .github/workflows in this PR because the current
-# GitHub OAuth token lacks the `workflow` scope. Re-add at that path
-# when a token with workflow permission is available.
+# Canonical copy of `.github/workflows/ref001-v3-runtime.yml`.
+# GitHub rejects workflow-file pushes unless the credential has the `workflow` OAuth scope.
 name: REF001 V3 Runtime
 
 on:

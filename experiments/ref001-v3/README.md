@@ -40,4 +40,5 @@ Canonical rasters are served from `implementation/theme/assets/images/ref001/ren
 - CTA people keep transparent silhouettes; section background is not baked into the image
 - URLs without Figma destinations remain `#` / `UNRESOLVED`
 - SP Figma frame includes a 40px status bar; the website does not paint device chrome
-- The dedicated V3 GitHub Actions workflow is stored at `docs/github-actions-ref001-v3-runtime.yml` until a token with `workflow` scope can install it under `.github/workflows/`
+- Student Voice collapsed items use dummy copy (`（ダミー）`) in the same open layout; Figma has no expanded content for those two
+- GitHub refused to accept `.github/workflows/ref001-v3-runtime.yml` from this OAuth token (`workflow` scope missing). The same YAML stays at `docs/github-actions-ref001-v3-runtime.yml`
