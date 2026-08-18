@@ -25,6 +25,13 @@
     (_, index) => `./assets/partner/partner-${String(index + 1).padStart(3, '0')}.png`
   );
 
+  const footerLogoAssets = [
+    ['./assets/footer/budokan-logo-crest.svg', 'footer-logo-art__crest'],
+    ['./assets/footer/budokan-wordmark-1.svg', 'footer-logo-art__wordmark-1'],
+    ['./assets/footer/budokan-wordmark-2.svg', 'footer-logo-art__wordmark-2'],
+    ['./assets/footer/budokan-wordmark-3.svg', 'footer-logo-art__wordmark-3']
+  ];
+
   const localDateKey = (date) => {
     const y = date.getFullYear();
     const m = String(date.getMonth() + 1).padStart(2, '0');
@@ -66,6 +73,46 @@
 
       slot.replaceChildren(image);
     });
+  }
+
+  function initDurableFooterLogo() {
+    const slot = document.querySelector('.footer-logo[data-asset-status="pending"]');
+    if (!slot) {
+      document.documentElement.dataset.footerLogoAssetStatus = 'slot-missing';
+      return;
+    }
+
+    const art = document.createElement('span');
+    art.className = 'footer-logo-art';
+    art.setAttribute('aria-hidden', 'true');
+    let loaded = 0;
+    let failed = false;
+
+    footerLogoAssets.forEach(([src, className]) => {
+      const image = document.createElement('img');
+      image.src = src;
+      image.alt = '';
+      image.className = className;
+      image.decoding = 'sync';
+      image.addEventListener('load', () => {
+        loaded += 1;
+        document.documentElement.dataset.footerLogoAssetReady = String(loaded);
+        if (!failed && loaded === footerLogoAssets.length) {
+          slot.removeAttribute('data-asset-status');
+          slot.dataset.assetStatus = 'ready';
+          slot.classList.add('asset-ready');
+          document.documentElement.dataset.footerLogoAssetStatus = 'ready';
+        }
+      }, { once: true });
+      image.addEventListener('error', () => {
+        failed = true;
+        slot.dataset.assetStatus = 'error';
+        document.documentElement.dataset.footerLogoAssetStatus = 'error';
+      }, { once: true });
+      art.append(image);
+    });
+
+    slot.replaceChildren(art);
   }
 
   function initCalendar() {
@@ -152,6 +199,7 @@
 
   window.addEventListener('DOMContentLoaded', () => {
     initDurablePartnerAssets();
+    initDurableFooterLogo();
     initCalendar();
   }, { once: true });
 })();
