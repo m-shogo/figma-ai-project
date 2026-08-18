@@ -2,6 +2,10 @@
  * Kept separate from the visual decision sheet so it can be collapsed into
  * section owners after the user approves Final. */
 
+/* The user chose V3's quote face, not V3's metrics. Preserve the existing
+ * Figma-gated numeric typography: PC/SP quote line-height 160% and weight 600. */
+.ref-mv__quote{font-weight:600!important;line-height:1.6!important}
+
 /* Student Voice keeps Figma's initial heights but may grow after user-opened
  * product-decision disclosures. Color follows story order, not open state. */
 .ref-voice-item:nth-of-type(odd)>.ref-content{background:var(--ref-light-blue)!important}
