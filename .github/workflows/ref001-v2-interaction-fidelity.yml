@@ -1,0 +1,114 @@
+name: REF001 V2 Interaction Fidelity
+
+on:
+  pull_request:
+    paths:
+      - 'experiments/ref001-blind-clean-20260812/implementation/**'
+      - 'experiments/ref001-blind-clean-20260812/tools/verify-js-no-visual-diff.mjs'
+      - 'research/figma-updates/2026-08-18-ref001-v2-v3-first-pass-learning.md'
+      - '.github/workflows/ref001-v2-interaction-fidelity.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  authority-and-no-visual-diff:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Materialize comparison base
+        env:
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          if [ -n "$PR_BASE_SHA" ]; then
+            BASE_SHA="$PR_BASE_SHA"
+          else
+            git fetch origin so
+            BASE_SHA="$(git rev-parse origin/so)"
+          fi
+          git worktree add --detach /tmp/ref001-base "$BASE_SHA"
+          echo "BASE_SHA=$BASE_SHA" >> "$GITHUB_ENV"
+          echo "HEAD_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+
+      - name: PHP syntax and authority contract
+        run: |
+          find experiments/ref001-blind-clean-20260812/implementation/theme -name '*.php' -print0 | xargs -0 -n1 php -l
+          php -r '
+            $a = require "experiments/ref001-blind-clean-20260812/implementation/theme/inc/figma-authority.php";
+            if (($a["frames"]["pc"]["node"] ?? null) !== "21384:8173") exit(1);
+            if (($a["frames"]["sp"]["node"] ?? null) !== "21376:4401") exit(2);
+            if (($a["interaction"]["prototype"]["pc_final_frame_reactions"] ?? null) !== 0) exit(3);
+            if (($a["interaction"]["prototype"]["sp_final_frame_reactions"] ?? null) !== 0) exit(4);
+            if (($a["interaction"]["messages"]["authored_slide_content_count"] ?? null) !== 1) exit(5);
+          '
+
+      - name: Stage canonical rendered assets in both fixtures
+        run: |
+          for ROOT in "$GITHUB_WORKSPACE" /tmp/ref001-base; do
+            SOURCE="$ROOT/implementation/theme/assets/images/ref001/rendered"
+            DEST="$ROOT/experiments/ref001-blind-clean-20260812/implementation/theme/assets/images/ref001/rendered"
+            if [ -d "$SOURCE" ]; then
+              mkdir -p "$DEST"
+              cp -R "$SOURCE"/. "$DEST"/
+            fi
+          done
+
+      - name: Install browser and pixel diff runtime
+        run: |
+          mkdir -p /tmp/ref001-js-qa
+          cd /tmp/ref001-js-qa
+          npm init -y >/dev/null 2>&1
+          npm install playwright@1.54.2 pixelmatch@7.1.0 pngjs@7.0.0 >/dev/null
+          npx playwright install --with-deps chromium
+          cp "$GITHUB_WORKSPACE/experiments/ref001-blind-clean-20260812/tools/verify-js-no-visual-diff.mjs" ./verify.mjs
+
+      - name: Start base and head fixtures
+        run: |
+          php -S 127.0.0.1:8764 -t /tmp/ref001-base/experiments/ref001-blind-clean-20260812/implementation/theme >/tmp/ref001-base.log 2>&1 &
+          php -S 127.0.0.1:8765 -t "$GITHUB_WORKSPACE/experiments/ref001-blind-clean-20260812/implementation/theme" >/tmp/ref001-head.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:8764/preview.php >/dev/null && curl -fsS http://127.0.0.1:8765/preview.php >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          echo '--- base ---'; cat /tmp/ref001-base.log
+          echo '--- head ---'; cat /tmp/ref001-head.log
+          exit 1
+
+      - name: Verify authority-aware JS and exact no-visual-diff
+        run: |
+          cd /tmp/ref001-js-qa
+          node verify.mjs \
+            http://127.0.0.1:8764/preview.php \
+            http://127.0.0.1:8765/preview.php \
+            "$GITHUB_WORKSPACE/experiments/ref001-blind-clean-20260812/evidence/js-finalization"
+
+      - name: Publish summary
+        if: always()
+        run: |
+          REPORT='experiments/ref001-blind-clean-20260812/evidence/js-finalization/report.json'
+          {
+            echo '## REF-001 V2 JS finalization'
+            echo
+            echo "- Base: \`$BASE_SHA\`"
+            echo "- Head: \`$HEAD_SHA\`"
+            if [ -f "$REPORT" ]; then
+              echo '- JS authority contract: evaluated'
+              echo '- PC/SP no-visual-diff: evaluated with exact pixel comparison'
+            else
+              echo '- Evidence report was not produced.'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload JS finalization evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ref001-v2-js-finalization
+          path: experiments/ref001-blind-clean-20260812/evidence/js-finalization
+          if-no-files-found: warn
+          retention-days: 14

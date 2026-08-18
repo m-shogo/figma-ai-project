@@ -5,6 +5,7 @@ function ref001_get(string $key, $fallback = '') { if (function_exists('get_fiel
 function ref001_e($value): void { echo htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8'); }
 function ref001_section(string $name): void { require __DIR__ . '/template-parts/sections/' . $name . '.php'; }
 function ref001_course_domain(): array { return require __DIR__ . '/inc/course-domain.php'; }
+function ref001_figma_authority(): array { static $authority; if ($authority === null) { $authority = require __DIR__ . '/inc/figma-authority.php'; } return $authority; }
 function ref001_assets(): array { static $assets; if ($assets === null) { $assets = require __DIR__ . '/inc/asset-map.php'; } return $assets; }
 function ref001_asset_url(string $path): string {
     if (REF001_FIXTURE_MODE || !function_exists('get_stylesheet_directory_uri')) return $path;
@@ -25,7 +26,10 @@ function ref001_picture(string $slot, string $class = '', string $alt = '', bool
     $pc = ref001_asset_url((string)$entry['pc']);
     $sp = ref001_asset_url((string)$entry['sp']);
     $loading = $eager ? 'eager' : 'lazy';
-    echo '<picture class="ref-picture ' . htmlspecialchars($class, ENT_QUOTES, 'UTF-8') . '" data-asset-slot="' . htmlspecialchars($slot, ENT_QUOTES, 'UTF-8') . '">';
+    $figma = is_array($entry['figma'] ?? null) ? $entry['figma'] : [];
+    $figma_pc = isset($figma['pc']) ? ' data-figma-pc="' . htmlspecialchars((string)$figma['pc'], ENT_QUOTES, 'UTF-8') . '"' : '';
+    $figma_sp = isset($figma['sp']) ? ' data-figma-sp="' . htmlspecialchars((string)$figma['sp'], ENT_QUOTES, 'UTF-8') . '"' : '';
+    echo '<picture class="ref-picture ' . htmlspecialchars($class, ENT_QUOTES, 'UTF-8') . '" data-asset-slot="' . htmlspecialchars($slot, ENT_QUOTES, 'UTF-8') . '"' . $figma_pc . $figma_sp . '>';
     echo '<source media="(max-width:767px)" srcset="' . htmlspecialchars($sp, ENT_QUOTES, 'UTF-8') . '">';
     echo '<img src="' . htmlspecialchars($pc, ENT_QUOTES, 'UTF-8') . '" alt="' . htmlspecialchars($alt, ENT_QUOTES, 'UTF-8') . '" loading="' . $loading . '" decoding="async">';
     echo '</picture>';
@@ -60,4 +64,5 @@ if (function_exists('add_action')) { add_action('wp_enqueue_scripts', function()
     wp_enqueue_style('ref001-v2-intermediate-mv', get_stylesheet_directory_uri() . '/v2-intermediate-mv.css', ['ref001-v2-mobile-fluid'], '0.1.0');
     wp_enqueue_style('ref001-v2-font-fidelity', get_stylesheet_directory_uri() . '/v2-font-fidelity.css', ['ref001-v2-intermediate-mv'], '0.1.0');
     wp_enqueue_style('ref001-v2-typography-fidelity', get_stylesheet_directory_uri() . '/v2-typography-fidelity.css', ['ref001-v2-font-fidelity'], '0.1.0');
+    wp_enqueue_script('ref001-v2-interactions', get_stylesheet_directory_uri() . '/assets/js/ref001-interactions.js', [], '0.1.0', true);
 }); }
