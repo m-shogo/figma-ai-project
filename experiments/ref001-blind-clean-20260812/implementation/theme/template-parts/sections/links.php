@@ -1,4 +1,4 @@
-<section class="ref-links" data-section="links">
+<section class="ref-links" data-section="links"<?= ref001_figma_section_attrs('links'); ?>>
     <div class="ref-links__grid">
         <a href="<?php ref001_e(ref001_link_url('campus')); ?>" class="ref-link-tile ref-link-tile--campus" style="--tile-bg:#eee7ff;--tile-shadow:#8473aa;--tile-accent:#8473aa" data-link-status="UNRESOLVED">
             <span class="ref-link-tile__shadow" aria-hidden="true"></span>
