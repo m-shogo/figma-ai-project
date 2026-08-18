@@ -1,0 +1,155 @@
+name: REF001 V2 V3 Visual Comparison
+
+on:
+  push:
+    branches:
+      - agent/ref001-v2-v3-visual-comparison
+    paths:
+      - '.github/workflows/ref001-v2-v3-visual-compare.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Materialize protected V3 as read-only worktree
+        run: |
+          git fetch origin agent/ref001-v3:refs/remotes/origin/agent/ref001-v3
+          git worktree add --detach /tmp/ref001-v3 refs/remotes/origin/agent/ref001-v3
+          echo "V2_HEAD=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          echo "V3_HEAD=$(git -C /tmp/ref001-v3 rev-parse HEAD)" >> "$GITHUB_ENV"
+
+      - name: Stage canonical V2 rendered assets
+        run: |
+          SOURCE='implementation/theme/assets/images/ref001/rendered'
+          DEST='experiments/ref001-blind-clean-20260812/implementation/theme/assets/images/ref001/rendered'
+          if [ -d "$SOURCE" ]; then
+            mkdir -p "$DEST"
+            cp -R "$SOURCE"/. "$DEST"/
+          fi
+
+      - name: Install Chromium runtime
+        run: |
+          mkdir -p /tmp/ref001-compare-node
+          cd /tmp/ref001-compare-node
+          npm init -y >/dev/null 2>&1
+          npm install playwright@1.54.2 >/dev/null
+          npx playwright install --with-deps chromium
+
+      - name: Start V2 and V3 fixtures
+        run: |
+          php -S 127.0.0.1:8765 -t "$GITHUB_WORKSPACE" >/tmp/ref001-v2-http.log 2>&1 &
+          php -S 127.0.0.1:8766 -t /tmp/ref001-v3 >/tmp/ref001-v3-http.log 2>&1 &
+          V2_URL='http://127.0.0.1:8765/experiments/ref001-blind-clean-20260812/implementation/theme/preview.php'
+          V3_URL='http://127.0.0.1:8766/experiments/ref001-v3/implementation/preview.php'
+          for i in $(seq 1 30); do
+            if curl -fsS "$V2_URL" >/dev/null && curl -fsS "$V3_URL" >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          echo '--- V2 ---'; cat /tmp/ref001-v2-http.log
+          echo '--- V3 ---'; cat /tmp/ref001-v3-http.log
+          exit 1
+
+      - name: Capture identical PC SP visual evidence
+        env:
+          NODE_PATH: /tmp/ref001-compare-node/node_modules
+        run: |
+          cat >/tmp/ref001-compare-node/capture.mjs <<'JS'
+          import { chromium } from 'playwright';
+          import fs from 'node:fs/promises';
+          import path from 'node:path';
+
+          const out = process.argv[2];
+          const v2Head = process.env.V2_HEAD;
+          const v3Head = process.env.V3_HEAD;
+          await fs.mkdir(out, { recursive: true });
+          const browser = await chromium.launch({ headless: true });
+          const targets = [
+            { variant: 'v2', url: 'http://127.0.0.1:8765/experiments/ref001-blind-clean-20260812/implementation/theme/preview.php' },
+            { variant: 'v3', url: 'http://127.0.0.1:8766/experiments/ref001-v3/implementation/preview.php' },
+          ];
+          const modes = [
+            { mode: 'pc', width: 1380, height: 1000 },
+            { mode: 'sp', width: 375, height: 844 },
+          ];
+          const manifest = { generatedAt: new Date().toISOString(), v2Head, v3Head, captures: [] };
+
+          const safe = value => String(value || 'section').trim().replace(/[^a-zA-Z0-9_-]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 80) || 'section';
+
+          try {
+            for (const target of targets) {
+              for (const mode of modes) {
+                const page = await browser.newPage({ viewport: { width: mode.width, height: mode.height }, deviceScaleFactor: 1, locale: 'ja-JP', timezoneId: 'Asia/Tokyo' });
+                const errors = [];
+                page.on('pageerror', error => errors.push(String(error)));
+                await page.goto(target.url, { waitUntil: 'networkidle' });
+                await page.evaluate(() => document.fonts?.ready);
+                await page.screenshot({ path: path.join(out, `${target.variant}-${mode.mode}-full.png`), fullPage: true });
+
+                const info = await page.evaluate(() => {
+                  const rect = el => {
+                    const r = el.getBoundingClientRect();
+                    return { x: r.x + scrollX, y: r.y + scrollY, width: r.width, height: r.height, bottom: r.bottom + scrollY };
+                  };
+                  const sections = [...document.querySelectorAll('[data-section]')].map((el, i) => ({
+                    index: i,
+                    dataSection: el.getAttribute('data-section'),
+                    className: typeof el.className === 'string' ? el.className : '',
+                    tagName: el.tagName,
+                    rect: rect(el),
+                  })).filter(item => item.rect.width > 0 && item.rect.height > 0);
+                  return {
+                    document: {
+                      clientWidth: document.documentElement.clientWidth,
+                      scrollWidth: document.documentElement.scrollWidth,
+                      bodyHeight: document.body.getBoundingClientRect().height,
+                    },
+                    sections,
+                  };
+                });
+
+                const used = new Map();
+                for (const section of info.sections) {
+                  const base = safe(section.dataSection || section.className.split(/\s+/)[0] || `${section.tagName}-${section.index}`);
+                  const count = (used.get(base) || 0) + 1;
+                  used.set(base, count);
+                  const name = count === 1 ? base : `${base}-${count}`;
+                  const locator = page.locator('[data-section]').nth(section.index);
+                  try {
+                    await locator.screenshot({ path: path.join(out, `${target.variant}-${mode.mode}-section-${name}.png`) });
+                    section.capture = `${target.variant}-${mode.mode}-section-${name}.png`;
+                  } catch (error) {
+                    section.captureError = String(error);
+                  }
+                }
+
+                manifest.captures.push({ variant: target.variant, mode: mode.mode, viewport: mode, errors, ...info });
+                await page.close();
+              }
+            }
+          } finally {
+            await browser.close();
+          }
+          await fs.writeFile(path.join(out, 'manifest.json'), JSON.stringify(manifest, null, 2));
+          console.log(JSON.stringify({ v2Head, v3Head, captures: manifest.captures.map(c => ({ variant:c.variant, mode:c.mode, bodyHeight:c.document.bodyHeight, overflow:c.document.scrollWidth-c.document.clientWidth, sections:c.sections.length, errors:c.errors.length })) }, null, 2));
+          if (manifest.captures.some(c => c.errors.length || c.document.scrollWidth > c.document.clientWidth + 1)) process.exit(1);
+          JS
+          cd /tmp/ref001-compare-node
+          node capture.mjs "$GITHUB_WORKSPACE/ref001-v2-v3-comparison"
+
+      - name: Upload comparison evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ref001-v2-v3-fresh-comparison
+          path: ref001-v2-v3-comparison
+          if-no-files-found: error
+          retention-days: 14
