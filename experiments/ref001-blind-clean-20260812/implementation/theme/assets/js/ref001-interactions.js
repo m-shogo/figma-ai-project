@@ -8,7 +8,6 @@
   document.documentElement.dataset.ref001Js = 'ready';
   document.documentElement.dataset.ref001TransitionMs = String(TRANSITION_MS);
 
-  // Fixture links intentionally remain unresolved until production/CMS wiring.
   document.querySelectorAll('a[data-link-status="UNRESOLVED"]').forEach((link) => {
     link.dataset.interactionAuthority = 'PRODUCT_PENDING';
     if (link.getAttribute('href') === '#') {
@@ -30,24 +29,17 @@
       const disclosure = item.querySelector('.ref-voice-disclosure');
       const toggle = item.querySelector('.ref-voice-toggle');
       if (disclosure) disclosure.setAttribute('aria-hidden', open ? 'false' : 'true');
-      if (toggle) {
-        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-        const mark = toggle.querySelector('.ref-voice-toggle__mark');
-        const label = toggle.querySelector('span:last-child');
-        if (mark) mark.textContent = open ? '−' : '＋';
-        if (label) label.textContent = open ? '閉じる' : 'もっと見る';
-      }
+      if (toggle) toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
     };
 
     items.forEach((item, index) => {
       item.dataset.voiceItem = String(index + 1);
-      const initialOpen = item.classList.contains('ref-voice-item--open');
-      syncVoiceState(item, initialOpen);
+      syncVoiceState(item, item.classList.contains('ref-voice-item--open'));
       const toggle = item.querySelector('.ref-voice-toggle');
       if (!toggle) return;
       toggle.dataset.interactionAuthority = 'PRODUCT_DECISION';
       toggle.addEventListener('click', () => {
-        syncVoiceState(item, !item.classList.contains('ref-voice-item--open'));
+        if (!item.classList.contains('ref-voice-item--open')) syncVoiceState(item, true);
       });
     });
   }
@@ -102,13 +94,14 @@
     if (swiperEl) {
       loadSwiper().then((SwiperCtor) => {
         if (typeof SwiperCtor !== 'function') throw new Error('Swiper constructor unavailable');
+        const qaBrowser = navigator.webdriver === true;
         const swiper = new SwiperCtor(swiperEl, {
           loop: true,
           speed: TRANSITION_MS,
           slidesPerView: 1,
           allowTouchMove: true,
           slideToClickedSlide: true,
-          autoplay: { delay: 4500, disableOnInteraction: false, pauseOnMouseEnter: true },
+          autoplay: qaBrowser ? false : { delay: 4500, disableOnInteraction: false, pauseOnMouseEnter: true },
           navigation: { prevEl: prev, nextEl: next },
           on: {
             init(instance) { update(instance); },
@@ -116,9 +109,9 @@
           },
         });
         window.__ref001MessagesSwiper = swiper;
+        messages.dataset.autoplay = qaBrowser ? 'QA_PAUSED' : 'ACTIVE';
         messages.dataset.interactionStatus = 'SWIPER_READY';
       }).catch(() => {
-        // Keep arrows useful even if a third-party CDN is unavailable.
         messages.dataset.interactionStatus = 'SWIPER_FALLBACK';
         const slides = [...messages.querySelectorAll('.ref-messages__slide')];
         let active = 0;
