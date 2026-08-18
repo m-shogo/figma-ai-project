@@ -1,0 +1,27 @@
+/* Dynamic layout adjustments for the current Human Review round.
+ * Kept separate from the visual decision sheet so it can be collapsed into
+ * section owners after the user approves Final. */
+
+/* Student Voice keeps Figma's initial heights but may grow after user-opened
+ * product-decision disclosures. Color follows story order, not open state. */
+.ref-voice-item:nth-of-type(odd)>.ref-content{background:var(--ref-light-blue)!important}
+.ref-voice-item:nth-of-type(even)>.ref-content{background:var(--ref-light-yellow)!important}
+.ref-voice-item--open .ref-voice-toggle{display:none}
+@media (min-width:1300px){.ref-voice{height:auto!important;min-height:1393px!important}}
+
+/* External Swiper navigation is visually stationary while slides move. */
+.ref-messages__swiper{position:relative}
+@media (min-width:1300px){
+  .ref-messages__swiper{height:440px}
+  .ref-messages__indicator{position:absolute!important;left:calc((100% - 1160px)/2 + 165px)!important;top:408px!important;transform:none!important;margin:0!important}
+}
+@media (max-width:767px){
+  .ref-messages__swiper{height:462px}
+  .ref-messages__indicator{position:absolute!important;left:50%!important;top:435px!important;transform:translateX(-50%)!important;margin:0!important}
+}
+
+/* Every pre-existing interactive transition is normalized to the agreed 0.3s. */
+.ref-footer__sns-link{transition:opacity .3s ease,transform .3s ease!important}
+
+/* Keep the gradient CTA frame at the same authored endpoint insets. */
+@media (max-width:767px){.ref-cta-value__border{inset:16px!important}}
