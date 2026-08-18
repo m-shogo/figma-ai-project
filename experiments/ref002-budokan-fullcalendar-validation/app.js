@@ -25,6 +25,31 @@
     (_, index) => `./assets/partner/partner-${String(index + 1).padStart(3, '0')}.png`
   );
 
+  const rasterAssetSlots = [
+    { key: 'hero', selector: '.hero-image', pc: './assets/figma-raster/hero/hero-pc.png', sp: './assets/figma-raster/hero/hero-sp.png' },
+    { key: 'event-01', selector: '.event-photo--one', pc: './assets/figma-raster/events/event-01.png' },
+    { key: 'event-02', selector: '.event-photo--two', pc: './assets/figma-raster/events/event-02.png' },
+    { key: 'event-03', selector: '.event-photo--three', pc: './assets/figma-raster/events/event-03.png' },
+    { key: 'event-04', selector: '.event-photo--four', pc: './assets/figma-raster/events/event-04.png' },
+    { key: 'purpose-01', selector: '.purpose-photo--budo', pc: './assets/figma-raster/purpose/purpose-01.png' },
+    { key: 'purpose-02', selector: '.purpose-photo--calligraphy', pc: './assets/figma-raster/purpose/purpose-02.png' },
+    { key: 'purpose-03', selector: '.purpose-photo--budokan', pc: './assets/figma-raster/purpose/purpose-03.png' },
+    { key: 'about-bg', selector: '.about-visual', pc: './assets/figma-raster/about/about-bg-pc.png', sp: './assets/figma-raster/about/about-bg-sp.png' },
+    { key: 'about-01', selector: '.about-card-photo--1', pc: './assets/figma-raster/about/about-01.png' },
+    { key: 'about-02', selector: '.about-card-photo--2', pc: './assets/figma-raster/about/about-02.png' },
+    { key: 'about-03', selector: '.about-card-photo--3', pc: './assets/figma-raster/about/about-03.png' },
+    { key: 'about-04', selector: '.about-card-photo--4', pc: './assets/figma-raster/about/about-04.png' },
+    { key: 'about-05', selector: '.about-card-photo--5', pc: './assets/figma-raster/about/about-05.png' },
+    { key: 'about-06', selector: '.about-card-photo--6', pc: './assets/figma-raster/about/about-06.png' },
+    { key: 'instagram-01', selector: '.instagram-thumb:nth-child(1)', pc: './assets/figma-raster/instagram/instagram-01.png' },
+    { key: 'instagram-02', selector: '.instagram-thumb:nth-child(2)', pc: './assets/figma-raster/instagram/instagram-02.png' },
+    { key: 'instagram-03', selector: '.instagram-thumb:nth-child(3)', pc: './assets/figma-raster/instagram/instagram-03.png' },
+    { key: 'instagram-04', selector: '.instagram-thumb:nth-child(4)', pc: './assets/figma-raster/instagram/instagram-04.png' },
+    { key: 'instagram-05', selector: '.instagram-thumb:nth-child(5)', pc: './assets/figma-raster/instagram/instagram-05.png' },
+    { key: 'banner', selector: '.banner-section', pc: './assets/figma-raster/banner/banner-pc.png', sp: './assets/figma-raster/banner/banner-sp.png' },
+    { key: 'footer-map', selector: '.footer-map', pc: './assets/figma-raster/footer/footer-map.png' }
+  ];
+
   // Figma footer logo group 839:4711 is 283.25×55. The original SVG is
   // slightly larger than this connector can transfer as one text response, so
   // it is reconstructed from its authored vector children in the same parent
@@ -44,6 +69,52 @@
     return `${y}-${m}-${d}`;
   };
 
+  function markAssetReady(slot, key) {
+    slot.removeAttribute('data-asset-status');
+    slot.dataset.assetStatus = 'ready';
+    slot.dataset.assetKey = key;
+    slot.classList.remove('asset-pending');
+    slot.classList.add('asset-ready');
+  }
+
+  function initDurableRasterAssets() {
+    const isSp = window.matchMedia('(max-width: 767px)').matches;
+    let ready = 0;
+    let failed = 0;
+
+    rasterAssetSlots.forEach((entry) => {
+      const slot = document.querySelector(entry.selector);
+      if (!slot) {
+        failed += 1;
+        document.documentElement.dataset.rasterAssetStatus = 'slot-missing';
+        return;
+      }
+      const src = isSp && entry.sp ? entry.sp : entry.pc;
+      const image = new Image();
+      image.decoding = 'sync';
+      image.addEventListener('load', () => {
+        slot.style.backgroundImage = `url("${src}")`;
+        slot.style.backgroundRepeat = 'no-repeat';
+        slot.style.backgroundPosition = 'center';
+        slot.style.backgroundSize = 'cover';
+        markAssetReady(slot, entry.key);
+        ready += 1;
+        document.documentElement.dataset.rasterAssetReady = String(ready);
+        if (ready === rasterAssetSlots.length && failed === 0) {
+          document.documentElement.dataset.rasterAssetStatus = 'ready';
+        }
+      }, { once: true });
+      image.addEventListener('error', () => {
+        failed += 1;
+        slot.dataset.assetStatus = 'error';
+        slot.dataset.assetKey = entry.key;
+        document.documentElement.dataset.rasterAssetErrors = String(failed);
+        document.documentElement.dataset.rasterAssetStatus = 'error';
+      }, { once: true });
+      image.src = src;
+    });
+  }
+
   function initDurablePartnerAssets() {
     const slots = [...document.querySelectorAll('.partner-logo[data-asset-status="pending"]')];
     if (slots.length !== partnerAssetPaths.length) {
@@ -61,9 +132,7 @@
       image.decoding = 'sync';
 
       image.addEventListener('load', () => {
-        slot.removeAttribute('data-asset-status');
-        slot.dataset.assetStatus = 'ready';
-        slot.classList.add('asset-ready');
+        markAssetReady(slot, `partner-${String(index + 1).padStart(3, '0')}`);
         loaded += 1;
         document.documentElement.dataset.partnerAssetReady = String(loaded);
         if (loaded === partnerAssetPaths.length) {
@@ -108,9 +177,7 @@
           slot.style.display = 'block';
           slot.style.fontSize = '0';
           slot.style.letterSpacing = '0';
-          slot.removeAttribute('data-asset-status');
-          slot.dataset.assetStatus = 'ready';
-          slot.classList.add('asset-ready');
+          markAssetReady(slot, 'footer-logo');
           document.documentElement.dataset.footerLogoAssetStatus = 'ready';
         }
       }, { once: true });
@@ -208,6 +275,7 @@
   }
 
   window.addEventListener('DOMContentLoaded', () => {
+    initDurableRasterAssets();
     initDurablePartnerAssets();
     initDurableFooterLogo();
     initCalendar();
