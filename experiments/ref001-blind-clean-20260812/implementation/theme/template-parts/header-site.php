@@ -1,5 +1,5 @@
 <?php $request_url = ref001_link_url('document'); $open_campus_url = ref001_link_url('open-campus'); ?>
-<header class="ref-header" data-section="header">
+<header class="ref-header" data-section="header"<?= ref001_figma_section_attrs('header'); ?>>
     <div class="ref-header__inner">
         <div class="ref-header-logo">
             <img class="ref-header-logo__image" src="<?php ref001_e(ref001_asset_url('assets/icons/university-logo-outlined.svg')); ?>" alt="千葉経済大学 CHIBA KEIZAI">

@@ -43,18 +43,42 @@ Result: some geometry repair compensated for typography that should have been fi
 
 ### 4. Interaction evidence was not separated from interaction inference
 
-V3 added a useful Student Voice controller, but the final REF-001 PC and SP frames contain **zero Prototype reactions**. The visible design shows item 1 open and items 2/3 collapsed, but Figma does not contain expanded detail copy for items 2/3. Messages displays `1 / 4`, while only one slide is authored in the final PC/SP frames.
+V3 added a useful Student Voice controller, but the final REF-001 PC and SP frames contain **zero direct Prototype reactions**. The visible design shows item 1 open and items 2/3 collapsed, but Figma does not contain expanded detail copy for items 2/3. Messages displays `1 / 4`, while only one slide is authored in the final PC/SP frames.
 
 Result: a reasonable web behavior could be mistaken for Figma-authored behavior.
 
 **Next-FIRST-PASS rule:** every interaction must be classified as one of:
 
-1. `AUTHORED` — explicit Figma reaction/variant/content evidence
+1. `AUTHORED` — explicit, validated Figma reaction/variant/content evidence
 2. `STRONGLY_INFERRED` — visible affordance/state implies behavior but Figma does not author the transition
 3. `PRODUCT_DECISION` — behavior requires requirements outside Figma
 4. `CONTENT_PENDING` — behavior is obvious but required content is absent
+5. `STALE_REJECTED` — a reaction exists but its destination fails project/component semantic validation
 
 Never invent missing slides, accordion copy, destinations, or states to make a demo look complete.
+
+### 4.1 A Prototype reaction can be real Figma data and still be the wrong authority
+
+A deeper audit followed the final REF-001 instances to their main components. The PC Header and PC Footer main components did contain `ON_HOVER → CHANGE_TO → DISSOLVE 0.3s` reactions.
+
+At first glance that looked like missed authored behavior. The destinations were then inspected:
+
+- PC Header main component `280:267` → destination `14654:3046` (`Header/hover`)
+  - destination text includes `研究者の方`, `遺伝研データ`, `国立遺伝学研究所`
+- PC Footer main component `280:368` → destination `14654:3787` (`Footer/hover`)
+  - destination includes `Copyright © National Institute of Genetics` and unrelated NIG footer links
+
+These are stale copied-source prototype destinations, not 千葉経済大学 REF-001 states. They are therefore `STALE_REJECTED`, not `AUTHORED`.
+
+This is a critical upgrade to Figma observation:
+
+> `reaction exists` is not sufficient evidence.
+
+**Next-FIRST-PASS rule:** trace interaction authority through:
+
+`final instance → mainComponent → reaction → destination → component lineage + project semantic validation → accept/reject`.
+
+A reaction should only become implementation authority when its destination is structurally and semantically compatible with the current project. This protects adaptive implementation from copied design-system residue and stale prototypes.
 
 ### 5. Repair CSS accumulated faster than ownership was simplified
 
@@ -70,6 +94,14 @@ V3 usefully extracted only genuinely repeated pieces and kept one-off sections e
 
 **Next-FIRST-PASS rule:** during section inventory classify visible patterns `REUSE / ADAPT / NEW`. Do not over-componentize one-off compositions, but do not duplicate stable CTA/heading behavior when the same authored pattern repeats.
 
+### 7. Validation contracts encoded early assumptions too narrowly
+
+When V3-style `figma.pc / figma.sp` lineage was replayed into V2, the old asset validator rejected it because it assumed every image entry contained only `pc` and `sp`.
+
+Deleting the metadata would have made CI green but lost the improvement. Instead the validator was upgraded to require the lineage and compare all 32 PC/SP node IDs against the rendered-asset registry while retaining path, WebP, dimensions, SHA-256 and alpha checks.
+
+**Next-FIRST-PASS rule:** when a stronger evidence model breaks an older validator, distinguish `invalid new design` from `validator encoded an obsolete assumption`. Evolve the validator only when the new invariant is stricter and testable.
+
 ## What V3 taught us — and what it did not
 
 ### Promote
@@ -80,6 +112,7 @@ V3 usefully extracted only genuinely repeated pieces and kept one-off sections e
 - minimal repeated components
 - section-aligned CSS ownership
 - interaction authority classification
+- validator evolution when stronger machine-readable lineage is introduced
 
 ### Do not promote
 
@@ -87,23 +120,26 @@ V3 usefully extracted only genuinely repeated pieces and kept one-off sections e
 - V3 course icon mapping mistakes
 - dummy Student Voice expanded content
 - a fake 4-slide Messages carousel
+- stale copied Prototype destinations
 - client-specific implementation paths as universal rules
 
 ## New FIRST PASS order
 
 1. Label execution context: ChatGPT / Codex / Claude Code / Cursor + available capabilities.
 2. Read Figma final PC/SP frames and section boundaries.
-3. Persist section/node authority before coding.
-4. Inventory Variables, components, text segments, image/vector assets, and reactions.
-5. Observe the target repo/company conventions before choosing structure.
-6. Classify each section/pattern `REUSE / ADAPT / NEW`.
-7. Create asset slots with durable Figma lineage before visual repair.
-8. Implement section-first with clear property ownership.
-9. Gate endpoint typography numerically before pixel polishing.
-10. Classify interactions `AUTHORED / STRONGLY_INFERRED / PRODUCT_DECISION / CONTENT_PENDING`.
-11. Implement only behavior for which required content and destination authority exist.
-12. Run responsive/runtime QA, visual diff, and interaction QA.
-13. Record human repair separately; promote a rule only after it repeats across multiple real projects.
+3. Persist frame/section node authority before coding and expose it in runtime evidence.
+4. Inventory Variables, components, rich text segments, image/vector assets, and direct reactions.
+5. For final-frame instances, inspect mainComponent / ComponentSet evidence as well.
+6. Validate every reaction destination against the current component lineage and project semantics; mark contamination `STALE_REJECTED`.
+7. Observe the target repo/company conventions before choosing structure.
+8. Classify each section/pattern `REUSE / ADAPT / NEW`.
+9. Create asset slots with durable Figma lineage before visual repair.
+10. Implement section-first with clear property ownership.
+11. Gate endpoint typography numerically before pixel polishing.
+12. Classify interactions `AUTHORED / STRONGLY_INFERRED / PRODUCT_DECISION / CONTENT_PENDING / STALE_REJECTED`.
+13. Implement only behavior for which required content, destination, and validated authority exist.
+14. Run responsive/runtime QA, exact no-visual-diff checks for structural refactors, and interaction QA.
+15. Record human repair separately; promote a rule only after it repeats across multiple real projects.
 
 ## Promotion status
 

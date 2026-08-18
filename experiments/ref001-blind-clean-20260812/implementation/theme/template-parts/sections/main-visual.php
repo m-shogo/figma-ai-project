@@ -1,4 +1,4 @@
-<section class="ref-mv" data-section="main-visual">
+<section class="ref-mv" data-section="main-visual"<?= ref001_figma_section_attrs('main-visual'); ?>>
   <div class="ref-mv__people" aria-hidden="true">
     <?php ref001_picture('main-visual-left', 'ref-mv__person ref-mv__person--left', '', true); ?>
     <?php ref001_picture('main-visual-right', 'ref-mv__person ref-mv__person--right', '', true); ?>
