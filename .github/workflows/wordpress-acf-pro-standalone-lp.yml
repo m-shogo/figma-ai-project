@@ -1,0 +1,145 @@
+name: WordPress ACF PRO Standalone LP Fixture
+
+on:
+  pull_request:
+    paths:
+      - 'experiments/wordpress-acf-pro-standalone-lp/**'
+      - '.github/workflows/wordpress-acf-pro-standalone-lp.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  light-validation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Guard branch scope against so
+        run: |
+          git fetch origin so --depth=1
+          changed="$(git diff --name-only origin/so...HEAD)"
+          printf '%s\n' "$changed"
+          bad="$(printf '%s\n' "$changed" | grep -Ev '^(experiments/wordpress-acf-pro-standalone-lp/|\.github/workflows/wordpress-acf-pro-standalone-lp\.yml$)' || true)"
+          if [ -n "$bad" ]; then
+            echo "FAIL out-of-scope files changed:"
+            printf '%s\n' "$bad"
+            exit 1
+          fi
+      - name: Docker Compose config
+        working-directory: experiments/wordpress-acf-pro-standalone-lp
+        run: docker compose config --quiet
+      - name: PHP syntax
+        run: find experiments/wordpress-acf-pro-standalone-lp -name '*.php' -print0 | xargs -0 -n1 php -l
+      - name: Validate deterministic fixture PNG generator
+        working-directory: experiments/wordpress-acf-pro-standalone-lp
+        run: |
+          php <<'PHP'
+          <?php
+          require 'scripts/fixture-image.php';
+          $fixture = json_decode(file_get_contents('fixtures/figma-baseline.json'), true, 512, JSON_THROW_ON_ERROR);
+          $aspects = [];
+          foreach ($fixture['fields']['cards'] as $card) {
+              if (empty($card['image'])) {
+                  continue;
+              }
+              $bytes = standalone_lp_fixture_png_bytes((string) $card['image']);
+              $info = getimagesizefromstring($bytes);
+              if ($info === false || ($info['mime'] ?? '') !== 'image/png' || $info[0] < 64 || $info[1] < 64) {
+                  fwrite(STDERR, "FAIL invalid generated PNG for {$card['image']}\n");
+                  exit(1);
+              }
+              $aspects[$info[0] <=> $info[1]] = true;
+          }
+          if (count($aspects) !== 3) {
+              fwrite(STDERR, "FAIL baseline generated PNGs must cover landscape/portrait/square\n");
+              exit(1);
+          }
+          echo "PASS deterministic PNG generation + aspect coverage\n";
+          PHP
+      - name: Shell and env syntax
+        run: |
+          find experiments/wordpress-acf-pro-standalone-lp/scripts -name '*.sh' -print0 | xargs -0 -n1 bash -n
+          bash -n experiments/wordpress-acf-pro-standalone-lp/.env.example
+      - name: Validate worktree runtime isolation
+        working-directory: experiments/wordpress-acf-pro-standalone-lp
+        run: |
+          script="$PWD/scripts/runtime-env.sh"
+          first="$(env -u COMPOSE_PROJECT_NAME -u WP_PORT -u WP_URL FIXTURE_ROOT="$PWD" RUNTIME_SCRIPT="$script" bash -c 'source "$RUNTIME_SCRIPT"; printf "%s|%s|%s" "$COMPOSE_PROJECT_NAME" "$WP_PORT" "$WP_URL"')"
+          second="$(env -u COMPOSE_PROJECT_NAME -u WP_PORT -u WP_URL FIXTURE_ROOT="$PWD/../synthetic-other-worktree" RUNTIME_SCRIPT="$script" bash -c 'source "$RUNTIME_SCRIPT"; printf "%s|%s|%s" "$COMPOSE_PROJECT_NAME" "$WP_PORT" "$WP_URL"')"
+          IFS='|' read -r first_project first_port first_url <<< "$first"
+          IFS='|' read -r second_project second_port second_url <<< "$second"
+          [[ "$first_project" != "$second_project" ]]
+          [[ "$first_port" != "$second_port" ]]
+          [[ "$first_url" == "http://127.0.0.1:${first_port}" ]]
+          [[ "$second_url" == "http://127.0.0.1:${second_port}" ]]
+      - name: Node syntax
+        run: |
+          node --check experiments/wordpress-acf-pro-standalone-lp/tests/runtime.mjs
+          node --check experiments/wordpress-acf-pro-standalone-lp/tests/visual-diff.mjs
+      - name: Resolve isolated browser QA modules
+        working-directory: experiments/wordpress-acf-pro-standalone-lp
+        run: |
+          mkdir -p .runtime/playwright
+          cd .runtime/playwright
+          npm init -y >/dev/null 2>&1
+          npm install --ignore-scripts --no-audit --no-fund playwright@1.54.2 pixelmatch@7.1.0 pngjs@7.0.0 >/dev/null
+          cd ../..
+          node --input-type=module -e "import { createRequire } from 'node:module'; import path from 'node:path'; const r=createRequire(path.resolve('.runtime/playwright/package.json')); if (!r('playwright').chromium) process.exit(1);"
+          node tests/visual-diff.mjs
+      - name: Validate portable ACF export
+        run: python scripts/validate_acf_export.py experiments/wordpress-acf-pro-standalone-lp/acf-export.json
+      - name: Validate fixture contracts and security boundary
+        run: python experiments/wordpress-acf-pro-standalone-lp/tests/validate-fixtures.py
+
+  wordpress-runtime-smoke:
+    needs: light-validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+      - name: Start real WordPress + DB + WP-CLI and activate fixture theme
+        working-directory: experiments/wordpress-acf-pro-standalone-lp
+        run: bash scripts/runtime-smoke.sh
+
+  full-e2e-conditional:
+    needs: [light-validation, wordpress-runtime-smoke]
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v6
+      - name: Resolve ACF PRO E2E availability
+        id: gate
+        env:
+          ACF_PRO_LICENSE_KEY: ${{ secrets.ACF_PRO_LICENSE_KEY }}
+        run: |
+          if [ -z "$ACF_PRO_LICENSE_KEY" ]; then
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "## FULL E2E: SKIP_NO_ACF_PRO_LICENSE_KEY" >> "$GITHUB_STEP_SUMMARY"
+            echo "ACF PRO E2E was not executed; LIGHT validation and the real WordPress runtime smoke remain authoritative for this run." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+            echo "## FULL E2E: ACF PRO license key available" >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Run WordPress + ACF PRO + Playwright E2E
+        if: steps.gate.outputs.enabled == 'true'
+        working-directory: experiments/wordpress-acf-pro-standalone-lp
+        env:
+          CI: 'true'
+          ACF_PRO_LICENSE_KEY: ${{ secrets.ACF_PRO_LICENSE_KEY }}
+        run: make qa
+      - name: Record FULL E2E PASS
+        if: steps.gate.outputs.enabled == 'true' && success()
+        run: |
+          echo "FULL E2E: PASS" >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload runtime evidence
+        if: steps.gate.outputs.enabled == 'true' && hashFiles('experiments/wordpress-acf-pro-standalone-lp/.runtime/qa/**') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: wordpress-acf-pro-standalone-lp-runtime
+          path: experiments/wordpress-acf-pro-standalone-lp/.runtime/qa
+          if-no-files-found: warn
+          retention-days: 14
