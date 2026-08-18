@@ -8,6 +8,31 @@ Shared here: WordPress runtime, MariaDB, WP-CLI, safe ACF PRO attachment/resolut
 
 Not standardized here: future LP HTML/PHP structure, section model, CSS/JS architecture, breakpoints, slider behavior, component granularity, or ACF field architecture. A real Figma/company repository must be observed before those choices are frozen.
 
+## Hosting a supplied production theme
+
+The runtime is reusable infrastructure. It hosts either the disposable sample theme or a **supplied production theme**, without changing anything else.
+
+Drop the theme in and run:
+
+```bash
+cp -R /path/to/supplied-theme theme-dropin/
+make smoke
+```
+
+`theme-dropin/` is git-ignored: a client theme must never be committed to this repository. The directory itself stays tracked so the drop-in path always exists.
+
+If the theme lives elsewhere on disk, point at it instead of copying:
+
+```bash
+THEME_SOURCE_DIR=/absolute/path/to/supplied-theme make smoke
+```
+
+Resolution order is: explicit `THEME_SOURCE_DIR`, then the single directory inside `theme-dropin/`, then the disposable sample. `THEME_SLUG` defaults to the theme directory name and can be overridden when the target install expects a different directory name.
+
+Before mounting anything, `scripts/runtime-env.sh` verifies that the source directory exists, contains `style.css`, and that `style.css` carries a `Theme Name:` header. Two themes in `theme-dropin/` is an explicit failure rather than an arbitrary pick, and `THEME_SLUG` must be a safe directory name.
+
+When a supplied theme is active, the sample-only steps are skipped rather than faked: the sample `acf-export.json` import and the sample CMS mutation fixtures do not run, because a supplied theme owns its own field architecture. `make smoke` and the WordPress/ACF PRO runtime path stay identical.
+
 ## Local isolation
 
 This fixture is not a preview server for public/LAN exposure. Docker publishes WordPress only on `127.0.0.1`, setup forces WordPress `blog_public=0`, and the runtime smoke also verifies that `robots.txt` disallows crawling. The sample credentials are intentionally disposable local-fixture credentials and must never be reused for a real environment.
@@ -61,7 +86,7 @@ That performs: official Composer resolution when only `ACF_PRO_LICENSE_KEY` is p
 
 All shell entrypoints are invoked explicitly through `bash`, so the fixture does not depend on executable-bit preservation when files move through GitHub/API-based workflows.
 
-Use `make status` to print the resolved Compose project and WordPress URL. Use `make reset` for a destructive reset of **only that resolved Compose project** plus `.runtime`. Use `make fixture FIXTURE=repeater-8-items` to switch one validated case.
+Use `make status` to print the resolved Compose project, WordPress URL, and the resolved theme source/slug. Use `make reset` for a destructive reset of **only that resolved Compose project** plus `.runtime`. Use `make fixture FIXTURE=repeater-8-items` to switch one validated case.
 
 ## Theme contract
 

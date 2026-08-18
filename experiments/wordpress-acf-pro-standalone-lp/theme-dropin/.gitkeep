@@ -1,0 +1,3 @@
+Drop the supplied production theme directory here, then run `make smoke` or `make qa`.
+Contents are git-ignored: a client theme must never be committed to this repository.
+Override explicitly with THEME_SOURCE_DIR when the theme lives elsewhere on disk.

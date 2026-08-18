@@ -76,6 +76,59 @@ jobs:
           [[ "$first_port" != "$second_port" ]]
           [[ "$first_url" == "http://127.0.0.1:${first_port}" ]]
           [[ "$second_url" == "http://127.0.0.1:${second_port}" ]]
+      - name: Validate supplied-theme drop-in contract
+        working-directory: experiments/wordpress-acf-pro-standalone-lp
+        run: |
+          script="$PWD/scripts/runtime-env.sh"
+          resolve() {
+            env -u COMPOSE_PROJECT_NAME -u WP_PORT -u WP_URL RUNTIME_SCRIPT="$script" \
+              bash -c 'source "$RUNTIME_SCRIPT"; printf "%s|%s|%s" "$THEME_SLUG" "$THEME_IS_SAMPLE" "$THEME_SOURCE_DIR"'
+          }
+
+          # 1. Nothing dropped in: the disposable sample stays the default.
+          IFS='|' read -r slug is_sample source <<< "$(resolve)"
+          [[ "$slug" == "standalone-lp-sample" ]]
+          [[ "$is_sample" == "1" ]]
+          [[ "$source" == "$PWD/theme/standalone-lp-sample" ]]
+
+          # 2. A supplied theme is hosted without editing the runtime.
+          supplied="$RUNNER_TEMP/supplied-theme"
+          rm -rf "$supplied"; mkdir -p "$supplied"
+          printf '/*\nTheme Name: Supplied Contract Probe\n*/\n' > "$supplied/style.css"
+          IFS='|' read -r slug is_sample source <<< "$(THEME_SOURCE_DIR="$supplied" resolve)"
+          [[ "$slug" == "supplied-theme" ]]
+          [[ "$is_sample" == "0" ]]
+          [[ "$source" == "$supplied" ]]
+
+          # 3. theme-dropin/ auto-resolves a single dropped theme.
+          rm -rf theme-dropin/probe-theme
+          mkdir -p theme-dropin/probe-theme
+          printf '/*\nTheme Name: Dropin Contract Probe\n*/\n' > theme-dropin/probe-theme/style.css
+          IFS='|' read -r slug is_sample source <<< "$(resolve)"
+          [[ "$slug" == "probe-theme" ]]
+          [[ "$is_sample" == "0" ]]
+
+          # 4. Compose mounts the resolved theme at the resolved slug.
+          THEME_SOURCE_DIR="$supplied" THEME_SLUG=budokan docker compose config \
+            | grep -q '/var/www/html/wp-content/themes/budokan'
+
+          # 5. Ambiguous and invalid input fail closed instead of guessing.
+          mkdir -p theme-dropin/second-theme
+          printf '/*\nTheme Name: Second\n*/\n' > theme-dropin/second-theme/style.css
+          if resolve >/dev/null 2>&1; then echo 'FAIL two drop-in themes must not resolve'; exit 1; fi
+          rm -rf theme-dropin/second-theme
+
+          printf 'body{}\n' > theme-dropin/probe-theme/style.css
+          if resolve >/dev/null 2>&1; then echo 'FAIL style.css without a Theme Name header must not resolve'; exit 1; fi
+          printf '/*\nTheme Name: Dropin Contract Probe\n*/\n' > theme-dropin/probe-theme/style.css
+
+          if THEME_SLUG='../escape' resolve >/dev/null 2>&1; then echo 'FAIL unsafe THEME_SLUG must not resolve'; exit 1; fi
+
+          rm -rf theme-dropin/probe-theme "$supplied"
+
+          # 6. A supplied theme must never become committable.
+          git check-ignore -q theme-dropin/any-client-theme
+          echo 'PASS supplied-theme drop-in contract'
       - name: Node syntax
         run: |
           node --check experiments/wordpress-acf-pro-standalone-lp/tests/runtime.mjs

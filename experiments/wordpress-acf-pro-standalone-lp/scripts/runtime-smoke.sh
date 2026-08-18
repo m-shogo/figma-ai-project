@@ -70,9 +70,9 @@ blog_public="$(docker compose run --rm cli option get blog_public)"
 
 wordpress_version="$(docker compose run --rm cli core version)"
 docker compose run --rm cli db check >/dev/null
-docker compose run --rm cli theme activate standalone-lp-sample >/dev/null
+docker compose run --rm cli theme activate "$THEME_SLUG" >/dev/null
 active_theme="$(docker compose run --rm cli option get stylesheet)"
-[[ "$active_theme" == "standalone-lp-sample" ]] || { echo "FAIL standalone theme was not activated." >&2; exit 1; }
+[[ "$active_theme" == "$THEME_SLUG" ]] || { echo "FAIL theme was not activated: expected ${THEME_SLUG}, got ${active_theme}." >&2; exit 1; }
 
 http_code="$(curl --silent --show-error --output /tmp/standalone-lp-smoke.html --write-out '%{http_code}' "$WP_URL/")"
 [[ "$http_code" == "200" ]] || {

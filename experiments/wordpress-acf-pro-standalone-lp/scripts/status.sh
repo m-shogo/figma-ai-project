@@ -16,6 +16,12 @@ cd "$ROOT"
 
 echo "Compose project: ${COMPOSE_PROJECT_NAME}"
 echo "WordPress URL: ${WP_URL}"
+echo "Theme source: ${THEME_SOURCE_DIR}"
+if [[ "$THEME_IS_SAMPLE" == "1" ]]; then
+  echo "Theme slug: ${THEME_SLUG} (disposable sample)"
+else
+  echo "Theme slug: ${THEME_SLUG} (supplied theme)"
+fi
 docker compose ps
 
 running_services="$(docker compose ps --status running --services)"
