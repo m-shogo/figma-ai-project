@@ -1,16 +1,20 @@
 name: REF001 Final Human Feedback Once
 
 on:
-  push:
+  pull_request:
     branches:
-      - agent/ref001-css-canonicalize
+      - so
+    types:
+      - opened
+      - synchronize
+      - reopened
 
 permissions:
   contents: write
 
 jobs:
   apply:
-    if: github.actor != 'github-actions[bot]'
+    if: github.event.pull_request.head.ref == 'agent/ref001-css-canonicalize' && github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -50,6 +54,7 @@ jobs:
   box-sizing:border-box!important;
   display:grid!important;
   place-items:center!important;
+  isolation:auto;
   width:189px!important;
   height:49px!important;
   padding:0!important;
@@ -57,7 +62,6 @@ jobs:
   border:1px solid #777!important;
   border-radius:999px!important;
   overflow:visible!important;
-  isolation:auto;
 }
 .ref-course__rec-label::before{
   content:""!important;
@@ -86,6 +90,20 @@ jobs:
           if nav_old not in css:
               raise SystemExit('messages nav authority not found')
           css = css.replace(nav_old, nav_new, 1)
+
+          narrow_mobile = '''\n\n/* REF001 narrow-mobile overflow contract */
+@media (max-width:374px){
+  .ref-links__grid{
+    --ref-links-gap:min(19px,5vw);
+    --group-size:calc((100vw - 32px - var(--ref-links-gap))/2);
+    --face-size:calc(var(--group-size) - 7px);
+    column-gap:var(--ref-links-gap)!important;
+  }
+}
+'''
+          if narrow_mobile not in css:
+              raise SystemExit('obsolete narrow-mobile contract not found')
+          css = css.replace(narrow_mobile, '\n')
 
           path.write_text(css)
           PY
