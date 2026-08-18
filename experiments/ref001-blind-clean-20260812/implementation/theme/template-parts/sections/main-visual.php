@@ -12,6 +12,11 @@
     <p class="ref-mv__desc">７つのコース制で“ミライ”を見つけ、<br>資格取得支援で“チカラ”をつける。<br>千葉の経済と就職に強い学びがここにある。</p>
   </div>
   <a class="ref-mv__oc" href="<?php ref001_e(ref001_link_url('open-campus')); ?>" data-link-status="UNRESOLVED" aria-label="オープンキャンパス">
-    <span class="ref-mv__oc-kicker">大学の雰囲気を体験！</span><b>OPEN<br>CAMPUS</b><small>開催中！</small><?php ref001_icon('arrow-right', 'ref-mv__oc-arrow'); ?>
+    <span class="ref-mv__oc-kicker">
+      <img class="ref-mv__oc-kicker-shape ref-mv__oc-kicker-shape--fill" src="<?php ref001_e(ref001_asset_url('assets/mv/oc-kicker-fill.svg')); ?>" alt="" width="187" height="47" aria-hidden="true">
+      <img class="ref-mv__oc-kicker-shape ref-mv__oc-kicker-shape--line" src="<?php ref001_e(ref001_asset_url('assets/mv/oc-kicker-line.svg')); ?>" alt="" width="187" height="47" aria-hidden="true">
+      <span class="ref-mv__oc-kicker-text">大学の雰囲気を体験！</span>
+    </span>
+    <b>OPEN<br>CAMPUS</b><small>開催中！</small>
   </a>
 </section>
