@@ -13,9 +13,9 @@ const t = (selector, size, lineHeight, letterSpacing = 0.05, weight = 500, extra
  * PC Top@2x 21384:8173 @ 1380px
  * SP Top_sp@2x 21376:4401 @ 375px
  *
- * Values are representative semantic typography roles. Repeated nodes sharing
- * one selector are checked individually, so this gate covers all rendered
- * instances of each role rather than only one screenshot sample.
+ * Repeated nodes sharing one semantic selector are checked individually. Mixed
+ * Figma text runs get explicit selectors instead of being flattened into the
+ * dominant style of their parent text node.
  */
 const contracts = {
   pc: {
@@ -48,7 +48,7 @@ const contracts = {
       t('.ref-edu-card__number', 22, 1),
       t('.ref-edu-card__phase', 14, 1),
       t('.ref-edu-card h3', 20, 1),
-      t('.ref-edu-card li span', 15, 1),
+      t('.ref-edu-card:nth-of-type(1) li span, .ref-edu-card:nth-of-type(2) li span, .ref-edu-card:nth-of-type(3) li:nth-child(-n+2) span, .ref-edu-card:nth-of-type(4) li:nth-child(n+2) span', 15, 1),
       t('.ref-edu-card:nth-of-type(3) li:nth-child(3) span', 15, 1, 0.01),
       t('.ref-edu-card:nth-of-type(4) li:nth-child(1) span', 15, 1, 0.01),
 
@@ -78,13 +78,13 @@ const contracts = {
       t('.ref-courses__title-line', 30, 1),
       t('.ref-courses__head .ref-bracket-title strong', 42, 1, 0.05, 900),
       t('.ref-course h3', 20, 1),
-      t('.ref-course__desc', 16, 1.3),
+      t('.ref-course:not(:nth-child(3)):not(:nth-child(7)) .ref-course__desc', 16, 1.3),
       t('.ref-course:nth-child(3) .ref-course__desc', 16, 1.3, 0.03),
       t('.ref-course:nth-child(7) .ref-course__desc', 16, 1.3, 0.03),
       t('.ref-course__rec-label', 14, 1),
       t('.ref-course__rec li', 13, 1),
 
-      t('.ref-link-tile__copy', 22, 1),
+      t('.ref-link-tile:not(.ref-link-tile--numbers) .ref-link-tile__copy', 22, 1),
       t('.ref-link-tile--numbers .ref-link-tile__copy', 22, 1.4),
       t('.ref-link-tile__numbers-kicker', 18, 1.4),
       t('.ref-link-tile__instagram-copy', 20, 1, 0.05, 400),
@@ -126,7 +126,7 @@ const contracts = {
       t('.ref-education__intro p', 16, 1.6),
       t('.ref-edu-card__number', 22, 1),
       t('.ref-edu-card__phase', 14, 1),
-      t('.ref-edu-card h3', 18, 1.3),
+      t('.ref-edu-card:not(:first-of-type) h3', 18, 1.3),
       t('.ref-edu-card:first-of-type h3', 18, 1),
       t('.ref-edu-card li span', 15, 1),
 
@@ -160,7 +160,7 @@ const contracts = {
       t('.ref-course__rec-label', 14, 1),
       t('.ref-course__rec li', 13, 1.4),
 
-      t('.ref-link-tile__copy', 16, 1),
+      t('.ref-link-tile:not(.ref-link-tile--numbers) .ref-link-tile__copy', 16, 1),
       t('.ref-link-tile--numbers .ref-link-tile__copy', 16, 1.4),
       t('.ref-link-tile__numbers-kicker', 13, 1.4),
       t('.ref-link-tile__instagram-copy', 16, 1, 0.05, 400),
