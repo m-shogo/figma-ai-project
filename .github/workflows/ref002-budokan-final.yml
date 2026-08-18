@@ -1,0 +1,59 @@
+name: REF002 Budokan Full Page QA
+
+on:
+  pull_request:
+    paths:
+      - 'experiments/ref002-budokan-fullcalendar-validation/**'
+      - '.github/workflows/ref002-budokan-final.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  full-page:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+      - name: Validate final QA source
+        run: node --check experiments/ref002-budokan-fullcalendar-validation/qa-final.mjs
+      - name: Install Chromium runtime
+        run: |
+          mkdir -p /tmp/ref002-playwright && cd /tmp/ref002-playwright
+          npm init -y >/dev/null 2>&1
+          npm install playwright@1.54.2 >/dev/null
+          npx playwright install --with-deps chromium
+          ln -s /tmp/ref002-playwright/node_modules "$GITHUB_WORKSPACE/node_modules"
+      - name: Start Web fixture
+        run: |
+          python3 -m http.server 8772 --bind 127.0.0.1 --directory experiments/ref002-budokan-fullcalendar-validation >/tmp/ref002-final-http.log 2>&1 &
+          for i in $(seq 1 20); do curl -fsS http://127.0.0.1:8772/ >/dev/null && exit 0; sleep 1; done
+          cat /tmp/ref002-final-http.log
+          exit 1
+      - name: Verify complete PC/SP document geometry and FullCalendar
+        run: node experiments/ref002-budokan-fullcalendar-validation/qa-final.mjs http://127.0.0.1:8772/ /tmp/ref002-budokan-final
+      - name: Assert evidence remains honest while assets are pending
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('/tmp/ref002-budokan-final/final-runtime-evidence.json')
+          d=json.loads(p.read_text())
+          assert d['figma']['spDeviceChromePx']==40
+          assert d['pc']['evidence']['calendar']['eventCount']==18
+          assert d['sp']['evidence']['calendar']['eventCount']==18
+          if d['visualComplete']:
+              assert d['assetPending']=={'pc':0,'sp':0}
+          else:
+              assert d['assetPending']['pc']>0 and d['assetPending']['sp']>0
+          print(json.dumps({'visualComplete':d['visualComplete'],'assetPending':d['assetPending']},indent=2))
+          PY
+      - name: Upload final evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ref002-budokan-full-page
+          path: /tmp/ref002-budokan-final
+          if-no-files-found: warn
+          retention-days: 7
