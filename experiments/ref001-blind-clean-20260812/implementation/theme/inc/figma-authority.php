@@ -23,6 +23,13 @@ return [
         'cta-value' => ['pc' => ['21378:7481'], 'sp' => ['21376:4942']],
         'footer' => ['pc' => ['21378:7457'], 'sp' => ['21376:4402']],
     ],
+    'layout' => [
+        'sp_max_width' => 767,
+        'desktop_from_width' => 768,
+        'desktop_min_canvas_width' => 1280,
+        'runtime_authority' => 'PRODUCT_DECISION',
+        'rule' => 'User explicitly requested the PC endpoint design language from 768px upward with body min-width 1280px. Do not invent a separate fluid/tablet composition in 768-1279.',
+    ],
     'interaction' => [
         'transition_ms' => 300,
         'prototype' => [
@@ -68,7 +75,7 @@ return [
             'authored_slide_content_count' => 1,
             'runtime_slide_count' => 4,
             'runtime_engine' => 'Swiper',
-            'runtime_rule' => 'User explicitly requested autoplay + clickable four-slide Swiper; slides 2-4 are dummy runtime content, not Figma-authored content.',
+            'runtime_rule' => 'User explicitly requested autoplay + clickable four-slide Swiper with both copy and image changing. Slide 1 uses the authored Messages image; slides 2-4 use dummy text and existing dummy raster assets and must not be labeled Figma-authored.',
         ],
         'page-top' => [
             'runtime_authority' => 'PRODUCT_DECISION',
