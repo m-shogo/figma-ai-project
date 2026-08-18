@@ -15,7 +15,7 @@ $voices = [
           <div class="ref-speech"><h3><?php ref001_e(ref001_get("voice_{$index}_title")); ?></h3><p><?php ref001_e(ref001_get("voice_{$index}_profile")); ?><br><?php ref001_e(ref001_get("voice_{$index}_school")); ?></p></div>
         </div>
         <?php if (!$open): ?>
-          <button type="button" class="ref-voice-toggle" aria-expanded="false" aria-controls="<?php ref001_e($detail_id); ?>"><span class="ref-voice-toggle__mark" aria-hidden="true">＋</span><span>もっと見る</span></button>
+          <button type="button" class="ref-voice-more ref-voice-toggle" aria-expanded="false" aria-controls="<?php ref001_e($detail_id); ?>"><span class="ref-voice-toggle__mark" aria-hidden="true">＋</span><span>もっと見る</span></button>
         <?php endif; ?>
         <div id="<?php ref001_e($detail_id); ?>" class="ref-voice-disclosure"<?= $open ? '' : ' aria-hidden="true"'; ?>>
           <div class="ref-voice-disclosure__inner">
