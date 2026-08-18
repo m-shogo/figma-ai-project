@@ -1,0 +1,44 @@
+name: REF001 Final Runtime Fix
+
+on:
+  push:
+    branches:
+      - agent/ref001-css-canonicalize
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/ref001-css-canonicalize
+          fetch-depth: 0
+      - name: Patch 320px footer overflow inside existing SP bucket
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('experiments/ref001-blind-clean-20260812/implementation/theme/assets/css/ref001.css')
+          s = p.read_text()
+          needle = "@media (max-width:767px){\n.ref-cta-value__border{inset:16px!important}\n}"
+          replacement = "@media (max-width:767px){\n.ref-cta-value__border{inset:16px!important}\n  .ref-footer__copyright{white-space:normal}\n}"
+          if s.count(needle) != 1:
+              raise SystemExit(f'expected one target block, found {s.count(needle)}')
+          p.write_text(s.replace(needle, replacement))
+          PY
+      - name: Commit runtime-only fix
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo 'No patch required.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add experiments/ref001-blind-clean-20260812/implementation/theme/assets/css/ref001.css
+          git commit -m 'Fix REF-001 320px footer overflow'
+          git push origin HEAD:agent/ref001-css-canonicalize
