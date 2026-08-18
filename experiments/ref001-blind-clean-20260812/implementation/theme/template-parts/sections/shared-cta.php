@@ -1,4 +1,4 @@
-<section class="ref-shared-cta" data-section="shared-cta">
+<section class="ref-shared-cta" data-section="shared-cta"<?= ref001_figma_section_attrs('shared-cta'); ?>>
     <div class="ref-shared-cta__inner">
         <h2><span class="ref-shared-cta__line">千葉経済大学を</span><span class="ref-shared-cta__line">もっと知ろう！</span></h2>
         <div class="ref-shared-cta__actions">
