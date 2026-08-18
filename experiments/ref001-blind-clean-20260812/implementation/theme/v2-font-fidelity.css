@@ -1,0 +1,6 @@
+/* REF-001 V2 font-face fidelity.
+ * Figma uses Poppins SemiBold (600) for OPEN CAMPUS. The base fixture only
+ * loaded 400/500, which made browsers synthesize 600. Keep this small and
+ * separate from geometry/typography ownership.
+ */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');
