@@ -41,7 +41,7 @@ def snapshot(*, generated_at: str | None = None) -> dict:
 class ApplyRadarPreflightTests(unittest.TestCase):
     def test_pins_fresh_relevant_official_snapshot(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             path = root / "research/update-radar/latest.json"
             path.parent.mkdir(parents=True)
             value = snapshot()
@@ -60,7 +60,7 @@ class ApplyRadarPreflightTests(unittest.TestCase):
 
     def test_retests_are_derived_only_from_changes_relevant_to_run(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             path = root / "research/update-radar/latest.json"
             path.parent.mkdir(parents=True)
             value = snapshot()
@@ -94,7 +94,7 @@ class ApplyRadarPreflightTests(unittest.TestCase):
 
     def test_stale_snapshot_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             path = root / "research/update-radar/latest.json"
             path.parent.mkdir(parents=True)
             value = snapshot(generated_at=(datetime.now(timezone.utc) - timedelta(hours=48)).isoformat())
@@ -105,7 +105,7 @@ class ApplyRadarPreflightTests(unittest.TestCase):
 
     def test_missing_agent_lane_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             path = root / "research/update-radar/latest.json"
             path.parent.mkdir(parents=True)
             value = snapshot()
@@ -118,7 +118,7 @@ class ApplyRadarPreflightTests(unittest.TestCase):
 
     def test_missing_accessibility_lane_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             path = root / "research/update-radar/latest.json"
             path.parent.mkdir(parents=True)
             value = snapshot()

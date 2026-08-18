@@ -37,7 +37,7 @@ class ChunkAssemblyTests(unittest.TestCase):
 
     def test_independently_padded_chunks_reassemble_exact_bytes(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
+            root = Path(tmp).resolve()
             paths = self.write_chunks(root / "chunks", JPEG_BYTES, [7, 13, 17, 19])
             output = root / "asset.jpg"
             sha256, size, detected = assembler.assemble_chunks(paths, output)
@@ -48,14 +48,14 @@ class ChunkAssemblyTests(unittest.TestCase):
 
     def test_invalid_chunk_fails_closed(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
-            path = Path(tmp) / "bad.b64"
+            path = Path(tmp).resolve() / "bad.b64"
             path.write_text("not base64!?", encoding="ascii")
             with self.assertRaisesRegex(assembler.AssemblyError, "valid base64"):
                 assembler.decode_chunk(path)
 
     def test_rendered_manifest_is_explicitly_not_raw_cms_source(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
+            root = Path(tmp).resolve()
             output = root / "assets" / "education.jpg"
             output.parent.mkdir(parents=True)
             output.write_bytes(JPEG_BYTES)
@@ -81,7 +81,7 @@ class ChunkAssemblyTests(unittest.TestCase):
 
     def test_generated_manifest_passes_repository_validator_shape(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
+            root = Path(tmp).resolve()
             asset = root / "assets" / "education.jpg"
             asset.parent.mkdir(parents=True)
             asset.write_bytes(JPEG_BYTES)
@@ -105,7 +105,7 @@ class ChunkAssemblyTests(unittest.TestCase):
     def test_missing_chunk_directory_fails(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             with self.assertRaisesRegex(assembler.AssemblyError, "not found"):
-                assembler.chunk_paths(Path(tmp) / "missing")
+                assembler.chunk_paths(Path(tmp).resolve() / "missing")
 
 
 if __name__ == "__main__":

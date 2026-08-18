@@ -262,7 +262,7 @@ class StartSectionRunTests(unittest.TestCase):
 
     def test_complete_legacy_preflight_and_valid_lineage_can_start(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             data = fixture(root)
             started = self.validate_start(root, data)
             self.assertEqual(started["status"], "RUNNING")
@@ -270,7 +270,7 @@ class StartSectionRunTests(unittest.TestCase):
 
     def test_valid_required_variable_mode_audit_allows_start(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             data = fixture(root)
             attach_variable_mode_audit(root, data, good_variable_mode_audit())
             started = self.validate_start(root, data)
@@ -278,7 +278,7 @@ class StartSectionRunTests(unittest.TestCase):
 
     def test_required_variable_mode_audit_missing_blocks_start(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             data = fixture(root)
             attach_variable_mode_audit(root, data, None, required=True)
             with self.assertRaisesRegex(ValueError, "Variable Mode audit is required but missing"):
@@ -286,7 +286,7 @@ class StartSectionRunTests(unittest.TestCase):
 
     def test_variable_mode_mismatch_blocks_start_and_surfaces_safe_remediation(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             data = fixture(root)
             audit = good_variable_mode_audit()
             audit["roots"][0]["explicit_mode_id"] = None
@@ -297,7 +297,7 @@ class StartSectionRunTests(unittest.TestCase):
 
     def test_variable_mode_audit_older_than_reference_blocks_start(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             data = fixture(root)
             attach_variable_mode_audit(
                 root,
@@ -310,7 +310,7 @@ class StartSectionRunTests(unittest.TestCase):
 
     def test_missing_implementation_profile_pin_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             data = fixture(root)
             data["coordination"]["implementation_profile_path"] = ""
             with self.assertRaisesRegex(ValueError, "pinned Implementation Profile"):
@@ -318,7 +318,7 @@ class StartSectionRunTests(unittest.TestCase):
 
     def test_legacy_preflight_still_requires_community_flag(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             data = fixture(root)
             data["tooling_preflight"]["community_scan_checked"] = False
             with self.assertRaisesRegex(ValueError, "community_scan_checked"):
@@ -326,7 +326,7 @@ class StartSectionRunTests(unittest.TestCase):
 
     def test_automated_preflight_does_not_require_manual_community_scan(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             data = fixture(root)
             radar_path, radar_hash = make_radar(root)
             data["tooling_preflight"] = {
@@ -347,7 +347,7 @@ class StartSectionRunTests(unittest.TestCase):
 
     def test_automated_preflight_rejects_changed_radar_fingerprint(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             data = fixture(root)
             radar_path, radar_hash = make_radar(root)
             data["tooling_preflight"] = {
@@ -368,7 +368,7 @@ class StartSectionRunTests(unittest.TestCase):
 
     def test_missing_checked_at_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             data = fixture(root)
             data["tooling_preflight"]["checked_at"] = ""
             with self.assertRaisesRegex(ValueError, "checked_at"):
@@ -376,7 +376,7 @@ class StartSectionRunTests(unittest.TestCase):
 
     def test_stale_figma_profile_hash_is_rejected_at_start_time(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             data = fixture(root)
             profile = root / "profiles/figma-structure-profile.yaml"
             profile.write_text("reference_id: REF-1\nsections: []\n", encoding="utf-8")
@@ -385,7 +385,7 @@ class StartSectionRunTests(unittest.TestCase):
 
     def test_non_planned_run_cannot_be_restarted(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             data = fixture(root)
             data["status"] = "RUNNING"
             with self.assertRaisesRegex(ValueError, "only PLANNED runs can start"):
@@ -393,7 +393,7 @@ class StartSectionRunTests(unittest.TestCase):
 
     def test_integration_scope_is_not_started_by_section_cli(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             data = fixture(root)
             data["coordination"]["scope"] = "INTEGRATION"
             with self.assertRaisesRegex(ValueError, "only starts SECTION runs"):

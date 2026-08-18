@@ -56,7 +56,7 @@ class RemoteSanitizationTests(unittest.TestCase):
 class CaptureTests(unittest.TestCase):
     def test_git_unavailable_is_explicit(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
-            result = baseline.capture(Path(tmp), executable_lookup=lambda _: None)
+            result = baseline.capture(Path(tmp).resolve(), executable_lookup=lambda _: None)
         self.assertEqual(result["state"], "GIT_UNAVAILABLE")
         self.assertIsNone(result["dirty"])
 
@@ -64,7 +64,7 @@ class CaptureTests(unittest.TestCase):
         runner = QueueRunner(baseline.CommandResult(128, "", "not a git repository"))
         with tempfile.TemporaryDirectory() as tmp:
             result = baseline.capture(
-                Path(tmp), runner=runner, executable_lookup=lambda _: "/usr/bin/git"
+                Path(tmp).resolve(), runner=runner, executable_lookup=lambda _: "/usr/bin/git"
             )
         self.assertEqual(result["state"], "NOT_GIT_REPOSITORY")
 
@@ -78,7 +78,7 @@ class CaptureTests(unittest.TestCase):
         )
         with tempfile.TemporaryDirectory() as tmp:
             result = baseline.capture(
-                Path(tmp), runner=runner, executable_lookup=lambda _: "/usr/bin/git"
+                Path(tmp).resolve(), runner=runner, executable_lookup=lambda _: "/usr/bin/git"
             )
 
         self.assertEqual(result["state"], "OBSERVED")
@@ -100,7 +100,7 @@ class CaptureTests(unittest.TestCase):
         )
         with tempfile.TemporaryDirectory() as tmp:
             result = baseline.capture(
-                Path(tmp), runner=runner, executable_lookup=lambda _: "/usr/bin/git"
+                Path(tmp).resolve(), runner=runner, executable_lookup=lambda _: "/usr/bin/git"
             )
 
         serialized = str(result)
@@ -119,7 +119,7 @@ class CaptureTests(unittest.TestCase):
         )
         with tempfile.TemporaryDirectory() as tmp:
             result = baseline.capture(
-                Path(tmp), runner=runner, executable_lookup=lambda _: "/usr/bin/git"
+                Path(tmp).resolve(), runner=runner, executable_lookup=lambda _: "/usr/bin/git"
             )
         self.assertTrue(result["detached"])
         self.assertFalse(result["dirty"])

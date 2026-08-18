@@ -134,13 +134,13 @@ class RunLineageTests(unittest.TestCase):
 
     def test_valid_section_run_lineage_passes(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             run, _ = self.make_fixture(root)
             self.assertEqual([], self.validate(root, run))
 
     def test_reference_manifest_hash_drift_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             run, paths = self.make_fixture(root)
             paths["reference"].write_text("reference_id: REF-1\nchanged: true\n", encoding="utf-8")
             errors = self.validate(root, run)
@@ -148,7 +148,7 @@ class RunLineageTests(unittest.TestCase):
 
     def test_shared_contract_hash_drift_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             run, paths = self.make_fixture(root)
             paths["contract"].write_text(
                 "reference_id: REF-1\nfoundation:\n  commit: changed\n",
@@ -159,7 +159,7 @@ class RunLineageTests(unittest.TestCase):
 
     def test_section_manifest_hash_drift_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             run, paths = self.make_fixture(root)
             data = yaml.safe_load(paths["manifest"].read_text(encoding="utf-8"))
             data["sections"][0]["worker"]["parallel_group"] = "changed-wave"
@@ -169,7 +169,7 @@ class RunLineageTests(unittest.TestCase):
 
     def test_structure_profile_hash_drift_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             run, paths = self.make_fixture(root)
             data = yaml.safe_load(paths["profile"].read_text(encoding="utf-8"))
             data["sections"][0]["recommended_translation_mode"] = "STRUCTURE_FIRST"
@@ -179,7 +179,7 @@ class RunLineageTests(unittest.TestCase):
 
     def test_worker_contract_hash_must_match_run(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             run, paths = self.make_fixture(root)
             data = yaml.safe_load(paths["manifest"].read_text(encoding="utf-8"))
             data["sections"][0]["worker"]["contract_sha256"] = "stale-contract"
@@ -192,7 +192,7 @@ class RunLineageTests(unittest.TestCase):
 
     def test_run_profile_hash_must_match_manifest(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             run, _ = self.make_fixture(root)
             run["coordination"]["figma_structure_profile_sha256"] = "wrong"
             errors = self.validate(root, run)
@@ -203,7 +203,7 @@ class RunLineageTests(unittest.TestCase):
 
     def test_isolation_identity_must_match_manifest(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             run, _ = self.make_fixture(root)
             run["coordination"]["isolation_ref"] = "different-worktree"
             errors = self.validate(root, run)
@@ -211,7 +211,7 @@ class RunLineageTests(unittest.TestCase):
 
     def test_parallel_group_must_match_manifest(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             run, _ = self.make_fixture(root)
             run["coordination"]["parallel_group"] = "wave-02"
             errors = self.validate(root, run)
@@ -219,7 +219,7 @@ class RunLineageTests(unittest.TestCase):
 
     def test_page_benchmark_only_requires_frozen_reference_lineage(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             reference_hash = write_yaml(
                 root,
                 "references/ref/reference.yaml",

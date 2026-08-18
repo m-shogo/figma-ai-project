@@ -18,7 +18,7 @@ class WordPressLearningFixtureTests(unittest.TestCase):
         self.assertEqual([], validator.validate_fixture())
 
     def copy_fixture(self, directory: str) -> tuple[Path, Path]:
-        root = Path(directory)
+        root = Path(directory).resolve()
         fixture = root / "fixture-theme"
         shutil.copytree(validator.DEFAULT_FIXTURE, fixture)
         acf_export = root / "acf-export.json"

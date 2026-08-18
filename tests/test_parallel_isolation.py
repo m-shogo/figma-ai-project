@@ -57,7 +57,7 @@ def manifest(sections: list[dict], *, contract_hash: str = "contract-hash") -> d
 class ParallelIsolationTests(unittest.TestCase):
     def validate(self, data: dict) -> list[str]:
         with tempfile.TemporaryDirectory() as directory:
-            path = Path(directory) / "section-manifest.yaml"
+            path = Path(directory).resolve() / "section-manifest.yaml"
             path.write_text(yaml.safe_dump(data, sort_keys=False), encoding="utf-8")
             return validate_manifest(path)
 

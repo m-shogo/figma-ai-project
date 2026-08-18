@@ -57,7 +57,7 @@ def write_run(path: Path) -> None:
 class FirstPassEvidenceTests(unittest.TestCase):
     def test_freeze_creates_immutable_snapshot(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            path = Path(directory) / "run.yaml"
+            path = Path(directory).resolve() / "run.yaml"
             write_run(path)
             snapshot = evidence.freeze(path, "figma-ai-project@abc123")
             self.assertTrue(snapshot.is_file())
@@ -72,7 +72,7 @@ class FirstPassEvidenceTests(unittest.TestCase):
 
     def test_snapshot_detects_first_pass_capture_mutation(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            path = Path(directory) / "run.yaml"
+            path = Path(directory).resolve() / "run.yaml"
             write_run(path)
             evidence.freeze(path, "tooling@1")
             run = yaml.safe_load(path.read_text(encoding="utf-8"))
@@ -83,7 +83,7 @@ class FirstPassEvidenceTests(unittest.TestCase):
 
     def test_snapshot_detects_first_pass_score_mutation(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            path = Path(directory) / "run.yaml"
+            path = Path(directory).resolve() / "run.yaml"
             write_run(path)
             evidence.freeze(path, "tooling@1")
             run = yaml.safe_load(path.read_text(encoding="utf-8"))
@@ -94,7 +94,7 @@ class FirstPassEvidenceTests(unittest.TestCase):
 
     def test_snapshot_detects_implementation_profile_mutation(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            path = Path(directory) / "run.yaml"
+            path = Path(directory).resolve() / "run.yaml"
             write_run(path)
             evidence.freeze(path, "tooling@1")
             run = yaml.safe_load(path.read_text(encoding="utf-8"))
@@ -105,7 +105,7 @@ class FirstPassEvidenceTests(unittest.TestCase):
 
     def test_first_pass_commit_requires_snapshot(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            path = Path(directory) / "run.yaml"
+            path = Path(directory).resolve() / "run.yaml"
             write_run(path)
             errors = evidence.validate_run_file(path)
             self.assertTrue(any("snapshot missing" in error for error in errors))

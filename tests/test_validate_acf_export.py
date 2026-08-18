@@ -71,14 +71,14 @@ class AcfExportValidationTests(unittest.TestCase):
 
     def test_delivery_contract_requires_array_not_single_object(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            path = Path(directory) / "acf-export.json"
+            path = Path(directory).resolve() / "acf-export.json"
             path.write_text(json.dumps(valid_export()[0]), encoding="utf-8")
             errors = validator.validate_path(path)
             self.assertTrue(any("top-level JSON array" in error for error in errors))
 
     def test_candidate_paths_discovers_canonical_exports(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             canonical = root / "experiments" / "exp-1" / "artifacts" / "acf-export.json"
             canonical.parent.mkdir(parents=True)
             canonical.write_text(json.dumps(valid_export()), encoding="utf-8")
@@ -90,7 +90,7 @@ class AcfExportValidationTests(unittest.TestCase):
 
     def test_candidate_paths_supports_named_acf_export_evidence(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             named = root / "references" / "ref-1" / "first-pass.acf-export.json"
             named.parent.mkdir(parents=True)
             named.write_text(json.dumps(valid_export()), encoding="utf-8")

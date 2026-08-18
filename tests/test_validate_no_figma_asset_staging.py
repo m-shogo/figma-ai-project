@@ -14,11 +14,11 @@ import validate_no_figma_asset_staging as validator  # noqa: E402
 class FigmaAssetStagingHygieneTests(unittest.TestCase):
     def test_clean_tree_passes(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
-            self.assertEqual([], validator.validate(Path(tmp)))
+            self.assertEqual([], validator.validate(Path(tmp).resolve()))
 
     def test_chunk_staging_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
+            root = Path(tmp).resolve()
             path = root / "tmp" / "ref001-plugin-asset" / "chunks"
             path.mkdir(parents=True)
             (path / "0001.b64").write_text("AAAA", encoding="ascii")
@@ -27,7 +27,7 @@ class FigmaAssetStagingHygieneTests(unittest.TestCase):
 
     def test_one_shot_workflow_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
+            root = Path(tmp).resolve()
             path = root / ".github" / "workflows" / "ref001-rendered-asset-materialize.yml"
             path.parent.mkdir(parents=True)
             path.write_text("name: temporary\n", encoding="utf-8")

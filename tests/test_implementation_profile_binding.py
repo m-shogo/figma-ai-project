@@ -58,7 +58,7 @@ def profile() -> dict:
 class ImplementationProfileBindingTests(unittest.TestCase):
     def test_frozen_profile_binds_to_draft_contract(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             profile_path, _ = write_yaml(root, "implementation-profiles/profile.yaml", profile())
             contract = {
                 "status": "DRAFT",
@@ -72,7 +72,7 @@ class ImplementationProfileBindingTests(unittest.TestCase):
 
     def test_pinner_copies_profile_and_deliverable_requirements_to_run(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             profile_path, profile_hash = write_yaml(root, "implementation-profiles/profile.yaml", profile())
             contract = {
                 "implementation_profile": {
@@ -98,7 +98,7 @@ class ImplementationProfileBindingTests(unittest.TestCase):
 
     def test_pinner_rejects_stale_profile_hash(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             profile_path, profile_hash = write_yaml(root, "implementation-profiles/profile.yaml", profile())
             _, contract_hash = write_yaml(
                 root,

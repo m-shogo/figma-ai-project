@@ -80,7 +80,7 @@ class PrepareSectionExecutionTests(unittest.TestCase):
 
     def test_prepares_hashes_foundation_and_safe_wave_groups(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             manifest_path, contract_path, profile_path = self.fixture(root)
             prepared, plan = prepare_manifest(manifest_path, root=root)
 
@@ -98,7 +98,7 @@ class PrepareSectionExecutionTests(unittest.TestCase):
 
     def test_prepare_is_dry_run_and_does_not_write_manifest(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             manifest_path, _, _ = self.fixture(root)
             before = manifest_path.read_text(encoding="utf-8")
             prepare_manifest(manifest_path, root=root)
@@ -106,7 +106,7 @@ class PrepareSectionExecutionTests(unittest.TestCase):
 
     def test_non_frozen_contract_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             manifest_path, contract_path, _ = self.fixture(root)
             contract_path.write_text(yaml.safe_dump(contract(frozen=False)), encoding="utf-8")
             with self.assertRaisesRegex(ValueError, "must be FROZEN"):
@@ -114,7 +114,7 @@ class PrepareSectionExecutionTests(unittest.TestCase):
 
     def test_reference_mismatch_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             manifest_path, _, profile_path = self.fixture(root)
             profile_path.write_text(yaml.safe_dump(profile("REF-OTHER")), encoding="utf-8")
             with self.assertRaisesRegex(ValueError, "Profile reference_id does not match"):
@@ -122,7 +122,7 @@ class PrepareSectionExecutionTests(unittest.TestCase):
 
     def test_active_worker_cannot_be_silently_repinned_to_new_contract(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             manifest_path, _, _ = self.fixture(root)
             data = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
             data["sections"][0]["worker"].update(
@@ -139,7 +139,7 @@ class PrepareSectionExecutionTests(unittest.TestCase):
 
     def test_active_worker_group_is_not_rewritten_if_planner_changes(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             manifest_path, contract_path, _ = self.fixture(root)
             current_hash = hashlib.sha256(contract_path.read_bytes()).hexdigest()
             data = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))

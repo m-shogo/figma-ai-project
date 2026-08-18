@@ -28,7 +28,7 @@ def write_chunks(directory: Path, payload: bytes, count: int = 3) -> None:
 class RenderedAssetMaterializerTests(unittest.TestCase):
     def test_materializes_sorted_chunks_and_writes_secret_safe_manifest(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
+            root = Path(tmp).resolve()
             chunks = root / "chunks"
             write_chunks(chunks, PNG_BYTES)
             output = root / "assets" / "render.png"
@@ -59,7 +59,7 @@ class RenderedAssetMaterializerTests(unittest.TestCase):
 
     def test_rejects_invalid_base64_without_output(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
+            root = Path(tmp).resolve()
             chunks = root / "chunks"
             chunks.mkdir()
             (chunks / "0001.b64").write_text("%%%%", encoding="ascii")
@@ -81,7 +81,7 @@ class RenderedAssetMaterializerTests(unittest.TestCase):
 
     def test_rejects_hash_mismatch_without_output(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
+            root = Path(tmp).resolve()
             chunks = root / "chunks"
             write_chunks(chunks, PNG_BYTES)
             output = root / "asset.png"
@@ -102,7 +102,7 @@ class RenderedAssetMaterializerTests(unittest.TestCase):
 
     def test_rejects_size_mismatch(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
+            root = Path(tmp).resolve()
             chunks = root / "chunks"
             write_chunks(chunks, PNG_BYTES)
             output = root / "asset.png"
@@ -123,7 +123,7 @@ class RenderedAssetMaterializerTests(unittest.TestCase):
 
     def test_refuses_overwrite_without_force(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
+            root = Path(tmp).resolve()
             chunks = root / "chunks"
             write_chunks(chunks, PNG_BYTES)
             output = root / "asset.png"

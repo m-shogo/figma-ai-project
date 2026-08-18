@@ -132,7 +132,7 @@ def fixture(
 class CreateSectionRunTests(unittest.TestCase):
     def test_builds_fully_pinned_planned_run(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             reference_path, contract_path, profile_path, manifest_path, _ = fixture(root)
             record = build_run_record(
                 root=root,
@@ -173,7 +173,7 @@ class CreateSectionRunTests(unittest.TestCase):
 
     def test_company_bound_run_pins_resolved_environment_profiles(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             reference_path, _, _, manifest_path, _ = fixture(root, bind_company=True)
             record = build_run_record(
                 root=root,
@@ -196,7 +196,7 @@ class CreateSectionRunTests(unittest.TestCase):
 
     def test_planned_worker_is_rejected_until_isolation_is_ready(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             reference_path, _, _, manifest_path, _ = fixture(root, worker_status="PLANNED")
             with self.assertRaisesRegex(ValueError, "must be READY or RUNNING"):
                 build_run_record(
@@ -212,7 +212,7 @@ class CreateSectionRunTests(unittest.TestCase):
 
     def test_stale_structure_profile_hash_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             reference_path, _, profile_path, manifest_path, _ = fixture(root)
             profile_path.write_text("reference_id: REF-1\nsections: []\n", encoding="utf-8")
             with self.assertRaisesRegex(ValueError, "Structure Profile hash is stale"):
@@ -229,7 +229,7 @@ class CreateSectionRunTests(unittest.TestCase):
 
     def test_serial_shared_tree_is_allowed_for_singleton_wave(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             reference_path, _, _, manifest_path, _ = fixture(root, isolation_mode="SERIAL_SHARED_TREE")
             record = build_run_record(
                 root=root,
@@ -245,7 +245,7 @@ class CreateSectionRunTests(unittest.TestCase):
 
     def test_serial_shared_tree_is_rejected_for_multi_section_wave(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             reference_path, _, _, manifest_path, _ = fixture(root, isolation_mode="SERIAL_SHARED_TREE")
             manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
             second = {
@@ -279,7 +279,7 @@ class CreateSectionRunTests(unittest.TestCase):
 
     def test_other_isolation_requires_safety_evidence(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             reference_path, _, _, manifest_path, _ = fixture(root, isolation_mode="OTHER")
             data = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
             data["sections"][0]["worker"]["isolation"]["notes"] = []
@@ -298,7 +298,7 @@ class CreateSectionRunTests(unittest.TestCase):
 
     def test_unknown_translation_mode_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             reference_path, _, profile_path, manifest_path, _ = fixture(root)
             profile_data = yaml.safe_load(profile_path.read_text(encoding="utf-8"))
             profile_data["sections"][0]["recommended_translation_mode"] = "UNKNOWN"

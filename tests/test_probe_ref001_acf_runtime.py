@@ -26,7 +26,7 @@ class FakeRunner:
 
 
 def make_import_file(directory: str) -> Path:
-    path = Path(directory) / "acf-import.json"
+    path = Path(directory).resolve() / "acf-import.json"
     path.write_text(
         json.dumps(
             [
@@ -61,7 +61,7 @@ class ImportFileTests(unittest.TestCase):
 
     def test_rejects_payload_without_field_groups(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
-            path = Path(tmp) / "empty.json"
+            path = Path(tmp).resolve() / "empty.json"
             path.write_text('[{"key":"field_x"}]', encoding="utf-8")
             with self.assertRaisesRegex(ValueError, "no field-group"):
                 probe.load_item_keys(path)
@@ -74,7 +74,7 @@ class RuntimeProbeTests(unittest.TestCase):
             result = probe.probe_runtime(
                 runner=runner,
                 wp_binary="wp",
-                wp_path=Path(tmp),
+                wp_path=Path(tmp).resolve(),
                 site_url="",
                 import_file=make_import_file(tmp),
             )
@@ -96,7 +96,7 @@ class RuntimeProbeTests(unittest.TestCase):
             result = probe.probe_runtime(
                 runner=runner,
                 wp_binary="wp",
-                wp_path=Path(tmp),
+                wp_path=Path(tmp).resolve(),
                 site_url="https://example.test",
                 import_file=make_import_file(tmp),
             )
@@ -118,7 +118,7 @@ class RuntimeProbeTests(unittest.TestCase):
             result = probe.probe_runtime(
                 runner=runner,
                 wp_binary="wp",
-                wp_path=Path(tmp),
+                wp_path=Path(tmp).resolve(),
                 site_url="",
                 import_file=make_import_file(tmp),
             )
@@ -141,7 +141,7 @@ class RuntimeProbeTests(unittest.TestCase):
             result = probe.probe_runtime(
                 runner=runner,
                 wp_binary="wp",
-                wp_path=Path(tmp),
+                wp_path=Path(tmp).resolve(),
                 site_url="",
                 import_file=make_import_file(tmp),
                 execute_import=True,
@@ -167,7 +167,7 @@ class RuntimeProbeTests(unittest.TestCase):
             result = probe.probe_runtime(
                 runner=runner,
                 wp_binary="wp",
-                wp_path=Path(tmp),
+                wp_path=Path(tmp).resolve(),
                 site_url="",
                 import_file=make_import_file(tmp),
                 execute_import=True,
@@ -194,7 +194,7 @@ class RuntimeProbeTests(unittest.TestCase):
             result = probe.probe_runtime(
                 runner=runner,
                 wp_binary="wp",
-                wp_path=Path(tmp),
+                wp_path=Path(tmp).resolve(),
                 site_url="",
                 import_file=make_import_file(tmp),
                 execute_import=True,

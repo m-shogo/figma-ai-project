@@ -16,7 +16,7 @@ def load(path: Path) -> dict:
 class BootstrapExperimentTests(unittest.TestCase):
     def test_bootstrap_creates_expected_bundle_without_design_guesses(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             target = bootstrap("EXP-TEST", "REF-TEST", destination_root=root)
 
             self.assertTrue((target / "reference.yaml").is_file())
@@ -50,7 +50,7 @@ class BootstrapExperimentTests(unittest.TestCase):
 
     def test_existing_experiment_is_never_overwritten(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             bootstrap("EXP-TEST", "REF-1", destination_root=root)
             with self.assertRaises(FileExistsError):
                 bootstrap("EXP-TEST", "REF-2", destination_root=root)
@@ -58,11 +58,11 @@ class BootstrapExperimentTests(unittest.TestCase):
     def test_invalid_experiment_identifier_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             with self.assertRaises(ValueError):
-                bootstrap("../escape", "REF-1", destination_root=Path(directory))
+                bootstrap("../escape", "REF-1", destination_root=Path(directory).resolve())
 
     def test_readme_keeps_design_values_external(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            target = bootstrap("EXP-TEST", "REF-TEST", destination_root=Path(directory))
+            target = bootstrap("EXP-TEST", "REF-TEST", destination_root=Path(directory).resolve())
             text = (target / "README.md").read_text(encoding="utf-8")
             self.assertIn("no invented design values", text)
             self.assertIn("real Figma/codebase evidence", text)
