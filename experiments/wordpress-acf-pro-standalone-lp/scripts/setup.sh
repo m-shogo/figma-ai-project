@@ -110,7 +110,7 @@ fi
 
 docker compose run --rm cli option update blog_public 0 >/dev/null
 docker compose run --rm cli option update permalink_structure '/%postname%/' >/dev/null
-docker compose run --rm cli theme activate standalone-lp-sample >/dev/null
+docker compose run --rm cli theme activate "$THEME_SLUG" >/dev/null
 
 # The key exists only in the disposable WordPress runtime. Do not print it or
 # persist it to repository files. ACF officially supports ACF_PRO_LICENSE in
@@ -143,16 +143,26 @@ fi
 acf_version="$(docker compose run --rm cli plugin get advanced-custom-fields-pro --field=version)"
 echo "PASS ACF PRO active: ${acf_version}"
 
-if docker compose run --rm cli help acf json import >/dev/null 2>&1; then
-  docker compose run --rm cli acf json import /fixture/acf-export.json
-  echo "PASS ACF JSON imported through official WP-CLI command."
-else
-  echo "SKIP ACF CLI import unavailable in this installed ACF version; theme Local JSON remains active."
-fi
+if [[ "$THEME_IS_SAMPLE" == "1" ]]; then
+  if docker compose run --rm cli help acf json import >/dev/null 2>&1; then
+    docker compose run --rm cli acf json import /fixture/acf-export.json
+    echo "PASS ACF JSON imported through official WP-CLI command."
+  else
+    echo "SKIP ACF CLI import unavailable in this installed ACF version; theme Local JSON remains active."
+  fi
 
-bash "$ROOT/scripts/apply-fixture.sh" "$FIXTURE"
+  bash "$ROOT/scripts/apply-fixture.sh" "$FIXTURE"
+else
+  echo "SKIP sample ACF export import; a supplied theme owns its own field architecture."
+  echo "SKIP sample CMS mutation fixture; supplied-theme fixtures must be defined for that theme."
+fi
 echo "PASS WordPress runtime ready: ${WP_URL}"
 echo "PASS Compose project: ${COMPOSE_PROJECT_NAME}"
 echo "PASS loopback-only publication: ${published_port}"
 echo "PASS search-engine visibility disabled + static robots.txt"
-echo "PASS Fixture: ${FIXTURE}"
+echo "PASS Theme: ${THEME_SLUG} (${THEME_SOURCE_DIR})"
+if [[ "$THEME_IS_SAMPLE" == "1" ]]; then
+  echo "PASS Fixture: ${FIXTURE}"
+else
+  echo "SKIP Fixture: supplied theme, no sample fixture applied"
+fi

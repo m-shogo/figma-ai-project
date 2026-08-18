@@ -34,7 +34,7 @@ services:
         define('WP_DEBUG_DISPLAY', false);
     volumes:
       - wp_data:/var/www/html
-      - ./theme/standalone-lp-sample:/var/www/html/wp-content/themes/standalone-lp-sample:ro
+      - ${THEME_SOURCE_DIR:-./theme/standalone-lp-sample}:/var/www/html/wp-content/themes/${THEME_SLUG:-standalone-lp-sample}:ro
       - ./:/fixture:ro
 
   cli:
@@ -50,7 +50,7 @@ services:
       WORDPRESS_DB_PASSWORD: ${WP_DB_PASSWORD:-wordpress-fixture}
     volumes:
       - wp_data:/var/www/html
-      - ./theme/standalone-lp-sample:/var/www/html/wp-content/themes/standalone-lp-sample:ro
+      - ${THEME_SOURCE_DIR:-./theme/standalone-lp-sample}:/var/www/html/wp-content/themes/${THEME_SLUG:-standalone-lp-sample}:ro
       - ./:/fixture:ro
     working_dir: /var/www/html
     entrypoint: ["wp"]

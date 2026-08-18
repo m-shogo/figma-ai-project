@@ -62,6 +62,34 @@ if '127.0.0.1:${WP_PORT:-8088}:80' not in compose_text:
 if '0.0.0.0:${WP_PORT' in compose_text:
     fail('WordPress fixture must not bind HTTP to all interfaces')
 
+# The runtime must stay reusable for a supplied production theme, and must keep
+# defaulting to the disposable sample when nothing is dropped in.
+theme_mount = (
+    '${THEME_SOURCE_DIR:-./theme/standalone-lp-sample}'
+    ':/var/www/html/wp-content/themes/${THEME_SLUG:-standalone-lp-sample}:ro'
+)
+if compose_text.count(theme_mount) != 2:
+    fail('both WordPress and CLI services must mount the overrideable theme source')
+if './theme/standalone-lp-sample:/var/www/html' in compose_text:
+    fail('theme mount must not be hard-coded to the disposable sample')
+
+runtime_env_text = (ROOT / 'scripts' / 'runtime-env.sh').read_text(encoding='utf-8')
+for required in ('THEME_SOURCE_DIR', 'THEME_SLUG', 'THEME_IS_SAMPLE', 'Theme Name:'):
+    if required not in runtime_env_text:
+        fail(f'runtime-env.sh must resolve and validate the theme under test: {required}')
+
+setup_text = (ROOT / 'scripts' / 'setup.sh').read_text(encoding='utf-8')
+if 'theme activate standalone-lp-sample' in setup_text:
+    fail('setup must activate the resolved theme, not the hard-coded sample')
+if 'THEME_IS_SAMPLE' not in setup_text:
+    fail('setup must skip sample-only ACF/fixture steps for a supplied theme')
+
+gitignore_text = (ROOT / '.gitignore').read_text(encoding='utf-8')
+if 'theme-dropin/*' not in gitignore_text or '!theme-dropin/.gitkeep' not in gitignore_text:
+    fail('a supplied client theme must never be committable through theme-dropin/')
+if not (ROOT / 'theme-dropin' / '.gitkeep').is_file():
+    fail('theme-dropin/ drop-in path must exist in a fresh checkout')
+
 export = load_json(ROOT / 'acf-export.json')
 local = load_json(THEME / 'acf-json' / 'group_standalone_lp_sample.json')
 if export != [local]:
