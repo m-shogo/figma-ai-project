@@ -33,9 +33,16 @@ REF001_V3_SNAPSHOT_REF = os.environ.get(
     "REF001_V3_SNAPSHOT_REF",
     "fb1820917fb6ca82a1509eac4a8d2b9a4c51e8c2",
 )
+# REF-002 is intentionally published as a QA snapshot without merging Draft PR #142.
+# Update this authority only after its full-page QA is green.
+REF002_SNAPSHOT_REF = os.environ.get(
+    "REF002_SNAPSHOT_REF",
+    "1320476ccaaf86eef6efde6b5cad99533faf085d",
+)
 V2_THEME_REPO_PATH = Path("experiments/ref001-blind-clean-20260812/implementation/theme")
 V3_IMPL_REPO_PATH = Path("experiments/ref001-v3/implementation")
 RENDERED_REPO_PATH = Path("implementation/theme/assets/images/ref001/rendered")
+REF002_REPO_PATH = Path("experiments/ref002-budokan-fullcalendar-validation")
 
 
 class ReviewBuildError(RuntimeError):
@@ -150,8 +157,6 @@ def write_preview(destination: Path, html: str) -> None:
     destination.mkdir(parents=True, exist_ok=True)
     (destination / "index.html").write_text(html, encoding="utf-8")
 
-    # preview.php owns the stylesheet order. Copy every local stylesheet it emits
-    # instead of maintaining a second hard-coded list that can silently drift.
     for relative_name in local_preview_stylesheets(html):
         source = (THEME_DIR / relative_name).resolve()
         try:
@@ -166,9 +171,6 @@ def write_preview(destination: Path, html: str) -> None:
         raise ReviewBuildError(f"missing preview assets directory: {PREVIEW_ASSETS}")
     shutil.copytree(PREVIEW_ASSETS, destination / "assets", dirs_exist_ok=True)
 
-    # Rendered Figma composites are normalized outside the isolated replay fixture
-    # so they have one durable repository location. Merge them into the static
-    # preview's normal theme-relative asset path without duplicating source bytes.
     if REF001_RENDERED_ASSETS.is_dir():
         shutil.copytree(
             REF001_RENDERED_ASSETS,
@@ -318,12 +320,19 @@ def copy_tree_without_php(source: Path, destination: Path) -> None:
         shutil.copy2(child, target)
 
 
-def write_snapshot_metadata(destination: Path, *, label: str, ref: str, source: str) -> None:
+def write_snapshot_metadata(
+    destination: Path,
+    *,
+    label: str,
+    ref: str,
+    source: str,
+    immutable: bool = True,
+) -> None:
     payload = {
         "label": label,
         "ref": ref,
         "source": source,
-        "immutable_comparison_snapshot": True,
+        "immutable_comparison_snapshot": immutable,
     }
     (destination / "snapshot.json").write_text(
         json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
@@ -394,6 +403,28 @@ def build_v3_snapshot(destination: Path) -> None:
         )
 
 
+def build_ref002_snapshot(destination: Path) -> None:
+    with tempfile.TemporaryDirectory(prefix="ref002-preview-") as temp_name:
+        temp_root = Path(temp_name)
+        extract_git_paths(
+            REF002_SNAPSHOT_REF,
+            [REF002_REPO_PATH],
+            temp_root,
+            fallback_branch="agent/ref002-budokan-final-assets",
+        )
+        source = temp_root / REF002_REPO_PATH
+        if not (source / "index.html").is_file():
+            raise ReviewBuildError("REF-002 snapshot is missing index.html")
+        shutil.copytree(source, destination, dirs_exist_ok=True)
+        write_snapshot_metadata(
+            destination,
+            label="REF-002 Budokan — current QA snapshot",
+            ref=REF002_SNAPSHOT_REF,
+            source="Draft PR #142 green full-page QA; ASSET_PENDING=0",
+            immutable=False,
+        )
+
+
 def write_ref001_version_landing(reference_root: Path) -> None:
     html = """<!doctype html>
 <html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>REF-001 Versions</title>
@@ -405,6 +436,12 @@ def write_ref001_version_landing(reference_root: Path) -> None:
 <a href="./latest/review/"><strong>Human Review</strong><small>完成版とFigmaの比較・Section Diff</small></a>
 </body></html>
 """
+    (reference_root / "index.html").write_text(html, encoding="utf-8")
+
+
+def write_ref002_landing(reference_root: Path) -> None:
+    reference_root.mkdir(parents=True, exist_ok=True)
+    html = """<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta http-equiv="refresh" content="0;url=./latest/preview/"><title>REF-002 Budokan Preview</title></head><body><p><a href="./latest/preview/">REF-002 Budokan Previewを開く</a></p></body></html>"""
     (reference_root / "index.html").write_text(html, encoding="utf-8")
 
 
@@ -442,13 +479,17 @@ def build_site(*, manifest_path: Path = DEFAULT_MANIFEST, output: Path) -> Path:
     shutil.copytree(run_root / "preview", latest_root / "preview", dirs_exist_ok=True)
     shutil.copytree(run_root / "review", latest_root / "review", dirs_exist_ok=True)
 
-    # Stable, human-friendly comparison URLs.
     shutil.copytree(latest_root / "preview", reference_root / "final" / "preview", dirs_exist_ok=True)
     build_v2_snapshot(reference_root / "v2" / "preview")
     build_v3_snapshot(reference_root / "v3" / "preview")
 
     reference_root.mkdir(parents=True, exist_ok=True)
     write_ref001_version_landing(reference_root)
+
+    ref002_root = output / "ref-002"
+    build_ref002_snapshot(ref002_root / "latest" / "preview")
+    write_ref002_landing(ref002_root)
+
     write_landing(output, reference_id)
     return output
 
