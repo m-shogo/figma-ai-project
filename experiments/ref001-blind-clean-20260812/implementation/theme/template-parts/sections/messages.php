@@ -1,4 +1,4 @@
-<section class="ref-messages" data-section="messages">
+<section class="ref-messages" data-section="messages"<?= ref001_figma_section_attrs('messages'); ?>>
     <header class="ref-messages__head">
         <span class="ref-kicker"># MESSAGES</span>
         <h2><span>力をつけ活躍する</span><strong>先輩たち</strong></h2>

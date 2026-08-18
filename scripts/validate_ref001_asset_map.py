@@ -39,6 +39,9 @@ EXPECTED_SLOTS = {
 }
 RENDERED_PREFIX = "assets/images/ref001/rendered/"
 CANONICAL_PREFIX = "implementation/theme/"
+BASE_ENTRY_KEYS = {"pc", "sp", "figma"}
+OPTIONAL_ENTRY_KEYS = {"alpha", "silhouette"}
+NODE_ID_RE = re.compile(r"^\d+:\d+$")
 
 
 class ValidationError(RuntimeError):
@@ -77,7 +80,7 @@ def scaled_dimension(value: object, scale: int) -> int:
     return int((Decimal(str(value)) * scale).quantize(Decimal("1"), rounding=ROUND_HALF_UP))
 
 
-def load_images(asset_map: Path) -> dict[str, dict[str, str]]:
+def load_images(asset_map: Path) -> dict[str, dict[str, object]]:
     php = (
         "$m=require $argv[1];"
         "if(!isset($m['images'])||!is_array($m['images'])){fwrite(STDERR,'missing images map');exit(2);}"
@@ -212,11 +215,44 @@ def validate(
         if not isinstance(entry, dict):
             errors.append(f"{slot}: entry must be an object")
             continue
-        if set(entry) != {"pc", "sp"}:
-            errors.append(f"{slot}: must contain exactly pc and sp")
+
+        keys = set(entry)
+        missing_keys = sorted(BASE_ENTRY_KEYS - keys)
+        extra_keys = sorted(keys - BASE_ENTRY_KEYS - OPTIONAL_ENTRY_KEYS)
+        if missing_keys:
+            errors.append(f"{slot}: missing required keys: {', '.join(missing_keys)}")
+        if extra_keys:
+            errors.append(f"{slot}: unexpected keys: {', '.join(extra_keys)}")
+
+        figma = entry.get("figma")
+        if not isinstance(figma, dict):
+            errors.append(f"{slot}.figma: must be an object with pc and sp node IDs")
+            figma = {}
+        elif set(figma) != {"pc", "sp"}:
+            errors.append(f"{slot}.figma: must contain exactly pc and sp")
+
+        if slot.startswith("cta-person-"):
+            if entry.get("alpha") is not True:
+                errors.append(f"{slot}: alpha metadata must be true")
+            expected_silhouette = "yellow" if slot.endswith("left") else "green"
+            if entry.get("silhouette") != expected_silhouette:
+                errors.append(f"{slot}: silhouette must be {expected_silhouette}")
+        elif "alpha" in entry or "silhouette" in entry:
+            errors.append(f"{slot}: CTA-only alpha/silhouette metadata is not allowed")
+
         for viewport in ("pc", "sp"):
             counts["total"] += 1
             value = entry.get(viewport)
+            node_id = figma.get(viewport)
+            if not isinstance(node_id, str) or not NODE_ID_RE.fullmatch(node_id):
+                errors.append(f"{slot}.figma.{viewport}: valid Figma node ID required")
+
+            registry_asset = registry.get((slot, viewport))
+            if registry_asset is not None and node_id != registry_asset.get("node_id"):
+                errors.append(
+                    f"{slot}.figma.{viewport}: node differs from registry: {node_id} != {registry_asset.get('node_id')}"
+                )
+
             if not isinstance(value, str) or not value:
                 errors.append(f"{slot}.{viewport}: path must be a non-empty string")
                 continue
@@ -236,7 +272,6 @@ def validate(
                 errors.append(f"{slot}.{viewport}: rendered asset is classified under wrong viewport: {value}")
                 continue
 
-            registry_asset = registry.get((slot, viewport))
             if registry_asset is not None:
                 expected_map_value = str(registry_asset["path"])[len(CANONICAL_PREFIX):]
                 if value != expected_map_value:
@@ -253,6 +288,9 @@ def validate(
                 width, height, has_alpha = inspect_webp(canonical)
             except (OSError, ValidationError) as exc:
                 errors.append(f"{slot}.{viewport}: {exc}")
+                continue
+            if registry_asset is None:
+                errors.append(f"{slot}.{viewport}: rendered registry entry missing")
                 continue
             expected_size = (int(registry_asset["source_width"]), int(registry_asset["source_height"]))
             if (width, height) != expected_size:
@@ -296,7 +334,7 @@ def main() -> int:
             print(f"FAIL {error}")
         print(f"STATUS rendered={counts['rendered']}/32 dummy={counts['dummy']}/32")
         return 1
-    print(f"PASS REF-001 asset map rendered={counts['rendered']}/32 dummy={counts['dummy']}/32")
+    print(f"PASS REF-001 asset map rendered={counts['rendered']}/32 dummy={counts['dummy']}/32 lineage=32/32")
     return 0
 
 

@@ -24,6 +24,16 @@ class Ref001AssetMapTests(unittest.TestCase):
         else:
             self.assertEqual([], errors)
 
+    def test_asset_map_figma_lineage_matches_registry(self) -> None:
+        images = validator.load_images(validator.DEFAULT_MAP)
+        registry, errors = validator.load_registry(validator.DEFAULT_REGISTRY)
+        self.assertEqual([], errors)
+        self.assertEqual(validator.EXPECTED_SLOTS, set(images))
+        for slot, entry in images.items():
+            self.assertEqual({"pc", "sp"}, set(entry["figma"]))
+            for viewport in ("pc", "sp"):
+                self.assertEqual(registry[(slot, viewport)]["node_id"], entry["figma"][viewport])
+
     def test_registry_requires_webp_sp_3x_and_cta_alpha(self) -> None:
         registry, errors = validator.load_registry(validator.DEFAULT_REGISTRY)
         self.assertEqual([], errors)

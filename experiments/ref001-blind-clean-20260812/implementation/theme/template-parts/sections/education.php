@@ -6,7 +6,7 @@ $steps = [
     ['04', 'ゴール', ['望んだ将来を', '実現させる'], ['４年間の学びを進路につなげる', '経験を社会で発揮する', '自分らしい未来を見つける'], 'education-4'],
 ];
 ?>
-<section class="ref-education" data-section="education">
+<section class="ref-education" data-section="education"<?= ref001_figma_section_attrs('education'); ?>>
     <div class="ref-content">
         <div class="ref-education__head">
             <header class="ref-education__title">

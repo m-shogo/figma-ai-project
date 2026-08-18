@@ -1,0 +1,72 @@
+name: REF001 V2 Typography Fidelity
+
+on:
+  pull_request:
+    branches:
+      - so
+    paths:
+      - 'experiments/ref001-blind-clean-20260812/implementation/theme/**'
+      - 'experiments/ref001-blind-clean-20260812/tools/verify-typography-fidelity.mjs'
+      - '.github/workflows/ref001-v2-typography.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  typography:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate source syntax
+        run: |
+          php -l experiments/ref001-blind-clean-20260812/implementation/theme/preview.php
+          php -l experiments/ref001-blind-clean-20260812/implementation/theme/functions.php
+          php -l experiments/ref001-blind-clean-20260812/implementation/theme/template-parts/sections/main-visual.php
+          node --check experiments/ref001-blind-clean-20260812/tools/verify-typography-fidelity.mjs
+
+      - name: Install Chromium runtime
+        run: |
+          mkdir -p /tmp/ref001-v2-typography
+          cd /tmp/ref001-v2-typography
+          npm init -y >/dev/null 2>&1
+          npm install playwright@1.54.2 >/dev/null
+          npx playwright install --with-deps chromium
+
+      - name: Stage canonical rendered assets
+        run: |
+          SOURCE='implementation/theme/assets/images/ref001/rendered'
+          DEST='experiments/ref001-blind-clean-20260812/implementation/theme/assets/images/ref001/rendered'
+          if [ -d "$SOURCE" ]; then
+            mkdir -p "$DEST"
+            cp -R "$SOURCE"/. "$DEST"/
+          fi
+
+      - name: Start V2 fixture
+        run: |
+          php -S 127.0.0.1:8765 -t experiments/ref001-blind-clean-20260812/implementation/theme >/tmp/ref001-v2-typography-http.log 2>&1 &
+          for i in $(seq 1 20); do
+            curl -fsS http://127.0.0.1:8765/preview.php >/dev/null && exit 0
+            sleep 1
+          done
+          cat /tmp/ref001-v2-typography-http.log
+          exit 1
+
+      - name: Verify PC/SP computed typography against Figma
+        env:
+          NODE_PATH: /tmp/ref001-v2-typography/node_modules
+        run: |
+          cp experiments/ref001-blind-clean-20260812/tools/verify-typography-fidelity.mjs /tmp/ref001-v2-typography/verify.mjs
+          cd /tmp/ref001-v2-typography
+          node verify.mjs http://127.0.0.1:8765/preview.php "$GITHUB_WORKSPACE/ref001-v2-typography-report.json"
+
+      - name: Upload typography evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ref001-v2-typography-fidelity
+          path: ref001-v2-typography-report.json
+          if-no-files-found: warn
+          retention-days: 14

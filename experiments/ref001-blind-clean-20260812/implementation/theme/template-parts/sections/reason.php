@@ -5,7 +5,7 @@ $cards = [
     [ref001_get('reason_3_title'), ref001_get('reason_3_text'), 'reason-3'],
 ];
 ?>
-<section class="ref-reason" data-section="reason">
+<section class="ref-reason" data-section="reason"<?= ref001_figma_section_attrs('reason'); ?>>
     <div class="ref-content">
         <header class="ref-reason__head">
             <span class="ref-kicker"># REASON</span>
