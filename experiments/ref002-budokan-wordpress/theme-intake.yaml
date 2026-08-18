@@ -425,6 +425,7 @@ qa_reuse:
       reuse_mode: REUSE
       notes:
         - "disposable runtime として再利用。theme mount のみ差し替える"
+        - "提供Themeは theme-dropin/ へ置くか THEME_SOURCE_DIR で指す (PR #151)"
         - "production Theme構造をこの sample theme から継承しない"
     - id: acf_pro_resolution
       existing_asset: experiments/wordpress-acf-pro-standalone-lp/scripts/setup.sh

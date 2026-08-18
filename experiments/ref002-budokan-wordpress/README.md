@@ -61,6 +61,17 @@ python -m unittest tests.test_validate_wordpress_theme_intake
 
 ## Theme到着後の手順
 
+Themeを動かすローカル環境は既存 runtime を再利用します（PR #151）。
+
+```bash
+cd experiments/wordpress-acf-pro-standalone-lp
+cp -R /path/to/supplied-theme theme-dropin/
+make smoke
+```
+
+`theme-dropin/` は git-ignored です。client Theme をこの repository へ commit しないでください。
+
+
 ```text
 1. Themeのrepository / starting commit を theme_delivery へ記録し status を THEME_SUPPLIED へ
 2. python scripts/scan_wordpress_target.py <theme-repo> --output /tmp/recon.json
