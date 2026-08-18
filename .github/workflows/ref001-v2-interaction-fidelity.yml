@@ -40,11 +40,18 @@ jobs:
           find experiments/ref001-blind-clean-20260812/implementation/theme -name '*.php' -print0 | xargs -0 -n1 php -l
           php -r '
             $a = require "experiments/ref001-blind-clean-20260812/implementation/theme/inc/figma-authority.php";
+            $p = $a["interaction"]["prototype"] ?? [];
+            $audit = $p["component_reaction_audit"] ?? [];
             if (($a["frames"]["pc"]["node"] ?? null) !== "21384:8173") exit(1);
             if (($a["frames"]["sp"]["node"] ?? null) !== "21376:4401") exit(2);
-            if (($a["interaction"]["prototype"]["pc_final_frame_reactions"] ?? null) !== 0) exit(3);
-            if (($a["interaction"]["prototype"]["sp_final_frame_reactions"] ?? null) !== 0) exit(4);
+            if (($p["pc_final_frame_reactions"] ?? null) !== 0) exit(3);
+            if (($p["sp_final_frame_reactions"] ?? null) !== 0) exit(4);
             if (($a["interaction"]["messages"]["authored_slide_content_count"] ?? null) !== 1) exit(5);
+            if (($p["valid_ref001_reactions"] ?? null) !== 0) exit(6);
+            if (($audit["pc-header"]["status"] ?? null) !== "STALE_REJECTED") exit(7);
+            if (($audit["pc-footer"]["status"] ?? null) !== "STALE_REJECTED") exit(8);
+            if (($audit["pc-header"]["destination"] ?? null) !== "14654:3046") exit(9);
+            if (($audit["pc-footer"]["destination"] ?? null) !== "14654:3787") exit(10);
           '
 
       - name: Stage canonical rendered assets in both fixtures
@@ -98,6 +105,8 @@ jobs:
             echo "- Head: \`$HEAD_SHA\`"
             if [ -f "$REPORT" ]; then
               echo '- JS authority contract: evaluated'
+              echo '- Page/section/asset Figma lineage: evaluated'
+              echo '- Stale Header/Footer Prototype destinations: rejected by contract'
               echo '- PC/SP no-visual-diff: evaluated with exact pixel comparison'
             else
               echo '- Evidence report was not produced.'
