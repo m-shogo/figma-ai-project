@@ -22,14 +22,50 @@ REF001_FINAL_SNAPSHOT_BRANCH = "snapshot/ref001-final"
 _original_build_site = base.build_site
 
 
+def ensure_final_snapshot_object() -> None:
+    remote_ref = f"refs/remotes/origin/{REF001_FINAL_SNAPSHOT_BRANCH}"
+    fetch_refspec = f"+refs/heads/{REF001_FINAL_SNAPSHOT_BRANCH}:{remote_ref}"
+    try:
+        base.subprocess.run(
+            ["git", "fetch", "--no-tags", "--depth=1", "origin", fetch_refspec],
+            cwd=base.ROOT,
+            check=True,
+            stdout=base.subprocess.PIPE,
+            stderr=base.subprocess.PIPE,
+            text=True,
+            timeout=120,
+        )
+        branch_sha = base.subprocess.run(
+            ["git", "rev-parse", remote_ref],
+            cwd=base.ROOT,
+            check=True,
+            stdout=base.subprocess.PIPE,
+            stderr=base.subprocess.PIPE,
+            text=True,
+            timeout=30,
+        ).stdout.strip()
+    except (base.subprocess.CalledProcessError, base.subprocess.TimeoutExpired) as exc:
+        raise base.ReviewBuildError(f"cannot fetch frozen Final snapshot branch: {exc}") from exc
+
+    if branch_sha != REF001_FINAL_SNAPSHOT_REF:
+        raise base.ReviewBuildError(
+            "REF-001 Final snapshot pointer drifted: "
+            f"{REF001_FINAL_SNAPSHOT_BRANCH}={branch_sha}, expected={REF001_FINAL_SNAPSHOT_REF}. "
+            "Move the snapshot branch only after explicit human Final approval."
+        )
+
+
 def build_final_snapshot(destination: Path) -> None:
+    ensure_final_snapshot_object()
     with base.tempfile.TemporaryDirectory(prefix="ref001-final-") as temp_name:
         temp_root = Path(temp_name)
+        # The explicit refspec above materializes the approved SHA in shallow CI,
+        # so archive the immutable object directly instead of asking Git to infer
+        # a branch/ref from a raw commit SHA.
         base.extract_git_paths(
             REF001_FINAL_SNAPSHOT_REF,
             [base.V2_THEME_REPO_PATH, base.RENDERED_REPO_PATH],
             temp_root,
-            fallback_branch=REF001_FINAL_SNAPSHOT_BRANCH,
         )
         theme = temp_root / base.V2_THEME_REPO_PATH
         rendered = temp_root / base.RENDERED_REPO_PATH
