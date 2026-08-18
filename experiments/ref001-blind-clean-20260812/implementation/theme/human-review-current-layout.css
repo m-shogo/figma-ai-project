@@ -10,6 +10,7 @@
  * product-decision disclosures. Color follows story order, not open state. */
 .ref-voice-item:nth-of-type(odd)>.ref-content{background:var(--ref-light-blue)!important}
 .ref-voice-item:nth-of-type(even)>.ref-content{background:var(--ref-light-yellow)!important}
+.ref-voice-toggle.ref-voice-more{font-size:18px!important;line-height:18px!important;letter-spacing:.05em!important;font-weight:500!important}
 .ref-voice-item--open .ref-voice-toggle{display:none}
 @media (min-width:1300px){
   .ref-voice{height:auto!important;min-height:1393px!important}
