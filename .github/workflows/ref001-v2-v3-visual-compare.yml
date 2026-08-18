@@ -6,6 +6,11 @@ on:
       - agent/ref001-v2-v3-visual-comparison
     paths:
       - '.github/workflows/ref001-v2-v3-visual-compare.yml'
+  pull_request:
+    branches:
+      - so
+    paths:
+      - '.github/workflows/ref001-v2-v3-visual-compare.yml'
   workflow_dispatch:
 
 permissions:
