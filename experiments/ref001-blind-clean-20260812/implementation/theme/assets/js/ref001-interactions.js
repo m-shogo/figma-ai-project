@@ -4,10 +4,10 @@
   const root = document.querySelector('[data-ref001-page]');
   if (!root) return;
 
+  const TRANSITION_MS = 300;
   document.documentElement.dataset.ref001Js = 'ready';
+  document.documentElement.dataset.ref001TransitionMs = String(TRANSITION_MS);
 
-  // Fixture links intentionally remain unresolved until production/CMS wiring.
-  // Prevent placeholder `#` URLs from creating a fake navigation/jump-to-top.
   document.querySelectorAll('a[data-link-status="UNRESOLVED"]').forEach((link) => {
     link.dataset.interactionAuthority = 'PRODUCT_PENDING';
     if (link.getAttribute('href') === '#') {
@@ -16,59 +16,134 @@
     }
   });
 
-  // The final PC/SP Figma frames author three visible Student Voice states:
-  // item 1 open, items 2/3 collapsed. They do NOT author expanded body copy for
-  // items 2/3 and contain no Prototype reactions. Do not fabricate that content.
   const voice = root.querySelector('[data-section="student-voice"]');
   if (voice) {
-    voice.dataset.interactionAuthority = 'STRONGLY_INFERRED';
+    voice.dataset.interactionAuthority = 'PRODUCT_DECISION';
     const items = [...voice.querySelectorAll('.ref-voice-item')];
+    const syncVoiceState = (item, open) => {
+      item.classList.toggle('ref-voice-item--open', open);
+      item.classList.toggle('ref-voice-item--collapsed', !open);
+      item.dataset.voiceState = open ? 'open' : 'collapsed';
+      const disclosure = item.querySelector('.ref-voice-disclosure');
+      const toggle = item.querySelector('.ref-voice-toggle');
+      if (disclosure) disclosure.setAttribute('aria-hidden', open ? 'false' : 'true');
+      if (toggle) toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    };
+
     items.forEach((item, index) => {
       item.dataset.voiceItem = String(index + 1);
-      item.dataset.voiceState = item.classList.contains('ref-voice-item--open') ? 'open' : 'collapsed';
-    });
-    voice.querySelectorAll('.ref-voice-more').forEach((control) => {
-      control.dataset.interactionStatus = 'CONTENT_PENDING';
-      control.setAttribute('aria-disabled', 'true');
+      syncVoiceState(item, item.classList.contains('ref-voice-item--open'));
+      const toggle = item.querySelector('.ref-voice-toggle');
+      if (!toggle) return;
+      toggle.dataset.interactionAuthority = 'PRODUCT_DECISION';
+      toggle.addEventListener('click', () => {
+        if (!item.classList.contains('ref-voice-item--open')) syncVoiceState(item, true);
+      });
     });
   }
 
-  // Figma displays a 1/4 Messages indicator but only one authored slide exists
-  // in the final PC/SP frames. Keep the visual truth, but do not manufacture
-  // slides 2-4 or make decorative arrows pretend to be a working carousel.
+  const loadSwiper = () => {
+    if (window.Swiper) return Promise.resolve(window.Swiper);
+    if (!document.querySelector('link[data-ref-swiper]')) {
+      const css = document.createElement('link');
+      css.rel = 'stylesheet';
+      css.href = 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css';
+      css.dataset.refSwiper = 'true';
+      document.head.append(css);
+    }
+    return new Promise((resolve, reject) => {
+      const existing = document.querySelector('script[data-ref-swiper]');
+      if (existing) {
+        existing.addEventListener('load', () => resolve(window.Swiper), { once: true });
+        existing.addEventListener('error', reject, { once: true });
+        return;
+      }
+      const script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js';
+      script.defer = true;
+      script.dataset.refSwiper = 'true';
+      script.addEventListener('load', () => resolve(window.Swiper), { once: true });
+      script.addEventListener('error', reject, { once: true });
+      document.head.append(script);
+    });
+  };
+
   const messages = root.querySelector('[data-section="messages"]');
   if (messages) {
-    messages.dataset.interactionAuthority = 'STRONGLY_INFERRED';
-    messages.dataset.interactionStatus = 'SLIDE_DATA_PENDING';
+    messages.dataset.interactionAuthority = 'PRODUCT_DECISION';
     messages.dataset.authoredSlides = '1';
-    messages.dataset.displayedTotal = '4';
+    messages.dataset.runtimeSlides = '4';
+    messages.dataset.interactionStatus = 'SWIPER_LOADING';
+
+    const swiperEl = messages.querySelector('[data-ref-messages-swiper]');
+    const current = messages.querySelector('[data-ref-message-current]');
+    const bar = messages.querySelector('.ref-messages__bar');
+    const prev = messages.querySelector('.ref-messages__prev');
+    const next = messages.querySelector('.ref-messages__next');
+    const update = (swiper) => {
+      const index = (swiper.realIndex ?? swiper.activeIndex ?? 0) + 1;
+      if (current) current.textContent = String(index);
+      if (bar) bar.style.setProperty('--ref-message-progress', `${(index / 4) * 100}%`);
+      messages.dataset.activeSlide = String(index);
+    };
+
+    if (swiperEl) {
+      loadSwiper().then((SwiperCtor) => {
+        if (typeof SwiperCtor !== 'function') throw new Error('Swiper constructor unavailable');
+        const qaBrowser = navigator.webdriver === true;
+        const swiper = new SwiperCtor(swiperEl, {
+          loop: true,
+          speed: TRANSITION_MS,
+          slidesPerView: 1,
+          allowTouchMove: true,
+          slideToClickedSlide: true,
+          autoplay: qaBrowser ? false : { delay: 4500, disableOnInteraction: false, pauseOnMouseEnter: true },
+          navigation: { prevEl: prev, nextEl: next },
+          on: {
+            init(instance) { update(instance); },
+            slideChange(instance) { update(instance); },
+          },
+        });
+        window.__ref001MessagesSwiper = swiper;
+        messages.dataset.autoplay = qaBrowser ? 'QA_PAUSED' : 'ACTIVE';
+        messages.dataset.interactionStatus = 'SWIPER_READY';
+      }).catch(() => {
+        messages.dataset.interactionStatus = 'SWIPER_FALLBACK';
+        const slides = [...messages.querySelectorAll('.ref-messages__slide')];
+        let active = 0;
+        const show = (index) => {
+          active = (index + slides.length) % slides.length;
+          slides.forEach((slide, i) => { slide.hidden = i !== active; });
+          update({ realIndex: active });
+        };
+        prev?.addEventListener('click', () => show(active - 1));
+        next?.addEventListener('click', () => show(active + 1));
+        show(0);
+      });
+    }
   }
 
-  /**
-   * Progressive disclosure controller for future complete content.
-   * It is intentionally dormant in the current REF-001 fixture: a disclosure
-   * only activates when markup explicitly declares a complete target.
-   *
-   * Contract:
-   *   trigger[data-ref-disclosure="target-id"]
-   *   target#target-id[data-content-authority="COMPLETE"]
-   */
-  document.querySelectorAll('[data-ref-disclosure]').forEach((trigger) => {
-    const targetId = trigger.getAttribute('data-ref-disclosure');
-    const target = targetId ? document.getElementById(targetId) : null;
-    if (!target || target.dataset.contentAuthority !== 'COMPLETE') {
-      trigger.dataset.interactionStatus = 'CONTENT_PENDING';
-      trigger.setAttribute('aria-disabled', 'true');
-      return;
-    }
-
-    trigger.dataset.interactionAuthority = 'AUTHORED_CONTENT';
-    trigger.setAttribute('aria-controls', targetId);
-    trigger.setAttribute('aria-expanded', target.hidden ? 'false' : 'true');
-    trigger.addEventListener('click', () => {
-      const nextOpen = target.hidden;
-      target.hidden = !nextOpen;
-      trigger.setAttribute('aria-expanded', nextOpen ? 'true' : 'false');
+  // Footer is intentionally outside [data-ref001-page], so bind globally.
+  const pageTop = document.querySelector('.ref-footer__pagetop');
+  if (pageTop) {
+    const syncPageTop = () => pageTop.classList.toggle('is-visible', window.scrollY > 320);
+    syncPageTop();
+    window.addEventListener('scroll', syncPageTop, { passive: true });
+    pageTop.addEventListener('click', () => {
+      const start = window.scrollY;
+      if (start <= 0) return;
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        window.scrollTo(0, 0);
+        return;
+      }
+      const started = performance.now();
+      const tick = (now) => {
+        const progress = Math.min(1, (now - started) / TRANSITION_MS);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        window.scrollTo(0, Math.round(start * (1 - eased)));
+        if (progress < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
     });
-  });
+  }
 })();

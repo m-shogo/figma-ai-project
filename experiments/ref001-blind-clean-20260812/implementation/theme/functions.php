@@ -82,5 +82,7 @@ if (function_exists('add_action')) { add_action('wp_enqueue_scripts', function()
     wp_enqueue_style('ref001-v2-intermediate-mv', get_stylesheet_directory_uri() . '/v2-intermediate-mv.css', ['ref001-v2-mobile-fluid'], '0.1.0');
     wp_enqueue_style('ref001-v2-font-fidelity', get_stylesheet_directory_uri() . '/v2-font-fidelity.css', ['ref001-v2-intermediate-mv'], '0.1.0');
     wp_enqueue_style('ref001-v2-typography-fidelity', get_stylesheet_directory_uri() . '/v2-typography-fidelity.css', ['ref001-v2-font-fidelity'], '0.1.0');
+    wp_enqueue_style('ref001-human-review-current', get_stylesheet_directory_uri() . '/human-review-current.css', ['ref001-v2-typography-fidelity'], '0.1.0');
+    wp_enqueue_style('ref001-human-review-current-layout', get_stylesheet_directory_uri() . '/human-review-current-layout.css', ['ref001-human-review-current'], '0.1.0');
     wp_enqueue_script('ref001-v2-interactions', get_stylesheet_directory_uri() . '/assets/js/ref001-interactions.js', [], '0.1.0', true);
 }); }

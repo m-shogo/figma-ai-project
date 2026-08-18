@@ -92,30 +92,26 @@ return [
         'arrow-left' => 'assets/icons/arrow-left.svg',
         'arrow-right' => 'assets/icons/arrow-right.svg',
         'check' => 'assets/icons/check.svg',
-        // The committed SVG filenames follow Figma layer traversal order (IT→public-service),
-        // while the content domain is public-service→IT. Map by node identity/meaning, not filename ordinal.
-        'course-1' => 'assets/icons/course-7.svg', // public-service, PC Figma 21378:7722
-        'course-2' => 'assets/icons/course-6.svg', // accounting, PC Figma 21378:7683
-        'course-3' => 'assets/icons/course-5.svg', // business-management, PC Figma 21378:7655
-        'course-4' => 'assets/icons/course-4.svg', // finance, PC Figma 21378:7623
-        'course-5' => 'assets/icons/course-3.svg', // teaching, PC Figma 21378:7594
-        'course-6' => 'assets/icons/course-2.svg', // curator, PC Figma 21378:7565
-        // SP curator Figma 21376:4587 intentionally uses the same school/museum
-        // silhouette as SP teaching (21376:4558), not the PC curator artwork.
+        'course-1' => 'assets/icons/course-7.svg',
+        'course-2' => 'assets/icons/course-6.svg',
+        'course-3' => 'assets/icons/course-5.svg',
+        'course-4' => 'assets/icons/course-4.svg',
+        'course-5' => 'assets/icons/course-3.svg',
+        'course-6' => 'assets/icons/course-2.svg',
         'course-6-sp' => 'assets/icons/course-3.svg',
-        'course-7' => 'assets/icons/course-1.svg', // IT, PC Figma 21378:7533
+        'course-7' => 'assets/icons/course-1.svg',
         'facebook' => 'assets/icons/facebook-outline.svg',
         'youtube' => 'assets/icons/youtube-outline.svg',
         'instagram' => 'assets/icons/instagram-outline.svg',
         'line' => 'assets/icons/line-outline.svg',
     ],
-    // Destinations are unresolved in this isolated replay fixture. Keep them
-    // centralized so production integration can replace them without touching templates.
     'links' => [
         'document' => '#',
         'open-campus' => '#',
         'campus' => '#',
         'numbers' => '#',
+        'university-official' => 'https://www.cku.ac.jp/',
+        'junior-college-official' => 'https://www.chiba-kc.ac.jp/',
         'facebook' => '#',
         'youtube' => '#',
         'instagram' => '#',

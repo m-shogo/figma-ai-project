@@ -1,0 +1,44 @@
+/* Dynamic layout adjustments for the current Human Review round.
+ * Kept separate from the visual decision sheet so it can be collapsed into
+ * section owners after the user approves Final. */
+
+/* The user chose V3's quote face, not V3's metrics. Preserve the existing
+ * Figma-gated numeric typography: PC/SP quote line-height 160% and weight 600. */
+.ref-mv__quote{font-weight:600!important;line-height:1.6!important}
+
+/* Student Voice keeps Figma's initial heights but may grow after user-opened
+ * product-decision disclosures. Color follows story order, not open state. */
+.ref-voice-item:nth-of-type(odd)>.ref-content{background:var(--ref-light-blue)!important}
+.ref-voice-item:nth-of-type(even)>.ref-content{background:var(--ref-light-yellow)!important}
+.ref-voice-toggle.ref-voice-more{font-size:18px!important;line-height:18px!important;letter-spacing:.05em!important;font-weight:500!important}
+.ref-voice-item--open .ref-voice-toggle{display:none}
+@media (min-width:1300px){
+  .ref-voice{height:auto!important;min-height:1393px!important}
+  .ref-voice-item+.ref-voice-item{margin-top:40px!important}
+}
+@media (max-width:767px){.ref-voice-item+.ref-voice-item{margin-top:20px!important}}
+
+/* External Swiper navigation is visually stationary while slides move. The
+ * photo is authored as one fixed visual on the right; only the left-hand copy
+ * slides. This also avoids duplicating the same heavy image four times. */
+.ref-messages__swiper{position:relative;overflow:hidden}
+.ref-messages__swiper .swiper-wrapper{position:relative;z-index:1;display:flex;width:100%;height:100%;box-sizing:content-box;transition-property:transform}
+.ref-messages__slide{position:relative;flex:0 0 100%;width:100%;height:100%}
+.ref-messages__photo--static{position:absolute!important;z-index:0;margin:0!important;background:transparent!important}
+.ref-messages__photo--static img{display:block;width:100%;height:100%;object-fit:contain}
+@media (min-width:1300px){
+  .ref-messages__swiper{height:440px}
+  .ref-messages__photo--static{right:calc((100% - 1160px)/2);top:0;width:660px!important;height:440px!important}
+  .ref-messages__indicator{position:absolute!important;z-index:3;left:calc((100% - 1160px)/2 + 165px)!important;top:408px!important;transform:none!important;margin:0!important}
+}
+@media (max-width:767px){
+  .ref-messages__swiper{height:462px}
+  .ref-messages__photo--static{left:50%;top:40px;width:min(343px,calc(100% - 16px))!important;height:229px!important;transform:translateX(-50%)}
+  .ref-messages__indicator{position:absolute!important;z-index:3;left:50%!important;top:435px!important;transform:translateX(-50%)!important;margin:0!important}
+}
+
+/* Every pre-existing interactive transition is normalized to the agreed 0.3s. */
+.ref-footer__sns-link{transition:opacity .3s ease,transform .3s ease!important}
+
+/* Keep the gradient CTA frame at the same authored endpoint insets. */
+@media (max-width:767px){.ref-cta-value__border{inset:16px!important}}
