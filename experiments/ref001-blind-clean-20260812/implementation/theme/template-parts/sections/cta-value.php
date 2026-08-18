@@ -1,4 +1,4 @@
-<section class="ref-cta-value" data-section="cta-value">
+<section class="ref-cta-value" data-section="cta-value"<?= ref001_figma_section_attrs('cta-value'); ?>>
     <div class="ref-cta-value__border" aria-hidden="true"></div>
     <?php ref001_picture('cta-person-left', 'ref-portrait ref-portrait--left', ''); ?>
     <?php ref001_picture('cta-person-right', 'ref-portrait ref-portrait--right', ''); ?>
