@@ -6,6 +6,24 @@ function ref001_e($value): void { echo htmlspecialchars((string)$value, ENT_QUOT
 function ref001_section(string $name): void { require __DIR__ . '/template-parts/sections/' . $name . '.php'; }
 function ref001_course_domain(): array { return require __DIR__ . '/inc/course-domain.php'; }
 function ref001_figma_authority(): array { static $authority; if ($authority === null) { $authority = require __DIR__ . '/inc/figma-authority.php'; } return $authority; }
+function ref001_figma_frame_attrs(): string {
+    $authority = ref001_figma_authority();
+    $pc = (string)($authority['frames']['pc']['node'] ?? '');
+    $sp = (string)($authority['frames']['sp']['node'] ?? '');
+    return ' data-figma-pc="' . htmlspecialchars($pc, ENT_QUOTES, 'UTF-8') . '" data-figma-sp="' . htmlspecialchars($sp, ENT_QUOTES, 'UTF-8') . '"';
+}
+function ref001_figma_section_attrs(string $name): string {
+    static $occurrences = [];
+    $index = $occurrences[$name] ?? 0;
+    $occurrences[$name] = $index + 1;
+    $authority = ref001_figma_authority();
+    $entry = $authority['sections'][$name] ?? null;
+    if (!is_array($entry)) return '';
+    $pc = $entry['pc'][$index] ?? null;
+    $sp = $entry['sp'][$index] ?? null;
+    if (!is_string($pc) || !is_string($sp)) return '';
+    return ' data-figma-pc="' . htmlspecialchars($pc, ENT_QUOTES, 'UTF-8') . '" data-figma-sp="' . htmlspecialchars($sp, ENT_QUOTES, 'UTF-8') . '"';
+}
 function ref001_assets(): array { static $assets; if ($assets === null) { $assets = require __DIR__ . '/inc/asset-map.php'; } return $assets; }
 function ref001_asset_url(string $path): string {
     if (REF001_FIXTURE_MODE || !function_exists('get_stylesheet_directory_uri')) return $path;
