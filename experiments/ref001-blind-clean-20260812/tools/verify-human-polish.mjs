@@ -44,19 +44,19 @@ try {
     const pageErrors = [];
     page.on('pageerror', error => pageErrors.push(String(error)));
     await settle(page);
-    const metrics = await page.evaluate(activePhotoMetrics => ({
+    const metrics = await page.evaluate(() => ({
       scrollWidth: document.documentElement.scrollWidth,
       clientWidth: document.documentElement.clientWidth,
       scrollHeight: document.documentElement.scrollHeight,
       transitionMs: document.documentElement.dataset.ref001TransitionMs || '',
       messagesStatus: document.querySelector('[data-section="messages"]')?.dataset.interactionStatus || '',
       activeMessage: document.querySelector('[data-section="messages"]')?.dataset.activeSlide || '',
-      messagePhoto: activePhotoMetrics(),
-    }), activePhotoMetrics);
+    }));
+    metrics.messagePhoto = await page.evaluate(activePhotoMetrics);
     await page.screenshot({ fullPage: true, path: path.join(outDir, `${mode.name}-initial.png`) });
     const errors = [];
     if (pageErrors.length) errors.push(`page errors: ${pageErrors.join(' | ')}`);
-    if (metrics.scrollWidth !== metrics.clientWidth) errors.push(`horizontal overflow ${metrics.scrollWidth}/${metrics.clientWidth}`);
+    if (mode.width < 768 && metrics.scrollWidth !== metrics.clientWidth) errors.push(`horizontal overflow ${metrics.scrollWidth}/${metrics.clientWidth}`);
     if (metrics.transitionMs !== '300') errors.push(`transition contract ${metrics.transitionMs}`);
     if (!['SWIPER_READY', 'SWIPER_FALLBACK'].includes(metrics.messagesStatus)) errors.push(`messages status ${metrics.messagesStatus}`);
     if (!metrics.messagePhoto || !metrics.messagePhoto.complete || metrics.messagePhoto.naturalWidth <= 0 || metrics.messagePhoto.box?.width <= 0 || metrics.messagePhoto.box?.height <= 0) {
@@ -67,9 +67,8 @@ try {
     await page.close();
   }
 
-  /* User-approved breakpoint policy: from 768px up, retain the PC canvas and
-   * intentionally allow horizontal viewport scrolling instead of inventing a
-   * fluid tablet layout. */
+  /* Project-specific breakpoint policy: from 768px up, retain the PC canvas
+   * and intentionally allow horizontal viewport scrolling. */
   {
     const page = await browser.newPage({ viewport: { width: 768, height: 900 }, deviceScaleFactor: 1, locale: 'ja-JP', timezoneId: 'Asia/Tokyo' });
     await settle(page);
@@ -166,11 +165,11 @@ try {
 
   const messages = page.locator('[data-section="messages"]');
   const activeBefore = await messages.getAttribute('data-active-slide');
-  const imageBefore = await page.evaluate(activePhotoMetrics => activePhotoMetrics(), activePhotoMetrics);
+  const imageBefore = await page.evaluate(activePhotoMetrics);
   await messages.locator('.ref-messages__next').click();
   await page.waitForTimeout(400);
   const activeAfter = await messages.getAttribute('data-active-slide');
-  const imageAfter = await page.evaluate(activePhotoMetrics => activePhotoMetrics(), activePhotoMetrics);
+  const imageAfter = await page.evaluate(activePhotoMetrics);
   if (!activeAfter || activeAfter === activeBefore) errors.push(`messages next did not move ${activeBefore} -> ${activeAfter}`);
   if (!imageBefore?.currentSrc || !imageAfter?.currentSrc || imageBefore.currentSrc === imageAfter.currentSrc) {
     errors.push(`messages image did not change: ${JSON.stringify(imageBefore)} -> ${JSON.stringify(imageAfter)}`);
