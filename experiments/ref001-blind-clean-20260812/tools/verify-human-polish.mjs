@@ -25,20 +25,36 @@ try {
     const pageErrors = [];
     page.on('pageerror', error => pageErrors.push(String(error)));
     await settle(page);
-    const metrics = await page.evaluate(() => ({
-      scrollWidth: document.documentElement.scrollWidth,
-      clientWidth: document.documentElement.clientWidth,
-      scrollHeight: document.documentElement.scrollHeight,
-      transitionMs: document.documentElement.dataset.ref001TransitionMs || '',
-      messagesStatus: document.querySelector('[data-section="messages"]')?.dataset.interactionStatus || '',
-      activeMessage: document.querySelector('[data-section="messages"]')?.dataset.activeSlide || '',
-    }));
+    const metrics = await page.evaluate(() => {
+      const photo = document.querySelector('.ref-messages__photo--static img');
+      const photoBox = photo?.getBoundingClientRect();
+      return {
+        scrollWidth: document.documentElement.scrollWidth,
+        clientWidth: document.documentElement.clientWidth,
+        scrollHeight: document.documentElement.scrollHeight,
+        transitionMs: document.documentElement.dataset.ref001TransitionMs || '',
+        messagesStatus: document.querySelector('[data-section="messages"]')?.dataset.interactionStatus || '',
+        activeMessage: document.querySelector('[data-section="messages"]')?.dataset.activeSlide || '',
+        messagePhoto: photo ? {
+          complete: photo.complete,
+          naturalWidth: photo.naturalWidth,
+          naturalHeight: photo.naturalHeight,
+          currentSrc: photo.currentSrc,
+          display: getComputedStyle(photo).display,
+          opacity: getComputedStyle(photo).opacity,
+          box: photoBox ? { x: photoBox.x, y: photoBox.y, width: photoBox.width, height: photoBox.height } : null,
+        } : null,
+      };
+    });
     await page.screenshot({ fullPage: true, path: path.join(outDir, `${mode.name}-initial.png`) });
     const errors = [];
     if (pageErrors.length) errors.push(`page errors: ${pageErrors.join(' | ')}`);
     if (metrics.scrollWidth !== metrics.clientWidth) errors.push(`horizontal overflow ${metrics.scrollWidth}/${metrics.clientWidth}`);
     if (metrics.transitionMs !== '300') errors.push(`transition contract ${metrics.transitionMs}`);
     if (!['SWIPER_READY', 'SWIPER_FALLBACK'].includes(metrics.messagesStatus)) errors.push(`messages status ${metrics.messagesStatus}`);
+    if (!metrics.messagePhoto || !metrics.messagePhoto.complete || metrics.messagePhoto.naturalWidth <= 0 || metrics.messagePhoto.box?.width <= 0 || metrics.messagePhoto.box?.height <= 0) {
+      errors.push(`messages photo not visibly loaded: ${JSON.stringify(metrics.messagePhoto)}`);
+    }
     report.viewports.push({ ...mode, ...metrics, pageErrors, errors });
     if (errors.length) failed = true;
     await page.close();
@@ -136,7 +152,7 @@ try {
 }
 
 await fs.writeFile(path.join(outDir, 'report.json'), JSON.stringify(report, null, 2));
-for (const viewport of report.viewports) console.log(`[${viewport.name}] ${viewport.errors.length ? 'FAIL' : 'PASS'} width=${viewport.scrollWidth}/${viewport.clientWidth} status=${viewport.messagesStatus}`);
+for (const viewport of report.viewports) console.log(`[${viewport.name}] ${viewport.errors.length ? 'FAIL' : 'PASS'} width=${viewport.scrollWidth}/${viewport.clientWidth} status=${viewport.messagesStatus} photo=${JSON.stringify(viewport.messagePhoto)}`);
 console.log(`interaction=${report.interaction?.errors?.length ? 'FAIL' : 'PASS'}`);
 for (const error of report.interaction?.errors || []) console.error(error);
 if (failed) process.exit(1);
