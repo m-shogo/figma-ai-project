@@ -294,7 +294,7 @@ Visual QA viewportは`1380` PC / `375` SPを優先し、中間幅は必要にな
 
 Figma実assetは`asset slot` / `PC node` / `SP node` / `local path` / `SHA-256` / `dimensions`を追跡する。
 
-一時Figma URL(`https://www.figma.com/api/mcp/asset/...`)をGitへ保存しない。
+一時Figma MCP asset URL(`figma.com` の `/api/mcp/` asset endpoint)をGitへ保存しない。
 `scripts/validate_no_figma_mcp_asset_urls.py`が既に拒否する。
 
 durable bytesが無い状態を`ASSET_READY`へ昇格させない。

@@ -250,7 +250,8 @@ class EditorCapabilityTest(unittest.TestCase):
 
 class HygieneTest(unittest.TestCase):
     def test_ephemeral_figma_asset_url_is_rejected(self) -> None:
-        url = "https://www.figma.com/api/mcp/asset/" + "0123456789abcdef0123456789abcdef"
+        # Split so this fixture cannot trip the repository-wide leak gate on itself.
+        url = "https://" + "www.figma.com" + "/api/mcp/asset/" + "0123456789abcdef0123456789abcdef"
         self.assertTrue(any("short-lived Figma MCP asset URL" in e for e in validator.hygiene_errors(url)))
 
     def test_committed_license_key_is_rejected(self) -> None:
