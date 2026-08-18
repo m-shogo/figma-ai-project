@@ -58,4 +58,5 @@ if (function_exists('add_action')) { add_action('wp_enqueue_scripts', function()
     wp_enqueue_style('ref001-v2-intermediate-desktop', get_stylesheet_directory_uri() . '/v2-intermediate-desktop.css', ['ref001-v2-speech-variable-layout'], '0.1.0');
     wp_enqueue_style('ref001-v2-mobile-fluid', get_stylesheet_directory_uri() . '/v2-mobile-fluid.css', ['ref001-v2-intermediate-desktop'], '0.1.0');
     wp_enqueue_style('ref001-v2-intermediate-mv', get_stylesheet_directory_uri() . '/v2-intermediate-mv.css', ['ref001-v2-mobile-fluid'], '0.1.0');
+    wp_enqueue_style('ref001-v2-typography-fidelity', get_stylesheet_directory_uri() . '/v2-typography-fidelity.css', ['ref001-v2-intermediate-mv'], '0.1.0');
 }); }
