@@ -37,7 +37,7 @@ $slides = [
                             <p class="ref-messages__quote ref-messages__quote--sp"><?php foreach ($slide['sp'] as $line): ?><span><?php ref001_e($line); ?></span><?php endforeach; ?></p>
                             <p class="ref-messages__profile"><?php ref001_e($slide['profile']); ?><br><?php ref001_e($slide['school']); ?></p>
                         </div>
-                        <?php ref001_picture('messages-photo', 'ref-messages__photo', ''); ?>
+                        <?php ref001_picture('messages-photo', 'ref-messages__photo', '', $index === 0); ?>
                     </div>
                 </div>
             <?php endforeach; ?>
