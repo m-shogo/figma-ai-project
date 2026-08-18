@@ -11,9 +11,10 @@ on:
       - 'implementation/theme/assets/images/ref001/rendered/**'
       - 'scripts/ref001_ci_impact.py'
       - 'scripts/validate_ref001_asset_map.py'
+      - 'scripts/validate_ref001_css_contract.py'
       - 'tests/test_ref001_ci_impact.py'
       - 'tests/test_ref001_asset_map.py'
-      - 'tests/test_ref001_v2_logo_contract.py'
+      - 'tests/test_ref001_logo_contract.py'
       - '.github/workflows/ref001-blind-clean-runtime.yml'
   pull_request:
     paths:
@@ -23,9 +24,10 @@ on:
       - 'implementation/theme/assets/images/ref001/rendered/**'
       - 'scripts/ref001_ci_impact.py'
       - 'scripts/validate_ref001_asset_map.py'
+      - 'scripts/validate_ref001_css_contract.py'
       - 'tests/test_ref001_ci_impact.py'
       - 'tests/test_ref001_asset_map.py'
-      - 'tests/test_ref001_v2_logo_contract.py'
+      - 'tests/test_ref001_logo_contract.py'
       - '.github/workflows/ref001-blind-clean-runtime.yml'
 
 permissions:
@@ -40,7 +42,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Classify V2 CI impact
+      - name: Classify REF-001 CI impact
         id: impact
         env:
           PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
@@ -55,7 +57,7 @@ jobs:
             --head "$HEAD_SHA" \
             --github-output "$GITHUB_OUTPUT"
 
-      - name: Publish V2 CI impact summary
+      - name: Publish REF-001 CI impact summary
         env:
           MODE: ${{ steps.impact.outputs.mode }}
           WIDTHS: ${{ steps.impact.outputs.widths }}
@@ -64,7 +66,7 @@ jobs:
           REASON: ${{ steps.impact.outputs.reason }}
         run: |
           {
-            echo '## ⚡ REF-001 V2 CI impact'
+            echo '## ⚡ REF-001 CI impact'
             echo
             echo "- Mode: \`$MODE\`"
             echo "- Viewports: \`${WIDTHS:-none}\`"
@@ -73,7 +75,7 @@ jobs:
             echo "- Reason: $REASON"
           } >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Test V2 CI impact router
+      - name: Test REF-001 CI impact router
         run: python -m unittest tests.test_ref001_ci_impact
 
       - name: Enforce immutable FIRST PASS before finalization
@@ -85,8 +87,11 @@ jobs:
       - name: PHP syntax
         run: find experiments/ref001-blind-clean-20260812/implementation/theme -name '*.php' -print0 | xargs -0 -n1 php -l
 
-      - name: Validate V2 outlined university logo contract
-        run: python -m unittest tests.test_ref001_v2_logo_contract
+      - name: Validate canonical CSS contract
+        run: python scripts/validate_ref001_css_contract.py
+
+      - name: Validate outlined university logo contract
+        run: python -m unittest tests.test_ref001_logo_contract
 
       - name: Validate ACF export
         run: python scripts/validate_acf_export.py experiments/ref001-blind-clean-20260812/implementation/acf-export.json
