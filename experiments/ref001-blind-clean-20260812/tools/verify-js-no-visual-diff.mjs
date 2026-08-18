@@ -15,6 +15,21 @@ const modes = [
   { name: 'sp', width: 375, height: 844 },
 ];
 
+const expectedSectionLineage = [
+  ['header', '21378:8066', '21376:4918'],
+  ['main-visual', '21378:8032', '21376:4886'],
+  ['reason', '21378:7999', '21376:4852'],
+  ['education', '21378:7868', '21376:4720'],
+  ['shared-cta', '21378:7867', '21376:4719'],
+  ['student-voice', '21378:7766', '21376:4650'],
+  ['messages', '21378:7746', '21376:4629'],
+  ['shared-cta', '21378:7730', '21376:4628'],
+  ['courses', '21378:7505', '21376:4403'],
+  ['links', '21378:7458', '21376:4919'],
+  ['cta-value', '21378:7481', '21376:4942'],
+  ['footer', '21378:7457', '21376:4402'],
+].map(([section, pc, sp]) => ({ section, pc, sp }));
+
 const browser = await chromium.launch({ headless: true });
 const report = { baseUrl, headUrl, visual: [], interaction: null };
 let failed = false;
@@ -40,7 +55,7 @@ try {
     const basePng = PNG.sync.read(baseBuffer);
     const headPng = PNG.sync.read(headBuffer);
     let diffPixels = Number.POSITIVE_INFINITY;
-    let dimensionsMatch = basePng.width === headPng.width && basePng.height === headPng.height;
+    const dimensionsMatch = basePng.width === headPng.width && basePng.height === headPng.height;
 
     if (dimensionsMatch) {
       const diff = new PNG({ width: basePng.width, height: basePng.height });
@@ -68,6 +83,12 @@ try {
   await settle(page, headUrl);
 
   const interaction = await page.evaluate(() => {
+    const pageRoot = document.querySelector('[data-ref001-page]');
+    const sections = [...document.querySelectorAll('[data-section]')].map(node => ({
+      section: node.dataset.section,
+      pc: node.dataset.figmaPc || '',
+      sp: node.dataset.figmaSp || '',
+    }));
     const pictures = [...document.querySelectorAll('picture[data-asset-slot]')];
     const unresolved = [...document.querySelectorAll('a[data-link-status="UNRESOLVED"]')];
     const voice = document.querySelector('[data-section="student-voice"]');
@@ -91,6 +112,8 @@ try {
 
     return {
       jsReady: document.documentElement.dataset.ref001Js,
+      pageLineage: pageRoot ? { pc: pageRoot.dataset.figmaPc || '', sp: pageRoot.dataset.figmaSp || '' } : null,
+      sections,
       pictureCount: pictures.length,
       picturesMissingLineage: pictures.filter(node => !node.dataset.figmaPc || !node.dataset.figmaSp).map(node => node.dataset.assetSlot),
       unresolvedLinkCount: unresolved.length,
@@ -113,6 +136,9 @@ try {
   const errors = [];
   if (pageErrors.length) errors.push(`page errors: ${pageErrors.join(' | ')}`);
   if (interaction.jsReady !== 'ready') errors.push(`JS readiness ${interaction.jsReady ?? 'missing'} != ready`);
+  if (JSON.stringify(interaction.pageLineage) !== JSON.stringify({ pc: '21384:8173', sp: '21376:4401' })) errors.push(`page lineage ${JSON.stringify(interaction.pageLineage)}`);
+  if (interaction.sections.length !== expectedSectionLineage.length) errors.push(`section lineage count ${interaction.sections.length} != ${expectedSectionLineage.length}`);
+  if (JSON.stringify(interaction.sections) !== JSON.stringify(expectedSectionLineage)) errors.push(`section lineage mismatch: ${JSON.stringify(interaction.sections)}`);
   if (interaction.pictureCount !== 16) errors.push(`picture count ${interaction.pictureCount} != 16`);
   if (interaction.picturesMissingLineage.length) errors.push(`missing asset lineage: ${interaction.picturesMissingLineage.join(', ')}`);
   if (!interaction.placeholderClick?.defaultPrevented) errors.push('unresolved # link click was not prevented');
