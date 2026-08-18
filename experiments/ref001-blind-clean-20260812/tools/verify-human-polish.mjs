@@ -72,7 +72,10 @@ try {
     const headerBlue = document.querySelector('.ref-header .ref-action--blue');
     const mvOc = document.querySelector('.ref-mv__oc');
     const pageTop = document.querySelector('.ref-footer__pagetop');
-    const links = [...document.querySelectorAll('.ref-footer__related a')].map(a => a.href);
+    const links = [...document.querySelectorAll('.ref-footer__related a')].map(a => ({
+      href: a.getAttribute('href'),
+      status: a.dataset.linkStatus || '',
+    }));
     return {
       jsReady: document.documentElement.dataset.ref001Js || '',
       voiceAuthority: document.querySelector('[data-section="student-voice"]')?.dataset.interactionAuthority || '',
@@ -104,7 +107,9 @@ try {
   if (initial.messagesAutoplay && initial.messagesAutoplay !== 'QA_PAUSED') errors.push(`QA autoplay ${initial.messagesAutoplay}`);
   if (!initial.headerTransition.split(',').every(value => value.trim() === '0.3s')) errors.push(`button transition ${initial.headerTransition}`);
   if (initial.pageTopVisibleAtTop) errors.push('page top should be hidden at document top');
-  if (!initial.footerLinks.some(href => href === 'https://www.cku.ac.jp/') || !initial.footerLinks.some(href => href === 'https://www.chiba-kc.ac.jp/')) errors.push(`footer links ${initial.footerLinks.join(', ')}`);
+  if (initial.footerLinks.length !== 2 || !initial.footerLinks.every(link => link.href === '#' && link.status === 'UNRESOLVED')) {
+    errors.push(`footer destinations must remain unresolved: ${JSON.stringify(initial.footerLinks)}`);
+  }
 
   const header = page.locator('.ref-header .ref-action--blue').first();
   const headerBefore = await header.evaluate(el => ({ bg: getComputedStyle(el).backgroundColor, color: getComputedStyle(el).color }));
