@@ -1,4 +1,4 @@
-<footer class="ref-footer" data-section="footer">
+<footer class="ref-footer" data-section="footer"<?= ref001_figma_section_attrs('footer'); ?>>
     <div class="ref-footer__inner">
         <div class="ref-footer__profile">
             <div class="ref-footer-logo">
