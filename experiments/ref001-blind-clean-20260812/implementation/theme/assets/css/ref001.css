@@ -1530,6 +1530,7 @@ button{font:inherit}
 
 @media (max-width:767px){
 .ref-cta-value__border{inset:16px!important}
+  .ref-footer__copyright{white-space:normal}
 }
 
 .ref-course__rec-label{
