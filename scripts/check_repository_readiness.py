@@ -71,6 +71,7 @@ CHECKS: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("clean_replay_pairs", ("scripts/prepare_clean_replay.py", "validate")),
     ("capture_environment", ("scripts/validate_capture_environment.py",)),
     ("run_deliverables", ("scripts/validate_run_deliverables.py",)),
+    ("wordpress_theme_intake", ("scripts/validate_wordpress_theme_intake.py",)),
     ("unit_tests", ("-m", "unittest", "discover", "-s", "tests", "-p", "test_*.py")),
 )
 

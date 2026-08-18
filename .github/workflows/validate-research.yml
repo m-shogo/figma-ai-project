@@ -146,5 +146,8 @@ jobs:
       - name: Validate completed implementation deliverables
         run: python scripts/validate_run_deliverables.py
 
+      - name: Validate WordPress supplied-theme intake records
+        run: python scripts/validate_wordpress_theme_intake.py
+
       - name: Test section execution planner and validators
         run: python -m unittest discover -s tests -p 'test_*.py'
