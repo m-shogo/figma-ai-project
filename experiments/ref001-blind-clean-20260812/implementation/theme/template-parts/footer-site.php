@@ -11,8 +11,8 @@
         </div>
         <div>
             <div class="ref-footer__related">
-                <span>千葉経済大学公式サイト</span>
-                <span>千葉経済短期大学公式サイト</span>
+                <a href="<?php ref001_e(ref001_link_url('university-official')); ?>">千葉経済大学公式サイト</a>
+                <a href="<?php ref001_e(ref001_link_url('junior-college-official')); ?>">千葉経済短期大学公式サイト</a>
             </div>
             <nav class="ref-footer__sns" aria-label="公式SNS">
                 <img class="ref-footer__sns-art" src="<?php ref001_e(ref001_asset_url('assets/icons/footer-sns-outline.svg')); ?>" alt="" aria-hidden="true">
@@ -23,8 +23,8 @@
             </nav>
         </div>
         <div class="ref-footer__copyright">Copyright CHIBA KEIZAI UNIVERSITY, All Rights Reserved</div>
-        <div class="ref-footer__pagetop" aria-hidden="true">
+        <button type="button" class="ref-footer__pagetop" aria-label="ページ上部へ">
             <img src="<?php ref001_e(ref001_asset_url('assets/icons/footer-page-top.svg')); ?>" alt="">
-        </div>
+        </button>
     </div>
 </footer>
