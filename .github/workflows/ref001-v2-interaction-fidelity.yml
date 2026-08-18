@@ -4,8 +4,8 @@ on:
   pull_request:
     paths:
       - 'experiments/ref001-blind-clean-20260812/implementation/**'
+      - 'experiments/ref001-blind-clean-20260812/tools/verify-human-polish.mjs'
       - 'experiments/ref001-blind-clean-20260812/tools/verify-js-no-visual-diff.mjs'
-      - 'research/figma-updates/2026-08-18-ref001-v2-v3-first-pass-learning.md'
       - '.github/workflows/ref001-v2-interaction-fidelity.yml'
   workflow_dispatch:
 
@@ -13,27 +13,13 @@ permissions:
   contents: read
 
 jobs:
-  authority-and-no-visual-diff:
+  human-polish-interaction-qa:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-      - name: Materialize comparison base
-        env:
-          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
-        run: |
-          if [ -n "$PR_BASE_SHA" ]; then
-            BASE_SHA="$PR_BASE_SHA"
-          else
-            git fetch origin so
-            BASE_SHA="$(git rev-parse origin/so)"
-          fi
-          git worktree add --detach /tmp/ref001-base "$BASE_SHA"
-          echo "BASE_SHA=$BASE_SHA" >> "$GITHUB_ENV"
-          echo "HEAD_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
 
       - name: PHP syntax and authority contract
         run: |
@@ -46,78 +32,80 @@ jobs:
             if (($a["frames"]["sp"]["node"] ?? null) !== "21376:4401") exit(2);
             if (($p["pc_final_frame_reactions"] ?? null) !== 0) exit(3);
             if (($p["sp_final_frame_reactions"] ?? null) !== 0) exit(4);
-            if (($a["interaction"]["messages"]["authored_slide_content_count"] ?? null) !== 1) exit(5);
-            if (($p["valid_ref001_reactions"] ?? null) !== 0) exit(6);
-            if (($audit["pc-header"]["status"] ?? null) !== "STALE_REJECTED") exit(7);
-            if (($audit["pc-footer"]["status"] ?? null) !== "STALE_REJECTED") exit(8);
-            if (($audit["pc-header"]["destination"] ?? null) !== "14654:3046") exit(9);
-            if (($audit["pc-footer"]["destination"] ?? null) !== "14654:3787") exit(10);
+            if (($p["valid_ref001_reactions"] ?? null) !== 0) exit(5);
+            if (($audit["pc-header"]["status"] ?? null) !== "STALE_REJECTED") exit(6);
+            if (($audit["pc-footer"]["status"] ?? null) !== "STALE_REJECTED") exit(7);
+            if (($a["interaction"]["transition_ms"] ?? null) !== 300) exit(8);
+            if (($a["interaction"]["student-voice"]["runtime_authority"] ?? null) !== "PRODUCT_DECISION") exit(9);
+            if (($a["interaction"]["messages"]["runtime_authority"] ?? null) !== "PRODUCT_DECISION") exit(10);
+            if (($a["interaction"]["messages"]["authored_slide_content_count"] ?? null) !== 1) exit(11);
+            if (($a["interaction"]["messages"]["runtime_slide_count"] ?? null) !== 4) exit(12);
           '
 
-      - name: Stage canonical rendered assets in both fixtures
+      - name: Stage canonical rendered assets
         run: |
-          for ROOT in "$GITHUB_WORKSPACE" /tmp/ref001-base; do
-            SOURCE="$ROOT/implementation/theme/assets/images/ref001/rendered"
-            DEST="$ROOT/experiments/ref001-blind-clean-20260812/implementation/theme/assets/images/ref001/rendered"
-            if [ -d "$SOURCE" ]; then
-              mkdir -p "$DEST"
-              cp -R "$SOURCE"/. "$DEST"/
-            fi
-          done
+          SOURCE='implementation/theme/assets/images/ref001/rendered'
+          DEST='experiments/ref001-blind-clean-20260812/implementation/theme/assets/images/ref001/rendered'
+          if [ -d "$SOURCE" ]; then
+            mkdir -p "$DEST"
+            cp -R "$SOURCE"/. "$DEST"/
+          fi
 
-      - name: Install browser and pixel diff runtime
+      - name: Install browser runtime
         run: |
-          mkdir -p /tmp/ref001-js-qa
-          cd /tmp/ref001-js-qa
+          mkdir -p /tmp/ref001-human-polish
+          cd /tmp/ref001-human-polish
           npm init -y >/dev/null 2>&1
-          npm install playwright@1.54.2 pixelmatch@7.1.0 pngjs@7.0.0 >/dev/null
+          npm install playwright@1.54.2 >/dev/null
           npx playwright install --with-deps chromium
-          cp "$GITHUB_WORKSPACE/experiments/ref001-blind-clean-20260812/tools/verify-js-no-visual-diff.mjs" ./verify.mjs
+          cp "$GITHUB_WORKSPACE/experiments/ref001-blind-clean-20260812/tools/verify-human-polish.mjs" ./verify.mjs
 
-      - name: Start base and head fixtures
+      - name: Start current fixture
         run: |
-          php -S 127.0.0.1:8764 -t /tmp/ref001-base/experiments/ref001-blind-clean-20260812/implementation/theme >/tmp/ref001-base.log 2>&1 &
           php -S 127.0.0.1:8765 -t "$GITHUB_WORKSPACE/experiments/ref001-blind-clean-20260812/implementation/theme" >/tmp/ref001-head.log 2>&1 &
           for i in $(seq 1 30); do
-            if curl -fsS http://127.0.0.1:8764/preview.php >/dev/null && curl -fsS http://127.0.0.1:8765/preview.php >/dev/null; then exit 0; fi
+            if curl -fsS http://127.0.0.1:8765/preview.php >/dev/null; then exit 0; fi
             sleep 1
           done
-          echo '--- base ---'; cat /tmp/ref001-base.log
-          echo '--- head ---'; cat /tmp/ref001-head.log
+          cat /tmp/ref001-head.log
           exit 1
 
-      - name: Verify authority-aware JS and exact no-visual-diff
+      - name: Verify Human Review interaction contract
+        env:
+          NODE_PATH: /tmp/ref001-human-polish/node_modules
         run: |
-          cd /tmp/ref001-js-qa
+          cd /tmp/ref001-human-polish
           node verify.mjs \
-            http://127.0.0.1:8764/preview.php \
             http://127.0.0.1:8765/preview.php \
-            "$GITHUB_WORKSPACE/experiments/ref001-blind-clean-20260812/evidence/js-finalization"
+            "$GITHUB_WORKSPACE/experiments/ref001-blind-clean-20260812/evidence/human-polish"
 
       - name: Publish summary
         if: always()
         run: |
-          REPORT='experiments/ref001-blind-clean-20260812/evidence/js-finalization/report.json'
+          REPORT='experiments/ref001-blind-clean-20260812/evidence/human-polish/report.json'
           {
-            echo '## REF-001 V2 JS finalization'
+            echo '## REF-001 Human Review interaction QA'
             echo
-            echo "- Base: \`$BASE_SHA\`"
-            echo "- Head: \`$HEAD_SHA\`"
+            echo '- Visual changes are explicitly user-approved work-in-progress for `/latest/`; exact base/head pixel equality is intentionally not the gate in this phase.'
+            echo '- `/final/` remains separately frozen until explicit human approval.'
             if [ -f "$REPORT" ]; then
-              echo '- JS authority contract: evaluated'
-              echo '- Page/section/asset Figma lineage: evaluated'
-              echo '- Stale Header/Footer Prototype destinations: rejected by contract'
-              echo '- PC/SP no-visual-diff: evaluated with exact pixel comparison'
+              echo '- PC/SP overflow + runtime readiness: evaluated'
+              echo '- 0.3s interaction contract: evaluated'
+              echo '- button + OC hover inversion: evaluated'
+              echo '- Student Voice disclosure: evaluated'
+              echo '- Swiper next navigation: evaluated'
+              echo '- Page Top scroll behavior: evaluated'
+              echo '- Footer destinations: evaluated'
             else
               echo '- Evidence report was not produced.'
             fi
           } >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Upload JS finalization evidence
+      - name: Upload Human Review interaction evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ref001-v2-js-finalization
-          path: experiments/ref001-blind-clean-20260812/evidence/js-finalization
+          name: ref001-human-polish
+          path: experiments/ref001-blind-clean-20260812/evidence/human-polish
           if-no-files-found: warn
           retention-days: 14
