@@ -1,0 +1,37 @@
+name: REF001 V3 Evidence Package
+
+on:
+  pull_request:
+    branches:
+      - so
+    paths:
+      - '.github/workflows/ref001-v3-evidence-package.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Copy protected V3 committed QA without changing V3
+        run: |
+          git fetch origin agent/ref001-v3:refs/remotes/origin/agent/ref001-v3
+          mkdir -p ref001-v3-committed-evidence
+          git show refs/remotes/origin/agent/ref001-v3:experiments/ref001-v3/qa/runtime/v3-1380.png > ref001-v3-committed-evidence/v3-1380.png
+          git show refs/remotes/origin/agent/ref001-v3:experiments/ref001-v3/qa/runtime/v3-375.png > ref001-v3-committed-evidence/v3-375.png
+          git show refs/remotes/origin/agent/ref001-v3:experiments/ref001-v3/qa/runtime/v3-320.png > ref001-v3-committed-evidence/v3-320.png
+          git show refs/remotes/origin/agent/ref001-v3:experiments/ref001-v3/qa/runtime/runtime-probes.json > ref001-v3-committed-evidence/runtime-probes.json
+          printf '%s\n' "$(git rev-parse refs/remotes/origin/agent/ref001-v3)" > ref001-v3-committed-evidence/v3-head.txt
+          file ref001-v3-committed-evidence/*.png
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ref001-v3-committed-evidence
+          path: ref001-v3-committed-evidence
+          if-no-files-found: error
+          retention-days: 14
