@@ -42,7 +42,7 @@ jobs:
         with:
           ref: agent/ref001-css-canonicalize
           fetch-depth: 0
-      - name: Apply approved final human feedback and self-revert
+      - name: Apply approved final human feedback
         run: |
           python - <<'PY'
           from pathlib import Path
@@ -129,11 +129,9 @@ jobs:
           path.write_text(css)
           PY
 
-          rm -f .github/workflows/ref001-final-human-feedback-once.yml
-          git checkout 3aef4b901fc684afeecbcae63a9103e95c436016 -- .github/workflows/ref001-blind-clean-runtime.yml
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add experiments/ref001-blind-clean-20260812/implementation/theme/assets/css/ref001.css .github/workflows/ref001-blind-clean-runtime.yml .github/workflows/ref001-final-human-feedback-once.yml
+          git add experiments/ref001-blind-clean-20260812/implementation/theme/assets/css/ref001.css
           git commit -m 'Polish REF-001 final human feedback'
           git push origin HEAD:agent/ref001-css-canonicalize
 
