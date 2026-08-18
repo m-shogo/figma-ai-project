@@ -1,0 +1,291 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/figma-ai-project/wordpress-theme-intake.schema.json",
+  "title": "WordPress Supplied-Theme Intake Record",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "intake_id",
+    "status",
+    "project",
+    "theme_delivery",
+    "template_coverage",
+    "content_decisions",
+    "cpt",
+    "taxonomies",
+    "forms",
+    "qa_reuse",
+    "unknowns",
+    "conflicts",
+    "freeze"
+  ],
+  "properties": {
+    "schema_version": {"type": "integer", "minimum": 1},
+    "intake_id": {"type": "string", "minLength": 1},
+    "status": {"enum": ["AWAITING_THEME", "THEME_SUPPLIED", "THEME_OBSERVED", "FROZEN"]},
+    "created_at": {"type": "string"},
+    "updated_at": {"type": "string"},
+
+    "project": {
+      "type": "object",
+      "required": ["reference_id", "figma_file_key", "section_evidence_path", "evidence_paths"],
+      "properties": {
+        "reference_id": {"type": "string", "minLength": 1},
+        "figma_file_key": {"type": "string", "minLength": 1},
+        "section_evidence_path": {"type": "string", "minLength": 1},
+        "evidence_paths": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": true
+    },
+
+    "theme_delivery": {
+      "type": "object",
+      "required": [
+        "state",
+        "supplied_by",
+        "repository",
+        "starting_commit",
+        "theme_slug",
+        "theme_family",
+        "family_is_inference",
+        "scan_report_path",
+        "observation",
+        "blocking_questions"
+      ],
+      "properties": {
+        "state": {"enum": ["NOT_SUPPLIED", "SUPPLIED_UNOBSERVED", "OBSERVED"]},
+        "supplied_by": {"type": "string"},
+        "repository": {"type": "string"},
+        "starting_commit": {"type": "string"},
+        "theme_slug": {"type": "string"},
+        "theme_family": {"enum": ["UNKNOWN", "UNDETERMINED", "CLASSIC_THEME", "BLOCK_THEME", "HYBRID_THEME"]},
+        "family_is_inference": {"type": "boolean"},
+        "scan_report_path": {"type": "string"},
+        "observation": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["id", "status", "evidence", "notes"],
+            "properties": {
+              "id": {"type": "string", "minLength": 1},
+              "status": {"enum": ["UNKNOWN", "OBSERVED", "UNDETERMINED", "NONE"]},
+              "evidence": {"type": "array", "items": {"type": "string"}},
+              "notes": {"type": "array", "items": {"type": "string"}}
+            },
+            "additionalProperties": true
+          }
+        },
+        "blocking_questions": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": true
+    },
+
+    "template_coverage": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["surface", "hierarchy_name", "required", "theme_provides", "ownership", "target_path", "notes"],
+        "properties": {
+          "surface": {
+            "enum": [
+              "FRONT_PAGE", "POSTS_INDEX", "PAGE", "SINGLE", "ARCHIVE",
+              "CATEGORY", "TAXONOMY", "SEARCH", "NOT_FOUND",
+              "CPT_ARCHIVE", "CPT_SINGLE", "PAGE_TEMPLATE", "PART"
+            ]
+          },
+          "hierarchy_name": {"type": "string", "minLength": 1},
+          "required": {"enum": ["REQUIRED", "OPTIONAL", "UNDETERMINED"]},
+          "theme_provides": {"enum": ["UNKNOWN", "YES", "NO", "UNDETERMINED"]},
+          "ownership": {"enum": ["UNDETERMINED", "THEME", "PROJECT", "SHARED"]},
+          "target_path": {"type": "string"},
+          "notes": {"type": "array", "items": {"type": "string"}}
+        },
+        "additionalProperties": true
+      }
+    },
+
+    "content_decisions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "section_id", "label", "reuse", "content_ownership",
+          "implementation_unit", "editor_capability", "interaction", "notes"
+        ],
+        "properties": {
+          "section_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+          "label": {"type": "string", "minLength": 1},
+          "reuse": {"enum": ["UNDETERMINED", "REUSE", "ADAPT", "NEW"]},
+          "content_ownership": {
+            "enum": ["UNDETERMINED", "STATIC", "ACF_FIELD", "ACF_BLOCK", "CORE_BLOCK"]
+          },
+          "implementation_unit": {
+            "enum": ["UNDETERMINED", "TEMPLATE_PART", "ACF_BLOCK", "CORE_BLOCK", "PAGE_TEMPLATE", "OTHER"]
+          },
+          "editor_capability": {
+            "type": "object",
+            "required": ["add_remove", "reorder", "evidence"],
+            "properties": {
+              "add_remove": {"enum": ["UNKNOWN", "YES", "NO", "UNDETERMINED"]},
+              "reorder": {"enum": ["UNKNOWN", "YES", "NO", "UNDETERMINED"]},
+              "evidence": {"type": "array", "items": {"type": "string"}}
+            },
+            "additionalProperties": true
+          },
+          "interaction": {
+            "type": "object",
+            "required": ["classification", "evidence"],
+            "properties": {
+              "classification": {
+                "enum": [
+                  "UNDETERMINED", "NONE", "AUTHORED", "STRONGLY_INFERRED",
+                  "PRODUCT_DECISION", "CONTENT_PENDING", "STALE_REJECTED"
+                ]
+              },
+              "evidence": {"type": "array", "items": {"type": "string"}}
+            },
+            "additionalProperties": true
+          },
+          "notes": {"type": "array", "items": {"type": "string"}}
+        },
+        "additionalProperties": true
+      }
+    },
+
+    "cpt": {"$ref": "#/$defs/registrationBlock"},
+    "taxonomies": {"$ref": "#/$defs/registrationBlock"},
+
+    "forms": {
+      "type": "object",
+      "required": ["state", "selected_plugin", "candidates", "boundaries", "evidence", "notes"],
+      "properties": {
+        "state": {"enum": ["UNDETERMINED", "NONE", "SELECTED"]},
+        "selected_plugin": {"type": "string"},
+        "candidates": {"type": "array", "items": {"type": "string"}},
+        "boundaries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "insertion_surface", "markup_owner", "post_submit", "personal_data"],
+            "properties": {
+              "id": {"type": "string", "minLength": 1},
+              "insertion_surface": {"type": "string"},
+              "markup_owner": {"enum": ["UNDETERMINED", "PLUGIN", "THEME", "PROJECT"]},
+              "post_submit": {"type": "string"},
+              "personal_data": {"enum": ["UNKNOWN", "YES", "NO", "UNDETERMINED"]}
+            },
+            "additionalProperties": true
+          }
+        },
+        "evidence": {"type": "array", "items": {"type": "string"}},
+        "notes": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": true
+    },
+
+    "qa_reuse": {
+      "type": "object",
+      "required": ["layers", "viewports", "acf_secret_boundary"],
+      "properties": {
+        "layers": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["id", "existing_asset", "reuse_mode", "notes"],
+            "properties": {
+              "id": {"type": "string", "minLength": 1},
+              "existing_asset": {"type": "string", "minLength": 1},
+              "reuse_mode": {"enum": ["REUSE", "ADAPT", "NEW", "UNDETERMINED"]},
+              "notes": {"type": "array", "items": {"type": "string"}}
+            },
+            "additionalProperties": true
+          }
+        },
+        "viewports": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["width", "role"],
+            "properties": {
+              "width": {"type": "integer", "minimum": 1},
+              "role": {"type": "string", "minLength": 1}
+            },
+            "additionalProperties": true
+          }
+        },
+        "acf_secret_boundary": {
+          "type": "object",
+          "required": ["secret_name", "committed"],
+          "properties": {
+            "secret_name": {"type": "string", "minLength": 1},
+            "committed": {"const": false}
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+
+    "unknowns": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "question", "blocks", "state"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "question": {"type": "string", "minLength": 1},
+          "blocks": {"type": "array", "items": {"type": "string"}},
+          "state": {"enum": ["UNKNOWN", "UNDETERMINED", "RESOLVED"]}
+        },
+        "additionalProperties": true
+      }
+    },
+
+    "conflicts": {"type": "array"},
+
+    "freeze": {
+      "type": "object",
+      "required": ["ready", "frozen_at", "notes"],
+      "properties": {
+        "ready": {"type": "boolean"},
+        "frozen_at": {"type": "string"},
+        "notes": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": true
+    }
+  },
+
+  "$defs": {
+    "registrationBlock": {
+      "type": "object",
+      "required": ["state", "candidates", "entries", "evidence", "notes"],
+      "properties": {
+        "state": {"enum": ["UNDETERMINED", "NONE", "DEFINED"]},
+        "candidates": {"type": "array", "items": {"type": "string"}},
+        "entries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["slug", "role", "evidence"],
+            "properties": {
+              "slug": {"type": "string", "minLength": 1},
+              "role": {"type": "string"},
+              "evidence": {"type": "array", "items": {"type": "string"}}
+            },
+            "additionalProperties": true
+          }
+        },
+        "evidence": {"type": "array", "items": {"type": "string"}},
+        "notes": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": true
+    }
+  },
+
+  "additionalProperties": true
+}

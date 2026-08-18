@@ -242,7 +242,12 @@ Section Implementation Unitはstackへ合わせる:
 - ACF Block/native block
 - existing equivalent
 
-Canonical: `docs/wordpress-acf-policy.md`
+提供Themeがある案件では、Themeを観測するまでtheme-relativeな構造を確定しない。
+
+Canonical:
+
+- `docs/wordpress-acf-policy.md`
+- `docs/wordpress-theme-intake.md`
 
 ## Images / gradients / visual tolerance
 
