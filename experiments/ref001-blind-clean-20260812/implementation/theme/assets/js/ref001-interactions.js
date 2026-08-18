@@ -16,8 +16,6 @@
     }
   });
 
-  // Human Review explicitly promotes Student Voice 2/3 into interactive dummy
-  // content. This is a PRODUCT_DECISION, not retroactive Figma authority.
   const voice = root.querySelector('[data-section="student-voice"]');
   if (voice) {
     voice.dataset.interactionAuthority = 'PRODUCT_DECISION';
@@ -70,8 +68,6 @@
     });
   };
 
-  // Figma authored slide 1 only; Human Review explicitly requests a four-slide
-  // working Swiper with dummy/reused content for interaction QA.
   const messages = root.querySelector('[data-section="messages"]');
   if (messages) {
     messages.dataset.interactionAuthority = 'PRODUCT_DECISION';
@@ -127,9 +123,8 @@
     }
   }
 
-  // Scroll-following Page Top. It appears only after meaningful scrolling and
-  // uses a 300ms JS scroll to match the interaction transition contract.
-  const pageTop = root.querySelector('.ref-footer__pagetop');
+  // Footer is intentionally outside [data-ref001-page], so bind globally.
+  const pageTop = document.querySelector('.ref-footer__pagetop');
   if (pageTop) {
     const syncPageTop = () => pageTop.classList.toggle('is-visible', window.scrollY > 320);
     syncPageTop();
