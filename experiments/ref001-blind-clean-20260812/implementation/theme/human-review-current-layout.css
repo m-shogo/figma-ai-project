@@ -19,18 +19,22 @@
 @media (max-width:767px){.ref-voice-item+.ref-voice-item{margin-top:20px!important}}
 
 /* External Swiper navigation is visually stationary while slides move. The
- * minimal structural rules also prevent four slides stacking before CDN CSS is
- * ready; Swiper still owns transforms, touch handling and autoplay. */
+ * photo is authored as one fixed visual on the right; only the left-hand copy
+ * slides. This also avoids duplicating the same heavy image four times. */
 .ref-messages__swiper{position:relative;overflow:hidden}
-.ref-messages__swiper .swiper-wrapper{display:flex;width:100%;height:100%;box-sizing:content-box;transition-property:transform}
+.ref-messages__swiper .swiper-wrapper{position:relative;z-index:1;display:flex;width:100%;height:100%;box-sizing:content-box;transition-property:transform}
 .ref-messages__slide{position:relative;flex:0 0 100%;width:100%;height:100%}
+.ref-messages__photo--static{position:absolute!important;z-index:0;margin:0!important;background:transparent!important}
+.ref-messages__photo--static img{display:block;width:100%;height:100%;object-fit:contain}
 @media (min-width:1300px){
   .ref-messages__swiper{height:440px}
-  .ref-messages__indicator{position:absolute!important;left:calc((100% - 1160px)/2 + 165px)!important;top:408px!important;transform:none!important;margin:0!important}
+  .ref-messages__photo--static{right:calc((100% - 1160px)/2);top:0;width:660px!important;height:440px!important}
+  .ref-messages__indicator{position:absolute!important;z-index:3;left:calc((100% - 1160px)/2 + 165px)!important;top:408px!important;transform:none!important;margin:0!important}
 }
 @media (max-width:767px){
   .ref-messages__swiper{height:462px}
-  .ref-messages__indicator{position:absolute!important;left:50%!important;top:435px!important;transform:translateX(-50%)!important;margin:0!important}
+  .ref-messages__photo--static{left:50%;top:40px;width:min(343px,calc(100% - 32px))!important;height:229px!important;transform:translateX(-50%)}
+  .ref-messages__indicator{position:absolute!important;z-index:3;left:50%!important;top:435px!important;transform:translateX(-50%)!important;margin:0!important}
 }
 
 /* Every pre-existing interactive transition is normalized to the agreed 0.3s. */
