@@ -76,7 +76,7 @@ def rendered_manifest_for(asset: Path, root: Path) -> dict:
 
 class ManifestValidationTests(unittest.TestCase):
     def make_fixture(self, directory: str) -> tuple[Path, Path, dict]:
-        root = Path(directory)
+        root = Path(directory).resolve()
         asset = root / "assets" / "person.png"
         asset.parent.mkdir(parents=True)
         asset.write_bytes(PNG_BYTES)
@@ -86,7 +86,7 @@ class ManifestValidationTests(unittest.TestCase):
         return root, manifest_path, manifest
 
     def make_rendered_fixture(self, directory: str) -> tuple[Path, Path, dict]:
-        root = Path(directory)
+        root = Path(directory).resolve()
         asset = root / "assets" / "education.jpg"
         asset.parent.mkdir(parents=True)
         asset.write_bytes(JPEG_BYTES)

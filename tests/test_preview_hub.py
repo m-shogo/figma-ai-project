@@ -10,7 +10,7 @@ from scripts.attach_visual_baseline import write_preview_hub
 class PreviewHubTests(unittest.TestCase):
     def test_hub_links_all_requested_previews(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            output = Path(directory)
+            output = Path(directory).resolve()
             (output / "ref-001").mkdir(parents=True)
             write_preview_hub(output)
             root = (output / "index.html").read_text(encoding="utf-8")

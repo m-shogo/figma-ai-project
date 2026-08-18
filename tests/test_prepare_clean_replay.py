@@ -62,7 +62,7 @@ def write_run(path: Path, *, run_id: str, run_class: str, isolation: str, status
 class CleanReplayTests(unittest.TestCase):
     def test_prepare_pins_source_and_leakage_guards(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             original_root = replay.ROOT
             original_evidence_root = evidence.ROOT
             try:

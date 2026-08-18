@@ -111,7 +111,7 @@ class FormatSniffTests(unittest.TestCase):
 class DownloadTests(unittest.TestCase):
     def test_download_writes_bytes_hash_and_format_without_url_output(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
-            output = Path(tmp) / "asset.png"
+            output = Path(tmp).resolve() / "asset.png"
             opener = FakeOpener(FakeResponse(PNG_BYTES, content_type="image/png"))
 
             result = intake.download_asset(
@@ -131,7 +131,7 @@ class DownloadTests(unittest.TestCase):
 
     def test_declared_size_over_limit_leaves_no_output_or_part_file(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
+            root = Path(tmp).resolve()
             output = root / "too-large.png"
             opener = FakeOpener(FakeResponse(PNG_BYTES, content_type="image/png"))
 
@@ -150,7 +150,7 @@ class DownloadTests(unittest.TestCase):
 
     def test_unsupported_payload_leaves_no_output_or_part_file(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
+            root = Path(tmp).resolve()
             output = root / "asset.bin"
             opener = FakeOpener(FakeResponse(b"not-an-image", content_type="text/plain"))
 
@@ -170,7 +170,7 @@ class DownloadTests(unittest.TestCase):
 class ManifestTests(unittest.TestCase):
     def test_manifest_contains_hash_and_lineage_but_not_source_url(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
-            output = Path(tmp) / "person.png"
+            output = Path(tmp).resolve() / "person.png"
             output.write_bytes(PNG_BYTES)
             result = intake.DownloadResult(
                 sha256=hashlib.sha256(PNG_BYTES).hexdigest(),
@@ -197,7 +197,7 @@ class ManifestTests(unittest.TestCase):
 
     def test_write_manifest_is_valid_json(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
-            path = Path(tmp) / "asset.asset.json"
+            path = Path(tmp).resolve() / "asset.asset.json"
             payload = {"source_url_persisted": False, "artifact": {"sha256": "abc"}}
             intake.write_manifest(path, payload)
             self.assertEqual(json.loads(path.read_text(encoding="utf-8")), payload)
@@ -206,7 +206,7 @@ class ManifestTests(unittest.TestCase):
 class WriteTargetTests(unittest.TestCase):
     def test_refuses_overwrite_without_force(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
+            root = Path(tmp).resolve()
             output = root / "asset.png"
             manifest = root / "asset.png.asset.json"
             output.write_bytes(PNG_BYTES)
@@ -215,7 +215,7 @@ class WriteTargetTests(unittest.TestCase):
 
     def test_force_allows_existing_paths(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
+            root = Path(tmp).resolve()
             output = root / "asset.png"
             manifest = root / "asset.png.asset.json"
             output.write_bytes(PNG_BYTES)
@@ -224,7 +224,7 @@ class WriteTargetTests(unittest.TestCase):
 
     def test_refuses_same_asset_and_manifest_path(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
-            path = Path(tmp) / "same"
+            path = Path(tmp).resolve() / "same"
             with self.assertRaisesRegex(intake.AssetIntakeError, "must differ"):
                 intake.ensure_write_targets(path, path, force=False)
 

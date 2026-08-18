@@ -55,7 +55,7 @@ class CompanyPolicyTests(unittest.TestCase):
 
     def test_frozen_contract_requires_actual_policy_hash(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             policy_path = root / "policies/company-policy.yaml"
             policy_path.parent.mkdir(parents=True)
             policy_path.write_text(yaml.safe_dump(active_policy(), sort_keys=False), encoding="utf-8")

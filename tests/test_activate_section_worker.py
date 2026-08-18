@@ -82,7 +82,7 @@ def fixture(root: Path, sections: list[dict]) -> Path:
 class ActivateSectionWorkerTests(unittest.TestCase):
     def test_parallel_wave_accepts_worktree_isolation(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             manifest = fixture(
                 root,
                 [
@@ -107,7 +107,7 @@ class ActivateSectionWorkerTests(unittest.TestCase):
 
     def test_singleton_wave_allows_serial_shared_tree(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             manifest = fixture(root, [section("S01", 10, "src/sections/Header")])
             prepared, wave = activate(
                 manifest,
@@ -123,7 +123,7 @@ class ActivateSectionWorkerTests(unittest.TestCase):
 
     def test_parallel_wave_rejects_serial_shared_tree(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             manifest = fixture(
                 root,
                 [
@@ -142,7 +142,7 @@ class ActivateSectionWorkerTests(unittest.TestCase):
 
     def test_dependency_can_create_singleton_serial_wave(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             manifest = fixture(
                 root,
                 [
@@ -162,7 +162,7 @@ class ActivateSectionWorkerTests(unittest.TestCase):
 
     def test_other_isolation_requires_safety_notes(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             manifest = fixture(root, [section("S01", 10, "src/a")])
             with self.assertRaisesRegex(ValueError, "requires explicit safety notes"):
                 activate(
@@ -176,7 +176,7 @@ class ActivateSectionWorkerTests(unittest.TestCase):
 
     def test_ready_worker_identity_is_immutable(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             manifest = fixture(root, [section("S01", 10, "src/a")])
             data = yaml.safe_load(manifest.read_text(encoding="utf-8"))
             contract_path = root / data["shared_contract"]

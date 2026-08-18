@@ -87,7 +87,7 @@ class InitExperimentTests(unittest.TestCase):
 
     def test_build_records_links_all_skeleton_paths(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             self.make_templates(root)
             with patch.object(init, "ROOT", root):
                 records = init.build_records("EXP-1", "REF-1")
@@ -112,7 +112,7 @@ class InitExperimentTests(unittest.TestCase):
 
     def test_bootstrap_records_do_not_invent_design_values(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             self.make_templates(root)
             with patch.object(init, "ROOT", root):
                 records = init.build_records("EXP-1", "REF-1")
@@ -132,7 +132,7 @@ class InitExperimentTests(unittest.TestCase):
 
     def test_atomic_create_refuses_overwrite(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             target = root / "existing.yaml"
             target.write_text("old: true\n", encoding="utf-8")
             with self.assertRaisesRegex(ValueError, "refusing to overwrite"):

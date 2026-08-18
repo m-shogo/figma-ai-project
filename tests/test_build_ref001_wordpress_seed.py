@@ -63,7 +63,7 @@ class Ref001WordPressSeedTests(unittest.TestCase):
 
     def test_unknown_fixture_field_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             content = yaml.safe_load(builder.CONTENT_PATH.read_text(encoding="utf-8"))
             export = json.loads(builder.ACF_EXPORT_PATH.read_text(encoding="utf-8"))
             content = copy.deepcopy(content)
@@ -79,7 +79,7 @@ class Ref001WordPressSeedTests(unittest.TestCase):
 
     def test_media_placeholder_must_map_to_image_field(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             content = yaml.safe_load(builder.CONTENT_PATH.read_text(encoding="utf-8"))
             export = json.loads(builder.ACF_EXPORT_PATH.read_text(encoding="utf-8"))
             content = copy.deepcopy(content)
@@ -95,7 +95,7 @@ class Ref001WordPressSeedTests(unittest.TestCase):
 
     def test_duplicate_content_field_across_sources_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             first = yaml.safe_load(builder.CONTENT_PATH.read_text(encoding="utf-8"))
             second = {
                 "schema_version": 1,

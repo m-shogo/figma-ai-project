@@ -86,13 +86,13 @@ class FigmaStructureProfileLineageTests(unittest.TestCase):
 
     def test_valid_lineage_with_undetermined_signal_passes(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             manifest_path, _ = self.make_fixture(root)
             self.assertEqual([], self.validate(root, manifest_path))
 
     def test_profile_hash_drift_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             manifest_path, profile_path = self.make_fixture(root)
             data = yaml.safe_load(profile_path.read_text(encoding="utf-8"))
             data["sections"][0]["recommended_translation_mode"] = "VISUAL_FIRST"
@@ -102,7 +102,7 @@ class FigmaStructureProfileLineageTests(unittest.TestCase):
 
     def test_unknown_signal_is_rejected_for_active_worker(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             manifest_path, profile_path = self.make_fixture(root)
             data = yaml.safe_load(profile_path.read_text(encoding="utf-8"))
             data["sections"][0]["signals"]["variables"]["state"] = "UNKNOWN"
@@ -117,7 +117,7 @@ class FigmaStructureProfileLineageTests(unittest.TestCase):
 
     def test_manifest_nodes_must_exist_in_profile_entry(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             manifest_path, _ = self.make_fixture(root)
             data = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
             data["sections"][0]["figma"]["sp_node_id"] = "sp:other"
@@ -127,7 +127,7 @@ class FigmaStructureProfileLineageTests(unittest.TestCase):
 
     def test_translation_mode_must_be_resolved(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             manifest_path, profile_path = self.make_fixture(root)
             data = yaml.safe_load(profile_path.read_text(encoding="utf-8"))
             data["sections"][0]["recommended_translation_mode"] = "UNKNOWN"
@@ -142,7 +142,7 @@ class FigmaStructureProfileLineageTests(unittest.TestCase):
 
     def test_empty_inactive_manifest_does_not_require_profile(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             manifest_path = root / "section-manifest.yaml"
             manifest_path.write_text(
                 yaml.safe_dump({"reference_id": "REF-1", "sections": []}, sort_keys=False),

@@ -16,7 +16,7 @@ import validate_human_review_site as validator  # noqa: E402
 class HumanReviewDashboardBuildTests(unittest.TestCase):
     def test_build_produces_latest_and_run_history_urls(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            site = builder.build_site(output=Path(directory) / "site")
+            site = builder.build_site(output=Path(directory).resolve() / "site")
             self.assertTrue((site / "ref-001/latest/review/index.html").is_file())
             self.assertTrue((site / "ref-001/latest/review/review-assist.js").is_file())
             self.assertTrue((site / "ref-001/latest/review/review-assist.css").is_file())
@@ -46,7 +46,7 @@ class HumanReviewDashboardBuildTests(unittest.TestCase):
 
     def test_manifest_keeps_human_review_pending_and_exact_endpoints(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            site = builder.build_site(output=Path(directory) / "site")
+            site = builder.build_site(output=Path(directory).resolve() / "site")
             manifest = json.loads(
                 (site / "ref-001/latest/review/manifest.json").read_text(encoding="utf-8")
             )
@@ -60,7 +60,7 @@ class HumanReviewDashboardBuildTests(unittest.TestCase):
 
     def test_overlay_is_capability_gated_per_viewport(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            site = builder.build_site(output=Path(directory) / "site")
+            site = builder.build_site(output=Path(directory).resolve() / "site")
             manifest = json.loads(
                 (site / "ref-001/latest/review/manifest.json").read_text(encoding="utf-8")
             )
@@ -72,7 +72,7 @@ class HumanReviewDashboardBuildTests(unittest.TestCase):
 
     def test_preview_is_actual_output_without_review_chrome(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            site = builder.build_site(output=Path(directory) / "site")
+            site = builder.build_site(output=Path(directory).resolve() / "site")
             preview = (site / "ref-001/latest/preview/index.html").read_text(encoding="utf-8")
             self.assertIn("data-ref001-page", preview)
             self.assertNotIn("Human Visual Review", preview)
@@ -81,7 +81,7 @@ class HumanReviewDashboardBuildTests(unittest.TestCase):
 
     def test_preview_publishes_every_stylesheet_emitted_by_preview_php(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            site = builder.build_site(output=Path(directory) / "site")
+            site = builder.build_site(output=Path(directory).resolve() / "site")
             preview_root = site / "ref-001/latest/preview"
             preview = (preview_root / "index.html").read_text(encoding="utf-8")
             stylesheets = builder.local_preview_stylesheets(preview)
@@ -101,7 +101,7 @@ class HumanReviewDashboardBuildTests(unittest.TestCase):
 
     def test_preview_uses_swappable_pc_sp_images_focused_svg_assets_and_anchor_ctas(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            site = builder.build_site(output=Path(directory) / "site")
+            site = builder.build_site(output=Path(directory).resolve() / "site")
             preview = (site / "ref-001/latest/preview/index.html").read_text(encoding="utf-8")
             self.assertIn('<picture class="ref-picture', preview)
             self.assertIn('media="(max-width:767px)"', preview)

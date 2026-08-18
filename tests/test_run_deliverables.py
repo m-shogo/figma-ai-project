@@ -95,12 +95,12 @@ class RunDeliverableTests(unittest.TestCase):
 
     def test_complete_acf_run_passes_with_export_and_import_smoke(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             self.assertEqual([], self.validate(root, fixture(root)))
 
     def test_missing_export_evidence_blocks_completion(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             run = fixture(root)
             run["deliverables"]["acf"]["export_json"]["evidence_json_path"] = ""
             errors = self.validate(root, run)
@@ -108,7 +108,7 @@ class RunDeliverableTests(unittest.TestCase):
 
     def test_failed_import_smoke_blocks_completion(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             run = fixture(root)
             run["deliverables"]["acf"]["import_smoke"]["status"] = "FAIL"
             errors = self.validate(root, run)

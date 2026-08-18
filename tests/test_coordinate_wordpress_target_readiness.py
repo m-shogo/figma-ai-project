@@ -53,7 +53,7 @@ class CoordinatorTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp, \
             patch.object(coordinator.target_scan, "scan", return_value=recon()), \
             patch.object(coordinator.git_baseline, "capture", return_value=git_state()):
-            result = coordinator.coordinate(target_repo=Path(tmp))
+            result = coordinator.coordinate(target_repo=Path(tmp).resolve())
 
         self.assertEqual(result["status"], "BLOCKED")
         self.assertIn("WORDPRESS_RUNTIME_NOT_SUPPLIED", result["binding_readiness"]["blockers"])
@@ -70,8 +70,8 @@ class CoordinatorTests(unittest.TestCase):
             patch.object(coordinator.ref001_probe, "validate_site_url", return_value=""), \
             patch.object(coordinator.ref001_probe, "probe_runtime", return_value=ref001()):
             result = coordinator.coordinate(
-                target_repo=Path(tmp),
-                wp_path=Path(tmp) / "wordpress",
+                target_repo=Path(tmp).resolve(),
+                wp_path=Path(tmp).resolve() / "wordpress",
                 runtime_executable_lookup=lambda _: "/usr/local/bin/wp",
             )
 
@@ -89,7 +89,7 @@ class CoordinatorTests(unittest.TestCase):
             patch.object(coordinator.runtime_probe, "probe", return_value=runtime()), \
             patch.object(coordinator.ref001_probe, "validate_site_url", return_value=""), \
             patch.object(coordinator.ref001_probe, "probe_runtime", return_value=ref001()):
-            result = coordinator.coordinate(target_repo=Path(tmp), wp_path=Path(tmp) / "wordpress")
+            result = coordinator.coordinate(target_repo=Path(tmp).resolve(), wp_path=Path(tmp).resolve() / "wordpress")
 
         self.assertIn("TARGET_GIT_WORKTREE_DIRTY", result["binding_readiness"]["blockers"])
         self.assertFalse(result["binding_readiness"]["ready"])
@@ -101,7 +101,7 @@ class CoordinatorTests(unittest.TestCase):
             patch.object(coordinator.runtime_probe, "probe", return_value=runtime()), \
             patch.object(coordinator.ref001_probe, "validate_site_url", return_value=""), \
             patch.object(coordinator.ref001_probe, "probe_runtime", return_value=ref001()):
-            result = coordinator.coordinate(target_repo=Path(tmp), wp_path=Path(tmp) / "wordpress")
+            result = coordinator.coordinate(target_repo=Path(tmp).resolve(), wp_path=Path(tmp).resolve() / "wordpress")
 
         self.assertIn("TARGET_GIT_BASELINE_NOT_GIT_REPOSITORY", result["binding_readiness"]["blockers"])
         self.assertEqual(result["binding_readiness"]["starting_commit"], "")
@@ -113,7 +113,7 @@ class CoordinatorTests(unittest.TestCase):
             patch.object(coordinator.runtime_probe, "probe", return_value=runtime(theme="other-theme")), \
             patch.object(coordinator.ref001_probe, "validate_site_url", return_value=""), \
             patch.object(coordinator.ref001_probe, "probe_runtime", return_value=ref001()):
-            result = coordinator.coordinate(target_repo=Path(tmp), wp_path=Path(tmp) / "wordpress")
+            result = coordinator.coordinate(target_repo=Path(tmp).resolve(), wp_path=Path(tmp).resolve() / "wordpress")
 
         self.assertFalse(result["binding_readiness"]["ready"])
         self.assertEqual(result["binding_readiness"]["theme_consistency"], "MISMATCH")
@@ -130,7 +130,7 @@ class CoordinatorTests(unittest.TestCase):
             ), \
             patch.object(coordinator.ref001_probe, "validate_site_url", return_value=""), \
             patch.object(coordinator.ref001_probe, "probe_runtime", return_value=ref001()):
-            result = coordinator.coordinate(target_repo=Path(tmp), wp_path=Path(tmp) / "wordpress")
+            result = coordinator.coordinate(target_repo=Path(tmp).resolve(), wp_path=Path(tmp).resolve() / "wordpress")
 
         self.assertIn(
             "WORDPRESS_RUNTIME_WORDPRESS_BOOTSTRAP_UNAVAILABLE",
@@ -148,7 +148,7 @@ class CoordinatorTests(unittest.TestCase):
                 "probe_runtime",
                 return_value=ref001(status="BLOCKED", blockers=["ACF_JSON_IMPORT_COMMAND_UNAVAILABLE"]),
             ):
-            result = coordinator.coordinate(target_repo=Path(tmp), wp_path=Path(tmp) / "wordpress")
+            result = coordinator.coordinate(target_repo=Path(tmp).resolve(), wp_path=Path(tmp).resolve() / "wordpress")
 
         self.assertIn("ACF_JSON_IMPORT_COMMAND_UNAVAILABLE", result["binding_readiness"]["blockers"])
         self.assertFalse(result["completion_readiness"]["admin_ui_smoke_executed"])
@@ -160,7 +160,7 @@ class CoordinatorTests(unittest.TestCase):
             patch.object(coordinator.runtime_probe, "probe", return_value=runtime()), \
             patch.object(coordinator.ref001_probe, "validate_site_url", return_value=""), \
             patch.object(coordinator.ref001_probe, "probe_runtime", return_value=ref001()):
-            result = coordinator.coordinate(target_repo=Path(tmp), wp_path=Path(tmp) / "wordpress")
+            result = coordinator.coordinate(target_repo=Path(tmp).resolve(), wp_path=Path(tmp).resolve() / "wordpress")
 
         self.assertIn("THEME_SELECTION_MULTIPLE_CANDIDATES", result["binding_readiness"]["blockers"])
         self.assertEqual(result["binding_readiness"]["theme_consistency"], "UNDETERMINED")

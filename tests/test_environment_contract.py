@@ -116,14 +116,14 @@ class EnvironmentContractTests(unittest.TestCase):
 
     def test_valid_frozen_environment_contract_passes(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             policy_path = write_yaml(root, "policies/company-policy.yaml", company_policy())
             policy_hash = hashlib.sha256(policy_path.read_bytes()).hexdigest()
             self.assertEqual([], self.validate(root, frozen_contract(policy_path, policy_hash)))
 
     def test_required_profiles_must_match_company_policy(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             policy_path = write_yaml(root, "policies/company-policy.yaml", company_policy())
             contract = frozen_contract(policy_path, hashlib.sha256(policy_path.read_bytes()).hexdigest())
             contract["environment_contract"]["required_profiles"] = ["desktop-safari"]
@@ -132,7 +132,7 @@ class EnvironmentContractTests(unittest.TestCase):
 
     def test_each_required_profile_needs_explicit_effective_override(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             policy_path = write_yaml(root, "policies/company-policy.yaml", company_policy())
             contract = frozen_contract(policy_path, hashlib.sha256(policy_path.read_bytes()).hexdigest())
             contract["environment_contract"]["effective_overrides"] = [override("desktop-safari")]
@@ -141,7 +141,7 @@ class EnvironmentContractTests(unittest.TestCase):
 
     def test_canonical_profile_must_match_company_policy(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             policy_path = write_yaml(root, "policies/company-policy.yaml", company_policy())
             contract = frozen_contract(policy_path, hashlib.sha256(policy_path.read_bytes()).hexdigest())
             contract["environment_contract"]["canonical_profile"] = "ios-safari"
@@ -150,7 +150,7 @@ class EnvironmentContractTests(unittest.TestCase):
 
     def test_full_page_capture_must_cover_all_required_profiles(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             policy_path = write_yaml(root, "policies/company-policy.yaml", company_policy())
             contract = frozen_contract(policy_path, hashlib.sha256(policy_path.read_bytes()).hexdigest())
             contract["environment_contract"]["qa"]["full_page_capture"] = "CANONICAL_ONLY"
@@ -159,7 +159,7 @@ class EnvironmentContractTests(unittest.TestCase):
 
     def test_device_specific_full_reset_requires_company_permission(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             policy_path = write_yaml(root, "policies/company-policy.yaml", company_policy())
             contract = frozen_contract(policy_path, hashlib.sha256(policy_path.read_bytes()).hexdigest())
             contract["environment_contract"]["foundation"]["device_specific_full_reset"] = True

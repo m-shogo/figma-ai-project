@@ -130,12 +130,12 @@ class CaptureEnvironmentTests(unittest.TestCase):
 
     def test_complete_section_with_canonical_first_pass_passes(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             self.assertEqual([], self.validate(root, fixture(root)))
 
     def test_unknown_capture_environment_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             run = fixture(root)
             run["captures"]["first_pass"][0]["environment_profile_id"] = "unknown-device"
             errors = self.validate(root, run)
@@ -143,7 +143,7 @@ class CaptureEnvironmentTests(unittest.TestCase):
 
     def test_runtime_browser_must_match_profile(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             run = fixture(root)
             run["captures"]["first_pass"][0]["runtime"]["browser"] = "Chrome"
             errors = self.validate(root, run)
@@ -151,7 +151,7 @@ class CaptureEnvironmentTests(unittest.TestCase):
 
     def test_run_environment_pin_must_match_contract(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             run = fixture(root)
             run["coordination"]["required_environment_profiles"] = ["ios-safari"]
             errors = self.validate(root, run)
@@ -159,7 +159,7 @@ class CaptureEnvironmentTests(unittest.TestCase):
 
     def test_capture_must_be_deterministic(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             run = fixture(root)
             run["captures"]["first_pass"][0]["deterministic"] = False
             errors = self.validate(root, run)
@@ -167,7 +167,7 @@ class CaptureEnvironmentTests(unittest.TestCase):
 
     def test_complete_section_requires_canonical_first_pass(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             run = fixture(root)
             run["captures"]["first_pass"] = []
             errors = self.validate(root, run)
@@ -175,7 +175,7 @@ class CaptureEnvironmentTests(unittest.TestCase):
 
     def test_complete_integration_requires_full_page_for_all_required(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            root = Path(directory).resolve()
             run = fixture(root, scope="INTEGRATION")
             run["captures"]["verify"] = run["captures"]["verify"][:1]
             errors = self.validate(root, run)
