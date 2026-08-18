@@ -25,11 +25,16 @@
     (_, index) => `./assets/partner/partner-${String(index + 1).padStart(3, '0')}.png`
   );
 
+  // Figma footer logo group 839:4711 is 283.25×55. The original SVG is
+  // slightly larger than this connector can transfer as one text response, so
+  // it is reconstructed from its authored vector children in the same parent
+  // coordinate space. Percentage geometry keeps the exact composition when the
+  // existing 200×39 SP logo box scales it down.
   const footerLogoAssets = [
-    ['./assets/footer/budokan-logo-crest.svg', 'footer-logo-art__crest'],
-    ['./assets/footer/budokan-wordmark-1.svg', 'footer-logo-art__wordmark-1'],
-    ['./assets/footer/budokan-wordmark-2.svg', 'footer-logo-art__wordmark-2'],
-    ['./assets/footer/budokan-wordmark-3.svg', 'footer-logo-art__wordmark-3']
+    { src: './assets/footer/budokan-logo-crest.svg', className: 'footer-logo-art__crest', left: 0, top: 0, width: 20.007773, height: 100 },
+    { src: './assets/footer/budokan-wordmark-1.svg', className: 'footer-logo-art__wordmark-1', left: 26.213592, top: 34.924927, width: 73.786408, height: 59.263514 },
+    { src: './assets/footer/budokan-wordmark-2.svg', className: 'footer-logo-art__wordmark-2', left: 27.279359, top: 5, width: 71.625451, height: 83.199407 },
+    { src: './assets/footer/budokan-wordmark-3.svg', className: 'footer-logo-art__wordmark-3', left: 26.496369, top: 5.960083, width: 25.235088, height: 17.445391 }
   ];
 
   const localDateKey = (date) => {
@@ -85,19 +90,24 @@
     const art = document.createElement('span');
     art.className = 'footer-logo-art';
     art.setAttribute('aria-hidden', 'true');
+    art.style.cssText = 'position:relative;display:block;width:100%;height:100%;';
     let loaded = 0;
     let failed = false;
 
-    footerLogoAssets.forEach(([src, className]) => {
+    footerLogoAssets.forEach(({ src, className, left, top, width, height }) => {
       const image = document.createElement('img');
       image.src = src;
       image.alt = '';
       image.className = className;
       image.decoding = 'sync';
+      image.style.cssText = `position:absolute;display:block;max-width:none;left:${left}%;top:${top}%;width:${width}%;height:${height}%;`;
       image.addEventListener('load', () => {
         loaded += 1;
         document.documentElement.dataset.footerLogoAssetReady = String(loaded);
         if (!failed && loaded === footerLogoAssets.length) {
+          slot.style.display = 'block';
+          slot.style.fontSize = '0';
+          slot.style.letterSpacing = '0';
           slot.removeAttribute('data-asset-status');
           slot.dataset.assetStatus = 'ready';
           slot.classList.add('asset-ready');
