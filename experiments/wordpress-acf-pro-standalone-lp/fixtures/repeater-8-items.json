@@ -1,0 +1,20 @@
+{
+  "id": "repeater-8-items",
+  "qa_layer": "CMS_ROBUSTNESS",
+  "page": {"title": "Standalone LP Runtime Fixture", "slug": "standalone-lp"},
+  "fields": {
+    "hero_title": "A real CMS runtime before pixel confidence",
+    "hero_body": "Eight-item mutation for final-row and overflow robustness.",
+    "hero_cta": {"title": "Inspect editable cards", "url": "#cards", "target": ""},
+    "cards": [
+      {"id":"card-a","title":"Observe the reference","body":"Reference evidence first.","image":"blue","link":null},
+      {"id":"card-b","title":"Map CMS ownership","body":"Editor ownership first.","image":"mint","link":null},
+      {"id":"card-c","title":"Render through WordPress","body":"Real runtime render.","image":"violet","link":null},
+      {"id":"card-d","title":"Mutate without redesigning","body":"Mutation is separate from fidelity.","image":"coral","link":null},
+      {"id":"card-e","title":"Fifth item","body":"A second row must remain stable.","image":"gold","link":null},
+      {"id":"card-f","title":"Sixth item","body":"No horizontal overflow.","image":"sky","link":null},
+      {"id":"card-g","title":"Seventh item","body":"Incomplete final rows are runtime QA only.","image":"rose","link":null},
+      {"id":"card-h","title":"Eighth item","body":"Responsive layout remains editable.","image":"slate","link":null}
+    ]
+  }
+}

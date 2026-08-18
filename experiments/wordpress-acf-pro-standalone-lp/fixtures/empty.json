@@ -1,0 +1,11 @@
+{
+  "id": "empty",
+  "qa_layer": "CMS_ROBUSTNESS",
+  "page": {"title": "Standalone LP Runtime Fixture", "slug": "standalone-lp"},
+  "fields": {
+    "hero_title": "A real CMS runtime before pixel confidence",
+    "hero_body": "Empty repeater mutation for graceful fallback rendering.",
+    "hero_cta": {"title": "Inspect editable cards", "url": "#cards", "target": ""},
+    "cards": []
+  }
+}
