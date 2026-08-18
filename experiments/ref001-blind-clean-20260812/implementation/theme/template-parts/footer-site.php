@@ -11,8 +11,8 @@
         </div>
         <div>
             <div class="ref-footer__related">
-                <a href="<?php ref001_e(ref001_link_url('university-official')); ?>">千葉経済大学公式サイト</a>
-                <a href="<?php ref001_e(ref001_link_url('junior-college-official')); ?>">千葉経済短期大学公式サイト</a>
+                <a href="<?php ref001_e(ref001_link_url('university-official')); ?>" data-link-status="UNRESOLVED">千葉経済大学公式サイト</a>
+                <a href="<?php ref001_e(ref001_link_url('junior-college-official')); ?>" data-link-status="UNRESOLVED">千葉経済短期大学公式サイト</a>
             </div>
             <nav class="ref-footer__sns" aria-label="公式SNS">
                 <img class="ref-footer__sns-art" src="<?php ref001_e(ref001_asset_url('assets/icons/footer-sns-outline.svg')); ?>" alt="" aria-hidden="true">
