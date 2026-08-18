@@ -176,7 +176,7 @@ const contracts = {
   },
 };
 
-const px = value => Number.parseFloat(value || '0');
+const px = value => value === 'normal' ? 0 : Number.parseFloat(value || '0');
 const near = (actual, expected, tolerance = 0.06) => Math.abs(actual - expected) <= tolerance;
 
 const browser = await chromium.launch({ headless: true });
