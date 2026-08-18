@@ -136,6 +136,47 @@ Operational rule:
 
 That result is useful and honest for this project, but must be combined with prototype reactions (see above). Future projects with timeline/keyframe animation should route through `get_motion_context` and include easing/duration/timeline evidence in browser QA.
 
+### 10. `getStyledTextSegments()` prevents mixed-typography loss
+
+Verified across all **165** text nodes in the Budokan PC frame.
+
+Only one text node currently contains multiple typography segments, but it is visually important: the calendar month label `8月` uses different sizes inside one Figma text node:
+
+- `8` → Zen Kaku Gothic New Medium, 36px, line-height 100%, letter-spacing 10%
+- `月` → Zen Kaku Gothic New Medium, 22px, line-height 100%, letter-spacing 10%
+
+Operational rule:
+
+> Do not assume one Figma TEXT node equals one CSS typography style. When fidelity matters, inspect styled text segments before flattening typography into a single font-size/weight/line-height declaration.
+
+This is especially important for dates, prices, unit labels, superscripts, mixed weights, branded wordmarks, and Japanese/Latin mixed typography.
+
+## High-value capabilities to test on future suitable projects
+
+These are current official MCP capabilities but are not promoted by this Budokan run because the project does not provide the right evidence/use case.
+
+### Live Web → Figma capture (`generate_figma_design`)
+
+Potential use:
+
+- capture the implemented runtime back into Figma as editable layers
+- use it as a human-review/reverse-verification aid after browser implementation
+
+Guardrail:
+
+- never treat the captured implementation as the original design authority
+- source Figma remains Design Truth; browser runtime remains Runtime Truth
+- use the reverse capture only as an additional comparison/review surface
+
+### Design-system rule generation
+
+Current Figma MCP documentation exposes a `create_design_system_rules` prompt for generating agent-facing design-system/codebase guidance on clients that support MCP prompts.
+
+Potential use:
+
+- compare generated guidance with this repo's existing `AGENTS.md` / company project profiles
+- adopt only concrete missing rules; do not replace project-specific authority with generic generated rules
+
 ## Runtime/doc mismatches discovered
 
 The current documentation/type surface contains APIs that the present `use_figma` execution context does not support. Runtime behavior wins.
@@ -167,6 +208,7 @@ For a real Figma → Web implementation, prefer this order before inventing new 
    - bound variables
    - image hashes/fills
    - prototype reactions
+   - mixed text segments
    - exact special-case properties
 5. `download_assets` for normal asset inventory/raw sources.
 6. `exportAsync()` for exact authored composite/vector output when needed.
