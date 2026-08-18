@@ -4,7 +4,8 @@ import path from 'node:path';
 
 const widths=[320,360,375,390,430,767,768,769,1024,1200,1380];
 const fluidMobileWidths=new Set([375,390,430,767]);
-const intermediateDesktopWidths=new Set([768,769,1024,1200]);
+const intermediateDesktopWidths=new Set([]);
+const desktopLockWidths=new Set([768,769,1024,1200,1380]);
 const screenshotWidths=new Set([320,375,430,767,768,1024,1200,1380]);
 const outDir=process.env.REF001_CAPTURE_DIR||path.resolve('experiments/ref001-blind-clean-20260812/evidence/runtime');
 await fs.mkdir(outDir,{recursive:true});
@@ -42,7 +43,7 @@ for(const width of widths){
     await sleep(80);
   });
 
-  const metrics=await page.evaluate(({isIntermediateDesktop,isFluidMobile})=>{
+  const metrics=await page.evaluate(({isIntermediateDesktop,isFluidMobile,isDesktopLock})=>{
     const body=document.body,de=document.documentElement;
     const sw=()=>Math.round(Math.max(body.scrollWidth,de.scrollWidth));
     const rect=selector=>document.querySelector(selector)?.getBoundingClientRect()||null;
@@ -64,9 +65,16 @@ for(const width of widths){
     let fluidMobile=null;
     if(isFluidMobile){
       const expectedRail=Math.min(560,innerWidth-32);
-      const railSelectors=['.ref-mv__copy','.ref-education .ref-content','.ref-voice-item--open>.ref-content','.ref-messages__body','.ref-courses .ref-content'];
-      const rails=railSelectors.map(selector=>{const r=rect(selector);return{selector,width:r?+r.width.toFixed(1):null,left:r?+r.left.toFixed(1):null,right:r?+r.right.toFixed(1):null}});
-      const railFailures=rails.filter(x=>x.width===null||Math.abs(x.width-expectedRail)>1.5).map(x=>`${x.selector}:${x.width}`);
+      const messageRail=Math.min(343,innerWidth-32);
+      const railExpectations=[
+        ['.ref-mv__copy',expectedRail],
+        ['.ref-education .ref-content',expectedRail],
+        ['.ref-voice-item--open>.ref-content',expectedRail],
+        ['.ref-messages__body',messageRail],
+        ['.ref-courses .ref-content',expectedRail],
+      ];
+      const rails=railExpectations.map(([selector,expected])=>{const r=rect(selector);return{selector,expected,width:r?+r.width.toFixed(1):null,left:r?+r.left.toFixed(1):null,right:r?+r.right.toFixed(1):null}});
+      const railFailures=rails.filter(x=>x.width===null||Math.abs(x.width-x.expected)>1.5).map(x=>`${x.selector}:${x.width}/${x.expected}`);
 
       // A fluid outer rail must not erase authored child-component anchors.
       // 375px is the Figma reference: CTA Value is 240px and Shared CTA is
@@ -98,6 +106,7 @@ for(const width of widths){
 
       fluidMobile={
         expectedRail,
+        messageRail,
         rails,
         railFailures,
         componentAnchors:{
@@ -140,9 +149,6 @@ for(const width of widths){
         if(!inside(rec)||rec.width<cr.width*.8||rec.top<cr.top+135)courseCompositionFailures.push(`${index+1}:rec`);
       }
 
-      // The intermediate desktop MV must own the entire OPEN CAMPUS badge.
-      // Previously its orange shell survived while OPEN/CAMPUS and 開催中！
-      // fell outside/behind the badge; a pure overflow check could not see that.
       const mvBadge=rect('.ref-mv__oc');
       const mvBadgeTitle=rect('.ref-mv__oc b');
       const mvBadgeStatus=rect('.ref-mv__oc small');
@@ -159,8 +165,21 @@ for(const width of widths){
       if(mvBadgeTextFailures.length)layoutContractFailures.push(`mv-badge=${mvBadgeTextFailures.join('|')}`);
     }
 
-    return{bodyHeight:Math.round(Math.max(body.scrollHeight,de.scrollHeight)),scrollWidth:sw(),pageOverflowPx:Math.max(0,sw()-innerWidth),readableTextClipping:clipped,overflowElements,overflowDiagnostics,imageFailures,fluidMobile,intermediateDesktop,layoutContractFailures,primaryFonts:{zenKakuGothicNew:document.fonts.check('16px "Zen Kaku Gothic New"'),poppins:document.fonts.check('16px Poppins')},sections};
-  },{isIntermediateDesktop:intermediateDesktopWidths.has(width),isFluidMobile:fluidMobileWidths.has(width)});
+    let desktopLock=null;
+    if(isDesktopLock){
+      const pageRoot=document.querySelector('.ref-page');
+      const bodyMinWidth=getComputedStyle(body).minWidth;
+      const pageMinWidth=pageRoot?getComputedStyle(pageRoot).minWidth:'';
+      const failures=[];
+      if(bodyMinWidth!=='1280px')failures.push(`body-min-width=${bodyMinWidth}`);
+      if(pageMinWidth!=='1280px')failures.push(`page-min-width=${pageMinWidth}`);
+      if(sw()<1280)failures.push(`canvas-width=${sw()}`);
+      desktopLock={bodyMinWidth,pageMinWidth,scrollWidth:sw(),failures};
+      if(failures.length)layoutContractFailures.push(`desktop-lock=${failures.join('|')}`);
+    }
+
+    return{bodyHeight:Math.round(Math.max(body.scrollHeight,de.scrollHeight)),scrollWidth:sw(),pageOverflowPx:Math.max(0,sw()-innerWidth),readableTextClipping:clipped,overflowElements,overflowDiagnostics,imageFailures,fluidMobile,intermediateDesktop,desktopLock,layoutContractFailures,primaryFonts:{zenKakuGothicNew:document.fonts.check('16px "Zen Kaku Gothic New"'),poppins:document.fonts.check('16px Poppins')},sections};
+  },{isIntermediateDesktop:intermediateDesktopWidths.has(width),isFluidMobile:fluidMobileWidths.has(width),isDesktopLock:desktopLockWidths.has(width)});
   metrics.width=width;
   metrics.runtimeErrors=runtimeErrors;
   metrics.captureEnvironment={browser:'chromium',browserVersion,platform:process.platform,deviceScaleFactor:1,reducedMotion:'reduce',colorScheme:'light'};
@@ -170,10 +189,10 @@ for(const width of widths){
 }
 await browser.close();
 await fs.writeFile(path.join(outDir,'runtime-probes.json'),JSON.stringify(results,null,2)+'\n');
-const summary=results.map(x=>({width:x.width,bodyHeight:x.bodyHeight,pageOverflowPx:x.pageOverflowPx,readableTextClipping:x.readableTextClipping.length,imageFailures:x.imageFailures.length,layoutContractFailures:x.layoutContractFailures.length,fluidMobile:x.fluidMobile,intermediateDesktop:x.intermediateDesktop,primaryFonts:x.primaryFonts,runtimeErrors:x.runtimeErrors.length,captureEnvironment:x.captureEnvironment}));
+const summary=results.map(x=>({width:x.width,bodyHeight:x.bodyHeight,pageOverflowPx:x.pageOverflowPx,readableTextClipping:x.readableTextClipping.length,imageFailures:x.imageFailures.length,layoutContractFailures:x.layoutContractFailures.length,fluidMobile:x.fluidMobile,intermediateDesktop:x.intermediateDesktop,desktopLock:x.desktopLock,primaryFonts:x.primaryFonts,runtimeErrors:x.runtimeErrors.length,captureEnvironment:x.captureEnvironment}));
 console.log(JSON.stringify(summary,null,2));
 for(const r of results.filter(x=>x.pageOverflowPx>0)){console.log(`OVERFLOW DEBUG @ ${r.width}px`);console.log(JSON.stringify({elements:r.overflowElements,diagnostics:r.overflowDiagnostics},null,2))}
 for(const r of results.filter(x=>x.imageFailures.length)){console.log(`IMAGE DEBUG @ ${r.width}px`);console.log(JSON.stringify(r.imageFailures,null,2))}
-for(const r of results.filter(x=>x.layoutContractFailures.length)){console.log(`LAYOUT CONTRACT DEBUG @ ${r.width}px`);console.log(JSON.stringify({fluidMobile:r.fluidMobile,intermediateDesktop:r.intermediateDesktop,failures:r.layoutContractFailures},null,2))}
-const hardFailures=results.flatMap(x=>{const f=[];if(x.pageOverflowPx>0)f.push(`${x.width}:overflow=${x.pageOverflowPx}`);if(x.imageFailures.length)f.push(`${x.width}:imageFailures=${x.imageFailures.length}`);if(x.runtimeErrors.length)f.push(`${x.width}:runtimeErrors=${x.runtimeErrors.length}`);if(x.layoutContractFailures.length)f.push(`${x.width}:layout=${x.layoutContractFailures.join('|')}`);return f});
+for(const r of results.filter(x=>x.layoutContractFailures.length)){console.log(`LAYOUT CONTRACT DEBUG @ ${r.width}px`);console.log(JSON.stringify({fluidMobile:r.fluidMobile,intermediateDesktop:r.intermediateDesktop,desktopLock:r.desktopLock,failures:r.layoutContractFailures},null,2))}
+const hardFailures=results.flatMap(x=>{const f=[];if(x.width<768&&x.pageOverflowPx>0)f.push(`${x.width}:overflow=${x.pageOverflowPx}`);if(x.imageFailures.length)f.push(`${x.width}:imageFailures=${x.imageFailures.length}`);if(x.runtimeErrors.length)f.push(`${x.width}:runtimeErrors=${x.runtimeErrors.length}`);if(x.layoutContractFailures.length)f.push(`${x.width}:layout=${x.layoutContractFailures.join('|')}`);return f});
 if(hardFailures.length){console.error('Runtime probe hard failures:',hardFailures.join(', '));process.exitCode=1}
