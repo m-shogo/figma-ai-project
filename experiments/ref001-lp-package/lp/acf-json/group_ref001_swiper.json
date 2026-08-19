@@ -1,0 +1,88 @@
+{
+  "key": "group_ref001_swiper",
+  "title": "REF-001 先輩たちの声 (Swiper / Messages)",
+  "fields": [
+    {
+      "key": "field_ref001_swiper_slides",
+      "label": "Swiper slides",
+      "name": "ref001_swiper_slides",
+      "type": "repeater",
+      "required": 0,
+      "min": 0,
+      "max": 0,
+      "layout": "block",
+      "button_label": "Add slide",
+      "collapsed": "field_ref001_swiper_profile",
+      "instructions": "力をつけ活躍する先輩たち Swiper carousel. Editors may add, remove, and reorder slides. PC and SP quote copy are kept as two separate fields because the current markup genuinely renders two distinct, manually-authored line-break variants (not an invented split). Slide count / current-index label / progress bar all derive from this repeater at render time.",
+      "sub_fields": [
+        {
+          "key": "field_ref001_swiper_photo",
+          "label": "Slide photo",
+          "name": "photo",
+          "type": "image",
+          "required": 0,
+          "return_format": "array",
+          "preview_size": "medium",
+          "library": "all",
+          "parent_repeater": "field_ref001_swiper_slides"
+        },
+        {
+          "key": "field_ref001_swiper_quote_pc",
+          "label": "Quote (PC line breaks)",
+          "name": "quote_pc",
+          "type": "textarea",
+          "required": 0,
+          "rows": 3,
+          "new_lines": "",
+          "instructions": "One authored line per row; rendered as one <span> per line for the PC layout.",
+          "parent_repeater": "field_ref001_swiper_slides"
+        },
+        {
+          "key": "field_ref001_swiper_quote_sp",
+          "label": "Quote (SP line breaks)",
+          "name": "quote_sp",
+          "type": "textarea",
+          "required": 0,
+          "rows": 3,
+          "new_lines": "",
+          "instructions": "One authored line per row; rendered as one <span> per line for the SP layout.",
+          "parent_repeater": "field_ref001_swiper_slides"
+        },
+        {
+          "key": "field_ref001_swiper_profile",
+          "label": "Profile line",
+          "name": "profile",
+          "type": "text",
+          "required": 0,
+          "parent_repeater": "field_ref001_swiper_slides"
+        },
+        {
+          "key": "field_ref001_swiper_school",
+          "label": "School line",
+          "name": "school",
+          "type": "text",
+          "required": 0,
+          "parent_repeater": "field_ref001_swiper_slides"
+        }
+      ]
+    }
+  ],
+  "location": [
+    [
+      {
+        "param": "page_template",
+        "operator": "==",
+        "value": "page-ref001.php"
+      }
+    ]
+  ],
+  "menu_order": 1,
+  "position": "normal",
+  "style": "default",
+  "label_placement": "top",
+  "instruction_placement": "label",
+  "hide_on_screen": [],
+  "active": true,
+  "description": "REF-001 Swiper/Messages section (力をつけ活躍する先輩たち). Stable keys are intentional. Rendered by template-parts/ref001/messages.php with a fixture-content fallback so empty/missing ACF data never triggers a PHP warning. Arrow color/hit-area and Swiper JS init are unchanged, Human-Reviewed and frozen.",
+  "show_in_rest": 0
+}
