@@ -571,7 +571,7 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 
 		<header class="p-courses__head">
 			<span class="c-kicker"># COURSES</span>
-			<h2 class="c-heading"><span class="c-heading__text">未来につながる<strong>７つのコース</strong></span></h2>
+			<h2 class="c-heading"><span class="c-heading__text">未来につながる<strong>７</strong>つのコース</span></h2>
 		</header>
 
 		<ul class="p-courses__list">
