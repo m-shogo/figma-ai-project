@@ -7,11 +7,10 @@ THEME = ROOT / "experiments" / "ref001-blind-clean-20260812" / "implementation" 
 LOGO = THEME / "assets" / "icons" / "university-logo-outlined.svg"
 HEADER = THEME / "template-parts" / "header-site.php"
 FOOTER = THEME / "template-parts" / "footer-site.php"
-HEADER_CSS = THEME / "v2-header-polish.css"
-FOOTER_CSS = THEME / "v2-visual-polish.css"
+CSS = THEME / "assets" / "css" / "ref001.css"
 
 
-class Ref001V2LogoContractTest(unittest.TestCase):
+class Ref001LogoContractTest(unittest.TestCase):
     def test_shared_logo_is_outlined_svg(self):
         svg = LOGO.read_text(encoding="utf-8")
         lower = svg.lower()
@@ -37,13 +36,12 @@ class Ref001V2LogoContractTest(unittest.TestCase):
         self.assertNotIn("ref-footer-logo__en", footer)
 
     def test_figma_reference_dimensions_remain_explicit(self):
-        header_css = HEADER_CSS.read_text(encoding="utf-8")
-        footer_css = FOOTER_CSS.read_text(encoding="utf-8")
+        css = CSS.read_text(encoding="utf-8")
         footer = FOOTER.read_text(encoding="utf-8")
 
-        self.assertIn(".ref-header-logo{width:187px;height:47px}", header_css)
-        self.assertIn(".ref-header-logo{width:140px;height:35px}", header_css)
-        self.assertIn(".ref-footer-logo{display:flex;align-items:flex-start;width:240px;height:61px", footer_css)
+        self.assertIn(".ref-header-logo{width:187px;height:47px}", css)
+        self.assertIn(".ref-header-logo{width:140px;height:35px}", css)
+        self.assertIn(".ref-footer-logo{display:flex;align-items:flex-start;width:240px;height:61px", css)
         self.assertIn('width="240" height="61"', footer)
 
 

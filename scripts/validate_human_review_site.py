@@ -24,6 +24,13 @@ REQUIRED_SECTIONS = [
     "cta-value",
     "footer",
 ]
+CANONICAL_PREVIEW_CSS = "assets/css/ref001.css"
+LEGACY_PREVIEW_CSS = {
+    "style.css",
+    "responsive-continuity.css",
+    "visual-repair.css",
+    "human-review-repair.css",
+}
 
 
 class StylesheetHrefParser(HTMLParser):
@@ -58,8 +65,11 @@ def local_stylesheet_hrefs(html: str) -> list[str]:
 def validate_preview_stylesheets(preview_root: Path, html: str, label: str) -> list[str]:
     errors: list[str] = []
     hrefs = local_stylesheet_hrefs(html)
-    if not hrefs:
-        return [f"{label} preview must reference at least one local stylesheet"]
+    if hrefs != [CANONICAL_PREVIEW_CSS]:
+        errors.append(
+            f"{label} preview must load exactly canonical CSS {CANONICAL_PREVIEW_CSS}; got {hrefs}"
+        )
+
     for href in hrefs:
         parsed = urlsplit(href)
         relative = Path(parsed.path)
@@ -68,6 +78,11 @@ def validate_preview_stylesheets(preview_root: Path, html: str, label: str) -> l
             continue
         if not (preview_root / relative).is_file():
             errors.append(f"{label} preview stylesheet referenced by HTML is missing: {href}")
+
+    for legacy in sorted(LEGACY_PREVIEW_CSS):
+        if (preview_root / legacy).exists():
+            errors.append(f"{label} preview still publishes legacy CSS: {legacy}")
+
     return errors
 
 
@@ -89,14 +104,13 @@ def validate_site(root: Path) -> list[str]:
         latest_review / "review-assist.js",
         latest_review / "manifest.json",
         latest_preview / "index.html",
-        latest_preview / "style.css",
-        latest_preview / "responsive-continuity.css",
-        latest_preview / "visual-repair.css",
+        latest_preview / CANONICAL_PREVIEW_CSS,
         run_review / "index.html",
         run_review / "review-assist.css",
         run_review / "review-assist.js",
         run_review / "manifest.json",
         run_preview / "index.html",
+        run_preview / CANONICAL_PREVIEW_CSS,
     ]
     for path in required_files:
         if not path.is_file():

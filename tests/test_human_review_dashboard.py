@@ -21,7 +21,7 @@ class HumanReviewDashboardBuildTests(unittest.TestCase):
             self.assertTrue((site / "ref-001/latest/review/review-assist.js").is_file())
             self.assertTrue((site / "ref-001/latest/review/review-assist.css").is_file())
             self.assertTrue((site / "ref-001/latest/preview/index.html").is_file())
-            self.assertTrue((site / "ref-001/latest/preview/human-review-repair.css").is_file())
+            self.assertTrue((site / "ref-001/latest/preview/assets/css/ref001.css").is_file())
             self.assertTrue((site / "ref-001/latest/preview/assets/images/dummy/image-pc.svg").is_file())
             self.assertTrue((site / "ref-001/latest/preview/assets/images/dummy/image-sp.svg").is_file())
             self.assertTrue(
@@ -75,28 +75,20 @@ class HumanReviewDashboardBuildTests(unittest.TestCase):
             site = builder.build_site(output=Path(directory).resolve() / "site")
             preview = (site / "ref-001/latest/preview/index.html").read_text(encoding="utf-8")
             self.assertIn("data-ref001-page", preview)
+            self.assertIn('href="assets/css/ref001.css"', preview)
+            self.assertIn('src="assets/js/ref001-interactions.js"', preview)
             self.assertNotIn("Human Visual Review", preview)
-            self.assertIn("Automated Final Preview", preview)
-            self.assertIn("human-review-repair.css", preview)
+            self.assertNotIn("human-review-repair.css", preview)
+            self.assertNotIn("v2-", preview)
 
-    def test_preview_publishes_every_stylesheet_emitted_by_preview_php(self) -> None:
+    def test_preview_publishes_only_canonical_stylesheet(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             site = builder.build_site(output=Path(directory).resolve() / "site")
             preview_root = site / "ref-001/latest/preview"
             preview = (preview_root / "index.html").read_text(encoding="utf-8")
             stylesheets = builder.local_preview_stylesheets(preview)
-            self.assertGreater(len(stylesheets), 4)
-            for expected in (
-                "v2-visual-polish.css",
-                "v2-continuity-fixes.css",
-                "v2-hotspot-repair.css",
-                "v2-footer-sns-position.css",
-                "v2-speech-fluid-experiment.css",
-                "v2-speech-variable-layout.css",
-            ):
-                self.assertIn(expected, stylesheets)
-            for stylesheet in stylesheets:
-                self.assertTrue((preview_root / stylesheet).is_file(), stylesheet)
+            self.assertEqual(["assets/css/ref001.css"], stylesheets)
+            self.assertTrue((preview_root / "assets/css/ref001.css").is_file())
             self.assertEqual([], validator.validate_site(site))
 
     def test_preview_uses_swappable_pc_sp_images_focused_svg_assets_and_anchor_ctas(self) -> None:

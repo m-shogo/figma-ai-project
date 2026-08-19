@@ -141,6 +141,41 @@ Deleting the metadata would have made CI green but lost the improvement. Instead
 14. Run responsive/runtime QA, exact no-visual-diff checks for structural refactors, and interaction QA.
 15. Record human repair separately; promote a rule only after it repeats across multiple real projects.
 
+## Human hand-tuning feedback — final REF-001 review
+
+This section records direct Human Review corrections. These are high-value signals because they identify places where automated gates passed but a person comparing the implementation still preferred another already-existing implementation treatment. Treat each item as REF-001 evidence (`E1`), not as an automatic global rule.
+
+### Courses: 「こんな人にオススメ！」
+
+- **Symptom:** the canonical SVG reconstruction of the recommendation bubble was less visually faithful than the earlier V2 CSS-drawn bubble.
+- **Human truth/reference:** V2 is the closest approved implementation. Its local geometry is a `189×49` white pill, `1px #777` border, and a `12×12` rotated CSS tail.
+- **Implementation cause:** canonicalization favored a newer explicit vector asset even though the older CSS geometry already matched the visual target better.
+- **Why automation missed it:** whole-page/typography gates do not strongly isolate a small decorative silhouette, and “more explicit asset” was implicitly treated as an improvement even when it was not visually better.
+- **Minimal fix:** restore only the V2 CSS bubble treatment; leave course card layout and surrounding geometry unchanged.
+- **Prevention:** structural cleanup must preserve the best human-approved visual treatment. For small local shapes, compare current and prior implementations instead of assuming the newest/vectorized representation is more faithful.
+
+### Main Visual: 「大学の雰囲気を体験！」
+
+- **Symptom:** the open-campus kicker was slightly shifted, especially on SP.
+- **Human truth/reference:** the V3 positioning is closest: center-anchor with `left:50%` + `translateX(-50%)`, `top:9px` on PC and `top:-20px` on SP.
+- **Implementation cause:** the canonical version converted the composition into fixed left offsets (`27px` / `-19px`), allowing small drift from the circular CTA center.
+- **Why automation missed it:** typography values and macro section bounds remained valid, while a small overlay alignment error is easy to dilute in a full-page diff.
+- **Minimal fix:** change only the kicker anchor/offset; do not alter the open-campus circle or MV layout.
+- **Prevention:** when a badge is intentionally centered over a symmetric base shape, preserve center-anchor semantics from the best reference instead of replacing them with hard left coordinates.
+
+### Messages / Swiper navigation
+
+- **Symptom:** the previous arrow looked disabled because it was gray at 50% opacity, and both arrow buttons had a hit target effectively close to the `14×13` visible icon.
+- **Human truth/reference:** left and right arrows should share the same active purple `#8473AA`; the clickable/tappable area should be materially larger without changing the visible Figma geometry.
+- **Implementation cause:** the left SVG carried a disabled-looking legacy fill, while the button inherited almost no practical hit-area beyond the icon.
+- **Why automation missed it:** existing interaction QA verified state/behavior but did not score affordance symmetry or pointer/touch target ergonomics.
+- **Minimal fix:** make the left SVG match the right and enlarge only the invisible button hit area.
+- **Prevention:** interaction QA should explicitly inspect symmetric controls for equal visual affordance and practical hit targets (roughly 40px-class where layout permits) while preserving the authored visible geometry.
+
+### Promotion rule for manual feedback
+
+Manual corrections are not “one-off noise”. They are stored as structured evidence with `symptom → truth/reference → cause → missed gate → minimal fix → prevention`. If the same failure mode repeats on REF-002 or later projects, promote it into the shared FIRST PASS / QA rules. If it does not repeat, keep it as project-local evidence rather than overfitting the global system.
+
 ## Promotion status
 
 This is REF-001 evidence (E1), not yet a universal company rule. Repeat on REF-002 and later real projects. Promote only the parts that measurably reduce implementation time, repair count, final diff, or human editing cost without reducing fidelity.
