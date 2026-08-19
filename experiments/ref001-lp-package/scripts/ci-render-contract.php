@@ -28,6 +28,30 @@ function assert_true(bool $condition, string $message): void
     echo "PASS: $message\n";
 }
 
+// ---------------------------------------------------------------------
+// Asset completeness: every relative url(...) in lp/css/ref001.css must
+// resolve to a real file under lp/, so nothing referenced by the CSS
+// (background icons, fonts-not-needed-here, etc.) is silently missing.
+// ---------------------------------------------------------------------
+
+$cssPath = $package . '/lp/css/ref001.css';
+$css = file_get_contents($cssPath);
+assert_true($css !== false, 'lp/css/ref001.css is readable');
+
+preg_match_all("/url\\('(\\.\\.\\/[^']+)'\\)/", $css, $urlMatches);
+$missingCssAssets = [];
+foreach ($urlMatches[1] as $relativeUrl) {
+    if (str_starts_with($relativeUrl, 'http')) {
+        continue;
+    }
+    $resolved = realpath($package . '/lp/css/' . $relativeUrl);
+    if ($resolved === false) {
+        $missingCssAssets[] = $relativeUrl;
+    }
+}
+assert_true(count($urlMatches[1]) > 0, 'lp/css/ref001.css has at least one relative url() to check');
+assert_true(empty($missingCssAssets), 'every relative url() in lp/css/ref001.css resolves to a real file: ' . implode(', ', $missingCssAssets));
+
 function extract_section(string $html, string $class): ?string
 {
     if (preg_match('/<section class="' . preg_quote($class, '/') . '".*?<\/section>/s', $html, $m)) {
