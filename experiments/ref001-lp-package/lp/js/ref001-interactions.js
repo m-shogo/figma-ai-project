@@ -54,11 +54,14 @@
 	function loadSwiper() {
 		if (window.Swiper) return Promise.resolve(window.Swiper);
 
-		if (!document.querySelector('link[data-lp-swiper]')) {
-			const style = document.createElement('link');
-			style.rel = 'stylesheet';
-			style.href = 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css';
+		// Swiper の CSS は「vendor 層」として読み込みます。
+		// 普通に <link> で読むと層の外になり、こちらの CSS より強くなって
+		// .swiper-slide の display などを上書きできなくなるためです。
+		if (!document.querySelector('style[data-lp-swiper]')) {
+			const style = document.createElement('style');
 			style.dataset.lpSwiper = 'true';
+			style.textContent =
+				"@import url('https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css') layer(vendor);";
 			document.head.append(style);
 		}
 

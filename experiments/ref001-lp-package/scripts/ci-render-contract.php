@@ -57,18 +57,25 @@ check( empty( $missing ), 'CSS の相対 url() がすべて実ファイルに解
    =========================================================== */
 
 /* 幅で切り替えている @media だけを見る。
-   prefers-reduced-motion などの「幅と関係ない」クエリは対象外。 */
+   prefers-reduced-motion などの「幅と関係ない」クエリは対象外。
+
+   方針: スマホとPCの2つだけ。素の指定がスマホで、PC は min-width: 768px。
+   モバイルファーストなので max-width の @media は書かない。 */
 preg_match_all( '/@media[^{]+/', $css, $mq );
 $bad_bp = array();
 foreach ( array_unique( $mq[0] ) as $q ) {
 	if ( strpos( $q, 'width' ) === false ) {
 		continue;
 	}
-	if ( ! preg_match( '/\b(767|768)px\b/', $q ) ) {
+	if ( ! preg_match( '/min-width:\s*768px/', $q ) ) {
 		$bad_bp[] = trim( $q );
 	}
 }
-check( empty( $bad_bp ), '幅で切り替える @media は 767/768px だけ（中間ブレークポイントなし）' . ( $bad_bp ? ': ' . implode( ' | ', $bad_bp ) : '' ) );
+check(
+	empty( $bad_bp ),
+	'幅で切り替える @media は min-width: 768px だけ（モバイルファースト / 中間ブレークポイントなし）'
+		. ( $bad_bp ? ': ' . implode( ' | ', $bad_bp ) : '' )
+);
 check( ! preg_match( '/\b(1299|1300)px\b/', $css ), '廃止済みの 1299/1300px が残っていない' );
 
 
@@ -100,23 +107,51 @@ check( empty( $bad_clamp ), 'clamp() の最小値が最大値を超えていな�
 
 
 /* ===========================================================
-   2c. CSS — position: absolute が増えていないか
+   2c. CSS — position: absolute を使ってよい場所だけに限定できているか
 
-   レイアウトは flex / grid で組む方針です。absolute を使ってよいのは
-   「箱の外へはみ出すあしらい」だけ、と決めています。
-
-     1. 吹き出しの尻尾（.p-voice__balloon の三角）
-     2. フッター右下のページトップボタン
-
-   増えていたら「grid の同じマス」「マイナスマージン」
-   「justify-self」で組めないか検討してください。
+   レイアウト（並べる・そろえる）は flex / grid で組む方針です。
+   absolute を使ってよいのは「箱の外へはみ出すあしらい」だけ、と決めています。
+   下のリストに無いセレクタで absolute が出てきたら、
+   「grid の同じマス」「マイナスマージン」「justify-self」で
+   組み直せないか検討してください。
    =========================================================== */
 
+$absolute_allowlist = array(
+	'p-voice__balloon' => '吹き出しの尻尾（箱の外へ出す三角）',
+	'p-footer__pagetop' => 'フッター右下のページトップボタン',
+	'p-mv__oc'          => 'OPEN CAMPUS バッジ（写真へ重ねる）',
+	'p-mv__oc-balloon'  => 'バッジの吹き出し',
+	'p-mv__oc-arrow'    => 'バッジの矢印',
+);
+
 $css_without_comments = preg_replace( '#/\*.*?\*/#s', '', $css );
-$absolute_count = preg_match_all( '/position\s*:\s*absolute/', $css_without_comments );
+
+/* 「直前のセレクタ行 … position: absolute」を拾って、許可リストと突き合わせる */
+$absolute_users = array();
+$lines = explode( "\n", $css_without_comments );
+$current_selector = '';
+foreach ( $lines as $line ) {
+	if ( strpos( $line, '{' ) !== false ) {
+		$current_selector = trim( strtok( $line, '{' ) );
+	}
+	if ( preg_match( '/position\s*:\s*absolute/', $line ) ) {
+		$absolute_users[] = $current_selector;
+	}
+}
+
+$unexpected = array();
+foreach ( $absolute_users as $sel ) {
+	$ok = false;
+	foreach ( array_keys( $absolute_allowlist ) as $allowed ) {
+		if ( strpos( $sel, $allowed ) !== false ) { $ok = true; break; }
+	}
+	if ( ! $ok ) { $unexpected[] = $sel; }
+}
+
 check(
-	$absolute_count === 2,
-	"position: absolute は2箇所だけ（吹き出しの尻尾 / ページトップボタン）。現在 {$absolute_count} 箇所"
+	empty( $unexpected ),
+	'position: absolute は「あしらい」だけに限定されている（' . count( $absolute_users ) . '箇所）'
+		. ( $unexpected ? ' — 許可リスト外: ' . implode( ' / ', $unexpected ) : '' )
 );
 check(
 	! preg_match( '/:hover[^{]*\{[^}]*position\s*:\s*absolute/', $css_without_comments ),

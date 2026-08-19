@@ -1,5 +1,5 @@
 @charset "UTF-8";
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@600;900&family=Poppins:wght@400;500;600&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap');
 
 /* ==========================================================================
    千葉経済大学 LP スタイル
@@ -10,7 +10,7 @@
    そのブロックの中に、そのセクションの指定が全部入っています。
 
    ── このファイルの並び ──────────────────────────────────
-   1. カスケード層の宣言   どの指定が優先されるかの順番
+   1. カスケード層の宣言   どの指定が優先されるかの順番（vendor が最弱）
    2. デザイントークン     色 / 文字サイズ / 余白 の設定値
    3. reset                ブラウザ標準の打ち消し
    4. base                 ページ全体の下ごしらえ
@@ -21,9 +21,13 @@
    ── 書き方のルール ──────────────────────────────────────
    ・高さ・幅を決め打ちしない。中身と余白（padding / gap）で決める
    ・並べるのは flex か grid
-   ・position: absolute はこのファイル全体で1箇所だけ
-     （.p-voice__balloon の吹き出しの尻尾。箱の外へ出す三角なのでここだけ例外）
-     重ねたい・ずらしたいときは代わりに次を使う:
+   ・position: absolute は「箱の外へはみ出すあしらい」だけに使う。
+     並べる・そろえるといったレイアウトには使わない。
+     使ってよいのは次の5つだけ（CI で見張っています）:
+       .p-voice__balloon::before/after  吹き出しの尻尾
+       .p-footer__pagetop               フッター右下のボタン
+       .p-mv__oc / __oc-balloon / __oc-arrow   OPEN CAMPUS バッジ一式
+     レイアウトで重ねたい・ずらしたいときは代わりに次を使う:
        重ねる     → grid の同じマス（grid-area: 1 / 1）
        またがせる → マイナスマージン
        端に寄せる → justify-self / align-self
@@ -33,8 +37,9 @@
      途中でカクッと変わる幅を作らない
    ・列数は repeat(auto-fit, minmax(...)) で幅なりに決める。
      「何px以上なら何列」という指定は書かない
-   ・ブレークポイントは 768px の1本だけ。
-     しかもそこで変えるのは「並びの向きそのものが変わる箇所」に限る
+   ・スマホとPCの2つだけ。素の指定がスマホ、@media (min-width: 768px) がPC。
+     モバイルファーストなので max-width の @media は書かない。
+     しかも 768px で変えるのは「並びの向きそのものが変わる箇所」に限る
      （メインビジュアルの重ね／積み、学生の声の横／縦 など）
    ========================================================================== */
 
@@ -47,7 +52,14 @@
    といった事故が起きません。
    ========================================================================== */
 
-@layer reset, base, layout, components, sections;
+@layer vendor, reset, base, layout, components, sections;
+
+/* vendor を先頭に置いているのは Swiper のためです。
+   CDN から読み込む CSS は「層の外」に入るため、そのままだと
+   層に入れたこちらの指定より強くなり、.swiper-slide などを
+   上書きできません（display:grid が効かない等）。
+   lp/js/ref001-interactions.js 側で Swiper の CSS を
+   @import ... layer(vendor) として読み込み、この順番に従わせています。 */
 
 
 /* ==========================================================================
@@ -77,19 +89,56 @@
 		--color-white:     #fff;
 
 		/* --- フォント --- */
-		--font-jp: 'Zen Kaku Gothic New', 'Hiragino Sans', 'Noto Sans JP', sans-serif;
-		--font-en: 'Poppins', Arial, sans-serif;
+		--font-jp:    'Zen Kaku Gothic New', 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+		--font-en:    'Poppins', Arial, sans-serif;
+		--font-serif: 'Noto Serif JP', 'Yu Mincho', 'Hiragino Mincho ProN', serif;  /* 引用符 “ ” 専用 */
 
-		/* --- 文字サイズ（375px 〜 1380px で滑らかに変化） --- */
-		--fs-small:      clamp(0.75rem,  0.7034rem + 0.199vw, 0.875rem);   /* 12 → 14 */
-		--fs-body:       clamp(0.875rem, 0.8284rem + 0.199vw, 1rem);       /* 14 → 16 */
-		--fs-lead:       clamp(0.8125rem, 0.7192rem + 0.398vw, 1.0625rem); /* 13 → 17 */
-		--fs-card-title: clamp(1rem,     0.9067rem + 0.398vw, 1.25rem);    /* 16 → 20 */
-		--fs-heading:    clamp(1rem,     0.6735rem + 1.393vw, 1.875rem);   /* 16 → 30 */
-		--fs-heading-em: clamp(1.3125rem, 0.8228rem + 2.09vw, 2.625rem);   /* 21 → 42 */
-		--fs-catch-lead: clamp(2.5rem,   1.3806rem + 4.776vw, 5.5rem);     /* 40 → 88 */
-		--fs-catch-mid:  clamp(1.3125rem, 0.7761rem + 2.289vw, 2.75rem);   /* 21 → 44 */
-		--fs-catch-last: clamp(2rem,     1.0905rem + 3.881vw, 4.4375rem);  /* 32 → 71 */
+		/* --- 文字サイズ ---
+		   デザイン（Figma）では、本文まわりの多くが SP と PC で同じサイズです。
+		   大きく変わるのは見出しなど一部だけなので、
+		   「固定するもの」と「変化させるもの」を分けています。
+		   数値は Figma の SP 値 → PC 値。 */
+
+		/* 固定（SP と PC で同じ） */
+		--fs-small:        0.875rem;  /* 14  ラベル / 補足 */
+		--fs-body:         1rem;      /* 16  本文 */
+		--fs-kicker:       1.25rem;   /* 20  # REASON などのタグ */
+		--fs-card-title:   1.125rem;  /* 18  カード見出し / EDUバッジ */
+		--fs-course-title: 1.25rem;   /* 20  コース名 */
+		--fs-course-check: 0.8125rem; /* 13  コースのチェック項目 */
+		--fs-tile:         1.375rem;  /* 22  丸いリンク */
+		--fs-toggle:       1.125rem;  /* 18  もっと見る */
+
+		/* 変化する（375px → 1380px で滑らかに） */
+		--fs-heading:      clamp(1.5rem, 1.3601rem + 0.597vw, 1.875rem);     /* 24 → 30 */
+		--fs-heading-em:   clamp(2rem, 1.7668rem + 0.995vw, 2.625rem);       /* 32 → 42 */
+		--fs-edu-intro:    clamp(1.25rem, 1.1567rem + 0.398vw, 1.5rem);      /* 20 → 24 */
+		--fs-edu-card:     clamp(1.125rem, 1.0784rem + 0.199vw, 1.25rem);    /* 18 → 20 */
+		--fs-edu-check:    clamp(0.875rem, 0.8517rem + 0.100vw, 0.9375rem);  /* 14 → 15 */
+		--fs-cta-title:    clamp(1.5rem, 1.3134rem + 0.796vw, 2rem);         /* 24 → 32 */
+		--fs-voice-name:   clamp(1rem, 0.8134rem + 0.796vw, 1.5rem);         /* 16 → 24 */
+		--fs-voice-advice: clamp(1rem, 0.9534rem + 0.199vw, 1.125rem);       /* 16 → 18 */
+		--fs-msg-quote:    clamp(1.375rem, 1.2351rem + 0.597vw, 1.75rem);    /* 22 → 28 */
+		--fs-msg-counter:  clamp(1.25rem, 1.1567rem + 0.398vw, 1.5rem);      /* 20 → 24 */
+		--fs-note:         clamp(0.875rem, 0.8284rem + 0.199vw, 1rem);       /* 14 → 16  住所 / 所属 */
+		--fs-tile-label:   clamp(1rem, 0.8601rem + 0.597vw, 1.375rem);       /* 16 → 22  丸リンクの文字 */
+		--fs-copyright:    clamp(0.75rem, 0.7034rem + 0.199vw, 0.875rem);    /* 12 → 14 */
+		--logo-width:      clamp(8.75rem, 7.6539rem + 4.677vw, 11.6875rem);  /* 140 → 187 */
+		/* メインビジュアルの見出し。
+		   ここだけ 320px 起点にしています。写真へ重ねる大きな文字なので、
+		   狭い端末では 375px より下でも縮まないと折り返してしまうためです
+		   （元デザインも SP では vw 基準で縮めていました）。 */
+		--fs-mv-quote:   clamp(5.3125rem, 4.6710rem + 3.208vw, 7.4375rem);  /* 85 → 119 引用符 */
+		--fs-mv-word:    clamp(3.5rem,    3.1038rem + 1.981vw, 4.8125rem);  /* 56 →  77 ケイザイ */
+		--fs-mv-mid:     clamp(1.75rem,   1.4481rem + 1.509vw, 2.75rem);    /* 28 →  44 って、想像以上に */
+		--fs-mv-last:    clamp(3.125rem,  2.7288rem + 1.981vw, 4.4375rem);  /* 50 →  71 おもしろい。 */
+		--fs-mv-lead:    clamp(0.8125rem, 0.6804rem + 0.660vw, 1.25rem);    /* 13 →  20 説明文 */
+
+		/* OPEN CAMPUS バッジ */
+		--oc-size:       clamp(10.625rem, 8.9925rem + 6.965vw, 15rem);     /* 170 → 240 */
+		--oc-title:      clamp(1.625rem,  1.4851rem + 0.597vw, 2rem);      /*  26 →  32 */
+		--oc-note:       clamp(1rem,      0.8601rem + 0.597vw, 1.375rem);  /*  16 →  22 */
+		--oc-arrow:      clamp(2.25rem,   1.9701rem + 1.194vw, 3rem);      /*  36 →  48 */
 
 		/* --- レイアウト --- */
 		--container:     1160px;  /* 本文の最大幅 */
@@ -213,7 +262,7 @@
 		padding: .2em .5em;
 		background: var(--color-yellow);
 		font-family: var(--font-en);
-		font-size: var(--fs-card-title);
+		font-size: var(--fs-kicker);
 		font-weight: 400;
 		line-height: 1;
 		letter-spacing: .05em;
@@ -308,7 +357,7 @@
 	.c-checklist {
 		display: grid;
 		gap: .7em;
-		font-size: var(--fs-small);
+		font-size: var(--fs-edu-check);
 		line-height: 1.5;
 
 		& li {
@@ -322,6 +371,12 @@
 			color: var(--color-pink);
 			font-weight: 700;
 		}
+	}
+
+	/* コースの「こんな人にオススメ！」の中だけ、少し小さく詰める */
+	.c-checklist--pink {
+		font-size: var(--fs-course-check);
+		line-height: 1.4;
 	}
 }
 
@@ -347,13 +402,25 @@
 		padding-block: clamp(.625rem, .4rem + 1vw, 1rem);
 	}
 
-	& .p-header__logo img {
-		width: clamp(7.5rem, 5rem + 6.5vw, 12.5rem);   /* 120 → 200 */
+	& .p-header__logo {
+		flex: none;   /* ボタンに押されて潰れないように */
 	}
 
+	& .p-header__logo img {
+		width: var(--logo-width);
+	}
+
+	/* SP ではボタンを出さない（元デザインの仕様。ロゴだけの細いヘッダー）。
+	   代わりに画面下部の CTA と MV のバッジで導線を確保している */
 	& .p-header__actions {
-		display: flex;
-		gap: clamp(.5rem, .3rem + .8vw, 1rem);
+		display: none;
+	}
+
+	@media (min-width: 768px) {
+		& .p-header__actions {
+			display: flex;
+			gap: clamp(.5rem, .3rem + .8vw, 1rem);
+		}
 	}
 
 	/* ヘッダーのボタンだけ最初から塗りつぶし。
@@ -380,7 +447,6 @@
 	@media (min-width: 768px) {
 		& .c-btn {
 			min-width: 12.5rem;
-			font-size: var(--fs-body);
 		}
 	}
 }
@@ -389,13 +455,20 @@
 /* --------------------------------------------------------------------------
    MV — メインビジュアル
 
-   PC: 左右の写真とコピーを grid の同じマスに重ねる
-   SP: 重ねると文字が顔にかぶって読めないので、写真の帯 → コピー の縦並び
-   どちらも高さは中身なりに決まります。
+   構成の考え方
+   ・人物写真の帯とコピーを grid の同じマス（1行1列）に重ねる
+   ・高さは「写真の高さ」と「コピーの高さ」の大きいほうで自動的に決まる
+     → height の決め打ちが要らない
+   ・写真は元デザインの実寸 570 × 614px（＝1380px 幅に対して 41.3%）。
+     img は width だけ指定し、高さは画像本来の比率にまかせる
+   ・PC は「左は上端ぞろえ、右は少し下げる」ずらしレイアウト
+     SP は「1枚目を右上、2枚目を左下」の振り分けレイアウト
+   ・OPEN CAMPUS バッジだけは写真の上へ重ねて下へはみ出す“あしらい”なので
+     absolute で置いている
    -------------------------------------------------------------------------- */
 .p-mv {
 	display: grid;
-	position: relative;   /* OPEN CAMPUS バッジの基準 */
+	position: relative;   /* OPEN CAMPUS バッジの位置の基準 */
 	isolation: isolate;
 	background-color: var(--color-bg-yellow);
 	background-image: url('../image/icons/ref001-mv-bg-sp.svg');
@@ -403,168 +476,211 @@
 	background-size: cover;
 	background-repeat: no-repeat;
 
+	/* --- 人物写真 --- */
 	& .p-mv__photos {
-		display: flex;
-		justify-content: space-between;
-		align-items: stretch;
+		grid-area: 1 / 1;
+		display: grid;
+		justify-items: end;   /* SP: 1枚目を右上へ */
 	}
 
 	& .p-mv__photo {
-		width: 50%;
+		/* 元デザインの実寸を上限にした割合指定。高さは画像の比率まかせ */
+		width: min(89.3%, 24.0625rem);   /* SP: 385px 上限 */
 
 		& img {
 			width: 100%;
-			aspect-ratio: 3 / 4;
-			object-fit: cover;
-			object-position: center top;
+			height: auto;
 		}
 	}
 
+	/* SP: 2枚目は左下へ */
+	& .p-mv__photo--right {
+		justify-self: start;
+	}
+
+	/* --- コピー --- */
 	& .p-mv__body {
+		grid-area: 1 / 1;
+		z-index: 1;
 		display: grid;
 		align-content: center;
 		justify-items: center;
 		gap: clamp(1rem, .6rem + 1.7vw, 1.75rem);
-		padding-block: clamp(2rem, 1.4rem + 2.6vw, 4rem);
+		/* 下は OPEN CAMPUS バッジが重なる分をあける（PC では打ち消す） */
+		padding-block: clamp(2rem, 1.4rem + 2.6vw, 6.625rem) clamp(13rem, 9rem + 11vw, 15rem);
 		padding-inline: var(--gutter);
 		text-align: center;
 	}
 
 	& .p-mv__catch {
 		display: grid;
-		gap: .1em;
-		font-weight: 900;
-		line-height: 1.25;
-		letter-spacing: .04em;
+		justify-items: center;
+		gap: .05em;
+		font-weight: 500;
+		line-height: 1.15;
+		letter-spacing: .05em;
+		/* 途中で改行させない。文字サイズを vw で縮めて収める設計のため */
+		white-space: nowrap;
 	}
 
-	& .p-mv__catch-line--lead { font-size: var(--fs-catch-lead); }
-	& .p-mv__catch-line--mid  { font-size: var(--fs-catch-mid); }
-	& .p-mv__catch-line--last { font-size: var(--fs-catch-last); }
+	/* 「“ケイザイ”」の行。引用符と文字でサイズが違うので、
+	   flex にして下ぞろえ（baseline）で並べる */
+	& .p-mv__catch-line--lead {
+		display: flex;
+		align-items: baseline;
+		justify-content: center;
+	}
 
-	& .p-mv__quote { color: var(--color-purple); }
+	& .p-mv__catch-line--mid  { font-size: var(--fs-mv-mid); color: #000; }
+	& .p-mv__catch-line--last { font-size: var(--fs-mv-last); }
 
-	/* 「ケイザイ」と「おもしろい。」は白抜き + 濃い縁取り。
-	   写真の上に来ても背景の明暗に関係なく読めます。
-	   paint-order で縁を文字の後ろに描くと、線が太くても字が潰れません。 */
+	/* 引用符は明朝体・紫。文字より一回り大きい */
+	& .p-mv__quote {
+		font-family: var(--font-serif);
+		font-size: var(--fs-mv-quote);
+		font-weight: 600;
+		line-height: 1;
+		color: var(--color-purple);
+	}
+
+	/* 「ケイザイ」「おもしろい。」は白抜き + 濃い縁取り。
+	   写真の上に重なっても背景の明暗に関係なく読める。
+	   paint-order は指定しない（指定すると縁が文字の内側に隠れて細く見えるため、
+	   元デザインどおり縁を全幅出す） */
 	& .p-mv__catch-line--lead strong,
 	& .p-mv__catch-line--last {
 		color: var(--color-white);
 		-webkit-text-stroke: 2px var(--color-text);
-		paint-order: stroke fill;
+	}
+
+	& .p-mv__catch-line--lead strong {
+		font-size: var(--fs-mv-word);
+		font-weight: 500;
+		letter-spacing: .02em;
 	}
 
 	& .p-mv__lead {
-		max-width: var(--measure);
-		font-size: var(--fs-lead);
+		/* SP は背景が明るいので黒。PC は本文色に戻す */
+		color: #000;
+		font-size: var(--fs-mv-lead);
 		line-height: 2;
-		letter-spacing: .06em;
+		letter-spacing: .05em;
 	}
 
-	/* --- OPEN CAMPUS バッジ ---
-	   吹き出し → 丸 の順に縦に並べ、丸をマイナスマージンで少し持ち上げて
-	   吹き出しに重ねています。absolute は使っていません。 */
+	/* --- OPEN CAMPUS バッジ --- */
 	& .p-mv__oc {
-		display: grid;
-		justify-items: center;
-		justify-self: center;
+		position: absolute;
 		z-index: 2;
+		right: 4%;
+		bottom: 0;
+
+		display: grid;
+		place-content: center;
+		justify-items: center;
+		gap: .1em;
+		width: var(--oc-size);
+		aspect-ratio: 1;
+		border-radius: 50%;
+		background: var(--color-orange);
+		color: var(--color-text);
 		text-align: center;
-		transition: transform .2s ease;
+		transition: transform .3s ease, box-shadow .3s ease;
 
 		&:hover,
-		&:focus-visible { transform: scale(1.04); }
+		&:focus-visible {
+			transform: translateY(-2px);
+			box-shadow: 0 8px 18px rgb(245 151 26 / 25%);
+		}
 	}
 
+	/* 吹き出しは円の上端に少し重ねる */
 	& .p-mv__oc-balloon {
-		position: relative;   /* 丸より前に出すため（重ね順の指定だけ） */
-		z-index: 1;
+		position: absolute;
+		bottom: calc(100% - 1.4em);
+		left: 50%;
+		translate: -50% 0;
 		white-space: nowrap;
 
-		padding: .6em 1.2em;
+		padding: .85em 1.6em;
 		border: 1px solid var(--color-text);
 		border-radius: 999px;
 		background: var(--color-white);
 		color: var(--color-text);
 		font-size: var(--fs-small);
 		line-height: 1;
-	}
-
-	& .p-mv__oc-circle {
-		display: grid;
-		place-content: center;
-		justify-items: center;
-		gap: .15em;
-		margin-top: -.9em;   /* 吹き出しに少し重ねる */
-
-		width: clamp(7rem, 5rem + 5.2vw, 9.75rem);   /* 112 → 156 */
-		aspect-ratio: 1;
-		border-radius: 50%;
-		background: var(--color-orange);
-		color: var(--color-white);
-	}
-
-	& .p-mv__oc-title {
-		font-family: var(--font-en);
-		font-size: clamp(1rem, .75rem + 1.1vw, 1.375rem);
-		font-weight: 600;
-		line-height: 1.25;
 		letter-spacing: .05em;
 	}
 
+	& .p-mv__oc-title {
+		color: var(--color-white);
+		font-family: var(--font-en);
+		font-size: var(--oc-title);
+		font-weight: 600;
+		line-height: 1.3;
+		letter-spacing: .05em;
+		-webkit-text-stroke: 1px var(--color-text);
+		paint-order: stroke fill;
+	}
+
 	& .p-mv__oc-note {
-		font-size: var(--fs-small);
+		color: var(--color-text);
+		font-size: var(--oc-note);
+		font-weight: 500;
 		line-height: 1;
+		letter-spacing: .05em;
 	}
 
-	/* SP は「写真 → コピー → バッジ」の縦並び。
-	   バッジも普通に流し込むので、高さは中身なりに決まります。 */
-	@media (max-width: 767px) {
-		& .p-mv__photos {
-			max-width: 34rem;
-			margin-inline: auto;
-		}
+	/* 右下の丸い矢印。円からはみ出さない位置に置く */
+	& .p-mv__oc-arrow {
+		position: absolute;
+		right: 4%;
+		bottom: 4%;
+		display: grid;
+		place-items: center;
+		width: var(--oc-arrow);
+		aspect-ratio: 1;
+		border: 1px solid var(--color-orange);
+		border-radius: 50%;
+		background: var(--color-white);
+		transition: background-color .3s ease, transform .3s ease;
 
-		& .p-mv__oc {
-			padding-bottom: clamp(1.5rem, 1rem + 2vw, 2.5rem);
-		}
+		& img { width: 30%; }
 	}
 
-	/* --- PC: 写真とコピーを重ねる --- */
+	& .p-mv__oc:hover .p-mv__oc-arrow,
+	& .p-mv__oc:focus-visible .p-mv__oc-arrow {
+		background: var(--color-orange);
+		transform: rotate(-6deg);
+	}
+	& .p-mv__oc:hover .p-mv__oc-arrow img,
+	& .p-mv__oc:focus-visible .p-mv__oc-arrow img {
+		content: url('../image/icons/ref001-mv-arrow-white.svg');
+	}
+
+	/* --- SP: 写真とコピーが重なりすぎないよう、下に余白を足す --- */
+	/* --- PC: 左右に振り分け、右だけ少し下げる --- */
 	@media (min-width: 768px) {
 		background-image: url('../image/icons/ref001-mv-bg-pc.svg');
 		background-size: 100% 100%;
 
 		& .p-mv__photos {
-			grid-area: 1 / 1;
+			display: flex;
+			justify-content: space-between;
+			align-items: start;
 		}
 
-		/* 写真の幅は画面幅なりに伸ばします。
-		   % にすると狭いPC幅で中央のコピーを置く場所が無くなり、
-		   文字が顔に重なって読めなくなるためです。 */
 		& .p-mv__photo {
-			width: clamp(11rem, 5rem + 20vw, 30rem);
-
-			& img {
-				aspect-ratio: auto;
-				height: 100%;
-			}
+			width: min(41.3%, 35.625rem);   /* PC: 570px 上限 */
 		}
 
-		& .p-mv__body {
-			grid-area: 1 / 1;
-			z-index: 1;
-			padding-block: clamp(4rem, 1rem + 8vw, 6.875rem);
+		/* 元デザインでは右の写真だけ 80px 下がっている（1380px 幅に対して 5.8%） */
+		& .p-mv__photo--right {
+			margin-top: min(5.8%, 5rem);
 		}
 
-		/* バッジも同じマスに置いて、右下へ寄せて重ねます。
-		   absolute ではなく grid の配置なので、
-		   まわりの余白を変えても位置関係が崩れません。 */
 		& .p-mv__oc {
-			grid-area: 1 / 1;
-			align-self: end;
-			justify-self: end;
-			margin: 0 6% 6% 0;
+			right: 4%;
+			bottom: 3%;
 		}
 	}
 }
@@ -626,7 +742,7 @@
 		padding: .45em 1.3em;
 		border: 1px solid var(--color-text);
 		background: var(--color-white);
-		font-size: var(--fs-card-title);
+		font-size: var(--fs-edu-card);
 		font-weight: 500;
 		line-height: 1.4;
 	}
@@ -672,7 +788,7 @@
 
 	& .p-education__intro-title {
 		display: inline;
-		font-size: var(--fs-card-title);
+		font-size: var(--fs-edu-intro);
 		font-weight: 500;
 		line-height: 1.8;
 		background: linear-gradient(transparent 70%, var(--color-orange) 0);
@@ -691,14 +807,38 @@
 		gap: var(--gap-card);
 	}
 
+	/* SP は「バッジ」「写真＋見出しの横並び」「チェック項目」の3段。
+	   写真を全幅にすると縦に伸びすぎるため、元デザインどおり左に小さく置く。
+	   PC では下の @media で縦積みに戻す。 */
 	& .p-education__step {
-		display: flex;
-		flex-direction: column;
+		display: grid;
+		/* 列幅は % で明示する。auto 列の中で width:% を使うと
+		   幅が決まらず、右の見出しが1文字ずつ縦に折り返してしまう */
+		grid-template-columns: 40% 1fr;
+		align-items: center;
 		gap: 1rem;
 		padding-bottom: 1.5rem;
 		border: 1px solid var(--color-text);
 		background: var(--color-white);
 		box-shadow: 8px 8px 0 0 var(--color-purple);
+	}
+
+	& .p-education__badge,
+	& .p-education__step .c-checklist {
+		grid-column: 1 / -1;
+	}
+
+	/* SP は 写真(左) + 見出し(右)。HTML の順番は「見出し → 写真」なので、
+	   grid の列を明示して見た目の左右を入れ替えています。 */
+	& .p-education__photo {
+		grid-column: 1;
+		grid-row: 2;
+		width: 100%;
+	}
+
+	& .p-education__step-title {
+		grid-column: 2;
+		grid-row: 2;
 	}
 
 	/* 左上の見出しタブ。枠線の上に乗せるため 1px ぶん外へ出しています。 */
@@ -708,7 +848,8 @@
 		padding: .7em 1.1em;
 		background: var(--color-purple);
 		color: var(--color-white);
-		font-size: var(--fs-small);
+		font-size: var(--fs-card-title);
+		font-weight: 400;
 		line-height: 1;
 		letter-spacing: .05em;
 	}
@@ -722,7 +863,7 @@
 
 	& .p-education__step-title {
 		margin-inline: 1.5rem;
-		font-size: var(--fs-card-title);
+		font-size: var(--fs-edu-card);
 		font-weight: 500;
 		line-height: 1.4;
 		text-align: center;
@@ -745,11 +886,21 @@
 		margin-inline: 1.5rem;
 	}
 
-	/* PC は「見出し | リード文」の横並び */
+	/* PC は「見出し | リード文」の横並び、カードは縦積みに戻す */
 	@media (min-width: 768px) {
 		& .p-education__head {
 			grid-template-columns: auto 1fr;
 			align-items: center;
+		}
+
+		& .p-education__step {
+			display: flex;
+			flex-direction: column;
+			align-items: stretch;
+		}
+
+		& .p-education__photo {
+			width: auto;
 		}
 
 		& .p-education__heading {
@@ -780,7 +931,7 @@
 	}
 
 	& .p-cta__title {
-		font-size: var(--fs-heading);
+		font-size: var(--fs-cta-title);
 		font-weight: 500;
 		line-height: 1.5;
 		letter-spacing: .06em;
@@ -872,14 +1023,14 @@
 	& .p-voice__title {
 		margin-bottom: .5em;
 		color: var(--color-purple);
-		font-size: var(--fs-card-title);
+		font-size: var(--fs-voice-name);
 		font-weight: 500;
 		line-height: 1.5;
 		text-wrap: pretty;
 	}
 
 	& .p-voice__meta {
-		font-size: var(--fs-body);
+		font-size: var(--fs-note);
 		line-height: 1.6;
 	}
 
@@ -891,7 +1042,7 @@
 		justify-self: center;
 		padding: .5em 1em;   /* 押せる範囲を広げる */
 		color: var(--color-blue);
-		font-size: var(--fs-body);
+		font-size: var(--fs-toggle);
 	}
 
 	& .p-voice__toggle-mark {
@@ -944,7 +1095,7 @@
 		padding: .25em 1.2em;
 		background: var(--color-blue);
 		color: var(--color-white);
-		font-size: var(--fs-small);
+		font-size: var(--fs-body);
 		font-weight: 500;
 		line-height: 1.6;
 		text-align: center;
@@ -965,7 +1116,7 @@
 		border-radius: 999px;
 		background: var(--color-purple);
 		color: var(--color-white);
-		font-size: var(--fs-body);
+		font-size: var(--fs-voice-advice);
 		line-height: 1.4;
 		text-align: center;
 		white-space: nowrap;
@@ -1048,6 +1199,13 @@
 
 	& .p-messages__slider {
 		overflow: hidden;
+		width: 100%;
+		/* Swiper の CSS が .swiper に margin-inline: auto を付けており、
+		   auto マージンがあると grid の stretch が効かず、
+		   中身（スライド4枚ぶん）の幅まで広がって横スクロールが出ます。
+		   打ち消したうえで、min-width: 0 で縮めるようにしています。 */
+		margin-inline: 0;
+		min-width: 0;
 	}
 
 	& .p-messages__slide {
@@ -1061,7 +1219,8 @@
 
 		& img {
 			width: 100%;
-			aspect-ratio: 4 / 3;
+			/* 元デザインは 660 × 440px = 3:2 */
+			aspect-ratio: 3 / 2;
 			object-fit: cover;
 		}
 	}
@@ -1080,7 +1239,8 @@
 		display: grid;
 		justify-items: start;
 		gap: .4em;
-		font-size: var(--fs-card-title);
+		font-size: var(--fs-msg-quote);
+		font-weight: 400;
 		line-height: 1.6;
 
 		& span {
@@ -1094,7 +1254,7 @@
 		padding: .25em .6em;
 		background: rgb(255 255 255 / .85);
 		color: var(--color-purple);
-		font-size: var(--fs-small);
+		font-size: var(--fs-body);
 		line-height: 1.6;
 	}
 
@@ -1123,7 +1283,7 @@
 		align-items: center;
 		gap: clamp(.75rem, .4rem + 1.4vw, 1.4rem);
 		font-family: var(--font-en);
-		font-size: var(--fs-card-title);
+		font-size: var(--fs-msg-counter);
 		line-height: 1;
 	}
 
@@ -1138,13 +1298,19 @@
 		background-repeat: no-repeat;
 		background-position: left center;
 		background-size: var(--progress, 25%) 100%;
-		transition: background-size .3s ease;
 	}
 
 	/* --- PC: 写真を右 62%、コピーを左下に重ねる --- */
 	@media (min-width: 768px) {
+		/* 元デザインは 1160px 中 660px（= 57%） */
 		& .p-messages__photo {
-			width: 62%;
+			width: 57%;
+		}
+
+		/* 見出しは重ねずに上へ置く。
+		   写真へ重ねると、左側に来るコピー（黒帯）と見出しがぶつかるため。 */
+		& .p-messages__body {
+			align-self: center;
 		}
 
 		& .p-messages__body {
@@ -1153,8 +1319,8 @@
 		}
 
 		& .p-messages__quote {
-			font-size: clamp(1.125rem, .2rem + 1.9vw, 1.75rem);
 			gap: .35em;
+			font-weight: 500;
 		}
 
 		& .p-messages__meta {
@@ -1232,14 +1398,14 @@
 
 	& .p-courses__title {
 		width: fit-content;
-		font-size: var(--fs-card-title);
+		font-size: var(--fs-course-title);
 		font-weight: 500;
 		line-height: 1.4;
 		background: linear-gradient(transparent 68%, color-mix(in srgb, var(--course) 30%, transparent) 0);
 	}
 
 	& .p-courses__text {
-		font-size: var(--fs-small);
+		font-size: var(--fs-body);
 		line-height: 1.5;
 		text-wrap: pretty;
 	}
@@ -1272,7 +1438,8 @@
    色は HTML 側の style="--tile-bg / --tile-accent" で1つずつ指定しています。
    -------------------------------------------------------------------------- */
 .p-links {
-	padding-block: var(--space-section);
+	/* 元デザインは上下の余白を持たず、前後のセクションとの間隔で調整していた */
+	padding-block: clamp(2.5rem, 1.6rem + 3.8vw, 4.5rem);
 
 	/* 4つで1セットなので、余りが出ないよう 2列 か 4列 だけにしています
 	   （auto-fit にすると 3列 になって1つだけ余る幅ができてしまうため）。 */
@@ -1295,6 +1462,8 @@
 		place-content: center;
 		justify-items: center;
 		gap: .7em;
+		font-size: var(--fs-tile);
+		font-weight: 400;
 
 		max-width: 17.5rem;
 		margin-inline: auto;
@@ -1315,7 +1484,7 @@
 	}
 
 	& .p-links__label {
-		font-size: var(--fs-body);
+		font-size: var(--fs-tile-label);
 		font-weight: 500;
 		line-height: 1.4;
 		letter-spacing: .05em;
@@ -1385,8 +1554,8 @@
 	}
 
 	& .p-invite__title {
-		font-size: var(--fs-heading-em);
-		font-weight: 900;
+		font-size: var(--fs-cta-title);
+		font-weight: 500;
 		line-height: 1.5;
 		letter-spacing: .06em;
 		text-wrap: balance;
@@ -1432,7 +1601,7 @@
 
 	& .p-footer__address {
 		margin-top: 1em;
-		font-size: var(--fs-small);
+		font-size: var(--fs-note);
 		line-height: 1.8;
 	}
 
@@ -1463,7 +1632,8 @@
 
 	& .p-footer__copyright {
 		font-family: var(--font-en);
-		font-size: var(--fs-small);
+		font-size: var(--fs-copyright);
+		font-weight: 400;
 		letter-spacing: .03em;
 	}
 
