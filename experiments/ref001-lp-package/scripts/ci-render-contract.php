@@ -81,14 +81,6 @@ function body_class($extra = '') { echo htmlspecialchars((string) $extra, ENT_QU
 function wp_head() { echo '<!--WP_HEAD-->'; }
 function wp_footer() { echo '<!--WP_FOOTER-->'; }
 
-$__wp_enqueue_scripts_hooks = [];
-function add_action($hook, $callback) {
-    global $__wp_enqueue_scripts_hooks;
-    if ($hook === 'wp_enqueue_scripts') {
-        $__wp_enqueue_scripts_hooks[] = $callback;
-    }
-}
-function is_page_template($slug) { return $slug === 'lp-originalPage.php'; }
 $__wp_enqueued = ['styles' => [], 'scripts' => []];
 function wp_enqueue_style($handle, $src, $deps, $ver) { global $__wp_enqueued; $__wp_enqueued['styles'][$handle] = $src; }
 function wp_enqueue_script($handle, $src, $deps, $ver, $footer) { global $__wp_enqueued; $__wp_enqueued['scripts'][$handle] = $src; }
@@ -97,15 +89,14 @@ ob_start();
 include $package . '/lp-originalPage.php';
 $page = ob_get_clean();
 
-// The template only *registers* the wp_enqueue_scripts callback via
-// add_action(); a real WordPress run fires it before wp_head()/wp_footer()
-// output. Fire it here to prove it resolves to the right CSS/JS without a
-// PHP fatal, same as production would.
-foreach ($__wp_enqueue_scripts_hooks as $callback) {
-    $callback();
-}
-assert_true(isset($__wp_enqueued['styles']['ref001-lp-style']) && str_ends_with($__wp_enqueued['styles']['ref001-lp-style'], '/lp/css/ref001.css'), 'wp_enqueue_scripts hook registers ref001-lp-style pointing at lp/css/ref001.css');
-assert_true(isset($__wp_enqueued['scripts']['ref001-lp-script']) && str_ends_with($__wp_enqueued['scripts']['ref001-lp-script'], '/lp/js/ref001-interactions.js'), 'wp_enqueue_scripts hook registers ref001-lp-script pointing at lp/js/ref001-interactions.js');
+// wp_enqueue_style()/wp_enqueue_script() must be called directly (not
+// deferred via add_action('wp_enqueue_scripts', ...)), because a page
+// template file is loaded by WordPress *after* that hook has already
+// fired -- a deferred registration would silently never run in
+// production, meaning the CSS/JS never load at all. Assert the calls
+// happened synchronously while this file was included.
+assert_true(isset($__wp_enqueued['styles']['ref001-lp-style']) && str_ends_with($__wp_enqueued['styles']['ref001-lp-style'], '/lp/css/ref001.css'), 'lp-originalPage calls wp_enqueue_style() directly for ref001-lp-style (not deferred via add_action)');
+assert_true(isset($__wp_enqueued['scripts']['ref001-lp-script']) && str_ends_with($__wp_enqueued['scripts']['ref001-lp-script'], '/lp/js/ref001-interactions.js'), 'lp-originalPage calls wp_enqueue_script() directly for ref001-lp-script (not deferred via add_action)');
 assert_true(strpos($page, '<link') === false && strpos($page, '<script') === false, 'lp-originalPage has no raw <link>/<script> tags (CSS/JS goes through wp_head()/wp_footer() instead)');
 assert_true(strpos($page, '<!DOCTYPE html>') === 0, 'lp-originalPage is a standalone document starting with <!DOCTYPE html> (no get_header())');
 assert_true(strpos($page, '<!--WP_HEAD-->') !== false && strpos($page, '<!--WP_HEAD-->') < strpos($page, '<main'), 'wp_head() is called inside <head>, before the LP content');

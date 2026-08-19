@@ -27,20 +27,17 @@
  * そのまま表示されます（フォールバック動作は lp/acf-swap/ 側に内蔵済み）。
  *
  * --- CSS/JSの読み込み方について ---
- * <link>/<script>を本文中に直書きせず、WordPress標準の
- * wp_enqueue_scripts フックで登録している（下のadd_action）。
- * これにより、CSSは wp_head() の中で正しく <head> 内に、
- * JSは wp_footer() の中で </body>直前に出力される。
+ * <link>/<script>を本文中に直書きせず、wp_enqueue_style()/wp_enqueue_script()
+ * で登録している。ページテンプレートは通常のWordPressの`wp_enqueue_scripts`
+ * フックより後に読み込まれるため、`add_action('wp_enqueue_scripts', ...)`で
+ * 遅延登録すると間に合わず一度も実行されないことがある(その場合CSS/JSが
+ * 一切読み込まれない)。このファイルは自分ですぐ下でwp_head()/wp_footer()を
+ * 呼ぶので、フックへ登録し直さず直接enqueueして確実に間に合わせている。
  */
 $lp_base = trailingslashit( get_stylesheet_directory_uri() ) . 'lp/';
 
-add_action( 'wp_enqueue_scripts', function () use ( $lp_base ) {
-	if ( ! function_exists( 'is_page_template' ) || ! is_page_template( 'lp-originalPage.php' ) ) {
-		return;
-	}
-	wp_enqueue_style( 'ref001-lp-style', $lp_base . 'css/ref001.css', array(), null );
-	wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', array(), null, true );
-} );
+wp_enqueue_style( 'ref001-lp-style', $lp_base . 'css/ref001.css', array(), null );
+wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', array(), null, true );
 ?><!DOCTYPE html>
 <html <?php language_attributes(); ?>>
 <head>
