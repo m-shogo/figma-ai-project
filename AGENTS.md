@@ -10,6 +10,24 @@
 
 Reference designそのものはこのrepoが決めない。
 
+## Execution speed / agent ownership
+
+複数Agent運用では、同じwrite scopeを二重実装・二重調査しない。
+
+作業開始時にlatest base / current branch / open PR / active ownerを確認し、既にClaude Code / Codex / Code系Agentが実装を所有している場合は、その成果を引き継いでlatestとの差分だけを処理する。
+
+ユーザーが明示的に「これが正本」「消していい」「これで完成」「それ以外修正なし」「マスター権限で廃止してよい」と決定したproject-local contractは、security / Company Policy hard constraint / protected scopeに反しない限り、staleなactive test・validator・CI・fixture・legacy implementationより上位のCurrent Authorityとして扱う。
+
+- Current Authorityと矛盾する旧contractを守るためにproduction codeを複雑化しない。
+- Scope外failureは、今回の変更が原因でないことを1回確認したら追跡を打ち切る。
+- Human-approved Visualは`VISUAL_FROZEN`として扱い、integrationを理由に勝手にredesignしない。
+- 既存QAで証明できることのために新しい恒久validator / workflowを増やさない。
+- 同じ原因で2回詰まったら同じ方法を繰り返さずrouteを変える。
+- HumanのMaster Authority 1つで互換調査・legacy維持を大幅に省けるなら、遠回りを始める前に短くHumanへescalateする。
+- repoを読めば解決するroutine implementation decisionはHumanへ丸投げしない。
+
+Canonical: `docs/agent-execution-policy.md`
+
 ## Source of truth / precedence
 
 Visual/design source of truth:
