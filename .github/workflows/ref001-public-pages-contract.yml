@@ -1,0 +1,113 @@
+name: REF001 Public Pages Contract
+
+on:
+  workflow_run:
+    workflows:
+      - Publish Human Review Dashboard
+    types:
+      - completed
+
+permissions:
+  contents: write
+
+jobs:
+  verify-public-pages:
+    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'so'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout so
+        uses: actions/checkout@v6
+        with:
+          ref: so
+          fetch-depth: 0
+
+      - name: Verify deployed REF-001 CSS contract
+        id: contract
+        env:
+          SOURCE_SHA: ${{ github.event.workflow_run.head_sha }}
+          SOURCE_RUN_ID: ${{ github.event.workflow_run.id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE='https://m-shogo.github.io/figma-ai-project/ref-001/latest/preview'
+          HTML='/tmp/ref001-public-preview.html'
+          CSS='/tmp/ref001-public-ref001.css'
+
+          fetch_with_retry() {
+            local url="$1"
+            local out="$2"
+            for attempt in $(seq 1 30); do
+              if curl -fsSL --max-time 20 -H 'Cache-Control: no-cache' "${url}?qa=${SOURCE_SHA}-${attempt}" -o "$out"; then
+                return 0
+              fi
+              sleep 5
+            done
+            echo "FAIL public fetch: $url" >&2
+            return 1
+          }
+
+          fetch_with_retry "$BASE/" "$HTML"
+          grep -Fq 'assets/css/ref001.css' "$HTML" || { echo 'FAIL canonical stylesheet is not loaded by public preview' >&2; exit 1; }
+          if grep -Fq 'v2-intermediate-desktop.css' "$HTML"; then
+            echo 'FAIL public preview still loads retired intermediate stylesheet' >&2
+            exit 1
+          fi
+
+          fetch_with_retry "$BASE/assets/css/ref001.css" "$CSS"
+          if grep -Eq '1299px|1300px' "$CSS"; then
+            echo 'FAIL retired 1299/1300 boundary remains in public CSS' >&2
+            grep -En '1299px|1300px' "$CSS" >&2 || true
+            exit 1
+          fi
+
+          python - <<'PY'
+          import re
+          from pathlib import Path
+          css = Path('/tmp/ref001-public-ref001.css').read_text(encoding='utf-8')
+          queries = re.findall(r'@media\s*\([^)]*?(max|min)-width\s*:\s*(\d+)px[^)]*\)', css)
+          allowed = {('max', '767'), ('min', '768')}
+          unexpected = sorted(set(queries) - allowed)
+          if unexpected:
+              raise SystemExit(f'FAIL unexpected public media-query boundaries: {unexpected}')
+          print('PASS public media-query boundaries:', sorted(set(queries)))
+          PY
+
+          if curl -fsSL --max-time 20 -H 'Cache-Control: no-cache' "$BASE/v2-intermediate-desktop.css?qa=${SOURCE_SHA}" -o /tmp/ref001-retired.css; then
+            echo 'FAIL retired intermediate stylesheet is still publicly served' >&2
+            exit 1
+          fi
+
+          CSS_SHA256=$(sha256sum "$CSS" | awk '{print $1}')
+          MEDIA_QUERIES=$(grep -oE '@media[^\{]+' "$CSS" | tr '\n' ' ' | sed 's/[[:space:]]\+/ /g' || true)
+          mkdir -p qa
+          cat > qa/ref001-public-pages-contract.md <<EOF
+          # REF-001 Public Pages Contract
+
+          - result: PASS
+          - checked source commit: \`${SOURCE_SHA}\`
+          - Pages workflow run: \`${SOURCE_RUN_ID}\`
+          - public preview: \`${BASE}/\`
+          - public stylesheet: \`${BASE}/assets/css/ref001.css\`
+          - public CSS sha256: \`${CSS_SHA256}\`
+          - retired \`1299px\` boundary: absent
+          - retired \`1300px\` boundary: absent
+          - retired \`v2-intermediate-desktop.css\`: not loaded and not served
+          - allowed responsive contract: \`max-width: 767px\` / \`min-width: 768px\`
+          - observed media queries: \`${MEDIA_QUERIES}\`
+          EOF
+
+      - name: Commit public verification evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git pull --rebase origin so
+          git add qa/ref001-public-pages-contract.md
+          if git diff --cached --quiet; then
+            echo 'Public verification evidence already current.'
+            exit 0
+          fi
+          git commit -m 'qa(ref001): record public Pages CSS verification'
+          git push origin HEAD:so
