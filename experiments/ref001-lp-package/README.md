@@ -19,12 +19,15 @@ Student Voice / Swiperの2箇所だけをACF PROに差し替える」という�
 ```
 lp-originalPage.php   ページテンプレート本体。ACFなし、全セクション直書き。
 lp/
-├── css/ref001.css                 REF-001のフリーズ済みCSS(1バイトも変更なし)
+├── css/ref001.css                 REF-001のフリーズ済みCSS
+│                                   (url()の相対パスのみlp/image/配下に
+│                                   合わせて書き換え済み。中身のCSSルール自体は無変更)
 ├── js/ref001-interactions.js      REF-001のフリーズ済みJS(Voiceアコーディオン/Swiper初期化)
 ├── image/
-│   ├── icons/*.svg
-│   ├── mv/*.svg
-│   └── photos/{pc,sp}/*.webp      すべてFigma書き出しの実アセット(1バイトも変更なし)
+│   ├── icons/*.svg                 CSS/PHP両方から参照される全アイコン
+│   ├── mv/*.svg                    メインビジュアルのオープンキャンパス飾り
+│   ├── backgrounds/*.jpg           CSSがbackground-imageで使う写真素材
+│   └── photos/{pc,sp}/*.webp       Figma書き出しの実写真(全てPHP<picture>から参照)
 ├── acf-swap/
 │   ├── _helpers.php               ACF版の共通ヘルパー(repeater読み取り/フォールバック等)
 │   ├── student-voice-acf.php      「学生の声」ACF差し替え版
@@ -63,6 +66,17 @@ lp/
    フィールドが空/ACF無効のままでも、直書き版と同じ内容が表示される
    （`lp/acf-swap/_helpers.php`のフォールバック機構）。
 
+## フォント / 外部ライブラリについて
+
+- **フォント**: `lp/css/ref001.css`の先頭で`@import url('https://fonts.googleapis.com/...')`
+  によりNoto Serif JP / Poppins / Zen Kaku Gothic NewをGoogle Fonts CDNから
+  読み込んでいる。これはREF-001の元CSSからそのまま引き継いだ仕様で、
+  ローカルにフォントファイルを同梱する構成ではない
+  （インターネット接続がある環境であればそのまま動作する）。
+- **Swiper**: `lp/js/ref001-interactions.js`が実行時に
+  `https://cdn.jsdelivr.net/npm/swiper@11/...`からSwiper本体を自動読み込みする
+  （`window.Swiper`が既に存在する場合は読み込まない）。ローカルには同梱しない。
+
 ## ページ構造 / CSS・JSの読み込み方
 
 ```
@@ -92,6 +106,8 @@ WordPress標準の`wp_enqueue_scripts`フックでCSS/JSを登録しており、
 - ACFの値を書き換えてレンダリングし、実際にDOM(タイトル/本文/枚数)が
   変わることを確認済み（`have_rows`/`get_sub_field`をモックしたテストで検証）
 - ACF JSON 2ファイルとも `json.load` でパース可能なことを確認済み
+- `lp/css/ref001.css`内の全`url()`相対パスが`lp/`配下の実ファイルに
+  解決することを機械チェック済み（アイコン/背景画像の同梱漏れがないことの検証）
 
 ## 実施していないこと（人間側で必要）
 
