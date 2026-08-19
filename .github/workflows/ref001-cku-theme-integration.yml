@@ -1,0 +1,56 @@
+name: REF001 cku Theme Integration
+
+on:
+  push:
+    paths:
+      - 'experiments/ref001-cku-theme-integration/**'
+      - '.github/workflows/ref001-cku-theme-integration.yml'
+  pull_request:
+    paths:
+      - 'experiments/ref001-cku-theme-integration/**'
+      - '.github/workflows/ref001-cku-theme-integration.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-dev.txt
+
+      - name: Install validation dependencies
+        run: python -m pip install -r requirements-dev.txt
+
+      - name: Validate theme intake record
+        run: python scripts/validate_wordpress_theme_intake.py experiments/ref001-cku-theme-integration/theme-intake.yaml
+
+      - name: Validate ACF export/field-group JSON
+        run: |
+          python scripts/validate_acf_export.py experiments/ref001-cku-theme-integration/overlay/acf-export.json
+          python -c "import json; json.load(open('experiments/ref001-cku-theme-integration/overlay/acf-json/group_ref001_student_voice.json')); json.load(open('experiments/ref001-cku-theme-integration/overlay/acf-json/group_ref001_swiper.json'))"
+
+      - name: Reject persisted Figma MCP asset URLs / ACF secrets in this directory
+        run: |
+          python scripts/validate_no_figma_mcp_asset_urls.py
+          if grep -R -n -E 'ACF_PRO_LICENSE_KEY[[:space:]]*[:=][[:space:]]*[^[:space:]"'"'"']' \
+            experiments/ref001-cku-theme-integration; then
+            echo 'ACF_PRO_LICENSE_KEY value must not be committed.'
+            exit 1
+          fi
+
+      - name: PHP syntax (overlay template-parts/page-template/functions/inc)
+        run: find experiments/ref001-cku-theme-integration/overlay -name '*.php' -print0 | xargs -0 -n1 php -l
+
+      - name: Render-contract smoke test (fixture fallback + ACF mutation)
+        run: php experiments/ref001-cku-theme-integration/scripts/ci-render-contract.php experiments/ref001-cku-theme-integration/overlay
+
+      - name: Apply-overlay script syntax
+        run: bash -n experiments/ref001-cku-theme-integration/scripts/apply-overlay.sh
