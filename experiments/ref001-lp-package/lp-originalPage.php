@@ -23,12 +23,27 @@
  * に置き換えてください。ACF PROが有効なら lp/acf-json/*.json のフィールドが
  * 自動で読み込まれます。ACF未設定/空の場合は、この直書き版と同じ内容が
  * そのまま表示されます（フォールバック動作は lp/acf-swap/ 側に内蔵済み）。
+ *
+ * --- CSS/JSの読み込み方について ---
+ * <link>/<script>を本文中に直書きせず、WordPress標準の
+ * wp_enqueue_scripts フックで登録している（下のadd_action）。
+ * これにより、CSSは get_header() が出力する wp_head() の中で
+ * 正しく <head> 内に、JSは get_footer() が出力する wp_footer() の中で
+ * </body>直前に出力される（テーマのheader.php/footer.phpが
+ * wp_head()/wp_footer()を呼んでいる、通常のWordPressテーマである前提）。
  */
 $lp_base = trailingslashit( get_stylesheet_directory_uri() ) . 'lp/';
 
+add_action( 'wp_enqueue_scripts', function () use ( $lp_base ) {
+	if ( ! function_exists( 'is_page_template' ) || ! is_page_template( 'lp-originalPage.php' ) ) {
+		return;
+	}
+	wp_enqueue_style( 'ref001-lp-style', $lp_base . 'css/ref001.css', array(), null );
+	wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', array(), null, true );
+} );
+
 get_header();
 ?>
-<link rel="stylesheet" href="<?php echo esc_url( $lp_base . 'css/ref001.css' ); ?>">
 <main class="ref-page" data-ref001-page data-figma-pc="21384:8173" data-figma-sp="21376:4401">
   <section class="ref-mv" data-section="main-visual" data-figma-pc="21378:8032" data-figma-sp="21376:4886">
   <div class="ref-mv__people" aria-hidden="true">
@@ -328,7 +343,5 @@ get_header();
     </div>
 </section>
 </main>
-
-<script src="<?php echo esc_url( $lp_base . 'js/ref001-interactions.js' ); ?>" defer></script>
 <?php
 get_footer();
