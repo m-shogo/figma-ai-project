@@ -1,6 +1,11 @@
 name: REF001 Public Pages Contract
 
 on:
+  push:
+    branches:
+      - so
+    paths:
+      - 'research/figma-assets/ref001/2026-08-18-pages-republish.md'
   workflow_run:
     workflows:
       - Publish Human Review Dashboard
@@ -12,9 +17,9 @@ permissions:
 
 jobs:
   verify-public-pages:
-    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'so'
+    if: github.event_name == 'push' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'so')
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - name: Checkout so
         uses: actions/checkout@v6
@@ -23,16 +28,42 @@ jobs:
           fetch-depth: 0
 
       - name: Verify deployed REF-001 CSS contract
-        id: contract
         env:
-          SOURCE_SHA: ${{ github.event.workflow_run.head_sha }}
-          SOURCE_RUN_ID: ${{ github.event.workflow_run.id }}
+          SOURCE_SHA: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.sha }}
+          VERIFY_RUN_ID: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.id || github.run_id }}
         shell: bash
         run: |
           set -euo pipefail
-          BASE='https://m-shogo.github.io/figma-ai-project/ref-001/latest/preview'
+          ROOT='https://m-shogo.github.io/figma-ai-project/ref-001/latest'
+          BASE="$ROOT/preview"
+          MANIFEST='/tmp/ref001-public-manifest.json'
           HTML='/tmp/ref001-public-preview.html'
           CSS='/tmp/ref001-public-ref001.css'
+
+          deployed=''
+          for attempt in $(seq 1 120); do
+            if curl -fsSL --max-time 20 -H 'Cache-Control: no-cache' "$ROOT/review/manifest.json?qa=${SOURCE_SHA}-${attempt}" -o "$MANIFEST"; then
+              deployed=$(python - <<'PY'
+          import json
+          from pathlib import Path
+          try:
+              payload = json.loads(Path('/tmp/ref001-public-manifest.json').read_text(encoding='utf-8'))
+              print(payload.get('generated', {}).get('source_commit', ''))
+          except Exception:
+              print('')
+          PY
+              )
+              if [ "$deployed" = "$SOURCE_SHA" ]; then
+                echo "PASS public deployment source commit: $deployed"
+                break
+              fi
+            fi
+            sleep 5
+          done
+          if [ "$deployed" != "$SOURCE_SHA" ]; then
+            echo "FAIL public Pages did not reach source commit $SOURCE_SHA (observed: ${deployed:-none})" >&2
+            exit 1
+          fi
 
           fetch_with_retry() {
             local url="$1"
@@ -70,7 +101,16 @@ jobs:
           unexpected = sorted(set(queries) - allowed)
           if unexpected:
               raise SystemExit(f'FAIL unexpected public media-query boundaries: {unexpected}')
+          required = (
+              '.ref-course__rec-label',
+              '.ref-mv__oc-kicker',
+              '.ref-messages__nav::before',
+          )
+          missing = [selector for selector in required if selector not in css]
+          if missing:
+              raise SystemExit(f'FAIL approved public selectors missing: {missing}')
           print('PASS public media-query boundaries:', sorted(set(queries)))
+          print('PASS approved selectors present:', ', '.join(required))
           PY
 
           if curl -fsSL --max-time 20 -H 'Cache-Control: no-cache' "$BASE/v2-intermediate-desktop.css?qa=${SOURCE_SHA}" -o /tmp/ref001-retired.css; then
@@ -85,8 +125,9 @@ jobs:
           # REF-001 Public Pages Contract
 
           - result: PASS
-          - checked source commit: \`${SOURCE_SHA}\`
-          - Pages workflow run: \`${SOURCE_RUN_ID}\`
+          - checked deployed source commit: \`${SOURCE_SHA}\`
+          - verification trigger run: \`${VERIFY_RUN_ID}\`
+          - public manifest source commit: \`${deployed}\`
           - public preview: \`${BASE}/\`
           - public stylesheet: \`${BASE}/assets/css/ref001.css\`
           - public CSS sha256: \`${CSS_SHA256}\`
@@ -94,6 +135,7 @@ jobs:
           - retired \`1300px\` boundary: absent
           - retired \`v2-intermediate-desktop.css\`: not loaded and not served
           - allowed responsive contract: \`max-width: 767px\` / \`min-width: 768px\`
+          - approved selectors: present
           - observed media queries: \`${MEDIA_QUERIES}\`
           EOF
 
