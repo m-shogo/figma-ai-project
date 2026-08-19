@@ -8,16 +8,25 @@ Student Voice / Swiperの2箇所だけをACF PROに差し替える」という�
 想定したパッケージ。cku固有の`functions.php`規約には依存しない、
 **完全独立LP**として作ってある。
 
-**サイト共通のヘッダー/フッター（ナビ・ロゴ・共通フッター等）は
+**対象テーマ共通のヘッダー/フッター（テーマのナビ・ロゴ・共通フッター等）は
 一切表示しない。** `get_header()`/`get_footer()`は使わず、
 `<!DOCTYPE html>`から自前でHTML文書を組み立てている。WordPressが
 必要とする`<head>`情報（enqueueされたCSS/JS、SEOプラグインのmeta等）
 だけを`wp_head()`/`wp_footer()`で出力する。
 
+その代わり、**REF-001自身のHeader/Footer**（ロゴ・資料請求/オープン
+キャンパスへのアクション、大学住所・SNS・コピーライト等）を
+`lp-originalPage.php`内に直書きで含めている。これはテーマ側の
+共通ヘッダー/フッターとは別物 — REF-001のデザインに含まれる
+Header/Footerセクションそのもので、`<main>`の前後に配置してある。
+
 ## 構成
 
 ```
 lp-originalPage.php   ページテンプレート本体。ACFなし、全セクション直書き。
+                       (Header/Footer含む: <main>の前後にREF-001自身の
+                       Header/Footerを配置。テーマ側の共通header.php/
+                       footer.phpは呼ばない)
 lp/
 ├── css/ref001.css                 REF-001のフリーズ済みCSS
 │                                   (url()の相対パスのみlp/image/配下に
@@ -116,6 +125,11 @@ lp/
 - ACF JSON 2ファイルとも `json.load` でパース可能なことを確認済み
 - `lp/css/ref001.css`内の全`url()`相対パスが`lp/`配下の実ファイルに
   解決することを機械チェック済み（アイコン/背景画像の同梱漏れがないことの検証）
+- REF-001自身のHeader/Footerを追加し、実ブラウザで全アイコン/ロゴ画像が
+  読み込み成功（`complete:true`）することを確認済み
+- Coursesセクションのアイコン: SP専用バリアントが実在するコースは1件のみで、
+  それ以外の6件が壊れた`<picture>`(空srcset)になっていたバグを修正し、
+  実ブラウザで7件全てのアイコンが正しく表示されることを確認済み
 
 ## 実施していないこと（人間側で必要）
 
