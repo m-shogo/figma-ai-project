@@ -47,11 +47,15 @@ function normalize(string $html): string
 // same situation as a real site with ACF PRO inactive).
 // ---------------------------------------------------------------------
 
-function get_header() {}
-function get_footer() {}
 function get_stylesheet_directory_uri() { return 'https://example.test/wp-content/themes/example'; }
 function trailingslashit($s) { return rtrim($s, '/') . '/'; }
 function esc_url($s) { return htmlspecialchars($s, ENT_QUOTES, 'UTF-8'); }
+function language_attributes() { echo 'lang="ja"'; }
+function bloginfo($key) { echo $key === 'charset' ? 'UTF-8' : ''; }
+function wp_title($sep) {}
+function body_class($extra = '') { echo htmlspecialchars((string) $extra, ENT_QUOTES, 'UTF-8'); }
+function wp_head() { echo '<!--WP_HEAD-->'; }
+function wp_footer() { echo '<!--WP_FOOTER-->'; }
 
 $__wp_enqueue_scripts_hooks = [];
 function add_action($hook, $callback) {
@@ -70,15 +74,19 @@ include $package . '/lp-originalPage.php';
 $page = ob_get_clean();
 
 // The template only *registers* the wp_enqueue_scripts callback via
-// add_action(); a real WordPress run fires it during wp_head()/wp_footer()
-// (inside get_header()/get_footer()). Fire it here to prove it resolves
-// to the right CSS/JS without a PHP fatal, same as production would.
+// add_action(); a real WordPress run fires it before wp_head()/wp_footer()
+// output. Fire it here to prove it resolves to the right CSS/JS without a
+// PHP fatal, same as production would.
 foreach ($__wp_enqueue_scripts_hooks as $callback) {
     $callback();
 }
 assert_true(isset($__wp_enqueued['styles']['ref001-lp-style']) && str_ends_with($__wp_enqueued['styles']['ref001-lp-style'], '/lp/css/ref001.css'), 'wp_enqueue_scripts hook registers ref001-lp-style pointing at lp/css/ref001.css');
 assert_true(isset($__wp_enqueued['scripts']['ref001-lp-script']) && str_ends_with($__wp_enqueued['scripts']['ref001-lp-script'], '/lp/js/ref001-interactions.js'), 'wp_enqueue_scripts hook registers ref001-lp-script pointing at lp/js/ref001-interactions.js');
-assert_true(strpos($page, '<link') === false && strpos($page, '<script') === false, 'lp-originalPage body has no raw <link>/<script> tags (CSS/JS goes through wp_head()/wp_footer() instead)');
+assert_true(strpos($page, '<link') === false && strpos($page, '<script') === false, 'lp-originalPage has no raw <link>/<script> tags (CSS/JS goes through wp_head()/wp_footer() instead)');
+assert_true(strpos($page, '<!DOCTYPE html>') === 0, 'lp-originalPage is a standalone document starting with <!DOCTYPE html> (no get_header())');
+assert_true(strpos($page, '<!--WP_HEAD-->') !== false && strpos($page, '<!--WP_HEAD-->') < strpos($page, '<main'), 'wp_head() is called inside <head>, before the LP content');
+assert_true(strpos($page, '<!--WP_FOOTER-->') !== false && strpos($page, '<!--WP_FOOTER-->') > strpos($page, '</main>'), 'wp_footer() is called after the LP content, before </body>');
+assert_true(substr_count($page, '<html') === 1 && substr_count($page, '</html>') === 1, 'lp-originalPage emits exactly one <html>...</html> (no theme header/footer wrapping it a second time)');
 
 $expectedVoice = extract_section($page, 'ref-voice');
 $expectedMessages = extract_section($page, 'ref-messages');

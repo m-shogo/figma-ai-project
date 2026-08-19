@@ -11,9 +11,11 @@
  *   lp/js/ref001-interactions.js
  *   lp/image/icons/*.svg, lp/image/mv/*.svg, lp/image/photos/{pc,sp}/*.webp
  *
- * ヘッダー/フッターは既存テーマ側（get_header() / get_footer()）をそのまま使う想定です。
- * 会社/テーマ側の都合でget_header()/get_footer()が使えない場合は、
- * 下の2行を削除して素のHTML(<!DOCTYPE html>...)へ置き換えてください。
+ * 完全独立LPとして作ってあるため、テーマのheader.php/footer.php
+ * （サイト共通のナビ・ロゴ・共通フッター等）は一切読み込まない。
+ * get_header()/get_footer()ではなく<!DOCTYPE html>から自前で組み立て、
+ * WordPressが必要とする<head>情報(enqueueされたCSS/JS、SEOプラグインの
+ * meta等)だけをwp_head()/wp_footer()で出力する。
  *
  * --- Student Voice / Swiper をACF化したい場合 ---
  * 本文中の「学生の声」セクション（<section class="ref-student-voice" ...）を
@@ -27,10 +29,8 @@
  * --- CSS/JSの読み込み方について ---
  * <link>/<script>を本文中に直書きせず、WordPress標準の
  * wp_enqueue_scripts フックで登録している（下のadd_action）。
- * これにより、CSSは get_header() が出力する wp_head() の中で
- * 正しく <head> 内に、JSは get_footer() が出力する wp_footer() の中で
- * </body>直前に出力される（テーマのheader.php/footer.phpが
- * wp_head()/wp_footer()を呼んでいる、通常のWordPressテーマである前提）。
+ * これにより、CSSは wp_head() の中で正しく <head> 内に、
+ * JSは wp_footer() の中で </body>直前に出力される。
  */
 $lp_base = trailingslashit( get_stylesheet_directory_uri() ) . 'lp/';
 
@@ -41,9 +41,15 @@ add_action( 'wp_enqueue_scripts', function () use ( $lp_base ) {
 	wp_enqueue_style( 'ref001-lp-style', $lp_base . 'css/ref001.css', array(), null );
 	wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', array(), null, true );
 } );
-
-get_header();
-?>
+?><!DOCTYPE html>
+<html <?php language_attributes(); ?>>
+<head>
+<meta charset="<?php bloginfo( 'charset' ); ?>">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title><?php wp_title( '' ); ?></title>
+<?php wp_head(); ?>
+</head>
+<body <?php body_class( 'ref001-lp-standalone' ); ?>>
 <main class="ref-page" data-ref001-page data-figma-pc="21384:8173" data-figma-sp="21376:4401">
   <section class="ref-mv" data-section="main-visual" data-figma-pc="21378:8032" data-figma-sp="21376:4886">
   <div class="ref-mv__people" aria-hidden="true">
@@ -343,5 +349,7 @@ get_header();
     </div>
 </section>
 </main>
-<?php
-get_footer();
+<?php wp_footer(); ?>
+</body>
+</html>
+
