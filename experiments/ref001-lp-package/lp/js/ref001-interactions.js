@@ -1,188 +1,166 @@
+/**
+ * 千葉経済大学 LP の動きをまとめたファイル。
+ *
+ * やっていることは3つだけです。
+ *   1. STUDENTS VOICE の「もっと見る」開閉
+ *   2. MESSAGES のスライダー（Swiper を CDN から読み込んで初期化）
+ *   3. フッター右下の「ページ上部へ」ボタン
+ *
+ * 対応する HTML / CSS は
+ *   lp-originalPage.php の各セクション
+ *   lp/css/ref001.css の .p-voice / .p-messages / .p-footer ブロック
+ * です。
+ */
 (() => {
-  'use strict';
+	'use strict';
 
-  const root = document.querySelector('[data-ref001-page]');
-  if (!root) return;
+	const page = document.querySelector('.p-lp');
+	if (!page) return;
 
-  const TRANSITION_MS = 300;
-  const MESSAGE_COUNT = 4;
+	/** スライドの切り替え時間（CSS 側と揃えたいときはここ） */
+	const TRANSITION_MS = 300;
 
-  document.documentElement.dataset.ref001Js = 'ready';
-  document.documentElement.dataset.ref001TransitionMs = String(TRANSITION_MS);
 
-  function guardUnresolvedLinks() {
-    document.querySelectorAll('a[data-link-status="UNRESOLVED"]').forEach((link) => {
-      link.dataset.interactionAuthority = 'PRODUCT_PENDING';
-      if (link.getAttribute('href') !== '#') return;
+	/* ----------------------------------------------------------------
+	   1. STUDENTS VOICE — 「もっと見る」で詳細を開閉する
+	   ---------------------------------------------------------------- */
+	function initVoice() {
+		const toggles = page.querySelectorAll('.p-voice__toggle');
 
-      link.dataset.interactionStatus = 'DESTINATION_PENDING';
-      link.addEventListener('click', (event) => event.preventDefault());
-    });
-  }
+		toggles.forEach((toggle) => {
+			const detail = document.getElementById(toggle.getAttribute('aria-controls'));
+			if (!detail) return;
 
-  function initStudentVoice() {
-    const section = root.querySelector('[data-section="student-voice"]');
-    if (!section) return;
+			toggle.addEventListener('click', () => {
+				const willOpen = toggle.getAttribute('aria-expanded') !== 'true';
 
-    section.dataset.interactionAuthority = 'PRODUCT_DECISION';
+				toggle.setAttribute('aria-expanded', String(willOpen));
+				detail.hidden = !willOpen;
+				toggle.closest('.p-voice__item')?.classList.toggle('is-open', willOpen);
 
-    const syncState = (item, open) => {
-      item.classList.toggle('ref-voice-item--open', open);
-      item.classList.toggle('ref-voice-item--collapsed', !open);
-      item.dataset.voiceState = open ? 'open' : 'collapsed';
+				// ボタンの文言も状態に合わせる
+				toggle.lastChild.textContent = willOpen ? '閉じる' : 'もっと見る';
+			});
+		});
+	}
 
-      item.querySelector('.ref-voice-disclosure')?.setAttribute('aria-hidden', open ? 'false' : 'true');
-      item.querySelector('.ref-voice-toggle')?.setAttribute('aria-expanded', open ? 'true' : 'false');
-    };
 
-    section.querySelectorAll('.ref-voice-item').forEach((item, index) => {
-      item.dataset.voiceItem = String(index + 1);
-      syncState(item, item.classList.contains('ref-voice-item--open'));
+	/* ----------------------------------------------------------------
+	   2. MESSAGES — スライダー
 
-      const toggle = item.querySelector('.ref-voice-toggle');
-      if (!toggle) return;
+	   Swiper 本体はこのパッケージに同梱せず、CDN から読み込みます。
+	   すでにテーマ側が Swiper を読み込んでいる場合は二重読み込みしません。
+	   ---------------------------------------------------------------- */
+	function loadSwiper() {
+		if (window.Swiper) return Promise.resolve(window.Swiper);
 
-      toggle.dataset.interactionAuthority = 'PRODUCT_DECISION';
-      toggle.addEventListener('click', () => syncState(item, true));
-    });
-  }
+		if (!document.querySelector('link[data-lp-swiper]')) {
+			const style = document.createElement('link');
+			style.rel = 'stylesheet';
+			style.href = 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css';
+			style.dataset.lpSwiper = 'true';
+			document.head.append(style);
+		}
 
-  function loadSwiper() {
-    if (window.Swiper) return Promise.resolve(window.Swiper);
+		return new Promise((resolve, reject) => {
+			const existing = document.querySelector('script[data-lp-swiper]');
+			if (existing) {
+				existing.addEventListener('load', () => resolve(window.Swiper), { once: true });
+				existing.addEventListener('error', reject, { once: true });
+				return;
+			}
 
-    if (!document.querySelector('link[data-ref-swiper]')) {
-      const stylesheet = document.createElement('link');
-      stylesheet.rel = 'stylesheet';
-      stylesheet.href = 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css';
-      stylesheet.dataset.refSwiper = 'true';
-      document.head.append(stylesheet);
-    }
+			const script = document.createElement('script');
+			script.src = 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js';
+			script.defer = true;
+			script.dataset.lpSwiper = 'true';
+			script.addEventListener('load', () => resolve(window.Swiper), { once: true });
+			script.addEventListener('error', reject, { once: true });
+			document.head.append(script);
+		});
+	}
 
-    return new Promise((resolve, reject) => {
-      const existing = document.querySelector('script[data-ref-swiper]');
-      if (existing) {
-        existing.addEventListener('load', () => resolve(window.Swiper), { once: true });
-        existing.addEventListener('error', reject, { once: true });
-        return;
-      }
+	function initMessages() {
+		const section = page.querySelector('.p-messages');
+		if (!section) return;
 
-      const script = document.createElement('script');
-      script.src = 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js';
-      script.defer = true;
-      script.dataset.refSwiper = 'true';
-      script.addEventListener('load', () => resolve(window.Swiper), { once: true });
-      script.addEventListener('error', reject, { once: true });
-      document.head.append(script);
-    });
-  }
+		const slider = section.querySelector('[data-ref-messages-swiper]');
+		if (!slider) return;
 
-  function initMessages() {
-    const section = root.querySelector('[data-section="messages"]');
-    if (!section) return;
+		const slides  = section.querySelectorAll('.p-messages__slide');
+		const total   = slides.length;
+		const current = section.querySelector('[data-ref-message-current]');
+		const bar     = section.querySelector('.p-messages__counter-bar');
+		const prev    = section.querySelector('.p-messages__arrow--prev');
+		const next    = section.querySelector('.p-messages__arrow--next');
 
-    section.dataset.interactionAuthority = 'PRODUCT_DECISION';
-    section.dataset.authoredSlides = '1';
-    section.dataset.runtimeSlides = String(MESSAGE_COUNT);
-    section.dataset.interactionStatus = 'SWIPER_LOADING';
+		if (!total) return;
 
-    const swiperElement = section.querySelector('[data-ref-messages-swiper]');
-    if (!swiperElement) return;
+		/** 「1 ── 4」の数字とバーを今のスライドに合わせる */
+		const syncCounter = (index0) => {
+			const shown = index0 + 1;
+			if (current) current.textContent = String(shown);
+			if (bar) bar.style.setProperty('--progress', `${(shown / total) * 100}%`);
+		};
 
-    const current = section.querySelector('[data-ref-message-current]');
-    const progress = section.querySelector('.ref-messages__bar');
-    const previous = section.querySelector('.ref-messages__prev');
-    const next = section.querySelector('.ref-messages__next');
+		loadSwiper()
+			.then((Swiper) => {
+				if (typeof Swiper !== 'function') throw new Error('Swiper unavailable');
 
-    const update = (swiper) => {
-      const index = (swiper.realIndex ?? swiper.activeIndex ?? 0) + 1;
-      if (current) current.textContent = String(index);
-      if (progress) progress.style.setProperty('--ref-message-progress', `${(index / MESSAGE_COUNT) * 100}%`);
-      section.dataset.activeSlide = String(index);
-    };
+				// 自動テスト中は自動再生を止めておく（キャプチャが安定するため）
+				const isAutomated = navigator.webdriver === true;
 
-    loadSwiper()
-      .then((SwiperCtor) => {
-        if (typeof SwiperCtor !== 'function') {
-          throw new Error('Swiper constructor unavailable');
-        }
+				// loop ではなく rewind を使っています。
+				// loop はスライドを複製して並べ替える仕組みで、
+				// 枚数が少ないと内部状態が崩れて動かなくなることがあります。
+				// rewind は最後まで行ったら先頭に戻るだけなので、
+				// 見え方は同じまま、動きが安定します。
+				new Swiper(slider, {
+					rewind: true,
+					speed: TRANSITION_MS,
+					slidesPerView: 1,
+					autoplay: isAutomated
+						? false
+						: { delay: 4500, disableOnInteraction: false, pauseOnMouseEnter: true },
+					navigation: { prevEl: prev, nextEl: next },
+					on: {
+						init:        (s) => syncCounter(s.activeIndex ?? 0),
+						slideChange: (s) => syncCounter(s.activeIndex ?? 0),
+					},
+				});
+			})
+			.catch(() => {
+				// CDN が読めなかったときも、矢印だけは動くようにしておく
+				let active = 0;
 
-        const qaBrowser = navigator.webdriver === true;
-        const swiper = new SwiperCtor(swiperElement, {
-          loop: true,
-          speed: TRANSITION_MS,
-          slidesPerView: 1,
-          allowTouchMove: true,
-          slideToClickedSlide: true,
-          autoplay: qaBrowser
-            ? false
-            : { delay: 4500, disableOnInteraction: false, pauseOnMouseEnter: true },
-          navigation: { prevEl: previous, nextEl: next },
-          on: {
-            init: update,
-            slideChange: update,
-          },
-        });
+				const show = (index) => {
+					active = (index + total) % total;
+					slides.forEach((slide, i) => { slide.hidden = i !== active; });
+					syncCounter(active);
+				};
 
-        window.__ref001MessagesSwiper = swiper;
-        section.dataset.autoplay = qaBrowser ? 'QA_PAUSED' : 'ACTIVE';
-        section.dataset.interactionStatus = 'SWIPER_READY';
-      })
-      .catch(() => {
-        const slides = [...section.querySelectorAll('.ref-messages__slide')];
-        if (!slides.length) return;
+				prev?.addEventListener('click', () => show(active - 1));
+				next?.addEventListener('click', () => show(active + 1));
+				show(0);
+			});
+	}
 
-        section.dataset.interactionStatus = 'SWIPER_FALLBACK';
-        let active = 0;
 
-        const show = (index) => {
-          active = (index + slides.length) % slides.length;
-          slides.forEach((slide, slideIndex) => {
-            slide.hidden = slideIndex !== active;
-          });
-          update({ realIndex: active });
-        };
+	/* ----------------------------------------------------------------
+	   3. ページ上部へ戻るボタン
+	   ---------------------------------------------------------------- */
+	function initPageTop() {
+		const button = document.querySelector('.p-footer__pagetop');
+		if (!button) return;
 
-        previous?.addEventListener('click', () => show(active - 1));
-        next?.addEventListener('click', () => show(active + 1));
-        show(0);
-      });
-  }
+		button.addEventListener('click', () => {
+			const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+			window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
+		});
+	}
 
-  function initPageTop() {
-    const button = document.querySelector('.ref-footer__pagetop');
-    if (!button) return;
 
-    const syncVisibility = () => {
-      button.classList.toggle('is-visible', window.scrollY > 320);
-    };
-
-    const scrollToTop = () => {
-      const start = window.scrollY;
-      if (start <= 0) return;
-
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        window.scrollTo(0, 0);
-        return;
-      }
-
-      const startedAt = performance.now();
-      const tick = (now) => {
-        const progress = Math.min(1, (now - startedAt) / TRANSITION_MS);
-        const eased = 1 - Math.pow(1 - progress, 3);
-        window.scrollTo(0, Math.round(start * (1 - eased)));
-        if (progress < 1) requestAnimationFrame(tick);
-      };
-
-      requestAnimationFrame(tick);
-    };
-
-    syncVisibility();
-    window.addEventListener('scroll', syncVisibility, { passive: true });
-    button.addEventListener('click', scrollToTop);
-  }
-
-  guardUnresolvedLinks();
-  initStudentVoice();
-  initMessages();
-  initPageTop();
+	initVoice();
+	initMessages();
+	initPageTop();
 })();

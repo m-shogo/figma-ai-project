@@ -1,141 +1,157 @@
-# REF-001 LP パッケージ（ACFなし直書き版 + 差し替え用ACF一式）
+# 千葉経済大学 LP パッケージ
 
-`experiments/ref001-cku-theme-integration/`（cku本番テーマへ最小限のフックだけで
-統合する版）とは**別の、もう一つの納品形態**。
+`lp-originalPage.php` と `lp/` フォルダをテーマ直下にコピーするだけで動く、
+自己完結型の LP です。
 
-こちらは「まずACF無しで直書きのページとしてそのまま動かし、後から
-Student Voice / Swiperの2箇所だけをACF PROに差し替える」という運用を
-想定したパッケージ。cku固有の`functions.php`規約には依存しない、
-**完全独立LP**として作ってある。
+- まずは **ACF なし** の直書き状態でそのまま公開できます
+- あとから **学生の声 / スライダーの2箇所だけ** を ACF PRO で編集可能にできます
 
-**対象テーマ共通のヘッダー/フッター（テーマのナビ・ロゴ・共通フッター等）は
-一切表示しない。** `get_header()`/`get_footer()`は使わず、
-`<!DOCTYPE html>`から自前でHTML文書を組み立てている。WordPressが
-必要とする`<head>`情報（enqueueされたCSS/JS、SEOプラグインのmeta等）
-だけを`wp_head()`/`wp_footer()`で出力する。
+---
 
-その代わり、**REF-001自身のHeader/Footer**（ロゴ・資料請求/オープン
-キャンパスへのアクション、大学住所・SNS・コピーライト等）を
-`lp-originalPage.php`内に直書きで含めている。これはテーマ側の
-共通ヘッダー/フッターとは別物 — REF-001のデザインに含まれる
-Header/Footerセクションそのもので、`<main>`の前後に配置してある。
-
-## 構成
+## 1. 何がどこにあるか
 
 ```
-lp-originalPage.php   ページテンプレート本体。ACFなし、全セクション直書き。
-                       (Header/Footer含む: <main>の前後にREF-001自身の
-                       Header/Footerを配置。テーマ側の共通header.php/
-                       footer.phpは呼ばない)
+lp-originalPage.php   ページ本体。全セクションが見た目どおりの順で直書きしてあります。
+                       （REF-001 自身の Header / Footer も含みます）
 lp/
-├── css/ref001.css                 REF-001のフリーズ済みCSS
-│                                   (url()の相対パスのみlp/image/配下に
-│                                   合わせて書き換え済み。中身のCSSルール自体は無変更)
-├── js/ref001-interactions.js      REF-001のフリーズ済みJS(Voiceアコーディオン/Swiper初期化)
+├── css/ref001.css                スタイル（このLP専用。1ファイル）
+├── js/ref001-interactions.js     アコーディオン / スライダー / ページトップ
 ├── image/
-│   ├── icons/*.svg                 CSS/PHP両方から参照される全アイコン
-│   ├── mv/*.svg                    メインビジュアルのオープンキャンパス飾り
-│   ├── backgrounds/*.jpg           CSSがbackground-imageで使う写真素材
-│   └── photos/{pc,sp}/*.webp       Figma書き出しの実写真(全てPHP<picture>から参照)
-├── acf-swap/
-│   ├── _helpers.php               ACF版の共通ヘルパー(repeater読み取り/フォールバック等)
-│   ├── student-voice-acf.php      「学生の声」ACF差し替え版
-│   └── swiper-acf.php             「Swiper(先輩たちの声)」ACF差し替え版
-└── acf-json/
-    ├── group_ref001_student_voice.json   ACF PROフィールド定義(Local JSON)
-    └── group_ref001_swiper.json          同上
+│   ├── icons/*.svg                アイコン
+│   ├── mv/*.svg                   メインビジュアルのあしらい
+│   ├── backgrounds/*.jpg          CTA の背景写真
+│   └── photos/{pc,sp}/*.webp      写真（PC用 / SP用）
+├── acf-swap/                      ACF で編集したくなったときだけ使うファイル
+│   ├── _helpers.php
+│   ├── student-voice-acf.php
+│   └── swiper-acf.php
+├── acf-json/                      ACF PRO のフィールド定義（Local JSON）
+│   ├── group_ref001_student_voice.json
+│   └── group_ref001_swiper.json
+└── acf-export.json                上2つをまとめた確認用ファイル
 ```
 
-## 使い方: そのまま設置する（ACFなし）
+---
 
-1. `lp-originalPage.php` と `lp/` フォルダを、対象テーマのルート直下に
-   そのままコピーする。
-2. WordPress管理画面で固定ページを作成し、テンプレートに
-   「LP オリジナルページ（ACFなし直書き版）」を選択する。
-3. これだけで表示される。ACF PROは不要。中身は`lp-originalPage.php`に
-   直接HTMLとして書いてあるので、文言や画像を変えたい場合は
-   このファイルを直接編集すればよい。
+## 2. 設置手順（ACF なし）
 
-## 使い方: あとからStudent Voice / SwiperだけACF化する
+1. `lp-originalPage.php` と `lp/` をテーマのルート直下にコピーする
+2. 管理画面で固定ページを作り、テンプレートに
+   **「LP オリジナルページ」** を選ぶ
+3. 以上。ACF PRO は不要です
 
-1. ACF PROを有効化する（`lp/acf-json/`は自動で読み込まれる）。
-2. `lp-originalPage.php` の中の該当セクションを、コメントに書いてある通り
-   include に置き換える。
+文言や画像を変えたいときは `lp-originalPage.php` を直接編集してください。
+セクションごとにコメントで区切ってあります。
 
-   学生の声セクション（`<section class="ref-voice" ...>...</section>`）を:
+---
+
+## 3. あとから ACF で編集できるようにする
+
+1. ACF PRO を有効化する（`lp/acf-json/` は自動で読み込まれます）
+2. `lp-originalPage.php` の中の該当セクションを、丸ごと include に置き換える
+
+   学生の声 … `<section class="p-voice"> 〜 </section>` を:
    ```php
    <?php include __DIR__ . '/lp/acf-swap/student-voice-acf.php'; ?>
    ```
-   Swiperセクション（`<section class="ref-messages" ...>...</section>`）を:
+   スライダー … `<section class="p-messages"> 〜 </section>` を:
    ```php
    <?php include __DIR__ . '/lp/acf-swap/swiper-acf.php'; ?>
    ```
-3. 管理画面で `ref001_student_voices` / `ref001_swiper_slides` の
-   繰り返しフィールドを編集すると、その内容が反映される。
-   フィールドが空/ACF無効のままでも、直書き版と同じ内容が表示される
-   （`lp/acf-swap/_helpers.php`のフォールバック機構）。
+3. 管理画面の繰り返しフィールドで編集する
+   - 学生の声 … `ref001_student_voices`
+   - スライダー … `ref001_swiper_slides`
 
-## フォント / 外部ライブラリについて
+フィールドを空にしたまま／ACF を止めた場合でも、直書き版と同じ内容が
+表示されます（PHP の警告も出ません）。
+スライダーは枚数を増減すると、右下のカウンター（1 ── 4）も自動で追従します。
 
-- **フォント**: `lp/css/ref001.css`の先頭で`@import url('https://fonts.googleapis.com/...')`
-  によりNoto Serif JP / Poppins / Zen Kaku Gothic NewをGoogle Fonts CDNから
-  読み込んでいる。これはREF-001の元CSSからそのまま引き継いだ仕様で、
-  ローカルにフォントファイルを同梱する構成ではない
-  （インターネット接続がある環境であればそのまま動作する）。
-- **Swiper**: `lp/js/ref001-interactions.js`が実行時に
-  `https://cdn.jsdelivr.net/npm/swiper@11/...`からSwiper本体を自動読み込みする
-  （`window.Swiper`が既に存在する場合は読み込まない）。ローカルには同梱しない。
+---
 
-## ページ構造 / CSS・JSの読み込み方
+## 4. CSS の決まりごと
 
-```
-<!DOCTYPE html>
-<html>
-<head>
-  <?php wp_head(); ?>   ← enqueueされたCSS等はここに出力される
-</head>
-<body>
-  <main class="ref-page">...REF-001の全セクション...</main>
-  <?php wp_footer(); ?> ← enqueueされたJS等はここに出力される
-</body>
-</html>
-```
+あとから人が直すことを前提にした構成です。
 
-テーマの`header.php`/`footer.php`（ナビ・ロゴ・共通フッター等）は
-呼び出さない。`<link>`/`<script>`を本文に直書きする代わりに、
-`wp_enqueue_style()`/`wp_enqueue_script()`でCSS/JSを登録しており、
-それが`wp_head()`/`wp_footer()`によって正しい位置に出力される。
+### 探し方
 
-**注意**: `add_action('wp_enqueue_scripts', ...)`で遅延登録する一般的な
-書き方は、あえて使っていない。ページテンプレートはそのフックより後に
-読み込まれるため、そこで登録しても間に合わず一度も実行されず、CSS/JSが
-サイト全体で一切当たらなくなることがある（フォント等の見た目が
-どこにも反映されない不具合として現れる）。このファイルはすぐ下で
-自分自身が`wp_head()`/`wp_footer()`を呼ぶため、フックへ登録し直さず
-直接enqueueして確実にタイミングを合わせている。
+HTML のセクション名で CSS を検索してください。1箇所だけに当たります。
 
-## QA実施済みの内容
+| HTML | CSS |
+| --- | --- |
+| `<section class="p-reason">` | `.p-reason { ... }` |
+| `<section class="p-courses">` | `.p-courses { ... }` |
 
-- 全PHPファイル: `php -l` 構文チェック済み
-- `lp/acf-swap/*.php` をACF不在の状態でレンダリングし、
-  `lp-originalPage.php`の直書き部分と**バイト単位で一致**することを確認済み
-  （`data-figma-*`属性の有無のみ意図的な差分）
-- ACFの値を書き換えてレンダリングし、実際にDOM(タイトル/本文/枚数)が
-  変わることを確認済み（`have_rows`/`get_sub_field`をモックしたテストで検証）
-- ACF JSON 2ファイルとも `json.load` でパース可能なことを確認済み
-- `lp/css/ref001.css`内の全`url()`相対パスが`lp/`配下の実ファイルに
-  解決することを機械チェック済み（アイコン/背景画像の同梱漏れがないことの検証）
-- REF-001自身のHeader/Footerを追加し、実ブラウザで全アイコン/ロゴ画像が
-  読み込み成功（`complete:true`）することを確認済み
-- Coursesセクションのアイコン: SP専用バリアントが実在するコースは1件のみで、
-  それ以外の6件が壊れた`<picture>`(空srcset)になっていたバグを修正し、
-  実ブラウザで7件全てのアイコンが正しく表示されることを確認済み
+各セクションのブロックの中に、そのセクションの **PC / SP 両方** の指定が
+入っています。別の場所を探し回る必要はありません。
 
-## 実施していないこと（人間側で必要）
+### 名前の付け方
 
-- 実ACF PROライセンス＋実WordPress環境での目視QA
-  （`experiments/wordpress-acf-pro-standalone-lp/` の `make qa` を、
-  `.env`にライセンスキーを設定した上で実行してください）
-- 実際のWordPress環境で`wp_head()`/`wp_footer()`が想定通りCSS/JSを
-  出力するかの目視確認（SEOプラグイン等が`<head>`へ何を追加するかは
-  環境依存のため、設置後に一度ページソースで確認することを推奨）
+| 接頭辞 | 意味 | 例 |
+| --- | --- | --- |
+| `l-` | レイアウトの入れ物 | `l-container` |
+| `c-` | 使い回すパーツ | `c-btn` / `c-kicker` / `c-heading` / `c-checklist` |
+| `p-` | ページのセクション | `p-mv` / `p-reason` / `p-courses` |
+
+### 書き方のルール
+
+- **高さ・幅を決め打ちしない。** 中身と余白（`padding` / `gap`）で決まるようにする
+- **並べるときは flex か grid。** `position: absolute` はレイアウトに使わない
+- `absolute` を使ってよいのは **あしらいだけ**
+  （吹き出しの尻尾、OPEN CAMPUS バッジ、ページトップボタン）
+- 要素どうしを重ねたいときは、`absolute` ではなく
+  **grid の同じマスに置く**（`grid-area: 1 / 1`）
+  → メインビジュアルと「まずは大学を体験してみよう！」がこの方法です
+- 見出しなどを境目にまたがせたいときは、`absolute` ではなく
+  **マイナスマージン**（`p-reason__title` / `p-courses__rec-label`）
+- **ブレークポイントは 768px の1本だけ。**
+  767px以下 = SP / 768px以上 = PC。中間の境目は作らない
+- 色や余白は先頭の `:root` にまとめてあります。まずそこを見てください
+- 初期化（reset）は `:where()` で囲んで詳細度を 0 にしてあります。
+  囲まないと `.p-lp a {}` が `.c-btn--doc {}` より強くなり、
+  ボタンの文字色が効かない、といった事故が起きます
+
+---
+
+## 5. フォント / 外部ライブラリ
+
+- **フォント**: `lp/css/ref001.css` の先頭で Google Fonts から読み込みます
+  （Zen Kaku Gothic New / Poppins）。ファイルは同梱していません
+- **Swiper**: `lp/js/ref001-interactions.js` が実行時に CDN から読み込みます。
+  テーマ側に既に Swiper があればそれを使い、二重読み込みしません
+
+どちらもインターネット接続がある環境でそのまま動きます。
+
+---
+
+## 6. 確認済みの内容
+
+`php scripts/ci-render-contract.php .` で自動チェックできます（全31項目）。
+
+- 全 PHP の構文チェック
+- CSS の相対 `url()` がすべて実ファイルに解決する（素材の入れ忘れ検出）
+- `@media` が 767/768px の1本だけ（中間ブレークポイントが増えていない）
+- `<!DOCTYPE html>` から始まる単独ドキュメントで、`wp_head()` / `wp_footer()`
+  が正しい位置にある
+- CSS/JS を `add_action` 経由にしていない（発火せず CSS が当たらない事故の防止）
+- テンプレートが参照する素材がすべて存在する
+- 旧クラス名（`ref-*`）が残っていない
+- ACF 未設定時に直書き版と同じ内容が出て、PHP 警告が出ない
+- ACF 設定時に内容・件数・画像が実際に切り替わる
+
+ブラウザでの実測（Chromium）:
+
+- PC 1380px / SP 375px とも横スクロールなし
+- 画像 50 点すべて読み込み成功
+- ページ全体の高さ PC 7794px（承認済みデザイン 7714px とほぼ一致）
+- 学生の声のアコーディオンが開閉とも動作
+- スライダーが「次へ 2→3→4→1」「戻る」ともに動作し、カウンターが連動
+
+---
+
+## 7. 人の手が必要な残作業
+
+- 実 ACF PRO ライセンス + 実 WordPress での目視確認
+  （`experiments/wordpress-acf-pro-standalone-lp/` の `.env` にキーを入れて `make qa`）
+- リンク先 URL の最終確認（現在は千葉経済大学の公開ページを指しています）
+- 「数字で見る千葉経済大学」のリンク先だけ未確定のため、
+  暫定で大学トップを指しています

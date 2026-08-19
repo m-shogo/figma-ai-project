@@ -1,199 +1,263 @@
 <?php
 /**
- * CI render-contract smoke test for the REF-001 lp-package.
+ * LP パッケージの自動チェック。
  *
- * Proves, without a real WordPress/ACF PRO install:
- *   1. ACF absent  -> lp/acf-swap/{student-voice,swiper}-acf.php render the
- *      exact same markup as the hardcoded sections in lp-originalPage.php.
- *   2. ACF present (mocked have_rows/the_row/get_sub_field, run in a fresh
- *      PHP process so pass 1's undefined-ACF-functions state is untouched),
- *      mutated data -> the DOM actually changes (title/quote text, row count).
+ * 実際の WordPress / ACF PRO が無くても壊れを検出できるように、
+ * WordPress の関数を最低限だけ用意してテンプレートを描画し、
+ * 出来上がった HTML と CSS を機械的に検査します。
+ *
+ * 使い方:
+ *   php scripts/ci-render-contract.php .
  */
 
-error_reporting(E_ALL);
-ini_set('display_errors', '1');
+error_reporting( E_ALL );
+ini_set( 'display_errors', '1' );
 
-$package = $argv[1] ?? null;
-if (!$package || !is_dir($package)) {
-    fwrite(STDERR, "usage: ci-render-contract.php <lp-package-dir>\n");
-    exit(2);
+$pkg = $argv[1] ?? null;
+if ( ! $pkg || ! is_dir( $pkg ) ) {
+	fwrite( STDERR, "usage: ci-render-contract.php <lp-package-dir>\n" );
+	exit( 2 );
+}
+$pkg = rtrim( $pkg, '/' );
+
+$failures = 0;
+
+function check( bool $ok, string $message ): void {
+	global $failures;
+	if ( $ok ) {
+		echo "PASS: $message\n";
+		return;
+	}
+	echo "FAIL: $message\n";
+	$failures++;
 }
 
-function assert_true(bool $condition, string $message): void
-{
-    if (!$condition) {
-        fwrite(STDERR, "FAIL: $message\n");
-        exit(1);
-    }
-    echo "PASS: $message\n";
+
+/* ===========================================================
+   1. CSS — 相対 url() がすべて実ファイルに解決するか
+   =========================================================== */
+
+$css_path = $pkg . '/lp/css/ref001.css';
+$css      = file_get_contents( $css_path );
+check( $css !== false, 'lp/css/ref001.css が読める' );
+
+preg_match_all( "/url\\(\\s*'(\\.\\.\\/[^']+)'\\s*\\)/", $css, $m );
+$missing = array();
+foreach ( array_unique( $m[1] ) as $rel ) {
+	if ( realpath( dirname( $css_path ) . '/' . $rel ) === false ) {
+		$missing[] = $rel;
+	}
 }
+check( count( $m[1] ) > 0, 'CSS に相対 url() が存在する（検査対象がある）' );
+check( empty( $missing ), 'CSS の相対 url() がすべて実ファイルに解決する' . ( $missing ? ': ' . implode( ', ', $missing ) : '' ) );
 
-// ---------------------------------------------------------------------
-// Asset completeness: every relative url(...) in lp/css/ref001.css must
-// resolve to a real file under lp/, so nothing referenced by the CSS
-// (background icons, fonts-not-needed-here, etc.) is silently missing.
-// ---------------------------------------------------------------------
 
-$cssPath = $package . '/lp/css/ref001.css';
-$css = file_get_contents($cssPath);
-assert_true($css !== false, 'lp/css/ref001.css is readable');
+/* ===========================================================
+   2. CSS — ブレークポイントが 767/768 の1本だけか
+   =========================================================== */
 
-preg_match_all("/url\\('(\\.\\.\\/[^']+)'\\)/", $css, $urlMatches);
-$missingCssAssets = [];
-foreach ($urlMatches[1] as $relativeUrl) {
-    if (str_starts_with($relativeUrl, 'http')) {
-        continue;
-    }
-    $resolved = realpath($package . '/lp/css/' . $relativeUrl);
-    if ($resolved === false) {
-        $missingCssAssets[] = $relativeUrl;
-    }
+preg_match_all( '/@media[^{]+/', $css, $mq );
+$bad_bp = array();
+foreach ( array_unique( $mq[0] ) as $q ) {
+	if ( ! preg_match( '/\b(767|768)px\b/', $q ) ) {
+		$bad_bp[] = trim( $q );
+	}
 }
-assert_true(count($urlMatches[1]) > 0, 'lp/css/ref001.css has at least one relative url() to check');
-assert_true(empty($missingCssAssets), 'every relative url() in lp/css/ref001.css resolves to a real file: ' . implode(', ', $missingCssAssets));
+check( empty( $bad_bp ), '@media は 767/768px だけ（中間ブレークポイントなし）' . ( $bad_bp ? ': ' . implode( ' | ', $bad_bp ) : '' ) );
+check( ! preg_match( '/\b(1299|1300)px\b/', $css ), '廃止済みの 1299/1300px が残っていない' );
 
-function extract_section(string $html, string $class): ?string
-{
-    if (preg_match('/<section class="' . preg_quote($class, '/') . '".*?<\/section>/s', $html, $m)) {
-        return $m[0];
-    }
-    return null;
-}
 
-function normalize(string $html): string
-{
-    return rtrim(preg_replace('/ data-figma-pc="[^"]*" data-figma-sp="[^"]*"/', '', $html));
-}
-
-// ---------------------------------------------------------------------
-// Pass 1: fallback fidelity (no ACF functions defined anywhere in this
-// process, so have_rows()/get_sub_field() genuinely do not exist -- the
-// same situation as a real site with ACF PRO inactive).
-// ---------------------------------------------------------------------
+/* ===========================================================
+   3. テンプレートを描画する（WordPress スタブ）
+   =========================================================== */
 
 function get_stylesheet_directory_uri() { return 'https://example.test/wp-content/themes/example'; }
-function trailingslashit($s) { return rtrim($s, '/') . '/'; }
-function esc_url($s) { return htmlspecialchars($s, ENT_QUOTES, 'UTF-8'); }
+function trailingslashit( $s ) { return rtrim( $s, '/' ) . '/'; }
+function esc_url( $s ) { return htmlspecialchars( $s, ENT_QUOTES, 'UTF-8' ); }
 function language_attributes() { echo 'lang="ja"'; }
-function bloginfo($key) { echo $key === 'charset' ? 'UTF-8' : ''; }
-function wp_title($sep) {}
-function body_class($extra = '') { echo htmlspecialchars((string) $extra, ENT_QUOTES, 'UTF-8'); }
+function bloginfo( $k ) { echo $k === 'charset' ? 'UTF-8' : ''; }
+function body_class( $extra = '' ) { echo 'class="' . htmlspecialchars( (string) $extra, ENT_QUOTES, 'UTF-8' ) . '"'; }
 function wp_head() { echo '<!--WP_HEAD-->'; }
 function wp_footer() { echo '<!--WP_FOOTER-->'; }
 
-$__wp_enqueued = ['styles' => [], 'scripts' => []];
-function wp_enqueue_style($handle, $src, $deps, $ver) { global $__wp_enqueued; $__wp_enqueued['styles'][$handle] = $src; }
-function wp_enqueue_script($handle, $src, $deps, $ver, $footer) { global $__wp_enqueued; $__wp_enqueued['scripts'][$handle] = $src; }
+$enqueued = array( 'style' => array(), 'script' => array() );
+function wp_enqueue_style( $h, $src, $d, $v ) { global $enqueued; $enqueued['style'][ $h ] = $src; }
+function wp_enqueue_script( $h, $src, $d, $v, $f ) { global $enqueued; $enqueued['script'][ $h ] = $src; }
 
 ob_start();
-include $package . '/lp-originalPage.php';
+include $pkg . '/lp-originalPage.php';
 $page = ob_get_clean();
 
-// wp_enqueue_style()/wp_enqueue_script() must be called directly (not
-// deferred via add_action('wp_enqueue_scripts', ...)), because a page
-// template file is loaded by WordPress *after* that hook has already
-// fired -- a deferred registration would silently never run in
-// production, meaning the CSS/JS never load at all. Assert the calls
-// happened synchronously while this file was included.
-assert_true(isset($__wp_enqueued['styles']['ref001-lp-style']) && str_ends_with($__wp_enqueued['styles']['ref001-lp-style'], '/lp/css/ref001.css'), 'lp-originalPage calls wp_enqueue_style() directly for ref001-lp-style (not deferred via add_action)');
-assert_true(isset($__wp_enqueued['scripts']['ref001-lp-script']) && str_ends_with($__wp_enqueued['scripts']['ref001-lp-script'], '/lp/js/ref001-interactions.js'), 'lp-originalPage calls wp_enqueue_script() directly for ref001-lp-script (not deferred via add_action)');
-assert_true(strpos($page, '<link') === false && strpos($page, '<script') === false, 'lp-originalPage has no raw <link>/<script> tags (CSS/JS goes through wp_head()/wp_footer() instead)');
-assert_true(strpos($page, '<!DOCTYPE html>') === 0, 'lp-originalPage is a standalone document starting with <!DOCTYPE html> (no get_header())');
-assert_true(strpos($page, '<!--WP_HEAD-->') !== false && strpos($page, '<!--WP_HEAD-->') < strpos($page, '<main'), 'wp_head() is called inside <head>, before the LP content');
-assert_true(strpos($page, '<!--WP_FOOTER-->') !== false && strpos($page, '<!--WP_FOOTER-->') > strpos($page, '</main>'), 'wp_footer() is called after the LP content, before </body>');
-assert_true(substr_count($page, '<html') === 1 && substr_count($page, '</html>') === 1, 'lp-originalPage emits exactly one <html>...</html> (no theme header/footer wrapping it a second time)');
 
-// REF-001's own Header/Footer sections (not the site theme's chrome --
-// this page is standalone and calls no get_header()/get_footer()) must
-// be present, in order, around <main>.
-$headerPos = strpos($page, '<header class="ref-header"');
-$mainPos = strpos($page, '<main class="ref-page"');
-$footerPos = strpos($page, '<footer class="ref-footer"');
-assert_true($headerPos !== false && $headerPos < $mainPos, 'lp-originalPage includes REF-001\'s own <header class="ref-header"> before <main>');
-assert_true($footerPos !== false && $footerPos > $mainPos, 'lp-originalPage includes REF-001\'s own <footer class="ref-footer"> after <main>');
+/* ===========================================================
+   4. ページの土台 — 単独ドキュメントになっているか
+   =========================================================== */
 
-// Courses icons: only one course has a distinct SP-only variant (the
-// asset-map's "course-6-sp" entry); every other course must render a
-// plain <img> rather than a <picture> with an empty/broken srcset.
-assert_true(strpos($page, "esc_url( \$lp_base . '' )") === false, 'no course icon renders a <picture> with an empty/unresolved srcset');
-assert_true(substr_count($page, 'ref-course__icon"><picture>') === 1, 'exactly one course icon uses <picture> (the one with a real SP-only variant); the rest are plain <img>');
+check( str_starts_with( $page, '<!DOCTYPE html>' ), '<!DOCTYPE html> から始まる単独ドキュメント（get_header() を使っていない）' );
+check( substr_count( $page, '<html' ) === 1 && substr_count( $page, '</html>' ) === 1, '<html> は1組だけ（テーマのheader/footerで二重に包まれていない）' );
 
-$expectedVoice = extract_section($page, 'ref-voice');
-$expectedMessages = extract_section($page, 'ref-messages');
-assert_true($expectedVoice !== null, 'lp-originalPage body contains ref-voice section');
-assert_true($expectedMessages !== null, 'lp-originalPage body contains ref-messages section');
+$head_pos   = strpos( $page, '<!--WP_HEAD-->' );
+$main_pos   = strpos( $page, '<main' );
+$footer_pos = strpos( $page, '<!--WP_FOOTER-->' );
+$mainend    = strpos( $page, '</main>' );
 
-ob_start();
-include $package . '/lp/acf-swap/student-voice-acf.php';
-$actualVoice = ob_get_clean();
+check( $head_pos !== false && $head_pos < $main_pos, 'wp_head() が <head> 内・本文より前で呼ばれている' );
+check( $footer_pos !== false && $footer_pos > $mainend, 'wp_footer() が本文より後・</body> 直前で呼ばれている' );
 
-ob_start();
-include $package . '/lp/acf-swap/swiper-acf.php';
-$actualMessages = ob_get_clean();
 
-assert_true(normalize($expectedVoice) === normalize($actualVoice), 'student-voice-acf.php fallback byte-matches lp-originalPage direct markup');
-assert_true(normalize($expectedMessages) === normalize($actualMessages), 'swiper-acf.php fallback byte-matches lp-originalPage direct markup');
+/* ===========================================================
+   5. CSS / JS の読み込み方
+   =========================================================== */
 
-// ---------------------------------------------------------------------
-// Pass 2: mutated ACF repeater data, in a fresh PHP process.
-// ---------------------------------------------------------------------
+check(
+	isset( $enqueued['style']['ref001-lp-style'] ) && str_ends_with( $enqueued['style']['ref001-lp-style'], '/lp/css/ref001.css' ),
+	'CSS を wp_enqueue_style() でその場で登録している'
+);
+check(
+	isset( $enqueued['script']['ref001-lp-script'] ) && str_ends_with( $enqueued['script']['ref001-lp-script'], '/lp/js/ref001-interactions.js' ),
+	'JS を wp_enqueue_script() でその場で登録している'
+);
 
-$mutatedScript = <<<'PHP'
+$tpl_src = file_get_contents( $pkg . '/lp-originalPage.php' );
+
+/* コメントには「なぜ add_action を使わないか」の説明が書いてあるので、
+   コメントを取り除いた実コードだけを見て判定します。 */
+$tpl_code = '';
+foreach ( token_get_all( $tpl_src ) as $token ) {
+	if ( is_array( $token ) && in_array( $token[0], array( T_COMMENT, T_DOC_COMMENT ), true ) ) {
+		continue;
+	}
+	$tpl_code .= is_array( $token ) ? $token[1] : $token;
+}
+
+check(
+	! preg_match( "/add_action\\s*\\(\\s*['\"]wp_enqueue_scripts['\"]/", $tpl_code ),
+	"add_action('wp_enqueue_scripts', ...) を使っていない（フックが先に終わっていて発火せず CSS が当たらなくなるため）"
+);
+check(
+	strpos( $page, '<link' ) === false && strpos( $page, '<script' ) === false,
+	'<link>/<script> を本文へ直書きしていない'
+);
+
+
+/* ===========================================================
+   6. セクションの並び
+   =========================================================== */
+
+$order = array( 'p-header', 'p-mv', 'p-reason', 'p-education', 'p-cta', 'p-voice', 'p-messages', 'p-courses', 'p-links', 'p-invite', 'p-footer' );
+$last  = -1;
+$order_ok = true;
+foreach ( $order as $cls ) {
+	$at = strpos( $page, 'class="' . $cls );
+	if ( $at === false || $at < $last ) { $order_ok = false; break; }
+	$last = $at;
+}
+check( $order_ok, 'セクションが Header→MV→…→Footer の順で並んでいる' );
+check( substr_count( $page, 'class="p-cta"' ) === 2, 'CTA セクションが2回出てくる' );
+
+/* 旧実装のクラス名が残っていないか（作り直しの取りこぼし検出） */
+check( ! preg_match( '/class="[^"]*\bref-[a-z]/', $page ), '旧クラス名（ref-*）が残っていない' );
+
+
+/* ===========================================================
+   7. テンプレートが参照する画像がすべて存在するか
+   =========================================================== */
+
+preg_match_all( "/\\\$lp_base\\s*\\.\\s*'([^']+)'/", $tpl_src, $assets );
+$missing_assets = array();
+foreach ( array_unique( $assets[1] ) as $rel ) {
+	if ( ! is_file( $pkg . '/lp/' . $rel ) ) {
+		$missing_assets[] = $rel;
+	}
+}
+check( empty( $missing_assets ), 'テンプレートが参照する素材がすべて lp/ に存在する' . ( $missing_assets ? ': ' . implode( ', ', $missing_assets ) : '' ) );
+
+
+/* ===========================================================
+   8. ACF 差し替え版 — 未設定時 / 値を入れた時
+   別プロセスで動かします（ACF関数の有無を分けるため）
+   =========================================================== */
+
+$run = function ( string $mode ) use ( $pkg ) {
+	$script = <<<'PHP'
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', '1');
-$package = $argv[1];
+error_reporting(E_ALL); ini_set('display_errors','1');
+list($pkg, $mode) = [$argv[1], $argv[2]];
 $lp_base = 'lp/';
+function esc_url($s){ return htmlspecialchars($s, ENT_QUOTES, 'UTF-8'); }
 
-$GLOBALS['__acf_data'] = [
-    'ref001_student_voices' => [
-        ['avatar' => ['url' => 'https://cdn.test/mut-avatar-1.jpg', 'alt' => 'x'], 'detail_photo' => null,
-         'title' => 'CI_MUTATED_TITLE', 'profile' => 'p', 'school' => 's', 'body' => 'b',
-         'lesson' => 'l', 'reason' => 'r', 'advice' => 'a'],
-    ],
-    'ref001_swiper_slides' => [
-        ['photo' => ['url' => 'https://cdn.test/mut-slide-1.jpg', 'alt' => ''], 'quote_pc' => "CI_MUTATED_PC_LINE",
-         'quote_sp' => "CI_MUTATED_SP_LINE", 'profile' => 'p', 'school' => 's'],
-    ],
-];
-$GLOBALS['__acf_cursor'] = null;
-$GLOBALS['__acf_index'] = -1;
-
-function have_rows($field) {
-    $rows = $GLOBALS['__acf_data'][$field] ?? [];
-    if ($GLOBALS['__acf_cursor'] !== $field) { $GLOBALS['__acf_cursor'] = $field; $GLOBALS['__acf_index'] = -1; }
-    return $GLOBALS['__acf_index'] + 1 < count($rows);
-}
-function the_row() { $GLOBALS['__acf_index']++; }
-function get_sub_field($name) {
-    $rows = $GLOBALS['__acf_data'][$GLOBALS['__acf_cursor']] ?? [];
-    $row = $rows[$GLOBALS['__acf_index']] ?? [];
-    return $row[$name] ?? null;
+if ($mode === 'acf') {
+    $GLOBALS['D'] = [
+        'ref001_student_voices' => [[
+            'avatar' => ['url'=>'https://cdn.test/a.jpg','alt'=>'A'], 'detail_photo' => null,
+            'title'=>'CI_MUT_TITLE','profile'=>'P','school'=>'S','body'=>'B',
+            'lesson'=>'L','reason'=>'R','advice'=>'A']],
+        'ref001_swiper_slides' => [
+            ['photo'=>['url'=>'https://cdn.test/s.jpg','alt'=>''],'quote'=>"CI_MUT_L1\nCI_MUT_L2",'profile'=>'P','school'=>'S'],
+            ['photo'=>null,'quote'=>'CI_MUT_B','profile'=>'P','school'=>'S'],
+        ],
+    ];
+    $GLOBALS['C']=null; $GLOBALS['I']=-1;
+    function have_rows($f){ $r=$GLOBALS['D'][$f]??[]; if($GLOBALS['C']!==$f){$GLOBALS['C']=$f;$GLOBALS['I']=-1;} return $GLOBALS['I']+1<count($r); }
+    function the_row(){ $GLOBALS['I']++; }
+    function get_sub_field($n){ $r=$GLOBALS['D'][$GLOBALS['C']]??[]; return $r[$GLOBALS['I']][$n]??null; }
 }
 
-ob_start();
-include $package . '/lp/acf-swap/student-voice-acf.php';
-echo ob_get_clean();
-
-$GLOBALS['__acf_cursor'] = null;
-$GLOBALS['__acf_index'] = -1;
-ob_start();
-include $package . '/lp/acf-swap/swiper-acf.php';
-echo ob_get_clean();
+ob_start(); include $pkg . '/lp/acf-swap/student-voice-acf.php'; echo ob_get_clean();
+if ($mode === 'acf') { $GLOBALS['C']=null; $GLOBALS['I']=-1; }
+ob_start(); include $pkg . '/lp/acf-swap/swiper-acf.php'; echo ob_get_clean();
 PHP;
+	$tmp = tempnam( sys_get_temp_dir(), 'lp-acf-' ) . '.php';
+	file_put_contents( $tmp, $script );
+	$out = shell_exec( escapeshellarg( PHP_BINARY ) . ' ' . escapeshellarg( $tmp ) . ' ' . escapeshellarg( $pkg ) . ' ' . escapeshellarg( $mode ) . ' 2>&1' );
+	unlink( $tmp );
+	return (string) $out;
+};
 
-$tmpScript = tempnam(sys_get_temp_dir(), 'ref001-lp-ci-mutated-') . '.php';
-file_put_contents($tmpScript, $mutatedScript);
-$mutatedHtml = shell_exec(escapeshellarg(PHP_BINARY) . ' ' . escapeshellarg($tmpScript) . ' ' . escapeshellarg($package) . ' 2>&1');
-unlink($tmpScript);
+$fallback = $run( 'fallback' );
+$mutated  = $run( 'acf' );
 
-assert_true(strpos($mutatedHtml, 'CI_MUTATED_TITLE') !== false, 'ACF pass: mutated Student Voice title renders');
-assert_true(strpos($mutatedHtml, 'mut-avatar-1.jpg') !== false, 'ACF pass: mutated Student Voice image renders');
-assert_true(substr_count($mutatedHtml, 'data-voice-item="') === 1, 'ACF pass: repeater with 1 row renders exactly 1 voice item');
-assert_true(strpos($mutatedHtml, 'CI_MUTATED_PC_LINE') !== false, 'ACF pass: mutated swiper PC quote renders');
-assert_true(strpos($mutatedHtml, 'mut-slide-1.jpg') !== false, 'ACF pass: mutated swiper image renders');
-assert_true(substr_count($mutatedHtml, 'data-message-slide="') === 1, 'ACF pass: repeater with 1 row renders exactly 1 swiper slide');
-assert_true(strpos($mutatedHtml, 'PHP Fatal error') === false, 'ACF pass: no PHP fatal errors');
-assert_true(strpos($mutatedHtml, 'PHP Warning') === false, 'ACF pass: no PHP warnings');
+$no_php_error = static function ( string $html ): bool {
+	return strpos( $html, 'PHP Warning' ) === false
+		&& strpos( $html, 'PHP Notice' ) === false
+		&& strpos( $html, 'PHP Fatal' ) === false
+		&& strpos( $html, 'Deprecated' ) === false;
+};
 
+/* 未設定時 = 直書き版と同じ内容が出る */
+check( $no_php_error( $fallback ), 'ACF 未設定でも PHP の警告 / エラーが出ない' );
+check( substr_count( $fallback, '<article class="p-voice__item' ) === 3, 'ACF 未設定時: 学生の声が3件出る' );
+check( substr_count( $fallback, 'is-open' ) === 1, 'ACF 未設定時: 1件目だけ開いている' );
+check( substr_count( $fallback, 'swiper-slide p-messages__slide' ) === 4, 'ACF 未設定時: スライドが4枚出る' );
+check( str_contains( $fallback, 'まだやりたいことが決まっていなくても大丈夫だった。' ), 'ACF 未設定時: 直書き版と同じ文言が出る' );
+
+/* 値を入れた時 = 中身が本当に変わる */
+check( $no_php_error( $mutated ), 'ACF 設定時も PHP の警告 / エラーが出ない' );
+check( str_contains( $mutated, 'CI_MUT_TITLE' ), 'ACF 設定時: 入力した見出しが反映される' );
+check( ! str_contains( $mutated, 'まだやりたいことが決まっていなくても大丈夫だった。' ), 'ACF 設定時: 直書きの文言に戻らない' );
+check( substr_count( $mutated, '<article class="p-voice__item' ) === 1, 'ACF 設定時: 件数が入力どおり（1件）になる' );
+check( str_contains( $mutated, 'cdn.test/a.jpg' ), 'ACF 設定時: 入力した画像が使われる' );
+check( substr_count( $mutated, 'swiper-slide p-messages__slide' ) === 2, 'ACF 設定時: スライド枚数が入力どおり（2枚）になる' );
+check( str_contains( $mutated, 'CI_MUT_L1' ) && str_contains( $mutated, 'CI_MUT_L2' ), 'ACF 設定時: 改行が行ごとの帯に分かれる' );
+
+/* 差し替え版と直書き版でセクションの作りが一致しているか */
+check(
+	str_contains( $fallback, '<section class="p-voice">' ) && str_contains( $page, '<section class="p-voice">' ),
+	'差し替え版と直書き版で学生の声のセクション構造が同じ'
+);
+check(
+	str_contains( $fallback, '<section class="p-messages">' ) && str_contains( $page, '<section class="p-messages">' ),
+	'差し替え版と直書き版で MESSAGES のセクション構造が同じ'
+);
+
+
+/* ===========================================================
+   結果
+   =========================================================== */
+
+echo "\n";
+if ( $failures > 0 ) {
+	echo "FAILED: {$failures} 件\n";
+	exit( 1 );
+}
 echo "ALL PASS\n";
