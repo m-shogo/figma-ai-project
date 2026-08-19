@@ -1,0 +1,119 @@
+{
+  "key": "group_ref001_student_voice",
+  "title": "REF-001 学生の声 (Student Voice)",
+  "fields": [
+    {
+      "key": "field_ref001_student_voices",
+      "label": "Student Voice items",
+      "name": "ref001_student_voices",
+      "type": "repeater",
+      "required": 0,
+      "min": 0,
+      "max": 0,
+      "layout": "block",
+      "button_label": "Add student voice",
+      "collapsed": "field_ref001_voice_title",
+      "instructions": "私が千葉経済大学を選んだ理由 section. Editors may add, remove, and reorder items. Only fields that visibly exist in the current REF-001 markup are exposed here (avatar, open-detail photo, title, profile line, school line, body copy, impressive-lesson value, admission-reason value, advice-to-applicants value). The first item renders open-by-default and the rest collapsed; that disclosure behavior stays code-owned, not an ACF field.",
+      "sub_fields": [
+        {
+          "key": "field_ref001_voice_avatar",
+          "label": "Avatar image",
+          "name": "avatar",
+          "type": "image",
+          "required": 0,
+          "return_format": "array",
+          "preview_size": "thumbnail",
+          "library": "all",
+          "parent_repeater": "field_ref001_student_voices"
+        },
+        {
+          "key": "field_ref001_voice_detail_photo",
+          "label": "Open-detail photo",
+          "name": "detail_photo",
+          "type": "image",
+          "required": 0,
+          "return_format": "array",
+          "preview_size": "medium",
+          "library": "all",
+          "parent_repeater": "field_ref001_student_voices"
+        },
+        {
+          "key": "field_ref001_voice_title",
+          "label": "Title",
+          "name": "title",
+          "type": "text",
+          "required": 0,
+          "parent_repeater": "field_ref001_student_voices"
+        },
+        {
+          "key": "field_ref001_voice_profile",
+          "label": "Profile line",
+          "name": "profile",
+          "type": "text",
+          "required": 0,
+          "parent_repeater": "field_ref001_student_voices"
+        },
+        {
+          "key": "field_ref001_voice_school",
+          "label": "School line",
+          "name": "school",
+          "type": "text",
+          "required": 0,
+          "parent_repeater": "field_ref001_student_voices"
+        },
+        {
+          "key": "field_ref001_voice_body",
+          "label": "Body copy",
+          "name": "body",
+          "type": "textarea",
+          "required": 0,
+          "rows": 4,
+          "new_lines": "br",
+          "parent_repeater": "field_ref001_student_voices"
+        },
+        {
+          "key": "field_ref001_voice_lesson",
+          "label": "印象に残った授業 (impressive lesson)",
+          "name": "lesson",
+          "type": "text",
+          "required": 0,
+          "parent_repeater": "field_ref001_student_voices"
+        },
+        {
+          "key": "field_ref001_voice_reason",
+          "label": "入学の決め手 (admission reason)",
+          "name": "reason",
+          "type": "text",
+          "required": 0,
+          "parent_repeater": "field_ref001_student_voices"
+        },
+        {
+          "key": "field_ref001_voice_advice",
+          "label": "受験生へのひとこと (advice to applicants)",
+          "name": "advice",
+          "type": "text",
+          "required": 0,
+          "parent_repeater": "field_ref001_student_voices"
+        }
+      ]
+    }
+  ],
+  "location": [
+    [
+      {
+        "param": "page_template",
+        "operator": "==",
+        "value": "page-ref001.php"
+      }
+    ]
+  ],
+  "menu_order": 0,
+  "position": "normal",
+  "style": "default",
+  "label_placement": "top",
+  "instruction_placement": "label",
+  "hide_on_screen": [],
+  "active": true,
+  "description": "REF-001 Student Voice section (私が千葉経済大学を選んだ理由). Stable keys are intentional. Rendered by template-parts/ref001/student-voice.php with a fixture-content fallback so empty/missing ACF data never triggers a PHP warning.",
+  "show_in_rest": 0
+}
