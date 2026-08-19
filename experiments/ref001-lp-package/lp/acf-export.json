@@ -104,7 +104,7 @@
         {
           "param": "page_template",
           "operator": "==",
-          "value": "page-ref001.php"
+          "value": "lp-originalPage.php"
         }
       ]
     ],
@@ -147,25 +147,14 @@
             "parent_repeater": "field_ref001_swiper_slides"
           },
           {
-            "key": "field_ref001_swiper_quote_pc",
-            "label": "Quote (PC line breaks)",
-            "name": "quote_pc",
+            "key": "field_ref001_swiper_quote",
+            "label": "コメント（改行するとその位置で行が分かれます）",
+            "name": "quote",
             "type": "textarea",
             "required": 0,
             "rows": 3,
             "new_lines": "",
-            "instructions": "One authored line per row; rendered as one <span> per line for the PC layout.",
-            "parent_repeater": "field_ref001_swiper_slides"
-          },
-          {
-            "key": "field_ref001_swiper_quote_sp",
-            "label": "Quote (SP line breaks)",
-            "name": "quote_sp",
-            "type": "textarea",
-            "required": 0,
-            "rows": 3,
-            "new_lines": "",
-            "instructions": "One authored line per row; rendered as one <span> per line for the SP layout.",
+            "instructions": "1行ずつ黒い帯になります。改行で行を分けてください。",
             "parent_repeater": "field_ref001_swiper_slides"
           },
           {
@@ -192,7 +181,7 @@
         {
           "param": "page_template",
           "operator": "==",
-          "value": "page-ref001.php"
+          "value": "lp-originalPage.php"
         }
       ]
     ],
