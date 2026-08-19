@@ -21,9 +21,14 @@
    ── 書き方のルール ──────────────────────────────────────
    ・高さ・幅を決め打ちしない。中身と余白（padding / gap）で決める
    ・並べるのは flex か grid
-   ・position: absolute は「あしらい」だけ。レイアウトには使わない
-     （吹き出しの尻尾 / OPEN CAMPUS バッジ / ページトップボタン）
-   ・要素を重ねたいときは absolute ではなく grid の同じマス（grid-area: 1/1）
+   ・position: absolute はこのファイル全体で1箇所だけ
+     （.p-voice__balloon の吹き出しの尻尾。箱の外へ出す三角なのでここだけ例外）
+     重ねたい・ずらしたいときは代わりに次を使う:
+       重ねる     → grid の同じマス（grid-area: 1 / 1）
+       またがせる → マイナスマージン
+       端に寄せる → justify-self / align-self
+   ・hover も absolute を使わない。色 / opacity / translate / box-shadow で表現し、
+     :hover と :focus-visible は必ずセットで書く（キーボード操作でも同じ見た目に）
    ・文字サイズと余白は clamp() で 375px〜1380px を滑らかにつなぐ。
      途中でカクッと変わる幅を作らない
    ・列数は repeat(auto-fit, minmax(...)) で幅なりに決める。
@@ -253,21 +258,30 @@
 	}
 
 	/* --- ボタン（資料請求 / オープンキャンパス） ---
-	   標準は「白地 + 色文字」。ヘッダーだけ塗りつぶしにしていて、
-	   その指定は p-header のブロックの中にあります。 */
+	   標準は「白地 + 色文字 + 色の枠線」。
+	   マウスを乗せる / キーボードで選ぶと色が反転します（白地 → 塗り）。
+	   アイコンも白版へ差し替えます。
+
+	   ヘッダーだけ最初から塗りつぶしなので反転の向きが逆になります。
+	   その指定は p-header のブロックの中にまとめてあります。 */
 	.c-btn {
+		--btn-color: var(--color-text);   /* 下の modifier で上書きします */
+
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
 		gap: .75em;
 		padding: 1em 1.5em;
+		border: 1px solid var(--btn-color);
 		background: var(--color-white);
+		color: var(--btn-color);
 		font-size: var(--fs-body);
 		line-height: 1;
 		letter-spacing: .04em;
 		white-space: nowrap;
-		transition: opacity .2s ease;
+		transition: background-color .3s ease, color .3s ease, border-color .3s ease;
 
+		/* アイコンは幅だけ指定。高さは画像の縦横比のまま自動で決まります */
 		& .c-btn__icon {
 			width: 1.2em;
 			flex: none;
@@ -275,12 +289,20 @@
 
 		&:hover,
 		&:focus-visible {
-			opacity: .75;
+			background: var(--btn-color);
+			color: var(--color-white);
 		}
 	}
 
-	.c-btn--doc { color: var(--color-blue); }
-	.c-btn--oc  { color: var(--color-purple); }
+	/* 色だけを決めます。塗り方の指定は上の .c-btn にまとまっています */
+	.c-btn--doc { --btn-color: var(--color-blue); }
+	.c-btn--oc  { --btn-color: var(--color-purple); }
+
+	/* 反転して背景が塗りになるので、アイコンを白版へ差し替えます */
+	.c-btn--doc:hover .c-btn__icon,
+	.c-btn--doc:focus-visible .c-btn__icon { content: url('../image/icons/document.svg'); }
+	.c-btn--oc:hover .c-btn__icon,
+	.c-btn--oc:focus-visible .c-btn__icon { content: url('../image/icons/open-campus.svg'); }
 
 	/* --- ✓ 付きの箇条書き --- */
 	.c-checklist {
@@ -334,14 +356,26 @@
 		gap: clamp(.5rem, .3rem + .8vw, 1rem);
 	}
 
-	/* ヘッダーのボタンだけ塗りつぶし + 白文字 */
+	/* ヘッダーのボタンだけ最初から塗りつぶし。
+	   したがって hover の向きも逆（塗り → 白地）になります。 */
 	& .c-btn {
 		padding: .9em 1em;
 		font-size: var(--fs-small);
+		background: var(--btn-color);
 		color: var(--color-white);
 	}
-	& .c-btn--doc { background: var(--color-blue); }
-	& .c-btn--oc  { background: var(--color-purple); }
+
+	& .c-btn:hover,
+	& .c-btn:focus-visible {
+		background: var(--color-white);
+		color: var(--btn-color);
+	}
+
+	/* 反転の向きが逆なので、アイコンの差し替えも逆（色版）にします */
+	& .c-btn--doc:hover .c-btn__icon,
+	& .c-btn--doc:focus-visible .c-btn__icon { content: url('../image/icons/document-blue.svg'); }
+	& .c-btn--oc:hover .c-btn__icon,
+	& .c-btn--oc:focus-visible .c-btn__icon { content: url('../image/icons/open-campus-purple.svg'); }
 
 	@media (min-width: 768px) {
 		& .c-btn {
@@ -391,10 +425,7 @@
 		align-content: center;
 		justify-items: center;
 		gap: clamp(1rem, .6rem + 1.7vw, 1.75rem);
-		/* 下は OPEN CAMPUS バッジ（吹き出し込み）が重なる分をあける。
-		   バッジは幅 112〜156px の円 + 上の吹き出し + 下の余白なので、
-		   その合計より少し大きい値にしています。 */
-		padding-block: clamp(2rem, 1.4rem + 2.6vw, 4rem) clamp(11.25rem, 9rem + 6vw, 13rem);
+		padding-block: clamp(2rem, 1.4rem + 2.6vw, 4rem);
 		padding-inline: var(--gutter);
 		text-align: center;
 	}
@@ -413,6 +444,16 @@
 
 	& .p-mv__quote { color: var(--color-purple); }
 
+	/* 「ケイザイ」と「おもしろい。」は白抜き + 濃い縁取り。
+	   写真の上に来ても背景の明暗に関係なく読めます。
+	   paint-order で縁を文字の後ろに描くと、線が太くても字が潰れません。 */
+	& .p-mv__catch-line--lead strong,
+	& .p-mv__catch-line--last {
+		color: var(--color-white);
+		-webkit-text-stroke: 2px var(--color-text);
+		paint-order: stroke fill;
+	}
+
 	& .p-mv__lead {
 		max-width: var(--measure);
 		font-size: var(--fs-lead);
@@ -420,23 +461,14 @@
 		letter-spacing: .06em;
 	}
 
-	/* --- OPEN CAMPUS バッジ（あしらいなので重ねて配置） --- */
+	/* --- OPEN CAMPUS バッジ ---
+	   吹き出し → 丸 の順に縦に並べ、丸をマイナスマージンで少し持ち上げて
+	   吹き出しに重ねています。absolute は使っていません。 */
 	& .p-mv__oc {
-		position: absolute;
-		z-index: 2;
-		right: 50%;
-		bottom: 1rem;
-		translate: 50% 0;
-
 		display: grid;
-		place-content: center;
 		justify-items: center;
-		gap: .15em;
-		width: clamp(7rem, 5rem + 5.2vw, 9.75rem);   /* 112 → 156 */
-		aspect-ratio: 1;
-		border-radius: 50%;
-		background: var(--color-orange);
-		color: var(--color-white);
+		justify-self: center;
+		z-index: 2;
 		text-align: center;
 		transition: transform .2s ease;
 
@@ -445,10 +477,8 @@
 	}
 
 	& .p-mv__oc-balloon {
-		position: absolute;
-		bottom: calc(100% - .25rem);
-		left: 50%;
-		translate: -50% 0;
+		position: relative;   /* 丸より前に出すため（重ね順の指定だけ） */
+		z-index: 1;
 		white-space: nowrap;
 
 		padding: .6em 1.2em;
@@ -458,6 +488,20 @@
 		color: var(--color-text);
 		font-size: var(--fs-small);
 		line-height: 1;
+	}
+
+	& .p-mv__oc-circle {
+		display: grid;
+		place-content: center;
+		justify-items: center;
+		gap: .15em;
+		margin-top: -.9em;   /* 吹き出しに少し重ねる */
+
+		width: clamp(7rem, 5rem + 5.2vw, 9.75rem);   /* 112 → 156 */
+		aspect-ratio: 1;
+		border-radius: 50%;
+		background: var(--color-orange);
+		color: var(--color-white);
 	}
 
 	& .p-mv__oc-title {
@@ -473,11 +517,16 @@
 		line-height: 1;
 	}
 
-	/* SP は写真が広がりすぎないように上限をつける */
+	/* SP は「写真 → コピー → バッジ」の縦並び。
+	   バッジも普通に流し込むので、高さは中身なりに決まります。 */
 	@media (max-width: 767px) {
 		& .p-mv__photos {
 			max-width: 34rem;
 			margin-inline: auto;
+		}
+
+		& .p-mv__oc {
+			padding-bottom: clamp(1.5rem, 1rem + 2vw, 2.5rem);
 		}
 	}
 
@@ -508,17 +557,14 @@
 			padding-block: clamp(4rem, 1rem + 8vw, 6.875rem);
 		}
 
-		/* 白くするのはキャッチだけ。リード文まで白にすると、
-		   写真に重なったときに読めなくなります。 */
-		& .p-mv__catch {
-			color: var(--color-white);
-			text-shadow: 0 0 18px rgb(132 115 170 / .35);
-		}
-
+		/* バッジも同じマスに置いて、右下へ寄せて重ねます。
+		   absolute ではなく grid の配置なので、
+		   まわりの余白を変えても位置関係が崩れません。 */
 		& .p-mv__oc {
-			right: 6%;
-			bottom: 10%;
-			translate: none;
+			grid-area: 1 / 1;
+			align-self: end;
+			justify-self: end;
+			margin: 0 6% 6% 0;
 		}
 	}
 }
@@ -690,6 +736,8 @@
 			width: 100%;
 			aspect-ratio: 4 / 3;
 			object-fit: cover;
+			/* 上を基準に切り取る。中央基準だと人物の頭が切れるため */
+			object-position: center top;
 		}
 	}
 
@@ -1058,12 +1106,14 @@
 		margin-top: clamp(1.25rem, .8rem + 1.9vw, 2rem);
 	}
 
-	/* 見た目の大きさは変えずに、押せる範囲だけ広げています */
+	/* 矢印の見た目は小さいまま、押せる範囲だけ広げています。
+	   固定値ではなく「最低これだけは確保する」指定にしているので、
+	   文字サイズを変えても押しにくくなりません（目安は 44px 四方）。 */
 	& .p-messages__arrow {
 		display: grid;
 		place-items: center;
-		width: 2.75rem;
-		height: 2.75rem;
+		min-width: 2.75rem;
+		min-height: 2.75rem;
 
 		& img { width: 1.375rem; }
 	}
@@ -1077,21 +1127,18 @@
 		line-height: 1;
 	}
 
-	/* 進み具合は JS が --progress を書き換えます */
+	/* 進み具合は JS が --progress を書き換えます。
+	   青い部分は背景のグラデーションの幅で表しているので、
+	   重ねるための擬似要素も absolute も要りません。 */
 	& .p-messages__counter-bar {
-		position: relative;
 		width: clamp(5.5rem, 2rem + 9vw, 9.125rem);
 		height: 2px;
-		background: #aaa;
-
-		&::before {
-			content: '';
-			position: absolute;
-			inset: 0 auto 0 0;
-			width: var(--progress, 25%);
-			background: var(--color-blue);
-			transition: width .3s ease;
-		}
+		background-color: #aaa;
+		background-image: linear-gradient(var(--color-blue) 0 0);
+		background-repeat: no-repeat;
+		background-position: left center;
+		background-size: var(--progress, 25%) 100%;
+		transition: background-size .3s ease;
 	}
 
 	/* --- PC: 写真を右 62%、コピーを左下に重ねる --- */
@@ -1351,10 +1398,6 @@
 		width: min(100%, 17.5rem);
 	}
 
-	& .c-btn {
-		border: 1px solid currentColor;
-	}
-
 	@media (min-width: 768px) {
 		& .p-invite__photo { width: 24%; }
 
@@ -1372,7 +1415,7 @@
    FOOTER — ロゴ / 住所 / 関連サイト / SNS / コピーライト
    -------------------------------------------------------------------------- */
 .p-footer {
-	position: relative;   /* ページトップボタンの基準 */
+	position: relative;   /* ページトップボタンの位置の基準 */
 	padding-block: clamp(2.5rem, 1.8rem + 3vw, 4rem) clamp(2rem, 1.6rem + 1.7vw, 2.5rem);
 	background: var(--color-white);
 
@@ -1424,7 +1467,9 @@
 		letter-spacing: .03em;
 	}
 
-	/* 右下のページトップボタン（あしらい） */
+	/* 右下のページトップボタン。
+	   フッターの角に貼り付く「あしらい」なので、ここは absolute が適任です
+	   （本文の並びに影響させず、常に角へ固定したいため）。 */
 	& .p-footer__pagetop {
 		position: absolute;
 		right: 0;

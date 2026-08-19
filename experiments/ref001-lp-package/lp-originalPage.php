@@ -115,7 +115,7 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 	<div class="p-mv__body">
 		<h1 class="p-mv__catch">
 			<span class="p-mv__catch-line p-mv__catch-line--lead">
-				<span class="p-mv__quote">&ldquo;</span>ケイザイ<span class="p-mv__quote">&rdquo;</span>
+				<span class="p-mv__quote">&ldquo;</span><strong>ケイザイ</strong><span class="p-mv__quote">&rdquo;</span>
 			</span>
 			<span class="p-mv__catch-line p-mv__catch-line--mid">って、想像以上に</span>
 			<span class="p-mv__catch-line p-mv__catch-line--last">おもしろい。</span>
@@ -127,11 +127,15 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 		</p>
 	</div>
 
-	<!-- OPEN CAMPUS バッジ（あしらいなので写真の上に重ねています） -->
+	<!-- OPEN CAMPUS バッジ
+	     吹き出しと丸を上下に並べ、丸をマイナスマージンで少し重ねています。
+	     PC では grid の同じマスに置いて写真の上へ重ねます（absolute は不使用）。 -->
 	<a class="p-mv__oc" href="https://www.cku.ac.jp/admission/opencampus/" target="_blank" rel="noopener">
 		<span class="p-mv__oc-balloon">大学の雰囲気を体験！</span>
-		<span class="p-mv__oc-title">OPEN<br>CAMPUS</span>
-		<span class="p-mv__oc-note">開催中！</span>
+		<span class="p-mv__oc-circle">
+			<span class="p-mv__oc-title">OPEN<br>CAMPUS</span>
+			<span class="p-mv__oc-note">開催中！</span>
+		</span>
 	</a>
 
 </section>
@@ -761,11 +765,11 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 		<h2 class="p-invite__title">まずは大学を<br>体験してみよう！</h2>
 		<div class="p-invite__actions">
 			<a class="c-btn c-btn--doc" href="https://www.cku.ac.jp/sys/seikyu/" target="_blank" rel="noopener">
-				<img class="c-btn__icon" src="<?php echo esc_url( $lp_base . 'image/icons/document.svg' ); ?>" alt="" aria-hidden="true">
+				<img class="c-btn__icon" src="<?php echo esc_url( $lp_base . 'image/icons/document-blue.svg' ); ?>" alt="" aria-hidden="true">
 				<span>資料請求</span>
 			</a>
 			<a class="c-btn c-btn--oc" href="https://www.cku.ac.jp/admission/opencampus/" target="_blank" rel="noopener">
-				<img class="c-btn__icon" src="<?php echo esc_url( $lp_base . 'image/icons/open-campus.svg' ); ?>" alt="" aria-hidden="true">
+				<img class="c-btn__icon" src="<?php echo esc_url( $lp_base . 'image/icons/open-campus-purple.svg' ); ?>" alt="" aria-hidden="true">
 				<span>オープンキャンパス</span>
 			</a>
 		</div>
