@@ -56,15 +56,47 @@ check( empty( $missing ), 'CSS の相対 url() がすべて実ファイルに解
    2. CSS — ブレークポイントが 767/768 の1本だけか
    =========================================================== */
 
+/* 幅で切り替えている @media だけを見る。
+   prefers-reduced-motion などの「幅と関係ない」クエリは対象外。 */
 preg_match_all( '/@media[^{]+/', $css, $mq );
 $bad_bp = array();
 foreach ( array_unique( $mq[0] ) as $q ) {
+	if ( strpos( $q, 'width' ) === false ) {
+		continue;
+	}
 	if ( ! preg_match( '/\b(767|768)px\b/', $q ) ) {
 		$bad_bp[] = trim( $q );
 	}
 }
-check( empty( $bad_bp ), '@media は 767/768px だけ（中間ブレークポイントなし）' . ( $bad_bp ? ': ' . implode( ' | ', $bad_bp ) : '' ) );
+check( empty( $bad_bp ), '幅で切り替える @media は 767/768px だけ（中間ブレークポイントなし）' . ( $bad_bp ? ': ' . implode( ' | ', $bad_bp ) : '' ) );
 check( ! preg_match( '/\b(1299|1300)px\b/', $css ), '廃止済みの 1299/1300px が残っていない' );
+
+
+/* ===========================================================
+   2b. CSS — clamp() の最小値が最大値を超えていないか
+
+   clamp(最小, 推奨, 最大) は最小 > 最大 と書いてもエラーにならず、
+   黙って最小値で固定されます。気づきにくいので機械で検算します。
+   =========================================================== */
+
+$to_px = static function ( string $tok ) {
+	$tok = trim( $tok );
+	if ( preg_match( '/^([\d.]+)rem$/', $tok, $mm ) ) { return (float) $mm[1] * 16; }
+	if ( preg_match( '/^([\d.]+)px$/', $tok, $mm ) )  { return (float) $mm[1]; }
+	return null;
+};
+preg_match_all( '/clamp\(([^()]*(?:\([^()]*\)[^()]*)*)\)/', $css, $clamps );
+$bad_clamp = array();
+foreach ( $clamps[0] as $i => $whole ) {
+	$parts = explode( ',', $clamps[1][ $i ] );
+	if ( count( $parts ) !== 3 ) { continue; }
+	$lo = $to_px( $parts[0] );
+	$hi = $to_px( $parts[2] );
+	if ( $lo !== null && $hi !== null && $lo > $hi ) {
+		$bad_clamp[] = $whole;
+	}
+}
+check( empty( $bad_clamp ), 'clamp() の最小値が最大値を超えていない' . ( $bad_clamp ? ': ' . implode( ' | ', $bad_clamp ) : '' ) );
 
 
 /* ===========================================================

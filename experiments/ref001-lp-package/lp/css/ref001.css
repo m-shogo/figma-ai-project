@@ -4,281 +4,311 @@
 /* ==========================================================================
    千葉経済大学 LP スタイル
 
-   ■ ファイルの並び
-      1. デザイントークン    色 / フォント / 余白 の設定値
-      2. ベース              ページ全体の下ごしらえ
-      3. レイアウト          l-container など
-      4. 共通パーツ          c-btn / c-kicker / c-heading / c-checklist
-      5. セクション          p-header / p-mv / ... 画面の上から順に
+   ── 直したい場所の探し方 ────────────────────────────────
+   HTML のセクション名（例 p-reason）でこのファイルを検索してください。
+   名前は重複しないので、必ず1つのブロックだけに当たります。
+   そのブロックの中に、そのセクションの指定が全部入っています。
 
-   ■ 直したい場所の探し方
-      HTML のセクション名（例 p-reason）でこのファイルを検索してください。
-      セクション名は重複しないので、必ず1つのブロックだけに当たります。
-      そのブロックの中に、そのセクションの PC/SP 両方の指定が入っています。
+   ── このファイルの並び ──────────────────────────────────
+   1. カスケード層の宣言   どの指定が優先されるかの順番
+   2. デザイントークン     色 / 文字サイズ / 余白 の設定値
+   3. reset                ブラウザ標準の打ち消し
+   4. base                 ページ全体の下ごしらえ
+   5. layout               l-container
+   6. components           c-btn / c-kicker / c-heading / c-checklist
+   7. sections             p-header / p-mv / ... 画面の上から順に
 
-   ■ 書き方のルール
-      ・高さ・幅は決め打ちしない。中身と余白（padding / gap）で決まるようにする
-      ・並べるときは flex か grid を使う
-      ・position: absolute は「あしらい」だけ（吹き出しの尻尾、飾りバッジなど）
-        レイアウトそのものには使わない
-      ・ブレークポイントは 768px の1本だけ
-        767px以下 = SP / 768px以上 = PC。それ以外の境目は作らない
+   ── 書き方のルール ──────────────────────────────────────
+   ・高さ・幅を決め打ちしない。中身と余白（padding / gap）で決める
+   ・並べるのは flex か grid
+   ・position: absolute は「あしらい」だけ。レイアウトには使わない
+     （吹き出しの尻尾 / OPEN CAMPUS バッジ / ページトップボタン）
+   ・要素を重ねたいときは absolute ではなく grid の同じマス（grid-area: 1/1）
+   ・文字サイズと余白は clamp() で 375px〜1380px を滑らかにつなぐ。
+     途中でカクッと変わる幅を作らない
+   ・列数は repeat(auto-fit, minmax(...)) で幅なりに決める。
+     「何px以上なら何列」という指定は書かない
+   ・ブレークポイントは 768px の1本だけ。
+     しかもそこで変えるのは「並びの向きそのものが変わる箇所」に限る
+     （メインビジュアルの重ね／積み、学生の声の横／縦 など）
    ========================================================================== */
 
 
 /* ==========================================================================
-   1. デザイントークン
-   色や余白を変えたいときは、まずここを見てください。
-   ここを1箇所直すと、使っている場所すべてに反映されます。
+   1. カスケード層
+
+   後ろに書いた層ほど強くなります。詳細度（セレクタの強さ）に関係なく
+   この順番で決まるので、「reset のほうが強くてボタンの色が効かない」
+   といった事故が起きません。
    ========================================================================== */
 
-:root {
-	/* --- 色 --- */
-	--color-text:        #333;
-	--color-purple:      #8473aa;
-	--color-blue:        #38a1db;
-	--color-orange:      #f5971a;
-	--color-yellow:      #fffc68;
-	--color-pink:        #f26f81;   /* チェックマーク */
-	--color-beige:       #f6f5ef;   /* セクション背景（うすいベージュ） */
-	--color-bg-blue:     #edfdff;   /* セクション背景（うすい水色） */
-	--color-bg-yellow:   #fffaea;   /* セクション背景（うすい黄色） */
-	--color-line:        #777;      /* 枠線 */
-	--color-white:       #fff;
+@layer reset, base, layout, components, sections;
 
-	/* --- フォント --- */
-	--font-jp: 'Zen Kaku Gothic New', 'Hiragino Sans', 'Noto Sans JP', sans-serif;
-	--font-en: 'Poppins', Arial, sans-serif;
 
-	/* --- レイアウト --- */
-	--container:   1160px;  /* 本文の最大幅 */
-	--gutter:      24px;    /* 画面端の余白 */
-	--section-pad: 96px;    /* セクションの上下余白 */
-	--radius:      0px;     /* 角丸（このデザインは角丸なし） */
-}
+/* ==========================================================================
+   2. デザイントークン
 
-/* SP のときだけ小さくする値 */
-@media (max-width: 767px) {
+   色や文字サイズを変えたいときは、まずここを見てください。
+   ここを1箇所直すと、使っている場所すべてに反映されます。
+
+   clamp(最小, 推奨, 最大) は「画面幅に応じて滑らかに変える」書き方です。
+   例: --fs-heading は画面 375px で 16px、1380px で 30px になり、
+       その間は途切れず連続的に変化します。
+   ========================================================================== */
+
+@layer base {
 	:root {
-		--gutter:      16px;
-		--section-pad: 56px;
+		/* --- 色 --- */
+		--color-text:      #333;
+		--color-purple:    #8473aa;
+		--color-blue:      #38a1db;
+		--color-orange:    #f5971a;
+		--color-yellow:    #fffc68;
+		--color-pink:      #f26f81;   /* チェックマーク */
+		--color-beige:     #f6f5ef;   /* 背景（うすいベージュ） */
+		--color-bg-blue:   #edfdff;   /* 背景（うすい水色） */
+		--color-bg-yellow: #fffaea;   /* 背景（うすい黄色） */
+		--color-line:      #777;      /* 枠線 */
+		--color-white:     #fff;
+
+		/* --- フォント --- */
+		--font-jp: 'Zen Kaku Gothic New', 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+		--font-en: 'Poppins', Arial, sans-serif;
+
+		/* --- 文字サイズ（375px 〜 1380px で滑らかに変化） --- */
+		--fs-small:      clamp(0.75rem,  0.7034rem + 0.199vw, 0.875rem);   /* 12 → 14 */
+		--fs-body:       clamp(0.875rem, 0.8284rem + 0.199vw, 1rem);       /* 14 → 16 */
+		--fs-lead:       clamp(0.8125rem, 0.7192rem + 0.398vw, 1.0625rem); /* 13 → 17 */
+		--fs-card-title: clamp(1rem,     0.9067rem + 0.398vw, 1.25rem);    /* 16 → 20 */
+		--fs-heading:    clamp(1rem,     0.6735rem + 1.393vw, 1.875rem);   /* 16 → 30 */
+		--fs-heading-em: clamp(1.3125rem, 0.8228rem + 2.09vw, 2.625rem);   /* 21 → 42 */
+		--fs-catch-lead: clamp(2.5rem,   1.3806rem + 4.776vw, 5.5rem);     /* 40 → 88 */
+		--fs-catch-mid:  clamp(1.3125rem, 0.7761rem + 2.289vw, 2.75rem);   /* 21 → 44 */
+		--fs-catch-last: clamp(2rem,     1.0905rem + 3.881vw, 4.4375rem);  /* 32 → 71 */
+
+		/* --- レイアウト --- */
+		--container:     1160px;  /* 本文の最大幅 */
+		--gutter:        clamp(1rem, 0.6rem + 1.7vw, 1.5rem);            /* 画面端の余白 16 → 24 */
+		--space-section: clamp(3.5rem, 2.5672rem + 3.98vw, 6rem);        /* セクション上下 56 → 96 */
+		--gap-card:      clamp(1.5rem, 0.9rem + 2.5vw, 2.5rem);          /* カード同士の間隔 24 → 40 */
+
+		/* 読みやすい1行の長さ（日本語で約40文字） */
+		--measure: 40em;
 	}
 }
 
 
 /* ==========================================================================
-   2. ベース
+   3. reset
    ========================================================================== */
 
-*,
-*::before,
-*::after {
-	box-sizing: border-box;
-}
+@layer reset {
+	*,
+	*::before,
+	*::after {
+		box-sizing: border-box;
+	}
 
-body.p-lp {
-	margin: 0;
-	color: var(--color-text);
-	background: var(--color-white);
-	font-family: var(--font-jp);
-	font-weight: 500;
-	line-height: 1.6;
-	/* 横スクロールが出ないようにする保険 */
-	overflow-x: hidden;
-}
+	body {
+		margin: 0;
+	}
 
-/* ここから下の初期化は :where() で囲んでいます。
-   :where() は「詳細度0」になるので、あとから書くセクションや
-   共通パーツの指定が必ず勝ちます。
-   （囲まないと .p-lp a {} のほうが .c-btn--doc {} より強くなってしまい、
-     ボタンの文字色が効かない、といった事故が起きます） */
+	img,
+	picture {
+		display: block;
+		max-width: 100%;
+	}
 
-.p-lp :where(img) {
-	display: block;
-	max-width: 100%;
-	height: auto;
-}
+	img {
+		height: auto;
+	}
 
-.p-lp :where(picture) {
-	display: block;
-}
+	h1, h2, h3, p, dl, dd, figure {
+		margin: 0;
+	}
 
-.p-lp :where(h1, h2, h3, p, dl, dd, figure) {
-	margin: 0;
-}
+	ul, ol {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
 
-.p-lp :where(ul, ol) {
-	margin: 0;
-	padding: 0;
-	list-style: none;
-}
+	a {
+		color: inherit;
+		text-decoration: none;
+	}
 
-.p-lp :where(a) {
-	color: inherit;
-	text-decoration: none;
-}
-
-.p-lp :where(button) {
-	font: inherit;
-	color: inherit;
-	background: none;
-	border: 0;
-	padding: 0;
-	cursor: pointer;
-}
-
-/* 開いていない詳細を確実に隠す（display 指定に負けないように） */
-.p-lp [hidden] {
-	display: none !important;
+	button {
+		font: inherit;
+		color: inherit;
+		background: none;
+		border: 0;
+		padding: 0;
+		cursor: pointer;
+	}
 }
 
 
 /* ==========================================================================
-   3. レイアウト
+   4. base
    ========================================================================== */
 
-/* 本文の横幅をそろえる箱。画面が狭いときは端に --gutter ぶんの余白が残る */
-.l-container {
-	width: min(var(--container), 100% - var(--gutter) * 2);
-	margin-inline: auto;
+@layer base {
+	body.p-lp {
+		color: var(--color-text);
+		background: var(--color-white);
+		font-family: var(--font-jp);
+		font-weight: 500;
+		font-size: var(--fs-body);
+		line-height: 1.7;
+		/* 横スクロールが出ないようにする保険 */
+		overflow-x: hidden;
+		/* 読点の位置で不自然に切れないようにする */
+		word-break: normal;
+		overflow-wrap: anywhere;
+	}
+
+	/* 動きを減らす設定にしている人には、動きを止める */
+	@media (prefers-reduced-motion: reduce) {
+		body.p-lp *,
+		body.p-lp *::before,
+		body.p-lp *::after {
+			transition-duration: .01ms !important;
+			animation-duration: .01ms !important;
+			scroll-behavior: auto !important;
+		}
+	}
 }
 
 
 /* ==========================================================================
-   4. 共通パーツ
-   複数のセクションで使い回すものだけを置いています。
+   5. layout
+   ========================================================================== */
+
+@layer layout {
+	/* 本文の横幅をそろえる箱。狭いときは端に --gutter ぶんの余白が残る */
+	.l-container {
+		width: min(var(--container), 100% - var(--gutter) * 2);
+		margin-inline: auto;
+	}
+}
+
+
+/* ==========================================================================
+   6. components
+   複数のセクションで使い回すものだけ。
    1箇所でしか使わないものは、そのセクションのブロックに書いてください。
    ========================================================================== */
 
-/* --- 見出しの上にある黄色いタグ（# REASON など） -------------------------- */
-.c-kicker {
-	display: inline-block;
-	padding: 2px 8px;
-	background: var(--color-yellow);
-	font-family: var(--font-en);
-	font-size: 20px;
-	font-weight: 400;
-	line-height: 1;
-	letter-spacing: .05em;
+@layer components {
 
-	@media (max-width: 767px) {
-		font-size: 15px;
-	}
-}
-
-/* --- （ ）で囲まれたセクション見出し -------------------------------------
-   見出し本文は .c-heading__text で1つにまとめてください。
-   まとめないと「（」「本文」「太字」がバラバラに並んで、
-   画面が狭いときに変な位置で改行されます。                     */
-.c-heading {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	gap: 28px;
-	font-size: 30px;
-	font-weight: 500;
-	line-height: 1.5;
-	letter-spacing: .06em;
-
-	& .c-heading__text {
-		text-align: center;
-	}
-
-	& strong {
-		font-size: 42px;
-		font-weight: 900;
-	}
-
-	/* 左右の（ ）は飾り */
-	&::before,
-	&::after {
-		flex: none;
+	/* --- 見出しの上の黄色いタグ（# REASON など） --- */
+	.c-kicker {
+		display: inline-block;
+		padding: .2em .5em;
+		background: var(--color-yellow);
 		font-family: var(--font-en);
-		font-size: 50px;
+		font-size: var(--fs-card-title);
+		font-weight: 400;
+		line-height: 1;
+		letter-spacing: .05em;
+	}
+
+	/* --- （ ）で囲まれたセクション見出し ---
+	   見出し本文は .c-heading__text で1つにまとめてください。
+	   まとめないと「（」「本文」「太字」が別々に並び、
+	   画面が狭いときに変な位置で改行されます。 */
+	.c-heading {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: clamp(.5rem, .2rem + 1.4vw, 1.75rem);
+		font-size: var(--fs-heading);
 		font-weight: 500;
-		color: var(--color-white);
-		-webkit-text-stroke: 1px var(--color-text);
-	}
-	&::before { content: '（'; }
-	&::after  { content: '）'; }
+		line-height: 1.5;
+		letter-spacing: .06em;
 
-	@media (max-width: 767px) {
-		gap: 8px;
-		font-size: 16px;
+		& .c-heading__text {
+			text-align: center;
+			text-wrap: balance;   /* 行の長さをそろえて折り返す */
+		}
 
-		& strong { font-size: 21px; }
+		& strong {
+			font-size: var(--fs-heading-em);
+			font-weight: 900;
+		}
 
+		/* 左右の（ ）は飾り */
 		&::before,
-		&::after { font-size: 26px; }
-	}
-}
-
-/* --- ボタン（資料請求 / オープンキャンパス） ------------------------------
-   標準は「白地 + 色文字」。ヘッダーだけ塗りつぶしにしていて、
-   その指定は p-header のブロックの中にあります。               */
-.c-btn {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	gap: 12px;
-	padding: 18px 24px;
-	background: var(--color-white);
-	font-size: 16px;
-	line-height: 1;
-	letter-spacing: .04em;
-	transition: opacity .2s ease;
-
-	& .c-btn__icon {
-		width: 18px;
-		flex: none;
+		&::after {
+			flex: none;
+			font-family: var(--font-en);
+			font-size: calc(var(--fs-heading-em) * 1.2);
+			font-weight: 500;
+			color: var(--color-white);
+			-webkit-text-stroke: 1px var(--color-text);
+		}
+		&::before { content: '（'; }
+		&::after  { content: '）'; }
 	}
 
-	&:hover {
-		opacity: .75;
+	/* --- ボタン（資料請求 / オープンキャンパス） ---
+	   標準は「白地 + 色文字」。ヘッダーだけ塗りつぶしにしていて、
+	   その指定は p-header のブロックの中にあります。 */
+	.c-btn {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: .75em;
+		padding: 1em 1.5em;
+		background: var(--color-white);
+		font-size: var(--fs-body);
+		line-height: 1;
+		letter-spacing: .04em;
+		white-space: nowrap;
+		transition: opacity .2s ease;
+
+		& .c-btn__icon {
+			width: 1.2em;
+			flex: none;
+		}
+
+		&:hover,
+		&:focus-visible {
+			opacity: .75;
+		}
 	}
 
-	@media (max-width: 767px) {
-		padding: 14px 16px;
-		font-size: 14px;
-	}
-}
+	.c-btn--doc { color: var(--color-blue); }
+	.c-btn--oc  { color: var(--color-purple); }
 
-.c-btn--doc { color: var(--color-blue); }
-.c-btn--oc  { color: var(--color-purple); }
-
-/* --- ✓ 付きの箇条書き ---------------------------------------------------- */
-.c-checklist {
-	display: grid;
-	gap: 10px;
-	font-size: 14px;
-	line-height: 1.5;
-
-	& li {
+	/* --- ✓ 付きの箇条書き --- */
+	.c-checklist {
 		display: grid;
-		grid-template-columns: auto 1fr;
-		gap: 9px;
-	}
+		gap: .7em;
+		font-size: var(--fs-small);
+		line-height: 1.5;
 
-	& li::before {
-		content: '✓';
-		color: var(--color-pink);
-		font-weight: 700;
-	}
+		& li {
+			display: grid;
+			grid-template-columns: auto 1fr;
+			gap: .6em;
+		}
 
-	@media (max-width: 767px) {
-		font-size: 13px;
+		& li::before {
+			content: '✓';
+			color: var(--color-pink);
+			font-weight: 700;
+		}
 	}
-}
-
-.c-checklist--pink {
-	font-size: 13px;
-	line-height: 1.4;
 }
 
 
 /* ==========================================================================
-   5. セクション（画面の上から順）
+   7. sections（画面の上から順）
    ========================================================================== */
+
+@layer sections {
 
 
 /* --------------------------------------------------------------------------
@@ -291,51 +321,32 @@ body.p-lp {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		gap: 24px;
-		padding-block: 16px;
+		gap: clamp(.5rem, .2rem + 1.5vw, 1.5rem);
+		padding-block: clamp(.625rem, .4rem + 1vw, 1rem);
 	}
 
 	& .p-header__logo img {
-		width: 200px;
+		width: clamp(7.5rem, 5rem + 6.5vw, 12.5rem);   /* 120 → 200 */
 	}
 
 	& .p-header__actions {
 		display: flex;
-		gap: 16px;
+		gap: clamp(.5rem, .3rem + .8vw, 1rem);
 	}
 
 	/* ヘッダーのボタンだけ塗りつぶし + 白文字 */
 	& .c-btn {
-		min-width: 200px;
-		padding-block: 14px;
+		padding: .9em 1em;
+		font-size: var(--fs-small);
 		color: var(--color-white);
 	}
 	& .c-btn--doc { background: var(--color-blue); }
 	& .c-btn--oc  { background: var(--color-purple); }
 
-	@media (max-width: 767px) {
-		& .p-header__inner {
-			gap: 12px;
-			padding-block: 10px;
-		}
-
-		& .p-header__logo img {
-			width: 130px;
-		}
-
-		& .p-header__actions {
-			gap: 8px;
-		}
-
+	@media (min-width: 768px) {
 		& .c-btn {
-			min-width: 0;
-			gap: 5px;
-			padding: 9px 8px;
-			font-size: 10px;
-			white-space: nowrap;   /* 「オープンキャンパス」を折り返さない */
-		}
-		& .c-btn .c-btn__icon {
-			width: 11px;
+			min-width: 12.5rem;
+			font-size: var(--fs-body);
 		}
 	}
 }
@@ -344,73 +355,67 @@ body.p-lp {
 /* --------------------------------------------------------------------------
    MV — メインビジュアル
 
-   写真の帯とコピーを grid の同じマス（1行1列）に重ねています。
-   高さはコピー側の上下 padding と写真の高さのうち、背が高いほうで決まります。
+   PC: 左右の写真とコピーを grid の同じマスに重ねる
+   SP: 重ねると文字が顔にかぶって読めないので、写真の帯 → コピー の縦並び
+   どちらも高さは中身なりに決まります。
    -------------------------------------------------------------------------- */
 .p-mv {
 	display: grid;
-	background-color: var(--color-bg-yellow);
-	background-image: url('../image/icons/ref001-mv-bg-pc.svg');
-	background-position: center bottom;
-	background-size: 100% auto;
-	background-repeat: no-repeat;
-	/* OPEN CAMPUS バッジを重ねるための基準 */
-	position: relative;
+	position: relative;   /* OPEN CAMPUS バッジの基準 */
 	isolation: isolate;
+	background-color: var(--color-bg-yellow);
+	background-image: url('../image/icons/ref001-mv-bg-sp.svg');
+	background-position: center;
+	background-size: cover;
+	background-repeat: no-repeat;
 
-	/* --- 左右の写真 --- */
 	& .p-mv__photos {
-		grid-area: 1 / 1;
 		display: flex;
 		justify-content: space-between;
 		align-items: stretch;
 	}
 
 	& .p-mv__photo {
-		width: 34%;
+		width: 50%;
 
 		& img {
 			width: 100%;
-			height: 100%;
+			aspect-ratio: 3 / 4;
 			object-fit: cover;
 			object-position: center top;
 		}
 	}
 
-	/* --- 中央のコピー --- */
 	& .p-mv__body {
-		grid-area: 1 / 1;
-		z-index: 1;
 		display: grid;
 		align-content: center;
 		justify-items: center;
-		gap: 28px;
-		padding-block: 110px 130px;
+		gap: clamp(1rem, .6rem + 1.7vw, 1.75rem);
+		/* 下は OPEN CAMPUS バッジ（吹き出し込み）が重なる分をあける。
+		   バッジは幅 112〜156px の円 + 上の吹き出し + 下の余白なので、
+		   その合計より少し大きい値にしています。 */
+		padding-block: clamp(2rem, 1.4rem + 2.6vw, 4rem) clamp(11.25rem, 9rem + 6vw, 13rem);
 		padding-inline: var(--gutter);
 		text-align: center;
 	}
 
 	& .p-mv__catch {
 		display: grid;
-		gap: 4px;
-		margin: 0;
-		color: var(--color-white);
+		gap: .1em;
 		font-weight: 900;
 		line-height: 1.25;
 		letter-spacing: .04em;
-		text-shadow: 0 0 18px rgba(132, 115, 170, .35);
 	}
 
-	& .p-mv__catch-line--lead { font-size: 88px; }
-	& .p-mv__catch-line--mid  { font-size: 44px; }
-	& .p-mv__catch-line--last { font-size: 71px; }
+	& .p-mv__catch-line--lead { font-size: var(--fs-catch-lead); }
+	& .p-mv__catch-line--mid  { font-size: var(--fs-catch-mid); }
+	& .p-mv__catch-line--last { font-size: var(--fs-catch-last); }
 
-	& .p-mv__quote {
-		color: var(--color-purple);
-	}
+	& .p-mv__quote { color: var(--color-purple); }
 
 	& .p-mv__lead {
-		font-size: 17px;
+		max-width: var(--measure);
+		font-size: var(--fs-lead);
 		line-height: 2;
 		letter-spacing: .06em;
 	}
@@ -418,15 +423,16 @@ body.p-lp {
 	/* --- OPEN CAMPUS バッジ（あしらいなので重ねて配置） --- */
 	& .p-mv__oc {
 		position: absolute;
-		right: 6%;
-		bottom: 10%;
 		z-index: 2;
+		right: 50%;
+		bottom: 1rem;
+		translate: 50% 0;
 
 		display: grid;
 		place-content: center;
 		justify-items: center;
-		gap: 2px;
-		width: 156px;
+		gap: .15em;
+		width: clamp(7rem, 5rem + 5.2vw, 9.75rem);   /* 112 → 156 */
 		aspect-ratio: 1;
 		border-radius: 50%;
 		background: var(--color-orange);
@@ -434,121 +440,118 @@ body.p-lp {
 		text-align: center;
 		transition: transform .2s ease;
 
-		&:hover { transform: scale(1.04); }
+		&:hover,
+		&:focus-visible { transform: scale(1.04); }
 	}
 
 	& .p-mv__oc-balloon {
 		position: absolute;
-		bottom: calc(100% - 4px);
+		bottom: calc(100% - .25rem);
 		left: 50%;
 		translate: -50% 0;
 		white-space: nowrap;
 
-		padding: 8px 16px;
+		padding: .6em 1.2em;
 		border: 1px solid var(--color-text);
 		border-radius: 999px;
 		background: var(--color-white);
 		color: var(--color-text);
-		font-size: 13px;
+		font-size: var(--fs-small);
 		line-height: 1;
 	}
 
 	& .p-mv__oc-title {
 		font-family: var(--font-en);
-		font-size: 22px;
+		font-size: clamp(1rem, .75rem + 1.1vw, 1.375rem);
 		font-weight: 600;
 		line-height: 1.25;
 		letter-spacing: .05em;
 	}
 
 	& .p-mv__oc-note {
-		font-size: 13px;
+		font-size: var(--fs-small);
 		line-height: 1;
 	}
 
-	/* --- SP ---
-	   画面が狭いと写真とコピーが重なって文字が読めなくなるので、
-	   重ねるのをやめて「写真の帯」→「コピー」の縦並びにします。
-	   grid の行を分けるだけなので、高さは中身なりに決まります。 */
+	/* SP は写真が広がりすぎないように上限をつける */
 	@media (max-width: 767px) {
-		background-image: url('../image/icons/ref001-mv-bg-sp.svg');
-		background-size: cover;
+		& .p-mv__photos {
+			max-width: 34rem;
+			margin-inline: auto;
+		}
+	}
+
+	/* --- PC: 写真とコピーを重ねる --- */
+	@media (min-width: 768px) {
+		background-image: url('../image/icons/ref001-mv-bg-pc.svg');
+		background-size: 100% 100%;
 
 		& .p-mv__photos {
-			grid-area: auto;   /* 重ね配置をやめる */
+			grid-area: 1 / 1;
 		}
 
+		/* 写真の幅は画面幅なりに伸ばします。
+		   % にすると狭いPC幅で中央のコピーを置く場所が無くなり、
+		   文字が顔に重なって読めなくなるためです。 */
 		& .p-mv__photo {
-			width: 50%;
+			width: clamp(11rem, 5rem + 20vw, 30rem);
 
 			& img {
-				aspect-ratio: 3 / 4;
-				height: auto;
+				aspect-ratio: auto;
+				height: 100%;
 			}
 		}
 
 		& .p-mv__body {
-			grid-area: auto;   /* 写真の下に置く */
-			gap: 16px;
-			/* 下は OPEN CAMPUS バッジ（吹き出し込みで約160px）の分をあける */
-			padding-block: 32px 180px;
-			/* 背景が明るいので文字は白ではなく本文色にする */
-			color: var(--color-text);
+			grid-area: 1 / 1;
+			z-index: 1;
+			padding-block: clamp(4rem, 1rem + 8vw, 6.875rem);
 		}
 
+		/* 白くするのはキャッチだけ。リード文まで白にすると、
+		   写真に重なったときに読めなくなります。 */
 		& .p-mv__catch {
-			color: inherit;
-			text-shadow: none;
-		}
-
-		& .p-mv__catch-line--lead { font-size: 40px; }
-		& .p-mv__catch-line--mid  { font-size: 21px; }
-		& .p-mv__catch-line--last { font-size: 32px; }
-
-		& .p-mv__lead {
-			font-size: 13px;
-			line-height: 1.9;
+			color: var(--color-white);
+			text-shadow: 0 0 18px rgb(132 115 170 / .35);
 		}
 
 		& .p-mv__oc {
-			right: 50%;
-			bottom: 16px;
-			translate: 50% 0;
-			width: 112px;
+			right: 6%;
+			bottom: 10%;
+			translate: none;
 		}
-
-		& .p-mv__oc-balloon { font-size: 11px; padding: 6px 12px; }
-		& .p-mv__oc-title   { font-size: 16px; }
-		& .p-mv__oc-note    { font-size: 11px; }
 	}
 }
 
 
 /* --------------------------------------------------------------------------
    REASON — 千葉経済大学が選ばれる理由
+
+   列数は「1枚あたり最低 280px」というルールだけ書いて、
+   あとは画面幅なりに 1列 → 2列 → 3列 と自動で変わります。
    -------------------------------------------------------------------------- */
 .p-reason {
-	padding-block: var(--section-pad);
+	padding-block: var(--space-section);
 	background: var(--color-white);
 
 	& .p-reason__head {
 		display: grid;
 		justify-items: center;
-		gap: 24px;
-		margin-bottom: 48px;
+		gap: clamp(1rem, .6rem + 1.7vw, 1.5rem);
+		margin-bottom: var(--gap-card);
 		text-align: center;
 	}
 
 	& .p-reason__lead {
-		max-width: 720px;
-		font-size: 16px;
-		line-height: 1.8;
+		max-width: var(--measure);
+		font-size: var(--fs-body);
+		text-wrap: pretty;
 	}
 
 	& .p-reason__list {
 		display: grid;
-		grid-template-columns: repeat(3, 1fr);
-		gap: 40px;
+		grid-template-columns: repeat(auto-fit, minmax(min(100%, 17.5rem), 1fr));
+		gap: var(--gap-card);
 	}
 
 	& .p-reason__card {
@@ -557,71 +560,52 @@ body.p-lp {
 		background: var(--color-beige);
 	}
 
-	& .p-reason__photo {
-		& img {
-			width: 100%;
-			aspect-ratio: 16 / 10;
-			object-fit: cover;
-		}
+	& .p-reason__photo img {
+		width: 100%;
+		aspect-ratio: 16 / 10;
+		object-fit: cover;
 	}
 
 	& .p-reason__body {
 		display: grid;
-		gap: 14px;
-		padding: 0 24px 26px;
+		gap: .8em;
+		padding: 0 1.5rem 1.6rem;
 	}
 
 	/* 見出しは写真との境目にまたがせる。
-	   absolute ではなく、上方向のマイナスマージンで持ち上げています。 */
+	   absolute ではなく上方向のマイナスマージンで持ち上げています。 */
 	& .p-reason__title {
 		width: fit-content;
-		margin-top: -20px;
-		padding: 8px 24px;
+		margin-top: -1.1em;
+		padding: .45em 1.3em;
 		border: 1px solid var(--color-text);
 		background: var(--color-white);
-		font-size: 18px;
+		font-size: var(--fs-card-title);
 		font-weight: 500;
 		line-height: 1.4;
 	}
 
 	& .p-reason__text {
-		font-size: 16px;
-		line-height: 1.8;
+		font-size: var(--fs-body);
 		letter-spacing: .04em;
-	}
-
-	@media (max-width: 767px) {
-		& .p-reason__head {
-			gap: 16px;
-			margin-bottom: 28px;
-		}
-
-		& .p-reason__lead { font-size: 14px; }
-
-		& .p-reason__list {
-			grid-template-columns: 1fr;
-			gap: 28px;
-		}
-
-		& .p-reason__title { font-size: 16px; padding: 6px 18px; }
-		& .p-reason__text  { font-size: 14px; }
+		text-wrap: pretty;
 	}
 }
 
 
 /* --------------------------------------------------------------------------
    EDUCATION — ４年間の学び
+
+   カードは「1枚あたり最低 220px」。画面幅なりに 1→2→3→4列 と変わります。
    -------------------------------------------------------------------------- */
 .p-education {
-	padding-block: var(--section-pad);
+	padding-block: var(--space-section);
 	background: var(--color-beige);
 
 	& .p-education__head {
 		display: grid;
-		grid-template-columns: auto 1fr;
-		align-items: center;
-		gap: 42px;
-		margin-bottom: 40px;
+		gap: clamp(1rem, .6rem + 1.7vw, 2.625rem);
+		margin-bottom: var(--gap-card);
 	}
 
 	& .p-education__title .c-kicker {
@@ -629,44 +613,43 @@ body.p-lp {
 	}
 
 	& .p-education__heading {
-		margin-top: 20px;
-		font-size: 42px;
+		margin-top: .5em;
+		font-size: var(--fs-heading-em);
 		font-weight: 500;
 		line-height: 1.3;
-		white-space: nowrap;
 	}
 
 	& .p-education__intro {
 		border-left: 2px solid #7fc9ed;
-		padding-left: 22px;
+		padding-left: 1.4rem;
 	}
 
 	& .p-education__intro-title {
 		display: inline;
-		font-size: 24px;
+		font-size: var(--fs-card-title);
 		font-weight: 500;
 		line-height: 1.8;
 		background: linear-gradient(transparent 70%, var(--color-orange) 0);
 	}
 
 	& .p-education__intro-text {
-		margin-top: 12px;
-		font-size: 16px;
-		line-height: 1.8;
+		max-width: var(--measure);
+		margin-top: .8em;
+		font-size: var(--fs-body);
+		text-wrap: pretty;
 	}
 
 	& .p-education__list {
 		display: grid;
-		grid-template-columns: repeat(4, 1fr);
-		gap: 40px;
+		grid-template-columns: repeat(auto-fit, minmax(min(100%, 13.75rem), 1fr));
+		gap: var(--gap-card);
 	}
 
-	/* カードは中身の量で高さが決まります。4枚は grid が自動でそろえます。 */
 	& .p-education__step {
 		display: flex;
 		flex-direction: column;
-		gap: 16px;
-		padding-bottom: 24px;
+		gap: 1rem;
+		padding-bottom: 1.5rem;
 		border: 1px solid var(--color-text);
 		background: var(--color-white);
 		box-shadow: 8px 8px 0 0 var(--color-purple);
@@ -676,31 +659,32 @@ body.p-lp {
 	& .p-education__badge {
 		align-self: flex-start;
 		margin: -1px 0 0 -1px;
-		padding: 10px 16px;
+		padding: .7em 1.1em;
 		background: var(--color-purple);
 		color: var(--color-white);
-		font-size: 14px;
+		font-size: var(--fs-small);
 		line-height: 1;
 		letter-spacing: .05em;
 	}
 
 	& .p-education__badge-no {
-		margin-right: 8px;
+		margin-right: .5em;
 		font-family: var(--font-en);
-		font-size: 22px;
+		font-size: 1.5em;
 		font-weight: 600;
 	}
 
 	& .p-education__step-title {
-		margin-inline: 24px;
-		font-size: 20px;
+		margin-inline: 1.5rem;
+		font-size: var(--fs-card-title);
 		font-weight: 500;
 		line-height: 1.4;
 		text-align: center;
+		text-wrap: balance;
 	}
 
 	& .p-education__photo {
-		margin-inline: 24px;
+		margin-inline: 1.5rem;
 
 		& img {
 			width: 100%;
@@ -710,43 +694,31 @@ body.p-lp {
 	}
 
 	& .c-checklist {
-		margin-inline: 24px;
+		margin-inline: 1.5rem;
 	}
 
-	@media (max-width: 767px) {
+	/* PC は「見出し | リード文」の横並び */
+	@media (min-width: 768px) {
 		& .p-education__head {
-			grid-template-columns: 1fr;
-			gap: 20px;
-			margin-bottom: 28px;
+			grid-template-columns: auto 1fr;
+			align-items: center;
 		}
 
 		& .p-education__heading {
-			margin-top: 12px;
-			font-size: 28px;
-			white-space: normal;
+			white-space: nowrap;
 		}
-
-		& .p-education__intro-title { font-size: 18px; }
-		& .p-education__intro-text  { font-size: 14px; }
-
-		& .p-education__list {
-			grid-template-columns: 1fr;
-			gap: 28px;
-		}
-
-		& .p-education__step-title { font-size: 18px; }
 	}
 }
 
 
 /* --------------------------------------------------------------------------
    CTA — 千葉経済大学をもっと知ろう！
-   このセクションはページ内に2回出てきます（MESSAGES の前と後）。
+   ページ内に2回出てきます（MESSAGES の前と後）。
    -------------------------------------------------------------------------- */
 .p-cta {
-	padding-block: 72px;
+	padding-block: clamp(2.75rem, 1.8rem + 4vw, 4.5rem);
 	background-image:
-		linear-gradient(90deg, rgba(56, 161, 219, .85), rgba(132, 115, 170, .85)),
+		linear-gradient(90deg, rgb(56 161 219 / .85), rgb(132 115 170 / .85)),
 		url('../image/backgrounds/shared-cta-campus-source.jpg');
 	background-size: cover;
 	background-position: center;
@@ -755,43 +727,32 @@ body.p-lp {
 	& .p-cta__inner {
 		display: grid;
 		justify-items: center;
-		gap: 36px;
+		gap: clamp(1.5rem, 1rem + 2vw, 2.25rem);
 		text-align: center;
 	}
 
 	& .p-cta__title {
-		font-size: 32px;
+		font-size: var(--fs-heading);
 		font-weight: 500;
 		line-height: 1.5;
 		letter-spacing: .06em;
+		text-wrap: balance;
 	}
 
 	& .p-cta__actions {
-		display: flex;
-		flex-wrap: wrap;
-		justify-content: center;
-		gap: 20px;
+		display: grid;
+		gap: clamp(.75rem, .5rem + 1vw, 1.25rem);
+		width: min(100%, 20rem);
 	}
 
-	& .c-btn {
-		min-width: 260px;
-	}
-
-	@media (max-width: 767px) {
-		padding-block: 44px;
-
-		& .p-cta__inner { gap: 24px; }
-
-		& .p-cta__title { font-size: 19px; }
-
+	/* 横に並べられる幅になったら2つ横並びにする */
+	@media (min-width: 768px) {
 		& .p-cta__actions {
-			flex-direction: column;
-			align-items: stretch;
-			gap: 12px;
-			width: 100%;
+			grid-auto-flow: column;
+			width: auto;
 		}
 
-		& .c-btn { min-width: 0; }
+		& .c-btn { min-width: 16rem; }
 	}
 }
 
@@ -800,43 +761,38 @@ body.p-lp {
    STUDENTS VOICE — 私が千葉経済大学を選んだ理由
 
    1件目は最初から開いた状態、2件目以降は「もっと見る」で開きます。
-   開閉のクラス付け替えは lp/js/ref001-interactions.js が行います。
+   開閉は lp/js/ref001-interactions.js が担当しています。
    -------------------------------------------------------------------------- */
 .p-voice {
-	padding-top: var(--section-pad);
+	padding-top: var(--space-section);
 
 	& .p-voice__head {
 		display: grid;
 		justify-items: center;
-		gap: 24px;
-		margin-bottom: 48px;
+		gap: clamp(1rem, .6rem + 1.7vw, 1.5rem);
+		margin-bottom: var(--gap-card);
 		text-align: center;
 	}
 
 	/* 3件目だけ背景色を変えています */
-	& .p-voice__item {
-		background: var(--color-bg-blue);
-	}
-	& .p-voice__item:nth-of-type(3) {
-		background: var(--color-bg-yellow);
-	}
+	& .p-voice__item { background: var(--color-bg-blue); }
+	& .p-voice__item:nth-of-type(3) { background: var(--color-bg-yellow); }
 
 	& .p-voice__inner {
 		display: grid;
-		gap: 28px;
-		padding-block: 40px;
+		gap: clamp(1.25rem, .8rem + 1.9vw, 1.75rem);
+		padding-block: clamp(1.75rem, 1.2rem + 2.3vw, 2.5rem);
 	}
 
 	/* --- 顔写真 + 吹き出し --- */
 	& .p-voice__profile {
 		display: grid;
-		grid-template-columns: auto 1fr;
-		align-items: center;
-		gap: 48px;
+		justify-items: center;
+		gap: 1rem;
 	}
 
 	& .p-voice__avatar img {
-		width: 160px;
+		width: clamp(6.875rem, 4.5rem + 6.2vw, 10rem);   /* 110 → 160 */
 		aspect-ratio: 1;
 		border-radius: 50%;
 		object-fit: cover;
@@ -844,39 +800,38 @@ body.p-lp {
 
 	& .p-voice__balloon {
 		position: relative;   /* 尻尾の基準 */
-		padding: 28px 40px;
+		width: 100%;
+		max-width: 40rem;
+		padding: clamp(1.25rem, .9rem + 1.5vw, 1.75rem) clamp(1.25rem, .7rem + 2.3vw, 2.5rem);
 		border: 1px solid var(--color-line);
 		background: var(--color-white);
 	}
 
-	/* 吹き出しの尻尾。あしらいなので absolute で置いています。 */
+	/* 吹き出しの尻尾。あしらいなので absolute で置いています。
+	   SP は上向き（写真が上にあるため）、PC は左向きです。 */
 	& .p-voice__balloon::before,
 	& .p-voice__balloon::after {
 		content: '';
 		position: absolute;
-		top: 50%;
-		right: 100%;
-		translate: 0 -50%;
-		border-block: 12px solid transparent;
+		bottom: 100%;
+		left: 50%;
+		translate: -50% 0;
+		border-inline: 12px solid transparent;
 	}
-	& .p-voice__balloon::before {
-		border-right: 14px solid var(--color-line);
-	}
-	& .p-voice__balloon::after {
-		margin-right: -1px;
-		border-right: 14px solid var(--color-white);
-	}
+	& .p-voice__balloon::before { border-bottom: 14px solid var(--color-line); }
+	& .p-voice__balloon::after  { margin-bottom: -1px; border-bottom: 14px solid var(--color-white); }
 
 	& .p-voice__title {
-		margin-bottom: 14px;
+		margin-bottom: .5em;
 		color: var(--color-purple);
-		font-size: 24px;
+		font-size: var(--fs-card-title);
 		font-weight: 500;
 		line-height: 1.5;
+		text-wrap: pretty;
 	}
 
 	& .p-voice__meta {
-		font-size: 16px;
+		font-size: var(--fs-body);
 		line-height: 1.6;
 	}
 
@@ -884,10 +839,11 @@ body.p-lp {
 	& .p-voice__toggle {
 		display: inline-flex;
 		align-items: center;
-		gap: 8px;
+		gap: .5em;
 		justify-self: center;
+		padding: .5em 1em;   /* 押せる範囲を広げる */
 		color: var(--color-blue);
-		font-size: 18px;
+		font-size: var(--fs-body);
 	}
 
 	& .p-voice__toggle-mark {
@@ -897,24 +853,20 @@ body.p-lp {
 		height: 1em;
 		line-height: 1;
 	}
-	& .p-voice__toggle-mark::before {
-		content: '＋';
-	}
-	& .p-voice__toggle[aria-expanded="true"] .p-voice__toggle-mark::before {
-		content: '－';
-	}
+	& .p-voice__toggle-mark::before { content: '＋'; }
+	& .p-voice__toggle[aria-expanded="true"] .p-voice__toggle-mark::before { content: '－'; }
 
 	/* --- 開いたときの詳細 --- */
 	& .p-voice__detail {
 		display: grid;
-		gap: 28px;
+		gap: clamp(1.25rem, .8rem + 1.9vw, 1.75rem);
 	}
 
 	& .p-voice__detail-main {
 		display: grid;
-		grid-template-columns: 404px 1fr;
+		grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
 		align-items: start;
-		gap: 62px;
+		gap: clamp(1.125rem, .5rem + 2.6vw, 3.875rem);
 	}
 
 	& .p-voice__photo img {
@@ -925,132 +877,95 @@ body.p-lp {
 
 	& .p-voice__detail-body {
 		display: grid;
-		gap: 18px;
-		font-size: 16px;
-		line-height: 1.8;
+		gap: 1.1em;
+		font-size: var(--fs-body);
 	}
+
+	& .p-voice__detail-text { text-wrap: pretty; }
 
 	/* 「印象に残った授業」などのラベル + 内容 */
 	& .p-voice__points {
 		display: grid;
-		grid-template-columns: auto 1fr;
-		align-items: center;
-		gap: 12px 16px;
-		padding: 18px 24px;
+		gap: .4em;
+		padding: clamp(1rem, .7rem + 1.2vw, 1.15rem) clamp(1rem, .6rem + 1.7vw, 1.5rem);
 		background: var(--color-white);
 	}
 
 	& .p-voice__points dt {
-		padding: 4px 20px;
+		justify-self: start;
+		padding: .25em 1.2em;
 		background: var(--color-blue);
 		color: var(--color-white);
-		font-size: 14px;
+		font-size: var(--fs-small);
 		font-weight: 500;
 		line-height: 1.6;
 		text-align: center;
-		white-space: nowrap;
+	}
+
+	& .p-voice__points dd:not(:last-of-type) {
+		margin-bottom: .5em;
 	}
 
 	& .p-voice__advice {
 		display: grid;
-		grid-template-columns: auto 1fr;
-		align-items: start;
-		gap: 34px;
+		justify-items: start;
+		gap: .8em;
 	}
 
 	& .p-voice__advice-label {
-		padding: 12px 28px;
+		padding: .7em 1.6em;
 		border-radius: 999px;
 		background: var(--color-purple);
 		color: var(--color-white);
-		font-size: 15px;
+		font-size: var(--fs-body);
 		line-height: 1.4;
 		text-align: center;
 		white-space: nowrap;
 	}
 
 	& .p-voice__advice-text {
-		font-size: 16px;
-		line-height: 1.8;
+		font-size: var(--fs-body);
+		text-wrap: pretty;
 	}
 
-	/* --- SP --- */
-	@media (max-width: 767px) {
-		& .p-voice__head {
-			gap: 16px;
-			margin-bottom: 28px;
-		}
-
-		& .p-voice__inner {
-			gap: 20px;
-			padding-block: 28px;
-		}
-
-		/* 顔写真を上、吹き出しを下に積む */
+	/* --- PC: 写真と吹き出しを横並びにし、尻尾も左向きに付け替える --- */
+	@media (min-width: 768px) {
 		& .p-voice__profile {
-			grid-template-columns: 1fr;
-			justify-items: center;
-			gap: 16px;
+			grid-template-columns: auto 1fr;
+			align-items: center;
+			gap: clamp(1.5rem, -1rem + 5vw, 3rem);
+			justify-items: stretch;
 		}
-
-		& .p-voice__avatar img { width: 110px; }
 
 		& .p-voice__balloon {
-			width: 100%;
-			padding: 20px;
+			max-width: none;
 		}
 
-		/* 尻尾も上向きに付け替える */
 		& .p-voice__balloon::before,
 		& .p-voice__balloon::after {
-			top: auto;
-			right: auto;
-			bottom: 100%;
-			left: 50%;
-			translate: -50% 0;
-			border-block: 0;
-			border-inline: 12px solid transparent;
+			top: 50%;
+			bottom: auto;
+			right: 100%;
+			left: auto;
+			translate: 0 -50%;
+			border-inline: 0;
+			border-block: 12px solid transparent;
 		}
-		& .p-voice__balloon::before {
-			border-right: 12px solid transparent;
-			border-bottom: 14px solid var(--color-line);
-		}
-		& .p-voice__balloon::after {
-			margin-right: 0;
-			margin-bottom: -1px;
-			border-right: 12px solid transparent;
-			border-bottom: 14px solid var(--color-white);
-		}
-
-		& .p-voice__title { font-size: 17px; }
-		& .p-voice__meta  { font-size: 13px; }
-
-		& .p-voice__toggle { font-size: 15px; }
-
-		& .p-voice__detail { gap: 20px; }
-
-		& .p-voice__detail-main {
-			grid-template-columns: 1fr;
-			gap: 18px;
-		}
-
-		& .p-voice__detail-body { font-size: 14px; }
+		& .p-voice__balloon::before { border-bottom: 0; border-right: 14px solid var(--color-line); }
+		& .p-voice__balloon::after  { margin-bottom: 0; margin-right: -1px; border-bottom: 0; border-right: 14px solid var(--color-white); }
 
 		& .p-voice__points {
-			grid-template-columns: 1fr;
-			gap: 6px;
-			padding: 16px;
+			grid-template-columns: auto 1fr;
+			align-items: center;
+			gap: .75em 1em;
 		}
-		& .p-voice__points dt { justify-self: start; }
-		& .p-voice__points dd { margin-bottom: 8px; }
+		& .p-voice__points dd:not(:last-of-type) { margin-bottom: 0; }
 
 		& .p-voice__advice {
-			grid-template-columns: 1fr;
-			justify-items: start;
-			gap: 12px;
+			grid-template-columns: auto 1fr;
+			align-items: start;
+			gap: 2rem;
 		}
-
-		& .p-voice__advice-text { font-size: 14px; }
 	}
 }
 
@@ -1062,23 +977,23 @@ body.p-lp {
    写真は右寄せ、コピーは左下寄せなので、重なり方は自動で決まります。
    -------------------------------------------------------------------------- */
 .p-messages {
-	padding-block: var(--section-pad);
+	padding-block: var(--space-section);
 	background: var(--color-white);
 
 	& .p-messages__head {
 		display: grid;
-		gap: 20px;
+		gap: clamp(.75rem, .5rem + 1vw, 1.25rem);
 		justify-items: start;
-		margin-bottom: 32px;
+		margin-bottom: var(--gap-card);
 	}
 
 	& .p-messages__heading {
-		font-size: 30px;
+		font-size: var(--fs-heading);
 		font-weight: 500;
 		line-height: 1.5;
 
 		& strong {
-			font-size: 42px;
+			font-size: var(--fs-heading-em);
 			font-weight: 900;
 		}
 	}
@@ -1094,7 +1009,7 @@ body.p-lp {
 	& .p-messages__photo {
 		grid-area: 1 / 1;
 		justify-self: end;
-		width: 62%;
+		width: 100%;
 
 		& img {
 			width: 100%;
@@ -1107,29 +1022,31 @@ body.p-lp {
 		grid-area: 1 / 1;
 		align-self: end;
 		display: grid;
-		gap: 24px;
+		gap: .9em;
 		justify-items: start;
-		padding-bottom: 40px;
+		padding: 0 .75rem 1.25rem;
 	}
 
 	/* 1行ずつ黒い帯にする */
 	& .p-messages__quote {
 		display: grid;
 		justify-items: start;
-		gap: 10px;
-		font-size: 28px;
+		gap: .4em;
+		font-size: var(--fs-card-title);
 		line-height: 1.6;
 
 		& span {
-			padding: 6px 24px;
+			padding: .25em .8em;
 			background: var(--color-text);
 			color: var(--color-white);
 		}
 	}
 
 	& .p-messages__meta {
+		padding: .25em .6em;
+		background: rgb(255 255 255 / .85);
 		color: var(--color-purple);
-		font-size: 16px;
+		font-size: var(--fs-small);
 		line-height: 1.6;
 	}
 
@@ -1137,35 +1054,33 @@ body.p-lp {
 	& .p-messages__nav {
 		display: flex;
 		align-items: center;
-		gap: 22px;
-		margin-top: 32px;
+		gap: clamp(.75rem, .4rem + 1.4vw, 1.4rem);
+		margin-top: clamp(1.25rem, .8rem + 1.9vw, 2rem);
 	}
 
 	/* 見た目の大きさは変えずに、押せる範囲だけ広げています */
 	& .p-messages__arrow {
 		display: grid;
 		place-items: center;
-		width: 44px;
-		height: 44px;
+		width: 2.75rem;
+		height: 2.75rem;
 
-		& img {
-			width: 22px;
-		}
+		& img { width: 1.375rem; }
 	}
 
 	& .p-messages__counter {
 		display: flex;
 		align-items: center;
-		gap: 22px;
+		gap: clamp(.75rem, .4rem + 1.4vw, 1.4rem);
 		font-family: var(--font-en);
-		font-size: 24px;
+		font-size: var(--fs-card-title);
 		line-height: 1;
 	}
 
 	/* 進み具合は JS が --progress を書き換えます */
 	& .p-messages__counter-bar {
 		position: relative;
-		width: 146px;
+		width: clamp(5.5rem, 2rem + 9vw, 9.125rem);
 		height: 2px;
 		background: #aaa;
 
@@ -1179,52 +1094,27 @@ body.p-lp {
 		}
 	}
 
-	@media (max-width: 767px) {
-		& .p-messages__head {
-			gap: 12px;
-			margin-bottom: 20px;
-		}
-
-		& .p-messages__heading {
-			font-size: 18px;
-
-			& strong { font-size: 24px; }
-		}
-
-		/* SP は写真を全面に敷いて、その上にコピーを乗せる */
+	/* --- PC: 写真を右 62%、コピーを左下に重ねる --- */
+	@media (min-width: 768px) {
 		& .p-messages__photo {
-			width: 100%;
+			width: 62%;
 		}
 
 		& .p-messages__body {
-			gap: 14px;
-			padding: 0 12px 20px;
+			gap: 1.5em;
+			padding: 0 0 2.5rem;
 		}
 
 		& .p-messages__quote {
-			gap: 6px;
-			font-size: 15px;
-
-			& span { padding: 4px 12px; }
+			font-size: clamp(1.125rem, .2rem + 1.9vw, 1.75rem);
+			gap: .35em;
 		}
 
 		& .p-messages__meta {
-			padding: 4px 10px;
-			background: rgba(255, 255, 255, .85);
-			font-size: 12px;
+			padding: 0;
+			background: none;
+			font-size: var(--fs-body);
 		}
-
-		& .p-messages__nav {
-			gap: 12px;
-			margin-top: 20px;
-		}
-
-		& .p-messages__counter {
-			gap: 12px;
-			font-size: 18px;
-		}
-
-		& .p-messages__counter-bar { width: 90px; }
 	}
 }
 
@@ -1235,14 +1125,14 @@ body.p-lp {
    カードの色は HTML 側の style="--course: #xxxxxx" で1枚ずつ指定しています。
    -------------------------------------------------------------------------- */
 .p-courses {
-	padding-block: var(--section-pad);
+	padding-block: var(--space-section);
 	background: var(--color-beige);
 
 	& .p-courses__head {
 		display: grid;
 		justify-items: center;
-		gap: 24px;
-		margin-bottom: 46px;
+		gap: clamp(1rem, .6rem + 1.7vw, 1.5rem);
+		margin-bottom: var(--gap-card);
 		text-align: center;
 	}
 
@@ -1253,20 +1143,22 @@ body.p-lp {
 		color: transparent;
 	}
 
+	/* 1枚あたり最低 416px。本文の最大幅(1160px)では2列に収まり、
+	   3列に割れることはありません（3列だと 416*3+40*2 = 1328px 必要なため）。
+	   狭いところでは自動で1列になります。 */
 	& .p-courses__list {
 		display: grid;
-		grid-template-columns: repeat(2, 1fr);
-		gap: 40px;
+		grid-template-columns: repeat(auto-fit, minmax(min(100%, 26rem), 1fr));
+		gap: var(--gap-card);
 	}
 
-	/* 7枚目だけ2列ぶんを使って中央に置く */
+	/* 7枚目だけ2列ぶんを使って中央に置く（列が2列以上のときだけ効きます） */
 	& .p-courses__card:last-child:nth-child(odd) {
 		grid-column: 1 / -1;
-		width: min(100%, calc((var(--container) - 40px) / 2));
+		width: min(100%, calc((var(--container) - var(--gap-card)) / 2));
 		justify-self: center;
 	}
 
-	/* アイコン / 本文 / オススメ枠 の3つを grid で組んでいます */
 	& .p-courses__card {
 		display: grid;
 		grid-template-columns: auto 1fr;
@@ -1277,91 +1169,52 @@ body.p-lp {
 	& .p-courses__icon {
 		display: grid;
 		place-items: center;
-		width: 100px;
+		width: clamp(4.5rem, 3rem + 4vw, 6.25rem);   /* 72 → 100 */
 		aspect-ratio: 1;
 		background: var(--course);
 
-		& img { width: 56px; }
+		& img { width: 55%; }
 	}
 
 	& .p-courses__body {
 		display: grid;
 		align-content: start;
-		gap: 12px;
-		padding: 24px 32px;
+		gap: .5em;
+		padding: clamp(1rem, .7rem + 1.2vw, 1.5rem) clamp(1.125rem, .6rem + 2.2vw, 2rem);
 	}
 
 	& .p-courses__title {
 		width: fit-content;
-		font-size: 20px;
+		font-size: var(--fs-card-title);
 		font-weight: 500;
 		line-height: 1.4;
 		background: linear-gradient(transparent 68%, color-mix(in srgb, var(--course) 30%, transparent) 0);
 	}
 
 	& .p-courses__text {
-		font-size: 15px;
+		font-size: var(--fs-small);
 		line-height: 1.5;
+		text-wrap: pretty;
 	}
 
 	& .p-courses__rec {
 		grid-column: 1 / -1;
-		margin: 12px 32px 24px;
-		padding: 0 20px 18px;
+		margin: .5rem clamp(1.125rem, .6rem + 2.2vw, 2rem) 1.5rem;
+		padding: 0 clamp(.875rem, .5rem + 1.6vw, 1.25rem) 1.1rem;
 		background: var(--color-bg-blue);
 	}
 
-	/* 「こんな人にオススメ！」のラベルは枠の上端にまたがせます。
+	/* 「こんな人にオススメ！」は枠の上端にまたがせます。
 	   ここも absolute ではなくマイナスマージンです。 */
 	& .p-courses__rec-label {
 		width: fit-content;
-		margin: -16px 0 16px;
-		padding: 8px 22px;
+		margin: -1em 0 1em;
+		padding: .5em 1.4em;
 		border: 1px solid var(--color-line);
 		border-radius: 999px;
 		background: var(--color-white);
-		font-size: 14px;
+		font-size: var(--fs-small);
 		line-height: 1;
-	}
-
-	@media (max-width: 767px) {
-		& .p-courses__head {
-			gap: 16px;
-			margin-bottom: 28px;
-		}
-
-		& .p-courses__list {
-			grid-template-columns: 1fr;
-			gap: 24px;
-		}
-
-		& .p-courses__card:last-child:nth-child(odd) {
-			width: 100%;
-		}
-
-		& .p-courses__icon {
-			width: 72px;
-
-			& img { width: 40px; }
-		}
-
-		& .p-courses__body {
-			gap: 8px;
-			padding: 16px 18px;
-		}
-
-		& .p-courses__title { font-size: 17px; }
-		& .p-courses__text  { font-size: 13px; }
-
-		& .p-courses__rec {
-			margin: 8px 18px 18px;
-			padding: 0 14px 14px;
-		}
-
-		& .p-courses__rec-label {
-			font-size: 12px;
-			padding: 6px 16px;
-		}
 	}
 }
 
@@ -1372,92 +1225,77 @@ body.p-lp {
    色は HTML 側の style="--tile-bg / --tile-accent" で1つずつ指定しています。
    -------------------------------------------------------------------------- */
 .p-links {
-	padding-block: var(--section-pad);
+	padding-block: var(--space-section);
 
+	/* 4つで1セットなので、余りが出ないよう 2列 か 4列 だけにしています
+	   （auto-fit にすると 3列 になって1つだけ余る幅ができてしまうため）。 */
 	& .p-links__list {
 		display: grid;
-		grid-template-columns: repeat(4, 1fr);
-		gap: 24px;
-		max-width: 1120px;
+		grid-template-columns: repeat(2, 1fr);
+		gap: clamp(1.25rem, .6rem + 2.6vw, 1.5rem);
+		max-width: 70rem;
 		margin-inline: auto;
+	}
+
+	@media (min-width: 768px) {
+		& .p-links__list {
+			grid-template-columns: repeat(4, 1fr);
+		}
 	}
 
 	& .p-links__tile {
 		display: grid;
 		place-content: center;
 		justify-items: center;
-		gap: 14px;
+		gap: .7em;
 
+		max-width: 17.5rem;
+		margin-inline: auto;
 		aspect-ratio: 1;
+		width: 100%;
 		border: 1px solid var(--color-text);
 		border-radius: 50%;
 		background: var(--tile-bg);
-		box-shadow: 10px 10px 0 var(--tile-accent);
+		box-shadow: clamp(.375rem, .2rem + .7vw, .625rem) clamp(.375rem, .2rem + .7vw, .625rem) 0 var(--tile-accent);
 		text-align: center;
 		transition: translate .2s ease, box-shadow .2s ease;
 
-		&:hover {
+		&:hover,
+		&:focus-visible {
 			translate: 4px 4px;
-			box-shadow: 6px 6px 0 var(--tile-accent);
+			box-shadow: .375rem .375rem 0 var(--tile-accent);
 		}
 	}
 
 	& .p-links__label {
-		font-size: 20px;
+		font-size: var(--fs-body);
 		font-weight: 500;
 		line-height: 1.4;
 		letter-spacing: .05em;
+		text-wrap: balance;
 
 		& small {
 			display: block;
-			font-size: 15px;
+			font-size: var(--fs-small);
 		}
 	}
 
 	& .p-links__label--en {
 		font-family: var(--font-en);
-		font-size: 18px;
 
 		& small {
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			gap: 7px;
-			margin-top: 10px;
-			font-size: 14px;
+			gap: .5em;
+			margin-top: .6em;
 		}
 
-		& small img { width: 16px; }
+		& small img { width: 1.1em; }
 	}
 
 	& .p-links__arrow {
-		width: 20px;
-	}
-
-	@media (max-width: 767px) {
-		& .p-links__list {
-			grid-template-columns: repeat(2, 1fr);
-			gap: 32px 16px;
-		}
-
-		& .p-links__tile {
-			gap: 8px;
-			box-shadow: 6px 6px 0 var(--tile-accent);
-		}
-
-		& .p-links__label {
-			font-size: 14px;
-
-			& small { font-size: 11px; }
-		}
-
-		& .p-links__label--en {
-			font-size: 13px;
-
-			& small { font-size: 11px; margin-top: 6px; }
-		}
-
-		& .p-links__arrow { width: 15px; }
+		width: clamp(.9375rem, .6rem + 1.2vw, 1.25rem);
 	}
 }
 
@@ -1479,7 +1317,7 @@ body.p-lp {
 	}
 
 	& .p-invite__photo {
-		width: 24%;
+		width: 28%;
 
 		& img {
 			width: 100%;
@@ -1494,48 +1332,38 @@ body.p-lp {
 		display: grid;
 		align-content: center;
 		justify-items: center;
-		gap: 32px;
-		padding: 72px var(--gutter);
+		gap: clamp(1.25rem, .8rem + 1.9vw, 2rem);
+		padding: clamp(2.75rem, 1.8rem + 4vw, 4.5rem) var(--gutter);
 		text-align: center;
 	}
 
 	& .p-invite__title {
-		font-size: 34px;
+		font-size: var(--fs-heading-em);
 		font-weight: 900;
 		line-height: 1.5;
 		letter-spacing: .06em;
+		text-wrap: balance;
 	}
 
 	& .p-invite__actions {
-		display: flex;
-		flex-wrap: wrap;
-		justify-content: center;
-		gap: 20px;
+		display: grid;
+		gap: clamp(.75rem, .5rem + 1vw, 1.25rem);
+		width: min(100%, 17.5rem);
 	}
 
 	& .c-btn {
-		min-width: 260px;
 		border: 1px solid currentColor;
 	}
 
-	@media (max-width: 767px) {
-		& .p-invite__photo { width: 30%; }
-
-		& .p-invite__body {
-			gap: 20px;
-			padding-block: 44px;
-		}
-
-		& .p-invite__title { font-size: 20px; }
+	@media (min-width: 768px) {
+		& .p-invite__photo { width: 24%; }
 
 		& .p-invite__actions {
-			flex-direction: column;
-			align-items: stretch;
-			gap: 12px;
-			width: min(100%, 280px);
+			grid-auto-flow: column;
+			width: auto;
 		}
 
-		& .c-btn { min-width: 0; }
+		& .c-btn { min-width: 16rem; }
 	}
 }
 
@@ -1545,54 +1373,54 @@ body.p-lp {
    -------------------------------------------------------------------------- */
 .p-footer {
 	position: relative;   /* ページトップボタンの基準 */
-	padding-block: 64px 40px;
+	padding-block: clamp(2.5rem, 1.8rem + 3vw, 4rem) clamp(2rem, 1.6rem + 1.7vw, 2.5rem);
 	background: var(--color-white);
 
 	& .p-footer__inner {
 		display: grid;
-		grid-template-columns: auto 1fr;
-		gap: 40px;
+		gap: clamp(1.75rem, 1.2rem + 2.3vw, 2.5rem);
+		justify-items: center;
+		text-align: center;
 	}
 
 	& .p-footer__logo {
-		width: 240px;
+		width: clamp(11.25rem, 8rem + 8.7vw, 15rem);   /* 180 → 240 */
 	}
 
 	& .p-footer__address {
-		margin-top: 24px;
-		font-size: 14px;
+		margin-top: 1em;
+		font-size: var(--fs-small);
 		line-height: 1.8;
 	}
 
 	& .p-footer__side {
 		display: grid;
-		justify-items: end;
+		justify-items: center;
 		align-content: start;
-		gap: 28px;
+		gap: clamp(1.25rem, .9rem + 1.5vw, 1.75rem);
 	}
 
 	& .p-footer__related {
-		display: flex;
-		flex-wrap: wrap;
-		justify-content: flex-end;
-		gap: 20px;
-		font-size: 15px;
+		display: grid;
+		gap: .7em;
+		font-size: var(--fs-body);
 
-		& a:hover { text-decoration: underline; }
+		& a:hover,
+		& a:focus-visible { text-decoration: underline; }
 	}
 
 	& .p-footer__sns {
 		display: flex;
-		gap: 28px;
+		gap: clamp(1.375rem, 1rem + 1.6vw, 1.75rem);
 
-		& img { width: 26px; }
-		& a:hover { opacity: .7; }
+		& img { width: clamp(1.375rem, 1rem + 1.6vw, 1.625rem); }
+		& a:hover,
+		& a:focus-visible { opacity: .7; }
 	}
 
 	& .p-footer__copyright {
-		grid-column: 1 / -1;
 		font-family: var(--font-en);
-		font-size: 12px;
+		font-size: var(--fs-small);
 		letter-spacing: .03em;
 	}
 
@@ -1603,47 +1431,43 @@ body.p-lp {
 		bottom: 0;
 		display: grid;
 		place-items: center;
-		width: 50px;
+		width: clamp(2.5rem, 1.8rem + 3vw, 3.125rem);
 		aspect-ratio: 1;
 		background: linear-gradient(90deg, var(--color-blue), var(--color-purple));
 
-		& img { width: 15px; }
-		&:hover { opacity: .85; }
+		& img { width: 30%; }
+		&:hover,
+		&:focus-visible { opacity: .85; }
 	}
 
-	@media (max-width: 767px) {
-		padding-block: 40px 32px;
-
+	@media (min-width: 768px) {
 		& .p-footer__inner {
-			grid-template-columns: 1fr;
-			gap: 28px;
-			justify-items: center;
-			text-align: center;
+			grid-template-columns: auto 1fr;
+			justify-items: start;
+			text-align: left;
 		}
 
-		& .p-footer__logo { width: 180px; }
-
-		& .p-footer__address {
-			margin-top: 16px;
-			font-size: 12px;
-		}
-
-		& .p-footer__side {
-			justify-items: center;
-			gap: 20px;
-		}
+		& .p-footer__side { justify-items: end; }
 
 		& .p-footer__related {
-			flex-direction: column;
-			align-items: center;
-			gap: 10px;
-			font-size: 13px;
+			grid-auto-flow: column;
+			gap: 1.25rem;
 		}
 
-		& .p-footer__sns { gap: 22px; }
-
-		& .p-footer__copyright { font-size: 10px; }
-
-		& .p-footer__pagetop { width: 40px; }
+		& .p-footer__copyright { grid-column: 1 / -1; }
 	}
+}
+
+}  /* @layer sections おわり */
+
+
+/* ==========================================================================
+   層の外に置く指定
+
+   どの層よりも強くなります。閉じている詳細を確実に隠すためだけに使います。
+   （層の中に置くと sections の display: grid に負けてしまいます）
+   ========================================================================== */
+
+[hidden] {
+	display: none;
 }
