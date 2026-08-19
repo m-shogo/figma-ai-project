@@ -1,0 +1,443 @@
+schema_version: 1
+intake_id: REF-001-CKU-THEME-INTEGRATION
+status: FROZEN
+created_at: "2026-08-19"
+updated_at: "2026-08-19"
+
+project:
+  reference_id: REF-001-CHIBA-KEIZAI-SAMPLE
+  figma_file_key: ZYTdtw4wCgkcBy2cVnhxVI
+  section_evidence_path: experiments/ref001-cku-theme-integration/ref001-section-geometry-evidence.md
+  evidence_paths:
+    - experiments/ref001-blind-clean-20260812/implementation/theme/README.md
+    - experiments/ref001-blind-clean-20260812/implementation/theme/inc/figma-authority.php
+    - experiments/ref001-wordpress-acf/acf-content-model.yaml
+    - experiments/ref001-wordpress-acf/courses-content-model.yaml
+    - docs/wordpress-theme-intake.md
+    - docs/wordpress-acf-policy.md
+    - docs/wordpress-target-reconnaissance.md
+    - docs/wordpress-target-readiness.md
+
+# NOTE: the supplied production theme (cku, real 千葉経済大学 site theme) is a
+# client-owned codebase. Per experiments/wordpress-acf-pro-standalone-lp/README.md
+# ("a client theme must never be committed to this repository"), the theme's own
+# source files are intentionally NOT committed here. They were unzipped from the
+# untracked repo-root `cku.zip` into a local scratch directory, observed with
+# scripts/scan_wordpress_target.py, and are hosted locally (or in CI) via the
+# standalone-lp harness's theme-dropin/ mechanism. This record freezes the
+# INTEGRATION DECISIONS made against that observation; `overlay/` in this
+# directory holds only the new/added files this project contributes on top of
+# the supplied theme.
+theme_delivery:
+  state: OBSERVED
+  supplied_by: "repo root untracked cku.zip (~26MB), provided out-of-band by the human operator"
+  repository: "N/A (zip export, not a git repository)"
+  starting_commit: "n/a-zip-export (cku.zip has no git history; theme observed as a flat filesystem snapshot)"
+  theme_slug: cku
+  theme_family: CLASSIC_THEME
+  family_is_inference: true
+  scan_report_path: "N/A - scan run from a local scratch unzip location, not committed to the repo (see notes above); reproducible via: unzip cku.zip -d <scratch>; python3 scripts/scan_wordpress_target.py <scratch>/cku"
+  observation:
+    - id: theme_family
+      status: OBSERVED
+      evidence:
+        - "cku/footer.php, cku/functions.php, cku/header.php, cku/index.php present; no theme.json"
+      notes:
+        - "family_is_inference: true is preserved (scan tool inference, not a company authorization)"
+    - id: theme_json
+      status: NONE
+      evidence:
+        - "no cku/theme.json in the unzipped export"
+      notes: []
+    - id: template_inventory
+      status: OBSERVED
+      evidence:
+        - "cku/front-page.php, page.php, page-form.php, page-library.php, page-library_top.php, page-oneColumn.php, page-oneColumnWide.php, original-opencampus.php, single.php, single-staff.php, archive.php, archive-library_news.php, category.php, taxonomy-library_news_cat.php, search.php, search-library.php, 404.php all present"
+      notes:
+        - "page-*.php carry `Template Name:` PHP headers (classic page-template convention)"
+    - id: template_parts
+      status: OBSERVED
+      evidence:
+        - "cku/_includes/_body_header.php, _body_footer.php, _body_js.php, _head_css.php, _head_js.php, _head_meta.php, _library_*.php, _main_module.php, _side_navigation.php"
+        - "flat root-level reusable partials loaded via get_template_part(), e.g. front-page.php calls get_template_part('list','news02') -> list-news02.php"
+      notes:
+        - "cku has no template-parts/ subdirectory convention of its own; get_template_part() slugs resolve theme-root-relative and support subdirectories, which this project uses to namespace new files (template-parts/ref001/*) without touching theme-root file names"
+    - id: global_header_footer
+      status: OBSERVED
+      evidence:
+        - "header.php / footer.php call get_header()/get_footer() across every discovered template; _includes/_body_header.php and _body_footer.php hold the actual header/footer body markup"
+      notes:
+        - "Header/Footer ownership stays THEME; REF-001 integration does not touch header.php/footer.php/_includes/_body_header.php/_includes/_body_footer.php"
+    - id: style_architecture
+      status: OBSERVED
+      evidence:
+        - "cku/css/style.scss compiled to css/style.css (+ .map); base/_reset.scss, base/_normalize.scss, global/_index.scss, layout/_layout.scss, module/_module.scss, wordpress/_wordpress.scss"
+        - "cku/style.css (WP theme header stylesheet) is separate from css/style.css (compiled SCSS bundle) and is only loaded for the required WP `Theme Name:` header block, per functions.php enqueue (`new EnqueueStyle('css-style', get_stylesheet_uri(), ...)`)"
+      notes:
+        - "REF-001's already-frozen assets/css/ref001.css is NOT merged into this SCSS pipeline; it is enqueued standalone, scoped to the new page template only, to avoid recompiling/duplicating the theme's SCSS build (see content_decisions notes)"
+    - id: js_architecture
+      status: OBSERVED
+      evidence:
+        - "cku/functions/EnqueueScript.php defines a small wp_enqueue_script wrapper class with an optional conditional-load closure; functions.php registers common.js, home.js (front-page only), form.js (page-form.php only), staff.js (staff archive only), plus CDN swiper-bundle@8 (unconditional, global) and modaal/dualtab/scroll-hint"
+      notes:
+        - "REF-001's assets/js/ref001-interactions.js self-guards its own Swiper CDN loader with `if (window.Swiper) return Promise.resolve(window.Swiper)`, so it reuses the theme's already-enqueued Swiper 8 global instead of loading Swiper 11 a second time -> no duplicate Swiper enqueue"
+    - id: breakpoints
+      status: OBSERVED
+      evidence:
+        - "cku/css/global/functions/_functions.scss defines $breakpoint-2column: calc(#{$width-base-twoColumn} + #{$padding-TB * 2}) (derived, not a bare px literal); breakPoint_original-min() mixin used across layout/_layout.scss"
+      notes:
+        - "REF-001's own CSS is untouched and keeps its Human-Reviewed <=767 / >=768 breakpoint authority internally; this integration does not add a third breakpoint system or touch cku's SCSS breakpoint variables"
+    - id: naming_convention
+      status: OBSERVED
+      evidence:
+        - "cku uses snake_case/prefix classes: top_*, module_*, global_*, gc_*, plus underscore-prefixed state modifiers (_disabled, _center, _white, _column, _oneColumn)"
+      notes:
+        - "REF-001's own ref- / ref001- prefixed BEM-ish classes are visually and namespace-distinct from cku's convention, which avoids collisions; new PHP template-part files follow cku's flat/get_template_part convention for file naming even though the CSS class prefix stays REF-001's own"
+    - id: acf_evidence
+      status: OBSERVED
+      evidence:
+        - "get_field()/have_rows()/get_sub_field()/the_row() used throughout front-page.php, acf5-custom_field.php, list-*.php, single.php, single-staff.php, original-opencampus.php, page-library_top.php, visual.php"
+        - "no acf-json/ directory and no acf_add_local_field_group()/save_json or load_json filters found in the unzipped export -> existing production field groups are DB-registered via the ACF admin UI, not exported as Local JSON in this theme copy"
+      notes:
+        - "no acf-json/ precedent exists in the supplied theme, so this project follows docs/wordpress-theme-intake.md's fallback rule and introduces overlay/acf-json/ using the same Local JSON + human-readable stable-key convention already established in experiments/wordpress-acf-pro-standalone-lp/theme/standalone-lp-sample/acf-json/"
+    - id: block_support
+      status: UNDETERMINED
+      evidence: []
+      notes:
+        - "no theme.json / block-template evidence found; classic-theme filesystem evidence alone cannot confirm or rule out block-editor feature flags registered elsewhere (e.g. via a must-use plugin not included in this export). Not required for this integration: Student Voice/Swiper page template is a classic PHP page template, not a block template."
+    - id: enqueue_convention
+      status: OBSERVED
+      evidence:
+        - "functions.php: get_template_part('functions/EnqueueStyle'); get_template_part('functions/EnqueueScript'); then `new EnqueueStyle(...)` / `new EnqueueScript(...)` calls, several with a conditional-load Closure (e.g. is_page_template('page-form.php'), is_front_page())"
+      notes:
+        - "overlay/functions/ref001-integration.php follows this exact convention: `new EnqueueStyle('ref001-style', ..., function () { return is_page_template('page-ref001.php'); })` etc., so REF-001 assets load only on the new page template"
+    - id: form_evidence
+      status: NONE
+      evidence:
+        - "page-form.php + js/form.js + yubinbango-script (Japanese postal-code autofill) present, but no Contact Form 7 / MW WP Form / Gravity Forms plugin evidence in the theme export; form markup appears theme-owned (acf5-custom_field.php-driven)"
+      notes:
+        - "irrelevant to this integration: Student Voice and Swiper contain no form fields"
+    - id: cpt_evidence
+      status: OBSERVED
+      evidence:
+        - "functions.php registers a `staff` CPT (教員紹介) with `staff_cat` taxonomy"
+      notes:
+        - "irrelevant to this integration: no new CPT is introduced for Student Voice/Swiper, both remain page-local ACF repeaters"
+    - id: image_pipeline
+      status: OBSERVED
+      evidence:
+        - "functions.php add_theme_support('post-thumbnails') + multiple add_image_size() calls (page_img, top_main_pc/sp, module_img, module_img_col2, module_card, etc.), consumed via wp_get_attachment_image_src() throughout templates"
+      notes:
+        - "ACF Image fields for Student Voice/Swiper use return_format: array (attachment ID/URL) rendered through wp_get_attachment_image_src()-style helpers in overlay/functions/ref001-integration.php, matching this existing pattern, rather than reusing REF-001's fixture ref001_picture() PC/SP <picture> helper verbatim (adapted, not copy-pasted, to fit ACF media fields)"
+  blocking_questions: []
+
+template_coverage:
+  - surface: PAGE_TEMPLATE
+    hierarchy_name: page-ref001.php
+    required: REQUIRED
+    theme_provides: "NO"
+    ownership: PROJECT
+    target_path: overlay/page-templates/page-ref001.php
+    notes:
+      - "New classic page template (`Template Name: REF-001 千葉経済大学 Fidelity Page`), following the page-form.php / page-library.php Template Name convention already used by cku"
+      - "Reuses cku's own get_header()/get_footer() (global Header/Footer ownership stays THEME, unchanged)"
+  - surface: PART
+    hierarchy_name: template-parts/ref001/*.php
+    required: REQUIRED
+    theme_provides: "NO"
+    ownership: PROJECT
+    target_path: overlay/template-parts/ref001/
+    notes:
+      - "All REF-001 sections (main-visual, reason, education, shared-cta x2, student-voice, messages/swiper, courses, links, cta-value) ported as get_template_part('template-parts/ref001/<name>') calls, namespaced under a subdirectory so no cku theme-root file is touched or overwritten"
+      - "Only student-voice and messages(swiper) read from ACF; the rest stay STATIC (fixed markup ported unchanged from the Human-Reviewed fixture)"
+  - surface: FRONT_PAGE
+    hierarchy_name: front-page.php
+    required: OPTIONAL
+    theme_provides: "YES"
+    ownership: THEME
+    target_path: ""
+    notes:
+      - "Out of scope. cku's real front-page.php (千葉経済大学 top page) is untouched; REF-001 renders on its own new page template, not the live front page"
+  - surface: PAGE
+    hierarchy_name: page.php
+    required: OPTIONAL
+    theme_provides: "YES"
+    ownership: THEME
+    target_path: ""
+    notes:
+      - "Untouched; REF-001 uses its own page-ref001.php template instead of the generic page.php + ACF flexible-content editor path"
+  - surface: POSTS_INDEX
+    hierarchy_name: home.php (not present; front-page.php + index.php cover it)
+    required: OPTIONAL
+    theme_provides: "NO"
+    ownership: THEME
+    target_path: ""
+    notes: ["Out of scope; untouched by this integration"]
+  - surface: SINGLE
+    hierarchy_name: single.php / single-staff.php
+    required: OPTIONAL
+    theme_provides: "YES"
+    ownership: THEME
+    target_path: ""
+    notes: ["Out of scope; untouched by this integration"]
+  - surface: ARCHIVE
+    hierarchy_name: archive.php / archive-library_news.php
+    required: OPTIONAL
+    theme_provides: "YES"
+    ownership: THEME
+    target_path: ""
+    notes: ["Out of scope; untouched by this integration"]
+  - surface: CATEGORY
+    hierarchy_name: category.php
+    required: OPTIONAL
+    theme_provides: "YES"
+    ownership: THEME
+    target_path: ""
+    notes: ["Out of scope; untouched by this integration"]
+  - surface: TAXONOMY
+    hierarchy_name: taxonomy-library_news_cat.php
+    required: OPTIONAL
+    theme_provides: "YES"
+    ownership: THEME
+    target_path: ""
+    notes: ["Out of scope; untouched by this integration"]
+  - surface: SEARCH
+    hierarchy_name: search.php / search-library.php
+    required: OPTIONAL
+    theme_provides: "YES"
+    ownership: THEME
+    target_path: ""
+    notes: ["Out of scope; untouched by this integration"]
+  - surface: NOT_FOUND
+    hierarchy_name: 404.php
+    required: OPTIONAL
+    theme_provides: "YES"
+    ownership: THEME
+    target_path: ""
+    notes: ["Out of scope; untouched by this integration"]
+  - surface: CPT_ARCHIVE
+    hierarchy_name: archive-{post_type}.php (staff has_archive)
+    required: OPTIONAL
+    theme_provides: "YES"
+    ownership: THEME
+    target_path: ""
+    notes: ["cku's existing staff CPT archive; out of scope, untouched"]
+  - surface: CPT_SINGLE
+    hierarchy_name: single-staff.php
+    required: OPTIONAL
+    theme_provides: "YES"
+    ownership: THEME
+    target_path: ""
+    notes: ["Out of scope; untouched by this integration"]
+
+content_decisions:
+  - section_id: student-voice
+    label: "Student Voice（私が千葉経済大学を選んだ理由）"
+    reuse: ADAPT
+    content_ownership: ACF_FIELD
+    implementation_unit: TEMPLATE_PART
+    editor_capability:
+      add_remove: "YES"
+      reorder: "YES"
+      evidence:
+        - "Mission-level explicit instruction: model Student Voice as an ACF Pro Repeater (overriding the more conservative NOT_BASELINE precedent recorded for Courses in experiments/ref001-wordpress-acf/courses-content-model.yaml, which applies to a different, code-owned identity system)"
+    interaction:
+      classification: AUTHORED
+      evidence:
+        - "template-parts/sections/student-voice.php: item 1 open by default, items 2-3 collapsed with a disclosure (もっと見る) toggle -- preserved unchanged from the Human-Reviewed fixture; interaction JS/CSS not modified"
+    notes:
+      - "Only fields that visibly exist in the current markup become ACF sub_fields: avatar image, detail image, title, profile, school, body, impressive-lesson value, admission-reason value, advice. No autoplay/pagination/extra-slide invention."
+      - "Fixed default open/collapsed state (item 1 open) stays code-owned interaction behavior, not an ACF field."
+  - section_id: messages
+    label: "Swiper（力をつけ活躍する先輩たち / messages section）"
+    reuse: ADAPT
+    content_ownership: ACF_FIELD
+    implementation_unit: TEMPLATE_PART
+    editor_capability:
+      add_remove: "YES"
+      reorder: "YES"
+      evidence:
+        - "Mission-level explicit instruction: model Swiper as an ACF Pro Repeater"
+    interaction:
+      classification: AUTHORED
+      evidence:
+        - "template-parts/sections/messages.php: Swiper carousel with prev/next nav + progress indicator, arrow color/hit-area already Human-Reviewed and frozen; JS init (ref001-interactions.js) unmodified"
+    notes:
+      - "Fields: slide photo (image), PC-authored quote line breaks, SP-authored quote line breaks, profile, school. PC/SP quote line arrays are kept as two separate ACF fields (quote_pc, quote_sp) because the current markup genuinely renders two distinct manually-authored line-break variants -- not invented."
+      - "Slide count/order/current-index label ('1' / '4') derive from the repeater at render time; no fixed cardinality is hardcoded beyond what ACF gives back."
+  - section_id: header
+    label: Header
+    reuse: REUSE
+    content_ownership: STATIC
+    implementation_unit: OTHER
+    editor_capability: {add_remove: "NO", reorder: "NO", evidence: []}
+    interaction: {classification: NONE, evidence: []}
+    notes: ["cku's own header.php/_includes/_body_header.php; untouched"]
+  - section_id: footer
+    label: Footer
+    reuse: REUSE
+    content_ownership: STATIC
+    implementation_unit: OTHER
+    editor_capability: {add_remove: "NO", reorder: "NO", evidence: []}
+    interaction: {classification: NONE, evidence: []}
+    notes: ["cku's own footer.php/_includes/_body_footer.php; untouched"]
+  - section_id: main-visual
+    label: Main Visual
+    reuse: ADAPT
+    content_ownership: STATIC
+    implementation_unit: TEMPLATE_PART
+    editor_capability: {add_remove: "NO", reorder: "NO", evidence: []}
+    interaction: {classification: AUTHORED, evidence: ["ported unchanged from Human-Reviewed fixture"]}
+    notes: ["Not in ACF scope for this run; stays code-owned per mission scope discipline"]
+  - section_id: reason
+    label: Reason
+    reuse: ADAPT
+    content_ownership: STATIC
+    implementation_unit: TEMPLATE_PART
+    editor_capability: {add_remove: "NO", reorder: "NO", evidence: []}
+    interaction: {classification: AUTHORED, evidence: ["こんな人にオススメ！ CSS speech-bubble (V2-style) preserved unchanged"]}
+    notes: ["Out of ACF scope"]
+  - section_id: education
+    label: Education
+    reuse: ADAPT
+    content_ownership: STATIC
+    implementation_unit: TEMPLATE_PART
+    editor_capability: {add_remove: "NO", reorder: "NO", evidence: []}
+    interaction: {classification: AUTHORED, evidence: ["大学の雰囲気を体験！ center-anchor method (V3-style) preserved unchanged"]}
+    notes: ["Out of ACF scope"]
+  - section_id: shared-cta
+    label: Shared CTA
+    reuse: ADAPT
+    content_ownership: STATIC
+    implementation_unit: TEMPLATE_PART
+    editor_capability: {add_remove: "NO", reorder: "NO", evidence: []}
+    interaction: {classification: NONE, evidence: []}
+    notes: ["Out of ACF scope; rendered twice per page, unchanged"]
+  - section_id: courses
+    label: Courses
+    reuse: ADAPT
+    content_ownership: STATIC
+    implementation_unit: TEMPLATE_PART
+    editor_capability: {add_remove: "NO", reorder: "NO", evidence: []}
+    interaction: {classification: NONE, evidence: []}
+    notes: ["Out of ACF scope per mission (courses ACF precedent already recorded separately in experiments/ref001-wordpress-acf, not reopened here)"]
+  - section_id: links
+    label: Links
+    reuse: ADAPT
+    content_ownership: STATIC
+    implementation_unit: TEMPLATE_PART
+    editor_capability: {add_remove: "NO", reorder: "NO", evidence: []}
+    interaction: {classification: NONE, evidence: []}
+    notes: ["Out of ACF scope"]
+  - section_id: cta-value
+    label: CTA Value
+    reuse: ADAPT
+    content_ownership: STATIC
+    implementation_unit: TEMPLATE_PART
+    editor_capability: {add_remove: "NO", reorder: "NO", evidence: []}
+    interaction: {classification: NONE, evidence: []}
+    notes: ["Out of ACF scope"]
+
+cpt:
+  state: NONE
+  candidates: []
+  entries: []
+  evidence:
+    - "Student Voice and Swiper are page-local ACF Repeaters, not a reusable content type; cku's own `staff` CPT is unrelated and untouched"
+  notes:
+    - "No new CPT introduced by this integration"
+
+taxonomies:
+  state: NONE
+  candidates: []
+  entries: []
+  evidence:
+    - "Student Voice / Swiper ACF repeaters have no taxonomy relationship; cku's own staff_cat taxonomy (functions.php) is unrelated and untouched"
+  notes:
+    - "No new taxonomy introduced by this integration"
+
+forms:
+  state: NONE
+  selected_plugin: ""
+  candidates: []
+  boundaries: []
+  evidence:
+    - "Student Voice and Swiper contain no form fields"
+  notes:
+    - "Out of scope for this integration"
+
+qa_reuse:
+  layers:
+    - id: wordpress_runtime
+      existing_asset: experiments/wordpress-acf-pro-standalone-lp
+      reuse_mode: REUSE
+      notes:
+        - "cku was applied via scripts/apply-overlay.sh into theme-dropin/cku (git-ignored) and scripts/status.sh confirmed the harness correctly resolved THEME_SOURCE_DIR/theme_slug=cku; no new runtime was built"
+        - "`make smoke` was started locally but this agent's sandbox has no outbound Docker Hub network access (verified: even `docker pull hello-world` did not complete) -- WordPress/MariaDB images could not be pulled, so a real WordPress render of the overlay was NOT obtained in this run. This is an environment/network limitation, not a code defect."
+        - "In place of the live runtime, experiments/ref001-cku-theme-integration/scripts/ci-render-contract.php exercises the exact same PHP entry points (functions/ref001-integration.php + page-ref001.php) against a minimal WordPress-function stub harness: (1) ACF absent -> byte-parity fixture fallback with no PHP warnings/errors, (2) ACF repeater data present and mutated -> DOM actually changes (title/image/quote text, and item count truncates to the mutated row count). This is E1 local observation at the PHP-contract level, not a substitute for a real WordPress+ACF PRO FULL E2E render."
+        - "Manual follow-up for the human operator: run `experiments/ref001-cku-theme-integration/scripts/apply-overlay.sh` against a real cku checkout in `experiments/wordpress-acf-pro-standalone-lp/theme-dropin/`, then `make smoke` (and `make qa` with a real ACF_PRO_LICENSE_KEY) from a network environment that can reach Docker Hub."
+    - id: acf_pro_resolution
+      existing_asset: experiments/wordpress-acf-pro-standalone-lp/scripts/setup.sh
+      reuse_mode: REUSE
+      notes:
+        - "ACF_PRO_LICENSE_KEY secret boundary reused as-is; this run had no license key available and, separately, no Docker Hub network access, so neither the secret-free `make smoke` runtime path nor the full `make qa` path could be executed end-to-end in this sandbox. `make qa` (full ACF PRO + repeater mutation + Playwright) requires the human operator's real ACF_PRO_LICENSE_KEY and a network-unrestricted environment."
+    - id: cms_mutation_qa
+      existing_asset: experiments/wordpress-acf-pro-standalone-lp/tests/runtime.mjs
+      reuse_mode: ADAPT
+      notes:
+        - "Mutation shapes (0/1/8/many items, long text, missing image, reordered items) map onto the student_voice and swiper repeaters; requires ACF PRO to execute for real, so this remains a documented/adapted contract pending a licensed FULL E2E run"
+    - id: visual_diff
+      existing_asset: experiments/wordpress-acf-pro-standalone-lp/tests/visual-diff.mjs
+      reuse_mode: REUSE
+      notes:
+        - "MEASURE_ONLY; no universal tolerance introduced"
+    - id: asset_lineage
+      existing_asset: tools/implementation-intake/visual_truth_guard.py
+      reuse_mode: REUSE
+      notes:
+        - "REF-001 assets are already ASSET_READY (Human-Reviewed, durable bytes) under experiments/ref001-blind-clean-20260812; no new Figma asset pulls needed for this integration"
+    - id: target_readiness
+      existing_asset: scripts/coordinate_wordpress_target_readiness.py
+      reuse_mode: REUSE
+      notes:
+        - "Used for read-only preflight against the local scratch unzip of cku"
+  viewports:
+    - {width: 320, role: "SP QA (mission-listed capture width, not a CSS breakpoint)"}
+    - {width: 360, role: "SP QA"}
+    - {width: 375, role: "SP QA canonical"}
+    - {width: 390, role: "SP QA"}
+    - {width: 430, role: "SP QA"}
+    - {width: 767, role: "SP QA boundary"}
+    - {width: 768, role: "PC QA boundary"}
+    - {width: 769, role: "PC QA"}
+    - {width: 1024, role: "PC QA"}
+    - {width: 1200, role: "PC QA"}
+    - {width: 1380, role: "PC QA canonical"}
+  acf_secret_boundary:
+    secret_name: ACF_PRO_LICENSE_KEY
+    committed: false
+
+unknowns:
+  - id: block-support-flags
+    question: "Are any block-editor feature flags registered for cku outside this filesystem export (e.g. via a must-use plugin)?"
+    blocks: []
+    state: RESOLVED
+    notes:
+      - "Resolved as not-applicable to this integration: page-ref001.php is a classic PHP page template (Template Name header), not a block template, so undetermined block-editor flags do not block this implementation. Left UNDETERMINED at the theme_delivery.observation[block_support] item itself, per the epistemic-state rule (UNDETERMINED must not be laundered into NONE); resolving the *unknown* here only means it does not block freeze, not that the underlying filesystem fact became known."
+  - id: acf-pro-license
+    question: "Is a real ACF_PRO_LICENSE_KEY available in this run for a full `make qa` FULL E2E run (repeater mutation QA against real ACF PRO)?"
+    blocks:
+      - qa_reuse.layers.cms_mutation_qa
+    state: RESOLVED
+    notes:
+      - "Answer: no. This is a definitive, documented answer, not an open question: experiments/wordpress-acf-pro-standalone-lp is explicitly designed to degrade gracefully without the secret (`make smoke` runtime-only path), and this repo's safety rules forbid entering/sourcing a real license key on the agent's own initiative. Resolution is 'defer FULL E2E to the human operator's real secret', which is recorded as an explicit manual follow-up in this record and in the final report, not left as a silently-open unknown."
+
+conflicts: []
+
+freeze:
+  ready: true
+  frozen_at: "2026-08-19"
+  notes:
+    - "Theme observed via scripts/scan_wordpress_target.py against a local scratch unzip of the untracked repo-root cku.zip"
+    - "Integration decisions bound to this observation are frozen in template_coverage/content_decisions above"
+    - "overlay/ in this directory is the committed integration deliverable; the supplied theme's own source is intentionally not committed (see theme_delivery note)"

@@ -1,0 +1,27 @@
+<?php
+$cards = [
+    [ref001_get('reason_1_title'), ref001_get('reason_1_text'), 'reason-1'],
+    [ref001_get('reason_2_title'), ref001_get('reason_2_text'), 'reason-2'],
+    [ref001_get('reason_3_title'), ref001_get('reason_3_text'), 'reason-3'],
+];
+?>
+<section class="ref-reason" data-section="reason"<?= ref001_figma_section_attrs('reason'); ?>>
+    <div class="ref-content">
+        <header class="ref-reason__head">
+            <span class="ref-kicker"># REASON</span>
+            <h2 class="ref-section-title ref-bracket-title"><span class="ref-reason__title-lead">千葉経済大学が</span><strong>選ばれる理由</strong></h2>
+            <p class="ref-reason__intro"><?php ref001_e(ref001_get('reason_intro')); ?></p>
+        </header>
+        <div class="ref-reason__cards">
+            <?php foreach ($cards as $card): ?>
+                <article class="ref-reason-card">
+                    <?php ref001_picture($card[2], 'ref-reason-card__media', ''); ?>
+                    <div class="ref-reason-card__body">
+                        <h3 class="ref-reason-card__title"><?php ref001_e($card[0]); ?></h3>
+                        <p class="ref-reason-card__text"><?php ref001_e($card[1]); ?></p>
+                    </div>
+                </article>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</section>
