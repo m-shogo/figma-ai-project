@@ -53,8 +53,8 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
             <img class="ref-header-logo__image" src="<?php echo esc_url( $lp_base . 'image/icons/university-logo-outlined.svg' ); ?>" alt="千葉経済大学 CHIBA KEIZAI">
         </div>
         <nav class="ref-header__actions" aria-label="関連アクション">
-            <a href="#" class="ref-action ref-action--blue" data-link-status="UNRESOLVED"><img class="ref-svg-icon ref-action__icon" src="<?php echo esc_url( $lp_base . 'image/icons/document.svg' ); ?>" alt="" aria-hidden="true"><span>資料請求</span></a>
-            <a href="#" class="ref-action ref-action--purple" data-link-status="UNRESOLVED"><img class="ref-svg-icon ref-action__icon" src="<?php echo esc_url( $lp_base . 'image/icons/open-campus.svg' ); ?>" alt="" aria-hidden="true"><span>オープンキャンパス</span></a>
+            <a href="https://www.cku.ac.jp/sys/seikyu/" target="_blank" class="ref-action ref-action--blue" data-link-status="UNRESOLVED"><img class="ref-svg-icon ref-action__icon" src="<?php echo esc_url( $lp_base . 'image/icons/document.svg' ); ?>" alt="" aria-hidden="true"><span>資料請求</span></a>
+            <a href="https://www.cku.ac.jp/admission/opencampus/" target="_blank" class="ref-action ref-action--purple" data-link-status="UNRESOLVED"><img class="ref-svg-icon ref-action__icon" src="<?php echo esc_url( $lp_base . 'image/icons/open-campus.svg' ); ?>" alt="" aria-hidden="true"><span>オープンキャンパス</span></a>
         </nav>
     </div>
 </header>
@@ -70,7 +70,7 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
     </h1>
     <p class="ref-mv__desc">７つのコース制で“ミライ”を見つけ、<br>資格取得支援で“チカラ”をつける。<br>千葉の経済と就職に強い学びがここにある。</p>
   </div>
-  <a class="ref-mv__oc" href="#" data-link-status="UNRESOLVED" aria-label="オープンキャンパス">
+  <a class="ref-mv__oc" href="https://www.cku.ac.jp/admission/opencampus/" target="_blank" data-link-status="UNRESOLVED" aria-label="オープンキャンパス">
     <span class="ref-mv__oc-kicker">
       <img class="ref-mv__oc-kicker-shape ref-mv__oc-kicker-shape--fill" src="<?php echo esc_url( $lp_base . 'image/mv/oc-kicker-fill.svg' ); ?>" alt="" width="187" height="47" aria-hidden="true">
       <img class="ref-mv__oc-kicker-shape ref-mv__oc-kicker-shape--line" src="<?php echo esc_url( $lp_base . 'image/mv/oc-kicker-line.svg' ); ?>" alt="" width="187" height="47" aria-hidden="true">
@@ -95,12 +95,12 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
                 </article>
                             <article class="ref-reason-card">
                     <picture class="ref-picture ref-reason-card__media" data-asset-slot="reason-2" data-figma-pc="21378:8010" data-figma-sp="21376:4864"><source media="(max-width:767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/reason-2-21376-4864.webp' ); ?>"><img src="<?php echo esc_url( $lp_base . 'image/photos/pc/reason-2-21378-8010.webp' ); ?>" alt="" loading="lazy" decoding="async"></picture>                    <div class="ref-reason-card__body">
-                        <h3 class="ref-reason-card__title">充実のキャリア支援</h3>
-                        <p class="ref-reason-card__text">キャリア支援と企業連携により、希望進路の実現をサポートします。</p>
+                        <h3 class="ref-reason-card__title">キャリア支援</h3>
+                        <p class="ref-reason-card__text">手厚い個別支援と企業連携より、希望進路の実現をサポートします。</p>
                     </div>
                 </article>
                             <article class="ref-reason-card">
-                    <picture class="ref-picture ref-reason-card__media" data-asset-slot="reason-3" data-figma-pc="21378:8018" data-figma-sp="21376:4872"><source media="(max-width:767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/reason-3-21376-4872.webp' ); ?>"><img src="<?php echo esc_url( $lp_base . 'image/photos/pc/reason-3-21378-8018.webp' ); ?>" alt="" loading="lazy" decoding="async"></picture>                    <div class="ref-reason-card__body">
+                    <picture class="ref-picture ref-reason-card__media" data-asset-slot="reason-3" data-figma-pc="21378:8018" data-figma-sp="21376:4872"><source media="(max-width:767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/reason-4.jpg' ); ?>"><img src="<?php echo esc_url( $lp_base . 'image/photos/pc/reason-4.jpg' ); ?>" alt="" loading="lazy" decoding="async"></picture>                    <div class="ref-reason-card__body">
                         <h3 class="ref-reason-card__title">地域連携・インターンシップ</h3>
                         <p class="ref-reason-card__text">地域企業・自治体との実践的な学びで、社会で活きる力を養います。</p>
                     </div>
@@ -129,12 +129,12 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
                         <span class="ref-edu-card__phase">スタート</span>
                     </div>
                     <h3>大学1年生の自分</h3>
-                    <picture class="ref-picture ref-edu-card__media" data-asset-slot="education-1" data-figma-pc="21378:7980" data-figma-sp="21376:4835"><source media="(max-width:767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/education-1-21376-4835.webp' ); ?>"><img src="<?php echo esc_url( $lp_base . 'image/photos/pc/education-1-21378-7980.webp' ); ?>" alt="" loading="lazy" decoding="async"></picture>                    <ul>
-                                                    <li><img class="ref-svg-icon ref-edu-card__check" src="<?php echo esc_url( $lp_base . 'image/icons/check.svg' ); ?>" alt="" aria-hidden="true"><span>将来がまだ見えない</span></li>
-                                                    <li><img class="ref-svg-icon ref-edu-card__check" src="<?php echo esc_url( $lp_base . 'image/icons/check.svg' ); ?>" alt="" aria-hidden="true"><span>学科選択制度で基礎を学ぶ</span></li>
-                                                    <li><img class="ref-svg-icon ref-edu-card__check" src="<?php echo esc_url( $lp_base . 'image/icons/check.svg' ); ?>" alt="" aria-hidden="true"><span>７つのコースで目標を明確に</span></li>
-                                                    <li><img class="ref-svg-icon ref-edu-card__check" src="<?php echo esc_url( $lp_base . 'image/icons/check.svg' ); ?>" alt="" aria-hidden="true"><span>資格取得支援でスキルを発見</span></li>
-                                            </ul>
+                    <picture class="ref-picture ref-edu-card__media" data-asset-slot="education-1" data-figma-pc="21378:7980" data-figma-sp="21376:4835"><source media="(max-width:767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/education-1-21376-4835.webp' ); ?>"><img src="<?php echo esc_url( $lp_base . 'image/photos/pc/education-1-21378-7980.webp' ); ?>" alt="" loading="lazy" decoding="async"></picture>
+                    <ul>
+                        <li><img class="ref-svg-icon ref-edu-card__check" src="<?php echo esc_url( $lp_base . 'image/icons/check.svg' ); ?>" alt="" aria-hidden="true"><span>経済学と経営学の基礎を学ぶ</span></li>
+                        <li><img class="ref-svg-icon ref-edu-card__check" src="<?php echo esc_url( $lp_base . 'image/icons/check.svg' ); ?>" alt="" aria-hidden="true"><span>７つのコースで目標を明確にする</span></li>
+                        <li><img class="ref-svg-icon ref-edu-card__check" src="<?php echo esc_url( $lp_base . 'image/icons/check.svg' ); ?>" alt="" aria-hidden="true"><span>コミュニケーションスキルを伸ばす</span></li>
+                    </ul>
                 </article>
                                     <span class="ref-edu-flow-arrow" aria-hidden="true">
                         <img class="ref-svg-icon ref-edu-flow-arrow__glyph" src="<?php echo esc_url( $lp_base . 'image/icons/arrow-right.svg' ); ?>" alt="" aria-hidden="true">                        <img class="ref-svg-icon ref-edu-flow-arrow__glyph" src="<?php echo esc_url( $lp_base . 'image/icons/arrow-right.svg' ); ?>" alt="" aria-hidden="true">                    </span>
@@ -142,14 +142,15 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
                     <div class="ref-edu-card__badge">
                         <span class="ref-edu-card__number">02</span>
                         <small>/</small>
-                        <span class="ref-edu-card__phase">学ぶ</span>
+                        <span class="ref-edu-card__phase">拡大する</span>
                     </div>
-                    <h3>世の中の仕組みを知る</h3>
-                    <picture class="ref-picture ref-edu-card__media" data-asset-slot="education-2" data-figma-pc="21378:7946" data-figma-sp="21376:4801"><source media="(max-width:767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/education-2-21376-4801.webp' ); ?>"><img src="<?php echo esc_url( $lp_base . 'image/photos/pc/education-2-21378-7946.webp' ); ?>" alt="" loading="lazy" decoding="async"></picture>                    <ul>
-                                                    <li><img class="ref-svg-icon ref-edu-card__check" src="<?php echo esc_url( $lp_base . 'image/icons/check.svg' ); ?>" alt="" aria-hidden="true"><span>ヒット商品の裏側</span></li>
-                                                    <li><img class="ref-svg-icon ref-edu-card__check" src="<?php echo esc_url( $lp_base . 'image/icons/check.svg' ); ?>" alt="" aria-hidden="true"><span>トクするお金のルール</span></li>
-                                                    <li><img class="ref-svg-icon ref-edu-card__check" src="<?php echo esc_url( $lp_base . 'image/icons/check.svg' ); ?>" alt="" aria-hidden="true"><span>AIで仕事はどうなる</span></li>
-                                            </ul>
+                    <h3>可能性を模索する自分</h3>
+                    <picture class="ref-picture ref-edu-card__media" data-asset-slot="education-2" data-figma-pc="21378:7946" data-figma-sp="21376:4801"><source media="(max-width:767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/education-2-21376-4801.webp' ); ?>"><img src="<?php echo esc_url( $lp_base . 'image/photos/pc/education-2-21378-7946.webp' ); ?>" alt="" loading="lazy" decoding="async"></picture>
+                    <ul>
+                        <li><img class="ref-svg-icon ref-edu-card__check" src="<?php echo esc_url( $lp_base . 'image/icons/check.svg' ); ?>" alt="" aria-hidden="true"><span>ゼミナールで専門分野を探求する</span></li>
+                        <li><img class="ref-svg-icon ref-edu-card__check" src="<?php echo esc_url( $lp_base . 'image/icons/check.svg' ); ?>" alt="" aria-hidden="true"><span>資格を取得して得意を増やす</span></li>
+                        <li><img class="ref-svg-icon ref-edu-card__check" src="<?php echo esc_url( $lp_base . 'image/icons/check.svg' ); ?>" alt="" aria-hidden="true"><span>教養科目で知識の幅を広げる</span></li>
+        
                 </article>
                                     <span class="ref-edu-flow-arrow" aria-hidden="true">
                         <img class="ref-svg-icon ref-edu-flow-arrow__glyph" src="<?php echo esc_url( $lp_base . 'image/icons/arrow-right.svg' ); ?>" alt="" aria-hidden="true">                        <img class="ref-svg-icon ref-edu-flow-arrow__glyph" src="<?php echo esc_url( $lp_base . 'image/icons/arrow-right.svg' ); ?>" alt="" aria-hidden="true">                    </span>
@@ -157,14 +158,15 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
                     <div class="ref-edu-card__badge">
                         <span class="ref-edu-card__number">03</span>
                         <small>/</small>
-                        <span class="ref-edu-card__phase">出会う</span>
+                        <span class="ref-edu-card__phase">展開する</span>
                     </div>
-                    <h3><span class="ref-edu-card__title-line">先生と一緒に</span><span class="ref-edu-card__title-line">考える</span></h3>
-                    <picture class="ref-picture ref-edu-card__media" data-asset-slot="education-3" data-figma-pc="21378:7917" data-figma-sp="21376:4769"><source media="(max-width:767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/education-3-21376-4769.webp' ); ?>"><img src="<?php echo esc_url( $lp_base . 'image/photos/pc/education-3-21378-7917.webp' ); ?>" alt="" loading="lazy" decoding="async"></picture>                    <ul>
-                                                    <li><img class="ref-svg-icon ref-edu-card__check" src="<?php echo esc_url( $lp_base . 'image/icons/check.svg' ); ?>" alt="" aria-hidden="true"><span>教職員との距離が近い</span></li>
-                                                    <li><img class="ref-svg-icon ref-edu-card__check" src="<?php echo esc_url( $lp_base . 'image/icons/check.svg' ); ?>" alt="" aria-hidden="true"><span>悩みを相談しやすい</span></li>
-                                                    <li><img class="ref-svg-icon ref-edu-card__check" src="<?php echo esc_url( $lp_base . 'image/icons/check.svg' ); ?>" alt="" aria-hidden="true"><span>個人に合わせた進路のサポート</span></li>
-                                            </ul>
+                    <h3>社会を意識する自分</h3>
+                    <picture class="ref-picture ref-edu-card__media" data-asset-slot="education-3" data-figma-pc="21378:7917" data-figma-sp="21376:4769"><source media="(max-width:767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/education-3-21376-4769.webp' ); ?>"><img src="<?php echo esc_url( $lp_base . 'image/photos/pc/education-3-21378-7917.webp' ); ?>" alt="" loading="lazy" decoding="async"></picture> 
+                    <ul>
+                        <li><img class="ref-svg-icon ref-edu-card__check" src="<?php echo esc_url( $lp_base . 'image/icons/check.svg' ); ?>" alt="" aria-hidden="true"><span>就業体験で働くことの解像度を上げる</span></li>
+                        <li><img class="ref-svg-icon ref-edu-card__check" src="<?php echo esc_url( $lp_base . 'image/icons/check.svg' ); ?>" alt="" aria-hidden="true"><span>キャリア支援で自己理解を深める</span></li>
+                        <li><img class="ref-svg-icon ref-edu-card__check" src="<?php echo esc_url( $lp_base . 'image/icons/check.svg' ); ?>" alt="" aria-hidden="true"><span>教職員と相談しながら進路を考える（定める）</span></li>
+                    </ul>
                 </article>
                                     <span class="ref-edu-flow-arrow" aria-hidden="true">
                         <img class="ref-svg-icon ref-edu-flow-arrow__glyph" src="<?php echo esc_url( $lp_base . 'image/icons/arrow-right.svg' ); ?>" alt="" aria-hidden="true">                        <img class="ref-svg-icon ref-edu-flow-arrow__glyph" src="<?php echo esc_url( $lp_base . 'image/icons/arrow-right.svg' ); ?>" alt="" aria-hidden="true">                    </span>
@@ -172,9 +174,9 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
                     <div class="ref-edu-card__badge">
                         <span class="ref-edu-card__number">04</span>
                         <small>/</small>
-                        <span class="ref-edu-card__phase">ゴール</span>
+                        <span class="ref-edu-card__phase">確信する</span>
                     </div>
-                    <h3><span class="ref-edu-card__title-line">望んだ将来を</span><span class="ref-edu-card__title-line">実現させる</span></h3>
+                    <h3 class="_small">望んだ将来を実現させる自分</h3>
                     <picture class="ref-picture ref-edu-card__media" data-asset-slot="education-4" data-figma-pc="21378:7889" data-figma-sp="21376:4741"><source media="(max-width:767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/education-4-21376-4741.webp' ); ?>"><img src="<?php echo esc_url( $lp_base . 'image/photos/pc/education-4-21378-7889.webp' ); ?>" alt="" loading="lazy" decoding="async"></picture>                    <ul>
                                                     <li><img class="ref-svg-icon ref-edu-card__check" src="<?php echo esc_url( $lp_base . 'image/icons/check.svg' ); ?>" alt="" aria-hidden="true"><span>４年間の学びを進路につなげる</span></li>
                                                     <li><img class="ref-svg-icon ref-edu-card__check" src="<?php echo esc_url( $lp_base . 'image/icons/check.svg' ); ?>" alt="" aria-hidden="true"><span>経験を社会で発揮する</span></li>
@@ -188,8 +190,8 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
     <div class="ref-shared-cta__inner">
         <h2><span class="ref-shared-cta__line">千葉経済大学を</span><span class="ref-shared-cta__line">もっと知ろう！</span></h2>
         <div class="ref-shared-cta__actions">
-            <a href="#" class="ref-action ref-action--blue" data-link-status="UNRESOLVED"><img class="ref-svg-icon ref-action__icon" src="<?php echo esc_url( $lp_base . 'image/icons/document.svg' ); ?>" alt="" aria-hidden="true"><span>資料請求</span></a>
-            <a href="#" class="ref-action ref-action--purple" data-link-status="UNRESOLVED"><img class="ref-svg-icon ref-action__icon" src="<?php echo esc_url( $lp_base . 'image/icons/open-campus.svg' ); ?>" alt="" aria-hidden="true"><span>オープンキャンパス</span></a>
+            <a href="https://www.cku.ac.jp/sys/seikyu/" target="_blank" class="ref-action ref-action--blue" data-link-status="UNRESOLVED"><img class="ref-svg-icon ref-action__icon" src="<?php echo esc_url( $lp_base . 'image/icons/document.svg' ); ?>" alt="" aria-hidden="true"><span>資料請求</span></a>
+            <a href="https://www.cku.ac.jp/admission/opencampus/" target="_blank" class="ref-action ref-action--purple" data-link-status="UNRESOLVED"><img class="ref-svg-icon ref-action__icon" src="<?php echo esc_url( $lp_base . 'image/icons/open-campus.svg' ); ?>" alt="" aria-hidden="true"><span>オープンキャンパス</span></a>
         </div>
     </div>
 </section>
@@ -260,7 +262,7 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
     </header>
     <div class="swiper ref-messages__swiper" data-ref-messages-swiper>
         <div class="swiper-wrapper">
-                                            <div class="swiper-slide ref-messages__slide" data-message-slide="1">
+                <div class="swiper-slide ref-messages__slide" data-message-slide="1">
                     <div class="ref-content ref-messages__body">
                         <div class="ref-messages__copy">
                             <p class="ref-messages__quote ref-messages__quote--pc"><span>大学で培った企画力を武器に、</span><span>今はIT企業のマーケターとして挑戦の毎日です！</span></p>
@@ -269,34 +271,34 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
                         </div>
                                                     <picture class="ref-picture ref-messages__photo ref-messages__photo--slide" data-asset-slot="messages-photo" data-figma-pc="21378:7760" data-figma-sp="21376:4643"><source media="(max-width:767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/messages-photo-21376-4643.webp' ); ?>"><img src="<?php echo esc_url( $lp_base . 'image/photos/pc/messages-photo-21378-7760.webp' ); ?>" alt="" loading="eager" decoding="async"></picture>                                            </div>
                 </div>
-                                            <div class="swiper-slide ref-messages__slide" data-message-slide="2">
+                <div class="swiper-slide ref-messages__slide" data-message-slide="2">
                     <div class="ref-content ref-messages__body">
                         <div class="ref-messages__copy">
-                            <p class="ref-messages__quote ref-messages__quote--pc"><span>ゼミで身につけた行動力を活かして、</span><span>地域と企業をつなぐ仕事に挑戦しています！</span></p>
-                            <p class="ref-messages__quote ref-messages__quote--sp"><span>ゼミで身につけた行動力を活かして、</span><span>地域と企業をつなぐ仕事に</span><span>挑戦しています！</span></p>
-                            <p class="ref-messages__profile">経済学科地域経済コース4年 Aさん<br>千葉県立千葉商業高等学校出身</p>
+                            <p class="ref-messages__quote ref-messages__quote--pc"><span>大学で培った企画力を武器に、</span><span>今はIT企業のマーケターとして挑戦の毎日です！</span></p>
+                            <p class="ref-messages__quote ref-messages__quote--sp"><span>大学で培った企画力を武器に、</span><span>今はIT企業のマーケターとして</span><span>挑戦の毎日です！</span></p>
+                            <p class="ref-messages__profile">経営学科ビジネス経営コース3年 Tさん<br>千葉県立生浜高等学校出身</p>
                         </div>
-                                                    <picture class="ref-picture ref-messages__photo ref-messages__photo--slide" data-asset-slot="reason-1" data-figma-pc="21378:8002" data-figma-sp="21376:4855"><source media="(max-width:767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/reason-1-21376-4855.webp' ); ?>"><img src="<?php echo esc_url( $lp_base . 'image/photos/pc/reason-1-21378-8002.webp' ); ?>" alt="" loading="lazy" decoding="async"></picture>                                            </div>
+                                                    <picture class="ref-picture ref-messages__photo ref-messages__photo--slide" data-asset-slot="messages-photo" data-figma-pc="21378:7760" data-figma-sp="21376:4643"><source media="(max-width:767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/messages-photo-21376-4643.webp' ); ?>"><img src="<?php echo esc_url( $lp_base . 'image/photos/pc/messages-photo-21378-7760.webp' ); ?>" alt="" loading="eager" decoding="async"></picture>                                            </div>
                 </div>
-                                            <div class="swiper-slide ref-messages__slide" data-message-slide="3">
+                <div class="swiper-slide ref-messages__slide" data-message-slide="3">
                     <div class="ref-content ref-messages__body">
                         <div class="ref-messages__copy">
-                            <p class="ref-messages__quote ref-messages__quote--pc"><span>数字と向き合う力が自信になり、</span><span>会計の知識を活かせる進路が見えてきました！</span></p>
-                            <p class="ref-messages__quote ref-messages__quote--sp"><span>数字と向き合う力が自信になり、</span><span>会計の知識を活かせる進路が</span><span>見えてきました！</span></p>
-                            <p class="ref-messages__profile">経営学科会計コース4年 Kさん<br>千葉県立幕張総合高等学校出身</p>
+                            <p class="ref-messages__quote ref-messages__quote--pc"><span>大学で培った企画力を武器に、</span><span>今はIT企業のマーケターとして挑戦の毎日です！</span></p>
+                            <p class="ref-messages__quote ref-messages__quote--sp"><span>大学で培った企画力を武器に、</span><span>今はIT企業のマーケターとして</span><span>挑戦の毎日です！</span></p>
+                            <p class="ref-messages__profile">経営学科ビジネス経営コース3年 Tさん<br>千葉県立生浜高等学校出身</p>
                         </div>
-                                                    <picture class="ref-picture ref-messages__photo ref-messages__photo--slide" data-asset-slot="reason-2" data-figma-pc="21378:8010" data-figma-sp="21376:4864"><source media="(max-width:767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/reason-2-21376-4864.webp' ); ?>"><img src="<?php echo esc_url( $lp_base . 'image/photos/pc/reason-2-21378-8010.webp' ); ?>" alt="" loading="lazy" decoding="async"></picture>                                            </div>
+                                                    <picture class="ref-picture ref-messages__photo ref-messages__photo--slide" data-asset-slot="messages-photo" data-figma-pc="21378:7760" data-figma-sp="21376:4643"><source media="(max-width:767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/messages-photo-21376-4643.webp' ); ?>"><img src="<?php echo esc_url( $lp_base . 'image/photos/pc/messages-photo-21378-7760.webp' ); ?>" alt="" loading="eager" decoding="async"></picture>                                            </div>
                 </div>
-                                            <div class="swiper-slide ref-messages__slide" data-message-slide="4">
+                <div class="swiper-slide ref-messages__slide" data-message-slide="4">
                     <div class="ref-content ref-messages__body">
                         <div class="ref-messages__copy">
-                            <p class="ref-messages__quote ref-messages__quote--pc"><span>先生や仲間と考え抜いた経験を糧に、</span><span>自分らしい働き方を目指しています！</span></p>
-                            <p class="ref-messages__quote ref-messages__quote--sp"><span>先生や仲間と考え抜いた経験を糧に、</span><span>自分らしい働き方を</span><span>目指しています！</span></p>
-                            <p class="ref-messages__profile">経営学科ビジネス経営コース4年 Sさん<br>千葉県立検見川高等学校出身</p>
+                            <p class="ref-messages__quote ref-messages__quote--pc"><span>大学で培った企画力を武器に、</span><span>今はIT企業のマーケターとして挑戦の毎日です！</span></p>
+                            <p class="ref-messages__quote ref-messages__quote--sp"><span>大学で培った企画力を武器に、</span><span>今はIT企業のマーケターとして</span><span>挑戦の毎日です！</span></p>
+                            <p class="ref-messages__profile">経営学科ビジネス経営コース3年 Tさん<br>千葉県立生浜高等学校出身</p>
                         </div>
-                                                    <picture class="ref-picture ref-messages__photo ref-messages__photo--slide" data-asset-slot="reason-3" data-figma-pc="21378:8018" data-figma-sp="21376:4872"><source media="(max-width:767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/reason-3-21376-4872.webp' ); ?>"><img src="<?php echo esc_url( $lp_base . 'image/photos/pc/reason-3-21378-8018.webp' ); ?>" alt="" loading="lazy" decoding="async"></picture>                                            </div>
+                                                    <picture class="ref-picture ref-messages__photo ref-messages__photo--slide" data-asset-slot="messages-photo" data-figma-pc="21378:7760" data-figma-sp="21376:4643"><source media="(max-width:767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/messages-photo-21376-4643.webp' ); ?>"><img src="<?php echo esc_url( $lp_base . 'image/photos/pc/messages-photo-21378-7760.webp' ); ?>" alt="" loading="eager" decoding="async"></picture>                                            </div>
                 </div>
-                    </div>
+        </div>
         <div class="ref-messages__indicator">
             <button type="button" class="ref-messages__nav ref-messages__prev" aria-label="前のメッセージ"><img class="ref-svg-icon ref-messages__arrow" src="<?php echo esc_url( $lp_base . 'image/icons/arrow-left.svg' ); ?>" alt="" aria-hidden="true"></button>
             <span data-ref-message-current>1</span><span class="ref-messages__bar" style="--ref-message-progress:25%"></span><span>4</span>
@@ -308,15 +310,15 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
     <div class="ref-shared-cta__inner">
         <h2><span class="ref-shared-cta__line">千葉経済大学を</span><span class="ref-shared-cta__line">もっと知ろう！</span></h2>
         <div class="ref-shared-cta__actions">
-            <a href="#" class="ref-action ref-action--blue" data-link-status="UNRESOLVED"><img class="ref-svg-icon ref-action__icon" src="<?php echo esc_url( $lp_base . 'image/icons/document.svg' ); ?>" alt="" aria-hidden="true"><span>資料請求</span></a>
-            <a href="#" class="ref-action ref-action--purple" data-link-status="UNRESOLVED"><img class="ref-svg-icon ref-action__icon" src="<?php echo esc_url( $lp_base . 'image/icons/open-campus.svg' ); ?>" alt="" aria-hidden="true"><span>オープンキャンパス</span></a>
+            <a href="https://www.cku.ac.jp/sys/seikyu/" target="_blank" class="ref-action ref-action--blue" data-link-status="UNRESOLVED"><img class="ref-svg-icon ref-action__icon" src="<?php echo esc_url( $lp_base . 'image/icons/document.svg' ); ?>" alt="" aria-hidden="true"><span>資料請求</span></a>
+            <a href="https://www.cku.ac.jp/admission/opencampus/" target="_blank" class="ref-action ref-action--purple" data-link-status="UNRESOLVED"><img class="ref-svg-icon ref-action__icon" src="<?php echo esc_url( $lp_base . 'image/icons/open-campus.svg' ); ?>" alt="" aria-hidden="true"><span>オープンキャンパス</span></a>
         </div>
     </div>
 </section>
-<section class="ref-courses" data-section="courses" data-figma-pc="21378:7505" data-figma-sp="21376:4403"><div class="ref-content"><header class="ref-courses__head"><span class="ref-kicker"># COURCES</span><h2 class="ref-bracket-title"><span class="ref-courses__title-line ref-courses__title-line--lead">未来につながる</span><span class="ref-courses__title-line ref-courses__title-line--courses"><strong>７</strong>つのコース</span></h2></header><div class="ref-courses__grid"><article class="ref-course" style="--course:#fabf12"><div class="ref-course__icon"><img class="ref-svg-icon ref-course__icon-svg" src="<?php echo esc_url( $lp_base . 'image/icons/course-7.svg' ); ?>" alt="" aria-hidden="true"></div><h3>公務員コース</h3><p class="ref-course__desc">国家公務員、地方公務員、公安職、公益法人などを目指すコース</p><div class="ref-course__rec"><span class="ref-course__rec-label"><span>こんな人にオススメ！</span><i class="ref-course__rec-tail-fill" aria-hidden="true"></i><i class="ref-course__rec-tail-line" aria-hidden="true"></i></span><ul><li><img class="ref-svg-icon ref-course__check" src="<?php echo esc_url( $lp_base . 'image/icons/check.svg' ); ?>" alt="" aria-hidden="true"><span>経済や地域の課題を解決し、安心して暮らせる街をつくりたい人</span></li><li><img class="ref-svg-icon ref-course__check" src="<?php echo esc_url( $lp_base . 'image/icons/check.svg' ); ?>" alt="" aria-hidden="true"><span>試験対策だけでなく実務で役立つ生きた経済の知識を身につけたい人</span></li></ul></div></article><article class="ref-course" style="--course:#f29800"><div class="ref-course__icon"><img class="ref-svg-icon ref-course__icon-svg" src="<?php echo esc_url( $lp_base . 'image/icons/course-6.svg' ); ?>" alt="" aria-hidden="true"></div><h3>会計コース</h3><p class="ref-course__desc">税理士、公認会計士、その他経理部門などを目指すコース</p><div class="ref-course__rec"><span class="ref-course__rec-label"><span>こんな人にオススメ！</span><i class="ref-course__rec-tail-fill" aria-hidden="true"></i><i class="ref-course__rec-tail-line" aria-hidden="true"></i></span><ul><li><img class="ref-svg-icon ref-course__check" src="<?php echo esc_url( $lp_base . 'image/icons/check.svg' ); ?>" alt="" aria-hidden="true"><span>企業の「お金」のプロとして、専門資格を在学中に武器にしたい人</span></li><li><img class="ref-svg-icon ref-course__check" src="<?php echo esc_url( $lp_base . 'image/icons/check.svg' ); ?>" alt="" aria-hidden="true"><span>数字の強さを活かして、企業の経営を裏から支えたい人</span></li></ul></div></article><article class="ref-course" style="--course:#ed6c4e"><div class="ref-course__icon"><img class="ref-svg-icon ref-course__icon-svg" src="<?php echo esc_url( $lp_base . 'image/icons/course-5.svg' ); ?>" alt="" aria-hidden="true"></div><h3>ビジネス経営コース</h3><p class="ref-course__desc">ビジネスパーソン、ビジネスリーダーを目指すコース</p><div class="ref-course__rec"><span class="ref-course__rec-label"><span>こんな人にオススメ！</span><i class="ref-course__rec-tail-fill" aria-hidden="true"></i><i class="ref-course__rec-tail-line" aria-hidden="true"></i></span><ul><li><img class="ref-svg-icon ref-course__check" src="<?php echo esc_url( $lp_base . 'image/icons/check.svg' ); ?>" alt="" aria-hidden="true"><span>自由なアイデアを形にして、起業やヒット商品開発に挑戦したい人</span></li><li><img class="ref-svg-icon ref-course__check" src="<?php echo esc_url( $lp_base . 'image/icons/check.svg' ); ?>" alt="" aria-hidden="true"><span>リーダーシップや、実践的なマーケティングを学びたい人</span></li></ul></div></article><article class="ref-course" style="--course:#df4473"><div class="ref-course__icon"><img class="ref-svg-icon ref-course__icon-svg" src="<?php echo esc_url( $lp_base . 'image/icons/course-4.svg' ); ?>" alt="" aria-hidden="true"></div><h3>金融コース</h3><p class="ref-course__desc">銀行業界、証券業界などを目指すコース</p><div class="ref-course__rec"><span class="ref-course__rec-label"><span>こんな人にオススメ！</span><i class="ref-course__rec-tail-fill" aria-hidden="true"></i><i class="ref-course__rec-tail-line" aria-hidden="true"></i></span><ul><li><img class="ref-svg-icon ref-course__check" src="<?php echo esc_url( $lp_base . 'image/icons/check.svg' ); ?>" alt="" aria-hidden="true"><span>経済の仕組みを深く学び、人や企業の夢を「融資」で応援したい人</span></li><li><img class="ref-svg-icon ref-course__check" src="<?php echo esc_url( $lp_base . 'image/icons/check.svg' ); ?>" alt="" aria-hidden="true"><span>地元・千葉をはじめとする地域経済の活性化に貢献したい人</span></li></ul></div></article><article class="ref-course" style="--course:#00a5e3"><div class="ref-course__icon"><img class="ref-svg-icon ref-course__icon-svg" src="<?php echo esc_url( $lp_base . 'image/icons/course-3.svg' ); ?>" alt="" aria-hidden="true"></div><h3>教職コース</h3><p class="ref-course__desc">中学（社会）・高校（公民）の免許取得、教員を目指すコース</p><div class="ref-course__rec"><span class="ref-course__rec-label"><span>こんな人にオススメ！</span><i class="ref-course__rec-tail-fill" aria-hidden="true"></i><i class="ref-course__rec-tail-line" aria-hidden="true"></i></span><ul><li><img class="ref-svg-icon ref-course__check" src="<?php echo esc_url( $lp_base . 'image/icons/check.svg' ); ?>" alt="" aria-hidden="true"><span>「社会や経済の面白さ」をわかりやすく伝えられる先生になりたい人</span></li><li><img class="ref-svg-icon ref-course__check" src="<?php echo esc_url( $lp_base . 'image/icons/check.svg' ); ?>" alt="" aria-hidden="true"><span>教職課程と経済の専門知識を両立させた視野を持つ教育者を目指す人</span></li></ul></div></article><article class="ref-course" style="--course:#28b6aa"><div class="ref-course__icon"><picture><source media="(max-width:767px)" srcset="<?php echo esc_url( $lp_base . 'image/icons/course-3.svg' ); ?>"><img class="ref-svg-icon ref-course__icon-svg" src="<?php echo esc_url( $lp_base . 'image/icons/course-2.svg' ); ?>" alt="" aria-hidden="true"></picture></div><h3>学芸員コース</h3><p class="ref-course__desc">学芸員資格の取得、関連する仕事を目指すコース</p><div class="ref-course__rec"><span class="ref-course__rec-label"><span>こんな人にオススメ！</span><i class="ref-course__rec-tail-fill" aria-hidden="true"></i><i class="ref-course__rec-tail-line" aria-hidden="true"></i></span><ul><li><img class="ref-svg-icon ref-course__check" src="<?php echo esc_url( $lp_base . 'image/icons/check.svg' ); ?>" alt="" aria-hidden="true"><span>歴史や文化の魅力を、展示や企画を通して多くの人に伝えたい人</span></li><li><img class="ref-svg-icon ref-course__check" src="<?php echo esc_url( $lp_base . 'image/icons/check.svg' ); ?>" alt="" aria-hidden="true"><span>経済の視点も持ち合わせた「文化の専門家」を目指したい人</span></li></ul></div></article><article class="ref-course" style="--course:#8cc66c"><div class="ref-course__icon"><img class="ref-svg-icon ref-course__icon-svg" src="<?php echo esc_url( $lp_base . 'image/icons/course-1.svg' ); ?>" alt="" aria-hidden="true"></div><h3>ITコース</h3><p class="ref-course__desc">ITスキルを駆使するビジネスパーソンを目指すコース</p><div class="ref-course__rec"><span class="ref-course__rec-label"><span>こんな人にオススメ！</span><i class="ref-course__rec-tail-fill" aria-hidden="true"></i><i class="ref-course__rec-tail-line" aria-hidden="true"></i></span><ul><li><img class="ref-svg-icon ref-course__check" src="<?php echo esc_url( $lp_base . 'image/icons/check.svg' ); ?>" alt="" aria-hidden="true"><span>プログラミングだけでなく、AIやデータでビジネスを変革したい人</span></li><li><img class="ref-svg-icon ref-course__check" src="<?php echo esc_url( $lp_base . 'image/icons/check.svg' ); ?>" alt="" aria-hidden="true"><span>ITの最先端技術×経済の知識で、DX時代に最適な人材になりたい人</span></li></ul></div></article></div></div></section>
+<section class="ref-courses" data-section="courses" data-figma-pc="21378:7505" data-figma-sp="21376:4403"><div class="ref-content"><header class="ref-courses__head"><span class="ref-kicker"># COURSES</span><h2 class="ref-bracket-title"><span class="ref-courses__title-line ref-courses__title-line--lead">未来につながる</span><span class="ref-courses__title-line ref-courses__title-line--courses"><strong>７</strong>つのコース</span></h2></header><div class="ref-courses__grid"><article class="ref-course" style="--course:#fabf12"><div class="ref-course__icon"><img class="ref-svg-icon ref-course__icon-svg" src="<?php echo esc_url( $lp_base . 'image/icons/course-7.svg' ); ?>" alt="" aria-hidden="true"></div><h3>公務員コース</h3><p class="ref-course__desc">国家公務員、地方公務員、公安職、公益法人などを目指すコース</p><div class="ref-course__rec"><span class="ref-course__rec-label"><span>こんな人にオススメ！</span><i class="ref-course__rec-tail-fill" aria-hidden="true"></i><i class="ref-course__rec-tail-line" aria-hidden="true"></i></span><ul><li><img class="ref-svg-icon ref-course__check" src="<?php echo esc_url( $lp_base . 'image/icons/check.svg' ); ?>" alt="" aria-hidden="true"><span>経済や地域の課題を解決し、安心して暮らせる街をつくりたい人</span></li><li><img class="ref-svg-icon ref-course__check" src="<?php echo esc_url( $lp_base . 'image/icons/check.svg' ); ?>" alt="" aria-hidden="true"><span>試験対策だけでなく実務で役立つ生きた経済の知識を身につけたい人</span></li></ul></div></article><article class="ref-course" style="--course:#f29800"><div class="ref-course__icon"><img class="ref-svg-icon ref-course__icon-svg" src="<?php echo esc_url( $lp_base . 'image/icons/course-6.svg' ); ?>" alt="" aria-hidden="true"></div><h3>会計コース</h3><p class="ref-course__desc">税理士、公認会計士、その他経理部門などを目指すコース</p><div class="ref-course__rec"><span class="ref-course__rec-label"><span>こんな人にオススメ！</span><i class="ref-course__rec-tail-fill" aria-hidden="true"></i><i class="ref-course__rec-tail-line" aria-hidden="true"></i></span><ul><li><img class="ref-svg-icon ref-course__check" src="<?php echo esc_url( $lp_base . 'image/icons/check.svg' ); ?>" alt="" aria-hidden="true"><span>企業の「お金」のプロとして、専門資格を在学中に武器にしたい人</span></li><li><img class="ref-svg-icon ref-course__check" src="<?php echo esc_url( $lp_base . 'image/icons/check.svg' ); ?>" alt="" aria-hidden="true"><span>数字の強さを活かして、企業の経営を裏から支えたい人</span></li></ul></div></article><article class="ref-course" style="--course:#ed6c4e"><div class="ref-course__icon"><img class="ref-svg-icon ref-course__icon-svg" src="<?php echo esc_url( $lp_base . 'image/icons/course-5.svg' ); ?>" alt="" aria-hidden="true"></div><h3>ビジネス経営コース</h3><p class="ref-course__desc">ビジネスパーソン、ビジネスリーダーを目指すコース</p><div class="ref-course__rec"><span class="ref-course__rec-label"><span>こんな人にオススメ！</span><i class="ref-course__rec-tail-fill" aria-hidden="true"></i><i class="ref-course__rec-tail-line" aria-hidden="true"></i></span><ul><li><img class="ref-svg-icon ref-course__check" src="<?php echo esc_url( $lp_base . 'image/icons/check.svg' ); ?>" alt="" aria-hidden="true"><span>自由なアイデアを形にして、起業やヒット商品開発に挑戦したい人</span></li><li><img class="ref-svg-icon ref-course__check" src="<?php echo esc_url( $lp_base . 'image/icons/check.svg' ); ?>" alt="" aria-hidden="true"><span>リーダーシップや、実践的なマーケティングを学びたい人</span></li></ul></div></article><article class="ref-course" style="--course:#df4473"><div class="ref-course__icon"><img class="ref-svg-icon ref-course__icon-svg" src="<?php echo esc_url( $lp_base . 'image/icons/course-4.svg' ); ?>" alt="" aria-hidden="true"></div><h3>金融コース</h3><p class="ref-course__desc">銀行業界、証券業界などを目指すコース</p><div class="ref-course__rec"><span class="ref-course__rec-label"><span>こんな人にオススメ！</span><i class="ref-course__rec-tail-fill" aria-hidden="true"></i><i class="ref-course__rec-tail-line" aria-hidden="true"></i></span><ul><li><img class="ref-svg-icon ref-course__check" src="<?php echo esc_url( $lp_base . 'image/icons/check.svg' ); ?>" alt="" aria-hidden="true"><span>経済の仕組みを深く学び、人や企業の夢を「融資」で応援したい人</span></li><li><img class="ref-svg-icon ref-course__check" src="<?php echo esc_url( $lp_base . 'image/icons/check.svg' ); ?>" alt="" aria-hidden="true"><span>地元・千葉をはじめとする地域経済の活性化に貢献したい人</span></li></ul></div></article><article class="ref-course" style="--course:#00a5e3"><div class="ref-course__icon"><img class="ref-svg-icon ref-course__icon-svg" src="<?php echo esc_url( $lp_base . 'image/icons/course-3.svg' ); ?>" alt="" aria-hidden="true"></div><h3>教職コース</h3><p class="ref-course__desc">中学（社会）・高校（公民）の免許取得、教員を目指すコース</p><div class="ref-course__rec"><span class="ref-course__rec-label"><span>こんな人にオススメ！</span><i class="ref-course__rec-tail-fill" aria-hidden="true"></i><i class="ref-course__rec-tail-line" aria-hidden="true"></i></span><ul><li><img class="ref-svg-icon ref-course__check" src="<?php echo esc_url( $lp_base . 'image/icons/check.svg' ); ?>" alt="" aria-hidden="true"><span>「社会や経済の面白さ」をわかりやすく伝えられる先生になりたい人</span></li><li><img class="ref-svg-icon ref-course__check" src="<?php echo esc_url( $lp_base . 'image/icons/check.svg' ); ?>" alt="" aria-hidden="true"><span>教職課程と経済の専門知識を両立させた視野を持つ教育者を目指す人</span></li></ul></div></article><article class="ref-course" style="--course:#28b6aa"><div class="ref-course__icon"><picture><source media="(max-width:767px)" srcset="<?php echo esc_url( $lp_base . 'image/icons/course-3.svg' ); ?>"><img class="ref-svg-icon ref-course__icon-svg" src="<?php echo esc_url( $lp_base . 'image/icons/course-2.svg' ); ?>" alt="" aria-hidden="true"></picture></div><h3>学芸員コース</h3><p class="ref-course__desc">学芸員資格の取得、関連する仕事を目指すコース</p><div class="ref-course__rec"><span class="ref-course__rec-label"><span>こんな人にオススメ！</span><i class="ref-course__rec-tail-fill" aria-hidden="true"></i><i class="ref-course__rec-tail-line" aria-hidden="true"></i></span><ul><li><img class="ref-svg-icon ref-course__check" src="<?php echo esc_url( $lp_base . 'image/icons/check.svg' ); ?>" alt="" aria-hidden="true"><span>歴史や文化の魅力を、展示や企画を通して多くの人に伝えたい人</span></li><li><img class="ref-svg-icon ref-course__check" src="<?php echo esc_url( $lp_base . 'image/icons/check.svg' ); ?>" alt="" aria-hidden="true"><span>経済の視点も持ち合わせた「文化の専門家」を目指したい人</span></li></ul></div></article><article class="ref-course" style="--course:#8cc66c"><div class="ref-course__icon"><img class="ref-svg-icon ref-course__icon-svg" src="<?php echo esc_url( $lp_base . 'image/icons/course-1.svg' ); ?>" alt="" aria-hidden="true"></div><h3>ITコース</h3><p class="ref-course__desc">ITスキルを駆使するビジネスパーソンを目指すコース</p><div class="ref-course__rec"><span class="ref-course__rec-label"><span>こんな人にオススメ！</span><i class="ref-course__rec-tail-fill" aria-hidden="true"></i><i class="ref-course__rec-tail-line" aria-hidden="true"></i></span><ul><li><img class="ref-svg-icon ref-course__check" src="<?php echo esc_url( $lp_base . 'image/icons/check.svg' ); ?>" alt="" aria-hidden="true"><span>プログラミングだけでなく、AIやデータでビジネスを変革したい人</span></li><li><img class="ref-svg-icon ref-course__check" src="<?php echo esc_url( $lp_base . 'image/icons/check.svg' ); ?>" alt="" aria-hidden="true"><span>ITの最先端技術×経済の知識で、DX時代に最適な人材になりたい人</span></li></ul></div></article></div></div></section>
 <section class="ref-links" data-section="links" data-figma-pc="21378:7458" data-figma-sp="21376:4919">
     <div class="ref-links__grid">
-        <a href="#" class="ref-link-tile ref-link-tile--campus" style="--tile-bg:#eee7ff;--tile-shadow:#8473aa;--tile-accent:#8473aa" data-link-status="UNRESOLVED">
+        <a href="https://www.cku.ac.jp/campuslife/facilities/" target="_blank" class="ref-link-tile ref-link-tile--campus" style="--tile-bg:#eee7ff;--tile-shadow:#8473aa;--tile-accent:#8473aa" data-link-status="UNRESOLVED">
             <span class="ref-link-tile__shadow" aria-hidden="true"></span>
             <span class="ref-link-tile__face">
                 <span class="ref-link-tile__copy">キャンパス紹介</span>
@@ -330,14 +332,14 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
                 <span class="ref-link-tile__arrow"><img class="ref-svg-icon " src="<?php echo esc_url( $lp_base . 'image/icons/arrow-right.svg' ); ?>" alt="" aria-hidden="true"></span>
             </span>
         </a>
-        <a href="#" class="ref-link-tile ref-link-tile--instagram" style="--tile-bg:#ffdbe0;--tile-accent:#8473aa" data-link-status="UNRESOLVED">
+        <a href="https://www.instagram.com/chibakeizai_university/hl=ja" target="_blank" class="ref-link-tile ref-link-tile--instagram" style="--tile-bg:#ffdbe0;--tile-accent:#8473aa" data-link-status="UNRESOLVED">
             <span class="ref-link-tile__shadow" aria-hidden="true"></span>
             <span class="ref-link-tile__face">
                 <span class="ref-link-tile__instagram-copy"><span class="ref-link-tile__instagram-title">Official Instagram</span><small><img class="ref-svg-icon ref-link-tile__instagram-icon" src="<?php echo esc_url( $lp_base . 'image/icons/instagram-outline.svg' ); ?>" alt="" aria-hidden="true"><span>ckckoho</span></small></span>
                 <span class="ref-link-tile__arrow"><img class="ref-svg-icon " src="<?php echo esc_url( $lp_base . 'image/icons/arrow-right.svg' ); ?>" alt="" aria-hidden="true"></span>
             </span>
         </a>
-        <a href="#" class="ref-link-tile ref-link-tile--line" style="--tile-bg:#eafff3;--tile-shadow:#06c755;--tile-accent:#06c755" data-link-status="UNRESOLVED">
+        <a href="https://lin.ee/slXdqYb" target="_blank" class="ref-link-tile ref-link-tile--line" style="--tile-bg:#eafff3;--tile-shadow:#06c755;--tile-accent:#06c755" data-link-status="UNRESOLVED">
             <span class="ref-link-tile__shadow" aria-hidden="true"></span>
             <span class="ref-link-tile__face">
                 <span class="ref-link-tile__copy">LINE登録</span>
@@ -351,8 +353,8 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
     <picture class="ref-picture ref-portrait ref-portrait--left" data-asset-slot="cta-person-left" data-figma-pc="21378:7489" data-figma-sp="21376:4958"><source media="(max-width:767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/cta-person-left-21376-4958.webp' ); ?>"><img src="<?php echo esc_url( $lp_base . 'image/photos/pc/cta-person-left-21378-7489.webp' ); ?>" alt="" loading="lazy" decoding="async"></picture>    <picture class="ref-picture ref-portrait ref-portrait--right" data-asset-slot="cta-person-right" data-figma-pc="21378:7485" data-figma-sp="21376:4962"><source media="(max-width:767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/cta-person-right-21376-4962.webp' ); ?>"><img src="<?php echo esc_url( $lp_base . 'image/photos/pc/cta-person-right-21378-7485.webp' ); ?>" alt="" loading="lazy" decoding="async"></picture>    <div class="ref-cta-value__inner">
         <h2><span>まずは大学を</span><span>体験してみよう！</span></h2>
         <div class="ref-cta-value__actions">
-            <a href="#" class="ref-action ref-action--blue" data-link-status="UNRESOLVED"><img class="ref-svg-icon ref-action__icon" src="<?php echo esc_url( $lp_base . 'image/icons/document.svg' ); ?>" alt="" aria-hidden="true"><span>資料請求</span></a>
-            <a href="#" class="ref-action ref-action--purple" data-link-status="UNRESOLVED"><img class="ref-svg-icon ref-action__icon" src="<?php echo esc_url( $lp_base . 'image/icons/open-campus.svg' ); ?>" alt="" aria-hidden="true"><span>オープンキャンパス</span></a>
+            <a href="https://www.cku.ac.jp/sys/seikyu/" target="_blank" class="ref-action ref-action--blue" data-link-status="UNRESOLVED"><img class="ref-svg-icon ref-action__icon" src="<?php echo esc_url( $lp_base . 'image/icons/document.svg' ); ?>" alt="" aria-hidden="true"><span>資料請求</span></a>
+            <a href="https://www.cku.ac.jp/admission/opencampus/" target="_blank" class="ref-action ref-action--purple" data-link-status="UNRESOLVED"><img class="ref-svg-icon ref-action__icon" src="<?php echo esc_url( $lp_base . 'image/icons/open-campus.svg' ); ?>" alt="" aria-hidden="true"><span>オープンキャンパス</span></a>
         </div>
     </div>
 </section>
@@ -370,15 +372,14 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
         </div>
         <div>
             <div class="ref-footer__related">
-                <a href="#" data-link-status="UNRESOLVED">千葉経済大学公式サイト</a>
-                <a href="#" data-link-status="UNRESOLVED">千葉経済短期大学公式サイト</a>
+                <a href="https://www.cku.ac.jp/" target="_blank" data-link-status="UNRESOLVED">千葉経済大学公式サイト</a>
+                <a href="https://www.chiba-kc.ac.jp/" target="_blank" data-link-status="UNRESOLVED">千葉経済短期大学公式サイト</a>
             </div>
             <nav class="ref-footer__sns" aria-label="公式SNS">
-                <img class="ref-footer__sns-art" src="<?php echo esc_url( $lp_base . 'image/icons/footer-sns-outline.svg' ); ?>" alt="" aria-hidden="true">
-                <a class="ref-footer__sns-link" href="#" aria-label="Facebook" data-link-status="UNRESOLVED"><img class="ref-svg-icon ref-footer__sns-icon" src="<?php echo esc_url( $lp_base . 'image/icons/facebook-outline.svg' ); ?>" alt="" aria-hidden="true"></a>
-                <a class="ref-footer__sns-link" href="#" aria-label="YouTube" data-link-status="UNRESOLVED"><img class="ref-svg-icon ref-footer__sns-icon" src="<?php echo esc_url( $lp_base . 'image/icons/youtube-outline.svg' ); ?>" alt="" aria-hidden="true"></a>
-                <a class="ref-footer__sns-link" href="#" aria-label="Instagram" data-link-status="UNRESOLVED"><img class="ref-svg-icon ref-footer__sns-icon" src="<?php echo esc_url( $lp_base . 'image/icons/instagram-outline.svg' ); ?>" alt="" aria-hidden="true"></a>
-                <a class="ref-footer__sns-link" href="#" aria-label="LINE" data-link-status="UNRESOLVED"><img class="ref-svg-icon ref-footer__sns-icon" src="<?php echo esc_url( $lp_base . 'image/icons/line-outline.svg' ); ?>" alt="" aria-hidden="true"></a>
+                <a class="ref-footer__sns-link" href="https://www.facebook.com/chiba.cku" target="_blank" aria-label="Facebook" data-link-status="UNRESOLVED"><img class="ref-svg-icon ref-footer__sns-icon" src="<?php echo esc_url( $lp_base . 'image/icons/facebook-outline.svg' ); ?>" alt="" aria-hidden="true"></a>
+                <a class="ref-footer__sns-link" href="https://www.youtube.com/channel/UC122mDhTJRvAzzyl3xBGQnw" target="_blank" aria-label="YouTube" data-link-status="UNRESOLVED"><img class="ref-svg-icon ref-footer__sns-icon" src="<?php echo esc_url( $lp_base . 'image/icons/youtube-outline.svg' ); ?>" alt="" aria-hidden="true"></a>
+                <a class="ref-footer__sns-link" href="https://www.instagram.com/chibakeizai_university/hl=ja" target="_blank" aria-label="Instagram" data-link-status="UNRESOLVED"><img class="ref-svg-icon ref-footer__sns-icon" src="<?php echo esc_url( $lp_base . 'image/icons/instagram-outline.svg' ); ?>" alt="" aria-hidden="true"></a>
+                <a class="ref-footer__sns-link" href="https://lin.ee/slXdqYb" target="_blank" aria-label="LINE" data-link-status="UNRESOLVED"><img class="ref-svg-icon ref-footer__sns-icon" src="<?php echo esc_url( $lp_base . 'image/icons/line-outline.svg' ); ?>" alt="" aria-hidden="true"></a>
             </nav>
         </div>
         <div class="ref-footer__copyright">Copyright CHIBA KEIZAI UNIVERSITY, All Rights Reserved</div>
