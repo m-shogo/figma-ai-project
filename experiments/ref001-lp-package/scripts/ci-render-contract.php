@@ -53,9 +53,32 @@ function get_stylesheet_directory_uri() { return 'https://example.test/wp-conten
 function trailingslashit($s) { return rtrim($s, '/') . '/'; }
 function esc_url($s) { return htmlspecialchars($s, ENT_QUOTES, 'UTF-8'); }
 
+$__wp_enqueue_scripts_hooks = [];
+function add_action($hook, $callback) {
+    global $__wp_enqueue_scripts_hooks;
+    if ($hook === 'wp_enqueue_scripts') {
+        $__wp_enqueue_scripts_hooks[] = $callback;
+    }
+}
+function is_page_template($slug) { return $slug === 'lp-originalPage.php'; }
+$__wp_enqueued = ['styles' => [], 'scripts' => []];
+function wp_enqueue_style($handle, $src, $deps, $ver) { global $__wp_enqueued; $__wp_enqueued['styles'][$handle] = $src; }
+function wp_enqueue_script($handle, $src, $deps, $ver, $footer) { global $__wp_enqueued; $__wp_enqueued['scripts'][$handle] = $src; }
+
 ob_start();
 include $package . '/lp-originalPage.php';
 $page = ob_get_clean();
+
+// The template only *registers* the wp_enqueue_scripts callback via
+// add_action(); a real WordPress run fires it during wp_head()/wp_footer()
+// (inside get_header()/get_footer()). Fire it here to prove it resolves
+// to the right CSS/JS without a PHP fatal, same as production would.
+foreach ($__wp_enqueue_scripts_hooks as $callback) {
+    $callback();
+}
+assert_true(isset($__wp_enqueued['styles']['ref001-lp-style']) && str_ends_with($__wp_enqueued['styles']['ref001-lp-style'], '/lp/css/ref001.css'), 'wp_enqueue_scripts hook registers ref001-lp-style pointing at lp/css/ref001.css');
+assert_true(isset($__wp_enqueued['scripts']['ref001-lp-script']) && str_ends_with($__wp_enqueued['scripts']['ref001-lp-script'], '/lp/js/ref001-interactions.js'), 'wp_enqueue_scripts hook registers ref001-lp-script pointing at lp/js/ref001-interactions.js');
+assert_true(strpos($page, '<link') === false && strpos($page, '<script') === false, 'lp-originalPage body has no raw <link>/<script> tags (CSS/JS goes through wp_head()/wp_footer() instead)');
 
 $expectedVoice = extract_section($page, 'ref-voice');
 $expectedMessages = extract_section($page, 'ref-messages');

@@ -58,6 +58,18 @@ lp/
    フィールドが空/ACF無効のままでも、直書き版と同じ内容が表示される
    （`lp/acf-swap/_helpers.php`のフォールバック機構）。
 
+## CSS/JSの読み込み方
+
+`<link>`/`<script>`を本文に直書きせず、WordPress標準の`wp_enqueue_scripts`
+フックで登録している。これにより:
+
+- CSSは`get_header()`が出力する`wp_head()`の中で正しく`<head>`内に出力される
+- JSは`get_footer()`が出力する`wp_footer()`の中で`</body>`直前に出力される
+
+（対象テーマの`header.php`/`footer.php`が`wp_head()`/`wp_footer()`を
+呼んでいる、通常のWordPressテーマであることが前提。ほぼ全てのテーマが
+そうなっているはずだが、設置後に一度ページソースで確認することを推奨）
+
 ## QA実施済みの内容
 
 - 全PHPファイル: `php -l` 構文チェック済み
