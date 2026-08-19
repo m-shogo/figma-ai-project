@@ -100,6 +100,31 @@ check( empty( $bad_clamp ), 'clamp() の最小値が最大値を超えていな�
 
 
 /* ===========================================================
+   2c. CSS — position: absolute が増えていないか
+
+   レイアウトは flex / grid で組む方針です。absolute を使ってよいのは
+   「箱の外へはみ出すあしらい」だけ、と決めています。
+
+     1. 吹き出しの尻尾（.p-voice__balloon の三角）
+     2. フッター右下のページトップボタン
+
+   増えていたら「grid の同じマス」「マイナスマージン」
+   「justify-self」で組めないか検討してください。
+   =========================================================== */
+
+$css_without_comments = preg_replace( '#/\*.*?\*/#s', '', $css );
+$absolute_count = preg_match_all( '/position\s*:\s*absolute/', $css_without_comments );
+check(
+	$absolute_count === 2,
+	"position: absolute は2箇所だけ（吹き出しの尻尾 / ページトップボタン）。現在 {$absolute_count} 箇所"
+);
+check(
+	! preg_match( '/:hover[^{]*\{[^}]*position\s*:\s*absolute/', $css_without_comments ),
+	'hover の中で position: absolute を使っていない'
+);
+
+
+/* ===========================================================
    3. テンプレートを描画する（WordPress スタブ）
    =========================================================== */
 
