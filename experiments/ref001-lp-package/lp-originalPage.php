@@ -101,12 +101,15 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
      ============================================================ -->
 <section class="p-mv">
 
+	<!-- 左右の人物写真。
+	     PC は「左は上端 / 右は少し下げる」、SP は「1枚目を右上 / 2枚目を左下」に
+	     振り分けます。並べ方は CSS 側（flex / grid）で指定しています。 -->
 	<div class="p-mv__photos" aria-hidden="true">
-		<picture class="p-mv__photo">
+		<picture class="p-mv__photo p-mv__photo--left">
 			<source media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/main-visual-left-21376-4894.webp' ); ?>">
 			<img src="<?php echo esc_url( $lp_base . 'image/photos/pc/main-visual-left-21378-8041.webp' ); ?>" alt="" loading="eager" decoding="async">
 		</picture>
-		<picture class="p-mv__photo">
+		<picture class="p-mv__photo p-mv__photo--right">
 			<source media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/main-visual-right-21376-4890.webp' ); ?>">
 			<img src="<?php echo esc_url( $lp_base . 'image/photos/pc/main-visual-right-21378-8036.webp' ); ?>" alt="" loading="eager" decoding="async">
 		</picture>
@@ -127,14 +130,14 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 		</p>
 	</div>
 
-	<!-- OPEN CAMPUS バッジ
-	     吹き出しと丸を上下に並べ、丸をマイナスマージンで少し重ねています。
-	     PC では grid の同じマスに置いて写真の上へ重ねます（absolute は不使用）。 -->
+	<!-- OPEN CAMPUS バッジ。
+	     写真の上に重ねて下へはみ出す「あしらい」なので、ここは absolute です。 -->
 	<a class="p-mv__oc" href="https://www.cku.ac.jp/admission/opencampus/" target="_blank" rel="noopener">
 		<span class="p-mv__oc-balloon">大学の雰囲気を体験！</span>
-		<span class="p-mv__oc-circle">
-			<span class="p-mv__oc-title">OPEN<br>CAMPUS</span>
-			<span class="p-mv__oc-note">開催中！</span>
+		<span class="p-mv__oc-title">OPEN<br>CAMPUS</span>
+		<span class="p-mv__oc-note">開催中！</span>
+		<span class="p-mv__oc-arrow" aria-hidden="true">
+			<img src="<?php echo esc_url( $lp_base . 'image/icons/ref001-mv-arrow-black.svg' ); ?>" alt="">
 		</span>
 	</a>
 
