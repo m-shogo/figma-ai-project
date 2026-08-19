@@ -103,6 +103,21 @@ assert_true(strpos($page, '<!--WP_HEAD-->') !== false && strpos($page, '<!--WP_H
 assert_true(strpos($page, '<!--WP_FOOTER-->') !== false && strpos($page, '<!--WP_FOOTER-->') > strpos($page, '</main>'), 'wp_footer() is called after the LP content, before </body>');
 assert_true(substr_count($page, '<html') === 1 && substr_count($page, '</html>') === 1, 'lp-originalPage emits exactly one <html>...</html> (no theme header/footer wrapping it a second time)');
 
+// REF-001's own Header/Footer sections (not the site theme's chrome --
+// this page is standalone and calls no get_header()/get_footer()) must
+// be present, in order, around <main>.
+$headerPos = strpos($page, '<header class="ref-header"');
+$mainPos = strpos($page, '<main class="ref-page"');
+$footerPos = strpos($page, '<footer class="ref-footer"');
+assert_true($headerPos !== false && $headerPos < $mainPos, 'lp-originalPage includes REF-001\'s own <header class="ref-header"> before <main>');
+assert_true($footerPos !== false && $footerPos > $mainPos, 'lp-originalPage includes REF-001\'s own <footer class="ref-footer"> after <main>');
+
+// Courses icons: only one course has a distinct SP-only variant (the
+// asset-map's "course-6-sp" entry); every other course must render a
+// plain <img> rather than a <picture> with an empty/broken srcset.
+assert_true(strpos($page, "esc_url( \$lp_base . '' )") === false, 'no course icon renders a <picture> with an empty/unresolved srcset');
+assert_true(substr_count($page, 'ref-course__icon"><picture>') === 1, 'exactly one course icon uses <picture> (the one with a real SP-only variant); the rest are plain <img>');
+
 $expectedVoice = extract_section($page, 'ref-voice');
 $expectedMessages = extract_section($page, 'ref-messages');
 assert_true($expectedVoice !== null, 'lp-originalPage body contains ref-voice section');
