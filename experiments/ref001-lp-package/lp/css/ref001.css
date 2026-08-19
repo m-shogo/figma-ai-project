@@ -123,16 +123,21 @@
 		--fs-note:         clamp(0.875rem, 0.8284rem + 0.199vw, 1rem);       /* 14 → 16  住所 / 所属 */
 		--fs-tile-label:   clamp(1rem, 0.8601rem + 0.597vw, 1.375rem);       /* 16 → 22  丸リンクの文字 */
 		--fs-copyright:    clamp(0.75rem, 0.7034rem + 0.199vw, 0.875rem);    /* 12 → 14 */
+		--fs-tile-en:      clamp(1rem, 0.9067rem + 0.398vw, 1.25rem);        /* 16 → 20  Official Instagram */
+		--fs-tile-kicker:  clamp(0.8125rem, 0.6959rem + 0.498vw, 1.125rem);  /* 13 → 18  数字で見る */
+		--fs-heading-mark: clamp(2.625rem, 2.4384rem + 0.796vw, 3.125rem);   /* 42 → 50  （ ）の記号 */
 		--logo-width:      clamp(8.75rem, 7.6539rem + 4.677vw, 11.6875rem);  /* 140 → 187 */
-		/* メインビジュアルの見出し。
-		   ここだけ 320px 起点にしています。写真へ重ねる大きな文字なので、
-		   狭い端末では 375px より下でも縮まないと折り返してしまうためです
-		   （元デザインも SP では vw 基準で縮めていました）。 */
-		--fs-mv-quote:   clamp(5.3125rem, 4.6710rem + 3.208vw, 7.4375rem);  /* 85 → 119 引用符 */
-		--fs-mv-word:    clamp(3.5rem,    3.1038rem + 1.981vw, 4.8125rem);  /* 56 →  77 ケイザイ */
-		--fs-mv-mid:     clamp(1.75rem,   1.4481rem + 1.509vw, 2.75rem);    /* 28 →  44 って、想像以上に */
-		--fs-mv-last:    clamp(3.125rem,  2.7288rem + 1.981vw, 4.4375rem);  /* 50 →  71 おもしろい。 */
-		--fs-mv-lead:    clamp(0.8125rem, 0.6804rem + 0.660vw, 1.25rem);    /* 13 →  20 説明文 */
+		/* メインビジュアルの見出しだけ、他と組み立て方が違います。
+		   写真へ重ねる大きな文字なので、
+		     ・375px でちょうど Figma の SP 値になる
+		     ・375px より狭い端末では vw で縮んで折り返さない
+		   という条件が要るためです。
+		   PC 側（下の @media）で 768px→1380px の値に切り替えます。 */
+		--fs-mv-quote:   min(26.6667vw, 6.25rem);   /* 375px で 100px 引用符 */
+		--fs-mv-word:    min(17.6vw,    4.125rem);  /* 375px で  66px ケイザイ */
+		--fs-mv-mid:     min(8.5333vw,  2rem);      /* 375px で  32px って、想像以上に */
+		--fs-mv-last:    min(16vw,      3.75rem);   /* 375px で  60px おもしろい。 */
+		--fs-mv-lead:    min(3.7333vw,  0.875rem);  /* 375px で  14px 説明文 */
 
 		/* OPEN CAMPUS バッジ */
 		--oc-size:       clamp(10.625rem, 8.9925rem + 6.965vw, 15rem);     /* 170 → 240 */
@@ -287,9 +292,11 @@
 			text-wrap: balance;   /* 行の長さをそろえて折り返す */
 		}
 
+		/* 強調部分。Figma では太さは通常と同じ w500 で、大きさだけ変わる。
+		   コースの「７」だけ w900 なので、そちらは p-courses 側で指定している */
 		& strong {
 			font-size: var(--fs-heading-em);
-			font-weight: 900;
+			font-weight: 500;
 		}
 
 		/* 左右の（ ）は飾り */
@@ -297,7 +304,7 @@
 		&::after {
 			flex: none;
 			font-family: var(--font-en);
-			font-size: calc(var(--fs-heading-em) * 1.2);
+			font-size: var(--fs-heading-mark);
 			font-weight: 500;
 			color: var(--color-white);
 			-webkit-text-stroke: 1px var(--color-text);
@@ -357,6 +364,7 @@
 	.c-checklist {
 		display: grid;
 		gap: .7em;
+		color: #000;
 		font-size: var(--fs-edu-check);
 		line-height: 1.5;
 
@@ -508,7 +516,9 @@
 		gap: clamp(1rem, .6rem + 1.7vw, 1.75rem);
 		/* 下は OPEN CAMPUS バッジが重なる分をあける（PC では打ち消す） */
 		padding-block: clamp(2rem, 1.4rem + 2.6vw, 6.625rem) clamp(13rem, 9rem + 11vw, 15rem);
-		padding-inline: var(--gutter);
+		/* キャッチは画面いっぱいに使うので、ここでは左右の余白を取らない。
+		   余白が要るのは説明文だけなので、そちらに個別に付けている */
+		padding-inline: 0;
 		text-align: center;
 	}
 
@@ -560,7 +570,8 @@
 	}
 
 	& .p-mv__lead {
-		/* SP は背景が明るいので黒。PC は本文色に戻す */
+		padding-inline: var(--gutter);
+		/* Figma は SP/PC とも #000 */
 		color: #000;
 		font-size: var(--fs-mv-lead);
 		line-height: 2;
@@ -660,6 +671,13 @@
 	/* --- SP: 写真とコピーが重なりすぎないよう、下に余白を足す --- */
 	/* --- PC: 左右に振り分け、右だけ少し下げる --- */
 	@media (min-width: 768px) {
+		/* 768px で SP の値とちょうど連続し、1380px で Figma の PC 値になる */
+		--fs-mv-quote: clamp(6.25rem,  4.7598rem + 3.105vw, 7.4375rem);  /* 100 → 119 */
+		--fs-mv-word:  clamp(4.125rem, 3.2623rem + 1.797vw, 4.8125rem);  /*  66 →  77 */
+		--fs-mv-mid:   clamp(2rem,     1.0588rem + 1.961vw, 2.75rem);    /*  32 →  44 */
+		--fs-mv-last:  clamp(3.75rem,  2.8873rem + 1.797vw, 4.4375rem);  /*  60 →  71 */
+		--fs-mv-lead:  clamp(0.875rem, 0.4044rem + 0.980vw, 1.25rem);    /*  14 →  20 */
+
 		background-image: url('../image/icons/ref001-mv-bg-pc.svg');
 		background-size: 100% 100%;
 
@@ -706,6 +724,7 @@
 
 	& .p-reason__lead {
 		max-width: var(--measure);
+		color: #000;
 		font-size: var(--fs-body);
 		text-wrap: pretty;
 	}
@@ -797,6 +816,7 @@
 	& .p-education__intro-text {
 		max-width: var(--measure);
 		margin-top: .8em;
+		color: #000;
 		font-size: var(--fs-body);
 		text-wrap: pretty;
 	}
@@ -848,8 +868,8 @@
 		padding: .7em 1.1em;
 		background: var(--color-purple);
 		color: var(--color-white);
-		font-size: var(--fs-card-title);
-		font-weight: 400;
+		font-size: var(--fs-small);
+		font-weight: 500;
 		line-height: 1;
 		letter-spacing: .05em;
 	}
@@ -863,6 +883,7 @@
 
 	& .p-education__step-title {
 		margin-inline: 1.5rem;
+		color: #000;
 		font-size: var(--fs-edu-card);
 		font-weight: 500;
 		line-height: 1.4;
@@ -1080,7 +1101,10 @@
 		font-size: var(--fs-body);
 	}
 
-	& .p-voice__detail-text { text-wrap: pretty; }
+	& .p-voice__detail-text {
+		color: #000;
+		text-wrap: pretty;
+	}
 
 	/* 「印象に残った授業」などのラベル + 内容 */
 	& .p-voice__points {
@@ -1240,7 +1264,7 @@
 		justify-items: start;
 		gap: .4em;
 		font-size: var(--fs-msg-quote);
-		font-weight: 400;
+		font-weight: 500;
 		line-height: 1.6;
 
 		& span {
@@ -1282,6 +1306,7 @@
 		display: flex;
 		align-items: center;
 		gap: clamp(.75rem, .4rem + 1.4vw, 1.4rem);
+		color: #000;
 		font-family: var(--font-en);
 		font-size: var(--fs-msg-counter);
 		line-height: 1;
@@ -1320,7 +1345,6 @@
 
 		& .p-messages__quote {
 			gap: .35em;
-			font-weight: 500;
 		}
 
 		& .p-messages__meta {
@@ -1349,7 +1373,9 @@
 		text-align: center;
 	}
 
+	/* コースの見出しだけ「７」が太字（Figma で w900 指定） */
 	& .p-courses__head .c-heading strong {
+		font-weight: 900;
 		background: linear-gradient(90deg, var(--color-purple), var(--color-blue));
 		background-clip: text;
 		-webkit-background-clip: text;
@@ -1405,6 +1431,7 @@
 	}
 
 	& .p-courses__text {
+		color: #000;
 		font-size: var(--fs-body);
 		line-height: 1.5;
 		text-wrap: pretty;
@@ -1492,12 +1519,14 @@
 
 		& small {
 			display: block;
-			font-size: var(--fs-small);
+			font-size: var(--fs-tile-kicker);
 		}
 	}
 
 	& .p-links__label--en {
 		font-family: var(--font-en);
+		font-size: var(--fs-tile-en);
+		font-weight: 400;
 
 		& small {
 			display: flex;
@@ -1505,6 +1534,7 @@
 			justify-content: center;
 			gap: .5em;
 			margin-top: .6em;
+			font-size: var(--fs-copyright);
 		}
 
 		& small img { width: 1.1em; }
