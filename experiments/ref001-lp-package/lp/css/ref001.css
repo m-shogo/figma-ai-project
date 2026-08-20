@@ -287,8 +287,17 @@
 		gap: clamp(.5rem, .2rem + 1.4vw, 1.75rem);
 		font-size: var(--fs-heading);
 		font-weight: 500;
-		line-height: 1.5;
-		letter-spacing: .06em;
+		/* Figma の見出しは2行とも同じ行の高さです（SP は 41px ずつ）。
+		   行の高さを「倍率」で書くと、大きい文字の行だけ背が高くなって
+		   Figma とずれるので、大きいほうの文字サイズを基準にした
+		   長さで指定しています。 */
+		line-height: calc(var(--fs-heading-em) * 1.3);
+		letter-spacing: .05em;
+
+		@media (min-width: 768px) {
+			/* PC は1行。大きい文字の高さ（42px）がそのまま行の高さになります */
+			line-height: 1;
+		}
 
 		& .c-heading__text {
 			text-align: center;
@@ -334,7 +343,8 @@
 	.c-bubble {
 		position: relative;   /* 尻尾の位置の基準 */
 		width: fit-content;
-		padding: .6em 1.5em;
+		/* Figma: 高さ 38px（文字 14px ＋ 上下 12px）、左右 20px */
+		padding: .857em 1.4286em;
 		border: 1px solid #555;
 		border-radius: 999px;
 		background: var(--color-white);
@@ -867,7 +877,8 @@
 		display: grid;
 		justify-items: center;
 		gap: clamp(1rem, .6rem + 1.7vw, 1.5rem);
-		margin-bottom: var(--gap-card);
+		/* Figma: 見出しブロックからカードまで SP 32px → PC 48px */
+		margin-bottom: clamp(2rem, 1.4030rem + 2.5473vw, 3rem);
 		text-align: center;
 	}
 
@@ -877,16 +888,19 @@
 	& .p-reason__lead {
 		/* Figma は SP / PC とも左ぞろえ（見出しだけ中央） */
 		text-align: left;
+		line-height: 1.6;
+		letter-spacing: .05em;
 		max-width: 47.25rem;   /* 756px */
 		color: #000;
 		font-size: var(--fs-body);
 		text-wrap: pretty;
 	}
 
+	/* Figma: SP は縦1列（間 16px）、PC は3列（間 40px）。 */
 	& .p-reason__list {
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(min(100%, 17.5rem), 1fr));
-		gap: var(--gap-card);
+		gap: clamp(1rem, -0.3881rem + 5.9204vw, 2.5rem);
 	}
 
 	& .p-reason__card {
@@ -901,17 +915,22 @@
 		object-fit: cover;
 	}
 
+	/* Figma のベージュの箱。
+	   タイトルのチップは箱の上へ SP 18px / PC 20px はみ出します。
+	   はみ出す量はチップ側のマイナスマージンで作るので、
+	   箱の上の余白は 0 です。
+	   チップと本文の間 SP 16px → PC 24px、下の余白 SP 24px → PC 32px。 */
 	& .p-reason__body {
 		display: grid;
-		gap: .8em;
-		padding: 0 1.5rem 1.6rem;
+		gap: clamp(1rem, 0.8134rem + 0.796vw, 1.5rem);
+		padding: 0 1.5rem clamp(1.5rem, 1.3134rem + 0.796vw, 2rem);
 	}
 
 	/* 見出しは写真との境目にまたがせる。
 	   absolute ではなく上方向のマイナスマージンで持ち上げています。 */
 	& .p-reason__title {
 		width: fit-content;
-		margin-top: -1.1em;
+		margin-top: clamp(-1.25rem, -1.0781rem - 0.199vw, -1.125rem);
 		/* Figma: 左右 24px / 高さ 36px。
 		   左右を広げすぎると「地域連携・インターンシップ」が
 		   1文字だけ折り返してしまうので、ここは Figma の値どおりにします */
@@ -925,7 +944,8 @@
 
 	& .p-reason__text {
 		font-size: var(--fs-body);
-		letter-spacing: .04em;
+		line-height: 1.6;      /* Figma: 16px に対して 25.6px */
+		letter-spacing: .05em;
 		text-wrap: pretty;
 	}
 }
@@ -1872,33 +1892,48 @@
 		}
 	}
 
+	/* Figma: アイコンの枠から本文まで 24px。
+	   右の余白は SP 16px → PC 40px。上は 24px。 */
 	& .p-courses__body {
 		display: grid;
 		align-content: start;
 		gap: .5em;
-		/* 左右 24px は Figma の値（SP / PC 共通。アイコンの枠との間隔） */
-		padding: clamp(1rem, .7rem + 1.2vw, 1.5rem) 1.5rem;
+		padding: 1.5rem clamp(1rem, 0.4403rem + 2.3881vw, 2.5rem) 0 1.5rem;
+		/* Figma: コース名の下線から説明文まで 13px */
+		gap: .8125rem;
 	}
 
+	/* Figma: コース名は 20px の1行。下線はコースの色の 8px の帯で、
+	   文字の箱より 3px 下へはみ出します。 */
 	& .p-courses__title {
 		width: fit-content;
+		padding-bottom: 3px;
 		font-size: var(--fs-course-title);
 		font-weight: 500;
-		line-height: 1.4;
-		background: linear-gradient(transparent 68%, color-mix(in srgb, var(--course) 30%, transparent) 0);
+		line-height: 1;
+		letter-spacing: .05em;
+		background: linear-gradient(color-mix(in srgb, var(--course) 30%, transparent) 0 0)
+		            no-repeat left bottom / 100% 8px;
 	}
 
 	& .p-courses__text {
 		color: #000;
 		font-size: var(--fs-body);
-		line-height: 1.5;
+		line-height: 1.3;      /* Figma: 16px の2行で 42px */
+		letter-spacing: .05em;
 		text-wrap: pretty;
 	}
 
+	/* Figma の水色の箱。カードの左右から SP 16px / PC 32px 内側にあり、
+	   「こんな人にオススメ！」が上端に 21px 重なります。
+	   箱の中の余白は 左右 SP 16px → PC 20px、下 SP 16px → PC 24px。 */
 	& .p-courses__rec {
 		grid-column: 1 / -1;
-		margin: .5rem clamp(1.125rem, .6rem + 2.2vw, 2rem) 1.5rem;
-		padding: 0 clamp(.875rem, .5rem + 1.6vw, 1.25rem) 1.1rem;
+		/* Figma: 説明文の下から水色の箱まで SP 37px → PC 43px */
+		margin: clamp(2.3125rem, 2.1725rem + 0.597vw, 2.6875rem)
+		        clamp(1rem, 0.0672rem + 3.9801vw, 2rem) 1.5rem;
+		padding: 0 clamp(1rem, 0.8134rem + 0.796vw, 1.25rem)
+		           clamp(1rem, 0.8134rem + 0.796vw, 1.5rem);
 		background: var(--color-bg-blue);
 	}
 
@@ -1906,8 +1941,9 @@
 	   ここも absolute ではなくマイナスマージンです。 */
 	/* 見た目は .c-bubble（components 層）。MV の吹き出しと同じ部品です。
 	   Figma でも同じ 187×38px の形が使われています。 */
+	/* Figma: 箱の上端から 21px 上へ出て、下のリストとの間は SP 19px → PC 23px */
 	& .p-courses__rec-label {
-		margin: -1em 0 1.4em;
+		margin: -1.3125rem 0 clamp(1.1875rem, 1.0944rem + 0.398vw, 1.4375rem);
 	}
 }
 
@@ -1987,11 +2023,13 @@
 		background: var(--tile-shadow, var(--tile-accent));
 	}
 
+	/* Figma では文字が円の中央、矢印は円の上から決まった位置（SP 61.3% /
+	   PC 67.2%）に置かれています。文字の行数が変わっても矢印は動きません。
+	   そのため2つを同じマスへ置き、矢印だけ上からの距離で決めています
+	   （％は円の幅に対する割合。円は正円なので高さの割合と同じです）。 */
 	& .p-links__tile {
 		display: grid;
-		place-content: center;
-		justify-items: center;
-		gap: .7em;
+		place-items: center;
 		font-size: var(--fs-tile);
 		font-weight: 400;
 
@@ -2059,12 +2097,21 @@
 	   塗りを持つ <img> だと1色に固定されてしまうため、
 	   形だけを mask で抜いて --tile-accent を流し込んでいます。
 	   大きさは Figma の実寸 SP 16×15px → PC 20×19px。 */
+	& .p-links__label { grid-area: 1 / 1; }
+
 	& .p-links__arrow {
+		grid-area: 1 / 1;
+		align-self: start;
+		margin-top: 61.3%;   /* Figma SP: 円の上から 95 / 155px */
 		width: clamp(1rem, 0.9067rem + 0.398vw, 1.25rem);
 		aspect-ratio: 20 / 19;
 		background: var(--tile-accent);
 		-webkit-mask: url('../image/icons/arrow-right.svg') center / contain no-repeat;
 		mask: url('../image/icons/arrow-right.svg') center / contain no-repeat;
+	}
+
+	@media (min-width: 768px) {
+		& .p-links__arrow { margin-top: 67.2%; }   /* Figma PC: 円の上から 168 / 250px */
 	}
 }
 
@@ -2208,7 +2255,8 @@
 
 	& .p-footer__inner {
 		display: grid;
-		gap: clamp(1.75rem, 1.2rem + 2.3vw, 2.5rem);
+		/* Figma: かたまり同士の間 SP 40px → PC 64px */
+		gap: clamp(2.5rem, 1.94rem + 2.3881vw, 4rem);
 		justify-items: center;
 		text-align: center;
 	}
@@ -2218,16 +2266,18 @@
 	}
 
 	& .p-footer__address {
-		margin-top: 1em;
+		/* Figma: ロゴから SP 24px → PC 32px */
+		margin-top: clamp(1.5rem, 1.3134rem + 0.796vw, 2rem);
 		font-size: var(--fs-note);
-		line-height: 1.8;
+		line-height: 1.3;   /* Figma: PC 16px→20.8px / SP 14px→18.2px */
+		letter-spacing: .05em;
 	}
 
 	& .p-footer__side {
 		display: grid;
 		justify-items: center;
 		align-content: start;
-		gap: clamp(1.25rem, .9rem + 1.5vw, 1.75rem);
+		gap: 2.5rem;   /* Figma: SP / PC とも 40px */
 	}
 
 	& .p-footer__related {
@@ -2235,6 +2285,7 @@
 		justify-items: center;
 		gap: 1.5em;
 		font-size: var(--fs-body);
+		line-height: 1;   /* Figma SP: 16px の1行ちょうど。PC は下で 1.6 に */
 
 		/* Figma では2つのリンクの間に 40×1px の細い線が入ります */
 		& a + a {
@@ -2248,7 +2299,8 @@
 
 	& .p-footer__sns {
 		display: flex;
-		gap: clamp(1.375rem, 1rem + 1.6vw, 1.75rem);
+		align-items: center;
+		gap: 2rem;   /* Figma: SP / PC とも 32px */
 
 		/* Figma のアイコンは高さ 23px。横幅は絵によって 25〜32px と違うので
 		   高さでそろえます */
@@ -2261,6 +2313,7 @@
 		font-family: var(--font-en);
 		font-size: var(--fs-copyright);
 		font-weight: 400;
+		line-height: 1;   /* Figma: PC 14px / SP 12px の1行 */
 		letter-spacing: .03em;
 	}
 
@@ -2283,15 +2336,20 @@
 	}
 
 	@media (min-width: 768px) {
+		/* Figma のフッターは本文枠（1160px）ではなく、
+		   画面の端から 80px の位置に置かれています。 */
 		& .p-footer__inner {
 			grid-template-columns: auto 1fr;
 			justify-items: start;
+			max-width: none;
+			width: calc(100% - 10rem);
 			text-align: left;
 		}
 
 		& .p-footer__side {
 			justify-self: end;
 			justify-items: end;
+			padding-top: 1.4375rem;   /* Figma: 左のロゴより 23px 下から始まる */
 		}
 
 		/* PC は2つのリンクを横に並べ、間は「/」で区切ります
@@ -2300,13 +2358,15 @@
 			grid-auto-flow: column;
 			justify-items: end;
 			gap: 1.25rem;
+			line-height: 1.6;   /* Figma PC: 16px → 25.6px */
 
 			& a + a { padding-top: 0; background: none; }
 
 			& a + a::before {
 				content: '/';
 				margin-right: 1.25rem;
-				color: var(--color-line);
+				color: #858585;         /* Figma */
+				font-size: .875rem;     /* Figma: 14px */
 			}
 		}
 
