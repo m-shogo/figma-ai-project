@@ -559,6 +559,9 @@
 		gap: clamp(.5rem, .2rem + 1.5vw, 1.5rem);
 		/* Figma の上下余白 SP 16px → PC 24px（帯の高さ SP 67px / PC 94px） */
 		padding-block: clamp(1rem, 0.8134rem + 0.796vw, 1.5rem);
+		/* Figma のヘッダーは本文枠ではなく、画面の端から SP 16px / PC 48px */
+		padding-inline: clamp(1rem, 0.2537rem + 3.1841vw, 3rem);
+		max-width: none;
 	}
 
 	& .p-header__logo {
