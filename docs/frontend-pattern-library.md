@@ -466,6 +466,237 @@ Card +1やcopy変更でCSS diffが0ならGood signal。
 
 ---
 
+## FP-COMP-001 — Existing production componentを無視して再生成
+
+Figma上にButton/Card/Modal等の既存Componentがあり、codebaseにも対応するproduction componentがあるのに、AIが見た目だけから新しいmarkup/componentを作る。
+
+### Failure mode
+
+- design systemと実装が二重化
+- props/variant/state contractがズレる
+- accessibility/analytics/behaviorを再実装して品質差が出る
+- Figma更新とcode更新のdriftが増える
+
+### Better direction
+
+Figma componentとproduction componentの**対応関係を先に探す**。
+
+```text
+Figma component
+→ Existing code / Storybook / component registryを検索
+→ mapped production componentがあれば再利用
+→ 本当に無ければ新規実装候補
+```
+
+Code Connectのような明示mappingが使える環境では有力。ただし特定toolをCORE要件にはしない。
+
+---
+
+## GP-COMP-001 — Figma ↔ Production component mapping
+
+Reusable componentでは可能なら次を結ぶ。
+
+```text
+Figma node/component identity
+↔ production component owner
+↔ variant / property mapping
+↔ Story/example/test owner when present
+```
+
+目的は「Figma ComponentだからWeb Component化」ではなく、**既に存在するproduction truthをAIが見逃さないこと**。
+
+Mapping方式はCode Connect、Storybook link、repo metadata、project registryなどExisting環境に合わせる。
+
+Status: `CANDIDATE` — 実案件でmapping costと再利用効果を観測して昇格判断する。
+
+---
+
+## FP-TOKEN-001 — Figma Variableを無条件に全部token化
+
+Figmaに存在するVariable/Style/数値を、意味や既存codebaseを見ず全て新しいCSS/JS tokenへ変換する。
+
+### Failure mode
+
+- one-off visual valueまでglobal API化
+- Existing design tokenとの二重source
+- namingだけ違うduplicate token
+- DesignerがFigma側を整理しただけでcode APIが大量変更
+
+### Better direction
+
+Tokenは**共有されたdesign decision**である時に同期候補にする。
+
+Company/Existing design systemにtoken pipelineがある場合はそれを正本にし、無い案件へTokens Studio / Style Dictionary等を機械導入しない。
+
+---
+
+## GP-TOKEN-001 — Design token source-of-truth sync
+
+Token運用が実在する案件では:
+
+```text
+Authoritative design decision
+→ Figma Variables / token source
+→ versioned token data
+→ platform transform/build
+→ production code
+```
+
+のdriftを減らす。
+
+Tokens Studio + Style Dictionaryのようなpipelineは有力な外部evidence。デジタル庁Design SystemでもFigma token → GitHub → build/packageの運用例がある。
+
+重要なのはtool名ではなく、**designerとengineerが同じdesign decision identityを共有すること**。
+
+Status: `CANDIDATE` — token systemがあるProjectでのみ評価する。
+
+---
+
+## FP-HANDOFF-001 — Screenshotだけをhandoff contractにする
+
+Figma screenshotだけを見て、次を推測で補う。
+
+- linkかbuttonか
+- CMS assetかFigma export assetか
+- responsive/fixed intent
+- interaction behavior
+- alt/accessible label
+- reading/focus order
+
+### Failure mode
+
+Visualは近くてもProduction semanticsが間違う。
+
+### Better direction
+
+FigmaのAnnotation / measurement / component description / prototype / Ready-for-dev情報等が存在する場合、それらを**implementation evidence**として読む。
+
+Design fileに情報が無い場合はExisting/Product contractへ戻り、AI推測を最後にする。
+
+---
+
+## GP-HANDOFF-001 — Annotation as implementation evidence
+
+Figma annotation/handoff情報が使える案件では、特に次を優先して残す・読む。
+
+```text
+responsive / fixed intent
+interaction behavior
+asset source / CMS ownership
+accessibility role / label / reading order
+non-obvious spacing or sizing reason
+component usage constraint
+```
+
+Annotationはvisual truthそのものを置き換えず、**見た目だけでは分からないintentの証拠**として扱う。
+
+Status: `CANDIDATE` — Figma plan/permissionに依存するためProject capabilityとして使う。
+
+---
+
+## GP-QA-003 — Figma → Render → Machine-readable parity report → Repair
+
+Screenshotを人間が眺めるだけでなく、可能な環境では:
+
+```text
+Figma reference
++ rendered implementation
+→ screenshot / DOM geometry / computed style / text comparison
+→ machine-readable diff report
+→ AI root-cause repair
+→ re-render
+→ human final review
+```
+
+のloopを候補にする。
+
+CommunityのuiMatchのように、Figma nodeとPlaywright renderを比較し、pixel/layout/style/color/text差分を機械可読reportとして返す実装は有力な外部evidence。
+
+このrepoでは既存Visual QA / Playwright / section diffをまず再利用し、別tool導入自体を目的にしない。
+
+Status: `CANDIDATE` — 自動repairの成功率・誤修正率・human correction costを実案件で測る。
+
+---
+
+## GP-STORY-001 — Reusable component state catalog
+
+Design-system / shared-component scopeでは、StorybookまたはExisting equivalentで次のstateを孤立表示できると強い。
+
+```text
+default
+hover / focus-visible / active when relevant
+disabled
+loading / error when relevant
+long content / missing media
+meaningful variants / themes
+```
+
+Figma referenceをStorybookに埋め込む、またはCode Connect等でproduction componentへlinkする方法も候補。
+
+Standalone LPやone-off SectionへStorybook導入を強制しない。
+
+Status: `CANDIDATE` — shared component reuseがある案件で採用判断する。
+
+---
+
+## FP-ASSET-001 — Existing icon/vectorをAIが描き直す
+
+既存codebase/Figma/design systemに正しいicon/vector sourceがあるのに、AIがCSS primitiveや近似SVGを新規作成する。
+
+### Failure mode
+
+- path/optical alignmentが微妙に違う
+- brand/icon更新が同期されない
+- 同じiconのvariantが増える
+- QAで不要な微調整が発生
+
+### Better direction
+
+```text
+Existing production asset
+→ Figma/design-system asset
+→ exact SVG/vector export
+→ 必要ならWeb optimization
+→ それでも無ければ新規作成
+```
+
+Icon/logoは特に**sourceを再利用し、再描画を避ける**。
+
+OpenAIのFigma workflowでも、codebaseにSVGがある場合はそれを直接importし、rotated primitives等で再構築しない方針が採られている。
+
+---
+
+## GP-A11Y-001 — Accessibility intent survives handoff
+
+Figma側にrole/label/reading order/interaction intentのannotationがある場合、Frontend側でsemantic HTML/ARIA/keyboard contractへ変換して保持する。
+
+```text
+Design intent
+→ annotation/component description
+→ semantic implementation
+→ keyboard/axe/manual QA
+```
+
+A11yを「実装後にaxeを通すだけ」にせず、**design intentからproduction semanticsへ渡す情報**として扱う。
+
+Status: `CANDIDATE` — annotation利用可能性とProject WCAG targetに応じる。
+
+---
+
+## External practitioner evidence for these candidates
+
+- Figma Code Connect: Figma componentsとproduction componentsの明示mapping
+- Figma Dev Mode annotations / measurements / Ready for dev: non-visual intent handoff
+- Tokens Studio + Style Dictionary: token JSONをcode向けへtransformするpipeline
+- デジタル庁 Design Tokens: Figma token → GitHub → build/packageのproduction example
+- Storybook + design integration / Chromatic-style workflows: isolated state catalog + visual review
+- uiMatch: Figma referenceとPlaywright renderのmachine-readable parity report / experimental AI repair loop
+- OpenAI Figma generate-design guidance: existing SVG/icon sourceを再描画せず直接import
+
+External exampleはauthorityではない。実案件で再現できたものだけclean replayを経てpromotionする。
+
+---
+
 ## Pattern promotion rule
 
 ```text
