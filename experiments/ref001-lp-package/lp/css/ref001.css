@@ -395,7 +395,9 @@
 		font-size: var(--fs-body);
 		line-height: 1;
 		letter-spacing: .04em;
-		white-space: nowrap;
+		/* 文言を長くしても画面からはみ出さないよう、折り返しは禁止しません。
+		   今の文言は 1行に収まります（幅 261px に対して余裕があります）。
+		   長い文言に変えた場合はボタンが縦に伸びるだけで、レイアウトは崩れません。 */
 		transition: background-color .3s ease, color .3s ease, border-color .3s ease;
 
 		/* アイコンは Figma の実寸（文字サイズ 16px 基準）で置きます。
@@ -613,8 +615,10 @@
 		     置かれているため、そのままだと間隔が広がりすぎます）。 */
 		line-height: 1.45;
 		letter-spacing: .05em;
-		/* 途中で改行させない。文字サイズを vw で縮めて収める設計のため */
-		white-space: nowrap;
+		/* 文字サイズを vw で縮めて収める設計なので、今の文言は
+		   320px でも 1行に収まります。
+		   nowrap は付けていません。文言を長くしたときに
+		   横スクロールが出るより、2行になるほうが安全なためです。 */
 	}
 
 	/* 「“ケイザイ”」の行。引用符と文字でサイズが違うので、
@@ -952,11 +956,12 @@
 		left: 50%;
 		translate: -50% 0;
 		margin-top: calc(var(--gap-card) / 2);
-		width: 1.25rem;
+		/* Figma はふつうの矢印ではなく「≫」（二重の山かっこ）です */
+		width: 1.5rem;
 		height: 1.25rem;
 		background: var(--color-text);
-		-webkit-mask: url('../image/icons/arrow-right.svg') center / contain no-repeat;
-		mask: url('../image/icons/arrow-right.svg') center / contain no-repeat;
+		-webkit-mask: url('../image/icons/arrow-double-right.svg') center / contain no-repeat;
+		mask: url('../image/icons/arrow-double-right.svg') center / contain no-repeat;
 		rotate: 90deg;   /* SP は下向き */
 	}
 
@@ -1387,12 +1392,17 @@
 		min-width: 0;
 	}
 
+	/* SP は「写真」→「コピー」の縦2段。
+	   Figma では黒帯だけが写真の下端に 61px 重なり、
+	   所属（学科・出身校）は写真の下に出ます。
+	   PC は下の @media で「写真の上にコピーを重ねる」形に切り替えます。 */
 	& .p-messages__slide {
 		display: grid;
+		grid-template-rows: auto auto;
 	}
 
 	& .p-messages__photo {
-		grid-area: 1 / 1;
+		grid-row: 1;
 		justify-self: end;
 		width: 100%;
 
@@ -1405,12 +1415,13 @@
 	}
 
 	& .p-messages__body {
-		grid-area: 1 / 1;
-		align-self: end;
+		grid-row: 2;
+		/* 黒帯を写真の下端へ重ねるぶん（Figma: 61px） */
+		margin-top: -3.8125rem;
 		display: grid;
 		gap: .9em;
 		justify-items: start;
-		padding: 0 .75rem 1.25rem;
+		padding: 0 .75rem;
 	}
 
 	/* 1行ずつ黒い帯にする */
@@ -1420,10 +1431,11 @@
 		gap: .4em;
 		font-size: var(--fs-msg-quote);
 		font-weight: 500;
-		line-height: 1.6;
+		/* 黒帯1本の高さ Figma: SP 36px / PC 49px */
+		line-height: 1.4;
 
 		& span {
-			padding: .25em .8em;
+			padding: .2em .8em;
 			background: var(--color-text);
 			color: var(--color-white);
 		}
@@ -1514,7 +1526,11 @@
 			width: 57%;
 		}
 
+		& .p-messages__photo { grid-area: 1 / 1; }
+
 		& .p-messages__body {
+			grid-area: 1 / 1;
+			margin-top: 0;
 			align-self: center;
 			gap: 1.5em;
 			padding: 0;
@@ -1585,18 +1601,29 @@
 	& .p-courses__icon {
 		display: grid;
 		place-items: center;
-		width: clamp(4.5rem, 3rem + 4vw, 6.25rem);   /* 72 → 100 */
+		width: clamp(4.5rem, 3.8469rem + 2.7861vw, 6.25rem);   /* 72 → 100 */
 		aspect-ratio: 1;
 		background: var(--course);
 
-		& img { width: 55%; }
+		/* 絵は「56×56px（SP 40×40px）の枠に収まるまで縮める」指定です。
+		   幅だけを % で決めると、縦長の絵（例: 会計コース 40×56px）が
+		   枠からはみ出す大きさになってしまいます。
+		   素材はすべて Figma の実寸（長い辺が 56px）で書き出してあるので、
+		   上限だけ決めれば縦横比はそのまま正しく収まります。 */
+		& img {
+			width: auto;
+			height: auto;
+			max-width:  clamp(2.5rem, 2.1269rem + 1.592vw, 3.5rem);
+			max-height: clamp(2.5rem, 2.1269rem + 1.592vw, 3.5rem);
+		}
 	}
 
 	& .p-courses__body {
 		display: grid;
 		align-content: start;
 		gap: .5em;
-		padding: clamp(1rem, .7rem + 1.2vw, 1.5rem) clamp(1.125rem, .6rem + 2.2vw, 2rem);
+		/* 左右 24px は Figma の値（SP / PC 共通。アイコンの枠との間隔） */
+		padding: clamp(1rem, .7rem + 1.2vw, 1.5rem) 1.5rem;
 	}
 
 	& .p-courses__title {
