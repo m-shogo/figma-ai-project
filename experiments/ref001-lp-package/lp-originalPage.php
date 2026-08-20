@@ -69,7 +69,7 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
      HEADER — ロゴ / 資料請求・オープンキャンパスボタン
      ============================================================ -->
 <header class="p-header">
-	<div class="p-header__inner l-container">
+	<div class="p-header__inner">
 
 		<a class="p-header__logo" href="https://www.cku.ac.jp/">
 			<img width="187" height="47" src="<?php echo esc_url( $lp_base . 'image/icons/university-logo-outlined.svg' ); ?>"
