@@ -218,68 +218,61 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 	<ol class="p-education__list">
 
 		<li class="p-education__step">
-			<div class="p-education__card">
-				<p class="p-education__badge"><span class="p-education__badge-no">01</span>スタート</p>
-				<h3 class="p-education__step-title">大学1年生の自分</h3>
-				<picture class="p-education__photo">
-					<source width="420" height="237" media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/education-1-21376-4835.webp' ); ?>">
-					<img width="233" height="131" src="<?php echo esc_url( $lp_base . 'image/photos/pc/education-1-21378-7980.webp' ); ?>" alt="" loading="lazy" decoding="async">
-				</picture>
-				<ul class="c-checklist">
-					<li>将来がまだ見えない</li>
-					<li>学科選択制度で基礎を学ぶ</li>
-					<li>７つのコースで目標を明確に</li>
-					<li>資格取得支援でスキルを発見</li>
-				</ul>
-			</div>
+			<p class="p-education__badge"><span class="p-education__badge-no">01</span>スタート</p>
+			<h3 class="p-education__step-title">大学1年生の自分</h3>
+			<picture class="p-education__photo">
+				<source width="420" height="237" media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/education-1-21376-4835.webp' ); ?>">
+				<img width="233" height="131" src="<?php echo esc_url( $lp_base . 'image/photos/pc/education-1-21378-7980.webp' ); ?>" alt="" loading="lazy" decoding="async">
+			</picture>
+			<ul class="c-checklist">
+				<li>将来がまだ見えない</li>
+				<li>学科選択制度で基礎を学ぶ</li>
+				<li>７つのコースで目標を明確に</li>
+				<li>資格取得支援でスキルを発見</li>
+			</ul>
 		</li>
 
 		<li class="p-education__step">
-			<div class="p-education__card">
-				<p class="p-education__badge"><span class="p-education__badge-no">02</span>学ぶ</p>
-				<h3 class="p-education__step-title">世の中の仕組みを知る</h3>
-				<picture class="p-education__photo">
-					<source width="420" height="237" media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/education-2-21376-4801.webp' ); ?>">
-					<img width="233" height="131" src="<?php echo esc_url( $lp_base . 'image/photos/pc/education-2-21378-7946.webp' ); ?>" alt="" loading="lazy" decoding="async">
-				</picture>
-				<ul class="c-checklist">
-					<li>ヒット商品の裏側</li>
-					<li>トクするお金のルール</li>
-					<li>AIで仕事はどうなる</li>
-				</ul>
-			</div>
+			<p class="p-education__badge"><span class="p-education__badge-no">02</span>学ぶ</p>
+			<!-- 2行になるときに Figma と同じ位置で折り返すため、意味の区切りを span で囲んでいます -->
+			<h3 class="p-education__step-title"><span>世の中の仕組み</span><span>を知る</span></h3>
+			<picture class="p-education__photo">
+				<source width="420" height="237" media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/education-2-21376-4801.webp' ); ?>">
+				<img width="233" height="131" src="<?php echo esc_url( $lp_base . 'image/photos/pc/education-2-21378-7946.webp' ); ?>" alt="" loading="lazy" decoding="async">
+			</picture>
+			<ul class="c-checklist">
+				<li>ヒット商品の裏側</li>
+				<li>トクするお金のルール</li>
+				<li>AIで仕事はどうなる</li>
+			</ul>
 		</li>
 
 		<li class="p-education__step">
-			<div class="p-education__card">
-				<p class="p-education__badge"><span class="p-education__badge-no">03</span>出会う</p>
-				<h3 class="p-education__step-title">先生と一緒に考える</h3>
-				<picture class="p-education__photo">
-					<source width="420" height="237" media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/education-3-21376-4769.webp' ); ?>">
-					<img width="233" height="131" src="<?php echo esc_url( $lp_base . 'image/photos/pc/education-3-21378-7917.webp' ); ?>" alt="" loading="lazy" decoding="async">
-				</picture>
-				<ul class="c-checklist">
-					<li>教職員との距離が近い</li>
-					<li>悩みを相談しやすい</li>
-					<li>個人に合わせた進路のサポート</li>
-				</ul>
-			</div>
+			<p class="p-education__badge"><span class="p-education__badge-no">03</span>出会う</p>
+			<h3 class="p-education__step-title"><span>先生と一緒に</span><span>考える</span></h3>
+			<picture class="p-education__photo">
+				<source width="420" height="237" media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/education-3-21376-4769.webp' ); ?>">
+				<img width="233" height="131" src="<?php echo esc_url( $lp_base . 'image/photos/pc/education-3-21378-7917.webp' ); ?>" alt="" loading="lazy" decoding="async">
+			</picture>
+			<ul class="c-checklist">
+				<li>教職員との距離が近い</li>
+				<li>悩みを相談しやすい</li>
+				<li>個人に合わせた進路のサポート</li>
+			</ul>
 		</li>
 
 		<li class="p-education__step">
-			<div class="p-education__card">
-				<p class="p-education__badge"><span class="p-education__badge-no">04</span>ゴール</p>
-				<h3 class="p-education__step-title">望んだ将来を実現させる</h3>
-				<picture class="p-education__photo">
-					<source width="420" height="237" media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/education-4-21376-4741.webp' ); ?>">
-					<img width="233" height="131" src="<?php echo esc_url( $lp_base . 'image/photos/pc/education-4-21378-7889.webp' ); ?>" alt="" loading="lazy" decoding="async">
-				</picture>
-				<ul class="c-checklist">
-					<li>４年間の学びを進路につなげる</li>
-					<li>経験を社会で発揮する</li>
-					<li>自分らしい未来を見つける</li>
-				</ul>
-			</div>
+			<p class="p-education__badge"><span class="p-education__badge-no">04</span>ゴール</p>
+			<h3 class="p-education__step-title"><span>望んだ将来を</span><span>実現させる</span></h3>
+			<picture class="p-education__photo">
+				<source width="420" height="237" media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/education-4-21376-4741.webp' ); ?>">
+				<img width="233" height="131" src="<?php echo esc_url( $lp_base . 'image/photos/pc/education-4-21378-7889.webp' ); ?>" alt="" loading="lazy" decoding="async">
+			</picture>
+			<ul class="c-checklist">
+				<li>４年間の学びを進路につなげる</li>
+				<li>経験を社会で発揮する</li>
+				<li>自分らしい未来を見つける</li>
+			</ul>
 		</li>
 
 	</ol>
@@ -732,7 +725,7 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 				</a>
 			</li>
 
-			<li class="p-links__item" style="--tile-bg: #ffdbe0; --tile-accent: #8473aa; --tile-shadow: linear-gradient(150deg, #4c64d3, #cf2e92 25%, #f26939 63%, #ffdd83)">
+			<li class="p-links__item" style="--tile-bg: #ffdbe0; --tile-accent: #8473aa; --tile-shadow: var(--gradient-instagram)">
 				<a class="p-links__tile" href="https://www.instagram.com/chibakeizai_university/" target="_blank" rel="noopener">
 					<span class="p-links__label p-links__label--en">
 						Official <br>Instagram
