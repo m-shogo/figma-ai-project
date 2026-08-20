@@ -143,7 +143,7 @@
 		--fs-mv-lead:    min(3.7333vw,  0.875rem);  /* 375px で  14px 説明文 */
 
 		/* OPEN CAMPUS バッジ */
-		--oc-size:       clamp(11.8125rem, 10.6233rem + 5.0746vw, 15rem); /* 189 → 240 */
+		--oc-size:       clamp(10.625rem, 8.9927rem + 6.9652vw, 15rem);   /* 170 → 240 */
 		--oc-title:      clamp(1.625rem,  1.4851rem + 0.597vw, 2rem);      /*  26 →  32 */
 		--oc-note:       clamp(1rem,      0.8601rem + 0.597vw, 1.375rem);  /*  16 →  22 */
 		--oc-arrow:      clamp(2.25rem,   1.9701rem + 1.194vw, 3rem);      /*  36 →  48 */
@@ -293,6 +293,12 @@
 		& .c-heading__text {
 			text-align: center;
 			text-wrap: balance;   /* 行の長さをそろえて折り返す */
+
+			/* SP で2行になる見出しは HTML の <br> で位置を決めています。
+			   PC は1行に収まるので改行を無効にします。 */
+			@media (min-width: 768px) {
+				& br { display: none; }
+			}
 		}
 
 		/* 強調部分。Figma では太さは通常と同じ w500 で、大きさだけ変わる。
@@ -314,6 +320,45 @@
 		}
 		&::before { content: '('; }
 		&::after  { content: ')'; }
+	}
+
+	/* --- 吹き出し ---
+	   Figma では MV の「大学の雰囲気を体験！」と
+	   コースの「こんな人にオススメ！」がまったく同じ部品です
+	   （角丸 187×38px ＋ 下向きの三角 13×17px、文字 14px）。
+
+	   Figma では同じ形が 2px ずらして2枚重なっていて、
+	   上と右に細い線がのぞく「二重線」になっています。
+	   ここでは drop-shadow で同じ見え方を作っています。
+	   （box-shadow だと四角い影になり、尻尾の形に沿いません） */
+	.c-bubble {
+		position: relative;   /* 尻尾の位置の基準 */
+		width: fit-content;
+		padding: .6em 1.5em;
+		border: 1px solid #555;
+		border-radius: 999px;
+		background: var(--color-white);
+		color: var(--color-text);
+		font-size: var(--fs-small);
+		line-height: 1;
+		letter-spacing: .05em;
+		white-space: nowrap;
+		filter: drop-shadow(2px -2px 0 #555);
+
+		/* 下向きの尻尾。正方形を45度回して2辺だけ線を残しています */
+		&::after {
+			content: '';
+			position: absolute;
+			top: 100%;
+			left: 50%;
+			width: .75rem;
+			height: .75rem;
+			margin: -.4375rem 0 0 -.375rem;
+			border-right: 1px solid #555;
+			border-bottom: 1px solid #555;
+			background: var(--color-white);
+			rotate: 45deg;
+		}
 	}
 
 	/* --- 見出しの左右に添える「＼ ／」の斜線 ---
@@ -714,21 +759,13 @@
 	}
 
 	/* 吹き出しは円の上端に少し重ねる */
+	/* 吹き出しの見た目は .c-bubble（components 層）。ここでは位置だけ決めます。
+	   Figma では尻尾の先が円の上から 18% ほど入り込みます。 */
 	& .p-mv__oc-balloon {
 		position: absolute;
-		bottom: calc(100% - 1.4em);
+		bottom: 82%;
 		left: 50%;
 		translate: -50% 0;
-		white-space: nowrap;
-
-		padding: .85em 1.6em;
-		border: 1px solid var(--color-text);
-		border-radius: 999px;
-		background: var(--color-white);
-		color: var(--color-text);
-		font-size: var(--fs-small);
-		line-height: 1;
-		letter-spacing: .05em;
 	}
 
 	& .p-mv__oc-title {
@@ -838,6 +875,8 @@
 	   通常の読みやすさ上限（--measure 40em）だと2行になってしまうため、
 	   このリード文だけ上限を広げています。 */
 	& .p-reason__lead {
+		/* Figma は SP / PC とも左ぞろえ（見出しだけ中央） */
+		text-align: left;
 		max-width: 47.25rem;   /* 756px */
 		color: #000;
 		font-size: var(--fs-body);
@@ -1299,14 +1338,18 @@
 	}
 
 	/* --- 顔写真 + 吹き出し --- */
+	/* Figma は SP / PC とも「顔写真が左、吹き出しが右」です。
+	   SP では写真が吹き出しの左上に重なります（PC は少し離れて並びます）。 */
 	& .p-voice__profile {
 		display: grid;
-		justify-items: center;
-		gap: 1rem;
+		grid-template-columns: auto 1fr;
+		align-items: start;   /* SP は上ぞろえ。PC は下の @media で中央ぞろえ */
 	}
 
+	& .p-voice__avatar { z-index: 1; }   /* 吹き出しの上に出す */
+
 	& .p-voice__avatar img {
-		width: clamp(6.875rem, 4.5rem + 6.2vw, 10rem);   /* 110 → 160 */
+		width: clamp(5.25rem, 3.4776rem + 7.5622vw, 10rem);   /* 84 → 160 */
 		aspect-ratio: 1;
 		border-radius: 50%;
 		object-fit: cover;
@@ -1314,12 +1357,17 @@
 
 	& .p-voice__balloon {
 		position: relative;   /* 尻尾の基準 */
-		width: 100%;
-		max-width: 40rem;
-		padding: clamp(1.25rem, .9rem + 1.5vw, 1.75rem) clamp(1.25rem, .7rem + 2.3vw, 2.5rem);
+		/* SP は写真の下へ 68px もぐり込ませ、PC は 30px 離す。
+		   上の 18px は、写真が吹き出しより少し上に出るぶん（Figma）。 */
+		margin: 1.125rem 0 0 -4.25rem;
+		padding: clamp(1.25rem, .9rem + 1.5vw, 1.75rem) 1.5rem;
 		border: 1px solid var(--color-line);
 		background: var(--color-white);
 	}
+
+	/* SP は写真が重なるぶん、見出しだけ右へよけます */
+	& .p-voice__title--offset,
+	& .p-voice__title { padding-left: 3.75rem; }
 
 	/* 吹き出しの尻尾。あしらいなので absolute で置いています。
 	   SP は上向き（写真が上にあるため）、PC は左向きです。 */
@@ -1327,13 +1375,13 @@
 	& .p-voice__balloon::after {
 		content: '';
 		position: absolute;
-		bottom: 100%;
-		left: 50%;
-		translate: -50% 0;
-		border-inline: 12px solid transparent;
+		top: 50%;
+		right: 100%;
+		translate: 0 -50%;
+		border-block: 12px solid transparent;
 	}
-	& .p-voice__balloon::before { border-bottom: 14px solid var(--color-line); }
-	& .p-voice__balloon::after  { margin-bottom: -1px; border-bottom: 14px solid var(--color-white); }
+	& .p-voice__balloon::before { border-right: 14px solid var(--color-line); }
+	& .p-voice__balloon::after  { margin-right: -1px; border-right: 14px solid var(--color-white); }
 
 	& .p-voice__title {
 		margin-bottom: .5em;
@@ -1447,29 +1495,14 @@
 
 	/* --- PC: 写真と吹き出しを横並びにし、尻尾も左向きに付け替える --- */
 	@media (min-width: 768px) {
-		& .p-voice__profile {
-			grid-template-columns: auto 1fr;
-			align-items: center;
-			gap: clamp(1.5rem, -1rem + 5vw, 3rem);
-			justify-items: stretch;
-		}
+		& .p-voice__profile { align-items: center; }
 
 		& .p-voice__balloon {
-			max-width: none;
+			margin: 0 0 0 1.875rem;   /* PC は写真と離す（Figma 30px） */
+			padding-inline: 4.125rem;
 		}
 
-		& .p-voice__balloon::before,
-		& .p-voice__balloon::after {
-			top: 50%;
-			bottom: auto;
-			right: 100%;
-			left: auto;
-			translate: 0 -50%;
-			border-inline: 0;
-			border-block: 12px solid transparent;
-		}
-		& .p-voice__balloon::before { border-bottom: 0; border-right: 14px solid var(--color-line); }
-		& .p-voice__balloon::after  { margin-bottom: 0; margin-right: -1px; border-bottom: 0; border-right: 14px solid var(--color-white); }
+		& .p-voice__title { padding-left: 0; }
 
 		& .p-voice__points {
 			grid-template-columns: auto 1fr;
@@ -1584,9 +1617,11 @@
 	}
 
 	/* --- 矢印とカウンター --- */
+	/* Figma は SP が右寄せ、PC は左から 165px の位置です */
 	& .p-messages__nav {
 		display: flex;
 		align-items: center;
+		justify-content: end;
 		gap: clamp(.75rem, .4rem + 1.4vw, 1.4rem);
 		margin-top: clamp(1.25rem, .8rem + 1.9vw, 2rem);
 	}
@@ -1652,6 +1687,7 @@
 			z-index: 1;
 			margin-top: 0;
 			/* Figma: 1160px 中 165px の位置から始まる */
+			justify-content: start;
 			margin-left: 14.22%;
 		}
 
@@ -1784,15 +1820,10 @@
 
 	/* 「こんな人にオススメ！」は枠の上端にまたがせます。
 	   ここも absolute ではなくマイナスマージンです。 */
+	/* 見た目は .c-bubble（components 層）。MV の吹き出しと同じ部品です。
+	   Figma でも同じ 187×38px の形が使われています。 */
 	& .p-courses__rec-label {
-		width: fit-content;
-		margin: -1em 0 1em;
-		padding: .5em 1.4em;
-		border: 1px solid var(--color-line);
-		border-radius: 999px;
-		background: var(--color-white);
-		font-size: var(--fs-small);
-		line-height: 1;
+		margin: -1em 0 1.4em;
 	}
 }
 
@@ -1851,6 +1882,9 @@
 		& .p-links__list {
 			grid-template-columns: repeat(4, 1fr);
 		}
+
+		/* Figma は SP が「Official / Instagram」の2行、PC は1行 */
+		& .p-links__label--en br { display: none; }
 	}
 
 	& .p-links__item {
@@ -2096,7 +2130,7 @@
 	}
 
 	& .p-footer__logo {
-		width: clamp(11.25rem, 8rem + 8.7vw, 15rem);   /* 180 → 240 */
+		width: 15rem;   /* Figma は SP / PC とも 240px */
 	}
 
 	& .p-footer__address {
@@ -2114,8 +2148,15 @@
 
 	& .p-footer__related {
 		display: grid;
-		gap: .7em;
+		justify-items: center;
+		gap: 1.5em;
 		font-size: var(--fs-body);
+
+		/* Figma では2つのリンクの間に 40×1px の細い線が入ります */
+		& a + a {
+			padding-top: 1.5em;
+			background: linear-gradient(#d9d9d9 0 0) no-repeat center top / 2.5rem 1px;
+		}
 
 		& a:hover,
 		& a:focus-visible { text-decoration: underline; }
@@ -2125,7 +2166,9 @@
 		display: flex;
 		gap: clamp(1.375rem, 1rem + 1.6vw, 1.75rem);
 
-		& img { width: clamp(1.375rem, 1rem + 1.6vw, 1.625rem); }
+		/* Figma のアイコンは高さ 23px。横幅は絵によって 25〜32px と違うので
+		   高さでそろえます */
+		& img { width: auto; height: 1.4375rem; }
 		& a:hover,
 		& a:focus-visible { opacity: .7; }
 	}
@@ -2162,12 +2205,29 @@
 			text-align: left;
 		}
 
-		& .p-footer__side { justify-items: end; }
+		& .p-footer__side {
+			justify-self: end;
+			justify-items: end;
+		}
 
+		/* PC は2つのリンクを横に並べ、間は「/」で区切ります
+		   （SP は縦に並べて細い線で区切る） */
 		& .p-footer__related {
 			grid-auto-flow: column;
+			justify-items: end;
 			gap: 1.25rem;
+
+			& a + a { padding-top: 0; background: none; }
+
+			& a + a::before {
+				content: '/';
+				margin-right: 1.25rem;
+				color: var(--color-line);
+			}
 		}
+
+		& .p-footer__address br:nth-of-type(1),
+		& .p-footer__address br:nth-of-type(3) { display: none; }
 
 		& .p-footer__copyright { grid-column: 1 / -1; }
 	}

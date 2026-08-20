@@ -133,7 +133,7 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 	<!-- OPEN CAMPUS バッジ。
 	     写真の上に重ねて下へはみ出す「あしらい」なので、ここは absolute です。 -->
 	<a class="p-mv__oc" href="https://www.cku.ac.jp/admission/opencampus/" target="_blank" rel="noopener">
-		<span class="p-mv__oc-balloon">大学の雰囲気を体験！</span>
+		<span class="p-mv__oc-balloon c-bubble">大学の雰囲気を体験！</span>
 		<span class="p-mv__oc-title">OPEN<br>CAMPUS</span>
 		<span class="p-mv__oc-note">開催中！</span>
 		<span class="p-mv__oc-arrow" aria-hidden="true">
@@ -314,7 +314,7 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 
 	<header class="p-voice__head l-container">
 		<span class="c-kicker"># STUDENTS_VOICE</span>
-		<h2 class="c-heading"><span class="c-heading__text">私が千葉経済大学を<strong>選んだ理由</strong></span></h2>
+		<h2 class="c-heading"><span class="c-heading__text">私が千葉経済大学を<br><strong>選んだ理由</strong></span></h2>
 	</header>
 
 	<article class="p-voice__item is-open">
@@ -587,7 +587,7 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 					<p class="p-courses__text">国家公務員、地方公務員、公安職、公益法人などを目指すコース</p>
 				</div>
 				<div class="p-courses__rec">
-					<p class="p-courses__rec-label">こんな人にオススメ！</p>
+					<p class="p-courses__rec-label c-bubble">こんな人にオススメ！</p>
 					<ul class="c-checklist c-checklist--pink">
 						<li>経済や地域の課題を解決し、安心して暮らせる街をつくりたい人</li>
 						<li>試験対策だけでなく実務で役立つ生きた経済の知識を身につけたい人</li>
@@ -604,7 +604,7 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 					<p class="p-courses__text">税理士、公認会計士、その他経理部門などを目指すコース</p>
 				</div>
 				<div class="p-courses__rec">
-					<p class="p-courses__rec-label">こんな人にオススメ！</p>
+					<p class="p-courses__rec-label c-bubble">こんな人にオススメ！</p>
 					<ul class="c-checklist c-checklist--pink">
 						<li>企業の「お金」のプロとして、専門資格を在学中に武器にしたい人</li>
 						<li>数字の強さを活かして、企業の経営を裏から支えたい人</li>
@@ -621,7 +621,7 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 					<p class="p-courses__text">ビジネスパーソン、ビジネスリーダーを目指すコース</p>
 				</div>
 				<div class="p-courses__rec">
-					<p class="p-courses__rec-label">こんな人にオススメ！</p>
+					<p class="p-courses__rec-label c-bubble">こんな人にオススメ！</p>
 					<ul class="c-checklist c-checklist--pink">
 						<li>自由なアイデアを形にして、起業やヒット商品開発に挑戦したい人</li>
 						<li>リーダーシップや、実践的なマーケティングを学びたい人</li>
@@ -638,7 +638,7 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 					<p class="p-courses__text">銀行業界、証券業界などを目指すコース</p>
 				</div>
 				<div class="p-courses__rec">
-					<p class="p-courses__rec-label">こんな人にオススメ！</p>
+					<p class="p-courses__rec-label c-bubble">こんな人にオススメ！</p>
 					<ul class="c-checklist c-checklist--pink">
 						<li>経済の仕組みを深く学び、人や企業の夢を「融資」で応援したい人</li>
 						<li>地元・千葉をはじめとする地域経済の活性化に貢献したい人</li>
@@ -655,7 +655,7 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 					<p class="p-courses__text">中学（社会）・高校（公民）の免許取得、教員を目指すコース</p>
 				</div>
 				<div class="p-courses__rec">
-					<p class="p-courses__rec-label">こんな人にオススメ！</p>
+					<p class="p-courses__rec-label c-bubble">こんな人にオススメ！</p>
 					<ul class="c-checklist c-checklist--pink">
 						<li>「社会や経済の面白さ」をわかりやすく伝えられる先生になりたい人</li>
 						<li>教職課程と経済の専門知識を両立させた視野を持つ教育者を目指す人</li>
@@ -672,7 +672,7 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 					<p class="p-courses__text">学芸員資格の取得、関連する仕事を目指すコース</p>
 				</div>
 				<div class="p-courses__rec">
-					<p class="p-courses__rec-label">こんな人にオススメ！</p>
+					<p class="p-courses__rec-label c-bubble">こんな人にオススメ！</p>
 					<ul class="c-checklist c-checklist--pink">
 						<li>歴史や文化の魅力を、展示や企画を通して多くの人に伝えたい人</li>
 						<li>経済の視点も持ち合わせた「文化の専門家」を目指したい人</li>
@@ -689,7 +689,7 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 					<p class="p-courses__text">ITスキルを駆使するビジネスパーソンを目指すコース</p>
 				</div>
 				<div class="p-courses__rec">
-					<p class="p-courses__rec-label">こんな人にオススメ！</p>
+					<p class="p-courses__rec-label c-bubble">こんな人にオススメ！</p>
 					<ul class="c-checklist c-checklist--pink">
 						<li>プログラミングだけでなく、AIやデータでビジネスを変革したい人</li>
 						<li>ITの最先端技術×経済の知識で、DX時代に最適な人材になりたい人</li>
@@ -728,7 +728,7 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 			<li class="p-links__item" style="--tile-bg: #ffdbe0; --tile-accent: #8473aa; --tile-shadow: var(--gradient-instagram)">
 				<a class="p-links__tile" href="https://www.instagram.com/chibakeizai_university/" target="_blank" rel="noopener">
 					<span class="p-links__label p-links__label--en">
-						Official Instagram
+						Official <br>Instagram
 						<small>
 							<img width="25" height="25" src="<?php echo esc_url( $lp_base . 'image/icons/instagram-outline.svg' ); ?>" alt="" aria-hidden="true">ckckoho
 						</small>
@@ -796,8 +796,10 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 			<img width="187" height="47" class="p-footer__logo" src="<?php echo esc_url( $lp_base . 'image/icons/university-logo-outlined.svg' ); ?>"
 			     alt="千葉経済大学 CHIBA KEIZAI" width="240" height="61">
 			<p class="p-footer__address">
-				〒263-0021　千葉市稲毛区轟町3-59-5<br>
-				Tel.043-253-9111（大代表）/ 043-253-5524（入試広報センター）
+				〒263-0021<br>
+				千葉市稲毛区轟町3-59-5<br>
+				Tel.043-253-9111（大代表）<br>
+				/043-253-5524（入試広報センター）
 			</p>
 		</div>
 
