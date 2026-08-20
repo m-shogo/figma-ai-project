@@ -52,6 +52,7 @@ class CheckResult:
 
 CHECKS: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("update_sources", ("scripts/validate_update_sources.py",)),
+    ("frontend_implementation_policy", ("scripts/validate_frontend_implementation_policy.py",)),
     ("implementation_profile", ("scripts/validate_implementation_profile.py",)),
     ("run_implementation_profile", ("scripts/validate_run_implementation_profile.py",)),
     ("records", ("scripts/validate_records.py",)),

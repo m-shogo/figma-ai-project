@@ -66,12 +66,53 @@ SECTION runではexact section entry:
 
 This profile is a **translation strategy**, not a replacement source of design truth.
 
+### Applicable Knowledge Slice
+
+Production `SECTION` / `INTEGRATION` runでは、過去の学びを保存するだけでなく、**今回scopeへ適用可能なportable knowledgeを開始前に選択して入力へ含める**。
+
+Source:
+
+- `playbook/proven/*.yaml` — portability evidenceが十分なrule
+- `playbook/candidates/*.yaml` — clean replay済みだが追加検証中のrule
+- `docs/frontend-pattern-library.md` 等のdomain Pattern Library — target failure/intentが今回scopeへ一致するものだけ
+
+Selectionは最低限:
+
+- target failure / UI pattern / implementation familyが今回scopeへ関係するか
+- scope labelが今回へ適用可能か
+- evidence maturity / recommendation strength
+- `last_verified_at`
+- verified tooling / agent / CMS / framework条件
+- known limits
+- retest triggerが発火していないか
+
+を見る。
+
+**Candidateはhard ruleではない。** `OPTIONAL / PREFERRED / CAUTION`等のrecommendationとevidence maturityを保ったまま判断材料へ入れる。
+
+適用ruleが0件なら0件でよい。無関係なplaybookを大量投入してcontextを汚染しない。
+
+Run Recordには、実際に入力へ使ったruleをpath/SHA・maturity・recommendation・selection reason付きで残す。
+
+```text
+Past evidence
+→ applicable knowledge selection
+→ current run input
+→ result
+→ confirm / contradict / new observation
+→ replay / promotion / demotion / retest
+→ next run selection
+```
+
+これをlearning closed loopとする。
+
 ### Run lineage
 
 - run ID/scope
 - agent/model/client version if known
 - prompt/context hashes
 - isolation identity when parallel
+- applicable knowledge refs / hashes
 
 ---
 
@@ -83,10 +124,11 @@ Without this split, `C1 Structured Figma` could accidentally mean:
 - no component/token resolution
 - no profile revision
 - no foundation pin
+- no applicable learned-rule lineage
 
 which would make section outputs incomparable and inconsistent.
 
-Production comparison should vary context retrieval while keeping coordination fixed.
+Production comparison should vary context retrieval while keeping coordination fixed。
 
 ---
 
@@ -198,6 +240,7 @@ Do not fetch one huge page context because the tool allows it.
 2. resolved shared component/token paths
 3. section-local target files
 4. nearby implementation examples only when needed
+5. applicable playbook/pattern entries only when target failure/scope matches
 
 Do not let every section worker independently crawl the whole repository.
 
@@ -227,12 +270,18 @@ COMMON first-pass comparison must not leak:
 - previous agent output
 - previous repair diff
 - human scoring comments
-- another agent's failure analysis
+- another agent's same-reference failure analysis
 - final repaired implementation
 
 Use fresh context/clean baseline where possible.
 
-OPTIMIZED run may use agent-specific procedures but records them separately.
+Portable playbook knowledge is different from leaking the answer. However controlled experiments may intentionally exclude Candidate/Proven knowledge to measure a baseline. In that case:
+
+- exclusion itselfをexperiment variableとして記録する
+- production defaultと混同しない
+- same-reference final repair diffやhuman answerをportable ruleとして偽装しない
+
+OPTIMIZED run may use applicable agent-specific procedures but records them separately.
 
 ---
 
@@ -250,6 +299,17 @@ coordination:
   figma_structure_profile_sha256: "..."
   foundation_commit: "..."
 
+knowledge_context:
+  mode: PRODUCTION_APPLICABLE
+  selected_rules:
+    - rule_id: CR-XXXX
+      path: playbook/candidates/cr-xxxx.yaml
+      sha: "..."
+      evidence_maturity: E2
+      recommendation: OPTIONAL
+      selection_reason: "target failure and scope match"
+  excluded_rules: []
+
 context:
   tier: C2
   prompt_version: "..."
@@ -264,6 +324,8 @@ context:
   figma_nodes_inspected: []
 ```
 
+After run, record whether selected knowledge was confirmed, contradicted, irrelevant under current conditions, or requires retest. Do not silently upgrade/demote rule maturity from one observation.
+
 ---
 
 ## Context efficiency
@@ -274,6 +336,7 @@ Possible diagnostic metrics:
 - nodes inspected
 - screenshots fetched
 - repo files read
+- selected knowledge entries
 - prompt/context bytes/tokens if observable
 - turns before FIRST_PASS
 
@@ -289,6 +352,8 @@ Model/MCP capabilityが上がれば、最適なTier・translation mode・retriev
 
 - old context workaroundを永久rule化しない
 - Structure Profileはtool snapshot/hash付きで保持
-- major update後はre-profile/re-run可能
+- Candidate/Proven ruleも`last_verified_at` / verified tooling / retest triggerを見る
+- major update後はre-profile/re-run/retest可能
+- contradicted evidenceは削除せずdemotion/retest evidenceとして残す
 
-目的はcontextを最大化することではなく、**現在のtoolで、必要な証拠だけを使ってFirst-passとReworkを最適化すること**。
+目的はcontextを最大化することではなく、**現在のtoolで、必要な証拠と適用可能な過去知識だけを使ってFirst-passとReworkを最適化すること**。

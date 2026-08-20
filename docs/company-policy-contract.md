@@ -4,19 +4,24 @@
 
 案件ごとの実装判断を、agentの一般論ではなく**会社・チームの実装規約から開始する**。
 
-Production implementation precedence:
+Frontend authorityのcanonical interpretationは `docs/frontend-authority-model.md`。
+
+Company Policyは最上位の**technical hard constraints**を所有する。一方、Existing Codebase / Design Systemは実装baselineであり、Company/security/protected scopeに反しない明示的なProject/Owner decisionは、対象scopeのstale Existing baselineを更新できる。
 
 ```text
-COMPANY POLICY
-  ↓
-EXISTING CODEBASE / EXISTING DESIGN SYSTEM
-  ↓
-FIGMA IMPLEMENTATION EVIDENCE
-  ↓
-AGENT INFERENCE
+Company hard constraints
+↓
+Existing Codebase / Design System = baseline
+↔ Explicit authorized Project/Owner override
+↓
+Effective Project Contract
+
+Visual truth = Figma reference
+Implementation evidence = actual Figma structure / annotation / interaction
+Agent inference = last
 ```
 
-ただし、これは**technical implementation constraintsの優先順位**。
+Company Policy内の `precedence.implementation_constraints` は、**authorized Project/Owner overrideを解決する前のbaseline technical evidence order**を互換的に記録するfieldであり、Frontend全体を単純4段順位表へ戻すものではない。
 
 Visual/design source of truthは引き続きFigma reference。
 
@@ -57,7 +62,7 @@ Visual/design source of truthは引き続きFigma reference。
 推奨view:
 
 ```text
-Company Policy
+Company Policy hard constraints
 ├ Browser Support
 │  ├ Browserslist
 │  ├ Minimum versions
@@ -79,10 +84,11 @@ Company Policy
 ├ Folder / Section Unit
 └ Update Policy
 
-Effective Rules
-├ Company
-├ inherited Existing Codebase
-├ Figma evidence
+Effective Project Contract
+├ Company hard constraints
+├ inherited Existing baseline
+├ authorized Project/Owner overrides
+├ Figma implementation evidence
 └ unresolved conflicts
 ```
 
@@ -215,11 +221,13 @@ Company Policyに明記されていない項目は、既存codebaseを次のsour
 
 既存に確立された方法がある場合、Figma MCPが別形式のコードを提案しても既存へ翻訳する。
 
+ただしExistingは永久不変のhard ruleではない。Company hard constraintに反しない明示的なProject/Owner migration・廃止・exceptionがある場合は、その対象scopeでCurrent Authorityとして解決し、Effective Project Contractへ反映する。
+
 ---
 
 ## Figma implementation evidence
 
-会社/既存で決まっていないものだけ、Figmaから実装意図を読む。
+Effective Project Contractで決まっていないものは、Figmaから実装意図を読む。
 
 読む対象:
 
@@ -268,7 +276,7 @@ Materialな仕様を「良しなに」で確定しない。
 
 会社ruleと既存repoがズレている。
 
-→ existingを自動正当化しない。Company Policy revision/dateを見てmigration対象か確認。
+→ existingを自動正当化しない。Company Policy revision/dateと明示Current Authorityを見てmigration対象か確認。
 
 ### FIGMA_AMBIGUITY
 
@@ -357,6 +365,7 @@ Company Policy内の技術defaultも永久固定しない。
 
 Canonical:
 
+- `docs/frontend-authority-model.md`
 - `docs/device-environment-policy.md`
 - `docs/web-interaction-policy.md`
 - `docs/update-preflight.md`

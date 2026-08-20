@@ -76,6 +76,43 @@
       },
       "additionalProperties": true
     },
+    "knowledge_context": {
+      "type": "object",
+      "properties": {
+        "mode": { "enum": ["PRODUCTION_APPLICABLE", "CONTROLLED_EXCLUDED", "NONE_APPLICABLE", "LEGACY_UNRECORDED"] },
+        "selected_rules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "rule_id": { "type": "string", "minLength": 1 },
+              "path": { "type": "string" },
+              "sha": { "type": "string" },
+              "evidence_maturity": { "type": "string", "pattern": "^E[0-5]$" },
+              "recommendation": { "type": "string" },
+              "selection_reason": { "type": "string" },
+              "freshness": { "enum": ["FRESH", "CURRENT", "AGING", "STALE_UNTIL_REVERIFIED", "UNKNOWN"] },
+              "retest_trigger_active": { "type": "boolean" }
+            },
+            "additionalProperties": true
+          }
+        },
+        "excluded_rules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "rule_id": { "type": "string", "minLength": 1 },
+              "reason": { "enum": ["NOT_APPLICABLE", "STALE", "RETEST_TRIGGERED", "CONTROLLED_BASELINE", "SUPERSEDED", "OTHER"] }
+            },
+            "additionalProperties": true
+          }
+        },
+        "pattern_refs": { "type": "array", "items": { "type": "string" } },
+        "selection_notes": { "type": "array" }
+      },
+      "additionalProperties": true
+    },
     "agent": {
       "type": "object",
       "required": ["client", "model", "instruction_sources", "mcp_mode"],
@@ -119,6 +156,95 @@
         "files_read": { "type": "array", "items": { "type": "string" } },
         "figma_nodes_inspected": { "type": "array", "items": { "type": "string" } },
         "tool_calls": { "type": ["integer", "null"], "minimum": 0 }
+      },
+      "additionalProperties": true
+    },
+    "runtime_contract": {
+      "type": "object",
+      "properties": {
+        "product_viewport_source": { "enum": ["EFFECTIVE_ENVIRONMENT_CONTRACT"] },
+        "product_min_viewport_css_px": { "type": ["number", "null"], "exclusiveMinimum": 0 },
+        "unresolved_product_viewport_fallback_css_px": { "type": "number", "exclusiveMinimum": 0 },
+        "unresolved_product_viewport_fallback_status": { "enum": ["CANDIDATE"] },
+        "accessibility_reflow_probe_css_px": { "type": "number", "const": 320 },
+        "selected_states": {
+          "type": "array",
+          "items": { "enum": ["DEFAULT", "LOADING", "EMPTY", "PARTIAL", "ERROR", "SUCCESS", "DISABLED", "OFFLINE_OR_NETWORK_FAILURE"] },
+          "uniqueItems": true
+        },
+        "form": {
+          "type": "object",
+          "properties": {
+            "applicable": { "type": "boolean" },
+            "ime_tested": { "type": "boolean" },
+            "autofill_tested": { "type": "boolean" },
+            "submit_lifecycle_tested": { "type": "boolean" }
+          },
+          "additionalProperties": true
+        },
+        "font": {
+          "type": "object",
+          "properties": {
+            "applicable": { "type": "boolean" },
+            "fallback_tested": { "type": "boolean" },
+            "delayed_load_tested": { "type": "boolean" },
+            "metric_adjustment_used": { "type": "boolean" },
+            "evidence": { "type": "array" }
+          },
+          "additionalProperties": true
+        },
+        "third_party": {
+          "type": "object",
+          "properties": {
+            "applicable": { "type": "boolean" },
+            "integrations": { "type": "array" },
+            "failure_fallback_tested": { "type": "boolean" },
+            "security_privacy_reviewed": { "type": "boolean" }
+          },
+          "additionalProperties": true
+        },
+        "localization": {
+          "type": "object",
+          "properties": {
+            "applicable": { "type": "boolean" },
+            "languages": { "type": "array", "items": { "type": "string" } },
+            "directions": { "type": "array", "items": { "enum": ["LTR", "RTL", "AUTO"] }, "uniqueItems": true },
+            "bidi_tested": { "type": "boolean" }
+          },
+          "additionalProperties": true
+        },
+        "degradation": {
+          "type": "object",
+          "properties": {
+            "profile": { "enum": ["DEFAULT_PRIORITY", "PROJECT_DEFINED", "NOT_APPLICABLE"] },
+            "adaptations": { "type": "array" }
+          },
+          "additionalProperties": true
+        },
+        "optional_capabilities": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "PRINT_REQUIRED",
+              "PDF_OUTPUT_REQUIRED",
+              "OFFLINE_REQUIRED",
+              "PWA_REQUIRED",
+              "REDUCED_DATA_REQUIRED",
+              "RTL_REQUIRED",
+              "SEO_REQUIRED",
+              "SHARE_METADATA_REQUIRED",
+              "EMBED_SECURITY_REVIEW_REQUIRED",
+              "SECURITY_HEADER_REVIEW_REQUIRED",
+              "CONSENT_REQUIRED",
+              "ANALYTICS_REQUIRED",
+              "ERROR_ROUTE_REQUIRED",
+              "BOT_PROTECTION_REQUIRED",
+              "CACHE_POLICY_REQUIRED",
+              "RUM_REQUIRED"
+            ]
+          },
+          "uniqueItems": true
+        }
       },
       "additionalProperties": true
     },
@@ -204,6 +330,11 @@
       "properties": {
         "observations": { "type": "array" },
         "candidate_rules": { "type": "array" },
+        "confirmed_rules": { "type": "array" },
+        "contradicted_rules": { "type": "array" },
+        "rules_needing_retest": { "type": "array" },
+        "promotion_candidates": { "type": "array" },
+        "demotion_candidates": { "type": "array" },
         "agent_specific": { "type": "array" },
         "project_specific": { "type": "array" }
       },
