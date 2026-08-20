@@ -234,7 +234,8 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 
 		<li class="p-education__step">
 			<p class="p-education__badge"><span class="p-education__badge-no">02</span>学ぶ</p>
-			<h3 class="p-education__step-title">世の中の仕組みを知る</h3>
+			<!-- 2行になるときに Figma と同じ位置で折り返すため、意味の区切りを span で囲んでいます -->
+			<h3 class="p-education__step-title"><span>世の中の仕組み</span><span>を知る</span></h3>
 			<picture class="p-education__photo">
 				<source width="420" height="237" media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/education-2-21376-4801.webp' ); ?>">
 				<img width="233" height="131" src="<?php echo esc_url( $lp_base . 'image/photos/pc/education-2-21378-7946.webp' ); ?>" alt="" loading="lazy" decoding="async">
@@ -248,7 +249,7 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 
 		<li class="p-education__step">
 			<p class="p-education__badge"><span class="p-education__badge-no">03</span>出会う</p>
-			<h3 class="p-education__step-title">先生と一緒に考える</h3>
+			<h3 class="p-education__step-title"><span>先生と一緒に</span><span>考える</span></h3>
 			<picture class="p-education__photo">
 				<source width="420" height="237" media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/education-3-21376-4769.webp' ); ?>">
 				<img width="233" height="131" src="<?php echo esc_url( $lp_base . 'image/photos/pc/education-3-21378-7917.webp' ); ?>" alt="" loading="lazy" decoding="async">
@@ -262,7 +263,7 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 
 		<li class="p-education__step">
 			<p class="p-education__badge"><span class="p-education__badge-no">04</span>ゴール</p>
-			<h3 class="p-education__step-title">望んだ将来を実現させる</h3>
+			<h3 class="p-education__step-title"><span>望んだ将来を</span><span>実現させる</span></h3>
 			<picture class="p-education__photo">
 				<source width="420" height="237" media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/education-4-21376-4741.webp' ); ?>">
 				<img width="233" height="131" src="<?php echo esc_url( $lp_base . 'image/photos/pc/education-4-21378-7889.webp' ); ?>" alt="" loading="lazy" decoding="async">
@@ -713,18 +714,18 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 			<li class="p-links__item" style="--tile-bg: #eee7ff; --tile-accent: #8473aa">
 				<a class="p-links__tile" href="https://www.cku.ac.jp/campuslife/facilities/" target="_blank" rel="noopener">
 					<span class="p-links__label">キャンパス紹介</span>
-					<img width="14" height="13" class="p-links__arrow" src="<?php echo esc_url( $lp_base . 'image/icons/arrow-right.svg' ); ?>" alt="" aria-hidden="true">
+					<span class="p-links__arrow" aria-hidden="true"></span>
 				</a>
 			</li>
 
 			<li class="p-links__item" style="--tile-bg: #ffebd1; --tile-accent: #f5971a">
 				<a class="p-links__tile" href="https://www.cku.ac.jp/" target="_blank" rel="noopener">
 					<span class="p-links__label"><small>数字で見る</small>千葉経済大学</span>
-					<img width="14" height="13" class="p-links__arrow" src="<?php echo esc_url( $lp_base . 'image/icons/arrow-right.svg' ); ?>" alt="" aria-hidden="true">
+					<span class="p-links__arrow" aria-hidden="true"></span>
 				</a>
 			</li>
 
-			<li class="p-links__item" style="--tile-bg: #ffdbe0; --tile-accent: #8473aa">
+			<li class="p-links__item" style="--tile-bg: #ffdbe0; --tile-accent: #8473aa; --tile-shadow: var(--gradient-instagram)">
 				<a class="p-links__tile" href="https://www.instagram.com/chibakeizai_university/" target="_blank" rel="noopener">
 					<span class="p-links__label p-links__label--en">
 						Official Instagram
@@ -732,14 +733,14 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 							<img width="25" height="25" src="<?php echo esc_url( $lp_base . 'image/icons/instagram-outline.svg' ); ?>" alt="" aria-hidden="true">ckckoho
 						</small>
 					</span>
-					<img width="14" height="13" class="p-links__arrow" src="<?php echo esc_url( $lp_base . 'image/icons/arrow-right.svg' ); ?>" alt="" aria-hidden="true">
+					<span class="p-links__arrow" aria-hidden="true"></span>
 				</a>
 			</li>
 
 			<li class="p-links__item" style="--tile-bg: #eafff3; --tile-accent: #06c755">
 				<a class="p-links__tile" href="https://lin.ee/slXdqYb" target="_blank" rel="noopener">
 					<span class="p-links__label">LINE登録</span>
-					<img width="14" height="13" class="p-links__arrow" src="<?php echo esc_url( $lp_base . 'image/icons/arrow-right.svg' ); ?>" alt="" aria-hidden="true">
+					<span class="p-links__arrow" aria-hidden="true"></span>
 				</a>
 			</li>
 

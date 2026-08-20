@@ -23,10 +23,13 @@
    ・並べるのは flex か grid
    ・position: absolute は「箱の外へはみ出すあしらい」だけに使う。
      並べる・そろえるといったレイアウトには使わない。
-     使ってよいのは次の5つだけ（CI で見張っています）:
+     使ってよいのは次だけ（CI で見張っています）:
        .p-voice__balloon::before/after  吹き出しの尻尾
        .p-footer__pagetop               フッター右下のボタン
        .p-mv__oc / __oc-balloon / __oc-arrow   OPEN CAMPUS バッジ一式
+       .p-education__step::before/after       カードの影とカード間の「≫」
+       .p-links__item::before                 丸いリンクの影の円
+       .p-invite の飾り枠
      レイアウトで重ねたい・ずらしたいときは代わりに次を使う:
        重ねる     → grid の同じマス（grid-area: 1 / 1）
        またがせる → マイナスマージン
@@ -106,6 +109,7 @@
 		--fs-card-title:   1.125rem;  /* 18  カード見出し / EDUバッジ */
 		--fs-course-title: 1.25rem;   /* 20  コース名 */
 		--fs-course-check: 0.8125rem; /* 13  コースのチェック項目 */
+		--fs-edu-check:    0.9375rem; /* 15  EDUCATION のチェック項目 */
 		--fs-tile:         1.375rem;  /* 22  丸いリンク */
 		--fs-toggle:       1.125rem;  /* 18  もっと見る */
 
@@ -114,7 +118,6 @@
 		--fs-heading-em:   clamp(2rem, 1.7668rem + 0.995vw, 2.625rem);       /* 32 → 42 */
 		--fs-edu-intro:    clamp(1.25rem, 1.1567rem + 0.398vw, 1.5rem);      /* 20 → 24 */
 		--fs-edu-card:     clamp(1.125rem, 1.0784rem + 0.199vw, 1.25rem);    /* 18 → 20 */
-		--fs-edu-check:    clamp(0.875rem, 0.8517rem + 0.100vw, 0.9375rem);  /* 14 → 15 */
 		--fs-cta-title:    clamp(1.5rem, 1.3134rem + 0.796vw, 2rem);         /* 24 → 32 */
 		--fs-voice-name:   clamp(1rem, 0.8134rem + 0.796vw, 1.5rem);         /* 16 → 24 */
 		--fs-voice-advice: clamp(1rem, 0.9534rem + 0.199vw, 1.125rem);       /* 16 → 18 */
@@ -264,7 +267,7 @@
 	/* --- 見出しの上の黄色いタグ（# REASON など） --- */
 	.c-kicker {
 		display: inline-block;
-		padding: .2em .5em;
+		padding: .1em .4em;   /* Figma は上下 2px / 左右 8px（文字 20px） */
 		background: var(--color-yellow);
 		font-family: var(--font-en);
 		font-size: var(--fs-kicker);
@@ -430,28 +433,46 @@
 	.c-btn--oc:hover .c-btn__icon,
 	.c-btn--oc:focus-visible .c-btn__icon { content: url('../image/icons/open-campus.svg'); }
 
-	/* --- ✓ 付きの箇条書き --- */
+	/* --- チェックボックス付きの箇条書き ---
+	   Figma の印は「白い四角 + うすい灰色の枠 + 右上へはみ出すピンクのチェック」
+	   という1つの絵です（lp/image/icons/check.svg）。
+	   文字の ✓ では形が違うので、画像をそのまま置いています。
+
+	   Figma の数値（EDUCATION / コース 共通）
+	     絵の大きさ    11 × 10px
+	     絵と文字の間  10px（文字は行の先頭から 21px の位置）
+	     行の送り      文字サイズ + 12px（15px なら 27px、13px なら 25px）
+
+	   素材は右に 1px ぶん余白がある 12 × 10px なので、
+	   箱を 12px・間隔を 9px にすると文字が Figma と同じ 21px の位置に来ます。
+
+	   行の高さは Figma の 1.0 ではなく 1.4 にしています（日本語が詰まりすぎるため）。
+	   そのぶん増えた上下の余白は
+	     ・行間  gap から引く（行の送りは Figma どおり）
+	     ・ブロックの外  margin で打ち消す（前後の要素との間隔が Figma どおりになる）
+	   で相殺しています。 */
 	.c-checklist {
 		display: grid;
-		/* Figma では項目が 27px 間隔で並びます。
-		   行の高さ 1.4（≒21px）＋ 間 .4em（≒6px）で同じ間隔になります。
-		   Figma の値は行の高さ 1.0 ですが、日本語は文字が詰まりすぎるため
-		   行の高さは 1.4 にして、間隔のほうで合わせています。 */
-		gap: .4em;
+		gap: calc(12px - .4em);
+		margin-block: -.2em;
 		color: #000;
 		font-size: var(--fs-edu-check);
 		line-height: 1.4;
+		letter-spacing: .05em;
 
 		& li {
 			display: grid;
 			grid-template-columns: auto 1fr;
-			gap: .6em;
+			align-items: start;
+			gap: 9px;
 		}
 
+		/* 絵は1行目の高さの中で上下中央（Figma も文字に対して中央） */
 		& li::before {
-			content: '✓';
-			color: var(--color-pink);
-			font-weight: 700;
+			content: '';
+			width: 12px;
+			height: 1.4em;
+			background: url('../image/icons/check.svg') left center / 12px 10px no-repeat;
 		}
 	}
 
@@ -877,13 +898,27 @@
    カードは「1枚あたり最低 220px」。画面幅なりに 1→2→3→4列 と変わります。
    -------------------------------------------------------------------------- */
 .p-education {
-	padding-block: var(--space-section);
+	/* カードの間隔。Figma は SP 44px → PC 40px（SP のほうが広い） */
+	--edu-gap: clamp(2.5rem, 2.843rem - .398vw, 2.75rem);
+
+	/* Figma: 上 SP 56px → PC 82px / 下 SP 37px → PC 80px（上下で違う） */
+	padding-top: clamp(3.5rem, 2.894rem + 2.587vw, 5.125rem);
+	padding-bottom: clamp(2.3125rem, 1.309rem + 4.279vw, 5rem);
 	background: var(--color-beige);
+	/* カードの影を背景色より前に出すため、ここで重なりの基準を作る
+	   （影は z-index: -1。基準が無いとページの背景まで下がって見えなくなる） */
+	isolation: isolate;
 
 	& .p-education__head {
 		display: grid;
-		gap: clamp(1rem, .6rem + 1.7vw, 2.625rem);
-		margin-bottom: var(--gap-card);
+		gap: 1.5rem;   /* Figma: 見出しブロックと説明ブロックの間 24px（SP / PC 共通） */
+		/* Figma: 説明の最後の行からカードまで SP 32px → PC 50px */
+		margin-bottom: clamp(2rem, 1.58rem + 1.791vw, 3.125rem);
+	}
+
+	/* SP は見出しを中央ぞろえ。PC は下の @media で左ぞろえの横並びにする */
+	& .p-education__title {
+		text-align: center;
 	}
 
 	& .p-education__title .c-kicker {
@@ -891,74 +926,116 @@
 	}
 
 	& .p-education__heading {
-		margin-top: .5em;
+		margin-top: .5em;   /* Figma: タグから SP 16px / PC 20px */
 		font-size: var(--fs-heading-em);
 		font-weight: 500;
-		line-height: 1.3;
+		line-height: 1;     /* Figma は行の高さ 1.0 */
+		letter-spacing: .05em;
 	}
 
+	/* SP は「線（横）→ 見出し → 説明」の縦並び。
+	   PC は「線（縦）｜ 見出し + 説明」の横並び（下の @media）。
+	   縦の間隔は要素ごとに違うので gap は使わず margin で指定します。 */
 	& .p-education__intro {
-		border-left: 2px solid #7fc9ed;
-		padding-left: 1.4rem;
+		display: grid;
+		gap: 0;
 	}
 
+	/* Figma の Vector 5。ただの線ではなく、途中に「見出しを指す切り欠き」があります。
+	   線は幅なりに伸ばし、切り欠きだけ実寸のまま真ん中に置きたいので、
+	   背景を「線・線・切り欠き」の3枚に分けています。
+	   色は素材（青 #38a1db）にも入っています。 */
+	& .p-education__intro::before {
+		content: '';
+		height: 20px;
+		background:
+			url('../image/icons/edu-accent-notch-up.svg') no-repeat center bottom / 18px 20px,
+			linear-gradient(var(--color-blue) 0 0) no-repeat left  bottom / calc(50% - 9px) 1px,
+			linear-gradient(var(--color-blue) 0 0) no-repeat right bottom / calc(50% - 9px) 1px;
+	}
+
+	/* オレンジの帯は Figma では文字の下端にかかる高さ 8px の棒です。
+	   文字の箱より 4px 下へはみ出すので、そのぶんを padding で確保しています。
+	   PC は Figma の帯が文字より 50px 長い（文字 352px / 帯 402px）。 */
 	& .p-education__intro-title {
-		display: inline;
+		width: fit-content;
+		margin-top: 1.5rem;    /* Figma: 線から 24px */
+		margin-inline: auto;   /* SP は中央。PC は下の @media で左へ */
+		padding-bottom: 4px;
 		font-size: var(--fs-edu-intro);
 		font-weight: 500;
-		line-height: 1.8;
-		background: linear-gradient(transparent 70%, var(--color-orange) 0);
+		line-height: 1;        /* Figma は行の高さ 1.0 */
+		letter-spacing: .05em;
+		background: linear-gradient(var(--color-orange) 0 0) no-repeat 0 100% / 100% 8px;
 	}
 
 	& .p-education__intro-text {
 		max-width: var(--measure);
-		margin-top: .8em;
+		/* Figma: 見出しから SP 24px / PC 16px。帯のはみ出し 4px を引いた値 */
+		margin-top: clamp(.75rem, 1.4366rem - .796vw, 1.25rem);
 		color: #000;
 		font-size: var(--fs-body);
+		line-height: 1.6;   /* Figma */
+		letter-spacing: .05em;
 		text-wrap: pretty;
 	}
 
 	/* カードの並びだけ本文より広く取ります。
 	   Figma は画面端から 64px の位置に、281px のカードを 40px 間隔で4枚。
-	   本文（l-container 1160px）より広いので、ここだけ別の幅にしています。 */
+	   本文（l-container 1160px）より広いので、ここだけ別の幅にしています。
+	   影が右へ 8px ずれるぶんを padding で確保しているので、
+	   Figma と同じ「カード 281px」「影の右端まで 1252px」に収まります。 */
 	& .p-education__list {
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(min(100%, 13.75rem), 1fr));
-		gap: var(--gap-card);
+		gap: var(--edu-gap);
 		width: min(78.25rem, 100% - var(--gutter) * 2);   /* 1252px */
+		padding-inline-end: 8px;
 		margin-inline: auto;
 	}
 
 	/* SP は「バッジ」「写真＋見出しの横並び」「チェック項目」の3段。
 	   写真を全幅にすると縦に伸びすぎるため、元デザインどおり左に小さく置く。
 	   PC では下の @media で縦積みに戻す。 */
-	/* カードとカードの間に「≫」を置く（Figma の f101）。
-	   カードの外側へ出すあしらいなので absolute を使う。
-	   SP は縦並びなので下向きにする。 */
 	& .p-education__step {
+		--card-pad: 1rem;   /* Figma: カードの左右 SP 16px（PC は 24px） */
+
 		position: relative;
 		display: grid;
-		/* 列幅は % で明示する。auto 列の中で width:% を使うと
-		   幅が決まらず、右の見出しが1文字ずつ縦に折り返してしまう */
-		grid-template-columns: 40% 1fr;
+		/* Figma: 写真 140px ＋ 間 16px ＋ 見出し 147px */
+		grid-template-columns: minmax(0, 140fr) minmax(0, 147fr);
 		align-items: center;
 		gap: 1rem;
-		padding-bottom: 1.5rem;
+		/* 左右は「枠線を含めてカードの端から --card-pad」になるよう 1px 引く。
+		   Figma の枠線は境界の真ん中に引かれているため（下 32px は Figma の値） */
+		padding: 0 calc(var(--card-pad) - 1px) 2rem;
 		border: 1px solid var(--color-text);
 		background: var(--color-white);
-		box-shadow: 8px 8px 0 0 var(--color-purple);
 	}
 
+	/* 右下へ 8px ずらした影。Figma は青 → 紫のグラデーションなので
+	   box-shadow では出せず、カードの後ろへ同じ大きさの箱を敷いています。 */
+	& .p-education__step::before {
+		content: '';
+		position: absolute;
+		z-index: -1;
+		inset: -1px;   /* 枠線を含めたカードと同じ大きさにする */
+		translate: 8px 8px;
+		background: linear-gradient(270deg, var(--color-purple), var(--color-blue));
+	}
+
+	/* カードとカードの間に置く「≫」（Figma の f101）。
+	   カードの外へ出すあしらいなので absolute を使う。
+	   SP は縦並びなので下向き。箱は SP 20×17px / PC 24×20px（Figma の実寸）。 */
 	& .p-education__step:not(:last-child)::after {
 		content: '';
 		position: absolute;
 		top: 100%;
 		left: 50%;
-		translate: -50% 0;
-		margin-top: calc(var(--gap-card) / 2);
-		/* Figma はふつうの矢印ではなく「≫」（二重の山かっこ）です */
-		width: 1.5rem;
-		height: 1.25rem;
+		/* カードとカードの間隔のちょうど中央に置く */
+		translate: -50% calc(var(--edu-gap) / 2 - 50%);
+		width: 1.25rem;
+		height: 1.0625rem;
 		background: var(--color-text);
 		-webkit-mask: url('../image/icons/arrow-double-right.svg') center / contain no-repeat;
 		mask: url('../image/icons/arrow-double-right.svg') center / contain no-repeat;
@@ -975,19 +1052,20 @@
 	& .p-education__photo {
 		grid-column: 1;
 		grid-row: 2;
-		width: 100%;
+
+		/* 縦横比は素材のまま（PC 233×131 / SP 420×237 = Figma の実寸） */
+		& img {
+			width: 100%;
+		}
 	}
 
-	& .p-education__step-title {
-		grid-column: 2;
-		grid-row: 2;
-	}
-
-	/* 左上の見出しタブ。枠線の上に乗せるため 1px ぶん外へ出しています。 */
+	/* 左上の見出しタブ。枠線とカードの左右余白の外へ出して角に貼り付けます。 */
 	& .p-education__badge {
-		align-self: flex-start;
-		margin: -1px 0 0 -1px;
-		padding: .7em 1.1em;
+		justify-self: start;
+		align-self: start;
+		margin: -1px 0 0 calc(-1 * var(--card-pad));
+		/* Figma: 上下 SP 8px → PC 12px / 左右 16px */
+		padding: clamp(.5rem, .4067rem + .398vw, .75rem) 1rem;
 		background: var(--color-purple);
 		color: var(--color-white);
 		font-size: var(--fs-small);
@@ -999,41 +1077,48 @@
 	/* 「01 / スタート」の数字。あとの「/」は飾りなので CSS で足します */
 	& .p-education__badge-no {
 		font-family: var(--font-en);
-		font-size: 1.5em;
-		font-weight: 600;
+		font-size: 1.375rem;   /* Figma: 22px（SP / PC 同じ） */
+		font-weight: 500;
 
 		&::after {
 			content: '/';
-			margin-inline: .35em;
-			font-size: .6667em;   /* 数字 22px に対して 14px */
+			margin-inline: .5rem;   /* Figma: 前後 8px */
+			color: rgb(255 255 255 / .4);
+			font-family: var(--font-jp);
+			font-size: var(--fs-small);
 			font-weight: 500;
 		}
 	}
 
 	& .p-education__step-title {
-		margin-inline: 1.5rem;
+		grid-column: 2;
+		grid-row: 2;
 		color: #000;
 		font-size: var(--fs-edu-card);
 		font-weight: 500;
-		line-height: 1.2;   /* Figma は 20px の1行ちょうど */
+		/* Figma は行の高さ 1.0 だが、2行になったとき詰まりすぎるので 1.3。
+		   増えたぶんは PC の上下の margin から引いています */
+		line-height: 1.3;
+		letter-spacing: .05em;
 		text-align: center;
 		text-wrap: balance;
-	}
 
-	& .p-education__photo {
-		margin-inline: 1.5rem;
-
-		& img {
-			width: 100%;
-			aspect-ratio: 4 / 3;
-			object-fit: cover;
-			/* 上を基準に切り取る。中央基準だと人物の頭が切れるため */
-			object-position: center top;
+		/* 2行になるときは意味の区切りで折り返す（HTML 側で span で囲んだ位置）。
+		   単語の途中で切れると読みにくいためです。 */
+		& span {
+			display: inline-block;
 		}
 	}
 
-	& .c-checklist {
-		margin-inline: 1.5rem;
+	/* Figma の項目のブロックは 233px 幅。SP ではカードの中で中央（端から 51px）。
+	   長い項目は Figma でもこの枠から右へはみ出して1行に収まっているので、
+	   足りないときだけカードの左右余白の半分まで広げます
+	   （カードの幅は変わらないので、これ以上はみ出して横スクロールにはなりません）。 */
+	& .p-education__step .c-checklist {
+		width: max-content;
+		min-width: min(100%, 14.5625rem);   /* Figma: 233px */
+		max-width: calc(100% + var(--card-pad) / 2);
+		margin-inline: auto;
 	}
 
 	/* PC は「見出し | リード文」の横並び、カードは縦積みに戻す */
@@ -1043,6 +1128,40 @@
 			align-items: center;
 		}
 
+		& .p-education__title {
+			text-align: left;
+		}
+
+		/* 線は文字の左。切り欠きは見出し側（左）を向く。
+		   Figma の線は文字ブロックより上下へ 10px ぶん長い */
+		& .p-education__intro {
+			grid-template-columns: 20px 1fr;
+			column-gap: 23px;   /* Figma: 線と文字の間 */
+		}
+
+		& .p-education__intro::before {
+			grid-row: 1 / span 2;
+			width: 20px;
+			height: auto;
+			margin-block: -10px;
+			background:
+				url('../image/icons/edu-accent-notch.svg') no-repeat right center / 20px 18px,
+				linear-gradient(var(--color-blue) 0 0) no-repeat right top    / 1px calc(50% - 9px),
+				linear-gradient(var(--color-blue) 0 0) no-repeat right bottom / 1px calc(50% - 9px);
+		}
+
+		& .p-education__intro-title {
+			grid-column: 2;
+			margin-top: 0;
+			margin-inline: 0;
+			padding-right: 3.125rem;   /* Figma: 帯だけ文字より 50px 長い */
+		}
+
+		& .p-education__intro-text {
+			grid-column: 2;
+			max-width: 31.5rem;   /* Figma: 504px（2行に収まる幅） */
+		}
+
 		/* PC は必ず4列。
 		   幅なりに列数が変わると、折り返した行の右端のカードから
 		   矢印が画面の外へ出てしまうためです（Figma も PC は4列）。 */
@@ -1050,28 +1169,43 @@
 			grid-template-columns: repeat(4, minmax(0, 1fr));
 		}
 
+		/* 見出しの列は中身の幅で決まるので、今の文言は1行に収まります。
+		   文言が長くなったときは、はみ出させずに折り返します（nowrap は付けない）。 */
+
+		/* PC は「バッジ → 見出し → 写真 → 項目」の縦積み。
+		   Figma の縦の間隔は 24 / 16 / 19px と一定でないので gap は使わない。
+		   見出しは行の高さ 1.3 のぶん上下に 3px 余白を持つので、その分を引いています。 */
 		& .p-education__step {
+			--card-pad: 1.5rem;   /* Figma: カードの左右 24px */
+
 			display: flex;
 			flex-direction: column;
 			align-items: stretch;
+			gap: 0;
+			padding-bottom: 1.75rem;   /* Figma: 下 28px */
+		}
+
+		& .p-education__step-title {
+			margin-top: 1.3125rem;   /* Figma: バッジから 24px */
+		}
+
+		& .p-education__photo {
+			margin-top: .8125rem;    /* Figma: 見出しから 16px */
+		}
+
+		& .p-education__step .c-checklist {
+			margin-top: 1rem;        /* Figma: 写真から 19px */
+			margin-inline: 0;        /* PC はカードの内側の左端から始まる */
 		}
 
 		/* PC は横並びなので、矢印はカードの右側に右向きで置く */
 		& .p-education__step:not(:last-child)::after {
 			top: 50%;
 			left: 100%;
-			translate: 0 -50%;
-			margin-top: 0;
-			margin-left: calc(var(--gap-card) / 2 - .625rem);
+			translate: calc(var(--edu-gap) / 2 - 50%) -50%;
+			width: 1.5rem;      /* Figma: 24 × 20px */
+			height: 1.25rem;
 			rotate: 0deg;
-		}
-
-		& .p-education__photo {
-			width: auto;
-		}
-
-		& .p-education__heading {
-			white-space: nowrap;
 		}
 	}
 }
@@ -1667,18 +1801,49 @@
    LINKS — 丸いリンクボタン4つ
 
    色は HTML 側の style="--tile-bg / --tile-accent" で1つずつ指定しています。
+   Instagram だけ影がグラデーションなので --tile-shadow も渡しています。
    -------------------------------------------------------------------------- */
 .p-links {
 	/* 元デザインは上下の余白を持たず、前後のセクションとの間隔で調整していた */
 	padding-block: clamp(2.5rem, 1.6rem + 3.8vw, 4.5rem);
 
+	/* 影の円をずらす量（Figma: SP 7px → PC 10px）と、
+	   円と円の間隔（Figma: SP 26px → PC 34px）。
+	   並びと影の両方で使うので、セクションの先頭で決めています。 */
+	--tile-offset: clamp(.4375rem, .3675rem + .2985vw, .625rem);
+	--tile-gap:    clamp(1.625rem, 1.4384rem + .796vw, 2.125rem);
+
+	/* Instagram の影だけ、Figma は4色のグラデーション（不透明度 70%）です。
+	   向きは SP と PC で逆（SP は上下反転、PC は左右反転）なので、
+	   下の @media で角度だけ差し替えています。
+	   HTML 側の style="--tile-shadow: var(--gradient-instagram)" から使います。 */
+	--gradient-instagram-angle: 32.62deg;
+	--gradient-instagram: linear-gradient(
+		var(--gradient-instagram-angle),
+		rgb(76 100 211 / .7)  13.9%,
+		rgb(207 46 146 / .7)  31.81%,
+		rgb(242 105 57 / .7)  59.03%,
+		rgb(255 221 131 / .7) 85.53%
+	);
+
+	@media (min-width: 768px) {
+		--gradient-instagram-angle: 212.62deg;
+	}
+
 	/* 4つで1セットなので、余りが出ないよう 2列 か 4列 だけにしています
-	   （auto-fit にすると 3列 になって1つだけ余る幅ができてしまうため）。 */
+	   （auto-fit にすると 3列 になって1つだけ余る幅ができてしまうため）。
+
+	   右下へずらす影のぶんを padding で並びの中に確保しています。
+	   これを入れないと円が Figma より大きくなり（PC 250px → 262px）、
+	   いちばん右の影が画面端の余白へはみ出します。
+	   最大幅 1112px は Figma の並び全体の幅です。 */
 	& .p-links__list {
 		display: grid;
 		grid-template-columns: repeat(2, 1fr);
-		gap: clamp(1.25rem, .6rem + 2.6vw, 1.5rem);
-		max-width: 70rem;
+		gap: var(--tile-gap);
+		padding-inline-end: var(--tile-offset);
+		padding-block-end: var(--tile-offset);
+		max-width: 69.5rem;   /* 1112px */
 		margin-inline: auto;
 	}
 
@@ -1686,6 +1851,22 @@
 		& .p-links__list {
 			grid-template-columns: repeat(4, 1fr);
 		}
+	}
+
+	& .p-links__item {
+		position: relative;
+	}
+
+	/* Figma は「色の付いた円を右下へずらして置き、その上に本体の円を重ねる」
+	   組み方です。Instagram だけ下の円が4色のグラデーションなので、
+	   単色しか置けない box-shadow ではなく円そのものとして持たせています。 */
+	& .p-links__item::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		translate: var(--tile-offset) var(--tile-offset);
+		border-radius: 50%;
+		background: var(--tile-shadow, var(--tile-accent));
 	}
 
 	& .p-links__tile {
@@ -1696,21 +1877,19 @@
 		font-size: var(--fs-tile);
 		font-weight: 400;
 
-		max-width: 17.5rem;
-		margin-inline: auto;
+		/* 影の円より前に出すためだけの relative（重なり順の指定） */
+		position: relative;
 		aspect-ratio: 1;
-		width: 100%;
 		border: 1px solid var(--color-text);
 		border-radius: 50%;
 		background: var(--tile-bg);
-		box-shadow: clamp(.375rem, .2rem + .7vw, .625rem) clamp(.375rem, .2rem + .7vw, .625rem) 0 var(--tile-accent);
 		text-align: center;
-		transition: translate .2s ease, box-shadow .2s ease;
+		transition: translate .2s ease;
 
+		/* 影の円は動かないので、本体だけ近づいて重なりが浅くなります */
 		&:hover,
 		&:focus-visible {
 			translate: 4px 4px;
-			box-shadow: .375rem .375rem 0 var(--tile-accent);
 		}
 	}
 
@@ -1732,6 +1911,18 @@
 		font-size: var(--fs-tile-en);
 		font-weight: 400;
 
+		/* Figma は SP だけ「Official」「Instagram」の2行組みです。
+		   1行にすると幅が円の直径（155px）とほぼ同じで、少しでも狭い画面では
+		   円の外へはみ出します。折り返し位置を決めるための上限で、
+		   「Instagram」1語（約5.1em）と全文（約9.4em）の間なら
+		   フォントが変わっても2行組みになります。
+		   PC は Figma でも1行なので外します。 */
+		max-width: 7em;
+
+		@media (min-width: 768px) {
+			max-width: none;
+		}
+
 		& small {
 			display: flex;
 			align-items: center;
@@ -1741,11 +1932,21 @@
 			font-size: var(--fs-copyright);
 		}
 
-		& small img { width: 1.1em; }
+		/* Instagram のマークは Figma の実寸 SP 13px → PC 14px。
+		   em で文字に連動させると PC で 15.4px になり1割大きくなります。 */
+		& small img { width: clamp(.8125rem, .7892rem + .0995vw, .875rem); }
 	}
 
+	/* 矢印の色はタイルごとに違います（Figma: 紫 / 橙 / 紫 / 緑）。
+	   塗りを持つ <img> だと1色に固定されてしまうため、
+	   形だけを mask で抜いて --tile-accent を流し込んでいます。
+	   大きさは Figma の実寸 SP 16×15px → PC 20×19px。 */
 	& .p-links__arrow {
-		width: clamp(.9375rem, .6rem + 1.2vw, 1.25rem);
+		width: clamp(1rem, 0.9067rem + 0.398vw, 1.25rem);
+		aspect-ratio: 20 / 19;
+		background: var(--tile-accent);
+		-webkit-mask: url('../image/icons/arrow-right.svg') center / contain no-repeat;
+		mask: url('../image/icons/arrow-right.svg') center / contain no-repeat;
 	}
 }
 
