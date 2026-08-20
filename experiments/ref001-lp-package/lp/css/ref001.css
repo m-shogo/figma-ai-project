@@ -355,9 +355,9 @@
 		/* 折り返しは禁止しません。今の文言は1行に収まりますが、
 		   長い文言に変えたときは横へはみ出すより2行になるほうが安全です。 */
 		text-wrap: balance;
-		filter: drop-shadow(2px -2px 0 #555);
 
-		/* 下向きの尻尾。正方形を45度回して2辺だけ線を残しています */
+		/* 下向きの尻尾（Figma: 13×17px）。
+		   正方形を45度回して2辺だけ線を残しています。 */
 		&::after {
 			content: '';
 			position: absolute;
@@ -779,8 +779,12 @@
 	& .p-mv__oc-balloon {
 		position: absolute;
 		bottom: 82%;
-		left: 50%;
-		translate: -50% 0;
+		/* left だけで中央に置くと、使える幅が「左半分」になってしまい
+		   文字が折り返します。左右を 0 にして margin: auto で中央へ寄せると、
+		   円の幅いっぱいを使えます。 */
+		left: 0;
+		right: 0;
+		margin-inline: auto;
 	}
 
 	& .p-mv__oc-title {
@@ -1374,7 +1378,7 @@
 	   上下は SP 32px → PC 40px。 */
 	& .p-voice__inner {
 		display: grid;
-		gap: clamp(1.25rem, .8rem + 1.9vw, 1.75rem);
+		gap: 2rem;   /* Figma: 顔写真のかたまりから下の写真まで SP / PC とも 32px */
 		padding-block: clamp(2rem, 1.8134rem + 0.796vw, 2.5rem);
 		padding-inline: clamp(1rem, 0.0672rem + 3.9801vw, 3.5rem);
 	}
@@ -1402,9 +1406,9 @@
 	   線は 1px なので、左と上では面の外側に、右と下では面の内側に見えます。 */
 	& .p-voice__balloon {
 		position: relative;   /* 尻尾と輪郭線の基準 */
-		/* SP は写真の下へ 68px もぐり込ませ、PC は 30px 離す。
-		   上の 18px は、写真が吹き出しより少し上に出るぶん（Figma）。 */
-		margin-block: 1.125rem 0;
+		/* 白い面は輪郭線より下にずれます（Figma: SP 26px / PC 8px）。
+		   輪郭線のほうが顔写真の上端とそろいます。 */
+		margin-block: clamp(.5rem, 2.0448rem - 1.791vw, 1.625rem) 0;
 		/* SP は写真の下へ 61px もぐり込み、PC は 56px 離れます（Figma） */
 		margin-inline: clamp(-3.8125rem, -6.5411rem + 11.6418vw, 3.5rem) 0;
 		padding: clamp(1.25rem, .9rem + 1.5vw, 1.75rem) 1.5rem;
@@ -1549,6 +1553,7 @@
 		color: var(--color-white);
 		font-size: var(--fs-voice-advice);
 		line-height: 1.4;
+		letter-spacing: .05em;
 		text-align: center;
 		text-wrap: balance;   /* 長い文言でもはみ出さず2行になる */
 
@@ -1573,7 +1578,6 @@
 		& .p-voice__profile { align-items: center; }
 
 		& .p-voice__balloon {
-			margin-block: 0;
 			padding-inline: 2.5rem;   /* Figma: 白い面の中の左右 40px */
 		}
 
@@ -1587,6 +1591,9 @@
 			justify-content: space-between;
 		}
 
+		/* Figma では右の本文が写真より 20px 下から始まります */
+		& .p-voice__detail-body { padding-top: 1.25rem; }
+
 		& .p-voice__points {
 			grid-template-columns: auto 1fr;
 			align-items: center;
@@ -1597,7 +1604,9 @@
 		& .p-voice__advice {
 			grid-template-columns: auto 1fr;
 			align-items: start;
-			gap: 2rem;
+			/* Figma: 紫の角丸の右端（尻尾込み）から本文まで。
+			   尻尾は箱の外に出ているので、そのぶんを足して 44px */
+			gap: 2.75rem;
 		}
 
 		/* PC は尻尾が右向き（Figma 13×8px） */
@@ -1631,14 +1640,22 @@
 		margin-bottom: var(--gap-card);
 	}
 
+	/* 他の見出しと同じ組み方です。
+	   Figma では「先輩たち」も太さは通常と同じ 500 で、大きさだけ 42px。
+	   太字（900）はコースの「７」だけです。 */
 	& .p-messages__heading {
 		font-size: var(--fs-heading);
 		font-weight: 500;
-		line-height: 1.5;
+		line-height: calc(var(--fs-heading-em) * 1.3);
+		letter-spacing: .05em;
 
 		& strong {
 			font-size: var(--fs-heading-em);
-			font-weight: 900;
+			font-weight: 500;
+		}
+
+		@media (min-width: 768px) {
+			line-height: 1;
 		}
 	}
 
