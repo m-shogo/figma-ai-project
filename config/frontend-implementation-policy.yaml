@@ -5,12 +5,14 @@ policy_lifecycle:
   canonical_doc: docs/frontend-implementation-standard.md
   pattern_library: docs/frontend-pattern-library.md
   maintainability_qa: docs/frontend-maintainability-qa.md
+  repeatable_content_doc: docs/frontend-repeatable-content.md
 
 objectives:
   - VISUAL_FIDELITY
   - FINDABILITY
   - LOCALITY
   - CONTENT_RESILIENCE
+  - REPEATABLE_CONTENT_RESILIENCE
   - RESPONSIVE_RESILIENCE
   - INTERACTION_ACCESSIBILITY
   - SIMPLICITY
@@ -135,6 +137,43 @@ content_resilience:
     browser_zoom_200_when_required: true
     user_font_enlargement_when_relevant: true
 
+repeatable_content:
+  same_format_sequence_should_trigger_repeatability_review: true
+  do_not_force_cms_conversion: true
+  parent_owns_collection_layout: true
+  item_owns_internal_layout: true
+  stable_item_dom_shape: prefer
+  ordinary_count_change_should_not_require_css_patch: true
+  do_not_encode_semantic_role_only_by_current_index: true
+  semantic_modifier_or_data_preferred_for_meaningful_variant: true
+  nth_child_is_not_globally_banned: true
+  nth_child_review:
+    good_reasons:
+      - AUTHORED_ALTERNATION
+      - ZEBRA_PATTERN
+      - FIRST_LAST_BOUNDARY
+      - ORDER_IS_THE_SEMANTIC_RULE
+    suspicious_reasons:
+      - CURRENT_COUNT_POSITION_PATCH
+      - CENTER_LAST_ITEM_BECAUSE_COUNT_IS_CURRENTLY_ODD
+      - ITEM_SPECIFIC_GEOMETRY_PATCH
+  repeatable_candidates:
+    - CARD
+    - COURSE
+    - STUDENT_VOICE
+    - FAQ
+    - NEWS
+    - STAFF
+    - LOGO
+    - STEP
+    - FEATURE
+    - GALLERY
+    - SLIDER_ITEM
+    - CTA_LINK
+  optional_fields_should_have_defined_behavior: true
+  js_count_and_state_follow_actual_dom_or_data: true
+  future_cms_conversion_should_not_require_unnecessary_css_redesign: true
+
 cardinality_resilience:
   consider:
     - ZERO_ITEMS
@@ -143,6 +182,7 @@ cardinality_resilience:
     - PLUS_ONE
     - MINUS_ONE
     - OPTIONAL_FIELD_MISSING
+    - EDITABLE_ORDER_CHANGE
   adding_one_item_should_not_require_css_by_default: true
 
 media:
@@ -204,12 +244,17 @@ php_wordpress_acf:
     - ESCAPE
     - RENDER_MARKUP
   scattered_data_fetch_logic: avoid
+  repeater_migration:
+    preserve_item_markup_when_reasonable: true
+    avoid_full_css_redesign_for_static_to_repeater_transition: true
+    unique_ids_for_repeated_interactions: required
 
 accessibility:
   semantic_controls_required: true
   preserve_keyboard_focus_behavior: true
   reduced_motion_when_animation_exists: review
   touch_pointer_policy_from_company_environment: true
+  repeated_content_unique_ids: required_when_ids_are_used
 
 maintainability_qa:
   dimensions:
@@ -217,6 +262,8 @@ maintainability_qa:
     - LOCALITY
     - CONTENT_MUTATION
     - CARDINALITY_MUTATION
+    - ORDER_MUTATION
+    - OPTIONAL_FIELD_MUTATION
     - RESPONSIVE_RESILIENCE
     - HUMAN_REPAIR_SCENARIO
   target_css_base_definition_count_per_owner: 1
@@ -230,6 +277,13 @@ smell_combinations:
       - MANY_ABSOLUTE_CHILDREN
       - REPEATED_XY_OFFSETS
       - DUPLICATE_SELECTOR_OVERRIDES
+  repeater_position_patch:
+    severity: STRONG_WARNING
+    indicators:
+      - MANY_NTH_CHILD_RULES
+      - ITEM_SPECIFIC_WIDTH_HEIGHT
+      - ITEM_SPECIFIC_XY_OFFSETS
+      - HARD_CODED_ITEM_COUNT_IN_JS
 
 exceptions:
   allowed: true
@@ -263,6 +317,7 @@ final_definition:
     - OWNER_SEARCHABILITY
     - NO_UNEXPLAINED_OVERRIDE_ACCUMULATION
     - EDITABLE_CONTENT_MUTATION_RESILIENCE
+    - REPEATABLE_CONTENT_RESILIENCE
     - REQUIRED_ENVIRONMENT_RESILIENCE
     - INTENTIONAL_EXCEPTIONS
     - NO_TEMPORARY_FINAL_FIX_LAYER
