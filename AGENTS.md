@@ -41,11 +41,14 @@ Technical implementation precedence:
 ```text
 COMPANY POLICY
 → EXISTING CODEBASE / DESIGN SYSTEM
+→ FRONTEND IMPLEMENTATION STANDARD
 → FIGMA IMPLEMENTATION EVIDENCE
 → AGENT INFERENCE
 ```
 
 Company Policyはbrowser/device support、reset/base/environment CSS、breakpoints、approved libraries、folder/CMS/ACF、interaction、images、visual tolerance等の最上位technical constraint。
+
+Frontend Implementation Standardは、Company/既存codebaseで未確定なFrontend設計判断について、人間が後から検索・理解・修正しやすく、content/CMS/responsive変更へ耐える実装を作る共通defaultとして扱う。
 
 Company PolicyとFigma visual/behaviorが衝突したら、勝手にredesignせず`CONFLICT`として記録する。
 
@@ -55,6 +58,8 @@ Canonical:
 
 - `docs/company-policy-contract.md`
 - `docs/device-environment-policy.md`
+- `docs/frontend-implementation-standard.md`
+- `config/frontend-implementation-policy.yaml`
 
 ## Production default
 
@@ -81,6 +86,7 @@ Scheduled Official Update Radar
 → FULL PAGE capture for ALL REQUIRED environments
 → Relevant interaction QA for ALL relevant REQUIRED environments
 → Targeted Repair
+→ Maintainability / Mutation QA where relevant
 → Clean Replay
 → Knowledge Promotion
 ```
@@ -156,6 +162,31 @@ Environment adaptationには必要に応じて:
 を置く。
 
 Shared foundationはSection workerが勝手に変更しない。
+
+## Frontend implementation / human maintainability
+
+Frontend実装はVisual Fidelityだけで完成判定しない。
+
+- Figmaのframe寸法/座標を、その理由だけで固定`width`/`height`/`min-*`/absoluteへ転写しない。
+- `position:absolute`や固定寸法は禁止ではない。Hero artwork、asset固有寸法、UI contract等、意図と不変条件を説明できる場合は普通に使う。
+- 通常contentはNormal Flow / Flex / Grid等、content changeへ追従できるlayoutを先に検討する。
+- CSS property使用件数をKPIにしない。property-banを回避するための巨大negative margin/translate等へ置換しない。
+- `l- / c- / p- / is-` + BEM系のowner/searchabilityを安定した命名contractとして扱う。
+- BEM base selectorは原則flat。Native CSS nestingはstate/pseudo/conditional co-locationを中心に使い、deep descendant nestingでDOM依存とspecificityを増やさない。
+- 1 Block / Elementのbase CSSは原則1 canonical location。Visual修正をstylesheet末尾の`final fixes`/overrideとして積み上げない。
+- editable textは明示的な1行contractが無い限りwrap可能と考え、heading 1→2→3行、body長文化等のmutationをRelevant scopeで確認する。
+- 同じformatのcontentが連続する場合、将来Repeater/loop/CMS dataになる可能性を確認する。CMS化そのものを強制せず、parentがcollection layout、itemが内部layoutを所有する構造をdefaultとする。
+- repeater候補は件数・順番・文言量・optional field変更で不要なCSS patchを要求しないことを目標にする。意味のあるvariantを現在の`nth-child(N)`だけへ埋め込まない。
+- 同じformatのitemはstable DOM shapeを保ち、ACF/API等へ移行しても不要なHTML/CSS全面改修を発生させない。
+- Visual QAで差分を見つけたらcanonical ownerを直す。同じ箇所へ2回以上patchが必要なら局所layoutの再設計を検討する。
+
+Canonical:
+
+- `docs/frontend-implementation-standard.md`
+- `config/frontend-implementation-policy.yaml`
+- `docs/frontend-repeatable-content.md`
+- `docs/frontend-maintainability-qa.md`
+- `docs/frontend-pattern-library.md`
 
 ## Epistemic states
 
