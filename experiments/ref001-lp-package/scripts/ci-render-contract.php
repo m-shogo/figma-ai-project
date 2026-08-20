@@ -122,7 +122,8 @@ $absolute_allowlist = array(
 	'p-mv__oc'            => 'OPEN CAMPUS バッジ（写真へ重ねる）',
 	'p-mv__oc-balloon'    => 'バッジの吹き出し',
 	'p-mv__oc-arrow'      => 'バッジの矢印',
-	'p-education__step'   => 'カードとカードの間に置く矢印',
+	'p-education__step'   => 'カードの影（青→紫のグラデーション）とカード間の矢印',
+	'p-links__item'       => '丸いリンクの影の円（本体の円の外へずらして重ねる）',
 	'.p-invite'           => 'INVITE の内側の飾り枠',
 );
 
