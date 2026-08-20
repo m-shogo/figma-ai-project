@@ -40,6 +40,10 @@ common_checklist:
   - LANGUAGE_AND_RUNTIME
   - BUILD_AND_PACKAGE_MANAGER
   - STYLING_ARCHITECTURE
+  - FRONTEND_MAINTAINABILITY_STANDARD
+  - CSS_OWNER_AND_SEARCHABILITY
+  - CONTENT_MUTATION_PLAN
+  - REPEATABLE_CONTENT_ASSESSMENT
   - COMPONENT_REUSE_POLICY
   - ROUTING_DECISION
   - DATA_SOURCE_DECISION
@@ -120,6 +124,8 @@ conditional_checklists:
     - ACF_FIELD_GROUP_OWNERSHIP
     - ACF_IMAGE_RETURN_FORMAT
     - ACF_REPEATER_FLEXIBLE_BLOCK_DECISION
+    - ACF_REPEATER_CARDINALITY_AND_OPTIONAL_FIELDS
+    - ACF_STATIC_TO_REPEATER_MARKUP_STABILITY
     - ACF_KEY_STABILITY
     - ACF_EXPORT_JSON_REQUIREMENT
     - ACF_LOCAL_JSON_REQUIREMENT
@@ -130,4 +136,7 @@ rules:
   company_policy_may_override_user_selection: true
   repository_evidence_may_raise_conflict: true
   explicit_conflict_resolution_required_before_freeze: true
+  frontend_maintainability_standard_required: true
+  repeatable_content_is_assessed_without_forcing_cms_conversion: true
+  editable_content_requires_mutation_plan_when_relevant: true
   acf_requires_importable_json_delivery: true
