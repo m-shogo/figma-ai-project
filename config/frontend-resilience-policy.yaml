@@ -1,0 +1,146 @@
+schema_version: 1
+status: ACTIVE
+canonical_docs:
+  implementation_standard: docs/frontend-implementation-standard.md
+  maintainability_qa: docs/frontend-maintainability-qa.md
+  repeatable_content: docs/frontend-repeatable-content.md
+  stress_qa: docs/frontend-resilience-stress-qa.md
+
+principles:
+  property_bans_are_not_the_goal: true
+  simple_content_change_should_not_require_coordinate_patch: true
+  stress_tests_must_be_reproducible_when_randomized: true
+  supported_range_is_better_than_fake_infinite_support: true
+
+content_shape_contract:
+  classify_fields_when_relevant:
+    - REQUIRED
+    - OPTIONAL
+    - SEMANTIC_VARIANT
+  static_php_acf_api_react_may_share_semantic_shape: true
+
+cardinality:
+  declare_when_relevant:
+    - EXPECTED_COUNT
+    - NORMAL_OPERATING_RANGE
+    - STRESS_SUPPORTED_RANGE
+    - ZERO_BEHAVIOR
+  mutation_points:
+    - ZERO
+    - ONE
+    - EXPECTED_MINUS_ONE
+    - EXPECTED
+    - EXPECTED_PLUS_ONE
+    - NORMAL_MAX
+    - STRESS_MAX_WHEN_MEANINGFUL
+  ordinary_count_change_should_not_require_item_position_css: true
+
+fuzz_qa:
+  status: ACTIVE_WHEN_RELEVANT
+  deterministic_seed_required_when_randomized: true
+  dimensions:
+    - ITEM_COUNT
+    - TITLE_LENGTH
+    - BODY_LENGTH
+    - OPTIONAL_FIELD_PRESENCE
+    - IMAGE_RATIO
+    - IMAGE_PRESENCE
+    - ORDER
+    - SEMANTIC_VARIANT_POSITION
+    - CTA_PRESENCE
+    - METADATA_PRESENCE
+  uniform_lorem_only_is_insufficient_for_repeaters: true
+
+uneven_content:
+  required_when_repeatable_content_is_material: true
+  examples:
+    - TITLE_1_2_3_LINES_MIXED
+    - SHORT_NORMAL_LONG_BODY_MIXED
+    - OPTIONAL_IMAGE_MIXED
+    - CTA_PRESENT_MISSING_MIXED
+
+reorder_qa:
+  required_when_order_is_editable: true
+  index_must_not_own_semantic_variant_by_accident: true
+  js_identity_should_survive_reorder_when_stateful: true
+
+missing_field_qa:
+  use_content_shape_contract: true
+  check_empty_wrapper_artifacts: true
+  check_broken_images: true
+  check_empty_controls: true
+  check_stale_spacing: true
+
+cms_stress_preview:
+  status: CANDIDATE_WHEN_FIXTURE_ENVIRONMENT_EXISTS
+  modes:
+    - NORMAL
+    - LONG_TEXT
+    - UNEVEN_CONTENT
+    - MISSING_OPTIONALS
+    - FEW_ITEMS
+    - MANY_ITEMS
+    - REORDERED
+    - EXTREME
+  must_not_modify_production_editor_data: true
+
+css_diff_signal:
+  simple_data_mutation_css_diff_zero: GOOD_SIGNAL
+  absolute_requirement: false
+  legitimate_css_change_reasons:
+    - NEW_SEMANTIC_VARIANT
+    - NEW_LAYOUT_MODE
+    - REAL_STYLE_CONTRACT_CHANGE
+
+ownership_map:
+  status: CANDIDATE_AUTOMATION
+  inputs:
+    - OWNER_CLASS
+    - TEMPLATE_OR_MARKUP_PATH
+    - CSS_OWNER
+    - DATA_JS_HOOK
+    - CMS_OR_DATA_SOURCE
+    - QA_FIXTURE
+  purpose: ONE_SEARCH_START_POINT
+
+layout_smell_score:
+  status: DIAGNOSTIC_ONLY
+  zero_is_not_goal: true
+  signals:
+    - FIXED_CONTENT_BLOCK_SIZE
+    - ABSOLUTE_CONTENT_CHILDREN
+    - UNEXPLAINED_OFFSETS
+    - IMPORTANT
+    - DUPLICATE_OWNER_SELECTOR
+    - PATCH_BREAKPOINT
+    - NOWRAP_EDITABLE_CONTENT
+    - INDEX_SPECIFIC_LAYOUT_PATCH
+  justified_exception_does_not_count_as_failure: true
+
+human_repair_scenarios:
+  - HEADING_CHANGE
+  - ADD_ONE_CARD
+  - REORDER_CARDS
+  - CHANGE_CARD_GAP
+  - REPLACE_IMAGE
+  - REMOVE_OPTIONAL_CTA
+
+future_change_questions:
+  - WHAT_IF_TEXT_GROWS
+  - WHAT_IF_COUNT_CHANGES
+  - WHAT_IF_IMAGE_CHANGES
+  - WHAT_IF_OPTIONAL_FIELD_DISAPPEARS
+  - WHAT_IF_ORDER_CHANGES
+
+failure_learning:
+  preserve_reproducible_fixture_or_seed: true
+  flow:
+    - FAILURE
+    - ROOT_CAUSE
+    - MINIMAL_OWNER_REPAIR
+    - CLEAN_REPLAY
+    - FAILURE_PATTERN
+    - GOOD_PATTERN
+    - CANDIDATE_RULE
+    - REPEATED_EVIDENCE
+    - ACTIVE_PROMOTION
