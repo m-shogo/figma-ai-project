@@ -152,7 +152,7 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 
 		<header class="p-reason__head">
 			<span class="c-kicker"># REASON</span>
-			<h2 class="c-heading"><span class="c-heading__text">千葉経済大学が<strong>選ばれる理由</strong></span></h2>
+			<h2 class="c-heading"><span class="c-heading__text">千葉経済大学が<br><strong>選ばれる理由</strong></span></h2>
 			<p class="p-reason__lead">学生一人ひとりに寄り添う教育と、地域に根ざした実践的な学びで、将来につながる力を育みます。</p>
 		</header>
 
@@ -573,7 +573,7 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 
 		<header class="p-courses__head">
 			<span class="c-kicker"># COURCES</span>
-			<h2 class="c-heading"><span class="c-heading__text">未来につながる<strong>７</strong>つのコース</span></h2>
+			<h2 class="c-heading"><span class="c-heading__text">未来につながる<br><strong>７</strong>つのコース</span></h2>
 		</header>
 
 		<ul class="p-courses__list">
