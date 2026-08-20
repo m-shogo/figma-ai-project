@@ -209,7 +209,7 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 				<h2 class="p-education__heading">４年間の学び</h2>
 			</div>
 			<div class="p-education__intro">
-				<h3 class="p-education__intro-title">将来、これから探しても大丈夫</h3>
+				<h3 class="p-education__intro-title"><span>将来、これから探しても大丈夫</span></h3>
 				<p class="p-education__intro-text">千葉経済大学では、経済や経営を学びながら、世の中の仕組みを知り、自分の興味や可能性を見つけていきます。</p>
 			</div>
 		</header>
@@ -583,7 +583,7 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 					<img width="44" height="56" src="<?php echo esc_url( $lp_base . 'image/icons/course-7.svg' ); ?>" alt="" aria-hidden="true">
 				</p>
 				<div class="p-courses__body">
-					<h3 class="p-courses__title">公務員コース</h3>
+					<h3 class="p-courses__title"><span>公務員コース</span></h3>
 					<p class="p-courses__text">国家公務員、地方公務員、公安職、公益法人などを目指すコース</p>
 				</div>
 				<div class="p-courses__rec">
@@ -600,7 +600,7 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 					<img width="40" height="56" src="<?php echo esc_url( $lp_base . 'image/icons/course-6.svg' ); ?>" alt="" aria-hidden="true">
 				</p>
 				<div class="p-courses__body">
-					<h3 class="p-courses__title">会計コース</h3>
+					<h3 class="p-courses__title"><span>会計コース</span></h3>
 					<p class="p-courses__text">税理士、公認会計士、その他経理部門などを目指すコース</p>
 				</div>
 				<div class="p-courses__rec">
@@ -617,7 +617,7 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 					<img width="56" height="56" src="<?php echo esc_url( $lp_base . 'image/icons/course-5.svg' ); ?>" alt="" aria-hidden="true">
 				</p>
 				<div class="p-courses__body">
-					<h3 class="p-courses__title">ビジネス経営コース</h3>
+					<h3 class="p-courses__title"><span>ビジネス経営コース</span></h3>
 					<p class="p-courses__text">ビジネスパーソン、ビジネスリーダーを目指すコース</p>
 				</div>
 				<div class="p-courses__rec">
@@ -634,7 +634,7 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 					<img width="52" height="56" src="<?php echo esc_url( $lp_base . 'image/icons/course-4.svg' ); ?>" alt="" aria-hidden="true">
 				</p>
 				<div class="p-courses__body">
-					<h3 class="p-courses__title">金融コース</h3>
+					<h3 class="p-courses__title"><span>金融コース</span></h3>
 					<p class="p-courses__text">銀行業界、証券業界などを目指すコース</p>
 				</div>
 				<div class="p-courses__rec">
@@ -651,7 +651,7 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 					<img width="56" height="38" src="<?php echo esc_url( $lp_base . 'image/icons/course-3.svg' ); ?>" alt="" aria-hidden="true">
 				</p>
 				<div class="p-courses__body">
-					<h3 class="p-courses__title">教職コース</h3>
+					<h3 class="p-courses__title"><span>教職コース</span></h3>
 					<p class="p-courses__text">中学（社会）・高校（公民）の免許取得、教員を目指すコース</p>
 				</div>
 				<div class="p-courses__rec">
@@ -668,7 +668,7 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 					<img width="48" height="56" src="<?php echo esc_url( $lp_base . 'image/icons/course-2.svg' ); ?>" alt="" aria-hidden="true">
 				</p>
 				<div class="p-courses__body">
-					<h3 class="p-courses__title">学芸員コース</h3>
+					<h3 class="p-courses__title"><span>学芸員コース</span></h3>
 					<p class="p-courses__text">学芸員資格の取得、関連する仕事を目指すコース</p>
 				</div>
 				<div class="p-courses__rec">
@@ -685,7 +685,7 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 					<img width="56" height="40" src="<?php echo esc_url( $lp_base . 'image/icons/course-1.svg' ); ?>" alt="" aria-hidden="true">
 				</p>
 				<div class="p-courses__body">
-					<h3 class="p-courses__title">ITコース</h3>
+					<h3 class="p-courses__title"><span>ITコース</span></h3>
 					<p class="p-courses__text">ITスキルを駆使するビジネスパーソンを目指すコース</p>
 				</div>
 				<div class="p-courses__rec">
