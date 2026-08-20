@@ -2023,11 +2023,13 @@
 		background: var(--tile-shadow, var(--tile-accent));
 	}
 
+	/* Figma では文字が円の中央、矢印は円の上から決まった位置（SP 61.3% /
+	   PC 67.2%）に置かれています。文字の行数が変わっても矢印は動きません。
+	   そのため2つを同じマスへ置き、矢印だけ上からの距離で決めています
+	   （％は円の幅に対する割合。円は正円なので高さの割合と同じです）。 */
 	& .p-links__tile {
 		display: grid;
-		place-content: center;
-		justify-items: center;
-		gap: .7em;
+		place-items: center;
 		font-size: var(--fs-tile);
 		font-weight: 400;
 
@@ -2095,12 +2097,21 @@
 	   塗りを持つ <img> だと1色に固定されてしまうため、
 	   形だけを mask で抜いて --tile-accent を流し込んでいます。
 	   大きさは Figma の実寸 SP 16×15px → PC 20×19px。 */
+	& .p-links__label { grid-area: 1 / 1; }
+
 	& .p-links__arrow {
+		grid-area: 1 / 1;
+		align-self: start;
+		margin-top: 61.3%;   /* Figma SP: 円の上から 95 / 155px */
 		width: clamp(1rem, 0.9067rem + 0.398vw, 1.25rem);
 		aspect-ratio: 20 / 19;
 		background: var(--tile-accent);
 		-webkit-mask: url('../image/icons/arrow-right.svg') center / contain no-repeat;
 		mask: url('../image/icons/arrow-right.svg') center / contain no-repeat;
+	}
+
+	@media (min-width: 768px) {
+		& .p-links__arrow { margin-top: 67.2%; }   /* Figma PC: 円の上から 168 / 250px */
 	}
 }
 
@@ -2244,7 +2255,8 @@
 
 	& .p-footer__inner {
 		display: grid;
-		gap: clamp(1.75rem, 1.2rem + 2.3vw, 2.5rem);
+		/* Figma: かたまり同士の間 SP 40px → PC 64px */
+		gap: clamp(2.5rem, 1.94rem + 2.3881vw, 4rem);
 		justify-items: center;
 		text-align: center;
 	}
@@ -2254,16 +2266,18 @@
 	}
 
 	& .p-footer__address {
-		margin-top: 1em;
+		/* Figma: ロゴから SP 24px → PC 32px */
+		margin-top: clamp(1.5rem, 1.3134rem + 0.796vw, 2rem);
 		font-size: var(--fs-note);
-		line-height: 1.8;
+		line-height: 1.3;   /* Figma: PC 16px→20.8px / SP 14px→18.2px */
+		letter-spacing: .05em;
 	}
 
 	& .p-footer__side {
 		display: grid;
 		justify-items: center;
 		align-content: start;
-		gap: clamp(1.25rem, .9rem + 1.5vw, 1.75rem);
+		gap: 2.5rem;   /* Figma: SP / PC とも 40px */
 	}
 
 	& .p-footer__related {
@@ -2271,6 +2285,7 @@
 		justify-items: center;
 		gap: 1.5em;
 		font-size: var(--fs-body);
+		line-height: 1;   /* Figma SP: 16px の1行ちょうど。PC は下で 1.6 に */
 
 		/* Figma では2つのリンクの間に 40×1px の細い線が入ります */
 		& a + a {
@@ -2284,7 +2299,8 @@
 
 	& .p-footer__sns {
 		display: flex;
-		gap: clamp(1.375rem, 1rem + 1.6vw, 1.75rem);
+		align-items: center;
+		gap: 2rem;   /* Figma: SP / PC とも 32px */
 
 		/* Figma のアイコンは高さ 23px。横幅は絵によって 25〜32px と違うので
 		   高さでそろえます */
@@ -2297,6 +2313,7 @@
 		font-family: var(--font-en);
 		font-size: var(--fs-copyright);
 		font-weight: 400;
+		line-height: 1;   /* Figma: PC 14px / SP 12px の1行 */
 		letter-spacing: .03em;
 	}
 
@@ -2319,15 +2336,20 @@
 	}
 
 	@media (min-width: 768px) {
+		/* Figma のフッターは本文枠（1160px）ではなく、
+		   画面の端から 80px の位置に置かれています。 */
 		& .p-footer__inner {
 			grid-template-columns: auto 1fr;
 			justify-items: start;
+			max-width: none;
+			width: calc(100% - 10rem);
 			text-align: left;
 		}
 
 		& .p-footer__side {
 			justify-self: end;
 			justify-items: end;
+			padding-top: 1.4375rem;   /* Figma: 左のロゴより 23px 下から始まる */
 		}
 
 		/* PC は2つのリンクを横に並べ、間は「/」で区切ります
@@ -2336,13 +2358,15 @@
 			grid-auto-flow: column;
 			justify-items: end;
 			gap: 1.25rem;
+			line-height: 1.6;   /* Figma PC: 16px → 25.6px */
 
 			& a + a { padding-top: 0; background: none; }
 
 			& a + a::before {
 				content: '/';
 				margin-right: 1.25rem;
-				color: var(--color-line);
+				color: #858585;         /* Figma */
+				font-size: .875rem;     /* Figma: 14px */
 			}
 		}
 
