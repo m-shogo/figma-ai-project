@@ -1,0 +1,268 @@
+schema_version: 1
+policy_status: ACTIVE
+policy_lifecycle:
+  allowed_states: [CORE, ACTIVE, CANDIDATE, PROJECT_ONLY, DEPRECATED, RETIRED]
+  canonical_doc: docs/frontend-implementation-standard.md
+  pattern_library: docs/frontend-pattern-library.md
+  maintainability_qa: docs/frontend-maintainability-qa.md
+
+objectives:
+  - VISUAL_FIDELITY
+  - FINDABILITY
+  - LOCALITY
+  - CONTENT_RESILIENCE
+  - RESPONSIVE_RESILIENCE
+  - INTERACTION_ACCESSIBILITY
+  - SIMPLICITY
+
+stable_naming_contract:
+  prefixes:
+    layout: l-
+    component: c-
+    project_section: p-
+    state: is-
+  bem_style: true
+  require_owner_searchability: true
+  avoid_generic_standalone_classes:
+    - inner
+    - list
+    - box
+    - item
+    - title
+    - text
+    - image
+
+layout_decision_order:
+  - NORMAL_FLOW
+  - FLEX
+  - GRID
+  - GRID_OVERLAP
+  - RELATIVE_ABSOLUTE
+  - FIXED_OR_CONSTRAINED_SIZING
+  rule: intent_based_not_property_count_based
+
+sizing:
+  fixed_dimensions_are_not_globally_banned: true
+  categories:
+    content_owned:
+      fixed_block_size_default: avoid
+      examples: [section, article, card_body, accordion_body, cms_text_area]
+    asset_owned:
+      fixed_or_constrained_size: allow
+      examples: [logo, icon, avatar, hero_person, badge, video, canvas]
+    ui_owned:
+      fixed_or_minimum_size: allow
+      examples: [button, control, touch_target, modal_bound]
+  prefer_when_appropriate:
+    - auto
+    - intrinsic_sizing
+    - max_inline_size
+    - min
+    - max
+    - clamp
+    - fit_content
+    - aspect_ratio
+    - gap
+    - padding
+    - grid_flex_stretch
+    - minmax_0_1fr
+    - min_inline_size_0
+
+positioning:
+  absolute_is_not_globally_banned: true
+  default_review: WARN
+  appropriate_intents:
+    - HERO_ART_DIRECTION
+    - DECORATION
+    - BADGE
+    - BALLOON_TAIL
+    - PAGE_TOP
+    - INTENTIONAL_OVERLAY
+  suspicious_intents:
+    - NORMAL_BODY_LAYOUT
+    - CARD_COLLECTION_LAYOUT
+    - FIGMA_XY_COORDINATE_RECREATION
+  offset_family_review_together:
+    - absolute_offsets
+    - translate_for_placement
+    - large_negative_margin
+    - large_relative_offset
+
+css_ownership:
+  one_block_one_canonical_location: true
+  prohibit_permanent_zones:
+    - final_fixes
+    - visual_tweaks
+    - hotfix_overrides
+    - temporary_overrides
+  repair_owner_instead_of_appending_override: true
+  repeated_patch_threshold_before_redesign_review: 2
+
+nesting:
+  bem_selectors_flat_by_default: true
+  use_ampersand_for_parent_reference: true
+  prefer_nested_conditions_with_owner: true
+  deep_descendant_nesting_default: warn
+
+specificity:
+  prefer_single_class_selector: true
+  id_styling_default: warn
+  important_default: warn
+  important_allowed_reasons:
+    - THIRD_PARTY_BOUNDARY
+    - UNAVOIDABLE_INLINE_STYLE
+    - EXPLICIT_UTILITY_CONTRACT
+    - ACCESSIBILITY_ENVIRONMENT_OVERRIDE
+
+responsive:
+  breakpoint_count_is_not_score: true
+  company_existing_breakpoints_first: true
+  breakpoint_means_layout_boundary: true
+  device_capability_is_separate: true
+  patch_breakpoint_proliferation: warn
+  container_queries_status: CANDIDATE
+
+content_resilience:
+  editable_text_default_dynamic: true
+  nowrap_default_for_editable_content: warn
+  fixed_text_block_height_default: warn
+  mutation_matrix:
+    heading_lines: [1, 2, 3]
+    body_length_multipliers: [0.5, 1.0, 1.5, 2.0]
+    long_japanese: true
+    long_latin_token_when_relevant: true
+    font_fallback_when_relevant: true
+    browser_zoom_200_when_required: true
+    user_font_enlargement_when_relevant: true
+
+cardinality_resilience:
+  consider:
+    - ZERO_ITEMS
+    - ONE_ITEM
+    - EXPECTED_COUNT
+    - PLUS_ONE
+    - MINUS_ONE
+    - OPTIONAL_FIELD_MISSING
+  adding_one_item_should_not_require_css_by_default: true
+
+media:
+  distinguish_intrinsic_ratio_from_rendered_coordinates: true
+  intrinsic_width_height_attributes: prefer
+  responsive_image_sizing: prefer
+  intentional_crop_object_fit_cover: allow
+  must_not_crop_object_fit_contain: allow
+  picture_only_when_source_or_crop_materially_differs: true
+
+overflow_smells:
+  review:
+    - overflow_hidden
+    - white_space_nowrap
+    - text_clipping
+  hidden_overflow_must_not_mask_layout_failure: true
+
+logical_properties:
+  status: ACTIVE
+  existing_codebase_consistency_first: true
+  candidates:
+    - margin_inline
+    - padding_block
+    - inline_size
+    - min_inline_size
+
+component_extraction:
+  similar_visual_appearance_alone_is_insufficient: true
+  strong_signals:
+    - SAME_SEMANTIC_ROLE
+    - SAME_STRUCTURE
+    - SAME_INTERACTION
+    - SAME_REASON_TO_CHANGE
+
+tokens:
+  root_is_not_dumping_ground: true
+  global_candidates:
+    - BRAND_COLOR
+    - TYPOGRAPHY_ROLE
+    - COMMON_CONTAINER
+    - COMMON_GUTTER
+    - REPEATED_SPACING
+    - REPEATED_RADIUS
+  single_use_magic_number_tokenization: avoid
+
+javascript:
+  separate_css_and_js_hooks: prefer
+  data_js_hooks: prefer
+  small_interaction_owners: prefer
+  safe_noop_when_target_missing: prefer
+  overengineering: avoid
+
+php_wordpress_acf:
+  existing_architecture_first: true
+  section_implementation_ownership: required_when_material
+  preferred_flow:
+    - READ_DATA
+    - NORMALIZE_FALLBACK
+    - ESCAPE
+    - RENDER_MARKUP
+  scattered_data_fetch_logic: avoid
+
+accessibility:
+  semantic_controls_required: true
+  preserve_keyboard_focus_behavior: true
+  reduced_motion_when_animation_exists: review
+  touch_pointer_policy_from_company_environment: true
+
+maintainability_qa:
+  dimensions:
+    - FINDABILITY
+    - LOCALITY
+    - CONTENT_MUTATION
+    - CARDINALITY_MUTATION
+    - RESPONSIVE_RESILIENCE
+    - HUMAN_REPAIR_SCENARIO
+  target_css_base_definition_count_per_owner: 1
+
+smell_combinations:
+  figma_coordinate_recreation:
+    severity: STRONG_WARNING
+    indicators:
+      - FIXED_SECTION_HEIGHT
+      - OVERFLOW_HIDDEN
+      - MANY_ABSOLUTE_CHILDREN
+      - REPEATED_XY_OFFSETS
+      - DUPLICATE_SELECTOR_OVERRIDES
+
+exceptions:
+  allowed: true
+  non_obvious_exception_should_record:
+    - owner
+    - selector
+    - intent
+    - reason
+    - resilience_requirement
+
+candidate_modern_css:
+  container_queries: CANDIDATE
+  subgrid: CANDIDATE
+  anchor_positioning: CANDIDATE
+  has_selector: CANDIDATE
+  scope_rule: CANDIDATE
+  adoption_rule: use_only_when_simpler_maintainable_and_target_environment_allows
+
+repair_rules:
+  fix_canonical_owner_first: true
+  do_not_append_visual_patch_at_file_end: true
+  property_count_optimization_is_not_goal: true
+  css_line_count_is_not_quality_score: true
+
+final_definition:
+  require_when_relevant:
+    - VISUAL_FIDELITY
+    - NO_UNINTENDED_HORIZONTAL_OVERFLOW
+    - INTERACTION_RUNTIME_INTEGRITY
+    - SEMANTIC_ACCESSIBLE_BEHAVIOR
+    - OWNER_SEARCHABILITY
+    - NO_UNEXPLAINED_OVERRIDE_ACCUMULATION
+    - EDITABLE_CONTENT_MUTATION_RESILIENCE
+    - REQUIRED_ENVIRONMENT_RESILIENCE
+    - INTENTIONAL_EXCEPTIONS
+    - NO_TEMPORARY_FINAL_FIX_LAYER
