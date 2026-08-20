@@ -5,6 +5,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
@@ -14,9 +15,15 @@ import validate_human_review_site as validator  # noqa: E402
 
 
 class HumanReviewDashboardBuildTests(unittest.TestCase):
+    def _build_site(self, directory: str) -> Path:
+        # Generic dashboard unit tests do not own the frozen Final snapshot's
+        # remote Git availability. Keep them deterministic by exercising the
+        # base builder; the pointer policy is tested separately below.
+        return builder._original_build_site(output=Path(directory).resolve() / "site")
+
     def test_build_produces_latest_and_run_history_urls(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            site = builder.build_site(output=Path(directory).resolve() / "site")
+            site = self._build_site(directory)
             self.assertTrue((site / "ref-001/latest/review/index.html").is_file())
             self.assertTrue((site / "ref-001/latest/review/review-assist.js").is_file())
             self.assertTrue((site / "ref-001/latest/review/review-assist.css").is_file())
@@ -46,7 +53,7 @@ class HumanReviewDashboardBuildTests(unittest.TestCase):
 
     def test_manifest_keeps_human_review_pending_and_exact_endpoints(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            site = builder.build_site(output=Path(directory).resolve() / "site")
+            site = self._build_site(directory)
             manifest = json.loads(
                 (site / "ref-001/latest/review/manifest.json").read_text(encoding="utf-8")
             )
@@ -60,7 +67,7 @@ class HumanReviewDashboardBuildTests(unittest.TestCase):
 
     def test_overlay_is_capability_gated_per_viewport(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            site = builder.build_site(output=Path(directory).resolve() / "site")
+            site = self._build_site(directory)
             manifest = json.loads(
                 (site / "ref-001/latest/review/manifest.json").read_text(encoding="utf-8")
             )
@@ -72,7 +79,7 @@ class HumanReviewDashboardBuildTests(unittest.TestCase):
 
     def test_preview_is_actual_output_without_review_chrome(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            site = builder.build_site(output=Path(directory).resolve() / "site")
+            site = self._build_site(directory)
             preview = (site / "ref-001/latest/preview/index.html").read_text(encoding="utf-8")
             self.assertIn("data-ref001-page", preview)
             self.assertIn('href="assets/css/ref001.css"', preview)
@@ -83,7 +90,7 @@ class HumanReviewDashboardBuildTests(unittest.TestCase):
 
     def test_preview_publishes_only_canonical_stylesheet(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            site = builder.build_site(output=Path(directory).resolve() / "site")
+            site = self._build_site(directory)
             preview_root = site / "ref-001/latest/preview"
             preview = (preview_root / "index.html").read_text(encoding="utf-8")
             stylesheets = builder.local_preview_stylesheets(preview)
@@ -93,7 +100,7 @@ class HumanReviewDashboardBuildTests(unittest.TestCase):
 
     def test_preview_uses_swappable_pc_sp_images_focused_svg_assets_and_anchor_ctas(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            site = builder.build_site(output=Path(directory).resolve() / "site")
+            site = self._build_site(directory)
             preview = (site / "ref-001/latest/preview/index.html").read_text(encoding="utf-8")
             self.assertIn('<picture class="ref-picture', preview)
             self.assertIn('media="(max-width:767px)"', preview)
@@ -155,6 +162,34 @@ class HumanReviewDashboardBuildTests(unittest.TestCase):
             self.assertIn(needle, html)
         self.assertIn("has-difference", css)
         self.assertIn("compact-toggle", css)
+
+
+class FrozenFinalSnapshotPolicyTests(unittest.TestCase):
+    def test_final_snapshot_pointer_accepts_approved_sha(self) -> None:
+        with mock.patch.object(
+            builder.base.subprocess,
+            "run",
+            side_effect=[
+                mock.Mock(),
+                mock.Mock(stdout=f"{builder.REF001_FINAL_SNAPSHOT_REF}\n"),
+            ],
+        ) as run:
+            builder.ensure_final_snapshot_object()
+
+        self.assertEqual(run.call_count, 2)
+        self.assertIn(builder.REF001_FINAL_SNAPSHOT_BRANCH, " ".join(run.call_args_list[0].args[0]))
+
+    def test_final_snapshot_pointer_rejects_drift(self) -> None:
+        with mock.patch.object(
+            builder.base.subprocess,
+            "run",
+            side_effect=[
+                mock.Mock(),
+                mock.Mock(stdout=f"{'0' * 40}\n"),
+            ],
+        ):
+            with self.assertRaisesRegex(builder.base.ReviewBuildError, "pointer drifted"):
+                builder.ensure_final_snapshot_object()
 
 
 if __name__ == "__main__":

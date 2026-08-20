@@ -18,7 +18,12 @@ on:
       - "contracts/**/*.yaml"
       - "contracts/**/*.json"
       - "research/**/*.yaml"
+      - "research/**/*.md"
       - "docs/human-editability.md"
+      - "docs/frontend-*.md"
+      - "docs/css-strategy.md"
+      - "docs/css-foundation-reset-policy.md"
+      - "docs/wordpress-acf-policy.md"
       - "requirements-dev.txt"
       - ".github/workflows/validate-research.yml"
       - ".github/workflows/update-radar.yml"
@@ -39,7 +44,12 @@ on:
       - "contracts/**/*.yaml"
       - "contracts/**/*.json"
       - "research/**/*.yaml"
+      - "research/**/*.md"
       - "docs/human-editability.md"
+      - "docs/frontend-*.md"
+      - "docs/css-strategy.md"
+      - "docs/css-foundation-reset-policy.md"
+      - "docs/wordpress-acf-policy.md"
       - "requirements-dev.txt"
       - ".github/workflows/validate-research.yml"
       - ".github/workflows/update-radar.yml"
@@ -73,6 +83,9 @@ jobs:
 
       - name: Validate official Update Radar source registry
         run: python scripts/validate_update_sources.py
+
+      - name: Validate frontend implementation policy invariants
+        run: python scripts/validate_frontend_implementation_policy.py
 
       - name: Validate implementation target profiles and Shared Contract binding
         run: python scripts/validate_implementation_profile.py

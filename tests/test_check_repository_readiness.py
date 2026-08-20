@@ -159,6 +159,7 @@ class RepositoryReadinessTests(unittest.TestCase):
     def test_check_list_contains_all_high_level_safety_lanes(self) -> None:
         names = {name for name, _ in readiness.CHECKS}
         expected = {
+            "frontend_implementation_policy",
             "records",
             "global_figma_profile",
             "section_figma_profiles",

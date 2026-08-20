@@ -89,6 +89,8 @@ Examples:
 
 件数固定・並び順固定であれば、fixed fields / existing Group構造の方がtemplate contractを強く保てる場合がある。
 
+Repeatable UI自体のlayout/content耐性は `docs/frontend-repeatable-content.md` を参照する。Repeaterを採用しない場合でも、将来data-drivenへ移行しやすいitem shapeを検討できる。
+
 ### Editor can reorder/add different section types
 
 → Existing projectがFlexible Contentを採用しているなら候補。
@@ -116,6 +118,47 @@ Editor add/remove/reorder requirement?
 ACF PRO availabilityが未確認の段階では、Repeater/Flexible Content/ACF Blocks等のPRO依存機能をproduction contractへFROZENしない。
 
 Learning/first-pass fixtureは必要ならbasic fieldsだけで成立させ、target repository/runtime reconnaissance後にPRO architectureへ昇格できるようにする。
+
+---
+
+## Field naming / searchability
+
+Company/existing naming conventionを最優先する。
+
+既存規約が弱い場合、field nameはPHP/CMS内で検索したときowner/contextが分かることを重視する。
+
+Top-levelで曖昧になりやすい例:
+
+```text
+title
+image
+text
+```
+
+より、必要なら:
+
+```text
+student_voice_title
+student_voice_image
+course_intro_text
+```
+
+のようにowner/contextを持たせる。
+
+ただしRepeater/Groupのchild fieldは親contextが十分に明確なら:
+
+```text
+title
+body
+image
+cta
+```
+
+のように簡潔でよい。
+
+**検索性を上げるために全field名を不必要に長文化しない。Contextが失われる場所だけnamespaceする。**
+
+Field label、field name、PHP variable、CSS ownerを完全に同じ文字列へ揃えること自体は目的ではない。それぞれの責任範囲で人間が辿れることを優先する。
 
 ---
 
@@ -180,6 +223,8 @@ Figma上のTEXT nodeだからといって全てACF化しない。
 - PC/SP wrap QA
 
 をfield contractへ含める。
+
+Frontend Standardのcontent risk factorsを使い、editor-owned copyは明示single-line contractが無い限りwrap/mutation対象として扱う。
 
 ---
 

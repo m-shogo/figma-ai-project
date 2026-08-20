@@ -7,6 +7,8 @@ created_at: ""
 updated_at: ""
 
 precedence:
+  # Compatibility baseline evidence order only. Effective frontend authority also resolves
+  # explicit authorized Project/Owner overrides per docs/frontend-authority-model.md.
   implementation_constraints:
     - COMPANY_POLICY
     - EXISTING_CODEBASE
@@ -98,7 +100,7 @@ project_structure:
 
 css:
   strategy: EXISTING_PROJECT_FIRST
-  reset_policy: EXISTING_FIRST # EXISTING_FIRST | COMPANY_RESET | MODERN_NORMALIZE | NORMALIZE | NONE
+  reset_policy: EXISTING_FIRST # EXISTING_FIRST | COMPANY_RESET | FRAMEWORK_NATIVE | TAILWIND_PREFLIGHT | MODERN_NORMALIZE | NORMALIZE | CUSTOM_MINIMAL | NONE
   reset_path: ""
   foundation_layers:
     reset_required: true
@@ -122,6 +124,11 @@ css:
   notes: []
 
 responsive:
+  # Resolve from REQUIRED environment profiles / explicit Project contract.
+  # 360 CSS px may be used as a CANDIDATE exploratory fallback when no support floor exists yet,
+  # but it is not a universal hard product minimum.
+  minimum_product_viewport_css_px: null
+  below_minimum_requires_explicit_project_contract: true
   breakpoint_source: COMPANY_OR_EXISTING
   breakpoints: []
   container_policy: ""
@@ -229,6 +236,7 @@ accessibility:
   target_size_exception_policy: WCAG_2_2
   resize_text_percent: 200
   reflow_400_percent_required: true
+  reflow_width_equivalent_css_px: 320 # WCAG-equivalent probe; separate from product support floor
   horizontal_scroll_exception_policy: WCAG_2_2
   zoom_must_not_be_disabled: true
   hover_focus_content_policy: DISMISSIBLE_HOVERABLE_PERSISTENT

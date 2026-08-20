@@ -131,3 +131,6 @@ rules:
   repository_evidence_may_raise_conflict: true
   explicit_conflict_resolution_required_before_freeze: true
   acf_requires_importable_json_delivery: true
+  frontend_standard_is_default_not_higher_authority_than_company_existing_or_explicit_project_contract: true
+  frontend_maintainability_qa_is_selected_by_section_risk_not_added_as_universal_profile_checklist: true
+  repeatable_content_review_does_not_force_cms_conversion: true
