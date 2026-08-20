@@ -119,6 +119,7 @@ check( empty( $bad_clamp ), 'clamp() の最小値が最大値を超えていな�
 $absolute_allowlist = array(
 	'c-bubble'            => '吹き出しの尻尾（箱の外へ出す三角）',
 	'p-voice__balloon'    => '吹き出しの尻尾（箱の外へ出す三角）',
+	'p-voice__advice-lab' => '「受験生へのひとこと」の尻尾（箱の外へ出す三角）',
 	'p-footer__pagetop'   => 'フッター右下のページトップボタン',
 	'p-mv__oc'            => 'OPEN CAMPUS バッジ（写真へ重ねる）',
 	'p-mv__oc-balloon'    => 'バッジの吹き出し',

@@ -1328,13 +1328,22 @@
 	}
 
 	/* 3件目だけ背景色を変えています */
-	& .p-voice__item { background: var(--color-bg-blue); }
+	/* Figma の帯は画面いっぱいではなく本文と同じ幅です
+	   （SP 343px / PC 1160px）。 */
+	& .p-voice__item {
+		width: min(var(--container), 100% - var(--gutter) * 2);
+		margin-inline: auto;
+		background: var(--color-bg-blue);
+	}
 	& .p-voice__item:nth-of-type(3) { background: var(--color-bg-yellow); }
 
+	/* Figma: 帯の内側の余白は SP 16px → PC 56px（左右）。
+	   上下は SP 32px → PC 40px。 */
 	& .p-voice__inner {
 		display: grid;
 		gap: clamp(1.25rem, .8rem + 1.9vw, 1.75rem);
-		padding-block: clamp(1.75rem, 1.2rem + 2.3vw, 2.5rem);
+		padding-block: clamp(2rem, 1.8134rem + 0.796vw, 2.5rem);
+		padding-inline: clamp(1rem, 0.0672rem + 3.9801vw, 3.5rem);
 	}
 
 	/* --- 顔写真 + 吹き出し --- */
@@ -1355,14 +1364,26 @@
 		object-fit: cover;
 	}
 
+	/* Figma の吹き出しは「白い面」と「輪郭線だけの形」の2枚重ねで、
+	   輪郭線のほうが左上へずれています（SP 7 / 8px、PC 26 / 8px）。
+	   線は 1px なので、左と上では面の外側に、右と下では面の内側に見えます。 */
 	& .p-voice__balloon {
-		position: relative;   /* 尻尾の基準 */
+		position: relative;   /* 尻尾と輪郭線の基準 */
 		/* SP は写真の下へ 68px もぐり込ませ、PC は 30px 離す。
 		   上の 18px は、写真が吹き出しより少し上に出るぶん（Figma）。 */
-		margin: 1.125rem 0 0 -4.25rem;
+		margin-block: 1.125rem 0;
+		/* SP は写真の下へ 61px もぐり込み、PC は 56px 離れます（Figma） */
+		margin-inline: clamp(-3.8125rem, -6.5411rem + 11.6418vw, 3.5rem) 0;
 		padding: clamp(1.25rem, .9rem + 1.5vw, 1.75rem) 1.5rem;
-		border: 1px solid var(--color-line);
 		background: var(--color-white);
+	}
+
+	& .p-voice__balloon::before {
+		content: '';
+		position: absolute;
+		inset: -8px 7px 8px -7px;   /* 面と同じ大きさのまま左上へ 7 / 8px */
+		border: 1px solid var(--color-text);
+		pointer-events: none;
 	}
 
 	/* SP は写真が重なるぶん、見出しだけ右へよけます */
@@ -1371,7 +1392,8 @@
 
 	/* 吹き出しの尻尾。あしらいなので absolute で置いています。
 	   SP は上向き（写真が上にあるため）、PC は左向きです。 */
-	& .p-voice__balloon::before,
+	/* 吹き出しの尻尾（左向き）。あしらいなので absolute で置いています。
+	   輪郭線は親の drop-shadow が一緒に付けてくれます。 */
 	& .p-voice__balloon::after {
 		content: '';
 		position: absolute;
@@ -1379,9 +1401,8 @@
 		right: 100%;
 		translate: 0 -50%;
 		border-block: 12px solid transparent;
+		border-right: 14px solid var(--color-white);
 	}
-	& .p-voice__balloon::before { border-right: 14px solid var(--color-line); }
-	& .p-voice__balloon::after  { margin-right: -1px; border-right: 14px solid var(--color-white); }
 
 	& .p-voice__title {
 		margin-bottom: .5em;
@@ -1424,11 +1445,12 @@
 		gap: clamp(1.25rem, .8rem + 1.9vw, 1.75rem);
 	}
 
+	/* SP は「写真 → 本文」の縦積み。
+	   PC は Figma の 404px : 604px（間 40px）の2列（下の @media）。 */
 	& .p-voice__detail-main {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
 		align-items: start;
-		gap: clamp(1.125rem, .5rem + 2.6vw, 3.875rem);
+		gap: clamp(1.125rem, .5rem + 2.6vw, 2.5rem);
 	}
 
 	& .p-voice__photo img {
@@ -1449,21 +1471,28 @@
 	}
 
 	/* 「印象に残った授業」などのラベル + 内容 */
+	/* Figma: 白い箱の内側は上下左右 24px。
+	   SP は「ラベル → 説明」の縦積み、PC は横並び（下の @media）。 */
 	& .p-voice__points {
 		display: grid;
-		gap: .4em;
-		padding: clamp(1rem, .7rem + 1.2vw, 1.15rem) clamp(1rem, .6rem + 1.7vw, 1.5rem);
+		gap: .5rem;
+		/* Figma: 上下 24px、左右は SP 16px → PC 24px */
+		padding: 1.5rem clamp(1rem, 0.8134rem + 0.796vw, 1.5rem);
 		background: var(--color-white);
 	}
 
+	/* Figma: 青いラベルは 174×24px、文字 16px、左右 20px の余白。
+	   角は丸めません。 */
 	& .p-voice__points dt {
 		justify-self: start;
-		padding: .25em 1.2em;
+		min-width: 10.875rem;   /* 174px */
+		padding: .25em 1.25em;
 		background: var(--color-blue);
 		color: var(--color-white);
 		font-size: var(--fs-body);
 		font-weight: 500;
-		line-height: 1.6;
+		line-height: 1;
+		letter-spacing: .05em;
 		text-align: center;
 	}
 
@@ -1477,7 +1506,10 @@
 		gap: .8em;
 	}
 
+	/* Figma: 紫の角丸に小さな三角が付きます。
+	   SP は下向き（8×13px）、PC は右向き（13×8px）。 */
 	& .p-voice__advice-label {
+		position: relative;
 		padding: .7em 1.6em;
 		border-radius: 999px;
 		background: var(--color-purple);
@@ -1486,6 +1518,16 @@
 		line-height: 1.4;
 		text-align: center;
 		white-space: nowrap;
+
+		&::after {
+			content: '';
+			position: absolute;
+			top: 100%;
+			left: 50%;
+			translate: -50% 0;
+			border-inline: 4px solid transparent;
+			border-top: 13px solid var(--color-purple);
+		}
 	}
 
 	& .p-voice__advice-text {
@@ -1498,16 +1540,24 @@
 		& .p-voice__profile { align-items: center; }
 
 		& .p-voice__balloon {
-			margin: 0 0 0 1.875rem;   /* PC は写真と離す（Figma 30px） */
-			padding-inline: 4.125rem;
+			margin-block: 0;
+			padding-inline: 2.5rem;   /* Figma: 白い面の中の左右 40px */
 		}
 
+		& .p-voice__balloon::before { inset: -8px 26px 8px -26px; }
+
 		& .p-voice__title { padding-left: 0; }
+
+		/* Figma: 写真 404px : 本文 604px、間 40px（1160px 中） */
+		& .p-voice__detail-main {
+			grid-template-columns: 38.55% 57.63%;   /* Figma: 404px : 604px（内側 1048px） */
+			justify-content: space-between;
+		}
 
 		& .p-voice__points {
 			grid-template-columns: auto 1fr;
 			align-items: center;
-			gap: .75em 1em;
+			gap: .75em 1.25rem;   /* Figma: ラベルと説明の間 20px */
 		}
 		& .p-voice__points dd:not(:last-of-type) { margin-bottom: 0; }
 
@@ -1515,6 +1565,17 @@
 			grid-template-columns: auto 1fr;
 			align-items: start;
 			gap: 2rem;
+		}
+
+		/* PC は尻尾が右向き（Figma 13×8px） */
+		& .p-voice__advice-label::after {
+			top: 50%;
+			left: 100%;
+			translate: 0 -50%;
+			border-inline: 0;
+			border-block: 4px solid transparent;
+			border-top: 0;
+			border-left: 13px solid var(--color-purple);
 		}
 	}
 }
@@ -1618,30 +1679,52 @@
 
 	/* --- 矢印とカウンター --- */
 	/* Figma は SP が右寄せ、PC は左から 165px の位置です */
+	/* Figma の「← 1 ──── 4 →」。要素の間隔は SP 16px → PC 24px。
+	   矢印は前がグレー #969696、次が紫 #8473aa と色が違います。 */
 	& .p-messages__nav {
 		display: flex;
 		align-items: center;
 		justify-content: end;
-		gap: clamp(.75rem, .4rem + 1.4vw, 1.4rem);
+		gap: clamp(1rem, 0.8134rem + 0.796vw, 1.5rem);
 		margin-top: clamp(1.25rem, .8rem + 1.9vw, 2rem);
 	}
 
-	/* 矢印の見た目は小さいまま、押せる範囲だけ広げています。
-	   固定値ではなく「最低これだけは確保する」指定にしているので、
-	   文字サイズを変えても押しにくくなりません（目安は 44px 四方）。 */
+	/* 絵は 14×13px のまま、押せる範囲だけ 44px 四方まで広げています
+	   （固定値ではなく「最低これだけは確保する」指定なので、
+	     文字サイズを変えても押しにくくなりません）。
+	   間隔が Figma どおりになるよう、広げたぶんは
+	   マイナスマージンで打ち消しています。 */
 	& .p-messages__arrow {
 		display: grid;
 		place-items: center;
 		min-width: 2.75rem;
 		min-height: 2.75rem;
+		margin-inline: -.9375rem;   /* (44 - 14) / 2 */
+	}
 
-		& img { width: 1.375rem; }
+	& .p-messages__arrow-icon {
+		width: .875rem;    /* 14px */
+		height: .8125rem;  /* 13px */
+		-webkit-mask: center / contain no-repeat;
+		mask: center / contain no-repeat;
+	}
+
+	& .p-messages__arrow--prev .p-messages__arrow-icon {
+		background: var(--color-line-mid, #969696);
+		-webkit-mask-image: url('../image/icons/arrow-left.svg');
+		mask-image: url('../image/icons/arrow-left.svg');
+	}
+
+	& .p-messages__arrow--next .p-messages__arrow-icon {
+		background: var(--color-purple);
+		-webkit-mask-image: url('../image/icons/arrow-right.svg');
+		mask-image: url('../image/icons/arrow-right.svg');
 	}
 
 	& .p-messages__counter {
 		display: flex;
 		align-items: center;
-		gap: clamp(.75rem, .4rem + 1.4vw, 1.4rem);
+		gap: clamp(1rem, 0.8134rem + 0.796vw, 1.5rem);
 		color: #000;
 		font-family: var(--font-en);
 		font-size: var(--fs-msg-counter);
@@ -1649,12 +1732,13 @@
 	}
 
 	/* 進み具合は JS が --progress を書き換えます。
-	   青い部分は背景のグラデーションの幅で表しているので、
-	   重ねるための擬似要素も absolute も要りません。 */
+	   青い部分は背景の幅で表しているので、
+	   重ねるための擬似要素も absolute も要りません。
+	   Figma のバーは SP / PC とも 146×2px です。 */
 	& .p-messages__counter-bar {
-		width: clamp(5.5rem, 2rem + 9vw, 9.125rem);
+		width: 9.125rem;   /* 146px */
 		height: 2px;
-		background-color: #aaa;
+		background-color: #969696;
 		background-image: linear-gradient(var(--color-blue) 0 0);
 		background-repeat: no-repeat;
 		background-position: left center;
