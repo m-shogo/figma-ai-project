@@ -318,7 +318,7 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 	</header>
 
 	<article class="p-voice__item is-open">
-		<div class="p-voice__inner l-container">
+		<div class="p-voice__inner">
 
 			<div class="p-voice__profile">
 				<picture class="p-voice__avatar">
@@ -357,7 +357,7 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 	</article>
 
 	<article class="p-voice__item">
-		<div class="p-voice__inner l-container">
+		<div class="p-voice__inner">
 
 			<div class="p-voice__profile">
 				<picture class="p-voice__avatar">
@@ -400,7 +400,7 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 	</article>
 
 	<article class="p-voice__item">
-		<div class="p-voice__inner l-container">
+		<div class="p-voice__inner">
 
 			<div class="p-voice__profile">
 				<picture class="p-voice__avatar">
@@ -526,7 +526,7 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 		</div>
 		<div class="p-messages__nav">
 			<button class="p-messages__arrow p-messages__arrow--prev" type="button" aria-label="前のメッセージ">
-				<img width="14" height="13" src="<?php echo esc_url( $lp_base . 'image/icons/arrow-left.svg' ); ?>" alt="" aria-hidden="true">
+				<span class="p-messages__arrow-icon" aria-hidden="true"></span>
 			</button>
 			<p class="p-messages__counter">
 				<span data-ref-message-current>1</span>
@@ -534,7 +534,7 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 				<span>4</span>
 			</p>
 			<button class="p-messages__arrow p-messages__arrow--next" type="button" aria-label="次のメッセージ">
-				<img width="14" height="13" src="<?php echo esc_url( $lp_base . 'image/icons/arrow-right.svg' ); ?>" alt="" aria-hidden="true">
+				<span class="p-messages__arrow-icon" aria-hidden="true"></span>
 			</button>
 		</div>
 
