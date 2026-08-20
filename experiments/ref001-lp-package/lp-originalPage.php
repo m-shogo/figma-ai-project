@@ -72,17 +72,17 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 	<div class="p-header__inner l-container">
 
 		<a class="p-header__logo" href="https://www.cku.ac.jp/">
-			<img src="<?php echo esc_url( $lp_base . 'image/icons/university-logo-outlined.svg' ); ?>"
+			<img width="187" height="47" src="<?php echo esc_url( $lp_base . 'image/icons/university-logo-outlined.svg' ); ?>"
 			     alt="千葉経済大学 CHIBA KEIZAI" width="240" height="61">
 		</a>
 
 		<nav class="p-header__actions" aria-label="関連リンク">
 			<a class="c-btn c-btn--doc" href="https://www.cku.ac.jp/sys/seikyu/" target="_blank" rel="noopener">
-				<img class="c-btn__icon" src="<?php echo esc_url( $lp_base . 'image/icons/document.svg' ); ?>" alt="" aria-hidden="true">
+				<img width="16" height="13" class="c-btn__icon" src="<?php echo esc_url( $lp_base . 'image/icons/document.svg' ); ?>" alt="" aria-hidden="true">
 				<span>資料請求</span>
 			</a>
 			<a class="c-btn c-btn--oc" href="https://www.cku.ac.jp/admission/opencampus/" target="_blank" rel="noopener">
-				<img class="c-btn__icon" src="<?php echo esc_url( $lp_base . 'image/icons/open-campus.svg' ); ?>" alt="" aria-hidden="true">
+				<img width="13" height="14" class="c-btn__icon" src="<?php echo esc_url( $lp_base . 'image/icons/open-campus.svg' ); ?>" alt="" aria-hidden="true">
 				<span>オープンキャンパス</span>
 			</a>
 		</nav>
@@ -106,12 +106,12 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 	     振り分けます。並べ方は CSS 側（flex / grid）で指定しています。 -->
 	<div class="p-mv__photos" aria-hidden="true">
 		<picture class="p-mv__photo p-mv__photo--left">
-			<source media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/main-visual-left-21376-4894.webp' ); ?>">
-			<img src="<?php echo esc_url( $lp_base . 'image/photos/pc/main-visual-left-21378-8041.webp' ); ?>" alt="" loading="eager" decoding="async">
+			<source width="1005" height="660" media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/main-visual-left-21376-4894.webp' ); ?>">
+			<img width="570" height="614" src="<?php echo esc_url( $lp_base . 'image/photos/pc/main-visual-left-21378-8041.webp' ); ?>" alt="" loading="eager" decoding="async">
 		</picture>
 		<picture class="p-mv__photo p-mv__photo--right">
-			<source media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/main-visual-right-21376-4890.webp' ); ?>">
-			<img src="<?php echo esc_url( $lp_base . 'image/photos/pc/main-visual-right-21378-8036.webp' ); ?>" alt="" loading="eager" decoding="async">
+			<source width="1005" height="660" media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/main-visual-right-21376-4890.webp' ); ?>">
+			<img width="570" height="614" src="<?php echo esc_url( $lp_base . 'image/photos/pc/main-visual-right-21378-8036.webp' ); ?>" alt="" loading="eager" decoding="async">
 		</picture>
 	</div>
 
@@ -137,7 +137,7 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 		<span class="p-mv__oc-title">OPEN<br>CAMPUS</span>
 		<span class="p-mv__oc-note">開催中！</span>
 		<span class="p-mv__oc-arrow" aria-hidden="true">
-			<img src="<?php echo esc_url( $lp_base . 'image/icons/ref001-mv-arrow-black.svg' ); ?>" alt="">
+			<img width="14" height="13" src="<?php echo esc_url( $lp_base . 'image/icons/ref001-mv-arrow-black.svg' ); ?>" alt="">
 		</span>
 	</a>
 
@@ -160,8 +160,8 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 
 			<li class="p-reason__card">
 				<picture class="p-reason__photo">
-					<source media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/reason-1-21376-4855.webp' ); ?>">
-					<img src="<?php echo esc_url( $lp_base . 'image/photos/pc/reason-1-21378-8002.webp' ); ?>" alt="" loading="lazy" decoding="async">
+					<source width="1029" height="687" media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/reason-1-21376-4855.webp' ); ?>">
+					<img width="360" height="240" src="<?php echo esc_url( $lp_base . 'image/photos/pc/reason-1-21378-8002.webp' ); ?>" alt="" loading="lazy" decoding="async">
 				</picture>
 				<div class="p-reason__body">
 					<h3 class="p-reason__title">少人数教育</h3>
@@ -171,19 +171,19 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 
 			<li class="p-reason__card">
 				<picture class="p-reason__photo">
-					<source media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/reason-2-21376-4864.webp' ); ?>">
-					<img src="<?php echo esc_url( $lp_base . 'image/photos/pc/reason-2-21378-8010.webp' ); ?>" alt="" loading="lazy" decoding="async">
+					<source width="1029" height="687" media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/reason-2-21376-4864.webp' ); ?>">
+					<img width="360" height="240" src="<?php echo esc_url( $lp_base . 'image/photos/pc/reason-2-21378-8010.webp' ); ?>" alt="" loading="lazy" decoding="async">
 				</picture>
 				<div class="p-reason__body">
-					<h3 class="p-reason__title">キャリア支援</h3>
-					<p class="p-reason__text">手厚い個別支援と企業連携より、希望進路の実現をサポートします。</p>
+					<h3 class="p-reason__title">充実のキャリア支援</h3>
+					<p class="p-reason__text">キャリア支援と企業連携により、希望進路の実現をサポートします。</p>
 				</div>
 			</li>
 
 			<li class="p-reason__card">
 				<picture class="p-reason__photo">
-					<source media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/reason-3-21376-4872.webp' ); ?>">
-					<img src="<?php echo esc_url( $lp_base . 'image/photos/pc/reason-3-21378-8018.webp' ); ?>" alt="" loading="lazy" decoding="async">
+					<source width="1029" height="687" media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/reason-3-21376-4872.webp' ); ?>">
+					<img width="360" height="240" src="<?php echo esc_url( $lp_base . 'image/photos/pc/reason-3-21378-8018.webp' ); ?>" alt="" loading="lazy" decoding="async">
 				</picture>
 				<div class="p-reason__body">
 					<h3 class="p-reason__title">地域連携・インターンシップ</h3>
@@ -213,68 +213,68 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 				<p class="p-education__intro-text">千葉経済大学では、経済や経営を学びながら、世の中の仕組みを知り、自分の興味や可能性を見つけていきます。</p>
 			</div>
 		</header>
-
-		<ol class="p-education__list">
-
-			<li class="p-education__step">
-				<p class="p-education__badge"><span class="p-education__badge-no">01</span>スタート</p>
-				<h3 class="p-education__step-title">大学1年生の自分</h3>
-				<picture class="p-education__photo">
-					<source media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/education-1-21376-4835.webp' ); ?>">
-					<img src="<?php echo esc_url( $lp_base . 'image/photos/pc/education-1-21378-7980.webp' ); ?>" alt="" loading="lazy" decoding="async">
-				</picture>
-				<ul class="c-checklist">
-					<li>経済学と経営学の基礎を学ぶ</li>
-					<li>７つのコースで目標を明確にする</li>
-					<li>コミュニケーションスキルを伸ばす</li>
-				</ul>
-			</li>
-
-			<li class="p-education__step">
-				<p class="p-education__badge"><span class="p-education__badge-no">02</span>拡大する</p>
-				<h3 class="p-education__step-title">可能性を模索する自分</h3>
-				<picture class="p-education__photo">
-					<source media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/education-2-21376-4801.webp' ); ?>">
-					<img src="<?php echo esc_url( $lp_base . 'image/photos/pc/education-2-21378-7946.webp' ); ?>" alt="" loading="lazy" decoding="async">
-				</picture>
-				<ul class="c-checklist">
-					<li>ゼミナールで専門分野を探求する</li>
-					<li>資格を取得して得意を増やす</li>
-					<li>教養科目で知識の幅を広げる</li>
-				</ul>
-			</li>
-
-			<li class="p-education__step">
-				<p class="p-education__badge"><span class="p-education__badge-no">03</span>展開する</p>
-				<h3 class="p-education__step-title">社会を意識する自分</h3>
-				<picture class="p-education__photo">
-					<source media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/education-3-21376-4769.webp' ); ?>">
-					<img src="<?php echo esc_url( $lp_base . 'image/photos/pc/education-3-21378-7917.webp' ); ?>" alt="" loading="lazy" decoding="async">
-				</picture>
-				<ul class="c-checklist">
-					<li>就業体験で働くことの解像度を上げる</li>
-					<li>キャリア支援で自己理解を深める</li>
-					<li>教職員と相談しながら進路を考える（定める）</li>
-				</ul>
-			</li>
-
-			<li class="p-education__step">
-				<p class="p-education__badge"><span class="p-education__badge-no">04</span>確信する</p>
-				<h3 class="p-education__step-title">望んだ将来を実現させる自分</h3>
-				<picture class="p-education__photo">
-					<source media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/education-4-21376-4741.webp' ); ?>">
-					<img src="<?php echo esc_url( $lp_base . 'image/photos/pc/education-4-21378-7889.webp' ); ?>" alt="" loading="lazy" decoding="async">
-				</picture>
-				<ul class="c-checklist">
-					<li>４年間の学びを進路につなげる</li>
-					<li>経験を社会で発揮する</li>
-					<li>自分らしい未来を見つける</li>
-				</ul>
-			</li>
-
-		</ol>
-
 	</div>
+
+	<ol class="p-education__list">
+
+		<li class="p-education__step">
+			<p class="p-education__badge"><span class="p-education__badge-no">01</span>スタート</p>
+			<h3 class="p-education__step-title">大学1年生の自分</h3>
+			<picture class="p-education__photo">
+				<source width="420" height="237" media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/education-1-21376-4835.webp' ); ?>">
+				<img width="233" height="131" src="<?php echo esc_url( $lp_base . 'image/photos/pc/education-1-21378-7980.webp' ); ?>" alt="" loading="lazy" decoding="async">
+			</picture>
+			<ul class="c-checklist">
+				<li>将来がまだ見えない</li>
+				<li>学科選択制度で基礎を学ぶ</li>
+				<li>７つのコースで目標を明確に</li>
+				<li>資格取得支援でスキルを発見</li>
+			</ul>
+		</li>
+
+		<li class="p-education__step">
+			<p class="p-education__badge"><span class="p-education__badge-no">02</span>学ぶ</p>
+			<h3 class="p-education__step-title">世の中の仕組みを知る</h3>
+			<picture class="p-education__photo">
+				<source width="420" height="237" media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/education-2-21376-4801.webp' ); ?>">
+				<img width="233" height="131" src="<?php echo esc_url( $lp_base . 'image/photos/pc/education-2-21378-7946.webp' ); ?>" alt="" loading="lazy" decoding="async">
+			</picture>
+			<ul class="c-checklist">
+				<li>ヒット商品の裏側</li>
+				<li>トクするお金のルール</li>
+				<li>AIで仕事はどうなる</li>
+			</ul>
+		</li>
+
+		<li class="p-education__step">
+			<p class="p-education__badge"><span class="p-education__badge-no">03</span>出会う</p>
+			<h3 class="p-education__step-title">先生と一緒に考える</h3>
+			<picture class="p-education__photo">
+				<source width="420" height="237" media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/education-3-21376-4769.webp' ); ?>">
+				<img width="233" height="131" src="<?php echo esc_url( $lp_base . 'image/photos/pc/education-3-21378-7917.webp' ); ?>" alt="" loading="lazy" decoding="async">
+			</picture>
+			<ul class="c-checklist">
+				<li>教職員との距離が近い</li>
+				<li>悩みを相談しやすい</li>
+				<li>個人に合わせた進路のサポート</li>
+			</ul>
+		</li>
+
+		<li class="p-education__step">
+			<p class="p-education__badge"><span class="p-education__badge-no">04</span>ゴール</p>
+			<h3 class="p-education__step-title">望んだ将来を実現させる</h3>
+			<picture class="p-education__photo">
+				<source width="420" height="237" media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/education-4-21376-4741.webp' ); ?>">
+				<img width="233" height="131" src="<?php echo esc_url( $lp_base . 'image/photos/pc/education-4-21378-7889.webp' ); ?>" alt="" loading="lazy" decoding="async">
+			</picture>
+			<ul class="c-checklist">
+				<li>４年間の学びを進路につなげる</li>
+				<li>経験を社会で発揮する</li>
+				<li>自分らしい未来を見つける</li>
+			</ul>
+		</li>
+
+	</ol>
 </section>
 
 
@@ -285,14 +285,14 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
      ============================================================ -->
 <section class="p-cta">
 	<div class="p-cta__inner l-container">
-		<h2 class="p-cta__title">千葉経済大学をもっと知ろう！</h2>
+		<h2 class="p-cta__title c-marked-title"><span class="p-cta__title-text">千葉経済大学を<br>もっと知ろう！</span></h2>
 		<div class="p-cta__actions">
 			<a class="c-btn c-btn--doc" href="https://www.cku.ac.jp/sys/seikyu/" target="_blank" rel="noopener">
-				<img class="c-btn__icon" src="<?php echo esc_url( $lp_base . 'image/icons/document-blue.svg' ); ?>" alt="" aria-hidden="true">
+				<img width="16" height="13" class="c-btn__icon" src="<?php echo esc_url( $lp_base . 'image/icons/document-blue.svg' ); ?>" alt="" aria-hidden="true">
 				<span>資料請求</span>
 			</a>
 			<a class="c-btn c-btn--oc" href="https://www.cku.ac.jp/admission/opencampus/" target="_blank" rel="noopener">
-				<img class="c-btn__icon" src="<?php echo esc_url( $lp_base . 'image/icons/open-campus-purple.svg' ); ?>" alt="" aria-hidden="true">
+				<img width="13" height="14" class="c-btn__icon" src="<?php echo esc_url( $lp_base . 'image/icons/open-campus-purple.svg' ); ?>" alt="" aria-hidden="true">
 				<span>オープンキャンパス</span>
 			</a>
 		</div>
@@ -321,8 +321,8 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 
 			<div class="p-voice__profile">
 				<picture class="p-voice__avatar">
-					<source media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/student-voice-01-21376-4709.webp' ); ?>">
-					<img src="<?php echo esc_url( $lp_base . 'image/photos/pc/voice-1-avatar-21378-7857.webp' ); ?>" alt="" loading="lazy" decoding="async">
+					<source width="252" height="252" media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/student-voice-01-21376-4709.webp' ); ?>">
+					<img width="160" height="160" src="<?php echo esc_url( $lp_base . 'image/photos/pc/voice-1-avatar-21378-7857.webp' ); ?>" alt="" loading="lazy" decoding="async">
 				</picture>
 				<div class="p-voice__balloon">
 					<h3 class="p-voice__title">まだやりたいことが決まっていなくても大丈夫だった。</h3>
@@ -333,8 +333,8 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 			<div class="p-voice__detail" id="voice-detail-1">
 				<div class="p-voice__detail-main">
 					<picture class="p-voice__photo">
-						<source media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/voice-1-detail-21376-4701.webp' ); ?>">
-						<img src="<?php echo esc_url( $lp_base . 'image/photos/pc/voice-1-detail-21378-7849.webp' ); ?>" alt="" loading="lazy" decoding="async">
+						<source width="933" height="525" media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/voice-1-detail-21376-4701.webp' ); ?>">
+						<img width="404" height="227" src="<?php echo esc_url( $lp_base . 'image/photos/pc/voice-1-detail-21378-7849.webp' ); ?>" alt="" loading="lazy" decoding="async">
 					</picture>
 					<div class="p-voice__detail-body">
 						<p class="p-voice__detail-text">千葉経済大学のオープンキャンパスでは、多様なコースから自分の将来が広がると分かったことが決め手です！</p>
@@ -360,8 +360,8 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 
 			<div class="p-voice__profile">
 				<picture class="p-voice__avatar">
-					<source media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/student-voice-02-21376-4678.webp' ); ?>">
-					<img src="<?php echo esc_url( $lp_base . 'image/photos/pc/voice-2-avatar-21378-7826.webp' ); ?>" alt="" loading="lazy" decoding="async">
+					<source width="252" height="252" media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/student-voice-02-21376-4678.webp' ); ?>">
+					<img width="160" height="160" src="<?php echo esc_url( $lp_base . 'image/photos/pc/voice-2-avatar-21378-7826.webp' ); ?>" alt="" loading="lazy" decoding="async">
 				</picture>
 				<div class="p-voice__balloon">
 					<h3 class="p-voice__title">将来の仕事が、大学生活の中で見えてきました。</h3>
@@ -376,8 +376,8 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 			<div class="p-voice__detail" id="voice-detail-2" hidden>
 				<div class="p-voice__detail-main">
 					<picture class="p-voice__photo">
-						<source media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/voice-1-detail-21376-4701.webp' ); ?>">
-						<img src="<?php echo esc_url( $lp_base . 'image/photos/pc/voice-1-detail-21378-7849.webp' ); ?>" alt="" loading="lazy" decoding="async">
+						<source width="933" height="525" media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/voice-1-detail-21376-4701.webp' ); ?>">
+						<img width="404" height="227" src="<?php echo esc_url( $lp_base . 'image/photos/pc/voice-1-detail-21378-7849.webp' ); ?>" alt="" loading="lazy" decoding="async">
 					</picture>
 					<div class="p-voice__detail-body">
 						<p class="p-voice__detail-text">少人数の授業で先生に相談しやすく、授業やゼミを通して自分の得意なことが少しずつ見えてきました。</p>
@@ -403,8 +403,8 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 
 			<div class="p-voice__profile">
 				<picture class="p-voice__avatar">
-					<source media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/student-voice-04-21376-4663.webp' ); ?>">
-					<img src="<?php echo esc_url( $lp_base . 'image/photos/pc/voice-3-avatar-21378-7795.webp' ); ?>" alt="" loading="lazy" decoding="async">
+					<source width="252" height="252" media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/student-voice-04-21376-4663.webp' ); ?>">
+					<img width="160" height="160" src="<?php echo esc_url( $lp_base . 'image/photos/pc/voice-3-avatar-21378-7795.webp' ); ?>" alt="" loading="lazy" decoding="async">
 				</picture>
 				<div class="p-voice__balloon">
 					<h3 class="p-voice__title">学芸員になる夢を、安心して目指せると思った。</h3>
@@ -419,8 +419,8 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 			<div class="p-voice__detail" id="voice-detail-3" hidden>
 				<div class="p-voice__detail-main">
 					<picture class="p-voice__photo">
-						<source media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/voice-1-detail-21376-4701.webp' ); ?>">
-						<img src="<?php echo esc_url( $lp_base . 'image/photos/pc/voice-1-detail-21378-7849.webp' ); ?>" alt="" loading="lazy" decoding="async">
+						<source width="933" height="525" media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/voice-1-detail-21376-4701.webp' ); ?>">
+						<img width="404" height="227" src="<?php echo esc_url( $lp_base . 'image/photos/pc/voice-1-detail-21378-7849.webp' ); ?>" alt="" loading="lazy" decoding="async">
 					</picture>
 					<div class="p-voice__detail-body">
 						<p class="p-voice__detail-text">学芸員資格をめざせることに加えて、経済や経営も一緒に学べるので、将来の選択肢を広げられると感じました。</p>
@@ -454,7 +454,7 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
      に差し替えてください。
      ============================================================ -->
 <section class="p-messages">
-	<div class="l-container">
+	<div class="p-messages__inner l-container">
 
 		<header class="p-messages__head">
 			<span class="c-kicker"># MESSAGES</span>
@@ -466,8 +466,8 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 
 				<div class="swiper-slide p-messages__slide">
 					<picture class="p-messages__photo">
-						<source media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/messages-photo-21376-4643.webp' ); ?>">
-						<img src="<?php echo esc_url( $lp_base . 'image/photos/pc/messages-photo-21378-7760.webp' ); ?>" alt="" loading="lazy" decoding="async">
+						<source width="1029" height="686" media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/messages-photo-21376-4643.webp' ); ?>">
+						<img width="660" height="440" src="<?php echo esc_url( $lp_base . 'image/photos/pc/messages-photo-21378-7760.webp' ); ?>" alt="" loading="lazy" decoding="async">
 					</picture>
 					<div class="p-messages__body">
 						<p class="p-messages__quote">
@@ -480,8 +480,8 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 
 				<div class="swiper-slide p-messages__slide">
 					<picture class="p-messages__photo">
-						<source media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/reason-1-21376-4855.webp' ); ?>">
-						<img src="<?php echo esc_url( $lp_base . 'image/photos/pc/reason-1-21378-8002.webp' ); ?>" alt="" loading="lazy" decoding="async">
+						<source width="1029" height="687" media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/reason-1-21376-4855.webp' ); ?>">
+						<img width="360" height="240" src="<?php echo esc_url( $lp_base . 'image/photos/pc/reason-1-21378-8002.webp' ); ?>" alt="" loading="lazy" decoding="async">
 					</picture>
 					<div class="p-messages__body">
 						<p class="p-messages__quote">
@@ -494,8 +494,8 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 
 				<div class="swiper-slide p-messages__slide">
 					<picture class="p-messages__photo">
-						<source media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/reason-2-21376-4864.webp' ); ?>">
-						<img src="<?php echo esc_url( $lp_base . 'image/photos/pc/reason-2-21378-8010.webp' ); ?>" alt="" loading="lazy" decoding="async">
+						<source width="1029" height="687" media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/reason-2-21376-4864.webp' ); ?>">
+						<img width="360" height="240" src="<?php echo esc_url( $lp_base . 'image/photos/pc/reason-2-21378-8010.webp' ); ?>" alt="" loading="lazy" decoding="async">
 					</picture>
 					<div class="p-messages__body">
 						<p class="p-messages__quote">
@@ -508,8 +508,8 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 
 				<div class="swiper-slide p-messages__slide">
 					<picture class="p-messages__photo">
-						<source media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/reason-3-21376-4872.webp' ); ?>">
-						<img src="<?php echo esc_url( $lp_base . 'image/photos/pc/reason-3-21378-8018.webp' ); ?>" alt="" loading="lazy" decoding="async">
+						<source width="1029" height="687" media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/reason-3-21376-4872.webp' ); ?>">
+						<img width="360" height="240" src="<?php echo esc_url( $lp_base . 'image/photos/pc/reason-3-21378-8018.webp' ); ?>" alt="" loading="lazy" decoding="async">
 					</picture>
 					<div class="p-messages__body">
 						<p class="p-messages__quote">
@@ -522,20 +522,21 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 
 			</div>
 
-			<div class="p-messages__nav">
-				<button class="p-messages__arrow p-messages__arrow--prev" type="button" aria-label="前のメッセージ">
-					<img src="<?php echo esc_url( $lp_base . 'image/icons/arrow-left.svg' ); ?>" alt="" aria-hidden="true">
-				</button>
-				<p class="p-messages__counter">
-					<span data-ref-message-current>1</span>
-					<span class="p-messages__counter-bar" aria-hidden="true"></span>
-					<span>4</span>
-				</p>
-				<button class="p-messages__arrow p-messages__arrow--next" type="button" aria-label="次のメッセージ">
-					<img src="<?php echo esc_url( $lp_base . 'image/icons/arrow-right.svg' ); ?>" alt="" aria-hidden="true">
-				</button>
-			</div>
 		</div>
+		<div class="p-messages__nav">
+			<button class="p-messages__arrow p-messages__arrow--prev" type="button" aria-label="前のメッセージ">
+				<img width="14" height="13" src="<?php echo esc_url( $lp_base . 'image/icons/arrow-left.svg' ); ?>" alt="" aria-hidden="true">
+			</button>
+			<p class="p-messages__counter">
+				<span data-ref-message-current>1</span>
+				<span class="p-messages__counter-bar" aria-hidden="true"></span>
+				<span>4</span>
+			</p>
+			<button class="p-messages__arrow p-messages__arrow--next" type="button" aria-label="次のメッセージ">
+				<img width="14" height="13" src="<?php echo esc_url( $lp_base . 'image/icons/arrow-right.svg' ); ?>" alt="" aria-hidden="true">
+			</button>
+		</div>
+
 
 	</div>
 </section>
@@ -546,14 +547,14 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
      ============================================================ -->
 <section class="p-cta">
 	<div class="p-cta__inner l-container">
-		<h2 class="p-cta__title">千葉経済大学をもっと知ろう！</h2>
+		<h2 class="p-cta__title c-marked-title"><span class="p-cta__title-text">千葉経済大学を<br>もっと知ろう！</span></h2>
 		<div class="p-cta__actions">
 			<a class="c-btn c-btn--doc" href="https://www.cku.ac.jp/sys/seikyu/" target="_blank" rel="noopener">
-				<img class="c-btn__icon" src="<?php echo esc_url( $lp_base . 'image/icons/document-blue.svg' ); ?>" alt="" aria-hidden="true">
+				<img width="16" height="13" class="c-btn__icon" src="<?php echo esc_url( $lp_base . 'image/icons/document-blue.svg' ); ?>" alt="" aria-hidden="true">
 				<span>資料請求</span>
 			</a>
 			<a class="c-btn c-btn--oc" href="https://www.cku.ac.jp/admission/opencampus/" target="_blank" rel="noopener">
-				<img class="c-btn__icon" src="<?php echo esc_url( $lp_base . 'image/icons/open-campus-purple.svg' ); ?>" alt="" aria-hidden="true">
+				<img width="13" height="14" class="c-btn__icon" src="<?php echo esc_url( $lp_base . 'image/icons/open-campus-purple.svg' ); ?>" alt="" aria-hidden="true">
 				<span>オープンキャンパス</span>
 			</a>
 		</div>
@@ -570,7 +571,7 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 	<div class="l-container">
 
 		<header class="p-courses__head">
-			<span class="c-kicker"># COURSES</span>
+			<span class="c-kicker"># COURCES</span>
 			<h2 class="c-heading"><span class="c-heading__text">未来につながる<strong>７</strong>つのコース</span></h2>
 		</header>
 
@@ -578,7 +579,7 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 
 			<li class="p-courses__card" style="--course: #fabf12">
 				<p class="p-courses__icon">
-					<img src="<?php echo esc_url( $lp_base . 'image/icons/course-7.svg' ); ?>" alt="" aria-hidden="true">
+					<img width="44" height="56" src="<?php echo esc_url( $lp_base . 'image/icons/course-7.svg' ); ?>" alt="" aria-hidden="true">
 				</p>
 				<div class="p-courses__body">
 					<h3 class="p-courses__title">公務員コース</h3>
@@ -595,7 +596,7 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 
 			<li class="p-courses__card" style="--course: #f29800">
 				<p class="p-courses__icon">
-					<img src="<?php echo esc_url( $lp_base . 'image/icons/course-6.svg' ); ?>" alt="" aria-hidden="true">
+					<img width="40" height="56" src="<?php echo esc_url( $lp_base . 'image/icons/course-6.svg' ); ?>" alt="" aria-hidden="true">
 				</p>
 				<div class="p-courses__body">
 					<h3 class="p-courses__title">会計コース</h3>
@@ -612,7 +613,7 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 
 			<li class="p-courses__card" style="--course: #ed6c4e">
 				<p class="p-courses__icon">
-					<img src="<?php echo esc_url( $lp_base . 'image/icons/course-5.svg' ); ?>" alt="" aria-hidden="true">
+					<img width="56" height="56" src="<?php echo esc_url( $lp_base . 'image/icons/course-5.svg' ); ?>" alt="" aria-hidden="true">
 				</p>
 				<div class="p-courses__body">
 					<h3 class="p-courses__title">ビジネス経営コース</h3>
@@ -629,7 +630,7 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 
 			<li class="p-courses__card" style="--course: #df4473">
 				<p class="p-courses__icon">
-					<img src="<?php echo esc_url( $lp_base . 'image/icons/course-4.svg' ); ?>" alt="" aria-hidden="true">
+					<img width="52" height="56" src="<?php echo esc_url( $lp_base . 'image/icons/course-4.svg' ); ?>" alt="" aria-hidden="true">
 				</p>
 				<div class="p-courses__body">
 					<h3 class="p-courses__title">金融コース</h3>
@@ -646,7 +647,7 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 
 			<li class="p-courses__card" style="--course: #00a5e3">
 				<p class="p-courses__icon">
-					<img src="<?php echo esc_url( $lp_base . 'image/icons/course-3.svg' ); ?>" alt="" aria-hidden="true">
+					<img width="56" height="38" src="<?php echo esc_url( $lp_base . 'image/icons/course-3.svg' ); ?>" alt="" aria-hidden="true">
 				</p>
 				<div class="p-courses__body">
 					<h3 class="p-courses__title">教職コース</h3>
@@ -663,7 +664,7 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 
 			<li class="p-courses__card" style="--course: #28b6aa">
 				<p class="p-courses__icon">
-					<img src="<?php echo esc_url( $lp_base . 'image/icons/course-2.svg' ); ?>" alt="" aria-hidden="true">
+					<img width="48" height="56" src="<?php echo esc_url( $lp_base . 'image/icons/course-2.svg' ); ?>" alt="" aria-hidden="true">
 				</p>
 				<div class="p-courses__body">
 					<h3 class="p-courses__title">学芸員コース</h3>
@@ -680,7 +681,7 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 
 			<li class="p-courses__card" style="--course: #8cc66c">
 				<p class="p-courses__icon">
-					<img src="<?php echo esc_url( $lp_base . 'image/icons/course-1.svg' ); ?>" alt="" aria-hidden="true">
+					<img width="56" height="40" src="<?php echo esc_url( $lp_base . 'image/icons/course-1.svg' ); ?>" alt="" aria-hidden="true">
 				</p>
 				<div class="p-courses__body">
 					<h3 class="p-courses__title">ITコース</h3>
@@ -712,14 +713,14 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 			<li class="p-links__item" style="--tile-bg: #eee7ff; --tile-accent: #8473aa">
 				<a class="p-links__tile" href="https://www.cku.ac.jp/campuslife/facilities/" target="_blank" rel="noopener">
 					<span class="p-links__label">キャンパス紹介</span>
-					<img class="p-links__arrow" src="<?php echo esc_url( $lp_base . 'image/icons/arrow-right.svg' ); ?>" alt="" aria-hidden="true">
+					<img width="14" height="13" class="p-links__arrow" src="<?php echo esc_url( $lp_base . 'image/icons/arrow-right.svg' ); ?>" alt="" aria-hidden="true">
 				</a>
 			</li>
 
 			<li class="p-links__item" style="--tile-bg: #ffebd1; --tile-accent: #f5971a">
 				<a class="p-links__tile" href="https://www.cku.ac.jp/" target="_blank" rel="noopener">
 					<span class="p-links__label"><small>数字で見る</small>千葉経済大学</span>
-					<img class="p-links__arrow" src="<?php echo esc_url( $lp_base . 'image/icons/arrow-right.svg' ); ?>" alt="" aria-hidden="true">
+					<img width="14" height="13" class="p-links__arrow" src="<?php echo esc_url( $lp_base . 'image/icons/arrow-right.svg' ); ?>" alt="" aria-hidden="true">
 				</a>
 			</li>
 
@@ -728,17 +729,17 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 					<span class="p-links__label p-links__label--en">
 						Official Instagram
 						<small>
-							<img src="<?php echo esc_url( $lp_base . 'image/icons/instagram-outline.svg' ); ?>" alt="" aria-hidden="true">ckckoho
+							<img width="25" height="25" src="<?php echo esc_url( $lp_base . 'image/icons/instagram-outline.svg' ); ?>" alt="" aria-hidden="true">ckckoho
 						</small>
 					</span>
-					<img class="p-links__arrow" src="<?php echo esc_url( $lp_base . 'image/icons/arrow-right.svg' ); ?>" alt="" aria-hidden="true">
+					<img width="14" height="13" class="p-links__arrow" src="<?php echo esc_url( $lp_base . 'image/icons/arrow-right.svg' ); ?>" alt="" aria-hidden="true">
 				</a>
 			</li>
 
 			<li class="p-links__item" style="--tile-bg: #eafff3; --tile-accent: #06c755">
 				<a class="p-links__tile" href="https://lin.ee/slXdqYb" target="_blank" rel="noopener">
 					<span class="p-links__label">LINE登録</span>
-					<img class="p-links__arrow" src="<?php echo esc_url( $lp_base . 'image/icons/arrow-right.svg' ); ?>" alt="" aria-hidden="true">
+					<img width="14" height="13" class="p-links__arrow" src="<?php echo esc_url( $lp_base . 'image/icons/arrow-right.svg' ); ?>" alt="" aria-hidden="true">
 				</a>
 			</li>
 
@@ -754,25 +755,25 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 <section class="p-invite">
 
 	<div class="p-invite__photos" aria-hidden="true">
-		<picture class="p-invite__photo">
-			<source media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/cta-person-left-21376-4958.webp' ); ?>">
-			<img src="<?php echo esc_url( $lp_base . 'image/photos/pc/cta-person-left-21378-7489.webp' ); ?>" alt="" loading="lazy" decoding="async">
+		<picture class="p-invite__photo p-invite__photo--left">
+			<source width="342" height="432" media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/cta-person-left-21376-4958.webp' ); ?>">
+			<img width="280" height="294" src="<?php echo esc_url( $lp_base . 'image/photos/pc/cta-person-left-21378-7489.webp' ); ?>" alt="" loading="lazy" decoding="async">
 		</picture>
-		<picture class="p-invite__photo">
-			<source media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/cta-person-right-21376-4962.webp' ); ?>">
-			<img src="<?php echo esc_url( $lp_base . 'image/photos/pc/cta-person-right-21378-7485.webp' ); ?>" alt="" loading="lazy" decoding="async">
+		<picture class="p-invite__photo p-invite__photo--right">
+			<source width="330" height="411" media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/cta-person-right-21376-4962.webp' ); ?>">
+			<img width="335" height="293" src="<?php echo esc_url( $lp_base . 'image/photos/pc/cta-person-right-21378-7485.webp' ); ?>" alt="" loading="lazy" decoding="async">
 		</picture>
 	</div>
 
 	<div class="p-invite__body">
-		<h2 class="p-invite__title">まずは大学を<br>体験してみよう！</h2>
+		<h2 class="p-invite__title c-marked-title"><span class="p-invite__title-text">まずは大学を<br>体験してみよう！</span></h2>
 		<div class="p-invite__actions">
 			<a class="c-btn c-btn--doc" href="https://www.cku.ac.jp/sys/seikyu/" target="_blank" rel="noopener">
-				<img class="c-btn__icon" src="<?php echo esc_url( $lp_base . 'image/icons/document-blue.svg' ); ?>" alt="" aria-hidden="true">
+				<img width="16" height="13" class="c-btn__icon" src="<?php echo esc_url( $lp_base . 'image/icons/document-blue.svg' ); ?>" alt="" aria-hidden="true">
 				<span>資料請求</span>
 			</a>
 			<a class="c-btn c-btn--oc" href="https://www.cku.ac.jp/admission/opencampus/" target="_blank" rel="noopener">
-				<img class="c-btn__icon" src="<?php echo esc_url( $lp_base . 'image/icons/open-campus-purple.svg' ); ?>" alt="" aria-hidden="true">
+				<img width="13" height="14" class="c-btn__icon" src="<?php echo esc_url( $lp_base . 'image/icons/open-campus-purple.svg' ); ?>" alt="" aria-hidden="true">
 				<span>オープンキャンパス</span>
 			</a>
 		</div>
@@ -791,7 +792,7 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 	<div class="p-footer__inner l-container">
 
 		<div class="p-footer__profile">
-			<img class="p-footer__logo" src="<?php echo esc_url( $lp_base . 'image/icons/university-logo-outlined.svg' ); ?>"
+			<img width="187" height="47" class="p-footer__logo" src="<?php echo esc_url( $lp_base . 'image/icons/university-logo-outlined.svg' ); ?>"
 			     alt="千葉経済大学 CHIBA KEIZAI" width="240" height="61">
 			<p class="p-footer__address">
 				〒263-0021　千葉市稲毛区轟町3-59-5<br>
@@ -806,16 +807,16 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 			</nav>
 			<nav class="p-footer__sns" aria-label="公式SNS">
 				<a href="https://www.facebook.com/chibakeizaiuniv/" target="_blank" rel="noopener" aria-label="Facebook">
-					<img src="<?php echo esc_url( $lp_base . 'image/icons/facebook-outline.svg' ); ?>" alt="" aria-hidden="true">
+					<img width="28" height="28" src="<?php echo esc_url( $lp_base . 'image/icons/facebook-outline.svg' ); ?>" alt="" aria-hidden="true">
 				</a>
 				<a href="https://www.youtube.com/@chibakeizaiuniversity" target="_blank" rel="noopener" aria-label="YouTube">
-					<img src="<?php echo esc_url( $lp_base . 'image/icons/youtube-outline.svg' ); ?>" alt="" aria-hidden="true">
+					<img width="30" height="21" src="<?php echo esc_url( $lp_base . 'image/icons/youtube-outline.svg' ); ?>" alt="" aria-hidden="true">
 				</a>
 				<a href="https://www.instagram.com/chibakeizai_university/" target="_blank" rel="noopener" aria-label="Instagram">
-					<img src="<?php echo esc_url( $lp_base . 'image/icons/instagram-outline.svg' ); ?>" alt="" aria-hidden="true">
+					<img width="25" height="25" src="<?php echo esc_url( $lp_base . 'image/icons/instagram-outline.svg' ); ?>" alt="" aria-hidden="true">
 				</a>
 				<a href="https://lin.ee/slXdqYb" target="_blank" rel="noopener" aria-label="LINE">
-					<img src="<?php echo esc_url( $lp_base . 'image/icons/line-outline.svg' ); ?>" alt="" aria-hidden="true">
+					<img width="29" height="29" src="<?php echo esc_url( $lp_base . 'image/icons/line-outline.svg' ); ?>" alt="" aria-hidden="true">
 				</a>
 			</nav>
 		</div>
@@ -825,7 +826,7 @@ wp_enqueue_script( 'ref001-lp-script', $lp_base . 'js/ref001-interactions.js', a
 	</div>
 
 	<button class="p-footer__pagetop" type="button" aria-label="ページ上部へ">
-		<img src="<?php echo esc_url( $lp_base . 'image/icons/footer-page-top.svg' ); ?>" alt="" aria-hidden="true">
+		<img width="15" height="8" src="<?php echo esc_url( $lp_base . 'image/icons/footer-page-top.svg' ); ?>" alt="" aria-hidden="true">
 	</button>
 </footer>
 
