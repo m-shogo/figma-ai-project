@@ -352,7 +352,9 @@
 		font-size: var(--fs-small);
 		line-height: 1;
 		letter-spacing: .05em;
-		white-space: nowrap;
+		/* 折り返しは禁止しません。今の文言は1行に収まりますが、
+		   長い文言に変えたときは横へはみ出すより2行になるほうが安全です。 */
+		text-wrap: balance;
 		filter: drop-shadow(2px -2px 0 #555);
 
 		/* 下向きの尻尾。正方形を45度回して2辺だけ線を残しています */
@@ -1023,12 +1025,17 @@
 		width: fit-content;
 		margin-top: 1.5rem;    /* Figma: 線から 24px */
 		margin-inline: auto;   /* SP は中央。PC は下の @media で左へ */
-		padding-bottom: 4px;
 		font-size: var(--fs-edu-intro);
 		font-weight: 500;
 		line-height: 1;        /* Figma は行の高さ 1.0 */
 		letter-spacing: .05em;
-		background: linear-gradient(var(--color-orange) 0 0) no-repeat 0 100% / 100% 8px;
+
+		/* 帯は文字の幅ぶんだけ。2行になったときも各行に付きます */
+		& span {
+			box-decoration-break: clone;
+			padding-bottom: 4px;
+			background: linear-gradient(var(--color-orange) 0 0) no-repeat 0 100% / 100% 8px;
+		}
 	}
 
 	& .p-education__intro-text {
@@ -1216,8 +1223,11 @@
 			grid-column: 2;
 			margin-top: 0;
 			margin-inline: 0;
-			padding-right: 3.125rem;   /* Figma: 帯だけ文字より 50px 長い */
 		}
+
+		/* Figma は帯だけ文字より 50px 長い（文字 352px / 帯 402px）。
+		   帯は span に描いているので、余白も span へ付けます。 */
+		& .p-education__intro-title span { padding-right: 3.125rem; }
 
 		& .p-education__intro-text {
 			grid-column: 2;
@@ -1540,7 +1550,7 @@
 		font-size: var(--fs-voice-advice);
 		line-height: 1.4;
 		text-align: center;
-		white-space: nowrap;
+		text-wrap: balance;   /* 長い文言でもはみ出さず2行になる */
 
 		&::after {
 			content: '';
@@ -1909,14 +1919,20 @@
 	/* Figma: コース名は 20px の1行。下線はコースの色の 8px の帯で、
 	   文字の箱より 3px 下へはみ出します。 */
 	& .p-courses__title {
-		width: fit-content;
-		padding-bottom: 3px;
 		font-size: var(--fs-course-title);
 		font-weight: 500;
 		line-height: 1;
 		letter-spacing: .05em;
-		background: linear-gradient(color-mix(in srgb, var(--course) 30%, transparent) 0 0)
-		            no-repeat left bottom / 100% 8px;
+
+		/* 下線は文字の幅ぶんだけ。2行になったときに
+		   最後の行だけでなく各行に付くよう、中の span へ描いています
+		   （box-decoration-break: clone で行ごとに背景を繰り返す）。 */
+		& span {
+			box-decoration-break: clone;
+			padding-bottom: 3px;
+			background: linear-gradient(color-mix(in srgb, var(--course) 30%, transparent) 0 0)
+			            no-repeat left bottom / 100% 8px;
+		}
 	}
 
 	& .p-courses__text {
