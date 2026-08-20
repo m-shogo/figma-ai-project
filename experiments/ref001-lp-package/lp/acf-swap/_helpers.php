@@ -55,26 +55,66 @@ function lp_rows( string $field, array $sub_fields, array $fallback ): array {
  */
 function lp_picture( string $lp_base, $acf_image, string $pc, string $sp, string $class = '' ): void {
 	if ( ! empty( $acf_image['url'] ) ) {
-		$pc_url = (string) $acf_image['url'];
-		$sp_url = $pc_url;
-		$alt    = (string) ( $acf_image['alt'] ?? '' );
+		$pc_url  = (string) $acf_image['url'];
+		$sp_url  = $pc_url;
+		$alt     = (string) ( $acf_image['alt'] ?? '' );
+		$pc_size = array( (int) ( $acf_image['width'] ?? 0 ), (int) ( $acf_image['height'] ?? 0 ) );
+		$sp_size = $pc_size;
 	} else {
-		$pc_url = $lp_base . 'image/photos/pc/' . $pc;
-		$sp_url = $lp_base . 'image/photos/sp/' . $sp;
-		$alt    = '';
+		$pc_url  = $lp_base . 'image/photos/pc/' . $pc;
+		$sp_url  = $lp_base . 'image/photos/sp/' . $sp;
+		$alt     = '';
+		$pc_size = lp_image_size( 'image/photos/pc/' . $pc );
+		$sp_size = lp_image_size( 'image/photos/sp/' . $sp );
 	}
 
 	printf( '<picture class="%s">', htmlspecialchars( $class, ENT_QUOTES, 'UTF-8' ) );
 	printf(
-		'<source media="(max-width: 767px)" srcset="%s">',
+		'<source media="(max-width: 767px)"%s srcset="%s">',
+		lp_size_attrs( $sp_size ),
 		htmlspecialchars( $sp_url, ENT_QUOTES, 'UTF-8' )
 	);
 	printf(
-		'<img src="%s" alt="%s" loading="lazy" decoding="async">',
+		'<img%s src="%s" alt="%s" loading="lazy" decoding="async">',
+		lp_size_attrs( $pc_size ),
 		htmlspecialchars( $pc_url, ENT_QUOTES, 'UTF-8' ),
 		htmlspecialchars( $alt, ENT_QUOTES, 'UTF-8' )
 	);
 	echo '</picture>';
+}
+
+/**
+ * lp/ 以下の画像の実寸を返します。
+ *
+ * img に width / height を書いておくと、読み込みが終わる前でも
+ * ブラウザが表示場所の高さを確保できるので、画面がガタつきません。
+ *
+ * @return array{0:int,1:int} 幅と高さ。分からないときは 0, 0
+ */
+function lp_image_size( string $relative_path ): array {
+	static $cache = array();
+
+	if ( isset( $cache[ $relative_path ] ) ) {
+		return $cache[ $relative_path ];
+	}
+
+	$file = dirname( __DIR__ ) . '/' . ltrim( $relative_path, '/' );
+	$size = is_readable( $file ) ? @getimagesize( $file ) : false;
+
+	$cache[ $relative_path ] = $size ? array( (int) $size[0], (int) $size[1] ) : array( 0, 0 );
+
+	return $cache[ $relative_path ];
+}
+
+/**
+ * width / height 属性の文字列を作ります。実寸が分からないときは何も出しません。
+ */
+function lp_size_attrs( array $size ): string {
+	if ( empty( $size[0] ) || empty( $size[1] ) ) {
+		return '';
+	}
+
+	return sprintf( ' width="%d" height="%d"', $size[0], $size[1] );
 }
 
 /** 改行区切りの文字列を、空行を除いた配列にする */

@@ -117,11 +117,13 @@ check( empty( $bad_clamp ), 'clamp() の最小値が最大値を超えていな�
    =========================================================== */
 
 $absolute_allowlist = array(
-	'p-voice__balloon' => '吹き出しの尻尾（箱の外へ出す三角）',
-	'p-footer__pagetop' => 'フッター右下のページトップボタン',
-	'p-mv__oc'          => 'OPEN CAMPUS バッジ（写真へ重ねる）',
-	'p-mv__oc-balloon'  => 'バッジの吹き出し',
-	'p-mv__oc-arrow'    => 'バッジの矢印',
+	'p-voice__balloon'    => '吹き出しの尻尾（箱の外へ出す三角）',
+	'p-footer__pagetop'   => 'フッター右下のページトップボタン',
+	'p-mv__oc'            => 'OPEN CAMPUS バッジ（写真へ重ねる）',
+	'p-mv__oc-balloon'    => 'バッジの吹き出し',
+	'p-mv__oc-arrow'      => 'バッジの矢印',
+	'p-education__step'   => 'カードとカードの間に置く矢印',
+	'.p-invite'           => 'INVITE の内側の飾り枠',
 );
 
 $css_without_comments = preg_replace( '#/\*.*?\*/#s', '', $css );
@@ -130,12 +132,19 @@ $css_without_comments = preg_replace( '#/\*.*?\*/#s', '', $css );
 $absolute_users = array();
 $lines = explode( "\n", $css_without_comments );
 $current_selector = '';
+$block_stack = array();
 foreach ( $lines as $line ) {
 	if ( strpos( $line, '{' ) !== false ) {
 		$current_selector = trim( strtok( $line, '{' ) );
+		$block_stack[] = $current_selector;
+	}
+	if ( strpos( $line, '}' ) !== false && $block_stack ) {
+		array_pop( $block_stack );
 	}
 	if ( preg_match( '/position\s*:\s*absolute/', $line ) ) {
-		$absolute_users[] = $current_selector;
+		/* 「&::before」のように単体では判断できない書き方があるので、
+		   外側のブロック名も含めて許可リストと突き合わせる */
+		$absolute_users[] = implode( ' ', $block_stack );
 	}
 }
 

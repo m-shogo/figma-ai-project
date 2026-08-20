@@ -51,7 +51,7 @@ $slides = lp_rows(
 $total = count( $slides );
 ?>
 <section class="p-messages">
-	<div class="l-container">
+	<div class="p-messages__inner l-container">
 
 		<header class="p-messages__head">
 			<span class="c-kicker"># MESSAGES</span>
@@ -83,20 +83,21 @@ $total = count( $slides );
 				<?php endforeach; ?>
 			</div>
 
-			<div class="p-messages__nav">
-				<button class="p-messages__arrow p-messages__arrow--prev" type="button" aria-label="前のメッセージ">
-					<img src="<?php echo esc_url( $lp_base . 'image/icons/arrow-left.svg' ); ?>" alt="" aria-hidden="true">
-				</button>
-				<p class="p-messages__counter">
-					<span data-ref-message-current>1</span>
-					<span class="p-messages__counter-bar" aria-hidden="true"></span>
-					<span><?php echo (int) $total; ?></span>
-				</p>
-				<button class="p-messages__arrow p-messages__arrow--next" type="button" aria-label="次のメッセージ">
-					<img src="<?php echo esc_url( $lp_base . 'image/icons/arrow-right.svg' ); ?>" alt="" aria-hidden="true">
-				</button>
-			</div>
 		</div>
+		<div class="p-messages__nav">
+			<button class="p-messages__arrow p-messages__arrow--prev" type="button" aria-label="前のメッセージ">
+				<img src="<?php echo esc_url( $lp_base . 'image/icons/arrow-left.svg' ); ?>" alt="" aria-hidden="true">
+			</button>
+			<p class="p-messages__counter">
+				<span data-ref-message-current>1</span>
+				<span class="p-messages__counter-bar" aria-hidden="true"></span>
+				<span><?php echo (int) $total; ?></span>
+			</p>
+			<button class="p-messages__arrow p-messages__arrow--next" type="button" aria-label="次のメッセージ">
+				<img src="<?php echo esc_url( $lp_base . 'image/icons/arrow-right.svg' ); ?>" alt="" aria-hidden="true">
+			</button>
+		</div>
+
 
 	</div>
 </section>
