@@ -1,0 +1,273 @@
+schema_version: 5
+profile_id: IMPL-REF001-BENCHMARK-WORDPRESS-ACF
+status: FROZEN
+created_at: '2026-08-21T12:41:00+09:00'
+updated_at: '2026-08-21T12:41:00+09:00'
+selection:
+  mode: EXPLICIT
+  family: WORDPRESS
+  variant: CLASSIC
+  selected_by: BENCHMARK_FIXTURE_CONTRACT
+  notes:
+  - This profile freezes only the isolated REF-001 benchmark target, never the unresolved production theme.
+  - WordPress fixed Page template + ACF and the 768 owner breakpoint are project/owner-resolved inputs; Classic is selected because the benchmark target itself is a new Classic shell.
+repository:
+  repository: m-shogo/figma-ai-project
+  starting_commit: 9fcb24dde1607f5a3830dfdd869ed318a830e6d9
+  target_route_or_template: experiments/ref001-benchmark-replay/blank-theme/page-templates/template-ref001-benchmark.php
+  inspected: true
+  evidence_paths:
+  - experiments/wordpress-acf-pro-standalone-lp/compose.yml
+  - experiments/wordpress-acf-pro-standalone-lp/scripts/setup.sh
+  - .github/workflows/wordpress-acf-pro-standalone-lp.yml
+  - experiments/ref001-benchmark-replay/blank-theme/style.css
+  - experiments/ref001-benchmark-replay/blank-theme/page-templates/template-ref001-benchmark.php
+resolution:
+  detected_family: WORDPRESS
+  detected_variant: CLASSIC
+  confidence: HIGH
+  evidence:
+  - Owner-resolved REF-001 target family is WordPress fixed Page template + ACF.
+  - The benchmark target is intentionally defined as a new minimal Classic theme shell.
+  - The existing standalone fixture pins WordPress 7.0.2 with PHP 8.3 and installs ACF PRO through the official Composer repository.
+  conflicts: []
+  conflict_resolution: MATCHED
+effective:
+  family: WORDPRESS
+  variant: CLASSIC
+  language_runtime: PHP 8.3 / WordPress 7.0.2 / HTML / CSS / JavaScript
+  package_manager: Composer for ACF PRO runtime dependency only; no frontend package manager
+  build_tool: NONE
+  styling_architecture: Plain WordPress theme CSS; section-local styles preferred, no framework dependency
+  component_system: WordPress Page template + template parts
+  routing: Selectable fixed WordPress Page Template
+  data_source: WordPress Page + benchmark-specific ACF fields
+  image_pipeline: WordPress attachment IDs + wp_get_attachment_image(); exact Figma asset identity remains authoritative
+  form_handling: NOT_APPLICABLE
+  i18n: Japanese benchmark; no multilingual runtime required
+  test_harness: Docker Compose WordPress runtime + WP-CLI/ACF import smoke + browser/runtime/visual QA
+  rendering_mode: SERVER_RENDERED_PHP
+  notes:
+  - No production theme/version/Local JSON/global ownership claim is made by this benchmark profile.
+  - Old REF answer-bearing implementation is forbidden from the clean workspace.
+platform:
+  wordpress:
+    enabled: true
+    wordpress_version: 7.0.2
+    php_version: '8.3'
+    theme_type: CLASSIC
+    template_unit: FIXED_PAGE_TEMPLATE
+    editor_model: ACF_FIELDS
+    asset_enqueue: wp_enqueue_style()/wp_enqueue_script() from benchmark functions.php
+    image_helpers: wp_get_attachment_image() with attachment ID fields
+    theme_json: NOT_REQUIRED_FOR_BENCHMARK_CLASSIC_THEME
+    block_json: NOT_REQUIRED_FOR_FIXED_PAGE_TEMPLATE
+    cpt_taxonomy: NOT_REQUIRED_BY_REF001_BENCHMARK
+    acf:
+      enabled: true
+      version: ^6.0
+      pro: true
+      architecture: TEMPLATE_FIELDS
+      field_group_ownership: BENCHMARK_PAGE_SPECIFIC
+      image_return_format: ID
+      local_json_policy: NOT_REQUIRED_FOR_BENCHMARK
+      local_json_dir: ''
+      stable_keys_required: true
+      notes:
+      - ACF PRO dependency contract is ^6.0; runtime smoke records the actual installed patch version.
+      - Do not infer production ACF architecture from this benchmark.
+delivery_requirements:
+  source_code_required: true
+  acf:
+    required: true
+    export_json:
+      required: true
+      format: ACF_EXPORT_ARRAY
+      target_repo_path: experiments/ref001-benchmark-replay/output/acf-export.json
+      evidence_copy_required: true
+    local_json:
+      required: false
+      target_repo_dir: ''
+    import_or_sync_smoke_required: true
+    accepted_methods:
+    - WP_CLI_IMPORT
+    - OTHER
+checklist:
+- id: REPOSITORY_BASELINE
+  status: PASS
+  evidence:
+  - m-shogo/figma-ai-project benchmark baseline is pinned to 9fcb24dde1607f5a3830dfdd869ed318a830e6d9.
+  notes: []
+- id: TARGET_ROUTE_OR_TEMPLATE
+  status: PASS
+  evidence:
+  - Benchmark target is experiments/ref001-benchmark-replay/blank-theme/page-templates/template-ref001-benchmark.php.
+  notes: []
+- id: LANGUAGE_AND_RUNTIME
+  status: PASS
+  evidence:
+  - Current standalone WordPress fixture uses wordpress:7.0.2-php8.3-apache.
+  notes: []
+- id: BUILD_AND_PACKAGE_MANAGER
+  status: PASS
+  evidence:
+  - Theme has no frontend build step; Composer is used only by the existing fixture runtime to install ACF PRO.
+  notes: []
+- id: STYLING_ARCHITECTURE
+  status: PASS
+  evidence:
+  - Blank benchmark target starts with plain theme CSS; clean replay must derive design CSS from current authority.
+  notes: []
+- id: COMPONENT_REUSE_POLICY
+  status: PASS
+  evidence:
+  - Reuse canonical project utilities/assets when allowed; old REF answer-bearing implementation is excluded from the sanitized workspace.
+  notes: []
+- id: ROUTING_DECISION
+  status: PASS
+  evidence:
+  - Benchmark uses a selectable fixed WordPress Page Template.
+  notes: []
+- id: DATA_SOURCE_DECISION
+  status: PASS
+  evidence:
+  - Benchmark content delivery is WordPress Page + ACF fields; field definitions must be delivered as importable ACF JSON.
+  notes: []
+- id: IMAGE_ASSET_PIPELINE
+  status: PASS
+  evidence:
+  - Benchmark uses WordPress attachment IDs and wp_get_attachment_image(); exact Figma assets remain separate authority.
+  notes: []
+- id: FORM_HANDLING_DECISION
+  status: PASS
+  evidence:
+  - No form is required by the REF-001 benchmark reference.
+  notes: []
+- id: I18N_DECISION
+  status: PASS
+  evidence:
+  - Benchmark language is Japanese; no multilingual runtime is required for this replay target.
+  notes: []
+- id: TEST_HARNESS_DECISION
+  status: PASS
+  evidence:
+  - Existing standalone runtime provides Docker Compose, WP-CLI setup, ACF import/activation, runtime checks, and Playwright visual QA.
+  notes: []
+- id: REQUIRED_ENVIRONMENT_MATRIX
+  status: PASS
+  evidence:
+  - Benchmark runtime is pinned to WordPress 7.0.2 / PHP 8.3; responsive acceptance remains 375 and 1380 with boundary/runtime probes.
+  notes: []
+- id: ACCESSIBILITY_BASELINE
+  status: PASS
+  evidence:
+  - Semantic HTML, keyboard baseline, no page horizontal overflow, and readable text reflow remain required.
+  notes: []
+- id: WORDPRESS_VERSION
+  status: PASS
+  evidence:
+  - Current benchmark runtime compose pins wordpress:7.0.2-php8.3-apache.
+  notes: []
+- id: PHP_VERSION
+  status: PASS
+  evidence:
+  - Current benchmark runtime compose pins PHP 8.3.
+  notes: []
+- id: WORDPRESS_THEME_TYPE
+  status: PASS
+  evidence:
+  - The new benchmark target itself is intentionally a minimal Classic theme shell; this does not classify any production theme.
+  notes: []
+- id: WORDPRESS_TEMPLATE_UNIT
+  status: PASS
+  evidence:
+  - Owner-resolved REF-001 implementation unit is a fixed WordPress Page template.
+  notes: []
+- id: WORDPRESS_EDITOR_MODEL
+  status: PASS
+  evidence:
+  - Owner-resolved REF-001 content model uses ACF fields.
+  notes: []
+- id: WORDPRESS_ASSET_ENQUEUE
+  status: PASS
+  evidence:
+  - Blank benchmark theme uses wp_enqueue_style()/wp_enqueue_script() conventions.
+  notes: []
+- id: WORDPRESS_IMAGE_HELPERS
+  status: PASS
+  evidence:
+  - Benchmark media contract uses attachment IDs + wp_get_attachment_image().
+  notes: []
+- id: WORDPRESS_ESCAPING
+  status: PASS
+  evidence:
+  - Blank target and replay must use WordPress escaping appropriate to output context.
+  notes: []
+- id: WORDPRESS_THEME_JSON_DECISION
+  status: PASS
+  evidence:
+  - Classic benchmark shell does not require theme.json.
+  notes: []
+- id: WORDPRESS_BLOCK_JSON_DECISION
+  status: PASS
+  evidence:
+  - Fixed Classic benchmark Page template does not require block.json.
+  notes: []
+- id: WORDPRESS_CPT_TAXONOMY_DECISION
+  status: PASS
+  evidence:
+  - REF-001 benchmark does not require a CPT or taxonomy.
+  notes: []
+- id: ACF_VERSION_AND_LICENSE_TIER
+  status: PASS
+  evidence:
+  - Existing standalone runtime installs wpengine/advanced-custom-fields-pro:^6.0 and requires ACF PRO credentials; exact installed patch version is verified during runtime smoke, not guessed in source.
+  notes: []
+- id: ACF_ARCHITECTURE
+  status: PASS
+  evidence:
+  - Benchmark uses template fields for the fixed Page; repeated visual structure does not itself authorize Repeater/Flexible Content.
+  notes: []
+- id: ACF_FIELD_GROUP_OWNERSHIP
+  status: PASS
+  evidence:
+  - Replay owns a benchmark-specific Page field group only; global production ownership is out of scope.
+  notes: []
+- id: ACF_IMAGE_RETURN_FORMAT
+  status: PASS
+  evidence:
+  - Benchmark image fields use attachment ID return format.
+  notes: []
+- id: ACF_REPEATER_FLEXIBLE_BLOCK_DECISION
+  status: PASS
+  evidence:
+  - No add/remove/reorder editor requirement is assumed; fresh replay must justify any PRO-only collection field from authority.
+  notes: []
+- id: ACF_KEY_STABILITY
+  status: PASS
+  evidence:
+  - Importable benchmark ACF JSON requires stable field/group keys.
+  notes: []
+- id: ACF_EXPORT_JSON_REQUIREMENT
+  status: PASS
+  evidence:
+  - Fresh replay must deliver an importable ACF_EXPORT_ARRAY JSON under its benchmark evidence/output namespace.
+  notes: []
+- id: ACF_LOCAL_JSON_REQUIREMENT
+  status: PASS
+  evidence:
+  - Local JSON is intentionally not required for the isolated benchmark; importable export JSON + smoke is the portable contract.
+  notes: []
+- id: ACF_IMPORT_OR_SYNC_SMOKE_PLAN
+  status: PASS
+  evidence:
+  - Existing runtime supports ACF import and activation through WP-CLI/PHP bootstrap; fresh replay must record a passing import/sync smoke.
+  notes: []
+unknowns: []
+conflicts: []
+freeze:
+  ready: true
+  frozen_at: '2026-08-21T12:41:00+09:00'
+  notes:
+  - Frozen for isolated REF-001 benchmark execution only.
+  - Production repository/theme/version/global ownership remain outside this profile and must not be inferred from it.
