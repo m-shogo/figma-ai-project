@@ -95,7 +95,12 @@ class ExecutionOutputContractTests(unittest.TestCase):
         section = {
             "responsive": {
                 "breakpoint_exception_proposals": [
-                    {"status": "APPROVED", "source": "OWNER", "threshold_px": 1100}
+                    {
+                        "status": "APPROVED",
+                        "source": "OWNER",
+                        "threshold_px": 1100,
+                        "evidence": ["owner-approved"],
+                    }
                 ]
             }
         }
@@ -105,6 +110,21 @@ class ExecutionOutputContractTests(unittest.TestCase):
             section=section,
         )
         self.assertEqual([], errors)
+
+    def test_owner_exception_without_evidence_is_rejected(self) -> None:
+        section = {
+            "responsive": {
+                "breakpoint_exception_proposals": [
+                    {"status": "APPROVED", "source": "OWNER", "threshold_px": 1100}
+                ]
+            }
+        }
+        errors = validate_css_text(
+            "@media (min-width: 1100px){.x{display:block}}",
+            contract(override="OWNER_ALLOWED"),
+            section=section,
+        )
+        self.assertTrue(any("unowned viewport threshold 1100px" in error for error in errors))
 
     def test_page_run_rejects_known_static_html_output_for_php_profile(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
