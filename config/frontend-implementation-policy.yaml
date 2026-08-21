@@ -98,6 +98,13 @@ responsive:
   authoring_default: MOBILE_FIRST
   base_declarations_target_smallest_supported_layout: true
   larger_layout_overrides_use_min_width_by_default: true
+  execution_order_default: SP_THEN_PC
+  section_stabilization_order: SP_THEN_PC
+  boundary_cluster_acceptance_order: SP_THEN_PC
+  final_integration_acceptance_order: SP_THEN_PC
+  pc_change_to_shared_owner_invalidates_prior_sp_acceptance: true
+  shared_owner_change_restart_acceptance_from: SP
+  parallel_capture_must_not_override_acceptance_order: true
   media_queries_colocated_with_owner_by_default: true
   breakpoint_bucket_stylesheets_by_default: false
   company_or_explicit_project_authoring_rule_can_override: true
