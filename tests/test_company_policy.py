@@ -39,11 +39,17 @@ class CompanyPolicyTests(unittest.TestCase):
     def test_active_policy_with_browser_contract_passes_semantics(self) -> None:
         self.assertEqual([], policy.semantic_policy_errors(active_policy()))
 
-    def test_precedence_order_is_not_negotiable(self) -> None:
+    def test_baseline_evidence_order_remains_stable(self) -> None:
         data = active_policy()
         data["precedence"]["implementation_constraints"] = list(reversed(EXPECTED))
         errors = policy.semantic_policy_errors(data)
-        self.assertTrue(any("implementation precedence" in error for error in errors))
+        self.assertTrue(
+            any(
+                "baseline implementation evidence order" in error
+                and "Effective Project Contract" in error
+                for error in errors
+            )
+        )
 
     def test_active_policy_requires_browser_support_contract(self) -> None:
         data = active_policy()
@@ -52,6 +58,24 @@ class CompanyPolicyTests(unittest.TestCase):
         data["browser_support"]["test_matrix"] = []
         errors = policy.semantic_policy_errors(data)
         self.assertTrue(any("browser support contract" in error for error in errors))
+
+    def test_declared_product_viewport_minimum_must_be_positive_number_or_null(self) -> None:
+        data = active_policy()
+        data["responsive"]["minimum_product_viewport_css_px"] = "360px"
+        errors = policy.semantic_policy_errors(data)
+        self.assertTrue(any("minimum_product_viewport_css_px" in error for error in errors))
+
+        data["responsive"]["minimum_product_viewport_css_px"] = None
+        errors = policy.semantic_policy_errors(data)
+        self.assertFalse(any("minimum_product_viewport_css_px" in error for error in errors))
+
+    def test_declared_below_minimum_policy_requires_explicit_project_contract(self) -> None:
+        data = active_policy()
+        data["responsive"]["below_minimum_requires_explicit_project_contract"] = False
+        errors = policy.semantic_policy_errors(data)
+        self.assertTrue(
+            any("below_minimum_requires_explicit_project_contract" in error for error in errors)
+        )
 
     def test_frozen_contract_requires_actual_policy_hash(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

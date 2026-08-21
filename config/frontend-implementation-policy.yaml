@@ -1,0 +1,341 @@
+schema_version: 5
+policy_status: ACTIVE
+
+canonical:
+  authority_model: docs/frontend-authority-model.md
+  quick_contract: docs/frontend-quick-contract.md
+  implementation_standard: docs/frontend-implementation-standard.md
+  maintainability_qa: docs/frontend-maintainability-qa.md
+  repeatable_content: docs/frontend-repeatable-content.md
+  stress_qa: docs/frontend-resilience-stress-qa.md
+  pattern_library: docs/frontend-pattern-library.md
+  reuse_before_build: docs/frontend-reuse-before-build.md
+  external_integration_matrix: docs/frontend-external-integration-matrix.md
+  decorative_pattern_cookbook: docs/frontend-decorative-pattern-cookbook.md
+  visual_repair_learning_loop: docs/frontend-visual-repair-learning-loop.md
+  coverage_map: docs/frontend-standard-coverage.md
+  css_foundation_reset: docs/css-foundation-reset-policy.md
+  font_loading: docs/frontend-font-loading-policy.md
+  production_runtime: docs/frontend-production-runtime-contract.md
+  delivery_security: docs/frontend-delivery-security-contract.md
+
+rule_lifecycle:
+  allowed_states: [CORE, ACTIVE, CANDIDATE, PROJECT_ONLY, DEPRECATED, RETIRED]
+  numeric_thresholds_default: CANDIDATE
+  one_observation_must_not_create_permanent_ban: true
+
+authority:
+  model: ROLE_BASED_NOT_SINGLE_LINEAR_PRECEDENCE
+  company_hard_constraints_are_top: true
+  existing_codebase_is_required_baseline: true
+  explicit_authorized_project_override_can_supersede_stale_existing_baseline: true
+  explicit_override_cannot_bypass_company_security_or_protected_scope: true
+  effective_project_contract_resolves_existing_plus_authorized_overrides: true
+  visual_source: FIGMA_REFERENCE
+  figma_implementation_evidence_is_input_to_decision: true
+  frontend_standard_role: FALLBACK_DECISION_FRAMEWORK
+  frontend_standard_must_not_override_effective_project_contract: true
+  frontend_standard_must_not_override_figma_visual_truth: true
+  figma_structure_must_not_be_mechanically_copied_to_web_mechanism: true
+  agent_inference_is_last: true
+  explicit_instruction_inferred_structure_and_agent_inference_are_distinct: true
+
+objectives:
+  - VISUAL_FIDELITY
+  - FINDABILITY
+  - LOCALITY
+  - CONTENT_RESILIENCE
+  - REPEATABLE_CONTENT_RESILIENCE
+  - RESPONSIVE_RESILIENCE
+  - RUNTIME_STATE_RESILIENCE
+  - INTERACTION_ACCESSIBILITY
+  - PERFORMANCE_LOADING_RESPONSIVENESS
+  - THIRD_PARTY_BOUNDARY_SAFETY
+  - DELIVERY_SECURITY_RESPONSIBILITY
+  - INTERNATIONALIZATION_RESILIENCE
+  - REGRESSION_SCOPE_SAFETY
+  - HUMAN_REPAIRABILITY
+  - REUSE_EFFICIENCY
+  - LEARNING_REWORK_REDUCTION
+  - SIMPLICITY
+
+naming:
+  existing_company_rule_first: true
+  owner_searchability_is_core: true
+  global_css_bem_prefix_default: true
+  scoped_css_local_names_allowed_when_owner_boundary_is_unambiguous: true
+  do_not_force_bem_only_to_increase_prefix_count: true
+
+layout:
+  property_bans_are_not_goal: true
+  fixed_dimensions_are_not_globally_banned: true
+  absolute_is_not_globally_banned: true
+  figma_rendered_coordinate_is_not_automatically_web_constraint: true
+  property_count_is_not_quality_score: true
+
+css_ownership:
+  authoritative_base_owner_required: true
+  legal_contextual_selector_repetition_allowed: true
+  duplicate_detection_prefer_parser_ast: true
+  simple_regex_must_not_fail_legal_contexts: true
+  permanent_final_fix_zone_prohibited: true
+  repair_canonical_owner_first: true
+  repeated_patch_is_design_review_signal: true
+  hard_patch_count_threshold: null
+
+nesting:
+  global_bem_selectors_flat_by_default: true
+  scoped_css_existing_convention_first: true
+  ampersand_is_not_required_for_simple_descendant: true
+  deep_descendant_nesting: WARN
+  parent_selector_list_specificity_must_be_considered: true
+  contextual_at_rules_colocated_with_owner_by_default: true
+  separate_breakpoint_buckets_by_default: false
+  owner_colocation_requires_supported_authoring_stack: true
+
+responsive:
+  company_existing_breakpoints_first: true
+  authoring_default: MOBILE_FIRST
+  base_declarations_target_smallest_supported_layout: true
+  larger_layout_overrides_use_min_width_by_default: true
+  media_queries_colocated_with_owner_by_default: true
+  breakpoint_bucket_stylesheets_by_default: false
+  company_or_explicit_project_authoring_rule_can_override: true
+  product_viewport_source: EFFECTIVE_ENVIRONMENT_CONTRACT
+  unresolved_product_viewport_fallback_css_px: 360
+  unresolved_product_viewport_fallback_status: CANDIDATE
+  below_resolved_product_minimum_not_default_visual_target: true
+  accessibility_reflow_is_separate_probe: true
+  breakpoint_means_layout_boundary_not_device_identity: true
+  breakpoint_count_is_not_score: true
+  patch_breakpoint_proliferation: WARN
+  breakpoint_continuity_probe_when_material: true
+
+content_risk_factors:
+  multiple_factors_can_apply: true
+  required_categories:
+    - STATIC_AUTHORED
+    - EDITOR_OWNED
+    - LOCALIZED
+    - EXTERNAL_DATA
+    - USER_GENERATED
+  editable_text_default_wrap: true
+  explicit_single_line_contract_can_override: true
+
+line_break_strategy:
+  required_strategies:
+    - NATURAL_WRAP
+    - PHRASE_WRAP
+    - AUTHORED_BREAK
+    - TRUNCATION
+  screenshot_line_break_is_not_automatically_contract: true
+  hardcoded_br_for_editable_copy: REVIEW
+  phrase_wrap_requires_semantic_or_art_direction_reason: true
+  phrase_wrap_must_not_be_mechanically_applied_to_localized_or_cms_copy: true
+  truncation_requires_explicit_information_loss_contract: true
+
+repeatable_content:
+  same_format_sequence_triggers_review: true
+  do_not_force_cms_conversion: true
+  parent_owns_collection_layout: true
+  item_owns_internal_layout: true
+  ordinary_count_change_should_not_require_item_position_css: true
+  semantic_variant_must_not_depend_only_on_accidental_index: true
+  nth_child_is_not_globally_banned: true
+  supported_cardinality_range_can_be_explicit: true
+  incomplete_row_behavior_can_be_explicit: true
+  optional_fields_need_defined_behavior_when_editable: true
+  reorder_qa_when_order_editable: true
+
+responsive_dom:
+  duplicate_same_semantic_content_for_pc_sp_by_default: false
+  separate_markup_allowed_when_structure_interaction_or_source_really_differs: true
+  separate_markup_requires_focus_id_js_analytics_cms_review: true
+
+javascript:
+  separate_styling_and_behavior_hooks: PREFER
+  hook_convention: EXISTING_PROJECT_FIRST
+  data_js_is_not_global_requirement: true
+  primary_state_source_required_when_multiple_state_representations_exist: true
+  state_representations_must_stay_synchronized: true
+
+forms:
+  semantic_labeling_required_when_applicable: true
+  placeholder_must_not_be_only_label: true
+  autocomplete_considered_for_user_data: true
+  inputmode_enterkeyhint_considered_for_mobile_input: true
+  inputmode_is_not_validation: true
+  ime_composition_must_not_be_misclassified_as_committed_input: true
+  autofill_state_must_not_break_layout_or_labeling: true
+  submit_lifecycle_has_single_primary_state: true
+  error_must_not_be_conveyed_by_color_only: true
+
+runtime_states:
+  async_state_contract_when_applicable: true
+  recognized_states: [DEFAULT, LOADING, EMPTY, PARTIAL, ERROR, SUCCESS, DISABLED, OFFLINE_OR_NETWORK_FAILURE]
+  all_states_not_required_for_every_section: true
+  empty_and_error_are_distinct: true
+  external_failure_must_not_break_unrelated_primary_content: true
+
+font_loading:
+  font_is_shared_layout_dependency: true
+  final_family_name_alone_is_not_sufficient_contract: true
+  fallback_render_must_not_lose_content: true
+  metric_adjustment_requires_measured_reason_and_browser_support: true
+  font_display_is_not_single_global_value: true
+  preload_only_critical_faces: true
+  cjk_and_localized_glyph_coverage_when_relevant: true
+  font_change_expands_regression_scope: true
+
+third_party:
+  explicit_trust_boundary_required_when_present: true
+  review_privacy_security_loading_cls_and_failure: true
+  sandbox_or_sri_when_feasible_and_required_by_risk: true
+  consent_gated_integrations_supported: true
+  third_party_failure_must_not_break_unrelated_primary_content: true
+
+delivery_security:
+  client_shipped_private_secrets_forbidden: true
+  server_security_policy_owner_must_remain_explicit: true
+  section_worker_must_not_weaken_csp_to_fit_implementation: true
+  cms_api_user_output_requires_escape_or_sanitization_owner: true
+  frontend_validation_is_not_server_validation: true
+  js_failure_contract_when_relevant: true
+  soft_404_is_not_default: true
+  analytics_event_owner_required_when_present: true
+  analytics_duplicate_firing_must_be_reviewed: true
+  consent_lifecycle_when_required: true
+  cache_versioning_follows_existing_build_or_deployment: true
+  service_worker_not_default_cache_fix: true
+  production_debug_or_secret_exposure_prohibited: true
+
+internationalization:
+  localized_means_more_than_text_expansion: true
+  lang_semantics_when_applicable: true
+  directionality_semantics_when_applicable: true
+  dir_auto_candidate_for_unknown_direction_external_or_user_data: true
+  rtl_is_not_globally_required: true
+  logical_properties_selected_from_real_bidi_need_not_fashion: true
+
+accessibility:
+  company_wcag_target_first: true
+  semantic_controls: REQUIRED
+  keyboard_focus: REQUIRED_WHEN_INTERACTIVE
+  focus_not_obscured_review_when_relevant: true
+  resize_text_reflow_and_text_spacing_are_distinct: true
+  reflow_vertical_content_width_equivalent_css_px: 320
+  source_visual_focus_order_review_when_reordered: true
+
+performance:
+  html_intrinsic_dimensions_are_not_css_fixed_size: true
+  lcp_candidate_must_not_be_mechanically_lazy_loaded: true
+  fetchpriority_high_not_global_default: true
+  inspect_when_relevant:
+    - LCP
+    - CLS
+    - INP
+
+graceful_degradation:
+  priorities: [P0_FUNCTION_INFORMATION_ACCESS, P1_BRAND_HIERARCHY, P2_DECORATIVE_GEOMETRY, P3_NONESSENTIAL_MOTION]
+  unreadably_small_text_is_not_default_fit_strategy: true
+  blanket_scale_is_not_default_fit_strategy: true
+  hidden_information_is_not_default_fit_strategy: true
+  project_can_override_priority_with_explicit_contract: true
+
+qa_tiers:
+  required: [FAST_PR_GATE, TARGETED_MUTATION, DEEP_PERIODIC]
+  targeted_mutation_selected_from_risk: true
+  full_cartesian_mutation_product_every_pr: false
+  pairwise_or_representative_combinations: PREFER
+
+change_impact:
+  qa_scope_follows_dependency_blast_radius: true
+  section_local_default_scope: [SECTION, RELEVANT_BOUNDARY]
+  shared_component_default_scope: [KNOWN_DEPENDENTS, INTEGRATION]
+  shared_token_or_foundation_default_scope: [KNOWN_DEPENDENTS, REPRESENTATIVE_GLOBAL_OR_FULL_PAGE]
+  changed_line_count_is_not_proxy_for_impact: true
+  dependency_map_should_be_reused_when_available: true
+  dependency_driven_qa_selector: CANDIDATE
+
+native_capability_adoption:
+  existing_solution_first: true
+  actual_need_and_figma_evidence_before_adoption: true
+  company_browser_matrix_required: true
+  accessibility_and_reduced_motion_review_when_relevant: true
+  feature_availability_alone_must_not_force_migration: true
+  candidate_apis: [POPOVER, DIALOG_INERT, VIEW_TRANSITION, SCROLL_DRIVEN_ANIMATION, ANCHOR_POSITIONING, CONTAINER_QUERIES]
+
+reuse_before_build:
+  effective_project_contract_and_existing_code_first: true
+  browser_and_native_web_before_custom_infrastructure: true
+  official_project_tooling_before_reimplementation: true
+  existing_design_system_or_library_before_new_equivalent: true
+  mature_oss_requires_project_fit_review: true
+  custom_implementation_is_last_option_not_prohibited: true
+  custom_gap_must_be_small_and_owned: true
+  reuse_rate_is_diagnostic_not_hard_kpi: true
+  standalone_lp_must_not_be_forced_into_shared_system_tooling: true
+
+external_integration:
+  matrix_required: true
+  upstream_before_custom: true
+  upstream_heavy_mechanism_must_not_be_reimplemented: true
+  custom_glue_must_be_small_owned_and_retireable: true
+  existing_custom_path_retired_only_after_clean_replay: true
+  plan_license_privacy_and_project_fit_required: true
+  allowed_statuses: [USE_NOW, USE_WHEN_PRESENT, CONDITIONAL, CLEAN_REPLAY_CANDIDATE, KEEP_SMALL_GLUE, RETIRE_AS_DEFAULT]
+  figma_download_assets_before_fallback_transport_when_available: true
+  code_connect_clone_prohibited: true
+  playwright_first_for_browser_visual_regression: true
+  existing_storybook_first_for_shared_component_surface: true
+  browserslist_shared_target_source_when_present: true
+  stylelint_postcss_before_new_regex_css_parser_when_present: true
+  wordpress_official_environment_evaluated_before_new_generic_fixture: true
+  acf_official_json_cli_before_custom_import_export_when_supported: true
+  update_radar_reuses_upstream_release_sources: true
+
+decorative_fidelity:
+  css_only_is_not_success_condition: true
+  compare_modes: [CSS, CSS_PLUS_SVG, SVG, RASTER, FIGMA_EXACT_EXPORT]
+  exact_existing_or_figma_source_checked_before_redraw: true
+  editable_text_separated_from_decorative_shape_when_practical: true
+  css_complexity_escape_to_asset_or_hybrid: true
+  property_bans_are_not_used_as_escape_rule: true
+  pattern_promotion_requires_repeated_evidence: true
+
+visual_repair_learning:
+  diagnostic_priority: [LAYOUT, TYPOGRAPHY, ASSET, COLOR, DECORATION, SUBPIXEL_POLISH]
+  section_first_root_cause_repair: true
+  canonical_owner_repair_first: true
+  blind_rerun_is_not_failure_diagnosis: true
+  existing_playwright_and_project_qa_first: true
+  dedicated_large_visual_engine_is_not_default: true
+  human_correction_cost_is_diagnostic: true
+  repeated_feedback_is_learning_signal: true
+  one_feedback_event_must_not_create_permanent_rule: true
+
+optional_project_capabilities:
+  not_global_core: true
+  available:
+    - PRINT_REQUIRED
+    - PDF_OUTPUT_REQUIRED
+    - OFFLINE_REQUIRED
+    - PWA_REQUIRED
+    - REDUCED_DATA_REQUIRED
+    - RTL_REQUIRED
+    - SEO_REQUIRED
+    - SHARE_METADATA_REQUIRED
+    - EMBED_SECURITY_REVIEW_REQUIRED
+    - SECURITY_HEADER_REVIEW_REQUIRED
+    - CONSENT_REQUIRED
+    - ANALYTICS_REQUIRED
+    - ERROR_ROUTE_REQUIRED
+    - BOT_PROTECTION_REQUIRED
+    - CACHE_POLICY_REQUIRED
+    - RUM_REQUIRED
+
+human_maintainability:
+  owner_searchability: REQUIRED
+  authoritative_owner_clarity: REQUIRED
+  simple_data_change_css_diff_zero: GOOD_SIGNAL_NOT_HARD_KPI
+  temporary_final_fix_layer_at_final: PROHIBITED

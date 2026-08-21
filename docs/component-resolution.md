@@ -2,14 +2,17 @@
 
 FigmaのComponentを見つけたら即新規componentを作るのではなく、**Figma側の意味と既存codebase側の実装を突き合わせ、section worker開始前にreuse方針を解決する**。
 
+この文書はCode Connectの代替platformではない。Code Connect / Figma design-system search / Storybook / repo component registry等のupstream capabilityが利用可能なら先に使い、ここでは最終decisionとfallback evidenceだけを保持する。
+
 ## Goal
 
 Sectionごとに同じButton/Card/Inputを別々に実装することを防ぐ。
 
 ```text
 Figma component/instance
-  + Code Connect mapping
-  + existing code component
+  + existing Code Connect mapping when available
+  + Figma design-system search
+  + existing code component / Storybook / registry
   + variant/prop semantics
   ↓
 Resolution
@@ -24,10 +27,36 @@ all section workers use same decision
 1. Figma component / component set / instance identity
 2. variants / component properties
 3. library origin when observable
-4. Code Connect mapping if available
-5. existing target-repo component inventory
-6. visual/semantic/API compatibility
-7. actual reuse count across target sections
+4. existing Code Connect map when available
+5. Code Connect suggestions/context when mapping work is needed and plan supports it
+6. Figma design-system/library search when available
+7. existing target-repo component / Storybook / registry inventory
+8. visual/semantic/API compatibility
+9. actual reuse count across target sections
+
+Do not skip Existing production search merely because Figma has no Component metadata.
+
+## Code Connect availability boundary
+
+Code Connect is conditional on Figma plan/seat/library support. When available, use upstream mapping rather than maintaining a parallel proprietary mapping engine.
+
+When unavailable:
+
+```text
+Figma component identity
++ design-system/library search if available
++ repo / Storybook / registry search
+→ this resolution table
+```
+
+Do not respond to Code Connect unavailability by building:
+
+- framework-specific parser clones
+- custom component browsing UI
+- custom template language
+- custom Figma-side mapping database
+
+The fallback should remain small enough to retire if upstream becomes available.
 
 ## Resolution states
 
@@ -67,6 +96,7 @@ Section workerが勝手に拡張せず、Shared Foundation側で調整する。
 
 Evidence:
 
+- upstream / existing component searchを実施済み
 - multiple section consumers
 - same semantic role
 - stable shared API
@@ -94,6 +124,7 @@ Production parallel workerへ渡す前に追加調査する。
 | repeated across sections | no match | none | CREATE_SHARED candidate |
 | one-off local pattern | no match | none | IMPLEMENT_SECTION_LOCAL |
 | Figma components NONE | existing code system exists | n/a | existing code architecture優先 |
+| Code Connect unavailable | existing code candidate exists | unavailable | REUSE_EXISTING after manual evidence |
 
 ## Variant / prop mapping
 
@@ -106,6 +137,7 @@ Component reuseの失敗は「同じButtonを使ったか」だけではない�
 - default behavior
 - unavailable combination
 - state mapping
+- mapping source: Code Connect / registry / Storybook / manual repo evidence
 
 Example:
 
@@ -115,6 +147,7 @@ component_resolution:
     figma_component: "Button"
     figma_node_id: "123:456"
     resolution: REUSE_EXISTING
+    mapping_source: CODE_CONNECT
     code_path: src/components/Button
     prop_mapping:
       style=Primary: variant=primary
@@ -129,9 +162,11 @@ component_resolution:
 - layer名だけで似たcomponentを選ぶ
 - visual一致だけでsemantic/API mismatchを無視
 - Code Connect mappingが古いのに無条件利用
+- Code Connectが使えないので同等platformを自作する
 - section workerがshared componentをforkする
 - Figma Componentを全てglobal abstractionへ昇格
 - FigmaにComponentが無いからcode reuseもしない
+- Storybook/component registryがあるのに別preview/component catalogを作る
 
 ## Section worker contract
 
@@ -145,10 +180,11 @@ Workerはresolution tableをread-onlyで使用する。
 
 Coordinatorが承認した場合:
 
-1. Shared Foundation更新
-2. verify
-3. Shared Contract revision/hash更新
-4. affected sectionsだけ再base/re-run
+1. upstream/existing solution再確認
+2. Shared Foundation更新
+3. verify
+4. Shared Contract revision/hash更新
+5. affected sectionsだけ再base/re-run
 
 ## Learning
 
@@ -159,5 +195,8 @@ Track failures:
 - COMPONENT_PROP_MISS
 - CODE_CONNECT_MISS
 - DUPLICATE_SHARED_PRIMITIVE
+- UPSTREAM_COMPONENT_SEARCH_SKIPPED
 
 同じresolution strategyが別section/referenceでも効いて初めてportable ruleへ昇格する。
+
+External integration statusは `docs/frontend-external-integration-matrix.md` を参照する。

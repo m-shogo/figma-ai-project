@@ -31,14 +31,71 @@ sections: []
 #     tokens: []
 #     fonts: []
 #     assets: []
+#     third_party: []
 #     integration_coupling: LOW # LOW | MEDIUM | HIGH
 #     coupling_notes: []
 #   responsive:
 #     uses_shared_breakpoints: true
+#     product_min_viewport_css_px: null # inherit Effective Environment Contract; override only with explicit Project/Section evidence
 #     invariants: []
 #     transitions: []
 #     unknowns: []
 #     breakpoint_exception_proposals: []
+#   # Optional maintainability/runtime metadata. Add only when material to implementation/QA.
+#   content:
+#     # Multiple factors may coexist, e.g. [EDITOR_OWNED, LOCALIZED].
+#     risk_factors: [STATIC_AUTHORED] # STATIC_AUTHORED | EDITOR_OWNED | LOCALIZED | EXTERNAL_DATA | USER_GENERATED
+#     # Optional default for important editable headings/copy. Per-field exception may differ.
+#     line_strategy: NATURAL_WRAP # NATURAL_WRAP | PHRASE_WRAP | AUTHORED_BREAK | TRUNCATION | PROJECT_DEFINED
+#     repeatable: false
+#     optional_fields: []
+#     language: "" # inherit document/project language when empty
+#     directionality: INHERIT # INHERIT | LTR | RTL | AUTO | PROJECT_DEFINED
+#     cardinality:
+#       expected: null
+#       normal_min: null
+#       normal_max: null
+#       zero_behavior: PROJECT_DEFINED # HIDE_SECTION | EMPTY_STATE | INVALID_BY_CONTRACT | PROJECT_DEFINED
+#       incomplete_row_behavior: PROJECT_DEFINED # START | CENTER | STRETCH | AUTHORED_VARIANT | PROJECT_DEFINED
+#   runtime:
+#     model: STATIC # STATIC | ASYNC | FORM | THIRD_PARTY | MIXED | PROJECT_DEFINED
+#     states: [DEFAULT] # DEFAULT | LOADING | EMPTY | PARTIAL | ERROR | SUCCESS | DISABLED | OFFLINE_OR_NETWORK_FAILURE
+#     form:
+#       enabled: false
+#       submit_lifecycle: INHERIT # INHERIT | REQUIRED | NOT_APPLICABLE
+#       ime_sensitive: AUTO # AUTO | REQUIRED | NOT_APPLICABLE
+#       autofill_sensitive: AUTO # AUTO | REQUIRED | NOT_APPLICABLE
+#     third_party:
+#       classification: NONE # NONE | THIRD_PARTY_TRUSTED | THIRD_PARTY_SANDBOXED | CONSENT_GATED | LAZY_EMBED | CRITICAL_EXTERNAL | PROJECT_DEFINED
+#       provider: ""
+#       fallback_defined: false
+#     font_sensitive: AUTO # AUTO | REQUIRED | OPTIONAL | NOT_APPLICABLE
+#     degradation:
+#       profile: INHERIT # INHERIT | DEFAULT_PRIORITY | PROJECT_DEFINED
+#       notes: []
+#   layout_intent:
+#     primary: UNKNOWN # NORMAL_FLOW | FLEX | GRID | HYBRID | ART_DIRECTED | UNKNOWN
+#     intentional_overlays: []
+#     fixed_size_owners: []
+#   maintainability_qa:
+#     text_mutation: AUTO # AUTO | REQUIRED | OPTIONAL | NOT_APPLICABLE
+#     cardinality_mutation: AUTO # AUTO | REQUIRED | OPTIONAL | NOT_APPLICABLE
+#     reorder_mutation: AUTO # AUTO | REQUIRED | OPTIONAL | NOT_APPLICABLE
+#     optional_field_mutation: AUTO # AUTO | REQUIRED | OPTIONAL | NOT_APPLICABLE
+#     runtime_state_mutation: AUTO # AUTO | REQUIRED | OPTIONAL | NOT_APPLICABLE
+#     form_state_qa: AUTO # AUTO | REQUIRED | OPTIONAL | NOT_APPLICABLE
+#     font_loading_qa: AUTO # AUTO | REQUIRED | OPTIONAL | NOT_APPLICABLE
+#     third_party_failure_qa: AUTO # AUTO | REQUIRED | OPTIONAL | NOT_APPLICABLE
+#     localization_bidi_qa: AUTO # AUTO | REQUIRED | OPTIONAL | NOT_APPLICABLE
+#     graceful_degradation_qa: AUTO # AUTO | REQUIRED | OPTIONAL | NOT_APPLICABLE
+#     accessibility_reflow: INHERIT # INHERIT | REQUIRED | NOT_APPLICABLE
+#     performance_loading: AUTO # AUTO | REQUIRED | OPTIONAL | NOT_APPLICABLE
+#     interaction_responsiveness: AUTO # AUTO | REQUIRED | OPTIONAL | NOT_APPLICABLE
+#     breakpoint_continuity: AUTO # AUTO | REQUIRED | OPTIONAL | NOT_APPLICABLE
+#   change_impact:
+#     ownership: SECTION_LOCAL # SECTION_LOCAL | SHARED_COMPONENT | SHARED_TOKEN | SHARED_FONT | SHARED_FOUNDATION | PROJECT_DEFINED
+#     known_dependents: []
+#     regression_scope: AUTO # AUTO | SECTION | BOUNDARY | KNOWN_DEPENDENTS | INTEGRATION | FULL_PAGE
 #   implementation:
 #     component_path: ""
 #     style_path: ""
@@ -61,6 +118,8 @@ sections: []
 
 integration:
   root_composition_path: ""
+  product_min_viewport_css_px: null # resolved from Effective Environment Contract
+  accessibility_reflow_probe_css_px: 320 # WCAG-equivalent probe; separate from product support floor
   required_checks:
     - section_order
     - container_alignment
@@ -73,3 +132,6 @@ integration:
     - z_index_continuity
     - background_continuity
     - asset_quality
+    - runtime_state_integrity
+    - font_loading_stability
+    - relevant_third_party_fallback

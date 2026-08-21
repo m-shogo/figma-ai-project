@@ -28,7 +28,7 @@ Reference designそのものはこのrepoが決めない。
 
 Canonical: `docs/agent-execution-policy.md`
 
-## Source of truth / precedence
+## Source of truth / authority
 
 Visual/design source of truth:
 
@@ -36,25 +36,38 @@ Visual/design source of truth:
 FIGMA REFERENCE
 ```
 
-Technical implementation precedence:
+Technical authorityは単純な1本順位表へ押し込まない。
 
 ```text
-COMPANY POLICY
-→ EXISTING CODEBASE / DESIGN SYSTEM
-→ FIGMA IMPLEMENTATION EVIDENCE
-→ AGENT INFERENCE
+Company hard constraints
+↓
+Existing Codebase / Design System = baseline
+↔ Explicit authorized Project/Owner override
+↓
+Effective Project Contract
+
+Implementation evidence = actual Figma structure / annotation / interaction
+Frontend Standard = fallback decision framework
+Agent inference = last
 ```
 
-Company Policyはbrowser/device support、reset/base/environment CSS、breakpoints、approved libraries、folder/CMS/ACF、interaction、images、visual tolerance等の最上位technical constraint。
+Company Policyはbrowser/device support、reset/base/environment CSS、breakpoints、approved libraries、folder/CMS/ACF、interaction、images、visual tolerance等の最上位technical hard constraint。
 
-Company PolicyとFigma visual/behaviorが衝突したら、勝手にredesignせず`CONFLICT`として記録する。
+Existing Codebase / Design Systemは必ず先に読むbaseline。ただしCompany/security/protected scopeに反しない明示Project/Owner decisionは、対象scopeのstale Existing implementation/test/validator/fixtureを更新・廃止できる。
+
+Company PolicyまたはEffective Project ContractとFigma visual/behaviorが衝突したら、勝手にredesignせず`CONFLICT`として記録する。
 
 Reference未提示ならdesignを発明しない。
 
+Frontendの保守性・layout decisionについてEffective Project Contract/Figma evidenceで未確定な部分は、`docs/frontend-quick-contract.md`を短い共通defaultとして読む。詳細は`docs/frontend-implementation-standard.md`へ進む。Frontend StandardはCompany hard constraint、Effective Project Contract、Figma visual truthを上書きしない。
+
 Canonical:
 
+- `docs/frontend-authority-model.md`
 - `docs/company-policy-contract.md`
 - `docs/device-environment-policy.md`
+- `docs/frontend-quick-contract.md`
+- `docs/frontend-implementation-standard.md`
 
 ## Production default
 
@@ -81,6 +94,7 @@ Scheduled Official Update Radar
 → FULL PAGE capture for ALL REQUIRED environments
 → Relevant interaction QA for ALL relevant REQUIRED environments
 → Targeted Repair
+→ Targeted Frontend Maintainability QA where relevant
 → Clean Replay
 → Knowledge Promotion
 ```
@@ -156,6 +170,30 @@ Environment adaptationには必要に応じて:
 を置く。
 
 Shared foundationはSection workerが勝手に変更しない。
+
+## Frontend implementation / human maintainability
+
+Frontend実装では、特定propertyを使わないこと自体を目的にしない。
+
+- `absolute` / fixed dimensions / `min-*`等は禁止ではない。Intentとownershipで判断する。
+- Figmaのrendered座標/section寸法を、その理由だけでWeb constraintへ直写ししない。
+- 通常contentはFlow/Flex/Grid等content changeへ追従できるlayoutを先に検討し、Hero artwork等のart directionではabsoluteを普通に使える。
+- `l- / c- / p- / is-` + BEM系のowner/searchabilityを、Company/Existing命名が無い場合のstable contractとして扱う。
+- BEM selectorはflatをdefaultにし、Native CSS nestingはpseudo/state/condition等のco-location中心に使う。
+- 1 Block/Elementにはauthoritative base ownerを持たせ、末尾`final-fix`を積み上げない。Media/container/supports等の正当なcontextual ruleまで単純duplicate扱いしない。
+- 同じformatのcontentは将来repeatable/data-drivenになる可能性を確認するが、CMS化自体を強制しない。
+- Sectionのcontent risk factors / repeatability / interaction / performance riskから必要なMutation QAだけ選ぶ。全Fuzzを毎PR強制しない。
+- Visual FidelityだけでなくFindability、Content/Responsive resilience、Interaction/A11y、Performance/LoadingをRelevant scopeでFINAL条件にする。
+
+Canonical:
+
+- `docs/frontend-quick-contract.md`
+- `docs/frontend-implementation-standard.md`
+- `docs/frontend-repeatable-content.md`
+- `docs/frontend-maintainability-qa.md`
+- `docs/frontend-resilience-stress-qa.md`
+- `docs/frontend-pattern-library.md`
+- `config/frontend-implementation-policy.yaml`
 
 ## Epistemic states
 

@@ -1,4 +1,4 @@
-schema_version: 11
+schema_version: 13
 experiment_id: EXP-XXXX
 run_id: RUN-XXXX
 run_class: COMMON # COMMON | OPTIMIZED | REPLAY
@@ -55,6 +55,23 @@ coordination:
   isolation_mode: "" # BRANCH_WORKTREE | AGENT_SANDBOX | SERIAL_SHARED_TREE | OTHER | empty when N/A
   isolation_ref: ""
 
+knowledge_context:
+  mode: PRODUCTION_APPLICABLE # PRODUCTION_APPLICABLE | CONTROLLED_EXCLUDED | NONE_APPLICABLE | LEGACY_UNRECORDED
+  selected_rules: []
+  # - rule_id: CR-REF001-003
+  #   path: playbook/candidates/cr-ref001-003-visual-repetition-vs-cms-cardinality.yaml
+  #   sha: ""
+  #   evidence_maturity: E2
+  #   recommendation: OPTIONAL
+  #   selection_reason: "target failure / UI pattern / implementation family matches this run"
+  #   freshness: FRESH # FRESH | CURRENT | AGING | STALE_UNTIL_REVERIFIED | UNKNOWN
+  #   retest_trigger_active: false
+  excluded_rules: []
+  # - rule_id: CR-XXXX
+  #   reason: NOT_APPLICABLE # NOT_APPLICABLE | STALE | RETEST_TRIGGERED | CONTROLLED_BASELINE | SUPERSEDED | OTHER
+  pattern_refs: []
+  selection_notes: []
+
 agent:
   client: "" # codex | claude-code | cursor | other
   model: ""
@@ -85,6 +102,39 @@ context:
   files_read: []
   figma_nodes_inspected: []
   tool_calls: null
+
+runtime_contract:
+  product_viewport_source: EFFECTIVE_ENVIRONMENT_CONTRACT
+  product_min_viewport_css_px: null # resolved support floor from Required Environment Profiles / Existing / explicit Project contract
+  unresolved_product_viewport_fallback_css_px: 360 # exploratory candidate only while support floor is unresolved
+  unresolved_product_viewport_fallback_status: CANDIDATE
+  accessibility_reflow_probe_css_px: 320 # WCAG-equivalent probe; separate from product support floor
+  selected_states: [] # DEFAULT | LOADING | EMPTY | PARTIAL | ERROR | SUCCESS | DISABLED | OFFLINE_OR_NETWORK_FAILURE
+  form:
+    applicable: false
+    ime_tested: false
+    autofill_tested: false
+    submit_lifecycle_tested: false
+  font:
+    applicable: false
+    fallback_tested: false
+    delayed_load_tested: false
+    metric_adjustment_used: false
+    evidence: []
+  third_party:
+    applicable: false
+    integrations: []
+    failure_fallback_tested: false
+    security_privacy_reviewed: false
+  localization:
+    applicable: false
+    languages: []
+    directions: [] # LTR | RTL | AUTO
+    bidi_tested: false
+  degradation:
+    profile: DEFAULT_PRIORITY # DEFAULT_PRIORITY | PROJECT_DEFINED | NOT_APPLICABLE
+    adaptations: []
+  optional_capabilities: [] # PRINT_REQUIRED | PDF_OUTPUT_REQUIRED | OFFLINE_REQUIRED | PWA_REQUIRED | REDUCED_DATA_REQUIRED | RTL_REQUIRED | SEO_REQUIRED | SHARE_METADATA_REQUIRED | EMBED_SECURITY_REVIEW_REQUIRED | SECURITY_HEADER_REVIEW_REQUIRED | CONSENT_REQUIRED | ANALYTICS_REQUIRED | ERROR_ROUTE_REQUIRED | BOT_PROTECTION_REQUIRED | CACHE_POLICY_REQUIRED | RUM_REQUIRED
 
 execution:
   workflow: STAGED # STAGED | ONE_SHOT
@@ -198,6 +248,17 @@ rework:
   merge_conflicts: 0
   affected_section_count: 0
   contract_violations: 0
+  same_feedback_repeated_count: null # diagnostic; null means not measured, not zero
+  major_rework_count: null
+  wrong_implementation_strategy_reversal_count: null
+  human_final_correction_count: null
+  human_correction_minutes: null
+  flaky_rerun_debug_minutes: null
+  reuse_metrics:
+    existing_component_reuse_rate: null # 0.0..1.0 when opportunity denominator is known
+    existing_asset_reuse_rate: null
+    existing_pattern_reuse_rate: null
+    notes: []
   severity_counts:
     S1: 0
     S2: 0
@@ -209,7 +270,15 @@ failures: []
 #   severity: S2
 #   primary: SPACING
 #   secondary: []
+#   root_cause_category: WRONG_IMPLEMENTATION_STRATEGY
+#   root_cause_secondary: [REUSE_MISSED]
 #   confidence: HIGH
+# Root-cause category examples:
+# AI_JUDGEMENT_ERROR | CODING_RULE_ERROR | FIGMA_INPUT_AMBIGUITY |
+# ASSET_MISSING_OR_WRONG_SOURCE | EXISTING_CODE_MISUNDERSTANDING | REUSE_MISSED |
+# WRONG_IMPLEMENTATION_STRATEGY | QA_MISSING | VISUAL_REPAIR_ERROR |
+# RESPONSIVE_ASSUMPTION | CMS_REPEATER_ASSUMPTION | TOOL_LIMITATION |
+# ENVIRONMENT_OR_RENDERING_VARIANCE
 
 repairs: []
 # - round: 1
@@ -226,6 +295,17 @@ replay:
 lessons:
   observations: []
   candidate_rules: []
+  confirmed_rules: []
+  # - rule_id: CR-XXXX
+  #   evidence: []
+  #   note: "same direction reproduced under current conditions"
+  contradicted_rules: []
+  # - rule_id: CR-XXXX
+  #   evidence: []
+  #   note: "current result conflicts with prior evidence; do not delete history"
+  rules_needing_retest: []
+  promotion_candidates: []
+  demotion_candidates: []
   agent_specific: []
   project_specific: []
 

@@ -11,7 +11,7 @@ from jsonschema import Draft202012Validator
 
 ROOT = Path(__file__).resolve().parents[1]
 POLICY_SCHEMA = ROOT / "schemas" / "company-policy.schema.json"
-EXPECTED_PRECEDENCE = [
+EXPECTED_BASELINE_EVIDENCE_ORDER = [
     "COMPANY_POLICY",
     "EXISTING_CODEBASE",
     "FIGMA_IMPLEMENTATION_EVIDENCE",
@@ -120,6 +120,24 @@ def environment_errors(data: dict[str, Any]) -> list[str]:
             )
 
     responsive = data.get("responsive", {})
+    if "minimum_product_viewport_css_px" in responsive:
+        product_minimum = responsive.get("minimum_product_viewport_css_px")
+        if product_minimum is not None and (
+            isinstance(product_minimum, bool)
+            or not isinstance(product_minimum, (int, float))
+            or product_minimum <= 0
+        ):
+            errors.append(
+                "responsive.minimum_product_viewport_css_px must be null or a positive CSS-pixel number"
+            )
+    if (
+        "below_minimum_requires_explicit_project_contract" in responsive
+        and responsive.get("below_minimum_requires_explicit_project_contract") is not True
+    ):
+        errors.append(
+            "responsive.below_minimum_requires_explicit_project_contract must be true when declared"
+        )
+
     input_queries = responsive.get("input_capability_queries", {})
     if input_queries.get("hover_pointer_required") is not True:
         errors.append("responsive policy must require hover/pointer capability queries")
@@ -159,10 +177,12 @@ def environment_errors(data: dict[str, Any]) -> list[str]:
 
 def semantic_policy_errors(data: dict[str, Any]) -> list[str]:
     errors: list[str] = []
-    precedence = data.get("precedence", {}).get("implementation_constraints", [])
-    if precedence != EXPECTED_PRECEDENCE:
+    baseline_evidence_order = data.get("precedence", {}).get("implementation_constraints", [])
+    if baseline_evidence_order != EXPECTED_BASELINE_EVIDENCE_ORDER:
         errors.append(
-            "implementation precedence must be COMPANY_POLICY > EXISTING_CODEBASE > FIGMA_IMPLEMENTATION_EVIDENCE > AGENT_INFERENCE"
+            "Company Policy baseline implementation evidence order must be "
+            "COMPANY_POLICY > EXISTING_CODEBASE > FIGMA_IMPLEMENTATION_EVIDENCE > AGENT_INFERENCE; "
+            "authorized Project/Owner overrides are resolved separately by the Effective Project Contract"
         )
 
     if data.get("status") == "ACTIVE":

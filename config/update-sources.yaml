@@ -78,8 +78,9 @@ lanes:
         authority: OFFICIAL
         kind: HTML_DIGEST
         url: https://developers.figma.com/docs/figma-mcp-server/tools-and-prompts/
-        topics: [figma, mcp, tools, prompts]
-        impacts: [MCP, FIGMA_TO_CODE, CODE_TO_FIGMA, CONTEXT_RETRIEVAL]
+        include_keywords: [download_assets, get_design_context, get_screenshot, search_design_system, Code Connect, upload_assets]
+        topics: [figma, mcp, tools, prompts, assets, code-connect, design-system]
+        impacts: [MCP, FIGMA_TO_CODE, CODE_TO_FIGMA, CONTEXT_RETRIEVAL, ASSET_FIDELITY, COMPONENT_REUSE]
       - id: figma-code-connect-releases
         authority: OFFICIAL
         kind: GITHUB_RELEASES
@@ -150,6 +151,59 @@ lanes:
         topics: [cursor, mcp, agents, design-mode, browser, rules, hooks, skills]
         impacts: [AGENT_CAPABILITY, MCP, VISUAL_BROWSER_TOOLING, PARALLEL_EXECUTION, CONTEXT_HANDLING]
 
+  FRONTEND_TOOLING:
+    required_for_significant_run: true
+    sources:
+      - id: playwright-releases
+        authority: OFFICIAL
+        kind: GITHUB_RELEASES
+        repo: microsoft/playwright
+        url: https://api.github.com/repos/microsoft/playwright/releases?per_page=12
+        topics: [playwright, screenshots, snapshots, trace, aria, browser, testing]
+        impacts: [VISUAL_BROWSER_TOOLING, VISUAL_FIDELITY, RUNTIME_QA, ACCESSIBILITY, DEBUGGING]
+      - id: storybook-releases
+        authority: OFFICIAL
+        kind: GITHUB_RELEASES
+        repo: storybookjs/storybook
+        url: https://api.github.com/repos/storybookjs/storybook/releases?per_page=12
+        topics: [storybook, components, visual-tests, interaction-tests, accessibility]
+        impacts: [DESIGN_SYSTEM, COMPONENT_REUSE, VISUAL_FIDELITY, ACCESSIBILITY, QA]
+      - id: browserslist-releases
+        authority: OFFICIAL
+        kind: GITHUB_RELEASES
+        repo: browserslist/browserslist
+        url: https://api.github.com/repos/browserslist/browserslist/releases?per_page=12
+        topics: [browserslist, browser-targets, compatibility, caniuse]
+        impacts: [BROWSER_SUPPORT, CSS, JS, ENVIRONMENT_CONTRACT]
+      - id: stylelint-releases
+        authority: OFFICIAL
+        kind: GITHUB_RELEASES
+        repo: stylelint/stylelint
+        url: https://api.github.com/repos/stylelint/stylelint/releases?per_page=12
+        topics: [stylelint, css, lint, postcss, nesting, custom-rules]
+        impacts: [CSS, STATIC_QA, MAINTAINABILITY]
+      - id: axe-core-releases
+        authority: OFFICIAL
+        kind: GITHUB_RELEASES
+        repo: dequelabs/axe-core
+        url: https://api.github.com/repos/dequelabs/axe-core/releases?per_page=12
+        topics: [axe, accessibility, wcag, aria, testing]
+        impacts: [ACCESSIBILITY, QA]
+      - id: lighthouse-ci-releases
+        authority: OFFICIAL
+        kind: GITHUB_RELEASES
+        repo: GoogleChrome/lighthouse-ci
+        url: https://api.github.com/repos/GoogleChrome/lighthouse-ci/releases?per_page=12
+        topics: [lighthouse, performance, budgets, ci, accessibility, seo]
+        impacts: [PERFORMANCE, QA, CI]
+      - id: svgo-releases
+        authority: OFFICIAL
+        kind: GITHUB_RELEASES
+        repo: svg/svgo
+        url: https://api.github.com/repos/svg/svgo/releases?per_page=12
+        topics: [svg, optimizer, viewbox, accessibility, assets]
+        impacts: [ASSET_FIDELITY, PERFORMANCE, ACCESSIBILITY]
+
   WEB_PLATFORM:
     required_for_significant_run: true
     sources:
@@ -196,6 +250,13 @@ lanes:
         url: https://api.github.com/repos/design-tokens/community-group/releases?per_page=12
         topics: [design-tokens, variables, interoperability]
         impacts: [TOKENS, DESIGN_SYSTEM, FIGMA_VARIABLES]
+      - id: style-dictionary-releases
+        authority: OFFICIAL
+        kind: GITHUB_RELEASES
+        repo: style-dictionary/style-dictionary
+        url: https://api.github.com/repos/style-dictionary/style-dictionary/releases?per_page=12
+        topics: [design-tokens, dtcg, transforms, build]
+        impacts: [TOKENS, DESIGN_SYSTEM, FIGMA_VARIABLES, BUILD_TOOLING]
 
   WORDPRESS_ACF:
     required_for_significant_run: true
@@ -214,6 +275,13 @@ lanes:
         include_keywords: [block, theme, template, media, image, CSS, React, API, accessibility]
         topics: [wordpress, development, blocks, themes, api]
         impacts: [WORDPRESS, CMS, BLOCKS, FRONTEND_ARCHITECTURE]
+      - id: wordpress-wp-env
+        authority: OFFICIAL
+        kind: HTML_DIGEST
+        url: https://developer.wordpress.org/block-editor/getting-started/devenv/get-started-with-wp-env/
+        include_keywords: [wp-env, Docker, WordPress, themes, plugins, testing]
+        topics: [wordpress, wp-env, local-development, docker, testing]
+        impacts: [WORDPRESS, CMS, RUNTIME_QA, DEVELOPMENT_ENVIRONMENT]
       - id: acf-releases
         authority: OFFICIAL
         kind: GITHUB_RELEASES
@@ -228,6 +296,13 @@ lanes:
         include_keywords: [Blocks, Repeater, Flexible Content, Image, Inline Editing, Block Bindings, security]
         topics: [acf, blocks, repeater, flexible-content, images]
         impacts: [ACF, WORDPRESS, CMS, BLOCKS, IMAGES]
+      - id: acf-json-cli
+        authority: OFFICIAL
+        kind: HTML_DIGEST
+        url: https://www.advancedcustomfields.com/resources/wp-acf-json/
+        include_keywords: [wp acf json, status, sync, import, export, WP-CLI, Local JSON]
+        topics: [acf, wp-cli, local-json, import, export, sync]
+        impacts: [ACF, WORDPRESS, CMS, CI, DELIVERY]
 
   SAFARI_WEBKIT:
     activation:
@@ -294,18 +369,24 @@ retest_keyword_map:
   TYPOGRAPHY_RUNTIME:
     keywords: [line-height, line height, vertical trim, text-box-trim, font metrics, optical sizing, fallback font, variable font, text wrap, truncation, text-wrap, balance, pretty]
   ASSET_FIDELITY:
-    keywords: [svg, png, mask, gradient, stroke, export, vector, image crop, image fill, focal point, alpha, color profile, asset]
+    keywords: [svg, png, mask, gradient, stroke, export, vector, image crop, image fill, focal point, alpha, color profile, asset, download_assets]
   VARIABLE_MODE_RUNTIME:
     keywords: [variable mode, modes, alias, resolved value, raw value, suggested variable, responsive mode]
   COLOR_GRADIENT:
     keywords: [gradient, color, p3, gamut, contrast-color, color-mix, alpha]
   ACCESSIBILITY:
-    keywords: [accessibility, focus, keyboard, aria, forced colors, contrast, target size]
+    keywords: [accessibility, focus, keyboard, aria, axe, forced colors, contrast, target size]
   FIGMA_MCP:
-    keywords: [figma mcp, get_design_context, get_metadata, code connect, parserless, template, variant, write to canvas, skill]
+    keywords: [figma mcp, get_design_context, get_metadata, download_assets, search_design_system, code connect, parserless, template, variant, write to canvas, skill]
+  VISUAL_QA_TOOLING:
+    keywords: [playwright, screenshot, snapshot, visual test, chromatic, argos, pixelmatch, trace]
+  CSS_TOOLING:
+    keywords: [browserslist, stylelint, postcss, browser support, compatibility]
+  PERFORMANCE_TOOLING:
+    keywords: [lighthouse, performance budget, core web vitals, resource budget]
   AGENT_CONTEXT:
     keywords: [context, compaction, agent, subagent, rules, instructions, skill, hook]
   PARALLEL_EXECUTION:
     keywords: [parallel, worktree, sandbox, background agent, multi-repo, isolation]
   WORDPRESS_ACF:
-    keywords: [wordpress, acf, block.json, repeater, flexible content, block bindings, inline editing]
+    keywords: [wordpress, wp-env, wp acf json, acf, block.json, repeater, flexible content, block bindings, inline editing]
