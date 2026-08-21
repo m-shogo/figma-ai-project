@@ -1,0 +1,33 @@
+{
+  "experiment": "REF-001 Clean Replay",
+  "phase": "PRE_FREEZE_FIRST_PASS",
+  "historical_comparison_allowed": false,
+  "clean_authority": {
+    "artifact": "ref001-benchmark-clean-replay.zip",
+    "start_commit": "9fcb24dde1607f5a3830dfdd869ed318a830e6d9",
+    "implementation_profile": "IMPL-REF001-BENCHMARK-WORDPRESS-ACF",
+    "runtime_family": "SERVER_RENDERED_PHP",
+    "cms": "WordPress + ACF PRO",
+    "breakpoint": {"mobile_max_px": 767, "desktop_min_px": 768}
+  },
+  "current_figma": {
+    "file_key": "ZYTdtw4wCgkcBy2cVnhxVI",
+    "pc_root": {"node_id": "21384:8173", "name": "Top@2x", "width": 1380, "height": 7714},
+    "sp_root": {"node_id": "21376:4401", "name": "Top_sp@2x", "width": 375, "height": 10817},
+    "interaction_evidence": {"pc_reaction_nodes": 0, "sp_reaction_nodes": 0, "motion_nodes": 0, "policy": "Do not invent unresolved menu, accordion, slider, or CTA destinations in First Pass."},
+    "component_instances": {"pc": ["Header", "cta", "Footer"], "sp": ["Header_sp", "cta_sp", "Footer_sp", "Status-Bar_W"]},
+    "annotations": ["Hidden bg-pattern annotation states the grid pattern is a repeated pattern-grid component."],
+    "code_connect": "UNAVAILABLE_CURRENT_FIGMA_PLAN",
+    "asset_discovery": "PASS",
+    "asset_byte_transfer": "BLOCKED_BY_EXECUTION_NETWORK",
+    "asset_policy": "No short-lived Figma MCP asset URL is committed. ACF image IDs render through wp_get_attachment_image(); deterministic fallbacks are used until durable bytes are available."
+  },
+  "implementation": {
+    "section_order": ["Header", "Hero", "Reason", "Education", "CTA", "Students Voice", "Messages", "CTA", "Courses", "Links", "Value CTA", "Footer"],
+    "acf_field_count": 84,
+    "acf_repeater_or_flexible_content_used": false,
+    "javascript_added": false,
+    "css_media_queries": ["(min-width: 768px)"],
+    "transient_figma_urls_committed": false
+  }
+}

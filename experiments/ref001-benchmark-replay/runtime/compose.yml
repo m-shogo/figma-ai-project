@@ -1,0 +1,55 @@
+name: ref001-clean-replay-first-pass
+
+services:
+  db:
+    image: mariadb:11.4.12
+    environment:
+      MARIADB_DATABASE: wordpress
+      MARIADB_USER: wordpress
+      MARIADB_PASSWORD: ref001-clean-replay
+      MARIADB_ROOT_PASSWORD: ref001-clean-replay-root
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+
+  wordpress:
+    image: wordpress:7.0.2-php8.3-apache
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:8088:80"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: ref001-clean-replay
+      WORDPRESS_CONFIG_EXTRA: |
+        define('WP_ENVIRONMENT_TYPE', 'local');
+        define('WP_DEBUG', true);
+        define('WP_DEBUG_DISPLAY', false);
+    volumes:
+      - wp_data:/var/www/html
+      - ../blank-theme:/var/www/html/wp-content/themes/ref001-benchmark-clean:ro
+
+  cli:
+    image: wordpress:cli-2.12.0-php8.3
+    depends_on:
+      db:
+        condition: service_healthy
+    user: "33:33"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: ref001-clean-replay
+    volumes:
+      - wp_data:/var/www/html
+      - ../blank-theme:/var/www/html/wp-content/themes/ref001-benchmark-clean:ro
+    working_dir: /var/www/html
+    entrypoint: ["wp"]
+
+volumes:
+  wp_data:
