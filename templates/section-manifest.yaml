@@ -1,4 +1,4 @@
-schema_version: 8
+schema_version: 9
 reference_id: REF-XXXX
 page_id: ""
 shared_contract: ""
@@ -7,6 +7,8 @@ figma_structure_profile: ""
 figma_structure_profile_sha256: ""
 foundation_commit: ""
 
+# New schema v9 sections must include observation_coverage.
+# Canonical: docs/frontend-observation-coverage.md
 sections: []
 # - section_id: S01
 #   name: Header
@@ -41,6 +43,24 @@ sections: []
 #     transitions: []
 #     unknowns: []
 #     breakpoint_exception_proposals: []
+#   observation_coverage:
+#     source_presence:
+#       TEXT: PRESENT # PRESENT | NONE | UNDETERMINED
+#       RASTER_MEDIA: NONE
+#       VECTOR_LOGO: NONE
+#       BACKGROUND: PRESENT
+#       DECORATION: NONE
+#       INTERACTION_STATE: UNDETERMINED
+#       RESPONSIVE_VARIANT: PRESENT
+#     source_evidence: [] # must contain real Figma evidence before this section is used
+#     runtime_review:
+#       sp:
+#         status: PENDING # PENDING | PASS | KNOWN_GAP | NOT_APPLICABLE
+#         evidence: []
+#       pc:
+#         status: PENDING
+#         evidence: []
+#     known_gaps: []
 #   # Optional maintainability/runtime metadata. Add only when material to implementation/QA.
 #   content:
 #     # Multiple factors may coexist, e.g. [EDITOR_OWNED, LOCALIZED].
@@ -117,6 +137,7 @@ sections: []
 #     proposed_shared_changes: []
 
 integration:
+  status: PLANNED # PLANNED | RUNNING | COMPLETE
   root_composition_path: ""
   product_min_viewport_css_px: null # resolved from Effective Environment Contract
   accessibility_reflow_probe_css_px: 320 # WCAG-equivalent probe; separate from product support floor
@@ -135,3 +156,8 @@ integration:
     - runtime_state_integrity
     - font_loading_stability
     - relevant_third_party_fallback
+  observation_coverage:
+    sp_full_page: PENDING # PENDING | PASS | KNOWN_GAP | NOT_APPLICABLE
+    pc_full_page: PENDING
+    evidence: []
+    known_gaps: []
