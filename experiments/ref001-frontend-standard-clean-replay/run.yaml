@@ -1,0 +1,101 @@
+schema_version: 1
+run_id: RUN-REF001-FRONTEND-STANDARD-CLEAN-REPLAY-20260821-A
+status: IN_PROGRESS
+purpose: >-
+  Validate whether the current Frontend Implementation Standard can reproduce REF-001
+  from current Figma authority + canonical project rules without reusing old REF-specific
+  implementation answers before the replay is frozen.
+base:
+  branch: so
+  starting_commit: 9285c29dbf5b01d153d4c8b9c3d76ff3777b6d32
+work_branch: agent/ref001-frontend-standard-clean-replay
+protected_scopes:
+  - existing REF-001 latest/final implementation
+  - Claude Code current REF-001 implementation
+  - V3 / PR #92
+  - unrelated REF-002 / PR #142
+pre_freeze_forbidden_reads:
+  - old REF-specific CSS/HTML/PHP/JS implementation bodies
+  - old repair patches and workaround values
+  - old Human final-tuning values
+pre_freeze_allowed_reuse:
+  - canonical project contracts and policies
+  - shared project infrastructure
+  - canonical Figma Variables/Components
+  - formal exact assets and asset manifests
+  - existing generic intake/QA utilities
+figma:
+  file_key: ZYTdtw4wCgkcBy2cVnhxVI
+  page_node_id: "21376:1600"
+  pc_root: "21384:8173"
+  pc_size: [1380, 7714]
+  sp_root: "21376:4401"
+  sp_size: [375, 10817]
+  breakpoint_contract:
+    mobile_max_px: 767
+    desktop_min_px: 768
+  code_connect: UNDETERMINED_PLAN_SEAT_LIMIT
+  authority_method:
+    - get_design_context
+    - metadata/node hierarchy
+    - Variables
+    - component evidence
+    - masks/exact asset evidence
+    - motion/prototype evidence where relevant
+sections:
+  - { id: header, pc: "21378:8066", sp: "21376:4918", status: AUTHORITY_CAPTURED }
+  - { id: main-visual, pc: "21378:8032", sp: "21376:4886", status: AUTHORITY_CAPTURED }
+  - { id: reason, pc: "21378:7999", sp: "21376:4852", status: AUTHORITY_CAPTURED }
+  - { id: education, pc: "21378:7868", sp: "21376:4720", status: PENDING_AUTHORITY }
+  - { id: cta-after-education, pc: "21378:7867", sp: "21376:4719", status: PENDING_AUTHORITY }
+  - { id: student-voice, pc: "21378:7766", sp: "21376:4650", status: PENDING_AUTHORITY }
+  - { id: messages, pc: "21378:7746", sp: "21376:4629", status: PENDING_AUTHORITY }
+  - { id: cta-before-courses, pc: "21378:7730", sp: "21376:4628", status: PENDING_AUTHORITY }
+  - { id: courses, pc: "21378:7505", sp: "21376:4403", status: PENDING_AUTHORITY }
+  - { id: links, pc: "21378:7458", sp: "21376:4919", status: PENDING_AUTHORITY }
+  - { id: cta-value, pc: "21378:7481", sp: "21376:4942", status: PENDING_AUTHORITY }
+  - { id: footer, pc: "21378:7457", sp: "21376:4402", status: PENDING_AUTHORITY }
+asset_transfer:
+  discovery: PASS
+  byte_transfer: BLOCKED_BY_EXECUTION_NETWORK
+  existing_canonical_helper: scripts/ingest_figma_mcp_asset.py
+  policy: docs/figma-asset-intake.md
+  rule: Never commit short-lived Figma MCP URLs.
+  consequence: >-
+    Continue semantic/layout implementation and non-asset runtime QA, but do not claim
+    final visual/asset fidelity until exact raster bytes are materialized on a network-enabled runner.
+contamination_log:
+  - type: RECENT_COMMIT_MESSAGE
+    detail: >-
+      Startup Git inspection surfaced an old REF-specific repair description in commit metadata.
+      The old implementation body/patch was not opened and the value is excluded from implementation decisions.
+  - type: ROOT_README_SUMMARY
+    detail: >-
+      Root README was opened as project baseline and exposed historical clean-replay aggregate scores.
+      Those scores are quarantined and must not be used for implementation/repair decisions before replay freeze.
+metrics:
+  first_pass_frozen: false
+  repair_rounds: 0
+  strategy_reversals: 0
+  css_postfix_patch_count: 0
+  important_count: null
+  unnecessary_absolute_count: null
+  unnecessary_fixed_dimension_count: null
+  duplicated_css_count: null
+  runtime_errors: null
+  console_errors: null
+  horizontal_overflow_failures: null
+  interaction_correctness: UNMEASURED
+  asset_fidelity: BLOCKED_BY_EXECUTION_NETWORK
+  typography_fidelity: UNMEASURED
+  semantic_quality: UNMEASURED
+  human_repairability: UNMEASURED
+  implementation_time_minutes: null
+  repair_time_minutes: null
+  reuse_rate: null
+comparison:
+  allowed_after_first_pass_freeze: true
+  old_ref_read: false
+  claude_current_read: false
+  current_final_read: false
+  v3_read: false
