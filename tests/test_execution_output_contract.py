@@ -126,6 +126,18 @@ class ExecutionOutputContractTests(unittest.TestCase):
         )
         self.assertTrue(any("unowned viewport threshold 1100px" in error for error in errors))
 
+    def test_ref001_wordpress_profile_rejects_clean_static_target(self) -> None:
+        run = {
+            "coordination": {
+                "implementation_profile_path": "experiments/ref001-wordpress-acf/implementation-profile.yaml"
+            },
+            "code": {
+                "target_route": "experiments/ref001-frontend-standard-clean-replay/implementation/index.html"
+            },
+        }
+        errors = validate_run_output_contract(run)
+        self.assertTrue(any("contradicts SERVER_RENDERED_PHP" in error for error in errors))
+
     def test_page_run_rejects_known_static_html_output_for_php_profile(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
