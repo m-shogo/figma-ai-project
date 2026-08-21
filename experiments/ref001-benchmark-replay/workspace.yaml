@@ -8,6 +8,7 @@ purpose: FRESH_WORDPRESS_ACF_BENCHMARK_REPLAY
 include_paths:
 - config
 - docs
+- schemas
 - templates
 - scripts
 - requirements-dev.txt
