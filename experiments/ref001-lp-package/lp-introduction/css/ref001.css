@@ -1,0 +1,2471 @@
+@charset "UTF-8";
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@600;900&family=Poppins:wght@400;500;600&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap');
+
+/* ==========================================================================
+   千葉経済大学 LP スタイル
+
+   ── 直したい場所の探し方 ────────────────────────────────
+   HTML のセクション名（例 p-reason）でこのファイルを検索してください。
+   名前は重複しないので、必ず1つのブロックだけに当たります。
+   そのブロックの中に、そのセクションの指定が全部入っています。
+
+   ── このファイルの並び ──────────────────────────────────
+   1. カスケード層の宣言   どの指定が優先されるかの順番（vendor が最弱）
+   2. デザイントークン     色 / 文字サイズ / 余白 の設定値
+   3. reset                ブラウザ標準の打ち消し
+   4. base                 ページ全体の下ごしらえ
+   5. layout               l-container
+   6. components           c-btn / c-kicker / c-heading / c-checklist
+   7. sections             p-header / p-mv / ... 画面の上から順に
+
+   ── 書き方のルール ──────────────────────────────────────
+   ・高さ・幅を決め打ちしない。中身と余白（padding / gap）で決める
+   ・並べるのは flex か grid
+   ・position: absolute は「箱の外へはみ出すあしらい」だけに使う。
+     並べる・そろえるといったレイアウトには使わない。
+     使ってよいのは次だけ（CI で見張っています）:
+       .p-voice__balloon::before/after  吹き出しの尻尾
+       .p-footer__pagetop               フッター右下のボタン
+       .p-mv__oc / __oc-balloon / __oc-arrow   OPEN CAMPUS バッジ一式
+       .p-education__step::before/after       カードの影とカード間の「≫」
+       .p-links__item::before                 丸いリンクの影の円
+       .p-invite の飾り枠
+     レイアウトで重ねたい・ずらしたいときは代わりに次を使う:
+       重ねる     → grid の同じマス（grid-area: 1 / 1）
+       またがせる → マイナスマージン
+       端に寄せる → justify-self / align-self
+   ・hover も absolute を使わない。色 / opacity / translate / box-shadow で表現し、
+     :hover と :focus-visible は必ずセットで書く（キーボード操作でも同じ見た目に）
+   ・文字サイズと余白は clamp() で 375px〜1380px を滑らかにつなぐ。
+     途中でカクッと変わる幅を作らない
+   ・列数は repeat(auto-fit, minmax(...)) で幅なりに決める。
+     「何px以上なら何列」という指定は書かない
+   ・スマホとPCの2つだけ。素の指定がスマホ、@media (min-width: 768px) がPC。
+     モバイルファーストなので max-width の @media は書かない。
+     しかも 768px で変えるのは「並びの向きそのものが変わる箇所」に限る
+     （メインビジュアルの重ね／積み、学生の声の横／縦 など）
+   ========================================================================== */
+
+
+/* ==========================================================================
+   1. カスケード層
+
+   後ろに書いた層ほど強くなります。詳細度（セレクタの強さ）に関係なく
+   この順番で決まるので、「reset のほうが強くてボタンの色が効かない」
+   といった事故が起きません。
+   ========================================================================== */
+
+@layer vendor, reset, base, layout, components, sections;
+
+/* vendor を先頭に置いているのは Swiper のためです。
+   CDN から読み込む CSS は「層の外」に入るため、そのままだと
+   層に入れたこちらの指定より強くなり、.swiper-slide などを
+   上書きできません（display:grid が効かない等）。
+   lp/js/ref001-interactions.js 側で Swiper の CSS を
+   @import ... layer(vendor) として読み込み、この順番に従わせています。 */
+
+
+/* ==========================================================================
+   2. デザイントークン
+
+   色や文字サイズを変えたいときは、まずここを見てください。
+   ここを1箇所直すと、使っている場所すべてに反映されます。
+
+   clamp(最小, 推奨, 最大) は「画面幅に応じて滑らかに変える」書き方です。
+   例: --fs-heading は画面 375px で 16px、1380px で 30px になり、
+       その間は途切れず連続的に変化します。
+   ========================================================================== */
+
+@layer base {
+	:root {
+		/* --- 色 --- */
+		--color-text:      #333;
+		--color-purple:    #8473aa;
+		--color-blue:      #38a1db;
+		--color-orange:    #f5971a;
+		--color-yellow:    #fffc68;
+		--color-pink:      #f26f81;   /* チェックマーク */
+		--color-beige:     #f6f5ef;   /* 背景（うすいベージュ） */
+		--color-bg-blue:   #edfdff;   /* 背景（うすい水色） */
+		--color-bg-yellow: #fffaea;   /* 背景（うすい黄色） */
+		--color-line:      #777;      /* 枠線 */
+		--color-white:     #fff;
+
+		/* --- フォント --- */
+		--font-jp:    'Zen Kaku Gothic New', 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+		--font-en:    'Poppins', Arial, sans-serif;
+		--font-serif: 'Noto Serif JP', 'Yu Mincho', 'Hiragino Mincho ProN', serif;  /* 引用符 “ ” 専用 */
+
+		/* --- 文字サイズ ---
+		   デザイン（Figma）では、本文まわりの多くが SP と PC で同じサイズです。
+		   大きく変わるのは見出しなど一部だけなので、
+		   「固定するもの」と「変化させるもの」を分けています。
+		   数値は Figma の SP 値 → PC 値。 */
+
+		/* 固定（SP と PC で同じ） */
+		--fs-small:        0.875rem;  /* 14  ラベル / 補足 */
+		--fs-body:         1rem;      /* 16  本文 */
+		--fs-kicker:       1.25rem;   /* 20  # REASON などのタグ */
+		--fs-card-title:   1.125rem;  /* 18  カード見出し / EDUバッジ */
+		--fs-course-title: 1.25rem;   /* 20  コース名 */
+		--fs-course-check: 0.8125rem; /* 13  コースのチェック項目 */
+		--fs-edu-check:    0.9375rem; /* 15  EDUCATION のチェック項目 */
+		--fs-tile:         1.375rem;  /* 22  丸いリンク */
+		--fs-toggle:       1.125rem;  /* 18  もっと見る */
+
+		/* 変化する（375px → 1380px で滑らかに） */
+		--fs-heading:      clamp(1.5rem, 1.3601rem + 0.597vw, 1.875rem);     /* 24 → 30 */
+		--fs-heading-em:   clamp(2rem, 1.7668rem + 0.995vw, 2.625rem);       /* 32 → 42 */
+		--fs-edu-intro:    clamp(1.25rem, 1.1567rem + 0.398vw, 1.5rem);      /* 20 → 24 */
+		--fs-edu-card:     clamp(1.125rem, 1.0784rem + 0.199vw, 1.25rem);    /* 18 → 20 */
+		--fs-cta-title:    clamp(1.5rem, 1.3134rem + 0.796vw, 2rem);         /* 24 → 32 */
+		--fs-voice-name:   clamp(1rem, 0.8134rem + 0.796vw, 1.5rem);         /* 16 → 24 */
+		--fs-voice-advice: clamp(1rem, 0.9534rem + 0.199vw, 1.125rem);       /* 16 → 18 */
+		--fs-msg-quote:    clamp(1.375rem, 1.2351rem + 0.597vw, 1.75rem);    /* 22 → 28 */
+		--fs-msg-counter:  clamp(1.25rem, 1.1567rem + 0.398vw, 1.5rem);      /* 20 → 24 */
+		--fs-note:         clamp(0.875rem, 0.8284rem + 0.199vw, 1rem);       /* 14 → 16  住所 / 所属 */
+		--fs-tile-label:   clamp(1rem, 0.8601rem + 0.597vw, 1.375rem);       /* 16 → 22  丸リンクの文字 */
+		--fs-copyright:    clamp(0.75rem, 0.7034rem + 0.199vw, 0.875rem);    /* 12 → 14 */
+		--fs-tile-en:      clamp(1rem, 0.9067rem + 0.398vw, 1.25rem);        /* 16 → 20  Official Instagram */
+		--fs-tile-kicker:  clamp(0.8125rem, 0.6959rem + 0.498vw, 1.125rem);  /* 13 → 18  数字で見る */
+		--fs-heading-mark: clamp(2.625rem, 2.4384rem + 0.796vw, 3.125rem);   /* 42 → 50  （ ）の記号 */
+		--logo-width:      clamp(8.75rem, 7.6539rem + 4.677vw, 11.6875rem);  /* 140 → 187 */
+		/* メインビジュアルの見出しだけ、他と組み立て方が違います。
+		   写真へ重ねる大きな文字なので、
+		     ・375px でちょうど Figma の SP 値になる
+		     ・375px より狭い端末では vw で縮んで折り返さない
+		   という条件が要るためです。
+		   PC 側（下の @media）で 768px→1380px の値に切り替えます。 */
+		--fs-mv-quote:   min(26.6667vw, 6.25rem);   /* 375px で 100px 引用符 */
+		--fs-mv-word:    min(17.6vw,    4.125rem);  /* 375px で  66px ケイザイ */
+		--fs-mv-mid:     min(8.5333vw,  2rem);      /* 375px で  32px って、想像以上に */
+		--fs-mv-last:    min(16vw,      3.75rem);   /* 375px で  60px おもしろい。 */
+		--fs-mv-lead:    min(3.7333vw,  0.875rem);  /* 375px で  14px 説明文 */
+
+		/* OPEN CAMPUS バッジ */
+		--oc-size:       clamp(10.625rem, 8.9927rem + 6.9652vw, 15rem);   /* 170 → 240 */
+		--oc-title:      clamp(1.625rem,  1.4851rem + 0.597vw, 2rem);      /*  26 →  32 */
+		--oc-note:       clamp(1rem,      0.8601rem + 0.597vw, 1.375rem);  /*  16 →  22 */
+		--oc-arrow:      clamp(2.25rem,   1.9701rem + 1.194vw, 3rem);      /*  36 →  48 */
+
+		/* --- レイアウト --- */
+		--container:     1160px;  /* 本文の最大幅 */
+		--gutter:        clamp(1rem, 0.6rem + 1.7vw, 1.5rem);            /* 画面端の余白 16 → 24 */
+		--space-section: clamp(3.5rem, 2.5672rem + 3.98vw, 6rem);        /* セクション上下 56 → 96 */
+		--gap-card:      clamp(1.5rem, 0.9rem + 2.5vw, 2.5rem);          /* カード同士の間隔 24 → 40 */
+
+		/* 読みやすい1行の長さ（日本語で約40文字） */
+		--measure: 40em;
+	}
+}
+
+
+/* ==========================================================================
+   3. reset
+   ========================================================================== */
+
+@layer reset {
+	*,
+	*::before,
+	*::after {
+		box-sizing: border-box;
+	}
+
+	body {
+		margin: 0;
+	}
+
+	img,
+	picture {
+		display: block;
+		max-width: 100%;
+	}
+
+	img {
+		height: auto;
+	}
+
+	h1, h2, h3, p, dl, dd, figure {
+		margin: 0;
+	}
+
+	ul, ol {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	a {
+		color: inherit;
+		text-decoration: none;
+	}
+
+	button {
+		font: inherit;
+		color: inherit;
+		background: none;
+		border: 0;
+		padding: 0;
+		cursor: pointer;
+	}
+}
+
+
+/* ==========================================================================
+   4. base
+   ========================================================================== */
+
+@layer base {
+	body.p-lp {
+		color: var(--color-text);
+		background: var(--color-white);
+		font-family: var(--font-jp);
+		font-weight: 500;
+		font-size: var(--fs-body);
+		line-height: 1.7;
+		/* 横スクロールが出ないようにする保険 */
+		overflow-x: hidden;
+		/* 読点の位置で不自然に切れないようにする */
+		word-break: normal;
+		overflow-wrap: anywhere;
+	}
+
+	/* 動きを減らす設定にしている人には、動きを止める */
+	@media (prefers-reduced-motion: reduce) {
+		body.p-lp *,
+		body.p-lp *::before,
+		body.p-lp *::after {
+			transition-duration: .01ms !important;
+			animation-duration: .01ms !important;
+			scroll-behavior: auto !important;
+		}
+	}
+}
+
+
+/* ==========================================================================
+   5. layout
+   ========================================================================== */
+
+@layer layout {
+	/* 本文の横幅をそろえる箱。狭いときは端に --gutter ぶんの余白が残る */
+	.l-container {
+		width: min(var(--container), 100% - var(--gutter) * 2);
+		margin-inline: auto;
+	}
+}
+
+
+/* ==========================================================================
+   6. components
+   複数のセクションで使い回すものだけ。
+   1箇所でしか使わないものは、そのセクションのブロックに書いてください。
+   ========================================================================== */
+
+@layer components {
+
+	/* --- 見出しの上の黄色いタグ（# REASON など） --- */
+	.c-kicker {
+		display: inline-block;
+		padding: .1em .4em;   /* Figma は上下 2px / 左右 8px（文字 20px） */
+		background: var(--color-yellow);
+		font-family: var(--font-en);
+		font-size: var(--fs-kicker);
+		font-weight: 400;
+		line-height: 1;
+		letter-spacing: .05em;
+	}
+
+	/* --- （ ）で囲まれたセクション見出し ---
+	   見出し本文は .c-heading__text で1つにまとめてください。
+	   まとめないと「（」「本文」「太字」が別々に並び、
+	   画面が狭いときに変な位置で改行されます。 */
+	.c-heading {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: clamp(.5rem, .2rem + 1.4vw, 1.75rem);
+		font-size: var(--fs-heading);
+		font-weight: 500;
+		/* Figma の見出しは2行とも同じ行の高さです（SP は 41px ずつ）。
+		   行の高さを「倍率」で書くと、大きい文字の行だけ背が高くなって
+		   Figma とずれるので、大きいほうの文字サイズを基準にした
+		   長さで指定しています。 */
+		line-height: calc(var(--fs-heading-em) * 1.3);
+		letter-spacing: .05em;
+
+		@media (min-width: 768px) {
+			/* PC は1行。大きい文字の高さ（42px）がそのまま行の高さになります */
+			line-height: 1;
+		}
+
+		& .c-heading__text {
+			text-align: center;
+			text-wrap: balance;   /* 行の長さをそろえて折り返す */
+
+			/* SP で2行になる見出しは HTML の <br> で位置を決めています。
+			   PC は1行に収まるので改行を無効にします。 */
+			@media (min-width: 768px) {
+				& br { display: none; }
+			}
+		}
+
+		/* 強調部分。Figma では太さは通常と同じ w500 で、大きさだけ変わる。
+		   コースの「７」だけ w900 なので、そちらは p-courses 側で指定している */
+		& strong {
+			font-size: var(--fs-heading-em);
+			font-weight: 500;
+		}
+
+		/* 左右の（ ）は飾り */
+		&::before,
+		&::after {
+			flex: none;
+			font-family: var(--font-en);
+			font-size: var(--fs-heading-mark);
+			font-weight: 500;
+			color: var(--color-white);
+			-webkit-text-stroke: 1px var(--color-text);
+		}
+		&::before { content: '('; }
+		&::after  { content: ')'; }
+	}
+
+	/* --- 吹き出し ---
+	   Figma では MV の「大学の雰囲気を体験！」と
+	   コースの「こんな人にオススメ！」がまったく同じ部品です
+	   （角丸 187×38px ＋ 下向きの三角、文字 14px）。
+
+	   Figma の作りは「同じ形が2枚」です。
+	     1枚目 塗り（コースはベージュ / MV は白）
+	     2枚目 輪郭線だけ。1枚目より 2px 右上へずれている
+	   ずれているので線が塗りから少し離れて見え、
+	   全体が「二重線」に見えます。これが Figma どおりの見え方です。
+
+	   角丸と尻尾がつながった形は CSS の border だけでは作れないので、
+	   Figma から書き出した SVG（塗り用と線用）を
+	   型抜き（mask）に使って、色は CSS 側で指定しています。
+	   これなら文言が長くなって2行になっても形が伸びるだけで崩れません。 */
+	.c-bubble {
+		/* 中の色。既定は白。コースの「こんな人にオススメ！」だけ
+		   Figma ではセクションと同じベージュです。 */
+		--bubble-bg: var(--color-white);
+		--bubble-line: #555;
+
+		position: relative;
+		width: fit-content;
+		/* Figma: 高さ 47px（文字 14px ＋ 上 12px ＋ 下 12px ＋ 尻尾 9px）、左右 20px */
+		padding: .857em 1.4286em 1.5em;
+		color: var(--color-text);
+		font-size: var(--fs-small);
+		line-height: 1;
+		letter-spacing: .05em;
+		/* 折り返しは禁止しません。今の文言は1行に収まりますが、
+		   長い文言に変えたときは横へはみ出すより2行になるほうが安全です。 */
+		text-wrap: balance;
+
+		/* 文字を2枚の形より前に出す */
+		& > span { position: relative; }
+
+		/* 1枚目: 塗り */
+		&::before {
+			content: '';
+			position: absolute;
+			inset: 0;
+			background: var(--bubble-bg);
+			-webkit-mask: url('../image/icons/course-recommend-fill.svg') 0 0 / 100% 100% no-repeat;
+			mask: url('../image/icons/course-recommend-fill.svg') 0 0 / 100% 100% no-repeat;
+		}
+
+		/* 2枚目: 輪郭線。1枚目より 2px 右上へずらす（Figma と同じ） */
+		&::after {
+			content: '';
+			position: absolute;
+			inset: 0;
+			translate: 2px -2px;
+			background: var(--bubble-line);
+			-webkit-mask: url('../image/icons/bubble-outline.svg') 0 0 / 100% 100% no-repeat;
+			mask: url('../image/icons/bubble-outline.svg') 0 0 / 100% 100% no-repeat;
+		}
+	}
+
+	/* --- 見出しの左右に添える「＼ ／」の斜線 ---
+	   CTA と「まずは大学を体験してみよう！」で共通に使います。
+
+	   Figma の Vector 7 / 8 は 20 × 26px（SP は 20 × 42px）の
+	   線幅 1px の斜線です。角度は指定されておらず、
+	   「箱の左上から右下へ引いた線」という形で決まっています。
+
+	   なので rotate で角度を作らず、Figma と同じ大きさの箱を置いて
+	   その対角線を clip-path で切り出しています。
+	   こうすると箱の縦横を Figma の数値に合わせるだけで角度も一致し、
+	   ズレたときも「箱の大きさ」だけを直せば済みます。
+
+	   色は currentColor なので、置いた見出しの文字色にそのまま従います。 */
+	.c-marked-title {
+		--mark-w: 20px;
+		--mark-h: 42px;   /* SP。PC は下のメディアクエリで 26px */
+		--mark-line: 1.3px;
+
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		/* 斜線と文字の間。Figma は 32px。狭くしたい場所は
+		   --mark-gap をそのブロックで上書きしてください */
+		gap: var(--mark-gap, 2rem);
+
+		&::before,
+		&::after {
+			content: '';
+			flex: none;
+			width: var(--mark-w);
+			height: var(--mark-h);
+			background: currentColor;
+		}
+
+		/* 左は ＼（左上 → 右下） */
+		&::before {
+			clip-path: polygon(
+				0 0,
+				var(--mark-line) 0,
+				100% 100%,
+				calc(100% - var(--mark-line)) 100%
+			);
+		}
+
+		/* 右は ／（右上 → 左下） */
+		&::after {
+			clip-path: polygon(
+				100% 0,
+				calc(100% - var(--mark-line)) 0,
+				0 100%,
+				var(--mark-line) 100%
+			);
+		}
+
+		@media (min-width: 768px) {
+			--mark-h: 26px;
+		}
+	}
+
+	/* --- ボタン（資料請求 / オープンキャンパス） ---
+	   標準は「白地 + 色文字 + 色の枠線」。
+	   マウスを乗せる / キーボードで選ぶと色が反転します（白地 → 塗り）。
+	   アイコンも白版へ差し替えます。
+
+	   ヘッダーだけ最初から塗りつぶしなので反転の向きが逆になります。
+	   その指定は p-header のブロックの中にまとめてあります。 */
+	.c-btn {
+		--btn-color: var(--color-text);   /* 下の modifier で上書きします */
+
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: .75em;
+		/* Figma は 261 × 64px。文字16px + 上下24px で 64px になる。
+		   枠線は Figma には無い */
+		padding: 1.5em;
+		min-width: 16.3125rem;   /* 261px */
+		background: var(--color-white);
+		color: var(--btn-color);
+		font-size: var(--fs-body);
+		line-height: 1;
+		letter-spacing: .04em;
+		/* 文言を長くしても画面からはみ出さないよう、折り返しは禁止しません。
+		   今の文言は 1行に収まります（幅 261px に対して余裕があります）。
+		   長い文言に変えた場合はボタンが縦に伸びるだけで、レイアウトは崩れません。 */
+		transition: background-color .3s ease, color .3s ease, border-color .3s ease;
+
+		/* アイコンは Figma の実寸（文字サイズ 16px 基準）で置きます。
+		   高さは画像の縦横比のまま自動で決まります。
+		   幅をアイコンごとに変えているのは、資料請求（16×13）と
+		   オープンキャンパス（13×14）で縦横比が違うためです。
+		   同じ幅にすると縦長のアイコンが文字より背が高くなり、
+		   2つのボタンの高さがそろわなくなります。 */
+		& .c-btn__icon {
+			flex: none;
+			width: 1em;              /* 16px */
+		}
+
+		&:hover,
+		&:focus-visible {
+			background: var(--btn-color);
+			color: var(--color-white);
+		}
+	}
+
+	/* 色だけを決めます。塗り方の指定は上の .c-btn にまとまっています */
+	.c-btn--doc { --btn-color: var(--color-blue); }
+	.c-btn--oc  { --btn-color: var(--color-purple); }
+
+	/* 反転して背景が塗りになるので、アイコンを白版へ差し替えます */
+	.c-btn--oc .c-btn__icon { width: .8125em; }   /* 13px */
+
+	.c-btn--doc:hover .c-btn__icon,
+	.c-btn--doc:focus-visible .c-btn__icon { content: url('../image/icons/document.svg'); }
+	.c-btn--oc:hover .c-btn__icon,
+	.c-btn--oc:focus-visible .c-btn__icon { content: url('../image/icons/open-campus.svg'); }
+
+	/* --- チェックボックス付きの箇条書き ---
+	   Figma の印は「白い四角 + うすい灰色の枠 + 右上へはみ出すピンクのチェック」
+	   という1つの絵です（lp/image/icons/check.svg）。
+	   文字の ✓ では形が違うので、画像をそのまま置いています。
+
+	   Figma の数値（EDUCATION / コース 共通）
+	     絵の大きさ    11 × 10px
+	     絵と文字の間  10px（文字は行の先頭から 21px の位置）
+	     行の送り      文字サイズ + 12px（15px なら 27px、13px なら 25px）
+
+	   素材は右に 1px ぶん余白がある 12 × 10px なので、
+	   箱を 12px・間隔を 9px にすると文字が Figma と同じ 21px の位置に来ます。
+
+	   行の高さは Figma の 1.0 ではなく 1.4 にしています（日本語が詰まりすぎるため）。
+	   そのぶん増えた上下の余白は
+	     ・行間  gap から引く（行の送りは Figma どおり）
+	     ・ブロックの外  margin で打ち消す（前後の要素との間隔が Figma どおりになる）
+	   で相殺しています。 */
+	.c-checklist {
+		display: grid;
+		gap: calc(12px - .4em);
+		margin-block: -.2em;
+		color: #000;
+		font-size: var(--fs-edu-check);
+		line-height: 1.4;
+		letter-spacing: .05em;
+
+		& li {
+			display: grid;
+			grid-template-columns: auto 1fr;
+			align-items: start;
+			gap: 9px;
+		}
+
+		/* 絵は1行目の高さの中で上下中央（Figma も文字に対して中央） */
+		& li::before {
+			content: '';
+			width: 12px;
+			height: 1.4em;
+			background: url('../image/icons/check.svg') left center / 12px 10px no-repeat;
+		}
+	}
+
+	/* コースの「こんな人にオススメ！」の中だけ、少し小さく詰める */
+	.c-checklist--pink {
+		font-size: var(--fs-course-check);
+		line-height: 1.4;
+	}
+}
+
+
+/* ==========================================================================
+   7. sections（画面の上から順）
+   ========================================================================== */
+
+@layer sections {
+
+
+/* --------------------------------------------------------------------------
+   HEADER — ロゴ / ボタン
+   -------------------------------------------------------------------------- */
+.p-header {
+	background: var(--color-white);
+
+	& .p-header__inner {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: clamp(.5rem, .2rem + 1.5vw, 1.5rem);
+		/* Figma の上下余白 SP 16px → PC 24px（帯の高さ SP 67px / PC 94px） */
+		padding-block: clamp(1rem, 0.8134rem + 0.796vw, 1.5rem);
+		/* Figma のヘッダーは本文枠ではなく、画面の端から SP 16px / PC 48px */
+		padding-inline: clamp(1rem, 0.2537rem + 3.1841vw, 3rem);
+		max-width: none;
+	}
+
+	& .p-header__logo {
+		flex: none;   /* ボタンに押されて潰れないように */
+	}
+
+	& .p-header__logo img {
+		width: var(--logo-width);
+	}
+
+	/* SP ではボタンを出さない（元デザインの仕様。ロゴだけの細いヘッダー）。
+	   代わりに画面下部の CTA と MV のバッジで導線を確保している */
+	& .p-header__actions {
+		display: none;
+	}
+
+	@media (min-width: 768px) {
+		& .p-header__actions {
+			display: flex;
+			gap: clamp(.5rem, .3rem + .8vw, 1rem);
+		}
+	}
+
+	/* ヘッダーのボタンだけ最初から塗りつぶし。
+	   したがって hover の向きも逆（塗り → 白地）になります。 */
+	& .c-btn {
+		/* Figma は 201 × 46px。文字14px + 上下16px で 46px */
+		padding: 1.143em 1em;
+		min-width: 0;
+		font-size: var(--fs-small);
+		background: var(--btn-color);
+		color: var(--color-white);
+	}
+
+	& .c-btn:hover,
+	& .c-btn:focus-visible {
+		background: var(--color-white);
+		color: var(--btn-color);
+	}
+
+	/* 反転の向きが逆なので、アイコンの差し替えも逆（色版）にします */
+	& .c-btn--doc:hover .c-btn__icon,
+	& .c-btn--doc:focus-visible .c-btn__icon { content: url('../image/icons/document-blue.svg'); }
+	& .c-btn--oc:hover .c-btn__icon,
+	& .c-btn--oc:focus-visible .c-btn__icon { content: url('../image/icons/open-campus-purple.svg'); }
+
+	@media (min-width: 768px) {
+		& .c-btn {
+			min-width: 12.5625rem;   /* 201px */
+		}
+	}
+}
+
+
+/* --------------------------------------------------------------------------
+   MV — メインビジュアル
+
+   構成の考え方
+   ・人物写真の帯とコピーを grid の同じマス（1行1列）に重ねる
+   ・高さは「写真の高さ」と「コピーの高さ」の大きいほうで自動的に決まる
+     → height の決め打ちが要らない
+   ・写真は元デザインの実寸 570 × 614px（＝1380px 幅に対して 41.3%）。
+     img は width だけ指定し、高さは画像本来の比率にまかせる
+   ・PC は「左は上端ぞろえ、右は少し下げる」ずらしレイアウト
+     SP は「1枚目を右上、2枚目を左下」の振り分けレイアウト
+   ・OPEN CAMPUS バッジだけは写真の上へ重ねて下へはみ出す“あしらい”なので
+     absolute で置いている
+   -------------------------------------------------------------------------- */
+.p-mv {
+	display: grid;
+	position: relative;   /* OPEN CAMPUS バッジの位置の基準 */
+	isolation: isolate;
+	background-color: var(--color-bg-yellow);
+	background-image: url('../image/icons/ref001-mv-bg-sp.svg');
+	background-position: center;
+	background-size: cover;
+	background-repeat: no-repeat;
+
+	/* --- 人物写真 --- */
+	& .p-mv__photos {
+		grid-area: 1 / 1;
+		display: grid;
+		justify-items: end;          /* SP: 1枚目を右上へ */
+		align-content: space-between;/* SP: 1枚目は上端、2枚目は下端へ */
+	}
+
+	& .p-mv__photo {
+		width: min(89.3%, 20.9375rem);   /* SP: 335px 上限 */
+
+		& img {
+			width: 100%;
+			/* Figma は 335 × 220px に切り抜いて使っています */
+			aspect-ratio: 335 / 220;
+			object-fit: cover;
+		}
+	}
+
+	/* SP: 2枚目は左下へ */
+	& .p-mv__photo--right {
+		justify-self: start;
+	}
+
+	/* --- コピー --- */
+	& .p-mv__body {
+		grid-area: 1 / 1;
+		z-index: 1;
+		display: grid;
+		align-content: center;
+		justify-items: center;
+		/* キャッチと説明文の間 Figma: SP 16px / PC 15px */
+		gap: 1rem;
+		/* Figma の上下余白 上 SP 127px → PC 106px / 下 SP 259px → PC 173px。
+		   画面が広くなるほど小さくなるので、clamp の傾きがマイナスになります。 */
+		padding-block: clamp(6.625rem,  8.4275rem - 2.0896vw,  7.9375rem)
+		               clamp(10.8125rem, 18.1931rem - 8.5572vw, 16.1875rem);
+		/* キャッチは画面いっぱいに使うので、ここでは左右の余白を取らない。
+		   余白が要るのは説明文だけなので、そちらに個別に付けている */
+		padding-inline: 0;
+		text-align: center;
+	}
+
+	& .p-mv__catch {
+		display: grid;
+		justify-items: center;
+		gap: 0;
+		font-weight: 500;
+		/* Figma の3行は、文字の間が 26px / 24px 空いています。
+		   行の高さ 1.45 で並べるとちょうどその間隔になります
+		   （Figma の指定値は 1.6 ですが、Figma では3行が少し重なって
+		     置かれているため、そのままだと間隔が広がりすぎます）。 */
+		line-height: 1.45;
+		letter-spacing: .05em;
+		/* 文字サイズを vw で縮めて収める設計なので、今の文言は
+		   320px でも 1行に収まります。
+		   nowrap は付けていません。文言を長くしたときに
+		   横スクロールが出るより、2行になるほうが安全なためです。 */
+	}
+
+	/* 「“ケイザイ”」の行。引用符と文字でサイズが違うので、
+	   flex にして下ぞろえ（baseline）で並べる */
+	& .p-mv__catch-line--lead {
+		display: flex;
+		align-items: baseline;
+		justify-content: center;
+	}
+
+	& .p-mv__catch-line--mid  { font-size: var(--fs-mv-mid); color: #000; }
+	& .p-mv__catch-line--last { font-size: var(--fs-mv-last); }
+
+	/* 引用符は明朝体・紫。文字より一回り大きい */
+	& .p-mv__quote {
+		font-family: var(--font-serif);
+		font-size: var(--fs-mv-quote);
+		font-weight: 600;
+		line-height: 1;
+		color: var(--color-purple);
+	}
+
+	/* 「ケイザイ」「おもしろい。」は白抜き + 濃い縁取り。
+	   写真の上に重なっても背景の明暗に関係なく読める。
+	   paint-order は指定しない（指定すると縁が文字の内側に隠れて細く見えるため、
+	   元デザインどおり縁を全幅出す） */
+	& .p-mv__catch-line--lead strong,
+	& .p-mv__catch-line--last {
+		color: var(--color-white);
+		-webkit-text-stroke: 2px var(--color-text);
+	}
+
+	& .p-mv__catch-line--lead strong {
+		font-size: var(--fs-mv-word);
+		font-weight: 500;
+		letter-spacing: .02em;
+	}
+
+	& .p-mv__lead {
+		padding-inline: var(--gutter);
+		/* Figma は SP/PC とも #000 */
+		color: #000;
+		font-size: var(--fs-mv-lead);
+		line-height: 2;
+		letter-spacing: .05em;
+	}
+
+	/* --- OPEN CAMPUS バッジ --- */
+	& .p-mv__oc {
+		position: absolute;
+		z-index: 2;
+		right: 4%;
+		bottom: 0;
+
+		display: grid;
+		place-content: center;
+		justify-items: center;
+		gap: .1em;
+		width: var(--oc-size);
+		aspect-ratio: 1;
+		border-radius: 50%;
+		background: var(--color-orange);
+		color: var(--color-text);
+		text-align: center;
+		transition: transform .3s ease, box-shadow .3s ease;
+
+		&:hover,
+		&:focus-visible {
+			transform: translateY(-2px);
+			box-shadow: 0 8px 18px rgb(245 151 26 / 25%);
+		}
+	}
+
+	/* 吹き出しは円の上端に少し重ねる */
+	/* 吹き出しの見た目は .c-bubble（components 層）。ここでは位置だけ決めます。
+	   Figma では尻尾の先が円の上から 18% ほど入り込みます。 */
+	/* Figma の吹き出しは 187px で、SP では円（170px）より広く、
+	   左右へはみ出して置かれます。
+	   幅を max-content にすると「入る幅」に縛られず1行のままになり、
+	   円の中央にそろえられます。
+	   長い文言に変えたときは max-width で画面の中へ収めます。 */
+	& .p-mv__oc-balloon {
+		position: absolute;
+		bottom: 82%;
+		left: 50%;
+		translate: -50% 0;
+		width: max-content;
+		/* 円の幅（100%）＋ 円が画面の端から離れている量（左右で 8vw）まで。
+		   これ以上は広がらないので、文言を長くしても画面からはみ出しません。
+		   輪郭線が 2px 右へずれているぶんも差し引きます。 */
+		max-width: calc(100% + 8vw - 2px);
+	}
+
+	& .p-mv__oc-title {
+		color: var(--color-white);
+		font-family: var(--font-en);
+		font-size: var(--oc-title);
+		font-weight: 600;
+		line-height: 1.3;
+		letter-spacing: .05em;
+		-webkit-text-stroke: 1px var(--color-text);
+		paint-order: stroke fill;
+	}
+
+	& .p-mv__oc-note {
+		color: var(--color-text);
+		font-size: var(--oc-note);
+		font-weight: 500;
+		line-height: 1;
+		letter-spacing: .05em;
+	}
+
+	/* 右下の丸い矢印。円からはみ出さない位置に置く */
+	& .p-mv__oc-arrow {
+		position: absolute;
+		right: 4%;
+		bottom: 4%;
+		display: grid;
+		place-items: center;
+		width: var(--oc-arrow);
+		aspect-ratio: 1;
+		border: 1px solid var(--color-orange);
+		border-radius: 50%;
+		background: var(--color-white);
+		transition: background-color .3s ease, transform .3s ease;
+
+		& img { width: 30%; }
+	}
+
+	& .p-mv__oc:hover .p-mv__oc-arrow,
+	& .p-mv__oc:focus-visible .p-mv__oc-arrow {
+		background: var(--color-orange);
+		transform: rotate(-6deg);
+	}
+	& .p-mv__oc:hover .p-mv__oc-arrow img,
+	& .p-mv__oc:focus-visible .p-mv__oc-arrow img {
+		content: url('../image/icons/ref001-mv-arrow-white.svg');
+	}
+
+	/* --- SP: 写真とコピーが重なりすぎないよう、下に余白を足す --- */
+	/* --- PC: 左右に振り分け、右だけ少し下げる --- */
+	@media (min-width: 768px) {
+		/* 768px で SP の値とちょうど連続し、1380px で Figma の PC 値になる */
+		--fs-mv-quote: clamp(6.25rem,  4.7598rem + 3.105vw, 7.4375rem);  /* 100 → 119 */
+		--fs-mv-word:  clamp(4.125rem, 3.2623rem + 1.797vw, 4.8125rem);  /*  66 →  77 */
+		--fs-mv-mid:   clamp(2rem,     1.0588rem + 1.961vw, 2.75rem);    /*  32 →  44 */
+		--fs-mv-last:  clamp(3.75rem,  2.8873rem + 1.797vw, 4.4375rem);  /*  60 →  71 */
+		--fs-mv-lead:  clamp(0.875rem, 0.4044rem + 0.980vw, 1.25rem);    /*  14 →  20 */
+
+		background-image: url('../image/icons/ref001-mv-bg-pc.svg');
+		background-size: 100% 100%;
+
+		& .p-mv__photos {
+			display: flex;
+			justify-content: space-between;
+			align-items: start;
+		}
+
+		& .p-mv__photo {
+			width: min(41.3%, 35.625rem);   /* PC: 570px 上限 */
+
+			/* PC は切り抜かず、画像の比率のまま（Figma 570 × 614px） */
+			& img { aspect-ratio: auto; }
+		}
+
+		/* 元デザインでは右の写真だけ 80px 下がっている（1380px 幅に対して 5.8%） */
+		& .p-mv__photo--right {
+			margin-top: min(5.8%, 5rem);
+		}
+
+		/* Figma は PC も SP もバッジの下端が帯の下端とそろいます */
+		& .p-mv__oc {
+			right: 4%;
+		}
+	}
+}
+
+
+/* --------------------------------------------------------------------------
+   REASON — 千葉経済大学が選ばれる理由
+
+   列数は「1枚あたり最低 280px」というルールだけ書いて、
+   あとは画面幅なりに 1列 → 2列 → 3列 と自動で変わります。
+   -------------------------------------------------------------------------- */
+.p-reason {
+	/* Figma: 上 SP 48px → PC 78px / 下 SP 56px → PC 96px */
+	padding-block: clamp(3rem, 2.3806rem + 2.6418vw, 4.875rem) var(--space-section);
+	background: var(--color-white);
+
+	& .p-reason__head {
+		display: grid;
+		justify-items: center;
+		gap: clamp(1rem, .6rem + 1.7vw, 1.5rem);
+		/* Figma: 見出しブロックからカードまで SP 32px → PC 48px */
+		margin-bottom: clamp(2rem, 1.4030rem + 2.5473vw, 3rem);
+		text-align: center;
+	}
+
+	/* Figma では 756px の1行に収まります。
+	   通常の読みやすさ上限（--measure 40em）だと2行になってしまうため、
+	   このリード文だけ上限を広げています。 */
+	& .p-reason__lead {
+		/* Figma は SP / PC とも左ぞろえ（見出しだけ中央） */
+		text-align: left;
+		line-height: 1.6;
+		letter-spacing: .05em;
+		max-width: 47.25rem;   /* 756px */
+		color: #000;
+		font-size: var(--fs-body);
+		text-wrap: pretty;
+	}
+
+	/* Figma: SP は縦1列（間 16px）、PC は3列（間 40px）。 */
+	& .p-reason__list {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(min(100%, 17.5rem), 1fr));
+		gap: clamp(1rem, -0.3881rem + 5.9204vw, 2.5rem);
+	}
+
+	& .p-reason__card {
+		display: flex;
+		flex-direction: column;
+		background: var(--color-beige);
+	}
+
+	& .p-reason__photo img {
+		width: 100%;
+		aspect-ratio: 3 / 2;   /* Figma: 360 × 240px */
+		object-fit: cover;
+	}
+
+	/* Figma のベージュの箱。
+	   タイトルのチップは箱の上へ SP 18px / PC 20px はみ出します。
+	   はみ出す量はチップ側のマイナスマージンで作るので、
+	   箱の上の余白は 0 です。
+	   チップと本文の間 SP 16px → PC 24px、下の余白 SP 24px → PC 32px。 */
+	& .p-reason__body {
+		display: grid;
+		gap: clamp(1rem, 0.8134rem + 0.796vw, 1.5rem);
+		padding: 0 1.5rem clamp(1.5rem, 1.3134rem + 0.796vw, 2rem);
+	}
+
+	/* 見出しは写真との境目にまたがせる。
+	   absolute ではなく上方向のマイナスマージンで持ち上げています。 */
+	& .p-reason__title {
+		width: fit-content;
+		margin-top: clamp(-1.25rem, -1.0781rem - 0.199vw, -1.125rem);
+		/* Figma: 左右 24px / 高さ 36px。
+		   左右を広げすぎると「地域連携・インターンシップ」が
+		   1文字だけ折り返してしまうので、ここは Figma の値どおりにします */
+		padding: .2em 1.2em;
+		border: 1px solid var(--color-text);
+		background: var(--color-white);
+		font-size: var(--fs-edu-card);
+		font-weight: 500;
+		line-height: 1.4;
+	}
+
+	& .p-reason__text {
+		font-size: var(--fs-body);
+		line-height: 1.6;      /* Figma: 16px に対して 25.6px */
+		letter-spacing: .05em;
+		text-wrap: pretty;
+	}
+}
+
+
+/* --------------------------------------------------------------------------
+   EDUCATION — ４年間の学び
+
+   カードは「1枚あたり最低 220px」。画面幅なりに 1→2→3→4列 と変わります。
+   -------------------------------------------------------------------------- */
+.p-education {
+	/* カードの間隔。Figma は SP 44px → PC 40px（SP のほうが広い） */
+	--edu-gap: clamp(2.5rem, 2.843rem - .398vw, 2.75rem);
+
+	/* Figma: 上 SP 56px → PC 82px / 下 SP 37px → PC 80px（上下で違う） */
+	padding-top: clamp(3.5rem, 2.894rem + 2.587vw, 5.125rem);
+	padding-bottom: clamp(2.3125rem, 1.309rem + 4.279vw, 5rem);
+	background: var(--color-beige);
+	/* カードの影を背景色より前に出すため、ここで重なりの基準を作る
+	   （影は z-index: -1。基準が無いとページの背景まで下がって見えなくなる） */
+	isolation: isolate;
+
+	& .p-education__head {
+		display: grid;
+		gap: 1.5rem;   /* Figma: 見出しブロックと説明ブロックの間 24px（SP / PC 共通） */
+		/* Figma: 説明の最後の行からカードまで SP 32px → PC 50px */
+		margin-bottom: clamp(2rem, 1.58rem + 1.791vw, 3.125rem);
+	}
+
+	/* SP は見出しを中央ぞろえ。PC は下の @media で左ぞろえの横並びにする */
+	& .p-education__title {
+		text-align: center;
+	}
+
+	& .p-education__title .c-kicker {
+		background: var(--color-white);
+	}
+
+	& .p-education__heading {
+		margin-top: .5em;   /* Figma: タグから SP 16px / PC 20px */
+		font-size: var(--fs-heading-em);
+		font-weight: 500;
+		line-height: 1;     /* Figma は行の高さ 1.0 */
+		letter-spacing: .05em;
+	}
+
+	/* SP は「線（横）→ 見出し → 説明」の縦並び。
+	   PC は「線（縦）｜ 見出し + 説明」の横並び（下の @media）。
+	   縦の間隔は要素ごとに違うので gap は使わず margin で指定します。 */
+	& .p-education__intro {
+		display: grid;
+		gap: 0;
+	}
+
+	/* Figma の Vector 5。ただの線ではなく、途中に「見出しを指す切り欠き」があります。
+	   線は幅なりに伸ばし、切り欠きだけ実寸のまま真ん中に置きたいので、
+	   背景を「線・線・切り欠き」の3枚に分けています。
+	   色は素材（青 #38a1db）にも入っています。 */
+	& .p-education__intro::before {
+		content: '';
+		height: 20px;
+		background:
+			url('../image/icons/edu-accent-notch-up.svg') no-repeat center bottom / 18px 20px,
+			linear-gradient(var(--color-blue) 0 0) no-repeat left  bottom / calc(50% - 9px) 1px,
+			linear-gradient(var(--color-blue) 0 0) no-repeat right bottom / calc(50% - 9px) 1px;
+	}
+
+	/* オレンジの帯は Figma では文字の下端にかかる高さ 8px の棒です。
+	   文字の箱より 4px 下へはみ出すので、そのぶんを padding で確保しています。
+	   PC は Figma の帯が文字より 50px 長い（文字 352px / 帯 402px）。 */
+	& .p-education__intro-title {
+		width: fit-content;
+		margin-top: 1.5rem;    /* Figma: 線から 24px */
+		margin-inline: auto;   /* SP は中央。PC は下の @media で左へ */
+		font-size: var(--fs-edu-intro);
+		font-weight: 500;
+		line-height: 1;        /* Figma は行の高さ 1.0 */
+		letter-spacing: .05em;
+
+		/* 帯は文字の幅ぶんだけ。2行になったときも各行に付きます */
+		& span {
+			box-decoration-break: clone;
+			padding-bottom: 4px;
+			background: linear-gradient(var(--color-orange) 0 0) no-repeat 0 100% / 100% 8px;
+		}
+	}
+
+	& .p-education__intro-text {
+		max-width: var(--measure);
+		/* Figma: 見出しから SP 24px / PC 16px。帯のはみ出し 4px を引いた値 */
+		margin-top: clamp(.75rem, 1.4366rem - .796vw, 1.25rem);
+		color: #000;
+		font-size: var(--fs-body);
+		line-height: 1.6;   /* Figma */
+		letter-spacing: .05em;
+		text-wrap: pretty;
+	}
+
+	/* カードの並びだけ本文より広く取ります。
+	   Figma は画面端から 64px の位置に、281px のカードを 40px 間隔で4枚。
+	   本文（l-container 1160px）より広いので、ここだけ別の幅にしています。
+	   影が右へ 8px ずれるぶんを padding で確保しているので、
+	   Figma と同じ「カード 281px」「影の右端まで 1252px」に収まります。 */
+	& .p-education__list {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(min(100%, 13.75rem), 1fr));
+		gap: var(--edu-gap);
+		width: min(78.25rem, 100% - var(--gutter) * 2);   /* 1252px */
+		padding-inline-end: 8px;
+		margin-inline: auto;
+	}
+
+	/* SP は「バッジ」「写真＋見出しの横並び」「チェック項目」の3段。
+	   写真を全幅にすると縦に伸びすぎるため、元デザインどおり左に小さく置く。
+	   PC では下の @media で縦積みに戻す。 */
+	& .p-education__step {
+		--card-pad: 1rem;   /* Figma: カードの左右 SP 16px（PC は 24px） */
+
+		position: relative;
+		display: grid;
+		/* Figma: 写真 140px ＋ 間 16px ＋ 見出し 147px */
+		grid-template-columns: minmax(0, 140fr) minmax(0, 147fr);
+		align-items: center;
+		gap: 1rem;
+		/* 左右は「枠線を含めてカードの端から --card-pad」になるよう 1px 引く。
+		   Figma の枠線は境界の真ん中に引かれているため（下 32px は Figma の値） */
+		padding: 0 calc(var(--card-pad) - 1px) 2rem;
+		border: 1px solid var(--color-text);
+		background: var(--color-white);
+	}
+
+	/* 右下へ 8px ずらした影。Figma は青 → 紫のグラデーションなので
+	   box-shadow では出せず、カードの後ろへ同じ大きさの箱を敷いています。 */
+	& .p-education__step::before {
+		content: '';
+		position: absolute;
+		z-index: -1;
+		inset: -1px;   /* 枠線を含めたカードと同じ大きさにする */
+		translate: 8px 8px;
+		background: linear-gradient(270deg, var(--color-purple), var(--color-blue));
+	}
+
+	/* カードとカードの間に置く「≫」（Figma の f101）。
+	   カードの外へ出すあしらいなので absolute を使う。
+	   SP は縦並びなので下向き。箱は SP 20×17px / PC 24×20px（Figma の実寸）。 */
+	& .p-education__step:not(:last-child)::after {
+		content: '';
+		position: absolute;
+		top: 100%;
+		left: 50%;
+		/* カードとカードの間隔のちょうど中央に置く */
+		translate: -50% calc(var(--edu-gap) / 2 - 50%);
+		width: 1.25rem;
+		height: 1.0625rem;
+		background: var(--color-text);
+		-webkit-mask: url('../image/icons/arrow-double-right.svg') center / contain no-repeat;
+		mask: url('../image/icons/arrow-double-right.svg') center / contain no-repeat;
+		rotate: 90deg;   /* SP は下向き */
+	}
+
+	& .p-education__badge,
+	& .p-education__step .c-checklist {
+		grid-column: 1 / -1;
+	}
+
+	/* SP は 写真(左) + 見出し(右)。HTML の順番は「見出し → 写真」なので、
+	   grid の列を明示して見た目の左右を入れ替えています。 */
+	& .p-education__photo {
+		grid-column: 1;
+		grid-row: 2;
+
+		/* 縦横比は素材のまま（PC 233×131 / SP 420×237 = Figma の実寸） */
+		& img {
+			width: 100%;
+		}
+	}
+
+	/* 左上の見出しタブ。枠線とカードの左右余白の外へ出して角に貼り付けます。 */
+	& .p-education__badge {
+		justify-self: start;
+		align-self: start;
+		margin: -1px 0 0 calc(-1 * var(--card-pad));
+		/* Figma: 上下 SP 8px → PC 12px / 左右 16px */
+		padding: clamp(.5rem, .4067rem + .398vw, .75rem) 1rem;
+		background: var(--color-purple);
+		color: var(--color-white);
+		font-size: var(--fs-small);
+		font-weight: 500;
+		line-height: 1;
+		letter-spacing: .05em;
+	}
+
+	/* 「01 / スタート」の数字。あとの「/」は飾りなので CSS で足します */
+	& .p-education__badge-no {
+		font-family: var(--font-en);
+		font-size: 1.375rem;   /* Figma: 22px（SP / PC 同じ） */
+		font-weight: 500;
+
+		&::after {
+			content: '/';
+			margin-inline: .5rem;   /* Figma: 前後 8px */
+			color: rgb(255 255 255 / .4);
+			font-family: var(--font-jp);
+			font-size: var(--fs-small);
+			font-weight: 500;
+		}
+	}
+
+	& .p-education__step-title {
+		grid-column: 2;
+		grid-row: 2;
+		color: #000;
+		font-size: var(--fs-edu-card);
+		font-weight: 500;
+		/* Figma は行の高さ 1.0 だが、2行になったとき詰まりすぎるので 1.3。
+		   増えたぶんは PC の上下の margin から引いています */
+		line-height: 1.3;
+		letter-spacing: .05em;
+		text-align: center;
+		text-wrap: balance;
+
+		/* 2行になるときは意味の区切りで折り返す（HTML 側で span で囲んだ位置）。
+		   単語の途中で切れると読みにくいためです。 */
+		& span {
+			display: inline-block;
+		}
+	}
+
+	/* Figma の項目のブロックは 233px 幅。SP ではカードの中で中央（端から 51px）。
+	   長い項目は Figma でもこの枠から右へはみ出して1行に収まっているので、
+	   足りないときだけカードの左右余白の半分まで広げます
+	   （カードの幅は変わらないので、これ以上はみ出して横スクロールにはなりません）。 */
+	& .p-education__step .c-checklist {
+		width: max-content;
+		min-width: min(100%, 14.5625rem);   /* Figma: 233px */
+		max-width: calc(100% + var(--card-pad) / 2);
+		margin-inline: auto;
+	}
+
+	/* PC は「見出し | リード文」の横並び、カードは縦積みに戻す */
+	@media (min-width: 768px) {
+		& .p-education__head {
+			grid-template-columns: auto 1fr;
+			align-items: center;
+		}
+
+		& .p-education__title {
+			text-align: left;
+		}
+
+		/* 線は文字の左。切り欠きは見出し側（左）を向く。
+		   Figma の線は文字ブロックより上下へ 10px ぶん長い */
+		& .p-education__intro {
+			grid-template-columns: 20px 1fr;
+			column-gap: 23px;   /* Figma: 線と文字の間 */
+		}
+
+		& .p-education__intro::before {
+			grid-row: 1 / span 2;
+			width: 20px;
+			height: auto;
+			margin-block: -10px;
+			background:
+				url('../image/icons/edu-accent-notch.svg') no-repeat right center / 20px 18px,
+				linear-gradient(var(--color-blue) 0 0) no-repeat right top    / 1px calc(50% - 9px),
+				linear-gradient(var(--color-blue) 0 0) no-repeat right bottom / 1px calc(50% - 9px);
+		}
+
+		& .p-education__intro-title {
+			grid-column: 2;
+			margin-top: 0;
+			margin-inline: 0;
+		}
+
+		/* Figma は帯だけ文字より 50px 長い（文字 352px / 帯 402px）。
+		   帯は span に描いているので、余白も span へ付けます。 */
+		& .p-education__intro-title span { padding-right: 3.125rem; }
+
+		& .p-education__intro-text {
+			grid-column: 2;
+			max-width: 31.5rem;   /* Figma: 504px（2行に収まる幅） */
+		}
+
+		/* PC は必ず4列。
+		   幅なりに列数が変わると、折り返した行の右端のカードから
+		   矢印が画面の外へ出てしまうためです（Figma も PC は4列）。 */
+		& .p-education__list {
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+		}
+
+		/* 見出しの列は中身の幅で決まるので、今の文言は1行に収まります。
+		   文言が長くなったときは、はみ出させずに折り返します（nowrap は付けない）。 */
+
+		/* PC は「バッジ → 見出し → 写真 → 項目」の縦積み。
+		   Figma の縦の間隔は 24 / 16 / 19px と一定でないので gap は使わない。
+		   見出しは行の高さ 1.3 のぶん上下に 3px 余白を持つので、その分を引いています。 */
+		& .p-education__step {
+			--card-pad: 1.5rem;   /* Figma: カードの左右 24px */
+
+			display: flex;
+			flex-direction: column;
+			align-items: stretch;
+			gap: 0;
+			padding-bottom: 1.75rem;   /* Figma: 下 28px */
+		}
+
+		& .p-education__step-title {
+			margin-top: 1.3125rem;   /* Figma: バッジから 24px */
+		}
+
+		& .p-education__photo {
+			margin-top: .8125rem;    /* Figma: 見出しから 16px */
+		}
+
+		& .p-education__step .c-checklist {
+			margin-top: 1rem;        /* Figma: 写真から 19px */
+			margin-inline: 0;        /* PC はカードの内側の左端から始まる */
+		}
+
+		/* PC は横並びなので、矢印はカードの右側に右向きで置く */
+		& .p-education__step:not(:last-child)::after {
+			top: 50%;
+			left: 100%;
+			translate: calc(var(--edu-gap) / 2 - 50%) -50%;
+			width: 1.5rem;      /* Figma: 24 × 20px */
+			height: 1.25rem;
+			rotate: 0deg;
+		}
+	}
+}
+
+
+/* --------------------------------------------------------------------------
+   CTA — 千葉経済大学をもっと知ろう！
+   ページ内に2回出てきます（MESSAGES の前と後）。
+   -------------------------------------------------------------------------- */
+.p-cta {
+	/* 帯の高さは中身と余白で決まります（Figma: SP 350px / PC 328px）。
+	   上下の余白 SP 56px → PC 91.2px。
+	   PC が半端な数字なのは、見出しの行の高さ（32px × 1.3 = 41.6px）を
+	   引いた残りを上下で等分すると 328px にぴったり収まるからです。 */
+	padding-block: clamp(3.5rem, 2.6794rem + 3.5025vw, 5.7rem)   /* 上 56px → 91.2px */
+	               var(--space-section);                          /* 下 56px → 96px */
+
+	/* Figma: 写真の上に 青→紫 のグラデーションを不透明度 0.8 で重ねる */
+	background-image:
+		linear-gradient(90deg, rgb(56 161 219 / .8), rgb(132 115 170 / .8)),
+		url('../image/backgrounds/shared-cta-campus-source.jpg');
+	background-size: cover;
+	background-position: center;
+	color: var(--color-white);
+
+	& .p-cta__inner {
+		display: grid;
+		justify-items: center;
+		/* 見出しの行とボタンの間 Figma: SP 31.6px → PC 35.2px
+		   （Figma 上の「文字の見た目」の間は 32 / 40px ですが、
+		     行の高さ 1.3 のぶんを差し引くとこの値になります） */
+		gap: clamp(1.975rem, 1.891rem + 0.3582vw, 2.2rem);
+		text-align: center;
+	}
+
+	/* 左右の斜線は .c-marked-title（components 層）が描きます */
+	& .p-cta__title {
+		font-size: var(--fs-cta-title);
+		font-weight: 500;
+		line-height: 1.3;   /* Figma: 24px に対して 31.2px */
+		letter-spacing: .06em;
+	}
+
+	/* Figma は SP 2行 / PC 1行。改行は PC 側で無効にする */
+	& .p-cta__title br { display: inline; }
+
+	& .p-cta__actions {
+		display: grid;
+		/* ボタン同士の間 Figma: SP 16px（縦） → PC 20px（横） */
+		gap: clamp(1rem, 0.9067rem + 0.398vw, 1.25rem);
+		width: min(100%, 16.3125rem);   /* ボタン 261px ぶん */
+	}
+
+	@media (min-width: 768px) {
+		& .p-cta__title br { display: none; }
+
+		/* 横に並べられる幅になったら2つ横並びにする */
+		& .p-cta__actions {
+			grid-auto-flow: column;
+			width: auto;
+		}
+	}
+}
+
+
+/* --------------------------------------------------------------------------
+   STUDENTS VOICE — 私が千葉経済大学を選んだ理由
+
+   1件目は最初から開いた状態、2件目以降は「もっと見る」で開きます。
+   開閉は lp/js/ref001-interactions.js が担当しています。
+   -------------------------------------------------------------------------- */
+.p-voice {
+	/* Figma: 上 SP 56px → PC 96px / 下 SP 51px → PC 87px */
+	padding-block: var(--space-section) clamp(3.1875rem, 2.5433rem + 2.7473vw, 5.4375rem);
+
+	& .p-voice__head {
+		display: grid;
+		justify-items: center;
+		gap: clamp(1rem, .6rem + 1.7vw, 1.5rem);
+		/* Figma: 見出しから1つ目の項目まで SP 32px → PC 48px */
+		margin-bottom: clamp(2rem, 1.403rem + 2.5473vw, 3rem);
+		text-align: center;
+	}
+
+	/* Figma: 項目どうしの間 SP 16px → PC 40px */
+	& .p-voice__item + .p-voice__item {
+		margin-top: clamp(1rem, -0.3881rem + 5.9204vw, 2.5rem);
+	}
+
+	/* 3件目だけ背景色を変えています */
+	/* Figma の帯は画面いっぱいではなく本文と同じ幅です
+	   （SP 343px / PC 1160px）。 */
+	& .p-voice__item {
+		width: min(var(--container), 100% - var(--gutter) * 2);
+		margin-inline: auto;
+		background: var(--color-bg-blue);
+	}
+	& .p-voice__item:nth-of-type(3) { background: var(--color-bg-yellow); }
+
+	/* Figma: 帯の内側の余白は SP 16px → PC 56px（左右）。
+	   上下は SP 32px → PC 40px。 */
+	& .p-voice__inner {
+		display: grid;
+		gap: 2rem;   /* Figma: 顔写真のかたまりから下の写真まで SP / PC とも 32px */
+		padding-block: clamp(2rem, 1.8134rem + 0.796vw, 2.5rem);
+		padding-inline: clamp(1rem, 0.0672rem + 3.9801vw, 3.5rem);
+	}
+
+	/* --- 顔写真 + 吹き出し --- */
+	/* Figma は SP / PC とも「顔写真が左、吹き出しが右」です。
+	   SP では写真が吹き出しの左上に重なります（PC は少し離れて並びます）。 */
+	& .p-voice__profile {
+		display: grid;
+		grid-template-columns: auto 1fr;
+		align-items: start;   /* SP は上ぞろえ。PC は下の @media で中央ぞろえ */
+	}
+
+	& .p-voice__avatar { z-index: 1; }   /* 吹き出しの上に出す */
+
+	& .p-voice__avatar img {
+		width: clamp(5.25rem, 3.4776rem + 7.5622vw, 10rem);   /* 84 → 160 */
+		aspect-ratio: 1;
+		border-radius: 50%;
+		object-fit: cover;
+	}
+
+	/* Figma の吹き出しは「白い面」と「輪郭線だけの形」の2枚重ねで、
+	   輪郭線のほうが左上へずれています（SP 7 / 8px、PC 26 / 8px）。
+	   線は 1px なので、左と上では面の外側に、右と下では面の内側に見えます。 */
+	& .p-voice__balloon {
+		position: relative;   /* 尻尾と輪郭線の基準 */
+		/* 白い面は輪郭線より下にずれます（Figma: SP 26px / PC 8px）。
+		   輪郭線のほうが顔写真の上端とそろいます。 */
+		margin-block: clamp(.5rem, 2.0448rem - 1.791vw, 1.625rem) 0;
+		/* SP は写真の下へ 61px もぐり込み、PC は 56px 離れます（Figma） */
+		margin-inline: clamp(-3.8125rem, -6.5411rem + 11.6418vw, 3.5rem) 0;
+		padding: clamp(1.25rem, .9rem + 1.5vw, 1.75rem) 1.5rem;
+		background: var(--color-white);
+	}
+
+	& .p-voice__balloon::before {
+		content: '';
+		position: absolute;
+		inset: -8px 7px 8px -7px;   /* 面と同じ大きさのまま左上へ 7 / 8px */
+		border: 1px solid var(--color-text);
+		pointer-events: none;
+	}
+
+	/* SP は写真が重なるぶん、見出しだけ右へよけます */
+	& .p-voice__title--offset,
+	& .p-voice__title { padding-left: 3.75rem; }
+
+	/* 吹き出しの尻尾。あしらいなので absolute で置いています。
+	   SP は上向き（写真が上にあるため）、PC は左向きです。 */
+	/* 吹き出しの尻尾（左向き）。あしらいなので absolute で置いています。
+	   輪郭線は親の drop-shadow が一緒に付けてくれます。 */
+	& .p-voice__balloon::after {
+		content: '';
+		position: absolute;
+		top: 50%;
+		right: 100%;
+		translate: 0 -50%;
+		border-block: 12px solid transparent;
+		border-right: 14px solid var(--color-white);
+	}
+
+	& .p-voice__title {
+		margin-bottom: .5em;
+		color: var(--color-purple);
+		font-size: var(--fs-voice-name);
+		font-weight: 500;
+		line-height: 1.5;
+		text-wrap: pretty;
+	}
+
+	& .p-voice__meta {
+		font-size: var(--fs-note);
+		line-height: 1.6;
+	}
+
+	/* --- 「もっと見る」ボタン --- */
+	/* Figma では文字の高さぶん（18px）しかありませんが、
+	   指で押せる範囲は確保したいので、余白を足したぶんを
+	   マイナスマージンで打ち消しています。
+	   見た目の高さは Figma どおり、押せる範囲は広いまま。 */
+	& .p-voice__toggle {
+		display: inline-flex;
+		align-items: center;
+		gap: .5em;
+		justify-self: center;
+		padding: .75em 1em;
+		margin-block: -.75em;
+		color: var(--color-blue);
+		font-size: var(--fs-toggle);
+		line-height: 1;
+	}
+
+	& .p-voice__toggle-mark {
+		display: grid;
+		place-items: center;
+		width: 1em;
+		height: 1em;
+		line-height: 1;
+	}
+	& .p-voice__toggle-mark::before { content: '＋'; }
+	& .p-voice__toggle[aria-expanded="true"] .p-voice__toggle-mark::before { content: '－'; }
+
+	/* --- 開いたときの詳細 --- */
+	& .p-voice__detail {
+		display: grid;
+		gap: clamp(1.25rem, .8rem + 1.9vw, 1.75rem);
+	}
+
+	/* SP は「写真 → 本文」の縦積み。
+	   PC は Figma の 404px : 604px（間 40px）の2列（下の @media）。 */
+	& .p-voice__detail-main {
+		display: grid;
+		align-items: start;
+		gap: clamp(1.125rem, .5rem + 2.6vw, 2.5rem);
+	}
+
+	& .p-voice__photo img {
+		width: 100%;
+		aspect-ratio: 16 / 9;
+		object-fit: cover;
+	}
+
+	& .p-voice__detail-body {
+		display: grid;
+		gap: 1.1em;
+		font-size: var(--fs-body);
+	}
+
+	& .p-voice__detail-text {
+		color: #000;
+		text-wrap: pretty;
+	}
+
+	/* 「印象に残った授業」などのラベル + 内容 */
+	/* Figma: 白い箱の内側は上下左右 24px。
+	   SP は「ラベル → 説明」の縦積み、PC は横並び（下の @media）。 */
+	& .p-voice__points {
+		display: grid;
+		gap: .5rem;
+		/* Figma: 上下 24px、左右は SP 16px → PC 24px */
+		padding: 1.5rem clamp(1rem, 0.8134rem + 0.796vw, 1.5rem);
+		background: var(--color-white);
+	}
+
+	/* Figma: 青いラベルは 174×24px、文字 16px、左右 20px の余白。
+	   角は丸めません。 */
+	& .p-voice__points dt {
+		justify-self: start;
+		min-width: 10.875rem;   /* 174px */
+		padding: .25em 1.25em;
+		background: var(--color-blue);
+		color: var(--color-white);
+		font-size: var(--fs-body);
+		font-weight: 500;
+		line-height: 1;
+		letter-spacing: .05em;
+		text-align: center;
+	}
+
+	& .p-voice__points dd:not(:last-of-type) {
+		margin-bottom: .5em;
+	}
+
+	& .p-voice__advice {
+		display: grid;
+		justify-items: start;
+		gap: .8em;
+	}
+
+	/* Figma: 紫の角丸に小さな三角が付きます。
+	   SP は下向き（8×13px）、PC は右向き（13×8px）。 */
+	& .p-voice__advice-label {
+		position: relative;
+		padding: .7em 1.6em;
+		border-radius: 999px;
+		background: var(--color-purple);
+		color: var(--color-white);
+		font-size: var(--fs-voice-advice);
+		line-height: 1.4;
+		letter-spacing: .05em;
+		text-align: center;
+		text-wrap: balance;   /* 長い文言でもはみ出さず2行になる */
+
+		&::after {
+			content: '';
+			position: absolute;
+			top: 100%;
+			left: 50%;
+			translate: -50% 0;
+			border-inline: 4px solid transparent;
+			border-top: 13px solid var(--color-purple);
+		}
+	}
+
+	& .p-voice__advice-text {
+		font-size: var(--fs-body);
+		text-wrap: pretty;
+	}
+
+	/* --- PC: 写真と吹き出しを横並びにし、尻尾も左向きに付け替える --- */
+	@media (min-width: 768px) {
+		& .p-voice__profile { align-items: center; }
+
+		& .p-voice__balloon {
+			padding-inline: 2.5rem;   /* Figma: 白い面の中の左右 40px */
+		}
+
+		& .p-voice__balloon::before { inset: -8px 26px 8px -26px; }
+
+		& .p-voice__title { padding-left: 0; }
+
+		/* Figma: 写真 404px : 本文 604px、間 40px（1160px 中） */
+		& .p-voice__detail-main {
+			grid-template-columns: 38.55% 57.63%;   /* Figma: 404px : 604px（内側 1048px） */
+			justify-content: space-between;
+		}
+
+		/* Figma では右の本文が写真より 20px 下から始まります */
+		& .p-voice__detail-body { padding-top: 1.25rem; }
+
+		& .p-voice__points {
+			grid-template-columns: auto 1fr;
+			align-items: center;
+			gap: .75em 1.25rem;   /* Figma: ラベルと説明の間 20px */
+		}
+		& .p-voice__points dd:not(:last-of-type) { margin-bottom: 0; }
+
+		& .p-voice__advice {
+			grid-template-columns: auto 1fr;
+			align-items: start;
+			/* Figma: 紫の角丸の右端（尻尾込み）から本文まで。
+			   尻尾は箱の外に出ているので、そのぶんを足して 44px */
+			gap: 2.75rem;
+		}
+
+		/* PC は尻尾が右向き（Figma 13×8px） */
+		& .p-voice__advice-label::after {
+			top: 50%;
+			left: 100%;
+			translate: 0 -50%;
+			border-inline: 0;
+			border-block: 4px solid transparent;
+			border-top: 0;
+			border-left: 13px solid var(--color-purple);
+		}
+	}
+}
+
+
+/* --------------------------------------------------------------------------
+   MESSAGES — 力をつけ活躍する先輩たち（スライダー）
+
+   写真とコピーを grid の同じマスに重ねています。
+   写真は右寄せ、コピーは左下寄せなので、重なり方は自動で決まります。
+   -------------------------------------------------------------------------- */
+.p-messages {
+	/* Figma: 上 SP 56px → PC 96px / 下 SP 69px → PC 118px */
+	padding-block: var(--space-section) clamp(4.3125rem, 3.4358rem + 3.7396vw, 7.375rem);
+	background: var(--color-white);
+
+	& .p-messages__head {
+		display: grid;
+		gap: clamp(.75rem, .5rem + 1vw, 1.25rem);
+		justify-items: start;
+		margin-bottom: var(--gap-card);
+	}
+
+	/* 他の見出しと同じ組み方です。
+	   Figma では「先輩たち」も太さは通常と同じ 500 で、大きさだけ 42px。
+	   太字（900）はコースの「７」だけです。 */
+	& .p-messages__heading {
+		font-size: var(--fs-heading);
+		font-weight: 500;
+		line-height: calc(var(--fs-heading-em) * 1.3);
+		letter-spacing: .05em;
+
+		& strong {
+			font-size: var(--fs-heading-em);
+			font-weight: 500;
+		}
+
+		@media (min-width: 768px) {
+			line-height: 1;
+		}
+	}
+
+	& .p-messages__slider {
+		overflow: hidden;
+		width: 100%;
+		/* Swiper の CSS が .swiper に margin-inline: auto を付けており、
+		   auto マージンがあると grid の stretch が効かず、
+		   中身（スライド4枚ぶん）の幅まで広がって横スクロールが出ます。
+		   打ち消したうえで、min-width: 0 で縮めるようにしています。 */
+		margin-inline: 0;
+		min-width: 0;
+	}
+
+	/* SP は「写真」→「コピー」の縦2段。
+	   Figma では黒帯だけが写真の下端に 61px 重なり、
+	   所属（学科・出身校）は写真の下に出ます。
+	   PC は下の @media で「写真の上にコピーを重ねる」形に切り替えます。 */
+	& .p-messages__slide {
+		display: grid;
+		grid-template-rows: auto auto;
+	}
+
+	& .p-messages__photo {
+		grid-row: 1;
+		justify-self: end;
+		width: 100%;
+
+		& img {
+			width: 100%;
+			/* 元デザインは 660 × 440px = 3:2 */
+			aspect-ratio: 3 / 2;
+			object-fit: cover;
+		}
+	}
+
+	& .p-messages__body {
+		grid-row: 2;
+		/* 黒帯を写真の下端へ重ねるぶん（Figma: 61px） */
+		margin-top: -3.8125rem;
+		display: grid;
+		gap: .9em;
+		justify-items: start;
+		padding: 0 .75rem;
+	}
+
+	/* 1行ずつ黒い帯にする */
+	& .p-messages__quote {
+		display: grid;
+		justify-items: start;
+		gap: .4em;
+		font-size: var(--fs-msg-quote);
+		font-weight: 500;
+		/* 黒帯1本の高さ Figma: SP 36px / PC 49px */
+		line-height: 1.4;
+
+		& span {
+			padding: .2em .8em;
+			background: var(--color-text);
+			color: var(--color-white);
+		}
+	}
+
+	& .p-messages__meta {
+		padding: .25em .6em;
+		background: rgb(255 255 255 / .85);
+		color: var(--color-purple);
+		font-size: var(--fs-body);
+		line-height: 1.6;
+	}
+
+	/* --- 矢印とカウンター --- */
+	/* Figma は SP が右寄せ、PC は左から 165px の位置です */
+	/* Figma の「← 1 ──── 4 →」。要素の間隔は SP 16px → PC 24px。
+	   矢印は前がグレー #969696、次が紫 #8473aa と色が違います。 */
+	& .p-messages__nav {
+		display: flex;
+		align-items: center;
+		justify-content: end;
+		gap: clamp(1rem, 0.8134rem + 0.796vw, 1.5rem);
+		margin-top: clamp(1.25rem, .8rem + 1.9vw, 2rem);
+	}
+
+	/* 絵は 14×13px のまま、押せる範囲だけ 44px 四方まで広げています
+	   （固定値ではなく「最低これだけは確保する」指定なので、
+	     文字サイズを変えても押しにくくなりません）。
+	   間隔が Figma どおりになるよう、広げたぶんは
+	   マイナスマージンで打ち消しています。 */
+	& .p-messages__arrow {
+		display: grid;
+		place-items: center;
+		min-width: 2.75rem;
+		min-height: 2.75rem;
+		margin-inline: -.9375rem;   /* (44 - 14) / 2 */
+	}
+
+	& .p-messages__arrow-icon {
+		width: .875rem;    /* 14px */
+		height: .8125rem;  /* 13px */
+		-webkit-mask: center / contain no-repeat;
+		mask: center / contain no-repeat;
+	}
+
+	& .p-messages__arrow--prev .p-messages__arrow-icon {
+		background: var(--color-line-mid, #969696);
+		-webkit-mask-image: url('../image/icons/arrow-left.svg');
+		mask-image: url('../image/icons/arrow-left.svg');
+	}
+
+	& .p-messages__arrow--next .p-messages__arrow-icon {
+		background: var(--color-purple);
+		-webkit-mask-image: url('../image/icons/arrow-right.svg');
+		mask-image: url('../image/icons/arrow-right.svg');
+	}
+
+	& .p-messages__counter {
+		display: flex;
+		align-items: center;
+		gap: clamp(1rem, 0.8134rem + 0.796vw, 1.5rem);
+		color: #000;
+		font-family: var(--font-en);
+		font-size: var(--fs-msg-counter);
+		line-height: 1;
+	}
+
+	/* 進み具合は JS が --progress を書き換えます。
+	   青い部分は背景の幅で表しているので、
+	   重ねるための擬似要素も absolute も要りません。
+	   Figma のバーは SP / PC とも 146×2px です。 */
+	& .p-messages__counter-bar {
+		width: 9.125rem;   /* 146px */
+		height: 2px;
+		background-color: #969696;
+		background-image: linear-gradient(var(--color-blue) 0 0);
+		background-repeat: no-repeat;
+		background-position: left center;
+		background-size: var(--progress, 25%) 100%;
+	}
+
+	/* --- PC ---
+	   Figma では写真が見出しと同じ高さから始まり、段の下端までのびます。
+	   左側に「見出し / 引用 / カウンター」が縦に並び、
+	   引用の黒帯だけが写真の上に少しはみ出します。
+
+	   そこで、外側を「上：見出し／中：引用／下：カウンター」の3段にして、
+	   スライダーを3段ぶんに広げ、見出しとカウンターをその上へ重ねています。 */
+	@media (min-width: 768px) {
+		& .p-messages__inner {
+			display: grid;
+			grid-template-rows: auto 1fr auto;
+		}
+
+		& .p-messages__slider { grid-area: 1 / 1 / -1 / -1; }
+
+		& .p-messages__head {
+			grid-area: 1 / 1;
+			z-index: 1;
+			margin-bottom: 0;
+		}
+
+		& .p-messages__nav {
+			grid-area: 3 / 1;
+			z-index: 1;
+			margin-top: 0;
+			/* Figma: 1160px 中 165px の位置から始まる */
+			justify-content: start;
+			margin-left: 14.22%;
+		}
+
+		/* 元デザインは 1160px 中 660px（= 57%） */
+		& .p-messages__photo {
+			width: 57%;
+		}
+
+		& .p-messages__photo { grid-area: 1 / 1; }
+
+		& .p-messages__body {
+			grid-area: 1 / 1;
+			margin-top: 0;
+			align-self: center;
+			gap: 1.5em;
+			padding: 0;
+		}
+
+		& .p-messages__quote {
+			gap: .35em;
+		}
+
+		& .p-messages__meta {
+			padding: 0;
+			background: none;
+			font-size: var(--fs-body);
+		}
+	}
+}
+
+
+/* --------------------------------------------------------------------------
+   COURSES — 未来につながる７つのコース
+
+   カードの色は HTML 側の style="--course: #xxxxxx" で1枚ずつ指定しています。
+   -------------------------------------------------------------------------- */
+.p-courses {
+	/* Figma: 上 SP 56px → PC 72px / 下 SP 56px → PC 96px */
+	padding-block: clamp(3.5rem, 3.1269rem + 1.592vw, 4.5rem) var(--space-section);
+	background: var(--color-beige);
+
+	& .p-courses__head {
+		display: grid;
+		justify-items: center;
+		gap: clamp(1rem, .6rem + 1.7vw, 1.5rem);
+		margin-bottom: var(--gap-card);
+		text-align: center;
+	}
+
+	/* コースの見出しだけ「７」が太字（Figma で w900 指定） */
+	& .p-courses__head .c-heading strong {
+		font-weight: 900;
+		background: linear-gradient(90deg, var(--color-purple), var(--color-blue));
+		background-clip: text;
+		-webkit-background-clip: text;
+		color: transparent;
+	}
+
+	/* 1枚あたり最低 416px。本文の最大幅(1160px)では2列に収まり、
+	   3列に割れることはありません（3列だと 416*3+40*2 = 1328px 必要なため）。
+	   狭いところでは自動で1列になります。 */
+	& .p-courses__list {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(min(100%, 26rem), 1fr));
+		gap: var(--gap-card);
+	}
+
+	/* 7枚目だけ2列ぶんを使って中央に置く（列が2列以上のときだけ効きます） */
+	& .p-courses__card:last-child:nth-child(odd) {
+		grid-column: 1 / -1;
+		width: min(100%, calc((var(--container) - var(--gap-card)) / 2));
+		justify-self: center;
+	}
+
+	& .p-courses__card {
+		display: grid;
+		grid-template-columns: auto 1fr;
+		align-content: start;
+		background: var(--color-white);
+	}
+
+	& .p-courses__icon {
+		display: grid;
+		place-items: center;
+		width: clamp(4.5rem, 3.8469rem + 2.7861vw, 6.25rem);   /* 72 → 100 */
+		aspect-ratio: 1;
+		background: var(--course);
+
+		/* 絵は「56×56px（SP 40×40px）の枠に収まるまで縮める」指定です。
+		   幅だけを % で決めると、縦長の絵（例: 会計コース 40×56px）が
+		   枠からはみ出す大きさになってしまいます。
+		   素材はすべて Figma の実寸（長い辺が 56px）で書き出してあるので、
+		   上限だけ決めれば縦横比はそのまま正しく収まります。 */
+		& img {
+			width: auto;
+			height: auto;
+			max-width:  clamp(2.5rem, 2.1269rem + 1.592vw, 3.5rem);
+			max-height: clamp(2.5rem, 2.1269rem + 1.592vw, 3.5rem);
+		}
+	}
+
+	/* Figma: アイコンの枠から本文まで 24px。
+	   右の余白は SP 16px → PC 40px。上は 24px。 */
+	& .p-courses__body {
+		display: grid;
+		align-content: start;
+		gap: .5em;
+		padding: 1.5rem clamp(1rem, 0.4403rem + 2.3881vw, 2.5rem) 0 1.5rem;
+		/* Figma: コース名の下線から説明文まで 13px */
+		gap: .8125rem;
+	}
+
+	/* Figma: コース名は 20px の1行。下線はコースの色の 8px の帯で、
+	   文字の箱より 3px 下へはみ出します。 */
+	& .p-courses__title {
+		font-size: var(--fs-course-title);
+		font-weight: 500;
+		line-height: 1;
+		letter-spacing: .05em;
+
+		/* 下線は文字の幅ぶんだけ。2行になったときに
+		   最後の行だけでなく各行に付くよう、中の span へ描いています
+		   （box-decoration-break: clone で行ごとに背景を繰り返す）。 */
+		& span {
+			box-decoration-break: clone;
+			padding-bottom: 3px;
+			background: linear-gradient(color-mix(in srgb, var(--course) 30%, transparent) 0 0)
+			            no-repeat left bottom / 100% 8px;
+		}
+	}
+
+	& .p-courses__text {
+		color: #000;
+		font-size: var(--fs-body);
+		line-height: 1.3;      /* Figma: 16px の2行で 42px */
+		letter-spacing: .05em;
+		text-wrap: pretty;
+	}
+
+	/* Figma の水色の箱。カードの左右から SP 16px / PC 32px 内側にあり、
+	   「こんな人にオススメ！」が上端に 21px 重なります。
+	   箱の中の余白は 左右 SP 16px → PC 20px、下 SP 16px → PC 24px。 */
+	& .p-courses__rec {
+		grid-column: 1 / -1;
+		/* Figma: 説明文の下から水色の箱まで SP 37px → PC 43px */
+		margin: clamp(2.3125rem, 2.1725rem + 0.597vw, 2.6875rem)
+		        clamp(1rem, 0.0672rem + 3.9801vw, 2rem) 1.5rem;
+		padding: 0 clamp(1rem, 0.8134rem + 0.796vw, 1.25rem)
+		           clamp(1rem, 0.8134rem + 0.796vw, 1.5rem);
+		background: var(--color-bg-blue);
+	}
+
+	/* 「こんな人にオススメ！」は枠の上端にまたがせます。
+	   ここも absolute ではなくマイナスマージンです。 */
+	/* 見た目は .c-bubble（components 層）。MV の吹き出しと同じ部品です。
+	   Figma でも同じ 187×38px の形が使われています。 */
+	/* Figma: 箱の上端から 21px 上へ出て、下のリストとの間は SP 19px → PC 23px。
+	   吹き出しの下 9px は尻尾のぶんで、Figma では箱へ食い込むので
+	   その 9px をマイナスして間隔を合わせています。 */
+	& .p-courses__rec-label {
+		/* Figma ではこの吹き出しの中だけセクションと同じベージュ */
+		--bubble-bg: var(--color-beige);
+
+		margin: -1.3125rem 0 clamp(.625rem, 0.5319rem + 0.398vw, .875rem);
+	}
+}
+
+
+/* --------------------------------------------------------------------------
+   LINKS — 丸いリンクボタン4つ
+
+   色は HTML 側の style="--tile-bg / --tile-accent" で1つずつ指定しています。
+   Instagram だけ影がグラデーションなので --tile-shadow も渡しています。
+   -------------------------------------------------------------------------- */
+.p-links {
+	/* 元デザインは上下の余白を持たず、前後のセクションとの間隔で調整していた */
+	padding-block: clamp(2.5rem, 1.6rem + 3.8vw, 4.5rem);
+
+	/* 影の円をずらす量（Figma: SP 7px → PC 10px）と、
+	   円と円の間隔（Figma: SP 26px → PC 34px）。
+	   並びと影の両方で使うので、セクションの先頭で決めています。 */
+	--tile-offset: clamp(.4375rem, .3675rem + .2985vw, .625rem);
+	--tile-gap:    clamp(1.625rem, 1.4384rem + .796vw, 2.125rem);
+
+	/* Instagram の影だけ、Figma は4色のグラデーション（不透明度 70%）です。
+	   向きは SP と PC で逆（SP は上下反転、PC は左右反転）なので、
+	   下の @media で角度だけ差し替えています。
+	   HTML 側の style="--tile-shadow: var(--gradient-instagram)" から使います。 */
+	--gradient-instagram-angle: 32.62deg;
+	--gradient-instagram: linear-gradient(
+		var(--gradient-instagram-angle),
+		rgb(76 100 211 / .7)  13.9%,
+		rgb(207 46 146 / .7)  31.81%,
+		rgb(242 105 57 / .7)  59.03%,
+		rgb(255 221 131 / .7) 85.53%
+	);
+
+	@media (min-width: 768px) {
+		--gradient-instagram-angle: 212.62deg;
+	}
+
+	/* 4つで1セットなので、余りが出ないよう 2列 か 4列 だけにしています
+	   （auto-fit にすると 3列 になって1つだけ余る幅ができてしまうため）。
+
+	   右下へずらす影のぶんを padding で並びの中に確保しています。
+	   これを入れないと円が Figma より大きくなり（PC 250px → 262px）、
+	   いちばん右の影が画面端の余白へはみ出します。
+	   最大幅 1112px は Figma の並び全体の幅です。 */
+	& .p-links__list {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: var(--tile-gap);
+		padding-inline-end: var(--tile-offset);
+		padding-block-end: var(--tile-offset);
+		max-width: 69.5rem;   /* 1112px */
+		margin-inline: auto;
+	}
+
+	@media (min-width: 768px) {
+		& .p-links__list {
+			grid-template-columns: repeat(4, 1fr);
+		}
+
+		/* Figma は SP が「Official / Instagram」の2行、PC は1行 */
+		& .p-links__label--en br { display: none; }
+	}
+
+	& .p-links__item {
+		position: relative;
+	}
+
+	/* Figma は「色の付いた円を右下へずらして置き、その上に本体の円を重ねる」
+	   組み方です。Instagram だけ下の円が4色のグラデーションなので、
+	   単色しか置けない box-shadow ではなく円そのものとして持たせています。 */
+	& .p-links__item::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		translate: var(--tile-offset) var(--tile-offset);
+		border-radius: 50%;
+		background: var(--tile-shadow, var(--tile-accent));
+	}
+
+	/* Figma では文字が円の中央、矢印は円の上から決まった位置（SP 61.3% /
+	   PC 67.2%）に置かれています。文字の行数が変わっても矢印は動きません。
+	   そのため2つを同じマスへ置き、矢印だけ上からの距離で決めています
+	   （％は円の幅に対する割合。円は正円なので高さの割合と同じです）。 */
+	& .p-links__tile {
+		display: grid;
+		place-items: center;
+		font-size: var(--fs-tile);
+		font-weight: 400;
+
+		/* 影の円より前に出すためだけの relative（重なり順の指定） */
+		position: relative;
+		aspect-ratio: 1;
+		border: 1px solid var(--color-text);
+		border-radius: 50%;
+		background: var(--tile-bg);
+		text-align: center;
+		transition: translate .2s ease;
+
+		/* 影の円は動かないので、本体だけ近づいて重なりが浅くなります */
+		&:hover,
+		&:focus-visible {
+			translate: 4px 4px;
+		}
+	}
+
+	& .p-links__label {
+		font-size: var(--fs-tile-label);
+		font-weight: 500;
+		line-height: 1.4;
+		letter-spacing: .05em;
+		text-wrap: balance;
+
+		& small {
+			display: block;
+			font-size: var(--fs-tile-kicker);
+		}
+	}
+
+	& .p-links__label--en {
+		font-family: var(--font-en);
+		font-size: var(--fs-tile-en);
+		font-weight: 400;
+
+		/* Figma は SP だけ「Official」「Instagram」の2行組みです。
+		   1行にすると幅が円の直径（155px）とほぼ同じで、少しでも狭い画面では
+		   円の外へはみ出します。折り返し位置を決めるための上限で、
+		   「Instagram」1語（約5.1em）と全文（約9.4em）の間なら
+		   フォントが変わっても2行組みになります。
+		   PC は Figma でも1行なので外します。 */
+		max-width: 7em;
+
+		@media (min-width: 768px) {
+			max-width: none;
+		}
+
+		& small {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: .5em;
+			margin-top: .6em;
+			font-size: var(--fs-copyright);
+		}
+
+		/* Instagram のマークは Figma の実寸 SP 13px → PC 14px。
+		   em で文字に連動させると PC で 15.4px になり1割大きくなります。 */
+		& small img { width: clamp(.8125rem, .7892rem + .0995vw, .875rem); }
+	}
+
+	/* 矢印の色はタイルごとに違います（Figma: 紫 / 橙 / 紫 / 緑）。
+	   塗りを持つ <img> だと1色に固定されてしまうため、
+	   形だけを mask で抜いて --tile-accent を流し込んでいます。
+	   大きさは Figma の実寸 SP 16×15px → PC 20×19px。 */
+	& .p-links__label { grid-area: 1 / 1; }
+
+	& .p-links__arrow {
+		grid-area: 1 / 1;
+		align-self: start;
+		margin-top: 61.3%;   /* Figma SP: 円の上から 95 / 155px */
+		width: clamp(1rem, 0.9067rem + 0.398vw, 1.25rem);
+		aspect-ratio: 20 / 19;
+		background: var(--tile-accent);
+		-webkit-mask: url('../image/icons/arrow-right.svg') center / contain no-repeat;
+		mask: url('../image/icons/arrow-right.svg') center / contain no-repeat;
+	}
+
+	@media (min-width: 768px) {
+		& .p-links__arrow { margin-top: 67.2%; }   /* Figma PC: 円の上から 168 / 250px */
+	}
+}
+
+
+/* --------------------------------------------------------------------------
+   INVITE — まずは大学を体験してみよう！
+
+   MV と同じで、左右の写真と中央のコピーを grid の同じマスに重ねています。
+   -------------------------------------------------------------------------- */
+.p-invite {
+	display: grid;
+	position: relative;   /* 内側の飾り枠の基準 */
+	/* Figma: 薄紫 → 薄い水色 のグラデーション */
+	background: linear-gradient(90deg, #e4deff, #d2faff);
+
+	/* 内側の飾り枠。Figma は SP 16px / PC 20px 内側に 2px の線 */
+	&::before {
+		content: '';
+		position: absolute;
+		inset: clamp(1rem, 0.9067rem + 0.398vw, 1.25rem);
+		z-index: 1;
+		border: 2px solid transparent;
+		border-image: linear-gradient(90deg, var(--color-purple), var(--color-blue)) 1;
+		pointer-events: none;
+	}
+
+	/* --- 左右の人物 ---
+	   Figma から書き出した実寸の切り抜き画像をそのまま置きます。
+	   2人とも帯の下端にそろえ、幅は画面幅に対する割合で指定します
+	   （割合 = Figma の幅 ÷ Figma の画面幅）。
+	   高さは画像の縦横比のまま決まるので、height は書きません。 */
+	& .p-invite__photos {
+		grid-area: 1 / 1;
+		display: flex;
+		align-items: end;
+		justify-content: space-between;
+	}
+
+	& .p-invite__photo {
+		flex: none;
+
+		& img { width: 100%; }
+	}
+
+	& .p-invite__photo--left  { width: 30.4%; }   /* SP 375px で 114px */
+	& .p-invite__photo--right { width: 29.33%; }  /* SP 375px で 110px */
+
+	& .p-invite__body {
+		grid-area: 1 / 1;
+		z-index: 2;
+		display: grid;
+		align-content: center;
+		justify-items: center;
+		/* 見出しの行とボタンの間 Figma: SP 31.6px → PC 35.2px */
+		gap: clamp(1.975rem, 1.891rem + 0.3582vw, 2.2rem);
+		/* 帯の高さは中身と余白で決まります（Figma: SP 396px / PC 328px）。
+		   上 SP 60px → PC 91.2px。
+		   下は SP 98px → PC 91.2px。SP だけ下を厚くしているのは、
+		   下端に置いた人物（144px）とボタンが重ならないようにするためです。 */
+		padding-block: clamp(3.75rem, 3.0225rem + 3.1045vw, 5.7rem)   /* 上 60px → 91.2px */
+		               clamp(6rem,   6.1716rem - 0.199vw,  6.125rem);  /* 下 98px → 96px */
+		padding-inline: var(--gutter);
+		text-align: center;
+	}
+
+	/* 左右の斜線は .c-marked-title（components 層）が描きます。
+	   この帯だけ SP の斜線と文字の間が狭い（Figma: SP 20px → PC 32px） */
+	& .p-invite__title {
+		--mark-gap: clamp(1.25rem, 0.9701rem + 1.194vw, 2rem);
+
+		font-size: var(--fs-cta-title);
+		font-weight: 500;
+		line-height: 1.3;   /* Figma: 24px に対して 31.2px */
+		letter-spacing: .06em;
+	}
+
+	/* 文字の下に黄色いマーカーを敷く（Figma の marker）。
+	   行の下端にそろえた帯なので、行数が増えても各行に付きます。
+	   高さ Figma: SP 12px → PC 16px */
+	& .p-invite__title-text {
+		box-decoration-break: clone;
+		background: linear-gradient(var(--color-yellow) 0 0) no-repeat left bottom
+		            / 100% clamp(0.75rem, 0.6567rem + 0.398vw, 1rem);
+	}
+
+	& .p-invite__actions {
+		display: grid;
+		/* ボタン同士の間 Figma: SP 16px（縦） → PC 20px（横） */
+		gap: clamp(1rem, 0.9067rem + 0.398vw, 1.25rem);
+		width: min(100%, 15rem);   /* Figma SP のボタン幅 240px */
+	}
+
+	/* Figma ではここのボタンは塗りつぶし。hover で白地に反転する */
+	& .c-btn {
+		min-width: 0;   /* SP は 240px。標準の 261px より狭い */
+		background: var(--btn-color);
+		color: var(--color-white);
+	}
+	& .c-btn:hover,
+	& .c-btn:focus-visible {
+		background: var(--color-white);
+		color: var(--btn-color);
+	}
+	/* 塗りつぶしの上に置くので、アイコンは白版にします。
+	   HTML の src は色版なので、ここで白版へ差し替えています。 */
+	& .c-btn--doc .c-btn__icon { content: url('../image/icons/document.svg'); }
+	& .c-btn--oc  .c-btn__icon { content: url('../image/icons/open-campus.svg'); }
+
+	& .c-btn--doc:hover .c-btn__icon,
+	& .c-btn--doc:focus-visible .c-btn__icon { content: url('../image/icons/document-blue.svg'); }
+	& .c-btn--oc:hover .c-btn__icon,
+	& .c-btn--oc:focus-visible .c-btn__icon { content: url('../image/icons/open-campus-purple.svg'); }
+
+	@media (min-width: 768px) {
+		& .p-invite__title br { display: none; }
+
+		/* PC は人物が左右の端から少し内側に入ります。
+		   ％はすべて帯の全幅が基準です（Figma 1380px 換算）。
+		   container に padding を入れると％の基準が変わってしまうので、
+		   ずらす量は写真側の margin で持たせています。 */
+		& .p-invite__photo--left  { width: 18.84%; margin-left: 7.54%; }   /* 260px / 左から 104px */
+		& .p-invite__photo--right { width: 22.46%; margin-right: 3.91%; }  /* 310px / 右から 54px */
+
+		& .p-invite__actions {
+			grid-auto-flow: column;
+			width: auto;
+		}
+
+		& .c-btn { min-width: 16.3125rem; }   /* PC は 261px */
+	}
+}
+
+
+.p-footer {
+	position: relative;   /* ページトップボタンの位置の基準 */
+	/* Figma の上下余白 上 SP 56px → PC 72px / 下 SP 66px → PC 72px
+	   （帯の高さ SP 515px / PC 357px） */
+	padding-block: clamp(3.5rem, 3.1269rem + 1.592vw, 4.5rem)
+	               clamp(4.125rem, 3.9011rem + 0.597vw, 4.5rem);
+	background: var(--color-white);
+
+	& .p-footer__inner {
+		display: grid;
+		/* Figma: かたまり同士の間 SP 40px → PC 64px */
+		gap: clamp(2.5rem, 1.94rem + 2.3881vw, 4rem);
+		justify-items: center;
+		text-align: center;
+	}
+
+	& .p-footer__logo {
+		width: 15rem;   /* Figma は SP / PC とも 240px */
+	}
+
+	& .p-footer__address {
+		/* Figma: ロゴから SP 24px → PC 32px */
+		margin-top: clamp(1.5rem, 1.3134rem + 0.796vw, 2rem);
+		font-size: var(--fs-note);
+		line-height: 1.3;   /* Figma: PC 16px→20.8px / SP 14px→18.2px */
+		letter-spacing: .05em;
+	}
+
+	& .p-footer__side {
+		display: grid;
+		justify-items: center;
+		align-content: start;
+		gap: 2.5rem;   /* Figma: SP / PC とも 40px */
+	}
+
+	& .p-footer__related {
+		display: grid;
+		justify-items: center;
+		gap: 1.5em;
+		font-size: var(--fs-body);
+		line-height: 1;   /* Figma SP: 16px の1行ちょうど。PC は下で 1.6 に */
+
+		/* Figma では2つのリンクの間に 40×1px の細い線が入ります */
+		& a + a {
+			padding-top: 1.5em;
+			background: linear-gradient(#d9d9d9 0 0) no-repeat center top / 2.5rem 1px;
+		}
+
+		& a:hover,
+		& a:focus-visible { text-decoration: underline; }
+	}
+
+	& .p-footer__sns {
+		display: flex;
+		align-items: center;
+		gap: 2rem;   /* Figma: SP / PC とも 32px */
+
+		/* Figma のアイコンは高さ 23px。横幅は絵によって 25〜32px と違うので
+		   高さでそろえます */
+		& img { width: auto; height: 1.4375rem; }
+		& a:hover,
+		& a:focus-visible { opacity: .7; }
+	}
+
+	& .p-footer__copyright {
+		font-family: var(--font-en);
+		font-size: var(--fs-copyright);
+		font-weight: 400;
+		line-height: 1;   /* Figma: PC 14px / SP 12px の1行 */
+		letter-spacing: .03em;
+	}
+
+	/* 右下のページトップボタン。
+	   フッターの角に貼り付く「あしらい」なので、ここは absolute が適任です
+	   （本文の並びに影響させず、常に角へ固定したいため）。 */
+	& .p-footer__pagetop {
+		position: absolute;
+		right: 0;
+		bottom: 0;
+		display: grid;
+		place-items: center;
+		width: clamp(2.5rem, 1.8rem + 3vw, 3.125rem);
+		aspect-ratio: 1;
+		background: linear-gradient(90deg, var(--color-blue), var(--color-purple));
+
+		& img { width: 30%; }
+		&:hover,
+		&:focus-visible { opacity: .85; }
+	}
+
+	@media (min-width: 768px) {
+		/* Figma のフッターは本文枠（1160px）ではなく、
+		   画面の端から 80px の位置に置かれています。 */
+		& .p-footer__inner {
+			grid-template-columns: auto 1fr;
+			justify-items: start;
+			max-width: none;
+			width: calc(100% - 10rem);
+			text-align: left;
+		}
+
+		& .p-footer__side {
+			justify-self: end;
+			justify-items: end;
+			padding-top: 1.4375rem;   /* Figma: 左のロゴより 23px 下から始まる */
+		}
+
+		/* PC は2つのリンクを横に並べ、間は「/」で区切ります
+		   （SP は縦に並べて細い線で区切る） */
+		& .p-footer__related {
+			grid-auto-flow: column;
+			justify-items: end;
+			gap: 1.25rem;
+			line-height: 1.6;   /* Figma PC: 16px → 25.6px */
+
+			& a + a { padding-top: 0; background: none; }
+
+			& a + a::before {
+				content: '/';
+				margin-right: 1.25rem;
+				color: #858585;         /* Figma */
+				font-size: .875rem;     /* Figma: 14px */
+			}
+		}
+
+		& .p-footer__address br:nth-of-type(1),
+		& .p-footer__address br:nth-of-type(3) { display: none; }
+
+		& .p-footer__copyright { grid-column: 1 / -1; }
+	}
+}
+
+}  /* @layer sections おわり */
+
+
+/* ==========================================================================
+   層の外に置く指定
+
+   どの層よりも強くなります。閉じている詳細を確実に隠すためだけに使います。
+   （層の中に置くと sections の display: grid に負けてしまいます）
+   ========================================================================== */
+
+[hidden] {
+	display: none;
+}

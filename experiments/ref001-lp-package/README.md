@@ -29,7 +29,28 @@ lp/
 │   ├── group_ref001_student_voice.json
 │   └── group_ref001_swiper.json
 └── acf-export.json                上2つをまとめた確認用ファイル
+
+lp-introduction-originalPage.php   ↑の複製（テンプレート名「LP-introduction ページ」）
+lp-introduction/                   ↑が読み込む素材一式（lp/ の複製）
 ```
+
+### `lp/` と `lp-introduction/` の関係
+
+同じ中身を2セット持っています。片方を編集しても、もう片方には影響しません。
+
+| | 本体 | 複製 |
+|---|---|---|
+| テンプレート名 | LP オリジナルページ | **LP-introduction ページ** |
+| ページテンプレート | `lp-originalPage.php` | `lp-introduction-originalPage.php` |
+| 素材フォルダ | `lp/` | `lp-introduction/` |
+| CSS のハンドル名 | `ref001-lp-style` | `ref001-lp-introduction-style` |
+| JS のハンドル名 | `ref001-lp-script` | `ref001-lp-introduction-script` |
+| ACF グループのキー | `group_ref001_student_voice` / `group_ref001_swiper` | `group_ref001_intro_student_voice` / `group_ref001_intro_swiper` |
+| ACF の適用先 | `lp-originalPage.php` | `lp-introduction-originalPage.php` |
+
+CSS / JS のハンドル名と ACF のグループキーを分けてあるので、
+**2つのテンプレートを同じサイトに置いても衝突しません。**
+固定ページの「ページ属性 → テンプレート」でどちらを使うか選べます。
 
 ---
 
