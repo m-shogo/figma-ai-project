@@ -196,3 +196,106 @@ jobs:
           path: experiments/wordpress-acf-pro-standalone-lp/.runtime/qa
           if-no-files-found: warn
           retention-days: 14
+
+  ref001-clean-replay-freeze-observer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout carrier with frozen commit reachable
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Materialize only frozen Clean Replay authority
+        shell: bash
+        run: |
+          set -euo pipefail
+          FROZEN="$RUNNER_TEMP/ref001-frozen-repo"
+          rm -rf "$FROZEN"
+          mkdir -p "$FROZEN"
+          git cat-file -e 59002424921623275e600eaf1df431d808e61c0a^{commit}
+          git archive 59002424921623275e600eaf1df431d808e61c0a \
+            scripts/validate_acf_export.py \
+            experiments/ref001-benchmark-replay \
+            | tar -x -C "$FROZEN"
+          test -f "$FROZEN/experiments/ref001-benchmark-replay/blank-theme/style.css"
+          test -f "$FROZEN/experiments/ref001-benchmark-replay/runtime/setup.sh"
+          echo "FROZEN_ROOT=$FROZEN" >> "$GITHUB_ENV"
+          echo "PASS frozen First Pass materialized from 59002424921623275e600eaf1df431d808e61c0a"
+
+      - name: Validate frozen static gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          php -l "$FROZEN_ROOT/experiments/ref001-benchmark-replay/blank-theme/functions.php"
+          php -l "$FROZEN_ROOT/experiments/ref001-benchmark-replay/blank-theme/page-templates/template-ref001-benchmark.php"
+          php -l "$FROZEN_ROOT/experiments/ref001-benchmark-replay/blank-theme/template-parts/ref001/benchmark-page.php"
+          python "$FROZEN_ROOT/scripts/validate_acf_export.py" "$FROZEN_ROOT/experiments/ref001-benchmark-replay/output/acf-export.json"
+          python - "$FROZEN_ROOT" <<'PY'
+          import pathlib, re, sys
+          root = pathlib.Path(sys.argv[1])
+          css = (root / 'experiments/ref001-benchmark-replay/blank-theme/style.css').read_text()
+          queries = re.findall(r'@media\s*\(([^)]+)\)', css)
+          assert queries == ['min-width: 768px'], queries
+          assert 'figma.com/api/mcp/asset' not in css
+          template = (root / 'experiments/ref001-benchmark-replay/blank-theme/template-parts/ref001/benchmark-page.php').read_text()
+          assert 'figma.com/api/mcp/asset' not in template
+          assert template.count('data-figma-pc-node=') >= 10
+          assert template.count('data-figma-sp-node=') >= 10
+          print('PASS frozen static gates')
+          PY
+
+      - name: Require ACF PRO license for Clean Replay freeze
+        shell: bash
+        env:
+          ACF_PRO_LICENSE_KEY: ${{ secrets.ACF_PRO_LICENSE_KEY }}
+        run: |
+          test -n "${ACF_PRO_LICENSE_KEY:-}" || { echo 'FAIL ACF_PRO_LICENSE_KEY is required for Clean Replay freeze'; exit 3; }
+
+      - name: Start frozen WordPress + ACF PRO runtime
+        shell: bash
+        env:
+          ACF_PRO_LICENSE_KEY: ${{ secrets.ACF_PRO_LICENSE_KEY }}
+        working-directory: ${{ runner.temp }}/ref001-frozen-repo/experiments/ref001-benchmark-replay
+        run: bash runtime/setup.sh
+
+      - name: Capture frozen First Pass at 9 widths
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="$FROZEN_ROOT/experiments/ref001-benchmark-replay/output"
+          mkdir -p "$OUT/captures"
+          docker run --rm --network host \
+            -e REF001_URL=http://127.0.0.1:8088/ \
+            -e REF001_OUTPUT=/output \
+            -v "$FROZEN_ROOT/experiments/ref001-benchmark-replay/runtime/capture.mjs:/work/capture.mjs:ro" \
+            -v "$OUT:/output" \
+            mcr.microsoft.com/playwright:v1.55.0-noble \
+            bash -lc 'cd /tmp && npm init -y >/dev/null && npm install --silent playwright@1.55.0 && node /work/capture.mjs'
+          test "$(find "$OUT/captures" -maxdepth 1 -name 'ref001-*.png' | wc -l | tr -d ' ')" = "9"
+          test -f "$OUT/first-pass-runtime-metrics.json"
+          cat "$OUT/first-pass-runtime-metrics.json"
+
+      - name: Upload frozen First Pass evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ref001-clean-replay-frozen-first-pass-5900242
+          path: |
+            ${{ runner.temp }}/ref001-frozen-repo/experiments/ref001-benchmark-replay/output/captures/*.png
+            ${{ runner.temp }}/ref001-frozen-repo/experiments/ref001-benchmark-replay/output/first-pass-runtime-metrics.json
+            ${{ runner.temp }}/ref001-frozen-repo/experiments/ref001-benchmark-replay/output/first-pass-acquisition-evidence.json
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Runtime logs on failure
+        if: failure()
+        shell: bash
+        working-directory: ${{ runner.temp }}/ref001-frozen-repo/experiments/ref001-benchmark-replay/runtime
+        run: docker compose logs --no-color || true
+
+      - name: Stop frozen runtime
+        if: always()
+        shell: bash
+        working-directory: ${{ runner.temp }}/ref001-frozen-repo/experiments/ref001-benchmark-replay/runtime
+        run: docker compose down -v || true
