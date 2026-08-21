@@ -1,6 +1,6 @@
 schema_version: 1
 run_id: RUN-REF001-FRONTEND-STANDARD-CLEAN-REPLAY-20260821-A
-status: FIRST_PASS_FROZEN
+status: COMPARISON_RECORDED_NO_MERGE
 purpose: >-
   Validate whether the current Frontend Implementation Standard can reproduce REF-001
   from current Figma authority + canonical project rules without reusing old REF-specific
@@ -8,12 +8,17 @@ purpose: >-
 base:
   branch: so
   starting_commit: 9285c29dbf5b01d153d4c8b9c3d76ff3777b6d32
+  note: >-
+    The experiment base remains frozen even though so advanced after First Pass.
+    Newer REF-001 commits are read-only comparison evidence and are not rebased into the replay.
 work_branch: agent/ref001-frontend-standard-clean-replay
+pr: 182
+merge_policy: USER_EXPLICIT_APPROVAL_REQUIRED
 protected_scopes:
   - existing REF-001 latest/final implementation
   - Claude Code current REF-001 implementation
   - V3 / PR #92
-  - unrelated REF-002 / PR #142
+  - unrelated REF-002 work
 pre_freeze_forbidden_reads:
   - old REF-specific CSS/HTML/PHP/JS implementation bodies
   - old repair patches and workaround values
@@ -31,9 +36,12 @@ figma:
   pc_size: [1380, 7714]
   sp_root: "21376:4401"
   sp_size: [375, 10817]
+  sp_web_content_height: 10777
+  sp_status_bar_px: 40
   breakpoint_contract:
     mobile_max_px: 767
     desktop_min_px: 768
+    source: OWNER_REFERENCE_CONTRACT
   code_connect: UNDETERMINED_PLAN_SEAT_LIMIT
   authority_method:
     - get_design_context
@@ -46,6 +54,7 @@ figma:
   interaction_evidence:
     student_voice_motion_nodes: 0
     messages_motion_nodes: 0
+    reference_contract_status: UNDETERMINED
     policy: Do not invent accordion/carousel behavior without authority evidence.
 sections:
   - { id: header, pc: "21378:8066", sp: "21376:4918", status: AUTHORITY_CAPTURED_AND_IMPLEMENTED }
@@ -67,16 +76,20 @@ asset_transfer:
   policy: docs/figma-asset-intake.md
   rule: Never commit short-lived Figma MCP URLs.
   reusable_formal_assets:
-    - existing MV decorative SVGs
-    - existing seven course icon SVGs
+    count: 9
+    items:
+      - two existing MV decorative SVGs
+      - seven existing course icon SVGs
+  unresolved_exact_raster_slots: 19
+  asset_slot_reuse_rate_percent: 32.1
+  overall_reuse_rate: NOT_RELIABLY_QUANTIFIABLE
   consequence: >-
-    Continue semantic/layout implementation and non-asset runtime QA, but do not claim
-    final visual/asset fidelity until exact raster bytes are materialized on a network-enabled runner.
+    Exact asset fidelity cannot be claimed for the replay. No guessed raster implementation was used.
 contamination_log:
   - type: RECENT_COMMIT_MESSAGE
     detail: >-
       Startup Git inspection surfaced an old REF-specific repair description in commit metadata.
-      The old implementation body/patch was not opened and the value is excluded from implementation decisions.
+      The old implementation body/patch was not opened and the value was excluded from implementation decisions.
   - type: ROOT_README_SUMMARY
     detail: >-
       Root README was opened as project baseline and exposed historical clean-replay aggregate scores.
@@ -85,33 +98,143 @@ first_pass:
   frozen: true
   implementation_commit: b6d6e3dfe49c488fbf5c128e6b901249abf08de5
   comparison_reads_before_freeze: false
-  visual_accuracy: UNMEASURED_PENDING_RUNTIME_AND_ASSET_LIMITATION
+  measured_ledger_to_first_pass_minutes: 8.45
+  full_wall_clock_time: NOT_RELIABLY_MEASURED
+  runtime:
+    overflow_failure_widths: [320, 390]
+    overflow_failure_count: 2
+    runtime_errors: 0
+    console_errors: 0
+    failed_requests: 0
+    broken_formal_images: 0
+    duplicate_ids: 0
+    h1_count: 1
+    main_count: 1
+    authority_owner_count: 12
+  endpoint_geometry:
+    pc_1380:
+      runtime_height: 7553
+      figma_height: 7714
+      delta_px: -161
+      delta_percent: -2.09
+    sp_375:
+      runtime_height: 10636
+      figma_web_height: 10777
+      delta_px: -141
+      delta_percent: -1.31
+  visual_accuracy: PARTIAL_AND_ASSET_BLOCKED
+repair_1:
+  commit: 501d8e7a334d7222a982565337f015cd42c28da7
+  type: CANONICAL_OWNER_RESPONSIVE_REPAIR
+  diagnosis_to_commit_minutes_approx: 8
+  changed_files:
+    - experiments/ref001-frontend-standard-clean-replay/implementation/styles.css
+  changed_lines:
+    additions: 9
+    deletions: 8
+  causes:
+    - mobile grid min-content expansion
+    - hero copy sizing at narrow widths
+    - bilateral negative margin in Messages
+    - fixed two-column feature-link width
+    - nowrap footer copyright
+  result:
+    overflow_failure_widths: []
+    overflow_failure_count: 0
+    runtime_errors: 0
+    console_errors: 0
+    failed_requests: 0
+    broken_formal_images: 0
+    duplicate_ids: 0
+    residual_text_box_overhang_widths: [320, 375]
+    residual_text_box_note: >-
+      The Hero small-title element box slightly crosses the viewport detector boundary,
+      while document scroll width remains equal to the viewport. This is retained as a
+      low-severity typography-box issue rather than hidden with overflow CSS.
 metrics:
   first_pass_frozen: true
-  repair_rounds: 0
-  strategy_reversals: 1
-  strategy_reversal_note: >-
-    Direct temporary Figma asset download was abandoned after execution-network failure;
-    the canonical repo asset-intake route was selected instead without adding a bridge.
+  repair_rounds: 1
+  strategy_reversals: 2
+  strategy_reversal_notes:
+    - Direct temporary Figma asset download -> canonical asset-intake/pending-slot route after execution-network failure.
+    - Playwright NODE_PATH execution -> temporary workspace co-location after ESM package-resolution failure.
+  architecture_reversal_required_but_not_applied: >-
+    The frozen canonical implementation profile requires WordPress + ACF + server-rendered PHP,
+    but Clean Replay First Pass selected static HTML. Rebuilding after reading the old/current
+    implementation would contaminate the experiment result, so this remains a recorded Standard gap.
   css_postfix_patch_count: 0
   important_count: 0
-  unnecessary_absolute_count: UNMEASURED
-  unnecessary_fixed_dimension_count: UNMEASURED
-  duplicated_css_count: UNMEASURED
-  runtime_errors: UNMEASURED
-  console_errors: UNMEASURED
-  horizontal_overflow_failures: UNMEASURED
-  interaction_correctness: AUTHORITY_STATIC_NO_MOTION_EVIDENCE
+  mechanical_absolute_declarations: 16
+  unnecessary_absolute_count: NOT_PROVEN_BY_MECHANICAL_COUNT
+  mechanical_width_px_declarations: 41
+  mechanical_height_px_declarations: 42
+  unnecessary_fixed_dimension_count: NOT_PROVEN_BY_MECHANICAL_COUNT
+  duplicated_css_count: NOT_ESTABLISHED
+  runtime_errors: 0
+  console_errors: 0
+  horizontal_overflow_failures_after_repair: 0
+  interaction_correctness: PASS_FOR_FROZEN_AUTHORITY_NO_BEHAVIOR_INVENTED
   asset_fidelity: BLOCKED_BY_EXECUTION_NETWORK
-  typography_fidelity: UNMEASURED
-  semantic_quality: UNMEASURED
-  human_repairability: UNMEASURED
-  implementation_time_minutes: UNMEASURED
-  repair_time_minutes: 0
-  reuse_rate: UNMEASURED
+  typography_fidelity: PARTIAL_RESIDUAL_HERO_TEXT_BOX_OVERHANG
+  semantic_quality: PASS_SINGLE_MAIN_SINGLE_H1_SECTION_STRUCTURE
+  human_repairability: MIXED_SIMPLE_CSS_BUT_WRONG_PRODUCTION_FAMILY
+  implementation_time_minutes_measured_window: 8.45
+  repair_time_minutes_approx: 8
+implementation_family:
+  canonical_profile: experiments/ref001-wordpress-acf/implementation-profile.yaml
+  required: WORDPRESS_ACF_SERVER_RENDERED_PHP
+  clean_first_pass: STATIC_HTML_CSS
+  clean_contract_match: false
+  current_final_contract_match: true
+responsive_architecture:
+  canonical_breakpoint_thresholds: [768]
+  clean_viewport_queries:
+    - "768px..1100px intermediate override"
+    - "<=767px mobile override"
+  assessment: FAIL_EXTRA_NON_OWNER_INTERMEDIATE_POLICY
+current_final_comparison:
+  commit: 0f0aad4aec3348e02b477f14cea3e2872efaa6f8
+  mode: READ_ONLY_POST_FREEZE
+  endpoint_geometry:
+    pc_1380:
+      runtime_height: 7677
+      figma_height: 7714
+      delta_px: -37
+      delta_percent: -0.48
+    sp_375:
+      runtime_height: 10773
+      figma_web_height: 10777
+      delta_px: -4
+      delta_percent: -0.04
+  runtime:
+    horizontal_overflow: 0
+    tested_widths: 17
+    width_range: "320..1440"
+    render_contract_checks: "34/34 PASS"
+    variable_text_checks: "21 locations x 5 widths PASS"
+  static_complexity:
+    clean_css_bytes: 29158
+    current_final_css_bytes: 88287
+    clean_css_lines: 370
+    current_final_css_lines: 2471
+    clean_important: 0
+    current_final_important: 3
+    clean_absolute: 16
+    current_final_absolute: 14
+    clean_explicit_width_height_px: 83
+    current_final_explicit_width_height_px: 22
+    clean_clamp_calls: 11
+    current_final_clamp_calls: 99
+    clean_nowrap: 2
+    current_final_nowrap: 0
+    note: >-
+      These are mechanical counts, not automatic quality scores. Current Final includes substantially
+      more production/WordPress/fidelity behavior, but it is also more fluid on explicit dimensions.
 comparison:
   allowed_after_first_pass_freeze: true
-  old_ref_read: false
+  old_ref_read: true
   claude_current_read: false
-  current_final_read: false
+  current_final_read: true
+  current_final_commit: 0f0aad4aec3348e02b477f14cea3e2872efaa6f8
   v3_read: false
+  overall_verdict: CURRENT_FINAL_WINS_OVERALL_CLEAN_REPLAY_REVEALS_STANDARD_GAPS
