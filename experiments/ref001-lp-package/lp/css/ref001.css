@@ -901,7 +901,8 @@
    あとは画面幅なりに 1列 → 2列 → 3列 と自動で変わります。
    -------------------------------------------------------------------------- */
 .p-reason {
-	padding-block: var(--space-section);
+	/* Figma: 上 SP 48px → PC 78px / 下 SP 56px → PC 96px */
+	padding-block: clamp(3rem, 2.3806rem + 2.6418vw, 4.875rem) var(--space-section);
 	background: var(--color-white);
 
 	& .p-reason__head {
@@ -1376,14 +1377,21 @@
    開閉は lp/js/ref001-interactions.js が担当しています。
    -------------------------------------------------------------------------- */
 .p-voice {
-	padding-top: var(--space-section);
+	/* Figma: 上 SP 56px → PC 96px / 下 SP 51px → PC 87px */
+	padding-block: var(--space-section) clamp(3.1875rem, 2.5433rem + 2.7473vw, 5.4375rem);
 
 	& .p-voice__head {
 		display: grid;
 		justify-items: center;
 		gap: clamp(1rem, .6rem + 1.7vw, 1.5rem);
-		margin-bottom: var(--gap-card);
+		/* Figma: 見出しから1つ目の項目まで SP 32px → PC 48px */
+		margin-bottom: clamp(2rem, 1.403rem + 2.5473vw, 3rem);
 		text-align: center;
+	}
+
+	/* Figma: 項目どうしの間 SP 16px → PC 40px */
+	& .p-voice__item + .p-voice__item {
+		margin-top: clamp(1rem, -0.3881rem + 5.9204vw, 2.5rem);
 	}
 
 	/* 3件目だけ背景色を変えています */
@@ -1478,14 +1486,20 @@
 	}
 
 	/* --- 「もっと見る」ボタン --- */
+	/* Figma では文字の高さぶん（18px）しかありませんが、
+	   指で押せる範囲は確保したいので、余白を足したぶんを
+	   マイナスマージンで打ち消しています。
+	   見た目の高さは Figma どおり、押せる範囲は広いまま。 */
 	& .p-voice__toggle {
 		display: inline-flex;
 		align-items: center;
 		gap: .5em;
 		justify-self: center;
-		padding: .5em 1em;   /* 押せる範囲を広げる */
+		padding: .75em 1em;
+		margin-block: -.75em;
 		color: var(--color-blue);
 		font-size: var(--fs-toggle);
+		line-height: 1;
 	}
 
 	& .p-voice__toggle-mark {
@@ -1652,7 +1666,8 @@
    写真は右寄せ、コピーは左下寄せなので、重なり方は自動で決まります。
    -------------------------------------------------------------------------- */
 .p-messages {
-	padding-block: var(--space-section);
+	/* Figma: 上 SP 56px → PC 96px / 下 SP 69px → PC 118px */
+	padding-block: var(--space-section) clamp(4.3125rem, 3.4358rem + 3.7396vw, 7.375rem);
 	background: var(--color-white);
 
 	& .p-messages__head {
@@ -1881,7 +1896,8 @@
    カードの色は HTML 側の style="--course: #xxxxxx" で1枚ずつ指定しています。
    -------------------------------------------------------------------------- */
 .p-courses {
-	padding-block: var(--space-section);
+	/* Figma: 上 SP 56px → PC 72px / 下 SP 56px → PC 96px */
+	padding-block: clamp(3.5rem, 3.1269rem + 1.592vw, 4.5rem) var(--space-section);
 	background: var(--color-beige);
 
 	& .p-courses__head {
@@ -1999,12 +2015,14 @@
 	   ここも absolute ではなくマイナスマージンです。 */
 	/* 見た目は .c-bubble（components 層）。MV の吹き出しと同じ部品です。
 	   Figma でも同じ 187×38px の形が使われています。 */
-	/* Figma: 箱の上端から 21px 上へ出て、下のリストとの間は SP 19px → PC 23px */
+	/* Figma: 箱の上端から 21px 上へ出て、下のリストとの間は SP 19px → PC 23px。
+	   吹き出しの下 9px は尻尾のぶんで、Figma では箱へ食い込むので
+	   その 9px をマイナスして間隔を合わせています。 */
 	& .p-courses__rec-label {
 		/* Figma ではこの吹き出しの中だけセクションと同じベージュ */
 		--bubble-bg: var(--color-beige);
 
-		margin: -1.3125rem 0 clamp(1.1875rem, 1.0944rem + 0.398vw, 1.4375rem);
+		margin: -1.3125rem 0 clamp(.625rem, 0.5319rem + 0.398vw, .875rem);
 	}
 }
 
