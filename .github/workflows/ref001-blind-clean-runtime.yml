@@ -242,3 +242,5 @@ jobs:
         shell: bash
         working-directory: experiments/ref001-benchmark-replay/runtime
         run: docker compose down -v || true
+
+# observer-trigger-2
