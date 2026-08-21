@@ -3,7 +3,7 @@ contract_id: CONTRACT-REF001-BENCHMARK-CLEAN-REPLAY
 reference_id: REF-001-CHIBA-KEIZAI-SAMPLE
 status: DRAFT
 created_at: '2026-08-21T12:41:00+09:00'
-updated_at: '2026-08-21T12:41:00+09:00'
+updated_at: '2026-08-21T13:58:00+09:00'
 
 company_policy:
   path: ''
@@ -87,6 +87,28 @@ human_editability:
   cms_code_ownership_must_be_explicit: true
   change_drills_required: true
   notes: []
+
+cms_validation:
+  acf_admin_e2e:
+    required: true
+    browser_driver: PLAYWRIGHT
+    real_wordpress_required: true
+    acf_pro_active_required: true
+    field_group_visible_on_target_page_required: true
+    representative_field_edit_required: true
+    image_field_edit_required_when_present: true
+    collection_controls_required_when_present: true
+    save_update_required: true
+    persistence_after_reload_required: true
+    frontend_roundtrip_required: true
+    baseline_restore_required: true
+    console_and_page_error_free_required: true
+    evidence_json: experiments/ref001-benchmark-replay/output/acf-admin-e2e.json
+    screenshot_dir: experiments/ref001-benchmark-replay/output/acf-admin-e2e
+    notes:
+    - ACF delivery is not complete merely because export JSON validates or imports.
+    - First Pass freeze requires browser-level proof that an editor can see, edit, save, reload, and observe representative ACF content on the frontend.
+    - Repeater/Flexible Content add/remove/reorder is tested only when fresh authority justifies those field types; the benchmark must not invent them.
 
 breakpoints:
   mode: GLOBAL_SPECIFIED
@@ -186,6 +208,10 @@ integration:
   - runtime_state_integrity
   - human_editability
   - cms_code_ownership_clarity
+  - acf_import_or_sync_smoke
+  - acf_admin_field_presence
+  - acf_admin_edit_save_reload
+  - acf_frontend_roundtrip
 
 environment_contract:
   status: UNRESOLVED
