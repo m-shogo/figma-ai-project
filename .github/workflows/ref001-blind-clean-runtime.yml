@@ -186,3 +186,59 @@ jobs:
           path: experiments/ref001-blind-clean-20260812/evidence/final/latest
           if-no-files-found: error
           retention-days: 14
+
+  frozen-first-pass-screenshot-observer:
+    if: github.event_name == 'pull_request' && github.head_ref == 'experiment/ref001-first-pass-screenshot-observer-v2-20260821'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      ACF_PRO_LICENSE_KEY: ${{ secrets.ACF_PRO_LICENSE_KEY }}
+    steps:
+      - name: Checkout exact frozen First Pass bytes
+        uses: actions/checkout@v6
+        with:
+          ref: 59002424921623275e600eaf1df431d808e61c0a
+          fetch-depth: 1
+
+      - name: Assert frozen source and ACF PRO availability
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "59002424921623275e600eaf1df431d808e61c0a"
+          test -n "${ACF_PRO_LICENSE_KEY:-}" || { echo 'FAIL ACF_PRO_LICENSE_KEY secret is required; no fake fallback.'; exit 3; }
+
+      - name: Start frozen WordPress + ACF PRO runtime
+        shell: bash
+        run: experiments/ref001-benchmark-replay/runtime/setup.sh
+
+      - name: Capture frozen First Pass screenshots
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p experiments/ref001-benchmark-replay/output/captures
+          docker run --rm --network host \
+            -e REF001_URL=http://127.0.0.1:8088/ \
+            -e REF001_OUTPUT=/output \
+            -v "$PWD/experiments/ref001-benchmark-replay/runtime/capture.mjs:/work/capture.mjs:ro" \
+            -v "$PWD/experiments/ref001-benchmark-replay/output:/output" \
+            mcr.microsoft.com/playwright:v1.55.0-noble \
+            bash -lc 'cd /tmp && npm init -y >/dev/null && npm install --silent playwright@1.55.0 && cp /work/capture.mjs /tmp/capture.mjs && node /tmp/capture.mjs'
+          test -f experiments/ref001-benchmark-replay/output/captures/first-pass-1380.png
+          test -f experiments/ref001-benchmark-replay/output/captures/first-pass-375.png
+
+      - name: Upload frozen First Pass screenshots
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: ref001-clean-replay-frozen-first-pass-screenshots
+          path: |
+            experiments/ref001-benchmark-replay/output/captures/*.png
+            experiments/ref001-benchmark-replay/output/first-pass-runtime-metrics.json
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Stop frozen runtime
+        if: always()
+        shell: bash
+        working-directory: experiments/ref001-benchmark-replay/runtime
+        run: docker compose down -v || true
