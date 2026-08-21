@@ -1,0 +1,104 @@
+name: REF-001 Clean Replay Runtime Observer
+
+on:
+  pull_request:
+    branches:
+      - experiment/ref001-clean-replay-runtime-base-20260821
+
+permissions:
+  contents: read
+
+jobs:
+  frozen-first-pass:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      ACF_PRO_LICENSE_KEY: ${{ secrets.ACF_PRO_LICENSE_KEY }}
+    steps:
+      - name: Checkout frozen First Pass bytes
+        uses: actions/checkout@v4
+        with:
+          ref: 59002424921623275e600eaf1df431d808e61c0a
+          fetch-depth: 1
+
+      - name: Assert frozen commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "59002424921623275e600eaf1df431d808e61c0a"
+
+      - name: Static clean-replay checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          php -l experiments/ref001-benchmark-replay/blank-theme/functions.php
+          php -l experiments/ref001-benchmark-replay/blank-theme/page-templates/template-ref001-benchmark.php
+          php -l experiments/ref001-benchmark-replay/blank-theme/template-parts/ref001/benchmark-page.php
+          python scripts/validate_acf_export.py experiments/ref001-benchmark-replay/output/acf-export.json
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          css = Path('experiments/ref001-benchmark-replay/blank-theme/style.css').read_text()
+          queries = re.findall(r'@media\s*\(([^)]+)\)', css)
+          assert queries == ['min-width: 768px'], queries
+          assert 'figma.com/api/mcp/asset' not in css
+          template = Path('experiments/ref001-benchmark-replay/blank-theme/template-parts/ref001/benchmark-page.php').read_text()
+          assert 'figma.com/api/mcp/asset' not in template
+          assert 'get_field' not in template
+          assert template.count('data-figma-pc-node=') >= 10
+          assert template.count('data-figma-sp-node=') >= 10
+          print('PASS static First Pass freeze gates')
+          PY
+
+      - name: Require ACF PRO runtime secret
+        shell: bash
+        run: |
+          test -n "${ACF_PRO_LICENSE_KEY:-}" || { echo 'FAIL ACF_PRO_LICENSE_KEY secret is required; no fake ACF fallback is permitted.'; exit 3; }
+
+      - name: Start WordPress + ACF PRO runtime
+        shell: bash
+        run: experiments/ref001-benchmark-replay/runtime/setup.sh
+
+      - name: Capture 9 responsive widths
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p experiments/ref001-benchmark-replay/output/captures
+          docker run --rm --network host \
+            -e REF001_URL=http://127.0.0.1:8088/ \
+            -e REF001_OUTPUT=/output \
+            -v "$PWD/experiments/ref001-benchmark-replay/runtime/capture.mjs:/work/capture.mjs:ro" \
+            -v "$PWD/experiments/ref001-benchmark-replay/output:/output" \
+            mcr.microsoft.com/playwright:v1.55.0-noble \
+            bash -lc 'cd /tmp && npm init -y >/dev/null && npm install --silent playwright@1.55.0 && node /work/capture.mjs'
+
+      - name: Emit measurements
+        if: always()
+        shell: bash
+        run: |
+          if [[ -f experiments/ref001-benchmark-replay/output/first-pass-runtime-metrics.json ]]; then
+            cat experiments/ref001-benchmark-replay/output/first-pass-runtime-metrics.json
+          fi
+
+      - name: Upload captures and metrics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ref001-clean-replay-frozen-first-pass
+          path: |
+            experiments/ref001-benchmark-replay/output/captures/*.png
+            experiments/ref001-benchmark-replay/output/first-pass-runtime-metrics.json
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Runtime logs on failure
+        if: failure()
+        shell: bash
+        working-directory: experiments/ref001-benchmark-replay/runtime
+        run: docker compose logs --no-color || true
+
+      - name: Stop runtime
+        if: always()
+        shell: bash
+        working-directory: experiments/ref001-benchmark-replay/runtime
+        run: docker compose down -v || true
