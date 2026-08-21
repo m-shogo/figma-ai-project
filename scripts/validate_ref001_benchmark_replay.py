@@ -89,7 +89,7 @@ def main() -> int:
     setup_text = RUNTIME_SETUP.read_text(encoding="utf-8")
     if "wordpress:7.0.2-php8.3-apache" not in compose_text:
         errors.append("benchmark profile WordPress/PHP version evidence drifted from current compose runtime")
-    if "wpengine/advanced-custom-fields-pro:^6.0" not in setup_text:
+    if '"wpengine/advanced-custom-fields-pro": "^6.0"' not in setup_text:
         errors.append("benchmark profile ACF PRO dependency contract drifted from current runtime setup")
 
     workspace = sanitized.load_profile(WORKSPACE_PATH)
