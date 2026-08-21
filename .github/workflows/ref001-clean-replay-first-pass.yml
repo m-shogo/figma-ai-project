@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - experiment/ref001-clean-replay-first-pass-20260821
+      - experiment/ref001-clean-replay-runtime-20260821
+  pull_request:
+    branches:
+      - experiment/ref001-clean-replay-baseline-20260821
   workflow_dispatch:
 
 permissions:
@@ -17,6 +21,16 @@ jobs:
       ACF_PRO_LICENSE_KEY: ${{ secrets.ACF_PRO_LICENSE_KEY }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 2
+
+      - name: Prove runtime branch preserves frozen implementation
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = "59002424921623275e600eaf1df431d808e61c0a"
+          git diff --exit-code HEAD^ HEAD -- experiments/ref001-benchmark-replay
 
       - name: Static clean-replay checks
         shell: bash
