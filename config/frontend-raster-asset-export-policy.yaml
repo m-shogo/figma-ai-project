@@ -1,0 +1,41 @@
+schema_version: 1
+policy_id: OWNER-FRONTEND-RASTER-ASSET-EXPORT
+status: ACTIVE
+authority: OWNER_FIXED
+scope: WEB_DELIVERY_RASTER_ASSETS
+
+# Explicit owner rule. Agents/project inference must not change these values.
+# Only a later explicit owner instruction or a conflicting Company hard constraint
+# may replace this contract.
+responsive_exports:
+  sp:
+    scale: 3
+    format: WEBP
+  pc:
+    scale: 2
+    format: WEBP
+
+vector_policy:
+  prefer_svg_when_source_is_vector: true
+  raster_rule_applies_to_svg: false
+
+art_direction:
+  separate_pc_sp_asset_when_crop_or_composition_differs: true
+  do_not_force_single_asset_when_visual_source_differs: true
+
+quality:
+  do_not_count_upscaled_low_resolution_source_as_compliant: true
+  insufficient_source_state: SOURCE_RESOLUTION_INSUFFICIENT
+  preserve_alpha_when_required: true
+  verify_crop_and_object_position: true
+  avoid_unnecessary_oversized_files: true
+
+naming:
+  pc_sp_distinction_required_when_assets_are_separate: true
+  examples:
+    - hero-pc.webp
+    - hero-sp.webp
+
+qa_exclusions:
+  - FIGMA_REFERENCE_SCREENSHOT
+  - VISUAL_QA_CAPTURE
