@@ -1931,12 +1931,17 @@
 
 		& .p-messages__photo { grid-area: 1 / 1; }
 
+		/* 写真の上に重ねますが、上端の位置を固定して「下へ伸びる」形にしています。
+		   中央ぞろえだと、文字が増えたときに上へも伸びて見出しに重なるためです。
+		   上の余白 13.62% は Figma の 158px（本文枠 1160px 中）。
+		   ％は枠の横幅を基準にするので、画面幅が変わっても同じ位置になります。
+		   写真の大きさは img の縦横比で決まるので、文字が増えても変わりません。 */
 		& .p-messages__body {
 			grid-area: 1 / 1;
 			margin-top: 0;
-			align-self: center;
+			align-self: start;
 			gap: 1.5em;
-			padding: 0;
+			padding: 13.62% 0 0;
 		}
 
 		& .p-messages__quote {
