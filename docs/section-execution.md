@@ -6,6 +6,8 @@ Figma公式MCP docsも large/heavy frame を一括処理せず、Header / Sideba
 
 Whole-page one-shotは能力進化を測るresearch benchmarkとして残すが、現時点のproduction defaultではない。
 
+Company / Project contractが別順序を明示しない限り、Mobile FirstはCSS authoringだけでなくsection実装・stabilization・integration acceptanceにも適用し、canonical orderを**SP → PC**とする。
+
 ## Core architecture
 
 ```text
@@ -25,15 +27,15 @@ Frozen Figma reference
   ↓
 6. Section manifest binds contract hash + foundation commit
   ↓
-7. Parallel section implementation
+7. Parallel section implementation: SP stabilize → PC adapt/verify
   ↓
 8. Integration
   ↓
-9. Global visual / responsive verification
+9. Global visual / responsive verification: SP → PC
   ↓
 10. Targeted section repair
   ↓
-11. Final global verification
+11. Final global verification: SP → PC
 ```
 
 重要なのは、**parallel workerを開始する前にshared contractとfoundation commitをfreezeすること**。
@@ -241,6 +243,26 @@ shared contract + foundationが固定されたらsectionを並列化してよい
 - allowed output paths
 - forbidden shared-file edits
 
+### Canonical per-section execution order
+
+Company / Project exceptionが無い場合、各workerはsectionごとに次の順を守る。
+
+```text
+1. SP evidenceを読む
+2. SP base layoutを実装
+3. SP visual/runtimeをstabilize
+4. PC evidenceとの差分を読む
+5. approved breakpoint contractでPCへadapt
+6. PC visual/runtimeをverify
+7. relevant boundaryをSP → PCでverify
+```
+
+PCを先に作って最後にSPへ縮めるdesktop-first repairをdefaultにしない。
+
+PC側のrepairがshared CSS、shared component、DOM、JS、asset、token、container等のSPにも影響し得るownerを変更した場合、そのsectionの既存SP PASSは無効化する。**SPから再確認 → PC再確認**へ戻る。
+
+SP/PCのcaptureを同時に取得すること自体は許可するが、capture並列化とacceptance orderを混同しない。
+
 ### Isolation rule
 
 原則section workerは:
@@ -350,6 +372,8 @@ AIは指定breakpointを探すのではなく:
 10. states/interactions/annotations
 11. section-specific exceptions
 
+PC/SP両方のreferenceを先に理解することは、SP → PC implementation orderと矛盾しない。Inspectでは全体関係を把握し、write/stabilization/acceptanceではSPを先にする。
+
 ### Implementation order
 
 1. fonts/tokens
@@ -357,8 +381,8 @@ AIは指定breakpointを探すのではなく:
 3. layout/container primitives
 4. shared components
 5. section components
-6. section layout
-7. section responsive behavior
+6. section SP base layout/stabilization
+7. section PC adaptation/verification
 8. page integration
 9. visual repair
 
@@ -384,6 +408,17 @@ section workerのoutputをpage orderへ接続する。
 - global overflow
 - asset continuity
 
+Integration acceptanceは原則:
+
+```text
+SP full-page / relevant interaction
+→ PC full-page / relevant interaction
+```
+
+の順で行う。
+
+PC側のintegration repairでSPにも影響し得るshared ownerを変更した場合、final sequenceは無効化し、**SP full-pageから再確認してからPC**へ進む。
+
 section単体が高品質でもページ全体で崩れるため、integration evidenceを必ず残す。
 
 ---
@@ -401,6 +436,7 @@ section単体が高品質でもページ全体で崩れるため、integration e
 - allowed pathだけ変更
 - container alignment matches shared contract
 - screenshots captured at required viewport
+- section acceptance completed in SP → PC order unless explicit Project exception exists
 - section-level mismatch recorded
 
 page integration後:
@@ -413,6 +449,8 @@ page integration後:
 - asset quality/crop
 - accessibility basics
 - overflow/z-index/background continuity
+- final acceptance completed SP → PC
+- PC shared-owner repair triggers SP re-verification before FINAL
 
 ---
 
@@ -454,6 +492,8 @@ shared contract変更が承認された場合:
 
 全sectionを無条件で作り直す必要はないが、**異なるcontract hashの成果物をそのまま混ぜない。**
 
+Affected sectionを再runする場合も、そのsectionのacceptanceはSP → PCから再開する。
+
 ---
 
 ## 13. Research exception
@@ -463,3 +503,5 @@ Whole-page one-shotやAI-inferred breakpointは永久禁止ではない。
 major model/MCP/Figma update後にresearch cohortとして再テストできる。
 
 ただしproductionでは、案件側に明示breakpointがある限りその指定が優先される。
+
+SP → PC execution orderもCompany / Projectがdesktop-first等を明示する場合はoverride可能だが、Agentが慣習や都合だけで逆転させない。
