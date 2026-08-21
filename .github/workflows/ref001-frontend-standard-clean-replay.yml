@@ -1,0 +1,89 @@
+name: REF001 Frontend Standard Clean Replay
+
+on:
+  push:
+    branches:
+      - agent/ref001-frontend-standard-clean-replay
+    paths:
+      - 'experiments/ref001-frontend-standard-clean-replay/**'
+      - '.github/workflows/ref001-frontend-standard-clean-replay.yml'
+  pull_request:
+    paths:
+      - 'experiments/ref001-frontend-standard-clean-replay/**'
+      - '.github/workflows/ref001-frontend-standard-clean-replay.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  first-pass-runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Static implementation contract
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          root = Path('experiments/ref001-frontend-standard-clean-replay/implementation')
+          html = (root / 'index.html').read_text()
+          css = (root / 'styles.css').read_text()
+          failures = []
+          if 'www.figma.com/api/mcp/asset/' in html + css:
+              failures.append('transient Figma MCP URL committed')
+          important = len(re.findall(r'!important\b', css))
+          if important:
+              failures.append(f'!important count={important}')
+          if html.count('<main') != 1:
+              failures.append(f'main count={html.count("<main")}')
+          if html.count('<h1') != 1:
+              failures.append(f'h1 count={html.count("<h1")}')
+          authority_pairs = len(re.findall(r'data-figma-pc="[^"]+"\s+data-figma-sp="[^"]+"', html))
+          if authority_pairs < 12:
+              failures.append(f'authority pair count={authority_pairs}')
+          print(f'important_count={important}')
+          print(f'authority_pair_count={authority_pairs}')
+          print(f'absolute_declarations={len(re.findall(r"position:\s*absolute", css))}')
+          print(f'fixed_declarations={len(re.findall(r"position:\s*fixed", css))}')
+          print(f'width_px_declarations={len(re.findall(r"\bwidth:\s*\d+(?:\.\d+)?px", css))}')
+          print(f'height_px_declarations={len(re.findall(r"\bheight:\s*\d+(?:\.\d+)?px", css))}')
+          if failures:
+              raise SystemExit('\n'.join(failures))
+          PY
+
+      - name: Install Playwright in temporary workspace
+        run: |
+          mkdir -p /tmp/ref001-clean-playwright
+          cd /tmp/ref001-clean-playwright
+          npm init -y >/dev/null 2>&1
+          npm install playwright@1.54.2 >/dev/null
+          npx playwright install --with-deps chromium
+
+      - name: Start isolated experiment server
+        run: |
+          python -m http.server 8765 --bind 127.0.0.1 --directory experiments > /tmp/ref001-clean-http.log 2>&1 &
+          echo $! > /tmp/ref001-clean-http.pid
+          for i in $(seq 1 20); do
+            curl -fsS http://127.0.0.1:8765/ref001-frontend-standard-clean-replay/implementation/index.html >/dev/null && exit 0
+            sleep 1
+          done
+          cat /tmp/ref001-clean-http.log
+          exit 1
+
+      - name: Capture responsive runtime probes
+        env:
+          NODE_PATH: /tmp/ref001-clean-playwright/node_modules
+          REF001_CAPTURE_DIR: ${{ github.workspace }}/experiments/ref001-frontend-standard-clean-replay/evidence/runtime
+        run: node experiments/ref001-frontend-standard-clean-replay/tools/capture-runtime.mjs
+
+      - name: Upload first-pass runtime evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ref001-frontend-standard-clean-replay-runtime
+          path: experiments/ref001-frontend-standard-clean-replay/evidence/runtime
+          if-no-files-found: error
+          retention-days: 14
