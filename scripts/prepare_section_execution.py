@@ -12,9 +12,11 @@ from typing import Any
 import yaml
 
 from section_planner import build_plan
+from validate_records import SECTION_SCHEMA, load_json as load_schema_json, validate_schema
 
 ROOT = Path(__file__).resolve().parents[1]
 IMMUTABLE_WORKER_STATES = {"READY", "RUNNING", "COMPLETE"}
+OBSERVATION_COVERAGE_SCHEMA_VERSION = 9
 
 
 def load_yaml(path: Path) -> dict[str, Any]:
@@ -61,6 +63,22 @@ def atomic_write_yaml(path: Path, data: dict[str, Any]) -> None:
         except FileNotFoundError:
             pass
         raise
+
+
+def require_v9_manifest_schema(manifest: dict[str, Any]) -> None:
+    """Fail before planning/activation instead of writing an invalid schema-v9 manifest.
+
+    Historical manifests stay on their original lifecycle. New v9 manifests reuse the
+    canonical Section schema so Observation Coverage is not reimplemented as another
+    validator or silently deferred until CI.
+    """
+
+    version = int(manifest.get("schema_version", 0) or 0)
+    if version < OBSERVATION_COVERAGE_SCHEMA_VERSION:
+        return
+    errors = validate_schema(manifest, load_schema_json(SECTION_SCHEMA))
+    if errors:
+        raise ValueError("Section Manifest schema v9 invalid:\n- " + "\n- ".join(errors))
 
 
 def require_frozen_contract(contract: dict[str, Any]) -> str:
@@ -153,6 +171,7 @@ def prepare_manifest(
         raise ValueError("do not prepare the canonical template in place; copy it into an experiment first")
 
     manifest = load_yaml(manifest_path)
+    require_v9_manifest_schema(manifest)
 
     contract_value = shared_contract_override or str(manifest.get("shared_contract", ""))
     profile_value = structure_profile_override or str(manifest.get("figma_structure_profile", ""))

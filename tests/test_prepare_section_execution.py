@@ -11,7 +11,7 @@ import yaml
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from prepare_section_execution import prepare_manifest  # noqa: E402
+from prepare_section_execution import prepare_manifest, require_v9_manifest_schema  # noqa: E402
 
 
 def write_yaml(root: Path, relative: str, data: dict) -> Path:
@@ -155,6 +155,90 @@ class PrepareSectionExecutionTests(unittest.TestCase):
             manifest_path.write_text(yaml.safe_dump(data, sort_keys=False), encoding="utf-8")
             with self.assertRaisesRegex(ValueError, "Do not rewrite an active worker group"):
                 prepare_manifest(manifest_path, root=root)
+
+    def test_empty_schema_v9_template_is_valid_before_section_discovery(self) -> None:
+        data = yaml.safe_load((ROOT / "templates" / "section-manifest.yaml").read_text(encoding="utf-8"))
+        require_v9_manifest_schema(data)
+
+    def test_incomplete_schema_v9_section_fails_before_planning_or_activation(self) -> None:
+        data = yaml.safe_load((ROOT / "templates" / "section-manifest.yaml").read_text(encoding="utf-8"))
+        data["sections"] = [
+            {
+                "section_id": "S01",
+                "name": "Hero",
+                "order": 10,
+                "figma": {
+                    "logical_role": "HERO",
+                    "pc_node_id": "1:1",
+                    "sp_node_id": "1:2",
+                    "other_node_ids": [],
+                    "semantic_name_source": "FIGMA",
+                    "boundary_source": "FIGMA_TOP_LEVEL",
+                    "boundary_confidence": "HIGH",
+                    "boundary_evidence": ["Figma metadata"],
+                    "pc_sp_mapping_confidence": "HIGH",
+                    "mapping_evidence": ["paired frames"],
+                },
+                "evidence": {"screenshots": [], "metadata_capture": "metadata"},
+                "dependencies": {
+                    "section_ids": [],
+                    "shared_components": [],
+                    "tokens": [],
+                    "fonts": [],
+                    "assets": [],
+                    "integration_coupling": "LOW",
+                    "coupling_notes": [],
+                },
+                "responsive": {
+                    "uses_shared_breakpoints": True,
+                    "invariants": [],
+                    "transitions": [],
+                    "unknowns": [],
+                    "breakpoint_exception_proposals": [],
+                },
+                "observation_coverage": {
+                    "source_presence": {
+                        "TEXT": "PRESENT",
+                        "RASTER_MEDIA": "PRESENT",
+                        "VECTOR_LOGO": "NONE",
+                        "BACKGROUND": "PRESENT",
+                        "DECORATION": "NONE",
+                        "INTERACTION_STATE": "UNDETERMINED",
+                        "RESPONSIVE_VARIANT": "PRESENT",
+                    },
+                    "source_evidence": [],
+                    "runtime_review": {
+                        "sp": {"status": "PENDING", "evidence": []},
+                        "pc": {"status": "PENDING", "evidence": []},
+                    },
+                    "known_gaps": [],
+                },
+                "implementation": {
+                    "component_path": "hero.php",
+                    "style_path": "hero.css",
+                    "allowed_paths": ["hero.php", "hero.css"],
+                    "shared_files_read_only": True,
+                },
+                "worker": {
+                    "status": "PLANNED",
+                    "parallel_group": "",
+                    "contract_sha256": "",
+                    "isolation": {
+                        "mode": "UNASSIGNED",
+                        "ref": "",
+                        "parallel_safe": False,
+                        "notes": [],
+                    },
+                    "agent": "",
+                    "model": "",
+                    "base_commit": "",
+                    "output_commit": "",
+                    "proposed_shared_changes": [],
+                },
+            }
+        ]
+        with self.assertRaisesRegex(ValueError, "Section Manifest schema v9 invalid"):
+            require_v9_manifest_schema(data)
 
 
 if __name__ == "__main__":
