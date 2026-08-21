@@ -17,8 +17,13 @@
 	const page = document.querySelector('.p-lp');
 	if (!page) return;
 
-	/** スライドの切り替え時間（CSS 側と揃えたいときはここ） */
-	const TRANSITION_MS = 300;
+	/** スライドが切り替わるときの動きの長さ（ミリ秒）。
+	    大きくするほどゆっくり動きます。 */
+	const TRANSITION_MS = 900;
+
+	/** 次のスライドへ自動で進むまでの待ち時間（ミリ秒）。
+	    大きくするほど1枚を長く見せます。 */
+	const AUTOPLAY_DELAY_MS = 7000;
 
 
 	/* ----------------------------------------------------------------
@@ -124,7 +129,7 @@
 					slidesPerView: 1,
 					autoplay: isAutomated
 						? false
-						: { delay: 4500, disableOnInteraction: false, pauseOnMouseEnter: true },
+						: { delay: AUTOPLAY_DELAY_MS, disableOnInteraction: false, pauseOnMouseEnter: true },
 					navigation: { prevEl: prev, nextEl: next },
 					on: {
 						init:        (s) => syncCounter(s.activeIndex ?? 0),
