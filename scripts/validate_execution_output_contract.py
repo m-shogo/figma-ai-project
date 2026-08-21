@@ -203,6 +203,34 @@ def validate_output_plan(manifest: dict[str, Any], profile: dict[str, Any]) -> l
     return errors
 
 
+def validate_run_output_contract(data: dict[str, Any]) -> list[str]:
+    """Reject known file output that contradicts a pinned rendering mode.
+
+    URL-like routes such as `/` are neutral rather than guessed. Section manifests and
+    final deliverable evidence provide stronger proof when a run route is not a file.
+    """
+    coordination = data.get("coordination", {})
+    raw_profile = str(coordination.get("implementation_profile_path", "")).strip()
+    if not raw_profile:
+        return []
+    profile_path = repo_path(raw_profile)
+    if not profile_path.is_file():
+        return []
+    profile = load_yaml(profile_path)
+    rendering = str(profile.get("effective", {}).get("rendering_mode", "")).strip()
+    target_route = str(data.get("code", {}).get("target_route", "")).strip()
+    if rendering != "SERVER_RENDERED_PHP" or not target_route:
+        return []
+
+    clean_target = target_route.split("?", 1)[0].split("#", 1)[0].lower()
+    if clean_target.endswith((".html", ".htm")):
+        return [
+            "run output contradicts SERVER_RENDERED_PHP Implementation Profile; "
+            f"code.target_route={target_route!r}"
+        ]
+    return []
+
+
 def style_paths(section: dict[str, Any]) -> list[str]:
     implementation = section.get("implementation", {})
     found: list[str] = []
