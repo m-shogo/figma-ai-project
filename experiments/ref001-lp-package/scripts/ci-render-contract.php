@@ -14,6 +14,15 @@ error_reporting( E_ALL );
 ini_set( 'display_errors', '1' );
 
 $pkg = $argv[1] ?? null;
+
+/* 2つめ以降の引数で、検査する「フォルダ名」と「テンプレート名」を指定できます。
+   省略時は lp / lp-originalPage.php（本体）。
+   複製した LP-introduction を検査するときは
+     php scripts/ci-render-contract.php . lp-introduction lp-introduction-originalPage.php ref001-lp-introduction
+   のように渡します。 */
+$asset_dir = $argv[2] ?? 'lp';
+$template  = $argv[3] ?? 'lp-originalPage.php';
+$handle    = $argv[4] ?? 'ref001-lp';
 if ( ! $pkg || ! is_dir( $pkg ) ) {
 	fwrite( STDERR, "usage: ci-render-contract.php <lp-package-dir>\n" );
 	exit( 2 );
@@ -37,7 +46,7 @@ function check( bool $ok, string $message ): void {
    1. CSS — 相対 url() がすべて実ファイルに解決するか
    =========================================================== */
 
-$css_path = $pkg . '/lp/css/ref001.css';
+$css_path = $pkg . '/' . $asset_dir . '/css/ref001.css';
 $css      = file_get_contents( $css_path );
 check( $css !== false, 'lp/css/ref001.css が読める' );
 
@@ -189,7 +198,7 @@ function wp_enqueue_style( $h, $src, $d, $v ) { global $enqueued; $enqueued['sty
 function wp_enqueue_script( $h, $src, $d, $v, $f ) { global $enqueued; $enqueued['script'][ $h ] = $src; }
 
 ob_start();
-include $pkg . '/lp-originalPage.php';
+include $pkg . '/' . $template;
 $page = ob_get_clean();
 
 
@@ -214,15 +223,15 @@ check( $footer_pos !== false && $footer_pos > $mainend, 'wp_footer() が本文�
    =========================================================== */
 
 check(
-	isset( $enqueued['style']['ref001-lp-style'] ) && str_ends_with( $enqueued['style']['ref001-lp-style'], '/lp/css/ref001.css' ),
+	isset( $enqueued['style'][ $handle . '-style' ] ) && str_ends_with( $enqueued['style'][ $handle . '-style' ], '/' . $asset_dir . '/css/ref001.css' ),
 	'CSS を wp_enqueue_style() でその場で登録している'
 );
 check(
-	isset( $enqueued['script']['ref001-lp-script'] ) && str_ends_with( $enqueued['script']['ref001-lp-script'], '/lp/js/ref001-interactions.js' ),
+	isset( $enqueued['script'][ $handle . '-script' ] ) && str_ends_with( $enqueued['script'][ $handle . '-script' ], '/' . $asset_dir . '/js/ref001-interactions.js' ),
 	'JS を wp_enqueue_script() でその場で登録している'
 );
 
-$tpl_src = file_get_contents( $pkg . '/lp-originalPage.php' );
+$tpl_src = file_get_contents( $pkg . '/' . $template );
 
 /* コメントには「なぜ add_action を使わないか」の説明が書いてあるので、
    コメントを取り除いた実コードだけを見て判定します。 */
@@ -270,7 +279,7 @@ check( ! preg_match( '/class="[^"]*\bref-[a-z]/', $page ), '旧クラス名（re
 preg_match_all( "/\\\$lp_base\\s*\\.\\s*'([^']+)'/", $tpl_src, $assets );
 $missing_assets = array();
 foreach ( array_unique( $assets[1] ) as $rel ) {
-	if ( ! is_file( $pkg . '/lp/' . $rel ) ) {
+	if ( ! is_file( $pkg . '/' . $asset_dir . '/' . $rel ) ) {
 		$missing_assets[] = $rel;
 	}
 }
@@ -282,11 +291,11 @@ check( empty( $missing_assets ), 'テンプレートが参照する素材がす�
    別プロセスで動かします（ACF関数の有無を分けるため）
    =========================================================== */
 
-$run = function ( string $mode ) use ( $pkg ) {
+$run = function ( string $mode ) use ( $pkg, $asset_dir ) {
 	$script = <<<'PHP'
 <?php
 error_reporting(E_ALL); ini_set('display_errors','1');
-list($pkg, $mode) = [$argv[1], $argv[2]];
+list($pkg, $mode, $asset_dir) = [$argv[1], $argv[2], $argv[3] ?? 'lp'];
 $lp_base = 'lp/';
 function esc_url($s){ return htmlspecialchars($s, ENT_QUOTES, 'UTF-8'); }
 
@@ -307,13 +316,13 @@ if ($mode === 'acf') {
     function get_sub_field($n){ $r=$GLOBALS['D'][$GLOBALS['C']]??[]; return $r[$GLOBALS['I']][$n]??null; }
 }
 
-ob_start(); include $pkg . '/lp/acf-swap/student-voice-acf.php'; echo ob_get_clean();
+ob_start(); include $pkg . '/' . $asset_dir . '/acf-swap/student-voice-acf.php'; echo ob_get_clean();
 if ($mode === 'acf') { $GLOBALS['C']=null; $GLOBALS['I']=-1; }
-ob_start(); include $pkg . '/lp/acf-swap/swiper-acf.php'; echo ob_get_clean();
+ob_start(); include $pkg . '/' . $asset_dir . '/acf-swap/swiper-acf.php'; echo ob_get_clean();
 PHP;
 	$tmp = tempnam( sys_get_temp_dir(), 'lp-acf-' ) . '.php';
 	file_put_contents( $tmp, $script );
-	$out = shell_exec( escapeshellarg( PHP_BINARY ) . ' ' . escapeshellarg( $tmp ) . ' ' . escapeshellarg( $pkg ) . ' ' . escapeshellarg( $mode ) . ' 2>&1' );
+	$out = shell_exec( escapeshellarg( PHP_BINARY ) . ' ' . escapeshellarg( $tmp ) . ' ' . escapeshellarg( $pkg ) . ' ' . escapeshellarg( $mode ) . ' ' . escapeshellarg( $asset_dir ) . ' 2>&1' );
 	unlink( $tmp );
 	return (string) $out;
 };

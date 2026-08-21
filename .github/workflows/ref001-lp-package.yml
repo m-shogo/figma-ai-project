@@ -48,3 +48,6 @@ jobs:
 
       - name: Render-contract smoke test (fixture fallback fidelity + ACF mutation)
         run: php experiments/ref001-lp-package/scripts/ci-render-contract.php experiments/ref001-lp-package
+
+      - name: Render contract (LP-introduction / 複製したテンプレート)
+        run: php experiments/ref001-lp-package/scripts/ci-render-contract.php experiments/ref001-lp-package lp-introduction lp-introduction-originalPage.php ref001-lp-introduction
