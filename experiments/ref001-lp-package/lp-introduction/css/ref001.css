@@ -1847,15 +1847,19 @@
 
 		& .p-messages__slider { grid-area: 1 / 1 / -1 / -1; }
 
+		/* 見出しとカウンターはスライダーと同じマスに重ねています。
+		   Swiper 側の CSS が .swiper に z-index: 1 を付けているため、
+		   こちらも 1 のままだと「後に書かれたスライダーが上」になり
+		   見出しが隠れます。2 にしてスライダーより前に出します。 */
 		& .p-messages__head {
 			grid-area: 1 / 1;
-			z-index: 1;
+			z-index: 2;
 			margin-bottom: 0;
 		}
 
 		& .p-messages__nav {
 			grid-area: 3 / 1;
-			z-index: 1;
+			z-index: 2;
 			margin-top: 0;
 			/* Figma: 1160px 中 165px の位置から始まる */
 			justify-content: start;
