@@ -341,13 +341,17 @@
 	   ここでは drop-shadow で同じ見え方を作っています。
 	   （box-shadow だと四角い影になり、尻尾の形に沿いません） */
 	.c-bubble {
+		/* 中の色。既定は白ですが、コースの「こんな人にオススメ！」だけ
+		   Figma ではセクションと同じベージュです（水色の箱を切り抜いたように見せるため）。 */
+		--bubble-bg: var(--color-white);
+
 		position: relative;   /* 尻尾の位置の基準 */
 		width: fit-content;
 		/* Figma: 高さ 38px（文字 14px ＋ 上下 12px）、左右 20px */
 		padding: .857em 1.4286em;
 		border: 1px solid #555;
 		border-radius: 999px;
-		background: var(--color-white);
+		background: var(--bubble-bg);
 		color: var(--color-text);
 		font-size: var(--fs-small);
 		line-height: 1;
@@ -356,21 +360,30 @@
 		   長い文言に変えたときは横へはみ出すより2行になるほうが安全です。 */
 		text-wrap: balance;
 
-		/* 下向きの尻尾（Figma: 13×17px）。
-		   正方形を45度回して2辺だけ線を残しています。 */
+		/* 下向きの尻尾。Figma の三角は 13×17px ですが、
+		   角丸から下に出ているのは 9px ぶんだけなので、
+		   見えている V は 幅 7px / 深さ 9px になります。
+		   Figma では枠線が尻尾のところで下へ降りて、
+		   また上がって続く「1本のつながった線」になっています。
+
+		   そこで三角を2枚重ねています。
+		     1枚目（濃い色） 尻尾の形そのもの
+		     2枚目（白）     1.5px 上へずらして内側を塗りつぶす
+		   これで斜めの2辺だけが線として残り、
+		   さらに2枚目が角丸の下線を 13px ぶん隠すので、
+		   線が尻尾の入口で途切れて V へ続いて見えます。 */
+		&::before,
 		&::after {
 			content: '';
 			position: absolute;
 			top: 100%;
 			left: 50%;
-			width: .75rem;
-			height: .75rem;
-			margin: -.4375rem 0 0 -.375rem;
-			border-right: 1px solid #555;
-			border-bottom: 1px solid #555;
-			background: var(--color-white);
-			rotate: 45deg;
+			translate: -50% 0;
+			border-inline: 3.5px solid transparent;
 		}
+
+		&::before { border-top: 9px solid #555; }
+		&::after  { margin-top: -1.5px; border-top: 9px solid var(--bubble-bg); }
 	}
 
 	/* --- 見出しの左右に添える「＼ ／」の斜線 ---
@@ -776,15 +789,20 @@
 	/* 吹き出しは円の上端に少し重ねる */
 	/* 吹き出しの見た目は .c-bubble（components 層）。ここでは位置だけ決めます。
 	   Figma では尻尾の先が円の上から 18% ほど入り込みます。 */
+	/* Figma の吹き出しは 187px で、SP では円（170px）より広く、
+	   左右へはみ出して置かれます。
+	   幅を max-content にすると「入る幅」に縛られず1行のままになり、
+	   円の中央にそろえられます。
+	   長い文言に変えたときは max-width で画面の中へ収めます。 */
 	& .p-mv__oc-balloon {
 		position: absolute;
 		bottom: 82%;
-		/* left だけで中央に置くと、使える幅が「左半分」になってしまい
-		   文字が折り返します。左右を 0 にして margin: auto で中央へ寄せると、
-		   円の幅いっぱいを使えます。 */
-		left: 0;
-		right: 0;
-		margin-inline: auto;
+		left: 50%;
+		translate: -50% 0;
+		width: max-content;
+		/* 円の幅（100%）＋ 円が画面の端から離れている量（左右で 8vw）まで。
+		   これ以上は広がらないので、文言を長くしても画面からはみ出しません。 */
+		max-width: calc(100% + 8vw);
 	}
 
 	& .p-mv__oc-title {
@@ -1979,6 +1997,9 @@
 	   Figma でも同じ 187×38px の形が使われています。 */
 	/* Figma: 箱の上端から 21px 上へ出て、下のリストとの間は SP 19px → PC 23px */
 	& .p-courses__rec-label {
+		/* Figma ではこの吹き出しの中だけセクションと同じベージュ */
+		--bubble-bg: var(--color-beige);
+
 		margin: -1.3125rem 0 clamp(1.1875rem, 1.0944rem + 0.398vw, 1.4375rem);
 	}
 }
