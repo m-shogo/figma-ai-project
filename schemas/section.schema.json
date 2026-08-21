@@ -3,6 +3,130 @@
   "$id": "https://example.invalid/figma-ai-project/section.schema.json",
   "title": "Figma AI Section Execution Manifest",
   "type": "object",
+  "$defs": {
+    "observationPresence": {
+      "enum": ["PRESENT", "NONE", "UNDETERMINED"]
+    },
+    "runtimeReview": {
+      "type": "object",
+      "required": ["status", "evidence"],
+      "properties": {
+        "status": {
+          "enum": ["PENDING", "PASS", "KNOWN_GAP", "NOT_APPLICABLE"]
+        },
+        "evidence": {
+          "type": "array"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {"status": {"const": "PASS"}},
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "evidence": {"minItems": 1}
+            }
+          }
+        }
+      ],
+      "additionalProperties": true
+    },
+    "sectionObservationCoverage": {
+      "type": "object",
+      "required": ["source_presence", "source_evidence", "runtime_review", "known_gaps"],
+      "properties": {
+        "source_presence": {
+          "type": "object",
+          "required": [
+            "TEXT",
+            "RASTER_MEDIA",
+            "VECTOR_LOGO",
+            "BACKGROUND",
+            "DECORATION",
+            "INTERACTION_STATE",
+            "RESPONSIVE_VARIANT"
+          ],
+          "properties": {
+            "TEXT": {"$ref": "#/$defs/observationPresence"},
+            "RASTER_MEDIA": {"$ref": "#/$defs/observationPresence"},
+            "VECTOR_LOGO": {"$ref": "#/$defs/observationPresence"},
+            "BACKGROUND": {"$ref": "#/$defs/observationPresence"},
+            "DECORATION": {"$ref": "#/$defs/observationPresence"},
+            "INTERACTION_STATE": {"$ref": "#/$defs/observationPresence"},
+            "RESPONSIVE_VARIANT": {"$ref": "#/$defs/observationPresence"}
+          },
+          "additionalProperties": false
+        },
+        "source_evidence": {
+          "type": "array",
+          "minItems": 1
+        },
+        "runtime_review": {
+          "type": "object",
+          "required": ["sp", "pc"],
+          "properties": {
+            "sp": {"$ref": "#/$defs/runtimeReview"},
+            "pc": {"$ref": "#/$defs/runtimeReview"}
+          },
+          "additionalProperties": true
+        },
+        "known_gaps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["category", "reason"],
+            "properties": {
+              "category": {
+                "enum": [
+                  "TEXT",
+                  "RASTER_MEDIA",
+                  "VECTOR_LOGO",
+                  "BACKGROUND",
+                  "DECORATION",
+                  "INTERACTION_STATE",
+                  "RESPONSIVE_VARIANT",
+                  "OTHER"
+                ]
+              },
+              "reason": {"type": "string", "minLength": 1},
+              "evidence": {"type": "array"}
+            },
+            "additionalProperties": true
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "integrationObservationCoverage": {
+      "type": "object",
+      "required": ["sp_full_page", "pc_full_page", "evidence", "known_gaps"],
+      "properties": {
+        "sp_full_page": {
+          "enum": ["PENDING", "PASS", "KNOWN_GAP", "NOT_APPLICABLE"]
+        },
+        "pc_full_page": {
+          "enum": ["PENDING", "PASS", "KNOWN_GAP", "NOT_APPLICABLE"]
+        },
+        "evidence": {"type": "array"},
+        "known_gaps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["section_id", "reason"],
+            "properties": {
+              "section_id": {"type": "string", "minLength": 1},
+              "reason": {"type": "string", "minLength": 1},
+              "evidence": {"type": "array"}
+            },
+            "additionalProperties": true
+          }
+        }
+      },
+      "additionalProperties": true
+    }
+  },
   "required": ["schema_version", "reference_id", "page_id", "shared_contract", "shared_contract_sha256", "figma_structure_profile", "figma_structure_profile_sha256", "foundation_commit", "sections", "integration"],
   "properties": {
     "schema_version": { "type": "integer", "minimum": 1 },
@@ -74,6 +198,9 @@
             },
             "additionalProperties": true
           },
+          "observation_coverage": {
+            "$ref": "#/$defs/sectionObservationCoverage"
+          },
           "implementation": {
             "type": "object",
             "required": ["component_path", "style_path", "allowed_paths", "shared_files_read_only"],
@@ -119,11 +246,151 @@
       "type": "object",
       "required": ["root_composition_path", "required_checks"],
       "properties": {
+        "status": {"enum": ["PLANNED", "RUNNING", "COMPLETE"]},
         "root_composition_path": { "type": "string" },
-        "required_checks": { "type": "array", "items": { "type": "string" } }
+        "required_checks": { "type": "array", "items": { "type": "string" } },
+        "observation_coverage": {
+          "$ref": "#/$defs/integrationObservationCoverage"
+        }
       },
       "additionalProperties": true
     }
   },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"schema_version": {"minimum": 9}},
+        "required": ["schema_version"]
+      },
+      "then": {
+        "properties": {
+          "sections": {
+            "items": {
+              "required": ["observation_coverage"],
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "worker": {
+                        "properties": {"status": {"const": "COMPLETE"}},
+                        "required": ["status"]
+                      }
+                    },
+                    "required": ["worker"]
+                  },
+                  "then": {
+                    "properties": {
+                      "observation_coverage": {
+                        "properties": {
+                          "runtime_review": {
+                            "properties": {
+                              "sp": {
+                                "properties": {
+                                  "status": {"enum": ["PASS", "NOT_APPLICABLE"]}
+                                }
+                              },
+                              "pc": {
+                                "properties": {
+                                  "status": {"enum": ["PASS", "NOT_APPLICABLE"]}
+                                }
+                              }
+                            }
+                          },
+                          "known_gaps": {"maxItems": 0}
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "worker": {
+                        "properties": {"status": {"const": "COMPLETE"}},
+                        "required": ["status"]
+                      },
+                      "figma": {
+                        "properties": {"sp_node_id": {"minLength": 1}},
+                        "required": ["sp_node_id"]
+                      }
+                    },
+                    "required": ["worker", "figma"]
+                  },
+                  "then": {
+                    "properties": {
+                      "observation_coverage": {
+                        "properties": {
+                          "runtime_review": {
+                            "properties": {
+                              "sp": {
+                                "properties": {"status": {"const": "PASS"}}
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "worker": {
+                        "properties": {"status": {"const": "COMPLETE"}},
+                        "required": ["status"]
+                      },
+                      "figma": {
+                        "properties": {"pc_node_id": {"minLength": 1}},
+                        "required": ["pc_node_id"]
+                      }
+                    },
+                    "required": ["worker", "figma"]
+                  },
+                  "then": {
+                    "properties": {
+                      "observation_coverage": {
+                        "properties": {
+                          "runtime_review": {
+                            "properties": {
+                              "pc": {
+                                "properties": {"status": {"const": "PASS"}}
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "integration": {
+            "required": ["status", "observation_coverage"],
+            "allOf": [
+              {
+                "if": {
+                  "properties": {"status": {"const": "COMPLETE"}},
+                  "required": ["status"]
+                },
+                "then": {
+                  "properties": {
+                    "observation_coverage": {
+                      "properties": {
+                        "sp_full_page": {"enum": ["PASS", "NOT_APPLICABLE"]},
+                        "pc_full_page": {"enum": ["PASS", "NOT_APPLICABLE"]},
+                        "evidence": {"minItems": 1},
+                        "known_gaps": {"maxItems": 0}
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
   "additionalProperties": true
 }
