@@ -2,7 +2,7 @@
  * 千葉経済大学 LP の動きをまとめたファイル。
  *
  * やっていることは3つだけです。
- *   1. STUDENTS VOICE の「もっと見る」開閉
+ *   1. STUDENTS VOICE の「もっと見る」で詳細をひらく
  *   2. MESSAGES のスライダー（Swiper を CDN から読み込んで初期化）
  *   3. フッター右下の「ページ上部へ」ボタン
  *
@@ -27,24 +27,21 @@
 
 
 	/* ----------------------------------------------------------------
-	   1. STUDENTS VOICE — 「もっと見る」で詳細を開閉する
+	   1. STUDENTS VOICE — 「もっと見る」で詳細をひらく
 	   ---------------------------------------------------------------- */
 	function initVoice() {
 		const toggles = page.querySelectorAll('.p-voice__toggle');
 
 		toggles.forEach((toggle) => {
-			const detail = document.getElementById(toggle.getAttribute('aria-controls'));
-			if (!detail) return;
+			const item = toggle.closest('.p-voice__item');
+			if (!item) return;
 
 			toggle.addEventListener('click', () => {
-				const willOpen = toggle.getAttribute('aria-expanded') !== 'true';
-
-				toggle.setAttribute('aria-expanded', String(willOpen));
-				detail.hidden = !willOpen;
-				toggle.closest('.p-voice__item')?.classList.toggle('is-open', willOpen);
-
-				// ボタンの文言も状態に合わせる
-				toggle.lastChild.textContent = willOpen ? '閉じる' : 'もっと見る';
+				// Figma では開いた状態の項目にボタンがないので、
+				// 一度開いたら閉じません（ボタンごと消えます）。
+				// たたむ / ひらく動きは CSS 側（.is-open）が受け持ちます。
+				toggle.setAttribute('aria-expanded', 'true');
+				item.classList.add('is-open');
 			});
 		});
 	}

@@ -304,7 +304,7 @@ wp_enqueue_script( 'ref001-lp-introduction-script', $lp_base . 'js/ref001-intera
 <!-- ============================================================
      STUDENTS VOICE — 私が千葉経済大学を選んだ理由
      1件目だけ開いた状態、2件目以降は「もっと見る」で開きます。
-     開閉は lp-introduction/js/ref001-interactions.js が担当しています。
+     開閉は lp/js/ref001-interactions.js が担当しています。
 
      ACF化するときは、この <section> まるごとを
        <?php include __DIR__ . '/lp-introduction/acf-swap/student-voice-acf.php'; ?>
@@ -332,24 +332,26 @@ wp_enqueue_script( 'ref001-lp-introduction-script', $lp_base . 'js/ref001-intera
 			</div>
 
 			<div class="p-voice__detail" id="voice-detail-1">
-				<div class="p-voice__detail-main">
-					<picture class="p-voice__photo">
-						<source width="933" height="525" media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/voice-1-detail-21376-4701.webp' ); ?>">
-						<img width="404" height="227" src="<?php echo esc_url( $lp_base . 'image/photos/pc/voice-1-detail-21378-7849.webp' ); ?>" alt="" loading="lazy" decoding="async">
-					</picture>
-					<div class="p-voice__detail-body">
-						<p class="p-voice__detail-text">千葉経済大学のオープンキャンパスでは、多様なコースから自分の将来が広がると分かったことが決め手です！</p>
-						<dl class="p-voice__points">
-							<dt>印象に残った授業</dt>
-							<dd>フィールドワークの授業が本当に楽しい！</dd>
-							<dt>入学の決め手</dt>
-							<dd>少人数授業で先生との距離が近いこと</dd>
-						</dl>
+				<div class="p-voice__detail-inner">
+					<div class="p-voice__detail-main">
+						<picture class="p-voice__photo">
+							<source width="933" height="525" media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/voice-1-detail-21376-4701.webp' ); ?>">
+							<img width="404" height="227" src="<?php echo esc_url( $lp_base . 'image/photos/pc/voice-1-detail-21378-7849.webp' ); ?>" alt="" loading="lazy" decoding="async">
+						</picture>
+						<div class="p-voice__detail-body">
+							<p class="p-voice__detail-text">千葉経済大学のオープンキャンパスでは、多様なコースから自分の将来が広がると分かったことが決め手です！</p>
+							<dl class="p-voice__points">
+								<dt>印象に残った授業</dt>
+								<dd>フィールドワークの授業が本当に楽しい！</dd>
+								<dt>入学の決め手</dt>
+								<dd>少人数授業で先生との距離が近いこと</dd>
+							</dl>
+						</div>
 					</div>
-				</div>
-				<div class="p-voice__advice">
-					<p class="p-voice__advice-label">受験生へのひとこと</p>
-					<p class="p-voice__advice-text">目標が決まっている人もまだ迷っている人も、ぜひ一度オープンキャンパスに参加してみてください。実際に大学の雰囲気を感じることで、自分に合った学びがきっと見つかると思います。</p>
+					<div class="p-voice__advice">
+						<p class="p-voice__advice-label">受験生へのひとこと</p>
+						<p class="p-voice__advice-text">目標が決まっている人もまだ迷っている人も、ぜひ一度オープンキャンパスに参加してみてください。実際に大学の雰囲気を感じることで、自分に合った学びがきっと見つかると思います。</p>
+					</div>
 				</div>
 			</div>
 
@@ -370,29 +372,33 @@ wp_enqueue_script( 'ref001-lp-introduction-script', $lp_base . 'js/ref001-intera
 				</div>
 			</div>
 
-			<button class="p-voice__toggle" type="button" aria-expanded="false" aria-controls="voice-detail-2">
-				<span class="p-voice__toggle-mark" aria-hidden="true"></span>もっと見る
-			</button>
+			<div class="p-voice__more">
+				<button class="p-voice__toggle" type="button" aria-expanded="false" aria-controls="voice-detail-2">
+					<span class="p-voice__toggle-mark" aria-hidden="true"></span>もっと見る
+				</button>
+			</div>
 
-			<div class="p-voice__detail" id="voice-detail-2" hidden>
-				<div class="p-voice__detail-main">
-					<picture class="p-voice__photo">
-						<source width="933" height="525" media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/voice-1-detail-21376-4701.webp' ); ?>">
-						<img width="404" height="227" src="<?php echo esc_url( $lp_base . 'image/photos/pc/voice-1-detail-21378-7849.webp' ); ?>" alt="" loading="lazy" decoding="async">
-					</picture>
-					<div class="p-voice__detail-body">
-						<p class="p-voice__detail-text">少人数の授業で先生に相談しやすく、授業やゼミを通して自分の得意なことが少しずつ見えてきました。</p>
-						<dl class="p-voice__points">
-							<dt>印象に残った授業</dt>
-							<dd>グループワークで企画を形にしていく授業</dd>
-							<dt>入学の決め手</dt>
-							<dd>先生や先輩に相談しやすい学びの環境</dd>
-						</dl>
+			<div class="p-voice__detail" id="voice-detail-2">
+				<div class="p-voice__detail-inner">
+					<div class="p-voice__detail-main">
+						<picture class="p-voice__photo">
+							<source width="933" height="525" media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/voice-1-detail-21376-4701.webp' ); ?>">
+							<img width="404" height="227" src="<?php echo esc_url( $lp_base . 'image/photos/pc/voice-1-detail-21378-7849.webp' ); ?>" alt="" loading="lazy" decoding="async">
+						</picture>
+						<div class="p-voice__detail-body">
+							<p class="p-voice__detail-text">少人数の授業で先生に相談しやすく、授業やゼミを通して自分の得意なことが少しずつ見えてきました。</p>
+							<dl class="p-voice__points">
+								<dt>印象に残った授業</dt>
+								<dd>グループワークで企画を形にしていく授業</dd>
+								<dt>入学の決め手</dt>
+								<dd>先生や先輩に相談しやすい学びの環境</dd>
+							</dl>
+						</div>
 					</div>
-				</div>
-				<div class="p-voice__advice">
-					<p class="p-voice__advice-label">受験生へのひとこと</p>
-					<p class="p-voice__advice-text">進路に迷っていても、実際に授業や学生の雰囲気を見るとイメージが変わります。気軽にオープンキャンパスで確かめてみてください。</p>
+					<div class="p-voice__advice">
+						<p class="p-voice__advice-label">受験生へのひとこと</p>
+						<p class="p-voice__advice-text">進路に迷っていても、実際に授業や学生の雰囲気を見るとイメージが変わります。気軽にオープンキャンパスで確かめてみてください。</p>
+					</div>
 				</div>
 			</div>
 
@@ -413,29 +419,33 @@ wp_enqueue_script( 'ref001-lp-introduction-script', $lp_base . 'js/ref001-intera
 				</div>
 			</div>
 
-			<button class="p-voice__toggle" type="button" aria-expanded="false" aria-controls="voice-detail-3">
-				<span class="p-voice__toggle-mark" aria-hidden="true"></span>もっと見る
-			</button>
+			<div class="p-voice__more">
+				<button class="p-voice__toggle" type="button" aria-expanded="false" aria-controls="voice-detail-3">
+					<span class="p-voice__toggle-mark" aria-hidden="true"></span>もっと見る
+				</button>
+			</div>
 
-			<div class="p-voice__detail" id="voice-detail-3" hidden>
-				<div class="p-voice__detail-main">
-					<picture class="p-voice__photo">
-						<source width="933" height="525" media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/voice-1-detail-21376-4701.webp' ); ?>">
-						<img width="404" height="227" src="<?php echo esc_url( $lp_base . 'image/photos/pc/voice-1-detail-21378-7849.webp' ); ?>" alt="" loading="lazy" decoding="async">
-					</picture>
-					<div class="p-voice__detail-body">
-						<p class="p-voice__detail-text">学芸員資格をめざせることに加えて、経済や経営も一緒に学べるので、将来の選択肢を広げられると感じました。</p>
-						<dl class="p-voice__points">
-							<dt>印象に残った授業</dt>
-							<dd>博物館や地域文化を調べる実践的な授業</dd>
-							<dt>入学の決め手</dt>
-							<dd>資格取得と専門分野の学びを両立できること</dd>
-						</dl>
+			<div class="p-voice__detail" id="voice-detail-3">
+				<div class="p-voice__detail-inner">
+					<div class="p-voice__detail-main">
+						<picture class="p-voice__photo">
+							<source width="933" height="525" media="(max-width: 767px)" srcset="<?php echo esc_url( $lp_base . 'image/photos/sp/voice-1-detail-21376-4701.webp' ); ?>">
+							<img width="404" height="227" src="<?php echo esc_url( $lp_base . 'image/photos/pc/voice-1-detail-21378-7849.webp' ); ?>" alt="" loading="lazy" decoding="async">
+						</picture>
+						<div class="p-voice__detail-body">
+							<p class="p-voice__detail-text">学芸員資格をめざせることに加えて、経済や経営も一緒に学べるので、将来の選択肢を広げられると感じました。</p>
+							<dl class="p-voice__points">
+								<dt>印象に残った授業</dt>
+								<dd>博物館や地域文化を調べる実践的な授業</dd>
+								<dt>入学の決め手</dt>
+								<dd>資格取得と専門分野の学びを両立できること</dd>
+							</dl>
+						</div>
 					</div>
-				</div>
-				<div class="p-voice__advice">
-					<p class="p-voice__advice-label">受験生へのひとこと</p>
-					<p class="p-voice__advice-text">やりたいことが決まっている人も、まだ探している人も大丈夫です。気になる分野を実際に見て、自分らしい進路を見つけてください。</p>
+					<div class="p-voice__advice">
+						<p class="p-voice__advice-label">受験生へのひとこと</p>
+						<p class="p-voice__advice-text">やりたいことが決まっている人も、まだ探している人も大丈夫です。気になる分野を実際に見て、自分らしい進路を見つけてください。</p>
+					</div>
 				</div>
 			</div>
 
