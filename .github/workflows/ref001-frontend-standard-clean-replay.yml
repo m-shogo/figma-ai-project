@@ -75,9 +75,11 @@ jobs:
 
       - name: Capture responsive runtime probes
         env:
-          NODE_PATH: /tmp/ref001-clean-playwright/node_modules
           REF001_CAPTURE_DIR: ${{ github.workspace }}/experiments/ref001-frontend-standard-clean-replay/evidence/runtime
-        run: node experiments/ref001-frontend-standard-clean-replay/tools/capture-runtime.mjs
+        run: |
+          cp experiments/ref001-frontend-standard-clean-replay/tools/capture-runtime.mjs /tmp/ref001-clean-playwright/capture-runtime.mjs
+          cd /tmp/ref001-clean-playwright
+          node capture-runtime.mjs
 
       - name: Upload first-pass runtime evidence
         if: always()
