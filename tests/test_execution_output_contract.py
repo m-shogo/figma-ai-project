@@ -1,11 +1,18 @@
 from __future__ import annotations
 
+import tempfile
 import unittest
+from pathlib import Path
+from unittest.mock import patch
 
+import yaml
+
+import scripts.validate_execution_output_contract as output_contract
 from scripts.validate_execution_output_contract import (
     extract_media_query_thresholds,
     validate_css_text,
     validate_output_plan,
+    validate_run_output_contract,
 )
 
 
@@ -98,6 +105,31 @@ class ExecutionOutputContractTests(unittest.TestCase):
             section=section,
         )
         self.assertEqual([], errors)
+
+    def test_page_run_rejects_known_static_html_output_for_php_profile(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            profile = wordpress_profile() | {"profile_id": "IMPL-TEST"}
+            (root / "profile.yaml").write_text(yaml.safe_dump(profile), encoding="utf-8")
+            run = {
+                "coordination": {"implementation_profile_path": "profile.yaml"},
+                "code": {"target_route": "experiments/example/index.html"},
+            }
+            with patch.object(output_contract, "ROOT", root):
+                errors = validate_run_output_contract(run)
+        self.assertTrue(any("contradicts SERVER_RENDERED_PHP" in error for error in errors))
+
+    def test_page_run_does_not_guess_from_url_like_route(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            profile = wordpress_profile() | {"profile_id": "IMPL-TEST"}
+            (root / "profile.yaml").write_text(yaml.safe_dump(profile), encoding="utf-8")
+            run = {
+                "coordination": {"implementation_profile_path": "profile.yaml"},
+                "code": {"target_route": "/"},
+            }
+            with patch.object(output_contract, "ROOT", root):
+                self.assertEqual([], validate_run_output_contract(run))
 
     def test_modern_range_syntax_extracts_threshold(self) -> None:
         self.assertEqual({768.0}, extract_media_query_thresholds("(width >= 768px)"))
