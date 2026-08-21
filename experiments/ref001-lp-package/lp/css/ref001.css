@@ -334,24 +334,28 @@
 	/* --- 吹き出し ---
 	   Figma では MV の「大学の雰囲気を体験！」と
 	   コースの「こんな人にオススメ！」がまったく同じ部品です
-	   （角丸 187×38px ＋ 下向きの三角 13×17px、文字 14px）。
+	   （角丸 187×38px ＋ 下向きの三角、文字 14px）。
 
-	   Figma では同じ形が 2px ずらして2枚重なっていて、
-	   上と右に細い線がのぞく「二重線」になっています。
-	   ここでは drop-shadow で同じ見え方を作っています。
-	   （box-shadow だと四角い影になり、尻尾の形に沿いません） */
+	   Figma の作りは「同じ形が2枚」です。
+	     1枚目 塗り（コースはベージュ / MV は白）
+	     2枚目 輪郭線だけ。1枚目より 2px 右上へずれている
+	   ずれているので線が塗りから少し離れて見え、
+	   全体が「二重線」に見えます。これが Figma どおりの見え方です。
+
+	   角丸と尻尾がつながった形は CSS の border だけでは作れないので、
+	   Figma から書き出した SVG（塗り用と線用）を
+	   型抜き（mask）に使って、色は CSS 側で指定しています。
+	   これなら文言が長くなって2行になっても形が伸びるだけで崩れません。 */
 	.c-bubble {
-		/* 中の色。既定は白ですが、コースの「こんな人にオススメ！」だけ
-		   Figma ではセクションと同じベージュです（水色の箱を切り抜いたように見せるため）。 */
+		/* 中の色。既定は白。コースの「こんな人にオススメ！」だけ
+		   Figma ではセクションと同じベージュです。 */
 		--bubble-bg: var(--color-white);
+		--bubble-line: #555;
 
-		position: relative;   /* 尻尾の位置の基準 */
+		position: relative;
 		width: fit-content;
-		/* Figma: 高さ 38px（文字 14px ＋ 上下 12px）、左右 20px */
-		padding: .857em 1.4286em;
-		border: 1px solid #555;
-		border-radius: 999px;
-		background: var(--bubble-bg);
+		/* Figma: 高さ 47px（文字 14px ＋ 上 12px ＋ 下 12px ＋ 尻尾 9px）、左右 20px */
+		padding: .857em 1.4286em 1.5em;
 		color: var(--color-text);
 		font-size: var(--fs-small);
 		line-height: 1;
@@ -360,30 +364,29 @@
 		   長い文言に変えたときは横へはみ出すより2行になるほうが安全です。 */
 		text-wrap: balance;
 
-		/* 下向きの尻尾。Figma の三角は 13×17px ですが、
-		   角丸から下に出ているのは 9px ぶんだけなので、
-		   見えている V は 幅 7px / 深さ 9px になります。
-		   Figma では枠線が尻尾のところで下へ降りて、
-		   また上がって続く「1本のつながった線」になっています。
+		/* 文字を2枚の形より前に出す */
+		& > span { position: relative; }
 
-		   そこで三角を2枚重ねています。
-		     1枚目（濃い色） 尻尾の形そのもの
-		     2枚目（白）     1.5px 上へずらして内側を塗りつぶす
-		   これで斜めの2辺だけが線として残り、
-		   さらに2枚目が角丸の下線を 13px ぶん隠すので、
-		   線が尻尾の入口で途切れて V へ続いて見えます。 */
-		&::before,
+		/* 1枚目: 塗り */
+		&::before {
+			content: '';
+			position: absolute;
+			inset: 0;
+			background: var(--bubble-bg);
+			-webkit-mask: url('../image/icons/course-recommend-fill.svg') 0 0 / 100% 100% no-repeat;
+			mask: url('../image/icons/course-recommend-fill.svg') 0 0 / 100% 100% no-repeat;
+		}
+
+		/* 2枚目: 輪郭線。1枚目より 2px 右上へずらす（Figma と同じ） */
 		&::after {
 			content: '';
 			position: absolute;
-			top: 100%;
-			left: 50%;
-			translate: -50% 0;
-			border-inline: 3.5px solid transparent;
+			inset: 0;
+			translate: 2px -2px;
+			background: var(--bubble-line);
+			-webkit-mask: url('../image/icons/bubble-outline.svg') 0 0 / 100% 100% no-repeat;
+			mask: url('../image/icons/bubble-outline.svg') 0 0 / 100% 100% no-repeat;
 		}
-
-		&::before { border-top: 9px solid #555; }
-		&::after  { margin-top: -1.5px; border-top: 9px solid var(--bubble-bg); }
 	}
 
 	/* --- 見出しの左右に添える「＼ ／」の斜線 ---
@@ -801,8 +804,9 @@
 		translate: -50% 0;
 		width: max-content;
 		/* 円の幅（100%）＋ 円が画面の端から離れている量（左右で 8vw）まで。
-		   これ以上は広がらないので、文言を長くしても画面からはみ出しません。 */
-		max-width: calc(100% + 8vw);
+		   これ以上は広がらないので、文言を長くしても画面からはみ出しません。
+		   輪郭線が 2px 右へずれているぶんも差し引きます。 */
+		max-width: calc(100% + 8vw - 2px);
 	}
 
 	& .p-mv__oc-title {
