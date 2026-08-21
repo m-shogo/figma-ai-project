@@ -92,6 +92,27 @@ Preferred authoring:
 
 BEM selector自体をDOM構造どおり深くnestすることとは別問題。`.p-block__item`はflat ownerとして保ち、そのownerのresponsive/state/contextだけを近くへ置く。
 
+### Mobile Firstは実装順・QA順まで含む
+
+Mobile FirstはCSS authoring styleだけではない。Company / Project contractが別順序を明示しない限り、Figma-to-Web production executionのdefaultを次で統一する。
+
+```text
+Per section:
+SP evidence
+→ SP implementation
+→ SP visual/runtime stabilization
+→ PC adaptation
+→ PC visual/runtime verification
+
+Final integration:
+SP full-page / relevant interaction verification
+→ PC full-page / relevant interaction verification
+```
+
+PC側の修正がshared CSS、shared component、DOM、JS、asset、token、container等の**SPにも影響し得るowner**を変更した場合、そのsectionまたはfinal integrationの確認順は無効になる。PCだけ再確認して完了せず、影響scopeを**SPから再確認し、その後PC**を確認する。
+
+PC/SPを同時に観測・比較することは禁止しない。重要なのは、実装・stabilization・FINAL acceptanceの基準順を `SP → PC` に固定し、PC修正によるSP regressionを未確認のままFINALにしないこと。
+
 ## 7. Production viewportはEnvironment Contractから解決する
 
 通常mobile visual/regression targetの下限は、**Company PolicyのRequired Environment Profiles / Existing product support / 明示Project contract**から解決する。
