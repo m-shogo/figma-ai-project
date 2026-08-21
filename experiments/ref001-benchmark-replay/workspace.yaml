@@ -18,6 +18,7 @@ include_paths:
 - references/chiba-keizai-sample.remaining-structure-evidence.yaml
 - experiments/ref001-benchmark-replay/implementation-profile.yaml
 - experiments/ref001-benchmark-replay/shared-contract.yaml
+- experiments/ref001-benchmark-replay/FRESH-EXECUTION.md
 - experiments/ref001-benchmark-replay/blank-theme
 - experiments/wordpress-acf-pro-standalone-lp/compose.yml
 - experiments/wordpress-acf-pro-standalone-lp/scripts/setup.sh
