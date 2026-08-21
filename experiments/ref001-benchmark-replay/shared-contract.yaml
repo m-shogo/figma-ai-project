@@ -5,39 +5,6 @@ status: DRAFT
 created_at: '2026-08-21T12:41:00+09:00'
 updated_at: '2026-08-21T12:41:00+09:00'
 
-decision_preflight:
-  status: RESOLVED
-  strategy: COST_BASED
-  block_only_expensive_irreversible_or_cross_cutting: true
-  low_cost_reversible_default_without_owner_wait: true
-  continue_independent_safe_work_while_waiting: true
-  repeated_time_sink_promotes_to_preflight: true
-  items:
-    target_runtime:
-      status: RESOLVED
-      framework_or_template_family: WORDPRESS_CLASSIC_FIXED_PAGE_TEMPLATE
-      production_repo_or_fixture_scope: BENCHMARK_FIXTURE_ONLY
-      evidence:
-      - experiments/ref001-benchmark-replay/implementation-profile.yaml
-    responsive_contract:
-      status: RESOLVED
-      breakpoint_source: OWNER
-      breakpoint_values: [767, 768]
-      figma_acceptance_widths: [375, 1380]
-      runtime_safety_widths: [320, 375, 390, 430, 767, 768, 769, 1024, 1200, 1380]
-      boundary_probe_policy: TEST_BOTH_SIDES_OF_768
-      evidence:
-      - references/chiba-keizai-sample.reference.yaml
-    content_cms_contract:
-      status: RESOLVED
-      code_owned_content: []
-      cms_owned_content:
-      - Benchmark Page content resolved from current authority into ACF fields during the fresh replay.
-      unknown_records_must_not_be_invented: true
-      notes:
-      - Field structure must be derived fresh; old REF ACF schemas are forbidden from the sanitized workspace.
-  unresolved_behavior: No production-theme/company-policy fact may be invented to make the benchmark executable.
-
 company_policy:
   path: ''
   sha256: ''
@@ -56,53 +23,43 @@ implementation_profile:
 
 figma_profile:
   captured_at: '2026-08-21T12:41:00+09:00'
-  source_nodes:
-  - '21384:8173'
-  - '21376:4401'
+  source_nodes: ['21384:8173', '21376:4401']
   components:
     level: PARTIAL
-    evidence:
-    - references/chiba-keizai-sample.reference.yaml
+    evidence: [references/chiba-keizai-sample.reference.yaml]
   variables:
     level: PARTIAL
     modes_observed: [PC, SP]
     aliases_observed: true
-    evidence:
-    - references/chiba-keizai-sample.variable-mode-audit.yaml
+    evidence: [references/chiba-keizai-sample.variable-mode-audit.yaml]
   auto_layout:
     coverage: MIXED
     generation: UNDETERMINED
     grid_observed: false
-    evidence:
-    - references/chiba-keizai-sample.structure-profile.yaml
+    evidence: [references/chiba-keizai-sample.structure-profile.yaml]
   semantic_naming:
     quality: MEDIUM
-    evidence:
-    - references/chiba-keizai-sample.reference.yaml
+    evidence: [references/chiba-keizai-sample.reference.yaml]
   code_connect:
     level: UNDETERMINED
     mapped_components: []
-    evidence:
-    - Figma Code Connect lookup is unavailable under the current plan/seat; absence is not inferred.
+    evidence: [Current Figma plan/seat does not permit a definitive Code Connect lookup.]
   annotations:
     level: PARTIAL
-    evidence:
-    - references/chiba-keizai-sample.reference.yaml
+    evidence: [references/chiba-keizai-sample.reference.yaml]
   assets:
     level: PARTIAL
-    evidence:
-    - Exact asset identity must come from current Figma/repository authority; temporary MCP URLs must not be persisted.
+    evidence: [Exact asset identity must come from current Figma or canonical repository authority.]
   strategy_decisions:
   - Section-first implementation from current Figma authority.
-  - Old REF answer-bearing implementation is excluded until First Pass freeze.
+  - Old REF answer-bearing implementation remains hidden until First Pass freeze.
 
 codebase:
   repository: m-shogo/figma-ai-project
   starting_commit: 9fcb24dde1607f5a3830dfdd869ed318a830e6d9
   framework: WordPress Classic benchmark fixture
   styling_architecture: Plain theme CSS with section-local ownership
-  global_style_paths:
-  - experiments/ref001-benchmark-replay/blank-theme/style.css
+  global_style_paths: [experiments/ref001-benchmark-replay/blank-theme/style.css]
   design_system_paths: []
   token_paths: []
   shared_component_paths: []
@@ -114,7 +71,6 @@ styling:
   css_module_naming: ''
   notes:
   - Intrinsic responsiveness is preferred between the owner-owned mobile/desktop boundary.
-  - No customary or convenience breakpoint may be invented.
 
 human_editability:
   required: true
@@ -135,21 +91,20 @@ human_editability:
 breakpoints:
   mode: GLOBAL_SPECIFIED
   source: OWNER
-  source_refs:
-  - references/chiba-keizai-sample.reference.yaml
+  source_refs: [references/chiba-keizai-sample.reference.yaml]
   values:
   - name: mobile
     media_query: '(max-width: 767px)'
     min_width_px: null
     max_width_px: 767
-    source_ref: owner-resolved REF-001 production breakpoint
-    notes: Figma 375px remains a visual acceptance endpoint, not the breakpoint source.
+    source_ref: owner-resolved REF-001 breakpoint
+    notes: 375px is the mobile visual acceptance frame, not the breakpoint source.
   - name: desktop
     media_query: '(min-width: 768px)'
     min_width_px: 768
     max_width_px: null
-    source_ref: owner-resolved REF-001 production breakpoint
-    notes: Figma 1380px remains a visual acceptance endpoint, not the breakpoint source.
+    source_ref: owner-resolved REF-001 breakpoint
+    notes: 1380px is the desktop visual acceptance frame, not the breakpoint source.
   worker_override: PROPOSE_ONLY
   validation_viewports:
   - {name: mobile-acceptance, width: 375}
@@ -187,17 +142,14 @@ layout:
   spacing_rhythm: []
   auto_layout_generation: UNDETERMINED
   intrinsic_layout_allowed: true
-  notes:
-  - Raw Figma group dimensions are not copied blindly when they contradict responsive intent.
+  notes: []
 
 shared_components: []
-
 assets:
   source_policy: EXACT_WHEN_AVAILABLE
   extraction_method: CURRENT_FIGMA_OR_CANONICAL_REPOSITORY_ASSET
   shared_assets: []
   image_crop_rules: []
-
 accessibility:
   semantic_html: true
   keyboard_baseline: true
@@ -208,12 +160,9 @@ foundation:
   status: BUILT
   base_commit: 9fcb24dde1607f5a3830dfdd869ed318a830e6d9
   commit: 3107f5d46b853cde47610cf16660d8ee729c4053
-  changed_paths:
-  - experiments/ref001-benchmark-replay/blank-theme
-  checks:
-  - Blank theme contains no REF-001 visual CSS/markup answer.
-  notes:
-  - Benchmark foundation is intentionally blank; fresh execution owns the implementation.
+  changed_paths: [experiments/ref001-benchmark-replay/blank-theme]
+  checks: [Blank theme contains no REF-001 visual implementation answer.]
+  notes: [Fresh execution owns all design markup and CSS.]
 
 parallel_execution:
   shared_files_read_only_for_workers: true
@@ -238,11 +187,49 @@ integration:
   - human_editability
   - cms_code_ownership_clarity
 
-unknowns:
-- ACTIVE Company Policy is not present in the current repository; this benchmark Shared Contract therefore remains DRAFT.
-conflicts: []
+environment_contract:
+  status: UNRESOLVED
+  required_profiles: []
+  canonical_profile: ''
+  runtime_detection:
+    strategy: FEATURE_DETECTION_FIRST
+    feature_detection_required: true
+    ua_sniffing_policy: PROHIBITED_UNLESS_REQUIRED_BY_PROVEN_PLATFORM_DEFECT
+    notes: []
+  foundation:
+    reset_source: BENCHMARK_THEME
+    reset_paths: []
+    base_paths: [experiments/ref001-benchmark-replay/blank-theme/style.css]
+    environment_paths: []
+    device_specific_full_reset: false
+    notes: []
+  viewport:
+    meta_policy: STANDARD_RESPONSIVE_VIEWPORT
+    unit_policy: CSS_PX
+    safe_area_policy: USE_WHEN_REQUIRED_BY_UI
+    virtual_keyboard_policy: NOT_APPLICABLE
+    notes: []
+  interaction:
+    smooth_scroll_policy: DO_NOT_INVENT
+    hover_pointer_policy: CAPABILITY_BASED
+    touch_policy: CAPABILITY_BASED
+    scroll_lock_policy: ONLY_WHEN_INTERACTION_REQUIRES
+    reduced_motion_policy: RESPECT_PREFERS_REDUCED_MOTION
+    notes: []
+  effective_overrides: []
+  qa:
+    section_capture: CANONICAL_PLUS_DIFFERENCES
+    boundary_capture: CANONICAL_PLUS_DIFFERENCES
+    full_page_capture: ALL_REQUIRED
+    interaction_qa: ALL_RELEVANT_REQUIRED
+    real_device_policy: BENCHMARK_BROWSER_RUNTIME
+    notes: []
+  conflicts: []
 
+unknowns:
+- ACTIVE Company Policy is not present in the current repository; this Shared Contract remains DRAFT rather than inventing production authority.
+conflicts: []
 freeze:
   ready: false
   frozen_at: ''
-  notes: Benchmark execution decisions are resolved, but the Shared Contract is intentionally not represented as a production-ready frozen contract without legitimate Company Policy authority.
+  notes: Benchmark runtime/profile/breakpoint decisions are resolved, but production-level contract freeze requires legitimate Company Policy authority.
