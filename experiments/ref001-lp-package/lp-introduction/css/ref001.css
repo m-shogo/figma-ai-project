@@ -1408,7 +1408,9 @@
 	   上下は SP 32px → PC 40px。 */
 	& .p-voice__inner {
 		display: grid;
-		gap: 2rem;   /* Figma: 顔写真のかたまりから下の写真まで SP / PC とも 32px */
+		/* 間隔はここでは付けず、下の各ブロックが自分で持ちます。
+		   たたむとき（開閉アニメーション）に間隔も一緒に消えるようにするためです。 */
+		gap: 0;
 		padding-block: clamp(2rem, 1.8134rem + 0.796vw, 2.5rem);
 		padding-inline: clamp(1rem, 0.0672rem + 3.9801vw, 3.5rem);
 	}
@@ -1496,7 +1498,6 @@
 		gap: .5em;
 		justify-self: center;
 		padding: .75em 1em;
-		margin-block: -.75em;
 		color: var(--color-blue);
 		font-size: var(--fs-toggle);
 		line-height: 1;
@@ -1513,9 +1514,66 @@
 	& .p-voice__toggle[aria-expanded="true"] .p-voice__toggle-mark::before { content: '－'; }
 
 	/* --- 開いたときの詳細 --- */
+	/* --- 「もっと見る」の開き方 ---
+	   Figma では、開いた状態の項目にボタンはありません。
+	   なので「開いたらボタンが消えて、詳細がひらく」動きにしています。
+
+	   高さを 0fr → 1fr で変えているのは、
+	   height: auto がアニメーションできないためです。
+	   この書き方なら中身の高さを測らずになめらかに開閉できます。
+	   （中の箱に min-height: 0 と overflow: hidden が要ります） */
+	& .p-voice__more,
 	& .p-voice__detail {
 		display: grid;
+		grid-template-rows: 1fr;
+		padding-top: 2rem;   /* Figma: 上の間隔 32px。閉じるときに一緒に 0 へ */
+		transition: grid-template-rows .6s ease, padding-top .6s ease, opacity .45s ease;
+	}
+
+	/* ボタンは押せる範囲を広げるために上下へ余白を持っています。
+	   そのぶん上の間隔は減らし、下は打ち消して Figma の位置に合わせます。 */
+	& .p-voice__more {
+		font-size: var(--fs-toggle);
+		padding-top: calc(2rem - .75em);
+
+		& > * { margin-bottom: -.75em; }
+	}
+
+	& .p-voice__more > *,
+	& .p-voice__detail-inner {
+		min-height: 0;
+		overflow: hidden;
+	}
+
+	& .p-voice__detail-inner {
+		display: grid;
 		gap: clamp(1.25rem, .8rem + 1.9vw, 1.75rem);
+	}
+
+	/* 閉じている間は詳細をたたむ。
+	   visibility は閉じ切ってから切り替えるので遅らせています
+	   （読み上げやタブ移動の対象から外すため）。 */
+	& .p-voice__item:not(.is-open) .p-voice__detail {
+		grid-template-rows: 0fr;
+		padding-top: 0;
+		opacity: 0;
+		visibility: hidden;
+		transition: grid-template-rows .6s ease, padding-top .6s ease, opacity .3s ease, visibility 0s .6s;
+	}
+
+	/* 開いたらボタンをたたむ */
+	& .p-voice__item.is-open .p-voice__more {
+		grid-template-rows: 0fr;
+		padding-top: 0;
+		opacity: 0;
+		visibility: hidden;
+		transition: grid-template-rows .6s ease, padding-top .6s ease, opacity .3s ease, visibility 0s .6s;
+	}
+
+	/* 動きを減らす設定の人には、アニメーションなしで切り替えます */
+	@media (prefers-reduced-motion: reduce) {
+		& .p-voice__more,
+		& .p-voice__detail { transition: none; }
 	}
 
 	/* SP は「写真 → 本文」の縦積み。
