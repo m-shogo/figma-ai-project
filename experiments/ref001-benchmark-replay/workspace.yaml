@@ -1,0 +1,54 @@
+schema_version: 1
+workspace_id: REF-001-BENCHMARK-CLEAN-REPLAY-V2
+reference_id: REF-001-CHIBA-KEIZAI-SAMPLE
+purpose: FRESH_WORDPRESS_ACF_BENCHMARK_REPLAY
+
+# Strict allowlist: enough authority to make a fresh implementation decision,
+# without any old REF implementation/CSS/ACF answer package.
+include_paths:
+- config
+- docs
+- templates
+- scripts
+- requirements-dev.txt
+- references/chiba-keizai-sample.reference.yaml
+- references/chiba-keizai-sample.structure-profile.yaml
+- references/chiba-keizai-sample.variable-mode-audit.yaml
+- references/chiba-keizai-sample.courses-structure-evidence.yaml
+- references/chiba-keizai-sample.remaining-structure-evidence.yaml
+- experiments/ref001-benchmark-replay/implementation-profile.yaml
+- experiments/ref001-benchmark-replay/shared-contract.yaml
+- experiments/ref001-benchmark-replay/blank-theme
+- experiments/wordpress-acf-pro-standalone-lp/compose.yml
+- experiments/wordpress-acf-pro-standalone-lp/scripts/setup.sh
+- .github/workflows/wordpress-acf-pro-standalone-lp.yml
+
+# Generic execution/build tools are visible. REF-specific repair/build scripts and
+# old learning-fixture validators are answer-bearing and remain hidden.
+exclude_globs:
+- scripts/*ref001*
+- scripts/**/*ref001*
+- scripts/validate_wordpress_learning_fixture.py
+- scripts/__pycache__/*
+- scripts/**/__pycache__/*
+
+# Defense in depth. Broadening include_paths later must not expose historical
+# solutions, repaired CSS, old ACF structures, or comparison scores.
+forbidden_globs:
+- experiments/ref001-wordpress-acf/*
+- experiments/ref001-wordpress-acf/**/*
+- experiments/ref001-lp-package/*
+- experiments/ref001-lp-package/**/*
+- experiments/ref001-blind-clean-20260812/*
+- experiments/ref001-blind-clean-20260812/**/*
+- experiments/ref001-frontend-standard-clean-replay/*
+- experiments/ref001-frontend-standard-clean-replay/**/*
+- experiments/ref001-v3/*
+- experiments/ref001-v3/**/*
+- implementation/theme/*
+- implementation/theme/**/*
+- research/figma-web-friction/*
+- research/figma-web-friction/**/*
+- scripts/validate_wordpress_learning_fixture.py
+- tests/test_ref001_*
+- tests/**/test_ref001_*
