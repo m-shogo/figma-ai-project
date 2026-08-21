@@ -15,7 +15,7 @@ company_policy:
 
 implementation_profile:
   path: experiments/ref001-benchmark-replay/implementation-profile.yaml
-  sha256: PENDING_BIND
+  sha256: 81d2b1de44d65b5475959bae0240941c76dee27a7e90a663fc55112dce122079
   profile_id: IMPL-REF001-BENCHMARK-WORDPRESS-ACF
   status: BOUND
   family: WORDPRESS
