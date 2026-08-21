@@ -1,6 +1,6 @@
 schema_version: 1
 run_id: RUN-REF001-FRONTEND-STANDARD-CLEAN-REPLAY-20260821-A
-status: IN_PROGRESS
+status: FIRST_PASS_FROZEN
 purpose: >-
   Validate whether the current Frontend Implementation Standard can reproduce REF-001
   from current Figma authority + canonical project rules without reusing old REF-specific
@@ -41,26 +41,34 @@ figma:
     - Variables
     - component evidence
     - masks/exact asset evidence
+    - annotations
     - motion/prototype evidence where relevant
+  interaction_evidence:
+    student_voice_motion_nodes: 0
+    messages_motion_nodes: 0
+    policy: Do not invent accordion/carousel behavior without authority evidence.
 sections:
-  - { id: header, pc: "21378:8066", sp: "21376:4918", status: AUTHORITY_CAPTURED }
-  - { id: main-visual, pc: "21378:8032", sp: "21376:4886", status: AUTHORITY_CAPTURED }
-  - { id: reason, pc: "21378:7999", sp: "21376:4852", status: AUTHORITY_CAPTURED }
-  - { id: education, pc: "21378:7868", sp: "21376:4720", status: PENDING_AUTHORITY }
-  - { id: cta-after-education, pc: "21378:7867", sp: "21376:4719", status: PENDING_AUTHORITY }
-  - { id: student-voice, pc: "21378:7766", sp: "21376:4650", status: PENDING_AUTHORITY }
-  - { id: messages, pc: "21378:7746", sp: "21376:4629", status: PENDING_AUTHORITY }
-  - { id: cta-before-courses, pc: "21378:7730", sp: "21376:4628", status: PENDING_AUTHORITY }
-  - { id: courses, pc: "21378:7505", sp: "21376:4403", status: PENDING_AUTHORITY }
-  - { id: links, pc: "21378:7458", sp: "21376:4919", status: PENDING_AUTHORITY }
-  - { id: cta-value, pc: "21378:7481", sp: "21376:4942", status: PENDING_AUTHORITY }
-  - { id: footer, pc: "21378:7457", sp: "21376:4402", status: PENDING_AUTHORITY }
+  - { id: header, pc: "21378:8066", sp: "21376:4918", status: AUTHORITY_CAPTURED_AND_IMPLEMENTED }
+  - { id: main-visual, pc: "21378:8032", sp: "21376:4886", status: AUTHORITY_CAPTURED_AND_IMPLEMENTED }
+  - { id: reason, pc: "21378:7999", sp: "21376:4852", status: AUTHORITY_CAPTURED_AND_IMPLEMENTED }
+  - { id: education, pc: "21378:7868", sp: "21376:4720", status: AUTHORITY_CAPTURED_AND_IMPLEMENTED }
+  - { id: cta-after-education, pc: "21378:7867", sp: "21376:4719", status: AUTHORITY_CAPTURED_AND_IMPLEMENTED }
+  - { id: student-voice, pc: "21378:7766", sp: "21376:4650", status: AUTHORITY_CAPTURED_AND_IMPLEMENTED }
+  - { id: messages, pc: "21378:7746", sp: "21376:4629", status: AUTHORITY_CAPTURED_AND_IMPLEMENTED }
+  - { id: cta-before-courses, pc: "21378:7730", sp: "21376:4628", status: AUTHORITY_CAPTURED_AND_IMPLEMENTED }
+  - { id: courses, pc: "21378:7505", sp: "21376:4403", status: AUTHORITY_CAPTURED_AND_IMPLEMENTED }
+  - { id: links, pc: "21378:7458", sp: "21376:4919", status: AUTHORITY_CAPTURED_AND_IMPLEMENTED }
+  - { id: cta-value, pc: "21378:7481", sp: "21376:4942", status: AUTHORITY_CAPTURED_AND_IMPLEMENTED }
+  - { id: footer, pc: "21378:7457", sp: "21376:4402", status: AUTHORITY_CAPTURED_AND_IMPLEMENTED }
 asset_transfer:
   discovery: PASS
   byte_transfer: BLOCKED_BY_EXECUTION_NETWORK
   existing_canonical_helper: scripts/ingest_figma_mcp_asset.py
   policy: docs/figma-asset-intake.md
   rule: Never commit short-lived Figma MCP URLs.
+  reusable_formal_assets:
+    - existing MV decorative SVGs
+    - existing seven course icon SVGs
   consequence: >-
     Continue semantic/layout implementation and non-asset runtime QA, but do not claim
     final visual/asset fidelity until exact raster bytes are materialized on a network-enabled runner.
@@ -72,27 +80,35 @@ contamination_log:
   - type: ROOT_README_SUMMARY
     detail: >-
       Root README was opened as project baseline and exposed historical clean-replay aggregate scores.
-      Those scores are quarantined and must not be used for implementation/repair decisions before replay freeze.
+      Those scores were quarantined and were not used for implementation/repair decisions before replay freeze.
+first_pass:
+  frozen: true
+  implementation_commit: b6d6e3dfe49c488fbf5c128e6b901249abf08de5
+  comparison_reads_before_freeze: false
+  visual_accuracy: UNMEASURED_PENDING_RUNTIME_AND_ASSET_LIMITATION
 metrics:
-  first_pass_frozen: false
+  first_pass_frozen: true
   repair_rounds: 0
-  strategy_reversals: 0
+  strategy_reversals: 1
+  strategy_reversal_note: >-
+    Direct temporary Figma asset download was abandoned after execution-network failure;
+    the canonical repo asset-intake route was selected instead without adding a bridge.
   css_postfix_patch_count: 0
-  important_count: null
-  unnecessary_absolute_count: null
-  unnecessary_fixed_dimension_count: null
-  duplicated_css_count: null
-  runtime_errors: null
-  console_errors: null
-  horizontal_overflow_failures: null
-  interaction_correctness: UNMEASURED
+  important_count: 0
+  unnecessary_absolute_count: UNMEASURED
+  unnecessary_fixed_dimension_count: UNMEASURED
+  duplicated_css_count: UNMEASURED
+  runtime_errors: UNMEASURED
+  console_errors: UNMEASURED
+  horizontal_overflow_failures: UNMEASURED
+  interaction_correctness: AUTHORITY_STATIC_NO_MOTION_EVIDENCE
   asset_fidelity: BLOCKED_BY_EXECUTION_NETWORK
   typography_fidelity: UNMEASURED
   semantic_quality: UNMEASURED
   human_repairability: UNMEASURED
-  implementation_time_minutes: null
-  repair_time_minutes: null
-  reuse_rate: null
+  implementation_time_minutes: UNMEASURED
+  repair_time_minutes: 0
+  reuse_rate: UNMEASURED
 comparison:
   allowed_after_first_pass_freeze: true
   old_ref_read: false
