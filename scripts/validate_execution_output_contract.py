@@ -101,6 +101,9 @@ def approved_exception_thresholds(section: dict[str, Any], contract: dict[str, A
             continue
         if proposal.get("source") != "OWNER" or proposal.get("status") not in {"APPROVED", "OWNER_APPROVED"}:
             continue
+        evidence = proposal.get("evidence", [])
+        if not isinstance(evidence, list) or not evidence:
+            continue
         for field in ("threshold_px", "min_width_px", "max_width_px"):
             raw = proposal.get(field)
             if isinstance(raw, (int, float)) and not isinstance(raw, bool):
