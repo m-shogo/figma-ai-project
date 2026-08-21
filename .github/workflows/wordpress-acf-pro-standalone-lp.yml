@@ -4,6 +4,12 @@ on:
   pull_request:
     paths:
       - 'experiments/wordpress-acf-pro-standalone-lp/**'
+      - 'schemas/wordpress-acf-delivery.schema.json'
+      - 'scripts/validate_wordpress_acf_delivery.py'
+      - 'tests/test_wordpress_acf_delivery_gate.py'
+      - 'templates/implementation-profile.yaml'
+      - 'docs/frontend-wordpress-acf-delivery.md'
+      - 'research/ref001-clean-replay-post-freeze-comparison-20260821.md'
       - '.github/workflows/wordpress-acf-pro-standalone-lp.yml'
   workflow_dispatch:
 
@@ -18,12 +24,12 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - name: Guard branch scope against so
+      - name: Guard delivery-standard branch scope against so
         run: |
           git fetch origin so --depth=1
           changed="$(git diff --name-only origin/so...HEAD)"
           printf '%s\n' "$changed"
-          bad="$(printf '%s\n' "$changed" | grep -Ev '^(experiments/wordpress-acf-pro-standalone-lp/|\.github/workflows/wordpress-acf-pro-standalone-lp\.yml$)' || true)"
+          bad="$(printf '%s\n' "$changed" | grep -Ev '^(experiments/wordpress-acf-pro-standalone-lp/|schemas/wordpress-acf-delivery\.schema\.json$|scripts/validate_wordpress_acf_delivery\.py$|tests/test_wordpress_acf_delivery_gate\.py$|templates/implementation-profile\.yaml$|docs/frontend-wordpress-acf-delivery\.md$|research/ref001-clean-replay-post-freeze-comparison-20260821\.md$|\.github/workflows/wordpress-acf-pro-standalone-lp\.yml$)' || true)"
           if [ -n "$bad" ]; then
             echo "FAIL out-of-scope files changed:"
             printf '%s\n' "$bad"
@@ -85,13 +91,11 @@ jobs:
               bash -c 'source "$RUNTIME_SCRIPT"; printf "%s|%s|%s" "$THEME_SLUG" "$THEME_IS_SAMPLE" "$THEME_SOURCE_DIR"'
           }
 
-          # 1. Nothing dropped in: the disposable sample stays the default.
           IFS='|' read -r slug is_sample source <<< "$(resolve)"
           [[ "$slug" == "standalone-lp-sample" ]]
           [[ "$is_sample" == "1" ]]
           [[ "$source" == "$PWD/theme/standalone-lp-sample" ]]
 
-          # 2. A supplied theme is hosted without editing the runtime.
           supplied="$RUNNER_TEMP/supplied-theme"
           rm -rf "$supplied"; mkdir -p "$supplied"
           printf '/*\nTheme Name: Supplied Contract Probe\n*/\n' > "$supplied/style.css"
@@ -100,7 +104,6 @@ jobs:
           [[ "$is_sample" == "0" ]]
           [[ "$source" == "$supplied" ]]
 
-          # 3. theme-dropin/ auto-resolves a single dropped theme.
           rm -rf theme-dropin/probe-theme
           mkdir -p theme-dropin/probe-theme
           printf '/*\nTheme Name: Dropin Contract Probe\n*/\n' > theme-dropin/probe-theme/style.css
@@ -108,11 +111,9 @@ jobs:
           [[ "$slug" == "probe-theme" ]]
           [[ "$is_sample" == "0" ]]
 
-          # 4. Compose mounts the resolved theme at the resolved slug.
           THEME_SOURCE_DIR="$supplied" THEME_SLUG=budokan docker compose config \
             | grep -q '/var/www/html/wp-content/themes/budokan'
 
-          # 5. Ambiguous and invalid input fail closed instead of guessing.
           mkdir -p theme-dropin/second-theme
           printf '/*\nTheme Name: Second\n*/\n' > theme-dropin/second-theme/style.css
           if resolve >/dev/null 2>&1; then echo 'FAIL two drop-in themes must not resolve'; exit 1; fi
@@ -125,8 +126,6 @@ jobs:
           if THEME_SLUG='../escape' resolve >/dev/null 2>&1; then echo 'FAIL unsafe THEME_SLUG must not resolve'; exit 1; fi
 
           rm -rf theme-dropin/probe-theme "$supplied"
-
-          # 6. A supplied theme must never become committable.
           git check-ignore -q theme-dropin/any-client-theme
           echo 'PASS supplied-theme drop-in contract'
       - name: Node syntax
@@ -145,6 +144,10 @@ jobs:
           node tests/visual-diff.mjs
       - name: Validate portable ACF export
         run: python scripts/validate_acf_export.py experiments/wordpress-acf-pro-standalone-lp/acf-export.json
+      - name: Validate fresh-delivery schema and static contract
+        run: |
+          python scripts/validate_wordpress_acf_delivery.py
+          python -m unittest tests.test_wordpress_acf_delivery_gate
       - name: Validate fixture contracts and security boundary
         run: python experiments/wordpress-acf-pro-standalone-lp/tests/validate-fixtures.py
 
@@ -195,4 +198,44 @@ jobs:
           name: wordpress-acf-pro-standalone-lp-runtime
           path: experiments/wordpress-acf-pro-standalone-lp/.runtime/qa
           if-no-files-found: warn
+          retention-days: 14
+
+  fresh-delivery-e2e-conditional:
+    needs: [light-validation, wordpress-runtime-smoke]
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v6
+      - name: Resolve ACF PRO Fresh Delivery availability
+        id: gate
+        env:
+          ACF_PRO_LICENSE_KEY: ${{ secrets.ACF_PRO_LICENSE_KEY }}
+        run: |
+          if [ -z "$ACF_PRO_LICENSE_KEY" ]; then
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "## FRESH DELIVERY E2E: SKIP_NO_ACF_PRO_LICENSE_KEY" >> "$GITHUB_STEP_SUMMARY"
+            echo "Fresh reconstruction was not falsely marked PASS because licensed ACF PRO was unavailable." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+            echo "## FRESH DELIVERY E2E: ACF PRO license key available" >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Reconstruct delivery on a second fresh WordPress database
+        if: steps.gate.outputs.enabled == 'true'
+        working-directory: experiments/wordpress-acf-pro-standalone-lp
+        env:
+          CI: 'true'
+          ACF_PRO_LICENSE_KEY: ${{ secrets.ACF_PRO_LICENSE_KEY }}
+        run: make delivery-qa
+      - name: Record Fresh Delivery PASS
+        if: steps.gate.outputs.enabled == 'true' && success()
+        run: echo "FRESH DELIVERY E2E: PASS" >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload fresh-delivery evidence
+        if: steps.gate.outputs.enabled == 'true' && hashFiles('experiments/wordpress-acf-pro-standalone-lp/.runtime/delivery-qa/**') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: wordpress-acf-pro-fresh-delivery
+          path: |
+            experiments/wordpress-acf-pro-standalone-lp/.runtime/delivery-qa
+            experiments/wordpress-acf-pro-standalone-lp/.runtime/qa
+          if-no-files-found: error
           retention-days: 14
