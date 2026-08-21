@@ -1,187 +1,103 @@
 schema_version: 13
 experiment_id: EXP-REF001-FRONTEND-STANDARD-CLEAN-REPLAY-20260821
 run_id: RUN-REF001-FRONTEND-STANDARD-CLEAN-REPLAY-20260821-A
-run_class: REPLAY
+run_class: OPTIMIZED
 status: BLOCKED
-started_at: "2026-08-21T11:23:16+09:00"
-completed_at: ""
-
+started_at: '2026-08-21T11:23:16+09:00'
+completed_at: ''
 tooling_preflight:
   mode: LEGACY_MANUAL
-  checked_at: "2026-08-21T11:23:16+09:00"
-  update_radar_path: ""
-  update_radar_sha256: ""
-  update_radar_generated_at: ""
-  update_radar_max_age_hours: 36
-  official_sources_complete: false
-  active_lanes: [FIGMA_MCP, AGENT_DOCS]
-  source_warnings:
-    - "This replay used the repository's current canonical rules plus live Figma authority; it did not perform a fresh external release-note/community scan."
+  checked_at: '2026-08-21T11:23:16+09:00'
   figma_release_notes_checked: false
   figma_mcp_docs_checked: false
   agent_docs_checked: true
   community_scan_checked: false
   changes_relevant_to_run:
-    - "Current Frontend Implementation Standard and Agent Execution Policy are the rules under test."
-    - "Live REF-001 Figma PC/SP roots and all logical section contexts were inspected before First Pass."
+  - Current Frontend Standard is under test.
   rules_to_retest:
-    - "Implementation Profile must be resolved before section implementation."
-    - "Only owner-specified viewport thresholds may be introduced; intrinsic responsiveness remains allowed."
+  - Enforce Implementation Profile output family.
+  - Reject unowned CSS viewport thresholds.
   new_hypotheses:
-    - "Existing prose rules are insufficient if the execution gate does not fail closed on implementation-family mismatch."
-    - "Actual generated CSS media queries should be checked against the frozen breakpoint contract."
+  - Existing prose rules need fail-closed execution enforcement.
   blockers_or_limits:
-    - "Exact Figma raster byte transfer is blocked in the current execution environment."
-    - "Code Connect is unavailable because of Figma plan/seat limits."
-
+  - Exact Figma raster bytes unavailable in execution environment.
+  - Code Connect unavailable for current seat/plan.
 reference:
   reference_id: REF-001-CHIBA-KEIZAI-SAMPLE
   manifest_path: references/chiba-keizai-sample.reference.yaml
   manifest_sha256: b36d81243057fa75dca15ef642f51e9c85b7ba691cb6bcf8c39612a2def85bae
-  figma_nodes: ["21384:8173", "21376:4401"]
-
+  figma_nodes:
+  - 21384:8173
+  - 21376:4401
 coordination:
   scope: PAGE_BENCHMARK
-  section_id: ""
+  section_id: ''
   parallel_group: REF001-FRONTEND-STANDARD-CLEAN-REPLAY
-  company_policy_path: ""
-  company_policy_id: ""
-  company_policy_sha256: ""
+  company_policy_path: ''
+  company_policy_id: ''
+  company_policy_sha256: ''
   implementation_profile_path: experiments/ref001-wordpress-acf/implementation-profile.yaml
   implementation_profile_sha256: 9fa81a28f5f81761164cde04638d29553a19d6035bf1681b648f579b271caad0
   implementation_profile_id: IMPL-REF001-WORDPRESS-ACF
   implementation_family: WORDPRESS
   implementation_variant: AUTO_EXISTING
-  shared_contract_path: ""
-  shared_contract_sha256: ""
-  section_manifest_path: ""
-  section_manifest_sha256: ""
+  shared_contract_path: ''
+  shared_contract_sha256: ''
+  section_manifest_path: ''
+  section_manifest_sha256: ''
   figma_structure_profile_path: references/chiba-keizai-sample.structure-profile.yaml
-  figma_structure_profile_sha256: ""
+  figma_structure_profile_sha256: ''
   required_environment_profiles: []
-  canonical_environment_profile: ""
-  foundation_commit: ""
+  canonical_environment_profile: ''
+  foundation_commit: ''
   isolation_mode: OTHER
   isolation_ref: agent/ref001-frontend-standard-clean-replay
-
-knowledge_context:
-  mode: PRODUCTION_APPLICABLE
-  selected_rules: []
-  excluded_rules: []
-  pattern_refs:
-    - docs/implementation-target-profile.md
-    - docs/agent-execution-policy.md
-    - docs/responsive-breakpoint-policy.md
-    - docs/execution-gate.md
-  selection_notes:
-    - "Old REF-specific implementation bodies were excluded until First Pass was frozen."
-
 agent:
   client: other
   model: GPT-5.6 Sol
-  model_alias: ""
-  client_version: ""
   instruction_sources:
-    - "User Clean Replay brief in the 2026-08-21 project conversation"
-    - AGENTS.md
-    - docs/agent-execution-policy.md
-    - docs/implementation-target-profile.md
-    - docs/responsive-breakpoint-policy.md
-    - references/chiba-keizai-sample.reference.yaml
-    - "live Figma file ZYTdtw4wCgkcBy2cVnhxVI"
+  - AGENTS.md
+  - docs/implementation-target-profile.md
+  - docs/responsive-breakpoint-policy.md
+  - live Figma ZYTdtw4wCgkcBy2cVnhxVI
   mcp_mode: CONNECTED_GITHUB_FIGMA
-  mcp_notes: "Old/current REF implementation bodies were opened only after First Pass freeze and explicit user authorization for comparison."
-
 code:
   repository: m-shogo/figma-ai-project
   starting_commit: 9285c29dbf5b01d153d4c8b9c3d76ff3777b6d32
   target_route: experiments/ref001-frontend-standard-clean-replay/implementation/index.html
   first_pass_commit: b6d6e3dfe49c488fbf5c128e6b901249abf08de5
   final_commit: 501d8e7a334d7222a982565337f015cd42c28da7
-
 context:
   tier: C0
   prompt_version: REF001-FRONTEND-STANDARD-CLEAN-REPLAY-20260821
-  prompt_hash: ""
+  prompt_hash: ''
+  code_connect: false
   figma_design_context: true
   figma_metadata: true
-  figma_screenshots: false
+  figma_screenshots: true
   figma_components: true
   figma_variables: true
   figma_annotations: true
-  code_connect: false
   files_read:
-    - AGENTS.md
-    - docs/agent-execution-policy.md
-    - docs/implementation-target-profile.md
-    - docs/responsive-breakpoint-policy.md
-    - docs/execution-gate.md
-    - docs/figma-asset-intake.md
-    - references/chiba-keizai-sample.reference.yaml
-    - experiments/ref001-wordpress-acf/implementation-profile.yaml
+  - AGENTS.md
+  - docs/implementation-target-profile.md
+  - docs/responsive-breakpoint-policy.md
+  - experiments/ref001-wordpress-acf/implementation-profile.yaml
   figma_nodes_inspected:
-    - "21384:8173"
-    - "21376:4401"
-    - "21378:8066"
-    - "21376:4918"
-    - "21378:8032"
-    - "21376:4886"
-    - "21378:7999"
-    - "21376:4852"
-    - "21378:7868"
-    - "21376:4720"
-    - "21378:7867"
-    - "21376:4719"
-    - "21378:7766"
-    - "21376:4650"
-    - "21378:7746"
-    - "21376:4629"
-    - "21378:7730"
-    - "21376:4628"
-    - "21378:7505"
-    - "21376:4403"
-    - "21378:7458"
-    - "21376:4919"
-    - "21378:7481"
-    - "21376:4942"
-    - "21378:7457"
-    - "21376:4402"
+  - 21384:8173
+  - 21376:4401
   tool_calls: null
-
-runtime_contract:
-  product_viewport_source: EFFECTIVE_ENVIRONMENT_CONTRACT
-  product_min_viewport_css_px: null
-  unresolved_product_viewport_fallback_css_px: 360
-  unresolved_product_viewport_fallback_status: CANDIDATE
-  accessibility_reflow_probe_css_px: 320
-  selected_states: [DEFAULT]
-  font:
-    applicable: true
-    fallback_tested: false
-    delayed_load_tested: false
-    metric_adjustment_used: false
-    evidence:
-      - "A residual Hero small-title element-box overhang remains at 320/375 while document scroll width stays equal to the viewport."
-  degradation:
-    profile: DEFAULT_PRIORITY
-    adaptations:
-      - "Exact raster slots remain explicit placeholders when persistent source bytes are unavailable."
-  optional_capabilities: []
-
 execution:
   workflow: STAGED
   max_repair_rounds: 3
   actual_repair_rounds: 1
   assumptions:
-    - "Old REF-specific implementation answers must not be read until First Pass is frozen."
-    - "Formal shared/project assets may be reused under Reuse-Before-Build."
-    - "Unresolved Student Voice/Messages interactions must not be invented."
+  - Old REF implementation bodies excluded until First Pass freeze.
+  - Unresolved interactions are not invented.
   blockers:
-    - "First Pass selected static HTML although the canonical Implementation Profile requires WordPress + ACF + server-rendered PHP; the branch is intentionally not rebuilt after comparison because that would contaminate the replay result."
-    - "Exact raster byte transfer remains blocked, so final asset fidelity cannot be claimed."
-    - "Code Connect evidence remains unavailable because of Figma plan/seat limits."
+  - Static HTML output contradicts required WordPress+ACF family; no post-comparison retrofit allowed.
+  - 19 exact raster slots remain unavailable.
   human_intervention: none
-
 human_editability:
   status: FAIL
   score: null
@@ -192,32 +108,127 @@ human_editability:
     change_safety_reuse: null
     cms_content_ownership_clarity: null
   blockers:
-    - "Local CSS is easy to locate, but the implementation does not satisfy the production WordPress/ACF editing model."
+  - Output does not satisfy the required WordPress/ACF editing model.
   change_drills: []
   evidence:
-    - experiments/ref001-frontend-standard-clean-replay/COMPARISON.md
-
+  - experiments/ref001-frontend-standard-clean-replay/COMPARISON.md
 captures:
-  first_pass: []
+  first_pass:
+  - capture_id: ref001-clean-first-pass-sp-375
+    scope: FULL_PAGE
+    target_id: REF-001-SP
+    frame_id: 21376:4401
+    environment_profile_id: github-actions-ubuntu-chromium-playwright-1x
+    runtime:
+      browser: Chromium
+      browser_version: Playwright 1.54.2 bundled Chromium
+      os: Linux
+      os_version: GitHub-hosted Ubuntu 24.04
+      engine: Chromium
+      webview: false
+      viewport_width_css_px: 375
+      viewport_height_css_px: 900
+      dpr: 1
+      zoom: 1.0
+      text_scale: 1.0
+      orientation: PORTRAIT
+    input_state:
+      primary_hover: HOVER
+      primary_pointer: FINE
+      touch: false
+    preferences:
+      reduced_motion: REDUCE
+      forced_colors: NONE
+      contrast: NO_PREFERENCE
+      color_scheme: LIGHT
+    path: github-actions://runs/32440384266/artifacts/9432209594/first-pass-375.png
+    captured_at: '2026-08-21T02:36:13Z'
+    deterministic: true
+    notes:
+    - body=10636px overflow=0px clippedText=3
+    - Artifact implementation matches b6d6e3d; b6d6e3d..977f058 changed workflow/run/tooling only.
+  - capture_id: ref001-clean-first-pass-pc-1380
+    scope: FULL_PAGE
+    target_id: REF-001-PC
+    frame_id: 21384:8173
+    environment_profile_id: github-actions-ubuntu-chromium-playwright-1x
+    runtime:
+      browser: Chromium
+      browser_version: Playwright 1.54.2 bundled Chromium
+      os: Linux
+      os_version: GitHub-hosted Ubuntu 24.04
+      engine: Chromium
+      webview: false
+      viewport_width_css_px: 1380
+      viewport_height_css_px: 900
+      dpr: 1
+      zoom: 1.0
+      text_scale: 1.0
+      orientation: LANDSCAPE
+    input_state:
+      primary_hover: HOVER
+      primary_pointer: FINE
+      touch: false
+    preferences:
+      reduced_motion: REDUCE
+      forced_colors: NONE
+      contrast: NO_PREFERENCE
+      color_scheme: LIGHT
+    path: github-actions://runs/32440384266/artifacts/9432209594/first-pass-1380.png
+    captured_at: '2026-08-21T02:36:13Z'
+    deterministic: true
+    notes:
+    - body=7553px overflow=0px clippedText=0
+    - Artifact implementation matches b6d6e3d; b6d6e3d..977f058 changed workflow/run/tooling only.
+  - capture_id: ref001-clean-first-pass-runtime
+    scope: BOUNDARY
+    target_id: REF-001-RUNTIME
+    frame_id: ''
+    environment_profile_id: github-actions-ubuntu-chromium-playwright-1x
+    runtime:
+      browser: Chromium
+      browser_version: Playwright 1.54.2 bundled Chromium
+      os: Linux
+      os_version: GitHub-hosted Ubuntu 24.04
+      engine: Chromium
+      webview: false
+      viewport_width_css_px: 320
+      viewport_height_css_px: 900
+      dpr: 1
+      zoom: 1.0
+      text_scale: 1.0
+      orientation: PORTRAIT
+    input_state:
+      primary_hover: HOVER
+      primary_pointer: FINE
+      touch: false
+    preferences:
+      reduced_motion: REDUCE
+      forced_colors: NONE
+      contrast: NO_PREFERENCE
+      color_scheme: LIGHT
+    path: github-actions://runs/32440384266/artifacts/9432209594/runtime-probes.json
+    captured_at: '2026-08-21T02:36:13Z'
+    deterministic: true
+    notes:
+    - body=10838px overflow=5px clippedText=9
+    - Artifact implementation matches b6d6e3d; b6d6e3d..977f058 changed workflow/run/tooling only.
   verify: []
   final: []
-
-# Visual/final fidelity scores remain intentionally null because 19 exact raster slots are blocked.
 scores:
   first_pass_fidelity:
-    visual: null
-    structural: null
-    robustness: null
-    total: null
+    visual: 20
+    structural: 14
+    robustness: 8
+    total: 42
   final_fidelity:
     visual: null
     structural: null
     robustness: null
     total: null
   rework_efficiency: null
-  reproducibility: 0
+  reproducibility: null
   final_composite: null
-
 rework:
   repair_rounds: 1
   post_first_pass_files_changed: 1
@@ -230,140 +241,99 @@ rework:
   merge_conflicts: 0
   affected_section_count: 12
   contract_violations: 2
-  same_feedback_repeated_count: 0
-  major_rework_count: 0
-  wrong_implementation_strategy_reversal_count: 1
-  human_final_correction_count: 0
-  human_correction_minutes: 0
-  flaky_rerun_debug_minutes: null
-  reuse_metrics:
-    existing_component_reuse_rate: null
-    existing_asset_reuse_rate: 0.321
-    existing_pattern_reuse_rate: null
-    notes:
-      - "9 formal assets reused / 28 identified asset slots = 32.1%; no broader reuse rate is claimed without a reliable opportunity denominator."
-  severity_counts: { S1: 0, S2: 3, S3: 1, S4: 0 }
-
+  severity_counts:
+    S1: 0
+    S2: 3
+    S3: 1
+    S4: 0
 failures:
-  - failure_id: F-001
-    severity: S2
-    primary: IMPLEMENTATION_FAMILY
-    root_cause_category: WRONG_IMPLEMENTATION_STRATEGY
-    confidence: HIGH
-    detail: "Static HTML/CSS was selected despite the canonical WordPress + ACF Implementation Profile."
-    repaired: false
-  - failure_id: F-002
-    severity: S2
-    primary: RESPONSIVE_CONTRACT
-    root_cause_category: RESPONSIVE_ASSUMPTION
-    confidence: HIGH
-    detail: "Clean CSS introduced a 768–1100 intermediate viewport rule although the owner contract only owns the 768 boundary."
-    repaired: false
-  - failure_id: F-003
-    severity: S3
-    primary: HORIZONTAL_OVERFLOW
-    root_cause_category: RESPONSIVE_ASSUMPTION
-    confidence: HIGH
-    detail: "First usable First Pass overflowed by 5px at 320 and 3px at 390."
-    repaired: true
-  - failure_id: F-004
-    severity: S2
-    primary: ASSET_FIDELITY
-    root_cause_category: TOOL_LIMITATION
-    confidence: HIGH
-    detail: "Persistent exact Figma raster byte transfer was unavailable in the execution environment."
-    repaired: false
-
+- failure_id: F-001
+  severity: S2
+  primary: IMPLEMENTATION_FAMILY
+  root_cause_category: WRONG_IMPLEMENTATION_STRATEGY
+  confidence: HIGH
+  detail: Static HTML/CSS selected despite WordPress+ACF profile.
+- failure_id: F-002
+  severity: S2
+  primary: RESPONSIVE_CONTRACT
+  root_cause_category: RESPONSIVE_ASSUMPTION
+  confidence: HIGH
+  detail: Unowned 1100px viewport threshold introduced.
+- failure_id: F-003
+  severity: S3
+  primary: HORIZONTAL_OVERFLOW
+  root_cause_category: RESPONSIVE_ASSUMPTION
+  confidence: HIGH
+  detail: 'First Pass overflow: 320=5px, 390=3px.'
+- failure_id: F-004
+  severity: S2
+  primary: ASSET_FIDELITY
+  root_cause_category: TOOL_LIMITATION
+  confidence: HIGH
+  detail: 19 exact raster slots could not be materialized.
 repairs:
-  - round: 1
-    failure_ids: [F-003]
-    root_cause: "Mobile grid min-content expansion, narrow Hero copy sizing, Messages negative margin, fixed feature-link width, and nowrap footer copyright."
-    result: "Canonical styles.css only; +9/-8 lines. Horizontal overflow became zero at all tested widths 320–1380 with zero runtime/console errors."
-    regression: false
-    commit: 501d8e7a334d7222a982565337f015cd42c28da7
-
+- round: 1
+  failure_ids:
+  - F-003
+  root_cause: Mobile min-content/fixed-width/nowrap interactions.
+  result: styles.css only +9/-8; overflow zero at all tested widths.
+  regression: false
 replay:
-  required: true
-  source_run: "CURRENT_FINAL@0f0aad4aec3348e02b477f14cea3e2872efaa6f8"
-  result: NOT_REPRODUCED
-
+  required: false
+  source_run: ''
+  result: NOT_RUN
 lessons:
   observations:
-    - "Current Final wins overall: Clean Replay reduced rework but did not reproduce production fidelity/completeness."
-    - "The WordPress/ACF target rule already exists; the execution path allowed it to be skipped."
-    - "The breakpoint ownership rule already exists; generated CSS still introduced an unowned threshold."
-    - "One canonical-owner repair removed horizontal overflow without postfix override CSS or !important."
-    - "Section-level geometry is needed because local vertical errors can cancel in whole-page height."
-    - "Unresolved interaction behavior was correctly not invented."
+  - Current Final wins overall.
+  - Existing target/breakpoint rules were skipped because enforcement was fail-open.
+  - Unresolved interactions were correctly not invented.
+  - Canonical REPLAY metadata is reserved for formally paired run records.
   candidate_rules:
-    - "P0: bind frozen Implementation Profile lineage and actual output-family evidence into Section Execution Gate."
-    - "P0: validate generated CSS viewport thresholds against the frozen breakpoint contract."
-    - "P1: capture per-section Figma/runtime top-height deltas at First Pass."
-    - "P1: separate LAYOUT_COMPLETE from VISUAL_COMPLETE when exact assets are blocked."
-  confirmed_rules:
-    - rule_id: NO_INTERACTION_INVENTION_WITHOUT_AUTHORITY
-      evidence: [references/chiba-keizai-sample.reference.yaml]
-      note: "Student Voice and Messages behavior remained unresolved; do not invent accordion/carousel data."
+  - P0 enforce output family from Implementation Profile.
+  - P0 validate CSS thresholds against breakpoint contract.
+  - P1 capture section geometry at First Pass.
+  confirmed_rules: []
   contradicted_rules: []
   rules_needing_retest:
-    - "Retest Implementation Profile enforcement in a new uncontaminated Clean Replay."
-    - "Retest breakpoint threshold enforcement in a new uncontaminated Clean Replay."
+  - 'Issue #184 gates in a fresh independent run.'
   promotion_candidates: []
   demotion_candidates: []
   agent_specific:
-    - "The agent moved into section implementation without binding output family to the available WordPress+ACF profile."
+  - Implementation family binding was skipped.
   project_specific:
-    - "REF-001 owner breakpoint is 768; PC Figma is 1380x7714; SP web-content height is 10777 after excluding the 40px status bar."
-
+  - REF-001 owner breakpoint=768.
+first_pass_artifact:
+  run_id: 32440384266
+  artifact_id: 9432209594
+  name: ref001-frontend-standard-clean-replay-runtime
+  digest: sha256:d6d71f07f2bc89383ada83a31dd48a3461d78c0599a13a6a7d7cd120e3622c7e
+  head_sha: 977f0581e3a88c8254be93c0d9389b1d09a78563
+score_evidence:
+  rubric: docs/evaluation-rubric.md
+  visual: 20/40 = geometry 7 + spacing 4 + typography 5 + effects 3 + assets 1.
+  structural: 14/25 = component 3 + token 3 + responsive 2 + semantic 4 + isolation 1 + state 1.
+  robustness: 8/15 = boundary 3 + intermediate 2 + content 1 + accessibility 1 + overflow/clipping 1.
 comparison_evidence:
   report: experiments/ref001-frontend-standard-clean-replay/COMPARISON.md
   current_final_commit: 0f0aad4aec3348e02b477f14cea3e2872efaa6f8
-  current_final_mode: READ_ONLY_POST_FREEZE
-  first_pass_minutes_measured_window: 8.45
-  repair_minutes_approx: 8
-  first_pass_runtime:
-    overflow_failure_widths: [320, 390]
-    runtime_errors: 0
-    console_errors: 0
-  repair_runtime:
-    overflow_failure_widths: []
-    runtime_errors: 0
-    console_errors: 0
-  endpoint_geometry:
-    clean_pc_1380: { runtime_height: 7553, figma_height: 7714, delta_px: -161, delta_percent: -2.09 }
-    current_pc_1380: { runtime_height: 7677, figma_height: 7714, delta_px: -37, delta_percent: -0.48 }
-    clean_sp_375: { runtime_height: 10636, figma_web_height: 10777, delta_px: -141, delta_percent: -1.31 }
-    current_sp_375: { runtime_height: 10773, figma_web_height: 10777, delta_px: -4, delta_percent: -0.04 }
-  static_complexity:
-    clean_css_bytes: 29158
-    current_final_css_bytes: 88287
-    clean_important: 0
-    current_final_important: 3
-    clean_absolute: 16
-    current_final_absolute: 14
-    clean_explicit_width_height_px: 83
-    current_final_explicit_width_height_px: 22
-    clean_clamp_calls: 11
-    current_final_clamp_calls: 99
+  clean_geometry:
+    pc_delta_px: -161
+    sp_delta_px: -141
+  current_final_geometry:
+    pc_delta_px: -37
+    sp_delta_px: -4
   implementation_family:
     required: WORDPRESS_ACF_SERVER_RENDERED_PHP
     clean: STATIC_HTML_CSS
-    clean_contract_match: false
-    current_final_contract_match: true
+    match: false
   responsive_contract:
-    canonical_thresholds: [768]
+    canonical_thresholds:
+    - 768
     clean_extra_threshold: 1100
-    clean_contract_match: false
+    match: false
   asset_transfer:
     reused_formal_assets: 9
     unresolved_exact_raster_slots: 19
     status: BLOCKED_BY_EXECUTION_NETWORK
-  overall_verdict: CURRENT_FINAL_WINS_OVERALL_CLEAN_REPLAY_REVEALS_STANDARD_GAPS
-
-notes: >-
-  Comparison is complete, but the run remains BLOCKED because the Clean implementation does not
-  satisfy the canonical WordPress/ACF production family and exact raster materialization is unavailable.
-  Reproducibility is scored 0/10 because the required production implementation family was not reproduced;
-  partial structural/runtime successes are retained separately rather than converted into reproducibility credit.
-  The branch is deliberately not retrofitted after Current Final was read. PR #182 remains Draft and must
-  not be merged without explicit user approval.
+  verdict: CURRENT_FINAL_WINS_OVERALL
+notes: 'Comparison complete; PR #182 stays Draft/unmerged. Enforcement improvements are tracked in issue #184.'
