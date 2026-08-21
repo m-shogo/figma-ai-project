@@ -132,6 +132,9 @@ jobs:
       - name: Validate frozen breakpoint contract semantics
         run: python scripts/validate_breakpoint_contract.py
 
+      - name: Validate implementation family and produced CSS thresholds
+        run: python scripts/validate_execution_output_contract.py
+
       - name: Validate section discovery evidence and mapping confidence
         run: python scripts/validate_section_discovery.py
 
