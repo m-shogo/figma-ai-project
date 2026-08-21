@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 6
 profile_id: IMPLEMENTATION-PROFILE-XXXX
 status: DRAFT # DRAFT | RESOLVED | FROZEN
 created_at: ""
@@ -91,6 +91,25 @@ platform:
 
 delivery_requirements:
   source_code_required: true
+  # New schema v6 WordPress + ACF profiles must resolve this package contract
+  # before freeze. Paths are project-specific; the folder layout is not forced.
+  package:
+    required: false
+    artifact_classes:
+    - THEME_CODE
+    - ASSETS
+    - ACF_EXPORT_JSON
+    - INSTALL_DOC
+    - ACF_FIELD_MAP
+    install_doc:
+      required: false
+      target_repo_path: ""
+    acf_field_map:
+      required: false
+      target_repo_path: ""
+    exclude_acf_pro_plugin: true
+    exclude_license_secret: true
+    exclude_database: true
   acf:
     required: false
     export_json:
@@ -103,6 +122,22 @@ delivery_requirements:
       target_repo_dir: ""
     import_or_sync_smoke_required: false
     accepted_methods: [] # ADMIN_UI | WP_CLI_IMPORT | LOCAL_JSON_SYNC | WP_CLI_SYNC | OTHER
+    # Internal QA gate: real wp-admin field visibility/edit/save/reload/frontend roundtrip.
+    admin_e2e_required: false
+  # Delivery QA is separate from the development/admin QA above. It must prove
+  # that artifacts alone reconstruct a second, fresh WordPress database.
+  fresh_install:
+    required: false
+    database_copy_allowed: false
+    source_acf_db_state_reuse_allowed: false
+    browser_driver: PLAYWRIGHT
+    required_steps:
+    - THEME_CODE_INSTALL
+    - ACF_JSON_IMPORT
+    - PAGE_TEMPLATE_ASSIGNMENT
+    - FIXTURE_INPUT
+    - FRONTEND_RENDER
+    - PLAYWRIGHT
 
 checklist: []
 # - id: REPOSITORY_BASELINE

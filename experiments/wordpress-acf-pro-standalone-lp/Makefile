@@ -1,6 +1,6 @@
 SHELL := /usr/bin/env bash
 
-.PHONY: smoke setup qa fixture reset status
+.PHONY: smoke setup qa delivery-qa fixture reset status
 
 smoke:
 	bash ./scripts/runtime-smoke.sh
@@ -11,6 +11,9 @@ setup:
 qa:
 	bash ./scripts/setup.sh
 	bash ./scripts/qa.sh
+
+delivery-qa:
+	bash ./scripts/delivery-qa.sh
 
 fixture:
 	@test -n "$(FIXTURE)" || (echo "Usage: make fixture FIXTURE=repeater-8-items"; exit 2)
