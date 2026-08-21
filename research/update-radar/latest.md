@@ -1,16 +1,16 @@
 # Update Radar — Latest Official Source Scan
 
-Generated: `2026-08-20T04:00:23+00:00`
+Generated: `2026-08-21T04:03:10+00:00`
 
-Active lanes: ACCESSIBILITY, CLAUDE_CODE, CODEX, CURSOR, DESIGN_SYSTEMS, FIGMA, MCP, WEB_PLATFORM, WORDPRESS_ACF
+Active lanes: ACCESSIBILITY, CLAUDE_CODE, CODEX, CURSOR, DESIGN_SYSTEMS, FIGMA, FRONTEND_TOOLING, MCP, WEB_PLATFORM, WORDPRESS_ACF
 
 ## Summary
 
-- Sources checked: 27
-- Changed since previous snapshot: 8
-- First observations: 0
+- Sources checked: 37
+- Changed since previous snapshot: 6
+- First observations: 10
 - Fetch errors: 3
-- RETEST candidates: ACCESSIBILITY, AGENT_CONTEXT, ANIMATION, ASSET_FIDELITY, COLOR_GRADIENT, CSS_RESET, FIGMA_LAYOUT_GENERATION, FIGMA_MCP, INPUT_CAPABILITY, LAYOUT, PARALLEL_EXECUTION, SCROLL, TYPOGRAPHY_RUNTIME, VARIABLE_MODE_RUNTIME, WORDPRESS_ACF
+- RETEST candidates: ACCESSIBILITY, AGENT_CONTEXT, ANIMATION, ASSET_FIDELITY, COLOR_GRADIENT, CSS_RESET, FIGMA_LAYOUT_GENERATION, FIGMA_MCP, INPUT_CAPABILITY, LAYOUT, PARALLEL_EXECUTION, SCROLL, TYPOGRAPHY_RUNTIME, VARIABLE_MODE_RUNTIME, VISUAL_QA_TOOLING
 
 ## Changed sources
 
@@ -22,20 +22,28 @@ Active lanes: ACCESSIBILITY, CLAUDE_CODE, CODEX, CURSOR, DESIGN_SYSTEMS, FIGMA, 
 - RETEST: INPUT_CAPABILITY, ANIMATION, LAYOUT, FIGMA_LAYOUT_GENERATION, TYPOGRAPHY_RUNTIME, ASSET_FIDELITY, COLOR_GRADIENT, FIGMA_MCP, AGENT_CONTEXT
 - Source: https://www.figma.com/release-notes/
 
+### figma-mcp-tools
+
+- Lane: `FIGMA`
+- Latest title: Tools and prompts | Developer Docs
+- Impacts: MCP, FIGMA_TO_CODE, CODE_TO_FIGMA, CONTEXT_RETRIEVAL, ASSET_FIDELITY, COMPONENT_REUSE
+- RETEST: ANIMATION, ASSET_FIDELITY, ACCESSIBILITY, FIGMA_MCP, VISUAL_QA_TOOLING, AGENT_CONTEXT
+- Source: https://developers.figma.com/docs/figma-mcp-server/tools-and-prompts/
+
 ### claude-code-releases
 
 - Lane: `CLAUDE_CODE`
-- Latest title: v2.1.237
+- Latest title: v2.1.238
 - Impacts: AGENT_CAPABILITY, MCP, PARALLEL_EXECUTION, CONTEXT_HANDLING
-- RETEST: CSS_RESET, SCROLL, LAYOUT, FIGMA_LAYOUT_GENERATION, ASSET_FIDELITY, ACCESSIBILITY, FIGMA_MCP, AGENT_CONTEXT, PARALLEL_EXECUTION
+- RETEST: CSS_RESET, SCROLL, LAYOUT, FIGMA_LAYOUT_GENERATION, TYPOGRAPHY_RUNTIME, ASSET_FIDELITY, ACCESSIBILITY, FIGMA_MCP, AGENT_CONTEXT, PARALLEL_EXECUTION
 - Source: https://api.github.com/repos/anthropics/claude-code/releases?per_page=12
 
 ### claude-code-feed
 
 - Lane: `CLAUDE_CODE`
-- Latest title: Claude Code v2.1.237
+- Latest title: Claude Code v2.1.238
 - Impacts: AGENT_CAPABILITY, MCP, CONTEXT_HANDLING
-- RETEST: CSS_RESET, SCROLL, LAYOUT, FIGMA_LAYOUT_GENERATION, ASSET_FIDELITY, ACCESSIBILITY, FIGMA_MCP, AGENT_CONTEXT, PARALLEL_EXECUTION
+- RETEST: CSS_RESET, SCROLL, LAYOUT, FIGMA_LAYOUT_GENERATION, TYPOGRAPHY_RUNTIME, ASSET_FIDELITY, ACCESSIBILITY, FIGMA_MCP, AGENT_CONTEXT, PARALLEL_EXECUTION
 - Source: https://raw.githubusercontent.com/anthropics/claude-code/main/feed.xml
 
 ### cursor-changelog
@@ -49,34 +57,10 @@ Active lanes: ACCESSIBILITY, CLAUDE_CODE, CODEX, CURSOR, DESIGN_SYSTEMS, FIGMA, 
 ### mdn-browser-compat-data-releases
 
 - Lane: `WEB_PLATFORM`
-- Latest title: @mdn/browser-compat-data@next
+- Latest title: v8.0.12
 - Impacts: CSS, BROWSER_SUPPORT, FEATURE_DETECTION
 - RETEST: CSS_RESET, INPUT_CAPABILITY, TYPOGRAPHY_RUNTIME, ASSET_FIDELITY, ACCESSIBILITY, AGENT_CONTEXT
 - Source: https://api.github.com/repos/mdn/browser-compat-data/releases?per_page=12
-
-### wordpress-releases
-
-- Lane: `WORDPRESS_ACF`
-- Latest title: Releases – WordPress News
-- Impacts: WORDPRESS, CMS, BLOCKS, IMAGES, ACCESSIBILITY
-- RETEST: LAYOUT, ACCESSIBILITY, WORDPRESS_ACF
-- Source: https://wordpress.org/news/category/releases/
-
-### acf-releases
-
-- Lane: `WORDPRESS_ACF`
-- Latest title: Advanced Custom Fields v6.8.8
-- Impacts: ACF, WORDPRESS, CMS, BLOCKS
-- RETEST: CSS_RESET, INPUT_CAPABILITY, SCROLL, LAYOUT, FIGMA_LAYOUT_GENERATION, ASSET_FIDELITY, ACCESSIBILITY, FIGMA_MCP, AGENT_CONTEXT, WORDPRESS_ACF
-- Source: https://api.github.com/repos/AdvancedCustomFields/acf/releases?per_page=12
-
-### acf-changelog
-
-- Lane: `WORDPRESS_ACF`
-- Latest title: ACF | Changelog
-- Impacts: ACF, WORDPRESS, CMS, BLOCKS, IMAGES
-- RETEST: CSS_RESET, SCROLL, LAYOUT, ASSET_FIDELITY, FIGMA_MCP, AGENT_CONTEXT, WORDPRESS_ACF
-- Source: https://www.advancedcustomfields.com/changelog/
 
 ## Fetch errors
 
