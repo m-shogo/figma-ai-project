@@ -15,6 +15,7 @@ if str(ROOT) not in sys.path:
 
 from scripts import section_planner  # noqa: E402
 from scripts import validate_breakpoint_contract  # noqa: E402
+from scripts import validate_execution_output_contract  # noqa: E402
 from scripts import validate_parallel_isolation  # noqa: E402
 from scripts import validate_parallel_paths  # noqa: E402
 from scripts import validate_records  # noqa: E402
@@ -89,6 +90,15 @@ def validate_execution(path: Path, manifest: dict[str, Any]) -> tuple[list[str],
     if contract is not None:
         errors.extend(validate_records.semantic_shared_errors(contract))
         errors.extend(validate_breakpoint_contract.validate_contract(contract))
+        # Bind the actual/planned output to the frozen implementation family and
+        # reject generated viewport thresholds that are not owned by the contract.
+        errors.extend(
+            validate_execution_output_contract.validate_manifest(
+                path,
+                manifest,
+                contract=contract,
+            )
+        )
 
     groups = executable_groups(manifest)
     if not groups:
@@ -131,8 +141,9 @@ def render_human(path: Path, errors: list[str], groups: dict[str, list[str]], pl
 def main() -> int:
     parser = argparse.ArgumentParser(
         description=(
-            "Fail-closed preflight for section execution: schema, shared-contract/foundation lineage, "
-            "Figma discovery confidence, breakpoint semantics, dependencies/write ownership, and worker isolation."
+            "Fail-closed preflight for section execution: schema, implementation target/output binding, "
+            "shared-contract/foundation lineage, Figma discovery confidence, breakpoint semantics/output, "
+            "dependencies/write ownership, and worker isolation."
         )
     )
     parser.add_argument("manifest", help="Repository-relative section-manifest YAML path")
