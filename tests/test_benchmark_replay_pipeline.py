@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import unittest
 
-from scripts.validate_ref001_benchmark_replay import main
+from scripts.validate_benchmark_replay_pipeline import main
 
 
 class BenchmarkReplayPipelineTests(unittest.TestCase):
