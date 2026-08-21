@@ -182,6 +182,27 @@ Visual変更が本当に必要ならHumanへescalateする。
 - 複数案件で再利用できる
 - Humanが恒久gateを要求した
 
+### Mobile-first execution invariant
+
+Frontend実装でEffective Project Contractが別順序を明示しない限り、`Mobile First`はCSS authoringだけでなく**実装・stabilization・FINAL acceptanceの実行順**として扱う。
+
+```text
+Section:
+SP → PC
+
+Boundary / Cluster:
+SP → PC
+
+Final full-page / relevant interaction:
+SP → PC
+```
+
+PC側のrepairがshared CSS、shared component、DOM、JS、asset、token、container等のSPにも影響し得るownerを変更した場合、そのscopeの既存PASSを保持したまま完了してはいけない。影響scopeのacceptance sequenceを無効化し、**SPから再確認してからPC**を再確認する。
+
+PC/SP evidenceを並行取得すること自体は許可するが、並行captureを理由にacceptance順序を曖昧にしない。
+
+このruleのためだけに新しいvisual engineやworkflowを作らない。既存のFigma evidence、Playwright、Section / Boundary / Page captureを再利用する。
+
 ## 8. Fast re-check rule
 
 同じ状態を何度もpollしない。
@@ -202,6 +223,8 @@ Visual変更が本当に必要ならHumanへescalateする。
 - diff scope
 - secrets / temp garbage
 - current base drift
+
+Frontendのfinal Visual/runtime gateがSP/PCを含む場合、Project exceptionが無い限り**SP → PC**でacceptanceし、PCでshared ownerを修正した場合はSPからsequenceをやり直す。
 
 ### After merge
 
