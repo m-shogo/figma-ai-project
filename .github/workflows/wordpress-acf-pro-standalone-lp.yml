@@ -228,7 +228,8 @@ jobs:
         run: make delivery-qa
       - name: Record Fresh Delivery PASS
         if: steps.gate.outputs.enabled == 'true' && success()
-        run: echo "FRESH DELIVERY E2E: PASS" >> "$GITHUB_STEP_SUMMARY"
+        run: |
+          echo "FRESH DELIVERY E2E: PASS" >> "$GITHUB_STEP_SUMMARY"
       - name: Upload fresh-delivery evidence
         if: steps.gate.outputs.enabled == 'true' && hashFiles('experiments/wordpress-acf-pro-standalone-lp/.runtime/delivery-qa/**') != ''
         uses: actions/upload-artifact@v4
