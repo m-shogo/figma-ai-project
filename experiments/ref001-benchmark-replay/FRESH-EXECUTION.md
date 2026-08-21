@@ -31,7 +31,7 @@ Before First Pass freeze, do **not** fetch, open, reconstruct, or copy any exclu
 From the sanitized workspace, run:
 
 ```bash
-python scripts/validate_ref001_benchmark_replay.py
+python scripts/validate_benchmark_replay_pipeline.py
 ```
 
 The gate must prove at minimum:
@@ -79,6 +79,6 @@ Only **after** that freeze may the execution context read historical/current REF
 
 ## Shared Contract status
 
-`shared-contract.yaml` intentionally remains `DRAFT` because the repository does not contain a legitimate ACTIVE Company Policy authority. Do not invent one. For this isolated benchmark, the FROZEN Implementation Profile plus `validate_ref001_benchmark_replay.py` are the executable preflight for target family and breakpoint ownership.
+`shared-contract.yaml` intentionally remains `DRAFT` because the repository does not contain a legitimate ACTIVE Company Policy authority. Do not invent one. For this isolated benchmark, the FROZEN Implementation Profile plus `validate_benchmark_replay_pipeline.py` are the executable preflight for target family and breakpoint ownership.
 
 This limitation must remain visible in final experiment reporting; it is not permission to reinterpret the benchmark as production-ready policy.
