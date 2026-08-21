@@ -1922,6 +1922,10 @@
 			/* Figma: 1160px 中 165px の位置から始まる */
 			justify-content: start;
 			margin-left: 14.22%;
+			/* 箱の幅は中身ぶんだけ。
+			   幅いっぱいだと写真の上に透明な箱がかぶさり、
+			   写真側のマウス操作を受け取ってしまうためです。 */
+			width: fit-content;
 		}
 
 		/* 元デザインは 1160px 中 660px（= 57%） */
@@ -1941,14 +1945,21 @@
 			margin-top: 0;
 			align-self: start;
 			gap: 1.5em;
-			padding: 13.62% 0 0;
+			/* 下の 3.75rem は、いちばん下に重ねているカウンター（1 ── 4）の場所。
+			   これを空けておかないと、所属が長いときに文字がカウンターへ届きます。
+			   文字が増えるとこの箱ごと下へ伸びるので、カウンターも一緒に下がります。 */
+			padding: 13.62% 0 3.75rem;
 		}
 
 		& .p-messages__quote {
 			gap: .35em;
 		}
 
+		/* 所属は写真の下へ回り込ませません。
+		   Figma でも写真の左側（1160px 中 500px まで）に収まっています。
+		   長い文言のときは、写真にかからず下へ伸びます。 */
 		& .p-messages__meta {
+			max-width: 43%;
 			padding: 0;
 			background: none;
 			font-size: var(--fs-body);
