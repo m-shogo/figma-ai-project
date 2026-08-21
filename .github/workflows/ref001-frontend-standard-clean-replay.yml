@@ -54,6 +54,10 @@ jobs:
               raise SystemExit('\n'.join(failures))
           PY
 
+      - name: Compare current final and Clean Replay static structure
+        if: github.event_name == 'pull_request'
+        run: python experiments/ref001-frontend-standard-clean-replay/tools/compare-static.py
+
       - name: Install Playwright in temporary workspace
         run: |
           mkdir -p /tmp/ref001-clean-playwright
@@ -81,11 +85,11 @@ jobs:
           cd /tmp/ref001-clean-playwright
           node capture-runtime.mjs
 
-      - name: Upload first-pass runtime evidence
+      - name: Upload replay evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ref001-frontend-standard-clean-replay-runtime
-          path: experiments/ref001-frontend-standard-clean-replay/evidence/runtime
+          name: ref001-frontend-standard-clean-replay-evidence
+          path: experiments/ref001-frontend-standard-clean-replay/evidence
           if-no-files-found: error
           retention-days: 14
