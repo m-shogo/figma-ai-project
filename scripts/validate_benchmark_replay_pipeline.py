@@ -19,9 +19,61 @@ BLANK_THEME = BASE / "blank-theme"
 RUNTIME_COMPOSE = ROOT / "experiments" / "wordpress-acf-pro-standalone-lp" / "compose.yml"
 RUNTIME_SETUP = ROOT / "experiments" / "wordpress-acf-pro-standalone-lp" / "scripts" / "setup.sh"
 
+ACF_ADMIN_REQUIRED_TRUE = (
+    "required",
+    "real_wordpress_required",
+    "acf_pro_active_required",
+    "field_group_visible_on_target_page_required",
+    "representative_field_edit_required",
+    "image_field_edit_required_when_present",
+    "collection_controls_required_when_present",
+    "save_update_required",
+    "persistence_after_reload_required",
+    "frontend_roundtrip_required",
+    "baseline_restore_required",
+    "console_and_page_error_free_required",
+)
+ACF_ADMIN_REQUIRED_CHECKS = {
+    "acf_import_or_sync_smoke",
+    "acf_admin_field_presence",
+    "acf_admin_edit_save_reload",
+    "acf_frontend_roundtrip",
+}
+ACF_ADMIN_EVIDENCE_JSON = "experiments/ref001-benchmark-replay/output/acf-admin-e2e.json"
+ACF_ADMIN_SCREENSHOT_DIR = "experiments/ref001-benchmark-replay/output/acf-admin-e2e"
+
 
 def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def acf_admin_contract_errors(contract: dict) -> list[str]:
+    errors: list[str] = []
+    config = contract.get("cms_validation", {}).get("acf_admin_e2e", {})
+    if not isinstance(config, dict):
+        return ["cms_validation.acf_admin_e2e must be an object"]
+
+    for key in ACF_ADMIN_REQUIRED_TRUE:
+        if config.get(key) is not True:
+            errors.append(f"cms_validation.acf_admin_e2e.{key} must be true")
+
+    if config.get("browser_driver") != "PLAYWRIGHT":
+        errors.append("cms_validation.acf_admin_e2e.browser_driver must be PLAYWRIGHT")
+    if config.get("evidence_json") != ACF_ADMIN_EVIDENCE_JSON:
+        errors.append(
+            "cms_validation.acf_admin_e2e.evidence_json must be " + ACF_ADMIN_EVIDENCE_JSON
+        )
+    if config.get("screenshot_dir") != ACF_ADMIN_SCREENSHOT_DIR:
+        errors.append(
+            "cms_validation.acf_admin_e2e.screenshot_dir must be " + ACF_ADMIN_SCREENSHOT_DIR
+        )
+
+    required_checks = set(contract.get("integration", {}).get("required_checks", []))
+    missing_checks = sorted(ACF_ADMIN_REQUIRED_CHECKS - required_checks)
+    if missing_checks:
+        errors.append("integration.required_checks missing ACF admin gates: " + ", ".join(missing_checks))
+
+    return errors
 
 
 def main() -> int:
@@ -45,6 +97,7 @@ def main() -> int:
         f"benchmark binding: {error}"
         for error in output_contract.validate_profile_binding(contract, profile, profile_path=PROFILE_PATH)
     )
+    errors.extend(f"ACF admin contract: {error}" for error in acf_admin_contract_errors(contract))
 
     breakpoints = contract.get("breakpoints", {})
     thresholds = output_contract.contract_thresholds(contract)
@@ -129,6 +182,7 @@ def main() -> int:
     print("  target=WORDPRESS/CLASSIC/SERVER_RENDERED_PHP + ACF PRO")
     print("  owned_viewport_thresholds=767,768")
     print("  static_html=REJECTED unowned_1100=REJECTED")
+    print("  acf_admin_edit_save_reload_frontend_roundtrip=REQUIRED")
     return 0
 
 
