@@ -18,6 +18,84 @@ Exact source asset
 
 Exact sourceが取れるのにAI再生成へ置換しない。
 
+## Owner-fixed Web delivery raster export contract
+
+Machine-readable authority:
+
+`config/frontend-raster-asset-export-policy.yaml`
+
+Web実装へ納品する**Raster asset**は、Owner固定ルールとして次を使う。
+
+```text
+SP raster → 表示サイズ基準 @3x → WebP
+PC raster → 表示サイズ基準 @2x → WebP
+```
+
+例:
+
+```text
+SP 375×240 CSS px表示 → 1125×720 px WebP
+PC 600×400 CSS px表示 → 1200×800 px WebP
+```
+
+この倍率・形式はAgentがperformance最適化、慣習、Figma export default等を理由に独自変更しない。
+
+変更できるのは:
+
+- 後続の明示Owner指示
+- 上位Company hard constraintとの実衝突
+
+だけ。Agent inference / project-local convenience / generic best practiceでは変更しない。
+
+### Vector exception
+
+Logo / icon / simple vector illustration / authored vector decoration等、sourceがvectorでSVGが適切なものはこのRaster倍率ルールの対象外。
+
+Vector sourceを倍率ルールを満たすためだけにWebPへRaster化しない。SVGを優先する。
+
+### PC/SP art direction
+
+PC/SPでcrop / focal point / composition / visible layerが異なる場合、同一RasterをCSSだけで無理に兼用しない。
+
+必要なら別assetとして書き出す。
+
+例:
+
+```text
+hero-pc.webp
+hero-sp.webp
+```
+
+既存案件に明示命名規則がある場合は命名規則を優先するが、PC/SPのasset identityを判別可能に保つ。
+
+### Source resolution insufficiency
+
+元Rasterの実解像度が不足している場合、単純upscaleで@2x/@3xにして「適合」と判定しない。
+
+```text
+SOURCE_RESOLUTION_INSUFFICIENT
+```
+
+として扱い、可能なら高解像度原本または正しいFigma export sourceを取得する。
+
+### Raster asset QA
+
+Relevant assetでは最低限:
+
+- SP raster = rendered CSS size基準 @3x
+- PC raster = rendered CSS size基準 @2x
+- final delivery format = WebP
+- PC/SP asset取り違えなし
+- intrinsic pixel dimensions確認
+- crop / focal point / `object-position`確認
+- 不要なぼけ・過剰圧縮なし
+- 必要なalpha/transparency保持
+- 不要に巨大なfile sizeにしない
+
+を確認する。
+
+Figma reference screenshot / Visual QA capture / diff用screenshotそのものはこのWeb delivery倍率ルールの対象外。
+
 ## Responsive images
 
 HTML/CMS stackに応じて:
@@ -36,6 +114,8 @@ PC/SPで同じ画像のresolutionだけ変わるのか、crop/art direction自�
 ### Resolution switching
 
 同じcomposition → `srcset`/`sizes` candidate。
+
+ただしWeb delivery用Raster derivativeを作る場合、Owner固定のSP @3x / PC @2x WebP contract自体は維持する。
 
 ### Art direction
 
