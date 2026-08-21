@@ -1,0 +1,152 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/figma-ai-project/wordpress-acf-delivery.schema.json",
+  "title": "WordPress ACF delivery contracts",
+  "$defs": {
+    "profileRequirement": {
+      "type": "object",
+      "required": ["source_code_required", "package", "acf", "fresh_install"],
+      "properties": {
+        "source_code_required": {"const": true},
+        "package": {
+          "type": "object",
+          "required": ["required", "artifact_classes", "install_doc", "acf_field_map", "exclude_acf_pro_plugin", "exclude_license_secret", "exclude_database"],
+          "properties": {
+            "required": {"const": true},
+            "artifact_classes": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {"enum": ["THEME_CODE", "ASSETS", "ACF_EXPORT_JSON", "INSTALL_DOC", "ACF_FIELD_MAP"]}
+            },
+            "install_doc": {
+              "type": "object",
+              "required": ["required", "target_repo_path"],
+              "properties": {
+                "required": {"const": true},
+                "target_repo_path": {"type": "string", "minLength": 1}
+              },
+              "additionalProperties": true
+            },
+            "acf_field_map": {
+              "type": "object",
+              "required": ["required", "target_repo_path"],
+              "properties": {
+                "required": {"const": true},
+                "target_repo_path": {"type": "string", "minLength": 1}
+              },
+              "additionalProperties": true
+            },
+            "exclude_acf_pro_plugin": {"const": true},
+            "exclude_license_secret": {"const": true},
+            "exclude_database": {"const": true}
+          },
+          "additionalProperties": true
+        },
+        "acf": {
+          "type": "object",
+          "required": ["required", "export_json", "import_or_sync_smoke_required", "accepted_methods", "admin_e2e_required"],
+          "properties": {
+            "required": {"const": true},
+            "admin_e2e_required": {"const": true}
+          },
+          "additionalProperties": true
+        },
+        "fresh_install": {
+          "type": "object",
+          "required": ["required", "database_copy_allowed", "source_acf_db_state_reuse_allowed", "browser_driver", "required_steps"],
+          "properties": {
+            "required": {"const": true},
+            "database_copy_allowed": {"const": false},
+            "source_acf_db_state_reuse_allowed": {"const": false},
+            "browser_driver": {"const": "PLAYWRIGHT"},
+            "required_steps": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {"enum": ["THEME_CODE_INSTALL", "ACF_JSON_IMPORT", "PAGE_TEMPLATE_ASSIGNMENT", "FIXTURE_INPUT", "FRONTEND_RENDER", "PLAYWRIGHT"]}
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "runEvidence": {
+      "type": "object",
+      "required": ["package", "acf", "fresh_install"],
+      "properties": {
+        "package": {
+          "type": "object",
+          "required": ["required", "artifacts", "excluded"],
+          "properties": {
+            "required": {"const": true},
+            "artifacts": {
+              "type": "object",
+              "required": ["theme_code", "assets", "install_doc", "acf_field_map"],
+              "properties": {
+                "theme_code": {"type": "string", "minLength": 1},
+                "assets": {"type": "string", "minLength": 1},
+                "install_doc": {"type": "string", "minLength": 1},
+                "acf_field_map": {"type": "string", "minLength": 1}
+              },
+              "additionalProperties": true
+            },
+            "excluded": {
+              "type": "object",
+              "required": ["acf_pro_plugin", "license_secret", "database"],
+              "properties": {
+                "acf_pro_plugin": {"const": true},
+                "license_secret": {"const": true},
+                "database": {"const": true}
+              },
+              "additionalProperties": true
+            }
+          },
+          "additionalProperties": true
+        },
+        "acf": {
+          "type": "object",
+          "required": ["admin_e2e"],
+          "properties": {
+            "admin_e2e": {
+              "type": "object",
+              "required": ["required", "status", "evidence"],
+              "properties": {
+                "required": {"const": true},
+                "status": {"const": "PASS"},
+                "evidence": {"type": "array", "minItems": 1}
+              },
+              "additionalProperties": true
+            }
+          },
+          "additionalProperties": true
+        },
+        "fresh_install": {
+          "type": "object",
+          "required": ["required", "status", "source_database_copied", "source_acf_db_state_reused", "steps", "evidence"],
+          "properties": {
+            "required": {"const": true},
+            "status": {"const": "PASS"},
+            "source_database_copied": {"const": false},
+            "source_acf_db_state_reused": {"const": false},
+            "steps": {
+              "type": "object",
+              "required": ["THEME_CODE_INSTALL", "ACF_JSON_IMPORT", "PAGE_TEMPLATE_ASSIGNMENT", "FIXTURE_INPUT", "FRONTEND_RENDER", "PLAYWRIGHT"],
+              "properties": {
+                "THEME_CODE_INSTALL": {"const": "PASS"},
+                "ACF_JSON_IMPORT": {"const": "PASS"},
+                "PAGE_TEMPLATE_ASSIGNMENT": {"const": "PASS"},
+                "FIXTURE_INPUT": {"const": "PASS"},
+                "FRONTEND_RENDER": {"const": "PASS"},
+                "PLAYWRIGHT": {"const": "PASS"}
+              },
+              "additionalProperties": true
+            },
+            "evidence": {"type": "array", "minItems": 1}
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}
