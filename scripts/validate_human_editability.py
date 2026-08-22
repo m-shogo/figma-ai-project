@@ -10,6 +10,7 @@ import yaml
 ROOT = Path(__file__).resolve().parents[1]
 RUN_TEMPLATE = ROOT / "templates" / "run-record.yaml"
 SHARED_TEMPLATE = ROOT / "templates" / "shared-contract.yaml"
+MATERIAL_DRILL_EVIDENCE_SCHEMA_VERSION = 13
 
 DIMENSIONS = (
     "discoverability",
@@ -20,6 +21,7 @@ DIMENSIONS = (
 )
 STATUSES = {"PENDING", "PASS", "FAIL", "NOT_APPLICABLE"}
 DRILL_RESULTS = {"PASS", "FAIL", "NOT_APPLICABLE"}
+PLACEHOLDER_EVIDENCE = {"", "n/a", "na", "none", "null", "pending", "todo", "unknown", "tbd"}
 
 
 def load_yaml(path: Path) -> dict[str, Any]:
@@ -29,11 +31,28 @@ def load_yaml(path: Path) -> dict[str, Any]:
     return value
 
 
+def is_material_text(value: Any) -> bool:
+    return isinstance(value, str) and value.strip().lower() not in PLACEHOLDER_EVIDENCE
+
+
+def material_string_items(value: Any) -> list[str]:
+    if not isinstance(value, list):
+        return []
+    return [item.strip() for item in value if is_material_text(item)]
+
+
+def is_passing_regression_status(value: Any) -> bool:
+    return is_material_text(value) and value.strip().upper().startswith("PASS")
+
+
 def validate_run_block(data: dict[str, Any], label: str) -> list[str]:
     errors: list[str] = []
     block = data.get("human_editability")
     if not isinstance(block, dict):
         return [f"{label}: schema_version>=11 requires human_editability object"]
+
+    schema_version = int(data.get("schema_version", 0) or 0)
+    require_material_drill_evidence = schema_version >= MATERIAL_DRILL_EVIDENCE_SCHEMA_VERSION
 
     status = block.get("status")
     if status not in STATUSES:
@@ -110,6 +129,33 @@ def validate_run_block(data: dict[str, Any], label: str) -> list[str]:
         for field in ("located_paths", "changed_paths", "unexpected_paths"):
             if field in drill and not isinstance(drill[field], list):
                 errors.append(f"{label}: human_editability.change_drills[{index}].{field} must be an array")
+            elif require_material_drill_evidence and isinstance(drill.get(field), list) and any(
+                not is_material_text(item) for item in drill[field]
+            ):
+                errors.append(
+                    f"{label}: human_editability.change_drills[{index}].{field} entries must be non-placeholder strings"
+                )
+        if require_material_drill_evidence and "notes" in drill and not isinstance(drill["notes"], list):
+            errors.append(f"{label}: human_editability.change_drills[{index}].notes must be an array")
+
+        if require_material_drill_evidence and result == "PASS":
+            for field in ("drill_id", "task", "snapshot_commit"):
+                if not is_material_text(drill.get(field)):
+                    errors.append(
+                        f"{label}: PASS change drill[{index}] requires material {field} evidence"
+                    )
+            if not material_string_items(drill.get("located_paths")):
+                errors.append(f"{label}: PASS change drill[{index}] requires at least one located_path")
+            if not is_passing_regression_status(drill.get("regression_status")):
+                errors.append(
+                    f"{label}: PASS change drill[{index}] requires a PASS-prefixed regression_status"
+                )
+            if not material_string_items(drill.get("changed_paths")) and not material_string_items(
+                drill.get("notes")
+            ):
+                errors.append(
+                    f"{label}: PASS change drill[{index}] with zero changed_paths requires notes explaining the non-file change"
+                )
 
     if status == "PASS":
         if score is None or float(score) < 8:
