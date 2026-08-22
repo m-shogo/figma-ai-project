@@ -60,6 +60,105 @@ def section_manifest(contract_hash: str, profile_hash: str) -> dict:
     }
 
 
+def v9_section_manifest(contract_hash: str, profile_hash: str) -> dict:
+    return {
+        "schema_version": 9,
+        "reference_id": "REF-1",
+        "page_id": "page",
+        "shared_contract": "contracts/shared-contract.yaml",
+        "shared_contract_sha256": contract_hash,
+        "figma_structure_profile": "experiments/exp/figma-structure-profile.yaml",
+        "figma_structure_profile_sha256": profile_hash,
+        "foundation_commit": "foundation-commit",
+        "sections": [
+            {
+                "section_id": "S01",
+                "name": "Hero",
+                "order": 10,
+                "figma": {
+                    "logical_role": "HERO",
+                    "pc_node_id": "1:1",
+                    "sp_node_id": "1:2",
+                    "other_node_ids": [],
+                    "semantic_name_source": "FIGMA",
+                    "boundary_source": "FIGMA_TOP_LEVEL",
+                    "boundary_confidence": "HIGH",
+                    "boundary_evidence": [],
+                    "pc_sp_mapping_confidence": "HIGH",
+                    "mapping_evidence": [],
+                },
+                "evidence": {"screenshots": [], "metadata_capture": "meta"},
+                "dependencies": {
+                    "section_ids": [],
+                    "shared_components": [],
+                    "tokens": [],
+                    "fonts": [],
+                    "assets": [],
+                    "integration_coupling": "LOW",
+                    "coupling_notes": [],
+                },
+                "responsive": {
+                    "uses_shared_breakpoints": True,
+                    "invariants": [],
+                    "transitions": [],
+                    "unknowns": [],
+                    "breakpoint_exception_proposals": [],
+                },
+                "observation_coverage": {
+                    "source_presence": {
+                        "TEXT": "PRESENT",
+                        "RASTER_MEDIA": "PRESENT",
+                        "VECTOR_LOGO": "NONE",
+                        "BACKGROUND": "PRESENT",
+                        "DECORATION": "NONE",
+                        "INTERACTION_STATE": "UNDETERMINED",
+                        "RESPONSIVE_VARIANT": "PRESENT",
+                    },
+                    "source_evidence": ["Figma nodes 1:1 / 1:2"],
+                    "runtime_review": {
+                        "sp": {"status": "PASS", "evidence": ["sp-section.png"]},
+                        "pc": {"status": "PASS", "evidence": ["pc-section.png"]},
+                    },
+                    "known_gaps": [],
+                },
+                "implementation": {
+                    "component_path": "hero.php",
+                    "style_path": "hero.css",
+                    "allowed_paths": ["hero.php", "hero.css"],
+                    "shared_files_read_only": True,
+                },
+                "worker": {
+                    "status": "COMPLETE",
+                    "parallel_group": "wave-01",
+                    "contract_sha256": contract_hash,
+                    "isolation": {
+                        "mode": "BRANCH_WORKTREE",
+                        "ref": "worktree-s01",
+                        "parallel_safe": True,
+                        "notes": [],
+                    },
+                    "agent": "test",
+                    "model": "test",
+                    "base_commit": "foundation-commit",
+                    "output_commit": "output",
+                    "proposed_shared_changes": [],
+                },
+            }
+        ],
+        "integration": {
+            "status": "COMPLETE",
+            "root_composition_path": "page.php",
+            "required_checks": [],
+            "observation_coverage": {
+                "sp_full_page": "PASS",
+                "pc_full_page": "PASS",
+                "evidence": ["sp-full.png", "pc-full.png"],
+                "known_gaps": [],
+            },
+        },
+    }
+
+
 def base_run(
     reference_hash: str,
     contract_hash: str,
@@ -136,6 +235,37 @@ class RunLineageTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory).resolve()
             run, _ = self.make_fixture(root)
+            self.assertEqual([], self.validate(root, run))
+
+    def test_schema_v13_active_run_rejects_legacy_manifest(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory).resolve()
+            run, _ = self.make_fixture(root)
+            run["schema_version"] = 13
+            errors = self.validate(root, run)
+            self.assertTrue(any("schema v9+ Observation Coverage" in error for error in errors), errors)
+
+    def test_schema_v12_active_run_keeps_legacy_manifest_compatibility(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory).resolve()
+            run, _ = self.make_fixture(root)
+            run["schema_version"] = 12
+            self.assertEqual([], self.validate(root, run))
+
+    def test_schema_v13_active_run_accepts_canonical_v9_manifest(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory).resolve()
+            run, paths = self.make_fixture(root)
+            contract_hash = run["coordination"]["shared_contract_sha256"]
+            profile_hash = run["coordination"]["figma_structure_profile_sha256"]
+            paths["manifest"].write_text(
+                yaml.safe_dump(v9_section_manifest(contract_hash, profile_hash), sort_keys=False),
+                encoding="utf-8",
+            )
+            run["schema_version"] = 13
+            run["coordination"]["section_manifest_sha256"] = hashlib.sha256(
+                paths["manifest"].read_bytes()
+            ).hexdigest()
             self.assertEqual([], self.validate(root, run))
 
     def test_reference_manifest_hash_drift_is_rejected(self) -> None:
@@ -226,6 +356,7 @@ class RunLineageTests(unittest.TestCase):
                 {"reference_id": "REF-1"},
             )
             run = {
+                "schema_version": 13,
                 "status": "RUNNING",
                 "reference": {
                     "reference_id": "REF-1",

@@ -8,9 +8,13 @@ from typing import Any
 
 import yaml
 
+from validate_records import SECTION_SCHEMA, load_json as load_schema_json, validate_schema
+
 ROOT = Path(__file__).resolve().parents[1]
 ACTIVE = {"RUNNING", "COMPLETE"}
 SECTION_SCOPES = {"SECTION", "INTEGRATION"}
+OBSERVATION_LINEAGE_RUN_SCHEMA_VERSION = 13
+OBSERVATION_COVERAGE_SECTION_SCHEMA_VERSION = 9
 
 
 def load_yaml(path: Path) -> dict[str, Any]:
@@ -208,6 +212,17 @@ def validate_run(data: dict[str, Any]) -> list[str]:
     except Exception as exc:
         errors.append(f"cannot read section manifest: {exc}")
         return errors
+
+    run_schema_version = int(data.get("schema_version", 0) or 0)
+    if run_schema_version >= OBSERVATION_LINEAGE_RUN_SCHEMA_VERSION:
+        manifest_schema_version = int(manifest.get("schema_version", 0) or 0)
+        if manifest_schema_version < OBSERVATION_COVERAGE_SECTION_SCHEMA_VERSION:
+            errors.append(
+                "active schema-v13+ SECTION/INTEGRATION run requires Section Manifest schema v9+ Observation Coverage"
+            )
+        else:
+            schema_errors = validate_schema(manifest, load_schema_json(SECTION_SCHEMA))
+            errors.extend(f"section manifest schema v9 invalid: {error}" for error in schema_errors)
 
     if manifest.get("reference_id") != reference.get("reference_id"):
         errors.append("run reference_id does not match section manifest reference_id")
