@@ -11,6 +11,7 @@ from typing import Any
 import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
+RUN_TEMPLATE_PATH = ROOT / "templates" / "run-record.yaml"
 READY_STATES = {"READY", "RUNNING"}
 SAFE_PARALLEL_ISOLATION_MODES = {"BRANCH_WORKTREE", "AGENT_SANDBOX", "OTHER"}
 
@@ -284,46 +285,41 @@ def build_run_record(
     ]
 
     code_baseline = reference.get("code_baseline", {})
-    return {
-        "schema_version": 10,
-        "experiment_id": experiment_id,
-        "run_id": run_id,
-        "run_class": run_class,
-        "status": "PLANNED",
-        "started_at": "",
-        "completed_at": "",
-        "tooling_preflight": {
-            "mode": "AUTOMATED_UPDATE_RADAR",
-            "checked_at": "",
-            "update_radar_path": "",
-            "update_radar_sha256": "",
-            "update_radar_generated_at": "",
-            "update_radar_max_age_hours": 36,
-            "official_sources_complete": False,
-            "active_lanes": [],
-            "source_warnings": [],
-            "figma_release_notes_checked": False,
-            "figma_mcp_docs_checked": False,
-            "agent_docs_checked": False,
-            "community_scan_checked": False,
-            "changes_relevant_to_run": [],
-            "rules_to_retest": [],
-            "new_hypotheses": [],
-            "blockers_or_limits": [],
-        },
-        "reference": {
+    record = load_yaml(RUN_TEMPLATE_PATH)
+
+    record.update(
+        {
+            "experiment_id": experiment_id,
+            "run_id": run_id,
+            "run_class": run_class,
+            "status": "PLANNED",
+            "started_at": "",
+            "completed_at": "",
+            "notes": "",
+        }
+    )
+
+    record["reference"].update(
+        {
             "reference_id": manifest.get("reference_id", ""),
             "manifest_path": relative(root, reference_path),
             "manifest_sha256": sha256(reference_path),
             "figma_nodes": node_ids,
-        },
-        "coordination": {
+        }
+    )
+    record["coordination"].update(
+        {
             "scope": "SECTION",
             "section_id": section_id,
             "parallel_group": worker.get("parallel_group", ""),
             "company_policy_path": company_policy_path,
             "company_policy_id": company_policy_id,
             "company_policy_sha256": company_policy_hash,
+            "implementation_profile_path": "",
+            "implementation_profile_sha256": "",
+            "implementation_profile_id": "",
+            "implementation_family": "",
+            "implementation_variant": "",
             "shared_contract_path": relative(root, contract_path),
             "shared_contract_sha256": contract_hash,
             "section_manifest_path": relative(root, manifest_path),
@@ -335,8 +331,10 @@ def build_run_record(
             "foundation_commit": manifest.get("foundation_commit", ""),
             "isolation_mode": isolation.get("mode", ""),
             "isolation_ref": isolation.get("ref", ""),
-        },
-        "agent": {
+        }
+    )
+    record["agent"].update(
+        {
             "client": agent_client,
             "model": model,
             "model_alias": "",
@@ -344,15 +342,19 @@ def build_run_record(
             "instruction_sources": ["AGENTS.md"],
             "mcp_mode": "",
             "mcp_notes": "",
-        },
-        "code": {
+        }
+    )
+    record["code"].update(
+        {
             "repository": code_baseline.get("repository", ""),
             "starting_commit": manifest.get("foundation_commit", ""),
             "target_route": code_baseline.get("target_route", ""),
             "first_pass_commit": "",
             "final_commit": "",
-        },
-        "context": {
+        }
+    )
+    record["context"].update(
+        {
             "tier": context_tier,
             "prompt_version": "",
             "prompt_hash": "",
@@ -366,58 +368,27 @@ def build_run_record(
             "files_read": [],
             "figma_nodes_inspected": [],
             "tool_calls": None,
-        },
-        "execution": {
+        }
+    )
+    record["execution"].update(
+        {
             "workflow": "STAGED",
             "max_repair_rounds": max_repair_rounds,
             "actual_repair_rounds": 0,
             "assumptions": [],
             "blockers": [],
             "human_intervention": "none",
-        },
-        "captures": {"first_pass": [], "verify": [], "final": []},
-        "scores": {
-            "first_pass_fidelity": {
-                "visual": None,
-                "structural": None,
-                "robustness": None,
-                "total": None,
-            },
-            "final_fidelity": {
-                "visual": None,
-                "structural": None,
-                "robustness": None,
-                "total": None,
-            },
-            "rework_efficiency": None,
-            "reproducibility": None,
-            "final_composite": None,
-        },
-        "rework": {
-            "repair_rounds": 0,
-            "post_first_pass_files_changed": None,
-            "post_first_pass_lines_added": None,
-            "post_first_pass_lines_deleted": None,
-            "rebuild_count": 0,
-            "integration_only_failures": 0,
-            "shared_contract_revisions": 0,
-            "foundation_rebuilds": 0,
-            "merge_conflicts": 0,
-            "affected_section_count": 1,
-            "contract_violations": 0,
-            "severity_counts": {"S1": 0, "S2": 0, "S3": 0, "S4": 0},
-        },
-        "failures": [],
-        "repairs": [],
-        "replay": {"required": False, "source_run": "", "result": "NOT_RUN"},
-        "lessons": {
-            "observations": [],
-            "candidate_rules": [],
-            "agent_specific": [],
-            "project_specific": [],
-        },
-        "notes": "",
-    }
+        }
+    )
+    record["rework"]["affected_section_count"] = 1
+    record["replay"].update(
+        {
+            "required": False,
+            "source_run": "",
+            "result": "NOT_RUN",
+        }
+    )
+    return record
 
 
 def main() -> int:
