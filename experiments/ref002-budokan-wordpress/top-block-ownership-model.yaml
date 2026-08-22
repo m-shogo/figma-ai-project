@@ -1,0 +1,188 @@
+schema_version: 1
+reference_id: REF-002-BUDOKAN
+page: TOP
+status: READY_FOR_THEME_MAPPING
+editor_model: BLOCK_EDITOR
+theme_family: UNKNOWN
+
+principles:
+  - "Theme shell and project conventions are observed before production paths are chosen."
+  - "Core Block and existing Theme capability precede new custom blocks."
+  - "Figma structure is translated into semantic/editor ownership; it is not copied node-for-node into Gutenberg."
+  - "CMS cardinality and data model are not inferred from visual repetition."
+  - "PC/SP authored differences are presentation evidence, not automatic evidence for duplicate CMS fields."
+  - "UNDETERMINED is preserved when the actual Theme, content operation, or data source is not yet known."
+
+sections:
+  - section_id: TOP-HEADER
+    name: Header
+    figma:
+      pc_node: "header instance within 839:4676"
+      sp_node: "1399:12409"
+    ownership: THEME_SHELL
+    editor_unit: THEME_EXISTING
+    block_candidate: NOT_PAGE_CONTENT
+    production_decision: MAP_TO_EXISTING_THEME
+    notes:
+      - "Do not rebuild page-local Header markup when the supplied Theme owns Header/navigation."
+
+  - section_id: TOP-HERO
+    name: Hero / Main Visual
+    figma:
+      pc_node: "MV within 839:4676"
+      sp_node: "446:10021"
+    ownership: PAGE_CONTENT_OR_THEME_FEATURE
+    editor_unit: PATTERN_OR_EXISTING_BLOCK_CANDIDATE
+    block_candidate: [core/group, core/image, core/heading, core/paragraph]
+    production_decision: UNDETERMINED_UNTIL_THEME_AND_EDITOR_REQUIREMENT
+    notes:
+      - "Preserve authored PC/SP composition rather than shrinking the PC composition."
+      - "Use a custom block only if the supplied Theme/editor contract needs structured constraints that Core/Pattern cannot express safely."
+
+  - section_id: TOP-IMPORTANT-NOTICE
+    name: Important Notice
+    figma:
+      pc_node: "important notice within 839:4676"
+      sp_node: "446:11658"
+    ownership: DYNAMIC_OR_EDITOR_CONTENT
+    editor_unit: UNDETERMINED
+    block_candidate: [core/group, core/paragraph]
+    data_model: UNDETERMINED
+    production_decision: OBSERVE_EXISTING_THEME_AND_CONTENT_SOURCE
+    notes:
+      - "Could be manually authored, query-derived, option/global content, or an existing project feature. Do not invent a CPT or option page."
+
+  - section_id: TOP-EVENTS
+    name: Events / Calendar
+    figma:
+      pc_node: "events/calendar composition in 839:4676"
+      sp_node: "1399:12408"
+    ownership: DYNAMIC
+    editor_unit: DYNAMIC_BLOCK_OR_THEME_FEATURE_CANDIDATE
+    data_model: UNDETERMINED
+    interaction: PRESENT
+    third_party_library: UNDETERMINED
+    production_decision: OBSERVE_EXISTING_EVENT_DATA_AND_LIBRARY_FIRST
+    notes:
+      - "The old baseline validates FullCalendar as one possible implementation, not production authority."
+      - "Do not infer Event CPT, plugin, REST shape, or FullCalendar dependency before the supplied Theme/plugin stack is observed."
+      - "Calendar/list switching, month navigation, keyboard/touch/focus, loading/empty/error behavior are runtime QA responsibilities when present."
+
+  - section_id: TOP-PURPOSE
+    name: Purpose / User Guide
+    figma:
+      pc_node: "purpose guide/cards within 839:4676"
+      sp_node: "1392:11716"
+    ownership: EDITOR_CONTENT_CANDIDATE
+    editor_unit: PATTERN_OR_EXISTING_BLOCK_CANDIDATE
+    block_candidate: [core/group, core/image, core/heading, core/paragraph, core/button]
+    cardinality: FIXED_UNTIL_EDITOR_EVIDENCE
+    production_decision: CORE_AND_PATTERN_FIRST
+    notes:
+      - "Three visual cards do not authorize Repeater/Flexible Content."
+      - "Promote to structured custom/ACF Block only if editor capability, validation, or reuse requirements justify it."
+
+  - section_id: TOP-ABOUT
+    name: About Nippon Budokan
+    figma:
+      pc_node: "about composition within 839:4676"
+      sp_node: "1392:11708"
+    ownership: EDITOR_CONTENT_CANDIDATE
+    editor_unit: PATTERN_OR_EXISTING_BLOCK_CANDIDATE
+    responsive_evidence:
+      pc_visible_cards: 6
+      sp_authored_cards: 3
+      sp_behavior: HORIZONTAL_SCROLLER_EVIDENCE
+    cms_cardinality: UNDETERMINED
+    production_decision: PRESERVE_RESPONSIVE_AUTHORING_WITHOUT_DUPLICATING_CMS_MODEL
+    notes:
+      - "PC 6 vs SP 3 is presentation evidence; it does not prove the editor owns different record counts per device."
+      - "Determine whether one content set is filtered/presented differently or whether authored sources genuinely differ only after Theme/content evidence."
+
+  - section_id: TOP-NEWS
+    name: News
+    figma:
+      pc_node: "news section within 839:4676"
+      sp_node: "446:11772"
+    ownership: DYNAMIC
+    editor_unit: QUERY_OR_EXISTING_THEME_FEATURE_CANDIDATE
+    block_candidate: [core/query]
+    data_model_candidates: [CORE_POST_CATEGORY, EXISTING_CPT]
+    production_decision: CORE_POST_CATEGORY_FIRST_CHECK
+    notes:
+      - "A visible News section does not prove a News CPT. Inspect existing post types, categories, queries, and Theme conventions first."
+
+  - section_id: TOP-PARTNERS
+    name: Official Partners
+    figma:
+      pc_node: "partners section within 839:4676"
+      sp_node: "1363:9405"
+    ownership: EDITOR_OR_GLOBAL_CONTENT
+    editor_unit: PATTERN_OR_STRUCTURED_BLOCK_CANDIDATE
+    cardinality: UNDETERMINED
+    block_candidate: [core/group, core/image]
+    production_decision: OBSERVE_EDITOR_OPERATIONS_FIRST
+    notes:
+      - "Logo repetition alone does not authorize an ACF Repeater."
+      - "If editors add/remove/reorder partners, prefer the target project's existing structured-content mechanism."
+
+  - section_id: TOP-INSTAGRAM
+    name: Instagram / Media
+    figma:
+      pc_node: "instagram/media section within 839:4676"
+      sp_node: "1360:9389"
+    ownership: EXTERNAL_OR_EDITOR_CONTENT
+    editor_unit: UNDETERMINED
+    responsive_evidence:
+      pc_visible_items: 5
+      sp_visible_items: 4
+    cms_cardinality: UNDETERMINED
+    production_decision: OBSERVE_DATA_SOURCE_AND_PRIVACY_REQUIREMENTS
+    notes:
+      - "Different visible counts do not prove different CMS record counts."
+      - "Determine static curated images vs API/embed vs existing plugin before adding integration code."
+
+  - section_id: TOP-BANNER
+    name: Banner Area
+    figma:
+      sp_node: "1360:9354"
+    ownership: EDITOR_CONTENT_CANDIDATE
+    editor_unit: CORE_OR_PATTERN_CANDIDATE
+    block_candidate: [core/image, core/group]
+    production_decision: CORE_FIRST
+
+  - section_id: TOP-FOOTER
+    name: Footer
+    figma:
+      sp_node: "1360:9369"
+    ownership: THEME_SHELL
+    editor_unit: THEME_EXISTING
+    block_candidate: NOT_PAGE_CONTENT
+    production_decision: MAP_TO_EXISTING_THEME
+
+mapping_when_theme_arrives:
+  required_observations:
+    - theme_family
+    - wordpress_version
+    - acf_pro_version
+    - theme_json
+    - existing_block_json
+    - existing_block_namespaces
+    - patterns
+    - block_styles
+    - template_and_template_part_ownership
+    - header_footer_ownership
+    - css_scss_pipeline
+    - js_enqueue_and_build_pipeline
+    - current_post_types_taxonomies
+    - acf_local_json_and_field_group_conventions
+    - existing_slider_tabs_accordion_calendar_libraries
+    - image_helper_and_return_format
+  output:
+    - "Replace each UNDETERMINED/CANDIDATE with evidence-backed existing Theme/Core/Pattern/ACF/custom ownership."
+    - "Create new custom blocks only for the smallest remaining capability gap."
+    - "Preserve editor/front-end semantic and visual parity."
+
+freeze:
+  production_ready: false
+  reason: "Actual project Theme is intentionally project-specific and has not been supplied/identified for this replay."
