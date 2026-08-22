@@ -24,6 +24,29 @@ The reusable capability is **not** a fixed folder structure, CSS architecture, b
 
 These tasks are independent of the production Theme and reduce later implementation reversal.
 
+## Discover before asking
+
+Once a Theme repository/commit is supplied, do not ask the user questions whose answers are observable from code or runtime evidence.
+
+Observe directly before asking about:
+
+- Classic / Hybrid / Block Theme family
+- Header/Footer/navigation/template-part ownership
+- `theme.json`
+- block registrations / `block.json` namespaces
+- Patterns / block styles / variations
+- CSS/SCSS/build pipeline
+- JS/enqueue/build pipeline
+- breakpoints/container/gutter primitives
+- ACF Local JSON and ACF Block evidence
+- registered CPT/taxonomies
+- installed/used form or interaction libraries when evidence is available
+- image pipeline / registered sizes / helper conventions
+
+Ask only when the repository/runtime cannot decide a material business or editorial requirement, such as whether editors must add/reorder cards, which team owns News/Events, or what a form must do after submit.
+
+This keeps the Theme adaptive without turning normal reconnaissance into repeated human setup work.
+
 ## Theme-arrival reconnaissance
 
 Before writing production markup/CSS/JS, inspect the supplied Theme for:
@@ -60,6 +83,24 @@ Resolve in this order:
 8. new native custom block
 
 A lower item is selected only when higher items cannot satisfy the semantic, editorial, responsive, accessibility, or runtime contract cleanly.
+
+## Exact Figma asset reuse boundary
+
+Protected Draft PR #142 is not production architecture authority, but its durable Figma asset bytes are valid reuse candidates.
+
+Use [`baseline-asset-source.yaml`](baseline-asset-source.yaml) as the asset-source evidence.
+
+Rules:
+
+- do not regenerate/download an exact asset merely because the old implementation is not being reused
+- do not copy old HTML/CSS/JS ownership together with the asset
+- after Theme observation, import only the assets the new ownership model needs
+- place them according to the supplied Theme's asset conventions, not the old benchmark paths
+- re-hash imported bytes against the pinned SHA-256 values
+- resolve responsive use from Figma evidence; PC/SP authored assets may remain distinct
+- final acceptance still requires fresh Theme-bound SP -> PC visual comparison
+
+This is reuse-before-build applied to design assets: reuse proven bytes, rebuild only the Theme-specific integration.
 
 ## Block Editor output quality
 
