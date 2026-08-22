@@ -93,6 +93,9 @@ jobs:
       - name: Audit reusable run lessons are indexed
         run: python scripts/audit_frontend_learning_capture.py
 
+      - name: Validate reuse-before-build preflight evidence
+        run: python scripts/validate_reuse_preflight.py
+
       - name: Validate implementation target profiles and Shared Contract binding
         run: python scripts/validate_implementation_profile.py
 
