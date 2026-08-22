@@ -24,6 +24,20 @@ For every Figma part or page section, resolve implementation in this order:
 
 A Figma Component is design evidence, not automatic evidence that a new WordPress Block must exist. Visual repetition is not automatic evidence for ACF Repeater/Flexible Content.
 
+## Template/output boundary
+
+Block Editor ownership must survive the generated Theme code.
+
+- In a Classic/Hybrid Theme, editor-owned page/post body content should continue through the Theme's normal WordPress content-rendering path (normally the existing Loop / `the_content()` ownership) instead of being duplicated as hard-coded PHP or parallel ACF fields.
+- In a Block Theme, editor-owned body content should remain represented by the Theme's normal block template / Post Content ownership instead of being copied into a second custom rendering system.
+- Header, Footer, Breadcrumb, Page Title, sidebars, and other shell regions follow the supplied Theme's existing ownership; Block Editor does not automatically move those regions into page content.
+- Patterns may seed or constrain authored compositions, but a Pattern is not automatically a new data model.
+- Template locking/content-only editing is selected only when the observed WordPress version and editorial requirement justify protecting structure while allowing content edits.
+- Do not manually parse/serialize stored block content or bypass normal rendering hooks unless the supplied project already requires that architecture or a measured capability gap proves it necessary.
+- Do not convert ordinary Core Block content into ACF fields merely to make PHP templates easier to write.
+
+The generated code is successful only when a developer can understand both **where the editor owns content** and **where the Theme owns presentation/runtime behavior**.
+
 ## Modern custom-block boundary
 
 When a new block is actually required:
@@ -36,6 +50,8 @@ When a new block is actually required:
 - for ACF Blocks, avoid duplicating wrapper attributes in editor preview
 - keep design/layout tokens out of ACF fields unless editors genuinely own them
 - keep stable ACF keys and deliver portable ACF JSON when ACF fields are used
+
+Version-dependent optimizations remain conditional. For example, newer WordPress versions can batch-register block metadata and newer ACF PRO versions can use ACF Blocks v3/inline editing, but REF-002 must first observe the project's installed versions before choosing those paths.
 
 ## Editor QA is part of completion
 
