@@ -27,6 +27,47 @@ Before First Pass freeze, do **not** fetch, open, reconstruct, or copy any exclu
 - extra viewport thresholds are prohibited unless owner-backed evidence is explicitly added; intrinsic Grid/Flex/minmax/clamp responsiveness is allowed
 - unresolved Figma interactions must not be invented
 
+## Current frontend execution contract
+
+This benchmark **does not redefine** the repository's frontend execution policy. It consumes the canonical current policy from `config/frontend-implementation-policy.yaml` and the canonical Section Manifest contract from `templates/section-manifest.yaml` / `schemas/section.schema.json`.
+
+Machine-readable expectations for this handoff:
+
+- `execution_order: SP_THEN_PC`
+- `section_stabilization_order: SP_THEN_PC`
+- `final_integration_acceptance_order: SP_THEN_PC`
+- `shared_owner_change_restart_acceptance_from: SP`
+- `observation_manifest: SECTION_SCHEMA_V9_REQUIRED`
+- `parallel_capture_must_not_override_acceptance_order: true`
+
+Before implementing the first logical section, create a **fresh schema-v9 Section Manifest (or run-local copy derived from `templates/section-manifest.yaml`)** and populate `observation_coverage` from current Figma evidence. Do not reconstruct values from old REF implementations.
+
+For every logical section, externalize the seven coarse source classes instead of relying on agent memory:
+
+- `TEXT`
+- `RASTER_MEDIA`
+- `VECTOR_LOGO`
+- `BACKGROUND`
+- `DECORATION`
+- `INTERACTION_STATE`
+- `RESPONSIVE_VARIANT`
+
+Use `PRESENT | NONE | UNDETERMINED` with actual source evidence. `UNDETERMINED` is preferable to guessing. Runtime review remains separate from source observation.
+
+The default section loop is deliberately ordered:
+
+1. inspect current Figma **SP** evidence for the section
+2. implement and stabilize **SP**
+3. inspect/adapt the same ownership for **PC**
+4. verify **PC**
+5. run the relevant boundary/continuity check before moving on
+
+Parallel screenshot capture is allowed for efficiency, but it must **not** change acceptance order. If a PC repair changes a shared owner such as shared CSS, component markup, JS, asset/token ownership, container/foundation behavior, or another dependency that can affect SP, the prior SP acceptance is invalidated and validation restarts from **SP → PC**.
+
+Final full-page acceptance is also **SP → PC**. A page is not considered integrated merely because both screenshots exist; the ordered acceptance contract and Observation Coverage evidence must be satisfied.
+
+Because this benchmark Shared Contract intentionally remains `DRAFT`, do not fake production worker activation merely to satisfy READY/RUNNING gates. The schema-v9 manifest is still required as fresh observation/ownership evidence for the Clean Replay, while production activation semantics remain unavailable until legitimate Company Policy authority exists.
+
 ## Start gate
 
 From the sanitized workspace, run:
@@ -44,6 +85,9 @@ The gate must prove at minimum:
 - the blank target contains no REF visual markup/CSS answer
 - historical REF answer paths are absent from workspace selection
 - the Shared Contract requires browser-level ACF admin editability and frontend roundtrip evidence before First Pass freeze
+- the sanitized handoff contains the canonical current SP→PC execution policy
+- the canonical Section Manifest is schema v9+ and the handoff explicitly requires Observation Coverage
+- a shared-owner PC repair restarts acceptance from SP rather than silently preserving an old SP PASS
 
 If the gate fails, fix the substrate/authority mismatch before implementing sections. Do not bypass it with a new bridge or alternate implementation family.
 
@@ -93,16 +137,19 @@ A direct `update_field()` mutation remains useful for deterministic robustness t
 
 ## Execution loop
 
-For each logical section, use structured Figma authority first, then implement, render, measure, and repair. Validate PC/SP plus intermediate/boundary widths. Record strategy reversals and repair rounds rather than hiding them.
+Use current structured Figma authority first. Execute section-by-section as **SP observation → SP implementation/stabilization → PC adaptation/verification → boundary check**, then continue downward. Do not do all HTML first and all CSS later when that would discard section-local visual attention.
+
+For each section, keep its schema-v9 Observation Coverage current as implementation evidence changes. Source observation and runtime review are different facts: seeing a raster or decoration in Figma does not prove it rendered correctly, and a visually plausible browser result does not prove the source was fully observed.
 
 First Pass means the first complete implementation produced from this sanitized authority. Before any historical comparison:
 
 1. commit the complete First Pass
-2. capture deterministic runtime evidence
+2. capture deterministic runtime evidence with ordered SP→PC acceptance
 3. record PC/SP/intermediate overflow and runtime results
 4. record implementation-profile/breakpoint/ACF-delivery compliance
 5. complete and preserve the ACF wp-admin edit/save/reload/frontend roundtrip evidence above
-6. freeze First Pass evidence immutably
+6. record schema-v9 Observation Coverage and unresolved known gaps without converting them to PASS
+7. freeze First Pass evidence immutably
 
 Only **after** that freeze may the execution context read historical/current REF implementations for comparison.
 
