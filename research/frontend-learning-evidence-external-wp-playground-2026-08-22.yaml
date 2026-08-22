@@ -1,0 +1,47 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: EXT-WPENV-PLAYGROUND-RUNTIME-EXPERIMENTAL
+    summary: wp-env now offers an experimental WordPress Playground runtime that removes the Docker requirement for quick disposable testing, but its SQLite database and lack of wp-env run make it unsuitable as the current replacement for the repository's real WordPress + ACF PRO runtime fixture.
+    category: CMS
+    applicability:
+      scope: EXTERNAL
+      conditions:
+        - A future task needs fast disposable WordPress rendering where Docker availability is the primary constraint.
+        - The required plugin/theme behavior does not depend on Docker-only wp-env capabilities or MySQL parity.
+      exclusions:
+        - Do not use as production-runtime evidence for WordPress projects that require MySQL parity.
+        - Do not replace ACF PRO ADMIN_UI, WP-CLI, seed/mutation, or real-theme runtime proof without a dedicated equivalence replay.
+    promotion_state: null
+    promotion:
+      candidate: false
+      rationale: Preserve as an upstream capability to re-evaluate; current official limitations make Docker wp-env or an existing project runtime the stronger evidence source for this repository.
+      blocked_by:
+        - Upstream runtime maturity beyond experimental status.
+        - Equivalent support for the command/runtime capabilities needed by the ACF PRO fixture, or a narrower benchmark that does not need them.
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-EXT-WPENV-PLAYGROUND-OFFICIAL-20260822
+          kind: EXTERNAL_GUIDANCE
+          reference_id: ''
+          run_id: ''
+          path: https://developer.wordpress.org/block-editor/reference-guides/packages/packages-env/
+          commit: ''
+          note: Official wp-env documentation describes the Playground runtime as experimental, Docker-free, SQLite-backed, and currently lacking the wp-env run command available in the Docker runtime.
+        - evidence_id: EV-EXT-WPENV-PLAYGROUND-MATRIX
+          kind: CANONICAL_DOC
+          reference_id: ''
+          run_id: ''
+          path: docs/frontend-external-integration-matrix.md
+          commit: ''
+          note: Existing project guidance already requires environment choice to follow project/runtime evidence rather than uniformity for its own sake.
+      contradicts: []
+    notes:
+      - This is retained to avoid rebuilding a Dockerless WordPress harness if the upstream runtime matures enough for a future narrow use case.
