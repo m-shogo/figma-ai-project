@@ -1,0 +1,81 @@
+schema_version: 1
+reference_id: REF-002-BUDOKAN
+status: READY_FOR_SELECTIVE_REUSE
+updated_at: "2026-08-23"
+
+purpose:
+  - "Preserve exact durable Figma asset truth already materialized in the protected REF-002 baseline without inheriting its HTML/CSS/JS architecture."
+  - "Avoid downloading/regenerating known-good image bytes when the production Theme implementation begins."
+
+source:
+  protected_pr: 142
+  branch: agent/ref002-budokan-final-assets
+  head_commit: 1320476ccaaf86eef6efde6b5cad99533faf085d
+  figma_file_key: RfAQQ28V1HGaeIcpgRmQq1
+  manifest_path: experiments/ref002-budokan-fullcalendar-validation/assets/figma-raster/manifest.json
+  manifest_git_blob_sha: 2af8091f3b369c1cbe088d3ce10324a9cab90b26
+  first_pass_contract_path: experiments/ref002-budokan-fullcalendar-validation/evidence/first-pass-contract.json
+  first_pass_contract_git_blob_sha: 6eb1bfce176c4dfefb29caea0a1319fca5490479
+
+verified_state:
+  pr_claims:
+    pc_asset_pending: 0
+    sp_asset_pending: 0
+    pc_visual_complete: true
+    sp_visual_complete: true
+  raster_manifest_entries: 25
+  additional_durable_assets:
+    partner_png_count: 12
+    footer_vector_svg_count: 4
+  notes:
+    - "The raster manifest records per-file SHA-256, dimensions, byte counts and crop-board provenance."
+    - "Partner PNGs and Footer SVG vector authority are durable on the protected baseline branch but are outside the raster manifest; verify their Git/blob identity again when selectively importing them."
+    - "The old first-pass contract still says pending-materialization because it predates the later asset materialization. The current protected PR head and manifest supersede that historical state for asset availability only."
+
+reuse_boundary:
+  may_reuse:
+    - exact raster bytes after hash verification
+    - authored Footer vector bytes after source verification
+    - Figma node IDs / dimensions / visual-truth references
+    - asset transport lessons
+  must_not_reuse_as_production_authority:
+    - old HTML structure
+    - old CSS ownership
+    - old JavaScript architecture
+    - FullCalendar choice unless the supplied Theme/project requirements justify it
+    - old template paths
+    - old ACF/CMS assumptions
+  import_timing: AFTER_THEME_OBSERVATION_BEFORE_SECTION_IMPLEMENTATION
+  hash_verification_required: true
+  target_paths: "Resolve from the supplied Theme; do not preserve baseline asset paths merely for convenience."
+
+canonical_raster_sha256:
+  hero-pc.png: 303e1ce21becd67b631964601b6457a1d967472ad96e6044062d941cc1129146
+  hero-sp.png: 2b3df6becfeae326720f18fc4b0bc8c6310508971b6e5c29c25a85ce20c30afe
+  event-01.png: c4ed1cfddc50671dc0381bad999ddc7d51de22b3b9cbbd8a5c258f76a46c4111
+  event-02.png: b7bd525b559999ec744c34942cabe1a93813bec550e0c4f6f08b71c8a85c5028
+  event-03.png: f49eba199210dff9642dbac52377af31c4cffda8f6ead888cf3db2b78aedb1c9
+  event-04.png: c4ed1cfddc50671dc0381bad999ddc7d51de22b3b9cbbd8a5c258f76a46c4111
+  purpose-01.png: 6a6ecac5429012c50980150687ba6dfa08c8fd20c17fef89dd0ea96999793956
+  purpose-02.png: 8f42527d69abadbcdf984dadc7a6a0a083d6b63587b12377f6d94321d859fc59
+  purpose-03.png: 060a13321f7c12a565bc2d4fe959388ed7b95519953511c2afb11b1ef1f3c9c2
+  about-bg-pc.png: bcdfcd845980e393526c0c123527c8480eeeb6b1abacb0aff85319f6a82eb52e
+  about-bg-sp.png: a72cb50694d4d8308c96e26bfd95cae64b35b85782a7a1da61f605f460650bb3
+  about-01.png: 2371ea16f16477a52d3b9ec3fbccd21f9a33ecb171f34f76a71083df292f66b6
+  about-02.png: 5243f6e92e801129f6c25690dc90fea5b889f6530c5612275fd9cbb20542f40f
+  about-03.png: 8632651d3d600973c9af979bef3e0723b17d43066d658003f94194a8e6bcb58c
+  about-04.png: 9f30bdec35428b28535b0f619065c198cf54a55478cccded465999b7dd054fad
+  about-05.png: 19089d0ed3815fdc3be26cd9a2e701e637acdde7d09a5dc134aa4cbd2eb41b6d
+  about-06.png: ccd04688fed8892591f16d93561aecfd55c8dd3805c135d7d24d8fcef79bc523
+  instagram-01.png: 57c5c3acbe620ccb613cbcad9f7017807acafbef7edc4a50924ad701e87f60a6
+  instagram-02.png: fdf04230fa4cd6847b2c79235ce5e77a2d5619bf90074af78792154b2d9f9378
+  instagram-03.png: a9aebfc69e3ab9acf4f0a9ef2efabca249c35586b3f5dd71e7593a11fef540b1
+  instagram-04.png: bcf9c7f8ca520763b9b0633d56e80cc973eb1408c81a2f20032ba5bbb64b645b
+  instagram-05.png: a309cad4f2b6b42c8a04e4e99b545062791435edc073ad5d4c8cce4a0e2b2949
+  banner-pc.png: 0e1670a2bf3e8c805e22b1c987ebd2409702e9277982db61e67b0b729fbf1bf1
+  banner-sp.png: 4a2b4a63e4f7f8e3644a37ec5f12039a96667ef000984f165c92bd795726af05
+  footer-map.png: 5c6a3fbb9f3835d74752567bd62762136893b538fa4ce03b0a7ba53785ecdc38
+
+production_completion_rule:
+  - "Selective reuse is not complete until copied bytes are re-hashed in the production Theme workspace and match this evidence."
+  - "Visual completion still requires fresh Theme-bound SP -> PC Figma comparison; asset availability does not prove final page fidelity."
