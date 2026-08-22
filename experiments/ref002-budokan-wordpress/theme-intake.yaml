@@ -2,7 +2,7 @@ schema_version: 1
 intake_id: REF-002-BUDOKAN-WORDPRESS
 status: AWAITING_THEME
 created_at: "2026-08-18"
-updated_at: "2026-08-18"
+updated_at: "2026-08-23"
 
 project:
   reference_id: REF-002-BUDOKAN
@@ -11,6 +11,7 @@ project:
   evidence_paths:
     - tools/implementation-intake/REAL_WEB_VALIDATION.md
     - tools/implementation-intake/REF002_VISUAL_TRUTH_ASSET_LEARNING.md
+    - experiments/ref002-budokan-wordpress/baseline-asset-source.yaml
     - docs/wordpress-theme-intake.md
     - docs/wordpress-acf-policy.md
     - docs/wordpress-target-reconnaissance.md
@@ -95,11 +96,9 @@ theme_delivery:
       notes:
         - "registered image sizes と attachment helper 使用状況を観測してから ACF image return format を決める"
   blocking_questions:
-    - "本番用の初期ベーシックThemeはいつ、どのrepository/commitで提供されますか"
-    - "Themeは Classic / Block / Hybrid のどれを前提にしていますか"
-    - "Header/Footer/navigation は Theme所有ですか、案件側で置き換えますか"
-    - "既存の form plugin と CPT 登録は Theme側にありますか"
-    - "ACF Local JSON の運用ruleは Theme側で決まっていますか"
+    - "本番用Themeのrepository/commitまたはTheme実体へのアクセス"
+    - "Theme repo外に会社固有の実装policy / coding standard / editor運用仕様がある場合、その所在"
+    - "repoから観測できない業務要件だけ確認する。Theme family / Header/Footer / block / form plugin / CPT / ACF Local JSON / CSS/JS/breakpointは先にAIが観測する"
 
 template_coverage:
   - surface: FRONT_PAGE
@@ -453,7 +452,8 @@ qa_reuse:
       reuse_mode: REUSE
       notes:
         - "ASSET_PENDING / ASSET_READY / ASSET_CORRUPT / ASSET_INVALID_EPHEMERAL_METADATA をそのまま使う"
-        - "REF-002 benchmark は PC/SP それぞれ 35 slot が ASSET_PENDING のまま"
+        - "Protected PR #142 head 1320476ccaaf86eef6efde6b5cad99533faf085d では PC/SP ASSET_PENDING=0。production Themeへは baseline-asset-source.yaml から必要assetだけselective importし、再hashする"
+        - "旧HTML/CSS/JSや旧asset pathはproduction authorityにしない"
     - id: target_readiness
       existing_asset: scripts/coordinate_wordpress_target_readiness.py
       reuse_mode: REUSE
@@ -496,10 +496,9 @@ unknowns:
       - content_decisions.content_ownership
     state: UNKNOWN
   - id: ref002-asset-materialization
-    question: "REF-002 の Figma 実asset を durable bytes として持ち込む経路"
-    blocks:
-      - visual_completeness
-    state: UNDETERMINED
+    question: "Protected PR #142のdurable Figma asset source/transport/provenanceをproduction replayで再利用できる状態に固定する"
+    blocks: []
+    state: RESOLVED
 
 conflicts: []
 
@@ -508,4 +507,4 @@ freeze:
   frozen_at: ""
   notes:
     - "Theme未提供のため freeze しない"
-    - "freeze には Theme観測完了と UNDETERMINED の解消が必要"
+    - "freeze には Theme観測完了と未解決の業務/editor要件の解消が必要"
