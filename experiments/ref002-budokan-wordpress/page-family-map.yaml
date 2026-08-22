@@ -1,0 +1,187 @@
+schema_version: 1
+reference_id: REF-002-BUDOKAN
+status: READY_FOR_THEME_MAPPING
+source: LIVE_FIGMA_INSPECTION
+
+shared_shell_evidence:
+  pc:
+    - "news/post/form/generic pages visibly reuse Header, Page Title, Breadcrumb, and Footer structures."
+    - "join/training-center/training/backnumber use a related but not identical authored shell/hero family; do not force one DOM solely for DRYness."
+  sp:
+    - "news/join/training-center/training/backnumber consistently show mobile Header, title/hero, breadcrumb, Footer, and footer CTA families with authored page-specific differences."
+  implementation_rule: "Map these semantic families to the supplied Theme's existing shell/template-part/block-pattern architecture rather than creating a universal REF-002 Theme shell."
+
+families:
+  - family_id: NEWS_ARCHIVE
+    pc_frame: "413:2191"
+    sp_frame: "560:2524"
+    observed_parts:
+      - HEADER
+      - PAGE_TITLE
+      - CATEGORY_OR_FILTER_TABS
+      - ARTICLE_LIST
+      - PAGER
+      - BREADCRUMB
+      - FOOTER
+      - SP_FOOTER_CTA
+    wordpress_resolution:
+      template: EXISTING_ARCHIVE_OR_QUERY_TEMPLATE_FIRST
+      data_model: CORE_POST_CATEGORY_OR_EXISTING_CPT
+      blocks: [core/query]
+      custom_block: NOT_PROVEN
+    notes:
+      - "Do not create a News CPT just because Figma labels the page News."
+      - "Filter/tab behavior and URL semantics must come from the actual Theme/product contract."
+
+  - family_id: POST_DETAIL
+    pc_frame: "1235:6361"
+    sp_frame: UNOBSERVED_CANONICAL_MATCH
+    observed_parts:
+      - HEADER
+      - PAGE_TITLE
+      - ARTICLE_LEAD
+      - CONTENT_IMAGE
+      - HEADING_TEXT_GROUPS
+      - BUTTONS
+      - SEPARATOR
+      - BREADCRUMB
+      - FOOTER
+    wordpress_resolution:
+      template: EXISTING_SINGLE_TEMPLATE_FIRST
+      editor_content: CORE_BLOCKS_FIRST
+      custom_block: ONLY_FOR_MISSING_STRUCTURED_CAPABILITY
+    notes:
+      - "The article body is a strong Core Block candidate: headings, paragraphs, images, buttons, and separators should not become custom ACF fields by default."
+
+  - family_id: FORM_PAGE
+    pc_frame: "1156:7728"
+    sp_frame: UNOBSERVED_CANONICAL_MATCH
+    observed_parts:
+      - HEADER
+      - PAGE_TITLE
+      - FORM_CONTENT
+      - BREADCRUMB
+      - FOOTER
+    wordpress_resolution:
+      form_engine: EXISTING_THEME_OR_PLUGIN_FIRST
+      custom_form_framework: NOT_PLANNED
+      block_wrapper: EXISTING_FORM_BLOCK_SHORTCODE_OR_PATTERN_FIRST
+    qa:
+      - IME
+      - AUTOFILL
+      - VALIDATION
+      - ERROR
+      - SUBMIT_LIFECYCLE
+      - KEYBOARD
+      - SP_THEN_PC
+    notes:
+      - "Figma defines visual treatment, not the production form backend/plugin."
+
+  - family_id: GENERIC_CONTENT_WITH_LOCAL_NAV
+    pc_frame: "1203:4865"
+    sp_frame: UNOBSERVED_CANONICAL_MATCH
+    observed_parts:
+      - HEADER
+      - PAGE_TITLE
+      - CONTENT_PARTS
+      - BREADCRUMB
+      - LOCAL_NAV
+      - FOOTER
+    wordpress_resolution:
+      content: CORE_BLOCKS_AND_PATTERNS_FIRST
+      local_nav: EXISTING_THEME_OR_HIERARCHY_MENU_FIRST
+      custom_block: NOT_PROVEN
+
+  - family_id: LONG_GENERIC_CONTENT
+    pc_frame: "1206:5446"
+    sp_frame: UNOBSERVED_CANONICAL_MATCH
+    observed_parts:
+      - HEADER
+      - PAGE_TITLE
+      - LONG_CONTENT
+      - BREADCRUMB
+      - FOOTER
+    wordpress_resolution:
+      content: CORE_BLOCKS_AND_PATTERNS_FIRST
+      custom_block: NOT_PROVEN
+    notes:
+      - "Use this page to test whether Parts-derived styles survive long real content without page-specific CSS patches."
+
+  - family_id: FEATURE_PAGE_JOIN
+    pc_frame: "380:417"
+    sp_frame: "560:188"
+    observed_parts:
+      - FEATURE_HERO
+      - HEADER
+      - BREADCRUMB
+      - CONTENT_SECTIONS
+      - FOOTER
+      - SP_FOOTER_CTA
+    wordpress_resolution:
+      shell: EXISTING_THEME_FEATURE_TEMPLATE_OR_PATTERN_FIRST
+      content: CORE_AND_PATTERN_FIRST
+      custom_block: SECTION_BY_SECTION_EVIDENCE_ONLY
+    notes:
+      - "PC/SP content lengths and composition differ materially; preserve authored responsive intent rather than forcing identical geometry."
+
+  - family_id: FEATURE_PAGE_TRAINING_CENTER
+    pc_frame: "395:7954"
+    sp_frame: "560:377"
+    observed_parts:
+      - FEATURE_HERO
+      - HEADER
+      - BREADCRUMB
+      - CONTENT_SECTIONS
+      - FOOTER
+      - SP_FOOTER_CTA
+    wordpress_resolution:
+      shell: REUSE_FEATURE_PAGE_FAMILY_IF_SEMANTICALLY_MATCHED
+      content: CORE_AND_PATTERN_FIRST
+
+  - family_id: FEATURE_PAGE_TRAINING
+    pc_frame: "402:236"
+    sp_frame: "560:537"
+    observed_parts:
+      - FEATURE_HERO_OR_PAGE_TITLE
+      - HEADER
+      - BREADCRUMB
+      - CONTENT_SECTIONS
+      - LOWER_CTA_OR_RELATED_SECTION
+      - FOOTER
+      - SP_FOOTER_CTA
+    wordpress_resolution:
+      shell: REUSE_FEATURE_PAGE_FAMILY_IF_SEMANTICALLY_MATCHED
+      content: CORE_AND_PATTERN_FIRST
+
+  - family_id: BACKNUMBER
+    pc_frame: "405:360"
+    sp_frame: "560:677"
+    observed_parts:
+      - FEATURE_HERO_OR_PAGE_TITLE
+      - HEADER
+      - BREADCRUMB
+      - INTRO_OR_FILTER
+      - LARGE_REPEATABLE_VISUAL_LIST
+      - FOOTER
+      - SP_FOOTER_CTA
+    wordpress_resolution:
+      data_model: UNDETERMINED
+      editor_unit: QUERY_EXISTING_DATA_OR_STRUCTURED_CONTENT_CANDIDATE
+      repeater: NOT_AUTHORIZED_BY_VISUAL_REPETITION
+    notes:
+      - "This is a high-value cardinality test: determine actual editorial add/remove/reorder and archive semantics before choosing Query, CPT, Repeater, or fixed authored blocks."
+
+reuse_validation:
+  goals:
+    - "Parts-derived heading/button/table/list styles should work across multiple families without per-page duplication."
+    - "Shell reuse should follow semantic Theme ownership, not Figma instance identity alone."
+    - "Page-specific exceptions remain local and must not mutate shared components without dependent-page regression QA."
+    - "The Block Editor should remain usable: ordinary editorial content stays ordinary blocks where possible."
+
+production_freeze:
+  ready: false
+  blockers:
+    - ACTUAL_THEME_NOT_OBSERVED
+    - ACTUAL_POST_TYPE_AND_TAXONOMY_REGISTRY_NOT_OBSERVED
+    - ACTUAL_FORM_ENGINE_NOT_OBSERVED
+    - ACTUAL_BLOCK_PATTERN_INVENTORY_NOT_OBSERVED
