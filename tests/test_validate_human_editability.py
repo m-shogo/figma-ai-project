@@ -89,6 +89,49 @@ class HumanEditabilityValidationTests(unittest.TestCase):
         errors = MODULE.validate_run_block(run, "run")
         self.assertTrue(any("cannot contain a failed change drill" in error for error in errors))
 
+    def test_pass_drill_requires_material_snapshot_commit(self) -> None:
+        run = self.base_run()
+        drill = self.drill("HE-SNAPSHOT")
+        drill["snapshot_commit"] = "TBD"
+        run["human_editability"]["change_drills"] = [drill]
+        errors = MODULE.validate_run_block(run, "run")
+        self.assertTrue(any("material snapshot_commit evidence" in error for error in errors), errors)
+
+    def test_pass_drill_requires_located_source(self) -> None:
+        run = self.base_run()
+        drill = self.drill("HE-LOCATE")
+        drill["located_paths"] = []
+        run["human_editability"]["change_drills"] = [drill]
+        errors = MODULE.validate_run_block(run, "run")
+        self.assertTrue(any("at least one located_path" in error for error in errors), errors)
+
+    def test_pass_drill_requires_regression_pass(self) -> None:
+        run = self.base_run()
+        drill = self.drill("HE-REGRESSION")
+        drill["regression_status"] = "NOT_RUN"
+        run["human_editability"]["change_drills"] = [drill]
+        errors = MODULE.validate_run_block(run, "run")
+        self.assertTrue(any("regression_status=PASS" in error for error in errors), errors)
+
+    def test_pass_drill_with_no_file_change_requires_explanation(self) -> None:
+        run = self.base_run()
+        drill = self.drill("HE-CMS")
+        drill["changed_paths"] = []
+        run["human_editability"]["change_drills"] = [drill]
+        errors = MODULE.validate_run_block(run, "run")
+        self.assertTrue(any("zero changed_paths requires notes" in error for error in errors), errors)
+
+        drill["notes"] = ["Changed the editor-owned ACF value in the disposable runtime; no code file changed."]
+        self.assertEqual(MODULE.validate_run_block(run, "run"), [])
+
+    def test_path_evidence_rejects_placeholder_entries(self) -> None:
+        run = self.base_run()
+        drill = self.drill("HE-PATH")
+        drill["changed_paths"] = ["TODO"]
+        run["human_editability"]["change_drills"] = [drill]
+        errors = MODULE.validate_run_block(run, "run")
+        self.assertTrue(any("entries must be non-placeholder strings" in error for error in errors), errors)
+
 
 if __name__ == "__main__":
     unittest.main()
