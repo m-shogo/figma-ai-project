@@ -1,0 +1,154 @@
+schema_version: 1
+reference_id: REF-002-BUDOKAN
+figma_file_key: RfAQQ28V1HGaeIcpgRmQq1
+parts_frame:
+  node_id: "1163:4245"
+  name: parts
+  width: 1380
+  height: 7122
+  local_component_count: 12
+  observed_instance_count: 72
+
+principles:
+  - "A Figma Component is design evidence, not automatic evidence for a new WordPress Block."
+  - "Prefer existing Theme and WordPress Core capabilities before custom blocks."
+  - "Patterns compose blocks; custom blocks own behavior or data contracts that Core cannot express cleanly."
+  - "ACF fields represent editor-owned content/configuration, not design tokens or arbitrary Figma properties."
+
+parts:
+  - id: heading_h2
+    figma_node_id: "1157:8179"
+    figma_name: h2
+    initial_resolution: CORE_BLOCK_STYLE
+    wordpress_candidate: core/heading
+    custom_block: NOT_PLANNED
+    notes:
+      - "Use Theme/editor styles for authored H2 treatment unless the base Theme already provides an equivalent style."
+
+  - id: heading_h3
+    figma_node_id: "1157:8184"
+    figma_name: h3
+    initial_resolution: CORE_BLOCK_STYLE
+    wordpress_candidate: core/heading
+    custom_block: NOT_PLANNED
+
+  - id: heading_h4
+    figma_node_id: "1157:8189"
+    figma_name: h4
+    initial_resolution: CORE_BLOCK_STYLE
+    wordpress_candidate: core/heading
+    custom_block: NOT_PLANNED
+
+  - id: small_link_button
+    figma_node_id: "1216:6172"
+    figma_name: parts / btn-02
+    initial_resolution: CORE_BLOCK_OR_EXISTING_STYLE
+    wordpress_candidate: core/button
+    custom_block: UNDETERMINED
+    notes:
+      - "External/file/PDF icon variants should first be solved through existing Theme link/button conventions or block styles."
+
+  - id: cta_button
+    figma_node_id: "1157:8271"
+    figma_name: parts / btn-03
+    initial_resolution: PATTERN_OR_CORE_STYLE
+    wordpress_candidate: core/buttons
+    custom_block: UNDETERMINED
+
+  - id: table_header_cell
+    figma_node_id: "1157:8286"
+    figma_name: Headercell
+    initial_resolution: CORE_BLOCK_STYLE
+    wordpress_candidate: core/table
+    custom_block: NOT_PLANNED
+
+  - id: table_cell
+    figma_node_id: "1157:8291"
+    figma_name: cell
+    initial_resolution: CORE_BLOCK_STYLE
+    wordpress_candidate: core/table
+    custom_block: NOT_PLANNED
+
+  - id: separator
+    figma_node_id: "1254:6965"
+    figma_name: hr
+    initial_resolution: CORE_BLOCK_STYLE
+    wordpress_candidate: core/separator
+    custom_block: NOT_PLANNED
+
+  - id: page_anchor_link
+    figma_node_id: "1198:4686"
+    figma_name: btn-pagelink
+    initial_resolution: PATTERN_OR_CORE_STYLE
+    wordpress_candidate: core/button
+    custom_block: UNDETERMINED
+
+  - id: quotation_open
+    figma_node_id: "1157:8392"
+    figma_name: ico_quotation01
+    initial_resolution: CORE_BLOCK_DECORATION
+    wordpress_candidate: core/quote
+    custom_block: NOT_PLANNED
+
+  - id: quotation_close
+    figma_node_id: "1157:8396"
+    figma_name: ico_quotation02
+    initial_resolution: CORE_BLOCK_DECORATION
+    wordpress_candidate: core/quote
+    custom_block: NOT_PLANNED
+
+  - id: local_navigation_item
+    figma_node_id: "1201:4784"
+    figma_name: nav_local
+    initial_resolution: DYNAMIC_OR_PATTERN_CANDIDATE
+    wordpress_candidate: UNDETERMINED
+    custom_block: UNDETERMINED
+    notes:
+      - "Resolve whether navigation is editor-authored, hierarchy-derived, menu-derived, or Theme-owned after base Theme inspection."
+
+non_component_parts:
+  - id: paragraph_and_inline_emphasis
+    initial_resolution: CORE_BLOCKS
+    wordpress_candidates: [core/paragraph]
+  - id: two_column_text_boxes
+    initial_resolution: PATTERN
+    wordpress_candidates: [core/group, core/columns]
+  - id: image_with_caption
+    initial_resolution: CORE_BLOCKS
+    wordpress_candidates: [core/image, core/media-text]
+  - id: unordered_ordered_annotation_lists
+    initial_resolution: CORE_BLOCKS
+    wordpress_candidates: [core/list, core/paragraph]
+  - id: accordion
+    initial_resolution: CORE_FIRST
+    wordpress_candidates: [core/details]
+    custom_block: ONLY_IF_FIGMA_OR_PRODUCT_BEHAVIOR_EXCEEDS_CORE_DETAILS
+  - id: navigation_card
+    initial_resolution: PATTERN_FIRST
+    wordpress_candidates: [core/group, core/image, core/heading, core/paragraph, core/button]
+  - id: slider
+    initial_resolution: EXISTING_LIBRARY_FIRST
+    wordpress_candidates: []
+    custom_block: CANDIDATE
+    notes:
+      - "Check the base Theme/plugin stack before choosing Swiper or creating a new block."
+  - id: tabs
+    initial_resolution: EXISTING_LIBRARY_FIRST
+    wordpress_candidates: []
+    custom_block: CANDIDATE
+    notes:
+      - "If custom implementation is required, keyboard and focus semantics are part of the block contract."
+
+shell_owned:
+  - header
+  - footer
+  - page_title
+  - breadcrumb
+
+production_freeze:
+  ready: false
+  blockers:
+    - ACTUAL_BASE_THEME_NOT_OBSERVED
+    - WORDPRESS_VERSION_NOT_OBSERVED
+    - ACF_PRO_VERSION_NOT_OBSERVED
+    - EXISTING_BLOCK_PATTERN_STYLE_INVENTORY_NOT_OBSERVED
