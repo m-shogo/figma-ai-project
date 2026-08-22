@@ -12,8 +12,14 @@ from typing import Any
 
 import yaml
 
+from validate_records import SECTION_SCHEMA, load_json as load_schema_json, validate_schema
+
 ROOT = Path(__file__).resolve().parents[1]
-SNAPSHOT_SCHEMA_VERSION = 1
+SNAPSHOT_SCHEMA_VERSION = 2
+SUPPORTED_SNAPSHOT_SCHEMA_VERSIONS = {1, 2}
+OBSERVATION_LINEAGE_RUN_SCHEMA_VERSION = 13
+OBSERVATION_LINEAGE_SCOPES = {"SECTION", "INTEGRATION", "PAGE_BENCHMARK"}
+OBSERVATION_COVERAGE_SECTION_SCHEMA_VERSION = 9
 
 
 def load_yaml(path: Path) -> dict[str, Any]:
@@ -39,6 +45,77 @@ def snapshot_path(run_path: Path) -> Path:
     return run_path.with_name(f"{run_path.stem}.first-pass.json")
 
 
+def repo_file(value: str, label: str) -> Path:
+    text = value.strip()
+    if not text:
+        raise ValueError(f"{label} is required before FIRST PASS freeze")
+    path = (ROOT / text).resolve()
+    if path != ROOT and ROOT not in path.parents:
+        raise ValueError(f"{label} escapes repository root: {text}")
+    if not path.is_file():
+        raise ValueError(f"{label} does not exist: {text}")
+    return path
+
+
+def require_pinned_file(coordination: dict[str, Any], path_field: str, hash_field: str, label: str) -> tuple[str, str, Path]:
+    path_value = str(coordination.get(path_field, "")).strip()
+    expected_hash = str(coordination.get(hash_field, "")).strip()
+    if not expected_hash:
+        raise ValueError(f"coordination.{hash_field} is required before FIRST PASS freeze")
+    path = repo_file(path_value, f"coordination.{path_field}")
+    actual_hash = file_sha256(path)
+    if actual_hash != expected_hash:
+        raise ValueError(
+            f"{label} sha256 mismatch before FIRST PASS freeze: expected {expected_hash}, actual {actual_hash}"
+        )
+    return path_value, expected_hash, path
+
+
+def observation_lineage(run: dict[str, Any]) -> dict[str, str]:
+    version = int(run.get("schema_version", 0) or 0)
+    coordination = run.get("coordination", {})
+    scope = str(coordination.get("scope", "")).strip()
+    if version < OBSERVATION_LINEAGE_RUN_SCHEMA_VERSION or scope not in OBSERVATION_LINEAGE_SCOPES:
+        return {}
+
+    manifest_path_value, manifest_hash, manifest_path = require_pinned_file(
+        coordination,
+        "section_manifest_path",
+        "section_manifest_sha256",
+        "Section Manifest",
+    )
+    profile_path_value, profile_hash, _ = require_pinned_file(
+        coordination,
+        "figma_structure_profile_path",
+        "figma_structure_profile_sha256",
+        "Figma Structure Profile",
+    )
+
+    manifest = load_yaml(manifest_path)
+    manifest_version = int(manifest.get("schema_version", 0) or 0)
+    if manifest_version < OBSERVATION_COVERAGE_SECTION_SCHEMA_VERSION:
+        raise ValueError(
+            "FIRST PASS freeze requires Section Manifest schema v9+ so Observation Coverage is part of the frozen evidence"
+        )
+    schema_errors = validate_schema(manifest, load_schema_json(SECTION_SCHEMA))
+    if schema_errors:
+        raise ValueError(
+            "Section Manifest is invalid before FIRST PASS freeze:\n- " + "\n- ".join(schema_errors)
+        )
+
+    if str(manifest.get("figma_structure_profile", "")).strip() != profile_path_value:
+        raise ValueError("run Figma Structure Profile path does not match Section Manifest before FIRST PASS freeze")
+    if str(manifest.get("figma_structure_profile_sha256", "")).strip() != profile_hash:
+        raise ValueError("run Figma Structure Profile hash does not match Section Manifest before FIRST PASS freeze")
+
+    return {
+        "section_manifest_path": manifest_path_value,
+        "section_manifest_sha256": manifest_hash,
+        "figma_structure_profile_path": profile_path_value,
+        "figma_structure_profile_sha256": profile_hash,
+    }
+
+
 def first_pass_payload(run: dict[str, Any], tooling_revision: str) -> dict[str, Any]:
     code = run.get("code", {})
     captures = run.get("captures", {}).get("first_pass", [])
@@ -57,7 +134,7 @@ def first_pass_payload(run: dict[str, Any], tooling_revision: str) -> dict[str, 
     if not tooling_revision:
         raise ValueError("tooling_revision is required to pin the figma-ai-project baseline")
 
-    return {
+    payload = {
         "schema_version": SNAPSHOT_SCHEMA_VERSION,
         "experiment_id": str(run.get("experiment_id", "")),
         "run_id": str(run.get("run_id", "")),
@@ -75,11 +152,14 @@ def first_pass_payload(run: dict[str, Any], tooling_revision: str) -> dict[str, 
         "captures_sha256": sha256_text(canonical_json(captures)),
         "first_pass_fidelity": score,
     }
+    payload.update(observation_lineage(run))
+    return payload
 
 
 def validate_snapshot(run: dict[str, Any], snapshot: dict[str, Any]) -> list[str]:
     errors: list[str] = []
-    if snapshot.get("schema_version") != SNAPSHOT_SCHEMA_VERSION:
+    snapshot_version = snapshot.get("schema_version")
+    if snapshot_version not in SUPPORTED_SNAPSHOT_SCHEMA_VERSIONS:
         errors.append("unsupported FIRST PASS snapshot schema_version")
     if snapshot.get("run_id") != run.get("run_id"):
         errors.append("FIRST PASS snapshot run_id mismatch")
@@ -105,6 +185,12 @@ def validate_snapshot(run: dict[str, Any], snapshot: dict[str, Any]) -> list[str
         "captures_sha256": sha256_text(canonical_json(captures)),
         "first_pass_fidelity": score,
     }
+    if snapshot_version == 2:
+        try:
+            expected.update(observation_lineage(run))
+        except Exception as exc:
+            errors.append(str(exc))
+
     for key, value in expected.items():
         if snapshot.get(key) != value:
             errors.append(f"FIRST PASS snapshot {key} no longer matches run record")
