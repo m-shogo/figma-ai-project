@@ -1,6 +1,6 @@
 # REF-002 Visual Truth Wrapper + Durable Asset Readiness
 
-This record extends the canonical Fast Loop with two concrete lessons observed on the independent REF-002 Budokan validation. It does **not** change REF-001 V2/V3 implementation, assets, or Visual QA.
+This record extends the canonical Fast Loop with concrete lessons observed on the independent REF-002 Budokan validation. It does **not** change REF-001 V2/V3 implementation, assets, or Visual QA.
 
 ## 1. Visual Truth wrapper artifact
 
@@ -66,8 +66,36 @@ Knowing a temporary Figma URL is **not** materialization and must never promote 
 
 Implementation: `visual_truth_guard.durable_asset_state`.
 
-## REF-002 current boundary
+## REF-002 materialization update — 2026-08-23
 
-Budokan still has real image materialization work remaining. This guard deliberately does not convert its pending image evidence into a fake pass: the status remains pending until actual durable bytes are present and verified.
+The original section below was written before the later protected REF-002 asset-materialization work and is now historical evidence rather than the current asset-availability state.
 
-The Figma connector can expose/export the relevant image nodes, but the current ChatGPT connector/runtime boundary does not yet provide a safe reusable binary handoff for these short-lived asset responses. That transport limitation is kept separate from the durable readiness contract.
+Protected Draft PR #142 at immutable head `1320476ccaaf86eef6efde6b5cad99533faf085d` contains durable local assets used by its current benchmark runtime:
+
+- PC `ASSET_PENDING = 0`
+- SP `ASSET_PENDING = 0`
+- 25 raster assets recorded in `assets/figma-raster/manifest.json` with per-file SHA-256, dimensions and byte sizes
+- 12 durable Partner PNGs
+- Footer brand vector authority preserved as SVG components
+- short-lived Figma MCP URLs are not persisted
+
+The raster manifest source is:
+
+`experiments/ref002-budokan-fullcalendar-validation/assets/figma-raster/manifest.json`
+
+The production WordPress replay does **not** inherit PR #142 HTML/CSS/JS architecture. Exact asset bytes may be selectively reused after the supplied Theme is observed and their hashes are reverified.
+
+Canonical production-reuse evidence:
+
+`experiments/ref002-budokan-wordpress/baseline-asset-source.yaml`
+
+This separates two facts that must not be conflated:
+
+1. **asset availability is solved for the protected benchmark source**;
+2. **production Theme-bound visual fidelity is not solved until the new implementation imports the required bytes and passes fresh SP -> PC Figma comparison**.
+
+## Historical boundary before materialization
+
+At the time this lesson was first recorded, Budokan still had image materialization work remaining. The guard deliberately did not convert pending image evidence into a fake pass: status stayed pending until actual durable bytes were present and verified.
+
+The Figma connector could expose/export the relevant image nodes, but the then-current ChatGPT connector/runtime boundary did not provide a safe reusable binary handoff for short-lived asset responses. The later #142 work solved that benchmark transport problem without weakening the durable-readiness contract.
