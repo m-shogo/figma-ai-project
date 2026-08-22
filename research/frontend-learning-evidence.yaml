@@ -1,0 +1,263 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+# This is an evidence index, not a runtime policy source.
+# Keep observations, successes, failures, and counterexamples queryable here.
+# Promotion into canonical frontend policy remains a separate reviewed action.
+records:
+  - learning_id: OBS-REF001-DECORATIVE-EXACT-SOURCE
+    summary: Exact Figma decorative vectors combined with live text can be a better implementation mechanism than CSS-only reconstruction when the exact source exists.
+    category: ASSET_STRATEGY
+    applicability:
+      scope: REFERENCE
+      conditions:
+        - Figma exposes an exact decorative vector or rendered asset whose geometry is part of visual truth.
+        - Text or editor-owned content remains separately live where appropriate.
+      exclusions:
+        - Do not flatten live content into an image merely to simplify implementation.
+    promotion_state: null
+    promotion:
+      candidate: false
+      rationale: Single-reference observation only.
+      blocked_by:
+        - Dedicated clean replay on an independent design.
+        - Evidence that exact-source reuse reduces repair cost without harming editability.
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-REF001-DECORATIVE-RESEARCH
+          kind: LOCAL_RESEARCH
+          reference_id: REF-001-CHIBA-KEIZAI-SAMPLE
+          run_id: ''
+          path: research/ref001-v2-v3-frontend-learning-2026-08-20.md
+          commit: ''
+          note: Student Voice structured-context observation records exact SVG decoration with live text.
+        - evidence_id: EV-REF001-DECORATIVE-COOKBOOK
+          kind: CANONICAL_DOC
+          reference_id: REF-001-CHIBA-KEIZAI-SAMPLE
+          run_id: ''
+          path: docs/frontend-decorative-pattern-cookbook.md
+          commit: ''
+          note: Existing mechanism-selection guidance keeps exact-source reuse as an evidence-based option rather than a blanket rule.
+      contradicts: []
+    notes:
+      - Preserve as observation until a distinct reference reproduces the benefit.
+
+  - learning_id: OBS-REF001-VISUAL-REPAIR-OWNERSHIP
+    summary: V2-level visual close-out is easier to maintain when repairs return to the canonical section or shared owner instead of accumulating chronology-based repair layers.
+    category: MAINTAINABILITY
+    applicability:
+      scope: REFERENCE
+      conditions:
+        - A visual defect has a discoverable canonical owner.
+        - A temporary diagnostic patch can be removed after root-cause repair.
+      exclusions:
+        - Multiple CSS files are not a failure when they represent stable ownership boundaries.
+    promotion_state: null
+    promotion:
+      candidate: false
+      rationale: REF-001 comparison supports the direction but Human Correction Cost is not yet measured across designs.
+      blocked_by:
+        - Independent-design replay with repair-round and change-locality evidence.
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-REF001-REPAIR-OWNERSHIP-RESEARCH
+          kind: LOCAL_RESEARCH
+          reference_id: REF-001-CHIBA-KEIZAI-SAMPLE
+          run_id: ''
+          path: research/ref001-v2-v3-frontend-learning-2026-08-20.md
+          commit: ''
+          note: V2/V3 comparison identifies repair-layer archaeology versus section-local ownership.
+        - evidence_id: EV-REF001-REPAIR-LOOP-DOC
+          kind: CANONICAL_DOC
+          reference_id: REF-001-CHIBA-KEIZAI-SAMPLE
+          run_id: ''
+          path: docs/frontend-visual-repair-learning-loop.md
+          commit: ''
+          note: Existing learning loop requires root-cause repair and clean replay before promotion.
+      contradicts: []
+    notes:
+      - This is not a ban on override files or multiple stylesheets.
+
+  - learning_id: OBS-REF001-FIGMA-PROVENANCE
+    summary: Section and asset mappings back to Figma node evidence appear to reduce rediscovery cost and help separate source mismatch from crop, layout, or mechanism mismatch.
+    category: FIGMA_PROVENANCE
+    applicability:
+      scope: REFERENCE
+      conditions:
+        - Source node identity is available and stable enough to record.
+      exclusions:
+        - Do not invent mappings when the current Figma capability cannot prove them.
+    promotion_state: null
+    promotion:
+      candidate: false
+      rationale: Benefit is plausible and observed, but direct Human Correction Cost impact remains unmeasured.
+      blocked_by:
+        - Independent-design evidence measuring rediscovery or repair effort.
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-REF001-PROVENANCE-RESEARCH
+          kind: LOCAL_RESEARCH
+          reference_id: REF-001-CHIBA-KEIZAI-SAMPLE
+          run_id: ''
+          path: research/ref001-v2-v3-frontend-learning-2026-08-20.md
+          commit: ''
+          note: V3 section and asset-slot mapping was materially easier to navigate than weaker historical provenance.
+        - evidence_id: EV-REF001-STRUCTURE-PROFILE
+          kind: LOCAL_RESEARCH
+          reference_id: REF-001-CHIBA-KEIZAI-SAMPLE
+          run_id: ''
+          path: references/chiba-keizai-sample.structure-profile.yaml
+          commit: ''
+          note: Current structured evidence keeps Figma section identity externalized instead of relying on memory.
+      contradicts: []
+    notes: []
+
+  - learning_id: OBS-REF001-OBSERVATION-COVERAGE-LINEAGE
+    summary: Externalizing a small fixed set of source-observation classes and pinning that evidence through execution boundaries reduces the chance that an agent silently forgets visible media, decoration, responsive variants, or states.
+    category: OBSERVATION_COVERAGE
+    applicability:
+      scope: REFERENCE
+      conditions:
+        - Figma is a visual authority and implementation proceeds section-by-section.
+        - Source observation must remain distinguishable from browser runtime review.
+      exclusions:
+        - Observation Coverage does not replace visual diff, browser QA, or structured Figma inspection.
+    promotion_state: null
+    promotion:
+      candidate: true
+      rationale: REF-001 now has schema, execution-boundary, First Pass lineage, active-run, and Clean Replay distribution proof, but not a genuinely distinct design replay.
+      blocked_by:
+        - REF-003 or another independent design proving lower omission/rework without excessive bookkeeping.
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-OBS-COVERAGE-DOC
+          kind: CANONICAL_DOC
+          reference_id: REF-001-CHIBA-KEIZAI-SAMPLE
+          run_id: ''
+          path: docs/frontend-observation-coverage.md
+          commit: ''
+          note: Defines the seven coarse source classes and separates source observation from runtime review.
+        - evidence_id: EV-OBS-COVERAGE-SCHEMA
+          kind: COMMIT
+          reference_id: REF-001-CHIBA-KEIZAI-SAMPLE
+          run_id: ''
+          path: schemas/section.schema.json
+          commit: 974ca089cd6d57f8954a119e052aa6cc4dd65918
+          note: PR #203 introduced schema-v9 Observation Coverage.
+        - evidence_id: EV-OBS-COVERAGE-EXECUTION
+          kind: COMMIT
+          reference_id: REF-001-CHIBA-KEIZAI-SAMPLE
+          run_id: ''
+          path: scripts/prepare_section_execution.py
+          commit: 6df59cd21cd555014a54f1cd8fe292919165a799
+          note: PR #204 moved validation to the actual section execution boundary.
+        - evidence_id: EV-OBS-COVERAGE-FREEZE
+          kind: COMMIT
+          reference_id: REF-001-CHIBA-KEIZAI-SAMPLE
+          run_id: ''
+          path: scripts/first_pass_evidence.py
+          commit: b97f4c5646bdb4bfbceb3400077c79a0e36f98ba
+          note: PR #205 froze Section Manifest and Structure Profile lineage with First Pass evidence.
+        - evidence_id: EV-OBS-COVERAGE-ACTIVE-RUN
+          kind: COMMIT
+          reference_id: REF-001-CHIBA-KEIZAI-SAMPLE
+          run_id: ''
+          path: scripts/validate_run_lineage.py
+          commit: 2e2fffec6cb4a348d5806318c62707bad0c810ba
+          note: PR #207 rejects active schema-v13+ Section/Integration runs with legacy observation manifests.
+        - evidence_id: EV-OBS-COVERAGE-DISTRIBUTION
+          kind: COMMIT
+          reference_id: REF-001-CHIBA-KEIZAI-SAMPLE
+          run_id: ''
+          path: scripts/validate_benchmark_replay_pipeline.py
+          commit: 03a00410a92d85e245dbcf5fcb98cab4656a17d4
+          note: PR #209 proves the sanitized Clean Replay handoff actually carries current Observation Coverage authority.
+      contradicts: []
+    notes:
+      - Operational use is already stronger than the cross-design generalization evidence; keep that distinction visible.
+
+  - learning_id: OBS-REF001-HUMAN-EDITABILITY-EVIDENCE
+    summary: Human editability is more trustworthy when task-based change drills preserve snapshot provenance, located ownership, actual change surface, and regression evidence instead of relying on a numeric self-score alone.
+    category: MAINTAINABILITY
+    applicability:
+      scope: REFERENCE
+      conditions:
+        - A delivered implementation is expected to be modified by a human after generation.
+      exclusions:
+        - Non-file CMS changes can legitimately have no changed file when the evidence explains the runtime/admin mutation.
+    promotion_state: null
+    promotion:
+      candidate: true
+      rationale: REF-001 provides real change-drill evidence and validator proof, but broader project-family evidence is still desirable.
+      blocked_by:
+        - Independent implementation family or reference proving the drill evidence remains useful without becoming ceremonial overhead.
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-HUMAN-EDITABILITY-DOC
+          kind: CANONICAL_DOC
+          reference_id: REF-001-CHIBA-KEIZAI-SAMPLE
+          run_id: ''
+          path: docs/human-editability.md
+          commit: ''
+          note: Defines discoverability, locality, intent readability, reuse safety, content ownership, and disposable change drills.
+        - evidence_id: EV-HUMAN-EDITABILITY-HISTORICAL-RUN
+          kind: RUN_RECORD
+          reference_id: REF-001-CHIBA-KEIZAI-SAMPLE
+          run_id: REF001-BLIND-CLEAN-20260812
+          path: experiments/ref001-blind-clean-20260812/run.yaml
+          commit: ''
+          note: Historical run contains rich PASS-prefixed regression results for three real change drills.
+        - evidence_id: EV-HUMAN-EDITABILITY-STRICT-EVIDENCE
+          kind: COMMIT
+          reference_id: REF-001-CHIBA-KEIZAI-SAMPLE
+          run_id: ''
+          path: scripts/validate_human_editability.py
+          commit: 41ff4dcdb6aa0c5cb59ad144092650ba87f93426
+          note: PR #208 requires material drill evidence for new schema-v13+ runs while preserving historical semantics.
+      contradicts: []
+    notes: []
+
+  - learning_id: OBS-PROJECT-RUN-TEMPLATE-AUTHORITY
+    summary: Record generators should derive from the canonical template rather than manually duplicating evolving schema fields, because duplicated constructors drift silently as the contract grows.
+    category: TOOLING
+    applicability:
+      scope: PROJECT
+      conditions:
+        - A generated record has a canonical checked-in template whose schema evolves over time.
+      exclusions:
+        - This does not imply every runtime object in every project must be template-generated.
+    promotion_state: PROJECT_ONLY
+    promotion:
+      candidate: false
+      rationale: Confirmed repository-internal tooling invariant; not a cross-project frontend implementation rule.
+      blocked_by: []
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-RUN-TEMPLATE-GENERATOR
+          kind: COMMIT
+          reference_id: ''
+          run_id: ''
+          path: scripts/create_section_run.py
+          commit: b57a6c089c359d02fca5ce3a00e5fd384b1e3472
+          note: PR #206 removed the stale hardcoded schema-10 run constructor and made the canonical run template authoritative.
+        - evidence_id: EV-RUN-TEMPLATE-CANONICAL
+          kind: CANONICAL_DOC
+          reference_id: ''
+          run_id: ''
+          path: templates/run-record.yaml
+          commit: ''
+          note: Current run template carries the evolving contract fields consumed by the generator.
+      contradicts: []
+    notes:
+      - Keep PROJECT_ONLY unless independent repositories show the same architecture and benefit.
