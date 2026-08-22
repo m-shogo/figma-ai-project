@@ -1,4 +1,4 @@
-schema_version: 13
+schema_version: 14
 experiment_id: EXP-XXXX
 run_id: RUN-XXXX
 run_class: COMMON # COMMON | OPTIMIZED | REPLAY
@@ -71,6 +71,21 @@ knowledge_context:
   #   reason: NOT_APPLICABLE # NOT_APPLICABLE | STALE | RETEST_TRIGGERED | CONTROLLED_BASELINE | SUPERSEDED | OTHER
   pattern_refs: []
   selection_notes: []
+
+reuse_preflight:
+  status: PENDING # PENDING | PASS | NOT_APPLICABLE | LEGACY_UNRECORDED
+  checked_sources: [] # EXISTING_CODEBASE | NATIVE_PLATFORM | OFFICIAL_CAPABILITY | DESIGN_SYSTEM_OR_LIBRARY | MATURE_OSS_OR_PATTERN | PROJECT_GOOD_PATTERN
+  evidence: [] # material repo paths, tool results, official docs, or concise search outcomes
+  selected_reuse: [] # existing component/asset/pattern/tool actually selected for this run
+  decision_notes: []
+  custom_infrastructure:
+    planned: false # true only for reusable project infrastructure, not ordinary page/section implementation
+    existing_solution_checked: []
+    why_existing_is_insufficient: ""
+    smallest_missing_glue: ""
+    ownership: ""
+    verification: ""
+    retirement_trigger: ""
 
 agent:
   client: "" # codex | claude-code | cursor | other
