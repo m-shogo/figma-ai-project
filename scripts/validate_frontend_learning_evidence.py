@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 import sys
@@ -38,6 +39,10 @@ def material_text(value: Any) -> bool:
     return isinstance(value, str) and bool(value.strip())
 
 
+def text_sha256(value: str) -> str:
+    return hashlib.sha256(value.strip().encode("utf-8")).hexdigest()
+
+
 def local_evidence_path(root: Path, value: str) -> Path | None:
     if not material_text(value):
         return None
@@ -46,6 +51,19 @@ def local_evidence_path(root: Path, value: str) -> Path | None:
     if candidate != root and root not in candidate.parents:
         return None
     return candidate
+
+
+def run_lesson_values(run: dict[str, Any], source_field: str) -> list[str]:
+    prefix = "lessons."
+    if not source_field.startswith(prefix):
+        return []
+    lessons = run.get("lessons", {})
+    if not isinstance(lessons, dict):
+        return []
+    value = lessons.get(source_field[len(prefix) :], [])
+    if not isinstance(value, list):
+        return []
+    return [item.strip() for item in value if material_text(item)]
 
 
 def semantic_errors(
@@ -109,6 +127,7 @@ def semantic_errors(
 
                 kind = item.get("kind")
                 path_value = str(item.get("path", ""))
+                path: Path | None = None
                 if kind in LOCAL_EVIDENCE_KINDS:
                     path = local_evidence_path(root, path_value)
                     if path is None:
@@ -126,8 +145,30 @@ def semantic_errors(
                 elif commit and not HEX_COMMIT.fullmatch(commit):
                     errors.append(f"{item_label}: commit must be lowercase hex when provided")
 
-                if kind == "RUN_RECORD" and not material_text(item.get("run_id")):
-                    errors.append(f"{item_label}: RUN_RECORD evidence requires run_id")
+                if kind == "RUN_RECORD":
+                    run_id = str(item.get("run_id", "")).strip()
+                    if not run_id:
+                        errors.append(f"{item_label}: RUN_RECORD evidence requires run_id")
+                    if path is not None and path.is_file():
+                        try:
+                            run = load_yaml(path)
+                        except Exception as exc:
+                            errors.append(f"{item_label}: cannot load RUN_RECORD evidence: {exc}")
+                        else:
+                            if str(run.get("run_id", "")).strip() != run_id:
+                                errors.append(f"{item_label}: run_id does not match linked RUN_RECORD")
+                            source_field = str(item.get("source_field", "")).strip()
+                            source_hash = str(item.get("source_text_sha256", "")).strip()
+                            if source_field or source_hash:
+                                values = run_lesson_values(run, source_field)
+                                if not values:
+                                    errors.append(
+                                        f"{item_label}: source_field {source_field!r} has no material lesson values in RUN_RECORD"
+                                    )
+                                elif source_hash not in {text_sha256(value) for value in values}:
+                                    errors.append(
+                                        f"{item_label}: source_text_sha256 does not match any item in {source_field}"
+                                    )
 
         if state in PROMOTED_STATES and len(supporting_references) < 2:
             errors.append(
