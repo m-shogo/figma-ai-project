@@ -239,15 +239,16 @@ def start(data: dict[str, Any]) -> dict[str, Any]:
     if data.get("coordination", {}).get("scope") != "SECTION":
         raise ValueError("start_section_run.py only starts SECTION runs")
 
+    candidate = dict(data)
+    candidate["status"] = "RUNNING"
+
     errors = implementation_profile_errors(data)
     errors.extend(preflight_errors(data))
-    errors.extend(reuse_preflight_errors(data))
+    errors.extend(reuse_preflight_errors(candidate))
     errors.extend(figma_variable_mode_errors(data))
     if errors:
         raise ValueError("section start gate incomplete:\n- " + "\n- ".join(errors))
 
-    candidate = dict(data)
-    candidate["status"] = "RUNNING"
     lineage_errors = validate_run(candidate)
     if lineage_errors:
         raise ValueError("run lineage invalid:\n- " + "\n- ".join(lineage_errors))
