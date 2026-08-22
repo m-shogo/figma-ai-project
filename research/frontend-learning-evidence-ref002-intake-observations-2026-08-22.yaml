@@ -79,7 +79,7 @@ records:
           note: The merged intake instructs mounting the supplied Theme into the existing disposable runtime while preventing client Theme bytes or sample-Theme architecture from becoming repository canon.
       contradicts: []
     notes:
-      - This is a concrete Reuse-Before-Build example: reuse responsibilities, not accidental architecture.
+      - 'This is a concrete Reuse-Before-Build example: reuse responsibilities, not accidental architecture.'
 
   - learning_id: OBS-REF002-AUTHORED-PC-SP-DIFFERENCES
     summary: Explicitly authored PC/SP structural or cardinality differences should be preserved as design evidence rather than normalized into identical content/layout merely for implementation symmetry.
@@ -109,4 +109,4 @@ records:
           note: REF-002 records SNS placement differences, About 6-card PC vs 3-card SP horizontal scroller, Instagram 5 vs 4 thumbnails, and other PC/SP composition differences while warning against forcing parity through content duplication/deletion.
       contradicts: []
     notes:
-      - Keep this distinct from CMS cardinality: responsive presentation evidence does not by itself determine editor content cardinality.
+      - 'Keep this distinct from CMS cardinality: responsive presentation evidence does not by itself determine editor content cardinality.'
