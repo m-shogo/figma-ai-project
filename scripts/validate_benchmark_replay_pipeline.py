@@ -15,9 +15,14 @@ BASE = ROOT / "experiments" / "ref001-benchmark-replay"
 PROFILE_PATH = BASE / "implementation-profile.yaml"
 CONTRACT_PATH = BASE / "shared-contract.yaml"
 WORKSPACE_PATH = BASE / "workspace.yaml"
+HANDOFF_PATH = BASE / "FRESH-EXECUTION.md"
 BLANK_THEME = BASE / "blank-theme"
 RUNTIME_COMPOSE = ROOT / "experiments" / "wordpress-acf-pro-standalone-lp" / "compose.yml"
 RUNTIME_SETUP = ROOT / "experiments" / "wordpress-acf-pro-standalone-lp" / "scripts" / "setup.sh"
+FRONTEND_POLICY_PATH = ROOT / "config" / "frontend-implementation-policy.yaml"
+SECTION_TEMPLATE_PATH = ROOT / "templates" / "section-manifest.yaml"
+SECTION_SCHEMA_PATH = ROOT / "schemas" / "section.schema.json"
+OBSERVATION_DOC_PATH = ROOT / "docs" / "frontend-observation-coverage.md"
 
 ACF_ADMIN_REQUIRED_TRUE = (
     "required",
@@ -41,6 +46,31 @@ ACF_ADMIN_REQUIRED_CHECKS = {
 }
 ACF_ADMIN_EVIDENCE_JSON = "experiments/ref001-benchmark-replay/output/acf-admin-e2e.json"
 ACF_ADMIN_SCREENSHOT_DIR = "experiments/ref001-benchmark-replay/output/acf-admin-e2e"
+OBSERVATION_SOURCE_CLASSES = {
+    "TEXT",
+    "RASTER_MEDIA",
+    "VECTOR_LOGO",
+    "BACKGROUND",
+    "DECORATION",
+    "INTERACTION_STATE",
+    "RESPONSIVE_VARIANT",
+}
+EXECUTION_POLICY_EXPECTATIONS = {
+    "authoring_default": "MOBILE_FIRST",
+    "execution_order_default": "SP_THEN_PC",
+    "section_stabilization_order": "SP_THEN_PC",
+    "boundary_cluster_acceptance_order": "SP_THEN_PC",
+    "final_integration_acceptance_order": "SP_THEN_PC",
+    "shared_owner_change_restart_acceptance_from": "SP",
+}
+HANDOFF_EXECUTION_MARKERS = {
+    "execution_order: SP_THEN_PC",
+    "section_stabilization_order: SP_THEN_PC",
+    "final_integration_acceptance_order: SP_THEN_PC",
+    "shared_owner_change_restart_acceptance_from: SP",
+    "observation_manifest: SECTION_SCHEMA_V9_REQUIRED",
+    "parallel_capture_must_not_override_acceptance_order: true",
+}
 
 
 def sha256(path: Path) -> str:
@@ -76,14 +106,78 @@ def acf_admin_contract_errors(contract: dict) -> list[str]:
     return errors
 
 
+def current_execution_contract_errors(
+    policy: dict,
+    section_template: dict,
+    section_schema: dict,
+    handoff_text: str,
+) -> list[str]:
+    errors: list[str] = []
+    responsive = policy.get("responsive", {})
+    if not isinstance(responsive, dict):
+        return ["frontend policy responsive block must be an object"]
+
+    for key, expected in EXECUTION_POLICY_EXPECTATIONS.items():
+        if responsive.get(key) != expected:
+            errors.append(
+                f"frontend responsive.{key} must remain {expected!r} for this current benchmark contract"
+            )
+
+    for key in (
+        "pc_change_to_shared_owner_invalidates_prior_sp_acceptance",
+        "parallel_capture_must_not_override_acceptance_order",
+    ):
+        if responsive.get(key) is not True:
+            errors.append(f"frontend responsive.{key} must be true")
+
+    if int(section_template.get("schema_version", 0) or 0) < 9:
+        errors.append("canonical Section Manifest template must be schema_version >= 9")
+
+    integration_coverage = section_template.get("integration", {}).get("observation_coverage")
+    if not isinstance(integration_coverage, dict):
+        errors.append("canonical Section Manifest template must expose integration.observation_coverage")
+    else:
+        for key in ("sp_full_page", "pc_full_page", "evidence", "known_gaps"):
+            if key not in integration_coverage:
+                errors.append(
+                    f"canonical Section Manifest integration.observation_coverage missing {key}"
+                )
+
+    coverage_def = section_schema.get("$defs", {}).get("sectionObservationCoverage", {})
+    source_presence = coverage_def.get("properties", {}).get("source_presence", {})
+    required_classes = set(source_presence.get("required", []))
+    missing_classes = sorted(OBSERVATION_SOURCE_CLASSES - required_classes)
+    if missing_classes:
+        errors.append(
+            "Section schema Observation Coverage missing source classes: " + ", ".join(missing_classes)
+        )
+
+    runtime_review = coverage_def.get("properties", {}).get("runtime_review", {})
+    runtime_required = set(runtime_review.get("required", []))
+    if not {"sp", "pc"}.issubset(runtime_required):
+        errors.append("Section schema Observation Coverage runtime_review must require sp and pc")
+
+    for marker in sorted(HANDOFF_EXECUTION_MARKERS):
+        if marker not in handoff_text:
+            errors.append(f"FRESH-EXECUTION missing current execution marker: {marker}")
+
+    return errors
+
+
 def main() -> int:
     errors: list[str] = []
 
     profile = implementation_profile.load_yaml(PROFILE_PATH)
     profile_schema = implementation_profile.load_json(implementation_profile.SCHEMA_PATH)
     profile_config = implementation_profile.load_yaml(implementation_profile.TARGETS_PATH)
-    errors.extend(f"implementation profile schema: {error.message}" for error in Draft202012Validator(profile_schema).iter_errors(profile))
-    errors.extend(f"implementation profile semantic: {error}" for error in implementation_profile.semantic_errors(profile, profile_config))
+    errors.extend(
+        f"implementation profile schema: {error.message}"
+        for error in Draft202012Validator(profile_schema).iter_errors(profile)
+    )
+    errors.extend(
+        f"implementation profile semantic: {error}"
+        for error in implementation_profile.semantic_errors(profile, profile_config)
+    )
 
     contract = implementation_profile.load_yaml(CONTRACT_PATH)
     binding = contract.get("implementation_profile", {})
@@ -99,6 +193,20 @@ def main() -> int:
     )
     errors.extend(f"ACF admin contract: {error}" for error in acf_admin_contract_errors(contract))
 
+    frontend_policy = implementation_profile.load_yaml(FRONTEND_POLICY_PATH)
+    section_template = implementation_profile.load_yaml(SECTION_TEMPLATE_PATH)
+    section_schema = implementation_profile.load_json(SECTION_SCHEMA_PATH)
+    handoff_text = HANDOFF_PATH.read_text(encoding="utf-8")
+    errors.extend(
+        f"current execution contract: {error}"
+        for error in current_execution_contract_errors(
+            frontend_policy,
+            section_template,
+            section_schema,
+            handoff_text,
+        )
+    )
+
     breakpoints = contract.get("breakpoints", {})
     thresholds = output_contract.contract_thresholds(contract)
     if thresholds != {767.0, 768.0}:
@@ -107,8 +215,13 @@ def main() -> int:
         errors.append("benchmark breakpoint worker_override must remain PROPOSE_ONLY")
 
     allowed_css = "@media (max-width: 767px){.x{display:block}} @media (min-width: 768px){.y{display:block}}"
-    errors.extend(f"owned breakpoint rejected: {error}" for error in output_contract.validate_css_text(allowed_css, contract))
-    unowned_errors = output_contract.validate_css_text("@media (min-width: 1100px){.x{display:block}}", contract)
+    errors.extend(
+        f"owned breakpoint rejected: {error}"
+        for error in output_contract.validate_css_text(allowed_css, contract)
+    )
+    unowned_errors = output_contract.validate_css_text(
+        "@media (min-width: 1100px){.x{display:block}}", contract
+    )
     if not any("unowned viewport threshold 1100px" in error for error in unowned_errors):
         errors.append("unowned 1100px viewport threshold was not rejected")
 
@@ -129,10 +242,15 @@ def main() -> int:
             }
         ]
     }
-    errors.extend(f"PHP output plan rejected: {error}" for error in output_contract.validate_output_plan(php_manifest, profile))
+    errors.extend(
+        f"PHP output plan rejected: {error}"
+        for error in output_contract.validate_output_plan(php_manifest, profile)
+    )
 
     style_text = (BLANK_THEME / "style.css").read_text(encoding="utf-8")
-    owner_text = (BLANK_THEME / "template-parts" / "ref001" / "benchmark-page.php").read_text(encoding="utf-8")
+    owner_text = (BLANK_THEME / "template-parts" / "ref001" / "benchmark-page.php").read_text(
+        encoding="utf-8"
+    )
     if "@media" in style_text or "{" in style_text:
         errors.append("blank benchmark style.css must not contain visual/layout CSS rules")
     if "<section" in owner_text.lower() or "class=" in owner_text.lower():
@@ -166,10 +284,17 @@ def main() -> int:
             "experiments/ref001-benchmark-replay/FRESH-EXECUTION.md",
             "references/chiba-keizai-sample.reference.yaml",
             "scripts/validate_benchmark_replay_pipeline.py",
+            "config/frontend-implementation-policy.yaml",
+            "templates/section-manifest.yaml",
+            "schemas/section.schema.json",
+            "docs/frontend-observation-coverage.md",
         }
         missing = sorted(required - selected_paths)
         if missing:
             errors.append("sanitized workspace is missing required benchmark authority: " + ", ".join(missing))
+
+    if not OBSERVATION_DOC_PATH.is_file():
+        errors.append("canonical frontend Observation Coverage document is missing")
 
     if errors:
         print("FAIL REF-001 benchmark clean replay pipeline")
@@ -183,6 +308,8 @@ def main() -> int:
     print("  owned_viewport_thresholds=767,768")
     print("  static_html=REJECTED unowned_1100=REJECTED")
     print("  acf_admin_edit_save_reload_frontend_roundtrip=REQUIRED")
+    print("  execution_acceptance=SP_THEN_PC shared_owner_restart=SP")
+    print("  observation_coverage=SECTION_SCHEMA_V9_REQUIRED")
     return 0
 
 
