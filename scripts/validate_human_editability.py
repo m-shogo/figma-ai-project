@@ -20,6 +20,7 @@ DIMENSIONS = (
 )
 STATUSES = {"PENDING", "PASS", "FAIL", "NOT_APPLICABLE"}
 DRILL_RESULTS = {"PASS", "FAIL", "NOT_APPLICABLE"}
+PLACEHOLDER_EVIDENCE = {"", "n/a", "na", "none", "null", "pending", "todo", "unknown", "tbd"}
 
 
 def load_yaml(path: Path) -> dict[str, Any]:
@@ -27,6 +28,16 @@ def load_yaml(path: Path) -> dict[str, Any]:
     if not isinstance(value, dict):
         raise ValueError("top-level YAML value must be an object")
     return value
+
+
+def is_material_text(value: Any) -> bool:
+    return isinstance(value, str) and value.strip().lower() not in PLACEHOLDER_EVIDENCE
+
+
+def material_string_items(value: Any) -> list[str]:
+    if not isinstance(value, list):
+        return []
+    return [item.strip() for item in value if is_material_text(item)]
 
 
 def validate_run_block(data: dict[str, Any], label: str) -> list[str]:
@@ -110,6 +121,31 @@ def validate_run_block(data: dict[str, Any], label: str) -> list[str]:
         for field in ("located_paths", "changed_paths", "unexpected_paths"):
             if field in drill and not isinstance(drill[field], list):
                 errors.append(f"{label}: human_editability.change_drills[{index}].{field} must be an array")
+            elif isinstance(drill.get(field), list) and any(
+                not is_material_text(item) for item in drill[field]
+            ):
+                errors.append(
+                    f"{label}: human_editability.change_drills[{index}].{field} entries must be non-placeholder strings"
+                )
+        if "notes" in drill and not isinstance(drill["notes"], list):
+            errors.append(f"{label}: human_editability.change_drills[{index}].notes must be an array")
+
+        if result == "PASS":
+            for field in ("drill_id", "task", "snapshot_commit"):
+                if not is_material_text(drill.get(field)):
+                    errors.append(
+                        f"{label}: PASS change drill[{index}] requires material {field} evidence"
+                    )
+            if not material_string_items(drill.get("located_paths")):
+                errors.append(f"{label}: PASS change drill[{index}] requires at least one located_path")
+            if drill.get("regression_status") != "PASS":
+                errors.append(f"{label}: PASS change drill[{index}] requires regression_status=PASS")
+            if not material_string_items(drill.get("changed_paths")) and not material_string_items(
+                drill.get("notes")
+            ):
+                errors.append(
+                    f"{label}: PASS change drill[{index}] with zero changed_paths requires notes explaining the non-file change"
+                )
 
     if status == "PASS":
         if score is None or float(score) < 8:
