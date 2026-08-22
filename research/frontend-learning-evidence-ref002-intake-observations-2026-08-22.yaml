@@ -69,7 +69,7 @@ records:
           run_id: ''
           path: experiments/ref002-budokan-wordpress/theme-intake.yaml
           commit: ''
-          note: `qa_reuse` explicitly reuses/adapts WordPress runtime, ACF secret handling, CMS mutation QA, visual diff, typography metrics, asset lineage, and readiness while stating that the sample Theme is not the production inheritance source.
+          note: qa_reuse explicitly reuses/adapts WordPress runtime, ACF secret handling, CMS mutation QA, visual diff, typography metrics, asset lineage, and readiness while stating that the sample Theme is not the production inheritance source.
         - evidence_id: EV-REF002-QA-REUSE-README
           kind: LOCAL_RESEARCH
           reference_id: REF-002-BUDOKAN
