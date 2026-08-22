@@ -1,0 +1,55 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: CR-REF001-003
+    summary: Visual repetition or PC/SP item-count differences in Figma do not by themselves authorize a reorderable CMS collection or a new CPT; editor capabilities and domain semantics must supply that requirement.
+    category: CMS
+    applicability:
+      scope: CROSS_REFERENCE
+      conditions:
+        - Figma shows repeated items or authored PC/SP item-count differences.
+        - Editor add/remove/reorder requirements are absent, unknown, or still under reconnaissance.
+      exclusions:
+        - If the project explicitly requires editors to add, remove, reorder, or independently manage arbitrary items, a collection/CPT architecture may be the correct model.
+        - Existing Theme, plugin, ACF Local JSON, CPT, or company conventions remain authoritative when observed.
+    promotion_state: CANDIDATE
+    promotion:
+      candidate: true
+      rationale: REF-001 has a measured clean implementation with zero CMS inventions and strong editability; REF-002 independently reproduces the conservative decision boundary during WordPress intake, but REF-002 has not yet produced an implementation/clean-replay outcome with measurable effect.
+      blocked_by:
+        - Complete an independent REF-002 or other-reference implementation/clean replay and measure CMS overmodeling, repair rounds, or Human Correction Cost.
+        - Exercise a genuine editor-managed dynamic collection case to verify the known-limit boundary rather than only conservative cases.
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-CR003-REF001-WP-ACF
+          kind: LOCAL_RESEARCH
+          reference_id: REF-001-CHIBA-KEIZAI-SAMPLE
+          run_id: ''
+          path: experiments/ref001-wordpress-acf/README.md
+          commit: ''
+          note: REF-001 WordPress/ACF learning distinguishes visual repetition and semantic ordered identities from evidence for a reorderable ACF collection.
+        - evidence_id: EV-CR003-REF001-CANDIDATE
+          kind: CANONICAL_DOC
+          reference_id: REF-001-CHIBA-KEIZAI-SAMPLE
+          run_id: ''
+          path: playbook/candidates/cr-ref001-003-visual-repetition-vs-cms-cardinality.yaml
+          commit: ''
+          note: Existing E2/OPTIONAL candidate records zero CMS inventions and Human Editability evidence from the REF-001 clean implementation.
+        - evidence_id: EV-CR003-REF002-THEME-INTAKE
+          kind: LOCAL_RESEARCH
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/ref002-budokan-wordpress/theme-intake.yaml
+          commit: ''
+          note: REF-002 independently keeps editor cardinality UNDETERMINED despite authored PC/SP count differences and refuses to infer CPT requirements solely from visible Events/News sections.
+      contradicts: []
+    notes:
+      - Cross-reference support is now real, but evidence maturity remains E2 because the second reference has not yet measured an implementation outcome.
+      - Do not move this record to ACTIVE/CORE or playbook/proven solely because a second intake document agrees with the boundary.
