@@ -155,7 +155,7 @@ class FirstPassEvidenceTests(unittest.TestCase):
             errors = evidence.validate_run_file(path)
             self.assertTrue(any("snapshot missing" in error for error in errors))
 
-    def test_v2_freeze_pins_observation_lineage(self) -> None:
+    def test_v3_freeze_pins_observation_lineage(self) -> None:
         with tempfile.TemporaryDirectory(dir=ROOT) as directory:
             path = Path(directory).resolve() / "run.yaml"
             write_run(path)
@@ -164,7 +164,7 @@ class FirstPassEvidenceTests(unittest.TestCase):
             snapshot = evidence.freeze(path, "tooling@2")
             payload = json.loads(snapshot.read_text(encoding="utf-8"))
 
-            self.assertEqual(payload["schema_version"], 2)
+            self.assertEqual(payload["schema_version"], 3)
             self.assertEqual(payload["section_manifest_path"], manifest_path.relative_to(ROOT).as_posix())
             self.assertEqual(payload["section_manifest_sha256"], evidence.file_sha256(manifest_path))
             self.assertEqual(
@@ -176,7 +176,7 @@ class FirstPassEvidenceTests(unittest.TestCase):
                 evidence.file_sha256(profile_path),
             )
 
-    def test_v2_freeze_rejects_missing_observation_lineage(self) -> None:
+    def test_v3_freeze_rejects_missing_observation_lineage(self) -> None:
         with tempfile.TemporaryDirectory(dir=ROOT) as directory:
             path = Path(directory).resolve() / "run.yaml"
             write_run(path)
@@ -188,7 +188,7 @@ class FirstPassEvidenceTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "section_manifest_sha256"):
                 evidence.freeze(path, "tooling@2")
 
-    def test_v2_snapshot_detects_observation_pin_mutation(self) -> None:
+    def test_v3_snapshot_detects_observation_pin_mutation(self) -> None:
         with tempfile.TemporaryDirectory(dir=ROOT) as directory:
             path = Path(directory).resolve() / "run.yaml"
             write_run(path)

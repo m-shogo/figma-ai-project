@@ -13,13 +13,15 @@ from typing import Any
 import yaml
 
 from validate_records import SECTION_SCHEMA, load_json as load_schema_json, validate_schema
+from validate_reuse_preflight import reuse_preflight_errors
 
 ROOT = Path(__file__).resolve().parents[1]
-SNAPSHOT_SCHEMA_VERSION = 2
-SUPPORTED_SNAPSHOT_SCHEMA_VERSIONS = {1, 2}
+SNAPSHOT_SCHEMA_VERSION = 3
+SUPPORTED_SNAPSHOT_SCHEMA_VERSIONS = {1, 2, 3}
 OBSERVATION_LINEAGE_RUN_SCHEMA_VERSION = 13
 OBSERVATION_LINEAGE_SCOPES = {"SECTION", "INTEGRATION", "PAGE_BENCHMARK"}
 OBSERVATION_COVERAGE_SECTION_SCHEMA_VERSION = 9
+REUSE_PREFLIGHT_LINEAGE_RUN_SCHEMA_VERSION = 14
 
 
 def load_yaml(path: Path) -> dict[str, Any]:
@@ -116,6 +118,22 @@ def observation_lineage(run: dict[str, Any]) -> dict[str, str]:
     }
 
 
+def reuse_preflight_lineage(run: dict[str, Any]) -> dict[str, str]:
+    version = int(run.get("schema_version", 0) or 0)
+    if version < REUSE_PREFLIGHT_LINEAGE_RUN_SCHEMA_VERSION:
+        return {}
+
+    errors = reuse_preflight_errors(run)
+    if errors:
+        raise ValueError(
+            "Reuse-Before-Build preflight is invalid before FIRST PASS freeze:\n- " + "\n- ".join(errors)
+        )
+    preflight = run.get("reuse_preflight")
+    if not isinstance(preflight, dict):
+        raise ValueError("reuse_preflight must be an object before FIRST PASS freeze")
+    return {"reuse_preflight_sha256": sha256_text(canonical_json(preflight))}
+
+
 def first_pass_payload(run: dict[str, Any], tooling_revision: str) -> dict[str, Any]:
     code = run.get("code", {})
     captures = run.get("captures", {}).get("first_pass", [])
@@ -153,6 +171,7 @@ def first_pass_payload(run: dict[str, Any], tooling_revision: str) -> dict[str, 
         "first_pass_fidelity": score,
     }
     payload.update(observation_lineage(run))
+    payload.update(reuse_preflight_lineage(run))
     return payload
 
 
@@ -165,6 +184,10 @@ def validate_snapshot(run: dict[str, Any], snapshot: dict[str, Any]) -> list[str
         errors.append("FIRST PASS snapshot run_id mismatch")
     if snapshot.get("experiment_id") != run.get("experiment_id"):
         errors.append("FIRST PASS snapshot experiment_id mismatch")
+
+    run_schema_version = int(run.get("schema_version", 0) or 0)
+    if run_schema_version >= REUSE_PREFLIGHT_LINEAGE_RUN_SCHEMA_VERSION and snapshot_version in {1, 2}:
+        errors.append("schema-v14+ run requires FIRST PASS snapshot schema v3+ with reuse preflight lineage")
 
     reference = run.get("reference", {})
     coordination = run.get("coordination", {})
@@ -185,9 +208,14 @@ def validate_snapshot(run: dict[str, Any], snapshot: dict[str, Any]) -> list[str
         "captures_sha256": sha256_text(canonical_json(captures)),
         "first_pass_fidelity": score,
     }
-    if snapshot_version == 2:
+    if snapshot_version in {2, 3}:
         try:
             expected.update(observation_lineage(run))
+        except Exception as exc:
+            errors.append(str(exc))
+    if snapshot_version == 3:
+        try:
+            expected.update(reuse_preflight_lineage(run))
         except Exception as exc:
             errors.append(str(exc))
 
