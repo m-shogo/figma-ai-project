@@ -109,7 +109,22 @@
         "run_id": {"type": "string"},
         "path": {"type": "string"},
         "commit": {"type": "string"},
+        "source_field": {
+          "enum": [
+            "lessons.candidate_rules",
+            "lessons.confirmed_rules",
+            "lessons.contradicted_rules",
+            "lessons.rules_needing_retest",
+            "lessons.promotion_candidates",
+            "lessons.demotion_candidates"
+          ]
+        },
+        "source_text_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
         "note": {"type": "string", "minLength": 1}
+      },
+      "dependentRequired": {
+        "source_field": ["source_text_sha256"],
+        "source_text_sha256": ["source_field"]
       },
       "additionalProperties": false
     }

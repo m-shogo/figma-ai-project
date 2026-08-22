@@ -79,19 +79,63 @@ class FrontendLearningEvidenceTests(unittest.TestCase):
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text("evidence\n", encoding="utf-8")
 
-    def test_repository_learning_index_is_valid(self) -> None:
-        data = MODULE.load_yaml(ROOT / "research" / "frontend-learning-evidence.yaml")
+    def write_run(self, root: Path, *, run_id: str = "RUN-X", candidate: str = "candidate") -> str:
+        relative = "experiments/test/run.yaml"
+        target = root / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(
+            yaml.safe_dump(
+                {
+                    "run_id": run_id,
+                    "lessons": {
+                        "candidate_rules": [candidate],
+                    },
+                },
+                sort_keys=False,
+            ),
+            encoding="utf-8",
+        )
+        return relative
+
+    def test_repository_learning_shards_are_valid_as_one_evidence_set(self) -> None:
+        combined, paths, combine_errors = MODULE.load_combined_index(ROOT)
         schema = MODULE.load_json(ROOT / "schemas" / "frontend-learning-evidence.schema.json")
         policy = MODULE.load_yaml(ROOT / "config" / "frontend-implementation-policy.yaml")
-        self.assertEqual([], MODULE.schema_errors(data, schema))
+        self.assertGreaterEqual(len(paths), 2)
+        self.assertEqual([], combine_errors)
+        for path in paths:
+            self.assertEqual([], MODULE.schema_errors(MODULE.load_yaml(path), schema), path)
         self.assertEqual(
             [],
             MODULE.semantic_errors(
-                data,
+                combined,
                 root=ROOT,
                 allowed_states=set(policy["rule_lifecycle"]["allowed_states"]),
             ),
         )
+
+    def test_combine_shards_rejects_policy_drift(self) -> None:
+        first = self.index([self.record("OBS-A")])
+        second = self.index([self.record("OBS-B")])
+        second["policy"]["cross_reference_evidence_required_for_active"] = False
+        _, errors = MODULE.combine_index_documents(
+            [(Path("a.yaml"), first), (Path("b.yaml"), second)]
+        )
+        self.assertTrue(any("policy block must match" in error for error in errors), errors)
+
+    def test_duplicate_learning_id_across_shards_is_rejected(self) -> None:
+        with self.make_root() as directory:
+            root = Path(directory)
+            self.write_evidence(root)
+            first = self.record("OBS-DUP")
+            second = copy.deepcopy(first)
+            second["evidence"]["supports"][0]["evidence_id"] = "EV-2"
+            combined, combine_errors = MODULE.combine_index_documents(
+                [(Path("a.yaml"), self.index([first])), (Path("b.yaml"), self.index([second]))]
+            )
+            self.assertEqual([], combine_errors)
+            errors = self.validate(combined, root)
+            self.assertTrue(any("duplicate learning_id" in error for error in errors), errors)
 
     def test_duplicate_learning_id_is_rejected(self) -> None:
         with self.make_root() as directory:
@@ -117,6 +161,47 @@ class FrontendLearningEvidenceTests(unittest.TestCase):
             record["evidence"]["supports"][0]["kind"] = "COMMIT"
             errors = self.validate(self.index([record]), root)
             self.assertTrue(any("COMMIT evidence requires" in error for error in errors), errors)
+
+    def test_run_record_evidence_requires_exact_run_identity(self) -> None:
+        with self.make_root() as directory:
+            root = Path(directory)
+            relative = self.write_run(root, run_id="RUN-A")
+            record = self.record()
+            item = record["evidence"]["supports"][0]
+            item.update(
+                {
+                    "kind": "RUN_RECORD",
+                    "run_id": "RUN-WRONG",
+                    "path": relative,
+                }
+            )
+            errors = self.validate(self.index([record]), root)
+            self.assertTrue(any("run_id does not match" in error for error in errors), errors)
+
+            item["run_id"] = "RUN-A"
+            self.assertEqual([], self.validate(self.index([record]), root))
+
+    def test_run_lesson_fragment_hash_must_match_exact_source_item(self) -> None:
+        with self.make_root() as directory:
+            root = Path(directory)
+            candidate = "Preserve this exact candidate lesson."
+            relative = self.write_run(root, run_id="RUN-A", candidate=candidate)
+            record = self.record()
+            item = record["evidence"]["supports"][0]
+            item.update(
+                {
+                    "kind": "RUN_RECORD",
+                    "run_id": "RUN-A",
+                    "path": relative,
+                    "source_field": "lessons.candidate_rules",
+                    "source_text_sha256": "0" * 64,
+                }
+            )
+            errors = self.validate(self.index([record]), root)
+            self.assertTrue(any("source_text_sha256 does not match" in error for error in errors), errors)
+
+            item["source_text_sha256"] = MODULE.text_sha256(candidate)
+            self.assertEqual([], self.validate(self.index([record]), root))
 
     def test_active_learning_requires_two_distinct_references(self) -> None:
         with self.make_root() as directory:

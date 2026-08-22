@@ -1,0 +1,105 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: CR-REF001-SECTION-WHITESPACE-RHYTHM
+    summary: Intentional inter-section whitespace may belong to page rhythm rather than section-local padding; absorbing it blindly can create cascading section-top drift.
+    category: VISUAL_FIDELITY
+    applicability:
+      scope: REFERENCE
+      conditions:
+        - Figma evidence shows intentional whitespace between semantic section boundaries.
+        - Moving the whitespace into one section would shift downstream section geometry.
+      exclusions:
+        - Section-internal padding genuinely owns the whitespace.
+        - The project contract explicitly assigns the spacing to a component or section token.
+    promotion_state: CANDIDATE
+    promotion:
+      candidate: true
+      rationale: Captured from an actual REF-001 Clean Replay candidate rule, but only one reference supports it so far.
+      blocked_by:
+        - Independent-reference replay confirming that page-rhythm ownership reduces cascading repair.
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-REF001-BLIND-CLEAN-WHITESPACE-RHYTHM
+          kind: RUN_RECORD
+          reference_id: REF-001-CHIBA-KEIZAI-SAMPLE
+          run_id: RUN-REF001-BLIND-CLEAN-20260812-A
+          path: experiments/ref001-blind-clean-20260812/run.yaml
+          commit: ''
+          source_field: lessons.candidate_rules
+          source_text_sha256: 7653e9125b7a0030caad7cdf5cf4e6b5b1ceb112daa0419a9ec07d3a520c960f
+          note: Exact candidate-rule fragment from the immutable historical Blind Clean run record.
+      contradicts: []
+    notes:
+      - Keep conditional; this is not a rule that all section gaps belong to the page root.
+
+  - learning_id: CR-REF001-TEXT-PRESENTATION-RAILS
+    summary: Shared text rails and section-specific presentation rails should remain distinct when Figma intentionally uses different content widths for text and cards or other presentation surfaces.
+    category: RESPONSIVE
+    applicability:
+      scope: REFERENCE
+      conditions:
+        - Figma evidence shows repeated text alignment on one rail and a section-specific card or grid width on another.
+      exclusions:
+        - A single existing project container is the evidenced owner for both text and presentation content.
+        - Separate rails would only duplicate equivalent width ownership.
+    promotion_state: CANDIDATE
+    promotion:
+      candidate: true
+      rationale: Captured from an actual REF-001 Clean Replay candidate rule; cross-reference evidence is still missing.
+      blocked_by:
+        - Independent-reference evidence showing separate rails reduce patching without unnecessary container complexity.
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-REF001-BLIND-CLEAN-TEXT-PRESENTATION-RAILS
+          kind: RUN_RECORD
+          reference_id: REF-001-CHIBA-KEIZAI-SAMPLE
+          run_id: RUN-REF001-BLIND-CLEAN-20260812-A
+          path: experiments/ref001-blind-clean-20260812/run.yaml
+          commit: ''
+          source_field: lessons.candidate_rules
+          source_text_sha256: 471c8c0f36d2b2a8bc0f8d48cb07e8c4ac5d67aeeaf865deeb253ea4a01c4416
+          note: Exact candidate-rule fragment from the immutable historical Blind Clean run record.
+      contradicts: []
+    notes:
+      - Do not turn this into a universal extra-wrapper rule; the separate rail must be visible in source/project evidence.
+
+  - learning_id: CR-REF001-PERSISTENT-MEDIA-BYTES
+    summary: Image-heavy Figma fidelity requires durable access to the actual media bytes; short-lived Figma asset URLs must not be persisted as a substitute for real asset materialization.
+    category: ASSET_STRATEGY
+    applicability:
+      scope: REFERENCE
+      conditions:
+        - Visual fidelity materially depends on raster, composite, or other media bytes from Figma or canonical project authority.
+        - The implementation needs durable reproducible assets rather than a temporary inspection URL.
+      exclusions:
+        - A stable canonical repository or approved project asset already exists and is the actual source of truth.
+    promotion_state: CANDIDATE
+    promotion:
+      candidate: true
+      rationale: Captured from an actual REF-001 Clean Replay candidate rule and reinforced by the run blocker, but still needs independent-reference evidence before general ACTIVE promotion.
+      blocked_by:
+        - Independent image-heavy reference confirming durable byte materialization is a repeatable fidelity prerequisite.
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-REF001-BLIND-CLEAN-PERSISTENT-MEDIA-BYTES
+          kind: RUN_RECORD
+          reference_id: REF-001-CHIBA-KEIZAI-SAMPLE
+          run_id: RUN-REF001-BLIND-CLEAN-20260812-A
+          path: experiments/ref001-blind-clean-20260812/run.yaml
+          commit: ''
+          source_field: lessons.candidate_rules
+          source_text_sha256: f6c19ac8b5bb019e50045a498bd847d1bd4a80de96a7ffa39d1202a51b6e3ffe
+          note: Exact candidate-rule fragment from the immutable historical Blind Clean run record.
+      contradicts: []
+    notes:
+      - This forbids persisting short-lived URLs as evidence; it does not require Figma to be the asset source when project authority already supplies the exact media.
