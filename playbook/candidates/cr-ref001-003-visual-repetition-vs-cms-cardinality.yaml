@@ -8,7 +8,7 @@ recommendation: OPTIONAL
 scope:
   - PATTERN_LEVEL
 first_observed_at: "2026-08-11"
-last_verified_at: "2026-08-12"
+last_verified_at: "2026-08-22"
 verified_tooling:
   figma_mcp: "Figma MCP connected; REF-001 file ZYTdtw4wCgkcBy2cVnhxVI"
   agents:
@@ -21,18 +21,22 @@ evidence_runs:
   - "experiments/ref001-wordpress-acf/README.md#h1--figma-repetition-does-not-imply-acf-repeater"
   - "experiments/ref001-wordpress-acf/README.md#h8--ordered-progression-is-different-from-a-reorderable-collection"
   - "experiments/ref001-blind-clean-20260812/evidence/final-measurement.yaml"
+  - "experiments/ref002-budokan-wordpress/theme-intake.yaml#content_decisions"
 metric_effect:
   first_pass_delta: null
   repair_round_delta: null
   observed:
-    - "Blind Clean Replay recorded cms_inventions: 0."
-    - "Reason stayed fixed-cardinality, Education retained semantic 01-04 order, and Courses retained seven code/domain-owned identities/order/colors."
-    - "The same clean implementation passed Human Editability 10/10 with three disposable change drills."
+    - "REF-001 Blind Clean Replay recorded cms_inventions: 0."
+    - "REF-001 Reason stayed fixed-cardinality, Education retained semantic 01-04 order, and Courses retained seven code/domain-owned identities/order/colors."
+    - "The same REF-001 clean implementation passed Human Editability 10/10 with three disposable change drills."
+    - "REF-002 independently preserves authored PC/SP cardinality differences (for example About 6 cards on PC vs 3 in the SP horizontal scroller) while explicitly keeping editor add/remove/reorder capability UNDETERMINED."
+    - "REF-002 also keeps Events/News CPT requirements UNDETERMINED rather than inferring content architecture from the visible Figma sections alone."
 known_limits:
-  - "Verified on one reference family only; not yet cross-reference or cross-agent evidence."
+  - "REF-002 supplies independent decision-boundary evidence, but it has not yet completed an implementation/clean replay with measurable rework or Human Correction Cost effect; keep this rule E2/OPTIONAL."
   - "If editors genuinely need add/remove/reorder behavior, fixed fields become the wrong model and a collection architecture should be selected from that stronger requirement."
   - "ACF PRO availability and target-project field conventions still take precedence in production integration."
 retest_triggers:
+  - "REF-002 or another independent reference reaches implementation/clean replay and can measure CMS overmodeling/rework outcome"
   - "target project supplies explicit editor cardinality/reordering requirements"
   - "new reference uses dynamic collection semantics"
   - "major ACF/editor architecture change"

@@ -1,0 +1,112 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: OBS-REF002-THEME-OBSERVE-BEFORE-OWNERSHIP
+    summary: When a production WordPress Theme is an external project input, keep Theme-relative paths, ownership, breakpoints, JS/CSS architecture, ACF Local JSON behavior, and plugin/CPT assumptions unresolved until the supplied Theme is actually observed.
+    category: CMS
+    applicability:
+      scope: REFERENCE
+      conditions:
+        - The target project will supply an existing or company Theme whose structure is authoritative.
+        - Theme-relative implementation details have not yet been inspected from the actual target source.
+      exclusions:
+        - A project that explicitly authorizes a greenfield Theme has a different ownership boundary.
+    promotion_state: null
+    promotion:
+      candidate: false
+      rationale: Strong intake discipline in REF-002, but no completed implementation comparison yet proves lower rework across projects.
+      blocked_by:
+        - Compare a supplied-Theme implementation that used reconnaissance-first against a case with premature architecture assumptions.
+        - Measure avoided reversals, changed-file locality, or Human Correction Cost.
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-REF002-THEME-OBSERVE-INTAKE
+          kind: LOCAL_RESEARCH
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/ref002-budokan-wordpress/theme-intake.yaml
+          commit: ''
+          note: The intake intentionally keeps Theme family, paths, header/footer ownership, style/JS architecture, breakpoints, ACF evidence, forms, CPT, and image pipeline UNKNOWN until the supplied Theme is observed.
+        - evidence_id: EV-REF002-THEME-OBSERVE-README
+          kind: LOCAL_RESEARCH
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/ref002-budokan-wordpress/README.md
+          commit: ''
+          note: The merged REF-002 intake explicitly blocks target paths and implementation units before Theme observation and reuses the existing runtime only as a disposable runtime rather than a production Theme template.
+      contradicts: []
+    notes:
+      - Preserve UNKNOWN/UNDETERMINED as evidence; filling unknowns with conventions is not progress.
+
+  - learning_id: OBS-REF002-REUSE-QA-WITHOUT-INHERITING-FIXTURE-ARCHITECTURE
+    summary: Reuse proven runtime, mutation QA, visual diff, asset-lineage, secret-boundary, and readiness tooling while keeping the supplied production Theme architecture authoritative instead of inheriting the disposable fixture's sample Theme structure.
+    category: REUSE
+    applicability:
+      scope: REFERENCE
+      conditions:
+        - A reusable QA/runtime capability is independent of the target Theme's production source architecture.
+      exclusions:
+        - Do not copy the fixture Theme structure merely because its runtime and tests are reusable.
+    promotion_state: null
+    promotion:
+      candidate: false
+      rationale: REF-002 deliberately separates reusable QA responsibility from non-reusable production Theme ownership; outcome evidence should be collected after a real supplied Theme is integrated.
+      blocked_by:
+        - Complete the supplied-Theme integration and measure how much existing QA/runtime infrastructure was reused without structural leakage.
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-REF002-QA-REUSE-LAYERS
+          kind: LOCAL_RESEARCH
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/ref002-budokan-wordpress/theme-intake.yaml
+          commit: ''
+          note: qa_reuse explicitly reuses/adapts WordPress runtime, ACF secret handling, CMS mutation QA, visual diff, typography metrics, asset lineage, and readiness while stating that the sample Theme is not the production inheritance source.
+        - evidence_id: EV-REF002-QA-REUSE-README
+          kind: LOCAL_RESEARCH
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/ref002-budokan-wordpress/README.md
+          commit: ''
+          note: The merged intake instructs mounting the supplied Theme into the existing disposable runtime while preventing client Theme bytes or sample-Theme architecture from becoming repository canon.
+      contradicts: []
+    notes:
+      - 'This is a concrete Reuse-Before-Build example: reuse responsibilities, not accidental architecture.'
+
+  - learning_id: OBS-REF002-AUTHORED-PC-SP-DIFFERENCES
+    summary: Explicitly authored PC/SP structural or cardinality differences should be preserved as design evidence rather than normalized into identical content/layout merely for implementation symmetry.
+    category: RESPONSIVE
+    applicability:
+      scope: REFERENCE
+      conditions:
+        - Figma evidence shows intentional differences between canonical PC and SP compositions.
+      exclusions:
+        - Do not treat every accidental Figma discrepancy as authored intent; structured context and runtime/product requirements still need to support the interpretation.
+    promotion_state: null
+    promotion:
+      candidate: false
+      rationale: REF-002 intake contains several concrete authored differences, but the production implementation has not yet validated their intermediate-width/runtime behavior.
+      blocked_by:
+        - Implement and visually validate the authored differences across canonical and intermediate widths.
+        - Compare whether preserving them reduces visual repair without harming CMS/content ownership.
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-REF002-AUTHORED-DIFFERENCE-INTAKE
+          kind: LOCAL_RESEARCH
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/ref002-budokan-wordpress/theme-intake.yaml
+          commit: ''
+          note: REF-002 records SNS placement differences, About 6-card PC vs 3-card SP horizontal scroller, Instagram 5 vs 4 thumbnails, and other PC/SP composition differences while warning against forcing parity through content duplication/deletion.
+      contradicts: []
+    notes:
+      - 'Keep this distinct from CMS cardinality: responsive presentation evidence does not by itself determine editor content cardinality.'
