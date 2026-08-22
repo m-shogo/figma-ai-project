@@ -90,6 +90,9 @@ jobs:
       - name: Validate frontend learning evidence index
         run: python scripts/validate_frontend_learning_evidence.py
 
+      - name: Audit reusable run lessons are indexed
+        run: python scripts/audit_frontend_learning_capture.py
+
       - name: Validate implementation target profiles and Shared Contract binding
         run: python scripts/validate_implementation_profile.py
 
