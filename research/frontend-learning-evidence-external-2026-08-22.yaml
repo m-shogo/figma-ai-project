@@ -1,0 +1,211 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: EXT-FIGMA-MCP-UPSTREAM-ASSET-DESIGN-SYSTEM
+    summary: Current Figma Remote MCP already owns design-context, exact asset download, design-system search, and Code Connect-adjacent discovery responsibilities, so project code should keep only durable provenance and project-specific interpretation glue.
+    category: REUSE
+    applicability:
+      scope: EXTERNAL
+      conditions:
+        - The active MCP client exposes the applicable Remote MCP tools for the current Figma file and plan.
+      exclusions:
+        - Durable downloaded bytes still need approved project storage and provenance because returned asset URLs are temporary.
+        - Project authority, component compatibility, and implementation strategy remain project-specific decisions.
+    promotion_state: null
+    promotion:
+      candidate: false
+      rationale: This is upstream capability evidence supporting the existing reuse-before-build posture, not a new universal frontend implementation rule.
+      blocked_by: []
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-EXT-FIGMA-MCP-TOOLS-20260822
+          kind: EXTERNAL_GUIDANCE
+          reference_id: ''
+          run_id: ''
+          path: https://developers.figma.com/docs/figma-mcp-server/tools-and-prompts/
+          commit: ''
+          note: Official Figma documentation lists get_design_context, download_assets, search_design_system, get_libraries, Code Connect tools, and related Remote MCP capabilities; download_assets returns temporary URLs plus rendered/raw assets.
+        - evidence_id: EV-EXT-FIGMA-MCP-MATRIX
+          kind: CANONICAL_DOC
+          reference_id: ''
+          run_id: ''
+          path: docs/frontend-external-integration-matrix.md
+          commit: ''
+          note: Existing matrix already classifies these upstream responsibilities as USE_NOW or conditional reuse and keeps only provenance/adaptation glue.
+      contradicts: []
+    notes:
+      - The current project connector exposes download_assets and search_design_system, confirming the official capability is reachable in this workspace.
+
+  - learning_id: EXT-WPENV-ISOLATED-RUNTIME-CLEAN-REPLAY
+    summary: Current wp-env supports separate config-driven environments with isolated containers and data, custom PHP/theme/plugin mappings, lifecycle scripts, and configurable environment homes, making it a stronger replacement candidate for generic WordPress fixture infrastructure.
+    category: CMS
+    applicability:
+      scope: EXTERNAL
+      conditions:
+        - A project needs a disposable WordPress development/test runtime rather than a company-owned existing environment.
+        - Required ACF PRO licensing and project-specific theme/seed behavior can be injected without committing private plugin bytes.
+      exclusions:
+        - Do not replace a healthy company/project runtime merely for uniformity.
+        - Do not remove the current fixture until parallel isolation, ACF PRO, deterministic seed/mutation, and Playwright behavior are replayed equivalently.
+    promotion_state: CANDIDATE
+    promotion:
+      candidate: true
+      rationale: Official wp-env capabilities now cover more of the generic Docker/runtime responsibility, but this repository still needs a real clean replay against the current ACF PRO fixture before retirement decisions.
+      blocked_by:
+        - Clean replay of WordPress/PHP version pinning and theme mapping.
+        - ACF PRO licensed install/activation without persisted private bytes.
+        - Parallel config/worktree isolation and deterministic database reset/seed behavior.
+        - Playwright runtime URL and CMS mutation equivalence.
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-EXT-WPENV-OFFICIAL-20260822
+          kind: EXTERNAL_GUIDANCE
+          reference_id: ''
+          run_id: ''
+          path: https://developer.wordpress.org/block-editor/reference-guides/packages/packages-env/
+          commit: ''
+          note: Official wp-env docs describe separate --config environments with isolated Docker containers/data, WP_ENV_HOME, phpVersion, plugin/theme mappings, lifecycle scripts, and parallel-environment guidance.
+        - evidence_id: EV-EXT-WPENV-MATRIX
+          kind: CANONICAL_DOC
+          reference_id: ''
+          run_id: ''
+          path: docs/frontend-external-integration-matrix.md
+          commit: ''
+          note: Existing matrix already marks wp-env as a CLEAN_REPLAY_CANDIDATE before bespoke generic Docker infrastructure.
+      contradicts: []
+    notes:
+      - This is an upstream replacement experiment, not permission to delete the proven #202 fixture first.
+
+  - learning_id: EXT-STORYBOOK-BROWSER-COMPONENT-TEST-REUSE
+    summary: When a target project already owns Storybook, current Storybook testing can reuse stories for real-browser component tests and Chromatic-backed visual tests, reducing justification for a second custom shared-component harness.
+    category: REUSE
+    applicability:
+      scope: EXTERNAL
+      conditions:
+        - Storybook already exists in the target project and the framework supports the current testing integration.
+      exclusions:
+        - Do not introduce Storybook solely to satisfy this project Standard.
+        - Figma parity interpretation and whole-page/CMS runtime QA remain separate responsibilities.
+    promotion_state: null
+    promotion:
+      candidate: false
+      rationale: This reinforces the existing USE_WHEN_PRESENT policy rather than introducing a new dependency requirement.
+      blocked_by: []
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-EXT-STORYBOOK-VITEST-BROWSER-20260822
+          kind: EXTERNAL_GUIDANCE
+          reference_id: ''
+          run_id: ''
+          path: https://storybook.js.org/docs/writing-tests/integrations/vitest-addon/index
+          commit: ''
+          note: Current Storybook docs recommend browser-mode component tests using Playwright Chromium through the Vitest addon.
+        - evidence_id: EV-EXT-STORYBOOK-VISUAL-20260822
+          kind: EXTERNAL_GUIDANCE
+          reference_id: ''
+          run_id: ''
+          path: https://storybook.js.org/docs/writing-tests/visual-testing
+          commit: ''
+          note: Storybook documents maintained Chromatic visual testing that turns stories into visual baseline tests.
+        - evidence_id: EV-EXT-STORYBOOK-MATRIX
+          kind: CANONICAL_DOC
+          reference_id: ''
+          run_id: ''
+          path: docs/frontend-external-integration-matrix.md
+          commit: ''
+          note: Existing matrix says to reuse established Storybook/Chromatic shared-component review when present.
+      contradicts: []
+    notes: []
+
+  - learning_id: EXT-PERCY-FIGMA-HOSTED-REVIEW-TRIAL
+    summary: Percy currently provides direct Figma-design to implementation-snapshot mapping and hosted visual review, so it remains the strongest external candidate to replace generic hosted review responsibilities while leaving project-specific Figma authority and learning glue local.
+    category: TOOLING
+    applicability:
+      scope: EXTERNAL
+      conditions:
+        - The project can approve BrowserStack/Percy as an external processing boundary.
+        - Figma file access, screenshot quota/cost, and width/browser coverage fit the project.
+      exclusions:
+        - Private projects must not expose Figma or DOM/assets without explicit approval.
+        - Do not duplicate Percy and another hosted visual review service for the same responsibility.
+    promotion_state: CANDIDATE
+    promotion:
+      candidate: true
+      rationale: Official Percy functionality overlaps the generic Human Review surface, but adoption requires an authenticated real-project trial and privacy/cost evaluation.
+      blocked_by:
+        - Approved Percy project/account and Figma access model.
+        - Disposable trial measuring Figma mapping quality, review usability, false-positive cost, and Human Correction minutes.
+        - Verification that project-specific Figma provenance and root-cause learning remain accessible after any replacement.
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-EXT-PERCY-FIGMA-OVERVIEW-20260822
+          kind: EXTERNAL_GUIDANCE
+          reference_id: ''
+          run_id: ''
+          path: https://www.browserstack.com/docs/percy/visual-testing-workflows/figma/overview
+          commit: ''
+          note: Percy documents mapping Figma designs to implementation snapshots for visual comparison and collaborative review.
+        - evidence_id: EV-EXT-PERCY-FIGMA-ACCESS-20260822
+          kind: EXTERNAL_GUIDANCE
+          reference_id: ''
+          run_id: ''
+          path: https://www.browserstack.com/docs/percy/visual-testing-workflows/figma/configuration
+          commit: ''
+          note: Percy documents Figma access/rate-limit constraints, including public-link or service-account access and Dev/Full access guidance for critical builds.
+        - evidence_id: EV-EXT-PERCY-MATRIX
+          kind: CANONICAL_DOC
+          reference_id: ''
+          run_id: ''
+          path: docs/frontend-external-integration-matrix.md
+          commit: ''
+          note: Existing matrix already treats Percy Figma as a conditional high-value trial rather than USE_NOW.
+      contradicts: []
+    notes:
+      - Keep generic review replacement separate from Figma-specific diagnosis and evidence promotion.
+
+  - learning_id: EXT-UIMATCH-STRUCTURED-DIFF-EXPERIMENTAL
+    summary: uiMatch demonstrates a useful Figma-to-implementation structured report pattern using Playwright, pixel/color/layout/style/text evidence, and CI-oriented output, but its current 0.x experimental status is not sufficient to make it a production dependency.
+    category: TOOLING
+    applicability:
+      scope: EXTERNAL
+      conditions:
+        - Evaluating structured Figma/browser delta formats or future replacement candidates for small custom comparison glue.
+      exclusions:
+        - Do not adopt as production authority while the upstream project explicitly labels its APIs unstable and not production-ready.
+    promotion_state: null
+    promotion:
+      candidate: false
+      rationale: Preserve the architecture lesson and monitor maturity; no dependency adoption decision is justified yet.
+      blocked_by:
+        - Upstream maturity/stability improvement.
+        - Clean replay showing lower maintenance and Human Correction Cost than the current Playwright + pixelmatch + project-specific evidence glue.
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-EXT-UIMATCH-GITHUB-20260822
+          kind: EXTERNAL_GUIDANCE
+          reference_id: ''
+          run_id: ''
+          path: https://github.com/kosaki08/uimatch
+          commit: ''
+          note: Upstream README documents Playwright rendering, Figma comparison, structured pixel/layout/style/color/text reports, CI exit codes, and experimental AI repair-loop use while explicitly labeling the project Experimental / 0.x / not production-ready.
+        - evidence_id: EV-EXT-UIMATCH-LEARNING-DOC
+          kind: CANONICAL_DOC
+          reference_id: ''
+          run_id: ''
+          path: docs/frontend-visual-repair-learning-loop.md
+          commit: ''
+          note: Existing learning-loop guidance already adopts the structured-delta idea while deferring the dependency because of maturity.
+      contradicts: []
+    notes:
+      - Re-check upstream maturity through Update Radar/research before extending equivalent custom comparison infrastructure.
