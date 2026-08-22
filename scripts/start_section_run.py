@@ -15,6 +15,7 @@ from audit_figma_variable_modes import audit_record
 from plan_figma_variable_mode_remediation import build_remediation_plan
 from validate_implementation_profile import load_yaml as load_profile_yaml
 from validate_implementation_profile import semantic_errors as implementation_profile_semantic_errors
+from validate_reuse_preflight import reuse_preflight_errors
 from validate_run_lineage import validate_run
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -240,6 +241,7 @@ def start(data: dict[str, Any]) -> dict[str, Any]:
 
     errors = implementation_profile_errors(data)
     errors.extend(preflight_errors(data))
+    errors.extend(reuse_preflight_errors(data))
     errors.extend(figma_variable_mode_errors(data))
     if errors:
         raise ValueError("section start gate incomplete:\n- " + "\n- ".join(errors))
@@ -255,7 +257,7 @@ def start(data: dict[str, Any]) -> dict[str, Any]:
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Transition a pinned SECTION run from PLANNED to RUNNING after Implementation Profile, tooling, and Figma responsive-mode validation"
+        description="Transition a pinned SECTION run from PLANNED to RUNNING after Implementation Profile, tooling, reuse-before-build, and Figma responsive-mode validation"
     )
     parser.add_argument("run_record", type=Path)
     parser.add_argument("--apply", action="store_true")
