@@ -1,0 +1,46 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: EXT-FIGMA-MCP-DESIGN-SYSTEM-RULES-PROMPT
+    summary: Figma Remote MCP now exposes an upstream create_design_system_rules prompt for generating design-system guidance, so agents should check client support before building another generic rule-generation layer; project authority and frontend implementation policy still remain local.
+    category: REUSE
+    applicability:
+      scope: EXTERNAL
+      conditions:
+        - The active MCP client supports Figma MCP prompts.
+        - The target task is design-system context generation rather than project-specific frontend policy resolution.
+      exclusions:
+        - Do not replace Company, Existing Codebase, Effective Project Contract, or this repository's evidence lifecycle with generated Figma guidance.
+        - Do not assume all clients support MCP prompts merely because the Remote MCP server documents one.
+    promotion_state: null
+    promotion:
+      candidate: false
+      rationale: This is upstream capability awareness and a reuse-before-build checkpoint, not a new runtime rule.
+      blocked_by:
+        - Confirm prompt support in the active client before treating the capability as operational.
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-EXT-FIGMA-DESIGN-SYSTEM-RULES-PROMPT-20260822
+          kind: EXTERNAL_GUIDANCE
+          reference_id: ''
+          run_id: ''
+          path: https://developers.figma.com/docs/figma-mcp-server/tools-and-prompts/
+          commit: ''
+          note: Official Figma MCP documentation lists create_design_system_rules as an MCP prompt and explicitly notes that not all agents and clients support MCP prompts.
+        - evidence_id: EV-EXT-FIGMA-RULES-REUSE-MATRIX
+          kind: CANONICAL_DOC
+          reference_id: ''
+          run_id: ''
+          path: docs/frontend-external-integration-matrix.md
+          commit: ''
+          note: Existing project guidance requires upstream capability checks before growing project-specific infrastructure.
+      contradicts: []
+    notes:
+      - The current connector exposes tool resources but no prompt resource was confirmed during this pass, so this remains capability evidence rather than USE_NOW behavior.
