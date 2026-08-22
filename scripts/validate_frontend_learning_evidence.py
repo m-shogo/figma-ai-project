@@ -13,7 +13,7 @@ import yaml
 from jsonschema import Draft202012Validator
 
 ROOT = Path(__file__).resolve().parents[1]
-INDEX_PATH = ROOT / "research" / "frontend-learning-evidence.yaml"
+INDEX_GLOB = "frontend-learning-evidence*.yaml"
 SCHEMA_PATH = ROOT / "schemas" / "frontend-learning-evidence.schema.json"
 POLICY_PATH = ROOT / "config" / "frontend-implementation-policy.yaml"
 LOCAL_EVIDENCE_KINDS = {"LOCAL_RESEARCH", "RUN_RECORD", "COMMIT", "CANONICAL_DOC"}
@@ -51,6 +51,50 @@ def local_evidence_path(root: Path, value: str) -> Path | None:
     if candidate != root and root not in candidate.parents:
         return None
     return candidate
+
+
+def index_paths(root: Path) -> list[Path]:
+    research = root / "research"
+    if not research.exists():
+        return []
+    return sorted(path for path in research.glob(INDEX_GLOB) if path.is_file())
+
+
+def combine_index_documents(
+    documents: list[tuple[Path, dict[str, Any]]],
+) -> tuple[dict[str, Any], list[str]]:
+    errors: list[str] = []
+    if not documents:
+        return {}, [f"no frontend learning evidence shards matched research/{INDEX_GLOB}"]
+
+    first_path, first = documents[0]
+    schema_version = first.get("schema_version")
+    policy = first.get("policy")
+    combined_records: list[Any] = []
+
+    for path, document in documents:
+        if document.get("schema_version") != schema_version:
+            errors.append(
+                f"{path.name}: schema_version must match {first_path.name} ({schema_version!r})"
+            )
+        if document.get("policy") != policy:
+            errors.append(f"{path.name}: policy block must match {first_path.name}")
+        records = document.get("records", [])
+        if isinstance(records, list):
+            combined_records.extend(records)
+
+    return {
+        "schema_version": schema_version,
+        "policy": policy,
+        "records": combined_records,
+    }, errors
+
+
+def load_combined_index(root: Path) -> tuple[dict[str, Any], list[Path], list[str]]:
+    paths = index_paths(root)
+    documents = [(path, load_yaml(path)) for path in paths]
+    combined, errors = combine_index_documents(documents)
+    return combined, paths, errors
 
 
 def run_lesson_values(run: dict[str, Any], source_field: str) -> list[str]:
@@ -192,14 +236,17 @@ def schema_errors(data: dict[str, Any], schema: dict[str, Any]) -> list[str]:
 
 
 def main() -> int:
-    data = load_yaml(INDEX_PATH)
     schema = load_json(SCHEMA_PATH)
     frontend_policy = load_yaml(POLICY_PATH)
     allowed_states = set(frontend_policy.get("rule_lifecycle", {}).get("allowed_states", []))
 
-    errors = schema_errors(data, schema)
+    combined, paths, errors = load_combined_index(ROOT)
+    for path in paths:
+        shard = load_yaml(path)
+        errors.extend(f"{path.relative_to(ROOT)}: {error}" for error in schema_errors(shard, schema))
+
     if not errors:
-        errors.extend(semantic_errors(data, root=ROOT, allowed_states=allowed_states))
+        errors.extend(semantic_errors(combined, root=ROOT, allowed_states=allowed_states))
 
     if errors:
         print("FAIL frontend learning evidence index")
@@ -207,7 +254,7 @@ def main() -> int:
             print(f"  - {error}")
         return 1
 
-    records = data.get("records", [])
+    records = combined.get("records", [])
     states = Counter(
         str(record.get("promotion_state") or "UNPROMOTED")
         for record in records
@@ -228,7 +275,10 @@ def main() -> int:
     )
 
     print("PASS frontend learning evidence index")
-    print(f"  records={len(records)} distinct_references={len(reference_ids)} contradictions={contradiction_count}")
+    print(
+        f"  shards={len(paths)} records={len(records)} distinct_references={len(reference_ids)} "
+        f"contradictions={contradiction_count}"
+    )
     print("  states=" + ",".join(f"{key}:{states[key]}" for key in sorted(states)))
     print("  auto_promotion=false")
     return 0
