@@ -144,8 +144,24 @@ class CreateSectionRunTests(unittest.TestCase):
                 agent_client="codex",
                 model="model-current",
             )
+            template = yaml.safe_load(
+                (ROOT / "templates" / "run-record.yaml").read_text(encoding="utf-8")
+            )
 
-            self.assertEqual(record["schema_version"], 10)
+            self.assertEqual(record["schema_version"], template["schema_version"])
+            self.assertEqual(set(record), set(template))
+            for block in (
+                "tooling_preflight",
+                "knowledge_context",
+                "runtime_contract",
+                "human_editability",
+                "deliverables",
+                "scores",
+                "rework",
+                "lessons",
+            ):
+                self.assertTrue(set(template[block]).issubset(record[block]))
+
             self.assertEqual(record["status"], "PLANNED")
             self.assertEqual(record["tooling_preflight"]["mode"], "AUTOMATED_UPDATE_RADAR")
             self.assertEqual(record["tooling_preflight"]["update_radar_max_age_hours"], 36)
@@ -170,6 +186,10 @@ class CreateSectionRunTests(unittest.TestCase):
             self.assertEqual(record["code"]["starting_commit"], "foundation-123")
             self.assertEqual(record["code"]["repository"], "m-shogo/example")
             self.assertEqual(record["coordination"]["required_environment_profiles"], [])
+            self.assertEqual(record["rework"]["affected_section_count"], 1)
+            self.assertIn("reuse_metrics", record["rework"])
+            self.assertIn("selected_states", record["runtime_contract"])
+            self.assertEqual(record["human_editability"]["status"], "PENDING")
 
     def test_company_bound_run_pins_resolved_environment_profiles(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
