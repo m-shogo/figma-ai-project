@@ -10,7 +10,6 @@ import yaml
 import validate_frontend_learning_evidence as learning
 
 ROOT = Path(__file__).resolve().parents[1]
-INDEX_PATH = ROOT / "research" / "frontend-learning-evidence.yaml"
 TRACKED_FIELDS = (
     "candidate_rules",
     "confirmed_rules",
@@ -119,8 +118,10 @@ def capture_errors(index: dict[str, Any], *, root: Path) -> list[str]:
 
 
 def main() -> int:
-    index = load_yaml(INDEX_PATH)
-    errors = capture_errors(index, root=ROOT)
+    index, shards, combine_errors = learning.load_combined_index(ROOT)
+    errors = list(combine_errors)
+    if not errors:
+        errors.extend(capture_errors(index, root=ROOT))
     if errors:
         print("FAIL frontend learning capture audit")
         for error in errors:
@@ -129,7 +130,10 @@ def main() -> int:
 
     fragments = reusable_run_fragments(ROOT)
     print("PASS frontend learning capture audit")
-    print(f"  reusable_run_fragments={len(fragments)} indexed={len(captured_fragments(index))}")
+    print(
+        f"  shards={len(shards)} reusable_run_fragments={len(fragments)} "
+        f"indexed={len(captured_fragments(index))}"
+    )
     print("  observations remain in run records; only reusable lifecycle fields require cross-run indexing")
     return 0
 
