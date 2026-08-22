@@ -49,6 +49,11 @@ class HumanEditabilityValidationTests(unittest.TestCase):
             "notes": [],
         }
 
+    def strict_run(self) -> dict:
+        run = self.base_run()
+        run["schema_version"] = 13
+        return run
+
     def test_pass_score_must_equal_dimension_sum(self) -> None:
         run = self.base_run()
         run["human_editability"]["score"] = 9
@@ -89,32 +94,35 @@ class HumanEditabilityValidationTests(unittest.TestCase):
         errors = MODULE.validate_run_block(run, "run")
         self.assertTrue(any("cannot contain a failed change drill" in error for error in errors))
 
-    def test_pass_drill_requires_material_snapshot_commit(self) -> None:
-        run = self.base_run()
+    def test_schema_v13_pass_drill_requires_material_snapshot_commit(self) -> None:
+        run = self.strict_run()
         drill = self.drill("HE-SNAPSHOT")
         drill["snapshot_commit"] = "TBD"
         run["human_editability"]["change_drills"] = [drill]
         errors = MODULE.validate_run_block(run, "run")
         self.assertTrue(any("material snapshot_commit evidence" in error for error in errors), errors)
 
-    def test_pass_drill_requires_located_source(self) -> None:
-        run = self.base_run()
+    def test_schema_v13_pass_drill_requires_located_source(self) -> None:
+        run = self.strict_run()
         drill = self.drill("HE-LOCATE")
         drill["located_paths"] = []
         run["human_editability"]["change_drills"] = [drill]
         errors = MODULE.validate_run_block(run, "run")
         self.assertTrue(any("at least one located_path" in error for error in errors), errors)
 
-    def test_pass_drill_requires_regression_pass(self) -> None:
-        run = self.base_run()
+    def test_schema_v13_pass_drill_requires_passing_regression_evidence(self) -> None:
+        run = self.strict_run()
         drill = self.drill("HE-REGRESSION")
         drill["regression_status"] = "NOT_RUN"
         run["human_editability"]["change_drills"] = [drill]
         errors = MODULE.validate_run_block(run, "run")
-        self.assertTrue(any("regression_status=PASS" in error for error in errors), errors)
+        self.assertTrue(any("PASS-prefixed regression_status" in error for error in errors), errors)
 
-    def test_pass_drill_with_no_file_change_requires_explanation(self) -> None:
-        run = self.base_run()
+        drill["regression_status"] = "PASS_SCOPED_SELECTOR_NO_UNRELATED_PATHS"
+        self.assertEqual(MODULE.validate_run_block(run, "run"), [])
+
+    def test_schema_v13_pass_drill_with_no_file_change_requires_explanation(self) -> None:
+        run = self.strict_run()
         drill = self.drill("HE-CMS")
         drill["changed_paths"] = []
         run["human_editability"]["change_drills"] = [drill]
@@ -124,13 +132,20 @@ class HumanEditabilityValidationTests(unittest.TestCase):
         drill["notes"] = ["Changed the editor-owned ACF value in the disposable runtime; no code file changed."]
         self.assertEqual(MODULE.validate_run_block(run, "run"), [])
 
-    def test_path_evidence_rejects_placeholder_entries(self) -> None:
-        run = self.base_run()
+    def test_schema_v13_path_evidence_rejects_placeholder_entries(self) -> None:
+        run = self.strict_run()
         drill = self.drill("HE-PATH")
         drill["changed_paths"] = ["TODO"]
         run["human_editability"]["change_drills"] = [drill]
         errors = MODULE.validate_run_block(run, "run")
         self.assertTrue(any("entries must be non-placeholder strings" in error for error in errors), errors)
+
+    def test_schema_v11_historical_drill_keeps_rich_regression_status_compatible(self) -> None:
+        run = self.base_run()
+        drill = self.drill("HE-HISTORICAL")
+        drill["regression_status"] = "PASS_RENDERED_EDITOR_VALUE_WITHOUT_LAYOUT_CHANGE"
+        run["human_editability"]["change_drills"] = [drill]
+        self.assertEqual(MODULE.validate_run_block(run, "run"), [])
 
 
 if __name__ == "__main__":
