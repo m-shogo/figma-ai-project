@@ -5,6 +5,7 @@ import argparse
 import json
 import math
 import re
+from collections import Counter
 from pathlib import Path
 from typing import Any
 
@@ -58,11 +59,22 @@ def jaccard(a: set[str], b: set[str]) -> float:
     return len(a & b) / len(a | b)
 
 
+def containment(a: set[str], b: set[str]) -> float:
+    if not a or not b:
+        return 0.0
+    return len(a & b) / min(len(a), len(b))
+
+
 def ratio_similarity(a: float | None, b: float | None) -> float:
     if not a or not b or a <= 0 or b <= 0:
         return 0.0
     ratio = min(a, b) / max(a, b)
     return max(0.0, min(1.0, ratio))
+
+
+def order_value(frame: dict[str, Any]) -> int | None:
+    value = frame.get("canvas_order", frame.get("order"))
+    return value if isinstance(value, int) else None
 
 
 def order_similarity(a: int | None, a_count: int, b: int | None, b_count: int) -> float:
@@ -80,32 +92,35 @@ def score_pair(pc: dict[str, Any], sp: dict[str, Any], pc_count: int, sp_count: 
     pc_name = canonical_name(pc)
     sp_name = canonical_name(sp)
     if pc_name and sp_name and pc_name == sp_name:
-        # A device suffix/prefix-only difference such as join vs join_sp is strong
-        # evidence, but candidate competition still prevents duplicate/variant names
-        # from being silently accepted.
-        score += 0.72
+        score += 0.48
         evidence.append("canonical_name_exact")
     else:
         name_sim = jaccard(set(pc_name.split()), set(sp_name.split()))
         if name_sim:
-            score += 0.28 * name_sim
+            score += 0.24 * name_sim
             evidence.append(f"name_tokens={name_sim:.2f}")
 
-    semantic = jaccard(token_set(pc), token_set(sp))
+    pc_tokens = token_set(pc)
+    sp_tokens = token_set(sp)
+    semantic = jaccard(pc_tokens, sp_tokens)
+    semantic_containment = containment(pc_tokens, sp_tokens)
     if semantic:
-        score += 0.34 * semantic
-        evidence.append(f"semantic_tokens={semantic:.2f}")
+        score += 0.22 * semantic
+        evidence.append(f"semantic_jaccard={semantic:.2f}")
+    if semantic_containment:
+        score += 0.22 * semantic_containment
+        evidence.append(f"semantic_containment={semantic_containment:.2f}")
 
     family_pc = " ".join(normalize_text(pc.get("page_family_hint", "")))
     family_sp = " ".join(normalize_text(sp.get("page_family_hint", "")))
     if family_pc and family_sp and family_pc == family_sp:
-        score += 0.28
+        score += 0.24
         evidence.append("page_family_hint_exact")
 
-    order_sim = order_similarity(pc.get("order"), pc_count, sp.get("order"), sp_count)
+    order_sim = order_similarity(order_value(pc), pc_count, order_value(sp), sp_count)
     if order_sim:
         score += 0.08 * order_sim
-        evidence.append(f"order={order_sim:.2f}")
+        evidence.append(f"canvas_order={order_sim:.2f}")
 
     h_sim = ratio_similarity(pc.get("height"), sp.get("height"))
     if h_sim:
@@ -116,15 +131,20 @@ def score_pair(pc: dict[str, Any], sp: dict[str, Any], pc_count: int, sp_count: 
 
 
 def confidence(score: float, margin: float, second_score: float) -> str:
-    # A second candidate that is independently strong often means Figma contains
-    # alternate/revision frames. Its absolute strength matters even when the best
-    # candidate is saturated at 1.0; targeted inspection should disambiguate it.
     strong_alternative = second_score >= 0.60
     if score >= 0.78 and margin >= 0.15 and not strong_alternative:
         return "HIGH"
     if score >= 0.55 and margin >= 0.08:
         return "MEDIUM"
     return "LOW"
+
+
+def decision_for(conf: str) -> str:
+    if conf == "HIGH":
+        return "AUTO_CANDIDATE"
+    if conf == "MEDIUM":
+        return "INSPECT_STRUCTURE"
+    return "INSPECT_VISUAL"
 
 
 def resolve(data: dict[str, Any]) -> dict[str, Any]:
@@ -156,7 +176,7 @@ def resolve(data: dict[str, Any]) -> dict[str, Any]:
             "second_score": round(second, 4),
             "margin": round(margin, 4),
             "confidence": conf,
-            "decision": "AUTO_CANDIDATE" if conf == "HIGH" else ("INSPECT_MORE" if conf == "MEDIUM" else "HUMAN_REVIEW"),
+            "decision": decision_for(conf),
             "evidence": best_evidence,
             "alternatives": [
                 {"sp_node_id": sp.get("node_id"), "sp_name": sp.get("name"), "score": round(score, 4)}
@@ -164,13 +184,30 @@ def resolve(data: dict[str, Any]) -> dict[str, Any]:
             ],
         })
 
+    # Only credible candidates participate in collision detection. A LOW match may
+    # temporarily point at an otherwise obvious SP frame simply because every
+    # available score is weak; it must not downgrade the strong owner of that frame.
+    credible = [m for m in matches if float(m.get("score") or 0.0) >= 0.55]
+    selected = Counter(str(m.get("sp_node_id") or "") for m in credible)
+    collisions = {node_id for node_id, count in selected.items() if node_id and count > 1}
+    for match in matches:
+        if str(match.get("sp_node_id") or "") in collisions and float(match.get("score") or 0.0) >= 0.55:
+            match["collision"] = True
+            if match["confidence"] == "HIGH":
+                match["confidence"] = "MEDIUM"
+            match["decision"] = "INSPECT_STRUCTURE"
+            match["evidence"].append("candidate_collision")
+        else:
+            match["collision"] = False
+
     return {
         "schema_version": 1,
         "reference_id": data.get("reference_id", ""),
         "policy": {
-            "high": "may be used as an automatic candidate, but remains evidence rather than Figma truth until runtime/visual checks agree",
-            "medium": "inspect Figma descendants/text/components/screenshots before deciding",
-            "low": "keep UNDETERMINED and request human input only if further observation cannot resolve it",
+            "high": "automatic candidate only; visual/runtime evidence still owns final truth",
+            "medium": "agent inspects descendants, text, components, page family and candidate collisions before deciding",
+            "low": "agent compares screenshots/visual truth before asking a human",
+            "human_review": "ask a human only when structure plus visual inspection still leaves multiple plausible mappings",
         },
         "matches": matches,
     }

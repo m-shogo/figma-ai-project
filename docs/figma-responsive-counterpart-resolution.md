@@ -12,7 +12,7 @@ PC/SPのFigma frameを毎回人間が手で対応付ける作業を減らす。
 - PCだけ / SPだけに存在するsurface
 - 古い案・別variant・wrapper frameが残っている
 
-を含めて、**観測 evidence から候補を順位付けし、確信度に応じて追加観測する**。
+を含めて、**観測 evidence から候補を順位付けし、確信度に応じてAI自身が追加観測する**。
 
 これは新しいVisual QA engineではない。既存の Figma Structure Profile の
 `signals.responsive_mapping` を埋めるための薄い discovery helper である。
@@ -27,10 +27,10 @@ lightweight fingerprint
 responsive counterpart ranking
         ↓
 HIGH    -> automatic candidate
-MEDIUM  -> targeted Figma inspection
-LOW     -> keep UNDETERMINED
+MEDIUM  -> AIがstructure/text/componentを追加観測
+LOW     -> AIがscreenshot/visual truthを比較
         ↓
-visual/structure evidence
+それでも複数候補が残る場合だけhuman review
         ↓
 Section Manifest / Structure Profile
         ↓
@@ -39,8 +39,8 @@ SP -> PC implementation and acceptance
 
 **1位だから正解とはしない。**
 
-2位候補も強い場合は、古いvariant・別composition・wrapperの可能性があるため
-自動採用を止める。
+2位候補も強い場合や、複数PCが同じSP候補を取り合う場合は、
+old variant・別composition・wrapperの可能性があるため自動採用を止める。
 
 ## Fingerprint evidence
 
@@ -52,7 +52,7 @@ SP -> PC implementation and acceptance
 2. semantic/page-family hint
 3. descendant layer/component名
 4. visible text vocabulary
-5. frame順序
+5. canvas上のframe順序（可能ならx座標からleft-to-rightで作る）
 6. width/height比
 7. 必要なら screenshot / design context / component lineage
 
@@ -86,14 +86,16 @@ frames:
     name: join
     width: 1380
     height: 3400
-    order: 0
+    canvas_order: 0
   - page_role: SP
     node_id: "3:4"
     name: join_sp
     width: 375
     height: 4600
-    order: 0
+    canvas_order: 0
 ```
+
+`canvas_order` が無い旧inventoryでは `order` をfallbackとして使う。
 
 精度を上げる場合:
 
@@ -113,12 +115,12 @@ Figmaのpage/frame/visible contentから観測できる場合だけ evidence と
 
 ### HIGH / AUTO_CANDIDATE
 
-明確な名前対応やsemantic evidenceがあり、強い競合候補もない。
+明確な名前対応やsemantic evidenceがあり、強い競合候補もcollisionもない。
 
 自動候補としてSection discoveryへ渡してよい。
 ただしFigma truthの最終確定ではなく、後続のvisual/structure evidenceと矛盾したら撤回する。
 
-### MEDIUM / INSPECT_MORE
+### MEDIUM / INSPECT_STRUCTURE
 
 有力だが、次のどれかがある。
 
@@ -126,16 +128,41 @@ Figmaのpage/frame/visible contentから観測できる場合だけ evidence と
 - 強い2位候補がある
 - semantic fingerprintだけで対応している
 - old/current variantの区別がつかない
+- 複数PCが同じSP候補を選んでいる
 
-この場合、対象candidateだけ追加で `get_metadata` / screenshot / design context / component lineageを確認する。
-全Figmaを人間に整理させない。
+この場合、AIが対象candidateだけ追加で `get_metadata` / descendant text / components /
+page-family evidenceを確認する。全Figmaを人間に整理させない。
 
-### LOW / HUMAN_REVIEW
+### LOW / INSPECT_VISUAL
 
-fingerprint不足または候補競合を追加観測でも解決できない。
+構造fingerprintだけでは証拠が薄い。
 
-まず `UNDETERMINED` を維持する。
-人間へ質問するのは、Figma内の追加観測で解けないことを確認した後だけ。
+この場合も人間へはまだ聞かず、AIが screenshot / design context / visual truth を比較する。
+REF-002 main TOPのように、見た目は明確でも内部がflattenされてprogrammatic fingerprintが疎な
+Figmaをここで救う。
+
+### HUMAN REVIEW — 最後だけ
+
+structure + visual inspectionまで実施しても複数の妥当候補が残る場合だけ、人間へ確認する。
+
+質問時も「PC/SPどれですか？」と丸投げせず、候補node ID・スクリーンショット・判断根拠・
+違いを提示して最小確認にする。
+
+## Candidate collision
+
+resolverはPCごとに候補をrankするため、同じSP frameが複数PCの1位になることがある。
+
+その場合:
+
+- `collision: true`
+- HIGHでもMEDIUMへdowngrade
+- `decision: INSPECT_STRUCTURE`
+- evidenceに `candidate_collision`
+
+として自動採用を止める。
+
+これは1:1対応を強制するためではなく、意図しない重複assignmentを検出するための安全弁。
+最終的にshared SP surfaceやalternate stateだと観測できれば、その事実を明示して扱う。
 
 ## Important: responsive counterpart != identical layout
 
@@ -172,11 +199,19 @@ resolverが決めるのは**同じsemantic surfaceの候補**であり、respons
 
 - `join` ↔ `join_sp`: 名前/semanticとも強い
 - `training_center` ↔ `training_center_sp`: 名前/semanticとも強い
-- `parts` ↔ generic `SP_prototype` (`1399:19144`): 名前は違うが、Parts内容の順序とsemantic fingerprintが一致
-- News: `news_sp` (`560:2524`) と generic `SP_prototype` (`1399:14225`) の両方がNews archiveを表す別compositionとして存在
+- `parts` ↔ generic `SP_prototype` (`1399:19144`): 名前は違うがParts内容の順序とsemantic fingerprintが一致
+- News: `news_sp` (`560:2524`) と generic `SP_prototype` (`1399:14225`) の両方がNews archiveを表す別compositionとして存在し、追加観測が必要
 - main TOP SP `446:10020`: visual evidenceは強いがprogrammatic descendant fingerprintは疎で、fingerprintだけなら自動HIGHにしてはいけない
 
 この結果から、**name-only matchingもsemantic-only matchingも不十分**であり、confidence + candidate competition + targeted observation が必要と分かった。
+
+REF-002のraw/reduced observation fixture:
+
+`experiments/ref002-budokan-wordpress/responsive-counterpart-fixture.yaml`
+
+テスト用enriched fixture:
+
+`tests/fixtures/ref002-responsive-frame-inventory.yaml`
 
 ## Human effort target
 
@@ -186,7 +221,8 @@ resolverが決めるのは**同じsemantic surfaceの候補**であり、respons
 ユーザー: Figmaを渡す
 AI: pages/framesを観測
 AI: PC/SPを自動候補化
-AI: 曖昧な数件だけ追加観測
+AI: 曖昧な数件だけstructure追加観測
+AI: まだ曖昧ならAI自身がscreenshot比較
 AI: それでも解けない箇所だけ具体的に質問
 ```
 
