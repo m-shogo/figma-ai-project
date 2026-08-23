@@ -119,7 +119,7 @@ def confidence(score: float, margin: float, second_score: float) -> str:
     # A second candidate that is independently strong often means Figma contains
     # alternate/revision frames. Do not let a convenient name turn that into a
     # false HIGH match; targeted visual/structure inspection should disambiguate it.
-    strong_alternative = second_score >= 0.65 and margin < 0.35
+    strong_alternative = second_score >= 0.60 and margin < 0.35
     if score >= 0.78 and margin >= 0.15 and not strong_alternative:
         return "HIGH"
     if score >= 0.55 and margin >= 0.08:
