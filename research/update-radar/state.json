@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-08-22T03:57:57+00:00",
+  "updated_at": "2026-08-23T04:03:14+00:00",
   "fingerprints": {
     "figma-release-notes": "49058922c3eb92f7f231abb3257c65fce0cae6abeeb824f197b797ad1db0f0cf",
     "figma-auto-layout-current": "9f549da5798e1af9cdcdd2914ad0e3c97206f93a17fa5e0fec762bfedad6baaf",
@@ -15,8 +15,8 @@
     "figma-code-connect-releases": "4138a6aa25ab473e046199584d187355d447f4d52218b68a7f4ae84eb8ec9686",
     "mcp-spec-releases": "98a021f7b460f9a3980efeb31c5af68395d6c2beaa5c809f0bd640ab3c83d210",
     "mcp-spec-latest": "37917e212996002bfe96174fb481b8f5d2ba0b0bbe8b0943d4dd70712b47152d",
-    "claude-code-releases": "cee7e8e1cbd588ecbf964e1db1f9115a539f476e027795f99b70fd6e18845cac",
-    "claude-code-feed": "a4638800859531dff52e9c0c5a3bc6d0ee7105a8c5c56da6d049a4d8c8d30159",
+    "claude-code-releases": "7debad845594782a6fa77e7f6c6cf0cba1b158ad2e786dc43ba15a909869e8c9",
+    "claude-code-feed": "d3bad8ac06fbce5b2d63eb5979d1a0b5c7875d764bdb1563f191164607bcb8e5",
     "cursor-changelog": "8b7448641d4acace4a99eaf4d7280ecab057b19a5e8e942354d528f8f238ac0e",
     "playwright-releases": "473c400384d957f955e0997f2e0226636379da40b74648da8f53c0a42badc22d",
     "storybook-releases": "452664dfc3b0fc5bce89e7ccb9c7d84a555c926265efb7680de35971f8df6f16",
@@ -26,7 +26,7 @@
     "lighthouse-ci-releases": "5cd178cff75b4eea6878530d6e489104ed1348fc6c5466d464a982eb767a03dc",
     "svgo-releases": "3d6051719a7e1abb2342391c3d2c00d75db94a99f51ab3f9515ad5c073eedb01",
     "web-features-releases": "fe22a48c658984e4bcc57193c5627991a3cb32aea2b6e6c0e29c8d81deca47dc",
-    "mdn-browser-compat-data-releases": "a64629ee9997fd453e393dd584623c8170d3bd645f0f675f65c66c92900515b4",
+    "mdn-browser-compat-data-releases": "c9b9e964488585f10b3a1acf96f3bc59edc044fa26029ed14700ac48be4674e7",
     "w3c-wai-news": "f9ccd2fb4b5e1a4aad980570d677e70eea9038086773fc36a059faf9393d2379",
     "design-tokens-spec": "e7526f9a4360fd590555d5b3a1107042f18a6ace66a09cbbfd266f86621266fb",
     "style-dictionary-releases": "e4f26830ef6e764d51bfd825fb80dd9843946bea91a49285214962f6911aba5e",
