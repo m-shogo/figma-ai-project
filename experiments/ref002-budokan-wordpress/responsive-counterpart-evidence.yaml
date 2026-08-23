@@ -1,0 +1,124 @@
+schema_version: 1
+reference_id: REF-002-BUDOKAN
+observed_at: "2026-08-23"
+figma_file_key: RfAQQ28V1HGaeIcpgRmQq1
+status: OBSERVATION_EVIDENCE
+
+purpose:
+  - "Use live REF-002 Figma as a hard case for reducing manual PC/SP pairing."
+  - "Preserve ambiguity instead of forcing a 1:1 mapping when multiple authored SP variants exist."
+
+sources:
+  pc_page:
+    node_id: "0:1"
+    name: pc
+  sp_page:
+    node_id: "114:5409"
+    name: sp
+  evidence_methods:
+    - TOP_LEVEL_METADATA
+    - READ_ONLY_DESCENDANT_TEXT_NAME_FINGERPRINT
+    - TARGETED_SCREENSHOT_INSPECTION
+
+observations:
+  - pc:
+      node_id: "380:417"
+      name: join
+    sp:
+      node_id: "560:188"
+      name: join_sp
+    state: STRONG_COUNTERPART
+    evidence:
+      - "device-normalized names match"
+      - "visible/descendant semantics include 大会に参加したい / 武道 / related event content"
+    next_action: AUTO_CANDIDATE_THEN_VISUAL_VERIFY
+
+  - pc:
+      node_id: "395:7954"
+      name: training_center
+    sp:
+      node_id: "560:377"
+      name: training_center_sp
+    state: STRONG_COUNTERPART
+    evidence:
+      - "device-normalized names match"
+      - "visible/descendant semantics include 研修センター / 施設 / 設備"
+    next_action: AUTO_CANDIDATE_THEN_VISUAL_VERIFY
+
+  - pc:
+      node_id: "402:236"
+      name: training
+    sp:
+      node_id: "560:537"
+      name: training_sp
+    state: STRONG_NAME_COUNTERPART_NEEDS_CONTENT_VERIFY
+    evidence:
+      - "device-normalized names match"
+      - "PC descendant fingerprint is sparse relative to SP, so name alone is not final authority"
+    next_action: TARGETED_VISUAL_OR_STRUCTURE_VERIFY
+
+  - pc:
+      node_id: "405:360"
+      name: backnumber
+    sp:
+      node_id: "560:677"
+      name: backnumber_sp
+    state: STRONG_NAME_COUNTERPART_NEEDS_CONTENT_VERIFY
+    evidence:
+      - "device-normalized names match"
+      - "SP visibly contains 月刊『武道』 backnumber content; PC descendant fingerprint is sparse"
+    next_action: TARGETED_VISUAL_OR_STRUCTURE_VERIFY
+
+  - pc:
+      node_id: "1163:4245"
+      name: parts
+    sp:
+      node_id: "1399:19144"
+      name: SP_prototype
+    state: CONFIRMED_BY_TARGETED_VISUAL_INSPECTION
+    evidence:
+      - "frame names do not match"
+      - "semantic fingerprint matches Parts vocabulary: パーツ集 / headings / text / image / list / buttons / table / accordion / navigation / slider / quote / tabs"
+      - "targeted screenshots show the same Parts catalog adapted from PC to SP"
+    next_action: RECORD_AS_RESPONSIVE_MAPPING_EVIDENCE
+
+  - pc:
+      node_id: "413:2191"
+      name: news
+    candidates:
+      - node_id: "560:2524"
+        name: news_sp
+        role: CURRENT_PAGE_FAMILY_CANDIDATE
+      - node_id: "1399:14225"
+        name: SP_prototype
+        role: ALTERNATE_NEWS_COMPOSITION
+    state: AMBIGUOUS_AUTHORED_VARIANTS
+    evidence:
+      - "both SP candidates visibly render an お知らせ archive with the same article/category semantics"
+      - "560:2524 uses pill-like category controls and a different pagination/footer composition"
+      - "1399:14225 uses a compact rectangular category grid and longer archive composition"
+      - "existing page-family-map selects 560:2524, but the alternate must remain visible evidence instead of being discarded by name"
+    next_action: KEEP_PRIMARY_AND_ALTERNATIVE_UNTIL_REVISION_OR_PRODUCT_AUTHORITY_DISAMBIGUATES
+
+  - pc:
+      node_id: "839:4676"
+      name: topdesign
+    sp:
+      node_id: "446:10020"
+      name: SP_prototype
+    state: VISUAL_COUNTERPART_PROGRAMMATIC_FINGERPRINT_SPARSE
+    evidence:
+      - "prior/current visual inspection identifies this as the main TOP composition"
+      - "read-only descendant fingerprint on the SP wrapper exposes very little semantic text, so automated fingerprint alone must not claim HIGH confidence"
+    next_action: USE_TARGETED_VISUAL_EVIDENCE_NOT_NAME_OR_DESCENDANT_COUNT_ALONE
+
+learning:
+  confirmed:
+    - "Device-normalized names are useful strong evidence, not authority."
+    - "Semantic fingerprint can recover counterparts whose Figma frame names are unrelated."
+    - "Strong second candidates must lower automation confidence because Figma may contain authored variants/revisions."
+    - "Sparse wrapper frames require targeted visual/structure evidence rather than forced matching."
+  not_proven:
+    - "Every PC frame has exactly one SP counterpart."
+    - "The newest-looking or best-named frame is automatically the current product authority."
+    - "Responsive counterparts must have identical DOM, item count, or section order."
