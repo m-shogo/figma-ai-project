@@ -184,13 +184,14 @@ def resolve(data: dict[str, Any]) -> dict[str, Any]:
             ],
         })
 
-    # Independent ranking can reveal multiple PC frames competing for the same SP
-    # frame. Do not silently auto-accept such collisions; force targeted agent
-    # inspection while keeping all ranking evidence.
-    selected = Counter(str(m.get("sp_node_id") or "") for m in matches)
+    # Only credible candidates participate in collision detection. A LOW match may
+    # temporarily point at an otherwise obvious SP frame simply because every
+    # available score is weak; it must not downgrade the strong owner of that frame.
+    credible = [m for m in matches if float(m.get("score") or 0.0) >= 0.55]
+    selected = Counter(str(m.get("sp_node_id") or "") for m in credible)
     collisions = {node_id for node_id, count in selected.items() if node_id and count > 1}
     for match in matches:
-        if str(match.get("sp_node_id") or "") in collisions:
+        if str(match.get("sp_node_id") or "") in collisions and float(match.get("score") or 0.0) >= 0.55:
             match["collision"] = True
             if match["confidence"] == "HIGH":
                 match["confidence"] = "MEDIUM"
