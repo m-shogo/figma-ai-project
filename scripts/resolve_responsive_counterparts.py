@@ -81,7 +81,8 @@ def score_pair(pc: dict[str, Any], sp: dict[str, Any], pc_count: int, sp_count: 
     sp_name = canonical_name(sp)
     if pc_name and sp_name and pc_name == sp_name:
         # A device suffix/prefix-only difference such as join vs join_sp is strong
-        # evidence, but margin still prevents duplicate names from being auto-selected.
+        # evidence, but candidate competition still prevents duplicate/variant names
+        # from being silently accepted.
         score += 0.72
         evidence.append("canonical_name_exact")
     else:
@@ -114,8 +115,12 @@ def score_pair(pc: dict[str, Any], sp: dict[str, Any], pc_count: int, sp_count: 
     return min(1.0, score), evidence
 
 
-def confidence(score: float, margin: float) -> str:
-    if score >= 0.78 and margin >= 0.15:
+def confidence(score: float, margin: float, second_score: float) -> str:
+    # A second candidate that is independently strong often means Figma contains
+    # alternate/revision frames. Do not let a convenient name turn that into a
+    # false HIGH match; targeted visual/structure inspection should disambiguate it.
+    strong_alternative = second_score >= 0.65 and margin < 0.35
+    if score >= 0.78 and margin >= 0.15 and not strong_alternative:
         return "HIGH"
     if score >= 0.55 and margin >= 0.08:
         return "MEDIUM"
@@ -141,13 +146,14 @@ def resolve(data: dict[str, Any]) -> dict[str, Any]:
         best_score, best_sp, best_evidence = ranked[0]
         second = ranked[1][0] if len(ranked) > 1 else 0.0
         margin = best_score - second
-        conf = confidence(best_score, margin)
+        conf = confidence(best_score, margin, second)
         matches.append({
             "pc_node_id": pc.get("node_id"),
             "pc_name": pc.get("name"),
             "sp_node_id": best_sp.get("node_id"),
             "sp_name": best_sp.get("name"),
             "score": round(best_score, 4),
+            "second_score": round(second, 4),
             "margin": round(margin, 4),
             "confidence": conf,
             "decision": "AUTO_CANDIDATE" if conf == "HIGH" else ("INSPECT_MORE" if conf == "MEDIUM" else "HUMAN_REVIEW"),
