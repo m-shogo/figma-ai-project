@@ -80,7 +80,9 @@ def score_pair(pc: dict[str, Any], sp: dict[str, Any], pc_count: int, sp_count: 
     pc_name = canonical_name(pc)
     sp_name = canonical_name(sp)
     if pc_name and sp_name and pc_name == sp_name:
-        score += 0.48
+        # A device suffix/prefix-only difference such as join vs join_sp is strong
+        # evidence, but margin still prevents duplicate names from being auto-selected.
+        score += 0.72
         evidence.append("canonical_name_exact")
     else:
         name_sim = jaccard(set(pc_name.split()), set(sp_name.split()))
