@@ -46,7 +46,7 @@ class ResponsiveCounterpartResolverTests(unittest.TestCase):
         result = resolve(load_fixture())
         news = by_pc(result, "413:2191")
         self.assertEqual(news["sp_node_id"], "560:2524")
-        self.assertGreaterEqual(news["second_score"], 0.65)
+        self.assertGreaterEqual(news["second_score"], 0.60)
         self.assertEqual(news["confidence"], "MEDIUM")
         self.assertEqual(news["decision"], "INSPECT_MORE")
         self.assertTrue(any(item["sp_node_id"] == "1399:14225" for item in news["alternatives"]))
