@@ -69,6 +69,18 @@ Before implementation, one missing authority must be resolved: where production 
 
 Do not guess this CMS/data authority. Implementing the visual row before resolving it would risk hard-coding editorial content or creating an unnecessary ACF/CPT contract.
 
+## Proven block reuse
+
+The Figma index/help panel is **not** a new bespoke component. Existing Theme block CSS already maps directly to its authored structure:
+
+- Figma outlined expandable “月刊「武道」総索引” panel → existing `.wp-block-details` from `css/blocks/wp-block-details-style.css`. It already owns the outlined 3px-radius shell, summary/content divider, and plus/minus disclosure affordance.
+- Figma “月刊「武道」総索引ダウンロード” action → existing `.wp-block-buttons` / `.wp-block-button__link` from `css/blocks/wp-block-buttonLink-style.css`. That stylesheet explicitly maps to Figma `button_L`, including 60px minimum height, the 26px octagon arrow, and automatic PDF icon for `.pdf` destinations.
+- Figma numbered “使い方” instructions → existing `ol.wp-block-list` from `css/blocks/wp-block-list-style.css`; it already uses the 36px text offset and 16px number treatment observed in the PC design.
+- Figma red `※` caution rows → existing `ul.annotation-list` in the same list stylesheet.
+- Figma “使い方” H4 → existing heading block styles; no page-specific heading primitive is warranted.
+
+Consequence: future implementation should first compose the index/help area entirely from these existing blocks and only add page-specific CSS when runtime/visual diff proves an actual missing rule. Rebuilding this panel as custom PHP/CSS would duplicate an already-authoritative Theme component family.
+
 ## Reuse-before-build checklist for the future implementation
 
 - Reuse `_visual`, breadcrumb/dropdown navigation, global inner/column layout, sidebar and Footer as-is.
@@ -88,3 +100,5 @@ A human or production-source authority is required only for the **monthly issue 
 ## Reusable lesson
 
 A visually repetitive page is not automatically evidence for a new CPT or ACF repeater. In this Theme, `page.php` + Gutenberg is already an explicit content-authoring boundary. First prove the production data lifecycle, then choose the smallest structure that preserves it. This avoids turning a Figma repetition pattern into an unsupported CMS architecture decision.
+
+A second concrete lesson is that a Figma panel that looks page-specific may already be composed from Theme primitives. Dependency inspection should include block-level CSS before creating any page component; here that check eliminated an unnecessary details panel, button, numbered-list, and annotation implementation before code was written.
