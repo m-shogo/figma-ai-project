@@ -22,8 +22,7 @@
 
 - 正本 Theme: `experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/`
 - 出所: **オリジナル**（外部 git repo / commit なし。手元 Theme が正本）
-- Theme は gitignore 対象。research repo へ client Theme を commit しない
-- **確認事項:** Theme 実装差分を git で追うなら overlay 方式か、この案件だけ追跡許可するか Human 判断が必要
+- **この案件のみ Theme を git 追跡する**（Human Authority A）。他案件の drop-in Theme は引き続き ignore
 - 差し込みは `theme-dropin/` に **1 Theme のみ**（倉庫として溜めない）
 - 本番 Theme 構造を `theme/sample-theme` から継承しない
 - 専用ルール: [`THEME_RULES.md`](THEME_RULES.md)

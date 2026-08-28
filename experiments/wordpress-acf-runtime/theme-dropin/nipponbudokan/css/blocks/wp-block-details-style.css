@@ -1,0 +1,188 @@
+@charset "utf-8";
+/* // ------------------------------
+// MARK: 詳細
+// ------------------------------ */
+.block-editor_wrap,
+.editor-styles-wrapper {
+    .wp-block-details {
+        /* 基本スタイル */
+        border: 1px solid var(--color-primary);
+        margin-top: var(--wp-block-margin);
+        background-color: var(--color-secondary);
+        --_padding-block: 24px;
+        --_padding-inline: 20px;
+        --_button-width: 52px;
+        --_summary-gap: 8px;
+        summary.wp-block-details__summary {
+            list-style-type: '';
+            position: relative;
+            padding-block: var(--_padding-block);
+            padding-inline: var(--_padding-inline) calc(var(--_button-width) + var(--_summary-gap));
+            cursor: pointer;
+            touch-action: manipulation;
+            &::-webkit-details-marker {
+                display: none;
+            }
+        }
+
+        .wp-block-details__title {
+            font-weight: 700;
+            font-size: 18px;
+            letter-spacing: 0.1em;
+            line-height: 1.5;
+            color: var(--color-text);
+            overflow-wrap: anywhere;
+            word-break: normal;
+            line-break: strict;
+        }
+        .wp-block-details__button {
+            position: absolute;
+            z-index: 1;
+            pointer-events: none;
+            top: 50%;
+            translate: 0 -50%;
+            right: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: var(--_button-width);
+            height: 100%;
+            background-color: transparent;
+            transition: var(--transition-duration);
+            overflow: hidden;
+            /* &::before {
+          content: '';
+          position: absolute;
+          z-index: -1;
+          inset: 0;
+          background: var(--color-primary);
+          opacity: 0;
+          visibility: hidden;
+          transition: var(--transition-duration);
+        } */
+
+            > span {
+                &::before,
+                &::after {
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    translate: -50% -50%;
+                    display: block;
+                    width: 20px;
+                    height: 2px;
+                    content: '';
+                    background-color: var(--color-primary);
+                    transition: var(--transition-duration);
+                }
+                &::before {
+                }
+                &::after {
+                    rotate: 90deg;
+                }
+            }
+        }
+
+        .wp-block-details__content {
+            position: relative;
+            z-index: 0;
+            padding-block: var(--_padding-block);
+            padding-inline: var(--_padding-inline);
+            overflow-wrap: anywhere;
+            word-break: normal;
+            line-break: strict;
+            &::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: var(--_padding-inline);
+                block-size: 1px;
+                inline-size: calc(100% - var(--_padding-inline) * 2);
+                background-color: var(--color-primary);
+                z-index: 1;
+            }
+        }
+        .wp-block-details__inner {
+            flex-grow: 1;
+            display: block grid;
+            > * {
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
+        }
+
+        /* FAQタイプのスタイル */
+        &._qa {
+            summary.wp-block-details__summary,
+            .wp-block-details__content {
+                display: flex;
+                gap: 16px;
+                align-items: flex-start;
+                &::before {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 32px;
+                    font-size: 32px;
+                    font-weight: 500;
+                    line-height: 1;
+                    flex-shrink: 0;
+                    margin-top: -2px;
+                }
+            }
+
+            summary.wp-block-details__summary {
+                &::before {
+                    content: 'Q';
+                    color: var(--color-primary);
+                }
+            }
+            .wp-block-details__content {
+                &::before {
+                    content: 'A';
+                    color: var(--color-accent);
+                }
+            }
+        }
+
+        /* hover */
+        @media (any-hover: hover) {
+            &:hover {
+                .wp-block-details__button {
+                    &::before {
+                        opacity: 1;
+                        visibility: visible;
+                    }
+                }
+            }
+        }
+
+        /* 開いたときのスタイル */
+        &[open] {
+            .wp-block-details__button {
+                > span {
+                    &::after {
+                        rotate: 0deg;
+                    }
+                }
+            }
+        }
+
+        @media screen and (min-width: 768px) {
+            --_padding-inline: 24px;
+            --_button-width: 68px;
+            .wp-block-details__title {
+                font-size: 20px;
+            }
+            &._qa {
+                summary.wp-block-details__summary,
+                .wp-block-details__content {
+                    &::before {
+                        width: 32px;
+                    }
+                }
+            }
+        }
+    }
+}

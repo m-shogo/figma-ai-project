@@ -1,0 +1,14 @@
+@charset "utf-8";
+/* // ------------------------------
+// 区切り線
+// ------------------------------ */
+.block-editor_wrap,
+.editor-styles-wrapper {
+    .wp-block-separator {
+        margin-top: var(--wp-block-margin-large);
+        margin-bottom: var(--wp-block-margin-large);
+        border-width: 1px 0 0 0;
+        border-style: dashed;
+        border-color: var(--color-separator);
+    }
+}

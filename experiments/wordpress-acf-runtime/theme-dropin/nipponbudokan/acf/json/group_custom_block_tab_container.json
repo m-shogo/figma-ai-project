@@ -1,0 +1,43 @@
+{
+    "key": "group_custom_block_tab_container",
+    "title": "カスタムブロック - タブコンテナ",
+    "fields": [
+        {
+            "key": "field_6878bead26cfb",
+            "label": "概要",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "タブコンテナの中身は「タブの中身」ブロックしか入りません",
+            "new_lines": "br",
+            "esc_html": 0
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "block",
+                "operator": "==",
+                "value": "acf/tab-container"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "display_title": ""
+}

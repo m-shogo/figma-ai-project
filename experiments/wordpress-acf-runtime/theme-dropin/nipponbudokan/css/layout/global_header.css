@@ -1,0 +1,120 @@
+@charset "utf-8";
+.global_header {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 100;
+    width: 100%;
+    height: var(--header-height-SP);
+    background-color: var(--color-secondary);
+    transition: height var(--transition-duration);
+    .gh_inner {
+        display: flex;
+        align-items: center;
+        padding-inline: var(--padding-SP);
+        height: inherit;
+        gap: 40px;
+    }
+    .gh_logo {
+        flex-shrink: 0;
+        width: 140px;
+        a {
+            display: block;
+            color: var(--color-text);
+            text-decoration: none;
+            transition: var(--transition-duration);
+        }
+    }
+    .gh_menu {
+        position: absolute;
+        right: 0;
+        top: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: var(--header-height-SP);
+        height: var(--header-height-SP);
+        background-color: transparent;
+        color: var(--color-primary);
+        touch-action: manipulation;
+        .icon {
+            display: block;
+            position: relative;
+            top: 13px;
+            width: 20px;
+            height: 2px;
+            background-color: var(--color-primary);
+            transition: var(--transition-duration);
+            &::before,
+            &::after {
+                content: '';
+                display: block;
+                position: absolute;
+                left: 0;
+                width: 100%;
+                height: 2px;
+                transition: var(--transition-duration);
+                background-color: var(--color-primary);
+            }
+            &::before {
+                top: -6px;
+            }
+            &::after {
+                top: 6px;
+            }
+        }
+        .text {
+            margin-top: 20px;
+            font-size: 10px;
+        }
+    }
+
+    /* MARK: header_breakpoint */
+    @media screen and (min-width: 1080px) {
+        height: var(--header-height-PC);
+        .gh_inner {
+            padding-inline: 40px 20px;
+        }
+        .gh_menu {
+            display: none;
+        }
+    }
+
+    /* MARK: hover */
+    @media (any-hover: hover) {
+        .gh_logo {
+            a {
+                &:hover {
+                    opacity: var(--opacity-hover);
+                }
+            }
+        }
+    }
+}
+
+/* modifire */
+body._fixed,
+body._contentFixed {
+    .global_header {
+        position: fixed;
+    }
+}
+
+body._open-menu {
+    .global_header {
+        .gh_menu {
+            .icon {
+                background-color: transparent;
+                &::before {
+                    top: 0;
+                    transform: rotate(45deg);
+                }
+                &::after {
+                    top: 0;
+                    transform: rotate(-45deg);
+                }
+            }
+        }
+    }
+}

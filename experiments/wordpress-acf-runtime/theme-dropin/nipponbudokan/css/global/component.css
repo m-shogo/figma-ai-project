@@ -1,0 +1,360 @@
+@charset "utf-8";
+/* //
+// コンポーネント用CSS
+// @extendで呼び出す用の小コンポーネント（ボタンなど）を記述
+//
+// ==========================================================================
+// 余白コンポーネント
+// ========================================================================== */
+%inner {
+    position: relative;
+    padding: 0 var(--padding-SP);
+    width: 100%;
+    transition: padding var(--transition-duration);
+    @media screen and (min-width: 768px) {
+        margin: 0 auto;
+        padding: 0 var(--padding-TB);
+    }
+}
+/* // ==========================================================================
+// アイコンコンポーネント
+// ========================================================================== */
+%before-faq {
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+    color: var(--color-secondary);
+    line-height: 36px;
+    text-align: center;
+}
+%icon-modal {
+    &::before,
+    &::after {
+        content: '';
+        display: block;
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        z-index: 10;
+        width: 30px;
+        height: 30px;
+        @media screen and (min-width: 768px) {
+            width: 50px;
+            height: 50px;
+        }
+    }
+    &::before {
+        background-color: var(--color-primary);
+    }
+    &::after {
+        content: '\f002';
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--font-awesome);
+        font-weight: 500;
+        color: var(--color-secondary);
+    }
+}
+/* // ==========================================================================
+// ラベルコンポーネント
+// ========================================================================== */
+%label {
+    display: inline-block;
+    border: 1px solid var(--color-primary);
+    padding: 0 0.5em;
+}
+/* // ==========================================================================
+// ボタンコンポーネント
+// ========================================================================== */
+%module_button {
+    display: block;
+    position: relative;
+    padding: 15px 50px;
+    border: 1px solid var(--color-primary);
+    border-radius: 3em;
+    max-width: 240px;
+    width: 100%;
+    font-size: 16px;
+    line-height: 1.3;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color var(--transition-duration), color var(--transition-duration);
+    @media screen and (min-width: 768px) {
+        max-width: 100%;
+        width: auto;
+    }
+    span {
+        display: block;
+    }
+}
+%module_button-menu {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: var(--header-height-SP);
+    height: var(--header-height-SP);
+    background-color: transparent;
+    color: var(--color-primary);
+    @media screen and (min-width: 768px) {
+        display: none;
+    }
+    .icon {
+        width: 100%;
+    }
+    i {
+        width: 100%;
+    }
+    &.gh_menu {
+        .icon {
+            display: block;
+            position: relative;
+            top: 13px;
+            width: 20px;
+            height: 2px;
+            background-color: var(--color-primary);
+            transition: var(--transition-duration);
+            body._open-menu & {
+                background-color: transparent;
+            }
+            &::before,
+            &::after {
+                content: '';
+                display: block;
+                position: absolute;
+                left: 0;
+                width: 100%;
+                height: 2px;
+                transition: var(--transition-duration);
+                background-color: var(--color-primary);
+            }
+            &::before {
+                top: -6px;
+                body._open-menu & {
+                    top: 0;
+                    transform: rotate(45deg);
+                }
+            }
+            &::after {
+                top: 6px;
+                body._open-menu & {
+                    top: 0;
+                    transform: rotate(-45deg);
+                }
+            }
+        }
+        i {
+            margin-top: 20px;
+            font-size: 10px;
+        }
+    }
+}
+%module_zoom-button {
+    &::after {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        width: 50px;
+        height: 50px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--color-primary);
+        border: 1px solid var(--color-primary);
+        color: var(--color-secondary);
+        font-size: 18px;
+        transition: var(--transition-duration);
+        font-family: var(--font-awesome);
+        font-weight: 400;
+        content: var(--icon-zoom);
+    }
+    @media (any-hover: hover) {
+        &::after {
+            opacity: 0.8;
+            background-color: var(--color-secondary);
+            color: var(--color-primary);
+        }
+    }
+}
+/* // ==========================================================================
+// インプットコンポーネント
+// ========================================================================== */
+%module_input {
+    border: 1px solid var(--color-gray-background);
+    padding: 0.5em 1em;
+    width: 100%;
+    height: 50px;
+    background-color: var(--color-gray-background);
+    color: var(--color-text);
+    font-size: 16px;
+    transition: border-color var(--transition-duration), background-color var(--transition-duration);
+    &:hover {
+        border-color: var(--color-primary) !important;
+    }
+    &:focus {
+        border-color: var(--color-primary) !important;
+        background-color: var(--color-secondary);
+    }
+    &:-webkit-autofill {
+        -webkit-box-shadow: 0 0 0 1000px var(--color-secondary) inset;
+    }
+    &[readonly='readonly'],
+    &[readonly] {
+        border-color: transparent !important;
+        background-color: transparent !important;
+        color: #000;
+    }
+}
+/* // ==========================================================================
+// タイトルコンポーネント
+// ========================================================================== */
+%module_title {
+    font-weight: 700;
+}
+/* // ==========================================================================
+// 埋め込み系コンポーネント
+// ========================================================================== */
+%module_iframe {
+    position: relative;
+    overflow: hidden;
+    padding: 0 0 56.25%;
+    width: 100%;
+    height: 0;
+    iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100% !important;
+        height: 100% !important;
+    }
+}
+/* // ==========================================================================
+// リストコンポーネント
+// ========================================================================== */
+%module_list {
+    li {
+        position: relative;
+        padding-left: 30px;
+        &::before {
+            content: '';
+            position: absolute;
+        }
+        .module_column-col1._left & {
+            display: flex;
+            flex-direction: column;
+        }
+        & + li {
+            margin-top: 10px;
+        }
+        ul,
+        ol {
+            li {
+                &:first-child {
+                    margin-top: 0.5em;
+                }
+            }
+        }
+    }
+}
+/* // ==========================================================================
+// 表コンポーネント
+// ========================================================================== */
+%module_table {
+    height: auto !important;
+    border-left: 1px solid var(--color-gray-border-02);
+    border-right: 1px solid var(--color-gray-border-02);
+    @media screen and (min-width: 768px) {
+        width: 100% !important;
+    }
+    thead,
+    tbody,
+    tfoot {
+        width: 100%;
+    }
+    tr {
+        &:first-child {
+            th,
+            td {
+                border-top: 1px solid var(--color-gray-border-02);
+            }
+        }
+        th,
+        td {
+            border-bottom: 1px solid var(--color-gray-border-02);
+            padding: 1em;
+            min-width: 8em;
+            @media screen and (min-width: 768px) {
+                min-width: auto;
+                padding: 16px 32px;
+            }
+            & + th,
+            & + td {
+                border-left: 1px solid var(--color-gray-border-02);
+            }
+        }
+        th {
+            background-color: var(--color-primary);
+            color: var(--color-secondary);
+            text-align: center;
+        }
+        td {
+            background-color: var(--color-secondary);
+        }
+    }
+}
+/* // ==========================================================================
+// カラムコンポーネント
+// ========================================================================== */
+%module_column {
+    display: flex;
+    @media screen and (min-width: 768px) {
+        justify-content: space-between;
+    }
+}
+
+/* // ==========================================================================
+// ファイルの種別アイコン
+// ========================================================================== */
+%module_file-type-icon {
+    &[target='_blank'] {
+        &::after {
+            font-family: var(--font-awesome);
+            font-weight: 400;
+            content: var(--icon-blank);
+            margin-left: 4px;
+            margin-bottom: 2px;
+        }
+    }
+    &[href$='.pdf'] {
+        &::after {
+            font-family: var(--font-awesome);
+            font-weight: 400;
+            content: var(--icon-pdf);
+            margin-left: 4px;
+        }
+    }
+    &[href$='.doc'],
+    &[href$='.docx'],
+    &[href$='.docm'],
+    &[href$='.xls'],
+    &[href$='.xlsx'],
+    &[href$='.xlsm'],
+    &[href$='.png'],
+    &[href$='.jpg'],
+    &[href$='.jpeg'],
+    &[href$='.gif'],
+    &[href$='.webp'] {
+        &::after {
+            font-family: var(--font-awesome);
+            font-weight: 400;
+            content: var(--icon-file);
+            margin-left: 4px;
+        }
+    }
+}

@@ -1,0 +1,36 @@
+@charset "utf-8";
+/*　// ------------------------------
+// 引用
+// ------------------------------　*/
+.block-editor_wrap,
+.editor-styles-wrapper {
+    .wp-block-quote {
+        position: relative;
+        padding: 0px 46px;
+        margin-top: var(--wp-block-margin);
+        & + & {
+            margin-top: var(--wp-block-margin-large);
+        }
+        &::before,
+        &::after {
+            background-color: #777;
+            opacity: 0.2;
+            mask: url('../../images/common/icon-doublequote.svg') no-repeat center / contain;
+            display: block;
+            position: absolute;
+            width: 36px;
+            height: 36px;
+        }
+        &::before {
+            content: '';
+            left: 0;
+            top: 0;
+        }
+        &::after {
+            transform: rotate(180deg);
+            content: '';
+            right: 0;
+            bottom: 0;
+        }
+    }
+}

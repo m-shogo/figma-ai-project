@@ -1,0 +1,61 @@
+@charset "utf-8";
+/* // ------------------------------
+// テキストリンク
+// ------------------------------ */
+.block-editor_wrap,
+.editor-styles-wrapper {
+    p:is(:not([class]), .wp-block-paragraph, .has-text-align-left, .has-text-align-right, .has-text-align-center, .block-editor-rich-text__editable, .has-background),
+    .wp-block-list,
+    .wp-block-flexible-table-block-table {
+        a:is(:not([class]), .icon-blank) {
+            color: var(--color-link);
+            text-decoration-line: underline;
+            text-decoration-color: color-mix(in oklch, var(--color-link) 100%, transparent);
+            text-decoration-thickness: 1px;
+            text-underline-offset: 2px;
+            text-decoration-skip-ink: none;
+            transition: var(--transition-duration);
+            &[target='_blank'] {
+                &::after {
+                    content: var(--icon-blank);
+                    font-family: var(--font-awesome);
+                    font-weight: 400;
+                    margin-left: 0.25em;
+                }
+            }
+            &[href$='.pdf'] {
+                &::after {
+                    content: var(--icon-pdf);
+                    font-family: var(--font-awesome);
+                    font-weight: 400;
+                    margin-left: 0.25em;
+                }
+            }
+            &[href$='.doc'],
+            &[href$='.docx'],
+            &[href$='.docm'],
+            &[href$='.xls'],
+            &[href$='.xlsx'],
+            &[href$='.xlsm'],
+            &[href$='.png'],
+            &[href$='.jpg'],
+            &[href$='.jpeg'],
+            &[href$='.gif'],
+            &[href$='.webp'] {
+                &::after {
+                    content: var(--icon-file);
+                    font-family: var(--font-awesome);
+                    font-weight: 400;
+                    margin-left: 0.25em;
+                }
+            }
+
+            /* hover */
+            @media (any-hover: hover) {
+                &:hover {
+                    text-decoration-color: color-mix(in oklch, var(--color-link) 0%, transparent 100%);
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,53 @@
+@charset "utf-8";
+/* // ==========================================================================
+// サイト共通コンテンツ
+// ========================================================================== */
+.global_contents {
+    > section {
+        padding-bottom: 50px;
+        .module_breadCrumb {
+            margin-top: 15px;
+            margin-bottom: 50px;
+        }
+    }
+    .gc_main {
+        display: flow-root;
+        width: 100%;
+    }
+    .gc_sub {
+        margin-top: 84px;
+    }
+    .gc_dropdown {
+        margin-block: 72px;
+        width: 300px;
+    }
+
+    @media screen and (min-width: 768px) {
+        > section {
+            padding-bottom: 100px;
+            .module_breadCrumb {
+                margin-bottom: 70px;
+            }
+        }
+        .gc_main {
+            &._oneColumn {
+            }
+        }
+        .gc_sub {
+            margin-top: 0;
+            width: 100%;
+        }
+        .gc_dropdown {
+        }
+    }
+}
+body:not(.home) {
+    .global_contents {
+        > section {
+            > .global_inner,
+            > .content_inner {
+                min-height: 1%; /* IE用flexバグ対策（flexでパンくず並び替える場合は必要） */
+            }
+        }
+    }
+}

@@ -1,0 +1,86 @@
+@charset "utf-8";
+/* // ------------------------------
+// パラグラフ
+// ------------------------------ */
+.block-editor_wrap,
+.editor-styles-wrapper {
+    p.has-small-font-size {
+        font-size: 0.75rem !important;
+    }
+    p.has-medium-font-size {
+        font-size: 1rem !important;
+    }
+    p.has-large-font-size {
+        font-size: 1.25rem !important;
+    }
+    p.has-x-large-font-size {
+        font-size: 1.5rem !important;
+    }
+    p:is(:not([class]), .wp-block-paragraph, .block-editor-rich-text__editable, .has-text-align-left, .has-text-align-right, .has-text-align-center) {
+        font-size: 1rem;
+        font-weight: 400;
+        letter-spacing: 0.05em;
+        line-height: 180%;
+        color: var(--color-text);
+        margin-top: var(--wp-block-margin);
+        & + p:is(:not([class]), .has-text-align-left, .has-text-align-right, .has-text-align-center) {
+            margin-top: var(--wp-block-margin);
+        }
+        &:first-child {
+            margin-top: 0;
+        }
+        em {
+            font-style: italic;
+        }
+        strong {
+            font-weight: bold;
+        }
+        /* MARK: 下線 */
+        /* 下線が太い場合 */
+        /* span[style*='underline'] {
+        background: linear-gradient(to bottom, transparent, transparent 65%, color-mix(in oklch, var(--color-primary) 40%, transparent) 66%, color-mix(in oklch, var(--color-primary) 40%, transparent) 100%);
+        text-decoration: none !important;
+    } */
+        /* 下線が細い場合 */
+        span[style*='text-decoration: underline'] {
+            /* ブロックにstyle属性で吐き出されるため、!importantを使用して上書き */
+            text-decoration-line: underline !important;
+            text-decoration-color: currentColor !important;
+            text-decoration-thickness: 1px !important;
+            text-underline-offset: 2px !important;
+            text-decoration-skip-ink: none !important;
+        }
+    }
+    .wp-block-columns {
+        .has-background {
+            p:is(:not([class]), .has-text-align-left, .has-text-align-right, .has-text-align-center) {
+                /* color: initial; */
+            }
+        }
+    }
+
+    /* MARK: 特定のブロックとの余白 */
+    p:is(:not([class]), .has-background, .has-text-align-left, .has-text-align-right, .has-text-align-center),
+    ul,
+    ol,
+    .wp-block-flexible-table-block-table,
+    .wp-block-group,
+    .wp-block-details,
+    .wp-block-table,
+    .wp-block-image,
+    .wp-block-buttons {
+        & + p:is(:not([class]), .has-background, .has-text-align-left, .has-text-align-right, .has-text-align-center) {
+            margin-top: var(--wp-block-margin-small);
+        }
+    }
+
+    /* MARK: 背景色があるブロック */
+    div.wp-block-group.has-background,
+    div.wp-block-column.has-background,
+    p.has-background {
+        padding: 32px;
+        @media screen and (min-width: 768px) {
+            padding: 40px 32px;
+        }
+    }
+}

@@ -3,8 +3,10 @@
 *.zip
 advanced-custom-fields-pro/
 
-# Supplied production themes are client property; never commit them here.
-# The directory itself stays tracked so the drop-in path always exists.
+# Default: client themes in theme-dropin are ignored.
+# Budokan Human Authority: track nipponbudokan only for this project.
 theme-dropin/*
 !theme-dropin/.gitkeep
 !theme-dropin/README.md
+!theme-dropin/nipponbudokan/
+!theme-dropin/nipponbudokan/**

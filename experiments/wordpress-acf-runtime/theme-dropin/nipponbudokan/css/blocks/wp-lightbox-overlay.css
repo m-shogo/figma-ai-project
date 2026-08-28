@@ -1,0 +1,9 @@
+@charset "utf-8";
+/* // ==========================================================================
+//  ブロックエディタ用モーダル
+// ========================================================================== */
+.wp-lightbox-overlay img {
+    width: 100% !important;
+    height: auto !important;
+    object-fit: contain !important; /* 必要に応じて cover → contain に変更 */
+}

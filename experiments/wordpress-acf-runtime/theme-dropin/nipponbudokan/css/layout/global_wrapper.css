@@ -1,0 +1,12 @@
+@charset "utf-8";
+/* // ==========================================================================
+// サイト共通ラッパー
+// ========================================================================== */
+.global_wrapper {
+    padding-top: var(--header-height-SP);
+    /* overflow: hidden; */
+    /* MARK: header_breakpoint */
+    @media screen and (min-width: 1080px) {
+        padding-top: var(--header-height-PC);
+    }
+}

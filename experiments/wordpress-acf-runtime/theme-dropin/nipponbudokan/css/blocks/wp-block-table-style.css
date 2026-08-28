@@ -1,0 +1,135 @@
+@charset "utf-8";
+/* // ------------------------------
+// テーブル
+// ------------------------------ */
+.block-editor_wrap,
+.editor-styles-wrapper {
+    .wp-block-table,
+    .wp-block-flexible-table-block-table {
+        /* MARK: 基本スタイル */
+        margin-top: var(--wp-block-margin);
+        gap: 16px;
+        & + & {
+            margin-top: var(--wp-block-margin-large);
+        }
+        /* MARK: ボーダー */
+        --_border-color: var(--color-separator);
+        --_border-color-thead: var(--color-secondary);
+        --_border-width: 1px;
+        --_border-style: solid;
+        table {
+            border-collapse: separate;
+            border-spacing: 0;
+            th,
+            td {
+                border: none !important;
+                border-top: var(--_border-width, 1px) var(--_border-style, solid) var(--_border-color, var(--color-separator)) !important;
+                border-left: var(--_border-width, 1px) var(--_border-style, solid) var(--_border-color, var(--color-separator)) !important;
+            }
+            th {
+                border-color: var(--_border-color-thead, var(--color-secondary));
+            }
+            &::before {
+                content: '';
+                position: absolute;
+                z-index: 1;
+                inset: 0;
+                pointer-events: none;
+                border: var(--_border-width, 1px) var(--_border-style, solid) var(--_border-color, var(--color-separator));
+                outline: calc(var(--_border-width, 1px) + 1px) var(--_border-style, solid) var(--_border-color, var(--color-separator));
+                outline-offset: calc(var(--_border-width, 1px) * -1);
+            }
+        }
+        /* MARK: 角丸 */
+        table {
+            --_border-radius: 0px;
+            border-radius: var(--_border-radius, 0px);
+            position: relative;
+            z-index: 0;
+            &::before {
+                border-radius: var(--_border-radius, 0px);
+            }
+        }
+        table {
+            overflow: hidden;
+            tr {
+                th,
+                td {
+                    padding: 16px 20px;
+                }
+                th {
+                    background-color: var(--color-primary) !important;
+                    color: var(--color-secondary) !important;
+                    font-weight: 700;
+                }
+            }
+        }
+        /* MARK: ストライプ スタイル */
+        &.is-style-stripes {
+            --_stripe-color: var(--color-tertiary);
+            tr {
+                &:nth-child(odd) {
+                    td {
+                        background-color: var(--_stripe-color, var(--color-tertiary));
+                    }
+                }
+            }
+            @media screen and (max-width: 767px) {
+                > table.is-stacked-on-mobile {
+                    tbody {
+                        tr {
+                            &:nth-child(odd) {
+                                td {
+                                    background-color: transparent;
+                                }
+                            }
+                            /* 子要素の個数が「奇数」のとき tr の奇数と偶数で td の背景色を交互にする */
+                            &:has(> *:nth-child(odd):last-child) {
+                                &:nth-child(odd) {
+                                    *:nth-child(odd) {
+                                        background-color: var(--_stripe-color, var(--color-tertiary));
+                                    }
+                                }
+                                &:nth-child(even) {
+                                    *:nth-child(even) {
+                                        background-color: var(--_stripe-color, var(--color-tertiary));
+                                    }
+                                }
+                            }
+                            /* 子要素の個数が「偶数」のとき */
+                            &:not(:has(> *:nth-child(odd):last-child)) {
+                                & {
+                                    *:nth-child(odd) {
+                                        background-color: var(--color-tertiary);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        /* MARK: モバイルでスクロール スタイル */
+        &.is-scroll-on-mobile {
+            @media screen and (max-width: 767px) {
+                padding-bottom: 10px;
+                > table {
+                    width: var(--width-main);
+                }
+            }
+            /* スクロールバー色変更（webkit用） */
+            &::-webkit-scrollbar {
+                width: 4px;
+                height: 4px;
+            }
+            &::-webkit-scrollbar-track {
+                border-radius: 2px;
+                background: var(--color-gray-background);
+            }
+            &::-webkit-scrollbar-thumb {
+                border-radius: 2px;
+                background: var(--color-primary);
+            }
+        }
+    }
+}

@@ -1,0 +1,45 @@
+@charset "utf-8";
+/* // ==========================================================================
+// タイトル
+// ========================================================================== */
+.module_titleSingle {
+    border: solid var(--color-gray-border);
+    border-width: 1px 0;
+    padding: 20px 0;
+    margin-bottom: 40px;
+    .thumbnail {
+        margin-bottom: 20px;
+        img {
+            aspect-ratio: 360 / 240;
+        }
+    }
+    .head {
+        display: flex;
+        align-items: center;
+        .date {
+            margin-right: 20px;
+            time {
+            }
+        }
+        .category {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 4px 10px;
+            .label {
+                display: inline-block;
+                border: 1px solid var(--color-primary);
+                padding: 0 0.5em;
+                color: var(--color-primary);
+            }
+        }
+    }
+    .body {
+        margin-top: 20px;
+        .module_title-01 {
+            margin-bottom: 0;
+            font-size: 24px;
+            font-weight: 700;
+        }
+    }
+}

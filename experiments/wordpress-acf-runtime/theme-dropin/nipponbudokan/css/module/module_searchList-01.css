@@ -1,0 +1,42 @@
+@charset "utf-8";
+/* // ==========================================================================
+// 検索結果リストモジュール
+// ========================================================================== */
+.module_searchList-01 {
+    li {
+        position: relative;
+        border-bottom: 1px solid var(--color-gray-border);
+        &:first-child {
+            border-top: 1px solid var(--color-gray-border);
+        }
+        a {
+            display: block;
+            padding: 20px 40px 20px 0;
+            color: var(--color-text);
+            text-decoration: none;
+            transition: var(--transition-duration);
+            &::after {
+                content: '\f105';
+                display: block;
+                position: absolute;
+                right: 20px;
+                top: 50%;
+                font-family: var(--font-awesome);
+                font-size: 20px;
+                transform: translateY(-50%);
+                transition: var(--transition-duration);
+            }
+            &:hover {
+                color: var(--color-link);
+            }
+        }
+    }
+
+    @media screen and (min-width: 768px) {
+        li {
+            a {
+                padding: 20px 40px 20px 20px;
+            }
+        }
+    }
+}

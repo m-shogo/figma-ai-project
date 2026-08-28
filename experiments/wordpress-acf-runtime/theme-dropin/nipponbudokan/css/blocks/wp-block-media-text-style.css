@@ -1,0 +1,20 @@
+@charset "utf-8";
+/* // ------------------------------
+// メディアとテキスト
+// ------------------------------ */
+.block-editor_wrap,
+.editor-styles-wrapper {
+    .wp-block-media-text {
+        margin-top: var(--wp-block-margin);
+        gap: 32px 16px;
+        @media screen and (min-width: 768px) {
+            gap: 40px;
+        }
+        .wp-block-media-text__content {
+            padding: 0;
+            > *:first-child {
+                margin-top: 0;
+            }
+        }
+    }
+}

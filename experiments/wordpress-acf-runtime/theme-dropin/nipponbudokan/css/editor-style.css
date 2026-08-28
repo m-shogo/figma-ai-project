@@ -1,0 +1,149 @@
+@charset "utf-8";
+@import './global/variables.css';
+
+@import './blocks/wp-block-buttonLink-style.css';
+@import './blocks/wp-block-columns-style.css';
+@import './blocks/wp-block-details-style.css';
+@import './blocks/wp-block-gallery-style.css';
+@import './blocks/wp-block-group-style.css';
+@import './blocks/wp-block-heading-style.css';
+@import './blocks/wp-block-image-style.css';
+@import './blocks/wp-block-inPageLink-style.css';
+@import './blocks/wp-block-list-style.css';
+@import './blocks/wp-block-media-text-style.css';
+@import './blocks/wp-block-navigation-style.css';
+@import './blocks/wp-block-quote-style.css';
+@import './blocks/wp-block-separator-style.css';
+@import './blocks/wp-block-table-style.css';
+@import './blocks/wp-block-text-style.css';
+@import './blocks/wp-block-textLink-style.css';
+@import './blocks/wp-lightbox-overlay.css';
+
+@import './module/module_newsCard-01.css';
+@import './module/module_newsList-01.css';
+
+/* ==========================================================================
+ * 管理画面ビジュアルエディタ用CSS
+ * ========================================================================== */
+/* ==========================================================================
+ * 共通（基本的に変更しない）
+ * ========================================================================== */
+/* 背景色 */
+html {
+    background-color: var(--color-secondary);
+}
+
+/* ブロック間の余白削除 */
+html :where(.wp-block) {
+    margin-top: 0;
+    margin-bottom: 0;
+    box-sizing: border-box;
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    }
+}
+
+/* フォントファミリー */
+.editor-styles-wrapper {
+    font-family: var(--font-sansSerif-ja);
+    font-weight: 400;
+}
+
+/* タイトル下の余白 */
+.editor-styles-wrapper .editor-visual-editor__post-title-wrapper {
+    margin-bottom: 40px;
+}
+
+/* リンクのポインターを削除 */
+.editor-styles-wrapper a {
+    pointer-events: none;
+}
+
+/* タイトルのフォントウェイトを400に */
+.editor-styles-wrapper h1.wp-block-post-title {
+    font-weight: 400;
+}
+
+/* リストスタイルをリセット */
+.editor-styles-wrapper ul {
+    list-style: none;
+    padding: 0;
+}
+
+/* テキストエリアのデザイン */
+.editor-styles-wrapper .mce-content-body {
+    display: block;
+    min-height: 250px;
+    padding: 25px;
+    border: 1px solid #1e1e1e;
+    background-color: var(--color-secondary);
+    font-family: var(--font-sansSerif-ja);
+    font-weight: 400;
+}
+
+/* ==========================================================================
+ * テーブルのツールチップ表示
+ * ========================================================================== */
+.editor-styles-wrapper {
+    .wp-block-flexible-table-block-table {
+        table {
+            overflow: visible !important;
+        }
+    }
+}
+
+/* ==========================================================================
+ * 詳細の見出しをわかりやすくする
+ * ========================================================================== */
+.editor-styles-wrapper {
+    .wp-block-details {
+        padding: 48px 24px 24px;
+        summary {
+            border: 1px solid #1e1e1e;
+            padding: 8px 40px 8px 8px;
+            /* margin-bottom: 24px; */
+            position: relative;
+            z-index: 0;
+            &::marker,
+            &::-webkit-details-marker {
+                display: none;
+            }
+            &::before {
+                content: 'アコーディオン見出し';
+                position: absolute;
+                bottom: 100%;
+                left: -1px;
+                padding: 3px 6px 4px;
+                background-color: #1e1e1e;
+                color: #fff;
+                font-size: 12px;
+                font-weight: 700;
+                line-height: 1;
+            }
+            &:after {
+                content: '+';
+                position: absolute;
+                top: 50%;
+                right: 0;
+                translate: 0 -50%;
+                width: 32px;
+                height: 32px;
+                color: #1e1e1e;
+                font-size: 24px;
+                line-height: 1;
+                text-align: center;
+                display: flex;
+                align-items: center;
+            }
+        }
+        &[open] {
+            summary {
+                &::after {
+                    content: '-';
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,35 @@
+@charset "utf-8";
+/* // ==========================================================================
+// 表モジュール
+// ========================================================================== */
+.module_table-wrap {
+    /* -webkit-overflow-scrolling: touch; */
+    overflow-x: auto;
+    /* // 横スクロール時に下余白追加 */
+    &._scroll {
+        padding-bottom: 10px;
+    }
+
+    @media screen and (min-width: 768px) {
+        &._scroll {
+            padding-bottom: 0;
+        }
+    }
+}
+/* .module_table-01 {
+    thead,
+    tbody {
+        tr {
+            th {
+                background: var(--color-primary) !important;
+                color: var(--color-secondary) !important;
+            }
+        }
+    }
+    tr {
+        th,
+        td {
+            border: 1px solid var(--color-gray-border-02) !important;
+        }
+    }
+} */

@@ -1,0 +1,85 @@
+@charset "utf-8";
+/* // ------------------------------
+// 画像
+// ------------------------------ */
+/* // 変数（画像テキスト回り込み時の余白設定用） */
+/* //////////////////////////////////////// */
+.block-editor_wrap,
+.editor-styles-wrapper {
+    .wp-block-image {
+        --_alignWP_paddingSP-X: 20px;
+        --_alignWP_paddingSP-Y: 1em;
+        --_alignWP_paddingPC-X: 30px;
+        --_alignWP_paddingPC-Y: 1em;
+        margin-top: var(--wp-block-margin);
+        & + & {
+            margin-top: var(--wp-block-margin-large);
+        }
+        .alignleft,
+        .alignright {
+            margin-bottom: var(--_alignWP_paddingSP-Y);
+            margin-inline: auto;
+            max-width: calc(50% - var(--_alignWP_paddingSP-X) / 2);
+            height: auto;
+            @media screen and (min-width: 768px) {
+                margin-bottom: var(--_alignWP_paddingPC-Y);
+                max-width: calc(50% - var(--_alignWP_paddingPC-X) / 2);
+            }
+        }
+        .alignleft {
+            margin-inline: 0 var(--_alignWP_paddingSP-X);
+            margin-bottom: var(--_alignWP_paddingSP-Y);
+            display: table;
+            float: left;
+            @media screen and (min-width: 768px) {
+                margin-right: var(--_alignWP_paddingPC-X);
+            }
+        }
+        .alignright {
+            margin-inline: var(--_alignWP_paddingSP-X) 0;
+            margin-bottom: var(--_alignWP_paddingSP-Y);
+            display: table;
+            float: right;
+            @media screen and (min-width: 768px) {
+                margin-left: var(--_alignWP_paddingPC-X);
+            }
+        }
+        .aligncenter {
+            display: table;
+            margin-inline: auto;
+            text-align: center;
+        }
+        /* &.border-none {
+        img {
+            border: none;
+        }
+    } */
+        .wp-element-caption {
+            text-align: center;
+            font-size: 14px;
+            margin-top: var(--wp-block-margin-small);
+            line-height: 1.5;
+            color: var(--color-primary);
+        }
+        @media screen and (min-width: 768px) {
+            .alignleft {
+                /* margin-bottom: 0; */
+                /* margin-right: 40px; */
+            }
+            .alignright {
+                /* margin-bottom: 0; */
+                /* margin-left: 40px; */
+            }
+        }
+    }
+    .wp-block[data-align='left'] > .wp-block-image {
+        @media screen and (min-width: 768px) {
+            /* margin-right: 32px; */
+        }
+    }
+    .wp-block[data-align='right'] > .wp-block-image {
+        @media screen and (min-width: 768px) {
+            /* margin-right: 32px; */
+        }
+    }
+}

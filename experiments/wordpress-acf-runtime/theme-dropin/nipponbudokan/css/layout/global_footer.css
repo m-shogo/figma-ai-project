@@ -1,0 +1,602 @@
+@charset "utf-8";
+/* // ==========================================================================
+// サイト共通フッター
+// ========================================================================== */
+.global_footer {
+    position: relative;
+    background-color: var(--color-gray-background);
+    color: var(--color-text);
+    a {
+        color: var(--color-text);
+        text-decoration: none;
+        transition: color var(--transition-duration);
+    }
+
+    .gf_logo {
+        width: 140px;
+        a {
+            transition: opacity var(--transition-duration);
+        }
+    }
+    .gf_menu {
+    }
+    .gf_links-01 {
+        display: grid;
+        pointer-events: auto;
+        /* MARK: 共通 全階層に影響あり start */
+        .gfl_item-02,
+        .gfl_item-03,
+        .gfl_item-04,
+        .gfl_item-05,
+        .gfl_item-06 {
+            border-top: 1px solid var(--color-gray-border);
+        }
+        .gfl_item-02 {
+            &:first-child {
+                border-top: none;
+            }
+            &:last-child {
+                border-bottom: 1px solid var(--color-gray-border);
+            }
+        }
+        .gfl_title-02,
+        .gfl_title-03,
+        .gfl_title-04,
+        .gfl_title-05,
+        .gfl_title-06 {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+        .gfl_link-02,
+        .gfl_link-03,
+        .gfl_link-04,
+        .gfl_link-05,
+        .gfl_link-06 {
+            display: block;
+            padding-block: 20px;
+            padding-inline: 20px;
+            flex-grow: 1;
+            overflow-wrap: anywhere;
+            word-break: normal;
+            line-break: strict;
+            &::after {
+                content: none;
+            }
+        }
+        .gfl_button-02,
+        .gfl_button-03,
+        .gfl_button-04,
+        .gfl_button-05,
+        .gfl_button-06 {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            position: relative;
+            width: 60px;
+            height: 60px;
+            background-color: transparent;
+            pointer-events: all;
+            touch-action: manipulation;
+            &::before,
+            &::after {
+                content: '';
+                display: block;
+                position: absolute;
+                left: calc(50% - 5px);
+                top: calc(50% - 1px);
+                border-radius: 1px;
+                width: 10px;
+                height: 2px;
+                background-color: var(--color-text);
+                transition: var(--transition-duration);
+            }
+            &::after {
+                transform: rotate(-90deg);
+            }
+            span {
+                display: none;
+            }
+        }
+        .gfl_wrapper-02,
+        .gfl_wrapper-03,
+        .gfl_wrapper-04,
+        .gfl_wrapper-05,
+        .gfl_wrapper-06 {
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows var(--transition-duration);
+        }
+        .gfl_inner-02,
+        .gfl_inner-03,
+        .gfl_inner-04,
+        .gfl_inner-05,
+        .gfl_inner-06 {
+            overflow: hidden;
+        }
+        .gfl_list-02,
+        .gfl_list-03,
+        .gfl_list-04,
+        .gfl_list-05,
+        .gfl_list-06 {
+        }
+        /* MARK: 共通 3階層以降に影響あり start */
+        .gfl_item-03,
+        .gfl_item-04,
+        .gfl_item-05,
+        .gfl_item-06 {
+        }
+        .gfl_title-03,
+        .gfl_title-04,
+        .gfl_title-05,
+        .gfl_title-06 {
+        }
+        .gfl_link-03,
+        .gfl_link-04,
+        .gfl_link-05,
+        .gfl_link-06 {
+        }
+        .gfl_button-03,
+        .gfl_button-04,
+        .gfl_button-05,
+        .gfl_button-06 {
+        }
+        .gfl_wrapper-03,
+        .gfl_wrapper-04,
+        .gfl_wrapper-05,
+        .gfl_wrapper-06 {
+        }
+        .gfl_inner-03,
+        .gfl_inner-04,
+        .gfl_inner-05,
+        .gfl_inner-06 {
+        }
+        .gfl_list-03,
+        .gfl_list-04,
+        .gfl_list-05,
+        .gfl_list-06 {
+        }
+        /* 3階層以降に影響あり end */
+        /* MARK: ステータス start */
+        .gfl_item-02 {
+            /* &.current_page_parent, */
+            /* &.current-menu-ancestor, */
+            &.current-menu-item {
+                .gfl_link-02 {
+                    color: var(--color-primary);
+                }
+            }
+        }
+        .gfl_item-03 {
+            &.current-menu-item {
+                .gfl_link-03 {
+                    color: var(--color-primary);
+                }
+            }
+        }
+        .gfl_item-04 {
+            &.current-menu-item {
+                .gfl_link-04 {
+                    color: var(--color-primary);
+                }
+            }
+        }
+        .gfl_item-05 {
+            &.current-menu-item {
+                .gfl_link-05 {
+                    color: var(--color-primary);
+                }
+            }
+        }
+        .gfl_item-06 {
+            &.current-menu-item {
+                .gfl_link-06 {
+                    color: var(--color-primary);
+                }
+            }
+        }
+        /* ステータス end */
+        /* 共通 end */
+
+        /* MARK: 階層別 3階層 start */
+        .gfl_item-03 {
+        }
+        .gfl_title-03 {
+        }
+        .gfl_link-03 {
+        }
+        .gfl_button-03 {
+        }
+        .gfl_wrapper-03 {
+        }
+        .gfl_inner-03 {
+        }
+        .gfl_list-03 {
+        }
+        /* 3階層 end */
+
+        /* MARK: 階層別 4階層 start */
+        .gfl_item-04 {
+        }
+        .gfl_title-04 {
+        }
+        .gfl_link-04 {
+        }
+        .gfl_button-04 {
+        }
+        .gfl_wrapper-04 {
+        }
+        .gfl_inner-04 {
+        }
+        .gfl_list-04 {
+        }
+        /* 4階層 end */
+
+        /* MARK: 階層別 5階層 start */
+        /* あれば追加 */
+        /* 5階層 end */
+
+        /* MARK: 階層別 6階層 start */
+        /* あれば追加 */
+        /* 6階層 end */
+
+        /* MARK: ステータス start */
+        .gfl_item-02,
+        .gfl_item-03,
+        .gfl_item-04,
+        .gfl_item-05,
+        .gfl_item-06 {
+            &[data-open='true'] {
+                > [class*='gfl_title'] {
+                    > [class*='gfl_button'] {
+                        &::after {
+                            transform: rotate(0deg);
+                        }
+                    }
+                }
+                > [class*='gfl_wrapper'] {
+                    grid-template-rows: 1fr;
+                }
+            }
+            &[data-open='false'] {
+                > [class*='gfl_wrapper'] {
+                    grid-template-rows: 0fr;
+                }
+            }
+        }
+        /* ステータス end */
+    }
+    .gf_subMenu {
+    }
+    .gf_links-02 {
+        &.menu {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .menu-item {
+            border-bottom: 1px solid var(--color-gray-border);
+            a {
+                display: block;
+                padding-block: 20px;
+                padding-inline: 20px;
+            }
+            &:nth-child(odd) {
+                border-right: 1px solid var(--color-gray-border);
+            }
+        }
+    }
+    .gf_information {
+        padding: 50px 0;
+        address {
+            margin-top: 30px;
+            line-height: 1.5;
+            .gf_address {
+                a {
+                }
+            }
+            .gf_tel {
+                span {
+                }
+            }
+        }
+    }
+    .gf_copyright {
+        padding: 15px 20px;
+        background-color: var(--color-primary);
+        font-size: 12px;
+        color: var(--color-secondary);
+        line-height: 1.5;
+        text-align: center;
+    }
+    .gf_pageTop {
+        position: fixed;
+        right: 20px;
+        bottom: 20px;
+        z-index: 50;
+        a {
+            display: block;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            background-color: var(--color-primary);
+            &::before {
+                content: '\f106';
+                display: block;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                font-family: var(--font-awesome);
+                color: var(--color-secondary);
+                transform: translate(-50%, -50%);
+            }
+            &:hover {
+            }
+            span {
+                display: none;
+            }
+        }
+    }
+
+    @media screen and (min-width: 768px) {
+        padding-top: 50px;
+        .gf_links-wrap {
+            display: flex;
+            padding-inline: var(--padding-TB);
+            margin-inline: auto;
+            max-width: calc(var(--width-base) + var(--padding-TB) * 2);
+        }
+
+        .gf_links-01 {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            /* MARK: 共通 全階層に影響あり start */
+            .gfl_item-02,
+            .gfl_item-03,
+            .gfl_item-04,
+            .gfl_item-05,
+            .gfl_item-06 {
+                border-top: none;
+                position: relative;
+                z-index: 0;
+            }
+            .gfl_item-02 {
+                min-width: 240px;
+                &:last-child {
+                    border-bottom: none;
+                }
+            }
+            .gfl_title-02,
+            .gfl_title-03,
+            .gfl_title-04,
+            .gfl_title-05,
+            .gfl_title-06 {
+                width: auto;
+            }
+            .gfl_link-02,
+            .gfl_link-03,
+            .gfl_link-04,
+            .gfl_link-05,
+            .gfl_link-06 {
+                padding-block: 0;
+                padding-inline: 0;
+            }
+            .gfl_button-02,
+            .gfl_button-03,
+            .gfl_button-04,
+            .gfl_button-05,
+            .gfl_button-06 {
+                display: none;
+            }
+            .gfl_wrapper-02,
+            .gfl_wrapper-03,
+            .gfl_wrapper-04,
+            .gfl_wrapper-05,
+            .gfl_wrapper-06 {
+                grid-template-rows: 1fr;
+            }
+            .gfl_inner-02,
+            .gfl_inner-03,
+            .gfl_inner-04,
+            .gfl_inner-05,
+            .gfl_inner-06 {
+            }
+            /* MARK: 共通 3階層以降に影響あり start */
+            .gfl_list-03,
+            .gfl_list-04,
+            .gfl_list-05,
+            .gfl_list-06 {
+            }
+            .gfl_item-03,
+            .gfl_item-04,
+            .gfl_item-05,
+            .gfl_item-06 {
+            }
+            .gfl_title-03,
+            .gfl_title-04,
+            .gfl_title-05,
+            .gfl_title-06 {
+            }
+            .gfl_link-03,
+            .gfl_link-04,
+            .gfl_link-05,
+            .gfl_link-06 {
+            }
+            .gfl_button-03,
+            .gfl_button-04,
+            .gfl_button-05,
+            .gfl_button-06 {
+            }
+            .gfl_wrapper-03,
+            .gfl_wrapper-04,
+            .gfl_wrapper-05,
+            .gfl_wrapper-06 {
+            }
+            .gfl_inner-03,
+            .gfl_inner-04,
+            .gfl_inner-05,
+            .gfl_inner-06 {
+            }
+            /* 3階層以降に影響あり end */
+            /* 共通 end */
+
+            /* MARK: 階層別 2階層 start */
+            .gfl_list-02 {
+                display: grid;
+                gap: 8px;
+            }
+            .gfl_item-02 {
+            }
+            .gfl_title-02 {
+            }
+            .gfl_link-02 {
+                font-weight: 700;
+            }
+            .gfl_button-02 {
+            }
+            .gfl_wrapper-02 {
+                margin-top: 10px;
+            }
+            .gfl_inner-02 {
+            }
+            /* 3階層 end */
+
+            /* MARK: 階層別 3階層 start */
+            .gfl_list-03 {
+                display: grid;
+                gap: 10px;
+            }
+            .gfl_item-03 {
+            }
+            .gfl_title-03 {
+                gap: 8px;
+                &::before {
+                    content: var(--icon-chevron-right);
+                    font-family: var(--font-awesome);
+                    flex-shrink: 0;
+                    pointer-events: none;
+                    font-size: 12px;
+                }
+            }
+            .gfl_link-03 {
+            }
+            .gfl_button-03 {
+            }
+            .gfl_wrapper-03 {
+                margin-top: 10px;
+            }
+            .gfl_inner-03 {
+            }
+            /* 3階層 end */
+
+            /* MARK: 階層別 4階層 start */
+            .gfl_list-04 {
+                display: grid;
+                gap: 10px;
+            }
+            .gfl_item-04 {
+            }
+            .gfl_title-04 {
+                padding-left: 24px;
+                position: relative;
+                z-index: 0;
+                &::before {
+                    content: var(--icon-chevron-right);
+                    font-family: var(--font-awesome);
+                    position: absolute;
+                    left: 12px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    font-size: 10px;
+                }
+            }
+            .gfl_link-04 {
+            }
+            .gfl_button-04 {
+            }
+            .gfl_wrapper-04 {
+                margin-top: 10px;
+            }
+            .gfl_inner-04 {
+            }
+            /* 4階層 end */
+
+            /* MARK: 階層別 5階層 start */
+            .gfl_list-05 {
+            }
+            .gfl_item-05 {
+            }
+            .gfl_title-05 {
+                padding-left: 36px;
+                font-size: 14px;
+                position: relative;
+                z-index: 0;
+                &::before {
+                    content: var(--icon-chevron-right);
+                    font-family: var(--font-awesome);
+                    position: absolute;
+                    left: 24px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    font-size: 10px;
+                }
+            }
+            .gfl_link-05 {
+            }
+            .gfl_button-05 {
+            }
+            .gfl_wrapper-05 {
+            }
+            .gfl_inner-05 {
+            }
+            /* 5階層 end */
+
+            /* MARK: 階層別 6階層 start */
+            /* あれば追加 */
+            /* 6階層 end */
+
+            /* MARK: ステータス start */
+            /* ステータス end */
+        }
+        .gf_menu {
+        }
+        .gf_subMenu {
+            flex-shrink: 0;
+            min-width: 240px;
+        }
+        .gf_links-02 {
+            &.menu {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+            .menu-item {
+                border-bottom: none;
+                a {
+                    padding-block: 0;
+                    padding-inline: 0;
+                }
+                &:nth-child(odd) {
+                    border-right: none;
+                }
+            }
+        }
+    }
+
+    /* MARK: hover */
+    @media (any-hover: hover) {
+        .gf_logo {
+            a {
+                &:hover {
+                    opacity: var(--opacity-hover);
+                }
+            }
+        }
+        a {
+            &:hover {
+                color: var(--color-link);
+            }
+        }
+    }
+}

@@ -1,0 +1,76 @@
+@charset "utf-8";
+/* // ==========================================================================
+// メインビジュアル
+// ========================================================================== */
+.top_mainVisual {
+    position: relative;
+    overflow-x: hidden;
+    .tm_swiper-container {
+        .swiper-wrapper {
+            .swiper-slide {
+                .tm_background {
+                    position: relative;
+                    overflow: hidden;
+                    width: 100%;
+                    height: 375px;
+                    img {
+                        height: 100%;
+                    }
+                }
+            }
+        }
+        .tm_inner {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: 0;
+            right: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .tm_title {
+            font-size: 30px;
+            font-weight: 700;
+            color: var(--color-secondary);
+            text-align: center;
+        }
+        .swiper-pagination {
+            display: flex;
+            justify-content: center;
+            position: absolute;
+            left: 50%;
+            top: 345px;
+            transform: translateX(-50%);
+            .swiper-pagination-bullet {
+                opacity: 1;
+                margin-inline: 5px;
+                width: 12px;
+                height: 12px;
+                background-color: var(--color-secondary);
+                transition: background-color var(--transition-duration);
+                &:hover,
+                &.swiper-pagination-bullet-active {
+                    background-color: var(--color-primary);
+                }
+            }
+        }
+    }
+
+    @media screen and (min-width: 768px) {
+        .tm_swiper-container {
+            .swiper-wrapper {
+                .swiper-slide {
+                    .tm_background {
+                        height: 600px;
+                    }
+                }
+            }
+            .swiper-pagination {
+                top: auto;
+                bottom: 20px;
+            }
+        }
+    }
+}

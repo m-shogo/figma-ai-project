@@ -1,0 +1,85 @@
+@charset "utf-8";
+/* // ==========================================================================
+// トップバナー top_banner
+// ========================================================================== */
+.top_banner-01 {
+    padding: 60px 0;
+    .list {
+        display: grid;
+        gap: 30px;
+        li {
+            position: relative;
+            z-index: 0;
+            aspect-ratio: 265 / 80;
+            a {
+                display: block;
+                width: 100%;
+                height: 100%;
+                transition: opacity var(--transition-duration);
+                &:hover {
+                    opacity: var(--opacity-hover);
+                }
+                &[target='_blank'] {
+                    .title {
+                        &::after {
+                            content: var(--icon-blank);
+                            font-family: var(--font-awesome);
+                        }
+                    }
+                }
+                &._disabled {
+                    pointer-events: none;
+                }
+            }
+            &._noImage {
+                a {
+                    background-color: var(--color-gray-border);
+                }
+            }
+            .image {
+                position: relative;
+                width: 100%;
+                height: 100%;
+                img {
+                    height: 100%;
+                }
+            }
+            .title {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: absolute;
+                top: 0;
+                left: 0;
+                padding: 10px;
+                width: 100%;
+                height: 100%;
+                color: var(--color-secondary);
+                font-weight: 700;
+                text-align: center;
+                text-decoration: none;
+            }
+        }
+    }
+
+    @media screen and (min-width: 768px) {
+        .list {
+            grid-template-columns: repeat(4, 1fr);
+            li {
+            }
+        }
+    }
+
+    /* MARK: hover */
+    @media (any-hover: hover) {
+        .list {
+            li {
+                a {
+                    &:hover {
+                        opacity: var(--opacity-hover);
+                    }
+                }
+            }
+        }
+    }
+}

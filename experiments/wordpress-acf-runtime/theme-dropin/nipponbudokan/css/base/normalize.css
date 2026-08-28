@@ -1,0 +1,299 @@
+@charset "utf-8";
+/*
+ * ベース用CSS
+ */
+
+/* ==========================================================================
+ * リセット追加
+ * ========================================================================== */
+:root {
+  --vw: 1vw;
+  scrollbar-gutter: stable;
+}
+* {
+  box-sizing: border-box;
+  -webkit-text-size-adjust: 100%;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  &:focus {
+    outline: none;
+  }
+  &::before,
+  &::after {
+    box-sizing: border-box;
+  }
+}
+main {
+  display: block;
+}
+hr {
+  display: block;
+  margin: 1em 0;
+  border: 0;
+  padding: 0;
+  height: 1px;
+  border-top: 1px solid #cccccc;
+}
+/* :where(*:not(.block-editor_wrap *)) {
+    margin: 0;
+} */
+a, p, span, li, dd, dt, th, td, textarea, input, select, option, legend, label, fieldset, button {
+  overflow-wrap: anywhere;
+  word-break: normal;
+  line-break: strict;
+}
+
+/* ==========================================================================
+ * フォームリセット
+ * ========================================================================== */
+button {
+  cursor: pointer;
+}
+button,
+fieldset,
+form,
+input,
+label,
+legend,
+select,
+textarea {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+  outline: none;
+  border-radius: 0;
+  border: none;
+  margin: 0;
+  padding: 0;
+  font: inherit;
+  vertical-align: baseline;
+}
+input,
+textarea {
+  max-width: 100%;
+}
+input[type='button'],
+input[type='reset'],
+input[type='submit'],
+button {
+  cursor: pointer;
+}
+
+/* ==========================================================================
+ * ベース
+ * ========================================================================== */
+html {
+  font-size: 16px;
+}
+@media (min-width: 768px) {
+  html {
+    overflow-x: auto;
+  }
+}
+body {
+  position: relative;
+  z-index: 0;
+  background: var(--color-secondary);
+  font-family: var(--font-sansSerif-ja);
+  font-weight: 400;
+  line-height: 1.8;
+  font-size: 1rem;
+  color: var(--color-text);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+@media (min-width: 768px) {
+  body {
+    min-width: 1280px;
+  }
+}
+body._contentFixed {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+}
+
+/* MARK: header_breakpoint */
+/* @media screen and (min-width: 768px) {
+  body._contentFixed {
+    position: relative;
+    width: auto;
+    height: auto;
+  }
+} */
+a {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  font: inherit;
+  color: var(--color-link);
+  text-decoration: underline;
+  vertical-align: baseline;
+  &:hover,
+  &:focus,
+  &:active {
+    text-decoration: none;
+  }
+}
+@media screen and (min-width: 768px) {
+  a[href^='tel:'] {
+    display: inline-block;
+    color: inherit;
+    text-decoration: inherit;
+    pointer-events: none;
+  }
+}
+img {
+  max-width: 100%;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  object-position: center center;
+  vertical-align: top;
+}
+sup,
+sub {
+  font-size: 78%;
+}
+sup {
+  vertical-align: super;
+}
+sub {
+  vertical-align: sub;
+}
+
+/* プレースホルダー色定義 */
+:placeholder-shown {
+  color: var(--color-gray-text);
+}
+::-webkit-input-placeholder {
+  color: var(--color-gray-text);
+  opacity: 1;
+}
+:-moz-placeholder {
+  color: var(--color-gray-text);
+}
+::-moz-placeholder {
+  color: var(--color-gray-text);
+  opacity: 1;
+}
+:-ms-input-placeholder {
+  color: var(--color-gray-text);
+}
+/* ChromeやSafariで検索フォームの右側にある×ボタン削除 */
+::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+}
+
+/* ==========================================================================
+ * ClearFix
+ * ========================================================================== */
+.clearFix::after {
+  clear: both;
+  content: '.';
+  display: block;
+  height: 0;
+  visibility: hidden;
+}
+
+/* ==========================================================================
+ * 文字サイズ
+ * ========================================================================== */
+@media screen and (min-width: 768px) {
+  ._font-sizeS {
+    font-size: 1.2rem;
+  }
+}
+@media screen and (min-width: 768px) {
+  ._font-sizeM {
+    font-size: 1.4rem;
+  }
+}
+@media screen and (min-width: 768px) {
+  ._font-sizeL {
+    font-size: 1.8rem;
+  }
+}
+
+/* ==========================================================================
+ * 装飾クラス
+ * ========================================================================== */
+._hide {
+  display: none !important;
+}
+._align-right {
+  text-align: right !important;
+}
+._align-left {
+  text-align: left !important;
+}
+._align-center {
+  text-align: center !important;
+}
+._indent {
+  text-indent: 1rem !important;
+}
+._block-right {
+  margin-right: 0 !important;
+  margin-left: auto !important;
+}
+._block-center {
+  margin-right: auto !important;
+  margin-left: auto !important;
+}
+._block-left {
+  margin-right: auto !important;
+  margin-left: 0 !important;
+}
+._font-normal {
+  font-weight: normal !important;
+}
+._font-bold {
+  font-weight: bold !important;
+}
+._text-italic {
+  font-style: italic !important;
+}
+._text-underline {
+  text-decoration: underline !important;
+}
+._text-blink {
+  text-decoration: blink !important;
+}
+._text-line_through {
+  text-decoration: line-through !important;
+}
+
+/* ==========================================================================
+ * 表示切り替え
+ * ========================================================================== */
+/* SP以下のみ表示 */
+@media screen and (min-width: 768px) {
+  ._only-SP {
+    display: none !important;
+  }
+}
+/* TB以下のみ表示 */
+@media screen and (min-width: 768px) {
+  ._under-TB {
+    display: none !important;
+  }
+}
+/* TB以上のみ表示 */
+._over-TB {
+  display: none !important;
+}
+@media screen and (min-width: 768px) {
+  ._over-TB {
+    display: block !important;
+  }
+}
+/* PC以上のみ表示 */
+._over-PC {
+  display: none !important;
+}
+@media screen and (min-width: 768px) {
+  ._over-PC {
+    display: block !important;
+  }
+}

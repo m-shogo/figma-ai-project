@@ -1,0 +1,197 @@
+@charset "utf-8";
+/* // ------------------------------
+// ナビゲーション
+// ------------------------------ */
+.block-editor_wrap,
+.editor-styles-wrapper {
+    /* エディタ画面のみ start */
+    .wp-block-acf-navigation-small + .wp-block-acf-navigation-large {
+        margin-top: var(--wp-block-margin-xxlarge);
+        @media screen and (min-width: 768px) {
+            margin-top: var(--wp-block-margin-large);
+        }
+    }
+    .wp-block-acf-navigation-large + .wp-block-acf-navigation-small {
+        margin-top: var(--wp-block-margin-xxlarge);
+        @media screen and (min-width: 768px) {
+            margin-top: var(--wp-block-margin-large);
+        }
+    }
+    /* エディタ画面のみ end */
+    .module_navigation {
+        display: grid;
+        grid-template-columns: 1fr;
+        margin-top: var(--wp-block-margin);
+        & + & {
+            margin-top: var(--wp-block-margin-large);
+        }
+        /* MARK: 共通 */
+        .navigation {
+            a {
+                text-decoration: none;
+                color: var(--color-text);
+                display: flex;
+                &::after {
+                    content: unset;
+                }
+                &[target='_blank'] {
+                    .content {
+                        .title {
+                            &::after {
+                                font-family: var(--font-awesome);
+                                content: var(--icon-blank);
+                                margin-left: 10px;
+                            }
+                        }
+                    }
+                }
+                &.is-disabled {
+                    pointer-events: none;
+                }
+                .image {
+                    overflow: hidden;
+                    flex-shrink: 0;
+                    aspect-ratio: 335 / 219;
+                    img {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                        transition: var(--transition-duration);
+                    }
+                }
+                .content {
+                    transition: var(--transition-duration);
+                    .title {
+                        font-weight: 500;
+                        color: var(--color-primary);
+                        line-height: 1.6;
+                        letter-spacing: 0.1em;
+                        text-decoration: underline;
+                        text-decoration-thickness: 1px;
+                        overflow-wrap: anywhere;
+                        word-break: normal;
+                        line-break: strict;
+                    }
+                    .text {
+                        line-height: 1.8;
+                        letter-spacing: 0.08em;
+                        color: var(--color-text);
+                    }
+                }
+            }
+        }
+        /* MARK: 大 */
+        &.--large {
+            gap: 40px;
+            .navigation {
+                a {
+                    flex-direction: column;
+                    gap: 20px;
+                    .image {
+                        border-radius: 8px;
+                        aspect-ratio: 335 / 219;
+                    }
+                    .content {
+                        .title {
+                            font-size: 24px;
+                            text-underline-offset: 6px;
+                        }
+                        .text {
+                            margin-top: 20px;
+                            font-size: 16px;
+                        }
+                    }
+                }
+            }
+        }
+        /* MARK: 小 */
+        &.--small {
+            gap: 30px;
+            .navigation {
+                a {
+                    align-items: flex-start;
+                    gap: 15px;
+                    .image {
+                        border-radius: 4px;
+                        width: 120px;
+                        aspect-ratio: 1 / 1;
+                        border: 1px solid var(--color-gray-border);
+                    }
+                    .content {
+                        .title {
+                            font-size: 16px;
+                            text-underline-offset: 4px;
+                        }
+                        .text {
+                            margin-top: 10px;
+                            font-size: 12px;
+                        }
+                    }
+                }
+            }
+        }
+
+        @media screen and (min-width: 768px) {
+            flex-direction: row;
+            flex-wrap: wrap;
+            & + .module_navigation {
+                /* margin-top: 48px; */
+            }
+            &.--large {
+                gap: 60px;
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 60px;
+                .navigation {
+                    a {
+                        .content {
+                            .title {
+                            }
+                        }
+                    }
+                }
+            }
+            &.--small {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 40px;
+                .navigation {
+                    a {
+                        gap: 25px;
+                        .image {
+                            border: unset;
+                            width: 180px;
+                            aspect-ratio: 18 / 15;
+                        }
+                        .content {
+                            .title {
+                                font-size: 20px;
+                            }
+                            .text {
+                                margin-top: 15px;
+                                font-size: 14px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        /* MARK: hover */
+        @media (any-hover: hover) {
+            .navigation {
+                a {
+                    &:hover {
+                        .content {
+                            opacity: 0.7;
+                        }
+                        .image {
+                            img {
+                                transform: scale(1.05);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,541 @@
+@charset "utf-8";
+/* // ==========================================================================
+// ドロップダウンメニュー
+// ========================================================================== */
+.module_dropdown {
+    display: grid;
+    pointer-events: auto;
+    height: fit-content;
+    a {
+        color: var(--color-text);
+        text-decoration: none;
+        transition: color var(--transition-duration);
+    }
+    /* MARK: 共通 全階層に影響あり start */
+    .mdd_item-02,
+    .mdd_item-03,
+    .mdd_item-04,
+    .mdd_item-05,
+    .mdd_item-06 {
+        flex-grow: 1;
+        border-top: 1px solid var(--color-separator--blue);
+    }
+    .mdd_title-02,
+    .mdd_title-03,
+    .mdd_title-04,
+    .mdd_title-05,
+    .mdd_title-06 {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+    }
+    .mdd_link-02,
+    .mdd_link-03,
+    .mdd_link-04,
+    .mdd_link-05,
+    .mdd_link-06 {
+        display: block;
+        padding-block: 16px;
+        padding-inline: 20px;
+        flex-grow: 1;
+        overflow-wrap: anywhere;
+        word-break: normal;
+        line-break: strict;
+        &::after {
+            content: none;
+        }
+    }
+    .mdd_button-02,
+    .mdd_button-03,
+    .mdd_button-04,
+    .mdd_button-05,
+    .mdd_button-06 {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        position: relative;
+        width: 45px;
+        height: 60px;
+        background-color: transparent;
+        touch-action: manipulation;
+        transition: background-color var(--transition-duration);
+        &::before,
+        &::after {
+            content: '';
+            display: block;
+            position: absolute;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 1px;
+            width: 18px;
+            height: 2px;
+            background-color: var(--color-primary);
+            transition: transform var(--transition-duration);
+        }
+        &::after {
+            transform: translate(-50%, -50%) rotate(-90deg);
+        }
+        span {
+            display: none;
+        }
+    }
+    .mdd_wrapper-02,
+    .mdd_wrapper-03,
+    .mdd_wrapper-04,
+    .mdd_wrapper-05,
+    .mdd_wrapper-06 {
+        display: grid;
+        grid-template-rows: 0fr;
+        transition: grid-template-rows var(--transition-duration);
+    }
+    .mdd_inner-02,
+    .mdd_inner-03,
+    .mdd_inner-04,
+    .mdd_inner-05,
+    .mdd_inner-06 {
+        overflow: hidden;
+    }
+    .mdd_list-02,
+    .mdd_list-03,
+    .mdd_list-04,
+    .mdd_list-05,
+    .mdd_list-06 {
+    }
+    /* MARK: 共通 3階層以降に影響あり start */
+    .mdd_item-03,
+    .mdd_item-04,
+    .mdd_item-05,
+    .mdd_item-06 {
+    }
+    .mdd_title-03,
+    .mdd_title-04,
+    .mdd_title-05,
+    .mdd_title-06 {
+    }
+    .mdd_link-03,
+    .mdd_link-04,
+    .mdd_link-05,
+    .mdd_link-06 {
+    }
+    .mdd_button-03,
+    .mdd_button-04,
+    .mdd_button-05,
+    .mdd_button-06 {
+    }
+    .mdd_wrapper-03,
+    .mdd_wrapper-04,
+    .mdd_wrapper-05,
+    .mdd_wrapper-06 {
+    }
+    .mdd_inner-03,
+    .mdd_inner-04,
+    .mdd_inner-05,
+    .mdd_inner-06 {
+    }
+    .mdd_list-03,
+    .mdd_list-04,
+    .mdd_list-05,
+    .mdd_list-06 {
+    }
+    /* 3階層以降に影響あり end */
+    /* MARK: 共通 4階層以降に影響あり start */
+    .mdd_item-04,
+    .mdd_item-05,
+    .mdd_item-06 {
+        &._noChild {
+            .mdd_link-04,
+            .mdd_link-05,
+            .mdd_link-06 {
+                &::before {
+                    content: var(--icon-chevron-right);
+                    font-family: var(--font-awesome);
+                    font-size: 14px;
+                    margin-right: 10px;
+                    color: var(--color-primary);
+                    flex-shrink: 0;
+                    pointer-events: none;
+                }
+            }
+        }
+    }
+    .mdd_title-04,
+    .mdd_title-05,
+    .mdd_title-06 {
+    }
+    .mdd_link-04,
+    .mdd_link-05,
+    .mdd_link-06 {
+    }
+    .mdd_button-04,
+    .mdd_button-05,
+    .mdd_button-06 {
+    }
+    .mdd_wrapper-04,
+    .mdd_wrapper-05,
+    .mdd_wrapper-06 {
+    }
+    .mdd_inner-04,
+    .mdd_inner-05,
+    .mdd_inner-06 {
+    }
+    .mdd_list-04,
+    .mdd_list-05,
+    .mdd_list-06 {
+    }
+    /* 4階層以降に影響あり end */
+    /* MARK: 共通 5階層以降に影響あり start */
+    .mdd_item-05,
+    .mdd_item-06 {
+    }
+    .mdd_title-05,
+    .mdd_title-06 {
+        padding-left: 24px;
+    }
+    .mdd_link-05,
+    .mdd_link-06 {
+    }
+    .mdd_button-05,
+    .mdd_button-06 {
+    }
+    .mdd_wrapper-05,
+    .mdd_wrapper-06 {
+    }
+    .mdd_inner-05,
+    .mdd_inner-06 {
+    }
+    .mdd_list-05,
+    .mdd_list-06 {
+    }
+    /* 4階層以降に影響あり end */
+    /* MARK: ステータス start */
+    /* .mdd_item-02 {
+        &.current_page_parent,
+        &.current-menu-ancestor,
+        &.current-menu-item {
+            .mdd_link-02 {
+                color: var(--color-primary);
+            }
+        }
+    } */
+    .mdd_item-03 {
+        &.current-menu-ancestor,
+        &.current-menu-item {
+            .mdd_link-03 {
+                color: var(--color-primary);
+            }
+        }
+    }
+    .mdd_item-04 {
+        &.current-menu-item {
+            .mdd_link-04 {
+                color: var(--color-primary);
+            }
+        }
+    }
+    .mdd_item-05 {
+        &.current-menu-item {
+            .mdd_link-05 {
+                color: var(--color-primary);
+            }
+        }
+    }
+    .mdd_item-06 {
+        &.current-menu-item {
+            .mdd_link-06 {
+                color: var(--color-primary);
+            }
+        }
+    }
+    /* ステータス end */
+    /* 共通 end */
+
+    /* MARK: 階層別 2階層 start */
+    .mdd_item-02 {
+        border: 1px solid var(--color-separator--blue);
+    }
+    .mdd_title-02 {
+    }
+    .mdd_link-02 {
+    }
+    .mdd_button-02 {
+    }
+    .mdd_wrapper-02 {
+    }
+    .mdd_inner-02 {
+    }
+    .mdd_list-02 {
+    }
+    /* 3階層 end */
+
+    /* MARK: 階層別 3階層 start */
+    .mdd_item-03 {
+        &._noChild {
+            .mdd_link-03 {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                &::after {
+                    content: var(--icon-chevron-right);
+                    font-family: var(--font-awesome);
+                    font-size: 14px;
+                    margin-left: 4px;
+                    color: var(--color-primary);
+                    flex-shrink: 0;
+                    pointer-events: none;
+                }
+            }
+        }
+    }
+    .mdd_title-03 {
+    }
+    .mdd_link-03 {
+    }
+    .mdd_button-03 {
+    }
+    .mdd_wrapper-03 {
+    }
+    .mdd_inner-03 {
+    }
+    .mdd_list-03 {
+    }
+    /* 3階層 end */
+
+    /* MARK: 階層別 4階層 start */
+    .mdd_item-04 {
+    }
+    .mdd_title-04 {
+    }
+    .mdd_link-04 {
+    }
+    .mdd_button-04 {
+    }
+    .mdd_wrapper-04 {
+    }
+    .mdd_inner-04 {
+    }
+    .mdd_list-04 {
+    }
+    /* 4階層 end */
+
+    /* MARK: 階層別 5階層 start */
+    /* あれば追加 */
+    /* 5階層 end */
+
+    /* MARK: 階層別 6階層 start */
+    /* あれば追加 */
+    /* 6階層 end */
+
+    /* MARK: ステータス start */
+    .mdd_item-02,
+    .mdd_item-03,
+    .mdd_item-04,
+    .mdd_item-05,
+    .mdd_item-06 {
+        &[data-open='true'] {
+            > [class*='mdd_title'] {
+                > [class*='mdd_button'] {
+                    &::after {
+                        transform: translate(-50%, -50%) rotate(0deg);
+                    }
+                }
+            }
+            > [class*='mdd_wrapper'] {
+                grid-template-rows: 1fr;
+            }
+        }
+        &[data-open='false'] {
+            > [class*='mdd_wrapper'] {
+                grid-template-rows: 0fr;
+            }
+        }
+    }
+    /* ステータス end */
+    @media screen and (min-width: 768px) {
+        /* MARK: 共通 全階層に影響あり start */
+        .mdd_item-02,
+        .mdd_item-03,
+        .mdd_item-04,
+        .mdd_item-05,
+        .mdd_item-06 {
+        }
+        .mdd_title-02,
+        .mdd_title-03,
+        .mdd_title-04,
+        .mdd_title-05,
+        .mdd_title-06 {
+        }
+        .mdd_link-02,
+        .mdd_link-03,
+        .mdd_link-04,
+        .mdd_link-05,
+        .mdd_link-06 {
+        }
+        .mdd_button-02,
+        .mdd_button-03,
+        .mdd_button-04,
+        .mdd_button-05,
+        .mdd_button-06 {
+        }
+        .mdd_wrapper-02,
+        .mdd_wrapper-03,
+        .mdd_wrapper-04,
+        .mdd_wrapper-05,
+        .mdd_wrapper-06 {
+        }
+        .mdd_inner-02,
+        .mdd_inner-03,
+        .mdd_inner-04,
+        .mdd_inner-05,
+        .mdd_inner-06 {
+        }
+        .mdd_list-02,
+        .mdd_list-03,
+        .mdd_list-04,
+        .mdd_list-05,
+        .mdd_list-06 {
+        }
+        /* MARK: 共通 3階層以降に影響あり start */
+        .mdd_item-03,
+        .mdd_item-04,
+        .mdd_item-05,
+        .mdd_item-06 {
+        }
+        .mdd_title-03,
+        .mdd_title-04,
+        .mdd_title-05,
+        .mdd_title-06 {
+        }
+        .mdd_link-03,
+        .mdd_link-04,
+        .mdd_link-05,
+        .mdd_link-06 {
+        }
+        .mdd_button-03,
+        .mdd_button-04,
+        .mdd_button-05,
+        .mdd_button-06 {
+        }
+        .mdd_wrapper-03,
+        .mdd_wrapper-04,
+        .mdd_wrapper-05,
+        .mdd_wrapper-06 {
+        }
+        .mdd_inner-03,
+        .mdd_inner-04,
+        .mdd_inner-05,
+        .mdd_inner-06 {
+        }
+        .mdd_list-03,
+        .mdd_list-04,
+        .mdd_list-05,
+        .mdd_list-06 {
+        }
+        /* 3階層以降に影響あり end */
+        /* 共通 end */
+
+        /* MARK: 階層別 2階層 start */
+        .mdd_item-02 {
+        }
+        .mdd_title-02 {
+        }
+        .mdd_link-02 {
+        }
+        .mdd_button-02 {
+        }
+        .mdd_wrapper-02 {
+        }
+        .mdd_inner-02 {
+        }
+        .mdd_list-02 {
+        }
+        /* 3階層 end */
+
+        /* MARK: 階層別 3階層 start */
+        .mdd_item-03 {
+        }
+        .mdd_title-03 {
+        }
+        .mdd_link-03 {
+        }
+        .mdd_button-03 {
+        }
+        .mdd_wrapper-03 {
+        }
+        .mdd_inner-03 {
+        }
+        .mdd_list-03 {
+        }
+        /* 3階層 end */
+
+        /* MARK: 階層別 4階層 start */
+        .mdd_item-04 {
+        }
+        .mdd_title-04 {
+        }
+        .mdd_link-04 {
+        }
+        .mdd_button-04 {
+        }
+        .mdd_wrapper-04 {
+        }
+        .mdd_inner-04 {
+        }
+        .mdd_list-04 {
+        }
+        /* 4階層 end */
+
+        /* MARK: 階層別 5階層 start */
+        .mdd_item-05 {
+        }
+        .mdd_title-05 {
+        }
+        .mdd_link-05 {
+        }
+        .mdd_button-05 {
+        }
+        .mdd_wrapper-05 {
+        }
+        .mdd_inner-05 {
+        }
+        .mdd_list-05 {
+        }
+        /* 5階層 end */
+
+        /* MARK: 階層別 6階層 start */
+        /* あれば追加 */
+        /* 6階層 end */
+
+        /* MARK: ステータス start */
+        /* ステータス end */
+    }
+
+    /* MARK: hover */
+    @media (any-hover: hover) {
+        .mdd_title-03 {
+            &:has(.mdd_link-03:hover) {
+            }
+        }
+        .mdd_button-02,
+        .mdd_button-03,
+        .mdd_button-04,
+        .mdd_button-05,
+        .mdd_button-06 {
+            &:hover {
+                background-color: #ccc;
+            }
+        }
+        .mdd_link-02,
+        .mdd_link-03,
+        .mdd_link-04,
+        .mdd_link-05,
+        .mdd_link-06 {
+            &:hover {
+                color: var(--color-primary);
+            }
+        }
+    }
+}

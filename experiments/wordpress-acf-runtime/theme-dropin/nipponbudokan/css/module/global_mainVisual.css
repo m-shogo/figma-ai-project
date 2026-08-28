@@ -1,0 +1,47 @@
+@charset "utf-8";
+/* // ==========================================================================
+// サイト共通メインビジュアル
+// ========================================================================== */
+.global_mainVisual {
+    position: relative;
+    overflow: hidden;
+    height: 200px;
+    color: var(--color-secondary);
+    transition: height var(--transition-duration);
+    .gm_inner {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: static;
+        height: inherit;
+    }
+    .gm_background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: -1;
+        width: 100%;
+        height: 100%;
+        background-position: center center;
+        background-size: cover;
+        background-repeat: no-repeat;
+        &::before {
+            content: '';
+            display: block;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 20;
+            background-color: color-mix(in oklch, var(--color-primary) 20%, transparent);
+        }
+    }
+    .gm_title {
+        font-size: 26px;
+        font-weight: 700;
+        text-align: center;
+    }
+
+    @media screen and (min-width: 768px) {
+        height: 300px;
+    }
+}

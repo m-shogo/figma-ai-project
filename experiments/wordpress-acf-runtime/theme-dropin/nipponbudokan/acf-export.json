@@ -1,0 +1,2161 @@
+[
+    {
+        "key": "group_68d4d92c3052d",
+        "title": "SEO設定",
+        "fields": [
+            {
+                "key": "field_68d4d92c3c7b5",
+                "label": "タイトル",
+                "name": "page_title",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "allow_in_bindings": 0,
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_68d4d94a3c7b6",
+                "label": "ディスクリプション",
+                "name": "page_description",
+                "aria-label": "",
+                "type": "textarea",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "allow_in_bindings": 0,
+                "rows": 3,
+                "placeholder": "",
+                "new_lines": ""
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "post_type",
+                    "operator": "==",
+                    "value": "page"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "side",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": "",
+        "show_in_rest": 0,
+        "display_title": "",
+        "allow_ai_access": false,
+        "ai_description": ""
+    },
+    {
+        "key": "group_tab_container",
+        "title": "カスタムブロック - タブコンテナ",
+        "fields": [
+            {
+                "key": "field_6878bead26cfb",
+                "label": "概要",
+                "name": "",
+                "aria-label": "",
+                "type": "message",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "message": "タブコンテナの中身は「タブの中身」ブロックしか入りません",
+                "new_lines": "br",
+                "esc_html": 0
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "block",
+                    "operator": "==",
+                    "value": "acf\/tab-container"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": "",
+        "show_in_rest": 0,
+        "display_title": "",
+        "allow_ai_access": false,
+        "ai_description": ""
+    },
+    {
+        "key": "group_tab_panel",
+        "title": "カスタムブロック - タブパネル",
+        "fields": [
+            {
+                "key": "field_6878b3c4ee225",
+                "label": "ボタンタイトル（表示用）",
+                "name": "panel_title",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "allow_in_bindings": 0,
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "block",
+                    "operator": "==",
+                    "value": "acf\/tab-panel"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": "",
+        "show_in_rest": 0,
+        "display_title": "",
+        "allow_ai_access": false,
+        "ai_description": ""
+    },
+    {
+        "key": "group_6879de5a2718b",
+        "title": "カスタムブロック - ナビゲーション（大）",
+        "fields": [
+            {
+                "key": "field_6879de5a2a5b6",
+                "label": "ナビゲーション（大）",
+                "name": "navigation-large",
+                "aria-label": "",
+                "type": "repeater",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "layout": "block",
+                "pagination": 0,
+                "min": 0,
+                "max": 0,
+                "collapsed": "",
+                "button_label": "+ ナビゲーションを追加",
+                "rows_per_page": 20,
+                "sub_fields": [
+                    {
+                        "key": "field_6879de8255761",
+                        "label": "画像",
+                        "name": "image",
+                        "aria-label": "",
+                        "type": "image",
+                        "instructions": "横550px・縦360px以上",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "return_format": "id",
+                        "library": "all",
+                        "min_width": 550,
+                        "min_height": 360,
+                        "min_size": "",
+                        "max_width": 2000,
+                        "max_height": 2000,
+                        "max_size": "",
+                        "mime_types": "",
+                        "allow_in_bindings": 0,
+                        "preview_size": "thumbnail",
+                        "parent_repeater": "field_6879de5a2a5b6"
+                    },
+                    {
+                        "key": "field_6879de5a2bd2d",
+                        "label": "タイトル",
+                        "name": "title",
+                        "aria-label": "",
+                        "type": "textarea",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "100",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "maxlength": "",
+                        "allow_in_bindings": 1,
+                        "rows": 1,
+                        "placeholder": "",
+                        "new_lines": "",
+                        "parent_repeater": "field_6879de5a2a5b6"
+                    },
+                    {
+                        "key": "field_6879de9255762",
+                        "label": "テキスト",
+                        "name": "text",
+                        "aria-label": "",
+                        "type": "textarea",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "maxlength": "",
+                        "allow_in_bindings": 0,
+                        "rows": 3,
+                        "placeholder": "",
+                        "new_lines": "",
+                        "parent_repeater": "field_6879de5a2a5b6"
+                    },
+                    {
+                        "key": "field_6879dea955763",
+                        "label": "URL",
+                        "name": "url",
+                        "aria-label": "",
+                        "type": "text",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "80",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "maxlength": "",
+                        "allow_in_bindings": 0,
+                        "placeholder": "",
+                        "prepend": "",
+                        "append": "",
+                        "parent_repeater": "field_6879de5a2a5b6"
+                    },
+                    {
+                        "key": "field_6879deb555764",
+                        "label": "外部リンク",
+                        "name": "target",
+                        "aria-label": "",
+                        "type": "checkbox",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "20",
+                            "class": "",
+                            "id": ""
+                        },
+                        "choices": {
+                            "はい": "はい"
+                        },
+                        "default_value": [],
+                        "return_format": "value",
+                        "allow_custom": 0,
+                        "allow_in_bindings": 0,
+                        "layout": "vertical",
+                        "toggle": 0,
+                        "save_custom": 0,
+                        "custom_choice_button_text": "新規選択肢を追加",
+                        "parent_repeater": "field_6879de5a2a5b6"
+                    }
+                ]
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "block",
+                    "operator": "==",
+                    "value": "acf\/navigation-large"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": "",
+        "show_in_rest": 0,
+        "display_title": "",
+        "allow_ai_access": false,
+        "ai_description": ""
+    },
+    {
+        "key": "group_6879dee96cd12",
+        "title": "カスタムブロック - ナビゲーション（小）",
+        "fields": [
+            {
+                "key": "field_6879dee96ef84",
+                "label": "ナビゲーション（小）",
+                "name": "navigation-small",
+                "aria-label": "",
+                "type": "repeater",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "layout": "block",
+                "pagination": 0,
+                "min": 0,
+                "max": 0,
+                "collapsed": "",
+                "button_label": "+ ナビゲーションを追加",
+                "rows_per_page": 20,
+                "sub_fields": [
+                    {
+                        "key": "field_6879dee970316",
+                        "label": "画像",
+                        "name": "image",
+                        "aria-label": "",
+                        "type": "image",
+                        "instructions": "横180px・縦150px以上",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "return_format": "id",
+                        "library": "all",
+                        "min_width": 180,
+                        "min_height": 150,
+                        "min_size": "",
+                        "max_width": 2000,
+                        "max_height": 2000,
+                        "max_size": "",
+                        "mime_types": "",
+                        "allow_in_bindings": 0,
+                        "preview_size": "thumbnail",
+                        "parent_repeater": "field_6879dee96ef84"
+                    },
+                    {
+                        "key": "field_6879dee9707bf",
+                        "label": "タイトル",
+                        "name": "title",
+                        "aria-label": "",
+                        "type": "textarea",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "maxlength": "",
+                        "allow_in_bindings": 1,
+                        "rows": 1,
+                        "placeholder": "",
+                        "new_lines": "",
+                        "parent_repeater": "field_6879dee96ef84"
+                    },
+                    {
+                        "key": "field_6879dee970bc6",
+                        "label": "テキスト",
+                        "name": "text",
+                        "aria-label": "",
+                        "type": "textarea",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "maxlength": "",
+                        "allow_in_bindings": 0,
+                        "rows": 2,
+                        "placeholder": "",
+                        "new_lines": "",
+                        "parent_repeater": "field_6879dee96ef84"
+                    },
+                    {
+                        "key": "field_6879dee970f66",
+                        "label": "URL",
+                        "name": "url",
+                        "aria-label": "",
+                        "type": "text",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "80",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "maxlength": "",
+                        "allow_in_bindings": 0,
+                        "placeholder": "",
+                        "prepend": "",
+                        "append": "",
+                        "parent_repeater": "field_6879dee96ef84"
+                    },
+                    {
+                        "key": "field_6879dee971365",
+                        "label": "外部リンク",
+                        "name": "target",
+                        "aria-label": "",
+                        "type": "checkbox",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "20",
+                            "class": "",
+                            "id": ""
+                        },
+                        "choices": {
+                            "はい": "はい"
+                        },
+                        "default_value": [],
+                        "return_format": "value",
+                        "allow_custom": 0,
+                        "allow_in_bindings": 0,
+                        "layout": "vertical",
+                        "toggle": 0,
+                        "save_custom": 0,
+                        "custom_choice_button_text": "新規選択肢を追加",
+                        "parent_repeater": "field_6879dee96ef84"
+                    }
+                ]
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "block",
+                    "operator": "==",
+                    "value": "acf\/navigation-small"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": "",
+        "show_in_rest": 0,
+        "display_title": "",
+        "allow_ai_access": false,
+        "ai_description": ""
+    },
+    {
+        "key": "group_680b6ccb205cb",
+        "title": "カスタムブロック - ページ内リンク",
+        "fields": [
+            {
+                "key": "field_680b6ccb22eea",
+                "label": "ページ内リンク",
+                "name": "inPageLink_items",
+                "aria-label": "",
+                "type": "repeater",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "layout": "row",
+                "pagination": 0,
+                "min": 0,
+                "max": 0,
+                "collapsed": "",
+                "button_label": "+ ページ内リンクを追加",
+                "rows_per_page": 20,
+                "sub_fields": [
+                    {
+                        "key": "field_680b6ccb24306",
+                        "label": "タイトル",
+                        "name": "inPageLink_title",
+                        "aria-label": "",
+                        "type": "textarea",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "70",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "maxlength": "",
+                        "allow_in_bindings": 1,
+                        "rows": 1,
+                        "placeholder": "",
+                        "new_lines": "",
+                        "parent_repeater": "field_680b6ccb22eea"
+                    },
+                    {
+                        "key": "field_680b6ccb24683",
+                        "label": "遷移先ID",
+                        "name": "inPageLink_id",
+                        "aria-label": "",
+                        "type": "text",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "30",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "maxlength": "",
+                        "allow_in_bindings": 1,
+                        "placeholder": "",
+                        "prepend": "#",
+                        "append": "",
+                        "parent_repeater": "field_680b6ccb22eea"
+                    }
+                ]
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "block",
+                    "operator": "==",
+                    "value": "acf\/in-page-link"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": "",
+        "show_in_rest": 0,
+        "display_title": "",
+        "allow_ai_access": false,
+        "ai_description": ""
+    },
+    {
+        "key": "group_6822b470967bc",
+        "title": "カスタムブロック - 投稿の出力",
+        "fields": [
+            {
+                "key": "field_6822b4e4ac8f3",
+                "label": "投稿の種類",
+                "name": "block_post_type",
+                "aria-label": "",
+                "type": "select",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "choices": {
+                    "post": "新着情報",
+                    "event": "イベント"
+                },
+                "default_value": "post",
+                "return_format": "value",
+                "multiple": 0,
+                "allow_null": 0,
+                "allow_in_bindings": 0,
+                "ui": 0,
+                "ajax": 0,
+                "placeholder": "",
+                "create_options": 0,
+                "save_options": 0
+            },
+            {
+                "key": "field_682bf5fccb39a",
+                "label": "カテゴリー（新着情報）",
+                "name": "block_category",
+                "aria-label": "",
+                "type": "taxonomy",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": [
+                    [
+                        {
+                            "field": "field_6822b4e4ac8f3",
+                            "operator": "==",
+                            "value": "post"
+                        }
+                    ]
+                ],
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "taxonomy": "category",
+                "add_term": 0,
+                "save_terms": 0,
+                "load_terms": 0,
+                "return_format": "object",
+                "field_type": "checkbox",
+                "allow_in_bindings": 0,
+                "bidirectional": 0,
+                "multiple": 0,
+                "allow_null": 0,
+                "bidirectional_target": []
+            },
+            {
+                "key": "field_6822b629ac8f4",
+                "label": "カテゴリー（イベント）",
+                "name": "block_event_cat",
+                "aria-label": "",
+                "type": "taxonomy",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": [
+                    [
+                        {
+                            "field": "field_6822b4e4ac8f3",
+                            "operator": "==",
+                            "value": "event"
+                        }
+                    ]
+                ],
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "taxonomy": "event_cat",
+                "add_term": 0,
+                "save_terms": 0,
+                "load_terms": 0,
+                "return_format": "object",
+                "field_type": "checkbox",
+                "allow_in_bindings": 0,
+                "bidirectional": 0,
+                "multiple": 0,
+                "allow_null": 0,
+                "bidirectional_target": []
+            },
+            {
+                "key": "field_6822b676ac8f5",
+                "label": "表示件数",
+                "name": "block_posts_per_page",
+                "aria-label": "",
+                "type": "number",
+                "instructions": "未入力の場合は全件表示になります。",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "min": 1,
+                "max": "",
+                "allow_in_bindings": 0,
+                "placeholder": "",
+                "step": 1,
+                "prepend": "",
+                "append": "件"
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "block",
+                    "operator": "==",
+                    "value": "acf\/custom-post-list"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": "",
+        "show_in_rest": 0,
+        "display_title": "",
+        "allow_ai_access": false,
+        "ai_description": ""
+    },
+    {
+        "key": "group_5c35429d2de35",
+        "title": "ビジュアル設定",
+        "fields": [
+            {
+                "key": "field_5c3542f042381",
+                "label": "画像",
+                "name": "page_img",
+                "aria-label": "",
+                "type": "image",
+                "instructions": "横00px・縦00px以上",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "return_format": "id",
+                "preview_size": "page_img",
+                "library": "all",
+                "min_width": "",
+                "min_height": "",
+                "min_size": "",
+                "max_width": "",
+                "max_height": "",
+                "max_size": "",
+                "mime_types": ""
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "post_type",
+                    "operator": "==",
+                    "value": "page"
+                },
+                {
+                    "param": "page_type",
+                    "operator": "!=",
+                    "value": "front_page"
+                },
+                {
+                    "param": "page",
+                    "operator": "!=",
+                    "value": "12"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": [
+            "the_content",
+            "excerpt",
+            "discussion",
+            "comments",
+            "revisions",
+            "slug",
+            "author",
+            "format",
+            "featured_image",
+            "tags",
+            "send-trackbacks"
+        ],
+        "active": true,
+        "description": "",
+        "show_in_rest": 0,
+        "display_title": "",
+        "allow_ai_access": false,
+        "ai_description": ""
+    },
+    {
+        "key": "group_5d5cb663a2f6e",
+        "title": "ビジュアル設定（投稿タイプ）",
+        "fields": [
+            {
+                "key": "field_5d5cb674e2a74",
+                "label": "通常投稿",
+                "name": "page_img-post",
+                "aria-label": "",
+                "type": "image",
+                "instructions": "横00px・縦00px以上",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "return_format": "id",
+                "preview_size": "page_img",
+                "library": "all",
+                "min_width": "",
+                "min_height": "",
+                "min_size": "",
+                "max_width": "",
+                "max_height": "",
+                "max_size": "",
+                "mime_types": ""
+            },
+            {
+                "key": "field_5d5cb69fe2a75",
+                "label": "カスタム投稿",
+                "name": "page_img-sampleslug",
+                "aria-label": "",
+                "type": "image",
+                "instructions": "横00px・縦00px以上",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "return_format": "id",
+                "preview_size": "page_img",
+                "library": "all",
+                "min_width": "",
+                "min_height": "",
+                "min_size": "",
+                "max_width": "",
+                "max_height": "",
+                "max_size": "",
+                "mime_types": ""
+            },
+            {
+                "key": "field_5d5cb6c8e2a77",
+                "label": "その他（404）",
+                "name": "page_img-other",
+                "aria-label": "",
+                "type": "image",
+                "instructions": "横00px・縦00px以上",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "return_format": "id",
+                "preview_size": "page_img",
+                "library": "all",
+                "min_width": "",
+                "min_height": "",
+                "min_size": "",
+                "max_width": "",
+                "max_height": "",
+                "max_size": "",
+                "mime_types": ""
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "options_page",
+                    "operator": "==",
+                    "value": "common_visual"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": "",
+        "show_in_rest": false,
+        "display_title": "",
+        "allow_ai_access": false,
+        "ai_description": ""
+    },
+    {
+        "key": "group_5c75da2476bd0",
+        "title": "メニュー",
+        "fields": [
+            {
+                "key": "field_5cc12249d2a42",
+                "label": "2階層目メニュー",
+                "name": "common-menu-01",
+                "aria-label": "",
+                "type": "repeater",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "collapsed": "",
+                "min": 0,
+                "max": 0,
+                "layout": "block",
+                "button_label": "+ 2階層目メニューを追加",
+                "rows_per_page": 20,
+                "sub_fields": [
+                    {
+                        "key": "field_5cc1226ed2a43",
+                        "label": "タイトル",
+                        "name": "title-01",
+                        "aria-label": "",
+                        "type": "text",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "40",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "placeholder": "",
+                        "prepend": "",
+                        "append": "",
+                        "maxlength": "",
+                        "parent_repeater": "field_5cc12249d2a42"
+                    },
+                    {
+                        "key": "field_5cc12276d2a44",
+                        "label": "リンク先",
+                        "name": "url-01",
+                        "aria-label": "",
+                        "type": "text",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "40",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "placeholder": "",
+                        "prepend": "",
+                        "append": "",
+                        "maxlength": "",
+                        "parent_repeater": "field_5cc12249d2a42"
+                    },
+                    {
+                        "key": "field_5cc1227fd2a45",
+                        "label": "外部リンク",
+                        "name": "target-01",
+                        "aria-label": "",
+                        "type": "checkbox",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "20",
+                            "class": "",
+                            "id": ""
+                        },
+                        "choices": {
+                            "はい": "はい"
+                        },
+                        "allow_custom": 0,
+                        "default_value": [],
+                        "layout": "vertical",
+                        "toggle": 0,
+                        "return_format": "value",
+                        "save_custom": 0,
+                        "custom_choice_button_text": "新規選択肢を追加",
+                        "parent_repeater": "field_5cc12249d2a42"
+                    },
+                    {
+                        "key": "field_5cc12290d2a46",
+                        "label": "ヘッダーメニュー",
+                        "name": "hide-header",
+                        "aria-label": "",
+                        "type": "radio",
+                        "instructions": "ヘッダーメニュー・フッターメニューをどちらも「表示しない」に設定すると下層ページのサイドバーにのみ表示されます",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "choices": {
+                            "block": "PC・スマホとも表示",
+                            "over-TB": "PCのみ表示",
+                            "only-SP": "スマホのみ表示",
+                            "none": "表示しない"
+                        },
+                        "allow_null": 0,
+                        "other_choice": 0,
+                        "default_value": "block",
+                        "layout": "horizontal",
+                        "return_format": "value",
+                        "save_other_choice": 0,
+                        "parent_repeater": "field_5cc12249d2a42"
+                    },
+                    {
+                        "key": "field_5cc122a7d2a47",
+                        "label": "フッターメニュー",
+                        "name": "hide-footer",
+                        "aria-label": "",
+                        "type": "true_false",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "message": "",
+                        "default_value": 1,
+                        "ui": 1,
+                        "ui_on_text": "表示する",
+                        "ui_off_text": "表示しない",
+                        "parent_repeater": "field_5cc12249d2a42"
+                    },
+                    {
+                        "key": "field_5cc122b8d2a48",
+                        "label": "3階層目",
+                        "name": "select-01",
+                        "aria-label": "",
+                        "type": "true_false",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "100",
+                            "class": "",
+                            "id": ""
+                        },
+                        "message": "",
+                        "default_value": 0,
+                        "ui": 1,
+                        "ui_on_text": "必要",
+                        "ui_off_text": "不要",
+                        "parent_repeater": "field_5cc12249d2a42"
+                    },
+                    {
+                        "key": "field_5cc122ccd2a49",
+                        "label": "3階層目メニュー",
+                        "name": "hierarchy-02",
+                        "aria-label": "",
+                        "type": "repeater",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": [
+                            [
+                                {
+                                    "field": "field_5cc122b8d2a48",
+                                    "operator": "==",
+                                    "value": "1"
+                                }
+                            ]
+                        ],
+                        "wrapper": {
+                            "width": "100",
+                            "class": "",
+                            "id": ""
+                        },
+                        "collapsed": "",
+                        "min": 0,
+                        "max": 0,
+                        "layout": "block",
+                        "button_label": "+ 3階層目メニューを追加",
+                        "rows_per_page": 20,
+                        "parent_repeater": "field_5cc12249d2a42",
+                        "sub_fields": [
+                            {
+                                "key": "field_5cc12367ac291",
+                                "label": "タイトル",
+                                "name": "title-02",
+                                "aria-label": "",
+                                "type": "text",
+                                "instructions": "",
+                                "required": 0,
+                                "conditional_logic": 0,
+                                "wrapper": {
+                                    "width": "40",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "default_value": "",
+                                "placeholder": "",
+                                "prepend": "",
+                                "append": "",
+                                "maxlength": "",
+                                "parent_repeater": "field_5cc122ccd2a49"
+                            },
+                            {
+                                "key": "field_5cc12373ac292",
+                                "label": "リンク先",
+                                "name": "url-02",
+                                "aria-label": "",
+                                "type": "text",
+                                "instructions": "",
+                                "required": 0,
+                                "conditional_logic": 0,
+                                "wrapper": {
+                                    "width": "40",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "default_value": "",
+                                "placeholder": "",
+                                "prepend": "",
+                                "append": "",
+                                "maxlength": "",
+                                "parent_repeater": "field_5cc122ccd2a49"
+                            },
+                            {
+                                "key": "field_5cc1237aac293",
+                                "label": "外部リンク",
+                                "name": "target-02",
+                                "aria-label": "",
+                                "type": "checkbox",
+                                "instructions": "",
+                                "required": 0,
+                                "conditional_logic": 0,
+                                "wrapper": {
+                                    "width": "20",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "choices": {
+                                    "はい": "はい"
+                                },
+                                "allow_custom": 0,
+                                "default_value": [],
+                                "layout": "vertical",
+                                "toggle": 0,
+                                "return_format": "value",
+                                "save_custom": 0,
+                                "custom_choice_button_text": "新規選択肢を追加",
+                                "parent_repeater": "field_5cc122ccd2a49"
+                            },
+                            {
+                                "key": "field_5cc12384ac294",
+                                "label": "4階層目",
+                                "name": "select-02",
+                                "aria-label": "",
+                                "type": "true_false",
+                                "instructions": "4階層目は下層ページのサイドバーのみ表示されます",
+                                "required": 0,
+                                "conditional_logic": 0,
+                                "wrapper": {
+                                    "width": "",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "message": "",
+                                "default_value": 0,
+                                "ui": 1,
+                                "ui_on_text": "必要",
+                                "ui_off_text": "不要",
+                                "parent_repeater": "field_5cc122ccd2a49"
+                            },
+                            {
+                                "key": "field_5cc12393ac295",
+                                "label": "4階層目メニュー",
+                                "name": "hierarchy-03",
+                                "aria-label": "",
+                                "type": "repeater",
+                                "instructions": "",
+                                "required": 0,
+                                "conditional_logic": [
+                                    [
+                                        {
+                                            "field": "field_5cc12384ac294",
+                                            "operator": "==",
+                                            "value": "1"
+                                        }
+                                    ]
+                                ],
+                                "wrapper": {
+                                    "width": "",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "collapsed": "",
+                                "min": 0,
+                                "max": 0,
+                                "layout": "block",
+                                "button_label": "+ 4階層目メニューを追加",
+                                "rows_per_page": 20,
+                                "parent_repeater": "field_5cc122ccd2a49",
+                                "sub_fields": [
+                                    {
+                                        "key": "field_5cc124e8238d5",
+                                        "label": "タイトル",
+                                        "name": "title-03",
+                                        "aria-label": "",
+                                        "type": "text",
+                                        "instructions": "",
+                                        "required": 0,
+                                        "conditional_logic": 0,
+                                        "wrapper": {
+                                            "width": "40",
+                                            "class": "",
+                                            "id": ""
+                                        },
+                                        "default_value": "",
+                                        "placeholder": "",
+                                        "prepend": "",
+                                        "append": "",
+                                        "maxlength": "",
+                                        "parent_repeater": "field_5cc12393ac295"
+                                    },
+                                    {
+                                        "key": "field_5cc124f6238d6",
+                                        "label": "リンク先",
+                                        "name": "url-03",
+                                        "aria-label": "",
+                                        "type": "text",
+                                        "instructions": "",
+                                        "required": 0,
+                                        "conditional_logic": 0,
+                                        "wrapper": {
+                                            "width": "40",
+                                            "class": "",
+                                            "id": ""
+                                        },
+                                        "default_value": "",
+                                        "placeholder": "",
+                                        "prepend": "",
+                                        "append": "",
+                                        "maxlength": "",
+                                        "parent_repeater": "field_5cc12393ac295"
+                                    },
+                                    {
+                                        "key": "field_5cc124fd238d7",
+                                        "label": "外部リンク",
+                                        "name": "target-03",
+                                        "aria-label": "",
+                                        "type": "checkbox",
+                                        "instructions": "",
+                                        "required": 0,
+                                        "conditional_logic": 0,
+                                        "wrapper": {
+                                            "width": "20",
+                                            "class": "",
+                                            "id": ""
+                                        },
+                                        "choices": {
+                                            "はい": "はい"
+                                        },
+                                        "allow_custom": 0,
+                                        "default_value": [],
+                                        "layout": "vertical",
+                                        "toggle": 0,
+                                        "return_format": "value",
+                                        "save_custom": 0,
+                                        "custom_choice_button_text": "新規選択肢を追加",
+                                        "parent_repeater": "field_5cc12393ac295"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "key": "field_5c9d9b086e8f0",
+                "label": "サブメニュー",
+                "name": "common-submenu-01",
+                "aria-label": "",
+                "type": "repeater",
+                "instructions": "ヘッダー下部（PC・スマホ）、フッター下部（PCのみ）に表示されます",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "collapsed": "",
+                "min": 0,
+                "max": 0,
+                "layout": "block",
+                "button_label": "+ メニューを追加",
+                "rows_per_page": 20,
+                "sub_fields": [
+                    {
+                        "key": "field_5c9d9be06e8f1",
+                        "label": "タイトル",
+                        "name": "title",
+                        "aria-label": "",
+                        "type": "text",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "40",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "placeholder": "",
+                        "prepend": "",
+                        "append": "",
+                        "maxlength": "",
+                        "parent_repeater": "field_5c9d9b086e8f0"
+                    },
+                    {
+                        "key": "field_5c9d9c066e8f2",
+                        "label": "リンク先",
+                        "name": "url",
+                        "aria-label": "",
+                        "type": "text",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "40",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "placeholder": "",
+                        "prepend": "",
+                        "append": "",
+                        "maxlength": "",
+                        "parent_repeater": "field_5c9d9b086e8f0"
+                    },
+                    {
+                        "key": "field_5c9d9c116e8f3",
+                        "label": "外部リンク",
+                        "name": "target",
+                        "aria-label": "",
+                        "type": "checkbox",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "20",
+                            "class": "",
+                            "id": ""
+                        },
+                        "choices": {
+                            "はい": "はい"
+                        },
+                        "allow_custom": 0,
+                        "default_value": [],
+                        "layout": "vertical",
+                        "toggle": 0,
+                        "return_format": "value",
+                        "save_custom": 0,
+                        "custom_choice_button_text": "新規選択肢を追加",
+                        "parent_repeater": "field_5c9d9b086e8f0"
+                    },
+                    {
+                        "key": "field_5ca1c594fa589",
+                        "label": "ヘッダーメニュー",
+                        "name": "hide-header",
+                        "aria-label": "",
+                        "type": "radio",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "choices": {
+                            "block": "PC・スマホとも表示",
+                            "over-TB": "PCのみ表示",
+                            "only-SP": "スマホのみ表示",
+                            "none": "表示しない"
+                        },
+                        "allow_null": 0,
+                        "other_choice": 0,
+                        "default_value": "",
+                        "layout": "horizontal",
+                        "return_format": "value",
+                        "save_other_choice": 0,
+                        "parent_repeater": "field_5c9d9b086e8f0"
+                    },
+                    {
+                        "key": "field_5ca1c570fa588",
+                        "label": "フッターメニュー（PCのみ）",
+                        "name": "hide-footer",
+                        "aria-label": "",
+                        "type": "true_false",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "message": "",
+                        "default_value": 1,
+                        "ui": 1,
+                        "ui_on_text": "表示する",
+                        "ui_off_text": "表示しない",
+                        "parent_repeater": "field_5c9d9b086e8f0"
+                    }
+                ]
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "options_page",
+                    "operator": "==",
+                    "value": "common_menu"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": "",
+        "show_in_rest": false,
+        "display_title": "",
+        "allow_ai_access": false,
+        "ai_description": ""
+    },
+    {
+        "key": "group_6503bf1e5c7b4",
+        "title": "投稿選択",
+        "fields": [
+            {
+                "key": "field_6503bf1ec8d65",
+                "label": "投稿選択",
+                "name": "post_type",
+                "aria-label": "",
+                "type": "radio",
+                "instructions": "記事を選択した場合のみ本文が有効になります",
+                "required": 1,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "choices": {
+                    "post": "記事",
+                    "url": "リンク",
+                    "file": "ファイル",
+                    "none": "リンク無し"
+                },
+                "default_value": "post",
+                "return_format": "value",
+                "allow_null": 0,
+                "other_choice": 0,
+                "allow_in_bindings": 1,
+                "layout": "horizontal",
+                "save_other_choice": 0
+            },
+            {
+                "key": "field_6503c0e150414",
+                "label": "リンク先",
+                "name": "postType_url",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "",
+                "required": 1,
+                "conditional_logic": [
+                    [
+                        {
+                            "field": "field_6503bf1ec8d65",
+                            "operator": "==",
+                            "value": "url"
+                        }
+                    ]
+                ],
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_6503c0f750415",
+                "label": "外部リンク",
+                "name": "postType_target",
+                "aria-label": "",
+                "type": "checkbox",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": [
+                    [
+                        {
+                            "field": "field_6503bf1ec8d65",
+                            "operator": "==",
+                            "value": "url"
+                        }
+                    ]
+                ],
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "choices": {
+                    "はい": "はい"
+                },
+                "default_value": [],
+                "return_format": "value",
+                "allow_custom": 0,
+                "layout": "vertical",
+                "toggle": 0,
+                "save_custom": 0,
+                "custom_choice_button_text": "新規選択肢を追加"
+            },
+            {
+                "key": "field_6503c11c50416",
+                "label": "ファイル",
+                "name": "postType_file",
+                "aria-label": "",
+                "type": "file",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": [
+                    [
+                        {
+                            "field": "field_6503bf1ec8d65",
+                            "operator": "==",
+                            "value": "file"
+                        }
+                    ]
+                ],
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "return_format": "url",
+                "library": "all",
+                "min_size": "",
+                "max_size": "",
+                "mime_types": ""
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "post_type",
+                    "operator": "==",
+                    "value": "post"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": [
+            "the_content",
+            "excerpt",
+            "discussion",
+            "comments",
+            "format",
+            "page_attributes",
+            "featured_image",
+            "send-trackbacks"
+        ],
+        "active": true,
+        "description": "",
+        "show_in_rest": 0,
+        "display_title": "",
+        "allow_ai_access": false,
+        "ai_description": ""
+    },
+    {
+        "key": "group_5d5cb524e275f",
+        "title": "トップ_スライダー",
+        "fields": [
+            {
+                "key": "field_5d5cb55a4dc10",
+                "label": "スライダー",
+                "name": "top_slider-01",
+                "aria-label": "",
+                "type": "repeater",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "collapsed": "",
+                "min": 0,
+                "max": 0,
+                "layout": "row",
+                "button_label": "+ スライダーを追加",
+                "rows_per_page": 20,
+                "sub_fields": [
+                    {
+                        "key": "field_5d5cb5774dc11",
+                        "label": "画像（PC）",
+                        "name": "img_pc",
+                        "aria-label": "",
+                        "type": "image",
+                        "instructions": "横00px・縦00px以上",
+                        "required": 1,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "return_format": "id",
+                        "preview_size": "top_main_pc",
+                        "library": "all",
+                        "min_width": "",
+                        "min_height": "",
+                        "min_size": "",
+                        "max_width": "",
+                        "max_height": "",
+                        "max_size": "",
+                        "mime_types": "",
+                        "parent_repeater": "field_5d5cb55a4dc10"
+                    },
+                    {
+                        "key": "field_5d5cb5dd4dc12",
+                        "label": "画像（スマホ）",
+                        "name": "img_sp",
+                        "aria-label": "",
+                        "type": "image",
+                        "instructions": "横00px・縦00px以上",
+                        "required": 1,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "return_format": "id",
+                        "preview_size": "medium",
+                        "library": "all",
+                        "min_width": "",
+                        "min_height": "",
+                        "min_size": "",
+                        "max_width": "",
+                        "max_height": "",
+                        "max_size": "",
+                        "mime_types": "",
+                        "parent_repeater": "field_5d5cb55a4dc10"
+                    },
+                    {
+                        "key": "field_5d677f3972f71",
+                        "label": "テキスト",
+                        "name": "text",
+                        "aria-label": "",
+                        "type": "textarea",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "placeholder": "",
+                        "maxlength": "",
+                        "rows": 3,
+                        "new_lines": "br",
+                        "parent_repeater": "field_5d5cb55a4dc10"
+                    }
+                ]
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "page_type",
+                    "operator": "==",
+                    "value": "front_page"
+                }
+            ]
+        ],
+        "menu_order": 1,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": [
+            "the_content",
+            "excerpt",
+            "discussion",
+            "comments",
+            "revisions",
+            "slug",
+            "author",
+            "format",
+            "featured_image",
+            "tags",
+            "send-trackbacks"
+        ],
+        "active": true,
+        "description": "",
+        "show_in_rest": false,
+        "display_title": "",
+        "allow_ai_access": false,
+        "ai_description": ""
+    },
+    {
+        "key": "group_5d5cb6d7e02d5",
+        "title": "トップ_重要なお知らせ",
+        "fields": [
+            {
+                "key": "field_5d6776189bd4d",
+                "label": "表示設定",
+                "name": "top_notice_select",
+                "aria-label": "",
+                "type": "true_false",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "message": "",
+                "default_value": 0,
+                "ui": 1,
+                "ui_on_text": "表示する",
+                "ui_off_text": "表示しない"
+            },
+            {
+                "key": "field_5d5cb6ecb6e82",
+                "label": "重要なお知らせ",
+                "name": "top_notice-01",
+                "aria-label": "",
+                "type": "repeater",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "collapsed": "",
+                "min": 0,
+                "max": 0,
+                "layout": "row",
+                "button_label": "+ 重要なお知らせを追加",
+                "rows_per_page": 20,
+                "sub_fields": [
+                    {
+                        "key": "field_5d5cb73db6e83",
+                        "label": "日付",
+                        "name": "date",
+                        "aria-label": "",
+                        "type": "date_picker",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "display_format": "Y\/n\/j",
+                        "return_format": "Y\/n\/j",
+                        "first_day": 1,
+                        "parent_repeater": "field_5d5cb6ecb6e82",
+                        "default_to_current_date": 0
+                    },
+                    {
+                        "key": "field_5d5cb752b6e84",
+                        "label": "テキストエリア",
+                        "name": "textarea",
+                        "aria-label": "",
+                        "type": "textarea",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "maxlength": "",
+                        "allow_in_bindings": 0,
+                        "rows": "",
+                        "placeholder": "",
+                        "new_lines": "br",
+                        "parent_repeater": "field_5d5cb6ecb6e82"
+                    },
+                    {
+                        "key": "field_5d5de31a66870",
+                        "label": "表示設定",
+                        "name": "none",
+                        "aria-label": "",
+                        "type": "checkbox",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "choices": {
+                            "_hide": "このお知らせを非表示にする"
+                        },
+                        "allow_custom": 0,
+                        "default_value": [],
+                        "layout": "vertical",
+                        "toggle": 0,
+                        "return_format": "value",
+                        "save_custom": 0,
+                        "custom_choice_button_text": "新規選択肢を追加",
+                        "parent_repeater": "field_5d5cb6ecb6e82"
+                    }
+                ]
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "page_type",
+                    "operator": "==",
+                    "value": "front_page"
+                }
+            ]
+        ],
+        "menu_order": 2,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": "",
+        "show_in_rest": 0,
+        "display_title": "",
+        "allow_ai_access": false,
+        "ai_description": ""
+    },
+    {
+        "key": "group_5d5cb8bcd1fa8",
+        "title": "トップ_バナー",
+        "fields": [
+            {
+                "key": "field_5d5cb8c6b61f8",
+                "label": "バナー",
+                "name": "top_banner-01",
+                "aria-label": "",
+                "type": "repeater",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "collapsed": "",
+                "min": 0,
+                "max": 0,
+                "layout": "row",
+                "button_label": "+ バナーを追加",
+                "rows_per_page": 20,
+                "sub_fields": [
+                    {
+                        "key": "field_5d5cb8efb61f9",
+                        "label": "画像",
+                        "name": "img",
+                        "aria-label": "",
+                        "type": "image",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "return_format": "id",
+                        "preview_size": "top_banner",
+                        "library": "all",
+                        "min_width": "",
+                        "min_height": "",
+                        "min_size": "",
+                        "max_width": "",
+                        "max_height": "",
+                        "max_size": "",
+                        "mime_types": "",
+                        "parent_repeater": "field_5d5cb8c6b61f8"
+                    },
+                    {
+                        "key": "field_5d5cb900b61fa",
+                        "label": "タイトル",
+                        "name": "title",
+                        "aria-label": "",
+                        "type": "text",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "placeholder": "",
+                        "prepend": "",
+                        "append": "",
+                        "maxlength": "",
+                        "parent_repeater": "field_5d5cb8c6b61f8"
+                    },
+                    {
+                        "key": "field_5d5cb913b61fb",
+                        "label": "リンク先",
+                        "name": "url",
+                        "aria-label": "",
+                        "type": "text",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "placeholder": "",
+                        "prepend": "",
+                        "append": "",
+                        "maxlength": "",
+                        "parent_repeater": "field_5d5cb8c6b61f8"
+                    },
+                    {
+                        "key": "field_5d5cb92eb61fc",
+                        "label": "外部リンク",
+                        "name": "target",
+                        "aria-label": "",
+                        "type": "checkbox",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "choices": {
+                            "はい": "はい"
+                        },
+                        "allow_custom": 0,
+                        "default_value": [],
+                        "layout": "vertical",
+                        "toggle": 0,
+                        "return_format": "value",
+                        "save_custom": 0,
+                        "custom_choice_button_text": "新規選択肢を追加",
+                        "parent_repeater": "field_5d5cb8c6b61f8"
+                    }
+                ]
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "page_type",
+                    "operator": "==",
+                    "value": "front_page"
+                }
+            ]
+        ],
+        "menu_order": 10,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": "",
+        "show_in_rest": false,
+        "display_title": "",
+        "allow_ai_access": false,
+        "ai_description": ""
+    },
+    {
+        "key": "group_6438a559c33d7",
+        "title": "タグ設定",
+        "fields": [
+            {
+                "key": "field_6438a58095571",
+                "label": "headタグ直後",
+                "name": "headTag_after",
+                "aria-label": "",
+                "type": "textarea",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "placeholder": "",
+                "maxlength": "",
+                "rows": 10,
+                "new_lines": ""
+            },
+            {
+                "key": "field_6438a71e5d5a4",
+                "label": "\/headタグ直前",
+                "name": "headTag_before",
+                "aria-label": "",
+                "type": "textarea",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "placeholder": "",
+                "maxlength": "",
+                "rows": 10,
+                "new_lines": ""
+            },
+            {
+                "key": "field_6438a6925d5a2",
+                "label": "bodyタグ直後",
+                "name": "bodyTag_after",
+                "aria-label": "",
+                "type": "textarea",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "placeholder": "",
+                "maxlength": "",
+                "rows": 10,
+                "new_lines": ""
+            },
+            {
+                "key": "field_6438a6a85d5a3",
+                "label": "\/bodyタグの直前",
+                "name": "bodyTag_before",
+                "aria-label": "",
+                "type": "textarea",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "placeholder": "",
+                "maxlength": "",
+                "rows": 10,
+                "new_lines": ""
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "options_page",
+                    "operator": "==",
+                    "value": "common_tag"
+                }
+            ]
+        ],
+        "menu_order": 100,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": [
+            "excerpt",
+            "discussion",
+            "comments",
+            "revisions",
+            "slug",
+            "author",
+            "format",
+            "featured_image",
+            "tags",
+            "send-trackbacks"
+        ],
+        "active": true,
+        "description": "",
+        "show_in_rest": 0,
+        "display_title": "",
+        "allow_ai_access": false,
+        "ai_description": ""
+    }
+]

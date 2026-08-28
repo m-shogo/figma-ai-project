@@ -1,0 +1,44 @@
+@charset "utf-8";
+/* // ==========================================================================
+// パンくずリスト
+// ========================================================================== */
+.module_breadCrumb {
+    position: relative;
+    font-size: 12px;
+    color: var(--color-text);
+    line-height: 1.5;
+    .mb_inner {
+    }
+    .module_breadCrumb-01 {
+        li {
+            display: inline;
+            &:not(:last-child) {
+                &::after {
+                    content: '＞';
+                    display: inline-block;
+                    margin-inline: 5px;
+                }
+            }
+            a,
+            span {
+                br {
+                    display: none;
+                }
+            }
+            a {
+                color: var(--color-text);
+            }
+        }
+    }
+
+    /* MARK: hover */
+    @media (any-hover: hover) {
+        .module_breadCrumb-01 {
+            a {
+                &:hover {
+                    text-decoration: none;
+                }
+            }
+        }
+    }
+}

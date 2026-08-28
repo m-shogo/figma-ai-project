@@ -1,0 +1,192 @@
+@charset "utf-8";
+/*
+ * CSS用変数・関数の設定
+ *
+//*============================
+// MARK: フォント
+//============================*/
+@font-face {
+    font-family: 'local Noto Sans JP';
+    font-weight: 400;
+    font-style: normal;
+    src: local('NotoSansJP-Regular'),
+    url('../../fonts/NotoSansJP-Regular.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'local Noto Sans JP';
+    font-weight: 500;
+    font-style: normal;
+    src: local('NotoSansJP-Medium'),
+    url('../../fonts/NotoSansJP-Medium.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'local Noto Sans JP';
+    font-weight: 600;
+    font-style: normal;
+    src: local('NotoSansJP-SemiBold'),
+    url('../../fonts/NotoSansJP-SemiBold.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'local Noto Sans JP';
+    font-weight: 700;
+    font-style: normal;
+    src: local('NotoSansJP-Bold'),
+    url('../../fonts/NotoSansJP-Bold.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'local Noto Serif JP';
+    font-weight: 400;
+    font-style: normal;
+    src: local('NotoSerifJP-Regular'),
+    url('../../fonts/NotoSerifJP-Regular.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'local Noto Serif JP';
+    font-weight: 500;
+    font-style: normal;
+    src: local('NotoSerifJP-Medium'),
+    url('../../fonts/NotoSerifJP-Medium.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'local Noto Serif JP';
+    font-weight: 600;
+    font-style: normal;
+    src: local('NotoSerifJP-SemiBold'),
+    url('../../fonts/NotoSerifJP-SemiBold.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'local Noto Serif JP';
+    font-weight: 700;
+    font-style: normal;
+    src: local('NotoSerifJP-Bold'),
+    url('../../fonts/NotoSerifJP-Bold.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'local Roboto';
+    font-weight: 400;
+    font-style: normal;
+    src: local('Roboto-Regular'),
+    url('../../fonts/Roboto-Regular.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'local Roboto';
+    font-weight: 500;
+    font-style: normal;
+    src: local('Roboto-Medium'),
+    url('../../fonts/Roboto-Medium.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'local Roboto';
+    font-weight: 600;
+    font-style: normal;
+    src: local('Roboto-SemiBold'),
+    url('../../fonts/Roboto-SemiBold.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'local Roboto';
+    font-weight: 700;
+    font-style: normal;
+    src: local('Roboto-Bold'),
+    url('../../fonts/Roboto-Bold.woff2') format('woff2');
+}
+
+/* ==========================================================================
+ * 変数
+ * ========================================================================== */
+:where(:root) {
+    /* プライマリーカラー */
+    --color-primary: #00b7f1;
+    /* セカンダリーカラー */
+    --color-secondary: #fff;
+    --color-tertiary: #e3f2fd;
+    /* アクセントカラー */
+    --color-accent: #dd7c23;
+    /* --color-accent-yellow: #bd9620; */
+    /* --color-accent-purple: #a73073; */
+    /* グレー */
+    --color-gray-text: #707070;
+    --color-gray-border: #ababab;
+    --color-gray-border-02: #eaeaea;
+    --color-gray-border-03: #eeeeee;
+    --color-gray-background: #f8f8f8;
+    /* テキストカラー */
+    --color-text: #333;
+    --color-link: #008ddc;
+    /* ボーダーカラー */
+    --color-separator: #eaeaea;
+    --color-separator--soft: #e7e7e7;
+    --color-separator--blue: #86a3b5;
+    /* 背景カラー */
+    --color-base--bg-blue-soft: #e8fafd;
+    /* エラーカラー */
+    --color-error-text: #e53935;
+    --color-error-border: #e53935;
+    --color-error-background: #ffebee;
+    /* ベース幅 */
+    --width-base: 1160px;
+    --width-base-small: 960px;
+    --width-content: 1000px;
+    --width-main: 860px;
+    --width-side: 260px;
+    /* ベース余白 */
+    --padding-SP: 20px;
+    --padding-TB: 60px;
+    /* transition */
+    --transition-duration: 0.3s;
+    /* opacity */
+    --opacity-hover: 0.7;
+    /* --transition-timing-function: ease-in; */
+    /* ヘッダー高さ */
+    --header-height-SP: 60px;
+    --header-height-PC: 120px;
+    /* ブロック間の下余白 */
+    --wp-block-margin: 24px;
+    --wp-block-margin-small: 16px;
+    --wp-block-margin-medium: 32px;
+    --wp-block-margin-large: 48px;
+    --wp-block-margin-xlarge: 64px;
+    --wp-block-margin-xxlarge: 80px;
+
+    /* ==========================================================================
+   * フォント
+   * ========================================================================== */
+    /* 日本語サンセリフ体 */
+    --font-sansSerif-ja: 'local Noto Sans JP', 'Noto Sans JP', sans-serif;
+    /* 日本語セリフ体 */
+    --font-serif-ja: 'local Noto Serif JP', 'Noto Serif JP', serif;
+    /* 英語サンセリフ体 */
+    --font-sansSerif-en: 'local Roboto', 'Roboto', sans-serif;
+    /* 英語セリフ体 */
+    --font-serif-en: 'Crimson Text', serif;
+    /* FontAwesome */
+    --font-awesome: 'Font Awesome 6 Pro';
+    /* FontAwesome Brands */
+    --font-awesomeBrands: 'Font Awesome 6 Brands';
+
+    /* ==========================================================================
+   * アイコン定義（FontAwesomeのcontent値）
+   * ========================================================================== */
+    --icon-blank: '\f2d2';
+    --icon-file: '\f15c';
+    --icon-pdf: '\f1c1';
+    --icon-zoom: '\f002';
+    --icon-chevron-right: '\f054';
+    --icon-chevron-down: '\f078';
+}
+
+/* ==========================================================================
+ * 既存のカスタムブロックのclassName一覧（除外用セレクタ）
+ * @each ループを展開済み
+ *
+ * 使用例:
+ * .wp-block-list:not(.anchor-box):not(.attention-list)... { }
+ *
+ * 除外対象クラス:
+ *   anchor-box, attention-list, border-list, annotation-list,
+ *   circle-text, double-text, has-background, has-pale-pink-color,
+ *   has-text-color, has-vivid-cyan-blue-color, monotone-table,
+ *   organization-table, triangle-text, type-vertical
+ * ========================================================================== */
+

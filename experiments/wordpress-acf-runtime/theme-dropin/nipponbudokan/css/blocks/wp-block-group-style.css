@@ -1,0 +1,26 @@
+@charset "utf-8";
+/* // ------------------------------
+// flex
+// ------------------------------ */
+.block-editor_wrap,
+.editor-styles-wrapper {
+    .wp-block-group {
+        margin-top: var(--wp-block-margin);
+        .wp-block-group__inner-container {
+            > *:first-child {
+                margin-top: 0;
+            }
+        }
+        /* // ==========================================================================
+        // 画像とテキストが回り込み時のブロックグループのフロート解除
+        // ========================================================================== */
+        &:has(.wp-block-image figure.alignleft, .wp-block-image figure.alignright) {
+            display: flow-root;
+            .wp-block-group__inner-container {
+                > *:nth-child(2) {
+                    margin-top: 0;
+                }
+            }
+        }
+    }
+}

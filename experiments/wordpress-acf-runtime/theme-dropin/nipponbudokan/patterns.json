@@ -1,0 +1,616 @@
+[
+    {
+        "__file": "wp_block",
+        "title": "大見出し",
+        "content": "<!-- wp:heading -->\n<h2 class=\"wp-block-heading\">見出しH2見出しH2見出しH2<\/h2>\n<!-- \/wp:heading -->",
+        "syncStatus": "unsynced",
+        "categories": [
+            "001_heading"
+        ],
+        "categoryLabels": [
+            "001_見出し"
+        ],
+        "postDate": "2026-02-09 10:15:00",
+        "postDateGmt": "2026-02-09 01:15:00"
+    },
+    {
+        "__file": "wp_block",
+        "title": "中見出し",
+        "content": "<!-- wp:heading {\"level\":3} -->\n<h3 class=\"wp-block-heading\">見出しH3見出しH3見出しH3<\/h3>\n<!-- \/wp:heading -->",
+        "syncStatus": "unsynced",
+        "categories": [
+            "001_heading"
+        ],
+        "categoryLabels": [
+            "001_見出し"
+        ],
+        "postDate": "2026-02-08 10:15:00",
+        "postDateGmt": "2026-02-08 01:15:00"
+    },
+    {
+        "__file": "wp_block",
+        "title": "小見出し",
+        "content": "<!-- wp:heading {\"level\":4} -->\n<h4 class=\"wp-block-heading\">見出しH4見出しH4見出しH4<\/h4>\n<!-- \/wp:heading -->",
+        "syncStatus": "unsynced",
+        "categories": [
+            "001_heading"
+        ],
+        "categoryLabels": [
+            "001_見出し"
+        ],
+        "postDate": "2026-02-07 10:14:00",
+        "postDateGmt": "2026-02-07 01:14:00"
+    },
+    {
+        "__file": "wp_block",
+        "title": "小見出し２",
+        "content": "<!-- wp:heading {\"level\":5} -->\n<h5 class=\"wp-block-heading\">見出しH5見出しH5見出しH5<\/h5>\n<!-- \/wp:heading -->",
+        "syncStatus": "unsynced",
+        "categories": [
+            "001_heading"
+        ],
+        "categoryLabels": [
+            "001_見出し"
+        ],
+        "postDate": "2026-02-06 13:02:00",
+        "postDateGmt": "2026-02-06 04:02:00"
+    },
+    {
+        "__file": "wp_block",
+        "title": "背景付きテキストボックス（枠あり）",
+        "content": "<!-- wp:group {\"style\":{\"color\":{\"background\":\"#ffffff\"}},\"layout\":{\"type\":\"constrained\"}} -->\n<div class=\"wp-block-group has-background\" style=\"background-color:#ffffff\"><!-- wp:heading {\"level\":4} -->\n<h4 class=\"wp-block-heading\">小見出し<\/h4>\n<!-- \/wp:heading -->\n\n<!-- wp:paragraph -->\n<p>背景付きテキストボックス。1カラムテキスト。<br>この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。<\/p>\n<!-- \/wp:paragraph --><\/div>\n<!-- \/wp:group -->",
+        "syncStatus": "unsynced",
+        "categories": [
+            "002_text"
+        ],
+        "categoryLabels": [
+            "002_テキスト"
+        ],
+        "postDate": "2026-02-05 10:11:00",
+        "postDateGmt": "2026-02-05 01:11:00"
+    },
+    {
+        "__file": "wp_block",
+        "title": "背景付きテキストボックス（枠あり2カラム）",
+        "content": "<!-- wp:columns -->\n<div class=\"wp-block-columns\"><!-- wp:column {\"backgroundColor\":\"white\"} -->\n<div class=\"wp-block-column has-white-background-color has-background\"><!-- wp:paragraph -->\n<p>背景付きテキストボックス。2カラムテキスト。<br>この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。<\/p>\n<!-- \/wp:paragraph --><\/div>\n<!-- \/wp:column -->\n\n<!-- wp:column {\"backgroundColor\":\"white\"} -->\n<div class=\"wp-block-column has-white-background-color has-background\"><!-- wp:paragraph -->\n<p>背景付きテキストボックス。2カラムテキスト。<br>この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。<\/p>\n<!-- \/wp:paragraph --><\/div>\n<!-- \/wp:column --><\/div>\n<!-- \/wp:columns -->",
+        "syncStatus": "unsynced",
+        "categories": [
+            "002_text"
+        ],
+        "categoryLabels": [
+            "002_テキスト"
+        ],
+        "postDate": "2026-02-04 10:07:00",
+        "postDateGmt": "2026-02-04 01:07:00"
+    },
+    {
+        "__file": "wp_block",
+        "title": "背景付きテキストボックス（背景あり）",
+        "content": "<!-- wp:group {\"backgroundColor\":\"gray\",\"layout\":{\"type\":\"constrained\"}} -->\n<div class=\"wp-block-group has-gray-background-color has-background\"><!-- wp:heading {\"level\":4} -->\n<h4 class=\"wp-block-heading\">小見出し<\/h4>\n<!-- \/wp:heading -->\n\n<!-- wp:paragraph -->\n<p>背景付きテキストボックス。1カラムテキスト。<br>この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。<\/p>\n<!-- \/wp:paragraph --><\/div>\n<!-- \/wp:group -->",
+        "syncStatus": "unsynced",
+        "categories": [
+            "002_text"
+        ],
+        "categoryLabels": [
+            "002_テキスト"
+        ],
+        "postDate": "2026-02-03 10:05:00",
+        "postDateGmt": "2026-02-03 01:05:00"
+    },
+    {
+        "__file": "wp_block",
+        "title": "背景付きテキストボックス（背景あり2カラム）",
+        "content": "<!-- wp:columns -->\n<div class=\"wp-block-columns\"><!-- wp:column {\"backgroundColor\":\"gray\"} -->\n<div class=\"wp-block-column has-gray-background-color has-background\"><!-- wp:paragraph -->\n<p>背景付きテキストボックス。2カラムテキスト。<br>この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。<\/p>\n<!-- \/wp:paragraph --><\/div>\n<!-- \/wp:column -->\n\n<!-- wp:column {\"backgroundColor\":\"gray\"} -->\n<div class=\"wp-block-column has-gray-background-color has-background\"><!-- wp:paragraph -->\n<p>背景付きテキストボックス。2カラムテキスト。<br>この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。<\/p>\n<!-- \/wp:paragraph --><\/div>\n<!-- \/wp:column --><\/div>\n<!-- \/wp:columns -->",
+        "syncStatus": "unsynced",
+        "categories": [
+            "002_text"
+        ],
+        "categoryLabels": [
+            "002_テキスト"
+        ],
+        "postDate": "2026-02-02 10:04:00",
+        "postDateGmt": "2026-02-02 01:04:00"
+    },
+    {
+        "__file": "wp_block",
+        "title": "画像",
+        "content": "<!-- wp:group {\"metadata\":{\"name\":\"画像グループ\"},\"layout\":{\"type\":\"constrained\"}} -->\n<div class=\"wp-block-group\"><!-- wp:image {\"sizeSlug\":\"large\",\"className\":\"is-style-default\"} -->\n<figure class=\"wp-block-image size-large is-style-default\"><img src=\"https:\/\/placehold.jp\/600x400.png\" alt=\"\"\/><\/figure>\n<!-- \/wp:image --><\/div>\n<!-- \/wp:group -->",
+        "syncStatus": "unsynced",
+        "categories": [
+            "006_media"
+        ],
+        "categoryLabels": [
+            "006_画像・動画"
+        ],
+        "postDate": "2026-02-01 22:13:00",
+        "postDateGmt": "2026-02-01 13:13:00"
+    },
+    {
+        "__file": "wp_block",
+        "title": "テキストと画像横並び（画像：右　比率：50:50）",
+        "content": "<!-- wp:columns {\"isStackedOnMobile\":false} -->\n<div class=\"wp-block-columns is-not-stacked-on-mobile\"><!-- wp:column {\"width\":\"%\"} -->\n<div class=\"wp-block-column\"><!-- wp:heading {\"level\":4} -->\n<h4 class=\"wp-block-heading\">テキストと画像横並び（画像：右　比率：50:50）<\/h4>\n<!-- \/wp:heading -->\n\n<!-- wp:paragraph -->\n<p>あのイーハトーヴォのすきとおった風、夏でも底に冷たさをもつ青いそら、うつくしい森で飾られたモリーオ市、郊外のぎらぎらひかる草の波。<\/p>\n<!-- \/wp:paragraph --><\/div>\n<!-- \/wp:column -->\n\n<!-- wp:column -->\n<div class=\"wp-block-column\"><!-- wp:image {\"sizeSlug\":\"large\"} -->\n<figure class=\"wp-block-image size-large\"><img src=\"https:\/\/placehold.jp\/600x400.png\" alt=\"\"\/><\/figure>\n<!-- \/wp:image --><\/div>\n<!-- \/wp:column --><\/div>\n<!-- \/wp:columns -->",
+        "syncStatus": "unsynced",
+        "categories": [
+            "002_text",
+            "006_media"
+        ],
+        "categoryLabels": [
+            "002_テキスト",
+            "006_画像・動画"
+        ],
+        "postDate": "2026-01-31 09:44:00",
+        "postDateGmt": "2026-01-31 00:44:00"
+    },
+    {
+        "__file": "wp_block",
+        "title": "テキストと画像横並び（画像：左　比率：50:50）",
+        "content": "<!-- wp:columns {\"isStackedOnMobile\":false} -->\n<div class=\"wp-block-columns is-not-stacked-on-mobile\"><!-- wp:column {\"width\":\"%\"} -->\n<div class=\"wp-block-column\"><!-- wp:image {\"sizeSlug\":\"large\"} -->\n<figure class=\"wp-block-image size-large\"><img src=\"https:\/\/placehold.jp\/600x400.png\" alt=\"\"\/><\/figure>\n<!-- \/wp:image --><\/div>\n<!-- \/wp:column -->\n\n<!-- wp:column -->\n<div class=\"wp-block-column\"><!-- wp:heading {\"level\":4} -->\n<h4 class=\"wp-block-heading\">テキストと画像横並び（画像：左　比率：50:50）<\/h4>\n<!-- \/wp:heading -->\n\n<!-- wp:paragraph -->\n<p>あのイーハトーヴォのすきとおった風、夏でも底に冷たさをもつ青いそら、うつくしい森で飾られたモリーオ市、郊外のぎらぎらひかる草の波。<\/p>\n<!-- \/wp:paragraph --><\/div>\n<!-- \/wp:column --><\/div>\n<!-- \/wp:columns -->",
+        "syncStatus": "unsynced",
+        "categories": [
+            "002_text",
+            "006_media"
+        ],
+        "categoryLabels": [
+            "002_テキスト",
+            "006_画像・動画"
+        ],
+        "postDate": "2026-01-30 09:50:00",
+        "postDateGmt": "2026-01-30 00:50:00"
+    },
+    {
+        "__file": "wp_block",
+        "title": "テキストと画像横並び　テキスト回り込み（画像：右）",
+        "content": "<!-- wp:group {\"layout\":{\"type\":\"constrained\"}} -->\n<div class=\"wp-block-group\"><!-- wp:image {\"width\":\"420px\",\"sizeSlug\":\"large\",\"linkDestination\":\"none\",\"align\":\"right\"} -->\n<figure class=\"wp-block-image alignright size-large is-resized\"><img src=\"https:\/\/placehold.jp\/600x400.png\" alt=\"\" style=\"width:420px\"\/><figcaption class=\"wp-element-caption\">画像キャプション<\/figcaption><\/figure>\n<!-- \/wp:image -->\n\n<!-- wp:heading {\"level\":4} -->\n<h4 class=\"wp-block-heading\">テキストと画像横並び　テキスト回り込み（画像：右）<\/h4>\n<!-- \/wp:heading -->\n\n<!-- wp:paragraph -->\n<p>あのイーハトーヴォのすきとおった風、夏でも底に冷たさをもつ青いそら、うつくしい森で飾られたモリーオ市、郊外のぎらぎらひかる草の波。<\/p>\n<!-- \/wp:paragraph -->\n\n<!-- wp:paragraph -->\n<p>この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。<\/p>\n<!-- \/wp:paragraph --><\/div>\n<!-- \/wp:group -->",
+        "syncStatus": "unsynced",
+        "categories": [
+            "002_text",
+            "006_media"
+        ],
+        "categoryLabels": [
+            "002_テキスト",
+            "006_画像・動画"
+        ],
+        "postDate": "2026-01-29 10:21:00",
+        "postDateGmt": "2026-01-29 01:21:00"
+    },
+    {
+        "__file": "wp_block",
+        "title": "テキストと画像横並び　テキスト回り込み（画像：左）",
+        "content": "<!-- wp:group {\"layout\":{\"type\":\"constrained\"}} -->\n<div class=\"wp-block-group\"><!-- wp:image {\"width\":\"420px\",\"sizeSlug\":\"large\",\"linkDestination\":\"none\",\"align\":\"left\"} -->\n<figure class=\"wp-block-image alignleft size-large is-resized\"><img src=\"https:\/\/placehold.jp\/600x400.png\" alt=\"\" style=\"width:420px\"\/><figcaption class=\"wp-element-caption\">画像キャプション<\/figcaption><\/figure>\n<!-- \/wp:image -->\n\n<!-- wp:heading {\"level\":4} -->\n<h4 class=\"wp-block-heading\">テキストと画像横並び　テキスト回り込み（画像：左）<\/h4>\n<!-- \/wp:heading -->\n\n<!-- wp:paragraph -->\n<p>あのイーハトーヴォのすきとおった風、夏でも底に冷たさをもつ青いそら、うつくしい森で飾られたモリーオ市、郊外のぎらぎらひかる草の波。<\/p>\n<!-- \/wp:paragraph -->\n\n<!-- wp:paragraph -->\n<p>この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。<\/p>\n<!-- \/wp:paragraph --><\/div>\n<!-- \/wp:group -->",
+        "syncStatus": "unsynced",
+        "categories": [
+            "002_text",
+            "006_media"
+        ],
+        "categoryLabels": [
+            "002_テキスト",
+            "006_画像・動画"
+        ],
+        "postDate": "2026-01-28 10:29:00",
+        "postDateGmt": "2026-01-28 01:29:00"
+    },
+    {
+        "__file": "wp_block",
+        "title": "テキストと画像横並び　モバイルでは縦並び（画像：右　比率：50:50）",
+        "content": "<!-- wp:columns -->\n<div class=\"wp-block-columns\"><!-- wp:column {\"width\":\"%\"} -->\n<div class=\"wp-block-column\"><!-- wp:heading {\"level\":4} -->\n<h4 class=\"wp-block-heading\">テキストと画像横並び　モバイルでは縦並び（画像：右　比率：50:50）<\/h4>\n<!-- \/wp:heading -->\n\n<!-- wp:paragraph -->\n<p>あのイーハトーヴォのすきとおった風、夏でも底に冷たさをもつ青いそら、うつくしい森で飾られたモリーオ市、郊外のぎらぎらひかる草の波。<\/p>\n<!-- \/wp:paragraph --><\/div>\n<!-- \/wp:column -->\n\n<!-- wp:column -->\n<div class=\"wp-block-column\"><!-- wp:image {\"sizeSlug\":\"large\"} -->\n<figure class=\"wp-block-image size-large\"><img src=\"https:\/\/placehold.jp\/600x400.png\" alt=\"\"\/><\/figure>\n<!-- \/wp:image --><\/div>\n<!-- \/wp:column --><\/div>\n<!-- \/wp:columns -->",
+        "syncStatus": "unsynced",
+        "categories": [
+            "002_text",
+            "006_media"
+        ],
+        "categoryLabels": [
+            "002_テキスト",
+            "006_画像・動画"
+        ],
+        "postDate": "2026-01-27 10:05:00",
+        "postDateGmt": "2026-01-27 01:05:00"
+    },
+    {
+        "__file": "wp_block",
+        "title": "テキストと画像横並び　モバイルでは縦並び（画像：左　比率：50:50）",
+        "content": "<!-- wp:columns -->\n<div class=\"wp-block-columns\"><!-- wp:column {\"width\":\"%\"} -->\n<div class=\"wp-block-column\"><!-- wp:image {\"sizeSlug\":\"large\"} -->\n<figure class=\"wp-block-image size-large\"><img src=\"https:\/\/placehold.jp\/600x400.png\" alt=\"\"\/><\/figure>\n<!-- \/wp:image --><\/div>\n<!-- \/wp:column -->\n\n<!-- wp:column -->\n<div class=\"wp-block-column\"><!-- wp:heading {\"level\":4} -->\n<h4 class=\"wp-block-heading\">テキストと画像横並び　モバイルでは縦並び（画像：左　比率：50:50）<\/h4>\n<!-- \/wp:heading -->\n\n<!-- wp:paragraph -->\n<p>あのイーハトーヴォのすきとおった風、夏でも底に冷たさをもつ青いそら、うつくしい森で飾られたモリーオ市、郊外のぎらぎらひかる草の波。<\/p>\n<!-- \/wp:paragraph --><\/div>\n<!-- \/wp:column --><\/div>\n<!-- \/wp:columns -->",
+        "syncStatus": "unsynced",
+        "categories": [
+            "002_text",
+            "006_media"
+        ],
+        "categoryLabels": [
+            "002_テキスト",
+            "006_画像・動画"
+        ],
+        "postDate": "2026-01-26 10:07:00",
+        "postDateGmt": "2026-01-26 01:07:00"
+    },
+    {
+        "__file": "wp_block",
+        "title": "動画",
+        "content": "<!-- wp:group {\"metadata\":{\"name\":\"動画グループ\"},\"layout\":{\"type\":\"constrained\"}} -->\n<div class=\"wp-block-group\"><!-- wp:video -->\n<figure class=\"wp-block-video\"><video controls src=\"https:\/\/placeholdervideo.dev\/600x400\"><\/video><\/figure>\n<!-- \/wp:video --><\/div>\n<!-- \/wp:group -->",
+        "syncStatus": "unsynced",
+        "categories": [
+            "006_media"
+        ],
+        "categoryLabels": [
+            "006_画像・動画"
+        ],
+        "postDate": "2026-01-25 22:25:00",
+        "postDateGmt": "2026-01-25 13:25:00"
+    },
+    {
+        "__file": "wp_block",
+        "title": "YouTube",
+        "content": "<!-- wp:group {\"metadata\":{\"name\":\"YouTubeグループ\"},\"layout\":{\"type\":\"constrained\"}} -->\n<div class=\"wp-block-group\"><!-- wp:embed {\"url\":\"https:\/\/youtu.be\/NXY8AIk6KuA?si=6eZuUIyUTZZqEdF3\",\"type\":\"video\",\"providerNameSlug\":\"youtube\",\"responsive\":true,\"className\":\"wp-embed-aspect-16-9 wp-has-aspect-ratio\"} -->\n<figure class=\"wp-block-embed is-type-video is-provider-youtube wp-block-embed-youtube wp-embed-aspect-16-9 wp-has-aspect-ratio\"><div class=\"wp-block-embed__wrapper\">\nhttps:\/\/youtu.be\/NXY8AIk6KuA?si=6eZuUIyUTZZqEdF3\n<\/div><\/figure>\n<!-- \/wp:embed --><\/div>\n<!-- \/wp:group -->",
+        "syncStatus": "unsynced",
+        "categories": [
+            "006_media"
+        ],
+        "categoryLabels": [
+            "006_画像・動画"
+        ],
+        "postDate": "2026-01-25 22:20:00",
+        "postDateGmt": "2026-01-25 13:20:00"
+    },
+    {
+        "__file": "wp_block",
+        "title": "番号なしリスト",
+        "content": "<!-- wp:list -->\n<ul class=\"wp-block-list\"><!-- wp:list-item -->\n<li>番号なしリスト<a href=\"\/\" target=\"_blank\" rel=\"noreferrer noopener\">番号なしリスト<\/a><\/li>\n<!-- \/wp:list-item -->\n\n<!-- wp:list-item -->\n<li>番号なしリスト番号なしリスト番号なしリスト番号なしリスト番号なしリスト番号なしリスト番号なしリスト番号なしリスト番号なしリスト番号なしリスト<!-- wp:list -->\n<ul class=\"wp-block-list\"><!-- wp:list-item -->\n<li>番号なしリスト<\/li>\n<!-- \/wp:list-item --><\/ul>\n<!-- \/wp:list --><\/li>\n<!-- \/wp:list-item -->\n\n<!-- wp:list-item -->\n<li>リスト間15px<!-- wp:list {\"ordered\":true} -->\n<ol class=\"wp-block-list\"><!-- wp:list-item -->\n<li>番号つきリスト番号つきリスト<\/li>\n<!-- \/wp:list-item -->\n\n<!-- wp:list-item -->\n<li>番号つきリスト番号つきリスト<\/li>\n<!-- \/wp:list-item -->\n\n<!-- wp:list-item -->\n<li>番号つきリスト番号つきリスト<\/li>\n<!-- \/wp:list-item --><\/ol>\n<!-- \/wp:list --><\/li>\n<!-- \/wp:list-item -->\n\n<!-- wp:list-item -->\n<li>番号なしリスト<\/li>\n<!-- \/wp:list-item --><\/ul>\n<!-- \/wp:list -->",
+        "syncStatus": "unsynced",
+        "categories": [
+            "003_list"
+        ],
+        "categoryLabels": [
+            "003_リスト"
+        ],
+        "postDate": "2026-01-25 10:02:00",
+        "postDateGmt": "2026-01-25 01:02:00"
+    },
+    {
+        "__file": "wp_block",
+        "title": "番号つきリスト",
+        "content": "<!-- wp:list {\"ordered\":true} -->\n<ol class=\"wp-block-list\"><!-- wp:list-item -->\n<li>番号つきリスト番号つきリスト<!-- wp:list {\"ordered\":true} -->\n<ol class=\"wp-block-list\"><!-- wp:list-item -->\n<li>番号つきリスト番号つきリスト<\/li>\n<!-- \/wp:list-item -->\n\n<!-- wp:list-item -->\n<li>番号つきリスト番号つきリスト<\/li>\n<!-- \/wp:list-item -->\n\n<!-- wp:list-item -->\n<li>番号つきリスト番号つきリスト<\/li>\n<!-- \/wp:list-item --><\/ol>\n<!-- \/wp:list --><\/li>\n<!-- \/wp:list-item -->\n\n<!-- wp:list-item -->\n<li>番号つきリスト番号つきリスト番号つきリスト番号つきリスト番号つきリスト番号つきリスト番号つきリスト番号つきリスト番号つきリスト番号つきリスト<!-- wp:list -->\n<ul class=\"wp-block-list\"><!-- wp:list-item -->\n<li>番号なしリスト<\/li>\n<!-- \/wp:list-item -->\n\n<!-- wp:list-item -->\n<li>番号なしリスト<\/li>\n<!-- \/wp:list-item -->\n\n<!-- wp:list-item -->\n<li>番号なしリスト<\/li>\n<!-- \/wp:list-item --><\/ul>\n<!-- \/wp:list --><\/li>\n<!-- \/wp:list-item -->\n\n<!-- wp:list-item -->\n<li>リスト間15px<\/li>\n<!-- \/wp:list-item -->\n\n<!-- wp:list-item -->\n<li>test<\/li>\n<!-- \/wp:list-item -->\n\n<!-- wp:list-item -->\n<li>test<\/li>\n<!-- \/wp:list-item -->\n\n<!-- wp:list-item -->\n<li>test<\/li>\n<!-- \/wp:list-item -->\n\n<!-- wp:list-item -->\n<li>test<\/li>\n<!-- \/wp:list-item -->\n\n<!-- wp:list-item -->\n<li>test<\/li>\n<!-- \/wp:list-item -->\n\n<!-- wp:list-item -->\n<li>test<\/li>\n<!-- \/wp:list-item -->\n\n<!-- wp:list-item -->\n<li>番号が2桁の場合<\/li>\n<!-- \/wp:list-item --><\/ol>\n<!-- \/wp:list -->",
+        "syncStatus": "unsynced",
+        "categories": [
+            "003_list"
+        ],
+        "categoryLabels": [
+            "003_リスト"
+        ],
+        "postDate": "2026-01-24 10:01:00",
+        "postDateGmt": "2026-01-24 01:01:00"
+    },
+    {
+        "__file": "wp_block",
+        "title": "注釈リスト",
+        "content": "<!-- wp:list {\"className\":\"annotation-list\"} -->\n<ul class=\"wp-block-list annotation-list\"><!-- wp:list-item -->\n<li>注釈リスト注釈<a href=\"\/\" target=\"_blank\" rel=\"noreferrer noopener\">リスト<\/a><\/li>\n<!-- \/wp:list-item -->\n\n<!-- wp:list-item -->\n<li>注釈リスト注釈リスト注釈リスト注釈リスト注釈リスト注釈リスト注釈リスト注釈リスト注釈リスト注釈リスト<!-- wp:list -->\n<ul class=\"wp-block-list\"><!-- wp:list-item -->\n<li>注釈リスト<\/li>\n<!-- \/wp:list-item --><\/ul>\n<!-- \/wp:list --><\/li>\n<!-- \/wp:list-item -->\n\n<!-- wp:list-item -->\n<li>注釈リスト<!-- wp:list {\"ordered\":true} -->\n<ol class=\"wp-block-list\"><!-- wp:list-item -->\n<li>注釈リスト注釈リスト<\/li>\n<!-- \/wp:list-item -->\n\n<!-- wp:list-item -->\n<li>注釈リスト注釈リスト<\/li>\n<!-- \/wp:list-item -->\n\n<!-- wp:list-item -->\n<li>注釈リスト注釈リスト<\/li>\n<!-- \/wp:list-item --><\/ol>\n<!-- \/wp:list --><\/li>\n<!-- \/wp:list-item -->\n\n<!-- wp:list-item -->\n<li>注釈リスト<\/li>\n<!-- \/wp:list-item --><\/ul>\n<!-- \/wp:list -->",
+        "syncStatus": "unsynced",
+        "categories": [
+            "003_list"
+        ],
+        "categoryLabels": [
+            "003_リスト"
+        ],
+        "postDate": "2026-01-23 23:29:00",
+        "postDateGmt": "2026-01-23 14:29:00"
+    },
+    {
+        "__file": "wp_block",
+        "title": "塗りつぶしボタン",
+        "content": "<!-- wp:buttons -->\n<div class=\"wp-block-buttons\"><!-- wp:button {\"className\":\"is-style-fill\"} -->\n<div class=\"wp-block-button is-style-fill\"><a class=\"wp-block-button__link wp-element-button\">塗りつぶしボタン<\/a><\/div>\n<!-- \/wp:button --><\/div>\n<!-- \/wp:buttons -->",
+        "syncStatus": "unsynced",
+        "categories": [
+            "004_button"
+        ],
+        "categoryLabels": [
+            "004_ボタン"
+        ],
+        "postDate": "2026-01-22 22:31:00",
+        "postDateGmt": "2026-01-22 13:31:00"
+    },
+    {
+        "__file": "wp_block",
+        "title": "輪郭ボタン",
+        "content": "<!-- wp:buttons -->\n<div class=\"wp-block-buttons\"><!-- wp:button {\"className\":\"is-style-outline\"} -->\n<div class=\"wp-block-button is-style-outline\"><a class=\"wp-block-button__link wp-element-button\">輪郭ボタン<\/a><\/div>\n<!-- \/wp:button --><\/div>\n<!-- \/wp:buttons -->",
+        "syncStatus": "unsynced",
+        "categories": [
+            "004_button"
+        ],
+        "categoryLabels": [
+            "004_ボタン"
+        ],
+        "postDate": "2026-01-21 22:31:00",
+        "postDateGmt": "2026-01-21 13:31:00"
+    },
+    {
+        "__file": "wp_block",
+        "title": "モバイル表示でスクロールするテーブル",
+        "content": "<!-- wp:flexible-table-block\/table {\"isScrollOnMobile\":true} -->\n<figure class=\"wp-block-flexible-table-block-table is-scroll-on-mobile\"><table class=\"has-fixed-layout\"><tbody><tr><td>テーブルセル<\/td><td>テーブルセル<\/td><td>テーブルセル<\/td><\/tr><tr><td>テーブルセル<\/td><td>テーブルセル<\/td><td>テーブルセル<\/td><\/tr><tr><td>テーブルセル<\/td><td>テーブルセル<\/td><td>テーブルセル<\/td><\/tr><\/tbody><\/table><\/figure>\n<!-- \/wp:flexible-table-block\/table -->",
+        "syncStatus": "unsynced",
+        "categories": [
+            "005_table"
+        ],
+        "categoryLabels": [
+            "005_テーブル"
+        ],
+        "postDate": "2026-01-20 09:34:00",
+        "postDateGmt": "2026-01-20 00:34:00"
+    },
+    {
+        "__file": "wp_block",
+        "title": "スマホで縦並びテーブル",
+        "content": "<!-- wp:flexible-table-block\/table {\"isStackedOnMobile\":true} -->\n<figure class=\"wp-block-flexible-table-block-table\"><table class=\"has-fixed-layout is-stacked-on-mobile\"><tbody><tr><td>テーブルセル<\/td><td>テーブルセル<\/td><td>テーブルセル<\/td><\/tr><tr><td>テーブルセル<\/td><td>テーブルセル<\/td><td>テーブルセル<\/td><\/tr><tr><td>テーブルセル<\/td><td>テーブルセル<\/td><td>テーブルセル<\/td><\/tr><\/tbody><\/table><\/figure>\n<!-- \/wp:flexible-table-block\/table -->",
+        "syncStatus": "unsynced",
+        "categories": [
+            "005_table"
+        ],
+        "categoryLabels": [
+            "005_テーブル"
+        ],
+        "postDate": "2026-01-19 09:33:00",
+        "postDateGmt": "2026-01-19 00:33:00"
+    },
+    {
+        "__file": "wp_block",
+        "title": "左ヘッダー付きテーブル",
+        "content": "<!-- wp:flexible-table-block\/table -->\n<figure class=\"wp-block-flexible-table-block-table\"><table class=\"has-fixed-layout\"><thead><tr><th>テーブルヘッダー<\/th><td>テーブルセル<\/td><td>テーブルセル<\/td><\/tr><\/thead><tbody><tr><th>テーブルヘッダー<\/th><td>テーブルセル<\/td><td>テーブルセル<\/td><\/tr><tr><th>テーブルヘッダー<\/th><td>テーブルセル<\/td><td>テーブルセル<\/td><\/tr><tr><th>テーブルヘッダー<\/th><td>テーブルセル<\/td><td>テーブルセル<\/td><\/tr><\/tbody><\/table><\/figure>\n<!-- \/wp:flexible-table-block\/table -->",
+        "syncStatus": "unsynced",
+        "categories": [
+            "005_table"
+        ],
+        "categoryLabels": [
+            "005_テーブル"
+        ],
+        "postDate": "2026-01-18 22:22:00",
+        "postDateGmt": "2026-01-18 13:22:00"
+    },
+    {
+        "__file": "wp_block",
+        "title": "上ヘッダー付きテーブル",
+        "content": "<!-- wp:flexible-table-block\/table -->\n<figure class=\"wp-block-flexible-table-block-table\"><table class=\"has-fixed-layout\"><tbody><tr><th>テーブルヘッダー<\/th><th>テーブルヘッダー<\/th><th>テーブルヘッダー<\/th><\/tr><tr><td>テーブルセル<\/td><td>テーブルセル<\/td><td>テーブルセル<\/td><\/tr><tr><td>テーブルセル<\/td><td>テーブルセル<\/td><td>テーブルセル<\/td><\/tr><\/tbody><\/table><\/figure>\n<!-- \/wp:flexible-table-block\/table -->",
+        "syncStatus": "unsynced",
+        "categories": [
+            "005_table"
+        ],
+        "categoryLabels": [
+            "005_テーブル"
+        ],
+        "postDate": "2026-01-17 22:20:00",
+        "postDateGmt": "2026-01-17 13:20:00"
+    },
+    {
+        "__file": "wp_block",
+        "title": "シンプルなテーブル",
+        "content": "<!-- wp:flexible-table-block\/table {\"className\":\"is-style-default\"} -->\n<figure class=\"wp-block-flexible-table-block-table is-style-default\"><table class=\"has-fixed-layout\"><tbody><tr><td>テーブルセル<\/td><td>テーブルセル<\/td><td>テーブルセル<\/td><\/tr><tr><td>テーブルセル<\/td><td>テーブルセル<\/td><td>テーブルセル<\/td><\/tr><tr><td>テーブルセル<\/td><td>テーブルセル<\/td><td>テーブルセル<\/td><\/tr><\/tbody><\/table><\/figure>\n<!-- \/wp:flexible-table-block\/table -->",
+        "syncStatus": "unsynced",
+        "categories": [
+            "005_table"
+        ],
+        "categoryLabels": [
+            "005_テーブル"
+        ],
+        "postDate": "2026-01-16 09:31:00",
+        "postDateGmt": "2026-01-16 00:31:00"
+    },
+    {
+        "__file": "wp_block",
+        "title": "モバイル表示でスクロールするテーブル（ストライプ）",
+        "content": "<!-- wp:flexible-table-block\/table {\"isScrollOnMobile\":true,\"className\":\"is-style-stripes\"} -->\n<figure class=\"wp-block-flexible-table-block-table is-scroll-on-mobile is-style-stripes\"><table class=\"has-fixed-layout\"><tbody><tr><td>テーブルセル<\/td><td>テーブルセル<\/td><td>テーブルセル<\/td><\/tr><tr><td>テーブルセル<\/td><td>テーブルセル<\/td><td>テーブルセル<\/td><\/tr><tr><td>テーブルセル<\/td><td>テーブルセル<\/td><td>テーブルセル<\/td><\/tr><\/tbody><\/table><\/figure>\n<!-- \/wp:flexible-table-block\/table -->",
+        "syncStatus": "unsynced",
+        "categories": [
+            "005_table"
+        ],
+        "categoryLabels": [
+            "005_テーブル"
+        ],
+        "postDate": "2026-01-15 06:19:00",
+        "postDateGmt": "2026-01-14 21:19:00"
+    },
+    {
+        "__file": "wp_block",
+        "title": "スマホで縦並びテーブル（ストライプ）",
+        "content": "<!-- wp:flexible-table-block\/table {\"isStackedOnMobile\":true,\"className\":\"is-style-stripes\"} -->\n<figure class=\"wp-block-flexible-table-block-table is-style-stripes\"><table class=\"has-fixed-layout is-stacked-on-mobile\"><tbody><tr><td>テーブルセル<\/td><td>テーブルセル<\/td><td>テーブルセル<\/td><\/tr><tr><td>テーブルセル<\/td><td>テーブルセル<\/td><td>テーブルセル<\/td><\/tr><tr><td>テーブルセル<\/td><td>テーブルセル<\/td><td>テーブルセル<\/td><\/tr><\/tbody><\/table><\/figure>\n<!-- \/wp:flexible-table-block\/table -->",
+        "syncStatus": "unsynced",
+        "categories": [
+            "005_table"
+        ],
+        "categoryLabels": [
+            "005_テーブル"
+        ],
+        "postDate": "2026-01-14 06:19:00",
+        "postDateGmt": "2026-01-13 21:19:00"
+    },
+    {
+        "__file": "wp_block",
+        "title": "左ヘッダー付きテーブル（ストライプ）",
+        "content": "<!-- wp:flexible-table-block\/table {\"className\":\"is-style-stripes\"} -->\n<figure class=\"wp-block-flexible-table-block-table is-style-stripes\"><table class=\"has-fixed-layout\"><tbody><tr><th>テーブルヘッダー<\/th><td>テーブルセル<\/td><td>テーブルセル<\/td><\/tr><tr><th>テーブルヘッダー<\/th><td>テーブルセル<\/td><td>テーブルセル<\/td><\/tr><tr><th>テーブルヘッダー<\/th><td>テーブルセル<\/td><td>テーブルセル<\/td><\/tr><tr><th>テーブルヘッダー<\/th><td>テーブルセル<\/td><td>テーブルセル<\/td><\/tr><tr><th>テーブルヘッダー<\/th><td>テーブルセル<\/td><td>テーブルセル<\/td><\/tr><\/tbody><\/table><\/figure>\n<!-- \/wp:flexible-table-block\/table -->",
+        "syncStatus": "unsynced",
+        "categories": [
+            "005_table"
+        ],
+        "categoryLabels": [
+            "005_テーブル"
+        ],
+        "postDate": "2026-01-13 16:42:00",
+        "postDateGmt": "2026-01-13 07:42:00"
+    },
+    {
+        "__file": "wp_block",
+        "title": "上ヘッダー付きテーブル（ストライプ）",
+        "content": "<!-- wp:flexible-table-block\/table {\"className\":\"is-style-stripes\"} -->\n<figure class=\"wp-block-flexible-table-block-table is-style-stripes\"><table class=\"has-fixed-layout\"><tbody><tr><th>テーブルヘッダー<\/th><th>テーブルヘッダー<\/th><th>テーブルヘッダー<\/th><\/tr><tr><td>テーブルセル<\/td><td>テーブルセル<\/td><td>テーブルセル<\/td><\/tr><tr><td>テーブルセル<\/td><td>テーブルセル<\/td><td>テーブルセル<\/td><\/tr><tr><td>テーブルセル<\/td><td>テーブルセル<\/td><td>テーブルセル<\/td><\/tr><tr><td>テーブルセル<\/td><td>テーブルセル<\/td><td>テーブルセル<\/td><\/tr><\/tbody><\/table><\/figure>\n<!-- \/wp:flexible-table-block\/table -->",
+        "syncStatus": "unsynced",
+        "categories": [
+            "005_table"
+        ],
+        "categoryLabels": [
+            "005_テーブル"
+        ],
+        "postDate": "2026-01-12 16:42:00",
+        "postDateGmt": "2026-01-12 07:42:00"
+    },
+    {
+        "__file": "wp_block",
+        "title": "シンプルなテーブル（ストライプ）",
+        "content": "<!-- wp:flexible-table-block\/table {\"className\":\"is-style-stripes\"} -->\n<figure class=\"wp-block-flexible-table-block-table is-style-stripes\"><table class=\"has-fixed-layout\"><tbody><tr><td>テーブルセル<\/td><td>テーブルセル<\/td><td>テーブルセル<\/td><\/tr><tr><td>テーブルセル<\/td><td>テーブルセル<\/td><td>テーブルセル<\/td><\/tr><tr><td>テーブルセル<\/td><td>テーブルセル<\/td><td>テーブルセル<\/td><\/tr><\/tbody><\/table><\/figure>\n<!-- \/wp:flexible-table-block\/table -->",
+        "syncStatus": "unsynced",
+        "categories": [
+            "005_table"
+        ],
+        "categoryLabels": [
+            "005_テーブル"
+        ],
+        "postDate": "2026-01-11 06:19:00",
+        "postDateGmt": "2026-01-10 21:19:00"
+    },
+    {
+        "__file": "wp_block",
+        "title": "ギャラリー",
+        "content": "<!-- wp:columns {\"isStackedOnMobile\":false} -->\n<div class=\"wp-block-columns is-not-stacked-on-mobile\"><!-- wp:column -->\n<div class=\"wp-block-column\"><!-- wp:image {\"sizeSlug\":\"large\",\"linkDestination\":\"none\"} -->\n<figure class=\"wp-block-image size-large\"><img src=\"https:\/\/placehold.jp\/600x400.png\" alt=\"\"\/><figcaption class=\"wp-element-caption\">個別にzoom設定やキャプションを付けたい場合は、「ギャラリー」は使用せず「カラム＆画像」で対応してください。<\/figcaption><\/figure>\n<!-- \/wp:image --><\/div>\n<!-- \/wp:column -->\n\n<!-- wp:column -->\n<div class=\"wp-block-column\"><!-- wp:image {\"lightbox\":{\"enabled\":true},\"sizeSlug\":\"large\",\"linkDestination\":\"none\"} -->\n<figure class=\"wp-block-image size-large\"><img src=\"https:\/\/placehold.jp\/600x400.png\" alt=\"\"\/><\/figure>\n<!-- \/wp:image --><\/div>\n<!-- \/wp:column --><\/div>\n<!-- \/wp:columns -->",
+        "syncStatus": "unsynced",
+        "categories": [
+            "006_media"
+        ],
+        "categoryLabels": [
+            "006_画像・動画"
+        ],
+        "postDate": "2026-01-10 09:55:00",
+        "postDateGmt": "2026-01-10 00:55:00"
+    },
+    {
+        "__file": "wp_block",
+        "title": "通常アコーディオン",
+        "content": "<!-- wp:details -->\n<details class=\"wp-block-details\"><summary>アコーディオン　デフォルト<\/summary><!-- wp:paragraph {\"placeholder\":\"「\/」を入力して非表示ブロックを追加する\"} -->\n<p>アコーディオンの中身<\/p>\n<!-- \/wp:paragraph --><\/details>\n<!-- \/wp:details -->",
+        "syncStatus": "unsynced",
+        "categories": [
+            "007_accordion"
+        ],
+        "categoryLabels": [
+            "007_アコーディオン"
+        ],
+        "postDate": "2026-01-09 10:01:00",
+        "postDateGmt": "2026-01-09 01:01:00"
+    },
+    {
+        "__file": "wp_block",
+        "title": "QAアコーディオン",
+        "content": "<!-- wp:details {\"className\":\"_qa\"} -->\n<details class=\"wp-block-details _qa\"><summary>QAアコーディオン<\/summary><!-- wp:paragraph {\"placeholder\":\"「\/」を入力して非表示ブロックを追加する\"} -->\n<p>QAアコーディオンの中身<\/p>\n<!-- \/wp:paragraph --><\/details>\n<!-- \/wp:details -->",
+        "syncStatus": "unsynced",
+        "categories": [
+            "007_accordion"
+        ],
+        "categoryLabels": [
+            "007_アコーディオン"
+        ],
+        "postDate": "2026-01-08 10:00:00",
+        "postDateGmt": "2026-01-08 01:00:00"
+    },
+    {
+        "__file": "wp_block",
+        "title": "区切り線",
+        "content": "<!-- wp:separator -->\n<hr class=\"wp-block-separator has-alpha-channel-opacity\"\/>\n<!-- \/wp:separator -->",
+        "syncStatus": "unsynced",
+        "categories": [
+            "010_layout"
+        ],
+        "categoryLabels": [
+            "010_装飾・レイアウト"
+        ],
+        "postDate": "2026-01-07 10:00:00",
+        "postDateGmt": "2026-01-07 01:00:00"
+    },
+    {
+        "__file": "wp_block",
+        "title": "ページ内リンク",
+        "content": "<!-- wp:acf\/in-page-link {\"name\":\"acf\/in-page-link\",\"data\":{\"inPageLink_items_0_inPageLink_title\":\"ページ内リンク1\",\"_inPageLink_items_0_inPageLink_title\":\"field_680b6ccb24306\",\"inPageLink_items_0_inPageLink_id\":\"id-01\",\"_inPageLink_items_0_inPageLink_id\":\"field_680b6ccb24683\",\"inPageLink_items_1_inPageLink_title\":\"ページ内リンク2\",\"_inPageLink_items_1_inPageLink_title\":\"field_680b6ccb24306\",\"inPageLink_items_1_inPageLink_id\":\"id-02\",\"_inPageLink_items_1_inPageLink_id\":\"field_680b6ccb24683\",\"inPageLink_items_2_inPageLink_title\":\"ページ内リンク3\",\"_inPageLink_items_2_inPageLink_title\":\"field_680b6ccb24306\",\"inPageLink_items_2_inPageLink_id\":\"id-03\",\"_inPageLink_items_2_inPageLink_id\":\"field_680b6ccb24683\",\"inPageLink_items\":3,\"_inPageLink_items\":\"field_680b6ccb22eea\"},\"mode\":\"preview\"} \/-->",
+        "syncStatus": "unsynced",
+        "categories": [
+            "008_anchor"
+        ],
+        "categoryLabels": [
+            "008_ページ内リンク"
+        ],
+        "postDate": "2026-01-06 09:59:00",
+        "postDateGmt": "2026-01-06 00:59:00"
+    },
+    {
+        "__file": "wp_block",
+        "title": "タブコンテンツ",
+        "content": "<!-- wp:acf\/tab-container {\"name\":\"acf\/tab-container\",\"data\":[],\"mode\":\"preview\"} -->\n<!-- wp:acf\/tab-panel {\"name\":\"acf\/tab-panel\",\"data\":{\"panel_title\":\"タブ１\",\"_panel_title\":\"field_6878b3c4ee225\"},\"mode\":\"preview\"} -->\n<!-- wp:paragraph -->\n<p>タブの中身１<\/p>\n<!-- \/wp:paragraph -->\n\n<!-- wp:paragraph -->\n<p>タブの中身１<\/p>\n<!-- \/wp:paragraph -->\n<!-- \/wp:acf\/tab-panel -->\n\n<!-- wp:acf\/tab-panel {\"name\":\"acf\/tab-panel\",\"data\":{\"panel_title\":\"タブ２\",\"_panel_title\":\"field_6878b3c4ee225\"},\"mode\":\"preview\"} -->\n<!-- wp:paragraph -->\n<p>タブの中身２<\/p>\n<!-- \/wp:paragraph -->\n\n<!-- wp:paragraph -->\n<p>タブの中身２<\/p>\n<!-- \/wp:paragraph -->\n<!-- \/wp:acf\/tab-panel -->\n\n<!-- wp:acf\/tab-panel {\"name\":\"acf\/tab-panel\",\"data\":{\"panel_title\":\"タブ３\",\"_panel_title\":\"field_6878b3c4ee225\"},\"mode\":\"preview\"} -->\n<!-- wp:paragraph -->\n<p>タブの中身３<\/p>\n<!-- \/wp:paragraph -->\n\n<!-- wp:paragraph -->\n<p>タブの中身３<\/p>\n<!-- \/wp:paragraph -->\n<!-- \/wp:acf\/tab-panel -->\n<!-- \/wp:acf\/tab-container -->",
+        "syncStatus": "unsynced",
+        "categories": [
+            "009_tab"
+        ],
+        "categoryLabels": [
+            "009_タブ"
+        ],
+        "postDate": "2026-01-05 14:08:00",
+        "postDateGmt": "2026-01-05 05:08:00"
+    },
+    {
+        "__file": "wp_block",
+        "title": "スペース大",
+        "content": "<!-- wp:spacer {\"height\":\"80px\"} -->\n<div style=\"height:80px\" aria-hidden=\"true\" class=\"wp-block-spacer\"><\/div>\n<!-- \/wp:spacer -->",
+        "syncStatus": "unsynced",
+        "categories": [
+            "010_layout"
+        ],
+        "categoryLabels": [
+            "010_装飾・レイアウト"
+        ],
+        "postDate": "2026-01-04 09:54:00",
+        "postDateGmt": "2026-01-04 00:54:00"
+    },
+    {
+        "__file": "wp_block",
+        "title": "スペース小",
+        "content": "<!-- wp:spacer {\"height\":\"30px\"} -->\n<div style=\"height:30px\" aria-hidden=\"true\" class=\"wp-block-spacer\"><\/div>\n<!-- \/wp:spacer -->",
+        "syncStatus": "unsynced",
+        "categories": [
+            "010_layout"
+        ],
+        "categoryLabels": [
+            "010_装飾・レイアウト"
+        ],
+        "postDate": "2026-01-03 09:52:00",
+        "postDateGmt": "2026-01-03 00:52:00"
+    },
+    {
+        "__file": "wp_block",
+        "title": "ナビゲーション（大）",
+        "content": "<!-- wp:acf\/navigation-large {\"name\":\"acf\/navigation-large\",\"data\":{\"navigation-large_0_image\":\"\",\"_navigation-large_0_image\":\"field_6879de8255761\",\"navigation-large_0_title\":\"ナビゲーション1\",\"_navigation-large_0_title\":\"field_6879de5a2bd2d\",\"navigation-large_0_text\":\"\",\"_navigation-large_0_text\":\"field_6879de9255762\",\"navigation-large_0_url\":\"\/\",\"_navigation-large_0_url\":\"field_6879dea955763\",\"navigation-large_0_target\":\"\",\"_navigation-large_0_target\":\"field_6879deb555764\",\"navigation-large_1_image\":8,\"_navigation-large_1_image\":\"field_6879de8255761\",\"navigation-large_1_title\":\"ナビゲーション2　画像あり\",\"_navigation-large_1_title\":\"field_6879de5a2bd2d\",\"navigation-large_1_text\":\"\",\"_navigation-large_1_text\":\"field_6879de9255762\",\"navigation-large_1_url\":\"\/\",\"_navigation-large_1_url\":\"field_6879dea955763\",\"navigation-large_1_target\":\"\",\"_navigation-large_1_target\":\"field_6879deb555764\",\"navigation-large_2_image\":\"\",\"_navigation-large_2_image\":\"field_6879de8255761\",\"navigation-large_2_title\":\"ナビゲーション3　テキストあり\",\"_navigation-large_2_title\":\"field_6879de5a2bd2d\",\"navigation-large_2_text\":\"これは外部リンクです。\",\"_navigation-large_2_text\":\"field_6879de9255762\",\"navigation-large_2_url\":\"\/\",\"_navigation-large_2_url\":\"field_6879dea955763\",\"navigation-large_2_target\":[\"はい\"],\"_navigation-large_2_target\":\"field_6879deb555764\",\"navigation-large\":3,\"_navigation-large\":\"field_6879de5a2a5b6\"},\"mode\":\"preview\"} \/-->",
+        "syncStatus": "unsynced",
+        "categories": [
+            "011_navigation"
+        ],
+        "categoryLabels": [
+            "011_ナビゲーション"
+        ],
+        "postDate": "2026-01-02 09:56:00",
+        "postDateGmt": "2026-01-02 00:56:00"
+    },
+    {
+        "__file": "wp_block",
+        "title": "ナビゲーション（小）",
+        "content": "<!-- wp:acf\/navigation-small {\"name\":\"acf\/navigation-small\",\"data\":{\"navigation-small_0_image\":7,\"_navigation-small_0_image\":\"field_6879dee970316\",\"navigation-small_0_title\":\"タイトルタイトル\",\"_navigation-small_0_title\":\"field_6879dee9707bf\",\"navigation-small_0_text\":\"テキスト\",\"_navigation-small_0_text\":\"field_6879dee970bc6\",\"navigation-small_0_url\":\"\/\",\"_navigation-small_0_url\":\"field_6879dee970f66\",\"navigation-small_0_target\":\"\",\"_navigation-small_0_target\":\"field_6879dee971365\",\"navigation-small_1_image\":7,\"_navigation-small_1_image\":\"field_6879dee970316\",\"navigation-small_1_title\":\"外部リンク\",\"_navigation-small_1_title\":\"field_6879dee9707bf\",\"navigation-small_1_text\":\"テキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキスト\",\"_navigation-small_1_text\":\"field_6879dee970bc6\",\"navigation-small_1_url\":\"\/\",\"_navigation-small_1_url\":\"field_6879dee970f66\",\"navigation-small_1_target\":[\"はい\"],\"_navigation-small_1_target\":\"field_6879dee971365\",\"navigation-small_2_image\":\"\",\"_navigation-small_2_image\":\"field_6879dee970316\",\"navigation-small_2_title\":\"画像が無い場合\",\"_navigation-small_2_title\":\"field_6879dee9707bf\",\"navigation-small_2_text\":\"テキストテキストテキスト\",\"_navigation-small_2_text\":\"field_6879dee970bc6\",\"navigation-small_2_url\":\"\/\",\"_navigation-small_2_url\":\"field_6879dee970f66\",\"navigation-small_2_target\":\"\",\"_navigation-small_2_target\":\"field_6879dee971365\",\"navigation-small\":3,\"_navigation-small\":\"field_6879dee96ef84\"},\"mode\":\"preview\"} \/-->",
+        "syncStatus": "unsynced",
+        "categories": [
+            "011_navigation"
+        ],
+        "categoryLabels": [
+            "011_ナビゲーション"
+        ],
+        "postDate": "2026-01-01 16:28:00",
+        "postDateGmt": "2026-01-01 07:28:00"
+    },
+    {
+        "__file": "wp_block",
+        "title": "引用",
+        "content": "<!-- wp:quote -->\n<blockquote class=\"wp-block-quote\"><!-- wp:paragraph -->\n<p>幅広いコースやプログラムを提供しています。STEM分野から芸術、言語、スポーツまで、生徒が興味や才能に合わせて選択できる多彩なオプションがあります。また、個別のニーズに合わせたサポートも充実しています。豊かな学びの環境で、生徒の成長を支援します。<\/p>\n<!-- \/wp:paragraph --><\/blockquote>\n<!-- \/wp:quote -->",
+        "syncStatus": "unsynced",
+        "categories": [
+            "002_text"
+        ],
+        "categoryLabels": [
+            "002_テキスト"
+        ],
+        "postDate": "2025-12-17 09:48:34",
+        "postDateGmt": "2025-12-17 00:48:34"
+    }
+]

@@ -1,0 +1,1221 @@
+/*
+// フォーム用CSS
+// */
+/* // ==========================================================================
+// ベース
+// ========================================================================== */
+input[type='text'],
+input[type='tel'],
+input[type='email'],
+input[type='number'],
+input[type='date'],
+input[type='month'],
+input[type='week'],
+input[type='time'],
+input[type='datetime-local'],
+input[type='url'],
+input[type='search'],
+input[type='password'],
+select,
+textarea,
+.file label {
+    border: 1px solid var(--color-gray-background);
+    padding: 0.5em 1em;
+    width: 100%;
+    height: 50px;
+    background-color: var(--color-gray-background);
+    color: var(--color-text);
+    font-size: 16px;
+    transition: border-color var(--transition-duration), background-color var(--transition-duration);
+    &:hover {
+        border-color: var(--color-primary) !important;
+    }
+    &:focus {
+        border-color: var(--color-primary) !important;
+        background-color: var(--color-secondary);
+    }
+    &:-webkit-autofill {
+        -webkit-box-shadow: 0 0 0 1000px var(--color-secondary) inset;
+    }
+    &[readonly='readonly'],
+    &[readonly] {
+        border-color: transparent !important;
+        background-color: transparent !important;
+        color: #000;
+    }
+}
+select {
+    padding-right: 50px;
+}
+/* // ==========================================================================
+    // テキストエリア
+    // ========================================================================== */
+textarea {
+    padding: 0.75em 1em;
+    width: 100%;
+    max-width: 100%;
+    height: 10em;
+    field-sizing: content;
+    min-height: min-content;
+}
+
+/* // ==========================================================================
+// パーツ（ContactForm7）
+// ========================================================================== */
+/* // フォームサイズ指定用 */
+.size-SS {
+    width: 5em !important;
+}
+.size-S {
+    width: 8em !important;
+}
+.size-M {
+    width: 15em !important;
+}
+.size-L {
+    width: 100% !important;
+    @media screen and (min-width: 768px) {
+        width: 20em !important;
+    }
+}
+.size-LL {
+    width: 100% !important;
+}
+.size-SS,
+.size-S,
+.size-M,
+.size-L,
+.size-LL {
+    & input,
+    & select {
+        width: 100% !important;
+    }
+}
+/* // 共通・リセット */
+.wpcf7-form-control-wrap {
+    display: block;
+}
+.wpcf7-list-item {
+    display: block !important;
+    margin: 0 !important;
+}
+/* // ==========================================================================
+// セレクトボックス（div.selectで囲む必要あり）
+/* // ========================================================================== */
+.select {
+    position: relative;
+    &::after {
+        content: '\f107';
+        position: absolute;
+        right: 20px;
+        top: 0.75em; /* エラーメッセージが下に挿入されるためトップからの距離で指定 */
+        font-family: var(--font-awesome);
+        font-size: 20px;
+        color: var(--color-text);
+        pointer-events: none;
+    }
+    select {
+        padding-right: 40px !important;
+        &::-ms-expand {
+            display: none;
+        }
+    }
+}
+/* // ==========================================================================
+// チェックボックス・ラジオボタン
+// ========================================================================== */
+.wpcf7-form-control {
+    &.wpcf7-checkbox,
+    &.wpcf7-radio {
+        .wpcf7-list-item {
+            &:not(:first-child) {
+                dd:not([class]) & {
+                    margin-top: 10px !important;
+                }
+            }
+        }
+    }
+}
+input {
+    /* // 共通 */
+    &[type='checkbox'],
+    &[type='radio'],
+    &[type='checkbox'] + input[type='hidden'],
+    &[type='radio'] + input[type='hidden'] {
+        display: none;
+        + span {
+            display: inline-block;
+            position: relative;
+            padding-left: 30px;
+            &::before,
+            &::after {
+                content: '';
+                display: block;
+                position: absolute;
+                left: 0;
+                top: 0.25em;
+                width: 20px;
+                height: 20px;
+                transition: var(--transition-duration);
+            }
+            &::before {
+                border: 1px solid var(--color-gray-border);
+            }
+            &::after {
+            }
+        }
+        &:hover {
+            + span {
+                &::before {
+                    border-color: var(--color-primary);
+                }
+            }
+        }
+    }
+    /* // 選択時のベースカラー */
+    &[type='checkbox']:checked,
+    &[type='radio']:checked,
+    &[type='checkbox']:checked + input[type='hidden'],
+    &[type='radio']:checked + input[type='hidden'] {
+        + span {
+            &::after {
+                background-color: var(--color-primary);
+            }
+        }
+    }
+    /* // チェックボックス */
+    &[type='checkbox'],
+    &[type='checkbox'] + input[type='hidden'] {
+        + span {
+            &::before,
+            &::after {
+            }
+            &::before {
+            }
+            &::after {
+                content: '\f00c';
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-family: var(--font-awesome);
+                color: var(--color-secondary);
+            }
+        }
+    }
+    /* // ラジオボタン */
+    &[type='radio'],
+    &[type='radio'] + input[type='hidden'] {
+        + span {
+            &::before,
+            &::after {
+                border-radius: 50%;
+            }
+            &::before {
+            }
+            &::after {
+                transform: scale(0.6);
+            }
+        }
+    }
+}
+/* // ==========================================================================
+// チェックボックス・ラジオボタン（ボタン型）
+// ========================================================================== */
+._button-checkbox,
+._button-radio {
+    .wpcf7-form-control {
+        display: flex;
+        flex-wrap: wrap;
+        /* // ボタンサイズ・余白 */
+        .wpcf7-list-item {
+            width: calc(50% - 5px);
+            @media screen and (min-width: 768px) {
+                width: calc(50% - 10px);
+            }
+            &:nth-child(2n) {
+                margin-left: 10px !important;
+                @media screen and (min-width: 768px) {
+                    margin-left: 20px !important;
+                }
+            }
+            &:nth-child(n + 3) {
+                margin-top: 10px !important;
+                @media screen and (min-width: 768px) {
+                    margin-top: 20px !important;
+                }
+            }
+            /* // ボタン共通 */
+            input {
+                &[type='radio'],
+                &[type='checkbox'] {
+                    + .wpcf7-list-item-label {
+                        display: block;
+                        position: relative;
+                        border: 1px solid var(--color-primary);
+                        border-radius: 3em;
+                        max-width: 240px;
+                        width: 100%;
+                        font-size: 16px;
+                        line-height: 1.3;
+                        text-align: center;
+                        text-decoration: none;
+                        transition: background-color var(--transition-duration), color var(--transition-duration);
+                        background-color: var(--color-primary);
+                        color: var(--color-secondary);
+                        padding: 0;
+                        max-width: none;
+                        span {
+                            display: block;
+                        }
+                    }
+                    &:hover {
+                        + .wpcf7-list-item-label {
+                            background-color: var(--color-primary);
+                            color: var(--color-secondary);
+                        }
+                    }
+                }
+                /* // チェックボックス */
+                &[type='checkbox'],
+                &[type='checkbox'] + input[type='hidden'] {
+                    + .wpcf7-list-item-label {
+                        &::before {
+                            content: none;
+                        }
+                        &::after {
+                            left: 20px;
+                            top: 50%;
+                            border-color: transparent;
+                            background-color: transparent;
+                            color: var(--color-secondary);
+                            transform: translateY(-50%);
+                        }
+                    }
+                }
+                /* // ラジオボタン */
+                &[type='radio'] {
+                    + .wpcf7-list-item-label {
+                        padding-right: 20px;
+                        padding-left: 20px;
+                        &::before,
+                        &::after {
+                            content: none;
+                        }
+                    }
+                }
+                /* // 確認画面用 */
+                &[type='radio']:checked,
+                &[type='checkbox']:checked,
+                &[type='hidden'] {
+                    + .wpcf7-list-item-label {
+                        border-color: var(--color-primary);
+                        background-color: var(--color-primary);
+                        color: var(--color-secondary);
+                    }
+                }
+                &[type='radio']:checked + input[type='hidden'],
+                &[type='checkbox']:checked + input[type='hidden'] {
+                    + span {
+                        &::before {
+                            content: none;
+                        }
+                    }
+                }
+                &[type='radio']:checked + input[type='hidden'] {
+                    + span {
+                        &::after {
+                            content: none;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+/* // ==========================================================================
+// ファイル
+// ========================================================================== */
+.file {
+    display: flex;
+    flex-direction: column-reverse;
+    position: relative;
+    .wpcf7-form-control-wrap {
+        input {
+            display: none;
+        }
+    }
+    label {
+        position: relative;
+        &::before {
+            content: '選択されていません';
+            top: 50%;
+            left: 1em;
+            transform: translateY(-50%);
+        }
+        &._changed {
+            &::before {
+                content: '';
+            }
+            & + .clear-file {
+                display: block;
+            }
+        }
+    }
+    .clear-file {
+        content: '\f00d';
+        display: none;
+        position: absolute;
+        right: 0;
+        top: 0;
+        z-index: 2;
+        width: 50px;
+        height: 50px;
+        background-color: transparent;
+        font-family: var(--font-awesome);
+        color: var(--color-text);
+    }
+}
+/* // ==========================================================================
+// 送信ボタン
+// ========================================================================== */
+.form_button {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+    /* // 確認画面なしの場合は削除 */
+    &._flex {
+        flex-wrap: wrap;
+        margin-right: -10px;
+        margin-bottom: -20px;
+        margin-left: -10px;
+    }
+    /* //////////////////////// */
+}
+.form_button-01 {
+    padding: 0;
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
+    /* // 確認画面なしの場合は削除 */
+    .form_button._flex & {
+        margin-right: 10px;
+        margin-left: 10px;
+        margin-bottom: 20px;
+    }
+    /* //////////////////////// */
+    &:hover {
+        background-color: var(--color-secondary);
+        color: var(--color-primary);
+    }
+    /* // 承諾確認未チェック時 */
+    &._disabled {
+        border-color: var(--color-gray-border);
+        background-color: var(--color-gray-border);
+        color: var(--color-secondary);
+        pointer-events: none;
+    }
+    /* // 確認画面なしの場合は削除 */
+    &._prev {
+        background-color: var(--color-secondary);
+        color: var(--color-primary);
+        &:hover {
+            background-color: var(--color-primary);
+            color: var(--color-secondary);
+        }
+    }
+    &._next {
+    }
+    /* //////////////////////// */
+    input[type='submit'],
+    input[type='button'] {
+        position: relative;
+        z-index: 2;
+        padding: 15px 50px;
+        width: 100%;
+        height: 100%;
+        background-color: transparent;
+        color: inherit;
+    }
+}
+/* // ==========================================================================
+// ajaxローダー
+// ========================================================================== */
+.ajax-loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: 0 !important;
+    transform: translate(-50%, -50%);
+}
+/* // ==========================================================================
+// エラー用パーツ
+// ========================================================================== */
+/* // フォームパーツ */
+input:not([type='checkbox']):not([type='radio']):not([type='file']):not([type='button']):not([type='submit']):not([type='search']),
+select,
+textarea {
+    &.wpcf7-not-valid {
+        border: 1px solid var(--color-error-text) !important;
+        background: var(--color-error-background) !important;
+        &.wpcf7-radio,
+        &.wpcf7-checkbox {
+            border: none !important;
+            background: none !important;
+        }
+    }
+}
+/* // テキスト */
+.wpcf7-not-valid-tip {
+    display: block;
+    color: var(--color-error-text) !important;
+}
+/* // メッセージ共通 */
+.wpcf7-response-output,
+.wpcf7-validation-errors,
+.wpcf7-mail-sent-ok {
+    margin: 3em auto;
+    padding: 1em !important;
+    font-weight: bold;
+    color: var(--color-error-text);
+    text-align: center;
+}
+/* // エラーメッセージ */
+.wpcf7-response-output,
+.wpcf7-validation-errors {
+    border: 1px solid var(--color-error-text) !important;
+    color: var(--color-error-text);
+}
+/* // 送信完了メッセージ */
+.wpcf7-mail-sent-ok {
+    border: 1px solid var(--color-primary) !important;
+    color: var(--color-primary);
+}
+/* // ==========================================================================
+// カラム
+// ========================================================================== */
+[class*='form_column-col'] {
+    @media screen and (min-width: 768px) {
+        margin: 0 auto;
+        max-width: 750px;
+    }
+    & + p {
+        margin-top: 50px;
+    }
+    > div {
+        &:not(:first-child) {
+            margin-top: 30px;
+        }
+        dt {
+            display: flex;
+            align-items: center;
+            .label {
+                &-need,
+                &-any {
+                    margin-right: 1em;
+                    padding: 0 0.5em;
+                    color: var(--color-secondary);
+                    font-size: 14px;
+                    white-space: nowrap;
+                }
+                &-need {
+                    background-color: var(--color-error-text);
+                }
+                &-any {
+                    background-color: var(--color-primary);
+                }
+            }
+            .title {
+            }
+        }
+        dd {
+            margin-top: 10px;
+            /* // 横並び用 */
+            &._flex {
+                display: flex;
+                flex-wrap: wrap;
+                hr {
+                    margin: 5px 0;
+                    width: 100%;
+                    border: none;
+                    @media screen and (min-width: 768px) {
+                        display: none;
+                    }
+                }
+                .select {
+                    &:not(:last-of-type) {
+                        .wpcf7-not-valid-tip {
+                            margin-bottom: 8px;
+                        }
+                    }
+                }
+            }
+            .text {
+                margin: 10px 10px 0;
+                &:first-child {
+                    margin-left: 0;
+                }
+                &:last-child {
+                    margin-right: 0;
+                }
+            }
+            /* // 2カラム用 */
+            ul {
+                li {
+                    display: flex;
+                    align-items: flex-start;
+                    & + li {
+                        margin-top: 10px;
+                    }
+                    .title {
+                        flex: none;
+                        margin: 10px 10px 0;
+                        width: 80px;
+                        &:first-child {
+                            margin-left: 0;
+                        }
+                        &:last-child {
+                            margin-right: 0;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+.form_column-col1 {
+    > div {
+        dt {
+        }
+        dd {
+        }
+    }
+}
+.form_column-col2 {
+    > div {
+        @media screen and (min-width: 768px) {
+            display: flex;
+            flex-wrap: nowrap;
+        }
+        dt {
+            @media screen and (min-width: 768px) {
+                align-items: flex-start;
+                padding-right: 50px;
+                width: 300px;
+            }
+        }
+        dd {
+            @media screen and (min-width: 768px) {
+                margin-top: 0;
+                width: calc(100% - 300px);
+            }
+        }
+    }
+}
+/* // ==========================================================================
+// 確認画面パーツ
+// ========================================================================== */
+.form_flowList-01 {
+    display: flex;
+    overflow: hidden;
+    margin-bottom: 50px;
+    height: 80px;
+    li {
+        position: relative;
+        height: inherit;
+        width: calc(100% / 3 - 30px / 3);
+        @media screen and (min-width: 768px) {
+            width: calc(100% / 3 - 100px / 3);
+        }
+        &::before,
+        &::after {
+            content: '';
+            display: block;
+            position: absolute;
+            top: 0;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 40px 0 40px 12px;
+            @media screen and (min-width: 768px) {
+                border-width: 40px 0 40px 43px;
+            }
+        }
+        &::before {
+            right: -12px;
+            border-color: transparent transparent transparent var(--color-primary);
+            @media screen and (min-width: 768px) {
+                right: -43px;
+            }
+        }
+        &::after {
+            right: -11px;
+            border-color: transparent transparent transparent var(--color-secondary);
+            @media screen and (min-width: 768px) {
+                right: -42px;
+            }
+        }
+        & + li {
+            margin-left: 15px;
+            @media screen and (min-width: 768px) {
+                margin-left: 50px;
+            }
+        }
+        &:last-child {
+            &::before,
+            &::after {
+                content: none;
+            }
+        }
+        &:not(:last-child) {
+            div {
+                padding-left: 5px;
+                @media screen and (min-width: 768px) {
+                    padding-left: 20px;
+                }
+            }
+        }
+        &._current {
+            &::after {
+                border-color: transparent transparent transparent var(--color-primary);
+            }
+            div {
+                background-color: var(--color-primary);
+                color: var(--color-secondary);
+            }
+        }
+        > div {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid var(--color-primary);
+            width: 100%;
+            height: inherit;
+            background-color: var(--color-secondary);
+            color: var(--color-primary);
+            @media screen and (min-width: 768px) {
+                flex-direction: row;
+            }
+            .title-sub {
+                font-family: var(--font-sansSerif-en);
+                @media screen and (min-width: 768px) {
+                    margin-right: 10px;
+                }
+            }
+            .title-main {
+                @media screen and (min-width: 768px) {
+                    font-size: 18px;
+                }
+            }
+        }
+    }
+}
+/* // ==========================================================================
+// その他
+// ========================================================================== */
+/* // 外部CSS遅延読み込み時のちらつき対策用 */
+.wpcf7c-force-hide {
+    display: none !important;
+}
+.wpcf7-display-none {
+    display: none;
+}
+
+/* // ==========================================================================
+// パーツ（formidable form）
+// ========================================================================== */
+.frm_forms {
+    h2 {
+        font-size: 2.5rem;
+        font-weight: bold;
+        border-bottom: solid 2px #ccc;
+        margin: 20px 0 40px;
+    }
+    @media screen and (min-width: 768px) {
+        margin: 0 auto;
+        max-width: 750px;
+    }
+    .frm_form_field {
+        margin-bottom: 30px;
+    }
+    .frm_select {
+        position: relative;
+        cursor: pointer;
+        &::after {
+            content: '\f107';
+            position: absolute;
+            font-family: var(--font-awesome);
+            color: var(--color-text);
+            pointer-events: none;
+            font-size: 6vw;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            @media screen and (min-width: 768px) {
+                font-size: 20px;
+            }
+        }
+    }
+    .frm_opt_container {
+        /* display: flex;
+    flex-wrap: wrap; */
+        .frm_checkbox,
+        .frm_radio {
+            margin-bottom: 10px !important;
+            margin-right: 20px;
+        }
+        label {
+            position: relative;
+            padding-left: 25px;
+            color: var(--color-text);
+            @media screen and (min-width: 768px) {
+                margin-right: 20px;
+            }
+        }
+        input {
+            display: block;
+            height: 0;
+            position: absolute;
+            &::before,
+            &::after {
+                display: block;
+                position: absolute;
+                top: 0.25em;
+                left: 0;
+                width: 20px;
+                height: 20px;
+                content: '';
+                transition: 0.3s;
+                cursor: pointer;
+            }
+            &::before {
+                border: 1px solid var(--color-gray-border);
+            }
+            &::after {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+        .frm_checkbox {
+            input {
+                &:checked {
+                    &::before {
+                        border: 1px solid var(--color-primary);
+                        background-color: var(--color-primary);
+                    }
+                    &::after {
+                        color: var(--color-secondary);
+                    }
+                }
+                &::after {
+                    color: var(--color-secondary);
+                    font-family: var(--font-awesome);
+                    font-weight: 400;
+                    line-height: 1;
+                    content: '\f00c';
+                }
+            }
+        }
+        .frm_radio {
+            input {
+                &::before,
+                &::after {
+                    border-radius: 50%;
+                }
+                &::after {
+                    transform: scale(0.6);
+                }
+                &:checked {
+                    &::after {
+                        background-color: var(--color-primary);
+                    }
+                }
+            }
+        }
+    }
+    .frm_button {
+        .frm_opt_container {
+            justify-content: space-between;
+            @media screen and (min-width: 768px) {
+                justify-content: flex-start;
+            }
+            .frm_checkbox,
+            .frm_radio {
+                margin-bottom: 20px;
+                margin-right: 0;
+            }
+            label {
+                width: 43vw;
+                height: 50px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                padding: 0;
+                text-indent: -1000px;
+                overflow: hidden;
+                font-size: 0;
+                @media screen and (min-width: 768px) {
+                    width: 200px;
+                }
+            }
+            input {
+                display: block;
+                padding: 15px 50px;
+                border: 1px solid var(--color-primary);
+                border-radius: 3em;
+                font-size: 16px;
+                line-height: 1.3;
+                text-align: center;
+                width: 100%;
+                height: 50px;
+                position: absolute;
+                top: 0;
+                left: 0;
+                &::before {
+                    display: none;
+                }
+                &::after {
+                    content: attr(value) '';
+                    width: 100%;
+                    height: 50px;
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    color: var(--color-primary);
+                    border-radius: 3em;
+                    font-family: var(--font-sansSerif-ja);
+                }
+                &:checked {
+                    background: var(--color-primary);
+                    &::before {
+                        content: '\f00c';
+                        display: block;
+                        position: absolute;
+                        top: 55%;
+                        left: 20px;
+                        transform: translateY(-50%);
+                        font-family: var(--font-awesome);
+                        font-weight: 400;
+                        background: none;
+                        border: none;
+                        color: var(--color-secondary);
+                    }
+                    &::after {
+                        color: var(--color-secondary);
+                    }
+                }
+            }
+            .frm_radio {
+                input {
+                    &::before {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+    /* //ラベル */
+    .frm_primary_label {
+        margin-bottom: 10px;
+        display: flex;
+        align-items: flex-start;
+        color: var(--color-text);
+        &::before {
+            margin-right: 1em;
+            padding: 0.2em 0.5em;
+            color: var(--color-secondary);
+            font-size: 14px;
+            white-space: nowrap;
+            font-weight: normal;
+            display: inline;
+        }
+        &.any {
+            &::before {
+                content: '任意';
+                background-color: var(--color-primary);
+            }
+        }
+        &.required {
+            &::before {
+                content: '必須';
+                background-color: var(--color-error-text);
+            }
+        }
+    }
+    span.frm_required::before {
+        /* content: '必須';
+        font-size: 14px;
+        padding: 0.2em 0.5em;
+        background: var(--color-error-text);
+        color: #fff;
+        white-space: nowrap;
+        position: absolute;
+        left: 0;
+        top: 0.5em; */
+    }
+    .hyphen {
+        position: relative;
+        padding-right: 20px !important;
+        &::after {
+            content: '-';
+            position: absolute;
+            top: 2rem;
+            right: 0;
+        }
+    }
+    @media only screen and (max-width: 600px) {
+        .spgrid {
+            body & {
+                grid-column: span 4 / span 2 !important;
+            }
+        }
+    }
+    .prefectures {
+        .frm_select {
+            width: 120%;
+        }
+    }
+    /* //ファイルアップロード */
+    .frm_dropzone {
+        &.frm_single_upload {
+            max-width: 100% !important;
+            .dz-message {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+            }
+            svg {
+                max-width: 60px;
+            }
+            button {
+                font-size: 16px !important;
+            }
+            .dz-filename {
+                color: var(--color-primary);
+                a {
+                    color: var(--color-primary);
+                }
+            }
+            .frm_remove_link {
+                cursor: pointer;
+                svg {
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+    /* //リピーター */
+    .frm_repeat_buttons {
+        a {
+            color: var(--color-primary);
+        }
+    }
+    /* //プライバシー */
+    .privacy {
+        text-align: center;
+        display: block;
+        .frm_opt_container {
+            display: flex;
+            justify-content: center;
+            .frm_checkbox {
+                margin-right: 0;
+                label {
+                    margin-right: 0;
+                }
+            }
+        }
+        .frm_primary_label {
+            display: none;
+        }
+    }
+    /* //送信ボタン */
+    .frm_submit {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        flex-direction: row-reverse;
+        gap: 20px 40px;
+        .frm_button_submit {
+            /* @extend %module_button; */
+            display: block;
+            position: relative;
+            padding: 15px 50px;
+            border: 1px solid var(--color-primary);
+            border-radius: 3em;
+            max-width: 240px;
+            width: 100%;
+            font-size: 16px;
+            line-height: 1.3;
+            text-align: center;
+            text-decoration: none;
+            transition: background-color var(--transition-duration), color var(--transition-duration);
+            background: var(--color-primary);
+            width: 100%;
+            max-width: 80%;
+            color: var(--color-secondary);
+            span {
+                display: block;
+            }
+            @media screen and (min-width: 768px) {
+                max-width: 260px;
+            }
+            &:hover {
+                background: var(--color-secondary);
+                color: var(--color-primary);
+            }
+        }
+    }
+    /* // ==========================================================================
+    // 2カラム用（ラベル位置左）
+    // ========================================================================== */
+    .frm_form_field {
+        &.frm_left_container {
+            @media screen and (min-width: 600px) {
+                grid-template-columns: 35% auto;
+            }
+            .frm_primary_label {
+                @media screen and (min-width: 600px) {
+                    margin-right: 40px;
+                }
+            }
+        }
+    }
+    .frm_conf_field {
+        &.frm_left_container {
+            @media screen and (min-width: 600px) {
+                grid-template-columns: 65%;
+                justify-content: flex-end;
+            }
+        }
+    }
+    /* // ==========================================================================
+    // エラーメッセージ
+    // ========================================================================== */
+    .frm_error_style,
+    .frm_error,
+    .frm_blank_field {
+        color: var(--color-error-text) !important;
+        input[type='text'],
+        input[type='email'],
+        input[type='url'],
+        input[type='tel'],
+        input[type='number'],
+        input[type='password'],
+        textarea,
+        select {
+            border: 1px solid var(--color-error-text) !important;
+        }
+    }
+    .frm_error_style {
+        padding: 5px;
+        border: 1px solid var(--color-error-text);
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 50px;
+    }
+    /* // ==========================================================================
+    // 確認画面
+    // ========================================================================== */
+    .frm-summary-page-wrapper {
+        .frm-child-row + tr {
+            display: none;
+        }
+        tr {
+            td:has(h3) {
+                background: transparent;
+                padding: 0 !important;
+                h3 {
+                    font-size: 18px;
+                }
+            }
+        }
+    }
+    .frm_opt_container {
+        /* display: flex !important; */
+    }
+    .frm_required,
+    .frm-edit-page-btn {
+        display: none;
+    }
+    .frm-line-table {
+        tr {
+            display: block;
+            margin-bottom: 30px;
+            border-bottom: none;
+        }
+        th,
+        td {
+            display: block;
+            text-align: left;
+            width: 100% !important;
+            padding: 0 !important;
+            color: var(--color-text) !important;
+        }
+        td {
+            padding: 0.5em 1em !important;
+            background: var(--color-tertiary);
+            margin-top: 10px;
+        }
+    }
+    h3.frm_primary_label {
+        display: none;
+    }
+    .frm_message {
+        text-align: center;
+    }
+    .frm_verify {
+        display: none;
+    }
+    .with_frm_style .frm_none_container .frm_primary_label,
+    .with_frm_style .frm_pos_none,
+    .frm_pos_none,
+    .frm_none_container .frm_primary_label {
+        display: none;
+    }
+    /* // 2カラム用 */
+    .frm_2col {
+        .frm_form_field.frm_inline_container,
+        .frm_form_field.frm_right_container,
+        .frm_form_field.frm_left_container {
+            grid-template-columns: 35% auto;
+        }
+    }
+}
+/* //日付フィールド */
+.ui-datepicker {
+    .ui-datepicker-header,
+    .ui-widget-header {
+        background: var(--color-primary) !important;
+    }
+    td {
+        .ui-state-hover {
+            background: var(--color-primary) !important;
+            color: var(--color-secondary) !important;
+        }
+        &.ui-datepicker-current-day {
+            background: var(--color-primary) !important;
+            a {
+                color: var(--color-secondary) !important;
+            }
+        }
+    }
+    .ui-datepicker-prev,
+    .ui-datepicker-next {
+        position: absolute;
+    }
+    .ui-datepicker-title select.ui-datepicker-month,
+    .ui-datepicker-title select.ui-datepicker-year {
+        width: calc(50% - 18px) !important;
+    }
+}
+.ui-datepicker-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: calc(100% - 34px * 2);
+    gap: 10px;
+    margin: 0 auto;
+}

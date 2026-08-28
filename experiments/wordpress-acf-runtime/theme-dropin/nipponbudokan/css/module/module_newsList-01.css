@@ -1,0 +1,134 @@
+@charset "utf-8";
+/* // ------------------------------
+// ニュースリスト
+// ------------------------------ */
+.block-editor_wrap,
+.editor-styles-wrapper {
+    .module_newsList-01 {
+        margin-top: var(--wp-block-margin);
+        & + & {
+            margin-top: var(--wp-block-margin-large);
+        }
+    }
+}
+.module_newsList-01 {
+    /* ニュースリスト + ニュースカードと続く場合の上部余白 */
+    & + .module_newsCard-01 {
+        margin-top: var(--wp-block-margin-large);
+    }
+    .mnl-01_article {
+        border-top: 1px solid var(--color-gray-border);
+        &:last-child {
+            border-bottom: 1px solid var(--color-gray-border);
+        }
+        .link,
+        .no-link {
+            display: block;
+            padding: 20px 0;
+            color: var(--color-text);
+            text-decoration: none;
+            transition: var(--transition-duration);
+        }
+        .link {
+            &[target='_blank'] {
+                .title {
+                    &::after {
+                        content: var(--icon-blank);
+                        font-family: var(--font-awesome);
+                        font-weight: 400;
+                        margin-left: 0.25em;
+                    }
+                }
+            }
+            &[href$='.doc'],
+            &[href$='.docx'],
+            &[href$='.docm'],
+            &[href$='.xls'],
+            &[href$='.xlsx'],
+            &[href$='.xlsm'],
+            &[href$='.png'],
+            &[href$='.jpg'],
+            &[href$='.jpeg'],
+            &[href$='.gif'],
+            &[href$='.webp'] {
+                .title {
+                    &::after {
+                        content: var(--icon-file);
+                        font-family: var(--font-awesome);
+                        font-weight: 400;
+                        margin-left: 0.25em;
+                    }
+                }
+            }
+            &[href$='.pdf'] {
+                .title {
+                    &::after {
+                        content: var(--icon-pdf);
+                        font-family: var(--font-awesome);
+                        font-weight: 400;
+                        margin-left: 0.25em;
+                    }
+                }
+            }
+        }
+        .head {
+            display: flex;
+            .date {
+                margin: 0; /* エディタでの余白を削除 */
+                width: 100px;
+            }
+            .category {
+                margin: 0; /* エディタでの余白を削除 */
+                display: flex;
+                align-items: center;
+                flex-wrap: wrap;
+                gap: 4px 10px;
+                .label {
+                    display: inline-block;
+                    border: 1px solid var(--color-primary);
+                    padding: 0 0.5em;
+                    color: var(--color-primary);
+                }
+            }
+        }
+        .body {
+            margin-top: 10px;
+            .title {
+                margin: 0; /* エディタでの余白を削除 */
+                font-weight: 700;
+                font-size: 18px;
+                line-height: 1.5;
+                letter-spacing: 0.05em;
+                transition: color var(--transition-duration);
+                overflow-wrap: anywhere;
+                word-break: normal;
+                line-break: strict;
+            }
+        }
+    }
+
+    @media screen and (min-width: 768px) {
+        .mnl-01_article {
+            .link,
+            .no-link {
+                padding: 20px;
+            }
+        }
+    }
+
+    /* MARK: hover */
+    @media (any-hover: hover) {
+        .mnl-01_article {
+            .link,
+            .no-link {
+                &:hover {
+                    .body {
+                        .title {
+                            color: var(--color-link);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

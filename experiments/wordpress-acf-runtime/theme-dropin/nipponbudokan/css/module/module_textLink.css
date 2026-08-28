@@ -1,0 +1,52 @@
+@charset "utf-8";
+/* // ==========================================================================
+// テキストリンク
+// ========================================================================== */
+.module_textLink {
+    color: var(--color-link);
+    text-decoration-line: underline;
+    text-decoration-color: color-mix(in oklch, var(--color-link) 100%, transparent);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+    text-decoration-skip-ink: none;
+    &[target='_blank'] {
+        &::after {
+            content: var(--icon-blank);
+            font-family: var(--font-awesome);
+            font-weight: 400;
+            margin-left: 0.25em;
+        }
+    }
+    &[href$='.pdf'] {
+        &::after {
+            content: var(--icon-pdf);
+            font-family: var(--font-awesome);
+            font-weight: 400;
+            margin-left: 0.25em;
+        }
+    }
+    &[href$='.doc'],
+    &[href$='.docx'],
+    &[href$='.docm'],
+    &[href$='.xls'],
+    &[href$='.xlsx'],
+    &[href$='.xlsm'],
+    &[href$='.png'],
+    &[href$='.jpg'],
+    &[href$='.jpeg'],
+    &[href$='.gif'],
+    &[href$='.webp'] {
+        &::after {
+            content: var(--icon-file);
+            font-family: var(--font-awesome);
+            font-weight: 400;
+            margin-left: 0.25em;
+        }
+    }
+    /* MARK: hover */
+    @media (any-hover: hover) {
+        &:hover {
+            text-decoration-color: color-mix(in oklch, var(--color-link) 0%, transparent 100%);
+        }
+    }
+}

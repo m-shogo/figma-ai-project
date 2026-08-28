@@ -1,0 +1,24 @@
+@charset "utf-8";
+/* // ------------------------------
+// MARK: カラム
+// ------------------------------ */
+.block-editor_wrap,
+.editor-styles-wrapper {
+    .wp-block-columns {
+        margin-top: var(--wp-block-margin);
+        & + & {
+            margin-top: var(--wp-block-margin-large);
+        }
+        &.is-layout-flex {
+            gap: 32px 24px;
+            @media screen and (min-width: 768px) {
+                gap: 32px;
+            }
+        }
+        .wp-block-column {
+            > *:first-child {
+                margin-top: 0;
+            }
+        }
+    }
+}

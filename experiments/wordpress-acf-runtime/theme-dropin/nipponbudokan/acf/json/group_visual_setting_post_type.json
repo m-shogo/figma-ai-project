@@ -1,0 +1,100 @@
+{
+    "key": "group_visual_setting_post_type",
+    "title": "ビジュアル設定（投稿タイプ）",
+    "fields": [
+        {
+            "key": "field_5d5cb674e2a74",
+            "label": "通常投稿",
+            "name": "page_img-post",
+            "aria-label": "",
+            "type": "image",
+            "instructions": "横00px・縦00px以上",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "id",
+            "preview_size": "page_img",
+            "library": "all",
+            "min_width": "",
+            "min_height": "",
+            "min_size": "",
+            "max_width": "",
+            "max_height": "",
+            "max_size": "",
+            "mime_types": ""
+        },
+        {
+            "key": "field_5d5cb69fe2a75",
+            "label": "カスタム投稿",
+            "name": "page_img-sampleslug",
+            "aria-label": "",
+            "type": "image",
+            "instructions": "横00px・縦00px以上",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "id",
+            "preview_size": "page_img",
+            "library": "all",
+            "min_width": "",
+            "min_height": "",
+            "min_size": "",
+            "max_width": "",
+            "max_height": "",
+            "max_size": "",
+            "mime_types": ""
+        },
+        {
+            "key": "field_5d5cb6c8e2a77",
+            "label": "その他（404）",
+            "name": "page_img-other",
+            "aria-label": "",
+            "type": "image",
+            "instructions": "横00px・縦00px以上",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "id",
+            "preview_size": "page_img",
+            "library": "all",
+            "min_width": "",
+            "min_height": "",
+            "min_size": "",
+            "max_width": "",
+            "max_height": "",
+            "max_size": "",
+            "mime_types": ""
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "options_page",
+                "operator": "==",
+                "value": "common_visual"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": false,
+    "display_title": ""
+}

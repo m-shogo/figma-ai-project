@@ -1,0 +1,140 @@
+@charset "utf-8";
+/*　// ------------------------------
+// ボタンリンク
+// ------------------------------　*/
+/* ///////// デフォルト設定 ///////// */
+.block-editor_wrap,
+.editor-styles-wrapper {
+    .wp-block-buttons {
+        margin-top: var(--wp-block-margin);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        & + & {
+            margin-top: var(--wp-block-margin-large);
+        }
+        .wp-block-button {
+            display: block;
+            &:not(.has-custom-width) {
+                /* デフォルトサイズ */
+                width: 100%;
+            }
+            .wp-block-button__link {
+                position: relative;
+                text-decoration: none;
+                font-size: 15px;
+                min-height: 48px;
+                font-weight: 500;
+                line-height: normal;
+                display: flex;
+                align-items: center;
+                text-align: left;
+                border: 2px solid var(--color-primary);
+                border-radius: 3em;
+                background-color: var(--color-primary);
+                color: var(--color-secondary);
+                padding: 12px 70px 12px 35px;
+                letter-spacing: 0.08em;
+                transition: var(--transition-duration);
+                max-width: 100%;
+                &.has-text-align-center {
+                    justify-content: center;
+                    padding: 12px 35px;
+                }
+                &.has-text-align-right {
+                    justify-content: flex-end;
+                }
+                &::after {
+                    content: '';
+                    position: absolute;
+                    right: 24px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    transition: var(--transition-duration);
+                    font-size: 18px;
+                    color: currentColor;
+                }
+                &[target='_blank'] {
+                    &::after {
+                        content: var(--icon-blank);
+                        font-family: var(--font-awesome);
+                        font-weight: 400;
+                    }
+                }
+                &[href$='.pdf'] {
+                    &::after {
+                        content: var(--icon-pdf);
+                        font-family: var(--font-awesome);
+                        font-weight: 400;
+                    }
+                }
+                &[href$='.doc'],
+                &[href$='.docx'],
+                &[href$='.docm'],
+                &[href$='.xls'],
+                &[href$='.xlsx'],
+                &[href$='.xlsm'],
+                &[href$='.png'],
+                &[href$='.jpg'],
+                &[href$='.jpeg'],
+                &[href$='.gif'],
+                &[href$='.webp'] {
+                    &::after {
+                        content: var(--icon-file);
+                        font-family: var(--font-awesome);
+                        font-weight: 400;
+                    }
+                }
+            }
+            &.is-style-outline {
+                .wp-block-button__link {
+                    background-color: transparent;
+                    color: var(--color-primary);
+                }
+            }
+        }
+        /* ///////// 個別設定 /////////　*/
+        /* ボタン小 */
+        &.small {
+        }
+
+        @media screen and (min-width: 768px) {
+            gap: 20px;
+            .wp-block-button {
+                &.has-custom-width {
+                    width: 100%;
+                }
+                &:not(.has-custom-width) {
+                    width: auto;
+                    min-width: 270px;
+                }
+                .wp-block-button__link {
+                    padding: 16px 64px 16px 40px;
+                    min-height: 64px;
+                    font-size: 16px;
+                }
+            }
+        }
+    }
+}
+
+.block-editor_wrap {
+    /* ホバー時のスタイル */
+    /* MARK: hover */
+    @media (any-hover: hover) {
+        .wp-block-button {
+            &:has(.wp-block-button__link:hover) {
+                .wp-block-button__link {
+                    background-color: var(--color-secondary);
+                    color: var(--color-primary);
+                }
+                &.is-style-outline {
+                    .wp-block-button__link {
+                        background-color: var(--color-primary);
+                        color: var(--color-secondary);
+                    }
+                }
+            }
+        }
+    }
+}

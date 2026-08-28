@@ -1,0 +1,105 @@
+@charset "utf-8";
+/* // ==========================================================================
+// ページネーション
+// ========================================================================== */
+/* // 一覧用 */
+.module_pager-01 {
+    margin-top: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    position: relative;
+    z-index: 0;
+    .page-numbers {
+        &:not(.prev):not(.next):not(.dots) {
+            display: block flex;
+            align-items: center;
+            justify-content: center;
+            inline-size: 40px;
+            height: auto;
+            aspect-ratio: 1 / 1;
+            border: 1px solid var(--color-primary);
+            font-family: var(--enText);
+            font-weight: 400;
+            font-size: 16px;
+            line-height: 1;
+            text-decoration: none;
+            background-color: var(--color-secondary);
+            color: var(--color-primary);
+            transition: color var(--transition-duration), background-color var(--transition-duration);
+            &.current {
+                border-color: var(--color-primary);
+                background-color: var(--color-primary);
+                color: var(--color-secondary);
+            }
+        }
+        /* 矢印ボタン */
+        &.prev,
+        &.next {
+            flex-shrink: 0;
+            text-decoration: none;
+            width: 40px;
+            height: 40px;
+            aspect-ratio: 1 / 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            span {
+                line-height: 1;
+                &::before {
+                    font-family: var(--font-awesome);
+                    font-weight: 400;
+                    font-size: 24px;
+                    color: var(--color-text);
+                }
+            }
+        }
+        &.prev {
+            span {
+                &::before {
+                    content: '\f104';
+                }
+            }
+        }
+        &.next {
+            span {
+                &::before {
+                    content: '\f105';
+                }
+            }
+        }
+        /* ドット */
+        &.dots {
+            width: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+
+    @media screen and (min-width: 768px) {
+        margin-top: 80px;
+        .page-numbers {
+            &:not(.prev):not(.next):not(.dots) {
+            }
+        }
+    }
+
+    /* MARK: hover */
+    @media (any-hover: hover) {
+        .page-numbers {
+            &:hover {
+                &:not(.prev):not(.next):not(.current):not(.dots) {
+                    background-color: var(--color-primary);
+                    color: var(--color-secondary);
+                }
+                &.prev,
+                &.next {
+                    & span {
+                    }
+                }
+            }
+        }
+    }
+}
