@@ -79,7 +79,7 @@
     }
 
     .tp_title_en_initial {
-        display: none;
+        display: inline;
     }
 
     .tp_lead {
@@ -207,7 +207,7 @@
 
         .tp_heading {
             align-items: flex-start;
-            gap: 20px;
+            gap: 11.5px;
         }
 
         .tp_title {
