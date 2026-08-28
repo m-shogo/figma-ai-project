@@ -128,13 +128,13 @@ jobs:
 
               if (item.name === 'sp') {
                 if (!metrics.visual || Math.abs(metrics.visual.width - item.contentWidth) > 1 || Math.abs(metrics.visual.height - 278) > 2) failed = true;
-                if (!metrics.background || Math.abs(metrics.background.width - item.contentWidth) > 1 || Math.abs(metrics.background.height - 240) > 1 || Math.abs(metrics.background.y) > 1) failed = true;
+                if (!metrics.background || Math.abs(metrics.background.x) > 1 || Math.abs(metrics.background.width - item.contentWidth) > 1 || Math.abs(metrics.background.height - 240) > 1 || Math.abs(metrics.background.y) > 1) failed = true;
                 if (!metrics.title || Math.abs(metrics.title.x) > 1 || Math.abs(metrics.title.y - 199) > 2 || Math.abs(metrics.title.width - 335) > 1 || Math.abs(metrics.title.height - 79) > 2) failed = true;
                 if (metrics.title?.fontSize !== '22px' || metrics.title?.textAlign !== 'left') failed = true;
               } else {
                 if (!metrics.visual || Math.abs(metrics.visual.width - item.contentWidth) > 1 || Math.abs(metrics.visual.height - 321) > 2) failed = true;
-                if (!metrics.background || Math.abs(metrics.background.width - item.contentWidth) > 1 || Math.abs(metrics.background.height - 320) > 1 || Math.abs(metrics.background.y) > 1) failed = true;
-                if (!metrics.title || Math.abs(metrics.title.x) > 1 || Math.abs(metrics.title.y - 253) > 2 || Math.abs(metrics.title.width - 360) > 1 || Math.abs(metrics.title.height - 68) > 2) failed = true;
+                if (!metrics.background || Math.abs(metrics.background.x - 60) > 1 || Math.abs(metrics.background.width - 1320) > 1 || Math.abs(metrics.background.height - 320) > 1 || Math.abs(metrics.background.y) > 1) failed = true;
+                if (!metrics.title || Math.abs(metrics.title.x) > 1 || Math.abs(metrics.title.y - 253) > 2 || Math.abs(metrics.title.width - 360) > 1 || Math.abs(metrics.title.height - 79) > 2) failed = true;
                 if (metrics.title?.fontSize !== '32px' || metrics.title?.textAlign !== 'center') failed = true;
               }
 
