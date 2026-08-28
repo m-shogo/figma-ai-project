@@ -1,7 +1,10 @@
 <?php
 $context = isset($args['context']) ? sanitize_key($args['context']) : 'archive';
 $link_tabs = array_key_exists('link_tabs', $args ?? array()) ? (bool) $args['link_tabs'] : ($context === 'archive');
-$labels = isset($args['labels']) && is_array($args['labels']) ? $args['labels'] : array();
+$default_labels = array('武道', '書道', '刊行物', '研修', '事務局');
+$labels = isset($args['labels']) && is_array($args['labels'])
+    ? $args['labels']
+    : apply_filters('nipponbudokan_news_category_labels', $default_labels);
 
 $posts_page_id = (int) get_option('page_for_posts');
 $all_url = $posts_page_id ? get_permalink($posts_page_id) : home_url('/');
@@ -22,39 +25,28 @@ if ($current_category_id) {
     }
 }
 
-$tabs = array();
-$tabs[] = array(
+$tabs = array(array(
     'label' => 'すべて',
     'url' => $all_url,
     'active' => $current_category_id === 0,
-);
+));
 
-if (!empty($labels)) {
-    foreach ($labels as $label) {
-        if ($label === 'すべて') {
-            continue;
-        }
-        $tabs[] = array(
-            'label' => (string) $label,
-            'url' => '',
-            'active' => false,
-        );
+foreach ($labels as $label) {
+    $label = (string) $label;
+    if ($label === '' || $label === 'すべて') {
+        continue;
     }
-} else {
-    $categories = get_categories(array(
-        'orderby' => 'id',
-        'order' => 'ASC',
-        'hide_empty' => false,
-        'parent' => 0,
-    ));
 
-    foreach ($categories as $category) {
-        $tabs[] = array(
-            'label' => $category->name,
-            'url' => get_category_link($category->term_id),
-            'active' => $current_top_category_id === (int) $category->term_id,
-        );
+    $term = get_term_by('name', $label, 'category');
+    if (!$term || is_wp_error($term)) {
+        $term = null;
     }
+
+    $tabs[] = array(
+        'label' => $label,
+        'url' => $term ? get_category_link($term->term_id) : '',
+        'active' => $term ? $current_top_category_id === (int) $term->term_id : false,
+    );
 }
 
 $nav_classes = array('news_tabs', 'news_tabs_' . $context);
