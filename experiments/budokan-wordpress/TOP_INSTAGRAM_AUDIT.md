@@ -62,21 +62,33 @@ SPとPCは同一content familyなので、同一DOMをSP 2×2 → PC 5列へCSS�
 
 安全な実装案:
 
-- dedicated TOP template-part（例: `_top-instagram.php`）
+- dedicated TOP template-part（`_top-instagram.php`）
 - Figmaの5枚をTheme assetとして永続保存したfallback
 - 将来の差し替え用に `nipponbudokan_top_instagram_items` filter
 - 本番URLが与えられるまでは偽の `#` linkを必須化しない
 - fifth itemはSP非表示、PCで表示
 
+## Asset materialization follow-up
+
+現行FigmaのSP/PC nodeを再取得し、5枚の内容と並びを再確認した。短命MCP URLをThemeへ保存する代わりに、同じrepository内の旧検証branch `agent/ref002-budokan-final-assets` に既に永続化されていた **現行Figma由来の231×289 exact crop** を再利用する。
+
+- 01 blob: `a2fad85def5120c1911a59f7d10f76e482d4c397`
+- 02 blob: `a65afa025059878f96dd1b820719c661e7283553`
+- 03 blob: `23f604f55bdc112489db93caee22d2be4f5f2dc8`
+- 04 blob: `27e42b845627e8634a68b67fab9bb9ea84736bd3`
+- 05 blob: `a78b8f520ad38f2f54651c6aca88e55daac7e5f9`
+
+PR #142自体や旧runtimeコードはmergeしない。画像blobだけを新しいTheme pathへ同一Git objectのままmaterializeするため、再encodeや一時URL依存を避けられる。
+
 ## 今回見つかった実装上の注意
 
-Figma MCPが返す画像URLは短命なのでThemeからhotlinkしない。`get_design_context`で5枚の正本画像は取得できるが、永続Theme asset化する経路を通してから実装する。
+Figma MCPが返す画像URLは短命なのでThemeからhotlinkしない。さらに、同一repositoryの既存Git objectに正本assetがある場合は、ネットワーク経由で再downloadするよりblob identityを再利用した方がbyte fidelityとprovenanceを保ちやすい。
 
-また、既存TOP PartnerのRuntimeで `.global_contents > section` の追加padding競合が実証されているため、本sectionでもSP/PCのroot heightをRuntimeで必ず測定し、globalルールへmagic compensationを入れない。
+また、既存TOP PartnerのRuntimeで `.global_contents > section` の追加padding競合が実証されているため、本sectionでは `.global_contents > .top_instagram-01` がSP/PCのsection paddingを明示的に所有する。global側へmagic compensationは入れない。
 
 ## Gate
 
-次の実装は以下を満たしてからsection完了扱いにする。
+section完了条件:
 
 1. Figmaの5枚を一時URLではなくThemeへ永続保存
 2. SP Figma → SP implementation → real WordPress runtime QA
