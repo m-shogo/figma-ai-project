@@ -2,7 +2,12 @@
 <main id="global_contents" class="global_contents" itemscope itemprop="mainContentOfPage">
     <section>
         <?php get_template_part('template-parts/_visual'); ?>
-        <?php if (get_current_post_type() === 'post' || is_category() || is_tag() || is_date()): ?>
+        <?php
+        $current_post_type = get_current_post_type();
+        $is_news_archive = $current_post_type === 'post'
+            || (empty($current_post_type) && (is_category() || is_tag() || is_date()));
+        ?>
+        <?php if ($is_news_archive): ?>
             <?php get_template_part('template-parts/_news-archive'); ?>
         <?php else: ?>
             <?php get_template_part('template-parts/_dropdown-archive'); ?>
