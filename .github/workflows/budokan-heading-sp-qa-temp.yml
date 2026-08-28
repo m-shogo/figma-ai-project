@@ -116,6 +116,7 @@ jobs:
                   h2AlignItems: h2Style.alignItems,
                   h2Before: { width:h2Before.width, height:h2Before.height, marginTop:h2Before.marginTop },
                   h3Padding: {top:h3Style.paddingTop,right:h3Style.paddingRight,bottom:h3Style.paddingBottom,left:h3Style.paddingLeft},
+                  h3Border: {top:h3Style.borderTopWidth,bottom:h3Style.borderBottomWidth},
                   h4Gap: h4Style.gap,
                   scrollWidth: document.documentElement.scrollWidth,
                   clientWidth: document.documentElement.clientWidth,
@@ -125,12 +126,17 @@ jobs:
               const overflow = metrics.scrollWidth > metrics.clientWidth + 1;
               if (status >= 400 || pageErrors.length || overflow) failed = true;
               if (metrics.h2Gap !== '20px' || metrics.h2AlignItems !== 'flex-start') failed = true;
-              if (metrics.h2Before.width !== '10px' || metrics.h2Before.height !== '10px' || metrics.h2Before.marginTop !== '13px') failed = true;
+              if (metrics.h2Before.width !== '10px' || metrics.h2Before.height !== '10px') failed = true;
               if (metrics.h4Gap !== '16px') failed = true;
+              if (metrics.h3Border.top !== '1px' || metrics.h3Border.bottom !== '1px') failed = true;
               if (item.name === 'sp') {
-                if (metrics.h3Padding.top !== '12px' || metrics.h3Padding.right !== '16px' || metrics.h3Padding.bottom !== '12px' || metrics.h3Padding.left !== '16px') failed = true;
+                if (metrics.h2Before.marginTop !== '12px') failed = true;
+                if (metrics.h3Padding.top !== '11px' || metrics.h3Padding.right !== '15px' || metrics.h3Padding.bottom !== '11px' || metrics.h3Padding.left !== '15px') failed = true;
+                if (Math.abs(metrics.h3.height - 52) > 0.5) failed = true;
               } else {
-                if (metrics.h3Padding.top !== '16px' || metrics.h3Padding.right !== '20px' || metrics.h3Padding.bottom !== '16px' || metrics.h3Padding.left !== '20px') failed = true;
+                if (metrics.h2Before.marginTop !== '13px') failed = true;
+                if (metrics.h3Padding.top !== '15px' || metrics.h3Padding.right !== '19px' || metrics.h3Padding.bottom !== '15px' || metrics.h3Padding.left !== '19px') failed = true;
+                if (Math.abs(metrics.h3.height - 60) > 0.5) failed = true;
               }
               await page.locator('.block-editor_wrap').screenshot({ path: `.runtime/budokan-heading/${item.name}-headings.png` });
               results.push({viewport:item,status,pageErrors,overflow,metrics});
