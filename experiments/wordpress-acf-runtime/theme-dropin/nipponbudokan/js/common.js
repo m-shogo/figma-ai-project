@@ -684,14 +684,11 @@ window.addEventListener('resize', setVw);
   // ==========================================================================
   const pageTop = function () {
     const gf_pageTop = $('#js_gf_pageTop');
-    const windowWidth = $(window).width();
-    gf_pageTop.hide();
-    $(window).on('scroll', function () {
-      if ($(this).scrollTop() > 0) {
-        gf_pageTop.fadeIn();
-      } else {
-        gf_pageTop.fadeOut();
-      }
+    // Figma: copyright bar 内に常時表示（fixed 浮遊ボタンではない）
+    gf_pageTop.show();
+    gf_pageTop.find('a').on('click', function (e) {
+      e.preventDefault();
+      $('body,html').stop().animate({ scrollTop: 0 }, 300);
     });
   };
 

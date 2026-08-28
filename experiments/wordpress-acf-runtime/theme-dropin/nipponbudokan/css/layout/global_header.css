@@ -75,22 +75,14 @@
         background-color: var(--color-header-search);
         .icon {
             display: block;
-            position: relative;
             width: 18px;
             height: 18px;
-            border: 2px solid currentColor;
-            border-radius: 50%;
-            &::after {
-                content: '';
-                display: block;
-                position: absolute;
-                right: -5px;
-                bottom: -3px;
-                width: 8px;
-                height: 2px;
-                background-color: currentColor;
-                transform: rotate(45deg);
-                transform-origin: left center;
+            &::before {
+                content: var(--icon-zoom);
+                font-family: var(--font-awesome);
+                font-size: 18px;
+                font-weight: 400;
+                line-height: 1;
             }
         }
     }
@@ -99,7 +91,7 @@
         .icon {
             display: block;
             width: 20px;
-            height: 2px;
+            height: 1px;
             background-color: currentColor;
             box-shadow: 0 -6px 0 currentColor, 0 6px 0 currentColor;
             transition: var(--transition-duration);

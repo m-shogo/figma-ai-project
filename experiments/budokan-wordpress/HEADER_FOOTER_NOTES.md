@@ -30,6 +30,14 @@
 2. layout は flex。fixed header は sticky 用途として維持可
 3. デザイン変更前提なので構造とトークンを先に合わせ、pixel 追い込みは後
 4. form は触らない
+5. クラスは Theme 流儀（`gh_` / `gn_` / `gf_`）。BEM `--modifier` 禁止
+
+## 進捗（2026-08-28）
+
+- Header: ブランド色 / EN・search・menu 常時（PC）/ 768 切替 / PC 横ナビ + chevron
+- Footer: logo・住所・アクセス・SNS / 2列リンク / copyright bar + Page Top（金）
+- SNS URL・実コンテンツはプレースホルダ（Human 指示待ち）
+- `parts.php` は未変更（ブロック本文正本）
 
 ## SP
 

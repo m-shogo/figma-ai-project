@@ -303,34 +303,30 @@
         position: static;
         overflow: visible;
         flex-grow: 1;
-        height: auto;
+        height: inherit;
         padding-bottom: 0;
         background-color: transparent;
         transition: none;
         pointer-events: none;
         clip-path: unset;
-        display: grid;
-        grid-template-areas:
-            'gn_subMenu gn_search'
-            'gn_menu gn_menu';
-        grid-template-columns: 1fr 300px;
-        grid-template-rows: auto 1fr;
-        row-gap: 16px;
-        justify-items: end;
-        margin-top: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 0;
         > .gn_menu {
-            grid-area: gn_menu;
+            width: 100%;
+            pointer-events: auto;
         }
-        > .gn_subMenu {
-            grid-area: gn_subMenu;
-        }
+        > .gn_subMenu,
         > .gn_search {
-            grid-area: gn_search;
+            display: none;
         }
 
         .gn_links-01 {
             display: flex;
-            gap: 40px;
+            align-items: center;
+            justify-content: center;
+            gap: 48px;
             /* MARK: 共通 全階層に影響あり start */
             .gnl_item-02,
             .gnl_item-03,
@@ -467,11 +463,27 @@
 
             /* MARK: 階層別 2階層 start */
             .gnl_item-02 {
+                &._hasChild {
+                    > .gnl_title-02 {
+                        gap: 8px;
+                        &::after {
+                            content: var(--icon-chevron-down);
+                            font-family: var(--font-awesome);
+                            flex-shrink: 0;
+                            color: var(--color-primary);
+                            font-size: 13px;
+                            line-height: 1;
+                        }
+                    }
+                }
             }
             .gnl_title-02 {
             }
             .gnl_link-02 {
                 padding-block: 16px;
+                font-size: 15px;
+                letter-spacing: 0.05em;
+                line-height: 1;
             }
             .gnl_button-02 {
             }
