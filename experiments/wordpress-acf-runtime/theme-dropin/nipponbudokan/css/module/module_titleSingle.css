@@ -4,8 +4,7 @@
 // Figma SP 1451:5197 / PC 1235:6361
 // ========================================================================== */
 .module_titleSingle {
-    width: 100vw;
-    margin-left: calc(50% - 50vw);
+    width: 100%;
     margin-bottom: 32px;
     padding: 32px 0;
     border: solid var(--color-gray-border);
@@ -71,7 +70,6 @@
     @media screen and (min-width: 768px) {
         margin-bottom: 48px;
         padding: 48px 0;
-        border-width: 0 0 1px;
 
         .head,
         .body {
