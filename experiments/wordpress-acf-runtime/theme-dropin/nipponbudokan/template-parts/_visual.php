@@ -1,5 +1,15 @@
-<?php global $post; ?>
-<div class="global_mainVisual">
+<?php
+/**
+ * Shared page visual.
+ *
+ * Figma has two presentation families that share the same WordPress/ACF image
+ * authority: archive/search/error visuals and ordinary fixed-page image-title
+ * visuals. Keep one renderer/data contract and expose only a context modifier.
+ */
+global $post;
+$is_fixed_page_visual = is_page() && !is_front_page() && !is_404() && !is_search();
+?>
+<div class="global_mainVisual<?php echo $is_fixed_page_visual ? ' _fixedPage' : ''; ?>">
     <div class="global_inner gm_inner">
         <?php if (get_current_post_type() && !is_page() && !is_404() && !is_search() || is_post_type_archive() || is_tax()): //投稿 
         ?>
