@@ -1,0 +1,143 @@
+name: Budokan Heading Master QA Temp
+
+on:
+  pull_request:
+    paths:
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/**'
+      - '.github/workflows/budokan-heading-sp-qa-temp.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  heading-runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: PHP syntax
+        run: find experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan -name '*.php' -print0 | xargs -0 -n1 php -l
+
+      - name: Check ACF PRO runtime availability
+        id: acf
+        env:
+          ACF_PRO_LICENSE_KEY: ${{ secrets.ACF_PRO_LICENSE_KEY }}
+        run: |
+          if [ -n "$ACF_PRO_LICENSE_KEY" ]; then
+            echo 'enabled=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'enabled=false' >> "$GITHUB_OUTPUT"
+            echo 'SKIP live Budokan capture: ACF_PRO_LICENSE_KEY is unavailable.'
+          fi
+
+      - name: Install browser QA dependency
+        if: steps.acf.outputs.enabled == 'true'
+        working-directory: experiments/wordpress-acf-runtime
+        run: |
+          mkdir -p .runtime/playwright
+          cd .runtime/playwright
+          npm init -y >/dev/null 2>&1
+          npm install --no-audit --no-fund playwright@1.54.2 >/dev/null
+          npx playwright install --with-deps chromium
+
+      - name: Start real WordPress + ACF PRO + Budokan Theme
+        if: steps.acf.outputs.enabled == 'true'
+        working-directory: experiments/wordpress-acf-runtime
+        env:
+          ACF_PRO_LICENSE_KEY: ${{ secrets.ACF_PRO_LICENSE_KEY }}
+          CI: 'true'
+        run: bash scripts/setup.sh
+
+      - name: Seed shared heading fixture
+        if: steps.acf.outputs.enabled == 'true'
+        working-directory: experiments/wordpress-acf-runtime
+        run: |
+          content='<h2>日本武道館研修センター 施設のご案内</h2><p>共有見出しのランタイム検証用本文です。</p><h3>宿泊料金</h3><p>共有中見出しの検証用本文です。</p><h4>2026年9月30日まで</h4><p>共有小見出しの検証用本文です。</p>'
+          docker compose run --rm cli post create --post_type=page --post_status=publish --post_title='Heading Runtime QA' --post_name='training-heading-qa' --post_content="$content" --porcelain >/tmp/page-id
+          test -s /tmp/page-id
+
+      - name: Capture SP and PC heading geometry
+        if: steps.acf.outputs.enabled == 'true'
+        working-directory: experiments/wordpress-acf-runtime
+        run: |
+          source scripts/runtime-env.sh
+          mkdir -p .runtime/budokan-heading
+          WP_URL="$WP_URL" node <<'NODE'
+          const fs = require('node:fs');
+          const path = require('node:path');
+          const { createRequire } = require('node:module');
+          const requireQA = createRequire(path.resolve('.runtime/playwright/package.json'));
+          const { chromium } = requireQA('playwright');
+
+          (async () => {
+            const browser = await chromium.launch({ headless: true });
+            const cases = [
+              { name: 'sp', viewportWidth: 390, contentWidth: 375, height: 900 },
+              { name: 'pc', viewportWidth: 1395, contentWidth: 1380, height: 900 },
+            ];
+            const results = [];
+            let failed = false;
+            for (const item of cases) {
+              const page = await browser.newPage({ viewport: { width: item.viewportWidth, height: item.height } });
+              const pageErrors = [];
+              page.on('pageerror', error => pageErrors.push(error.message));
+              const response = await page.goto(`${process.env.WP_URL}/training-heading-qa/`, { waitUntil: 'networkidle' });
+              await page.evaluate(() => document.fonts.ready);
+              await page.locator('.block-editor_wrap h2').scrollIntoViewIfNeeded();
+              const metrics = await page.evaluate(() => {
+                const rect = el => { const r = el.getBoundingClientRect(); return {x:r.x,y:r.y,width:r.width,height:r.height}; };
+                const h2 = document.querySelector('.block-editor_wrap h2');
+                const h3 = document.querySelector('.block-editor_wrap h3');
+                const h4 = document.querySelector('.block-editor_wrap h4');
+                const h2Style = getComputedStyle(h2);
+                const h2Before = getComputedStyle(h2, '::before');
+                const h3Style = getComputedStyle(h3);
+                const h4Style = getComputedStyle(h4);
+                return {
+                  h2: rect(h2), h3: rect(h3), h4: rect(h4),
+                  h2Gap: h2Style.gap,
+                  h2AlignItems: h2Style.alignItems,
+                  h2Before: { width:h2Before.width, height:h2Before.height, marginTop:h2Before.marginTop },
+                  h3Padding: {top:h3Style.paddingTop,right:h3Style.paddingRight,bottom:h3Style.paddingBottom,left:h3Style.paddingLeft},
+                  h4Gap: h4Style.gap,
+                  scrollWidth: document.documentElement.scrollWidth,
+                  clientWidth: document.documentElement.clientWidth,
+                };
+              });
+              const status = response?.status() || 0;
+              const overflow = metrics.scrollWidth > metrics.clientWidth + 1;
+              if (status >= 400 || pageErrors.length || overflow) failed = true;
+              if (metrics.h2Gap !== '20px' || metrics.h2AlignItems !== 'flex-start') failed = true;
+              if (metrics.h2Before.width !== '10px' || metrics.h2Before.height !== '10px' || metrics.h2Before.marginTop !== '13px') failed = true;
+              if (metrics.h4Gap !== '16px') failed = true;
+              if (item.name === 'sp') {
+                if (metrics.h3Padding.top !== '12px' || metrics.h3Padding.right !== '16px' || metrics.h3Padding.bottom !== '12px' || metrics.h3Padding.left !== '16px') failed = true;
+              } else {
+                if (metrics.h3Padding.top !== '16px' || metrics.h3Padding.right !== '20px' || metrics.h3Padding.bottom !== '16px' || metrics.h3Padding.left !== '20px') failed = true;
+              }
+              await page.locator('.block-editor_wrap').screenshot({ path: `.runtime/budokan-heading/${item.name}-headings.png` });
+              results.push({viewport:item,status,pageErrors,overflow,metrics});
+              await page.close();
+            }
+            await browser.close();
+            fs.writeFileSync('.runtime/budokan-heading/runtime.json', JSON.stringify(results, null, 2));
+            console.log(JSON.stringify(results, null, 2));
+            if (failed) process.exit(1);
+          })().catch(error => { console.error(error); process.exit(1); });
+          NODE
+
+      - name: Upload runtime evidence
+        if: steps.acf.outputs.enabled == 'true' && always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: budokan-heading-runtime-temp
+          path: experiments/wordpress-acf-runtime/.runtime/budokan-heading
+          if-no-files-found: error
+
+      - name: Cleanup runtime
+        if: always()
+        working-directory: experiments/wordpress-acf-runtime
+        run: |
+          source scripts/runtime-env.sh
+          docker compose down -v --remove-orphans || true
