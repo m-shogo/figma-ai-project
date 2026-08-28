@@ -112,12 +112,13 @@
     --color-gray-border-03: #eeeeee;
     --color-gray-background: #f8f8f8;
     --color-copyright: #2c3036;
+    --color-header-search: #4e5055;
     /* テキストカラー */
     --color-text: #333;
     --color-link: #bf3e2b;
     /* ボーダーカラー */
     --color-separator: #eaeaea;
-    --color-separator--soft: #e7e7e7;
+    --color-separator--soft: #e6e6e6;
     --color-separator--blue: #86a3b5;
     /* 背景カラー */
     --color-base--bg-blue-soft: #e8fafd;

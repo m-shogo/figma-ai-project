@@ -1,4 +1,7 @@
 @charset "utf-8";
+/* // ==========================================================================
+// サイト共通ヘッダー
+// ========================================================================== */
 .global_header {
     position: fixed;
     left: 0;
@@ -7,7 +10,8 @@
     width: 100%;
     height: var(--header-height-SP);
     background-color: var(--color-secondary);
-    border-bottom: 1px solid #e6e6e6;
+    border-bottom: 1px solid var(--color-separator--soft);
+    transition: height var(--transition-duration);
     .gh_inner {
         display: flex;
         align-items: center;
@@ -15,7 +19,6 @@
         gap: 16px;
         padding-inline: var(--padding-SP);
         height: inherit;
-        max-width: 100%;
     }
     .gh_logo {
         flex-shrink: 0;
@@ -33,14 +36,16 @@
             }
         }
     }
-    .gh_actions {
+    .gh_buttons {
         display: flex;
         flex-shrink: 0;
         align-items: stretch;
         gap: 8px;
         margin-left: auto;
     }
-    .gh_action {
+    .gh_lang,
+    .gh_search,
+    .gh_menu {
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -58,46 +63,46 @@
             line-height: 1;
         }
     }
-    .gh_action--lang {
+    .gh_lang {
         display: none;
         background-color: var(--color-accent);
         font-size: 14px;
         font-weight: 500;
         letter-spacing: 0.1em;
     }
-    .gh_action--search {
+    .gh_search {
         display: none;
-        background-color: #4e5055;
-        .gh_action_icon {
+        background-color: var(--color-header-search);
+        .icon {
             display: block;
+            position: relative;
             width: 18px;
             height: 18px;
             border: 2px solid currentColor;
             border-radius: 50%;
-            position: relative;
             &::after {
                 content: '';
+                display: block;
                 position: absolute;
                 right: -5px;
                 bottom: -3px;
                 width: 8px;
                 height: 2px;
-                background: currentColor;
+                background-color: currentColor;
                 transform: rotate(45deg);
                 transform-origin: left center;
             }
         }
     }
-    .gh_action--menu,
     .gh_menu {
         background-color: var(--color-primary);
-        color: var(--color-secondary);
         .icon {
             display: block;
             width: 20px;
             height: 2px;
             background-color: currentColor;
             box-shadow: 0 -6px 0 currentColor, 0 6px 0 currentColor;
+            transition: var(--transition-duration);
         }
         .text {
             position: absolute;
@@ -112,7 +117,7 @@
         }
     }
 
-    /* layout: PC */
+    /* MARK: header_breakpoint */
     @media screen and (min-width: 768px) {
         height: var(--header-height-PC);
         .gh_inner {
@@ -122,31 +127,47 @@
         .gh_logo {
             width: 340px;
             max-width: none;
-            a img {
-                height: 40px;
+            a {
+                img {
+                    height: 40px;
+                }
             }
         }
-        .gh_actions {
+        .gh_buttons {
             gap: 10px;
         }
-        .gh_action {
+        .gh_lang,
+        .gh_search,
+        .gh_menu {
             width: var(--header-action-size);
             height: var(--header-action-size);
         }
-        .gh_action--lang,
-        .gh_action--search {
+        .gh_lang,
+        .gh_search {
             display: flex;
         }
     }
 
+    /* MARK: hover */
     @media (any-hover: hover) {
-        .gh_logo a:hover,
-        .gh_action:hover {
-            opacity: var(--opacity-hover);
+        .gh_logo {
+            a {
+                &:hover {
+                    opacity: var(--opacity-hover);
+                }
+            }
+        }
+        .gh_lang,
+        .gh_search,
+        .gh_menu {
+            &:hover {
+                opacity: var(--opacity-hover);
+            }
         }
     }
 }
 
+/* modifire */
 body._fixed,
 body._contentFixed {
     .global_header {

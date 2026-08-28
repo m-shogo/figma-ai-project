@@ -42,12 +42,14 @@ Nav locations: `global-nav` / `sub-nav` / `footer-nav`
 - 変数: `css/global/variables.css`（`--width-base: 1160px` 等）
 - 命名:
   - layout: `global_*`
-  - header 子: `gh_*` / nav: `gn_*` / footer: `gf_*`
-  - module: `module_*` / 略称 prefix（`ms_` 等）
-  - TOP: `top_*`（`css/project/top_module.css`）
+  - header 子: `gh_*`（例: `gh_inner` `gh_logo` `gh_menu` `gh_lang` `gh_search` `gh_buttons`）
+  - nav: `gn_*` / footer: `gf_*`
+  - module: `module_*` + 略称（`ms_` 等）/ 番号接尾辞 `-01`
+  - TOP: `top_*`
   - blocks: `wp-block-*` 上書き
-
-新規 CSS は既存層に足す。`final-fix` ファイルを増やさない。
+- **BEM の `--modifier` は使わない**（Theme 既存に合わせる）
+- メディアクエリコメントは `/* MARK: header_breakpoint */` / `/* MARK: hover */` 形式
+- ネストは Theme 既存 CSS と同じ native nesting
 
 ---
 

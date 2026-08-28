@@ -56,14 +56,12 @@
             </div>
         </nav>
 
-        <div class="gh_actions">
-            <a class="gh_action gh_action--lang" href="<?php echo esc_url(home_url('/en/')); ?>">
-                <span>EN</span>
-            </a>
-            <button type="button" class="gh_action gh_action--search" id="gh_search" aria-label="検索">
-                <span class="gh_action_icon" aria-hidden="true"></span>
+        <div class="gh_buttons">
+            <a class="gh_lang" href="<?php echo esc_url(home_url('/en/')); ?>"><span>EN</span></a>
+            <button type="button" class="gh_search" id="gh_search" aria-label="検索">
+                <span class="icon" aria-hidden="true"></span>
             </button>
-            <button type="button" class="gh_action gh_action--menu gh_menu" id="gh_menu" aria-label="メニュー" aria-controls="global_navigation" aria-expanded="false">
+            <button type="button" class="gh_menu" id="gh_menu" aria-label="メニュー" aria-controls="global_navigation" aria-expanded="false">
                 <span class="icon" aria-hidden="true"></span>
                 <span class="text">menu</span>
             </button>
