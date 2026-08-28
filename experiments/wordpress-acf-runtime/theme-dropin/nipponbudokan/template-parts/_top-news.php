@@ -11,8 +11,6 @@ $news_query = new WP_Query(array(
 $posts_page_id = (int) get_option('page_for_posts');
 $news_archive_url = $posts_page_id ? get_permalink($posts_page_id) : home_url('/');
 
-$news_tabs = array('すべて', '武道', '書道', '刊行物', '研修', '事務局');
-
 $news_samples = array(
     array(
         'date' => '2025.00.00',
@@ -72,7 +70,6 @@ $news_label_tones = array(
                 <?php get_template_part('template-parts/_news-tabs', null, array(
                     'context' => 'top',
                     'link_tabs' => false,
-                    'labels' => $news_tabs,
                 )); ?>
 
                 <a class="top_news_more top_news_more_pc" href="<?php echo esc_url($news_archive_url); ?>">
