@@ -54,9 +54,13 @@ jobs:
         working-directory: experiments/wordpress-acf-runtime
         run: |
           source scripts/runtime-env.sh
-          docker compose run --rm cli option update show_on_front posts >/dev/null
           docker compose run --rm cli option update posts_per_page 20 >/dev/null
           docker compose run --rm cli post delete $(docker compose run --rm cli post list --post_type=post --format=ids) --force >/dev/null 2>&1 || true
+          front_id=$(docker compose run --rm cli post create --post_type=page --post_status=publish --post_title='QA Home' --post_name='qa-home' --porcelain)
+          news_id=$(docker compose run --rm cli post create --post_type=page --post_status=publish --post_title='お知らせ' --post_name='news' --porcelain)
+          docker compose run --rm cli option update show_on_front page >/dev/null
+          docker compose run --rm cli option update page_on_front "$front_id" >/dev/null
+          docker compose run --rm cli option update page_for_posts "$news_id" >/dev/null
 
           term_budo=$(docker compose run --rm cli term create category '武道' --porcelain)
           term_shodo=$(docker compose run --rm cli term create category '書道' --porcelain)
@@ -83,7 +87,7 @@ jobs:
         run: |
           source scripts/runtime-env.sh
           mkdir -p .runtime/budokan-news-archive
-          WP_URL="$WP_URL" node <<'NODE'
+          QA_URL="$WP_URL/news/" node <<'NODE'
           const fs = require('node:fs');
           const path = require('node:path');
           const { createRequire } = require('node:module');
@@ -104,7 +108,7 @@ jobs:
               const page = await browser.newPage({ viewport: item.viewport });
               const pageErrors = [];
               page.on('pageerror', e => pageErrors.push(e.message));
-              const response = await page.goto(process.env.WP_URL, { waitUntil: 'networkidle' });
+              const response = await page.goto(process.env.QA_URL, { waitUntil: 'networkidle' });
               await page.evaluate(() => document.fonts.ready);
               await page.locator('.news_archive').scrollIntoViewIfNeeded();
               await page.waitForTimeout(100);
