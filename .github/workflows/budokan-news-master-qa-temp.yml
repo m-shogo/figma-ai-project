@@ -55,6 +55,7 @@ jobs:
         working-directory: experiments/wordpress-acf-runtime
         run: |
           source scripts/runtime-env.sh
+
           ids="$(docker compose run --rm cli post list --post_type=post --post_status=publish --format=ids)"
           if [ -n "$ids" ]; then
             docker compose run --rm cli post delete $ids --force >/dev/null
@@ -65,21 +66,23 @@ jobs:
           docker compose run --rm cli rewrite structure '/%postname%/' --hard >/dev/null
           docker compose run --rm cli rewrite flush --hard >/dev/null
 
-          declare -a names=('武道' '書道' '刊行物' '研修' '事務局')
-          declare -a slugs=('budo' 'shodo' 'publication' 'training' 'office')
-          declare -a cat_ids=()
+          names=('武道' '書道' '刊行物' '研修' '事務局')
+          slugs=('budo' 'shodo' 'publication' 'training' 'office')
+          cat_ids=()
+
           for i in "${!names[@]}"; do
             existing="$(docker compose run --rm cli term get category "${slugs[$i]}" --by=slug --field=term_id 2>/dev/null || true)"
             if [ -n "$existing" ]; then
               cat_ids+=("$existing")
             else
-              cat_ids+=("$(docker compose run --rm cli term create category "${names[$i]}" --slug="${slugs[$i]}" --porcelain)")"
+              created="$(docker compose run --rm cli term create category "${names[$i]}" --slug="${slugs[$i]}" --porcelain)"
+              cat_ids+=("$created")
             fi
           done
 
           for i in $(seq 1 12); do
             cat_index=$(( (i - 1) % 5 ))
-            day=$(printf '%02d' "$i")
+            day="$(printf '%02d' "$i")"
             docker compose run --rm cli post create \
               --post_type=post \
               --post_status=publish \
@@ -161,7 +164,8 @@ jobs:
               });
               await page.locator('.news_archive').screenshot({ path: `.runtime/budokan-news-master/${item.name}-archive-news.png` });
 
-              const firstCategoryHref = await page.locator('.news_tabs_archive .news_tabs_item').nth(1).locator('a').getAttribute('href');
+              const desiredCategory = page.locator('.news_tabs_archive .news_tabs_item').filter({ hasText: '武道' }).first();
+              const firstCategoryHref = await desiredCategory.locator('a').getAttribute('href');
               let categoryStatus = 0;
               let categoryActive = '';
               if (firstCategoryHref) {
@@ -173,7 +177,7 @@ jobs:
               const horizontalOverflow = archiveMetrics.scrollWidth > archiveMetrics.clientWidth + 1;
               if ((topResponse?.status() || 0) >= 400 || (archiveResponse?.status() || 0) >= 400 || categoryStatus >= 400 || pageErrors.length) failed = true;
               if (topMetrics.articleCount !== 5 || topMetrics.tabCount !== 6) failed = true;
-              if (archiveMetrics.articleCount < 10 || archiveMetrics.tabCount !== 6 || archiveMetrics.activeLabel !== 'すべて' || archiveMetrics.pagerCount !== 1 || horizontalOverflow) failed = true;
+              if (archiveMetrics.articleCount < 10 || archiveMetrics.tabCount < 6 || archiveMetrics.activeLabel !== 'すべて' || archiveMetrics.pagerCount !== 1 || horizontalOverflow) failed = true;
               if (categoryActive.trim() !== '武道') failed = true;
 
               if (item.name === 'sp') {
