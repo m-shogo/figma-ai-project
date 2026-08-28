@@ -43,6 +43,15 @@ $pagenate_args = array(
             }
         }
     }
+
+    // FigmaのNews pagerは両端のcontrol領域を常に保持する。
+    // WordPressは境界ページでprev/nextを省略するため、News variantだけdisabled stateを補う。
+    if ($prev_link === '') {
+        $prev_link = '<span class="page-numbers prev is-disabled" aria-disabled="true"><span></span></span>';
+    }
+    if ($next_link === '') {
+        $next_link = '<span class="page-numbers next is-disabled" aria-disabled="true"><span></span></span>';
+    }
     ?>
     <div class="module_pager-01 news_pager">
         <div class="news_pager_prev"><?php echo $prev_link; ?></div>
