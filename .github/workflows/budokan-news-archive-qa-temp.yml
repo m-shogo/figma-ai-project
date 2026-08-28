@@ -1,0 +1,195 @@
+name: Budokan News Archive QA Temp
+
+on:
+  pull_request:
+    paths:
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/**'
+      - '.github/workflows/budokan-news-archive-qa-temp.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  runtime-news-archive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: PHP syntax
+        run: find experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan -name '*.php' -print0 | xargs -0 -n1 php -l
+
+      - name: Check ACF PRO runtime availability
+        id: acf
+        env:
+          ACF_PRO_LICENSE_KEY: ${{ secrets.ACF_PRO_LICENSE_KEY }}
+        run: |
+          if [ -n "$ACF_PRO_LICENSE_KEY" ]; then
+            echo 'enabled=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'enabled=false' >> "$GITHUB_OUTPUT"
+            echo 'SKIP live Budokan capture: ACF_PRO_LICENSE_KEY is unavailable.'
+          fi
+
+      - name: Install browser QA dependency
+        if: steps.acf.outputs.enabled == 'true'
+        working-directory: experiments/wordpress-acf-runtime
+        run: |
+          mkdir -p .runtime/playwright
+          cd .runtime/playwright
+          npm init -y >/dev/null 2>&1
+          npm install --no-audit --no-fund playwright@1.54.2 >/dev/null
+          npx playwright install --with-deps chromium
+
+      - name: Start real WordPress + ACF PRO + Budokan Theme
+        if: steps.acf.outputs.enabled == 'true'
+        working-directory: experiments/wordpress-acf-runtime
+        env:
+          ACF_PRO_LICENSE_KEY: ${{ secrets.ACF_PRO_LICENSE_KEY }}
+          CI: 'true'
+        run: bash scripts/setup.sh
+
+      - name: Seed news archive fixture
+        if: steps.acf.outputs.enabled == 'true'
+        working-directory: experiments/wordpress-acf-runtime
+        run: |
+          source scripts/runtime-env.sh
+          docker compose run --rm cli option update show_on_front posts >/dev/null
+          docker compose run --rm cli option update posts_per_page 20 >/dev/null
+          for name in 武道 書道 刊行物 研修 事務局; do
+            docker compose run --rm cli term create category "$name" --porcelain >/dev/null 2>&1 || true
+          done
+          docker compose run --rm cli post delete $(docker compose run --rm cli post list --post_type=post --format=ids) --force >/dev/null 2>&1 || true
+          labels=(刊行物 事務局 武道 書道 事務局)
+          titles=(
+            '日本武道協議会設立45周年記念「少年少女武道指導書」を刊行しました。'
+            '令和7年度職員採用（新卒）の応募受付は終了しました。'
+            '11月30日(日)にシンガポールで日本武道演武大会が開催されます。'
+            '第62回全日本書初め大展覧会特設ページを開設しました。'
+            '料金の改定について（令和7年10月1日より）'
+          )
+          for i in $(seq 1 25); do
+            idx=$(( (i - 1) % 5 ))
+            post_id=$(docker compose run --rm cli post create --post_type=post --post_status=publish --post_title="${titles[$idx]}" --post_date="2025-01-$(printf '%02d' $((26-i))) 12:00:00" --porcelain)
+            term_id=$(docker compose run --rm cli term get category "${labels[$idx]}" --field=term_id)
+            docker compose run --rm cli post term add "$post_id" category "$term_id" >/dev/null
+          done
+
+      - name: Capture and assert news archive SP / PC
+        if: steps.acf.outputs.enabled == 'true'
+        working-directory: experiments/wordpress-acf-runtime
+        run: |
+          source scripts/runtime-env.sh
+          mkdir -p .runtime/budokan-news-archive
+          WP_URL="$WP_URL" node <<'NODE'
+          const fs = require('node:fs');
+          const path = require('node:path');
+          const { createRequire } = require('node:module');
+          const requireQA = createRequire(path.resolve('.runtime/playwright/package.json'));
+          const { chromium } = requireQA('playwright');
+
+          const near = (actual, expected, tolerance = 2) => Math.abs(actual - expected) <= tolerance;
+
+          (async () => {
+            const browser = await chromium.launch({ headless: true });
+            const cases = [
+              { name: 'sp', viewport: { width: 390, height: 900 }, contentWidth: 375 },
+              { name: 'pc', viewport: { width: 1395, height: 900 }, contentWidth: 1380 },
+            ];
+            const results = [];
+            let failed = false;
+
+            for (const item of cases) {
+              const page = await browser.newPage({ viewport: item.viewport });
+              const pageErrors = [];
+              page.on('pageerror', error => pageErrors.push(error.message));
+              const response = await page.goto(process.env.WP_URL, { waitUntil: 'networkidle' });
+              await page.evaluate(() => document.fonts.ready);
+              await page.locator('.news_archive').scrollIntoViewIfNeeded();
+              await page.waitForTimeout(100);
+
+              const metrics = await page.evaluate(() => {
+                const rect = selector => {
+                  const el = document.querySelector(selector);
+                  if (!el) return null;
+                  const r = el.getBoundingClientRect();
+                  return { x:r.x, y:r.y, width:r.width, height:r.height };
+                };
+                const first = document.querySelector('.news_item');
+                const firstLink = first?.querySelector('.news_item_link');
+                const tabs = [...document.querySelectorAll('.news_tabs_item')];
+                const numberLinks = [...document.querySelectorAll('.news_pager_numbers .page-numbers:not(.prev):not(.next):not(.dots)')];
+                const style = el => el ? getComputedStyle(el) : null;
+                return {
+                  archive: rect('.news_archive'),
+                  tabsList: rect('.news_tabs_archive .news_tabs_list'),
+                  firstTab: rect('.news_tabs_archive .news_tabs_item'),
+                  firstTabLink: rect('.news_tabs_archive .news_tabs_link'),
+                  list: rect('.module_newsList-01'),
+                  firstItem: rect('.news_item'),
+                  firstLink: rect('.news_item_link'),
+                  firstMeta: rect('.news_item_meta'),
+                  firstLabel: rect('.news_item_label'),
+                  pager: rect('.news_pager'),
+                  firstPageNumber: numberLinks.length ? (() => { const r=numberLinks[0].getBoundingClientRect(); return {x:r.x,y:r.y,width:r.width,height:r.height}; })() : null,
+                  itemCount: document.querySelectorAll('.news_item').length,
+                  tabCount: tabs.length,
+                  activeTabText: document.querySelector('.news_tabs_item.is-active')?.textContent.trim() || '',
+                  firstItemBorderTop: first ? style(first).borderTopWidth : null,
+                  firstLinkDirection: firstLink ? style(firstLink).flexDirection : null,
+                  scrollWidth: document.documentElement.scrollWidth,
+                  clientWidth: document.documentElement.clientWidth,
+                };
+              });
+
+              const status = response?.status() || 0;
+              const overflow = metrics.scrollWidth > metrics.clientWidth + 1;
+              if (status >= 400 || pageErrors.length || overflow) failed = true;
+              if (metrics.itemCount !== 20 || metrics.tabCount !== 6 || metrics.activeTabText !== 'すべて') failed = true;
+
+              if (item.name === 'sp') {
+                if (!metrics.archive || !near(metrics.archive.width, 335, 1)) failed = true;
+                if (!metrics.tabsList || !near(metrics.tabsList.width, 335, 1)) failed = true;
+                if (!metrics.firstTab || !near(metrics.firstTab.width, 90, 1) || !near(metrics.firstTab.height, 32, 1)) failed = true;
+                if (!metrics.firstItem || !near(metrics.firstItem.width, 335, 1)) failed = true;
+                if (metrics.firstLinkDirection !== 'column') failed = true;
+                if (!metrics.firstLabel || !near(metrics.firstLabel.width, 80, 1) || !near(metrics.firstLabel.height, 24, 1)) failed = true;
+                if (!metrics.pager || !near(metrics.pager.width, 335, 1) || !near(metrics.pager.height, 94, 3)) failed = true;
+                if (!metrics.firstPageNumber || !near(metrics.firstPageNumber.width, 40, 1) || !near(metrics.firstPageNumber.height, 40, 1)) failed = true;
+              } else {
+                if (!metrics.archive || !near(metrics.archive.width, 960, 1)) failed = true;
+                if (!metrics.tabsList || !near(metrics.tabsList.width, 960, 1)) failed = true;
+                if (!metrics.firstTab || !near(metrics.firstTab.width, 120, 1) || !near(metrics.firstTab.height, 48, 1)) failed = true;
+                if (!metrics.firstItem || !near(metrics.firstItem.width, 960, 1) || !near(metrics.firstItem.height, 90, 2)) failed = true;
+                if (metrics.firstItemBorderTop !== '1px' || metrics.firstLinkDirection !== 'row') failed = true;
+                if (!metrics.firstLabel || !near(metrics.firstLabel.width, 80, 1) || !near(metrics.firstLabel.height, 24, 1)) failed = true;
+                if (!metrics.pager || !near(metrics.pager.width, 960, 1) || !near(metrics.pager.height, 40, 2)) failed = true;
+                if (!metrics.firstPageNumber || !near(metrics.firstPageNumber.width, 50, 1) || !near(metrics.firstPageNumber.height, 40, 1)) failed = true;
+              }
+
+              await page.locator('.news_archive').screenshot({ path: `.runtime/budokan-news-archive/${item.name}-news-archive.png` });
+              results.push({ case:item.name, status, pageErrors, overflow, metrics });
+              await page.close();
+            }
+
+            await browser.close();
+            fs.writeFileSync('.runtime/budokan-news-archive/runtime.json', JSON.stringify(results, null, 2));
+            console.log(JSON.stringify(results, null, 2));
+            if (failed) process.exit(1);
+          })().catch(error => { console.error(error); process.exit(1); });
+          NODE
+
+      - name: Upload runtime evidence
+        if: steps.acf.outputs.enabled == 'true' && always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: budokan-news-archive-runtime-temp
+          path: experiments/wordpress-acf-runtime/.runtime/budokan-news-archive
+          if-no-files-found: error
+
+      - name: Cleanup runtime
+        if: always()
+        working-directory: experiments/wordpress-acf-runtime
+        run: |
+          source scripts/runtime-env.sh
+          docker compose down -v --remove-orphans || true
