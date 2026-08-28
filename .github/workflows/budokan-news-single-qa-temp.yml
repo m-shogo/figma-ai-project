@@ -33,9 +33,9 @@ jobs:
           wpcli() { docker compose run --rm cli "$@"; }
           NEWS_PAGE="$(wpcli post create --post_type=page --post_status=publish --post_title='お知らせ' --post_name=news --porcelain)"
           wpcli option update page_for_posts "$NEWS_PAGE" >/dev/null
-          TERM_ID="$(wpcli term create _cat '書道' --slug=calligraphy --porcelain)"
+          TERM_ID="$(wpcli term create category '書道' --slug=calligraphy --porcelain)"
           POST_ID="$(wpcli post create --post_type=post --post_status=publish --post_title='第42回 高円宮杯日本武道館書写書道大展覧会令和8年8月23日（日）開催' --post_date='2025-08-08 12:00:00' --post_content='<p>日本武道館は、昭和39年の開館以来、書写・書道の普及奨励を図っています。</p><h3>作品募集（毛筆の部・硬筆の部）</h3><ul><li>出品締切日　令和8年6月9日（火）</li><li>送付先　日本武道館 書道展事務局</li></ul><h3>授賞式及び展覧会</h3><table><tbody><tr><th>日時</th><td>令和8年8月23日（日）</td></tr><tr><th>会場</th><td>日本武道館 中道場</td></tr><tr><th>お問い合わせ先</th><td>日本武道館 書道展事務局</td></tr></tbody></table>' --porcelain)"
-          wpcli post term set "$POST_ID" _cat "$TERM_ID" --by=id >/dev/null
+          wpcli post term set "$POST_ID" category "$TERM_ID" --by=id >/dev/null
           ATTACH_ID="$(wpcli media import /fixture/theme-dropin/nipponbudokan/images/top/mv-sample.png --title='記事メイン画像' --caption='高円宮妃殿下から受賞者に高円宮杯が授与された' --porcelain)"
           wpcli post meta update "$POST_ID" _thumbnail_id "$ATTACH_ID" >/dev/null
           wpcli post meta update "$POST_ID" post_type article >/dev/null || true
@@ -75,16 +75,17 @@ jobs:
               const m=await page.evaluate(()=>{
                 const box=s=>{const e=document.querySelector(s);if(!e)return null;const r=e.getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height}};
                 const css=s=>{const e=document.querySelector(s);if(!e)return null;const v=getComputedStyle(e);return {fontSize:parseFloat(v.fontSize),paddingTop:parseFloat(v.paddingTop),paddingBottom:parseFloat(v.paddingBottom),fontFamily:v.fontFamily,fontWeight:v.fontWeight}};
-                return {title:box('.module_titleSingle'),head:box('.module_titleSingle .head'),body:box('.module_titleSingle .body'),h1:box('.module_titleSingle h1'),featured:box('.single_featured'),featuredImg:box('.single_featured img'),titleCss:css('.module_titleSingle'),h1Css:css('.module_titleSingle h1'),scrollWidth:document.documentElement.scrollWidth,clientWidth:document.documentElement.clientWidth};
+                return {title:box('.module_titleSingle'),head:box('.module_titleSingle .head'),body:box('.module_titleSingle .body'),h1:box('.module_titleSingle h1'),featured:box('.single_featured'),featuredImg:box('.single_featured img'),label:box('.module_titleSingle .category .label'),titleCss:css('.module_titleSingle'),h1Css:css('.module_titleSingle h1'),scrollWidth:document.documentElement.scrollWidth,clientWidth:document.documentElement.clientWidth};
               });
               const status=response?.status()||0;
               if(status>=400||errors.length||m.scrollWidth>m.clientWidth+1) failed=true;
-              if(!m.title||Math.abs(m.title.width-c.width)>1) failed=true;
+              if(!m.title||Math.abs(m.title.width-c.width)>1||Math.abs(m.title.x)>1) failed=true;
               if(!m.head||Math.abs(m.head.width-c.contentWidth)>2) failed=true;
               if(!m.body||Math.abs(m.body.width-c.contentWidth)>2) failed=true;
               if(!m.h1Css||Math.abs(m.h1Css.fontSize-c.titleSize)>0.5) failed=true;
               if(!m.titleCss||Math.abs(m.titleCss.paddingTop-c.titlePad)>0.5||Math.abs(m.titleCss.paddingBottom-c.titlePad)>0.5) failed=true;
               if(!m.featured||m.featured.width>c.featuredMax+2) failed=true;
+              if(!m.label||Math.abs(m.label.width-80)>2) failed=true;
               await page.screenshot({path:`.runtime/budokan-news-single/${c.name}-full.png`,fullPage:true});
               await page.locator('.module_titleSingle').screenshot({path:`.runtime/budokan-news-single/${c.name}-title.png`});
               results.push({case:c,status,errors,metrics:m});
