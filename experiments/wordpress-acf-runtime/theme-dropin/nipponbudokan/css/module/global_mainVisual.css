@@ -61,7 +61,10 @@
         .gm_inner {
             display: block;
             position: relative;
+            margin: 0;
             padding: 0;
+            max-width: none;
+            width: 100%;
             height: 100%;
         }
 
@@ -108,7 +111,11 @@
         &._fixedPage {
             height: 321px;
 
+            /* Figma PC places the authored image 60px in from the left and
+             * lets it run to the right canvas edge (1320px at 1380 canvas). */
             .gm_background {
+                left: 60px;
+                width: calc(100% - 60px);
                 height: 320px;
 
                 &::before {
@@ -120,7 +127,7 @@
                 top: 253px;
                 padding: 24px 40px 10px;
                 width: 360px;
-                min-height: 68px;
+                min-height: 79px;
                 background-color: var(--color-secondary);
                 color: var(--color-text);
                 font-family: var(--font-serif-ja);
