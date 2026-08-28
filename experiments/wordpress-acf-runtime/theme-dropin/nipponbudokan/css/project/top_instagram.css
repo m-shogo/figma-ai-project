@@ -149,7 +149,8 @@
             grid-template-columns: repeat(5, 231px);
             gap: 1px;
         }
-        .ti_thumbnail {
+        .ti_thumbnail,
+        .ti_thumbnail:nth-child(n + 5) {
             display: block;
             width: 231px;
             height: 289px;
