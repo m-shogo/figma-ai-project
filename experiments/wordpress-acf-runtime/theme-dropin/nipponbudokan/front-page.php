@@ -111,6 +111,7 @@ $has_slider = function_exists('have_rows') && have_rows('top_slider-01');
     <?php get_template_part('template-parts/_top-guide'); ?>
     <?php get_template_part('template-parts/_top-about'); ?>
     <?php get_template_part('template-parts/_top-news'); ?>
+    <?php get_template_part('template-parts/_top-partner'); ?>
     <div id="top_banner-01" class="top_banner-01">
         <div class="global_inner">
             <?php if (function_exists('have_rows') && have_rows('top_banner-01')): ?>

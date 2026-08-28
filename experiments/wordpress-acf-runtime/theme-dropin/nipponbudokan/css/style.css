@@ -54,6 +54,7 @@
 @import './project/top_guide.css'; /* TOP 目的から探す（大） 2026-08-28 */
 @import './project/top_about.css'; /* TOP 日本武道館とは 2026-08-28 */
 @import './project/top_news.css';
+@import './project/top_partner.css'; /* TOP 公式パートナー PC+SP 2026-08-28 */
 @import './project/top_banner.css';
 
 @import './wordpress/form.css';

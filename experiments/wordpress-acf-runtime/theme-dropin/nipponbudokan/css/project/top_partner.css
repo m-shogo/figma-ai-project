@@ -1,0 +1,301 @@
+@charset "utf-8";
+/* // ==========================================================================
+// TOP 公式パートナー（mobile first）
+// Figma SP 1363:9405 → PC 1603:7187
+// 同一DOMを SP 2列 / PC 4列へ拡張する。
+// ========================================================================== */
+.top_partner-01 {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding-block: 64px;
+    background-color: var(--color-heading-band);
+    color: var(--color-text);
+
+    /* SP Figma の実mask asset。PC root には存在しないためPCでは消す。 */
+    &::before {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        top: 0;
+        left: 0;
+        width: 300px;
+        height: 314px;
+        background: url('../../images/top/partner/partner-bg-sp.png') center / 100% 100% no-repeat;
+        pointer-events: none;
+    }
+
+    .tp_layout {
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
+    }
+
+    .tp_intro {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 24px;
+        text-align: center;
+    }
+
+    .tp_heading {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .tp_title {
+        margin: 0;
+        font-family: var(--font-sansSerif-ja);
+        font-size: 22px;
+        font-weight: 500;
+        line-height: 1;
+        letter-spacing: 0.05em;
+        color: var(--color-text);
+    }
+
+    .tp_title_en {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0;
+        font-family: var(--font-sansSerif-en);
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 1;
+        letter-spacing: 0.05em;
+        color: var(--color-primary);
+    }
+
+    .tp_title_en::before {
+        content: '';
+        width: 10px;
+        height: 10px;
+        flex-shrink: 0;
+        background-color: var(--color-primary);
+        clip-path: var(--clip-octagon);
+    }
+
+    .tp_title_en_initial {
+        display: inline;
+    }
+
+    .tp_lead {
+        margin: 0;
+        font-size: 15px;
+        font-weight: 400;
+        line-height: 1;
+        letter-spacing: 0.05em;
+        color: var(--color-text);
+        white-space: nowrap;
+    }
+
+    .tp_lead_pc {
+        display: none;
+    }
+
+    .tp_list {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .tp_item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        min-width: 0;
+        height: 66px;
+        padding: 8px 16px;
+        border: 1px solid var(--color-line);
+        border-radius: 3px;
+        background-color: var(--color-secondary);
+    }
+
+    .tp_logo {
+        display: block;
+        width: 30px;
+        height: 30px;
+        flex-shrink: 0;
+        object-fit: contain;
+    }
+
+    .tp_name {
+        overflow: hidden;
+        max-width: 100%;
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 1;
+        letter-spacing: 0.05em;
+        text-align: center;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .tp_more {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        width: fit-content;
+        margin-inline: auto;
+        color: var(--color-text);
+        font-size: 15px;
+        font-weight: 500;
+        line-height: 1;
+        letter-spacing: 0.05em;
+        text-decoration: none;
+        white-space: nowrap;
+    }
+
+    .tp_more.tp_more_pc {
+        display: none;
+    }
+
+    .tp_more_icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 26px;
+        height: 26px;
+        flex-shrink: 0;
+        background-color: var(--color-secondary);
+        color: var(--color-primary);
+        clip-path: var(--clip-octagon);
+        filter: drop-shadow(0 0 0.7px var(--color-line));
+    }
+
+    .tp_more_icon::before {
+        content: var(--icon-arrow-right);
+        font-family: var(--font-awesome);
+        font-size: 8px;
+        font-weight: 900;
+        line-height: 1;
+    }
+
+    @media screen and (min-width: 768px) {
+        padding-block: 0;
+
+        &::before {
+            display: none;
+        }
+
+        .tp_layout {
+            display: grid;
+            grid-template-columns: 189px minmax(0, 860px);
+            align-items: center;
+            justify-content: space-between;
+            gap: 111px;
+            height: 421px;
+            padding-block: 100px;
+            border-bottom: 1px solid var(--color-primary);
+        }
+
+        .tp_intro {
+            align-items: flex-start;
+            gap: 20px;
+            text-align: left;
+        }
+
+        .tp_heading {
+            align-items: flex-start;
+            gap: 11.5px;
+        }
+
+        .tp_title {
+            font-family: var(--font-serif-ja);
+            font-size: 24px;
+            font-weight: 500;
+        }
+
+        .tp_title_en {
+            gap: 0;
+            font-family: var(--font-serif-ja);
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .tp_title_en::before {
+            content: none;
+        }
+
+        .tp_title_en_initial {
+            display: inline-grid;
+            place-items: center;
+            width: 28px;
+            height: 28px;
+            flex-shrink: 0;
+            margin-right: -1px;
+            background-color: var(--color-primary);
+            color: var(--color-secondary);
+            clip-path: var(--clip-octagon);
+        }
+
+        .tp_lead {
+            line-height: 1.8;
+            white-space: normal;
+        }
+
+        .tp_lead_pc {
+            display: initial;
+        }
+
+        .tp_more_sp {
+            display: none;
+        }
+
+        .tp_more.tp_more_pc {
+            display: inline-flex;
+            margin-top: 20px;
+            margin-inline: 0;
+        }
+
+        .tp_list {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .tp_item {
+            flex-direction: row;
+            justify-content: flex-start;
+            gap: 10px;
+            height: 60px;
+            padding: 10px 16px;
+        }
+
+        .tp_logo {
+            width: 40px;
+            height: 40px;
+        }
+
+        .tp_name {
+            flex: 1 1 auto;
+            font-size: 14px;
+            text-align: left;
+        }
+
+        a.tp_more {
+            transition: opacity var(--transition-duration);
+        }
+
+        a.tp_more:hover {
+            opacity: var(--opacity-hover);
+        }
+    }
+}
+
+/* global_contents の汎用 section bottom padding より高いspecificityで、Figma固有寸法を保つ。 */
+.global_contents > .top_partner-01 {
+    padding-bottom: 64px;
+
+    @media screen and (min-width: 768px) {
+        padding-bottom: 0;
+    }
+}
