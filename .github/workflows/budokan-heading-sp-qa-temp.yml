@@ -53,9 +53,24 @@ jobs:
         if: steps.acf.outputs.enabled == 'true'
         working-directory: experiments/wordpress-acf-runtime
         run: |
-          content='<h2>日本武道館研修センター 施設のご案内</h2><p>共有見出しのランタイム検証用本文です。</p><h3>宿泊料金</h3><p>共有中見出しの検証用本文です。</p><h4>2026年9月30日まで</h4><p>共有小見出しの検証用本文です。</p>'
-          docker compose run --rm cli post create --post_type=page --post_status=publish --post_title='Heading Runtime QA' --post_name='training-heading-qa' --post_content="$content" --porcelain >/tmp/page-id
-          test -s /tmp/page-id
+          mkdir -p .runtime
+          cat > .runtime/seed-heading.php <<'PHP'
+          <?php
+          $id = wp_insert_post([
+              'post_type' => 'page',
+              'post_status' => 'publish',
+              'post_title' => 'Heading Runtime QA',
+              'post_name' => 'training-heading-qa',
+              'post_content' => '<h2>日本武道館研修センター 施設のご案内</h2><p>共有見出しのランタイム検証用本文です。</p><h3>宿泊料金</h3><p>共有中見出しの検証用本文です。</p><h4>2026年9月30日まで</h4><p>共有小見出しの検証用本文です。</p>',
+          ], true);
+          if (is_wp_error($id)) {
+              fwrite(STDERR, $id->get_error_message() . PHP_EOL);
+              exit(1);
+          }
+          echo $id . PHP_EOL;
+          PHP
+          docker compose run --rm cli eval-file /fixture/.runtime/seed-heading.php | tee /tmp/page-id
+          grep -Eq '[0-9]+' /tmp/page-id
 
       - name: Capture SP and PC heading geometry
         if: steps.acf.outputs.enabled == 'true'
