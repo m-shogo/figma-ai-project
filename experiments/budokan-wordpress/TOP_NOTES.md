@@ -14,7 +14,7 @@
 3. 大会・イベント + カレンダー（**FullCalendar + Google Calendar**。自前 UI 禁止）← **PC+SP 検証済み（SNS 3本含む）**
 4. 目的から探す（大） ← **PC+SP 第一通**
 5. 日本武道館とは ← **PC+SP 第一通**
-6. お知らせ（front-page の `top_news-01` は Theme 残り。次セクションで置換）
+6. お知らせ ← **mobile-first 実装 + 実WordPress/ACF PRO Runtime Visual QA 完了**
 7. 公式パートナー
 8. 月刊「武道」
 9. 導線バナー
@@ -24,6 +24,7 @@
 
 - 既存 `front-page.php` / `top_*` CSS を改修（新規 shell 禁止）
 - 命名は `tm_` / `top_` / Theme 流儀
+- **TOP は mobile-first。SP を通常フローの正本として先に実装し、PC は `@media (min-width: 768px)` で拡張する**
 - ACF 未投入時は sample fallback（MV・notice・guide）
 - `parts.php` は触らない
 - form は触らない
@@ -45,15 +46,26 @@
   - PC: 縦見出し + About us 八角、リード右、パンフレット/動画、カード4列（縦書き帯）
   - SP: ダーク導入 + 白パネル、カードは横スクロール（scroll-snap）
   - 写真・PDF・動画 URL は sample / `#`
+- お知らせは `template-parts/_top-news.php` + `css/project/top_news.css`。`front-page.php` の旧 stub は template-part 呼び出しへ置換
+  - Figma: SP `446:11772` / PC `1603:7236`
+  - SP 正本: 左右24px、上下64px、見出し+一覧CTA、3列×2段カテゴリ、記事5件縦積み
+  - PC 拡張: 1160px 白パネル、160pxサイド + 記事列、カテゴリ縦表示、記事横組み
+  - WordPress 投稿があれば最新5件を表示。投稿なしは Figma 照合用 sample 5件
+  - カテゴリ表示の実際の絞り込み方法は News 運用未確定のため第一通では表示のみ。勝手に JS filter / taxonomy 契約を作らない
+  - 日付数字は Figma 幅に合わせ Theme の `--font-sansSerif-en`（Roboto）12pxを使用
+  - **2026-08-28 実Runtime QA: WordPress 7.0.2 + ACF PRO 6.8.9 + 実 `nipponbudokan` Theme + Playwright Chromium PASS**
+  - SP authored 375: section width=375、panel x=24 / width=327、article=5、category=6、HTTP 200、page error 0、horizontal overflow 0。section DOM height=974.9375（Figma 975相当）
+  - PC authored 1380: section width=1380、panel x=110 / width=1160 / height=606、article=5、category=6、HTTP 200、page error 0、horizontal overflow 0
+  - Linux Chromium は既存 `scrollbar-gutter: stable` が15pxを予約するため、CIは outer 390→authored 375 / outer 1395→authored 1380 として比較。News固有の15px補正は入れない
+  - SP→PCの順で最終captureを目視比較し、日付・カテゴリ・タイトル開始位置、PC `News` 灰色八角、active/inactiveカテゴリ点、罫線のPC漏れを修正済み
 
 ## 次の作業（引き継ぎ）
 
-順序は上から。PC と SP を同じセクションで対にして直す。`parts.php` と form は触らない。
+PC と SP を同じセクションで対にして直す。`parts.php` と form は触らない。
 
-1. **お知らせ** … `front-page.php` の `top_news-01` stub を Figma に置換（PC: 左見出し+フィルタ、右リスト。SP: タブグリッド+一覧CTA）
-2. **公式パートナー**
-3. **月刊「武道」**
-4. **導線バナー**（既存 `top_banner-01` を Figma 寄せ）
-5. TOP 地図付き footer は当面使わない（グローバルは `footer_subpage`）
+1. **公式パートナー** … まずSP正本をFigmaから取得・構造確認 → 実装 → SP Runtime QA → PC拡張 → PC Runtime QA
+2. **月刊「武道」**
+3. **導線バナー**（既存 `top_banner-01` を Figma 寄せ）
+4. TOP 地図付き footer は当面使わない（グローバルは `footer_subpage`）
 
 Human 待ち: Google Calendar ID/API key、SNS/PDF/動画の本番 URL、タイトル写真、form（Formidable）

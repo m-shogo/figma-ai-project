@@ -110,32 +110,7 @@ $has_slider = function_exists('have_rows') && have_rows('top_slider-01');
     <?php get_template_part('template-parts/_top-events'); ?>
     <?php get_template_part('template-parts/_top-guide'); ?>
     <?php get_template_part('template-parts/_top-about'); ?>
-    <section id="top_news-01" class="top_news-01">
-        <div class="global_inner">
-            <h2 class="top_title-01"><span class="title-main">タイトル</span><span class="title-sub">Sub title</span></h2>
-            <?php
-            $arg = array(
-                'posts_per_page' => 4,
-                'orderby' => 'date',
-                'order' => 'DESC'
-            );
-            $posts = get_posts($arg);
-            if ($posts): ?>
-                <?php get_template_part('template-parts/_list-news'); ?>
-            <?php else: ?>
-                <p>お知らせはありません。</p>
-            <?php endif; ?>
-            <div class="top_button">
-                <div class="block-editor_wrap">
-                    <div class="wp-block-buttons">
-                        <div class="wp-block-button">
-                            <a class="wp-block-button__link has-text-align-center" href="<?php echo get_post_type_archive_link('post'); ?>">ボタン</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    <?php get_template_part('template-parts/_top-news'); ?>
     <div id="top_banner-01" class="top_banner-01">
         <div class="global_inner">
             <?php if (function_exists('have_rows') && have_rows('top_banner-01')): ?>
