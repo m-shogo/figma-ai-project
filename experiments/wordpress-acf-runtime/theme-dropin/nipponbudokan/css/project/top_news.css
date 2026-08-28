@@ -1,7 +1,8 @@
 @charset "utf-8";
 /* // ==========================================================================
-// TOP お知らせ（mobile first / Figma SP 446:11772 → PC 1603:7236）
-// News 運用未確定のためカテゴリタブは第一通では表示のみ。
+// TOP お知らせ（archive news master の派生 / mobile first）
+// Figma SP 446:11772 → PC 1603:7236
+// 共通 item / tabs の基礎は module_newsList-01.css。ここにはTOP固有差分だけ置く。
 // ========================================================================== */
 .top_news-01 {
     padding-block: 64px;
@@ -93,111 +94,79 @@
         display: none;
     }
 
-    .top_news_tabs {
+    /* TOP は archive の pill tabs ではなく、SP 3x2 / PC 縦ナビの派生。 */
+    .top_news_tabs .news_tabs_list {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
         margin: 0;
         padding: 0;
         border: 1px solid var(--color-text);
-        list-style: none;
-
-        li {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 34px;
-            padding: 8px 6px;
-            border-left: 1px solid var(--color-text);
-            color: var(--color-text);
-            font-size: 14px;
-            font-weight: 500;
-            line-height: 1;
-            letter-spacing: 0.05em;
-
-            &:nth-child(3n + 1) {
-                border-left: 0;
-            }
-
-            &:nth-child(n + 4) {
-                border-top: 1px solid var(--color-text);
-            }
-
-            &.is-active {
-                background-color: var(--color-text);
-                color: var(--color-secondary);
-            }
-        }
     }
 
-    .top_news_articles {
+    .top_news_tabs .news_tabs_item {
         min-width: 0;
-    }
-
-    .top_news_article {
-        margin: 0;
-        border-bottom: 1px solid var(--color-line);
-
-        &:first-child {
-            border-top: 1px solid var(--color-line);
-        }
-    }
-
-    .top_news_article_link {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-        padding: 20px 16px;
+        border-left: 1px solid var(--color-text);
         color: var(--color-text);
-        text-decoration: none;
-    }
 
-    .top_news_meta {
-        display: flex;
-        align-items: center;
-        gap: 24px;
-        min-width: 0;
+        &:nth-child(3n + 1) {
+            border-left: 0;
+        }
 
-        time {
-            flex-shrink: 0;
-            font-family: var(--font-sansSerif-en);
-            font-size: 12px;
-            font-weight: 400;
-            line-height: 1;
-            letter-spacing: 0.05em;
+        &:nth-child(n + 4) {
+            border-top: 1px solid var(--color-text);
+        }
+
+        &.is-active {
+            background-color: var(--color-text);
+            color: var(--color-secondary);
         }
     }
 
-    .top_news_label {
-        display: inline-flex;
+    .top_news_tabs .news_tabs_link {
+        display: flex;
         align-items: center;
         justify-content: center;
-        width: 80px;
-        min-height: 25px;
-        padding: 5px 8px;
-        flex-shrink: 0;
-        border: 1px solid var(--color-text);
-        border-radius: 2px;
-        color: var(--color-text);
-        background-color: var(--color-secondary);
-        font-size: 13px;
+        min-height: 34px;
+        padding: 8px 6px;
+        color: inherit;
+        font-size: 14px;
         font-weight: 500;
         line-height: 1;
         letter-spacing: 0.05em;
-        text-align: center;
+        text-decoration: none;
     }
 
-    .top_news_title {
-        margin: 0;
-        font-size: 16px;
+    /* archive item master からのSP差分 */
+    .top_news_articles .news_item:first-child {
+        border-top: 1px solid var(--color-line);
+    }
+
+    .top_news_articles .news_item_link {
+        gap: 16px;
+        padding: 20px 16px;
+    }
+
+    .top_news_articles .news_item_meta {
+        gap: 24px;
+    }
+
+    .top_news_articles .news_item_date {
+        font-family: var(--font-sansSerif-en);
+        font-size: 12px;
+        font-weight: 400;
+    }
+
+    .top_news_articles .news_item_label {
+        min-height: 25px;
+        border-color: var(--color-text);
+        font-weight: 500;
+    }
+
+    .top_news_articles .news_item_title {
         font-weight: 500;
         line-height: 1.6;
-        letter-spacing: 0.05em;
-        text-decoration: underline;
-        text-underline-offset: 0.12em;
-        overflow-wrap: anywhere;
     }
 
-    /* PC は SP の構造を維持して横組みに拡張する。 */
     @media screen and (min-width: 768px) {
         padding-block: 96px 0;
         background-color: var(--color-heading-band);
@@ -272,70 +241,70 @@
             display: inline-flex;
         }
 
-        .top_news_tabs {
+        .top_news_tabs .news_tabs_list {
             display: flex;
             flex-direction: column;
             gap: 16px;
             border: 0;
+        }
 
-            li {
-                position: relative;
-                justify-content: flex-start;
-                gap: 10px;
-                min-height: 32px;
-                padding: 9px 16px;
-                border: 0;
-                border-radius: 16px;
+        .top_news_tabs .news_tabs_item {
+            position: relative;
+            border: 0;
+            border-radius: 16px;
 
-                &:nth-child(n + 4) {
-                    border-top: 0;
-                }
+            &:nth-child(n + 4) {
+                border-top: 0;
+            }
 
-                &::before {
-                    content: '';
-                    width: 6px;
-                    height: 6px;
-                    flex-shrink: 0;
-                    background-color: var(--color-text);
-                    clip-path: var(--clip-octagon);
-                }
-
-                &.is-active {
-                    border-radius: 3px;
-
-                    &::before {
-                        background-color: var(--color-secondary);
-                    }
-                }
+            &.is-active {
+                border-radius: 3px;
             }
         }
 
-        .top_news_article:first-child {
+        .top_news_tabs .news_tabs_link {
+            justify-content: flex-start;
+            gap: 10px;
+            min-height: 32px;
+            padding: 9px 16px;
+
+            &::before {
+                content: '';
+                width: 6px;
+                height: 6px;
+                flex-shrink: 0;
+                background-color: var(--color-text);
+                clip-path: var(--clip-octagon);
+            }
+        }
+
+        .top_news_tabs .news_tabs_item.is-active .news_tabs_link::before {
+            background-color: var(--color-secondary);
+        }
+
+        .top_news_articles .news_item:first-child {
             border-top: 0;
         }
 
-        .top_news_article_link {
-            display: flex;
-            flex-direction: row;
+        .top_news_articles .news_item_link {
             gap: 40px;
-            align-items: center;
+            min-height: 0;
             padding: 32px 20px;
         }
 
-        .top_news_article:first-child .top_news_article_link {
+        .top_news_articles .news_item:first-child .news_item_link {
             padding-top: 0;
         }
 
-        .top_news_article:last-child .top_news_article_link {
+        .top_news_articles .news_item:last-child .news_item_link {
             padding-bottom: 0;
         }
 
-        .top_news_meta {
+        .top_news_articles .news_item_meta {
             gap: 20px;
-            flex-shrink: 0;
         }
 
-        .top_news_label {
+        .top_news_articles .news_item_label {
             border-color: currentColor;
 
             &.is-publication {
@@ -359,16 +328,13 @@
             }
         }
 
-        .top_news_title {
-            flex: 1 1 auto;
-            min-width: 0;
+        .top_news_articles .news_item_title {
             line-height: 1.4;
         }
     }
 
-    /* MARK: hover */
     @media (any-hover: hover) {
-        .top_news_article_link:hover .top_news_title,
+        .top_news_articles .news_item_link:hover .news_item_title,
         .top_news_more:hover {
             color: var(--color-link);
         }
