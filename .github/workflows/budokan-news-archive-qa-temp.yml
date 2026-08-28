@@ -1,0 +1,79 @@
+name: Budokan News Archive QA Temp
+on: pull_request
+permissions:
+  contents: read
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+      - name: PHP syntax
+        run: find experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan -name '*.php' -print0 | xargs -0 -n1 php -l
+      - name: Install Playwright
+        working-directory: experiments/wordpress-acf-runtime
+        run: |
+          mkdir -p .runtime/playwright && cd .runtime/playwright
+          npm init -y >/dev/null 2>&1
+          npm install --no-audit --no-fund playwright@1.54.2 >/dev/null
+          npx playwright install --with-deps chromium
+      - name: Start real WordPress + ACF PRO
+        working-directory: experiments/wordpress-acf-runtime
+        env:
+          ACF_PRO_LICENSE_KEY: ${{ secrets.ACF_PRO_LICENSE_KEY }}
+          CI: 'true'
+        run: bash scripts/setup.sh
+      - name: Seed posts archive
+        working-directory: experiments/wordpress-acf-runtime
+        run: |
+          source scripts/runtime-env.sh
+          docker compose run --rm cli option update posts_per_page 20 >/dev/null
+          docker compose run --rm cli post delete $(docker compose run --rm cli post list --post_type=post --format=ids) --force >/dev/null 2>&1 || true
+          front_id=$(docker compose run --rm cli post create --post_type=page --post_status=publish --post_title='QA Home' --post_name='qa-home' --porcelain)
+          news_id=$(docker compose run --rm cli post create --post_type=page --post_status=publish --post_title='お知らせ' --post_name='news' --porcelain)
+          docker compose run --rm cli option update show_on_front page >/dev/null
+          docker compose run --rm cli option update page_on_front "$front_id" >/dev/null
+          docker compose run --rm cli option update page_for_posts "$news_id" >/dev/null
+          budo=$(docker compose run --rm cli term create category '武道' --porcelain)
+          shodo=$(docker compose run --rm cli term create category '書道' --porcelain)
+          pub=$(docker compose run --rm cli term create category '刊行物' --porcelain)
+          training=$(docker compose run --rm cli term create category '研修' --porcelain)
+          office=$(docker compose run --rm cli term create category '事務局' --porcelain)
+          ids=("$pub" "$office" "$budo" "$shodo" "$training")
+          titles=('日本武道協議会設立45周年記念「少年少女武道指導書」を刊行しました。' '令和7年度職員採用（新卒）の応募受付は終了しました。' '11月30日(日)にシンガポールで日本武道演武大会が開催されます。' '第62回全日本書初め大展覧会特設ページを開設しました。' '料金の改定について（令和7年10月1日より）')
+          for i in $(seq 1 25); do
+            n=$(( (i - 1) % 5 ))
+            p=$(docker compose run --rm cli post create --post_type=post --post_status=publish --post_title="${titles[$n]}" --post_date="2025-01-$(printf '%02d' $((26-i))) 12:00:00" --porcelain)
+            docker compose run --rm cli post term set "$p" category "${ids[$n]}" --by=id >/dev/null
+          done
+      - name: Capture + assert SP and PC
+        working-directory: experiments/wordpress-acf-runtime
+        run: |
+          source scripts/runtime-env.sh
+          mkdir -p .runtime/budokan-news-archive
+          QA_URL="$WP_URL/news/" node <<'NODE'
+          const fs=require('fs'),path=require('path'),{createRequire}=require('module');
+          const {chromium}=createRequire(path.resolve('.runtime/playwright/package.json'))('playwright');
+          const near=(a,b,t=2)=>Math.abs(a-b)<=t;
+          (async()=>{const b=await chromium.launch({headless:true});let failed=false;const out=[];
+          for(const c of [{name:'sp',w:390,h:900},{name:'pc',w:1395,h:900}]){const p=await b.newPage({viewport:{width:c.w,height:c.h}});const errs=[];p.on('pageerror',e=>errs.push(e.message));const r=await p.goto(process.env.QA_URL,{waitUntil:'networkidle'});await p.evaluate(()=>document.fonts.ready);await p.locator('.news_archive').scrollIntoViewIfNeeded();
+          const m=await p.evaluate(()=>{const R=s=>{const e=document.querySelector(s);if(!e)return null;const r=e.getBoundingClientRect();return{x:r.x,y:r.y,width:r.width,height:r.height}};const first=document.querySelector('.news_item'),link=first?.querySelector('.news_item_link'),num=document.querySelector('.news_pager_numbers .page-numbers:not(.prev):not(.next):not(.dots)');return{archive:R('.news_archive'),tabs:R('.news_tabs_archive .news_tabs_list'),tab:R('.news_tabs_archive .news_tabs_item'),item:R('.news_item'),label:R('.news_item_label'),pager:R('.news_pager'),num:num?(()=>{const r=num.getBoundingClientRect();return{width:r.width,height:r.height}})():null,count:document.querySelectorAll('.news_item').length,tabsCount:document.querySelectorAll('.news_tabs_item').length,active:document.querySelector('.news_tabs_item.is-active')?.textContent.trim(),dir:link?getComputedStyle(link).flexDirection:null,top:first?getComputedStyle(first).borderTopWidth:null,sw:document.documentElement.scrollWidth,cw:document.documentElement.clientWidth}});
+          const bad=(r?.status()||0)>=400||errs.length||m.sw>m.cw+1||m.count!==20||m.tabsCount!==6||m.active!=='すべて';failed ||= bad;
+          if(c.name==='sp') failed ||= !near(m.archive.width,335,1)||!near(m.tabs.width,335,1)||!near(m.tab.width,90,1)||!near(m.tab.height,32,1)||!near(m.item.width,335,1)||m.dir!=='column'||!near(m.label.width,80,1)||!near(m.label.height,24,1)||!near(m.pager.width,335,1)||!near(m.pager.height,94,3)||!near(m.num.width,40,1)||!near(m.num.height,40,1);
+          else failed ||= !near(m.archive.width,960,1)||!near(m.tabs.width,960,1)||!near(m.tab.width,120,1)||!near(m.tab.height,48,1)||!near(m.item.width,960,1)||!near(m.item.height,90,2)||m.dir!=='row'||m.top!=='1px'||!near(m.label.width,80,1)||!near(m.label.height,24,1)||!near(m.pager.width,960,1)||!near(m.pager.height,40,2)||!near(m.num.width,50,1)||!near(m.num.height,40,1);
+          await p.locator('.news_archive').screenshot({path:`.runtime/budokan-news-archive/${c.name}.png`});out.push({case:c.name,status:r?.status(),errors:errs,metrics:m});await p.close();}
+          await b.close();fs.writeFileSync('.runtime/budokan-news-archive/runtime.json',JSON.stringify(out,null,2));console.log(JSON.stringify(out,null,2));if(failed)process.exit(1);})().catch(e=>{console.error(e);process.exit(1)});
+          NODE
+      - name: Upload evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: budokan-news-archive-runtime-temp
+          path: experiments/wordpress-acf-runtime/.runtime/budokan-news-archive
+          if-no-files-found: error
+      - name: Cleanup
+        if: always()
+        working-directory: experiments/wordpress-acf-runtime
+        run: |
+          source scripts/runtime-env.sh
+          docker compose down -v --remove-orphans || true
