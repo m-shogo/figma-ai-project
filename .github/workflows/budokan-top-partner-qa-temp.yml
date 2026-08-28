@@ -1,0 +1,157 @@
+name: Budokan TOP Partner QA Temp
+
+on:
+  pull_request:
+    paths:
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/**'
+      - '.github/workflows/budokan-top-partner-qa-temp.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  runtime-partner:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: PHP syntax
+        run: find experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan -name '*.php' -print0 | xargs -0 -n1 php -l
+
+      - name: Check ACF PRO runtime availability
+        id: acf
+        env:
+          ACF_PRO_LICENSE_KEY: ${{ secrets.ACF_PRO_LICENSE_KEY }}
+        run: |
+          if [ -n "$ACF_PRO_LICENSE_KEY" ]; then
+            echo 'enabled=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'enabled=false' >> "$GITHUB_OUTPUT"
+            echo 'SKIP live Budokan capture: ACF_PRO_LICENSE_KEY is unavailable.'
+          fi
+
+      - name: Install browser QA dependency
+        if: steps.acf.outputs.enabled == 'true'
+        working-directory: experiments/wordpress-acf-runtime
+        run: |
+          mkdir -p .runtime/playwright
+          cd .runtime/playwright
+          npm init -y >/dev/null 2>&1
+          npm install --no-audit --no-fund playwright@1.54.2 >/dev/null
+          npx playwright install --with-deps chromium
+
+      - name: Start real WordPress + ACF PRO + Budokan Theme
+        if: steps.acf.outputs.enabled == 'true'
+        working-directory: experiments/wordpress-acf-runtime
+        env:
+          ACF_PRO_LICENSE_KEY: ${{ secrets.ACF_PRO_LICENSE_KEY }}
+          CI: 'true'
+        run: bash scripts/setup.sh
+
+      - name: Capture TOP Official Partner SP and PC
+        if: steps.acf.outputs.enabled == 'true'
+        working-directory: experiments/wordpress-acf-runtime
+        run: |
+          source scripts/runtime-env.sh
+          mkdir -p .runtime/budokan-top-partner
+          WP_URL="$WP_URL" node <<'NODE'
+          const fs = require('node:fs');
+          const path = require('node:path');
+          const { createRequire } = require('node:module');
+          const requireQA = createRequire(path.resolve('.runtime/playwright/package.json'));
+          const { chromium } = requireQA('playwright');
+
+          (async () => {
+            const browser = await chromium.launch({ headless: true });
+            const cases = [
+              { name: 'sp', viewportWidth: 390, contentWidth: 375, height: 1000 },
+              { name: 'pc', viewportWidth: 1395, contentWidth: 1380, height: 900 },
+            ];
+            const results = [];
+            let failed = false;
+
+            for (const item of cases) {
+              const page = await browser.newPage({ viewport: { width: item.viewportWidth, height: item.height } });
+              const pageErrors = [];
+              page.on('pageerror', error => pageErrors.push(error.message));
+
+              const response = await page.goto(process.env.WP_URL, { waitUntil: 'networkidle' });
+              await page.evaluate(() => document.fonts.ready);
+              await page.locator('#top_partner-01').scrollIntoViewIfNeeded();
+              await page.waitForTimeout(100);
+
+              const metrics = await page.evaluate(() => {
+                const rect = selector => {
+                  const el = document.querySelector(selector);
+                  if (!el) return null;
+                  const r = el.getBoundingClientRect();
+                  return { x: r.x, y: r.y, width: r.width, height: r.height };
+                };
+                const logos = [...document.querySelectorAll('#top_partner-01 .tp_logo')];
+                return {
+                  section: rect('#top_partner-01'),
+                  layout: rect('#top_partner-01 .tp_layout'),
+                  intro: rect('#top_partner-01 .tp_intro'),
+                  list: rect('#top_partner-01 .tp_list'),
+                  firstItem: rect('#top_partner-01 .tp_item'),
+                  firstLogo: rect('#top_partner-01 .tp_logo'),
+                  moreSp: rect('#top_partner-01 .tp_more_sp'),
+                  morePc: rect('#top_partner-01 .tp_more_pc'),
+                  itemCount: document.querySelectorAll('#top_partner-01 .tp_item').length,
+                  logoCount: logos.length,
+                  brokenLogoCount: logos.filter(img => !img.complete || img.naturalWidth === 0 || img.naturalHeight === 0).length,
+                  scrollWidth: document.documentElement.scrollWidth,
+                  clientWidth: document.documentElement.clientWidth,
+                };
+              });
+
+              const status = response?.status() || 0;
+              const horizontalOverflow = metrics.scrollWidth > metrics.clientWidth + 1;
+              if (status >= 400 || pageErrors.length || horizontalOverflow) failed = true;
+              if (metrics.itemCount !== 12 || metrics.logoCount !== 12 || metrics.brokenLogoCount !== 0) failed = true;
+
+              if (item.name === 'sp') {
+                if (!metrics.section || Math.abs(metrics.section.width - item.contentWidth) > 1 || Math.abs(metrics.section.height - 769) > 2) failed = true;
+                if (!metrics.layout || Math.abs(metrics.layout.x - 20) > 1 || Math.abs(metrics.layout.width - 335) > 1) failed = true;
+                if (!metrics.intro || Math.abs(metrics.intro.height - 95) > 2) failed = true;
+                if (!metrics.list || Math.abs(metrics.list.x - 20) > 1 || Math.abs(metrics.list.width - 335) > 1 || Math.abs(metrics.list.height - 456) > 2) failed = true;
+                if (!metrics.firstItem || Math.abs(metrics.firstItem.width - 161.5) > 1 || Math.abs(metrics.firstItem.height - 66) > 1) failed = true;
+                if (!metrics.firstLogo || Math.abs(metrics.firstLogo.width - 30) > 1 || Math.abs(metrics.firstLogo.height - 30) > 1) failed = true;
+                if (!metrics.moreSp || Math.abs(metrics.moreSp.height - 26) > 1) failed = true;
+              } else {
+                if (!metrics.section || Math.abs(metrics.section.width - item.contentWidth) > 1 || Math.abs(metrics.section.height - 421) > 2) failed = true;
+                if (!metrics.layout || Math.abs(metrics.layout.x - 110) > 2 || Math.abs(metrics.layout.width - 1160) > 2 || Math.abs(metrics.layout.height - 421) > 2) failed = true;
+                if (!metrics.intro || Math.abs(metrics.intro.width - 189) > 2) failed = true;
+                if (!metrics.list || Math.abs(metrics.list.x - 410) > 2 || Math.abs(metrics.list.width - 860) > 2 || Math.abs(metrics.list.height - 220) > 2) failed = true;
+                if (!metrics.firstItem || Math.abs(metrics.firstItem.width - 200) > 1 || Math.abs(metrics.firstItem.height - 60) > 1) failed = true;
+                if (!metrics.firstLogo || Math.abs(metrics.firstLogo.width - 40) > 1 || Math.abs(metrics.firstLogo.height - 40) > 1) failed = true;
+                if (!metrics.morePc || Math.abs(metrics.morePc.height - 26) > 1) failed = true;
+              }
+
+              await page.locator('#top_partner-01').screenshot({ path: `.runtime/budokan-top-partner/${item.name}-partner.png` });
+              results.push({ viewport: item, status, pageErrors, horizontalOverflow, metrics });
+              await page.close();
+            }
+
+            await browser.close();
+            fs.writeFileSync('.runtime/budokan-top-partner/runtime.json', JSON.stringify(results, null, 2));
+            console.log(JSON.stringify(results, null, 2));
+            if (failed) process.exit(1);
+          })().catch(error => { console.error(error); process.exit(1); });
+          NODE
+
+      - name: Upload runtime evidence
+        if: steps.acf.outputs.enabled == 'true' && always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: budokan-top-partner-runtime-temp
+          path: experiments/wordpress-acf-runtime/.runtime/budokan-top-partner
+          if-no-files-found: error
+
+      - name: Cleanup runtime
+        if: always()
+        working-directory: experiments/wordpress-acf-runtime
+        run: |
+          source scripts/runtime-env.sh
+          docker compose down -v --remove-orphans || true
