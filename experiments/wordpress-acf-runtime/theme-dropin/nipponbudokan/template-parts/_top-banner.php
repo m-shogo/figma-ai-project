@@ -57,7 +57,7 @@ $section_style = $background_url !== ''
                     <?php else: ?>
                         <span class="tb_link is-disabled" aria-disabled="true">
                     <?php endif; ?>
-                            <span class="tb_arrow" aria-hidden="true"></span>
+                            <span class="tb_arrow" aria-hidden="true"><span class="tb_arrow_icon"></span></span>
                             <span class="tb_title"><?php echo esc_html($item['title']); ?></span>
                             <?php if ($item['external']): ?><span class="tb_external" aria-hidden="true"></span><?php endif; ?>
                     <?php if ($item['url'] !== ''): ?>
