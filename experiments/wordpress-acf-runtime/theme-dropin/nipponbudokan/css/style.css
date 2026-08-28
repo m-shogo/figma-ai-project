@@ -4,7 +4,7 @@
 /* @import './global/component.css'; */
 
 @import './layout/global_header.css';
-@import './layout/global_footer.css';
+@import './layout/global_footer.css'; /* footer PC+SP 2026-08-28b */
 @import './layout/global_wrapper.css';
 @import './layout/global_inner.css';
 @import './layout/global_navigation.css';
@@ -15,7 +15,7 @@
 @import './blocks/wp-block-details-style.css';
 @import './blocks/wp-block-gallery-style.css';
 @import './blocks/wp-block-group-style.css';
-@import './blocks/wp-block-heading-style.css';
+@import './blocks/wp-block-heading-style.css'; /* parts Figma headings 2026-08-28 */
 @import './blocks/wp-block-image-style.css';
 @import './blocks/wp-block-inPageLink-style.css';
 @import './blocks/wp-block-list-style.css';
@@ -48,8 +48,11 @@
 @import './module/module_titleSingle.css';
 @import './module/module_zoom-button.css';
 
-/* @import './project/top_module.css'; */
-/* @import './project/top_mainVisual.css'; */
+/* top_module.css は .top_notice-01 を absolute にするので FV と衝突する。title/button は top_news.css へ */
+@import './project/top_mainVisual.css'; /* TOP FV PC+SP 2026-08-28 */
+@import './project/top_events.css'; /* TOP events + FullCalendar 2026-08-28 */
+@import './project/top_guide.css'; /* TOP 目的から探す（大） 2026-08-28 */
+@import './project/top_about.css'; /* TOP 日本武道館とは 2026-08-28 */
 @import './project/top_news.css';
 @import './project/top_banner.css';
 

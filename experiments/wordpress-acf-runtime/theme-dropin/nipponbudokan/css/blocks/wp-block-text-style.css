@@ -17,10 +17,10 @@
         font-size: 1.5rem !important;
     }
     p:is(:not([class]), .wp-block-paragraph, .block-editor-rich-text__editable, .has-text-align-left, .has-text-align-right, .has-text-align-center) {
-        font-size: 1rem;
+        font-size: 17px;
         font-weight: 400;
         letter-spacing: 0.05em;
-        line-height: 180%;
+        line-height: 1.6;
         color: var(--color-text);
         margin-top: var(--wp-block-margin);
         & + p:is(:not([class]), .has-text-align-left, .has-text-align-right, .has-text-align-center) {
@@ -78,9 +78,12 @@
     div.wp-block-group.has-background,
     div.wp-block-column.has-background,
     p.has-background {
-        padding: 32px;
+        padding: 24px;
+        border: 1px solid var(--color-line);
+        border-radius: 3px;
+        /* MARK: heading_pc */
         @media screen and (min-width: 768px) {
-            padding: 40px 32px;
+            padding: 32px;
         }
     }
 }

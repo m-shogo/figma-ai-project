@@ -58,6 +58,7 @@ Nav locations: `global-nav` / `sub-nav` / `footer-nav`
 - `inc/front.php` → jQuery 差し替え / Swiper / Modaal / `common.js`
 - TOP のみ `home.js`
 - form テンプレのみ `form.js`（**Agent は form 触らない**）
+- TOP カレンダー: **FullCalendar + Google Calendar plugin**（Human Authority）。自前カレンダー禁止。ID/key は Human 待ち
 
 ---
 
@@ -88,6 +89,8 @@ QA は 〜767 と ≥1280 を主にする。
 
 - `patterns.json` … ブロックパターン書き出し
 - `parts.php` … 「●●パーツ集●●」本文正本（**変更なし・タグ追加禁止**）
+- 固定ページは 1カラム（`templates/template-oneColumn.php`）。見た目は `css/blocks/` とページタイトル帯（`global_mainVisual.css`）で Figma parts / SP_parts に合わせる
+- form ブロックがあっても Agent は触らない
 
 ---
 

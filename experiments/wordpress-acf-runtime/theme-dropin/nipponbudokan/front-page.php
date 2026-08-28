@@ -84,9 +84,9 @@ $has_slider = function_exists('have_rows') && have_rows('top_slider-01');
     </div>
 
     <section id="top_notice-01" class="top_notice-01">
-            <div class="tn_inner">
-                <p class="tn_icon" aria-hidden="true"><img src="<?php echo esc_url($theme_uri . '/images/top/ico-attention.svg'); ?>" alt="" width="24" height="24" loading="lazy"></p>
-                <div class="tn_body">
+        <div class="tn_inner">
+            <p class="tn_icon" aria-hidden="true"><img src="<?php echo esc_url($theme_uri . '/images/top/ico-attention.svg'); ?>" alt="" width="24" height="24" loading="lazy"></p>
+            <div class="tn_body">
                     <?php if (function_exists('have_rows') && have_rows('top_notice-01')): ?>
                         <ul class="tn_list">
                             <?php while (have_rows('top_notice-01')): the_row(); ?>
@@ -107,6 +107,9 @@ $has_slider = function_exists('have_rows') && have_rows('top_slider-01');
         </section>
 </div>
 <main id="global_contents" class="global_contents" itemscope itemprop="mainContentOfPage">
+    <?php get_template_part('template-parts/_top-events'); ?>
+    <?php get_template_part('template-parts/_top-guide'); ?>
+    <?php get_template_part('template-parts/_top-about'); ?>
     <section id="top_news-01" class="top_news-01">
         <div class="global_inner">
             <h2 class="top_title-01"><span class="title-main">タイトル</span><span class="title-sub">Sub title</span></h2>
@@ -127,34 +130,6 @@ $has_slider = function_exists('have_rows') && have_rows('top_slider-01');
                     <div class="wp-block-buttons">
                         <div class="wp-block-button">
                             <a class="wp-block-button__link has-text-align-center" href="<?php echo get_post_type_archive_link('post'); ?>">ボタン</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <section id="top_news-02" class="top_news-02 _bg_color-gray-01">
-        <div class="global_inner">
-            <h2 class="top_title-01"><span class="title-main">タイトル</span><span class="title-sub">Sub title</span></h2>
-            <?php
-            $arg = array(
-                'posts_per_page' => 6,
-                'has_password' => false,
-                'post_type' => 'event',
-                'orderby' => 'date',
-                'order' => 'DESC'
-            );
-            $posts = get_posts($arg);
-            if ($posts): ?>
-                <?php get_template_part('template-parts/_list-card'); ?>
-            <?php else: ?>
-                <p>記事はありません。</p>
-            <?php endif; ?>
-            <div class="top_button">
-                <div class="block-editor_wrap">
-                    <div class="wp-block-buttons">
-                        <div class="wp-block-button is-style-outline">
-                            <a class="wp-block-button__link has-text-align-center" href="<?php echo get_post_type_archive_link('event'); ?>">ボタン</a>
                         </div>
                     </div>
                 </div>

@@ -4,9 +4,10 @@
 // ========================================================================== */
 .module_breadCrumb {
     position: relative;
-    font-size: 12px;
+    font-size: 13px;
     color: var(--color-text);
     line-height: 1.5;
+    letter-spacing: 0.05em;
     .mb_inner {
     }
     .module_breadCrumb-01 {
@@ -14,9 +15,13 @@
             display: inline;
             &:not(:last-child) {
                 &::after {
-                    content: '＞';
+                    content: var(--icon-chevron-right);
+                    font-family: var(--font-awesome);
+                    font-weight: 400;
+                    font-size: 10px;
+                    color: var(--color-primary);
                     display: inline-block;
-                    margin-inline: 5px;
+                    margin-inline: 10px;
                 }
             }
             a,

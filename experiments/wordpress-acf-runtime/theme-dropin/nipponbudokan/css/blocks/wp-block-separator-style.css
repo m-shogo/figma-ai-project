@@ -8,7 +8,7 @@
         margin-top: var(--wp-block-margin-large);
         margin-bottom: var(--wp-block-margin-large);
         border-width: 1px 0 0 0;
-        border-style: dashed;
-        border-color: var(--color-separator);
+        border-style: solid;
+        border-color: var(--color-line);
     }
 }

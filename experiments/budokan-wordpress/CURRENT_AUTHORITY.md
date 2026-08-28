@@ -78,6 +78,16 @@ experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/parts.php
 
 ---
 
+## TOP カレンダー（Human Authority）
+
+- TOP のカレンダーは **FullCalendar**（手描きテーブル / 自前カレンダー UI は作らない）
+- データ源は **Google Calendar**（FullCalendar の Google Calendar plugin）
+- Theme 現状に FullCalendar は無い（Swiper のみ）。TOP カレンダー実装時に enqueue する
+- Google Calendar の calendar ID / API key は Human が渡すまで sample / 非公開プレースホルダ
+- FullCalendar 内部 DOM を QA contract にしない。見た目は Figma に合わせて Theme CSS で包む
+
+---
+
 ## Frontend / 人が触れる CSS（必須）
 
 正本:
@@ -149,7 +159,8 @@ Form は Human 担当のためこの順に含めない。
 3. CSS は frontend-quick-contract に従う（通常 content は Flow/Flex/Grid 優先。absolute 極力避ける）
 4. パーツ集は `parts.php` を変更なしで使う（タグ追加禁止）
 5. form は触らない
-6. `ref002` 名の新規ファイルを作らない
-7. デザイン変更前提で、Theme に合わせて載せる。運用未確定・契約変更は Human が明示するまで変えない
-8. 実装順は Header/Footer → パーツ集 → TOP
-9. 再現可能な学びは evidence / playbook candidate に残す（自動で Company Policy へ上げない）
+6. TOP カレンダーは FullCalendar + Google Calendar。自前カレンダーを作らない
+7. `ref002` 名の新規ファイルを作らない
+8. デザイン変更前提で、Theme に合わせて載せる。運用未確定・契約変更は Human が明示するまで変えない
+9. 実装順は Header/Footer → パーツ集 → TOP
+10. 再現可能な学びは evidence / playbook candidate に残す（自動で Company Policy へ上げない）

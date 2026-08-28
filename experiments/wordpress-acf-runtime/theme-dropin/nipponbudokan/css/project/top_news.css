@@ -2,6 +2,26 @@
 /* // ==========================================================================
 // トップニュース top_news
 // ========================================================================== */
+.top_title-01 {
+    margin-bottom: 30px;
+    .title-main,
+    .title-sub {
+        display: block;
+        text-align: center;
+    }
+    .title-main {
+        font-size: 30px;
+        font-weight: 700;
+    }
+    .title-sub {
+        color: var(--color-gray-border);
+    }
+}
+.top_button {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+}
 .top_news-01 {
   padding-block: 80px ;
 }

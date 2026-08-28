@@ -117,7 +117,6 @@ if (is_singular() && $post && !$page_acf_description) {
 
 <meta name="theme-color" content="#ffffff">
 <style>
-    <?php include(get_theme_file_path('/css/project/top_module.css')); ?>
     <?php include(get_theme_file_path('/css/project/top_mainVisual.css')); ?>
     <?php include(get_theme_file_path('/css/add.css')); ?>
 </style>

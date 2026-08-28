@@ -1,6 +1,6 @@
 @charset "utf-8";
 /* // ------------------------------
-// ページ内リンク
+// ページ内リンク（Figma btn-pagelink）
 // ------------------------------ */
 .block-editor_wrap,
 .editor-styles-wrapper {
@@ -10,6 +10,7 @@
         list-style: none;
         padding: 0;
         margin-top: var(--wp-block-margin);
+        gap: 0;
         & + & {
             margin-top: var(--wp-block-margin-large);
         }
@@ -18,47 +19,48 @@
             a {
                 color: var(--color-text);
                 text-decoration: none;
-                font-size: 14px;
-                letter-spacing: 0.1em;
+                font-size: 16px;
+                font-weight: 500;
+                letter-spacing: 0.05em;
                 line-height: 1.2;
-                padding: 20px 10px;
-                border-bottom: 2px solid var(--color-primary);
+                min-height: 56px;
+                padding: 12px 16px 12px 12px;
+                border-bottom: 1px solid var(--color-text);
                 display: flex;
                 align-items: center;
+                gap: 10px;
                 width: 100%;
                 transition: var(--transition-duration);
-                @include hover {
-                    border-color: var(--color-primary);
-                    .title {
-                        &::before {
-                            background-color: var(--color-primary);
-                        }
-                    }
+                &::before {
+                    content: var(--icon-arrow-right);
+                    font-family: var(--font-awesome);
+                    font-weight: 900;
+                    font-size: 8px;
+                    width: 26px;
+                    height: 26px;
+                    flex-shrink: 0;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: var(--color-primary);
+                    background-color: var(--color-accent);
+                    clip-path: var(--clip-octagon);
                 }
                 .title {
-                    padding-right: 24px;
+                    padding-right: 0;
                     position: relative;
                     width: 100%;
                     overflow-wrap: anywhere;
                     word-break: normal;
                     line-break: strict;
                     &::after {
-                        content: '';
-                        display: block;
-                        color: var(--color-primary);
-                        font-size: 22px;
-                        position: absolute;
-                        right: 0;
-                        top: 50%;
-                        line-height: 1;
-                        transform: translateY(-50%);
-                        font-family: var(--font-awesome);
-                        content: var(--icon-chevron-down);
+                        content: none;
                     }
                 }
             }
         }
 
+        /* MARK: heading_pc */
         @media screen and (min-width: 768px) {
             gap: 0 20px;
             display: grid;
@@ -74,13 +76,6 @@
             &[data-column='1'] {
                 grid-template-columns: repeat(1, 1fr);
             }
-            .inPageLink {
-                a {
-                    font-size: 16px;
-                    border-color: color-mix(in oklch, var(--color-primary) 40%, transparent);
-                    padding: 24px 16px;
-                }
-            }
         }
 
         /* MARK: hover */
@@ -88,12 +83,7 @@
             .inPageLink {
                 a {
                     &:hover {
-                        border-color: var(--color-primary);
-                        .title {
-                            &::before {
-                                background-color: var(--color-primary);
-                            }
-                        }
+                        opacity: var(--opacity-hover);
                     }
                 }
             }

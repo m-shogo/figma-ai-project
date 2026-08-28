@@ -13,8 +13,8 @@
             margin-top: var(--wp-block-margin-large);
         }
         /* MARK: ボーダー */
-        --_border-color: var(--color-separator);
-        --_border-color-thead: var(--color-secondary);
+        --_border-color: var(--color-line);
+        --_border-color-thead: var(--color-table-head);
         --_border-width: 1px;
         --_border-style: solid;
         table {
@@ -55,12 +55,15 @@
             tr {
                 th,
                 td {
-                    padding: 16px 20px;
+                    padding: 15px 20px;
+                    font-size: 15px;
+                    letter-spacing: 0.05em;
+                    line-height: 1.6;
                 }
                 th {
-                    background-color: var(--color-primary) !important;
+                    background-color: var(--color-table-head) !important;
                     color: var(--color-secondary) !important;
-                    font-weight: 700;
+                    font-weight: 400;
                 }
             }
         }

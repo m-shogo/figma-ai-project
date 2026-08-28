@@ -16,7 +16,8 @@
 | Header SP 閉じ | `446:10020` | ダーク帯 / logo白字 + EN・search・menu が隙間なく全高 / ハンバーガー |
 | Header SP 開き | `2096:9573` | 同じ3ボタン。menu は赤地に白 × |
 | SP menu 別案 | `2096:9496` | PlanB。閉じボタンが白枠 × のみ（3ボタン案を正とする） |
-| Footer PC | `1901:14268` | logo+住所+SNS / 2列リンク / copyright + Page Top |
+| Footer PC | `1901:14268` | logo+住所+SNS / 2列リンク / copyright + 金 Page Top。地図なし |
+| Footer SP 下層 | `560:2524` / `560:188` 末尾 | ダーク / logo白字+住所+アクセス / グレー地図 / copyright + 赤 Page Top / sticky お問い合わせ・アクセス |
 
 色: main `#bf3e2b` / sec `#ca9957` / text `#333` / search `#4e5055` / logo字 PC `#e6e6e6`
 
@@ -46,4 +47,27 @@
 
 - WP に global-nav が無いときは sample 4項目（fallback）
 - PC メガメニュー中身はメニューデータ待ち
-- Footer SP は次セクション
+
+## Footer 突き合わせ（今回）
+
+Human: Header 完成。Footer を PC+SP で進める。
+
+正本:
+
+- PC: `footer_subpage` `1901:14268`（白・リンク2列・金 Page Top・地図なし）
+- SP 下層: `news_sp` / `join_sp` 末尾（ダーク・地図・赤 Page Top・sticky お問い合わせ/アクセス）
+- TOP の PC 地図付き footer (`1901:13409`) と TOP sticky「目的から探す」はグローバルに入れない
+
+入れたもの:
+
+- ロゴは Header と同じ紋 + picture（SP 白字 / PC 濃色 wordmark）
+- アクセスアイコンは Figma 書き出し `icon-access.svg`
+- footer-nav / sub-nav 未設定時は Figma 10項目 fallback
+- SP 固定バー: お問い合わせ / アクセス（メニュー開時は隠す）
+- 地図は SP のみ（静止画・グレースケール）。PC 下層には出さない
+
+残:
+
+- SNS / アクセス / 問い合わせの本番 URL は Human 待ち
+- WP メニューが入ったら fallback は消える
+- TOP 専用 footer（PC 地図・「目的から探す」sticky）は TOP セクションで別途

@@ -29,6 +29,44 @@ function nipponbudokan_global_nav_fallback()
 }
 
 /**
+ * footer-nav 未設定時の sample（Figma footer_subpage 左列）
+ */
+function nipponbudokan_footer_nav_fallback()
+{
+    $items = array(
+        '日本武道館について',
+        '武道振興・普及事業',
+        '書道普及・奨励事業',
+        '武道刊行物事業',
+        '研修センター',
+    );
+    echo '<div class="gf_container-01" id="gf_container-01"><ul id="gf_links-01" class="menu gf_links-01">';
+    foreach ($items as $label) {
+        echo '<li class="gfl_item-02 _noChild"><div class="gfl_title-02"><a class="gfl_link-02" href="#"><span>' . esc_html($label) . '</span></a></div></li>';
+    }
+    echo '</ul></div>';
+}
+
+/**
+ * sub-nav 未設定時の sample（Figma footer_subpage 右列）
+ */
+function nipponbudokan_footer_sub_nav_fallback()
+{
+    $items = array(
+        'よくあるご質問',
+        'お問い合わせ',
+        'パンフレットのご案内',
+        '個人情報保護方針',
+        '業務・財務に関する資料',
+    );
+    echo '<div class="gf_container-02" id="gf_container-02"><ul id="gf_links-02" class="menu gf_links-02">';
+    foreach ($items as $label) {
+        echo '<li class="menu-item"><a href="#"><span>' . esc_html($label) . '</span></a></li>';
+    }
+    echo '</ul></div>';
+}
+
+/**
  * メニューリンクで新タブを開くべきか判定
  * （target="_blank"指定・空URL・指定拡張子のファイルリンクの場合にtrue）
  *

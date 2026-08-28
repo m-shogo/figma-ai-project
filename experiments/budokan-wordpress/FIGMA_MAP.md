@@ -15,6 +15,7 @@ Pages: PC `0:1` / SP `114:5409`
 | Header SP 開き | SP | `2096:9573` | SP TOP（menu open） |
 | SP メニュー展開例 | SP | `2096:9496` | TopPage PlanB SP①（別案） |
 | Footer 例 | PC | `1901:14268` | footer_subpage |
+| Footer SP 下層 | SP | `560:2524` / `560:188` 末尾 | news_sp / join_sp |
 | パーツ集 | PC | `1163:4245` | parts |
 | パーツ集 | SP | `1399:19144` | SP_parts |
 | SP メニュー展開例 | SP | `2096:9496` | TopPage PlanB SP① |

@@ -119,6 +119,10 @@
     /* ボーダーカラー */
     --color-separator: #eaeaea;
     --color-separator--soft: #e6e6e6;
+    /* Figma parts separator / table / h3 帯 */
+    --color-line: #d7d4d4;
+    --color-heading-band: #f2f2f2;
+    --color-table-head: #424242;
     --color-separator--blue: #86a3b5;
     /* 背景カラー */
     --color-base--bg-blue-soft: #e8fafd;
@@ -129,7 +133,7 @@
     /* ベース幅 */
     --width-base: 1160px;
     --width-base-small: 960px;
-    --width-content: 1000px;
+    --width-content: 960px;
     --width-main: 860px;
     --width-side: 260px;
     /* ベース余白 */
@@ -178,6 +182,8 @@
     --icon-chevron-right: '\f054';
     --icon-chevron-down: '\f078';
     --icon-angle-down: '\f107';
+    --icon-arrow-right: '\f061';
+    --clip-octagon: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
 }
 
 /* ==========================================================================

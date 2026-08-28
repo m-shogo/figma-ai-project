@@ -1,19 +1,31 @@
 @charset "utf-8";
 /* // ==========================================================================
 // メインビジュアル（TOP FV）
+// Figma PC: 1399:12229 ／ SP: 446:10020 先頭（MV → お知らせ → 目的から探す）
 // ========================================================================== */
 .top_mainVisual {
     position: relative;
     overflow-x: clip;
+    display: flex;
+    flex-direction: column;
     .tm_stage {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-        padding-inline: var(--padding-SP);
+        display: contents;
     }
     .tm_mv {
-        flex: 1 1 auto;
+        order: 1;
         min-width: 0;
+        padding-inline: var(--padding-SP);
+    }
+    .tm_guide {
+        order: 3;
+        width: auto;
+        margin-inline: var(--padding-SP);
+        margin-bottom: 8px;
+    }
+    .top_notice-01 {
+        order: 2;
+        margin-top: 16px;
+        margin-bottom: 20px;
     }
     .tm_swiper-container {
         position: relative;
@@ -91,9 +103,6 @@
         }
     }
 
-    .tm_guide {
-        width: 100%;
-    }
     .tm_guide_head {
         display: flex;
         align-items: center;
@@ -129,7 +138,7 @@
         display: flex;
         flex-direction: column;
         gap: 16px;
-        padding-bottom: 20px;
+        padding-bottom: 24px;
         border-bottom: 1px solid #d7d4d4;
         &:last-child {
             padding-bottom: 0;
@@ -187,7 +196,7 @@
             gap: 16px;
             min-height: 64px;
             padding: 16px 20px;
-            border-radius: 0 3px 3px 0;
+            border-radius: 0;
             background-color: var(--color-primary);
             color: var(--color-secondary);
         }
@@ -224,10 +233,22 @@
     /* MARK: layout_breakpoint */
     @media screen and (min-width: 768px) {
         .tm_stage {
+            display: flex;
             flex-direction: row;
-            align-items: flex-start;
+            align-items: stretch;
             gap: 20px;
             padding-inline: 60px 20px;
+        }
+        .tm_mv {
+            order: unset;
+            flex: 1 1 auto;
+            padding-inline: 0;
+            height: 600px;
+        }
+        .tm_swiper-container,
+        .tm_swiper-container .swiper-wrapper,
+        .tm_swiper-container .swiper-slide {
+            height: 100%;
         }
         .tm_swiper-container {
             .swiper-wrapper {
@@ -254,26 +275,36 @@
             }
         }
         .tm_guide {
+            order: unset;
             flex-shrink: 0;
             width: 240px;
+            height: 600px;
+            margin-inline: 0;
+            margin-bottom: 0;
+            overflow: hidden;
         }
         .tm_guide_head {
             height: 60px;
             font-size: 16px;
         }
         .tm_guide_body {
-            min-height: 544px;
+            box-sizing: border-box;
+            min-height: 540px;
             padding: 20px 24px 28px;
         }
         .top_notice-01 {
+            order: unset;
             position: relative;
             z-index: 2;
             width: min(700px, calc(100% - 280px));
             margin-top: -40px;
+            margin-bottom: 0;
             margin-left: 0;
             .tn_inner {
+                gap: 20px;
                 min-height: 80px;
                 padding-inline: 48px;
+                border-radius: 0 3px 3px 0;
             }
             .tn_text,
             .tn_item {

@@ -142,8 +142,18 @@ function my_enqueue_scripts() {
     wp_enqueue_script('modaal-script', get_theme_file_uri('/js/modaal.min.js'), array('jquery'), '0.4.4', ['strategy' => 'defer','in_footer' => false]);
     wp_enqueue_script('common-script', get_theme_file_uri('/js/common.js'), array('jquery','swiper-script','modaal-script'), filemtime(get_theme_file_path('/js/common.js')), ['strategy' => 'defer','in_footer' => false]);
 
-    if(is_front_page()){
-        wp_enqueue_script('home-script', get_theme_file_uri('/js/home.js'), array('common-script'), filemtime(get_theme_file_path('/js/home.js')), ['strategy' => 'defer','in_footer' => false]);
+    if (is_front_page()) {
+        wp_enqueue_script('fullcalendar-script', get_theme_file_uri('/js/fullcalendar.min.js'), array(), '6.1.15', ['strategy' => 'defer', 'in_footer' => false]);
+        wp_enqueue_script('fullcalendar-gcal-script', get_theme_file_uri('/js/fullcalendar-google-calendar.min.js'), array('fullcalendar-script'), '6.1.15', ['strategy' => 'defer', 'in_footer' => false]);
+        wp_enqueue_script('home-script', get_theme_file_uri('/js/home.js'), array('common-script', 'fullcalendar-gcal-script'), filemtime(get_theme_file_path('/js/home.js')), ['strategy' => 'defer', 'in_footer' => false]);
+        $gcal = apply_filters('nipponbudokan_google_calendar', array(
+            'apiKey' => '',
+            'calendarId' => '',
+        ));
+        wp_localize_script('home-script', 'nipponbudokanTopCal', array(
+            'googleCalendarApiKey' => isset($gcal['apiKey']) ? (string) $gcal['apiKey'] : '',
+            'googleCalendarId' => isset($gcal['calendarId']) ? (string) $gcal['calendarId'] : '',
+        ));
     }
 
     if (is_page_template('templates/template-form.php')) {
