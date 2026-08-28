@@ -1,0 +1,16 @@
+{
+  "id": "missing-image",
+  "qa_layer": "CMS_ROBUSTNESS",
+  "page": {"title": "Sample Theme Runtime Fixture", "slug": "sample-theme"},
+  "fields": {
+    "hero_title": "A real CMS runtime before pixel confidence",
+    "hero_body": "Missing-image mutation for fallback rendering.",
+    "hero_cta": {"title": "Inspect editable cards", "url": "#cards", "target": ""},
+    "cards": [
+      {"id":"card-a","title":"Observe the reference","body":"Reference evidence first.","image":"blue","link":null},
+      {"id":"card-b","title":"Map CMS ownership","body":"This row intentionally has no image.","image":null,"link":null},
+      {"id":"card-c","title":"Render through WordPress","body":"Real runtime render.","image":"violet","link":null},
+      {"id":"card-d","title":"Mutate without redesigning","body":"Missing media must not collapse layout.","image":"coral","link":null}
+    ]
+  }
+}

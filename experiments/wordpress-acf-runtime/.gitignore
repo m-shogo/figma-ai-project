@@ -1,0 +1,10 @@
+.env
+.runtime/
+*.zip
+advanced-custom-fields-pro/
+
+# Supplied production themes are client property; never commit them here.
+# The directory itself stays tracked so the drop-in path always exists.
+theme-dropin/*
+!theme-dropin/.gitkeep
+!theme-dropin/README.md

@@ -1,0 +1,16 @@
+{
+  "id": "figma-baseline",
+  "qa_layer": "FIGMA_FIDELITY_READY",
+  "page": {"title": "Sample Theme Runtime Fixture", "slug": "sample-theme"},
+  "fields": {
+    "hero_title": "A real CMS runtime before pixel confidence",
+    "hero_body": "This disposable fixture proves WordPress + ACF PRO + browser QA without standardizing a company's theme architecture or a future Figma LP structure.",
+    "hero_cta": {"title": "Inspect editable cards", "url": "#cards", "target": ""},
+    "cards": [
+      {"id": "card-a", "title": "Observe the reference", "body": "Read structure, responsive evidence, assets, and interaction before deciding implementation architecture.", "image": "blue", "link": {"title": "Evidence first", "url": "#cards", "target": ""}},
+      {"id": "card-b", "title": "Map CMS ownership", "body": "Only editor-owned content becomes ACF data. Visual repetition alone does not create CMS repetition requirements.", "image": "mint", "link": {"title": "Ownership", "url": "#cards", "target": ""}},
+      {"id": "card-c", "title": "Render through WordPress", "body": "The QA target is the real WordPress page populated through ACF, not a detached static HTML approximation.", "image": "violet", "link": {"title": "Runtime", "url": "#cards", "target": ""}},
+      {"id": "card-d", "title": "Mutate without redesigning", "body": "Stress count, copy length, missing media, order, and responsive widths separately from Figma fidelity scoring.", "image": "coral", "link": {"title": "Mutation QA", "url": "#cards", "target": ""}}
+    ]
+  }
+}

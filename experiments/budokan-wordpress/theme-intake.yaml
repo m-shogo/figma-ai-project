@@ -1,0 +1,539 @@
+schema_version: 1
+intake_id: BUDOKAN-WORDPRESS
+status: THEME_OBSERVED
+created_at: "2026-08-28"
+updated_at: "2026-08-28"
+
+project:
+  reference_id: BUDOKAN
+  figma_file_key: w7SGVY63FuW6JpaQVKjxm2
+  section_evidence_path: tools/implementation-intake/REAL_WEB_VALIDATION.md
+  evidence_paths:
+    - experiments/budokan-wordpress/CURRENT_AUTHORITY.md
+    - experiments/budokan-wordpress/THEME_RULES.md
+    - tools/implementation-intake/REAL_WEB_VALIDATION.md
+    - tools/implementation-intake/REF002_VISUAL_TRUTH_ASSET_LEARNING.md
+    - experiments/ref002-budokan-wordpress/baseline-asset-source.yaml
+    - experiments/wordpress-acf-runtime/README.md
+    - docs/wordpress-theme-intake.md
+    - docs/wordpress-acf-policy.md
+    - docs/wordpress-target-reconnaissance.md
+    - docs/wordpress-target-readiness.md
+  figma_nodes:
+    pc: "0:1"
+    sp: "114:5409"
+    pc_url: "https://www.figma.com/design/w7SGVY63FuW6JpaQVKjxm2/nipponbudokan?node-id=0-1"
+    sp_url: "https://www.figma.com/design/w7SGVY63FuW6JpaQVKjxm2/nipponbudokan?node-id=114-5409"
+
+theme_delivery:
+  state: OBSERVED
+  supplied_by: "Human (original theme drop-in)"
+  repository: "local:experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan"
+  starting_commit: "local-original"
+  theme_slug: "nipponbudokan"
+  theme_family: CLASSIC_THEME
+  family_is_inference: true
+  scan_report_path: "experiments/budokan-wordpress/THEME_RULES.md"
+  observation:
+    - id: theme_family
+      status: OBSERVED
+      evidence:
+        - "style.css Theme header; header.php/footer.php; no theme.json"
+      notes:
+        - "Classic + Block Editor / ACF Blocks 併用。family_is_inference は true のまま"
+    - id: theme_json
+      status: NONE
+      evidence:
+        - "theme.json absent in theme root"
+      notes: []
+    - id: template_inventory
+      status: OBSERVED
+      evidence:
+        - "front-page.php page.php single.php archive.php search.php 404.php templates/*"
+      notes:
+        - "THEME_RULES.md §8"
+    - id: template_parts
+      status: OBSERVED
+      evidence:
+        - "template-parts/_header.php _footer.php _head_contents.php _visual.php _list-news.php ..."
+      notes: []
+    - id: global_header_footer
+      status: OBSERVED
+      evidence:
+        - "header.php + template-parts/_header.php; footer.php + template-parts/_footer.php"
+        - "css/layout/global_header.css global_footer.css global_navigation.css"
+      notes:
+        - "実装は既存 parts を編集。新規 shell 禁止"
+    - id: style_architecture
+      status: OBSERVED
+      evidence:
+        - "css/style.css @import chain; enqueue common-style in inc/front.php"
+      notes:
+        - "base → global → layout → blocks → module → project"
+    - id: js_architecture
+      status: OBSERVED
+      evidence:
+        - "inc/front.php: jquery/swiper/modaal/common.js; home.js on front-page"
+      notes:
+        - "form.js は Human form 領域。Agent は触らない"
+    - id: breakpoints
+      status: OBSERVED
+      evidence:
+        - "Theme CSS uses min-width 768px widely; body min-width 1280px at >=768"
+      notes:
+        - "案件契約は CURRENT_AUTHORITY（768/1280）。header 1080 は無視"
+    - id: naming_convention
+      status: OBSERVED
+      evidence:
+        - "global_* gh_* gn_* gf_* module_* top_* wp-block-*"
+      notes: []
+    - id: acf_evidence
+      status: OBSERVED
+      evidence:
+        - "acf/json/ via acf/settings/save_json and load_json; acf-export.json; acf/blocks/"
+      notes: []
+    - id: block_support
+      status: OBSERVED
+      evidence:
+        - "patterns.json; css/blocks/*; ACF custom blocks; editor-style.css"
+      notes: []
+    - id: enqueue_convention
+      status: OBSERVED
+      evidence:
+        - "inc/front.php my_enqueue_scripts / replace_default_jquery"
+      notes: []
+    - id: form_evidence
+      status: OBSERVED
+      evidence:
+        - "inc/form.php; templates/template-form.php; Formidable enqueue branch"
+      notes:
+        - "実装は Human Authority。Agent は form を実装しない"
+    - id: cpt_evidence
+      status: OBSERVED
+      evidence:
+        - "inc/custom.php register_post_type event; taxonomy event_cat"
+      notes:
+        - "News/Events 運用は sample。本番は随時"
+    - id: image_pipeline
+      status: UNDETERMINED
+      evidence: []
+      notes:
+        - "front-page で top_main_pc / top_main_sp sizes を参照。登録箇所の追跡は後続"
+  blocking_questions:
+    - "Theme 実体は gitignore。差分を research repo で追う場合の方針（overlay / 追跡許可）"
+    - "repoから観測できない業務要件だけ随時確認"
+
+template_coverage:
+  - surface: FRONT_PAGE
+    hierarchy_name: front-page.php
+    required: REQUIRED
+    theme_provides: "YES"
+    ownership: THEME
+    target_path: "front-page.php"
+    notes:
+      - "TOP。ACF 中心（editor 非表示）"
+  - surface: POSTS_INDEX
+    hierarchy_name: home.php
+    required: UNDETERMINED
+    theme_provides: UNKNOWN
+    ownership: UNDETERMINED
+    target_path: ""
+    notes:
+      - "News sample 運用。確定は随時"
+  - surface: PAGE
+    hierarchy_name: page.php
+    required: REQUIRED
+    theme_provides: "YES"
+    ownership: THEME
+    target_path: "page.php"
+    notes:
+      - "固定ページの既定template"
+  - surface: SINGLE
+    hierarchy_name: single.php
+    required: UNDETERMINED
+    theme_provides: "YES"
+    ownership: THEME
+    target_path: "single.php"
+    notes: []
+  - surface: ARCHIVE
+    hierarchy_name: archive.php
+    required: UNDETERMINED
+    theme_provides: "YES"
+    ownership: THEME
+    target_path: "archive.php"
+    notes: []
+  - surface: CATEGORY
+    hierarchy_name: category.php
+    required: UNDETERMINED
+    theme_provides: UNKNOWN
+    ownership: UNDETERMINED
+    target_path: ""
+    notes: []
+  - surface: TAXONOMY
+    hierarchy_name: taxonomy.php
+    required: UNDETERMINED
+    theme_provides: UNKNOWN
+    ownership: UNDETERMINED
+    target_path: ""
+    notes: []
+  - surface: SEARCH
+    hierarchy_name: search.php
+    required: UNDETERMINED
+    theme_provides: "YES"
+    ownership: THEME
+    target_path: "search.php"
+    notes: []
+  - surface: NOT_FOUND
+    hierarchy_name: 404.php
+    required: REQUIRED
+    theme_provides: "YES"
+    ownership: THEME
+    target_path: "404.php"
+    notes:
+      - "WordPress案件として最低限必要な面"
+  - surface: CPT_ARCHIVE
+    hierarchy_name: archive-{post_type}.php
+    required: UNDETERMINED
+    theme_provides: UNKNOWN
+    ownership: UNDETERMINED
+    target_path: ""
+    notes:
+      - "event CPT あり。archive.php 共用の可能性"
+  - surface: CPT_SINGLE
+    hierarchy_name: single-{post_type}.php
+    required: UNDETERMINED
+    theme_provides: UNKNOWN
+    ownership: UNDETERMINED
+    target_path: ""
+    notes:
+      - "event は single.php 共用の可能性"
+  - surface: PAGE_TEMPLATE
+    hierarchy_name: custom page template
+    required: UNDETERMINED
+    theme_provides: "YES"
+    ownership: THEME
+    target_path: "templates/"
+    notes:
+      - "template-oneColumn.php template-oneColumnWide.php template-form.php 等"
+  - surface: PART
+    hierarchy_name: shared template parts
+    required: REQUIRED
+    theme_provides: "YES"
+    ownership: THEME
+    target_path: "template-parts/"
+    notes:
+      - "Header / Footer / navigation / breadcrumbs / lists / pagination"
+      - "パーツ集本文正本は parts.php（ルート）。変更なし"
+
+content_decisions:
+  - section_id: header
+    label: Header
+    reuse: UNDETERMINED
+    content_ownership: UNDETERMINED
+    implementation_unit: UNDETERMINED
+    editor_capability:
+      add_remove: UNKNOWN
+      reorder: UNKNOWN
+      evidence: []
+    interaction:
+      classification: UNDETERMINED
+      evidence: []
+    notes:
+      - "PC y=0 h=100 / SP y=0 h=60 (REAL_WEB_VALIDATION.md)"
+      - "global ownership。提供Themeが既にHeaderを持つ場合は REUSE/ADAPT を先に検討する"
+  - section_id: hero
+    label: Hero
+    reuse: UNDETERMINED
+    content_ownership: UNDETERMINED
+    implementation_unit: UNDETERMINED
+    editor_capability:
+      add_remove: UNKNOWN
+      reorder: UNKNOWN
+      evidence: []
+    interaction:
+      classification: UNDETERMINED
+      evidence: []
+    notes:
+      - "PC y=100 h=640 / SP y=60 h=518 (REAL_WEB_VALIDATION.md)"
+      - "SP Hero は device chrome 正規化後の 518px が確定値。558px は誤り"
+  - section_id: events
+    label: Events
+    reuse: UNDETERMINED
+    content_ownership: UNDETERMINED
+    implementation_unit: UNDETERMINED
+    editor_capability:
+      add_remove: UNKNOWN
+      reorder: UNKNOWN
+      evidence: []
+    interaction:
+      classification: UNDETERMINED
+      evidence:
+        - "benchmark では FullCalendar dayGridMonth / 18 events / Calendar-List切替 / prev-next を実行"
+    notes:
+      - "PC y=740 h=948 / SP y=578 h=1834 (REAL_WEB_VALIDATION.md)"
+      - "event data は CMS 由来になる可能性が高いが、CPT要件が未確定のため UNDETERMINED"
+      - "third-party library の private DOM を QA contract にしない"
+  - section_id: sns
+    label: SNS
+    reuse: UNDETERMINED
+    content_ownership: UNDETERMINED
+    implementation_unit: UNDETERMINED
+    editor_capability:
+      add_remove: UNKNOWN
+      reorder: UNKNOWN
+      evidence: []
+    interaction:
+      classification: UNDETERMINED
+      evidence: []
+    notes:
+      - "PC y=1688 h=200 / SP y=2160 h=252 (REAL_WEB_VALIDATION.md)"
+      - "PC は Events の後の独立strip、SP は Events 領域末尾に配置される authored 差分がある"
+      - "parity を強制して content を複製/削除しない"
+  - section_id: purpose
+    label: Purpose
+    reuse: UNDETERMINED
+    content_ownership: UNDETERMINED
+    implementation_unit: UNDETERMINED
+    editor_capability:
+      add_remove: UNKNOWN
+      reorder: UNKNOWN
+      evidence: []
+    interaction:
+      classification: UNDETERMINED
+      evidence: []
+    notes:
+      - "PC y=1888 h=808 / SP y=2476 h=1668 (REAL_WEB_VALIDATION.md)"
+      - "SP には terminal Purpose menu (y=8304.125 h=56) が別途存在する"
+  - section_id: about
+    label: About
+    reuse: UNDETERMINED
+    content_ownership: UNDETERMINED
+    implementation_unit: UNDETERMINED
+    editor_capability:
+      add_remove: UNKNOWN
+      reorder: UNKNOWN
+      evidence: []
+    interaction:
+      classification: UNDETERMINED
+      evidence: []
+    notes:
+      - "PC y=2696 h=1179 / SP y=4144 h=1053 (REAL_WEB_VALIDATION.md)"
+      - "PC 6 cards / SP 3 cards horizontal scroller の authored 差分あり"
+      - "card 数差は editor cardinality の証拠ではない"
+  - section_id: news
+    label: News
+    reuse: UNDETERMINED
+    content_ownership: UNDETERMINED
+    implementation_unit: UNDETERMINED
+    editor_capability:
+      add_remove: UNKNOWN
+      reorder: UNKNOWN
+      evidence: []
+    interaction:
+      classification: UNDETERMINED
+      evidence: []
+    notes:
+      - "PC y=3875 h=652 / SP y=5197 h=975 (REAL_WEB_VALIDATION.md)"
+      - "core post + category で足りるか CPT が要るかは実サイト要件が判明してから"
+  - section_id: partner
+    label: Partner
+    reuse: UNDETERMINED
+    content_ownership: UNDETERMINED
+    implementation_unit: UNDETERMINED
+    editor_capability:
+      add_remove: UNKNOWN
+      reorder: UNKNOWN
+      evidence: []
+    interaction:
+      classification: UNDETERMINED
+      evidence: []
+    notes:
+      - "PC y=4530 h=380 / SP y=6172 h=781 (REAL_WEB_VALIDATION.md)"
+  - section_id: instagram
+    label: Instagram
+    reuse: UNDETERMINED
+    content_ownership: UNDETERMINED
+    implementation_unit: UNDETERMINED
+    editor_capability:
+      add_remove: UNKNOWN
+      reorder: UNKNOWN
+      evidence: []
+    interaction:
+      classification: UNDETERMINED
+      evidence: []
+    notes:
+      - "PC y=4910 h=545 / SP y=6953 h=684 (REAL_WEB_VALIDATION.md)"
+      - "PC 5 thumbnails / SP 4 thumbnails の authored 差分あり"
+      - "外部feed連携かCMS登録かは未確定"
+  - section_id: banner
+    label: Banner
+    reuse: UNDETERMINED
+    content_ownership: UNDETERMINED
+    implementation_unit: UNDETERMINED
+    editor_capability:
+      add_remove: UNKNOWN
+      reorder: UNKNOWN
+      evidence: []
+    interaction:
+      classification: UNDETERMINED
+      evidence: []
+    notes:
+      - "PC y=5455 h=160 / SP y=7637 h=200 (REAL_WEB_VALIDATION.md)"
+  - section_id: footer
+    label: Footer
+    reuse: UNDETERMINED
+    content_ownership: UNDETERMINED
+    implementation_unit: UNDETERMINED
+    editor_capability:
+      add_remove: UNKNOWN
+      reorder: UNKNOWN
+      evidence: []
+    interaction:
+      classification: UNDETERMINED
+      evidence: []
+    notes:
+      - "PC y=5614 h=567 / SP y=7837 h=467.125 (REAL_WEB_VALIDATION.md)"
+      - "global ownership。Header と同様に提供Theme側の所有を先に確認する"
+
+cpt:
+  state: UNDETERMINED
+  candidates:
+    - "events 相当のcontent (hypothesis / Canonではない)"
+    - "news 相当のcontent (hypothesis / Canonではない)"
+  entries: []
+  evidence: []
+  notes:
+    - "Figma に Events / News section が存在することは CPT が必要な証拠ではない"
+    - "core post + category で足りる可能性を先に潰す"
+    - "提供Theme/既存pluginの登録と衝突しないことを確認してから DEFINED へ進む"
+
+taxonomies:
+  state: UNDETERMINED
+  candidates: []
+  entries: []
+  evidence: []
+  notes:
+    - "cpt.state が DEFINED になるまで taxonomy 設計を始めない"
+
+forms:
+  state: UNDETERMINED
+  selected_plugin: ""
+  candidates:
+    - Formidable Forms
+    - Formidable Forms Pro
+  boundaries:
+    - id: form-insertion-page-template
+      insertion_surface: PAGE_TEMPLATE
+      markup_owner: UNDETERMINED
+      post_submit: UNDETERMINED
+      personal_data: UNKNOWN
+    - id: form-insertion-part
+      insertion_surface: PART
+      markup_owner: UNDETERMINED
+      post_submit: UNDETERMINED
+      personal_data: UNKNOWN
+  evidence: []
+  notes:
+    - "Human Authority: フォーム実装は Human が担当。Agent は form を実装しない"
+    - "環境には Formidable Forms / Pro が載る想定（CURRENT_AUTHORITY.md）"
+    - "今の段階で決めるのは form が挿入される境界のみ"
+
+qa_reuse:
+  layers:
+    - id: wordpress_runtime
+      existing_asset: experiments/wordpress-acf-runtime
+      reuse_mode: REUSE
+      notes:
+        - "案件共通の disposable runtime。theme mount のみ差し替える"
+        - "提供Themeは experiments/wordpress-acf-runtime/theme-dropin/ へ置くか THEME_SOURCE_DIR で指す"
+        - "production Theme構造を sample-theme から継承しない"
+        - "旧 experiments/wordpress-acf-pro-standalone-lp は残置。新規はこちらを使う"
+    - id: acf_pro_resolution
+      existing_asset: experiments/wordpress-acf-runtime/scripts/setup.sh
+      reuse_mode: REUSE
+      notes:
+        - "ACF_PRO_LICENSE_KEY の secret 境界をそのまま使う"
+    - id: cms_mutation_qa
+      existing_asset: experiments/wordpress-acf-runtime/tests/runtime.mjs
+      reuse_mode: ADAPT
+      notes:
+        - "0/1/8/多数・長文・改行・空・画像なし・並び替え の形を budokan field へ写す"
+        - "fixture 内容は ACF field 構造が決まってから作る"
+    - id: visual_diff
+      existing_asset: experiments/wordpress-acf-runtime/tests/visual-diff.mjs
+      reuse_mode: REUSE
+      notes:
+        - "VISUAL_DIFF_MAX_RATIO 未設定時は MEASURE_ONLY。universal tolerance を入れない"
+    - id: typography_metrics
+      existing_asset: docs/ref001-typography-runtime-metrics-learning.md
+      reuse_mode: ADAPT
+      notes:
+        - "font-size / line-height / letter-spacing / font-weight を computed style で検証する"
+    - id: asset_lineage
+      existing_asset: tools/implementation-intake/visual_truth_guard.py
+      reuse_mode: REUSE
+      notes:
+        - "ASSET_PENDING / ASSET_READY / ASSET_CORRUPT / ASSET_INVALID_EPHEMERAL_METADATA をそのまま使う"
+        - "Protected PR #142 head 1320476ccaaf86eef6efde6b5cad99533faf085d では PC/SP ASSET_PENDING=0。production Themeへは baseline-asset-source.yaml から必要assetだけselective importし、再hashする"
+        - "旧HTML/CSS/JSや旧asset pathはproduction authorityにしない"
+    - id: target_readiness
+      existing_asset: scripts/coordinate_wordpress_target_readiness.py
+      reuse_mode: REUSE
+      notes:
+        - "Theme到着時の read-only preflight"
+  viewports:
+    - width: 1380
+      role: PC canonical
+    - width: 375
+      role: SP canonical
+  acf_secret_boundary:
+    secret_name: ACF_PRO_LICENSE_KEY
+    committed: false
+
+unknowns:
+  - id: theme-delivery
+    question: "本番用の初期ベーシックThemeのrepository/commit/構造"
+    blocks:
+      - template_coverage.target_path
+      - content_decisions.implementation_unit
+      - freeze.ready
+    state: RESOLVED
+  - id: parts-collection-page
+    question: "●●パーツ集●●固定ページの本文正本"
+    blocks: []
+    state: RESOLVED
+  - id: cpt-requirement
+    question: "Events / News を CPT にするか core post で扱うか"
+    blocks:
+      - cpt.state
+      - taxonomies.state
+      - template_coverage.CPT_ARCHIVE
+      - template_coverage.CPT_SINGLE
+    state: UNKNOWN
+  - id: form-plugin
+    question: "使用する form 実装 (plugin または独自)"
+    blocks:
+      - forms.state
+      - forms.selected_plugin
+    state: RESOLVED
+  - id: editor-capability
+    question: "各 section で editor が追加/削除/並び替えを行う必要があるか"
+    blocks:
+      - content_decisions.content_ownership
+    state: UNKNOWN
+  - id: durable-asset-materialization
+    question: "既存 durable Figma asset source/transport/provenanceをproduction replayで再利用できる状態に固定する"
+    blocks: []
+    state: RESOLVED
+
+conflicts: []
+
+freeze:
+  ready: false
+  frozen_at: ""
+  notes:
+    - "Theme OBSERVED（nipponbudokan）。THEME_RULES.md 参照"
+    - "パーツ集固定ページは parts.php を変更なしで使う（タグ追加禁止）"
+    - "フォームは Human 担当"
+    - "未解決: editor capability / News·Events 本番運用 / image_pipeline 詳細"
+    - "次: Header/Footer → パーツ集 → TOP"

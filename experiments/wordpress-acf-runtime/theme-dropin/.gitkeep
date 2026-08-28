@@ -1,0 +1,3 @@
+Place exactly one theme directory here (example: theme-dropin/budokan/), then run `make smoke`.
+Contents are git-ignored: never commit a client theme to this repository.
+Or set THEME_SOURCE_DIR to an absolute path when the theme lives elsewhere.

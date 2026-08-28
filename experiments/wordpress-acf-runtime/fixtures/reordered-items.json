@@ -1,0 +1,16 @@
+{
+  "id": "reordered-items",
+  "qa_layer": "CMS_ROBUSTNESS",
+  "page": {"title": "Sample Theme Runtime Fixture", "slug": "sample-theme"},
+  "fields": {
+    "hero_title": "A real CMS runtime before pixel confidence",
+    "hero_body": "Reordered mutation for CMS editability.",
+    "hero_cta": {"title": "Inspect editable cards", "url": "#cards", "target": ""},
+    "cards": [
+      {"id":"card-d","title":"Mutate without redesigning","body":"Moved from fourth to first.","image":"coral","link":null},
+      {"id":"card-b","title":"Map CMS ownership","body":"Remains second.","image":"mint","link":null},
+      {"id":"card-a","title":"Observe the reference","body":"Moved from first to third.","image":"blue","link":null},
+      {"id":"card-c","title":"Render through WordPress","body":"Moved from third to fourth.","image":"violet","link":null}
+    ]
+  }
+}

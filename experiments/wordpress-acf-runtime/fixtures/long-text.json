@@ -1,0 +1,16 @@
+{
+  "id": "long-text",
+  "qa_layer": "CMS_ROBUSTNESS",
+  "page": {"title": "Sample Theme Runtime Fixture", "slug": "sample-theme"},
+  "fields": {
+    "hero_title": "A real CMS runtime before pixel confidence",
+    "hero_body": "Long-copy mutation for clipping and responsive growth.",
+    "hero_cta": {"title": "Inspect editable cards", "url": "#cards", "target": ""},
+    "cards": [
+      {"id":"card-a","title":"Observe the reference — editor supplied title that is intentionally much longer than the baseline composition","body":"Read structure, responsive evidence, assets, and interaction before deciding implementation architecture. This paragraph intentionally continues with substantially more editorial copy so the runtime can prove that readable text grows instead of clipping or escaping its card container across desktop, tablet, and mobile widths. The content is not pixel-diffed against Figma because this state does not exist in the reference, and the browser robustness result must remain separate from visual-fidelity scoring.","image":"blue","link":null},
+      {"id":"card-b","title":"Map CMS ownership","body":"Only editor-owned content becomes ACF data.","image":"mint","link":null},
+      {"id":"card-c","title":"Render through WordPress","body":"The QA target is the real WordPress page.","image":"violet","link":null},
+      {"id":"card-d","title":"Mutate without redesigning","body":"Mutation stays separate from Figma fidelity.","image":"coral","link":null}
+    ]
+  }
+}
