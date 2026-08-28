@@ -62,30 +62,34 @@ jobs:
           const { chromium } = requireQA('playwright');
           (async () => {
             const browser = await chromium.launch({ headless: true });
+            // Chromium reserves a 15px vertical scrollbar in this runner. Use
+            // the same viewport/content-width contract as the existing Budokan
+            // section QA so the rendered CSS canvas matches authored Figma widths.
             const cases = [
-              { name:'sp', width:375, height:900, titleSize:22, titlePad:32, contentWidth:311, featuredMax:335 },
-              { name:'pc', width:1380, height:900, titleSize:32, titlePad:48, contentWidth:960, featuredMax:800 },
+              { name:'sp', viewportWidth:390, authoredWidth:375, height:900, titleSize:22, titlePad:32, contentWidth:311, featuredMax:335 },
+              { name:'pc', viewportWidth:1395, authoredWidth:1380, height:900, titleSize:32, titlePad:48, contentWidth:960, featuredMax:800 },
             ];
             const results=[]; let failed=false;
             for (const c of cases) {
-              const page=await browser.newPage({viewport:{width:c.width,height:c.height}});
+              const page=await browser.newPage({viewport:{width:c.viewportWidth,height:c.height}});
               const errors=[]; page.on('pageerror',e=>errors.push(e.message));
               const response=await page.goto(process.env.POST_URL,{waitUntil:'networkidle'});
               await page.evaluate(()=>document.fonts.ready);
               const m=await page.evaluate(()=>{
                 const box=s=>{const e=document.querySelector(s);if(!e)return null;const r=e.getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height}};
                 const css=s=>{const e=document.querySelector(s);if(!e)return null;const v=getComputedStyle(e);return {fontSize:parseFloat(v.fontSize),paddingTop:parseFloat(v.paddingTop),paddingBottom:parseFloat(v.paddingBottom),fontFamily:v.fontFamily,fontWeight:v.fontWeight}};
-                return {title:box('.module_titleSingle'),head:box('.module_titleSingle .head'),body:box('.module_titleSingle .body'),h1:box('.module_titleSingle h1'),featured:box('.single_featured'),featuredImg:box('.single_featured img'),label:box('.module_titleSingle .category .label'),titleCss:css('.module_titleSingle'),h1Css:css('.module_titleSingle h1'),scrollWidth:document.documentElement.scrollWidth,clientWidth:document.documentElement.clientWidth};
+                return {title:box('.module_titleSingle'),head:box('.module_titleSingle .head'),body:box('.module_titleSingle .body'),h1:box('.module_titleSingle h1'),featured:box('.single_featured'),featuredImg:box('.single_featured img'),label:box('.module_titleSingle .category .label'),breadcrumb:box('.module_breadCrumb'),titleCss:css('.module_titleSingle'),h1Css:css('.module_titleSingle h1'),scrollWidth:document.documentElement.scrollWidth,clientWidth:document.documentElement.clientWidth};
               });
               const status=response?.status()||0;
               if(status>=400||errors.length||m.scrollWidth>m.clientWidth+1) failed=true;
-              if(!m.title||Math.abs(m.title.width-c.width)>1||Math.abs(m.title.x)>1) failed=true;
+              if(!m.title||Math.abs(m.title.width-c.authoredWidth)>1||Math.abs(m.title.x)>1) failed=true;
               if(!m.head||Math.abs(m.head.width-c.contentWidth)>2) failed=true;
               if(!m.body||Math.abs(m.body.width-c.contentWidth)>2) failed=true;
               if(!m.h1Css||Math.abs(m.h1Css.fontSize-c.titleSize)>0.5) failed=true;
               if(!m.titleCss||Math.abs(m.titleCss.paddingTop-c.titlePad)>0.5||Math.abs(m.titleCss.paddingBottom-c.titlePad)>0.5) failed=true;
               if(!m.featured||m.featured.width>c.featuredMax+2) failed=true;
               if(!m.label||Math.abs(m.label.width-80)>2) failed=true;
+              if(!m.breadcrumb||m.breadcrumb.y <= (m.featured?.y || 0)) failed=true;
               await page.screenshot({path:`.runtime/budokan-news-single/${c.name}-full.png`,fullPage:true});
               await page.locator('.module_titleSingle').screenshot({path:`.runtime/budokan-news-single/${c.name}-title.png`});
               results.push({case:c,status,errors,metrics:m});
