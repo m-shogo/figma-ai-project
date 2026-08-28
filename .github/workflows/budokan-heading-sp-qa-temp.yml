@@ -53,6 +53,7 @@ jobs:
         if: steps.acf.outputs.enabled == 'true'
         working-directory: experiments/wordpress-acf-runtime
         run: |
+          source scripts/runtime-env.sh
           mkdir -p .runtime
           cat > .runtime/seed-heading.php <<'PHP'
           <?php
