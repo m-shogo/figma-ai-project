@@ -27,8 +27,8 @@
     }
     h2:is(:not([class]), .wp-block-heading) {
         display: flex;
-        align-items: center;
-        gap: 12px;
+        align-items: flex-start;
+        gap: 20px;
         font-family: var(--font-serif-ja);
         font-weight: 500;
         font-size: 26px;
@@ -43,13 +43,15 @@
             content: '';
             width: 10px;
             height: 10px;
+            margin-top: 12px;
             flex-shrink: 0;
             background-color: var(--color-primary);
             clip-path: var(--clip-octagon);
         }
-        /* MARK: heading_pc */
         @media screen and (min-width: 768px) {
-            gap: 20px;
+            &::before {
+                margin-top: 13px;
+            }
         }
         & + :is(h1, h2, h3, h4, h5, h6):is(:not([class]), .wp-block-heading) {
             margin-top: 40px;
@@ -67,13 +69,16 @@
         letter-spacing: 0.05em;
         color: var(--color-text);
         margin-bottom: 0;
-        padding: 16px 20px;
+        padding: 11px 15px;
         background-color: var(--color-heading-band);
         border-top: 1px solid var(--color-line);
         border-bottom: 1px solid var(--color-line);
         overflow-wrap: anywhere;
         word-break: normal;
         line-break: strict;
+        @media screen and (min-width: 768px) {
+            padding: 15px 19px;
+        }
         & + :is(h1, h2, h3, h4, h5, h6):is(:not([class]), .wp-block-heading) {
             margin-top: 32px;
         }
