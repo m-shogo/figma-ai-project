@@ -3,7 +3,7 @@
 // ページネーション
 // ========================================================================== */
 /* // 一覧用 */
-.module_pager-01 {
+.module_pager-01:not(.news_pager) {
     margin-top: 50px;
     display: flex;
     align-items: center;
