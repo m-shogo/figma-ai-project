@@ -151,6 +151,27 @@ Runtime証拠取得用のtemporary workflowがPR差分に入り得る。
 - merge前に削除し、最終PR diffを再確認する。
 - 実装ファイルと永続的な標準だけを残す。
 
+### 9. 親コンポーネントの寸法PASSだけではVisual QA完了ではない
+
+**起きたこと**
+
+Archive全体の幅、記事数、pagerの存在、HTTP、overflowがすべてPASSした後に、FigmaのSP pager子node `560:4260` を再取得したところ、実装がPC風のunderline page numbers / 赤八角矢印のままで、SP正本の「円形page numbers + 薄灰色の丸矢印」と異なることを発見した。
+
+**原因**
+
+Archive親frameのdesign contextとruntime geometryを確認したことで安心し、見た目が独立して切り替わる子componentのvariantを個別に取得・比較していなかった。テストもpagerの存在数しか見ていなかった。
+
+**次回ルール**
+
+- 親frameを取得したら、`pager / tabs / card / CTA / slider control / modal control` など独立したvariantを持つ子componentを洗い出す。
+- SP/PCで形が変わる子componentは、親のscreenshotだけでなく子nodeのdesign contextを取得する。
+- Runtime QAは「存在する」だけでなく、重要な子componentの `size / shape / background / border / state` まで最小限assertする。
+- geometry PASSをVisual PASSと呼ばない。最後に必ず実captureとFigma子nodeを目視比較する。
+
+**一般化候補**
+
+Section Visual QA / Progressive Disclosure の実務ルールとして、他セクションでも再現すればFrontend Learningへ昇格候補。
+
 ---
 
 ## 今後の実装前チェック
@@ -159,12 +180,14 @@ Runtime証拠取得用のtemporary workflowがPR差分に入り得る。
 
 - Figma SP nodeを先に取得したか
 - 同じcomponent familyが他ページ/TOP/archiveにないか検索したか
+- 親frame内でSP/PC variantが変わる子componentを洗い出したか
 - 既存Themeに再利用できるPHP/CSS/moduleがないか確認したか
 - データのマスターはどこか決めたか
 - SP base → SP Runtime QA → PC extension → PC Runtime QAの順になっているか
 - 固定width/height/absoluteを使う前にflow/flex/gridで成立しない理由を説明できるか
 - Visual差がcomponent由来かglobal/browser/font由来か切り分けたか
 - QA selectorがDOM位置依存になっていないか
+- 重要な子componentを存在確認だけでPASSにしていないか
 - 一時fixture/workflowを最終diffに残していないか
 
 ## 昇格ルール
