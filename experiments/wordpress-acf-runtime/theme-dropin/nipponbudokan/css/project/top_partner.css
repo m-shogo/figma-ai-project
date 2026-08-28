@@ -12,7 +12,7 @@
     background-color: var(--color-heading-band);
     color: var(--color-text);
 
-    /* Figma左上の淡い幾何学背景。コンテンツ座標のabsoluteコピーには使わない。 */
+    /* SP Figma の実mask asset。PC root には存在しないためPCでは消す。 */
     &::before {
         content: '';
         position: absolute;
@@ -21,8 +21,8 @@
         left: 0;
         width: 300px;
         height: 314px;
-        background-color: #e7e7e7;
-        clip-path: polygon(0 0, 82% 0, 100% 42%, 100% 72%, 68% 100%, 0 82%);
+        background: url('../../images/top/partner/partner-bg-sp.png') center / 100% 100% no-repeat;
+        pointer-events: none;
     }
 
     .tp_layout {
@@ -181,11 +181,7 @@
         padding-block: 0;
 
         &::before {
-            top: auto;
-            bottom: -79px;
-            width: 307px;
-            height: 325px;
-            opacity: 0.7;
+            display: none;
         }
 
         .tp_layout {
