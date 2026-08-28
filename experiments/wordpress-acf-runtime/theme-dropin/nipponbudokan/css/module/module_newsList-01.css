@@ -232,7 +232,8 @@
     text-decoration: none;
 }
 
-.news_archive .news_pager_numbers .page-numbers.current {
+/* generic module_pager-01 の :not(...) + .current より明示的に News state を優先する。 */
+.news_archive .news_pager .news_pager_numbers .page-numbers.current:not(.prev):not(.next):not(.dots) {
     border-color: var(--color-text);
     background-color: var(--color-text);
     color: var(--color-secondary);
@@ -395,7 +396,7 @@
         font-weight: 400;
     }
 
-    .news_archive .news_pager_numbers .page-numbers.current {
+    .news_archive .news_pager .news_pager_numbers .page-numbers.current:not(.prev):not(.next):not(.dots) {
         border-bottom-color: var(--color-text);
         background: transparent;
         color: var(--color-text);
