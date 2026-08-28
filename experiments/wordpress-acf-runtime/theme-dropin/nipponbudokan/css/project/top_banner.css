@@ -76,16 +76,29 @@
     }
 
     .tb_arrow {
+        position: relative;
         display: flex;
         align-items: center;
         justify-content: center;
         width: 26px;
         height: 26px;
         flex-shrink: 0;
-        background-color: var(--color-secondary);
-        color: var(--color-primary);
+        background-color: var(--color-line);
         clip-path: var(--clip-octagon);
-        filter: drop-shadow(0 0 0.7px var(--color-line));
+
+        &::before {
+            content: '';
+            position: absolute;
+            inset: 1px;
+            background-color: var(--color-secondary);
+            clip-path: var(--clip-octagon);
+        }
+    }
+
+    .tb_arrow_icon {
+        position: relative;
+        z-index: 1;
+        color: var(--color-primary);
 
         &::before {
             content: var(--icon-arrow-right);
