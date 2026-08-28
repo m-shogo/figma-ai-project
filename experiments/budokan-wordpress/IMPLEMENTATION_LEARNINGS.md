@@ -172,6 +172,43 @@ Archive親frameのdesign contextとruntime geometryを確認したことで安�
 
 Section Visual QA / Progressive Disclosure の実務ルールとして、他セクションでも再現すればFrontend Learningへ昇格候補。
 
+### 10. variantが大きく違うときはspecificity戦争をしない
+
+**起きたこと**
+
+News pagerをSP/PC向けに作り直した後も、後から読み込まれるgeneric `module_pager-01` のnested `:not(...)` selectorがcurrent state、prev/next width、icon content/colorを部分的に上書きした。最初はNews側selectorを強くしてcurrent stateだけ直したが、実captureではSPの「前のページ」が縦に潰れ、PC矢印も黒いchevronへ戻っていた。
+
+**原因**
+
+見た目が根本的に別variantなのに、generic baselineを受けたまま個別propertyごとに上書きしようとした。
+
+**次回ルール**
+
+- variantの構造・shape・stateが大きく違う場合、まず「generic baselineを本当に継承すべきか」を判断する。
+- 継承不要ならmodifier/variant classでdefault selector対象から明示的に外し、variant側にvisual contractを集約する。
+- specificityを上げ続ける、import順だけで直す、`!important`を足す、の順で対処しない。
+- 修正後はcomputed styleだけでなく実captureで文字折返し・icon glyph・stateを確認する。
+
+**一般化候補**
+
+CSS Cascade / Component Variant IsolationとしてFrontend Standard候補。別componentでも再現してから昇格する。
+
+### 11. archive条件は画面種別より先にデータ種別を絞る
+
+**起きたこと**
+
+News masterへ通常投稿archiveを寄せる際、`is_date()` をOR条件で直接足すと、custom post typeの日付archiveまでNews layoutへ入る可能性があることを最終diff監査で発見した。
+
+**原因**
+
+`category / tag / date` という画面条件を先に足し、現在のpost typeとの積条件を十分に考えなかった。
+
+**次回ルール**
+
+- archive分岐はまず `post_type / taxonomy` というデータ種別を確定し、その内側でdate/category等のview条件を見る。
+- WordPress conditional tagsをORで増やす前に、別post typeでもtrueになり得るか確認する。
+- 0件archiveでは `get_post_type()` がfalseになり得るため、Theme既存のfallback helperも含めて確認する。
+
 ---
 
 ## 今後の実装前チェック
@@ -188,6 +225,8 @@ Section Visual QA / Progressive Disclosure の実務ルールとして、他セ�
 - Visual差がcomponent由来かglobal/browser/font由来か切り分けたか
 - QA selectorがDOM位置依存になっていないか
 - 重要な子componentを存在確認だけでPASSにしていないか
+- variantがgeneric CSSを本当に継承すべきか確認したか
+- archive分岐で別post typeを巻き込んでいないか
 - 一時fixture/workflowを最終diffに残していないか
 
 ## 昇格ルール
