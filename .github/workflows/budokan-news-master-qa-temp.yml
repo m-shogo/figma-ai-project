@@ -152,6 +152,19 @@ jobs:
                   const r = el.getBoundingClientRect();
                   return { x: r.x, y: r.y, width: r.width, height: r.height };
                 };
+                const style = selector => {
+                  const el = document.querySelector(selector);
+                  if (!el) return null;
+                  const css = getComputedStyle(el);
+                  return {
+                    display: css.display,
+                    borderRadius: css.borderRadius,
+                    borderBottomWidth: css.borderBottomWidth,
+                    backgroundColor: css.backgroundColor,
+                    color: css.color,
+                    clipPath: css.clipPath,
+                  };
+                };
                 const active = document.querySelector('.news_tabs_archive .news_tabs_item.is-active');
                 const masthead = document.querySelector('.global_mainVisual .gm_title');
                 const breadcrumb = document.querySelector('.module_breadCrumb');
@@ -162,7 +175,12 @@ jobs:
                   articleCount: document.querySelectorAll('.news_archive .news_item').length,
                   tabCount: document.querySelectorAll('.news_tabs_archive .news_tabs_item').length,
                   activeLabel: active ? active.textContent.trim() : '',
-                  pagerCount: document.querySelectorAll('.news_archive .module_pager-01').length,
+                  pagerCount: document.querySelectorAll('.news_archive .news_pager').length,
+                  pager: rect('.news_archive .news_pager'),
+                  pagerCurrent: rect('.news_archive .news_pager_numbers .page-numbers.current'),
+                  pagerCurrentStyle: style('.news_archive .news_pager_numbers .page-numbers.current'),
+                  pagerNextIcon: rect('.news_archive .news_pager_next .page-numbers span'),
+                  pagerNextIconStyle: style('.news_archive .news_pager_next .page-numbers span'),
                   masthead: masthead ? masthead.textContent.trim() : '',
                   breadcrumb: breadcrumb ? breadcrumb.textContent.replace(/\s+/g, ' ').trim() : '',
                   scrollWidth: document.documentElement.scrollWidth,
@@ -170,6 +188,7 @@ jobs:
                 };
               });
               await page.locator('.news_archive').screenshot({ path: `.runtime/budokan-news-master/${item.name}-archive-news.png` });
+              await page.locator('.news_archive .news_pager').screenshot({ path: `.runtime/budokan-news-master/${item.name}-archive-pager.png` });
               await page.screenshot({ path: `.runtime/budokan-news-master/${item.name}-archive-page.png`, fullPage: true });
 
               const desiredCategory = page.locator('.news_tabs_archive .news_tabs_item').filter({ hasText: '武道' }).first();
@@ -196,9 +215,19 @@ jobs:
               if (item.name === 'sp') {
                 if (Math.abs(topMetrics.section.width - item.contentWidth) > 1 || Math.abs(topMetrics.panel.x - 24) > 1 || Math.abs(topMetrics.panel.width - 327) > 1) failed = true;
                 if (Math.abs(archiveMetrics.archive.x - 20) > 1 || Math.abs(archiveMetrics.archive.width - 335) > 1 || Math.abs(archiveMetrics.firstItem.width - 335) > 1) failed = true;
+                if (!archiveMetrics.pager || Math.abs(archiveMetrics.pager.width - 335) > 1 || Math.abs(archiveMetrics.pager.height - 94) > 1) failed = true;
+                if (!archiveMetrics.pagerCurrent || Math.abs(archiveMetrics.pagerCurrent.width - 40) > 1 || Math.abs(archiveMetrics.pagerCurrent.height - 40) > 1) failed = true;
+                if (!archiveMetrics.pagerCurrentStyle || archiveMetrics.pagerCurrentStyle.borderRadius !== '50%' || archiveMetrics.pagerCurrentStyle.backgroundColor !== 'rgb(51, 51, 51)') failed = true;
+                if (!archiveMetrics.pagerNextIcon || Math.abs(archiveMetrics.pagerNextIcon.width - 30) > 1 || Math.abs(archiveMetrics.pagerNextIcon.height - 30) > 1) failed = true;
+                if (!archiveMetrics.pagerNextIconStyle || archiveMetrics.pagerNextIconStyle.borderRadius !== '50%' || archiveMetrics.pagerNextIconStyle.backgroundColor !== 'rgb(242, 242, 242)') failed = true;
               } else {
                 if (Math.abs(topMetrics.section.width - item.contentWidth) > 1 || Math.abs(topMetrics.panel.x - 110) > 1 || Math.abs(topMetrics.panel.width - 1160) > 2 || Math.abs(topMetrics.panel.height - 606) > 2) failed = true;
                 if (Math.abs(archiveMetrics.archive.x - 210) > 2 || Math.abs(archiveMetrics.archive.width - 960) > 2 || Math.abs(archiveMetrics.firstItem.width - 960) > 2 || Math.abs(archiveMetrics.firstItem.height - 90) > 2) failed = true;
+                if (!archiveMetrics.pager || Math.abs(archiveMetrics.pager.height - 40) > 1) failed = true;
+                if (!archiveMetrics.pagerCurrent || Math.abs(archiveMetrics.pagerCurrent.width - 50) > 1 || Math.abs(archiveMetrics.pagerCurrent.height - 40) > 1) failed = true;
+                if (!archiveMetrics.pagerCurrentStyle || archiveMetrics.pagerCurrentStyle.borderRadius !== '0px' || archiveMetrics.pagerCurrentStyle.borderBottomWidth !== '2px') failed = true;
+                if (!archiveMetrics.pagerNextIcon || Math.abs(archiveMetrics.pagerNextIcon.width - 40) > 1 || Math.abs(archiveMetrics.pagerNextIcon.height - 40) > 1) failed = true;
+                if (!archiveMetrics.pagerNextIconStyle || archiveMetrics.pagerNextIconStyle.backgroundColor !== 'rgb(191, 62, 43)' || archiveMetrics.pagerNextIconStyle.clipPath === 'none') failed = true;
               }
 
               results.push({
