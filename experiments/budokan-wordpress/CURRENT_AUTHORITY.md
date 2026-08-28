@@ -102,6 +102,7 @@ experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/parts.php
 - 先に Flow / Flex / Grid。Hero artwork 等 art direction だけ intentional absolute
 - Figma 座標の直写で Web を固くしない
 - Theme 既存の `global_*` / `module_*` / `gh_` 等に合わせる
+- 失敗・手戻り・レビュー指摘は [`IMPLEMENTATION_LEARNINGS.md`](IMPLEMENTATION_LEARNINGS.md) に原因と再発防止まで残す
 - 学習は実装後に `research/frontend-learning-evidence*.yaml` / playbook candidate へ戻す（自動昇格しない）
 
 Theme 専用の enqueue・命名は `THEME_RULES.md`。Frontend Standard は Company / Theme / Figma visual を上書きしない。
@@ -139,14 +140,26 @@ File: [nipponbudokan](https://www.figma.com/design/w7SGVY63FuW6JpaQVKjxm2/nippon
 
 ---
 
-## 実装順（Human Authority）
+## 実装順 / 全体俯瞰（Human Authority）
+
+基本の土台は固定する。
 
 ```text
 0. Theme 観測 → この Theme 専用ルールを短く固定
 1. Header / Footer
 2. パーツ集（parts.php 変更なし）
-3. TOP
+3. それ以降はページ順・TOP順を固定しない
 ```
+
+3以降は、実装前に **Figma全体 / Theme全体 / WordPressのデータ構造** を見て、最も手戻りの少ない順に組み替える。
+
+- 同じ UI family が `通常ページ / archive / single / TOP / sidebar / card` にあるか先に探す
+- ある場合は、どれが **標準形・マスター・データ正本** かを先に決める
+- 通常一覧や共通moduleがマスターなら、TOPを先に作る必要はない。TOPは派生・改良型として共通部品を使う
+- 「今このセクションを見ているから次も隣」という理由だけで順番を決めない
+- 既存Theme / Component / CSS / PHP / taxonomy / libraryをReuse-Before-Buildで確認してから新規実装する
+- 一度決めた順番も、全体確認でより滑らかな依存順が見つかったら変更してよい
+- ただし1つの実装単位の中では **SP Figma確認 → SP実装 → SP Runtime QA → PC拡張 → PC Runtime QA → 最終diff** の順を守る
 
 Form は Human 担当のためこの順に含めない。
 
@@ -162,5 +175,7 @@ Form は Human 担当のためこの順に含めない。
 6. TOP カレンダーは FullCalendar + Google Calendar。自前カレンダーを作らない
 7. `ref002` 名の新規ファイルを作らない
 8. デザイン変更前提で、Theme に合わせて載せる。運用未確定・契約変更は Human が明示するまで変えない
-9. 実装順は Header/Footer → パーツ集 → TOP
-10. 再現可能な学びは evidence / playbook candidate に残す（自動で Company Policy へ上げない）
+9. Header/Footer/Parts後は順番を固定せず、Figma/Theme/WP全体からcomponent familyと依存関係を調べ、マスター→派生の順を優先する
+10. SP base → SP Runtime QA → PC extension → PC Runtime QAを1単位として完了させる
+11. ミス・手戻りは `IMPLEMENTATION_LEARNINGS.md` に「事象→原因→次回ルール→一般化範囲」で残す
+12. 再現可能な学びは evidence / playbook candidate に戻すが、自動で Company Policy へ上げない
