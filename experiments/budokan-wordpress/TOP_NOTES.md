@@ -15,7 +15,7 @@
 4. 目的から探す（大） ← **PC+SP 第一通**
 5. 日本武道館とは ← **PC+SP 第一通**
 6. お知らせ ← **通常Archiveをマスター化 + TOP派生リファクタ + 実WordPress/ACF PRO Runtime Visual QA完了**
-7. 公式パートナー
+7. 公式パートナー ← **SP/PC Figma + 実WordPress/ACF PRO Runtime Visual QA完了**
 8. 月刊「武道」
 9. 導線バナー
 10. Footer（共通。TOP 内に地図付き別案あり → デザイン変更前提で当面 `footer_subpage`）
@@ -106,18 +106,63 @@
 - Visual QAは親sectionだけでなく、SP/PCでvariantが変わるpager/tab/CTA等の子componentまで確認する。
 - 詳細は `IMPLEMENTATION_LEARNINGS.md` に「事象→原因→次回ルール→一般化範囲」で残す。
 
+## 公式パートナー — mobile-first / Runtime QA PASS
+
+### Figma
+
+- SP: `1363:9405` — 375×769
+- PC: `1603:7187` — authored 1380 / inner 1160×421
+- SPの淡い300×314装飾は実Figma node `1363:9407` をPNG exportしてThemeへ保存。
+- PCの公式パートナーrootには同装飾が存在しないため、PCでは非表示。
+
+### 実装
+
+- `template-parts/_top-partner.php` + `css/project/top_partner.css`。
+- TOP News直後へ接続。
+- 12団体のロゴはFigmaからTheme内 `images/top/partner/` へ永続保存し、一時Figma URLへhotlinkしない。
+- 未確定ACF構造や本番URLは作らず、fallback data + `nipponbudokan_top_partner_items` / `nipponbudokan_top_partner_url` filterで差し替え可能にした。
+- 同一DOMをSP 2列 → PC 4列へCSSで展開。
+
+### Runtime QA
+
+**実WordPress + ACF PRO 6.8.9 + 実Theme + Playwright ChromiumでPASS。**
+
+- SP authored 375:
+  - section x=0 / width=375 / **height=769**
+  - inner x=20 / width=335
+  - intro height=95
+  - list width=335 / height=456
+  - card **161.5×66** / logo **30×30**
+  - SP CTA height=26 / PC CTAは非表示
+  - 12 item / 12 logo / broken logo 0
+  - HTTP 200 / page error 0 / horizontal overflow 0
+- PC authored 1380:
+  - section x=0 / width=1380 / **height=421**
+  - inner x=110 / width=1160 / height=421
+  - intro width=189
+  - list x=410 / width=860 / height=220
+  - card **200×60** / logo **40×40**
+  - PC CTA height=26 / SP CTAは非表示
+  - 12 item / 12 logo / broken logo 0
+  - HTTP 200 / page error 0 / horizontal overflow 0
+- 既存 `.global_contents > section` がSP 50px / PC 100pxのbottom paddingを追加してFigma寸法を伸ばす競合をRuntimeで発見。`top_partner-01`だけ明示的に上書きし、globalルール自体は変更していない。
+- Linux Chromiumの `scrollbar-gutter: stable` 15px予約はouter viewportでのみ吸収し、component CSSへ15px補正を入れていない。
+
 ## 次の作業（引き継ぎ）
 
 `parts.php` と form は触らない。
 
-**次を最初から「公式パートナー」と固定しない。** 次回着手前にFigma / Theme / WordPress全体を再度確認し、残り候補のどれが他ページのマスターや既存moduleに依存するかを先に調べる。
+公式パートナーをfinal diff / squash mergeで閉じた後、次は **月刊「武道」編集部** のmaster / derivative監査から開始する。
 
-候補:
+Figma候補:
+- TOP SP `1360:9389`
+- TOP PC `1603:7173`
+- 刊行物 / backnumber関連ページおよびFooter SNSに「月刊『武道』編集部」表現が存在するため、TOPだけ独立実装せず再利用可能性を先に確認する。
 
-1. 公式パートナー
-2. 月刊「武道」
-3. 導線バナー（既存 `top_banner-01` との関係を先に確認）
-4. TOP 地図付き footer は当面使わない（グローバルは `footer_subpage`）
+その後:
+1. 月刊「武道」: master/derivative監査 → SP Figma → SP実装/Runtime → PC拡張/Runtime
+2. 導線バナー: SP `1360:9354` / PC `1603:7145`。既存 `top_banner-01` / Footer系との再利用関係を先に確認
+3. TOP 地図付き footer は当面使わない（グローバルは `footer_subpage`）
 
 選んだ1単位では必ず、**SP Figma → SP実装 → SP Runtime QA → PC拡張 → PC Runtime QA → final diff** の順で完了させる。
 
