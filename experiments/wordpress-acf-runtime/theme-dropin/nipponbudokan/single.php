@@ -13,12 +13,10 @@ if (get_field('post_type') === 'url') {
 
     // URLのバリデーション
     if ($postType_url && filter_var($postType_url, FILTER_VALIDATE_URL)) {
-        // 外部URLの場合はesc_url_raw()でサニタイズしてからリダイレクト
         $redirect_url = esc_url_raw($postType_url);
         wp_redirect($redirect_url);
         exit;
     } else {
-        // URLが無効な場合は404ページへリダイレクト
         wp_safe_redirect(home_url('/404/'));
         exit;
     }
@@ -29,22 +27,17 @@ if (get_field('post_type') === 'file') {
     $postType_file = get_field('postType_file');
 
     if ($postType_file) {
-        // 配列の場合はurlキーから取得、文字列の場合はそのまま使用
         $postType_url = is_array($postType_file) ? $postType_file['url'] : $postType_file;
 
-        // URLのバリデーション
         if ($postType_url && filter_var($postType_url, FILTER_VALIDATE_URL)) {
-            // 外部URLの場合はesc_url_raw()でサニタイズしてからリダイレクト
             $redirect_url = esc_url_raw($postType_url);
             wp_redirect($redirect_url);
             exit;
         } else {
-            // URLが無効な場合は404ページへリダイレクト
             wp_safe_redirect(home_url('/404/'));
             exit;
         }
     } else {
-        // ファイルが設定されていない場合は404ページへリダイレクト
         wp_safe_redirect(home_url('/404/'));
         exit;
     }
@@ -68,15 +61,6 @@ if (get_field('post_type') === 'file') {
                             <meta itemprop="url" content="<?php echo esc_url(home_url('/')); ?>">
                         </span>
                         <div class="module_titleSingle">
-                            <div class="thumbnail">
-                                <?php
-                                // PHP 8.3: wp_get_attachment_image_src は添付が存在しない・削除済みなどのとき false を返す。false に対する配列オフセットアクセスを避けるため $thumb も判定する。
-                                $thumbnailId = get_post_thumbnail_id($post->ID);
-                                $thumb = wp_get_attachment_image_src($thumbnailId, '');
-                                if ($thumbnailId && $thumb) : ?>
-                                    <img itemprop="image" src="<?php echo esc_url($thumb[0]); ?>" alt="<?php echo esc_attr(get_the_title()); ?>" width="360" height="240">
-                                <?php endif; ?>
-                            </div>
                             <div class="head">
                                 <p class="date">
                                     <time datetime="<?php echo esc_attr(get_the_time('Y-m-d')); ?>"><?php the_time('Y/m/d'); ?></time>
@@ -91,6 +75,19 @@ if (get_field('post_type') === 'file') {
                                 <h1 class="module_title-01"><span itemprop="headline"><?php the_title(); ?></span></h1>
                             </div>
                         </div>
+                        <?php
+                        $thumbnailId = get_post_thumbnail_id($post->ID);
+                        $thumb = $thumbnailId ? wp_get_attachment_image_src($thumbnailId, 'full') : false;
+                        $caption = $thumbnailId ? wp_get_attachment_caption($thumbnailId) : '';
+                        ?>
+                        <?php if ($thumbnailId && $thumb) : ?>
+                            <figure class="single_featured">
+                                <img itemprop="image" src="<?php echo esc_url($thumb[0]); ?>" alt="<?php echo esc_attr(get_post_meta($thumbnailId, '_wp_attachment_image_alt', true) ?: get_the_title()); ?>" width="800" height="534">
+                                <?php if ($caption) : ?>
+                                    <figcaption><?php echo esc_html($caption); ?></figcaption>
+                                <?php endif; ?>
+                            </figure>
+                        <?php endif; ?>
                         <div class="block-editor_wrap" itemprop="articleBody">
                             <?php the_content(); ?>
                         </div>
