@@ -79,7 +79,13 @@ jobs:
               const response = await page.goto(process.env.WP_URL, { waitUntil: 'networkidle' });
               await page.evaluate(() => document.fonts.ready);
               await page.locator('#top_instagram-01').scrollIntoViewIfNeeded();
-              await page.waitForTimeout(100);
+              await page.waitForFunction(() => {
+                const visibleImages = [...document.querySelectorAll('#top_instagram-01 .ti_thumbnail')]
+                  .filter(el => getComputedStyle(el).display !== 'none')
+                  .map(el => el.querySelector('img'))
+                  .filter(Boolean);
+                return visibleImages.length > 0 && visibleImages.every(img => img.complete && img.naturalWidth > 0 && img.naturalHeight > 0);
+              });
 
               const metrics = await page.evaluate(() => {
                 const rect = selector => {
@@ -91,6 +97,7 @@ jobs:
                 const tiles = [...document.querySelectorAll('#top_instagram-01 .ti_thumbnail')];
                 const visibleTiles = tiles.filter(el => getComputedStyle(el).display !== 'none');
                 const images = [...document.querySelectorAll('#top_instagram-01 img')];
+                const visibleImages = visibleTiles.map(el => el.querySelector('img')).filter(Boolean);
                 return {
                   section: rect('#top_instagram-01'),
                   inner: rect('#top_instagram-01 .ti_inner'),
@@ -102,7 +109,8 @@ jobs:
                   itemCount: tiles.length,
                   visibleItemCount: visibleTiles.length,
                   imageCount: images.length,
-                  brokenImageCount: images.filter(img => !img.complete || img.naturalWidth === 0 || img.naturalHeight === 0).length,
+                  visibleImageCount: visibleImages.length,
+                  brokenVisibleImageCount: visibleImages.filter(img => !img.complete || img.naturalWidth === 0 || img.naturalHeight === 0).length,
                   scrollWidth: document.documentElement.scrollWidth,
                   clientWidth: document.documentElement.clientWidth,
                 };
@@ -111,16 +119,16 @@ jobs:
               const status = response?.status() || 0;
               const horizontalOverflow = metrics.scrollWidth > metrics.clientWidth + 1;
               if (status >= 400 || pageErrors.length || horizontalOverflow) failed = true;
-              if (metrics.itemCount !== 5 || metrics.imageCount !== 5 || metrics.brokenImageCount !== 0) failed = true;
+              if (metrics.itemCount !== 5 || metrics.imageCount !== 5 || metrics.brokenVisibleImageCount !== 0) failed = true;
 
               if (item.name === 'sp') {
-                if (metrics.visibleItemCount !== 4) failed = true;
+                if (metrics.visibleItemCount !== 4 || metrics.visibleImageCount !== 4) failed = true;
                 if (!metrics.section || Math.abs(metrics.section.width - item.contentWidth) > 1 || Math.abs(metrics.section.height - 683.75) > 3) failed = true;
                 if (!metrics.inner || Math.abs(metrics.inner.x - 32) > 1 || Math.abs(metrics.inner.width - 311) > 1) failed = true;
                 if (!metrics.thumbnails || Math.abs(metrics.thumbnails.width - 311) > 1 || Math.abs(metrics.thumbnails.height - 389.75) > 3) failed = true;
                 if (!metrics.firstTile || Math.abs(metrics.firstTile.width - 155) > 2 || Math.abs(metrics.firstTile.height - 194) > 2) failed = true;
               } else {
-                if (metrics.visibleItemCount !== 5) failed = true;
+                if (metrics.visibleItemCount !== 5 || metrics.visibleImageCount !== 5) failed = true;
                 if (!metrics.section || Math.abs(metrics.section.width - item.contentWidth) > 1 || Math.abs(metrics.section.height - 571) > 3) failed = true;
                 if (!metrics.inner || Math.abs(metrics.inner.x - 110) > 2 || Math.abs(metrics.inner.width - 1160) > 2) failed = true;
                 if (!metrics.head || Math.abs(metrics.head.width - 1160) > 2 || Math.abs(metrics.head.height - 62) > 3) failed = true;
