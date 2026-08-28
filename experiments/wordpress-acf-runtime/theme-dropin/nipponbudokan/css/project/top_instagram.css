@@ -1,0 +1,160 @@
+@charset "utf-8";
+/* TOP 月刊「武道」編集部 / Instagram */
+
+.global_contents > .top_instagram-01 {
+    padding: 64px 32px;
+}
+
+.top_instagram-01 {
+    .ti_inner {
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
+        width: 100%;
+        margin-inline: auto;
+    }
+    .ti_head {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        align-items: center;
+    }
+    .ti_titleGroup {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        align-items: center;
+    }
+    .ti_title {
+        margin: 0;
+        color: var(--color-text);
+        font-family: var(--font-sansSerif-ja);
+        font-size: 22px;
+        font-weight: 500;
+        line-height: 1;
+        letter-spacing: 0.05em;
+    }
+    .ti_label {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        margin: 0;
+        color: var(--color-primary);
+        font-family: var(--font-sansSerif-en);
+        font-size: 14px;
+        line-height: 1;
+        letter-spacing: 0.05em;
+    }
+    .ti_marker {
+        display: block;
+        flex: none;
+        width: 10px;
+        height: 10px;
+        background-color: var(--color-primary);
+        clip-path: var(--clip-octagon);
+    }
+    .ti_labelInitial {
+        color: inherit;
+    }
+    .ti_lead {
+        width: 100%;
+        margin: 0;
+        color: var(--color-text);
+        font-family: var(--font-sansSerif-ja);
+        font-size: 15px;
+        line-height: 1.8;
+        letter-spacing: 0.05em;
+    }
+    .ti_thumbnails {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1px;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+    .ti_thumbnail {
+        overflow: hidden;
+        aspect-ratio: 4 / 5;
+    }
+    .ti_thumbnail:nth-child(n + 5) {
+        display: none;
+    }
+    .ti_link,
+    .ti_thumbnail img {
+        display: block;
+        width: 100%;
+        height: 100%;
+    }
+    .ti_thumbnail img {
+        object-fit: cover;
+    }
+}
+
+/* MARK: instagram_pc */
+@media screen and (min-width: 768px) {
+    .global_contents > .top_instagram-01 {
+        padding: 100px 110px 80px;
+    }
+    .top_instagram-01 {
+        .ti_inner {
+            gap: 40px;
+            width: 1160px;
+        }
+        .ti_head {
+            flex-direction: row;
+            gap: 40px;
+            align-items: flex-end;
+            justify-content: space-between;
+        }
+        .ti_titleGroup {
+            gap: 10px;
+            align-items: flex-start;
+            min-width: 226px;
+        }
+        .ti_title {
+            font-family: var(--font-serif-ja);
+            font-size: 24px;
+            font-weight: 500;
+        }
+        .ti_label {
+            position: relative;
+            gap: 0;
+            min-height: 28px;
+            padding-left: 14px;
+            font-family: var(--font-serif-ja);
+            font-size: 16px;
+            font-weight: 500;
+        }
+        .ti_marker {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 28px;
+            height: 28px;
+        }
+        .ti_labelText {
+            position: relative;
+            z-index: 1;
+        }
+        .ti_labelInitial {
+            color: #fff;
+        }
+        .ti_lead {
+            width: auto;
+            white-space: nowrap;
+        }
+        .ti_thumbnails {
+            grid-template-columns: repeat(5, 231px);
+            gap: 1px;
+        }
+        .ti_thumbnail,
+        .ti_thumbnail:nth-child(n + 5) {
+            display: block;
+            width: 231px;
+            height: 289px;
+            aspect-ratio: auto;
+        }
+    }
+}
