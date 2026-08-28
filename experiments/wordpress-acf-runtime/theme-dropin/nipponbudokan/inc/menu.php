@@ -11,6 +11,24 @@ add_action('after_setup_theme', function () {
 });
 
 /**
+ * global-nav 未設定時の sample（Figma Header PC 4項目）
+ */
+function nipponbudokan_global_nav_fallback()
+{
+    $items = array(
+        '日本武道館について',
+        '事業案内',
+        '刊行物',
+        '研修センター',
+    );
+    echo '<div class="gn_container-01" id="gn_container-01"><ul id="gn_links-01" class="menu gn_links-01">';
+    foreach ($items as $label) {
+        echo '<li class="gnl_item-02 _hasChild"><div class="gnl_title-02"><a class="gnl_link-02 module_textLink" href="#"><span>' . esc_html($label) . '</span></a></div></li>';
+    }
+    echo '</ul></div>';
+}
+
+/**
  * メニューリンクで新タブを開くべきか判定
  * （target="_blank"指定・空URL・指定拡張子のファイルリンクの場合にtrue）
  *

@@ -1,6 +1,7 @@
 @charset "utf-8";
 /* // ==========================================================================
 // サイト共通ヘッダー
+// Figma PC: 1399:12372 / SP closed: 446:10020 / SP open: 2096:9573
 // ========================================================================== */
 .global_header {
     position: fixed;
@@ -9,30 +10,46 @@
     z-index: 100;
     width: 100%;
     height: var(--header-height-SP);
-    background-color: var(--color-secondary);
-    border-bottom: 1px solid var(--color-separator--soft);
+    background-color: var(--color-copyright);
     transition: height var(--transition-duration);
     .gh_inner {
         display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
-        padding-inline: var(--padding-SP);
+        align-items: stretch;
+        flex-wrap: nowrap;
         height: inherit;
     }
     .gh_logo {
-        flex-shrink: 0;
-        width: auto;
-        max-width: 200px;
+        display: flex;
+        flex: 1 1 auto;
+        align-items: center;
+        min-width: 0;
+        padding-inline: 12px;
         a {
-            display: block;
-            color: var(--color-text);
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            min-width: 0;
+            max-width: 100%;
+            color: var(--color-secondary);
             text-decoration: none;
             transition: opacity var(--transition-duration);
+        }
+        .gh_logo_mark {
+            display: block;
+            flex-shrink: 0;
+            width: 36px;
+            height: 35px;
+        }
+        .gh_logo_name {
+            display: block;
+            flex: 0 1 auto;
+            min-width: 0;
+            line-height: 0;
             img {
                 display: block;
                 width: auto;
-                height: 36px;
+                max-width: 137px;
+                height: 32px;
             }
         }
     }
@@ -40,7 +57,6 @@
         display: flex;
         flex-shrink: 0;
         align-items: stretch;
-        gap: 8px;
         margin-left: auto;
     }
     .gh_lang,
@@ -51,10 +67,10 @@
         align-items: center;
         justify-content: center;
         box-sizing: border-box;
-        width: var(--header-action-size);
+        width: 52px;
         height: var(--header-height-SP);
         border: 0;
-        border-radius: 3px;
+        border-radius: 0;
         color: var(--color-secondary);
         text-decoration: none;
         cursor: pointer;
@@ -64,14 +80,12 @@
         }
     }
     .gh_lang {
-        display: none;
         background-color: var(--color-accent);
         font-size: 14px;
         font-weight: 500;
         letter-spacing: 0.1em;
     }
     .gh_search {
-        display: none;
         background-color: var(--color-header-search);
         .icon {
             display: block;
@@ -87,14 +101,35 @@
         }
     }
     .gh_menu {
+        position: relative;
         background-color: var(--color-primary);
         .icon {
             display: block;
+            position: relative;
             width: 20px;
-            height: 1px;
+            height: 13px;
             background-color: currentColor;
-            box-shadow: 0 -6px 0 currentColor, 0 6px 0 currentColor;
-            transition: var(--transition-duration);
+            background-clip: content-box;
+            padding-block: 6px;
+            box-sizing: border-box;
+            &::before,
+            &::after {
+                content: '';
+                display: block;
+                position: absolute;
+                left: 0;
+                width: 20px;
+                height: 1px;
+                background-color: currentColor;
+                transition: transform var(--transition-duration), top var(--transition-duration);
+            }
+            &::before {
+                top: 0;
+            }
+            &::after {
+                bottom: 0;
+                top: auto;
+            }
         }
         .text {
             position: absolute;
@@ -112,31 +147,40 @@
     /* MARK: header_breakpoint */
     @media screen and (min-width: 768px) {
         height: var(--header-height-PC);
+        background-color: var(--color-secondary);
+        border-bottom: 1px solid var(--color-separator--soft);
         .gh_inner {
+            align-items: center;
             padding-inline: 60px 20px;
             gap: 24px;
         }
         .gh_logo {
-            width: 340px;
-            max-width: none;
+            flex: 0 0 auto;
+            padding-inline: 0;
             a {
+                color: var(--color-text);
+            }
+            .gh_logo_mark {
+                width: 41px;
+                height: 40px;
+            }
+            .gh_logo_name {
                 img {
-                    height: 40px;
+                    max-width: none;
+                    height: 36px;
                 }
             }
         }
         .gh_buttons {
             gap: 10px;
+            align-items: center;
         }
         .gh_lang,
         .gh_search,
         .gh_menu {
             width: var(--header-action-size);
             height: var(--header-action-size);
-        }
-        .gh_lang,
-        .gh_search {
-            display: flex;
+            border-radius: 3px;
         }
     }
 
@@ -154,6 +198,46 @@
         .gh_menu {
             &:hover {
                 opacity: var(--opacity-hover);
+            }
+        }
+    }
+}
+
+/* MARK: open_menu — SP はハンバーガーを × に */
+body._open-menu {
+    .global_header {
+        .gh_menu {
+            .icon {
+                background-color: transparent;
+                padding-block: 0;
+                height: 20px;
+                &::before {
+                    top: 9.5px;
+                    transform: rotate(45deg);
+                }
+                &::after {
+                    top: 9.5px;
+                    bottom: auto;
+                    transform: rotate(-45deg);
+                }
+            }
+        }
+        @media screen and (min-width: 768px) {
+            .gh_menu {
+                .icon {
+                    background-color: currentColor;
+                    padding-block: 6px;
+                    height: 13px;
+                    &::before {
+                        top: 0;
+                        transform: none;
+                    }
+                    &::after {
+                        top: auto;
+                        bottom: 0;
+                        transform: none;
+                    }
+                }
             }
         }
     }

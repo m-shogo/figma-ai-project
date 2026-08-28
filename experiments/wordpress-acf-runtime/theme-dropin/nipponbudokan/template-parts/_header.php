@@ -1,18 +1,18 @@
 <header id="global_header" class="global_header" itemscope itemtype="https://schema.org/WPHeader">
     <div class="gh_inner">
-        <?php if (is_front_page()) : ?>
-            <h1 class="gh_logo">
-                <a href="<?php echo esc_url(home_url('/')); ?>">
-                    <img src="<?php echo get_template_directory_uri(); ?>/images/common/logo.svg" alt="<?php bloginfo('name'); ?>" width="200" height="40" decoding="async">
-                </a>
-            </h1>
-        <?php else: ?>
-            <p class="gh_logo">
-                <a href="<?php echo esc_url(home_url('/')); ?>">
-                    <img src="<?php echo get_template_directory_uri(); ?>/images/common/logo.svg" alt="<?php bloginfo('name'); ?>" width="200" height="40" decoding="async">
-                </a>
-            </p>
-        <?php endif; ?>
+        <?php
+        $theme_uri = get_template_directory_uri();
+        $logo_tag = is_front_page() ? 'h1' : 'p';
+        ?>
+        <<?php echo $logo_tag; ?> class="gh_logo">
+            <a href="<?php echo esc_url(home_url('/')); ?>" aria-label="<?php echo esc_attr(get_bloginfo('name')); ?>">
+                <img class="gh_logo_mark" src="<?php echo esc_url($theme_uri . '/images/common/logo-mark.svg'); ?>" alt="" width="41" height="40" decoding="async">
+                <picture class="gh_logo_name">
+                    <source media="(min-width: 768px)" srcset="<?php echo esc_url($theme_uri . '/images/common/logo-wordmark.svg'); ?>" width="152" height="36">
+                    <img src="<?php echo esc_url($theme_uri . '/images/common/logo-wordmark-sp-inverse.svg'); ?>" alt="" width="137" height="32" decoding="async">
+                </picture>
+            </a>
+        </<?php echo $logo_tag; ?>>
 
         <nav id="global_navigation" class="global_navigation" itemscope itemtype="https://schema.org/SiteNavigationElement">
             <div class="gn_menu">
@@ -24,7 +24,7 @@
                     'container' => 'div',
                     'container_class' => 'gn_container-01',
                     'container_id' => 'gn_container-01',
-                    'fallback_cb' => false,
+                    'fallback_cb' => 'nipponbudokan_global_nav_fallback',
                     'theme_location' => 'global-nav',
                     'walker' => new Custom_Global_Walker_Nav_Menu(),
                 ));

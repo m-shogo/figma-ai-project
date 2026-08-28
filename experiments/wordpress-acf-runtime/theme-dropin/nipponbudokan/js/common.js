@@ -326,9 +326,12 @@ window.addEventListener('resize', setVw);
     // グローバルナビゲーション
     $('#gh_menu').on('click', function () {
       $body.toggleClass('_open-menu _open-bg');
+      const isOpen = $body.hasClass('_open-menu');
+      $(this).attr('aria-expanded', isOpen ? 'true' : 'false');
     });
     $('#gn_close').on('click', function () {
       $body.removeClass('_open-menu _open-bg');
+      $('#gh_menu').attr('aria-expanded', 'false');
     });
     const globalNavItems = document.querySelectorAll('[class*="gnl_item"]._hasChild');
     globalNavItems.forEach(item => {
@@ -363,7 +366,7 @@ window.addEventListener('resize', setVw);
     // ==========================================================================
     // PCレイアウトとみなす最小幅（toggleMenu / contentFixed のブレークポイント跨ぎで共通）
     // MARK: header_breakpoint
-    const headerBreakpointMin = 1080;
+    const headerBreakpointMin = 768;
     // メガメニューのタッチ展開状態クラス（touchMegaMenuSupport とブレークポイント跨ぎ処理の両方から参照）
     const touchOpenClass = '_touchOpen';
     // すべてのタッチ用メガメニューを閉じる（resize 時は toggleMenu スコープからも呼ぶ）
@@ -477,7 +480,7 @@ window.addEventListener('resize', setVw);
     // });
 
     // 検索
-    $('#search').on('click', function () {
+    $('#gh_search').on('click', function () {
       if ($body.hasClass('_open-bg')) {
         $body.addClass('_open-search');
       } else {
@@ -494,6 +497,7 @@ window.addEventListener('resize', setVw);
         .removeClass('_open-search')
         .removeClass('_open-menu')
         .removeClass('_open-bg');
+      $('#gh_menu').attr('aria-expanded', 'false');
     });
 
     // アーカイブ用のローカルナビゲーションを開閉式にする
@@ -662,7 +666,7 @@ window.addEventListener('resize', setVw);
     });
     // 幅のブレークポイントを跨いだとき state を false にし、固定中ならスクロール位置を戻す（toggleMenu 側のクラス削除と整合）
     // MARK: header_breakpoint
-    const headerBreakpointMin = 1080;
+    const headerBreakpointMin = 768;
     let lastWidthForContentFixedBreakpoint = null;
     $(window).on('load resize', function () {
       const currentWidth = $(window).width();
