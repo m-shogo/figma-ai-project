@@ -78,6 +78,26 @@ experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/parts.php
 
 ---
 
+## Frontend / 人が触れる CSS（必須）
+
+正本:
+
+- `docs/frontend-quick-contract.md`
+- `docs/frontend-implementation-standard.md`
+- `docs/frontend-maintainability-qa.md`
+
+この案件での読み:
+
+- **absolute 禁止ではないが、通常 content は極力使わない**
+- 先に Flow / Flex / Grid。Hero artwork 等 art direction だけ intentional absolute
+- Figma 座標の直写で Web を固くしない
+- Theme 既存の `global_*` / `module_*` / `gh_` 等に合わせる
+- 学習は実装後に `research/frontend-learning-evidence*.yaml` / playbook candidate へ戻す（自動昇格しない）
+
+Theme 専用の enqueue・命名は `THEME_RULES.md`。Frontend Standard は Company / Theme / Figma visual を上書きしない。
+
+---
+
 ## レスポンシブ / タイポ（Human Authority）
 
 ```text
@@ -126,8 +146,10 @@ Form は Human 担当のためこの順に含めない。
 
 1. 本ファイルと Theme を先に読む
 2. 実装前に Theme 専用ルールを短く決める（命名・Header/Footer・pattern・enqueue）。breakpoint は CURRENT_AUTHORITY の 768/1280 契約に従う（header 1080 は無視）
-3. パーツ集は `parts.php` を変更なしで使う（タグ追加禁止）
-4. form は触らない
-5. `ref002` 名の新規ファイルを作らない
-6. デザイン変更前提で、Theme に合わせて載せる。運用未確定・契約変更は Human が明示するまで変えない
-7. 実装順は Header/Footer → パーツ集 → TOP
+3. CSS は frontend-quick-contract に従う（通常 content は Flow/Flex/Grid 優先。absolute 極力避ける）
+4. パーツ集は `parts.php` を変更なしで使う（タグ追加禁止）
+5. form は触らない
+6. `ref002` 名の新規ファイルを作らない
+7. デザイン変更前提で、Theme に合わせて載せる。運用未確定・契約変更は Human が明示するまで変えない
+8. 実装順は Header/Footer → パーツ集 → TOP
+9. 再現可能な学びは evidence / playbook candidate に残す（自動で Company Policy へ上げない）

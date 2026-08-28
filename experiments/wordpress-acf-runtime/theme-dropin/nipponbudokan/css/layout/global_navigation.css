@@ -298,8 +298,8 @@
         }
     }
 
-    /* MARK: header_breakpoint */
-    @media screen and (min-width: 1080px) {
+    /* MARK: header_breakpoint — Human Authority: 768 (ignore legacy 1080) */
+    @media screen and (min-width: 768px) {
         position: static;
         overflow: visible;
         flex-grow: 1;

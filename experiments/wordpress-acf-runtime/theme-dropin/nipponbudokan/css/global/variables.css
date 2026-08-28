@@ -96,13 +96,13 @@
  * 変数
  * ========================================================================== */
 :where(:root) {
-    /* プライマリーカラー */
-    --color-primary: #00b7f1;
+    /* プライマリーカラー（Figma budokan main） */
+    --color-primary: #bf3e2b;
     /* セカンダリーカラー */
     --color-secondary: #fff;
     --color-tertiary: #e3f2fd;
-    /* アクセントカラー */
-    --color-accent: #dd7c23;
+    /* アクセントカラー（Figma budokan sec / gold） */
+    --color-accent: #ca9957;
     /* --color-accent-yellow: #bd9620; */
     /* --color-accent-purple: #a73073; */
     /* グレー */
@@ -111,9 +111,10 @@
     --color-gray-border-02: #eaeaea;
     --color-gray-border-03: #eeeeee;
     --color-gray-background: #f8f8f8;
+    --color-copyright: #2c3036;
     /* テキストカラー */
     --color-text: #333;
-    --color-link: #008ddc;
+    --color-link: #bf3e2b;
     /* ボーダーカラー */
     --color-separator: #eaeaea;
     --color-separator--soft: #e7e7e7;
@@ -140,7 +141,8 @@
     /* --transition-timing-function: ease-in; */
     /* ヘッダー高さ */
     --header-height-SP: 60px;
-    --header-height-PC: 120px;
+    --header-height-PC: 100px;
+    --header-action-size: 60px;
     /* ブロック間の下余白 */
     --wp-block-margin: 24px;
     --wp-block-margin-small: 16px;
