@@ -4,7 +4,11 @@
  *
  * Figma has two presentation families that share the same WordPress/ACF image
  * authority: archive/search/error visuals and ordinary fixed-page image-title
- * visuals. Keep one renderer/data contract and expose only a context modifier.
+ * visuals. Keep one renderer/data contract and expose only context differences.
+ *
+ * Single-post Figma places the breadcrumb after the article body, immediately
+ * before the subpage footer. `single.php` therefore owns that one placement;
+ * all other surfaces keep the shared breadcrumb directly after this visual.
  */
 global $post;
 $is_fixed_page_visual = is_page() && !is_front_page() && !is_404() && !is_search();
@@ -82,4 +86,6 @@ $is_fixed_page_visual = is_page() && !is_front_page() && !is_404() && !is_search
         <?php endif; ?>
     </div>
 </div>
-<?php get_template_part('template-parts/_breadCrumb'); ?>
+<?php if (!is_single()): ?>
+    <?php get_template_part('template-parts/_breadCrumb'); ?>
+<?php endif; ?>
