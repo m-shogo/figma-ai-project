@@ -15,7 +15,7 @@ $target_attr = isset($item['target_attr']) ? (string) $item['target_attr'] : '';
 $tone_class = isset($item['tone_class']) ? sanitize_html_class($item['tone_class']) : '';
 
 $is_link = $url !== '';
-$tag_name = $is_link ? 'a' : 'span';
+$tag_name = $is_link ? 'a' : 'div';
 $article_classes = array('news_item', 'news_item_' . $context);
 $link_classes = array('news_item_link');
 $meta_classes = array('news_item_meta');
