@@ -1,134 +1,463 @@
 @charset "utf-8";
-/* // ------------------------------
-// ニュースリスト
-// ------------------------------ */
+/* // ==========================================================================
+// お知らせ共通マスター
+// Figma archive: PC 1669:5733 / SP 560:4185
+// TOP は同じ news_item / news_tabs markup を使い、top_news.css で差分だけ上書きする。
+// ========================================================================== */
 .block-editor_wrap,
 .editor-styles-wrapper {
     .module_newsList-01 {
         margin-top: var(--wp-block-margin);
+
         & + & {
             margin-top: var(--wp-block-margin-large);
         }
     }
 }
+
+.news_archive {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    padding-block: 32px 80px;
+}
+
+.news_tabs {
+    min-width: 0;
+}
+
+.news_tabs_list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.news_tabs_archive {
+    .news_tabs_list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+    }
+
+    .news_tabs_item {
+        width: 90px;
+    }
+
+    .news_tabs_link {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 32px;
+        padding: 9px;
+        border-radius: 16px;
+        background-color: var(--color-gray-border-03);
+        color: var(--color-text);
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 1;
+        letter-spacing: 0.05em;
+        text-decoration: none;
+        white-space: nowrap;
+    }
+
+    .news_tabs_item.is-active .news_tabs_link {
+        background-color: var(--color-text);
+        color: var(--color-secondary);
+    }
+}
+
 .module_newsList-01 {
-    /* ニュースリスト + ニュースカードと続く場合の上部余白 */
+    min-width: 0;
+
     & + .module_newsCard-01 {
         margin-top: var(--wp-block-margin-large);
     }
-    .mnl-01_article {
-        border-top: 1px solid var(--color-gray-border);
-        &:last-child {
-            border-bottom: 1px solid var(--color-gray-border);
+}
+
+.news_item {
+    margin: 0;
+    border-bottom: 1px solid var(--color-line);
+}
+
+.news_item_link {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+    color: var(--color-text);
+    text-decoration: none;
+    transition: color var(--transition-duration);
+}
+
+.news_item_meta {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    min-width: 0;
+}
+
+.news_item_date {
+    flex-shrink: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: 0.05em;
+}
+
+.news_item_label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    min-height: 24px;
+    padding: 5px 8px;
+    flex-shrink: 0;
+    border: 1px solid var(--color-line);
+    border-radius: 2px;
+    background-color: var(--color-secondary);
+    color: var(--color-text);
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: 0.05em;
+    text-align: center;
+}
+
+.news_item_title {
+    margin: 0;
+    min-width: 0;
+    color: var(--color-text);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: 0.05em;
+    text-decoration: underline;
+    text-underline-offset: 0.12em;
+    overflow-wrap: anywhere;
+    transition: color var(--transition-duration);
+}
+
+.news_item_link[target='_blank'] .news_item_title::after {
+    content: var(--icon-blank);
+    margin-left: 0.25em;
+    font-family: var(--font-awesome);
+    font-weight: 400;
+    text-decoration: none;
+}
+
+.news_item_link[href$='.doc'] .news_item_title::after,
+.news_item_link[href$='.docx'] .news_item_title::after,
+.news_item_link[href$='.docm'] .news_item_title::after,
+.news_item_link[href$='.xls'] .news_item_title::after,
+.news_item_link[href$='.xlsx'] .news_item_title::after,
+.news_item_link[href$='.xlsm'] .news_item_title::after,
+.news_item_link[href$='.png'] .news_item_title::after,
+.news_item_link[href$='.jpg'] .news_item_title::after,
+.news_item_link[href$='.jpeg'] .news_item_title::after,
+.news_item_link[href$='.gif'] .news_item_title::after,
+.news_item_link[href$='.webp'] .news_item_title::after {
+    content: var(--icon-file);
+    margin-left: 0.25em;
+    font-family: var(--font-awesome);
+    font-weight: 400;
+    text-decoration: none;
+}
+
+.news_item_link[href$='.pdf'] .news_item_title::after {
+    content: var(--icon-pdf);
+    margin-left: 0.25em;
+    font-family: var(--font-awesome);
+    font-weight: 400;
+    text-decoration: none;
+}
+
+/*
+ * News pager は SP / PC で形が大きく異なる。
+ * SP Figma 560:4260 = 円形 page numbers + 下段の前後導線。
+ * PC Figma 1137:4996 = 八角矢印 + underline page numbers の1列。
+ * generic module_pager-01 を壊さないよう news variant の wrapper 内だけ上書きする。
+ */
+.news_archive .news_pager {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    grid-template-rows: 40px 30px;
+    align-items: center;
+    row-gap: 24px;
+    width: 100%;
+    min-height: 94px;
+    margin-top: 8px;
+}
+
+.news_pager_numbers {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.news_pager_prev,
+.news_pager_next {
+    grid-row: 2;
+    min-width: 0;
+}
+
+.news_pager_prev {
+    grid-column: 1;
+    justify-self: start;
+}
+
+.news_pager_next {
+    grid-column: 3;
+    justify-self: end;
+}
+
+.news_archive .news_pager_numbers .page-numbers:not(.prev):not(.next):not(.dots) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--color-text);
+    border-radius: 50%;
+    background-color: var(--color-secondary);
+    color: var(--color-text);
+    font-family: var(--font-sansSerif-en);
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1;
+    text-decoration: none;
+}
+
+/* generic module_pager-01 の :not(...) + .current より明示的に News state を優先する。 */
+.news_archive .news_pager .news_pager_numbers .page-numbers.current:not(.prev):not(.next):not(.dots) {
+    border-color: var(--color-text);
+    background-color: var(--color-text);
+    color: var(--color-secondary);
+}
+
+.news_archive .news_pager_numbers .page-numbers.dots {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 40px;
+    color: var(--color-text);
+}
+
+.news_archive .news_pager_prev .page-numbers,
+.news_archive .news_pager_next .page-numbers {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    width: auto;
+    height: 30px;
+    color: var(--color-text);
+    font-size: 12px;
+    line-height: 1;
+    text-decoration: none;
+}
+
+.news_archive .news_pager_prev .page-numbers::after {
+    content: '前のページ';
+}
+
+.news_archive .news_pager_next .page-numbers::before {
+    content: '次のページ';
+}
+
+.news_archive .news_pager_prev .page-numbers span,
+.news_archive .news_pager_next .page-numbers span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background-color: var(--color-heading-band);
+    color: var(--color-text);
+}
+
+.news_archive .news_pager_prev .page-numbers span::before,
+.news_archive .news_pager_next .page-numbers span::before {
+    font-family: var(--font-awesome);
+    font-size: 8px;
+    font-weight: 900;
+    line-height: 1;
+    color: inherit;
+}
+
+.news_archive .news_pager_prev .page-numbers span::before {
+    content: '\f060';
+}
+
+.news_archive .news_pager_next .page-numbers span::before {
+    content: '\f061';
+}
+
+@media screen and (min-width: 768px) {
+    .news_archive {
+        gap: 56px;
+        padding-block: 64px 100px;
+    }
+
+    .news_tabs_archive {
+        .news_tabs_list {
+            justify-content: flex-start;
+            gap: 12px;
         }
-        .link,
-        .no-link {
-            display: block;
-            padding: 20px 0;
-            color: var(--color-text);
-            text-decoration: none;
-            transition: var(--transition-duration);
+
+        .news_tabs_item {
+            width: 120px;
         }
-        .link {
-            &[target='_blank'] {
-                .title {
-                    &::after {
-                        content: var(--icon-blank);
-                        font-family: var(--font-awesome);
-                        font-weight: 400;
-                        margin-left: 0.25em;
-                    }
-                }
-            }
-            &[href$='.doc'],
-            &[href$='.docx'],
-            &[href$='.docm'],
-            &[href$='.xls'],
-            &[href$='.xlsx'],
-            &[href$='.xlsm'],
-            &[href$='.png'],
-            &[href$='.jpg'],
-            &[href$='.jpeg'],
-            &[href$='.gif'],
-            &[href$='.webp'] {
-                .title {
-                    &::after {
-                        content: var(--icon-file);
-                        font-family: var(--font-awesome);
-                        font-weight: 400;
-                        margin-left: 0.25em;
-                    }
-                }
-            }
-            &[href$='.pdf'] {
-                .title {
-                    &::after {
-                        content: var(--icon-pdf);
-                        font-family: var(--font-awesome);
-                        font-weight: 400;
-                        margin-left: 0.25em;
-                    }
-                }
-            }
+
+        .news_tabs_link {
+            height: 48px;
+            padding: 16px;
+            border: 1px solid var(--color-text);
+            border-radius: 3px;
+            background-color: var(--color-secondary);
         }
-        .head {
-            display: flex;
-            .date {
-                margin: 0; /* エディタでの余白を削除 */
-                width: 100px;
-            }
-            .category {
-                margin: 0; /* エディタでの余白を削除 */
-                display: flex;
-                align-items: center;
-                flex-wrap: wrap;
-                gap: 4px 10px;
-                .label {
-                    display: inline-block;
-                    border: 1px solid var(--color-primary);
-                    padding: 0 0.5em;
-                    color: var(--color-primary);
-                }
-            }
+
+        .news_tabs_item.is-active .news_tabs_link {
+            border-color: var(--color-text);
+            background-color: var(--color-text);
         }
-        .body {
-            margin-top: 10px;
-            .title {
-                margin: 0; /* エディタでの余白を削除 */
-                font-weight: 700;
-                font-size: 18px;
-                line-height: 1.5;
-                letter-spacing: 0.05em;
-                transition: color var(--transition-duration);
-                overflow-wrap: anywhere;
-                word-break: normal;
-                line-break: strict;
-            }
-        }
+    }
+
+    .module_newsList-01 .news_item:first-child {
+        border-top: 1px solid var(--color-line);
+    }
+
+    .news_item_link {
+        flex-direction: row;
+        align-items: center;
+        gap: 40px;
+        min-height: 90px;
+        padding: 20px;
+    }
+
+    .news_item_meta {
+        gap: 40px;
+        flex-shrink: 0;
+    }
+
+    .news_item_label {
+        border-color: var(--color-text);
+        font-weight: 500;
+    }
+
+    .news_item_title {
+        flex: 1 1 auto;
+        line-height: 1.4;
+    }
+
+    .news_archive .news_pager {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 48px;
+        width: 100%;
+        min-height: 40px;
+        margin-top: 0;
+    }
+
+    .news_pager_numbers {
+        display: flex;
+        gap: 8px;
+        order: 2;
+    }
+
+    .news_pager_prev {
+        order: 1;
+        width: 40px;
+        height: 40px;
+    }
+
+    .news_pager_next {
+        order: 3;
+        width: 40px;
+        height: 40px;
+    }
+
+    .news_archive .news_pager_numbers .page-numbers:not(.prev):not(.next):not(.dots) {
+        width: 50px;
+        height: 40px;
+        padding-bottom: 16px;
+        border: 0;
+        border-bottom: 2px solid var(--color-line);
+        border-radius: 0;
+        background: transparent;
+        color: var(--color-text);
+        font-weight: 400;
+    }
+
+    .news_archive .news_pager .news_pager_numbers .page-numbers.current:not(.prev):not(.next):not(.dots) {
+        border-bottom-color: var(--color-text);
+        background: transparent;
+        color: var(--color-text);
+        font-weight: 700;
+    }
+
+    .news_archive .news_pager_numbers .page-numbers.dots {
+        width: 32px;
+        height: 40px;
+    }
+
+    .news_archive .news_pager_prev .page-numbers,
+    .news_archive .news_pager_next .page-numbers {
+        width: 40px;
+        height: 40px;
+        gap: 0;
+        font-size: 0;
+    }
+
+    .news_archive .news_pager_prev .page-numbers::after,
+    .news_archive .news_pager_next .page-numbers::before {
+        content: none;
+    }
+
+    .news_archive .news_pager_prev .page-numbers span,
+    .news_archive .news_pager_next .page-numbers span {
+        width: 40px;
+        height: 40px;
+        border-radius: 0;
+        background-color: var(--color-primary);
+        color: var(--color-secondary);
+        clip-path: var(--clip-octagon);
+    }
+
+    .news_archive .news_pager_prev .page-numbers span::before,
+    .news_archive .news_pager_next .page-numbers span::before {
+        font-size: 11px;
+    }
+}
+
+@media (any-hover: hover) {
+    .news_item_link:hover .news_item_title,
+    .news_tabs_archive .news_tabs_link:hover {
+        color: var(--color-link);
+    }
+
+    .news_tabs_archive .news_tabs_item.is-active .news_tabs_link:hover {
+        color: var(--color-secondary);
+    }
+
+    .news_archive .news_pager_numbers .page-numbers:hover:not(.current):not(.dots) {
+        border-color: var(--color-primary);
+        background-color: var(--color-primary);
+        color: var(--color-secondary);
     }
 
     @media screen and (min-width: 768px) {
-        .mnl-01_article {
-            .link,
-            .no-link {
-                padding: 20px;
-            }
-        }
-    }
-
-    /* MARK: hover */
-    @media (any-hover: hover) {
-        .mnl-01_article {
-            .link,
-            .no-link {
-                &:hover {
-                    .body {
-                        .title {
-                            color: var(--color-link);
-                        }
-                    }
-                }
-            }
+        .news_archive .news_pager_numbers .page-numbers:hover:not(.current):not(.dots) {
+            border-bottom-color: var(--color-primary);
+            background: transparent;
+            color: var(--color-link);
         }
     }
 }

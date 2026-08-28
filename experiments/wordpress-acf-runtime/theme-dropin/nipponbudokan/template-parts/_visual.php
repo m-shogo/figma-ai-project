@@ -13,12 +13,23 @@
             } else {
                 $img_url = esc_url(get_template_directory_uri()) . '/images/common/noimage_visual-01.webp';
             }
+
+            // 通常投稿は一覧・カテゴリ・詳細で同じ「お知らせ」マスター見出しを使う。
+            // get_archive_title() は posts index で "Archives"、category でカテゴリ名になるため Figma と一致しない。
+            if ($postType_name === 'post') {
+                $posts_page_id = (int) get_option('page_for_posts');
+                $archive_heading = $posts_page_id ? get_the_title($posts_page_id) : '';
+                $archive_heading = $archive_heading ?: 'お知らせ';
+            } else {
+                $archive_heading = get_archive_title();
+                $archive_heading = $archive_heading ?: get_the_title(get_option('page_for_posts'));
+            }
             ?>
             <div class="gm_background" style="background-image: url(<?php echo esc_url($img_url); ?>)"></div>
             <?php if (!is_single()): ?>
-                <h1 class="gm_title"><span><?php echo (get_archive_title()) ? get_archive_title() : get_the_title(get_option('page_for_posts')); ?></span></h1>
+                <h1 class="gm_title"><span><?php echo esc_html($archive_heading); ?></span></h1>
             <?php else: ?>
-                <p class="gm_title"><span><?php echo (get_archive_title()) ? get_archive_title() : get_the_title(get_option('page_for_posts')); ?></span></p>
+                <p class="gm_title"><span><?php echo esc_html($archive_heading); ?></span></p>
             <?php endif; ?>
         <?php elseif (is_404()): //404 
         ?>

@@ -1,6 +1,7 @@
 <?php
 global $post, $posts, $wp_query;
 $props = isset($args) && isset($args['props']) ? $args['props'] : '';
+$context = isset($args) && isset($args['context']) ? sanitize_key($args['context']) : '';
 ?>
 <?php if (is_front_page() || is_page()) : ?>
     <div class="module_newsList-01">
@@ -17,7 +18,9 @@ $props = isset($args) && isset($args['props']) ? $args['props'] : '';
             <?php endwhile; ?>
         </div>
         <?php if ($props !== 'customPostList') : ?>
-            <?php get_template_part('template-parts/_pagination'); ?>
+            <?php get_template_part('template-parts/_pagination', null, array(
+                'variant' => $context === 'archive' ? 'news' : '',
+            )); ?>
         <?php endif; ?>
     <?php else: ?>
         <p>お知らせはありません。</p>
