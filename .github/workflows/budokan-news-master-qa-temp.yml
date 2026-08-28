@@ -61,7 +61,10 @@ jobs:
             docker compose run --rm cli post delete $ids --force >/dev/null
           fi
 
+          front_page_id="$(docker compose run --rm cli post create --post_type=page --post_status=publish --post_title='TOP' --post_name='top' --porcelain)"
           news_page_id="$(docker compose run --rm cli post create --post_type=page --post_status=publish --post_title='お知らせ' --post_name='news' --porcelain)"
+          docker compose run --rm cli option update show_on_front page >/dev/null
+          docker compose run --rm cli option update page_on_front "$front_page_id" >/dev/null
           docker compose run --rm cli option update page_for_posts "$news_page_id" >/dev/null
           docker compose run --rm cli rewrite structure '/%postname%/' --hard >/dev/null
           docker compose run --rm cli rewrite flush --hard >/dev/null
@@ -150,6 +153,8 @@ jobs:
                   return { x: r.x, y: r.y, width: r.width, height: r.height };
                 };
                 const active = document.querySelector('.news_tabs_archive .news_tabs_item.is-active');
+                const masthead = document.querySelector('.global_mainVisual .gm_title');
+                const breadcrumb = document.querySelector('.module_breadCrumb');
                 return {
                   archive: rect('.news_archive'),
                   tabs: rect('.news_tabs_archive'),
@@ -158,27 +163,35 @@ jobs:
                   tabCount: document.querySelectorAll('.news_tabs_archive .news_tabs_item').length,
                   activeLabel: active ? active.textContent.trim() : '',
                   pagerCount: document.querySelectorAll('.news_archive .module_pager-01').length,
+                  masthead: masthead ? masthead.textContent.trim() : '',
+                  breadcrumb: breadcrumb ? breadcrumb.textContent.replace(/\s+/g, ' ').trim() : '',
                   scrollWidth: document.documentElement.scrollWidth,
                   clientWidth: document.documentElement.clientWidth,
                 };
               });
               await page.locator('.news_archive').screenshot({ path: `.runtime/budokan-news-master/${item.name}-archive-news.png` });
+              await page.screenshot({ path: `.runtime/budokan-news-master/${item.name}-archive-page.png`, fullPage: true });
 
               const desiredCategory = page.locator('.news_tabs_archive .news_tabs_item').filter({ hasText: '武道' }).first();
               const firstCategoryHref = await desiredCategory.locator('a').getAttribute('href');
               let categoryStatus = 0;
               let categoryActive = '';
+              let categoryMasthead = '';
+              let categoryBreadcrumb = '';
               if (firstCategoryHref) {
                 const categoryResponse = await page.goto(firstCategoryHref, { waitUntil: 'networkidle' });
                 categoryStatus = categoryResponse?.status() || 0;
                 categoryActive = await page.locator('.news_tabs_archive .news_tabs_item.is-active').innerText();
+                categoryMasthead = (await page.locator('.global_mainVisual .gm_title').innerText()).trim();
+                categoryBreadcrumb = (await page.locator('.module_breadCrumb').innerText()).replace(/\s+/g, ' ').trim();
               }
 
               const horizontalOverflow = archiveMetrics.scrollWidth > archiveMetrics.clientWidth + 1;
               if ((topResponse?.status() || 0) >= 400 || (archiveResponse?.status() || 0) >= 400 || categoryStatus >= 400 || pageErrors.length) failed = true;
               if (topMetrics.articleCount !== 5 || topMetrics.tabCount !== 6) failed = true;
-              if (archiveMetrics.articleCount < 10 || archiveMetrics.tabCount < 6 || archiveMetrics.activeLabel !== 'すべて' || archiveMetrics.pagerCount !== 1 || horizontalOverflow) failed = true;
-              if (categoryActive.trim() !== '武道') failed = true;
+              if (archiveMetrics.articleCount !== 10 || archiveMetrics.tabCount !== 6 || archiveMetrics.activeLabel !== 'すべて' || archiveMetrics.pagerCount !== 1 || horizontalOverflow) failed = true;
+              if (archiveMetrics.masthead !== 'お知らせ' || !archiveMetrics.breadcrumb.includes('お知らせ')) failed = true;
+              if (categoryActive.trim() !== '武道' || categoryMasthead !== 'お知らせ' || !categoryBreadcrumb.includes('武道')) failed = true;
 
               if (item.name === 'sp') {
                 if (Math.abs(topMetrics.section.width - item.contentWidth) > 1 || Math.abs(topMetrics.panel.x - 24) > 1 || Math.abs(topMetrics.panel.width - 327) > 1) failed = true;
@@ -194,6 +207,8 @@ jobs:
                 archiveStatus: archiveResponse?.status() || 0,
                 categoryStatus,
                 categoryActive: categoryActive.trim(),
+                categoryMasthead,
+                categoryBreadcrumb,
                 pageErrors,
                 horizontalOverflow,
                 topMetrics,
