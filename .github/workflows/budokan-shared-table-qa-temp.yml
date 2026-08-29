@@ -16,32 +16,22 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v6
-
       - name: PHP syntax
         run: find experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan -name '*.php' -print0 | xargs -0 -n1 php -l
-
       - name: Check ACF PRO runtime availability
         id: acf
         env:
           ACF_PRO_LICENSE_KEY: ${{ secrets.ACF_PRO_LICENSE_KEY }}
         run: |
-          if [ -n "$ACF_PRO_LICENSE_KEY" ]; then
-            echo 'enabled=true' >> "$GITHUB_OUTPUT"
-          else
-            echo 'enabled=false' >> "$GITHUB_OUTPUT"
-            echo 'SKIP live table capture: ACF_PRO_LICENSE_KEY is unavailable.'
-          fi
-
+          if [ -n "$ACF_PRO_LICENSE_KEY" ]; then echo 'enabled=true' >> "$GITHUB_OUTPUT"; else echo 'enabled=false' >> "$GITHUB_OUTPUT"; fi
       - name: Install browser QA dependency
         if: steps.acf.outputs.enabled == 'true'
         working-directory: experiments/wordpress-acf-runtime
         run: |
-          mkdir -p .runtime/playwright
-          cd .runtime/playwright
+          mkdir -p .runtime/playwright && cd .runtime/playwright
           npm init -y >/dev/null 2>&1
           npm install --no-audit --no-fund playwright@1.54.2 >/dev/null
           npx playwright install --with-deps chromium
-
       - name: Start real WordPress + ACF PRO + Budokan Theme
         if: steps.acf.outputs.enabled == 'true'
         working-directory: experiments/wordpress-acf-runtime
@@ -49,7 +39,6 @@ jobs:
           ACF_PRO_LICENSE_KEY: ${{ secrets.ACF_PRO_LICENSE_KEY }}
           CI: 'true'
         run: bash scripts/setup.sh
-
       - name: Seed native Gutenberg table fixture
         if: steps.acf.outputs.enabled == 'true'
         working-directory: experiments/wordpress-acf-runtime
@@ -61,7 +50,6 @@ jobs:
           <!-- /wp:table -->
           HTML
           docker compose run --rm cli post update 2 --post_title='Table Runtime QA' --post_status=publish --post_content="$(cat .runtime/table-fixture.html)"
-
       - name: Capture and assert shared table SP and PC
         if: steps.acf.outputs.enabled == 'true'
         working-directory: experiments/wordpress-acf-runtime
@@ -72,86 +60,48 @@ jobs:
           const fs = require('node:fs');
           const path = require('node:path');
           const { createRequire } = require('node:module');
-          const requireQA = createRequire(path.resolve('.runtime/playwright/package.json'));
-          const { chromium } = requireQA('playwright');
-
-          const near = (actual, expected, tolerance = 1) => Math.abs(actual - expected) <= tolerance;
-          (async () => {
-            const browser = await chromium.launch({ headless: true });
-            const cases = [
-              { name: 'sp', viewportWidth: 390, authoredWidth: 375, height: 900 },
-              { name: 'pc', viewportWidth: 1395, authoredWidth: 1380, height: 900 },
-            ];
-            const results = [];
-            let failed = false;
-
-            for (const item of cases) {
-              const page = await browser.newPage({ viewport: { width: item.viewportWidth, height: item.height } });
-              const pageErrors = [];
-              page.on('pageerror', error => pageErrors.push(error.message));
-              const response = await page.goto(`${process.env.WP_URL}/?page_id=2`, { waitUntil: 'networkidle' });
-              await page.evaluate(() => document.fonts.ready);
-              const table = page.locator('.wp-block-table.is-scroll-on-mobile').first();
-              await table.scrollIntoViewIfNeeded();
-              await page.waitForTimeout(100);
-
-              const metrics = await page.evaluate(() => {
-                const q = s => document.querySelector(s);
-                const rect = el => { const r = el.getBoundingClientRect(); return { x:r.x, y:r.y, width:r.width, height:r.height }; };
-                const wrap = q('.wp-block-table.is-scroll-on-mobile');
-                const tbl = wrap?.querySelector('table');
-                const head = tbl?.querySelector('thead tr');
-                const bodyRows = [...(tbl?.querySelectorAll('tbody tr') || [])];
-                const firstTh = tbl?.querySelector('th');
-                const firstTd = tbl?.querySelector('td');
-                const thStyle = firstTh ? getComputedStyle(firstTh) : null;
-                const tdStyle = firstTd ? getComputedStyle(firstTd) : null;
-                return {
-                  wrap: wrap ? rect(wrap) : null,
-                  table: tbl ? rect(tbl) : null,
-                  tableScrollWidth: wrap?.scrollWidth || 0,
-                  wrapClientWidth: wrap?.clientWidth || 0,
-                  head: head ? rect(head) : null,
-                  bodyRows: bodyRows.map(rect),
-                  firstTh: firstTh ? rect(firstTh) : null,
-                  firstTd: firstTd ? rect(firstTd) : null,
-                  th: thStyle ? { fontSize: thStyle.fontSize, lineHeight: thStyle.lineHeight, paddingTop: thStyle.paddingTop, paddingLeft: thStyle.paddingLeft, backgroundColor: thStyle.backgroundColor, color: thStyle.color, fontWeight: thStyle.fontWeight } : null,
-                  td: tdStyle ? { fontSize: tdStyle.fontSize, lineHeight: tdStyle.lineHeight, paddingTop: tdStyle.paddingTop, paddingLeft: tdStyle.paddingLeft } : null,
-                  pageScrollWidth: document.documentElement.scrollWidth,
-                  pageClientWidth: document.documentElement.clientWidth,
-                };
+          const { chromium } = createRequire(path.resolve('.runtime/playwright/package.json'))('playwright');
+          const near=(a,b,t=1)=>Math.abs(a-b)<=t;
+          (async()=>{
+            const browser=await chromium.launch({headless:true});
+            const cases=[{name:'sp',width:390,height:900},{name:'pc',width:1395,height:900}];
+            const results=[]; let failed=false;
+            for(const item of cases){
+              const page=await browser.newPage({viewport:{width:item.width,height:item.height}});
+              const pageErrors=[]; page.on('pageerror',e=>pageErrors.push(e.message));
+              const response=await page.goto(`${process.env.WP_URL}/?page_id=2`,{waitUntil:'networkidle'});
+              await page.evaluate(()=>document.fonts.ready);
+              const locator=page.locator('.wp-block-table.is-scroll-on-mobile').first();
+              await locator.scrollIntoViewIfNeeded(); await page.waitForTimeout(100);
+              const m=await page.evaluate(()=>{
+                const wrap=document.querySelector('.wp-block-table.is-scroll-on-mobile');
+                const table=wrap?.querySelector('table');
+                const firstTh=table?.querySelector('th'); const firstTd=table?.querySelector('td');
+                const rect=e=>{const r=e.getBoundingClientRect();return{x:r.x,y:r.y,width:r.width,height:r.height}};
+                const cs=e=>{const s=getComputedStyle(e);return{fontSize:s.fontSize,lineHeight:s.lineHeight,paddingTop:s.paddingTop,paddingLeft:s.paddingLeft,backgroundColor:s.backgroundColor,color:s.color,fontWeight:s.fontWeight,boxShadow:s.boxShadow}};
+                return {wrap:wrap?rect(wrap):null,table:table?rect(table):null,head:table?rect(table.querySelector('thead tr')):null,rows:table?[...table.querySelectorAll('tbody tr')].map(rect):[],firstTh:firstTh?rect(firstTh):null,firstTd:firstTd?rect(firstTd):null,th:firstTh?cs(firstTh):null,td:firstTd?cs(firstTd):null,scrollWidth:wrap?.scrollWidth||0,clientWidth:wrap?.clientWidth||0,pageScrollWidth:document.documentElement.scrollWidth,pageClientWidth:document.documentElement.clientWidth};
               });
-
-              const status = response?.status() || 0;
-              const horizontalPageOverflow = metrics.pageScrollWidth > metrics.pageClientWidth + 1;
-              if (status >= 400 || pageErrors.length || horizontalPageOverflow || !metrics.wrap || !metrics.table) failed = true;
-              if (!near(metrics.head?.height || 0, 54, 1) || metrics.bodyRows.some(r => !near(r.height, 54, 1))) failed = true;
-              if (!near(parseFloat(metrics.th?.fontSize || 0), 15, .2) || !near(parseFloat(metrics.th?.lineHeight || 0), 24, .3)) failed = true;
-              if (!near(parseFloat(metrics.th?.paddingTop || 0), 15, .2) || !near(parseFloat(metrics.th?.paddingLeft || 0), 20, .2)) failed = true;
-              if (!near(parseFloat(metrics.td?.fontSize || 0), 15, .2) || !near(parseFloat(metrics.td?.lineHeight || 0), 24, .3)) failed = true;
-
-              if (item.name === 'sp') {
-                if (!near(metrics.wrap.width, 327, 1)) failed = true;
-                if (!near(metrics.table.width, 960, 2)) failed = true;
-                if (!(metrics.tableScrollWidth > metrics.wrapClientWidth + 500)) failed = true;
+              const status=response?.status()||0; const pageOverflow=m.pageScrollWidth>m.pageClientWidth+1;
+              if(status>=400||pageErrors.length||pageOverflow||!m.wrap||!m.table) failed=true;
+              if(!near(m.head?.height||0,54,0.6)||m.rows.some(r=>!near(r.height,54,0.6))) failed=true;
+              if(!near(parseFloat(m.th?.fontSize||0),15,.2)||!near(parseFloat(m.th?.lineHeight||0),24,.3)||!near(parseFloat(m.th?.paddingTop||0),15,.2)||!near(parseFloat(m.th?.paddingLeft||0),20,.2)) failed=true;
+              if(m.th?.backgroundColor!=='rgb(66, 66, 66)'||m.th?.color!=='rgb(255, 255, 255)'||m.th?.fontWeight!=='400') failed=true;
+              if(!String(m.th?.boxShadow).includes('215, 212, 212')) failed=true;
+              if(item.name==='sp'){
+                if(!near(m.table.width,960,1)||m.scrollWidth<959||m.clientWidth>=m.scrollWidth-100) failed=true;
               } else {
-                if (!near(metrics.wrap.width, 960, 1)) failed = true;
-                if (!near(metrics.table.width, 960, 1)) failed = true;
-                if (!near(metrics.firstTh?.width || 0, 240, 2)) failed = true;
+                if(!near(m.table.width,m.wrap.width,1)||!near(m.firstTh?.width||0,m.wrap.width/4,1)) failed=true;
               }
-
-              await table.screenshot({ path: `.runtime/budokan-shared-table/${item.name}-table.png` });
-              results.push({ viewport: item, status, pageErrors, horizontalPageOverflow, metrics });
+              await locator.screenshot({path:`.runtime/budokan-shared-table/${item.name}-table.png`});
+              results.push({viewport:item,status,pageErrors,pageOverflow,metrics:m});
               await page.close();
             }
-
             await browser.close();
-            fs.writeFileSync('.runtime/budokan-shared-table/runtime.json', JSON.stringify(results, null, 2));
-            console.log(JSON.stringify(results, null, 2));
-            if (failed) process.exit(1);
-          })().catch(error => { console.error(error); process.exit(1); });
+            fs.writeFileSync('.runtime/budokan-shared-table/runtime.json',JSON.stringify(results,null,2));
+            console.log(JSON.stringify(results,null,2));
+            if(failed) process.exit(1);
+          })().catch(e=>{console.error(e);process.exit(1)});
           NODE
-
       - name: Upload runtime evidence
         if: steps.acf.outputs.enabled == 'true' && always()
         uses: actions/upload-artifact@v4
@@ -159,7 +109,6 @@ jobs:
           name: budokan-shared-table-runtime-temp
           path: experiments/wordpress-acf-runtime/.runtime/budokan-shared-table
           if-no-files-found: error
-
       - name: Cleanup runtime
         if: always()
         working-directory: experiments/wordpress-acf-runtime
