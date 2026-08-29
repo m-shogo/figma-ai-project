@@ -58,7 +58,7 @@ jobs:
             const page=await browser.newPage({viewport:{width,height:900}});
             const errors=[]; page.on('pageerror',e=>errors.push(String(e)));
             const response=await page.goto(url,{waitUntil:'networkidle'});
-            if (!response || response.status()!==200) throw new Error(`${name}: HTTP ${response?.status()}`);
+            const status=response?.status() ?? null;
             const data=await page.locator('.block-editor_wrap .wp-block-media-text').first().evaluate(el=>{
               const s=getComputedStyle(el);
               const content=el.querySelector('.wp-block-media-text__content').getBoundingClientRect();
@@ -66,23 +66,27 @@ jobs:
               const rect=el.getBoundingClientRect();
               return {gap:s.gap,rowGap:s.rowGap,columnGap:s.columnGap,display:s.display,rect:rect.toJSON(),content:content.toJSON(),media:media.toJSON(),overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth};
             });
+            results[name]={status,errors,...data};
+            await page.screenshot({path:`/tmp/budokan-${name}-media-text.png`,fullPage:true});
+            await page.close();
+          }
+          fs.writeFileSync('/tmp/budokan-media-text-result.json',JSON.stringify(results,null,2));
+          console.log(JSON.stringify(results,null,2));
+          await browser.close();
+          for (const [name,data] of Object.entries(results)) {
+            if (data.status!==200) throw new Error(`${name}: HTTP ${data.status}`);
             const rowGap=parseFloat(data.rowGap), columnGap=parseFloat(data.columnGap);
             if (Math.abs(rowGap-30)>0.1 || Math.abs(columnGap-30)>0.1) throw new Error(`${name}: gaps ${data.rowGap}/${data.columnGap}`);
             if (name==='sp') {
               const actual=data.media.top-data.content.bottom;
-              if (actual < 29.5 || actual > 30.5) throw new Error(`sp: expected content above media with 30px gap; actual=${actual}; content=${JSON.stringify(data.content)} media=${JSON.stringify(data.media)}`);
+              if (actual < 29.5 || actual > 30.5) throw new Error(`sp: expected content above media with 30px gap; actual=${actual}`);
             } else {
               const actual=data.media.left-data.content.right;
-              if (actual < 29.5 || actual > 30.5) throw new Error(`pc: expected content left of media with 30px gap; actual=${actual}; content=${JSON.stringify(data.content)} media=${JSON.stringify(data.media)}`);
+              if (actual < 29.5 || actual > 30.5) throw new Error(`pc: expected content left of media with 30px gap; actual=${actual}`);
             }
             if (data.overflow>0.5) throw new Error(`${name}: page overflow ${data.overflow}`);
-            if (errors.length) throw new Error(`${name}: page errors ${errors.join('; ')}`);
-            results[name]=data;
-            await page.screenshot({path:`/tmp/budokan-${name}-media-text.png`,fullPage:true});
-            await page.close();
+            if (data.errors.length) throw new Error(`${name}: page errors ${data.errors.join('; ')}`);
           }
-          console.log(JSON.stringify(results,null,2));
-          await browser.close();
           JS
           cd /tmp/budokan-playwright
           node qa.mjs
@@ -92,7 +96,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: budokan-media-text
-          path: /tmp/budokan-*-media-text.png
+          path: |
+            /tmp/budokan-*-media-text.png
+            /tmp/budokan-media-text-result.json
           if-no-files-found: ignore
 
       - name: Stop runtime
