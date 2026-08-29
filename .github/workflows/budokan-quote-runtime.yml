@@ -28,18 +28,19 @@ jobs:
           source ./scripts/runtime-env.sh
           CONTENT='<!-- wp:quote --><blockquote class="wp-block-quote"><!-- wp:paragraph --><p>日本武道館では、武道大会や研修会など、多様な参加型イベントを開催しています。</p><!-- /wp:paragraph --></blockquote><!-- /wp:quote -->'
           docker compose run --rm cli post create --post_type=page --post_status=publish --post_title='Quote QA' --post_name='quote-qa' --post_content="$CONTENT" --porcelain
-          curl --fail --silent --show-error "$WP_URL/quote-qa/" | grep -q 'wp-block-quote'
+          curl --fail --silent --show-error "$WP_URL/quote-qa/" -o /tmp/budokan-quote.html
+          grep -q 'wp-block-quote' /tmp/budokan-quote.html
       - name: Install browser probe
         run: |
           npm install --no-save playwright@1.55.0
-          npx playwright install chromium
+          npx playwright install --with-deps chromium
       - name: Verify SP and PC computed quote geometry
         working-directory: experiments/wordpress-acf-runtime
         run: |
           source ./scripts/runtime-env.sh
           export QA_URL="$WP_URL/quote-qa/"
           node --input-type=module <<'NODE'
-          import { chromium } from '../../../node_modules/playwright/index.mjs';
+          import { chromium } from '../../node_modules/playwright/index.mjs';
           const browser = await chromium.launch({headless:true});
           const cases = [
             {name:'SP', width:390, padding:34, quote:24},
