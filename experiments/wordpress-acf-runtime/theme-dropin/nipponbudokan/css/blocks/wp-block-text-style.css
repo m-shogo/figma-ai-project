@@ -76,12 +76,24 @@
 
     /* MARK: 背景色があるブロック */
     div.wp-block-group.has-background,
-    div.wp-block-column.has-background,
     p.has-background {
         padding: 24px;
         border: 1px solid var(--color-line);
         border-radius: 3px;
         /* MARK: heading_pc */
+        @media screen and (min-width: 768px) {
+            padding: 32px;
+        }
+    }
+
+    /* Parts/Text の背景付き2カラムは native Gutenberg Column derivative。
+       SP 30px / PC 32px のinsetをFigma authorityに合わせ、
+       border/radius/colorは既存shared contractを再利用する。 */
+    div.wp-block-column.has-background {
+        padding: 30px;
+        border: 1px solid var(--color-line);
+        border-radius: 3px;
+
         @media screen and (min-width: 768px) {
             padding: 32px;
         }
