@@ -1,0 +1,166 @@
+name: Budokan Shared List Runtime QA
+
+on:
+  pull_request:
+    paths:
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/blocks/wp-block-list-style.css'
+      - '.github/workflows/budokan-shared-list-runtime.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      ACF_PRO_LICENSE_KEY: ${{ secrets.ACF_PRO_LICENSE_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install Playwright Chromium
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Real WordPress + ACF PRO list runtime QA
+        working-directory: experiments/wordpress-acf-runtime
+        run: |
+          set -euo pipefail
+          test -n "$ACF_PRO_LICENSE_KEY" || { echo 'FAIL ACF_PRO_LICENSE_KEY secret unavailable'; exit 2; }
+          source ./scripts/runtime-env.sh
+          bash ./scripts/setup.sh
+
+          mkdir -p .runtime
+          cat > .runtime/list-content.html <<'HTML'
+          <!-- wp:list -->
+          <ul class="wp-block-list"><!-- wp:list-item --><li>Primary list item<!-- wp:list --><ul class="wp-block-list"><!-- wp:list-item --><li>Nested list item</li><!-- /wp:list-item --><!-- wp:list-item --><li>Nested second item</li><!-- /wp:list-item --></ul><!-- /wp:list --></li><!-- /wp:list-item --><!-- wp:list-item --><li>Primary second item</li><!-- /wp:list-item --></ul>
+          <!-- /wp:list -->
+          <!-- wp:list {"ordered":true} -->
+          <ol class="wp-block-list"><!-- wp:list-item --><li>Ordered item</li><!-- /wp:list-item --><!-- wp:list-item --><li>Ordered second item</li><!-- /wp:list-item --></ol>
+          <!-- /wp:list -->
+          <!-- wp:list {"className":"annotation-list"} -->
+          <ul class="wp-block-list annotation-list"><!-- wp:list-item --><li>Annotation item</li><!-- /wp:list-item --><!-- wp:list-item --><li>Annotation second item</li><!-- /wp:list-item --></ul>
+          <!-- /wp:list -->
+          HTML
+
+          page_id="$(docker compose run --rm cli post create /fixture/.runtime/list-content.html --post_type=page --post_status=publish --post_title='List Runtime QA' --post_name='list-runtime-qa' --porcelain)"
+          test -n "$page_id"
+          url="${WP_URL}/list-runtime-qa/"
+          curl --fail --silent --show-error "$url" >/dev/null
+
+          export LIST_QA_URL="$url"
+          node <<'JS'
+          const { chromium } = require('playwright');
+          const assert = require('node:assert/strict');
+
+          const rgb = (value) => value.replace(/\s+/g, '');
+          const near = (actual, expected, tolerance = 0.15) => {
+            assert.ok(Math.abs(actual - expected) <= tolerance, `expected ${expected}±${tolerance}, got ${actual}`);
+          };
+
+          (async () => {
+            const browser = await chromium.launch({ headless: true });
+            for (const [label, width, expected] of [
+              ['SP', 390, { primaryPad: 21, annotationPad: 31, nestedMargin: null }],
+              ['PC', 1395, { primaryPad: 18, annotationPad: 28, nestedMargin: 6 }],
+            ]) {
+              const page = await browser.newPage({ viewport: { width, height: 1000 } });
+              const errors = [];
+              page.on('pageerror', e => errors.push(String(e)));
+              const response = await page.goto(process.env.LIST_QA_URL, { waitUntil: 'networkidle' });
+              assert.equal(response.status(), 200, `${label} HTTP`);
+              assert.deepEqual(errors, [], `${label} page errors`);
+              const metrics = await page.evaluate(() => {
+                const root = document.querySelector('.block-editor_wrap');
+                const primary = root.querySelector('ul.wp-block-list:not(.annotation-list) > li');
+                const nested = primary.querySelector('ul.wp-block-list');
+                const nestedLi = nested.querySelector(':scope > li');
+                const ordered = root.querySelector('ol.wp-block-list > li');
+                const annotation = root.querySelector('ul.annotation-list > li');
+                const s = el => getComputedStyle(el);
+                const p = (el, pseudo) => getComputedStyle(el, pseudo);
+                return {
+                  docOverflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+                  primary: {
+                    pad: parseFloat(s(primary).paddingLeft),
+                    fontSize: parseFloat(s(primary).fontSize),
+                    lineHeight: parseFloat(s(primary).lineHeight),
+                    weight: s(primary).fontWeight,
+                    bulletW: parseFloat(p(primary,'::before').width),
+                    bulletH: parseFloat(p(primary,'::before').height),
+                    bulletBg: p(primary,'::before').backgroundColor,
+                    radius: parseFloat(p(primary,'::before').borderTopLeftRadius),
+                    transform: p(primary,'::before').transform,
+                  },
+                  nested: {
+                    marginLeft: parseFloat(s(nested).marginLeft),
+                    gap: parseFloat(s(nested).rowGap),
+                    pad: parseFloat(s(nestedLi).paddingLeft),
+                    bg: p(nestedLi,'::before').backgroundColor,
+                    border: p(nestedLi,'::before').borderTopColor,
+                    borderWidth: parseFloat(p(nestedLi,'::before').borderTopWidth),
+                  },
+                  ordered: {
+                    pad: parseFloat(s(ordered).paddingLeft),
+                    markerSize: parseFloat(p(ordered,'::before').fontSize),
+                    markerWeight: p(ordered,'::before').fontWeight,
+                    minWidth: parseFloat(p(ordered,'::before').minWidth),
+                  },
+                  annotation: {
+                    pad: parseFloat(s(annotation).paddingLeft),
+                    fontSize: parseFloat(s(annotation).fontSize),
+                    lineHeight: parseFloat(s(annotation).lineHeight),
+                    weight: s(annotation).fontWeight,
+                    markerSize: parseFloat(p(annotation,'::before').fontSize),
+                    markerWeight: p(annotation,'::before').fontWeight,
+                    markerColor: p(annotation,'::before').color,
+                    transform: p(annotation,'::before').transform,
+                  }
+                };
+              });
+              assert.ok(metrics.docOverflow <= 0, `${label} page overflow ${metrics.docOverflow}`);
+              near(metrics.primary.pad, expected.primaryPad);
+              near(metrics.primary.fontSize, 17);
+              near(metrics.primary.lineHeight, 27.2, 0.25);
+              assert.equal(metrics.primary.weight, '400');
+              near(metrics.primary.bulletW, 6); near(metrics.primary.bulletH, 6);
+              assert.equal(rgb(metrics.primary.bulletBg), 'rgb(202,153,87)');
+              near(metrics.primary.radius, 3);
+              assert.match(metrics.primary.transform, /10\.5|matrix\(1, 0, 0, 1, 0, 10\.5\)/);
+
+              near(metrics.ordered.pad, 36);
+              near(metrics.ordered.markerSize, 16);
+              assert.equal(metrics.ordered.markerWeight, '500');
+              near(metrics.ordered.minWidth, 26);
+
+              near(metrics.annotation.pad, expected.annotationPad);
+              near(metrics.annotation.fontSize, 14);
+              near(metrics.annotation.lineHeight, 22.4, 0.25);
+              assert.equal(metrics.annotation.weight, '400');
+              near(metrics.annotation.markerSize, 16);
+              assert.equal(metrics.annotation.markerWeight, '500');
+              assert.equal(rgb(metrics.annotation.markerColor), 'rgb(191,62,43)');
+              assert.match(metrics.annotation.transform, /3|matrix\(1, 0, 0, 1, 0, 3\)/);
+
+              near(metrics.nested.gap, 8);
+              near(metrics.nested.pad, 18);
+              assert.equal(rgb(metrics.nested.bg), 'rgba(0,0,0,0)');
+              assert.equal(rgb(metrics.nested.border), 'rgb(202,153,87)');
+              near(metrics.nested.borderWidth, 1);
+              if (expected.nestedMargin !== null) near(metrics.nested.marginLeft, expected.nestedMargin);
+              console.log(label, JSON.stringify(metrics));
+              await page.close();
+            }
+            await browser.close();
+          })().catch(err => { console.error(err); process.exit(1); });
+          JS
+
+      - name: Cleanup runtime
+        if: always()
+        working-directory: experiments/wordpress-acf-runtime
+        run: bash ./scripts/reset.sh || true
