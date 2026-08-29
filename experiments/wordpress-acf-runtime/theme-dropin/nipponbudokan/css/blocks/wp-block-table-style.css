@@ -76,14 +76,15 @@
         }
         /* MARK: ストライプ スタイル */
         &.is-style-stripes {
-            --_stripe-color: var(--color-tertiary);
+            /* Figma color/base--lightgray authority for the shared table. */
+            --_stripe-color: #f2f2f2;
             /* Figma's table master starts the body on white and stripes the
                second row. Keep stacked-table behavior separate below. */
             table:not(.is-stacked-on-mobile) {
                 tbody {
                     tr:nth-child(even) {
                         td {
-                            background-color: var(--_stripe-color, var(--color-tertiary));
+                            background-color: var(--_stripe-color, #f2f2f2);
                         }
                     }
                 }
@@ -101,12 +102,12 @@
                             &:has(> *:nth-child(odd):last-child) {
                                 &:nth-child(odd) {
                                     *:nth-child(odd) {
-                                        background-color: var(--_stripe-color, var(--color-tertiary));
+                                        background-color: var(--_stripe-color, #f2f2f2);
                                     }
                                 }
                                 &:nth-child(even) {
                                     *:nth-child(even) {
-                                        background-color: var(--_stripe-color, var(--color-tertiary));
+                                        background-color: var(--_stripe-color, #f2f2f2);
                                     }
                                 }
                             }
@@ -114,7 +115,7 @@
                             &:not(:has(> *:nth-child(odd):last-child)) {
                                 & {
                                     *:nth-child(odd) {
-                                        background-color: var(--color-tertiary);
+                                        background-color: var(--_stripe-color, #f2f2f2);
                                     }
                                 }
                             }
