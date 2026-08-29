@@ -1,0 +1,142 @@
+name: Budokan Navigation Large QA
+
+on:
+  push:
+    branches:
+      - agent/budokan-navigation-large-master-20260829
+    paths:
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/blocks/wp-block-navigation-style.css'
+      - '.github/workflows/budokan-navigation-large-qa.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      ACF_PRO_LICENSE_KEY: ${{ secrets.ACF_PRO_LICENSE_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify navigation-large ACF/render authority
+        run: |
+          python - <<'PY'
+          import json, pathlib
+          root=pathlib.Path('experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan')
+          data=json.loads((root/'acf/json/group_custom_block_navigation_large.json').read_text())
+          assert data['title']=='カスタムブロック - ナビゲーション（大）'
+          assert data['location'][0][0]['value']=='acf/navigation-large'
+          repeater=data['fields'][0]
+          assert repeater['name']=='navigation-large'
+          names=[f['name'] for f in repeater['sub_fields']]
+          assert names==['image','title','text','url','target'], names
+          render=(root/'acf/blocks/navigationLarge.php').read_text()
+          assert 'module_navigation --large' in render
+          assert "have_rows('navigation-large')" in render
+          assert 'width="335" height="219"' in render
+          small=(root/'acf/blocks/navigationSmall.php').read_text()
+          assert 'module_navigation --small' in small
+          print('ACF/render authority: navigation-large confirmed; navigation-small remains distinct')
+          PY
+
+      - name: Start real WordPress + ACF PRO runtime
+        run: bash experiments/wordpress-acf-runtime/scripts/setup.sh
+
+      - name: Seed navigation-large runtime fixture
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          CONTENT='<ul class="module_navigation --large"><li class="navigation"><a href="#"><div class="image"><div style="width:100%;height:100%;background:#dbe8ee"></div></div><div class="content"><h2 class="title">宿泊利用申し込み</h2><div class="text">テキストテキスト。不要な場合はテキスト非表示</div></div></a></li><li class="navigation"><a href="#"><div class="image"><div style="width:100%;height:100%;background:#dbe8ee"></div></div><div class="content"><h2 class="title">宿泊利用申し込み</h2><div class="text">テキストテキスト。不要な場合はテキスト非表示</div></div></a></li><li class="navigation"><a href="https://example.com" target="_blank"><div class="image"><div style="width:100%;height:100%;background:#dbe8ee"></div></div><div class="content"><h2 class="title">宿泊利用申し込み</h2><div class="text">テキストテキスト。不要な場合はテキスト非表示</div></div></a></li></ul>'
+          docker compose run --rm cli post create \
+            --post_type=page \
+            --post_status=publish \
+            --post_title='Navigation Large QA' \
+            --post_name='navigation-large-qa' \
+            --post_content="$CONTENT" >/dev/null
+          printf '%s' "$WP_URL/navigation-large-qa/" > /tmp/budokan-navigation-large-url
+
+      - name: Install browser probe
+        run: |
+          mkdir -p /tmp/budokan-playwright
+          cd /tmp/budokan-playwright
+          npm init -y >/dev/null 2>&1
+          npm install playwright@1.54.2 >/dev/null
+          npx playwright install --with-deps chromium >/dev/null
+
+      - name: Verify SP then PC runtime geometry
+        env:
+          QA_URL_FILE: /tmp/budokan-navigation-large-url
+        run: |
+          cat > /tmp/budokan-playwright/qa.mjs <<'JS'
+          import fs from 'node:fs';
+          import { chromium } from 'playwright';
+          const url=fs.readFileSync(process.env.QA_URL_FILE,'utf8');
+          const browser=await chromium.launch({headless:true});
+          const results={};
+          const near=(v,t,e=.6)=>Math.abs(v-t)<=e;
+          for (const [name,width] of [['sp',390],['pc',1395]]) {
+            const page=await browser.newPage({viewport:{width,height:1200}});
+            const errors=[]; page.on('pageerror',e=>errors.push(String(e)));
+            const response=await page.goto(url,{waitUntil:'networkidle'});
+            if (!response || response.status()!==200) throw new Error(`${name}: HTTP ${response?.status()}`);
+            const data=await page.locator('.block-editor_wrap .module_navigation.--large').first().evaluate(el=>{
+              const cards=[...el.querySelectorAll(':scope > .navigation')];
+              const r=cards.map(c=>c.getBoundingClientRect().toJSON());
+              const first=cards[0], image=first.querySelector('.image'), content=first.querySelector('.content'), title=first.querySelector('.title'), text=first.querySelector('.text');
+              const es=getComputedStyle(el), is=getComputedStyle(image), cs=getComputedStyle(content), ts=getComputedStyle(title), xs=getComputedStyle(text);
+              const ir=image.getBoundingClientRect(), cr=content.getBoundingClientRect();
+              const before=getComputedStyle(title,'::before');
+              const after=getComputedStyle(cards[2].querySelector('.title'),'::after');
+              return {gridColumns:es.gridTemplateColumns,rowGap:es.rowGap,columnGap:es.columnGap,cards:r,image:ir.toJSON(),content:cr.toJSON(),aspect:is.aspectRatio,radius:is.borderTopLeftRadius,padding:[cs.paddingTop,cs.paddingRight,cs.paddingBottom,cs.paddingLeft],contentGap:cs.gap,borderBottom:cs.borderBottomWidth,title:{font:ts.fontFamily,size:ts.fontSize,weight:ts.fontWeight,line:ts.lineHeight,letter:ts.letterSpacing,color:ts.color,decoration:ts.textDecorationLine},text:{size:xs.fontSize,weight:xs.fontWeight,line:xs.lineHeight,letter:xs.letterSpacing,padBottom:xs.paddingBottom},before:{width:before.width,height:before.height,marginRight:before.marginRight,color:before.color,fontSize:before.fontSize},external:after.content,overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth};
+            });
+            const gap=parseFloat(name==='sp'?data.rowGap:data.columnGap);
+            if (!near(gap,name==='sp'?24:40,.2)) throw new Error(`${name}: module gap ${gap}`);
+            if (name==='sp') {
+              if (data.cards.length!==3) throw new Error('sp: card count');
+              if (!(data.cards[1].top>data.cards[0].bottom)) throw new Error('sp: cards not stacked');
+              const physical=data.cards[1].top-data.cards[0].bottom;
+              if (!near(physical,24,.3)) throw new Error(`sp: physical card gap ${physical}`);
+            } else {
+              if (!data.gridColumns.split(' ').every(x=>parseFloat(x)>0) || data.gridColumns.split(' ').length!==3) throw new Error(`pc: columns ${data.gridColumns}`);
+              if (!near(data.cards[1].left-data.cards[0].right,40,.3)) throw new Error('pc: first column gap');
+              if (!near(data.cards[2].left-data.cards[1].right,40,.3)) throw new Error('pc: second column gap');
+            }
+            if (!near(data.image.width/data.image.height,1.5,.01)) throw new Error(`${name}: image ratio ${data.image.width/data.image.height}`);
+            if (!near(parseFloat(data.radius),3,.1)) throw new Error(`${name}: image radius ${data.radius}`);
+            if (!near(data.content.top,data.image.bottom,.3)) throw new Error(`${name}: image/content seam gap ${data.content.top-data.image.bottom}`);
+            for (const [i,v] of data.padding.entries()) if (!near(parseFloat(v),[24,20,24,20][i],.1)) throw new Error(`${name}: content padding ${data.padding}`);
+            if (!near(parseFloat(data.contentGap),16,.1)) throw new Error(`${name}: content gap ${data.contentGap}`);
+            if (!near(parseFloat(data.borderBottom),1,.1)) throw new Error(`${name}: border ${data.borderBottom}`);
+            if (!near(parseFloat(data.title.size),18,.1) || data.title.weight!=='500' || !near(parseFloat(data.title.line),18,.2)) throw new Error(`${name}: title typography ${JSON.stringify(data.title)}`);
+            if (data.title.decoration!=='none') throw new Error(`${name}: title decoration ${data.title.decoration}`);
+            if (!near(parseFloat(data.text.size),15,.1) || data.text.weight!=='400' || !near(parseFloat(data.text.line),24,.2)) throw new Error(`${name}: text typography ${JSON.stringify(data.text)}`);
+            if (!near(parseFloat(data.text.padBottom),8,.1)) throw new Error(`${name}: text padding ${data.text.padBottom}`);
+            if (!near(parseFloat(data.before.width),26,.1) || !near(parseFloat(data.before.height),26,.1) || !near(parseFloat(data.before.marginRight),8,.1)) throw new Error(`${name}: arrow rail ${JSON.stringify(data.before)}`);
+            if (data.overflow>0.5) throw new Error(`${name}: page overflow ${data.overflow}`);
+            if (errors.length) throw new Error(`${name}: page errors ${errors.join('; ')}`);
+            results[name]=data;
+            await page.screenshot({path:`/tmp/budokan-${name}-navigation-large.png`,fullPage:true});
+            await page.close();
+          }
+          console.log(JSON.stringify(results,null,2));
+          await browser.close();
+          JS
+          cd /tmp/budokan-playwright
+          node qa.mjs
+
+      - name: Upload visual evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: budokan-navigation-large
+          path: /tmp/budokan-*-navigation-large.png
+          if-no-files-found: ignore
+
+      - name: Stop runtime
+        if: always()
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          docker compose down -v --remove-orphans
