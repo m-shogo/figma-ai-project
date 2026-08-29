@@ -1,0 +1,90 @@
+name: Budokan Page Link Runtime QA
+
+on:
+  pull_request:
+    branches: [so]
+    paths:
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/blocks/wp-block-inPageLink-style.css'
+      - '.github/workflows/budokan-pagelink-runtime.yml'
+
+jobs:
+  pagelink-runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      ACF_PRO_LICENSE_KEY: ${{ secrets.ACF_PRO_LICENSE_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare WordPress + ACF PRO runtime
+        working-directory: experiments/wordpress-acf-runtime
+        run: |
+          test -n "$ACF_PRO_LICENSE_KEY"
+          cp .env.example .env
+          printf '\nACF_PRO_LICENSE_KEY=%s\n' "$ACF_PRO_LICENSE_KEY" >> .env
+          bash ./scripts/setup.sh
+      - name: Seed page-link fixture
+        working-directory: experiments/wordpress-acf-runtime
+        run: |
+          source ./scripts/runtime-env.sh
+          CONTENT='<!-- wp:html --><ul class="module_inPageLink-01" data-column="4"><li class="inPageLink"><a href="#a"><div class="title">ページ内リンク</div></a></li><li class="inPageLink"><a href="#b"><div class="title">柔道</div></a></li><li class="inPageLink"><a href="#c"><div class="title">剣道</div></a></li><li class="inPageLink"><a href="#d"><div class="title">弓道</div></a></li><li class="inPageLink"><a href="#e"><div class="title">テキストが入ります。テキストが入ります。テキストが入ります。</div></a></li></ul><!-- /wp:html -->'
+          docker compose run --rm cli post create --post_type=page --post_status=publish --post_title='Page Link QA' --post_name='pagelink-qa' --post_content="$CONTENT" --porcelain
+          curl --fail --silent --show-error "$WP_URL/pagelink-qa/" -o /tmp/budokan-pagelink.html
+          grep -q 'module_inPageLink-01' /tmp/budokan-pagelink.html
+      - name: Install browser probe
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Verify SP and PC computed page-link geometry
+        working-directory: experiments/wordpress-acf-runtime
+        run: |
+          source ./scripts/runtime-env.sh
+          export QA_URL="$WP_URL/pagelink-qa/"
+          node --input-type=module <<'NODE'
+          import { chromium } from '../../node_modules/playwright/index.mjs';
+          const browser = await chromium.launch({headless:true});
+          const eq=(actual,expected,label,t=0.75)=>{if(Math.abs(actual-expected)>t) throw new Error(`${label}: ${actual} != ${expected}`)};
+
+          {
+            const page=await browser.newPage({viewport:{width:390,height:900}});
+            const errors=[]; page.on('pageerror',e=>errors.push(String(e)));
+            const res=await page.goto(process.env.QA_URL,{waitUntil:'networkidle'});
+            if(!res||res.status()!==200) throw new Error(`SP HTTP ${res?.status()}`);
+            const data=await page.locator('.module_inPageLink-01').evaluate(el=>{
+              const items=[...el.querySelectorAll('.inPageLink a')];
+              const first=items[0], multi=items[4];
+              const s=getComputedStyle(first), b=getComputedStyle(first,'::before');
+              const r=first.getBoundingClientRect(), mr=multi.getBoundingClientRect();
+              return {listW:el.getBoundingClientRect().width,itemW:r.width,itemH:r.height,multiH:mr.height,padL:parseFloat(s.paddingLeft),padR:parseFloat(s.paddingRight),gap:parseFloat(s.columnGap||s.gap),iconW:parseFloat(b.width),iconH:parseFloat(b.height),iconBg:b.backgroundColor,iconColor:b.color,overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth};
+            });
+            eq(data.itemW,data.listW,'SP fill width'); eq(data.itemH,58,'SP one-line height');
+            if(data.multiH < 58) throw new Error(`SP multiline height ${data.multiH}`);
+            eq(data.padL,12,'SP padding-left'); eq(data.padR,16,'SP padding-right'); eq(data.gap,10,'SP icon gap'); eq(data.iconW,26,'SP icon width'); eq(data.iconH,26,'SP icon height');
+            if(data.iconBg!=='rgb(51, 51, 51)') throw new Error(`SP icon background ${data.iconBg}`);
+            if(data.iconColor!=='rgb(255, 255, 255)') throw new Error(`SP icon color ${data.iconColor}`);
+            if(data.overflow>1) throw new Error(`SP page overflow ${data.overflow}`);
+            if(errors.length) throw new Error(`SP page errors ${errors.join('; ')}`);
+            console.log('PASS SP',data); await page.close();
+          }
+
+          {
+            const page=await browser.newPage({viewport:{width:1395,height:900}});
+            const errors=[]; page.on('pageerror',e=>errors.push(String(e)));
+            const res=await page.goto(process.env.QA_URL,{waitUntil:'networkidle'});
+            if(!res||res.status()!==200) throw new Error(`PC HTTP ${res?.status()}`);
+            const data=await page.locator('.module_inPageLink-01').evaluate(el=>{
+              const items=[...el.querySelectorAll('.inPageLink')]; const anchors=items.map(x=>x.querySelector('a'));
+              const lr=el.getBoundingClientRect(), rects=items.map(x=>x.getBoundingClientRect()); const s=getComputedStyle(anchors[0]), b=getComputedStyle(anchors[0],'::before');
+              return {listW:lr.width,widths:rects.map(r=>r.width),heights:anchors.map(a=>a.getBoundingClientRect().height),xs:rects.map(r=>Math.round(r.x-lr.x)),ys:rects.map(r=>Math.round(r.y-lr.y)),padL:parseFloat(s.paddingLeft),padR:parseFloat(s.paddingRight),iconW:parseFloat(b.width),iconH:parseFloat(b.height),overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth};
+            });
+            data.widths.forEach((w,i)=>eq(w,220,`PC item ${i} width`)); data.heights.forEach((h,i)=>eq(h,56,`PC item ${i} height`));
+            eq(data.padL,12,'PC padding-left'); eq(data.padR,16,'PC padding-right'); eq(data.iconW,26,'PC icon width'); eq(data.iconH,26,'PC icon height');
+            if(data.overflow>1) throw new Error(`PC page overflow ${data.overflow}`);
+            if(errors.length) throw new Error(`PC page errors ${errors.join('; ')}`);
+            console.log('PASS PC',data); await page.close();
+          }
+          await browser.close();
+          NODE
+      - name: Tear down runtime
+        if: always()
+        working-directory: experiments/wordpress-acf-runtime
+        run: bash ./scripts/reset.sh || true
