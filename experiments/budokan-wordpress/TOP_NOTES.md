@@ -1,6 +1,6 @@
 # TOP — 作業メモ
 
-更新: 2026-08-28
+更新: 2026-08-30
 
 ## Figma
 
@@ -16,8 +16,8 @@
 5. 日本武道館とは ← **PC+SP 第一通**
 6. お知らせ ← **通常Archiveをマスター化 + TOP派生リファクタ + 実WordPress/ACF PRO Runtime Visual QA完了**
 7. 公式パートナー ← **SP/PC Figma + 実WordPress/ACF PRO Runtime Visual QA完了**
-8. 月刊「武道」
-9. 導線バナー
+8. 月刊「武道」編集部 / Instagram ← **SP/PC Figma + exact raster + 実WordPress/ACF PRO Runtime Visual QA完了。2026-08-30 current Figma再確認済み**
+9. 導線バナー ← **SP exact background raster + SP/PC Runtime QA + squash merge完了**
 10. Footer（共通。TOP 内に地図付き別案あり → デザイン変更前提で当面 `footer_subpage`）
 
 > 上の番号はFigma上の並び順のメモ。Header / Footer / Parts完了後の**実装順そのものではない**。着手前に全体を見てmaster / derivative / 既存Theme依存を確認し、戻りが少ない順に組み替える。
@@ -148,22 +148,36 @@
 - 既存 `.global_contents > section` がSP 50px / PC 100pxのbottom paddingを追加してFigma寸法を伸ばす競合をRuntimeで発見。`top_partner-01`だけ明示的に上書きし、globalルール自体は変更していない。
 - Linux Chromiumの `scrollbar-gutter: stable` 15px予約はouter viewportでのみ吸収し、component CSSへ15px補正を入れていない。
 
+## 月刊「武道」編集部 / Instagram — current authority revalidated
+
+- SP Figma `1360:9389` / PC Figma `1603:7173` を2026-08-30に再取得。
+- 現行 `_top-instagram.php` + `top_instagram.css` はSP 2×2 / PC 5列、padding、typography、thumbnail geometryともcurrent authorityと一致。
+- 実装commit `c95fa7797aad52f6f761366f303ac3db94ca265e` は最新 `so` の祖先で、当時のreal WordPress + ACF PRO runtime / visual QAも完了済み。
+- Instagram API / ACF feed / 本番URLは依然authorityなし。fallback + filter契約を維持し、推測でCMSを追加しない。
+- 詳細は `TOP_INSTAGRAM_AUDIT.md`。
+
+## 導線バナー — current authority merged
+
+- SP `1360:9354` / PC `1603:7145`。
+- 既存 `top_banner-01` ACF authorityを再利用し、新しいCMS契約を追加していない。
+- Figma SP背景JPEGはdurable Theme assetとして保存済み。
+- SP/PC real WordPress runtime QA + clean CI + squash merge完了。
+- 詳細は `TOP_BANNER_AUDIT.md`。
+
 ## 次の作業（引き継ぎ）
 
 `parts.php` と form は触らない。
 
-公式パートナーをfinal diff / squash mergeで閉じた後、次は **月刊「武道」編集部** のmaster / derivative監査から開始する。
+TOPの明示セクションは、地図付きFooterの保留案とHuman待ちデータを除き、実装または検証済み。次回はTOPの見た目順へ戻らず、最新 `so` から **通常ページ / archive / single の残familyをFigma・Theme・WordPress全体で再監査**して、SP/PC authorityと既存ownerが揃うものを1単位選ぶ。
 
-Figma候補:
-- TOP SP `1360:9389`
-- TOP PC `1603:7173`
-- 刊行物 / backnumber関連ページおよびFooter SNSに「月刊『武道』編集部」表現が存在するため、TOPだけ独立実装せず再利用可能性を先に確認する。
+既知の保留:
 
-その後:
-1. 月刊「武道」: master/derivative監査 → SP Figma → SP実装/Runtime → PC拡張/Runtime
-2. 導線バナー: SP `1360:9354` / PC `1603:7145`。既存 `top_banner-01` / Footer系との再利用関係を先に確認
-3. TOP 地図付き footer は当面使わない（グローバルは `footer_subpage`）
+1. Parts Slider — Figma authorityはあるがeditor/WordPress owner未確定。
+2. Local Navigation — PC authorityはあるがSP behaviorとrender owner未確定。
+3. legacy `navigation-small` — Theme contractはあるがcurrent Figma specimenなし。
+4. Training Center / Backnumber —visual hierarchyは監査済みだがcanonical editor/data lifecycleが未確定。
+5. TOP 地図付き footer — 当面使わない。グローバルは `footer_subpage`。
 
-選んだ1単位では必ず、**SP Figma → SP実装 → SP Runtime QA → PC拡張 → PC Runtime QA → final diff** の順で完了させる。
+選んだ1単位では必ず、**SP Figma → SP実装 → SP Runtime QA → PC拡張 → PC Runtime QA → visual diff → fix → learning → clean PR/CI/squash merge** の順で完了させる。
 
-Human 待ち: Google Calendar ID/API key、SNS/PDF/動画の本番 URL、タイトル写真、form（Formidable）
+Human 待ち: Google Calendar ID/API key、SNS/PDF/動画の本番 URL、タイトル写真、form（Formidable）、未確定CMS/data lifecycle。
