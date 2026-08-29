@@ -113,29 +113,6 @@ $has_slider = function_exists('have_rows') && have_rows('top_slider-01');
     <?php get_template_part('template-parts/_top-news'); ?>
     <?php get_template_part('template-parts/_top-partner'); ?>
     <?php get_template_part('template-parts/_top-instagram'); ?>
-    <div id="top_banner-01" class="top_banner-01">
-        <div class="global_inner">
-            <?php if (function_exists('have_rows') && have_rows('top_banner-01')): ?>
-                <ul class="list">
-                    <?php while (have_rows('top_banner-01')): the_row(); ?>
-                        <?php
-                        $img = get_sub_field('img');
-                        $thumb = $img ? wp_get_attachment_image_src($img, 'top_banner') : null;
-                        $title = get_sub_field('title');
-                        $alt = ($img && get_post($img)) ? get_post_meta($img, '_wp_attachment_image_alt', true) : '';
-                        $url = get_sub_field('url');
-                        $target = get_sub_field('target');
-                        ?>
-                        <li <?php if (empty($img)): ?>class="_noImage" <?php endif; ?>>
-                            <a <?php if (!empty($url)): ?>href="<?php echo esc_url($url); ?>" <?php if ($target): ?>target="_blank" <?php endif; ?><?php else: ?> class="_disabled" tabindex="-1" <?php endif; ?>>
-                                <?php if ($img && !empty($thumb[0])): ?><p class="image"><img src="<?php echo esc_url($thumb[0]); ?>" alt="<?php echo esc_attr($alt); ?>" width="335" height="101" loading="lazy"></p><?php endif; ?>
-                                <?php if ($title): ?><p class="title"><?php echo esc_html($title); ?></p><?php endif; ?>
-                            </a>
-                        </li>
-                    <?php endwhile; ?>
-                </ul>
-            <?php endif; ?>
-        </div>
-    </div>
+    <?php get_template_part('template-parts/_top-banner'); ?>
 </main>
 <?php get_footer(); ?>
