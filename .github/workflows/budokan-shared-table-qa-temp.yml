@@ -45,8 +45,8 @@ jobs:
         run: |
           source scripts/runtime-env.sh
           cat > .runtime/table-fixture.html <<'HTML'
-          <!-- wp:table {"className":"is-scroll-on-mobile"} -->
-          <figure class="wp-block-table is-scroll-on-mobile"><table><thead><tr><th>ヘッダーセル</th><th>ヘッダーセル</th><th>ヘッダーセル</th><th>ヘッダーセル</th></tr></thead><tbody><tr><td>通常セル</td><td colspan="2">通常セル</td><td>通常セル</td></tr><tr><td>通常セル</td><td colspan="2">通常セル</td><td>通常セル</td></tr></tbody></table></figure>
+          <!-- wp:table {"className":"is-style-stripes is-scroll-on-mobile"} -->
+          <figure class="wp-block-table is-style-stripes is-scroll-on-mobile"><table><thead><tr><th>ヘッダーセル</th><th>ヘッダーセル</th><th>ヘッダーセル</th><th>ヘッダーセル</th></tr></thead><tbody><tr><td>通常セル</td><td colspan="2">通常セル</td><td>通常セル</td></tr><tr><td>通常セル</td><td colspan="2">通常セル</td><td>通常セル</td></tr></tbody></table></figure>
           <!-- /wp:table -->
           HTML
           docker compose run --rm cli post update 2 --post_title='Table Runtime QA' --post_status=publish --post_content="$(cat .runtime/table-fixture.html)"
@@ -76,19 +76,24 @@ jobs:
               const m=await page.evaluate(()=>{
                 const wrap=document.querySelector('.wp-block-table.is-scroll-on-mobile');
                 const table=wrap?.querySelector('table');
-                const firstTh=table?.querySelector('th'); const firstTd=table?.querySelector('td');
+                const runtimeWrap=table?.parentElement;
+                const firstTh=table?.querySelector('th');
+                const bodyRows=[...(table?.querySelectorAll('tbody tr')||[])];
+                const firstTd=bodyRows[0]?.querySelector('td');
+                const secondTd=bodyRows[1]?.querySelector('td');
                 const rect=e=>{const r=e.getBoundingClientRect();return{x:r.x,y:r.y,width:r.width,height:r.height}};
-                const cs=e=>{const s=getComputedStyle(e);return{fontSize:s.fontSize,lineHeight:s.lineHeight,paddingTop:s.paddingTop,paddingLeft:s.paddingLeft,backgroundColor:s.backgroundColor,color:s.color,fontWeight:s.fontWeight,boxShadow:s.boxShadow,width:s.width,minWidth:s.minWidth,overflowX:s.overflowX,display:s.display}};
-                return {innerWidth:window.innerWidth,clientViewportWidth:document.documentElement.clientWidth,matchMobile:window.matchMedia('(max-width: 767px)').matches,wrapClass:wrap?.className||'',directChildTable:!!(wrap&&table&&table.parentElement===wrap),tableParentTag:table?.parentElement?.tagName||'',tableParentClass:table?.parentElement?.className||'',wrap:wrap?rect(wrap):null,table:table?rect(table):null,head:table?rect(table.querySelector('thead tr')):null,rows:table?[...table.querySelectorAll('tbody tr')].map(rect):[],firstTh:firstTh?rect(firstTh):null,firstTd:firstTd?rect(firstTd):null,wrapStyle:wrap?cs(wrap):null,tableStyle:table?cs(table):null,th:firstTh?cs(firstTh):null,td:firstTd?cs(firstTd):null,scrollWidth:wrap?.scrollWidth||0,clientWidth:wrap?.clientWidth||0,pageScrollWidth:document.documentElement.scrollWidth,pageClientWidth:document.documentElement.clientWidth};
+                const cs=e=>{const s=getComputedStyle(e);return{fontSize:s.fontSize,lineHeight:s.lineHeight,paddingTop:s.paddingTop,paddingLeft:s.paddingLeft,backgroundColor:s.backgroundColor,color:s.color,fontWeight:s.fontWeight,boxShadow:s.boxShadow,width:s.width,minWidth:s.minWidth,overflowX:s.overflowX,display:s.display,textAlign:s.textAlign}};
+                return {innerWidth:window.innerWidth,matchMobile:window.matchMedia('(max-width: 767px)').matches,wrapClass:wrap?.className||'',runtimeWrapClass:runtimeWrap?.className||'',wrap:wrap?rect(wrap):null,runtimeWrap:runtimeWrap?rect(runtimeWrap):null,table:table?rect(table):null,head:table?rect(table.querySelector('thead tr')):null,rows:bodyRows.map(rect),firstTh:firstTh?rect(firstTh):null,firstTd:firstTd?rect(firstTd):null,wrapStyle:wrap?cs(wrap):null,runtimeWrapStyle:runtimeWrap?cs(runtimeWrap):null,tableStyle:table?cs(table):null,th:firstTh?cs(firstTh):null,firstTdStyle:firstTd?cs(firstTd):null,secondTdStyle:secondTd?cs(secondTd):null,runtimeScrollWidth:runtimeWrap?.scrollWidth||0,runtimeClientWidth:runtimeWrap?.clientWidth||0,pageScrollWidth:document.documentElement.scrollWidth,pageClientWidth:document.documentElement.clientWidth};
               });
               const status=response?.status()||0; const pageOverflow=m.pageScrollWidth>m.pageClientWidth+1;
               if(status>=400||pageErrors.length||pageOverflow||!m.wrap||!m.table) failed=true;
               if(!near(m.head?.height||0,54,0.6)||m.rows.some(r=>!near(r.height,54,0.6))) failed=true;
               if(!near(parseFloat(m.th?.fontSize||0),15,.2)||!near(parseFloat(m.th?.lineHeight||0),24,.3)||!near(parseFloat(m.th?.paddingTop||0),15,.2)||!near(parseFloat(m.th?.paddingLeft||0),20,.2)) failed=true;
-              if(m.th?.backgroundColor!=='rgb(66, 66, 66)'||m.th?.color!=='rgb(255, 255, 255)'||m.th?.fontWeight!=='400') failed=true;
+              if(m.th?.backgroundColor!=='rgb(66, 66, 66)'||m.th?.color!=='rgb(255, 255, 255)'||m.th?.fontWeight!=='400'||m.th?.textAlign!=='center') failed=true;
               if(!String(m.th?.boxShadow).includes('215, 212, 212')) failed=true;
+              if(m.firstTdStyle?.textAlign!=='center'||m.firstTdStyle?.backgroundColor!=='rgba(0, 0, 0, 0)'||m.secondTdStyle?.backgroundColor!=='rgb(242, 242, 242)') failed=true;
               if(item.name==='sp'){
-                if(!m.matchMobile||!near(m.table.width,960,1)||m.scrollWidth<959||m.clientWidth>=m.scrollWidth-100) failed=true;
+                if(!m.matchMobile||!near(m.table.width,960,1)||m.runtimeScrollWidth<959||m.runtimeClientWidth>=m.runtimeScrollWidth-100) failed=true;
               } else {
                 if(m.matchMobile||!near(m.table.width,m.wrap.width,1)||!near(m.firstTh?.width||0,m.wrap.width/4,1)) failed=true;
               }
