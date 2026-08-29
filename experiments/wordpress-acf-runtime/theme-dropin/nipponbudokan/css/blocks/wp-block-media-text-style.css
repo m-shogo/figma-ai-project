@@ -6,9 +6,11 @@
 .editor-styles-wrapper {
     .wp-block-media-text {
         margin-top: var(--wp-block-margin);
-        gap: 32px 16px;
+        /* Parts / テキスト+画像 master は SP stack / PC side-by-side とも
+           text-media の責任境界を 30px に保つ。 */
+        gap: 30px;
         @media screen and (min-width: 768px) {
-            gap: 40px;
+            gap: 30px;
         }
         .wp-block-media-text__content {
             padding: 0;
