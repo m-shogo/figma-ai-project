@@ -1,0 +1,53 @@
+name: Temporary Budokan News Query Context QA 2
+
+on:
+  push:
+    branches:
+      - agent/budokan-news-query-context-20260830
+
+jobs:
+  php-contract-runtime:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: PHP syntax and query-context regression
+        shell: bash
+        run: |
+          php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/acf/blocks/customPostList.php
+          php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_list-news.php
+          php <<'PHP'
+          <?php
+          error_reporting(E_ALL);
+          class FakeQuery {
+              public array $posts;
+              public function __construct(array $posts) { $this->posts = $posts; }
+              public function have_posts(): bool { return !empty($this->posts); }
+          }
+          $fixturePosts = [(object)['ID'=>101,'post_title'=>'News Alpha'],(object)['ID'=>102,'post_title'=>'News Beta']];
+          $pagePost = (object)['ID'=>900,'post_title'=>'Training Center Page'];
+          function get_field($key) { return match($key) {'block_post_type'=>'post','block_posts_per_page'=>2,'block_category'=>[],default=>null}; }
+          class WP_Query extends FakeQuery { public function __construct($args=[]) { global $fixturePosts; parent::__construct($fixturePosts); } }
+          function wp_reset_postdata() {}
+          function sanitize_key($value) { return preg_replace('/[^a-z0-9_\-]/','',strtolower((string)$value)); }
+          function is_front_page() { return false; }
+          function is_page() { return true; }
+          function have_posts() { return false; }
+          function the_post() {}
+          function setup_postdata($value) { $GLOBALS['post']=$value; }
+          $capturedListArgs=null;
+          function get_template_part($slug,$name=null,$args=[]) {
+              global $capturedListArgs;
+              if ($slug==='template-parts/_list-news') { $capturedListArgs=$args; return; }
+              if ($slug==='template-parts/_list-news_article') { echo '<article>'.htmlspecialchars($GLOBALS['post']->post_title,ENT_QUOTES).'</article>'; }
+          }
+          $wp_query=new FakeQuery([$pagePost]); $posts=[$pagePost]; $post=$pagePost;
+          require 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/acf/blocks/customPostList.php';
+          $ids=array_map(fn($item)=>$item->ID,$capturedListArgs['posts']??[]);
+          if ($ids!==[101,102]) { fwrite(STDERR,'wrong explicit posts '.json_encode($ids)."\n"); exit(1); }
+          $args=['props'=>'customPostList','posts'=>$fixturePosts]; $posts=[$pagePost]; $post=$pagePost;
+          ob_start(); require 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_list-news.php'; $html=ob_get_clean();
+          if (!str_contains($html,'News Alpha') || !str_contains($html,'News Beta') || str_contains($html,'Training Center Page')) {
+              fwrite(STDERR,"query context leak\n$html\n"); exit(1);
+          }
+          echo "PASS explicit custom query posts win over page globals\n";
+          PHP
