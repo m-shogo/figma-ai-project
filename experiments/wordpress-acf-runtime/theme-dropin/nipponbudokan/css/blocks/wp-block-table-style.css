@@ -14,7 +14,7 @@
         }
         /* MARK: ボーダー */
         --_border-color: var(--color-line);
-        --_border-color-thead: var(--color-table-head);
+        --_border-color-thead: var(--color-line);
         --_border-width: 1px;
         --_border-style: solid;
         table {
@@ -23,11 +23,17 @@
             th,
             td {
                 border: none !important;
-                border-top: var(--_border-width, 1px) var(--_border-style, solid) var(--_border-color, var(--color-separator)) !important;
-                border-left: var(--_border-width, 1px) var(--_border-style, solid) var(--_border-color, var(--color-separator)) !important;
+                /* Figma separators are drawn inside the authored 54px cells.
+                   Use inset rules instead of layout-contributing borders so
+                   15 + 24 + 15 stays exactly 54px. */
+                box-shadow:
+                    inset var(--_border-width, 1px) 0 0 var(--_border-color, var(--color-separator)),
+                    inset 0 var(--_border-width, 1px) 0 var(--_border-color, var(--color-separator));
             }
             th {
-                border-color: var(--_border-color-thead, var(--color-secondary));
+                box-shadow:
+                    inset var(--_border-width, 1px) 0 0 var(--_border-color-thead, var(--color-separator)),
+                    inset 0 var(--_border-width, 1px) 0 var(--_border-color-thead, var(--color-separator));
             }
             &::before {
                 content: '';
@@ -115,9 +121,13 @@
         /* MARK: モバイルでスクロール スタイル */
         &.is-scroll-on-mobile {
             @media screen and (max-width: 767px) {
+                overflow-x: auto;
                 padding-bottom: 10px;
                 > table {
-                    width: var(--width-main);
+                    /* Figma SP clips the same 960px table master into the
+                       mobile content viewport instead of compressing columns. */
+                    width: 960px;
+                    min-width: 960px;
                 }
             }
             /* スクロールバー色変更（webkit用） */
