@@ -6,7 +6,7 @@
 .editor-styles-wrapper {
     .wp-block-quote {
         position: relative;
-        padding: 0px 46px;
+        padding: 0 34px;
         margin-top: var(--wp-block-margin);
         & + & {
             margin-top: var(--wp-block-margin-large);
@@ -18,8 +18,8 @@
             mask: url('../../images/common/icon-doublequote.svg') no-repeat center / contain;
             display: block;
             position: absolute;
-            width: 36px;
-            height: 36px;
+            width: 24px;
+            height: 24px;
         }
         &::before {
             content: '';
@@ -31,6 +31,20 @@
             content: '';
             right: 0;
             bottom: 0;
+        }
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .block-editor_wrap,
+    .editor-styles-wrapper {
+        .wp-block-quote {
+            padding-inline: 46px;
+            &::before,
+            &::after {
+                width: 36px;
+                height: 36px;
+            }
         }
     }
 }
