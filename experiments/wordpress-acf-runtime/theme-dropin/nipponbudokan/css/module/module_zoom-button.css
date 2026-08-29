@@ -49,7 +49,26 @@
     }
 }
 
+/* Figma training-center gallery authority uses a dark 70%-opaque zoom tile on
+   both breakpoints. Keep this override on gallery/lightbox instances only;
+   standalone linked-image affordances retain the existing shared contract. */
+.wp-block-gallery .wp-lightbox-container .lightbox_wrap {
+    &::after {
+        background-color: rgba(51, 51, 51, 0.7);
+        border-color: transparent;
+    }
+}
+
 @media screen and (max-width: 767px) {
+    /* Figma SP gallery authority: 32px control with 15px icon. */
+    .wp-block-gallery .wp-lightbox-container .lightbox_wrap {
+        &::after {
+            width: 32px;
+            height: 32px;
+            font-size: 15px;
+        }
+    }
+
     .wp-block-columns.is-not-stacked-on-mobile {
         .lightbox_wrap {
             &::after {
