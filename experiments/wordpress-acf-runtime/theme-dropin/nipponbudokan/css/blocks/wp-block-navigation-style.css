@@ -80,25 +80,72 @@
                 }
             }
         }
-        /* MARK: 大 */
+        /* MARK: 大 / Figma Parts Navigation master */
         &.--large {
-            gap: 40px;
+            gap: 24px;
             .navigation {
+                min-width: 0;
                 a {
                     flex-direction: column;
-                    gap: 20px;
+                    gap: 0;
                     .image {
-                        border-radius: 8px;
-                        aspect-ratio: 335 / 219;
+                        width: 100%;
+                        aspect-ratio: 3 / 2;
+                        border-radius: 3px 3px 0 0;
                     }
                     .content {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 16px;
+                        padding: 24px 20px;
+                        background: var(--color-secondary);
+                        border-bottom: 1px solid var(--color-line);
                         .title {
-                            font-size: 24px;
-                            text-underline-offset: 6px;
+                            display: flex;
+                            align-items: center;
+                            position: relative;
+                            margin: 0;
+                            color: var(--color-text);
+                            font-family: var(--font-sansSerif-ja);
+                            font-size: 18px;
+                            font-weight: 500;
+                            line-height: 1;
+                            letter-spacing: 0.05em;
+                            text-decoration: none;
+                            text-underline-offset: 0;
+                            &::before {
+                                content: var(--icon-arrow-right);
+                                box-sizing: border-box;
+                                width: 26px;
+                                height: 26px;
+                                margin-right: 8px;
+                                flex: 0 0 26px;
+                                display: inline-flex;
+                                align-items: center;
+                                justify-content: center;
+                                font-family: var(--font-awesome);
+                                font-size: 8px;
+                                font-weight: 900;
+                                line-height: 1;
+                                color: var(--color-primary);
+                                background: var(--color-secondary);
+                                border: 1px solid var(--color-line);
+                                clip-path: var(--clip-octagon);
+                            }
+                            &::after {
+                                flex-shrink: 0;
+                                font-size: 16px;
+                                font-weight: 400;
+                                line-height: 1;
+                            }
                         }
                         .text {
-                            margin-top: 20px;
-                            font-size: 16px;
+                            margin-top: 0;
+                            padding-bottom: 8px;
+                            font-size: 15px;
+                            font-weight: 400;
+                            line-height: 1.6;
+                            letter-spacing: 0.05em;
                         }
                     }
                 }
@@ -138,14 +185,13 @@
                 /* margin-top: 48px; */
             }
             &.--large {
-                gap: 60px;
-                display: grid;
-                grid-template-columns: repeat(2, 1fr);
-                gap: 60px;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 40px;
                 .navigation {
                     a {
                         .content {
                             .title {
+                                font-family: var(--font-serif-ja);
                             }
                         }
                     }
