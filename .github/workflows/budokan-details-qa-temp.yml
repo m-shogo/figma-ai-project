@@ -1,0 +1,168 @@
+name: Budokan Details QA Temp
+
+on:
+  pull_request:
+    paths:
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/**'
+      - '.github/workflows/budokan-details-qa-temp.yml'
+  push:
+    branches:
+      - agent/budokan-details-master
+    paths:
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/**'
+      - '.github/workflows/budokan-details-qa-temp.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  details-runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Check ACF PRO runtime availability
+        id: acf
+        env:
+          ACF_PRO_LICENSE_KEY: ${{ secrets.ACF_PRO_LICENSE_KEY }}
+        run: |
+          if [ -n "$ACF_PRO_LICENSE_KEY" ]; then
+            echo 'enabled=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'enabled=false' >> "$GITHUB_OUTPUT"
+            echo 'SKIP live Budokan capture: ACF_PRO_LICENSE_KEY is unavailable.'
+          fi
+
+      - name: Install browser QA dependency
+        if: steps.acf.outputs.enabled == 'true'
+        working-directory: experiments/wordpress-acf-runtime
+        run: |
+          mkdir -p .runtime/playwright
+          cd .runtime/playwright
+          npm init -y >/dev/null 2>&1
+          npm install --no-audit --no-fund playwright@1.54.2 >/dev/null
+          npx playwright install --with-deps chromium
+
+      - name: Start real WordPress + ACF PRO + Budokan Theme
+        if: steps.acf.outputs.enabled == 'true'
+        working-directory: experiments/wordpress-acf-runtime
+        env:
+          ACF_PRO_LICENSE_KEY: ${{ secrets.ACF_PRO_LICENSE_KEY }}
+          CI: 'true'
+        run: bash scripts/setup.sh
+
+      - name: Seed native Gutenberg details fixture
+        if: steps.acf.outputs.enabled == 'true'
+        working-directory: experiments/wordpress-acf-runtime
+        run: |
+          source scripts/runtime-env.sh
+          cat > .runtime/details-fixture.html <<'HTML'
+          <!-- wp:details -->
+          <details class="wp-block-details"><summary>通常アコーディオン</summary><!-- wp:paragraph --><p>展開するとテキスト、写真などが表示されます。</p><!-- /wp:paragraph --></details>
+          <!-- /wp:details -->
+          <!-- wp:details {"showContent":true} -->
+          <details class="wp-block-details" open><summary>タイトルが入ります。テキストが長い時。テキストが長い時。テキストが長い時。</summary><!-- wp:paragraph --><p>展開するとテキスト、写真などが表示されます。日本武道館では、武道大会や研修会など、多様な参加型イベントを開催しています。</p><!-- /wp:paragraph --></details>
+          <!-- /wp:details -->
+          <!-- wp:details {"className":"_qa","showContent":true} -->
+          <details class="wp-block-details _qa" open><summary>QAアコーディオン<br>タイトルが入ります。テキストが長い時。</summary><!-- wp:paragraph --><p>展開するとテキスト、写真などが表示されます。日本武道館では多様な参加型イベントを開催しています。</p><!-- /wp:paragraph --></details>
+          <!-- /wp:details -->
+          HTML
+          docker compose run --rm cli post create \
+            --post_type=page \
+            --post_title='Details Runtime QA' \
+            --post_name='details-runtime-qa' \
+            --post_status=publish \
+            --post_content="$(cat .runtime/details-fixture.html)" \
+            --porcelain >/dev/null
+
+      - name: Inspect SP and PC details runtime
+        if: steps.acf.outputs.enabled == 'true'
+        working-directory: experiments/wordpress-acf-runtime
+        run: |
+          source scripts/runtime-env.sh
+          mkdir -p .runtime/budokan-details
+          WP_URL="$WP_URL" node <<'NODE'
+          const fs = require('node:fs');
+          const path = require('node:path');
+          const { createRequire } = require('node:module');
+          const requireQA = createRequire(path.resolve('.runtime/playwright/package.json'));
+          const { chromium } = requireQA('playwright');
+
+          (async () => {
+            const browser = await chromium.launch({ headless: true });
+            const cases = [
+              { name: 'sp', width: 390, height: 900 },
+              { name: 'pc', width: 1395, height: 900 },
+            ];
+            const report = [];
+            let failed = false;
+
+            for (const item of cases) {
+              const page = await browser.newPage({ viewport: { width: item.width, height: item.height } });
+              const errors = [];
+              page.on('pageerror', error => errors.push(error.message));
+              const response = await page.goto(`${process.env.WP_URL}/details-runtime-qa/`, { waitUntil: 'networkidle' });
+              await page.evaluate(() => document.fonts.ready);
+              const details = page.locator('.block-editor_wrap > .wp-block-details');
+              const count = await details.count();
+              if (count !== 3) failed = true;
+
+              const metrics = await page.evaluate(() => {
+                const all = [...document.querySelectorAll('.block-editor_wrap > .wp-block-details')];
+                const rect = el => { const r = el.getBoundingClientRect(); return { x:r.x, y:r.y, width:r.width, height:r.height }; };
+                const css = el => {
+                  if (!el) return null;
+                  const s = getComputedStyle(el);
+                  return {
+                    display:s.display, paddingTop:s.paddingTop, paddingRight:s.paddingRight,
+                    paddingBottom:s.paddingBottom, paddingLeft:s.paddingLeft,
+                    fontSize:s.fontSize, lineHeight:s.lineHeight, letterSpacing:s.letterSpacing,
+                    borderTopWidth:s.borderTopWidth, borderColor:s.borderTopColor,
+                  };
+                };
+                return {
+                  scrollWidth: document.documentElement.scrollWidth,
+                  clientWidth: document.documentElement.clientWidth,
+                  details: all.map(el => ({
+                    open: el.open,
+                    className: el.className,
+                    rect: rect(el),
+                    outerHTML: el.outerHTML,
+                    summaryRect: rect(el.querySelector('summary')),
+                    summaryCss: css(el.querySelector('summary')),
+                    directParagraphCss: css(el.querySelector(':scope > p')),
+                    titleNode: !!el.querySelector('.wp-block-details__title'),
+                    buttonNode: !!el.querySelector('.wp-block-details__button'),
+                    contentNode: !!el.querySelector('.wp-block-details__content'),
+                  })),
+                };
+              });
+              const status = response?.status() || 0;
+              const overflow = metrics.scrollWidth > metrics.clientWidth + 1;
+              if (status >= 400 || errors.length || overflow) failed = true;
+              await page.locator('.block-editor_wrap').screenshot({ path: `.runtime/budokan-details/${item.name}.png` });
+              report.push({ viewport:item, status, errors, overflow, metrics });
+              await page.close();
+            }
+            await browser.close();
+            fs.writeFileSync('.runtime/budokan-details/report.json', JSON.stringify(report, null, 2));
+            console.log(JSON.stringify(report, null, 2));
+            if (failed) process.exit(1);
+          })().catch(error => { console.error(error); process.exit(1); });
+          NODE
+
+      - name: Upload runtime evidence
+        if: steps.acf.outputs.enabled == 'true' && always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: budokan-details-runtime-temp
+          path: experiments/wordpress-acf-runtime/.runtime/budokan-details
+          if-no-files-found: error
+
+      - name: Cleanup runtime
+        if: always()
+        working-directory: experiments/wordpress-acf-runtime
+        run: |
+          source scripts/runtime-env.sh
+          docker compose down -v --remove-orphans || true
