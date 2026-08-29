@@ -33,6 +33,21 @@ The Theme already owns the correct semantic master in `wp-block-columns-style.cs
 
 The background-box padding is deliberately **not** generalized in this change. Figma proves 30px SP / 32px PC on these authored boxes, but it does not yet prove which WordPress style/class owns that padding across all background-column usages. Applying padding to every `.wp-block-column.has-background` would overreach the available authority. That derivative remains a separate follow-up once real runtime markup/usage authority is confirmed.
 
+## Runtime QA
+
+A temporary real WordPress + ACF PRO workflow seeded native `core/columns` / `core/column` markup and ran the established browser contract at SP 390px and PC 1395px.
+
+The runtime gate passed completely:
+
+- WordPress + ACF PRO setup succeeded.
+- The native Gutenberg columns fixture rendered with HTTP 200.
+- SP computed `gap`, `row-gap`, and `column-gap` were all 24px; both columns filled the available content width and the measured stacked visual separation was 24px.
+- PC computed `gap`, `row-gap`, and `column-gap` were all 24px; the measured horizontal visual separation between the two columns was 24px.
+- No page-level positive horizontal overflow was detected and no browser page errors were emitted.
+- The existing REF001 Audit Completeness workflow was GREEN on the runtime-tested head.
+
+No Theme regression or QA-harness correction was needed in this pass. The temporary workflow is removed before merge so the permanent diff remains limited to the shared CSS owner and this project-local evidence note.
+
 ## Reusable lesson
 
 When a Parts specimen contains a layout primitive plus styled content boxes, separate parent-layout ownership from child-style ownership. A directly verified parent gap can be fixed safely in the shared columns master even when the child box class/contract remains ambiguous. Do not use that ambiguity as a reason to preserve a known-wrong shared gap, and do not use the known gap as justification to guess the child styling contract.
