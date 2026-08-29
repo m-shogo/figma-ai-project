@@ -44,8 +44,26 @@ The Theme used the PC geometry (`padding: 0 46px`, quote primitive 36×36) for e
 - Under `min-width:768px`, restore the verified PC contract: `padding-inline: 46px`, quote primitive 36×36.
 - Keep quote color, opacity, top-left/bottom-right anchoring, sibling spacing, and semantics unchanged.
 
+## Runtime QA
+
+A disposable real WordPress runtime was started with the supplied `nipponbudokan` Theme and ACF PRO 6.8.9 active. A native Gutenberg `core/quote` page was created through WP-CLI, then Playwright verified the established browser contract at 390px viewport for the authored 375px SP surface and 1395px viewport for the authored 1380px PC surface.
+
+Final computed evidence was GREEN:
+
+- SP: HTTP 200; left/right padding 34px; opening/closing primitives 24×24; pseudo-element opacity 0.2; no positive page-level horizontal overflow; no page errors.
+- PC: HTTP 200; left/right padding 46px; opening/closing primitives 36×36; pseudo-element opacity 0.2; no positive page-level horizontal overflow; no page errors.
+- The Figma screenshots for both quote bodies were re-read after the numeric inspection to confirm the same visual relationship: quotation rails sit outside the copy with a stable 10px rail-to-copy gap while the rail itself changes size by breakpoint.
+
+## Failed QA approach / cause / fix
+
+The first disposable workflow produced a false failure after the quote post had already been created successfully. The probe used `curl ... | grep -q ...`; once `grep -q` found the marker it closed the pipe, so `curl` reported write error 23 even though the HTTP response and block markup were valid. This was QA plumbing, not a Theme regression.
+
+The corrected probe writes the HTTP response to a temporary file first and runs `grep -q` on that file. The browser probe path was also corrected to resolve Playwright from the repository-root `node_modules`, and Chromium dependencies are installed explicitly. The rerun then passed setup, fixture creation, SP QA, PC QA, and teardown.
+
 ## Reusable lesson
 
 For symmetric decorative content blocks, distinguish the decorative rail width from the copy inset. Here the invariant is a 10px rail-to-copy gap while the rail itself scales from 24px on SP to 36px on PC. Reusing the desktop copy inset at every breakpoint hid that relationship and reduced mobile text width unnecessarily.
 
-Keep this as project-local evidence until the same rail-vs-copy-inset pattern repeats independently in another component family.
+Also treat shell-pipeline failures as possible QA-harness failures before changing Theme code: a successful upstream HTTP request can still surface a non-zero `curl` exit when a downstream `grep -q` deliberately closes the pipe early.
+
+Keep these as project-local evidence until the same patterns repeat independently in another component or QA family.
