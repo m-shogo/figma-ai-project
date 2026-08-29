@@ -43,7 +43,7 @@
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    color: var(--color-secondary);
+                    color: var(--color-white);
                     background-color: var(--color-text);
                     clip-path: var(--clip-octagon);
                     transform: rotate(90deg);
@@ -75,9 +75,13 @@
                 }
             }
             &[data-column='4'] {
-                grid-template-columns: repeat(4, 220px);
+                display: flex;
+                flex-wrap: wrap;
                 gap: 24px 20px;
-                padding-block: 24px;
+                .inPageLink {
+                    width: 220px;
+                    min-width: 220px;
+                }
             }
             &[data-column='3'] {
                 grid-template-columns: repeat(3, 1fr);
