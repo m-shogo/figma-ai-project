@@ -123,10 +123,10 @@
             @media screen and (max-width: 767px) {
                 overflow-x: auto;
                 padding-bottom: 10px;
-                > table {
-                    /* WordPress core table CSS can force the table back to the
-                       viewport width. Figma instead preserves four ~240px
-                       columns and clips that 960px master on mobile. */
+                /* WordPress runtime wraps the table before display, so the
+                   authored mobile scroll contract must target the descendant
+                   table rather than assume it is a direct child. */
+                table {
                     width: 960px !important;
                     min-width: 960px !important;
                     th,
