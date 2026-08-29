@@ -24,7 +24,7 @@ jobs:
           error_reporting(E_ALL);
           define('ABSPATH', __DIR__ . '/');
 
-          final class FakeQuery {
+          class FakeQuery {
               public array $posts;
               public function __construct(array $posts) { $this->posts = $posts; }
               public function have_posts(): bool { return !empty($this->posts); }
