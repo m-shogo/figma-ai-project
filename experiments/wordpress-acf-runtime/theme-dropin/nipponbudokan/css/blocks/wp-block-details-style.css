@@ -12,8 +12,10 @@
         border-radius: 3px;
         --_padding-block: 24px;
         --_padding-inline: 24px;
-        --_button-width: 52px;
-        --_summary-gap: 8px;
+        /* Figma uses a dedicated 68px action rail (24 + 20 + 24) at both
+           breakpoints; there is no extra gap between title and action rail. */
+        --_button-width: 68px;
+        --_summary-gap: 0px;
         summary,
         summary.wp-block-details__summary {
             list-style-type: '';
@@ -97,9 +99,9 @@
                 content: '';
                 position: absolute;
                 top: 0;
-                left: var(--_padding-inline);
+                left: 0;
                 block-size: 1px;
-                inline-size: calc(100% - var(--_padding-inline) * 2);
+                inline-size: 100%;
                 background-color: var(--color-line);
                 z-index: 1;
             }
@@ -126,7 +128,7 @@
                     align-items: center;
                     justify-content: center;
                     width: 32px;
-                    font-size: 32px;
+                    font-size: 24px;
                     font-weight: 500;
                     line-height: 1;
                     flex-shrink: 0;
@@ -179,11 +181,32 @@
 
         @media screen and (min-width: 768px) {
             --_padding-inline: 24px;
-            --_button-width: 68px;
+
             .wp-block-details__title {
                 font-size: 16px;
             }
+
+            /* Figma PC keeps the short collapsed title at 24px, while an
+               expanded title/content and the QA variant use 32px on the left. */
+            &[open] {
+                summary.wp-block-details__summary {
+                    padding-left: 32px;
+                }
+
+                .wp-block-details__content {
+                    padding-inline: 32px;
+                }
+            }
+
             &._qa {
+                summary.wp-block-details__summary {
+                    padding-left: 32px;
+                }
+
+                .wp-block-details__content {
+                    padding-inline: 32px;
+                }
+
                 summary.wp-block-details__summary,
                 .wp-block-details__content {
                     &::before {
