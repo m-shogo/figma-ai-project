@@ -13,7 +13,7 @@
         border: 0 !important;
         background:
             linear-gradient(var(--color-line), var(--color-line))
-            19px 50% / calc(100% - 19px) 1px no-repeat;
+            19px 50% / calc(100% - 19px) 0.8px no-repeat;
         overflow: visible;
 
         &::before {
