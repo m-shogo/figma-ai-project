@@ -86,24 +86,30 @@ No new PHP wrapper or image asset was introduced. The existing title element gai
 
 This follows reuse-before-build and keeps the ACF render contract unchanged.
 
-## Runtime QA contract
+## Runtime QA evidence
 
-The temporary QA workflow first asserts the ACF JSON and render mapping, then starts the real WordPress + ACF PRO runtime. A frontend fixture matching the existing render DOM is used to test CSS geometry without mutating the ACF contract.
+The temporary QA workflow first asserted the ACF JSON and render mapping, then started the real WordPress runtime with **ACF PRO 6.8.9**. A frontend fixture matching the existing render DOM tested CSS geometry without mutating the ACF contract.
 
-Required gates:
+Observed runtime:
 
-- HTTP 200 and no browser runtime error
-- no page-level positive horizontal overflow
-- SP: one column, physical 24px card gap
-- PC: three columns, physical 40px column gaps
-- image ratio 3:2 and 3px top radius
-- zero image/content seam gap
-- content padding 24/20/24/20, stack gap 16px, 1px bottom separator
-- title 18/500/18 and no underline
-- copy 15/400/24 with 8px bottom inset
-- arrow rail 26px with 8px title gap
+- SP viewport `390px` → authored content width `335px`, one column, physical card gap `24px`
+- PC viewport `1395px` → authored main-content width `860px`, three fluid `260px` cards with physical `40px` column gaps
+- both viewports: computed image aspect `3 / 2`, 3px top radius, zero image/content seam gap
+- both: content padding `24 / 20 / 24 / 20`, gap `16px`, bottom border `1px`
+- SP title: Noto Sans JP semantic Theme token, `18px / 500 / 18px`, `0.9px` tracking, dark, no underline
+- PC title: Noto Serif JP semantic Theme token, same numeric typography
+- copy: `15px / 400 / 24px`, `0.75px` tracking, `8px` bottom inset
+- arrow rail: `26 × 26px` with `8px` title gap
+- external-link pseudo-element remained present
+- page-level overflow was non-positive and no browser page error was reported
 
-The workflow and screenshots are validation-only evidence and must be removed before final clean-head merge.
+The PC result is useful confirmation of the ownership decision: a real 860px content rail naturally produces 260px cards. Forcing the Parts specimen's 293px width would have created overflow and would have confused specimen geometry with page geometry.
+
+Two SP/PC screenshots were emitted as temporary visual evidence after the geometry gate passed. The validation workflow was then removed before final clean-head review.
+
+### Reusable lesson
+
+A successful visual master does not require every Figma specimen width to survive literally. Preserve exact component-owned ratios/gaps/padding/type and let the verified runtime container own the remaining width when the design is clearly fluid.
 
 ## Promotion decision
 
