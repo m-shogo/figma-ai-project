@@ -55,9 +55,19 @@ A second issue was typography ownership inside annotation rows. The previous `fo
 
 The nested PC list is also a useful boundary case: Figma provides direct authority for the extra horizontal offset on PC but not in the SP Parts sample. The implementation therefore scopes that offset to the PC breakpoint rather than guessing an SP counterpart.
 
-## Verification status
+## Runtime QA
 
-Structured Figma inspection is complete for SP and PC Parts and confirms the geometry/tokens above. The implementation is intentionally limited to the existing shared Gutenberg master. Real WordPress/runtime verification must still be treated as a merge gate; if CI/runtime evidence exposes browser/DOM behavior that differs from these authored coordinates, fix the CSS owner rather than inventing new markup.
+A disposable real WordPress + ACF PRO runtime was run against the supplied `nipponbudokan` Theme after sourcing the shared `runtime-env.sh`, then a native Gutenberg page containing unordered, nested, ordered, and annotation lists was seeded through WP-CLI. ACF PRO 6.8.9 was active. The browser contract used the established 390 → authored 375 SP and 1395 → authored 1380 PC viewports.
+
+Both SP and PC passed HTTP 200, page-error, and page-level overflow gates. Computed runtime evidence matched the authored responsibilities:
+
+- SP primary list: 21px text inset; 17px / 27.2px / 400 copy; 6×6 gold bullet; 3px radius; 10.5px vertical marker offset.
+- PC primary list: 18px text inset with the same typography and marker primitive.
+- Nested list: 8px row gap, 18px item inset, transparent 6px marker with 1px gold border; PC adds the verified 6px horizontal list offset while SP remains at 0 because no SP nested authority exists.
+- Ordered list: 36px item inset; 16px / 500 marker; 26px number rail.
+- Annotation list: 31px SP / 28px PC inset; 14px / 22.4px / 400 copy; 16px / 500 red `※` marker with 3px vertical offset.
+
+The temporary runtime workflow was used only as a verification gate and is removed before merge. REF001 Audit Completeness was also GREEN on the runtime-tested head.
 
 ## Reusable lesson
 
