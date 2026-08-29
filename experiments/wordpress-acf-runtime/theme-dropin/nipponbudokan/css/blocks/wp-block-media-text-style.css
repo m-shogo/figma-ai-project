@@ -6,10 +6,32 @@
 .editor-styles-wrapper {
     .wp-block-media-text {
         margin-top: var(--wp-block-margin);
-        gap: 32px 16px;
-        @media screen and (min-width: 768px) {
-            gap: 40px;
+        /* Parts / テキスト+画像 master は SP stack / PC side-by-side とも
+           text-media の責任境界を 30px に保つ。 */
+        gap: 30px;
+
+        /* Gutenberg core の stacked-on-mobile は media を先頭行へ置くが、
+           Budokan Parts の media-right master は SP でも text -> media の順。 */
+        &.is-stacked-on-mobile.has-media-on-the-right {
+            @media screen and (max-width: 767px) {
+                grid-template-columns: 100% !important;
+
+                .wp-block-media-text__content {
+                    grid-column: 1;
+                    grid-row: 1;
+                }
+
+                .wp-block-media-text__media {
+                    grid-column: 1;
+                    grid-row: 2;
+                }
+            }
         }
+
+        @media screen and (min-width: 768px) {
+            gap: 30px;
+        }
+
         .wp-block-media-text__content {
             padding: 0;
             > *:first-child {
