@@ -107,7 +107,11 @@
                     background-size: 26px 2px;
                     &::before {
                         background-color: var(--color-secondary);
-                        filter: drop-shadow(0 0 0.7px var(--color-line));
+                        filter:
+                            drop-shadow(1px 0 0 var(--color-line))
+                            drop-shadow(-1px 0 0 var(--color-line))
+                            drop-shadow(0 1px 0 var(--color-line))
+                            drop-shadow(0 -1px 0 var(--color-line));
                     }
                 }
             }
