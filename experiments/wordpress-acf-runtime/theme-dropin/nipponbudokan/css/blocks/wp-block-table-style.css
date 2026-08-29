@@ -14,7 +14,7 @@
         }
         /* MARK: ボーダー */
         --_border-color: var(--color-line);
-        --_border-color-thead: var(--color-table-head);
+        --_border-color-thead: var(--color-line);
         --_border-width: 1px;
         --_border-style: solid;
         table {
@@ -23,11 +23,17 @@
             th,
             td {
                 border: none !important;
-                border-top: var(--_border-width, 1px) var(--_border-style, solid) var(--_border-color, var(--color-separator)) !important;
-                border-left: var(--_border-width, 1px) var(--_border-style, solid) var(--_border-color, var(--color-separator)) !important;
+                /* Figma separators are drawn inside the authored 54px cells.
+                   Use inset rules instead of layout-contributing borders so
+                   15 + 24 + 15 stays exactly 54px. */
+                box-shadow:
+                    inset var(--_border-width, 1px) 0 0 var(--_border-color, var(--color-separator)),
+                    inset 0 var(--_border-width, 1px) 0 var(--_border-color, var(--color-separator));
             }
             th {
-                border-color: var(--_border-color-thead, var(--color-secondary));
+                box-shadow:
+                    inset var(--_border-width, 1px) 0 0 var(--_border-color-thead, var(--color-separator)),
+                    inset 0 var(--_border-width, 1px) 0 var(--_border-color-thead, var(--color-separator));
             }
             &::before {
                 content: '';
@@ -55,10 +61,11 @@
             tr {
                 th,
                 td {
-                    padding: 15px 20px;
+                    padding: 15px 30px;
                     font-size: 15px;
                     letter-spacing: 0.05em;
                     line-height: 1.6;
+                    text-align: center;
                 }
                 th {
                     background-color: var(--color-table-head) !important;
@@ -69,11 +76,16 @@
         }
         /* MARK: ストライプ スタイル */
         &.is-style-stripes {
-            --_stripe-color: var(--color-tertiary);
-            tr {
-                &:nth-child(odd) {
-                    td {
-                        background-color: var(--_stripe-color, var(--color-tertiary));
+            /* Figma color/base--lightgray authority for the shared table. */
+            --_stripe-color: #f2f2f2;
+            /* Figma's table master starts the body on white and stripes the
+               second row. Keep stacked-table behavior separate below. */
+            table:not(.is-stacked-on-mobile) {
+                tbody {
+                    tr:nth-child(even) {
+                        td {
+                            background-color: var(--_stripe-color, #f2f2f2);
+                        }
                     }
                 }
             }
@@ -90,12 +102,12 @@
                             &:has(> *:nth-child(odd):last-child) {
                                 &:nth-child(odd) {
                                     *:nth-child(odd) {
-                                        background-color: var(--_stripe-color, var(--color-tertiary));
+                                        background-color: var(--_stripe-color, #f2f2f2);
                                     }
                                 }
                                 &:nth-child(even) {
                                     *:nth-child(even) {
-                                        background-color: var(--_stripe-color, var(--color-tertiary));
+                                        background-color: var(--_stripe-color, #f2f2f2);
                                     }
                                 }
                             }
@@ -103,7 +115,7 @@
                             &:not(:has(> *:nth-child(odd):last-child)) {
                                 & {
                                     *:nth-child(odd) {
-                                        background-color: var(--color-tertiary);
+                                        background-color: var(--_stripe-color, #f2f2f2);
                                     }
                                 }
                             }
@@ -115,22 +127,31 @@
         /* MARK: モバイルでスクロール スタイル */
         &.is-scroll-on-mobile {
             @media screen and (max-width: 767px) {
+                overflow-x: auto;
                 padding-bottom: 10px;
-                > table {
-                    width: var(--width-main);
+                /* WordPress runtime wraps the table before display, so the
+                   authored mobile scroll contract must target the descendant
+                   table rather than assume it is a direct child. */
+                table {
+                    width: 960px !important;
+                    min-width: 960px !important;
+                    th,
+                    td {
+                        min-width: 240px;
+                    }
                 }
             }
-            /* スクロールバー色変更（webkit用） */
+            /* Figma SP uses a 5px horizontal track/thumb. */
             &::-webkit-scrollbar {
-                width: 4px;
-                height: 4px;
+                width: 5px;
+                height: 5px;
             }
             &::-webkit-scrollbar-track {
-                border-radius: 2px;
+                border-radius: 2.5px;
                 background: var(--color-gray-background);
             }
             &::-webkit-scrollbar-thumb {
-                border-radius: 2px;
+                border-radius: 2.5px;
                 background: var(--color-primary);
             }
         }
