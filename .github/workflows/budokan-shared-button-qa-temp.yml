@@ -1,0 +1,172 @@
+name: Budokan Shared Button QA Temp
+
+on:
+  pull_request:
+    paths:
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/**'
+      - '.github/workflows/budokan-shared-button-qa-temp.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  runtime-button:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: PHP syntax
+        run: find experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan -name '*.php' -print0 | xargs -0 -n1 php -l
+
+      - name: Check ACF PRO runtime availability
+        id: acf
+        env:
+          ACF_PRO_LICENSE_KEY: ${{ secrets.ACF_PRO_LICENSE_KEY }}
+        run: |
+          if [ -n "$ACF_PRO_LICENSE_KEY" ]; then
+            echo 'enabled=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'enabled=false' >> "$GITHUB_OUTPUT"
+            echo 'SKIP live Budokan capture: ACF_PRO_LICENSE_KEY is unavailable.'
+          fi
+
+      - name: Install browser QA dependency
+        if: steps.acf.outputs.enabled == 'true'
+        working-directory: experiments/wordpress-acf-runtime
+        run: |
+          mkdir -p .runtime/playwright
+          cd .runtime/playwright
+          npm init -y >/dev/null 2>&1
+          npm install --no-audit --no-fund playwright@1.54.2 >/dev/null
+          npx playwright install --with-deps chromium
+
+      - name: Start real WordPress + ACF PRO + Budokan Theme
+        if: steps.acf.outputs.enabled == 'true'
+        working-directory: experiments/wordpress-acf-runtime
+        env:
+          ACF_PRO_LICENSE_KEY: ${{ secrets.ACF_PRO_LICENSE_KEY }}
+          CI: 'true'
+        run: bash scripts/setup.sh
+
+      - name: Seed deterministic native button fixture
+        if: steps.acf.outputs.enabled == 'true'
+        working-directory: experiments/wordpress-acf-runtime
+        run: |
+          source scripts/runtime-env.sh
+          cat > .runtime/button-fixture.html <<'HTML'
+          <!-- wp:buttons -->
+          <div class="wp-block-buttons">
+            <!-- wp:button -->
+            <div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="#fixture">施設概要</a></div>
+            <!-- /wp:button -->
+          </div>
+          <!-- /wp:buttons -->
+          HTML
+          CONTENT="$(cat .runtime/button-fixture.html)"
+          docker compose run --rm cli post create \
+            --post_type=page \
+            --post_status=publish \
+            --post_title='Button QA' \
+            --post_name='button-qa' \
+            --post_content="$CONTENT" >/dev/null
+
+      - name: Verify shared default button SP and PC
+        if: steps.acf.outputs.enabled == 'true'
+        working-directory: experiments/wordpress-acf-runtime
+        run: |
+          source scripts/runtime-env.sh
+          mkdir -p .runtime/budokan-shared-button
+          WP_URL="$WP_URL" node <<'NODE'
+          const fs = require('node:fs');
+          const path = require('node:path');
+          const { createRequire } = require('node:module');
+          const requireQA = createRequire(path.resolve('.runtime/playwright/package.json'));
+          const { chromium } = requireQA('playwright');
+
+          (async () => {
+            const browser = await chromium.launch({ headless: true });
+            const cases = [
+              { name: 'sp', viewportWidth: 390, height: 700 },
+              { name: 'pc', viewportWidth: 1395, height: 700 },
+            ];
+            const results = [];
+            let failed = false;
+
+            for (const item of cases) {
+              const page = await browser.newPage({ viewport: { width: item.viewportWidth, height: item.height } });
+              const pageErrors = [];
+              page.on('pageerror', error => pageErrors.push(error.message));
+              const response = await page.goto(`${process.env.WP_URL}/button-qa/`, { waitUntil: 'networkidle' });
+              await page.evaluate(() => document.fonts.ready);
+
+              const metrics = await page.evaluate(() => {
+                const link = document.querySelector('.wp-block-buttons .wp-block-button:not(.is-style-outline) .wp-block-button__link');
+                if (!link) return { found: false };
+                const style = getComputedStyle(link);
+                const arrow = getComputedStyle(link, '::before');
+                const rect = link.getBoundingClientRect();
+                return {
+                  found: true,
+                  rect: { width: rect.width, height: rect.height },
+                  fontSize: parseFloat(style.fontSize),
+                  fontWeight: style.fontWeight,
+                  paddingLeft: parseFloat(style.paddingLeft),
+                  paddingRight: parseFloat(style.paddingRight),
+                  borderRadius: parseFloat(style.borderTopLeftRadius),
+                  borderColor: style.borderTopColor,
+                  backgroundColor: style.backgroundColor,
+                  backgroundImage: style.backgroundImage,
+                  backgroundSize: style.backgroundSize,
+                  backgroundPosition: style.backgroundPosition,
+                  arrowWidth: parseFloat(arrow.width),
+                  arrowHeight: parseFloat(arrow.height),
+                  arrowFontSize: parseFloat(arrow.fontSize),
+                  arrowColor: arrow.color,
+                  arrowBackgroundColor: arrow.backgroundColor,
+                  arrowFilter: arrow.filter,
+                  scrollWidth: document.documentElement.scrollWidth,
+                  clientWidth: document.documentElement.clientWidth,
+                };
+              });
+
+              const status = response?.status() || 0;
+              const horizontalOverflow = metrics.scrollWidth > metrics.clientWidth + 1;
+              if (status >= 400 || pageErrors.length || !metrics.found || horizontalOverflow) failed = true;
+              if (Math.abs(metrics.rect.height - 60) > 0.5) failed = true;
+              if (Math.abs(metrics.fontSize - 15) > 0.5) failed = true;
+              if (Math.abs(metrics.paddingLeft - 16) > 0.5 || Math.abs(metrics.paddingRight - 20) > 0.5) failed = true;
+              if (Math.abs(metrics.borderRadius - 3) > 0.5) failed = true;
+              if (Math.abs(metrics.arrowWidth - 26) > 0.5 || Math.abs(metrics.arrowHeight - 26) > 0.5) failed = true;
+              if (Math.abs(metrics.arrowFontSize - 8) > 0.5) failed = true;
+              if (metrics.arrowBackgroundColor !== 'rgb(255, 255, 255)') failed = true;
+              if (!metrics.arrowFilter || metrics.arrowFilter === 'none') failed = true;
+              if (!metrics.backgroundImage.includes('linear-gradient')) failed = true;
+              if (!metrics.backgroundSize.includes('26px 2px')) failed = true;
+
+              await page.locator('.wp-block-buttons').first().screenshot({ path: `.runtime/budokan-shared-button/${item.name}-button.png` });
+              results.push({ viewport: item, status, pageErrors, horizontalOverflow, metrics });
+              await page.close();
+            }
+
+            await browser.close();
+            fs.writeFileSync('.runtime/budokan-shared-button/runtime.json', JSON.stringify(results, null, 2));
+            console.log(JSON.stringify(results, null, 2));
+            if (failed) process.exit(1);
+          })().catch(error => { console.error(error); process.exit(1); });
+          NODE
+
+      - name: Upload runtime evidence
+        if: steps.acf.outputs.enabled == 'true' && always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: budokan-shared-button-runtime-temp
+          path: experiments/wordpress-acf-runtime/.runtime/budokan-shared-button
+          if-no-files-found: error
+
+      - name: Cleanup runtime
+        if: always()
+        working-directory: experiments/wordpress-acf-runtime
+        run: |
+          source scripts/runtime-env.sh
+          docker compose down -v --remove-orphans || true
