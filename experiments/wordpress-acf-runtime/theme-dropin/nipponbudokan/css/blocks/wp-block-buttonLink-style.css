@@ -94,6 +94,24 @@
                     }
                 }
             }
+
+            /* Live Figma button_L authority uses a white octagonal arrow tile with
+               a gray 1px edge plus a 26×2 primary underline. Keep this on the
+               verified default family so outline-style siblings retain their
+               existing contract until independently proven. */
+            &:not(.is-style-outline) {
+                .wp-block-button__link {
+                    background-image: linear-gradient(var(--color-primary), var(--color-primary));
+                    background-repeat: no-repeat;
+                    background-position: 16px 100%;
+                    background-size: 26px 2px;
+                    &::before {
+                        background-color: var(--color-secondary);
+                        filter: drop-shadow(0 0 0.7px var(--color-line));
+                    }
+                }
+            }
+
             &.is-style-outline {
                 .wp-block-button__link {
                     background-color: var(--color-secondary);
