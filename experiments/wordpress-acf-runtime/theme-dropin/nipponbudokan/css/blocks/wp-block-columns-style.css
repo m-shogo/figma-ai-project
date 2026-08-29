@@ -10,10 +10,10 @@
             margin-top: var(--wp-block-margin-large);
         }
         &.is-layout-flex {
-            gap: 32px 24px;
-            @media screen and (min-width: 768px) {
-                gap: 32px;
-            }
+            /* Figma shared Text master uses a 24px sibling gap at both
+               breakpoints. Keep row/column ownership in the native Gutenberg
+               columns master instead of introducing a page-specific wrapper. */
+            gap: 24px;
         }
         .wp-block-column {
             > *:first-child {
