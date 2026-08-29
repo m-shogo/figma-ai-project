@@ -1,11 +1,11 @@
-name: Budokan Text Background Group QA
+name: Budokan Text Background Column QA
 
 on:
   push:
     branches:
       - agent/budokan-text-background-group-master
     paths:
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/blocks/wp-block-group-style.css'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/blocks/wp-block-text-style.css'
       - '.github/workflows/budokan-text-background-group-qa.yml'
 
 permissions:
@@ -23,13 +23,13 @@ jobs:
       - name: Start real WordPress + ACF PRO runtime
         run: bash experiments/wordpress-acf-runtime/scripts/setup.sh
 
-      - name: Seed native Gutenberg background Group
+      - name: Seed native Gutenberg background Columns
         run: |
           cd experiments/wordpress-acf-runtime
           source scripts/runtime-env.sh
-          CONTENT='<!-- wp:group {"style":{"color":{"background":"#ffffff"}}} --><div class="wp-block-group has-background" style="background-color:#ffffff"><!-- wp:paragraph --><p>背景付きテキストボックス 日本武道館では、武道大会や研修会など、多様な参加型イベントを開催しています。</p><!-- /wp:paragraph --></div><!-- /wp:group -->'
-          docker compose run --rm cli post create --post_type=page --post_status=publish --post_title='Background Group QA' --post_name='background-group-qa' --post_content="$CONTENT" >/dev/null
-          printf '%s' "$WP_URL/background-group-qa/" > /tmp/budokan-group-url
+          CONTENT='<!-- wp:columns --><div class="wp-block-columns"><!-- wp:column {"style":{"color":{"background":"#ffffff"}}} --><div class="wp-block-column has-background" style="background-color:#ffffff"><!-- wp:paragraph --><p>背景付きテキストボックス 日本武道館では、武道大会や研修会など、多様な参加型イベントを開催しています。</p><!-- /wp:paragraph --></div><!-- /wp:column --><!-- wp:column {"style":{"color":{"background":"#ffffff"}}} --><div class="wp-block-column has-background" style="background-color:#ffffff"><!-- wp:paragraph --><p>背景付きテキストボックス 日本武道館では、武道大会や研修会など、多様な参加型イベントを開催しています。</p><!-- /wp:paragraph --></div><!-- /wp:column --></div><!-- /wp:columns -->'
+          docker compose run --rm cli post create --post_type=page --post_status=publish --post_title='Background Column QA' --post_name='background-column-qa' --post_content="$CONTENT" >/dev/null
+          printf '%s' "$WP_URL/background-column-qa/" > /tmp/budokan-column-url
 
       - name: Install browser probe
         run: |
@@ -41,7 +41,7 @@ jobs:
 
       - name: Verify SP then PC runtime geometry
         env:
-          QA_URL_FILE: /tmp/budokan-group-url
+          QA_URL_FILE: /tmp/budokan-column-url
         run: |
           cat > /tmp/budokan-playwright/qa.mjs <<'JS'
           import fs from 'node:fs';
@@ -56,24 +56,28 @@ jobs:
             try {
               const response=await page.goto(url,{waitUntil:'networkidle'});
               if (!response || response.status() !== 200) throw new Error(`${name}: HTTP ${response?.status()}`);
-              const data=await page.locator('.block-editor_wrap .wp-block-group.has-background').first().evaluate(el=>{
+              const columns=page.locator('.block-editor_wrap .wp-block-columns > .wp-block-column.has-background');
+              if (await columns.count() !== 2) throw new Error(`${name}: expected 2 background columns`);
+              const data=await columns.first().evaluate(el=>{
                 const s=getComputedStyle(el); const p=el.querySelector('p'); const ps=p?getComputedStyle(p):null;
-                return {paddingTop:parseFloat(s.paddingTop),paddingRight:parseFloat(s.paddingRight),paddingBottom:parseFloat(s.paddingBottom),paddingLeft:parseFloat(s.paddingLeft),background:s.backgroundColor,paragraphMarginTop:ps?parseFloat(ps.marginTop):null,rect:el.getBoundingClientRect().toJSON(),overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth};
+                return {paddingTop:parseFloat(s.paddingTop),paddingRight:parseFloat(s.paddingRight),paddingBottom:parseFloat(s.paddingBottom),paddingLeft:parseFloat(s.paddingLeft),background:s.backgroundColor,borderTopWidth:parseFloat(s.borderTopWidth),borderTopColor:s.borderTopColor,borderRadius:parseFloat(s.borderTopLeftRadius),paragraphMarginTop:ps?parseFloat(ps.marginTop):null,rect:el.getBoundingClientRect().toJSON(),overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth};
               });
-              results[name]={...data,pageErrors:errors};
-              await page.screenshot({path:`/tmp/budokan-${name}-group.png`,fullPage:true});
+              const gap=await columns.evaluateAll(els=>els.length===2?Math.round((els[1].getBoundingClientRect().top-els[0].getBoundingClientRect().bottom)*100)/100:null);
+              results[name]={...data,verticalGap:gap,pageErrors:errors};
+              await page.screenshot({path:`/tmp/budokan-${name}-column.png`,fullPage:true});
               for (const k of ['paddingTop','paddingRight','paddingBottom','paddingLeft']) if (Math.abs(data[k]-expected)>0.1) throw new Error(`${name}: ${k}=${data[k]} expected ${expected}`);
               if (data.background !== 'rgb(255, 255, 255)') throw new Error(`${name}: background ${data.background}`);
+              if (Math.abs(data.borderTopWidth-1)>0.1) throw new Error(`${name}: border ${data.borderTopWidth}`);
+              if (Math.abs(data.borderRadius-3)>0.1) throw new Error(`${name}: radius ${data.borderRadius}`);
               if (data.overflow > 0.5) throw new Error(`${name}: page overflow ${data.overflow}`);
               if (errors.length) throw new Error(`${name}: page errors ${errors.join('; ')}`);
             } catch (e) {
-              failure = String(e);
-              results.failure = failure;
-              await page.screenshot({path:`/tmp/budokan-${name}-group.png`,fullPage:true}).catch(()=>{});
+              failure = String(e); results.failure = failure;
+              await page.screenshot({path:`/tmp/budokan-${name}-column.png`,fullPage:true}).catch(()=>{});
               break;
             } finally { await page.close(); }
           }
-          fs.writeFileSync('/tmp/budokan-group-results.json', JSON.stringify(results,null,2));
+          fs.writeFileSync('/tmp/budokan-column-results.json', JSON.stringify(results,null,2));
           console.log(JSON.stringify(results,null,2));
           await browser.close();
           if (failure) throw new Error(failure);
@@ -85,10 +89,10 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: budokan-text-background-group
+          name: budokan-text-background-column
           path: |
-            /tmp/budokan-*-group.png
-            /tmp/budokan-group-results.json
+            /tmp/budokan-*-column.png
+            /tmp/budokan-column-results.json
           if-no-files-found: warn
 
       - name: Stop runtime
