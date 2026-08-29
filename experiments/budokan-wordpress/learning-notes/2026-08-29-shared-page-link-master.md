@@ -49,12 +49,16 @@ The corrected implementation maps the verified Figma ownership instead: the four
 
 The first real WordPress + ACF PRO runtime gate then failed on the arrow color even though the CSS intent was white. The implementation had introduced `var(--color-white)`, but the Theme does not define that token, so the pseudo-element inherited the dark text color and computed as `rgb(51, 51, 51)`. Inspecting the Theme variable authority showed that its established white token is `--color-secondary: #fff`. Reusing that existing token fixes the runtime mismatch without introducing a new global variable or hard-coded local color.
 
+After the token fix, the runtime assertions turned green, but reviewing the captured PC coordinates exposed a second implementation bug that the assertions had not yet covered: every 220px item was still at x=0 and stacked at y=0/80/160/... in the 860px fixture. The `data-column=4` variant changed `display` to flex but failed to neutralize the SP master's inherited `flex-direction: column`. The desktop variant therefore needed an explicit `flex-direction: row`, and the runtime gate was strengthened to assert the expected 860px wrap positions (0/240/480 on row 1, then 0/240 on row 2) rather than checking width/height alone.
+
 ## Reusable lesson
 
 When a Figma specimen looks like a fixed N-column grid, inspect `layoutWrap`, child `minWidth`, layout sizing, and at least one real-page instance before encoding `grid-template-columns`. A repeated 220px visual width can actually be a wrapped minimum-width component contract rather than a rigid grid contract.
 
 Also separate component geometry from page-context spacing. The same page-link list has zero vertical padding in Parts and 24px vertical padding in the hardcover page. That repeated structure is evidence that the latter is derivative spacing, not master styling.
 
-Finally, do not invent semantically plausible CSS variable names. Verify the Theme's token authority and then assert the resulting computed value in runtime QA. A syntactically valid undefined custom property can silently invalidate the declaration and fall back to inheritance, producing a visual mismatch without a CSS parse error.
+Do not invent semantically plausible CSS variable names. Verify the Theme's token authority and then assert the resulting computed value in runtime QA. A syntactically valid undefined custom property can silently invalidate the declaration and fall back to inheritance, producing a visual mismatch without a CSS parse error.
+
+Finally, a green dimensional QA is not equivalent to a green layout QA. For wrapping/flex/grid components, capture and assert child positions or row/column membership too. Inherited directional properties are a common derivative failure mode: when a variant changes layout mode/axis, explicitly neutralize incompatible master properties.
 
 Keep these as project-local findings until the same ownership pattern repeats independently elsewhere.
