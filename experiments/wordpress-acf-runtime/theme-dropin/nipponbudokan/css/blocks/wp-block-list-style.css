@@ -40,14 +40,14 @@
     /* //---------- ulのみ ---------- */
     ul.wp-block-list:not(.annotation-list) {
         > li {
-            padding-left: 18px;
+            padding-left: 21px;
             &::before {
                 content: '';
                 width: 6px;
                 height: 6px;
                 background: var(--color-accent);
                 border-radius: 3px;
-                transform: translateY(0.7em);
+                transform: translateY(10.5px);
             }
         }
         ul.wp-block-list {
@@ -89,14 +89,17 @@
     ul.annotation-list {
         gap: 10px;
         li {
+            padding-left: 31px;
             font-size: 14px;
-            font-weight: 500;
-            line-height: 1.5;
+            font-weight: 400;
+            line-height: 1.6;
             letter-spacing: 0.05em;
             &::before {
                 content: '※';
                 font-size: 16px;
-                transform: translateY(-0.1em);
+                font-weight: 500;
+                line-height: 1;
+                transform: translateY(3px);
                 color: var(--color-primary);
             }
             ul.wp-block-list,
@@ -104,24 +107,24 @@
                 margin-top: var(--wp-block-margin-small);
                 gap: 10px;
                 li {
+                    padding-left: 31px;
                     font-size: 14px;
-                    font-weight: 500;
-                    line-height: 1.5;
+                    font-weight: 400;
+                    line-height: 1.6;
                     letter-spacing: 0.05em;
-                    padding-left: 30px;
                     &::before {
                         content: '※';
                         font-size: 16px;
-                        transform: translateY(-0.1em);
+                        font-weight: 500;
+                        line-height: 1;
+                        transform: translateY(3px);
                         color: var(--color-primary);
                         width: auto;
                         height: auto;
                         background: transparent;
                         border-radius: 0;
                         display: inline-block;
-                        line-height: 1.5;
                         font-family: var(--font-sansSerif-ja);
-                        font-weight: 500;
                     }
                 }
             }
@@ -132,4 +135,32 @@
     .border-list {
         padding: 0;
     } */
+}
+
+@media screen and (min-width: 768px) {
+    .block-editor_wrap,
+    .editor-styles-wrapper {
+        ul.wp-block-list:not(.annotation-list) {
+            > li {
+                padding-left: 18px;
+            }
+            ul.wp-block-list {
+                margin-left: 6px;
+            }
+        }
+        ul.annotation-list {
+            li {
+                padding-left: 28px;
+                &::before {
+                    transform: translateY(3px);
+                }
+                ul.wp-block-list,
+                ol.wp-block-list {
+                    li {
+                        padding-left: 28px;
+                    }
+                }
+            }
+        }
+    }
 }
