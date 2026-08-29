@@ -65,6 +65,7 @@
                     font-size: 15px;
                     letter-spacing: 0.05em;
                     line-height: 1.6;
+                    text-align: center;
                 }
                 th {
                     background-color: var(--color-table-head) !important;
@@ -76,10 +77,14 @@
         /* MARK: ストライプ スタイル */
         &.is-style-stripes {
             --_stripe-color: var(--color-tertiary);
-            tr {
-                &:nth-child(odd) {
-                    td {
-                        background-color: var(--_stripe-color, var(--color-tertiary));
+            /* Figma's table master starts the body on white and stripes the
+               second row. Keep stacked-table behavior separate below. */
+            table:not(.is-stacked-on-mobile) {
+                tbody {
+                    tr:nth-child(even) {
+                        td {
+                            background-color: var(--_stripe-color, var(--color-tertiary));
+                        }
                     }
                 }
             }
