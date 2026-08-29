@@ -1,0 +1,151 @@
+name: Budokan Gallery Zoom QA Temp
+
+on:
+  pull_request:
+    paths:
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/**'
+      - '.github/workflows/budokan-gallery-zoom-qa-temp.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  runtime-zoom:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: PHP syntax
+        run: find experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan -name '*.php' -print0 | xargs -0 -n1 php -l
+
+      - name: Check ACF PRO runtime availability
+        id: acf
+        env:
+          ACF_PRO_LICENSE_KEY: ${{ secrets.ACF_PRO_LICENSE_KEY }}
+        run: |
+          if [ -n "$ACF_PRO_LICENSE_KEY" ]; then
+            echo 'enabled=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'enabled=false' >> "$GITHUB_OUTPUT"
+            echo 'SKIP live Budokan capture: ACF_PRO_LICENSE_KEY is unavailable.'
+          fi
+
+      - name: Install browser QA dependency
+        if: steps.acf.outputs.enabled == 'true'
+        working-directory: experiments/wordpress-acf-runtime
+        run: |
+          mkdir -p .runtime/playwright
+          cd .runtime/playwright
+          npm init -y >/dev/null 2>&1
+          npm install --no-audit --no-fund playwright@1.54.2 >/dev/null
+          npx playwright install --with-deps chromium
+
+      - name: Start real WordPress + ACF PRO + Budokan Theme
+        if: steps.acf.outputs.enabled == 'true'
+        working-directory: experiments/wordpress-acf-runtime
+        env:
+          ACF_PRO_LICENSE_KEY: ${{ secrets.ACF_PRO_LICENSE_KEY }}
+          CI: 'true'
+        run: bash scripts/setup.sh
+
+      - name: Seed deterministic gallery lightbox fixture
+        if: steps.acf.outputs.enabled == 'true'
+        working-directory: experiments/wordpress-acf-runtime
+        run: |
+          source scripts/runtime-env.sh
+          cat > .runtime/zoom-fixture.html <<'HTML'
+          <!-- wp:gallery {"linkTo":"media"} -->
+          <figure class="wp-block-gallery has-nested-images columns-3 is-cropped">
+            <figure class="wp-block-image size-large"><div class="wp-lightbox-container"><span class="lightbox_wrap"><img alt="fixture 1" src="/wp-includes/images/blank.gif" width="300" height="200"></span></div></figure>
+            <figure class="wp-block-image size-large"><div class="wp-lightbox-container"><span class="lightbox_wrap"><img alt="fixture 2" src="/wp-includes/images/blank.gif" width="300" height="200"></span></div></figure>
+          </figure>
+          <!-- /wp:gallery -->
+          HTML
+          CONTENT="$(cat .runtime/zoom-fixture.html)"
+          docker compose run --rm cli post create \
+            --post_type=page \
+            --post_status=publish \
+            --post_title='Zoom QA' \
+            --post_name='zoom-qa' \
+            --post_content="$CONTENT" >/dev/null
+
+      - name: Verify gallery zoom SP and PC
+        if: steps.acf.outputs.enabled == 'true'
+        working-directory: experiments/wordpress-acf-runtime
+        run: |
+          source scripts/runtime-env.sh
+          mkdir -p .runtime/budokan-gallery-zoom
+          WP_URL="$WP_URL" node <<'NODE'
+          const fs = require('node:fs');
+          const path = require('node:path');
+          const { createRequire } = require('node:module');
+          const requireQA = createRequire(path.resolve('.runtime/playwright/package.json'));
+          const { chromium } = requireQA('playwright');
+
+          (async () => {
+            const browser = await chromium.launch({ headless: true });
+            const cases = [
+              { name: 'sp', viewportWidth: 390, height: 700, expectedSize: 32, expectedFont: 15 },
+              { name: 'pc', viewportWidth: 1395, height: 700, expectedSize: 50, expectedFont: 18 },
+            ];
+            const results = [];
+            let failed = false;
+
+            for (const item of cases) {
+              const page = await browser.newPage({ viewport: { width: item.viewportWidth, height: item.height } });
+              const pageErrors = [];
+              page.on('pageerror', error => pageErrors.push(error.message));
+              const response = await page.goto(`${process.env.WP_URL}/zoom-qa/`, { waitUntil: 'networkidle' });
+              await page.evaluate(() => document.fonts.ready);
+
+              const metrics = await page.evaluate(() => {
+                const el = document.querySelector('.wp-block-gallery .wp-lightbox-container .lightbox_wrap');
+                if (!el) return { found: false };
+                const pseudo = getComputedStyle(el, '::after');
+                return {
+                  found: true,
+                  width: parseFloat(pseudo.width),
+                  height: parseFloat(pseudo.height),
+                  fontSize: parseFloat(pseudo.fontSize),
+                  backgroundColor: pseudo.backgroundColor,
+                  borderColor: pseudo.borderColor,
+                  content: pseudo.content,
+                  scrollWidth: document.documentElement.scrollWidth,
+                  clientWidth: document.documentElement.clientWidth,
+                };
+              });
+
+              const status = response?.status() || 0;
+              const horizontalOverflow = metrics.scrollWidth > metrics.clientWidth + 1;
+              if (status >= 400 || pageErrors.length || !metrics.found || horizontalOverflow) failed = true;
+              if (Math.abs(metrics.width - item.expectedSize) > 0.5 || Math.abs(metrics.height - item.expectedSize) > 0.5) failed = true;
+              if (Math.abs(metrics.fontSize - item.expectedFont) > 0.5) failed = true;
+              if (metrics.backgroundColor !== 'rgba(51, 51, 51, 0.7)') failed = true;
+
+              await page.locator('.wp-block-gallery').first().screenshot({ path: `.runtime/budokan-gallery-zoom/${item.name}-gallery.png` });
+              results.push({ viewport: item, status, pageErrors, horizontalOverflow, metrics });
+              await page.close();
+            }
+
+            await browser.close();
+            fs.writeFileSync('.runtime/budokan-gallery-zoom/runtime.json', JSON.stringify(results, null, 2));
+            console.log(JSON.stringify(results, null, 2));
+            if (failed) process.exit(1);
+          })().catch(error => { console.error(error); process.exit(1); });
+          NODE
+
+      - name: Upload runtime evidence
+        if: steps.acf.outputs.enabled == 'true' && always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: budokan-gallery-zoom-runtime-temp
+          path: experiments/wordpress-acf-runtime/.runtime/budokan-gallery-zoom
+          if-no-files-found: error
+
+      - name: Cleanup runtime
+        if: always()
+        working-directory: experiments/wordpress-acf-runtime
+        run: |
+          source scripts/runtime-env.sh
+          docker compose down -v --remove-orphans || true
