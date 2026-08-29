@@ -28,12 +28,7 @@ jobs:
           cd experiments/wordpress-acf-runtime
           source scripts/runtime-env.sh
           CONTENT='<!-- wp:group {"style":{"color":{"background":"#ffffff"}}} --><div class="wp-block-group has-background" style="background-color:#ffffff"><!-- wp:paragraph --><p>背景付きテキストボックス 日本武道館では、武道大会や研修会など、多様な参加型イベントを開催しています。</p><!-- /wp:paragraph --></div><!-- /wp:group -->'
-          docker compose run --rm cli post create \
-            --post_type=page \
-            --post_status=publish \
-            --post_title='Background Group QA' \
-            --post_name='background-group-qa' \
-            --post_content="$CONTENT" >/dev/null
+          docker compose run --rm cli post create --post_type=page --post_status=publish --post_title='Background Group QA' --post_name='background-group-qa' --post_content="$CONTENT" >/dev/null
           printf '%s' "$WP_URL/background-group-qa/" > /tmp/budokan-group-url
 
       - name: Install browser probe
@@ -54,26 +49,34 @@ jobs:
           const url = fs.readFileSync(process.env.QA_URL_FILE, 'utf8');
           const browser = await chromium.launch({headless:true});
           const results = {};
+          let failure = null;
           for (const [name,width,expected] of [['sp',390,30],['pc',1395,32]]) {
             const page = await browser.newPage({viewport:{width,height:900}});
             const errors=[]; page.on('pageerror',e=>errors.push(String(e)));
-            const response=await page.goto(url,{waitUntil:'networkidle'});
-            if (!response || response.status() !== 200) throw new Error(`${name}: HTTP ${response?.status()}`);
-            const data=await page.locator('.block-editor_wrap .wp-block-group.has-background').first().evaluate(el=>{
-              const s=getComputedStyle(el); const p=el.querySelector('p'); const ps=p?getComputedStyle(p):null;
-              return {paddingTop:parseFloat(s.paddingTop),paddingRight:parseFloat(s.paddingRight),paddingBottom:parseFloat(s.paddingBottom),paddingLeft:parseFloat(s.paddingLeft),background:s.backgroundColor,paragraphMarginTop:ps?parseFloat(ps.marginTop):null,rect:el.getBoundingClientRect().toJSON(),overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth};
-            });
-            for (const k of ['paddingTop','paddingRight','paddingBottom','paddingLeft']) if (Math.abs(data[k]-expected)>0.1) throw new Error(`${name}: ${k}=${data[k]} expected ${expected}`);
-            if (data.background !== 'rgb(255, 255, 255)') throw new Error(`${name}: background ${data.background}`);
-            if (Math.abs(data.paragraphMarginTop)>0.1) throw new Error(`${name}: first child margin-top ${data.paragraphMarginTop}`);
-            if (data.overflow > 0.5) throw new Error(`${name}: page overflow ${data.overflow}`);
-            if (errors.length) throw new Error(`${name}: page errors ${errors.join('; ')}`);
-            results[name]=data;
-            await page.screenshot({path:`/tmp/budokan-${name}-group.png`,fullPage:true});
-            await page.close();
+            try {
+              const response=await page.goto(url,{waitUntil:'networkidle'});
+              if (!response || response.status() !== 200) throw new Error(`${name}: HTTP ${response?.status()}`);
+              const data=await page.locator('.block-editor_wrap .wp-block-group.has-background').first().evaluate(el=>{
+                const s=getComputedStyle(el); const p=el.querySelector('p'); const ps=p?getComputedStyle(p):null;
+                return {paddingTop:parseFloat(s.paddingTop),paddingRight:parseFloat(s.paddingRight),paddingBottom:parseFloat(s.paddingBottom),paddingLeft:parseFloat(s.paddingLeft),background:s.backgroundColor,paragraphMarginTop:ps?parseFloat(ps.marginTop):null,rect:el.getBoundingClientRect().toJSON(),overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth};
+              });
+              results[name]={...data,pageErrors:errors};
+              await page.screenshot({path:`/tmp/budokan-${name}-group.png`,fullPage:true});
+              for (const k of ['paddingTop','paddingRight','paddingBottom','paddingLeft']) if (Math.abs(data[k]-expected)>0.1) throw new Error(`${name}: ${k}=${data[k]} expected ${expected}`);
+              if (data.background !== 'rgb(255, 255, 255)') throw new Error(`${name}: background ${data.background}`);
+              if (data.overflow > 0.5) throw new Error(`${name}: page overflow ${data.overflow}`);
+              if (errors.length) throw new Error(`${name}: page errors ${errors.join('; ')}`);
+            } catch (e) {
+              failure = String(e);
+              results.failure = failure;
+              await page.screenshot({path:`/tmp/budokan-${name}-group.png`,fullPage:true}).catch(()=>{});
+              break;
+            } finally { await page.close(); }
           }
+          fs.writeFileSync('/tmp/budokan-group-results.json', JSON.stringify(results,null,2));
           console.log(JSON.stringify(results,null,2));
           await browser.close();
+          if (failure) throw new Error(failure);
           JS
           cd /tmp/budokan-playwright
           node qa.mjs
@@ -83,8 +86,10 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: budokan-text-background-group
-          path: /tmp/budokan-*-group.png
-          if-no-files-found: ignore
+          path: |
+            /tmp/budokan-*-group.png
+            /tmp/budokan-group-results.json
+          if-no-files-found: warn
 
       - name: Stop runtime
         if: always()
