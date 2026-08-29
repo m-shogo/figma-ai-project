@@ -129,8 +129,39 @@
             }
         }
         /* ///////// 個別設定 /////////　*/
-        /* ボタン小 */
+        /* ボタン小（Figma parts / btn-02） */
         &.small {
+            gap: 16px;
+            .wp-block-button {
+                width: auto;
+                min-width: 0;
+                .wp-block-button__link {
+                    min-height: 32px;
+                    width: auto;
+                    padding: 0;
+                    gap: 10px;
+                    border: 0;
+                    border-radius: 0;
+                    background: none;
+                    font-size: 15px;
+                    font-weight: 500;
+                    line-height: 1.5;
+                    &::before {
+                        width: 32px;
+                        height: 32px;
+                        background-color: var(--color-accent);
+                        color: var(--color-secondary);
+                        font-size: 12px;
+                        font-weight: 400;
+                        filter: none;
+                    }
+                }
+                &:not(.is-style-outline) {
+                    .wp-block-button__link {
+                        background-image: none;
+                    }
+                }
+            }
         }
 
         /* MARK: heading_pc */
@@ -143,6 +174,11 @@
                 &:not(.has-custom-width) {
                     width: auto;
                     min-width: 270px;
+                }
+            }
+            &.small {
+                .wp-block-button:not(.has-custom-width) {
+                    min-width: 0;
                 }
             }
         }
