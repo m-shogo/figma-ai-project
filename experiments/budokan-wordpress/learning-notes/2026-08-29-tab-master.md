@@ -74,6 +74,16 @@ The prior Theme represented a different visual system:
 
 Those defaults did not match the current Parts authority.
 
+## Implementation correction found during review
+
+The first mobile pass used a normal `1px` CSS border on the `68px`-tall Figma specimen while each grid row was also authored as `34px`. On the web, an auto-height container would then become `34 + 34 + 2 = 70px`; Figma's stroke is visually inside the authored `68px` geometry.
+
+The corrected implementation keeps the two physical `34px` rows and renders the outside stroke with an **inset box-shadow**, so the stroke does not inflate the component's layout box. `box-sizing: border-box` is also explicit on the generated buttons.
+
+### Reusable lesson
+
+When matching an exact Figma box, distinguish **painted stroke geometry** from **layout-affecting CSS border geometry**. If the authored child dimensions already consume the full component height, an inset stroke can preserve visual fidelity without silently adding pixels to runtime layout.
+
 ## Unknown / intentionally preserved
 
 Figma provides default and active visual authority here, but no explicit hover-state authority. The existing Theme hover behavior is therefore preserved instead of inventing a new hover state.
