@@ -1,0 +1,162 @@
+name: Budokan Shared Separator QA Temp
+
+on:
+  pull_request:
+    paths:
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/**'
+      - 'experiments/budokan-wordpress/**'
+      - '.github/workflows/budokan-shared-separator-qa-temp.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  runtime-separator:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: PHP syntax
+        run: find experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan -name '*.php' -print0 | xargs -0 -n1 php -l
+
+      - name: Check ACF PRO runtime availability
+        id: acf
+        env:
+          ACF_PRO_LICENSE_KEY: ${{ secrets.ACF_PRO_LICENSE_KEY }}
+        run: |
+          if [ -n "$ACF_PRO_LICENSE_KEY" ]; then
+            echo 'enabled=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'enabled=false' >> "$GITHUB_OUTPUT"
+            echo 'SKIP live separator capture: ACF_PRO_LICENSE_KEY is unavailable.'
+          fi
+
+      - name: Install browser QA dependency
+        if: steps.acf.outputs.enabled == 'true'
+        working-directory: experiments/wordpress-acf-runtime
+        run: |
+          mkdir -p .runtime/playwright
+          cd .runtime/playwright
+          npm init -y >/dev/null 2>&1
+          npm install --no-audit --no-fund playwright@1.54.2 >/dev/null
+          npx playwright install --with-deps chromium
+
+      - name: Start real WordPress + ACF PRO + Budokan Theme
+        if: steps.acf.outputs.enabled == 'true'
+        working-directory: experiments/wordpress-acf-runtime
+        env:
+          ACF_PRO_LICENSE_KEY: ${{ secrets.ACF_PRO_LICENSE_KEY }}
+          CI: 'true'
+        run: bash scripts/setup.sh
+
+      - name: Seed native Gutenberg separator fixture
+        if: steps.acf.outputs.enabled == 'true'
+        working-directory: experiments/wordpress-acf-runtime
+        run: |
+          source scripts/runtime-env.sh
+          cat > .runtime/separator-fixture.html <<'HTML'
+          <!-- wp:heading {"level":2} -->
+          <h2 class="wp-block-heading">区切り線 Runtime QA</h2>
+          <!-- /wp:heading -->
+          <!-- wp:separator -->
+          <hr class="wp-block-separator has-alpha-channel-opacity"/>
+          <!-- /wp:separator -->
+          HTML
+          docker compose run --rm cli post update 2 --post_title='Separator Runtime QA' --post_status=publish --post_content="$(cat .runtime/separator-fixture.html)"
+
+      - name: Capture and assert shared separator SP and PC
+        if: steps.acf.outputs.enabled == 'true'
+        working-directory: experiments/wordpress-acf-runtime
+        run: |
+          source scripts/runtime-env.sh
+          mkdir -p .runtime/budokan-shared-separator
+          WP_URL="$WP_URL" node <<'NODE'
+          const fs = require('node:fs');
+          const path = require('node:path');
+          const { createRequire } = require('node:module');
+          const requireQA = createRequire(path.resolve('.runtime/playwright/package.json'));
+          const { chromium } = requireQA('playwright');
+
+          const near = (actual, expected, tolerance = 1) => Math.abs(actual - expected) <= tolerance;
+          (async () => {
+            const browser = await chromium.launch({ headless: true });
+            const cases = [
+              { name: 'sp', viewportWidth: 390, authoredWidth: 375, height: 900 },
+              { name: 'pc', viewportWidth: 1395, authoredWidth: 1380, height: 900 },
+            ];
+            const results = [];
+            let failed = false;
+
+            for (const item of cases) {
+              const page = await browser.newPage({ viewport: { width: item.viewportWidth, height: item.height } });
+              const pageErrors = [];
+              page.on('pageerror', error => pageErrors.push(error.message));
+              const response = await page.goto(`${process.env.WP_URL}/?page_id=2`, { waitUntil: 'networkidle' });
+              await page.evaluate(() => document.fonts.ready);
+              const separator = page.locator('.block-editor_wrap .wp-block-separator').first();
+              await separator.scrollIntoViewIfNeeded();
+              await page.waitForTimeout(100);
+
+              const metrics = await page.evaluate(() => {
+                const el = document.querySelector('.block-editor_wrap .wp-block-separator');
+                if (!el) return null;
+                const r = el.getBoundingClientRect();
+                const s = getComputedStyle(el);
+                const before = getComputedStyle(el, '::before');
+                return {
+                  rect: { x:r.x, y:r.y, width:r.width, height:r.height },
+                  borderTopWidth: s.borderTopWidth,
+                  backgroundImage: s.backgroundImage,
+                  backgroundPosition: s.backgroundPosition,
+                  backgroundSize: s.backgroundSize,
+                  before: {
+                    width: before.width,
+                    height: before.height,
+                    left: before.left,
+                    top: before.top,
+                    backgroundColor: before.backgroundColor,
+                    clipPath: before.clipPath,
+                  },
+                  pageScrollWidth: document.documentElement.scrollWidth,
+                  pageClientWidth: document.documentElement.clientWidth,
+                };
+              });
+
+              const status = response?.status() || 0;
+              const horizontalPageOverflow = metrics ? metrics.pageScrollWidth > metrics.pageClientWidth + 1 : true;
+              const colorOk = metrics?.before?.backgroundColor === 'rgb(215, 212, 212)';
+              const clipOk = metrics?.before?.clipPath && metrics.before.clipPath !== 'none';
+              const lineOk = metrics?.backgroundImage?.includes('linear-gradient') && metrics?.backgroundPosition?.includes('19px');
+              if (status >= 400 || pageErrors.length || horizontalPageOverflow || !metrics) failed = true;
+              if (!near(metrics?.rect?.height || 0, 11, .2)) failed = true;
+              if (!near(parseFloat(metrics?.before?.width || 0), 11, .2) || !near(parseFloat(metrics?.before?.height || 0), 11, .2)) failed = true;
+              if (!near(parseFloat(metrics?.borderTopWidth || 0), 0, .1)) failed = true;
+              if (!colorOk || !clipOk || !lineOk) failed = true;
+
+              await separator.screenshot({ path: `.runtime/budokan-shared-separator/${item.name}-separator.png` });
+              results.push({ viewport:item, status, pageErrors, horizontalPageOverflow, metrics, colorOk, clipOk, lineOk });
+              await page.close();
+            }
+
+            await browser.close();
+            fs.writeFileSync('.runtime/budokan-shared-separator/runtime.json', JSON.stringify(results, null, 2));
+            console.log(JSON.stringify(results, null, 2));
+            if (failed) process.exit(1);
+          })().catch(error => { console.error(error); process.exit(1); });
+          NODE
+
+      - name: Upload runtime evidence
+        if: steps.acf.outputs.enabled == 'true' && always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: budokan-shared-separator-runtime-temp
+          path: experiments/wordpress-acf-runtime/.runtime/budokan-shared-separator
+          if-no-files-found: error
+
+      - name: Cleanup runtime
+        if: always()
+        working-directory: experiments/wordpress-acf-runtime
+        run: |
+          source scripts/runtime-env.sh
+          docker compose down -v --remove-orphans || true
