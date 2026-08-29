@@ -84,17 +84,34 @@ The corrected implementation keeps the two physical `34px` rows and renders the 
 
 When matching an exact Figma box, distinguish **painted stroke geometry** from **layout-affecting CSS border geometry**. If the authored child dimensions already consume the full component height, an inset stroke can preserve visual fidelity without silently adding pixels to runtime layout.
 
+## Runtime QA evidence
+
+A temporary branch-only GitHub Actions workflow started the project's real WordPress runtime with ACF PRO, seeded the existing Tab DOM contract, loaded the Theme's real `common.js`, and exercised the JS-generated `.tab-button` controls in Chromium.
+
+The gate passed for both SP (`390px`) and PC (`1395px`):
+
+- HTTP 200 and no browser page errors
+- six buttons were generated from six `.tab-panel[data-title]` panels
+- SP: three-column grid, exact `68px` master height, two `34px` rows, equal columns, inset outside stroke, square corners
+- PC: flex layout, `120 × 48px` buttons, `12px` physical gap, `3px` radius, `16px` horizontal padding
+- both: `14px / 500 / 0.05em` label typography
+- initial state exposed exactly one panel
+- clicking the second generated button moved both `.active` state and visible panel to index 2
+- no positive page-level horizontal overflow
+- SP and PC screenshots were emitted as temporary visual evidence
+
+The temporary workflow is validation-only and is removed before clean-head PR review.
+
 ## Unknown / intentionally preserved
 
 Figma provides default and active visual authority here, but no explicit hover-state authority. The existing Theme hover behavior is therefore preserved instead of inventing a new hover state.
 
 This is intentionally project-local evidence. Do not promote the exact Tab geometry to a global frontend standard.
 
-## Verification status for this run
+## Promotion decision
 
-- Figma SP and PC nodes were read through design context before editing.
-- Existing ACF render ownership and JS-generated button ownership were re-checked.
-- The CSS change is isolated to `module_tab.css`.
-- `parts.php`, Form/Formidable, ACF fields, PHP render markup, and tab JS behavior were not modified.
+Keep these findings project-local. The render → JS-generated DOM → CSS ownership tracing is reusable and agrees with reuse-before-build, but one Tab master is not enough evidence to promote its exact geometry or interaction styling into a higher project standard.
 
-A real WordPress browser runtime was not available directly in the connector execution environment during this run. CI/check status is therefore treated separately from browser-runtime evidence; do not claim a browser visual pass unless a later workflow supplies it.
+## Scope guard
+
+`parts.php`, Form/Formidable, ACF fields, PHP render markup, and Tab JS behavior were not modified.
