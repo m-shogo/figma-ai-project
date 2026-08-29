@@ -1,6 +1,6 @@
 # TOP 月刊「武道」編集部 — dependency / reuse audit
 
-更新: 2026-08-29
+更新: 2026-08-30
 
 ## 結論
 
@@ -109,6 +109,17 @@ Figma rootは約684px、runtimeは682.5pxで約1.25px差。Figma child metadata�
 
 runtime section captureの最上端に見える赤1px線は、本section由来ではなく直前のTOP Partner PC `border-bottom`。ページ連結時の既存正本境界なのでInstagram側では消さない。
 
+## 2026-08-30 current-authority revalidation
+
+最新 `so` から依存関係を再監査し、Figma SP `1360:9389` / PC `1603:7173` を `get_design_context` で再取得した。
+
+- SPは現行実装と同じ `64px 32px` padding、32px section gap、22px heading、14px Instagram label、15px lead、2×2 thumbnail composition。
+- PCは現行実装と同じ `100px 110px 80px` padding、40px section gap、1160px inner、24px serif heading、5× `231 × 289` thumbnail composition。
+- Themeの `_top-instagram.php` / `top_instagram.css` / `front-page.php` 接続も最新 `so` 上で再確認した。
+- 既存実装を作り直す根拠となるFigma差分、Theme ownership差分、WordPress data authorityの変更は見つからなかった。
+
+この再監査では、既に完成・検証済みのsectionを「引き継ぎメモが古い」という理由で重複実装しないことを優先した。製品コードは変更しない。
+
 ## 今回見つかった失敗と学び
 
 ### 1. SP用 `nth-child` 非表示がPCへ残った
@@ -138,6 +149,7 @@ section完了条件:
 3. PC extension → PC runtime QA — PASS
 4. authored 375 / 1380でoverflow・broken image・section geometry確認 — PASS
 5. visual diff / fix — PASS
-6. PR / CI / squash merge — merge前最終gate
+6. PR / CI / squash merge — PASS（実装commit `c95fa7797aad52f6f761366f303ac3db94ca265e` は現行 `so` の祖先）
+7. latest `so` からcurrent Figma authorityを再取得し重複実装不要を確認 — PASS（2026-08-30）
 
 `parts.php` と form/Formidableは対象外のまま。
