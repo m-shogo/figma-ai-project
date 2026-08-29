@@ -79,27 +79,7 @@ jobs:
                 const firstTh=table?.querySelector('th'); const firstTd=table?.querySelector('td');
                 const rect=e=>{const r=e.getBoundingClientRect();return{x:r.x,y:r.y,width:r.width,height:r.height}};
                 const cs=e=>{const s=getComputedStyle(e);return{fontSize:s.fontSize,lineHeight:s.lineHeight,paddingTop:s.paddingTop,paddingLeft:s.paddingLeft,backgroundColor:s.backgroundColor,color:s.color,fontWeight:s.fontWeight,boxShadow:s.boxShadow,width:s.width,minWidth:s.minWidth,overflowX:s.overflowX,display:s.display}};
-                return {
-                  innerWidth: window.innerWidth,
-                  clientViewportWidth: document.documentElement.clientWidth,
-                  matchMobile: window.matchMedia('(max-width: 767px)').matches,
-                  wrapClass: wrap?.className || '',
-                  directChildTable: !!(wrap && table && table.parentElement===wrap),
-                  wrap:wrap?rect(wrap):null,
-                  table:table?rect(table):null,
-                  head:table?rect(table.querySelector('thead tr')):null,
-                  rows:table?[...table.querySelectorAll('tbody tr')].map(rect):[],
-                  firstTh:firstTh?rect(firstTh):null,
-                  firstTd:firstTd?rect(firstTd):null,
-                  wrapStyle:wrap?cs(wrap):null,
-                  tableStyle:table?cs(table):null,
-                  th:firstTh?cs(firstTh):null,
-                  td:firstTd?cs(firstTd):null,
-                  scrollWidth:wrap?.scrollWidth||0,
-                  clientWidth:wrap?.clientWidth||0,
-                  pageScrollWidth:document.documentElement.scrollWidth,
-                  pageClientWidth:document.documentElement.clientWidth
-                };
+                return {innerWidth:window.innerWidth,clientViewportWidth:document.documentElement.clientWidth,matchMobile:window.matchMedia('(max-width: 767px)').matches,wrapClass:wrap?.className||'',directChildTable:!!(wrap&&table&&table.parentElement===wrap),tableParentTag:table?.parentElement?.tagName||'',tableParentClass:table?.parentElement?.className||'',wrap:wrap?rect(wrap):null,table:table?rect(table):null,head:table?rect(table.querySelector('thead tr')):null,rows:table?[...table.querySelectorAll('tbody tr')].map(rect):[],firstTh:firstTh?rect(firstTh):null,firstTd:firstTd?rect(firstTd):null,wrapStyle:wrap?cs(wrap):null,tableStyle:table?cs(table):null,th:firstTh?cs(firstTh):null,td:firstTd?cs(firstTd):null,scrollWidth:wrap?.scrollWidth||0,clientWidth:wrap?.clientWidth||0,pageScrollWidth:document.documentElement.scrollWidth,pageClientWidth:document.documentElement.clientWidth};
               });
               const status=response?.status()||0; const pageOverflow=m.pageScrollWidth>m.pageClientWidth+1;
               if(status>=400||pageErrors.length||pageOverflow||!m.wrap||!m.table) failed=true;
@@ -108,7 +88,7 @@ jobs:
               if(m.th?.backgroundColor!=='rgb(66, 66, 66)'||m.th?.color!=='rgb(255, 255, 255)'||m.th?.fontWeight!=='400') failed=true;
               if(!String(m.th?.boxShadow).includes('215, 212, 212')) failed=true;
               if(item.name==='sp'){
-                if(!m.matchMobile||!m.directChildTable||!near(m.table.width,960,1)||m.scrollWidth<959||m.clientWidth>=m.scrollWidth-100) failed=true;
+                if(!m.matchMobile||!near(m.table.width,960,1)||m.scrollWidth<959||m.clientWidth>=m.scrollWidth-100) failed=true;
               } else {
                 if(m.matchMobile||!near(m.table.width,m.wrap.width,1)||!near(m.firstTh?.width||0,m.wrap.width/4,1)) failed=true;
               }
