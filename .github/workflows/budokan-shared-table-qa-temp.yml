@@ -83,18 +83,22 @@ jobs:
                 const secondTd=bodyRows[1]?.querySelector('td');
                 const rect=e=>{const r=e.getBoundingClientRect();return{x:r.x,y:r.y,width:r.width,height:r.height}};
                 const cs=e=>{const s=getComputedStyle(e);return{fontSize:s.fontSize,lineHeight:s.lineHeight,paddingTop:s.paddingTop,paddingLeft:s.paddingLeft,backgroundColor:s.backgroundColor,color:s.color,fontWeight:s.fontWeight,boxShadow:s.boxShadow,width:s.width,minWidth:s.minWidth,overflowX:s.overflowX,display:s.display,textAlign:s.textAlign}};
-                return {innerWidth:window.innerWidth,matchMobile:window.matchMedia('(max-width: 767px)').matches,wrapClass:wrap?.className||'',runtimeWrapClass:runtimeWrap?.className||'',wrap:wrap?rect(wrap):null,runtimeWrap:runtimeWrap?rect(runtimeWrap):null,table:table?rect(table):null,head:table?rect(table.querySelector('thead tr')):null,rows:bodyRows.map(rect),firstTh:firstTh?rect(firstTh):null,firstTd:firstTd?rect(firstTd):null,wrapStyle:wrap?cs(wrap):null,runtimeWrapStyle:runtimeWrap?cs(runtimeWrap):null,tableStyle:table?cs(table):null,th:firstTh?cs(firstTh):null,firstTdStyle:firstTd?cs(firstTd):null,secondTdStyle:secondTd?cs(secondTd):null,runtimeScrollWidth:runtimeWrap?.scrollWidth||0,runtimeClientWidth:runtimeWrap?.clientWidth||0,pageScrollWidth:document.documentElement.scrollWidth,pageClientWidth:document.documentElement.clientWidth};
+                const scrollBar=wrap?getComputedStyle(wrap,'::-webkit-scrollbar'):null;
+                return {innerWidth:window.innerWidth,matchMobile:window.matchMedia('(max-width: 767px)').matches,wrapClass:wrap?.className||'',runtimeWrapClass:runtimeWrap?.className||'',wrap:wrap?rect(wrap):null,runtimeWrap:runtimeWrap?rect(runtimeWrap):null,table:table?rect(table):null,head:table?rect(table.querySelector('thead tr')):null,rows:bodyRows.map(rect),firstTh:firstTh?rect(firstTh):null,firstTd:firstTd?rect(firstTd):null,wrapStyle:wrap?cs(wrap):null,runtimeWrapStyle:runtimeWrap?cs(runtimeWrap):null,tableStyle:table?cs(table):null,th:firstTh?cs(firstTh):null,firstTdStyle:firstTd?cs(firstTd):null,secondTdStyle:secondTd?cs(secondTd):null,scrollBarHeight:scrollBar?.height||'',runtimeScrollWidth:runtimeWrap?.scrollWidth||0,runtimeClientWidth:runtimeWrap?.clientWidth||0,pageScrollWidth:document.documentElement.scrollWidth,pageClientWidth:document.documentElement.clientWidth};
               });
               const status=response?.status()||0; const pageOverflow=m.pageScrollWidth>m.pageClientWidth+1;
               if(status>=400||pageErrors.length||pageOverflow||!m.wrap||!m.table) failed=true;
               if(!near(m.head?.height||0,54,0.6)||m.rows.some(r=>!near(r.height,54,0.6))) failed=true;
-              if(!near(parseFloat(m.th?.fontSize||0),15,.2)||!near(parseFloat(m.th?.lineHeight||0),24,.3)||!near(parseFloat(m.th?.paddingTop||0),15,.2)||!near(parseFloat(m.th?.paddingLeft||0),20,.2)) failed=true;
+              if(!near(parseFloat(m.th?.fontSize||0),15,.2)||!near(parseFloat(m.th?.lineHeight||0),24,.3)||!near(parseFloat(m.th?.paddingTop||0),15,.2)||!near(parseFloat(m.th?.paddingLeft||0),30,.2)) failed=true;
               if(m.th?.backgroundColor!=='rgb(66, 66, 66)'||m.th?.color!=='rgb(255, 255, 255)'||m.th?.fontWeight!=='400'||m.th?.textAlign!=='center') failed=true;
               if(!String(m.th?.boxShadow).includes('215, 212, 212')) failed=true;
               if(m.firstTdStyle?.textAlign!=='center'||m.firstTdStyle?.backgroundColor!=='rgba(0, 0, 0, 0)'||m.secondTdStyle?.backgroundColor!=='rgb(242, 242, 242)') failed=true;
               if(item.name==='sp'){
-                if(!m.matchMobile||!near(m.table.width,960,1)||m.runtimeScrollWidth<959||m.runtimeClientWidth>=m.runtimeScrollWidth-100) failed=true;
+                if(!m.matchMobile||!near(m.table.width,960,1)||m.runtimeScrollWidth<959||m.runtimeClientWidth>=m.runtimeScrollWidth-100||m.scrollBarHeight!=='5px') failed=true;
               } else {
+                /* Desktop table remains fluid to its real content container; the
+                   960px Parts canvas is not a license to force unrelated page
+                   containers to 960px. Verify equal 4-column distribution. */
                 if(m.matchMobile||!near(m.table.width,m.wrap.width,1)||!near(m.firstTh?.width||0,m.wrap.width/4,1)) failed=true;
               }
               await locator.screenshot({path:`.runtime/budokan-shared-table/${item.name}-table.png`});
