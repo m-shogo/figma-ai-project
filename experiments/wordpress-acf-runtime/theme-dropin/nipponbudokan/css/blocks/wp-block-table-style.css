@@ -124,11 +124,15 @@
                 overflow-x: auto;
                 padding-bottom: 10px;
                 > table {
-                    /* WordPress core table CSS forces width:100%; the authored
-                       Figma mobile variant intentionally keeps the 960px master
-                       and clips it inside the mobile viewport. */
+                    /* WordPress core table CSS can force the table back to the
+                       viewport width. Figma instead preserves four ~240px
+                       columns and clips that 960px master on mobile. */
                     width: 960px !important;
                     min-width: 960px !important;
+                    th,
+                    td {
+                        min-width: 240px;
+                    }
                 }
             }
             /* スクロールバー色変更（webkit用） */
