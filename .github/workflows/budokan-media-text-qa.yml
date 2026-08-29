@@ -1,0 +1,103 @@
+name: Budokan Media Text QA
+
+on:
+  push:
+    branches:
+      - agent/budokan-media-text-master-20260829
+    paths:
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/blocks/wp-block-media-text-style.css'
+      - '.github/workflows/budokan-media-text-qa.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      ACF_PRO_LICENSE_KEY: ${{ secrets.ACF_PRO_LICENSE_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Start real WordPress + ACF PRO runtime
+        run: bash experiments/wordpress-acf-runtime/scripts/setup.sh
+
+      - name: Seed native Gutenberg media-text fixture
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          CONTENT='<!-- wp:media-text {"mediaPosition":"right","mediaType":"image","mediaWidth":34,"isStackedOnMobile":true} --><div class="wp-block-media-text is-stacked-on-mobile has-media-on-the-right" style="grid-template-columns:auto 34%"><div class="wp-block-media-text__content"><!-- wp:paragraph --><p>日本武道館では、武道大会や書初め大展覧会、研修会、武道学園の行事など、多様な参加型イベントを開催しています。</p><!-- /wp:paragraph --></div><figure class="wp-block-media-text__media"><div class="qa-media" style="height:240px;background:#eaeaea"></div></figure></div><!-- /wp:media-text -->'
+          docker compose run --rm cli post create \
+            --post_type=page \
+            --post_status=publish \
+            --post_title='Media Text QA' \
+            --post_name='media-text-qa' \
+            --post_content="$CONTENT" >/dev/null
+          printf '%s' "$WP_URL/media-text-qa/" > /tmp/budokan-media-text-url
+
+      - name: Install browser probe
+        run: |
+          mkdir -p /tmp/budokan-playwright
+          cd /tmp/budokan-playwright
+          npm init -y >/dev/null 2>&1
+          npm install playwright@1.54.2 >/dev/null
+          npx playwright install --with-deps chromium >/dev/null
+
+      - name: Verify SP then PC runtime geometry
+        env:
+          QA_URL_FILE: /tmp/budokan-media-text-url
+        run: |
+          cat > /tmp/budokan-playwright/qa.mjs <<'JS'
+          import fs from 'node:fs';
+          import { chromium } from 'playwright';
+          const url=fs.readFileSync(process.env.QA_URL_FILE,'utf8');
+          const browser=await chromium.launch({headless:true});
+          const results={};
+          for (const [name,width] of [['sp',390],['pc',1395]]) {
+            const page=await browser.newPage({viewport:{width,height:900}});
+            const errors=[]; page.on('pageerror',e=>errors.push(String(e)));
+            const response=await page.goto(url,{waitUntil:'networkidle'});
+            if (!response || response.status()!==200) throw new Error(`${name}: HTTP ${response?.status()}`);
+            const data=await page.locator('.block-editor_wrap .wp-block-media-text').first().evaluate(el=>{
+              const s=getComputedStyle(el);
+              const content=el.querySelector('.wp-block-media-text__content').getBoundingClientRect();
+              const media=el.querySelector('.wp-block-media-text__media').getBoundingClientRect();
+              const rect=el.getBoundingClientRect();
+              return {gap:s.gap,rowGap:s.rowGap,columnGap:s.columnGap,display:s.display,rect:rect.toJSON(),content:content.toJSON(),media:media.toJSON(),overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth};
+            });
+            const rowGap=parseFloat(data.rowGap), columnGap=parseFloat(data.columnGap);
+            if (Math.abs(rowGap-30)>0.1 || Math.abs(columnGap-30)>0.1) throw new Error(`${name}: gaps ${data.rowGap}/${data.columnGap}`);
+            if (name==='sp') {
+              const actual=data.media.top-data.content.bottom;
+              if (actual < 29.5 || actual > 30.5) throw new Error(`sp: expected content above media with 30px gap; actual=${actual}; content=${JSON.stringify(data.content)} media=${JSON.stringify(data.media)}`);
+            } else {
+              const actual=data.media.left-data.content.right;
+              if (actual < 29.5 || actual > 30.5) throw new Error(`pc: expected content left of media with 30px gap; actual=${actual}; content=${JSON.stringify(data.content)} media=${JSON.stringify(data.media)}`);
+            }
+            if (data.overflow>0.5) throw new Error(`${name}: page overflow ${data.overflow}`);
+            if (errors.length) throw new Error(`${name}: page errors ${errors.join('; ')}`);
+            results[name]=data;
+            await page.screenshot({path:`/tmp/budokan-${name}-media-text.png`,fullPage:true});
+            await page.close();
+          }
+          console.log(JSON.stringify(results,null,2));
+          await browser.close();
+          JS
+          cd /tmp/budokan-playwright
+          node qa.mjs
+
+      - name: Upload visual evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: budokan-media-text
+          path: /tmp/budokan-*-media-text.png
+          if-no-files-found: ignore
+
+      - name: Stop runtime
+        if: always()
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          docker compose down -v --remove-orphans
