@@ -11,18 +11,6 @@
                 margin-top: 0;
             }
         }
-
-        /* Figma Parts「背景付きボックス」は native Gutenberg Group の
-           background variant。背景色そのものは editor/CMS が所有し、
-           shared Theme は verified inset だけを mobile-first で所有する。 */
-        &.has-background {
-            padding: 30px;
-
-            @media screen and (min-width: 768px) {
-                padding: 32px;
-            }
-        }
-
         /* // ==========================================================================
         // 画像とテキストが回り込み時のブロックグループのフロート解除
         // ========================================================================== */
