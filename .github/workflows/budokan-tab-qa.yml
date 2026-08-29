@@ -1,0 +1,145 @@
+name: Budokan Tab QA
+
+on:
+  push:
+    branches:
+      - agent/budokan-tab-master-20260829
+    paths:
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/module/module_tab.css'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/acf/blocks/tabContainer.php'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/acf/blocks/tabPanel.php'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/common.js'
+      - '.github/workflows/budokan-tab-qa.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      ACF_PRO_LICENSE_KEY: ${{ secrets.ACF_PRO_LICENSE_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify Tab render/runtime ownership
+        run: |
+          python - <<'PY'
+          import pathlib
+          root=pathlib.Path('experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan')
+          container=(root/'acf/blocks/tabContainer.php').read_text()
+          panel=(root/'acf/blocks/tabPanel.php').read_text()
+          js=(root/'js/common.js').read_text()
+          assert 'module_tab-wrapper' in container
+          assert 'tab-buttons' in container
+          assert '<InnerBlocks />' in container
+          assert 'class="tab-panel"' in panel
+          assert 'data-title=' in panel
+          assert "querySelectorAll('.module_tab-wrapper')" in js
+          assert "querySelectorAll('.tab-button')" in js
+          assert "button.classList.add('active')" in js
+          print('Tab render -> generated DOM -> CSS ownership confirmed')
+          PY
+
+      - name: Start real WordPress + ACF PRO runtime
+        run: bash experiments/wordpress-acf-runtime/scripts/setup.sh
+
+      - name: Seed Tab runtime fixture
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          CONTENT='<div class="module_tab-wrapper"><div class="tab-buttons" role="tablist"></div><div class="tab-contents"><div class="tab-panel" data-title="アクティブ"><p>Panel 1</p></div><div class="tab-panel" data-title="タブ2"><p>Panel 2</p></div><div class="tab-panel" data-title="タブ3"><p>Panel 3</p></div><div class="tab-panel" data-title="タブ4"><p>Panel 4</p></div><div class="tab-panel" data-title="タブ5"><p>Panel 5</p></div><div class="tab-panel" data-title="タブ6"><p>Panel 6</p></div></div></div>'
+          docker compose run --rm cli post create \
+            --post_type=page \
+            --post_status=publish \
+            --post_title='Tab QA' \
+            --post_name='tab-qa' \
+            --post_content="$CONTENT" >/dev/null
+          printf '%s' "$WP_URL/tab-qa/" > /tmp/budokan-tab-url
+
+      - name: Install browser probe
+        run: |
+          mkdir -p /tmp/budokan-playwright
+          cd /tmp/budokan-playwright
+          npm init -y >/dev/null 2>&1
+          npm install playwright@1.54.2 >/dev/null
+          npx playwright install --with-deps chromium >/dev/null
+
+      - name: Verify SP then PC runtime geometry and interaction
+        env:
+          QA_URL_FILE: /tmp/budokan-tab-url
+        run: |
+          cat > /tmp/budokan-playwright/qa.mjs <<'JS'
+          import fs from 'node:fs';
+          import { chromium } from 'playwright';
+          const url=fs.readFileSync(process.env.QA_URL_FILE,'utf8');
+          const browser=await chromium.launch({headless:true});
+          const near=(v,t,e=.6)=>Math.abs(v-t)<=e;
+          const results={};
+          for (const [name,width] of [['sp',390],['pc',1395]]) {
+            const page=await browser.newPage({viewport:{width,height:1000}});
+            const errors=[]; page.on('pageerror',e=>errors.push(String(e)));
+            const response=await page.goto(url,{waitUntil:'networkidle'});
+            if (!response || response.status()!==200) throw new Error(`${name}: HTTP ${response?.status()}`);
+            const root=page.locator('.module_tab-wrapper').first();
+            await root.locator('.tab-button').first().waitFor();
+            const data=await root.evaluate(el=>{
+              const buttons=[...el.querySelectorAll('.tab-buttons > .tab-button')];
+              const br=buttons.map(b=>b.getBoundingClientRect().toJSON());
+              const container=el.querySelector('.tab-buttons');
+              const cr=container.getBoundingClientRect();
+              const cs=getComputedStyle(container), first=getComputedStyle(buttons[0]), second=getComputedStyle(buttons[1]);
+              const panels=[...el.querySelectorAll('.tab-panel')].map(p=>({display:getComputedStyle(p).display,title:p.dataset.title}));
+              return {count:buttons.length,container:cr.toJSON(),display:cs.display,columns:cs.gridTemplateColumns,gap:cs.gap,shadow:cs.boxShadow,buttons:br,first:{height:first.height,width:first.width,bg:first.backgroundColor,color:first.color,radius:first.borderRadius,size:first.fontSize,weight:first.fontWeight,line:first.lineHeight,letter:first.letterSpacing,padL:first.paddingLeft},second:{bg:second.backgroundColor,color:second.color,border:second.borderTopWidth},panels,overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth};
+            });
+            if (data.count!==6) throw new Error(`${name}: JS button count ${data.count}`);
+            if (name==='sp') {
+              if (data.display!=='grid') throw new Error(`sp: display ${data.display}`);
+              if (!near(data.container.height,68,.2)) throw new Error(`sp: container height ${data.container.height}`);
+              if (data.columns.split(' ').length!==3) throw new Error(`sp: columns ${data.columns}`);
+              if (!data.buttons.every(b=>near(b.height,34,.2))) throw new Error(`sp: row heights ${data.buttons.map(b=>b.height)}`);
+              if (!near(data.buttons[1].left-data.buttons[0].left,data.container.width/3,.6)) throw new Error('sp: unequal column geometry');
+              if (!near(data.buttons[3].top-data.buttons[0].top,34,.2)) throw new Error('sp: second row offset');
+              if (!data.shadow || data.shadow==='none') throw new Error('sp: missing inset outer stroke');
+              if (parseFloat(data.first.radius)!==0) throw new Error(`sp: radius ${data.first.radius}`);
+              if (!near(parseFloat(data.first.line),14,.2)) throw new Error(`sp: active line ${data.first.line}`);
+            } else {
+              if (data.display!=='flex') throw new Error(`pc: display ${data.display}`);
+              if (!data.buttons.every(b=>near(b.width,120,.2)&&near(b.height,48,.2))) throw new Error(`pc: button geometry ${JSON.stringify(data.buttons)}`);
+              if (!near(data.buttons[1].left-data.buttons[0].right,12,.2)) throw new Error('pc: gap');
+              if (!near(parseFloat(data.first.radius),3,.1)) throw new Error(`pc: radius ${data.first.radius}`);
+              if (!near(parseFloat(data.first.padL),16,.1)) throw new Error(`pc: padding ${data.first.padL}`);
+            }
+            if (!near(parseFloat(data.first.size),14,.1) || data.first.weight!=='500') throw new Error(`${name}: typography ${JSON.stringify(data.first)}`);
+            if (!near(parseFloat(data.first.letter),.7,.1)) throw new Error(`${name}: tracking ${data.first.letter}`);
+            if (data.panels.filter(p=>p.display!=='none').length!==1) throw new Error(`${name}: initial panel visibility ${JSON.stringify(data.panels)}`);
+            await root.locator('.tab-button').nth(1).click();
+            const interaction=await root.evaluate(el=>({active:[...el.querySelectorAll('.tab-button')].findIndex(b=>b.classList.contains('active')),visible:[...el.querySelectorAll('.tab-panel')].findIndex(p=>getComputedStyle(p).display!=='none')}));
+            if (interaction.active!==1 || interaction.visible!==1) throw new Error(`${name}: interaction ${JSON.stringify(interaction)}`);
+            if (data.overflow>0.5) throw new Error(`${name}: page overflow ${data.overflow}`);
+            if (errors.length) throw new Error(`${name}: page errors ${errors.join('; ')}`);
+            results[name]={...data,interaction};
+            await page.screenshot({path:`/tmp/budokan-${name}-tab.png`,fullPage:true});
+            await page.close();
+          }
+          console.log(JSON.stringify(results,null,2));
+          await browser.close();
+          JS
+          cd /tmp/budokan-playwright
+          node qa.mjs
+
+      - name: Upload visual evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: budokan-tab
+          path: /tmp/budokan-*-tab.png
+          if-no-files-found: ignore
+
+      - name: Stop runtime
+        if: always()
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          docker compose down -v --remove-orphans
