@@ -73,10 +73,13 @@ jobs:
             if(!res||res.status()!==200) throw new Error(`PC HTTP ${res?.status()}`);
             const data=await page.locator('.module_inPageLink-01').evaluate(el=>{
               const items=[...el.querySelectorAll('.inPageLink')]; const anchors=items.map(x=>x.querySelector('a'));
-              const lr=el.getBoundingClientRect(), rects=items.map(x=>x.getBoundingClientRect()); const s=getComputedStyle(anchors[0]), b=getComputedStyle(anchors[0],'::before');
-              return {listW:lr.width,widths:rects.map(r=>r.width),heights:anchors.map(a=>a.getBoundingClientRect().height),xs:rects.map(r=>Math.round(r.x-lr.x)),ys:rects.map(r=>Math.round(r.y-lr.y)),padL:parseFloat(s.paddingLeft),padR:parseFloat(s.paddingRight),iconW:parseFloat(b.width),iconH:parseFloat(b.height),overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth};
+              const lr=el.getBoundingClientRect(), rects=items.map(x=>x.getBoundingClientRect()); const s=getComputedStyle(anchors[0]), b=getComputedStyle(anchors[0],'::before'), ls=getComputedStyle(el);
+              return {listW:lr.width,widths:rects.map(r=>r.width),heights:anchors.map(a=>a.getBoundingClientRect().height),xs:rects.map(r=>Math.round(r.x-lr.x)),ys:rects.map(r=>Math.round(r.y-lr.y)),direction:ls.flexDirection,padL:parseFloat(s.paddingLeft),padR:parseFloat(s.paddingRight),iconW:parseFloat(b.width),iconH:parseFloat(b.height),overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth};
             });
             data.widths.forEach((w,i)=>eq(w,220,`PC item ${i} width`)); data.heights.forEach((h,i)=>eq(h,56,`PC item ${i} height`));
+            if(data.direction!=='row') throw new Error(`PC flex-direction ${data.direction}`);
+            const expectedX=[0,240,480,0,240], expectedY=[0,0,0,80,80];
+            data.xs.forEach((x,i)=>eq(x,expectedX[i],`PC item ${i} x`,1)); data.ys.forEach((y,i)=>eq(y,expectedY[i],`PC item ${i} y`,1));
             eq(data.padL,12,'PC padding-left'); eq(data.padR,16,'PC padding-right'); eq(data.iconW,26,'PC icon width'); eq(data.iconH,26,'PC icon height');
             if(data.overflow>1) throw new Error(`PC page overflow ${data.overflow}`);
             if(errors.length) throw new Error(`PC page errors ${errors.join('; ')}`);
