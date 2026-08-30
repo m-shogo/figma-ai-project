@@ -77,10 +77,15 @@ html="$(mktemp)"
 # and assert the final response is 200; a normal canonical redirect is not a
 # product/runtime failure.
 http_code="$(curl --silent --show-error --location --max-redirs 3 --output "$html" --write-out '%{http_code}' "$WP_URL/?page_id=$page_id")"
-[[ "$http_code" == "200" ]] || {
+if [[ "$http_code" != "200" ]]; then
   echo "FAIL Local Navigation fixture returned final HTTP ${http_code}." >&2
+  echo "--- response body ---" >&2
+  cat "$html" >&2 || true
+  echo >&2
+  echo "--- wordpress logs ---" >&2
+  docker compose logs wordpress >&2 || true
   exit 1
-}
+fi
 
 for required in \
   'class="local_navigation"' \
