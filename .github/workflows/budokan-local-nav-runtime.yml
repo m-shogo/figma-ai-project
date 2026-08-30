@@ -1,0 +1,32 @@
+name: Budokan Local Navigation Runtime
+
+on:
+  pull_request:
+    paths:
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/module/local_navigation.css'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/inc/menu.php'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/sidebar.php'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/templates/template-oneColumnLocalNav.php'
+      - 'experiments/wordpress-acf-runtime/scripts/budokan-local-nav-runtime-qa.sh'
+      - 'experiments/wordpress-acf-runtime/scripts/seed-budokan-local-nav-qa.php'
+      - '.github/workflows/budokan-local-nav-runtime.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: PHP syntax for Budokan runtime fixture
+        run: |
+          php -l experiments/wordpress-acf-runtime/scripts/seed-budokan-local-nav-qa.php
+          php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/templates/template-oneColumnLocalNav.php
+          php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/inc/menu.php
+
+      - name: Run disposable WordPress Local Navigation hierarchy QA
+        run: bash experiments/wordpress-acf-runtime/scripts/budokan-local-nav-runtime-qa.sh
