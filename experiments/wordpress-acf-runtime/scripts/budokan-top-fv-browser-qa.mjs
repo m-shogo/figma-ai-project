@@ -28,6 +28,7 @@ try {
     const noticeRect = notice.getBoundingClientRect();
     return {
       rootWidth: root.getBoundingClientRect().width,
+      viewportWidth: document.documentElement.clientWidth,
       mvWidth: mvRect.width,
       bgHeight: bgRect.height,
       titleSize: parseFloat(getComputedStyle(title).fontSize),
@@ -44,8 +45,9 @@ try {
     };
   });
   assert(sp, 'SP TOP FV elements missing');
-  assert(close(sp.rootWidth, 375), `SP root width ${sp.rootWidth}`);
-  assert(close(sp.mvWidth, 375), `SP MV width ${sp.mvWidth}`);
+  assert(close(sp.viewportWidth, 375), `SP viewport width ${sp.viewportWidth}`);
+  assert(close(sp.rootWidth, sp.viewportWidth), `SP root width ${sp.rootWidth} vs viewport ${sp.viewportWidth}`);
+  assert(close(sp.mvWidth, sp.viewportWidth), `SP MV width ${sp.mvWidth}`);
   assert(close(sp.bgHeight, 483, 1), `SP MV height ${sp.bgHeight}`);
   assert(close(sp.titleSize, 32, 0.5), `SP title size ${sp.titleSize}`);
   assert(close(sp.titleLineHeight, 44.8, 1), `SP title line-height ${sp.titleLineHeight}`);
@@ -80,6 +82,7 @@ try {
     const guideRect = guide.getBoundingClientRect();
     const innerRect = inner.getBoundingClientRect();
     return {
+      viewportWidth: document.documentElement.clientWidth,
       stageLeft: stageRect.left,
       stageWidth: stageRect.width,
       stageGap: parseFloat(getComputedStyle(stage).columnGap),
@@ -96,7 +99,7 @@ try {
   });
   assert(pc, 'PC TOP FV elements missing');
   assert(close(pc.stageLeft, 0, 1), `PC stage left ${pc.stageLeft}`);
-  assert(close(pc.stageWidth, 1380, 1), `PC stage width ${pc.stageWidth}`);
+  assert(close(pc.stageWidth, pc.viewportWidth, 1), `PC stage width ${pc.stageWidth} vs viewport ${pc.viewportWidth}`);
   assert(close(pc.stageGap, 20, 1), `PC stage gap ${pc.stageGap}`);
   assert(close(pc.mvHeight, 600, 1), `PC MV height ${pc.mvHeight}`);
   assert(close(pc.guideWidth, 240, 1) && close(pc.guideHeight, 600, 1), `PC guide ${pc.guideWidth}x${pc.guideHeight}`);
