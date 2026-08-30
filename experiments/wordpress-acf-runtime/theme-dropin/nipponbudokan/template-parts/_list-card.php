@@ -1,10 +1,11 @@
 <?php
 global $post, $posts, $wp_query;
 $props = isset($args) && isset($args['props']) ? $args['props'] : '';
+$explicit_posts = isset($args) && isset($args['posts']) && is_array($args['posts']) ? $args['posts'] : null;
 ?>
 <?php if (is_front_page() || is_page()) : ?>
     <div class="module_newsCard-01">
-        <?php foreach ($posts as $post) : setup_postdata($post); ?>
+        <?php foreach ($explicit_posts ?? $posts as $post) : setup_postdata($post); ?>
             <?php get_template_part('template-parts/_list-card_article'); ?>
         <?php endforeach;
         wp_reset_postdata(); ?>
