@@ -1,7 +1,7 @@
 @charset "utf-8";
 /* // ==========================================================================
 // メインビジュアル（TOP FV）
-// Figma PC: 1399:12229 ／ SP: 446:10020 先頭（MV → お知らせ → 目的から探す）
+// Figma PC: 1399:12229 ／ SP: 1455:5811 + 446:11658
 // ========================================================================== */
 .top_mainVisual {
     position: relative;
@@ -14,18 +14,17 @@
     .tm_mv {
         order: 1;
         min-width: 0;
-        padding-inline: var(--padding-SP);
+        padding-inline: 0;
     }
     .tm_guide {
+        display: none;
         order: 3;
-        width: auto;
-        margin-inline: var(--padding-SP);
-        margin-bottom: 8px;
     }
     .top_notice-01 {
         order: 2;
-        margin-top: 16px;
-        margin-bottom: 20px;
+        width: 335px;
+        margin-top: -35px;
+        margin-bottom: 48px;
     }
     .tm_swiper-container {
         position: relative;
@@ -36,14 +35,14 @@
                     position: relative;
                     overflow: hidden;
                     width: 100%;
-                    height: 280px;
+                    height: 483px;
                     border-radius: 3px;
                     &::after {
                         content: '';
                         display: block;
                         position: absolute;
                         inset: 0;
-                        background-image: linear-gradient(35deg, rgba(16, 24, 39, 0.7) 20%, rgba(16, 24, 39, 0) 58%);
+                        background-image: linear-gradient(53deg, rgba(16, 24, 39, 0.7) 29%, rgba(16, 24, 39, 0) 56%);
                         pointer-events: none;
                     }
                     img {
@@ -58,26 +57,28 @@
         .tm_inner {
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 24px;
             align-items: flex-start;
             position: absolute;
+            top: 246px;
             right: 20px;
-            bottom: 24px;
+            bottom: auto;
             left: 20px;
             z-index: 1;
             color: var(--color-secondary);
         }
         .tm_title {
             font-family: var(--font-serif-ja);
-            font-size: 24px;
+            font-size: 32px;
             font-weight: 500;
             line-height: 1.4;
             letter-spacing: 0.05em;
+            text-shadow: 1px 1px 5px #000;
         }
         .tm_lead {
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 500;
-            line-height: 1.4;
+            line-height: 1.6;
             letter-spacing: 0.05em;
         }
         .swiper-pagination {
@@ -189,14 +190,13 @@
     }
 
     .top_notice-01 {
-        margin-top: 16px;
         .tn_inner {
             display: flex;
             align-items: center;
-            gap: 16px;
-            min-height: 64px;
-            padding: 16px 20px;
-            border-radius: 0;
+            gap: 8px;
+            min-height: 70px;
+            padding: 14px 16px;
+            border-radius: 0 5px 5px 0;
             background-color: var(--color-primary);
             color: var(--color-secondary);
         }
@@ -205,8 +205,8 @@
             margin: 0;
             img {
                 display: block;
-                width: 24px;
-                height: 24px;
+                width: 20px;
+                height: 20px;
             }
         }
         .tn_body {
@@ -220,7 +220,7 @@
         .tn_text,
         .tn_item {
             margin: 0;
-            font-size: 14px;
+            font-size: 13px;
             letter-spacing: 0.05em;
             line-height: 1.4;
             a {
@@ -255,6 +255,9 @@
                 .swiper-slide {
                     .tm_background {
                         height: 600px;
+                        &::after {
+                            background-image: linear-gradient(35deg, rgba(16, 24, 39, 0.7) 20%, rgba(16, 24, 39, 0) 58%);
+                        }
                     }
                 }
             }
@@ -269,12 +272,15 @@
             .tm_title {
                 font-size: 44px;
                 letter-spacing: 0.05em;
+                text-shadow: none;
             }
             .tm_lead {
                 font-size: 18px;
+                line-height: 1.4;
             }
         }
         .tm_guide {
+            display: block;
             order: unset;
             flex-shrink: 0;
             width: 240px;
@@ -305,6 +311,12 @@
                 min-height: 80px;
                 padding-inline: 48px;
                 border-radius: 0 3px 3px 0;
+            }
+            .tn_icon {
+                img {
+                    width: 24px;
+                    height: 24px;
+                }
             }
             .tn_text,
             .tn_item {
