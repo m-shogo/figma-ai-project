@@ -1,9 +1,9 @@
 # Figma node map（nipponbudokan）
 
-File: `RfAQQ28V1HGaeIcpgRmQq1`  
-Pages: PC `0:1` / SP `114:5409` / 最新 `1603:7059` / パーツ一覧 `1163:4242` / アーカイブ `446:13859`
+File: `w7SGVY63FuW6JpaQVKjxm2`  
+Pages: PC `0:1` / SP `114:5409`
 
-デザイン変更前提。実装時は都度取り直す。**保存済みnode-idが解決できても、それだけで現行authorityとはみなさない。まずcurrent pageのtop-level frameを再走査し、対象full-page frameを`get_design_context`で再取得する。**
+デザイン変更前提。実装時は都度取り直す。**保存済みnode-idが解決できても、それだけで現行authorityとはみなさない。まず `CURRENT_AUTHORITY.md` のfile keyを確認し、current pageのtop-level frameを再走査し、対象full-page frameを`get_design_context`で再取得する。**
 
 ## 優先ノード
 
@@ -18,46 +18,65 @@ Pages: PC `0:1` / SP `114:5409` / 最新 `1603:7059` / パーツ一覧 `1163:424
 | Footer SP 下層 | SP | `560:2524` / `560:188` 末尾 | news_sp / join_sp |
 | パーツ集 | PC | `1163:4245` | parts |
 | パーツ集 | SP | `1399:19144` | SP_parts |
-| お知らせ archive | PC | `413:2191` | news（current full-page authority, 1380×3096） |
-| お知らせ archive | SP | `560:2524` | news_sp（current full-page authority, 375×2276） |
-| お知らせ detail | PC | `1235:6361` | post（current full-page authority） |
-| お知らせ detail | SP | — | current SP page `114:5409` のtop-level再走査では専用detail frameを確認できない。旧 `1451:5197` は現行fileで解決不可 |
+| お知らせ archive | PC | `413:2191` | news |
+| お知らせ archive | SP | `1399:14225` | SP_archive（full-page redesign authority） |
+| お知らせ archive | SP | `560:2524` | news_sp（older named page; corroborating evidence only） |
+| お知らせ detail | PC | `1235:6361` | post |
+| お知らせ detail | SP | `1451:5197` | SP_post |
 | Event archive | PC | `1619:9554` | event |
 | Event detail | PC | `1632:10382` | event_detail |
 | 大会・行事に参加したい | PC | `1148:6390` | navigation（本文あり） |
 | 大会・行事に参加したい | SP | `1468:7508` | SP_navigation（shellのみ、本文authority未作成） |
 | 大会に参加したい（別ページ） | SP | `560:188` | join_sp（本文あり。PC counterpart未確認） |
-| 研修センター | PC | `1137:5348` | navigation（layer name は汎用名。page title / body / breadcrumb で研修センター画面と確認） |
+| 研修センター | PC | `1137:5348` | navigation（page title / body / pricing / breadcrumb で識別） |
 | 研修センター（現行SP counterpart） | SP | `1468:6595` | SP_navigation（PCと同じ施設案内→料金→お知らせ→ご利用案内構造） |
-| 研修センター（旧SP案・参照注意） | SP | `560:377` | training_center_sp（料金詳細を欠き、旧料金改定文言を含む） |
+| 研修センター（旧SP案・参照注意） | SP | `560:377` | training_center_sp（料金詳細を欠く旧案） |
 | 地域社会武道指導者研修会 | PC | `1203:4865` | page（title/body/breadcrumbでSP counterpart確認） |
 | 地域社会武道指導者研修会 | SP | `560:537` | training_sp |
 | 地域社会武道指導者研修会 Local Nav | PC | `1216:6311` | local_nav |
 | 地域社会武道指導者研修会 SP navigation | SP | `560:632` | selector/dropdown-style navigation area |
 | 現代武道9種目紹介 | PC | `1145:6042` | navigation（9枚の Navigation Large を3列×3段） |
 | 現代武道9種目紹介 | SP | `1455:5489` | SP_navigation（同9枚を1列表示） |
-| SP メニュー展開例 | SP | `2096:9496` | TopPage PlanB SP① |
 | SP TOP 候補 | SP | `446:10020` / `2096:9573` | SP |
 
 ## Current top-level re-resolution evidence（2026-08-31）
 
+`CURRENT_AUTHORITY.md` の現行file `w7SGVY63FuW6JpaQVKjxm2` をライブ再取得した結果。
+
 Current PC page `0:1` top-level frames include:
 
 - `413:2191` `news`
+- `1619:9554` `event`
+- `1632:10382` `event_detail`
+- `1634:10806` `publications`
+- `1637:11288` `publications_detail`
+- `1656:5309` `hardcover`
+- `1686:5574` `hardcover_detail`
 - `1235:6361` `post`
 - `1137:5348` / `1145:6042` / `1148:6390` `navigation`
-- `1203:4865` / `1206:5446` `page`
+- `1156:7728` `form`
 - `1163:4245` `parts`
-- named legacy/alternate surfaces `380:417` `join`, `395:7954` `training_center`, `402:236` `training`, `405:360` `backnumber`
+- `1203:4865` / `1206:5446` `page`
+- `1700:7080` / `2108:10725` `page_youth-budo-tournament*`
+- `1709:8313` / `2108:10871` `page_kagami-biraki*`
+- `1714:8761` / `2108:10952` `page_kobudo-demonstration*`
+- `1603:7062` `topdesign04`
 
 Current SP page `114:5409` top-level frames include:
 
-- `560:2524` `news_sp`
+- `446:10020` / `2096:9573` `SP`
+- `1399:14225` `SP_archive`
+- `1451:5197` `SP_post`
+- `1451:5737` `SP_form`
+- `1455:5489` `SP_navigation`
+- `1468:6595` / `1468:7508` `SP_navigation`
+- `1399:19144` `SP_parts`
 - `560:188` `join_sp`
 - `560:377` `training_center_sp`
 - `560:537` `training_sp`
 - `560:677` `backnumber_sp`
-- large `SP_prototype` frames `446:10020`, `1399:14225`, `1399:19144`
+- `560:2524` `news_sp`
+- `2096:9496` `TopPage PlanB SP①`
 
 These lists are **discovery evidence, not automatic implementation authority**. Resolve page identity from title/body/breadcrumb and then call `get_design_context` on the selected full-page frame before implementation.
 
@@ -76,13 +95,13 @@ These lists are **discovery evidence, not automatic implementation authority**. 
 - PC canvas 幅は 1380。案件契約の body min-width は 1280
 - form フレームあり → Human 担当のため Agent は触らない
 - Figma の top-level layer name だけで画面を断定しない。汎用名・旧名が残るため、page title / 本文 / breadcrumb / global shell を突き合わせて authority を確定する
-- 旧File key `w7SGVY63FuW6JpaQVKjxm2` は現在のBudokan authorityではない。現行は `RfAQQ28V1HGaeIcpgRmQq1`
-- News archiveのcurrent full-page authorityはSP `560:2524` / PC `413:2191`。旧sub-layer anchorが消えることがあるため、full-page frameから再取得する
-- News detailはPC `1235:6361` がcurrent authority。旧SP detail `1451:5197` は現行fileで解決できず、current SP pageのtop-levelにも専用detail frameがないため、SP固有の新変更はfail closedとする
-- canonical SP page `114:5409` のtop-level frameを再走査した時点では、PC Event archive `1619:9554` / Event detail `1632:10382` に対応すると証明できる専用SP frameは確認できない。News SPをEventへ流用せず、SP authorityが出るまでfail closedとする
+- 現行file keyは `CURRENT_AUTHORITY.md` の `w7SGVY63FuW6JpaQVKjxm2`。`RfAQQ28V1HGaeIcpgRmQq1` は旧lineageとして参照可能でも、現行実装authorityへ自動昇格させない
+- 2026-08-31の再監査では、旧lineage `RfA...` で `1468:6595` が解決しなかった一方、現行 `w7...` では同nodeが解決し、料金詳細を含むTraining Center redesignを返した。file keyを取り違えると「node削除」と誤診するため、node失敗時はまずfile authorityを確認する
+- News archive/detailのSP redesign node `1399:14225` / `1451:5197` は現行 `w7...` で解決する。older named frame `560:2524` をcurrent redesignの代替として黙って使わない
+- canonical SP pageにはPC Event archive/detailに対応すると証明できる専用SP frameがまだない。News SPをEventへ流用せず、SP authorityが出るまでfail closedとする
 - `大会・行事に参加したい` はPC `1148:6390` / SP `1468:7508` でpage identityは一致するが、現行SPはshellのみで本文authorityがない
-- `560:188` (`join_sp`) は `大会に参加したい` という別の本文付きSPページ。PC全top-level frameの `参加したい` 文言再走査でも exact title のPC counterpartは確認できないため、`1148:6390` の不足SP本文として流用しない
+- `560:188` (`join_sp`) は `大会に参加したい` という別の本文付きSPページ。`1148:6390` の不足SP本文として流用しない
 - 研修センターSPは `1468:6595` をPC `1137:5348` のresponsive counterpartとして扱う。両者は施設案内、6枚gallery、料金詳細、お知らせ、ご利用案内の構造と料金改定内容が対応する
-- `560:377` は同名ページの旧SP案として残っている。最新実装authorityへ昇格させない
+- `560:377` は同名ページの旧SP案。料金詳細を欠くため最新実装authorityへ昇格させない
 - 地域社会武道指導者研修会はSP `560:537` / PC `1203:4865`。この実ページではPC `local_nav` に対してSPは4列navの縮小版ではなく、`560:632` のselector/dropdown-style navigationへinteraction formが切り替わる
 - 現代武道9種目紹介はSP `1455:5489` / PC `1145:6042`。両面とも既存Navigation Largeとgeometry/情報構造が一致するため、ページ専用cardを作らない
