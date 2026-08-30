@@ -1,34 +1,18 @@
 # Update Radar — Latest Official Source Scan
 
-Generated: `2026-08-29T10:08:17+00:00`
+Generated: `2026-08-30T09:16:52+00:00`
 
 Active lanes: ACCESSIBILITY, CLAUDE_CODE, CODEX, CURSOR, DESIGN_SYSTEMS, FIGMA, FRONTEND_TOOLING, MCP, WEB_PLATFORM, WORDPRESS_ACF
 
 ## Summary
 
 - Sources checked: 37
-- Changed since previous snapshot: 3
+- Changed since previous snapshot: 1
 - First observations: 0
 - Fetch errors: 3
-- RETEST candidates: ACCESSIBILITY, AGENT_CONTEXT, ASSET_FIDELITY, FIGMA_LAYOUT_GENERATION, FIGMA_MCP, INPUT_CAPABILITY, PARALLEL_EXECUTION, TYPOGRAPHY_RUNTIME, VARIABLE_MODE_RUNTIME
+- RETEST candidates: ACCESSIBILITY, AGENT_CONTEXT, ASSET_FIDELITY, FIGMA_MCP, INPUT_CAPABILITY, TYPOGRAPHY_RUNTIME
 
 ## Changed sources
-
-### claude-code-releases
-
-- Lane: `CLAUDE_CODE`
-- Latest title: v2.1.251
-- Impacts: AGENT_CAPABILITY, MCP, PARALLEL_EXECUTION, CONTEXT_HANDLING
-- RETEST: FIGMA_LAYOUT_GENERATION, ASSET_FIDELITY, VARIABLE_MODE_RUNTIME, ACCESSIBILITY, FIGMA_MCP, AGENT_CONTEXT, PARALLEL_EXECUTION
-- Source: https://api.github.com/repos/anthropics/claude-code/releases?per_page=12
-
-### claude-code-feed
-
-- Lane: `CLAUDE_CODE`
-- Latest title: Claude Code v2.1.251
-- Impacts: AGENT_CAPABILITY, MCP, CONTEXT_HANDLING
-- RETEST: FIGMA_LAYOUT_GENERATION, ASSET_FIDELITY, VARIABLE_MODE_RUNTIME, ACCESSIBILITY, FIGMA_MCP, AGENT_CONTEXT, PARALLEL_EXECUTION
-- Source: https://raw.githubusercontent.com/anthropics/claude-code/main/feed.xml
 
 ### mdn-browser-compat-data-releases
 
