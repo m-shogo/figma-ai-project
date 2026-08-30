@@ -40,6 +40,29 @@ The current PC root `1148:6390` is 1380 × 3890 and does contain a substantive c
 
 The PC content therefore cannot be safely projected onto SP by guessing stacking, spacing, visibility, or navigation behavior.
 
+## `join_sp` is a separate SP page, not the missing counterpart
+
+A second SP root exists at `560:188` with layer name `join_sp`. It is visually complete and therefore looked like a possible source for the missing mobile body. Re-checking its actual title, breadcrumb and content disproves that mapping:
+
+- page title / breadcrumb: `大会に参加したい`
+- introduction followed by `お知らせ`
+- `青少年の健全育成`
+- `古武道の保存・継承`
+- `日程・お問い合わせ`
+- `関連団体`
+
+That editorial identity is different from `大会・行事に参加したい` at SP `1468:7508` / PC `1148:6390`.
+
+A programmatic scan of all current PC top-level frames for text containing `参加したい` found the exact participation-page wording only in PC `1148:6390` as `大会・行事に参加したい` (plus TOP/thumbnail navigation references). No current PC top-level frame contains the exact page title `大会に参加したい`.
+
+Therefore:
+
+- do **not** use `560:188` as responsive body authority for PC `1148:6390`;
+- do **not** rename or silently merge these two editorial pages;
+- `560:188` itself is SP-only until a PC counterpart or explicit Human/Figma authority proves one.
+
+This distinction closes a high-risk false-positive match while leaving the original participation-page SP-body blocker unchanged.
+
 ## Theme / WordPress dependency
 
 Current repository search does not establish a dedicated page/content owner for the literal page title. Ordinary page routing remains the safest known shell authority (`page.php` + editor content), and existing News/shared navigation masters should be reused where the eventual SP design proves the same family.
@@ -64,6 +87,8 @@ Once that exists, implementation can follow the required SP-first path and reuse
 
 A title-only responsive match is not enough to authorize implementation. Here, SP and PC clearly identify the same page, but only PC contains the body. Treating page identity as layout authority would silently turn the PC body into an invented mobile design.
 
+Likewise, a content-complete SP frame with a similar purpose-oriented title is not sufficient evidence of responsive pairing. `大会に参加したい` and `大会・行事に参加したい` must remain distinct until the design/data authority explicitly connects them.
+
 ## Reusable lesson
 
 When duplicated/generic Figma frame names exist, verify two independent layers:
@@ -71,6 +96,6 @@ When duplicated/generic Figma frame names exist, verify two independent layers:
 1. **page identity** — title / breadcrumb / editorial subject;
 2. **responsive content authority** — actual sections and information structure at both breakpoints.
 
-Both must be present before SP-first implementation. A matching page title can resolve identity while the responsive body remains legitimately blocked.
+Both must be present before SP-first implementation. A matching page title can resolve identity while the responsive body remains legitimately blocked. A semantically similar but non-identical page title must not be promoted to a responsive counterpart just because its body is complete.
 
 No Theme PHP/CSS/JS, ACF contract, `parts.php`, Form, or Formidable work is changed by this audit.
