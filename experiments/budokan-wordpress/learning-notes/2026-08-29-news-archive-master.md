@@ -23,7 +23,7 @@ No duplicate News component is warranted.
 
 ## Runtime result
 
-A disposable real WordPress + ACF PRO runtime was populated with 25 Posts and the five authored category families, then checked at the authored SP/PC widths.
+A disposable real WordPress runtime was populated with 25 Posts and the five authored category families, then checked at the authored SP/PC widths.
 
 The original 2026-08-29 assertions passed for both SP and PC except that the PC category-tab assertion was based on stale Figma sublayer evidence. The current Figma full-page authority was re-read on 2026-08-31 and supersedes that specific assertion.
 
@@ -61,7 +61,7 @@ The first QA fixture used `wp term get category <display-name>` as if the displa
 
 The second fixture changed `show_on_front` and then opened `/`, but WordPress template hierarchy still selected the Theme front-page surface, so `.news_archive` correctly did not exist.
 
-**Fix:** create an explicit static front page and a real Posts page, set `page_for_posts`, and capture `/news/` as the archive route.
+**Fix:** create an explicit static front page and a real Posts page, set `page_for_posts`, and test the authored `/news/` route.
 
 ### 3. Adding a category without replacing `Uncategorized`
 
@@ -75,14 +75,26 @@ The 2026-08-29 note recorded sublayer IDs that later disappeared while the curre
 
 **Fix:** begin each new implementation run by resolving the current top-level page/frame (`114:5409 → 560:2524` for SP and `0:1 → 413:2191` for PC), then call `get_design_context` on the current full-page frame before trusting older sublayer notes.
 
+### 5. Letting the disposable WordPress install inherit unrelated defaults
+
+The first CI version of the new runtime fixture implicitly relied on WordPress defaults for both permalink routing and `posts_per_page`. That is not a faithful representation of the authored News surface: the design/master expects `/news/` and 20 rows on page one.
+
+**Fix:** make those fixture inputs explicit with the Posts page assignment, pretty-permalink structure and `posts_per_page=20`. These are QA-environment inputs only; they do not alter Theme/CMS production contracts.
+
+### 6. Counting a shared master row by an exact class string
+
+The CI fixture initially counted `class="news_item"`, but the shared renderer intentionally emits multiple classes: `news_item news_item_archive mnl-01_article`. Under `set -euo pipefail`, the no-match `grep` exited before a useful assertion message was printed.
+
+**Fix:** assert the stable class prefix `class="news_item news_item_archive` instead of pretending the component has only one class. A runtime assertion must follow the real renderer contract rather than a simplified mental model of it.
+
 ## Reusable lesson
 
 Before interpreting a runtime visual difference as a Theme/CSS defect, verify the **fixture and Figma authority** in this order:
 
 1. Current Figma page/frame IDs still resolve and represent the intended SP/PC surface.
 2. WordPress template route is the intended route.
-3. Seed data matches the production taxonomy/content contract.
-4. The measured DOM node corresponds to the same Figma boundary.
+3. Seed data and site options match the production-facing content contract being exercised.
+4. The measured DOM node corresponds to the same Figma boundary and actual renderer class contract.
 5. Only then modify production CSS.
 
 The fixture/routing lesson has multiple independent Budokan examples and remains a project-local practice. The Figma-node-drift case is currently one concrete recurrence discovered during News archive revalidation, so it is recorded here but is **not** promoted to a repository-wide standard yet.
