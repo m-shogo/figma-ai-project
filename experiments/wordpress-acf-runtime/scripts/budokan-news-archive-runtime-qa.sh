@@ -64,6 +64,7 @@ news_id="$(docker compose run --rm cli post create --post_type=page --post_statu
 docker compose run --rm cli option update show_on_front page >/dev/null
 docker compose run --rm cli option update page_on_front "$front_id" >/dev/null
 docker compose run --rm cli option update page_for_posts "$news_id" >/dev/null
+docker compose run --rm cli rewrite structure '/%postname%/' --hard >/dev/null
 
 declare -a labels=('武道' '書道' '刊行物' '研修' '事務局')
 declare -a term_ids=()
