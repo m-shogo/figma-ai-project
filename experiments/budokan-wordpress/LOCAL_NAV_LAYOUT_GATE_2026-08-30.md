@@ -64,6 +64,27 @@ Therefore `sidebar.php` is currently placed in the **right-side grid column**, w
 
 This also exposes a second dependency: the current ordinary-page `.gc_main` column is narrower than the 960px body shown in the Regional Training Figma page. The page-layout owner must be checked before moving the sidebar or flattening `._column` globally.
 
+## Cross-family Figma re-check
+
+Two additional ordinary-page families were inspected after the CSS attempt was stopped:
+
+- Training Center: SP `1468:6595` / PC `1137:5348`
+  - PC body container: `1296:8751`, width `962px`
+  - no Local Navigation section is present between body and breadcrumb/footer
+- Modern Budo: SP `1455:5489` / PC `1145:6042`
+  - PC body container: `1687:6220`, width `960px`
+  - no Local Navigation section is present between body and breadcrumb/footer
+
+Regional Training already provides the third data point:
+
+- Regional Training: PC `1203:4865`
+  - body container: width `960px`
+  - Local Navigation exists after the body as a full-width section
+
+So the **960px single-column ordinary-page body is now repeated Figma evidence across three page families**, while Local Navigation is optional/contextual rather than universal. This makes the legacy `1fr + 260px` ordinary-page shell a higher-priority master dependency than Local Navigation styling itself.
+
+It does **not** yet prove the exact WordPress migration rule. We still need to know which templates/pages should adopt the new one-column shell and how an optional `sidebar-nav` should be emitted after the body without leaving an empty gap on pages that do not belong to a local-nav branch.
+
 ## Failed approach and cause
 
 ### Attempt
@@ -78,24 +99,25 @@ The initial work treated the Local Navigation renderer as if its parent already 
 
 Before styling a full-width Figma section, verify not only its renderer and data owner but also the **parent layout owner and DOM placement at the target breakpoint**. A correct component renderer inside an incompatible parent grid is still the wrong implementation surface.
 
-This is one Budokan-local occurrence. Do not promote it to a company-wide standard yet.
+This is now repeated inside the Budokan ordinary-page family (three Figma pages share the 960px body), so it is strong enough to guide the Budokan page-shell investigation. It is still not evidence for a company-wide standard.
 
 ## Smallest authority needed before production implementation
 
-Determine whether ordinary Budokan pages in the new design are intended to replace the legacy two-column `.global_inner._column` layout with a one-column 960px body followed by a full-width Local Navigation, or whether only a specific page family does so.
+The Figma side is now substantially clearer: current ordinary-page designs use a centered ~960px body, and only some families add a full-width Local Navigation after it.
 
-Useful authority would be either:
+The remaining authority is on the WordPress/Theme side:
 
-- an actual production WordPress page/runtime showing the intended new ordinary-page shell, or
-- explicit Theme/Figma ownership confirming that `page.php` should move `get_sidebar()` outside `.global_inner._column` (and defining which ordinary pages are affected).
+- confirm the intended migration boundary for legacy `.global_inner._column` pages; and
+- confirm the runtime rule for whether `sidebar-nav` has a current branch, so `get_sidebar()` can be placed after the body without emitting an empty visual section.
 
-The exact fourth Local Navigation label is **not** the blocker for CSS anymore; it remains content authority and must stay fail-closed.
+An actual production WordPress menu/runtime export remains the smallest high-value input. The exact fourth Local Navigation label is **not** the blocker for CSS anymore; it remains content authority and must stay fail-closed.
 
 ## Safe next investigation
 
-1. Compare at least two more Figma ordinary-page families that include Local Navigation and measure their body width / Local Navigation placement.
-2. Audit all Theme templates that use `.global_inner._column` / `get_sidebar()` before changing the shared page shell.
-3. If repeated Figma evidence confirms the same one-column body + bottom Local Navigation shell, implement that shell as the master dependency first.
-4. Then return to Local Navigation: SP styling → SP runtime QA → PC extension → PC runtime QA → visual diff.
+1. Audit the Theme templates/usages of `.global_inner._column` and `get_sidebar()` to determine blast radius.
+2. Build a disposable WordPress fixture with one page that belongs to a `sidebar-nav` branch and one that does not.
+3. Prove an optional bottom Local Navigation render contract without guessed labels/content.
+4. Implement the 960px ordinary-page shell as the master dependency only if the runtime/template audit confirms the blast radius.
+5. Then return to Local Navigation: SP styling → SP runtime QA → PC extension → PC runtime QA → visual diff.
 
 No production CSS from the aborted attempt remains in the final branch diff.
