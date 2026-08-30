@@ -5,12 +5,29 @@ if (!url) process.exit(2);
 const assert = (condition, message) => { if (!condition) throw new Error(message); };
 const close = (actual, expected, tolerance = 2) => Math.abs(actual - expected) <= tolerance;
 
+async function requireCalendar(page, label) {
+  const errors = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await page.goto(url, { waitUntil: 'networkidle' });
+  await page.waitForTimeout(1500);
+  const state = await page.evaluate(() => ({
+    hasCalendarNode: Boolean(document.querySelector('#top_calendar')),
+    hasFcNode: Boolean(document.querySelector('#top_calendar .fc')),
+    fullCalendarType: typeof window.FullCalendar,
+    jqueryType: typeof window.jQuery,
+    localizedConfig: typeof window.nipponbudokanTopCal,
+    scripts: [...document.scripts].map(s => s.src).filter(Boolean).filter(src => /fullcalendar|home\.js|jquery/.test(src)),
+  }));
+  if (!state.hasFcNode) {
+    throw new Error(`${label} FullCalendar did not render: ${JSON.stringify({ ...state, pageErrors: errors })}`);
+  }
+}
+
 const browser = await chromium.launch({ headless: true });
 try {
   const mobileContext = await browser.newContext({ viewport: { width: 375, height: 2600 }, isMobile: true, hasTouch: true });
   const mobilePage = await mobileContext.newPage();
-  await mobilePage.goto(url, { waitUntil: 'networkidle' });
-  await mobilePage.waitForSelector('#top_calendar .fc');
+  await requireCalendar(mobilePage, 'SP');
   const sp = await mobilePage.evaluate(() => {
     const section = document.querySelector('#top_events-01');
     const heading = section?.querySelector('.te_heading_ja');
@@ -28,9 +45,7 @@ try {
       bannerWritingMode: getComputedStyle(banner).writingMode,
       firstImageWidth: firstImage.getBoundingClientRect().width,
       firstImageHeight: firstImage.getBoundingClientRect().height,
-      firstCardColumns: getComputedStyle(cards[0].querySelector('.te_card_link')).gridTemplateColumns,
       viewHeights: views.map(el => el.getBoundingClientRect().height),
-      calendarRendered: Boolean(section.querySelector('#top_calendar .fc')),
       snsWidths: snsLinks.map(el => el.getBoundingClientRect().width),
       snsHeights: snsLinks.map(el => el.getBoundingClientRect().height),
       snsFlow: getComputedStyle(section.querySelector('.te_sns ul')).flexDirection,
@@ -44,7 +59,6 @@ try {
   assert(sp.bannerWritingMode.includes('horizontal'), `SP banner writing-mode ${sp.bannerWritingMode}`);
   assert(close(sp.firstImageWidth, 104) && close(sp.firstImageHeight, 78), `SP event image ${sp.firstImageWidth}x${sp.firstImageHeight}`);
   assert(sp.viewHeights.every(h => close(h, 50, 1)), `SP tabs ${sp.viewHeights.join(',')}`);
-  assert(sp.calendarRendered, 'SP FullCalendar did not render');
   assert(sp.snsFlow === 'column', `SP SNS flow ${sp.snsFlow}`);
   assert(sp.snsWidths.every(w => close(w, 280, 1)), `SP SNS widths ${sp.snsWidths.join(',')}`);
   assert(sp.snsHeights.every(h => close(h, 60, 1)), `SP SNS heights ${sp.snsHeights.join(',')}`);
@@ -52,8 +66,7 @@ try {
 
   const desktopContext = await browser.newContext({ viewport: { width: 1380, height: 1800 } });
   const desktopPage = await desktopContext.newPage();
-  await desktopPage.goto(url, { waitUntil: 'networkidle' });
-  await desktopPage.waitForSelector('#top_calendar .fc');
+  await requireCalendar(desktopPage, 'PC');
   const pc = await desktopPage.evaluate(() => {
     const section = document.querySelector('#top_events-01');
     const heading = section?.querySelector('.te_heading_ja');
@@ -74,14 +87,12 @@ try {
     return {
       headingSize: parseFloat(getComputedStyle(heading).fontSize),
       layoutDisplay: layoutStyle.display,
-      layoutColumns: layoutStyle.gridTemplateColumns,
       layoutGap: parseFloat(layoutStyle.columnGap),
       bannerWritingMode: getComputedStyle(banner).writingMode,
       bannerWidth: bannerRect.width,
       imageWidth: imageRect.width,
       imageHeight: imageRect.height,
       calendarWidth: calRect.width,
-      calendarRendered: Boolean(section.querySelector('#top_calendar .fc')),
       snsWidth: snsRect.width,
       snsFlow: getComputedStyle(section.querySelector('.te_sns ul')).flexDirection,
       snsWidths: linkRects.map(r => r.width),
@@ -96,7 +107,6 @@ try {
   assert(close(pc.bannerWidth, 48, 1), `PC banner width ${pc.bannerWidth}`);
   assert(close(pc.imageWidth, 200) && close(pc.imageHeight, 150), `PC event image ${pc.imageWidth}x${pc.imageHeight}`);
   assert(close(pc.calendarWidth, 420, 1), `PC calendar rail ${pc.calendarWidth}`);
-  assert(pc.calendarRendered, 'PC FullCalendar did not render');
   assert(pc.snsWidth >= 1370, `PC SNS full-width breakout ${pc.snsWidth}`);
   assert(pc.snsFlow === 'row', `PC SNS flow ${pc.snsFlow}`);
   assert(pc.snsWidths.every(w => close(w, 280, 1)), `PC SNS widths ${pc.snsWidths.join(',')}`);
