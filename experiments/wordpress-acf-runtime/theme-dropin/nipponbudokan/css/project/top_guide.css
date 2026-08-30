@@ -276,3 +276,61 @@
 .global_contents > .top_guide-01 {
     padding-bottom: 0;
 }
+
+/* SP sticky derivative: Figma 1360:9370. It replaces the generic Footer
+   shortcut rail on TOP and links back to the existing #top_guide-01 master. */
+.top_purposeMenu {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 80;
+    display: block;
+    height: 56px;
+    border-top: 1px solid #4e5055;
+    background-color: var(--color-text);
+
+    .tpm_link {
+        box-sizing: border-box;
+        display: grid;
+        grid-template-columns: 1fr 16px;
+        align-items: center;
+        width: 100%;
+        height: 56px;
+        padding-inline: 24px;
+        color: var(--color-secondary);
+        text-decoration: none;
+    }
+
+    .tpm_label {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        min-width: 0;
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 1;
+        letter-spacing: 0.05em;
+    }
+
+    .tpm_listIcon::before {
+        content: '\f03a';
+        font-family: var(--font-awesome);
+        font-size: 15px;
+        font-weight: 300;
+        line-height: 1;
+    }
+
+    .tpm_arrow::before {
+        content: '\f077';
+        font-family: var(--font-awesome);
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 1;
+    }
+
+    @media screen and (min-width: 768px) {
+        display: none;
+    }
+}

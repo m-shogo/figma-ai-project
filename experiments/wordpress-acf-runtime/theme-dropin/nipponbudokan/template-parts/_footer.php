@@ -74,8 +74,10 @@
             <a href="#"><span>Page Top</span></a>
         </p>
     </div>
-    <nav class="gf_sticky" aria-label="ショートカット">
-        <a class="gf_sticky_contact" href="<?php echo esc_url(home_url('/contact/')); ?>"><span>お問い合わせ</span></a>
-        <a class="gf_sticky_access" href="<?php echo esc_url(home_url('/access/')); ?>"><span>アクセス</span></a>
-    </nav>
+    <?php if (!is_front_page()): ?>
+        <nav class="gf_sticky" aria-label="ショートカット">
+            <a class="gf_sticky_contact" href="<?php echo esc_url(home_url('/contact/')); ?>"><span>お問い合わせ</span></a>
+            <a class="gf_sticky_access" href="<?php echo esc_url(home_url('/access/')); ?>"><span>アクセス</span></a>
+        </nav>
+    <?php endif; ?>
 </footer>

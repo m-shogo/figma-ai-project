@@ -3,10 +3,14 @@ name: Budokan TOP Guide Runtime
 on:
   pull_request:
     paths:
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/footer.php'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_footer.php'
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_top-guide.php'
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/project/top_guide.css'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-top-guide-runtime-qa.sh'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-top-guide-browser-qa.mjs'
+      - 'experiments/wordpress-acf-runtime/scripts/budokan-top-purpose-terminal-browser-qa.mjs'
+      - 'experiments/budokan-wordpress/TOP_PURPOSE_TERMINAL_ALIGNMENT_2026-08-31.md'
       - '.github/workflows/budokan-top-guide-runtime.yml'
   workflow_dispatch:
 
@@ -34,6 +38,7 @@ jobs:
           npm install --no-save --package-lock=false playwright@1.54.2
           npx playwright install --with-deps chromium
           node experiments/wordpress-acf-runtime/scripts/budokan-top-guide-browser-qa.mjs "$qa_url"
+          node experiments/wordpress-acf-runtime/scripts/budokan-top-purpose-terminal-browser-qa.mjs "$qa_url"
 
       - name: Cleanup disposable WordPress runtime
         if: always()
