@@ -52,7 +52,12 @@ fi
 docker compose run --rm cli option update blog_public 0 >/dev/null
 docker compose run --rm cli option update permalink_structure '/%postname%/' >/dev/null
 docker compose run --rm cli theme activate "$THEME_SLUG" >/dev/null
-docker compose run --rm cli eval-file /fixture/scripts/seed-budokan-local-nav-qa.php >/dev/null
+# The disposable fixture deliberately refuses non-local environments. The
+# Apache service receives WP_ENVIRONMENT_TYPE through WORDPRESS_CONFIG_EXTRA,
+# while the separate WP-CLI service does not inherit that container setting.
+# Pass the environment explicitly to this one QA mutation instead of weakening
+# the fixture's production safety guard.
+docker compose run --rm -e WP_ENVIRONMENT_TYPE=local cli eval-file /fixture/scripts/seed-budokan-local-nav-qa.php >/dev/null
 
 page_id="$(docker compose run --rm cli option get budokan_local_nav_qa_page_id)"
 [[ "$page_id" =~ ^[0-9]+$ ]] || {
