@@ -22,12 +22,13 @@ try {
     const noticeText = notice?.querySelector('.tn_text, .tn_item');
     const guide = root?.querySelector('.tm_guide');
     if (!root || !mv || !bg || !inner || !title || !lead || !notice || !noticeInner || !noticeText || !guide) return null;
+    const rootRect = root.getBoundingClientRect();
     const mvRect = mv.getBoundingClientRect();
     const bgRect = bg.getBoundingClientRect();
     const innerRect = inner.getBoundingClientRect();
     const noticeRect = notice.getBoundingClientRect();
     return {
-      rootWidth: root.getBoundingClientRect().width,
+      rootWidth: rootRect.width,
       viewportWidth: document.documentElement.clientWidth,
       mvWidth: mvRect.width,
       bgHeight: bgRect.height,
@@ -47,7 +48,7 @@ try {
   assert(sp, 'SP TOP FV elements missing');
   assert(close(sp.viewportWidth, 375), `SP viewport width ${sp.viewportWidth}`);
   assert(close(sp.rootWidth, sp.viewportWidth), `SP root width ${sp.rootWidth} vs viewport ${sp.viewportWidth}`);
-  assert(close(sp.mvWidth, sp.viewportWidth), `SP MV width ${sp.mvWidth}`);
+  assert(close(sp.mvWidth, sp.rootWidth), `SP MV width ${sp.mvWidth} vs root ${sp.rootWidth}`);
   assert(close(sp.bgHeight, 483, 1), `SP MV height ${sp.bgHeight}`);
   assert(close(sp.titleSize, 32, 0.5), `SP title size ${sp.titleSize}`);
   assert(close(sp.titleLineHeight, 44.8, 1), `SP title line-height ${sp.titleLineHeight}`);
@@ -77,12 +78,14 @@ try {
     const notice = root?.querySelector('.top_notice-01');
     const noticeInner = notice?.querySelector('.tn_inner');
     if (!root || !stage || !mv || !bg || !inner || !title || !lead || !guide || !notice || !noticeInner) return null;
+    const rootRect = root.getBoundingClientRect();
     const stageRect = stage.getBoundingClientRect();
     const mvRect = mv.getBoundingClientRect();
     const guideRect = guide.getBoundingClientRect();
     const innerRect = inner.getBoundingClientRect();
     return {
-      viewportWidth: document.documentElement.clientWidth,
+      rootLeft: rootRect.left,
+      rootWidth: rootRect.width,
       stageLeft: stageRect.left,
       stageWidth: stageRect.width,
       stageGap: parseFloat(getComputedStyle(stage).columnGap),
@@ -98,8 +101,9 @@ try {
     };
   });
   assert(pc, 'PC TOP FV elements missing');
-  assert(close(pc.stageLeft, 0, 1), `PC stage left ${pc.stageLeft}`);
-  assert(close(pc.stageWidth, pc.viewportWidth, 1), `PC stage width ${pc.stageWidth} vs viewport ${pc.viewportWidth}`);
+  assert(close(pc.stageLeft, pc.rootLeft, 1), `PC stage/root left ${pc.stageLeft}/${pc.rootLeft}`);
+  assert(close(pc.stageWidth, pc.rootWidth, 1), `PC stage/root width ${pc.stageWidth}/${pc.rootWidth}`);
+  assert(pc.stageWidth >= 1360 && pc.stageWidth <= 1380, `PC rendered stage width ${pc.stageWidth}`);
   assert(close(pc.stageGap, 20, 1), `PC stage gap ${pc.stageGap}`);
   assert(close(pc.mvHeight, 600, 1), `PC MV height ${pc.mvHeight}`);
   assert(close(pc.guideWidth, 240, 1) && close(pc.guideHeight, 600, 1), `PC guide ${pc.guideWidth}x${pc.guideHeight}`);
