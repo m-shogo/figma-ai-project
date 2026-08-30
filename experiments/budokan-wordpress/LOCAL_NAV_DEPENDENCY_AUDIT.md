@@ -61,6 +61,15 @@ Local Navigation は PC でも **本文の後**に full-width section として�
 - child item: 5px gold dot + 12px gap + 14px copy + bottom rule
 - current item uses medium copy and gold bottom rule
 
+Current design-context extraction confirms the first three concrete PC child labels:
+
+1. `全国武道指導者研修会`
+2. `地域社会武道指導者研修会`（current）
+3. `中学校武道授業指導法研究事業`
+4. Figma remains literal placeholder `ローカルナビゲーション`
+
+The fourth slot therefore must **not** be assigned a production label from visual inference alone.
+
 ## Theme / WordPress owner proof
 
 ### `page.php`
@@ -123,6 +132,32 @@ That renderer appears before the `.global_inner._column` content in PHP. By cont
 
 Do not merge `sidebar-nav` and `dropdown-nav`, or copy their data between menu locations, without explicit runtime/editor authority.
 
+## Live production-site authority follow-up
+
+The current public 日本武道館 site was checked as an independent production-content authority after the repository and Drive did not expose a seeded `sidebar-nav` export.
+
+Production page:
+
+- `https://www.nipponbudokan.or.jp/shinkoujigyou/gyouji_04` — 地域社会武道指導者研修会
+- `https://www.nipponbudokan.or.jp/shinkoujigyou` — 武道の振興・普及 index
+
+Current production content confirms that the Figma labels are real sibling destinations under the `武道の振興・普及` / instructor-training area:
+
+- 全国武道指導者研修会
+- 地域社会武道指導者研修会
+- 中学校武道授業指導法研究事業
+
+The production index also contains `中学校武道必修化指導書`, but **that does not prove it is the fourth Figma local-nav slot**. Figma still calls the fourth item `ローカルナビゲーション`, and the public index does not expose the exact `sidebar-nav` WordPress menu tree or menu-item IDs. Therefore the fourth label remains fail-closed.
+
+What this new evidence changes:
+
+- A disposable QA fixture may safely use the three confirmed sibling labels above to exercise the existing walker/current-ancestor behavior.
+- The fourth QA item may only be a clearly marked sentinel used to test four-column geometry; it must not be promoted into production content or documented as a real destination.
+- CSS must depend on structural classes/depth/current state, not on Japanese label strings or guessed URLs.
+- Production menu seeding still requires the actual WordPress menu hierarchy/export or explicit content-owner confirmation.
+
+This narrows the blocker from “the hierarchy is unknown” to “three siblings are independently confirmed; the exact fourth slot and production menu tree are still unknown.”
+
 ## What is now safe / what is still not safe
 
 ### Safe conclusions
@@ -132,31 +167,35 @@ Do not merge `sidebar-nav` and `dropdown-nav`, or copy their data between menu l
 3. The same sidebar markup is the reuse-before-build target for both responsive forms.
 4. `local_navigation.css` is the correct component-specific CSS extension point; generic `module_menu.css` remains the interaction/layout baseline.
 5. No new ACF field group, bespoke page template, duplicate TOP component, or second menu data contract is justified.
+6. The three named PC sibling destinations are corroborated by the current production site and can be used in disposable QA fixtures.
 
 ### Remaining implementation gates
 
-Before committing the visual CSS, runtime must prove the actual `sidebar-nav` hierarchy because the Figma forms expose different hierarchy levels:
+Before committing production visual CSS, runtime still must prove a production-equivalent `sidebar-nav` hierarchy because the Figma forms expose different hierarchy levels:
 
 - SP title: `武道 振興・普及事業`
 - PC title: `指導者研修・指導法研究`
-- PC list: four child pages
+- PC list: four child slots, of which only three production labels are independently confirmed
 
-The walker can represent nested hierarchy, but the repository does not contain authoritative seeded `sidebar-nav` menu items. CSS that hides/shows depth or replaces labels must not be guessed from class names alone.
+The walker can represent nested hierarchy, but the repository and Drive do not contain an authoritative seeded `sidebar-nav` menu export. CSS that hides/shows depth or replaces labels must not be guessed from class names alone.
 
-Smallest missing runtime authority:
+Smallest missing production authority:
 
-- a disposable WordPress `sidebar-nav` fixture matching the intended production hierarchy, or Human confirmation of that hierarchy.
+- actual WordPress `sidebar-nav` hierarchy/export, or explicit confirmation of the fourth slot and parent/child menu tree.
 
-Once that exists, the next implementation unit can be:
+Safe next implementation investigation:
 
-1. seed disposable `sidebar-nav` fixture only in QA;
-2. SP CSS first in `local_navigation.css`;
-3. SP runtime screenshot/interaction QA against `560:632`;
-4. PC extension under `min-width: 768px`;
-5. PC runtime QA against `1216:6311`;
-6. visual diff/fixes;
-7. remove disposable fixture/workflow from final diff;
-8. clean PR/CI/squash merge.
+1. seed a **disposable QA-only** hierarchy using the three confirmed siblings plus a clearly marked fourth sentinel;
+2. render the existing walker and inspect emitted depth/current classes;
+3. if structural selectors alone can express the design, implement SP CSS first in `local_navigation.css`;
+4. SP runtime screenshot/interaction QA against `560:632`;
+5. PC extension under `min-width: 768px`;
+6. PC runtime QA against `1216:6311`;
+7. visual diff/fixes;
+8. remove disposable fixture/workflow from final diff;
+9. clean PR/CI/squash merge.
+
+If the CSS would need production-label knowledge, stop rather than baking the sentinel or guessed fourth destination into product code.
 
 ## Mistake / cause / reusable lesson
 
