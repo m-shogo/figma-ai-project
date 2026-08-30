@@ -80,7 +80,15 @@ A disposable WordPress runtime QA and Chromium geometry QA now assert the actual
 
 SP assertions cover full-width 483px MV, 32px title, 15px lead, x=20/y=246 text placement, 335×70 overlapped notice, and hidden desktop guide.
 
-PC assertions cover 1380px stage geometry, 20px column gap, 600px MV, 240×600 guide, 44px title, 18px lead, y=330 title block, and 700×80 notice.
+PC assertions cover the stage relative to the rendered TOP root, 20px column gap, 600px MV, 240×600 guide, 44px title, 18px lead, y=330 title block, and 700×80 notice.
+
+### Failed browser assertion and correction
+
+The first CI browser run correctly passed the real WordPress runtime step but failed on the assertion `PC stage width === nominal 1380px viewport`. Linux Chromium rendered the page content/stage at 1365px because of its desktop scrollbar while the Playwright viewport remained configured as 1380px. This was a **QA harness assumption**, not evidence that the Theme had lost 15px of intended layout width.
+
+The fix was not to change production CSS. The browser QA now checks the meaningful relationship instead: `.tm_stage` must occupy the same rendered width and left edge as `.top_mainVisual`, while the design-significant internal geometry (60/20 padding contract, 20px gap, 600px MV, 240px guide, 700×80 notice) is validated independently. This avoids hard-coding browser chrome/scrollbar behavior into the Theme.
+
+This failure is retained here because it is a useful concrete example of separating a test-harness false negative from an implementation defect.
 
 ## Reusable lesson
 
