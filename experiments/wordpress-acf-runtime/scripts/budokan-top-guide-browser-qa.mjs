@@ -15,12 +15,17 @@ function close(actual, expected, tolerance = 2) {
 }
 
 const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 375, height: 2200 } });
+const mobileContext = await browser.newContext({
+  viewport: { width: 375, height: 2200 },
+  isMobile: true,
+  hasTouch: true,
+});
+const mobilePage = await mobileContext.newPage();
 
 try {
-  await page.goto(url, { waitUntil: 'networkidle' });
+  await mobilePage.goto(url, { waitUntil: 'networkidle' });
 
-  const sp = await page.evaluate(() => {
+  const sp = await mobilePage.evaluate(() => {
     const section = document.querySelector('#top_guide-01');
     const intro = section?.querySelector('.tg_intro');
     const cards = section ? [...section.querySelectorAll('.tg_card')] : [];
@@ -39,6 +44,7 @@ try {
     const titleStyle = getComputedStyle(firstTitle);
 
     return {
+      sectionWidth: sectionRect.width,
       introHeight: introRect.height,
       firstCardLeft: cardRects[0].left - sectionRect.left,
       firstCardTop: cardRects[0].top - sectionRect.top,
@@ -53,6 +59,7 @@ try {
   });
 
   assert(sp, 'SP TOP Guide elements were not found.');
+  assert(close(sp.sectionWidth, 375), `SP mobile layout viewport expected 375px section, got ${sp.sectionWidth}.`);
   assert(close(sp.introHeight, 514), `SP intro expected 514px, got ${sp.introHeight}.`);
   assert(close(sp.firstCardLeft, 32), `SP first card x expected 32px, got ${sp.firstCardLeft}.`);
   assert(close(sp.firstCardTop, 401), `SP first card y expected 401px, got ${sp.firstCardTop}.`);
@@ -63,10 +70,13 @@ try {
   assert(close(sp.leadSize, 16, 0.5), `SP lead expected 16px, got ${sp.leadSize}.`);
   assert(close(sp.titleSize, 18, 0.5), `SP card title expected 18px, got ${sp.titleSize}.`);
 
-  await page.setViewportSize({ width: 1380, height: 1200 });
-  await page.reload({ waitUntil: 'networkidle' });
+  await mobileContext.close();
 
-  const pc = await page.evaluate(() => {
+  const desktopContext = await browser.newContext({ viewport: { width: 1380, height: 1200 } });
+  const desktopPage = await desktopContext.newPage();
+  await desktopPage.goto(url, { waitUntil: 'networkidle' });
+
+  const pc = await desktopPage.evaluate(() => {
     const section = document.querySelector('#top_guide-01');
     const intro = section?.querySelector('.tg_intro');
     const cards = section ? [...section.querySelectorAll('.tg_card')] : [];
@@ -109,6 +119,8 @@ try {
   assert(pc.titleDirection === 'row', `PC card title expected row, got ${pc.titleDirection}.`);
   assert(close(pc.titleSize, 20, 0.5), `PC card title expected 20px, got ${pc.titleSize}.`);
   assert(close(pc.leadSize, 16, 0.5), `PC lead expected 16px, got ${pc.leadSize}.`);
+
+  await desktopContext.close();
 
   console.log('PASS Budokan TOP Guide SP geometry QA.');
   console.log('PASS Budokan TOP Guide PC geometry QA.');
