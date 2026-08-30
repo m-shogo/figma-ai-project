@@ -99,7 +99,7 @@ for required in \
   'class="news_archive"' \
   'class="news_tabs news_tabs_archive"' \
   'class="module_newsList-01"' \
-  'class="news_pager module_pager-01"' \
+  'class="module_pager-01 news_pager"' \
   '>すべて<' \
   '>武道<' \
   '>書道<' \
