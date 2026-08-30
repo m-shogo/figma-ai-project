@@ -72,9 +72,13 @@ template="$(docker compose run --rm cli post meta get "$page_id" _wp_page_templa
 }
 
 html="$(mktemp)"
-http_code="$(curl --silent --show-error --output "$html" --write-out '%{http_code}' "$WP_URL/?page_id=$page_id")"
+# WordPress may canonically redirect ?page_id=N to the pretty permalink after
+# permalink_structure is enabled. Follow only a small bounded redirect chain
+# and assert the final response is 200; a normal canonical redirect is not a
+# product/runtime failure.
+http_code="$(curl --silent --show-error --location --max-redirs 3 --output "$html" --write-out '%{http_code}' "$WP_URL/?page_id=$page_id")"
 [[ "$http_code" == "200" ]] || {
-  echo "FAIL Local Navigation fixture returned HTTP ${http_code}." >&2
+  echo "FAIL Local Navigation fixture returned final HTTP ${http_code}." >&2
   exit 1
 }
 
