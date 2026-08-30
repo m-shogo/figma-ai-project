@@ -21,6 +21,10 @@ Pages: PC `0:1` / SP `114:5409`
 | 研修センター | PC | `1137:5348` | navigation（layer name は汎用名。page title / body / breadcrumb で研修センター画面と確認） |
 | 研修センター（現行SP counterpart） | SP | `1468:6595` | SP_navigation（PCと同じ施設案内→料金→お知らせ→ご利用案内構造） |
 | 研修センター（旧SP案・参照注意） | SP | `560:377` | training_center_sp（料金詳細を欠き、旧料金改定文言を含む） |
+| 地域社会武道指導者研修会 | PC | `1203:4865` | page（title/body/breadcrumbでSP counterpart確認） |
+| 地域社会武道指導者研修会 | SP | `560:537` | training_sp |
+| 地域社会武道指導者研修会 Local Nav | PC | `1216:6311` | local_nav |
+| 地域社会武道指導者研修会 SP navigation | SP | `560:632` | selector/dropdown-style navigation area |
 | SP メニュー展開例 | SP | `2096:9496` | TopPage PlanB SP① |
 | SP TOP 候補 | SP | `446:10020` / `2096:9573` | SP |
 
@@ -30,7 +34,8 @@ Pages: PC `0:1` / SP `114:5409`
 2. パーツ集 → parts / SP_parts（本文 markup は Theme の `parts.php` 正本）
 3. 以降のページ → 固定ページ順ではなく master/derivative 依存と reuse-before-build で選択
 4. 研修センター → `page.php` + Gutenberg/既存 Parts composition が現行候補。詳細は `TRAINING_CENTER_DEPENDENCY_AUDIT.md`
-5. TOP → topdesign04 + SP TOP（既存 master の thin derivative を優先）
+5. 地域社会武道指導者研修会 → `page.php` + Gutenberg/既存 shared block composition が現行候補。詳細は `REGIONAL_TRAINING_DEPENDENCY_AUDIT.md`
+6. TOP → topdesign04 + SP TOP（既存 master の thin derivative を優先）
 
 ## 注意
 
@@ -39,3 +44,4 @@ Pages: PC `0:1` / SP `114:5409`
 - Figma の top-level layer name だけで画面を断定しない。汎用名・旧名が残るため、page title / 本文 / breadcrumb / global shell を突き合わせて authority を確定する
 - 研修センターSPは `1468:6595` をPC `1137:5348` のresponsive counterpartとして扱う。両者は施設案内、6枚gallery、料金詳細、お知らせ、ご利用案内の構造と料金改定内容が対応する
 - `560:377` は同名ページの旧SP案として残っている。最新実装authorityへ昇格させない
+- 地域社会武道指導者研修会はSP `560:537` / PC `1203:4865`。この実ページではPC `local_nav` に対してSPは4列navの縮小版ではなく、`560:632` のselector/dropdown-style navigationへinteraction formが切り替わる
