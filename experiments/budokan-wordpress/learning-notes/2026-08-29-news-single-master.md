@@ -15,6 +15,7 @@
    - PC: 48px vertical padding, 960px inner width at authored 1380px, 32px Zen Old Mincho Bold title.
    - Category label remains the existing `_label-category.php` output and measures 80×23px in runtime.
 4. The lead image remains the WordPress featured image. Runtime confirms 335px at the Theme's SP content boundary and 800px on PC; the existing attachment caption supplies the authored caption surface.
+5. A later whole-surface recheck found a small content-format drift missed by the geometry-focused pass: both SP and PC Figma use dot-separated dates (`2025.00.00` pattern), while `single.php` still emitted `Y/m/d`. The display format is now `Y.m.d`; the machine-readable `datetime` attribute remains ISO `Y-m-d`.
 
 ## Mistakes / failed approaches and causes
 
@@ -30,6 +31,10 @@ The next QA used browser viewport widths 375/1380 directly. This runner reserves
 
 An initial implementation tried `100vw` plus `calc(50% - 50vw)` while the title module still lived inside `.global_inner`. Runtime exposed a -7.5px offset. The correct fix was structural: move the title band outside the constrained content container, then use natural `width:100%`. Do not compensate for a wrong DOM responsibility boundary with viewport math when Figma establishes a full-width sibling section.
 
+### Geometry PASS did not cover punctuation fidelity
+
+The first News single pass correctly verified width, typography, featured-image placement, category labeling, and breadcrumb ownership, but its runtime assertions did not compare the visible date separator. That allowed slash-separated `Y/m/d` to survive even though both current Figma authorities show dots. The fix changes only the presentation format and keeps the semantic `datetime` value unchanged.
+
 ## Successful runtime evidence
 
 Real WordPress + ACF PRO + Budokan Theme runtime QA passed for both authored canvases:
@@ -42,4 +47,4 @@ The QA fixture uses an existing Theme image only to exercise the WordPress featu
 
 ## Reusable lesson
 
-When a Figma/WordPress mismatch looks like a spacing or width problem, first verify the **responsibility boundary**: which DOM/module should own the content and whether it belongs inside or outside the shared constrained container. Then verify fixture semantics (taxonomy/route/data contract), and only after that tune CSS geometry. Promote this beyond the Budokan learning notes only after repeated independent evidence.
+When a Figma/WordPress mismatch looks like a spacing or width problem, first verify the **responsibility boundary**: which DOM/module should own the content and whether it belongs inside or outside the shared constrained container. Then verify fixture semantics (taxonomy/route/data contract), and only after that tune CSS geometry. For final visual closure, include small visible formatting tokens such as date separators in the comparison rather than treating geometry PASS as total fidelity. Promote these lessons beyond Budokan only after repeated independent evidence.
