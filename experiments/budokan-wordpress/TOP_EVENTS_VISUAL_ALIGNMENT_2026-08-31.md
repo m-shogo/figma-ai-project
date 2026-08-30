@@ -72,7 +72,7 @@ The existing Theme already had the correct ownership but its geometry represente
 - PC SNS controls were 64px high rather than 80px;
 - section background and several type sizes no longer matched current Figma.
 
-The fix changes only CSS. Existing PHP/JS/data owners remain in place.
+The production fix changes only CSS. Existing PHP/JS/data owners remain in place.
 
 ## WordPress/data authority still unresolved
 
@@ -89,7 +89,7 @@ A dedicated workflow renders the real Theme front page in disposable WordPress a
 - Events owner and four fallback cards render;
 - FullCalendar core, Google Calendar plugin, and `home.js` are enqueued;
 - no production Google credentials are fabricated;
-- Chromium renders a real `.fc` calendar at both widths.
+- Chromium renders a real FullCalendar instance at both widths.
 
 Browser geometry assertions intentionally target Theme-owned shells rather than FullCalendar's internal DOM.
 
@@ -112,10 +112,23 @@ PC contract:
 - FullCalendar rendered;
 - full-width SNS breakout with three 280×80 controls in one row.
 
+### QA false negative and correction
+
+The first browser QA incorrectly asserted `#top_calendar .fc`, assuming FullCalendar would create a nested `.fc` element. The workflow therefore reported that the calendar had not rendered even though the scripts and runtime were healthy.
+
+A diagnostic pass temporarily traced `home.js` and proved that `topCalendar()` entered and `calendar.render()` completed with no page errors. The actual FullCalendar v6 behavior is to add `fc` to the supplied root itself, so the correct runtime proof is `#top_calendar.fc`.
+
+Because the failure was in the QA assumption rather than Theme behavior, the temporary initialization/trace edits to `home.js` were fully reverted. Production `home.js` remains byte-for-byte equal to its pre-pass version. The final browser contract now checks the correct root state and the SP/PC geometry tests pass.
+
+Cause: vendor root ownership was assumed instead of observed.
+
+Reusable lesson: when validating a third-party widget, inspect the runtime root state before changing production initialization code. A failing selector is not evidence of a failing component.
+
 ## Reusable findings
 
 1. A responsive derivative may move to a visually separate band on PC while still sharing one markup owner. Do not duplicate the SNS data/markup solely because Figma promotes it to a sibling PC frame.
 2. For third-party widgets, assert the Theme-owned container/controls and the fact that the widget rendered; do not make vendor-internal DOM the durable QA contract.
 3. Visual work can safely use an authorized sample-data branch when production semantics are unresolved, but the fixture must explicitly avoid turning that sample into production authority.
+4. A runtime-QA selector failure must be diagnosed before production JS is changed. In this case the third-party library decorated the supplied root instead of inserting the nested node the first test expected.
 
 These remain Budokan-project findings until repeated evidence warrants promotion.
