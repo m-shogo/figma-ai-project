@@ -83,7 +83,10 @@ switch ($post_type) {
             global $wp_query;
             $main_query = $wp_query;
             $wp_query = $query;
-            get_template_part('template-parts/_list-card', null, array('props' => 'customPostList'));
+            get_template_part('template-parts/_list-card', null, array(
+                'props' => 'customPostList',
+                'posts' => $query->posts,
+            ));
             $wp_query = $main_query;
         } else {
             echo '<p>該当する投稿はございません。</p>';
