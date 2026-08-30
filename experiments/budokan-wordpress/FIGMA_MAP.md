@@ -18,6 +18,12 @@ Pages: PC `0:1` / SP `114:5409`
 | Footer SP 下層 | SP | `560:2524` / `560:188` 末尾 | news_sp / join_sp |
 | パーツ集 | PC | `1163:4245` | parts |
 | パーツ集 | SP | `1399:19144` | SP_parts |
+| お知らせ archive | PC | `413:2191` | news |
+| お知らせ archive | SP | `1399:14225` | SP_archive（page title / breadcrumb / item文言でNewsと確認） |
+| お知らせ detail | PC | `1235:6361` | post |
+| お知らせ detail | SP | `1451:5197` | SP_post（breadcrumb / 書道記事本文でNews detailと確認） |
+| Event archive | PC | `1619:9554` | event |
+| Event detail | PC | `1632:10382` | event_detail |
 | 研修センター | PC | `1137:5348` | navigation（layer name は汎用名。page title / body / breadcrumb で研修センター画面と確認） |
 | 研修センター（現行SP counterpart） | SP | `1468:6595` | SP_navigation（PCと同じ施設案内→料金→お知らせ→ご利用案内構造） |
 | 研修センター（旧SP案・参照注意） | SP | `560:377` | training_center_sp（料金詳細を欠き、旧料金改定文言を含む） |
@@ -45,6 +51,9 @@ Pages: PC `0:1` / SP `114:5409`
 - PC canvas 幅は 1380。案件契約の body min-width は 1280
 - form フレームあり → Human 担当のため Agent は触らない
 - Figma の top-level layer name だけで画面を断定しない。汎用名・旧名が残るため、page title / 本文 / breadcrumb / global shell を突き合わせて authority を確定する
+- `1399:14225` (`SP_archive`) はEventのSP counterpartではない。page title / breadcrumbが「お知らせ」、itemsもNews文脈なので、お知らせarchiveのSP authorityとして扱う
+- `1451:5197` (`SP_post`) もEvent detailではない。breadcrumbと「第42回 高円宮杯日本武道館書写書道大展覧会」の本文から、お知らせdetailのSP authorityとして扱う
+- canonical SP page `114:5409` のtop-level frameを再走査した時点では、PC Event archive `1619:9554` / Event detail `1632:10382` に対応すると証明できる専用SP frameは確認できない。`SP_archive` / `SP_post` をEventへ流用せず、SP authorityが出るまでfail closedとする
 - 研修センターSPは `1468:6595` をPC `1137:5348` のresponsive counterpartとして扱う。両者は施設案内、6枚gallery、料金詳細、お知らせ、ご利用案内の構造と料金改定内容が対応する
 - `560:377` は同名ページの旧SP案として残っている。最新実装authorityへ昇格させない
 - 地域社会武道指導者研修会はSP `560:537` / PC `1203:4865`。この実ページではPC `local_nav` に対してSPは4列navの縮小版ではなく、`560:632` のselector/dropdown-style navigationへinteraction formが切り替わる
