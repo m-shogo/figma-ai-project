@@ -31,7 +31,18 @@ if ($theme->get_stylesheet() !== 'nipponbudokan') {
 
 function budokan_qa_upsert_page(string $slug, string $title, int $parent_id = 0): int
 {
-    $page = get_page_by_path($slug, OBJECT, 'page');
+    $matches = get_posts(array(
+        'post_type' => 'page',
+        'post_status' => 'any',
+        'name' => $slug,
+        'post_parent' => $parent_id,
+        'posts_per_page' => 1,
+        'orderby' => 'ID',
+        'order' => 'ASC',
+        'no_found_rows' => true,
+    ));
+    $page = $matches ? $matches[0] : null;
+
     $payload = array(
         'post_type' => 'page',
         'post_status' => 'publish',
