@@ -2,7 +2,7 @@
 
 ## Scope
 
-This run closes the visual layer for the existing `sidebar-nav` Local Navigation family without creating a second renderer or inventing production menu data.
+This pass implements the closed-state visual layer for the existing `sidebar-nav` Local Navigation family without creating a second renderer or inventing production menu data.
 
 Authoritative Figma nodes:
 
@@ -24,6 +24,7 @@ The walker remains the data/markup owner. It emits both `lnl_*` and shared `mm_*
 - vertical padding `40px`
 - title/selector gap `24px`
 - title `16px`
+- exact visible title: `武道 振興・普及事業`
 - selector `50px` high
 - selector prompt `選択してください`
 - right control `50px × 50px`
@@ -33,6 +34,7 @@ The walker remains the data/markup owner. It emits both `lnl_*` and shared `mm_*
 - white background with top/bottom separator
 - vertical padding `56px`
 - title/list gap `48px`
+- exact visible title: `指導者研修・指導法研究`
 - title `20px`
 - four columns
 - column gap `20px`
@@ -40,18 +42,39 @@ The walker remains the data/markup owner. It emits both `lnl_*` and shared `mm_*
 - child text `14px`
 - bullet `5px`, gold
 - current child uses gold bottom border and medium weight
+- visible children: `全国武道指導者研修会`, `地域社会武道指導者研修会`, `中学校武道授業指導法研究事業`, and literal placeholder `ローカルナビゲーション`
 
 The fourth Figma child is still a literal placeholder. No production label was invented for it.
 
-## Implementation
+## Implementation already present
 
-`css/module/local_navigation.css` is now mobile-first.
+`css/module/local_navigation.css` is mobile-first.
 
-SP uses the existing depth-0 walker title as the section heading and the existing depth-0 menu button as the selector control. The existing `moduleNavToggle()` toggles the already-supported `data-open` state; no Local-Navigation-specific JavaScript was added.
-
-At `min-width:768px`, the selector button is hidden and the existing depth-1 sibling list becomes the four-column PC navigation.
+The initial implementation assumed that one depth-0 walker title could serve as the heading at both breakpoints, while the existing `moduleNavToggle()` owns the SP open/closed state. At `min-width:768px` the selector button is hidden and the existing depth-1 list is laid out as four columns.
 
 No Japanese menu item label is used as a CSS selector or PHP condition. Current state continues to come from WordPress menu classes.
+
+## Runtime re-check: hierarchy gate discovered after the first visual pass
+
+A later exact `get_design_context` re-check proved that the SP and PC heading labels are not the same string or the same semantic level:
+
+- SP heading: `武道 振興・普及事業`
+- PC heading: `指導者研修・指導法研究`
+- PC children: the four entries listed above
+
+That means the previous two-level assumption (`lnl_item-02` heading + `lnl_item-03` four-column children) is **not sufficient evidence for a final responsive PASS**. A coherent WordPress tree may require three levels — broad business family → instructor/research subgroup → page links — but production menu ownership has not yet been supplied, so Theme CSS must not silently promote that inference into a production contract.
+
+The current CSS is therefore retained as an implementation candidate, not declared final. In particular, no label-hiding/pseudo-content workaround is allowed to fake the breakpoint-specific headings.
+
+To make this uncertainty executable instead of conversational, `scripts/seed-budokan-local-nav-qa.php` now creates a **local-only disposable fixture** containing exactly the hierarchy visible across the current Figma nodes:
+
+1. `武道 振興・普及事業`
+2. `指導者研修・指導法研究`
+3. four children, where the fourth stays the literal Figma placeholder
+
+The fixture is deliberately guarded by `WP_ENVIRONMENT_TYPE=local`, requires the `nipponbudokan` Theme, assigns only a QA page to `templates/template-oneColumnLocalNav.php`, and does not claim to be production menu data.
+
+This fixture gives the next runtime pass a truthful way to inspect the walker depths (`02` / `03` / `04`) and verify whether the SP and PC visuals can be expressed structurally. If that three-level runtime confirms the expected DOM, CSS can then be corrected against it; if it does not, the implementation must remain blocked rather than guessing.
 
 ## Important correction found during final review
 
@@ -73,16 +96,18 @@ This is recorded as a project-local finding only. It is not promoted to a higher
 
 ## Verification and limits
 
-The closed SP and PC Figma states were re-fetched in this run and the CSS was reviewed against their measured geometry and state treatment.
+The closed SP and PC Figma states were re-fetched and the CSS was reviewed against their measured geometry and state treatment.
 
-A disposable headless-browser screenshot probe was attempted, but Chromium did not complete in the current execution container because its headless process stalled on the container runtime/DBus path. This was classified as a harness failure rather than evidence of a Theme failure; no product CSS was changed to accommodate the harness.
+A disposable headless-browser screenshot probe was attempted in the earlier pass, but Chromium did not complete in that execution container because its headless process stalled on the container runtime/DBus path. This was classified as a harness failure rather than evidence of a Theme failure; no product CSS was changed to accommodate the harness.
 
-The remaining production authority gate is unchanged:
+The remaining production authority gate is now stated more precisely:
 
 - which real WordPress page(s) are assigned `template-oneColumnLocalNav.php`
-- the actual production `sidebar-nav` tree/current-item state
+- the actual production `sidebar-nav` hierarchy/current-item state
+- whether the intended production tree is the three-level structure implied by the current SP/PC Figma headings
+- the SP **open-state** contents/visuals, which are not visible in the closed Figma node
 
-Until that data is available, this run does **not** claim production WordPress runtime visual PASS. The visual implementation remains structural and label-agnostic, and does not assign templates or create menu data.
+Until those are resolved, this work does **not** claim production WordPress runtime visual PASS. The QA fixture exists specifically to prove the structural option without writing production content.
 
 ## Files intentionally untouched
 
