@@ -115,7 +115,7 @@ for required in \
 done
 
 tab_count="$(grep -o 'class="news_tabs_item' "$html" | wc -l | tr -d ' ')"
-row_count="$(grep -o 'class="news_item"' "$html" | wc -l | tr -d ' ')"
+row_count="$(grep -o 'class="news_item news_item_archive' "$html" | wc -l | tr -d ' ')"
 [[ "$tab_count" == "6" ]] || {
   echo "FAIL expected six News category tabs; got ${tab_count}." >&2
   exit 1
