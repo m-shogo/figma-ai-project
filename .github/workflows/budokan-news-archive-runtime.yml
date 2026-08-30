@@ -1,0 +1,48 @@
+name: Budokan News Archive Runtime
+
+on:
+  pull_request:
+    paths:
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/archive.php'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_news-archive.php'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_news-tabs.php'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_list-news.php'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_list-news_article.php'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/module/module_newsList-01.css'
+      - 'experiments/wordpress-acf-runtime/scripts/budokan-news-archive-runtime-qa.sh'
+      - 'experiments/wordpress-acf-runtime/scripts/budokan-news-archive-browser-qa.mjs'
+      - 'experiments/budokan-wordpress/learning-notes/2026-08-29-news-archive-master.md'
+      - '.github/workflows/budokan-news-archive-runtime.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run disposable WordPress News archive runtime QA
+        env:
+          BUDOKAN_NEWS_ARCHIVE_KEEP_RUNTIME: '1'
+        run: bash experiments/wordpress-acf-runtime/scripts/budokan-news-archive-runtime-qa.sh
+
+      - name: Run SP and PC News archive browser geometry QA
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          qa_url="${WP_URL}/news/"
+          cd ../..
+          npm install --no-save --package-lock=false playwright@1.54.2
+          npx playwright install --with-deps chromium
+          node experiments/wordpress-acf-runtime/scripts/budokan-news-archive-browser-qa.mjs "$qa_url"
+
+      - name: Cleanup disposable WordPress runtime
+        if: always()
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          docker compose down -v --remove-orphans
