@@ -135,6 +135,10 @@
 
   topSlider();
   //newsSlider();
-  $(topCalendar);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', topCalendar, { once: true });
+  } else {
+    topCalendar();
+  }
 
 })(jQuery);
