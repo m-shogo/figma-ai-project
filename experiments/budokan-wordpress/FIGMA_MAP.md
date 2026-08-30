@@ -1,9 +1,9 @@
 # Figma node map（nipponbudokan）
 
-File: `w7SGVY63FuW6JpaQVKjxm2`  
-Pages: PC `0:1` / SP `114:5409`
+File: `RfAQQ28V1HGaeIcpgRmQq1`  
+Pages: PC `0:1` / SP `114:5409` / 最新 `1603:7059` / パーツ一覧 `1163:4242` / アーカイブ `446:13859`
 
-デザイン変更前提。実装時は都度取り直す。
+デザイン変更前提。実装時は都度取り直す。**保存済みnode-idが解決できても、それだけで現行authorityとはみなさない。まずcurrent pageのtop-level frameを再走査し、対象full-page frameを`get_design_context`で再取得する。**
 
 ## 優先ノード
 
@@ -18,10 +18,10 @@ Pages: PC `0:1` / SP `114:5409`
 | Footer SP 下層 | SP | `560:2524` / `560:188` 末尾 | news_sp / join_sp |
 | パーツ集 | PC | `1163:4245` | parts |
 | パーツ集 | SP | `1399:19144` | SP_parts |
-| お知らせ archive | PC | `413:2191` | news |
-| お知らせ archive | SP | `1399:14225` | SP_archive（page title / breadcrumb / item文言でNewsと確認） |
-| お知らせ detail | PC | `1235:6361` | post |
-| お知らせ detail | SP | `1451:5197` | SP_post（breadcrumb / 書道記事本文でNews detailと確認） |
+| お知らせ archive | PC | `413:2191` | news（current full-page authority, 1380×3096） |
+| お知らせ archive | SP | `560:2524` | news_sp（current full-page authority, 375×2276） |
+| お知らせ detail | PC | `1235:6361` | post（current full-page authority） |
+| お知らせ detail | SP | — | current SP page `114:5409` のtop-level再走査では専用detail frameを確認できない。旧 `1451:5197` は現行fileで解決不可 |
 | Event archive | PC | `1619:9554` | event |
 | Event detail | PC | `1632:10382` | event_detail |
 | 大会・行事に参加したい | PC | `1148:6390` | navigation（本文あり） |
@@ -39,6 +39,28 @@ Pages: PC `0:1` / SP `114:5409`
 | SP メニュー展開例 | SP | `2096:9496` | TopPage PlanB SP① |
 | SP TOP 候補 | SP | `446:10020` / `2096:9573` | SP |
 
+## Current top-level re-resolution evidence（2026-08-31）
+
+Current PC page `0:1` top-level frames include:
+
+- `413:2191` `news`
+- `1235:6361` `post`
+- `1137:5348` / `1145:6042` / `1148:6390` `navigation`
+- `1203:4865` / `1206:5446` `page`
+- `1163:4245` `parts`
+- named legacy/alternate surfaces `380:417` `join`, `395:7954` `training_center`, `402:236` `training`, `405:360` `backnumber`
+
+Current SP page `114:5409` top-level frames include:
+
+- `560:2524` `news_sp`
+- `560:188` `join_sp`
+- `560:377` `training_center_sp`
+- `560:537` `training_sp`
+- `560:677` `backnumber_sp`
+- large `SP_prototype` frames `446:10020`, `1399:14225`, `1399:19144`
+
+These lists are **discovery evidence, not automatic implementation authority**. Resolve page identity from title/body/breadcrumb and then call `get_design_context` on the selected full-page frame before implementation.
+
 ## 実装順との対応
 
 1. Header/Footer → header instance + footer_subpage + SP menu
@@ -54,9 +76,10 @@ Pages: PC `0:1` / SP `114:5409`
 - PC canvas 幅は 1380。案件契約の body min-width は 1280
 - form フレームあり → Human 担当のため Agent は触らない
 - Figma の top-level layer name だけで画面を断定しない。汎用名・旧名が残るため、page title / 本文 / breadcrumb / global shell を突き合わせて authority を確定する
-- `1399:14225` (`SP_archive`) はEventのSP counterpartではない。page title / breadcrumbが「お知らせ」、itemsもNews文脈なので、お知らせarchiveのSP authorityとして扱う
-- `1451:5197` (`SP_post`) もEvent detailではない。breadcrumbと「第42回 高円宮杯日本武道館書写書道大展覧会」の本文から、お知らせdetailのSP authorityとして扱う
-- canonical SP page `114:5409` のtop-level frameを再走査した時点では、PC Event archive `1619:9554` / Event detail `1632:10382` に対応すると証明できる専用SP frameは確認できない。`SP_archive` / `SP_post` をEventへ流用せず、SP authorityが出るまでfail closedとする
+- 旧File key `w7SGVY63FuW6JpaQVKjxm2` は現在のBudokan authorityではない。現行は `RfAQQ28V1HGaeIcpgRmQq1`
+- News archiveのcurrent full-page authorityはSP `560:2524` / PC `413:2191`。旧sub-layer anchorが消えることがあるため、full-page frameから再取得する
+- News detailはPC `1235:6361` がcurrent authority。旧SP detail `1451:5197` は現行fileで解決できず、current SP pageのtop-levelにも専用detail frameがないため、SP固有の新変更はfail closedとする
+- canonical SP page `114:5409` のtop-level frameを再走査した時点では、PC Event archive `1619:9554` / Event detail `1632:10382` に対応すると証明できる専用SP frameは確認できない。News SPをEventへ流用せず、SP authorityが出るまでfail closedとする
 - `大会・行事に参加したい` はPC `1148:6390` / SP `1468:7508` でpage identityは一致するが、現行SPはshellのみで本文authorityがない
 - `560:188` (`join_sp`) は `大会に参加したい` という別の本文付きSPページ。PC全top-level frameの `参加したい` 文言再走査でも exact title のPC counterpartは確認できないため、`1148:6390` の不足SP本文として流用しない
 - 研修センターSPは `1468:6595` をPC `1137:5348` のresponsive counterpartとして扱う。両者は施設案内、6枚gallery、料金詳細、お知らせ、ご利用案内の構造と料金改定内容が対応する
