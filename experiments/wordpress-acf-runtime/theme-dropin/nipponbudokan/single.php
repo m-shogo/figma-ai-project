@@ -103,7 +103,7 @@ if (get_field('post_type') === 'file') {
                             <?php endif; ?>
                             <?php $back_link = get_post_type() === 'post' ? get_permalink(get_option('page_for_posts')) : home_url() . '/' . $post_Type . '/'; ?>
                             <li class="back">
-                                <a href="<?php echo esc_url($back_link); ?>"><span>一覧</span></a>
+                                <a href="<?php echo esc_url($back_link); ?>"><span>一覧へ戻る</span></a>
                             </li>
                             <?php if ($next_post): ?>
                                 <li class="next">

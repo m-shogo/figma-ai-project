@@ -16,6 +16,7 @@
    - Category label remains the existing `_label-category.php` output and measures 80×23px in runtime.
 4. The lead image remains the WordPress featured image. Runtime confirms 335px at the Theme's SP content boundary and 800px on PC; the existing attachment caption supplies the authored caption surface.
 5. A later whole-surface recheck found a small content-format drift missed by the geometry-focused pass: both SP and PC Figma use dot-separated dates (`2025.00.00` pattern), while `single.php` still emitted `Y/m/d`. The display format is now `Y.m.d`; the machine-readable `datetime` attribute remains ISO `Y-m-d`.
+6. A subsequent current-PC recheck found the pager's visible center action says `一覧へ戻る`, while the shared `single.php` still rendered `一覧`. The route/owner was already correct, so only the visible label changed; adjacent-post semantics were intentionally left untouched because the Figma sample alone does not prove that previous/next navigation should be removed when neighbors exist.
 
 ## Mistakes / failed approaches and causes
 
@@ -35,6 +36,10 @@ An initial implementation tried `100vw` plus `calc(50% - 50vw)` while the title 
 
 The first News single pass correctly verified width, typography, featured-image placement, category labeling, and breadcrumb ownership, but its runtime assertions did not compare the visible date separator. That allowed slash-separated `Y/m/d` to survive even though both current Figma authorities show dots. The fix changes only the presentation format and keeps the semantic `datetime` value unchanged.
 
+### A single Figma pager state is not enough evidence to delete conditional navigation
+
+The current PC detail frame visually shows only the center `一覧へ戻る` action. `single.php`, however, conditionally renders previous/next only when adjacent eligible article posts exist. A screenshot with no visible adjacent controls can be explained by fixture data, so removing that existing behavior would invent a broader interaction rule. The safe correction is the proven label mismatch only; preserve conditional navigation until another authority establishes otherwise.
+
 ## Successful runtime evidence
 
 Real WordPress + ACF PRO + Budokan Theme runtime QA passed for both authored canvases:
@@ -47,4 +52,4 @@ The QA fixture uses an existing Theme image only to exercise the WordPress featu
 
 ## Reusable lesson
 
-When a Figma/WordPress mismatch looks like a spacing or width problem, first verify the **responsibility boundary**: which DOM/module should own the content and whether it belongs inside or outside the shared constrained container. Then verify fixture semantics (taxonomy/route/data contract), and only after that tune CSS geometry. For final visual closure, include small visible formatting tokens such as date separators in the comparison rather than treating geometry PASS as total fidelity. Promote these lessons beyond Budokan only after repeated independent evidence.
+When a Figma/WordPress mismatch looks like a spacing or width problem, first verify the **responsibility boundary**: which DOM/module should own the content and whether it belongs inside or outside the shared constrained container. Then verify fixture semantics (taxonomy/route/data contract), and only after that tune CSS geometry. For final visual closure, include small visible formatting tokens such as date separators and action labels in the comparison rather than treating geometry PASS as total fidelity. When Figma shows one conditional state, change only what that state actually proves; do not infer global interaction removal from absent controls. Promote these lessons beyond Budokan only after repeated independent evidence.
