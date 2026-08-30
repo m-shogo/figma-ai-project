@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/footer.php'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_footer.php'
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_top-guide.php'
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/project/top_guide.css'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-top-guide-runtime-qa.sh'
