@@ -51,6 +51,10 @@ fi
 
 docker compose run --rm cli option update blog_public 0 >/dev/null
 docker compose run --rm cli option update permalink_structure '/%postname%/' >/dev/null
+# The Budokan Theme header calls the established ACF contract immediately.
+# Load the public ACF runtime in this disposable WordPress instance rather than
+# stubbing get_field(), so the QA executes the actual Theme dependency path.
+docker compose run --rm cli plugin install advanced-custom-fields --activate >/dev/null
 docker compose run --rm cli theme activate "$THEME_SLUG" >/dev/null
 # The disposable fixture deliberately refuses non-local environments. The
 # Apache service receives WP_ENVIRONMENT_TYPE through WORDPRESS_CONFIG_EXTRA,
