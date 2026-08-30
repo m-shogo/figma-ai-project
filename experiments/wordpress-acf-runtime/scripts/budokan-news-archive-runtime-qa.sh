@@ -50,6 +50,7 @@ if ! docker compose run --rm cli core is-installed >/dev/null 2>&1; then
 fi
 
 docker compose run --rm cli option update blog_public 0 >/dev/null
+docker compose run --rm cli option update posts_per_page 20 >/dev/null
 docker compose run --rm cli plugin install advanced-custom-fields --activate >/dev/null
 docker compose run --rm cli theme activate "$THEME_SLUG" >/dev/null
 
