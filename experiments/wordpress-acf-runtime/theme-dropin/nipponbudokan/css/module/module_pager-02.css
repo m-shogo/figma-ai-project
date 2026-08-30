@@ -37,10 +37,33 @@
         }
         &.back {
             order: 3;
+            max-width: 270px;
+            width: 270px;
             a {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+                padding: 0 20px;
+                border-color: var(--color-line);
+                border-radius: 3px;
+                max-width: 270px;
+                width: 270px;
+                height: 60px;
                 background-color: var(--color-secondary);
-                color: var(--color-primary);
+                color: var(--color-text);
                 span {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    &::before {
+                        content: '\f03a';
+                        color: var(--color-primary);
+                        font-family: var(--font-awesome);
+                        font-size: 16px;
+                        font-weight: 400;
+                        line-height: 1;
+                    }
                 }
             }
         }
@@ -67,6 +90,8 @@
             }
             &.back {
                 order: 2;
+                max-width: 270px;
+                width: 270px;
             }
             &.next {
                 order: 3;
@@ -86,8 +111,12 @@
             &.back {
                 a {
                     &:hover {
+                        border-color: var(--color-primary);
                         background-color: var(--color-primary);
                         color: var(--color-secondary);
+                        span::before {
+                            color: var(--color-secondary);
+                        }
                     }
                 }
             }
