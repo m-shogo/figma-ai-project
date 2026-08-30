@@ -89,15 +89,30 @@ Library/post-type availability is not enough to infer event semantics. The curre
 
 This remains project-local evidence. Promote it only if the same owner-vs-semantics failure repeats in another independent data family.
 
+## Runtime/browser QA and failed approaches
+
+The PR adds a disposable real-WordPress runtime plus Chromium geometry assertions rather than treating source inspection as a visual PASS.
+
+The WordPress runtime path passed immediately: the real Theme front page rendered `#top_guide-01` and exactly three existing User Guide cards.
+
+The browser QA exposed two harness mistakes before reaching GREEN:
+
+1. A nominal Playwright `375px` desktop-style context produced a `360px` layout content width because Linux Chromium reserved a vertical scrollbar. That made the SP card `296px` rather than the Figma-authored `311px`. This was not fixed in Theme CSS. The QA was corrected to use a mobile/touch context so the runtime matches the authored 375px mobile viewport behavior.
+2. The first PC assertion treated Figma's absolute `x=210px` as cross-platform browser truth. Linux Chromium again reserved a 15px desktop scrollbar, so the correctly centered 960px rail began at `202.5px` inside a 1365px layout area. The assertion was corrected to prove the actual invariant — a centered 960px rail with three contiguous 320px columns — instead of baking in a platform-specific scrollbar assumption.
+
+After those harness fixes, both the disposable WordPress runtime and SP/PC browser geometry QA passed on the same code head.
+
+Reusable lesson: exact Figma canvas coordinates are good implementation targets, but browser QA should distinguish authored geometry invariants from OS/browser scrollbar mechanics. Use true mobile emulation for SP and relational centering assertions for desktop rails; do not distort production CSS merely to satisfy a CI runner's scrollbar model.
+
 ## Verification boundary
 
-This pass uses exact current Figma design-context measurements and Theme source comparison. It does not claim a production screenshot PASS because the canonical User Guide photographs are still unresolved and no production WordPress page/data snapshot was supplied.
+This pass closes the code-level responsive geometry proof for the existing placeholder-image state:
 
-A later runtime/browser pass should verify at minimum:
+- SP 375px: 514px intro, x=32 / 311px rail, y=401 card start, 189px images, contiguous cards, authored typography
+- PC: centered 960px rail, y=218 card start, 3 × 320px contiguous columns, 194px images, left-aligned card body
+- real WordPress Theme front-page render path: PASS
 
-- SP 375px: intro height, x=32 rail, y=401 card start, 311px card width, contiguous cards
-- PC 1380px: 960px centered rail, y=218 card start, 3 × 320px columns, left-aligned card body
-- final visual diff again after real images replace `noimage.webp`
+It still does **not** claim the final production-image visual PASS because the canonical three User Guide photographs are unresolved. Run the final visual diff again after real assets replace `noimage.webp`.
 
 ## Files intentionally untouched
 
