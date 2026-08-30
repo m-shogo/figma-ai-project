@@ -82,6 +82,7 @@ QA は 〜767 と ≥1280 を主にする。
 - Export 参照: `acf-export.json`
 - Options / TOP fields / custom blocks あり
 - **front-page は管理画面で editor 非表示**（`inc/custom.php`）→ TOP は ACF フィールド中心
+- **secondary `WP_Query` → shared renderer はpostsを明示渡しする。** `$wp_query` の差し替えだけでglobal `$posts` / `$post` ownershipが移ると仮定しない。News listとEvent cardの2系統で同じleakが確認されたためBudokan Theme standardへ昇格済み。
 
 ---
 
