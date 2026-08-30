@@ -3,15 +3,253 @@
 // サイト共通ローカルナビ
 // ========================================================================== */
 .local_navigation {
+    border-block: 1px solid var(--color-line);
+    background-color: var(--color-heading-band);
+    padding: 40px var(--padding-SP);
+
+    .ln_container-01 {
+        width: 100%;
+    }
+
     .ln_links {
+        width: 100%;
+
         & + .ln_links {
             margin-top: 48px;
         }
     }
+
+    /* SP: 現在ページを含む第3階層だけを selector として見せる。 */
+    .lnl_item-03 {
+        display: none;
+
+        &.current-menu-ancestor,
+        &.current-menu-item {
+            display: block;
+        }
+    }
+
+    .lnl_title-02 {
+        justify-content: flex-start;
+        background-color: transparent;
+        text-align: left;
+    }
+
+    .lnl_link-02 {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 0;
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 1.4;
+        letter-spacing: 0.05em;
+        color: var(--color-text);
+
+        &::before {
+            content: var(--icon-arrow-right);
+            display: grid;
+            place-items: center;
+            width: 20px;
+            height: 20px;
+            flex: 0 0 20px;
+            border: 1px solid var(--color-line);
+            border-radius: 10px;
+            background-color: var(--color-secondary);
+            color: var(--color-primary);
+            font-family: var(--font-awesome);
+            font-size: 8px;
+            line-height: 1;
+            transform: rotate(180deg);
+        }
+    }
+
+    .lnl_wrapper-02 {
+        margin-top: 24px;
+    }
+
+    .lnl_list-02 {
+        gap: 0;
+    }
+
+    .lnl_item-03.current-menu-ancestor,
+    .lnl_item-03.current-menu-item {
+        > .lnl_title-03 {
+            height: 50px;
+            border: 1px solid var(--color-text);
+            background-color: var(--color-secondary);
+        }
+
+        > .lnl_title-03 > .lnl_link-03 {
+            height: 48px;
+            padding: 0 15px;
+            font-size: 0;
+            font-weight: 500;
+            color: var(--color-text);
+
+            &::before {
+                content: '選択してください';
+                font-size: 13px;
+                line-height: 1;
+                letter-spacing: 0.05em;
+            }
+        }
+
+        > .lnl_title-03 > .lnl_button-03 {
+            width: 50px;
+            height: 48px;
+            background-color: var(--color-text);
+
+            &::before {
+                content: var(--icon-chevron-down);
+                width: auto;
+                height: auto;
+                border-radius: 0;
+                background-color: transparent;
+                color: var(--color-secondary);
+                font-family: var(--font-awesome);
+                font-size: 12px;
+                line-height: 1;
+                transform: translate(-50%, -50%);
+            }
+
+            &::after {
+                content: none;
+            }
+        }
+    }
+
+    .lnl_item-04 {
+        border-bottom: 1px solid var(--color-line);
+        background-color: var(--color-secondary);
+
+        &.current-menu-item {
+            border-bottom-color: var(--color-accent);
+        }
+    }
+
+    .lnl_link-04 {
+        padding: 12px 15px;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    .lnl_list-03 {
+        padding: 8px 0 0;
+        gap: 0;
+    }
+
     @media screen and (min-width: 768px) {
+        background-color: var(--color-secondary);
+        padding: 56px clamp(60px, 7.64vw, 110px);
+
+        .lnl_title-02 {
+            display: none;
+        }
+
+        .lnl_wrapper-02 {
+            margin-top: 0;
+        }
+
+        .lnl_item-03.current-menu-ancestor,
+        .lnl_item-03.current-menu-item {
+            > .lnl_title-03 {
+                height: auto;
+                border: 0;
+                background-color: transparent;
+            }
+
+            > .lnl_title-03 > .lnl_link-03 {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                height: auto;
+                padding: 0;
+                font-size: 20px;
+                font-weight: 500;
+                line-height: 1.4;
+                letter-spacing: 0.05em;
+                pointer-events: auto;
+
+                &::before {
+                    content: var(--icon-arrow-right);
+                    display: grid;
+                    place-items: center;
+                    width: 26px;
+                    height: 26px;
+                    flex: 0 0 26px;
+                    clip-path: var(--clip-octagon);
+                    background-color: var(--color-primary);
+                    color: var(--color-secondary);
+                    font-family: var(--font-awesome);
+                    font-size: 8px;
+                    line-height: 1;
+                }
+            }
+
+            > .lnl_title-03 > .lnl_button-03 {
+                display: none;
+            }
+
+            > .lnl_wrapper-03 {
+                grid-template-rows: 1fr;
+                margin-top: 48px;
+            }
+        }
+
+        .lnl_list-03 {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 20px;
+            padding: 0 36px;
+        }
+
+        .lnl_item-04 {
+            min-width: 0;
+            border-bottom: 1px solid var(--color-line);
+            background-color: transparent;
+
+            &.current-menu-item {
+                border-bottom-color: var(--color-accent);
+            }
+        }
+
+        .lnl_title-04 {
+            height: 34px;
+            align-items: flex-start;
+        }
+
+        .lnl_link-04 {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 0 0 20px;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 1;
+            letter-spacing: 0.05em;
+            white-space: nowrap;
+
+            &::before {
+                content: '';
+                width: 5px;
+                height: 5px;
+                flex: 0 0 5px;
+                margin-top: 4px;
+                border-radius: 50%;
+                background-color: var(--color-accent);
+            }
+        }
+
+        .lnl_item-04.current-menu-item .lnl_link-04 {
+            font-weight: 500;
+            color: var(--color-text);
+        }
     }
 
     /* MARK: hover */
     @media (any-hover: hover) {
+        .lnl_item-04 .lnl_link-04:hover {
+            color: var(--color-primary);
+        }
     }
 }
