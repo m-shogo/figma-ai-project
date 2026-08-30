@@ -38,7 +38,7 @@
         letter-spacing: 0.05em;
 
         &::before {
-            content: var(--icon-chevron-left);
+            content: var(--icon-arrow-right);
             display: grid;
             place-items: center;
             flex: 0 0 auto;
@@ -51,6 +51,7 @@
             font-family: var(--font-awesome);
             font-size: 8px;
             line-height: 1;
+            transform: rotate(180deg);
         }
     }
 
@@ -90,7 +91,7 @@
             left: auto;
             display: grid;
             place-items: center;
-            transform: none;
+            transform: rotate(90deg);
             width: 50px;
             height: 50px;
             border-radius: 0;
@@ -179,9 +180,11 @@
             font-size: 20px;
 
             &::before {
-                width: 20px;
-                height: 20px;
+                width: 26px;
+                height: 26px;
                 border: 0;
+                border-radius: 0;
+                clip-path: var(--clip-octagon);
                 background-color: var(--color-primary);
                 color: #fff;
             }
