@@ -1,7 +1,7 @@
 @charset "utf-8";
 /* // ==========================================================================
 // お知らせ共通マスター
-// Figma archive: PC 1669:5733 / SP 560:4185
+// Figma archive: PC 413:2191 / SP 560:2524
 // TOP は同じ news_item / news_tabs markup を使い、top_news.css で差分だけ上書きする。
 // ========================================================================== */
 .block-editor_wrap,
@@ -175,7 +175,7 @@
 
 /*
  * News pager は SP / PC で形が大きく異なる。
- * SP Figma 560:4260 = 円形 page numbers + 下段の前後導線。
+ * SP Figma 560:2524 = 円形 page numbers + 下段の前後導線。
  * PC Figma 1137:4996 = 八角矢印 + underline page numbers の1列。
  * generic module_pager-01 を壊さないよう news variant の wrapper 内だけ上書きする。
  */
@@ -308,19 +308,31 @@
     .news_tabs_archive {
         .news_tabs_list {
             justify-content: flex-start;
-            gap: 12px;
+            gap: 0;
         }
 
         .news_tabs_item {
-            width: 120px;
+            width: 160px;
         }
 
         .news_tabs_link {
             height: 48px;
             padding: 16px;
             border: 1px solid var(--color-text);
-            border-radius: 3px;
+            border-radius: 0;
             background-color: var(--color-secondary);
+        }
+
+        .news_tabs_item + .news_tabs_item .news_tabs_link {
+            border-left: 0;
+        }
+
+        .news_tabs_item:first-child .news_tabs_link {
+            border-radius: 3px 0 0 3px;
+        }
+
+        .news_tabs_item:last-child .news_tabs_link {
+            border-radius: 0 3px 3px 0;
         }
 
         .news_tabs_item.is-active .news_tabs_link {
