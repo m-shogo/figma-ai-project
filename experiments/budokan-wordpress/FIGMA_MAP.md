@@ -25,6 +25,8 @@ Pages: PC `0:1` / SP `114:5409`
 | 地域社会武道指導者研修会 | SP | `560:537` | training_sp |
 | 地域社会武道指導者研修会 Local Nav | PC | `1216:6311` | local_nav |
 | 地域社会武道指導者研修会 SP navigation | SP | `560:632` | selector/dropdown-style navigation area |
+| 現代武道9種目紹介 | PC | `1145:6042` | navigation（9枚の Navigation Large を3列×3段） |
+| 現代武道9種目紹介 | SP | `1455:5489` | SP_navigation（同9枚を1列表示） |
 | SP メニュー展開例 | SP | `2096:9496` | TopPage PlanB SP① |
 | SP TOP 候補 | SP | `446:10020` / `2096:9573` | SP |
 
@@ -35,7 +37,8 @@ Pages: PC `0:1` / SP `114:5409`
 3. 以降のページ → 固定ページ順ではなく master/derivative 依存と reuse-before-build で選択
 4. 研修センター → `page.php` + Gutenberg/既存 Parts composition が現行候補。詳細は `TRAINING_CENTER_DEPENDENCY_AUDIT.md`
 5. 地域社会武道指導者研修会 → `page.php` + Gutenberg/既存 shared block composition が現行候補。詳細は `REGIONAL_TRAINING_DEPENDENCY_AUDIT.md`
-6. TOP → topdesign04 + SP TOP（既存 master の thin derivative を優先）
+6. 現代武道9種目紹介 → `page.php` + 既存 Navigation Large master のcomposition。詳細は `MODERN_BUDO_DEPENDENCY_AUDIT.md`
+7. TOP → topdesign04 + SP TOP（既存 master の thin derivative を優先）
 
 ## 注意
 
@@ -45,3 +48,4 @@ Pages: PC `0:1` / SP `114:5409`
 - 研修センターSPは `1468:6595` をPC `1137:5348` のresponsive counterpartとして扱う。両者は施設案内、6枚gallery、料金詳細、お知らせ、ご利用案内の構造と料金改定内容が対応する
 - `560:377` は同名ページの旧SP案として残っている。最新実装authorityへ昇格させない
 - 地域社会武道指導者研修会はSP `560:537` / PC `1203:4865`。この実ページではPC `local_nav` に対してSPは4列navの縮小版ではなく、`560:632` のselector/dropdown-style navigationへinteraction formが切り替わる
+- 現代武道9種目紹介はSP `1455:5489` / PC `1145:6042`。両面とも既存Navigation Largeとgeometry/情報構造が一致するため、ページ専用cardを作らない
