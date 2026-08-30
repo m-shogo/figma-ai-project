@@ -160,13 +160,19 @@
         }
     }
 
+    .lnl_item-03.current-menu-item > .lnl_title-03 > .lnl_link-03,
+    .lnl_item-03.current_page_item > .lnl_title-03 > .lnl_link-03 {
+        color: var(--color-text);
+        font-weight: 500;
+    }
+
     .lnl_button-03 {
         display: none;
     }
 
     @media screen and (min-width: 768px) {
-        margin-inline: 0;
-        padding: 56px 50px;
+        margin-inline: calc(var(--padding-TB) * -1);
+        padding: 56px var(--padding-TB);
         border-block: 1px solid var(--color-line);
         background-color: #fff;
 
@@ -244,6 +250,7 @@
         .lnl_item-03.current-menu-item > .lnl_title-03 > .lnl_link-03,
         .lnl_item-03.current_page_item > .lnl_title-03 > .lnl_link-03 {
             border-bottom-color: var(--color-accent);
+            color: var(--color-text);
             font-weight: 500;
         }
     }
