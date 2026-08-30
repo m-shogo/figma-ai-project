@@ -30,12 +30,12 @@
 
 @import './module/archive_navigation.css';
 @import './module/global_mainVisual.css';
-@import './module/local_navigation.css';
 @import './module/module_bg.css';
 @import './module/module_breadCrumb.css';
 @import './module/module_dropdown.css';
 @import './module/module_line-01.css';
 @import './module/module_menu.css';
+@import './module/local_navigation.css';
 @import './module/module_newsCard-01.css';
 @import './module/module_newsList-01.css';
 @import './module/module_pager-01.css';
