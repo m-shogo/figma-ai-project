@@ -71,12 +71,15 @@ term_id="$(docker compose run --rm cli term create category '書道' --porcelain
   exit 1
 }
 
+# Keep the fixture safely in the past relative to the CI runner clock. A future
+# post_date can make WordPress schedule the post and turn this route into a
+# false 404 even when the Theme implementation is correct.
 post_id="$(docker compose run --rm cli post create \
   --post_type=post \
   --post_status=publish \
   --post_title='Budokan News Single QA' \
   --post_name='budokan-news-single-qa' \
-  --post_date='2026-08-31 08:00:00' \
+  --post_date='2026-08-30 12:00:00' \
   --post_content='<p>Budokan detail pager runtime fixture.</p>' \
   --porcelain)"
 [[ "$post_id" =~ ^[0-9]+$ ]] || {
@@ -99,8 +102,8 @@ for required in \
   'class="module_pager-02"' \
   'class="back"' \
   '>一覧へ戻る<' \
-  'datetime="2026-08-31"' \
-  '>2026.08.31<'; do
+  'datetime="2026-08-30"' \
+  '>2026.08.30<'; do
   grep -Fq "$required" "$html" || {
     echo "FAIL required News single runtime marker missing: ${required}" >&2
     exit 1
