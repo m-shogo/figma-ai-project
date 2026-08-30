@@ -94,11 +94,34 @@ The import now follows `module_menu.css`, allowing the component-specific varian
 
 This is recorded as a project-local finding only. It is not promoted to a higher standard yet.
 
+## Runtime closure of the three-level implementation
+
+A focused GitHub Actions job now executes the disposable WordPress instance and the actual Theme render path for this family. The verified runtime tree is:
+
+`lnl_item-02` broad family → `lnl_item-03` subgroup → four `lnl_item-04` page links.
+
+The PC CSS was corrected to that proven structure: depth `02` remains the SP closed-state heading, while `min-width:768px` promotes the existing depth `03` subgroup to the visible heading and lays out the existing depth `04` children as the four-column row. No content string is used as a selector and no second menu renderer was introduced.
+
+The CI harness exposed three useful failures before reaching green:
+
+1. **Fixture safety guard rejected WP-CLI.** The Apache container had `WP_ENVIRONMENT_TYPE=local`, but the separate CLI service did not inherit it. Fix: pass `WP_ENVIRONMENT_TYPE=local` only to the disposable fixture `eval-file`; do not weaken the fixture's production guard.
+2. **`?page_id=N` returned 301 after pretty permalinks were enabled.** This was normal WordPress canonicalization, not a Theme failure. Fix: follow a bounded redirect chain and assert the final response is 200.
+3. **The real Theme returned 500 because `header.php` immediately calls the established ACF `get_field()` contract.** The harness had omitted that runtime dependency. Fix: install/activate the public `advanced-custom-fields` plugin in the disposable instance rather than stubbing `get_field()` or changing Theme code.
+
+Reusable lesson: runtime QA must reproduce the component's actual framework/plugin dependency path. When the harness fails, fix missing environment/dependency fidelity first; never relax a production safety guard or distort product code merely to make the test pass.
+
+The structural runtime job now passes. A Chromium pass then checks the authored states directly:
+
+- SP 375px: broad-family heading remains visible, selector remains visible and 50px high, gray background resolves to `rgb(242, 242, 242)`, and the closed wrapper is collapsed.
+- PC 1380px: broad-family heading is hidden, `指導者研修・指導法研究` is the visible subgroup heading, depth-02/depth-03 selector buttons are hidden, exactly four depth-04 children occupy one row/four distinct columns, and `地域社会武道指導者研修会` carries the WordPress current-item state.
+
+This closes the **disposable WordPress SP closed-state + PC runtime/browser QA** for the currently authored Figma states. It does not convert the disposable fixture into production menu authority.
+
 ## Verification and limits
 
 The closed SP and PC Figma states were re-fetched and the CSS was reviewed against their measured geometry and state treatment.
 
-A disposable headless-browser screenshot probe was attempted in the earlier pass, but Chromium did not complete in that execution container because its headless process stalled on the container runtime/DBus path. This was classified as a harness failure rather than evidence of a Theme failure; no product CSS was changed to accommodate the harness.
+A disposable headless-browser screenshot probe was attempted in the earlier pass, but Chromium did not complete in that execution container because its headless process stalled on the container runtime/DBus path. This was classified as a harness failure rather than evidence of a Theme failure; no product CSS was changed to accommodate the harness. The later hosted-runner Chromium QA described above now provides executable browser evidence for the authored closed SP and PC states.
 
 The remaining production authority gate is now stated more precisely:
 
@@ -107,7 +130,7 @@ The remaining production authority gate is now stated more precisely:
 - whether the intended production tree is the three-level structure implied by the current SP/PC Figma headings
 - the SP **open-state** contents/visuals, which are not visible in the closed Figma node
 
-Until those are resolved, this work does **not** claim production WordPress runtime visual PASS. The QA fixture exists specifically to prove the structural option without writing production content.
+Until those are resolved, this work does **not** claim production WordPress runtime visual PASS. The QA fixture proves the structural implementation without writing production content.
 
 ## Files intentionally untouched
 
