@@ -96,62 +96,75 @@ A fresh re-inspection of the complete current SP and PC Navigation Parts section
 
 No current Figma Parts specimen was found for the legacy square-thumbnail `navigation-small` family. Therefore its existing Theme/ACF contract is preserved unchanged rather than being restyled from unrelated evidence.
 
-## Local Navigation — PC authority exists; SP behavior and render-owner mapping remain incomplete
+## Local Navigation — responsive Figma + WordPress owner now resolved; runtime hierarchy remains
 
-The PC Figma contains a distinct `local_nav` Parts section (`1168:4574`):
+A later full-page/render-path re-audit resolved the owner ambiguity that this document previously carried. See `LOCAL_NAV_DEPENDENCY_AUDIT.md` for the complete evidence.
 
-- full section `1380 × 276`
+### PC authority
+
+The PC Figma contains a distinct `local_nav` (`1216:6311`) on the real Regional Training page:
+
+- full section `1380 × 222`
+- after the 960px body content and before breadcrumb/footer
 - section padding `56px 110px`
 - title/list gap `48px`
 - title: 26px arrow rail + `20px / 500` text
-- list: four columns × two rows
-- each item `257 × 34`
-- 5px gold dot, 12px item gap, `14px / 400` copy, light-gray bottom rule
+- list: four columns
+- each item uses a 5px gold dot, 12px item gap, `14px` copy and bottom rule
+- current item uses a gold bottom rule / medium copy
 
-The same `nav_local` primitive also appears in multiple real PC page instances.
+### SP authority
 
-A fresh read-only scan of the canonical SP page (`114:5409`) still found no Local Navigation component/frame by local/navigation naming and no `ローカルナビゲーション` text specimen, so the intended SP behavior remains unresolved. This absence is evidence that no SP visual authority is currently available; it is **not** permission to infer `display:none` or invent a mobile layout.
+The same Regional Training page (`560:537`) contains its responsive Local Navigation counterpart at `560:632`:
 
-### Theme-owner correction
+- full-width `375 × 176`
+- after body content and immediately before `footer_sp`
+- light-gray background, `40px 20px` padding
+- title `武道 振興・普及事業`
+- `335 × 50px` selector-style control
+- placeholder `選択してください`
+- dark `50 × 50px` right control with white down-chevron
 
-The earlier version of this audit incorrectly described `css/module/local_navigation.css` as an absolute dropdown/floating panel. Re-reading the current tracked source shows that description was wrong. The file is a minimal shared Local Navigation stylesheet whose only authored layout rule is:
+This placement matters: the selector-style appearance does **not** make `_dropdown-navigation.php` the owner. `_dropdown-navigation.php` renders before content, while this Figma counterpart is after content.
 
-```css
-.local_navigation {
-    .ln_links {
-        & + .ln_links {
-            margin-top: 48px;
-        }
-    }
-}
-```
+### Proven Theme / WordPress owner
 
-It also contains an empty `min-width: 768px` media block and empty hover block. The `48px` rhythm is compatible with the Figma PC specimen's authored 48px separation, so this stylesheet is now a plausible shared Theme owner and should no longer be dismissed as unrelated legacy UI.
+The render path is:
 
-That source-level match still does **not** establish the missing PHP/WordPress markup contract for `.local_navigation` / `.ln_links`, nor does it establish SP behavior. Because the project execution contract requires SP authority first, rewriting or completing this family from PC-only geometry is still unsafe.
+`page.php` → `get_sidebar()` → `sidebar.php` → `sidebar-nav` → `Custom_Sidebar_Walker_Nav_Menu`.
 
-### Smallest missing authority
+`sidebar.php` explicitly owns `.local_navigation` and `.ln_links`. The walker emits both `lnl_*` and `mm_*` classes, so existing `module_menu.css` and `common.js` `moduleNavToggle()` are the reuse-before-build interaction baseline.
 
-- canonical SP behavior/design, or explicit authority that this local-navigation family is intentionally absent on SP; and
-- the WordPress/PHP render markup that owns `.local_navigation` and `.ln_links`, so the Figma `local_nav` component can be mapped to an actual runtime contract before CSS is extended.
+`css/module/local_navigation.css` remains the correct component-specific CSS extension point.
+
+### Remaining implementation gate
+
+The repository does not contain an authoritative seeded `sidebar-nav` menu hierarchy. Figma exposes different hierarchy levels between SP and PC (`武道 振興・普及事業` vs `指導者研修・指導法研究` + four child pages), so CSS must not guess which `lnl_*` depth owns each label.
+
+Smallest missing runtime authority:
+
+- a disposable WordPress `sidebar-nav` fixture matching intended production hierarchy, or Human confirmation of that hierarchy.
+
+Once present, Local Navigation can proceed through SP CSS/runtime QA → PC extension/runtime QA → visual diff/fixes without inventing a new renderer or data contract.
 
 ## Reusable lessons from this audit
 
 1. **Library availability is not component ownership.** A globally enqueued Swiper bundle does not justify inventing slider markup or editor data.
-2. **Open the current source before classifying a Theme owner.** The first Local Navigation audit inferred behavior that was not present in `local_navigation.css`; owner classification must be based on the tracked source plus runtime/render mapping, not filename/context assumptions.
-3. **Legacy code is not current visual authority.** `navigation-small` remains untouched when the canonical Figma family cannot be mapped confidently; Local Navigation likewise remains untouched until its SP and render contracts are proven.
-4. **Responsive authority must be complete enough for the project execution order.** A PC-only specimen cannot be promoted into a shared responsive master while SP behavior is unknown.
-5. **Specimen width is not automatically consuming-page width.** Slider image/outer dimensions should stay contextual until real WordPress ownership and container behavior are known.
+2. **Open the current source before classifying a Theme owner.** `local_navigation.css` alone was insufficient; the decisive proof came from `page.php` → `get_sidebar()` → `sidebar.php` plus the walker.
+3. **Full-page placement beats visual resemblance for owner mapping.** The SP Local Navigation looks selector-like, but its after-content placement proves it is not automatically the before-content `dropdown-nav` renderer.
+4. **Legacy code is not current visual authority.** `navigation-small` remains untouched when the canonical Figma family cannot be mapped confidently.
+5. **Responsive authority includes hierarchy/data shape.** SP/PC visuals and PHP owner can be known while implementation still correctly waits for the actual menu hierarchy used at runtime.
+6. **Specimen width is not automatically consuming-page width.** Slider image/outer dimensions should stay contextual until real WordPress ownership and container behavior are known.
 
-These are project-local findings from the current dependency audit. They are not promoted to a higher frontend standard from this single evidence point.
+These are project-local findings from the current dependency audit. They are not promoted to a higher frontend standard from this evidence alone.
 
 ## Safe continuation order
 
-Do not stay stuck on Slider, navigation-small, or Local Navigation. While those authority gaps remain, continue with another independent page/component family only when all of the following are available:
+Do not stay stuck on Slider, navigation-small, or the Local Navigation menu hierarchy. While those authority gaps remain, continue with another independent page/component family only when all of the following are available:
 
 1. canonical SP and PC Figma evidence,
 2. an identifiable Theme/WordPress owner or a Human-authorized new contract,
 3. a reuse-before-build path,
 4. a disposable real WordPress + ACF runtime path for SP → PC verification.
 
-The next implementation should therefore be selected from the remaining page families by master/derivative dependency, not by the visual order of the Parts or TOP pages.
+For Local Navigation specifically, once a disposable `sidebar-nav` hierarchy can be seeded from verified authority, its owner/render dependency no longer blocks implementation.

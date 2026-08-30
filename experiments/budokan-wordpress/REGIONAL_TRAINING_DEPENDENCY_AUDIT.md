@@ -96,50 +96,63 @@ PC authority therefore reinforces reuse of the already-implemented shared defaul
 
 ## Local Navigation responsive finding
 
-This page also resolves an important part of the previously open Local Navigation question.
+This page resolves the Local Navigation responsive family and, after a source/render-path re-audit, also resolves its WordPress/PHP owner. Full evidence is recorded in `LOCAL_NAV_DEPENDENCY_AUDIT.md`.
 
 ### PC
 
 Within `1203:4865`, Figma contains:
 
 - `1216:6311` `local_nav`
-- list width: 1160px
+- page-level placement immediately after the 960px body container
+- full-width `1380 × 222` section
 - child `nav_local` instances including the current page title
 
-This proves the PC `local_nav` family is used on a real ordinary page, not only on the Parts specimen.
+The Theme render owner is no longer unknown:
+
+`page.php` → `get_sidebar()` → `sidebar.php` → `sidebar-nav` → `Custom_Sidebar_Walker_Nav_Menu` → `.local_navigation .ln_links`.
+
+The sidebar walker also emits `mm_*` classes, so existing `module_menu.css` and `common.js` `moduleNavToggle()` are the interaction/layout baseline to reuse before adding new behavior.
 
 ### SP
 
-The same page does **not** render the 4-column PC local-nav grid. Instead, after content it contains:
+The same page does **not** render the 4-column PC local-nav grid. Instead, after the content it contains:
 
 - `560:632` navigation area
 - title row `武道 振興・普及事業`
 - `560:637` 335 × 50px selector-like control with `選択してください`
 
-Therefore the missing SP behavior is no longer “unknown local_nav geometry”: the responsive counterpart is a selector/dropdown-style navigation rather than a compressed local-nav grid.
+A page-level geometry re-check is decisive here: `560:632` is after the body and directly before `footer_sp`. It therefore maps to the responsive form of the sidebar Local Navigation, not to `_dropdown-navigation.php`, which is rendered before content by `page.php`.
 
-Theme `page.php` already calls `_dropdown-navigation.php`, whose WordPress owner is the `dropdown-nav` menu rendered through `Custom_Dropdown_Walker_Nav_Menu`. This is a strong existing SP/menu-data owner candidate and must be reused before creating new mobile local-navigation markup.
+The earlier audit treated `_dropdown-navigation.php` / `dropdown-nav` as a strong SP candidate because the control looked selector-like. That was an owner-classification mistake based on visual resemblance before checking full-page order and the actual PHP render path.
 
-The remaining uncertainty is the exact PC PHP/render owner for `.local_navigation` / `.ln_links`, and whether the same WordPress menu data is intended to feed both PC local-nav and SP dropdown. Do not guess that mapping until runtime markup/data ownership is proven.
+`dropdown-nav` remains a separate WordPress menu location and must not be merged with `sidebar-nav` without explicit authority.
+
+### Remaining Local Navigation gate
+
+The component owner and SP/PC visual authority are now known. The remaining blocker is the **actual `sidebar-nav` hierarchy/data fixture**. Figma exposes different hierarchy levels in each responsive form (`武道 振興・普及事業` on SP, `指導者研修・指導法研究` + four child pages on PC), but the repository does not contain authoritative seeded menu items proving which walker depth corresponds to each label.
+
+Until a disposable runtime menu fixture or Human-confirmed hierarchy exists, do not hide/show walker levels or replace labels through CSS guesses.
 
 ## WordPress / Theme dependency picture
 
 `page.php` currently owns ordinary pages and renders:
 
 1. `_visual`
-2. `_dropdown-navigation`
+2. `_dropdown-navigation` (separate `dropdown-nav` contract)
 3. `.global_inner._column`
 4. `.block-editor_wrap`
 5. `the_content()`
-6. sidebar
+6. `get_sidebar()` → Local Navigation owner (`sidebar-nav`)
 
 This page therefore remains an ordinary Page + Gutenberg composition candidate.
 
-Existing shared CSS evidence:
+Existing shared CSS/JS evidence:
 
 - `wp-block-buttonLink-style.css` already owns default `button_L` and `.wp-block-buttons.small` / `parts / btn-02` behavior.
 - existing Table/Flexible Table/scroll-hint contracts should own the horizontal schedule tables.
-- `module_dropdown.css` already owns the hierarchical WordPress dropdown-nav runtime contract.
+- `local_navigation.css` is the Local Navigation component-specific CSS extension point.
+- `module_menu.css` + `common.js` `moduleNavToggle()` already provide the generic nested-menu interaction baseline used by the sidebar walker.
+- `module_dropdown.css` / `dropdown-nav` are a separate contract and are not the Local Navigation owner.
 
 No new ACF field group or page-specific PHP template is justified by the current evidence.
 
@@ -150,15 +163,15 @@ The visual hierarchy is sufficiently clear. Remaining blockers are editorial/dat
 1. canonical Gutenberg block tree for this page, or confirmation that Agent-generated sample editor content may become the implementation seed;
 2. the source/ownership of the two intro images and the 645 × 430 PC image;
 3. year-selector behavior and data lifecycle (static links, tabs, anchors, or another editorial contract);
-4. exact PC runtime owner/data source for `local_nav` if it must be implemented from the same WordPress menu as SP dropdown.
+4. for Local Navigation visual implementation, the intended `sidebar-nav` hierarchy (a disposable QA fixture matching production hierarchy is sufficient; no new production contract is required).
 
 Until those are explicit, do not hard-code page copy/data in PHP and do not invent an ACF contract.
 
 ## Reusable findings
 
-- Responsive counterparts can change **interaction form**, not merely dimensions: PC `local_nav` becomes an SP selector/dropdown on this real page.
+- Responsive counterparts can change **interaction form**, not merely dimensions: PC `local_nav` becomes an SP selector-style Local Navigation on this real page.
 - A page-specific SP visual exception must not silently redefine a verified shared master. Here the 48px pill CTA differs from shared `button_L`, while PC explicitly uses the shared master.
-- Real-page instances are stronger dependency evidence than Parts-only naming, but runtime/PHP ownership still has to be proven before modifying shared Theme CSS.
+- Full-page placement + PHP render path are stronger owner evidence than visual resemblance/name. The SP selector is owned by `sidebar.php`, not automatically by a renderer named `dropdown`.
 - For data-heavy ordinary pages, visual authority can be complete while editor/data authority remains incomplete; fail closed on CMS contracts and continue with independent work.
 
 These remain project-local evidence and are not promoted to Company/frontend standards from this single page.
