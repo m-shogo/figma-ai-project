@@ -60,6 +60,12 @@ page_id="$(docker compose run --rm cli option get budokan_local_nav_qa_page_id)"
   exit 1
 }
 
+template="$(docker compose run --rm cli post meta get "$page_id" _wp_page_template)"
+[[ "$template" == "templates/template-oneColumnLocalNav.php" ]] || {
+  echo "FAIL QA page template mismatch: ${template}." >&2
+  exit 1
+}
+
 html="$(mktemp)"
 http_code="$(curl --silent --show-error --output "$html" --write-out '%{http_code}' "$WP_URL/?page_id=$page_id")"
 [[ "$http_code" == "200" ]] || {
@@ -90,7 +96,7 @@ if (( child_count < 4 )); then
   exit 1
 fi
 
-grep -Eq 'current-menu-item[^" ]*|current_page_item[^" ]*|current-menu-item|current_page_item' "$html" || {
+grep -Eq 'current-menu-item|current_page_item' "$html" || {
   echo "FAIL WordPress current-item state was not emitted by the sidebar walker." >&2
   exit 1
 }
