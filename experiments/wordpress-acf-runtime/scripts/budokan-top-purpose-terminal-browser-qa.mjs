@@ -23,39 +23,47 @@ try {
 
   const sp = await mobilePage.evaluate(() => {
     const footer = document.querySelector('#global_footer');
+    const defaultSticky = footer?.querySelector('.gf_sticky');
     const terminal = document.querySelector('.top_purposeMenu');
     const link = terminal?.querySelector('.tpm_link');
     const label = terminal?.querySelector('.tpm_label');
     const target = document.querySelector('#top_guide-01');
     if (!footer || !terminal || !link || !label || !target) return null;
-    const footerRect = footer.getBoundingClientRect();
     const terminalRect = terminal.getBoundingClientRect();
     const style = getComputedStyle(terminal);
     const labelStyle = getComputedStyle(label);
     return {
       viewportWidth: document.documentElement.clientWidth,
+      viewportHeight: window.innerHeight,
       terminalWidth: terminalRect.width,
       terminalHeight: terminalRect.height,
-      terminalTop: terminalRect.top + window.scrollY,
-      footerBottom: footerRect.bottom + window.scrollY,
-      background: style.backgroundColor,
+      terminalTop: terminalRect.top,
+      terminalBottom: terminalRect.bottom,
+      position: style.position,
+      zIndex: parseInt(style.zIndex, 10),
       borderTopWidth: parseFloat(style.borderTopWidth),
       labelSize: parseFloat(labelStyle.fontSize),
       labelLetterSpacing: parseFloat(labelStyle.letterSpacing),
       href: link.getAttribute('href'),
       targetId: target.id,
+      followsFooterInDom: terminal.previousElementSibling === footer,
+      defaultStickyPresent: Boolean(defaultSticky),
     };
   });
 
-  assert(sp, 'SP purpose terminal elements missing.');
+  assert(sp, 'SP purpose sticky elements missing.');
   assert(close(sp.viewportWidth, 375), `SP viewport expected 375px, got ${sp.viewportWidth}.`);
-  assert(close(sp.terminalWidth, 375), `SP terminal expected 375px, got ${sp.terminalWidth}.`);
-  assert(close(sp.terminalHeight, 56), `SP terminal expected 56px high, got ${sp.terminalHeight}.`);
-  assert(close(sp.terminalTop, sp.footerBottom, 1), `SP terminal must follow footer directly; terminal=${sp.terminalTop}, footer=${sp.footerBottom}.`);
-  assert(close(sp.borderTopWidth, 1, 0.25), `SP terminal border expected 1px, got ${sp.borderTopWidth}.`);
-  assert(close(sp.labelSize, 16, 0.5), `SP terminal label expected 16px, got ${sp.labelSize}.`);
-  assert(close(sp.labelLetterSpacing, 0.8, 0.25), `SP terminal tracking expected 0.8px, got ${sp.labelLetterSpacing}.`);
-  assert(sp.href === '#top_guide-01' && sp.targetId === 'top_guide-01', `SP terminal must reuse existing purpose master; href=${sp.href}.`);
+  assert(close(sp.terminalWidth, 375), `SP purpose sticky expected 375px, got ${sp.terminalWidth}.`);
+  assert(close(sp.terminalHeight, 56), `SP purpose sticky expected 56px high, got ${sp.terminalHeight}.`);
+  assert(sp.position === 'fixed', `SP purpose surface must be sticky/fixed, got ${sp.position}.`);
+  assert(close(sp.terminalTop, sp.viewportHeight - 56, 1) && close(sp.terminalBottom, sp.viewportHeight, 1), `SP purpose sticky must pin to viewport bottom; top=${sp.terminalTop}, bottom=${sp.terminalBottom}, viewport=${sp.viewportHeight}.`);
+  assert(sp.zIndex >= 80, `SP purpose sticky must own the footer-shortcut layer; z-index=${sp.zIndex}.`);
+  assert(sp.followsFooterInDom, 'SP purpose sticky should remain a thin TOP derivative immediately after the Footer master in DOM order.');
+  assert(!sp.defaultStickyPresent, 'TOP must not render the generic contact/access footer sticky beneath the purpose sticky.');
+  assert(close(sp.borderTopWidth, 1, 0.25), `SP purpose sticky border expected 1px, got ${sp.borderTopWidth}.`);
+  assert(close(sp.labelSize, 16, 0.5), `SP purpose sticky label expected 16px, got ${sp.labelSize}.`);
+  assert(close(sp.labelLetterSpacing, 0.8, 0.25), `SP purpose sticky tracking expected 0.8px, got ${sp.labelLetterSpacing}.`);
+  assert(sp.href === '#top_guide-01' && sp.targetId === 'top_guide-01', `SP purpose sticky must reuse existing purpose master; href=${sp.href}.`);
 
   await mobilePage.locator('.top_purposeMenu .tpm_link').click();
   await mobilePage.waitForTimeout(450);
@@ -69,9 +77,9 @@ try {
       expectedTop: header.getBoundingClientRect().height + 30,
     };
   });
-  assert(afterClick, 'SP purpose target/header missing after terminal click.');
-  assert(afterClick.scrollY > 0, `SP terminal click did not move the document; scrollY=${afterClick.scrollY}.`);
-  assert(close(afterClick.targetTop, afterClick.expectedTop, 4), `SP terminal should use existing smooth-scroll contract; targetTop=${afterClick.targetTop}, expected=${afterClick.expectedTop}.`);
+  assert(afterClick, 'SP purpose target/header missing after sticky click.');
+  assert(afterClick.scrollY > 0, `SP purpose sticky click did not move the document; scrollY=${afterClick.scrollY}.`);
+  assert(close(afterClick.targetTop, afterClick.expectedTop, 4), `SP purpose sticky should use existing smooth-scroll contract; targetTop=${afterClick.targetTop}, expected=${afterClick.expectedTop}.`);
   await mobileContext.close();
 
   const desktopContext = await browser.newContext({ viewport: { width: 1380, height: 900 } });
@@ -87,12 +95,12 @@ try {
     };
   });
   assert(pc, 'PC purpose derivative/master elements missing.');
-  assert(pc.terminalDisplay === 'none', `PC terminal derivative must be hidden, got ${pc.terminalDisplay}.`);
+  assert(pc.terminalDisplay === 'none', `PC purpose sticky derivative must be hidden, got ${pc.terminalDisplay}.`);
   assert(pc.guideDisplay !== 'none', 'PC existing FV purpose-guide master must remain visible.');
   await desktopContext.close();
 
-  console.log('PASS Budokan TOP purpose terminal SP geometry + interaction QA.');
-  console.log('PASS Budokan TOP purpose terminal PC derivative visibility QA.');
+  console.log('PASS Budokan TOP purpose sticky SP geometry + replacement + interaction QA.');
+  console.log('PASS Budokan TOP purpose sticky PC derivative visibility QA.');
 } finally {
   await browser.close();
 }
