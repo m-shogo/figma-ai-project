@@ -16,6 +16,8 @@ async function requireCalendar(page, label) {
     fullCalendarType: typeof window.FullCalendar,
     jqueryType: typeof window.jQuery,
     localizedConfig: typeof window.nipponbudokanTopCal,
+    homeRuntime: document.documentElement.dataset.budokanHomeRuntime || null,
+    readyState: document.readyState,
     scripts: [...document.scripts].map(s => s.src).filter(Boolean).filter(src => /fullcalendar|home\.js|jquery/.test(src)),
   }));
   if (!state.hasFcNode) {
