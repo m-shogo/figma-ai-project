@@ -125,3 +125,8 @@ echo "PASS Budokan Local Navigation disposable WordPress hierarchy rendered."
 echo "PASS Walker exposes broad family at depth 02, subgroup at depth 03, and four children at depth 04."
 echo "PASS Current page uses templates/template-oneColumnLocalNav.php and WordPress current-item classes."
 echo "NOTE This is structural runtime evidence only; SP open-state and production menu/template assignment remain Human/WordPress authority gates."
+
+if [[ "${BUDOKAN_LOCAL_NAV_KEEP_RUNTIME:-0}" == "1" ]]; then
+  trap - EXIT
+  echo "PASS runtime retained for follow-up browser QA at ${WP_URL}/?page_id=${page_id}."
+fi
