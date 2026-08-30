@@ -95,6 +95,7 @@ try {
     const leadStyle = getComputedStyle(lead);
 
     return {
+      sectionWidth: sectionRect.width,
       introHeight: introRect.height,
       cardsTop: cardRects[0].top - sectionRect.top,
       cardsLeft: cardRects[0].left - sectionRect.left,
@@ -111,7 +112,8 @@ try {
   assert(pc, 'PC TOP Guide elements were not found.');
   assert(close(pc.introHeight, 320), `PC intro expected 320px, got ${pc.introHeight}.`);
   assert(close(pc.cardsTop, 218), `PC card rail y expected 218px, got ${pc.cardsTop}.`);
-  assert(close(pc.cardsLeft, 210), `PC card rail x expected 210px, got ${pc.cardsLeft}.`);
+  const expectedCenteredLeft = (pc.sectionWidth - 960) / 2;
+  assert(close(pc.cardsLeft, expectedCenteredLeft), `PC 960px card rail should be centered; section=${pc.sectionWidth}, left=${pc.cardsLeft}, expected=${expectedCenteredLeft}.`);
   assert(pc.widths.every((width) => close(width, 320)), `PC cards expected 320px each, got ${pc.widths.join(',')}.`);
   assert(close(pc.xStarts[1] - pc.xStarts[0], 320) && close(pc.xStarts[2] - pc.xStarts[1], 320), `PC cards are not contiguous 320px columns: ${pc.xStarts.join(',')}.`);
   assert(close(pc.imageHeight, 194), `PC image height expected 194px, got ${pc.imageHeight}.`);
