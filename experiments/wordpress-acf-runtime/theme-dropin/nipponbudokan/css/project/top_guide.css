@@ -277,9 +277,14 @@
     padding-bottom: 0;
 }
 
-/* SP terminal derivative: Figma 1360:9370. It links back to the existing
-   #top_guide-01 master instead of duplicating the purpose-guide content. */
+/* SP sticky derivative: Figma 1360:9370. It replaces the generic Footer
+   shortcut rail on TOP and links back to the existing #top_guide-01 master. */
 .top_purposeMenu {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 80;
     display: block;
     height: 56px;
     border-top: 1px solid #4e5055;
