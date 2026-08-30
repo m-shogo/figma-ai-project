@@ -9,6 +9,7 @@ on:
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/inc/front.php'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-top-events-runtime-qa.sh'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-top-events-browser-qa.mjs'
+      - 'experiments/budokan-wordpress/TOP_EVENTS_VISUAL_ALIGNMENT_2026-08-31.md'
       - '.github/workflows/budokan-top-events-runtime.yml'
   workflow_dispatch:
 
