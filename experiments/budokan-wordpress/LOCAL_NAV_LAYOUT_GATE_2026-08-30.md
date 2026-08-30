@@ -85,6 +85,27 @@ So the **960px single-column ordinary-page body is now repeated Figma evidence a
 
 It does **not** yet prove the exact WordPress migration rule. We still need to know which templates/pages should adopt the new one-column shell and how an optional `sidebar-nav` should be emitted after the body without leaving an empty gap on pages that do not belong to a local-nav branch.
 
+## Existing Theme one-column owner found
+
+The Theme already has two explicit one-column page templates:
+
+- `templates/template-oneColumn.php` (`Template Name: 1カラムテンプレート`)
+- `templates/template-oneColumnWide.php` (`Template Name: 1カラム幅広テンプレート`)
+
+`template-oneColumn.php` already renders ordinary page content inside:
+
+```text
+.global_inner._content
+  .gc_main._oneColumn
+    the_content()
+```
+
+and `--width-content` is `960px`, so this existing template is structurally much closer to the repeated Figma ordinary-page body than default `page.php`'s legacy side-column grid. `template-oneColumnWide.php` uses the broader base-width wrapper and is therefore not the first candidate for the 960px family.
+
+This changes the reuse decision materially: **do not invent a new 960px page shell or immediately rewrite `page.php`**. First determine whether the affected Figma pages are intended to use the existing `1カラムテンプレート`, and then add the optional Local Navigation as a thin derivative/extension only if runtime authority requires it.
+
+The existing one-column template currently does not call `_dropdown-navigation.php` or `get_sidebar()`, so the remaining Local Navigation problem is smaller and more specific: prove how a page using this existing 960px shell should optionally render `sidebar-nav` after the body.
+
 ## Failed approach and cause
 
 ### Attempt
@@ -93,31 +114,30 @@ Implement `local_navigation.css` directly from SP first, then add the PC four-co
 
 ### Why it was stopped
 
-The initial work treated the Local Navigation renderer as if its parent already matched Figma. Re-reading `page.php`, `global_inner.css`, and `global_contents.css` showed that this assumption was false on PC. The component was inside a legacy side-column layout.
+The initial work treated the Local Navigation renderer as if its parent already matched Figma. Re-reading `page.php`, `global_inner.css`, and `global_contents.css` showed that this assumption was false on PC. The component was inside a legacy side-column layout. A later template audit then found that the Theme already owns a 960px one-column page template, making a new shell even less justified.
 
 ### Reusable Budokan lesson
 
-Before styling a full-width Figma section, verify not only its renderer and data owner but also the **parent layout owner and DOM placement at the target breakpoint**. A correct component renderer inside an incompatible parent grid is still the wrong implementation surface.
+Before styling a full-width Figma section, verify not only its renderer and data owner but also the **parent layout owner and DOM placement at the target breakpoint**. Then search existing page templates before changing the default shell. A correct component renderer inside an incompatible parent grid is still the wrong implementation surface, and an already-existing layout owner should be reused before a new one is created.
 
 This is now repeated inside the Budokan ordinary-page family (three Figma pages share the 960px body), so it is strong enough to guide the Budokan page-shell investigation. It is still not evidence for a company-wide standard.
 
 ## Smallest authority needed before production implementation
 
-The Figma side is now substantially clearer: current ordinary-page designs use a centered ~960px body, and only some families add a full-width Local Navigation after it.
+The Figma side is now substantially clearer: current ordinary-page designs use a centered ~960px body, and only some families add a full-width Local Navigation after it. The Theme also already owns a 960px one-column template.
 
-The remaining authority is on the WordPress/Theme side:
+The remaining authority is on the WordPress/runtime side:
 
-- confirm the intended migration boundary for legacy `.global_inner._column` pages; and
-- confirm the runtime rule for whether `sidebar-nav` has a current branch, so `get_sidebar()` can be placed after the body without emitting an empty visual section.
+- confirm whether Regional Training / Training Center / Modern Budo production pages are assigned to `1カラムテンプレート` (or are intended to be migrated to it); and
+- confirm the runtime rule for whether `sidebar-nav` has a current branch, so an optional Local Navigation can be emitted after the one-column body without an empty visual section.
 
-An actual production WordPress menu/runtime export remains the smallest high-value input. The exact fourth Local Navigation label is **not** the blocker for CSS anymore; it remains content authority and must stay fail-closed.
+An actual production WordPress page-template assignment plus `sidebar-nav` menu/runtime export is now the highest-value input. The exact fourth Local Navigation label is **not** the blocker for CSS anymore; it remains content authority and must stay fail-closed.
 
 ## Safe next investigation
 
-1. Audit the Theme templates/usages of `.global_inner._column` and `get_sidebar()` to determine blast radius.
-2. Build a disposable WordPress fixture with one page that belongs to a `sidebar-nav` branch and one that does not.
-3. Prove an optional bottom Local Navigation render contract without guessed labels/content.
-4. Implement the 960px ordinary-page shell as the master dependency only if the runtime/template audit confirms the blast radius.
-5. Then return to Local Navigation: SP styling → SP runtime QA → PC extension → PC runtime QA → visual diff.
+1. Build a disposable WordPress fixture using the existing `template-oneColumn.php`, with one page inside a `sidebar-nav` branch and one page outside it.
+2. Prove an optional bottom Local Navigation render contract without guessed labels/content.
+3. If the existing template + optional sidebar contract matches the Figma shell, implement that thin derivative instead of rewriting default `page.php`.
+4. Then return to Local Navigation: SP styling → SP runtime QA → PC extension → PC runtime QA → visual diff.
 
 No production CSS from the aborted attempt remains in the final branch diff.
