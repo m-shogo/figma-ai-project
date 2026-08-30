@@ -218,7 +218,7 @@
             align-items: flex-start;
         }
 
-        .lnl_link-04 {
+        .lnl_item-04._noChild .lnl_link-04 {
             display: flex;
             align-items: flex-start;
             gap: 12px;
