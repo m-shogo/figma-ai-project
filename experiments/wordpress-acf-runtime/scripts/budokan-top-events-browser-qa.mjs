@@ -12,15 +12,14 @@ async function requireCalendar(page, label) {
   await page.waitForTimeout(1500);
   const state = await page.evaluate(() => ({
     hasCalendarNode: Boolean(document.querySelector('#top_calendar')),
-    hasFcNode: Boolean(document.querySelector('#top_calendar .fc')),
+    hasRenderedCalendar: Boolean(document.querySelector('#top_calendar.fc')),
     fullCalendarType: typeof window.FullCalendar,
     jqueryType: typeof window.jQuery,
     localizedConfig: typeof window.nipponbudokanTopCal,
-    homeRuntime: document.documentElement.dataset.budokanHomeRuntime || null,
     readyState: document.readyState,
     scripts: [...document.scripts].map(s => s.src).filter(Boolean).filter(src => /fullcalendar|home\.js|jquery/.test(src)),
   }));
-  if (!state.hasFcNode) {
+  if (!state.hasRenderedCalendar) {
     throw new Error(`${label} FullCalendar did not render: ${JSON.stringify({ ...state, pageErrors: errors })}`);
   }
 }
