@@ -55,7 +55,7 @@ if (get_field('post_type') === 'file') {
                 <div class="module_titleSingle">
                     <div class="head">
                         <p class="date">
-                            <time datetime="<?php echo esc_attr(get_the_time('Y-m-d')); ?>"><?php the_time('Y/m/d'); ?></time>
+                            <time datetime="<?php echo esc_attr(get_the_time('Y-m-d')); ?>"><?php the_time('Y.m.d'); ?></time>
                         </p>
                         <?php
                         get_template_part('template-parts/_label-category', null, [
