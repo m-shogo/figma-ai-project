@@ -185,6 +185,7 @@ try {
   console.log('PASS Budokan Gutenberg button_L Zen Kaku 15px / gap 8 current Figma contract.');
   console.log('PASS Budokan Gutenberg details title Mincho 18 / 600 current Figma contract.');
   console.log('PASS Budokan Gutenberg details SP 59/16/20 / PC open 68/32 geometry current Figma contract.');
+  console.log('PASS Budokan Gutenberg table Zen Kaku 15px current Figma contract.');
 } finally {
   await browser.close();
 }

@@ -1,6 +1,8 @@
 @charset "utf-8";
 /* // ------------------------------
 // テーブル
+// Current Figma fileKey fKYDn9ikpJk1nW7IWFtaUx
+// PC 1157:8286 / 1157:8291; SP 1451:5690 — Zen Kaku Gothic New Regular 15
 // ------------------------------ */
 .block-editor_wrap,
 .editor-styles-wrapper {
@@ -62,6 +64,7 @@
                 th,
                 td {
                     padding: 15px 30px;
+                    font-family: var(--font-zen-kaku-gothic);
                     font-size: 15px;
                     letter-spacing: 0.05em;
                     line-height: 1.6;
