@@ -1,6 +1,8 @@
 @charset "utf-8";
 /*　// ------------------------------
 // ボタンリンク（Figma button_L / 輪郭）
+// Current Figma fileKey fKYDn9ikpJk1nW7IWFtaUx
+// SP 1468:7314 / PC 1296:8808 — Zen Kaku Gothic New Medium 15 / gap 8
 // ------------------------------　*/
 /* ///////// デフォルト設定 ///////// */
 .block-editor_wrap,
@@ -21,6 +23,7 @@
             .wp-block-button__link {
                 position: relative;
                 text-decoration: none;
+                font-family: var(--font-zen-kaku-gothic);
                 font-size: 15px;
                 font-weight: 500;
                 line-height: 1.4;
@@ -28,7 +31,7 @@
                 min-height: 60px;
                 display: flex;
                 align-items: center;
-                gap: 12px;
+                gap: 8px;
                 text-align: left;
                 border: 1px solid var(--color-line);
                 border-radius: 3px;
