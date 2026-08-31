@@ -45,7 +45,7 @@
     }
 
     .tg_heading_ja {
-        font-family: var(--font-sansSerif-ja);
+        font-family: var(--font-zen-kaku-gothic);
         font-size: 30px;
         font-weight: 500;
         line-height: 1;
@@ -58,7 +58,7 @@
         align-items: center;
         justify-content: center;
         gap: 8px;
-        font-family: var(--font-serif-en);
+        font-family: var(--font-sansSerif-en);
         font-size: 14px;
         font-weight: 400;
         line-height: 1;
@@ -78,6 +78,7 @@
     .tg_lead {
         width: 100%;
         margin: 0;
+        font-family: var(--font-zen-kaku-gothic);
         font-size: 16px;
         font-weight: 400;
         line-height: 1.8;
@@ -123,7 +124,7 @@
         align-items: center;
         gap: 10px;
         margin: 0;
-        font-family: var(--font-sansSerif-ja);
+        font-family: var(--font-zen-kaku-gothic);
         font-size: 18px;
         font-weight: 500;
         line-height: 1.2;
@@ -147,6 +148,7 @@
 
     .tg_card_text {
         margin: 0;
+        font-family: var(--font-zen-kaku-gothic);
         font-size: 15px;
         font-weight: 400;
         line-height: 1.6;
@@ -191,7 +193,7 @@
         }
 
         .tg_heading_ja {
-            font-family: var(--font-serif-ja);
+            font-family: var(--font-zen-old-mincho);
             font-size: 32px;
             font-weight: 500;
             color: var(--color-text);
@@ -200,7 +202,7 @@
         .tg_heading_en {
             justify-content: flex-start;
             gap: 0;
-            font-family: var(--font-serif-ja);
+            font-family: var(--font-zen-old-mincho);
             font-size: 22px;
             font-weight: 500;
             letter-spacing: 0.05em;
@@ -250,7 +252,7 @@
         .tg_card_title {
             flex-direction: row;
             gap: 10px;
-            font-family: var(--font-serif-ja);
+            font-family: var(--font-zen-old-mincho);
             font-size: 20px;
             font-weight: 500;
         }
