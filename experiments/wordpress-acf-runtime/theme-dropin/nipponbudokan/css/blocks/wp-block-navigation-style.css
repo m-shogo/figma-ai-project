@@ -1,6 +1,9 @@
 @charset "utf-8";
 /* // ------------------------------
 // ナビゲーション
+// Current Figma fileKey fKYDn9ikpJk1nW7IWFtaUx
+// Large: SP 1399:18870 / PC 1157:8339
+// Title is Zen Old Mincho SemiBold 18 on both breakpoints.
 // ------------------------------ */
 .block-editor_wrap,
 .editor-styles-wrapper {
@@ -106,9 +109,9 @@
                             position: relative;
                             margin: 0;
                             color: var(--color-text);
-                            font-family: var(--font-sansSerif-ja);
+                            font-family: var(--font-zen-old-mincho);
                             font-size: 18px;
-                            font-weight: 500;
+                            font-weight: 600;
                             line-height: 1;
                             letter-spacing: 0.05em;
                             text-decoration: none;
@@ -142,6 +145,7 @@
                         .text {
                             margin-top: 0;
                             padding-bottom: 8px;
+                            font-family: var(--font-zen-kaku-gothic);
                             font-size: 15px;
                             font-weight: 400;
                             line-height: 1.6;
@@ -187,15 +191,6 @@
             &.--large {
                 grid-template-columns: repeat(3, minmax(0, 1fr));
                 gap: 40px;
-                .navigation {
-                    a {
-                        .content {
-                            .title {
-                                font-family: var(--font-serif-ja);
-                            }
-                        }
-                    }
-                }
             }
             &.--small {
                 grid-template-columns: repeat(2, 1fr);

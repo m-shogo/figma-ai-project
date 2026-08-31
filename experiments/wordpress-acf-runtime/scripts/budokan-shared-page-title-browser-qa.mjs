@@ -189,6 +189,7 @@ try {
   console.log('PASS Budokan page-link Zen Kaku 16px / 500 current Figma contract.');
   console.log('PASS Budokan Gutenberg details QA hug Q/A / gold minus current Figma contract.');
   console.log('PASS Budokan media-text caption/zoom #333 current Figma contract.');
+  console.log('PASS Budokan navigation-large Mincho SemiBold 18 / Kaku 15 current Figma contract.');
 } finally {
   await browser.close();
 }
