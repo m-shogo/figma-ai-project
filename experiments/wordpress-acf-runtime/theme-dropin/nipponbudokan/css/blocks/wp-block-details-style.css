@@ -1,6 +1,9 @@
 @charset "utf-8";
 /* // ------------------------------
 // MARK: 詳細
+// Current Figma fileKey fKYDn9ikpJk1nW7IWFtaUx
+// SP 1399:18840 / PC 1157:8305 — Zen Old Mincho SemiBold 18
+// Geometry (SP rail 59 / inset 20) is a follow-up; this pass is title type only.
 // ------------------------------ */
 .block-editor_wrap,
 .editor-styles-wrapper {
@@ -30,9 +33,10 @@
         }
 
         .wp-block-details__title {
-            font-weight: 500;
-            font-size: 16px;
-            letter-spacing: 0.1em;
+            font-family: var(--font-zen-old-mincho);
+            font-weight: 600;
+            font-size: 18px;
+            letter-spacing: 0.05em;
             line-height: 1.5;
             color: var(--color-text);
             overflow-wrap: anywhere;
@@ -183,7 +187,8 @@
             --_padding-inline: 24px;
 
             .wp-block-details__title {
-                font-size: 16px;
+                font-size: 18px;
+                letter-spacing: 0.1em;
             }
 
             /* Figma PC keeps the short collapsed title at 24px, while an
