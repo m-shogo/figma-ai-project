@@ -10,6 +10,10 @@ function assert(condition, message) {
   if (!condition) throw new Error(message);
 }
 
+function close(actual, expected, tolerance = 2) {
+  return Math.abs(actual - expected) <= tolerance;
+}
+
 function isSerifFamily(family) {
   const value = String(family || '').toLowerCase();
   if (value.includes('sans-serif')) return false;
