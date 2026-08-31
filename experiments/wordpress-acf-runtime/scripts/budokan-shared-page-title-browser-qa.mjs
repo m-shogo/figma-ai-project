@@ -180,6 +180,7 @@ try {
   console.log('PASS Budokan image page-title PC photo 60/320 / Mincho 32 white panel current Figma contract.');
   console.log('PASS Budokan shared heading SP 24/12 Mincho / PC 26/20 Mincho current Figma contract.');
   console.log('PASS Budokan Gutenberg paragraph Zen Kaku Gothic New 17px / lh 1.6 current Figma contract.');
+  console.log('PASS Budokan Gutenberg list Zen Kaku 17px / 18px inset current Figma contract.');
 } finally {
   await browser.close();
 }

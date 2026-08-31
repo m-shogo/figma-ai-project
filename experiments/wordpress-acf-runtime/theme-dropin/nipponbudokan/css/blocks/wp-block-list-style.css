@@ -1,6 +1,8 @@
 @charset "utf-8";
 /* // ------------------------------
 // リスト
+// Current Figma fileKey fKYDn9ikpJk1nW7IWFtaUx
+// SP 1399:18762 / 2194:5169; PC 1157:8221
 // ------------------------------ */
 /* //---------- 共通設定 ---------- */
 .block-editor_wrap,
@@ -23,6 +25,7 @@
             color: var(--color-text);
             padding-left: 18px;
             position: relative;
+            font-family: var(--font-zen-kaku-gothic);
             font-size: 17px;
             line-height: 1.6;
             letter-spacing: 0.05em;
@@ -40,7 +43,7 @@
     /* //---------- ulのみ ---------- */
     ul.wp-block-list:not(.annotation-list) {
         > li {
-            padding-left: 21px;
+            padding-left: 18px;
             &::before {
                 content: '';
                 width: 6px;
@@ -78,7 +81,7 @@
                 line-height: 1;
                 transform: translateY(6px);
                 letter-spacing: 0.1em;
-                font-family: var(--font-sansSerif-ja);
+                font-family: var(--font-zen-kaku-gothic);
                 font-weight: 500;
                 font-size: 16px;
                 min-width: 26px;
@@ -96,6 +99,7 @@
             letter-spacing: 0.05em;
             &::before {
                 content: '※';
+                font-family: var(--font-zen-kaku-gothic);
                 font-size: 16px;
                 font-weight: 500;
                 line-height: 1;
@@ -124,7 +128,7 @@
                         background: transparent;
                         border-radius: 0;
                         display: inline-block;
-                        font-family: var(--font-sansSerif-ja);
+                        font-family: var(--font-zen-kaku-gothic);
                     }
                 }
             }
