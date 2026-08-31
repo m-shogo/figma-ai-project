@@ -11,6 +11,17 @@ function isKakuFamily(family) {
   return value.includes('kaku');
 }
 
+function markerTileOk(size) {
+  const last = String(size || '').trim().split(/\s+/).pop() || '';
+  if (last.endsWith('em')) return close(parseFloat(last), 1.6, 0.05);
+  return close(parseFloat(last), 27.2, 1);
+}
+
+function isGoldMarker(image) {
+  const value = String(image || '');
+  return /202,\s*153,\s*87/.test(value) || /ca9957/i.test(value) || /color-mix/i.test(value);
+}
+
 function isMinchoFamily(family) {
   const value = String(family || '').toLowerCase();
   if (value.includes('sans-serif')) return false;
@@ -25,13 +36,15 @@ export async function measureHeadings(page) {
     const h4 = wrap?.querySelector('h4.wp-block-heading');
     const h2Follow = h2?.nextElementSibling;
     const listItem = wrap?.querySelector('ul.wp-block-list > li');
-    if (!wrap || !h2 || !h3 || !h4 || !h2Follow || !listItem) return null;
+    const marker = wrap?.querySelector('span[style*="underline"]');
+    if (!wrap || !h2 || !h3 || !h4 || !h2Follow || !listItem || !marker) return null;
 
     const h2Style = getComputedStyle(h2);
     const h3Style = getComputedStyle(h3);
     const h4Style = getComputedStyle(h4);
     const followStyle = getComputedStyle(h2Follow);
     const listStyle = getComputedStyle(listItem);
+    const markerStyle = getComputedStyle(marker);
 
     return {
       h2Size: h2Style.fontSize,
@@ -55,6 +68,9 @@ export async function measureHeadings(page) {
       listFamily: listStyle.fontFamily,
       listSize: listStyle.fontSize,
       listPaddingLeft: listStyle.paddingLeft,
+      markerDecoration: markerStyle.textDecorationLine,
+      markerImage: markerStyle.backgroundImage,
+      markerSize: markerStyle.backgroundSize,
     };
   });
 }
@@ -76,6 +92,9 @@ export function assertHeadings(measured, band) {
   assert(isKakuFamily(measured.listFamily), `${band} list must resolve to Zen Kaku Gothic New, got ${measured.listFamily}.`);
   assert(measured.listSize === '17px', `${band} list expected 17px, got ${measured.listSize}.`);
   assert(measured.listPaddingLeft === '18px', `${band} unordered list text inset expected 18px, got ${measured.listPaddingLeft}.`);
+  assert(measured.markerDecoration === 'none', `${band} marker must not keep a CSS underline, got ${measured.markerDecoration}.`);
+  assert(isGoldMarker(measured.markerImage), `${band} marker expected gold #ca9957 overlay, got ${measured.markerImage}.`);
+  assert(markerTileOk(measured.markerSize), `${band} marker tile expected 1.6em (~27.2px), got ${measured.markerSize}.`);
 
   if (band === 'SP') {
     assert(measured.h2Size === '24px', `SP h2 expected 24px, got ${measured.h2Size}.`);
