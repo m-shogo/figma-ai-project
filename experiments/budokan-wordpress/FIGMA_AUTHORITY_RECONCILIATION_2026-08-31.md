@@ -1,6 +1,8 @@
 # Budokan Figma authority reconciliation — 2026-08-31
 
-Status: resolved. Project-local authority correction only; no Theme/ACF/content contract changed.
+> Later the same day, Human Authority moved current visual truth to `fKYDn9ikpJk1nW7IWFtaUx`. This note remains as lineage for the earlier `w7` vs `RfA` mix-up. Do not use it to override `CURRENT_AUTHORITY.md`.
+
+Status: resolved, then superseded. Project-local authority correction only; no Theme/ACF/content contract changed.
 
 ## What happened
 

@@ -1,6 +1,6 @@
 # Header / Footer — Figma vs Theme（作業メモ）
 
-更新: 2026-08-28
+更新: 2026-08-31（新 Figma `fKYDn9ikpJk1nW7IWFtaUx` 再同期）
 
 ## Frontend 契約（人が触る）
 
@@ -8,20 +8,19 @@
 - 通常 layout は Flow / Flex / Grid。absolute は極力使わない（icon 線など意図的 micro UI のみ可）
 - 学びは実装後 `research/frontend-learning-evidence*.yaml` 等へ戻す
 
-## Figma（現行）
+## Figma（現行 `fKYDn9ikpJk1nW7IWFtaUx`）
 
 | | node | 要点 |
 | --- | --- | --- |
-| Header PC | `1399:12372` | 白 / h100 / logo(金赤+薄い字) + 4ナビ(赤 angle-down) + EN/search/menu 60px角 gap10 radius3 / padding 60/20 |
-| Header SP 閉じ | `446:10020` | ダーク帯 / logo白字 + EN・search・menu が隙間なく全高 / ハンバーガー |
-| Header SP 開き | `2096:9573` | 同じ3ボタン。menu は赤地に白 × |
-| SP menu 別案 | `2096:9496` | PlanB。閉じボタンが白枠 × のみ（3ボタン案を正とする） |
-| Footer PC | `1901:14268` | logo+住所+SNS / 2列リンク / copyright + 金 Page Top。地図なし |
-| Footer SP 下層 | `560:2524` / `560:188` 末尾 | ダーク / logo白字+住所+アクセス / グレー地図 / copyright + 赤 Page Top / sticky お問い合わせ・アクセス |
+| Header PC | `2209:9850` | 左340ダークロゴレール + 白ナビ。h100。GNavi Zen Old Mincho 16px/500 tracking 0.8px、current 600+下線。EN/search/menu 60px角 gap10 radius3。右padding 30 |
+| Header SP 閉じ | `446:10020` | ダーク帯 h60 / logo 140×28 + EN・search・menu 各60px 隙間なし / ハンバーガー |
+| Header SP 開き | `2169:10018` | 同じ3ボタン。menu は赤地に白 × |
+| Footer PC | `1901:14268` | 未再同期。次回 Footer セクションで LIVE 再取得 |
+| Footer SP 下層 | `560:2524` / `560:188` 末尾 | 未再同期。次回 Footer セクションで LIVE 再取得 |
 
-色: main `#bf3e2b` / sec `#ca9957` / text `#333` / search `#4e5055` / logo字 PC `#e6e6e6`
+色: main `#bf3e2b` / sec `#ca9957` / text `#333` / search `#4e5055` / logo rail `#2c3036`
 
-フォント: Figma は Zen 系。Theme は Noto/Roboto を当面維持。
+フォント: Header GNavi は Zen Old Mincho。EN は Zen Kaku Gothic New Medium 14px。
 
 ## 実装方針
 
@@ -32,16 +31,15 @@
 5. form は触らない
 6. `parts.php` は触らない
 
-## Header 突き合わせ（今回）
+## Header 突き合わせ（2026-08-31 新 Figma）
 
 直した差:
 
-- 旧 Codia `logo.svg` → Figma 紋+社名
-- SP が白ヘッダー＋ハンバーガーのみ → Figma どおりダーク＋EN/search/menu 常時
-- SP 開時ハンバーガー → ×
-- PC ナビ セリフ 15px / 赤 `\f107` / gap 48
-- search の JS が `#search` のまま効いていなかった → `#gh_search`
-- JS の 1080 判定 → 案件 768
+- PC 白全幅 → 左 340px ダークロゴレール + 白ナビ、右 padding 30
+- PC GNavi Noto 15px / current 赤字 → Zen Old Mincho 16px/500、current は 600 + 下線、文字色は `#333` のまま
+- SP 操作ボタン 52px → 60px、logo を 140×28 相当へ縮小
+- EN を Zen Kaku Gothic New Medium 14px に合わせる
+- 全幅 border-bottom を廃止（current 下線だけ残す）
 
 残:
 

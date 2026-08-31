@@ -167,6 +167,9 @@
     --font-sansSerif-en: 'local Roboto', 'Roboto', sans-serif;
     /* 英語セリフ体 */
     --font-serif-en: 'Crimson Text', serif;
+    /* 現行Figma（Zen） */
+    --font-zen-old-mincho: 'Zen Old Mincho', serif;
+    --font-zen-kaku-gothic: 'Zen Kaku Gothic New', sans-serif;
     /* FontAwesome */
     --font-awesome: 'Font Awesome 6 Pro';
     /* FontAwesome Brands */

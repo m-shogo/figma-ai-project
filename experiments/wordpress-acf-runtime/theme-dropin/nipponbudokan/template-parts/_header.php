@@ -9,7 +9,7 @@
                 <img class="gh_logo_mark" src="<?php echo esc_url($theme_uri . '/images/common/logo-mark.svg'); ?>" alt="" width="41" height="40" decoding="async">
                 <picture class="gh_logo_name">
                     <source media="(min-width: 768px)" srcset="<?php echo esc_url($theme_uri . '/images/common/logo-wordmark.svg'); ?>" width="152" height="36">
-                    <img src="<?php echo esc_url($theme_uri . '/images/common/logo-wordmark-sp-inverse.svg'); ?>" alt="" width="137" height="32" decoding="async">
+                    <img src="<?php echo esc_url($theme_uri . '/images/common/logo-wordmark-sp-inverse.svg'); ?>" alt="" width="106" height="25" decoding="async">
                 </picture>
             </a>
         </<?php echo $logo_tag; ?>>

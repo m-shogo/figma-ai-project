@@ -1,7 +1,8 @@
 @charset "utf-8";
 /* // ==========================================================================
 // サイト共通ヘッダー
-// Figma PC: 1399:12372 / SP closed: 446:10020 / SP open: 2096:9573
+// Current Figma fileKey fKYDn9ikpJk1nW7IWFtaUx
+// PC: 2209:9850 / SP closed: 446:10020 shell / SP open: 2169:10018
 // ========================================================================== */
 .global_header {
     position: fixed;
@@ -23,11 +24,11 @@
         flex: 1 1 auto;
         align-items: center;
         min-width: 0;
-        padding-inline: 12px;
+        padding-inline: 20px 0;
         a {
             display: flex;
             align-items: center;
-            gap: 7px;
+            gap: 4.75px;
             min-width: 0;
             max-width: 100%;
             color: var(--color-secondary);
@@ -37,8 +38,8 @@
         .gh_logo_mark {
             display: block;
             flex-shrink: 0;
-            width: 36px;
-            height: 35px;
+            width: 28.85px;
+            height: 28px;
         }
         .gh_logo_name {
             display: block;
@@ -47,9 +48,9 @@
             line-height: 0;
             img {
                 display: block;
-                width: auto;
-                max-width: 137px;
-                height: 32px;
+                width: 106.4px;
+                max-width: 100%;
+                height: 24.97px;
             }
         }
     }
@@ -67,7 +68,7 @@
         align-items: center;
         justify-content: center;
         box-sizing: border-box;
-        width: 52px;
+        width: var(--header-action-size);
         height: var(--header-height-SP);
         border: 0;
         border-radius: 0;
@@ -81,6 +82,7 @@
     }
     .gh_lang {
         background-color: var(--color-accent);
+        font-family: var(--font-zen-kaku-gothic);
         font-size: 14px;
         font-weight: 500;
         letter-spacing: 0.1em;
@@ -107,10 +109,10 @@
             display: block;
             position: relative;
             width: 20px;
-            height: 13px;
+            height: 15px;
             background-color: currentColor;
             background-clip: content-box;
-            padding-block: 6px;
+            padding-block: 7px;
             box-sizing: border-box;
             &::before,
             &::after {
@@ -148,26 +150,29 @@
     @media screen and (min-width: 768px) {
         height: var(--header-height-PC);
         background-color: var(--color-secondary);
-        border-bottom: 1px solid var(--color-separator--soft);
         .gh_inner {
-            align-items: center;
-            padding-inline: 60px 20px;
-            gap: 24px;
+            align-items: stretch;
+            padding-inline: 0 30px;
+            gap: 0;
         }
         .gh_logo {
-            flex: 0 0 auto;
-            padding-inline: 0;
+            flex: 0 0 340px;
+            width: 340px;
+            padding-inline: 60px 0;
+            background-color: var(--color-copyright);
             a {
-                color: var(--color-text);
+                gap: 6.8px;
+                color: var(--color-secondary);
             }
             .gh_logo_mark {
-                width: 41px;
+                width: 41.22px;
                 height: 40px;
             }
             .gh_logo_name {
                 img {
+                    width: 152px;
                     max-width: none;
-                    height: 36px;
+                    height: 35.68px;
                 }
             }
         }
@@ -226,8 +231,8 @@ body._open-menu {
             .gh_menu {
                 .icon {
                     background-color: currentColor;
-                    padding-block: 6px;
-                    height: 13px;
+                    padding-block: 7px;
+                    height: 15px;
                     &::before {
                         top: 0;
                         transform: none;
