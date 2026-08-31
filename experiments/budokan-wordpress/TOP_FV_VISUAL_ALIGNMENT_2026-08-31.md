@@ -6,10 +6,10 @@ This run re-checked the full Budokan TOP dependency picture before implementatio
 
 Canonical Figma evidence refreshed in this run:
 
-- PC FV: `1399:12229` (`fv`)
+- PC FV: `1603:7662` (`fv`) — previous note `1399:12229` is stale
 - SP MV: `1455:5811` (`MV`)
 - SP important notice: `446:11658`
-- SP purpose-menu control: `1360:9370` (`menu-purpose`)
+- SP purpose-menu control: `2189:10144` (`menu-purpose`)
 - canonical TOP frames remain PC `1603:7062` / SP `446:10020`
 
 ## Existing Theme ownership reused
@@ -43,18 +43,17 @@ Therefore this run hides `.tm_guide` below 768px and restores it at the desktop 
 
 ### PC
 
-`1399:12229` confirms the existing desktop structure is fundamentally correct and reusable:
+`1603:7662` is the current PC FV. The desktop structure is still reusable, but several tokens moved:
 
 - overall width: 1380
-- stage padding: 60px left / 20px right
 - MV / guide gap: 20px
-- guide: 240×600
-- MV height: 600
-- title: 44px at y=330 relative to the MV, left 5%
-- lead: 18px
-- notice: 700×80, overlapping the bottom of the MV by 40px
+- guide: 240×600, body fill `#f9f2e5`
+- MV height: 600, photo 1030×600
+- title: Zen Old Mincho Medium 46 / lh 1.5 at y=307 relative to the MV
+- lead: Zen Kaku Medium 18 / lh 1.4
+- notice: 600×70 white rail, primary-red 16 Medium text, overlapping the MV by 35px
 
-The PC layer remains a thin breakpoint extension over the same Theme owner; no new renderer is necessary.
+The previous 44px title / y=330 / 700×80 red notice contract came from the superseded PC node and must not be kept.
 
 ## Implementation changes
 
@@ -66,7 +65,7 @@ The PC layer remains a thin breakpoint extension over the same Theme owner; no n
 - set SP title to 32px and lead to 15px
 - set the notice to 335×70 with the canonical -35px overlap
 - hide the desktop purpose-guide on SP
-- under `min-width:768px`, restore the existing PC 600px MV, 240px guide, 20px gap, 44px title, and 700×80 notice composition
+- under `min-width:768px`, restore the PC 600px MV, 240px cream guide, 20px gap, 46px Mincho title, and 600×70 white notice
 
 The implementation intentionally keeps the existing Theme image/data owners. The disposable runtime uses `images/top/mv-sample.png`; the Figma stock photograph is not promoted into production because no canonical media/CMS authority has been established for that exact asset.
 

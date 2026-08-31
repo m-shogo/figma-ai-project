@@ -1,7 +1,8 @@
 @charset "utf-8";
 /* // ==========================================================================
 // メインビジュアル（TOP FV）
-// Figma PC: 1399:12229 ／ SP: 1455:5811 + 446:11658
+// Current Figma fileKey fKYDn9ikpJk1nW7IWFtaUx
+// PC FV: 1603:7662 ／ SP MV: 1455:5811 + notice 446:11658
 // ========================================================================== */
 .top_mainVisual {
     position: relative;
@@ -68,7 +69,7 @@
             color: var(--color-secondary);
         }
         .tm_title {
-            font-family: var(--font-serif-ja);
+            font-family: var(--font-zen-old-mincho);
             font-size: 32px;
             font-weight: 500;
             line-height: 1.4;
@@ -76,6 +77,7 @@
             text-shadow: 1px 1px 5px #000;
         }
         .tm_lead {
+            font-family: var(--font-zen-kaku-gothic);
             font-size: 15px;
             font-weight: 500;
             line-height: 1.6;
@@ -114,6 +116,7 @@
         border-radius: 3px 3px 0 0;
         background-color: var(--color-text);
         color: var(--color-secondary);
+        font-family: var(--font-zen-old-mincho);
         font-size: 15px;
         font-weight: 500;
         letter-spacing: 0.05em;
@@ -133,7 +136,7 @@
         gap: 20px;
         padding: 20px;
         border-radius: 0 0 3px 3px;
-        background-color: #f2f2f2;
+        background-color: #f9f2e5;
     }
     .tm_guide_group {
         display: flex;
@@ -151,6 +154,7 @@
         align-items: center;
         gap: 10px;
         margin: 0;
+        font-family: var(--font-zen-old-mincho);
         font-size: 16px;
         font-weight: 500;
         letter-spacing: 0.05em;
@@ -173,6 +177,7 @@
             align-items: center;
             gap: 6px;
             color: var(--color-text);
+            font-family: var(--font-zen-kaku-gothic);
             font-size: 14px;
             font-weight: 500;
             letter-spacing: 0.05em;
@@ -220,6 +225,7 @@
         .tn_text,
         .tn_item {
             margin: 0;
+            font-family: var(--font-zen-kaku-gothic);
             font-size: 13px;
             letter-spacing: 0.05em;
             line-height: 1.4;
@@ -264,13 +270,14 @@
             .tm_inner {
                 right: auto;
                 bottom: auto;
-                top: 330px;
+                top: 307px;
                 left: 5%;
                 width: 61%;
                 gap: 24px;
             }
             .tm_title {
-                font-size: 44px;
+                font-size: 46px;
+                line-height: 1.5;
                 letter-spacing: 0.05em;
                 text-shadow: none;
             }
@@ -302,15 +309,17 @@
             order: unset;
             position: relative;
             z-index: 2;
-            width: min(700px, calc(100% - 280px));
-            margin-top: -40px;
+            width: 600px;
+            margin-top: -35px;
             margin-bottom: 0;
-            margin-left: 0;
+            margin-left: 60px;
             .tn_inner {
-                gap: 20px;
-                min-height: 80px;
-                padding-inline: 48px;
+                gap: 16px;
+                min-height: 70px;
+                padding-inline: 32px;
                 border-radius: 0 3px 3px 0;
+                background-color: var(--color-secondary);
+                color: var(--color-primary);
             }
             .tn_icon {
                 img {
@@ -321,6 +330,7 @@
             .tn_text,
             .tn_item {
                 font-size: 16px;
+                font-weight: 500;
                 line-height: 1;
             }
         }

@@ -4,6 +4,14 @@ const url = process.argv[2];
 if (!url) process.exit(2);
 const assert = (condition, message) => { if (!condition) throw new Error(message); };
 const close = (actual, expected, tolerance = 2) => Math.abs(actual - expected) <= tolerance;
+function isMinchoFamily(family) {
+  const value = String(family || '').toLowerCase();
+  if (value.includes('sans-serif')) return false;
+  return value.includes('mincho') || value.includes('zen old');
+}
+function isKakuFamily(family) {
+  return String(family || '').toLowerCase().includes('kaku');
+}
 
 const browser = await chromium.launch({ headless: true });
 try {
@@ -33,8 +41,10 @@ try {
       mvWidth: mvRect.width,
       bgHeight: bgRect.height,
       titleSize: parseFloat(getComputedStyle(title).fontSize),
+      titleFamily: getComputedStyle(title).fontFamily,
       titleLineHeight: parseFloat(getComputedStyle(title).lineHeight),
       leadSize: parseFloat(getComputedStyle(lead).fontSize),
+      leadFamily: getComputedStyle(lead).fontFamily,
       leadLineHeight: parseFloat(getComputedStyle(lead).lineHeight),
       innerLeft: innerRect.left - mvRect.left,
       innerTop: innerRect.top - mvRect.top,
@@ -51,8 +61,10 @@ try {
   assert(close(sp.mvWidth, sp.rootWidth), `SP MV width ${sp.mvWidth} vs root ${sp.rootWidth}`);
   assert(close(sp.bgHeight, 483, 1), `SP MV height ${sp.bgHeight}`);
   assert(close(sp.titleSize, 32, 0.5), `SP title size ${sp.titleSize}`);
+  assert(isMinchoFamily(sp.titleFamily), `SP title must resolve to Zen Old Mincho, got ${sp.titleFamily}.`);
   assert(close(sp.titleLineHeight, 44.8, 1), `SP title line-height ${sp.titleLineHeight}`);
   assert(close(sp.leadSize, 15, 0.5), `SP lead size ${sp.leadSize}`);
+  assert(isKakuFamily(sp.leadFamily), `SP lead must resolve to Zen Kaku Gothic New, got ${sp.leadFamily}.`);
   assert(close(sp.leadLineHeight, 24, 1), `SP lead line-height ${sp.leadLineHeight}`);
   assert(close(sp.innerLeft, 20, 1), `SP inner left ${sp.innerLeft}`);
   assert(close(sp.innerTop, 246, 2), `SP inner top ${sp.innerTop}`);
@@ -77,7 +89,9 @@ try {
     const guide = root?.querySelector('.tm_guide');
     const notice = root?.querySelector('.top_notice-01');
     const noticeInner = notice?.querySelector('.tn_inner');
-    if (!root || !stage || !mv || !bg || !inner || !title || !lead || !guide || !notice || !noticeInner) return null;
+    const guideBody = root?.querySelector('.tm_guide_body');
+    const guideHead = root?.querySelector('.tm_guide_head');
+    if (!root || !stage || !mv || !bg || !inner || !title || !lead || !guide || !notice || !noticeInner || !guideBody || !guideHead) return null;
     const rootRect = root.getBoundingClientRect();
     const stageRect = stage.getBoundingClientRect();
     const mvRect = mv.getBoundingClientRect();
@@ -94,10 +108,17 @@ try {
       guideHeight: guideRect.height,
       guideDisplay: getComputedStyle(guide).display,
       titleSize: parseFloat(getComputedStyle(title).fontSize),
+      titleFamily: getComputedStyle(title).fontFamily,
+      titleLineHeight: parseFloat(getComputedStyle(title).lineHeight),
       leadSize: parseFloat(getComputedStyle(lead).fontSize),
+      leadFamily: getComputedStyle(lead).fontFamily,
       innerTop: innerRect.top - mvRect.top,
       noticeWidth: notice.getBoundingClientRect().width,
       noticeHeight: noticeInner.getBoundingClientRect().height,
+      noticeBg: getComputedStyle(noticeInner).backgroundColor,
+      noticeColor: getComputedStyle(noticeInner).color,
+      guideBodyBg: getComputedStyle(guideBody).backgroundColor,
+      guideHeadFamily: getComputedStyle(guideHead).fontFamily,
     };
   });
   assert(pc, 'PC TOP FV elements missing');
@@ -108,11 +129,18 @@ try {
   assert(close(pc.mvHeight, 600, 1), `PC MV height ${pc.mvHeight}`);
   assert(close(pc.guideWidth, 240, 1) && close(pc.guideHeight, 600, 1), `PC guide ${pc.guideWidth}x${pc.guideHeight}`);
   assert(pc.guideDisplay !== 'none', 'PC guide unexpectedly hidden');
-  assert(close(pc.titleSize, 44, 0.5), `PC title size ${pc.titleSize}`);
+  assert(close(pc.titleSize, 46, 0.5), `PC title size ${pc.titleSize}`);
+  assert(isMinchoFamily(pc.titleFamily), `PC title must resolve to Zen Old Mincho, got ${pc.titleFamily}.`);
+  assert(close(pc.titleLineHeight, 69, 1), `PC title line-height ${pc.titleLineHeight}`);
   assert(close(pc.leadSize, 18, 0.5), `PC lead size ${pc.leadSize}`);
-  assert(close(pc.innerTop, 330, 2), `PC inner top ${pc.innerTop}`);
-  assert(close(pc.noticeWidth, 700, 1), `PC notice width ${pc.noticeWidth}`);
-  assert(close(pc.noticeHeight, 80, 1), `PC notice height ${pc.noticeHeight}`);
+  assert(isKakuFamily(pc.leadFamily), `PC lead must resolve to Zen Kaku Gothic New, got ${pc.leadFamily}.`);
+  assert(close(pc.innerTop, 307, 2), `PC inner top ${pc.innerTop}`);
+  assert(close(pc.noticeWidth, 600, 1), `PC notice width ${pc.noticeWidth}`);
+  assert(close(pc.noticeHeight, 70, 1), `PC notice height ${pc.noticeHeight}`);
+  assert(pc.noticeBg === 'rgb(255, 255, 255)', `PC notice expected white, got ${pc.noticeBg}.`);
+  assert(pc.noticeColor === 'rgb(191, 62, 43)', `PC notice text expected primary #bf3e2b, got ${pc.noticeColor}.`);
+  assert(pc.guideBodyBg === 'rgb(249, 242, 229)', `PC guide body expected #f9f2e5, got ${pc.guideBodyBg}.`);
+  assert(isMinchoFamily(pc.guideHeadFamily), `PC guide head must resolve to Zen Old Mincho, got ${pc.guideHeadFamily}.`);
   await desktopContext.close();
 
   console.log('PASS Budokan TOP FV canonical SP geometry and hidden desktop-only guide QA.');
