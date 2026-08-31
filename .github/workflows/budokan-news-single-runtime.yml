@@ -5,9 +5,11 @@ on:
     paths:
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/single.php'
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/module/module_pager-02.css'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/module/module_breadCrumb.css'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-news-single-runtime-qa.sh'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-news-single-browser-qa.mjs'
       - 'experiments/budokan-wordpress/learning-notes/2026-08-31-detail-return-pager-master.md'
+      - 'experiments/budokan-wordpress/learning-notes/2026-08-31-breadcrumb-responsive-master.md'
       - '.github/workflows/budokan-news-single-runtime.yml'
   workflow_dispatch:
 
@@ -26,7 +28,7 @@ jobs:
           BUDOKAN_NEWS_SINGLE_KEEP_RUNTIME: '1'
         run: bash experiments/wordpress-acf-runtime/scripts/budokan-news-single-runtime-qa.sh
 
-      - name: Run SP and PC detail return pager browser geometry QA
+      - name: Run SP and PC detail pager and breadcrumb browser geometry QA
         run: |
           cd experiments/wordpress-acf-runtime
           source scripts/runtime-env.sh
