@@ -21,7 +21,7 @@
     }
     .te_heading_ja {
         display: block;
-        font-family: var(--font-serif-ja);
+        font-family: var(--font-zen-kaku-gothic);
         font-size: 28px;
         font-weight: 500;
         line-height: 1;
@@ -34,7 +34,7 @@
         justify-content: center;
         gap: 8px;
         margin: 0;
-        font-family: var(--font-serif-en);
+        font-family: var(--font-sansSerif-en);
         font-size: 14px;
         font-weight: 400;
         line-height: 1;
@@ -70,6 +70,7 @@
         border-radius: 3px;
         background-color: var(--color-text);
         color: var(--color-secondary);
+        font-family: var(--font-zen-kaku-gothic);
         font-size: 18px;
         font-weight: 500;
         line-height: 1;
@@ -139,7 +140,9 @@
         border: 1px solid var(--color-line);
         border-radius: 2px;
         background-color: var(--color-secondary);
+        font-family: var(--font-zen-kaku-gothic);
         font-size: 13px;
+        font-weight: 500;
         letter-spacing: 0.05em;
         line-height: 1;
     }
@@ -154,6 +157,7 @@
     }
     .te_card_date {
         margin: 0;
+        font-family: var(--font-zen-kaku-gothic);
         font-size: 14px;
         font-weight: 500;
         line-height: 1;
@@ -162,6 +166,7 @@
     }
     .te_card_title {
         margin: 0;
+        font-family: var(--font-zen-kaku-gothic);
         font-size: 16px;
         font-weight: 500;
         line-height: 1.6;
@@ -193,6 +198,7 @@
         border: 1px solid var(--color-text);
         background: var(--color-secondary);
         color: var(--color-text);
+        font-family: var(--font-zen-kaku-gothic);
         font-size: 14px;
         font-weight: 500;
         letter-spacing: 0.05em;
@@ -232,7 +238,7 @@
     .te_cal_label {
         margin: 0;
         min-width: 3em;
-        font-family: var(--font-sansSerif-ja);
+        font-family: var(--font-zen-kaku-gothic);
         font-size: 36px;
         font-weight: 500;
         line-height: 1;
@@ -282,7 +288,7 @@
         --fc-page-text-color: var(--color-text);
         min-height: 280px;
         margin-top: 20px;
-        .fc { font-family: var(--font-sansSerif-ja); }
+        .fc { font-family: var(--font-zen-kaku-gothic); }
         .fc-header-toolbar { display: none; }
         .fc-col-header-cell {
             background-color: var(--color-text);
@@ -290,7 +296,7 @@
         }
         .fc-col-header-cell-cushion,
         .fc-daygrid-day-number {
-            font-size: 12px;
+            font-size: 16px;
             font-weight: 500;
             text-decoration: none;
         }
@@ -333,6 +339,7 @@
             align-items: center;
             gap: 10px;
             color: var(--color-text);
+            font-family: var(--font-zen-kaku-gothic);
             font-size: 15px;
             font-weight: 500;
             letter-spacing: 0.05em;
@@ -384,6 +391,7 @@
             border-radius: 3px;
             background-color: var(--color-secondary);
             color: var(--color-text);
+            font-family: var(--font-zen-kaku-gothic);
             font-size: 16px;
             font-weight: 500;
             letter-spacing: 0.05em;
@@ -418,11 +426,13 @@
             margin-bottom: 48px;
         }
         .te_heading_ja {
+            font-family: var(--font-zen-old-mincho);
             font-size: 32px;
             font-weight: 500;
         }
         .te_heading_en {
             gap: 0;
+            font-family: var(--font-zen-old-mincho);
             font-size: 22px;
             font-weight: 500;
             color: var(--color-primary);
@@ -454,7 +464,7 @@
             justify-content: flex-start;
             gap: 12px;
             background-color: var(--color-accent);
-            font-family: var(--font-serif-ja);
+            font-family: var(--font-zen-old-mincho);
             font-size: 20px;
             line-height: 1.15;
             letter-spacing: 0.1em;
