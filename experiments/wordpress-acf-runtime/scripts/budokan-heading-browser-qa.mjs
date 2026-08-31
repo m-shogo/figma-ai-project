@@ -78,7 +78,8 @@ export async function measureHeadings(page) {
     const caption = mediaText?.querySelector('.wp-element-caption');
     const navTitle = wrap?.querySelector('.module_navigation.--large .title');
     const navText = wrap?.querySelector('.module_navigation.--large .text');
-    if (!wrap || !h2 || !h3 || !h4 || !h2Follow || !listItem || !marker || !buttonLink || !detailsTitle || !closedSummary || !closedButton || !plus || !openSummary || !openContent || !openButton || !tableHead || !tableCell || !pageLink || !qaSummary || !qaPlus || !mediaText || !mediaContent || !mediaFigure || !mediaLink || !caption || !navTitle || !navText) return null;
+    const tabButton = wrap?.querySelector('.module_tab-wrapper .tab-button');
+    if (!wrap || !h2 || !h3 || !h4 || !h2Follow || !listItem || !marker || !buttonLink || !detailsTitle || !closedSummary || !closedButton || !plus || !openSummary || !openContent || !openButton || !tableHead || !tableCell || !pageLink || !qaSummary || !qaPlus || !mediaText || !mediaContent || !mediaFigure || !mediaLink || !caption || !navTitle || !navText || !tabButton) return null;
 
     const h2Style = getComputedStyle(h2);
     const h3Style = getComputedStyle(h3);
@@ -107,6 +108,7 @@ export async function measureHeadings(page) {
     const zoomStyle = getComputedStyle(mediaLink, '::after');
     const navTitleStyle = getComputedStyle(navTitle);
     const navTextStyle = getComputedStyle(navText);
+    const tabStyle = getComputedStyle(tabButton);
 
     return {
       h2Size: h2Style.fontSize,
@@ -179,6 +181,9 @@ export async function measureHeadings(page) {
       navTitleWeight: navTitleStyle.fontWeight,
       navTextFamily: navTextStyle.fontFamily,
       navTextSize: navTextStyle.fontSize,
+      tabFamily: tabStyle.fontFamily,
+      tabSize: tabStyle.fontSize,
+      tabWeight: tabStyle.fontWeight,
     };
   });
 }
@@ -233,6 +238,9 @@ export function assertHeadings(measured, band) {
   assert(measured.navTitleWeight === '600', `${band} navigation-large title expected weight 600, got ${measured.navTitleWeight}.`);
   assert(isKakuFamily(measured.navTextFamily), `${band} navigation-large copy must resolve to Zen Kaku Gothic New, got ${measured.navTextFamily}.`);
   assert(measured.navTextSize === '15px', `${band} navigation-large copy expected 15px, got ${measured.navTextSize}.`);
+  assert(isKakuFamily(measured.tabFamily), `${band} tab label must resolve to Zen Kaku Gothic New, got ${measured.tabFamily}.`);
+  assert(measured.tabSize === '14px', `${band} tab label expected 14px, got ${measured.tabSize}.`);
+  assert(measured.tabWeight === '500', `${band} tab label expected weight 500, got ${measured.tabWeight}.`);
 
   if (band === 'SP') {
     assert(measured.h2Size === '24px', `SP h2 expected 24px, got ${measured.h2Size}.`);

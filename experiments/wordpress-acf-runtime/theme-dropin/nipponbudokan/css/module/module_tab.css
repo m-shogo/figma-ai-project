@@ -1,6 +1,8 @@
 @charset "utf-8";
 /* // ==========================================================================
 // タブモジュール
+// Current Figma fileKey fKYDn9ikpJk1nW7IWFtaUx
+// SP 1399:19390 / PC 1663:5661 — Zen Kaku Medium 14, active #333 / white.
 // ========================================================================== */
 .module_tab-wrapper {
     position: relative;
@@ -32,6 +34,7 @@
             border-radius: 0;
             background-color: var(--color-secondary);
             color: var(--color-text);
+            font-family: var(--font-zen-kaku-gothic);
             font-size: 14px;
             font-weight: 500;
             line-height: 1;
