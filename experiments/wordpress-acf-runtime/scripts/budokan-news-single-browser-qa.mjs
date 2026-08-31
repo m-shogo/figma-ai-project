@@ -14,6 +14,11 @@ function close(actual, expected, tolerance = 2) {
   return Math.abs(actual - expected) <= tolerance;
 }
 
+function isKakuGothic(family) {
+  const value = String(family || '').toLowerCase();
+  return value.includes('kaku') || value.includes('gothic');
+}
+
 async function measure(page) {
   return page.evaluate(() => {
     const pager = document.querySelector('.module_pager-02');
@@ -24,7 +29,9 @@ async function measure(page) {
     const next = document.querySelector('.module_pager-02 .next');
     const breadcrumb = document.querySelector('.module_breadCrumb');
     const breadcrumbItem = document.querySelector('.module_breadCrumb-01 li:not(:last-child)');
-    if (!pager || !back || !link || !span || !prev || !next || !breadcrumb || !breadcrumbItem) return null;
+    const breadcrumbLink = document.querySelector('.module_breadCrumb-01 a');
+    const breadcrumbCurrent = document.querySelector('.module_breadCrumb-01 li:last-child span');
+    if (!pager || !back || !link || !span || !prev || !next || !breadcrumb || !breadcrumbItem || !breadcrumbLink || !breadcrumbCurrent) return null;
 
     const pagerRect = pager.getBoundingClientRect();
     const backRect = back.getBoundingClientRect();
@@ -35,6 +42,8 @@ async function measure(page) {
     const nextStyle = getComputedStyle(next);
     const breadcrumbStyle = getComputedStyle(breadcrumb);
     const breadcrumbSeparatorStyle = getComputedStyle(breadcrumbItem, '::after');
+    const breadcrumbLinkStyle = getComputedStyle(breadcrumbLink);
+    const breadcrumbCurrentStyle = getComputedStyle(breadcrumbCurrent);
 
     return {
       pagerWidth: pagerRect.width,
@@ -55,10 +64,14 @@ async function measure(page) {
       nextVisibility: nextStyle.visibility,
       breadcrumbFontSize: breadcrumbStyle.fontSize,
       breadcrumbLineHeight: breadcrumbStyle.lineHeight,
+      breadcrumbFontFamily: breadcrumbStyle.fontFamily,
       breadcrumbSeparatorFontSize: breadcrumbSeparatorStyle.fontSize,
       breadcrumbSeparatorMarginLeft: breadcrumbSeparatorStyle.marginLeft,
       breadcrumbSeparatorMarginRight: breadcrumbSeparatorStyle.marginRight,
       breadcrumbSeparatorColor: breadcrumbSeparatorStyle.color,
+      breadcrumbLinkColor: breadcrumbLinkStyle.color,
+      breadcrumbLinkDecoration: breadcrumbLinkStyle.textDecorationLine,
+      breadcrumbCurrentWeight: breadcrumbCurrentStyle.fontWeight,
     };
   });
 }
@@ -91,6 +104,10 @@ try {
   assert(sp.breadcrumbSeparatorFontSize === '10px', `SP breadcrumb chevron expected 10px, got ${sp.breadcrumbSeparatorFontSize}.`);
   assert(sp.breadcrumbSeparatorMarginLeft === '8px' && sp.breadcrumbSeparatorMarginRight === '8px', `SP breadcrumb rhythm expected 8px around chevrons, got ${sp.breadcrumbSeparatorMarginLeft}/${sp.breadcrumbSeparatorMarginRight}.`);
   assert(sp.breadcrumbSeparatorColor === 'rgb(191, 62, 43)', `SP breadcrumb chevron expected main red, got ${sp.breadcrumbSeparatorColor}.`);
+  assert(isKakuGothic(sp.breadcrumbFontFamily), `SP breadcrumb must resolve to Zen Kaku Gothic New, got ${sp.breadcrumbFontFamily}.`);
+  assert(sp.breadcrumbLinkColor === 'rgb(51, 51, 51)', `SP breadcrumb link expected #333, got ${sp.breadcrumbLinkColor}.`);
+  assert(sp.breadcrumbLinkDecoration.includes('underline'), `SP breadcrumb links must stay underlined, got ${sp.breadcrumbLinkDecoration}.`);
+  assert(sp.breadcrumbCurrentWeight === '500', `SP current crumb expected weight 500, got ${sp.breadcrumbCurrentWeight}.`);
   await mobileContext.close();
 
   const desktopContext = await browser.newContext({ viewport: { width: 1395, height: 1200 } });
@@ -115,6 +132,10 @@ try {
   assert(pc.breadcrumbSeparatorFontSize === '10px', `PC breadcrumb chevron expected 10px, got ${pc.breadcrumbSeparatorFontSize}.`);
   assert(pc.breadcrumbSeparatorMarginLeft === '10px' && pc.breadcrumbSeparatorMarginRight === '10px', `PC breadcrumb rhythm expected 10px around chevrons, got ${pc.breadcrumbSeparatorMarginLeft}/${pc.breadcrumbSeparatorMarginRight}.`);
   assert(pc.breadcrumbSeparatorColor === 'rgb(191, 62, 43)', `PC breadcrumb chevron expected main red, got ${pc.breadcrumbSeparatorColor}.`);
+  assert(isKakuGothic(pc.breadcrumbFontFamily), `PC breadcrumb must resolve to Zen Kaku Gothic New, got ${pc.breadcrumbFontFamily}.`);
+  assert(pc.breadcrumbLinkColor === 'rgb(51, 51, 51)', `PC breadcrumb link expected #333, got ${pc.breadcrumbLinkColor}.`);
+  assert(pc.breadcrumbLinkDecoration.includes('underline'), `PC breadcrumb links must stay underlined, got ${pc.breadcrumbLinkDecoration}.`);
+  assert(pc.breadcrumbCurrentWeight === '500', `PC current crumb expected weight 500, got ${pc.breadcrumbCurrentWeight}.`);
   await desktopContext.close();
 
   console.log('PASS Budokan News single SP return-to-list and breadcrumb rhythm QA.');

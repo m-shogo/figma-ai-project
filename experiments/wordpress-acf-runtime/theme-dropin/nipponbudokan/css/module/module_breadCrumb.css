@@ -1,14 +1,22 @@
 @charset "utf-8";
 /* // ==========================================================================
 // パンくずリスト
+// Current Figma fileKey fKYDn9ikpJk1nW7IWFtaUx
+// SP bread 1451:5316 / 1468:7510; PC bread 1235:6479
 // ========================================================================== */
 .module_breadCrumb {
     position: relative;
+    font-family: var(--font-zen-kaku-gothic);
     font-size: 13px;
+    font-weight: 400;
     color: var(--color-text);
     line-height: 1;
     letter-spacing: 0.05em;
     .mb_inner {
+        max-width: none;
+        margin-inline: 0;
+        padding-block: 20px;
+        padding-inline: 24px;
     }
     .module_breadCrumb-01 {
         li {
@@ -32,6 +40,12 @@
             }
             a {
                 color: var(--color-text);
+                font-weight: 400;
+                text-decoration: underline;
+                text-decoration-skip-ink: none;
+            }
+            &:last-child span {
+                font-weight: 500;
             }
         }
     }
@@ -40,14 +54,20 @@
     @media (any-hover: hover) {
         .module_breadCrumb-01 {
             a {
-                &:hover {
-                    text-decoration: none;
+                &:hover,
+                &:focus {
+                    color: var(--color-text);
+                    text-decoration: underline;
                 }
             }
         }
     }
 
     @media screen and (min-width: 768px) {
+        .mb_inner {
+            padding-block: 24px;
+            padding-inline: 64px;
+        }
         .module_breadCrumb-01 {
             li:not(:last-child)::after {
                 margin-inline: 10px;
