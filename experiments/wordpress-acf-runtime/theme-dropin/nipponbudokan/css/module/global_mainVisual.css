@@ -1,14 +1,16 @@
 @charset "utf-8";
 /* // ==========================================================================
 // サイト共通メインビジュアル
-// - archive/single/search/error: centered 180px SP / 220px PC family
-// - ordinary fixed page: Figma image-title SP/PC family
+// Current Figma fileKey fKYDn9ikpJk1nW7IWFtaUx
+// - archive/single/search/error: page_title-sp 1399:18544 / page_title-pc 2169:10270
+// - ordinary fixed page: page_title-img family (derivative, not this gold bar)
 // ========================================================================== */
 .global_mainVisual {
     position: relative;
     overflow: hidden;
     height: 180px;
-    color: var(--color-text);
+    background-color: var(--color-accent);
+    color: var(--color-secondary);
     transition: height var(--transition-duration);
     .gm_inner {
         display: flex;
@@ -16,8 +18,10 @@
         align-items: center;
         position: static;
         height: inherit;
+        padding-inline: 32px;
     }
     .gm_background {
+        display: none;
         position: absolute;
         top: 0;
         left: 0;
@@ -38,13 +42,13 @@
         }
     }
     .gm_title {
-        font-family: var(--font-sansSerif-ja);
-        font-size: 22px;
-        font-weight: 500;
+        font-family: var(--font-zen-old-mincho);
+        font-size: 24px;
+        font-weight: 700;
         line-height: 1.4;
         letter-spacing: 0.05em;
         text-align: center;
-        color: var(--color-text);
+        color: var(--color-secondary);
     }
 
     /*
@@ -57,6 +61,8 @@
     &._fixedPage {
         height: 278px;
         overflow: visible;
+        background-color: transparent;
+        color: var(--color-text);
 
         .gm_inner {
             display: block;
@@ -69,6 +75,7 @@
         }
 
         .gm_background {
+            display: block;
             z-index: 0;
             width: 100%;
             height: 240px;
@@ -104,10 +111,11 @@
     /* MARK: heading_pc */
     @media screen and (min-width: 768px) {
         height: 220px;
+        .gm_inner {
+            padding-inline: 0;
+        }
         .gm_title {
-            font-family: var(--font-serif-ja);
             font-size: 32px;
-            font-weight: 700;
         }
 
         &._fixedPage {
