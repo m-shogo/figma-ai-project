@@ -1,7 +1,7 @@
 @charset "utf-8";
 /* // ==========================================================================
 // お知らせ共通マスター
-// Figma archive: PC 413:2191 / SP 560:2524
+// Figma archive: PC 413:2191 / SP 1399:14225
 // TOP は同じ news_item / news_tabs markup を使い、top_news.css で差分だけ上書きする。
 // ========================================================================== */
 .block-editor_wrap,
@@ -34,14 +34,14 @@
 
 .news_tabs_archive {
     .news_tabs_list {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 20px;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0;
+        border: 1px solid var(--color-text);
     }
 
     .news_tabs_item {
-        width: 90px;
+        min-width: 0;
     }
 
     .news_tabs_link {
@@ -49,10 +49,11 @@
         align-items: center;
         justify-content: center;
         width: 100%;
-        height: 32px;
-        padding: 9px;
-        border-radius: 16px;
-        background-color: var(--color-gray-border-03);
+        height: 34px;
+        padding: 10px;
+        border: 0;
+        border-radius: 0;
+        background-color: var(--color-secondary);
         color: var(--color-text);
         font-size: 14px;
         font-weight: 500;
@@ -60,6 +61,15 @@
         letter-spacing: 0.05em;
         text-decoration: none;
         white-space: nowrap;
+    }
+
+    .news_tabs_item:nth-child(3n + 2) .news_tabs_link {
+        border-right: 1px solid var(--color-text);
+        border-left: 1px solid var(--color-text);
+    }
+
+    .news_tabs_item:nth-child(n + 4) .news_tabs_link {
+        border-top: 1px solid var(--color-text);
     }
 
     .news_tabs_item.is-active .news_tabs_link {
@@ -174,76 +184,71 @@
 }
 
 /*
- * News pager は SP / PC で形が大きく異なる。
- * SP Figma 560:2524 = 円形 page numbers + 下段の前後導線。
- * PC Figma 1137:4996 = 八角矢印 + underline page numbers の1列。
- * generic module_pager-01 を壊さないよう news variant の wrapper 内だけ上書きする。
+ * Current News pager keeps the same octagonal-arrow + underline-number family
+ * on SP and PC. SP uses the 327px content rail; PC centers the same family.
  */
 .news_archive .news_pager {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    grid-template-rows: 40px 30px;
+    display: flex;
     align-items: center;
-    row-gap: 24px;
+    justify-content: space-between;
     width: 100%;
-    min-height: 94px;
+    min-height: 40px;
     margin-top: 8px;
 }
 
 .news_pager_numbers {
-    grid-column: 1 / -1;
-    grid-row: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 20px;
-}
-
-.news_pager_prev,
-.news_pager_next {
-    grid-row: 2;
-    min-width: 0;
+    gap: 8px;
+    order: 2;
 }
 
 .news_pager_prev {
-    grid-column: 1;
-    justify-self: start;
+    order: 1;
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
 }
 
 .news_pager_next {
-    grid-column: 3;
-    justify-self: end;
+    order: 3;
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
 }
 
 .news_archive .news_pager_numbers .page-numbers:not(.prev):not(.next):not(.dots) {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
+    width: 50px;
     height: 40px;
-    border: 1px solid var(--color-text);
-    border-radius: 50%;
-    background-color: var(--color-secondary);
+    padding-bottom: 16px;
+    border: 0;
+    border-bottom: 2px solid var(--color-line);
+    border-radius: 0;
+    background: transparent;
     color: var(--color-text);
     font-family: var(--font-sansSerif-en);
     font-size: 16px;
-    font-weight: 500;
+    font-weight: 400;
     line-height: 1;
     text-decoration: none;
 }
 
-/* generic module_pager-01 の :not(...) + .current より明示的に News state を優先する。 */
 .news_archive .news_pager .news_pager_numbers .page-numbers.current:not(.prev):not(.next):not(.dots) {
-    border-color: var(--color-text);
-    background-color: var(--color-text);
-    color: var(--color-secondary);
+    border-bottom-color: var(--color-text);
+    background: transparent;
+    color: var(--color-text);
+    font-weight: 700;
 }
 
 .news_archive .news_pager_numbers .page-numbers.dots {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 24px;
+    width: 32px;
     height: 40px;
     color: var(--color-text);
 }
@@ -252,21 +257,18 @@
 .news_archive .news_pager_next .page-numbers {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
-    width: auto;
-    height: 30px;
+    width: 40px;
+    height: 40px;
+    gap: 0;
     color: var(--color-text);
-    font-size: 12px;
+    font-size: 0;
     line-height: 1;
     text-decoration: none;
 }
 
-.news_archive .news_pager_prev .page-numbers::after {
-    content: '前のページ';
-}
-
+.news_archive .news_pager_prev .page-numbers::after,
 .news_archive .news_pager_next .page-numbers::before {
-    content: '次のページ';
+    content: none;
 }
 
 .news_archive .news_pager_prev .page-numbers span,
@@ -274,18 +276,19 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: 40px;
     flex-shrink: 0;
-    border-radius: 50%;
-    background-color: var(--color-heading-band);
-    color: var(--color-text);
+    border-radius: 0;
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
+    clip-path: var(--clip-octagon);
 }
 
 .news_archive .news_pager_prev .page-numbers span::before,
 .news_archive .news_pager_next .page-numbers span::before {
     font-family: var(--font-awesome);
-    font-size: 8px;
+    font-size: 11px;
     font-weight: 900;
     line-height: 1;
     color: inherit;
@@ -307,32 +310,28 @@
 
     .news_tabs_archive {
         .news_tabs_list {
+            display: flex;
+            flex-wrap: wrap;
             justify-content: flex-start;
-            gap: 0;
+            gap: 12px;
+            border: 0;
         }
 
         .news_tabs_item {
-            width: 160px;
+            width: 120px;
         }
 
         .news_tabs_link {
             height: 48px;
             padding: 16px;
             border: 1px solid var(--color-text);
-            border-radius: 0;
+            border-radius: 3px;
             background-color: var(--color-secondary);
         }
 
-        .news_tabs_item + .news_tabs_item .news_tabs_link {
-            border-left: 0;
-        }
-
-        .news_tabs_item:first-child .news_tabs_link {
-            border-radius: 3px 0 0 3px;
-        }
-
-        .news_tabs_item:last-child .news_tabs_link {
-            border-radius: 0 3px 3px 0;
+        .news_tabs_item:nth-child(3n + 2) .news_tabs_link,
+        .news_tabs_item:nth-child(n + 4) .news_tabs_link {
+            border: 1px solid var(--color-text);
         }
 
         .news_tabs_item.is-active .news_tabs_link {
@@ -369,83 +368,10 @@
     }
 
     .news_archive .news_pager {
-        display: flex;
-        align-items: center;
         justify-content: center;
         gap: 48px;
-        width: 100%;
         min-height: 40px;
         margin-top: 0;
-    }
-
-    .news_pager_numbers {
-        display: flex;
-        gap: 8px;
-        order: 2;
-    }
-
-    .news_pager_prev {
-        order: 1;
-        width: 40px;
-        height: 40px;
-    }
-
-    .news_pager_next {
-        order: 3;
-        width: 40px;
-        height: 40px;
-    }
-
-    .news_archive .news_pager_numbers .page-numbers:not(.prev):not(.next):not(.dots) {
-        width: 50px;
-        height: 40px;
-        padding-bottom: 16px;
-        border: 0;
-        border-bottom: 2px solid var(--color-line);
-        border-radius: 0;
-        background: transparent;
-        color: var(--color-text);
-        font-weight: 400;
-    }
-
-    .news_archive .news_pager .news_pager_numbers .page-numbers.current:not(.prev):not(.next):not(.dots) {
-        border-bottom-color: var(--color-text);
-        background: transparent;
-        color: var(--color-text);
-        font-weight: 700;
-    }
-
-    .news_archive .news_pager_numbers .page-numbers.dots {
-        width: 32px;
-        height: 40px;
-    }
-
-    .news_archive .news_pager_prev .page-numbers,
-    .news_archive .news_pager_next .page-numbers {
-        width: 40px;
-        height: 40px;
-        gap: 0;
-        font-size: 0;
-    }
-
-    .news_archive .news_pager_prev .page-numbers::after,
-    .news_archive .news_pager_next .page-numbers::before {
-        content: none;
-    }
-
-    .news_archive .news_pager_prev .page-numbers span,
-    .news_archive .news_pager_next .page-numbers span {
-        width: 40px;
-        height: 40px;
-        border-radius: 0;
-        background-color: var(--color-primary);
-        color: var(--color-secondary);
-        clip-path: var(--clip-octagon);
-    }
-
-    .news_archive .news_pager_prev .page-numbers span::before,
-    .news_archive .news_pager_next .page-numbers span::before {
-        font-size: 11px;
     }
 }
 
@@ -460,16 +386,8 @@
     }
 
     .news_archive .news_pager_numbers .page-numbers:hover:not(.current):not(.dots) {
-        border-color: var(--color-primary);
-        background-color: var(--color-primary);
-        color: var(--color-secondary);
-    }
-
-    @media screen and (min-width: 768px) {
-        .news_archive .news_pager_numbers .page-numbers:hover:not(.current):not(.dots) {
-            border-bottom-color: var(--color-primary);
-            background: transparent;
-            color: var(--color-link);
-        }
+        border-bottom-color: var(--color-primary);
+        background: transparent;
+        color: var(--color-link);
     }
 }
