@@ -61,6 +61,12 @@ news_id="$(docker compose run --rm cli post create --post_type=page --post_statu
   exit 1
 }
 
+fixed_page_id="$(docker compose run --rm cli post create --post_type=page --post_status=publish --post_title='研修センター' --post_name='budokan-fixed-page-qa' --porcelain)"
+[[ "$fixed_page_id" =~ ^[0-9]+$ ]] || {
+  echo "FAIL could not create image page-title fixture page." >&2
+  exit 1
+}
+
 docker compose run --rm cli option update show_on_front page >/dev/null
 docker compose run --rm cli option update page_on_front "$front_id" >/dev/null
 docker compose run --rm cli option update page_for_posts "$news_id" >/dev/null
@@ -132,8 +138,26 @@ grep -Fq 'page-numbers' "$html" || {
 
 rm -f "$html"
 
+fixed_html="$(mktemp)"
+fixed_code="$(curl --silent --show-error --location --max-redirs 3 --output "$fixed_html" --write-out '%{http_code}' "${WP_URL}/budokan-fixed-page-qa/")"
+if [[ "$fixed_code" != "200" ]]; then
+  echo "FAIL image page-title fixture returned final HTTP ${fixed_code}." >&2
+  cat "$fixed_html" >&2 || true
+  exit 1
+fi
+grep -Fq '_fixedPage' "$fixed_html" || {
+  echo "FAIL ordinary fixed page did not render ._fixedPage visual modifier." >&2
+  exit 1
+}
+grep -Fq '研修センター' "$fixed_html" || {
+  echo "FAIL image page-title fixture heading missing." >&2
+  exit 1
+}
+rm -f "$fixed_html"
+
 echo "PASS Budokan News archive rendered through the real Posts-page Theme path."
 echo "PASS Six authored category tabs, 20 rows and pagination are present."
+echo "PASS ordinary fixed-page image title modifier rendered on /budokan-fixed-page-qa/."
 
 if [[ "${BUDOKAN_NEWS_ARCHIVE_KEEP_RUNTIME:-0}" == "1" ]]; then
   trap - EXIT

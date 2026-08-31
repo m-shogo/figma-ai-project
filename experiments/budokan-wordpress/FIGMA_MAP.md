@@ -20,6 +20,8 @@ Pages: PC `0:1` / SP `114:5409`
 | Footer コンポーネント | SP | `2189:10106` | footer-sp |
 | Page Title | PC | `2169:10270` | page_title-pc（金帯 220 / Mincho 32 Bold 白） |
 | Page Title | SP | `1399:18544` | page_title-sp（金帯 180 / Mincho 24 Bold 白） |
+| Page Title 画像付き | PC | `1450:5147` | page_title-img-pc（写真 1320×320 @x60 / 白 Mincho 32 パネル 360×79） |
+| Page Title 画像付き | SP | `1465:6339` | page_title-img-sp（写真 375×240 / 白 Mincho 24 パネル 327×66 @y207） |
 | Footer 例 | PC | `1901:14268` | footer_subpage |
 | Footer SP 下層 | SP | `560:2524` / `560:188` 末尾 | news_sp / join_sp |
 | パーツ集 | PC | `1163:4245` | parts |
