@@ -8,10 +8,13 @@ on:
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_news-tabs.php'
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_list-news.php'
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_list-news_article.php'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/module/global_mainVisual.css'
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/module/module_newsList-01.css'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-news-archive-runtime-qa.sh'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-news-archive-browser-qa.mjs'
-      - 'experiments/budokan-wordpress/learning-notes/2026-08-29-news-archive-master.md'
+      - 'experiments/wordpress-acf-runtime/scripts/budokan-shared-page-title-browser-qa.mjs'
+      - 'experiments/budokan-wordpress/learning-notes/2026-08-31-news-archive-master.md'
+      - 'experiments/budokan-wordpress/learning-notes/2026-08-31-shared-news-page-title-master.md'
       - '.github/workflows/budokan-news-archive-runtime.yml'
   workflow_dispatch:
 
@@ -39,6 +42,7 @@ jobs:
           npm install --no-save --package-lock=false playwright@1.54.2
           npx playwright install --with-deps chromium
           node experiments/wordpress-acf-runtime/scripts/budokan-news-archive-browser-qa.mjs "$qa_url"
+          node experiments/wordpress-acf-runtime/scripts/budokan-shared-page-title-browser-qa.mjs "$qa_url"
 
       - name: Cleanup disposable WordPress runtime
         if: always()
