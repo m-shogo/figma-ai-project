@@ -19,7 +19,13 @@ function markerTileOk(size) {
 
 function isGoldMarker(image) {
   const value = String(image || '');
-  return /202,\s*153,\s*87/.test(value) || /ca9957/i.test(value) || /color-mix/i.test(value);
+  if (/202,\s*153,\s*87/.test(value) || /ca9957/i.test(value) || /color-mix/i.test(value)) return true;
+  const srgb = value.match(/color\(srgb\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)/i);
+  if (!srgb) return false;
+  const r = Math.round(parseFloat(srgb[1]) * 255);
+  const g = Math.round(parseFloat(srgb[2]) * 255);
+  const b = Math.round(parseFloat(srgb[3]) * 255);
+  return close(r, 202, 2) && close(g, 153, 2) && close(b, 87, 2);
 }
 
 function isMinchoFamily(family) {

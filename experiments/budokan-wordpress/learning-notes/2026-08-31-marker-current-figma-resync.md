@@ -25,4 +25,4 @@ Replace the 1px underline with a per-line background tile: transparent for 1em, 
 
 ## Lesson
 
-A Parts layer named 下線 can still be a marker overlay. Read the paint node (`1399:18740`) rather than mapping the Japanese label to CSS `text-decoration`.
+A Parts layer named 下線 can still be a marker overlay. Read the paint node (`1399:18740`) rather than mapping the Japanese label to CSS `text-decoration`. Chromium computed `color-mix` as `color(srgb … / 0.3)`, so QA must accept that serialization rather than looking only for `rgb(202, 153, 87)`.
