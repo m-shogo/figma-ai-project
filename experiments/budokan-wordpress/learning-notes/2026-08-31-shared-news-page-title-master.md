@@ -27,8 +27,12 @@ A browser QA was added to assert the shared visual height, title type family/siz
 
 The old CSS comment grouped the shared archive/search/error visual as `160px SP / 220px PC`, and later News work concentrated on list/tab/pager geometry. That allowed a stale SP page-title baseline to survive while the current News full-page Figma had moved to the 180px/sans family.
 
+The first new browser QA also failed for a test-only reason: it assumed every serif computed `font-family` would contain the word `Mincho`. The Theme token resolves in the Linux runtime to `"local Noto Serif JP", "Noto Serif JP", serif`, which is the correct serif family but does not contain `Mincho`. Production CSS was left unchanged; the assertion was corrected to validate the semantic serif/sans family rather than a specific installed font name.
+
 ## Reusable lesson
 
 When a full-page responsive family is revalidated, do not treat the page-title/global shell as already correct merely because the section body passes. Re-read the current SP and PC full-page frames in the same run and verify shared shell geometry and typography as part of the visual gate.
+
+Runtime typography assertions should verify the intended family class/token semantics, not a single platform-specific resolved font name. Linux CI may legitimately resolve the same Theme serif token to Noto Serif rather than a font name containing `Mincho`.
 
 Generalization is intentionally project-local for now. Search/error and other post types continue to use the shared renderer, but this change was justified by repeated current evidence from News archive + News single; do not infer unrelated page-specific content contracts from it.
