@@ -3,7 +3,7 @@
 // パラグラフ
 // Current Figma fileKey fKYDn9ikpJk1nW7IWFtaUx
 // SP 1399:18729 / PC 1157:8182 — Zen Kaku Gothic New Regular 17 / lh 1.6
-// Marker highlight (1399:18739) is a separate Parts item.
+// Marker highlight (1399:18739) — Gutenberg underline span → gold 8px / 30% overlay.
 // ------------------------------ */
 .block-editor_wrap,
 .editor-styles-wrapper {
@@ -39,20 +39,21 @@
         strong {
             font-weight: bold;
         }
-        /* MARK: 下線 */
-        /* 下線が太い場合 */
-        /* span[style*='underline'] {
-        background: linear-gradient(to bottom, transparent, transparent 65%, color-mix(in oklch, var(--color-primary) 40%, transparent) 66%, color-mix(in oklch, var(--color-primary) 40%, transparent) 100%);
-        text-decoration: none !important;
-    } */
-        /* 下線が細い場合 */
+        /* MARK: マーカー（Current Figma SP 1399:18739 / 1399:18740）
+           Gutenberg underline span → gold #ca9957 @ 30% / 8px bar, 1em from line top.
+           Not a 1px text-decoration. Avoid absolute; per-line background tile. */
         span[style*='text-decoration: underline'] {
-            /* ブロックにstyle属性で吐き出されるため、!importantを使用して上書き */
-            text-decoration-line: underline !important;
-            text-decoration-color: currentColor !important;
-            text-decoration-thickness: 1px !important;
-            text-underline-offset: 2px !important;
-            text-decoration-skip-ink: none !important;
+            text-decoration: none !important;
+            background-image: linear-gradient(
+                transparent 1em,
+                color-mix(in srgb, var(--color-accent) 30%, transparent) 1em,
+                color-mix(in srgb, var(--color-accent) 30%, transparent) calc(1em + 8px),
+                transparent calc(1em + 8px)
+            );
+            background-repeat: repeat-y;
+            background-size: 100% 1.6em;
+            -webkit-box-decoration-break: clone;
+            box-decoration-break: clone;
         }
     }
     .wp-block-columns {
