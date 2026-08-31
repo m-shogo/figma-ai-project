@@ -24,12 +24,14 @@ export async function measureHeadings(page) {
     const h3 = wrap?.querySelector('h3.wp-block-heading');
     const h4 = wrap?.querySelector('h4.wp-block-heading');
     const h2Follow = h2?.nextElementSibling;
-    if (!wrap || !h2 || !h3 || !h4 || !h2Follow) return null;
+    const listItem = wrap?.querySelector('ul.wp-block-list > li');
+    if (!wrap || !h2 || !h3 || !h4 || !h2Follow || !listItem) return null;
 
     const h2Style = getComputedStyle(h2);
     const h3Style = getComputedStyle(h3);
     const h4Style = getComputedStyle(h4);
     const followStyle = getComputedStyle(h2Follow);
+    const listStyle = getComputedStyle(listItem);
 
     return {
       h2Size: h2Style.fontSize,
@@ -50,6 +52,9 @@ export async function measureHeadings(page) {
       pWeight: followStyle.fontWeight,
       pColor: followStyle.color,
       pLineHeight: followStyle.lineHeight,
+      listFamily: listStyle.fontFamily,
+      listSize: listStyle.fontSize,
+      listPaddingLeft: listStyle.paddingLeft,
     };
   });
 }
@@ -68,6 +73,9 @@ export function assertHeadings(measured, band) {
   assert(measured.pWeight === '400', `${band} paragraph expected weight 400, got ${measured.pWeight}.`);
   assert(measured.pColor === 'rgb(51, 51, 51)', `${band} paragraph expected #333, got ${measured.pColor}.`);
   assert(close(parseFloat(measured.pLineHeight), 27.2, 1), `${band} paragraph line-height expected ~27.2px, got ${measured.pLineHeight}.`);
+  assert(isKakuFamily(measured.listFamily), `${band} list must resolve to Zen Kaku Gothic New, got ${measured.listFamily}.`);
+  assert(measured.listSize === '17px', `${band} list expected 17px, got ${measured.listSize}.`);
+  assert(measured.listPaddingLeft === '18px', `${band} unordered list text inset expected 18px, got ${measured.listPaddingLeft}.`);
 
   if (band === 'SP') {
     assert(measured.h2Size === '24px', `SP h2 expected 24px, got ${measured.h2Size}.`);
