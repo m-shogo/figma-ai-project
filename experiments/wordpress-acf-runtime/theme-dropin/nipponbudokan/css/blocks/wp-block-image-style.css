@@ -54,12 +54,18 @@
             border: none;
         }
     } */
+        /* Current Figma テキスト+画像 caption: PC 1157:8217 / SP 1399:18759
+           Zen Kaku Medium 14 / #333 / lh 1.6 / tracking 5% / gap 20 / center.
+           The layer name still says SP 16px; LIVE Auto Layout itemSpacing is 20. */
         .wp-element-caption {
             text-align: center;
+            font-family: var(--font-zen-kaku-gothic);
             font-size: 14px;
-            margin-top: var(--wp-block-margin-small);
-            line-height: 1.5;
-            color: var(--color-primary);
+            font-weight: 500;
+            margin-top: 20px;
+            line-height: 1.6;
+            letter-spacing: 0.05em;
+            color: var(--color-text);
         }
         @media screen and (min-width: 768px) {
             .alignleft {

@@ -1,6 +1,8 @@
 @charset "utf-8";
 /* // ------------------------------
 // メディアとテキスト
+// Current Figma fileKey fKYDn9ikpJk1nW7IWFtaUx
+// SP 1399:18747 (text → image, gap 30) / PC 1157:8205 (text | 30 | image 330)
 // ------------------------------ */
 .block-editor_wrap,
 .editor-styles-wrapper {
@@ -37,6 +39,19 @@
             > *:first-child {
                 margin-top: 0;
             }
+        }
+
+        /* Same caption master as wp-block-image; media-text figcaption is not
+           inside .wp-block-image. Current Figma SP 1399:18759 / PC 1157:8217. */
+        .wp-element-caption {
+            text-align: center;
+            font-family: var(--font-zen-kaku-gothic);
+            font-size: 14px;
+            font-weight: 500;
+            margin-top: 20px;
+            line-height: 1.6;
+            letter-spacing: 0.05em;
+            color: var(--color-text);
         }
     }
 }
