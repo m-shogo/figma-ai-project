@@ -1,13 +1,13 @@
 @charset "utf-8";
 /* // ==========================================================================
 // サイト共通メインビジュアル
-// - archive/search/error: centered 160px SP / 220px PC family
+// - archive/single/search/error: centered 180px SP / 220px PC family
 // - ordinary fixed page: Figma image-title SP/PC family
 // ========================================================================== */
 .global_mainVisual {
     position: relative;
     overflow: hidden;
-    height: 160px;
+    height: 180px;
     color: var(--color-text);
     transition: height var(--transition-duration);
     .gm_inner {
@@ -38,9 +38,9 @@
         }
     }
     .gm_title {
-        font-family: var(--font-serif-ja);
-        font-size: 26px;
-        font-weight: 700;
+        font-family: var(--font-sansSerif-ja);
+        font-size: 22px;
+        font-weight: 500;
         line-height: 1.4;
         letter-spacing: 0.05em;
         text-align: center;
@@ -105,7 +105,9 @@
     @media screen and (min-width: 768px) {
         height: 220px;
         .gm_title {
+            font-family: var(--font-serif-ja);
             font-size: 32px;
+            font-weight: 700;
         }
 
         &._fixedPage {
