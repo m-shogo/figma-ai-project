@@ -85,7 +85,7 @@ These lists are **discovery evidence, not automatic implementation authority**. 
 1. Header/Footer → header instance + footer_subpage + SP menu
 2. パーツ集 → parts / SP_parts（本文 markup は Theme の `parts.php` 正本）
 3. 以降のページ → 固定ページ順ではなく master/derivative 依存と reuse-before-build で選択
-4. 研修センター → `page.php` + Gutenberg/既存 Parts composition が現行候補。詳細は `TRAINING_CENTER_DEPENDENCY_AUDIT.md`
+4. 研修センター → `templates/template-oneColumn.php` + Gutenberg/既存 Parts composition が現行shell候補。`page.php` はPCでsidebarを持つ2-column shellのため、このFigma pageの960px centered bodyとは一致しない。production template assignmentはWordPress authority待ち。詳細は `TRAINING_CENTER_DEPENDENCY_AUDIT.md`
 5. 地域社会武道指導者研修会 → `page.php` + Gutenberg/既存 shared block composition が現行候補。詳細は `REGIONAL_TRAINING_DEPENDENCY_AUDIT.md`
 6. 現代武道9種目紹介 → `page.php` + 既存 Navigation Large master のcomposition。詳細は `MODERN_BUDO_DEPENDENCY_AUDIT.md`
 7. TOP → topdesign04 + SP TOP（既存 master の thin derivative を優先）
@@ -103,5 +103,6 @@ These lists are **discovery evidence, not automatic implementation authority**. 
 - `560:188` (`join_sp`) は `大会に参加したい` という別の本文付きSPページ。`1148:6390` の不足SP本文として流用しない
 - 研修センターSPは `1468:6595` をPC `1137:5348` のresponsive counterpartとして扱う。両者は施設案内、6枚gallery、料金詳細、お知らせ、ご利用案内の構造と料金改定内容が対応する
 - `560:377` は同名ページの旧SP案。料金詳細を欠くため最新実装authorityへ昇格させない
+- 研修センターのshared shellはPCで `templates/template-oneColumn.php` が最も一致する一方、SP Figmaの本文railは約327px（24px inset）、shared `_content` railはTheme token上335px（20px inset）。この8px差をglobal padding変更で吸収しない。canonical page assignment/editor contentを得てruntime diffしてからscoped derivative要否を決める
 - 地域社会武道指導者研修会はSP `560:537` / PC `1203:4865`。この実ページではPC `local_nav` に対してSPは4列navの縮小版ではなく、`560:632` のselector/dropdown-style navigationへinteraction formが切り替わる
 - 現代武道9種目紹介はSP `1455:5489` / PC `1145:6042`。両面とも既存Navigation Largeとgeometry/情報構造が一致するため、ページ専用cardを作らない
