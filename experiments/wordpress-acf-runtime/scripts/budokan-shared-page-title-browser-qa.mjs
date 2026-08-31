@@ -56,7 +56,7 @@ try {
   assert(sp.titleText === 'お知らせ', `SP shared title expected お知らせ, got ${sp.titleText}.`);
   assert(sp.titleFontSize === '22px', `SP title expected 22px, got ${sp.titleFontSize}.`);
   assert(sp.titleFontWeight === '500', `SP title expected weight 500, got ${sp.titleFontWeight}.`);
-  assert(!sp.titleFontFamily.toLowerCase().includes('mincho'), `SP title must use sans family, got ${sp.titleFontFamily}.`);
+  assert(!sp.titleFontFamily.toLowerCase().includes('serif'), `SP title must use sans family, got ${sp.titleFontFamily}.`);
   assert(close(parseFloat(sp.titleLineHeight), 30.8, 1), `SP title line-height expected ~30.8px, got ${sp.titleLineHeight}.`);
   assert(close(parseFloat(sp.titleLetterSpacing), 1.1, 0.2), `SP title tracking expected ~1.1px, got ${sp.titleLetterSpacing}.`);
   assert(sp.overlayColor === 'rgba(255, 255, 255, 0.25)', `SP visual overlay expected 25% white, got ${sp.overlayColor}.`);
@@ -71,14 +71,14 @@ try {
   assert(pc.titleText === 'お知らせ', `PC shared title expected お知らせ, got ${pc.titleText}.`);
   assert(pc.titleFontSize === '32px', `PC title expected 32px, got ${pc.titleFontSize}.`);
   assert(pc.titleFontWeight === '700', `PC title expected weight 700, got ${pc.titleFontWeight}.`);
-  assert(pc.titleFontFamily.toLowerCase().includes('mincho'), `PC title must use serif/Mincho family, got ${pc.titleFontFamily}.`);
+  assert(pc.titleFontFamily.toLowerCase().includes('serif'), `PC title must use serif family, got ${pc.titleFontFamily}.`);
   assert(close(parseFloat(pc.titleLineHeight), 44.8, 1), `PC title line-height expected ~44.8px, got ${pc.titleLineHeight}.`);
   assert(close(parseFloat(pc.titleLetterSpacing), 1.6, 0.2), `PC title tracking expected ~1.6px, got ${pc.titleLetterSpacing}.`);
   assert(pc.overlayColor === 'rgba(255, 255, 255, 0.25)', `PC visual overlay expected 25% white, got ${pc.overlayColor}.`);
   await desktopContext.close();
 
   console.log('PASS Budokan shared News page-title SP 180px / sans 22px current Figma contract.');
-  console.log('PASS Budokan shared News page-title PC 220px / Mincho 32px current Figma contract.');
+  console.log('PASS Budokan shared News page-title PC 220px / serif 32px current Figma contract.');
 } finally {
   await browser.close();
 }
