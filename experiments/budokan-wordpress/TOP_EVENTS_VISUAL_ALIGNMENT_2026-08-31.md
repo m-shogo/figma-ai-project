@@ -36,13 +36,14 @@ This means the current work is a responsive correction to an existing master/der
 ### SP `1455:5487`
 
 - section width: 375px;
-- heading: `大会・イベント情報` 28px centered, with `Event` marker below;
+- heading: `大会・イベント情報` Zen Kaku Gothic New Medium 28 / `#333`, with `Event` as Roboto Regular 14 / primary below;
 - content rail: 20px side padding;
-- featured banner: about 327×50px, horizontal dark band;
+- featured banner: about 327×50px, horizontal dark band, Zen Kaku Medium 18;
 - four featured rows;
 - each featured image: 104×78px;
-- status/category chips: 20px high;
-- date: 14px; title: 16px;
+- status/category chips: Zen Kaku Medium 13 / 20px high;
+- date: Zen Kaku Medium 14; title: Zen Kaku Medium 16;
+- calendar tabs / month label / SNS labels: Zen Kaku Medium;
 - calendar/list tabs: two equal 50px controls;
 - month controls use 36px navigation shapes;
 - FullCalendar is the implementation authority for the calendar body; Figma's internal calendar cells are visual reference only;
@@ -51,11 +52,12 @@ This means the current work is a responsive correction to an existing master/der
 ### PC `1603:7488` + SNS `1603:7477`
 
 - Events section uses 110px side rails / 1160px content width and 80px top space;
-- heading: 32px;
+- heading JA: Zen Old Mincho Medium 32; EN `Event`: Zen Old Mincho Medium 22 with 36px primary octagon;
 - inner layout is featured rail + 80px gap + fixed 420px calendar rail;
-- featured label becomes a narrow vertical gold rail;
+- featured label becomes a narrow vertical gold rail, Zen Old Mincho Medium 20;
 - event images become 200×150px;
-- date becomes 16px; title 18px;
+- cards stay Zen Kaku (label 13 / date 16 / title 18);
+- calendar tabs 15 Medium Kaku; month label Kaku; SNS 16 Medium Kaku;
 - calendar tabs are 210+210px;
 - SNS is the immediate next PC band and contains the same three destinations in one row;
 - each PC SNS control is 280×80px with 20px gaps and 80px vertical band padding.
@@ -73,6 +75,20 @@ The existing Theme already had the correct ownership but its geometry represente
 - section background and several type sizes no longer matched current Figma.
 
 The production fix changes only CSS. Existing PHP/JS/data owners remain in place.
+
+## Current Figma type pass (file `fKYDn9ikpJk1nW7IWFtaUx`)
+
+Geometry QA already matched. LIVE type still used Noto / Crimson via `--font-serif-ja` / `--font-serif-en` / `--font-sansSerif-ja`.
+
+Confirmed split:
+
+- SP heading JA is Zen Kaku Medium 28; PC heading JA is Zen Old Mincho Medium 32. Same class, different families.
+- SP `Event` is Roboto Regular 14 (`--font-sansSerif-en`); PC `Event` is Zen Old Mincho Medium 22.
+- SP banner is Zen Kaku 18 on the dark rail; PC banner is Zen Old Mincho 20 on the gold vertical rail.
+- Cards, tabs, month chrome, more, and SNS are Zen Kaku Medium on both widths.
+- Theme-owned calendar weekday/day cushions follow Figma 16 SP / 18 PC. FullCalendar internal DOM stays out of the QA contract.
+
+`--font-serif-ja` remains Noto and is not a global swap.
 
 ## WordPress/data authority still unresolved
 
