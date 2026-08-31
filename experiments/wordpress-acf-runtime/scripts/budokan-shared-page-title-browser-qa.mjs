@@ -1,4 +1,5 @@
 import { chromium } from 'playwright';
+import { assertHeadings, measureHeadings } from './budokan-heading-browser-qa.mjs';
 
 const url = process.argv[2];
 if (!url) {
@@ -132,6 +133,7 @@ try {
   assert(spFixed.titleFontWeight === '700', `SP image title expected weight 700, got ${spFixed.titleFontWeight}.`);
   assert(isSerifFamily(spFixed.titleFontFamily), `SP image title must resolve to a Mincho/serif family, got ${spFixed.titleFontFamily}.`);
   assert(spFixed.titlePosition === 'relative', `SP image title panel must stay in flow, got ${spFixed.titlePosition}.`);
+  assertHeadings(await measureHeadings(mobilePage), 'SP');
   await mobileContext.close();
 
   const desktopContext = await browser.newContext({ viewport: { width: 1380, height: 900 } });
@@ -169,12 +171,14 @@ try {
   assert(isSerifFamily(pcFixed.titleFontFamily), `PC image title must resolve to a Mincho/serif family, got ${pcFixed.titleFontFamily}.`);
   assert(pcFixed.titleAlign === 'center', `PC image title expected center, got ${pcFixed.titleAlign}.`);
   assert(pcFixed.titlePosition === 'relative', `PC image title panel must stay in flow, got ${pcFixed.titlePosition}.`);
+  assertHeadings(await measureHeadings(desktopPage), 'PC');
   await desktopContext.close();
 
   console.log('PASS Budokan shared page-title SP 180px gold / Mincho 24px current Figma contract.');
   console.log('PASS Budokan shared page-title PC 220px gold / Mincho 32px current Figma contract.');
   console.log('PASS Budokan image page-title SP 273 / Mincho 24 white panel current Figma contract.');
   console.log('PASS Budokan image page-title PC photo 60/320 / Mincho 32 white panel current Figma contract.');
+  console.log('PASS Budokan shared heading SP 24/12 Mincho / PC 26/20 Mincho current Figma contract.');
 } finally {
   await browser.close();
 }

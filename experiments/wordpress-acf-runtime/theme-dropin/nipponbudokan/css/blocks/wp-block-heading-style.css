@@ -1,6 +1,11 @@
 @charset "utf-8";
 /* // ------------------------------
-// タイトル（Figma parts 1163:4245 / SP_parts 1399:19144）
+// タイトル
+// Current Figma fileKey fKYDn9ikpJk1nW7IWFtaUx
+// SP: h2_sp 2190:10305 / h3_sp 1451:5679 / h4_sp 1468:7466
+// PC: h2 1157:8179 / h3 1157:8184 / h4 1157:8189
+// h3 CSS padding stays 1px under the Figma inset because the 1px border is
+// already in the box (see 2026-08-29 heading learning).
 // ------------------------------ */
 .block-editor_wrap,
 .editor-styles-wrapper {
@@ -28,10 +33,10 @@
     h2:is(:not([class]), .wp-block-heading) {
         display: flex;
         align-items: flex-start;
-        gap: 20px;
-        font-family: var(--font-serif-ja);
+        gap: 12px;
+        font-family: var(--font-zen-old-mincho);
         font-weight: 500;
-        font-size: 26px;
+        font-size: 24px;
         line-height: 1.4;
         letter-spacing: 0.05em;
         color: var(--color-text);
@@ -48,21 +53,26 @@
             background-color: var(--color-primary);
             clip-path: var(--clip-octagon);
         }
-        @media screen and (min-width: 768px) {
-            &::before {
-                margin-top: 13px;
-            }
-        }
         & + :is(h1, h2, h3, h4, h5, h6):is(:not([class]), .wp-block-heading) {
             margin-top: 40px;
         }
         & + p:is(:not([class]), .wp-block-paragraph, .has-text-align-left, .has-text-align-right, .has-text-align-center) {
-            margin-top: 32px;
+            margin-top: 28px;
+        }
+        @media screen and (min-width: 768px) {
+            gap: 20px;
+            font-size: 26px;
+            &::before {
+                margin-top: 13px;
+            }
+            & + p:is(:not([class]), .wp-block-paragraph, .has-text-align-left, .has-text-align-right, .has-text-align-center) {
+                margin-top: 32px;
+            }
         }
     }
     h3:is(:not([class]), .wp-block-heading) {
         display: block;
-        font-family: var(--font-serif-ja);
+        font-family: var(--font-zen-old-mincho);
         font-weight: 500;
         font-size: 20px;
         line-height: 1.4;
@@ -89,8 +99,8 @@
     h4:is(:not([class]), .wp-block-heading) {
         display: flex;
         align-items: stretch;
-        gap: 16px;
-        font-family: var(--font-serif-ja);
+        gap: 12px;
+        font-family: var(--font-zen-old-mincho);
         font-weight: 500;
         font-size: 18px;
         line-height: 1.4;
@@ -105,6 +115,9 @@
             width: 4px;
             flex-shrink: 0;
             background-color: var(--color-primary);
+        }
+        @media screen and (min-width: 768px) {
+            gap: 16px;
         }
         & + :is(h1, h2, h3, h4, h5, h6):is(:not([class]), .wp-block-heading) {
             margin-top: 24px;
