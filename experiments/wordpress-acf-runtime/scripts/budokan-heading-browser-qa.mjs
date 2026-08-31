@@ -56,7 +56,10 @@ export async function measureHeadings(page) {
     const tableHead = wrap?.querySelector('.wp-block-table th');
     const tableCell = wrap?.querySelector('.wp-block-table td');
     const pageLink = wrap?.querySelector('.module_inPageLink-01 .inPageLink a');
-    if (!wrap || !h2 || !h3 || !h4 || !h2Follow || !listItem || !marker || !buttonLink || !detailsTitle || !closedSummary || !closedButton || !plus || !openSummary || !openContent || !openButton || !tableHead || !tableCell || !pageLink) return null;
+    const qaDetails = wrap?.querySelector('.wp-block-details._qa');
+    const qaSummary = qaDetails?.querySelector('summary');
+    const qaPlus = qaDetails?.querySelector('.wp-block-details__button span');
+    if (!wrap || !h2 || !h3 || !h4 || !h2Follow || !listItem || !marker || !buttonLink || !detailsTitle || !closedSummary || !closedButton || !plus || !openSummary || !openContent || !openButton || !tableHead || !tableCell || !pageLink || !qaSummary || !qaPlus) return null;
 
     const h2Style = getComputedStyle(h2);
     const h3Style = getComputedStyle(h3);
@@ -75,6 +78,9 @@ export async function measureHeadings(page) {
     const tableHeadStyle = getComputedStyle(tableHead);
     const tableCellStyle = getComputedStyle(tableCell);
     const pageLinkStyle = getComputedStyle(pageLink);
+    const qaSummaryStyle = getComputedStyle(qaSummary);
+    const qaMarkStyle = getComputedStyle(qaSummary, '::before');
+    const qaPlusStyle = getComputedStyle(qaPlus, '::before');
 
     return {
       h2Size: h2Style.fontSize,
@@ -125,6 +131,10 @@ export async function measureHeadings(page) {
       pageLinkFamily: pageLinkStyle.fontFamily,
       pageLinkSize: pageLinkStyle.fontSize,
       pageLinkWeight: pageLinkStyle.fontWeight,
+      qaPadTop: qaSummaryStyle.paddingTop,
+      qaPadLeft: qaSummaryStyle.paddingLeft,
+      qaMarkWidth: qaMarkStyle.width,
+      qaPlusColor: qaPlusStyle.backgroundColor,
     };
   });
 }
@@ -164,6 +174,8 @@ export function assertHeadings(measured, band) {
   assert(isKakuFamily(measured.pageLinkFamily), `${band} page-link must resolve to Zen Kaku Gothic New, got ${measured.pageLinkFamily}.`);
   assert(measured.pageLinkSize === '16px', `${band} page-link expected 16px, got ${measured.pageLinkSize}.`);
   assert(measured.pageLinkWeight === '500', `${band} page-link expected weight 500, got ${measured.pageLinkWeight}.`);
+  assert(parseFloat(measured.qaMarkWidth) <= 24, `${band} QA Q/A mark must hug the glyph, not a 32px slot, got ${measured.qaMarkWidth}.`);
+  assert(measured.qaPlusColor === 'rgb(202, 153, 87)', `${band} QA plus/minus expected gold #ca9957, got ${measured.qaPlusColor}.`);
 
   if (band === 'SP') {
     assert(measured.h2Size === '24px', `SP h2 expected 24px, got ${measured.h2Size}.`);
@@ -175,6 +187,7 @@ export function assertHeadings(measured, band) {
     assert(measured.detailsClosedPadTop === '16px' && measured.detailsClosedPadLeft === '20px', `SP closed details title padding expected 16/20, got ${measured.detailsClosedPadTop}/${measured.detailsClosedPadLeft}.`);
     assert(measured.detailsClosedRail === '59px' && measured.detailsOpenRail === '59px', `SP details rail expected 59px, got closed ${measured.detailsClosedRail} / open ${measured.detailsOpenRail}.`);
     assert(measured.detailsOpenContentPadTop === '20px' && measured.detailsOpenContentPadLeft === '20px', `SP open details content padding expected 20, got ${measured.detailsOpenContentPadTop}/${measured.detailsOpenContentPadLeft}.`);
+    assert(measured.qaPadTop === '20px' && measured.qaPadLeft === '20px', `SP QA details title padding expected 20/20, got ${measured.qaPadTop}/${measured.qaPadLeft}.`);
     return;
   }
 
@@ -188,4 +201,5 @@ export function assertHeadings(measured, band) {
   assert(measured.detailsClosedRail === '68px' && measured.detailsOpenRail === '68px', `PC details rail expected 68px, got closed ${measured.detailsClosedRail} / open ${measured.detailsOpenRail}.`);
   assert(measured.detailsOpenPadLeft === '32px', `PC open details title padding-left expected 32px, got ${measured.detailsOpenPadLeft}.`);
   assert(measured.detailsOpenContentPadTop === '32px' && measured.detailsOpenContentPadLeft === '32px', `PC open details content padding expected 32, got ${measured.detailsOpenContentPadTop}/${measured.detailsOpenContentPadLeft}.`);
+  assert(measured.qaPadTop === '24px' && measured.qaPadLeft === '32px', `PC QA details title padding expected 24/32, got ${measured.qaPadTop}/${measured.qaPadLeft}.`);
 }
