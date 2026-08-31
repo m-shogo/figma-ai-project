@@ -28,6 +28,18 @@ function isGoldMarker(image) {
   return close(r, 202, 2) && close(g, 153, 2) && close(b, 87, 2);
 }
 
+function isDarkZoom(color) {
+  const value = String(color || '');
+  const compact = value.replace(/\s+/g, '');
+  if (compact === 'rgba(51,51,51,0.7)' || compact === 'rgb(51,51,51)') return true;
+  const srgb = value.match(/color\(srgb\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)/i);
+  if (!srgb) return false;
+  const r = Math.round(parseFloat(srgb[1]) * 255);
+  const g = Math.round(parseFloat(srgb[2]) * 255);
+  const b = Math.round(parseFloat(srgb[3]) * 255);
+  return close(r, 51, 2) && close(g, 51, 2) && close(b, 51, 2);
+}
+
 function isMinchoFamily(family) {
   const value = String(family || '').toLowerCase();
   if (value.includes('sans-serif')) return false;
@@ -59,7 +71,12 @@ export async function measureHeadings(page) {
     const qaDetails = wrap?.querySelector('.wp-block-details._qa');
     const qaSummary = qaDetails?.querySelector('summary');
     const qaPlus = qaDetails?.querySelector('.wp-block-details__button span');
-    if (!wrap || !h2 || !h3 || !h4 || !h2Follow || !listItem || !marker || !buttonLink || !detailsTitle || !closedSummary || !closedButton || !plus || !openSummary || !openContent || !openButton || !tableHead || !tableCell || !pageLink || !qaSummary || !qaPlus) return null;
+    const mediaText = wrap?.querySelector('.wp-block-media-text');
+    const mediaContent = mediaText?.querySelector('.wp-block-media-text__content');
+    const mediaFigure = mediaText?.querySelector('.wp-block-media-text__media');
+    const mediaLink = mediaFigure?.querySelector('a');
+    const caption = mediaText?.querySelector('.wp-element-caption');
+    if (!wrap || !h2 || !h3 || !h4 || !h2Follow || !listItem || !marker || !buttonLink || !detailsTitle || !closedSummary || !closedButton || !plus || !openSummary || !openContent || !openButton || !tableHead || !tableCell || !pageLink || !qaSummary || !qaPlus || !mediaText || !mediaContent || !mediaFigure || !mediaLink || !caption) return null;
 
     const h2Style = getComputedStyle(h2);
     const h3Style = getComputedStyle(h3);
@@ -81,6 +98,11 @@ export async function measureHeadings(page) {
     const qaSummaryStyle = getComputedStyle(qaSummary);
     const qaMarkStyle = getComputedStyle(qaSummary, '::before');
     const qaPlusStyle = getComputedStyle(qaPlus, '::before');
+    const mediaStyle = getComputedStyle(mediaText);
+    const mediaContentRect = mediaContent.getBoundingClientRect();
+    const mediaFigureRect = mediaFigure.getBoundingClientRect();
+    const captionStyle = getComputedStyle(caption);
+    const zoomStyle = getComputedStyle(mediaLink, '::after');
 
     return {
       h2Size: h2Style.fontSize,
@@ -135,6 +157,19 @@ export async function measureHeadings(page) {
       qaPadLeft: qaSummaryStyle.paddingLeft,
       qaMarkWidth: qaMarkStyle.width,
       qaPlusColor: qaPlusStyle.backgroundColor,
+      mediaRowGap: mediaStyle.rowGap,
+      mediaColGap: mediaStyle.columnGap,
+      mediaContentTop: mediaContentRect.top,
+      mediaFigureTop: mediaFigureRect.top,
+      mediaContentLeft: mediaContentRect.left,
+      mediaFigureLeft: mediaFigureRect.left,
+      captionFamily: captionStyle.fontFamily,
+      captionSize: captionStyle.fontSize,
+      captionWeight: captionStyle.fontWeight,
+      captionColor: captionStyle.color,
+      captionMarginTop: captionStyle.marginTop,
+      zoomSize: zoomStyle.width,
+      zoomColor: zoomStyle.backgroundColor,
     };
   });
 }
@@ -176,6 +211,14 @@ export function assertHeadings(measured, band) {
   assert(measured.pageLinkWeight === '500', `${band} page-link expected weight 500, got ${measured.pageLinkWeight}.`);
   assert(parseFloat(measured.qaMarkWidth) <= 24, `${band} QA Q/A mark must hug the glyph, not a 32px slot, got ${measured.qaMarkWidth}.`);
   assert(measured.qaPlusColor === 'rgb(202, 153, 87)', `${band} QA plus/minus expected gold #ca9957, got ${measured.qaPlusColor}.`);
+  assert(measured.mediaRowGap === '30px' && measured.mediaColGap === '30px', `${band} media-text gap expected 30px, got row ${measured.mediaRowGap} / col ${measured.mediaColGap}.`);
+  assert(isKakuFamily(measured.captionFamily), `${band} caption must resolve to Zen Kaku Gothic New, got ${measured.captionFamily}.`);
+  assert(measured.captionSize === '14px', `${band} caption expected 14px, got ${measured.captionSize}.`);
+  assert(measured.captionWeight === '500', `${band} caption expected weight 500, got ${measured.captionWeight}.`);
+  assert(measured.captionColor === 'rgb(51, 51, 51)', `${band} caption expected #333, got ${measured.captionColor}.`);
+  assert(measured.captionMarginTop === '20px', `${band} caption margin-top expected 20px, got ${measured.captionMarginTop}.`);
+  assert(measured.zoomSize === '50px', `${band} media-text zoom expected 50px, got ${measured.zoomSize}.`);
+  assert(isDarkZoom(measured.zoomColor), `${band} media-text zoom expected #333 / 70%, got ${measured.zoomColor}.`);
 
   if (band === 'SP') {
     assert(measured.h2Size === '24px', `SP h2 expected 24px, got ${measured.h2Size}.`);
@@ -188,6 +231,7 @@ export function assertHeadings(measured, band) {
     assert(measured.detailsClosedRail === '59px' && measured.detailsOpenRail === '59px', `SP details rail expected 59px, got closed ${measured.detailsClosedRail} / open ${measured.detailsOpenRail}.`);
     assert(measured.detailsOpenContentPadTop === '20px' && measured.detailsOpenContentPadLeft === '20px', `SP open details content padding expected 20, got ${measured.detailsOpenContentPadTop}/${measured.detailsOpenContentPadLeft}.`);
     assert(measured.qaPadTop === '20px' && measured.qaPadLeft === '20px', `SP QA details title padding expected 20/20, got ${measured.qaPadTop}/${measured.qaPadLeft}.`);
+    assert(measured.mediaContentTop < measured.mediaFigureTop, `SP media-text must stack text above image, content ${measured.mediaContentTop} vs media ${measured.mediaFigureTop}.`);
     return;
   }
 
@@ -202,4 +246,5 @@ export function assertHeadings(measured, band) {
   assert(measured.detailsOpenPadLeft === '32px', `PC open details title padding-left expected 32px, got ${measured.detailsOpenPadLeft}.`);
   assert(measured.detailsOpenContentPadTop === '32px' && measured.detailsOpenContentPadLeft === '32px', `PC open details content padding expected 32, got ${measured.detailsOpenContentPadTop}/${measured.detailsOpenContentPadLeft}.`);
   assert(measured.qaPadTop === '24px' && measured.qaPadLeft === '32px', `PC QA details title padding expected 24/32, got ${measured.qaPadTop}/${measured.qaPadLeft}.`);
+  assert(measured.mediaContentLeft < measured.mediaFigureLeft, `PC media-text must keep text left of image, content ${measured.mediaContentLeft} vs media ${measured.mediaFigureLeft}.`);
 }
