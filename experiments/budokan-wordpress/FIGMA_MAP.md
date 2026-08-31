@@ -1,19 +1,21 @@
 # Figma node map（nipponbudokan）
 
-File: `w7SGVY63FuW6JpaQVKjxm2`  
+File: `fKYDn9ikpJk1nW7IWFtaUx`  
 Pages: PC `0:1` / SP `114:5409`
 
-デザイン変更前提。実装時は都度取り直す。**保存済みnode-idが解決できても、それだけで現行authorityとはみなさない。まず `CURRENT_AUTHORITY.md` のfile keyを確認し、current pageのtop-level frameを再走査し、対象full-page frameを`get_design_context`で再取得する。**
+デザイン調整版（2026-08-31 Human Authority）。実装時は都度取り直す。**保存済みnode-idが解決できても、それだけで現行authorityとはみなさない。まず `CURRENT_AUTHORITY.md` のfile keyを確認し、current pageのtop-level frameを再走査し、対象full-page frameを`get_design_context`で再取得する。**
+
+旧 file `w7SGVY63FuW6JpaQVKjxm2` / `RfAQQ28V1HGaeIcpgRmQq1` の値は引き継がない。
 
 ## 優先ノード
 
 | 用途 | 面 | node-id | name |
 | --- | --- | --- | --- |
 | TOP（現行候補） | PC | `1603:7062` | topdesign04 |
-| Header コンポーネント例 | PC | `1399:12372` | header (instance) |
-| Header SP 閉じ | SP | `446:10020` | SP TOP 先頭 |
-| Header SP 開き | SP | `2096:9573` | SP TOP（menu open） |
-| SP メニュー展開例 | SP | `2096:9496` | TopPage PlanB SP①（別案） |
+| Header コンポーネント | PC | `2209:9850` | header（1380×100、左340ダークロゴレール） |
+| Header instance 例 | PC | `2182:8241` | header |
+| Header SP 閉じ | SP | `446:10020` | SP TOP 先頭（header-sp 相当） |
+| Header SP 開き | SP | `2169:10018` | header-sp（menu 2169:10017 内） |
 | Footer 例 | PC | `1901:14268` | footer_subpage |
 | Footer SP 下層 | SP | `560:2524` / `560:188` 末尾 | news_sp / join_sp |
 | パーツ集 | PC | `1163:4245` | parts |
@@ -37,11 +39,11 @@ Pages: PC `0:1` / SP `114:5409`
 | 地域社会武道指導者研修会 SP navigation | SP | `560:632` | selector/dropdown-style navigation area |
 | 現代武道9種目紹介 | PC | `1145:6042` | navigation（9枚の Navigation Large を3列×3段） |
 | 現代武道9種目紹介 | SP | `1455:5489` | SP_navigation（同9枚を1列表示） |
-| SP TOP 候補 | SP | `446:10020` / `2096:9573` | SP |
+| SP TOP 候補 | SP | `446:10020` / `2169:10017` | SP / menu |
 
 ## Current top-level re-resolution evidence（2026-08-31）
 
-`CURRENT_AUTHORITY.md` の現行file `w7SGVY63FuW6JpaQVKjxm2` をライブ再取得した結果。
+`CURRENT_AUTHORITY.md` の現行file `fKYDn9ikpJk1nW7IWFtaUx` をライブ再取得した結果。Header は PC `2209:9850` / SP open `2169:10018`。旧 file `w7SGVY63FuW6JpaQVKjxm2` の測定値は使わない。
 
 Current PC page `0:1` top-level frames include:
 
@@ -95,9 +97,9 @@ These lists are **discovery evidence, not automatic implementation authority**. 
 - PC canvas 幅は 1380。案件契約の body min-width は 1280
 - form フレームあり → Human 担当のため Agent は触らない
 - Figma の top-level layer name だけで画面を断定しない。汎用名・旧名が残るため、page title / 本文 / breadcrumb / global shell を突き合わせて authority を確定する
-- 現行file keyは `CURRENT_AUTHORITY.md` の `w7SGVY63FuW6JpaQVKjxm2`。`RfAQQ28V1HGaeIcpgRmQq1` は旧lineageとして参照可能でも、現行実装authorityへ自動昇格させない
-- 2026-08-31の再監査では、旧lineage `RfA...` で `1468:6595` が解決しなかった一方、現行 `w7...` では同nodeが解決し、料金詳細を含むTraining Center redesignを返した。file keyを取り違えると「node削除」と誤診するため、node失敗時はまずfile authorityを確認する
-- News archive/detailのSP redesign node `1399:14225` / `1451:5197` は現行 `w7...` で解決する。older named frame `560:2524` をcurrent redesignの代替として黙って使わない
+- 現行file keyは `CURRENT_AUTHORITY.md` の `fKYDn9ikpJk1nW7IWFtaUx`。`w7SGVY63FuW6JpaQVKjxm2` / `RfAQQ28V1HGaeIcpgRmQq1` は旧lineageとして参照可能でも、現行実装authorityへ自動昇格させない
+- 2026-08-31の再監査では、旧lineage `RfA...` で `1468:6595` が解決しなかった一方、当時の現行 `w7...` では同nodeが解決した。その後 Human が `fKYD...` へ切り替えた。file keyを取り違えると「node削除」と誤診するため、node失敗時はまずfile authorityを確認する
+- News archive/detailのSP redesign node `1399:14225` / `1451:5197` は現行 file で再確認してから使う。older named frame `560:2524` をcurrent redesignの代替として黙って使わない
 - canonical SP pageにはPC Event archive/detailに対応すると証明できる専用SP frameがまだない。News SPをEventへ流用せず、SP authorityが出るまでfail closedとする
 - `大会・行事に参加したい` はPC `1148:6390` / SP `1468:7508` でpage identityは一致するが、現行SPはshellのみで本文authorityがない
 - `560:188` (`join_sp`) は `大会に参加したい` という別の本文付きSPページ。`1148:6390` の不足SP本文として流用しない

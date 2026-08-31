@@ -3,7 +3,7 @@
 このファイルは **日本武道館 WordPress 案件**の会話決定を正本化する。  
 以降の Agent は、ここを Current Authority として扱い、矛盾する旧命名・旧 LP runtime 前提で進めない。
 
-更新日: 2026-08-28
+更新日: 2026-08-31
 
 ---
 
@@ -127,16 +127,18 @@ Theme 専用の enqueue・命名は `THEME_RULES.md`。Frontend Standard は Com
 
 ## Figma（現行正本）
 
-File: [nipponbudokan](https://www.figma.com/design/w7SGVY63FuW6JpaQVKjxm2/nipponbudokan)
+Human Authority 2026-08-31: デザイン調整版を現行 visual 正本とする。
+
+File: [nipponbudokan](https://www.figma.com/design/fKYDn9ikpJk1nW7IWFtaUx/nipponbudokan)
 
 | 面 | URL | fileKey | node-id |
 | --- | --- | --- | --- |
-| PC | https://www.figma.com/design/w7SGVY63FuW6JpaQVKjxm2/nipponbudokan?node-id=0-1 | `w7SGVY63FuW6JpaQVKjxm2` | `0:1` |
-| SP | https://www.figma.com/design/w7SGVY63FuW6JpaQVKjxm2/nipponbudokan?node-id=114-5409 | `w7SGVY63FuW6JpaQVKjxm2` | `114:5409` |
+| PC | https://www.figma.com/design/fKYDn9ikpJk1nW7IWFtaUx/nipponbudokan?node-id=0-1 | `fKYDn9ikpJk1nW7IWFtaUx` | `0:1` |
+| SP | https://www.figma.com/design/fKYDn9ikpJk1nW7IWFtaUx/nipponbudokan?node-id=114-5409 | `fKYDn9ikpJk1nW7IWFtaUx` | `114:5409` |
 
-- 旧 file key `RfAQQ28V1HGaeIcpgRmQq1` は使わない（証拠 lineage 参照のみ）
-- **デザインは途中。これから変更あり** → pixel 固定しすぎない。Theme 規約優先で載せる
-- Visual の正本は上記 Figma。既存実装の正本は Theme
+- 旧 file key `w7SGVY63FuW6JpaQVKjxm2` / `RfAQQ28V1HGaeIcpgRmQq1` は使わない（証拠 lineage 参照のみ）
+- 旧 Figma から取得した font / geometry / color を引き継がない。毎回この file を LIVE 再取得する
+- Visual の正本は上記 Figma。既存実装の正本は Theme。差分は Theme を新 Figma へ合わせる
 
 ---
 

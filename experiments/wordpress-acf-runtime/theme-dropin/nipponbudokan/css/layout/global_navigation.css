@@ -316,12 +316,20 @@
         pointer-events: none;
         clip-path: unset;
         display: flex;
-        align-items: center;
+        align-items: stretch;
         justify-content: center;
         margin-top: 0;
         > .gn_menu {
             width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: stretch;
             pointer-events: auto;
+            .gn_container-01 {
+                display: flex;
+                width: 100%;
+                height: 100%;
+            }
         }
         > .gn_subMenu,
         > .gn_search {
@@ -330,9 +338,11 @@
 
         .gn_links-01 {
             display: flex;
-            align-items: center;
+            align-items: stretch;
             justify-content: center;
             gap: 48px;
+            width: 100%;
+            height: 100%;
             /* MARK: 共通 全階層に影響あり start */
             .gnl_item-02,
             .gnl_item-03,
@@ -428,11 +438,29 @@
             /* 3階層以降に影響あり end */
             /* MARK: ステータス start */
             .gnl_item-02 {
+                align-self: stretch;
+                display: flex;
+                align-items: center;
+                /* current / hover underline is decorative, 19px above the header bottom (Figma y=81 in 100px) */
+                &::after {
+                    content: '';
+                    position: absolute;
+                    left: 0;
+                    right: 0;
+                    bottom: 19px;
+                    height: 1px;
+                    background-color: var(--color-primary);
+                    opacity: 0;
+                    pointer-events: none;
+                }
                 /* &.current_page_parent, */
                 &.current-menu-ancestor,
                 &.current-menu-item {
                     .gnl_link-02 {
-                        color: var(--color-primary);
+                        font-weight: 600;
+                    }
+                    &::after {
+                        opacity: 1;
                     }
                 }
             }
@@ -486,9 +514,9 @@
             .gnl_title-02 {
             }
             .gnl_link-02 {
-                padding-block: 16px;
-                font-family: var(--font-serif-ja);
-                font-size: 15px;
+                padding-block: 0;
+                font-family: var(--font-zen-old-mincho);
+                font-size: 16px;
                 font-weight: 500;
                 letter-spacing: 0.05em;
                 line-height: 1;
@@ -666,6 +694,16 @@
         a {
             &:hover {
                 color: var(--color-link);
+            }
+        }
+        @media screen and (min-width: 768px) {
+            .gn_links-01 > .gnl_item-02 {
+                &:hover::after {
+                    opacity: 1;
+                }
+                > .gnl_title-02 .gnl_link-02:hover {
+                    color: var(--color-text);
+                }
             }
         }
     }

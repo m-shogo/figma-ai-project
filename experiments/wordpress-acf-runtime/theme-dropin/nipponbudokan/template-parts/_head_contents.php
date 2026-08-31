@@ -22,8 +22,8 @@
 <?php endif; ?>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&family=Noto+Serif+JP:wght@200..900&family=Roboto:wght@100..900&display=swap" fetchpriority="high">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&family=Noto+Serif+JP:wght@200..900&family=Roboto:wght@100..900&display=swap" media="print" onload='this.media="all"'>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&family=Noto+Serif+JP:wght@200..900&family=Roboto:wght@100..900&family=Zen+Old+Mincho:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" fetchpriority="high">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&family=Noto+Serif+JP:wght@200..900&family=Roboto:wght@100..900&family=Zen+Old+Mincho:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" media="print" onload='this.media="all"'>
 <link rel="preload" as="style" href="<?php echo esc_url(get_theme_file_uri('/css/all.min.css?ver=6.7.2')); ?>" fetchpriority="high">
 <link rel="stylesheet" href="<?php echo esc_url(get_theme_file_uri('/css/all.min.css?ver=6.7.2')); ?>" media="print" onload='this.media="all"'>
 <?php
