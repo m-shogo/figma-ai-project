@@ -55,7 +55,8 @@ export async function measureHeadings(page) {
     const openButton = openDetails?.querySelector('.wp-block-details__button');
     const tableHead = wrap?.querySelector('.wp-block-table th');
     const tableCell = wrap?.querySelector('.wp-block-table td');
-    if (!wrap || !h2 || !h3 || !h4 || !h2Follow || !listItem || !marker || !buttonLink || !detailsTitle || !closedSummary || !closedButton || !plus || !openSummary || !openContent || !openButton || !tableHead || !tableCell) return null;
+    const pageLink = wrap?.querySelector('.module_inPageLink-01 .inPageLink a');
+    if (!wrap || !h2 || !h3 || !h4 || !h2Follow || !listItem || !marker || !buttonLink || !detailsTitle || !closedSummary || !closedButton || !plus || !openSummary || !openContent || !openButton || !tableHead || !tableCell || !pageLink) return null;
 
     const h2Style = getComputedStyle(h2);
     const h3Style = getComputedStyle(h3);
@@ -73,6 +74,7 @@ export async function measureHeadings(page) {
     const openButtonStyle = getComputedStyle(openButton);
     const tableHeadStyle = getComputedStyle(tableHead);
     const tableCellStyle = getComputedStyle(tableCell);
+    const pageLinkStyle = getComputedStyle(pageLink);
 
     return {
       h2Size: h2Style.fontSize,
@@ -120,6 +122,9 @@ export async function measureHeadings(page) {
       tableHeadWeight: tableHeadStyle.fontWeight,
       tableCellFamily: tableCellStyle.fontFamily,
       tableCellSize: tableCellStyle.fontSize,
+      pageLinkFamily: pageLinkStyle.fontFamily,
+      pageLinkSize: pageLinkStyle.fontSize,
+      pageLinkWeight: pageLinkStyle.fontWeight,
     };
   });
 }
@@ -156,6 +161,9 @@ export function assertHeadings(measured, band) {
   assert(isKakuFamily(measured.tableCellFamily), `${band} table cell must resolve to Zen Kaku Gothic New, got ${measured.tableCellFamily}.`);
   assert(measured.tableHeadSize === '15px' && measured.tableCellSize === '15px', `${band} table expected 15px, got th ${measured.tableHeadSize} / td ${measured.tableCellSize}.`);
   assert(measured.tableHeadWeight === '400', `${band} table header expected weight 400, got ${measured.tableHeadWeight}.`);
+  assert(isKakuFamily(measured.pageLinkFamily), `${band} page-link must resolve to Zen Kaku Gothic New, got ${measured.pageLinkFamily}.`);
+  assert(measured.pageLinkSize === '16px', `${band} page-link expected 16px, got ${measured.pageLinkSize}.`);
+  assert(measured.pageLinkWeight === '500', `${band} page-link expected weight 500, got ${measured.pageLinkWeight}.`);
 
   if (band === 'SP') {
     assert(measured.h2Size === '24px', `SP h2 expected 24px, got ${measured.h2Size}.`);
