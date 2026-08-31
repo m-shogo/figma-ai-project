@@ -6,7 +6,7 @@
     position: relative;
     font-size: 13px;
     color: var(--color-text);
-    line-height: 1.5;
+    line-height: 1;
     letter-spacing: 0.05em;
     .mb_inner {
     }
@@ -21,7 +21,7 @@
                     font-size: 10px;
                     color: var(--color-primary);
                     display: inline-block;
-                    margin-inline: 10px;
+                    margin-inline: 8px;
                 }
             }
             a,
@@ -43,6 +43,14 @@
                 &:hover {
                     text-decoration: none;
                 }
+            }
+        }
+    }
+
+    @media screen and (min-width: 768px) {
+        .module_breadCrumb-01 {
+            li:not(:last-child)::after {
+                margin-inline: 10px;
             }
         }
     }
