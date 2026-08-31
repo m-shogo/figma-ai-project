@@ -14,6 +14,18 @@ function close(actual, expected, tolerance = 2) {
   return Math.abs(actual - expected) <= tolerance;
 }
 
+function isMinchoFamily(family) {
+  const value = String(family || '').toLowerCase();
+  if (value.includes('sans-serif')) return false;
+  return value.includes('mincho') || value.includes('zen old');
+}
+function isKakuFamily(family) {
+  return String(family || '').toLowerCase().includes('kaku');
+}
+function isRobotoFamily(family) {
+  return String(family || '').toLowerCase().includes('roboto');
+}
+
 const browser = await chromium.launch({ headless: true });
 const mobileContext = await browser.newContext({
   viewport: { width: 375, height: 2200 },
@@ -31,17 +43,21 @@ try {
     const cards = section ? [...section.querySelectorAll('.tg_card')] : [];
     const firstImage = cards[0]?.querySelector('.tg_card_image img');
     const heading = section?.querySelector('.tg_heading_ja');
+    const headingEn = section?.querySelector('.tg_heading_en');
     const lead = section?.querySelector('.tg_lead');
     const firstTitle = cards[0]?.querySelector('.tg_card_title');
-    if (!section || !intro || cards.length !== 3 || !firstImage || !heading || !lead || !firstTitle) return null;
+    const firstText = cards[0]?.querySelector('.tg_card_text');
+    if (!section || !intro || cards.length !== 3 || !firstImage || !heading || !headingEn || !lead || !firstTitle || !firstText) return null;
 
     const sectionRect = section.getBoundingClientRect();
     const introRect = intro.getBoundingClientRect();
     const cardRects = cards.map((card) => card.getBoundingClientRect());
     const imageRect = firstImage.getBoundingClientRect();
     const headingStyle = getComputedStyle(heading);
+    const headingEnStyle = getComputedStyle(headingEn);
     const leadStyle = getComputedStyle(lead);
     const titleStyle = getComputedStyle(firstTitle);
+    const textStyle = getComputedStyle(firstText);
 
     return {
       sectionWidth: sectionRect.width,
@@ -53,8 +69,14 @@ try {
       cardGap01: cardRects[1].top - cardRects[0].bottom,
       cardGap12: cardRects[2].top - cardRects[1].bottom,
       headingSize: parseFloat(headingStyle.fontSize),
+      headingFamily: headingStyle.fontFamily,
+      headingEnSize: parseFloat(headingEnStyle.fontSize),
+      headingEnFamily: headingEnStyle.fontFamily,
       leadSize: parseFloat(leadStyle.fontSize),
+      leadFamily: leadStyle.fontFamily,
       titleSize: parseFloat(titleStyle.fontSize),
+      titleFamily: titleStyle.fontFamily,
+      textFamily: textStyle.fontFamily,
     };
   });
 
@@ -67,8 +89,14 @@ try {
   assert(close(sp.firstImageHeight, 189), `SP image height expected 189px, got ${sp.firstImageHeight}.`);
   assert(Math.abs(sp.cardGap01) <= 1 && Math.abs(sp.cardGap12) <= 1, `SP cards should be contiguous; gaps=${sp.cardGap01},${sp.cardGap12}.`);
   assert(close(sp.headingSize, 30, 0.5), `SP heading expected 30px, got ${sp.headingSize}.`);
+  assert(isKakuFamily(sp.headingFamily), `SP heading JA must resolve to Zen Kaku Gothic New, got ${sp.headingFamily}.`);
+  assert(close(sp.headingEnSize, 14, 0.5), `SP heading EN expected 14px, got ${sp.headingEnSize}.`);
+  assert(isRobotoFamily(sp.headingEnFamily), `SP heading EN must resolve to Roboto, got ${sp.headingEnFamily}.`);
   assert(close(sp.leadSize, 16, 0.5), `SP lead expected 16px, got ${sp.leadSize}.`);
+  assert(isKakuFamily(sp.leadFamily), `SP lead must resolve to Zen Kaku Gothic New, got ${sp.leadFamily}.`);
   assert(close(sp.titleSize, 18, 0.5), `SP card title expected 18px, got ${sp.titleSize}.`);
+  assert(isKakuFamily(sp.titleFamily), `SP card title must resolve to Zen Kaku Gothic New, got ${sp.titleFamily}.`);
+  assert(isKakuFamily(sp.textFamily), `SP card text must resolve to Zen Kaku Gothic New, got ${sp.textFamily}.`);
 
   await mobileContext.close();
 
@@ -83,8 +111,11 @@ try {
     const firstImage = cards[0]?.querySelector('.tg_card_image img');
     const firstBody = cards[0]?.querySelector('.tg_card_body');
     const firstTitle = cards[0]?.querySelector('.tg_card_title');
+    const firstText = cards[0]?.querySelector('.tg_card_text');
+    const heading = section?.querySelector('.tg_heading_ja');
+    const headingEn = section?.querySelector('.tg_heading_en');
     const lead = section?.querySelector('.tg_lead');
-    if (!section || !intro || cards.length !== 3 || !firstImage || !firstBody || !firstTitle || !lead) return null;
+    if (!section || !intro || cards.length !== 3 || !firstImage || !firstBody || !firstTitle || !firstText || !heading || !headingEn || !lead) return null;
 
     const sectionRect = section.getBoundingClientRect();
     const introRect = intro.getBoundingClientRect();
@@ -92,6 +123,9 @@ try {
     const imageRect = firstImage.getBoundingClientRect();
     const bodyStyle = getComputedStyle(firstBody);
     const titleStyle = getComputedStyle(firstTitle);
+    const textStyle = getComputedStyle(firstText);
+    const headingStyle = getComputedStyle(heading);
+    const headingEnStyle = getComputedStyle(headingEn);
     const leadStyle = getComputedStyle(lead);
 
     return {
@@ -105,7 +139,14 @@ try {
       bodyAlign: bodyStyle.alignItems,
       titleDirection: titleStyle.flexDirection,
       titleSize: parseFloat(titleStyle.fontSize),
+      titleFamily: titleStyle.fontFamily,
+      textFamily: textStyle.fontFamily,
+      headingSize: parseFloat(headingStyle.fontSize),
+      headingFamily: headingStyle.fontFamily,
+      headingEnSize: parseFloat(headingEnStyle.fontSize),
+      headingEnFamily: headingEnStyle.fontFamily,
       leadSize: parseFloat(leadStyle.fontSize),
+      leadFamily: leadStyle.fontFamily,
     };
   });
 
@@ -120,12 +161,19 @@ try {
   assert(pc.bodyAlign === 'flex-start', `PC card body expected flex-start, got ${pc.bodyAlign}.`);
   assert(pc.titleDirection === 'row', `PC card title expected row, got ${pc.titleDirection}.`);
   assert(close(pc.titleSize, 20, 0.5), `PC card title expected 20px, got ${pc.titleSize}.`);
+  assert(isMinchoFamily(pc.titleFamily), `PC card title must resolve to Zen Old Mincho, got ${pc.titleFamily}.`);
+  assert(isKakuFamily(pc.textFamily), `PC card text must resolve to Zen Kaku Gothic New, got ${pc.textFamily}.`);
+  assert(close(pc.headingSize, 32, 0.5), `PC heading expected 32px, got ${pc.headingSize}.`);
+  assert(isMinchoFamily(pc.headingFamily), `PC heading JA must resolve to Zen Old Mincho, got ${pc.headingFamily}.`);
+  assert(close(pc.headingEnSize, 22, 0.5), `PC heading EN expected 22px, got ${pc.headingEnSize}.`);
+  assert(isMinchoFamily(pc.headingEnFamily), `PC heading EN must resolve to Zen Old Mincho, got ${pc.headingEnFamily}.`);
   assert(close(pc.leadSize, 16, 0.5), `PC lead expected 16px, got ${pc.leadSize}.`);
+  assert(isKakuFamily(pc.leadFamily), `PC lead must resolve to Zen Kaku Gothic New, got ${pc.leadFamily}.`);
 
   await desktopContext.close();
 
-  console.log('PASS Budokan TOP Guide SP geometry QA.');
-  console.log('PASS Budokan TOP Guide PC geometry QA.');
+  console.log('PASS Budokan TOP Guide SP geometry and type family QA.');
+  console.log('PASS Budokan TOP Guide PC geometry and type family QA.');
 } finally {
   await browser.close();
 }

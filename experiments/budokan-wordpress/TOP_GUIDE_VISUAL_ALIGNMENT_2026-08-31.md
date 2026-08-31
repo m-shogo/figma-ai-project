@@ -33,18 +33,19 @@ The Event family was investigated first because it precedes User Guide. Current 
 - section: `375 × 1668`
 - dark intro background height: `514px`
 - intro content x: `32px`, width `311px`, top `64px`
-- title: `30px`, centered
+- title: Zen Kaku Gothic New Medium `30px`, centered
+- English label: Roboto Regular `14px` / accent
 - title → English label spacing: `20px`
 - heading → lead spacing: `24px`
-- lead: `16px / 1.8 / 0.05em`
+- lead: Zen Kaku Regular `16px / 1.8 / 0.05em`
 - card rail starts at y=`401px`, overlapping the intro by `113px`
 - card width: `311px`
 - image height: `189px`
 - cards are contiguous, not separated by 24px gutters
 - card body: `24px 20px 32px`, `16px` internal gap
-- title: `18px`, icon `36px`
+- title: `18px` Zen Kaku Medium, icon `36px`
 - divider: `36px`
-- body copy: `15px / 1.6`
+- body copy: Zen Kaku Regular `15px / 1.6`
 
 ### PC `1603:7370`
 
@@ -57,8 +58,10 @@ The Event family was investigated first because it precedes User Guide. Current 
 - card image height: about `194px`
 - card body is left aligned, not centered
 - card body padding: `24px 32px 32px`
-- title: `20px` serif, icon `36px`
-- body copy: `16px / 1.8`
+- heading JA: Zen Old Mincho Medium `32px`; EN `User guide`: Zen Old Mincho Medium `22px`
+- lead: Zen Kaku Regular `16px`
+- title: `20px` Zen Old Mincho Medium, icon `36px`
+- body copy: Zen Kaku Regular `16px / 1.8`
 
 ## Corrected implementation assumptions
 
@@ -113,6 +116,18 @@ This pass closes the code-level responsive geometry proof for the existing place
 - real WordPress Theme front-page render path: PASS
 
 It still does **not** claim the final production-image visual PASS because the canonical three User Guide photographs are unresolved. Run the final visual diff again after real assets replace `noimage.webp`.
+
+## Current Figma type pass (file `fKYDn9ikpJk1nW7IWFtaUx`)
+
+Geometry QA already matched. LIVE type still used Noto / Crimson via `--font-sansSerif-ja` / `--font-serif-ja` / `--font-serif-en`.
+
+Confirmed split, same pattern as TOP Events:
+
+- SP heading JA is Zen Kaku Medium 30; PC heading JA is Zen Old Mincho Medium 32.
+- SP `User Guide` is Roboto Regular 14 (`--font-sansSerif-en`); PC is Zen Old Mincho Medium 22.
+- Card titles are Kaku 18 on SP and Mincho 20 on PC. Lead/body stay Zen Kaku Regular.
+
+The SP sticky `menu-purpose` (`1360:9370`) is **not** in this pass. Current file measures 375×64, Zen Old Mincho Medium 18, fill `#4e5055`. The existing 56px / 16px / `#333` contract came from an older file key and needs its own PR.
 
 ## Files intentionally untouched
 
