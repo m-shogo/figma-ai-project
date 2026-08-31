@@ -16,6 +16,8 @@ Pages: PC `0:1` / SP `114:5409`
 | Header instance 例 | PC | `2182:8241` | header |
 | Header SP 閉じ | SP | `446:10020` | SP TOP 先頭（header-sp 相当） |
 | Header SP 開き | SP | `2169:10018` | header-sp（menu 2169:10017 内） |
+| Footer コンポーネント | PC | `2106:9471` | footer_subpage |
+| Footer コンポーネント | SP | `2189:10106` | footer-sp |
 | Footer 例 | PC | `1901:14268` | footer_subpage |
 | Footer SP 下層 | SP | `560:2524` / `560:188` 末尾 | news_sp / join_sp |
 | パーツ集 | PC | `1163:4245` | parts |

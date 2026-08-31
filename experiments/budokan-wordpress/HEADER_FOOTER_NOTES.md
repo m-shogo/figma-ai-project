@@ -15,8 +15,8 @@
 | Header PC | `2209:9850` | 左340ダークロゴレール + 白ナビ。h100。GNavi Zen Old Mincho 16px/500 tracking 0.8px、current 600+下線。EN/search/menu 60px角 gap10 radius3。右padding 30 |
 | Header SP 閉じ | `446:10020` | ダーク帯 h60 / logo 140×28 + EN・search・menu 各60px 隙間なし / ハンバーガー |
 | Header SP 開き | `2169:10018` | 同じ3ボタン。menu は赤地に白 × |
-| Footer PC | `1901:14268` | 未再同期。次回 Footer セクションで LIVE 再取得 |
-| Footer SP 下層 | `560:2524` / `560:188` 末尾 | 未再同期。次回 Footer セクションで LIVE 再取得 |
+| Footer PC | `2106:9471` | 白・リンク2列・SNS 40px・金 Page Top 170×60・地図なし |
+| Footer SP | `2189:10106` | 白・SNS 48px・金 Page Top 50px・地図なし。旧ダーク地図フッターは使わない |
 
 色: main `#bf3e2b` / sec `#ca9957` / text `#333` / search `#4e5055` / logo rail `#2c3036`
 
@@ -46,26 +46,23 @@
 - WP に global-nav が無いときは sample 4項目（fallback）
 - PC メガメニュー中身はメニューデータ待ち
 
-## Footer 突き合わせ（今回）
-
-Human: Header 完成。Footer を PC+SP で進める。
+## Footer 突き合わせ（2026-08-31 新 Figma）
 
 正本:
 
-- PC: `footer_subpage` `1901:14268`（白・リンク2列・金 Page Top・地図なし）
-- SP 下層: `news_sp` / `join_sp` 末尾（ダーク・地図・赤 Page Top・sticky お問い合わせ/アクセス）
-- TOP の PC 地図付き footer (`1901:13409`) と TOP sticky「目的から探す」はグローバルに入れない
+- PC: `footer_subpage` `2106:9471`（白・リンク2列・金 Page Top・地図なし）
+- SP: `footer-sp` `2189:10106`（白・SNS・金 Page Top・地図なし）
+- TOP の PC 地図付き footer と TOP sticky「目的から探す」はグローバルに入れない
 
-入れたもの:
+直した差:
 
-- ロゴは Header と同じ紋 + picture（SP 白字 / PC 濃色 wordmark）
-- アクセスアイコンは Figma 書き出し `icon-access.svg`
-- footer-nav / sub-nav 未設定時は Figma 10項目 fallback
-- SP 固定バー: お問い合わせ / アクセス（メニュー開時は隠す）
-- 地図は SP のみ（静止画・グレースケール）。PC 下層には出さない
+- SP ダーク地図フッター → 白・ダーク wordmark・SNS 48px・地図なし
+- SP Page Top 赤 → 金
+- body copy を Zen Kaku Gothic New 14px に合わせる
 
 残:
 
 - SNS / アクセス / 問い合わせの本番 URL は Human 待ち
 - WP メニューが入ったら fallback は消える
+- SP sticky お問い合わせ/アクセスは `footer-sp` に無いが、現行 full-page で廃止証拠が無いため残す
 - TOP 専用 footer（PC 地図・「目的から探す」sticky）は TOP セクションで別途
