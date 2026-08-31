@@ -76,7 +76,9 @@ export async function measureHeadings(page) {
     const mediaFigure = mediaText?.querySelector('.wp-block-media-text__media');
     const mediaLink = mediaFigure?.querySelector('a');
     const caption = mediaText?.querySelector('.wp-element-caption');
-    if (!wrap || !h2 || !h3 || !h4 || !h2Follow || !listItem || !marker || !buttonLink || !detailsTitle || !closedSummary || !closedButton || !plus || !openSummary || !openContent || !openButton || !tableHead || !tableCell || !pageLink || !qaSummary || !qaPlus || !mediaText || !mediaContent || !mediaFigure || !mediaLink || !caption) return null;
+    const navTitle = wrap?.querySelector('.module_navigation.--large .title');
+    const navText = wrap?.querySelector('.module_navigation.--large .text');
+    if (!wrap || !h2 || !h3 || !h4 || !h2Follow || !listItem || !marker || !buttonLink || !detailsTitle || !closedSummary || !closedButton || !plus || !openSummary || !openContent || !openButton || !tableHead || !tableCell || !pageLink || !qaSummary || !qaPlus || !mediaText || !mediaContent || !mediaFigure || !mediaLink || !caption || !navTitle || !navText) return null;
 
     const h2Style = getComputedStyle(h2);
     const h3Style = getComputedStyle(h3);
@@ -103,6 +105,8 @@ export async function measureHeadings(page) {
     const mediaFigureRect = mediaFigure.getBoundingClientRect();
     const captionStyle = getComputedStyle(caption);
     const zoomStyle = getComputedStyle(mediaLink, '::after');
+    const navTitleStyle = getComputedStyle(navTitle);
+    const navTextStyle = getComputedStyle(navText);
 
     return {
       h2Size: h2Style.fontSize,
@@ -170,6 +174,11 @@ export async function measureHeadings(page) {
       captionMarginTop: captionStyle.marginTop,
       zoomSize: zoomStyle.width,
       zoomColor: zoomStyle.backgroundColor,
+      navTitleFamily: navTitleStyle.fontFamily,
+      navTitleSize: navTitleStyle.fontSize,
+      navTitleWeight: navTitleStyle.fontWeight,
+      navTextFamily: navTextStyle.fontFamily,
+      navTextSize: navTextStyle.fontSize,
     };
   });
 }
@@ -219,6 +228,11 @@ export function assertHeadings(measured, band) {
   assert(measured.captionMarginTop === '20px', `${band} caption margin-top expected 20px, got ${measured.captionMarginTop}.`);
   assert(measured.zoomSize === '50px', `${band} media-text zoom expected 50px, got ${measured.zoomSize}.`);
   assert(isDarkZoom(measured.zoomColor), `${band} media-text zoom expected #333 / 70%, got ${measured.zoomColor}.`);
+  assert(isMinchoFamily(measured.navTitleFamily), `${band} navigation-large title must resolve to Zen Old Mincho, got ${measured.navTitleFamily}.`);
+  assert(measured.navTitleSize === '18px', `${band} navigation-large title expected 18px, got ${measured.navTitleSize}.`);
+  assert(measured.navTitleWeight === '600', `${band} navigation-large title expected weight 600, got ${measured.navTitleWeight}.`);
+  assert(isKakuFamily(measured.navTextFamily), `${band} navigation-large copy must resolve to Zen Kaku Gothic New, got ${measured.navTextFamily}.`);
+  assert(measured.navTextSize === '15px', `${band} navigation-large copy expected 15px, got ${measured.navTextSize}.`);
 
   if (band === 'SP') {
     assert(measured.h2Size === '24px', `SP h2 expected 24px, got ${measured.h2Size}.`);
