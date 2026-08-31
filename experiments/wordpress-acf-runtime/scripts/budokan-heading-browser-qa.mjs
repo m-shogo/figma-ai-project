@@ -53,7 +53,9 @@ export async function measureHeadings(page) {
     const openSummary = openDetails?.querySelector('summary');
     const openContent = openDetails?.querySelector('.wp-block-details__content');
     const openButton = openDetails?.querySelector('.wp-block-details__button');
-    if (!wrap || !h2 || !h3 || !h4 || !h2Follow || !listItem || !marker || !buttonLink || !detailsTitle || !closedSummary || !closedButton || !plus || !openSummary || !openContent || !openButton) return null;
+    const tableHead = wrap?.querySelector('.wp-block-table th');
+    const tableCell = wrap?.querySelector('.wp-block-table td');
+    if (!wrap || !h2 || !h3 || !h4 || !h2Follow || !listItem || !marker || !buttonLink || !detailsTitle || !closedSummary || !closedButton || !plus || !openSummary || !openContent || !openButton || !tableHead || !tableCell) return null;
 
     const h2Style = getComputedStyle(h2);
     const h3Style = getComputedStyle(h3);
@@ -69,6 +71,8 @@ export async function measureHeadings(page) {
     const openSummaryStyle = getComputedStyle(openSummary);
     const openContentStyle = getComputedStyle(openContent);
     const openButtonStyle = getComputedStyle(openButton);
+    const tableHeadStyle = getComputedStyle(tableHead);
+    const tableCellStyle = getComputedStyle(tableCell);
 
     return {
       h2Size: h2Style.fontSize,
@@ -111,6 +115,11 @@ export async function measureHeadings(page) {
       detailsOpenContentPadTop: openContentStyle.paddingTop,
       detailsOpenContentPadLeft: openContentStyle.paddingLeft,
       detailsOpenRail: openButtonStyle.width,
+      tableHeadFamily: tableHeadStyle.fontFamily,
+      tableHeadSize: tableHeadStyle.fontSize,
+      tableHeadWeight: tableHeadStyle.fontWeight,
+      tableCellFamily: tableCellStyle.fontFamily,
+      tableCellSize: tableCellStyle.fontSize,
     };
   });
 }
@@ -143,6 +152,10 @@ export function assertHeadings(measured, band) {
   assert(measured.detailsSize === '18px', `${band} details title expected 18px, got ${measured.detailsSize}.`);
   assert(measured.detailsWeight === '600', `${band} details title expected weight 600, got ${measured.detailsWeight}.`);
   assert(measured.detailsPlusColor === 'rgb(191, 62, 43)', `${band} details plus/minus expected primary #bf3e2b, got ${measured.detailsPlusColor}.`);
+  assert(isKakuFamily(measured.tableHeadFamily), `${band} table header must resolve to Zen Kaku Gothic New, got ${measured.tableHeadFamily}.`);
+  assert(isKakuFamily(measured.tableCellFamily), `${band} table cell must resolve to Zen Kaku Gothic New, got ${measured.tableCellFamily}.`);
+  assert(measured.tableHeadSize === '15px' && measured.tableCellSize === '15px', `${band} table expected 15px, got th ${measured.tableHeadSize} / td ${measured.tableCellSize}.`);
+  assert(measured.tableHeadWeight === '400', `${band} table header expected weight 400, got ${measured.tableHeadWeight}.`);
 
   if (band === 'SP') {
     assert(measured.h2Size === '24px', `SP h2 expected 24px, got ${measured.h2Size}.`);
