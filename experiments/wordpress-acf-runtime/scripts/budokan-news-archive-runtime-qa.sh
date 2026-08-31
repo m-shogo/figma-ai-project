@@ -61,7 +61,13 @@ news_id="$(docker compose run --rm cli post create --post_type=page --post_statu
   exit 1
 }
 
-fixed_page_id="$(docker compose run --rm cli post create --post_type=page --post_status=publish --post_title='研修センター' --post_name='budokan-fixed-page-qa' --porcelain)"
+fixed_page_id="$(docker compose run --rm cli post create \
+  --post_type=page \
+  --post_status=publish \
+  --post_title='研修センター' \
+  --post_name='budokan-fixed-page-qa' \
+  --post_content='<h2 class="wp-block-heading">大見出し</h2><p>本文ギャップ確認</p><h3 class="wp-block-heading">中見出し</h3><p>本文ギャップ確認</p><h4 class="wp-block-heading">小見出し</h4><p>本文ギャップ確認</p>' \
+  --porcelain)"
 [[ "$fixed_page_id" =~ ^[0-9]+$ ]] || {
   echo "FAIL could not create image page-title fixture page." >&2
   exit 1
@@ -151,6 +157,10 @@ grep -Fq '_fixedPage' "$fixed_html" || {
 }
 grep -Fq '研修センター' "$fixed_html" || {
   echo "FAIL image page-title fixture heading missing." >&2
+  exit 1
+}
+grep -Fq 'wp-block-heading' "$fixed_html" || {
+  echo "FAIL fixture page did not render Gutenberg heading master markup." >&2
   exit 1
 }
 rm -f "$fixed_html"
