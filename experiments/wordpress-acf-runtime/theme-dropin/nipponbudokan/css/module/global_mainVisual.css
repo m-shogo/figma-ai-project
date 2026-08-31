@@ -3,7 +3,7 @@
 // サイト共通メインビジュアル
 // Current Figma fileKey fKYDn9ikpJk1nW7IWFtaUx
 // - archive/single/search/error: page_title-sp 1399:18544 / page_title-pc 2169:10270
-// - ordinary fixed page: page_title-img family (derivative, not this gold bar)
+// - ordinary fixed page: page_title-img-sp 1465:6339 / page_title-img-pc 1450:5147
 // ========================================================================== */
 .global_mainVisual {
     position: relative;
@@ -52,56 +52,61 @@
     }
 
     /*
-     * Figma SP page_title-img-sp (1468:6598).
-     * The CMS `page_img` field remains the image authority; this modifier only
-     * changes presentation. The authored texture behind the title is not a
-     * durable Theme asset, so the Theme dark/light tokens are used instead of
-     * persisting a short-lived Figma asset URL.
+     * Current Figma page_title-img-sp 1465:6339 / page_title-img-pc 1450:5147.
+     * CMS `page_img` stays the image authority. Title-panel paper texture is not
+     * a durable Theme asset; --color-secondary is the fallback fill.
+     * Title overlaps the photo by negative margin (not Figma-coordinate absolute).
      */
     &._fixedPage {
-        height: 278px;
+        height: auto;
         overflow: visible;
         background-color: transparent;
         color: var(--color-text);
 
         .gm_inner {
-            display: block;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-start;
             position: relative;
             margin: 0;
             padding: 0;
             max-width: none;
             width: 100%;
-            height: 100%;
+            height: auto;
         }
 
         .gm_background {
             display: block;
+            position: relative;
+            top: auto;
+            left: auto;
             z-index: 0;
             width: 100%;
             height: 240px;
 
             &::before {
-                background-color: rgb(0 0 0 / 40%);
+                background-color: transparent;
             }
         }
 
         .gm_title {
             display: flex;
-            align-items: center;
-            position: absolute;
-            top: 199px;
-            left: 0;
+            align-items: flex-end;
+            position: relative;
+            top: auto;
+            left: auto;
             z-index: 2;
-            margin: 0;
-            padding: 24px 20px 24px 24px;
-            width: min(335px, calc(100% - 40px));
-            min-height: 79px;
-            border-radius: 0 3px 3px 0;
-            background-color: var(--color-text);
-            color: var(--color-secondary);
-            font-family: var(--font-sansSerif-ja);
-            font-size: 22px;
-            font-weight: 500;
+            margin: -33px 0 0;
+            padding: 16px 20px 16px 24px;
+            width: min(327px, 100%);
+            min-height: 66px;
+            border-radius: 0 3px 0 0;
+            background-color: var(--color-secondary);
+            color: var(--color-text);
+            font-family: var(--font-zen-old-mincho);
+            font-size: 24px;
+            font-weight: 700;
             line-height: 1.4;
             letter-spacing: 0.05em;
             text-align: left;
@@ -119,30 +124,21 @@
         }
 
         &._fixedPage {
-            height: 321px;
+            height: auto;
 
-            /* Figma PC places the authored image 60px in from the left and
-             * lets it run to the right canvas edge (1320px at 1380 canvas). */
+            /* Photo starts 60px in and runs to the right canvas edge. */
             .gm_background {
-                left: 60px;
+                margin-left: 60px;
                 width: calc(100% - 60px);
                 height: 320px;
-
-                &::before {
-                    background-color: transparent;
-                }
             }
 
             .gm_title {
-                top: 253px;
+                margin-top: -67px;
                 padding: 24px 40px 10px;
                 width: 360px;
                 min-height: 79px;
-                background-color: var(--color-secondary);
-                color: var(--color-text);
-                font-family: var(--font-serif-ja);
                 font-size: 32px;
-                font-weight: 700;
                 text-align: center;
             }
         }
