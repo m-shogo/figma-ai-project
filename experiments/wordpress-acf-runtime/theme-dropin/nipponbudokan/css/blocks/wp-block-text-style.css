@@ -1,6 +1,9 @@
 @charset "utf-8";
 /* // ------------------------------
 // パラグラフ
+// Current Figma fileKey fKYDn9ikpJk1nW7IWFtaUx
+// SP 1399:18729 / PC 1157:8182 — Zen Kaku Gothic New Regular 17 / lh 1.6
+// Marker highlight (1399:18739) is a separate Parts item.
 // ------------------------------ */
 .block-editor_wrap,
 .editor-styles-wrapper {
@@ -17,6 +20,7 @@
         font-size: 1.5rem !important;
     }
     p:is(:not([class]), .wp-block-paragraph, .block-editor-rich-text__editable, .has-text-align-left, .has-text-align-right, .has-text-align-center) {
+        font-family: var(--font-zen-kaku-gothic);
         font-size: 17px;
         font-weight: 400;
         letter-spacing: 0.05em;

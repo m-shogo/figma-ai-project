@@ -6,6 +6,11 @@ function close(actual, expected, tolerance = 2) {
   return Math.abs(actual - expected) <= tolerance;
 }
 
+function isKakuFamily(family) {
+  const value = String(family || '').toLowerCase();
+  return value.includes('kaku');
+}
+
 function isMinchoFamily(family) {
   const value = String(family || '').toLowerCase();
   if (value.includes('sans-serif')) return false;
@@ -40,6 +45,11 @@ export async function measureHeadings(page) {
       h4Family: h4Style.fontFamily,
       h4Gap: h4Style.columnGap || h4Style.gap,
       h2FollowMarginTop: followStyle.marginTop,
+      pFamily: followStyle.fontFamily,
+      pSize: followStyle.fontSize,
+      pWeight: followStyle.fontWeight,
+      pColor: followStyle.color,
+      pLineHeight: followStyle.lineHeight,
     };
   });
 }
@@ -53,6 +63,11 @@ export function assertHeadings(measured, band) {
   assert(measured.h3Size === '20px', `${band} h3 expected 20px, got ${measured.h3Size}.`);
   assert(measured.h4Size === '18px', `${band} h4 expected 18px, got ${measured.h4Size}.`);
   assert(measured.h3Bg === 'rgb(242, 242, 242)', `${band} h3 band expected #f2f2f2, got ${measured.h3Bg}.`);
+  assert(isKakuFamily(measured.pFamily), `${band} paragraph must resolve to Zen Kaku Gothic New, got ${measured.pFamily}.`);
+  assert(measured.pSize === '17px', `${band} paragraph expected 17px, got ${measured.pSize}.`);
+  assert(measured.pWeight === '400', `${band} paragraph expected weight 400, got ${measured.pWeight}.`);
+  assert(measured.pColor === 'rgb(51, 51, 51)', `${band} paragraph expected #333, got ${measured.pColor}.`);
+  assert(close(parseFloat(measured.pLineHeight), 27.2, 1), `${band} paragraph line-height expected ~27.2px, got ${measured.pLineHeight}.`);
 
   if (band === 'SP') {
     assert(measured.h2Size === '24px', `SP h2 expected 24px, got ${measured.h2Size}.`);
