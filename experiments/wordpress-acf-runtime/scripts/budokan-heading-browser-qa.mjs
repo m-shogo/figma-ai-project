@@ -44,7 +44,8 @@ export async function measureHeadings(page) {
     const listItem = wrap?.querySelector('ul.wp-block-list > li');
     const marker = wrap?.querySelector('span[style*="underline"]');
     const buttonLink = wrap?.querySelector('.wp-block-button__link');
-    if (!wrap || !h2 || !h3 || !h4 || !h2Follow || !listItem || !marker || !buttonLink) return null;
+    const detailsTitle = wrap?.querySelector('.wp-block-details__title');
+    if (!wrap || !h2 || !h3 || !h4 || !h2Follow || !listItem || !marker || !buttonLink || !detailsTitle) return null;
 
     const h2Style = getComputedStyle(h2);
     const h3Style = getComputedStyle(h3);
@@ -53,6 +54,7 @@ export async function measureHeadings(page) {
     const listStyle = getComputedStyle(listItem);
     const markerStyle = getComputedStyle(marker);
     const buttonStyle = getComputedStyle(buttonLink);
+    const detailsStyle = getComputedStyle(detailsTitle);
 
     return {
       h2Size: h2Style.fontSize,
@@ -83,6 +85,10 @@ export async function measureHeadings(page) {
       buttonSize: buttonStyle.fontSize,
       buttonWeight: buttonStyle.fontWeight,
       buttonGap: buttonStyle.columnGap || buttonStyle.gap,
+      detailsFamily: detailsStyle.fontFamily,
+      detailsSize: detailsStyle.fontSize,
+      detailsWeight: detailsStyle.fontWeight,
+      detailsTracking: detailsStyle.letterSpacing,
     };
   });
 }
@@ -111,6 +117,9 @@ export function assertHeadings(measured, band) {
   assert(measured.buttonSize === '15px', `${band} button_L expected 15px, got ${measured.buttonSize}.`);
   assert(measured.buttonWeight === '500', `${band} button_L expected weight 500, got ${measured.buttonWeight}.`);
   assert(measured.buttonGap === '8px', `${band} button_L icon/text gap expected 8px, got ${measured.buttonGap}.`);
+  assert(isMinchoFamily(measured.detailsFamily), `${band} details title must resolve to Zen Old Mincho, got ${measured.detailsFamily}.`);
+  assert(measured.detailsSize === '18px', `${band} details title expected 18px, got ${measured.detailsSize}.`);
+  assert(measured.detailsWeight === '600', `${band} details title expected weight 600, got ${measured.detailsWeight}.`);
 
   if (band === 'SP') {
     assert(measured.h2Size === '24px', `SP h2 expected 24px, got ${measured.h2Size}.`);
@@ -118,6 +127,7 @@ export function assertHeadings(measured, band) {
     assert(measured.h4Gap === '12px', `SP h4 gap expected 12px, got ${measured.h4Gap}.`);
     assert(measured.h3PaddingTop === '11px' && measured.h3PaddingLeft === '15px', `SP h3 padding expected 11/15 (border-compensated), got ${measured.h3PaddingTop}/${measured.h3PaddingLeft}.`);
     assert(close(parseFloat(measured.h2FollowMarginTop), 28), `SP h2→p gap expected 28px, got ${measured.h2FollowMarginTop}.`);
+    assert(close(parseFloat(measured.detailsTracking), 0.9, 0.15), `SP details tracking expected ~0.9px, got ${measured.detailsTracking}.`);
     return;
   }
 
@@ -126,4 +136,5 @@ export function assertHeadings(measured, band) {
   assert(measured.h4Gap === '16px', `PC h4 gap expected 16px, got ${measured.h4Gap}.`);
   assert(measured.h3PaddingTop === '15px' && measured.h3PaddingLeft === '19px', `PC h3 padding expected 15/19 (border-compensated), got ${measured.h3PaddingTop}/${measured.h3PaddingLeft}.`);
   assert(close(parseFloat(measured.h2FollowMarginTop), 32), `PC h2→p gap expected 32px, got ${measured.h2FollowMarginTop}.`);
+  assert(close(parseFloat(measured.detailsTracking), 1.8, 0.2), `PC details tracking expected ~1.8px, got ${measured.detailsTracking}.`);
 }
