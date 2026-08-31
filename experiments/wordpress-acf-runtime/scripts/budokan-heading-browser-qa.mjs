@@ -45,7 +45,15 @@ export async function measureHeadings(page) {
     const marker = wrap?.querySelector('span[style*="underline"]');
     const buttonLink = wrap?.querySelector('.wp-block-button__link');
     const detailsTitle = wrap?.querySelector('.wp-block-details__title');
-    if (!wrap || !h2 || !h3 || !h4 || !h2Follow || !listItem || !marker || !buttonLink || !detailsTitle) return null;
+    const closedDetails = wrap?.querySelector('.wp-block-details:not([open])');
+    const openDetails = wrap?.querySelector('.wp-block-details[open]');
+    const closedSummary = closedDetails?.querySelector('summary');
+    const closedButton = closedDetails?.querySelector('.wp-block-details__button');
+    const plus = closedDetails?.querySelector('.wp-block-details__button span');
+    const openSummary = openDetails?.querySelector('summary');
+    const openContent = openDetails?.querySelector('.wp-block-details__content');
+    const openButton = openDetails?.querySelector('.wp-block-details__button');
+    if (!wrap || !h2 || !h3 || !h4 || !h2Follow || !listItem || !marker || !buttonLink || !detailsTitle || !closedSummary || !closedButton || !plus || !openSummary || !openContent || !openButton) return null;
 
     const h2Style = getComputedStyle(h2);
     const h3Style = getComputedStyle(h3);
@@ -55,6 +63,12 @@ export async function measureHeadings(page) {
     const markerStyle = getComputedStyle(marker);
     const buttonStyle = getComputedStyle(buttonLink);
     const detailsStyle = getComputedStyle(detailsTitle);
+    const closedSummaryStyle = getComputedStyle(closedSummary);
+    const closedButtonStyle = getComputedStyle(closedButton);
+    const plusStyle = getComputedStyle(plus, '::before');
+    const openSummaryStyle = getComputedStyle(openSummary);
+    const openContentStyle = getComputedStyle(openContent);
+    const openButtonStyle = getComputedStyle(openButton);
 
     return {
       h2Size: h2Style.fontSize,
@@ -89,6 +103,14 @@ export async function measureHeadings(page) {
       detailsSize: detailsStyle.fontSize,
       detailsWeight: detailsStyle.fontWeight,
       detailsTracking: detailsStyle.letterSpacing,
+      detailsClosedPadTop: closedSummaryStyle.paddingTop,
+      detailsClosedPadLeft: closedSummaryStyle.paddingLeft,
+      detailsClosedRail: closedButtonStyle.width,
+      detailsPlusColor: plusStyle.backgroundColor,
+      detailsOpenPadLeft: openSummaryStyle.paddingLeft,
+      detailsOpenContentPadTop: openContentStyle.paddingTop,
+      detailsOpenContentPadLeft: openContentStyle.paddingLeft,
+      detailsOpenRail: openButtonStyle.width,
     };
   });
 }
@@ -120,6 +142,7 @@ export function assertHeadings(measured, band) {
   assert(isMinchoFamily(measured.detailsFamily), `${band} details title must resolve to Zen Old Mincho, got ${measured.detailsFamily}.`);
   assert(measured.detailsSize === '18px', `${band} details title expected 18px, got ${measured.detailsSize}.`);
   assert(measured.detailsWeight === '600', `${band} details title expected weight 600, got ${measured.detailsWeight}.`);
+  assert(measured.detailsPlusColor === 'rgb(191, 62, 43)', `${band} details plus/minus expected primary #bf3e2b, got ${measured.detailsPlusColor}.`);
 
   if (band === 'SP') {
     assert(measured.h2Size === '24px', `SP h2 expected 24px, got ${measured.h2Size}.`);
@@ -128,6 +151,9 @@ export function assertHeadings(measured, band) {
     assert(measured.h3PaddingTop === '11px' && measured.h3PaddingLeft === '15px', `SP h3 padding expected 11/15 (border-compensated), got ${measured.h3PaddingTop}/${measured.h3PaddingLeft}.`);
     assert(close(parseFloat(measured.h2FollowMarginTop), 28), `SP h2→p gap expected 28px, got ${measured.h2FollowMarginTop}.`);
     assert(close(parseFloat(measured.detailsTracking), 0.9, 0.15), `SP details tracking expected ~0.9px, got ${measured.detailsTracking}.`);
+    assert(measured.detailsClosedPadTop === '16px' && measured.detailsClosedPadLeft === '20px', `SP closed details title padding expected 16/20, got ${measured.detailsClosedPadTop}/${measured.detailsClosedPadLeft}.`);
+    assert(measured.detailsClosedRail === '59px' && measured.detailsOpenRail === '59px', `SP details rail expected 59px, got closed ${measured.detailsClosedRail} / open ${measured.detailsOpenRail}.`);
+    assert(measured.detailsOpenContentPadTop === '20px' && measured.detailsOpenContentPadLeft === '20px', `SP open details content padding expected 20, got ${measured.detailsOpenContentPadTop}/${measured.detailsOpenContentPadLeft}.`);
     return;
   }
 
@@ -137,4 +163,8 @@ export function assertHeadings(measured, band) {
   assert(measured.h3PaddingTop === '15px' && measured.h3PaddingLeft === '19px', `PC h3 padding expected 15/19 (border-compensated), got ${measured.h3PaddingTop}/${measured.h3PaddingLeft}.`);
   assert(close(parseFloat(measured.h2FollowMarginTop), 32), `PC h2→p gap expected 32px, got ${measured.h2FollowMarginTop}.`);
   assert(close(parseFloat(measured.detailsTracking), 1.8, 0.2), `PC details tracking expected ~1.8px, got ${measured.detailsTracking}.`);
+  assert(measured.detailsClosedPadTop === '24px' && measured.detailsClosedPadLeft === '24px', `PC closed details title padding expected 24/24, got ${measured.detailsClosedPadTop}/${measured.detailsClosedPadLeft}.`);
+  assert(measured.detailsClosedRail === '68px' && measured.detailsOpenRail === '68px', `PC details rail expected 68px, got closed ${measured.detailsClosedRail} / open ${measured.detailsOpenRail}.`);
+  assert(measured.detailsOpenPadLeft === '32px', `PC open details title padding-left expected 32px, got ${measured.detailsOpenPadLeft}.`);
+  assert(measured.detailsOpenContentPadTop === '32px' && measured.detailsOpenContentPadLeft === '32px', `PC open details content padding expected 32, got ${measured.detailsOpenContentPadTop}/${measured.detailsOpenContentPadLeft}.`);
 }

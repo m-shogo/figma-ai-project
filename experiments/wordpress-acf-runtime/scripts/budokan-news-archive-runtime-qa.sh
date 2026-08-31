@@ -66,7 +66,7 @@ fixed_page_id="$(docker compose run --rm cli post create \
   --post_status=publish \
   --post_title='研修センター' \
   --post_name='budokan-fixed-page-qa' \
-  --post_content='<h2 class="wp-block-heading">大見出し</h2><p>本文ギャップ確認</p><h3 class="wp-block-heading">中見出し</h3><p>本文ギャップ確認</p><h4 class="wp-block-heading">小見出し</h4><p>本文ギャップ確認<span style="text-decoration: underline;">下線確認</span></p><ul class="wp-block-list"><li>番号なしリスト</li></ul><div class="wp-block-buttons"><div class="wp-block-button"><a class="wp-block-button__link">施設概要</a></div></div><!-- wp:details --><details class="wp-block-details"><summary>通常アコーディオン</summary><p>展開確認</p></details><!-- /wp:details -->' \
+  --post_content='<h2 class="wp-block-heading">大見出し</h2><p>本文ギャップ確認</p><h3 class="wp-block-heading">中見出し</h3><p>本文ギャップ確認</p><h4 class="wp-block-heading">小見出し</h4><p>本文ギャップ確認<span style="text-decoration: underline;">下線確認</span></p><ul class="wp-block-list"><li>番号なしリスト</li></ul><div class="wp-block-buttons"><div class="wp-block-button"><a class="wp-block-button__link">施設概要</a></div></div><!-- wp:details --><details class="wp-block-details"><summary>通常アコーディオン</summary><p>展開確認</p></details><!-- /wp:details --><!-- wp:details {"showContent":true} --><details class="wp-block-details" open><summary>タイトルが入ります</summary><p>展開確認</p></details><!-- /wp:details -->' \
   --porcelain)"
 [[ "$fixed_page_id" =~ ^[0-9]+$ ]] || {
   echo "FAIL could not create image page-title fixture page." >&2
