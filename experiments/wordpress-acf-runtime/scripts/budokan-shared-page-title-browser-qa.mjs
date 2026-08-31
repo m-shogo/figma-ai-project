@@ -182,6 +182,7 @@ try {
   console.log('PASS Budokan Gutenberg paragraph Zen Kaku Gothic New 17px / lh 1.6 current Figma contract.');
   console.log('PASS Budokan Gutenberg list Zen Kaku 17px / 18px inset current Figma contract.');
   console.log('PASS Budokan Gutenberg marker gold 8px overlay current Figma contract.');
+  console.log('PASS Budokan Gutenberg button_L Zen Kaku 15px / gap 8 current Figma contract.');
 } finally {
   await browser.close();
 }

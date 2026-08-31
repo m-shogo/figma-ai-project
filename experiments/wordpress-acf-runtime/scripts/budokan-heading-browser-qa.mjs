@@ -43,7 +43,8 @@ export async function measureHeadings(page) {
     const h2Follow = h2?.nextElementSibling;
     const listItem = wrap?.querySelector('ul.wp-block-list > li');
     const marker = wrap?.querySelector('span[style*="underline"]');
-    if (!wrap || !h2 || !h3 || !h4 || !h2Follow || !listItem || !marker) return null;
+    const buttonLink = wrap?.querySelector('.wp-block-button__link');
+    if (!wrap || !h2 || !h3 || !h4 || !h2Follow || !listItem || !marker || !buttonLink) return null;
 
     const h2Style = getComputedStyle(h2);
     const h3Style = getComputedStyle(h3);
@@ -51,6 +52,7 @@ export async function measureHeadings(page) {
     const followStyle = getComputedStyle(h2Follow);
     const listStyle = getComputedStyle(listItem);
     const markerStyle = getComputedStyle(marker);
+    const buttonStyle = getComputedStyle(buttonLink);
 
     return {
       h2Size: h2Style.fontSize,
@@ -77,6 +79,10 @@ export async function measureHeadings(page) {
       markerDecoration: markerStyle.textDecorationLine,
       markerImage: markerStyle.backgroundImage,
       markerSize: markerStyle.backgroundSize,
+      buttonFamily: buttonStyle.fontFamily,
+      buttonSize: buttonStyle.fontSize,
+      buttonWeight: buttonStyle.fontWeight,
+      buttonGap: buttonStyle.columnGap || buttonStyle.gap,
     };
   });
 }
@@ -101,6 +107,10 @@ export function assertHeadings(measured, band) {
   assert(measured.markerDecoration === 'none', `${band} marker must not keep a CSS underline, got ${measured.markerDecoration}.`);
   assert(isGoldMarker(measured.markerImage), `${band} marker expected gold #ca9957 overlay, got ${measured.markerImage}.`);
   assert(markerTileOk(measured.markerSize), `${band} marker tile expected 1.6em (~27.2px), got ${measured.markerSize}.`);
+  assert(isKakuFamily(measured.buttonFamily), `${band} button_L must resolve to Zen Kaku Gothic New, got ${measured.buttonFamily}.`);
+  assert(measured.buttonSize === '15px', `${band} button_L expected 15px, got ${measured.buttonSize}.`);
+  assert(measured.buttonWeight === '500', `${band} button_L expected weight 500, got ${measured.buttonWeight}.`);
+  assert(measured.buttonGap === '8px', `${band} button_L icon/text gap expected 8px, got ${measured.buttonGap}.`);
 
   if (band === 'SP') {
     assert(measured.h2Size === '24px', `SP h2 expected 24px, got ${measured.h2Size}.`);
