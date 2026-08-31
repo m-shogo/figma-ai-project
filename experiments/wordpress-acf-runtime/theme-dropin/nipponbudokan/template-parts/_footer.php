@@ -5,9 +5,9 @@
             <p class="gf_logo">
                 <a href="<?php echo esc_url(home_url('/')); ?>" aria-label="<?php echo esc_attr(get_bloginfo('name')); ?>">
                     <img class="gf_logo_mark" src="<?php echo esc_url($theme_uri . '/images/common/logo-mark.svg'); ?>" alt="" width="52" height="50" decoding="async" loading="lazy">
-                    <picture class="gf_logo_name">
-                        <source media="(min-width: 768px)" srcset="<?php echo esc_url($theme_uri . '/images/common/logo-wordmark-dark.svg'); ?>" width="192" height="45">
-                        <img src="<?php echo esc_url($theme_uri . '/images/common/logo-wordmark-sp-inverse.svg'); ?>" alt="" width="137" height="32" decoding="async" loading="lazy">
+                <picture class="gf_logo_name">
+                    <source media="(min-width: 768px)" srcset="<?php echo esc_url($theme_uri . '/images/common/logo-wordmark-dark.svg'); ?>" width="192" height="45">
+                    <img src="<?php echo esc_url($theme_uri . '/images/common/logo-wordmark-dark.svg'); ?>" alt="" width="148" height="35" decoding="async" loading="lazy">
                     </picture>
                 </a>
             </p>
