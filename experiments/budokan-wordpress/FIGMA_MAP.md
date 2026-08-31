@@ -22,6 +22,8 @@ Pages: PC `0:1` / SP `114:5409`
 | Page Title | SP | `1399:18544` | page_title-sp（金帯 180 / Mincho 24 Bold 白） |
 | Page Title 画像付き | PC | `1450:5147` | page_title-img-pc（写真 1320×320 @x60 / 白 Mincho 32 パネル 360×79） |
 | Page Title 画像付き | SP | `1465:6339` | page_title-img-sp（写真 375×240 / 白 Mincho 24 パネル 327×66 @y207） |
+| Breadcrumb | PC | `1235:6479` | bread（Zen Kaku 13 / gap 10 / px 64 py 24） |
+| Breadcrumb | SP | `1451:5316` | bread（Zen Kaku 13 / gap 8 / px 24 py 20） |
 | Footer 例 | PC | `1901:14268` | footer_subpage |
 | Footer SP 下層 | SP | `560:2524` / `560:188` 末尾 | news_sp / join_sp |
 | パーツ集 | PC | `1163:4245` | parts |
