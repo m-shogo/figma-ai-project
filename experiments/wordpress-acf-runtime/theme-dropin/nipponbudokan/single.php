@@ -87,16 +87,31 @@ if (get_field('post_type') === 'file') {
                             <?php the_content(); ?>
                         </div>
 
-                        <?php
-                        $postType = get_post_type_object(get_post_type());
-                        $back_link = get_post_type() === 'post'
-                            ? get_permalink(get_option('page_for_posts'))
-                            : home_url('/' . $postType->name . '/');
-                        ?>
                         <ul class="module_pager-02">
+                            <?php
+                            // ACF「投稿選択」が「記事（post）」の投稿のみを前後ナビの対象とする
+                            $prev_post = get_adjacent_article_post('previous');
+                            $next_post = get_adjacent_article_post('next');
+                            $post_Type = esc_html(get_post_type_object(get_post_type())->name);
+                            ?>
+                            <?php if ($prev_post): ?>
+                                <li class="prev">
+                                    <a href="<?php echo esc_url(get_permalink($prev_post->ID)); ?>"><span>前へ</span></a>
+                                </li>
+                            <?php else: ?>
+                                <li class="prev _hidden"><span>前へ</span></li>
+                            <?php endif; ?>
+                            <?php $back_link = get_post_type() === 'post' ? get_permalink(get_option('page_for_posts')) : home_url() . '/' . $post_Type . '/'; ?>
                             <li class="back">
                                 <a href="<?php echo esc_url($back_link); ?>"><span>一覧へ戻る</span></a>
                             </li>
+                            <?php if ($next_post): ?>
+                                <li class="next">
+                                    <a href="<?php echo esc_url(get_permalink($next_post->ID)); ?>"><span>次へ</span></a>
+                                </li>
+                            <?php else: ?>
+                                <li class="next _hidden"><span>次へ</span></li>
+                            <?php endif; ?>
                         </ul>
                     </div>
                 </div>
