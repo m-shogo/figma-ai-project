@@ -86,20 +86,28 @@ records:
       - This is not a ban on override files or multiple stylesheets.
 
   - learning_id: OBS-REF001-FIGMA-PROVENANCE
-    summary: Section and asset mappings back to Figma node evidence appear to reduce rediscovery cost and help separate source mismatch from crop, layout, or mechanism mismatch.
+    summary: Section and asset mappings back to current Figma node evidence reduce rediscovery and help prevent stale source identity from being mistaken for current implementation authority.
     category: FIGMA_PROVENANCE
     applicability:
-      scope: REFERENCE
+      scope: CROSS_REFERENCE
       conditions:
-        - Source node identity is available and stable enough to record.
+        - Figma is an implementation authority and source node/file identity can be recorded and re-resolved.
+        - Audits, handoffs, or implementation records may outlive a Figma file or node revision.
       exclusions:
         - Do not invent mappings when the current Figma capability cannot prove them.
-    promotion_state: null
+        - Historical node lineage may remain useful evidence but must not be silently promoted to current authority.
+    promotion_state: CANDIDATE
     promotion:
-      candidate: false
-      rationale: Benefit is plausible and observed, but direct Human Correction Cost impact remains unmeasured.
+      candidate: true
+      rationale: >-
+        REF-001 showed that explicit section/asset provenance made source mismatch easier to diagnose.
+        Budokan independently reproduced the failure boundary when a dependency audit still named an old
+        Figma file as canonical and treated old mobile evidence too strongly; a live current-file re-scan
+        corrected the audit before new implementation was built from stale evidence. This is enough for a
+        cross-reference candidate, but not yet for ACTIVE because measured repair-cost reduction is limited.
       blocked_by:
-        - Independent-design evidence measuring rediscovery or repair effort.
+        - Measure rediscovery/rework reduction on another implementation or clean replay that consumes the candidate prospectively.
+        - Confirm the rule remains lightweight when Figma authority changes frequently or node IDs are intentionally unstable.
       contradiction_review: ''
     evidence:
       supports:
@@ -117,8 +125,21 @@ records:
           path: references/chiba-keizai-sample.structure-profile.yaml
           commit: ''
           note: Current structured evidence keeps Figma section identity externalized instead of relying on memory.
+        - evidence_id: EV-BUDOKAN-PARTS-AUTHORITY-REFRESH-20260902
+          kind: CANONICAL_DOC
+          reference_id: BUDOKAN-WORDPRESS
+          run_id: ''
+          path: experiments/budokan-wordpress/PARTS_REMAINING_DEPENDENCY_AUDIT.md
+          commit: ''
+          note: >-
+            Budokan independently exposed stale provenance: the audit still named the superseded w7SG Figma
+            file as canonical and overstated old SP Local Navigation parity. Live retrieval from current
+            fKYDn9ikpJk1nW7IWFtaUx verified the surviving Slider nodes and the audit was corrected before
+            implementation continued.
       contradicts: []
-    notes: []
+    notes:
+      - Candidate means re-resolve current authority at decision boundaries; it does not require deleting historical lineage.
+      - Keep current-file/page verification separate from assuming every saved node ID remains valid forever.
 
   - learning_id: OBS-REF001-OBSERVATION-COVERAGE-LINEAGE
     summary: Externalizing a small fixed set of source-observation classes and pinning that evidence through execution boundaries reduces the chance that an agent silently forgets visible media, decoration, responsive variants, or states.
