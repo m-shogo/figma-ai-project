@@ -36,3 +36,12 @@ retest_triggers:
   - "major Figma MCP or design-to-code capability change"
   - "major agent/model generation change"
   - "new reference with materially different typography or localization constraints"
+promotion_review:
+  last_reviewed_at: "2026-09-02"
+  next_review_at: "2026-09-16"
+  status: RETEST_REQUIRED
+  reason: "The rule has strong REF-001 runtime evidence but still lacks an independent second-reference implementation outcome."
+  trigger: "Review immediately when another reference exercises static-frame fidelity versus runtime wrapping/overflow behavior."
+  evidence_needed:
+    - "Independent second-reference implementation or clean-replay outcome"
+    - "Measured wrapping/overflow result showing the rule reduces overfit without losing required fidelity"
