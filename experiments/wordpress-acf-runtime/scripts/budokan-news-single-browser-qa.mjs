@@ -77,6 +77,8 @@ async function measure(page) {
       borderColor: style.borderTopColor,
       background: style.backgroundColor,
       color: style.color,
+      family: style.fontFamily,
+      weight: style.fontWeight,
       iconContent: iconStyle.content,
       iconColor: iconStyle.color,
       prevDisplay: prevStyle.display,
@@ -124,6 +126,8 @@ try {
   assert(sp.borderColor === 'rgb(215, 212, 212)', `SP return border expected Figma separator, got ${sp.borderColor}.`);
   assert(sp.background === 'rgb(255, 255, 255)', `SP return background expected white, got ${sp.background}.`);
   assert(sp.color === 'rgb(51, 51, 51)', `SP return text expected #333, got ${sp.color}.`);
+  assert(isKakuFamily(sp.family), `SP return label must resolve to Zen Kaku Gothic New, got ${sp.family}.`);
+  assert(sp.weight === '500', `SP return label expected Medium, got ${sp.weight}.`);
   assert(sp.iconContent && sp.iconContent !== 'none' && sp.iconContent !== 'normal', `SP list icon must be generated; got ${sp.iconContent}.`);
   assert(sp.iconColor === 'rgb(191, 62, 43)', `SP list icon expected main red, got ${sp.iconColor}.`);
   assert(sp.prevDisplay === 'none' && sp.nextDisplay === 'none', `SP absent adjacent controls must remain display:none; prev=${sp.prevDisplay}, next=${sp.nextDisplay}.`);
@@ -158,6 +162,8 @@ try {
   assert(pc.borderColor === 'rgb(215, 212, 212)', `PC return border expected Figma separator, got ${pc.borderColor}.`);
   assert(pc.background === 'rgb(255, 255, 255)', `PC return background expected white, got ${pc.background}.`);
   assert(pc.color === 'rgb(51, 51, 51)', `PC return text expected #333, got ${pc.color}.`);
+  assert(isKakuFamily(pc.family), `PC return label must resolve to Zen Kaku Gothic New, got ${pc.family}.`);
+  assert(pc.weight === '500', `PC return label expected Medium, got ${pc.weight}.`);
   assert(pc.iconContent && pc.iconContent !== 'none' && pc.iconContent !== 'normal', `PC list icon must be generated; got ${pc.iconContent}.`);
   assert(pc.iconColor === 'rgb(191, 62, 43)', `PC list icon expected main red, got ${pc.iconColor}.`);
   assert(pc.prevDisplay === 'block' && pc.prevVisibility === 'hidden', `PC previous placeholder must preserve layout reservation; display=${pc.prevDisplay}, visibility=${pc.prevVisibility}.`);
