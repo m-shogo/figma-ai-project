@@ -92,7 +92,17 @@ if (get_field('post_type') === 'file') {
                             // ACF「投稿選択」が「記事（post）」の投稿のみを前後ナビの対象とする
                             $prev_post = get_adjacent_article_post('previous');
                             $next_post = get_adjacent_article_post('next');
-                            $post_Type = esc_html(get_post_type_object(get_post_type())->name);
+                            $current_post_type = get_post_type();
+
+                            if ($current_post_type === 'post') {
+                                $posts_page_id = (int) get_option('page_for_posts');
+                                $back_link = $posts_page_id ? get_permalink($posts_page_id) : home_url('/');
+                            } else {
+                                $back_link = get_post_type_archive_link($current_post_type);
+                                if (!$back_link) {
+                                    $back_link = home_url('/');
+                                }
+                            }
                             ?>
                             <?php if ($prev_post): ?>
                                 <li class="prev">
@@ -101,7 +111,6 @@ if (get_field('post_type') === 'file') {
                             <?php else: ?>
                                 <li class="prev _hidden"><span>前へ</span></li>
                             <?php endif; ?>
-                            <?php $back_link = get_post_type() === 'post' ? get_permalink(get_option('page_for_posts')) : home_url() . '/' . $post_Type . '/'; ?>
                             <li class="back">
                                 <a href="<?php echo esc_url($back_link); ?>"><span>一覧へ戻る</span></a>
                             </li>
