@@ -1,0 +1,48 @@
+name: Frontend Learning Promotion Review
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Monday 00:20 JST (Sunday 15:20 UTC)
+    - cron: '20 15 * * 0'
+  pull_request:
+    branches:
+      - so
+    paths:
+      - 'research/frontend-learning-evidence*.yaml'
+      - 'experiments/**/*.yaml'
+      - 'scripts/audit_frontend_learning_capture.py'
+      - 'scripts/audit_frontend_learning_promotion_queue.py'
+      - 'scripts/validate_frontend_learning_evidence.py'
+      - 'schemas/frontend-learning-evidence.schema.json'
+      - 'docs/frontend-learning-promotion-cadence.md'
+      - 'docs/frontend-visual-repair-learning-loop.md'
+
+permissions:
+  contents: read
+
+jobs:
+  learning-promotion-review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install validation dependencies
+        run: python -m pip install -r requirements-dev.txt
+
+      - name: Validate learning evidence index
+        run: python scripts/validate_frontend_learning_evidence.py
+
+      - name: Verify reusable lessons are indexed
+        run: python scripts/audit_frontend_learning_capture.py
+
+      - name: Fail when promotion review is due
+        run: python scripts/audit_frontend_learning_promotion_queue.py --fail-on-due
