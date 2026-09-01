@@ -41,3 +41,12 @@ retest_triggers:
   - "major Figma prototype inspection capability change"
   - "new reference containing explicit interaction and hidden-record evidence"
   - "major agent/model generation change"
+promotion_review:
+  last_reviewed_at: "2026-09-02"
+  next_review_at: "2026-09-16"
+  status: RETEST_REQUIRED
+  reason: "Two-reference decision-boundary evidence exists, but the second reference still lacks a measured implementation/clean-replay outcome."
+  trigger: "Review immediately when REF-002 or another reference completes explicit-interaction implementation and runtime QA."
+  evidence_needed:
+    - "Measured second-reference interaction implementation outcome"
+    - "Evidence that avoiding inferred behavior reduces rework without blocking required interaction"
