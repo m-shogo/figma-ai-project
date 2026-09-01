@@ -76,10 +76,11 @@ export async function measureHeadings(page) {
     const mediaFigure = mediaText?.querySelector('.wp-block-media-text__media');
     const mediaLink = mediaFigure?.querySelector('a');
     const caption = mediaText?.querySelector('.wp-element-caption');
+    const galleryCaption = wrap?.querySelector('.wp-block-gallery .wp-element-caption');
     const navTitle = wrap?.querySelector('.module_navigation.--large .title');
     const navText = wrap?.querySelector('.module_navigation.--large .text');
     const tabButton = wrap?.querySelector('.module_tab-wrapper .tab-button');
-    if (!wrap || !h2 || !h3 || !h4 || !h2Follow || !listItem || !marker || !buttonLink || !detailsTitle || !closedSummary || !closedButton || !plus || !openSummary || !openContent || !openButton || !tableHead || !tableCell || !pageLink || !qaSummary || !qaPlus || !mediaText || !mediaContent || !mediaFigure || !mediaLink || !caption || !navTitle || !navText || !tabButton) return null;
+    if (!wrap || !h2 || !h3 || !h4 || !h2Follow || !listItem || !marker || !buttonLink || !detailsTitle || !closedSummary || !closedButton || !plus || !openSummary || !openContent || !openButton || !tableHead || !tableCell || !pageLink || !qaSummary || !qaPlus || !mediaText || !mediaContent || !mediaFigure || !mediaLink || !caption || !galleryCaption || !navTitle || !navText || !tabButton) return null;
 
     const h2Style = getComputedStyle(h2);
     const h3Style = getComputedStyle(h3);
@@ -105,6 +106,7 @@ export async function measureHeadings(page) {
     const mediaContentRect = mediaContent.getBoundingClientRect();
     const mediaFigureRect = mediaFigure.getBoundingClientRect();
     const captionStyle = getComputedStyle(caption);
+    const galleryCaptionStyle = getComputedStyle(galleryCaption);
     const zoomStyle = getComputedStyle(mediaLink, '::after');
     const navTitleStyle = getComputedStyle(navTitle);
     const navTextStyle = getComputedStyle(navText);
@@ -174,6 +176,11 @@ export async function measureHeadings(page) {
       captionWeight: captionStyle.fontWeight,
       captionColor: captionStyle.color,
       captionMarginTop: captionStyle.marginTop,
+      galleryCaptionFamily: galleryCaptionStyle.fontFamily,
+      galleryCaptionSize: galleryCaptionStyle.fontSize,
+      galleryCaptionWeight: galleryCaptionStyle.fontWeight,
+      galleryCaptionColor: galleryCaptionStyle.color,
+      galleryCaptionMarginTop: galleryCaptionStyle.marginTop,
       zoomSize: zoomStyle.width,
       zoomColor: zoomStyle.backgroundColor,
       navTitleFamily: navTitleStyle.fontFamily,
@@ -231,6 +238,11 @@ export function assertHeadings(measured, band) {
   assert(measured.captionWeight === '500', `${band} caption expected weight 500, got ${measured.captionWeight}.`);
   assert(measured.captionColor === 'rgb(51, 51, 51)', `${band} caption expected #333, got ${measured.captionColor}.`);
   assert(measured.captionMarginTop === '20px', `${band} caption margin-top expected 20px, got ${measured.captionMarginTop}.`);
+  assert(isKakuFamily(measured.galleryCaptionFamily), `${band} gallery caption must resolve to Zen Kaku Gothic New, got ${measured.galleryCaptionFamily}.`);
+  assert(measured.galleryCaptionSize === '14px', `${band} gallery caption expected 14px, got ${measured.galleryCaptionSize}.`);
+  assert(measured.galleryCaptionWeight === '500', `${band} gallery caption expected weight 500, got ${measured.galleryCaptionWeight}.`);
+  assert(measured.galleryCaptionColor === 'rgb(51, 51, 51)', `${band} gallery caption expected #333, got ${measured.galleryCaptionColor}.`);
+  assert(measured.galleryCaptionMarginTop === '20px', `${band} gallery caption margin-top expected 20px, got ${measured.galleryCaptionMarginTop}.`);
   assert(measured.zoomSize === '50px', `${band} media-text zoom expected 50px, got ${measured.zoomSize}.`);
   assert(isDarkZoom(measured.zoomColor), `${band} media-text zoom expected #333 / 70%, got ${measured.zoomColor}.`);
   assert(isMinchoFamily(measured.navTitleFamily), `${band} navigation-large title must resolve to Zen Old Mincho, got ${measured.navTitleFamily}.`);

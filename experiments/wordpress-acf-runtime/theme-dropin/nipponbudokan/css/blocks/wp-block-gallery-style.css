@@ -1,6 +1,10 @@
 @charset "utf-8";
 /* // ------------------------------
 // ギャラリー
+// Current Figma fileKey fKYDn9ikpJk1nW7IWFtaUx
+// Caption master is Parts image+caption 1157:8217 / SP 1399:18759
+// (Zen Kaku Medium 14 / #333 / gap 20). Gallery has no separate Parts
+// caption specimen; reuse the image caption owner, do not keep WP overlay red.
 // ------------------------------ */
 .block-editor_wrap,
 .editor-styles-wrapper {
@@ -27,14 +31,19 @@
                 &:has(figcaption) {
                     .wp-element-caption {
                         background: none;
-                        color: var(--color-primary);
+                        color: var(--color-text);
                         text-shadow: unset;
                         position: initial;
                         padding: 0;
                         flex-basis: unset;
                         flex-grow: unset;
-                        margin-top: var(--wp-block-margin-small);
-                        /* margin-bottom: 24px; */
+                        margin-top: 20px;
+                        text-align: center;
+                        font-family: var(--font-zen-kaku-gothic);
+                        font-size: 14px;
+                        font-weight: 500;
+                        line-height: 1.6;
+                        letter-spacing: 0.05em;
                     }
                     &::before {
                         content: none; /* デフォルトのブラー効果を削除 */
