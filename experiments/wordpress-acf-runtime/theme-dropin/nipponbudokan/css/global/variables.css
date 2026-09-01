@@ -186,7 +186,10 @@
     --icon-chevron-down: '\f078';
     --icon-angle-down: '\f107';
     --icon-arrow-right: '\f061';
-    --clip-octagon: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+    --icon-arrow-down: '\f063';
+    /* Vertices on the cardinal axes (N/E/S/W). Human authority 2026-09-01:
+       Figma ico_octagon / CSS stop-sign flats were rotated a half-step. */
+    --clip-octagon: polygon(50% 0%, 85.355% 14.645%, 100% 50%, 85.355% 85.355%, 50% 100%, 14.645% 85.355%, 0% 50%, 14.645% 14.645%);
 }
 
 /* ==========================================================================

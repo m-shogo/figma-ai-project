@@ -55,7 +55,9 @@ export async function measureHeadings(page) {
     const h2Follow = h2?.nextElementSibling;
     const listItem = wrap?.querySelector('ul.wp-block-list > li');
     const marker = wrap?.querySelector('span[style*="underline"]');
-    const buttonLink = wrap?.querySelector('.wp-block-button__link');
+    const buttonLink = wrap?.querySelector('.wp-block-button:not(.is-style-outline) .wp-block-button__link');
+    const outlineLink = wrap?.querySelector('.wp-block-button.is-style-outline .wp-block-button__link');
+    const grayBox = wrap?.querySelector('.has-gray-background-color.has-background');
     const detailsTitle = wrap?.querySelector('.wp-block-details__title');
     const closedDetails = wrap?.querySelector('.wp-block-details:not([open])');
     const openDetails = wrap?.querySelector('.wp-block-details[open]');
@@ -80,15 +82,19 @@ export async function measureHeadings(page) {
     const navTitle = wrap?.querySelector('.module_navigation.--large .title');
     const navText = wrap?.querySelector('.module_navigation.--large .text');
     const tabButton = wrap?.querySelector('.module_tab-wrapper .tab-button');
-    if (!wrap || !h2 || !h3 || !h4 || !h2Follow || !listItem || !marker || !buttonLink || !detailsTitle || !closedSummary || !closedButton || !plus || !openSummary || !openContent || !openButton || !tableHead || !tableCell || !pageLink || !qaSummary || !qaPlus || !mediaText || !mediaContent || !mediaFigure || !mediaLink || !caption || !galleryCaption || !navTitle || !navText || !tabButton) return null;
+    if (!wrap || !h2 || !h3 || !h4 || !h2Follow || !listItem || !marker || !buttonLink || !outlineLink || !grayBox || !detailsTitle || !closedSummary || !closedButton || !plus || !openSummary || !openContent || !openButton || !tableHead || !tableCell || !pageLink || !qaSummary || !qaPlus || !mediaText || !mediaContent || !mediaFigure || !mediaLink || !caption || !galleryCaption || !navTitle || !navText || !tabButton) return null;
 
     const h2Style = getComputedStyle(h2);
+    const h2Mark = getComputedStyle(h2, '::before');
     const h3Style = getComputedStyle(h3);
     const h4Style = getComputedStyle(h4);
     const followStyle = getComputedStyle(h2Follow);
     const listStyle = getComputedStyle(listItem);
     const markerStyle = getComputedStyle(marker);
     const buttonStyle = getComputedStyle(buttonLink);
+    const outlineStyle = getComputedStyle(outlineLink);
+    const grayStyle = getComputedStyle(grayBox);
+    const pageLinkMark = getComputedStyle(pageLink, '::before');
     const detailsStyle = getComputedStyle(detailsTitle);
     const closedSummaryStyle = getComputedStyle(closedSummary);
     const closedButtonStyle = getComputedStyle(closedButton);
@@ -117,6 +123,7 @@ export async function measureHeadings(page) {
       h2Weight: h2Style.fontWeight,
       h2Family: h2Style.fontFamily,
       h2Gap: h2Style.columnGap || h2Style.gap,
+      h2Clip: h2Mark.clipPath,
       h3Size: h3Style.fontSize,
       h3Family: h3Style.fontFamily,
       h3PaddingTop: h3Style.paddingTop,
@@ -141,6 +148,9 @@ export async function measureHeadings(page) {
       buttonSize: buttonStyle.fontSize,
       buttonWeight: buttonStyle.fontWeight,
       buttonGap: buttonStyle.columnGap || buttonStyle.gap,
+      outlineMinHeight: outlineStyle.minHeight,
+      outlineBg: outlineStyle.backgroundColor,
+      grayBg: grayStyle.backgroundColor,
       detailsFamily: detailsStyle.fontFamily,
       detailsSize: detailsStyle.fontSize,
       detailsWeight: detailsStyle.fontWeight,
@@ -161,6 +171,7 @@ export async function measureHeadings(page) {
       pageLinkFamily: pageLinkStyle.fontFamily,
       pageLinkSize: pageLinkStyle.fontSize,
       pageLinkWeight: pageLinkStyle.fontWeight,
+      pageLinkClip: pageLinkMark.clipPath,
       qaPadTop: qaSummaryStyle.paddingTop,
       qaPadLeft: qaSummaryStyle.paddingLeft,
       qaMarkWidth: qaMarkStyle.width,
@@ -219,6 +230,10 @@ export function assertHeadings(measured, band) {
   assert(measured.buttonSize === '15px', `${band} button_L expected 15px, got ${measured.buttonSize}.`);
   assert(measured.buttonWeight === '500', `${band} button_L expected weight 500, got ${measured.buttonWeight}.`);
   assert(measured.buttonGap === '8px', `${band} button_L icon/text gap expected 8px, got ${measured.buttonGap}.`);
+  assert(/50%\s*0%/.test(String(measured.h2Clip)), `${band} octagon vertices must sit on the cardinal axes, got ${measured.h2Clip}.`);
+  assert(/50%\s*0%/.test(String(measured.pageLinkClip)), `${band} page-link octagon vertices must sit on the cardinal axes, got ${measured.pageLinkClip}.`);
+  assert(measured.grayBg === 'rgb(255, 255, 255)', `${band} gray background box expected white, got ${measured.grayBg}.`);
+  assert(measured.outlineBg === 'rgb(191, 62, 43)', `${band} outline button expected CTA fill #bf3e2b, got ${measured.outlineBg}.`);
   assert(isMinchoFamily(measured.detailsFamily), `${band} details title must resolve to Zen Old Mincho, got ${measured.detailsFamily}.`);
   assert(measured.detailsSize === '18px', `${band} details title expected 18px, got ${measured.detailsSize}.`);
   assert(measured.detailsWeight === '600', `${band} details title expected weight 600, got ${measured.detailsWeight}.`);
@@ -266,6 +281,7 @@ export function assertHeadings(measured, band) {
     assert(measured.detailsOpenContentPadTop === '20px' && measured.detailsOpenContentPadLeft === '20px', `SP open details content padding expected 20, got ${measured.detailsOpenContentPadTop}/${measured.detailsOpenContentPadLeft}.`);
     assert(measured.qaPadTop === '20px' && measured.qaPadLeft === '20px', `SP QA details title padding expected 20/20, got ${measured.qaPadTop}/${measured.qaPadLeft}.`);
     assert(measured.mediaContentTop < measured.mediaFigureTop, `SP media-text must stack text above image, content ${measured.mediaContentTop} vs media ${measured.mediaFigureTop}.`);
+    assert(measured.outlineMinHeight === '88px', `SP outline/CTA min-height expected 88px, got ${measured.outlineMinHeight}.`);
     return;
   }
 
@@ -281,4 +297,5 @@ export function assertHeadings(measured, band) {
   assert(measured.detailsOpenContentPadTop === '32px' && measured.detailsOpenContentPadLeft === '32px', `PC open details content padding expected 32, got ${measured.detailsOpenContentPadTop}/${measured.detailsOpenContentPadLeft}.`);
   assert(measured.qaPadTop === '24px' && measured.qaPadLeft === '32px', `PC QA details title padding expected 24/32, got ${measured.qaPadTop}/${measured.qaPadLeft}.`);
   assert(measured.mediaContentLeft < measured.mediaFigureLeft, `PC media-text must keep text left of image, content ${measured.mediaContentLeft} vs media ${measured.mediaFigureLeft}.`);
+  assert(measured.outlineMinHeight === '80px', `PC outline/CTA min-height expected 80px, got ${measured.outlineMinHeight}.`);
 }

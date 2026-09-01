@@ -91,6 +91,20 @@ async function measureFixed(page) {
   });
 }
 
+async function measureChrome(page) {
+  return page.evaluate(() => {
+    const visual = document.querySelector('.global_mainVisual');
+    const breadcrumb = document.querySelector('.module_breadCrumb');
+    const bodyStyle = getComputedStyle(document.body);
+    return {
+      visualBottom: visual ? visual.getBoundingClientRect().bottom : 0,
+      breadTop: breadcrumb ? breadcrumb.getBoundingClientRect().top : 0,
+      bodyImage: bodyStyle.backgroundImage,
+      bodySize: bodyStyle.backgroundSize,
+    };
+  });
+}
+
 const fixedPageUrl = new URL('/budokan-fixed-page-qa/', url).href;
 const goldPageUrl = new URL('/parts/', url).href;
 const browser = await chromium.launch({ headless: true });
@@ -115,6 +129,10 @@ try {
   assert(sp.titleColor === 'rgb(255, 255, 255)', `SP title color expected white, got ${sp.titleColor}.`);
   assert(close(parseFloat(sp.titleLineHeight), 33.6, 1), `SP title line-height expected ~33.6px, got ${sp.titleLineHeight}.`);
   assert(close(parseFloat(sp.titleLetterSpacing), 1.2, 0.2), `SP title tracking expected ~1.2px, got ${sp.titleLetterSpacing}.`);
+  const spChrome = await measureChrome(mobilePage);
+  assert(spChrome.breadTop > spChrome.visualBottom + 40, `SP breadcrumb must sit below the page title, visual ${spChrome.visualBottom} vs bread ${spChrome.breadTop}.`);
+  assert(/bg-pattern/.test(String(spChrome.bodyImage)), `SP body must tile the Figma parts fill, got ${spChrome.bodyImage}.`);
+  assert(String(spChrome.bodySize).includes('700px'), `SP body tile expected 700px, got ${spChrome.bodySize}.`);
 
   await mobilePage.goto(goldPageUrl, { waitUntil: 'networkidle' });
   const spParts = await measureGold(mobilePage);
@@ -164,6 +182,10 @@ try {
   assert(pc.titleColor === 'rgb(255, 255, 255)', `PC title color expected white, got ${pc.titleColor}.`);
   assert(close(parseFloat(pc.titleLineHeight), 44.8, 1), `PC title line-height expected ~44.8px, got ${pc.titleLineHeight}.`);
   assert(close(parseFloat(pc.titleLetterSpacing), 1.6, 0.2), `PC title tracking expected ~1.6px, got ${pc.titleLetterSpacing}.`);
+  const pcChrome = await measureChrome(desktopPage);
+  assert(pcChrome.breadTop > pcChrome.visualBottom + 40, `PC breadcrumb must sit below the page title, visual ${pcChrome.visualBottom} vs bread ${pcChrome.breadTop}.`);
+  assert(/bg-pattern/.test(String(pcChrome.bodyImage)), `PC body must tile the Figma parts fill, got ${pcChrome.bodyImage}.`);
+  assert(String(pcChrome.bodySize).includes('700px'), `PC body tile expected 700px, got ${pcChrome.bodySize}.`);
 
   await desktopPage.goto(goldPageUrl, { waitUntil: 'networkidle' });
   const pcParts = await measureGold(desktopPage);

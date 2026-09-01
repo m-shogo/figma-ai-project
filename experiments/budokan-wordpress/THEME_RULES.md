@@ -92,6 +92,12 @@ QA は 〜767 と ≥1280 を主にする。
 - `parts.php` … 「●●パーツ集●●」本文正本（**変更なし・タグ追加禁止**）
 - 固定ページは 1カラム（`templates/template-oneColumn.php`）。見た目は `css/blocks/` とページタイトル帯（`global_mainVisual.css`）で Figma parts / SP_parts に合わせる
 - form ブロックがあっても Agent は触らない
+- Gutenberg の style / palette 名は editor hook。Figma の見た目ではない（2026-09-01 Human）:
+  - 標準 `.wp-block-button` = `button_L`。hover は `1163:4229`（閉じるとき default だけでは不足）
+  - `.is-style-outline` = CTA `btn-03`。中空の輪郭にしない。`.small` は btn-02 のまま
+  - `has-gray-background-color` の塗りは白。slug `gray` は変えない
+  - ページフレームの IMAGE TILE は Parts 専用ではない。news / event / post / page / form / navigation / TOP（`topdesign04`）も同じ。メニュー overlay だけ白無地。Theme は `body` に 700×700 tile。ページを閉じる前に親フレーム fill を見る
+  - 新しい editor class（例: `.cta`）を足す前に、既存 style slot で足りるか Human にマップを確認する
 
 ---
 

@@ -7,9 +7,8 @@
  * `_fixedPage` opts in only when the page has `page_img`. Pages without a photo,
  * including Parts, keep the gold bar. Keep one renderer.
  *
- * Single-post Figma places the breadcrumb after the article body, immediately
- * before the subpage footer. `single.php` therefore owns that one placement;
- * all other surfaces keep the shared breadcrumb directly after this visual.
+ * Inner-page Figma places the breadcrumb after the main content, immediately
+ * before the footer. Templates own that placement; this visual does not.
  */
 global $post;
 $page_img = (is_page() && !is_front_page() && !is_404() && !is_search())
@@ -90,6 +89,3 @@ $is_fixed_page_visual = !empty($page_img);
         <?php endif; ?>
     </div>
 </div>
-<?php if (!is_single()): ?>
-    <?php get_template_part('template-parts/_breadCrumb'); ?>
-<?php endif; ?>

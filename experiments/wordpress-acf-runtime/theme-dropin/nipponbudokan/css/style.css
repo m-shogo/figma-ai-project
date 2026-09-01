@@ -1,6 +1,6 @@
 @import './base/reset.css';
 @import './base/normalize.css';
-@import './global/variables.css';
+@import './global/variables.css'; /* octagon vertices + body fill 2026-09-01 */
 /* @import './global/component.css'; */
 
 @import './layout/global_header.css';
@@ -62,3 +62,16 @@
 
 @import './wordpress/form.css';
 @import './wordpress/wordpress.css';
+
+/* Cardinal-vertex octagon + Parts body fill live on this cache-busted file.
+   :root beats the :where(:root) token sheet if a stale @import is cached. */
+:root {
+    --icon-arrow-down: '\f063';
+    --clip-octagon: polygon(50% 0%, 85.355% 14.645%, 100% 50%, 85.355% 85.355%, 50% 100%, 14.645% 85.355%, 0% 50%, 14.645% 14.645%);
+}
+body {
+    background-image: url('../images/common/bg-pattern.png');
+    background-repeat: repeat;
+    background-position: top left;
+    background-size: 700px 700px;
+}

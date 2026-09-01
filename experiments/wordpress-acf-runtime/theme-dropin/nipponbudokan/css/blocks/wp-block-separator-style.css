@@ -24,16 +24,7 @@
             width: 11px;
             height: 11px;
             background-color: var(--color-line);
-            clip-path: polygon(
-                29.29% 0,
-                70.71% 0,
-                100% 29.29%,
-                100% 70.71%,
-                70.71% 100%,
-                29.29% 100%,
-                0 70.71%,
-                0 29.29%
-            );
+            clip-path: var(--clip-octagon);
         }
     }
 }
