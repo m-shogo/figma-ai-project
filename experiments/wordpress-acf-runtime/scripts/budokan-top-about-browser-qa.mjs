@@ -16,6 +16,31 @@ function isRobotoFamily(family) {
   return String(family || '').toLowerCase().includes('roboto');
 }
 
+async function measureTopNews(page) {
+  return page.evaluate(() => {
+    const section = document.querySelector('#top_news-01');
+    const heading = section?.querySelector('.top_news_heading_ja');
+    const headingEn = section?.querySelector('.top_news_heading_en');
+    const more = section?.querySelector('.top_news_more_sp, .top_news_more_pc');
+    const tab = section?.querySelector('.news_tabs_link');
+    const date = section?.querySelector('.news_item_date');
+    const title = section?.querySelector('.news_item_title');
+    if (!section || !heading || !headingEn || !more || !tab || !date || !title) return null;
+    return {
+      headingSize: parseFloat(getComputedStyle(heading).fontSize),
+      headingFamily: getComputedStyle(heading).fontFamily,
+      headingEnSize: parseFloat(getComputedStyle(headingEn).fontSize),
+      headingEnFamily: getComputedStyle(headingEn).fontFamily,
+      moreFamily: getComputedStyle(more).fontFamily,
+      tabFamily: getComputedStyle(tab).fontFamily,
+      dateSize: parseFloat(getComputedStyle(date).fontSize),
+      dateFamily: getComputedStyle(date).fontFamily,
+      titleSize: parseFloat(getComputedStyle(title).fontSize),
+      titleFamily: getComputedStyle(title).fontFamily,
+    };
+  });
+}
+
 const browser = await chromium.launch({ headless: true });
 try {
   const mobileContext = await browser.newContext({ viewport: { width: 375, height: 2200 }, isMobile: true, hasTouch: true });
@@ -75,6 +100,18 @@ try {
   assert(sp.cardsDisplay === 'flex', `SP cards display ${sp.cardsDisplay}`);
   assert(sp.cardWidths.every(width => close(width, 240)), `SP card widths ${sp.cardWidths.join(',')}`);
   assert(close(sp.firstImageWidth, 240) && close(sp.firstImageHeight, 320), `SP image ${sp.firstImageWidth}x${sp.firstImageHeight}`);
+  const spNews = await measureTopNews(mobilePage);
+  assert(spNews, 'SP TOP News elements missing');
+  assert(close(spNews.headingSize, 30, 0.5), `SP news heading ${spNews.headingSize}`);
+  assert(isKakuFamily(spNews.headingFamily), `SP news heading JA must resolve to Zen Kaku Gothic New, got ${spNews.headingFamily}.`);
+  assert(close(spNews.headingEnSize, 14, 0.5), `SP news heading EN ${spNews.headingEnSize}`);
+  assert(isRobotoFamily(spNews.headingEnFamily), `SP news heading EN must resolve to Roboto, got ${spNews.headingEnFamily}.`);
+  assert(isKakuFamily(spNews.moreFamily), `SP news more must resolve to Zen Kaku Gothic New, got ${spNews.moreFamily}.`);
+  assert(isKakuFamily(spNews.tabFamily), `SP news tab must resolve to Zen Kaku Gothic New, got ${spNews.tabFamily}.`);
+  assert(close(spNews.dateSize, 14, 0.5), `SP news date ${spNews.dateSize}`);
+  assert(isKakuFamily(spNews.dateFamily), `SP news date must resolve to Zen Kaku Gothic New, got ${spNews.dateFamily}.`);
+  assert(close(spNews.titleSize, 16, 0.5), `SP news title ${spNews.titleSize}`);
+  assert(isKakuFamily(spNews.titleFamily), `SP news title must resolve to Zen Kaku Gothic New, got ${spNews.titleFamily}.`);
   await mobileContext.close();
 
   const desktopContext = await browser.newContext({ viewport: { width: 1380, height: 1500 } });
@@ -139,9 +176,22 @@ try {
   assert(new Set(pc.cardLefts.map(left => Math.round(left))).size === 4, `PC columns ${pc.cardLefts.join(',')}`);
   assert(pc.firstCardLeft > pc.headingRight + 40, `PC rail relation card=${pc.firstCardLeft} heading=${pc.headingRight}`);
   assert(close(pc.imageRatio, 0.75, 0.02), `PC image ratio ${pc.imageRatio}`);
+  const pcNews = await measureTopNews(desktopPage);
+  assert(pcNews, 'PC TOP News elements missing');
+  assert(close(pcNews.headingSize, 28, 0.5), `PC news heading ${pcNews.headingSize}`);
+  assert(isMinchoFamily(pcNews.headingFamily), `PC news heading JA must resolve to Zen Old Mincho, got ${pcNews.headingFamily}.`);
+  assert(close(pcNews.headingEnSize, 18, 0.5), `PC news heading EN ${pcNews.headingEnSize}`);
+  assert(isMinchoFamily(pcNews.headingEnFamily), `PC news heading EN must resolve to Zen Old Mincho, got ${pcNews.headingEnFamily}.`);
+  assert(isKakuFamily(pcNews.moreFamily), `PC news more must resolve to Zen Kaku Gothic New, got ${pcNews.moreFamily}.`);
+  assert(isKakuFamily(pcNews.tabFamily), `PC news tab must resolve to Zen Kaku Gothic New, got ${pcNews.tabFamily}.`);
+  assert(close(pcNews.dateSize, 14, 0.5), `PC news date ${pcNews.dateSize}`);
+  assert(isKakuFamily(pcNews.dateFamily), `PC news date must resolve to Zen Kaku Gothic New, got ${pcNews.dateFamily}.`);
+  assert(close(pcNews.titleSize, 16, 0.5), `PC news title ${pcNews.titleSize}`);
+  assert(isKakuFamily(pcNews.titleFamily), `PC news title must resolve to Zen Kaku Gothic New, got ${pcNews.titleFamily}.`);
   await desktopContext.close();
   console.log('PASS Budokan TOP About SP responsive geometry and type family QA.');
   console.log('PASS Budokan TOP About PC right-rail four-card geometry and type family QA.');
+  console.log('PASS Budokan TOP News SP/PC type family QA hosted on the About front-page runtime.');
 } finally {
   await browser.close();
 }

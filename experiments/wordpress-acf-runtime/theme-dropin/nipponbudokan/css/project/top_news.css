@@ -38,7 +38,7 @@
     }
 
     .top_news_heading_ja {
-        font-family: var(--font-sansSerif-ja);
+        font-family: var(--font-zen-kaku-gothic);
         font-size: 30px;
         font-weight: 500;
         letter-spacing: 0.05em;
@@ -62,6 +62,7 @@
         gap: 10px;
         width: fit-content;
         color: var(--color-text);
+        font-family: var(--font-zen-kaku-gothic);
         font-size: 15px;
         font-weight: 500;
         line-height: 1;
@@ -129,6 +130,7 @@
         min-height: 34px;
         padding: 8px 6px;
         color: inherit;
+        font-family: var(--font-zen-kaku-gothic);
         font-size: 14px;
         font-weight: 500;
         line-height: 1;
@@ -151,18 +153,20 @@
     }
 
     .top_news_articles .news_item_date {
-        font-family: var(--font-sansSerif-en);
-        font-size: 12px;
-        font-weight: 400;
+        font-family: var(--font-zen-kaku-gothic);
+        font-size: 14px;
+        font-weight: 500;
     }
 
     .top_news_articles .news_item_label {
         min-height: 25px;
         border-color: var(--color-text);
+        font-family: var(--font-zen-kaku-gothic);
         font-weight: 500;
     }
 
     .top_news_articles .news_item_title {
+        font-family: var(--font-zen-kaku-gothic);
         font-weight: 500;
         line-height: 1.6;
     }
@@ -195,7 +199,7 @@
         }
 
         .top_news_heading_ja {
-            font-family: var(--font-serif-ja);
+            font-family: var(--font-zen-old-mincho);
             font-size: 28px;
             font-weight: 500;
         }
@@ -206,7 +210,7 @@
             align-items: center;
             width: fit-content;
             min-height: 32px;
-            font-family: var(--font-serif-ja);
+            font-family: var(--font-zen-old-mincho);
             font-size: 18px;
             font-weight: 500;
             color: #a6a5ab;
