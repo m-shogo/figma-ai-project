@@ -136,6 +136,19 @@ These assertions deliberately distinguish layout invariants from unavailable pix
 
 These remain Budokan-project findings. Do not promote them to higher standards until repeated independently.
 
+## Current Figma type pass (file `fKYDn9ikpJk1nW7IWFtaUx`)
+
+Geometry already matched. LIVE type/size still used Noto/Crimson and a 13px EN chip.
+
+Confirmed from child nodes `1603:7273` / `1392:11708`:
+
+- SP heading JA: Zen Kaku Medium 30. EN `About us`: Roboto Regular 14 / accent octagon.
+- PC heading JA: Zen Old Mincho Medium 36, vertical. EN is **not** a 13px `#d5e3ec` chip; it is Zen Old Mincho Medium 30 (rotated −90) over a separate 72px `#b4c5d9` octagon.
+- Lead / CTA: Zen Kaku (SP/PC 16). SP overlay 14 Regular; PC overlay 16 Regular.
+- Card labels: SP Zen Kaku Medium 16; PC Zen Old Mincho SemiBold 18.
+
+PHP and media/href placeholders stay untouched.
+
 ## Files intentionally untouched
 
 - `parts.php`

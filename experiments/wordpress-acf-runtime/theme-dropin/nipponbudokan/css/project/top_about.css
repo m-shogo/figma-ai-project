@@ -52,7 +52,7 @@
     }
 
     .ta_heading_ja {
-        font-family: var(--font-sansSerif-ja);
+        font-family: var(--font-zen-kaku-gothic);
         font-size: 30px;
         font-weight: 500;
         line-height: 1.2;
@@ -65,7 +65,7 @@
         align-items: center;
         justify-content: center;
         gap: 8px;
-        font-family: var(--font-serif-en);
+        font-family: var(--font-sansSerif-en);
         font-size: 14px;
         font-weight: 400;
         line-height: 1;
@@ -93,7 +93,8 @@
 
     .ta_lead {
         margin: 0 0 24px;
-        font-size: 14px;
+        font-family: var(--font-zen-kaku-gothic);
+        font-size: 16px;
         font-weight: 400;
         line-height: 1.8;
         letter-spacing: 0.05em;
@@ -117,7 +118,8 @@
         border-radius: 0;
         background-color: var(--color-secondary);
         color: var(--color-text);
-        font-size: 13px;
+        font-family: var(--font-zen-kaku-gothic);
+        font-size: 16px;
         font-weight: 500;
         letter-spacing: 0.05em;
         line-height: 1.4;
@@ -196,8 +198,9 @@
         padding: 16px 8px;
         background-color: color-mix(in srgb, var(--color-copyright) 72%, transparent);
         color: var(--color-secondary);
-        font-size: 12px;
-        font-weight: 500;
+        font-family: var(--font-zen-kaku-gothic);
+        font-size: 14px;
+        font-weight: 400;
         line-height: 1.6;
         letter-spacing: 0.08em;
         writing-mode: vertical-rl;
@@ -208,7 +211,8 @@
         align-items: center;
         gap: 10px;
         margin: 0;
-        font-size: 14px;
+        font-family: var(--font-zen-kaku-gothic);
+        font-size: 16px;
         font-weight: 500;
         letter-spacing: 0.05em;
         color: var(--color-text);
@@ -270,8 +274,8 @@
 
         .ta_heading_ja {
             writing-mode: vertical-rl;
-            font-family: var(--font-serif-ja);
-            font-size: 32px;
+            font-family: var(--font-zen-old-mincho);
+            font-size: 36px;
             font-weight: 500;
             line-height: 1.4;
             letter-spacing: 0.12em;
@@ -279,18 +283,33 @@
         }
 
         .ta_heading_en {
+            position: relative;
+            isolation: isolate;
             writing-mode: vertical-rl;
             justify-content: flex-start;
-            min-block-size: 6.5em;
-            padding: 20px 10px;
+            min-block-size: 0;
+            padding: 0;
             gap: 0;
-            background-color: #d5e3ec;
-            color: #5a7388;
-            clip-path: var(--clip-octagon);
-            font-size: 13px;
+            background-color: transparent;
+            color: var(--color-text);
+            clip-path: none;
+            font-family: var(--font-zen-old-mincho);
+            font-size: 30px;
+            font-weight: 500;
+            letter-spacing: 0.05em;
 
             &::before {
-                content: none;
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 50%;
+                z-index: -1;
+                width: 72px;
+                height: 72px;
+                margin-right: 0;
+                transform: translateX(-50%);
+                background-color: #b4c5d9;
+                clip-path: var(--clip-octagon);
             }
         }
 
@@ -302,7 +321,7 @@
             grid-area: lead;
             margin: 0;
             max-width: none;
-            font-size: 15px;
+            font-size: 16px;
             line-height: 1.8;
             text-align: left;
         }
@@ -341,6 +360,16 @@
             width: 100%;
             height: auto;
             aspect-ratio: 3 / 4;
+        }
+
+        .ta_card_overlay {
+            font-size: 16px;
+        }
+
+        .ta_card_label {
+            font-family: var(--font-zen-old-mincho);
+            font-size: 18px;
+            font-weight: 600;
         }
     }
 
