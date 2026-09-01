@@ -1,101 +1,122 @@
 # Budokan participation page dependency audit
 
-Status: responsive page identity is resolved, but visual implementation is fail-closed because the current SP counterpart contains shell authority only and does not contain the PC content composition.
+Status: responsive page identity is resolved, but visual implementation remains fail-closed because the current SP counterpart contains shell authority only and does not contain the PC content composition.
 
-Updated: 2026-08-30
+Updated: 2026-09-02
 
-## Why this page was selected
+## Current authority
 
-After Header / Footer / Parts and the already-closed TOP families, the canonical SP page was inventoried again instead of following canvas order. A previously unmapped ordinary-page candidate was found:
+- current Human-selected Figma file: `fKYDn9ikpJk1nW7IWFtaUx`
+- current SP page: `114:5409`
+- current PC page: `0:1`
+- current SP frame: `1468:7508` (`SP_navigation`)
+- current PC frame: `1148:6390` (`navigation`)
 
-- SP `1468:7508` (`SP_navigation`) — page title `大会・行事に参加したい`
-- PC `1148:6390` (`navigation`) — same page title
+Historical `560:*` nodes must not be recovered as current authority. `560:188` was directly re-queried against the current file on 2026-09-02 and returned **node not found**.
 
-The exact title match makes these a strong page-identity pair, but responsive implementation authority must be checked at section level before coding.
+No Theme PHP/CSS/JS, ACF/CPT model, Form/Formidable, or `parts.php` change is authorized by this audit.
 
-## SP authority — shell only
+## Why this page remains blocked
 
-The current SP root `1468:7508` is 375 × 4672. Its direct children are only the established global shell:
+The exact page title resolves the responsive identity pair:
 
-- `1476:8101` page-title instance — `大会・行事に参加したい`
-- `1468:7510` breadcrumb instance
-- `1468:7509` Footer
-- `1468:7597` purpose menu
-- `1468:7598` Header
-- status-bar image
+- SP `1468:7508` — `大会・行事に参加したい`
+- PC `1148:6390` — `大会・行事に参加したい`
 
-There is no authored content surface between the page-title area and breadcrumb/footer in this current SP frame. In particular, there is no SP counterpart for the PC introduction, News rows, or navigation/content composition.
+However, page identity and responsive body authority are separate questions. The current SP frame is still shell-only, while the PC frame contains substantive body content.
 
-This is not evidence that production SP should intentionally be blank. It is evidence that the responsive content design is incomplete in the current Figma frame.
+## SP authority — current shell only
 
-## PC authority — content exists
+Current SP `1468:7508` was live-retrieved again from `fKYDn9ikpJk1nW7IWFtaUx` on 2026-09-02.
 
-The current PC root `1148:6390` is 1380 × 3890 and does contain a substantive content frame:
+The frame contains the established global shell:
 
 - page title `大会・行事に参加したい`
-- content container `1301:9490`, width 962px
+- Header
+- breadcrumb
+- Footer
+- purpose menu
+- status-bar image
+
+The area between the page-title composition and breadcrumb/footer is visually empty in the current frame. No authored SP counterpart is present for the PC introduction, News rows, or later content/navigation composition.
+
+This is **not** evidence that production SP should intentionally be blank. It means current mobile body composition is **UNDETERMINED**.
+
+Do not infer:
+
+- stacking order from PC
+- SP spacing from another navigation page
+- omission rules from the empty canvas
+- News/card/navigation behavior from a historical `560:*` frame
+
+## PC authority — body exists
+
+Current PC `1148:6390` remains the mapped body authority for this page. Existing audit/repository evidence records:
+
+- page title `大会・行事に参加したい`
+- substantive content container
 - introductory copy about 武道大会 / 書初め大展覧会 / 研修会 / 武道学園
 - `お知らせ` rows using the established News information structure
 - global Header / breadcrumb / Footer
 
-The PC content therefore cannot be safely projected onto SP by guessing stacking, spacing, visibility, or navigation behavior.
+The PC body can inform component-family discovery and reuse mapping, but it cannot be mechanically projected into SP while SP composition is unauthored.
 
-## `join_sp` is a separate SP page, not the missing counterpart
+## Historical `560:188 join_sp` is no longer a current alternative
 
-A second SP root exists at `560:188` with layer name `join_sp`. It is visually complete and therefore looked like a possible source for the missing mobile body. Re-checking its actual title, breadcrumb and content disproves that mapping:
+The previous version of this audit described `560:188` (`join_sp`) as a second SP root in the current file and then rejected it as a responsive counterpart because its title was `大会に参加したい` rather than `大会・行事に参加したい`.
 
-- page title / breadcrumb: `大会に参加したい`
-- introduction followed by `お知らせ`
-- `青少年の健全育成`
-- `古武道の保存・継承`
-- `日程・お問い合わせ`
-- `関連団体`
+That historical comparison remains useful as lineage explaining why title similarity alone is unsafe, but the **current-file claim was stale**.
 
-That editorial identity is different from `大会・行事に参加したい` at SP `1468:7508` / PC `1148:6390`.
+2026-09-02 current-file verification:
 
-A programmatic scan of all current PC top-level frames for text containing `参加したい` found the exact participation-page wording only in PC `1148:6390` as `大会・行事に参加したい` (plus TOP/thumbnail navigation references). No current PC top-level frame contains the exact page title `大会に参加したい`.
+- `FIGMA_MAP.md` current top-level re-resolution does not list `560:188`
+- direct `get_design_context` for `560:188` in `fKYDn9ikpJk1nW7IWFtaUx` returns `node not found`
 
 Therefore:
 
-- do **not** use `560:188` as responsive body authority for PC `1148:6390`;
-- do **not** rename or silently merge these two editorial pages;
-- `560:188` itself is SP-only until a PC counterpart or explicit Human/Figma authority proves one.
-
-This distinction closes a high-risk false-positive match while leaving the original participation-page SP-body blocker unchanged.
+- do not search historical Figma files to resurrect `560:188` as implementation authority
+- do not use its old body as a mobile fallback
+- do not preserve a false “current second SP page” dependency in future implementation decisions
+- historical screenshots/docs may remain historical evidence only
 
 ## Theme / WordPress dependency
 
-Current repository search does not establish a dedicated page/content owner for the literal page title. Ordinary page routing remains the safest known shell authority (`page.php` + editor content), and existing News/shared navigation masters should be reused where the eventual SP design proves the same family.
+Current repository evidence does not establish a dedicated page/content owner for this literal page title. Ordinary page routing remains the safest known shell authority (`page.php` + editor content), and existing News/shared navigation masters should be reused if and when current SP design proves those same families.
 
 Do not create:
 
-- a dedicated `page-*` template from PC-only evidence,
-- new ACF fields or a CPT,
-- a new News renderer,
-- SP geometry inferred from PC,
-- hard-coded Figma specimen copy in Theme PHP.
+- a dedicated `page-*` template from PC-only body evidence
+- new ACF fields or a CPT
+- a new News renderer
+- SP geometry inferred from PC
+- hard-coded Figma specimen copy in Theme PHP
+- a historical-node fallback path
 
 ## Smallest missing authority
 
-The blocker is specifically the **SP content composition** for `大会・行事に参加したい`.
+The blocker remains specifically the **current SP content composition** for `大会・行事に参加したい`.
 
-Smallest authority needed: a current SP frame or explicit design decision showing what appears after the page title — introduction, News, navigation/link groups, their order, and whether any PC content is intentionally omitted.
+Smallest authority needed: either
 
-Once that exists, implementation can follow the required SP-first path and reuse existing masters instead of inventing a parallel system.
+1. a current SP frame showing what appears after the page title — introduction, News, navigation/link groups, order, and intentional omissions; or
+2. an explicit Human decision that a named existing shared SP composition is the authority for this page.
 
-## Failed approach avoided
+Until then the correct implementation state is fail-closed, not “copy PC and make it responsive.”
 
-A title-only responsive match is not enough to authorize implementation. Here, SP and PC clearly identify the same page, but only PC contains the body. Treating page identity as layout authority would silently turn the PC body into an invented mobile design.
+## Reuse-first continuation once SP authority exists
 
-Likewise, a content-complete SP frame with a similar purpose-oriented title is not sufficient evidence of responsive pairing. `大会に参加したい` and `大会・行事に参加したい` must remain distinct until the design/data authority explicitly connects them.
+When current SP content authority becomes available:
 
-## Reusable lesson
+1. map each authored section back to existing Theme/WordPress owners
+2. reuse existing News and Navigation/shared blocks where semantic and visual contracts match
+3. keep ordinary `page.php` + editor-owned composition unless a stronger template authority exists
+4. verify SP runtime first
+5. extend/verify PC at `min-width: 768px`
+6. add only the smallest shared derivative justified by a proven gap
+7. run visual/runtime QA and relevant CI before merge
 
-When duplicated/generic Figma frame names exist, verify two independent layers:
+## Reusable lesson boundary
 
-1. **page identity** — title / breadcrumb / editorial subject;
-2. **responsive content authority** — actual sections and information structure at both breakpoints.
+The underlying cross-project lesson — re-resolve current Figma provenance instead of trusting stale node lineage — is now tracked through the repository learning evidence flow as a reviewed Candidate. This audit is project evidence for that Candidate; do not create another duplicate learning record for the same failure.
 
-Both must be present before SP-first implementation. A matching page title can resolve identity while the responsive body remains legitimately blocked. A semantically similar but non-identical page title must not be promoted to a responsive counterpart just because its body is complete.
-
-No Theme PHP/CSS/JS, ACF contract, `parts.php`, Form, or Formidable work is changed by this audit.
+No Theme PHP/CSS/JS, ACF/CPT, `parts.php`, Form/Formidable, Slider, Calendar, or Search work is changed by this authority refresh.
