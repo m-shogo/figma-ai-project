@@ -2,6 +2,8 @@
 
 ここは実験ログ置き場ではなく、**次案件へ持っていく価値があるruleだけを置く場所**。
 
+Canonical promotion timing / SLA: `docs/frontend-learning-promotion-policy.md`
+
 ## Directories
 
 - `candidates/` — clean replayまで進み、追加検証中
@@ -18,6 +20,7 @@
 - metric effect
 - known limits
 - last verified date/tooling
+- `promotion_review`（last/next review date、status、次に必要なevidence）
 
 を持つ。
 
@@ -50,6 +53,20 @@ selected prior rule
 
 へ戻す。
 
+## Promotion timing — 溜めない
+
+Candidateを「いつか見る」状態にしない。
+
+- clean replayでCandidate gateを満たしたら、そのrun/PR終了時にpromotion review
+- 別sectionで再現したら、そのrunでPROJECT_ONLY/拡張候補をreview
+- 別reference/project evidenceが入ったら、原則2日以内にACTIVE/proven review
+- contradictionは同じrun/PRでreview
+- project close時、そのprojectが触れたcandidateを全件review
+- evidence eventがなくても最大14日ごとに定期review
+- `READY_FOR_PROVEN` は最大7日以内に明示decision
+
+`python scripts/audit_frontend_learning_promotion.py` とscheduled CIが期限切れCandidateをFAILにする。自動昇格はしない。
+
 矛盾したruleを黙って削除しない。Toolingやreference条件の違いを残し、再試験可能にする。
 
 Controlled benchmarkでportable knowledgeを意図的に外す場合は、production defaultではなくexperiment variableとしてRun Recordへ明示する。
@@ -60,4 +77,4 @@ Controlled benchmarkでportable knowledgeを意図的に外す場合は、produc
 
 Observation → Candidate → Proven のpromotion ruleを通す。
 
-現在はfoundation phaseのため、**proven ruleはまだ0件**。これは正常。
+`proven` 件数が増えること自体をKPIにしない。PROJECT_ONLY / DEMOTE / RETIREへ流れることも正常な学習である。
