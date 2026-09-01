@@ -279,8 +279,23 @@ Observation
 → CANDIDATE
 → different reference/project evidence
 → ACTIVE
+→ successful reuse on additional contexts
+→ CORE
 ```
 
 Contradictionが出たらhistoryを消さず、scope変更・demotion・retireを記録する。
+
+**保存して終わりにしない。** Promotion timing / evidence gate / anti-stagnation SLA の正本は `docs/frontend-learning-promotion-policy.md`。
+
+最低限のtiming contract:
+
+- Candidate gateを満たしたら、そのrun/PR終了時にreview
+- 同一projectの2つ目の独立sectionで再現したらPROJECT_ONLY/拡張をreview
+- 2つ目のreference/project evidenceが入ったら原則2日以内にACTIVE/provenをreview
+- contradictionは同じrun/PRでreview
+- project close / clean replay完了時に、そのprojectで触れたcandidateを全件review
+- evidence eventがなくてもCandidateは最大14日ごとにreview
+- `READY_FOR_PROVEN` は最大7日以内に明示decision
+- CIはoverdueをFAILにするが、自動昇格はしない
 
 V2/V3からの今回のObservationは `research/ref001-v2-v3-frontend-learning-2026-08-20.md` を参照する。
