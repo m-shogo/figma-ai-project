@@ -1,0 +1,95 @@
+schema_version: 1
+policy: config/frontend-learning-promotion-policy.yaml
+reviewed_at: "2026-09-02"
+
+entries:
+  - learning_id: CR-REF001-001
+    last_reviewed_at: "2026-09-02"
+    next_review_at: "2026-09-16"
+    status: RETEST_REQUIRED
+    reason: "Strong REF-001 runtime evidence exists, but no independent second-reference implementation outcome exists yet."
+    trigger: "Review immediately when another reference exercises static-frame fidelity versus runtime wrapping/overflow behavior."
+    evidence_needed:
+      - "Independent second-reference implementation or clean-replay outcome"
+
+  - learning_id: CR-REF001-002
+    last_reviewed_at: "2026-09-02"
+    next_review_at: "2026-09-16"
+    status: RETEST_REQUIRED
+    reason: "Two-reference decision-boundary evidence exists, but the second reference lacks a measured interaction implementation outcome."
+    trigger: "Review immediately when REF-002 or another reference completes explicit-interaction implementation and runtime QA."
+    evidence_needed:
+      - "Measured second-reference interaction implementation outcome"
+
+  - learning_id: CR-REF001-003
+    last_reviewed_at: "2026-09-02"
+    next_review_at: "2026-09-16"
+    status: RETEST_REQUIRED
+    reason: "Two-reference conservative-modeling evidence exists, but the second reference has not measured CMS implementation/rework outcomes."
+    trigger: "Review immediately when REF-002 or another reference completes WordPress implementation or a genuine dynamic collection is supplied."
+    evidence_needed:
+      - "Measured second-reference CMS implementation/clean-replay outcome"
+      - "Positive dynamic-collection boundary case"
+
+  - learning_id: CR-REF001-SECTION-WHITESPACE-RHYTHM
+    last_reviewed_at: "2026-09-02"
+    next_review_at: "2026-09-16"
+    status: RETEST_REQUIRED
+    reason: "One clean replay supports the rule, but independent-reference evidence is still missing."
+    trigger: "Review when another design exposes intentional inter-section whitespace ownership."
+    evidence_needed:
+      - "Independent-reference replay with section-boundary repair outcome"
+
+  - learning_id: CR-REF001-TEXT-PRESENTATION-RAILS
+    last_reviewed_at: "2026-09-02"
+    next_review_at: "2026-09-16"
+    status: RETEST_REQUIRED
+    reason: "The separate-rails rule remains supported by one reference only."
+    trigger: "Review when another design uses materially distinct text and presentation rails."
+    evidence_needed:
+      - "Independent-reference evidence showing reduced patching without unnecessary container complexity"
+
+  - learning_id: CR-REF001-PERSISTENT-MEDIA-BYTES
+    last_reviewed_at: "2026-09-02"
+    next_review_at: "2026-09-16"
+    status: RETEST_REQUIRED
+    reason: "Durable asset-byte evidence is strong in REF-001, but cross-reference replay is still required before global promotion."
+    trigger: "Review when another image-heavy reference requires durable Figma/project asset materialization."
+    evidence_needed:
+      - "Independent image-heavy reference with reproducible asset-delivery outcome"
+
+  - learning_id: EXT-WPENV-ISOLATED-RUNTIME-CLEAN-REPLAY
+    last_reviewed_at: "2026-09-02"
+    next_review_at: "2026-09-16"
+    status: RETEST_REQUIRED
+    reason: "Official wp-env capability is promising, but replacement of the current WordPress fixture still requires an equivalence clean replay."
+    trigger: "Review when wp-env is replayed with ACF PRO, deterministic seed/mutation, parallel isolation, and Playwright."
+    evidence_needed:
+      - "Clean replay against the current WordPress + ACF PRO runtime responsibilities"
+
+  - learning_id: EXT-PERCY-FIGMA-HOSTED-REVIEW-TRIAL
+    last_reviewed_at: "2026-09-02"
+    next_review_at: "2026-09-16"
+    status: RETEST_REQUIRED
+    reason: "Percy remains a conditional external replacement candidate without an approved authenticated project trial."
+    trigger: "Review when an approved Percy/Figma trial measures mapping quality, privacy/cost fit, and Human Correction Cost."
+    evidence_needed:
+      - "Approved real-project Percy/Figma trial outcome"
+
+  - learning_id: OBS-REF001-OBSERVATION-COVERAGE-LINEAGE
+    last_reviewed_at: "2026-09-02"
+    next_review_at: "2026-09-16"
+    status: RETEST_REQUIRED
+    reason: "Operational evidence is strong inside REF-001, but cross-design omission/rework benefit remains unproven."
+    trigger: "Review when another design uses the Observation Coverage lineage through a full clean replay."
+    evidence_needed:
+      - "Independent-design replay measuring omission/rework impact"
+
+  - learning_id: OBS-REF001-HUMAN-EDITABILITY-EVIDENCE
+    last_reviewed_at: "2026-09-02"
+    next_review_at: "2026-09-16"
+    status: RETEST_REQUIRED
+    reason: "REF-001 has real change-drill evidence, but broader implementation-family evidence is still required."
+    trigger: "Review when another implementation family runs the same evidence-backed human editability drills."
+    evidence_needed:
+      - "Independent implementation-family change-drill outcome"
