@@ -2,13 +2,13 @@
 
 Status: current PC Figma/page-shell authority is available; production-safe Backnumber implementation remains fail-closed on both canonical monthly issue data ownership and a current dedicated SP counterpart.
 
-Updated: 2026-09-01
+Updated: 2026-09-02
 
 ## Current-state correction
 
 The current implementation authority is the Human-selected Figma file `fKYDn9ikpJk1nW7IWFtaUx`, not the older `w7SGVY63FuW6JpaQVKjxm2` / `RfAQQ28V1HGaeIcpgRmQq1` lineage.
 
-A live re-scan on 2026-09-01 confirms:
+A live re-scan confirms:
 
 - current PC frame: `1634:10806` (`publications`, 1380 × 6488)
 - current SP page: `114:5409`
@@ -21,7 +21,6 @@ The earlier TOP lower-banner blocker is also already resolved by PR #260. It is 
 
 ## Current authority
 
-- Git base checked from `so` after PR #335: `42164c69ae2e1742687accbb56d4e34364e0bc9b`.
 - Figma file: `fKYDn9ikpJk1nW7IWFtaUx`.
 - Current PC full-page authority: `1634:10806` (`publications`).
 - Current SP page: `114:5409`; dedicated Backnumber counterpart: **UNDETERMINED / absent from current top-level frames**.
@@ -53,6 +52,20 @@ Observed current PC geometry includes:
 
 Do not convert these visual repetitions into a CPT or ACF repeater without proving the real editorial data lifecycle.
 
+## Shared list master vs Publications contextual variant
+
+A 2026-09-02 live Figma re-check exposed an important component-family distinction that had been collapsed by PR #342:
+
+- shared SP list master `1399:18770` uses **17px / line-height 1.6** body text and **bare numeric markers** (`1`, `10`) at 16px
+- shared unordered master remains 17px / 1.6 (`1399:18762`, PC `1157:8221`)
+- Publications PC `1767:9543` is a **contextual variant**: 16px / line-height 1.5 body and punctuation markers (`1.`, `2.` ...)
+
+PR #342 had promoted the Publications punctuation into the global `ol.wp-block-list` rule. That made one page sample closer while silently moving the shared SP master away from its current Figma authority. The shared list CSS is now restored to the shared master.
+
+Do **not** reintroduce the Publications `1.` / 16px treatment globally. The remaining Publications-specific list styling is fail-closed until its real WordPress markup/data owner is known. If the page eventually needs a contextual modifier or a block-style variant, add it at the smallest proven semantic owner rather than changing the generic list master.
+
+This is also a QA rule: when a page contains a visually different instance of a shared family, compare that instance against the canonical shared master before editing the shared owner.
+
 ## SP authority rule
 
 There is currently no dedicated SP Backnumber frame in the Human-selected Figma file.
@@ -71,7 +84,7 @@ The index/help area still does not warrant page-specific PHP/CSS from current ev
 
 - outlined expandable index/help panel → existing `.wp-block-details` / `css/blocks/wp-block-details-style.css`
 - PDF/download action → existing `.wp-block-buttons` / `.wp-block-button__link` / `css/blocks/wp-block-buttonLink-style.css`
-- numbered instructions → existing `ol.wp-block-list` / `css/blocks/wp-block-list-style.css`
+- numbered instructions → existing `ol.wp-block-list` family, but Publications PC styling is a contextual variant and must not redefine the global master
 - red caution rows → existing `ul.annotation-list`
 - section heading → existing heading block styles
 
@@ -118,6 +131,7 @@ When the data owner is known:
 - A page-specific-looking panel may already be composed from Theme Gutenberg primitives; inspect block-level CSS before building a custom component.
 - A node ID that existed in an older Figma lineage is not current authority merely because an audit once called it current.
 - Current page-level re-scan must win over stale node maps when the Human changes the canonical Figma file.
+- A contextual instance must not redefine a shared component master merely because it was the latest instance inspected; inspect the shared family across PC/SP before changing a global selector.
 - Dependency audits are operational inputs. Stale blockers or stale Figma nodes can actively send later agents down the wrong implementation path, so they must be corrected as soon as disproved.
 
-No Theme PHP/CSS/JS, ACF contract, `parts.php`, Form, Formidable, Slider, Search result UI, or Calendar work is changed by this audit refresh.
+No new Theme PHP/JS, ACF contract, `parts.php`, Form, Formidable, Slider, Search result UI, or Calendar work is introduced by this audit refresh. The only Theme change in this correction is restoring the shared ordered-list CSS to its current shared Figma master.

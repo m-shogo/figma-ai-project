@@ -1,0 +1,58 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: OBS-BUDOKAN-SHARED-MASTER-VS-CONTEXT-VARIANT
+    summary: >-
+      A visually different page instance must not redefine a shared component master until the
+      component family has been checked across canonical PC/SP references; keep contextual variants
+      at the smallest evidenced owner instead of promoting one local sample into a global selector.
+    category: REUSE
+    applicability:
+      scope: REFERENCE
+      conditions:
+        - A shared selector or component is used across multiple pages or responsive references.
+        - One page instance differs in typography, marker treatment, geometry, state, or other visual contract.
+      exclusions:
+        - The differing instance has been proven to be the new canonical shared master.
+        - An explicit project authority intentionally changes the shared component for every consumer.
+    promotion_state: null
+    promotion:
+      candidate: false
+      rationale: >-
+        Budokan provides one concrete regression: Publications PC used 16px body text with `1.` markers,
+        while the shared SP ordered-list master uses 17px body text with bare numeric markers. A local
+        Publications sample was incorrectly generalized into the global ordered-list selector and then
+        corrected after cross-family Figma inspection. Keep as a single-reference observation until an
+        independent project reproduces the failure or clean-replay benefit.
+      blocked_by:
+        - Independent reference or project showing the same contextual-instance-to-global-master regression.
+        - Measurable evidence that family-wide preflight reduces repair or regression cost.
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-LIST-VARIANT-AUDIT-20260902
+          kind: CANONICAL_DOC
+          reference_id: BUDOKAN-WORDPRESS
+          run_id: ''
+          path: experiments/budokan-wordpress/BACKNUMBER_DEPENDENCY_AUDIT.md
+          commit: ''
+          note: >-
+            Records the current Figma distinction between shared SP ordered-list master 1399:18770
+            and Publications PC contextual variant 1767:9543, plus the regression caused by globalizing it.
+        - evidence_id: EV-BUDOKAN-LIST-MASTER-RESTORE-20260902
+          kind: COMMIT
+          reference_id: BUDOKAN-WORDPRESS
+          run_id: ''
+          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/blocks/wp-block-list-style.css
+          commit: a4fe30977a6808c634e415474e86c063bc3f1226
+          note: Restores the global ordered-list selector to the shared Figma master instead of the Publications-local variant.
+      contradicts: []
+    notes:
+      - Do not promote from a single Budokan correction.
+      - The Publications-specific 16px/`1.` treatment remains unresolved until its real WordPress markup/data owner is known.
