@@ -3,67 +3,92 @@
 File: `fKYDn9ikpJk1nW7IWFtaUx`  
 Pages: PC `0:1` / SP `114:5409`
 
-デザイン調整版（2026-08-31 Human Authority）。実装時は都度取り直す。**保存済みnode-idが解決できても、それだけで現行authorityとはみなさない。まず `CURRENT_AUTHORITY.md` のfile keyを確認し、current pageのtop-level frameを再走査し、対象full-page frameを`get_design_context`で再取得する。**
+Human-selected current authority. Last live re-scan: **2026-09-01**.
 
-旧 file `w7SGVY63FuW6JpaQVKjxm2` / `RfAQQ28V1HGaeIcpgRmQq1` の値は引き継がない。
+実装時は保存済みnode-idを信用して始めない。必ず `CURRENT_AUTHORITY.md` のfile keyを確認 → current pageのtop-level frameを再走査 → 対象full-page frameを `get_design_context` で再取得する。
+
+旧 file `w7SGVY63FuW6JpaQVKjxm2` / `RfAQQ28V1HGaeIcpgRmQq1` のnode値は historical evidence であり、current implementation authorityへ引き継がない。
 
 ## 優先ノード
 
-| 用途 | 面 | node-id | name |
+| 用途 | 面 | node-id | name / status |
 | --- | --- | --- | --- |
 | TOP（現行候補） | PC | `1603:7062` | topdesign04 |
 | Header コンポーネント | PC | `2209:9850` | header（1380×100、左340ダークロゴレール） |
 | Header instance 例 | PC | `2182:8241` | header |
-| Header SP 閉じ | SP | `446:10020` | SP TOP 先頭（header-sp 相当） |
-| Header SP 開き | SP | `2169:10018` | header-sp（menu 2169:10017 内） |
+| Header SP 閉じ | SP | `446:10020` | SP TOP |
+| Header SP 開き | SP | `2169:10018` | header-sp（menu `2169:10017` 内） |
 | Footer コンポーネント | PC | `2106:9471` | footer_subpage（下層・地図なし） |
 | Footer コンポーネント | SP | `2189:10106` | footer-sp（下層・地図なし） |
-| Footer TOP | PC | `1901:13409` | footer（地図 600×320） |
-| Footer TOP | SP | `1360:9369` | footer-sp-top（地図 315×168） |
+| Footer TOP | PC | `1901:13409` | footer（地図あり） |
+| Footer TOP | SP | `1360:9369` | footer-sp-top（地図あり） |
 | Page Title | PC | `2169:10270` | page_title-pc（金帯 220 / Mincho 32 Bold 白） |
 | Page Title | SP | `1399:18544` | page_title-sp（金帯 180 / Mincho 24 Bold 白） |
-| Page Title 画像付き | PC | `1450:5147` | page_title-img-pc（写真 1320×320 @x60 / 白 Mincho 32 パネル 360×79） |
-| Page Title 画像付き | SP | `1465:6339` | page_title-img-sp（写真 375×240 / 白 Mincho 24 パネル 327×66 @y207） |
-| Breadcrumb | PC | `1235:6479` | bread（Zen Kaku 13 / gap 10 / px 64 py 24） |
-| Breadcrumb | SP | `1451:5316` | bread（Zen Kaku 13 / gap 8 / px 24 py 20） |
-| Heading h2 | PC | `1157:8179` | h2（Zen Old Mincho Medium 26 / gap 20 / octagon 10） |
-| Heading h2 | SP | `2190:10305` | h2_sp（Zen Old Mincho Medium 24 / gap 12 / octagon 10） |
-| Heading h3 | PC | `1157:8184` | h3（20 / 帯 #f2f2f2 / inset 20×16） |
-| Heading h3 | SP | `1451:5679` | h3_sp（20 / 帯 #f2f2f2 / inset 16×12） |
-| Heading h4 | PC | `1157:8189` | h4（18 / 赤バー 4 / gap 16） |
-| Heading h4 | SP | `1468:7466` | h4_sp（18 / 赤バー 4 / gap 12） |
-| Paragraph | PC | `1157:8182` | p（Zen Kaku Gothic New Regular 17 / lh 1.6） |
-| Paragraph | SP | `1399:18729` | p（同上） |
-| Footer 例 | PC | `1901:14268` | footer_subpage |
-| Footer SP 下層 | SP | `560:2524` / `560:188` 末尾 | news_sp / join_sp |
+| Page Title 画像付き | PC | `1450:5147` | page_title-img-pc |
+| Page Title 画像付き | SP | `1465:6339` | page_title-img-sp |
+| Breadcrumb | PC | `1235:6479` | bread |
+| Breadcrumb | SP | `1451:5316` | bread |
+| Heading h2 | PC | `1157:8179` | h2（26 / octagon 10） |
+| Heading h2 | SP | `2190:10305` | h2_sp（24 / octagon 10） |
+| Heading h3 | PC | `1157:8184` | h3（20 / #f2f2f2帯） |
+| Heading h3 | SP | `1451:5679` | h3_sp |
+| Heading h4 | PC | `1157:8189` | h4（18 / 赤バー4） |
+| Heading h4 | SP | `1468:7466` | h4_sp |
+| Paragraph | PC | `1157:8182` | p（Zen Kaku 17 / lh 1.6） |
+| Paragraph | SP | `1399:18729` | p |
 | パーツ集 | PC | `1163:4245` | parts |
 | パーツ集 | SP | `1399:19144` | SP_parts |
 | お知らせ archive | PC | `413:2191` | news |
-| お知らせ archive | SP | `1399:14225` | SP_archive（full-page redesign authority） |
-| お知らせ archive | SP | `560:2524` | news_sp（older named page; corroborating evidence only） |
+| お知らせ archive | SP | `1399:14225` | SP_archive |
 | お知らせ detail | PC | `1235:6361` | post |
 | お知らせ detail | SP | `1451:5197` | SP_post |
 | Event archive | PC | `1619:9554` | event |
 | Event detail | PC | `1632:10382` | event_detail |
 | 大会・行事に参加したい | PC | `1148:6390` | navigation（本文あり） |
 | 大会・行事に参加したい | SP | `1468:7508` | SP_navigation（shellのみ、本文authority未作成） |
-| 大会に参加したい（別ページ） | SP | `560:188` | join_sp（本文あり。PC counterpart未確認） |
-| 研修センター | PC | `1137:5348` | navigation（page title / body / pricing / breadcrumb で識別） |
-| 研修センター（現行SP counterpart） | SP | `1468:6595` | SP_navigation（PCと同じ施設案内→料金→お知らせ→ご利用案内構造） |
-| 研修センター（旧SP案・参照注意） | SP | `560:377` | training_center_sp（料金詳細を欠く旧案） |
-| 地域社会武道指導者研修会 | PC | `1203:4865` | page（title/body/breadcrumbでSP counterpart確認） |
-| 地域社会武道指導者研修会 | SP | `560:537` | training_sp |
-| 地域社会武道指導者研修会 Local Nav | PC | `1216:6311` | local_nav |
-| 地域社会武道指導者研修会 SP navigation | SP | `560:632` | selector/dropdown-style navigation area |
-| 現代武道9種目紹介 | PC | `1145:6042` | navigation（9枚の Navigation Large を3列×3段） |
-| 現代武道9種目紹介 | SP | `1455:5489` | SP_navigation（同9枚を1列表示） |
-| SP TOP 候補 | SP | `446:10020` / `2169:10017` | SP / menu |
+| 研修センター | PC | `1137:5348` | navigation |
+| 研修センター | SP | `1468:6595` | SP_navigation |
+| 現代武道9種目紹介 | PC | `1145:6042` | navigation |
+| 現代武道9種目紹介 | SP | `1455:5489` | SP_navigation |
+| 地域社会武道指導者研修会 | PC | `1203:4865` | page |
+| 地域社会武道指導者研修会 | SP | — | dedicated current full-page counterpart未確認。旧lineage nodeを自動流用しない |
 
-## Current top-level re-resolution evidence（2026-08-31）
+## 残ページ current PC authority
 
-`CURRENT_AUTHORITY.md` の現行file `fKYDn9ikpJk1nW7IWFtaUx` をライブ再取得した結果。Header は PC `2209:9850` / SP open `2169:10018`。旧 file `w7SGVY63FuW6JpaQVKjxm2` の測定値は使わない。
+2026-09-01 のlive re-scanで、以下は current PC page `0:1` に存在する。
 
-Current PC page `0:1` top-level frames include:
+| Page family | node-id | current status |
+| --- | --- | --- |
+| 刊行物 / Backnumber | `1634:10806` | PC full-page current |
+| 刊行物 detail | `1637:11288` | PC full-page current |
+| Hardcover / 単行本 | `1656:5309` | PC full-page current |
+| Hardcover detail | `1686:5574` | PC full-page current |
+| 全日本少年少女武道錬成大会 | `2108:10725` | PC full-page current |
+| 鏡開き式・武道始め | `2108:10871` | PC full-page current |
+| 日本古武道演武大会 | `2108:10952` | PC full-page current |
+
+旧 tournament IDs `1700:7080` / `1709:8313` / `1714:8761` はcurrent mappingとして使わない。
+
+### 残ページのSP状態
+
+Current SP page `114:5409` を2026-09-01にlive re-scanした結果、上記7面に対応すると証明できる専用SP full-page frameは **存在を確認できなかった**。
+
+したがって残ページでは：
+
+- PCは上記current full-page frameで目視・runtime diff可能
+- SPは current pixel-perfect authority = **UNDETERMINED**
+- old `560:*` Backnumber/Training/News系nodeを復活させない
+- News SP、SP_navigation、別ページSPを見た目が似ているだけで代用しない
+- Themeの既存responsive masterが効く場合も、それは「shared Theme behavior」であり「current page-specific SP Figma parity」とは呼ばない
+- Humanがcurrent SP counterpartまたは「shared SP mastersをownerとする」と明示した時点でSP closureを再開する
+
+## Current top-level re-resolution evidence（2026-09-01）
+
+`CURRENT_AUTHORITY.md` の現行file `fKYDn9ikpJk1nW7IWFtaUx` をlive取得した結果。
+
+### PC page `0:1`
+
+Current top-level frames include:
 
 - `413:2191` `news`
 - `1619:9554` `event`
@@ -77,52 +102,89 @@ Current PC page `0:1` top-level frames include:
 - `1156:7728` `form`
 - `1163:4245` `parts`
 - `1203:4865` / `1206:5446` `page`
-- `2108:10725` `page_youth-budo-tournament-02` (old id `1700:7080` is absent)
-- `2108:10871` `page_kagami-biraki-02` (old id `1709:8313` is absent)
-- `2108:10952` `page_kobudo-demonstration-02` (old id `1714:8761` is absent)
+- `2108:10725` `page_youth-budo-tournament-02`
+- `2108:10871` `page_kagami-biraki-02`
+- `2108:10952` `page_kobudo-demonstration-02`
 - `1603:7062` `topdesign04`
 
-Current SP page `114:5409` top-level frames include:
+### SP page `114:5409`
 
-- `446:10020` / `2096:9573` `SP`
+Current top-level frames observed in the same live re-scan include:
+
+- `446:10020` `SP`
+- `2169:10017` `menu`
 - `1399:14225` `SP_archive`
 - `1451:5197` `SP_post`
 - `1451:5737` `SP_form`
 - `1455:5489` `SP_navigation`
-- `1468:6595` / `1468:7508` `SP_navigation`
+- `1468:6595` `SP_navigation`
+- `1468:7508` `SP_navigation`
 - `1399:19144` `SP_parts`
-- `560:188` `join_sp`
-- `560:377` `training_center_sp`
-- `560:537` `training_sp`
-- `560:677` `backnumber_sp`
-- `560:2524` `news_sp`
-- `2096:9496` `TopPage PlanB SP①`
+- `2197:5391` `navigation`（1380-wide frame on this canvas; SP authorityと即断しない）
+- `2197:5731` `topdesign04`（1380-wide frame on this canvas; SP authorityと即断しない）
 
-These lists are **discovery evidence, not automatic implementation authority**. Resolve page identity from title/body/breadcrumb and then call `get_design_context` on the selected full-page frame before implementation.
+旧監査に記録されていた `560:188` / `560:377` / `560:537` / `560:677` / `560:2524` はcurrent SP top-level listに存在しない。少なくとも `560:677` はcurrent fileで `get_design_context` を直接取得して **node not found** を確認済み。
+
+These lists are discovery evidence, not automatic implementation authority. Page identityは page title / body / breadcrumb / global shell を突き合わせ、full-page `get_design_context` で確定する。
+
+## 残ページのreuse-before-build観察
+
+Current PC full-page contextを再取得した範囲では、残ページは新しいpage systemを要求していない。
+
+### Publications / Publications detail
+
+主に既存masterのcomposition：
+
+- gold page title
+- body texture
+- h2 / h3 / h4
+- standard button / CTA
+- details/help panel
+- ordered/unordered list
+- white bordered boxes
+- breadcrumb / footer
+
+Repeated issue rowは見た目上繰り返していても、CPT/ACF Repeaterの証拠ではない。canonical editor/data ownerを確認するまでデータ構造を発明しない。詳細は `BACKNUMBER_DEPENDENCY_AUDIT.md`。
+
+### Hardcover
+
+主に既存masterのcomposition：
+
+- gold page title
+- h2 / h3
+- standard detail link
+- page-internal links
+- repeated cover/title/author/price cards
+- standard button
+
+Figma内の後半カテゴリにはplaceholder的な重複文言もあるため、Figmaはlayout authorityとして使い、商品コンテンツのcanonical data contractとはみなさない。
+
+### Tournament pages
+
+`2108:10725` のcurrent full-page contextでは、本文・gallery・h3・table・list・standard button/PDF action・image+h4+text card・separator・Local Nav・breadcrumb/footerの組み合わせで構成される。
+
+ページ固有CSSを先に作る理由はない。既存master composition → real runtime diff → 差が証明された箇所だけ最小derivative、の順を守る。
 
 ## 実装順との対応
 
-1. Header/Footer → header instance + footer_subpage + SP menu
-2. パーツ集 → parts / SP_parts（本文 markup は Theme の `parts.php` 正本）
-3. 以降のページ → 固定ページ順ではなく master/derivative 依存と reuse-before-build で選択
-4. 研修センター → `templates/template-oneColumn.php` + Gutenberg/既存 Parts composition が現行shell候補。`page.php` はPCでsidebarを持つ2-column shellのため、このFigma pageの960px centered bodyとは一致しない。production template assignmentはWordPress authority待ち。詳細は `TRAINING_CENTER_DEPENDENCY_AUDIT.md`
-5. 地域社会武道指導者研修会 → `page.php` + Gutenberg/既存 shared block composition が現行候補。詳細は `REGIONAL_TRAINING_DEPENDENCY_AUDIT.md`
-6. 現代武道9種目紹介 → `page.php` + 既存 Navigation Large master のcomposition。詳細は `MODERN_BUDO_DEPENDENCY_AUDIT.md`
-7. TOP → topdesign04 + SP TOP（既存 master の thin derivative を優先）
+1. Header / Footer → shared owners
+2. Parts → `parts` / `SP_parts`（Theme `parts.php` はHuman ownerのため変更しない）
+3. News / Event / Local Nav →既存ownerを再利用
+4. 残ページ → PC current full-page authorityとreal WordPress runtimeを比較し、shared masterで閉じる差分だけ修正
+5. SP専用authorityが無い残ページ → fail closed。旧nodeや別ページSPを流用しない
+6. Slider → Humanが既存editor/data ownerを決めるまで保留。Swiper存在だけを理由にACFを新設しない
+7. Event Calendar →最後。FullCalendar + Google Calendarの既存ownerを使い、ID/key Human待ち。自前UI禁止
+8. Form / Formidable / `parts.php` → Human担当
 
 ## 注意
 
-- PC canvas 幅は 1380。案件契約の body min-width は 1280
-- form フレームあり → Human 担当のため Agent は触らない
-- Figma の top-level layer name だけで画面を断定しない。汎用名・旧名が残るため、page title / 本文 / breadcrumb / global shell を突き合わせて authority を確定する
-- 現行file keyは `CURRENT_AUTHORITY.md` の `fKYDn9ikpJk1nW7IWFtaUx`。`w7SGVY63FuW6JpaQVKjxm2` / `RfAQQ28V1HGaeIcpgRmQq1` は旧lineageとして参照可能でも、現行実装authorityへ自動昇格させない
-- 2026-08-31の再監査では、旧lineage `RfA...` で `1468:6595` が解決しなかった一方、当時の現行 `w7...` では同nodeが解決した。その後 Human が `fKYD...` へ切り替えた。file keyを取り違えると「node削除」と誤診するため、node失敗時はまずfile authorityを確認する
-- News archive/detailのSP redesign node `1399:14225` / `1451:5197` は現行 file で再確認してから使う。older named frame `560:2524` をcurrent redesignの代替として黙って使わない
-- canonical SP pageにはPC Event archive/detailに対応すると証明できる専用SP frameがまだない。News SPをEventへ流用せず、SP authorityが出るまでfail closedとする
-- `大会・行事に参加したい` はPC `1148:6390` / SP `1468:7508` でpage identityは一致するが、現行SPはshellのみで本文authorityがない
-- `560:188` (`join_sp`) は `大会に参加したい` という別の本文付きSPページ。`1148:6390` の不足SP本文として流用しない
-- 研修センターSPは `1468:6595` をPC `1137:5348` のresponsive counterpartとして扱う。両者は施設案内、6枚gallery、料金詳細、お知らせ、ご利用案内の構造と料金改定内容が対応する
-- `560:377` は同名ページの旧SP案。料金詳細を欠くため最新実装authorityへ昇格させない
-- 研修センターのshared shellはPCで `templates/template-oneColumn.php` が最も一致する一方、SP Figmaの本文railは約327px（24px inset）、shared `_content` railはTheme token上335px（20px inset）。この8px差をglobal padding変更で吸収しない。canonical page assignment/editor contentを得てruntime diffしてからscoped derivative要否を決める
-- 地域社会武道指導者研修会はSP `560:537` / PC `1203:4865`。この実ページではPC `local_nav` に対してSPは4列navの縮小版ではなく、`560:632` のselector/dropdown-style navigationへinteraction formが切り替わる
-- 現代武道9種目紹介はSP `1455:5489` / PC `1145:6042`。両面とも既存Navigation Largeとgeometry/情報構造が一致するため、ページ専用cardを作らない
+- PC canvas 幅は1380。案件契約のbody min-widthは1280
+- Form frameは存在するがHuman担当のためAgentは触らない
+- Searchはheader icon authorityまで。結果一覧を勝手に設計しない
+- h1 / h5 / h6、nav-small、dropdown labelはcurrent Parts標本/契約がない限り発明しない
+- top-level layer nameだけでpage identityを断定しない
+- current file keyは必ず `CURRENT_AUTHORITY.md` から読む
+- old lineageのnode IDが文書・履歴・過去PRに残っていてもcurrentへ自動昇格させない
+- current nodeが消えた/見つからない場合、別fileの同nodeを探して代用せず、まずHuman-selected fileとcurrent pageを再確認する
+- current SP authorityが不足しているページを「PCを縮めれば同じ」と決め打ちしない
+- page-specific CSSは最後の手段。shared master / existing Gutenberg / Theme block CSS / current templatesで閉じられるかを先に確認する
