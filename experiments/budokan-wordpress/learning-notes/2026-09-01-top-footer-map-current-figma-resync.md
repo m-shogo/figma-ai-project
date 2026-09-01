@@ -9,7 +9,7 @@ Current file `fKYDn9ikpJk1nW7IWFtaUx`:
 - Subpage PC `2106:9471` `footer_subpage` (no map)
 - Subpage SP `2189:10106` `footer-sp` (no map)
 
-Owner remains `_footer.php` + `global_footer.css` + existing `footer-map.png`. Toggle is `get_template_part( ..., array( 'map' => true ) )` → class `_hasMap`. `footer.php` passes `is_front_page()` as the default. No new footer shell, ACF, or Form.
+Owner remains `_footer.php` + `global_footer.css` + existing `footer-map.png`. Toggle is `get_footer( null, array( 'map' => true ) )` → `_footer.php` `map` → class `_hasMap`. `front-page.php` is the only caller that passes it. Do not use `body.home` or `is_front_page()` for the map. No new footer shell, ACF, or Form.
 
 ## Finding
 
@@ -25,4 +25,4 @@ Keep map off by default. When `map` is true, show the existing map asset at SP 3
 
 ## Lesson
 
-A global hide to protect the subpage master is not permission to blank the TOP specimen. Gate the map with the template-part `map` arg, not `body.home`, so other pages can opt in.
+A global hide to protect the subpage master is not permission to blank the TOP specimen. Gate the map with an explicit `map` arg from the calling template (`get_footer`), not `body.home` or `is_front_page()`.

@@ -100,7 +100,7 @@ fi
 rm -f "$html"
 
 echo "PASS Budokan Footer rendered through the real Theme footer path."
-echo "PASS shared _footer.php remains reused; TOP shows footer map, subpages keep footer-sp / footer_subpage with no map."
+echo "PASS shared _footer.php remains reused; map only when the caller passes get_footer map => true."
 
 if [[ "${BUDOKAN_FOOTER_KEEP_RUNTIME:-0}" == "1" ]]; then
   trap - EXIT

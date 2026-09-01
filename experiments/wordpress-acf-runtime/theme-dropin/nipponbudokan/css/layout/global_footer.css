@@ -445,8 +445,9 @@
     }
 }
 
-/* TOP / mapped footer 1901:13409 / 1360:9369.
-   Toggle with get_template_part arg `map` → class _hasMap. Not body.home. */
+/* Mapped footer 1901:13409 / 1360:9369.
+   Toggle with get_footer( null, array( 'map' => true ) ) → class _hasMap.
+   Do not key this off body.home or is_front_page(). */
 .global_footer._hasMap {
     .gf_information {
         display: contents;
