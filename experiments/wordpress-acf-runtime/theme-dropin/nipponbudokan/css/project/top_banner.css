@@ -53,6 +53,7 @@
         border-radius: 3px;
         background-color: var(--color-secondary);
         color: var(--color-text);
+        font-family: var(--font-zen-kaku-gothic);
         font-size: 15px;
         font-weight: 500;
         line-height: 1;
