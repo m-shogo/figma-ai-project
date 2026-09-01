@@ -6,6 +6,8 @@
 //   2-col wrap, column-gap 64 / row-gap 24
 //   horizontal card: thumb 200×150 + text 224, gap 24
 //   labels → date → title
+//   category chip: #333 / #e7e7e7 / radius 2 / h20 (1630:9919).
+//   募集中 status chip stays fail-closed (no field).
 // Dedicated SP Event archive remains UNDETERMINED — keep SP stacked 2-col.
 // ------------------------------ */
 .block-editor_wrap,
@@ -131,10 +133,14 @@
                 flex-wrap: wrap;
                 gap: 4px 10px;
                 .label {
-                    display: inline-block;
-                    border: 1px solid var(--color-primary);
-                    padding: 0 0.5em;
-                    color: var(--color-primary);
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    min-height: 20px;
+                    border: 1px solid #e7e7e7;
+                    border-radius: 2px;
+                    padding: 0 10px;
+                    color: var(--color-text);
                     font-family: var(--font-zen-kaku-gothic);
                     font-size: 13px;
                     font-weight: 500;
