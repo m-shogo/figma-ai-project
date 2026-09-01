@@ -18,7 +18,9 @@ $explicit_posts = isset($args) && isset($args['posts']) && is_array($args['posts
             <?php endwhile; ?>
         </div>
         <?php if ($props !== 'customPostList') : ?>
-            <?php get_template_part('template-parts/_pagination'); ?>
+            <?php get_template_part('template-parts/_pagination', null, array(
+                'variant' => get_current_post_type() === 'event' ? 'news' : '',
+            )); ?>
         <?php endif; ?>
     <?php else: ?>
         <p>記事はありません。</p>

@@ -19,4 +19,4 @@ Mobile-first Kaku Medium 16/14, PC 18/16. Weight 500 not Bold.
 
 ## Lesson
 
-Event archive pager in Figma is the News underline family, but WordPress Event archive still uses generic `module_pager-01`. Do not retarget pager-01 from this card type pass.
+Event archive pager in Figma is the News underline family. WordPress Event archive now reuses `_pagination` variant `news` plus unscoped `.news_pager` CSS. Generic `module_pager-01` remains for search. Year/month calendar chrome on Event Figma stays fail-closed.
