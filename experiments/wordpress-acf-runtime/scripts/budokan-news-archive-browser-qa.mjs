@@ -14,6 +14,10 @@ function close(actual, expected, tolerance = 2) {
   return Math.abs(actual - expected) <= tolerance;
 }
 
+function isKakuFamily(family) {
+  return String(family || '').toLowerCase().includes('kaku');
+}
+
 const browser = await chromium.launch({ headless: true });
 
 try {
@@ -34,11 +38,13 @@ try {
     const firstArticleLink = firstArticle?.querySelector('.news_item_link');
     const firstMeta = firstArticle?.querySelector('.news_item_meta');
     const firstTitle = firstArticle?.querySelector('.news_item_title');
+    const firstDate = firstArticle?.querySelector('.news_item_date');
+    const firstLabel = firstArticle?.querySelector('.news_item_label');
     const pager = document.querySelector('.news_archive .news_pager');
     const pageNumber = document.querySelector('.news_pager_numbers .page-numbers:not(.prev):not(.next):not(.dots)');
     const prevSlot = document.querySelector('.news_pager_prev');
     const nextSlot = document.querySelector('.news_pager_next');
-    if (!archive || !list || tabs.length !== 6 || links.length !== 6 || !firstArticle || !firstArticleLink || !firstMeta || !firstTitle || !pager || !pageNumber || !prevSlot || !nextSlot) return null;
+    if (!archive || !list || tabs.length !== 6 || links.length !== 6 || !firstArticle || !firstArticleLink || !firstMeta || !firstTitle || !firstDate || !firstLabel || !pager || !pageNumber || !prevSlot || !nextSlot) return null;
 
     const archiveRect = archive.getBoundingClientRect();
     const listRect = list.getBoundingClientRect();
@@ -72,6 +78,11 @@ try {
       articleGap: articleLinkStyle.gap,
       metaGap: metaStyle.gap,
       titleLineHeight: titleStyle.lineHeight,
+      titleFamily: titleStyle.fontFamily,
+      tabFamily: linkStyles[0].fontFamily,
+      dateFamily: getComputedStyle(firstDate).fontFamily,
+      labelFamily: getComputedStyle(firstLabel).fontFamily,
+      numberFamily: numberStyle.fontFamily,
       pagerWidth: pagerRect.width,
       pagerDisplay: pagerStyle.display,
       pagerJustify: pagerStyle.justifyContent,
@@ -101,6 +112,11 @@ try {
   assert(close(sp.numberWidth, 50) && close(sp.numberHeight, 40), `SP page number expected 50x40, got ${sp.numberWidth}x${sp.numberHeight}.`);
   assert(sp.numberRadius === '0px' && sp.numberBottomBorder === '2px', `SP page number must use underline family, got radius=${sp.numberRadius} border=${sp.numberBottomBorder}.`);
   assert(close(sp.prevSize[0], 40) && close(sp.prevSize[1], 40) && close(sp.nextSize[0], 40) && close(sp.nextSize[1], 40), `SP pager arrow slots expected 40x40, got prev=${sp.prevSize} next=${sp.nextSize}.`);
+  assert(isKakuFamily(sp.tabFamily), `SP tab must resolve to Zen Kaku Gothic New, got ${sp.tabFamily}.`);
+  assert(isKakuFamily(sp.dateFamily), `SP date must resolve to Zen Kaku Gothic New, got ${sp.dateFamily}.`);
+  assert(isKakuFamily(sp.labelFamily), `SP label must resolve to Zen Kaku Gothic New, got ${sp.labelFamily}.`);
+  assert(isKakuFamily(sp.titleFamily), `SP title must resolve to Zen Kaku Gothic New, got ${sp.titleFamily}.`);
+  assert(isKakuFamily(sp.numberFamily), `SP pager number must resolve to Zen Kaku Gothic New, got ${sp.numberFamily}.`);
   await mobileContext.close();
 
   const desktopContext = await browser.newContext({ viewport: { width: 1380, height: 1200 } });
@@ -114,7 +130,9 @@ try {
     const links = [...document.querySelectorAll('.news_tabs_archive .news_tabs_link')];
     const pager = document.querySelector('.news_archive .news_pager');
     const pageNumber = document.querySelector('.news_pager_numbers .page-numbers:not(.prev):not(.next):not(.dots)');
-    if (!archive || !list || tabs.length !== 6 || links.length !== 6 || !pager || !pageNumber) return null;
+    const firstTitle = document.querySelector('.news_item_title');
+    const firstDate = document.querySelector('.news_item_date');
+    if (!archive || !list || tabs.length !== 6 || links.length !== 6 || !pager || !pageNumber || !firstTitle || !firstDate) return null;
 
     const archiveRect = archive.getBoundingClientRect();
     const listRect = list.getBoundingClientRect();
@@ -136,6 +154,10 @@ try {
       numberWidth: numberRect.width,
       numberHeight: numberRect.height,
       numberBottomBorder: numberStyle.borderBottomWidth,
+      numberFamily: numberStyle.fontFamily,
+      tabFamily: styles[0].fontFamily,
+      titleFamily: getComputedStyle(firstTitle).fontFamily,
+      dateFamily: getComputedStyle(firstDate).fontFamily,
     };
   });
 
@@ -149,10 +171,14 @@ try {
   assert(pc.radius === '3px' && pc.borders.every((border) => border === '1px'), `PC tabs expected independent 3px bordered cards, got radius=${pc.radius}, borders=${pc.borders.join(',')}.`);
   assert(pc.pagerJustify === 'center' && pc.pagerGap === '48px', `PC pager expected centered 48px family, got ${pc.pagerJustify}/${pc.pagerGap}.`);
   assert(close(pc.numberWidth, 50) && close(pc.numberHeight, 40) && pc.numberBottomBorder === '2px', `PC page number expected 50x40 underline, got ${pc.numberWidth}x${pc.numberHeight}/${pc.numberBottomBorder}.`);
+  assert(isKakuFamily(pc.tabFamily), `PC tab must resolve to Zen Kaku Gothic New, got ${pc.tabFamily}.`);
+  assert(isKakuFamily(pc.dateFamily), `PC date must resolve to Zen Kaku Gothic New, got ${pc.dateFamily}.`);
+  assert(isKakuFamily(pc.titleFamily), `PC title must resolve to Zen Kaku Gothic New, got ${pc.titleFamily}.`);
+  assert(isKakuFamily(pc.numberFamily), `PC pager number must resolve to Zen Kaku Gothic New, got ${pc.numberFamily}.`);
   await desktopContext.close();
 
-  console.log('PASS Budokan News archive SP current 3x2 tabs, article rail and one-row pager QA.');
-  console.log('PASS Budokan News archive PC current 6x120 tab and pager geometry QA.');
+  console.log('PASS Budokan News archive SP current 3x2 tabs, article rail, one-row pager, and type family QA.');
+  console.log('PASS Budokan News archive PC current 6x120 tab, pager geometry, and type family QA.');
 } finally {
   await browser.close();
 }
