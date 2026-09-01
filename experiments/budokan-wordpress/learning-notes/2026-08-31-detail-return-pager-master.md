@@ -2,9 +2,11 @@
 
 ## Authority re-check
 
-Before changing the shared pager, the current canonical Figma file `w7SGVY63FuW6JpaQVKjxm2` was re-checked rather than relying on the prior News-only screenshot.
+Before changing the shared pager, the current canonical Figma file `fKYDn9ikpJk1nW7IWFtaUx` was re-checked rather than relying on the prior News-only screenshot.
 
-Repeated evidence now exists across three current specimens:
+2026-09-01 revalidation: the current Human-selected file remains `fKYDn9ikpJk1nW7IWFtaUx`; News detail SP `1451:5197` and PC `1235:6361` still show the same central `一覧へ戻る` visual. The older file key `w7SGVY63FuW6JpaQVKjxm2` is lineage only and must not be treated as current authority.
+
+Repeated evidence exists across the detail specimens:
 
 - News detail SP `1451:5197`
 - News detail PC `1235:6361`
