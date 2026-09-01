@@ -19,6 +19,8 @@ on:
       - "contracts/**/*.json"
       - "research/**/*.yaml"
       - "research/**/*.md"
+      - "playbook/**/*.yaml"
+      - "playbook/**/*.md"
       - "docs/human-editability.md"
       - "docs/frontend-*.md"
       - "docs/css-strategy.md"
@@ -26,6 +28,7 @@ on:
       - "docs/wordpress-acf-policy.md"
       - "requirements-dev.txt"
       - ".github/workflows/validate-research.yml"
+      - ".github/workflows/frontend-learning-promotion-review.yml"
       - ".github/workflows/update-radar.yml"
   pull_request:
     paths:
@@ -45,6 +48,8 @@ on:
       - "contracts/**/*.json"
       - "research/**/*.yaml"
       - "research/**/*.md"
+      - "playbook/**/*.yaml"
+      - "playbook/**/*.md"
       - "docs/human-editability.md"
       - "docs/frontend-*.md"
       - "docs/css-strategy.md"
@@ -52,6 +57,7 @@ on:
       - "docs/wordpress-acf-policy.md"
       - "requirements-dev.txt"
       - ".github/workflows/validate-research.yml"
+      - ".github/workflows/frontend-learning-promotion-review.yml"
       - ".github/workflows/update-radar.yml"
 
 permissions:
@@ -89,6 +95,9 @@ jobs:
 
       - name: Validate frontend learning evidence index
         run: python scripts/validate_frontend_learning_evidence.py
+
+      - name: Audit frontend learning promotion backlog
+        run: python scripts/audit_frontend_learning_promotion.py
 
       - name: Audit reusable run lessons are indexed
         run: python scripts/audit_frontend_learning_capture.py
