@@ -16,6 +16,23 @@ function isRobotoFamily(family) {
   return String(family || '').toLowerCase().includes('roboto');
 }
 
+async function measureTopInstagram(page) {
+  return page.evaluate(() => {
+    const section = document.querySelector('#top_instagram-01');
+    const title = section?.querySelector('.ti_title');
+    const label = section?.querySelector('.ti_label');
+    const lead = section?.querySelector('.ti_lead');
+    if (!section || !title || !label || !lead) return null;
+    return {
+      titleSize: parseFloat(getComputedStyle(title).fontSize),
+      titleFamily: getComputedStyle(title).fontFamily,
+      labelSize: parseFloat(getComputedStyle(label).fontSize),
+      labelFamily: getComputedStyle(label).fontFamily,
+      leadFamily: getComputedStyle(lead).fontFamily,
+    };
+  });
+}
+
 async function measureTopPartner(page) {
   return page.evaluate(() => {
     const section = document.querySelector('#top_partner-01');
@@ -144,6 +161,13 @@ try {
   assert(close(spPartner.nameSize, 12, 0.5), `SP partner name ${spPartner.nameSize}`);
   assert(isKakuFamily(spPartner.nameFamily), `SP partner name must resolve to Zen Kaku Gothic New, got ${spPartner.nameFamily}.`);
   assert(isKakuFamily(spPartner.moreFamily), `SP partner more must resolve to Zen Kaku Gothic New, got ${spPartner.moreFamily}.`);
+  const spInstagram = await measureTopInstagram(mobilePage);
+  assert(spInstagram, 'SP TOP Instagram elements missing');
+  assert(close(spInstagram.titleSize, 22, 0.5), `SP instagram title ${spInstagram.titleSize}`);
+  assert(isKakuFamily(spInstagram.titleFamily), `SP instagram title must resolve to Zen Kaku Gothic New, got ${spInstagram.titleFamily}.`);
+  assert(close(spInstagram.labelSize, 14, 0.5), `SP instagram label ${spInstagram.labelSize}`);
+  assert(isRobotoFamily(spInstagram.labelFamily), `SP instagram label must resolve to Roboto, got ${spInstagram.labelFamily}.`);
+  assert(isKakuFamily(spInstagram.leadFamily), `SP instagram lead must resolve to Zen Kaku Gothic New, got ${spInstagram.leadFamily}.`);
   await mobileContext.close();
 
   const desktopContext = await browser.newContext({ viewport: { width: 1380, height: 1500 } });
@@ -230,11 +254,19 @@ try {
   assert(close(pcPartner.nameSize, 14, 0.5), `PC partner name ${pcPartner.nameSize}`);
   assert(isKakuFamily(pcPartner.nameFamily), `PC partner name must resolve to Zen Kaku Gothic New, got ${pcPartner.nameFamily}.`);
   assert(isKakuFamily(pcPartner.moreFamily), `PC partner more must resolve to Zen Kaku Gothic New, got ${pcPartner.moreFamily}.`);
+  const pcInstagram = await measureTopInstagram(desktopPage);
+  assert(pcInstagram, 'PC TOP Instagram elements missing');
+  assert(close(pcInstagram.titleSize, 24, 0.5), `PC instagram title ${pcInstagram.titleSize}`);
+  assert(isMinchoFamily(pcInstagram.titleFamily), `PC instagram title must resolve to Zen Old Mincho, got ${pcInstagram.titleFamily}.`);
+  assert(close(pcInstagram.labelSize, 16, 0.5), `PC instagram label ${pcInstagram.labelSize}`);
+  assert(isMinchoFamily(pcInstagram.labelFamily), `PC instagram label must resolve to Zen Old Mincho, got ${pcInstagram.labelFamily}.`);
+  assert(isKakuFamily(pcInstagram.leadFamily), `PC instagram lead must resolve to Zen Kaku Gothic New, got ${pcInstagram.leadFamily}.`);
   await desktopContext.close();
   console.log('PASS Budokan TOP About SP responsive geometry and type family QA.');
   console.log('PASS Budokan TOP About PC right-rail four-card geometry and type family QA.');
   console.log('PASS Budokan TOP News SP/PC type family QA hosted on the About front-page runtime.');
   console.log('PASS Budokan TOP Partner SP/PC type family QA hosted on the About front-page runtime.');
+  console.log('PASS Budokan TOP Instagram SP/PC type family QA hosted on the About front-page runtime.');
 } finally {
   await browser.close();
 }
