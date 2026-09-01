@@ -6,6 +6,9 @@
 // PC: h2 1157:8179 / h3 1157:8184 / h4 1157:8189
 // h3 CSS padding stays 1px under the Figma inset because the 1px border is
 // already in the box (see 2026-08-29 heading learning).
+// h4 Figma wraps the text in a 2px block inset while the 4px red rail spans
+// the full resulting height. The heading stays a single Gutenberg element, so
+// the rail uses a negative block margin to reproduce that child-wrapper inset.
 // ------------------------------ */
 .block-editor_wrap,
 .editor-styles-wrapper {
@@ -107,12 +110,14 @@
         letter-spacing: 0.05em;
         color: var(--color-text);
         margin-bottom: 0;
+        padding-block: 2px;
         overflow-wrap: anywhere;
         word-break: normal;
         line-break: strict;
         &::before {
             content: '';
             width: 4px;
+            margin-block: -2px;
             flex-shrink: 0;
             background-color: var(--color-primary);
         }
