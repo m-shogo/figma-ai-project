@@ -103,6 +103,11 @@
             .date {
                 margin: 0; /* エディタでの余白を削除 */
                 width: 100px;
+                font-family: var(--font-zen-kaku-gothic);
+                font-size: 14px;
+                font-weight: 500;
+                line-height: 1;
+                letter-spacing: 0.05em;
             }
             .category {
                 margin: 0; /* エディタでの余白を削除 */
@@ -116,6 +121,11 @@
                     border: 1px solid var(--color-primary);
                     padding: 0 0.5em;
                     color: var(--color-primary);
+                    font-family: var(--font-zen-kaku-gothic);
+                    font-size: 13px;
+                    font-weight: 500;
+                    line-height: 1;
+                    letter-spacing: 0.05em;
                 }
             }
         }
@@ -123,8 +133,9 @@
             margin-top: 10px;
             .title {
                 margin: 0; /* エディタでの余白を削除 */
-                font-weight: 700;
-                font-size: 18px;
+                font-family: var(--font-zen-kaku-gothic);
+                font-weight: 500;
+                font-size: 16px;
                 line-height: 1.5;
                 letter-spacing: 0.05em;
                 transition: color var(--transition-duration);
@@ -145,6 +156,12 @@
                 .category {
                     margin-top: 0;
                 }
+            }
+            .body .date {
+                font-size: 16px;
+            }
+            .foot .title {
+                font-size: 18px;
             }
         }
     }
