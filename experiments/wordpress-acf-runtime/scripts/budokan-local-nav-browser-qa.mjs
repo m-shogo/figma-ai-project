@@ -12,6 +12,10 @@ function assert(condition, message) {
   }
 }
 
+function isKakuFamily(family) {
+  return String(family || '').toLowerCase().includes('kaku');
+}
+
 const browser = await chromium.launch({ headless: true });
 const page = await browser.newPage({ viewport: { width: 375, height: 900 } });
 
@@ -35,6 +39,8 @@ try {
       selectorHeight: selectorRect.height,
       wrapperHeight: wrapperRect.height,
       background: navStyle.backgroundColor,
+      titleFamily: getComputedStyle(familyLink).fontFamily,
+      selectorFamily: getComputedStyle(selector, '::before').fontFamily,
     };
   });
 
@@ -45,6 +51,8 @@ try {
   assert(Math.abs(sp.selectorHeight - 50) <= 1, `SP selector height expected 50px, got ${sp.selectorHeight}.`);
   assert(sp.wrapperHeight <= 1, `SP closed wrapper should collapse, got ${sp.wrapperHeight}px.`);
   assert(sp.background === 'rgb(242, 242, 242)', `SP background expected rgb(242, 242, 242), got ${sp.background}.`);
+  assert(isKakuFamily(sp.titleFamily), `SP family heading must resolve to Zen Kaku Gothic New, got ${sp.titleFamily}.`);
+  assert(isKakuFamily(sp.selectorFamily), `SP selector prompt must resolve to Zen Kaku Gothic New, got ${sp.selectorFamily}.`);
 
   await page.setViewportSize({ width: 1380, height: 1000 });
   await page.reload({ waitUntil: 'networkidle' });
@@ -72,6 +80,8 @@ try {
       childTexts: childItems.map((el) => el.textContent.trim()),
       boxes,
       currentText: current ? current.textContent.trim() : null,
+      headingFamily: getComputedStyle(subgroupLink).fontFamily,
+      childFamily: current ? getComputedStyle(current.querySelector('.lnl_link-04') || current).fontFamily : null,
     };
   });
 
@@ -89,6 +99,8 @@ try {
   assert(topSpread <= 2, `PC four children are not on one row; top spread=${topSpread}px.`);
   const distinctLefts = new Set(pc.boxes.map((box) => Math.round(box.left)));
   assert(distinctLefts.size === 4, `PC four children do not occupy four columns; distinct x=${distinctLefts.size}.`);
+  assert(isKakuFamily(pc.headingFamily), `PC subgroup heading must resolve to Zen Kaku Gothic New, got ${pc.headingFamily}.`);
+  assert(isKakuFamily(pc.childFamily), `PC current child must resolve to Zen Kaku Gothic New, got ${pc.childFamily}.`);
 
   console.log('PASS Budokan Local Navigation SP closed-state browser QA.');
   console.log('PASS Budokan Local Navigation PC depth-03 heading + four depth-04 columns browser QA.');
