@@ -41,3 +41,12 @@ retest_triggers:
   - "new reference uses dynamic collection semantics"
   - "major ACF/editor architecture change"
   - "major agent/model generation change"
+promotion_review:
+  last_reviewed_at: "2026-09-02"
+  next_review_at: "2026-09-16"
+  status: RETEST_REQUIRED
+  reason: "Two-reference conservative-modeling evidence exists, but the second reference has not yet measured implementation/rework outcomes and the dynamic-collection boundary still needs an explicit positive case."
+  trigger: "Review immediately when REF-002 or another reference completes WordPress implementation, or when a genuine editor-managed dynamic collection is supplied."
+  evidence_needed:
+    - "Measured second-reference CMS implementation/clean-replay outcome"
+    - "Positive dynamic-collection case proving the known-limit boundary"
