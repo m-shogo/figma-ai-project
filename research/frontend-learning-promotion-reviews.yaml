@@ -22,3 +22,16 @@ reviews:
       an implementation/clean-replay outcome. Keep the rule candidate until an independent runtime
       outcome or a genuine editor-managed dynamic collection case tests the boundary. This is an
       explicit review disposition, not indefinite parking.
+  OBS-REF001-FIGMA-PROVENANCE:
+    last_reviewed_at: '2026-09-02'
+    next_review_due: '2026-09-16'
+    reviewed_supporting_references: 2
+    reviewed_contradictions: 0
+    disposition: KEEP_CANDIDATE
+    rationale: >-
+      REF-001 and Budokan now independently support recording and re-resolving Figma provenance, and
+      the Budokan Parts audit shows a concrete stale-authority failure that was caught before more
+      implementation was built from the wrong file/node lineage. This justifies CANDIDATE status, but
+      not ACTIVE yet: the second reference is a corrective/prevention outcome without a measured
+      prospective clean replay or Human Correction Cost delta. Revisit within two weeks or sooner when
+      another implementation consumes this candidate prospectively.
