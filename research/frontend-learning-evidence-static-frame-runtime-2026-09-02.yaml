@@ -1,0 +1,47 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: CR-REF001-001
+    summary: Exact Figma endpoint fidelity and browser runtime safety are separate acceptance layers; ordinary readable copy should not be forced into static-frame line breaks with nowrap, arbitrary hard breaks, viewport widening, or clipping unless the product contract explicitly requires a one-line behavior.
+    category: RESPONSIVE
+    applicability:
+      scope: REFERENCE
+      conditions:
+        - Static Figma endpoint geometry and browser runtime wrapping or overflow behavior can diverge at intermediate widths.
+        - Copy is ordinary readable content rather than an explicitly single-line control.
+      exclusions:
+        - Explicit one-line product contracts can justify nowrap when overflow and accessibility remain proven.
+        - Exact endpoint geometry still remains a fidelity target at the authored reference widths.
+    promotion_state: CANDIDATE
+    promotion:
+      candidate: true
+      rationale: REF-001 has a clean replay with zero horizontal-overflow/readable-text-clipping failures across runtime probes, but no independent second-reference implementation outcome exists yet.
+      blocked_by:
+        - Independent second-reference implementation or clean replay with materially different typography/localization constraints.
+        - Measured evidence that the rule prevents runtime overfit without hiding a real one-line product requirement.
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-CR001-REF001-WP-ACF
+          kind: LOCAL_RESEARCH
+          reference_id: REF-001-CHIBA-KEIZAI-SAMPLE
+          run_id: ''
+          path: experiments/ref001-wordpress-acf/README.md
+          commit: ''
+          note: REF-001 WordPress learning explicitly separates Figma fidelity from forcing static-frame behavior onto runtime copy.
+        - evidence_id: EV-CR001-REF001-CANDIDATE
+          kind: CANONICAL_DOC
+          reference_id: REF-001-CHIBA-KEIZAI-SAMPLE
+          run_id: ''
+          path: playbook/candidates/cr-ref001-001-static-frame-vs-runtime.yaml
+          commit: ''
+          note: The E2/OPTIONAL candidate records the clean replay and intermediate-width overflow/clipping results.
+      contradicts: []
+    notes:
+      - Keep CANDIDATE until a genuinely independent implementation outcome confirms the boundary.
