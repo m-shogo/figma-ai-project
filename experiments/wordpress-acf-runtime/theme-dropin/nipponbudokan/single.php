@@ -75,7 +75,8 @@ if (get_field('post_type') === 'file') {
                         $thumb = $thumbnailId ? wp_get_attachment_image_src($thumbnailId, 'full') : false;
                         $caption = $thumbnailId ? wp_get_attachment_caption($thumbnailId) : '';
                         ?>
-                        <?php if ($thumbnailId && $thumb) : ?>
+                        <?php // Current News detail owns a lead featured image; Event uses its thumbnail for archive-card media only. ?>
+                        <?php if (get_post_type() === 'post' && $thumbnailId && $thumb) : ?>
                             <figure class="single_featured">
                                 <img itemprop="image" src="<?php echo esc_url($thumb[0]); ?>" alt="<?php echo esc_attr(get_post_meta($thumbnailId, '_wp_attachment_image_alt', true) ?: get_the_title()); ?>" width="800" height="534">
                                 <?php if ($caption) : ?>
