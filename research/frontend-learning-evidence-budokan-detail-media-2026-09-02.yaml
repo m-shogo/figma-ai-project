@@ -1,0 +1,46 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: OBS-BUDOKAN-DETAIL-MEDIA-ROLE
+    summary: A CMS Featured Image can be shared as source data across list/card and detail surfaces without authorizing automatic detail rendering; presentation ownership must be resolved per current detail family.
+    category: CMS
+    applicability:
+      scope: PROJECT
+      conditions:
+        - A WordPress media field or Featured Image is consumed by more than one presentation surface.
+        - Current design or editor ownership distinguishes archive/card media from detail-body media.
+      exclusions:
+        - A project contract explicitly defines the Featured Image as the detail lead image for the affected post type.
+        - The detail template has a dedicated media field/slot whose ownership is already authoritative.
+    promotion_state: PROJECT_ONLY
+    promotion:
+      candidate: false
+      rationale: Current Budokan News and Event families prove that one Featured Image field has different presentation roles, but this is still one project and must not become a cross-project rule without independent evidence.
+      blocked_by:
+        - Independent reference or project showing the same source-field versus presentation-role boundary with measurable avoided rework.
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-DETAIL-MEDIA-AUDIT-20260902
+          kind: LOCAL_RESEARCH
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/budokan-wordpress/EVENT_DETAIL_MEDIA_OWNERSHIP_AUDIT.md
+          commit: ''
+          note: Live current-Figma comparison records News detail lead-image ownership, Event archive thumbnail ownership, and the absence of automatic Event detail lead media.
+        - evidence_id: EV-BUDOKAN-DETAIL-MEDIA-SINGLE-20260902
+          kind: COMMIT
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/single.php
+          commit: 34750dddc5e146ff4ef12aedfd454d292d459909
+          note: Shared single template now limits automatic Featured Image detail rendering to the current News/normal-post family while preserving Event thumbnail source data for archive cards.
+      contradicts: []
+    notes:
+      - Keep PROJECT_ONLY until another project/reference confirms the boundary; do not create a global prohibition on detail Featured Images.
