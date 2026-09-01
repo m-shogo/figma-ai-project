@@ -322,6 +322,44 @@
     .gn_search {
         margin-top: 40px;
         padding-inline: var(--padding-SP);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        /* SP open menu search 2169:10220 — 300×50 field, 50px #4e5055 icon.
+           search.php / 404 keep the shared 40px primary module_search-01. */
+        .module_search-01 {
+            width: 100%;
+            max-width: 300px;
+            .ms_from {
+                background-color: transparent;
+                grid-template-columns: minmax(0, 1fr) 50px;
+                .ms_input {
+                    height: 50px;
+                    border-color: var(--color-header-search);
+                }
+                .ms_button {
+                    height: 50px;
+                    border-color: var(--color-header-search);
+                    background-color: var(--color-header-search);
+                    span {
+                        font-size: 0;
+                        &::after {
+                            margin-left: 0;
+                            font-size: 13px;
+                            font-weight: 400;
+                        }
+                    }
+                    &:hover,
+                    &:focus {
+                        background-color: var(--color-header-search);
+                        span,
+                        span::after {
+                            color: var(--color-secondary);
+                        }
+                    }
+                }
+            }
+        }
     }
     .gn_close {
         display: block;
