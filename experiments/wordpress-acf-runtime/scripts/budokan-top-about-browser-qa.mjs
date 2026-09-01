@@ -16,6 +16,18 @@ function isRobotoFamily(family) {
   return String(family || '').toLowerCase().includes('roboto');
 }
 
+async function measureTopBanner(page) {
+  return page.evaluate(() => {
+    const section = document.querySelector('#top_banner-01');
+    const link = section?.querySelector('.tb_link');
+    if (!section || !link) return null;
+    return {
+      family: getComputedStyle(link).fontFamily,
+      size: parseFloat(getComputedStyle(link).fontSize),
+    };
+  });
+}
+
 async function measureTopInstagram(page) {
   return page.evaluate(() => {
     const section = document.querySelector('#top_instagram-01');
@@ -168,6 +180,10 @@ try {
   assert(close(spInstagram.labelSize, 14, 0.5), `SP instagram label ${spInstagram.labelSize}`);
   assert(isRobotoFamily(spInstagram.labelFamily), `SP instagram label must resolve to Roboto, got ${spInstagram.labelFamily}.`);
   assert(isKakuFamily(spInstagram.leadFamily), `SP instagram lead must resolve to Zen Kaku Gothic New, got ${spInstagram.leadFamily}.`);
+  const spBanner = await measureTopBanner(mobilePage);
+  assert(spBanner, 'SP TOP Banner elements missing');
+  assert(close(spBanner.size, 15, 0.5), `SP banner size ${spBanner.size}`);
+  assert(isKakuFamily(spBanner.family), `SP banner must resolve to Zen Kaku Gothic New, got ${spBanner.family}.`);
   await mobileContext.close();
 
   const desktopContext = await browser.newContext({ viewport: { width: 1380, height: 1500 } });
@@ -261,12 +277,17 @@ try {
   assert(close(pcInstagram.labelSize, 16, 0.5), `PC instagram label ${pcInstagram.labelSize}`);
   assert(isMinchoFamily(pcInstagram.labelFamily), `PC instagram label must resolve to Zen Old Mincho, got ${pcInstagram.labelFamily}.`);
   assert(isKakuFamily(pcInstagram.leadFamily), `PC instagram lead must resolve to Zen Kaku Gothic New, got ${pcInstagram.leadFamily}.`);
+  const pcBanner = await measureTopBanner(desktopPage);
+  assert(pcBanner, 'PC TOP Banner elements missing');
+  assert(close(pcBanner.size, 16, 0.5), `PC banner size ${pcBanner.size}`);
+  assert(isKakuFamily(pcBanner.family), `PC banner must resolve to Zen Kaku Gothic New, got ${pcBanner.family}.`);
   await desktopContext.close();
   console.log('PASS Budokan TOP About SP responsive geometry and type family QA.');
   console.log('PASS Budokan TOP About PC right-rail four-card geometry and type family QA.');
   console.log('PASS Budokan TOP News SP/PC type family QA hosted on the About front-page runtime.');
   console.log('PASS Budokan TOP Partner SP/PC type family QA hosted on the About front-page runtime.');
   console.log('PASS Budokan TOP Instagram SP/PC type family QA hosted on the About front-page runtime.');
+  console.log('PASS Budokan TOP Banner SP/PC type family QA hosted on the About front-page runtime.');
 } finally {
   await browser.close();
 }
