@@ -48,7 +48,7 @@
 
     .tp_title {
         margin: 0;
-        font-family: var(--font-sansSerif-ja);
+        font-family: var(--font-zen-kaku-gothic);
         font-size: 22px;
         font-weight: 500;
         line-height: 1;
@@ -84,6 +84,7 @@
 
     .tp_lead {
         margin: 0;
+        font-family: var(--font-zen-kaku-gothic);
         font-size: 15px;
         font-weight: 400;
         line-height: 1;
@@ -130,6 +131,7 @@
     .tp_name {
         overflow: hidden;
         max-width: 100%;
+        font-family: var(--font-zen-kaku-gothic);
         font-size: 12px;
         font-weight: 500;
         line-height: 1;
@@ -147,6 +149,7 @@
         width: fit-content;
         margin-inline: auto;
         color: var(--color-text);
+        font-family: var(--font-zen-kaku-gothic);
         font-size: 15px;
         font-weight: 500;
         line-height: 1;
@@ -210,14 +213,14 @@
         }
 
         .tp_title {
-            font-family: var(--font-serif-ja);
+            font-family: var(--font-zen-old-mincho);
             font-size: 24px;
             font-weight: 500;
         }
 
         .tp_title_en {
             gap: 0;
-            font-family: var(--font-serif-ja);
+            font-family: var(--font-zen-old-mincho);
             font-size: 16px;
             font-weight: 500;
         }
