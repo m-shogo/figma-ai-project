@@ -86,6 +86,14 @@
     }
 }
 
+.single-event .module_titleSingle {
+    @media screen and (min-width: 768px) {
+        .body .module_title-01 {
+            font-size: 32px;
+        }
+    }
+}
+
 .single_featured {
     width: 100%;
     max-width: 800px;
