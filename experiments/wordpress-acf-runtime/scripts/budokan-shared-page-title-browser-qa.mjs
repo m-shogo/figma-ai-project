@@ -92,6 +92,7 @@ async function measureFixed(page) {
 }
 
 const fixedPageUrl = new URL('/budokan-fixed-page-qa/', url).href;
+const goldPageUrl = new URL('/parts/', url).href;
 const browser = await chromium.launch({ headless: true });
 
 try {
@@ -114,6 +115,18 @@ try {
   assert(sp.titleColor === 'rgb(255, 255, 255)', `SP title color expected white, got ${sp.titleColor}.`);
   assert(close(parseFloat(sp.titleLineHeight), 33.6, 1), `SP title line-height expected ~33.6px, got ${sp.titleLineHeight}.`);
   assert(close(parseFloat(sp.titleLetterSpacing), 1.2, 0.2), `SP title tracking expected ~1.2px, got ${sp.titleLetterSpacing}.`);
+
+  await mobilePage.goto(goldPageUrl, { waitUntil: 'networkidle' });
+  const spParts = await measureGold(mobilePage);
+  assert(spParts, 'SP gold title on a page without page_img was not found.');
+  assert(close(spParts.height, 180), `SP Parts gold visual expected 180px, got ${spParts.height}.`);
+  assert(spParts.visualBg === 'rgb(202, 153, 87)', `SP Parts visual background expected gold #ca9957, got ${spParts.visualBg}.`);
+  assert(spParts.backgroundDisplay === 'none', `SP Parts photo layer must stay hidden on the gold title, got ${spParts.backgroundDisplay}.`);
+  assert(spParts.titleText === 'パーツ集', `SP Parts gold title expected パーツ集, got ${spParts.titleText}.`);
+  assert(spParts.titleFontSize === '24px', `SP Parts title expected 24px, got ${spParts.titleFontSize}.`);
+  assert(spParts.titleFontWeight === '700', `SP Parts title expected weight 700, got ${spParts.titleFontWeight}.`);
+  assert(isSerifFamily(spParts.titleFontFamily), `SP Parts title must resolve to a Mincho/serif family, got ${spParts.titleFontFamily}.`);
+  assert(spParts.titleColor === 'rgb(255, 255, 255)', `SP Parts title color expected white, got ${spParts.titleColor}.`);
 
   await mobilePage.goto(fixedPageUrl, { waitUntil: 'networkidle' });
   const spFixed = await measureFixed(mobilePage);
@@ -152,6 +165,18 @@ try {
   assert(close(parseFloat(pc.titleLineHeight), 44.8, 1), `PC title line-height expected ~44.8px, got ${pc.titleLineHeight}.`);
   assert(close(parseFloat(pc.titleLetterSpacing), 1.6, 0.2), `PC title tracking expected ~1.6px, got ${pc.titleLetterSpacing}.`);
 
+  await desktopPage.goto(goldPageUrl, { waitUntil: 'networkidle' });
+  const pcParts = await measureGold(desktopPage);
+  assert(pcParts, 'PC gold title on a page without page_img was not found.');
+  assert(close(pcParts.height, 220), `PC Parts gold visual expected 220px, got ${pcParts.height}.`);
+  assert(pcParts.visualBg === 'rgb(202, 153, 87)', `PC Parts visual background expected gold #ca9957, got ${pcParts.visualBg}.`);
+  assert(pcParts.backgroundDisplay === 'none', `PC Parts photo layer must stay hidden on the gold title, got ${pcParts.backgroundDisplay}.`);
+  assert(pcParts.titleText === 'パーツ集', `PC Parts gold title expected パーツ集, got ${pcParts.titleText}.`);
+  assert(pcParts.titleFontSize === '32px', `PC Parts title expected 32px, got ${pcParts.titleFontSize}.`);
+  assert(pcParts.titleFontWeight === '700', `PC Parts title expected weight 700, got ${pcParts.titleFontWeight}.`);
+  assert(isSerifFamily(pcParts.titleFontFamily), `PC Parts title must resolve to a Mincho/serif family, got ${pcParts.titleFontFamily}.`);
+  assert(pcParts.titleColor === 'rgb(255, 255, 255)', `PC Parts title color expected white, got ${pcParts.titleColor}.`);
+
   await desktopPage.goto(fixedPageUrl, { waitUntil: 'networkidle' });
   const pcFixed = await measureFixed(desktopPage);
   assert(pcFixed, 'PC image page title (_fixedPage) was not found.');
@@ -176,6 +201,7 @@ try {
 
   console.log('PASS Budokan shared page-title SP 180px gold / Mincho 24px current Figma contract.');
   console.log('PASS Budokan shared page-title PC 220px gold / Mincho 32px current Figma contract.');
+  console.log('PASS Budokan page without page_img keeps gold title on /parts/.');
   console.log('PASS Budokan image page-title SP 273 / Mincho 24 white panel current Figma contract.');
   console.log('PASS Budokan image page-title PC photo 60/320 / Mincho 32 white panel current Figma contract.');
   console.log('PASS Budokan shared heading SP 24/12 Mincho / PC 26/20 Mincho current Figma contract.');

@@ -3,15 +3,19 @@
  * Shared page visual.
  *
  * Figma has two presentation families that share the same WordPress/ACF image
- * authority: archive/search/error visuals and ordinary fixed-page image-title
- * visuals. Keep one renderer/data contract and expose only context differences.
+ * authority: the gold bar (default) and the image-title derivative (`_fixedPage`).
+ * `_fixedPage` opts in only when the page has `page_img`. Pages without a photo,
+ * including Parts, keep the gold bar. Keep one renderer.
  *
  * Single-post Figma places the breadcrumb after the article body, immediately
  * before the subpage footer. `single.php` therefore owns that one placement;
  * all other surfaces keep the shared breadcrumb directly after this visual.
  */
 global $post;
-$is_fixed_page_visual = is_page() && !is_front_page() && !is_404() && !is_search();
+$page_img = (is_page() && !is_front_page() && !is_404() && !is_search())
+    ? get_field('page_img', get_the_ID())
+    : null;
+$is_fixed_page_visual = !empty($page_img);
 ?>
 <div class="global_mainVisual<?php echo $is_fixed_page_visual ? ' _fixedPage' : ''; ?>">
     <div class="global_inner gm_inner">
@@ -73,7 +77,7 @@ $is_fixed_page_visual = is_page() && !is_front_page() && !is_404() && !is_search
             <h1 class="gm_title"><span><?php if (empty(get_search_query())) : ?>検索キーワードが未入力です<?php else: ?><?php the_search_query(); ?>の検索結果<?php endif; ?></span></h1>
         <?php else: ?>
             <?php
-            $img = get_field('page_img', get_the_ID());
+            $img = $page_img;
             if ($img) {
                 $thumb = wp_get_attachment_image_src($img, 'head_img');
                 $img_url = $thumb[0];

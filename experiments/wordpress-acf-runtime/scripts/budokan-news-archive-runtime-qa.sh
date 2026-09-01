@@ -73,6 +73,27 @@ fixed_page_id="$(docker compose run --rm cli post create \
   exit 1
 }
 
+parts_id="$(docker compose run --rm cli post create \
+  --post_type=page \
+  --post_status=publish \
+  --post_title='パーツ集' \
+  --post_name='parts' \
+  --porcelain)"
+[[ "$parts_id" =~ ^[0-9]+$ ]] || {
+  echo "FAIL could not create gold page-title fixture page." >&2
+  exit 1
+}
+
+media_id="$(docker compose run --rm cli media import \
+  "/var/www/html/wp-content/themes/${THEME_SLUG}/images/common/noimage_visual-01.webp" \
+  --porcelain)"
+media_id="$(printf '%s' "$media_id" | tr -d '[:space:]')"
+[[ "$media_id" =~ ^[0-9]+$ ]] || {
+  echo "FAIL could not import page_img fixture attachment." >&2
+  exit 1
+}
+docker compose run --rm cli eval "update_field('page_img', ${media_id}, ${fixed_page_id});" >/dev/null
+
 docker compose run --rm cli option update show_on_front page >/dev/null
 docker compose run --rm cli option update page_on_front "$front_id" >/dev/null
 docker compose run --rm cli option update page_for_posts "$news_id" >/dev/null
@@ -169,9 +190,31 @@ grep -Fq 'ギャラリーキャプション' "$fixed_html" || {
 }
 rm -f "$fixed_html"
 
+parts_html="$(mktemp)"
+parts_code="$(curl --silent --show-error --location --max-redirs 3 --output "$parts_html" --write-out '%{http_code}' "${WP_URL}/parts/")"
+if [[ "$parts_code" != "200" ]]; then
+  echo "FAIL gold page-title fixture returned final HTTP ${parts_code}." >&2
+  cat "$parts_html" >&2 || true
+  exit 1
+fi
+if grep -Fq 'class="global_mainVisual _fixedPage"' "$parts_html"; then
+  echo "FAIL page without page_img must keep the gold title, not ._fixedPage." >&2
+  exit 1
+fi
+grep -Fq 'class="global_mainVisual"' "$parts_html" || {
+  echo "FAIL gold page-title fixture did not render .global_mainVisual." >&2
+  exit 1
+}
+grep -Fq 'パーツ集' "$parts_html" || {
+  echo "FAIL gold page-title fixture heading missing." >&2
+  exit 1
+}
+rm -f "$parts_html"
+
 echo "PASS Budokan News archive rendered through the real Posts-page Theme path."
 echo "PASS Six authored category tabs, 20 rows and pagination are present."
 echo "PASS ordinary fixed-page image title modifier rendered on /budokan-fixed-page-qa/."
+echo "PASS page without page_img kept the gold title on /parts/."
 
 if [[ "${BUDOKAN_NEWS_ARCHIVE_KEEP_RUNTIME:-0}" == "1" ]]; then
   trap - EXIT
