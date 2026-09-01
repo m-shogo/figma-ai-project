@@ -34,6 +34,7 @@ async function measure(page) {
 
     const footerStyle = getComputedStyle(footer);
     const bodyStyle = getComputedStyle(body);
+    const mapRect = map.getBoundingClientRect();
     const mapStyle = getComputedStyle(map);
     const snsStyle = getComputedStyle(sns);
     const snsLinkRect = snsLink.getBoundingClientRect();
@@ -48,7 +49,10 @@ async function measure(page) {
       footerColor: footerStyle.color,
       bodyPadTop: parseFloat(bodyStyle.paddingTop),
       bodyPadInline: parseFloat(bodyStyle.paddingLeft),
+      isHome: document.body.classList.contains('home'),
       mapDisplay: mapStyle.display,
+      mapWidth: mapRect.width,
+      mapHeight: mapRect.height,
       snsDisplay: snsStyle.display,
       snsSize: snsLinkRect.width,
       linksDisplay: linksStyle.display,
@@ -81,7 +85,13 @@ try {
   assert(sp.footerColor === 'rgb(51, 51, 51)', `SP footer color expected #333, got ${sp.footerColor}.`);
   assert(close(sp.bodyPadTop, 48, 1), `SP body padding-top expected 48, got ${sp.bodyPadTop}.`);
   assert(close(sp.bodyPadInline, 30, 1), `SP body padding-inline expected 30, got ${sp.bodyPadInline}.`);
-  assert(sp.mapDisplay === 'none', `SP map must stay hidden, got ${sp.mapDisplay}.`);
+  if (sp.isHome) {
+    assert(sp.mapDisplay === 'block', `TOP SP map must show, got ${sp.mapDisplay}.`);
+    assert(close(sp.mapWidth, 315, 2), `TOP SP map width expected 315, got ${sp.mapWidth}.`);
+    assert(close(sp.mapHeight, 168, 2), `TOP SP map height expected 168, got ${sp.mapHeight}.`);
+  } else {
+    assert(sp.mapDisplay === 'none', `Subpage SP map must stay hidden, got ${sp.mapDisplay}.`);
+  }
   assert(sp.snsDisplay === 'flex', `SP SNS expected flex, got ${sp.snsDisplay}.`);
   assert(close(sp.snsSize, 48, 1), `SP SNS size expected 48, got ${sp.snsSize}.`);
   assert(sp.linksDisplay === 'none', `SP footer links must stay hidden, got ${sp.linksDisplay}.`);
@@ -99,9 +109,16 @@ try {
   const pc = await measure(desktopPage);
   assert(pc, 'PC Footer was not found.');
   assert(pc.footerBg === 'rgb(255, 255, 255)', `PC footer background expected white, got ${pc.footerBg}.`);
-  assert(close(pc.bodyPadTop, 56, 1), `PC body padding-top expected 56, got ${pc.bodyPadTop}.`);
+  if (pc.isHome) {
+    assert(close(pc.bodyPadTop, 72, 1), `TOP PC body padding-top expected 72, got ${pc.bodyPadTop}.`);
+    assert(pc.mapDisplay === 'block', `TOP PC map must show, got ${pc.mapDisplay}.`);
+    assert(close(pc.mapWidth, 600, 2), `TOP PC map width expected 600, got ${pc.mapWidth}.`);
+    assert(close(pc.mapHeight, 320, 2), `TOP PC map height expected 320, got ${pc.mapHeight}.`);
+  } else {
+    assert(close(pc.bodyPadTop, 56, 1), `Subpage PC body padding-top expected 56, got ${pc.bodyPadTop}.`);
+    assert(pc.mapDisplay === 'none', `Subpage PC map must stay hidden, got ${pc.mapDisplay}.`);
+  }
   assert(close(pc.bodyPadInline, 110, 1), `PC body padding-inline expected 110, got ${pc.bodyPadInline}.`);
-  assert(pc.mapDisplay === 'none', `PC map must stay hidden, got ${pc.mapDisplay}.`);
   assert(close(pc.snsSize, 40, 1), `PC SNS size expected 40, got ${pc.snsSize}.`);
   assert(pc.linksDisplay === 'flex', `PC footer links expected flex, got ${pc.linksDisplay}.`);
   assert(pc.pageTopBg === 'rgb(202, 153, 87)', `PC Page Top expected gold, got ${pc.pageTopBg}.`);
@@ -111,8 +128,13 @@ try {
   assert(pc.addressSize === '14px', `PC address expected 14px, got ${pc.addressSize}.`);
   await desktopContext.close();
 
-  console.log('PASS Budokan Footer SP white / SNS 48 / gold Page Top / no map.');
-  console.log('PASS Budokan Footer PC white / SNS 40 / links / gold Page Top 170x60.');
+  if (sp.isHome) {
+    console.log('PASS Budokan TOP Footer SP map 315x168 / SNS 48 / gold Page Top.');
+    console.log('PASS Budokan TOP Footer PC map 600x320 / links under identity / gold Page Top 170x60.');
+  } else {
+    console.log('PASS Budokan subpage Footer SP white / SNS 48 / gold Page Top / no map.');
+    console.log('PASS Budokan subpage Footer PC white / SNS 40 / links / gold Page Top 170x60.');
+  }
 } finally {
   await browser.close();
 }
