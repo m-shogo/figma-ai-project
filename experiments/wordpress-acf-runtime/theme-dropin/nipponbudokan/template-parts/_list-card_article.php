@@ -23,14 +23,14 @@
             <?php endif; ?>
         </div>
         <div class="body">
-            <p class="date">
-                <time datetime="<?php the_time('Y-m-d'); ?>"><?php the_time('Y/n/j'); ?></time>
-            </p>
             <?php
             get_template_part('template-parts/_label-category', null, [
                 'taxonomy' => '_cat',
             ]);
             ?>
+            <p class="date">
+                <time datetime="<?php the_time('Y-m-d'); ?>"><?php the_time('Y/n/j'); ?></time>
+            </p>
         </div>
         <div class="foot">
             <?php if (is_front_page() || is_page()) : ?>

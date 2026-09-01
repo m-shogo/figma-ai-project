@@ -1,6 +1,12 @@
 @charset "utf-8";
 /* // ------------------------------
-// ニュースカード
+// ニュースカード（Event card owner）
+// Current Figma fileKey fKYDn9ikpJk1nW7IWFtaUx
+// PC Event archive 1630:9912 in 1630:9911 / 1619:9554
+//   2-col wrap, column-gap 64 / row-gap 24
+//   horizontal card: thumb 200×150 + text 224, gap 24
+//   labels → date → title
+// Dedicated SP Event archive remains UNDETERMINED — keep SP stacked 2-col.
 // ------------------------------ */
 .block-editor_wrap,
 .editor-styles-wrapper {
@@ -21,6 +27,7 @@
     }
     .mnc-01_article {
         width: 100%;
+        min-width: 0;
         /* // カラム */
         .link,
         .no-link {
@@ -94,15 +101,23 @@
                     }
                 }
                 img {
+                    display: block;
+                    width: 100%;
+                    height: auto;
                     aspect-ratio: 360 / 240;
+                    object-fit: cover;
                 }
             }
         }
         .body {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
             margin-top: 10px;
+            min-width: 0;
             .date {
                 margin: 0; /* エディタでの余白を削除 */
-                width: 100px;
+                width: auto;
                 font-family: var(--font-zen-kaku-gothic);
                 font-size: 14px;
                 font-weight: 500;
@@ -115,7 +130,6 @@
                 align-items: center;
                 flex-wrap: wrap;
                 gap: 4px 10px;
-                margin-top: 10px;
                 .label {
                     display: inline-block;
                     border: 1px solid var(--color-primary);
@@ -147,15 +161,32 @@
     }
 
     @media screen and (min-width: 768px) {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 72px 40px;
+        /* LIVE Event archive article 1630:9911 is 2-col wrap, not 3-col. */
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 24px 64px;
         .mnc-01_article {
-            .body {
-                display: flex;
-                margin-top: 20px;
-                .category {
-                    margin-top: 0;
+            .link,
+            .no-link {
+                display: grid;
+                grid-template-columns: minmax(120px, 200px) minmax(0, 1fr);
+                column-gap: 24px;
+                align-items: start;
+            }
+            .head {
+                grid-row: 1 / span 2;
+                width: auto;
+                .image img {
+                    aspect-ratio: 200 / 150;
                 }
+            }
+            .body {
+                grid-column: 2;
+                margin-top: 0;
+                gap: 24px;
+            }
+            .foot {
+                grid-column: 2;
+                margin-top: 16px;
             }
             .body .date {
                 font-size: 16px;
