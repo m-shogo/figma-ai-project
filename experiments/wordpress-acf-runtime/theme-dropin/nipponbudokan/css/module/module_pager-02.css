@@ -52,6 +52,10 @@
                 height: 60px;
                 background-color: var(--color-secondary);
                 color: var(--color-text);
+                font-family: var(--font-zen-kaku-gothic);
+                font-size: 16px;
+                font-weight: 500;
+                line-height: 1;
                 span {
                     display: flex;
                     align-items: center;

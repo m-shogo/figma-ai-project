@@ -1,6 +1,11 @@
 @charset "utf-8";
 /* // ==========================================================================
 // サイト共通ナビゲーション
+// Current Figma fileKey fKYDn9ikpJk1nW7IWFtaUx
+// SP open menu 2169:10017 — L2 Mincho SemiBold 18 / L3 Mincho SemiBold 16 /
+// L4 Kaku Regular 15 / utility Kaku Medium 13
+// PC GNavi top remains Mincho Medium 16 (2209:9850). Keep SP accordion
+// (Disclosure); do not flatten the Figma expanded-tree geometry.
 // ========================================================================== */
 .global_navigation {
     position: absolute;
@@ -198,12 +203,27 @@
         /* 3階層以降に影響あり end */
         /* 共通 end */
 
+        /* MARK: 階層別 2階層 start */
+        .gnl_link-02 {
+            font-family: var(--font-zen-old-mincho);
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            line-height: 1;
+        }
+        /* 2階層 end */
+
         /* MARK: 階層別 3階層 start */
         .gnl_item-03 {
         }
         .gnl_title-03 {
         }
         .gnl_link-03 {
+            font-family: var(--font-zen-old-mincho);
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            line-height: 1;
         }
         .gnl_button-03 {
         }
@@ -220,7 +240,14 @@
         }
         .gnl_title-04 {
         }
-        .gnl_link-04 {
+        .gnl_link-04,
+        .gnl_link-05,
+        .gnl_link-06 {
+            font-family: var(--font-zen-kaku-gothic);
+            font-size: 15px;
+            font-weight: 400;
+            letter-spacing: 0.05em;
+            line-height: 1.2;
         }
         .gnl_button-04 {
         }
@@ -278,6 +305,14 @@
                 display: block;
                 padding-block: 20px;
                 padding-inline: 20px;
+                font-family: var(--font-zen-kaku-gothic);
+                font-size: 13px;
+                font-weight: 500;
+                letter-spacing: 0.05em;
+                line-height: 1.4;
+                overflow-wrap: anywhere;
+                word-break: normal;
+                line-break: strict;
             }
             &:nth-child(odd) {
                 border-right: 1px solid var(--color-gray-border);
@@ -287,6 +322,44 @@
     .gn_search {
         margin-top: 40px;
         padding-inline: var(--padding-SP);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        /* SP open menu search 2169:10220 — 300×50 field, 50px #4e5055 icon.
+           search.php / 404 keep the shared 40px primary module_search-01. */
+        .module_search-01 {
+            width: 100%;
+            max-width: 300px;
+            .ms_from {
+                background-color: transparent;
+                grid-template-columns: minmax(0, 1fr) 50px;
+                .ms_input {
+                    height: 50px;
+                    border-color: var(--color-header-search);
+                }
+                .ms_button {
+                    height: 50px;
+                    border-color: var(--color-header-search);
+                    background-color: var(--color-header-search);
+                    span {
+                        font-size: 0;
+                        &::after {
+                            margin-left: 0;
+                            font-size: 13px;
+                            font-weight: 400;
+                        }
+                    }
+                    &:hover,
+                    &:focus {
+                        background-color: var(--color-header-search);
+                        span,
+                        span::after {
+                            color: var(--color-secondary);
+                        }
+                    }
+                }
+            }
+        }
     }
     .gn_close {
         display: block;

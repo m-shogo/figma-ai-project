@@ -1,6 +1,8 @@
 @charset "utf-8";
 /*　// ------------------------------
 // 引用
+// Current Figma fileKey fKYDn9ikpJk1nW7IWFtaUx
+// PC body 1157:8394 / group 1157:8388 — Zen Kaku Gothic New Regular 17
 // ------------------------------　*/
 .block-editor_wrap,
 .editor-styles-wrapper {
@@ -8,6 +10,7 @@
         position: relative;
         padding: 0 34px;
         margin-top: var(--wp-block-margin);
+        font-family: var(--font-zen-kaku-gothic);
         & + & {
             margin-top: var(--wp-block-margin-large);
         }

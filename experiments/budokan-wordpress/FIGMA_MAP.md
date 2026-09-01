@@ -75,9 +75,9 @@ Current PC page `0:1` top-level frames include:
 - `1156:7728` `form`
 - `1163:4245` `parts`
 - `1203:4865` / `1206:5446` `page`
-- `1700:7080` / `2108:10725` `page_youth-budo-tournament*`
-- `1709:8313` / `2108:10871` `page_kagami-biraki*`
-- `1714:8761` / `2108:10952` `page_kobudo-demonstration*`
+- `2108:10725` `page_youth-budo-tournament-02` (old id `1700:7080` is absent)
+- `2108:10871` `page_kagami-biraki-02` (old id `1709:8313` is absent)
+- `2108:10952` `page_kobudo-demonstration-02` (old id `1714:8761` is absent)
 - `1603:7062` `topdesign04`
 
 Current SP page `114:5409` top-level frames include:

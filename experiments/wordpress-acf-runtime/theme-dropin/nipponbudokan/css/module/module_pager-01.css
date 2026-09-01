@@ -1,6 +1,8 @@
 @charset "utf-8";
 /* // ==========================================================================
 // ページネーション
+// Generic circular family for search.php. News/Event archives use .news_pager.
+// --enText is not a Theme token; numbers use Zen Kaku like the rest of JA UI.
 // ========================================================================== */
 /* // 一覧用 */
 .module_pager-01:not(.news_pager) {
@@ -20,7 +22,7 @@
             height: auto;
             aspect-ratio: 1 / 1;
             border: 1px solid var(--color-primary);
-            font-family: var(--enText);
+            font-family: var(--font-zen-kaku-gothic);
             font-weight: 400;
             font-size: 16px;
             line-height: 1;

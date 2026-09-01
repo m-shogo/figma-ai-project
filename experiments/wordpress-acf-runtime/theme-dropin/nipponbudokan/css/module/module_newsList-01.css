@@ -190,10 +190,12 @@
 }
 
 /*
- * Current News pager keeps the same octagonal-arrow + underline-number family
- * on SP and PC. SP uses the 327px content rail; PC centers the same family.
+ * Shared News/Event pager: octagonal-arrow + underline numbers.
+ * Current Figma Event archive instance 1619:9557 uses the same component as
+ * News (current Bold 16 / other Medium 16). SP News pager 2189:10281 matches.
+ * Scoped to .news_pager so Event archive can reuse it without .news_archive.
  */
-.news_archive .news_pager {
+.news_pager {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -224,7 +226,7 @@
     flex-shrink: 0;
 }
 
-.news_archive .news_pager_numbers .page-numbers:not(.prev):not(.next):not(.dots) {
+.news_pager_numbers .page-numbers:not(.prev):not(.next):not(.dots) {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -243,14 +245,14 @@
     text-decoration: none;
 }
 
-.news_archive .news_pager .news_pager_numbers .page-numbers.current:not(.prev):not(.next):not(.dots) {
+.news_pager .news_pager_numbers .page-numbers.current:not(.prev):not(.next):not(.dots) {
     border-bottom-color: var(--color-text);
     background: transparent;
     color: var(--color-text);
     font-weight: 700;
 }
 
-.news_archive .news_pager_numbers .page-numbers.dots {
+.news_pager_numbers .page-numbers.dots {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -259,8 +261,8 @@
     color: var(--color-text);
 }
 
-.news_archive .news_pager_prev .page-numbers,
-.news_archive .news_pager_next .page-numbers {
+.news_pager_prev .page-numbers,
+.news_pager_next .page-numbers {
     display: inline-flex;
     align-items: center;
     width: 40px;
@@ -272,13 +274,13 @@
     text-decoration: none;
 }
 
-.news_archive .news_pager_prev .page-numbers::after,
-.news_archive .news_pager_next .page-numbers::before {
+.news_pager_prev .page-numbers::after,
+.news_pager_next .page-numbers::before {
     content: none;
 }
 
-.news_archive .news_pager_prev .page-numbers span,
-.news_archive .news_pager_next .page-numbers span {
+.news_pager_prev .page-numbers span,
+.news_pager_next .page-numbers span {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -291,8 +293,8 @@
     clip-path: var(--clip-octagon);
 }
 
-.news_archive .news_pager_prev .page-numbers span::before,
-.news_archive .news_pager_next .page-numbers span::before {
+.news_pager_prev .page-numbers span::before,
+.news_pager_next .page-numbers span::before {
     font-family: var(--font-awesome);
     font-size: 11px;
     font-weight: 900;
@@ -300,11 +302,11 @@
     color: inherit;
 }
 
-.news_archive .news_pager_prev .page-numbers span::before {
+.news_pager_prev .page-numbers span::before {
     content: '\f060';
 }
 
-.news_archive .news_pager_next .page-numbers span::before {
+.news_pager_next .page-numbers span::before {
     content: '\f061';
 }
 
@@ -374,7 +376,7 @@
         line-height: 1.4;
     }
 
-    .news_archive .news_pager {
+    .news_pager {
         justify-content: center;
         gap: 48px;
         min-height: 40px;
@@ -392,7 +394,7 @@
         color: var(--color-secondary);
     }
 
-    .news_archive .news_pager_numbers .page-numbers:hover:not(.current):not(.dots) {
+    .news_pager_numbers .page-numbers:hover:not(.current):not(.dots) {
         border-bottom-color: var(--color-primary);
         background: transparent;
         color: var(--color-link);

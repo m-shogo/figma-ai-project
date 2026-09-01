@@ -56,6 +56,21 @@
             box-decoration-break: clone;
         }
     }
+
+    /* 武道とは PC 1206:5446 こども武道憲章: furigana is Kaku Regular 10.
+       Override Meyer reset `font: inherit` on rt when editors use native ruby.
+       Dedicated SP 武道とは page is UNDETERMINED; 10px stays mobile-first. */
+    ruby {
+        ruby-position: over;
+    }
+    rt {
+        font-family: var(--font-zen-kaku-gothic);
+        font-size: 10px;
+        font-weight: 400;
+        line-height: 1;
+        letter-spacing: 0.05em;
+    }
+
     .wp-block-columns {
         .has-background {
             p:is(:not([class]), .has-text-align-left, .has-text-align-right, .has-text-align-center) {
