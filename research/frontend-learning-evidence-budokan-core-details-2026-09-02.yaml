@@ -1,0 +1,47 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: OBS-BUDOKAN-CMS-NATIVE-MARKUP-SELECTOR-CONTRACT
+    summary: Shared CSS for CMS/core blocks must be validated against the actual serialized or rendered markup; helper selectors for descendants that the CMS never emits are dead implementation even when the visual intent and stylesheet syntax are otherwise correct.
+    category: MAINTAINABILITY
+    applicability:
+      scope: PROJECT
+      conditions:
+        - A CMS or framework owns the output markup of a shared content primitive.
+        - Shared CSS depends on descendant hooks or wrapper classes rather than only the documented/native root contract.
+      exclusions:
+        - A verified render transform, block renderer, plugin, or component layer explicitly materializes the descendant hooks before output.
+        - Project-specific markup intentionally owns the full component DOM rather than a CMS/core primitive.
+    promotion_state: PROJECT_ONLY
+    promotion:
+      candidate: false
+      rationale: Budokan provides a concrete Core Details mismatch and shared-owner repair, but this evidence is still one project and has not yet measured cross-project rework reduction.
+      blocked_by:
+        - Independent CMS/framework implementation reproducing a selector-to-rendered-markup mismatch.
+        - Measured evidence that preflight markup-contract validation reduces dead CSS or repair rounds in another reference/project.
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-CORE-DETAILS-AUDIT-20260902
+          kind: LOCAL_RESEARCH
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/budokan-wordpress/CORE_DETAILS_NATIVE_MARKUP_AUDIT.md
+          commit: ''
+          note: Current Figma, immutable parts.php markup, and Theme CSS were reconciled; synthetic Details descendants were not emitted by the authorized Core markup.
+        - evidence_id: EV-BUDOKAN-CORE-DETAILS-CSS-20260902
+          kind: COMMIT
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/blocks/wp-block-details-style.css
+          commit: 9ef8de4b456602f31adb311b277ed7cead65cf51
+          note: Shared CSS was changed to style native details > summary and direct editor-owned content without adding markup or page-specific overrides.
+      contradicts: []
+    notes:
+      - Keep PROJECT_ONLY until independent evidence proves portability; do not auto-promote from one CMS block failure.
