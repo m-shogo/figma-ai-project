@@ -1,0 +1,24 @@
+schema_version: 1
+reviews:
+  CR-REF001-002:
+    last_reviewed_at: '2026-09-02'
+    next_review_due: '2026-09-16'
+    reviewed_supporting_references: 2
+    reviewed_contradictions: 0
+    disposition: KEEP_CANDIDATE
+    rationale: >-
+      REF-001 and REF-002 agree that static affordances alone do not authorize behavior, but REF-002
+      still supplies intake/decision-boundary evidence rather than a measured independent clean replay.
+      Keep candidate status until a second implementation tests both the conservative and explicit-
+      interaction cases; revisit within two weeks even if no new evidence arrives.
+  CR-REF001-003:
+    last_reviewed_at: '2026-09-02'
+    next_review_due: '2026-09-16'
+    reviewed_supporting_references: 2
+    reviewed_contradictions: 0
+    disposition: KEEP_CANDIDATE
+    rationale: >-
+      Cross-reference support exists, but the second reference is still intake evidence rather than
+      an implementation/clean-replay outcome. Keep the rule candidate until an independent runtime
+      outcome or a genuine editor-managed dynamic collection case tests the boundary. This is an
+      explicit review disposition, not indefinite parking.
