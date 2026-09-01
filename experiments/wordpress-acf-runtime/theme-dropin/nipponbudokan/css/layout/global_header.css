@@ -227,24 +227,6 @@ body._open-menu {
                 }
             }
         }
-        @media screen and (min-width: 768px) {
-            .gh_menu {
-                .icon {
-                    background-color: currentColor;
-                    padding-block: 7px;
-                    height: 15px;
-                    &::before {
-                        top: 0;
-                        transform: none;
-                    }
-                    &::after {
-                        top: auto;
-                        bottom: 0;
-                        transform: none;
-                    }
-                }
-            }
-        }
     }
 }
 
