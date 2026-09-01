@@ -19,6 +19,21 @@ function isKakuGothic(family) {
   return value.includes('kaku') || value.includes('gothic');
 }
 
+function isMinchoFamily(family) {
+  const value = String(family || '').toLowerCase();
+  if (value.includes('sans-serif')) return false;
+  return value.includes('mincho') || value.includes('zen old');
+}
+
+function isKakuFamily(family) {
+  return String(family || '').toLowerCase().includes('kaku');
+}
+
+function isBold(weight) {
+  const value = String(weight || '').toLowerCase();
+  return value === 'bold' || parseInt(value, 10) >= 700;
+}
+
 async function measure(page) {
   return page.evaluate(() => {
     const pager = document.querySelector('.module_pager-02');
@@ -31,7 +46,10 @@ async function measure(page) {
     const breadcrumbItem = document.querySelector('.module_breadCrumb-01 li:not(:last-child)');
     const breadcrumbLink = document.querySelector('.module_breadCrumb-01 a');
     const breadcrumbCurrent = document.querySelector('.module_breadCrumb-01 li:last-child span');
-    if (!pager || !back || !link || !span || !prev || !next || !breadcrumb || !breadcrumbItem || !breadcrumbLink || !breadcrumbCurrent) return null;
+    const title = document.querySelector('.module_titleSingle .module_title-01');
+    const date = document.querySelector('.module_titleSingle .date');
+    const label = document.querySelector('.module_titleSingle .label');
+    if (!pager || !back || !link || !span || !prev || !next || !breadcrumb || !breadcrumbItem || !breadcrumbLink || !breadcrumbCurrent || !title || !date || !label) return null;
 
     const pagerRect = pager.getBoundingClientRect();
     const backRect = back.getBoundingClientRect();
@@ -44,6 +62,9 @@ async function measure(page) {
     const breadcrumbSeparatorStyle = getComputedStyle(breadcrumbItem, '::after');
     const breadcrumbLinkStyle = getComputedStyle(breadcrumbLink);
     const breadcrumbCurrentStyle = getComputedStyle(breadcrumbCurrent);
+    const titleStyle = getComputedStyle(title);
+    const dateStyle = getComputedStyle(date);
+    const labelStyle = getComputedStyle(label);
 
     return {
       pagerWidth: pagerRect.width,
@@ -72,6 +93,13 @@ async function measure(page) {
       breadcrumbLinkColor: breadcrumbLinkStyle.color,
       breadcrumbLinkDecoration: breadcrumbLinkStyle.textDecorationLine,
       breadcrumbCurrentWeight: breadcrumbCurrentStyle.fontWeight,
+      titleFamily: titleStyle.fontFamily,
+      titleSize: titleStyle.fontSize,
+      titleWeight: titleStyle.fontWeight,
+      dateFamily: dateStyle.fontFamily,
+      dateSize: dateStyle.fontSize,
+      labelFamily: labelStyle.fontFamily,
+      labelSize: labelStyle.fontSize,
     };
   });
 }
@@ -108,6 +136,13 @@ try {
   assert(sp.breadcrumbLinkColor === 'rgb(51, 51, 51)', `SP breadcrumb link expected #333, got ${sp.breadcrumbLinkColor}.`);
   assert(sp.breadcrumbLinkDecoration.includes('underline'), `SP breadcrumb links must stay underlined, got ${sp.breadcrumbLinkDecoration}.`);
   assert(sp.breadcrumbCurrentWeight === '500', `SP current crumb expected weight 500, got ${sp.breadcrumbCurrentWeight}.`);
+  assert(isMinchoFamily(sp.titleFamily), `SP article title must resolve to Zen Old Mincho, got ${sp.titleFamily}.`);
+  assert(sp.titleSize === '24px', `SP article title expected 24px, got ${sp.titleSize}.`);
+  assert(isBold(sp.titleWeight), `SP article title expected Bold, got ${sp.titleWeight}.`);
+  assert(isKakuFamily(sp.dateFamily), `SP date must resolve to Zen Kaku Gothic New, got ${sp.dateFamily}.`);
+  assert(sp.dateSize === '14px', `SP date expected 14px, got ${sp.dateSize}.`);
+  assert(isKakuFamily(sp.labelFamily), `SP category label must resolve to Zen Kaku Gothic New, got ${sp.labelFamily}.`);
+  assert(sp.labelSize === '13px', `SP category label expected 13px, got ${sp.labelSize}.`);
   await mobileContext.close();
 
   const desktopContext = await browser.newContext({ viewport: { width: 1395, height: 1200 } });
@@ -136,10 +171,17 @@ try {
   assert(pc.breadcrumbLinkColor === 'rgb(51, 51, 51)', `PC breadcrumb link expected #333, got ${pc.breadcrumbLinkColor}.`);
   assert(pc.breadcrumbLinkDecoration.includes('underline'), `PC breadcrumb links must stay underlined, got ${pc.breadcrumbLinkDecoration}.`);
   assert(pc.breadcrumbCurrentWeight === '500', `PC current crumb expected weight 500, got ${pc.breadcrumbCurrentWeight}.`);
+  assert(isMinchoFamily(pc.titleFamily), `PC article title must resolve to Zen Old Mincho, got ${pc.titleFamily}.`);
+  assert(pc.titleSize === '28px', `PC article title expected 28px, got ${pc.titleSize}.`);
+  assert(isBold(pc.titleWeight), `PC article title expected Bold, got ${pc.titleWeight}.`);
+  assert(isKakuFamily(pc.dateFamily), `PC date must resolve to Zen Kaku Gothic New, got ${pc.dateFamily}.`);
+  assert(pc.dateSize === '14px', `PC date expected 14px, got ${pc.dateSize}.`);
+  assert(isKakuFamily(pc.labelFamily), `PC category label must resolve to Zen Kaku Gothic New, got ${pc.labelFamily}.`);
+  assert(pc.labelSize === '13px', `PC category label expected 13px, got ${pc.labelSize}.`);
   await desktopContext.close();
 
-  console.log('PASS Budokan News single SP return-to-list and breadcrumb rhythm QA.');
-  console.log('PASS Budokan News single PC return-to-list and breadcrumb rhythm QA.');
+  console.log('PASS Budokan News single SP return-to-list, breadcrumb rhythm, and title type QA.');
+  console.log('PASS Budokan News single PC return-to-list, breadcrumb rhythm, and title type QA.');
 } finally {
   await browser.close();
 }
