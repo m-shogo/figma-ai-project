@@ -1,5 +1,7 @@
 </div><!-- /global_wrapper -->
-<?php get_template_part('template-parts/_footer'); ?>
+<?php get_template_part('template-parts/_footer', null, array(
+    'map' => is_front_page(),
+)); ?>
 <?php if (is_front_page()): ?>
     <nav class="top_purposeMenu" aria-label="目的から探す">
         <a class="tpm_link" href="#top_guide-01">

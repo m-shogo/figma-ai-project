@@ -445,8 +445,9 @@
     }
 }
 
-/* TOP footer 1901:13409 / 1360:9369. Subpage keeps map hidden. */
-.home .global_footer {
+/* TOP / mapped footer 1901:13409 / 1360:9369.
+   Toggle with get_template_part arg `map` → class _hasMap. Not body.home. */
+.global_footer._hasMap {
     .gf_information {
         display: contents;
     }
