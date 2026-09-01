@@ -18,7 +18,8 @@ LIVE type on the PC page is covered by existing masters:
 - `使い方` Mincho 18 → h4
 - index download → button_L (Kaku Medium 15)
 - issue title Mincho Medium 20 → h3
-- `ご注文` / `詳細はこちら` Kaku Medium 16 / 18 → button_L / text-link / in-page-link families already in Theme
+- `ご注文` on publications detail `1637:11288` is Parts `btn-03` (Kaku Medium 20) → `.wp-block-buttons.cta`
+- index `ご注文` / `詳細はこちら` stay on existing button families; do not invent a 16/18 page-specific button
 - summary Kaku Regular 15 → close to paragraph 17; do not invent a 15px page-specific body
 - breadcrumb Kaku 13
 - numbered how-to `1.` Roboto Condensed Medium 16 is a specimen leftover beside Kaku body 16. Theme `ol.wp-block-list` stays Kaku. Do not retarget list numbers to Roboto from this page.
