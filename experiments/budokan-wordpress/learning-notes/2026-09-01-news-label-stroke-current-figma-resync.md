@@ -15,7 +15,7 @@ LIVE News labels are `#333` outline chips. Theme used `--color-line` (`#d7d4d4`)
 
 ## Fix
 
-Archive `.news_item_label` uses `--color-text` stroke and `min-height: 23px`. Do not copy Event card `#e7e7e7` chips onto News; they are a different specimen.
+Archive `.news_item_label` uses `--color-text` stroke, `box-sizing: border-box`, and a 23px outer height. Do not copy Event card `#e7e7e7` chips onto News; they are a different specimen.
 
 ## Lesson
 
