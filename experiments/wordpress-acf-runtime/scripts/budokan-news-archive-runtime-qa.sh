@@ -66,12 +66,33 @@ fixed_page_id="$(docker compose run --rm cli post create \
   --post_status=publish \
   --post_title='研修センター' \
   --post_name='budokan-fixed-page-qa' \
-  --post_content='<h2 class="wp-block-heading">大見出し</h2><p>本文ギャップ確認</p><h3 class="wp-block-heading">中見出し</h3><p>本文ギャップ確認</p><h4 class="wp-block-heading">小見出し</h4><p>本文ギャップ確認<span style="text-decoration: underline;">下線確認</span></p><ul class="wp-block-list"><li>番号なしリスト</li></ul><div class="wp-block-buttons"><div class="wp-block-button"><a class="wp-block-button__link">施設概要</a></div></div><!-- wp:details --><details class="wp-block-details"><summary>通常アコーディオン</summary><p>展開確認</p></details><!-- /wp:details --><!-- wp:details {"showContent":true} --><details class="wp-block-details" open><summary>タイトルが入ります</summary><p>展開確認</p></details><!-- /wp:details --><!-- wp:details {"className":"_qa","showContent":true} --><details class="wp-block-details _qa" open><summary>QAアコーディオン</summary><p>展開確認</p></details><!-- /wp:details --><!-- wp:table --><figure class="wp-block-table"><table><thead><tr><th>ヘッダーセル</th></tr></thead><tbody><tr><td>通常セル</td></tr></tbody></table></figure><!-- /wp:table --><ul class="module_inPageLink-01"><li class="inPageLink"><a href="#link"><div class="title">ページ内リンク</div></a></li></ul><!-- wp:media-text {"mediaPosition":"right","mediaType":"image","isStackedOnMobile":true} --><div class="wp-block-media-text has-media-on-the-right is-stacked-on-mobile"><div class="wp-block-media-text__content"><p>メディアテキスト本文</p></div><figure class="wp-block-media-text__media"><a href="#zoom"><img alt="" width="330" height="240"></a><figcaption class="wp-element-caption">画像キャプション</figcaption></figure></div><!-- /wp:media-text --><ul class="module_navigation --large"><li class="navigation"><a href="#nav"><div class="content"><h2 class="title">宿泊利用申し込み</h2><div class="text">ナビ本文</div></div></a></li></ul><div class="module_tab-wrapper"><div class="tab-buttons"><button type="button" class="tab-button active">アクティブ</button><button type="button" class="tab-button">タブ</button></div></div><figure class="wp-block-gallery has-nested-images columns-default is-cropped"><figure class="wp-block-image"><img alt="" width="360" height="240"><figcaption class="wp-element-caption">ギャラリーキャプション</figcaption></figure></figure>' \
+  --post_content='<h2 class="wp-block-heading">大見出し</h2><p>本文ギャップ確認</p><h3 class="wp-block-heading">中見出し</h3><p>本文ギャップ確認</p><h4 class="wp-block-heading">小見出し</h4><p>本文ギャップ確認<span style="text-decoration: underline;">下線確認</span></p><ul class="wp-block-list"><li>番号なしリスト</li></ul><div class="wp-block-buttons"><div class="wp-block-button"><a class="wp-block-button__link">施設概要</a></div><div class="wp-block-button is-style-outline"><a class="wp-block-button__link">CTA輪郭</a></div></div><div class="wp-block-group has-gray-background-color has-background"><p>背景ボックス</p></div><!-- wp:details --><details class="wp-block-details"><summary>通常アコーディオン</summary><p>展開確認</p></details><!-- /wp:details --><!-- wp:details {"showContent":true} --><details class="wp-block-details" open><summary>タイトルが入ります</summary><p>展開確認</p></details><!-- /wp:details --><!-- wp:details {"className":"_qa","showContent":true} --><details class="wp-block-details _qa" open><summary>QAアコーディオン</summary><p>展開確認</p></details><!-- /wp:details --><!-- wp:table --><figure class="wp-block-table"><table><thead><tr><th>ヘッダーセル</th></tr></thead><tbody><tr><td>通常セル</td></tr></tbody></table></figure><!-- /wp:table --><ul class="module_inPageLink-01"><li class="inPageLink"><a href="#link"><div class="title">ページ内リンク</div></a></li></ul><!-- wp:media-text {"mediaPosition":"right","mediaType":"image","isStackedOnMobile":true} --><div class="wp-block-media-text has-media-on-the-right is-stacked-on-mobile"><div class="wp-block-media-text__content"><p>メディアテキスト本文</p></div><figure class="wp-block-media-text__media"><a href="#zoom"><img alt="" width="330" height="240"></a><figcaption class="wp-element-caption">画像キャプション</figcaption></figure></div><!-- /wp:media-text --><ul class="module_navigation --large"><li class="navigation"><a href="#nav"><div class="content"><h2 class="title">宿泊利用申し込み</h2><div class="text">ナビ本文</div></div></a></li></ul><div class="module_tab-wrapper"><div class="tab-buttons"><button type="button" class="tab-button active">アクティブ</button><button type="button" class="tab-button">タブ</button></div></div><figure class="wp-block-gallery has-nested-images columns-default is-cropped"><figure class="wp-block-image"><img alt="" width="360" height="240"><figcaption class="wp-element-caption">ギャラリーキャプション</figcaption></figure></figure>' \
   --porcelain)"
 [[ "$fixed_page_id" =~ ^[0-9]+$ ]] || {
   echo "FAIL could not create image page-title fixture page." >&2
   exit 1
 }
+
+parts_id="$(docker compose run --rm cli post create \
+  --post_type=page \
+  --post_status=publish \
+  --post_title='パーツ集' \
+  --post_name='parts' \
+  --porcelain)"
+[[ "$parts_id" =~ ^[0-9]+$ ]] || {
+  echo "FAIL could not create gold page-title fixture page." >&2
+  exit 1
+}
+
+media_id="$(docker compose run --rm cli media import \
+  "/var/www/html/wp-content/themes/${THEME_SLUG}/images/common/noimage_visual-01.webp" \
+  --porcelain)"
+media_id="$(printf '%s' "$media_id" | tr -d '[:space:]')"
+[[ "$media_id" =~ ^[0-9]+$ ]] || {
+  echo "FAIL could not import page_img fixture attachment." >&2
+  exit 1
+}
+docker compose run --rm cli eval "update_field('page_img', ${media_id}, ${fixed_page_id});" >/dev/null
 
 docker compose run --rm cli option update show_on_front page >/dev/null
 docker compose run --rm cli option update page_on_front "$front_id" >/dev/null
@@ -169,9 +190,31 @@ grep -Fq 'ギャラリーキャプション' "$fixed_html" || {
 }
 rm -f "$fixed_html"
 
+parts_html="$(mktemp)"
+parts_code="$(curl --silent --show-error --location --max-redirs 3 --output "$parts_html" --write-out '%{http_code}' "${WP_URL}/parts/")"
+if [[ "$parts_code" != "200" ]]; then
+  echo "FAIL gold page-title fixture returned final HTTP ${parts_code}." >&2
+  cat "$parts_html" >&2 || true
+  exit 1
+fi
+if grep -Fq 'class="global_mainVisual _fixedPage"' "$parts_html"; then
+  echo "FAIL page without page_img must keep the gold title, not ._fixedPage." >&2
+  exit 1
+fi
+grep -Fq 'class="global_mainVisual"' "$parts_html" || {
+  echo "FAIL gold page-title fixture did not render .global_mainVisual." >&2
+  exit 1
+}
+grep -Fq 'パーツ集' "$parts_html" || {
+  echo "FAIL gold page-title fixture heading missing." >&2
+  exit 1
+}
+rm -f "$parts_html"
+
 echo "PASS Budokan News archive rendered through the real Posts-page Theme path."
 echo "PASS Six authored category tabs, 20 rows and pagination are present."
 echo "PASS ordinary fixed-page image title modifier rendered on /budokan-fixed-page-qa/."
+echo "PASS page without page_img kept the gold title on /parts/."
 
 if [[ "${BUDOKAN_NEWS_ARCHIVE_KEEP_RUNTIME:-0}" == "1" ]]; then
   trap - EXIT

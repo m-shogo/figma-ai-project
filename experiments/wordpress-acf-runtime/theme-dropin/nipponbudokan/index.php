@@ -3,6 +3,7 @@
     <section>
         <?php get_template_part('template-parts/_visual'); ?>
         <?php get_template_part('template-parts/_news-archive'); ?>
+        <?php get_template_part('template-parts/_breadCrumb'); ?>
     </section>
 </main>
 <?php get_footer(); ?>

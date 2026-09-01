@@ -94,7 +94,9 @@
         }
     }
 
-    /* MARK: 背景色があるブロック */
+    /* MARK: 背景色があるブロック
+       Figma 1157:8201 / 1157:8203 is white + #d7d4d4, not editor gray #f8f8f8.
+       Keep the gray slug in the palette; override the fill here. */
     div.wp-block-group.has-background,
     p.has-background {
         padding: 24px;
@@ -104,6 +106,11 @@
         @media screen and (min-width: 768px) {
             padding: 32px;
         }
+    }
+    div.wp-block-group.has-gray-background-color.has-background,
+    div.wp-block-column.has-gray-background-color.has-background,
+    p.has-gray-background-color.has-background {
+        background-color: var(--color-secondary);
     }
 
     /* Parts/Text の背景付き2カラムは native Gutenberg Column derivative。

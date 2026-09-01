@@ -5,10 +5,6 @@
 .global_contents {
     > section {
         padding-bottom: 50px;
-        .module_breadCrumb {
-            margin-top: 15px;
-            margin-bottom: 50px;
-        }
     }
     .gc_main {
         display: flow-root;
@@ -25,9 +21,6 @@
     @media screen and (min-width: 768px) {
         > section {
             padding-bottom: 100px;
-            .module_breadCrumb {
-                margin-bottom: 70px;
-            }
         }
         .gc_main {
             &._oneColumn {
@@ -44,10 +37,20 @@
 body:not(.home) {
     .global_contents {
         > section {
+            padding-bottom: 0;
             > .global_inner,
             > .content_inner {
                 min-height: 1%; /* IE用flexバグ対策（flexでパンくず並び替える場合は必要） */
             }
+            > .module_breadCrumb {
+                margin-top: 50px;
+                margin-bottom: 0;
+            }
+        }
+    }
+    @media screen and (min-width: 768px) {
+        .global_contents > section > .module_breadCrumb {
+            margin-top: 100px;
         }
     }
 }

@@ -2,8 +2,8 @@
 /* // ==========================================================================
 // サイト共通メインビジュアル
 // Current Figma fileKey fKYDn9ikpJk1nW7IWFtaUx
-// - archive/single/search/error: page_title-sp 1399:18544 / page_title-pc 2169:10270
-// - ordinary fixed page: page_title-img-sp 1465:6339 / page_title-img-pc 1450:5147
+// - archive/single/search/error, and pages without page_img: page_title-sp 1399:18544 / page_title-pc 2169:10270
+// - pages with page_img: page_title-img-sp 1465:6339 / page_title-img-pc 1450:5147
 // ========================================================================== */
 .global_mainVisual {
     position: relative;

@@ -1,8 +1,10 @@
 @charset "utf-8";
 /*　// ------------------------------
-// ボタンリンク（Figma button_L / 輪郭）
+// ボタンリンク（Figma button_L / btn-03 CTA）
 // Current Figma fileKey fKYDn9ikpJk1nW7IWFtaUx
 // SP 1468:7314 / PC 1296:8808 — Zen Kaku Gothic New Medium 15 / gap 8
+// Hover 1163:4229 — primary octagon / white arrow
+// Outline = CTA (Human). PC 1157:8271 / SP 1450:5194. Hover 1157:8278.
 // ------------------------------　*/
 /* ///////// デフォルト設定 ///////// */
 .block-editor_wrap,
@@ -98,15 +100,12 @@
                 }
             }
 
-            /* Live Figma button_L authority uses a white octagonal arrow tile with
-               a gray 1px edge plus a 26×2 primary underline. Keep this on the
-               verified default family so outline-style siblings retain their
-               existing contract until independently proven. */
+            /* Live Figma button_L: white octagon, gray edge, 26×2 primary underline. */
             &:not(.is-style-outline) {
                 .wp-block-button__link {
                     background-image: linear-gradient(var(--color-primary), var(--color-primary));
                     background-repeat: no-repeat;
-                    background-position: 16px 100%;
+                    background-position: 15px 100%;
                     background-size: 26px 2px;
                     &::before {
                         background-color: var(--color-secondary);
@@ -115,18 +114,6 @@
                             drop-shadow(-1px 0 0 var(--color-line))
                             drop-shadow(0 1px 0 var(--color-line))
                             drop-shadow(0 -1px 0 var(--color-line));
-                    }
-                }
-            }
-
-            &.is-style-outline {
-                .wp-block-button__link {
-                    background-color: var(--color-secondary);
-                    border-color: var(--color-primary);
-                    color: var(--color-text);
-                    &::before {
-                        background-color: var(--color-primary);
-                        color: var(--color-secondary);
                     }
                 }
             }
@@ -167,9 +154,10 @@
             }
         }
 
-        /* CTA（Figma parts / btn-03-sp 1450:5194 / btn-03 1157:8271） */
-        &.cta {
-            .wp-block-button {
+        /* CTA（btn-03）and 輪郭（Human: outline uses the same family）. */
+        &:not(.small) {
+            &.cta .wp-block-button,
+            .wp-block-button.is-style-outline {
                 width: 100%;
 
                 .wp-block-button__link {
@@ -180,6 +168,7 @@
                     border: 0;
                     border-radius: 3px;
                     background-color: var(--color-primary);
+                    background-image: none;
                     color: var(--color-secondary);
                     font-family: var(--font-zen-kaku-gothic);
                     font-size: 18px;
@@ -193,11 +182,9 @@
                         font-weight: 900;
                         filter: none;
                     }
-                }
 
-                &:not(.is-style-outline) {
-                    .wp-block-button__link {
-                        background-image: none;
+                    &::after {
+                        content: none;
                     }
                 }
             }
@@ -221,13 +208,15 @@
                 }
             }
 
-            &.cta {
-                .wp-block-button:not(.has-custom-width) {
+            &:not(.small) {
+                &.cta .wp-block-button:not(.has-custom-width),
+                .wp-block-button.is-style-outline:not(.has-custom-width) {
                     width: 400px;
                     min-width: 400px;
                 }
 
-                .wp-block-button__link {
+                &.cta .wp-block-button .wp-block-button__link,
+                .wp-block-button.is-style-outline .wp-block-button__link {
                     min-height: 80px;
                     padding: 16px 24px;
                     gap: 15px;
@@ -241,18 +230,27 @@
 .block-editor_wrap {
     /* MARK: hover */
     @media (any-hover: hover) {
-        .wp-block-button {
-            .wp-block-button__link:hover {
-                border-color: var(--color-text);
-            }
-            &.is-style-outline {
-                .wp-block-button__link:hover {
+        .wp-block-buttons:not(.small):not(.cta) {
+            .wp-block-button:not(.is-style-outline) {
+                .wp-block-button__link:hover::before {
                     background-color: var(--color-primary);
                     color: var(--color-secondary);
-                    &::before {
-                        background-color: var(--color-secondary);
-                        color: var(--color-primary);
-                    }
+                    filter: none;
+                }
+            }
+        }
+
+        .wp-block-buttons:not(.small) {
+            &.cta .wp-block-button .wp-block-button__link:hover,
+            .wp-block-button.is-style-outline .wp-block-button__link:hover {
+                background-color: var(--color-secondary);
+                border: 1px solid var(--color-primary);
+                color: var(--color-primary);
+
+                &::before {
+                    background-color: var(--color-secondary);
+                    color: var(--color-primary);
+                    filter: none;
                 }
             }
         }

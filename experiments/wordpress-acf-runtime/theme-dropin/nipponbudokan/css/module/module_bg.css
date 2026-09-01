@@ -1,7 +1,15 @@
 @charset "utf-8";
 /* // ==========================================================================
 // 背景モジュール
-// ========================================================================== */
+// Figma parts 1163:4245 fill, tiled 700×700, top left.
+// ------------------------------ */
+body {
+    background-image: url('../../images/common/bg-pattern.png');
+    background-repeat: repeat;
+    background-position: top left;
+    background-size: 700px 700px;
+}
+
 /* /// 単色 */
 ._bg_color-gray-01 {
   background-color: var(--color-gray-background);

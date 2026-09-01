@@ -17,6 +17,7 @@ global $post;
                     </div>
                 </div>
             </div>
+            <?php get_template_part('template-parts/_breadCrumb'); ?>
         </section>
     <?php else: ?>
         <section>
@@ -26,6 +27,7 @@ global $post;
                     <?php echo get_the_password_form(); ?>
                 </div>
             </div>
+            <?php get_template_part('template-parts/_breadCrumb'); ?>
         </section>
     <?php endif; ?>
 </main>
