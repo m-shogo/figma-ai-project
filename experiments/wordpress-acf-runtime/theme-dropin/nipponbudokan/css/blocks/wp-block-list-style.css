@@ -3,6 +3,7 @@
 // リスト
 // Current Figma fileKey fKYDn9ikpJk1nW7IWFtaUx
 // SP 1399:18762 / 2194:5169; PC 1157:8221
+// Ordered marker corroboration: Publications PC 1634:10806 / 1767:9543 — Roboto Medium-style `1.` marker, 16px, 26px slot
 // ------------------------------ */
 /* //---------- 共通設定 ---------- */
 .block-editor_wrap,
@@ -76,12 +77,12 @@
                 align-items: center;
                 justify-content: flex-start;
                 counter-increment: li;
-                content: counter(li);
+                content: counter(li) '.';
                 color: var(--color-text);
                 line-height: 1;
                 transform: translateY(6px);
                 letter-spacing: 0.1em;
-                font-family: var(--font-zen-kaku-gothic);
+                font-family: var(--font-sansSerif-en);
                 font-weight: 500;
                 font-size: 16px;
                 min-width: 26px;
