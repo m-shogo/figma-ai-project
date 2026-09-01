@@ -2,9 +2,11 @@
 /* // ==========================================================================
 // サイト共通フッター
 // Current Figma fileKey fKYDn9ikpJk1nW7IWFtaUx
-// PC: 2106:9471 footer_subpage（白・リンク2列・金 Page Top・地図なし）
-// SP: 2189:10106 footer-sp（白・SNS 48px・金 Page Top・地図なし）
-// TOP の地図付き footer / 「目的から探す」sticky はグローバルに入れない
+// PC subpage: 2106:9471 footer_subpage（白・リンク2列・金 Page Top・地図なし）
+// SP subpage: 2189:10106 footer-sp（白・SNS 48px・金 Page Top・地図なし）
+// TOP PC: 1901:13409 footer（左にリンク+SNS、右に地図 600×320）
+// TOP SP: 1360:9369 footer-sp-top（SNSの下に地図 315×168。リンクなし）
+// TOP sticky「目的から探す」は footer.php の .top_purposeMenu。グローバル sticky に入れない
 // ========================================================================== */
 .global_footer {
     position: relative;
@@ -97,6 +99,15 @@
 
     .gf_map {
         display: none;
+        margin: 0;
+        overflow: hidden;
+        border-radius: 5px;
+        img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
     }
 
     .gf_sns {
@@ -430,6 +441,64 @@
             &:hover {
                 color: var(--color-link);
             }
+        }
+    }
+}
+
+/* TOP footer 1901:13409 / 1360:9369. Subpage keeps map hidden. */
+.home .global_footer {
+    .gf_information {
+        display: contents;
+    }
+    .gf_map {
+        display: block;
+        width: 315px;
+        height: 168px;
+    }
+
+    @media screen and (min-width: 768px) {
+        .gf_body {
+            display: grid;
+            grid-template-columns: minmax(0, 478px) 600px;
+            grid-template-areas:
+                'logo map'
+                'address map'
+                'links map'
+                'sns map';
+            align-items: start;
+            justify-content: space-between;
+            column-gap: 82px;
+            row-gap: 32px;
+            padding: 72px 110px;
+        }
+        .gf_logo {
+            grid-area: logo;
+        }
+        address {
+            grid-area: address;
+            flex-direction: row;
+            align-items: center;
+            gap: 24px;
+            text-align: left;
+        }
+        .gf_links-wrap {
+            grid-area: links;
+            gap: 63px;
+            justify-self: start;
+        }
+        .gf_links-01,
+        .gf_links-02.menu {
+            gap: 20px;
+        }
+        .gf_sns {
+            grid-area: sns;
+            justify-content: flex-start;
+        }
+        .gf_map {
+            grid-area: map;
+            width: 600px;
+            height: 320px;
+            align-self: start;
         }
     }
 }

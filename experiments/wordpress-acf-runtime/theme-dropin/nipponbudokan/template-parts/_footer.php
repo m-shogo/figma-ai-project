@@ -20,9 +20,6 @@
                     </a>
                 </p>
             </address>
-            <p class="gf_map">
-                <img src="<?php echo esc_url($theme_uri . '/images/common/footer-map.png'); ?>" alt="日本武道館周辺の地図" width="670" height="356" decoding="async" loading="lazy">
-            </p>
             <ul class="gf_sns">
                 <li class="gf_sns_item">
                     <a class="gf_sns_link gf_sns_youtube" href="#" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><span>YouTube</span></a>
@@ -67,6 +64,9 @@
                 ?>
             </div>
         </div>
+        <p class="gf_map">
+            <img src="<?php echo esc_url($theme_uri . '/images/common/footer-map.png'); ?>" alt="日本武道館周辺の地図" width="670" height="356" decoding="async" loading="lazy">
+        </p>
     </div>
     <div class="gf_bottom">
         <p class="gf_copyright"><span>&copy;2016 NIPPON BUDOKAN,All rights reserved</span></p>

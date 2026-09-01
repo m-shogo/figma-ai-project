@@ -52,17 +52,17 @@
 
 - PC: `footer_subpage` `2106:9471`（白・リンク2列・金 Page Top・地図なし）
 - SP: `footer-sp` `2189:10106`（白・SNS・金 Page Top・地図なし）
-- TOP の PC 地図付き footer と TOP sticky「目的から探す」はグローバルに入れない
+- TOP の PC 地図付き footer `1901:13409` と SP `footer-sp-top` `1360:9369` は `body.home` だけ。下層は地図なし
 
 直した差:
 
 - SP ダーク地図フッター → 白・ダーク wordmark・SNS 48px・地図なし
 - SP Page Top 赤 → 金
 - body copy を Zen Kaku Gothic New 14px に合わせる
+- TOP だけ既存 `gf_map` を表示（SP 315×168 / PC 600×320）。下層は隠したまま
 
 残:
 
 - SNS / アクセス / 問い合わせの本番 URL は Human 待ち
 - WP メニューが入ったら fallback は消える
 - SP sticky お問い合わせ/アクセスは `footer-sp` に無いが、現行 full-page で廃止証拠が無いため残す
-- TOP 専用 footer（PC 地図・「目的から探す」sticky）は TOP セクションで別途

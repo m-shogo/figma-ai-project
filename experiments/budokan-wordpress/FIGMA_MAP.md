@@ -16,8 +16,10 @@ Pages: PC `0:1` / SP `114:5409`
 | Header instance 例 | PC | `2182:8241` | header |
 | Header SP 閉じ | SP | `446:10020` | SP TOP 先頭（header-sp 相当） |
 | Header SP 開き | SP | `2169:10018` | header-sp（menu 2169:10017 内） |
-| Footer コンポーネント | PC | `2106:9471` | footer_subpage |
-| Footer コンポーネント | SP | `2189:10106` | footer-sp |
+| Footer コンポーネント | PC | `2106:9471` | footer_subpage（下層・地図なし） |
+| Footer コンポーネント | SP | `2189:10106` | footer-sp（下層・地図なし） |
+| Footer TOP | PC | `1901:13409` | footer（地図 600×320） |
+| Footer TOP | SP | `1360:9369` | footer-sp-top（地図 315×168） |
 | Page Title | PC | `2169:10270` | page_title-pc（金帯 220 / Mincho 32 Bold 白） |
 | Page Title | SP | `1399:18544` | page_title-sp（金帯 180 / Mincho 24 Bold 白） |
 | Page Title 画像付き | PC | `1450:5147` | page_title-img-pc（写真 1320×320 @x60 / 白 Mincho 32 パネル 360×79） |
