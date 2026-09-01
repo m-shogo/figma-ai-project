@@ -16,6 +16,28 @@ function isRobotoFamily(family) {
   return String(family || '').toLowerCase().includes('roboto');
 }
 
+async function measureTopPartner(page) {
+  return page.evaluate(() => {
+    const section = document.querySelector('#top_partner-01');
+    const title = section?.querySelector('.tp_title');
+    const titleEn = section?.querySelector('.tp_title_en');
+    const lead = section?.querySelector('.tp_lead');
+    const name = section?.querySelector('.tp_name');
+    const more = section?.querySelector('.tp_more');
+    if (!section || !title || !titleEn || !lead || !name || !more) return null;
+    return {
+      titleSize: parseFloat(getComputedStyle(title).fontSize),
+      titleFamily: getComputedStyle(title).fontFamily,
+      titleEnSize: parseFloat(getComputedStyle(titleEn).fontSize),
+      titleEnFamily: getComputedStyle(titleEn).fontFamily,
+      leadFamily: getComputedStyle(lead).fontFamily,
+      nameSize: parseFloat(getComputedStyle(name).fontSize),
+      nameFamily: getComputedStyle(name).fontFamily,
+      moreFamily: getComputedStyle(more).fontFamily,
+    };
+  });
+}
+
 async function measureTopNews(page) {
   return page.evaluate(() => {
     const section = document.querySelector('#top_news-01');
@@ -112,6 +134,16 @@ try {
   assert(isKakuFamily(spNews.dateFamily), `SP news date must resolve to Zen Kaku Gothic New, got ${spNews.dateFamily}.`);
   assert(close(spNews.titleSize, 16, 0.5), `SP news title ${spNews.titleSize}`);
   assert(isKakuFamily(spNews.titleFamily), `SP news title must resolve to Zen Kaku Gothic New, got ${spNews.titleFamily}.`);
+  const spPartner = await measureTopPartner(mobilePage);
+  assert(spPartner, 'SP TOP Partner elements missing');
+  assert(close(spPartner.titleSize, 22, 0.5), `SP partner title ${spPartner.titleSize}`);
+  assert(isKakuFamily(spPartner.titleFamily), `SP partner title must resolve to Zen Kaku Gothic New, got ${spPartner.titleFamily}.`);
+  assert(close(spPartner.titleEnSize, 14, 0.5), `SP partner EN ${spPartner.titleEnSize}`);
+  assert(isRobotoFamily(spPartner.titleEnFamily), `SP partner EN must resolve to Roboto, got ${spPartner.titleEnFamily}.`);
+  assert(isKakuFamily(spPartner.leadFamily), `SP partner lead must resolve to Zen Kaku Gothic New, got ${spPartner.leadFamily}.`);
+  assert(close(spPartner.nameSize, 12, 0.5), `SP partner name ${spPartner.nameSize}`);
+  assert(isKakuFamily(spPartner.nameFamily), `SP partner name must resolve to Zen Kaku Gothic New, got ${spPartner.nameFamily}.`);
+  assert(isKakuFamily(spPartner.moreFamily), `SP partner more must resolve to Zen Kaku Gothic New, got ${spPartner.moreFamily}.`);
   await mobileContext.close();
 
   const desktopContext = await browser.newContext({ viewport: { width: 1380, height: 1500 } });
@@ -188,10 +220,21 @@ try {
   assert(isKakuFamily(pcNews.dateFamily), `PC news date must resolve to Zen Kaku Gothic New, got ${pcNews.dateFamily}.`);
   assert(close(pcNews.titleSize, 16, 0.5), `PC news title ${pcNews.titleSize}`);
   assert(isKakuFamily(pcNews.titleFamily), `PC news title must resolve to Zen Kaku Gothic New, got ${pcNews.titleFamily}.`);
+  const pcPartner = await measureTopPartner(desktopPage);
+  assert(pcPartner, 'PC TOP Partner elements missing');
+  assert(close(pcPartner.titleSize, 24, 0.5), `PC partner title ${pcPartner.titleSize}`);
+  assert(isMinchoFamily(pcPartner.titleFamily), `PC partner title must resolve to Zen Old Mincho, got ${pcPartner.titleFamily}.`);
+  assert(close(pcPartner.titleEnSize, 16, 0.5), `PC partner EN ${pcPartner.titleEnSize}`);
+  assert(isMinchoFamily(pcPartner.titleEnFamily), `PC partner EN must resolve to Zen Old Mincho, got ${pcPartner.titleEnFamily}.`);
+  assert(isKakuFamily(pcPartner.leadFamily), `PC partner lead must resolve to Zen Kaku Gothic New, got ${pcPartner.leadFamily}.`);
+  assert(close(pcPartner.nameSize, 14, 0.5), `PC partner name ${pcPartner.nameSize}`);
+  assert(isKakuFamily(pcPartner.nameFamily), `PC partner name must resolve to Zen Kaku Gothic New, got ${pcPartner.nameFamily}.`);
+  assert(isKakuFamily(pcPartner.moreFamily), `PC partner more must resolve to Zen Kaku Gothic New, got ${pcPartner.moreFamily}.`);
   await desktopContext.close();
   console.log('PASS Budokan TOP About SP responsive geometry and type family QA.');
   console.log('PASS Budokan TOP About PC right-rail four-card geometry and type family QA.');
   console.log('PASS Budokan TOP News SP/PC type family QA hosted on the About front-page runtime.');
+  console.log('PASS Budokan TOP Partner SP/PC type family QA hosted on the About front-page runtime.');
 } finally {
   await browser.close();
 }
