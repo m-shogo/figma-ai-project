@@ -119,10 +119,67 @@ grep -Fq 'class="next _hidden"' "$html" || {
   exit 1
 }
 
+news_back_url="$(docker compose run --rm cli eval 'echo get_permalink((int) get_option("page_for_posts"));')"
+grep -Fq "href=\"${news_back_url}\"" "$html" || {
+  echo "FAIL News detail return link does not use the configured posts page URL: ${news_back_url}" >&2
+  exit 1
+}
+
 rm -f "$html"
 
-echo "PASS Budokan News single rendered through the real WordPress single.php path."
-echo "PASS Return label/date semantics and absent-adjacent states are preserved."
+# Event uses the same single.php detail pager. Its display label is Japanese
+# (イベント), while WordPress owns the canonical archive route for post type
+# `event`. The return action must follow the archive API, never a label-derived
+# path.
+event_id="$(docker compose run --rm cli post create \
+  --post_type=event \
+  --post_status=publish \
+  --post_title='Budokan Event Single QA' \
+  --post_name='budokan-event-single-qa' \
+  --post_date='2026-08-30 13:00:00' \
+  --post_content='<p>Budokan Event detail archive-link fixture.</p>' \
+  --porcelain)"
+[[ "$event_id" =~ ^[0-9]+$ ]] || {
+  echo "FAIL could not create Event single fixture." >&2
+  exit 1
+}
+
+event_url="$(docker compose run --rm cli post url "$event_id")"
+event_archive_url="$(docker compose run --rm cli eval 'echo get_post_type_archive_link("event");')"
+[[ -n "$event_url" && -n "$event_archive_url" ]] || {
+  echo "FAIL WordPress did not resolve Event single/archive URLs." >&2
+  exit 1
+}
+
+event_html="$(mktemp)"
+event_http_code="$(curl --silent --show-error --location --max-redirs 3 --output "$event_html" --write-out '%{http_code}' "$event_url")"
+if [[ "$event_http_code" != "200" ]]; then
+  echo "FAIL Event single returned final HTTP ${event_http_code}: ${event_url}" >&2
+  cat "$event_html" >&2 || true
+  docker compose logs wordpress >&2 || true
+  exit 1
+fi
+
+for required in \
+  'class="module_titleSingle"' \
+  'class="module_pager-02"' \
+  'class="back"' \
+  '>一覧へ戻る<'; do
+  grep -Fq "$required" "$event_html" || {
+    echo "FAIL required Event single runtime marker missing: ${required}" >&2
+    exit 1
+  }
+done
+
+grep -Fq "href=\"${event_archive_url}\"" "$event_html" || {
+  echo "FAIL Event detail return link does not use WordPress archive ownership: ${event_archive_url}" >&2
+  exit 1
+}
+
+rm -f "$event_html"
+
+echo "PASS Budokan News and Event details rendered through the real WordPress single.php path."
+echo "PASS Return links use WordPress-owned posts/archive URLs; date and absent-adjacent semantics are preserved."
 
 if [[ "${BUDOKAN_NEWS_SINGLE_KEEP_RUNTIME:-0}" == "1" ]]; then
   trap - EXIT
