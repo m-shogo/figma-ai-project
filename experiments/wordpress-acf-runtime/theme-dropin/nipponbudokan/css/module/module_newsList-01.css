@@ -57,6 +57,7 @@
         border-radius: 0;
         background-color: var(--color-secondary);
         color: var(--color-text);
+        font-family: var(--font-zen-kaku-gothic);
         font-size: 14px;
         font-weight: 500;
         line-height: 1;
@@ -112,8 +113,9 @@
 
 .news_item_date {
     flex-shrink: 0;
+    font-family: var(--font-zen-kaku-gothic);
     font-size: 14px;
-    font-weight: 400;
+    font-weight: 500;
     line-height: 1;
     letter-spacing: 0.05em;
 }
@@ -130,8 +132,9 @@
     border-radius: 2px;
     background-color: var(--color-secondary);
     color: var(--color-text);
+    font-family: var(--font-zen-kaku-gothic);
     font-size: 13px;
-    font-weight: 400;
+    font-weight: 500;
     line-height: 1;
     letter-spacing: 0.05em;
     text-align: center;
@@ -141,8 +144,9 @@
     margin: 0;
     min-width: 0;
     color: var(--color-text);
+    font-family: var(--font-zen-kaku-gothic);
     font-size: 16px;
-    font-weight: 400;
+    font-weight: 500;
     line-height: 1.6;
     letter-spacing: 0.05em;
     text-decoration: underline;
@@ -232,9 +236,9 @@
     border-radius: 0;
     background: transparent;
     color: var(--color-text);
-    font-family: var(--font-sansSerif-en);
+    font-family: var(--font-zen-kaku-gothic);
     font-size: 16px;
-    font-weight: 400;
+    font-weight: 500;
     line-height: 1;
     text-decoration: none;
 }
@@ -363,7 +367,6 @@
 
     .news_item_label {
         border-color: var(--color-text);
-        font-weight: 500;
     }
 
     .news_item_title {
