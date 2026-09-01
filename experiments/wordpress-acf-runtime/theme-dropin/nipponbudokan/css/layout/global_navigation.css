@@ -3,7 +3,7 @@
 // サイト共通ナビゲーション
 // Current Figma fileKey fKYDn9ikpJk1nW7IWFtaUx
 // SP open menu 2169:10017 — L2 Mincho SemiBold 18 / L3 Mincho SemiBold 16 /
-// L4 Kaku Regular 15 / utility Kaku Medium 13
+// L4 Kaku Regular 15 / utility Kaku Medium 13 / SNS 2169:10224 48px
 // PC GNavi top remains Mincho Medium 16 (2209:9850). Keep SP accordion
 // (Disclosure); do not flatten the Figma expanded-tree geometry.
 // ========================================================================== */
@@ -24,14 +24,18 @@
     grid-template-areas:
         'gn_menu'
         'gn_subMenu'
+        'gn_sns'
         'gn_search';
     grid-template-columns: 1fr;
-    grid-template-rows: 1fr auto auto;
+    grid-template-rows: 1fr auto auto auto;
     > .gn_menu {
         grid-area: gn_menu;
     }
     > .gn_subMenu {
         grid-area: gn_subMenu;
+    }
+    > .gn_sns {
+        grid-area: gn_sns;
     }
     > .gn_search {
         grid-area: gn_search;
@@ -319,6 +323,54 @@
             }
         }
     }
+    /* SP open menu SNS 2169:10224 — same 48px / gap 24 / #333 primitive as footer-sp.
+       Do not duplicate EN (already in .gh_lang). */
+    .gn_sns {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 24px;
+        list-style: none;
+        margin: 40px 0 0;
+        padding: 0;
+    }
+    .gn_sns_link {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+        border-radius: 999px;
+        background-color: var(--color-text);
+        color: var(--color-secondary);
+        transition: opacity var(--transition-duration);
+        span {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+        &::before {
+            font-family: var(--font-awesomeBrands);
+            font-size: 16px;
+            line-height: 1;
+        }
+        &.gn_sns_youtube::before {
+            content: '\f167';
+        }
+        &.gn_sns_instagram::before {
+            content: '\f16d';
+        }
+        &.gn_sns_x::before {
+            content: '\e61b';
+        }
+    }
     .gn_search {
         margin-top: 40px;
         padding-inline: var(--padding-SP);
@@ -405,6 +457,7 @@
             }
         }
         > .gn_subMenu,
+        > .gn_sns,
         > .gn_search {
             display: none;
         }
@@ -768,6 +821,10 @@
             &:hover {
                 color: var(--color-link);
             }
+        }
+        .gn_sns_link:hover {
+            opacity: var(--opacity-hover);
+            color: var(--color-secondary);
         }
         @media screen and (min-width: 768px) {
             .gn_links-01 > .gnl_item-02 {

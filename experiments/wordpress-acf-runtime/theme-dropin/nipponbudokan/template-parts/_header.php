@@ -45,6 +45,17 @@
                 ));
                 ?>
             </div>
+            <ul class="gn_sns" aria-label="公式SNS">
+                <li class="gn_sns_item">
+                    <a class="gn_sns_link gn_sns_youtube" href="#" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><span>YouTube</span></a>
+                </li>
+                <li class="gn_sns_item">
+                    <a class="gn_sns_link gn_sns_instagram" href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><span>Instagram</span></a>
+                </li>
+                <li class="gn_sns_item">
+                    <a class="gn_sns_link gn_sns_x" href="#" target="_blank" rel="noopener noreferrer" aria-label="X"><span>X</span></a>
+                </li>
+            </ul>
             <div class="gn_search">
                 <div class="gns_form module_search-01">
                     <form class="ms_from" role="search" method="get" action="<?php echo esc_url(home_url('/')); ?>">
