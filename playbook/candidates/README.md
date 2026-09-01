@@ -2,6 +2,8 @@
 
 ここには、Observationより強いがまだ汎用playbookとして証明不足のruleを置く。
 
+Canonical promotion timing / SLA: `../../docs/frontend-learning-promotion-policy.md`
+
 ## Entry gate
 
 - target failureが明確
@@ -9,10 +11,42 @@
 - before/afterまたは再現 evidenceあり
 - clean replayを最低1回通した
 - scope/known limitsを記録した
+- `promotion_review` に次のreview日・status・必要evidenceを記録した
 
 ## Promotion
 
-別reference/別案件または十分に異なるcontextで再現したら `../proven/` へ昇格を検討する。
+別reference/別案件または十分に異なるcontextで再現したら `../proven/` への昇格を**その時点でreview**する。
+
+- 2つ目の独立evidenceが入ったら原則2日以内にreview
+- evidence eventが無くても最大14日ごとにreview
+- `READY_FOR_PROVEN` は最大7日以内に明示decision
+- contradictionは同じrun/PRでreview
+- project close時、そのprojectで触れたcandidateを全件review
+
+時間だけではpromoteしない。期限は「判断を先送りしない」ためのもの。
+
+## Required `promotion_review`
+
+```yaml
+promotion_review:
+  last_reviewed_at: "2026-09-02"
+  next_review_at: "2026-09-16"
+  status: RETEST_REQUIRED
+  reason: "Second-reference measured outcome is missing."
+  trigger: "Review immediately when the next independent clean replay lands."
+  evidence_needed:
+    - "Measured second-reference outcome"
+```
+
+Allowed status:
+
+- `KEEP_CANDIDATE`
+- `RETEST_REQUIRED`
+- `READY_FOR_PROVEN`
+- `DEMOTE`
+- `RETIRE`
+
+`python scripts/audit_frontend_learning_promotion.py` がoverdueをFAILにする。自動昇格はしない。
 
 ## Current candidates
 
