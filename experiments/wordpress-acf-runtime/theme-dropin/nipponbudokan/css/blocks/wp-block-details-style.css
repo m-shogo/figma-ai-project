@@ -1,229 +1,189 @@
 @charset "utf-8";
 /* // ------------------------------
-// MARK: 詳細
+// MARK: 詳細 / Core Details
 // Current Figma fileKey fKYDn9ikpJk1nW7IWFtaUx
-// SP 1399:18840 / PC 1157:8305 — Zen Old Mincho SemiBold 18
-// Geometry: SP 1399:18837 rail 59 / title 20×16 / content 20
-// PC collapsed 1157:8302 24/68; PC open 1157:8314 title pl 32 / content 32
+// SP frame 1399:18837 / QA 1399:18857
+// PC collapsed 1157:8302 / open 1157:8314 / QA 1157:8324
+// WordPress authority: native core/details markup from parts.php
+//   <details class="wp-block-details"><summary>...</summary>...blocks...</details>
+// Do not depend on synthetic __title/__button/__content wrappers that Core does not emit.
 // ------------------------------ */
 .block-editor_wrap,
 .editor-styles-wrapper {
     .wp-block-details {
-        /* 基本スタイル */
-        border: 1px solid var(--color-text);
+        --_details-padding-inline: 20px;
+        --_details-title-padding-block: 16px;
+        --_details-content-padding-block: 20px;
+        --_details-control-inset: 20px;
+        --_details-control-size: 20px;
+
         margin-top: var(--wp-block-margin);
-        background-color: var(--color-secondary);
+        border: 1px solid var(--color-text);
         border-radius: 3px;
-        --_title-padding-block: 16px;
-        --_padding-inline: 20px;
-        --_content-padding-block: 20px;
-        /* SP rail is 19.5 + 20 + 19.5 = 59. PC restores 68 (24 + 20 + 24). */
-        --_button-width: 59px;
-        --_summary-gap: 0px;
-        summary,
-        summary.wp-block-details__summary {
-            list-style-type: '';
+        background-color: var(--color-secondary);
+        overflow: clip;
+
+        > summary,
+        > summary.wp-block-details__summary {
             position: relative;
-            padding-block: var(--_title-padding-block);
-            padding-inline: var(--_padding-inline) calc(var(--_button-width) + var(--_summary-gap));
+            display: block;
+            min-height: 59px;
+            padding-block: var(--_details-title-padding-block);
+            padding-inline:
+                var(--_details-padding-inline)
+                calc(var(--_details-control-inset) + var(--_details-control-size) + var(--_details-padding-inline));
+            border-bottom: 1px solid transparent;
+            list-style: none;
             cursor: pointer;
             touch-action: manipulation;
+            color: var(--color-text);
+            font-family: var(--font-zen-old-mincho);
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 1.5;
+            letter-spacing: 0.05em;
+            overflow-wrap: anywhere;
+            word-break: normal;
+            line-break: strict;
+
             &::-webkit-details-marker {
                 display: none;
             }
-        }
 
-        .wp-block-details__title {
-            font-family: var(--font-zen-old-mincho);
-            font-weight: 600;
-            font-size: 18px;
-            letter-spacing: 0.05em;
-            line-height: 1.5;
-            color: var(--color-text);
-            overflow-wrap: anywhere;
-            word-break: normal;
-            line-break: strict;
-        }
-        .wp-block-details__button {
-            position: absolute;
-            z-index: 1;
-            pointer-events: none;
-            top: 50%;
-            translate: 0 -50%;
-            right: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: var(--_button-width);
-            height: 100%;
-            background-color: transparent;
-            transition: var(--transition-duration);
-            overflow: hidden;
-            /* &::before {
-          content: '';
-          position: absolute;
-          z-index: -1;
-          inset: 0;
-          background: var(--color-primary);
-          opacity: 0;
-          visibility: hidden;
-          transition: var(--transition-duration);
-        } */
-
-            > span {
-                &::before,
-                &::after {
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    translate: -50% -50%;
-                    display: block;
-                    width: 20px;
-                    height: 2px;
-                    content: '';
-                    background-color: var(--color-primary);
-                    transition: var(--transition-duration);
-                }
-                &::before {
-                }
-                &::after {
-                    rotate: 90deg;
-                }
-            }
-        }
-
-        .wp-block-details__content {
-            position: relative;
-            z-index: 0;
-            padding-block: var(--_content-padding-block);
-            padding-inline: var(--_padding-inline);
-            overflow-wrap: anywhere;
-            word-break: normal;
-            line-break: strict;
+            /* Native summary owns the Figma plus/minus affordance. */
             &::after {
                 content: '';
                 position: absolute;
-                top: 0;
-                left: 0;
-                block-size: 1px;
-                inline-size: 100%;
-                background-color: var(--color-line);
-                z-index: 1;
+                top: 50%;
+                right: var(--_details-control-inset);
+                width: var(--_details-control-size);
+                height: var(--_details-control-size);
+                translate: 0 -50%;
+                background:
+                    linear-gradient(var(--color-primary), var(--color-primary)) center / 20px 2px no-repeat,
+                    linear-gradient(var(--color-primary), var(--color-primary)) center / 2px 20px no-repeat;
+                pointer-events: none;
+                transition: var(--transition-duration);
             }
         }
-        .wp-block-details__inner {
-            flex-grow: 1;
-            display: block grid;
-            > * {
-                &:last-child {
-                    margin-bottom: 0;
+
+        /* Core Details has no content wrapper. Keep editor-owned child blocks intact,
+           and recreate the shared content inset at the root boundary. */
+        > :not(summary) {
+            max-width: calc(100% - (var(--_details-padding-inline) * 2));
+            margin-inline: var(--_details-padding-inline);
+            overflow-wrap: anywhere;
+            word-break: normal;
+            line-break: strict;
+        }
+
+        > summary + * {
+            margin-top: var(--_details-content-padding-block);
+        }
+
+        > :last-child:not(summary) {
+            margin-bottom: var(--_details-content-padding-block);
+        }
+
+        &[open] {
+            > summary,
+            > summary.wp-block-details__summary {
+                border-bottom-color: var(--color-line);
+
+                &::after {
+                    background:
+                        linear-gradient(var(--color-primary), var(--color-primary)) center / 20px 2px no-repeat;
                 }
             }
         }
 
-        /* FAQタイプのスタイル — Current Figma SP 1399:18857 / PC 1157:8324
-           Q/A is a hugged Roboto Medium 24 glyph, not a 32px slot. */
+        /* FAQ family — Q/A stays decorative; editor content remains native blocks. */
         &._qa {
-            summary.wp-block-details__summary {
-                padding-block: 20px;
-            }
-            summary.wp-block-details__summary,
-            .wp-block-details__content {
-                display: flex;
-                gap: 16px;
-                align-items: center;
+            > summary,
+            > summary.wp-block-details__summary {
+                padding-left: 54px;
+
                 &::before {
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    width: auto;
+                    content: 'Q';
+                    position: absolute;
+                    top: 50%;
+                    left: 20px;
+                    translate: 0 -50%;
+                    color: var(--color-accent);
+                    font-family: var(--font-sansSerif-en);
                     font-size: 24px;
                     font-weight: 500;
                     line-height: 1;
-                    flex-shrink: 0;
+                    letter-spacing: 0.05em;
+                }
+
+                &::after {
+                    background-color: transparent;
+                }
+            }
+
+            > :not(summary) {
+                margin-left: 54px;
+                max-width: calc(100% - 74px);
+            }
+
+            > summary + * {
+                position: relative;
+
+                &::before {
+                    content: 'A';
+                    position: absolute;
+                    top: 50%;
+                    left: -34px;
+                    translate: 0 -50%;
+                    color: var(--color-accent);
+                    font-family: var(--font-sansSerif-en);
+                    font-size: 24px;
+                    font-weight: 500;
+                    line-height: 1;
                     letter-spacing: 0.05em;
                 }
             }
-
-            summary.wp-block-details__summary {
-                &::before {
-                    content: 'Q';
-                    color: var(--color-accent);
-                    font-family: var(--font-sansSerif-en);
-                    font-size: 24px;
-                    font-weight: 500;
-                }
-            }
-            .wp-block-details__content {
-                &::before {
-                    content: 'A';
-                    color: var(--color-accent);
-                    font-family: var(--font-sansSerif-en);
-                    font-size: 24px;
-                    font-weight: 500;
-                }
-            }
-            .wp-block-details__button > span {
-                &::before,
-                &::after {
-                    background-color: var(--color-accent);
-                }
-            }
         }
 
-        /* hover */
-        @media (any-hover: hover) {
-            &:hover {
-                .wp-block-details__button {
-                    &::before {
-                        opacity: 1;
-                        visibility: visible;
-                    }
-                }
-            }
-        }
-
-        /* 開いたときのスタイル */
-        &[open] {
-            .wp-block-details__button {
-                > span {
-                    &::after {
-                        rotate: 0deg;
-                    }
-                }
-            }
-        }
-
+        /* MARK: heading_pc */
         @media screen and (min-width: 768px) {
-            --_title-padding-block: 24px;
-            --_padding-inline: 24px;
-            --_content-padding-block: 24px;
-            --_button-width: 68px;
+            --_details-padding-inline: 32px;
+            --_details-title-padding-block: 24px;
+            --_details-content-padding-block: 32px;
+            --_details-control-inset: 24px;
 
-            .wp-block-details__title {
-                font-size: 18px;
+            > summary,
+            > summary.wp-block-details__summary {
+                min-height: 75px;
+                padding-left: 24px;
                 letter-spacing: 0.1em;
             }
 
-            /* PC collapsed title stays 24px; open title/content use 32px inset. */
             &[open] {
-                summary.wp-block-details__summary {
+                > summary,
+                > summary.wp-block-details__summary {
                     padding-left: 32px;
-                }
-
-                .wp-block-details__content {
-                    padding: 32px;
                 }
             }
 
             &._qa {
-                summary.wp-block-details__summary {
-                    padding-block: 24px;
-                    padding-left: 32px;
+                > summary,
+                > summary.wp-block-details__summary {
+                    padding-left: 66px;
+
+                    &::before {
+                        left: 32px;
+                    }
                 }
 
-                .wp-block-details__content {
-                    padding: 32px;
+                > :not(summary) {
+                    margin-left: 66px;
+                    max-width: calc(100% - 98px);
+                }
+
+                > summary + *::before {
+                    left: -34px;
                 }
             }
         }
