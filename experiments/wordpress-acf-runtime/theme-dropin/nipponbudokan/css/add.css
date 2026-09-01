@@ -1,0 +1,124 @@
+@charset "utf-8";
+
+/* Current Figma SP expanded global navigation: 2169:10017.
+   Preserve the existing WordPress menu/walker/disclosure contract and adjust
+   only the nested visual hierarchy below the mobile breakpoint. */
+@media screen and (max-width: 767px) {
+    .global_navigation {
+        .gn_links-01 {
+            /* Level 3: 56px light-gray business-family rows. */
+            .gnl_item-03 {
+                border-top: 0;
+                border-bottom: 1px solid var(--color-gray-border);
+                background-color: var(--color-heading-band);
+            }
+
+            .gnl_item-03 > .gnl_title-03 {
+                min-height: 56px;
+                background-color: var(--color-heading-band);
+            }
+
+            .gnl_item-03 > .gnl_title-03 > .gnl_link-03 {
+                padding: 20px 8px 20px 24px;
+                font-family: var(--font-zen-old-mincho);
+                font-size: 16px;
+                font-weight: 600;
+                line-height: 1;
+                letter-spacing: 0.05em;
+            }
+
+            .gnl_item-03 > .gnl_title-03 > .gnl_button-03 {
+                width: 36px;
+                height: 36px;
+                margin-right: 16px;
+            }
+
+            /* Expanded level 3 owns the #f8f8f8 grouped-section field. */
+            .gnl_item-03[data-open='true'] > .gnl_wrapper-03 > .gnl_inner-03 {
+                padding: 20px 24px;
+                background-color: #f8f8f8;
+            }
+
+            .gnl_item-03[data-open='true'] > .gnl_wrapper-03 > .gnl_inner-03 > .gnl_list-03 {
+                display: grid;
+                gap: 20px;
+            }
+
+            /* Level 4: gold grouped headings such as 大会イベント. */
+            .gnl_item-04 {
+                border-top: 0;
+            }
+
+            .gnl_item-04 > .gnl_title-04 {
+                min-height: 48px;
+                background-color: var(--color-accent);
+            }
+
+            .gnl_item-04 > .gnl_title-04 > .gnl_link-04 {
+                padding: 16px 8px 16px 16px;
+                color: var(--color-secondary);
+                font-family: var(--font-zen-old-mincho);
+                font-size: 16px;
+                font-weight: 600;
+                line-height: 1;
+                letter-spacing: 0.05em;
+            }
+
+            .gnl_item-04 > .gnl_title-04 > .gnl_button-04 {
+                width: 32px;
+                height: 32px;
+                margin-right: 8px;
+            }
+
+            .gnl_item-04 > .gnl_title-04 > .gnl_button-04::before,
+            .gnl_item-04 > .gnl_title-04 > .gnl_button-04::after {
+                background-color: var(--color-secondary);
+            }
+
+            .gnl_item-04[data-open='true'] > .gnl_wrapper-04 {
+                margin-top: 20px;
+            }
+
+            .gnl_item-04[data-open='true'] > .gnl_wrapper-04 > .gnl_inner-04 > .gnl_list-04 {
+                display: grid;
+                gap: 16px;
+            }
+
+            /* Level 5: 15px leaf links with the authored short lead rule. */
+            .gnl_item-05 {
+                border-top: 0;
+            }
+
+            .gnl_item-05._noChild > .gnl_title-05 {
+                min-height: 32px;
+                padding: 0 0 16px 16px;
+                border-bottom: 1px solid var(--color-gray-border);
+            }
+
+            .gnl_item-05._noChild:last-child > .gnl_title-05 {
+                border-bottom: 0;
+            }
+
+            .gnl_item-05._noChild > .gnl_title-05 > .gnl_link-05 {
+                position: relative;
+                padding: 0 0 0 16px;
+                color: var(--color-text);
+                font-family: var(--font-zen-kaku-gothic);
+                font-size: 15px;
+                font-weight: 400;
+                line-height: 1.2;
+                letter-spacing: 0.05em;
+            }
+
+            .gnl_item-05._noChild > .gnl_title-05 > .gnl_link-05::before {
+                content: '';
+                position: absolute;
+                top: 0.6em;
+                left: 0;
+                width: 8px;
+                height: 1px;
+                background-color: var(--color-primary);
+            }
+        }
+    }
+}
