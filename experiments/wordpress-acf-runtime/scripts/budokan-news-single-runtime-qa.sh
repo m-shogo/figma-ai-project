@@ -88,6 +88,18 @@ post_id="$(docker compose run --rm cli post create \
 }
 docker compose run --rm cli post term set "$post_id" category "$term_id" --by=id >/dev/null
 
+# Use an existing repository-owned image to prove the same WordPress thumbnail
+# has different responsibilities by detail family: News renders it as the lead
+# detail image; Event keeps it available for archive cards but does not inject
+# it into the current Figma Event detail body.
+fixture_media_path="/var/www/html/wp-content/themes/${THEME_SLUG}/images/common/bg-pattern.png"
+attachment_id="$(docker compose run --rm cli media import "$fixture_media_path" --title='Budokan Detail Media QA' --porcelain)"
+[[ "$attachment_id" =~ ^[0-9]+$ ]] || {
+  echo "FAIL could not create reusable featured-image fixture." >&2
+  exit 1
+}
+docker compose run --rm cli post meta update "$post_id" _thumbnail_id "$attachment_id" >/dev/null
+
 html="$(mktemp)"
 http_code="$(curl --silent --show-error --location --max-redirs 3 --output "$html" --write-out '%{http_code}' "${WP_URL}/budokan-news-single-qa/")"
 if [[ "$http_code" != "200" ]]; then
@@ -99,6 +111,7 @@ fi
 
 for required in \
   'class="module_titleSingle"' \
+  'class="single_featured"' \
   'class="module_pager-02"' \
   'class="back"' \
   '>一覧へ戻る<' \
@@ -143,6 +156,7 @@ event_id="$(docker compose run --rm cli post create \
   echo "FAIL could not create Event single fixture." >&2
   exit 1
 }
+docker compose run --rm cli post meta update "$event_id" _thumbnail_id "$attachment_id" >/dev/null
 
 event_url="$(docker compose run --rm cli post url "$event_id")"
 event_archive_url="$(docker compose run --rm cli eval 'echo get_post_type_archive_link("event");')"
@@ -176,9 +190,15 @@ grep -Fq "href=\"${event_archive_url}\"" "$event_html" || {
   exit 1
 }
 
+if grep -Fq 'class="single_featured"' "$event_html"; then
+  echo "FAIL Event thumbnail leaked into Event detail lead media; current Figma keeps archive-card thumbnail ownership separate." >&2
+  exit 1
+fi
+
 rm -f "$event_html"
 
 echo "PASS Budokan News and Event details rendered through the real WordPress single.php path."
+echo "PASS News keeps its lead featured image; Event thumbnail remains archive-card data and is not auto-injected into detail body."
 echo "PASS Return links use WordPress-owned posts/archive URLs; date and absent-adjacent semantics are preserved."
 
 if [[ "${BUDOKAN_NEWS_SINGLE_KEEP_RUNTIME:-0}" == "1" ]]; then
