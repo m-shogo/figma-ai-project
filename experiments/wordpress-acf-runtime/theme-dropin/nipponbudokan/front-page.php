@@ -115,4 +115,4 @@ $has_slider = function_exists('have_rows') && have_rows('top_slider-01');
     <?php get_template_part('template-parts/_top-instagram'); ?>
     <?php get_template_part('template-parts/_top-banner'); ?>
 </main>
-<?php get_footer(); ?>
+<?php get_footer(null, array('map' => true)); ?>
