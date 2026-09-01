@@ -127,10 +127,8 @@ if (get_field('post_type') === 'file') {
             </article>
         <?php else: ?>
             <div class="global_inner _content">
-                <div class="gc_main _oneColumn">
-                    <div class="module_password">
-                        <?php echo get_the_password_form(); ?>
-                    </div>
+                <div class="module_password">
+                    <?php echo get_the_password_form(); ?>
                 </div>
             </div>
         <?php endif; ?>
