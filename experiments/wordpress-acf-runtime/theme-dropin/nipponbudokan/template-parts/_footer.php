@@ -1,4 +1,7 @@
-<footer id="global_footer" class="global_footer" itemscope itemtype="https://schema.org/WPFooter">
+<?php
+$show_map = !empty(($args ?? array())['map']);
+?>
+<footer id="global_footer" class="global_footer<?php echo $show_map ? ' _hasMap' : ''; ?>" itemscope itemtype="https://schema.org/WPFooter">
     <?php $theme_uri = get_template_directory_uri(); ?>
     <div class="gf_body">
         <div class="gf_information">
@@ -64,9 +67,11 @@
                 ?>
             </div>
         </div>
+        <?php if ($show_map): ?>
         <p class="gf_map">
             <img src="<?php echo esc_url($theme_uri . '/images/common/footer-map.png'); ?>" alt="日本武道館周辺の地図" width="670" height="356" decoding="async" loading="lazy">
         </p>
+        <?php endif; ?>
     </div>
     <div class="gf_bottom">
         <p class="gf_copyright"><span>&copy;2016 NIPPON BUDOKAN,All rights reserved</span></p>

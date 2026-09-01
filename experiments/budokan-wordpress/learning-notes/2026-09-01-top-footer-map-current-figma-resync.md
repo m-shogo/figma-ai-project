@@ -9,7 +9,7 @@ Current file `fKYDn9ikpJk1nW7IWFtaUx`:
 - Subpage PC `2106:9471` `footer_subpage` (no map)
 - Subpage SP `2189:10106` `footer-sp` (no map)
 
-Owner remains `_footer.php` + `global_footer.css` + existing `footer-map.png`. `body.home` is the TOP switch. No new footer shell, ACF, or Form.
+Owner remains `_footer.php` + `global_footer.css` + existing `footer-map.png`. Toggle is `get_template_part( ..., array( 'map' => true ) )` → class `_hasMap`. `footer.php` passes `is_front_page()` as the default. No new footer shell, ACF, or Form.
 
 ## Finding
 
@@ -21,8 +21,8 @@ Shared Footer resync hid `.gf_map` on every page so the subpage master would win
 
 ## Fix
 
-Keep map hidden by default. On `.home` only, show the existing map asset at SP 315×168 / PC 600×320 radius 5. `display: contents` on TOP `.gf_information` lets links sit above SNS on PC without a second footer template.
+Keep map off by default. When `map` is true, show the existing map asset at SP 315×168 / PC 600×320 radius 5. `display: contents` on `_hasMap` `.gf_information` lets links sit above SNS on PC without a second footer template.
 
 ## Lesson
 
-TOP Footer and subpage Footer are different components. A global hide to protect the subpage master is not permission to blank the TOP specimen.
+A global hide to protect the subpage master is not permission to blank the TOP specimen. Gate the map with the template-part `map` arg, not `body.home`, so other pages can opt in.

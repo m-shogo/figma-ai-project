@@ -30,12 +30,12 @@ async function measure(page) {
     const pageTop = footer?.querySelector('.gf_pageTop a');
     const copyright = footer?.querySelector('.gf_copyright');
     const address = footer?.querySelector('.gf_address');
-    if (!footer || !body || !map || !sns || !snsLink || !links || !pageTop || !copyright || !address) return null;
+    if (!footer || !body || !sns || !snsLink || !links || !pageTop || !copyright || !address) return null;
 
     const footerStyle = getComputedStyle(footer);
     const bodyStyle = getComputedStyle(body);
-    const mapRect = map.getBoundingClientRect();
-    const mapStyle = getComputedStyle(map);
+    const mapRect = map ? map.getBoundingClientRect() : { width: 0, height: 0 };
+    const mapStyle = map ? getComputedStyle(map) : null;
     const snsStyle = getComputedStyle(sns);
     const snsLinkRect = snsLink.getBoundingClientRect();
     const linksStyle = getComputedStyle(links);
@@ -49,8 +49,8 @@ async function measure(page) {
       footerColor: footerStyle.color,
       bodyPadTop: parseFloat(bodyStyle.paddingTop),
       bodyPadInline: parseFloat(bodyStyle.paddingLeft),
-      isHome: document.body.classList.contains('home'),
-      mapDisplay: mapStyle.display,
+      hasMap: footer.classList.contains('_hasMap'),
+      mapDisplay: mapStyle ? mapStyle.display : 'none',
       mapWidth: mapRect.width,
       mapHeight: mapRect.height,
       snsDisplay: snsStyle.display,
@@ -85,7 +85,7 @@ try {
   assert(sp.footerColor === 'rgb(51, 51, 51)', `SP footer color expected #333, got ${sp.footerColor}.`);
   assert(close(sp.bodyPadTop, 48, 1), `SP body padding-top expected 48, got ${sp.bodyPadTop}.`);
   assert(close(sp.bodyPadInline, 30, 1), `SP body padding-inline expected 30, got ${sp.bodyPadInline}.`);
-  if (sp.isHome) {
+  if (sp.hasMap) {
     assert(sp.mapDisplay === 'block', `TOP SP map must show, got ${sp.mapDisplay}.`);
     assert(close(sp.mapWidth, 315, 2), `TOP SP map width expected 315, got ${sp.mapWidth}.`);
     assert(close(sp.mapHeight, 168, 2), `TOP SP map height expected 168, got ${sp.mapHeight}.`);
@@ -109,7 +109,7 @@ try {
   const pc = await measure(desktopPage);
   assert(pc, 'PC Footer was not found.');
   assert(pc.footerBg === 'rgb(255, 255, 255)', `PC footer background expected white, got ${pc.footerBg}.`);
-  if (pc.isHome) {
+  if (pc.hasMap) {
     assert(close(pc.bodyPadTop, 72, 1), `TOP PC body padding-top expected 72, got ${pc.bodyPadTop}.`);
     assert(pc.mapDisplay === 'block', `TOP PC map must show, got ${pc.mapDisplay}.`);
     assert(close(pc.mapWidth, 600, 2), `TOP PC map width expected 600, got ${pc.mapWidth}.`);
@@ -128,7 +128,7 @@ try {
   assert(pc.addressSize === '14px', `PC address expected 14px, got ${pc.addressSize}.`);
   await desktopContext.close();
 
-  if (sp.isHome) {
+  if (sp.hasMap) {
     console.log('PASS Budokan TOP Footer SP map 315x168 / SNS 48 / gold Page Top.');
     console.log('PASS Budokan TOP Footer PC map 600x320 / links under identity / gold Page Top 170x60.');
   } else {
