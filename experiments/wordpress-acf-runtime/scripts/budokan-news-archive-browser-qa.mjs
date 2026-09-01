@@ -82,6 +82,9 @@ try {
       tabFamily: linkStyles[0].fontFamily,
       dateFamily: getComputedStyle(firstDate).fontFamily,
       labelFamily: getComputedStyle(firstLabel).fontFamily,
+      labelBorder: getComputedStyle(firstLabel).borderTopColor,
+      labelWidth: firstLabel.getBoundingClientRect().width,
+      labelHeight: firstLabel.getBoundingClientRect().height,
       numberFamily: numberStyle.fontFamily,
       pagerWidth: pagerRect.width,
       pagerDisplay: pagerStyle.display,
@@ -115,6 +118,8 @@ try {
   assert(isKakuFamily(sp.tabFamily), `SP tab must resolve to Zen Kaku Gothic New, got ${sp.tabFamily}.`);
   assert(isKakuFamily(sp.dateFamily), `SP date must resolve to Zen Kaku Gothic New, got ${sp.dateFamily}.`);
   assert(isKakuFamily(sp.labelFamily), `SP label must resolve to Zen Kaku Gothic New, got ${sp.labelFamily}.`);
+  assert(sp.labelBorder === 'rgb(51, 51, 51)', `SP label stroke expected #333, got ${sp.labelBorder}.`);
+  assert(close(sp.labelWidth, 80) && close(sp.labelHeight, 23), `SP label expected 80x23, got ${sp.labelWidth}x${sp.labelHeight}.`);
   assert(isKakuFamily(sp.titleFamily), `SP title must resolve to Zen Kaku Gothic New, got ${sp.titleFamily}.`);
   assert(isKakuFamily(sp.numberFamily), `SP pager number must resolve to Zen Kaku Gothic New, got ${sp.numberFamily}.`);
   await mobileContext.close();
@@ -132,7 +137,8 @@ try {
     const pageNumber = document.querySelector('.news_pager_numbers .page-numbers:not(.prev):not(.next):not(.dots)');
     const firstTitle = document.querySelector('.news_item_title');
     const firstDate = document.querySelector('.news_item_date');
-    if (!archive || !list || tabs.length !== 6 || links.length !== 6 || !pager || !pageNumber || !firstTitle || !firstDate) return null;
+    const firstLabel = document.querySelector('.news_item_label');
+    if (!archive || !list || tabs.length !== 6 || links.length !== 6 || !pager || !pageNumber || !firstTitle || !firstDate || !firstLabel) return null;
 
     const archiveRect = archive.getBoundingClientRect();
     const listRect = list.getBoundingClientRect();
@@ -158,6 +164,10 @@ try {
       tabFamily: styles[0].fontFamily,
       titleFamily: getComputedStyle(firstTitle).fontFamily,
       dateFamily: getComputedStyle(firstDate).fontFamily,
+      labelFamily: getComputedStyle(firstLabel).fontFamily,
+      labelBorder: getComputedStyle(firstLabel).borderTopColor,
+      labelWidth: firstLabel.getBoundingClientRect().width,
+      labelHeight: firstLabel.getBoundingClientRect().height,
     };
   });
 
@@ -173,6 +183,9 @@ try {
   assert(close(pc.numberWidth, 50) && close(pc.numberHeight, 40) && pc.numberBottomBorder === '2px', `PC page number expected 50x40 underline, got ${pc.numberWidth}x${pc.numberHeight}/${pc.numberBottomBorder}.`);
   assert(isKakuFamily(pc.tabFamily), `PC tab must resolve to Zen Kaku Gothic New, got ${pc.tabFamily}.`);
   assert(isKakuFamily(pc.dateFamily), `PC date must resolve to Zen Kaku Gothic New, got ${pc.dateFamily}.`);
+  assert(isKakuFamily(pc.labelFamily), `PC label must resolve to Zen Kaku Gothic New, got ${pc.labelFamily}.`);
+  assert(pc.labelBorder === 'rgb(51, 51, 51)', `PC label stroke expected #333, got ${pc.labelBorder}.`);
+  assert(close(pc.labelWidth, 80) && close(pc.labelHeight, 23), `PC label expected 80x23, got ${pc.labelWidth}x${pc.labelHeight}.`);
   assert(isKakuFamily(pc.titleFamily), `PC title must resolve to Zen Kaku Gothic New, got ${pc.titleFamily}.`);
   assert(isKakuFamily(pc.numberFamily), `PC pager number must resolve to Zen Kaku Gothic New, got ${pc.numberFamily}.`);
   await desktopContext.close();
