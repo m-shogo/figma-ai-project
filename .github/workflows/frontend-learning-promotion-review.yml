@@ -10,6 +10,7 @@ on:
       - so
     paths:
       - 'research/frontend-learning-evidence*.yaml'
+      - 'research/frontend-learning-promotion-reviews.yaml'
       - 'experiments/**/*.yaml'
       - 'scripts/audit_frontend_learning_capture.py'
       - 'scripts/audit_frontend_learning_promotion_queue.py'
