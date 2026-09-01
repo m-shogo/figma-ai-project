@@ -8,7 +8,7 @@ The Budokan Figma authority was re-grounded before implementation. An old unrela
 
 Fresh evidence used in this run:
 
-- SP purpose sticky: `1360:9370` (`menu-purpose`), 375×56
+- SP purpose sticky: `1360:9370` (`menu-purpose`), 375×64
 - SP full frame: `446:10020`, where the control is authored as the final 56px at y=8344
 - PC FV: `1399:12229`, where the existing `.tm_guide` remains the 240×600 desktop purpose rail
 - existing TOP purpose master: `#top_guide-01`
@@ -18,13 +18,13 @@ No `parts.php`, Formidable/form work, ACF schema, or purpose-content duplication
 
 ## Figma findings
 
-`1360:9370` is a dark 375×56 purpose control with:
+`1360:9370` is a dark 375×64 purpose control with:
 
-- 1px top border `#4e5055`
+- fill `#4e5055` (same-color inside stroke, no contrasting top border)
 - 24px horizontal padding
-- centered list icon + `目的から探す`
-- 15px list icon
-- 16px label, 0.05em tracking
+- vertically centered list icon + `目的から探す`
+- 18px list icon
+- Zen Old Mincho Medium 18px label, 0.05em tracking
 - 16px upward chevron aligned to the right
 
 The node contains no expanded menu body. PC evidence continues to show the existing purpose guide inside the FV instead of this SP control.
@@ -42,13 +42,12 @@ The upward-chevron + sticky placement strongly supports a return-to-purpose inte
 `top_guide.css` owns the thin TOP derivative because the destination/master is TOP Guide:
 
 - fixed to viewport bottom
-- 56px height / full viewport width
+- 64px height / full viewport width
 - z-index 80, matching the Footer shortcut layer
-- dark Theme text background
-- 1px top separator
+- `#4e5055` background
 - 24px horizontal padding
 - existing Font Awesome font for the list/up glyphs
-- 16px centered label with 0.05em tracking
+- Zen Old Mincho Medium 18px centered label with 0.05em tracking
 
 The markup stays after `#global_footer` in DOM order rather than being duplicated inside the Footer master. `_footer.php` renders the generic `.gf_sticky` only when the current page is not the front page, so TOP has exactly one bottom shortcut owner.
 
@@ -63,12 +62,12 @@ The existing Budokan TOP Guide workflow is extended rather than adding another W
 ### SP
 
 - 375px purpose sticky width
-- 56px height
+- 64px height
 - `position:fixed` and bottom viewport ownership
 - DOM order immediately after the Footer master
 - generic `.gf_sticky` is absent on TOP, preventing overlapping shortcut owners
 - 1px top border
-- 16px / 0.8px-tracking label geometry
+- 18px / 0.9px-tracking Mincho label geometry
 - href reuses `#top_guide-01`
 - clicking the purpose sticky uses the existing smooth-scroll contract and lands the Guide below the header offset
 

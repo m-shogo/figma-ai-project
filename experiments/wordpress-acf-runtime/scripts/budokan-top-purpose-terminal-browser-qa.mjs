@@ -10,6 +10,11 @@ const assert = (condition, message) => {
   if (!condition) throw new Error(message);
 };
 const close = (actual, expected, tolerance = 2) => Math.abs(actual - expected) <= tolerance;
+function isMinchoFamily(family) {
+  const value = String(family || '').toLowerCase();
+  if (value.includes('sans-serif')) return false;
+  return value.includes('mincho') || value.includes('zen old');
+}
 
 const browser = await chromium.launch({ headless: true });
 try {
@@ -43,6 +48,7 @@ try {
       zIndex: parseInt(style.zIndex, 10),
       borderTopWidth: parseFloat(style.borderTopWidth),
       labelSize: parseFloat(labelStyle.fontSize),
+      labelFamily: labelStyle.fontFamily,
       labelLetterSpacing: parseFloat(labelStyle.letterSpacing),
       href: link.getAttribute('href'),
       targetId: target.id,
@@ -54,15 +60,16 @@ try {
   assert(sp, 'SP purpose sticky elements missing.');
   assert(close(sp.viewportWidth, 375), `SP viewport expected 375px, got ${sp.viewportWidth}.`);
   assert(close(sp.terminalWidth, 375), `SP purpose sticky expected 375px, got ${sp.terminalWidth}.`);
-  assert(close(sp.terminalHeight, 56), `SP purpose sticky expected 56px high, got ${sp.terminalHeight}.`);
+  assert(close(sp.terminalHeight, 64), `SP purpose sticky expected 64px high, got ${sp.terminalHeight}.`);
   assert(sp.position === 'fixed', `SP purpose surface must be sticky/fixed, got ${sp.position}.`);
-  assert(close(sp.terminalTop, sp.viewportHeight - 56, 1) && close(sp.terminalBottom, sp.viewportHeight, 1), `SP purpose sticky must pin to viewport bottom; top=${sp.terminalTop}, bottom=${sp.terminalBottom}, viewport=${sp.viewportHeight}.`);
+  assert(close(sp.terminalTop, sp.viewportHeight - 64, 1) && close(sp.terminalBottom, sp.viewportHeight, 1), `SP purpose sticky must pin to viewport bottom; top=${sp.terminalTop}, bottom=${sp.terminalBottom}, viewport=${sp.viewportHeight}.`);
   assert(sp.zIndex >= 80, `SP purpose sticky must own the footer-shortcut layer; z-index=${sp.zIndex}.`);
   assert(sp.followsFooterInDom, 'SP purpose sticky should remain a thin TOP derivative immediately after the Footer master in DOM order.');
   assert(!sp.defaultStickyPresent, 'TOP must not render the generic contact/access footer sticky beneath the purpose sticky.');
-  assert(close(sp.borderTopWidth, 1, 0.25), `SP purpose sticky border expected 1px, got ${sp.borderTopWidth}.`);
-  assert(close(sp.labelSize, 16, 0.5), `SP purpose sticky label expected 16px, got ${sp.labelSize}.`);
-  assert(close(sp.labelLetterSpacing, 0.8, 0.25), `SP purpose sticky tracking expected 0.8px, got ${sp.labelLetterSpacing}.`);
+  assert(close(sp.borderTopWidth, 0, 0.25), `SP purpose sticky should not keep a contrasting top border, got ${sp.borderTopWidth}.`);
+  assert(close(sp.labelSize, 18, 0.5), `SP purpose sticky label expected 18px, got ${sp.labelSize}.`);
+  assert(isMinchoFamily(sp.labelFamily), `SP purpose sticky label must resolve to Zen Old Mincho, got ${sp.labelFamily}.`);
+  assert(close(sp.labelLetterSpacing, 0.9, 0.25), `SP purpose sticky tracking expected 0.9px, got ${sp.labelLetterSpacing}.`);
   assert(sp.href === '#top_guide-01' && sp.targetId === 'top_guide-01', `SP purpose sticky must reuse existing purpose master; href=${sp.href}.`);
 
   await mobilePage.locator('.top_purposeMenu .tpm_link').click();
