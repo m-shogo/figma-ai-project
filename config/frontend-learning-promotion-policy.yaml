@@ -1,0 +1,52 @@
+schema_version: 1
+status: ACTIVE
+canonical_doc: docs/frontend-learning-promotion-policy.md
+
+auto_promotion: false
+
+review_statuses:
+  - KEEP_CANDIDATE
+  - RETEST_REQUIRED
+  - READY_FOR_PROVEN
+  - DEMOTE
+  - RETIRE
+
+sla:
+  candidate_review_max_days: 14
+  ready_for_proven_max_days: 7
+  second_reference_review_max_days: 2
+  contradiction_review: SAME_RUN_OR_PR
+  project_close_review: REQUIRED
+
+triggers:
+  - REPEATED_FAILURE
+  - SECOND_SECTION_CONFIRMATION
+  - SECOND_REFERENCE_EVIDENCE
+  - CONTRADICTION_OR_EXCEPTION
+  - TOOLING_OR_PLATFORM_CHANGE
+  - PROJECT_CLOSE_OR_CLEAN_REPLAY
+  - SCHEDULED_REVIEW_DATE
+
+promotion_gates:
+  candidate:
+    clean_replay_or_independent_reproduction_required: true
+    target_failure_required: true
+    known_limits_required: true
+    retest_triggers_required: true
+  active:
+    distinct_reference_minimum: 2
+    second_context_result_evidence_required: true
+    unresolved_contradiction_allowed: false
+    known_limits_required: true
+  core:
+    distinct_reference_minimum: 3
+    distinct_project_or_implementation_family_minimum: 2
+    successful_reuse_after_active_required: true
+    measurable_outcome_minimum: 2
+    unresolved_contradiction_allowed: false
+
+scheduled_review:
+  cadence: WEEKLY
+  cron_utc: "17 0 * * 1"
+  fail_on_overdue_candidate: true
+  auto_promote: false
