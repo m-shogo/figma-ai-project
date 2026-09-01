@@ -5,13 +5,16 @@ import argparse
 import subprocess
 import sys
 from dataclasses import dataclass
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from pathlib import Path
 from typing import Any
+
+import yaml
 
 import validate_frontend_learning_evidence as learning
 
 ROOT = Path(__file__).resolve().parents[1]
+REVIEW_LEDGER_PATH = ROOT / "research" / "frontend-learning-promotion-reviews.yaml"
 CANDIDATE_MAX_DAYS = 14
 PROJECT_ONLY_REVIEW_DAYS = 30
 DEPRECATED_REVIEW_DAYS = 60
@@ -29,13 +32,27 @@ class ReviewItem:
     blocked_by_count: int
 
 
+def parse_date(value: Any) -> date | None:
+    if not isinstance(value, str) or not value.strip():
+        return None
+    try:
+        return datetime.strptime(value.strip(), "%Y-%m-%d").date()
+    except ValueError:
+        return None
+
+
+def load_review_ledger() -> dict[str, dict[str, Any]]:
+    if not REVIEW_LEDGER_PATH.is_file():
+        return {}
+    value = yaml.safe_load(REVIEW_LEDGER_PATH.read_text(encoding="utf-8"))
+    if not isinstance(value, dict):
+        return {}
+    reviews = value.get("reviews", {})
+    return reviews if isinstance(reviews, dict) else {}
+
+
 def git_dates_for_learning(learning_id: str) -> tuple[date | None, date | None]:
-    """Return first-seen and last-touched dates for a learning record from git history.
-
-    The scheduled workflow checks out full history. When history is unavailable, return
-    (None, None) and keep evidence-count triggers active instead of inventing dates.
-    """
-
+    """Return first-seen and last-touched dates for a learning record from git history."""
     try:
         completed = subprocess.run(
             [
@@ -55,13 +72,7 @@ def git_dates_for_learning(learning_id: str) -> tuple[date | None, date | None]:
     except (OSError, subprocess.CalledProcessError):
         return None, None
 
-    values = [line.strip() for line in completed.stdout.splitlines() if line.strip()]
-    parsed: list[date] = []
-    for value in values:
-        try:
-            parsed.append(datetime.strptime(value, "%Y-%m-%d").date())
-        except ValueError:
-            continue
+    parsed = [d for line in completed.stdout.splitlines() if (d := parse_date(line.strip()))]
     if not parsed:
         return None, None
     return min(parsed), max(parsed)
@@ -98,9 +109,19 @@ def blocked_by_count(record: dict[str, Any]) -> int:
 
 
 def age_days(first_seen: date | None, *, today: date) -> int | None:
+    return None if first_seen is None else max(0, (today - first_seen).days)
+
+
+def default_due_date(state: str, first_seen: date | None) -> date | None:
     if first_seen is None:
         return None
-    return max(0, (today - first_seen).days)
+    windows = {
+        "CANDIDATE": CANDIDATE_MAX_DAYS,
+        "PROJECT_ONLY": PROJECT_ONLY_REVIEW_DAYS,
+        "DEPRECATED": DEPRECATED_REVIEW_DAYS,
+    }
+    days = windows.get(state)
+    return first_seen + timedelta(days=days) if days is not None else None
 
 
 def review_reason(
@@ -108,38 +129,73 @@ def review_reason(
     state: str,
     support_refs: int,
     contradictions: int,
-    age: int | None,
+    first_seen: date | None,
+    today: date,
+    prior_review: dict[str, Any] | None,
 ) -> str | None:
-    # Evidence-strength triggers are immediate. They intentionally request a review;
-    # they never change promotion_state automatically.
-    if contradictions > 0 and state in {"CANDIDATE", "ACTIVE", "CORE"}:
-        return "contradiction requires scope/demotion/retirement review"
+    prior_review = prior_review or {}
+    reviewed_refs = int(prior_review.get("reviewed_supporting_references", -1))
+    reviewed_contradictions = int(prior_review.get("reviewed_contradictions", -1))
+    next_review_due = parse_date(prior_review.get("next_review_due"))
 
-    if state == "CANDIDATE":
-        if support_refs >= 2:
-            return "cross-reference evidence reached ACTIVE review threshold"
-        if age is not None and age >= CANDIDATE_MAX_DAYS:
+    # New evidence after a recorded disposition reopens review immediately.
+    if contradictions > max(reviewed_contradictions, 0) and state in {"CANDIDATE", "ACTIVE", "CORE"}:
+        return "new contradiction requires scope/demotion/retirement review"
+
+    if state == "CANDIDATE" and support_refs >= 2 and support_refs > max(reviewed_refs, 0):
+        return "new cross-reference evidence reached ACTIVE review threshold"
+    if state == "PROJECT_ONLY" and support_refs >= 2 and support_refs > max(reviewed_refs, 0):
+        return "new cross-reference evidence requires scope expansion review"
+    if (
+        state == "ACTIVE"
+        and support_refs >= ACTIVE_CORE_REFERENCE_THRESHOLD
+        and support_refs > max(reviewed_refs, 0)
+    ):
+        return f"new evidence reached CORE review threshold ({ACTIVE_CORE_REFERENCE_THRESHOLD} references)"
+
+    # Once a disposition is recorded, its explicit next_review_due becomes authoritative.
+    if prior_review:
+        if next_review_due is not None and today >= next_review_due:
+            return f"recorded follow-up review date reached ({next_review_due.isoformat()})"
+        return None
+
+    due = default_due_date(state, first_seen)
+    if due is not None and today >= due:
+        if state == "CANDIDATE":
             return f"candidate exceeded {CANDIDATE_MAX_DAYS}-day maximum review window"
-
-    if state == "PROJECT_ONLY":
-        if support_refs >= 2:
-            return "project-only rule now has cross-reference evidence; scope expansion review is due"
-        if age is not None and age >= PROJECT_ONLY_REVIEW_DAYS:
+        if state == "PROJECT_ONLY":
             return f"project-only rule reached {PROJECT_ONLY_REVIEW_DAYS}-day revalidation window"
-
-    if state == "ACTIVE" and support_refs >= ACTIVE_CORE_REFERENCE_THRESHOLD:
-        return (
-            "ACTIVE rule has at least "
-            f"{ACTIVE_CORE_REFERENCE_THRESHOLD} supporting references; CORE review is due"
-        )
-
-    if state == "DEPRECATED" and age is not None and age >= DEPRECATED_REVIEW_DAYS:
-        return f"deprecated rule reached {DEPRECATED_REVIEW_DAYS}-day retire-or-reactivate review window"
-
+        if state == "DEPRECATED":
+            return f"deprecated rule reached {DEPRECATED_REVIEW_DAYS}-day retire-or-reactivate review window"
     return None
 
 
-def queue_items(index: dict[str, Any], *, today: date) -> list[ReviewItem]:
+def ledger_errors(ledger: dict[str, dict[str, Any]]) -> list[str]:
+    errors: list[str] = []
+    for learning_id, review in ledger.items():
+        if not isinstance(review, dict):
+            errors.append(f"{learning_id}: review entry must be an object")
+            continue
+        last_reviewed = parse_date(review.get("last_reviewed_at"))
+        next_due = parse_date(review.get("next_review_due"))
+        if last_reviewed is None:
+            errors.append(f"{learning_id}: last_reviewed_at must use YYYY-MM-DD")
+        if next_due is None:
+            errors.append(f"{learning_id}: next_review_due must use YYYY-MM-DD")
+        if last_reviewed is not None and next_due is not None and next_due <= last_reviewed:
+            errors.append(f"{learning_id}: next_review_due must be after last_reviewed_at")
+        for field in ("reviewed_supporting_references", "reviewed_contradictions"):
+            value = review.get(field)
+            if not isinstance(value, int) or value < 0:
+                errors.append(f"{learning_id}: {field} must be a non-negative integer")
+        if not str(review.get("disposition", "")).strip():
+            errors.append(f"{learning_id}: disposition is required")
+        if not str(review.get("rationale", "")).strip():
+            errors.append(f"{learning_id}: rationale is required")
+    return errors
+
+
+def queue_items(index: dict[str, Any], *, today: date, ledger: dict[str, dict[str, Any]]) -> list[ReviewItem]:
     output: list[ReviewItem] = []
     records = index.get("records", [])
     if not isinstance(records, list):
@@ -156,14 +212,15 @@ def queue_items(index: dict[str, Any], *, today: date) -> list[ReviewItem]:
             continue
 
         first_seen, _last_touched = git_dates_for_learning(learning_id)
-        age = age_days(first_seen, today=today)
         support_refs = len(support_reference_ids(record))
         contradictions = contradiction_count(record)
         reason = review_reason(
             state=state,
             support_refs=support_refs,
             contradictions=contradictions,
-            age=age,
+            first_seen=first_seen,
+            today=today,
+            prior_review=ledger.get(learning_id),
         )
         if reason is None:
             continue
@@ -172,56 +229,46 @@ def queue_items(index: dict[str, Any], *, today: date) -> list[ReviewItem]:
                 learning_id=learning_id,
                 promotion_state=state,
                 reason=reason,
-                age_days=age,
+                age_days=age_days(first_seen, today=today),
                 supporting_references=support_refs,
                 contradiction_count=contradictions,
                 blocked_by_count=blocked_by_count(record),
             )
         )
-
     return sorted(output, key=lambda item: (item.promotion_state, item.learning_id))
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description=(
-            "Report frontend learning records whose promotion/demotion review is due. "
-            "This tool never promotes automatically."
-        )
+        description="Report frontend learning records whose promotion/demotion review is due; never auto-promote."
     )
-    parser.add_argument(
-        "--fail-on-due",
-        action="store_true",
-        help="Exit 1 when one or more promotion reviews are due.",
-    )
-    parser.add_argument(
-        "--today",
-        help="Override today's date for deterministic tests, formatted YYYY-MM-DD.",
-    )
+    parser.add_argument("--fail-on-due", action="store_true", help="Exit 1 when reviews are due.")
+    parser.add_argument("--today", help="Override date for deterministic tests, YYYY-MM-DD.")
     args = parser.parse_args()
 
     today = date.today()
     if args.today:
-        try:
-            today = datetime.strptime(args.today, "%Y-%m-%d").date()
-        except ValueError:
-            print("FAIL frontend learning promotion queue")
-            print("  - --today must use YYYY-MM-DD")
+        parsed = parse_date(args.today)
+        if parsed is None:
+            print("FAIL frontend learning promotion queue\n  - --today must use YYYY-MM-DD")
             return 2
+        today = parsed
 
     index, shards, combine_errors = learning.load_combined_index(ROOT)
-    if combine_errors:
+    ledger = load_review_ledger()
+    errors = combine_errors + ledger_errors(ledger)
+    if errors:
         print("FAIL frontend learning promotion queue")
-        for error in combine_errors:
+        for error in errors:
             print(f"  - {error}")
         return 1
 
-    items = queue_items(index, today=today)
+    items = queue_items(index, today=today, ledger=ledger)
     print("PASS frontend learning promotion queue audit")
-    print(f"  shards={len(shards)} due_reviews={len(items)} today={today.isoformat()}")
+    print(f"  shards={len(shards)} recorded_reviews={len(ledger)} due_reviews={len(items)} today={today.isoformat()}")
     print(
-        "  cadence: CANDIDATE<=14d, PROJECT_ONLY review<=30d, "
-        "ACTIVE CORE-review at >=3 references, contradictions immediate"
+        "  cadence: CANDIDATE<=14d, PROJECT_ONLY<=30d, ACTIVE CORE-review at >=3 refs, "
+        "new contradictions immediate; reviewed items use explicit next_review_due"
     )
 
     if items:
@@ -234,13 +281,11 @@ def main() -> int:
                 f"blocked_by={item.blocked_by_count}: {item.reason}"
             )
         print(
-            "\nDisposition required: promote, narrow to PROJECT_ONLY, keep with fresh blocker/evidence, "
+            "\nDisposition required: promote, narrow to PROJECT_ONLY, keep with a dated review disposition, "
             "deprecate, or retire. Do not leave a due item untouched."
         )
 
-    if items and args.fail_on_due:
-        return 1
-    return 0
+    return 1 if items and args.fail_on_due else 0
 
 
 if __name__ == "__main__":
