@@ -1,6 +1,7 @@
 schema_version: 1
 status: ACTIVE
 canonical_doc: docs/frontend-learning-promotion-policy.md
+queue_path: research/frontend-learning-promotion-queue.yaml
 
 auto_promotion: false
 
