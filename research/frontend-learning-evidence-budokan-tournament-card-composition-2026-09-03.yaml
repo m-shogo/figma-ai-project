@@ -13,7 +13,7 @@ records:
       geometry from page-composition geometry before changing shared CSS. Reuse the verified component owner for its
       internal spacing and keep isolated outer grid spacing content-owned until repeated runtime/authority evidence
       proves a reusable shared derivative.
-    category: REUSE_MISSED
+    category: REUSE
     applicability:
       scope: PROJECT
       conditions:
