@@ -25,10 +25,11 @@ records:
     promotion:
       candidate: false
       rationale: >-
-        Budokan now has two same-project examples: POST_DETAIL was recovered as SP_post 1451:5197 and NEWS_ARCHIVE
-        was recovered as SP_archive 1399:14225 under the canonical current SP root 114:5409. The second observation
-        strengthens the project-local procedure, but both pieces of evidence come from REF-002-BUDOKAN and therefore
-        are not independent cross-reference evidence. Keep PROJECT_ONLY and do not auto-promote.
+        Budokan now has three same-project examples: POST_DETAIL was recovered as SP_post 1451:5197,
+        NEWS_ARCHIVE as SP_archive 1399:14225, and FEATURE_PAGE_TRAINING_CENTER as SP_navigation 1468:6595
+        under the canonical current SP root 114:5409. The additional observation strengthens the project-local
+        procedure, but all evidence still comes from REF-002-BUDOKAN and is not independent cross-reference
+        evidence. Keep PROJECT_ONLY and do not auto-promote.
       blocked_by:
         - NEEDS_INDEPENDENT_REFERENCE_EVIDENCE_BEFORE_CROSS_PROJECT_PROMOTION
       contradiction_review: ''
@@ -55,7 +56,18 @@ records:
             The live SP_archive frame 1399:14225 contains the expected News archive page title, six category tabs,
             repeated post cards, pagination, breadcrumb, footer, and mobile purpose menu, so the historical 560:2524
             mapping was replaced only for NEWS_ARCHIVE.
+        - evidence_id: EV-BUDOKAN-SP-TRAINING-CENTER-LIVE-AUTHORITY-20260902
+          kind: LOCAL_RESEARCH
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/ref002-budokan-wordpress/page-family-map.yaml
+          commit: ''
+          note: >-
+            Current Figma file fKYDn9ikpJk1nW7IWFtaUx was inspected under the canonical SP root 114:5409.
+            Live frame SP_navigation 1468:6595 is explicitly identified by its page title and breadcrumb as
+            the training-center page and exposes authored headings, body copy, gallery images, fee sections,
+            notices, and navigation buttons, so only FEATURE_PAGE_TRAINING_CENTER authority was refreshed.
       contradicts: []
     notes:
-      - "Promotion review disposition 2026-09-02: KEEP_PROJECT_ONLY; same-project evidence increased, but independent-reference evidence is still absent."
+      - "Promotion review disposition 2026-09-02: KEEP_PROJECT_ONLY; a third same-project observation does not satisfy independent-reference evidence requirements."
       - Re-verify other historical family nodes individually rather than bulk-rewriting the map.

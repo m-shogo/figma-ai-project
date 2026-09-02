@@ -140,7 +140,7 @@ families:
 
   - family_id: FEATURE_PAGE_TRAINING_CENTER
     pc_frame: "395:7954"
-    sp_frame: "560:377"
+    sp_frame: "1468:6595"
     observed_parts:
       - FEATURE_HERO
       - HEADER
@@ -151,6 +151,9 @@ families:
     wordpress_resolution:
       shell: REUSE_FEATURE_PAGE_FAMILY_IF_SEMANTICALLY_MATCHED
       content: CORE_AND_PATTERN_FIRST
+    notes:
+      - "Current SP_navigation 1468:6595 was re-verified live under the current SP authority root 114:5409 on 2026-09-02; its page title and breadcrumb identify the training-center family, and its body exposes authored headings, text, image gallery, fee sections, notices, and navigation buttons."
+      - "This authority correction does not authorize a new feature template, data model, gallery owner, or page-specific CSS; reuse existing Theme/editor owners unless a runtime diff proves otherwise."
 
   - family_id: FEATURE_PAGE_TRAINING
     pc_frame: "402:236"
