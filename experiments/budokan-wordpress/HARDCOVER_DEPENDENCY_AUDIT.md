@@ -1,6 +1,6 @@
 # Hardcover / 単行本 Dependency Audit
 
-更新: 2026-09-02
+更新: 2026-09-03
 
 対象は現行 Figma `fKYDn9ikpJk1nW7IWFtaUx` の PC full-page authority:
 
@@ -65,6 +65,27 @@ nested list は current Theme の shared `wp-block-list-style.css` で既に表�
 
 購入ボタンも `target="_blank"` を既存 WordPress markup が持てば shared button CSS の trailing external-link icon が使えるため、Hardcover 専用 icon markup は作らない。
 
+## 2026-09-03 shared-primitive re-verification
+
+LIVE current-Figma inspection of Hardcover detail `1686:5574` re-checked the two surfaces most likely to trigger unnecessary page-specific work:
+
+- purchase buttons are actual `button_L` instances at **270×60**; the visible labels use Zen Kaku Gothic New Medium **15px**, and the four purchase actions sit in the same shared button family already owned by `wp-block-buttonLink-style.css`
+- the caution row uses a **14px / 1.6** Zen Kaku Gothic New body with a separate **16px `※` marker**
+
+A second LIVE check against the canonical Parts annotation sample in `1163:4245` confirmed that the shared visual family also uses **14px / 1.6** Zen Kaku Gothic New body and a **16px Noto Sans JP Medium `※` marker**. Theme `ul.annotation-list` already matches the body/marker sizing and structure, but its marker explicitly uses the Theme Kaku family rather than Noto.
+
+That font-family mismatch is real, but it is **not** safe evidence for a broad shared CSS change yet: Publications contains a contextual annotation treatment, and the production WordPress markup/variant ownership for those contextual instances is still unresolved. Changing the generic marker family now could repair Parts/Hardcover while silently regressing another consumer whose semantic variant hook has not been established.
+
+Therefore:
+
+- purchase buttons: **REUSE_EXISTING**
+- annotation body/marker sizing and structure: **REUSE_EXISTING**
+- annotation marker font family: **FAIL_CLOSED_PENDING_CONSUMER_VARIANT_AUTHORITY**
+- Hardcover-specific button/annotation selector or derivative: **DO_NOT_CREATE**
+- Theme PHP/CSS/JS change in this pass: **NONE**
+
+This is intentionally narrower than claiming the whole Hardcover page complete: catalog/editor data ownership and dedicated SP authority remain unresolved.
+
 ## Data / editor boundary
 
 現在 Figma から証明できるのは layout と visible content sample まで。
@@ -87,6 +108,7 @@ nested list は current Theme の shared `wp-block-list-style.css` で既に表�
 1. real WordPress body markup を current PC Figma と比較し、shared block owner に具体的な差分がある
 2. Human が catalog/detail の data owner または editor operation を確定する
 3. current SP counterpart が追加され、shared SP behavior では閉じない差分が証明される
+4. annotation marker familyを変更する場合は、既知のannotation consumerとそのsemantic variant/WordPress markup ownershipを確認し、共有変更のblast radiusが閉じる
 
 それまでは book-card 専用 CSS / template / ACF / CPT を推測で追加しない。
 
@@ -97,7 +119,9 @@ nested list は current Theme の shared `wp-block-list-style.css` で既に表�
 | Page shell | `REUSE_EXISTING` | `page.php` + shared title/breadcrumb/footer |
 | h2/h3/h4 | `REUSE_EXISTING` | current Figma master と shared heading owner が一致 |
 | In-page links | `REUSE_EXISTING` | PC 220×56 / 4-col / gap / icon contract が一致 |
-| Purchase buttons | `REUSE_EXISTING` | default `button_L` + `target=_blank` icon contract が一致 |
+| Purchase buttons | `REUSE_EXISTING` | current LIVE `button_L` 270×60 / 15px Medium と default button owner が一致。`target=_blank` icon contractも再利用可能 |
+| Annotation sizing/structure | `REUSE_EXISTING` | Hardcover/Partsとも body 14px / 1.6 + marker 16px。既存annotation-listの構造と寸法を再利用 |
+| Annotation marker family | `UNRESOLVED` | current Parts/HardcoverはNoto Sans JP Medium、Theme genericはKaku。contextual consumer ownership未確定のため共有変更しない |
 | Nested contents list | `REUSE_EXISTING` | solid/hollow marker、indent、gap が shared list owner と一致 |
 | Book catalog data model | `UNRESOLVED` | Figma repetition は editor collection authority ではない |
 | Book card wrapper | `UNRESOLVED` | real editor markup/data owner 未確定。先に CSS class を発明しない |
