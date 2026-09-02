@@ -171,6 +171,7 @@
                 > summary,
                 > summary.wp-block-details__summary {
                     padding-left: 66px;
+                    letter-spacing: 0.05em;
 
                     &::before {
                         left: 32px;
