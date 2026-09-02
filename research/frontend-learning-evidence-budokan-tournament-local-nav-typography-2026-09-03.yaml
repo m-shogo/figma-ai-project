@@ -1,0 +1,55 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: OBS-BUDOKAN-SHARED-COMPONENT-CONSUMER-TYPOGRAPHY-VARIANT
+    summary: >-
+      Before changing typography on a shared component, inspect all known current-authority consumers. If one consumer
+      differs while another proves the existing base rule is correct, treat the delta as a variant/ownership question
+      rather than changing the shared token globally or inventing a page-specific selector.
+    category: REUSE
+    applicability:
+      scope: PROJECT
+      conditions:
+        - Multiple current-Figma consumers of the same WordPress component can be inspected directly.
+        - The shared Theme owner is known and reused by those consumers.
+        - The observed difference is narrower than the shared component contract.
+      exclusions:
+        - Do not infer a new semantic variant marker from page name, menu label, or visual similarity alone.
+        - Do not replace a shared token when another current-authority consumer proves that token is still correct.
+        - Do not treat same-project consumer comparisons as independent cross-project promotion evidence.
+    promotion_state: PROJECT_ONLY
+    promotion:
+      candidate: false
+      rationale: >-
+        Budokan Tournament Local Navigation 2108:10846 uses a Zen Old Mincho Medium 20px subgroup heading, while the
+        current Training Center Local Navigation 1216:6311 uses Zen Kaku Gothic New Medium 20px. The Theme shared
+        .lnl_link-03 Kaku family is therefore correct for Training Center and cannot safely be changed globally to fix
+        Tournament. No authoritative semantic Tournament variant hook has been proven, so the implementation remains
+        fail-closed rather than inventing a page-specific selector or new data contract.
+      blocked_by:
+        - NEEDS_AUTHORITATIVE_SEMANTIC_VARIANT_HOOK_FOR_IMPLEMENTATION
+        - NEEDS_INDEPENDENT_REFERENCE_EVIDENCE_BEFORE_CROSS_PROJECT_PROMOTION
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-TOURNAMENT-LOCAL-NAV-TYPOGRAPHY-20260903
+          kind: LOCAL_RESEARCH
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/budokan-wordpress/TOURNAMENT_LOCAL_NAV_TYPOGRAPHY_AUDIT_2026-09-03.md
+          commit: ''
+          note: >-
+            LIVE current Figma inspection compared Tournament Local Navigation 2108:10846 against Training Center
+            Local Navigation 1216:6311. Geometry/item behavior remains reusable, but the subgroup heading family differs:
+            Tournament is Zen Old Mincho Medium 20px while Training Center is Zen Kaku Gothic New Medium 20px.
+            Shared local_navigation.css remains unchanged because a global Mincho change would regress the Training
+            Center current-authority consumer and no semantic Tournament variant marker is yet authoritative.
+      contradicts: []
+    notes:
+      - "Promotion review disposition 2026-09-03: KEEP_PROJECT_ONLY; same-project evidence only, no auto-promotion."
