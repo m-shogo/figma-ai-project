@@ -21,23 +21,26 @@ Themeそのものは作らない。ここにあるのは、Themeが届いた瞬�
 
 ## 現在の状態
 
-```text
-status: AWAITING_THEME
-theme_delivery.state: NOT_SUPPLIED
-freeze.ready: false
-```
+このREADMEと [`theme-intake.yaml`](theme-intake.yaml) は **Theme到着前に作られたpre-theme intake artifact** であり、
+ファイル内の `AWAITING_THEME / NOT_SUPPLIED` は当時の履歴を示す。現在のBudokan実装判断で
+この古いstateを現在のauthorityとして扱わない。
 
-本番用の初期ベーシックThemeはユーザー側で用意される予定。
-到着するまで、Theme-relativeな具体path / slug / `implementation_unit` / form plugin / CPT slug は
-validatorが機械的に拒否する。
+現在の実装authority / blockerは次を優先する。
 
-ただし、**Theme repoから観測できる情報をユーザーへ質問しない**。
-Theme family / Header/Footer ownership / `theme.json` / block registration / CSS/JS pipeline /
-breakpoint / ACF Local JSON / CPT registration / form plugin evidence は、Theme受領後にAIがread-onlyで観測する。
+- [`figma-parts-resolution.yaml`](figma-parts-resolution.yaml): current Figma Parts authority と shared owner / fail-closed boundary
+- [`page-family-map.yaml`](page-family-map.yaml): current page-family mapping と residual blocker
+- `experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/`: 現在観測・検証しているTheme runtime fixture
+- current Figma file `fKYDn9ikpJk1nW7IWFtaUx`: saved historical node/file identityより優先
+
+`theme-intake.yaml` 自体は validator contract のhistorical intake evidenceとして保持する。Theme source repository / starting commit の
+正確なprovenanceを現在の証拠から確定できないため、推測で `THEME_OBSERVED` へ書き換えない。
+
+現在もfail-closedの対象は Slider editor/component ownership、dedicated SP Local Navigation visual authority、Search ownership、Calendar ownership。
+Form / Formidable / `parts.php` はHuman-owned/read-onlyである。
 
 ## Record
 
-[`theme-intake.yaml`](theme-intake.yaml)
+[`theme-intake.yaml`](theme-intake.yaml) はpre-theme intake recordであり、現在の実装authorityそのものではない。
 
 | block | 中身 |
 | --- | --- |
