@@ -45,3 +45,43 @@ records:
       contradicts: []
     notes:
       - Keep as an observation until another reference demonstrates the same ownership pattern and measurable repair benefit.
+
+  - learning_id: OBS-BUDOKAN-NAV-THEME-LOCATION-OWNERSHIP
+    summary: >-
+      A WordPress navigation template should render from the registered theme-location assignment and fail
+      closed when that location is unassigned; a hard-coded menu name can silently bypass the human-editable
+      ownership contract and an unconditional outer wrapper can leave empty layout chrome behind.
+    category: CMS
+    applicability:
+      scope: PROJECT
+      conditions:
+        - WordPress navigation is already registered and managed through a theme location.
+        - The template is expected to remain human-editable through Appearance > Menus / Navigation assignment.
+      exclusions:
+        - Do not remove a deliberately hard-coded menu when canonical project authority explicitly requires one.
+        - Do not invent a new menu location solely to satisfy this observation.
+    promotion_state: PROJECT_ONLY
+    promotion:
+      candidate: false
+      rationale: >-
+        The Budokan Theme already owns dropdown-nav as a registered location. The previous template also named
+        a specific menu and emitted its wrappers regardless of assignment. Reusing has_nav_menu() plus
+        theme_location restores the existing WordPress ownership contract without introducing new data.
+        This is useful project evidence but not yet independent cross-project proof.
+      blocked_by: []
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-NAV-THEME-LOCATION-FAIL-CLOSED-20260902
+          kind: COMMIT
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_dropdown-navigation.php
+          commit: 0af42e815a334a20049dc7bc7d7eca711c83d589
+          note: >-
+            The template now checks has_nav_menu('dropdown-nav'), removes the hard-coded menu name, and lets
+            wp_nav_menu resolve the editor-assigned menu through theme_location. Unassigned navigation renders
+            no empty wrapper and no fallback menu.
+      contradicts: []
+    notes:
+      - Keep PROJECT_ONLY until a distinct WordPress implementation demonstrates the same failure and benefit.

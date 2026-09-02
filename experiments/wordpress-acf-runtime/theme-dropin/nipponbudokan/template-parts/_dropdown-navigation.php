@@ -1,8 +1,8 @@
+<?php if (has_nav_menu('dropdown-nav')) : ?>
 <div class="global_inner">
     <div class="gc_dropdown">
         <?php
         wp_nav_menu(array(
-            'menu' => 'dropdown-nav',
             'menu_class' => 'module_dropdown',
             'menu_id' => 'module_dropdown',
             'container' => 'div',
@@ -24,3 +24,4 @@
         ?>
     </div>
 </div>
+<?php endif; ?>
