@@ -64,11 +64,11 @@ records:
     promotion:
       candidate: false
       rationale: >-
-        The Budokan Theme exposes the same ownership failure on both dropdown-nav and sidebar-nav: each location
-        was already registered for Human assignment while its template also named a fixed menu and emitted outer
-        chrome regardless of assignment. Reusing has_nav_menu() plus theme_location restores the existing
-        WordPress ownership contract without introducing new data. The second surface strengthens the project
-        finding but remains the same REF-002-BUDOKAN reference, so it is not independent promotion evidence.
+        The Budokan Theme exposes the same ownership failure across dropdown-nav, sidebar-nav, and the Header's
+        global-nav/sub-nav calls: each location was already registered for Human assignment while its template
+        also named a fixed menu. Reusing theme_location restores the existing WordPress ownership contract
+        without introducing new data. These additional surfaces strengthen the project finding but remain the
+        same REF-002-BUDOKAN reference, so they are not independent promotion evidence.
       blocked_by: []
       contradiction_review: ''
     evidence:
@@ -93,7 +93,17 @@ records:
             The sidebar template now follows the same registered-location contract: it removes the fixed
             sidebar-nav menu name, resolves the Human-assigned menu through theme_location, and emits no local
             navigation wrapper when the location is unassigned.
+        - evidence_id: EV-BUDOKAN-HEADER-THEME-LOCATION-OWNER-20260902
+          kind: COMMIT
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_header.php
+          commit: 9d7d14ff0a5e05a77ae13c31092fc289a46277e3
+          note: >-
+            Header global-nav and sub-nav now resolve the Human-assigned menus through their already-registered
+            theme locations instead of also naming fixed menus. Existing global-nav fallback behavior and all
+            Header markup, walker classes, menu IDs/classes, and styling remain unchanged.
       contradicts: []
     notes:
       - Keep PROJECT_ONLY until a distinct WordPress implementation demonstrates the same failure and benefit.
-      - The dropdown and sidebar observations are two surfaces in the same Budokan reference and must not be counted as two independent references.
+      - Dropdown, sidebar, and Header observations are multiple surfaces in the same Budokan reference and must not be counted as independent references.
