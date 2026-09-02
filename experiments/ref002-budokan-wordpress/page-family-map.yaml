@@ -103,7 +103,9 @@ families:
       custom_block: NOT_PROVEN
     notes:
       - "Existing Theme/sidebar navigation ownership is proven reusable, but dedicated current SP Local Navigation visual authority remains undetermined."
-      - "Do not infer missing SP geometry from the historical 560:* mapping."
+      - "Current SP-root audit on 2026-09-02 rejected SP_navigation 1455:5489 as Local Nav authority: its actual content is the full '現代武道9種目紹介' page with repeated in-content navigation cards, not a dedicated sidebar/local-navigation treatment."
+      - "Current SP-root audit also rejected SP_navigation 1468:7508 as authority: it is an incomplete '大会・行事に参加したい' frame whose breadcrumb still says '研修センターについて' and whose authored body is absent, so its geometry/content must not be treated as canonical until Figma is corrected or completed."
+      - "Do not infer missing SP geometry from the historical 560:* mapping or from a frame name such as SP_navigation alone."
 
   - family_id: LONG_GENERIC_CONTENT
     pc_frame: "1206:5446"

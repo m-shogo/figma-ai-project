@@ -21,15 +21,17 @@ records:
       exclusions:
         - Do not infer a responsive frame from naming alone; verify the current node and inspect its actual subtree/content.
         - Do not rewrite unrelated historical mappings solely because one family was re-verified.
+        - Reject current-looking candidates whose body is incomplete or whose title, breadcrumb, and semantic family do not agree.
     promotion_state: PROJECT_ONLY
     promotion:
       candidate: false
       rationale: >-
-        Budokan now has three same-project examples: POST_DETAIL was recovered as SP_post 1451:5197,
+        Budokan has three same-project positive recoveries: POST_DETAIL as SP_post 1451:5197,
         NEWS_ARCHIVE as SP_archive 1399:14225, and FEATURE_PAGE_TRAINING_CENTER as SP_navigation 1468:6595
-        under the canonical current SP root 114:5409. The additional observation strengthens the project-local
-        procedure, but all evidence still comes from REF-002-BUDOKAN and is not independent cross-reference
-        evidence. Keep PROJECT_ONLY and do not auto-promote.
+        under the canonical current SP root 114:5409. A later root-wide audit also rejected two current-looking
+        SP_navigation candidates after inspecting their actual content. This strengthens the project-local
+        procedure but still comes entirely from REF-002-BUDOKAN, not independent cross-reference evidence.
+        Keep PROJECT_ONLY and do not auto-promote.
       blocked_by:
         - NEEDS_INDEPENDENT_REFERENCE_EVIDENCE_BEFORE_CROSS_PROJECT_PROMOTION
       contradiction_review: ''
@@ -67,7 +69,19 @@ records:
             Live frame SP_navigation 1468:6595 is explicitly identified by its page title and breadcrumb as
             the training-center page and exposes authored headings, body copy, gallery images, fee sections,
             notices, and navigation buttons, so only FEATURE_PAGE_TRAINING_CENTER authority was refreshed.
+        - evidence_id: EV-BUDOKAN-SP-LOCAL-NAV-CANDIDATES-REJECTED-20260902
+          kind: LOCAL_RESEARCH
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/ref002-budokan-wordpress/page-family-map.yaml
+          commit: ''
+          note: >-
+            A read-only audit enumerated full-height frames under the canonical SP root 114:5409 and inspected
+            candidate content rather than trusting frame names. SP_navigation 1455:5489 is the complete
+            '現代武道9種目紹介' content page with repeated in-body navigation cards, not a dedicated Local Nav visual.
+            SP_navigation 1468:7508 is an incomplete '大会・行事に参加したい' frame whose breadcrumb still reads
+            '研修センターについて' and whose authored body is absent. Neither candidate closes the Local Nav SP gate.
       contradicts: []
     notes:
-      - "Promotion review disposition 2026-09-02: KEEP_PROJECT_ONLY; a third same-project observation does not satisfy independent-reference evidence requirements."
+      - "Promotion review disposition 2026-09-02: KEEP_PROJECT_ONLY; three positive mappings plus a same-project negative-candidate audit still do not satisfy independent-reference evidence requirements."
       - Re-verify other historical family nodes individually rather than bulk-rewriting the map.
