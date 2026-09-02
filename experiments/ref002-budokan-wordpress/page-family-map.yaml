@@ -123,8 +123,8 @@ families:
       - "Use this page to test whether Parts-derived styles survive long real content without page-specific CSS patches."
 
   - family_id: FEATURE_PAGE_JOIN
-    pc_frame: "380:417"
-    sp_frame: "560:188"
+    pc_frame: "2197:5391"
+    sp_frame: UNOBSERVED_CANONICAL_MATCH
     observed_parts:
       - FEATURE_HERO
       - HEADER
@@ -137,8 +137,10 @@ families:
       content: CORE_AND_PATTERN_FIRST
       custom_block: SECTION_BY_SECTION_EVIDENCE_ONLY
     notes:
-      - "Historical PC/SP captures showed materially different content lengths and composition."
-      - "The historical SP node 560:188 no longer resolves in the current Figma authority; current SP body is UNDETERMINED and must not be reconstructed by inference."
+      - "Current PC frame navigation 2197:5391 was re-verified live on 2026-09-02 as the complete '大会・行事に参加したい' page: its page title and breadcrumb agree, and its authored body includes notices, event cards, shared headings, standard buttons, related links, and the current subpage footer."
+      - "The historical PC 380:417 remains lineage only and is no longer used as current visual authority for this family."
+      - "The historical SP node 560:188 no longer resolves in the current Figma authority. Current-looking SP_navigation 1468:7508 was inspected and rejected because its breadcrumb/body are incomplete, so current SP authority remains UNOBSERVED_CANONICAL_MATCH rather than being inferred."
+      - "This PC authority refresh does not authorize a new feature template, ACF/CPT/data model, or page-specific CSS; reuse the existing Theme/editor owners unless an observed runtime diff proves otherwise."
 
   - family_id: FEATURE_PAGE_TRAINING_CENTER
     pc_frame: "395:7954"
