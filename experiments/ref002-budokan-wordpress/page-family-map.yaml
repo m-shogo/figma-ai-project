@@ -21,7 +21,7 @@ shared_shell_evidence:
 families:
   - family_id: NEWS_ARCHIVE
     pc_frame: "413:2191"
-    sp_frame: "560:2524"
+    sp_frame: "1399:14225"
     observed_parts:
       - HEADER
       - PAGE_TITLE
@@ -37,6 +37,7 @@ families:
       blocks: [core/query]
       custom_block: NOT_PROVEN
     notes:
+      - "Current SP_archive 1399:14225 was re-verified live under the current SP authority root 114:5409 on 2026-09-02; it contains the expected page title, six filter tabs, repeated post cards, pager, breadcrumb, footer, and mobile purpose menu."
       - "Do not create a News CPT just because Figma labels the page News."
       - "Filter/tab behavior and URL semantics must come from the actual Theme/product contract."
 
