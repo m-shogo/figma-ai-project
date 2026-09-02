@@ -18,7 +18,6 @@
             <div class="gn_menu">
                 <?php
                 wp_nav_menu(array(
-                    'menu' => 'global-nav',
                     'menu_class' => 'menu gn_links-01',
                     'menu_id' => 'gn_links-01',
                     'container' => 'div',
@@ -33,7 +32,6 @@
             <div class="gn_subMenu">
                 <?php
                 wp_nav_menu(array(
-                    'menu' => 'sub-nav',
                     'menu_class' => 'menu gn_links-02',
                     'menu_id' => 'gn_links-02',
                     'container' => 'div',
