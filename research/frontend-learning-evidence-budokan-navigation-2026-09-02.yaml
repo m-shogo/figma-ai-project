@@ -77,7 +77,7 @@ records:
           reference_id: REF-002-BUDOKAN
           run_id: ''
           path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_dropdown-navigation.php
-          commit: ''
+          commit: 0af42e815a334a20049dc7bc7d7eca711c83d589
           note: >-
             The template now checks has_nav_menu('dropdown-nav'), removes the hard-coded menu name, and lets
             wp_nav_menu resolve the editor-assigned menu through theme_location. Unassigned navigation renders
