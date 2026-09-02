@@ -51,7 +51,7 @@ records:
       A WordPress navigation template should render from the registered theme-location assignment and fail
       closed when that location is unassigned; a hard-coded menu name can silently bypass the human-editable
       ownership contract and an unconditional outer wrapper can leave empty layout chrome behind.
-    category: CMS_OWNERSHIP
+    category: CMS
     applicability:
       scope: PROJECT
       conditions:
