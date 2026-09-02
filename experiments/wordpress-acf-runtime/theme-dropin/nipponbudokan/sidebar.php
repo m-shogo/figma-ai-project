@@ -4,10 +4,10 @@
  * サイドバーナビゲーション
  */
 ?>
+<?php if (has_nav_menu('sidebar-nav')) : ?>
 <nav class="local_navigation" id="local_navigation">
     <?php
     wp_nav_menu(array(
-        'menu' => 'sidebar-nav',
         'menu_class' => 'ln_links module_menu',
         'menu_id' => 'ln_links',
         'container' => 'div',
@@ -28,3 +28,4 @@
     ));
     ?>
 </nav>
+<?php endif; ?>
