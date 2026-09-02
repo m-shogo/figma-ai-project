@@ -2,6 +2,13 @@ schema_version: 1
 reference_id: REF-002-BUDOKAN
 status: READY_FOR_THEME_MAPPING
 source: LIVE_FIGMA_INSPECTION
+figma_authority:
+  current_file_key: fKYDn9ikpJk1nW7IWFtaUx
+  current_verified_at: "2026-09-02"
+  historical_mapping_note: >-
+    Family node IDs below were captured during the original REF-002 inspection and are retained as historical
+    lineage unless a later audit explicitly re-verifies them in the current file. Do not use an unresolved
+    historical node ID by itself as current visual authority.
 
 shared_shell_evidence:
   pc:
@@ -76,6 +83,7 @@ families:
       - SP_THEN_PC
     notes:
       - "Figma defines visual treatment, not the production form backend/plugin."
+      - "Form/Formidable/parts.php remain Human-owned/read-only and are not implementation targets for autonomous Budokan work."
 
   - family_id: GENERIC_CONTENT_WITH_LOCAL_NAV
     pc_frame: "1203:4865"
@@ -91,6 +99,9 @@ families:
       content: CORE_BLOCKS_AND_PATTERNS_FIRST
       local_nav: EXISTING_THEME_OR_HIERARCHY_MENU_FIRST
       custom_block: NOT_PROVEN
+    notes:
+      - "Existing Theme/sidebar navigation ownership is proven reusable, but dedicated current SP Local Navigation visual authority remains undetermined."
+      - "Do not infer missing SP geometry from the historical 560:* mapping."
 
   - family_id: LONG_GENERIC_CONTENT
     pc_frame: "1206:5446"
@@ -122,7 +133,8 @@ families:
       content: CORE_AND_PATTERN_FIRST
       custom_block: SECTION_BY_SECTION_EVIDENCE_ONLY
     notes:
-      - "PC/SP content lengths and composition differ materially; preserve authored responsive intent rather than forcing identical geometry."
+      - "Historical PC/SP captures showed materially different content lengths and composition."
+      - "The historical SP node 560:188 no longer resolves in the current Figma authority; current SP body is UNDETERMINED and must not be reconstructed by inference."
 
   - family_id: FEATURE_PAGE_TRAINING_CENTER
     pc_frame: "395:7954"
@@ -180,8 +192,19 @@ reuse_validation:
 
 production_freeze:
   ready: false
+  resolved_since_initial_intake:
+    - ACTUAL_BASE_THEME_OBSERVED
+    - WORDPRESS_RUNTIME_OBSERVED
+    - ACF_PRO_RUNTIME_OBSERVED
+    - EXISTING_BLOCK_PATTERN_STYLE_INVENTORY_OBSERVED
+    - ACTUAL_POST_TYPE_AND_TAXONOMY_REGISTRY_OBSERVED_FOR_IMPLEMENTED_FAMILIES
   blockers:
-    - ACTUAL_THEME_NOT_OBSERVED
-    - ACTUAL_POST_TYPE_AND_TAXONOMY_REGISTRY_NOT_OBSERVED
-    - ACTUAL_FORM_ENGINE_NOT_OBSERVED
-    - ACTUAL_BLOCK_PATTERN_INVENTORY_NOT_OBSERVED
+    - SLIDER_EDITOR_OR_COMPONENT_OWNER_UNDETERMINED
+    - LOCAL_NAV_CURRENT_SP_VISUAL_AUTHORITY_UNDETERMINED
+    - SEARCH_OWNER_OR_AUTHORITY_UNDETERMINED
+    - CALENDAR_OWNER_OR_AUTHORITY_UNDETERMINED
+  protected_scope:
+    - FORM_FORMIDABLE_PARTS_PHP_HUMAN_OWNED
+  notes:
+    - "These blockers are narrow ownership/authority gates; they do not freeze already proven shared blocks or page families."
+    - "Historical family node IDs remain lineage until individually re-verified against the current Figma file."
