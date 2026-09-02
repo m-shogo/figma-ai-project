@@ -1,6 +1,6 @@
 # Hardcover / 単行本 Dependency Audit
 
-更新: 2026-09-02
+更新: 2026-09-03
 
 対象は現行 Figma `fKYDn9ikpJk1nW7IWFtaUx` の PC full-page authority:
 
@@ -65,6 +65,17 @@ nested list は current Theme の shared `wp-block-list-style.css` で既に表�
 
 購入ボタンも `target="_blank"` を既存 WordPress markup が持てば shared button CSS の trailing external-link icon が使えるため、Hardcover 専用 icon markup は作らない。
 
+## 2026-09-03 exact shared-primitive re-verification
+
+LIVE current-Figma inspection of Hardcover detail `1686:5574` re-checked the two surfaces most likely to trigger unnecessary page-specific work:
+
+- purchase buttons are actual `button_L` instances at **270×60**; the visible labels use Zen Kaku Gothic New Medium **15px**, and the four purchase actions sit in the same shared button family already owned by `wp-block-buttonLink-style.css`
+- the caution row uses a **14px / 1.6** Zen Kaku Gothic New body with a separate **16px `※` marker**; this matches the existing `ul.annotation-list` body/marker sizing in `wp-block-list-style.css`
+
+The Theme shared owners therefore already express these current PC visual contracts. No Hardcover-specific button markup, icon markup, annotation selector, PHP template, or CSS derivative is justified by the observed diff. The safe result of this QA pass is **REUSE_EXISTING / NO_THEME_CHANGE**.
+
+This is intentionally narrower than claiming the whole Hardcover page complete: catalog/editor data ownership and dedicated SP authority remain unresolved.
+
 ## Data / editor boundary
 
 現在 Figma から証明できるのは layout と visible content sample まで。
@@ -97,7 +108,8 @@ nested list は current Theme の shared `wp-block-list-style.css` で既に表�
 | Page shell | `REUSE_EXISTING` | `page.php` + shared title/breadcrumb/footer |
 | h2/h3/h4 | `REUSE_EXISTING` | current Figma master と shared heading owner が一致 |
 | In-page links | `REUSE_EXISTING` | PC 220×56 / 4-col / gap / icon contract が一致 |
-| Purchase buttons | `REUSE_EXISTING` | default `button_L` + `target=_blank` icon contract が一致 |
+| Purchase buttons | `REUSE_EXISTING` | current LIVE `button_L` 270×60 / 15px Medium と default button owner が一致。`target=_blank` icon contractも再利用可能 |
+| Annotation row | `REUSE_EXISTING` | current LIVE body 14px / 1.6 + marker 16px と `annotation-list` owner が一致 |
 | Nested contents list | `REUSE_EXISTING` | solid/hollow marker、indent、gap が shared list owner と一致 |
 | Book catalog data model | `UNRESOLVED` | Figma repetition は editor collection authority ではない |
 | Book card wrapper | `UNRESOLVED` | real editor markup/data owner 未確定。先に CSS class を発明しない |
