@@ -1,0 +1,49 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: OBS-BUDOKAN-FIGMA-SP-AUTHORITY-DISCOVERY
+    summary: >-
+      When a Figma family map says a responsive authority is unobserved, inspect the canonical responsive
+      canvas/root and its current child frames before concluding that the variant is missing; a live child
+      frame may exist even when a stale historical node or a broad page listing no longer exposes it directly.
+    category: VISUAL_FIDELITY
+    applicability:
+      scope: PROJECT
+      conditions:
+        - A current Figma file has an explicit responsive root or canvas authority.
+        - A family mapping still carries an unobserved or historical responsive node state.
+      exclusions:
+        - Do not infer a responsive frame from naming alone; verify the current node and retrieve its design context.
+        - Do not rewrite unrelated historical mappings solely because one family was re-verified.
+    promotion_state: PROJECT_ONLY
+    promotion:
+      candidate: false
+      rationale: >-
+        Budokan POST_DETAIL was mapped as SP authority unobserved, but the canonical current SP root 114:5409
+        contains SP_post 1451:5197 and that node resolves with full live design context. This corrects one
+        project authority record and prevents fallback to obsolete 560:* lineage, but it is still one project
+        and does not justify a cross-project rule or automatic promotion.
+      blocked_by: []
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-SP-POST-LIVE-AUTHORITY-20260902
+          kind: LOCAL_RESEARCH
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/ref002-budokan-wordpress/page-family-map.yaml
+          commit: ''
+          note: >-
+            Current Figma file fKYDn9ikpJk1nW7IWFtaUx was inspected through the canonical SP root 114:5409;
+            SP_post 1451:5197 was then retrieved directly and matched the POST_DETAIL family before updating
+            only that family mapping.
+      contradicts: []
+    notes:
+      - Keep PROJECT_ONLY; the observation is a same-project authority correction, not independent promotion evidence.
+      - Re-verify other historical family nodes individually rather than bulk-rewriting the map.
