@@ -1,0 +1,53 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: OBS-BUDOKAN-SHARED-MASTER-INSTANCE-VARIANT-GATE
+    summary: >-
+      When a page instance visually overrides one typography property of an otherwise shared component,
+      do not widen the shared CSS rule unless the canonical shared master and known consumers support the same change.
+      Preserve the shared owner and fail closed on the isolated delta until an existing reusable variant marker or Human authority exists.
+    category: VISUAL_FIDELITY
+    applicability:
+      scope: PROJECT
+      conditions:
+        - Current Figma page and current shared-component master were both inspected live in the canonical Budokan file.
+        - Existing Theme CSS is already aligned with the shared master.
+        - A page instance differs on a property that would affect other consumers if changed globally.
+      exclusions:
+        - Do not invent a page-specific selector solely to silence one visual delta.
+        - Do not invent a Gutenberg style slot, ACF field, CPT, or data marker without authority.
+        - Do not treat same-project examples as independent cross-project evidence.
+    promotion_state: PROJECT_ONLY
+    promotion:
+      candidate: false
+      rationale: >-
+        Current tournament page 2108:10725 uses Medium 500 for its left row-header labels while the canonical
+        shared Headercell 1157:8286 and Theme table owner use Regular 400. This proves a Budokan-local
+        blast-radius gate but supplies no independent project evidence for broader promotion.
+      blocked_by:
+        - NEEDS_INDEPENDENT_REFERENCE_EVIDENCE_BEFORE_CROSS_PROJECT_PROMOTION
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-TOURNAMENT-TABLE-VARIANT-20260903
+          kind: LOCAL_RESEARCH
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/budokan-wordpress/TOURNAMENT_TABLE_VARIANT_AUDIT_2026-09-03.md
+          commit: ''
+          note: >-
+            LIVE current Figma file fKYDn9ikpJk1nW7IWFtaUx was inspected at tournament page 2108:10725 and
+            shared table Headercell 1157:8286. Tournament row headers are Zen Kaku Gothic New Medium 500;
+            the shared Headercell is Regular 400. Existing wp-block-table-style.css intentionally owns shared
+            th typography at 400 and patterns.json already provides human-editable left-header Flexible Table
+            markup. Globalizing 500 would regress the canonical master; no Theme change was made.
+      contradicts: []
+    notes:
+      - "Promotion review disposition 2026-09-03: KEEP_PROJECT_ONLY; one same-project shared-master/instance comparison is not independent evidence."
+      - Preserve the shared owner until a reusable variant marker or explicit Human authority exists.
