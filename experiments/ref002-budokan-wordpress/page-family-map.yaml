@@ -42,7 +42,7 @@ families:
 
   - family_id: POST_DETAIL
     pc_frame: "1235:6361"
-    sp_frame: UNOBSERVED_CANONICAL_MATCH
+    sp_frame: "1451:5197"
     observed_parts:
       - HEADER
       - PAGE_TITLE
@@ -58,6 +58,7 @@ families:
       editor_content: CORE_BLOCKS_FIRST
       custom_block: ONLY_FOR_MISSING_STRUCTURED_CAPABILITY
     notes:
+      - "Current SP_post 1451:5197 was re-verified live under the current SP authority root 114:5409 on 2026-09-02; do not fall back to historical 560:* mappings for this family."
       - "The article body is a strong Core Block candidate: headings, paragraphs, images, buttons, and separators should not become custom ACF fields by default."
 
   - family_id: FORM_PAGE
