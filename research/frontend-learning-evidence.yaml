@@ -136,10 +136,23 @@ records:
             file as canonical and overstated old SP Local Navigation parity. Live retrieval from current
             fKYDn9ikpJk1nW7IWFtaUx verified the surviving Slider nodes and the audit was corrected before
             implementation continued.
+        - evidence_id: EV-BUDOKAN-PARTS-RESOLUTION-LIVE-REFRESH-20260902
+          kind: LOCAL_RESEARCH
+          reference_id: BUDOKAN-WORDPRESS
+          run_id: ''
+          path: experiments/ref002-budokan-wordpress/figma-parts-resolution.yaml
+          commit: ''
+          note: >-
+            A second stale authority surface was found after the canonical audit had already been corrected:
+            the structured Parts resolution still named an older Figma file and initial-intake blockers such as
+            an unobserved Theme/runtime. Current Figma nodes were re-resolved, historical keys were retained as
+            lineage, and unresolved Slider/Local Nav/Search/Calendar ownership stayed fail-closed instead of
+            converting stale metadata into implementation authority.
       contradicts: []
     notes:
       - Candidate means re-resolve current authority at decision boundaries; it does not require deleting historical lineage.
       - Keep current-file/page verification separate from assuming every saved node ID remains valid forever.
+      - Multiple Budokan evidence items still count as one supporting reference; this refresh does not justify ACTIVE promotion by itself.
 
   - learning_id: OBS-REF001-OBSERVATION-COVERAGE-LINEAGE
     summary: Externalizing a small fixed set of source-observation classes and pinning that evidence through execution boundaries reduces the chance that an agent silently forgets visible media, decoration, responsive variants, or states.
