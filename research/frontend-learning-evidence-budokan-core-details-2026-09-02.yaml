@@ -8,20 +8,21 @@ policy:
 
 records:
   - learning_id: OBS-BUDOKAN-CMS-NATIVE-MARKUP-SELECTOR-CONTRACT
-    summary: Shared CSS for CMS/core blocks must be validated against the actual serialized or rendered markup; helper selectors for descendants that the CMS never emits are dead implementation even when the visual intent and stylesheet syntax are otherwise correct.
+    summary: Shared CSS for CMS/core blocks must be validated against the actual serialized or rendered markup; selectors that assume descendants the CMS never emits, or accidentally exclude authorized modifier classes of the same semantic primitive, can leave part of the visual contract dead even when the stylesheet syntax is valid.
     category: MAINTAINABILITY
     applicability:
       scope: PROJECT
       conditions:
         - A CMS or framework owns the output markup of a shared content primitive.
-        - Shared CSS depends on descendant hooks or wrapper classes rather than only the documented/native root contract.
+        - Shared CSS depends on descendant hooks, wrapper classes, or class-presence filters such as `:not([class])`.
       exclusions:
-        - A verified render transform, block renderer, plugin, or component layer explicitly materializes the descendant hooks before output.
+        - A verified render transform, block renderer, plugin, or component layer explicitly materializes the required hooks before output.
         - Project-specific markup intentionally owns the full component DOM rather than a CMS/core primitive.
+        - A modifier intentionally defines a different semantic or visual primitive and therefore should not inherit the base contract.
     promotion_state: PROJECT_ONLY
     promotion:
       candidate: false
-      rationale: Budokan provides a concrete Core Details mismatch and shared-owner repair, but this evidence is still one project and has not yet measured cross-project rework reduction.
+      rationale: Budokan now provides two concrete selector-to-rendered-markup failures repaired at shared owners (Core Details descendants and background Paragraph modifier coverage), but both are still one project/reference and do not yet prove cross-project rework reduction.
       blocked_by:
         - Independent CMS/framework implementation reproducing a selector-to-rendered-markup mismatch.
         - Measured evidence that preflight markup-contract validation reduces dead CSS or repair rounds in another reference/project.
@@ -42,6 +43,20 @@ records:
           path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/blocks/wp-block-details-style.css
           commit: 9ef8de4b456602f31adb311b277ed7cead65cf51
           note: Shared CSS was changed to style native details > summary and direct editor-owned content without adding markup or page-specific overrides.
+        - evidence_id: EV-BUDOKAN-BACKGROUND-PARAGRAPH-AUDIT-20260902
+          kind: LOCAL_RESEARCH
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/budokan-wordpress/BACKGROUND_PARAGRAPH_SELECTOR_AUDIT.md
+          commit: ''
+          note: Current Figma background text-box evidence was reconciled with Gutenberg paragraph output; `p.has-background` had surface styling but was excluded from the shared body typography selector by class-presence filtering.
+        - evidence_id: EV-BUDOKAN-BACKGROUND-PARAGRAPH-CSS-20260902
+          kind: COMMIT
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/blocks/wp-block-text-style.css
+          commit: dc78d461c5f497bb405fe3e4dde33dfaed3bd4ef
+          note: Shared Paragraph typography now includes the authorized `.has-background` modifier instead of duplicating typography in a page-specific or surface-only rule.
       contradicts: []
     notes:
-      - Keep PROJECT_ONLY until independent evidence proves portability; do not auto-promote from one CMS block failure.
+      - Keep PROJECT_ONLY until independent evidence proves portability; two failures inside the same Budokan reference do not satisfy cross-reference promotion.
