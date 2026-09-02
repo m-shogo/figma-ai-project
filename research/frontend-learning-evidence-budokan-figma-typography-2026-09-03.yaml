@@ -1,0 +1,55 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: OBS-BUDOKAN-FIGMA-TYPOGRAPHY-EXACT-PROPERTY-CHECK
+    summary: >-
+      When generated Figma design-context output and the authored component geometry appear to disagree on typography,
+      inspect the exact current TEXT node properties before changing shared CSS. Generated shorthand can omit or
+      normalize a line-height that is explicitly stored on the underlying text node.
+    category: VISUAL_FIDELITY
+    applicability:
+      scope: PROJECT
+      conditions:
+        - A current Figma component has been verified in the canonical Budokan file.
+        - Generated design-context typography conflicts with measured component height, wrapping, or existing runtime CSS.
+      exclusions:
+        - Do not use this as permission to infer typography from geometry alone.
+        - Do not change a shared CSS value until the exact current text-node property and the renderer consumer are both verified.
+        - Do not treat one same-project observation as cross-project evidence.
+    promotion_state: PROJECT_ONLY
+    promotion:
+      candidate: false
+      rationale: >-
+        The current Budokan in-page-link specimen provides one strong same-project example: generated design context
+        described the SP label as leading-none, while exact TEXT node inspection on the long-label instance reports
+        lineHeight PERCENT 140 and matches the existing Theme line-height: 1.4. This prevented an unnecessary shared
+        CSS change, but it is only REF-002-BUDOKAN evidence and does not justify cross-project promotion.
+      blocked_by:
+        - NEEDS_INDEPENDENT_REFERENCE_EVIDENCE_BEFORE_CROSS_PROJECT_PROMOTION
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-INPAGE-LINK-EXACT-LINEHEIGHT-20260903
+          kind: LOCAL_RESEARCH
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/blocks/wp-block-inPageLink-style.css
+          commit: ''
+          note: >-
+            LIVE current Figma file fKYDn9ikpJk1nW7IWFtaUx was inspected at PC btn-pagelink 1198:4686 and SP
+            btn-pagelink 1399:18936, including the long SP instance 1399:18940. The exact TEXT node
+            I1399:18940;1198:4648 reports Zen Kaku Gothic New Medium 16, 5 percent letter spacing, and lineHeight
+            PERCENT 140. The existing renderer CSS already uses font-size 16, font-weight 500, letter-spacing 0.05em,
+            and line-height 1.4 on SP, while PC intentionally overrides to line-height 1. The ACF renderer also
+            already emits the CSS-owned .module_inPageLink-01 > .inPageLink > a > .title contract. No Theme code
+            change was warranted.
+      contradicts: []
+    notes:
+      - "Promotion review disposition 2026-09-03: KEEP_PROJECT_ONLY; one same-project exact-property QA finding is useful evidence but not an independent reference."
+      - Re-check exact Figma TEXT properties when generated shorthand would otherwise trigger a shared typography change.
