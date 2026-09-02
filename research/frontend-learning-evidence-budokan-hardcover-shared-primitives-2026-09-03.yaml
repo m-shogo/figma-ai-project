@@ -10,17 +10,18 @@ records:
   - learning_id: OBS-BUDOKAN-VERIFY-SHARED-PRIMITIVES-BEFORE-PAGE-DERIVATIVE
     summary: >-
       When a page appears to need bespoke controls or annotation styling, inspect the exact current-Figma instances and
-      compare them to the existing WordPress shared primitives before adding a page-specific derivative. Exact reuse is
-      a valid QA outcome and should stop unnecessary implementation.
+      compare them to the existing WordPress shared primitives before adding a page-specific derivative. Reuse can be the
+      correct QA outcome even when a narrower token mismatch remains fail-closed pending consumer/variant authority.
     category: REUSE
     applicability:
       scope: PROJECT
       conditions:
         - Current Figma exposes exact instance geometry and typography for the questioned surface.
         - Existing Theme shared owners and their consumer semantics are known.
-        - No real runtime or implementation diff proves the shared primitive insufficient.
+        - No real runtime or implementation diff proves a page-specific derivative necessary.
       exclusions:
         - Do not treat visual repetition as proof of a new ACF/CPT/data model.
+        - Do not change a shared token from one consumer when another current-authority consumer may use a contextual variant.
         - Do not claim whole-page completion when unresolved data ownership or breakpoint authority remains.
         - Do not count repeated evidence from the same project as independent cross-project promotion evidence.
     promotion_state: PROJECT_ONLY
@@ -28,10 +29,14 @@ records:
       candidate: false
       rationale: >-
         On current Budokan Hardcover detail 1686:5574, LIVE Figma purchase actions are button_L 270x60 with 15px Zen Kaku
-        Medium labels, while the caution row is 14px/1.6 body plus a separate 16px marker. Those contracts already match
-        wp-block-buttonLink-style.css and ul.annotation-list in wp-block-list-style.css, so no page-specific Theme change
-        is justified. This remains same-project evidence and does not meet the independent-reference promotion threshold.
+        Medium labels and are directly reusable. The caution row geometry/sizing also maps to the shared annotation-list
+        owner: 14px/1.6 body plus a separate 16px marker. A deeper check found the marker family is Noto Sans JP Medium in
+        both Hardcover detail and the canonical Parts sample, while Theme currently names Zen Kaku Gothic New; however,
+        Publications contains a contextual annotation treatment and its production markup/variant ownership is unresolved.
+        Therefore no page-specific derivative or broad shared-family change is justified yet. This remains same-project
+        evidence and does not meet the independent-reference promotion threshold.
       blocked_by:
+        - NEEDS_ANNOTATION_CONSUMER_VARIANT_AUTHORITY_BEFORE_SHARED_FONT_CHANGE
         - NEEDS_REAL_RUNTIME_DIFF_BEFORE_PAGE_SPECIFIC_IMPLEMENTATION
         - NEEDS_INDEPENDENT_REFERENCE_EVIDENCE_BEFORE_CROSS_PROJECT_PROMOTION
       contradiction_review: ''
@@ -44,10 +49,11 @@ records:
           path: experiments/budokan-wordpress/HARDCOVER_DEPENDENCY_AUDIT.md
           commit: ''
           note: >-
-            LIVE current Figma inspection of 1686:5574 verified purchase buttons as 270x60 button_L instances with 15px
-            Medium labels and the annotation row as 14px/1.6 body plus 16px marker. Existing shared button and annotation
-            CSS already matches, so the disposition is REUSE_EXISTING / NO_THEME_CHANGE while catalog data and SP parity
-            stay unresolved.
+            LIVE current Figma inspection verified Hardcover purchase buttons as 270x60 button_L instances with 15px
+            Medium labels. Hardcover annotation and canonical Parts annotation both use 14px/1.6 body plus a 16px Noto
+            Sans JP Medium marker. Theme annotation sizing/structure is reusable, but its marker family is Kaku; because
+            other contextual annotation consumers and their WordPress ownership are not yet closed, the safe disposition
+            is REUSE_EXISTING_WITH_FONT_VARIANT_GATE / NO_THEME_CHANGE while catalog data and SP parity stay unresolved.
       contradicts: []
     notes:
       - "Promotion review disposition 2026-09-03: KEEP_PROJECT_ONLY; same-project evidence only, no auto-promotion."
