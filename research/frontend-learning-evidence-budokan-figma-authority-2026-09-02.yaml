@@ -11,17 +11,20 @@ records:
     summary: >-
       When a Figma family map says a responsive or family authority is unobserved or points at historical lineage,
       inspect the canonical current canvas/root and its current child frames before concluding that the variant is
-      missing; a live frame may exist even when a stale historical node no longer resolves.
+      missing; a live frame may exist even when a stale historical node no longer resolves. When a family authority
+      is refreshed, synchronize any current-summary maps that implementation agents also read so the old node cannot
+      silently remain as a competing pseudo-authority.
     category: VISUAL_FIDELITY
     applicability:
       scope: PROJECT
       conditions:
         - A current Figma file has an explicit current canvas/root authority.
-        - A family mapping still carries an unobserved or historical node state.
+        - A family mapping still carries an unobserved or historical node state, or a derived summary map disagrees with the verified family authority.
       exclusions:
         - Do not infer a responsive frame from naming alone; verify the current node and inspect its actual subtree/content.
         - Do not rewrite unrelated historical mappings solely because one family was re-verified.
         - Reject current-looking candidates whose body is incomplete or whose title, breadcrumb, and semantic family do not agree.
+        - Do not convert historical top-level scan evidence into current family authority; preserve dated discovery lists as lineage when they are explicitly historical.
     promotion_state: PROJECT_ONLY
     promotion:
       candidate: false
@@ -29,9 +32,10 @@ records:
         Budokan has four same-project positive recoveries: POST_DETAIL as SP_post 1451:5197,
         NEWS_ARCHIVE as SP_archive 1399:14225, FEATURE_PAGE_TRAINING_CENTER as SP_navigation 1468:6595,
         and FEATURE_PAGE_JOIN PC as navigation 2197:5391. The root/canvas audits also rejected current-looking
-        SP_navigation candidates after inspecting their actual content. This strengthens the project-local procedure,
-        but all evidence still comes entirely from REF-002-BUDOKAN rather than independent cross-reference evidence.
-        Keep PROJECT_ONLY and do not auto-promote.
+        SP_navigation candidates after inspecting their actual content, and a subsequent authority-consistency QA
+        caught a stale summary-map row after the JOIN family had already been refreshed. This strengthens the
+        project-local procedure, but all evidence still comes entirely from REF-002-BUDOKAN rather than independent
+        cross-reference evidence. Keep PROJECT_ONLY and do not auto-promote.
       blocked_by:
         - NEEDS_INDEPENDENT_REFERENCE_EVIDENCE_BEFORE_CROSS_PROJECT_PROMOTION
       contradiction_review: ''
@@ -92,7 +96,20 @@ records:
             '大会・行事に参加したい' PC family by matching page title, breadcrumb, authored notice/event sections,
             shared headings/buttons, related links, and the current subpage footer. The family map now uses this
             live PC frame while leaving SP unobserved because candidate 1468:7508 remains incomplete.
+        - evidence_id: EV-BUDOKAN-JOIN-SUMMARY-MAP-DRIFT-CORRECTED-20260903
+          kind: LOCAL_RESEARCH
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/budokan-wordpress/FIGMA_MAP.md
+          commit: ''
+          note: >-
+            A fresh LIVE get_design_context on current PC frame navigation 2197:5391 again verified the complete
+            '大会・行事に参加したい' page, while FIGMA_MAP.md still listed older node 1148:6390 in its priority-node
+            table even though page-family-map.yaml had already moved FEATURE_PAGE_JOIN to 2197:5391. The summary row
+            was corrected without rewriting the dated 2026-09-01 top-level discovery list, preserving historical
+            scan evidence while removing a competing current-looking node from the implementation-facing table.
       contradicts: []
     notes:
       - "Promotion review disposition 2026-09-02: KEEP_PROJECT_ONLY; four positive mappings plus same-project negative-candidate audits still do not satisfy independent-reference evidence requirements."
+      - "Promotion review disposition 2026-09-03: KEEP_PROJECT_ONLY; the new summary-map drift correction is same-project process evidence, not an independent reference, so no promotion is warranted."
       - Re-verify other historical family nodes individually rather than bulk-rewriting the map.

@@ -44,7 +44,7 @@ Human-selected current authority. Last live re-scan: **2026-09-01**.
 | お知らせ detail | SP | `1451:5197` | SP_post |
 | Event archive | PC | `1619:9554` | event |
 | Event detail | PC | `1632:10382` | event_detail |
-| 大会・行事に参加したい | PC | `1148:6390` | navigation（本文あり） |
+| 大会・行事に参加したい | PC | `2197:5391` | navigation（本文あり・2026-09-03 LIVE再確認） |
 | 大会・行事に参加したい | SP | `1468:7508` | SP_navigation（shellのみ、本文authority未作成） |
 | 研修センター | PC | `1137:5348` | navigation |
 | 研修センター | SP | `1468:6595` | SP_navigation |
