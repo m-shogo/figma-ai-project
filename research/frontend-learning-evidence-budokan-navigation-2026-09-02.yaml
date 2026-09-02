@@ -64,10 +64,11 @@ records:
     promotion:
       candidate: false
       rationale: >-
-        The Budokan Theme already owns dropdown-nav as a registered location. The previous template also named
-        a specific menu and emitted its wrappers regardless of assignment. Reusing has_nav_menu() plus
-        theme_location restores the existing WordPress ownership contract without introducing new data.
-        This is useful project evidence but not yet independent cross-project proof.
+        The Budokan Theme exposes the same ownership failure on both dropdown-nav and sidebar-nav: each location
+        was already registered for Human assignment while its template also named a fixed menu and emitted outer
+        chrome regardless of assignment. Reusing has_nav_menu() plus theme_location restores the existing
+        WordPress ownership contract without introducing new data. The second surface strengthens the project
+        finding but remains the same REF-002-BUDOKAN reference, so it is not independent promotion evidence.
       blocked_by: []
       contradiction_review: ''
     evidence:
@@ -82,6 +83,17 @@ records:
             The template now checks has_nav_menu('dropdown-nav'), removes the hard-coded menu name, and lets
             wp_nav_menu resolve the editor-assigned menu through theme_location. Unassigned navigation renders
             no empty wrapper and no fallback menu.
+        - evidence_id: EV-BUDOKAN-SIDEBAR-THEME-LOCATION-FAIL-CLOSED-20260902
+          kind: COMMIT
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/sidebar.php
+          commit: 004076078b3dd99c191e4015a1e398e6f87afd96
+          note: >-
+            The sidebar template now follows the same registered-location contract: it removes the fixed
+            sidebar-nav menu name, resolves the Human-assigned menu through theme_location, and emits no local
+            navigation wrapper when the location is unassigned.
       contradicts: []
     notes:
       - Keep PROJECT_ONLY until a distinct WordPress implementation demonstrates the same failure and benefit.
+      - The dropdown and sidebar observations are two surfaces in the same Budokan reference and must not be counted as two independent references.
