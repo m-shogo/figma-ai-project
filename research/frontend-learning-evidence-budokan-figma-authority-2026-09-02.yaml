@@ -9,9 +9,9 @@ policy:
 records:
   - learning_id: OBS-BUDOKAN-FIGMA-SP-AUTHORITY-DISCOVERY
     summary: >-
-      When a Figma family map says a responsive authority is unobserved, inspect the canonical responsive
-      canvas/root and its current child frames before concluding that the variant is missing; a live child
-      frame may exist even when a stale historical node or a broad page listing no longer exposes it directly.
+      When a Figma family map says a responsive authority is unobserved or points at historical lineage,
+      inspect the canonical responsive canvas/root and its current child frames before concluding that the
+      variant is missing; a live child frame may exist even when a stale historical node no longer resolves.
     category: VISUAL_FIDELITY
     applicability:
       scope: PROJECT
@@ -19,17 +19,18 @@ records:
         - A current Figma file has an explicit responsive root or canvas authority.
         - A family mapping still carries an unobserved or historical responsive node state.
       exclusions:
-        - Do not infer a responsive frame from naming alone; verify the current node and retrieve its design context.
+        - Do not infer a responsive frame from naming alone; verify the current node and inspect its actual subtree/content.
         - Do not rewrite unrelated historical mappings solely because one family was re-verified.
     promotion_state: PROJECT_ONLY
     promotion:
       candidate: false
       rationale: >-
-        Budokan POST_DETAIL was mapped as SP authority unobserved, but the canonical current SP root 114:5409
-        contains SP_post 1451:5197 and that node resolves with full live design context. This corrects one
-        project authority record and prevents fallback to obsolete 560:* lineage, but it is still one project
-        and does not justify a cross-project rule or automatic promotion.
-      blocked_by: []
+        Budokan now has two same-project examples: POST_DETAIL was recovered as SP_post 1451:5197 and NEWS_ARCHIVE
+        was recovered as SP_archive 1399:14225 under the canonical current SP root 114:5409. The second observation
+        strengthens the project-local procedure, but both pieces of evidence come from REF-002-BUDOKAN and therefore
+        are not independent cross-reference evidence. Keep PROJECT_ONLY and do not auto-promote.
+      blocked_by:
+        - NEEDS_INDEPENDENT_REFERENCE_EVIDENCE_BEFORE_CROSS_PROJECT_PROMOTION
       contradiction_review: ''
     evidence:
       supports:
@@ -43,7 +44,18 @@ records:
             Current Figma file fKYDn9ikpJk1nW7IWFtaUx was inspected through the canonical SP root 114:5409;
             SP_post 1451:5197 was then retrieved directly and matched the POST_DETAIL family before updating
             only that family mapping.
+        - evidence_id: EV-BUDOKAN-SP-NEWS-ARCHIVE-LIVE-AUTHORITY-20260902
+          kind: LOCAL_RESEARCH
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/ref002-budokan-wordpress/page-family-map.yaml
+          commit: ''
+          note: >-
+            Current Figma file fKYDn9ikpJk1nW7IWFtaUx was inspected through the canonical SP root 114:5409.
+            The live SP_archive frame 1399:14225 contains the expected News archive page title, six category tabs,
+            repeated post cards, pagination, breadcrumb, footer, and mobile purpose menu, so the historical 560:2524
+            mapping was replaced only for NEWS_ARCHIVE.
       contradicts: []
     notes:
-      - Keep PROJECT_ONLY; the observation is a same-project authority correction, not independent promotion evidence.
+      - "Promotion review disposition 2026-09-02: KEEP_PROJECT_ONLY; same-project evidence increased, but independent-reference evidence is still absent."
       - Re-verify other historical family nodes individually rather than bulk-rewriting the map.
