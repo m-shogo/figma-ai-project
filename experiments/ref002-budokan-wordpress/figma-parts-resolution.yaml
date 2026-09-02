@@ -1,6 +1,27 @@
 schema_version: 1
 reference_id: REF-002-BUDOKAN
-figma_file_key: RfAQQ28V1HGaeIcpgRmQq1
+figma_file_key: fKYDn9ikpJk1nW7IWFtaUx
+figma_authority:
+  current_file_key: fKYDn9ikpJk1nW7IWFtaUx
+  current_verified_at: "2026-09-02"
+  historical_file_keys:
+    - RfAQQ28V1HGaeIcpgRmQq1
+    - w7SGVY63FuW6JpaQVKjxm2
+  rule: >-
+    Historical file/node lineage remains evidence only. Treat a saved mapping as current visual authority
+    only when it resolves in the Human-selected current file or a current audit explicitly re-verifies it.
+  live_verified_nodes:
+    - id: small_link_button
+      node_id: "1216:6172"
+    - id: cta_button
+      node_id: "1157:8271"
+    - id: table_header_cell
+      node_id: "1157:8286"
+    - id: page_anchor_link
+      node_id: "1198:4686"
+    - id: local_navigation_label
+      node_id: "1201:4784"
+      note: "Current node is the Parts/local-navigation label only; it is not a dedicated SP Local Navigation visual master."
 parts_frame:
   node_id: "1163:4245"
   name: parts
@@ -44,8 +65,9 @@ parts:
     figma_name: parts / btn-02
     initial_resolution: CORE_BLOCK_OR_EXISTING_STYLE
     wordpress_candidate: core/button
-    custom_block: UNDETERMINED
+    custom_block: NOT_PLANNED
     notes:
+      - "Current Figma node re-resolved on 2026-09-02; use the existing shared Theme button/link owner rather than a new block."
       - "External/file/PDF icon variants should first be solved through existing Theme link/button conventions or block styles."
 
   - id: cta_button
@@ -53,7 +75,9 @@ parts:
     figma_name: parts / btn-03
     initial_resolution: PATTERN_OR_CORE_STYLE
     wordpress_candidate: core/buttons
-    custom_block: UNDETERMINED
+    custom_block: NOT_PLANNED
+    notes:
+      - "Current Figma node re-resolved on 2026-09-02; the existing shared CTA/button owner remains the reuse path."
 
   - id: table_header_cell
     figma_node_id: "1157:8286"
@@ -61,6 +85,8 @@ parts:
     initial_resolution: CORE_BLOCK_STYLE
     wordpress_candidate: core/table
     custom_block: NOT_PLANNED
+    notes:
+      - "Current Figma node re-resolved on 2026-09-02; existing shared table styling remains the owner."
 
   - id: table_cell
     figma_node_id: "1157:8291"
@@ -81,7 +107,9 @@ parts:
     figma_name: btn-pagelink
     initial_resolution: PATTERN_OR_CORE_STYLE
     wordpress_candidate: core/button
-    custom_block: UNDETERMINED
+    custom_block: NOT_PLANNED
+    notes:
+      - "Current Figma node re-resolved on 2026-09-02; existing in-page-link shared CSS is the implementation owner."
 
   - id: quotation_open
     figma_node_id: "1157:8392"
@@ -100,11 +128,13 @@ parts:
   - id: local_navigation_item
     figma_node_id: "1201:4784"
     figma_name: nav_local
-    initial_resolution: DYNAMIC_OR_PATTERN_CANDIDATE
-    wordpress_candidate: UNDETERMINED
-    custom_block: UNDETERMINED
+    initial_resolution: EXISTING_THEME_NAVIGATION
+    wordpress_candidate: theme/sidebar-nav
+    custom_block: NOT_PLANNED
     notes:
-      - "Resolve whether navigation is editor-authored, hierarchy-derived, menu-derived, or Theme-owned after base Theme inspection."
+      - "Current node 1201:4784 is only the Parts label/specimen heading, not a dedicated SP Local Navigation visual master."
+      - "Template/sidebar/walker hierarchy is already proven reusable; current dedicated SP visual authority remains UNDETERMINED."
+      - "Do not fork page-specific Local Navigation CSS or infer missing SP geometry from historical 560:* evidence."
 
 non_component_parts:
   - id: paragraph_and_inline_emphasis
@@ -122,22 +152,29 @@ non_component_parts:
   - id: accordion
     initial_resolution: CORE_FIRST
     wordpress_candidates: [core/details]
-    custom_block: ONLY_IF_FIGMA_OR_PRODUCT_BEHAVIOR_EXCEEDS_CORE_DETAILS
+    custom_block: NOT_PLANNED
+    notes:
+      - "Native Core Details markup is the proven owner; shared Theme CSS targets the serialized/rendered details/summary structure."
   - id: navigation_card
-    initial_resolution: PATTERN_FIRST
-    wordpress_candidates: [core/group, core/image, core/heading, core/paragraph, core/button]
+    initial_resolution: EXISTING_THEME_FIRST
+    wordpress_candidates: [acf/navigation-large, core/group, core/image, core/heading, core/paragraph, core/button]
+    custom_block: NOT_PLANNED
+    notes:
+      - "Current Parts navigation authority resolves to the existing large-card Theme contract; legacy navigation-small remains a separate unchanged contract without current Parts visual authority."
   - id: slider
     initial_resolution: EXISTING_LIBRARY_FIRST
     wordpress_candidates: []
-    custom_block: CANDIDATE
+    custom_block: UNDETERMINED
     notes:
-      - "Check the base Theme/plugin stack before choosing Swiper or creating a new block."
+      - "Swiper is already globally available, but library availability is not editor/component ownership."
+      - "Do not create markup, ACF fields, or initialization until an existing WordPress owner or an explicitly authorized new editor contract is proven."
   - id: tabs
     initial_resolution: EXISTING_LIBRARY_FIRST
     wordpress_candidates: []
-    custom_block: CANDIDATE
+    custom_block: UNDETERMINED
     notes:
-      - "If custom implementation is required, keyboard and focus semantics are part of the block contract."
+      - "Preserve the existing resolved Theme behavior where present; do not infer a new editor contract from the Parts specimen alone."
+      - "If a new custom implementation is ever authorized, keyboard and focus semantics are part of the contract."
 
 shell_owned:
   - header
@@ -147,8 +184,16 @@ shell_owned:
 
 production_freeze:
   ready: false
+  resolved_since_initial_intake:
+    - ACTUAL_BASE_THEME_OBSERVED
+    - WORDPRESS_RUNTIME_OBSERVED
+    - ACF_PRO_RUNTIME_OBSERVED
+    - EXISTING_BLOCK_PATTERN_STYLE_INVENTORY_OBSERVED
   blockers:
-    - ACTUAL_BASE_THEME_NOT_OBSERVED
-    - WORDPRESS_VERSION_NOT_OBSERVED
-    - ACF_PRO_VERSION_NOT_OBSERVED
-    - EXISTING_BLOCK_PATTERN_STYLE_INVENTORY_NOT_OBSERVED
+    - SLIDER_EDITOR_OR_COMPONENT_OWNER_UNDETERMINED
+    - LOCAL_NAV_CURRENT_SP_VISUAL_AUTHORITY_UNDETERMINED
+    - SEARCH_OWNER_OR_AUTHORITY_UNDETERMINED
+    - CALENDAR_OWNER_OR_AUTHORITY_UNDETERMINED
+  notes:
+    - "These blockers are narrow ownership/authority gates; they do not freeze already proven shared blocks or page families."
+    - "Forms/Formidable and parts.php remain Human-owned/read-only and are outside this resolution update."
