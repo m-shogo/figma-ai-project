@@ -3,6 +3,7 @@
 // パラグラフ
 // Current Figma fileKey fKYDn9ikpJk1nW7IWFtaUx
 // SP 1399:18729 / PC 1157:8182 — Zen Kaku Gothic New Regular 17 / lh 1.6
+// Background paragraph PC 1157:8201 shares the same body typography; Gutenberg `has-background` must not opt out of it.
 // Marker highlight (1399:18739) — Gutenberg underline span → gold 8px / 30% overlay.
 // ------------------------------ */
 .block-editor_wrap,
@@ -19,7 +20,7 @@
     p.has-x-large-font-size {
         font-size: 1.5rem !important;
     }
-    p:is(:not([class]), .wp-block-paragraph, .block-editor-rich-text__editable, .has-text-align-left, .has-text-align-right, .has-text-align-center) {
+    p:is(:not([class]), .wp-block-paragraph, .block-editor-rich-text__editable, .has-background, .has-text-align-left, .has-text-align-right, .has-text-align-center) {
         font-family: var(--font-zen-kaku-gothic);
         font-size: 17px;
         font-weight: 400;
