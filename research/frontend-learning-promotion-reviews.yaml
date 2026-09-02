@@ -29,9 +29,10 @@ reviews:
     reviewed_contradictions: 0
     disposition: KEEP_CANDIDATE
     rationale: >-
-      REF-001 and Budokan now independently support recording and re-resolving Figma provenance, and
-      the Budokan Parts audit shows a concrete stale-authority failure that was caught before more
-      implementation was built from the wrong file/node lineage. This justifies CANDIDATE status, but
-      not ACTIVE yet: the second reference is a corrective/prevention outcome without a measured
-      prospective clean replay or Human Correction Cost delta. Revisit within two weeks or sooner when
-      another implementation consumes this candidate prospectively.
+      REF-001 and Budokan independently support recording and re-resolving Figma provenance. During the
+      current Budokan continuation, live Figma and the current runtime again showed that the pre-theme
+      README/intake state had become historical while newer structured authority was current. The README
+      was clarified without fabricating the missing original Theme source repository/starting commit.
+      This strengthens the same Budokan reference but does not create a third independent reference or a
+      prospective Human Correction Cost measurement. Keep CANDIDATE, preserve the existing blocker, and
+      revisit by 2026-09-16 or sooner when another implementation consumes the rule prospectively.
