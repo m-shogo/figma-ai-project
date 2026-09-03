@@ -18,6 +18,24 @@ if [[ "$THEME_SLUG" != "nipponbudokan" ]]; then
   exit 2
 fi
 
+python3 - <<'PY'
+import json
+from pathlib import Path
+path = Path('theme-dropin/nipponbudokan/acf/json/group_top_slider.json')
+data = json.loads(path.read_text(encoding='utf-8'))
+repeater = next((f for f in data.get('fields', []) if f.get('name') == 'top_slider-01'), None)
+if not repeater:
+    raise SystemExit('FAIL TOP slider ACF repeater missing.')
+subfields = {f.get('name'): f for f in repeater.get('sub_fields', [])}
+required = {'img_pc', 'img_sp', 'text', 'text_sp', 'lead_pc', 'lead_sp'}
+missing = sorted(required - subfields.keys())
+if missing:
+    raise SystemExit(f"FAIL TOP slider ACF responsive fields missing: {', '.join(missing)}")
+if subfields['text'].get('key') != 'field_5d677f3972f71':
+    raise SystemExit('FAIL legacy TOP slider text field key changed; backward compatibility would be broken.')
+print('PASS TOP slider Local JSON preserves legacy text owner and exposes responsive title/lead fields.')
+PY
+
 cleanup() {
   docker compose down -v --remove-orphans >/dev/null 2>&1 || true
 }
@@ -87,11 +105,16 @@ for required in \
   'class="tm_inner"' \
   'class="tm_title"' \
   'class="tm_lead"' \
+  'class="tm_copy_pc"' \
+  'class="tm_copy_sp"' \
   'class="tm_guide"' \
   'class="top_notice-01"' \
   '伝統を未来へつなぐ' \
   '武道文化の中心地' \
+  '武道と書道の中心地' \
   '武道、書道の普及・振興、公益目的事業の拠点として活動しています。' \
+  '武道の振興、書道文化の継承、' \
+  '公益事業の拠点として活動しています。' \
   '目的から探す' \
   '令和8年8月4日(火) 令和8年熊本地震　お見舞い'; do
   grep -Fq "$required" "$html" || {
@@ -116,8 +139,9 @@ done
 rm -f "$html"
 
 echo "PASS Budokan TOP FV rendered through the real Theme front-page path."
-echo "PASS existing slider, purpose-guide, and notice owners remain reused without a duplicate TOP component."
-echo "NOTE production ACF Pro slide/notice repeaters remain content authority; this disposable runtime verifies the ACF-API-present/no-Pro-repeater fallback path."
+echo "PASS current PC/SP fallback copy is emitted once per responsive owner without duplicating the TOP component."
+echo "PASS existing slider, purpose-guide, and notice owners remain reused."
+echo "NOTE production ACF Pro slide/notice repeaters remain content authority; Local JSON schema is validated here, while this disposable runtime verifies the ACF-API-present/no-Pro-repeater fallback path."
 
 if [[ "${BUDOKAN_TOP_FV_KEEP_RUNTIME:-0}" == "1" ]]; then
   trap - EXIT
