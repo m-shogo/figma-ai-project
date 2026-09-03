@@ -159,7 +159,7 @@
     }
 
     .top_news_articles .news_item_label {
-        min-height: 25px;
+        min-height: 23px;
         border-color: var(--color-text);
         font-family: var(--font-zen-kaku-gothic);
         font-weight: 500;

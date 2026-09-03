@@ -1,0 +1,54 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: OBS-BUDOKAN-TOP-NEWS-CURRENT-FIGMA-LABEL-HEIGHT
+    summary: >-
+      When a TOP derivative reuses a shared News item master, do not preserve a derivative min-height override after the shared master and current Figma both establish the same smaller geometry.
+    category: VISUAL_FIDELITY
+    applicability:
+      scope: PROJECT
+      conditions:
+        - Current Figma exposes the News label's authored geometry in both SP and PC.
+        - The shared News master already owns the 80x23 label contract.
+        - The correction is isolated to the TOP News derivative CSS.
+      exclusions:
+        - Do not alter News archive label geometry or Event label geometry from this evidence alone.
+        - Do not infer taxonomy, ACF, or filtering behavior from label appearance.
+        - Do not generalize to unrelated projects without independent evidence.
+    promotion_state: PROJECT_ONLY
+    promotion:
+      candidate: false
+      rationale: >-
+        LIVE current Figma file FKQaJDu5TZXHoCzPsfP92E nodes 446:11772 and 1603:7236 both show the TOP News category label at 80x23, and the existing shared module_newsList-01.css already owns that same 80x23 geometry. This is strong Budokan project evidence, not cross-project evidence.
+      blocked_by:
+        - NEEDS_INDEPENDENT_REFERENCE_EVIDENCE_BEFORE_CROSS_PROJECT_PROMOTION
+      contradiction_review: >-
+        The TOP derivative previously forced min-height:25px even though the shared master has height/min-height 23px. Current SP and PC authority contradict that override, so the derivative is returned to the shared 23px contract without changing the master.
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-TOP-NEWS-SP-LABEL-20260904
+          kind: LOCAL_RESEARCH
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/project/top_news.css
+          commit: ''
+          note: >-
+            LIVE SP node 446:11772 renders each category label with 13px text and 5px vertical padding, yielding an authored 23px control. The shared News master already defines width 80px and height/min-height 23px.
+        - evidence_id: EV-BUDOKAN-TOP-NEWS-PC-LABEL-20260904
+          kind: LOCAL_RESEARCH
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/project/top_news.css
+          commit: ''
+          note: >-
+            LIVE PC node 1603:7236 uses the same 80px label with 13px text and 5px vertical padding. The previous TOP-only min-height:25px was therefore a proven two-pixel visual drift in both responsive authorities.
+      contradicts: []
+    notes:
+      - "Promotion review disposition 2026-09-04: KEEP_PROJECT_ONLY; verified against both current Budokan SP and PC plus the existing shared News master, but no independent cross-project evidence exists."
+      - The correction preserves _news-item.php, taxonomy ownership, archive CSS, ACF/CPT contracts, Form/Formidable, parts.php, Slider, Calendar, Search, and unrelated shared CSS/PHP/JS.
