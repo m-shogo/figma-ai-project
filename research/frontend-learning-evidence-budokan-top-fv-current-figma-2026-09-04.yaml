@@ -76,14 +76,15 @@ records:
           path: experiments/wordpress-acf-runtime/scripts/budokan-top-fv-browser-qa.mjs
           commit: ''
           note: >-
-            Playwright at a nominal 1380px browser viewport exposed a 1365px document client width because the real page has a
-            vertical scrollbar, yielding a 1015px fluid MV rather than the Figma-frame 1030px. The Theme itself correctly loads
-            top_mainVisual.css through css/style.css. Forcing a fixed 1380px stage would create horizontal overflow and violate the
-            responsive owner. Browser QA now proves the authored 60px left padding, 30px right padding, 20px gap and 240px guide,
-            then verifies MV width as the exact remaining fluid allocation. At an actual 1380px client width that equation resolves
-            to the authored 1030px Figma width.
+            Playwright at a nominal 1380px browser viewport renders the TOP root/stage at 1365px because the existing shared
+            normalize.css declares `scrollbar-gutter: stable` on :root, reserving the platform scrollbar gutter. That leaves a
+            1015px fluid MV while preserving the current-Figma fixed allocation of 60px left padding, 30px right padding, 20px gap
+            and 240px guide. Changing the shared scrollbar policy only to force TOP to 1030px would widen blast radius across the
+            site, so it remains untouched. Browser QA instead proves those authored fixed dimensions and verifies the MV as the exact
+            remaining fluid allocation; without a reserved gutter, a 1380px stage resolves to the authored 1030px Figma width.
       contradicts: []
     notes:
       - "Promotion review disposition 2026-09-04: KEEP_PROJECT_ONLY; current same-file evidence plus project runtime evidence proves the Budokan TOP correction but is not independent cross-project evidence."
       - Preserve current SP behavior until a current 375px TOP authority is explicitly present or Human declares a shared SP master.
       - Prefer capability checks for Pro-only ACF field owners over generic ACF function-presence checks when a degraded/test runtime can expose public ACF APIs without the Pro field type.
+      - Preserve the shared stable scrollbar gutter unless a site-wide authority explicitly changes it; do not compensate for it with TOP-only overflow or fixed canvas width.
