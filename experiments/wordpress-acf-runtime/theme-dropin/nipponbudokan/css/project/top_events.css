@@ -68,7 +68,7 @@
         margin: 0 0 40px;
         padding: 8px 20px;
         border-radius: 3px;
-        background-color: var(--color-text);
+        background-color: #5a5a5b;
         color: var(--color-secondary);
         font-family: var(--font-zen-kaku-gothic);
         font-size: 18px;
@@ -129,7 +129,7 @@
         display: flex;
         flex-wrap: wrap;
         gap: 10px;
-        margin: 0;
+        margin: 0 0 8px;
     }
     .te_label {
         display: inline-flex;
