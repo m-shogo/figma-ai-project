@@ -1,0 +1,61 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: OBS-BUDOKAN-TOP-FV-CURRENT-AUTHORITY-BOUNDARY
+    summary: >-
+      For a large Figma full-page frame that cannot be returned as full design context, resolve the current full-page authority first,
+      then inspect bounded same-file sub-compositions that visibly belong to that surface before correcting Theme geometry. Do not
+      carry measurements from old Figma files merely because the component name is unchanged.
+    category: VISUAL_FIDELITY
+    applicability:
+      scope: PROJECT
+      conditions:
+        - A current full-page Figma frame is too large for one design-context response.
+        - The same current Figma file contains a bounded composition exposing exact geometry and typography for the target surface.
+        - The Theme owner is isolated enough that the correction does not widen into unrelated page consumers.
+      exclusions:
+        - Do not substitute retired Figma file keys or historical node IDs for missing current authority.
+        - Do not infer a dedicated SP TOP design when the current SP page does not expose a proven 375px TOP full-page authority.
+        - Do not overwrite ACF content ownership; align only fallback fixture copy and proven Theme presentation differences.
+    promotion_state: PROJECT_ONLY
+    promotion:
+      candidate: false
+      rationale: >-
+        The evidence is strong for the Budokan TOP owner: the current PC page resolves TOP as 1603:7062, and bounded current-file
+        FV nodes 2182:8103 through 2182:8240 expose the 1030px MV, 60px title inset, exact current fallback copy, gradient,
+        notice border/radii, guide separator color, and final guide-title tracking. This is still one project/reference family and
+        does not satisfy the cross-reference requirement for broader promotion.
+      blocked_by:
+        - NEEDS_INDEPENDENT_REFERENCE_EVIDENCE_BEFORE_CROSS_PROJECT_PROMOTION
+      contradiction_review: >-
+        The Theme previously documented retired fileKey fKYDn9ikpJk1nW7IWFtaUx and old node IDs while CURRENT_AUTHORITY.md now
+        requires FKQaJDu5TZXHoCzPsfP92E only. The current SP page has a 1380-wide TOP frame but no proven 375px TOP full-page
+        counterpart, so existing SP responsive behavior is preserved rather than re-authored from historical SP evidence.
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-TOP-FV-CURRENT-FIGMA-20260904
+          kind: LOCAL_RESEARCH
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/project/top_mainVisual.css
+          commit: ''
+          note: >-
+            LIVE current Figma file FKQaJDu5TZXHoCzPsfP92E was re-resolved from PC page 0:1. TOP is current frame 1603:7062.
+            Because that full page is too large for one design-context response, same-file bounded FV reference 2182:8103 was
+            read directly: image 1030x600 at x=60; title group x=120/top=407 (60px inset from MV, 307px from MV top);
+            title 46px Zen Old Mincho 1.5/5% and lead 18px Zen Kaku 1.4/5%; current fallback copy is
+            '伝統を未来へつなぐ、／武道文化の中心地' with '武道、書道の普及・振興、公益目的事業の拠点として活動しています。'.
+            The overlay gradient is rgba(16,24,39,.6) 17.905% to transparent 46.76% at 25.47deg. Notice is 600x70 white,
+            primary 1px border, with top-left square and the other three corners 3px. Current guide node 2182:8115 shows
+            #e2d3b8 separators and 10% tracking only on the 日本武道館 heading. Theme TOP-only CSS and fallback fixture copy
+            were corrected; production ACF owners top_slider-01/top_notice-01 remain unchanged.
+      contradicts: []
+    notes:
+      - "Promotion review disposition 2026-09-04: KEEP_PROJECT_ONLY; current same-file evidence proves the Budokan TOP correction but is not independent cross-project evidence."
+      - Preserve current SP behavior until a current 375px TOP authority is explicitly present or Human declares a shared SP master.
