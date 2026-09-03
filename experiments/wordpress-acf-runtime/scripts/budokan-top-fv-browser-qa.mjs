@@ -91,18 +91,26 @@ try {
     const noticeInner = notice?.querySelector('.tn_inner');
     const guideBody = root?.querySelector('.tm_guide_body');
     const guideHead = root?.querySelector('.tm_guide_head');
-    if (!root || !stage || !mv || !bg || !inner || !title || !lead || !guide || !notice || !noticeInner || !guideBody || !guideHead) return null;
+    const firstGuideGroup = root?.querySelector('.tm_guide_group');
+    const lastGuideTitle = root?.querySelector('.tm_guide_group:last-child .tm_guide_title');
+    if (!root || !stage || !mv || !bg || !inner || !title || !lead || !guide || !notice || !noticeInner || !guideBody || !guideHead || !firstGuideGroup || !lastGuideTitle) return null;
     const rootRect = root.getBoundingClientRect();
     const stageRect = stage.getBoundingClientRect();
     const mvRect = mv.getBoundingClientRect();
     const guideRect = guide.getBoundingClientRect();
     const innerRect = inner.getBoundingClientRect();
+    const noticeStyle = getComputedStyle(noticeInner);
+    const stageStyle = getComputedStyle(stage);
     return {
+      viewportWidth: document.documentElement.clientWidth,
       rootLeft: rootRect.left,
       rootWidth: rootRect.width,
       stageLeft: stageRect.left,
       stageWidth: stageRect.width,
-      stageGap: parseFloat(getComputedStyle(stage).columnGap),
+      stageGap: parseFloat(stageStyle.columnGap),
+      stagePaddingLeft: parseFloat(stageStyle.paddingLeft),
+      stagePaddingRight: parseFloat(stageStyle.paddingRight),
+      mvWidth: mvRect.width,
       mvHeight: bg.getBoundingClientRect().height,
       guideWidth: guideRect.width,
       guideHeight: guideRect.height,
@@ -112,39 +120,62 @@ try {
       titleLineHeight: parseFloat(getComputedStyle(title).lineHeight),
       leadSize: parseFloat(getComputedStyle(lead).fontSize),
       leadFamily: getComputedStyle(lead).fontFamily,
+      innerLeft: innerRect.left - mvRect.left,
       innerTop: innerRect.top - mvRect.top,
       noticeWidth: notice.getBoundingClientRect().width,
       noticeHeight: noticeInner.getBoundingClientRect().height,
-      noticeBg: getComputedStyle(noticeInner).backgroundColor,
-      noticeColor: getComputedStyle(noticeInner).color,
+      noticeBg: noticeStyle.backgroundColor,
+      noticeColor: noticeStyle.color,
+      noticeBorderWidth: parseFloat(noticeStyle.borderTopWidth),
+      noticeBorderColor: noticeStyle.borderTopColor,
+      noticeTopLeftRadius: parseFloat(noticeStyle.borderTopLeftRadius),
+      noticeTopRightRadius: parseFloat(noticeStyle.borderTopRightRadius),
+      noticeBottomRightRadius: parseFloat(noticeStyle.borderBottomRightRadius),
+      noticeBottomLeftRadius: parseFloat(noticeStyle.borderBottomLeftRadius),
       guideBodyBg: getComputedStyle(guideBody).backgroundColor,
       guideHeadFamily: getComputedStyle(guideHead).fontFamily,
+      guideSeparatorColor: getComputedStyle(firstGuideGroup).borderBottomColor,
+      lastGuideTitleSpacing: parseFloat(getComputedStyle(lastGuideTitle).letterSpacing),
     };
   });
   assert(pc, 'PC TOP FV elements missing');
   assert(close(pc.stageLeft, pc.rootLeft, 1), `PC stage/root left ${pc.stageLeft}/${pc.rootLeft}`);
   assert(close(pc.stageWidth, pc.rootWidth, 1), `PC stage/root width ${pc.stageWidth}/${pc.rootWidth}`);
+  assert(pc.stageWidth <= pc.viewportWidth && pc.stageWidth >= pc.viewportWidth - 20, `PC stable-gutter stage width ${pc.stageWidth} vs viewport ${pc.viewportWidth}`);
   assert(pc.stageWidth >= 1360 && pc.stageWidth <= 1380, `PC rendered stage width ${pc.stageWidth}`);
   assert(close(pc.stageGap, 20, 1), `PC stage gap ${pc.stageGap}`);
-  assert(close(pc.mvHeight, 600, 1), `PC MV height ${pc.mvHeight}`);
+  assert(close(pc.stagePaddingLeft, 60, 1), `PC stage left padding ${pc.stagePaddingLeft}`);
+  assert(close(pc.stagePaddingRight, 30, 1), `PC stage right padding ${pc.stagePaddingRight}`);
   assert(close(pc.guideWidth, 240, 1) && close(pc.guideHeight, 600, 1), `PC guide ${pc.guideWidth}x${pc.guideHeight}`);
+  const expectedFluidMvWidth = pc.stageWidth - pc.stagePaddingLeft - pc.stagePaddingRight - pc.stageGap - pc.guideWidth;
+  assert(close(pc.mvWidth, expectedFluidMvWidth, 1), `PC MV width ${pc.mvWidth} vs fluid allocation ${expectedFluidMvWidth}`);
+  assert(close(pc.mvHeight, 600, 1), `PC MV height ${pc.mvHeight}`);
   assert(pc.guideDisplay !== 'none', 'PC guide unexpectedly hidden');
   assert(close(pc.titleSize, 46, 0.5), `PC title size ${pc.titleSize}`);
   assert(isMinchoFamily(pc.titleFamily), `PC title must resolve to Zen Old Mincho, got ${pc.titleFamily}.`);
   assert(close(pc.titleLineHeight, 69, 1), `PC title line-height ${pc.titleLineHeight}`);
   assert(close(pc.leadSize, 18, 0.5), `PC lead size ${pc.leadSize}`);
   assert(isKakuFamily(pc.leadFamily), `PC lead must resolve to Zen Kaku Gothic New, got ${pc.leadFamily}.`);
+  assert(close(pc.innerLeft, 60, 1), `PC inner left ${pc.innerLeft}`);
   assert(close(pc.innerTop, 307, 2), `PC inner top ${pc.innerTop}`);
   assert(close(pc.noticeWidth, 600, 1), `PC notice width ${pc.noticeWidth}`);
   assert(close(pc.noticeHeight, 70, 1), `PC notice height ${pc.noticeHeight}`);
   assert(pc.noticeBg === 'rgb(255, 255, 255)', `PC notice expected white, got ${pc.noticeBg}.`);
   assert(pc.noticeColor === 'rgb(191, 62, 43)', `PC notice text expected primary #bf3e2b, got ${pc.noticeColor}.`);
+  assert(close(pc.noticeBorderWidth, 1, 0.1), `PC notice border width ${pc.noticeBorderWidth}`);
+  assert(pc.noticeBorderColor === 'rgb(191, 62, 43)', `PC notice border expected primary #bf3e2b, got ${pc.noticeBorderColor}.`);
+  assert(close(pc.noticeTopLeftRadius, 0, 0.1), `PC notice top-left radius ${pc.noticeTopLeftRadius}`);
+  assert(close(pc.noticeTopRightRadius, 3, 0.1), `PC notice top-right radius ${pc.noticeTopRightRadius}`);
+  assert(close(pc.noticeBottomRightRadius, 3, 0.1), `PC notice bottom-right radius ${pc.noticeBottomRightRadius}`);
+  assert(close(pc.noticeBottomLeftRadius, 3, 0.1), `PC notice bottom-left radius ${pc.noticeBottomLeftRadius}`);
   assert(pc.guideBodyBg === 'rgb(249, 242, 229)', `PC guide body expected #f9f2e5, got ${pc.guideBodyBg}.`);
   assert(isMinchoFamily(pc.guideHeadFamily), `PC guide head must resolve to Zen Old Mincho, got ${pc.guideHeadFamily}.`);
+  assert(pc.guideSeparatorColor === 'rgb(226, 211, 184)', `PC guide separator expected #e2d3b8, got ${pc.guideSeparatorColor}.`);
+  assert(close(pc.lastGuideTitleSpacing, 1.6, 0.2), `PC final guide title tracking ${pc.lastGuideTitleSpacing}`);
   await desktopContext.close();
 
   console.log('PASS Budokan TOP FV canonical SP geometry and hidden desktop-only guide QA.');
-  console.log('PASS Budokan TOP FV canonical PC MV + purpose guide + notice geometry QA.');
+  console.log('PASS Budokan TOP FV current PC fixed insets/guide + stable-gutter fluid MV + notice geometry QA.');
 } finally {
   await browser.close();
 }

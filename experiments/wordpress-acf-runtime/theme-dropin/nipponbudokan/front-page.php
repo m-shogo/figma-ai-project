@@ -1,7 +1,8 @@
 <?php get_header(); ?>
 <?php
 $theme_uri = get_template_directory_uri();
-$has_slider = function_exists('have_rows') && have_rows('top_slider-01');
+$has_acf_pro_repeater = class_exists('acf_field_repeater');
+$has_slider = $has_acf_pro_repeater && function_exists('have_rows') && have_rows('top_slider-01');
 ?>
 <div class="top_mainVisual">
     <div class="tm_stage">
@@ -25,7 +26,7 @@ $has_slider = function_exists('have_rows') && have_rows('top_slider-01');
                                 <div class="tm_background">
                                     <picture>
                                         <source srcset="<?php echo esc_url($pc_src); ?>" media="(min-width: 768px)">
-                                        <img src="<?php echo esc_url($sp_src); ?>" alt="<?php echo esc_attr($alt_sp ?: $alt_pc); ?>" width="1040" height="600" fetchpriority="high">
+                                        <img src="<?php echo esc_url($sp_src); ?>" alt="<?php echo esc_attr($alt_sp ?: $alt_pc); ?>" width="1030" height="600" fetchpriority="high">
                                     </picture>
                                 </div>
                                 <?php if ($text): ?>
@@ -38,11 +39,11 @@ $has_slider = function_exists('have_rows') && have_rows('top_slider-01');
                     <?php else: ?>
                         <li class="swiper-slide">
                             <div class="tm_background">
-                                <img src="<?php echo esc_url($theme_uri . '/images/top/mv-sample.png'); ?>" alt="<?php bloginfo('name'); ?>" width="1040" height="600" fetchpriority="high">
+                                <img src="<?php echo esc_url($theme_uri . '/images/top/mv-sample.png'); ?>" alt="<?php bloginfo('name'); ?>" width="1030" height="600" fetchpriority="high">
                             </div>
                             <div class="tm_inner">
-                                <p class="tm_title"><span>伝統を未来へつなぐ、<br>武道と書道の中心地</span></p>
-                                <p class="tm_lead"><span>武道の振興、書道文化の継承、公益事業の拠点として活動しています。</span></p>
+                                <p class="tm_title"><span>伝統を未来へつなぐ、<br>武道文化の中心地</span></p>
+                                <p class="tm_lead"><span>武道、書道の普及・振興、公益目的事業の拠点として活動しています。</span></p>
                             </div>
                         </li>
                     <?php endif; ?>
@@ -86,7 +87,7 @@ $has_slider = function_exists('have_rows') && have_rows('top_slider-01');
     <?php
     $notice_items = array();
     $show_notice = true;
-    if (function_exists('get_field') && function_exists('have_rows')) {
+    if ($has_acf_pro_repeater && function_exists('get_field') && function_exists('have_rows')) {
         $show_notice = (bool) get_field('top_notice_select');
         if ($show_notice && have_rows('top_notice-01')) {
             while (have_rows('top_notice-01')) {
@@ -113,7 +114,7 @@ $has_slider = function_exists('have_rows') && have_rows('top_slider-01');
                             <?php endforeach; ?>
                         </ul>
                     <?php else: ?>
-                        <p class="tn_text"><a href="#">コンサートでご来場される皆様へ、日本武道館からのお願い</a></p>
+                        <p class="tn_text"><a href="#">令和8年8月4日(火) 令和8年熊本地震　お見舞い</a></p>
                     <?php endif; ?>
                 </div>
             </div>

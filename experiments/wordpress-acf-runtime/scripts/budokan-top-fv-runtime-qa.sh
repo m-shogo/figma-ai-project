@@ -50,6 +50,9 @@ if ! docker compose run --rm cli core is-installed >/dev/null 2>&1; then
 fi
 
 docker compose run --rm cli option update blog_public 0 >/dev/null
+# Header/shared Theme consumers require ACF APIs. The public plugin supplies those APIs,
+# while front-page.php deliberately falls back unless the Pro repeater field type exists.
+# Production ACF Pro repeater ownership is therefore preserved rather than emulated here.
 docker compose run --rm cli plugin install advanced-custom-fields --activate >/dev/null
 docker compose run --rm cli theme activate "$THEME_SLUG" >/dev/null
 
@@ -87,10 +90,10 @@ for required in \
   'class="tm_guide"' \
   'class="top_notice-01"' \
   '伝統を未来へつなぐ' \
-  '武道と書道の中心地' \
-  '武道の振興、書道文化の継承' \
+  '武道文化の中心地' \
+  '武道、書道の普及・振興、公益目的事業の拠点として活動しています。' \
   '目的から探す' \
-  'コンサートでご来場される皆様へ、日本武道館からのお願い'; do
+  '令和8年8月4日(火) 令和8年熊本地震　お見舞い'; do
   grep -Fq "$required" "$html" || {
     echo "FAIL required TOP FV runtime marker missing: ${required}" >&2
     exit 1
@@ -114,7 +117,7 @@ rm -f "$html"
 
 echo "PASS Budokan TOP FV rendered through the real Theme front-page path."
 echo "PASS existing slider, purpose-guide, and notice owners remain reused without a duplicate TOP component."
-echo "NOTE production ACF slide images/links remain content authority; fallback media is used in this disposable runtime."
+echo "NOTE production ACF Pro slide/notice repeaters remain content authority; this disposable runtime verifies the ACF-API-present/no-Pro-repeater fallback path."
 
 if [[ "${BUDOKAN_TOP_FV_KEEP_RUNTIME:-0}" == "1" ]]; then
   trap - EXIT
