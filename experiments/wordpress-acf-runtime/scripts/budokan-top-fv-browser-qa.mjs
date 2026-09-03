@@ -25,11 +25,15 @@ try {
     const inner = root?.querySelector('.tm_inner');
     const title = root?.querySelector('.tm_title');
     const lead = root?.querySelector('.tm_lead');
+    const titlePc = title?.querySelector('.tm_copy_pc');
+    const titleSp = title?.querySelector('.tm_copy_sp');
+    const leadPc = lead?.querySelector('.tm_copy_pc');
+    const leadSp = lead?.querySelector('.tm_copy_sp');
     const notice = root?.querySelector('.top_notice-01');
     const noticeInner = notice?.querySelector('.tn_inner');
     const noticeText = notice?.querySelector('.tn_text, .tn_item');
     const guide = root?.querySelector('.tm_guide');
-    if (!root || !mv || !bg || !inner || !title || !lead || !notice || !noticeInner || !noticeText || !guide) return null;
+    if (!root || !mv || !bg || !inner || !title || !lead || !titlePc || !titleSp || !leadPc || !leadSp || !notice || !noticeInner || !noticeText || !guide) return null;
     const rootRect = root.getBoundingClientRect();
     const mvRect = mv.getBoundingClientRect();
     const bgRect = bg.getBoundingClientRect();
@@ -46,6 +50,12 @@ try {
       leadSize: parseFloat(getComputedStyle(lead).fontSize),
       leadFamily: getComputedStyle(lead).fontFamily,
       leadLineHeight: parseFloat(getComputedStyle(lead).lineHeight),
+      titlePcDisplay: getComputedStyle(titlePc).display,
+      titleSpDisplay: getComputedStyle(titleSp).display,
+      leadPcDisplay: getComputedStyle(leadPc).display,
+      leadSpDisplay: getComputedStyle(leadSp).display,
+      titleSpText: titleSp.innerText,
+      leadSpText: leadSp.innerText,
       innerLeft: innerRect.left - mvRect.left,
       innerTop: innerRect.top - mvRect.top,
       noticeWidth: noticeRect.width,
@@ -66,6 +76,12 @@ try {
   assert(close(sp.leadSize, 15, 0.5), `SP lead size ${sp.leadSize}`);
   assert(isKakuFamily(sp.leadFamily), `SP lead must resolve to Zen Kaku Gothic New, got ${sp.leadFamily}.`);
   assert(close(sp.leadLineHeight, 24, 1), `SP lead line-height ${sp.leadLineHeight}`);
+  assert(sp.titlePcDisplay === 'none', `SP PC-title display ${sp.titlePcDisplay}`);
+  assert(sp.titleSpDisplay !== 'none', 'SP responsive title unexpectedly hidden');
+  assert(sp.leadPcDisplay === 'none', `SP PC-lead display ${sp.leadPcDisplay}`);
+  assert(sp.leadSpDisplay !== 'none', 'SP responsive lead unexpectedly hidden');
+  assert(sp.titleSpText.includes('伝統を未来へつなぐ、') && sp.titleSpText.includes('武道と書道の中心地'), `SP current title copy ${sp.titleSpText}`);
+  assert(sp.leadSpText.includes('武道の振興、書道文化の継承、') && sp.leadSpText.includes('公益事業の拠点として活動しています。'), `SP current lead copy ${sp.leadSpText}`);
   assert(close(sp.innerLeft, 20, 1), `SP inner left ${sp.innerLeft}`);
   assert(close(sp.innerTop, 246, 2), `SP inner top ${sp.innerTop}`);
   assert(close(sp.noticeWidth, 335, 1), `SP notice width ${sp.noticeWidth}`);
@@ -86,6 +102,10 @@ try {
     const inner = root?.querySelector('.tm_inner');
     const title = root?.querySelector('.tm_title');
     const lead = root?.querySelector('.tm_lead');
+    const titlePc = title?.querySelector('.tm_copy_pc');
+    const titleSp = title?.querySelector('.tm_copy_sp');
+    const leadPc = lead?.querySelector('.tm_copy_pc');
+    const leadSp = lead?.querySelector('.tm_copy_sp');
     const guide = root?.querySelector('.tm_guide');
     const notice = root?.querySelector('.top_notice-01');
     const noticeInner = notice?.querySelector('.tn_inner');
@@ -93,7 +113,7 @@ try {
     const guideHead = root?.querySelector('.tm_guide_head');
     const firstGuideGroup = root?.querySelector('.tm_guide_group');
     const lastGuideTitle = root?.querySelector('.tm_guide_group:last-child .tm_guide_title');
-    if (!root || !stage || !mv || !bg || !inner || !title || !lead || !guide || !notice || !noticeInner || !guideBody || !guideHead || !firstGuideGroup || !lastGuideTitle) return null;
+    if (!root || !stage || !mv || !bg || !inner || !title || !lead || !titlePc || !titleSp || !leadPc || !leadSp || !guide || !notice || !noticeInner || !guideBody || !guideHead || !firstGuideGroup || !lastGuideTitle) return null;
     const rootRect = root.getBoundingClientRect();
     const stageRect = stage.getBoundingClientRect();
     const mvRect = mv.getBoundingClientRect();
@@ -120,6 +140,12 @@ try {
       titleLineHeight: parseFloat(getComputedStyle(title).lineHeight),
       leadSize: parseFloat(getComputedStyle(lead).fontSize),
       leadFamily: getComputedStyle(lead).fontFamily,
+      titlePcDisplay: getComputedStyle(titlePc).display,
+      titleSpDisplay: getComputedStyle(titleSp).display,
+      leadPcDisplay: getComputedStyle(leadPc).display,
+      leadSpDisplay: getComputedStyle(leadSp).display,
+      titlePcText: titlePc.innerText,
+      leadPcText: leadPc.innerText,
       innerLeft: innerRect.left - mvRect.left,
       innerTop: innerRect.top - mvRect.top,
       noticeWidth: notice.getBoundingClientRect().width,
@@ -156,6 +182,12 @@ try {
   assert(close(pc.titleLineHeight, 69, 1), `PC title line-height ${pc.titleLineHeight}`);
   assert(close(pc.leadSize, 18, 0.5), `PC lead size ${pc.leadSize}`);
   assert(isKakuFamily(pc.leadFamily), `PC lead must resolve to Zen Kaku Gothic New, got ${pc.leadFamily}.`);
+  assert(pc.titlePcDisplay !== 'none', 'PC responsive title unexpectedly hidden');
+  assert(pc.titleSpDisplay === 'none', `PC SP-title display ${pc.titleSpDisplay}`);
+  assert(pc.leadPcDisplay !== 'none', 'PC responsive lead unexpectedly hidden');
+  assert(pc.leadSpDisplay === 'none', `PC SP-lead display ${pc.leadSpDisplay}`);
+  assert(pc.titlePcText.includes('伝統を未来へつなぐ、') && pc.titlePcText.includes('武道文化の中心地'), `PC current title copy ${pc.titlePcText}`);
+  assert(pc.leadPcText.includes('武道、書道の普及・振興、公益目的事業の拠点として活動しています。'), `PC current lead copy ${pc.leadPcText}`);
   assert(close(pc.innerLeft, 60, 1), `PC inner left ${pc.innerLeft}`);
   assert(close(pc.innerTop, 307, 2), `PC inner top ${pc.innerTop}`);
   assert(close(pc.noticeWidth, 600, 1), `PC notice width ${pc.noticeWidth}`);
@@ -174,8 +206,8 @@ try {
   assert(close(pc.lastGuideTitleSpacing, 1.6, 0.2), `PC final guide title tracking ${pc.lastGuideTitleSpacing}`);
   await desktopContext.close();
 
-  console.log('PASS Budokan TOP FV canonical SP geometry and hidden desktop-only guide QA.');
-  console.log('PASS Budokan TOP FV current PC fixed insets/guide + stable-gutter fluid MV + notice geometry QA.');
+  console.log('PASS Budokan TOP FV canonical SP geometry, responsive copy, and hidden desktop-only guide QA.');
+  console.log('PASS Budokan TOP FV current PC fixed insets/guide + responsive copy + stable-gutter fluid MV + notice geometry QA.');
 } finally {
   await browser.close();
 }
