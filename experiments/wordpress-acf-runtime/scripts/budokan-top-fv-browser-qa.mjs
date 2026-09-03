@@ -100,12 +100,16 @@ try {
     const guideRect = guide.getBoundingClientRect();
     const innerRect = inner.getBoundingClientRect();
     const noticeStyle = getComputedStyle(noticeInner);
+    const stageStyle = getComputedStyle(stage);
     return {
+      viewportWidth: document.documentElement.clientWidth,
       rootLeft: rootRect.left,
       rootWidth: rootRect.width,
       stageLeft: stageRect.left,
       stageWidth: stageRect.width,
-      stageGap: parseFloat(getComputedStyle(stage).columnGap),
+      stageGap: parseFloat(stageStyle.columnGap),
+      stagePaddingLeft: parseFloat(stageStyle.paddingLeft),
+      stagePaddingRight: parseFloat(stageStyle.paddingRight),
       mvWidth: mvRect.width,
       mvHeight: bg.getBoundingClientRect().height,
       guideWidth: guideRect.width,
@@ -137,11 +141,15 @@ try {
   assert(pc, 'PC TOP FV elements missing');
   assert(close(pc.stageLeft, pc.rootLeft, 1), `PC stage/root left ${pc.stageLeft}/${pc.rootLeft}`);
   assert(close(pc.stageWidth, pc.rootWidth, 1), `PC stage/root width ${pc.stageWidth}/${pc.rootWidth}`);
+  assert(close(pc.stageWidth, pc.viewportWidth, 1), `PC stage/client viewport ${pc.stageWidth}/${pc.viewportWidth}`);
   assert(pc.stageWidth >= 1360 && pc.stageWidth <= 1380, `PC rendered stage width ${pc.stageWidth}`);
   assert(close(pc.stageGap, 20, 1), `PC stage gap ${pc.stageGap}`);
-  assert(close(pc.mvWidth, 1030, 1), `PC MV width ${pc.mvWidth}`);
-  assert(close(pc.mvHeight, 600, 1), `PC MV height ${pc.mvHeight}`);
+  assert(close(pc.stagePaddingLeft, 60, 1), `PC stage left padding ${pc.stagePaddingLeft}`);
+  assert(close(pc.stagePaddingRight, 30, 1), `PC stage right padding ${pc.stagePaddingRight}`);
   assert(close(pc.guideWidth, 240, 1) && close(pc.guideHeight, 600, 1), `PC guide ${pc.guideWidth}x${pc.guideHeight}`);
+  const expectedFluidMvWidth = pc.stageWidth - pc.stagePaddingLeft - pc.stagePaddingRight - pc.stageGap - pc.guideWidth;
+  assert(close(pc.mvWidth, expectedFluidMvWidth, 1), `PC MV width ${pc.mvWidth} vs fluid allocation ${expectedFluidMvWidth}`);
+  assert(close(pc.mvHeight, 600, 1), `PC MV height ${pc.mvHeight}`);
   assert(pc.guideDisplay !== 'none', 'PC guide unexpectedly hidden');
   assert(close(pc.titleSize, 46, 0.5), `PC title size ${pc.titleSize}`);
   assert(isMinchoFamily(pc.titleFamily), `PC title must resolve to Zen Old Mincho, got ${pc.titleFamily}.`);
@@ -167,7 +175,7 @@ try {
   await desktopContext.close();
 
   console.log('PASS Budokan TOP FV canonical SP geometry and hidden desktop-only guide QA.');
-  console.log('PASS Budokan TOP FV current PC MV + purpose guide + notice geometry QA.');
+  console.log('PASS Budokan TOP FV current PC fixed insets/guide + fluid MV + notice geometry QA.');
 } finally {
   await browser.close();
 }
