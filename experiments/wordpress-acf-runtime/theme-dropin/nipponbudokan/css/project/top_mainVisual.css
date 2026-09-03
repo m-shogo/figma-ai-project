@@ -1,8 +1,8 @@
 @charset "utf-8";
 /* // ==========================================================================
 // メインビジュアル（TOP FV）
-// Current Figma fileKey fKYDn9ikpJk1nW7IWFtaUx
-// PC FV: 1603:7662 ／ SP MV: 1455:5811 + notice 446:11658
+// Current Figma fileKey FKQaJDu5TZXHoCzPsfP92E
+// PC TOP: 1603:7062; FV reference: 2182:8103-8240
 // ========================================================================== */
 .top_mainVisual {
     position: relative;
@@ -143,7 +143,7 @@
         flex-direction: column;
         gap: 16px;
         padding-bottom: 24px;
-        border-bottom: 1px solid #d7d4d4;
+        border-bottom: 1px solid #e2d3b8;
         &:last-child {
             padding-bottom: 0;
             border-bottom: none;
@@ -164,6 +164,9 @@
             width: 36px;
             height: 36px;
         }
+    }
+    .tm_guide_group:last-child .tm_guide_title {
+        letter-spacing: 0.1em;
     }
     .tm_guide_list {
         display: flex;
@@ -243,7 +246,7 @@
             flex-direction: row;
             align-items: stretch;
             gap: 20px;
-            padding-inline: 60px 20px;
+            padding-inline: 60px 30px;
         }
         .tm_mv {
             order: unset;
@@ -262,7 +265,7 @@
                     .tm_background {
                         height: 600px;
                         &::after {
-                            background-image: linear-gradient(35deg, rgba(16, 24, 39, 0.7) 20%, rgba(16, 24, 39, 0) 58%);
+                            background-image: linear-gradient(25.47deg, rgba(16, 24, 39, 0.6) 17.905%, rgba(16, 24, 39, 0) 46.76%);
                         }
                     }
                 }
@@ -271,8 +274,9 @@
                 right: auto;
                 bottom: auto;
                 top: 307px;
-                left: 5%;
-                width: 61%;
+                left: 60px;
+                width: auto;
+                max-width: calc(100% - 120px);
                 gap: 24px;
             }
             .tm_title {
@@ -317,7 +321,8 @@
                 gap: 16px;
                 min-height: 70px;
                 padding-inline: 32px;
-                border-radius: 0 3px 3px 0;
+                border: 1px solid var(--color-primary);
+                border-radius: 0 3px 3px 3px;
                 background-color: var(--color-secondary);
                 color: var(--color-primary);
             }
