@@ -4,10 +4,10 @@
 /* @import './global/component.css'; */
 
 @import './layout/global_header.css';
-@import './layout/global_footer.css'; /* footer PC+SP 2026-08-28b */
+@import './layout/global_footer.css?v=20260903-footer2';
 @import './layout/global_wrapper.css';
 @import './layout/global_inner.css';
-@import './layout/global_navigation.css';
+@import './layout/global_navigation.css?v=20260903-navtype';
 @import './layout/global_contents.css';
 
 @import './blocks/wp-block-buttonLink-style.css';

@@ -1,6 +1,6 @@
 # Header / Footer — Figma vs Theme（作業メモ）
 
-更新: 2026-08-31（新 Figma `fKYDn9ikpJk1nW7IWFtaUx` 再同期）
+更新: 2026-09-03（現行 Figma `FKQaJDu5TZXHoCzPsfP92E`。旧 file は見ない）
 
 ## Frontend 契約（人が触る）
 
@@ -8,15 +8,20 @@
 - 通常 layout は Flow / Flex / Grid。absolute は極力使わない（icon 線など意図的 micro UI のみ可）
 - 学びは実装後 `research/frontend-learning-evidence*.yaml` 等へ戻す
 
-## Figma（現行 `fKYDn9ikpJk1nW7IWFtaUx`）
+## Figma（現行 `FKQaJDu5TZXHoCzPsfP92E`）
+
+実装前にこの file から LIVE 再取得する。旧 file の計測を引き継がない。
 
 | | node | 要点 |
 | --- | --- | --- |
-| Header PC | `2209:9850` | 左340ダークロゴレール + 白ナビ。h100。GNavi Zen Old Mincho 16px/500 tracking 0.8px、current 600+下線。EN/search/menu 60px角 gap10 radius3。右padding 30 |
-| Header SP 閉じ | `446:10020` | ダーク帯 h60 / logo 140×28 + EN・search・menu 各60px 隙間なし / ハンバーガー |
-| Header SP 開き | `2169:10018` | 同じ3ボタン。menu は赤地に白 × |
-| Footer PC | `2106:9471` | 白・リンク2列・SNS 40px・金 Page Top 170×60・地図なし |
-| Footer SP | `2189:10106` | 白・SNS 48px・金 Page Top 50px・地図なし。旧ダーク地図フッターは使わない |
+| Header シンボル | `1086:3582` | component `2169:10597` 内 |
+| Header in megamenu | `2209:9850` | megamenu `2206:9672` 先頭。閉じヘッダー単体の master としては使わない |
+| Header SP 閉じ | `446:10020` | SP ページの TOP frame |
+| Header SP 開き | `2169:10018` | menu `2169:10017` 内 |
+| Footer PC | `2106:9471` | footer_subpage |
+| Footer SP | `2189:10106` | footer-sp |
+
+PC には `menu` / `megamenu` / `search` overlay が current top-level として存在する。見た目差分は LIVE context で取る。
 
 色: main `#bf3e2b` / sec `#ca9957` / text `#333` / search `#4e5055` / logo rail `#2c3036`
 

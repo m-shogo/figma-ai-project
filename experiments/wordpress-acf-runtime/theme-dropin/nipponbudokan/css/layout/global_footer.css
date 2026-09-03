@@ -291,23 +291,20 @@
             }
         }
         .gf_links-wrap {
-            display: flex;
-            flex-direction: row;
-            align-items: flex-start;
-            gap: 120px;
+            display: block;
             flex-shrink: 0;
         }
         .gf_menu {
-            width: 150px;
+            width: auto;
         }
-        .gf_subMenu {
-            flex-shrink: 0;
-            min-width: 180px;
+        .gf_container-01 {
+            width: auto;
         }
         .gf_links-01 {
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
+            display: grid;
+            grid-template-columns: 150px 180px;
+            column-gap: 120px;
+            row-gap: 24px;
             list-style: none;
             margin: 0;
             padding: 0;
@@ -354,36 +351,6 @@
             .gfl_wrapper-06,
             .gfl_list-02 {
                 display: none;
-            }
-        }
-        .gf_links-02 {
-            &.menu {
-                display: flex;
-                flex-direction: column;
-                gap: 24px;
-                list-style: none;
-                margin: 0;
-                padding: 0;
-            }
-            .menu-item {
-                a {
-                    display: flex;
-                    align-items: center;
-                    gap: 12px;
-                    padding: 0;
-                    font-size: 14px;
-                    letter-spacing: 0.05em;
-                    line-height: 1;
-                    &::before {
-                        content: '';
-                        display: block;
-                        flex-shrink: 0;
-                        width: 5px;
-                        height: 5px;
-                        border-radius: 50%;
-                        background-color: var(--color-accent);
-                    }
-                }
             }
         }
         .gf_bottom {
@@ -485,12 +452,11 @@
         }
         .gf_links-wrap {
             grid-area: links;
-            gap: 63px;
             justify-self: start;
         }
-        .gf_links-01,
-        .gf_links-02.menu {
-            gap: 20px;
+        .gf_links-01 {
+            column-gap: 63px;
+            row-gap: 20px;
         }
         .gf_sns {
             grid-area: sns;

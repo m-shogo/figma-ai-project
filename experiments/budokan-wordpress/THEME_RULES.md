@@ -13,7 +13,7 @@ Human Authority: `CURRENT_AUTHORITY.md`（768/1280・パーツ集・form 担当�
 - `style.css` Theme header / PHP templates / `header.php` `footer.php`
 - `theme.json` なし
 - ブロック向け CSS: `css/blocks/`
-- ACF Blocks: `acf/blocks/` + Local JSON `acf/json/`
+- ACF Blocks: Theme `acf/blocks/`（フィールド名は CURRENT_AUTHORITY。`acf/` を再読しない）
 
 ---
 
@@ -29,7 +29,7 @@ Human Authority: `CURRENT_AUTHORITY.md`（768/1280・パーツ集・form 担当�
 | CSS | `css/layout/global_header.css` / `global_footer.css` / `global_navigation.css` |
 | Menu walkers | `inc/menu.php` |
 
-Nav locations: `global-nav` / `sub-nav` / `footer-nav`
+Nav locations: `global-nav`（赤ハンバーガー） / `mega-nav`（PCメガ） / `sub-nav`（サブハンバーガー） / `footer-nav`（フッター1本）
 
 **実装ルール:** Header/Footer は上記 parts を編集する。新規 shell を増やさない。クラスは既存 `gh_` / `gn_` / `gf_` に合わせる。
 
@@ -78,9 +78,9 @@ QA は 〜767 と ≥1280 を主にする。
 
 ## 6. ACF
 
-- Local JSON: `acf/json/`（save/load とも）
-- Export 参照: `acf-export.json`
-- Options / TOP fields / custom blocks あり
+- フィールド契約の正本: `CURRENT_AUTHORITY.md` の ACF 節
+- WordPress Local JSON / block PHP は Theme 実行に必要だが、Agent は `acf/` を再読してフィールドを増やさない。`acf-export.json` は退役
+- Options / TOP fields / custom blocks あり。グローバルナビは WP メニュー（ACF メニューグループは現行に無い）
 - **front-page は管理画面で editor 非表示**（`inc/custom.php`）→ TOP は ACF フィールド中心
 - **secondary `WP_Query` → shared renderer はpostsを明示渡しする。** `$wp_query` の差し替えだけでglobal `$posts` / `$post` ownershipが移ると仮定しない。News listとEvent cardの2系統で同じleakが確認されたためBudokan Theme standardへ昇格済み。
 
@@ -105,7 +105,8 @@ QA は 〜767 と ≥1280 を主にする。
 
 - TOP: `front-page.php`（ACF slider / notice / news / event list）
 - 固定ページ: `page.php` + `templates/template-*.php`
-- 共通帯: `template-parts/_visual.php` 等
+- 共通帯: `template-parts/_visual.php`
+- 種類「ナビゲーション」: ナビゲーションテンプレート + `page_img`（画像タイトル）。デフォルトページは `page_img` なし（黄土色）。正本は `CURRENT_AUTHORITY.md` / `DIRECTORY_MAP.md`
 
 ---
 

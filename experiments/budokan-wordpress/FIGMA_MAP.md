@@ -1,41 +1,33 @@
 # Figma node map（nipponbudokan）
 
-File: `fKYDn9ikpJk1nW7IWFtaUx`  
+File: `FKQaJDu5TZXHoCzPsfP92E`  
 Pages: PC `0:1` / SP `114:5409`
 
-Human-selected current authority. Last live re-scan: **2026-09-01**.
+Human-selected current authority. Last live re-scan: **2026-09-03**.
 
 実装時は保存済みnode-idを信用して始めない。必ず `CURRENT_AUTHORITY.md` のfile keyを確認 → current pageのtop-level frameを再走査 → 対象full-page frameを `get_design_context` で再取得する。
 
-旧 file `w7SGVY63FuW6JpaQVKjxm2` / `RfAQQ28V1HGaeIcpgRmQq1` のnode値は historical evidence であり、current implementation authorityへ引き継がない。
+旧 file `fKYDn9ikpJk1nW7IWFtaUx` / `w7SGVY63FuW6JpaQVKjxm2` / `RfAQQ28V1HGaeIcpgRmQq1` のnode値・計測は historical evidence であり、current implementation authorityへ引き継がない。
 
 ## 優先ノード
 
 | 用途 | 面 | node-id | name / status |
 | --- | --- | --- | --- |
-| TOP（現行候補） | PC | `1603:7062` | topdesign04 |
-| Header コンポーネント | PC | `2209:9850` | header（1380×100、左340ダークロゴレール） |
+| TOP | PC | `1603:7062` | topdesign04 |
+| Header シンボル | PC | `1086:3582` | header（component `2169:10597` 内） |
+| Header in megamenu | PC | `2209:9850` | header（megamenu `2206:9672` 内。閉じヘッダー単体ではない） |
 | Header instance 例 | PC | `2182:8241` | header |
-| Header SP 閉じ | SP | `446:10020` | SP TOP |
-| Header SP 開き | SP | `2169:10018` | header-sp（menu `2169:10017` 内） |
+| Header SP 閉じ | SP | `446:10020` | SP |
+| Header SP 開き | SP | `2297:14268` | menu（旧 `2169:10017` は退役） |
+| PC menu overlay | PC | `2096:6235` | menu |
+| PC megamenu | PC | `2206:9672` / `2225:10512` / `2225:10730` / `2228:10923` | megamenu |
+| PC search overlay | PC | `2295:8023` | search |
 | Footer コンポーネント | PC | `2106:9471` | footer_subpage（下層・地図なし） |
 | Footer コンポーネント | SP | `2189:10106` | footer-sp（下層・地図なし） |
-| Footer TOP | PC | `1901:13409` | footer（地図あり） |
-| Footer TOP | SP | `1360:9369` | footer-sp-top（地図あり） |
-| Page Title | PC | `2169:10270` | page_title-pc（金帯 220 / Mincho 32 Bold 白） |
-| Page Title | SP | `1399:18544` | page_title-sp（金帯 180 / Mincho 24 Bold 白） |
+| Page Title | PC | `2169:10270` | page_title-pc |
+| Page Title | SP | `1399:18544` | page_title-sp |
 | Page Title 画像付き | PC | `1450:5147` | page_title-img-pc |
 | Page Title 画像付き | SP | `1465:6339` | page_title-img-sp |
-| Breadcrumb | PC | `1235:6479` | bread |
-| Breadcrumb | SP | `1451:5316` | bread |
-| Heading h2 | PC | `1157:8179` | h2（26 / octagon 10） |
-| Heading h2 | SP | `2190:10305` | h2_sp（24 / octagon 10） |
-| Heading h3 | PC | `1157:8184` | h3（20 / #f2f2f2帯） |
-| Heading h3 | SP | `1451:5679` | h3_sp |
-| Heading h4 | PC | `1157:8189` | h4（18 / 赤バー4） |
-| Heading h4 | SP | `1468:7466` | h4_sp |
-| Paragraph | PC | `1157:8182` | p（Zen Kaku 17 / lh 1.6） |
-| Paragraph | SP | `1399:18729` | p |
 | パーツ集 | PC | `1163:4245` | parts |
 | パーツ集 | SP | `1399:19144` | SP_parts |
 | お知らせ archive | PC | `413:2191` | news |
@@ -44,9 +36,9 @@ Human-selected current authority. Last live re-scan: **2026-09-01**.
 | お知らせ detail | SP | `1451:5197` | SP_post |
 | Event archive | PC | `1619:9554` | event |
 | Event detail | PC | `1632:10382` | event_detail |
-| 大会・行事に参加したい | PC | `2197:5391` | navigation（本文あり・2026-09-03 LIVE再確認） |
-| 大会・行事に参加したい | SP | `1468:7508` | SP_navigation（shellのみ、本文authority未作成） |
-| 研修センター | PC | `1137:5348` | navigation |
+| 大会・行事に参加したい | PC | `1148:6390` | navigation（3709h。SP canvas 上の `2197:5391` は PC 幅のため SP authority にしない） |
+| 大会・行事に参加したい | SP | `1468:7508` | SP_navigation |
+| 研修センター | PC | `1137:5348` | navigation_training-center |
 | 研修センター | SP | `1468:6595` | SP_navigation |
 | 現代武道9種目紹介 | PC | `1145:6042` | navigation |
 | 現代武道9種目紹介 | SP | `1455:5489` | SP_navigation |
@@ -55,7 +47,7 @@ Human-selected current authority. Last live re-scan: **2026-09-01**.
 
 ## 残ページ current PC authority
 
-2026-09-01 のlive re-scanで、以下は current PC page `0:1` に存在する。
+2026-09-03 のlive re-scanで、以下は current PC page `0:1` に存在する。
 
 | Page family | node-id | current status |
 | --- | --- | --- |
@@ -71,7 +63,7 @@ Human-selected current authority. Last live re-scan: **2026-09-01**.
 
 ### 残ページのSP状態
 
-Current SP page `114:5409` を2026-09-01にlive re-scanした結果、上記7面に対応すると証明できる専用SP full-page frameは **存在を確認できなかった**。
+Current SP page `114:5409` を2026-09-03にlive re-scanした結果、上記7面に対応すると証明できる専用SP full-page frameは **存在を確認できなかった**。
 
 したがって残ページでは：
 
@@ -82,14 +74,15 @@ Current SP page `114:5409` を2026-09-01にlive re-scanした結果、上記7面
 - Themeの既存responsive masterが効く場合も、それは「shared Theme behavior」であり「current page-specific SP Figma parity」とは呼ばない
 - Humanがcurrent SP counterpartまたは「shared SP mastersをownerとする」と明示した時点でSP closureを再開する
 
-## Current top-level re-resolution evidence（2026-09-01）
+## Current top-level re-resolution evidence（2026-09-03）
 
-`CURRENT_AUTHORITY.md` の現行file `fKYDn9ikpJk1nW7IWFtaUx` をlive取得した結果。
+`CURRENT_AUTHORITY.md` の現行file `FKQaJDu5TZXHoCzPsfP92E` をlive取得した結果。旧 file の保存済みnodeは使わない。
 
 ### PC page `0:1`
 
 Current top-level frames include:
 
+- `1603:7062` `topdesign04`
 - `413:2191` `news`
 - `1619:9554` `event`
 - `1632:10382` `event_detail`
@@ -98,21 +91,25 @@ Current top-level frames include:
 - `1656:5309` `hardcover`
 - `1686:5574` `hardcover_detail`
 - `1235:6361` `post`
-- `1137:5348` / `1145:6042` / `1148:6390` `navigation`
+- `1137:5348` `navigation_training-center`
+- `1145:6042` / `1148:6390` `navigation`
 - `1156:7728` `form`
 - `1163:4245` `parts`
 - `1203:4865` / `1206:5446` `page`
 - `2108:10725` `page_youth-budo-tournament-02`
 - `2108:10871` `page_kagami-biraki-02`
 - `2108:10952` `page_kobudo-demonstration-02`
-- `1603:7062` `topdesign04`
+- `2096:6235` `menu`
+- `2169:10597` `component`
+- `2206:9672` / `2225:10512` / `2225:10730` / `2228:10923` `megamenu`
+- `2295:8023` `search`
 
 ### SP page `114:5409`
 
 Current top-level frames observed in the same live re-scan include:
 
 - `446:10020` `SP`
-- `2169:10017` `menu`
+- `2297:14268` `menu`
 - `1399:14225` `SP_archive`
 - `1451:5197` `SP_post`
 - `1451:5737` `SP_form`
@@ -123,7 +120,7 @@ Current top-level frames observed in the same live re-scan include:
 - `2197:5391` `navigation`（1380-wide frame on this canvas; SP authorityと即断しない）
 - `2197:5731` `topdesign04`（1380-wide frame on this canvas; SP authorityと即断しない）
 
-旧監査に記録されていた `560:188` / `560:377` / `560:537` / `560:677` / `560:2524` はcurrent SP top-level listに存在しない。少なくとも `560:677` はcurrent fileで `get_design_context` を直接取得して **node not found** を確認済み。
+旧 `560:*` lineage は current SP top-level に無い。復活させない。
 
 These lists are discovery evidence, not automatic implementation authority. Page identityは page title / body / breadcrumb / global shell を突き合わせ、full-page `get_design_context` で確定する。
 

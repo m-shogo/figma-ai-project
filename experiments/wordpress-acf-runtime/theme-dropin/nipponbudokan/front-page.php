@@ -83,21 +83,34 @@ $has_slider = function_exists('have_rows') && have_rows('top_slider-01');
         </aside>
     </div>
 
-    <section id="top_notice-01" class="top_notice-01">
-        <div class="tn_inner">
-            <p class="tn_icon" aria-hidden="true"><img src="<?php echo esc_url($theme_uri . '/images/top/ico-attention.svg'); ?>" alt="" width="24" height="24" loading="lazy"></p>
-            <div class="tn_body">
-                    <?php if (function_exists('have_rows') && have_rows('top_notice-01')): ?>
+    <?php
+    $notice_items = array();
+    $show_notice = true;
+    if (function_exists('get_field') && function_exists('have_rows')) {
+        $show_notice = (bool) get_field('top_notice_select');
+        if ($show_notice && have_rows('top_notice-01')) {
+            while (have_rows('top_notice-01')) {
+                the_row();
+                $textarea = get_sub_field('textarea');
+                $none = get_sub_field('none');
+                if (!$none && $textarea) {
+                    $notice_items[] = $textarea;
+                }
+            }
+        }
+        $show_notice = $show_notice && $notice_items !== array();
+    }
+    ?>
+    <?php if ($show_notice): ?>
+        <section id="top_notice-01" class="top_notice-01">
+            <div class="tn_inner">
+                <p class="tn_icon" aria-hidden="true"><img src="<?php echo esc_url($theme_uri . '/images/top/ico-attention.svg'); ?>" alt="" width="24" height="24" loading="lazy"></p>
+                <div class="tn_body">
+                    <?php if ($notice_items): ?>
                         <ul class="tn_list">
-                            <?php while (have_rows('top_notice-01')): the_row(); ?>
-                                <?php
-                                $textarea = get_sub_field('textarea');
-                                $none = get_sub_field('none');
-                                ?>
-                                <?php if (!$none && $textarea): ?>
-                                    <li class="tn_item"><?php echo $textarea; ?></li>
-                                <?php endif; ?>
-                            <?php endwhile; ?>
+                            <?php foreach ($notice_items as $textarea): ?>
+                                <li class="tn_item"><?php echo $textarea; ?></li>
+                            <?php endforeach; ?>
                         </ul>
                     <?php else: ?>
                         <p class="tn_text"><a href="#">コンサートでご来場される皆様へ、日本武道館からのお願い</a></p>
@@ -105,6 +118,7 @@ $has_slider = function_exists('have_rows') && have_rows('top_slider-01');
                 </div>
             </div>
         </section>
+    <?php endif; ?>
 </div>
 <main id="global_contents" class="global_contents" itemscope itemprop="mainContentOfPage">
     <?php get_template_part('template-parts/_top-events'); ?>

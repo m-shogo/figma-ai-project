@@ -3,6 +3,7 @@ add_action('after_setup_theme', function () {
     register_nav_menus(array(
         // 例 'メニューの位置を示す固有名称' => 'このメニューの位置の名称'
         'global-nav' => 'グローバルメニュー',
+        'mega-nav' => 'メガメニュー',
         'sub-nav' => 'サブメニュー',
         'footer-nav' => 'フッターメニュー',
         'sidebar-nav' => 'サイドバーメニュー',
@@ -11,7 +12,20 @@ add_action('after_setup_theme', function () {
 });
 
 /**
- * global-nav 未設定時の sample（Figma Header PC 4項目）
+ * global-nav 未設定時の sample（赤ハンバーガー。中身は WP メニューが正）
+ */
+function nipponbudokan_hamburger_nav_fallback()
+{
+    echo '<div class="gn_container-01" id="gn_container-01"><ul id="gn_links-01" class="menu gn_links-01">';
+    echo '<li class="gnl_item-02 _noChild"><div class="gnl_title-02"><a class="gnl_link-02 module_textLink" href="#"><span>日本武道館について</span></a></div></li>';
+    echo '<li class="gnl_item-02 _hasChild"><div class="gnl_title-02"><a class="gnl_link-02 module_textLink" href="#"><span>事業案内</span></a></div></li>';
+    echo '<li class="gnl_item-02 _hasChild"><div class="gnl_title-02"><a class="gnl_link-02 module_textLink" href="#"><span>刊行物について</span></a></div></li>';
+    echo '<li class="gnl_item-02 _hasChild"><div class="gnl_title-02"><a class="gnl_link-02 module_textLink" href="#"><span>研修センターについて</span></a></div></li>';
+    echo '</ul></div>';
+}
+
+/**
+ * mega-nav 未設定時の sample（Figma Header PC 4項目）
  */
 function nipponbudokan_global_nav_fallback()
 {
@@ -23,45 +37,31 @@ function nipponbudokan_global_nav_fallback()
     );
     echo '<div class="gn_container-01" id="gn_container-01"><ul id="gn_links-01" class="menu gn_links-01">';
     foreach ($items as $label) {
-        echo '<li class="gnl_item-02 _hasChild"><div class="gnl_title-02"><a class="gnl_link-02 module_textLink" href="#"><span>' . esc_html($label) . '</span></a></div></li>';
+        echo '<li class="gnl_item-02 _hasChild"><div class="gnl_title-02"><span class="gnl_link-02"><span>' . esc_html($label) . '</span></span></div></li>';
     }
     echo '</ul></div>';
 }
 
 /**
- * footer-nav 未設定時の sample（Figma footer_subpage 左列）
+ * footer-nav 未設定時の sample（Figma footer_subpage 2列）
  */
 function nipponbudokan_footer_nav_fallback()
 {
     $items = array(
         '日本武道館について',
+        'よくあるご質問',
         '武道振興・普及事業',
+        'お問い合わせ',
         '書道普及・奨励事業',
+        'パンフレットのご案内',
         '武道刊行物事業',
+        '個人情報保護方針',
         '研修センター',
+        '業務・財務に関する資料',
     );
     echo '<div class="gf_container-01" id="gf_container-01"><ul id="gf_links-01" class="menu gf_links-01">';
     foreach ($items as $label) {
         echo '<li class="gfl_item-02 _noChild"><div class="gfl_title-02"><a class="gfl_link-02" href="#"><span>' . esc_html($label) . '</span></a></div></li>';
-    }
-    echo '</ul></div>';
-}
-
-/**
- * sub-nav 未設定時の sample（Figma footer_subpage 右列）
- */
-function nipponbudokan_footer_sub_nav_fallback()
-{
-    $items = array(
-        'よくあるご質問',
-        'お問い合わせ',
-        'パンフレットのご案内',
-        '個人情報保護方針',
-        '業務・財務に関する資料',
-    );
-    echo '<div class="gf_container-02" id="gf_container-02"><ul id="gf_links-02" class="menu gf_links-02">';
-    foreach ($items as $label) {
-        echo '<li class="menu-item"><a href="#"><span>' . esc_html($label) . '</span></a></li>';
     }
     echo '</ul></div>';
 }
@@ -166,7 +166,8 @@ class Custom_Global_Walker_Nav_Menu extends Walker_Nav_Menu
         // 深度に応じたクラス名（2階層:gn_title-01, 3階層:gn_title-02, 4階層:gn_title-03）
         $li_class = 'gnl_item-' . $depth_number;
         $title_class = 'gnl_title-' . $depth_number;
-        $link_class = 'gnl_link-' . $depth_number . ' module_textLink';
+        $is_mega_top = isset($args->theme_location) && $args->theme_location === 'mega-nav' && (int) $depth === 0;
+        $link_class = 'gnl_link-' . $depth_number . ($is_mega_top ? '' : ' module_textLink');
         $button_class = 'gnl_button-' . $depth_number;
         $wrapper_class = 'gnl_wrapper-' . $depth_number;
         $inner_class = 'gnl_inner-' . $depth_number;
@@ -176,14 +177,24 @@ class Custom_Global_Walker_Nav_Menu extends Walker_Nav_Menu
             $li_classes = trim(implode(' ', $item->classes)) . ' ' . $li_class . ' _hasChild';
             $output .= '<li class="' . esc_attr($li_classes) . '">';
             $output .=   '<div class="' . esc_attr($title_class) . '">';
-            $output .=     '<a class="' . esc_attr($link_class) . '" href="' . esc_url($item_url) . '"' . $target_attribute . '>';
-            $output .=       '<span>' . esc_html($title) . '</span>';
-            // $output .=       '<span>' . esc_html($slug) . '</span>'; // スラッグを表示する場合はコメントアウトを解除
-            $output .=     '</a>';
+            if ($is_mega_top) {
+                $output .=     '<span class="' . esc_attr($link_class) . '">';
+                $output .=       '<span>' . esc_html($title) . '</span>';
+                $output .=     '</span>';
+            } else {
+                $output .=     '<a class="' . esc_attr($link_class) . '" href="' . esc_url($item_url) . '"' . $target_attribute . '>';
+                $output .=       '<span>' . esc_html($title) . '</span>';
+                $output .=     '</a>';
+            }
             $output .=     '<button class="' . esc_attr($button_class) . '" type="button"><span>開閉</span></button>';
             $output .=   '</div>';
             $output .=     '<div class="' . esc_attr($wrapper_class) . '">';
             $output .=       '<div class="' . esc_attr($inner_class) . '">';
+            if ((int) $depth === 0) {
+                $output .=         '<a class="gnl_panelTitle" href="' . esc_url($item_url) . '"' . $target_attribute . '>';
+                $output .=           '<span>' . esc_html($title) . '</span>';
+                $output .=         '</a>';
+            }
         } else {
             $li_classes = trim(implode(' ', $item->classes)) . ' ' . $li_class . ' _noChild';
             $output .=  '<li class="' . esc_attr($li_classes) . '">';
