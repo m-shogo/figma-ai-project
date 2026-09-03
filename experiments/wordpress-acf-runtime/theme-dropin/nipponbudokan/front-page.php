@@ -1,7 +1,8 @@
 <?php get_header(); ?>
 <?php
 $theme_uri = get_template_directory_uri();
-$has_slider = function_exists('have_rows') && have_rows('top_slider-01');
+$has_acf_pro_repeater = class_exists('acf_field_repeater');
+$has_slider = $has_acf_pro_repeater && function_exists('have_rows') && have_rows('top_slider-01');
 ?>
 <div class="top_mainVisual">
     <div class="tm_stage">
@@ -86,7 +87,7 @@ $has_slider = function_exists('have_rows') && have_rows('top_slider-01');
     <?php
     $notice_items = array();
     $show_notice = true;
-    if (function_exists('get_field') && function_exists('have_rows')) {
+    if ($has_acf_pro_repeater && function_exists('get_field') && function_exists('have_rows')) {
         $show_notice = (bool) get_field('top_notice_select');
         if ($show_notice && have_rows('top_notice-01')) {
             while (have_rows('top_notice-01')) {
