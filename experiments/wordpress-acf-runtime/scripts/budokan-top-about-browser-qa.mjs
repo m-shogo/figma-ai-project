@@ -186,7 +186,8 @@ try {
   assert(isKakuFamily(spBanner.family), `SP banner must resolve to Zen Kaku Gothic New, got ${spBanner.family}.`);
   await mobileContext.close();
 
-  const desktopContext = await browser.newContext({ viewport: { width: 1380, height: 1500 } });
+  // The Theme reserves a 15px desktop scrollbar gutter. Request 1395px so the CSS layout viewport matches the 1380px Figma canvas.
+  const desktopContext = await browser.newContext({ viewport: { width: 1395, height: 1500 } });
   const desktopPage = await desktopContext.newPage();
   await desktopPage.goto(url, { waitUntil: 'networkidle' });
   const pc = await desktopPage.evaluate(() => {
@@ -196,58 +197,86 @@ try {
     const panel = section?.querySelector('.ta_panel');
     const lead = section?.querySelector('.ta_lead');
     const actions = section?.querySelector('.ta_actions');
+    const buttons = section ? [...section.querySelectorAll('.ta_btn')] : [];
+    const stageInner = section?.querySelector('.ta_stage .global_inner');
+    const top = section?.querySelector('.ta_top');
     const cardsWrapInner = section?.querySelector('.ta_cards_wrap .global_inner');
     const cards = section ? [...section.querySelectorAll('.ta_card')] : [];
     const firstImage = cards[0]?.querySelector('.ta_card_image img');
     const firstLabel = cards[0]?.querySelector('.ta_card_label');
-    if (!section || !heading || !headingEn || !panel || !lead || !actions || !cardsWrapInner || cards.length !== 4 || !firstImage || !firstLabel) return null;
+    if (!section || !heading || !headingEn || !panel || !lead || !actions || buttons.length !== 2 || !stageInner || !top || !cardsWrapInner || cards.length !== 4 || !firstImage || !firstLabel) return null;
+    const sectionRect = section.getBoundingClientRect();
+    const topRect = top.getBoundingClientRect();
     const headingRect = heading.getBoundingClientRect();
+    const leadRect = lead.getBoundingClientRect();
     const actionsRect = actions.getBoundingClientRect();
     const cardRects = cards.map(card => card.getBoundingClientRect());
     const imageRect = firstImage.getBoundingClientRect();
     return {
+      sectionWidth: sectionRect.width,
+      sectionHeight: sectionRect.height,
+      contentLeft: topRect.left - sectionRect.left,
+      contentWidth: topRect.width,
       writingMode: getComputedStyle(heading).writingMode,
       headingSize: parseFloat(getComputedStyle(heading).fontSize),
       headingFamily: getComputedStyle(heading).fontFamily,
+      headingLineHeight: parseFloat(getComputedStyle(heading).lineHeight),
       headingEnSize: parseFloat(getComputedStyle(headingEn).fontSize),
       headingEnFamily: getComputedStyle(headingEn).fontFamily,
       headingEnClip: getComputedStyle(headingEn).clipPath,
       leadSize: parseFloat(getComputedStyle(lead).fontSize),
       leadFamily: getComputedStyle(lead).fontFamily,
+      leadLeft: leadRect.left - sectionRect.left,
+      leadTop: leadRect.top - sectionRect.top,
+      leadWidth: leadRect.width,
       labelSize: parseFloat(getComputedStyle(firstLabel).fontSize),
       labelFamily: getComputedStyle(firstLabel).fontFamily,
       labelWeight: getComputedStyle(firstLabel).fontWeight,
       panelDisplay: getComputedStyle(panel).display,
       actionsWidth: actionsRect.width,
-      headingRight: headingRect.right,
+      actionsTop: actionsRect.top - sectionRect.top,
+      buttonHeights: buttons.map(button => button.getBoundingClientRect().height),
       innerPaddingLeft: parseFloat(getComputedStyle(cardsWrapInner).paddingLeft),
       cardsDisplay: getComputedStyle(section.querySelector('.ta_cards')).display,
       cardTopSpread: Math.max(...cardRects.map(rect => rect.top)) - Math.min(...cardRects.map(rect => rect.top)),
-      cardLefts: cardRects.map(rect => rect.left),
-      firstCardLeft: cardRects[0].left,
-      imageRatio: imageRect.width / imageRect.height,
+      cardLefts: cardRects.map(rect => rect.left - sectionRect.left),
+      cardWidths: cardRects.map(rect => rect.width),
+      firstCardTop: cardRects[0].top - sectionRect.top,
+      firstImageWidth: imageRect.width,
+      firstImageHeight: imageRect.height,
     };
   });
   assert(pc, 'PC TOP About elements missing');
+  assert(close(pc.sectionWidth, 1380), `PC section width ${pc.sectionWidth}`);
+  assert(close(pc.sectionHeight, 1063), `PC section height ${pc.sectionHeight}`);
+  assert(close(pc.contentLeft, 110), `PC content left ${pc.contentLeft}`);
+  assert(close(pc.contentWidth, 1160), `PC content width ${pc.contentWidth}`);
   assert(pc.writingMode.includes('vertical'), `PC writing mode ${pc.writingMode}`);
   assert(close(pc.headingSize, 36, 0.5), `PC heading ${pc.headingSize}`);
   assert(isMinchoFamily(pc.headingFamily), `PC heading JA must resolve to Zen Old Mincho, got ${pc.headingFamily}.`);
+  assert(close(pc.headingLineHeight, 39.6, 1), `PC heading line-height ${pc.headingLineHeight}`);
   assert(close(pc.headingEnSize, 30, 0.5), `PC heading EN ${pc.headingEnSize}`);
   assert(isMinchoFamily(pc.headingEnFamily), `PC heading EN must resolve to Zen Old Mincho, got ${pc.headingEnFamily}.`);
   assert(pc.headingEnClip === 'none' || pc.headingEnClip === '', `PC heading EN must not be clipped into the octagon, got ${pc.headingEnClip}.`);
   assert(close(pc.leadSize, 16, 0.5), `PC lead ${pc.leadSize}`);
   assert(isKakuFamily(pc.leadFamily), `PC lead must resolve to Zen Kaku Gothic New, got ${pc.leadFamily}.`);
+  assert(close(pc.leadLeft, 430), `PC lead left ${pc.leadLeft}`);
+  assert(close(pc.leadTop, 100), `PC lead top ${pc.leadTop}`);
+  assert(close(pc.leadWidth, 840), `PC lead width ${pc.leadWidth}`);
   assert(close(pc.labelSize, 18, 0.5), `PC card label ${pc.labelSize}`);
   assert(isMinchoFamily(pc.labelFamily), `PC card label must resolve to Zen Old Mincho, got ${pc.labelFamily}.`);
   assert(pc.labelWeight === '600' || pc.labelWeight === 'bold', `PC card label weight ${pc.labelWeight}`);
   assert(pc.panelDisplay === 'contents', `PC panel display ${pc.panelDisplay}`);
-  assert(close(pc.actionsWidth, 220), `PC actions width ${pc.actionsWidth}`);
-  assert(close(pc.innerPaddingLeft, 280), `PC card rail inset ${pc.innerPaddingLeft}`);
+  assert(close(pc.actionsWidth, 240), `PC actions width ${pc.actionsWidth}`);
+  assert(close(pc.actionsTop, 521), `PC actions top ${pc.actionsTop}`);
+  assert(pc.buttonHeights.every(height => close(height, 50)), `PC CTA heights ${pc.buttonHeights.join(',')}`);
+  assert(close(pc.innerPaddingLeft, 380), `PC card rail inset ${pc.innerPaddingLeft}`);
   assert(pc.cardsDisplay === 'grid', `PC cards display ${pc.cardsDisplay}`);
   assert(pc.cardTopSpread <= 2, `PC row spread ${pc.cardTopSpread}`);
-  assert(new Set(pc.cardLefts.map(left => Math.round(left))).size === 4, `PC columns ${pc.cardLefts.join(',')}`);
-  assert(pc.firstCardLeft > pc.headingRight + 40, `PC rail relation card=${pc.firstCardLeft} heading=${pc.headingRight}`);
-  assert(close(pc.imageRatio, 0.75, 0.02), `PC image ratio ${pc.imageRatio}`);
+  assert(pc.cardWidths.every(width => close(width, 195)), `PC card widths ${pc.cardWidths.join(',')}`);
+  assert(pc.cardLefts.every((left, index) => close(left, 430 + (215 * index))), `PC card lefts ${pc.cardLefts.join(',')}`);
+  assert(close(pc.firstCardTop, 235), `PC first card top ${pc.firstCardTop}`);
+  assert(close(pc.firstImageWidth, 195) && close(pc.firstImageHeight, 360), `PC image ${pc.firstImageWidth}x${pc.firstImageHeight}`);
   const pcNews = await measureTopNews(desktopPage);
   assert(pcNews, 'PC TOP News elements missing');
   assert(close(pcNews.headingSize, 28, 0.5), `PC news heading ${pcNews.headingSize}`);
@@ -283,7 +312,7 @@ try {
   assert(isKakuFamily(pcBanner.family), `PC banner must resolve to Zen Kaku Gothic New, got ${pcBanner.family}.`);
   await desktopContext.close();
   console.log('PASS Budokan TOP About SP responsive geometry and type family QA.');
-  console.log('PASS Budokan TOP About PC right-rail four-card geometry and type family QA.');
+  console.log('PASS Budokan TOP About PC current-Figma section, rail, CTA, and type geometry QA.');
   console.log('PASS Budokan TOP News SP/PC type family QA hosted on the About front-page runtime.');
   console.log('PASS Budokan TOP Partner SP/PC type family QA hosted on the About front-page runtime.');
   console.log('PASS Budokan TOP Instagram SP/PC type family QA hosted on the About front-page runtime.');

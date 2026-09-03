@@ -1,0 +1,68 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: OBS-BUDOKAN-TOP-ABOUT-CURRENT-FIGMA-GEOMETRY
+    summary: >-
+      When a desktop composition interleaves a vertical title/CTA rail with a lead and four-card rail, validate the authored
+      section geometry as one composition rather than preserving older proportional-card or narrow-column assumptions.
+    category: VISUAL_FIDELITY
+    applicability:
+      scope: PROJECT
+      conditions:
+        - Current Figma exposes concrete section, inner, column, CTA, card, and image geometry.
+        - The correction is isolated to the Budokan TOP About project stylesheet and its dedicated runtime QA.
+        - Existing WordPress/PHP content ownership is preserved and no new ACF/CPT model is introduced.
+      exclusions:
+        - Do not infer missing production images, links, or ACF ownership from visual geometry alone.
+        - Do not apply the desktop geometry to SP without a dedicated current mobile authority.
+        - Do not generalize this composition to shared Gutenberg blocks or other projects.
+    promotion_state: PROJECT_ONLY
+    promotion:
+      candidate: false
+      rationale: >-
+        LIVE current Figma file FKQaJDu5TZXHoCzPsfP92E node 1603:7273 proves this Budokan-specific desktop composition,
+        but there is no independent cross-project evidence for promotion.
+      blocked_by:
+        - NEEDS_INDEPENDENT_REFERENCE_EVIDENCE_BEFORE_CROSS_PROJECT_PROMOTION
+      contradiction_review: >-
+        Existing SP behavior remains intentionally unchanged because the current authority used for this repair is the PC node;
+        the SP runtime is retained as a regression guard rather than claimed as current-Figma parity.
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-TOP-ABOUT-CURRENT-FIGMA-20260904
+          kind: LOCAL_RESEARCH
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/project/top_about.css
+          commit: ''
+          note: >-
+            LIVE node 1603:7273 is 1380x1063. Its content inner is x=110, width=1160; the left rail is 240px,
+            the right rail begins at x=430 and is 840px wide, with an 80px inter-column gap. The right lead starts at y=100,
+            the four-card rail starts at y=235, each card is 195px wide with 20px gaps, and each authored image is 195x360.
+            The left CTA rail is 240px wide with two 50px buttons separated by 20px. The previous runtime gate encoded older
+            220px CTA / 280px rail inset / 3:4 image assumptions; the implementation and QA were corrected together.
+        - evidence_id: EV-BUDOKAN-TOP-ABOUT-FIRST-RUNTIME-CORRECTION-20260904
+          kind: LOCAL_RESEARCH
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/wordpress-acf-runtime/scripts/budokan-top-about-browser-qa.mjs
+          commit: ''
+          note: >-
+            The first real WordPress browser run failed at `PC section width 1365` when the Playwright outer viewport was set to
+            1380px. This exposed a 15px desktop scrollbar gutter rather than an implementation need to force the section wider.
+            The QA now requests 1395px so the CSS layout viewport is the authored 1380px Figma canvas. The same review also caught
+            that `.global_inner` is a 1280px border-box with 60px desktop side padding: to place the card rail at Figma x=430,
+            its dedicated left padding must be 380px (50px centered outer margin + 380px), not the initially assumed 320px.
+            The Theme implementation was corrected instead of weakening the shared `.global_inner` contract.
+      contradicts: []
+    notes:
+      - "Promotion review disposition 2026-09-04: KEEP_PROJECT_ONLY; exact current-Figma geometry is strong project evidence but not cross-project evidence."
+      - The dedicated Figma aerial background and four card photographs are not present in the current Theme asset directory; no expiring Figma URL or speculative binary replacement was committed.
+      - Existing card overlay copy remains Theme-owned and was not remodelled in this bounded geometry correction.
+      - No ACF/CPT, Form/Formidable, parts.php, Slider, Calendar, Search, shared CSS, or unrelated PHP/JavaScript ownership was changed.
