@@ -2,7 +2,8 @@
 /* // ==========================================================================
 // メインビジュアル（TOP FV）
 // Current Figma fileKey FKQaJDu5TZXHoCzPsfP92E
-// PC TOP: 1603:7062; FV reference: 2182:8103-8240
+// PC TOP: 1603:7062; FV reference: 1603:7662
+// SP TOP: 446:10020; FV/MV reference: 1455:5811
 // ========================================================================== */
 .top_mainVisual {
     position: relative;
@@ -67,6 +68,12 @@
             left: 20px;
             z-index: 1;
             color: var(--color-secondary);
+        }
+        .tm_copy_pc {
+            display: none;
+        }
+        .tm_copy_sp {
+            display: inline;
         }
         .tm_title {
             font-family: var(--font-zen-old-mincho);
@@ -278,6 +285,12 @@
                 width: auto;
                 max-width: calc(100% - 120px);
                 gap: 24px;
+            }
+            .tm_copy_pc {
+                display: inline;
+            }
+            .tm_copy_sp {
+                display: none;
             }
             .tm_title {
                 font-size: 46px;
