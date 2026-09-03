@@ -1,19 +1,23 @@
 @charset "utf-8";
 /* // ==========================================================================
 // TOP 日本武道館とは
-// Current Figma authority: PC 1603:7273 (within TOP 1603:7062)
+// Current Figma authority: PC 1603:7273 / SP 1392:11708
 // Existing PHP remains the content owner. Production media/links are authority-gated.
 // ========================================================================== */
 .top_about-01 {
     position: relative;
     isolation: isolate;
     overflow: hidden;
+    background-color: var(--color-heading-band);
 
     .ta_stage_bg {
         position: absolute;
-        inset: 0;
+        top: 0;
+        right: 0;
+        left: 0;
         z-index: -1;
         overflow: hidden;
+        height: 424px;
 
         img {
             display: block;
@@ -26,12 +30,12 @@
             content: '';
             position: absolute;
             inset: 0;
-            background-color: color-mix(in srgb, var(--color-copyright) 78%, transparent);
+            background-color: rgba(38, 38, 38, 0.75);
         }
     }
 
     .ta_stage {
-        padding-block: 48px 0;
+        padding-block: 68px 0;
         color: var(--color-secondary);
     }
 
@@ -39,14 +43,14 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 28px;
+        gap: 42px;
     }
 
     .ta_heading {
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 16px;
+        gap: 20px;
         margin: 0;
         text-align: center;
     }
@@ -55,8 +59,8 @@
         font-family: var(--font-zen-kaku-gothic);
         font-size: 30px;
         font-weight: 500;
-        line-height: 1.2;
-        letter-spacing: 0.05em;
+        line-height: 1.25;
+        letter-spacing: 0.1em;
         color: var(--color-secondary);
     }
 
@@ -85,18 +89,19 @@
     .ta_panel {
         position: relative;
         z-index: 1;
-        width: 100%;
-        padding: 32px 20px 28px;
+        width: 327px;
+        padding: 40px 24px;
+        border-radius: 3px 0 0 3px;
         background-color: var(--color-secondary);
         color: var(--color-text);
     }
 
     .ta_lead {
-        margin: 0 0 24px;
+        margin: 0 0 32px;
         font-family: var(--font-zen-kaku-gothic);
         font-size: 16px;
         font-weight: 400;
-        line-height: 1.8;
+        line-height: 1.6;
         letter-spacing: 0.05em;
         text-align: left;
         color: var(--color-text);
@@ -105,24 +110,26 @@
     .ta_actions {
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: 16px;
     }
 
     .ta_btn {
         display: flex;
         align-items: center;
-        gap: 12px;
-        min-height: 52px;
+        justify-content: center;
+        gap: 8px;
+        min-height: 50px;
+        height: 50px;
         padding: 10px 16px;
         border: 1px solid var(--color-line);
-        border-radius: 0;
+        border-radius: 3px;
         background-color: var(--color-secondary);
         color: var(--color-text);
         font-family: var(--font-zen-kaku-gothic);
         font-size: 16px;
         font-weight: 500;
         letter-spacing: 0.05em;
-        line-height: 1.4;
+        line-height: 1;
         text-decoration: none;
 
         &::before {
@@ -144,18 +151,18 @@
 
     .ta_cards_wrap {
         position: relative;
-        padding-block: 48px 72px;
-        background-color: transparent;
+        padding-block: 40px 56px;
+        background-color: var(--color-heading-band);
     }
 
     .ta_cards {
         display: flex;
         gap: 20px;
         margin-inline: calc(var(--padding-SP) * -1);
-        padding-inline: calc((100vw - 240px) / 2);
+        padding-inline: calc((100vw - 295px) / 2);
         overflow-x: auto;
         scroll-snap-type: x mandatory;
-        scroll-padding-inline: calc((100vw - 240px) / 2);
+        scroll-padding-inline: calc((100vw - 295px) / 2);
         scrollbar-width: none;
 
         &::-webkit-scrollbar {
@@ -164,7 +171,7 @@
     }
 
     .ta_card {
-        flex: 0 0 240px;
+        flex: 0 0 295px;
         min-width: 0;
         scroll-snap-align: center;
     }
@@ -172,7 +179,7 @@
     .ta_card_link {
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: 20px;
         color: var(--color-text);
         text-decoration: none;
     }
@@ -181,11 +188,12 @@
         position: relative;
         margin: 0;
         overflow: hidden;
+        border-radius: 3px;
 
         img {
             display: block;
             width: 100%;
-            height: 320px;
+            height: 197px;
             object-fit: cover;
         }
     }
@@ -195,25 +203,26 @@
         top: 0;
         right: 0;
         bottom: 0;
-        padding: 16px 8px;
-        background-color: color-mix(in srgb, var(--color-copyright) 72%, transparent);
+        padding: 8px 6px;
+        background-color: color-mix(in srgb, var(--color-copyright) 88%, transparent);
         color: var(--color-secondary);
         font-family: var(--font-zen-kaku-gothic);
         font-size: 14px;
         font-weight: 400;
-        line-height: 1.6;
-        letter-spacing: 0.08em;
+        line-height: 1.1;
+        letter-spacing: 0.05em;
         writing-mode: vertical-rl;
     }
 
     .ta_card_label {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 8px;
         margin: 0;
         font-family: var(--font-zen-kaku-gothic);
         font-size: 16px;
         font-weight: 500;
+        line-height: 1;
         letter-spacing: 0.05em;
         color: var(--color-text);
 
@@ -222,12 +231,13 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 22px;
-            height: 22px;
+            width: 26px;
+            height: 26px;
             flex-shrink: 0;
-            background-color: var(--color-primary);
-            color: var(--color-secondary);
+            background-color: var(--color-secondary);
+            color: var(--color-primary);
             clip-path: var(--clip-octagon);
+            filter: drop-shadow(0 0 0.7px var(--color-line));
             font-family: var(--font-awesome);
             font-weight: 900;
             font-size: 8px;
@@ -237,6 +247,12 @@
 
     @media screen and (min-width: 768px) {
         min-height: 1063px;
+        background-color: transparent;
+
+        .ta_stage_bg {
+            height: auto;
+            bottom: 0;
+        }
 
         .ta_stage_bg::after {
             background-image: linear-gradient(
@@ -356,6 +372,7 @@
         .ta_cards_wrap {
             margin-top: -406px;
             padding-block: 0;
+            background-color: transparent;
         }
 
         .ta_cards_wrap .global_inner {
