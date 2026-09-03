@@ -1,0 +1,60 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: OBS-BUDOKAN-ANNOTATION-MARKER-CONSUMER-AUDIT
+    summary: >-
+      Before changing typography on a shared pseudo-element, audit the current Figma consumers by semantic composition,
+      not by glyph alone. The same visible marker can belong to distinct component families with intentionally different
+      typography, so a shared fix is safe only when the actual shared family is consistent across known consumers.
+    category: VISUAL_FIDELITY
+    applicability:
+      scope: PROJECT
+      conditions:
+        - A shared Theme selector renders a generated marker or icon for multiple WordPress surfaces.
+        - Current Figma authority exposes enough consumers to distinguish the shared component family from contextual variants.
+      exclusions:
+        - Do not generalize based only on matching marker characters such as the Japanese reference mark.
+        - Do not overwrite contextual publication/table typography that is authored inside a different component family.
+        - Do not treat same-project consumer breadth as independent cross-project evidence.
+    promotion_state: PROJECT_ONLY
+    promotion:
+      candidate: false
+      rationale: >-
+        Current Budokan evidence is strong enough for the local Theme correction because Parts, Hardcover detail, and three
+        tournament pages all use the standalone List marker as Noto Sans JP Medium 16/500, while Publications uses a separate
+        13px Zen Kaku contextual marker composition. This proves the local ownership boundary, but all evidence remains inside
+        the Budokan reference and therefore does not satisfy cross-reference promotion requirements.
+      blocked_by:
+        - NEEDS_INDEPENDENT_REFERENCE_EVIDENCE_BEFORE_CROSS_PROJECT_PROMOTION
+      contradiction_review: >-
+        Publications contains 13px Zen Kaku reference marks, but their parents are contextual Frames rather than the shared
+        standalone List marker family. Inline reference marks inside tournament table body text are also normal paragraph text,
+        not annotation-list markers. These are preserved as intentional non-consumers rather than treated as contradictions.
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-ANNOTATION-MARKER-CURRENT-FIGMA-20260903
+          kind: LOCAL_RESEARCH
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/blocks/wp-block-list-style.css
+          commit: ''
+          note: >-
+            LIVE current Figma file fKYDn9ikpJk1nW7IWFtaUx was inspected on PC page 0:1. Standalone List marker nodes are
+            Noto Sans JP Medium 16px / weight 500 / line-height 100% / letter-spacing 10% in Parts 1163:4245
+            (1157:8237, 1157:8241), Hardcover detail 1686:5574 (1687:5891), youth tournament 2108:10725
+            (2108:10840), Kagami-biraki 2108:10871 (2108:10919), and Kobudo tournament 2108:10952
+            (2108:11006, 2108:11009). Publications 1634:10806 instead has separate 13px Zen Kaku markers under contextual
+            Frame 439 / Frame 457 owners. Theme ul.annotation-list generated markers were using the Zen Kaku token despite
+            the consistent standalone List authority, so only those pseudo-element marker font declarations were changed to
+            the existing Noto Sans JP token var(--font-sansSerif-ja). Body text, sizes, spacing, nested structure, and
+            publication/table contexts remain unchanged.
+      contradicts: []
+    notes:
+      - "Promotion review disposition 2026-09-03: KEEP_PROJECT_ONLY; current multi-consumer evidence proves the Budokan shared-owner fix but is not independent cross-project evidence."
+      - Reuse the existing local Noto Sans JP token; do not add a new font or page-specific selector for this correction.
