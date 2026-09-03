@@ -50,9 +50,10 @@ if ! docker compose run --rm cli core is-installed >/dev/null 2>&1; then
 fi
 
 docker compose run --rm cli option update blog_public 0 >/dev/null
-# This disposable fixture intentionally exercises the Theme fallback path.
-# Production TOP content is owned by ACF Pro repeaters; installing free ACF here
-# exposes get_field() without the Pro repeater data and is not a valid ACF-backed fixture.
+# Header/shared Theme consumers require ACF APIs. The public plugin supplies those APIs,
+# while front-page.php deliberately falls back unless the Pro repeater field type exists.
+# Production ACF Pro repeater ownership is therefore preserved rather than emulated here.
+docker compose run --rm cli plugin install advanced-custom-fields --activate >/dev/null
 docker compose run --rm cli theme activate "$THEME_SLUG" >/dev/null
 
 front_id="$(docker compose run --rm cli post create \
@@ -116,7 +117,7 @@ rm -f "$html"
 
 echo "PASS Budokan TOP FV rendered through the real Theme front-page path."
 echo "PASS existing slider, purpose-guide, and notice owners remain reused without a duplicate TOP component."
-echo "NOTE production ACF Pro slide/notice data remains content authority; this disposable runtime intentionally verifies the no-ACF fallback presentation path."
+echo "NOTE production ACF Pro slide/notice repeaters remain content authority; this disposable runtime verifies the ACF-API-present/no-Pro-repeater fallback path."
 
 if [[ "${BUDOKAN_TOP_FV_KEEP_RUNTIME:-0}" == "1" ]]; then
   trap - EXIT
