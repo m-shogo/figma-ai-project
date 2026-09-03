@@ -101,7 +101,7 @@
             letter-spacing: 0.05em;
             &::before {
                 content: '※';
-                font-family: var(--font-zen-kaku-gothic);
+                font-family: var(--font-sansSerif-ja);
                 font-size: 16px;
                 font-weight: 500;
                 line-height: 1;
@@ -130,7 +130,7 @@
                         background: transparent;
                         border-radius: 0;
                         display: inline-block;
-                        font-family: var(--font-zen-kaku-gothic);
+                        font-family: var(--font-sansSerif-ja);
                     }
                 }
             }
