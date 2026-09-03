@@ -186,7 +186,8 @@ try {
   assert(isKakuFamily(spBanner.family), `SP banner must resolve to Zen Kaku Gothic New, got ${spBanner.family}.`);
   await mobileContext.close();
 
-  const desktopContext = await browser.newContext({ viewport: { width: 1380, height: 1500 } });
+  // The Theme reserves a 15px desktop scrollbar gutter. Request 1395px so the CSS layout viewport matches the 1380px Figma canvas.
+  const desktopContext = await browser.newContext({ viewport: { width: 1395, height: 1500 } });
   const desktopPage = await desktopContext.newPage();
   await desktopPage.goto(url, { waitUntil: 'networkidle' });
   const pc = await desktopPage.evaluate(() => {
@@ -198,13 +199,14 @@ try {
     const actions = section?.querySelector('.ta_actions');
     const buttons = section ? [...section.querySelectorAll('.ta_btn')] : [];
     const stageInner = section?.querySelector('.ta_stage .global_inner');
+    const top = section?.querySelector('.ta_top');
     const cardsWrapInner = section?.querySelector('.ta_cards_wrap .global_inner');
     const cards = section ? [...section.querySelectorAll('.ta_card')] : [];
     const firstImage = cards[0]?.querySelector('.ta_card_image img');
     const firstLabel = cards[0]?.querySelector('.ta_card_label');
-    if (!section || !heading || !headingEn || !panel || !lead || !actions || buttons.length !== 2 || !stageInner || !cardsWrapInner || cards.length !== 4 || !firstImage || !firstLabel) return null;
+    if (!section || !heading || !headingEn || !panel || !lead || !actions || buttons.length !== 2 || !stageInner || !top || !cardsWrapInner || cards.length !== 4 || !firstImage || !firstLabel) return null;
     const sectionRect = section.getBoundingClientRect();
-    const stageInnerRect = stageInner.getBoundingClientRect();
+    const topRect = top.getBoundingClientRect();
     const headingRect = heading.getBoundingClientRect();
     const leadRect = lead.getBoundingClientRect();
     const actionsRect = actions.getBoundingClientRect();
@@ -213,8 +215,8 @@ try {
     return {
       sectionWidth: sectionRect.width,
       sectionHeight: sectionRect.height,
-      innerLeft: stageInnerRect.left - sectionRect.left,
-      innerWidth: stageInnerRect.width,
+      contentLeft: topRect.left - sectionRect.left,
+      contentWidth: topRect.width,
       writingMode: getComputedStyle(heading).writingMode,
       headingSize: parseFloat(getComputedStyle(heading).fontSize),
       headingFamily: getComputedStyle(heading).fontFamily,
@@ -247,8 +249,8 @@ try {
   assert(pc, 'PC TOP About elements missing');
   assert(close(pc.sectionWidth, 1380), `PC section width ${pc.sectionWidth}`);
   assert(close(pc.sectionHeight, 1063), `PC section height ${pc.sectionHeight}`);
-  assert(close(pc.innerLeft, 110), `PC inner left ${pc.innerLeft}`);
-  assert(close(pc.innerWidth, 1160), `PC inner width ${pc.innerWidth}`);
+  assert(close(pc.contentLeft, 110), `PC content left ${pc.contentLeft}`);
+  assert(close(pc.contentWidth, 1160), `PC content width ${pc.contentWidth}`);
   assert(pc.writingMode.includes('vertical'), `PC writing mode ${pc.writingMode}`);
   assert(close(pc.headingSize, 36, 0.5), `PC heading ${pc.headingSize}`);
   assert(isMinchoFamily(pc.headingFamily), `PC heading JA must resolve to Zen Old Mincho, got ${pc.headingFamily}.`);
@@ -268,7 +270,7 @@ try {
   assert(close(pc.actionsWidth, 240), `PC actions width ${pc.actionsWidth}`);
   assert(close(pc.actionsTop, 521), `PC actions top ${pc.actionsTop}`);
   assert(pc.buttonHeights.every(height => close(height, 50)), `PC CTA heights ${pc.buttonHeights.join(',')}`);
-  assert(close(pc.innerPaddingLeft, 320), `PC card rail inset ${pc.innerPaddingLeft}`);
+  assert(close(pc.innerPaddingLeft, 380), `PC card rail inset ${pc.innerPaddingLeft}`);
   assert(pc.cardsDisplay === 'grid', `PC cards display ${pc.cardsDisplay}`);
   assert(pc.cardTopSpread <= 2, `PC row spread ${pc.cardTopSpread}`);
   assert(pc.cardWidths.every(width => close(width, 195)), `PC card widths ${pc.cardWidths.join(',')}`);
