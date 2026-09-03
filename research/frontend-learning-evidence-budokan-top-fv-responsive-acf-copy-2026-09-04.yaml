@@ -1,0 +1,80 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: OBS-BUDOKAN-TOP-FV-RESPONSIVE-COPY-ACF-OWNER
+    summary: >-
+      When current PC and SP Figma authorities prove materially different hero copy and an existing ACF Pro repeater already owns
+      the hero content, extend that existing owner minimally instead of hardcoding one viewport or creating a parallel content model.
+      Preserve the legacy field key/name, add only the responsive fields required by the proven variants, and provide a safe fallback
+      path so pre-existing rows do not lose content before editors populate the new fields.
+    category: CONTENT_OWNERSHIP
+    applicability:
+      scope: PROJECT
+      conditions:
+        - Current PC and SP Figma variants explicitly contain different title and/or lead copy.
+        - The existing WordPress implementation already delegates the visual's editable content to an ACF Pro repeater.
+        - Responsive additions can be made without changing the repeater identity, existing image fields, or the legacy title field key/name.
+      exclusions:
+        - Do not add responsive ACF fields merely because breakpoints exist; require current design/content evidence that the copy differs.
+        - Do not replace WordPress menu, post, or unrelated content owners with ACF for visual convenience.
+        - Do not claim ACF Pro runtime behavior was exercised when the disposable QA environment only exposes public ACF APIs.
+    promotion_state: PROJECT_ONLY
+    promotion:
+      candidate: false
+      rationale: >-
+        The evidence is concrete for the Budokan TOP: current PC FV 1603:7662 and current SP MV 1455:5811 expose different title
+        and lead copy, while top_slider-01 is already the production ACF Pro owner. The solution preserves the existing `text` field
+        identity and extends only that repeater. This remains one project/reference family and is insufficient for cross-project promotion.
+      blocked_by:
+        - NEEDS_INDEPENDENT_REFERENCE_EVIDENCE_BEFORE_CROSS_PROJECT_PROMOTION
+      contradiction_review: >-
+        Earlier TOP FV evidence correctly avoided inventing SP fields while a current 375px authority was not proven. This run directly
+        resolved the current SP TOP frame 446:10020 and MV 1455:5811, including title node 446:11656 and lead node 446:11657, so that
+        earlier exclusion is superseded for this bounded responsive-copy question rather than discarded.
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-TOP-FV-PC-SP-COPY-FIGMA-20260904
+          kind: LOCAL_RESEARCH
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/front-page.php
+          commit: ''
+          note: >-
+            LIVE current Figma file FKQaJDu5TZXHoCzPsfP92E was read directly. PC FV 1603:7662 uses title
+            '伝統を未来へつなぐ、／武道文化の中心地' and lead
+            '武道、書道の普及・振興、公益目的事業の拠点として活動しています。'. Current SP TOP 446:10020 contains MV
+            1455:5811; title node 446:11656 is '伝統を未来へつなぐ、／武道と書道の中心地' and lead node 446:11657 is
+            '武道の振興、書道文化の継承、／公益事業の拠点として活動しています。'. front-page.php now renders explicit
+            PC/SP copy spans while keeping one hero component and retaining backward-compatible copy fallback for existing rows.
+        - evidence_id: EV-BUDOKAN-TOP-FV-ACF-LOCAL-JSON-OWNER-20260904
+          kind: LOCAL_RESEARCH
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/acf/json/group_top_slider.json
+          commit: ''
+          note: >-
+            Existing ACF Local JSON already owns top_slider-01 with img_pc, img_sp, and legacy `text` key field_5d677f3972f71.
+            The correction keeps the repeater and that legacy field identity, relabels it as PC title, and adds only text_sp, lead_pc,
+            and lead_sp. inc/field.php already loads this Local JSON path, so no parallel CPT/options owner or unrelated data model is introduced.
+        - evidence_id: EV-BUDOKAN-TOP-FV-RESPONSIVE-COPY-QA-20260904
+          kind: LOCAL_RESEARCH
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/wordpress-acf-runtime/scripts/budokan-top-fv-browser-qa.mjs
+          commit: ''
+          note: >-
+            Browser QA now gates both visual geometry and viewport-specific copy: SP must expose only tm_copy_sp with the current
+            '武道と書道の中心地' title/current SP lead; PC must expose only tm_copy_pc with the current '武道文化の中心地'
+            title/current PC lead. The runtime shell separately parses Local JSON to ensure legacy `text` key continuity and the three
+            responsive fields. The disposable WordPress environment still uses public ACF, so real Pro repeater data execution is not overstated.
+      contradicts: []
+    notes:
+      - "Promotion review disposition 2026-09-04: KEEP_PROJECT_ONLY; strong current-Figma plus project-owner evidence exists, but no independent cross-project evidence supports promotion."
+      - Preserve existing ACF row compatibility: legacy `text` remains the PC-title owner and missing responsive fields degrade to safe copy fallbacks.
+      - A future production-admin check may confirm Local JSON sync state, but that is not a reason to duplicate the field group in code or create another content owner.
