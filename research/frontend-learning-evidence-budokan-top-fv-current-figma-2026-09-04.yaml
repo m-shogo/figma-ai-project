@@ -56,9 +56,9 @@ records:
             #e2d3b8 separators and 10% tracking only on the 日本武道館 heading. Theme TOP-only CSS and fallback fixture copy
             were corrected; production ACF owners top_slider-01/top_notice-01 remain unchanged.
         - evidence_id: EV-BUDOKAN-TOP-FV-ACF-CAPABILITY-RUNTIME-20260904
-          kind: RUN_RECORD
+          kind: LOCAL_RESEARCH
           reference_id: REF-002-BUDOKAN
-          run_id: 'pr-378-runtime-correction'
+          run_id: ''
           path: experiments/wordpress-acf-runtime/scripts/budokan-top-fv-runtime-qa.sh
           commit: ''
           note: >-
@@ -68,11 +68,12 @@ records:
             code calls get_field() unguarded and produced HTTP 500. The bounded correction keeps ACF APIs available for existing
             Theme consumers while front-page.php checks the actual Pro Repeater capability (`acf_field_repeater`) before claiming
             top_slider-01/top_notice-01 ownership. Real production ACF Pro semantics remain unchanged; no field group or data model
-            was invented.
+            was invented. This item links the QA harness source rather than an immutable run-record YAML, so it is classified as
+            LOCAL_RESEARCH instead of RUN_RECORD.
         - evidence_id: EV-BUDOKAN-TOP-FV-FLUID-PC-RUNTIME-20260904
-          kind: RUN_RECORD
+          kind: LOCAL_RESEARCH
           reference_id: REF-002-BUDOKAN
-          run_id: 'pr-378-browser-correction'
+          run_id: ''
           path: experiments/wordpress-acf-runtime/scripts/budokan-top-fv-browser-qa.mjs
           commit: ''
           note: >-
@@ -82,6 +83,8 @@ records:
             and 240px guide. Changing the shared scrollbar policy only to force TOP to 1030px would widen blast radius across the
             site, so it remains untouched. Browser QA instead proves those authored fixed dimensions and verifies the MV as the exact
             remaining fluid allocation; without a reserved gutter, a 1380px stage resolves to the authored 1030px Figma width.
+            This item links the browser QA harness source rather than an immutable run-record YAML, so it is classified as
+            LOCAL_RESEARCH instead of RUN_RECORD.
       contradicts: []
     notes:
       - "Promotion review disposition 2026-09-04: KEEP_PROJECT_ONLY; current same-file evidence plus project runtime evidence proves the Budokan TOP correction but is not independent cross-project evidence."
