@@ -1,0 +1,51 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: OBS-BUDOKAN-TOP-GUIDE-LOWER-EDGE-CURRENT-FIGMA
+    summary: >-
+      When an overlapping card rail is authored to terminate exactly at the next section boundary, do not preserve legacy desktop
+      bottom padding merely to create visual breathing room; validate the rail and section lower edge against current design authority.
+    category: VISUAL_FIDELITY
+    applicability:
+      scope: PROJECT
+      conditions:
+        - Current Figma proves the section root lower edge and card-rail lower edge are coincident.
+        - The correction is breakpoint-scoped and leaves the independently authored SP bottom spacing unchanged.
+        - The section owner is isolated TOP project CSS rather than a shared Gutenberg primitive.
+      exclusions:
+        - Do not remove bottom spacing from unrelated sections where current authority shows intentional separation.
+        - Do not generalize overlap geometry across projects without independent evidence.
+    promotion_state: PROJECT_ONLY
+    promotion:
+      candidate: false
+      rationale: >-
+        LIVE current Figma file FKQaJDu5TZXHoCzPsfP92E, PC node 1603:7370, proves this Budokan-specific section boundary,
+        but it remains a single project/reference family and does not satisfy cross-reference evidence requirements.
+      blocked_by:
+        - NEEDS_INDEPENDENT_REFERENCE_EVIDENCE_BEFORE_CROSS_PROJECT_PROMOTION
+      contradiction_review: >-
+        SP node 1455:5672 remains a distinct responsive composition with its existing 131px bottom spacing; the repair is PC-only.
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-TOP-GUIDE-LOWER-EDGE-20260904
+          kind: LOCAL_RESEARCH
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/project/top_guide.css
+          commit: ''
+          note: >-
+            LIVE PC node 1603:7370 is 689px high. Its intro is 320px high, the 960px-wide three-card rail starts at y=218,
+            and each card is approximately 471px high, so the rail ends at the section lower edge (218 + 471 = 689).
+            Theme already matched intro, overlap, 320px columns, 194px media, typography, and card internals, but retained an
+            additional PC-only 99px .tg_body bottom padding. Removing only that desktop padding restores the authored lower edge
+            while preserving the SP 131px bottom spacing and all card markup/data ownership.
+      contradicts: []
+    notes:
+      - "Promotion review disposition 2026-09-04: KEEP_PROJECT_ONLY; exact current-Figma geometry is sufficient for this Budokan repair but not for cross-project promotion."
+      - No ACF/CPT, Form/Formidable, parts.php, Slider, Calendar, Search, shared CSS, PHP, or JavaScript ownership was changed.

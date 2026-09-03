@@ -170,7 +170,7 @@
         }
 
         .tg_body {
-            padding: 0 0 99px;
+            padding: 0;
             background-color: var(--color-gray-background);
 
             .global_inner {
