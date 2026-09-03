@@ -1,5 +1,4 @@
 <?php
-// Fields: acf-export.json / acf/json/group_custom_block_in_page_link.json
 // inPageLink_items[] → inPageLink_title, inPageLink_id. Do not invent slugs.
 $items = get_field('inPageLink_items') ?? [];
 if (!is_array($items) || $items === []) {

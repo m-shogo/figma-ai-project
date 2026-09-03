@@ -2,11 +2,11 @@ schema_version: 1
 intake_id: BUDOKAN-WORDPRESS
 status: THEME_OBSERVED
 created_at: "2026-08-28"
-updated_at: "2026-08-31"
+updated_at: "2026-09-03"
 
 project:
   reference_id: BUDOKAN
-  figma_file_key: fKYDn9ikpJk1nW7IWFtaUx
+  figma_file_key: FKQaJDu5TZXHoCzPsfP92E
   section_evidence_path: tools/implementation-intake/REAL_WEB_VALIDATION.md
   evidence_paths:
     - experiments/budokan-wordpress/CURRENT_AUTHORITY.md
@@ -22,8 +22,8 @@ project:
   figma_nodes:
     pc: "0:1"
     sp: "114:5409"
-    pc_url: "https://www.figma.com/design/fKYDn9ikpJk1nW7IWFtaUx/nipponbudokan?node-id=0-1"
-    sp_url: "https://www.figma.com/design/fKYDn9ikpJk1nW7IWFtaUx/nipponbudokan?node-id=114-5409"
+    pc_url: "https://www.figma.com/design/FKQaJDu5TZXHoCzPsfP92E/nipponbudokan?node-id=0-1"
+    sp_url: "https://www.figma.com/design/FKQaJDu5TZXHoCzPsfP92E/nipponbudokan?node-id=114-5409"
 
 theme_delivery:
   state: OBSERVED
@@ -90,7 +90,7 @@ theme_delivery:
     - id: acf_evidence
       status: OBSERVED
       evidence:
-        - "acf/json/ via acf/settings/save_json and load_json; acf-export.json; acf/blocks/"
+        - "Field names: CURRENT_AUTHORITY.md ACF section. Runtime Local JSON remains in theme acf/json; agents must not re-read acf/ or acf-export.json"
       notes: []
     - id: block_support
       status: OBSERVED

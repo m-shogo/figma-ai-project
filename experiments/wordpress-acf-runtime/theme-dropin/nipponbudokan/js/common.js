@@ -335,9 +335,10 @@ window.addEventListener('resize', setVw);
     });
     const globalNavItems = document.querySelectorAll('[class*="gnl_item"]._hasChild');
     globalNavItems.forEach(item => {
-        const itemButton = item.querySelector('[class*="gnl_button"]');
+        const itemButton = item.querySelector(':scope > [class*="gnl_title"] > [class*="gnl_button"]');
         if (!itemButton) return;
-        itemButton.addEventListener('click', function () {
+        itemButton.addEventListener('click', function (e) {
+            e.stopPropagation();
             if (item.getAttribute('data-open') === 'true') {
                 item.setAttribute('data-open', 'false');
             } else {
@@ -371,7 +372,7 @@ window.addEventListener('resize', setVw);
     const touchOpenClass = '_touchOpen';
     // すべてのタッチ用メガメニューを閉じる（resize 時は toggleMenu スコープからも呼ぶ）
     const closeAllTouchMenus = () => {
-      const touchOpenItems = document.querySelectorAll(`.global_navigation [class*="gnl_item"].${touchOpenClass}`);
+      const touchOpenItems = document.querySelectorAll(`.global_header .gn_mega [class*="gnl_item"].${touchOpenClass}`);
       touchOpenItems.forEach((el) => el.classList.remove(touchOpenClass));
       $body.removeClass('_open-bg');
     };
@@ -386,7 +387,7 @@ window.addEventListener('resize', setVw);
 
       if (!hasTouch) return; // タッチデバイスでない場合は処理しない
 
-      const touchParentItems = document.querySelectorAll('.global_navigation [class*="gnl_item"]._hasChild');
+      const touchParentItems = document.querySelectorAll('.global_header .gn_mega [class*="gnl_item"]._hasChild');
 
       touchParentItems.forEach((li) => {
         li.addEventListener('touchstart', (e) => {
@@ -395,16 +396,16 @@ window.addEventListener('resize', setVw);
             // サブメニュー内のタップは通常の遷移を許可
             if (e.target.closest('[class*="gnl_wrapper"]')) return;
 
-            // 親リンク（gnl_title内のgnl_link）をタップした時のみ処理
-            const link = e.target.closest('[class*="gnl_title"] [class*="gnl_link"]');
-            if (!link) return; // リンクが見つからない場合は処理しない
+            // 親行のタップで開く（メガ L2 はリンクではない）
+            const onParentRow = e.target.closest('[class*="gnl_title"]');
+            if (!onParentRow) return;
 
             // メニューがすでに開いている＝2回目タップ→遷移許可（preventDefaultしない）
             if (li.classList.contains(touchOpenClass)) return;
 
             // 別のメニューが開いている場合はいったん閉じる
             const openItem = document.querySelector(
-              `.global_navigation [class*="gnl_item"].${touchOpenClass}`
+              `.global_header .gn_mega [class*="gnl_item"].${touchOpenClass}`
             );
             if (openItem && openItem !== li) {
               closeAllTouchMenus();
@@ -422,7 +423,7 @@ window.addEventListener('resize', setVw);
       // 枠外タップでメニューを閉じる
       document.addEventListener('touchstart',(e) => {
           if (!isPcLayout()) return;
-          const touchedInParentItem = e.target.closest('.global_navigation [class*="gnl_item"]._hasChild');
+          const touchedInParentItem = e.target.closest('.global_header .gn_mega [class*="gnl_item"]._hasChild');
           if (!touchedInParentItem) {
             closeAllTouchMenus();
           }

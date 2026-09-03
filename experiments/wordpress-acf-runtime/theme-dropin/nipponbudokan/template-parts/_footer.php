@@ -39,7 +39,6 @@ $show_map = !empty(($args ?? array())['map']);
             <div class="gf_menu">
                 <?php
                 wp_nav_menu(array(
-                    'menu' => 'footer-nav',
                     'menu_class' => 'menu gf_links-01',
                     'menu_id' => 'gf_links-01',
                     'container' => 'div',
@@ -48,21 +47,6 @@ $show_map = !empty(($args ?? array())['map']);
                     'fallback_cb' => 'nipponbudokan_footer_nav_fallback',
                     'theme_location' => 'footer-nav',
                     'walker' => new Custom_Footer_Walker_Nav_Menu(),
-                ));
-                ?>
-            </div>
-            <div class="gf_subMenu">
-                <?php
-                wp_nav_menu(array(
-                    'menu' => 'footer-nav',
-                    'menu_class' => 'menu gf_links-02',
-                    'menu_id' => 'gf_links-02',
-                    'container' => 'div',
-                    'container_class' => 'gf_container-02',
-                    'container_id' => 'gf_container-02',
-                    'fallback_cb' => 'nipponbudokan_footer_sub_nav_fallback',
-                    'theme_location' => 'sub-nav',
-                    'walker' => new Custom_Footer_Sub_Walker_Nav_Menu(),
                 ));
                 ?>
             </div>

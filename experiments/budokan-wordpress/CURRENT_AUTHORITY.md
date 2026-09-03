@@ -3,7 +3,7 @@
 このファイルは **日本武道館 WordPress 案件**の会話決定を正本化する。  
 以降の Agent は、ここを Current Authority として扱い、矛盾する旧命名・旧 LP runtime 前提で進めない。
 
-更新日: 2026-08-31
+更新日: 2026-09-03
 
 ---
 
@@ -30,7 +30,7 @@
 付属:
 
 - Block Patterns: `theme-dropin/nipponbudokan/patterns.json`
-- ACF export: `theme-dropin/nipponbudokan/acf-export.json`（加えて `acf/json/`）
+- ACF フィールド契約: 本ファイル「ACF」節（`acf-export.json` は退役。`acf/` を再読しない）
 
 ---
 
@@ -125,20 +125,61 @@ Theme 専用の enqueue・命名は `THEME_RULES.md`。Frontend Standard は Com
 
 ---
 
+## ACF（Human Authority 2026-09-03）
+
+フィールド名・用途はこの節が正本。WordPress 実行時の Local JSON / block PHP は Theme 内に残るが、**Agent は `theme-dropin/nipponbudokan/acf/` を再読してフィールドを増やしたり推測したりしない。** `acf-export.json` は退役（旧 portable dump。メニュー ACF グループを含むため使わない）。
+
+フィールドグループ JSON は編集しない。ブロック見た目の markup 修正が必要なときだけ既存 block PHP を触る。新しい ACF / CPT / スラッグは発明しない。
+
+| 用途 | フィールド |
+| --- | --- |
+| TOP スライダー | `top_slider-01` → `img_pc` / `img_sp` / `text` |
+| TOP お知らせ | `top_notice_select`（表示する） / `top_notice-01` → `date` / `textarea` / `none`（`_hide`） |
+| TOP バナー | `top_banner-01` → `img` / `title` / `url` / `target` |
+| 固定ページ タイトル帯画像 | `page_img` |
+| 投稿タイプ既定画像（Options `common_visual`） | `page_img-post` / `page_img-sampleslug` / `page_img-other` |
+| SEO（固定ページ） | `page_title` / `page_description` |
+| head/body タグ（Options `common_tag`） | `headTag_after` / `headTag_before` / `bodyTag_after` / `bodyTag_before` |
+| 投稿の出し方 | `post_type`（`post` / `url` / `file` / `none`） / `postType_url` / `postType_target` / `postType_file` |
+| ブロック ページ内リンク | `inPageLink_items` → `inPageLink_title` / `inPageLink_id` |
+| ブロック ナビ大 | `navigation-large` → `image` / `title` / `text` / `url` / `target` |
+| ブロック ナビ小 | `navigation-small` → 同上 |
+| ブロック 投稿一覧 | `block_post_type`（`post` / `event`） / `block_category` / `block_event_cat` / `block_posts_per_page` |
+| ブロック タブ | コンテナは message のみ。パネルは `panel_title` |
+
+- グローバルナビは WordPress メニュー。旧 `common-menu-01` / `common-submenu-01` は現行 ACF に無い
+- CPT `event` + `event_cat` は Theme `inc/custom.php`。開催日・募集ステータス用フィールドは **無い** → 当該 UI は fail-closed
+- `parts.php` / Form / Formidable は触らない
+
+---
+
+## ディレクトリーマップ / メニュー（Human Authority 2026-09-03）
+
+正本: [`DIRECTORY_MAP.md`](DIRECTORY_MAP.md)
+
+- これから言うメニューも、このマップの path / 階層 / 種類に合わせる
+- **Human が「このメニューを作れ」と言うまでメニューは作らない**
+- 2026-09-03 Human: メニューは **4本**。赤ハンバーガーメイン=`global-nav`（Figma SP/PC overlay の項目。URL はマップ）。サブハンバーガー=`sub-nav`。PCメガ=`mega-nav`（Figma 4本＋中身。URL はマップ）。フッター=`footer-nav`（指定10件を1本。見た目2列）。グループ見出しのみ `/`。固定ページはマップ全件（CPT一覧・外部ページは除く）
+- 作るときは完全一致より、マップからそれなりに載せる
+- 種類「ナビゲーション」= ナビゲーションテンプレート + **画像付きビジュアル**（`page_img`）
+- デフォルト（固定ページ等）= **黄土色**タイトル帯（`page_img` なし）
+- マップ上の誤字・空行は無視する
+
+---
+
 ## Figma（現行正本）
 
-Human Authority 2026-08-31: デザイン調整版を現行 visual 正本とする。
+Human Authority 2026-09-03: この file だけを LIVE 再取得する。過去 file の node / 計測 / スクリーンショットを引き継がない。
 
-File: [nipponbudokan](https://www.figma.com/design/fKYDn9ikpJk1nW7IWFtaUx/nipponbudokan)
+File: [nipponbudokan](https://www.figma.com/design/FKQaJDu5TZXHoCzPsfP92E/nipponbudokan)
 
 | 面 | URL | fileKey | node-id |
 | --- | --- | --- | --- |
-| PC | https://www.figma.com/design/fKYDn9ikpJk1nW7IWFtaUx/nipponbudokan?node-id=0-1 | `fKYDn9ikpJk1nW7IWFtaUx` | `0:1` |
-| SP | https://www.figma.com/design/fKYDn9ikpJk1nW7IWFtaUx/nipponbudokan?node-id=114-5409 | `fKYDn9ikpJk1nW7IWFtaUx` | `114:5409` |
+| PC | https://www.figma.com/design/FKQaJDu5TZXHoCzPsfP92E/nipponbudokan?node-id=0-1 | `FKQaJDu5TZXHoCzPsfP92E` | `0:1` |
+| SP | https://www.figma.com/design/FKQaJDu5TZXHoCzPsfP92E/nipponbudokan?node-id=114-5409 | `FKQaJDu5TZXHoCzPsfP92E` | `114:5409` |
 
-- 旧 file key `w7SGVY63FuW6JpaQVKjxm2` / `RfAQQ28V1HGaeIcpgRmQq1` は使わない（証拠 lineage 参照のみ）
-- 旧 Figma から取得した font / geometry / color を引き継がない。毎回この file を LIVE 再取得する
-- Visual の正本は上記 Figma。既存実装の正本は Theme。差分は Theme を新 Figma へ合わせる
+- 旧 file key `fKYDn9ikpJk1nW7IWFtaUx` / `w7SGVY63FuW6JpaQVKjxm2` / `RfAQQ28V1HGaeIcpgRmQq1` は使わない（証拠 lineage 参照のみ）
+- Visual の正本は上記 Figma。既存実装の正本は Theme。差分は Theme をこの Figma へ合わせる
 
 ---
 
@@ -181,3 +222,6 @@ Form は Human 担当のためこの順に含めない。
 10. SP base → SP Runtime QA → PC extension → PC Runtime QAを1単位として完了させる
 11. ミス・手戻りは `IMPLEMENTATION_LEARNINGS.md` に「事象→原因→次回ルール→一般化範囲」で残す
 12. 再現可能な学びは evidence / playbook candidate に戻すが、自動で Company Policy へ上げない
+13. Figma は本ファイルの file key だけを LIVE 取得する。旧 file は見ない
+14. ACF フィールドは本ファイルの表だけ使う。`acf/` と `acf-export.json` を再読しない
+15. サイト階層は `DIRECTORY_MAP.md`。メニューは Human が指定するまで作らない。ナビゲーションは画像ビジュアル、デフォルトは黄土色

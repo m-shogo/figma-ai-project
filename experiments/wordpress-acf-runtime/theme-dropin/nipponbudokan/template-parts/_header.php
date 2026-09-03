@@ -14,6 +14,20 @@
             </a>
         </<?php echo $logo_tag; ?>>
 
+        <div class="gn_mega">
+            <?php
+            wp_nav_menu(array(
+                'menu_class' => 'menu gn_links-01',
+                'menu_id' => 'gn_links-mega',
+                'container' => 'div',
+                'container_class' => 'gn_container-01',
+                'container_id' => 'gn_container-mega',
+                'fallback_cb' => 'nipponbudokan_global_nav_fallback',
+                'theme_location' => 'mega-nav',
+                'walker' => new Custom_Global_Walker_Nav_Menu(),
+            ));
+            ?>
+        </div>
         <nav id="global_navigation" class="global_navigation" itemscope itemtype="https://schema.org/SiteNavigationElement">
             <div class="gn_menu">
                 <?php
@@ -23,7 +37,7 @@
                     'container' => 'div',
                     'container_class' => 'gn_container-01',
                     'container_id' => 'gn_container-01',
-                    'fallback_cb' => 'nipponbudokan_global_nav_fallback',
+                    'fallback_cb' => 'nipponbudokan_hamburger_nav_fallback',
                     'theme_location' => 'global-nav',
                     'walker' => new Custom_Global_Walker_Nav_Menu(),
                 ));
@@ -54,6 +68,7 @@
                     <a class="gn_sns_link gn_sns_x" href="#" target="_blank" rel="noopener noreferrer" aria-label="X"><span>X</span></a>
                 </li>
             </ul>
+            <a class="gn_lang" href="<?php echo esc_url(home_url('/en/')); ?>"><span>EN</span></a>
             <div class="gn_search">
                 <div class="gns_form module_search-01">
                     <form class="ms_from" role="search" method="get" action="<?php echo esc_url(home_url('/')); ?>">
