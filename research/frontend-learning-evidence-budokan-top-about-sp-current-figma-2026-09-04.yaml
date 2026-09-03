@@ -1,0 +1,63 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: OBS-BUDOKAN-TOP-ABOUT-SP-CURRENT-AUTHORITY
+    summary: >-
+      Responsive fidelity must be re-resolved independently from the current SP authority even when the desktop variant was already
+      corrected. A desktop-correct card family can retain obsolete mobile proportions and background composition if historical SP
+      assumptions are treated as a regression target instead of re-reading the current SP node.
+    category: VISUAL_FIDELITY
+    applicability:
+      scope: PROJECT
+      conditions:
+        - Current PC and SP Figma variants expose materially different card proportions and section composition.
+        - The Theme has a bounded mobile-first owner with desktop overrides that can be corrected without shared-component blast radius.
+      exclusions:
+        - Do not infer missing production photos, hrefs, or editorial ownership from Figma presentation alone.
+        - Do not change ACF/CPT/menu ownership merely to correct bounded responsive geometry.
+    promotion_state: PROJECT_ONLY
+    promotion:
+      candidate: false
+      rationale: >-
+        The evidence is strong for the Budokan TOP About family but remains one project/reference family. It does not satisfy the
+        independent cross-project evidence requirement for promotion.
+      blocked_by:
+        - NEEDS_INDEPENDENT_REFERENCE_EVIDENCE_BEFORE_CROSS_PROJECT_PROMOTION
+      contradiction_review: >-
+        Earlier project QA intentionally preserved 240x320 SP portrait cards while the current LIVE SP node 1392:11708 now proves
+        295x197 landscape cards, a 327px white panel, 50px CTAs, and a light-gray lower section. The prior SP assertions are therefore
+        superseded for this bounded surface while the already-proven PC 1603:7273 geometry remains unchanged.
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-TOP-ABOUT-SP-FIGMA-20260904
+          kind: LOCAL_RESEARCH
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/project/top_about.css
+          commit: ''
+          note: >-
+            LIVE current Figma file FKQaJDu5TZXHoCzPsfP92E, SP page 114:5409, TOP root 446:10020 exposes About node 1392:11708.
+            The visible 375px composition uses a 424px dark photographic header, heading at the top of that field, a 327px white
+            content panel inset 24px, 50px CTAs with 16px gap, and a horizontally scrollable card rail whose cards are 295px wide
+            with approximately 197px-tall landscape media. The lower surface is #f2f2f2. Theme mobile-first About CSS was corrected
+            to those proven dimensions while desktop overrides retain the current 1603:7273 195x360 four-card rail.
+        - evidence_id: EV-BUDOKAN-TOP-ABOUT-SP-RUNTIME-GATE-20260904
+          kind: LOCAL_RESEARCH
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/wordpress-acf-runtime/scripts/budokan-top-about-browser-qa.mjs
+          commit: ''
+          note: >-
+            The existing real-WordPress/Playwright About gate was updated from the obsolete SP 240x320 portrait-card expectation to
+            the current 327px panel, 50px CTA, and 295x197 card geometry while retaining its existing PC About and downstream
+            News/Partner/Instagram/Banner typography regression checks.
+      contradicts: []
+    notes:
+      - "Promotion review disposition 2026-09-04: KEEP_PROJECT_ONLY; no auto-promotion."
+      - Production About photographs/background and destination URLs remain authority-gated and are not replaced by expiring Figma MCP assets.
