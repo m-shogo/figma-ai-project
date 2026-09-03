@@ -13,7 +13,7 @@ records:
       the hero content, extend that existing owner minimally instead of hardcoding one viewport or creating a parallel content model.
       Preserve the legacy field key/name, add only the responsive fields required by the proven variants, and provide a safe fallback
       path so pre-existing rows do not lose content before editors populate the new fields.
-    category: CONTENT_OWNERSHIP
+    category: CMS
     applicability:
       scope: PROJECT
       conditions:
@@ -76,5 +76,5 @@ records:
       contradicts: []
     notes:
       - "Promotion review disposition 2026-09-04: KEEP_PROJECT_ONLY; strong current-Figma plus project-owner evidence exists, but no independent cross-project evidence supports promotion."
-      - Preserve existing ACF row compatibility: legacy `text` remains the PC-title owner and missing responsive fields degrade to safe copy fallbacks.
-      - A future production-admin check may confirm Local JSON sync state, but that is not a reason to duplicate the field group in code or create another content owner.
+      - "Preserve existing ACF row compatibility: legacy `text` remains the PC-title owner and missing responsive fields degrade to safe copy fallbacks."
+      - "A future production-admin check may confirm Local JSON sync state, but that is not a reason to duplicate the field group in code or create another content owner."
