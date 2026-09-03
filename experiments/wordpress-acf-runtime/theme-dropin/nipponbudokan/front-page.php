@@ -3,6 +3,10 @@
 $theme_uri = get_template_directory_uri();
 $has_acf_pro_repeater = class_exists('acf_field_repeater');
 $has_slider = $has_acf_pro_repeater && function_exists('have_rows') && have_rows('top_slider-01');
+$default_title_pc = '伝統を未来へつなぐ、<br>武道文化の中心地';
+$default_title_sp = '伝統を未来へつなぐ、<br>武道と書道の中心地';
+$default_lead_pc = '武道、書道の普及・振興、公益目的事業の拠点として活動しています。';
+$default_lead_sp = '武道の振興、書道文化の継承、<br>公益事業の拠点として活動しています。';
 ?>
 <div class="top_mainVisual">
     <div class="tm_stage">
@@ -18,9 +22,28 @@ $has_slider = $has_acf_pro_repeater && function_exists('have_rows') && have_rows
                             $img_sp = get_sub_field('img_sp');
                             $thumb_sp = $img_sp ? wp_get_attachment_image_src($img_sp, 'top_main_sp') : null;
                             $alt_sp = ($img_sp && get_post($img_sp)) ? get_post_meta($img_sp, '_wp_attachment_image_alt', true) : '';
-                            $text = get_sub_field('text');
+                            $title_pc = get_sub_field('text');
+                            $title_sp = get_sub_field('text_sp');
+                            $lead_pc = get_sub_field('lead_pc');
+                            $lead_sp = get_sub_field('lead_sp');
                             $pc_src = !empty($thumb_pc[0]) ? $thumb_pc[0] : $theme_uri . '/images/top/mv-sample.png';
                             $sp_src = !empty($thumb_sp[0]) ? $thumb_sp[0] : $pc_src;
+
+                            if (!$title_pc) {
+                                $title_pc = $default_title_pc;
+                            }
+                            $is_canonical_title = strpos(wp_strip_all_tags($title_pc), '武道文化の中心地') !== false;
+                            if (!$title_sp) {
+                                $title_sp = $is_canonical_title
+                                    ? str_replace('武道文化の中心地', '武道と書道の中心地', $title_pc)
+                                    : $title_pc;
+                            }
+                            if (!$lead_pc && $is_canonical_title) {
+                                $lead_pc = $default_lead_pc;
+                            }
+                            if (!$lead_sp) {
+                                $lead_sp = $is_canonical_title ? $default_lead_sp : $lead_pc;
+                            }
                             ?>
                             <li class="swiper-slide">
                                 <div class="tm_background">
@@ -29,9 +52,18 @@ $has_slider = $has_acf_pro_repeater && function_exists('have_rows') && have_rows
                                         <img src="<?php echo esc_url($sp_src); ?>" alt="<?php echo esc_attr($alt_sp ?: $alt_pc); ?>" width="1030" height="600" fetchpriority="high">
                                     </picture>
                                 </div>
-                                <?php if ($text): ?>
+                                <?php if ($title_pc || $title_sp): ?>
                                     <div class="tm_inner">
-                                        <p class="tm_title"><span><?php echo esc_html($text); ?></span></p>
+                                        <p class="tm_title">
+                                            <span class="tm_copy_pc"><?php echo wp_kses_post($title_pc); ?></span>
+                                            <span class="tm_copy_sp"><?php echo wp_kses_post($title_sp); ?></span>
+                                        </p>
+                                        <?php if ($lead_pc || $lead_sp): ?>
+                                            <p class="tm_lead">
+                                                <span class="tm_copy_pc"><?php echo wp_kses_post($lead_pc); ?></span>
+                                                <span class="tm_copy_sp"><?php echo wp_kses_post($lead_sp ?: $lead_pc); ?></span>
+                                            </p>
+                                        <?php endif; ?>
                                     </div>
                                 <?php endif; ?>
                             </li>
@@ -42,8 +74,14 @@ $has_slider = $has_acf_pro_repeater && function_exists('have_rows') && have_rows
                                 <img src="<?php echo esc_url($theme_uri . '/images/top/mv-sample.png'); ?>" alt="<?php bloginfo('name'); ?>" width="1030" height="600" fetchpriority="high">
                             </div>
                             <div class="tm_inner">
-                                <p class="tm_title"><span>伝統を未来へつなぐ、<br>武道文化の中心地</span></p>
-                                <p class="tm_lead"><span>武道、書道の普及・振興、公益目的事業の拠点として活動しています。</span></p>
+                                <p class="tm_title">
+                                    <span class="tm_copy_pc"><?php echo wp_kses_post($default_title_pc); ?></span>
+                                    <span class="tm_copy_sp"><?php echo wp_kses_post($default_title_sp); ?></span>
+                                </p>
+                                <p class="tm_lead">
+                                    <span class="tm_copy_pc"><?php echo wp_kses_post($default_lead_pc); ?></span>
+                                    <span class="tm_copy_sp"><?php echo wp_kses_post($default_lead_sp); ?></span>
+                                </p>
                             </div>
                         </li>
                     <?php endif; ?>
