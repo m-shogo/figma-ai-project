@@ -77,11 +77,11 @@
                 },
                 {
                     "key": "field_5d677f3972f71",
-                    "label": "テキスト",
+                    "label": "タイトル（PC）",
                     "name": "text",
                     "aria-label": "",
                     "type": "textarea",
-                    "instructions": "",
+                    "instructions": "PCメインビジュアルに表示するタイトル。既存データ互換のためフィールド名 text は維持します。",
                     "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
@@ -93,6 +93,69 @@
                     "placeholder": "",
                     "maxlength": "",
                     "rows": 3,
+                    "new_lines": "br",
+                    "parent_repeater": "field_5d5cb55a4dc10"
+                },
+                {
+                    "key": "field_top_slider_text_sp",
+                    "label": "タイトル（スマホ）",
+                    "name": "text_sp",
+                    "aria-label": "",
+                    "type": "textarea",
+                    "instructions": "スマホ版でPCとコピーが異なる場合だけ入力。未入力時はPCタイトルを基準に後方互換表示します。",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "",
+                    "maxlength": "",
+                    "rows": 3,
+                    "new_lines": "br",
+                    "parent_repeater": "field_5d5cb55a4dc10"
+                },
+                {
+                    "key": "field_top_slider_lead_pc",
+                    "label": "リード（PC）",
+                    "name": "lead_pc",
+                    "aria-label": "",
+                    "type": "textarea",
+                    "instructions": "PCメインビジュアルのタイトル下に表示するリード文。",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "",
+                    "maxlength": "",
+                    "rows": 2,
+                    "new_lines": "br",
+                    "parent_repeater": "field_5d5cb55a4dc10"
+                },
+                {
+                    "key": "field_top_slider_lead_sp",
+                    "label": "リード（スマホ）",
+                    "name": "lead_sp",
+                    "aria-label": "",
+                    "type": "textarea",
+                    "instructions": "スマホ版でPCとリード文が異なる場合だけ入力。未入力時はPCリードを使用します。",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "",
+                    "maxlength": "",
+                    "rows": 2,
                     "new_lines": "br",
                     "parent_repeater": "field_5d5cb55a4dc10"
                 }
