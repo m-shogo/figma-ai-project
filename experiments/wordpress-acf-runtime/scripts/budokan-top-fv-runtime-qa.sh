@@ -87,10 +87,10 @@ for required in \
   'class="tm_guide"' \
   'class="top_notice-01"' \
   '伝統を未来へつなぐ' \
-  '武道と書道の中心地' \
-  '武道の振興、書道文化の継承' \
+  '武道文化の中心地' \
+  '武道、書道の普及・振興、公益目的事業の拠点として活動しています。' \
   '目的から探す' \
-  'コンサートでご来場される皆様へ、日本武道館からのお願い'; do
+  '令和8年8月4日(火) 令和8年熊本地震　お見舞い'; do
   grep -Fq "$required" "$html" || {
     echo "FAIL required TOP FV runtime marker missing: ${required}" >&2
     exit 1
