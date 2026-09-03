@@ -1,0 +1,46 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: OBS-BUDOKAN-TOP-FOOTER-CURRENT-FIGMA-RHYTHM
+    summary: >-
+      When a mapped footer flattens a nested Figma stack into CSS Grid with display: contents, preserve the authored sub-gap instead of applying one uniform row gap to every flattened row.
+    category: VISUAL_FIDELITY
+    applicability:
+      scope: PROJECT
+      conditions:
+        - Current Figma exposes a nested logo/address stack inside the TOP mapped footer.
+        - The Theme intentionally flattens that stack into the mapped footer grid.
+        - The correction is scoped to the PC _hasMap footer variant only.
+      exclusions:
+        - Do not change the subpage footer variant from this evidence.
+        - Do not infer SP footer geometry from the PC correction.
+        - Do not generalize to unrelated projects without independent evidence.
+    promotion_state: PROJECT_ONLY
+    promotion:
+      candidate: false
+      rationale: >-
+        LIVE current Figma node 1901:13409 shows the logo/address group at a 24px internal gap while the remaining left-column groups use 32px. The mapped Theme grid flattened all four rows under one 32px row-gap, producing a proven 8px drift between logo and address. This is Budokan-specific evidence only.
+      blocked_by:
+        - NEEDS_INDEPENDENT_REFERENCE_EVIDENCE_BEFORE_CROSS_PROJECT_PROMOTION
+      contradiction_review: >-
+        Existing _hasMap CSS used one 32px row-gap for logo, address, links and SNS. Current Figma contradicts that simplification only for the logo-to-address relationship, so the correction offsets the address row by 8px without changing the shared footer structure or other variants.
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-TOP-FOOTER-PC-RHYTHM-20260904
+          kind: LOCAL_RESEARCH
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/layout/global_footer.css
+          commit: ''
+          note: >-
+            LIVE PC footer node 1901:13409 has logo height 50.485px, then a 24px internal gap to the address row; the outer left-column groups use 32px. The Theme _hasMap grid intentionally uses display: contents, so margin-top:-8px on the mapped address row restores the authored first sub-gap while leaving links/SNS spacing unchanged.
+      contradicts: []
+    notes:
+      - "Promotion review disposition 2026-09-04: KEEP_PROJECT_ONLY; current Budokan Figma and Theme flattening provide strong project evidence, but no independent cross-project evidence exists."
+      - The correction is confined to PC .global_footer._hasMap and preserves the subpage footer, SP footer, WordPress footer menu ownership, ACF, Form/Formidable, parts.php, Slider, Calendar and Search.
