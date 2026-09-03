@@ -47,6 +47,19 @@ records:
             the four-card rail starts at y=235, each card is 195px wide with 20px gaps, and each authored image is 195x360.
             The left CTA rail is 240px wide with two 50px buttons separated by 20px. The previous runtime gate encoded older
             220px CTA / 280px rail inset / 3:4 image assumptions; the implementation and QA were corrected together.
+        - evidence_id: EV-BUDOKAN-TOP-ABOUT-FIRST-RUNTIME-CORRECTION-20260904
+          kind: LOCAL_RESEARCH
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/wordpress-acf-runtime/scripts/budokan-top-about-browser-qa.mjs
+          commit: ''
+          note: >-
+            The first real WordPress browser run failed at `PC section width 1365` when the Playwright outer viewport was set to
+            1380px. This exposed a 15px desktop scrollbar gutter rather than an implementation need to force the section wider.
+            The QA now requests 1395px so the CSS layout viewport is the authored 1380px Figma canvas. The same review also caught
+            that `.global_inner` is a 1280px border-box with 60px desktop side padding: to place the card rail at Figma x=430,
+            its dedicated left padding must be 380px (50px centered outer margin + 380px), not the initially assumed 320px.
+            The Theme implementation was corrected instead of weakening the shared `.global_inner` contract.
       contradicts: []
     notes:
       - "Promotion review disposition 2026-09-04: KEEP_PROJECT_ONLY; exact current-Figma geometry is strong project evidence but not cross-project evidence."
