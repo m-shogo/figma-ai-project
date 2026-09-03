@@ -55,7 +55,35 @@ records:
             primary 1px border, with top-left square and the other three corners 3px. Current guide node 2182:8115 shows
             #e2d3b8 separators and 10% tracking only on the 日本武道館 heading. Theme TOP-only CSS and fallback fixture copy
             were corrected; production ACF owners top_slider-01/top_notice-01 remain unchanged.
+        - evidence_id: EV-BUDOKAN-TOP-FV-ACF-CAPABILITY-RUNTIME-20260904
+          kind: RUNTIME
+          reference_id: REF-002-BUDOKAN
+          run_id: 'pr-378-runtime-correction'
+          path: experiments/wordpress-acf-runtime/scripts/budokan-top-fv-runtime-qa.sh
+          commit: ''
+          note: >-
+            The first disposable WordPress run had the public ACF plugin active, so get_field()/have_rows() existed while the
+            ACF Pro Repeater field type/data did not. Function-presence alone therefore caused the TOP notice owner to be read as
+            absent/off and hid the intended fallback. Removing ACF entirely was also invalid because existing shared Theme header
+            code calls get_field() unguarded and produced HTTP 500. The bounded correction keeps ACF APIs available for existing
+            Theme consumers while front-page.php checks the actual Pro Repeater capability (`acf_field_repeater`) before claiming
+            top_slider-01/top_notice-01 ownership. Real production ACF Pro semantics remain unchanged; no field group or data model
+            was invented.
+        - evidence_id: EV-BUDOKAN-TOP-FV-FLUID-PC-RUNTIME-20260904
+          kind: RUNTIME
+          reference_id: REF-002-BUDOKAN
+          run_id: 'pr-378-browser-correction'
+          path: experiments/wordpress-acf-runtime/scripts/budokan-top-fv-browser-qa.mjs
+          commit: ''
+          note: >-
+            Playwright at a nominal 1380px browser viewport exposed a 1365px document client width because the real page has a
+            vertical scrollbar, yielding a 1015px fluid MV rather than the Figma-frame 1030px. The Theme itself correctly loads
+            top_mainVisual.css through css/style.css. Forcing a fixed 1380px stage would create horizontal overflow and violate the
+            responsive owner. Browser QA now proves the authored 60px left padding, 30px right padding, 20px gap and 240px guide,
+            then verifies MV width as the exact remaining fluid allocation. At an actual 1380px client width that equation resolves
+            to the authored 1030px Figma width.
       contradicts: []
     notes:
-      - "Promotion review disposition 2026-09-04: KEEP_PROJECT_ONLY; current same-file evidence proves the Budokan TOP correction but is not independent cross-project evidence."
+      - "Promotion review disposition 2026-09-04: KEEP_PROJECT_ONLY; current same-file evidence plus project runtime evidence proves the Budokan TOP correction but is not independent cross-project evidence."
       - Preserve current SP behavior until a current 375px TOP authority is explicitly present or Human declares a shared SP master.
+      - Prefer capability checks for Pro-only ACF field owners over generic ACF function-presence checks when a degraded/test runtime can expose public ACF APIs without the Pro field type.
