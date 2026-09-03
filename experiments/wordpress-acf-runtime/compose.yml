@@ -32,10 +32,16 @@ services:
         define('WP_ENVIRONMENT_TYPE', 'local');
         define('WP_DEBUG', true);
         define('WP_DEBUG_DISPLAY', false);
+        define('WP_MEMORY_LIMIT', '256M');
+        define('WP_MAX_MEMORY_LIMIT', '512M');
     volumes:
       - wp_data:/var/www/html
       - ${THEME_SOURCE_DIR:-./theme/sample-theme}:/var/www/html/wp-content/themes/${THEME_SLUG:-sample-theme}:ro
       - ./:/fixture:ro
+      - ./php/conf.d/99-local-limits.ini:/usr/local/etc/php/conf.d/99-local-limits.ini:ro
+      - ./wp-dropins/fatal-error-handler.php:/var/www/html/wp-content/fatal-error-handler.php:ro
+      - ./wp-dropins/local-runtime-recover.php:/var/www/html/wp-content/local-runtime-recover.php:ro
+      - ./mu-plugins/00-local-runtime-guard.php:/var/www/html/wp-content/mu-plugins/00-local-runtime-guard.php:ro
 
   cli:
     image: wordpress:cli-2.12.0-php8.3
@@ -52,6 +58,10 @@ services:
       - wp_data:/var/www/html
       - ${THEME_SOURCE_DIR:-./theme/sample-theme}:/var/www/html/wp-content/themes/${THEME_SLUG:-sample-theme}:ro
       - ./:/fixture:ro
+      - ./php/conf.d/99-local-limits.ini:/usr/local/etc/php/conf.d/99-local-limits.ini:ro
+      - ./wp-dropins/fatal-error-handler.php:/var/www/html/wp-content/fatal-error-handler.php:ro
+      - ./wp-dropins/local-runtime-recover.php:/var/www/html/wp-content/local-runtime-recover.php:ro
+      - ./mu-plugins/00-local-runtime-guard.php:/var/www/html/wp-content/mu-plugins/00-local-runtime-guard.php:ro
     working_dir: /var/www/html
     entrypoint: ["wp"]
 
