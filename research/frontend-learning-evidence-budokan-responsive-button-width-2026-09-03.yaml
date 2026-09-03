@@ -1,0 +1,54 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: OBS-BUDOKAN-MOBILE-STACK-DOES-NOT-IMPLY-FULL-WIDTH-BUTTON
+    summary: >-
+      A mobile flex/wrapping container must not be assumed to make every child control full width. When current Figma
+      establishes a semantic minimum width with content-driven growth, preserve intrinsic width on the shared WordPress
+      control and bound it by the available container rather than stretching all default controls to 100%.
+    category: REUSE
+    applicability:
+      scope: PROJECT
+      conditions:
+        - Current Figma exposes short and long instances of the same shared control family at the same breakpoint.
+        - Existing WordPress markup already identifies the shared family and does not need a new editor/data model.
+        - The shared CSS can express the difference with intrinsic sizing plus an existing minimum-width contract.
+      exclusions:
+        - Do not apply the rule to explicit full-width variants such as CTA/outline controls.
+        - Do not override Gutenberg custom-width markers.
+        - Do not infer widths from one short label when long-label instances are unobserved.
+        - Do not count repeated evidence from the same project as independent cross-project promotion evidence.
+    promotion_state: PROJECT_ONLY
+    promotion:
+      candidate: false
+      rationale: >-
+        LIVE current Figma Parts shows short SP button_L instances at 270x60 while a long label in the same button_L family
+        grows to the available 327px width. The existing Theme instead stretched every default SP wp-block-button without
+        has-custom-width to 100%, even though its PC rule already used width:auto with a 270px minimum. The safe correction
+        reuses the same shared WordPress button family: mobile default controls now use intrinsic width, min-width:270px,
+        and max-width:100%. Existing small and CTA/outline variants keep their explicit sizing rules, and custom-width
+        controls remain excluded. This is same-project evidence only and does not satisfy cross-reference promotion.
+      blocked_by:
+        - NEEDS_INDEPENDENT_REFERENCE_EVIDENCE_BEFORE_CROSS_PROJECT_PROMOTION
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-SP-BUTTON-L-WIDTH-20260903
+          kind: LOCAL_RESEARCH
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/blocks/wp-block-buttonLink-style.css
+          commit: ''
+          note: >-
+            LIVE current Figma inspection of SP Parts 1399:19144 found normal short button_L instances at 270x60 and a
+            long button_L instance at 327x98. Existing Theme default SP buttons were forced to width:100%; the change
+            preserves the existing 270px semantic minimum while allowing content-driven growth up to the container.
+      contradicts: []
+    notes:
+      - "Promotion review disposition 2026-09-03: KEEP_PROJECT_ONLY; same-project evidence only, no auto-promotion."
