@@ -2,7 +2,7 @@
 
 Status: current PC Figma/page-shell authority is available; production-safe Backnumber implementation remains fail-closed on both canonical monthly issue data ownership and a current dedicated SP counterpart.
 
-Updated: 2026-09-02
+Updated: 2026-09-03
 
 ## Current-state correction
 
@@ -10,10 +10,12 @@ The current implementation authority is the Human-selected Figma file `fKYDn9ikp
 
 A live re-scan confirms:
 
-- current PC frame: `1634:10806` (`publications`, 1380 × 6488)
+- current PC frame: `1634:10806` (`publications`, 1380 × 6307)
 - current SP page: `114:5409`
 - the old `560:677` (`backnumber_sp`) node does **not** resolve in the current file
 - no dedicated Backnumber / Publications SP full-page frame is present among the current SP page top-level frames
+
+The 2026-09-03 live PC canvas re-check and direct full-page `get_design_context` both resolve the same current `1634:10806` Publications frame. Its current top-level geometry is 1380 × 6307; the previously recorded 6488px height was stale and must not be used as a current visual-QA target. This correction changes only the observed authority geometry; it does not relax the data-owner or SP-authority blockers below.
 
 Therefore, any older note that calls `560:677` the current SP authority is stale. It may describe historical design evidence, but it must not be used for implementation or pixel-parity claims.
 
@@ -132,6 +134,6 @@ When the data owner is known:
 - A node ID that existed in an older Figma lineage is not current authority merely because an audit once called it current.
 - Current page-level re-scan must win over stale node maps when the Human changes the canonical Figma file.
 - A contextual instance must not redefine a shared component master merely because it was the latest instance inspected; inspect the shared family across PC/SP before changing a global selector.
-- Dependency audits are operational inputs. Stale blockers or stale Figma nodes can actively send later agents down the wrong implementation path, so they must be corrected as soon as disproved.
+- Dependency audits are operational inputs. Stale blockers, stale Figma nodes, or stale geometry can actively send later agents down the wrong implementation/QA path, so they must be corrected as soon as current authority disproves them.
 
-No new Theme PHP/JS, ACF contract, `parts.php`, Form, Formidable, Slider, Search result UI, or Calendar work is introduced by this audit refresh. The only Theme change in this correction is restoring the shared ordered-list CSS to its current shared Figma master.
+No new Theme PHP/JS, ACF contract, `parts.php`, Form, Formidable, Slider, Search result UI, or Calendar work is introduced by this audit refresh. The only Theme change in the earlier contextual-list correction was restoring the shared ordered-list CSS to its current shared Figma master; this 2026-09-03 geometry correction changes no Theme code.
