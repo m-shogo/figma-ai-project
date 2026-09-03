@@ -141,7 +141,7 @@ try {
   assert(pc, 'PC TOP FV elements missing');
   assert(close(pc.stageLeft, pc.rootLeft, 1), `PC stage/root left ${pc.stageLeft}/${pc.rootLeft}`);
   assert(close(pc.stageWidth, pc.rootWidth, 1), `PC stage/root width ${pc.stageWidth}/${pc.rootWidth}`);
-  assert(close(pc.stageWidth, pc.viewportWidth, 1), `PC stage/client viewport ${pc.stageWidth}/${pc.viewportWidth}`);
+  assert(pc.stageWidth <= pc.viewportWidth && pc.stageWidth >= pc.viewportWidth - 20, `PC stable-gutter stage width ${pc.stageWidth} vs viewport ${pc.viewportWidth}`);
   assert(pc.stageWidth >= 1360 && pc.stageWidth <= 1380, `PC rendered stage width ${pc.stageWidth}`);
   assert(close(pc.stageGap, 20, 1), `PC stage gap ${pc.stageGap}`);
   assert(close(pc.stagePaddingLeft, 60, 1), `PC stage left padding ${pc.stagePaddingLeft}`);
@@ -175,7 +175,7 @@ try {
   await desktopContext.close();
 
   console.log('PASS Budokan TOP FV canonical SP geometry and hidden desktop-only guide QA.');
-  console.log('PASS Budokan TOP FV current PC fixed insets/guide + fluid MV + notice geometry QA.');
+  console.log('PASS Budokan TOP FV current PC fixed insets/guide + stable-gutter fluid MV + notice geometry QA.');
 } finally {
   await browser.close();
 }
