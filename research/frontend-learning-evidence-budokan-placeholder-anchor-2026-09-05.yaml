@@ -1,0 +1,78 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: OBS-BUDOKAN-PLACEHOLDER-ANCHOR-SCROLL-SIDE-EFFECT
+    summary: >-
+      Placeholder destinations must not be authored as navigable fragment links when a shared
+      delegated anchor-scroll handler owns same-page hash navigation. If the destination is not yet
+      authoritative, render the visual affordance fail-closed so an unresolved placeholder cannot
+      mutate the background page scroll position.
+    category: RUNTIME
+    applicability:
+      scope: REFERENCE
+      conditions:
+        - A shared or delegated click handler processes same-page fragment links such as a[href^="#"].
+        - A design contains a visually link-like row or CTA whose real destination is not yet established by current content or navigation authority.
+        - Placeholder markup would otherwise use href="#" or another synthetic fragment solely to appear clickable.
+      exclusions:
+        - The fragment target is real, authored, present in the document, and verified by runtime QA.
+        - The content owner has established a real destination URL or WordPress-managed navigation item.
+        - The control is intentionally specified to navigate to the top of the document.
+    promotion_state: null
+    promotion:
+      candidate: false
+      rationale: >-
+        Budokan reproduced one concrete interaction defect: unresolved TOP FV guide fallbacks were
+        authored as href="#", and the Theme's shared pageScroll handler treated them as same-page
+        navigation, allowing a click to move the background page upward. The bounded correction
+        removes navigation semantics only for unresolved fallbacks while preserving the authored SP
+        purpose shortcut to #top_guide-01. Keep this as Budokan/reference evidence until an
+        independent implementation reproduces the same delegated-anchor placeholder failure class.
+      blocked_by:
+        - Independent project or reference reproducing a placeholder fragment intercepted by shared anchor-navigation behavior.
+        - Cross-project evidence that fail-closed unresolved affordances preserve ownership without hiding valid authored navigation.
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-PLACEHOLDER-ANCHOR-REPRO-20260905
+          kind: COMMIT
+          reference_id: BUDOKAN-WORDPRESS
+          run_id: ''
+          path: experiments/wordpress-acf-runtime/scripts/budokan-top-body-interaction-browser-qa.mjs
+          commit: 85efba5e69ffb7a1afb3efc7806c8f2c0a7eeebe
+          note: >-
+            Disposable WordPress + Playwright coverage was added before the production correction to
+            pointer-test unresolved TOP FV href="#" fallbacks from a scrolled state and record an
+            upward background scroll as a defect rather than treating technical clickability as success.
+        - evidence_id: EV-BUDOKAN-PLACEHOLDER-ANCHOR-FIX-20260905
+          kind: COMMIT
+          reference_id: BUDOKAN-WORDPRESS
+          run_id: '33919570599'
+          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/front-page.php
+          commit: 6784cbae3c2494a8d1abf5145a3419f1e2ad8007
+          note: >-
+            The verified merged correction renders all eight unresolved TOP FV guide rows and the
+            fallback notice without href and with aria-disabled=true, while the authored SP fixed
+            purpose CTA remains #top_guide-01. Budokan TOP Body Interaction Runtime passed on the PR
+            head together with TOP FV and REF001 audit checks.
+        - evidence_id: EV-BUDOKAN-PLACEHOLDER-ANCHOR-OWNER-20260905
+          kind: CANONICAL_DOC
+          reference_id: BUDOKAN-WORDPRESS
+          run_id: ''
+          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/common.js
+          commit: 6784cbae3c2494a8d1abf5145a3419f1e2ad8007
+          note: >-
+            Existing Theme pageScroll ownership handles same-page fragment navigation globally, so
+            unresolved content destinations must not masquerade as synthetic fragment targets.
+      contradicts: []
+    notes:
+      - Do not invent destination URLs from visual labels when WordPress/Figma/current content authority does not establish them.
+      - Do not disable real authored anchors; the SP purpose shortcut remains a verified link to #top_guide-01.
+      - Prefer removing false navigation semantics over adding special-case scroll-handler exclusions for each placeholder.
+      - Runtime QA should pointer-test from a meaningful scrolled position and compare scrollY before and after activation.
