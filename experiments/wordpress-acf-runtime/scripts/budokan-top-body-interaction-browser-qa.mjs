@@ -19,7 +19,7 @@ const rectStable = (before, after, label, tolerance = 1) => {
 };
 
 async function openPage(viewport) {
-  const page = await browser.newPage({ viewportSize: viewport });
+  const page = await browser.newPage({ viewport });
   const pageErrors = [];
   page.on('pageerror', error => pageErrors.push(String(error)));
   await page.goto(targetUrl, { waitUntil: 'networkidle' });
