@@ -1,0 +1,42 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: OBS-BUDOKAN-OVERLAP-SECTION-END-GEOMETRY
+    summary: >-
+      When a Figma section intentionally overlaps child content across an intro/body boundary, child geometry can match while the parent section still has a visible rhythm error. Validate the full section height and the final child-to-section-end gap in addition to the first child position, especially when negative margins are used for authored overlap.
+    category: VISUAL_FIDELITY
+    applicability:
+      scope: PROJECT
+      conditions:
+        - A section uses intentional overlap or negative margin between authored regions.
+        - Runtime QA already validates child position or size but the section-end rhythm can still drift.
+      exclusions:
+        - Do not convert Figma canvas coordinates directly into fixed page positioning when normal flow can express the design.
+        - Do not change shared layout owners when the mismatch is confined to one bounded project section.
+    promotion_state: PROJECT_ONLY
+    promotion:
+      candidate: false
+      rationale: >-
+        Current evidence is a single Budokan TOP Guide case. It is strong enough to retain as a project-local QA rule, but there is no independent project reference proving that it should become a cross-project frontend rule.
+      blocked_by:
+        - NEEDS_INDEPENDENT_REFERENCE_EVIDENCE_BEFORE_CROSS_PROJECT_PROMOTION
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-TOP-GUIDE-END-GEOMETRY-20260904
+          kind: LOCAL_RESEARCH
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/wordpress-acf-runtime/scripts/budokan-top-guide-browser-qa.mjs
+          commit: ''
+          note: >-
+            Fresh current-file Figma reads measured the SP User Guide as 375 by 1668 with the first card at y 401, three contiguous cards ending at y 1604, and a 64px final gap. Existing runtime checks already covered the first-card position and card geometry but did not cover the section end, allowing a stale 131px body bottom padding to survive. The bounded TOP Guide CSS correction changes only the SP bottom padding to 64px, while the runtime contract now asserts both the full SP section height and final bottom gap; PC remains 689px high with a zero final gap.
+      contradicts: []
+    notes:
+      - "Promotion review disposition 2026-09-04: KEEP_PROJECT_ONLY; this is same-project evidence only and does not satisfy independent-reference promotion requirements."
