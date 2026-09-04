@@ -7,9 +7,11 @@ on:
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/inc/menu.php'
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/sidebar.php'
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/templates/template-oneColumnLocalNav.php'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/common.js'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-local-nav-runtime-qa.sh'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-local-nav-browser-qa.mjs'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-local-nav-interaction-browser-qa.mjs'
+      - 'experiments/wordpress-acf-runtime/scripts/budokan-anchor-interaction-browser-qa.mjs'
       - 'experiments/wordpress-acf-runtime/scripts/seed-budokan-local-nav-qa.php'
       - '.github/workflows/budokan-local-nav-runtime.yml'
   workflow_dispatch:
@@ -46,6 +48,7 @@ jobs:
           npx playwright install --with-deps chromium
           node experiments/wordpress-acf-runtime/scripts/budokan-local-nav-browser-qa.mjs "$qa_url"
           node experiments/wordpress-acf-runtime/scripts/budokan-local-nav-interaction-browser-qa.mjs "$qa_url"
+          node experiments/wordpress-acf-runtime/scripts/budokan-anchor-interaction-browser-qa.mjs "$qa_url"
 
       - name: Cleanup disposable WordPress runtime
         if: always()

@@ -275,19 +275,16 @@ window.addEventListener('resize', setVw);
 //   };
 
   // ==========================================================================
-  // スムーススクロール制御（ヘッダー分の高さは「const header = $('#global_header').height() * 2.5;」で調整）
+  // スムーススクロール制御
   // ==========================================================================
   const pageScroll = function () {
     $(document).ready(function () {
-      //URLのハッシュ値を取得
+      // URLのハッシュ値を取得。初期ハッシュはブラウザが既に対象へ移動するため、
+      // ページ上端へ戻さず、レイアウト安定後にヘッダー分だけ位置を補正する。
       const urlHash = location.hash;
-      //ハッシュ値があればページ内スクロール
       if ('' !== urlHash) {
-        //スクロールを0に戻しておく
-        $('body,html').stop().scrollTop(1);
         setTimeout(function () {
-          //ロード時の処理を待ち、時間差でスクロール実行
-          scrollToAnker(urlHash);
+          scrollToAnker(urlHash, false);
         }, 300);
       }
 
@@ -301,19 +298,27 @@ window.addEventListener('resize', setVw);
           const href = $(this).attr('href');
           //リンク先が#か空だったらhtmlに
           const hash = href === '#' || href === '' ? 'html' : href;
-          //スクロール実行
-          scrollToAnker(hash);
+          //スクロール実行。対象が存在しない場合は現在位置を維持する。
+          scrollToAnker(hash, true);
           //リンク無効化
           return false;
         });
 
       // 関数：スムーススクロール
-      // 指定したアンカー(#ID)へアニメーションでスクロール
-      function scrollToAnker(hash) {
+      // 指定したアンカー(#ID)へ移動。通常クリックのみアニメーションする。
+      function scrollToAnker(hash, animate) {
         const target = $(hash);
+        if (!target.length) return false;
+        const targetOffset = target.offset();
+        if (!targetOffset) return false;
         const header = $('#global_header').innerHeight() + 30;
-        const position = target.offset().top - header;
-        $('body,html').stop().animate({ scrollTop: position }, 300);
+        const position = Math.max(0, targetOffset.top - header);
+        if (animate) {
+          $('body,html').stop().animate({ scrollTop: position }, 300);
+        } else {
+          $('body,html').stop().scrollTop(position);
+        }
+        return true;
       }
     });
   };
