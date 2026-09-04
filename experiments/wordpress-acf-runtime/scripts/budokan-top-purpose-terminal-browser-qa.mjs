@@ -61,6 +61,8 @@ try {
       terminalBottom: terminalRect.bottom,
       linkWidth: linkRect.width,
       linkHeight: linkRect.height,
+      hitX,
+      hitY,
       position: style.position,
       zIndex: parseInt(style.zIndex, 10),
       pointerEvents: style.pointerEvents,
@@ -95,7 +97,9 @@ try {
   assert(sp.href === '#top_guide-01' && sp.targetId === 'top_guide-01', `SP purpose sticky must reuse existing purpose master; href=${sp.href}.`);
   assert(sp.hitStack.some((entry) => entry.className.split(/\s+/).includes('tpm_link')), `SP purpose sticky must own its center hit target; stack=${JSON.stringify(sp.hitStack)}.`);
 
-  await mobilePage.locator('.top_purposeMenu .tpm_link').click();
+  // Use a real pointer event at the already verified viewport hit target. Locator.click()
+  // may auto-scroll fixed elements before dispatch, which is not the interaction being tested.
+  await mobilePage.mouse.click(sp.hitX, sp.hitY);
   await mobilePage.waitForTimeout(450);
   const afterClick = await mobilePage.evaluate(() => {
     const target = document.querySelector('#top_guide-01');
