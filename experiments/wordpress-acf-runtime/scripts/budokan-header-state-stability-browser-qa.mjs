@@ -81,7 +81,16 @@ async function exerciseFocus(page, selector, label) {
   const locator = page.locator(selector);
   await locator.waitFor({ state: 'visible' });
   const before = await snapshot(page, selector);
-  await locator.focus();
+  // Use the browser's native DOM focus directly. Playwright Locator.focus() may
+  // first scroll an element into view as part of its actionability pipeline,
+  // which would manufacture a scroll jump unrelated to the Theme's focus state.
+  await page.evaluate((targetSelector) => {
+    const target = document.querySelector(targetSelector);
+    if (!(target instanceof HTMLElement)) {
+      throw new Error(`Focus target not found: ${targetSelector}`);
+    }
+    target.focus();
+  }, selector);
   await page.waitForTimeout(80);
   const focused = await snapshot(page, selector);
   assertGeometryStable(before, focused, `${label} focus`);
