@@ -86,3 +86,20 @@ function nipponbudokan_enqueue_modaal_scroll_stability() {
     );
 }
 add_action('wp_enqueue_scripts', 'nipponbudokan_enqueue_modaal_scroll_stability', 20);
+
+/**
+ * 深いスクロール位置でsticky headerへTab移動すると、ブラウザがheaderの
+ * 通常フロー位置へスクロールを戻す場合がある。Tab直前の位置を保持し、
+ * 次のfocus先が画面内のsticky header内だった場合だけ同期的に復元する。
+ */
+function nipponbudokan_enqueue_header_focus_stability() {
+    $path = get_theme_file_path('/js/header-focus-stability.js');
+    wp_enqueue_script(
+        'header-focus-stability-script',
+        get_theme_file_uri('/js/header-focus-stability.js'),
+        array('common-script'),
+        file_exists($path) ? filemtime($path) : null,
+        array('strategy' => 'defer', 'in_footer' => false)
+    );
+}
+add_action('wp_enqueue_scripts', 'nipponbudokan_enqueue_header_focus_stability', 20);
