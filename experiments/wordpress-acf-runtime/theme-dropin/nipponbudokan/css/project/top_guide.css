@@ -39,7 +39,7 @@
     .tg_body {
         position: relative;
         z-index: 1;
-        padding: 0 32px 131px;
+        padding: 0 32px 64px;
         background-color: var(--color-gray-background);
 
         .global_inner {
