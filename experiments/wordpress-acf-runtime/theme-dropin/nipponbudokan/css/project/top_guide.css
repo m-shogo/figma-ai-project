@@ -6,6 +6,7 @@
 // ========================================================================== */
 .top_guide-01 {
     position: relative;
+    overflow-x: clip;
 
     .tg_deco {
         position: absolute;
@@ -199,6 +200,8 @@
     }
 
     @media screen and (min-width: 768px) {
+        overflow-x: visible;
+
         .tg_deco {
             display: none;
         }

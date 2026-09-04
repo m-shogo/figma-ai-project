@@ -40,6 +40,7 @@ try {
   const sp = await mobilePage.evaluate(() => {
     const section = document.querySelector('#top_guide-01');
     const intro = section?.querySelector('.tg_intro');
+    const deco = section?.querySelector('.tg_deco');
     const cards = section ? [...section.querySelectorAll('.tg_card')] : [];
     const firstImage = cards[0]?.querySelector('.tg_card_image img');
     const heading = section?.querySelector('.tg_heading_ja');
@@ -47,10 +48,11 @@ try {
     const lead = section?.querySelector('.tg_lead');
     const firstTitle = cards[0]?.querySelector('.tg_card_title');
     const firstText = cards[0]?.querySelector('.tg_card_text');
-    if (!section || !intro || cards.length !== 3 || !firstImage || !heading || !headingEn || !lead || !firstTitle || !firstText) return null;
+    if (!section || !intro || !deco || cards.length !== 3 || !firstImage || !heading || !headingEn || !lead || !firstTitle || !firstText) return null;
 
     const sectionRect = section.getBoundingClientRect();
     const introRect = intro.getBoundingClientRect();
+    const decoRect = deco.getBoundingClientRect();
     const cardRects = cards.map((card) => card.getBoundingClientRect());
     const imageRect = firstImage.getBoundingClientRect();
     const headingStyle = getComputedStyle(heading);
@@ -60,9 +62,13 @@ try {
     const textStyle = getComputedStyle(firstText);
 
     return {
+      clientWidth: document.documentElement.clientWidth,
+      scrollWidth: document.documentElement.scrollWidth,
       sectionWidth: sectionRect.width,
       sectionHeight: sectionRect.height,
       introHeight: introRect.height,
+      decoRight: decoRect.right - sectionRect.left,
+      sectionOverflowX: getComputedStyle(section).overflowX,
       firstCardLeft: cardRects[0].left - sectionRect.left,
       firstCardTop: cardRects[0].top - sectionRect.top,
       firstCardWidth: cardRects[0].width,
@@ -85,6 +91,9 @@ try {
 
   assert(sp, 'SP TOP Guide elements were not found.');
   assert(close(sp.sectionWidth, 375), `SP mobile layout viewport expected 375px section, got ${sp.sectionWidth}.`);
+  assert(sp.decoRight > sp.sectionWidth + 100, `SP guide decoration no longer exercises the intentional off-canvas geometry; right=${sp.decoRight}, section=${sp.sectionWidth}.`);
+  assert(sp.sectionOverflowX === 'clip', `SP guide must clip its off-canvas decoration locally, got overflow-x=${sp.sectionOverflowX}.`);
+  assert(sp.scrollWidth <= sp.clientWidth + 1, `SP guide decoration leaked into root horizontal scroll: client=${sp.clientWidth}, scroll=${sp.scrollWidth}.`);
   assert(close(sp.sectionHeight, 1668), `SP section height expected 1668px, got ${sp.sectionHeight}.`);
   assert(close(sp.introHeight, 514), `SP intro expected 514px, got ${sp.introHeight}.`);
   assert(close(sp.firstCardLeft, 32), `SP first card x expected 32px, got ${sp.firstCardLeft}.`);
@@ -138,6 +147,7 @@ try {
       sectionWidth: sectionRect.width,
       sectionHeight: sectionRect.height,
       introHeight: introRect.height,
+      sectionOverflowX: getComputedStyle(section).overflowX,
       cardsTop: cardRects[0].top - sectionRect.top,
       cardsLeft: cardRects[0].left - sectionRect.left,
       widths: cardRects.map((rect) => rect.width),
@@ -160,6 +170,7 @@ try {
   });
 
   assert(pc, 'PC TOP Guide elements were not found.');
+  assert(pc.sectionOverflowX === 'visible', `PC guide overflow-x must return to visible, got ${pc.sectionOverflowX}.`);
   assert(close(pc.sectionHeight, 689), `PC section height expected 689px, got ${pc.sectionHeight}.`);
   assert(close(pc.introHeight, 320), `PC intro expected 320px, got ${pc.introHeight}.`);
   assert(close(pc.cardsTop, 218), `PC card rail y expected 218px, got ${pc.cardsTop}.`);
@@ -184,7 +195,7 @@ try {
 
   await desktopContext.close();
 
-  console.log('PASS Budokan TOP Guide SP geometry and type family QA.');
+  console.log('PASS Budokan TOP Guide SP geometry, typography, and local overflow containment QA.');
   console.log('PASS Budokan TOP Guide PC geometry and type family QA.');
 } finally {
   await browser.close();
