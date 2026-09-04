@@ -2,7 +2,7 @@
 /**
  * Plugin Name: メニューのみ インポート/エクスポート
  * Description: 外観 → メニューだけを JSON で書き出し・読み込みします。WordPress 公式のメニュー API / Importer と同じ手順です。
- * Version: 1.1.0
+ * Version: 1.2.0
  * Requires at least: 6.0
  * Requires PHP: 7.4
  */
@@ -42,7 +42,8 @@ function menu_only_io_render_page() {
 	<div class="wrap">
 		<h1>メニューの書き出し / 読み込み</h1>
 		<p>外観 → メニューの項目と、テーマ位置への割り当てだけを JSON にします。投稿・固定ページ本体は含みません。</p>
-		<p>読み込みは <a href="https://developer.wordpress.org/reference/functions/wp_update_nav_menu_item/">wp_update_nav_menu_item()</a> と、公式 WordPress Importer と同じ規則です。別サイトの投稿 ID は使いません。リンク先が無ければその項目は入れません。</p>
+		<p>読み込みは <a href="https://developer.wordpress.org/reference/functions/wp_update_nav_menu_item/">wp_update_nav_menu_item()</a> と、公式 WordPress Importer と同じ規則です。別サイトの投稿 ID は使いません。既定では、リンク先が無ければその項目は入れません。</p>
+		<p>名前と階層だけ残したいときは、読み込み時に「リンク先が無くても残す」を選んでください。無い固定ページへは紐づけず、<strong>カスタムリンク</strong>にします。あとから 外観 → メニュー で正しいページへ付け直せます。</p>
 
 		<h2>書き出す</h2>
 		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
@@ -66,6 +67,12 @@ function menu_only_io_render_page() {
 				<label>
 					<input type="checkbox" name="menu_only_io_locations" value="1" checked>
 					このテーマにあるメニュー位置だけ割り当てる
+				</label>
+			</p>
+			<p>
+				<label>
+					<input type="checkbox" name="menu_only_io_keep_unresolved" value="1">
+					リンク先が無くても、名前と階層は残す（ページ未作成の項目はカスタムリンクになります）
 				</label>
 			</p>
 			<?php submit_button( 'JSON を読み込む', 'secondary', 'submit', false ); ?>
@@ -117,8 +124,9 @@ function menu_only_io_handle_import() {
 
 	update_option( MENU_ONLY_IO_BACKUP_OPTION, menu_only_io_export_payload(), false );
 
-	$with_locations = ! empty( $_POST['menu_only_io_locations'] );
-	$result         = menu_only_io_import_payload( $data, $with_locations, false );
+	$with_locations   = ! empty( $_POST['menu_only_io_locations'] );
+	$keep_unresolved  = ! empty( $_POST['menu_only_io_keep_unresolved'] );
+	$result           = menu_only_io_import_payload( $data, $with_locations, false, $keep_unresolved );
 
 	$type = $result['errors'] || $result['warnings'] ? 'warning' : 'success';
 	menu_only_io_redirect_notice( menu_only_io_result_message( $result ), $type );
@@ -134,7 +142,7 @@ function menu_only_io_handle_restore() {
 		menu_only_io_redirect_notice( '戻せる控えがありません。', 'error' );
 	}
 
-	$result = menu_only_io_import_payload( $backup, true, true );
+	$result = menu_only_io_import_payload( $backup, true, true, false );
 	$type   = $result['errors'] || $result['warnings'] ? 'warning' : 'success';
 	menu_only_io_redirect_notice( '控えを読み込みました。 ' . menu_only_io_result_message( $result ), $type );
 }
@@ -286,7 +294,7 @@ function menu_only_io_export_item( $item ) {
 	return $row;
 }
 
-function menu_only_io_import_payload( array $data, $with_locations, $is_restore ) {
+function menu_only_io_import_payload( array $data, $with_locations, $is_restore, $keep_unresolved = false ) {
 	$warnings = array();
 	$errors   = array();
 	$skipped  = array();
@@ -304,7 +312,7 @@ function menu_only_io_import_payload( array $data, $with_locations, $is_restore 
 			continue;
 		}
 
-		$result = menu_only_io_replace_menu( $name, $slug, isset( $menu_data['items'] ) ? $menu_data['items'] : array(), $same_site, $data['site_url'] ?? '', $skipped );
+		$result = menu_only_io_replace_menu( $name, $slug, isset( $menu_data['items'] ) ? $menu_data['items'] : array(), $same_site, $data['site_url'] ?? '', $skipped, $warnings, $keep_unresolved );
 		if ( is_wp_error( $result ) ) {
 			$errors[] = $name . ': ' . $result->get_error_message();
 			continue;
@@ -350,7 +358,7 @@ function menu_only_io_import_payload( array $data, $with_locations, $is_restore 
 	);
 }
 
-function menu_only_io_replace_menu( $name, $slug, array $items, $same_site, $source_site_url, array &$skipped ) {
+function menu_only_io_replace_menu( $name, $slug, array $items, $same_site, $source_site_url, array &$skipped, array &$warnings, $keep_unresolved ) {
 	$old = $slug ? wp_get_nav_menu_object( $slug ) : false;
 	if ( ! $old ) {
 		$old = wp_get_nav_menu_object( $name );
@@ -373,7 +381,7 @@ function menu_only_io_replace_menu( $name, $slug, array $items, $same_site, $sou
 			continue;
 		}
 
-		$built = menu_only_io_build_item_args( $item, $same_site, $source_site_url, $skipped );
+		$built = menu_only_io_build_item_args( $item, $same_site, $source_site_url, $skipped, $warnings, $keep_unresolved );
 		if ( null === $built ) {
 			continue;
 		}
@@ -432,7 +440,7 @@ function menu_only_io_replace_menu( $name, $slug, array $items, $same_site, $sou
 	return (int) $new_id;
 }
 
-function menu_only_io_build_item_args( array $item, $same_site, $source_site_url, array &$skipped ) {
+function menu_only_io_build_item_args( array $item, $same_site, $source_site_url, array &$skipped, array &$warnings, $keep_unresolved ) {
 	$type   = isset( $item['type'] ) ? sanitize_key( $item['type'] ) : 'custom';
 	$object = isset( $item['object'] ) ? sanitize_key( $item['object'] ) : '';
 	$title  = isset( $item['title'] ) ? wp_strip_all_tags( $item['title'] ) : '';
@@ -443,29 +451,52 @@ function menu_only_io_build_item_args( array $item, $same_site, $source_site_url
 	if ( 'post_type' === $type ) {
 		$object_id = menu_only_io_resolve_post( $object, $item, $same_site );
 		if ( ! $object_id ) {
-			$skipped[] = $label . '（投稿がこのサイトに無いので公式 Importer と同じくスキップ）';
-			return null;
+			$placeholder = menu_only_io_unresolved_placeholder( $label, $url, $source_site_url, '（投稿がこのサイトに無いので公式 Importer と同じくスキップ）', $keep_unresolved, $skipped, $warnings, isset( $item['object_path'] ) ? (string) $item['object_path'] : '' );
+			if ( null === $placeholder ) {
+				return null;
+			}
+			$type      = $placeholder['type'];
+			$object    = $placeholder['object'];
+			$object_id = 0;
+			$url       = $placeholder['url'];
+		} else {
+			$url = '';
 		}
-		$url = '';
 	} elseif ( 'taxonomy' === $type ) {
 		$object_id = menu_only_io_resolve_term( $object, $item );
 		if ( ! $object_id ) {
-			$skipped[] = $label . '（タクソノミーがこのサイトに無いのでスキップ）';
-			return null;
+			$placeholder = menu_only_io_unresolved_placeholder( $label, $url, $source_site_url, '（タクソノミーがこのサイトに無いのでスキップ）', $keep_unresolved, $skipped, $warnings );
+			if ( null === $placeholder ) {
+				return null;
+			}
+			$type      = $placeholder['type'];
+			$object    = $placeholder['object'];
+			$object_id = 0;
+			$url       = $placeholder['url'];
+		} else {
+			$url = '';
 		}
-		$url = '';
 	} elseif ( 'post_type_archive' === $type ) {
 		if ( ! $object || ! get_post_type_object( $object ) ) {
-			$skipped[] = $label . '（投稿タイプがこのサイトに無いのでスキップ）';
-			return null;
+			$placeholder = menu_only_io_unresolved_placeholder( $label, $url, $source_site_url, '（投稿タイプがこのサイトに無いのでスキップ）', $keep_unresolved, $skipped, $warnings );
+			if ( null === $placeholder ) {
+				return null;
+			}
+			$type      = $placeholder['type'];
+			$object    = $placeholder['object'];
+			$object_id = 0;
+			$url       = $placeholder['url'];
 		}
 	} else {
 		$type   = 'custom';
 		$object = 'custom';
 		$url    = menu_only_io_rewrite_url( $url, $source_site_url );
 		if ( $url === '' ) {
-			$skipped[] = $label . '（URL が空のカスタムリンクなのでスキップ）';
-			return null;
+			$placeholder = menu_only_io_unresolved_placeholder( $label, '', $source_site_url, '（URL が空のカスタムリンクなのでスキップ）', $keep_unresolved, $skipped, $warnings );
+			if ( null === $placeholder ) {
+				return null;
+			}
+			$url = $placeholder['url'];
 		}
 	}
 
@@ -484,6 +515,29 @@ function menu_only_io_build_item_args( array $item, $same_site, $source_site_url
 		'menu-item-classes'     => implode( ' ', array_map( 'sanitize_html_class', $classes ) ),
 		'menu-item-xfn'         => isset( $item['xfn'] ) ? $item['xfn'] : '',
 		'menu-item-status'      => 'publish',
+	);
+}
+
+function menu_only_io_unresolved_placeholder( $label, $url, $source_site_url, $skip_suffix, $keep_unresolved, array &$skipped, array &$warnings, $object_path = '' ) {
+	if ( ! $keep_unresolved ) {
+		$skipped[] = $label . $skip_suffix;
+		return null;
+	}
+
+	$rewritten = menu_only_io_rewrite_url( $url, $source_site_url );
+	if ( $rewritten === '' && $object_path !== '' ) {
+		$rewritten = home_url( '/' . trim( $object_path, '/' ) . '/' );
+	}
+	if ( $rewritten === '' ) {
+		$rewritten = home_url( '/#menu-placeholder' );
+	}
+
+	$warnings[] = $label . '（リンク先が無いのでカスタムリンクとして残しました）';
+
+	return array(
+		'type'   => 'custom',
+		'object' => 'custom',
+		'url'    => $rewritten,
 	);
 }
 
