@@ -5,6 +5,8 @@ on:
     paths:
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/functions.php'
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/front-page.php'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_header.php'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/inc/menu.php'
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/project/top_mainVisual.css'
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/layout/global_header.css'
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/layout/global_wrapper.css'
