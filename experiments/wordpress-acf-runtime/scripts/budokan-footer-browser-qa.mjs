@@ -137,7 +137,7 @@ try {
   }
   assert(close(pc.bodyPadInline, 110, 1), `PC body padding-inline expected 110, got ${pc.bodyPadInline}.`);
   assert(close(pc.snsSize, 40, 1), `PC SNS size expected 40, got ${pc.snsSize}.`);
-  assert(pc.linksDisplay === 'flex', `PC footer links expected flex, got ${pc.linksDisplay}.`);
+  assert(pc.linksDisplay === 'block', `PC footer links expected block owner, got ${pc.linksDisplay}.`);
   assert(pc.pageTopBg === 'rgb(202, 153, 87)', `PC Page Top expected gold, got ${pc.pageTopBg}.`);
   assert(close(pc.pageTopWidth, 170, 2), `PC Page Top width expected 170, got ${pc.pageTopWidth}.`);
   assert(close(pc.pageTopHeight, 60, 1), `PC Page Top height expected 60, got ${pc.pageTopHeight}.`);
