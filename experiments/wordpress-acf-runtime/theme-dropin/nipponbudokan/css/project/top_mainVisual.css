@@ -52,6 +52,8 @@
                         width: 100%;
                         height: 100%;
                         object-fit: cover;
+                        /* Current SP Figma 1455:5811 crops the shared hero image right/down of center. */
+                        object-position: 64.4% 59.8%;
                     }
                 }
             }
@@ -273,6 +275,10 @@
                         height: 600px;
                         &::after {
                             background-image: linear-gradient(25.47deg, rgba(16, 24, 39, 0.6) 17.905%, rgba(16, 24, 39, 0) 46.76%);
+                        }
+                        img {
+                            /* PC 1603:7662 is effectively centered; keep the SP crop from leaking upward. */
+                            object-position: 50% 50%;
                         }
                     }
                 }
