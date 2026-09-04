@@ -446,7 +446,7 @@ window.addEventListener('resize', setVw);
         document.documentElement.classList.add('_device-touch');
       }
 
-      const isPcLayout = () => window.innerWidth > headerBreakpointMin; // PCレイアウトかどうかを判定
+      const isPcLayout = () => window.innerWidth >= headerBreakpointMin; // PCレイアウトかどうかを判定
 
       if (!hasTouch) return; // タッチデバイスでない場合は処理しない
 
@@ -500,8 +500,8 @@ window.addEventListener('resize', setVw);
     let lastWidthForBreakpoint = null;
     $(window).on('load resize', function () {
       const currentWidth = $(window).width();
-      const wasPcOrOver = lastWidthForBreakpoint !== null && lastWidthForBreakpoint > headerBreakpointMin;
-      const isPcOrOver = currentWidth > headerBreakpointMin;
+      const wasPcOrOver = lastWidthForBreakpoint !== null && lastWidthForBreakpoint >= headerBreakpointMin;
+      const isPcOrOver = currentWidth >= headerBreakpointMin;
       if (lastWidthForBreakpoint !== null && wasPcOrOver !== isPcOrOver) {
         closeAllTouchMenus();
         closeOverlays(true);
@@ -612,7 +612,7 @@ window.addEventListener('resize', setVw);
     // ウィンドウ幅によってクラス付与
     $(window).on('load resize', function () {
       const w = $(window).width();
-      if (w <= 768) {
+      if (w < 768) {
         $('html').addClass('_sp').removeClass('_pc _tablet');
       } else if (w < 1024) {
         $('html').addClass('_tablet').removeClass('_pc _sp');
@@ -669,7 +669,7 @@ window.addEventListener('resize', setVw);
       }
     });
 
-    // 表にスクロール用ラッパー要素とclassを追加
+    // 表にスクロール用ラッパー要素とclass追加
     $('.module_table-01').wrap('<div class="module_table-wrap"></div>');
     $(window).on('load resize', function () {
       $('.module_table-wrap').each(function () {
@@ -751,8 +751,8 @@ window.addEventListener('resize', setVw);
     let lastWidthForContentFixedBreakpoint = null;
     $(window).on('load resize', function () {
       const currentWidth = $(window).width();
-      const wasPcOrOver = lastWidthForContentFixedBreakpoint !== null && lastWidthForContentFixedBreakpoint > headerBreakpointMin;
-      const isPcOrOver = currentWidth > headerBreakpointMin;
+      const wasPcOrOver = lastWidthForContentFixedBreakpoint !== null && lastWidthForContentFixedBreakpoint >= headerBreakpointMin;
+      const isPcOrOver = currentWidth >= headerBreakpointMin;
       if (lastWidthForContentFixedBreakpoint !== null && wasPcOrOver !== isPcOrOver) {
         apply();
       }

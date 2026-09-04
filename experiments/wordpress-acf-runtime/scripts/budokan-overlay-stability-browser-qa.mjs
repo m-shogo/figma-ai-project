@@ -139,6 +139,37 @@ async function exerciseEscapeClose(page, selector, openClass, label) {
   assertClosedStable(before, closed, openClass, `${label} escape close`);
 }
 
+async function exerciseTouchMegaMenuBreakpoint(browser, width, label) {
+  const context = await browser.newContext({
+    viewport: { width, height: 900 },
+    hasTouch: true,
+  });
+  const page = await context.newPage();
+  await page.goto(url, { waitUntil: 'networkidle' });
+
+  const state = await page.evaluate(() => {
+    const header = document.querySelector('#global_header');
+    const item = document.querySelector('.global_header .gn_mega [class*="gnl_item"]._hasChild');
+    const title = item?.querySelector(':scope > [class*="gnl_title"]');
+    if (!header || !item || !title) return null;
+    title.dispatchEvent(new Event('touchstart', { bubbles: true, cancelable: true }));
+    return {
+      headerHeight: header.getBoundingClientRect().height,
+      htmlClass: document.documentElement.className,
+      touchOpen: item.classList.contains('_touchOpen'),
+      bodyOpenBg: document.body.classList.contains('_open-bg'),
+    };
+  });
+
+  assert(state, `${label}: required header/mega-menu fixture missing.`);
+  assert(close(state.headerHeight, 100, 1), `${label}: CSS is not using the PC header at ${width}px (height ${state.headerHeight}).`);
+  assert(state.touchOpen, `${label}: PC mega menu did not enter _touchOpen on touchstart at ${width}px.`);
+  assert(state.bodyOpenBg, `${label}: PC mega menu did not activate its background overlay at ${width}px.`);
+  assert(!state.htmlClass.split(/\s+/).includes('_sp'), `${label}: html is classified _sp while CSS uses the PC header at ${width}px.`);
+
+  await context.close();
+}
+
 async function runViewport(browser, viewport, contextOptions, label) {
   const context = await browser.newContext({ viewport, ...contextOptions });
   const page = await context.newPage();
@@ -166,11 +197,14 @@ const browser = await chromium.launch({ headless: true });
 try {
   await runViewport(browser, { width: 375, height: 900 }, { isMobile: true, hasTouch: true }, 'SP 375');
   await runViewport(browser, { width: 767, height: 900 }, {}, 'SP edge 767');
+  await exerciseTouchMegaMenuBreakpoint(browser, 768, 'PC CSS boundary 768 touch');
+  await exerciseTouchMegaMenuBreakpoint(browser, 769, 'PC JS edge 769 touch');
   await runViewport(browser, { width: 1280, height: 900 }, {}, 'PC minimum 1280');
   await runViewport(browser, { width: 1380, height: 900 }, {}, 'PC 1380');
   console.log('PASS Budokan menu/search overlays preserve visible header/FV geometry across current SP and PC owner widths.');
   console.log('PASS Budokan overlay scroll lock restores position across toggle-close, Escape-close, menu reopen, and search reopen.');
   console.log('PASS Budokan overlays do not increase existing document horizontal overflow.');
+  console.log('PASS Budokan 768px PC CSS boundary keeps touch mega-menu behavior and html layout classification aligned with the header breakpoint.');
 } finally {
   await browser.close();
 }
