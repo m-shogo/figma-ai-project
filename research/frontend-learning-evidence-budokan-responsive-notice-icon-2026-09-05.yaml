@@ -1,0 +1,96 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: OBS-BUDOKAN-RESPONSIVE-NOTICE-ICON-AUTHORITY
+    summary: >-
+      A single human-editable content owner does not imply that every responsive visual primitive
+      must share one asset. When current PC and SP Figma authority intentionally uses different icon
+      treatments, keep the WordPress content/ACF owner intact and switch only the presentation at the
+      existing breakpoint instead of inventing responsive content fields or forcing one asset across
+      both surfaces.
+    category: VISUAL_FIDELITY
+    applicability:
+      scope: REFERENCE
+      conditions:
+        - Current PC and SP Figma authority shows materially different visual primitives for the same semantic content.
+        - Existing WordPress/ACF ownership already correctly owns the content and must remain human-editable.
+        - The difference can be expressed in the existing component CSS/breakpoint without changing the data model.
+      exclusions:
+        - PC and SP differ only because one side is stale or non-authoritative.
+        - The responsive variants require genuinely different editorial content and current ownership does not authorize separate fields.
+        - An exact authored asset cannot be durably materialized and the proposed fallback would be a visual guess.
+    promotion_state: null
+    promotion:
+      candidate: false
+      rationale: >-
+        Budokan provides one verified reference case only. Current PC TOP notice uses a 24px primary
+        filled octagon SVG while current SP TOP notice uses Font Awesome 6 Pro Light circle-exclamation
+        at 20px. The merged fix preserves the existing single ACF notice repeater and changes only the
+        component presentation by breakpoint. Keep project-only until an independent reference confirms
+        this responsive-presentation/unchanged-content-owner pattern.
+      blocked_by:
+        - Independent project or reference reproducing a responsive visual-primitive divergence under one stable content owner.
+        - Cross-reference evidence that breakpoint-specific presentation avoids data-model churn without hiding an editorial ownership requirement.
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-NOTICE-FIGMA-PC-20260905
+          kind: CANONICAL_DOC
+          reference_id: BUDOKAN-WORDPRESS
+          run_id: ''
+          path: Figma FKQaJDu5TZXHoCzPsfP92E node 1603:8101
+          commit: ''
+          note: >-
+            Current PC Figma icon exported as authoritative SVG_STRING: 24x24 octagon filled/stroked
+            #BF3E2B with a white exclamation. The previously tracked Theme SVG was white outline plus
+            white exclamation and therefore disappeared against the current white PC notice surface.
+        - evidence_id: EV-BUDOKAN-NOTICE-FIGMA-SP-20260905
+          kind: CANONICAL_DOC
+          reference_id: BUDOKAN-WORDPRESS
+          run_id: ''
+          path: Figma FKQaJDu5TZXHoCzPsfP92E node 446:11658
+          commit: ''
+          note: >-
+            Current SP Figma specifies Font Awesome 6 Pro Light U+F06A at 20px in #E6E6E6 and a
+            #C84A32 red base treatment, proving that the PC SVG should not be reused visually on SP.
+        - evidence_id: EV-BUDOKAN-NOTICE-OWNER-20260905
+          kind: CANONICAL_DOC
+          reference_id: BUDOKAN-WORDPRESS
+          run_id: ''
+          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/acf/json/group_top_notice.json
+          commit: 699125a5b58ea0334870a3551b8bc6619e343b15
+          note: >-
+            Existing ACF Pro ownership is one front-page top_notice_select plus top_notice-01 repeater
+            with one textarea content field; no responsive content fields are authoritative.
+        - evidence_id: EV-BUDOKAN-NOTICE-FIX-20260905
+          kind: COMMIT
+          reference_id: BUDOKAN-WORDPRESS
+          run_id: '33927452139'
+          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/project/top_mainVisual.css
+          commit: 699125a5b58ea0334870a3551b8bc6619e343b15
+          note: >-
+            PR #405 merged the exact current PC Figma SVG, switches SP to the authored existing
+            Font Awesome family at the existing breakpoint, and aligns the SP base red without
+            changing markup ownership or ACF schema. Budokan TOP FV Runtime passed Disposable
+            WordPress, SP/PC browser geometry, overlay stability, and header interaction state QA.
+        - evidence_id: EV-BUDOKAN-NOTICE-INTERACTION-REGRESSION-20260905
+          kind: TEST_RUN
+          reference_id: BUDOKAN-WORDPRESS
+          run_id: '33927452073'
+          path: experiments/wordpress-acf-runtime/scripts/budokan-top-body-interaction-browser-qa.mjs
+          commit: 699125a5b58ea0334870a3551b8bc6619e343b15
+          note: >-
+            TOP Body Interaction Runtime remained green after the bounded notice visual correction,
+            confirming the responsive presentation change did not reintroduce scroll/pointer instability.
+      contradicts: []
+    notes:
+      - The SP notice texture remains intentionally unresolved: its Figma image hash is e67b1a1aaea102b8ef9da9d61fb39db492026bd4 and the source payload is 2,857,936 bytes; it is not the current MV image and no verified durable Theme media owner was found in this run.
+      - Do not substitute the MV image or another visually similar raster for that texture.
+      - Current PC/SP Figma notice editorial copy differs, but existing ACF ownership has one textarea; do not invent responsive notice fields without explicit authority.
+      - Breakpoint-specific presentation is acceptable here because semantic content ownership remains unchanged and the visual divergence is directly established by current Figma.
