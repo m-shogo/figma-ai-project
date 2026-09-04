@@ -181,6 +181,10 @@ async function auditHoverAndFocus(page, selector, label) {
   await auditHoverAndFocus(page, '.top_news_articles .news_item_link', 'SP TOP News item');
 
   const purpose = await visibleTarget(page, '.top_purposeMenu .tpm_link', 'SP purpose fixed CTA');
+  const purposeHref = await purpose.getAttribute('href');
+  if (purposeHref !== '#top_guide-01') {
+    failures.push(`SP purpose CTA authored target mismatch: ${purposeHref}`);
+  }
   await page.evaluate(() => window.scrollTo(0, Math.max(0, document.documentElement.scrollHeight - innerHeight - 120)));
   await page.waitForTimeout(80);
   await assertPointerOwnsCenter(purpose, 'SP purpose fixed CTA');
@@ -196,7 +200,6 @@ async function auditHoverAndFocus(page, selector, label) {
       const guideRect = guide?.getBoundingClientRect();
       const headerRect = header?.getBoundingClientRect();
       return {
-        hash: location.hash,
         guideTop: guideRect?.top ?? null,
         headerHeight: headerRect?.height ?? 0,
         scrollY: window.scrollY,
@@ -204,7 +207,6 @@ async function auditHoverAndFocus(page, selector, label) {
         clientWidth: document.documentElement.clientWidth,
       };
     });
-    if (result.hash !== '#top_guide-01') failures.push(`SP purpose CTA hash mismatch: ${result.hash}`);
     if (result.guideTop === null || result.guideTop < result.headerHeight - 2 || result.guideTop > result.headerHeight + 40) {
       failures.push(`SP purpose CTA landed at unstable Guide geometry: guideTop=${result.guideTop}, headerHeight=${result.headerHeight}`);
     }
