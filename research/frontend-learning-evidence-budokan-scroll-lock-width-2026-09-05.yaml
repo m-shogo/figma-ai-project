@@ -13,7 +13,7 @@ records:
       positioning, preserve the header's established layout-width contract and verify the rendered
       rectangle before/open/close; fixed width percentages can resolve against a narrower viewport
       than the normal-flow owner when scrollbar gutters or page minimum widths are involved.
-    category: INTERACTION
+    category: RUNTIME
     applicability:
       scope: REFERENCE
       conditions:
@@ -38,7 +38,7 @@ records:
     evidence:
       supports:
         - evidence_id: EV-BUDOKAN-SCROLL-LOCK-WIDTH-FAIL-20260905
-          kind: CI_RUN
+          kind: RUN_RECORD
           reference_id: BUDOKAN-WORDPRESS
           run_id: '33903197572'
           path: experiments/wordpress-acf-runtime/scripts/budokan-overlay-stability-browser-qa.mjs
