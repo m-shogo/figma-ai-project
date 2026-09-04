@@ -19,6 +19,21 @@ function isSansFamily(family) {
   return value.includes('sans-serif') || value.includes('gothic') || value.includes('kaku') || value.includes('roboto');
 }
 
+async function assertFooterSnsPlaceholdersFailClosed(page, label) {
+  const legacyLinks = await page.locator('.gf_sns a[href="#"]').count();
+  assert(legacyLinks === 0, `${label}: unresolved footer SNS destinations still render as href="#" links (${legacyLinks}).`);
+
+  const disabledOwners = page.locator('.gf_sns .gf_sns_link[aria-disabled="true"]');
+  const disabledCount = await disabledOwners.count();
+  assert(disabledCount === 3, `${label}: expected 3 fail-closed footer SNS visual owners, got ${disabledCount}.`);
+
+  const labels = await disabledOwners.evaluateAll((elements) => elements.map((element) => element.getAttribute('aria-label')));
+  assert(
+    JSON.stringify(labels) === JSON.stringify(['YouTube', 'Instagram', 'X']),
+    `${label}: footer SNS placeholder labels changed unexpectedly: ${JSON.stringify(labels)}.`,
+  );
+}
+
 async function measure(page) {
   return page.evaluate(() => {
     const footer = document.querySelector('#global_footer.global_footer');
@@ -79,6 +94,7 @@ try {
   });
   const mobilePage = await mobileContext.newPage();
   await mobilePage.goto(url, { waitUntil: 'networkidle' });
+  await assertFooterSnsPlaceholdersFailClosed(mobilePage, 'SP Footer');
   const sp = await measure(mobilePage);
   assert(sp, 'SP Footer was not found.');
   assert(sp.footerBg === 'rgb(255, 255, 255)', `SP footer background expected white, got ${sp.footerBg}.`);
@@ -106,6 +122,7 @@ try {
   const desktopContext = await browser.newContext({ viewport: { width: 1380, height: 900 } });
   const desktopPage = await desktopContext.newPage();
   await desktopPage.goto(url, { waitUntil: 'networkidle' });
+  await assertFooterSnsPlaceholdersFailClosed(desktopPage, 'PC Footer');
   const pc = await measure(desktopPage);
   assert(pc, 'PC Footer was not found.');
   assert(pc.footerBg === 'rgb(255, 255, 255)', `PC footer background expected white, got ${pc.footerBg}.`);
@@ -135,6 +152,7 @@ try {
     console.log('PASS Budokan subpage Footer SP white / SNS 48 / gold Page Top / no map.');
     console.log('PASS Budokan subpage Footer PC white / SNS 40 / links / gold Page Top 170x60.');
   }
+  console.log('PASS unresolved footer SNS destinations fail closed without changing authored SNS geometry.');
 } finally {
   await browser.close();
 }
