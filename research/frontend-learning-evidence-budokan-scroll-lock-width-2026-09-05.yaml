@@ -38,7 +38,7 @@ records:
     evidence:
       supports:
         - evidence_id: EV-BUDOKAN-SCROLL-LOCK-WIDTH-FAIL-20260905
-          kind: RUN_RECORD
+          kind: COMMIT
           reference_id: BUDOKAN-WORDPRESS
           run_id: '33903197572'
           path: experiments/wordpress-acf-runtime/scripts/budokan-overlay-stability-browser-qa.mjs
