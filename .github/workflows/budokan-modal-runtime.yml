@@ -3,9 +3,11 @@ name: Budokan Modal Runtime
 on:
   pull_request:
     paths:
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/functions.php'
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/inc/front.php'
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/common.js'
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/modaal.min.js'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/modaal-scroll-stability.js'
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/modaal.min.css'
       - 'experiments/wordpress-acf-runtime/scripts/seed-budokan-modal-qa.php'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-modal-interaction-browser-qa.mjs'
@@ -22,8 +24,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: PHP syntax for Budokan modal runtime fixture
-        run: php -l experiments/wordpress-acf-runtime/scripts/seed-budokan-modal-qa.php
+      - name: PHP syntax for Budokan modal runtime
+        run: |
+          php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/functions.php
+          php -l experiments/wordpress-acf-runtime/scripts/seed-budokan-modal-qa.php
 
       - name: Start disposable WordPress runtime
         env:
