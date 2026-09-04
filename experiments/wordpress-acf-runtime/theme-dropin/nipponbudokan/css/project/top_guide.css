@@ -171,10 +171,21 @@
     }
 
     .tg_card_line {
+        position: relative;
         width: 36px;
-        height: 1px;
+        height: 0;
         margin: 0;
-        background-color: var(--color-accent);
+        background: none;
+
+        &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 36px;
+            height: 1px;
+            background-color: var(--color-accent);
+        }
     }
 
     .tg_card_text {
