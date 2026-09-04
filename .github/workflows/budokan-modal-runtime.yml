@@ -1,0 +1,66 @@
+name: Budokan Modal Runtime
+
+on:
+  pull_request:
+    paths:
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/functions.php'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/inc/front.php'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/common.js'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/modaal.min.js'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/modaal-scroll-stability.js'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/modaal.min.css'
+      - 'experiments/wordpress-acf-runtime/scripts/seed-budokan-modal-qa.php'
+      - 'experiments/wordpress-acf-runtime/scripts/budokan-modal-interaction-browser-qa.mjs'
+      - '.github/workflows/budokan-modal-runtime.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: PHP syntax for Budokan modal runtime
+        run: |
+          php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/functions.php
+          php -l experiments/wordpress-acf-runtime/scripts/seed-budokan-modal-qa.php
+
+      - name: Start disposable WordPress runtime
+        env:
+          BUDOKAN_LOCAL_NAV_KEEP_RUNTIME: '1'
+        run: bash experiments/wordpress-acf-runtime/scripts/budokan-local-nav-runtime-qa.sh
+
+      - name: Seed modal QA and install browser runtime
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          docker compose run --rm -e WP_ENVIRONMENT_TYPE=local cli eval-file /fixture/scripts/seed-budokan-modal-qa.php
+          modal_page_id="$(docker compose run --rm cli option get budokan_modal_qa_page_id)"
+          modal_template="$(docker compose run --rm cli post meta get "$modal_page_id" _wp_page_template)"
+          if [[ "$modal_template" != "templates/template-oneColumn.php" ]]; then
+            echo "FAIL modal QA page template mismatch: ${modal_template}." >&2
+            exit 1
+          fi
+          cd ../..
+          npm install --no-save --package-lock=false playwright@1.54.2
+          npx playwright install --with-deps chromium
+
+      - name: Run modal interaction browser QA
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          modal_page_id="$(docker compose run --rm cli option get budokan_modal_qa_page_id)"
+          modal_qa_url="${WP_URL}/?page_id=${modal_page_id}"
+          cd ../..
+          node experiments/wordpress-acf-runtime/scripts/budokan-modal-interaction-browser-qa.mjs "$modal_qa_url"
+
+      - name: Cleanup disposable WordPress runtime
+        if: always()
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          docker compose down -v --remove-orphans
