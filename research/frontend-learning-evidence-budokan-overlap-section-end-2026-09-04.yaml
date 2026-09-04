@@ -32,11 +32,11 @@ records:
         - evidence_id: EV-BUDOKAN-TOP-GUIDE-END-GEOMETRY-20260904
           kind: LOCAL_RESEARCH
           reference_id: REF-002-BUDOKAN
-          run_id: ''
+          run_id: '33860332062'
           path: experiments/wordpress-acf-runtime/scripts/budokan-top-guide-browser-qa.mjs
           commit: ''
           note: >-
-            Fresh current-file Figma reads measured the SP User Guide as 375 by 1668 with the first card at y 401, three contiguous cards ending at y 1604, and a 64px final gap. Existing runtime checks already covered the first-card position and card geometry but did not cover the section end, allowing a stale 131px body bottom padding to survive. The bounded TOP Guide CSS correction changes only the SP bottom padding to 64px, while the runtime contract now asserts both the full SP section height and final bottom gap; PC remains 689px high with a zero final gap.
+            Fresh current-file Figma reads measured the SP User Guide as 375 by 1668 with the first card at y 401, three contiguous cards ending at y 1604, and a 64px final gap. Existing runtime checks covered the first-card position and card geometry but not the section end, allowing a stale 131px body bottom padding to survive. After correcting the padding, browser QA exposed a second exact mismatch: runtime height was 1671px because each authored Figma separator has zero layout height with a visible 1px stroke, while Theme separators consumed 1px of flex layout height. The bounded correction keeps the visible 1px rule in an absolutely positioned pseudo-element on a zero-height flex item. The runtime contract now asserts the full SP section height and final bottom gap; PC remains 689px high with a zero final gap.
       contradicts: []
     notes:
       - "Promotion review disposition 2026-09-04: KEEP_PROJECT_ONLY; this is same-project evidence only and does not satisfy independent-reference promotion requirements."
