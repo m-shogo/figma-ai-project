@@ -46,7 +46,7 @@ jobs:
         run: |
           cd experiments/wordpress-acf-runtime
           source scripts/runtime-env.sh
-          docker compose run --rm cli eval-file /fixture/scripts/seed-budokan-disclosure-qa.php
+          docker compose run --rm -e WP_ENVIRONMENT_TYPE=local cli eval-file /fixture/scripts/seed-budokan-disclosure-qa.php
           page_id="$(docker compose run --rm cli option get budokan_local_nav_qa_page_id)"
           disclosure_page_id="$(docker compose run --rm cli option get budokan_disclosure_qa_page_id)"
           qa_url="${WP_URL}/?page_id=${page_id}"
