@@ -77,23 +77,39 @@ async function pointerBox(page, selector, label) {
   return box;
 }
 
-async function exerciseFocus(page, selector, label) {
+async function exerciseKeyboardEntryFocus(page, selector, label) {
+  await page.evaluate(() => {
+    if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
+  });
+  const before = await snapshot(page, selector);
+  let reached = false;
+  for (let index = 0; index < 12; index += 1) {
+    await page.keyboard.press('Tab');
+    reached = await page.locator(selector).evaluate((element) => document.activeElement === element);
+    if (reached) break;
+  }
+  assert(reached, `${label}: keyboard Tab sequence did not reach the intended control.`);
+  await page.waitForTimeout(80);
+  const focused = await snapshot(page, selector);
+  assertGeometryStable(before, focused, `${label} keyboard focus`);
+}
+
+async function exerciseFocusStyle(page, selector, label) {
   const locator = page.locator(selector);
   await locator.waitFor({ state: 'visible' });
   const before = await snapshot(page, selector);
-  // Use the browser's native DOM focus directly. Playwright Locator.focus() may
-  // first scroll an element into view as part of its actionability pipeline,
-  // which would manufacture a scroll jump unrelated to the Theme's focus state.
+  // Focus-style geometry is measured without browser focus scrolling here. The
+  // real user keyboard-entry scroll behavior is verified separately above.
   await page.evaluate((targetSelector) => {
     const target = document.querySelector(targetSelector);
     if (!(target instanceof HTMLElement)) {
       throw new Error(`Focus target not found: ${targetSelector}`);
     }
-    target.focus();
+    target.focus({ preventScroll: true });
   }, selector);
   await page.waitForTimeout(80);
   const focused = await snapshot(page, selector);
-  assertGeometryStable(before, focused, `${label} focus`);
+  assertGeometryStable(before, focused, `${label} focus style`);
   const ownsFocus = await locator.evaluate((element) => document.activeElement === element);
   assert(ownsFocus, `${label}: focus did not remain on the intended control.`);
 }
@@ -103,9 +119,6 @@ async function exerciseHover(page, selector, label) {
   await locator.waitFor({ state: 'visible' });
   const box = await pointerBox(page, selector, label);
   const before = await snapshot(page, selector);
-  // Use raw pointer movement rather than locator.hover(): locator.hover() is allowed
-  // to scroll the locator into view, which would manufacture the very scroll jump
-  // this regression test is intended to detect.
   await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
   await page.waitForTimeout(80);
   const hovered = await snapshot(page, selector);
@@ -123,8 +136,6 @@ async function exerciseActive(page, selector, label) {
   await page.waitForTimeout(40);
   const active = await snapshot(page, selector);
   assertGeometryStable(before, active, `${label} active`);
-  // Release away from the control so this :active-state measurement does not
-  // synthesize a click that opens menu/search and contaminates later checks.
   const viewport = page.viewportSize();
   await page.mouse.move(1, Math.max(1, viewport.height - 2));
   await page.mouse.up();
@@ -139,6 +150,10 @@ async function runDesktop(browser) {
   const scrollY = await scrollDeep(page);
   assert(scrollY > 0, 'PC: fixture did not reach a scrolled state.');
 
+  // First prove the user-real keyboard path. If this moves the page, that is a
+  // product UX defect rather than a Playwright actionability artifact.
+  await exerciseKeyboardEntryFocus(page, '.gh_logo a', 'PC logo');
+
   const controls = [
     ['.gh_logo a', 'PC logo'],
     ['.gh_lang', 'PC EN'],
@@ -148,7 +163,7 @@ async function runDesktop(browser) {
 
   for (const [selector, label] of controls) {
     await exerciseHover(page, selector, label);
-    await exerciseFocus(page, selector, label);
+    await exerciseFocusStyle(page, selector, label);
     await exerciseActive(page, selector, label);
   }
 
@@ -165,6 +180,8 @@ async function runMobile(browser) {
   const scrollY = await scrollDeep(page);
   assert(scrollY > 0, 'SP: fixture did not reach a scrolled state.');
 
+  await exerciseKeyboardEntryFocus(page, '.gh_logo a', 'SP logo');
+
   const controls = [
     ['.gh_logo a', 'SP logo'],
     ['.gh_lang', 'SP EN'],
@@ -173,7 +190,7 @@ async function runMobile(browser) {
   ];
 
   for (const [selector, label] of controls) {
-    await exerciseFocus(page, selector, label);
+    await exerciseFocusStyle(page, selector, label);
   }
 
   assert(errors.length === 0, `SP: browser errors during header focus QA: ${errors.join(' | ')}`);
@@ -184,8 +201,8 @@ const browser = await chromium.launch({ headless: true });
 try {
   await runDesktop(browser);
   await runMobile(browser);
-  console.log('PASS Budokan PC header hover/focus/active states do not shift the control, sticky header, TOP main visual, scroll position, or document width.');
-  console.log('PASS Budokan SP header focus states preserve control/header/FV geometry, scroll position, and horizontal overflow state.');
+  console.log('PASS Budokan PC keyboard focus + hover/focus/active states do not shift the control, sticky header, TOP main visual, scroll position, or document width.');
+  console.log('PASS Budokan SP keyboard focus + focus states preserve control/header/FV geometry, scroll position, and horizontal overflow state.');
 } finally {
   await browser.close();
 }
