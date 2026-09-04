@@ -98,24 +98,24 @@ $default_lead_sp = '武道の振興、書道文化の継承、<br>公益事業�
                 <div class="tm_guide_group">
                     <p class="tm_guide_title"><img src="<?php echo esc_url($theme_uri . '/images/top/ico-budo.svg'); ?>" alt="" width="36" height="36" loading="lazy"><span>武道</span></p>
                     <ul class="tm_guide_list">
-                        <li><a href="#">武道を知りたい</a></li>
-                        <li><a href="#">大会・行事に参加したい</a></li>
-                        <li><a href="#">指導について知りたい</a></li>
+                        <li><a class="tm_guide_link" aria-disabled="true">武道を知りたい</a></li>
+                        <li><a class="tm_guide_link" aria-disabled="true">大会・行事に参加したい</a></li>
+                        <li><a class="tm_guide_link" aria-disabled="true">指導について知りたい</a></li>
                     </ul>
                 </div>
                 <div class="tm_guide_group">
                     <p class="tm_guide_title"><img src="<?php echo esc_url($theme_uri . '/images/top/ico-calligraphy.svg'); ?>" alt="" width="36" height="36" loading="lazy"><span>書道</span></p>
                     <ul class="tm_guide_list">
-                        <li><a href="#">書道を学びたい</a></li>
-                        <li><a href="#">展覧会に参加したい</a></li>
+                        <li><a class="tm_guide_link" aria-disabled="true">書道を学びたい</a></li>
+                        <li><a class="tm_guide_link" aria-disabled="true">展覧会に参加したい</a></li>
                     </ul>
                 </div>
                 <div class="tm_guide_group">
                     <p class="tm_guide_title"><img src="<?php echo esc_url($theme_uri . '/images/top/ico-budokan.svg'); ?>" alt="" width="36" height="36" loading="lazy"><span>日本武道館</span></p>
                     <ul class="tm_guide_list">
-                        <li><a href="#">研修施設を利用したい</a></li>
-                        <li><a href="#">コンサートに行きたい</a></li>
-                        <li><a href="#">武道館について知りたい</a></li>
+                        <li><a class="tm_guide_link" aria-disabled="true">研修施設を利用したい</a></li>
+                        <li><a class="tm_guide_link" aria-disabled="true">コンサートに行きたい</a></li>
+                        <li><a class="tm_guide_link" aria-disabled="true">武道館について知りたい</a></li>
                     </ul>
                 </div>
             </div>
@@ -152,7 +152,7 @@ $default_lead_sp = '武道の振興、書道文化の継承、<br>公益事業�
                             <?php endforeach; ?>
                         </ul>
                     <?php else: ?>
-                        <p class="tn_text"><a href="#">令和8年8月4日(火) 令和8年熊本地震　お見舞い</a></p>
+                        <p class="tn_text"><a class="tn_placeholder" aria-disabled="true">令和8年8月4日(火) 令和8年熊本地震　お見舞い</a></p>
                     <?php endif; ?>
                 </div>
             </div>
