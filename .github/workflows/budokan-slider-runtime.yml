@@ -1,0 +1,85 @@
+name: Budokan Slider Runtime
+
+on:
+  pull_request:
+    paths:
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/acf/blocks/slider.php'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/inc/field.php'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/module_slider.js'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/swiper-bundle.min.css'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/swiper-bundle.min.js'
+      - 'experiments/wordpress-acf-runtime/scripts/seed-budokan-slider-qa.php'
+      - 'experiments/wordpress-acf-runtime/scripts/budokan-slider-interaction-browser-qa.mjs'
+      - '.github/workflows/budokan-slider-runtime.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify production ACF Slider owns its runtime assets
+        run: |
+          php -l experiments/wordpress-acf-runtime/scripts/seed-budokan-slider-qa.php
+          field_php='experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/inc/field.php'
+          grep -Fq "'name'              => 'slider'" "$field_php"
+          grep -Fq "'enqueue_assets'" "$field_php"
+          grep -Fq "'module-slider'" "$field_php"
+          grep -Fq "/js/module_slider.js" "$field_php"
+          grep -Fq "/js/swiper-bundle.min.js" "$field_php"
+
+      - name: Start disposable WordPress runtime
+        env:
+          BUDOKAN_LOCAL_NAV_KEEP_RUNTIME: '1'
+        run: bash experiments/wordpress-acf-runtime/scripts/budokan-local-nav-runtime-qa.sh
+
+      - name: Seed slider QA and load the production-owned assets on the QA page
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          docker compose run --rm -e WP_ENVIRONMENT_TYPE=local cli eval-file /fixture/scripts/seed-budokan-slider-qa.php
+          slider_page_id="$(docker compose run --rm cli option get budokan_slider_qa_page_id)"
+          slider_template="$(docker compose run --rm cli post meta get "$slider_page_id" _wp_page_template)"
+          if [[ "$slider_template" != "templates/template-oneColumn.php" ]]; then
+            echo "FAIL slider QA page template mismatch: ${slider_template}." >&2
+            exit 1
+          fi
+
+          cat > /tmp/budokan-slider-qa-assets.php <<PHP
+          <?php
+          add_action('wp_enqueue_scripts', function () {
+              if (!is_page(${slider_page_id})) {
+                  return;
+              }
+              wp_enqueue_style('budokan-slider-qa-swiper', get_theme_file_uri('/css/swiper-bundle.min.css'), array(), '14.0.1');
+              wp_enqueue_script('budokan-slider-qa-swiper', get_theme_file_uri('/js/swiper-bundle.min.js'), array(), '14.0.1', array('strategy' => 'defer', 'in_footer' => false));
+              wp_enqueue_script('budokan-slider-qa-module', get_theme_file_uri('/js/module_slider.js'), array('budokan-slider-qa-swiper'), filemtime(get_theme_file_path('/js/module_slider.js')), array('strategy' => 'defer', 'in_footer' => false));
+          });
+          PHP
+          docker compose exec -T wordpress mkdir -p /var/www/html/wp-content/mu-plugins
+          docker compose cp /tmp/budokan-slider-qa-assets.php wordpress:/var/www/html/wp-content/mu-plugins/budokan-slider-qa-assets.php
+
+          cd ../..
+          npm install --no-save --package-lock=false playwright@1.54.2
+          npx playwright install --with-deps chromium
+
+      - name: Run slider interaction browser QA
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          slider_page_id="$(docker compose run --rm cli option get budokan_slider_qa_page_id)"
+          slider_qa_url="${WP_URL}/?page_id=${slider_page_id}"
+          cd ../..
+          node experiments/wordpress-acf-runtime/scripts/budokan-slider-interaction-browser-qa.mjs "$slider_qa_url"
+
+      - name: Cleanup disposable WordPress runtime
+        if: always()
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          docker compose down -v --remove-orphans
