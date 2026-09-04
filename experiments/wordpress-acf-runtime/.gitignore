@@ -1,6 +1,7 @@
 .env
 .runtime/
 *.zip
+!plugins/menu-only-import-export.zip
 advanced-custom-fields-pro/
 
 # Default: client themes in theme-dropin are ignored.

@@ -79,3 +79,11 @@ CSS を保存すると、開いているフロントが約 1 秒で再読込さ�
 - `max_execution_time` / `max_input_time`: 300
 - `max_input_vars`: 10000
 - `WP_MEMORY_LIMIT` 256M / `WP_MAX_MEMORY_LIMIT` 512M（`compose.yml` の `WORDPRESS_CONFIG_EXTRA`）
+
+## メニューのみ インポート/エクスポート
+
+WP に上げる ZIP:
+
+[`plugins/menu-only-import-export.zip`](plugins/menu-only-import-export.zip)
+
+説明: [`plugins/README.md`](plugins/README.md)
