@@ -3,7 +3,7 @@
 @import './global/variables.css'; /* octagon vertices + body fill 2026-09-01 */
 /* @import './global/component.css'; */
 
-@import './layout/global_header.css?v=20260904-search2';
+@import './layout/global_header.css?v=20260905-sticky3';
 @import './layout/global_footer.css?v=20260903-footer2';
 @import './layout/global_wrapper.css?v=20260904-sticky2';
 @import './layout/global_inner.css';

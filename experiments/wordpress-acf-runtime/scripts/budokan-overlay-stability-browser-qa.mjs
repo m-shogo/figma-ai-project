@@ -25,7 +25,10 @@ async function snapshot(page) {
       clientWidth: document.documentElement.clientWidth,
       scrollWidth: document.documentElement.scrollWidth,
       scrollY: window.scrollY,
+      headerPosition: getComputedStyle(header).position,
       headerTop: headerRect.top,
+      headerLeft: headerRect.left,
+      headerWidth: headerRect.width,
       headerHeight: headerRect.height,
       wrapperTop: wrapperRect.top,
       fvTop: fvRect.top,
@@ -84,8 +87,11 @@ function assertOverlayDoesNotIncreaseOverflow(before, state, label) {
 function assertStable(before, opened, label) {
   assert(before && opened, `${label}: required geometry missing.`);
   assert(opened.bodyClass.includes('_contentFixed'), `${label}: body did not enter scroll lock.`);
+  assert(opened.headerPosition === 'fixed', `${label}: scroll-locked header is ${opened.headerPosition}, expected fixed.`);
   assert(close(opened.clientWidth, before.clientWidth, 0.5), `${label}: document width shifted ${before.clientWidth} -> ${opened.clientWidth}.`);
   assert(close(opened.headerTop, before.headerTop), `${label}: header top shifted ${before.headerTop} -> ${opened.headerTop}.`);
+  assert(close(opened.headerLeft, before.headerLeft), `${label}: header left shifted ${before.headerLeft} -> ${opened.headerLeft}.`);
+  assert(close(opened.headerWidth, before.headerWidth, 0.5), `${label}: header width shifted ${before.headerWidth} -> ${opened.headerWidth}.`);
   assert(close(opened.headerHeight, before.headerHeight, 0.5), `${label}: header height shifted ${before.headerHeight} -> ${opened.headerHeight}.`);
   /* Scroll lock intentionally fixes the body at -scrollY. The wrapper carrier
    * moves in viewport coordinates, while the visible FV must remain stationary. */
@@ -98,7 +104,11 @@ function assertStable(before, opened, label) {
 function assertClosedStable(before, closed, openClass, label) {
   assert(!closed.bodyClass.includes(openClass), `${label}: ${openClass} remained after close.`);
   assert(!closed.bodyClass.includes('_contentFixed'), `${label}: scroll lock remained after close.`);
+  assert(closed.headerPosition === 'sticky', `${label}: header did not return to sticky after close (${closed.headerPosition}).`);
   assert(close(closed.scrollY, before.scrollY, 2), `${label}: scroll position was not restored ${before.scrollY} -> ${closed.scrollY}.`);
+  assert(close(closed.headerTop, before.headerTop, 1.5), `${label}: header top did not restore ${before.headerTop} -> ${closed.headerTop}.`);
+  assert(close(closed.headerLeft, before.headerLeft, 1.5), `${label}: header left did not restore ${before.headerLeft} -> ${closed.headerLeft}.`);
+  assert(close(closed.headerWidth, before.headerWidth, 0.5), `${label}: header width did not restore ${before.headerWidth} -> ${closed.headerWidth}.`);
   assert(close(closed.wrapperTop, before.wrapperTop, 2), `${label}: wrapper did not return to the pre-open viewport position ${before.wrapperTop} -> ${closed.wrapperTop}.`);
   assert(close(closed.fvTop, before.fvTop, 2), `${label}: FV did not return to the pre-open viewport position ${before.fvTop} -> ${closed.fvTop}.`);
   assert(close(closed.clientWidth, before.clientWidth, 0.5), `${label}: document width did not restore ${before.clientWidth} -> ${closed.clientWidth}.`);
@@ -139,6 +149,63 @@ async function exerciseEscapeClose(page, selector, openClass, label) {
   assertClosedStable(before, closed, openClass, `${label} escape close`);
 }
 
+async function scrollToSettled(page, requestedY) {
+  await page.evaluate((y) => window.scrollTo(0, y), requestedY);
+  await page.waitForTimeout(100);
+  return snapshot(page);
+}
+
+async function exerciseStickyScrollStability(page, label) {
+  const metrics = await page.evaluate(() => ({
+    maxScrollY: Math.max(0, document.documentElement.scrollHeight - window.innerHeight),
+  }));
+  const positions = [
+    0,
+    1,
+    60,
+    350,
+    Math.floor(metrics.maxScrollY * 0.5),
+    Math.floor(metrics.maxScrollY * 0.8),
+    Math.max(0, metrics.maxScrollY - 2),
+  ].filter((value, index, values) => value <= metrics.maxScrollY && values.indexOf(value) === index);
+
+  let baseline = null;
+  for (const requestedY of positions) {
+    const state = await scrollToSettled(page, requestedY);
+    assert(state, `${label}: sticky geometry missing at requested scroll ${requestedY}.`);
+    assert(!state.bodyClass.includes('_fixed'), `${label}: legacy body._fixed returned at scroll ${state.scrollY}.`);
+    assert(!state.bodyClass.includes('_contentFixed'), `${label}: scroll lock unexpectedly active during ordinary scroll ${state.scrollY}.`);
+    assert(state.headerPosition === 'sticky', `${label}: header position is ${state.headerPosition} during ordinary scroll ${state.scrollY}.`);
+    assert(close(state.headerTop, 0, 1.5), `${label}: sticky header flickered away from viewport top at scroll ${state.scrollY}: ${state.headerTop}.`);
+
+    if (!baseline) {
+      baseline = state;
+    } else {
+      assert(close(state.headerLeft, baseline.headerLeft, 1.5), `${label}: sticky header shifted horizontally ${baseline.headerLeft} -> ${state.headerLeft} at scroll ${state.scrollY}.`);
+      assert(close(state.headerWidth, baseline.headerWidth, 0.5), `${label}: sticky header width changed ${baseline.headerWidth} -> ${state.headerWidth} at scroll ${state.scrollY}.`);
+      assert(close(state.headerHeight, baseline.headerHeight, 0.5), `${label}: sticky header height changed ${baseline.headerHeight} -> ${state.headerHeight} at scroll ${state.scrollY}.`);
+      assert(state.scrollWidth <= baseline.scrollWidth + 1, `${label}: ordinary scrolling increased document scroll width ${baseline.scrollWidth} -> ${state.scrollWidth}.`);
+    }
+  }
+
+  return metrics.maxScrollY;
+}
+
+async function exerciseOverlaysAtScroll(page, scrollY, label) {
+  const scrolled = await scrollToSettled(page, scrollY);
+  assert(scrolled && scrolled.scrollY > 0, `${label}: fixture did not reach a scrolled state.`);
+  if (scrolled.scrollWidth > scrolled.clientWidth + 1) {
+    const offenders = await overflowOffenders(page);
+    console.log(`NOTE ${label}: baseline document scroll width is ${scrolled.scrollWidth}px for ${scrolled.clientWidth}px viewport; overlay QA only fails if open/close increases it.`);
+    console.log(`NOTE ${label}: baseline overflow candidates ${JSON.stringify(offenders)}`);
+  }
+
+  await exerciseOverlay(page, '#gh_menu', '_open-menu', `${label} menu`, 2);
+  await exerciseEscapeClose(page, '#gh_menu', '_open-menu', `${label} menu`);
+  await exerciseOverlay(page, '#gh_search', '_open-search', `${label} search`, 1);
+  await exerciseEscapeClose(page, '#gh_search', '_open-search', `${label} search`);
+}
+
 async function exerciseTouchMegaMenuBreakpoint(browser, width, label) {
   const context = await browser.newContext({
     viewport: { width, height: 900 },
@@ -174,21 +241,12 @@ async function runViewport(browser, viewport, contextOptions, label) {
   const context = await browser.newContext({ viewport, ...contextOptions });
   const page = await context.newPage();
   await page.goto(url, { waitUntil: 'networkidle' });
-  await page.evaluate(() => window.scrollTo(0, 350));
-  await page.waitForTimeout(100);
 
-  const scrolled = await snapshot(page);
-  assert(scrolled && scrolled.scrollY > 0, `${label}: fixture did not reach a scrolled state.`);
-  if (scrolled.scrollWidth > scrolled.clientWidth + 1) {
-    const offenders = await overflowOffenders(page);
-    console.log(`NOTE ${label}: baseline document scroll width is ${scrolled.scrollWidth}px for ${scrolled.clientWidth}px viewport; overlay QA only fails if open/close increases it.`);
-    console.log(`NOTE ${label}: baseline overflow candidates ${JSON.stringify(offenders)}`);
+  const maxScrollY = await exerciseStickyScrollStability(page, label);
+  await exerciseOverlaysAtScroll(page, Math.min(350, Math.max(1, maxScrollY)), `${label} shallow-scroll`);
+  if (maxScrollY > 700) {
+    await exerciseOverlaysAtScroll(page, Math.floor(maxScrollY * 0.7), `${label} deep-scroll`);
   }
-
-  await exerciseOverlay(page, '#gh_menu', '_open-menu', `${label} menu`, 2);
-  await exerciseEscapeClose(page, '#gh_menu', '_open-menu', `${label} menu`);
-  await exerciseOverlay(page, '#gh_search', '_open-search', `${label} search`, 1);
-  await exerciseEscapeClose(page, '#gh_search', '_open-search', `${label} search`);
 
   await context.close();
 }
@@ -201,8 +259,9 @@ try {
   await exerciseTouchMegaMenuBreakpoint(browser, 769, 'PC JS edge 769 touch');
   await runViewport(browser, { width: 1280, height: 900 }, {}, 'PC minimum 1280');
   await runViewport(browser, { width: 1380, height: 900 }, {}, 'PC 1380');
-  console.log('PASS Budokan menu/search overlays preserve visible header/FV geometry across current SP and PC owner widths.');
-  console.log('PASS Budokan overlay scroll lock restores position across toggle-close, Escape-close, menu reopen, and search reopen.');
+  console.log('PASS Budokan sticky header remains viewport-stable from page top through deep scroll without legacy _fixed behavior.');
+  console.log('PASS Budokan menu/search overlays preserve visible header/FV geometry at shallow and deep scroll positions across current SP and PC owner widths.');
+  console.log('PASS Budokan overlay scroll lock restores sticky header mode and scroll position across toggle-close, Escape-close, menu reopen, and search reopen.');
   console.log('PASS Budokan overlays do not increase existing document horizontal overflow.');
   console.log('PASS Budokan 768px PC CSS boundary keeps touch mega-menu behavior and html layout classification aligned with the header breakpoint.');
 } finally {
