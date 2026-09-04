@@ -28,7 +28,7 @@ $cards = array(
             <div class="tg_head">
                 <h2 class="tg_heading">
                     <span class="tg_heading_ja">目的から探す</span>
-                    <span class="tg_heading_en">User guide</span>
+                    <span class="tg_heading_en"><span class="tg_heading_en_initial">U</span>ser guide</span>
                 </h2>
                 <p class="tg_lead">日本武道館では、武道大会や書初め大展覧会、研修会、武道学園の行事など、多様な参加型イベントを開催しています。子どもから大人まで、技術向上や文化体験を目的とした機会がそろっています。参加内容に応じて、各種イベント情報からお選びください。</p>
             </div>

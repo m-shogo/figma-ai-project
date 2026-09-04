@@ -323,15 +323,73 @@ window.addEventListener('resize', setVw);
   // ==========================================================================
   const toggleMenu = function () {
     const $body = $('body');
-    // グローバルナビゲーション
+    const $nav = $('#global_navigation');
+    const $searchBlock = $nav.children('.gn_search');
+    const $searchButton = $('#gh_search');
+    const searchDuration = 300;
+    const $searchPanel = $('<div id="gh_searchPanel" class="gh_searchPanel" hidden />');
+    $body.append($searchPanel);
+
+    const searchPanelHeight = function () {
+      const raw = window.getComputedStyle($searchPanel.get(0)).getPropertyValue('--_search-panel-height');
+      const parsed = parseFloat(raw);
+      return Number.isFinite(parsed) ? parsed : 180;
+    };
+
+    const restoreSearchToNav = function () {
+      $searchPanel.stop(true, true).hide().attr('hidden', true).css({ height: '' });
+      if ($searchBlock.length && $searchBlock.parent()[0] !== $nav[0]) {
+        $nav.append($searchBlock);
+      }
+    };
+
+    const closeMenuUi = function () {
+      $body.removeClass('_open-menu');
+      $('#gh_menu').attr('aria-expanded', 'false');
+    };
+
+    const closeSearchUi = function (immediate, onDone) {
+      $searchButton.attr('aria-expanded', 'false');
+      const finish = function () {
+        restoreSearchToNav();
+        $body.removeClass('_open-search');
+        $body.trigger('nb:overlaychange');
+        if (typeof onDone === 'function') {
+          onDone();
+        }
+      };
+      if (immediate || !$searchPanel.is(':visible')) {
+        finish();
+        return;
+      }
+      $searchPanel.stop(true, true).animate({ height: 0 }, searchDuration, 'swing', finish);
+    };
+
+    const closeOverlays = function (immediate) {
+      closeMenuUi();
+      closeSearchUi(immediate, function () {
+        if (!$body.hasClass('_open-menu')) {
+          $body.removeClass('_open-bg');
+        }
+        $body.trigger('nb:overlaychange');
+      });
+    };
+
+    // グローバルナビゲーション（PCは右から / 検索は別パネル）
     $('#gh_menu').on('click', function () {
-      $body.toggleClass('_open-menu _open-bg');
-      const isOpen = $body.hasClass('_open-menu');
-      $(this).attr('aria-expanded', isOpen ? 'true' : 'false');
+      const opening = !$body.hasClass('_open-menu');
+      closeSearchUi(true);
+      closeAllTouchMenusKeepBg();
+      if (opening) {
+        $body.addClass('_open-menu _open-bg');
+      } else {
+        closeMenuUi();
+        $body.removeClass('_open-bg');
+      }
+      $(this).attr('aria-expanded', opening ? 'true' : 'false');
     });
     $('#gn_close').on('click', function () {
-      $body.removeClass('_open-menu _open-bg');
-      $('#gh_menu').attr('aria-expanded', 'false');
+      closeOverlays(true);
     });
     const globalNavItems = document.querySelectorAll('[class*="gnl_item"]._hasChild');
     globalNavItems.forEach(item => {
@@ -371,10 +429,15 @@ window.addEventListener('resize', setVw);
     // メガメニューのタッチ展開状態クラス（touchMegaMenuSupport とブレークポイント跨ぎ処理の両方から参照）
     const touchOpenClass = '_touchOpen';
     // すべてのタッチ用メガメニューを閉じる（resize 時は toggleMenu スコープからも呼ぶ）
-    const closeAllTouchMenus = () => {
+    const closeAllTouchMenusKeepBg = () => {
       const touchOpenItems = document.querySelectorAll(`.global_header .gn_mega [class*="gnl_item"].${touchOpenClass}`);
       touchOpenItems.forEach((el) => el.classList.remove(touchOpenClass));
-      $body.removeClass('_open-bg');
+    };
+    const closeAllTouchMenus = () => {
+      closeAllTouchMenusKeepBg();
+      if (!$body.hasClass('_open-menu') && !$body.hasClass('_open-search')) {
+        $body.removeClass('_open-bg');
+      }
     };
 
     const touchMegaMenuSupport = function () {
@@ -441,7 +504,8 @@ window.addEventListener('resize', setVw);
       const isPcOrOver = currentWidth > headerBreakpointMin;
       if (lastWidthForBreakpoint !== null && wasPcOrOver !== isPcOrOver) {
         closeAllTouchMenus();
-        $body.removeClass('_open-menu _open-bg _contentFixed');
+        closeOverlays(true);
+        $body.removeClass('_contentFixed');
       }
       lastWidthForBreakpoint = currentWidth;
     });
@@ -480,25 +544,40 @@ window.addEventListener('resize', setVw);
     //   },
     // });
 
-    // 検索
-    $('#gh_search').on('click', function () {
-      if ($body.hasClass('_open-bg')) {
-        $body.addClass('_open-search');
+    // 検索：メニューを閉じて、既存 .gn_search を上から下ろす（Figma 2295:8023）
+    $searchButton.attr('aria-expanded', 'false');
+    $searchButton.on('click', function () {
+      const opening = !$body.hasClass('_open-search');
+      closeAllTouchMenusKeepBg();
+      closeMenuUi();
+      if (opening) {
+        $searchPanel.append($searchBlock);
+        $body.addClass('_open-search _open-bg');
+        $searchButton.attr('aria-expanded', 'true');
+        $searchPanel
+          .css({ display: 'flex', height: 0, overflow: 'hidden' })
+          .removeAttr('hidden')
+          .stop(true, true)
+          .animate({ height: searchPanelHeight() }, searchDuration, 'swing', function () {
+            $searchBlock.find('.ms_input').trigger('focus');
+          });
       } else {
-        if ($body.hasClass('_open-search')) {
-          $body.removeClass('_open-search').removeClass('_open-bg');
-        } else {
-          $body.addClass('_open-search').addClass('_open-bg');
-        }
+        closeSearchUi(false, function () {
+          if (!$body.hasClass('_open-menu')) {
+            $body.removeClass('_open-bg');
+          }
+        });
       }
     });
 
     $('#gns_close, #overlay').on('click', function () {
-      $body
-        .removeClass('_open-search')
-        .removeClass('_open-menu')
-        .removeClass('_open-bg');
-      $('#gh_menu').attr('aria-expanded', 'false');
+      closeOverlays(false);
+    });
+
+    $(document).on('keydown', function (e) {
+      if (e.key !== 'Escape') return;
+      if (!$body.hasClass('_open-menu') && !$body.hasClass('_open-search')) return;
+      closeOverlays(false);
     });
 
     // アーカイブ用のローカルナビゲーションを開閉式にする
@@ -645,27 +724,28 @@ window.addEventListener('resize', setVw);
   // メニューオープン時背景のスクロール禁止
   // ==========================================================================
   const contentFixed = function () {
-    // メニューで背景スクロールを止めているか（#gh_menu のトグルと同期）
-    let state = false;
-    // メニューオープン直前のスクロール位置（閉じる・ブレークポイント跨ぎで復元）
-    let scrollpos;
-    $('#gh_menu').on('click', function () {
-      if (state == false) {
+    const $body = $('body');
+    let scrollpos = 0;
+    const apply = function () {
+      const shouldLock = $body.hasClass('_open-menu') || $body.hasClass('_open-search');
+      const locked = $body.hasClass('_contentFixed');
+      if (shouldLock && !locked) {
         scrollpos = $(window).scrollTop();
-        $('body').addClass('_contentFixed').css({ top: -scrollpos });
-        state = true;
-      } else {
-        $('body').removeClass('_contentFixed').css({ top: 0 });
+        $body.addClass('_contentFixed').css({ top: -scrollpos });
+      } else if (!shouldLock && locked) {
+        $body.removeClass('_contentFixed').css({ top: 0 });
         window.scrollTo(0, scrollpos);
-        state = false;
+      }
+    };
+    $('#gh_menu, #gh_search, #gn_close, #overlay').on('click', function () {
+      window.setTimeout(apply, 0);
+    });
+    $body.on('nb:overlaychange', apply);
+    $(document).on('keydown', function (e) {
+      if (e.key === 'Escape') {
+        window.setTimeout(apply, 0);
       }
     });
-    $('#gn_close').on('click', function () {
-      $('body').removeClass('_contentFixed').css({ top: 0 });
-      window.scrollTo(0, scrollpos);
-      state = false;
-    });
-    // 幅のブレークポイントを跨いだとき state を false にし、固定中ならスクロール位置を戻す（toggleMenu 側のクラス削除と整合）
     // MARK: header_breakpoint
     const headerBreakpointMin = 768;
     let lastWidthForContentFixedBreakpoint = null;
@@ -674,11 +754,7 @@ window.addEventListener('resize', setVw);
       const wasPcOrOver = lastWidthForContentFixedBreakpoint !== null && lastWidthForContentFixedBreakpoint > headerBreakpointMin;
       const isPcOrOver = currentWidth > headerBreakpointMin;
       if (lastWidthForContentFixedBreakpoint !== null && wasPcOrOver !== isPcOrOver) {
-        if (state) {
-          $('body').removeClass('_contentFixed').css({ top: 0 });
-          window.scrollTo(0, scrollpos);
-        }
-        state = false;
+        apply();
       }
       lastWidthForContentFixedBreakpoint = currentWidth;
     });
@@ -794,7 +870,9 @@ window.addEventListener('resize', setVw);
   // ==========================================================================
   // 実行
   // ==========================================================================
-  $('#global_header').floatingWidget();
+  // Header is position:sticky in CSS. Do not toggle body._fixed on scroll
+  // (that forced position:fixed and needed min-width padding-top on the wrapper).
+  // $('#global_header').floatingWidget();
 //   globalNavCurrent();
   moduleNavToggle();
   dropdownNavToggle();

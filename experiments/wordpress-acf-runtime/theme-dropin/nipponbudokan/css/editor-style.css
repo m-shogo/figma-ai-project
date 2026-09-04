@@ -14,13 +14,16 @@
 @import './blocks/wp-block-navigation-style.css';
 @import './blocks/wp-block-quote-style.css';
 @import './blocks/wp-block-separator-style.css';
+@import './blocks/wp-block-slider-style.css';
 @import './blocks/wp-block-table-style.css';
+@import './blocks/wp-block-tabs-style.css';
 @import './blocks/wp-block-text-style.css';
 @import './blocks/wp-block-textLink-style.css';
 @import './blocks/wp-lightbox-overlay.css';
 
 @import './module/module_newsCard-01.css';
 @import './module/module_newsList-01.css';
+@import './module/module_tab.css';
 
 /* ==========================================================================
  * 管理画面ビジュアルエディタ用CSS

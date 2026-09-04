@@ -20,11 +20,11 @@ $samples = array(
     <div class="global_inner">
         <h2 class="te_heading">
             <span class="te_heading_ja">大会・イベント情報</span>
-            <span class="te_heading_en">Event</span>
+            <span class="te_heading_en"><span class="te_heading_en_initial">E</span>vent</span>
         </h2>
         <div class="te_layout">
             <div class="te_featured">
-                <p class="te_featured_banner"><img src="<?php echo esc_url($theme_uri . '/images/top/ico-budokan.svg'); ?>" alt="" width="32" height="32" aria-hidden="true"><span>注目の大会・募集</span></p>
+                <p class="te_featured_banner"><img src="<?php echo esc_url($theme_uri . '/images/top/ico-facilities.svg'); ?>" alt="" width="28" height="21" aria-hidden="true"><span>注目の大会・募集</span></p>
                 <div class="te_cards">
                     <?php if ($has_events): ?>
                         <?php while ($event_query->have_posts()): $event_query->the_post(); ?>

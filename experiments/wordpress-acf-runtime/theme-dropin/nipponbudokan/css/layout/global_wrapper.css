@@ -2,11 +2,17 @@
 /* // ==========================================================================
 // サイト共通ラッパー
 // ========================================================================== */
+html {
+    scroll-padding-top: var(--header-height-SP);
+}
+
 .global_wrapper {
-    padding-top: var(--header-height-SP);
+    padding-top: 0;
     /* overflow: hidden; */
-    /* MARK: header_breakpoint — Human Authority: use 768, ignore Theme legacy 1080 */
-    @media screen and (min-width: 768px) {
-        padding-top: var(--header-height-PC);
+}
+
+@media screen and (min-width: 768px) {
+    html {
+        scroll-padding-top: var(--header-height-PC);
     }
 }

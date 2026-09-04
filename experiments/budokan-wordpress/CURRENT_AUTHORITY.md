@@ -129,7 +129,7 @@ Theme 専用の enqueue・命名は `THEME_RULES.md`。Frontend Standard は Com
 
 フィールド名・用途はこの節が正本。WordPress 実行時の Local JSON / block PHP は Theme 内に残るが、**Agent は `theme-dropin/nipponbudokan/acf/` を再読してフィールドを増やしたり推測したりしない。** `acf-export.json` は退役（旧 portable dump。メニュー ACF グループを含むため使わない）。
 
-フィールドグループ JSON は編集しない。ブロック見た目の markup 修正が必要なときだけ既存 block PHP を触る。新しい ACF / CPT / スラッグは発明しない。
+フィールドグループ JSON は編集しない。ブロック見た目の markup 修正が必要なときだけ既存 block PHP を触る。新しい ACF / CPT / スラッグは発明しない。**例外:** 2026-09-04 Human が `parts2.php` 用スライダーを指示したので `acf/slider`（`slider_items` → `image` / `caption`）だけ追加済み。
 
 | 用途 | フィールド |
 | --- | --- |
@@ -146,10 +146,14 @@ Theme 専用の enqueue・命名は `THEME_RULES.md`。Frontend Standard は Com
 | ブロック ナビ小 | `navigation-small` → 同上 |
 | ブロック 投稿一覧 | `block_post_type`（`post` / `event`） / `block_category` / `block_event_cat` / `block_posts_per_page` |
 | ブロック タブ | コンテナは message のみ。パネルは `panel_title` |
+| ブロック スライダー | `slider_items` → `image` / `caption` |
 
 - グローバルナビは WordPress メニュー。旧 `common-menu-01` / `common-submenu-01` は現行 ACF に無い
 - CPT `event` + `event_cat` は Theme `inc/custom.php`。開催日・募集ステータス用フィールドは **無い** → 当該 UI は fail-closed
+- Gutenberg ボタンスタイル「小ボタン」= `is-style-small`（Figma btn-02）。wrapper `.small` も互換で残す
+- ブロック スライダーは Human 2026-09-04: `parts2.php` 用に `acf/` へ追加してよい
 - `parts.php` / Form / Formidable は触らない
+- `parts2.php` は Human が編集許可した参照ソース（post 661）
 
 ---
 

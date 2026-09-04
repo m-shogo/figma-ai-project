@@ -3,11 +3,11 @@
 @import './global/variables.css'; /* octagon vertices + body fill 2026-09-01 */
 /* @import './global/component.css'; */
 
-@import './layout/global_header.css';
+@import './layout/global_header.css?v=20260904-search2';
 @import './layout/global_footer.css?v=20260903-footer2';
-@import './layout/global_wrapper.css';
+@import './layout/global_wrapper.css?v=20260904-sticky2';
 @import './layout/global_inner.css';
-@import './layout/global_navigation.css?v=20260903-navtype';
+@import './layout/global_navigation.css?v=20260904-navl4';
 @import './layout/global_contents.css';
 
 @import './blocks/wp-block-buttonLink-style.css';
@@ -23,7 +23,9 @@
 @import './blocks/wp-block-navigation-style.css';
 @import './blocks/wp-block-quote-style.css';
 @import './blocks/wp-block-separator-style.css';
+@import './blocks/wp-block-slider-style.css?v=20260904-slider4';
 @import './blocks/wp-block-table-style.css';
+@import './blocks/wp-block-tabs-style.css?v=20260904-tabs';
 @import './blocks/wp-block-text-style.css';
 @import './blocks/wp-block-textLink-style.css';
 @import './blocks/wp-lightbox-overlay.css';
@@ -51,17 +53,17 @@
 @import './module/module_zoom-button.css';
 
 /* top_module.css は .top_notice-01 を absolute にするので FV と衝突する。title/button は top_news.css へ */
-@import './project/top_mainVisual.css'; /* TOP FV PC+SP 2026-08-28 */
-@import './project/top_events.css'; /* TOP events + FullCalendar 2026-08-28 */
-@import './project/top_guide.css'; /* TOP 目的から探す（大） 2026-08-28 */
-@import './project/top_about.css'; /* TOP 日本武道館とは 2026-08-28 */
-@import './project/top_news.css';
-@import './project/top_partner.css'; /* TOP 公式パートナー PC+SP 2026-08-28 */
-@import './project/top_instagram.css'; /* TOP 月刊「武道」編集部 PC+SP 2026-08-29 */
-@import './project/top_banner.css';
+@import './project/top_mainVisual.css?v=20260904-fv2'; /* TOP FV PC+SP 2026-08-28 */
+@import './project/top_events.css?v=20260904-event2'; /* TOP events + FullCalendar 2026-08-28 */
+@import './project/top_guide.css?v=20260904-octagon2'; /* TOP 目的から探す（大） 2026-08-28 */
+@import './project/top_about.css?v=20260904-octagon2'; /* TOP 日本武道館とは 2026-08-28 */
+@import './project/top_news.css?v=20260904-octagon2';
+@import './project/top_partner.css?v=20260904-topfix3'; /* TOP 公式パートナー PC+SP 2026-08-28 */
+@import './project/top_instagram.css?v=20260904-octagon2'; /* TOP 月刊「武道」編集部 PC+SP 2026-08-29 */
+@import './project/top_banner.css?v=20260904-topfix2';
 
 @import './wordpress/form.css';
-@import './wordpress/wordpress.css';
+@import './wordpress/wordpress.css?v=20260904-search2';
 
 /* Cardinal-vertex octagon + Parts body fill live on this cache-busted file.
    :root beats the :where(:root) token sheet if a stale @import is cached. */

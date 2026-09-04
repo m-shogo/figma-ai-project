@@ -9,13 +9,12 @@
 
     .tg_deco {
         position: absolute;
-        left: 0;
-        bottom: 80px;
+        left: calc(100% - 75px);
+        bottom: 0;
         z-index: 0;
         width: 300px;
         height: 297px;
         background: url("../../images/top/guide-octagon-sp.svg") no-repeat center / contain;
-        transform: scaleY(-1);
         pointer-events: none;
     }
 
@@ -85,6 +84,7 @@
         line-height: 1;
         letter-spacing: 0.05em;
         color: var(--color-accent);
+        white-space: nowrap;
 
         &::before {
             content: '';
@@ -94,6 +94,11 @@
             background-color: var(--color-accent);
             clip-path: var(--clip-octagon);
         }
+    }
+
+    .tg_heading_en_initial {
+        font: inherit;
+        color: inherit;
     }
 
     .tg_lead {
@@ -231,8 +236,10 @@
         }
 
         .tg_heading_en {
+            position: relative;
             justify-content: flex-start;
             gap: 0;
+            min-height: 36px;
             font-family: var(--font-zen-old-mincho);
             font-size: 22px;
             font-weight: 500;
@@ -240,11 +247,26 @@
             color: var(--color-accent);
 
             &::before {
+                position: absolute;
+                left: 0;
+                top: 50%;
                 width: 36px;
                 height: 36px;
-                margin-right: -28px;
+                margin: 0;
+                transform: translateY(-50%);
                 background-color: var(--color-accent);
             }
+        }
+
+        .tg_heading_en_initial {
+            position: relative;
+            z-index: 1;
+            display: inline-grid;
+            place-items: center;
+            width: 36px;
+            height: 36px;
+            line-height: 1;
+            color: var(--color-secondary);
         }
 
         .tg_lead {

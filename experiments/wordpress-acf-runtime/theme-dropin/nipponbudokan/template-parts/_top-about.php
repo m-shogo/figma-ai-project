@@ -36,7 +36,7 @@ $cards = array(
             <div class="ta_top">
                 <h2 class="ta_heading">
                     <span class="ta_heading_ja">日本武道館とは</span>
-                    <span class="ta_heading_en">About us</span>
+                    <span class="ta_heading_en"><span class="ta_heading_en_text"><span class="ta_heading_en_initial">A</span>bout&nbsp;us</span></span>
                 </h2>
                 <div class="ta_panel">
                     <p class="ta_lead">日本武道館は、武道の普及・振興と書道文化の継承を目的として設立された公益財団法人です。<br class="ta_lead_break">武道大会・研修会・青少年育成・書初め大展覧会・刊行物発行など、多岐にわたる事業を展開しています。1964年東京オリンピックでは柔道競技の会場となり、現在は式典やコンサート会場としても利用されています。</p>

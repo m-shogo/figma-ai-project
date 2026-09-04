@@ -94,7 +94,7 @@ QA は 〜767 と ≥1280 を主にする。
 - form ブロックがあっても Agent は触らない
 - Gutenberg の style / palette 名は editor hook。Figma の見た目ではない（2026-09-01 Human）:
   - 標準 `.wp-block-button` = `button_L`。hover は `1163:4229`（閉じるとき default だけでは不足）
-  - `.is-style-outline` = CTA `btn-03`。中空の輪郭にしない。`.small` は btn-02 のまま
+  - `.is-style-outline` = CTA `btn-03`。中空の輪郭にしない。`.is-style-small` / wrapper `.small` は btn-02 のまま
   - hover で初めて `border` を足さない（共通: `docs/frontend-quick-contract.md` 節4）。rest から同じ太さ。Human 2026-09-04
   - ボタン hover に transition が無いものは `0.3s`（`--transition-duration`）。`::before` 含む。Human 2026-09-04
   - `has-gray-background-color` の塗りは白。slug `gray` は変えない
