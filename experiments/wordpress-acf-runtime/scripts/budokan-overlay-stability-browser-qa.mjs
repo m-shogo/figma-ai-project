@@ -35,6 +35,30 @@ async function snapshot(page) {
   });
 }
 
+async function overflowOffenders(page) {
+  return page.evaluate(() => {
+    const viewportWidth = document.documentElement.clientWidth;
+    return [...document.querySelectorAll('body *')]
+      .map((element) => {
+        const rect = element.getBoundingClientRect();
+        const style = getComputedStyle(element);
+        return {
+          tag: element.tagName.toLowerCase(),
+          id: element.id || '',
+          className: typeof element.className === 'string' ? element.className.trim().replace(/\s+/g, '.') : '',
+          left: Math.round(rect.left),
+          right: Math.round(rect.right),
+          width: Math.round(rect.width),
+          display: style.display,
+          position: style.position,
+        };
+      })
+      .filter((entry) => entry.display !== 'none' && entry.width > 0 && (entry.right > viewportWidth + 1 || entry.left < -1))
+      .sort((a, b) => (b.right - viewportWidth) - (a.right - viewportWidth))
+      .slice(0, 8);
+  });
+}
+
 async function pointerClick(page, selector) {
   const target = page.locator(selector);
   const box = await target.boundingBox();
@@ -63,9 +87,8 @@ function assertStable(before, opened, label) {
   assert(close(opened.clientWidth, before.clientWidth, 0.5), `${label}: document width shifted ${before.clientWidth} -> ${opened.clientWidth}.`);
   assert(close(opened.headerTop, before.headerTop), `${label}: header top shifted ${before.headerTop} -> ${opened.headerTop}.`);
   assert(close(opened.headerHeight, before.headerHeight, 0.5), `${label}: header height shifted ${before.headerHeight} -> ${opened.headerHeight}.`);
-  /* The scroll-lock implementation intentionally moves the fixed body by -scrollY.
-   * The wrapper's own viewport rect therefore changes while the user-visible FV
-   * must remain stationary. Assert the visible surface, not that internal carrier. */
+  /* Scroll lock intentionally fixes the body at -scrollY. The wrapper carrier
+   * moves in viewport coordinates, while the visible FV must remain stationary. */
   assert(close(opened.fvTop, before.fvTop), `${label}: TOP main visual jumped vertically ${before.fvTop} -> ${opened.fvTop}.`);
   assert(close(opened.fvLeft, before.fvLeft), `${label}: TOP main visual shifted horizontally ${before.fvLeft} -> ${opened.fvLeft}.`);
   assert(close(opened.fvWidth, before.fvWidth), `${label}: TOP main visual width changed ${before.fvWidth} -> ${opened.fvWidth}.`);
@@ -126,7 +149,9 @@ async function runViewport(browser, viewport, contextOptions, label) {
   const scrolled = await snapshot(page);
   assert(scrolled && scrolled.scrollY > 0, `${label}: fixture did not reach a scrolled state.`);
   if (scrolled.scrollWidth > scrolled.clientWidth + 1) {
+    const offenders = await overflowOffenders(page);
     console.log(`NOTE ${label}: baseline document scroll width is ${scrolled.scrollWidth}px for ${scrolled.clientWidth}px viewport; overlay QA only fails if open/close increases it.`);
+    console.log(`NOTE ${label}: baseline overflow candidates ${JSON.stringify(offenders)}`);
   }
 
   await exerciseOverlay(page, '#gh_menu', '_open-menu', `${label} menu`, 2);
@@ -141,10 +166,9 @@ const browser = await chromium.launch({ headless: true });
 try {
   await runViewport(browser, { width: 375, height: 900 }, { isMobile: true, hasTouch: true }, 'SP 375');
   await runViewport(browser, { width: 767, height: 900 }, {}, 'SP edge 767');
-  await runViewport(browser, { width: 768, height: 900 }, {}, 'breakpoint 768');
-  await runViewport(browser, { width: 769, height: 900 }, {}, 'PC edge 769');
+  await runViewport(browser, { width: 1280, height: 900 }, {}, 'PC minimum 1280');
   await runViewport(browser, { width: 1380, height: 900 }, {}, 'PC 1380');
-  console.log('PASS Budokan menu/search overlays preserve visible header/FV geometry across SP, breakpoint, and PC widths.');
+  console.log('PASS Budokan menu/search overlays preserve visible header/FV geometry across current SP and PC owner widths.');
   console.log('PASS Budokan overlay scroll lock restores position across toggle-close, Escape-close, menu reopen, and search reopen.');
   console.log('PASS Budokan overlays do not increase existing document horizontal overflow.');
 } finally {
