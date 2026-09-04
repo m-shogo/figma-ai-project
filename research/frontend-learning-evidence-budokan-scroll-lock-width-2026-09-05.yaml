@@ -1,0 +1,73 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: OBS-BUDOKAN-STICKY-TO-FIXED-SCROLL-LOCK-WIDTH
+    summary: >-
+      When an overlay scroll lock promotes a header from normal-flow sticky positioning to fixed
+      positioning, preserve the header's established layout-width contract and verify the rendered
+      rectangle before/open/close; fixed width percentages can resolve against a narrower viewport
+      than the normal-flow owner when scrollbar gutters or page minimum widths are involved.
+    category: RUNTIME
+    applicability:
+      scope: REFERENCE
+      conditions:
+        - An overlay or menu scroll lock changes a persistent header from sticky or normal-flow positioning to fixed.
+        - The page has a minimum desktop width, stable scrollbar gutter, reserved scrollbar space, or another width owner outside the fixed containing block.
+      exclusions:
+        - The overlay intentionally changes the header width according to canonical design authority.
+        - The header remains in the same containing-block/positioning model while the overlay is open.
+    promotion_state: null
+    promotion:
+      candidate: false
+      rationale: >-
+        Budokan reproduced one concrete runtime defect at the 1280px desktop minimum: the header
+        measured 1280px before menu open and 1265px after scroll lock promoted it to fixed. The
+        correction preserves the existing 1280px desktop minimum only while locked, and deep-scroll
+        Playwright regression QA now verifies sticky -> fixed -> sticky geometry. Keep this as
+        project/reference evidence until an independent implementation reproduces the same failure.
+      blocked_by:
+        - Independent project or reference reproducing a sticky-to-fixed width shift caused by scroll lock or scrollbar geometry.
+        - Cross-project evidence that before/open/close rectangle assertions prevent regressions without over-constraining intentional overlay designs.
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-SCROLL-LOCK-WIDTH-FAIL-20260905
+          kind: COMMIT
+          reference_id: BUDOKAN-WORDPRESS
+          run_id: '33903197572'
+          path: experiments/wordpress-acf-runtime/scripts/budokan-overlay-stability-browser-qa.mjs
+          commit: 4b2bd87d87e831f7baca6ba2e070697333f56c8a
+          note: >-
+            Disposable WordPress + Playwright reproduced the defect at PC minimum 1280px:
+            opening the menu changed the header width from 1280px to 1265px while the existing FV
+            geometry test remained green.
+        - evidence_id: EV-BUDOKAN-SCROLL-LOCK-WIDTH-FIX-20260905
+          kind: COMMIT
+          reference_id: BUDOKAN-WORDPRESS
+          run_id: '33903686451'
+          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/layout/global_header.css
+          commit: c0fad2d802995147514d2597ffa405e1c32a8b41
+          note: >-
+            Preserves the Theme's existing 1280px PC minimum for the fixed header during overlay
+            scroll lock; the same run passed top-to-deep-scroll sticky geometry, menu/search
+            open-close-reopen, Escape-close, scroll restoration, and FV stability.
+        - evidence_id: EV-BUDOKAN-SCROLL-LOCK-OWNER-20260905
+          kind: CANONICAL_DOC
+          reference_id: BUDOKAN-WORDPRESS
+          run_id: ''
+          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/base/normalize.css
+          commit: c0fad2d802995147514d2597ffa405e1c32a8b41
+          note: >-
+            Theme contract combines root scrollbar-gutter: stable with desktop body min-width:1280px,
+            explaining why a fixed width:100% header must preserve the established desktop minimum.
+      contradicts: []
+    notes:
+      - Do not generalize a literal 1280px minimum to other projects; preserve each project's existing width owner instead.
+      - Do not use a hard-coded scrollbar compensation value such as 15px when the underlying layout-width contract can be preserved directly.
+      - Interaction QA should compare user-visible geometry before open, while open, after close, after reopen, and at meaningful scrolled positions.
