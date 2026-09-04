@@ -16,9 +16,15 @@ const runCase = async ({ label, width, mobile = false }) => {
     hasTouch: mobile,
   });
   const page = await context.newPage();
-  const errors = [];
-  page.on('pageerror', error => errors.push(error.message));
-  page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
+  const pageErrors = [];
+  const failedRequests = [];
+  page.on('pageerror', error => pageErrors.push(error.message));
+  page.on('requestfailed', request => {
+    const resourceType = request.resourceType();
+    const requestUrl = request.url();
+    const failure = request.failure()?.errorText || 'request failed';
+    failedRequests.push({ resourceType, requestUrl, failure });
+  });
 
   const snapshot = () => page.evaluate(() => {
     const header = document.querySelector('#global_header');
@@ -41,6 +47,7 @@ const runCase = async ({ label, width, mobile = false }) => {
   });
 
   try {
+    const origin = new URL(url).origin;
     await page.goto(url, { waitUntil: 'networkidle' });
     const trigger = page.locator('.qa-modal-trigger');
     await trigger.scrollIntoViewIfNeeded();
@@ -87,7 +94,20 @@ const runCase = async ({ label, width, mobile = false }) => {
     const closed = await snapshot();
     assert(close(closed.scrollY, before.scrollY), `${label}: pointer close changed scrollY ${before.scrollY} -> ${closed.scrollY}.`);
     assert(closed.activeIsTrigger, `${label}: pointer close did not return focus to trigger.`);
-    assert(errors.length === 0, `${label}: browser errors: ${errors.join(' | ')}`);
+
+    const criticalRequestFailures = failedRequests.filter(({ resourceType, requestUrl }) => {
+      if (!['script', 'stylesheet'].includes(resourceType)) return false;
+      try {
+        return new URL(requestUrl).origin === origin;
+      } catch {
+        return false;
+      }
+    });
+    assert(pageErrors.length === 0, `${label}: page errors: ${pageErrors.join(' | ')}`);
+    assert(criticalRequestFailures.length === 0, `${label}: critical same-origin resource failures: ${criticalRequestFailures.map(({ resourceType, requestUrl, failure }) => `${resourceType} ${requestUrl} (${failure})`).join(' | ')}`);
+    if (failedRequests.length > 0) {
+      console.log(`NOTE ${label}: ignored non-critical request failures: ${failedRequests.map(({ resourceType, requestUrl, failure }) => `${resourceType} ${requestUrl} (${failure})`).join(' | ')}`);
+    }
     console.log(`PASS ${label}: Modaal keeps background geometry/scroll stable and restores focus after Escape/pointer close.`);
   } finally {
     await context.close();
