@@ -81,8 +81,14 @@ records:
             confirming the responsive presentation change did not reintroduce scroll/pointer instability.
       contradicts: []
     notes:
-      - Current live Figma PC notice node 1603:8101 is a 24x24 #BF3E2B filled octagon with white exclamation; current SP notice node 446:11658 uses Font Awesome 6 Pro Light U+F06A at 20px in #E6E6E6 on a #C84A32 base treatment.
-      - The SP notice texture remains intentionally unresolved: its Figma image hash is e67b1a1aaea102b8ef9da9d61fb39db492026bd4 and the source payload is 2,857,936 bytes; it is not the current MV image and no verified durable Theme media owner was found in this run.
+      - >-
+        Current live Figma PC notice node 1603:8101 is a 24x24 #BF3E2B filled octagon with white
+        exclamation; current SP notice node 446:11658 uses Font Awesome 6 Pro Light U+F06A at 20px
+        in #E6E6E6 on a #C84A32 base treatment.
+      - >-
+        The SP notice texture remains intentionally unresolved: its Figma image hash is
+        e67b1a1aaea102b8ef9da9d61fb39db492026bd4 and the source payload is 2,857,936 bytes; it is not
+        the current MV image and no verified durable Theme media owner was found in this run.
       - Do not substitute the MV image or another visually similar raster for that texture.
       - Current PC/SP Figma notice editorial copy differs, but existing ACF ownership has one textarea; do not invent responsive notice fields without explicit authority.
       - Breakpoint-specific presentation is acceptable here because semantic content ownership remains unchanged and the visual divergence is directly established by current Figma.
