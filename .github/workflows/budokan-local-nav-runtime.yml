@@ -42,26 +42,39 @@ jobs:
           BUDOKAN_LOCAL_NAV_KEEP_RUNTIME: '1'
         run: bash experiments/wordpress-acf-runtime/scripts/budokan-local-nav-runtime-qa.sh
 
-      - name: Run SP and PC Local Navigation browser QA
+      - name: Seed disclosure QA and install browser runtime
         run: |
           cd experiments/wordpress-acf-runtime
           source scripts/runtime-env.sh
           docker compose run --rm -e WP_ENVIRONMENT_TYPE=local cli eval-file /fixture/scripts/seed-budokan-disclosure-qa.php
-          page_id="$(docker compose run --rm cli option get budokan_local_nav_qa_page_id)"
           disclosure_page_id="$(docker compose run --rm cli option get budokan_disclosure_qa_page_id)"
           disclosure_template="$(docker compose run --rm cli post meta get "$disclosure_page_id" _wp_page_template)"
           if [[ "$disclosure_template" != "templates/template-oneColumn.php" ]]; then
             echo "FAIL disclosure QA page template mismatch: ${disclosure_template}." >&2
             exit 1
           fi
-          qa_url="${WP_URL}/?page_id=${page_id}"
-          disclosure_qa_url="${WP_URL}/?page_id=${disclosure_page_id}"
           cd ../..
           npm install --no-save --package-lock=false playwright@1.54.2
           npx playwright install --with-deps chromium
+
+      - name: Run existing Local Navigation browser QA
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          page_id="$(docker compose run --rm cli option get budokan_local_nav_qa_page_id)"
+          qa_url="${WP_URL}/?page_id=${page_id}"
+          cd ../..
           node experiments/wordpress-acf-runtime/scripts/budokan-local-nav-browser-qa.mjs "$qa_url"
           node experiments/wordpress-acf-runtime/scripts/budokan-local-nav-interaction-browser-qa.mjs "$qa_url"
           node experiments/wordpress-acf-runtime/scripts/budokan-anchor-interaction-browser-qa.mjs "$qa_url"
+
+      - name: Run disclosure interaction browser QA
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          disclosure_page_id="$(docker compose run --rm cli option get budokan_disclosure_qa_page_id)"
+          disclosure_qa_url="${WP_URL}/?page_id=${disclosure_page_id}"
+          cd ../..
           node experiments/wordpress-acf-runtime/scripts/budokan-disclosure-interaction-browser-qa.mjs "$disclosure_qa_url"
 
       - name: Cleanup disposable WordPress runtime
