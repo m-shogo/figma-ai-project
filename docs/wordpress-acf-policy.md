@@ -32,6 +32,34 @@ Hybrid
 
 ---
 
+## Do not invent fields / CPT
+
+既存project / 案件 Current Authority が持っているフィールド契約だけを使う。
+
+- 新しい ACF / CPT / スラッグを、Figma に見えたという理由だけで発明しない
+- 開催日・募集ステータス等、現行契約にフィールドが無い UI は fail-closed
+- 退役 dump / 実行用 JSON をフィールド発見に使わない（案件が「再読しない」と明示している path は読まない）
+- フィールドグループ JSON は、案件が禁止していれば編集しない。ブロック見た目の markup だけ必要なとき既存 PHP を触る
+- Form / Formidable は Human 担当と書かれている案件では触らない
+
+Budokan WordPress のフィールド正本は `experiments/budokan-wordpress/CURRENT_AUTHORITY.md`。
+
+---
+
+## Explicit parameters for reusable parts
+
+`is_front_page()` / `is_home()` は使ってよい。明らかにそのページ専用で変動しないもの（専用 CSS/JS、TOP sticky 等）はそれでよい。
+
+流用しうる塊だけ、ページ身元に結びつけない。呼び出し側が明示する、変わりにくい引数にする。
+
+- 正（流用）: `get_footer(null, array('map' => true))` → `_hasMap`
+- 誤（流用）: `body.home` や CSS `.home` で地図を出す
+- 正（TOP専用）: `is_front_page()` で TOP だけの CSS/JS / sticky
+- パーツは default オフ。使いたいテンプレートだけ opt-in
+- 引数名は機能（`map`）であり、ページ名ではない
+
+---
+
 ## Section implementation unit
 
 ### Classic theme

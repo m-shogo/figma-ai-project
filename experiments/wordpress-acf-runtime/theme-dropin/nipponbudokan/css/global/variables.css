@@ -186,6 +186,7 @@
     --icon-chevron-down: '\f078';
     --icon-angle-down: '\f107';
     --icon-arrow-right: '\f061';
+    --icon-arrow-left: '\f060';
     --icon-arrow-down: '\f063';
     /* Vertices on the cardinal axes (N/E/S/W). Human authority 2026-09-01:
        Figma ico_octagon / CSS stop-sign flats were rotated a half-step. */

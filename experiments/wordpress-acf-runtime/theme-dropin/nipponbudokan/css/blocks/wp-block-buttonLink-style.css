@@ -19,13 +19,16 @@
         }
         .wp-block-button {
             display: block;
-            &:not(.has-custom-width) {
+            &:not(.has-custom-width):not(.is-style-small) {
                 width: auto;
                 min-width: 270px;
                 max-width: 100%;
             }
+            overflow: visible;
             .wp-block-button__link {
+                --_octagon-chip: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'%3E%3Cpolygon fill='%23fff' stroke='%23d7d4d4' stroke-width='1' stroke-linejoin='round' points='13,0.6 21.78,4.22 25.4,13 21.78,21.78 13,25.4 4.22,21.78 0.6,13 4.22,4.22'/%3E%3C/svg%3E");
                 position: relative;
+                overflow: visible;
                 text-decoration: none;
                 font-family: var(--font-zen-kaku-gothic);
                 font-size: 15px;
@@ -42,10 +45,14 @@
                 background-color: var(--color-secondary);
                 color: var(--color-text);
                 padding: 12px 20px 12px 16px;
-                transition: var(--transition-duration);
+                transition:
+                    background-color var(--transition-duration),
+                    border-color var(--transition-duration),
+                    color var(--transition-duration);
                 max-width: 100%;
                 &::before {
                     content: var(--icon-arrow-right);
+                    box-sizing: border-box;
                     font-family: var(--font-awesome);
                     font-weight: 900;
                     font-size: 8px;
@@ -57,8 +64,18 @@
                     align-items: center;
                     justify-content: center;
                     color: var(--color-primary);
-                    background-color: var(--color-accent);
-                    clip-path: var(--clip-octagon);
+                    /* clip-path eats a 1px stroke; SVG chip keeps #d7d4d4 on white. */
+                    padding: 0;
+                    background-color: transparent;
+                    background-image: var(--_octagon-chip);
+                    background-repeat: no-repeat;
+                    background-position: center;
+                    background-size: 26px 26px;
+                    clip-path: none;
+                    filter: none;
+                    transition:
+                        background-color var(--transition-duration),
+                        color var(--transition-duration);
                 }
                 &.has-text-align-center {
                     justify-content: center;
@@ -103,63 +120,68 @@
             }
 
             /* Live Figma button_L: white octagon, gray edge, 26×2 primary underline. */
-            &:not(.is-style-outline) {
+            &:not(.is-style-outline):not(.is-style-small) {
                 .wp-block-button__link {
                     background-image: linear-gradient(var(--color-primary), var(--color-primary));
                     background-repeat: no-repeat;
                     background-position: 15px 100%;
                     background-size: 26px 2px;
-                    &::before {
-                        background-color: var(--color-secondary);
-                        filter:
-                            drop-shadow(1px 0 0 var(--color-line))
-                            drop-shadow(-1px 0 0 var(--color-line))
-                            drop-shadow(0 1px 0 var(--color-line))
-                            drop-shadow(0 -1px 0 var(--color-line));
-                    }
                 }
             }
         }
         /* ///////// 個別設定 /////////　*/
-        /* ボタン小（Figma parts / btn-02） */
-        &.small {
+        /* ボタン小（Figma parts / btn-02）— wrapper `.small` またはスタイル「小ボタン」 */
+        &.small,
+        .wp-block-button.is-style-small {
             gap: 16px;
-            .wp-block-button {
+        }
+        &.small .wp-block-button,
+        .wp-block-button.is-style-small {
+            width: auto;
+            min-width: 0;
+            .wp-block-button__link {
+                --_octagon-chip-small: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpolygon fill='%23ca9957' stroke='%23ca9957' stroke-width='1' stroke-linejoin='round' points='16,0.6 26.81,5.19 31.4,16 26.81,26.81 16,31.4 5.19,26.81 0.6,16 5.19,5.19'/%3E%3C/svg%3E");
+                --_octagon-chip-small-invert: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpolygon fill='%23fff' stroke='%23ca9957' stroke-width='1' stroke-linejoin='round' points='16,0.6 26.81,5.19 31.4,16 26.81,26.81 16,31.4 5.19,26.81 0.6,16 5.19,5.19'/%3E%3C/svg%3E");
+                min-height: 32px;
                 width: auto;
-                min-width: 0;
-                .wp-block-button__link {
-                    min-height: 32px;
-                    width: auto;
+                padding: 0;
+                gap: 10px;
+                border: 0;
+                border-radius: 0;
+                background: none;
+                font-size: 15px;
+                font-weight: 500;
+                line-height: 1.5;
+                &::before {
+                    width: 32px;
+                    height: 32px;
                     padding: 0;
-                    gap: 10px;
-                    border: 0;
-                    border-radius: 0;
-                    background: none;
-                    font-size: 15px;
-                    font-weight: 500;
-                    line-height: 1.5;
-                    &::before {
-                        width: 32px;
-                        height: 32px;
-                        background-color: var(--color-accent);
-                        color: var(--color-secondary);
-                        font-size: 12px;
-                        font-weight: 400;
-                        filter: none;
-                    }
+                    background-color: transparent;
+                    background-image: var(--_octagon-chip-small);
+                    background-repeat: no-repeat;
+                    background-position: center;
+                    background-size: 32px 32px;
+                    color: var(--color-secondary);
+                    font-size: 12px;
+                    font-weight: 400;
+                    clip-path: none;
+                    filter: none;
+                    transition:
+                        background-image var(--transition-duration),
+                        color var(--transition-duration);
                 }
-                &:not(.is-style-outline) {
-                    .wp-block-button__link {
-                        background-image: none;
-                    }
+            }
+            &:not(.is-style-outline) {
+                .wp-block-button__link {
+                    background-image: none;
                 }
             }
         }
 
         /* CTA（btn-03）and 輪郭（Human: outline uses the same family）. */
         &:not(.small) {
-            &.cta .wp-block-button,
-            .wp-block-button.is-style-outline {
+            &.cta .wp-block-button:not(.is-style-small),
+            .wp-block-button.is-style-outline:not(.is-style-small) {
                 width: 100%;
 
                 .wp-block-button__link {
@@ -167,7 +189,8 @@
                     width: 100%;
                     padding: 16px;
                     gap: 12px;
-                    border: 0;
+                    /* Rest already has the hover 1px so hover does not shift the box. */
+                    border: 1px solid var(--color-primary);
                     border-radius: 3px;
                     background-color: var(--color-primary);
                     background-image: none;
@@ -178,10 +201,13 @@
                     line-height: 1.4;
 
                     &::before {
+                        padding: 0;
                         background-color: var(--color-secondary);
+                        background-image: none;
                         color: var(--color-primary);
                         font-size: 8px;
                         font-weight: 900;
+                        clip-path: var(--clip-octagon);
                         filter: none;
                     }
 
@@ -199,20 +225,22 @@
                 &.has-custom-width {
                     width: 100%;
                 }
-                &:not(.has-custom-width) {
+                &:not(.has-custom-width):not(.is-style-small) {
                     width: auto;
                     min-width: 270px;
                 }
             }
-            &.small {
-                .wp-block-button:not(.has-custom-width) {
-                    min-width: 0;
-                }
+            &.small,
+            .wp-block-button.is-style-small:not(.has-custom-width) {
+                min-width: 0;
+            }
+            &.small .wp-block-button:not(.has-custom-width) {
+                min-width: 0;
             }
 
             &:not(.small) {
-                &.cta .wp-block-button:not(.has-custom-width),
-                .wp-block-button.is-style-outline:not(.has-custom-width) {
+                &.cta .wp-block-button:not(.has-custom-width):not(.is-style-small),
+                .wp-block-button.is-style-outline:not(.has-custom-width):not(.is-style-small) {
                     width: 400px;
                     min-width: 400px;
                 }
@@ -233,28 +261,43 @@
     /* MARK: hover */
     @media (any-hover: hover) {
         .wp-block-buttons:not(.small):not(.cta) {
-            .wp-block-button:not(.is-style-outline) {
+            .wp-block-button:not(.is-style-outline):not(.is-style-small) {
                 .wp-block-button__link:hover::before {
                     background-color: var(--color-primary);
+                    background-image: none;
                     color: var(--color-secondary);
+                    clip-path: var(--clip-octagon);
                     filter: none;
                 }
             }
         }
 
         .wp-block-buttons:not(.small) {
-            &.cta .wp-block-button .wp-block-button__link:hover,
-            .wp-block-button.is-style-outline .wp-block-button__link:hover {
+            &.cta .wp-block-button:not(.is-style-small) .wp-block-button__link:hover,
+            .wp-block-button.is-style-outline:not(.is-style-small) .wp-block-button__link:hover {
                 background-color: var(--color-secondary);
-                border: 1px solid var(--color-primary);
                 color: var(--color-primary);
 
                 &::before {
-                    background-color: var(--color-secondary);
+                    padding: 0;
+                    background-color: transparent;
+                    background-image: var(--_octagon-chip);
+                    background-repeat: no-repeat;
+                    background-position: center;
+                    background-size: 26px 26px;
                     color: var(--color-primary);
+                    clip-path: none;
                     filter: none;
                 }
             }
+        }
+
+        .wp-block-buttons.small .wp-block-button .wp-block-button__link:hover::before,
+        .wp-block-buttons.small .wp-block-button .wp-block-button__link:focus-visible::before,
+        .wp-block-button.is-style-small .wp-block-button__link:hover::before,
+        .wp-block-button.is-style-small .wp-block-button__link:focus-visible::before {
+            background-image: var(--_octagon-chip-small-invert);
+            color: var(--color-accent);
         }
     }
 }

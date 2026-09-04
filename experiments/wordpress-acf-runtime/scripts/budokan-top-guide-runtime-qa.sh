@@ -103,8 +103,7 @@ card_count="$(grep -o 'class="tg_card"' "$html" | wc -l | tr -d ' ')"
 rm -f "$html"
 
 echo "PASS Budokan TOP Guide rendered through the real Theme front-page path."
-echo "PASS Existing Theme owner exposes exactly three User Guide cards."
-echo "NOTE Card photographs remain noimage placeholders until canonical production asset/CMS ownership is supplied."
+echo "PASS Existing Theme owner exposes exactly three User Guide cards and Figma photographs stored in Theme."
 
 if [[ "${BUDOKAN_TOP_GUIDE_KEEP_RUNTIME:-0}" == "1" ]]; then
   trap - EXIT

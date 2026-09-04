@@ -5,11 +5,29 @@
 // FV の tm_guide（右カラム）とは別。Header の gh_ は使わない
 // ========================================================================== */
 .top_guide-01 {
+    position: relative;
+
+    .tg_deco {
+        position: absolute;
+        left: calc(100% - 75px);
+        bottom: 0;
+        z-index: 0;
+        width: 300px;
+        height: 297px;
+        background: url("../../images/top/guide-octagon-sp.svg") no-repeat center / contain;
+        pointer-events: none;
+    }
+
     .tg_intro {
+        position: relative;
+        z-index: 1;
         box-sizing: border-box;
         min-height: 514px;
         padding-block: 64px 0;
         background-color: #2b2d32;
+        background-image: url("../../images/top/guide-texture.webp");
+        background-size: 1000px 1000px;
+        background-blend-mode: multiply;
         color: #fff;
 
         .global_inner {
@@ -19,6 +37,8 @@
     }
 
     .tg_body {
+        position: relative;
+        z-index: 1;
         padding: 0 32px 131px;
         background-color: var(--color-gray-background);
 
@@ -64,6 +84,7 @@
         line-height: 1;
         letter-spacing: 0.05em;
         color: var(--color-accent);
+        white-space: nowrap;
 
         &::before {
             content: '';
@@ -73,6 +94,11 @@
             background-color: var(--color-accent);
             clip-path: var(--clip-octagon);
         }
+    }
+
+    .tg_heading_en_initial {
+        font: inherit;
+        color: inherit;
     }
 
     .tg_lead {
@@ -107,7 +133,12 @@
             width: 100%;
             height: 189px;
             object-fit: cover;
+            object-position: center bottom;
         }
+    }
+
+    .tg_card:nth-child(2) .tg_card_image img {
+        object-position: 50% 0;
     }
 
     .tg_card_body {
@@ -157,10 +188,15 @@
     }
 
     @media screen and (min-width: 768px) {
+        .tg_deco {
+            display: none;
+        }
+
         .tg_intro {
             min-height: 320px;
             padding-block: 80px 0;
             background-color: #f9f2e5;
+            background-image: none;
             color: var(--color-text);
 
             .global_inner {
@@ -200,8 +236,10 @@
         }
 
         .tg_heading_en {
+            position: relative;
             justify-content: flex-start;
             gap: 0;
+            min-height: 36px;
             font-family: var(--font-zen-old-mincho);
             font-size: 22px;
             font-weight: 500;
@@ -209,11 +247,26 @@
             color: var(--color-accent);
 
             &::before {
+                position: absolute;
+                left: 0;
+                top: 50%;
                 width: 36px;
                 height: 36px;
-                margin-right: -28px;
+                margin: 0;
+                transform: translateY(-50%);
                 background-color: var(--color-accent);
             }
+        }
+
+        .tg_heading_en_initial {
+            position: relative;
+            z-index: 1;
+            display: inline-grid;
+            place-items: center;
+            width: 36px;
+            height: 36px;
+            line-height: 1;
+            color: var(--color-secondary);
         }
 
         .tg_lead {

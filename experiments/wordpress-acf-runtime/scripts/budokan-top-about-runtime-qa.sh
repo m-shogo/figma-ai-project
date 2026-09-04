@@ -101,17 +101,21 @@ card_count="$(grep -o 'class="ta_card"' "$html" | wc -l | tr -d ' ')"
   exit 1
 }
 
-placeholder_count="$(grep -o '/images/common/noimage.webp' "$html" | wc -l | tr -d ' ')"
+placeholder_count="$(grep -o '/images/top/about-card-0[1-4].webp' "$html" | wc -l | tr -d ' ')"
 if (( placeholder_count < 4 )); then
-  echo "FAIL expected the unresolved card-image placeholders to remain explicit; got ${placeholder_count}." >&2
+  echo "FAIL expected durable Figma About card photos in Theme; got ${placeholder_count}." >&2
   exit 1
 fi
+
+grep -Fq '/images/top/about-bg-sp.webp' "$html" || {
+  echo "FAIL expected durable Figma About stage photo in Theme." >&2
+  exit 1
+}
 
 rm -f "$html"
 
 echo "PASS Budokan TOP About rendered through the real Theme front-page path."
-echo "PASS Existing Theme owner exposes the About heading/actions and exactly four cards."
-echo "NOTE Card/stage production media and destination URLs remain external authority; this fixture does not invent them."
+echo "PASS Existing Theme owner exposes the About heading/actions, four cards, and Figma photos stored in Theme."
 
 if [[ "${BUDOKAN_TOP_ABOUT_KEEP_RUNTIME:-0}" == "1" ]]; then
   trap - EXIT

@@ -9,6 +9,7 @@ import yaml
 ROOT = Path(__file__).resolve().parents[1]
 POLICY = ROOT / "config" / "frontend-raster-asset-export-policy.yaml"
 DOC = ROOT / "docs" / "image-gradient-visual-tolerance.md"
+AGENTS = ROOT / "AGENTS.md"
 
 
 class FrontendRasterAssetExportPolicyTests(unittest.TestCase):
@@ -40,6 +41,27 @@ class FrontendRasterAssetExportPolicyTests(unittest.TestCase):
         self.assertIn("PC raster → 表示サイズ基準 @2x → WebP", self.doc)
         self.assertIn("config/frontend-raster-asset-export-policy.yaml", self.doc)
         self.assertIn("SOURCE_RESOLUTION_INSUFFICIENT", self.doc)
+
+    def test_delivery_format_is_webp_and_outlined_svg(self) -> None:
+        delivery = self.policy["delivery_format"]
+        vector = self.policy["vector_policy"]
+        self.assertEqual("WEBP", delivery["photographic_raster"])
+        self.assertTrue(delivery["do_not_keep_jpeg_or_png_photos"])
+        self.assertEqual("OUTLINED_SVG", delivery["vector_logo_icon"])
+        self.assertTrue(delivery["do_not_hotlink_ephemeral_figma_urls"])
+        self.assertIn("theme", delivery["applies_to"])
+        self.assertIn("landing_page", delivery["applies_to"])
+        self.assertIn("html_site", delivery["applies_to"])
+        self.assertTrue(vector["outline_text_and_strokes_to_paths"])
+        self.assertTrue(vector["do_not_autotrace_raster_logo_to_svg"])
+        self.assertEqual("WEBP", vector["raster_only_logo_format"])
+        self.assertIn("写真・ラスター fill → WebP", self.doc)
+        self.assertIn("文字・stroke を path にした SVG", self.doc)
+        self.assertIn("ラスターしか無い logo", self.doc)
+        agents = AGENTS.read_text(encoding="utf-8")
+        self.assertIn("写真・ラスター fill → WebP", agents)
+        self.assertIn("文字・stroke を path にした SVG", agents)
+        self.assertIn("config/frontend-raster-asset-export-policy.yaml", agents)
 
 
 if __name__ == "__main__":

@@ -26,7 +26,7 @@ $default_lead_sp = '武道の振興、書道文化の継承、<br>公益事業�
                             $title_sp = get_sub_field('text_sp');
                             $lead_pc = get_sub_field('lead_pc');
                             $lead_sp = get_sub_field('lead_sp');
-                            $pc_src = !empty($thumb_pc[0]) ? $thumb_pc[0] : $theme_uri . '/images/top/mv-sample.png';
+                            $pc_src = !empty($thumb_pc[0]) ? $thumb_pc[0] : $theme_uri . '/images/top/mv-sample.webp';
                             $sp_src = !empty($thumb_sp[0]) ? $thumb_sp[0] : $pc_src;
 
                             if (!$title_pc) {
@@ -71,7 +71,7 @@ $default_lead_sp = '武道の振興、書道文化の継承、<br>公益事業�
                     <?php else: ?>
                         <li class="swiper-slide">
                             <div class="tm_background">
-                                <img src="<?php echo esc_url($theme_uri . '/images/top/mv-sample.png'); ?>" alt="<?php bloginfo('name'); ?>" width="1030" height="600" fetchpriority="high">
+                                <img src="<?php echo esc_url($theme_uri . '/images/top/mv-sample.webp'); ?>" alt="<?php bloginfo('name'); ?>" width="1030" height="600" fetchpriority="high">
                             </div>
                             <div class="tm_inner">
                                 <p class="tm_title">

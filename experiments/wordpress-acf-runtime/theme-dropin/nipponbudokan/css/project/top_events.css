@@ -4,11 +4,27 @@
 // FullCalendar 内部 DOM は QA 契約にしない
 // ========================================================================== */
 .top_events-01 {
+    position: relative;
     padding-block: 0;
     background-color: var(--color-secondary);
 
     > .global_inner {
+        position: relative;
+        z-index: 1;
         padding-top: 0;
+    }
+
+    /* SP Figma 1399:12224 — 200×200 #F2F2F2, right-aligned near SNS */
+    &::after {
+        content: '';
+        position: absolute;
+        z-index: 0;
+        right: 0;
+        bottom: 0;
+        width: 200px;
+        height: 200px;
+        background: url('../../images/top/events-octagon-sp.svg') no-repeat center / contain;
+        pointer-events: none;
     }
 
     .te_heading {
@@ -29,6 +45,7 @@
         color: var(--color-text);
     }
     .te_heading_en {
+        position: relative;
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -40,14 +57,18 @@
         line-height: 1;
         letter-spacing: 0.05em;
         color: var(--color-primary);
+        white-space: nowrap;
         &::before {
             content: '';
             width: 10px;
             height: 10px;
             flex-shrink: 0;
-            background-color: var(--color-primary);
-            clip-path: var(--clip-octagon);
+            background: url('../../images/top/ico-octagon-heading.svg') no-repeat center / contain;
         }
+    }
+    .te_heading_en_initial {
+        font: inherit;
+        color: inherit;
     }
 
     .te_layout {
@@ -418,6 +439,10 @@
     }
 
     @media screen and (min-width: 768px) {
+        &::after {
+            display: none;
+        }
+
         > .global_inner { padding-top: 80px; }
 
         .te_heading {
@@ -432,16 +457,33 @@
         }
         .te_heading_en {
             gap: 0;
+            min-height: 36px;
+            padding-left: 0;
             font-family: var(--font-zen-old-mincho);
             font-size: 22px;
             font-weight: 500;
+            letter-spacing: 0.05em;
             color: var(--color-primary);
             &::before {
+                position: absolute;
+                left: 0;
+                top: 50%;
                 width: 36px;
                 height: 36px;
-                margin-right: -25px;
-                background-color: var(--color-primary);
+                margin: 0;
+                transform: translateY(-50%);
+                background: url('../../images/top/ico-octagon-heading.svg') no-repeat center / contain;
             }
+        }
+        .te_heading_en_initial {
+            position: relative;
+            z-index: 1;
+            display: inline-grid;
+            place-items: center;
+            width: 36px;
+            height: 36px;
+            line-height: 1;
+            color: var(--color-secondary);
         }
 
         .te_layout {
@@ -452,26 +494,31 @@
         }
         .te_featured {
             display: grid;
-            grid-template-columns: 48px minmax(0, 1fr);
+            grid-template-columns: auto minmax(0, 1fr);
             gap: 40px;
             align-items: start;
         }
         .te_featured_banner {
-            min-height: 198px;
+            min-height: 0;
+            width: auto;
             margin: 0;
             padding: 20px 8px 30px;
             flex-direction: column;
-            justify-content: flex-start;
+            justify-content: center;
             gap: 12px;
             background-color: var(--color-accent);
             font-family: var(--font-zen-old-mincho);
             font-size: 20px;
             line-height: 1.15;
             letter-spacing: 0.1em;
-            writing-mode: vertical-rl;
+            writing-mode: horizontal-tb;
             img {
                 width: 28px;
                 height: 21px;
+                object-fit: contain;
+            }
+            span {
+                width: 20px;
             }
         }
         .te_card { padding-block: 24px; }

@@ -18,6 +18,21 @@ responsive_exports:
 vector_policy:
   prefer_svg_when_source_is_vector: true
   raster_rule_applies_to_svg: false
+  outline_text_and_strokes_to_paths: true
+  do_not_autotrace_raster_logo_to_svg: true
+  raster_only_logo_format: WEBP
+
+# Human Authority 2026-09-04. Theme / LP / HTML 共通。Cursor 専用ではない。
+delivery_format:
+  applies_to:
+    - theme
+    - landing_page
+    - html_site
+  photographic_raster: WEBP
+  do_not_keep_jpeg_or_png_photos: true
+  vector_logo_icon: OUTLINED_SVG
+  do_not_hotlink_ephemeral_figma_urls: true
+  persist_assets_in_repository: true
 
 art_direction:
   separate_pc_sp_asset_when_crop_or_composition_differs: true

@@ -175,6 +175,27 @@ add_action('acf/init', function () {
       'keywords'          => array('記事', '投稿', 'タクソノミー', 'taxonomy', 'カテゴリー'),
     ]);
 
+    acf_register_block_type(array(
+      'name'              => 'slider',
+      'title'             => 'スライダー',
+      'description'       => '画像スライダーブロック',
+      'render_template'   => get_template_directory() . '/acf/blocks/slider.php',
+      'category'          => 'media',
+      'icon'              => 'images-alt2',
+      'keywords'          => array('slider', 'swiper', 'スライダー', 'スライド'),
+      'enqueue_assets'    => function () {
+        wp_enqueue_style('swiper-style', get_theme_file_uri('/css/swiper-bundle.min.css'), array(), '14.0.1');
+        wp_enqueue_script('swiper-script', get_theme_file_uri('/js/swiper-bundle.min.js'), array(), '14.0.1', ['strategy' => 'defer', 'in_footer' => false]);
+        wp_enqueue_script(
+          'module-slider',
+          get_theme_file_uri('/js/module_slider.js'),
+          array('swiper-script'),
+          filemtime(get_theme_file_path('/js/module_slider.js')),
+          ['strategy' => 'defer', 'in_footer' => false]
+        );
+      },
+    ));
+
     acf_register_block_type([
       'icon' => 'open-folder',
       'name' => 'tab-container',
@@ -421,6 +442,11 @@ function custom_allowed_block_types_all($allowed_block_types, $block_editor_cont
     'acf/custom-post-list',       // ACF 投稿の出力
     'acf/tab-container',          // ACF タブコンテナ（親）
     'acf/tab-panel',            // ACF タブコンテンツ（子）
+    'acf/slider',                 // ACF スライダー
+    'core/tabs',
+    'core/tab-list',
+    'core/tab-panels',
+    'core/tab-panel',
     // ※ タブボタンはACFフィールドで実装するためブロックとしては不要
   );
 

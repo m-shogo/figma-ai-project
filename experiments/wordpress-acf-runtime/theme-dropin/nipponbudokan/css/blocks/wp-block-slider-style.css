@@ -1,0 +1,176 @@
+@charset "utf-8";
+/* // ------------------------------
+// スライダー（Figma parts / スライダー）
+// Current Figma fileKey FKQaJDu5TZXHoCzPsfP92E
+// SP 1399:18943 / PC 1157:8380 — 3:2 image, caption 14/500/1.6/5%,
+// PC: image max 645px, 60px side rails, 40px arrows outside the image.
+// SP: 40px primary octagon arrows overlap the image edges.
+// ------------------------------ */
+.block-editor_wrap,
+.editor-styles-wrapper {
+    .module_slider-01 {
+        position: relative;
+        z-index: 0;
+        contain: inline-size;
+        container-type: inline-size;
+        overflow: visible;
+        margin-top: var(--wp-block-margin);
+        width: 100%;
+        max-width: 100%;
+
+        .slider-stage {
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .swiper-wrapper {
+            align-items: stretch;
+        }
+
+        .swiper-slide {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            min-width: 0;
+            margin: 0;
+        }
+
+        .image {
+            position: relative;
+            z-index: 0;
+            overflow: hidden;
+            aspect-ratio: 3 / 2;
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                display: block;
+            }
+        }
+
+        figcaption {
+            margin: 0;
+            padding: 0 20px;
+            text-align: center;
+            color: var(--color-text);
+            font-family: var(--font-zen-kaku-gothic);
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 1.6;
+            letter-spacing: 0.05em;
+        }
+
+        .slider-nav {
+            position: absolute;
+            z-index: 2;
+            top: 0;
+            left: 0;
+            width: 100%;
+            max-width: 100%;
+            aspect-ratio: 3 / 2;
+            pointer-events: none;
+            overflow: visible;
+        }
+
+        .swiper-button-prev,
+        .swiper-button-next {
+            pointer-events: auto;
+            position: absolute;
+            top: 50%;
+            width: 40px;
+            height: 40px;
+            margin: 0;
+            padding: 0;
+            border: 0;
+            background-color: var(--color-primary);
+            color: var(--color-secondary);
+            clip-path: var(--clip-octagon);
+            transition: opacity var(--transition-duration);
+            &::after {
+                content: none;
+            }
+            .swiper-navigation-icon {
+                display: none;
+            }
+            &::before {
+                font-family: var(--font-awesome);
+                font-weight: 400;
+                font-size: 14px;
+                line-height: 1;
+                color: var(--color-secondary);
+            }
+        }
+        .swiper-button-prev {
+            left: 0;
+            transform: translate(-50%, -50%);
+            &::before {
+                content: var(--icon-arrow-left);
+            }
+        }
+        .swiper-button-next {
+            right: 0;
+            left: auto;
+            transform: translate(50%, -50%);
+            &::before {
+                content: var(--icon-arrow-right);
+            }
+        }
+        .swiper-button-disabled,
+        .swiper-button-lock {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        @media screen and (min-width: 768px) {
+            box-sizing: border-box;
+            width: 100%;
+            max-width: 765px;
+            margin-inline: auto;
+            padding-inline: 60px;
+
+            .slider-stage,
+            .image {
+                width: 100%;
+                max-width: 645px;
+                margin-inline: auto;
+            }
+
+            .swiper-slide {
+                gap: 24px;
+            }
+
+            figcaption {
+                padding: 0;
+            }
+
+            .slider-nav {
+                left: 0;
+                width: 100%;
+                max-width: none;
+                height: calc(100cqi * 2 / 3);
+                aspect-ratio: auto;
+            }
+
+            .swiper-button-prev {
+                left: 0;
+                transform: translateY(-50%);
+            }
+
+            .swiper-button-next {
+                right: 0;
+                left: auto;
+                transform: translateY(-50%);
+            }
+        }
+
+        @media (any-hover: hover) {
+            .swiper-button-prev:hover,
+            .swiper-button-next:hover {
+                opacity: var(--opacity-hover);
+            }
+        }
+    }
+}

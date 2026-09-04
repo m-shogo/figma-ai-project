@@ -49,3 +49,41 @@ make reset
 ## ローカル隔離
 
 HTTP は `127.0.0.1` のみ。`blog_public=0`。worktree ごとに Compose project / port を自動分離。
+
+## ローカル ホットリロード
+
+`WP_ENVIRONMENT_TYPE=local` のときだけ、Theme の CSS / PHP / JS / images を監視してブラウザを reload する。本番 Theme には入らない（runtime mu-plugin）。
+
+- `mu-plugins/10-local-hot-reload.php`
+- Theme 静的ファイルは `Cache-Control: no-store`（`@import` CSS が残らないようにする）
+- PHP は `opcache.revalidate_freq=0`
+
+compose を取り直す:
+
+```bash
+docker compose up -d
+```
+
+CSS を保存すると、開いているフロントが約 1 秒で再読込される。
+
+## ローカル PHP limits / Fatal guard
+
+新規でも既存 runtime の再構築でも、管理画面のプラグイン ZIP / メディア / ACF 画面が php.ini 天井に当たらないようにする。**デフォルト 2M のまま起動しない。**
+
+正本 ini: `php/conf.d/99-local-limits.ini` を wordpress と cli の両方へ mount（`compose.yml` 済み）。新しい WP を別経路で作るときも同じ値を入れる。
+
+プラグイン ZIP でサイト全体を落とさない。`wp-dropins/fatal-error-handler.php` と `mu-plugins/00-local-runtime-guard.php` を mount する。ACF PRO の `vendor/autoload.php` 欠落は自動補完し、それ以外の Fatal は原因プラグインを無効化して復旧する。
+
+- `upload_max_filesize` / `post_max_size`: 256M
+- `memory_limit`: 512M
+- `max_execution_time` / `max_input_time`: 300
+- `max_input_vars`: 10000
+- `WP_MEMORY_LIMIT` 256M / `WP_MAX_MEMORY_LIMIT` 512M（`compose.yml` の `WORDPRESS_CONFIG_EXTRA`）
+
+## メニューのみ インポート/エクスポート
+
+WP に上げる ZIP:
+
+[`plugins/menu-only-import-export.zip`](plugins/menu-only-import-export.zip)
+
+説明: [`plugins/README.md`](plugins/README.md)

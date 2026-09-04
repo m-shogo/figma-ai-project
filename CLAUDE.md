@@ -14,6 +14,7 @@
 
 - COMMON runではClaude固有の追加prompt hackや前runのmemoryを混ぜない。
 - Figma/reference固有のdesign factをこのファイルへ保存しない。
+- portable な Human-approved contract はこのファイルへ置かない。Git の `AGENTS.md` / canonical docs / `experiments/<case>/` へ上げる。
 - Agent-specific optimizationはCOMMONとは別のOPTIMIZED runとして記録する。
 - 新しいClaude固有ruleは、少なくともclean replayで有効性を確認するまで `AGENTS.md` へ昇格しない。
 

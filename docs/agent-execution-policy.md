@@ -32,6 +32,8 @@
 
 ただし、これはsecurity、secrets、法令、Company Policyのhard constraint、protected scopeを無視する権限ではない。そこに衝突がある場合は勝手に突破せずHumanへ短くescalateする。
 
+Human-approved な portable contract は **この Git repository が standing memory** である。`.cursor/rules` / Claude 専用追記 / Copilot copies / chat memory だけへ保存しない。置き場所は `AGENTS.md` / canonical docs / `experiments/<case>/` / machine-readable config。client adapter は読み方の差だけ。詳細は `docs/agent-adapters.md`。
+
 ## 2. Retire stale contracts instead of preserving them
 
 Current Authorityと旧仕様が矛盾する場合、旧仕様を維持するためにproduction codeを複雑化しない。

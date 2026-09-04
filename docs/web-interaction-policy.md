@@ -178,6 +178,12 @@ Interactive elementにはkeyboard focus equivalentを持たせる。Hoverだけ�
 
 Touchではhoverを必須状態としない。
 
+### Geometry
+
+hover / focus / active で初めて `border-width` を足さない。rest から同じ太さの border（`transparent` または塗りと同色）を置き、状態では色と塗りを変える。位置は `transform`。transition が無ければ Existing token、無ければ `0.3s`（pseudo 含む）。
+
+Figmaの「hoverで枠が付く」は visual result であり、CSS で hover 時に border を新設する指示ではない。正本は `docs/frontend-quick-contract.md` 節4。
+
 ---
 
 ## Touch gestures

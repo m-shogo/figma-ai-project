@@ -144,8 +144,9 @@ dimensions, mapping, or required comparison fails.
 
 A file is not considered valid merely because macOS Preview or one browser
 happens to display it. Canonical photographic raster assets should use WebP
-when decoded visual fidelity is preserved. Figma PNG exports may remain as
-temporary staging inputs.
+when decoded visual fidelity is preserved. Figma PNG / JPEG exports may remain as
+temporary staging inputs only; Theme / LP / HTML への納品は WebP にする。
+Vector logo / icon は outlined SVG。ラスターしか無い logo はトレースしない。
 
 At minimum verify:
 

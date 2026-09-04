@@ -3,7 +3,7 @@
 このファイルは **日本武道館 WordPress 案件**の会話決定を正本化する。  
 以降の Agent は、ここを Current Authority として扱い、矛盾する旧命名・旧 LP runtime 前提で進めない。
 
-更新日: 2026-09-03
+更新日: 2026-09-04
 
 ---
 
@@ -129,7 +129,7 @@ Theme 専用の enqueue・命名は `THEME_RULES.md`。Frontend Standard は Com
 
 フィールド名・用途はこの節が正本。WordPress 実行時の Local JSON / block PHP は Theme 内に残るが、**Agent は `theme-dropin/nipponbudokan/acf/` を再読してフィールドを増やしたり推測したりしない。** `acf-export.json` は退役（旧 portable dump。メニュー ACF グループを含むため使わない）。
 
-フィールドグループ JSON は編集しない。ブロック見た目の markup 修正が必要なときだけ既存 block PHP を触る。新しい ACF / CPT / スラッグは発明しない。
+フィールドグループ JSON は編集しない。ブロック見た目の markup 修正が必要なときだけ既存 block PHP を触る。新しい ACF / CPT / スラッグは発明しない。**例外:** 2026-09-04 Human が `parts2.php` 用スライダーを指示したので `acf/slider`（`slider_items` → `image` / `caption`）だけ追加済み。
 
 | 用途 | フィールド |
 | --- | --- |
@@ -146,10 +146,14 @@ Theme 専用の enqueue・命名は `THEME_RULES.md`。Frontend Standard は Com
 | ブロック ナビ小 | `navigation-small` → 同上 |
 | ブロック 投稿一覧 | `block_post_type`（`post` / `event`） / `block_category` / `block_event_cat` / `block_posts_per_page` |
 | ブロック タブ | コンテナは message のみ。パネルは `panel_title` |
+| ブロック スライダー | `slider_items` → `image` / `caption` |
 
 - グローバルナビは WordPress メニュー。旧 `common-menu-01` / `common-submenu-01` は現行 ACF に無い
 - CPT `event` + `event_cat` は Theme `inc/custom.php`。開催日・募集ステータス用フィールドは **無い** → 当該 UI は fail-closed
+- Gutenberg ボタンスタイル「小ボタン」= `is-style-small`（Figma btn-02）。wrapper `.small` も互換で残す
+- ブロック スライダーは Human 2026-09-04: `parts2.php` 用に `acf/` へ追加してよい
 - `parts.php` / Form / Formidable は触らない
+- `parts2.php` は Human が編集許可した参照ソース（post 661）
 
 ---
 
@@ -158,7 +162,7 @@ Theme 専用の enqueue・命名は `THEME_RULES.md`。Frontend Standard は Com
 正本: [`DIRECTORY_MAP.md`](DIRECTORY_MAP.md)
 
 - これから言うメニューも、このマップの path / 階層 / 種類に合わせる
-- **Human が「このメニューを作れ」と言うまでメニューは作らない**
+- 2026-09-04 Human: メニューは **作成済み**。作り直さない。追加 locaton はマップから載せる
 - 2026-09-03 Human: メニューは **4本**。赤ハンバーガーメイン=`global-nav`（Figma SP/PC overlay の項目。URL はマップ）。サブハンバーガー=`sub-nav`。PCメガ=`mega-nav`（Figma 4本＋中身。URL はマップ）。フッター=`footer-nav`（指定10件を1本。見た目2列）。グループ見出しのみ `/`。固定ページはマップ全件（CPT一覧・外部ページは除く）
 - 作るときは完全一致より、マップからそれなりに載せる
 - 種類「ナビゲーション」= ナビゲーションテンプレート + **画像付きビジュアル**（`page_img`）
@@ -180,6 +184,7 @@ File: [nipponbudokan](https://www.figma.com/design/FKQaJDu5TZXHoCzPsfP92E/nippon
 
 - 旧 file key `fKYDn9ikpJk1nW7IWFtaUx` / `w7SGVY63FuW6JpaQVKjxm2` / `RfAQQ28V1HGaeIcpgRmQq1` は使わない（証拠 lineage 参照のみ）
 - Visual の正本は上記 Figma。既存実装の正本は Theme。差分は Theme をこの Figma へ合わせる
+- Figma から入れる画像（Theme / LP / HTML 共通）: 写真・ラスターは **WebP**。logo / icon はベクターをアウトライン化して **SVG**。短命 URL は直貼りしない。ラスターしか無い logo はトレースしない。正本は `AGENTS.md` Images 節 / `docs/image-gradient-visual-tolerance.md` / `config/frontend-raster-asset-export-policy.yaml`。Budokan Theme 適用は `THEME_RULES.md` 節 12
 
 ---
 
@@ -224,4 +229,28 @@ Form は Human 担当のためこの順に含めない。
 12. 再現可能な学びは evidence / playbook candidate に戻すが、自動で Company Policy へ上げない
 13. Figma は本ファイルの file key だけを LIVE 取得する。旧 file は見ない
 14. ACF フィールドは本ファイルの表だけ使う。`acf/` と `acf-export.json` を再読しない
-15. サイト階層は `DIRECTORY_MAP.md`。メニューは Human が指定するまで作らない。ナビゲーションは画像ビジュアル、デフォルトは黄土色
+15. サイト階層は `DIRECTORY_MAP.md`。メニューは既に作成済み。ナビゲーションは画像ビジュアル、デフォルトは黄土色
+16. 流用しうる塊は明示パラメーター。`body.home` で再利用 UI を縛らない。正本は `THEME_RULES.md` 節 13 / `docs/wordpress-acf-policy.md`
+
+---
+
+## 並列作業レーン（Human Authority 2026-09-04）
+
+同じ Theme を Human と Agent が同時に触るときは write-scope を分ける。共有ファイルは片方だけ。
+
+**Human**
+
+- Form は従来どおり Human 担当
+
+**Agent**
+
+- TOP: `css/project/top_*` / `template-parts/_top-*` / `front-page.php`
+- パーツ集の見た目: `css/blocks/` と `css/module/`（`parts.php` は読めるが編集しない）
+- runtime ホットリロード / PHP limits など `experiments/wordpress-acf-runtime/` 基盤
+
+**両方触らない**
+
+- `css/style.css` / `css/global/variables.css` / `css/layout/`
+- `inc/front.php` / `header.php` / `footer.php` / `_header.php` / `_footer.php`
+- ACF JSON / `parts.php` / Formidable
+

@@ -5,7 +5,7 @@
 // PC: 2209:9850 / SP closed: 446:10020 shell / SP open: 2169:10018
 // ========================================================================== */
 .global_header {
-    position: fixed;
+    position: sticky;
     left: 0;
     top: 0;
     z-index: 100;
@@ -20,6 +20,8 @@
         height: inherit;
     }
     .gh_logo {
+        position: relative;
+        z-index: 1;
         display: flex;
         flex: 1 1 auto;
         align-items: center;
@@ -59,6 +61,12 @@
         flex-shrink: 0;
         align-items: stretch;
         margin-left: auto;
+        position: relative;
+        z-index: 3;
+    }
+    .gn_mega {
+        position: relative;
+        z-index: 1;
     }
     .gh_lang,
     .gh_search,
@@ -230,10 +238,86 @@ body._open-menu {
     }
 }
 
-/* modifire */
-body._fixed,
+/* modifire — overlay scroll-lock only. Sticky header stays sticky while scrolling. */
 body._contentFixed {
     .global_header {
         position: fixed;
+    }
+}
+
+/* Figma search 2295:8023 — JS (#gh_search) moves .gn_search here and animates height. */
+.gh_searchPanel {
+    --_search-panel-height: 180px;
+    position: fixed;
+    top: var(--header-height-SP);
+    left: 0;
+    z-index: 101;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    background-color: var(--color-secondary);
+    .gn_search {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        max-width: 300px;
+        margin: 0;
+        padding: 24px 20px;
+        .module_search-01 {
+            width: 100%;
+            .ms_from {
+                background-color: transparent;
+                grid-template-columns: minmax(0, 1fr) 50px;
+                .ms_input {
+                    height: 50px;
+                    border-color: var(--color-header-search);
+                }
+                .ms_button {
+                    height: 50px;
+                    border-color: var(--color-header-search);
+                    background-color: var(--color-header-search);
+                    span {
+                        font-size: 0;
+                        &::after {
+                            margin-left: 0;
+                            font-size: 13px;
+                            font-weight: 400;
+                        }
+                    }
+                    &:hover,
+                    &:focus {
+                        background-color: var(--color-header-search);
+                        span,
+                        span::after {
+                            color: var(--color-secondary);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .gn_close {
+        display: none;
+    }
+}
+
+.admin-bar .gh_searchPanel {
+    top: calc(var(--header-height-SP) + var(--wp-admin--admin-bar--height, 0px));
+}
+
+@media screen and (min-width: 768px) {
+    .gh_searchPanel {
+        --_search-panel-height: 323px;
+        top: var(--header-height-PC);
+        .gn_search {
+            max-width: 300px;
+            padding: 0;
+        }
+    }
+    .admin-bar .gh_searchPanel {
+        top: calc(var(--header-height-PC) + var(--wp-admin--admin-bar--height, 0px));
     }
 }
