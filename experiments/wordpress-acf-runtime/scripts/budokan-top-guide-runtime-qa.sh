@@ -83,8 +83,8 @@ for required in \
   'id="top_guide-01"' \
   'class="tg_intro"' \
   'class="tg_cards"' \
+  'class="tg_heading_en"' \
   '目的から探す' \
-  'User guide' \
   '>武道<' \
   '>書道<' \
   '>日本武道館<'; do
