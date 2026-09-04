@@ -1,0 +1,75 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: OBS-BUDOKAN-MODAL-FOCUS-RESTORE-SCROLL-JUMP
+    summary: >-
+      When a modal closes while background scroll lock is still active, restoring focus to an
+      off-screen trigger can move the document before the lock is released. Preserve keyboard
+      focus restoration, but use preventScroll-capable focus and verify background scroll geometry
+      across close paths instead of disabling focus restoration or allowing background scrolling.
+    category: RUNTIME
+    applicability:
+      scope: REFERENCE
+      conditions:
+        - A modal or overlay restores focus to the opener on close.
+        - Focus restoration happens before or during asynchronous removal of a body/root scroll lock.
+        - The opener may be outside the currently visible viewport when the modal is closed.
+      exclusions:
+        - The canonical interaction intentionally scrolls the opener into view on close.
+        - The modal library already guarantees focus restoration without changing scroll position in the supported runtime.
+    promotion_state: null
+    promotion:
+      candidate: false
+      rationale: >-
+        Budokan reproduced one concrete Modaal 0.4.4 defect at PC 1280 where Escape-close changed
+        scrollY from 761 to 1000 while focus was returned to the gallery trigger. A Theme-level
+        compatibility layer preserved focus with preventScroll and the same Disposable WordPress +
+        Playwright suite then passed SP 375, PC 1280 and PC 1380 for Escape and pointer close.
+        Keep this as project/reference evidence until an independent implementation reproduces the
+        same ordering failure.
+      blocked_by:
+        - Independent project or reference reproducing focus-driven background movement during modal close.
+        - Cross-project evidence that preventScroll focus restoration is compatible with the relevant modal/accessibility contracts.
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-MODAAL-FOCUS-SCROLL-FAIL-20260905
+          kind: COMMIT
+          reference_id: BUDOKAN-WORDPRESS
+          run_id: '33908734193'
+          path: experiments/wordpress-acf-runtime/scripts/budokan-modal-interaction-browser-qa.mjs
+          commit: bfa349d186daa7af0d77b557e19b77bf1a550601
+          note: >-
+            Disposable WordPress + Playwright passed SP 375 but reproduced a real PC 1280 regression:
+            Escape-closing a deep-scroll image modal changed background scrollY from 761 to 1000.
+        - evidence_id: EV-BUDOKAN-MODAAL-FOCUS-SCROLL-FIX-20260905
+          kind: COMMIT
+          reference_id: BUDOKAN-WORDPRESS
+          run_id: '33909531433'
+          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/modaal-scroll-stability.js
+          commit: c53ed0eba10ec93b9d00a3b54ddabc8ae34396c2
+          note: >-
+            The Theme keeps existing Modaal/common.js ownership and changes only focus restoration
+            for gallery modal instances to focus with preventScroll plus coordinate fallback. The
+            runtime passed SP 375, PC 1280 and PC 1380 for deep-scroll open, Escape close, reopen,
+            pointer close, focus return, width stability and horizontal overflow.
+        - evidence_id: EV-BUDOKAN-MODAAL-CLOSE-ORDER-OWNER-20260905
+          kind: CANONICAL_DOC
+          reference_id: BUDOKAN-WORDPRESS
+          run_id: ''
+          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/modaal.min.js
+          commit: c53ed0eba10ec93b9d00a3b54ddabc8ae34396c2
+          note: >-
+            Existing Modaal 0.4.4 close logic invokes before_close, starts asynchronous overlay/scroll-lock cleanup,
+            then restores lastFocus immediately; the body scroll-lock class is therefore still active when focus is restored.
+      contradicts: []
+    notes:
+      - Do not solve this class of defect by removing focus restoration; keyboard focus return remains part of the interaction contract.
+      - Do not enable background scrolling behind the modal merely to avoid the close jump.
+      - Test both Escape and pointer close at meaningful deep-scroll positions, and verify focus, scrollY, header/body width and overflow after close.
