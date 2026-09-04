@@ -1,0 +1,66 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: OBS-BUDOKAN-TOP-FV-SP-IMAGE-CROP-OBJECT-POSITION
+    summary: >-
+      When the same responsive hero image is authored with materially different crops in current PC and SP Figma,
+      do not rely on object-fit cover's default centered crop. Translate the proven SP crop into a scoped
+      object-position and explicitly restore the desktop crop at the breakpoint so the mobile correction cannot leak upward.
+    category: VISUAL_FIDELITY
+    applicability:
+      scope: PROJECT
+      conditions:
+        - Current PC and SP Figma authorities use the same hero-image content with different authored crop/focal placement.
+        - The existing Theme already owns the responsive image element and object-fit behavior.
+        - The crop can be corrected with CSS without replacing the image owner, CMS contract, or shared component family.
+      exclusions:
+        - Do not infer focal points from taste when current Figma does not prove a crop.
+        - Do not use a component-wide object-position when PC and SP authorities differ.
+        - Do not replace ACF image fields or commit temporary Figma asset URLs merely to correct crop geometry.
+    promotion_state: PROJECT_ONLY
+    promotion:
+      candidate: false
+      rationale: >-
+        Current Budokan TOP provides one concrete responsive-crop case. SP MV 1455:5811 exposes an authored image
+        transform equivalent to an approximately 64.4% 59.8% focal position, while PC FV 1603:7662 remains effectively centered.
+        This is useful project evidence but not enough independent evidence for a cross-project rule.
+      blocked_by:
+        - NEEDS_INDEPENDENT_REFERENCE_EVIDENCE_BEFORE_CROSS_PROJECT_PROMOTION
+      contradiction_review: >-
+        Earlier FV QA correctly established viewport geometry, typography, notice styling, guide layout, and responsive copy,
+        but did not gate the image focal crop. This record adds the missing visual-crop evidence without invalidating those checks.
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-TOP-FV-SP-AUTHORED-CROP-20260904
+          kind: LOCAL_RESEARCH
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/project/top_mainVisual.css
+          commit: ''
+          note: >-
+            LIVE current Figma file FKQaJDu5TZXHoCzPsfP92E was read directly. SP MV 1455:5811 is 375x483 and its
+            image layer is authored at about 271.62 percent width and 137.89 percent height, offset about -124.93 percent
+            horizontally and -32.51 percent vertically relative to the frame. Converting that authored transform to the
+            equivalent object-fit cover focal placement yields approximately 64.4% 59.8%. The existing Theme used
+            object-fit cover with no object-position, which defaults to a centered 50% 50% crop and therefore missed the
+            current SP composition.
+        - evidence_id: EV-BUDOKAN-TOP-FV-PC-CROP-ISOLATION-20260904
+          kind: LOCAL_RESEARCH
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/project/top_mainVisual.css
+          commit: ''
+          note: >-
+            Current PC FV 1603:7662 keeps the 1030x600 hero effectively centered. The bounded correction sets the SP
+            object-position on the existing .tm_background img owner and explicitly resets it to 50% 50% inside the existing
+            min-width 768px desktop branch. No PHP, ACF Pro fields, navigation ownership, shared global CSS, or image source is changed.
+      contradicts: []
+    notes:
+      - "Promotion review disposition 2026-09-04: KEEP_PROJECT_ONLY; current Figma proves the Budokan responsive crop, but no independent reference supports promotion."
+      - "The correction is deliberately CSS-only and scoped to TOP FV; existing ACF Pro image ownership remains unchanged."
