@@ -49,7 +49,9 @@ const auditNestedDisclosure = async ({ label, itemSelector, buttonSelector, wrap
 
   const before = await snapshotDisclosure(itemSelector, buttonSelector, wrapperSelector);
   assert(before, `${label} fixture is missing.`);
-  assert(before.itemOpen === 'false', `${label} must begin data-open=false, got ${before.itemOpen}.`);
+  // The authoritative Walker omits data-open until the first interaction;
+  // CSS treats both missing and "false" as the collapsed default state.
+  assert(before.itemOpen === null || before.itemOpen === 'false', `${label} must begin closed, got ${before.itemOpen}.`);
   assert(before.wrapperHeight <= 1, `${label} must begin collapsed, got ${before.wrapperHeight}px.`);
 
   await button.click();
