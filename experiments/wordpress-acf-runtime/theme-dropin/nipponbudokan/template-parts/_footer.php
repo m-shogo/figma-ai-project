@@ -25,13 +25,13 @@ $show_map = !empty(($args ?? array())['map']);
             </address>
             <ul class="gf_sns">
                 <li class="gf_sns_item">
-                    <a class="gf_sns_link gf_sns_youtube" href="#" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><span>YouTube</span></a>
+                    <span class="gf_sns_link gf_sns_youtube" aria-disabled="true" aria-label="YouTube"><span>YouTube</span></span>
                 </li>
                 <li class="gf_sns_item">
-                    <a class="gf_sns_link gf_sns_instagram" href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><span>Instagram</span></a>
+                    <span class="gf_sns_link gf_sns_instagram" aria-disabled="true" aria-label="Instagram"><span>Instagram</span></span>
                 </li>
                 <li class="gf_sns_item">
-                    <a class="gf_sns_link gf_sns_x" href="#" target="_blank" rel="noopener noreferrer" aria-label="X"><span>X</span></a>
+                    <span class="gf_sns_link gf_sns_x" aria-disabled="true" aria-label="X"><span>X</span></span>
                 </li>
             </ul>
         </div>
