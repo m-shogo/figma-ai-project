@@ -29,8 +29,18 @@ async function openPage(viewport) {
   return { page, pageErrors };
 }
 
-async function geometry(page, selector) {
-  return page.locator(selector).first().evaluate(el => {
+async function visibleTarget(page, selector, label) {
+  const candidates = page.locator(selector);
+  const count = await candidates.count();
+  for (let i = 0; i < count; i += 1) {
+    const candidate = candidates.nth(i);
+    if (await candidate.isVisible()) return candidate;
+  }
+  throw new Error(`${label}: no visible owner for ${selector}`);
+}
+
+async function geometry(target) {
+  return target.evaluate(el => {
     const r = el.getBoundingClientRect();
     return {
       x: r.x,
@@ -44,8 +54,8 @@ async function geometry(page, selector) {
   });
 }
 
-async function assertPointerOwnsCenter(page, selector, label) {
-  const result = await page.locator(selector).first().evaluate(el => {
+async function assertPointerOwnsCenter(target, label) {
+  const result = await target.evaluate(el => {
     const r = el.getBoundingClientRect();
     const x = r.left + r.width / 2;
     const y = r.top + r.height / 2;
@@ -59,14 +69,14 @@ async function assertPointerOwnsCenter(page, selector, label) {
 }
 
 async function auditHoverAndFocus(page, selector, label) {
-  const target = page.locator(selector).first();
+  const target = await visibleTarget(page, selector, label);
   await target.scrollIntoViewIfNeeded();
   await page.waitForTimeout(80);
-  const before = await geometry(page, selector);
-  await assertPointerOwnsCenter(page, selector, label);
+  const before = await geometry(target);
+  await assertPointerOwnsCenter(target, label);
   await page.mouse.move(before.x + before.width / 2, before.y + before.height / 2);
   await page.waitForTimeout(350);
-  const hovered = await geometry(page, selector);
+  const hovered = await geometry(target);
   rectStable(before, hovered, `${label} hover`);
   if (!near(before.scrollY, hovered.scrollY, 1)) {
     failures.push(`${label} hover changed scrollY: ${before.scrollY} -> ${hovered.scrollY}`);
@@ -77,7 +87,7 @@ async function auditHoverAndFocus(page, selector, label) {
 
   await target.evaluate(el => el.focus({ preventScroll: true }));
   await page.waitForTimeout(80);
-  const focused = await geometry(page, selector);
+  const focused = await geometry(target);
   rectStable(before, focused, `${label} focus`);
   if (!near(before.scrollY, focused.scrollY, 1)) {
     failures.push(`${label} focus changed scrollY: ${before.scrollY} -> ${focused.scrollY}`);
@@ -148,10 +158,10 @@ async function auditHoverAndFocus(page, selector, label) {
   await auditHoverAndFocus(page, '.top_news_more_sp', 'SP TOP News more CTA');
   await auditHoverAndFocus(page, '.top_news_articles .news_item_link', 'SP TOP News item');
 
-  const purpose = page.locator('.top_purposeMenu .tpm_link');
+  const purpose = await visibleTarget(page, '.top_purposeMenu .tpm_link', 'SP purpose fixed CTA');
   await page.evaluate(() => window.scrollTo(0, Math.max(0, document.documentElement.scrollHeight - innerHeight - 120)));
   await page.waitForTimeout(80);
-  await assertPointerOwnsCenter(page, '.top_purposeMenu .tpm_link', 'SP purpose fixed CTA');
+  await assertPointerOwnsCenter(purpose, 'SP purpose fixed CTA');
   const purposeBox = await purpose.boundingBox();
   if (!purposeBox) {
     failures.push('SP purpose fixed CTA is not visible');
