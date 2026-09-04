@@ -1,10 +1,13 @@
 <?php
 
 /**
- * Disposable Budokan ACF Slider interaction runtime fixture.
+ * Disposable Budokan Slider interaction runtime fixture.
  *
- * QA-only. It renders the Theme's existing acf/slider block so the block's
- * own enqueue_assets callback is exercised in a real local WordPress page.
+ * QA-only. The disposable CI installs public ACF, which does not expose the
+ * licensed ACF Blocks API used by production. This fixture therefore renders
+ * the Theme's existing Slider markup directly; the workflow separately
+ * verifies the production ACF block owns the same Swiper/module_slider assets
+ * and loads those real Theme assets only for this disposable QA page.
  */
 
 if (!defined('WP_CLI') || !WP_CLI) {
@@ -21,10 +24,6 @@ if ($theme->get_stylesheet() !== 'nipponbudokan') {
     WP_CLI::error('Budokan slider fixture requires the nipponbudokan theme.');
 }
 
-if (!function_exists('acf_register_block_type')) {
-    WP_CLI::error('Budokan slider fixture requires ACF Pro block support.');
-}
-
 $slug = 'qa-budokan-slider-interaction';
 $existing = get_posts(array(
     'post_type' => 'page',
@@ -36,27 +35,23 @@ $existing = get_posts(array(
     'no_found_rows' => true,
 ));
 
-$block = array(
-    'blockName' => 'acf/slider',
-    'attrs' => array(
-        'name' => 'acf/slider',
-        'data' => array(
-            'slider_items' => 3,
-            'slider_items_0_image' => '',
-            'slider_items_0_caption' => 'スライド A',
-            'slider_items_1_image' => '',
-            'slider_items_1_caption' => 'スライド B',
-            'slider_items_2_image' => '',
-            'slider_items_2_caption' => 'スライド C',
-        ),
-        'mode' => 'preview',
-    ),
-    'innerBlocks' => array(),
-    'innerHTML' => '',
-    'innerContent' => array(),
-);
-
-$content = '<p>Slider interaction runtime QA fixture.</p>' . serialize_block($block);
+$fallback = esc_url(get_template_directory_uri() . '/images/common/noimage.webp');
+$content = <<<HTML
+<p>Slider interaction runtime QA fixture.</p>
+<div class="module_slider-01" data-qa-slider="primary">
+  <div class="swiper slider-stage">
+    <div class="swiper-wrapper">
+      <figure class="swiper-slide"><div class="image"><img src="{$fallback}" alt="スライド A" width="645" height="430"></div><figcaption>スライド A</figcaption></figure>
+      <figure class="swiper-slide"><div class="image"><img src="{$fallback}" alt="スライド B" width="645" height="430"></div><figcaption>スライド B</figcaption></figure>
+      <figure class="swiper-slide"><div class="image"><img src="{$fallback}" alt="スライド C" width="645" height="430"></div><figcaption>スライド C</figcaption></figure>
+    </div>
+  </div>
+  <div class="slider-nav" aria-hidden="true">
+    <button type="button" class="swiper-button-prev" aria-label="前のスライド"></button>
+    <button type="button" class="swiper-button-next" aria-label="次のスライド"></button>
+  </div>
+</div>
+HTML;
 
 $payload = array(
     'post_type' => 'page',
