@@ -101,6 +101,10 @@ if (is_wp_error($page_id)) {
     WP_CLI::error($page_id->get_error_message());
 }
 
+// The Theme's root index.php does not render page content. Keep this QA page
+// on the existing one-column page template so the fixture exercises the real
+// Theme wrapper + enqueued CSS/JS rather than inventing a bespoke QA template.
+update_post_meta((int) $page_id, '_wp_page_template', 'templates/template-oneColumn.php');
 update_option('budokan_disclosure_qa_page_id', (int) $page_id, false);
 flush_rewrite_rules(false);
 
