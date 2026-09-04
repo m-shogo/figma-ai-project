@@ -16,6 +16,7 @@ Frontend実装時に最初に読む短い契約。
 - Delivery / Security / Operations: `docs/frontend-delivery-security-contract.md`
 - Repeater: `docs/frontend-repeatable-content.md`
 - QA: `docs/frontend-maintainability-qa.md`
+- Images / Figma delivery format: `docs/image-gradient-visual-tolerance.md`
 
 ## 1. Authorityの役割を混ぜない
 
@@ -49,7 +50,15 @@ Flow / Flex / Grid / relational overlap / intentional absolute・fixed・sticky 
 
 順番や使用件数をKPIにしない。
 
-## 4. Owner/searchabilityを守る
+## 4. 状態変化で箱をずらさない
+
+Figmaに「hoverで枠が付く」と書いてあっても、Webでは rest から同じ太さの枠を確保する。Company / Existing / 明示Projectが別契約ならそちらが勝つ。
+
+- hover / focus / active / open で初めて `border-width`・`padding`・寸法を変えて箱をずらさない。見える枠が rest に無いなら同じ太さの `transparent` か同色 border を先に置く
+- 位置は `transform`。状態変化に transition が無ければ Existing token、無ければ `0.3s`（`::before` / `::after` 含む）
+- 外寸・font・gap が近くても、子の線と hover を見てから閉じる
+
+## 5. Owner/searchabilityを守る
 
 Existing namingを最優先する。
 
@@ -57,13 +66,15 @@ Global CSSでは `l-/c-/p-/is-` + BEMをdefault候補にする。
 
 CSS Modules/Vue scoped/SFC等でcomponent/file scopeがownerを明確にする場合、local class名を無理にBEM化しない。
 
-## 5. Canonical ownerを直す
+流用しうる塊はページ身元（`body.home` 等）で出さず、呼び出し側の明示パラメーターにする。ページ専用で変動しないものだけ `is_front_page()` / `is_home()` でよい。詳細は `docs/wordpress-acf-policy.md`。
+
+## 6. Canonical ownerを直す
 
 1 Block/Elementにauthoritative base ownerを持たせる。
 
 Visual修正を末尾`final-fix`へ積まず、ownerへ戻して直す。合法なmedia/container/supports ruleはduplicate扱いしない。
 
-## 6. Mobile First + contextual at-ruleをownerへ同居させる
+## 7. Mobile First + contextual at-ruleをownerへ同居させる
 
 新規/明示的に再設計するCSS authoringは**Mobile Firstをdefault**にする。
 
@@ -113,7 +124,7 @@ PC側の修正がshared CSS、shared component、DOM、JS、asset、token、cont
 
 PC/SPを同時に観測・比較することは禁止しない。重要なのは、実装・stabilization・FINAL acceptanceの基準順を `SP → PC` に固定し、PC修正によるSP regressionを未確認のままFINALにしないこと。
 
-## 7. Production viewportはEnvironment Contractから解決する
+## 8. Production viewportはEnvironment Contractから解決する
 
 通常mobile visual/regression targetの下限は、**Company PolicyのRequired Environment Profiles / Existing product support / 明示Project contract**から解決する。
 
@@ -121,7 +132,7 @@ PC/SPを同時に観測・比較することは禁止しない。重要なのは
 
 WCAG 2.2 AA Reflowの**320 CSS px equivalent**はProduct support floorとは別のaccessibility probeとして必要時に残す。
 
-## 8. Content riskは複数持てる
+## 9. Content riskは複数持てる
 
 `STATIC_AUTHORED / EDITOR_OWNED / LOCALIZED / EXTERNAL_DATA / USER_GENERATED`
 
@@ -129,7 +140,7 @@ WCAG 2.2 AA Reflowの**320 CSS px equivalent**はProduct support floorとは別�
 
 Riskに応じてtext/overflow/fallback QAを選ぶ。
 
-## 9. 改行方法もcontractとして選ぶ
+## 10. 改行方法もcontractとして選ぶ
 
 - `NATURAL_WRAP`
 - `PHRASE_WRAP`
@@ -140,19 +151,19 @@ Figma screenshotの改行位置だけを理由に`<br>`/nowrapを固定しない
 
 Phrase単位spanは有力だが、CMS/翻訳文言へ機械適用しない。
 
-## 10. 同一contentのPC/SP DOM二重化をdefaultにしない
+## 11. 同一contentのPC/SP DOM二重化をdefaultにしない
 
 同じsource/markupをCSS/layout/art directionで使えるか先に見る。
 
 本当に構造・interaction・sourceが違う場合は分けてよい。その場合はfocus/ID/JS/analytics/CMS重複を確認する。
 
-## 11. Repeatable contentは現在件数へ依存させない
+## 12. Repeatable contentは現在件数へ依存させない
 
 Parentがcollection layout、itemが内部layoutを所有する。
 
 通常件数変更・reorder・optional field・incomplete last rowを必要なsupported rangeで考える。CMS化そのものは強制しない。
 
-## 12. Runtime state / Form / Font / Third-partyを該当時に見る
+## 13. Runtime state / Form / Font / Third-partyを該当時に見る
 
 Figmaの完成stateだけでProduction完成扱いしない。
 
@@ -168,7 +179,7 @@ Relevant scopeでは:
 
 全Sectionへ全stateを強制しない。
 
-## 13. Delivery / Security責務を曖昧にしない
+## 14. Delivery / Security責務を曖昧にしない
 
 Relevant scopeでは:
 
@@ -181,13 +192,13 @@ Relevant scopeでは:
 
 Section workerがserver policyを勝手に再設計しない。
 
-## 14. JSはvisual classとbehavior/stateを混同しない
+## 15. JSはvisual classとbehavior/stateを混同しない
 
 Existing hook conventionを使う。`data-js-*`固定ではない。
 
 複数状態表現がある場合、primary state sourceを決める。
 
-## 15. Accessibility / PerformanceもRelevant scopeでFINAL条件
+## 16. Accessibility / PerformanceもRelevant scopeでFINAL条件
 
 必要に応じて:
 
@@ -198,7 +209,7 @@ Existing hook conventionを使う。`data-js-*`固定ではない。
 
 を確認する。
 
-## 16. QAはrisk-based + blast-radius-based
+## 17. QAはrisk-based + blast-radius-based
 
 ```text
 FAST PR GATE → TARGETED MUTATION → DEEP / PERIODIC
@@ -216,7 +227,7 @@ Shared token/font/foundation → broader/global regression
 
 既存dependency mapを再利用する。
 
-## 17. Graceful degradationは情報/操作を先に守る
+## 18. Graceful degradationは情報/操作を先に守る
 
 極端条件で全部のgeometryを維持できない場合、文字を極小化・全体scale・情報clipでFigmaへ押し込まない。
 
@@ -231,7 +242,7 @@ Default priority:
 
 明示Project contractがあればそちらを優先する。
 
-## 18. Reuse-Before-Build
+## 19. Reuse-Before-Build
 
 新しいcomponent/helper/validator/visual engine/asset transportを作る前に:
 
@@ -253,7 +264,7 @@ Effective Project / Existing
 
 「全部自作」も「外部toolを入れること」もKPIにしない。Human correction/reworkと重複責務を本当に減らす最小構成を選ぶ。
 
-## 19. DecorativeはCSS-onlyを成功条件にしない
+## 20. DecorativeはCSS-onlyを成功条件にしない
 
 吹き出し・不規則線・texture等は最初から:
 
@@ -263,9 +274,9 @@ CSS / CSS + SVG / SVG / raster / Figma exact export
 
 を比較する。
 
-Figma/Existingに正しいassetがあるなら描き直さない。pseudo-element/clip/transform/breakpoint patchがshape再現のために増殖するならmechanismを再評価する。
+Figma/Existingに正しいassetがあるなら描き直さない。pseudo-element/clip/transform/breakpoint patchがshape再現のために増殖するならmechanismを再評価する。納品形式（写真・ラスター fill → WebP、ベクター logo/icon → アウトライン SVG）は `docs/image-gradient-visual-tolerance.md`。
 
-## 20. Visual repairはroot cause + learningへ戻す
+## 21. Visual repairはroot cause + learningへ戻す
 
 Visual差分は原則:
 
@@ -281,7 +292,7 @@ Runtime/interaction failureはblind rerunよりTrace等の既存evidenceを先�
 
 Human correction count/timeはdiagnosticとして記録し、現時点で全案件共通の固定分数gateにはしない。
 
-## 21. FINAL
+## 22. FINAL
 
 Visual Fidelityに加えてRelevant scopeで:
 

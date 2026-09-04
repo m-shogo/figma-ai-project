@@ -5,11 +5,30 @@
 // FV の tm_guide（右カラム）とは別。Header の gh_ は使わない
 // ========================================================================== */
 .top_guide-01 {
+    position: relative;
+
+    .tg_deco {
+        position: absolute;
+        left: 0;
+        bottom: 80px;
+        z-index: 0;
+        width: 300px;
+        height: 297px;
+        background: url("../../images/top/guide-octagon-sp.svg") no-repeat center / contain;
+        transform: scaleY(-1);
+        pointer-events: none;
+    }
+
     .tg_intro {
+        position: relative;
+        z-index: 1;
         box-sizing: border-box;
         min-height: 514px;
         padding-block: 64px 0;
         background-color: #2b2d32;
+        background-image: url("../../images/top/guide-texture.webp");
+        background-size: 1000px 1000px;
+        background-blend-mode: multiply;
         color: #fff;
 
         .global_inner {
@@ -19,6 +38,8 @@
     }
 
     .tg_body {
+        position: relative;
+        z-index: 1;
         padding: 0 32px 131px;
         background-color: var(--color-gray-background);
 
@@ -107,7 +128,12 @@
             width: 100%;
             height: 189px;
             object-fit: cover;
+            object-position: center bottom;
         }
+    }
+
+    .tg_card:nth-child(2) .tg_card_image img {
+        object-position: 50% 0;
     }
 
     .tg_card_body {
@@ -157,10 +183,15 @@
     }
 
     @media screen and (min-width: 768px) {
+        .tg_deco {
+            display: none;
+        }
+
         .tg_intro {
             min-height: 320px;
             padding-block: 80px 0;
             background-color: #f9f2e5;
+            background-image: none;
             color: var(--color-text);
 
             .global_inner {

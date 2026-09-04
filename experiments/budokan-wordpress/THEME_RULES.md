@@ -95,6 +95,8 @@ QA は 〜767 と ≥1280 を主にする。
 - Gutenberg の style / palette 名は editor hook。Figma の見た目ではない（2026-09-01 Human）:
   - 標準 `.wp-block-button` = `button_L`。hover は `1163:4229`（閉じるとき default だけでは不足）
   - `.is-style-outline` = CTA `btn-03`。中空の輪郭にしない。`.small` は btn-02 のまま
+  - hover で初めて `border` を足さない（共通: `docs/frontend-quick-contract.md` 節4）。rest から同じ太さ。Human 2026-09-04
+  - ボタン hover に transition が無いものは `0.3s`（`--transition-duration`）。`::before` 含む。Human 2026-09-04
   - `has-gray-background-color` の塗りは白。slug `gray` は変えない
   - ページフレームの IMAGE TILE は Parts 専用ではない。news / event / post / page / form / navigation / TOP（`topdesign04`）も同じ。メニュー overlay だけ白無地。Theme は `body` に 700×700 tile。ページを閉じる前に親フレーム fill を見る
   - 新しい editor class（例: `.cta`）を足す前に、既存 style slot で足りるか Human にマップを確認する
@@ -129,13 +131,46 @@ QA は 〜767 と ≥1280 を主にする。
 
 1. 既存 markup / class / menu location を壊さない
 2. Figma に合わせて見た目を寄せるが、デザイン変更前提で過剰に固定しない
-3. logo は `images/common/logo.svg`
+3. logo は `images/common/logo.svg`（アウトライン SVG）
 4. Footer 住所・TEL・copyright は現状プレースホルダ → 実データは Human 指示待ちでよい
 5. SP ハンバーガーは `#gh_menu` / `#global_navigation` / `#overlay`（`common.js` 連動）
 
 ---
 
-## 12. Git 注意
+## 12. Figma から Theme へ入れる画像
+
+Human Authority 2026-09-04（portable owner: `AGENTS.md` Images 節 / `docs/image-gradient-visual-tolerance.md` / `config/frontend-raster-asset-export-policy.yaml`。Theme / LP / HTML 共通。Cursor 専用ではない）:
+
+```text
+写真・ラスター fill → WebP
+logo / icon（ベクター） → 文字・stroke を path にした SVG
+```
+
+- 短命 Figma URL は直貼りしない。実装の `images/` 等へ永続保存する
+- JPEG / PNG の写真を納品物に残さない。取り込み時に WebP にする
+- logo / icon は Figma のベクターをアウトライン（文字・stroke を path）して SVG で保存する
+- Figma 側がラスターしか無い logo は SVG をトレースで捏造しない。その場合は WebP
+- favicon PNG などフォーマット契約があるものだけ例外
+
+---
+
+## 13. 明示パラメーター / 流用しやすさ
+
+`is_front_page()` / `is_home()` は使ってよい。明らかに TOP 専用で変動しないもの（TOP sticky、TOP 専用 CSS/JS など）はそれでよい。
+
+流用しうる塊だけ、ページ身元に結びつけない。呼び出し側が明示する、変わりにくい引数にする。
+
+- 正（流用）: `get_footer(null, array('map' => true))` → `_hasMap`
+- 誤（流用）: `body.home` や CSS `.home` で地図を出す
+- 正（TOP専用）: `is_front_page()` で TOP だけの CSS/JS / sticky
+- パーツは default オフ。使いたいテンプレートだけ opt-in
+- 引数名は機能（`map`）であり、ページ名ではない
+
+共通正本: `docs/wordpress-acf-policy.md`。Footer 地図の適用メモは `HEADER_FOOTER_NOTES.md`。
+
+---
+
+## 14. Git 注意
 
 Theme 実体は `theme-dropin/*` で **gitignore**。  
 この research repo に乗るのは intake / 本ルール / runtime 基盤。  

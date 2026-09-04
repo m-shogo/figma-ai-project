@@ -8,7 +8,36 @@
 
 既に決まっているFigmaのPC/SPデザインを、Codex / Claude Code / Cursor等で**高いFirst-pass Fidelity・低いRework・高い再現性**で実装できる工程へ改善する。
 
-Reference designそのものはこのrepoが決めない。
+Reference designそのものはこのrepoが決めない。Figma/AIの新機能は、その3つを上げるものだけ RETEST する。Figma製品の全部を追わない。
+
+## Knowledge placement / standing memory
+
+Human Authority 2026-09-04 以降、**この Git repository が全 AI の standing memory** である。Cursor / Claude Code / Codex / Copilot のどれで作業しても、同じ正本を読む。
+
+portable な Human-approved contract の置き場所:
+
+```text
+共通の短い契約 → AGENTS.md
+詳細 → canonical docs
+案件固有 Current Authority → experiments/<case>/
+機械可読 invariant → config/*.yaml + tests
+```
+
+Human が「これが正本」と決めた契約は、その scope の Git へすぐ書く。案件固有なら `experiments/<case>/`。全案件共通なら `AGENTS.md` の短い routing と canonical doc。client adapter へ複製しない。
+
+Agent の観察・1回の成功/失敗は、いきなり `AGENTS.md` / Company Policy へ上げない。
+
+```text
+project learning log
+→ research/frontend-learning-evidence*.yaml
+→ CANDIDATE
+→ 期限付き review（自動昇格しない）
+→ ACTIVE / PROJECT_ONLY / DEPRECATED / RETIRED
+```
+
+`auto_promotion` は false。レビューが due でも canonical を書き換えない。正本は `docs/knowledge-promotion.md` と `docs/frontend-learning-promotion-cadence.md`。
+
+Canonical: `docs/agent-adapters.md`
 
 ## Execution speed / agent ownership
 
@@ -178,6 +207,8 @@ Frontend実装では、特定propertyを使わないこと自体を目的にし�
 - `absolute` / fixed dimensions / `min-*`等は禁止ではない。Intentとownershipで判断する。
 - Figmaのrendered座標/section寸法を、その理由だけでWeb constraintへ直写ししない。
 - 通常contentはFlow/Flex/Grid等content changeへ追従できるlayoutを先に検討し、Hero artwork等のart directionではabsoluteを普通に使える。
+- 状態変化で箱をずらさない。hover/focus で初めて `border-width` / padding / 寸法を足さない。rest から同じ太さを確保し、状態では色・塗り・`transform` を変える。
+- interactive に transition が無ければ Existing duration、無ければ `0.3s`。`::before` / `::after` も含む。
 - `l- / c- / p- / is-` + BEM系のowner/searchabilityを、Company/Existing命名が無い場合のstable contractとして扱う。
 - BEM selectorはflatをdefaultにし、Native CSS nestingはpseudo/state/condition等のco-location中心に使う。
 - 1 Block/Elementにはauthoritative base ownerを持たせ、末尾`final-fix`を積み上げない。Media/container/supports等の正当なcontextual ruleまで単純duplicate扱いしない。
@@ -269,7 +300,7 @@ Company/Existingに指定が無い場合のみcurrent candidateを使う。
 
 - anchor smooth scroll: native CSS first + reduced motion + fixed-header offset
 - cinematic/controlled scroll: native smooth scrollと別契約
-- hover: hover/pointer capability gate + keyboard focus equivalent + touch fallback
+- hover: hover/pointer capability gate + keyboard focus equivalent + touch fallback。状態で border-width を新設して箱をずらさない
 - hamburger: site navigationはDisclosure patternがdefault
 - carousel simple: CSS Scroll Snap candidate
 - carousel complex: existing/approved specialist library
@@ -300,14 +331,29 @@ Section Implementation Unitはstackへ合わせる:
 
 提供Themeがある案件では、Themeを観測するまでtheme-relativeな構造を確定しない。
 
+案件の Current Authority / Theme rules / Directory map は experiment 配下の Git 正本を読む。Budokan WordPress なら:
+
+- `experiments/budokan-wordpress/CURRENT_AUTHORITY.md`
+- `experiments/budokan-wordpress/THEME_RULES.md`
+- `experiments/budokan-wordpress/DIRECTORY_MAP.md`
+
+Local WP runtime は php.ini デフォルト 2M のまま起動しない。正本は `experiments/wordpress-acf-runtime/README.md` と `php/conf.d/99-local-limits.ini`。
+
+既存フィールド契約に無い ACF / CPT / スラッグを発明しない。契約に無い開催日・募集ステータス等は fail-closed。
+
+流用しうる template part は `body.home` 等のページ身元で出さず、呼び出し側の明示パラメーターにする。ページ専用で変動しないものだけ `is_front_page()` / `is_home()` でよい。
+
 Canonical:
 
 - `docs/wordpress-acf-policy.md`
 - `docs/wordpress-theme-intake.md`
+- `experiments/wordpress-acf-runtime/README.md`
 
 ## Images / gradients / visual tolerance
 
 - exact source assetを優先
+- Theme / LP / HTML を問わず、Figma からの納品形式は **写真・ラスター fill → WebP**、**logo / icon（ベクター）→ 文字・stroke を path にした SVG**
+- 短命 Figma URL は直貼りしない。ラスターしか無い logo は SVG をトレースしない（そのときは WebP）
 - responsive imageとart directionを分ける
 - Figma gradientはstructured paint/stops/handles/opacity/blendを先に読む
 - screenshot目測gradientはlast resort
@@ -316,7 +362,10 @@ Canonical:
 - repeated 1–2px driftはsystemic failure signal
 - browser/OS/DPRが違うraw screenshot同士を同一pixel-perfect基準でrankingしない
 
-Canonical: `docs/image-gradient-visual-tolerance.md`
+Canonical:
+
+- `docs/image-gradient-visual-tolerance.md`
+- `config/frontend-raster-asset-export-policy.yaml`
 
 ## Section discovery / integration
 
@@ -481,6 +530,7 @@ FIRST_PASSを消さない。
 ## Do not
 
 - reference無しでdesignを作る
+- Figma製品の新機能を、First-pass Fidelity / Rework / 再現性に効かないのに追う
 - Company PolicyをFigma/AI inferenceで上書きする
 - Company/Figma conflictを黙って解決する
 - viewport widthだけでdevice/input capabilityを決める
@@ -495,10 +545,15 @@ FIRST_PASSを消さない。
 - LOW-confidence sectionを無検証で並列化する
 - Verify前にFIRST_PASSを上書きする
 - hoverだけに重要情報を置く
+- hover で初めて border を足して箱をずらす
 - complex carouselを毎回hand-rollする
 - all animationを1libraryへ寄せる
 - ACF fieldへdesign tokens/layout valuesを無条件に移す
 - exact image sourceがあるのにAI再生成する
+- Figma の写真・ラスター fill を JPEG / PNG のまま納品する
+- ベクター logo / icon をアウトライン化せずに残す、またはラスター logo をトレースして偽 SVG にする
+- 短命 Figma URL を実装へ直貼りする
+- portable な Human-approved contract を `.cursor/rules` / chat memory だけに置く
 - 1–2px magic numberでroot causeを隠す
 - 1回成功をbest practiceにする
 - 1回失敗を永久禁止にする

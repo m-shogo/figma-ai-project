@@ -1,0 +1,10 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="300" height="297" viewBox="0 0 300 297" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="octagon">
+<mask id="mask0_0_46" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="300" height="297">
+<rect id="Rectangle 493" width="300" height="297" fill="#D9D9D9"/>
+</mask>
+<g mask="url(#mask0_0_46)">
+<path id="Polygon 7" d="M176.318 -0.718935L301.401 51.0919L353.212 176.174L301.401 301.257L176.318 353.067L51.2361 301.257L-0.574698 176.174L51.2361 51.0919L176.318 -0.718935Z" fill="#F2F2F2"/>
+</g>
+</g>
+</svg>

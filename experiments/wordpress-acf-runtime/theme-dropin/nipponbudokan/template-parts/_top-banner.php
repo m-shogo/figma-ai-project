@@ -34,7 +34,7 @@ if (!$banner_items) {
     ];
 }
 
-$default_background_url = get_template_directory_uri() . '/images/top/bg-banner-sp.jpg';
+$default_background_url = get_template_directory_uri() . '/images/top/bg-banner-sp.webp';
 $background_url = (string) apply_filters('nipponbudokan_top_banner_background_url', $default_background_url);
 $section_style = $background_url !== ''
     ? sprintf('--tb-background-image: url(%s);', esc_url($background_url))

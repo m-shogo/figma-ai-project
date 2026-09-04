@@ -21,7 +21,9 @@ Status: ACTIVE audit map
 | Production runtime states/forms/third-party/i18n | `frontend-production-runtime-contract.md` |
 | Delivery/security/analytics/cache/error boundary | `frontend-delivery-security-contract.md` |
 | Company/Existing/Explicit contract roles | authority model + `AGENTS.md` |
+| Portable knowledge lives in Git, not client adapters | `AGENTS.md` Knowledge placement + `agent-adapters.md` |
 | Figma visual authority | authority model + `AGENTS.md` |
+| Figma delivery format (WebP photos / outlined SVG logos) | `image-gradient-visual-tolerance.md` + `config/frontend-raster-asset-export-policy.yaml` |
 | Explicit Figma instruction vs inferred structure | authority model + `figma-instruction-evidence.md` |
 | Frontend Standard is decision framework, not higher authority | authority model + policy |
 | Rule lifecycle CORE/ACTIVE/CANDIDATE | standard + policy |
@@ -57,6 +59,8 @@ Status: ACTIVE audit map
 | Hero/MV artwork absolute is valid | standard + pattern library |
 | absolute/translate/negative margin family review | standard + policy |
 | Figma rendered coordinates != Web constraints | authority model + standard |
+| hover/focus must not introduce border-width or box metrics | quick contract + standard + interaction policy + policy |
+| reserve hover border at rest; transition 0.3s / Existing token including pseudos | quick contract + interaction policy |
 | clamp/auto-fit are tools, not universal | `css-strategy.md` + standard |
 | breakpoint is layout boundary | standard + device policy |
 | product support floor resolves from Effective Environment Contract; 360px is unresolved CANDIDATE only | quick contract + runtime contract + policy |
@@ -173,6 +177,9 @@ Status: ACTIVE audit map
 | ACF 6.8+ official `wp acf json` before custom import/export | `acf-json-delivery.md` + external integration matrix |
 | official `@wordpress/env` before new generic WP Docker fixture | reuse-before-build + external integration matrix |
 | native attachment responsive image pipeline first | reuse-before-build + WP policy |
+| Local WP PHP upload/memory limits + fatal guard | `experiments/wordpress-acf-runtime/README.md` + `php/conf.d/99-local-limits.ini` |
+| Reusable template parts take explicit feature args | `wordpress-acf-policy.md` |
+| Budokan ACF / CPT / directory map / menu gate | `experiments/budokan-wordpress/CURRENT_AUTHORITY.md` |
 
 ## Accessibility / i18n
 

@@ -179,6 +179,16 @@ absoluteだけを減らして巨大`translate()`やnegative marginへ逃げな�
 
 を同じintentional offsetとしてreviewする。
 
+### ACTIVE-019 — 状態変化でbox metricsを変えない
+
+hover / focus / active / open で初めて `border-width` や padding を足して箱をずらさない。
+
+Figmaが「hoverで枠が付く」でも、Webでは rest から同じ太さ（`transparent` または塗りと同色）を確保し、状態では色と塗りを変える。移動は `transform`。
+
+状態変化に transition が無ければ Existing token、無ければ `0.3s`。`::before` / `::after` を含む。
+
+詳細は `docs/frontend-quick-contract.md` 節4。
+
 ---
 
 ## 5. HTML / DOM
@@ -711,6 +721,7 @@ fixed content block-size
 + many absolute content children
 + repeated x/y offsets
 + override accumulation
++ hover で border-width 0→1
 ```
 
 Figma coordinate recreationの可能性を示す。

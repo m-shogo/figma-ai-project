@@ -2,11 +2,11 @@
 $theme_uri = get_template_directory_uri();
 
 $items = array(
-    array('src' => $theme_uri . '/images/top/instagram-01.png', 'alt' => ''),
-    array('src' => $theme_uri . '/images/top/instagram-02.png', 'alt' => ''),
-    array('src' => $theme_uri . '/images/top/instagram-03.png', 'alt' => ''),
-    array('src' => $theme_uri . '/images/top/instagram-04.png', 'alt' => ''),
-    array('src' => $theme_uri . '/images/top/instagram-05.png', 'alt' => ''),
+    array('src' => $theme_uri . '/images/top/instagram-01.webp', 'alt' => ''),
+    array('src' => $theme_uri . '/images/top/instagram-02.webp', 'alt' => ''),
+    array('src' => $theme_uri . '/images/top/instagram-03.webp', 'alt' => ''),
+    array('src' => $theme_uri . '/images/top/instagram-04.webp', 'alt' => ''),
+    array('src' => $theme_uri . '/images/top/instagram-05.webp', 'alt' => ''),
 );
 
 /**

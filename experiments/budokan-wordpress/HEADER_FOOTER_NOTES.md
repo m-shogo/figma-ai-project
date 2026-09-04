@@ -57,7 +57,7 @@ PC には `menu` / `megamenu` / `search` overlay が current top-level として
 
 - PC: `footer_subpage` `2106:9471`（白・リンク2列・金 Page Top・地図なし）
 - SP: `footer-sp` `2189:10106`（白・SNS・金 Page Top・地図なし）
-- TOP の PC 地図付き footer `1901:13409` と SP `footer-sp-top` `1360:9369` は `get_footer( null, array( 'map' => true ) )`。`front-page.php` だけ渡す。`body.home` / `is_front_page()` では出さない
+- TOP の PC 地図付き footer `1901:13409` と SP `footer-sp-top` `1360:9369` は `get_footer( null, array( 'map' => true ) )`。`front-page.php` だけ渡す。`body.home` / `is_front_page()` では出さない。portable owner: `THEME_RULES.md` 節 13 / `docs/wordpress-acf-policy.md`
 
 直した差:
 

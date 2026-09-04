@@ -124,7 +124,7 @@ for required in \
 done
 
 for asset in \
-  '/images/top/mv-sample.png' \
+  '/images/top/mv-sample.webp' \
   '/images/top/ico-budo.svg' \
   '/images/top/ico-calligraphy.svg' \
   '/images/top/ico-budokan.svg' \

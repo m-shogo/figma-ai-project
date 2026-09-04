@@ -24,6 +24,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            object-position: 55% 42%;
         }
 
         &::after {
@@ -145,13 +146,15 @@
         }
 
         &.ta_btn_video::before {
-            content: '\f04b';
+            font-family: var(--font-awesomeBrands);
+            font-weight: 400;
+            content: '\f167';
         }
     }
 
     .ta_cards_wrap {
         position: relative;
-        padding-block: 40px 56px;
+        padding-block: 40px 120px;
         background-color: var(--color-heading-band);
     }
 
@@ -198,20 +201,49 @@
         }
     }
 
+    .ta_card:nth-child(1) .ta_card_image img {
+        object-position: 89% 54%;
+    }
+
+    .ta_card:nth-child(2) .ta_card_image img {
+        object-position: 99% 50%;
+    }
+
+    .ta_card:nth-child(3) .ta_card_image img {
+        object-position: 68% 95%;
+    }
+
+    .ta_card:nth-child(4) .ta_card_image img {
+        object-position: 44% 50%;
+    }
+
+    .ta_card_pc {
+        display: none;
+    }
+
     .ta_card_overlay {
         position: absolute;
         top: 0;
         right: 0;
-        bottom: 0;
-        padding: 8px 6px;
-        background-color: color-mix(in srgb, var(--color-copyright) 88%, transparent);
+        display: flex;
+        flex-direction: row;
+        gap: 3px;
         color: var(--color-secondary);
         font-family: var(--font-zen-kaku-gothic);
         font-size: 14px;
         font-weight: 400;
         line-height: 1.1;
         letter-spacing: 0.05em;
-        writing-mode: vertical-rl;
+
+        span {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            width: 31px;
+            padding: 8px 6px;
+            background-color: var(--color-text);
+            writing-mode: vertical-rl;
+        }
     }
 
     .ta_card_label {
@@ -245,6 +277,24 @@
         }
     }
 
+    .ta_scroll {
+        display: block;
+        width: 327px;
+        height: 5px;
+        margin: 40px auto 0;
+        overflow: hidden;
+        border-radius: 2.5px 0 0 2.5px;
+        background-color: var(--color-line);
+    }
+
+    .ta_scroll_bar {
+        display: block;
+        width: 110px;
+        height: 5px;
+        border-radius: 2.5px 0 0 2.5px;
+        background-color: var(--color-accent);
+    }
+
     @media screen and (min-width: 768px) {
         min-height: 1063px;
         background-color: transparent;
@@ -254,14 +304,26 @@
             bottom: 0;
         }
 
+        .ta_stage_bg img {
+            object-position: 50% 62%;
+        }
+
         .ta_stage_bg::after {
-            background-image: linear-gradient(
-                180deg,
-                color-mix(in srgb, #eef3f6 94%, transparent) 0%,
-                color-mix(in srgb, #eef3f6 82%, transparent) 55%,
-                color-mix(in srgb, #eef3f6 70%, transparent) 100%
-            );
             background-color: transparent;
+        }
+
+        .ta_stage_bg::before {
+            content: '';
+            position: absolute;
+            top: 480px;
+            left: 50%;
+            z-index: 0;
+            width: 1558px;
+            height: 260px;
+            transform: translateX(-50%);
+            background-color: rgba(255, 255, 255, 0.9);
+            filter: blur(50px);
+            pointer-events: none;
         }
 
         .ta_stage {
@@ -338,6 +400,10 @@
             &::before {
                 content: none;
             }
+
+            &::first-letter {
+                color: #fff;
+            }
         }
 
         .ta_panel {
@@ -352,6 +418,10 @@
             font-size: 16px;
             line-height: 1.8;
             text-align: left;
+        }
+
+        .ta_lead_break {
+            display: none;
         }
 
         .ta_actions {
@@ -391,7 +461,32 @@
 
         .ta_card {
             flex: none;
+            display: block;
             width: 195px;
+        }
+
+        .ta_card_pc {
+            display: block;
+        }
+
+        .ta_card:nth-child(1) .ta_card_image img {
+            object-position: 38% 50%;
+        }
+
+        .ta_card:nth-child(2) .ta_card_image img {
+            object-position: 15% 100%;
+        }
+
+        .ta_card:nth-child(3) .ta_card_image img {
+            object-position: 31% 99%;
+        }
+
+        .ta_card:nth-child(4) .ta_card_image img {
+            object-position: 44% 50%;
+        }
+
+        .ta_scroll {
+            display: none;
         }
 
         .ta_card_link {

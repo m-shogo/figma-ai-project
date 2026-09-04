@@ -3,22 +3,26 @@ $theme_uri = get_template_directory_uri();
 $cards = array(
     array(
         'icon' => 'ico-budo.svg',
+        'image' => 'guide-budo.webp',
         'title' => '武道',
         'text' => '日本の伝統的な武道を普及・奨励し、心身をきたえる中心的な道場として、人格形成や礼節を重んじる武道の振興事業を行っています。',
     ),
     array(
         'icon' => 'ico-calligraphy.svg',
+        'image' => 'guide-calligraphy.webp',
         'title' => '書道',
         'text' => '月刊誌「書写書道」での段級位認定、高円宮杯日本武道館書写書道大展覧会・全日本書初め大展覧会の2大全国大会を主催しています。',
     ),
     array(
         'icon' => 'ico-budokan.svg',
+        'image' => 'guide-budokan.webp',
         'title' => '日本武道館',
         'text' => '武道大会・研修会・青少年育成・書初め大展覧会・刊行物発行など、多岐にわたる事業を展開しています。',
     ),
 );
 ?>
 <section id="top_guide-01" class="top_guide-01">
+    <div class="tg_deco" aria-hidden="true"></div>
     <div class="tg_intro">
         <div class="global_inner">
             <div class="tg_head">
@@ -35,7 +39,7 @@ $cards = array(
             <div class="tg_cards">
                 <?php foreach ($cards as $card): ?>
                     <article class="tg_card">
-                        <p class="tg_card_image"><img src="<?php echo esc_url($theme_uri . '/images/common/noimage.webp'); ?>" alt="" width="360" height="220" loading="lazy"></p>
+                        <p class="tg_card_image"><img src="<?php echo esc_url($theme_uri . '/images/top/' . $card['image']); ?>" alt="" width="360" height="220" loading="lazy"></p>
                         <div class="tg_card_body">
                             <p class="tg_card_title">
                                 <img class="tg_card_icon" src="<?php echo esc_url($theme_uri . '/images/top/' . $card['icon']); ?>" alt="" width="36" height="36">

@@ -47,11 +47,24 @@ PC 600×400 CSS px表示 → 1200×800 px WebP
 
 だけ。Agent inference / project-local convenience / generic best practiceでは変更しない。
 
+### Delivery format（Human Authority 2026-09-04）
+
+Theme / LP / HTML サイトを問わず、Figma から実装へ入れるときの納品形式:
+
+```text
+写真・ラスター fill → WebP（JPEG / PNG のまま残さない）
+logo / icon（ベクター） → 文字・stroke を path にした SVG
+短命 Figma URL は直貼りしない
+Figma 側がラスターしか無い logo は SVG をトレースしない → WebP
+```
+
+favicon PNG など既存のフォーマット契約があるものだけ例外。
+
 ### Vector exception
 
 Logo / icon / simple vector illustration / authored vector decoration等、sourceがvectorでSVGが適切なものはこのRaster倍率ルールの対象外。
 
-Vector sourceを倍率ルールを満たすためだけにWebPへRaster化しない。SVGを優先する。
+Vector sourceを倍率ルールを満たすためだけにWebPへRaster化しない。SVGを優先する。トレースで偽SVGを作らない。
 
 ### PC/SP art direction
 

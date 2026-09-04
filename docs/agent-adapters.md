@@ -1,6 +1,6 @@
 # Agent Adapters — Codex / Claude Code / Cursor / compatible agents
 
-Last reviewed: 2026-08-20
+Last reviewed: 2026-09-04
 
 目的はagentごとに別の思想を作ることではない。
 
@@ -105,10 +105,12 @@ COMMON runでClaudeだけ追加memoryを持たせない。
 
 CursorのProject Rulesは `.cursor/rules` にversion-controlledで保存できる。root `AGENTS.md` もsimple project instructionとして利用可能な場合は共通contractとして使う。
 
-本repoの初期方針:
+本repoのstanding方針（Human Authority 2026-09-04 以降、一時的ではない）:
 
 - common rulesは `AGENTS.md`
-- `.cursor/rules` は本当にscopeが必要になった時だけ追加
+- 成長・記憶・蓄積の正本は Git 上の `AGENTS.md` / canonical docs / `experiments/<case>/` / machine-readable config
+- Human-approved な portable contract を `.cursor/rules` だけに置かない。置いたら同じ内容を Git 正本へ上げ、Cursor 側の複製は消す
+- `.cursor/rules` は本当に Cursor 固有の scope が必要になった時だけ追加
 - `.cursorrules` legacyへ新規投資しない
 
 Cursor固有ruleを作る場合は:

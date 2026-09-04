@@ -72,6 +72,9 @@ layout:
   absolute_is_not_globally_banned: true
   figma_rendered_coordinate_is_not_automatically_web_constraint: true
   property_count_is_not_quality_score: true
+  hover_must_not_introduce_layout_box_metrics: true
+  reserve_hover_border_at_rest: true
+  missing_interactive_transition_defaults_to_existing_or_0_3s: true
 
 css_ownership:
   authoritative_base_owner_required: true
