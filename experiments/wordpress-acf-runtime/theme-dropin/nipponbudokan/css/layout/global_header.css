@@ -245,6 +245,18 @@ body._contentFixed {
     }
 }
 
+/* PC body intentionally has min-width: 1280px. When scroll lock promotes the
+   header from sticky to fixed, width:100% resolves against the scrollbar-gutter
+   viewport instead of that body minimum. Keep the same established PC width so
+   menu/search opening cannot pull the header inward. */
+@media screen and (min-width: 768px) {
+    body._contentFixed {
+        .global_header {
+            min-width: 1280px;
+        }
+    }
+}
+
 /* Figma search 2295:8023 — JS (#gh_search) moves .gn_search here and animates height. */
 .gh_searchPanel {
     --_search-panel-height: 180px;
