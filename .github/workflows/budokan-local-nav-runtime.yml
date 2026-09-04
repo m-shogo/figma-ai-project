@@ -49,6 +49,11 @@ jobs:
           docker compose run --rm -e WP_ENVIRONMENT_TYPE=local cli eval-file /fixture/scripts/seed-budokan-disclosure-qa.php
           page_id="$(docker compose run --rm cli option get budokan_local_nav_qa_page_id)"
           disclosure_page_id="$(docker compose run --rm cli option get budokan_disclosure_qa_page_id)"
+          disclosure_template="$(docker compose run --rm cli post meta get "$disclosure_page_id" _wp_page_template)"
+          if [[ "$disclosure_template" != "templates/template-oneColumn.php" ]]; then
+            echo "FAIL disclosure QA page template mismatch: ${disclosure_template}." >&2
+            exit 1
+          fi
           qa_url="${WP_URL}/?page_id=${page_id}"
           disclosure_qa_url="${WP_URL}/?page_id=${disclosure_page_id}"
           cd ../..
