@@ -1,0 +1,42 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: OBS-BUDOKAN-RENDERED-TEXT-QA-MARKER
+    summary: >-
+      Raw HTML string checks should not assume that visually contiguous text is contiguous in source markup. When typography intentionally wraps one character or phrase in a child element, verify the structural marker in the raw response and assert the rendered text through DOM textContent in browser QA.
+    category: VISUAL_FIDELITY
+    applicability:
+      scope: PROJECT
+      conditions:
+        - A runtime smoke test validates authored text whose characters may be split across nested spans or inline elements.
+        - Browser QA is already available for the component.
+      exclusions:
+        - Do not weaken tests by removing content validation entirely.
+        - Do not rewrite production markup solely to satisfy a raw-source grep when the rendered DOM is correct.
+    promotion_state: PROJECT_ONLY
+    promotion:
+      candidate: false
+      rationale: >-
+        The failure and correction are currently evidenced only by the Budokan TOP Guide runtime. Keep the rule project-local until an independent reference reproduces the same test-harness failure pattern.
+      blocked_by:
+        - NEEDS_INDEPENDENT_REFERENCE_EVIDENCE_BEFORE_CROSS_PROJECT_PROMOTION
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-TOP-GUIDE-SPLIT-TEXT-MARKER-20260904
+          kind: LOCAL_RESEARCH
+          reference_id: REF-002-BUDOKAN
+          run_id: '33859983543'
+          path: experiments/wordpress-acf-runtime/scripts/budokan-top-guide-runtime-qa.sh
+          commit: ''
+          note: >-
+            PR 388 runtime attempt 1 failed before browser QA because the smoke script grepped for the contiguous raw string User guide. Production markup intentionally renders the initial U in a nested span, so the raw source does not contain that contiguous sequence even though the DOM text is correct. The correction checks the structural English-heading class in the raw response and moves exact User guide text validation into Playwright via textContent for both SP and PC.
+      contradicts: []
+    notes:
+      - "Promotion review disposition 2026-09-04: KEEP_PROJECT_ONLY; this is one project-local test-harness correction with no independent-reference evidence."

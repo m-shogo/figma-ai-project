@@ -61,6 +61,7 @@ try {
 
     return {
       sectionWidth: sectionRect.width,
+      sectionHeight: sectionRect.height,
       introHeight: introRect.height,
       firstCardLeft: cardRects[0].left - sectionRect.left,
       firstCardTop: cardRects[0].top - sectionRect.top,
@@ -68,8 +69,10 @@ try {
       firstImageHeight: imageRect.height,
       cardGap01: cardRects[1].top - cardRects[0].bottom,
       cardGap12: cardRects[2].top - cardRects[1].bottom,
+      lastCardBottomGap: sectionRect.bottom - cardRects[2].bottom,
       headingSize: parseFloat(headingStyle.fontSize),
       headingFamily: headingStyle.fontFamily,
+      headingEnText: headingEn.textContent.trim(),
       headingEnSize: parseFloat(headingEnStyle.fontSize),
       headingEnFamily: headingEnStyle.fontFamily,
       leadSize: parseFloat(leadStyle.fontSize),
@@ -82,14 +85,17 @@ try {
 
   assert(sp, 'SP TOP Guide elements were not found.');
   assert(close(sp.sectionWidth, 375), `SP mobile layout viewport expected 375px section, got ${sp.sectionWidth}.`);
+  assert(close(sp.sectionHeight, 1668), `SP section height expected 1668px, got ${sp.sectionHeight}.`);
   assert(close(sp.introHeight, 514), `SP intro expected 514px, got ${sp.introHeight}.`);
   assert(close(sp.firstCardLeft, 32), `SP first card x expected 32px, got ${sp.firstCardLeft}.`);
   assert(close(sp.firstCardTop, 401), `SP first card y expected 401px, got ${sp.firstCardTop}.`);
   assert(close(sp.firstCardWidth, 311), `SP card width expected 311px, got ${sp.firstCardWidth}.`);
   assert(close(sp.firstImageHeight, 189), `SP image height expected 189px, got ${sp.firstImageHeight}.`);
   assert(Math.abs(sp.cardGap01) <= 1 && Math.abs(sp.cardGap12) <= 1, `SP cards should be contiguous; gaps=${sp.cardGap01},${sp.cardGap12}.`);
+  assert(close(sp.lastCardBottomGap, 64), `SP final card bottom gap expected 64px, got ${sp.lastCardBottomGap}.`);
   assert(close(sp.headingSize, 30, 0.5), `SP heading expected 30px, got ${sp.headingSize}.`);
   assert(isKakuFamily(sp.headingFamily), `SP heading JA must resolve to Zen Kaku Gothic New, got ${sp.headingFamily}.`);
+  assert(sp.headingEnText === 'User guide', `SP heading EN text expected User guide, got ${sp.headingEnText}.`);
   assert(close(sp.headingEnSize, 14, 0.5), `SP heading EN expected 14px, got ${sp.headingEnSize}.`);
   assert(isRobotoFamily(sp.headingEnFamily), `SP heading EN must resolve to Roboto, got ${sp.headingEnFamily}.`);
   assert(close(sp.leadSize, 16, 0.5), `SP lead expected 16px, got ${sp.leadSize}.`);
@@ -130,12 +136,14 @@ try {
 
     return {
       sectionWidth: sectionRect.width,
+      sectionHeight: sectionRect.height,
       introHeight: introRect.height,
       cardsTop: cardRects[0].top - sectionRect.top,
       cardsLeft: cardRects[0].left - sectionRect.left,
       widths: cardRects.map((rect) => rect.width),
       xStarts: cardRects.map((rect) => rect.left - sectionRect.left),
       imageHeight: imageRect.height,
+      lastCardBottomGap: sectionRect.bottom - cardRects[2].bottom,
       bodyAlign: bodyStyle.alignItems,
       titleDirection: titleStyle.flexDirection,
       titleSize: parseFloat(titleStyle.fontSize),
@@ -143,6 +151,7 @@ try {
       textFamily: textStyle.fontFamily,
       headingSize: parseFloat(headingStyle.fontSize),
       headingFamily: headingStyle.fontFamily,
+      headingEnText: headingEn.textContent.trim(),
       headingEnSize: parseFloat(headingEnStyle.fontSize),
       headingEnFamily: headingEnStyle.fontFamily,
       leadSize: parseFloat(leadStyle.fontSize),
@@ -151,6 +160,7 @@ try {
   });
 
   assert(pc, 'PC TOP Guide elements were not found.');
+  assert(close(pc.sectionHeight, 689), `PC section height expected 689px, got ${pc.sectionHeight}.`);
   assert(close(pc.introHeight, 320), `PC intro expected 320px, got ${pc.introHeight}.`);
   assert(close(pc.cardsTop, 218), `PC card rail y expected 218px, got ${pc.cardsTop}.`);
   const expectedCenteredLeft = (pc.sectionWidth - 960) / 2;
@@ -158,6 +168,7 @@ try {
   assert(pc.widths.every((width) => close(width, 320)), `PC cards expected 320px each, got ${pc.widths.join(',')}.`);
   assert(close(pc.xStarts[1] - pc.xStarts[0], 320) && close(pc.xStarts[2] - pc.xStarts[1], 320), `PC cards are not contiguous 320px columns: ${pc.xStarts.join(',')}.`);
   assert(close(pc.imageHeight, 194), `PC image height expected 194px, got ${pc.imageHeight}.`);
+  assert(close(pc.lastCardBottomGap, 0), `PC card rail should end with the section; gap=${pc.lastCardBottomGap}.`);
   assert(pc.bodyAlign === 'flex-start', `PC card body expected flex-start, got ${pc.bodyAlign}.`);
   assert(pc.titleDirection === 'row', `PC card title expected row, got ${pc.titleDirection}.`);
   assert(close(pc.titleSize, 20, 0.5), `PC card title expected 20px, got ${pc.titleSize}.`);
@@ -165,6 +176,7 @@ try {
   assert(isKakuFamily(pc.textFamily), `PC card text must resolve to Zen Kaku Gothic New, got ${pc.textFamily}.`);
   assert(close(pc.headingSize, 32, 0.5), `PC heading expected 32px, got ${pc.headingSize}.`);
   assert(isMinchoFamily(pc.headingFamily), `PC heading JA must resolve to Zen Old Mincho, got ${pc.headingFamily}.`);
+  assert(pc.headingEnText === 'User guide', `PC heading EN text expected User guide, got ${pc.headingEnText}.`);
   assert(close(pc.headingEnSize, 22, 0.5), `PC heading EN expected 22px, got ${pc.headingEnSize}.`);
   assert(isMinchoFamily(pc.headingEnFamily), `PC heading EN must resolve to Zen Old Mincho, got ${pc.headingEnFamily}.`);
   assert(close(pc.leadSize, 16, 0.5), `PC lead expected 16px, got ${pc.leadSize}.`);

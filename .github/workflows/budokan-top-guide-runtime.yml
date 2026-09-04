@@ -29,15 +29,25 @@ jobs:
           BUDOKAN_TOP_GUIDE_KEEP_RUNTIME: '1'
         run: bash experiments/wordpress-acf-runtime/scripts/budokan-top-guide-runtime-qa.sh
 
+      - name: Install Playwright Chromium for TOP Guide browser QA
+        run: |
+          npm install --no-save --package-lock=false playwright@1.54.2
+          npx playwright install --with-deps chromium
+
       - name: Run SP and PC TOP Guide browser geometry QA
         run: |
           cd experiments/wordpress-acf-runtime
           source scripts/runtime-env.sh
           qa_url="${WP_URL}/"
           cd ../..
-          npm install --no-save --package-lock=false playwright@1.54.2
-          npx playwright install --with-deps chromium
           node experiments/wordpress-acf-runtime/scripts/budokan-top-guide-browser-qa.mjs "$qa_url"
+
+      - name: Run TOP purpose terminal browser interaction QA
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          qa_url="${WP_URL}/"
+          cd ../..
           node experiments/wordpress-acf-runtime/scripts/budokan-top-purpose-terminal-browser-qa.mjs "$qa_url"
 
       - name: Cleanup disposable WordPress runtime
