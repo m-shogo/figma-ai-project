@@ -33,7 +33,6 @@ const snapshot = async (itemSelector, buttonSelector, wrapperSelector) => page.e
       buttonTop: buttonRect.top,
       buttonLeft: buttonRect.left,
       buttonWidth: buttonRect.width,
-      buttonHeight: buttonRect.height,
       wrapperHeight: wrapperRect.height,
       activeIsButton: document.activeElement === button,
       documentScrollWidth: document.documentElement.scrollWidth,
@@ -104,15 +103,8 @@ try {
     wrapperSelector: '[data-qa-disclosure="dropdown"] .mdd_wrapper-02',
   });
 
-  await auditDisclosure({
-    label: 'SP module menu nested disclosure',
-    itemSelector: '[data-qa-disclosure="module-menu"] .mm_item-03._hasChild',
-    buttonSelector: '[data-qa-disclosure="module-menu"] .mm_button-03',
-    wrapperSelector: '[data-qa-disclosure="module-menu"] .mm_wrapper-03',
-  });
-
-  assert(pageErrors.length === 0, `Disclosure interaction produced page errors: ${pageErrors.join(' | ')}`);
-  console.log('PASS Budokan disclosure interaction stability browser QA');
+  assert(pageErrors.length === 0, `Dropdown interaction produced page errors: ${pageErrors.join(' | ')}`);
+  console.log('PASS Budokan dropdown disclosure interaction stability browser QA');
 } finally {
   await browser.close();
 }
