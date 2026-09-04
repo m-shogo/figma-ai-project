@@ -72,6 +72,7 @@ try {
       lastCardBottomGap: sectionRect.bottom - cardRects[2].bottom,
       headingSize: parseFloat(headingStyle.fontSize),
       headingFamily: headingStyle.fontFamily,
+      headingEnText: headingEn.textContent.trim(),
       headingEnSize: parseFloat(headingEnStyle.fontSize),
       headingEnFamily: headingEnStyle.fontFamily,
       leadSize: parseFloat(leadStyle.fontSize),
@@ -94,6 +95,7 @@ try {
   assert(close(sp.lastCardBottomGap, 64), `SP final card bottom gap expected 64px, got ${sp.lastCardBottomGap}.`);
   assert(close(sp.headingSize, 30, 0.5), `SP heading expected 30px, got ${sp.headingSize}.`);
   assert(isKakuFamily(sp.headingFamily), `SP heading JA must resolve to Zen Kaku Gothic New, got ${sp.headingFamily}.`);
+  assert(sp.headingEnText === 'User guide', `SP heading EN text expected User guide, got ${sp.headingEnText}.`);
   assert(close(sp.headingEnSize, 14, 0.5), `SP heading EN expected 14px, got ${sp.headingEnSize}.`);
   assert(isRobotoFamily(sp.headingEnFamily), `SP heading EN must resolve to Roboto, got ${sp.headingEnFamily}.`);
   assert(close(sp.leadSize, 16, 0.5), `SP lead expected 16px, got ${sp.leadSize}.`);
@@ -149,6 +151,7 @@ try {
       textFamily: textStyle.fontFamily,
       headingSize: parseFloat(headingStyle.fontSize),
       headingFamily: headingStyle.fontFamily,
+      headingEnText: headingEn.textContent.trim(),
       headingEnSize: parseFloat(headingEnStyle.fontSize),
       headingEnFamily: headingEnStyle.fontFamily,
       leadSize: parseFloat(leadStyle.fontSize),
@@ -173,6 +176,7 @@ try {
   assert(isKakuFamily(pc.textFamily), `PC card text must resolve to Zen Kaku Gothic New, got ${pc.textFamily}.`);
   assert(close(pc.headingSize, 32, 0.5), `PC heading expected 32px, got ${pc.headingSize}.`);
   assert(isMinchoFamily(pc.headingFamily), `PC heading JA must resolve to Zen Old Mincho, got ${pc.headingFamily}.`);
+  assert(pc.headingEnText === 'User guide', `PC heading EN text expected User guide, got ${pc.headingEnText}.`);
   assert(close(pc.headingEnSize, 22, 0.5), `PC heading EN expected 22px, got ${pc.headingEnSize}.`);
   assert(isMinchoFamily(pc.headingEnFamily), `PC heading EN must resolve to Zen Old Mincho, got ${pc.headingEnFamily}.`);
   assert(close(pc.leadSize, 16, 0.5), `PC lead expected 16px, got ${pc.leadSize}.`);
