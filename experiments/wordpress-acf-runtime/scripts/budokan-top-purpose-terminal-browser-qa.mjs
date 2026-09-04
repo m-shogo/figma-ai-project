@@ -35,8 +35,23 @@ try {
     const target = document.querySelector('#top_guide-01');
     if (!footer || !terminal || !link || !label || !target) return null;
     const terminalRect = terminal.getBoundingClientRect();
+    const linkRect = link.getBoundingClientRect();
     const style = getComputedStyle(terminal);
+    const linkStyle = getComputedStyle(link);
     const labelStyle = getComputedStyle(label);
+    const hitX = linkRect.left + linkRect.width / 2;
+    const hitY = linkRect.top + linkRect.height / 2;
+    const hitStack = document.elementsFromPoint(hitX, hitY).slice(0, 8).map((element) => {
+      const elementStyle = getComputedStyle(element);
+      return {
+        tag: element.tagName.toLowerCase(),
+        id: element.id || '',
+        className: typeof element.className === 'string' ? element.className : '',
+        position: elementStyle.position,
+        zIndex: elementStyle.zIndex,
+        pointerEvents: elementStyle.pointerEvents,
+      };
+    });
     return {
       viewportWidth: document.documentElement.clientWidth,
       viewportHeight: window.innerHeight,
@@ -44,8 +59,12 @@ try {
       terminalHeight: terminalRect.height,
       terminalTop: terminalRect.top,
       terminalBottom: terminalRect.bottom,
+      linkWidth: linkRect.width,
+      linkHeight: linkRect.height,
       position: style.position,
       zIndex: parseInt(style.zIndex, 10),
+      pointerEvents: style.pointerEvents,
+      linkPointerEvents: linkStyle.pointerEvents,
       borderTopWidth: parseFloat(style.borderTopWidth),
       labelSize: parseFloat(labelStyle.fontSize),
       labelFamily: labelStyle.fontFamily,
@@ -54,6 +73,7 @@ try {
       targetId: target.id,
       followsFooterInDom: terminal.previousElementSibling === footer,
       defaultStickyPresent: Boolean(defaultSticky),
+      hitStack,
     };
   });
 
@@ -61,9 +81,11 @@ try {
   assert(close(sp.viewportWidth, 375), `SP viewport expected 375px, got ${sp.viewportWidth}.`);
   assert(close(sp.terminalWidth, 375), `SP purpose sticky expected 375px, got ${sp.terminalWidth}.`);
   assert(close(sp.terminalHeight, 64), `SP purpose sticky expected 64px high, got ${sp.terminalHeight}.`);
+  assert(close(sp.linkWidth, 375) && close(sp.linkHeight, 64), `SP purpose sticky link must fill the terminal; link=${sp.linkWidth}×${sp.linkHeight}.`);
   assert(sp.position === 'fixed', `SP purpose surface must be sticky/fixed, got ${sp.position}.`);
   assert(close(sp.terminalTop, sp.viewportHeight - 64, 1) && close(sp.terminalBottom, sp.viewportHeight, 1), `SP purpose sticky must pin to viewport bottom; top=${sp.terminalTop}, bottom=${sp.terminalBottom}, viewport=${sp.viewportHeight}.`);
   assert(sp.zIndex >= 80, `SP purpose sticky must own the footer-shortcut layer; z-index=${sp.zIndex}.`);
+  assert(sp.pointerEvents !== 'none' && sp.linkPointerEvents !== 'none', `SP purpose sticky must accept pointer input; terminal=${sp.pointerEvents}, link=${sp.linkPointerEvents}.`);
   assert(sp.followsFooterInDom, 'SP purpose sticky should remain a thin TOP derivative immediately after the Footer master in DOM order.');
   assert(!sp.defaultStickyPresent, 'TOP must not render the generic contact/access footer sticky beneath the purpose sticky.');
   assert(close(sp.borderTopWidth, 0, 0.25), `SP purpose sticky should not keep a contrasting top border, got ${sp.borderTopWidth}.`);
@@ -71,6 +93,7 @@ try {
   assert(isMinchoFamily(sp.labelFamily), `SP purpose sticky label must resolve to Zen Old Mincho, got ${sp.labelFamily}.`);
   assert(close(sp.labelLetterSpacing, 0.9, 0.25), `SP purpose sticky tracking expected 0.9px, got ${sp.labelLetterSpacing}.`);
   assert(sp.href === '#top_guide-01' && sp.targetId === 'top_guide-01', `SP purpose sticky must reuse existing purpose master; href=${sp.href}.`);
+  assert(sp.hitStack.some((entry) => entry.className.split(/\s+/).includes('tpm_link')), `SP purpose sticky must own its center hit target; stack=${JSON.stringify(sp.hitStack)}.`);
 
   await mobilePage.locator('.top_purposeMenu .tpm_link').click();
   await mobilePage.waitForTimeout(450);
