@@ -22,10 +22,6 @@ async function snapshot(page, selector) {
     const fvRect = fv.getBoundingClientRect();
     const style = getComputedStyle(target);
     return {
-      activeTag: document.activeElement?.tagName || '',
-      activeId: document.activeElement?.id || '',
-      activeClass: typeof document.activeElement?.className === 'string' ? document.activeElement.className : '',
-      bodyClass: document.body.className,
       clientWidth: document.documentElement.clientWidth,
       scrollWidth: document.documentElement.scrollWidth,
       scrollY: window.scrollY,
@@ -68,11 +64,17 @@ async function scrollDeep(page) {
   const targetY = maxScrollY > 800 ? Math.floor(maxScrollY * 0.65) : Math.min(350, maxScrollY);
   await page.evaluate((y) => window.scrollTo(0, y), targetY);
   await page.waitForTimeout(120);
-  return windowScroll(page);
+  return page.evaluate(() => window.scrollY);
 }
 
-async function windowScroll(page) {
-  return page.evaluate(() => window.scrollY);
+async function pointerBox(page, selector, label) {
+  const box = await page.locator(selector).boundingBox();
+  assert(box, `${label}: target has no pointer box.`);
+  const viewport = page.viewportSize();
+  assert(viewport, `${label}: viewport unavailable.`);
+  assert(box.x + box.width / 2 >= 0 && box.x + box.width / 2 <= viewport.width, `${label}: target pointer center is outside viewport horizontally.`);
+  assert(box.y + box.height / 2 >= 0 && box.y + box.height / 2 <= viewport.height, `${label}: target pointer center is outside viewport vertically.`);
+  return box;
 }
 
 async function exerciseFocus(page, selector, label) {
@@ -90,8 +92,12 @@ async function exerciseFocus(page, selector, label) {
 async function exerciseHover(page, selector, label) {
   const locator = page.locator(selector);
   await locator.waitFor({ state: 'visible' });
+  const box = await pointerBox(page, selector, label);
   const before = await snapshot(page, selector);
-  await locator.hover();
+  // Use raw pointer movement rather than locator.hover(): locator.hover() is allowed
+  // to scroll the locator into view, which would manufacture the very scroll jump
+  // this regression test is intended to detect.
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
   await page.waitForTimeout(80);
   const hovered = await snapshot(page, selector);
   assertGeometryStable(before, hovered, `${label} hover`);
@@ -101,14 +107,17 @@ async function exerciseHover(page, selector, label) {
 async function exerciseActive(page, selector, label) {
   const locator = page.locator(selector);
   await locator.waitFor({ state: 'visible' });
-  const box = await locator.boundingBox();
-  assert(box, `${label}: target has no pointer box.`);
+  const box = await pointerBox(page, selector, label);
   const before = await snapshot(page, selector);
   await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
   await page.mouse.down();
   await page.waitForTimeout(40);
   const active = await snapshot(page, selector);
   assertGeometryStable(before, active, `${label} active`);
+  // Release away from the control so this :active-state measurement does not
+  // synthesize a click that opens menu/search and contaminates later checks.
+  const viewport = page.viewportSize();
+  await page.mouse.move(1, Math.max(1, viewport.height - 2));
   await page.mouse.up();
 }
 
