@@ -10,7 +10,7 @@ records:
   - learning_id: OBS-BUDOKAN-RENDERED-TEXT-QA-MARKER
     summary: >-
       Raw HTML string checks should not assume that visually contiguous text is contiguous in source markup. When typography intentionally wraps one character or phrase in a child element, verify the structural marker in the raw response and assert the rendered text through DOM textContent in browser QA.
-    category: QA_HARDENING
+    category: VISUAL_FIDELITY
     applicability:
       scope: PROJECT
       conditions:
