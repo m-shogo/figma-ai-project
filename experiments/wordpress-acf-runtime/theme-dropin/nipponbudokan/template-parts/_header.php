@@ -59,13 +59,13 @@
             </div>
             <ul class="gn_sns" aria-label="公式SNS">
                 <li class="gn_sns_item">
-                    <a class="gn_sns_link gn_sns_youtube" href="#" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><span>YouTube</span></a>
+                    <span class="gn_sns_link gn_sns_youtube" aria-disabled="true" aria-label="YouTube"><span>YouTube</span></span>
                 </li>
                 <li class="gn_sns_item">
-                    <a class="gn_sns_link gn_sns_instagram" href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><span>Instagram</span></a>
+                    <span class="gn_sns_link gn_sns_instagram" aria-disabled="true" aria-label="Instagram"><span>Instagram</span></span>
                 </li>
                 <li class="gn_sns_item">
-                    <a class="gn_sns_link gn_sns_x" href="#" target="_blank" rel="noopener noreferrer" aria-label="X"><span>X</span></a>
+                    <span class="gn_sns_link gn_sns_x" aria-disabled="true" aria-label="X"><span>X</span></span>
                 </li>
             </ul>
             <a class="gn_lang" href="<?php echo esc_url(home_url('/en/')); ?>"><span>EN</span></a>
