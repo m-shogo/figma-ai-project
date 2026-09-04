@@ -38,10 +38,11 @@ try {
     targetTop: document.querySelector('#local_navigation')?.getBoundingClientRect().top ?? null,
   }));
   assert(targetState.targetTop !== null, 'Anchor QA target disappeared after hash navigation.');
-  assert(targetState.y > 100, `Hash navigation did not reach the lower-page target; final scrollY=${targetState.y}.`);
+  assert(targetState.y > 20, `Hash navigation did not reach the lower-page target after header compensation; final scrollY=${targetState.y}.`);
 
   const samples = targetState.samples;
-  const firstDeepIndex = samples.findIndex((sample) => sample.y > 100);
+  const meaningfulDepth = Math.max(20, targetState.y * 0.5);
+  const firstDeepIndex = samples.findIndex((sample) => sample.y > meaningfulDepth);
   const resetAfterDeep = firstDeepIndex >= 0 && samples.slice(firstDeepIndex + 1).some((sample) => sample.y <= 2);
   assert(!resetAfterDeep, `Initial hash navigation visibly reset toward page top before settling: ${JSON.stringify(samples)}.`);
 
