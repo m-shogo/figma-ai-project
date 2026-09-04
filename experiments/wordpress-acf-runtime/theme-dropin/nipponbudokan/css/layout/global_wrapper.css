@@ -11,8 +11,19 @@ html {
     /* overflow: hidden; */
 }
 
+/* Opening menu/search fixes body in place and promotes the sticky header to
+   fixed. Preserve the header's normal-flow footprint so the page/FV behind
+   the overlay does not jump upward when the overlay opens. */
+body._contentFixed .global_wrapper {
+    padding-top: var(--header-height-SP);
+}
+
 @media screen and (min-width: 768px) {
     html {
         scroll-padding-top: var(--header-height-PC);
+    }
+
+    body._contentFixed .global_wrapper {
+        padding-top: var(--header-height-PC);
     }
 }
