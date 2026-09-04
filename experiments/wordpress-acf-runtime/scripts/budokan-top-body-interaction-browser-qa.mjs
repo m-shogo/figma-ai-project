@@ -36,7 +36,30 @@ async function visibleTarget(page, selector, label) {
     const candidate = candidates.nth(i);
     if (await candidate.isVisible()) return candidate;
   }
-  throw new Error(`${label}: no visible owner for ${selector}`);
+  const diagnostics = await page.evaluate((candidateSelector) => ({
+    innerWidth: window.innerWidth,
+    outerWidth: window.outerWidth,
+    devicePixelRatio: window.devicePixelRatio,
+    min768: window.matchMedia('(min-width: 768px)').matches,
+    max767: window.matchMedia('(max-width: 767px)').matches,
+    viewportMeta: document.querySelector('meta[name="viewport"]')?.getAttribute('content') || '',
+    owners: Array.from(document.querySelectorAll(candidateSelector)).map((el) => {
+      const style = getComputedStyle(el);
+      const rect = el.getBoundingClientRect();
+      return {
+        tag: el.tagName.toLowerCase(),
+        classes: el.className,
+        display: style.display,
+        visibility: style.visibility,
+        opacity: style.opacity,
+        width: rect.width,
+        height: rect.height,
+        top: rect.top,
+        left: rect.left,
+      };
+    }),
+  }), selector);
+  throw new Error(`${label}: no visible owner for ${selector}; diagnostics=${JSON.stringify(diagnostics)}`);
 }
 
 async function geometry(target) {
@@ -103,7 +126,6 @@ async function auditHoverAndFocus(page, selector, label) {
   const placeholderCount = await placeholderLinks.count();
 
   if (placeholderCount > 0) {
-    // Reproduce the harmful legacy behavior with a real pointer while a # link is still visible.
     const candidates = page.locator('.tm_guide a[href="#"]');
     let clicked = false;
     for (let i = (await candidates.count()) - 1; i >= 0; i -= 1) {
