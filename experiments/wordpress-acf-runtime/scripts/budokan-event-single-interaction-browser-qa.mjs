@@ -1,31 +1,26 @@
 import { chromium } from 'playwright';
 
 const targetUrl = process.argv[2];
-if (!targetUrl) {
-  console.error('Usage: node budokan-event-single-interaction-browser-qa.mjs <url>');
+const expectedArchiveUrl = process.argv[3];
+if (!targetUrl || !expectedArchiveUrl) {
+  console.error('Usage: node budokan-event-single-interaction-browser-qa.mjs <url> <event-archive-url>');
   process.exit(2);
 }
 
 const EPS = 2;
 const assert = (condition, message) => { if (!condition) throw new Error(message); };
 const near = (a, b, eps = EPS) => Math.abs(a - b) <= eps;
+const normalizeUrl = (value, base = targetUrl) => new URL(value, base).href;
+const expectedArchive = normalizeUrl(expectedArchiveUrl);
 
 async function snapshot(locator) {
   return locator.evaluate((el) => {
     const rect = el.getBoundingClientRect();
     const hit = document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2);
-    return {
-      top: rect.top,
-      left: rect.left,
-      width: rect.width,
-      height: rect.height,
-      scrollX: window.scrollX,
-      scrollY: window.scrollY,
-      clientWidth: document.documentElement.clientWidth,
-      scrollWidth: document.documentElement.scrollWidth,
-      hitOwns: Boolean(hit && (hit === el || el.contains(hit))),
-      focused: document.activeElement === el,
-    };
+    return { top: rect.top, left: rect.left, width: rect.width, height: rect.height,
+      scrollX: window.scrollX, scrollY: window.scrollY,
+      clientWidth: document.documentElement.clientWidth, scrollWidth: document.documentElement.scrollWidth,
+      hitOwns: Boolean(hit && (hit === el || el.contains(hit))), focused: document.activeElement === el };
   });
 }
 
@@ -49,11 +44,10 @@ async function placeAt(locator, targetTop) {
 async function auditReturnPager(page, label) {
   const back = page.locator('.module_pager-02 .back a');
   await back.waitFor({ state: 'visible' });
-
   const href = await back.getAttribute('href');
   assert(href && href !== '#' && !href.endsWith('#'), `${label}: Event return-to-list must use a real destination, got ${href}`);
-  const parsedHref = new URL(href, page.url());
-  assert(/\/event\/?$/.test(parsedHref.pathname), `${label}: Event return destination must be the WordPress Event archive, got ${parsedHref.pathname}`);
+  assert(normalizeUrl(href, page.url()) === expectedArchive,
+    `${label}: Event return destination must equal WordPress archive ownership; expected ${expectedArchive}, got ${normalizeUrl(href, page.url())}`);
   assert(await page.locator('.module_pager-02 .prev a[href="#"], .module_pager-02 .next a[href="#"]').count() === 0,
     `${label}: hidden adjacent pager slots must not expose bare-hash links`);
 
@@ -66,18 +60,14 @@ async function auditReturnPager(page, label) {
   await back.hover();
   const hovered = await snapshot(back);
   assertGeometryStable(label, base, hovered, 'hover');
-
   await back.focus();
   const focused = await snapshot(back);
   assert(focused.focused, `${label}: Event return-to-list focus failed`);
   assertGeometryStable(label, hovered, focused, 'focus');
 
   const origin = page.url();
-  await Promise.all([
-    page.waitForURL((url) => url.href !== origin, { waitUntil: 'domcontentloaded' }),
-    page.keyboard.press('Enter'),
-  ]);
-  assert(/\/event\/?$/.test(new URL(page.url()).pathname), `${label}: Enter did not navigate to Event archive`);
+  await Promise.all([page.waitForURL((url) => url.href !== origin, { waitUntil: 'domcontentloaded' }), page.keyboard.press('Enter')]);
+  assert(normalizeUrl(page.url()) === expectedArchive, `${label}: Enter did not navigate to WordPress-owned Event archive`);
 
   await page.goto(targetUrl, { waitUntil: 'networkidle' });
   const backAgain = page.locator('.module_pager-02 .back a');
@@ -90,13 +80,9 @@ async function auditReturnPager(page, label) {
     return Boolean(link && hit && (hit === link || link.contains(hit)));
   }, { x: box.x + box.width / 2, y: box.y + box.height / 2 });
   assert(ownsPointer, `${label}: real pointer target intercepted before Event return click`);
-
   const pointerOrigin = page.url();
-  await Promise.all([
-    page.waitForURL((url) => url.href !== pointerOrigin, { waitUntil: 'domcontentloaded' }),
-    page.mouse.click(box.x + box.width / 2, box.y + box.height / 2),
-  ]);
-  assert(/\/event\/?$/.test(new URL(page.url()).pathname), `${label}: pointer click did not navigate to Event archive`);
+  await Promise.all([page.waitForURL((url) => url.href !== pointerOrigin, { waitUntil: 'domcontentloaded' }), page.mouse.click(box.x + box.width / 2, box.y + box.height / 2)]);
+  assert(normalizeUrl(page.url()) === expectedArchive, `${label}: pointer click did not navigate to WordPress-owned Event archive`);
 }
 
 async function auditStickyShortcuts(page, label) {
@@ -105,7 +91,6 @@ async function auditStickyShortcuts(page, label) {
   const access = page.locator('.gf_sticky_access');
   await contact.waitFor({ state: 'visible' });
   await access.waitFor({ state: 'visible' });
-
   await page.evaluate(() => window.scrollTo(0, Math.max(1, document.documentElement.scrollHeight * 0.45)));
   await page.waitForTimeout(80);
 
@@ -116,11 +101,9 @@ async function auditStickyShortcuts(page, label) {
     assert(base.scrollY > 0, `${label}: sticky ${name} deep-scroll precondition missing`);
     assert(base.hitOwns, `${label}: sticky ${name} pointer center intercepted`);
     assert(base.scrollWidth <= base.clientWidth + 1, `${label}: horizontal overflow at sticky ${name} baseline`);
-
     await locator.hover();
     const hovered = await snapshot(locator);
     assertGeometryStable(`${label} sticky ${name}`, base, hovered, 'hover');
-
     await locator.focus();
     const focused = await snapshot(locator);
     assert(focused.focused, `${label}: sticky ${name} focus failed`);
