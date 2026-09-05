@@ -13,6 +13,7 @@ on:
       - 'experiments/wordpress-acf-runtime/scripts/budokan-local-nav-runtime-qa.sh'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-local-nav-browser-qa.mjs'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-local-nav-interaction-browser-qa.mjs'
+      - 'experiments/wordpress-acf-runtime/scripts/budokan-local-nav-pointer-browser-qa.mjs'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-anchor-interaction-browser-qa.mjs'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-disclosure-interaction-browser-qa.mjs'
       - 'experiments/wordpress-acf-runtime/scripts/seed-budokan-local-nav-qa.php'
@@ -66,6 +67,7 @@ jobs:
           cd ../..
           node experiments/wordpress-acf-runtime/scripts/budokan-local-nav-browser-qa.mjs "$qa_url"
           node experiments/wordpress-acf-runtime/scripts/budokan-local-nav-interaction-browser-qa.mjs "$qa_url"
+          node experiments/wordpress-acf-runtime/scripts/budokan-local-nav-pointer-browser-qa.mjs "$qa_url"
           node experiments/wordpress-acf-runtime/scripts/budokan-anchor-interaction-browser-qa.mjs "$qa_url"
 
       - name: Run disclosure interaction browser QA
