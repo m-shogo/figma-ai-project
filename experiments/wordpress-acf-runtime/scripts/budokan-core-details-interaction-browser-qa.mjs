@@ -28,9 +28,6 @@ async function runViewport(label, viewport, expectedStandardTextShift) {
 
     const standard = page.locator('[data-qa-details="standard"]');
     const faq = page.locator('[data-qa-details="faq"]');
-    await standard.scrollIntoViewIfNeeded();
-    await page.evaluate(() => window.scrollBy(0, -180));
-    assert((await page.evaluate(() => window.scrollY)) > 0, `${label}: deep-scroll precondition was not established`);
 
     async function snapshot(locator) {
       return locator.evaluate((details) => {
@@ -73,6 +70,13 @@ async function runViewport(label, viewport, expectedStandardTextShift) {
     }
 
     async function exercise(locator, kind, expectedTextShift) {
+      // Establish the same deterministic deep-scroll precondition separately
+      // for each control. The FAQ sits below the standard Details and must not
+      // inherit an off-screen pointer coordinate from the prior exercise.
+      await locator.scrollIntoViewIfNeeded();
+      await page.evaluate(() => window.scrollBy(0, -140));
+      assert((await page.evaluate(() => window.scrollY)) > 0, `${label}/${kind}: deep-scroll precondition was not established`);
+
       const summary = locator.locator('summary');
       await summary.evaluate((el) => el.setAttribute('data-qa-active-summary', 'true'));
       const closed = await snapshot(locator);
