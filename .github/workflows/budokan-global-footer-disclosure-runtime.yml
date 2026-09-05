@@ -8,6 +8,7 @@ on:
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_header.php'
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_footer.php'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-global-footer-disclosure-browser-qa.mjs'
+      - 'experiments/wordpress-acf-runtime/scripts/budokan-global-footer-disclosure-semantic-probe.mjs'
       - 'experiments/wordpress-acf-runtime/scripts/seed-budokan-global-footer-disclosure-qa.php'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-local-nav-runtime-qa.sh'
       - '.github/workflows/budokan-global-footer-disclosure-runtime.yml'
@@ -47,6 +48,15 @@ jobs:
           cd ../..
           npm install --no-save --package-lock=false playwright@1.54.2
           npx playwright install --with-deps chromium
+
+      - name: Probe Global/Footer disclosure semantic baselines
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          qa_page_id="$(docker compose run --rm cli option get budokan_global_footer_disclosure_qa_page_id)"
+          qa_url="${WP_URL}/?page_id=${qa_page_id}"
+          cd ../..
+          node experiments/wordpress-acf-runtime/scripts/budokan-global-footer-disclosure-semantic-probe.mjs "$qa_url"
 
       - name: Run Global/Footer disclosure browser QA
         run: |
