@@ -24,16 +24,14 @@ try {
   const onlyPlaceholder = placeholderLinks.first();
   assert(await onlyPlaceholder.evaluate((el) => el.closest('#js_gf_pageTop') !== null), 'The remaining href="#" is not the intentional Page Top control.');
 
-  assert(await page.locator('#gn_links-01').count() === 0, 'Unassigned global-nav should fail closed instead of rendering sample navigation.');
-  assert(await page.locator('#gf_links-01').count() === 0, 'Unassigned footer-nav should fail closed instead of rendering sample navigation.');
+  // The separate PC mega-nav fallback intentionally renders non-link spans and may reuse gn_links-01.
+  // Scope this assertion to the hamburger/global navigation surface only.
+  assert(await page.locator('#global_navigation #gn_links-01').count() === 0, 'Unassigned global-nav should fail closed instead of rendering sample navigation.');
+  assert(await page.locator('#global_footer #gf_links-01').count() === 0, 'Unassigned footer-nav should fail closed instead of rendering sample navigation.');
 
   const before = await page.evaluate(() => ({
     y: window.scrollY,
     rootWidth: document.documentElement.getBoundingClientRect().width,
-    header: (() => {
-      const r = document.querySelector('#global_header')?.getBoundingClientRect();
-      return r ? { left: r.left, top: r.top, width: r.width, height: r.height } : null;
-    })(),
   }));
 
   const pageTop = page.locator('#js_gf_pageTop a');
@@ -47,10 +45,6 @@ try {
 
   const after = await page.evaluate(() => ({
     rootWidth: document.documentElement.getBoundingClientRect().width,
-    header: (() => {
-      const r = document.querySelector('#global_header')?.getBoundingClientRect();
-      return r ? { left: r.left, top: r.top, width: r.width, height: r.height } : null;
-    })(),
   }));
   assert(Math.abs(after.rootWidth - before.rootWidth) <= 1, `Fallback/Page Top interaction changed root width: ${before.rootWidth} -> ${after.rootWidth}.`);
 
