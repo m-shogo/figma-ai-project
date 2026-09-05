@@ -103,3 +103,20 @@ function nipponbudokan_enqueue_header_focus_stability() {
     );
 }
 add_action('wp_enqueue_scripts', 'nipponbudokan_enqueue_header_focus_stability', 20);
+
+/**
+ * PCタッチ環境のメガメニューは `_touchOpen`、通常の開閉ボタンは `data-open`
+ * をそれぞれ既存state ownerとして持つ。state ownershipを変更せず、両方から
+ * 実効的なaria-expandedだけを投影する。
+ */
+function nipponbudokan_enqueue_mega_touch_expanded_semantics() {
+    $path = get_theme_file_path('/js/mega-touch-expanded-semantics.js');
+    wp_enqueue_script(
+        'mega-touch-expanded-semantics-script',
+        get_theme_file_uri('/js/mega-touch-expanded-semantics.js'),
+        array('common-script'),
+        file_exists($path) ? filemtime($path) : null,
+        array('strategy' => 'defer', 'in_footer' => false)
+    );
+}
+add_action('wp_enqueue_scripts', 'nipponbudokan_enqueue_mega_touch_expanded_semantics', 20);

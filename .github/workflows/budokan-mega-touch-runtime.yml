@@ -1,0 +1,59 @@
+name: Budokan Mega Touch Runtime
+
+on:
+  pull_request:
+    paths:
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/functions.php'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/common.js'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/mega-touch-expanded-semantics.js'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/inc/menu.php'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_header.php'
+      - 'experiments/wordpress-acf-runtime/scripts/budokan-mega-touch-browser-qa.mjs'
+      - 'experiments/wordpress-acf-runtime/scripts/seed-budokan-mega-touch-qa.php'
+      - 'experiments/wordpress-acf-runtime/scripts/budokan-local-nav-runtime-qa.sh'
+      - '.github/workflows/budokan-mega-touch-runtime.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: PHP syntax for Mega touch fixture
+        run: |
+          php -l experiments/wordpress-acf-runtime/scripts/seed-budokan-mega-touch-qa.php
+          php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/functions.php
+          php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/inc/menu.php
+      - name: Start disposable WordPress runtime
+        env:
+          BUDOKAN_LOCAL_NAV_KEEP_RUNTIME: '1'
+        run: bash experiments/wordpress-acf-runtime/scripts/budokan-local-nav-runtime-qa.sh
+      - name: Seed real WordPress Mega menu and install browser runtime
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          docker compose run --rm -e WP_ENVIRONMENT_TYPE=local cli eval-file /fixture/scripts/seed-budokan-mega-touch-qa.php
+          qa_page_id="$(docker compose run --rm cli option get budokan_mega_touch_qa_page_id)"
+          qa_template="$(docker compose run --rm cli post meta get "$qa_page_id" _wp_page_template)"
+          if [[ "$qa_template" != "templates/template-oneColumn.php" ]]; then echo "FAIL Mega touch QA page template mismatch: ${qa_template}." >&2; exit 1; fi
+          cd ../..
+          npm install --no-save --package-lock=false playwright@1.54.2
+          npx playwright install --with-deps chromium
+      - name: Run Mega touch browser QA
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          qa_page_id="$(docker compose run --rm cli option get budokan_mega_touch_qa_page_id)"
+          qa_url="${WP_URL}/?page_id=${qa_page_id}"
+          cd ../..
+          node experiments/wordpress-acf-runtime/scripts/budokan-mega-touch-browser-qa.mjs "$qa_url"
+      - name: Cleanup disposable WordPress runtime
+        if: always()
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          docker compose down -v --remove-orphans
