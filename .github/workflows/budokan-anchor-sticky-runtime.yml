@@ -37,8 +37,17 @@ jobs:
           page_id="$(docker compose run --rm cli option get budokan_content_interaction_qa_page_id)"
           echo "BUDOKAN_ANCHOR_QA_URL=${WP_URL}/?page_id=${page_id}" >> "$GITHUB_ENV"
 
-      - name: Audit initial hash and repeated anchor stability
-        run: node experiments/wordpress-acf-runtime/scripts/budokan-anchor-sticky-browser-qa.mjs "$BUDOKAN_ANCHOR_QA_URL"
+      - name: Audit PC initial hash stability
+        run: node experiments/wordpress-acf-runtime/scripts/budokan-anchor-sticky-browser-qa.mjs "$BUDOKAN_ANCHOR_QA_URL" initial pc
+
+      - name: Audit SP initial hash stability
+        run: node experiments/wordpress-acf-runtime/scripts/budokan-anchor-sticky-browser-qa.mjs "$BUDOKAN_ANCHOR_QA_URL" initial sp
+
+      - name: Audit PC repeated anchor stability
+        run: node experiments/wordpress-acf-runtime/scripts/budokan-anchor-sticky-browser-qa.mjs "$BUDOKAN_ANCHOR_QA_URL" repeat pc
+
+      - name: Audit SP repeated anchor stability
+        run: node experiments/wordpress-acf-runtime/scripts/budokan-anchor-sticky-browser-qa.mjs "$BUDOKAN_ANCHOR_QA_URL" repeat sp
 
       - name: Cleanup disposable WordPress runtime
         if: always()
