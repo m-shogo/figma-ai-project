@@ -1,0 +1,54 @@
+name: Budokan Core Details Runtime
+
+on:
+  pull_request:
+    paths:
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/blocks/wp-block-details-style.css'
+      - 'experiments/wordpress-acf-runtime/scripts/seed-budokan-core-details-qa.php'
+      - 'experiments/wordpress-acf-runtime/scripts/budokan-core-details-runtime-qa.sh'
+      - 'experiments/wordpress-acf-runtime/scripts/budokan-core-details-interaction-browser-qa.mjs'
+      - '.github/workflows/budokan-core-details-runtime.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run disposable WordPress Core Details runtime QA
+        env:
+          BUDOKAN_CORE_DETAILS_KEEP_RUNTIME: '1'
+        run: bash experiments/wordpress-acf-runtime/scripts/budokan-core-details-runtime-qa.sh
+
+      - name: Run SP and PC Core Details interaction QA
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          page_id="$(docker compose run --rm cli option get budokan_core_details_qa_page_id)"
+          qa_url="${WP_URL}/?page_id=${page_id}"
+          cd ../..
+          npm install --no-save --package-lock=false playwright@1.54.2
+          npx playwright install --with-deps chromium
+          set -o pipefail
+          node experiments/wordpress-acf-runtime/scripts/budokan-core-details-interaction-browser-qa.mjs "$qa_url" 2>&1 | tee budokan-core-details-browser-qa.log
+
+      - name: Upload Core Details browser QA log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: budokan-core-details-browser-qa-${{ github.run_id }}
+          path: budokan-core-details-browser-qa.log
+          if-no-files-found: warn
+          retention-days: 3
+
+      - name: Cleanup disposable WordPress runtime
+        if: always()
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          docker compose down -v --remove-orphans
