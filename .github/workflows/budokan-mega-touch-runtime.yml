@@ -3,7 +3,9 @@ name: Budokan Mega Touch Runtime
 on:
   pull_request:
     paths:
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/functions.php'
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/common.js'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/mega-touch-expanded-semantics.js'
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/inc/menu.php'
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_header.php'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-mega-touch-browser-qa.mjs'
@@ -24,6 +26,7 @@ jobs:
       - name: PHP syntax for Mega touch fixture
         run: |
           php -l experiments/wordpress-acf-runtime/scripts/seed-budokan-mega-touch-qa.php
+          php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/functions.php
           php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/inc/menu.php
       - name: Start disposable WordPress runtime
         env:
