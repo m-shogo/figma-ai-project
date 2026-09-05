@@ -44,7 +44,7 @@ $show_map = !empty(($args ?? array())['map']);
                     'container' => 'div',
                     'container_class' => 'gf_container-01',
                     'container_id' => 'gf_container-01',
-                    'fallback_cb' => 'nipponbudokan_footer_nav_fallback',
+                    'fallback_cb' => false,
                     'theme_location' => 'footer-nav',
                     'walker' => new Custom_Footer_Walker_Nav_Menu(),
                 ));
