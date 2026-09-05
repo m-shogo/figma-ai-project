@@ -1,0 +1,54 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: OBS-BUDOKAN-MODULE-EXPANDED-SEMANTICS
+    summary: >-
+      Repeated disclosure families can share the same visual interaction pattern without sharing one implementation owner.
+      Reproduce semantic state on each authoritative rendered owner separately, then synchronize aria-expanded from the
+      existing open-state owner only where the mismatch is proven. A real WordPress Walker is stronger evidence than a
+      handcrafted fixture when the production component is menu-owned.
+    category: TOOLING
+    applicability:
+      scope: PROJECT
+      conditions:
+        - WordPress Walker output renders a native disclosure button and existing data-open state controls visibility.
+        - Runtime QA can exercise the actual Walker output with pointer, Enter, and Space.
+        - A shared JavaScript interaction owner is reused by more than one rendered navigation context.
+      exclusions:
+        - Do not infer that sibling global, footer, dropdown, or mega-menu disclosure families share this defect without separate runtime evidence.
+        - Do not replace Human-editable WordPress Menu ownership with page-specific markup to simplify testing.
+        - Do not add a parallel open-state model solely for ARIA.
+        - Same-project recurrence is not independent evidence for cross-project promotion.
+    promotion_state: PROJECT_ONLY
+    promotion:
+      candidate: false
+      rationale: >-
+        PR #429 first added semantic assertions to the existing Disposable WordPress Local Navigation runtime and reproduced
+        failure only when the real Walker-rendered module/local navigation button lacked aria-expanded. The bounded repair
+        changed moduleNavToggle to initialize and resynchronize aria-expanded from its existing data-open state, while Menu
+        locations, Walker markup, URLs, CSS geometry, animation, ACF ownership, Form and TOP Calendar remained unchanged.
+        Local Navigation, Modal, Tab, Content Interaction, TOP Body, TOP FV and REF001 workflows all passed before squash merge.
+      blocked_by:
+        - NEEDS_INDEPENDENT_REFERENCE_EVIDENCE_BEFORE_CROSS_PROJECT_PROMOTION
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-MODULE-EXPANDED-SEMANTICS-20260906
+          kind: COMMIT
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/common.js
+          commit: 82d0662b010ef272de951bee81c6837cfe4c1f18
+          note: >-
+            PR #429 squash-merged after QA-first reproduction on actual WordPress Local Navigation Walker output, exact diff
+            cleanup, and all triggered shared common.js runtime workflows passed. The production diff only synchronized
+            aria-expanded from existing data-open state; no ownership or layout model changed.
+      contradicts: []
+    notes:
+      - "Promotion review disposition 2026-09-06: KEEP_PROJECT_ONLY; Budokan-only recurrence, no auto-promotion."
