@@ -7,6 +7,7 @@ on:
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/style.css'
       - 'experiments/wordpress-acf-runtime/scripts/seed-budokan-content-interaction-qa.php'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-content-interaction-runtime-qa.sh'
+      - 'experiments/wordpress-acf-runtime/scripts/budokan-content-interaction-browser-qa.mjs'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-anchor-sticky-browser-qa.mjs'
       - '.github/workflows/budokan-anchor-sticky-runtime.yml'
   workflow_dispatch:
@@ -108,6 +109,18 @@ jobs:
           test "$SP_INITIAL_MOTION" = success
           test "$PC_REPEAT" = success
           test "$SP_REPEAT" = success
+
+      - name: Regression audit pointer hover and focus geometry
+        run: node experiments/wordpress-acf-runtime/scripts/budokan-content-interaction-browser-qa.mjs "$BUDOKAN_ANCHOR_QA_URL" controls
+
+      - name: Regression audit keyboard Tab traversal
+        run: node experiments/wordpress-acf-runtime/scripts/budokan-content-interaction-browser-qa.mjs "$BUDOKAN_ANCHOR_QA_URL" tab
+
+      - name: Regression audit same-page anchor navigation
+        run: node experiments/wordpress-acf-runtime/scripts/budokan-content-interaction-browser-qa.mjs "$BUDOKAN_ANCHOR_QA_URL" anchor
+
+      - name: Regression audit SP sticky focus clearance
+        run: node experiments/wordpress-acf-runtime/scripts/budokan-content-interaction-browser-qa.mjs "$BUDOKAN_ANCHOR_QA_URL" sticky
 
       - name: Cleanup disposable WordPress runtime
         if: always()
