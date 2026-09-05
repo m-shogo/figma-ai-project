@@ -11,7 +11,7 @@
             $text = get_sub_field('text');
             $url = get_sub_field('url');
             $target = get_sub_field('target');
-            $link_attribute = $url ? ' href="' . esc_url($url) . '"' : ' aria-disabled="true"';
+            $link_attribute = $url ? ' href="' . esc_url($url) . '"' : ' aria-disabled="true" tabindex="-1"';
             $target_attribute = ($url && $target) ? ' target="_blank"' : '';
             ?>
             <li class="navigation">
