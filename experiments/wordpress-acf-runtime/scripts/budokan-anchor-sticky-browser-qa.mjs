@@ -1,8 +1,12 @@
 import { chromium } from 'playwright';
 
 const targetUrl = process.argv[2];
-if (!targetUrl) {
-  console.error('FAIL usage: node budokan-anchor-sticky-browser-qa.mjs <url>');
+const requestedAudit = process.argv[3] || 'all';
+const requestedViewport = process.argv[4] || 'all';
+const allowedAudits = new Set(['all', 'initial', 'repeat']);
+const allowedViewports = new Set(['all', 'pc', 'sp']);
+if (!targetUrl || !allowedAudits.has(requestedAudit) || !allowedViewports.has(requestedViewport)) {
+  console.error('FAIL usage: node budokan-anchor-sticky-browser-qa.mjs <url> [all|initial|repeat] [all|pc|sp]');
   process.exit(2);
 }
 
@@ -78,17 +82,17 @@ async function auditInitialHash(page, label) {
   await page.addInitScript(() => {
     window.__budokanInitialHashSamples = [];
     window.addEventListener('scroll', () => {
-      window.__budokanInitialHashSamples.push({
-        y: window.scrollY,
-        t: performance.now(),
-      });
+      window.__budokanInitialHashSamples.push({ y: window.scrollY, t: performance.now() });
     }, { passive: true });
   });
 
   await page.goto(withHash(targetUrl, 'qa-anchor-target'), { waitUntil: 'load' });
   await page.waitForTimeout(120);
   const early = await pageSnapshot(page);
-  assertDestination(early, `${label}/initial-hash early`);
+  assert(early, `${label}/initial-hash early: required header/target missing`);
+  assert(early.scrollY > 100, `${label}/initial-hash early: browser did not reach the deep target; scrollY=${early.scrollY}`);
+  assert(early.scrollWidth <= early.clientWidth + 1,
+    `${label}/initial-hash early: horizontal overflow ${early.scrollWidth} > ${early.clientWidth}`);
 
   await page.waitForTimeout(520);
   const settled = await pageSnapshot(page);
@@ -142,20 +146,26 @@ async function auditRepeatedClick(page, label) {
   assert(targetBox, `${label}/repeat: target missing after repeated navigation`);
 }
 
-async function runViewport(label, viewport) {
+async function runViewport(key, label, viewport) {
+  if (requestedViewport !== 'all' && requestedViewport !== key) return;
   const browser = await chromium.launch({ headless: true });
   const context = await browser.newContext({ viewport });
   const page = await context.newPage();
 
   try {
-    await auditInitialHash(page, label);
-    await auditRepeatedClick(page, label);
-    console.log(`PASS ${label}: initial-hash and repeated anchor interaction is stable.`);
+    if (requestedAudit === 'all' || requestedAudit === 'initial') {
+      await auditInitialHash(page, label);
+      console.log(`PASS ${label}: initial URL hash is stable.`);
+    }
+    if (requestedAudit === 'all' || requestedAudit === 'repeat') {
+      await auditRepeatedClick(page, label);
+      console.log(`PASS ${label}: repeated same-page anchor interaction is stable.`);
+    }
   } finally {
     await context.close();
     await browser.close();
   }
 }
 
-await runViewport('PC 1395', { width: 1395, height: 900 });
-await runViewport('SP 390', { width: 390, height: 844 });
+await runViewport('pc', 'PC 1395', { width: 1395, height: 900 });
+await runViewport('sp', 'SP 390', { width: 390, height: 844 });
