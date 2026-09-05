@@ -50,7 +50,7 @@ $fallback = get_template_directory_uri() . '/images/common/noimage.webp';
             <?php endforeach; ?>
         </div>
     </div>
-    <div class="slider-nav" aria-hidden="true">
+    <div class="slider-nav">
         <button type="button" class="swiper-button-prev" aria-label="前のスライド"></button>
         <button type="button" class="swiper-button-next" aria-label="次のスライド"></button>
     </div>
