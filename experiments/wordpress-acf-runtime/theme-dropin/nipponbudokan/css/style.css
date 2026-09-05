@@ -71,6 +71,19 @@
     --icon-arrow-down: '\f063';
     --clip-octagon: polygon(50% 0%, 85.355% 14.645%, 100% 50%, 85.355% 85.355%, 50% 100%, 14.645% 85.355%, 0% 50%, 14.645% 14.645%);
 }
+
+/* Native fragment navigation must land at the same clearance as common.js.
+   This prevents the browser's first hash position from being visibly corrected
+   300ms later, while retaining the Theme-owned measured click scroll routine. */
+html {
+    scroll-padding-top: calc(var(--header-height-SP) + 30px);
+}
+@media screen and (min-width: 768px) {
+    html {
+        scroll-padding-top: calc(var(--header-height-PC) + 30px);
+    }
+}
+
 body {
     background-image: url('../images/common/bg-pattern.png');
     background-repeat: repeat;
