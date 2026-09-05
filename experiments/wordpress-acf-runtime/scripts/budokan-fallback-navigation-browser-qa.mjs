@@ -17,17 +17,16 @@ const page = await context.newPage();
 try {
   await page.goto(url, { waitUntil: 'networkidle' });
 
-  const fallbackLinks = page.locator('#gn_links-01 a[href="#"], #gf_links-01 a[href="#"]');
-  const fallbackLinkCount = await fallbackLinks.count();
-  assert(fallbackLinkCount === 0, `Unassigned WordPress menu fallback still exposes ${fallbackLinkCount} href="#" placeholder links.`);
+  const placeholderLinks = page.locator('#global_navigation a[href="#"], #global_footer a[href="#"]');
+  const placeholderCount = await placeholderLinks.count();
+  // The intentional Page Top control is the only allowed bare-hash anchor in these surfaces.
+  assert(placeholderCount === 1, `Unassigned WordPress menu output still exposes unexpected href="#" placeholders; found ${placeholderCount}, expected only Page Top.`);
+  const onlyPlaceholder = placeholderLinks.first();
+  assert(await onlyPlaceholder.evaluate((el) => el.closest('#js_gf_pageTop') !== null), 'The remaining href="#" is not the intentional Page Top control.');
 
-  const disabledFallbacks = page.locator('#gn_links-01 [aria-disabled="true"], #gf_links-01 [aria-disabled="true"]');
-  const disabledCount = await disabledFallbacks.count();
-  assert(disabledCount >= 14, `Expected fail-closed fallback affordances for 4 header + 10 footer items; got ${disabledCount}.`);
+  assert(await page.locator('#gn_links-01').count() === 0, 'Unassigned global-nav should fail closed instead of rendering sample navigation.');
+  assert(await page.locator('#gf_links-01').count() === 0, 'Unassigned footer-nav should fail closed instead of rendering sample navigation.');
 
-  const deepY = await page.evaluate(() => Math.max(0, document.documentElement.scrollHeight - innerHeight - 320));
-  await page.evaluate((y) => window.scrollTo(0, y), deepY);
-  await page.waitForTimeout(120);
   const before = await page.evaluate(() => ({
     y: window.scrollY,
     rootWidth: document.documentElement.getBoundingClientRect().width,
@@ -37,25 +36,26 @@ try {
     })(),
   }));
 
-  const footerFallback = page.locator('#gf_links-01 [aria-disabled="true"]').first();
-  await footerFallback.scrollIntoViewIfNeeded();
-  const beforeClickY = await page.evaluate(() => window.scrollY);
-  await footerFallback.click();
-  await page.waitForTimeout(100);
-  const afterClickY = await page.evaluate(() => window.scrollY);
-  assert(Math.abs(afterClickY - beforeClickY) <= 1, `Fail-closed footer fallback moved the background page: ${beforeClickY} -> ${afterClickY}.`);
+  const pageTop = page.locator('#js_gf_pageTop a');
+  await pageTop.scrollIntoViewIfNeeded();
+  const beforePageTopY = await page.evaluate(() => window.scrollY);
+  assert(beforePageTopY > 100, `Page Top QA needs a meaningful scroll depth; got ${beforePageTopY}.`);
+  await pageTop.click();
+  await page.waitForTimeout(500);
+  const afterPageTopY = await page.evaluate(() => window.scrollY);
+  assert(afterPageTopY <= 2, `Intentional Page Top control no longer reaches page top; final scrollY=${afterPageTopY}.`);
 
   const after = await page.evaluate(() => ({
-    y: window.scrollY,
     rootWidth: document.documentElement.getBoundingClientRect().width,
     header: (() => {
       const r = document.querySelector('#global_header')?.getBoundingClientRect();
       return r ? { left: r.left, top: r.top, width: r.width, height: r.height } : null;
     })(),
   }));
-  assert(Math.abs(after.rootWidth - before.rootWidth) <= 1, `Fallback interaction changed root width: ${before.rootWidth} -> ${after.rootWidth}.`);
+  assert(Math.abs(after.rootWidth - before.rootWidth) <= 1, `Fallback/Page Top interaction changed root width: ${before.rootWidth} -> ${after.rootWidth}.`);
 
-  console.log('PASS unassigned WordPress menu fallbacks fail closed without placeholder anchors or background movement.');
+  console.log('PASS unassigned WordPress global/footer menu locations fail closed without sample placeholder anchors.');
+  console.log('PASS the intentional Footer Page Top control remains the sole bare-hash owner and still scrolls to the top.');
 } finally {
   await context.close();
   await browser.close();
