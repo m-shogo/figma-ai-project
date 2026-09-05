@@ -36,8 +36,12 @@ async function runViewport(label, viewport, expectedStandardTextShift) {
         if (!summary) throw new Error('summary missing');
         const rect = summary.getBoundingClientRect();
         const range = document.createRange();
-        const textNode = [...summary.childNodes].find((n) => n.nodeType === Node.TEXT_NODE && n.textContent.trim());
-        if (!textNode) throw new Error('summary text node missing');
+        const walker = document.createTreeWalker(summary, NodeFilter.SHOW_TEXT);
+        let textNode = walker.nextNode();
+        while (textNode && !textNode.textContent.trim()) {
+          textNode = walker.nextNode();
+        }
+        if (!textNode) throw new Error('summary descendant text node missing');
         range.selectNodeContents(textNode);
         const textRect = range.getBoundingClientRect();
         const hit = document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2);
@@ -114,13 +118,25 @@ async function runViewport(label, viewport, expectedStandardTextShift) {
       await page.keyboard.press('Enter');
       const keyboardOpen = await snapshot(locator);
       assert(keyboardOpen.focused && keyboardOpen.open, `${label}/${kind}: Enter open/focus failed`);
-      assertStable(keyboardClosed, keyboardOpen, kind, 'keyboard open', expectedOpenShift);
+      assertStable(keyboardClosed, keyboardOpen, kind, 'keyboard Enter open', expectedOpenShift);
 
       const keyboardOpenBaseline = await snapshot(locator);
       await page.keyboard.press('Enter');
       const keyboardClosed2 = await snapshot(locator);
       assert(keyboardClosed2.focused && !keyboardClosed2.open, `${label}/${kind}: Enter close/focus failed`);
-      assertStable(keyboardOpenBaseline, keyboardClosed2, kind, 'keyboard close', -expectedOpenShift);
+      assertStable(keyboardOpenBaseline, keyboardClosed2, kind, 'keyboard Enter close', -expectedOpenShift);
+
+      const spaceClosedBaseline = await snapshot(locator);
+      await page.keyboard.press('Space');
+      const spaceOpen = await snapshot(locator);
+      assert(spaceOpen.focused && spaceOpen.open, `${label}/${kind}: Space open/focus failed`);
+      assertStable(spaceClosedBaseline, spaceOpen, kind, 'keyboard Space open', expectedOpenShift);
+
+      const spaceOpenBaseline = await snapshot(locator);
+      await page.keyboard.press('Space');
+      const spaceClosed = await snapshot(locator);
+      assert(spaceClosed.focused && !spaceClosed.open, `${label}/${kind}: Space close/focus failed`);
+      assertStable(spaceOpenBaseline, spaceClosed, kind, 'keyboard Space close', -expectedOpenShift);
 
       await summary.evaluate((el) => el.removeAttribute('data-qa-active-summary'));
     }
