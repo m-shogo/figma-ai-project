@@ -53,7 +53,7 @@ records:
             for the News archive on SP and PC. The final bounded News workflow passed after the unrelated stale
             shared heading assertion was removed from this News-owned workflow.
         - evidence_id: EV-BUDOKAN-DETAILS-NATIVE-OWNER-20260905
-          kind: CODE
+          kind: COMMIT
           reference_id: REF-002-BUDOKAN
           run_id: ''
           path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/blocks/wp-block-details-style.css
