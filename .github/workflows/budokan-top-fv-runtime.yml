@@ -5,6 +5,9 @@ on:
     paths:
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/functions.php'
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/front-page.php'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_header.php'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_footer.php'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/inc/menu.php'
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/project/top_mainVisual.css'
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/layout/global_header.css'
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/layout/global_wrapper.css'
@@ -15,6 +18,7 @@ on:
       - 'experiments/wordpress-acf-runtime/scripts/budokan-top-fv-browser-qa.mjs'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-overlay-stability-browser-qa.mjs'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-header-state-stability-browser-qa.mjs'
+      - 'experiments/wordpress-acf-runtime/scripts/budokan-footer-browser-qa.mjs'
       - 'experiments/budokan-wordpress/TOP_FV_VISUAL_ALIGNMENT_2026-08-31.md'
       - '.github/workflows/budokan-top-fv-runtime.yml'
   workflow_dispatch:
@@ -62,6 +66,14 @@ jobs:
           qa_url="${WP_URL}/"
           cd ../..
           node experiments/wordpress-acf-runtime/scripts/budokan-header-state-stability-browser-qa.mjs "$qa_url"
+
+      - name: Run SP and PC footer geometry and placeholder QA
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          qa_url="${WP_URL}/"
+          cd ../..
+          node experiments/wordpress-acf-runtime/scripts/budokan-footer-browser-qa.mjs "$qa_url"
 
       - name: Cleanup disposable WordPress runtime
         if: always()

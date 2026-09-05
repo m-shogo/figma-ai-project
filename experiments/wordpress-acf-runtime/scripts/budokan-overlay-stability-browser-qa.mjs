@@ -77,6 +77,21 @@ async function pointerClick(page, selector) {
   await page.mouse.click(x, y);
 }
 
+async function assertHeaderSnsPlaceholdersFailClosed(page, label) {
+  const legacyLinks = await page.locator('.gn_sns a[href="#"]').count();
+  assert(legacyLinks === 0, `${label}: unresolved header SNS destinations still render as href="#" links (${legacyLinks}).`);
+
+  const disabledOwners = page.locator('.gn_sns .gn_sns_link[aria-disabled="true"]');
+  const disabledCount = await disabledOwners.count();
+  assert(disabledCount === 3, `${label}: expected 3 fail-closed header SNS visual owners, got ${disabledCount}.`);
+
+  const labels = await disabledOwners.evaluateAll((elements) => elements.map((element) => element.getAttribute('aria-label')));
+  assert(
+    JSON.stringify(labels) === JSON.stringify(['YouTube', 'Instagram', 'X']),
+    `${label}: header SNS placeholder labels changed unexpectedly: ${JSON.stringify(labels)}.`,
+  );
+}
+
 function assertOverlayDoesNotIncreaseOverflow(before, state, label) {
   assert(
     state.scrollWidth <= before.scrollWidth + 1,
@@ -93,8 +108,6 @@ function assertStable(before, opened, label) {
   assert(close(opened.headerLeft, before.headerLeft), `${label}: header left shifted ${before.headerLeft} -> ${opened.headerLeft}.`);
   assert(close(opened.headerWidth, before.headerWidth, 0.5), `${label}: header width shifted ${before.headerWidth} -> ${opened.headerWidth}.`);
   assert(close(opened.headerHeight, before.headerHeight, 0.5), `${label}: header height shifted ${before.headerHeight} -> ${opened.headerHeight}.`);
-  /* Scroll lock intentionally fixes the body at -scrollY. The wrapper carrier
-   * moves in viewport coordinates, while the visible FV must remain stationary. */
   assert(close(opened.fvTop, before.fvTop), `${label}: TOP main visual jumped vertically ${before.fvTop} -> ${opened.fvTop}.`);
   assert(close(opened.fvLeft, before.fvLeft), `${label}: TOP main visual shifted horizontally ${before.fvLeft} -> ${opened.fvLeft}.`);
   assert(close(opened.fvWidth, before.fvWidth), `${label}: TOP main visual width changed ${before.fvWidth} -> ${opened.fvWidth}.`);
@@ -213,6 +226,7 @@ async function exerciseTouchMegaMenuBreakpoint(browser, width, label) {
   });
   const page = await context.newPage();
   await page.goto(url, { waitUntil: 'networkidle' });
+  await assertHeaderSnsPlaceholdersFailClosed(page, label);
 
   const state = await page.evaluate(() => {
     const header = document.querySelector('#global_header');
@@ -241,6 +255,7 @@ async function runViewport(browser, viewport, contextOptions, label) {
   const context = await browser.newContext({ viewport, ...contextOptions });
   const page = await context.newPage();
   await page.goto(url, { waitUntil: 'networkidle' });
+  await assertHeaderSnsPlaceholdersFailClosed(page, label);
 
   const maxScrollY = await exerciseStickyScrollStability(page, label);
   await exerciseOverlaysAtScroll(page, Math.min(350, Math.max(1, maxScrollY)), `${label} shallow-scroll`);
@@ -264,6 +279,7 @@ try {
   console.log('PASS Budokan overlay scroll lock restores sticky header mode and scroll position across toggle-close, Escape-close, menu reopen, and search reopen.');
   console.log('PASS Budokan overlays do not increase existing document horizontal overflow.');
   console.log('PASS Budokan 768px PC CSS boundary keeps touch mega-menu behavior and html layout classification aligned with the header breakpoint.');
+  console.log('PASS unresolved header SNS destinations fail closed instead of rendering page-top placeholder links.');
 } finally {
   await browser.close();
 }
