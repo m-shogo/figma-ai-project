@@ -12,6 +12,7 @@ on:
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/common.js'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-local-nav-runtime-qa.sh'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-local-nav-browser-qa.mjs'
+      - 'experiments/wordpress-acf-runtime/scripts/budokan-local-nav-surface-diagnostic.mjs'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-local-nav-interaction-browser-qa.mjs'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-local-nav-pointer-browser-qa.mjs'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-anchor-interaction-browser-qa.mjs'
@@ -57,6 +58,36 @@ jobs:
           cd ../..
           npm install --no-save --package-lock=false playwright@1.54.2
           npx playwright install --with-deps chromium
+
+      - name: Diagnose Local Navigation surface geometry
+        continue-on-error: true
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          page_id="$(docker compose run --rm cli option get budokan_local_nav_qa_page_id)"
+          qa_url="${WP_URL}/?page_id=${page_id}"
+          cd ../..
+          node experiments/wordpress-acf-runtime/scripts/budokan-local-nav-surface-diagnostic.mjs "$qa_url" geometry
+
+      - name: Diagnose Local Navigation surface paint
+        continue-on-error: true
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          page_id="$(docker compose run --rm cli option get budokan_local_nav_qa_page_id)"
+          qa_url="${WP_URL}/?page_id=${page_id}"
+          cd ../..
+          node experiments/wordpress-acf-runtime/scripts/budokan-local-nav-surface-diagnostic.mjs "$qa_url" paint
+
+      - name: Diagnose Local Navigation surface padding
+        continue-on-error: true
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          page_id="$(docker compose run --rm cli option get budokan_local_nav_qa_page_id)"
+          qa_url="${WP_URL}/?page_id=${page_id}"
+          cd ../..
+          node experiments/wordpress-acf-runtime/scripts/budokan-local-nav-surface-diagnostic.mjs "$qa_url" padding
 
       - name: Run Local Navigation visual surface QA
         run: |
