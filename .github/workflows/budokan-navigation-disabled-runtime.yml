@@ -1,0 +1,52 @@
+name: Budokan Navigation Disabled Runtime
+
+on:
+  pull_request:
+    paths:
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/acf/blocks/navigationLarge.php'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/acf/blocks/navigationSmall.php'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/blocks/wp-block-navigation-style.css'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/acf/json/group_custom_block_navigation_large.json'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/acf/json/group_custom_block_navigation_small.json'
+      - 'experiments/wordpress-acf-runtime/scripts/budokan-navigation-disabled-template-qa.php'
+      - 'experiments/wordpress-acf-runtime/scripts/seed-budokan-navigation-disabled-qa.php'
+      - 'experiments/wordpress-acf-runtime/scripts/budokan-navigation-disabled-runtime-qa.sh'
+      - 'experiments/wordpress-acf-runtime/scripts/budokan-navigation-disabled-browser-qa.mjs'
+      - '.github/workflows/budokan-navigation-disabled-runtime.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify production ACF Navigation template semantics and start disposable WordPress
+        env:
+          BUDOKAN_NAVIGATION_DISABLED_KEEP_RUNTIME: '1'
+        run: bash experiments/wordpress-acf-runtime/scripts/budokan-navigation-disabled-runtime-qa.sh
+
+      - name: Install Playwright Chromium
+        run: |
+          npm install --no-save --package-lock=false playwright@1.54.2
+          npx playwright install --with-deps chromium
+
+      - name: Audit pointer and keyboard fail-closed behavior
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          page_id="$(docker compose run --rm cli option get budokan_navigation_disabled_qa_page_id)"
+          qa_url="${WP_URL}/?page_id=${page_id}"
+          cd ../..
+          node experiments/wordpress-acf-runtime/scripts/budokan-navigation-disabled-browser-qa.mjs "$qa_url"
+
+      - name: Cleanup disposable WordPress runtime
+        if: always()
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          docker compose down -v --remove-orphans
