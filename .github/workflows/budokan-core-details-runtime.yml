@@ -34,7 +34,17 @@ jobs:
           cd ../..
           npm install --no-save --package-lock=false playwright@1.54.2
           npx playwright install --with-deps chromium
-          node experiments/wordpress-acf-runtime/scripts/budokan-core-details-interaction-browser-qa.mjs "$qa_url"
+          set -o pipefail
+          node experiments/wordpress-acf-runtime/scripts/budokan-core-details-interaction-browser-qa.mjs "$qa_url" 2>&1 | tee budokan-core-details-browser-qa.log
+
+      - name: Upload Core Details browser QA log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: budokan-core-details-browser-qa-${{ github.run_id }}
+          path: budokan-core-details-browser-qa.log
+          if-no-files-found: warn
+          retention-days: 3
 
       - name: Cleanup disposable WordPress runtime
         if: always()
