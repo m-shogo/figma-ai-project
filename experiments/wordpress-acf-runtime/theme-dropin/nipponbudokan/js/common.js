@@ -416,6 +416,13 @@ window.addEventListener('resize', setVw);
     globalNavItems.forEach(item => {
         const itemButton = item.querySelector(':scope > [class*="gnl_title"] > [class*="gnl_button"]');
         if (!itemButton) return;
+        const syncExpanded = function () {
+          itemButton.setAttribute(
+            'aria-expanded',
+            item.getAttribute('data-open') === 'true' ? 'true' : 'false',
+          );
+        };
+        syncExpanded();
         itemButton.addEventListener('click', function (e) {
             e.stopPropagation();
             if (item.getAttribute('data-open') === 'true') {
@@ -423,6 +430,7 @@ window.addEventListener('resize', setVw);
             } else {
                 item.setAttribute('data-open', 'true');
             }
+            syncExpanded();
         });
     });
 
@@ -430,12 +438,20 @@ window.addEventListener('resize', setVw);
     footerNavItems.forEach(item => {
         const itemButton = item.querySelector('[class*="gfl_button"]');
         if (!itemButton) return;
+        const syncExpanded = function () {
+          itemButton.setAttribute(
+            'aria-expanded',
+            item.getAttribute('data-open') === 'true' ? 'true' : 'false',
+          );
+        };
+        syncExpanded();
         itemButton.addEventListener('click', function () {
             if (item.getAttribute('data-open') === 'true') {
                 item.setAttribute('data-open', 'false');
             } else {
                 item.setAttribute('data-open', 'true');
             }
+            syncExpanded();
         });
     });
 
@@ -612,7 +628,7 @@ window.addEventListener('resize', setVw);
     // );
     // // アーカイブナビゲーション
     // $('.an_links-01 > li > .anl_title').on('click', function () {
-    //   $(this).next().toggleClass('_open').slideToggle(400);
+    //   $(this).next().toggleClass('_open').slideToggle(300);
     //   $(this).toggleClass('_open');
     // });
     // // アーカイブナビゲーション枠外クリック時に閉じる
