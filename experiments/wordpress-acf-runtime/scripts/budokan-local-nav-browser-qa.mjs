@@ -1,9 +1,8 @@
 import { chromium } from 'playwright';
 
 const url = process.argv[2];
-const phase = process.argv[3] || 'all';
 if (!url) {
-  console.error('FAIL usage: node budokan-local-nav-browser-qa.mjs <url> [surface|typography|list|current|all]');
+  console.error('FAIL usage: node budokan-local-nav-browser-qa.mjs <url>');
   process.exit(2);
 }
 
@@ -15,10 +14,6 @@ function assert(condition, message) {
 
 function isKakuFamily(family) {
   return String(family || '').toLowerCase().includes('kaku');
-}
-
-function runs(name) {
-  return phase === 'all' || phase === name;
 }
 
 const browser = await chromium.launch({ headless: true });
@@ -74,6 +69,7 @@ try {
     const current = childItems.find((el) => el.classList.contains('current-menu-item') || el.classList.contains('current_page_item'));
     const currentLink = current ? current.querySelector('.lnl_link-04') : null;
     if (!nav || !familyTitle || !subgroupTitle || !subgroupLink || !list || !selector02 || !selector03) return null;
+
     const navRect = nav.getBoundingClientRect();
     const navStyle = getComputedStyle(nav);
     const subgroupRect = subgroupLink.getBoundingClientRect();
@@ -93,7 +89,11 @@ try {
       };
     });
     const currentLinkStyle = currentLink ? getComputedStyle(currentLink) : null;
+
     return {
+      innerWidth: window.innerWidth,
+      clientWidth: document.documentElement.clientWidth,
+      scrollWidth: document.documentElement.scrollWidth,
       familyDisplay: getComputedStyle(familyTitle).display,
       subgroupDisplay: getComputedStyle(subgroupTitle).display,
       subgroupTitle: subgroupLink.textContent.trim(),
@@ -107,6 +107,7 @@ try {
       childFamily: currentLinkStyle?.fontFamily || null,
       navBox: {
         left: navRect.left,
+        right: navRect.right,
         width: navRect.width,
         height: navRect.height,
       },
@@ -121,13 +122,17 @@ try {
       subgroupFontSize: parseFloat(getComputedStyle(subgroupLink).fontSize),
       subgroupLineHeight: parseFloat(getComputedStyle(subgroupLink).lineHeight),
       subgroupTop: subgroupRect.top,
+      navTop: navRect.top,
       listBox: {
         left: listRect.left,
         top: listRect.top,
         width: listRect.width,
+        height: listRect.height,
       },
-      listPaddingLeft: parseFloat(listStyle.paddingLeft),
+      listPaddingTop: parseFloat(listStyle.paddingTop),
       listPaddingRight: parseFloat(listStyle.paddingRight),
+      listPaddingBottom: parseFloat(listStyle.paddingBottom),
+      listPaddingLeft: parseFloat(listStyle.paddingLeft),
       listColumnGap: parseFloat(listStyle.columnGap),
       currentBorderBottomColor: currentLinkStyle?.borderBottomColor || null,
       currentFontWeight: currentLinkStyle?.fontWeight || null,
@@ -152,42 +157,44 @@ try {
   assert(isKakuFamily(pc.childFamily), `PC current child must resolve to Zen Kaku Gothic New, got ${pc.childFamily}.`);
 
   // Current Figma Local Navigation authority: FKQaJDu5TZXHoCzPsfP92E / 1216:6311.
-  // Figma strokes are inside the authored 222px frame; the Theme renders those
-  // separators as inset shadows so browser borders do not add 2px to layout.
-  if (runs('surface')) {
-    assert(Math.abs(pc.navBox.left) <= 1, `PC Local Navigation should reach viewport left edge, got left=${pc.navBox.left}.`);
-    assert(Math.abs(pc.navBox.width - 1380) <= 1, `PC Local Navigation width expected 1380px, got ${pc.navBox.width}.`);
-    assert(Math.abs(pc.navBox.height - 222) <= 1, `PC Local Navigation height expected 222px, got ${pc.navBox.height}.`);
-    assert(pc.navBackground === 'rgb(255, 255, 255)', `PC Local Navigation background expected white, got ${pc.navBackground}.`);
-    assert(pc.navBorderTopWidth === '0px' && pc.navBorderBottomWidth === '0px', `PC Local Navigation separators must not add layout height: top=${pc.navBorderTopWidth}, bottom=${pc.navBorderBottomWidth}.`);
-    assert(pc.navBoxShadow.includes('rgb(215, 212, 212)') && pc.navBoxShadow.includes('inset'), `PC Local Navigation inset separator contract mismatch: ${pc.navBoxShadow}.`);
-    assert(Math.abs(pc.navPaddingTop - 56) <= 1 && Math.abs(pc.navPaddingBottom - 56) <= 1, `PC Local Navigation vertical padding expected 56px, got top=${pc.navPaddingTop}, bottom=${pc.navPaddingBottom}.`);
-    assert(Math.abs(pc.navPaddingLeft - 110) <= 1 && Math.abs(pc.navPaddingRight - 110) <= 1, `PC Local Navigation horizontal padding expected 110px, got left=${pc.navPaddingLeft}, right=${pc.navPaddingRight}.`);
-  }
+  // The reference frame is 1380px wide, while the live Theme deliberately reserves
+  // a stable scrollbar gutter. Compare the component to the actual layout viewport
+  // (documentElement.clientWidth), not window.innerWidth, so QA does not regress the
+  // project's background-stability contract merely to manufacture a 1380px DOM box.
+  assert(Math.abs(pc.navBox.left) <= 1, `PC Local Navigation should reach layout viewport left edge, got left=${pc.navBox.left}.`);
+  assert(Math.abs(pc.navBox.right - pc.clientWidth) <= 1, `PC Local Navigation should reach layout viewport right edge: right=${pc.navBox.right}, clientWidth=${pc.clientWidth}.`);
+  assert(Math.abs(pc.navBox.width - pc.clientWidth) <= 1, `PC Local Navigation should fill layout viewport: width=${pc.navBox.width}, clientWidth=${pc.clientWidth}.`);
+  assert(pc.scrollWidth <= pc.clientWidth + 1, `PC Local Navigation must not introduce horizontal overflow: scrollWidth=${pc.scrollWidth}, clientWidth=${pc.clientWidth}.`);
+  assert(pc.innerWidth >= pc.clientWidth, `PC layout viewport cannot exceed window.innerWidth: innerWidth=${pc.innerWidth}, clientWidth=${pc.clientWidth}.`);
+  assert(Math.abs(pc.navBox.height - 222) <= 1, `PC Local Navigation height expected 222px, got ${pc.navBox.height}.`);
+  assert(pc.navBackground === 'rgb(255, 255, 255)', `PC Local Navigation background expected white, got ${pc.navBackground}.`);
+  assert(pc.navBorderTopWidth === '0px' && pc.navBorderBottomWidth === '0px', `PC Local Navigation separators must not add layout height: top=${pc.navBorderTopWidth}, bottom=${pc.navBorderBottomWidth}.`);
+  assert(pc.navBoxShadow.includes('rgb(215, 212, 212)') && pc.navBoxShadow.includes('inset'), `PC Local Navigation inset separator contract mismatch: ${pc.navBoxShadow}.`);
+  assert(Math.abs(pc.navPaddingTop - 56) <= 1 && Math.abs(pc.navPaddingBottom - 56) <= 1, `PC Local Navigation vertical padding expected 56px, got top=${pc.navPaddingTop}, bottom=${pc.navPaddingBottom}.`);
+  assert(Math.abs(pc.navPaddingLeft - 110) <= 1 && Math.abs(pc.navPaddingRight - 110) <= 1, `PC Local Navigation horizontal padding expected 110px, got left=${pc.navPaddingLeft}, right=${pc.navPaddingRight}.`);
 
-  if (runs('typography')) {
-    assert(Math.abs(pc.subgroupFontSize - 20) <= 0.5, `PC subgroup heading expected 20px, got ${pc.subgroupFontSize}px.`);
-    assert(Math.abs(pc.subgroupLineHeight - 28) <= 1, `PC subgroup heading line-height expected 28px, got ${pc.subgroupLineHeight}px.`);
-  }
+  assert(Math.abs(pc.subgroupFontSize - 20) <= 0.5, `PC subgroup heading expected 20px, got ${pc.subgroupFontSize}px.`);
+  assert(Math.abs(pc.subgroupLineHeight - 28) <= 1, `PC subgroup heading line-height expected 28px, got ${pc.subgroupLineHeight}px.`);
+  assert(Math.abs(pc.subgroupTop - pc.navTop - 56) <= 1, `PC subgroup heading top expected 56px from nav top, got ${pc.subgroupTop - pc.navTop}px.`);
 
-  if (runs('list')) {
-    assert(Math.abs(pc.listBox.top - pc.subgroupTop - 76) <= 1, `PC heading-to-list rhythm expected 48px after 28px heading, got delta=${pc.listBox.top - pc.subgroupTop}px.`);
-    assert(Math.abs(pc.listBox.width - 1160) <= 1, `PC Local Navigation list width expected 1160px, got ${pc.listBox.width}.`);
-    assert(Math.abs(pc.listPaddingLeft - 36) <= 1 && Math.abs(pc.listPaddingRight - 36) <= 1, `PC Local Navigation list inset expected 36px, got left=${pc.listPaddingLeft}, right=${pc.listPaddingRight}.`);
-    assert(Math.abs(pc.listColumnGap - 20) <= 1, `PC Local Navigation column gap expected 20px, got ${pc.listColumnGap}.`);
-    for (const [index, box] of pc.boxes.entries()) {
-      assert(Math.abs(box.width - 257) <= 1, `PC child ${index + 1} width expected 257px, got ${box.width}.`);
-      assert(Math.abs(box.height - 34) <= 1, `PC child ${index + 1} height expected 34px, got ${box.height}.`);
-    }
+  const expectedListWidth = pc.clientWidth - 220;
+  const expectedChildWidth = (expectedListWidth - 72 - 60) / 4;
+  assert(Math.abs(pc.listBox.top - pc.subgroupTop - 76) <= 1, `PC heading-to-list rhythm expected 48px after 28px heading, got delta=${pc.listBox.top - pc.subgroupTop}px.`);
+  assert(Math.abs(pc.listBox.width - expectedListWidth) <= 1, `PC Local Navigation list should fill authored 110px insets: expected ${expectedListWidth}px, got ${pc.listBox.width}.`);
+  assert(Math.abs(pc.listBox.height - 34) <= 1, `PC Local Navigation list height expected 34px, got ${pc.listBox.height}.`);
+  assert(Math.abs(pc.listPaddingTop) <= 1 && Math.abs(pc.listPaddingBottom) <= 1, `PC Local Navigation list must clear shared module_menu vertical padding: top=${pc.listPaddingTop}, bottom=${pc.listPaddingBottom}.`);
+  assert(Math.abs(pc.listPaddingLeft - 36) <= 1 && Math.abs(pc.listPaddingRight - 36) <= 1, `PC Local Navigation list inset expected 36px, got left=${pc.listPaddingLeft}, right=${pc.listPaddingRight}.`);
+  assert(Math.abs(pc.listColumnGap - 20) <= 1, `PC Local Navigation column gap expected 20px, got ${pc.listColumnGap}.`);
+  for (const [index, box] of pc.boxes.entries()) {
+    assert(Math.abs(box.width - expectedChildWidth) <= 1, `PC child ${index + 1} width expected ${expectedChildWidth}px at current layout viewport, got ${box.width}.`);
+    assert(Math.abs(box.height - 34) <= 1, `PC child ${index + 1} height expected 34px, got ${box.height}.`);
   }
+  assert(pc.currentBorderBottomColor === 'rgb(202, 153, 87)', `PC current child underline expected #ca9957, got ${pc.currentBorderBottomColor}.`);
+  assert(Number(pc.currentFontWeight) >= 500, `PC current child expected Medium weight, got ${pc.currentFontWeight}.`);
 
-  if (runs('current')) {
-    assert(pc.currentBorderBottomColor === 'rgb(202, 153, 87)', `PC current child underline expected #ca9957, got ${pc.currentBorderBottomColor}.`);
-    assert(Number(pc.currentFontWeight) >= 500, `PC current child expected Medium weight, got ${pc.currentFontWeight}.`);
-  }
-
-  console.log(`PASS Budokan Local Navigation baseline browser QA (${phase}).`);
-  console.log(`PASS Budokan Local Navigation PC current-Figma ${phase} contract QA.`);
+  console.log('PASS Budokan Local Navigation SP closed-state browser QA.');
+  console.log('PASS Budokan Local Navigation PC depth-03 heading + four depth-04 columns browser QA.');
+  console.log('PASS Budokan Local Navigation PC current-Figma geometry contract QA.');
 } finally {
   await browser.close();
 }
