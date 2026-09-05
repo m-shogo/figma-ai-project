@@ -99,37 +99,63 @@ const auditDisclosure = async ({ label, itemSelector, buttonSelector, wrapperSel
   assert(keyboardClosed.activeIsButton, `${label} keyboard close lost focus.`);
 };
 
+const globalDisclosure = {
+  label: 'SP global navigation child disclosure',
+  itemSelector: '#global_navigation [class*="gnl_item"]._hasChild',
+  buttonSelector: '#global_navigation [class*="gnl_item"]._hasChild > [class*="gnl_title"] > [class*="gnl_button"]',
+  wrapperSelector: '#global_navigation [class*="gnl_item"]._hasChild > [class*="gnl_wrapper"]',
+};
+const footerDisclosure = {
+  label: 'SP footer navigation child disclosure',
+  itemSelector: '#global_footer [class*="gfl_item"]._hasChild',
+  buttonSelector: '#global_footer [class*="gfl_item"]._hasChild [class*="gfl_button"]',
+  wrapperSelector: '#global_footer [class*="gfl_item"]._hasChild > [class*="gfl_wrapper"]',
+};
+
 try {
   const pageErrors = [];
   page.on('pageerror', (error) => pageErrors.push(error.message));
 
   await page.goto(url, { waitUntil: 'networkidle' });
 
-  // SP global navigation is hidden behind the existing hamburger overlay.
+  // Preflight both independent WordPress Menu families before the first hard
+  // semantic assertion so one missing aria-expanded cannot hide the other.
   const menuButton = page.locator('#gh_menu');
   await menuButton.click();
   await page.waitForTimeout(400);
   assert(await page.locator('body').evaluate((body) => body.classList.contains('_open-menu')), 'SP global menu did not open before disclosure audit.');
+  const globalBaseline = await snapshot(globalDisclosure);
+  assert(globalBaseline, 'SP global navigation child disclosure fixture is missing.');
 
-  await auditDisclosure({
-    label: 'SP global navigation child disclosure',
-    itemSelector: '#global_navigation [class*="gnl_item"]._hasChild',
-    buttonSelector: '#global_navigation [class*="gnl_item"]._hasChild > [class*="gnl_title"] > [class*="gnl_button"]',
-    wrapperSelector: '#global_navigation [class*="gnl_item"]._hasChild > [class*="gnl_wrapper"]',
-  });
-
-  // Close the overlay, then audit the real footer WordPress menu independently.
   await page.locator('#gn_close').click();
   await page.waitForTimeout(200);
   await page.locator('#global_footer').scrollIntoViewIfNeeded();
   await page.waitForTimeout(100);
+  const footerBaseline = await snapshot(footerDisclosure);
+  assert(footerBaseline, 'SP footer navigation child disclosure fixture is missing.');
 
-  await auditDisclosure({
-    label: 'SP footer navigation child disclosure',
-    itemSelector: '#global_footer [class*="gfl_item"]._hasChild',
-    buttonSelector: '#global_footer [class*="gfl_item"]._hasChild [class*="gfl_button"]',
-    wrapperSelector: '#global_footer [class*="gfl_item"]._hasChild > [class*="gfl_wrapper"]',
-  });
+  const semanticFailures = [];
+  if (globalBaseline.ariaExpanded !== 'false') {
+    semanticFailures.push(`global aria-expanded=${globalBaseline.ariaExpanded}`);
+  }
+  if (footerBaseline.ariaExpanded !== 'false') {
+    semanticFailures.push(`footer aria-expanded=${footerBaseline.ariaExpanded}`);
+  }
+  assert(
+    semanticFailures.length === 0,
+    `Global/Footer disclosure semantic baseline mismatch: ${semanticFailures.join(' | ')}`,
+  );
+
+  // Re-open global menu for the full interaction cycle after both baselines pass.
+  await menuButton.click();
+  await page.waitForTimeout(400);
+  await auditDisclosure(globalDisclosure);
+
+  await page.locator('#gn_close').click();
+  await page.waitForTimeout(200);
+  await page.locator('#global_footer').scrollIntoViewIfNeeded();
+  await page.waitForTimeout(100);
+  await auditDisclosure(footerDisclosure);
 
   assert(pageErrors.length === 0, `Global/Footer disclosure interaction produced page errors: ${pageErrors.join(' | ')}`);
   console.log('PASS Budokan SP Global/Footer WordPress Menu disclosure geometry, pointer ownership, keyboard stability, and aria-expanded synchronization QA');
