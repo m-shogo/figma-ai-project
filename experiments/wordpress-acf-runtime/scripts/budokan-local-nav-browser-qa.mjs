@@ -108,6 +108,7 @@ try {
       navBackground: navStyle.backgroundColor,
       navBorderTopWidth: navStyle.borderTopWidth,
       navBorderBottomWidth: navStyle.borderBottomWidth,
+      navBoxShadow: navStyle.boxShadow,
       navPaddingTop: parseFloat(navStyle.paddingTop),
       navPaddingRight: parseFloat(navStyle.paddingRight),
       navPaddingBottom: parseFloat(navStyle.paddingBottom),
@@ -146,13 +147,14 @@ try {
   assert(isKakuFamily(pc.childFamily), `PC current child must resolve to Zen Kaku Gothic New, got ${pc.childFamily}.`);
 
   // Current Figma Local Navigation authority: FKQaJDu5TZXHoCzPsfP92E / 1216:6311.
-  // Lock the shared PC geometry before the wider normal-page/DIRECTORY_MAP sweep so
-  // future page-specific work cannot silently distort this reusable owner.
+  // Figma strokes are inside the authored 222px frame; the Theme renders those
+  // separators as inset shadows so browser borders do not add 2px to layout.
   assert(Math.abs(pc.navBox.left) <= 1, `PC Local Navigation should reach viewport left edge, got left=${pc.navBox.left}.`);
   assert(Math.abs(pc.navBox.width - 1380) <= 1, `PC Local Navigation width expected 1380px, got ${pc.navBox.width}.`);
   assert(Math.abs(pc.navBox.height - 222) <= 1, `PC Local Navigation height expected 222px, got ${pc.navBox.height}.`);
   assert(pc.navBackground === 'rgb(255, 255, 255)', `PC Local Navigation background expected white, got ${pc.navBackground}.`);
-  assert(pc.navBorderTopWidth === '1px' && pc.navBorderBottomWidth === '1px', `PC Local Navigation border contract mismatch: top=${pc.navBorderTopWidth}, bottom=${pc.navBorderBottomWidth}.`);
+  assert(pc.navBorderTopWidth === '0px' && pc.navBorderBottomWidth === '0px', `PC Local Navigation separators must not add layout height: top=${pc.navBorderTopWidth}, bottom=${pc.navBorderBottomWidth}.`);
+  assert(pc.navBoxShadow.includes('rgb(215, 212, 212)') && pc.navBoxShadow.includes('inset'), `PC Local Navigation inset separator contract mismatch: ${pc.navBoxShadow}.`);
   assert(Math.abs(pc.navPaddingTop - 56) <= 1 && Math.abs(pc.navPaddingBottom - 56) <= 1, `PC Local Navigation vertical padding expected 56px, got top=${pc.navPaddingTop}, bottom=${pc.navPaddingBottom}.`);
   assert(Math.abs(pc.navPaddingLeft - 110) <= 1 && Math.abs(pc.navPaddingRight - 110) <= 1, `PC Local Navigation horizontal padding expected 110px, got left=${pc.navPaddingLeft}, right=${pc.navPaddingRight}.`);
   assert(Math.abs(pc.subgroupFontSize - 20) <= 0.5, `PC subgroup heading expected 20px, got ${pc.subgroupFontSize}px.`);
