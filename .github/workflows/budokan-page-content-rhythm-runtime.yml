@@ -1,0 +1,50 @@
+name: Budokan Page Content Rhythm Runtime
+
+on:
+  pull_request:
+    paths:
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/layout/global_contents.css'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/layout/global_inner.css'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/blocks/wp-block-text-style.css'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/templates/template-oneColumnLocalNav.php'
+      - 'experiments/wordpress-acf-runtime/scripts/budokan-page-content-rhythm-browser-qa.mjs'
+      - 'experiments/wordpress-acf-runtime/scripts/budokan-local-nav-runtime-qa.sh'
+      - 'experiments/wordpress-acf-runtime/scripts/seed-budokan-local-nav-qa.php'
+      - '.github/workflows/budokan-page-content-rhythm-runtime.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run disposable WordPress Local Navigation hierarchy QA
+        env:
+          BUDOKAN_LOCAL_NAV_KEEP_RUNTIME: '1'
+        run: bash experiments/wordpress-acf-runtime/scripts/budokan-local-nav-runtime-qa.sh
+
+      - name: Install browser runtime
+        run: |
+          npm install --no-save --package-lock=false playwright@1.54.2
+          npx playwright install --with-deps chromium
+
+      - name: Run normal-page authored content rhythm QA
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          page_id="$(docker compose run --rm cli option get budokan_local_nav_qa_page_id)"
+          qa_url="${WP_URL}/?page_id=${page_id}"
+          cd ../..
+          node experiments/wordpress-acf-runtime/scripts/budokan-page-content-rhythm-browser-qa.mjs "$qa_url"
+
+      - name: Cleanup disposable WordPress runtime
+        if: always()
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          docker compose down -v --remove-orphans
