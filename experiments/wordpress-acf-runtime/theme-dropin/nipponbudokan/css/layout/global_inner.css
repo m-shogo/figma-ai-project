@@ -19,5 +19,11 @@
         &._content {
             max-width: calc(var(--width-content) + var(--padding-TB) * 2);
         }
+        /* Local Navigation owns its own current-Figma horizontal inset.
+           Keep the standard global padding, but do not let the generic
+           max-width shrink the full-width navigation surface. */
+        &._localNavigation {
+            max-width: none;
+        }
     }
 }
