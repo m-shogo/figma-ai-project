@@ -25,9 +25,19 @@ async function runViewport(label, viewport, expectedStandardTextShift) {
     });
 
     async function ensureViewport(locator, kind) {
-      await locator.scrollIntoViewIfNeeded();
-      await page.evaluate(() => window.scrollBy(0, -120));
-      assert((await page.evaluate(() => window.scrollY)) > 0, `${label}/${kind}: deep-scroll precondition missing`);
+      await locator.evaluate((details) => {
+        const summary = details.querySelector('summary');
+        if (!summary) throw new Error('summary missing while positioning viewport');
+        const rect = summary.getBoundingClientRect();
+        const targetTop = Math.max(160, Math.min(240, window.innerHeight * 0.3));
+        window.scrollBy(0, rect.top - targetTop);
+      });
+      const position = await locator.locator('summary').evaluate((summary) => {
+        const rect = summary.getBoundingClientRect();
+        return { top: rect.top, bottom: rect.bottom, scrollY: window.scrollY, innerHeight: window.innerHeight };
+      });
+      assert(position.scrollY > 0, `${label}/${kind}: deep-scroll precondition missing`);
+      assert(position.top >= 150 && position.bottom <= position.innerHeight - 120, `${label}/${kind}: summary not in deterministic pointer-safe viewport band`);
     }
 
     async function snapshot(locator) {
