@@ -19,6 +19,7 @@ on:
       - 'experiments/wordpress-acf-runtime/scripts/budokan-overlay-stability-browser-qa.mjs'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-header-state-stability-browser-qa.mjs'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-footer-browser-qa.mjs'
+      - 'experiments/wordpress-acf-runtime/scripts/budokan-fallback-navigation-browser-qa.mjs'
       - 'experiments/budokan-wordpress/TOP_FV_VISUAL_ALIGNMENT_2026-08-31.md'
       - '.github/workflows/budokan-top-fv-runtime.yml'
   workflow_dispatch:
@@ -74,6 +75,14 @@ jobs:
           qa_url="${WP_URL}/"
           cd ../..
           node experiments/wordpress-acf-runtime/scripts/budokan-footer-browser-qa.mjs "$qa_url"
+
+      - name: Run unassigned menu fallback interaction QA
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          qa_url="${WP_URL}/"
+          cd ../..
+          node experiments/wordpress-acf-runtime/scripts/budokan-fallback-navigation-browser-qa.mjs "$qa_url"
 
       - name: Cleanup disposable WordPress runtime
         if: always()
