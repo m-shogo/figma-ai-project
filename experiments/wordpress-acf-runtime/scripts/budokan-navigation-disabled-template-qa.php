@@ -92,6 +92,9 @@ foreach ($templates as $label => $template) {
     if (strpos($disabled, 'aria-disabled="true"') === false) {
         fail("{$label}: disabled card must expose aria-disabled=true");
     }
+    if (strpos($disabled, 'tabindex="-1"') === false) {
+        fail("{$label}: disabled card must be removed from sequential keyboard focus");
+    }
     if (preg_match('/<a\b[^>]*\bhref\s*=/', $disabled)) {
         fail("{$label}: disabled card still renders href");
     }
@@ -115,6 +118,9 @@ foreach ($templates as $label => $template) {
     }
     if (strpos($enabled, 'aria-disabled="true"') !== false) {
         fail("{$label}: enabled card was marked disabled");
+    }
+    if (strpos($enabled, 'tabindex="-1"') !== false) {
+        fail("{$label}: enabled card was removed from keyboard focus");
     }
 }
 
