@@ -133,8 +133,11 @@ try {
   const globalBaseline = await snapshot(globalDisclosure);
   assert(globalBaseline, 'SP global navigation child disclosure fixture is missing.');
 
-  await page.locator('#gn_close').click();
+  // SP uses the visible hamburger control as the real close owner; #gn_close
+  // is not visible in this layout and must not be force-clicked in QA.
+  await menuButton.click();
   await page.waitForTimeout(200);
+  assert(await page.locator('body').evaluate((body) => !body.classList.contains('_open-menu')), 'SP global menu did not close from the visible hamburger control.');
   await page.locator('#global_footer').scrollIntoViewIfNeeded();
   await page.waitForTimeout(100);
   const footerBaseline = await snapshot(footerDisclosure);
@@ -149,8 +152,9 @@ try {
   await page.waitForTimeout(400);
   await auditDisclosure(globalDisclosure);
 
-  await page.locator('#gn_close').click();
+  await menuButton.click();
   await page.waitForTimeout(200);
+  assert(await page.locator('body').evaluate((body) => !body.classList.contains('_open-menu')), 'SP global menu did not close after disclosure interaction cycle.');
   await page.locator('#global_footer').scrollIntoViewIfNeeded();
   await page.waitForTimeout(100);
   await auditDisclosure(footerDisclosure);
