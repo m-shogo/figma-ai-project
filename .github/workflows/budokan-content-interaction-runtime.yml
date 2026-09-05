@@ -1,0 +1,60 @@
+name: Budokan Content Interaction Runtime
+
+on:
+  pull_request:
+    paths:
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/footer.php'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_footer.php'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/blocks/wp-block-buttonLink-style.css'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/common.js'
+      - 'experiments/wordpress-acf-runtime/scripts/seed-budokan-content-interaction-qa.php'
+      - 'experiments/wordpress-acf-runtime/scripts/budokan-content-interaction-runtime-qa.sh'
+      - 'experiments/wordpress-acf-runtime/scripts/budokan-content-interaction-browser-qa.mjs'
+      - '.github/workflows/budokan-content-interaction-runtime.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run disposable WordPress normal-page content runtime QA
+        env:
+          BUDOKAN_CONTENT_INTERACTION_KEEP_RUNTIME: '1'
+        run: bash experiments/wordpress-acf-runtime/scripts/budokan-content-interaction-runtime-qa.sh
+
+      - name: Install Playwright Chromium
+        run: |
+          npm install --no-save --package-lock=false playwright@1.54.2
+          npx playwright install --with-deps chromium
+
+      - name: Resolve content interaction QA URL
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          page_id="$(docker compose run --rm cli option get budokan_content_interaction_qa_page_id)"
+          echo "BUDOKAN_CONTENT_QA_URL=${WP_URL}/?page_id=${page_id}" >> "$GITHUB_ENV"
+
+      - name: Audit pointer hover and focus geometry
+        run: node experiments/wordpress-acf-runtime/scripts/budokan-content-interaction-browser-qa.mjs "$BUDOKAN_CONTENT_QA_URL" controls
+
+      - name: Audit keyboard Tab traversal
+        run: node experiments/wordpress-acf-runtime/scripts/budokan-content-interaction-browser-qa.mjs "$BUDOKAN_CONTENT_QA_URL" tab
+
+      - name: Audit same-page anchor navigation
+        run: node experiments/wordpress-acf-runtime/scripts/budokan-content-interaction-browser-qa.mjs "$BUDOKAN_CONTENT_QA_URL" anchor
+
+      - name: Audit SP sticky focus clearance
+        run: node experiments/wordpress-acf-runtime/scripts/budokan-content-interaction-browser-qa.mjs "$BUDOKAN_CONTENT_QA_URL" sticky
+
+      - name: Cleanup disposable WordPress runtime
+        if: always()
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          docker compose down -v --remove-orphans
