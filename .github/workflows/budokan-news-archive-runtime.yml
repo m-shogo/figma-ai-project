@@ -13,9 +13,7 @@ on:
       - 'experiments/wordpress-acf-runtime/scripts/budokan-news-archive-runtime-qa.sh'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-news-archive-browser-qa.mjs'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-news-archive-interaction-browser-qa.mjs'
-      - 'experiments/wordpress-acf-runtime/scripts/budokan-shared-page-title-browser-qa.mjs'
       - 'experiments/budokan-wordpress/learning-notes/2026-08-31-news-archive-master.md'
-      - 'experiments/budokan-wordpress/learning-notes/2026-08-31-shared-news-page-title-master.md'
       - '.github/workflows/budokan-news-archive-runtime.yml'
   workflow_dispatch:
 
@@ -34,7 +32,7 @@ jobs:
           BUDOKAN_NEWS_ARCHIVE_KEEP_RUNTIME: '1'
         run: bash experiments/wordpress-acf-runtime/scripts/budokan-news-archive-runtime-qa.sh
 
-      - name: Run SP and PC News archive browser geometry QA
+      - name: Run SP and PC News archive browser geometry and interaction QA
         run: |
           cd experiments/wordpress-acf-runtime
           source scripts/runtime-env.sh
@@ -44,7 +42,6 @@ jobs:
           npx playwright install --with-deps chromium
           node experiments/wordpress-acf-runtime/scripts/budokan-news-archive-browser-qa.mjs "$qa_url"
           node experiments/wordpress-acf-runtime/scripts/budokan-news-archive-interaction-browser-qa.mjs "$qa_url"
-          node experiments/wordpress-acf-runtime/scripts/budokan-shared-page-title-browser-qa.mjs "$qa_url"
 
       - name: Cleanup disposable WordPress runtime
         if: always()
