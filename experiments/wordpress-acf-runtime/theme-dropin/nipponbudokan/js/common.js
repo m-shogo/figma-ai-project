@@ -628,7 +628,7 @@ window.addEventListener('resize', setVw);
     // );
     // // アーカイブナビゲーション
     // $('.an_links-01 > li > .anl_title').on('click', function () {
-    //   $(this).next().toggleClass('_open').slideToggle(300);
+    //   $(this).next().toggleClass('_open').slideToggle(400);
     //   $(this).toggleClass('_open');
     // });
     // // アーカイブナビゲーション枠外クリック時に閉じる
