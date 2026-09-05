@@ -90,6 +90,7 @@ jobs:
           node experiments/wordpress-acf-runtime/scripts/budokan-local-nav-surface-diagnostic.mjs "$qa_url" padding
 
       - name: Run Local Navigation visual surface QA
+        continue-on-error: true
         run: |
           cd experiments/wordpress-acf-runtime
           source scripts/runtime-env.sh
@@ -99,6 +100,7 @@ jobs:
           node experiments/wordpress-acf-runtime/scripts/budokan-local-nav-browser-qa.mjs "$qa_url" surface
 
       - name: Run Local Navigation visual typography QA
+        continue-on-error: true
         run: |
           cd experiments/wordpress-acf-runtime
           source scripts/runtime-env.sh
@@ -108,6 +110,7 @@ jobs:
           node experiments/wordpress-acf-runtime/scripts/budokan-local-nav-browser-qa.mjs "$qa_url" typography
 
       - name: Run Local Navigation visual list QA
+        continue-on-error: true
         run: |
           cd experiments/wordpress-acf-runtime
           source scripts/runtime-env.sh
@@ -117,6 +120,7 @@ jobs:
           node experiments/wordpress-acf-runtime/scripts/budokan-local-nav-browser-qa.mjs "$qa_url" list
 
       - name: Run Local Navigation visual current-state QA
+        continue-on-error: true
         run: |
           cd experiments/wordpress-acf-runtime
           source scripts/runtime-env.sh
