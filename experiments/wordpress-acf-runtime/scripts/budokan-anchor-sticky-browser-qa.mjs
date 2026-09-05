@@ -3,10 +3,10 @@ import { chromium } from 'playwright';
 const targetUrl = process.argv[2];
 const requestedAudit = process.argv[3] || 'all';
 const requestedViewport = process.argv[4] || 'all';
-const allowedAudits = new Set(['all', 'initial', 'repeat']);
+const allowedAudits = new Set(['all', 'initial-clearance', 'initial-motion', 'repeat']);
 const allowedViewports = new Set(['all', 'pc', 'sp']);
 if (!targetUrl || !allowedAudits.has(requestedAudit) || !allowedViewports.has(requestedViewport)) {
-  console.error('FAIL usage: node budokan-anchor-sticky-browser-qa.mjs <url> [all|initial|repeat] [all|pc|sp]');
+  console.error('FAIL usage: node budokan-anchor-sticky-browser-qa.mjs <url> [all|initial-clearance|initial-motion|repeat] [all|pc|sp]');
   process.exit(2);
 }
 
@@ -78,7 +78,7 @@ function assertDestination(snapshot, label) {
     `${label}: horizontal overflow ${snapshot.scrollWidth} > ${snapshot.clientWidth}`);
 }
 
-async function auditInitialHash(page, label) {
+async function captureInitialHash(page, label) {
   await page.addInitScript(() => {
     window.__budokanInitialHashSamples = [];
     window.addEventListener('scroll', () => {
@@ -96,8 +96,20 @@ async function auditInitialHash(page, label) {
 
   await page.waitForTimeout(520);
   const settled = await pageSnapshot(page);
-  assertDestination(settled, `${label}/initial-hash settled`);
+  assert(settled, `${label}/initial-hash settled: required header/target missing`);
+  return { early, settled };
+}
 
+async function auditInitialHashClearance(page, label) {
+  const { settled } = await captureInitialHash(page, label);
+  assertDestination(settled, `${label}/initial-hash settled`);
+}
+
+async function auditInitialHashMotion(page, label) {
+  const { early, settled } = await captureInitialHash(page, label);
+  assert(settled.scrollY > 100, `${label}/initial-hash settled: deep-scroll precondition missing; scrollY=${settled.scrollY}`);
+  assert(settled.scrollWidth <= settled.clientWidth + 1,
+    `${label}/initial-hash settled: horizontal overflow ${settled.scrollWidth} > ${settled.clientWidth}`);
   assert(near(early.scrollY, settled.scrollY, 4),
     `${label}/initial-hash: page corrected after first visible destination; scrollY ${early.scrollY} -> ${settled.scrollY}; samples=${JSON.stringify(settled.samples)}`);
   assert(near(early.target.top, settled.target.top, 4),
@@ -153,9 +165,13 @@ async function runViewport(key, label, viewport) {
   const page = await context.newPage();
 
   try {
-    if (requestedAudit === 'all' || requestedAudit === 'initial') {
-      await auditInitialHash(page, label);
-      console.log(`PASS ${label}: initial URL hash is stable.`);
+    if (requestedAudit === 'all' || requestedAudit === 'initial-clearance') {
+      await auditInitialHashClearance(page, label);
+      console.log(`PASS ${label}: settled initial URL hash clears the sticky header.`);
+    }
+    if (requestedAudit === 'all' || requestedAudit === 'initial-motion') {
+      await auditInitialHashMotion(page, label);
+      console.log(`PASS ${label}: initial URL hash does not visibly re-correct.`);
     }
     if (requestedAudit === 'all' || requestedAudit === 'repeat') {
       await auditRepeatedClick(page, label);
