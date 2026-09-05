@@ -67,13 +67,13 @@ const isMSIE = ua.indexOf('msie') > -1 && ua.indexOf('opera') === -1, // IE(11�
   } else if (isIE) {
     rootClass.add('_browser-ie'); //IEならつけるクラス
   } else if (isChrome) {
-    rootClass.add('_browser-chrome'); //Google Chrome
+    rootClass.add('_browser-chrome'); //Chromeならつけるクラス
   } else if (isSafari) {
-    rootClass.add('_browser-safari'); //Safari
+    rootClass.add('_browser-safari'); //Safariならつけるクラス
   } else if (isEdge) {
-    rootClass.add('_browser-edge'); //Edge
+    rootClass.add('_browser-edge'); //Edgeならつけるクラス
   } else if (isFirefox) {
-    rootClass.add('_browser-firefox'); //Firefox
+    rootClass.add('_browser-firefox'); //Firefoxならつけるクラス
   }
 }
 
