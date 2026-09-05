@@ -37,17 +37,58 @@ jobs:
           page_id="$(docker compose run --rm cli option get budokan_content_interaction_qa_page_id)"
           echo "BUDOKAN_ANCHOR_QA_URL=${WP_URL}/?page_id=${page_id}" >> "$GITHUB_ENV"
 
-      - name: Audit PC initial hash stability
-        run: node experiments/wordpress-acf-runtime/scripts/budokan-anchor-sticky-browser-qa.mjs "$BUDOKAN_ANCHOR_QA_URL" initial pc
+      - id: pc_initial_clearance
+        name: Audit PC initial hash settled clearance
+        continue-on-error: true
+        run: node experiments/wordpress-acf-runtime/scripts/budokan-anchor-sticky-browser-qa.mjs "$BUDOKAN_ANCHOR_QA_URL" initial-clearance pc
 
-      - name: Audit SP initial hash stability
-        run: node experiments/wordpress-acf-runtime/scripts/budokan-anchor-sticky-browser-qa.mjs "$BUDOKAN_ANCHOR_QA_URL" initial sp
+      - id: pc_initial_motion
+        name: Audit PC initial hash second-movement
+        continue-on-error: true
+        run: node experiments/wordpress-acf-runtime/scripts/budokan-anchor-sticky-browser-qa.mjs "$BUDOKAN_ANCHOR_QA_URL" initial-motion pc
 
-      - name: Audit PC repeated anchor stability
+      - id: sp_initial_clearance
+        name: Audit SP initial hash settled clearance
+        continue-on-error: true
+        run: node experiments/wordpress-acf-runtime/scripts/budokan-anchor-sticky-browser-qa.mjs "$BUDOKAN_ANCHOR_QA_URL" initial-clearance sp
+
+      - id: sp_initial_motion
+        name: Audit SP initial hash second-movement
+        continue-on-error: true
+        run: node experiments/wordpress-acf-runtime/scripts/budokan-anchor-sticky-browser-qa.mjs "$BUDOKAN_ANCHOR_QA_URL" initial-motion sp
+
+      - id: pc_repeat
+        name: Audit PC repeated anchor stability
+        continue-on-error: true
         run: node experiments/wordpress-acf-runtime/scripts/budokan-anchor-sticky-browser-qa.mjs "$BUDOKAN_ANCHOR_QA_URL" repeat pc
 
-      - name: Audit SP repeated anchor stability
+      - id: sp_repeat
+        name: Audit SP repeated anchor stability
+        continue-on-error: true
         run: node experiments/wordpress-acf-runtime/scripts/budokan-anchor-sticky-browser-qa.mjs "$BUDOKAN_ANCHOR_QA_URL" repeat sp
+
+      - name: Enforce anchor interaction audit
+        if: always()
+        env:
+          PC_INITIAL_CLEARANCE: ${{ steps.pc_initial_clearance.outcome }}
+          PC_INITIAL_MOTION: ${{ steps.pc_initial_motion.outcome }}
+          SP_INITIAL_CLEARANCE: ${{ steps.sp_initial_clearance.outcome }}
+          SP_INITIAL_MOTION: ${{ steps.sp_initial_motion.outcome }}
+          PC_REPEAT: ${{ steps.pc_repeat.outcome }}
+          SP_REPEAT: ${{ steps.sp_repeat.outcome }}
+        run: |
+          printf 'PC initial clearance: %s\n' "$PC_INITIAL_CLEARANCE"
+          printf 'PC initial motion: %s\n' "$PC_INITIAL_MOTION"
+          printf 'SP initial clearance: %s\n' "$SP_INITIAL_CLEARANCE"
+          printf 'SP initial motion: %s\n' "$SP_INITIAL_MOTION"
+          printf 'PC repeat: %s\n' "$PC_REPEAT"
+          printf 'SP repeat: %s\n' "$SP_REPEAT"
+          test "$PC_INITIAL_CLEARANCE" = success
+          test "$PC_INITIAL_MOTION" = success
+          test "$SP_INITIAL_CLEARANCE" = success
+          test "$SP_INITIAL_MOTION" = success
+          test "$PC_REPEAT" = success
+          test "$SP_REPEAT" = success
 
       - name: Cleanup disposable WordPress runtime
         if: always()
