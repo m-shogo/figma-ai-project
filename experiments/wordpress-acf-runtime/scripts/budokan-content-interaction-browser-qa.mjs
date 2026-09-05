@@ -1,8 +1,10 @@
 import { chromium } from 'playwright';
 
 const targetUrl = process.argv[2];
-if (!targetUrl) {
-  console.error('FAIL usage: node budokan-content-interaction-browser-qa.mjs <url>');
+const requestedAudit = process.argv[3] || 'all';
+const allowedAudits = new Set(['all', 'controls', 'tab', 'anchor', 'sticky']);
+if (!targetUrl || !allowedAudits.has(requestedAudit)) {
+  console.error('FAIL usage: node budokan-content-interaction-browser-qa.mjs <url> [all|controls|tab|anchor|sticky]');
   process.exit(2);
 }
 
@@ -100,21 +102,18 @@ async function auditTabTraversal(page, label) {
 }
 
 async function auditStickyFocusBoundary(page, label) {
-  const sticky = page.locator('.gf_sticky');
-  await sticky.waitFor({ state: 'visible' });
-
   for (const name of ['default', 'cta', 'outline', 'small', 'inline']) {
     await page.goto(targetUrl, { waitUntil: 'networkidle' });
     const control = page.locator(`[data-qa-control="${name}"]`);
-    const stickyNow = page.locator('.gf_sticky');
-    await stickyNow.waitFor({ state: 'visible' });
+    const sticky = page.locator('.gf_sticky');
+    await sticky.waitFor({ state: 'visible' });
     await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
     await page.waitForTimeout(60);
     await control.focus();
     await page.waitForTimeout(80);
 
     const focused = await snapshot(control);
-    const stickyBox = await snapshot(stickyNow);
+    const stickyBox = await snapshot(sticky);
     assert(focused.focused, `${label}/${name}: focus failed from document-end boundary`);
     assert(focused.bottom <= stickyBox.top + EPS,
       `${label}/${name}: focused control is hidden behind sticky shortcuts; control bottom ${focused.bottom}, sticky top ${stickyBox.top}`);
@@ -160,6 +159,8 @@ async function auditAnchorJump(page, label) {
 }
 
 async function runViewport(label, viewport) {
+  if (requestedAudit === 'sticky' && viewport.width >= 768) return;
+
   const browser = await chromium.launch({ headless: true });
   const context = await browser.newContext({ viewport });
   const page = await context.newPage();
@@ -168,14 +169,24 @@ async function runViewport(label, viewport) {
     await page.goto(targetUrl, { waitUntil: 'networkidle' });
     assert(await page.locator('.qa-content-interaction-fixture').count(), `${label}: fixture root missing`);
 
-    for (const name of ['default', 'cta', 'outline', 'small', 'inline']) {
-      await auditControl(page, label, name);
+    if (requestedAudit === 'all' || requestedAudit === 'controls') {
+      for (const name of ['default', 'cta', 'outline', 'small', 'inline']) {
+        await auditControl(page, label, name);
+      }
+      console.log(`PASS ${label}: controls pointer/hover/focus geometry is stable.`);
     }
-    await auditTabTraversal(page, label);
-    await auditAnchorJump(page, label);
-    if (viewport.width < 768) await auditStickyFocusBoundary(page, label);
-
-    console.log(`PASS ${label}: CTA/outline/small/inline pointer-hover-focus geometry, Tab traversal, anchor navigation${viewport.width < 768 ? ', and sticky-focus clearance' : ''} are stable.`);
+    if (requestedAudit === 'all' || requestedAudit === 'tab') {
+      await auditTabTraversal(page, label);
+      console.log(`PASS ${label}: Tab traversal is stable.`);
+    }
+    if (requestedAudit === 'all' || requestedAudit === 'anchor') {
+      await auditAnchorJump(page, label);
+      console.log(`PASS ${label}: same-page anchor navigation is stable.`);
+    }
+    if ((requestedAudit === 'all' || requestedAudit === 'sticky') && viewport.width < 768) {
+      await auditStickyFocusBoundary(page, label);
+      console.log(`PASS ${label}: sticky-focus clearance is stable.`);
+    }
   } finally {
     await context.close();
     await browser.close();
