@@ -12,6 +12,7 @@ on:
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/common.js'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-local-nav-runtime-qa.sh'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-local-nav-browser-qa.mjs'
+      - 'experiments/wordpress-acf-runtime/scripts/budokan-page-master-browser-qa.mjs'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-local-nav-interaction-browser-qa.mjs'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-local-nav-pointer-browser-qa.mjs'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-anchor-interaction-browser-qa.mjs'
@@ -66,6 +67,7 @@ jobs:
           qa_url="${WP_URL}/?page_id=${page_id}"
           cd ../..
           node experiments/wordpress-acf-runtime/scripts/budokan-local-nav-browser-qa.mjs "$qa_url"
+          node experiments/wordpress-acf-runtime/scripts/budokan-page-master-browser-qa.mjs "$qa_url"
           node experiments/wordpress-acf-runtime/scripts/budokan-local-nav-interaction-browser-qa.mjs "$qa_url"
           node experiments/wordpress-acf-runtime/scripts/budokan-local-nav-pointer-browser-qa.mjs "$qa_url"
           node experiments/wordpress-acf-runtime/scripts/budokan-anchor-interaction-browser-qa.mjs "$qa_url"
