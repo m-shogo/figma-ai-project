@@ -8,6 +8,7 @@ on:
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/module/module_breadCrumb.css'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-news-single-runtime-qa.sh'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-news-single-browser-qa.mjs'
+      - 'experiments/wordpress-acf-runtime/scripts/budokan-news-single-interaction-browser-qa.mjs'
       - 'experiments/budokan-wordpress/learning-notes/2026-08-31-detail-return-pager-master.md'
       - 'experiments/budokan-wordpress/learning-notes/2026-08-31-breadcrumb-responsive-master.md'
       - '.github/workflows/budokan-news-single-runtime.yml'
@@ -37,6 +38,7 @@ jobs:
           npm install --no-save --package-lock=false playwright@1.54.2
           npx playwright install --with-deps chromium
           node experiments/wordpress-acf-runtime/scripts/budokan-news-single-browser-qa.mjs "$qa_url"
+          node experiments/wordpress-acf-runtime/scripts/budokan-news-single-interaction-browser-qa.mjs "$qa_url"
 
       - name: Cleanup disposable WordPress runtime
         if: always()
