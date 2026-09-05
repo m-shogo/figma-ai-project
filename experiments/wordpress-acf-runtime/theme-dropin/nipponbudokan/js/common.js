@@ -67,13 +67,13 @@ const isMSIE = ua.indexOf('msie') > -1 && ua.indexOf('opera') === -1, // IE(11�
   } else if (isIE) {
     rootClass.add('_browser-ie'); //IEならつけるクラス
   } else if (isChrome) {
-    rootClass.add('_browser-chrome'); //Chromeならつけるクラス
+    rootClass.add('_browser-chrome'); //Google Chrome
   } else if (isSafari) {
-    rootClass.add('_browser-safari'); //Safariならつけるクラス
+    rootClass.add('_browser-safari'); //Safari
   } else if (isEdge) {
-    rootClass.add('_browser-edge'); //Edgeならつけるクラス
+    rootClass.add('_browser-edge'); //Edge
   } else if (isFirefox) {
-    rootClass.add('_browser-firefox'); //Firefoxならつけるクラス
+    rootClass.add('_browser-firefox'); //Firefox
   }
 }
 
@@ -171,12 +171,20 @@ window.addEventListener('resize', setVw);
     moduleNavItems.forEach(item => {
         const itemButton = item.querySelector('[class*="mm_button"]');
         if (!itemButton) return;
+        const syncExpanded = function () {
+          itemButton.setAttribute(
+            'aria-expanded',
+            item.getAttribute('data-open') === 'true' ? 'true' : 'false',
+          );
+        };
+        syncExpanded();
         itemButton.addEventListener('click', function () {
             if (item.getAttribute('data-open') === 'true') {
                 item.setAttribute('data-open', 'false');
             } else {
                 item.setAttribute('data-open', 'true');
             }
+            syncExpanded();
         });
     });
   };
