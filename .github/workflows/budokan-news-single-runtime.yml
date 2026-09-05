@@ -9,6 +9,7 @@ on:
       - 'experiments/wordpress-acf-runtime/scripts/budokan-news-single-runtime-qa.sh'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-news-single-browser-qa.mjs'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-news-single-interaction-browser-qa.mjs'
+      - 'experiments/wordpress-acf-runtime/scripts/budokan-event-single-interaction-browser-qa.mjs'
       - 'experiments/budokan-wordpress/learning-notes/2026-08-31-detail-return-pager-master.md'
       - 'experiments/budokan-wordpress/learning-notes/2026-08-31-breadcrumb-responsive-master.md'
       - '.github/workflows/budokan-news-single-runtime.yml'
@@ -34,11 +35,18 @@ jobs:
           cd experiments/wordpress-acf-runtime
           source scripts/runtime-env.sh
           qa_url="${WP_URL}/budokan-news-single-qa/"
+          event_qa_id="$(docker compose run --rm cli post list --post_type=event --name=budokan-event-single-qa --field=ID --format=ids)"
+          test -n "$event_qa_id"
+          event_qa_url="$(docker compose run --rm cli post url "$event_qa_id")"
+          event_archive_url="$(docker compose run --rm cli eval 'echo get_post_type_archive_link("event");')"
+          test -n "$event_qa_url"
+          test -n "$event_archive_url"
           cd ../..
           npm install --no-save --package-lock=false playwright@1.54.2
           npx playwright install --with-deps chromium
           node experiments/wordpress-acf-runtime/scripts/budokan-news-single-browser-qa.mjs "$qa_url"
           node experiments/wordpress-acf-runtime/scripts/budokan-news-single-interaction-browser-qa.mjs "$qa_url"
+          node experiments/wordpress-acf-runtime/scripts/budokan-event-single-interaction-browser-qa.mjs "$event_qa_url" "$event_archive_url"
 
       - name: Cleanup disposable WordPress runtime
         if: always()
