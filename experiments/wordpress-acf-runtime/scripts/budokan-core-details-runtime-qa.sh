@@ -50,10 +50,13 @@ if ! docker compose run --rm cli core is-installed >/dev/null 2>&1; then
 fi
 
 docker compose run --rm cli option update blog_public 0 >/dev/null
+docker compose run --rm cli option update permalink_structure '/%postname%/' >/dev/null
 docker compose run --rm cli plugin install advanced-custom-fields --activate >/dev/null
 docker compose run --rm cli theme activate "$THEME_SLUG" >/dev/null
-docker compose run --rm cli rewrite structure '/%postname%/' --hard >/dev/null
-docker compose run --rm cli eval-file scripts/seed-budokan-core-details-qa.php >/dev/null
+# Keep the fixture's local-only guard intact. The Apache service receives
+# WP_ENVIRONMENT_TYPE through WORDPRESS_CONFIG_EXTRA, while this separate
+# WP-CLI service needs it explicitly. The repository is mounted at /fixture.
+docker compose run --rm -e WP_ENVIRONMENT_TYPE=local cli eval-file /fixture/scripts/seed-budokan-core-details-qa.php >/dev/null
 
 page_id="$(docker compose run --rm cli option get budokan_core_details_qa_page_id)"
 [[ "$page_id" =~ ^[0-9]+$ ]] || {
@@ -61,11 +64,10 @@ page_id="$(docker compose run --rm cli option get budokan_core_details_qa_page_i
   exit 1
 }
 
-qa_url="$(docker compose run --rm cli post url "$page_id")"
 html="$(mktemp)"
-http_code="$(curl --silent --show-error --location --max-redirs 3 --output "$html" --write-out '%{http_code}' "$qa_url")"
+http_code="$(curl --silent --show-error --location --max-redirs 3 --output "$html" --write-out '%{http_code}' "$WP_URL/?page_id=$page_id")"
 if [[ "$http_code" != "200" ]]; then
-  echo "FAIL Core Details QA page returned final HTTP ${http_code}: ${qa_url}" >&2
+  echo "FAIL Core Details QA page returned final HTTP ${http_code}." >&2
   cat "$html" >&2 || true
   docker compose logs wordpress >&2 || true
   exit 1
@@ -91,5 +93,5 @@ echo "PASS Standard and FAQ families remain native details/summary owners; no sy
 
 if [[ "${BUDOKAN_CORE_DETAILS_KEEP_RUNTIME:-0}" == "1" ]]; then
   trap - EXIT
-  echo "PASS runtime retained for browser QA at ${qa_url}"
+  echo "PASS runtime retained for browser QA at ${WP_URL}/?page_id=${page_id}"
 fi
