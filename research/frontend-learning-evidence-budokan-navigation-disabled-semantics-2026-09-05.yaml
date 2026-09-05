@@ -1,0 +1,57 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: OBS-BUDOKAN-NAVIGATION-DISABLED-SEMANTICS
+    summary: >-
+      A visually disabled link-like control is not keyboard-disabled merely because pointer events are blocked.
+      When a Human-editable ACF navigation row intentionally has no URL but retains anchor-shaped markup for visual
+      reuse, fail closed across both interaction channels: omit href/target, expose aria-disabled, and remove it from
+      sequential keyboard focus. When licensed ACF runtime cannot execute in CI and browser QA uses a manual rendered-DOM
+      mirror, keep a separate direct production-template assertion so stale fixture markup cannot redefine the contract.
+    category: TOOLING
+    applicability:
+      scope: PROJECT
+      conditions:
+        - A Human-editable navigation/card field permits an empty URL while the visual component retains link-shaped markup.
+        - CSS or other pointer behavior marks the URL-less control non-clickable.
+        - CI cannot execute the licensed ACF repeater runtime and therefore mirrors production DOM for browser QA.
+      exclusions:
+        - Do not invent placeholder URLs or hard-coded destinations for intentionally URL-less editable rows.
+        - Do not infer that pointer-events:none removes an element from keyboard focus or the accessibility contract.
+        - Do not weaken real pointer or keyboard assertions to accommodate a stale QA fixture.
+        - Same-project evidence is not independent evidence for cross-project promotion.
+    promotion_state: PROJECT_ONLY
+    promotion:
+      candidate: false
+      rationale: >-
+        PR #424 reproduced a real Budokan defect where URL-less ACF Navigation Large/Small cards were visually/pointer
+        disabled yet remained in sequential keyboard focus. The production templates were corrected with fail-closed
+        href/target/aria-disabled/tabindex semantics. A subsequent runtime failure exposed a separate QA-boundary issue:
+        the Disposable WordPress browser fixture manually mirrored the rendered ACF DOM because licensed repeater runtime
+        is unavailable in CI, and that mirror had not inherited the new tabindex contract. Updating the mirror alone was
+        insufficient evidence, so the independent production-template QA was also strengthened to assert both disabled
+        and enabled tabindex semantics. Runtime and REF001 then passed without CSS, menu ownership, or ACF schema changes.
+      blocked_by:
+        - NEEDS_INDEPENDENT_REFERENCE_EVIDENCE_BEFORE_CROSS_PROJECT_PROMOTION
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-NAVIGATION-DISABLED-SEMANTICS-20260905
+          kind: COMMIT
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/acf/blocks/navigationLarge.php
+          commit: 3842c004b0679ecbef9d2e83e7f875cbc8972d9c
+          note: >-
+            PR #424 squash-merged after direct production-template QA, Disposable WordPress, PC/SP Playwright pointer and
+            keyboard checks, and REF001 all passed. Navigation Small received the same bounded semantic correction; the
+            existing optional ACF URL fields and WordPress Menu ownership remained unchanged.
+      contradicts: []
+    notes:
+      - "Promotion review disposition 2026-09-05: KEEP_PROJECT_ONLY; Budokan-only evidence, no auto-promotion."
