@@ -1,0 +1,54 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: OBS-BUDOKAN-CORE-DETAILS-RENDERED-DOM-QA
+    summary: >-
+      Interaction QA for WordPress Core blocks should measure the rendered DOM contract rather than assuming
+      editor-source text remains a direct text-node child. When a bounded deep-scroll pointer test is meant to
+      assess the target component itself, place that target in a deterministic safe viewport band so unrelated
+      fixed surfaces or minimal scrollIntoView behavior do not create false interception failures.
+    category: TOOLING
+    applicability:
+      scope: PROJECT
+      conditions:
+        - Browser QA measures geometry or pointer ownership on WordPress Core-rendered markup.
+        - WordPress may normalize or wrap textual descendants while preserving the semantic control.
+        - The QA intends to isolate a component interaction invariant from separate fixed or sticky surface audits.
+      exclusions:
+        - Do not weaken pointer hit-testing or use forced clicks to hide real production interception.
+        - Do not change production CSS or markup merely to satisfy an accidental test viewport position.
+        - Fixed or sticky surface overlap must be tested separately when it is itself the behavior under audit.
+        - Same-project confirmation is not independent evidence for cross-project promotion.
+    promotion_state: PROJECT_ONLY
+    promotion:
+      candidate: false
+      rationale: >-
+        PR #416 produced two QA-only failures while auditing native Core Details. First, the test assumed the summary
+        label was a direct TEXT_NODE even though rendered Core markup preserved the semantic summary with descendant
+        text. Second, scrollIntoViewIfNeeded left the SP FAQ in a nondeterministic pointer position. Descendant text
+        traversal plus a deterministic deep-scroll viewport band made the same real pointer and keyboard assertions
+        pass without changing Theme production code. This is useful project evidence only.
+      blocked_by:
+        - NEEDS_INDEPENDENT_REFERENCE_EVIDENCE_BEFORE_CROSS_PROJECT_PROMOTION
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-CORE-DETAILS-INTERACTION-QA-20260905
+          kind: COMMIT
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/wordpress-acf-runtime/scripts/budokan-core-details-interaction-browser-qa.mjs
+          commit: 9db2254b0b4b3494c8b7f5f107f7b2505d485e83
+          note: >-
+            PR #416 merged after Disposable WordPress and PC/SP Playwright QA passed native Details pointer ownership,
+            open-close-reopen, Enter and Space keyboard semantics, focus retention, scroll stability, horizontal
+            overflow, and the current Figma-authorized state geometry. The final correction was entirely QA-side.
+      contradicts: []
+    notes:
+      - "Promotion review disposition 2026-09-05: KEEP_PROJECT_ONLY; Budokan-only evidence, no auto-promotion."
