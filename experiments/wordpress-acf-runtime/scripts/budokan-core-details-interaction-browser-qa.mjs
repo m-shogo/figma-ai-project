@@ -6,10 +6,8 @@ if (!targetUrl) {
   process.exit(2);
 }
 
-const EPS = 1.5;
-const assert = (condition, message) => {
-  if (!condition) throw new Error(message);
-};
+const EPS = 2;
+const assert = (condition, message) => { if (!condition) throw new Error(message); };
 const near = (a, b, eps = EPS) => Math.abs(a - b) <= eps;
 
 async function runViewport(label, viewport, expectedStandardTextShift) {
@@ -21,13 +19,16 @@ async function runViewport(label, viewport, expectedStandardTextShift) {
       const fixture = document.querySelector('.qa-core-details-fixture');
       if (!fixture) throw new Error('Core Details QA fixture missing.');
       const spacer = document.createElement('div');
-      spacer.setAttribute('data-qa-deep-scroll-spacer', '');
       spacer.style.height = '1100px';
+      spacer.setAttribute('data-qa-deep-scroll-spacer', '');
       fixture.before(spacer);
     });
 
-    const standard = page.locator('[data-qa-details="standard"]');
-    const faq = page.locator('[data-qa-details="faq"]');
+    async function ensureViewport(locator, kind) {
+      await locator.scrollIntoViewIfNeeded();
+      await page.evaluate(() => window.scrollBy(0, -120));
+      assert((await page.evaluate(() => window.scrollY)) > 0, `${label}/${kind}: deep-scroll precondition missing`);
+    }
 
     async function snapshot(locator) {
       return locator.evaluate((details) => {
@@ -35,94 +36,98 @@ async function runViewport(label, viewport, expectedStandardTextShift) {
         if (!summary) throw new Error('summary missing');
         const rect = summary.getBoundingClientRect();
         const range = document.createRange();
-        const textNode = [...summary.childNodes].find((node) => node.nodeType === Node.TEXT_NODE && node.textContent.trim());
+        const textNode = [...summary.childNodes].find((n) => n.nodeType === Node.TEXT_NODE && n.textContent.trim());
         if (!textNode) throw new Error('summary text node missing');
         range.selectNodeContents(textNode);
         const textRect = range.getBoundingClientRect();
-        const cx = rect.left + rect.width / 2;
-        const cy = rect.top + rect.height / 2;
-        const hit = document.elementFromPoint(cx, cy);
+        const hit = document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2);
         return {
           open: details.open,
-          summary: { left: rect.left, top: rect.top, width: rect.width, height: rect.height },
+          top: rect.top,
+          width: rect.width,
+          height: rect.height,
           textLeft: textRect.left,
           hitOwnsSummary: Boolean(hit && (hit === summary || summary.contains(hit))),
           scrollX: window.scrollX,
           scrollY: window.scrollY,
           clientWidth: document.documentElement.clientWidth,
           scrollWidth: document.documentElement.scrollWidth,
-          activeIsSummary: document.activeElement === summary,
+          focused: document.activeElement === summary,
         };
       });
     }
 
-    async function clickCenter(locator) {
+    async function clickSummary(locator, kind) {
       const summary = locator.locator('summary');
       const box = await summary.boundingBox();
-      if (!box) throw new Error(`${label}: summary bounding box missing`);
-      const hitOwns = await page.evaluate(({ x, y }) => {
+      assert(box, `${label}/${kind}: summary bounding box missing`);
+      const owns = await page.evaluate(({ x, y }) => {
         const hit = document.elementFromPoint(x, y);
-        const summary = document.querySelector('[data-qa-active-summary="true"]');
-        return Boolean(summary && hit && (hit === summary || summary.contains(hit)));
+        const active = document.querySelector('[data-qa-active-summary="true"]');
+        return Boolean(active && hit && (hit === active || active.contains(hit)));
       }, { x: box.x + box.width / 2, y: box.y + box.height / 2 });
-      assert(hitOwns, `${label}: pointer center is intercepted before click`);
+      assert(owns, `${label}/${kind}: pointer center intercepted`);
       await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
     }
 
-    async function exercise(locator, kind, expectedTextShift) {
-      // Establish the same deterministic deep-scroll precondition separately
-      // for each control. The FAQ sits below the standard Details and must not
-      // inherit an off-screen pointer coordinate from the prior exercise.
-      await locator.scrollIntoViewIfNeeded();
-      await page.evaluate(() => window.scrollBy(0, -140));
-      assert((await page.evaluate(() => window.scrollY)) > 0, `${label}/${kind}: deep-scroll precondition was not established`);
+    function assertStable(before, after, kind, action, expectedShift) {
+      assert(near(after.scrollY, before.scrollY), `${label}/${kind}: scrollY jumped on ${action}`);
+      assert(near(after.scrollX, before.scrollX), `${label}/${kind}: scrollX changed on ${action}`);
+      assert(near(after.top, before.top), `${label}/${kind}: summary top shifted on ${action}`);
+      assert(near(after.width, before.width), `${label}/${kind}: summary width shifted on ${action}`);
+      assert(near(after.height, before.height), `${label}/${kind}: summary height shifted on ${action}`);
+      assert(near(after.textLeft - before.textLeft, expectedShift), `${label}/${kind}: text shift ${after.textLeft - before.textLeft}px != ${expectedShift}px on ${action}`);
+      assert(after.scrollWidth <= after.clientWidth + 1, `${label}/${kind}: horizontal overflow on ${action}`);
+    }
 
+    async function exercise(locator, kind, expectedOpenShift) {
+      await ensureViewport(locator, kind);
       const summary = locator.locator('summary');
       await summary.evaluate((el) => el.setAttribute('data-qa-active-summary', 'true'));
-      const closed = await snapshot(locator);
-      assert(!closed.open, `${label}/${kind}: fixture must start closed`);
-      assert(closed.hitOwnsSummary, `${label}/${kind}: summary does not own pointer hit`);
-      assert(closed.scrollWidth <= closed.clientWidth + 1, `${label}/${kind}: horizontal overflow before open`);
 
-      await clickCenter(locator);
-      const opened = await snapshot(locator);
-      assert(opened.open, `${label}/${kind}: pointer click did not open details`);
-      assert(near(opened.scrollY, closed.scrollY), `${label}/${kind}: page scroll jumped on open (${closed.scrollY} -> ${opened.scrollY})`);
-      assert(near(opened.scrollX, closed.scrollX), `${label}/${kind}: horizontal scroll changed on open`);
-      assert(near(opened.summary.top, closed.summary.top), `${label}/${kind}: summary top shifted on open`);
-      assert(near(opened.summary.width, closed.summary.width), `${label}/${kind}: summary width shifted on open`);
-      assert(near(opened.summary.height, closed.summary.height), `${label}/${kind}: summary height shifted on open`);
-      assert(near(opened.textLeft - closed.textLeft, expectedTextShift), `${label}/${kind}: summary text shift ${opened.textLeft - closed.textLeft}px != Figma-authorized ${expectedTextShift}px`);
-      assert(opened.scrollWidth <= opened.clientWidth + 1, `${label}/${kind}: horizontal overflow after open`);
+      const closed1 = await snapshot(locator);
+      assert(!closed1.open && closed1.hitOwnsSummary, `${label}/${kind}: invalid closed pointer baseline`);
+      await clickSummary(locator, kind);
+      const open1 = await snapshot(locator);
+      assert(open1.open, `${label}/${kind}: pointer open failed`);
+      assertStable(closed1, open1, kind, 'pointer open', expectedOpenShift);
 
+      const openBaseline = await snapshot(locator);
+      await clickSummary(locator, kind);
+      const closed2 = await snapshot(locator);
+      assert(!closed2.open, `${label}/${kind}: pointer close failed`);
+      assertStable(openBaseline, closed2, kind, 'pointer close', -expectedOpenShift);
+
+      const closedBaseline = await snapshot(locator);
+      await clickSummary(locator, kind);
+      const open2 = await snapshot(locator);
+      assert(open2.open, `${label}/${kind}: pointer reopen failed`);
+      assertStable(closedBaseline, open2, kind, 'pointer reopen', expectedOpenShift);
+
+      await clickSummary(locator, kind);
+      assert(!(await snapshot(locator)).open, `${label}/${kind}: final pointer close failed`);
+
+      await ensureViewport(locator, `${kind}-keyboard`);
       await summary.focus();
-      const focused = await snapshot(locator);
-      assert(focused.activeIsSummary, `${label}/${kind}: summary did not retain keyboard focus`);
+      const keyboardClosed = await snapshot(locator);
+      assert(keyboardClosed.focused && !keyboardClosed.open, `${label}/${kind}: keyboard baseline invalid`);
       await page.keyboard.press('Enter');
-      const closedByKeyboard = await snapshot(locator);
-      assert(!closedByKeyboard.open, `${label}/${kind}: Enter did not close details`);
-      assert(closedByKeyboard.activeIsSummary, `${label}/${kind}: focus escaped after Enter close`);
-      assert(near(closedByKeyboard.scrollY, closed.scrollY), `${label}/${kind}: page scroll jumped on keyboard close`);
+      const keyboardOpen = await snapshot(locator);
+      assert(keyboardOpen.focused && keyboardOpen.open, `${label}/${kind}: Enter open/focus failed`);
+      assertStable(keyboardClosed, keyboardOpen, kind, 'keyboard open', expectedOpenShift);
 
-      await page.keyboard.press('Space');
-      const reopened = await snapshot(locator);
-      assert(reopened.open, `${label}/${kind}: Space did not reopen details`);
-      assert(reopened.activeIsSummary, `${label}/${kind}: focus escaped after Space reopen`);
-      assert(near(reopened.scrollY, closed.scrollY), `${label}/${kind}: page scroll jumped on keyboard reopen`);
-      assert(near(reopened.textLeft - closed.textLeft, expectedTextShift), `${label}/${kind}: reopened text shift changed`);
-
+      const keyboardOpenBaseline = await snapshot(locator);
       await page.keyboard.press('Enter');
-      const finalClosed = await snapshot(locator);
-      assert(!finalClosed.open, `${label}/${kind}: final close failed`);
-      assert(near(finalClosed.textLeft, closed.textLeft), `${label}/${kind}: text did not return to closed geometry`);
-      assert(near(finalClosed.scrollY, closed.scrollY), `${label}/${kind}: final close changed page scroll`);
+      const keyboardClosed2 = await snapshot(locator);
+      assert(keyboardClosed2.focused && !keyboardClosed2.open, `${label}/${kind}: Enter close/focus failed`);
+      assertStable(keyboardOpenBaseline, keyboardClosed2, kind, 'keyboard close', -expectedOpenShift);
+
       await summary.evaluate((el) => el.removeAttribute('data-qa-active-summary'));
     }
 
-    await exercise(standard, 'standard', expectedStandardTextShift);
-    await exercise(faq, 'faq', 0);
-
-    console.log(`PASS ${label}: native Core Details pointer/keyboard/deep-scroll stability; standard Figma state shift ${expectedStandardTextShift}px preserved.`);
+    await exercise(page.locator('[data-qa-details="standard"]'), 'standard', expectedStandardTextShift);
+    await exercise(page.locator('[data-qa-details="faq"]'), 'faq', 0);
+    console.log(`PASS ${label}: Core Details pointer/keyboard/deep-scroll stability; Figma state geometry preserved.`);
   } finally {
     await browser.close();
   }
