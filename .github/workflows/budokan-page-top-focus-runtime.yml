@@ -3,7 +3,9 @@ name: Budokan Page Top Focus Runtime
 on:
   pull_request:
     paths:
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/functions.php'
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/common.js'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/page-top-focus-stability.js'
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_footer.php'
       - 'experiments/wordpress-acf-runtime/scripts/seed-budokan-content-interaction-qa.php'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-content-interaction-runtime-qa.sh'
