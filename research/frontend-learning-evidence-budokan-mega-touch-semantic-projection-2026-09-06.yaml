@@ -1,0 +1,52 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: OBS-BUDOKAN-MEGA-TOUCH-SEMANTIC-PROJECTION
+    summary: >-
+      A legacy interaction can have separate authoritative state owners for ordinary disclosure and touch-only visual behavior.
+      When the visible state is correct but accessibility semantics are stale, preserve those established interaction owners and
+      derive aria-expanded from their effective combined state rather than collapsing or replacing the interaction model.
+    category: TOOLING
+    applicability:
+      scope: PROJECT
+      conditions:
+        - WordPress Theme Location mega navigation is rendered through the authoritative Walker.
+        - PC touch layout uses _touchOpen for visual expansion while ordinary disclosure retains data-open.
+        - Runtime QA can emulate touch at desktop width and exercise sibling switching, outside close, reopen and breakpoint reset.
+      exclusions:
+        - Do not infer this repair for unrelated menus that have a single state owner.
+        - Do not replace Human-editable WordPress Menu/Walker ownership with hard-coded navigation markup.
+        - Do not create a new open-state owner solely to synchronize accessibility semantics.
+        - Same-project recurrence is not independent evidence for cross-project promotion.
+    promotion_state: PROJECT_ONLY
+    promotion:
+      candidate: false
+      rationale: >-
+        PR #433 reproduced the mismatch on an actual disposable WordPress mega-nav before repair: WordPress startup and real menu
+        seeding succeeded while the touch browser interaction QA failed. The bounded repair left _touchOpen and data-open unchanged
+        and projected their effective state onto the existing disclosure button aria-expanded. The dedicated Mega Touch runtime,
+        Modal runtime, TOP FV runtime and REF001 passed before squash merge.
+      blocked_by:
+        - NEEDS_INDEPENDENT_REFERENCE_EVIDENCE_BEFORE_CROSS_PROJECT_PROMOTION
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-MEGA-TOUCH-SEMANTIC-PROJECTION-20260906
+          kind: COMMIT
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/mega-touch-expanded-semantics.js
+          commit: 0ea92f3245684aa8de770f2945eaed0ea46ae6a9
+          note: >-
+            PR #433 squash-merged after QA-first reproduction on actual WordPress mega-nav output in a touch-enabled desktop
+            browser context. The production change only projected effective expanded semantics and did not change menu ownership,
+            pointer behavior, CSS geometry, ACF ownership, Form or TOP Calendar logic.
+      contradicts: []
+    notes:
+      - "Promotion review disposition 2026-09-06: KEEP_PROJECT_ONLY; Budokan-only evidence, no auto-promotion."
