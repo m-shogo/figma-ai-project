@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/common.js'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/style.css'
       - 'experiments/wordpress-acf-runtime/scripts/seed-budokan-content-interaction-qa.php'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-content-interaction-runtime-qa.sh'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-anchor-sticky-browser-qa.mjs'
