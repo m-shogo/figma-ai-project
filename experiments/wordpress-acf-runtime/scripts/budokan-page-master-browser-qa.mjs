@@ -37,6 +37,10 @@ try {
       };
     };
 
+    const contentStyle = getComputedStyle(content);
+    const contentPaddingLeft = parseFloat(contentStyle.paddingLeft);
+    const contentPaddingRight = parseFloat(contentStyle.paddingRight);
+
     return {
       innerWidth: window.innerWidth,
       rootClientWidth: document.documentElement.clientWidth,
@@ -48,27 +52,36 @@ try {
       localNav: rect(localNav),
       breadcrumb: rect(breadcrumb),
       footer: rect(footer),
-      contentPaddingTop: parseFloat(getComputedStyle(content).paddingTop),
-      contentPaddingBottom: parseFloat(getComputedStyle(content).paddingBottom),
-      breadcrumbBackground: getComputedStyle(breadcrumb).backgroundColor,
+      contentPaddingLeft,
+      contentPaddingRight,
+      contentAreaLeft: rect(content).left + contentPaddingLeft,
+      contentAreaRight: rect(content).right - contentPaddingRight,
+      contentAreaWidth: rect(content).width - contentPaddingLeft - contentPaddingRight,
     };
   });
 
   assert(pc, 'PC normal-page master owner elements were not found.');
 
   // Current Figma normal-page authority: FKQaJDu5TZXHoCzPsfP92E / 1203:4865.
-  // Header occupies y=0..100, page title y=100..320, content shell x=210..1170,
-  // Local Navigation follows content at full width, then breadcrumb, then footer.
-  // The live Theme intentionally reserves a stable scrollbar gutter, so compare
-  // full-width surfaces to the actual body containing block rather than 1380px.
+  // Header occupies y=0..100, page title y=100..320, authored content is
+  // x=210..1170 (960px), Local Navigation follows content at full width,
+  // then breadcrumb, then footer.
+  //
+  // Theme ownership is deliberate here: .global_inner._content has a 1080px
+  // outer box because --width-content:960px is wrapped by the shared 60px
+  // tablet/desktop padding on each side. The Figma 960px frame maps to the
+  // padded wrapper's authored content area / .gc_main, not to that outer box.
+  // Measure the actual authored area instead of weakening the Theme token.
+  // The live Theme also reserves a stable scrollbar gutter, so compare full-
+  // width surfaces to the actual body containing block rather than 1380px.
   assert(pc.rootScrollWidth <= pc.rootClientWidth + 1, `PC normal page must not introduce horizontal overflow: scrollWidth=${pc.rootScrollWidth}, clientWidth=${pc.rootClientWidth}.`);
   assert(Math.abs(pc.visual.left - pc.body.left) <= 1 && Math.abs(pc.visual.right - pc.body.right) <= 1, `PC page visual should fill the body containing block: visual=${JSON.stringify(pc.visual)}, body=${JSON.stringify(pc.body)}.`);
   assert(Math.abs(pc.visual.height - 220) <= 1, `PC page visual height expected 220px from Figma 1203:4867, got ${pc.visual.height}px.`);
 
-  assert(Math.abs(pc.content.width - 960) <= 1, `PC normal-page content width expected 960px from Figma 1203:4878, got ${pc.content.width}px.`);
-  assert(Math.abs((pc.content.left + pc.content.right) / 2 - (pc.body.left + pc.body.right) / 2) <= 1, `PC normal-page content should remain centered: content=${JSON.stringify(pc.content)}, body=${JSON.stringify(pc.body)}.`);
-  assert(Math.abs(pc.content.top - pc.visual.bottom) <= 1, `PC content shell should start directly after page visual: contentTop=${pc.content.top}, visualBottom=${pc.visual.bottom}.`);
-  assert(Math.abs(pc.main.left - pc.content.left) <= 1 && Math.abs(pc.main.right - pc.content.right) <= 1, `PC one-column main should fill the authored 960px content shell: main=${JSON.stringify(pc.main)}, content=${JSON.stringify(pc.content)}.`);
+  assert(Math.abs(pc.contentAreaWidth - 960) <= 1, `PC normal-page authored content area expected 960px from Figma 1203:4878, got ${pc.contentAreaWidth}px (outer=${pc.content.width}, padding=${pc.contentPaddingLeft}+${pc.contentPaddingRight}).`);
+  assert(Math.abs((pc.contentAreaLeft + pc.contentAreaRight) / 2 - (pc.body.left + pc.body.right) / 2) <= 1, `PC normal-page authored content area should remain centered: area=${pc.contentAreaLeft}..${pc.contentAreaRight}, body=${JSON.stringify(pc.body)}.`);
+  assert(Math.abs(pc.content.top - pc.visual.bottom) <= 1, `PC content wrapper should start directly after page visual: contentTop=${pc.content.top}, visualBottom=${pc.visual.bottom}.`);
+  assert(Math.abs(pc.main.left - pc.contentAreaLeft) <= 1 && Math.abs(pc.main.right - pc.contentAreaRight) <= 1, `PC one-column main should fill the authored 960px content area: main=${JSON.stringify(pc.main)}, area=${pc.contentAreaLeft}..${pc.contentAreaRight}.`);
 
   assert(Math.abs(pc.localNav.left - pc.body.left) <= 1 && Math.abs(pc.localNav.right - pc.body.right) <= 1, `PC Local Navigation should remain a full-width surface in the normal-page master: nav=${JSON.stringify(pc.localNav)}, body=${JSON.stringify(pc.body)}.`);
   assert(pc.localNav.top >= pc.content.bottom - 1, `PC Local Navigation must follow content without overlap: navTop=${pc.localNav.top}, contentBottom=${pc.content.bottom}.`);
