@@ -71,6 +71,7 @@ try {
     if (!nav || !familyTitle || !subgroupTitle || !subgroupLink || !list || !selector02 || !selector03) return null;
 
     const navRect = nav.getBoundingClientRect();
+    const bodyRect = document.body.getBoundingClientRect();
     const navStyle = getComputedStyle(nav);
     const subgroupRect = subgroupLink.getBoundingClientRect();
     const listRect = list.getBoundingClientRect();
@@ -92,8 +93,13 @@ try {
 
     return {
       innerWidth: window.innerWidth,
-      clientWidth: document.documentElement.clientWidth,
-      scrollWidth: document.documentElement.scrollWidth,
+      rootClientWidth: document.documentElement.clientWidth,
+      rootScrollWidth: document.documentElement.scrollWidth,
+      bodyBox: {
+        left: bodyRect.left,
+        right: bodyRect.right,
+        width: bodyRect.width,
+      },
       familyDisplay: getComputedStyle(familyTitle).display,
       subgroupDisplay: getComputedStyle(subgroupTitle).display,
       subgroupTitle: subgroupLink.textContent.trim(),
@@ -157,15 +163,16 @@ try {
   assert(isKakuFamily(pc.childFamily), `PC current child must resolve to Zen Kaku Gothic New, got ${pc.childFamily}.`);
 
   // Current Figma Local Navigation authority: FKQaJDu5TZXHoCzPsfP92E / 1216:6311.
-  // The reference frame is 1380px wide, while the live Theme deliberately reserves
-  // a stable scrollbar gutter. Compare the component to the actual layout viewport
-  // (documentElement.clientWidth), not window.innerWidth, so QA does not regress the
-  // project's background-stability contract merely to manufacture a 1380px DOM box.
-  assert(Math.abs(pc.navBox.left) <= 1, `PC Local Navigation should reach layout viewport left edge, got left=${pc.navBox.left}.`);
-  assert(Math.abs(pc.navBox.right - pc.clientWidth) <= 1, `PC Local Navigation should reach layout viewport right edge: right=${pc.navBox.right}, clientWidth=${pc.clientWidth}.`);
-  assert(Math.abs(pc.navBox.width - pc.clientWidth) <= 1, `PC Local Navigation should fill layout viewport: width=${pc.navBox.width}, clientWidth=${pc.clientWidth}.`);
-  assert(pc.scrollWidth <= pc.clientWidth + 1, `PC Local Navigation must not introduce horizontal overflow: scrollWidth=${pc.scrollWidth}, clientWidth=${pc.clientWidth}.`);
-  assert(pc.innerWidth >= pc.clientWidth, `PC layout viewport cannot exceed window.innerWidth: innerWidth=${pc.innerWidth}, clientWidth=${pc.clientWidth}.`);
+  // The reference frame is 1380px wide, while the live Theme deliberately uses
+  // scrollbar-gutter: stable. Chromium reserves that gutter inside the body's
+  // containing block even when root clientWidth remains equal to window.innerWidth.
+  // Compare full-width Theme surfaces to the actual body geometry so QA preserves
+  // background stability instead of removing the intentional scrollbar reservation.
+  assert(Math.abs(pc.navBox.left - pc.bodyBox.left) <= 1, `PC Local Navigation should reach body left edge: nav=${pc.navBox.left}, body=${pc.bodyBox.left}.`);
+  assert(Math.abs(pc.navBox.right - pc.bodyBox.right) <= 1, `PC Local Navigation should reach body right edge: nav=${pc.navBox.right}, body=${pc.bodyBox.right}.`);
+  assert(Math.abs(pc.navBox.width - pc.bodyBox.width) <= 1, `PC Local Navigation should fill body containing block: nav=${pc.navBox.width}, body=${pc.bodyBox.width}.`);
+  assert(pc.rootScrollWidth <= pc.rootClientWidth + 1, `PC Local Navigation must not introduce horizontal overflow: scrollWidth=${pc.rootScrollWidth}, clientWidth=${pc.rootClientWidth}.`);
+  assert(pc.innerWidth >= pc.bodyBox.width, `PC body containing block cannot exceed window.innerWidth: innerWidth=${pc.innerWidth}, bodyWidth=${pc.bodyBox.width}.`);
   assert(Math.abs(pc.navBox.height - 222) <= 1, `PC Local Navigation height expected 222px, got ${pc.navBox.height}.`);
   assert(pc.navBackground === 'rgb(255, 255, 255)', `PC Local Navigation background expected white, got ${pc.navBackground}.`);
   assert(pc.navBorderTopWidth === '0px' && pc.navBorderBottomWidth === '0px', `PC Local Navigation separators must not add layout height: top=${pc.navBorderTopWidth}, bottom=${pc.navBorderBottomWidth}.`);
@@ -177,7 +184,7 @@ try {
   assert(Math.abs(pc.subgroupLineHeight - 28) <= 1, `PC subgroup heading line-height expected 28px, got ${pc.subgroupLineHeight}px.`);
   assert(Math.abs(pc.subgroupTop - pc.navTop - 56) <= 1, `PC subgroup heading top expected 56px from nav top, got ${pc.subgroupTop - pc.navTop}px.`);
 
-  const expectedListWidth = pc.clientWidth - 220;
+  const expectedListWidth = pc.bodyBox.width - 220;
   const expectedChildWidth = (expectedListWidth - 72 - 60) / 4;
   assert(Math.abs(pc.listBox.top - pc.subgroupTop - 76) <= 1, `PC heading-to-list rhythm expected 48px after 28px heading, got delta=${pc.listBox.top - pc.subgroupTop}px.`);
   assert(Math.abs(pc.listBox.width - expectedListWidth) <= 1, `PC Local Navigation list should fill authored 110px insets: expected ${expectedListWidth}px, got ${pc.listBox.width}.`);
@@ -186,7 +193,7 @@ try {
   assert(Math.abs(pc.listPaddingLeft - 36) <= 1 && Math.abs(pc.listPaddingRight - 36) <= 1, `PC Local Navigation list inset expected 36px, got left=${pc.listPaddingLeft}, right=${pc.listPaddingRight}.`);
   assert(Math.abs(pc.listColumnGap - 20) <= 1, `PC Local Navigation column gap expected 20px, got ${pc.listColumnGap}.`);
   for (const [index, box] of pc.boxes.entries()) {
-    assert(Math.abs(box.width - expectedChildWidth) <= 1, `PC child ${index + 1} width expected ${expectedChildWidth}px at current layout viewport, got ${box.width}.`);
+    assert(Math.abs(box.width - expectedChildWidth) <= 1, `PC child ${index + 1} width expected ${expectedChildWidth}px at current body width, got ${box.width}.`);
     assert(Math.abs(box.height - 34) <= 1, `PC child ${index + 1} height expected 34px, got ${box.height}.`);
   }
   assert(pc.currentBorderBottomColor === 'rgb(202, 153, 87)', `PC current child underline expected #ca9957, got ${pc.currentBorderBottomColor}.`);
