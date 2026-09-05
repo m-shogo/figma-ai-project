@@ -58,6 +58,7 @@ async function runViewport(label, viewport, expectedStandardTextShift) {
         return {
           open: details.open,
           top: rect.top,
+          bottom: rect.bottom,
           width: rect.width,
           height: rect.height,
           textLeft: textRect.left,
@@ -151,9 +152,52 @@ async function runViewport(label, viewport, expectedStandardTextShift) {
       await summary.evaluate((el) => el.removeAttribute('data-qa-active-summary'));
     }
 
+    async function auditStickyFocusBoundary() {
+      const sticky = page.locator('.gf_sticky');
+      await sticky.waitFor({ state: 'visible' });
+
+      for (const [kind, details] of [
+        ['standard-sticky-focus', page.locator('[data-qa-details="standard"]')],
+        ['faq-sticky-focus', page.locator('[data-qa-details="faq"]')],
+      ]) {
+        const summary = details.locator('summary');
+        await details.evaluate((el) => { el.open = false; });
+        await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+        await page.waitForTimeout(60);
+
+        await summary.focus();
+        await page.waitForTimeout(60);
+        const focusedClosed = await snapshot(details);
+        const stickyClosed = await sticky.evaluate((el) => {
+          const rect = el.getBoundingClientRect();
+          return { top: rect.top, bottom: rect.bottom, height: rect.height };
+        });
+        assert(focusedClosed.focused, `${label}/${kind}: summary focus failed from document-end boundary`);
+        assert(focusedClosed.bottom <= stickyClosed.top + EPS,
+          `${label}/${kind}: focused summary is hidden behind sticky shortcuts; summary bottom ${focusedClosed.bottom}, sticky top ${stickyClosed.top}`);
+        assert(focusedClosed.hitOwnsSummary, `${label}/${kind}: focused summary pointer center intercepted by sticky shortcuts`);
+        assert(focusedClosed.scrollWidth <= focusedClosed.clientWidth + 1, `${label}/${kind}: horizontal overflow at sticky-focus baseline`);
+
+        await page.keyboard.press('Enter');
+        const focusedOpen = await snapshot(details);
+        const stickyOpen = await sticky.evaluate((el) => ({ top: el.getBoundingClientRect().top }));
+        assert(focusedOpen.focused && focusedOpen.open, `${label}/${kind}: Enter open/focus failed at sticky boundary`);
+        assert(near(focusedOpen.scrollY, focusedClosed.scrollY), `${label}/${kind}: scrollY jumped while opening at sticky boundary`);
+        assert(focusedOpen.bottom <= stickyOpen.top + EPS, `${label}/${kind}: opened summary moved behind sticky shortcuts`);
+        assert(focusedOpen.hitOwnsSummary, `${label}/${kind}: opened summary pointer center intercepted by sticky shortcuts`);
+
+        await page.keyboard.press('Enter');
+        const focusedClosedAgain = await snapshot(details);
+        assert(focusedClosedAgain.focused && !focusedClosedAgain.open, `${label}/${kind}: Enter close/focus failed at sticky boundary`);
+        assert(near(focusedClosedAgain.scrollY, focusedOpen.scrollY), `${label}/${kind}: scrollY jumped while closing at sticky boundary`);
+        assert(focusedClosedAgain.hitOwnsSummary, `${label}/${kind}: closed summary pointer center intercepted after sticky-boundary cycle`);
+      }
+    }
+
     await exercise(page.locator('[data-qa-details="standard"]'), 'standard', expectedStandardTextShift);
     await exercise(page.locator('[data-qa-details="faq"]'), 'faq', 0);
-    console.log(`PASS ${label}: Core Details pointer/keyboard/deep-scroll stability; Figma state geometry preserved.`);
+    if (viewport.width < 768) await auditStickyFocusBoundary();
+    console.log(`PASS ${label}: Core Details pointer/keyboard/deep-scroll${viewport.width < 768 ? '/sticky-focus' : ''} stability; Figma state geometry preserved.`);
   } finally {
     await browser.close();
   }
