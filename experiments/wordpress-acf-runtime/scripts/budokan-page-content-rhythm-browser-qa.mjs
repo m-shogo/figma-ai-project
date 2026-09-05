@@ -22,7 +22,7 @@ try {
 
   const pc = await page.evaluate(() => {
     const visual = document.querySelector('.global_mainVisual');
-    const content = document.querySelector('.global_inner._content');
+    const content = document.querySelector('.global_inner._content._normalPage');
     const main = document.querySelector('.gc_main._oneColumn');
     const wrap = main?.querySelector('.block-editor_wrap');
     const paragraph = wrap?.querySelector('p');
@@ -72,6 +72,7 @@ try {
   assert(near(pc.content.top, pc.visual.bottom), `PC content wrapper should start directly after the page visual: contentTop=${pc.content.top}, visualBottom=${pc.visual.bottom}.`);
   assert(near(pc.main.left, pc.wrap.left) && near(pc.main.right, pc.wrap.right), `PC block editor wrap should preserve the one-column authored width: main=${JSON.stringify(pc.main)}, wrap=${JSON.stringify(pc.wrap)}.`);
   assert(near(pc.paragraph.top - pc.content.top, 64, 1), `PC first authored content should land 64px below the page visual per Figma 1203:4878: inset=${pc.paragraph.top - pc.content.top}px.`);
+  assert(near(pc.content.bottom - pc.wrap.bottom, 100, 1), `PC normal-page master should reserve the Figma 100px bottom inset after authored content: inset=${pc.content.bottom - pc.wrap.bottom}px.`);
   assert(pc.paragraphStyle.fontFamily.includes('Zen Kaku Gothic'), `PC body paragraph font family expected Zen Kaku Gothic New, got ${pc.paragraphStyle.fontFamily}.`);
   assert(near(pc.paragraphStyle.fontSize, 17, 0.1), `PC body paragraph font size expected 17px, got ${pc.paragraphStyle.fontSize}px.`);
   assert(Number(pc.paragraphStyle.fontWeight) === 400, `PC body paragraph font weight expected 400, got ${pc.paragraphStyle.fontWeight}.`);
