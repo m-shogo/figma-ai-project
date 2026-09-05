@@ -58,7 +58,7 @@ jobs:
           npm install --no-save --package-lock=false playwright@1.54.2
           npx playwright install --with-deps chromium
 
-      - name: Run existing Local Navigation browser QA
+      - name: Run Local Navigation visual browser QA
         run: |
           cd experiments/wordpress-acf-runtime
           source scripts/runtime-env.sh
@@ -66,8 +66,32 @@ jobs:
           qa_url="${WP_URL}/?page_id=${page_id}"
           cd ../..
           node experiments/wordpress-acf-runtime/scripts/budokan-local-nav-browser-qa.mjs "$qa_url"
+
+      - name: Run Local Navigation interaction browser QA
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          page_id="$(docker compose run --rm cli option get budokan_local_nav_qa_page_id)"
+          qa_url="${WP_URL}/?page_id=${page_id}"
+          cd ../..
           node experiments/wordpress-acf-runtime/scripts/budokan-local-nav-interaction-browser-qa.mjs "$qa_url"
+
+      - name: Run Local Navigation pointer browser QA
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          page_id="$(docker compose run --rm cli option get budokan_local_nav_qa_page_id)"
+          qa_url="${WP_URL}/?page_id=${page_id}"
+          cd ../..
           node experiments/wordpress-acf-runtime/scripts/budokan-local-nav-pointer-browser-qa.mjs "$qa_url"
+
+      - name: Run Local Navigation anchor browser QA
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          page_id="$(docker compose run --rm cli option get budokan_local_nav_qa_page_id)"
+          qa_url="${WP_URL}/?page_id=${page_id}"
+          cd ../..
           node experiments/wordpress-acf-runtime/scripts/budokan-anchor-interaction-browser-qa.mjs "$qa_url"
 
       - name: Run disclosure interaction browser QA
