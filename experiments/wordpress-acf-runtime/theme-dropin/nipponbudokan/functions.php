@@ -120,3 +120,20 @@ function nipponbudokan_enqueue_mega_touch_expanded_semantics() {
     );
 }
 add_action('wp_enqueue_scripts', 'nipponbudokan_enqueue_mega_touch_expanded_semantics', 20);
+
+/**
+ * Page Topをキーボードで起動した後、画面だけ上端へ移動してfocusがfooterに
+ * 取り残されると次のTabで下端へ戻される。common.jsの既存scroll ownerを
+ * 変えず、animation完了後のkeyboard focus continuityだけ補う。
+ */
+function nipponbudokan_enqueue_page_top_focus_stability() {
+    $path = get_theme_file_path('/js/page-top-focus-stability.js');
+    wp_enqueue_script(
+        'page-top-focus-stability-script',
+        get_theme_file_uri('/js/page-top-focus-stability.js'),
+        array('common-script'),
+        file_exists($path) ? filemtime($path) : null,
+        array('strategy' => 'defer', 'in_footer' => false)
+    );
+}
+add_action('wp_enqueue_scripts', 'nipponbudokan_enqueue_page_top_focus_stability', 20);
