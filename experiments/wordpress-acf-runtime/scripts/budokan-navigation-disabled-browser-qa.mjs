@@ -19,6 +19,8 @@ async function state(locator) {
     const hit = document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2);
     return {
       top: rect.top,
+      right: rect.right,
+      bottom: rect.bottom,
       left: rect.left,
       width: rect.width,
       height: rect.height,
@@ -92,6 +94,39 @@ async function auditFamily(page, label, family) {
   assert(activeQa !== `${family}-disabled`, `${label}/${family}: Tab entered disabled URL-less card`);
 }
 
+async function auditStickyFocusBoundary(page, label, family) {
+  await page.goto(targetUrl, { waitUntil: 'networkidle' });
+  const enabled = page.locator(`[data-qa-nav="${family}-enabled"]`);
+  const sticky = page.locator('.gf_sticky');
+  await enabled.waitFor({ state: 'visible' });
+  await sticky.waitFor({ state: 'visible' });
+
+  await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+  await page.waitForTimeout(80);
+  await enabled.focus();
+  await page.waitForTimeout(100);
+
+  const focused = await state(enabled);
+  const stickyState = await state(sticky);
+  assert(focused.focused, `${label}/${family}: enabled card focus failed from document-end boundary`);
+  assert(focused.bottom <= stickyState.top + EPS,
+    `${label}/${family}: focused card is hidden behind sticky shortcuts; card bottom ${focused.bottom}, sticky top ${stickyState.top}`);
+  assert(focused.hitOwns, `${label}/${family}: enabled card pointer center intercepted after document-end focus`);
+  assert(focused.scrollWidth <= focused.clientWidth + 1,
+    `${label}/${family}: horizontal overflow after document-end focus`);
+
+  const beforeScroll = await state(enabled);
+  await page.mouse.wheel(0, 120);
+  await page.waitForTimeout(100);
+  const afterScroll = await state(enabled);
+  assert(afterScroll.scrollWidth <= afterScroll.clientWidth + 1,
+    `${label}/${family}: horizontal overflow after follow-up scroll`);
+  assert(afterScroll.bottom <= stickyState.top + 121,
+    `${label}/${family}: follow-up scroll placed card unexpectedly deep behind sticky shortcuts`);
+  assert(beforeScroll.scrollY <= afterScroll.scrollY + EPS,
+    `${label}/${family}: follow-up downward scroll unexpectedly moved page upward ${beforeScroll.scrollY} -> ${afterScroll.scrollY}`);
+}
+
 async function run(label, viewport) {
   const browser = await chromium.launch({ headless: true });
   const context = await browser.newContext({ viewport });
@@ -101,7 +136,12 @@ async function run(label, viewport) {
     for (const family of ['large', 'small']) {
       await auditFamily(page, label, family);
     }
-    console.log(`PASS ${label}: ACF Navigation Large/Small URL-less cards fail closed for pointer and keyboard while enabled cards keep stable hover/focus geometry.`);
+    if (viewport.width < 768) {
+      for (const family of ['large', 'small']) {
+        await auditStickyFocusBoundary(page, label, family);
+      }
+    }
+    console.log(`PASS ${label}: ACF Navigation Large/Small URL-less cards fail closed for pointer and keyboard, enabled cards keep stable hover/focus geometry, and SP document-end focus clears fixed shortcuts.`);
   } finally {
     await context.close();
     await browser.close();
