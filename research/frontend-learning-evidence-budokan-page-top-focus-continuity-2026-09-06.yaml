@@ -13,7 +13,7 @@ records:
       now-off-screen footer control. Preserve the existing scroll owner, distinguish keyboard activation from pointer activation, reuse
       the existing animation completion signal, and move keyboard focus with preventScroll to an already-visible stable header control.
       Test scroll settlement and post-scroll focus continuity as separate runtime properties.
-    category: ACCESSIBILITY
+    category: RUNTIME
     applicability:
       scope: PROJECT
       conditions:
