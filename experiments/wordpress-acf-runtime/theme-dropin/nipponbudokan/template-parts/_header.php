@@ -37,7 +37,7 @@
                     'container' => 'div',
                     'container_class' => 'gn_container-01',
                     'container_id' => 'gn_container-01',
-                    'fallback_cb' => 'nipponbudokan_hamburger_nav_fallback',
+                    'fallback_cb' => false,
                     'theme_location' => 'global-nav',
                     'walker' => new Custom_Global_Walker_Nav_Menu(),
                 ));
