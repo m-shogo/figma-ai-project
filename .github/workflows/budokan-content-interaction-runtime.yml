@@ -33,14 +33,24 @@ jobs:
           npm install --no-save --package-lock=false playwright@1.54.2
           npx playwright install --with-deps chromium
 
-      - name: Run normal-page content interaction stability QA
+      - name: Resolve content interaction QA URL
         run: |
           cd experiments/wordpress-acf-runtime
           source scripts/runtime-env.sh
           page_id="$(docker compose run --rm cli option get budokan_content_interaction_qa_page_id)"
-          qa_url="${WP_URL}/?page_id=${page_id}"
-          cd ../..
-          node experiments/wordpress-acf-runtime/scripts/budokan-content-interaction-browser-qa.mjs "$qa_url"
+          echo "BUDOKAN_CONTENT_QA_URL=${WP_URL}/?page_id=${page_id}" >> "$GITHUB_ENV"
+
+      - name: Audit pointer hover and focus geometry
+        run: node experiments/wordpress-acf-runtime/scripts/budokan-content-interaction-browser-qa.mjs "$BUDOKAN_CONTENT_QA_URL" controls
+
+      - name: Audit keyboard Tab traversal
+        run: node experiments/wordpress-acf-runtime/scripts/budokan-content-interaction-browser-qa.mjs "$BUDOKAN_CONTENT_QA_URL" tab
+
+      - name: Audit same-page anchor navigation
+        run: node experiments/wordpress-acf-runtime/scripts/budokan-content-interaction-browser-qa.mjs "$BUDOKAN_CONTENT_QA_URL" anchor
+
+      - name: Audit SP sticky focus clearance
+        run: node experiments/wordpress-acf-runtime/scripts/budokan-content-interaction-browser-qa.mjs "$BUDOKAN_CONTENT_QA_URL" sticky
 
       - name: Cleanup disposable WordPress runtime
         if: always()
