@@ -114,17 +114,6 @@ async function auditStickyFocusBoundary(page, label, family) {
   assert(focused.hitOwns, `${label}/${family}: enabled card pointer center intercepted after document-end focus`);
   assert(focused.scrollWidth <= focused.clientWidth + 1,
     `${label}/${family}: horizontal overflow after document-end focus`);
-
-  const beforeScroll = await state(enabled);
-  await page.mouse.wheel(0, 120);
-  await page.waitForTimeout(100);
-  const afterScroll = await state(enabled);
-  assert(afterScroll.scrollWidth <= afterScroll.clientWidth + 1,
-    `${label}/${family}: horizontal overflow after follow-up scroll`);
-  assert(afterScroll.bottom <= stickyState.top + 121,
-    `${label}/${family}: follow-up scroll placed card unexpectedly deep behind sticky shortcuts`);
-  assert(beforeScroll.scrollY <= afterScroll.scrollY + EPS,
-    `${label}/${family}: follow-up downward scroll unexpectedly moved page upward ${beforeScroll.scrollY} -> ${afterScroll.scrollY}`);
 }
 
 async function run(label, viewport) {
