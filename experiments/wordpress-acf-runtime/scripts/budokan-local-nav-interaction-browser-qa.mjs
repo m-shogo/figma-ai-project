@@ -30,6 +30,7 @@ const snapshotDisclosure = (itemSelector, buttonSelector, wrapperSelector) => pa
     return {
       scrollY: window.scrollY,
       itemOpen: item.getAttribute('data-open'),
+      ariaExpanded: button.getAttribute('aria-expanded'),
       buttonTop: buttonRect.top,
       buttonLeft: buttonRect.left,
       buttonWidth: buttonRect.width,
@@ -52,12 +53,14 @@ const auditNestedDisclosure = async ({ label, itemSelector, buttonSelector, wrap
   // The authoritative Walker omits data-open until the first interaction;
   // CSS treats both missing and "false" as the collapsed default state.
   assert(before.itemOpen === null || before.itemOpen === 'false', `${label} must begin closed, got ${before.itemOpen}.`);
+  assert(before.ariaExpanded === 'false', `${label} must begin aria-expanded=false, got ${before.ariaExpanded}.`);
   assert(before.wrapperHeight <= 1, `${label} must begin collapsed, got ${before.wrapperHeight}px.`);
 
   await button.click();
   await page.waitForTimeout(400);
   const opened = await snapshotDisclosure(itemSelector, buttonSelector, wrapperSelector);
   assert(opened?.itemOpen === 'true', `${label} pointer open did not set data-open=true.`);
+  assert(opened?.ariaExpanded === 'true', `${label} pointer open did not set aria-expanded=true, got ${opened?.ariaExpanded}.`);
   assert(opened.wrapperHeight > 30, `${label} pointer open did not visibly expand, got ${opened.wrapperHeight}px.`);
   assert(close(opened.scrollY, before.scrollY), `${label} pointer open changed scroll position ${before.scrollY} -> ${opened.scrollY}.`);
   assert(close(opened.buttonTop, before.buttonTop), `${label} pointer open moved control vertically ${before.buttonTop} -> ${opened.buttonTop}.`);
@@ -70,6 +73,7 @@ const auditNestedDisclosure = async ({ label, itemSelector, buttonSelector, wrap
   await page.waitForTimeout(400);
   const closed = await snapshotDisclosure(itemSelector, buttonSelector, wrapperSelector);
   assert(closed?.itemOpen === 'false', `${label} pointer close did not set data-open=false.`);
+  assert(closed?.ariaExpanded === 'false', `${label} pointer close did not set aria-expanded=false, got ${closed?.ariaExpanded}.`);
   assert(closed.wrapperHeight <= 1, `${label} pointer close did not collapse, got ${closed.wrapperHeight}px.`);
   assert(close(closed.scrollY, before.scrollY), `${label} pointer close changed scroll position ${before.scrollY} -> ${closed.scrollY}.`);
   assert(close(closed.buttonTop, before.buttonTop), `${label} pointer close did not restore control position ${before.buttonTop} -> ${closed.buttonTop}.`);
@@ -79,6 +83,7 @@ const auditNestedDisclosure = async ({ label, itemSelector, buttonSelector, wrap
   await page.waitForTimeout(400);
   const keyboardOpened = await snapshotDisclosure(itemSelector, buttonSelector, wrapperSelector);
   assert(keyboardOpened?.itemOpen === 'true', `${label} did not open from keyboard Enter.`);
+  assert(keyboardOpened?.ariaExpanded === 'true', `${label} keyboard open did not set aria-expanded=true, got ${keyboardOpened?.ariaExpanded}.`);
   assert(keyboardOpened.wrapperHeight > 30, `${label} keyboard open did not visibly expand, got ${keyboardOpened.wrapperHeight}px.`);
   assert(close(keyboardOpened.scrollY, before.scrollY), `${label} keyboard open changed scroll position ${before.scrollY} -> ${keyboardOpened.scrollY}.`);
   assert(keyboardOpened.activeIsButton, `${label} keyboard open lost focus from the disclosure button.`);
@@ -87,6 +92,7 @@ const auditNestedDisclosure = async ({ label, itemSelector, buttonSelector, wrap
   await page.waitForTimeout(400);
   const keyboardClosed = await snapshotDisclosure(itemSelector, buttonSelector, wrapperSelector);
   assert(keyboardClosed?.itemOpen === 'false', `${label} did not close from keyboard Space.`);
+  assert(keyboardClosed?.ariaExpanded === 'false', `${label} keyboard close did not set aria-expanded=false, got ${keyboardClosed?.ariaExpanded}.`);
   assert(keyboardClosed.wrapperHeight <= 1, `${label} keyboard close did not collapse, got ${keyboardClosed.wrapperHeight}px.`);
   assert(close(keyboardClosed.scrollY, before.scrollY), `${label} keyboard close changed scroll position ${before.scrollY} -> ${keyboardClosed.scrollY}.`);
   assert(keyboardClosed.activeIsButton, `${label} keyboard close lost focus from the disclosure button.`);
@@ -109,6 +115,7 @@ try {
     return {
       scrollY: window.scrollY,
       itemOpen: item.getAttribute('data-open'),
+      ariaExpanded: button.getAttribute('aria-expanded'),
       buttonTop: buttonRect.top,
       buttonHeight: buttonRect.height,
       wrapperHeight: wrapperRect.height,
@@ -120,6 +127,7 @@ try {
 
   const before = await snapshot();
   assert(before, 'SP local navigation interaction fixture is missing.');
+  assert(before.ariaExpanded === 'false', `SP local navigation must begin aria-expanded=false, got ${before.ariaExpanded}.`);
   assert(before.wrapperHeight <= 1, `SP local navigation must begin collapsed, got ${before.wrapperHeight}px.`);
 
   await selector.click();
@@ -127,6 +135,7 @@ try {
   const opened = await snapshot();
   assert(opened, 'SP local navigation open-state fixture is missing.');
   assert(opened.itemOpen === 'true', `SP local navigation data-open expected true, got ${opened.itemOpen}.`);
+  assert(opened.ariaExpanded === 'true', `SP local navigation pointer open expected aria-expanded=true, got ${opened.ariaExpanded}.`);
   assert(opened.wrapperHeight > 40, `SP local navigation wrapper did not visibly expand, got ${opened.wrapperHeight}px.`);
   assert(close(opened.scrollY, before.scrollY), `SP local navigation open unexpectedly changed scroll position ${before.scrollY} -> ${opened.scrollY}.`);
   assert(close(opened.buttonTop, before.buttonTop), `SP local navigation control jumped vertically on open ${before.buttonTop} -> ${opened.buttonTop}.`);
@@ -149,6 +158,7 @@ try {
   const closed = await snapshot();
   assert(closed, 'SP local navigation close-state fixture is missing.');
   assert(closed.itemOpen === 'false', `SP local navigation data-open expected false, got ${closed.itemOpen}.`);
+  assert(closed.ariaExpanded === 'false', `SP local navigation pointer close expected aria-expanded=false, got ${closed.ariaExpanded}.`);
   assert(closed.wrapperHeight <= 1, `SP local navigation wrapper did not collapse after close, got ${closed.wrapperHeight}px.`);
   assert(close(closed.scrollY, before.scrollY), `SP local navigation close did not preserve scroll position ${before.scrollY} -> ${closed.scrollY}.`);
   assert(close(closed.buttonTop, before.buttonTop), `SP local navigation control did not return to its original viewport position ${before.buttonTop} -> ${closed.buttonTop}.`);
@@ -158,6 +168,7 @@ try {
   await page.waitForTimeout(400);
   const keyboardOpened = await snapshot();
   assert(keyboardOpened?.itemOpen === 'true', 'SP local navigation did not open from keyboard Enter.');
+  assert(keyboardOpened?.ariaExpanded === 'true', `SP local navigation keyboard open expected aria-expanded=true, got ${keyboardOpened?.ariaExpanded}.`);
   assert(keyboardOpened.wrapperHeight > 40, `SP local navigation keyboard open did not expand wrapper, got ${keyboardOpened.wrapperHeight}px.`);
   assert(close(keyboardOpened.scrollY, before.scrollY), `SP local navigation keyboard open changed scroll position ${before.scrollY} -> ${keyboardOpened.scrollY}.`);
   assert(keyboardOpened.activeIsButton, 'SP local navigation control lost focus after keyboard open.');
@@ -166,13 +177,14 @@ try {
   await page.waitForTimeout(400);
   const keyboardClosed = await snapshot();
   assert(keyboardClosed?.itemOpen === 'false', 'SP local navigation did not close from keyboard Space.');
+  assert(keyboardClosed?.ariaExpanded === 'false', `SP local navigation keyboard close expected aria-expanded=false, got ${keyboardClosed?.ariaExpanded}.`);
   assert(keyboardClosed.wrapperHeight <= 1, `SP local navigation keyboard close did not collapse wrapper, got ${keyboardClosed.wrapperHeight}px.`);
   assert(close(keyboardClosed.scrollY, before.scrollY), `SP local navigation keyboard close changed scroll position ${before.scrollY} -> ${keyboardClosed.scrollY}.`);
   assert(keyboardClosed.activeIsButton, 'SP local navigation control lost focus after keyboard close.');
 
   console.log('PASS Budokan SP local navigation opens/closes without scroll jump, control displacement, focus loss, or horizontal overflow.');
   console.log('PASS Budokan SP nested local navigation uses real WordPress Walker markup and remains pointer/keyboard stable.');
-  console.log('PASS Budokan SP local navigation preserves native keyboard activation for Enter and Space.');
+  console.log('PASS Budokan SP local navigation synchronizes aria-expanded with authoritative data-open state for pointer, Enter, and Space.');
 } finally {
   await context.close();
   await browser.close();
