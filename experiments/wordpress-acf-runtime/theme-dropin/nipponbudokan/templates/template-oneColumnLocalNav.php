@@ -5,7 +5,7 @@
  *
  * Reuses the canonical one-column content shell and renders the existing
  * sidebar-nav owner after the content so Local Navigation can span the
- * normal global width instead of being constrained to the 260px sidebar.
+ * viewport without being constrained to the 260px sidebar.
  */
 global $post;
 ?>
@@ -21,7 +21,7 @@ global $post;
                     </div>
                 </div>
             </div>
-            <div class="global_inner">
+            <div class="global_inner _localNavigation">
                 <?php get_sidebar(); ?>
             </div>
             <?php get_template_part('template-parts/_breadCrumb'); ?>
