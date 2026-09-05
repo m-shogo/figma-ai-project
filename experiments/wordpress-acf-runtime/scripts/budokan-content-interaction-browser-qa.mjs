@@ -128,6 +128,7 @@ async function auditAnchorJump(page, label) {
   const target = page.locator('#qa-anchor-target');
   await placeInSafeBand(page, link);
   assert((await snapshot(link)).hitOwns, `${label}/anchor: inline link pointer center intercepted before click`);
+  assert(await link.getAttribute('href') === '#qa-anchor-target', `${label}/anchor: fixture link lost its real target href`);
 
   await page.evaluate(() => {
     window.__budokanContentAnchorSamples = [];
@@ -146,7 +147,9 @@ async function auditAnchorJump(page, label) {
   });
   const samples = await page.evaluate(() => window.__budokanContentAnchorSamples || []);
 
-  assert(page.url().endsWith('#qa-anchor-target'), `${label}/anchor: real pointer click did not update the hash`);
+  // common.js intentionally prevents the browser default hash navigation and
+  // delegates same-page links to the Theme-owned 300ms scroll routine. The URL
+  // hash is therefore not an ownership contract; rendered destination geometry is.
   assert(targetBox.scrollY > 100, `${label}/anchor: page did not move to the lower target`);
   assert(targetBox.top >= headerBox.bottom - EPS,
     `${label}/anchor: target is hidden behind header; target top ${targetBox.top}, header bottom ${headerBox.bottom}`);
