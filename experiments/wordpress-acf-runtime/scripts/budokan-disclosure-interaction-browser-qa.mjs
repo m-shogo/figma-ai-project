@@ -30,6 +30,7 @@ const snapshot = async (itemSelector, buttonSelector, wrapperSelector) => page.e
     return {
       scrollY: window.scrollY,
       itemOpen: item.getAttribute('data-open'),
+      ariaExpanded: button.getAttribute('aria-expanded'),
       buttonTop: buttonRect.top,
       buttonLeft: buttonRect.left,
       buttonWidth: buttonRect.width,
@@ -50,12 +51,14 @@ const auditDisclosure = async ({ label, itemSelector, buttonSelector, wrapperSel
   const before = await snapshot(itemSelector, buttonSelector, wrapperSelector);
   assert(before, `${label} fixture is missing.`);
   assert(before.itemOpen === 'false', `${label} must begin data-open=false, got ${before.itemOpen}.`);
+  assert(before.ariaExpanded === 'false', `${label} must begin aria-expanded=false, got ${before.ariaExpanded}.`);
   assert(before.wrapperHeight <= 1, `${label} must begin collapsed, got ${before.wrapperHeight}px.`);
 
   await button.click();
   await page.waitForTimeout(400);
   const opened = await snapshot(itemSelector, buttonSelector, wrapperSelector);
   assert(opened?.itemOpen === 'true', `${label} pointer open did not set data-open=true.`);
+  assert(opened?.ariaExpanded === 'true', `${label} pointer open did not set aria-expanded=true, got ${opened?.ariaExpanded}.`);
   assert(opened.wrapperHeight > 30, `${label} pointer open did not visibly expand, got ${opened.wrapperHeight}px.`);
   assert(close(opened.scrollY, before.scrollY), `${label} pointer open changed scroll position ${before.scrollY} -> ${opened.scrollY}.`);
   assert(close(opened.buttonTop, before.buttonTop), `${label} pointer open moved control vertically ${before.buttonTop} -> ${opened.buttonTop}.`);
@@ -68,6 +71,7 @@ const auditDisclosure = async ({ label, itemSelector, buttonSelector, wrapperSel
   await page.waitForTimeout(400);
   const closed = await snapshot(itemSelector, buttonSelector, wrapperSelector);
   assert(closed?.itemOpen === 'false', `${label} pointer close did not set data-open=false.`);
+  assert(closed?.ariaExpanded === 'false', `${label} pointer close did not set aria-expanded=false, got ${closed?.ariaExpanded}.`);
   assert(closed.wrapperHeight <= 1, `${label} pointer close did not collapse, got ${closed.wrapperHeight}px.`);
   assert(close(closed.scrollY, before.scrollY), `${label} pointer close changed scroll position ${before.scrollY} -> ${closed.scrollY}.`);
   assert(close(closed.buttonTop, before.buttonTop), `${label} pointer close did not restore control position ${before.buttonTop} -> ${closed.buttonTop}.`);
@@ -77,6 +81,7 @@ const auditDisclosure = async ({ label, itemSelector, buttonSelector, wrapperSel
   await page.waitForTimeout(400);
   const keyboardOpened = await snapshot(itemSelector, buttonSelector, wrapperSelector);
   assert(keyboardOpened?.itemOpen === 'true', `${label} did not open from keyboard Enter.`);
+  assert(keyboardOpened?.ariaExpanded === 'true', `${label} keyboard open did not set aria-expanded=true, got ${keyboardOpened?.ariaExpanded}.`);
   assert(keyboardOpened.wrapperHeight > 30, `${label} keyboard open did not visibly expand, got ${keyboardOpened.wrapperHeight}px.`);
   assert(close(keyboardOpened.scrollY, before.scrollY), `${label} keyboard open changed scroll position ${before.scrollY} -> ${keyboardOpened.scrollY}.`);
   assert(keyboardOpened.activeIsButton, `${label} keyboard open lost focus from the disclosure button.`);
@@ -85,6 +90,7 @@ const auditDisclosure = async ({ label, itemSelector, buttonSelector, wrapperSel
   await page.waitForTimeout(400);
   const keyboardClosed = await snapshot(itemSelector, buttonSelector, wrapperSelector);
   assert(keyboardClosed?.itemOpen === 'false', `${label} did not close from keyboard Space.`);
+  assert(keyboardClosed?.ariaExpanded === 'false', `${label} keyboard close did not set aria-expanded=false, got ${keyboardClosed?.ariaExpanded}.`);
   assert(keyboardClosed.wrapperHeight <= 1, `${label} keyboard close did not collapse, got ${keyboardClosed.wrapperHeight}px.`);
   assert(close(keyboardClosed.scrollY, before.scrollY), `${label} keyboard close changed scroll position ${before.scrollY} -> ${keyboardClosed.scrollY}.`);
   assert(keyboardClosed.activeIsButton, `${label} keyboard close lost focus from the disclosure button.`);
@@ -104,7 +110,7 @@ try {
   });
 
   assert(pageErrors.length === 0, `Dropdown interaction produced page errors: ${pageErrors.join(' | ')}`);
-  console.log('PASS Budokan dropdown disclosure interaction stability browser QA');
+  console.log('PASS Budokan dropdown disclosure interaction stability and aria-expanded synchronization browser QA');
 } finally {
   await browser.close();
 }

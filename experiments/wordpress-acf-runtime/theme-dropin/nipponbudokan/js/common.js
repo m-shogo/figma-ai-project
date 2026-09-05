@@ -189,12 +189,20 @@ window.addEventListener('resize', setVw);
     dropdownNavItems.forEach(item => {
         const itemButton = item.querySelector('[class*="mdd_button"]');
         if (!itemButton) return;
+        const syncExpanded = function () {
+          itemButton.setAttribute(
+            'aria-expanded',
+            item.getAttribute('data-open') === 'true' ? 'true' : 'false',
+          );
+        };
+        syncExpanded();
         itemButton.addEventListener('click', function () {
             if (item.getAttribute('data-open') === 'true') {
                 item.setAttribute('data-open', 'false');
             } else {
                 item.setAttribute('data-open', 'true');
             }
+            syncExpanded();
         });
     });
   };
