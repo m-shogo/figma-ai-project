@@ -174,7 +174,13 @@
     @media screen and (min-width: 768px) {
         margin-inline: calc(var(--padding-TB) * -1);
         padding: 56px var(--padding-TB);
-        border-block: 1px solid var(--color-line);
+        /* Figma's 1px top/bottom strokes are drawn inside the authored 222px
+           frame and do not add to layout height. Inset shadows preserve that
+           geometry while rendering the same separators. */
+        border-block: 0;
+        box-shadow:
+            inset 0 1px 0 var(--color-line),
+            inset 0 -1px 0 var(--color-line);
         background-color: #fff;
 
         /* PC intentionally promotes the verified subgroup (depth 03) to the
