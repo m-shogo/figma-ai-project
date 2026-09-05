@@ -1,8 +1,8 @@
 # Hardcover / 単行本 Dependency Audit
 
-更新: 2026-09-03
+更新: 2026-09-06
 
-対象は現行 Figma `fKYDn9ikpJk1nW7IWFtaUx` の PC full-page authority:
+対象は現行 Figma `FKQaJDu5TZXHoCzPsfP92E` の PC full-page authority:
 
 - Hardcover / 日本武道館発行の単行本: `1656:5309`
 - Hardcover detail: `1686:5574`

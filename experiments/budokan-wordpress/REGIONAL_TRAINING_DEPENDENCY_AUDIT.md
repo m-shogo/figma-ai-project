@@ -1,10 +1,10 @@
 # Budokan — 地域社会武道指導者研修会 dependency / reuse audit
 
-更新: 2026-09-01
+更新: 2026-09-06
 
 ## 結論
 
-current Human-selected Figma `fKYDn9ikpJk1nW7IWFtaUx` とThemeを再確認した結果、このページで確定しているのはPC authorityとshared WordPress ownerであり、旧SP `560:*` はcurrent authorityではない。
+current Human-selected Figma `FKQaJDu5TZXHoCzPsfP92E` とThemeを再確認した結果、このページで確定しているのはPC authorityとshared WordPress ownerであり、旧SP `560:*` はcurrent authorityではない。
 
 - PC current authority: `1203:4865` (`page`, 1380 × 2182)
 - SP current dedicated full-page authority: **UNDETERMINED**
