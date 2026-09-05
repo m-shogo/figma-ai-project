@@ -45,7 +45,7 @@ $content = <<<HTML
     </a>
   </li>
   <li class="navigation">
-    <a aria-disabled="true" class="is-disabled" data-qa-nav="large-disabled">
+    <a aria-disabled="true" tabindex="-1" class="is-disabled" data-qa-nav="large-disabled">
       <div class="image"><img src="{$noimage}" alt="Large disabled" width="335" height="219"></div>
       <div class="content"><h2 class="title">Large disabled</h2><div class="text">URLなし</div></div>
     </a>
@@ -59,7 +59,7 @@ $content = <<<HTML
     </a>
   </li>
   <li class="navigation">
-    <a aria-disabled="true" class="is-disabled" data-qa-nav="small-disabled">
+    <a aria-disabled="true" tabindex="-1" class="is-disabled" data-qa-nav="small-disabled">
       <div class="image"><img src="{$noimage}" alt="Small disabled" width="120" height="120"></div>
       <div class="content"><h2 class="title">Small disabled</h2><div class="text">URLなし</div></div>
     </a>
