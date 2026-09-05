@@ -17,7 +17,7 @@ async function snapshot(locator) {
   return locator.evaluate((el) => {
     const rect = el.getBoundingClientRect();
     const hit = document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2);
-    return { top: rect.top, left: rect.left, width: rect.width, height: rect.height,
+    return { top: rect.top, right: rect.right, bottom: rect.bottom, left: rect.left, width: rect.width, height: rect.height,
       scrollX: window.scrollX, scrollY: window.scrollY,
       clientWidth: document.documentElement.clientWidth, scrollWidth: document.documentElement.scrollWidth,
       hitOwns: Boolean(hit && (hit === el || el.contains(hit))), focused: document.activeElement === el };
@@ -122,6 +122,55 @@ async function auditStickyShortcuts(page, label) {
   assert(afterScrollAccess.hitOwns, `${label}: sticky access pointer ownership lost after scroll`);
 }
 
+async function auditStickyContentClearance(page, label) {
+  await page.goto(targetUrl, { waitUntil: 'networkidle' });
+  const sticky = page.locator('.gf_sticky');
+  const footerBottom = page.locator('.gf_bottom');
+  const footerAccess = page.locator('.gf_access a');
+  const pageTop = page.locator('.gf_pageTop a');
+  const returnLink = page.locator('.module_pager-02 .back a');
+
+  await sticky.waitFor({ state: 'visible' });
+  await footerBottom.waitFor({ state: 'visible' });
+  await footerAccess.waitFor({ state: 'visible' });
+  await pageTop.waitFor({ state: 'visible' });
+  await returnLink.waitFor({ state: 'visible' });
+
+  await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+  await page.waitForTimeout(100);
+
+  const stickyBox = await snapshot(sticky);
+  const footerBottomBox = await snapshot(footerBottom);
+  assert(stickyBox.hitOwns, `${label}: sticky shortcut surface lost pointer ownership at document end`);
+  assert(footerBottomBox.bottom <= stickyBox.top + EPS,
+    `${label}: footer action row extends behind sticky shortcuts at document end; footer bottom ${footerBottomBox.bottom}, sticky top ${stickyBox.top}`);
+
+  for (const [name, locator] of [['footer access', footerAccess], ['Page Top', pageTop]]) {
+    const base = await snapshot(locator);
+    assert(base.bottom <= stickyBox.top + EPS,
+      `${label}: ${name} extends behind sticky shortcuts at document end; target bottom ${base.bottom}, sticky top ${stickyBox.top}`);
+    assert(base.hitOwns, `${label}: ${name} pointer center intercepted at document end`);
+    await locator.focus();
+    await page.waitForTimeout(40);
+    const focused = await snapshot(locator);
+    assert(focused.focused, `${label}: ${name} focus failed at document end`);
+    assert(focused.bottom <= stickyBox.top + EPS,
+      `${label}: ${name} moved behind sticky shortcuts when focused`);
+    assert(focused.hitOwns, `${label}: ${name} pointer ownership lost when focused at document end`);
+    assert(focused.scrollWidth <= focused.clientWidth + 1, `${label}: horizontal overflow while focusing ${name} at document end`);
+  }
+
+  await returnLink.focus();
+  await page.waitForTimeout(60);
+  const returnFocused = await snapshot(returnLink);
+  const stickyAfterReturnFocus = await snapshot(sticky);
+  assert(returnFocused.focused, `${label}: return-to-list focus failed in sticky clearance audit`);
+  assert(returnFocused.bottom <= stickyAfterReturnFocus.top + EPS,
+    `${label}: focused return-to-list is hidden behind sticky shortcuts`);
+  assert(returnFocused.hitOwns, `${label}: focused return-to-list pointer center intercepted by sticky shortcuts`);
+  assert(returnFocused.scrollWidth <= returnFocused.clientWidth + 1, `${label}: horizontal overflow after return-to-list focus`);
+}
+
 async function runViewport(label, viewport, contextOptions = {}, auditSticky = false) {
   const browser = await chromium.launch({ headless: true });
   const context = await browser.newContext({ viewport, ...contextOptions });
@@ -131,8 +180,11 @@ async function runViewport(label, viewport, contextOptions = {}, auditSticky = f
     assert(await page.locator('.module_titleSingle').count(), `${label}: Event detail title missing`);
     assert(await page.locator('.single_featured').count() === 0, `${label}: Event detail must not auto-inject archive-card thumbnail`);
     await auditReturnPager(page, label);
-    if (auditSticky) await auditStickyShortcuts(page, label);
-    console.log(`PASS ${label}: Event detail pager${auditSticky ? ' and sticky shortcut' : ''} interaction stability.`);
+    if (auditSticky) {
+      await auditStickyShortcuts(page, label);
+      await auditStickyContentClearance(page, label);
+    }
+    console.log(`PASS ${label}: Event detail pager${auditSticky ? ', sticky shortcut, and sticky-content clearance' : ''} interaction stability.`);
   } finally {
     await context.close();
     await browser.close();
