@@ -53,12 +53,24 @@ const snapshot = () => page.evaluate(({ buttonSelector, itemSelector, wrapperSel
 try {
   await page.goto(url, { waitUntil: 'networkidle' });
 
+  // The production template can legitimately place Local Navigation inside the
+  // first viewport when the page body is short. Add QA-only content before the
+  // component so this test deterministically exercises the same control at a
+  // deep, non-zero page position without changing production markup or CSS.
+  await page.evaluate(() => {
+    const nav = document.querySelector('.local_navigation');
+    if (!nav) return;
+    const spacer = document.createElement('div');
+    spacer.setAttribute('data-qa-deep-scroll-spacer', 'true');
+    spacer.style.height = '1400px';
+    spacer.style.pointerEvents = 'none';
+    nav.before(spacer);
+  });
+
   const button = page.locator(buttonSelector).first();
   await button.scrollIntoViewIfNeeded();
   await page.waitForTimeout(100);
 
-  // Put the fixture at a non-zero scroll position so open/close/reopen catches
-  // focus- or layout-driven scroll restoration rather than only top-of-page behavior.
   const initial = await snapshot();
   assert(initial, 'SP local navigation pointer fixture is missing.');
   assert(initial.scrollY > 0, `SP local navigation pointer fixture must be scrolled, got ${initial.scrollY}.`);
@@ -104,7 +116,7 @@ try {
   assert(close(finalClosed.scrollY, initial.scrollY), `SP local navigation final close changed scroll ${initial.scrollY} -> ${finalClosed.scrollY}.`);
   assert(finalClosed.pointerOwnedByButton, `SP local navigation final closed control is intercepted by ${finalClosed.hitTag}.${finalClosed.hitClass}.`);
 
-  console.log('PASS Budokan SP local navigation pointer ownership is stable through open/close/reopen at a scrolled page position.');
+  console.log('PASS Budokan SP local navigation pointer ownership is stable through open/close/reopen at a deep scrolled page position.');
 } finally {
   await context.close();
   await browser.close();
