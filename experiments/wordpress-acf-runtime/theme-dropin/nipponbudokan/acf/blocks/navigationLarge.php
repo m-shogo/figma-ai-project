@@ -11,9 +11,11 @@
             $text = get_sub_field('text');
             $url = get_sub_field('url');
             $target = get_sub_field('target');
+            $link_attribute = $url ? ' href="' . esc_url($url) . '"' : ' aria-disabled="true"';
+            $target_attribute = ($url && $target) ? ' target="_blank"' : '';
             ?>
             <li class="navigation">
-                <a href="<?php echo $url ? esc_url($url) : ''; ?>" <?php echo $target ? 'target="_blank"' : ''; ?> class="<?php echo $url ? '' : 'is-disabled'; ?>">
+                <a<?php echo $link_attribute; ?><?php echo $target_attribute; ?> class="<?php echo $url ? '' : 'is-disabled'; ?>">
                     <?php if ($image_thumb) : ?>
                         <div class="image">
                             <img src="<?php echo esc_url($image_thumb); ?>" alt="<?php echo $title ? esc_attr($title) : ''; ?>" width="335" height="219">
