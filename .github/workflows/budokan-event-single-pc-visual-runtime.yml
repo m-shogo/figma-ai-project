@@ -1,0 +1,63 @@
+name: Budokan Event Single PC Visual Runtime
+
+on:
+  pull_request:
+    paths:
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/single.php'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_visual.php'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/module/module_titleSingle.css'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/layout/global_inner.css'
+      - 'experiments/wordpress-acf-runtime/scripts/budokan-event-single-pc-visual-browser-qa.mjs'
+      - '.github/workflows/budokan-event-single-pc-visual-runtime.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Start disposable WordPress runtime using existing News archive fixture
+        env:
+          BUDOKAN_NEWS_ARCHIVE_KEEP_RUNTIME: '1'
+        run: bash experiments/wordpress-acf-runtime/scripts/budokan-news-archive-runtime-qa.sh
+
+      - name: Seed real Event detail through existing CPT and taxonomy ownership
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          term_id="$(docker compose run --rm cli term create event_cat '武道' --porcelain)"
+          event_id="$(docker compose run --rm cli post create \
+            --post_type=event \
+            --post_status=publish \
+            --post_title='日本武道館で武道（なぎなた）を体験してみよう' \
+            --post_date='2026-08-13 12:00:00' \
+            --post_content='<p>世界中から参集した柔道・空手競技の精鋭エキスパートたちが究極の技を競った大会。その開催に備え整備された日本武道館の中道場を使って体験会を実施します。</p><table><tbody><tr><th>日時</th><td>令和8年10月13日（火） 18時00分～19時30分</td></tr><tr><th>会場</th><td>日本武道館中道場</td></tr></tbody></table>' \
+            --porcelain)"
+          docker compose run --rm cli post term set "$event_id" event_cat "$term_id" --by=id >/dev/null
+          permalink="$(docker compose run --rm cli post url "$event_id")"
+          echo "BUDOKAN_EVENT_SINGLE_URL=${permalink}" >> "$GITHUB_ENV"
+          html="$(mktemp)"
+          http_code="$(curl --silent --show-error --location --max-redirs 3 --output "$html" --write-out '%{http_code}' "$permalink")"
+          [[ "$http_code" == "200" ]]
+          grep -Fq 'class="module_titleSingle"' "$html"
+          grep -Fq 'class="global_inner _content"' "$html"
+          grep -Fq 'class="module_pager-02"' "$html"
+          rm -f "$html"
+
+      - name: Run Event detail PC visual regression against current Figma authority
+        run: |
+          npm install --no-save --package-lock=false playwright@1.54.2
+          npx playwright install --with-deps chromium
+          node experiments/wordpress-acf-runtime/scripts/budokan-event-single-pc-visual-browser-qa.mjs "$BUDOKAN_EVENT_SINGLE_URL"
+
+      - name: Cleanup disposable WordPress runtime
+        if: always()
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          docker compose down -v --remove-orphans
