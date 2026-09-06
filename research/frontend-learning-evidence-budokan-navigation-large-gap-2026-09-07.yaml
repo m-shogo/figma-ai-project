@@ -11,7 +11,7 @@ records:
     summary: >-
       When a shared visual owner still cites a retired Figma source, re-fetch the current authoritative PC and SP nodes before changing spacing. Preserve
       independently different row and column rhythm instead of collapsing both axes into one generic gap, and lock the resulting contract in real runtime QA.
-    category: VISUAL
+    category: VISUAL_FIDELITY
     applicability:
       scope: PROJECT
       conditions:
