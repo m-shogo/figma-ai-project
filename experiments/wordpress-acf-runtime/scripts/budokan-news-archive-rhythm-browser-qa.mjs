@@ -30,6 +30,7 @@ async function measure(page) {
 
     return {
       viewportWidth: window.innerWidth,
+      layoutWidth: document.documentElement.clientWidth,
       documentWidth: document.documentElement.scrollWidth,
       archive: {
         left: archiveRect.left,
@@ -57,14 +58,14 @@ try {
   const sp = await measure(spPage);
   assert(sp, 'SP News archive rhythm surfaces were not found.');
   assert(close(sp.archive.left, 24), `SP archive left inset expected 24px, got ${sp.archive.left}.`);
-  assert(close(sp.viewportWidth - sp.archive.right, 24), `SP archive right inset expected 24px, got ${sp.viewportWidth - sp.archive.right}.`);
+  assert(close(sp.layoutWidth - sp.archive.right, 24), `SP archive right inset expected 24px, got ${sp.layoutWidth - sp.archive.right}.`);
   assert(close(sp.archive.width, 327), `SP archive rail expected 327px, got ${sp.archive.width}.`);
   assert(close(sp.archive.paddingTop, 48), `SP archive top inset expected 48px, got ${sp.archive.paddingTop}.`);
   assert(close(sp.archive.paddingBottom, 64), `SP archive bottom inset expected 64px, got ${sp.archive.paddingBottom}.`);
   assert(close(sp.archive.rowGap, 32), `SP archive section gap expected 32px, got ${sp.archive.rowGap}.`);
   assert(close(sp.tabToArticle, 32), `SP tab-to-article gap expected 32px, got ${sp.tabToArticle}.`);
   assert(close(sp.articleToPager, 32), `SP article-to-pager gap expected 32px, got ${sp.articleToPager}.`);
-  assert(sp.documentWidth <= sp.viewportWidth + 1, `SP horizontal overflow: document=${sp.documentWidth}, viewport=${sp.viewportWidth}.`);
+  assert(sp.documentWidth <= sp.layoutWidth + 1, `SP horizontal overflow: document=${sp.documentWidth}, layout=${sp.layoutWidth}, inner=${sp.viewportWidth}.`);
   await spContext.close();
 
   const pcContext = await browser.newContext({ viewport: { width: 1380, height: 1200 } });
@@ -72,16 +73,16 @@ try {
   await pcPage.goto(url, { waitUntil: 'networkidle' });
   const pc = await measure(pcPage);
   assert(pc, 'PC News archive rhythm surfaces were not found.');
-  const pcSideInset = (pc.viewportWidth - pc.archive.width) / 2;
+  const pcSideInset = (pc.layoutWidth - pc.archive.width) / 2;
   assert(close(pc.archive.width, 960), `PC archive rail expected 960px, got ${pc.archive.width}.`);
-  assert(close(pc.archive.left, pcSideInset), `PC archive expected centered 960px rail; left=${pc.archive.left}, expected=${pcSideInset}.`);
-  assert(close(pc.viewportWidth - pc.archive.right, pcSideInset), `PC archive expected centered 960px rail; right=${pc.viewportWidth - pc.archive.right}, expected=${pcSideInset}.`);
+  assert(close(pc.archive.left, pcSideInset), `PC archive expected centered 960px rail; left=${pc.archive.left}, expected=${pcSideInset}, layout=${pc.layoutWidth}, inner=${pc.viewportWidth}.`);
+  assert(close(pc.layoutWidth - pc.archive.right, pcSideInset), `PC archive expected centered 960px rail; right=${pc.layoutWidth - pc.archive.right}, expected=${pcSideInset}, layout=${pc.layoutWidth}, inner=${pc.viewportWidth}.`);
   assert(close(pc.archive.paddingTop, 64), `PC archive top inset expected 64px, got ${pc.archive.paddingTop}.`);
   assert(close(pc.archive.paddingBottom, 100), `PC archive bottom inset expected 100px, got ${pc.archive.paddingBottom}.`);
   assert(close(pc.archive.rowGap, 56), `PC archive section gap expected 56px, got ${pc.archive.rowGap}.`);
   assert(close(pc.tabToArticle, 56), `PC tab-to-article gap expected 56px, got ${pc.tabToArticle}.`);
   assert(close(pc.articleToPager, 56), `PC article-to-pager gap expected 56px, got ${pc.articleToPager}.`);
-  assert(pc.documentWidth <= pc.viewportWidth + 1, `PC horizontal overflow: document=${pc.documentWidth}, viewport=${pc.viewportWidth}.`);
+  assert(pc.documentWidth <= pc.layoutWidth + 1, `PC horizontal overflow: document=${pc.documentWidth}, layout=${pc.layoutWidth}, inner=${pc.viewportWidth}.`);
   await pcContext.close();
 
   console.log('PASS Budokan News archive PC/SP container rhythm QA.');
