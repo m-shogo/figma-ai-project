@@ -1,9 +1,9 @@
 @charset "utf-8";
 /* // ------------------------------
 // ナビゲーション
-// Current Figma fileKey fKYDn9ikpJk1nW7IWFtaUx
-// Large: SP 1399:18870 / PC 1157:8339
-// Title is Zen Old Mincho SemiBold 18 on both breakpoints.
+// Current Figma fileKey FKQaJDu5TZXHoCzPsfP92E
+// Large: SP 1455:5489 / PC 1145:6042
+// Title is Zen Old Mincho 18 on both breakpoints.
 // ------------------------------ */
 .block-editor_wrap,
 .editor-styles-wrapper {
@@ -83,9 +83,9 @@
                 }
             }
         }
-        /* MARK: 大 / Figma Parts Navigation master */
+        /* MARK: 大 / Current Figma Navigation Large */
         &.--large {
-            gap: 24px;
+            gap: 32px;
             align-items: stretch;
             .navigation {
                 min-width: 0;
@@ -215,7 +215,8 @@
             }
             &.--large {
                 grid-template-columns: repeat(3, minmax(0, 1fr));
-                gap: 40px;
+                column-gap: 40px;
+                row-gap: 56px;
             }
             &.--small {
                 grid-template-columns: repeat(2, 1fr);
