@@ -72,9 +72,10 @@ try {
   await pcPage.goto(url, { waitUntil: 'networkidle' });
   const pc = await measure(pcPage);
   assert(pc, 'PC News archive rhythm surfaces were not found.');
+  const pcSideInset = (pc.viewportWidth - pc.archive.width) / 2;
   assert(close(pc.archive.width, 960), `PC archive rail expected 960px, got ${pc.archive.width}.`);
-  assert(close(pc.archive.left, 210), `PC archive expected centered 960px rail; left=${pc.archive.left}.`);
-  assert(close(pc.viewportWidth - pc.archive.right, 210), `PC archive expected centered 960px rail; right=${pc.viewportWidth - pc.archive.right}.`);
+  assert(close(pc.archive.left, pcSideInset), `PC archive expected centered 960px rail; left=${pc.archive.left}, expected=${pcSideInset}.`);
+  assert(close(pc.viewportWidth - pc.archive.right, pcSideInset), `PC archive expected centered 960px rail; right=${pc.viewportWidth - pc.archive.right}, expected=${pcSideInset}.`);
   assert(close(pc.archive.paddingTop, 64), `PC archive top inset expected 64px, got ${pc.archive.paddingTop}.`);
   assert(close(pc.archive.paddingBottom, 100), `PC archive bottom inset expected 100px, got ${pc.archive.paddingBottom}.`);
   assert(close(pc.archive.rowGap, 56), `PC archive section gap expected 56px, got ${pc.archive.rowGap}.`);
