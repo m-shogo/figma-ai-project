@@ -1,0 +1,50 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: OBS-BUDOKAN-NAVIGATION-LARGE-GAP-LINEAGE
+    summary: >-
+      When a shared visual owner still cites a retired Figma source, re-fetch the current authoritative PC and SP nodes before changing spacing. Preserve
+      independently different row and column rhythm instead of collapsing both axes into one generic gap, and lock the resulting contract in real runtime QA.
+    category: VISUAL
+    applicability:
+      scope: PROJECT
+      conditions:
+        - Budokan Current Authority names one live Figma file and explicitly forbids carrying old-node measurements forward.
+        - The existing Navigation Large CSS owner still cited a retired Figma file and encoded one generic gap across axes.
+        - Current Navigation Large Figma nodes independently establish SP stack spacing and PC row/column spacing.
+        - Existing disposable WordPress and Playwright Navigation runtime can verify computed grid geometry together with pointer, focus and overflow behavior.
+      exclusions:
+        - Do not change a shared spacing owner from an old screenshot or historical audit without re-fetching the current Figma node.
+        - Do not infer equal row and column gaps when the current design establishes different axes.
+        - Do not generalize this Budokan-only observation without independent evidence.
+    promotion_state: PROJECT_ONLY
+    promotion:
+      candidate: false
+      rationale: >-
+        PR #459 re-fetched current SP 1455:5489 and PC 1145:6042, corrected Navigation Large from stale SP 24px to 32px and PC generic 40px to
+        40px columns / 56px rows, and extended the existing real WordPress + Playwright runtime. Run 34046755964 passed the production ACF Navigation
+        template semantics, computed responsive gaps, pointer/keyboard behavior, deep-scroll geometry, sticky-focus boundary and cleanup. REF001 remains
+        separately blocked at artifact upload, so the implementation PR is intentionally not merged here.
+      blocked_by:
+        - NEEDS_INDEPENDENT_REFERENCE_EVIDENCE_BEFORE_CROSS_PROJECT_PROMOTION
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-NAVIGATION-LARGE-GAP-20260907
+          kind: COMMIT
+          reference_id: REF-002-BUDOKAN
+          run_id: '34046755964'
+          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/blocks/wp-block-navigation-style.css
+          commit: 391d86abbab82566a0814d7b41c1b04caa6fead0
+          note: >-
+            The current shared Navigation CSS owner exists on so; PR #459 contains the bounded gap correction and the dedicated Navigation runtime passed.
+            No ACF field, menu owner, Form, parts.php or TOP Calendar ownership changed.
+      contradicts: []
+    notes:
+      - "Promotion review disposition requested: KEEP_PROJECT_ONLY; one-project current-Figma/runtime evidence only, no auto-promotion."
