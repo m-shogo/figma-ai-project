@@ -40,11 +40,11 @@ records:
           kind: COMMIT
           reference_id: REF-002-BUDOKAN
           run_id: '34034397086'
-          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/tab-semantics.js
+          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/common.js
           commit: 9e41ae9f5b0a7c36f4c024e852843390c94eff86
           note: >-
-            PR #457 is intentionally unmerged while REF001 artifact upload is quota-blocked; dedicated Tab runtime and all observed shared interaction
-            consumer runtimes are green.
+            common.js is the existing visual selection/panel-visibility owner retained by PR #457. The new tab-semantics.js projection layer remains on
+            that unmerged implementation PR while REF001 artifact upload is quota-blocked; dedicated Tab runtime and observed shared consumers are green.
       contradicts: []
     notes:
       - "Promotion review disposition requested: KEEP_PROJECT_ONLY; Budokan-only runtime evidence, no auto-promotion."
