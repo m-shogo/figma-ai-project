@@ -326,6 +326,12 @@
         padding-block: 64px 100px;
     }
 
+    /* Event uses the same archive mechanics as News, but its current PC Figma
+     * authority owns a 64px section rhythm rather than News' 56px rhythm. */
+    .event_archive {
+        gap: 64px;
+    }
+
     .news_tabs_archive {
         .news_tabs_list {
             display: flex;
