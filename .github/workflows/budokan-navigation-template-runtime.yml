@@ -1,0 +1,53 @@
+name: Budokan Navigation Template Runtime
+
+on:
+  pull_request:
+    paths:
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/templates/template-navigation.php'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/layout/global_inner.css'
+      - 'experiments/wordpress-acf-runtime/scripts/seed-budokan-navigation-template-qa.php'
+      - 'experiments/wordpress-acf-runtime/scripts/budokan-navigation-template-browser-qa.mjs'
+      - '.github/workflows/budokan-navigation-template-runtime.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Bootstrap disposable WordPress runtime
+        env:
+          BUDOKAN_LOCAL_NAV_KEEP_RUNTIME: '1'
+        run: bash experiments/wordpress-acf-runtime/scripts/budokan-local-nav-runtime-qa.sh
+      - name: Seed Navigation-template fixture
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          docker compose run --rm -e WP_ENVIRONMENT_TYPE=local cli eval-file /fixture/scripts/seed-budokan-navigation-template-qa.php
+      - name: Verify template is registered by WordPress
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          docker compose run --rm cli eval '$templates = wp_get_theme()->get_page_templates(); if (!isset($templates["templates/template-navigation.php"]) || $templates["templates/template-navigation.php"] !== "ナビゲーションテンプレート") { WP_CLI::error("Navigation template is not registered."); } WP_CLI::success("Navigation template registered.");'
+      - name: Install browser runtime
+        run: |
+          npm install --no-save --package-lock=false playwright@1.54.2
+          npx playwright install --with-deps chromium
+      - name: Run Navigation template PC owner QA
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          page_id="$(docker compose run --rm cli option get budokan_navigation_template_qa_page_id)"
+          qa_url="${WP_URL}/?page_id=${page_id}"
+          cd ../..
+          node experiments/wordpress-acf-runtime/scripts/budokan-navigation-template-browser-qa.mjs "$qa_url"
+      - name: Cleanup disposable WordPress runtime
+        if: always()
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          docker compose down -v --remove-orphans
