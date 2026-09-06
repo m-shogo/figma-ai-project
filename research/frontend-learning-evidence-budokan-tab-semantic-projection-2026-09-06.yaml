@@ -12,7 +12,7 @@ records:
       When an existing interactive component already owns visual selection state and panel visibility, repair missing accessibility semantics by projecting
       that proven state into ARIA and roving focus rather than replacing the interaction owner. Verify the projection at deep scroll so keyboard support
       cannot silently introduce scroll or geometry movement.
-    category: INTERACTION
+    category: RUNTIME
     applicability:
       scope: PROJECT
       conditions:
