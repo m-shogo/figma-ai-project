@@ -3,10 +3,12 @@ name: Budokan Tab Runtime
 on:
   pull_request:
     paths:
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/functions.php'
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/acf/blocks/tabContainer.php'
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/acf/blocks/tabPanel.php'
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/module/module_tab.css'
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/common.js'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/tab-semantics.js'
       - 'experiments/wordpress-acf-runtime/scripts/seed-budokan-tab-qa.php'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-tab-interaction-browser-qa.mjs'
       - '.github/workflows/budokan-tab-runtime.yml'
@@ -22,8 +24,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: PHP syntax for Budokan tab runtime fixture
-        run: php -l experiments/wordpress-acf-runtime/scripts/seed-budokan-tab-qa.php
+      - name: PHP syntax for Budokan tab runtime
+        run: |
+          php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/functions.php
+          php -l experiments/wordpress-acf-runtime/scripts/seed-budokan-tab-qa.php
 
       - name: Start disposable WordPress runtime
         env:
