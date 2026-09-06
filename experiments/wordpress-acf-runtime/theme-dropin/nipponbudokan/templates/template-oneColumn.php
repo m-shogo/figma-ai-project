@@ -10,7 +10,7 @@ global $post;
     <?php if (!post_password_required($post->ID)) :  ?>
         <section>
             <?php get_template_part('template-parts/_visual'); ?>
-            <div class="global_inner _content">
+            <div class="global_inner _content _normalPage">
                 <div class="gc_main _oneColumn">
                     <div class="block-editor_wrap">
                         <?php the_content(); ?>
