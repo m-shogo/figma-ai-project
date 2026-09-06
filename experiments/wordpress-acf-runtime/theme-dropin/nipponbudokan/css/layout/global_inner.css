@@ -7,6 +7,14 @@
     padding-inline: var(--padding-SP);
     width: 100%;
     /* transition: padding-inline var(--transition-duration); */
+    /* Current Navigation SP authority FKQaJDu5TZXHoCzPsfP92E / 1455:5489
+       owns a 327px authored rail inside the 375px viewport with 48px above
+       and 64px below the authored body. Scope that rhythm to the dedicated
+       Navigation template instead of changing every shared _content consumer. */
+    &._content._navigationPage {
+        padding-top: 48px;
+        padding-bottom: 64px;
+    }
     @media screen and (min-width: 768px) {
         max-width: calc(var(--width-base) + var(--padding-TB) * 2);
         margin-inline: auto;
