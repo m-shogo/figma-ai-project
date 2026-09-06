@@ -20,18 +20,28 @@ async function measure(page) {
     const tabs = document.querySelector('.news_tabs_archive');
     const articles = document.querySelector('.module_newsList-01');
     const pager = document.querySelector('.news_archive .news_pager');
-    if (!archive || !tabs || !articles || !pager) return null;
+    const shell = archive?.closest('.global_inner._content');
+    if (!archive || !tabs || !articles || !pager || !shell) return null;
 
     const archiveRect = archive.getBoundingClientRect();
     const tabsRect = tabs.getBoundingClientRect();
     const articlesRect = articles.getBoundingClientRect();
     const pagerRect = pager.getBoundingClientRect();
+    const shellRect = shell.getBoundingClientRect();
     const style = getComputedStyle(archive);
+    const shellStyle = getComputedStyle(shell);
+    const shellContentLeft = shellRect.left + parseFloat(shellStyle.paddingLeft);
+    const shellContentRight = shellRect.right - parseFloat(shellStyle.paddingRight);
 
     return {
       viewportWidth: window.innerWidth,
       layoutWidth: document.documentElement.clientWidth,
       documentWidth: document.documentElement.scrollWidth,
+      shell: {
+        contentLeft: shellContentLeft,
+        contentRight: shellContentRight,
+        contentWidth: shellContentRight - shellContentLeft,
+      },
       archive: {
         left: archiveRect.left,
         right: archiveRect.right,
@@ -57,8 +67,10 @@ try {
   await spPage.goto(url, { waitUntil: 'networkidle' });
   const sp = await measure(spPage);
   assert(sp, 'SP News archive rhythm surfaces were not found.');
-  assert(close(sp.archive.left, 24), `SP archive left inset expected 24px, got ${sp.archive.left}.`);
-  assert(close(sp.layoutWidth - sp.archive.right, 24), `SP archive right inset expected 24px, got ${sp.layoutWidth - sp.archive.right}.`);
+  const spShellInset = (sp.shell.contentWidth - sp.archive.width) / 2;
+  assert(close(sp.archive.left - sp.shell.contentLeft, spShellInset), `SP archive expected centered inside the authored content box; left inset=${sp.archive.left - sp.shell.contentLeft}, expected=${spShellInset}.`);
+  assert(close(sp.shell.contentRight - sp.archive.right, spShellInset), `SP archive expected symmetric content-box inset; right inset=${sp.shell.contentRight - sp.archive.right}, expected=${spShellInset}.`);
+  assert(close(sp.archive.left, 24), `SP archive page inset expected 24px, got ${sp.archive.left}.`);
   assert(close(sp.archive.width, 327), `SP archive rail expected 327px, got ${sp.archive.width}.`);
   assert(close(sp.archive.paddingTop, 48), `SP archive top inset expected 48px, got ${sp.archive.paddingTop}.`);
   assert(close(sp.archive.paddingBottom, 64), `SP archive bottom inset expected 64px, got ${sp.archive.paddingBottom}.`);
@@ -73,10 +85,11 @@ try {
   await pcPage.goto(url, { waitUntil: 'networkidle' });
   const pc = await measure(pcPage);
   assert(pc, 'PC News archive rhythm surfaces were not found.');
-  const pcSideInset = (pc.layoutWidth - pc.archive.width) / 2;
+  const pcShellInset = (pc.shell.contentWidth - pc.archive.width) / 2;
   assert(close(pc.archive.width, 960), `PC archive rail expected 960px, got ${pc.archive.width}.`);
-  assert(close(pc.archive.left, pcSideInset), `PC archive expected centered 960px rail; left=${pc.archive.left}, expected=${pcSideInset}, layout=${pc.layoutWidth}, inner=${pc.viewportWidth}.`);
-  assert(close(pc.layoutWidth - pc.archive.right, pcSideInset), `PC archive expected centered 960px rail; right=${pc.layoutWidth - pc.archive.right}, expected=${pcSideInset}, layout=${pc.layoutWidth}, inner=${pc.viewportWidth}.`);
+  assert(close(pc.shell.contentWidth, 960), `PC authored content box expected 960px, got ${pc.shell.contentWidth}.`);
+  assert(close(pc.archive.left - pc.shell.contentLeft, pcShellInset), `PC archive expected centered inside the authored content box; left inset=${pc.archive.left - pc.shell.contentLeft}, expected=${pcShellInset}.`);
+  assert(close(pc.shell.contentRight - pc.archive.right, pcShellInset), `PC archive expected symmetric content-box inset; right inset=${pc.shell.contentRight - pc.archive.right}, expected=${pcShellInset}.`);
   assert(close(pc.archive.paddingTop, 64), `PC archive top inset expected 64px, got ${pc.archive.paddingTop}.`);
   assert(close(pc.archive.paddingBottom, 100), `PC archive bottom inset expected 100px, got ${pc.archive.paddingBottom}.`);
   assert(close(pc.archive.rowGap, 56), `PC archive section gap expected 56px, got ${pc.archive.rowGap}.`);
