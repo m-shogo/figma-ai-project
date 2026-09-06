@@ -21,7 +21,7 @@
     gap: 32px;
     width: calc(100% - 8px);
     margin-inline: auto;
-    padding-block: 32px 80px;
+    padding-block: 48px 64px;
 }
 
 .news_tabs {
