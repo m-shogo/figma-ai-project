@@ -5,6 +5,7 @@ on:
     paths:
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/templates/template-navigation.php'
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/layout/global_inner.css'
+      - 'experiments/wordpress-acf-runtime/scripts/seed-budokan-stub-pages-and-menus.php'
       - 'experiments/wordpress-acf-runtime/scripts/seed-budokan-navigation-template-qa.php'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-navigation-template-browser-qa.mjs'
       - '.github/workflows/budokan-navigation-template-runtime.yml'
@@ -23,6 +24,16 @@ jobs:
         env:
           BUDOKAN_LOCAL_NAV_KEEP_RUNTIME: '1'
         run: bash experiments/wordpress-acf-runtime/scripts/budokan-local-nav-runtime-qa.sh
+      - name: Seed canonical DIRECTORY_MAP pages and menus
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          docker compose run --rm -e WP_ENVIRONMENT_TYPE=local cli eval-file /fixture/scripts/seed-budokan-stub-pages-and-menus.php
+      - name: Verify canonical Navigation template ownership
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          docker compose run --rm cli eval '$nav = get_page_by_path("budo/disciplines", OBJECT, "page"); if (!$nav) { WP_CLI::error("Canonical Navigation page missing."); } $nav_template = get_post_meta($nav->ID, "_wp_page_template", true); if ($nav_template !== "templates/template-navigation.php") { WP_CLI::error("Canonical Navigation page template mismatch: " . $nav_template); } $default = get_page_by_path("about/budokan", OBJECT, "page"); if (!$default) { WP_CLI::error("Canonical default page missing."); } $default_template = get_post_meta($default->ID, "_wp_page_template", true); if ($default_template !== "") { WP_CLI::error("Default page template ownership changed unexpectedly: " . $default_template); } $form = get_page_by_path("activities/budo/form-register", OBJECT, "page"); if (!$form) { WP_CLI::error("Canonical form page missing."); } $form_template = get_post_meta($form->ID, "_wp_page_template", true); if ($form_template !== "templates/template-form.php") { WP_CLI::error("Form template ownership changed unexpectedly: " . $form_template); } WP_CLI::success("Canonical Navigation/default/form template ownership verified.");'
       - name: Seed Navigation-template fixture
         run: |
           cd experiments/wordpress-acf-runtime
@@ -37,7 +48,7 @@ jobs:
         run: |
           npm install --no-save --package-lock=false playwright@1.54.2
           npx playwright install --with-deps chromium
-      - name: Run Navigation template PC owner QA
+      - name: Run Navigation template PC/SP owner QA
         run: |
           cd experiments/wordpress-acf-runtime
           source scripts/runtime-env.sh
