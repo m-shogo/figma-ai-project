@@ -1,6 +1,6 @@
 # Budokan backnumber dependency audit
 
-Status: current PC Figma/page-shell authority is available; production-safe Backnumber implementation remains fail-closed on both canonical monthly issue data ownership and a current dedicated SP counterpart.
+Status: current PC Figma authority is available; production-safe Backnumber implementation remains fail-closed on page-template ownership, canonical monthly issue data ownership, and a current dedicated SP counterpart.
 
 Updated: 2026-09-06
 
@@ -15,24 +15,43 @@ A live re-scan confirms:
 - the old `560:677` (`backnumber_sp`) node does **not** resolve as current authority
 - no dedicated Backnumber / Publications SP full-page frame is present among the current SP page top-level frames
 
-The current map resolves `1634:10806` as the Publications PC full-page authority. Its recorded current top-level geometry is 1380 × 6307; the previously recorded 6488px height is stale and must not be used as a current visual-QA target. This correction changes only the observed authority lineage/geometry; it does not relax the data-owner or SP-authority blockers below.
+The current map resolves `1634:10806` as the Publications PC full-page authority. Its current main container is `1687:6221`: x=170, width=1040, vertical layout, padding-top 64, padding-bottom 100. The previously recorded 6488px height and older main-container node references are stale and must not be used as current visual-QA targets.
 
 Therefore, any older note that calls `560:677` the current SP authority is stale. It may describe historical design evidence, but it must not be used for implementation or pixel-parity claims.
 
 The earlier TOP lower-banner blocker is also already resolved by PR #260. It is not an upstream dependency for Backnumber.
+
+## 2026-09-06 page-shell ownership correction
+
+Current DIRECTORY_MAP runtime ownership and LIVE Figma now expose a concrete conflict that must stay fail-closed instead of being papered over by a visual guess.
+
+`seed-budokan-stub-pages-and-menus.php` classifies `publications/budo/back` as `kind=page`. Its upsert contract assigns `kind=page` to the default WordPress template (`_wp_page_template` is an empty string), so the current disposable runtime resolves the Backnumber page through `page.php`.
+
+Current Theme `page.php` renders `.global_inner._column` with both `.gc_main` and `.gc_sub` sidebar. LIVE Figma `1634:10806`, however, shows a one-column 1040px main container (`1687:6221`) with no sidebar surface and 64px/100px top/bottom padding.
+
+Existing `templates/template-oneColumnWide.php` is structurally closer to the 1040px one-column Figma shell, but that resemblance is **not** WordPress ownership authority. Do not reassign the page template from Figma appearance alone.
+
+Accordingly:
+
+- default `page.php` is the current disposable-runtime assignment
+- current Figma proves that this default two-column shell is not a visual match for the Backnumber page shell
+- `template-oneColumnWide.php` is a reuse candidate, not an authorized owner
+- page-template ownership is `UNRESOLVED` until canonical WordPress/Human ownership confirms the intended assignment
+- no route-specific template override or CSS compensation should be introduced to hide this ownership conflict
 
 ## Current authority
 
 - Figma file: `FKQaJDu5TZXHoCzPsfP92E`.
 - Current PC full-page authority: `1634:10806` (`publications`).
 - Current SP page: `114:5409`; dedicated Backnumber counterpart: **UNDETERMINED / absent from current top-level frames**.
-- Ordinary-page owner remains `page.php` → global page shell → `the_content()` inside the existing content/sidebar layout unless WordPress assignment proves otherwise.
-- No current evidence requires a dedicated Backnumber PHP template, CPT, or new ACF field group.
-- Existing Theme Gutenberg/block styles remain the first reuse candidates.
+- Current disposable DIRECTORY_MAP runtime assigns `publications/budo/back` to default `page.php`.
+- Current Figma page shell is one-column 1040px with no sidebar, so the intended production template owner is **UNDETERMINED**.
+- No current evidence authorizes a dedicated Backnumber PHP template, route-specific override, CPT, or new ACF field group.
+- Existing Theme Gutenberg/block styles remain the first reuse candidates after page-shell ownership is resolved.
 
 ## Current PC composition evidence
 
-The current PC `publications` frame is still a composition of shared masters rather than evidence for a new page-specific system:
+The current PC `publications` frame is still a composition of shared masters rather than evidence for a new page-specific data system:
 
 - gold page title
 - body texture
@@ -45,7 +64,8 @@ The current PC `publications` frame is still a composition of shared masters rat
 
 Observed current PC geometry includes:
 
-- content body: about 1040px
+- one-column content body: 1040px
+- main top / bottom padding: 64px / 100px
 - issue header: 60px
 - cover: 160 × 226
 - image/text gap: 40px
@@ -90,9 +110,20 @@ The index/help area still does not warrant page-specific PHP/CSS from current ev
 - red caution rows → existing `ul.annotation-list`
 - section heading → existing heading block styles
 
-The page shell remains owned by Header / page visual / breadcrumb-navigation / content rail / Footer according to the assigned WordPress template.
+These are primitive-level reuse decisions only. The page shell itself is not currently closed because the runtime default-template assignment and the one-column Figma shell disagree.
 
-## Remaining blocker 1 — monthly issue data lifecycle
+## Remaining blocker 1 — page template ownership
+
+Smallest authority needed: the canonical WordPress/Human assignment for `/publications/budo/back/`.
+
+The current disposable DIRECTORY_MAP runtime says default `page.php`; the current Figma says 1040px one-column/no-sidebar. Until the intended production assignment is confirmed, do not:
+
+- switch the page to `template-oneColumnWide.php` merely because its geometry looks closer
+- add pathname conditionals to `page.php`
+- hide `.gc_sub` only for this route
+- add arbitrary width/padding compensation to make the default shell resemble Figma
+
+## Remaining blocker 2 — monthly issue data lifecycle
 
 The current inspected Figma/Theme evidence does not prove whether issue title, order URL, cover, summary, and detail destination are maintained as:
 
@@ -105,7 +136,7 @@ Do not infer a CPT or ACF repeater from visual repetition alone. Do not hard-cod
 
 Smallest authority needed: the canonical WordPress/editor/data source for one real Backnumber issue family, including title, order destination, durable cover ownership, summary, and detail destination.
 
-## Remaining blocker 2 — current SP counterpart
+## Remaining blocker 3 — current SP counterpart
 
 For exact responsive Figma closure, the current file needs either:
 
@@ -116,16 +147,17 @@ Until then, PC can be audited against current Figma, while SP remains fail-close
 
 ## Safe next gate
 
-When the data owner is known:
+When page-template and data ownership are known:
 
 1. Re-read `CURRENT_AUTHORITY.md` and re-scan the current Figma PC/SP pages.
-2. Confirm the WordPress/editor source for one real issue row before changing Theme data structures.
-3. Compose from the existing global shell and Gutenberg/block masters first.
-4. Run real WordPress runtime QA for the page.
-5. Compare PC against current `1634:10806`.
-6. For SP, use only a newly confirmed current counterpart or an explicit shared-master Human decision; otherwise keep SP parity UNDETERMINED.
-7. Add page-scoped CSS or a dedicated issue primitive only where runtime diff proves existing blocks insufficient.
-8. Record concrete causes/fixes, then clean Git/PR/CI and squash merge.
+2. Confirm the canonical WordPress page-template assignment before changing the page shell.
+3. Confirm the WordPress/editor source for one real issue row before changing Theme data structures.
+4. Compose from the existing global shell candidate and Gutenberg/block masters first.
+5. Run real WordPress runtime QA for the page.
+6. Compare PC against current `1634:10806` / main `1687:6221`.
+7. For SP, use only a newly confirmed current counterpart or an explicit shared-master Human decision; otherwise keep SP parity UNDETERMINED.
+8. Add page-scoped CSS or a dedicated issue primitive only where runtime diff proves existing blocks insufficient.
+9. Record concrete causes/fixes, then clean Git/PR/CI and squash merge.
 
 ## Reusable lessons
 
@@ -134,6 +166,7 @@ When the data owner is known:
 - A node ID that existed in an older Figma lineage is not current authority merely because an audit once called it current.
 - Current page-level re-scan must win over stale node maps when the Human changes the canonical Figma file.
 - A contextual instance must not redefine a shared component master merely because it was the latest instance inspected; inspect the shared family across PC/SP before changing a global selector.
-- Dependency audits are operational inputs. Stale blockers, stale Figma nodes, or stale geometry can actively send later agents down the wrong implementation/QA path, so they must be corrected as soon as current authority disproves them.
+- A fixture/runtime template assignment and a Figma visual shell are different authority dimensions. When they disagree, record the ownership conflict instead of choosing whichever implementation is visually convenient.
+- Dependency audits are operational inputs. Stale blockers, stale Figma nodes, stale geometry, or an unproven page-shell owner can actively send later agents down the wrong implementation/QA path, so they must be corrected as soon as current authority disproves them.
 
-No new Theme PHP/JS, ACF contract, `parts.php`, Form, Formidable, Slider, Search result UI, or Calendar work is introduced by this audit refresh. The only Theme change in the earlier contextual-list correction was restoring the shared ordered-list CSS to its current shared Figma master; this authority refresh changes no Theme code.
+No new Theme PHP/JS, ACF contract, `parts.php`, Form, Formidable, Slider, Search result UI, or Calendar work is introduced by this audit correction.
