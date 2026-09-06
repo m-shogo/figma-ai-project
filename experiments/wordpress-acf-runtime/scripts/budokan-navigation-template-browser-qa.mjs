@@ -13,11 +13,15 @@ const measure=async(page)=>page.evaluate(()=>{
   const bread=document.querySelector('.module_breadCrumb');
   if(!visual||!content||!main||!wrap||!p||!bread)return null;
   const r=e=>{const b=e.getBoundingClientRect();return{top:b.top,bottom:b.bottom,left:b.left,right:b.right,width:b.width};};
+  const contentStyle=getComputedStyle(content);
   return {
     visual:r(visual),content:r(content),main:r(main),wrap:r(wrap),p:r(p),bread:r(bread),
+    contentPaddingLeft:parseFloat(contentStyle.paddingLeft),
+    contentPaddingRight:parseFloat(contentStyle.paddingRight),
     hasSidebar:!!document.querySelector('.gc_sub'),
     hasColumnShell:!!document.querySelector('.global_inner._column'),
-    clientWidth:document.documentElement.clientWidth,scrollWidth:document.documentElement.scrollWidth
+    clientWidth:document.documentElement.clientWidth,scrollWidth:document.documentElement.scrollWidth,
+    innerWidth:window.innerWidth
   };
 });
 try {
@@ -43,7 +47,9 @@ try {
   assert(!spd.hasColumnShell,'Navigation SP template must not render the default two-column shell');
   assert(spd.scrollWidth<=spd.clientWidth+1,`SP horizontal overflow: ${spd.scrollWidth}/${spd.clientWidth}`);
   assert(near(spd.content.top,spd.visual.bottom),`SP content must start at visual bottom: ${spd.content.top}/${spd.visual.bottom}`);
-  assert(near(spd.main.width,327,1),`Navigation SP authored rail expected 327px, got ${spd.main.width}`);
+  assert(near(spd.contentPaddingLeft,24,0.1) && near(spd.contentPaddingRight,24,0.1),`Navigation SP current-Figma inline inset expected 24px/24px, got ${spd.contentPaddingLeft}px/${spd.contentPaddingRight}px`);
+  const expectedRail=spd.content.width-spd.contentPaddingLeft-spd.contentPaddingRight;
+  assert(near(spd.main.width,expectedRail,1),`Navigation SP authored rail must equal the padded content box (${expectedRail}px); got ${spd.main.width}px. viewport=${spd.innerWidth}px client=${spd.clientWidth}px`);
   assert(near(spd.p.top-spd.content.top,48,1),`Navigation SP top inset expected 48px, got ${spd.p.top-spd.content.top}`);
   assert(near(spd.content.bottom-spd.wrap.bottom,64,1),`Navigation SP bottom inset expected 64px, got ${spd.content.bottom-spd.wrap.bottom}`);
   assert(spd.bread.top>=spd.content.bottom-1,'SP breadcrumb must follow Navigation content without overlap');
