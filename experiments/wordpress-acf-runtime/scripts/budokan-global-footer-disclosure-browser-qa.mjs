@@ -168,6 +168,12 @@ try {
   const footerBaseline = await snapshot(footerDisclosure);
   assert(footerBaseline, 'SP footer navigation child disclosure fixture is missing.');
 
+  const footerButton = page.locator(footerDisclosure.buttonSelector).first();
+  const footerLinksWrap = page.locator('#global_footer .gf_links-wrap').first();
+  assert(!(await footerButton.isVisible()), 'SP footer nested-menu button unexpectedly became pointer-visible.');
+  assert(!(await footerLinksWrap.isVisible()), 'SP footer WordPress links wrapper unexpectedly became visible.');
+  assert(footerBaseline.wrapperHeight <= 1, `SP footer hidden nested wrapper must remain collapsed, got ${footerBaseline.wrapperHeight}px.`);
+
   const semanticFailures = [];
   if (globalBaseline.ariaExpanded !== 'false') semanticFailures.push(`global aria-expanded=${globalBaseline.ariaExpanded}`);
   if (footerBaseline.ariaExpanded !== 'false') semanticFailures.push(`footer aria-expanded=${footerBaseline.ariaExpanded}`);
@@ -182,10 +188,15 @@ try {
   assert(await page.locator('body').evaluate((body) => !body.classList.contains('_open-menu')), 'SP global menu did not close after disclosure interaction cycle.');
   await page.locator('#global_footer').scrollIntoViewIfNeeded();
   await page.waitForTimeout(100);
-  await auditDisclosure(footerDisclosure);
+  const footerAfterGlobalCycle = await snapshot(footerDisclosure);
+  assert(footerAfterGlobalCycle?.itemOpen === null || footerAfterGlobalCycle?.itemOpen === 'false', `SP footer hidden item changed state after global interaction, got data-open=${footerAfterGlobalCycle?.itemOpen}.`);
+  assert(footerAfterGlobalCycle?.ariaExpanded === 'false', `SP footer hidden button changed aria-expanded after global interaction, got ${footerAfterGlobalCycle?.ariaExpanded}.`);
+  assert(footerAfterGlobalCycle?.wrapperHeight <= 1, `SP footer hidden wrapper expanded after global interaction, got ${footerAfterGlobalCycle?.wrapperHeight}px.`);
+  assert(!(await footerButton.isVisible()), 'SP footer nested-menu button became pointer-visible after global interaction cycle.');
+  assert(footerAfterGlobalCycle.documentScrollWidth <= footerAfterGlobalCycle.documentClientWidth + 1, `SP footer state introduced horizontal overflow ${footerAfterGlobalCycle.documentScrollWidth}px > ${footerAfterGlobalCycle.documentClientWidth}px.`);
 
   assert(pageErrors.length === 0, `Global/Footer disclosure interaction produced page errors: ${pageErrors.join(' | ')}`);
-  console.log('PASS Budokan SP Global/Footer WordPress Menu disclosure open-close-reopen geometry, pointer ownership, keyboard stability, document-width stability, and aria-expanded synchronization QA');
+  console.log('PASS Budokan SP Global WordPress Menu disclosure open-close-reopen geometry, pointer ownership, keyboard stability, document-width stability, plus non-interactive Footer menu visibility contract QA');
 } finally {
   await browser.close();
 }
