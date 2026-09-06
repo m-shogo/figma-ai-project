@@ -1,0 +1,75 @@
+name: Budokan Event Archive Runtime
+
+on:
+  pull_request:
+    paths:
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/archive.php'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_event-archive.php'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_news-tabs.php'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_list-card.php'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_list-card_article.php'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/module/module_newsList-01.css'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/module/module_newsCard-01.css'
+      - 'experiments/wordpress-acf-runtime/scripts/budokan-event-archive-rhythm-browser-qa.mjs'
+      - '.github/workflows/budokan-event-archive-runtime.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Start disposable WordPress runtime using existing News archive fixture
+        env:
+          BUDOKAN_NEWS_ARCHIVE_KEEP_RUNTIME: '1'
+        run: bash experiments/wordpress-acf-runtime/scripts/budokan-news-archive-runtime-qa.sh
+
+      - name: Seed Event archive fixture through existing CPT and taxonomy ownership
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          declare -a labels=('武道' '書道' '研修')
+          declare -a term_ids=()
+          for label in "${labels[@]}"; do
+            term_id="$(docker compose run --rm cli term create event_cat "$label" --porcelain)"
+            term_ids+=("$term_id")
+          done
+          for index in $(seq 1 12); do
+            post_id="$(docker compose run --rm cli post create \
+              --post_type=event \
+              --post_status=publish \
+              --post_title="Budokan Event QA ${index}" \
+              --post_date="2026-08-$(printf '%02d' "$index") 12:00:00" \
+              --porcelain)"
+            term_index=$(( (index - 1) % ${#term_ids[@]} ))
+            docker compose run --rm cli post term set "$post_id" event_cat "${term_ids[$term_index]}" --by=id >/dev/null
+          done
+          html="$(mktemp)"
+          http_code="$(curl --silent --show-error --location --max-redirs 3 --output "$html" --write-out '%{http_code}' "${WP_URL}/event/")"
+          [[ "$http_code" == "200" ]]
+          grep -Fq 'class="news_archive event_archive"' "$html"
+          grep -Fq 'class="module_newsCard-01"' "$html"
+          grep -Fq 'class="module_pager-01 news_pager"' "$html"
+          rm -f "$html"
+
+      - name: Run PC Event archive browser rhythm QA
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          qa_url="${WP_URL}/event/"
+          cd ../..
+          npm install --no-save --package-lock=false playwright@1.54.2
+          npx playwright install --with-deps chromium
+          node experiments/wordpress-acf-runtime/scripts/budokan-event-archive-rhythm-browser-qa.mjs "$qa_url"
+
+      - name: Cleanup disposable WordPress runtime
+        if: always()
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          docker compose down -v --remove-orphans
