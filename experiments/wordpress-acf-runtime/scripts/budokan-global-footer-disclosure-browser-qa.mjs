@@ -61,7 +61,7 @@ const pointerClick = async (state, label) => {
 
 const auditDisclosure = async ({ label, itemSelector, buttonSelector, wrapperSelector }) => {
   const button = page.locator(buttonSelector).first();
-  await button.scrollIntoViewIfNeeded();
+  assert(await button.isVisible(), `${label} disclosure button must be visible before interaction audit.`);
   await page.waitForTimeout(100);
 
   const before = await snapshot({ itemSelector, buttonSelector, wrapperSelector });
