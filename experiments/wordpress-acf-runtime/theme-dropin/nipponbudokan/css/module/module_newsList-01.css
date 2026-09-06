@@ -206,6 +206,12 @@
     margin-top: 8px;
 }
 
+/* The News archive parent already owns its Figma section gap. Avoid stacking
+ * the shared pager's legacy 8px top margin on top of that parent rhythm. */
+.news_archive > .news_pager {
+    margin-top: 0;
+}
+
 .news_pager_numbers {
     display: flex;
     align-items: center;
