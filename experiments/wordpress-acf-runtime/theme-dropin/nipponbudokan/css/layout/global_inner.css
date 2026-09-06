@@ -8,10 +8,11 @@
     width: 100%;
     /* transition: padding-inline var(--transition-duration); */
     /* Current Navigation SP authority FKQaJDu5TZXHoCzPsfP92E / 1455:5489
-       owns a 327px authored rail inside the 375px viewport with 48px above
-       and 64px below the authored body. Scope that rhythm to the dedicated
-       Navigation template instead of changing every shared _content consumer. */
+       owns 24px inline insets with 48px above and 64px below the authored
+       body. The shared SP token remains 20px for its other consumers, so keep
+       this current-Figma correction scoped to the dedicated Navigation owner. */
     &._content._navigationPage {
+        padding-inline: 24px;
         padding-top: 48px;
         padding-bottom: 64px;
     }
