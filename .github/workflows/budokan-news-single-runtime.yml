@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/single.php'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/module/module_titleSingle.css'
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/module/module_pager-02.css'
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/module/module_breadCrumb.css'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-news-single-runtime-qa.sh'
