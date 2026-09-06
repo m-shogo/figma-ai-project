@@ -12,6 +12,7 @@ on:
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/module/module_newsList-01.css'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-news-archive-runtime-qa.sh'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-news-archive-browser-qa.mjs'
+      - 'experiments/wordpress-acf-runtime/scripts/budokan-news-archive-rhythm-browser-qa.mjs'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-news-archive-interaction-browser-qa.mjs'
       - 'experiments/budokan-wordpress/learning-notes/2026-08-31-news-archive-master.md'
       - '.github/workflows/budokan-news-archive-runtime.yml'
@@ -41,6 +42,7 @@ jobs:
           npm install --no-save --package-lock=false playwright@1.54.2
           npx playwright install --with-deps chromium
           node experiments/wordpress-acf-runtime/scripts/budokan-news-archive-browser-qa.mjs "$qa_url"
+          node experiments/wordpress-acf-runtime/scripts/budokan-news-archive-rhythm-browser-qa.mjs "$qa_url"
           node experiments/wordpress-acf-runtime/scripts/budokan-news-archive-interaction-browser-qa.mjs "$qa_url"
 
       - name: Cleanup disposable WordPress runtime

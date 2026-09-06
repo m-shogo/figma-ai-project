@@ -21,7 +21,7 @@
     gap: 32px;
     width: calc(100% - 8px);
     margin-inline: auto;
-    padding-block: 32px 80px;
+    padding-block: 48px 64px;
 }
 
 .news_tabs {
@@ -204,6 +204,12 @@
     width: 100%;
     min-height: 40px;
     margin-top: 8px;
+}
+
+/* The News archive parent already owns its Figma section gap. Avoid stacking
+ * the shared pager's legacy 8px top margin on top of that parent rhythm. */
+.news_archive > .news_pager {
+    margin-top: 0;
 }
 
 .news_pager_numbers {
