@@ -249,7 +249,7 @@ window.addEventListener('resize', setVw);
 
 //     // ナビ内リンクを抽出して正規化
 //     const getNavLinks = () =>
-//       $('a', $nav)
+//       $('a', nav)
 //         .toArray()
 //         .map((el) => {
 //           const $link = $(el);
@@ -536,7 +536,7 @@ window.addEventListener('resize', setVw);
     // ブレークポイントを跨いだときに不要なクラスを削除
     let lastWidthForBreakpoint = null;
     $(window).on('load resize', function () {
-      const currentWidth = $(window).width();
+      const currentWidth = window.innerWidth;
       const wasPcOrOver = lastWidthForBreakpoint !== null && lastWidthForBreakpoint >= headerBreakpointMin;
       const isPcOrOver = currentWidth >= headerBreakpointMin;
       if (lastWidthForBreakpoint !== null && wasPcOrOver !== isPcOrOver) {
@@ -628,27 +628,11 @@ window.addEventListener('resize', setVw);
     // );
     // // アーカイブナビゲーション
     // $('.an_links-01 > li > .anl_title').on('click', function () {
-    //   $(this).next().toggleClass('_open').slideToggle(400);
-    //   $(this).toggleClass('_open');
-    // });
-    // // アーカイブナビゲーション枠外クリック時に閉じる
-    // $(document).on('touchstart click', function (event) {
-    //   if (!$(event.target).closest('.an_links-01').length) {
-    //     $('.an_links-01 > li > .anl_title')
-    //       .removeClass('_open')
-    //       .next('.anl_wrapper')
-    //       .removeClass('_open')
-    //       .slideUp(400)
-    //       .find('.anl_button, .anl_wrapper')
-    //       .removeClass('_open')
-    //       .siblings('.anl_wrapper')
-    //       .slideUp(400);
-    //   } else {
-    //   }
+    //   $(this).next('.anl_list').slideToggle(300);
     // });
     // ウィンドウ幅によってクラス付与
     $(window).on('load resize', function () {
-      const w = $(window).width();
+      const w = window.innerWidth;
       if (w < 768) {
         $('html').addClass('_sp').removeClass('_pc _tablet');
       } else if (w < 1024) {
@@ -787,7 +771,7 @@ window.addEventListener('resize', setVw);
     const headerBreakpointMin = 768;
     let lastWidthForContentFixedBreakpoint = null;
     $(window).on('load resize', function () {
-      const currentWidth = $(window).width();
+      const currentWidth = window.innerWidth;
       const wasPcOrOver = lastWidthForContentFixedBreakpoint !== null && lastWidthForContentFixedBreakpoint >= headerBreakpointMin;
       const isPcOrOver = currentWidth >= headerBreakpointMin;
       if (lastWidthForContentFixedBreakpoint !== null && wasPcOrOver !== isPcOrOver) {
