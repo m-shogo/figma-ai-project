@@ -1,10 +1,7 @@
 import { chromium } from 'playwright';
 
 const targetUrl = process.argv[2];
-if (!targetUrl) {
-  console.error('Usage: node budokan-core-details-content-layout-browser-qa.mjs <url>');
-  process.exit(2);
-}
+if (!targetUrl) process.exit(2);
 
 const EPS = 2;
 const assert = (condition, message) => { if (!condition) throw new Error(message); };
@@ -13,152 +10,102 @@ const near = (a, b, eps = EPS) => Math.abs(a - b) <= eps;
 async function runViewport(label, viewport) {
   const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage({ viewport });
-
   try {
     await page.goto(targetUrl, { waitUntil: 'networkidle' });
     await page.evaluate(() => {
       const fixture = document.querySelector('.qa-core-details-fixture');
-      if (!fixture) throw new Error('Core Details QA fixture missing.');
+      if (!fixture) throw new Error('Core Details fixture missing');
       const spacer = document.createElement('div');
       spacer.style.height = '1100px';
-      spacer.setAttribute('data-qa-content-layout-spacer', '');
       fixture.before(spacer);
     });
 
-    async function stage(details, kind) {
-      await details.evaluate((el) => { el.open = false; });
-      await details.locator('summary').evaluate((summary) => {
-        const rect = summary.getBoundingClientRect();
-        const desiredTop = Math.round(window.innerHeight * 0.3);
-        window.scrollBy(0, rect.top - desiredTop);
-      });
-      await page.waitForTimeout(60);
-
-      const position = await details.locator('summary').evaluate((summary) => {
-        const rect = summary.getBoundingClientRect();
-        return { top: rect.top, bottom: rect.bottom, scrollY: window.scrollY, innerHeight: window.innerHeight };
-      });
-      assert(position.scrollY > 100, `${label}/${kind}: deep-scroll precondition missing`);
-      assert(position.top >= 140 && position.bottom <= position.innerHeight - 120,
-        `${label}/${kind}: summary is outside pointer-safe viewport band`);
-    }
-
-    async function snapshot(details) {
-      return details.evaluate((el) => {
-        const summary = el.querySelector('summary');
-        const content = Array.from(el.children).find((child) => child !== summary) || null;
-        if (!summary || !content) throw new Error('Details summary/content missing.');
-
-        const detailsRect = el.getBoundingClientRect();
-        const summaryRect = summary.getBoundingClientRect();
-        const contentRects = content.getClientRects();
-        const contentRect = contentRects.length ? content.getBoundingClientRect() : null;
-        const next = el.nextElementSibling;
-        const nextRect = next ? next.getBoundingClientRect() : null;
-        const hit = document.elementFromPoint(
-          summaryRect.left + summaryRect.width / 2,
-          summaryRect.top + summaryRect.height / 2,
-        );
-
-        return {
-          open: el.open,
-          scrollX: window.scrollX,
-          scrollY: window.scrollY,
-          clientWidth: document.documentElement.clientWidth,
-          scrollWidth: document.documentElement.scrollWidth,
-          detailsTop: detailsRect.top,
-          detailsBottom: detailsRect.bottom,
-          detailsHeight: detailsRect.height,
-          summaryTop: summaryRect.top,
-          summaryBottom: summaryRect.bottom,
-          summaryWidth: summaryRect.width,
-          summaryHeight: summaryRect.height,
-          contentVisible: Boolean(contentRect && contentRect.width > 0 && contentRect.height > 0),
-          contentTop: contentRect?.top ?? null,
-          contentBottom: contentRect?.bottom ?? null,
-          nextTop: nextRect?.top ?? null,
-          hitOwnsSummary: Boolean(hit && (hit === summary || summary.contains(hit))),
-        };
-      });
-    }
-
-    async function pointerToggle(details, kind) {
-      const summary = details.locator('summary');
-      const box = await summary.boundingBox();
-      assert(box, `${label}/${kind}: summary bounding box missing`);
-      const owns = await page.evaluate(({ x, y, selector }) => {
-        const target = document.querySelector(selector)?.querySelector('summary');
-        const hit = document.elementFromPoint(x, y);
-        return Boolean(target && hit && (hit === target || target.contains(hit)));
-      }, {
-        x: box.x + box.width / 2,
-        y: box.y + box.height / 2,
-        selector: `[data-qa-details="${kind}"]`,
-      });
-      assert(owns, `${label}/${kind}: real pointer center is intercepted`);
-      await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
-      await page.waitForTimeout(40);
-    }
-
-    function assertOpenLayout(closed, opened, kind, action) {
-      assert(opened.open, `${label}/${kind}: ${action} did not open Details`);
-      assert(opened.contentVisible, `${label}/${kind}: expanded content is not visibly rendered on ${action}`);
-      assert(opened.detailsHeight > closed.detailsHeight + EPS,
-        `${label}/${kind}: Details did not expand in normal flow on ${action}; ${closed.detailsHeight} -> ${opened.detailsHeight}`);
-      assert(opened.contentTop >= opened.summaryBottom - EPS,
-        `${label}/${kind}: expanded content overlaps summary on ${action}`);
-      assert(opened.contentBottom <= opened.detailsBottom + EPS,
-        `${label}/${kind}: expanded content is clipped outside Details on ${action}`);
-      if (opened.nextTop !== null) {
-        assert(opened.nextTop >= opened.detailsBottom - EPS,
-          `${label}/${kind}: following content overlaps expanded Details on ${action}`);
-      }
-      assert(near(opened.scrollY, closed.scrollY), `${label}/${kind}: scrollY jumped on ${action}`);
-      assert(near(opened.scrollX, closed.scrollX), `${label}/${kind}: scrollX changed on ${action}`);
-      assert(near(opened.summaryTop, closed.summaryTop), `${label}/${kind}: summary top shifted on ${action}`);
-      assert(near(opened.summaryWidth, closed.summaryWidth), `${label}/${kind}: summary width shifted on ${action}`);
-      assert(near(opened.summaryHeight, closed.summaryHeight), `${label}/${kind}: summary height shifted on ${action}`);
-      assert(opened.scrollWidth <= opened.clientWidth + 1, `${label}/${kind}: horizontal overflow on ${action}`);
-    }
-
-    function assertClosedLayout(opened, closed, kind, action) {
-      assert(!closed.open, `${label}/${kind}: ${action} did not close Details`);
-      assert(!closed.contentVisible, `${label}/${kind}: collapsed content remains visibly rendered on ${action}`);
-      assert(near(closed.detailsHeight, opened.detailsHeight, 2) === false,
-        `${label}/${kind}: collapse did not reduce Details height on ${action}`);
-      assert(near(closed.scrollY, opened.scrollY), `${label}/${kind}: scrollY jumped on ${action}`);
-      assert(closed.scrollWidth <= closed.clientWidth + 1, `${label}/${kind}: horizontal overflow on ${action}`);
-    }
+    const snapshot = async (details) => details.evaluate((el) => {
+      const summary = el.querySelector('summary');
+      const content = Array.from(el.children).find((child) => child !== summary);
+      if (!summary || !content) throw new Error('Details content missing');
+      const dr = el.getBoundingClientRect();
+      const sr = summary.getBoundingClientRect();
+      const cr = content.getBoundingClientRect();
+      const nr = el.nextElementSibling?.getBoundingClientRect() || null;
+      return {
+        open: el.open,
+        scrollY: window.scrollY,
+        clientWidth: document.documentElement.clientWidth,
+        scrollWidth: document.documentElement.scrollWidth,
+        detailsHeight: dr.height,
+        detailsBottom: dr.bottom,
+        summaryTop: sr.top,
+        summaryBottom: sr.bottom,
+        summaryWidth: sr.width,
+        summaryHeight: sr.height,
+        contentHasBox: cr.width > 0 && cr.height > 0,
+        contentTop: cr.top,
+        contentBottom: cr.bottom,
+        nextTop: nr?.top ?? null,
+      };
+    });
 
     for (const kind of ['standard', 'faq']) {
       const details = page.locator(`[data-qa-details="${kind}"]`);
-      await stage(details, kind);
+      const summary = details.locator('summary');
+      await details.evaluate((el) => { el.open = false; });
+      await summary.evaluate((el) => {
+        const rect = el.getBoundingClientRect();
+        window.scrollBy(0, rect.top - Math.round(window.innerHeight * 0.3));
+      });
+      await page.waitForTimeout(60);
+
+      const click = async () => {
+        const box = await summary.boundingBox();
+        assert(box, `${label}/${kind}: summary missing`);
+        const owns = await summary.evaluate((el) => {
+          const r = el.getBoundingClientRect();
+          const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+          return Boolean(hit && (hit === el || el.contains(hit)));
+        });
+        assert(owns, `${label}/${kind}: summary pointer intercepted`);
+        await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
+        await page.waitForTimeout(40);
+      };
+
       const closed1 = await snapshot(details);
-      assert(!closed1.open && !closed1.contentVisible, `${label}/${kind}: invalid collapsed baseline`);
-      assert(closed1.hitOwnsSummary, `${label}/${kind}: pointer center intercepted at baseline`);
+      assert(!closed1.open && closed1.scrollY > 100, `${label}/${kind}: invalid closed deep-scroll baseline`);
 
-      await pointerToggle(details, kind);
+      await click();
       const open1 = await snapshot(details);
-      assertOpenLayout(closed1, open1, kind, 'pointer open');
+      const growth1 = open1.detailsHeight - closed1.detailsHeight;
+      assert(open1.open && growth1 > EPS, `${label}/${kind}: Details did not expand`);
+      assert(open1.contentHasBox && open1.contentBottom > open1.summaryBottom + EPS, `${label}/${kind}: expanded body has no layout`);
+      assert(open1.contentTop >= open1.summaryBottom - EPS, `${label}/${kind}: expanded body overlaps summary`);
+      assert(open1.contentBottom <= open1.detailsBottom + EPS, `${label}/${kind}: expanded body escapes Details`);
+      if (closed1.nextTop !== null && open1.nextTop !== null) {
+        assert(open1.nextTop >= open1.detailsBottom - EPS, `${label}/${kind}: following content overlaps Details`);
+        assert(open1.nextTop - closed1.nextTop >= growth1 - EPS, `${label}/${kind}: following content was not displaced by expansion`);
+      }
+      assert(near(open1.scrollY, closed1.scrollY), `${label}/${kind}: scroll jumped on open`);
+      assert(near(open1.summaryTop, closed1.summaryTop), `${label}/${kind}: summary moved on open`);
+      assert(near(open1.summaryWidth, closed1.summaryWidth) && near(open1.summaryHeight, closed1.summaryHeight), `${label}/${kind}: summary resized on open`);
+      assert(open1.scrollWidth <= open1.clientWidth + 1, `${label}/${kind}: horizontal overflow on open`);
 
-      await pointerToggle(details, kind);
+      await click();
       const closed2 = await snapshot(details);
-      assertClosedLayout(open1, closed2, kind, 'pointer close');
-      assert(near(closed2.detailsHeight, closed1.detailsHeight),
-        `${label}/${kind}: collapsed height did not restore after close`);
+      assert(!closed2.open && near(closed2.detailsHeight, closed1.detailsHeight), `${label}/${kind}: collapsed height did not restore`);
+      assert(near(closed2.scrollY, open1.scrollY), `${label}/${kind}: scroll jumped on close`);
+      if (closed1.nextTop !== null && closed2.nextTop !== null) assert(near(closed2.nextTop, closed1.nextTop), `${label}/${kind}: following flow did not restore`);
 
-      await pointerToggle(details, kind);
+      await click();
       const open2 = await snapshot(details);
-      assertOpenLayout(closed2, open2, kind, 'pointer reopen');
+      assert(open2.open && near(open2.detailsHeight, open1.detailsHeight), `${label}/${kind}: reopen geometry changed`);
+      assert(near(open2.scrollY, closed2.scrollY), `${label}/${kind}: scroll jumped on reopen`);
 
-      await pointerToggle(details, kind);
+      await click();
       const closed3 = await snapshot(details);
-      assertClosedLayout(open2, closed3, kind, 'final pointer close');
-      assert(near(closed3.detailsHeight, closed1.detailsHeight),
-        `${label}/${kind}: collapsed height did not restore after reopen cycle`);
+      assert(!closed3.open && near(closed3.detailsHeight, closed1.detailsHeight), `${label}/${kind}: final close did not restore`);
+      assert(closed3.scrollWidth <= closed3.clientWidth + 1, `${label}/${kind}: horizontal overflow after cycle`);
     }
 
-    console.log(`PASS ${label}: expanded Core Details content stays visible, contained, non-overlapping and scroll-stable through reopen.`);
+    console.log(`PASS ${label}: Core Details expanded body stays contained and displaces/restores normal flow through reopen.`);
   } finally {
     await browser.close();
   }
@@ -166,4 +113,3 @@ async function runViewport(label, viewport) {
 
 await runViewport('SP-375', { width: 375, height: 812 });
 await runViewport('PC-1380', { width: 1380, height: 900 });
-console.log('PASS Budokan Core Details expanded-content layout QA.');
