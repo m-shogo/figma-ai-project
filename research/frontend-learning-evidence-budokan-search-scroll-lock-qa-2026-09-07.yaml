@@ -10,7 +10,7 @@ records:
   - learning_id: OBS-BUDOKAN-SEARCH-SCROLL-LOCK-QA
     summary: >-
       When a site freezes the background by saving the current scroll position and moving the body with a negative top offset, an overlay QA must not require window.scrollY itself to remain equal while the lock is active. During the locked state, verify the user-visible background geometry, document width, overflow, focus and pointer ownership; after close, verify that the saved document scroll position is restored.
-    category: QA
+    category: RUNTIME
     applicability:
       scope: PROJECT
       conditions:
