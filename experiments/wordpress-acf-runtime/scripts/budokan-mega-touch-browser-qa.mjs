@@ -75,6 +75,8 @@ try {
   const gutterBefore=await page.evaluate(() => ({
     innerWidth: window.innerWidth,
     clientWidth: document.documentElement.clientWidth,
+    scrollWidth: document.documentElement.scrollWidth,
+    bodyScrollWidth: document.body.scrollWidth,
     jqueryWidth: window.jQuery ? window.jQuery(window).width() : null,
     cssPc: window.matchMedia('(min-width: 768px)').matches,
     htmlClass: document.documentElement.className,
@@ -108,7 +110,13 @@ try {
   if (await first.evaluate(el=>!el.classList.contains('_touchOpen'))) throw new Error(`JS closed a PC touch mega while CSS remained PC: ${JSON.stringify({gutterBefore,gutterAfter})}`);
   if ((await firstButton.getAttribute('aria-expanded')) !== 'true') throw new Error('Scrollbar-only width delta left touch mega aria-expanded stale.');
   if (await page.evaluate(()=>document.documentElement.classList.contains('_sp'))) throw new Error(`JS projected SP state while authoritative CSS remained PC: ${JSON.stringify(gutterAfter)}`);
-  if (gutterAfter.scrollWidth > gutterAfter.clientWidth + 1) throw new Error(`Horizontal overflow during scrollbar breakpoint audit: ${JSON.stringify(gutterAfter)}`);
+  // This artificial 780px PC-side probe intentionally lands below the Theme's
+  // established 1280px PC body minimum. Do not misclassify that pre-existing PC
+  // shell overflow as a mega interaction defect; require the resize/open cycle
+  // not to create any additional document/body overflow beyond its baseline.
+  if (gutterAfter.scrollWidth > gutterBefore.scrollWidth + 1 || gutterAfter.bodyScrollWidth > gutterBefore.bodyScrollWidth + 1) {
+    throw new Error(`Scrollbar breakpoint audit introduced additional overflow: ${JSON.stringify({gutterBefore,gutterAfter})}`);
+  }
 
   console.log('PASS Budokan PC touch Mega interaction stability');
 } finally { await context.close(); await browser.close(); }
