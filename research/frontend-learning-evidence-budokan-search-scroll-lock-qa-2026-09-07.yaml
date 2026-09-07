@@ -37,10 +37,10 @@ records:
           kind: COMMIT
           reference_id: REF-002-BUDOKAN
           run_id: '34081179764'
-          path: experiments/wordpress-acf-runtime/scripts/budokan-search-backdrop-close-browser-qa.mjs
+          path: .github/workflows/budokan-top-fv-runtime.yml
           commit: 8cc13ac265880414bba6e8115568a0c149342282
           note: >-
-            PR #468 is QA/CI-only. The corrected runtime proves a visible #overlay pointer-owned close path at deep scroll on SP and PC, post-animation .ms_input focus without background geometry movement, reopen behavior, and restoration of the saved document scroll position after both backdrop closes. No Theme PHP/CSS/JS, WordPress Menu ownership or ACF schema changed.
+            PR #468 is QA/CI-only. The corrected runtime proves a visible #overlay pointer-owned close path at deep scroll on SP and PC, post-animation .ms_input focus without background geometry movement, reopen behavior, and restoration of the saved document scroll position after both backdrop closes. The cited workflow path already exists on the base branch and is the runtime owner extended by PR #468 to execute the new browser QA; the new script itself remains unmerged in PR #468. No Theme PHP/CSS/JS, WordPress Menu ownership or ACF schema changed.
       contradicts: []
     notes:
       - "Promotion review disposition requested: KEEP_PROJECT_ONLY; evidence is limited to the Budokan project and does not justify cross-project auto-promotion."
