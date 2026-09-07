@@ -511,7 +511,7 @@
             font-size: 20px;
             line-height: 1.15;
             letter-spacing: 0.1em;
-            writing-mode: vertical-rl;
+            writing-mode: horizontal-tb;
             img {
                 width: 28px;
                 height: 21px;
