@@ -1,0 +1,66 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: OBS-BUDOKAN-TOP-SLIDER-REDUCED-MOTION
+    summary: >-
+      An autoplaying hero slider should preserve its existing cadence for users with no motion preference while honoring
+      prefers-reduced-motion by stopping automatic slide advancement and removing the transition duration. Real-browser QA for
+      this boundary must exercise the production slider initializer with a deterministic multi-slide fixture and must not alter
+      production content ownership merely to make the test possible.
+    category: INTERACTION
+    applicability:
+      scope: PROJECT
+      conditions:
+        - The Budokan TOP hero uses the Theme-owned Swiper initializer in js/home.js.
+        - More than one production slide may exist through the already-authorized ACF Pro TOP slider repeater.
+        - Browser QA must verify both no-preference and reduce media states against the same production initializer.
+      exclusions:
+        - Do not invent a new motion system or new ACF/content owner for Reduced Motion support.
+        - Do not infer Reduced Motion behavior for unrelated sliders, tabs, menus, or modal transitions from this one Budokan TOP case.
+        - A disposable WordPress fallback fixture is test-only and must not become production content.
+        - Same-project confirmation is not independent evidence for cross-project promotion.
+    promotion_state: PROJECT_ONLY
+    promotion:
+      candidate: false
+      rationale: >-
+        PR #476 found that the Budokan TOP FV kept a 3000ms autoplay cadence and 1000ms fade even when the browser requested
+        reduced motion. The bounded production change preserves that behavior for no-preference, but disables autoplay and uses
+        zero transition duration for reduce. Budokan TOP FV Runtime 34153675905 passed the real Theme front-page runtime, existing
+        SP/PC geometry checks, the new Reduced Motion browser QA, overlay stability, header state stability, footer geometry, and
+        fallback navigation checks. Evidence is still project-specific and the PR remains unmerged while a separate TOP Events
+        consumer check is investigated.
+      blocked_by:
+        - NEEDS_INDEPENDENT_REFERENCE_EVIDENCE_BEFORE_CROSS_PROJECT_PROMOTION
+        - PR_476_NOT_YET_MERGED
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-TOP-SLIDER-REDUCED-MOTION-20260908
+          kind: PULL_REQUEST
+          reference_id: REF-002-BUDOKAN
+          run_id: '34153675905'
+          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/home.js
+          commit: bde45505b07aaedd9ef52e48d2907a0ce2bd48de
+          note: >-
+            PR #476 current head passed Budokan TOP FV Runtime after a QA-only fixture timing correction. The browser test checks
+            actual Swiper params and index behavior under no-preference and reduce while also asserting stable document width,
+            scroll position, and horizontal overflow.
+        - evidence_id: EV-BUDOKAN-TOP-SLIDER-FIXTURE-TIMING-20260908
+          kind: CI_CORRECTION
+          reference_id: REF-002-BUDOKAN
+          run_id: '34153495579'
+          path: experiments/wordpress-acf-runtime/scripts/budokan-top-slider-motion-browser-qa.mjs
+          commit: bde45505b07aaedd9ef52e48d2907a0ce2bd48de
+          note: >-
+            The first browser QA failed because its init fixture attempted to observe document.documentElement before that node was
+            available. Moving the test-only clone to a DOMContentLoaded listener, which still executes before the Theme's
+            window.load slider initialization, fixed the fixture without changing production behavior.
+      contradicts: []
+    notes:
+      - "Promotion review disposition 2026-09-08: KEEP_PROJECT_ONLY; Budokan-only evidence, no auto-promotion."
