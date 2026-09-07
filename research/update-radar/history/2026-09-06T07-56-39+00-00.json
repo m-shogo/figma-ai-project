@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-07T08:21:52+00:00",
+  "generated_at": "2026-09-06T07:56:39+00:00",
   "company_policy": {
     "path": "",
     "policy_id": "",
@@ -25,7 +25,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://www.figma.com/release-notes/",
-      "fetched_at": "2026-09-07T08:21:40+00:00",
+      "fetched_at": "2026-09-06T07:56:28+00:00",
       "fingerprint": "0a62abb6fc249835bb9c6d38b3e3eeb7138ca00bd8511da346eaea26d1576e2c",
       "title": "Figma product news and release notes",
       "items": [],
@@ -81,7 +81,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://help.figma.com/hc/en-us/articles/360040451373-Guide-to-auto-layout",
-      "fetched_at": "2026-09-07T08:21:40+00:00",
+      "fetched_at": "2026-09-06T07:56:29+00:00",
       "fingerprint": "9f549da5798e1af9cdcdd2914ad0e3c97206f93a17fa5e0fec762bfedad6baaf",
       "title": "Guide to auto layout – Figma Learn - Help Center",
       "items": [],
@@ -128,7 +128,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://help.figma.com/hc/en-us/articles/42031586813719-Use-auto-layout-with-CSS-Flexbox-in-mind",
-      "fetched_at": "2026-09-07T08:21:41+00:00",
+      "fetched_at": "2026-09-06T07:56:29+00:00",
       "fingerprint": "d020c071cd55337124a0eb332e13963fedae93b2060f82601c49ed5d112727b1",
       "title": "Use auto layout with CSS Flexbox in mind – Figma Learn - Help Center",
       "items": [],
@@ -172,7 +172,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://help.figma.com/hc/en-us/articles/31289469907863-Use-the-grid-auto-layout-flow",
-      "fetched_at": "2026-09-07T08:21:41+00:00",
+      "fetched_at": "2026-09-06T07:56:29+00:00",
       "fingerprint": "03384770b3c24260fa6d9236adeff4bc52c6aafded19f80142466e0d8a97f547",
       "title": "Use the grid auto layout flow – Figma Learn - Help Center",
       "items": [],
@@ -218,7 +218,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://help.figma.com/hc/en-us/articles/360039956634-Explore-text-properties",
-      "fetched_at": "2026-09-07T08:21:41+00:00",
+      "fetched_at": "2026-09-06T07:56:29+00:00",
       "fingerprint": "11a346ec6e477a97357df666f65cbb9683a7672645eb562c9e7262389e9c9888",
       "title": "Explore text properties – Figma Learn - Help Center",
       "items": [],
@@ -264,7 +264,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://help.figma.com/hc/en-us/articles/13402894554519-Export-formats-and-settings",
-      "fetched_at": "2026-09-07T08:21:41+00:00",
+      "fetched_at": "2026-09-06T07:56:29+00:00",
       "fingerprint": "755ecf3b4213c87c4d710c86df15b92e995a84d93bf92f897e28aa250ab673f9",
       "title": "Export formats and settings for static designs – Figma Learn - Help Center",
       "items": [],
@@ -314,7 +314,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://help.figma.com/hc/en-us/articles/360040675194-Crop-an-image",
-      "fetched_at": "2026-09-07T08:21:41+00:00",
+      "fetched_at": "2026-09-06T07:56:29+00:00",
       "fingerprint": "337a368ec089f33c3016eb0ab509a362218876dc482c52331c2cfd4494e38c31",
       "title": "Crop an image – Figma Learn - Help Center",
       "items": [],
@@ -358,7 +358,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://help.figma.com/hc/en-us/articles/27882809912471-Variables-in-Dev-Mode",
-      "fetched_at": "2026-09-07T08:21:41+00:00",
+      "fetched_at": "2026-09-06T07:56:30+00:00",
       "fingerprint": "34233ed673437c4cdeb4c81ec6d91ed46c6f46d0c676fa362a86d921cdfe2c12",
       "title": "Variables in Dev Mode – Figma Learn - Help Center",
       "items": [],
@@ -401,7 +401,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://developers.figma.com/docs/figma-mcp-server/",
-      "fetched_at": "2026-09-07T08:21:42+00:00",
+      "fetched_at": "2026-09-06T07:56:30+00:00",
       "fingerprint": "e9a3bfce460a7b85bc81ecff56f578994700766f0213d5680f51a93a28657b16",
       "title": "Introduction | Developer Docs",
       "items": [],
@@ -442,7 +442,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://developers.figma.com/docs/figma-mcp-server/tools-and-prompts/",
-      "fetched_at": "2026-09-07T08:21:42+00:00",
+      "fetched_at": "2026-09-06T07:56:30+00:00",
       "fingerprint": "740f9a3141d48005a63178c1dbf706cc3650d45fb5a6a2d7b35321fa0699d283",
       "title": "Tools and prompts | Developer Docs",
       "items": [],
@@ -491,7 +491,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/figma/code-connect/releases?per_page=12",
-      "fetched_at": "2026-09-07T08:21:42+00:00",
+      "fetched_at": "2026-09-06T07:56:30+00:00",
       "fingerprint": "4138a6aa25ab473e046199584d187355d447f4d52218b68a7f4ae84eb8ec9686",
       "title": "Code Connect 2.0.0",
       "items": [
@@ -649,7 +649,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/modelcontextprotocol/modelcontextprotocol/releases?per_page=12",
-      "fetched_at": "2026-09-07T08:21:42+00:00",
+      "fetched_at": "2026-09-06T07:56:31+00:00",
       "fingerprint": "98a021f7b460f9a3980efeb31c5af68395d6c2beaa5c809f0bd640ab3c83d210",
       "title": "2026-07-28",
       "items": [
@@ -769,7 +769,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://modelcontextprotocol.io/specification/latest",
-      "fetched_at": "2026-09-07T08:21:43+00:00",
+      "fetched_at": "2026-09-06T07:56:31+00:00",
       "fingerprint": "2f2193562ed6eb0875860a1c577b9bfe60297b23515272e39d541a425c1ea745",
       "title": "Specification - Model Context Protocol",
       "items": [],
@@ -803,7 +803,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://openai.com/products/release-notes/",
-      "fetched_at": "2026-09-07T08:21:43+00:00",
+      "fetched_at": "2026-09-06T07:56:31+00:00",
       "fingerprint": "",
       "title": "",
       "items": [],
@@ -836,7 +836,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://help.openai.com/en/articles/11428266-codex-changelog/",
-      "fetched_at": "2026-09-07T08:21:43+00:00",
+      "fetched_at": "2026-09-06T07:56:31+00:00",
       "fingerprint": "",
       "title": "",
       "items": [],
@@ -865,7 +865,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/anthropics/claude-code/releases?per_page=12",
-      "fetched_at": "2026-09-07T08:21:43+00:00",
+      "fetched_at": "2026-09-06T07:56:31+00:00",
       "fingerprint": "7e62da2c2f465211780e48795e436ce1ecce355cebac3bc968e19f7a8100eb3c",
       "title": "v2.1.263",
       "items": [
@@ -1012,8 +1012,8 @@
         "browser"
       ],
       "error": "",
-      "previous_fingerprint": "7e62da2c2f465211780e48795e436ce1ecce355cebac3bc968e19f7a8100eb3c",
-      "changed": false,
+      "previous_fingerprint": "3868d6d61d5a629f0fee1638b977abe689e43a7a177ea3863c91694a04e22949",
+      "changed": true,
       "first_observation": false
     },
     {
@@ -1022,7 +1022,7 @@
       "authority": "OFFICIAL",
       "kind": "XML_FEED",
       "url": "https://raw.githubusercontent.com/anthropics/claude-code/main/feed.xml",
-      "fetched_at": "2026-09-07T08:21:43+00:00",
+      "fetched_at": "2026-09-06T07:56:31+00:00",
       "fingerprint": "8ccecb8915e9cb081471eb423ac80a8c6bb46e7caddb2f91993070a9a11b82e5",
       "title": "Claude Code v2.1.263",
       "items": [
@@ -1120,8 +1120,8 @@
         "releases"
       ],
       "error": "",
-      "previous_fingerprint": "8ccecb8915e9cb081471eb423ac80a8c6bb46e7caddb2f91993070a9a11b82e5",
-      "changed": false,
+      "previous_fingerprint": "aea4fae96cde3f2927b8514b3e505bbcdc3d4ef843d6596d88133b734ea3891d",
+      "changed": true,
       "first_observation": false
     },
     {
@@ -1130,7 +1130,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://cursor.com/changelog",
-      "fetched_at": "2026-09-07T08:21:43+00:00",
+      "fetched_at": "2026-09-06T07:56:32+00:00",
       "fingerprint": "54c2da972716ba76ad34d98aef8606d838e8eec5eab91f3926079f63a96aa726",
       "title": "What's New in Cursor — Latest Updates & Release Notes",
       "items": [],
@@ -1179,7 +1179,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/microsoft/playwright/releases?per_page=12",
-      "fetched_at": "2026-09-07T08:21:44+00:00",
+      "fetched_at": "2026-09-06T07:56:32+00:00",
       "fingerprint": "030aea81cf301df25b155f2a389fd5a409010e6d7227c3daabb01ed282108b62",
       "title": "v1.63.0",
       "items": [
@@ -1339,7 +1339,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/storybookjs/storybook/releases?per_page=12",
-      "fetched_at": "2026-09-07T08:21:44+00:00",
+      "fetched_at": "2026-09-06T07:56:32+00:00",
       "fingerprint": "929d0307e22c03ed5d5ed46876bb460571683a3bb731fcf28027777d201e9e66",
       "title": "v11.0.0-alpha.0",
       "items": [
@@ -1492,7 +1492,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/browserslist/browserslist/releases?per_page=12",
-      "fetched_at": "2026-09-07T08:21:44+00:00",
+      "fetched_at": "2026-09-06T07:56:32+00:00",
       "fingerprint": "56ff3f302aa0eb1c2e42b50d0611bdf0e6160f7872413fde028df6ad9e2bebe5",
       "title": "4.28.9",
       "items": [
@@ -1637,7 +1637,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/stylelint/stylelint/releases?per_page=12",
-      "fetched_at": "2026-09-07T08:21:45+00:00",
+      "fetched_at": "2026-09-06T07:56:33+00:00",
       "fingerprint": "a6fe2c97f94c52d3f6e3700d24e9704fda23b03d1affdcd8885e542781c0f9a4",
       "title": "17.15.0",
       "items": [
@@ -1790,7 +1790,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/dequelabs/axe-core/releases?per_page=12",
-      "fetched_at": "2026-09-07T08:21:45+00:00",
+      "fetched_at": "2026-09-06T07:56:33+00:00",
       "fingerprint": "5fae27baa28621415d7da5d33500f937f2d77ed6cfa45ca4b25a7103bb5be345",
       "title": "Release 4.13.0",
       "items": [
@@ -1937,7 +1937,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/GoogleChrome/lighthouse-ci/releases?per_page=12",
-      "fetched_at": "2026-09-07T08:21:45+00:00",
+      "fetched_at": "2026-09-06T07:56:33+00:00",
       "fingerprint": "5cd178cff75b4eea6878530d6e489104ed1348fc6c5466d464a982eb767a03dc",
       "title": "v0.15.1",
       "items": [
@@ -2086,7 +2086,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/svg/svgo/releases?per_page=12",
-      "fetched_at": "2026-09-07T08:21:45+00:00",
+      "fetched_at": "2026-09-06T07:56:33+00:00",
       "fingerprint": "84d12299ec1df40268307327551bbaff33fb8dd51151020ed55ab3515d82ec86",
       "title": "v4.1.0",
       "items": [
@@ -2231,7 +2231,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/web-platform-dx/web-features/releases?per_page=12",
-      "fetched_at": "2026-09-07T08:21:46+00:00",
+      "fetched_at": "2026-09-06T07:56:34+00:00",
       "fingerprint": "7d3bc4ca5788d5046b524e1188423bc0e7dad3b9d1a074122adc05e3efb7aa3d",
       "title": "v3.37.0",
       "items": [
@@ -2387,15 +2387,15 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/mdn/browser-compat-data/releases?per_page=12",
-      "fetched_at": "2026-09-07T08:21:46+00:00",
-      "fingerprint": "295d204f5be2046aa046506a117fe1a5c910bd2eaed783116809ab7f63ee52d7",
+      "fetched_at": "2026-09-06T07:56:34+00:00",
+      "fingerprint": "3ca4dc1fd711268f0033b453b515052c732c12e88906d916db8574b269b851e1",
       "title": "@mdn/browser-compat-data@next",
       "items": [
         {
           "id": "327303933",
           "name": "@mdn/browser-compat-data@next",
           "tag": "next",
-          "published_at": "2026-09-07T00:01:58Z",
+          "published_at": "2026-09-06T00:02:09Z",
           "prerelease": true,
           "url": "https://github.com/mdn/browser-compat-data/releases/tag/next",
           "summary": "Experimental nightly prerelease generated from the [`main`](https://github.com/mdn/browser-compat-data/tree/main) branch (currently at [`8f78ef6`](https://github.com/mdn/browser-compat-data/commit/8f78ef6691bea90b55a975344ad7323130f20f36))."
@@ -2522,7 +2522,7 @@
         "web-api"
       ],
       "error": "",
-      "previous_fingerprint": "3ca4dc1fd711268f0033b453b515052c732c12e88906d916db8574b269b851e1",
+      "previous_fingerprint": "514b5acbb6576d22459937d33b251c8bed65539b03aaeb54f49f88e45692a0cf",
       "changed": true,
       "first_observation": false
     },
@@ -2532,7 +2532,7 @@
       "authority": "OFFICIAL",
       "kind": "JSON_DIGEST",
       "url": "https://chromestatus.com/features.json",
-      "fetched_at": "2026-09-07T08:21:47+00:00",
+      "fetched_at": "2026-09-06T07:56:34+00:00",
       "fingerprint": "",
       "title": "",
       "items": [],
@@ -2561,7 +2561,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://www.w3.org/WAI/news/",
-      "fetched_at": "2026-09-07T08:21:47+00:00",
+      "fetched_at": "2026-09-06T07:56:35+00:00",
       "fingerprint": "f9ccd2fb4b5e1a4aad980570d677e70eea9038086773fc36a059faf9393d2379",
       "title": "News | Web Accessibility Initiative (WAI) | W3C",
       "items": [],
@@ -2599,7 +2599,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/design-tokens/community-group/releases?per_page=12",
-      "fetched_at": "2026-09-07T08:21:47+00:00",
+      "fetched_at": "2026-09-06T07:56:35+00:00",
       "fingerprint": "e7526f9a4360fd590555d5b3a1107042f18a6ace66a09cbbfd266f86621266fb",
       "title": "",
       "items": [],
@@ -2627,19 +2627,10 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/style-dictionary/style-dictionary/releases?per_page=12",
-      "fetched_at": "2026-09-07T08:21:48+00:00",
-      "fingerprint": "59c3bd4575d07a771378f54b9b9611513736bbaab441bdb5d517655094d35076",
-      "title": "v5.5.3",
+      "fetched_at": "2026-09-06T07:56:35+00:00",
+      "fingerprint": "e4f26830ef6e764d51bfd825fb80dd9843946bea91a49285214962f6911aba5e",
+      "title": "v5.5.2",
       "items": [
-        {
-          "id": "383721444",
-          "name": "v5.5.3",
-          "tag": "v5.5.3",
-          "published_at": "2026-09-06T21:22:56Z",
-          "prerelease": false,
-          "url": "https://github.com/style-dictionary/style-dictionary/releases/tag/v5.5.3",
-          "summary": "### Patch Changes - 863685d: Limit nested composite token expansion to the configured type filters. - 2aced93: Preserve alpha precision in the `color/css` transform."
-        },
         {
           "id": "373078628",
           "name": "v5.5.2",
@@ -2738,9 +2729,18 @@
           "prerelease": false,
           "url": "https://github.com/style-dictionary/style-dictionary/releases/tag/v5.3.1",
           "summary": "### Patch Changes - 9f51f0d: Fix shadow and border CSS shorthands to also support latest DTCG color module. Add platform options to configure how the shorthand transforms stringify the color property."
+        },
+        {
+          "id": "284392141",
+          "name": "v5.3.0",
+          "tag": "v5.3.0",
+          "published_at": "2026-02-09T12:48:42Z",
+          "prerelease": false,
+          "url": "https://github.com/style-dictionary/style-dictionary/releases/tag/v5.3.0",
+          "summary": "### Minor Changes - b5adbc0: Add support for DTCG v2025.10 structured color format in color transformers. **New features:** - All color transformers now support both legacy string format and DTCG object format with `colorSpace`, `components`, `alpha`, and optional `hex` fallback properties - Support for all 14 DTCG color spaces: `srgb`, `srgb-linear`, `display-p3`, `a98-rgb`, `prophoto-rgb`, `rec2020`, `xyz-d50`, `xyz-d65`, `lab`, `lch`, `oklab`, `oklch`, `hsl`, `hwb` - New `color/oklch` transformer - outputs modern CSS `oklch()` function - New `color/oklab` transformer - outputs modern CSS `oklab()` function - New `color/p3` transformer - outputs CSS `color(display-p3 ...)` function - New `color/lch` transformer - outputs modern CSS `lch()` function **Types:** - Added `DTCGColorSpace` and `DTCGColorValue` TypeScript types **Hex fallback support:** When a DTCG color object includes a `hex` property, it will be used as a fallback when the color is out-of-gamut for sRGB, allowing designers to provide pre-computed sRGB approximations. ### Patch Changes - 1187f60: Update vulnerable transitive lodash dependency inside @bundled-es-modules/glob"
         }
       ],
-      "excerpt": "v5.5.3 ### Patch Changes - 863685d: Limit nested composite token expansion to the configured type filters. - 2aced93: Preserve alpha precision in the `color/css` transform. v5.5.2 ### Patch Changes - b65ea0b: Disallow output literal \"undefined\" for tokens with descriptions when commentStyle is set to none. v5.5.1 ### Patch Changes - ef1dbc8: Add better prototype pollution mitigation for convertTokenData utility. See [GitHub Advisory GHSA-xmr7-549p-98w3](https://github.com/style-dictionary/style-dictionary/security/advisories/GHSA-xmr7-549p-98w3) v5.5.0 ### Minor Changes - b63dc05: Add `emitEmptyFiles` option to write output files even when no tokens match the file's filter, instead of skipping them. ### Patch Changes - e319976: Fix regression to gracefully handle unparseable dimension tokens which is required to support custom dimension tokens from third party vendors like Tokens Studio. v5.4.4 ### Patch Changes - 23b5e8d: Fix prototype pollution vulnerability in the `convertTokenData` utility function, this was introduced in version `4.3.0`. Any token key that includes `__proto__` will be ignored. See [Security Advisory GHSA-vj5c-m527-mpff](https://github.com/style-dictionary/style-dictionary/security/advisories/GHSA-vj5c-m527-mpff). v5.4.3 ### Patch Changes - 371dbcb: Get proper deepmerge types in, fix small potential bug for `StyleDictionary.extend()`, flagged by type safety improvement. v5.4.2 ### Patch Changes - 60d16e1: Fix sizeRem and sizePxToRem transform to keep the 0-valued tokens type number/string intact in the result (regression 5.4.0) v5.4.1 ### Patch Changes - 46ec860: Fix `size/rem` transform stripping the unit from zero-magnitude dimension values (e.g. `\"0em\"`), which caused downstream CSS variables to serialize as `undefined`. Unit preservation now runs before the unitless-zero short-circuit. v5.4.0 ### Minor Changes - edceda7: Add support for [DTCG v2025.10](https://www.designtokens.org/tr/2025.10/) dimension token type object value, while remaining backwards compatible for dimension tokens using string values. All built-in transforms can now handle [dimension tokens](https://www.designtokens.org/tr/2025.10/format/#dimension). This includes CSS shorthand transforms for composed token types such as typography, border and shadows, which can contain properties that are dimensions. ```json { \"spacing\": { \"$type\": \"dimension\", \"$value\": { \"value\": 1, \"unit\": \"px\" } }, \"shadow\": { \"$type\": \"shadow\", \"$value\": { \"color\": { \"colorSpace\": \"srgb\", \"components\": [0, 0, 0], \"alpha\": 0.4 }, \"offsetX\": { \"value\": 2, \"unit\": \"px\" }, \"offsetY\": { \"value\": 2, \"unit\": \"px\" }, \"blur\": { \"value\": 4, \"unit\": \"px\" }, \"spread\": { \"value\": 6, \"unit\": \"px\" } } } } ``` - 3d5c140: Generate strict types (tuples) for the tokens of the same type ### Patch Changes - edceda7: Fix very old bug where size/remToPt wasn't converting to `pt` unit, but rather to `f` (iOS float). Fixed this, added `size/remToFloat` to use the old behavior, and updated the ios transformGroup to use this instead. This is technically potentially \"breaking\" but because it is a bugfix, this is a patch. v5.3.3 ### Patch Changes - 52817e1: Fix vulnerability in bundled version of glob -> minimatch. v5.3.2 ### Patch Changes - a7986d2: Support DTCG `inset` boolean property in shadow/css/shorthand transform, in addition to the existing `type: \"inset\"` format. Don't put invalid inset values in shadow/css/shorthand box-shadow values, they are ignored now. E.g. if you put `type: \"innerShadow\"` or some other unrecognized string. v5.3.1 ### Patch Changes - 9f51f0d: Fix shadow and border CSS shorthands to also support latest DTCG color module. Add platform options to configure how the shorthand transforms stringify the color property. [{\"id\":\"383721444\",\"name\":\"v5.5.3\",\"prerelease\":false,\"published_at\":\"2026-09-06T21:22:56Z\",\"summary\":\"### Patch Changes - 863685d: Limit nested composite token expansion to the configured type filters. - 2aced93: Preserve alpha precision in the `color/css` transform.\",\"tag\":\"v5.5.3\",\"url\":\"https://github.com/style-dictionary/style-dictionary/releases/tag/v5.5.3\"},{\"id\":\"373078628\",\"name\":\"v5.5.2\",\"prerelease\":false,\"published_at\":\"2026-08-19T13:33:45Z\",\"summary\":\"### Patch Changes - b65ea0b: Disallow output literal \\\"undefined\\\" for tokens with descriptions when commentStyle is set to none.\",\"tag\":\"v5.5.2\",\"url\":\"https://github.com/style-dictionary/style-dictionary/releases/tag/v5.5.2\"},{\"id\":\"366846236\",\"name\":\"v5.5.1\",\"prerelease\":false,\"published_at\":\"2026-08-07T15:36:18Z\",\"summary\":\"### Patch Changes - ef1dbc8: Add better prototype pollution mitigation for convertTokenData utility. See [GitHub Advisory GHSA-xmr7-549p-98w3](https://github.com/style-dictionary/style-dictionary/security/advisories/GHSA-xmr7-549p-98w3)\",\"tag\":\"v5.5.1\",\"url\":\"https://github.com/style-dictionary/style-dictionary/releases/tag/v5.5.1\"},{\"id\":\"342527912\",\"name\":\"v5.5.0\",\"prerelease\":false,\"published_at\":\"2026-06-21T13:14:59Z\",\"summary\":\"### Minor Changes - b63dc05: Add `emitEmptyFiles` option to write output files even when no tokens match the file's filter, instead of skipping them. ### Patch Changes - e319976: Fix regression to gracefully handle unparseable dimension tokens which is required to support custom dimension tokens from third party vendors like Tokens Studio.\",\"tag\":\"v5.5.0\",\"url\":\"https://github.com/style-dictionary/style-dictionary/releases/tag/v5.5.0\"},{\"id\":\"335879822\",\"name\":\"v5.4.4\",\"prerelease\":false,\"published_at\":\"2026-06-08T10:27:27Z\",\"summary\":\"### Patch Changes - 23b5e8d: Fix prototype pollution vulnerability in the `convertTokenData` utility function, this was introduced in version `4.3.0`. Any token key that includes `__proto__` will be ignored. See [Security Advisory GHSA-vj5c-m527-mpff](https://github.com/style-dictionary/style-dictionary/security/advisories/GHSA-vj5c-m527-mpff).\",\"tag\":\"v5.4.4\",\"url\":\"https://github.com/style-dictionary/style-dictionary/releases/tag/v5.4.4\"},{\"id\":\"333196350\",\"name\":\"v5.4.3\",\"prerelease\":false,\"published_at\":\"2026-06-02T15:14:44Z\",\"summary\":\"### Patch Changes - 371dbcb: Get proper deepmerge types in, fix small potential bug for `StyleDictionary.extend()`, flagged by type safety improvement.\",\"tag\":\"v5.4.3\",\"url\":\"https://github.com/style-dictionary/style-dictionary/releases/tag/v5.4.3\"},{\"id\":\"331814696\",\"name\":\"v5.4.2\",\"prerelease\":false,\"published_at\":\"2026-05-29T22:44:35Z\",\"summary\":\"### Patch Changes - 60d16e1: Fix sizeRem and sizePxToRem transform to keep the 0-valued tokens type number/string intact in the result (regression 5.4.0)\",\"tag\":\"v5.4.2\",\"url\":\"https://github.com/style-dictionary/style-dictionary/releases/tag/v5.4.2\"},{\"id\":\"324214955\",\"name\":\"v5.4.1\",\"prerelease\":false,\"published_at\":\"2026-05-18T10:46:16Z\",\"summary\":\"### Patch Changes - 46ec860: Fix `size/rem` transform stripping the unit from zero-magnitude dimension values (e.g. `\\\"0em\\\"`), which caused downstream CSS variables to serialize as `undefined`. Unit preservation now runs before the unitless-zero short-circuit.\",\"tag\":\"v5.4.1\",\"url\":\"https://github.com/style-dictionary/style-dictionary/releases/tag/v5.4.1\"},{\"id\":\"299884488\",\"name\":\"v5.4.0\",\"prerelease\":false,\"published_at\":\"2026-03-22T10:55:45Z\",\"summary\":\"### Minor Changes - edceda7: Add support for [DTCG v2025.10](https://www.designtokens.org/tr/2025.10/) dimension token type object value, while remaining backwards compatible for dimension tokens using string values. All built-in transforms can now handle [dimension tokens](https://www.designtokens.org/tr/2025.10/format/#dimension). This includes CSS shorthand transforms for composed token types such as typography, border and shadows, which can contain properties that are dimensions. ```json { \\\"spacing\\\": { \\\"$type\\\": \\\"dimension\\\", \\\"$value\\\": { \\\"value\\\": 1, \\\"unit\\\": \\\"px\\\" } }, \\\"shadow\\\": { \\\"$type\\\": \\\"shadow\\\", \\\"$value\\\": { \\\"color\\\": { \\\"colorSpace\\\": \\\"srgb\\\", \\\"components\\\": [0, 0, 0], \\\"alpha\\\": 0.4 }, \\\"offsetX\\\": { \\\"value\\\": 2, \\\"unit\\\": \\\"px\\\" }, \\\"offsetY\\\": { \\\"value\\\": 2, \\\"unit\\\": \\\"px\\\" }, \\\"blur\\\": { \\\"value\\\": 4, \\\"unit\\\": \\\"px\\\" }, \\\"spread\\\": { \\\"value\\\": 6, \\\"unit\\\": \\\"px\\\" } } } } ``` - 3d5c140: Generate strict types (tuples) for the tokens of the same type ### Patch Changes - edceda7: Fix very old bug where size/remToPt wasn't converting to `pt` unit, but rather to `f` (iOS float). Fixed this, added `size/remToFloat` to use the old behavior, and updated the ios transformGroup to use this instead. This is technically potentially \\\"breaking\\\" but because it is a bugfix, this is a patch.\",\"tag\":\"v5.4.0\",\"url\":\"https://github.com/style-dictionary/style-dictionary/releases/tag/v5.4.0\"},{\"id\":\"292112330\",\"name\":\"v5.3.3\",\"prerelease\":false,\"published_at\":\"2026-03-02T15:01:12Z\",\"summary\":\"### Patch Changes - 52817e1: Fix vulnerability in bundled version of glob -> minimatch.\",\"tag\":\"v5.3.3\",\"url\":\"https://github.com/style-dictionary/style-dictionary/releases/tag/v5.3.3\"},{\"id\":\"288821880\",\"name\":\"v5.3.2\",\"prerelease\":false,\"published_at\":\"2026-02-20T18:02:55Z\",\"summary\":\"### Patch Changes - a7986d2: Support DTCG `inset` boolean property in shadow/css/shorthand transform, in addition to the existing `type: \\\"inset\\\"` format. Don't put invalid inset values in shadow/css/shorthand box-shadow values, they are ignored now. E.g. if you put `type: \\\"innerShadow\\\"` or some other unrecognized string.\",\"tag\":\"v5.3.2\",\"url\":\"https://github.com/style-dictionary/style-dictionary/releases/tag/v5.3.2\"},{\"id\":\"286838323\",\"name\":\"v5.3.1\",\"prerelease\":false,\"published_at\":\"2026-02-16T12:32:49Z\",\"summary\":\"### Patch Changes - 9f51f0d: Fix shadow and border CSS shorthands to also support latest DTCG color module. Add platform options to configure how the shorthand transforms stringify the color property.\",\"tag\":\"v5.3.1\",\"url\":\"https://github.com/style-dictionary/style-dictionary/releases/tag/v5.3.1\"}]",
+      "excerpt": "v5.5.2 ### Patch Changes - b65ea0b: Disallow output literal \"undefined\" for tokens with descriptions when commentStyle is set to none. v5.5.1 ### Patch Changes - ef1dbc8: Add better prototype pollution mitigation for convertTokenData utility. See [GitHub Advisory GHSA-xmr7-549p-98w3](https://github.com/style-dictionary/style-dictionary/security/advisories/GHSA-xmr7-549p-98w3) v5.5.0 ### Minor Changes - b63dc05: Add `emitEmptyFiles` option to write output files even when no tokens match the file's filter, instead of skipping them. ### Patch Changes - e319976: Fix regression to gracefully handle unparseable dimension tokens which is required to support custom dimension tokens from third party vendors like Tokens Studio. v5.4.4 ### Patch Changes - 23b5e8d: Fix prototype pollution vulnerability in the `convertTokenData` utility function, this was introduced in version `4.3.0`. Any token key that includes `__proto__` will be ignored. See [Security Advisory GHSA-vj5c-m527-mpff](https://github.com/style-dictionary/style-dictionary/security/advisories/GHSA-vj5c-m527-mpff). v5.4.3 ### Patch Changes - 371dbcb: Get proper deepmerge types in, fix small potential bug for `StyleDictionary.extend()`, flagged by type safety improvement. v5.4.2 ### Patch Changes - 60d16e1: Fix sizeRem and sizePxToRem transform to keep the 0-valued tokens type number/string intact in the result (regression 5.4.0) v5.4.1 ### Patch Changes - 46ec860: Fix `size/rem` transform stripping the unit from zero-magnitude dimension values (e.g. `\"0em\"`), which caused downstream CSS variables to serialize as `undefined`. Unit preservation now runs before the unitless-zero short-circuit. v5.4.0 ### Minor Changes - edceda7: Add support for [DTCG v2025.10](https://www.designtokens.org/tr/2025.10/) dimension token type object value, while remaining backwards compatible for dimension tokens using string values. All built-in transforms can now handle [dimension tokens](https://www.designtokens.org/tr/2025.10/format/#dimension). This includes CSS shorthand transforms for composed token types such as typography, border and shadows, which can contain properties that are dimensions. ```json { \"spacing\": { \"$type\": \"dimension\", \"$value\": { \"value\": 1, \"unit\": \"px\" } }, \"shadow\": { \"$type\": \"shadow\", \"$value\": { \"color\": { \"colorSpace\": \"srgb\", \"components\": [0, 0, 0], \"alpha\": 0.4 }, \"offsetX\": { \"value\": 2, \"unit\": \"px\" }, \"offsetY\": { \"value\": 2, \"unit\": \"px\" }, \"blur\": { \"value\": 4, \"unit\": \"px\" }, \"spread\": { \"value\": 6, \"unit\": \"px\" } } } } ``` - 3d5c140: Generate strict types (tuples) for the tokens of the same type ### Patch Changes - edceda7: Fix very old bug where size/remToPt wasn't converting to `pt` unit, but rather to `f` (iOS float). Fixed this, added `size/remToFloat` to use the old behavior, and updated the ios transformGroup to use this instead. This is technically potentially \"breaking\" but because it is a bugfix, this is a patch. v5.3.3 ### Patch Changes - 52817e1: Fix vulnerability in bundled version of glob -> minimatch. v5.3.2 ### Patch Changes - a7986d2: Support DTCG `inset` boolean property in shadow/css/shorthand transform, in addition to the existing `type: \"inset\"` format. Don't put invalid inset values in shadow/css/shorthand box-shadow values, they are ignored now. E.g. if you put `type: \"innerShadow\"` or some other unrecognized string. v5.3.1 ### Patch Changes - 9f51f0d: Fix shadow and border CSS shorthands to also support latest DTCG color module. Add platform options to configure how the shorthand transforms stringify the color property. v5.3.0 ### Minor Changes - b5adbc0: Add support for DTCG v2025.10 structured color format in color transformers. **New features:** - All color transformers now support both legacy string format and DTCG object format with `colorSpace`, `components`, `alpha`, and optional `hex` fallback properties - Support for all 14 DTCG color spaces: `srgb`, `srgb-linear`, `display-p3`, `a98-rgb`, `prophoto-rgb`, `rec2020`, `xyz-d50`, `xyz-d65`, `lab`, `lch`, `oklab`, `oklch`, `hsl`, `hwb` - New `color/oklch` transformer - outputs modern CSS `oklch()` function - New `color/oklab` transformer - outputs modern CSS `oklab()` function - New `color/p3` transformer - outputs CSS `color(display-p3 ...)` function - New `color/lch` transformer - outputs modern CSS `lch()` function **Types:** - Added `DTCGColorSpace` and `DTCGColorValue` TypeScript types **Hex fallback support:** When a DTCG color object includes a `hex` property, it will be used as a fallback when the color is out-of-gamut for sRGB, allowing designers to provide pre-computed sRGB approximations. ### Patch Changes - 1187f60: Update vulnerable transitive lodash dependency inside @bundled-es-modules/glob [{\"id\":\"373078628\",\"name\":\"v5.5.2\",\"prerelease\":false,\"published_at\":\"2026-08-19T13:33:45Z\",\"summary\":\"### Patch Changes - b65ea0b: Disallow output literal \\\"undefined\\\" for tokens with descriptions when commentStyle is set to none.\",\"tag\":\"v5.5.2\",\"url\":\"https://github.com/style-dictionary/style-dictionary/releases/tag/v5.5.2\"},{\"id\":\"366846236\",\"name\":\"v5.5.1\",\"prerelease\":false,\"published_at\":\"2026-08-07T15:36:18Z\",\"summary\":\"### Patch Changes - ef1dbc8: Add better prototype pollution mitigation for convertTokenData utility. See [GitHub Advisory GHSA-xmr7-549p-98w3](https://github.com/style-dictionary/style-dictionary/security/advisories/GHSA-xmr7-549p-98w3)\",\"tag\":\"v5.5.1\",\"url\":\"https://github.com/style-dictionary/style-dictionary/releases/tag/v5.5.1\"},{\"id\":\"342527912\",\"name\":\"v5.5.0\",\"prerelease\":false,\"published_at\":\"2026-06-21T13:14:59Z\",\"summary\":\"### Minor Changes - b63dc05: Add `emitEmptyFiles` option to write output files even when no tokens match the file's filter, instead of skipping them. ### Patch Changes - e319976: Fix regression to gracefully handle unparseable dimension tokens which is required to support custom dimension tokens from third party vendors like Tokens Studio.\",\"tag\":\"v5.5.0\",\"url\":\"https://github.com/style-dictionary/style-dictionary/releases/tag/v5.5.0\"},{\"id\":\"335879822\",\"name\":\"v5.4.4\",\"prerelease\":false,\"published_at\":\"2026-06-08T10:27:27Z\",\"summary\":\"### Patch Changes - 23b5e8d: Fix prototype pollution vulnerability in the `convertTokenData` utility function, this was introduced in version `4.3.0`. Any token key that includes `__proto__` will be ignored. See [Security Advisory GHSA-vj5c-m527-mpff](https://github.com/style-dictionary/style-dictionary/security/advisories/GHSA-vj5c-m527-mpff).\",\"tag\":\"v5.4.4\",\"url\":\"https://github.com/style-dictionary/style-dictionary/releases/tag/v5.4.4\"},{\"id\":\"333196350\",\"name\":\"v5.4.3\",\"prerelease\":false,\"published_at\":\"2026-06-02T15:14:44Z\",\"summary\":\"### Patch Changes - 371dbcb: Get proper deepmerge types in, fix small potential bug for `StyleDictionary.extend()`, flagged by type safety improvement.\",\"tag\":\"v5.4.3\",\"url\":\"https://github.com/style-dictionary/style-dictionary/releases/tag/v5.4.3\"},{\"id\":\"331814696\",\"name\":\"v5.4.2\",\"prerelease\":false,\"published_at\":\"2026-05-29T22:44:35Z\",\"summary\":\"### Patch Changes - 60d16e1: Fix sizeRem and sizePxToRem transform to keep the 0-valued tokens type number/string intact in the result (regression 5.4.0)\",\"tag\":\"v5.4.2\",\"url\":\"https://github.com/style-dictionary/style-dictionary/releases/tag/v5.4.2\"},{\"id\":\"324214955\",\"name\":\"v5.4.1\",\"prerelease\":false,\"published_at\":\"2026-05-18T10:46:16Z\",\"summary\":\"### Patch Changes - 46ec860: Fix `size/rem` transform stripping the unit from zero-magnitude dimension values (e.g. `\\\"0em\\\"`), which caused downstream CSS variables to serialize as `undefined`. Unit preservation now runs before the unitless-zero short-circuit.\",\"tag\":\"v5.4.1\",\"url\":\"https://github.com/style-dictionary/style-dictionary/releases/tag/v5.4.1\"},{\"id\":\"299884488\",\"name\":\"v5.4.0\",\"prerelease\":false,\"published_at\":\"2026-03-22T10:55:45Z\",\"summary\":\"### Minor Changes - edceda7: Add support for [DTCG v2025.10](https://www.designtokens.org/tr/2025.10/) dimension token type object value, while remaining backwards compatible for dimension tokens using string values. All built-in transforms can now handle [dimension tokens](https://www.designtokens.org/tr/2025.10/format/#dimension). This includes CSS shorthand transforms for composed token types such as typography, border and shadows, which can contain properties that are dimensions. ```json { \\\"spacing\\\": { \\\"$type\\\": \\\"dimension\\\", \\\"$value\\\": { \\\"value\\\": 1, \\\"unit\\\": \\\"px\\\" } }, \\\"shadow\\\": { \\\"$type\\\": \\\"shadow\\\", \\\"$value\\\": { \\\"color\\\": { \\\"colorSpace\\\": \\\"srgb\\\", \\\"components\\\": [0, 0, 0], \\\"alpha\\\": 0.4 }, \\\"offsetX\\\": { \\\"value\\\": 2, \\\"unit\\\": \\\"px\\\" }, \\\"offsetY\\\": { \\\"value\\\": 2, \\\"unit\\\": \\\"px\\\" }, \\\"blur\\\": { \\\"value\\\": 4, \\\"unit\\\": \\\"px\\\" }, \\\"spread\\\": { \\\"value\\\": 6, \\\"unit\\\": \\\"px\\\" } } } } ``` - 3d5c140: Generate strict types (tuples) for the tokens of the same type ### Patch Changes - edceda7: Fix very old bug where size/remToPt wasn't converting to `pt` unit, but rather to `f` (iOS float). Fixed this, added `size/remToFloat` to use the old behavior, and updated the ios transformGroup to use this instead. This is technically potentially \\\"breaking\\\" but because it is a bugfix, this is a patch.\",\"tag\":\"v5.4.0\",\"url\":\"https://github.com/style-dictionary/style-dictionary/releases/tag/v5.4.0\"},{\"id\":\"292112330\",\"name\":\"v5.3.3\",\"prerelease\":false,\"published_at\":\"2026-03-02T15:01:12Z\",\"summary\":\"### Patch Changes - 52817e1: Fix vulnerability in bundled version of glob -> minimatch.\",\"tag\":\"v5.3.3\",\"url\":\"https://github.com/style-dictionary/style-dictionary/releases/tag/v5.3.3\"},{\"id\":\"288821880\",\"name\":\"v5.3.2\",\"prerelease\":false,\"published_at\":\"2026-02-20T18:02:55Z\",\"summary\":\"### Patch Changes - a7986d2: Support DTCG `inset` boolean property in shadow/css/shorthand transform, in addition to the existing `type: \\\"inset\\\"` format. Don't put invalid inset values in shadow/css/shorthand box-shadow values, they are ignored now. E.g. if you put `type: \\\"innerShadow\\\"` or some other unrecognized string.\",\"tag\":\"v5.3.2\",\"url\":\"https://github.com/style-dictionary/style-dictionary/releases/tag/v5.3.2\"},{\"id\":\"286838323\",\"name\":\"v5.3.1\",\"prerelease\":false,\"published_at\":\"2026-02-16T12:32:49Z\",\"summary\":\"### Patch Changes - 9f51f0d: Fix shadow and border CSS shorthands to also support latest DTCG color module. Add platform options to configure how the shorthand transforms stringify the color property.\",\"tag\":\"v5.3.1\",\"url\":\"https://github.com/style-dictionary/style-dictionary/releases/tag/v5.3.1\"},{\"id\":\"284392141\",\"name\":\"v5.3.0\",\"prerelease\":false,\"published_at\":\"2026-02-09T12:48:42Z\",\"summary\":\"### Minor Changes - b5adbc0: Add support for DTCG v2025.10 structured color format in color transformers. **New features:** - All color transformers now support both legacy string format and DTCG object format with `colorSpace`, `components`, `alpha`, and optional `hex` fallback properties - Support for all 14 DTCG color spaces: `srgb`, `srgb-linear`, `display-p3`, `a98-rgb`, `prophoto-rgb`, `rec2020`, `xyz-d50`, `xyz-d65`, `lab`, `lch`, `oklab`, `oklch`, `hsl`, `hwb` - New `color/oklch` transformer - outputs modern CSS `oklch()` function - New `color/oklab` transformer - outputs modern CSS `oklab()` function - New `color/p3` transformer - outputs CSS `color(display-p3 ...)` function - New `color/lch` transformer - outputs modern CSS `lch()` function **Types:** - Added `DTCGColorSpace` and `DTCGColorValue` TypeScript types **Hex fallback support:** When a DTCG color object includes a `hex` property, it will be used as a fallback when the color is out-of-gamut for sRGB, allowing designers to provide pre-computed sRGB approximations. ### Patch Changes - 1187f60: Update vulnerable transitive lodash dependency inside @bundled-es-modules/glob\",\"tag\":\"v5.3.0\",\"url\":\"https://github.com/style-dictionary/style-dictionary/releases/tag/v5.3.0\"}]",
       "matched_keywords": [
         "dtcg",
         "transforms"
@@ -2764,7 +2764,7 @@
       ],
       "error": "",
       "previous_fingerprint": "e4f26830ef6e764d51bfd825fb80dd9843946bea91a49285214962f6911aba5e",
-      "changed": true,
+      "changed": false,
       "first_observation": false
     },
     {
@@ -2773,7 +2773,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://wordpress.org/news/category/releases/",
-      "fetched_at": "2026-09-07T08:21:48+00:00",
+      "fetched_at": "2026-09-06T07:56:36+00:00",
       "fingerprint": "1eb14c6246ad68ec1d7f1855ac673384f79542b5dee1173bb8ac45bcf3a3f69e",
       "title": "Releases – WordPress News",
       "items": [],
@@ -2818,7 +2818,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://developer.wordpress.org/news/",
-      "fetched_at": "2026-09-07T08:21:49+00:00",
+      "fetched_at": "2026-09-06T07:56:37+00:00",
       "fingerprint": "9c0365df8725a77be02bdd9cec2c2bbe28e639209bb4ca533ee2be139c894190",
       "title": "WordPress Developer Blog – A site for plugin and theme developers, freelancers, and agency developers",
       "items": [],
@@ -2860,7 +2860,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://developer.wordpress.org/block-editor/getting-started/devenv/get-started-with-wp-env/",
-      "fetched_at": "2026-09-07T08:21:51+00:00",
+      "fetched_at": "2026-09-06T07:56:38+00:00",
       "fingerprint": "a21722fe3fc6dede642c78ae2f3e004734eeb3d0d790fa261c08eabcc544ce18",
       "title": "Get started with wp-env – Block Editor Handbook | Developer.WordPress.org",
       "items": [],
@@ -2902,7 +2902,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/AdvancedCustomFields/acf/releases?per_page=12",
-      "fetched_at": "2026-09-07T08:21:51+00:00",
+      "fetched_at": "2026-09-06T07:56:39+00:00",
       "fingerprint": "eb6af90b705ac7b926d2e53af03db0c0e8608d35b3b551b78f5aa001cb14aab0",
       "title": "Advanced Custom Fields v6.8.9",
       "items": [
@@ -3059,7 +3059,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://www.advancedcustomfields.com/changelog/",
-      "fetched_at": "2026-09-07T08:21:52+00:00",
+      "fetched_at": "2026-09-06T07:56:39+00:00",
       "fingerprint": "d7a920c5b427f4bfa038e2b2339e3c257202d9bf86332d62577febdbe6024824",
       "title": "ACF | Changelog",
       "items": [],
@@ -3108,7 +3108,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://www.advancedcustomfields.com/resources/wp-acf-json/",
-      "fetched_at": "2026-09-07T08:21:52+00:00",
+      "fetched_at": "2026-09-06T07:56:39+00:00",
       "fingerprint": "84a646f3552f8ca68ed09f62634ddb137c96cb473c2acee828c52fcefd92bef7",
       "title": "ACF | wp acf json",
       "items": [],
@@ -3149,6 +3149,47 @@
   ],
   "changes": [
     {
+      "source_id": "claude-code-releases",
+      "lane": "CLAUDE_CODE",
+      "title": "v2.1.263",
+      "retest_categories": [
+        "CSS_RESET",
+        "FIGMA_LAYOUT_GENERATION",
+        "ASSET_FIDELITY",
+        "VARIABLE_MODE_RUNTIME",
+        "FIGMA_MCP",
+        "AGENT_CONTEXT",
+        "PARALLEL_EXECUTION"
+      ],
+      "impacts": [
+        "AGENT_CAPABILITY",
+        "MCP",
+        "PARALLEL_EXECUTION",
+        "CONTEXT_HANDLING"
+      ],
+      "url": "https://api.github.com/repos/anthropics/claude-code/releases?per_page=12"
+    },
+    {
+      "source_id": "claude-code-feed",
+      "lane": "CLAUDE_CODE",
+      "title": "Claude Code v2.1.263",
+      "retest_categories": [
+        "CSS_RESET",
+        "FIGMA_LAYOUT_GENERATION",
+        "ASSET_FIDELITY",
+        "VARIABLE_MODE_RUNTIME",
+        "FIGMA_MCP",
+        "AGENT_CONTEXT",
+        "PARALLEL_EXECUTION"
+      ],
+      "impacts": [
+        "AGENT_CAPABILITY",
+        "MCP",
+        "CONTEXT_HANDLING"
+      ],
+      "url": "https://raw.githubusercontent.com/anthropics/claude-code/main/feed.xml"
+    },
+    {
       "source_id": "mdn-browser-compat-data-releases",
       "lane": "WEB_PLATFORM",
       "title": "@mdn/browser-compat-data@next",
@@ -3164,23 +3205,6 @@
         "FEATURE_DETECTION"
       ],
       "url": "https://api.github.com/repos/mdn/browser-compat-data/releases?per_page=12"
-    },
-    {
-      "source_id": "style-dictionary-releases",
-      "lane": "DESIGN_SYSTEMS",
-      "title": "v5.5.3",
-      "retest_categories": [
-        "ASSET_FIDELITY",
-        "COLOR_GRADIENT",
-        "ACCESSIBILITY"
-      ],
-      "impacts": [
-        "TOKENS",
-        "DESIGN_SYSTEM",
-        "FIGMA_VARIABLES",
-        "BUILD_TOOLING"
-      ],
-      "url": "https://api.github.com/repos/style-dictionary/style-dictionary/releases?per_page=12"
     }
   ],
   "fetch_errors": [
@@ -3199,15 +3223,18 @@
   ],
   "summary": {
     "source_count": 37,
-    "changed_count": 2,
+    "changed_count": 3,
     "error_count": 3,
     "first_observation_count": 0,
     "retest_categories": [
-      "ACCESSIBILITY",
       "AGENT_CONTEXT",
       "ASSET_FIDELITY",
       "COLOR_GRADIENT",
-      "FIGMA_MCP"
+      "CSS_RESET",
+      "FIGMA_LAYOUT_GENERATION",
+      "FIGMA_MCP",
+      "PARALLEL_EXECUTION",
+      "VARIABLE_MODE_RUNTIME"
     ]
   }
 }
