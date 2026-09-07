@@ -249,8 +249,8 @@ body._contentFixed {
    header from sticky to fixed, width:100% resolves against the scrollbar-gutter
    viewport instead of that body minimum. Keep the same established PC width so
    menu/search opening cannot pull the header inward. Modaal's body overflow
-   lock also breaks sticky containment on desktop, so promote the header only
-   while that lock is active; the wrapper preserves the removed flow footprint. */
+   lock also breaks sticky containment on desktop, so use the same fixed header
+   geometry while the modal is open; global_wrapper preserves its flow space. */
 @media screen and (min-width: 768px) {
     body._contentFixed,
     body.modaal-noscroll {
@@ -264,36 +264,76 @@ body._contentFixed {
 /* Figma search 2295:8023 — JS (#gh_search) moves .gn_search here and animates height. */
 .gh_searchPanel {
     --_search-panel-height: 180px;
-    display: none;
     position: fixed;
-    z-index: 90;
-    left: 0;
     top: var(--header-height-SP);
-    width: 100%;
-    height: 0;
-    overflow: hidden;
+    left: 0;
+    z-index: 101;
+    display: none;
     align-items: center;
     justify-content: center;
+    width: 100%;
     background-color: var(--color-secondary);
-    box-shadow: 0 8px 20px rgb(0 0 0 / 0.08);
-
     .gn_search {
-        display: block;
-        width: min(100% - 48px, 560px);
-        padding: 0;
-        border: 0;
-    }
-
-    .module_search-01 {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
         width: 100%;
-    }
-
-    @media screen and (min-width: 768px) {
-        --_search-panel-height: 220px;
-        top: var(--header-height-PC);
-
-        .gn_search {
-            width: min(100% - 120px, 720px);
+        max-width: 300px;
+        margin: 0;
+        padding: 24px 20px;
+        .module_search-01 {
+            width: 100%;
+            .ms_from {
+                background-color: transparent;
+                grid-template-columns: minmax(0, 1fr) 50px;
+                .ms_input {
+                    height: 50px;
+                    border-color: var(--color-header-search);
+                }
+                .ms_button {
+                    height: 50px;
+                    border-color: var(--color-header-search);
+                    background-color: var(--color-header-search);
+                    span {
+                        font-size: 0;
+                        &::after {
+                            margin-left: 0;
+                            font-size: 13px;
+                            font-weight: 400;
+                        }
+                    }
+                    &:hover,
+                    &:focus {
+                        background-color: var(--color-header-search);
+                        span,
+                        span::after {
+                            color: var(--color-secondary);
+                        }
+                    }
+                }
+            }
         }
+    }
+    .gn_close {
+        display: none;
+    }
+}
+
+.admin-bar .gh_searchPanel {
+    top: calc(var(--header-height-SP) + var(--wp-admin--admin-bar--height, 0px));
+}
+
+@media screen and (min-width: 768px) {
+    .gh_searchPanel {
+        --_search-panel-height: 323px;
+        top: var(--header-height-PC);
+        .gn_search {
+            max-width: 300px;
+            padding: 0;
+        }
+    }
+    .admin-bar .gh_searchPanel {
+        top: calc(var(--header-height-PC) + var(--wp-admin--admin-bar--height, 0px));
     }
 }
