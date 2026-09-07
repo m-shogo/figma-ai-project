@@ -14,7 +14,7 @@ records:
     applicability:
       scope: PROJECT
       conditions:
-        - Budokan menu/search contentFixed() stores the pre-open scroll position and applies body._contentFixed with top: -scrollpos.
+        - "Budokan menu/search contentFixed() stores the pre-open scroll position and applies body._contentFixed with top: -scrollpos."
         - Search moves the existing WordPress-owned search block into a fixed panel, focuses .ms_input after its opening animation, and can close from the visible #overlay backdrop.
         - Real WordPress plus Playwright can compare header/FV/document geometry and real pointer ownership at a deep-scroll baseline.
       exclusions:
