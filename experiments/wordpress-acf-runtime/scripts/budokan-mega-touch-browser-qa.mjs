@@ -86,18 +86,29 @@ try {
   if (!(await first.evaluate(el=>el.classList.contains('_touchOpen')))) throw new Error('Mega did not open before scrollbar breakpoint audit.');
 
   await page.setViewportSize({width:780,height:900}); await page.waitForTimeout(100);
-  const gutterAfter=await page.evaluate(() => ({
-    innerWidth: window.innerWidth,
-    clientWidth: document.documentElement.clientWidth,
-    jqueryWidth: window.jQuery ? window.jQuery(window).width() : null,
-    cssPc: window.matchMedia('(min-width: 768px)').matches,
-    htmlClass: document.documentElement.className,
-  }));
+  const gutterAfter=await page.evaluate(() => {
+    const clientWidth=document.documentElement.clientWidth;
+    const offenders=[...document.querySelectorAll('body *')]
+      .map(el=>{ const r=el.getBoundingClientRect(); return {tag:el.tagName.toLowerCase(),id:el.id,className:typeof el.className==='string'?el.className:'',left:r.left,right:r.right,width:r.width}; })
+      .filter(x=>x.right > clientWidth + 1 || x.left < -1)
+      .sort((a,b)=>Math.max(b.right-clientWidth,-b.left)-Math.max(a.right-clientWidth,-a.left))
+      .slice(0,12);
+    return {
+      innerWidth: window.innerWidth,
+      clientWidth,
+      scrollWidth: document.documentElement.scrollWidth,
+      bodyScrollWidth: document.body.scrollWidth,
+      jqueryWidth: window.jQuery ? window.jQuery(window).width() : null,
+      cssPc: window.matchMedia('(min-width: 768px)').matches,
+      htmlClass: document.documentElement.className,
+      offenders,
+    };
+  });
   if (!gutterAfter.cssPc) throw new Error(`Authoritative CSS crossed to SP; this is not a scrollbar-only JS disagreement: ${JSON.stringify({gutterBefore,gutterAfter})}`);
   if (await first.evaluate(el=>!el.classList.contains('_touchOpen'))) throw new Error(`JS closed a PC touch mega while CSS remained PC: ${JSON.stringify({gutterBefore,gutterAfter})}`);
   if ((await firstButton.getAttribute('aria-expanded')) !== 'true') throw new Error('Scrollbar-only width delta left touch mega aria-expanded stale.');
   if (await page.evaluate(()=>document.documentElement.classList.contains('_sp'))) throw new Error(`JS projected SP state while authoritative CSS remained PC: ${JSON.stringify(gutterAfter)}`);
-  if (await page.evaluate(()=>document.documentElement.scrollWidth > document.documentElement.clientWidth + 1)) throw new Error('Horizontal overflow during scrollbar breakpoint audit.');
+  if (gutterAfter.scrollWidth > gutterAfter.clientWidth + 1) throw new Error(`Horizontal overflow during scrollbar breakpoint audit: ${JSON.stringify(gutterAfter)}`);
 
   console.log('PASS Budokan PC touch Mega interaction stability');
 } finally { await context.close(); await browser.close(); }
