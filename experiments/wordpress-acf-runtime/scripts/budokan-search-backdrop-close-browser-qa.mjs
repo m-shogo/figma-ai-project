@@ -41,9 +41,11 @@ async function snapshot(page) {
   });
 }
 
-function assertBackgroundStable(before, after, label) {
+function assertBackgroundStable(before, after, label, { scroll = true } = {}) {
   assert(before && after, `${label}: required geometry missing`);
-  assert(near(after.scrollY, before.scrollY), `${label}: scrollY shifted ${before.scrollY} -> ${after.scrollY}`);
+  if (scroll) {
+    assert(near(after.scrollY, before.scrollY), `${label}: scrollY shifted ${before.scrollY} -> ${after.scrollY}`);
+  }
   assert(near(after.clientWidth, before.clientWidth, 0.5), `${label}: client width shifted ${before.clientWidth} -> ${after.clientWidth}`);
   assert(after.scrollWidth <= before.scrollWidth + 1, `${label}: horizontal overflow increased ${before.scrollWidth} -> ${after.scrollWidth}`);
   assert(near(after.headerTop, before.headerTop), `${label}: header top shifted ${before.headerTop} -> ${after.headerTop}`);
@@ -119,7 +121,10 @@ async function runViewport(browser, viewport, contextOptions, label) {
     assert(opened?.bodyClass.includes('_contentFixed'), `${label}: search did not enter scroll lock`);
     assert(opened?.searchExpanded === 'true', `${label}: aria-expanded not true after open`);
     assert(String(opened?.activeClass).includes('ms_input'), `${label}: search input did not receive focus after open animation`);
-    assertBackgroundStable(before, opened, `${label} search open/focus`);
+    // The established scroll lock stores the deep-scroll position on body.top.
+    // While locked, visual geometry is the invariant; window.scrollY is verified
+    // only after close restores the saved document position.
+    assertBackgroundStable(before, opened, `${label} search open/focus`, { scroll: false });
 
     await clickBackdrop(page, `${label} search backdrop close`);
     await page.waitForTimeout(450);
@@ -135,7 +140,7 @@ async function runViewport(browser, viewport, contextOptions, label) {
     assert(reopened?.bodyClass.includes('_open-search'), `${label}: search did not reopen`);
     assert(reopened?.searchExpanded === 'true', `${label}: aria-expanded not true after reopen`);
     assert(String(reopened?.activeClass).includes('ms_input'), `${label}: search input did not receive focus after reopen`);
-    assertBackgroundStable(before, reopened, `${label} search reopen/focus`);
+    assertBackgroundStable(before, reopened, `${label} search reopen/focus`, { scroll: false });
 
     await clickBackdrop(page, `${label} search second backdrop close`);
     await page.waitForTimeout(450);
@@ -154,7 +159,7 @@ try {
   await runViewport(browser, { width: 375, height: 900 }, { isMobile: true, hasTouch: true }, 'SP 375');
   await runViewport(browser, { width: 1380, height: 900 }, {}, 'PC 1380');
   console.log('PASS Budokan search backdrop uses a real pointer-owned close path at deep scroll on SP/PC.');
-  console.log('PASS search open focus, backdrop close, reopen, and second backdrop close preserve header/FV/document geometry and scroll state.');
+  console.log('PASS search open focus, backdrop close, reopen, and second backdrop close preserve header/FV/document geometry and restore scroll state after close.');
 } finally {
   await browser.close();
 }
