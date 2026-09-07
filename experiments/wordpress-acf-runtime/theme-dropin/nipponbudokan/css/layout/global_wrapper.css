@@ -23,7 +23,8 @@ body._contentFixed .global_wrapper {
         scroll-padding-top: var(--header-height-PC);
     }
 
-    body._contentFixed .global_wrapper {
+    body._contentFixed .global_wrapper,
+    body.modaal-noscroll .global_wrapper {
         padding-top: var(--header-height-PC);
     }
 }
