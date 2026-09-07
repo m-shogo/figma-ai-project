@@ -55,12 +55,12 @@ records:
           kind: COMMIT
           reference_id: REF-002-BUDOKAN
           run_id: '34153495579'
-          path: experiments/wordpress-acf-runtime/scripts/budokan-top-slider-motion-browser-qa.mjs
+          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/home.js
           commit: bde45505b07aaedd9ef52e48d2907a0ce2bd48de
           note: >-
-            The first browser QA failed because its init fixture attempted to observe document.documentElement before that node was
-            available. Moving the test-only clone to a DOMContentLoaded listener, which still executes before the Theme's
-            window.load slider initialization, fixed the fixture without changing production behavior.
+            The first browser QA failed because its test-only multislide fixture was registered before document.documentElement
+            existed. On the same production-owner commit, moving the fixture to a DOMContentLoaded listener, which still executes
+            before the Theme's window.load slider initialization, fixed the QA without changing production content ownership.
       contradicts: []
     notes:
       - "Promotion review disposition 2026-09-08: KEEP_PROJECT_ONLY; Budokan-only evidence, no auto-promotion."
