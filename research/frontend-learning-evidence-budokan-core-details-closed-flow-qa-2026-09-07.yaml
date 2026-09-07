@@ -41,13 +41,15 @@ records:
           kind: COMMIT
           reference_id: REF-002-BUDOKAN
           run_id: '34085405302'
-          path: experiments/wordpress-acf-runtime/scripts/budokan-core-details-content-layout-browser-qa.mjs
+          path: .github/workflows/budokan-core-details-runtime.yml
           commit: cf3627eac6cb296681df6a52d1f4ae1af5f29948
           note: >-
             PR #470 corrected the QA-only visibility assumption. Its current-so merge-ref runtime passed existing
             Core Details pointer, keyboard, deep-scroll checks plus SP375 and PC1380 expanded-body containment,
             following-flow displacement and restoration, open-close-reopen, scroll stability and horizontal overflow.
-            Artifact upload remained blocked by repository Actions storage quota.
+            The cited workflow path already exists on the base branch and is the runtime owner extended by PR #470;
+            the new browser QA script itself remains unmerged in PR #470. Artifact upload remained blocked by repository
+            Actions storage quota. No Theme PHP, CSS, JS, WordPress Menu ownership, or ACF schema changed.
       contradicts: []
     notes:
       - "Promotion review disposition 2026-09-07: KEEP_PROJECT_ONLY; Budokan-only evidence, no auto-promotion."
