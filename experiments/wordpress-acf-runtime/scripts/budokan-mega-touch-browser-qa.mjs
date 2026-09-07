@@ -59,5 +59,39 @@ try {
   if ((await firstButton.getAttribute('aria-expanded')) !== 'false') throw new Error('Breakpoint crossing left aria-expanded stale.');
   if (await page.evaluate(()=>document.documentElement.scrollWidth > document.documentElement.clientWidth + 1)) throw new Error('Horizontal overflow after breakpoint crossing.');
 
+  // Classic scrollbars can make the layout/client width narrower than innerWidth.
+  // Both 790px and 780px remain on the CSS/JS PC side of the 768px breakpoint;
+  // resizing between them must not be mistaken for a PC -> SP crossing.
+  await page.setViewportSize({width:790,height:900});
+  await page.evaluate(() => {
+    document.documentElement.style.overflowY='scroll';
+    document.documentElement.style.scrollbarGutter='stable';
+  });
+  await page.waitForTimeout(100);
+  const gutterBefore=await page.evaluate(() => ({
+    innerWidth: window.innerWidth,
+    clientWidth: document.documentElement.clientWidth,
+    jqueryWidth: window.jQuery ? window.jQuery(window).width() : null,
+    htmlClass: document.documentElement.className,
+  }));
+  if (!(gutterBefore.innerWidth >= 768)) throw new Error(`Expected PC innerWidth before gutter resize, got ${gutterBefore.innerWidth}.`);
+  if (!(gutterBefore.clientWidth < gutterBefore.innerWidth)) throw new Error(`QA environment did not reserve a scrollbar gutter: ${JSON.stringify(gutterBefore)}`);
+  if (!(await hitOwns(firstTitle))) throw new Error('Mega parent row is pointer-intercepted before scrollbar breakpoint audit.');
+  await touchCenter(firstTitle); await page.waitForTimeout(50);
+  if (!(await first.evaluate(el=>el.classList.contains('_touchOpen')))) throw new Error('Mega did not open before scrollbar breakpoint audit.');
+
+  await page.setViewportSize({width:780,height:900}); await page.waitForTimeout(100);
+  const gutterAfter=await page.evaluate(() => ({
+    innerWidth: window.innerWidth,
+    clientWidth: document.documentElement.clientWidth,
+    jqueryWidth: window.jQuery ? window.jQuery(window).width() : null,
+    htmlClass: document.documentElement.className,
+  }));
+  if (!(gutterAfter.innerWidth >= 768)) throw new Error(`Expected PC innerWidth after gutter resize, got ${gutterAfter.innerWidth}.`);
+  if (await first.evaluate(el=>!el.classList.contains('_touchOpen'))) throw new Error(`Scrollbar-only width delta closed a PC touch mega menu: ${JSON.stringify({gutterBefore,gutterAfter})}`);
+  if ((await firstButton.getAttribute('aria-expanded')) !== 'true') throw new Error('Scrollbar-only width delta left touch mega aria-expanded stale.');
+  if (await page.evaluate(()=>document.documentElement.classList.contains('_sp'))) throw new Error(`Scrollbar-only width delta projected SP state while innerWidth stayed PC: ${JSON.stringify(gutterAfter)}`);
+  if (await page.evaluate(()=>document.documentElement.scrollWidth > document.documentElement.clientWidth + 1)) throw new Error('Horizontal overflow during scrollbar breakpoint audit.');
+
   console.log('PASS Budokan PC touch Mega interaction stability');
 } finally { await context.close(); await browser.close(); }
