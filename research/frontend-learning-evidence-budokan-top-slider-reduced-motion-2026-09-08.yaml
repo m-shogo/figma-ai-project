@@ -13,7 +13,7 @@ records:
       prefers-reduced-motion by stopping automatic slide advancement and removing the transition duration. Real-browser QA for
       this boundary must exercise the production slider initializer with a deterministic multi-slide fixture and must not alter
       production content ownership merely to make the test possible.
-    category: INTERACTION
+    category: RUNTIME
     applicability:
       scope: PROJECT
       conditions:
@@ -42,7 +42,7 @@ records:
     evidence:
       supports:
         - evidence_id: EV-BUDOKAN-TOP-SLIDER-REDUCED-MOTION-20260908
-          kind: PULL_REQUEST
+          kind: COMMIT
           reference_id: REF-002-BUDOKAN
           run_id: '34153675905'
           path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/home.js
@@ -52,7 +52,7 @@ records:
             actual Swiper params and index behavior under no-preference and reduce while also asserting stable document width,
             scroll position, and horizontal overflow.
         - evidence_id: EV-BUDOKAN-TOP-SLIDER-FIXTURE-TIMING-20260908
-          kind: CI_CORRECTION
+          kind: COMMIT
           reference_id: REF-002-BUDOKAN
           run_id: '34153495579'
           path: experiments/wordpress-acf-runtime/scripts/budokan-top-slider-motion-browser-qa.mjs
