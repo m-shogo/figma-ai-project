@@ -15,10 +15,12 @@ async function exercise(reducedMotion) {
 
     // The disposable WordPress runtime deliberately has no ACF Pro repeater, so
     // front-page.php renders one canonical fallback slide. Duplicate that already-
-    // rendered Theme slide before window.load so home.js exercises its real
-    // multi-slide Swiper path without inventing a second production content owner.
+    // rendered Theme slide after DOMContentLoaded but before window.load so home.js
+    // exercises its real multi-slide Swiper path without inventing a second
+    // production content owner. The init script registers this listener before the
+    // page's own scripts register their window.load slider initializer.
     await page.addInitScript(() => {
-      const observer = new MutationObserver(() => {
+      document.addEventListener('DOMContentLoaded', () => {
         const wrapper = document.querySelector('.tm_swiper-container .swiper-wrapper');
         if (!wrapper || wrapper.dataset.qaMultislide === 'true') return;
         const first = wrapper.querySelector('.swiper-slide');
@@ -33,9 +35,7 @@ async function exercise(reducedMotion) {
           container.appendChild(pagination);
         }
         wrapper.dataset.qaMultislide = 'true';
-        observer.disconnect();
-      });
-      observer.observe(document.documentElement, { childList: true, subtree: true });
+      }, { once: true });
     });
 
     await page.goto(url, { waitUntil: 'load' });
