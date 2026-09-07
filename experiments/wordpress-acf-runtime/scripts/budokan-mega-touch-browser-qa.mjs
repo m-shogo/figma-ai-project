@@ -2,7 +2,10 @@ import { chromium } from 'playwright';
 
 const url = process.argv[2];
 if (!url) throw new Error('Usage: node budokan-mega-touch-browser-qa.mjs <url>');
-const browser = await chromium.launch({ headless: true });
+// Run headed under Xvfb in CI so Chromium uses its desktop scrollbar geometry.
+// Headless Chromium uses overlay-style viewport metrics and cannot reproduce the
+// clientWidth < innerWidth condition this boundary audit needs.
+const browser = await chromium.launch({ headless: false, args: ['--disable-features=OverlayScrollbar'] });
 const context = await browser.newContext({ viewport: { width: 1395, height: 900 }, hasTouch: true, isMobile: false });
 const page = await context.newPage();
 
@@ -60,12 +63,13 @@ try {
   if (await page.evaluate(()=>document.documentElement.scrollWidth > document.documentElement.clientWidth + 1)) throw new Error('Horizontal overflow after breakpoint crossing.');
 
   // Classic scrollbars can make the layout/client width narrower than innerWidth.
-  // Both 790px and 780px remain on the CSS/JS PC side of the 768px breakpoint;
-  // resizing between them must not be mistaken for a PC -> SP crossing.
+  // Both 790px and 780px remain on the CSS/JS PC side of the 768px viewport breakpoint;
+  // resizing between them must not be mistaken for a PC -> SP crossing merely because
+  // the scrollbar-gutter layout width approaches the threshold.
   await page.setViewportSize({width:790,height:900});
   await page.evaluate(() => {
     document.documentElement.style.overflowY='scroll';
-    document.documentElement.style.scrollbarGutter='stable';
+    document.body.style.minHeight='1800px';
   });
   await page.waitForTimeout(100);
   const gutterBefore=await page.evaluate(() => ({
@@ -75,7 +79,7 @@ try {
     htmlClass: document.documentElement.className,
   }));
   if (!(gutterBefore.innerWidth >= 768)) throw new Error(`Expected PC innerWidth before gutter resize, got ${gutterBefore.innerWidth}.`);
-  if (!(gutterBefore.clientWidth < gutterBefore.innerWidth)) throw new Error(`QA environment did not reserve a scrollbar gutter: ${JSON.stringify(gutterBefore)}`);
+  if (!(gutterBefore.clientWidth < gutterBefore.innerWidth)) throw new Error(`QA environment did not reserve a classic scrollbar gutter: ${JSON.stringify(gutterBefore)}`);
   if (!(await hitOwns(firstTitle))) throw new Error('Mega parent row is pointer-intercepted before scrollbar breakpoint audit.');
   await touchCenter(firstTitle); await page.waitForTimeout(50);
   if (!(await first.evaluate(el=>el.classList.contains('_touchOpen')))) throw new Error('Mega did not open before scrollbar breakpoint audit.');
