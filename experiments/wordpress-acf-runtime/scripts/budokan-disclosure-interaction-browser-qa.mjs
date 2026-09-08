@@ -10,6 +10,7 @@ const assert = (condition, message) => {
   if (!condition) throw new Error(message);
 };
 const close = (actual, expected, tolerance = 2) => Math.abs(actual - expected) <= tolerance;
+const hasMotionDuration = (value) => value.split(',').some((part) => parseFloat(part) > 0);
 
 const browser = await chromium.launch({ headless: true });
 const context = await browser.newContext({
@@ -39,6 +40,8 @@ const snapshot = async (itemSelector, buttonSelector, wrapperSelector) => page.e
       buttonLeft: buttonRect.left,
       buttonWidth: buttonRect.width,
       wrapperHeight: wrapperRect.height,
+      wrapperTransitionDuration: getComputedStyle(wrapper).transitionDuration,
+      indicatorTransitionDuration: getComputedStyle(button, '::after').transitionDuration,
       activeIsButton: document.activeElement === button,
       documentScrollWidth: document.documentElement.scrollWidth,
       documentClientWidth: document.documentElement.clientWidth,
@@ -147,19 +150,41 @@ try {
 
   await page.goto(url, { waitUntil: 'networkidle' });
 
+  const selectors = {
+    itemSelector: '[data-qa-disclosure="dropdown"] .mdd_item-02._hasChild',
+    buttonSelector: '[data-qa-disclosure="dropdown"] .mdd_button-02',
+    wrapperSelector: '[data-qa-disclosure="dropdown"] .mdd_wrapper-02',
+  };
   const dropdownRoot = page.locator('[data-qa-disclosure="dropdown"]');
   await dropdownRoot.scrollIntoViewIfNeeded();
   await page.waitForTimeout(100);
 
   await auditDisclosure({
     label: 'SP dropdown navigation',
-    itemSelector: '[data-qa-disclosure="dropdown"] .mdd_item-02._hasChild',
-    buttonSelector: '[data-qa-disclosure="dropdown"] .mdd_button-02',
-    wrapperSelector: '[data-qa-disclosure="dropdown"] .mdd_wrapper-02',
+    ...selectors,
   });
 
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.reload({ waitUntil: 'networkidle' });
+  await page.locator('[data-qa-disclosure="dropdown"]').scrollIntoViewIfNeeded();
+  await page.waitForTimeout(100);
+  const reduced = await snapshot(selectors.itemSelector, selectors.buttonSelector, selectors.wrapperSelector);
+  assert(reduced, 'SP dropdown Reduced Motion fixture is missing.');
+  assert(!hasMotionDuration(reduced.wrapperTransitionDuration), `Reduced Motion dropdown wrapper must not animate grid rows, got ${reduced.wrapperTransitionDuration}.`);
+  assert(!hasMotionDuration(reduced.indicatorTransitionDuration), `Reduced Motion dropdown indicator must not animate transform, got ${reduced.indicatorTransitionDuration}.`);
+  await pointerClick(reduced, 'SP dropdown Reduced Motion before open');
+  await page.waitForTimeout(50);
+  const reducedOpened = await snapshot(selectors.itemSelector, selectors.buttonSelector, selectors.wrapperSelector);
+  assert(reducedOpened?.itemOpen === 'true', 'Reduced Motion dropdown pointer open did not set data-open=true.');
+  assert(reducedOpened?.ariaExpanded === 'true', 'Reduced Motion dropdown pointer open did not set aria-expanded=true.');
+  assert(reducedOpened.wrapperHeight > 30, `Reduced Motion dropdown did not visibly expand, got ${reducedOpened.wrapperHeight}px.`);
+  assert(close(reducedOpened.scrollY, reduced.scrollY), `Reduced Motion dropdown pointer open changed scroll position ${reduced.scrollY} -> ${reducedOpened.scrollY}.`);
+  assert(close(reducedOpened.buttonTop, reduced.buttonTop), `Reduced Motion dropdown pointer open moved control ${reduced.buttonTop} -> ${reducedOpened.buttonTop}.`);
+  assert(close(reducedOpened.documentClientWidth, reduced.documentClientWidth), `Reduced Motion dropdown changed document client width ${reduced.documentClientWidth} -> ${reducedOpened.documentClientWidth}.`);
+  assert(reducedOpened.documentScrollWidth <= reducedOpened.documentClientWidth + 1, `Reduced Motion dropdown introduced horizontal overflow ${reducedOpened.documentScrollWidth}px > ${reducedOpened.documentClientWidth}px.`);
+
   assert(pageErrors.length === 0, `Dropdown interaction produced page errors: ${pageErrors.join(' | ')}`);
-  console.log('PASS Budokan dropdown disclosure open-close-reopen geometry, real pointer ownership, keyboard stability, document-width stability, and aria-expanded synchronization browser QA');
+  console.log('PASS Budokan dropdown disclosure open-close-reopen geometry, real pointer ownership, keyboard stability, Reduced Motion, document-width stability, and aria-expanded synchronization browser QA');
 } finally {
   await browser.close();
 }
