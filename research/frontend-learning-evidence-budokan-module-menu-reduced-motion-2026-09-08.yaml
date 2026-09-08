@@ -57,13 +57,14 @@ records:
           kind: COMMIT
           reference_id: REF-002-BUDOKAN
           run_id: '34218195411'
-          path: experiments/wordpress-acf-runtime/scripts/budokan-local-nav-reduced-motion-browser-qa.mjs
+          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/module/module_menu.css
           commit: 4ecc5eb27400d40d86276116bc0c4dee77875a74
           note: >-
             The first focused QA reported a pointer-owner failure before production interaction because the nested depth-03 button
-            remained inside the collapsed, overflow-hidden depth-02 SP Local Navigation parent. The correction follows the existing
-            runtime's real user path: open the authoritative parent with a normal pointer click, assert its semantic state, then
-            hit-test and cycle the now-visible nested disclosure. No production pointer-events or stacking change was needed.
+            remained inside the collapsed, overflow-hidden depth-02 SP Local Navigation parent. The QA script introduced by PR #481
+            was corrected to follow the existing runtime's real user path: open the authoritative parent with a normal pointer click,
+            assert its semantic state, then hit-test and cycle the now-visible nested disclosure. No production pointer-events or
+            stacking change was needed. The indexed path intentionally stays on an existing Theme owner until PR #481 itself merges.
       contradicts: []
     notes:
       - "Promotion review disposition requested 2026-09-08: KEEP_PROJECT_ONLY; Budokan-only evidence, no auto-promotion."
