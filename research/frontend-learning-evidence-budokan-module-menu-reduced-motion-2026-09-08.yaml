@@ -1,0 +1,69 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: OBS-BUDOKAN-MODULE-MENU-REDUCED-MOTION
+    summary: >-
+      A shared disclosure can preserve its existing open/closed state owner and normal-preference animation while honoring
+      prefers-reduced-motion by removing only the geometry and indicator transform transitions. Real-pointer browser QA for a
+      nested disclosure must first make every authoritative ancestor disclosure user-visible; hit-testing an element whose
+      overflow-hidden ancestor is still collapsed produces test-only negative evidence, not a production pointer defect.
+    category: RUNTIME
+    applicability:
+      scope: PROJECT
+      conditions:
+        - The Budokan Local Navigation uses the Human-editable sidebar-nav WordPress Theme Location through the existing Walker.
+        - Nested Local Navigation output reuses the shared module-menu disclosure classes and state owner.
+        - Browser QA must reach nested controls through the same visible parent-disclosure path available to users.
+        - Reduced Motion verification must preserve open-close semantics, focus, scroll position, control geometry and document width.
+      exclusions:
+        - Do not infer the same transition owner for unrelated menu, search, modal, tab or slider families without independent runtime proof.
+        - Do not force-click hidden descendants or treat elementFromPoint failure under a collapsed overflow-hidden ancestor as a production clickability defect.
+        - Do not change WordPress menu data, Walker markup or ACF ownership to make a browser fixture easier to exercise.
+        - Same-project confirmation is not independent evidence for cross-project promotion.
+    promotion_state: PROJECT_ONLY
+    promotion:
+      candidate: false
+      rationale: >-
+        PR #481 found that the shared Budokan module-menu disclosure kept its grid-row geometry transition and plus/minus transform
+        transition when the browser requested reduced motion. The bounded production repair removes only those two motion durations
+        under prefers-reduced-motion: reduce. The first focused browser pass then failed pointer ownership because it targeted a
+        nested depth-03 disclosure while the authoritative SP depth-02 Local Navigation parent was still collapsed with hidden
+        overflow. Commit 4ecc5eb corrected only the QA path by real-clicking that parent first. Budokan Local Navigation Runtime
+        34223839015 subsequently passed the existing hierarchy/browser coverage and the corrected disclosure interaction coverage.
+        Evidence remains Budokan-specific and PR #481 is not yet merged.
+      blocked_by:
+        - NEEDS_INDEPENDENT_REFERENCE_EVIDENCE_BEFORE_CROSS_PROJECT_PROMOTION
+        - PR_481_NOT_YET_MERGED
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-MODULE-MENU-REDUCED-MOTION-20260908
+          kind: COMMIT
+          reference_id: REF-002-BUDOKAN
+          run_id: '34223839015'
+          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/module/module_menu.css
+          commit: 4ecc5eb27400d40d86276116bc0c4dee77875a74
+          note: >-
+            PR #481 current head passed Budokan Local Navigation Runtime after preserving the existing module-menu state owner and
+            normal-preference transitions while removing disclosure geometry/icon transition duration only for Reduced Motion.
+            The real WordPress runtime retained pointer, focus, scroll and width stability across open-close-reopen cycles.
+        - evidence_id: EV-BUDOKAN-MODULE-MENU-NESTED-HITTEST-CORRECTION-20260908
+          kind: COMMIT
+          reference_id: REF-002-BUDOKAN
+          run_id: '34218195411'
+          path: experiments/wordpress-acf-runtime/scripts/budokan-local-nav-reduced-motion-browser-qa.mjs
+          commit: 4ecc5eb27400d40d86276116bc0c4dee77875a74
+          note: >-
+            The first focused QA reported a pointer-owner failure before production interaction because the nested depth-03 button
+            remained inside the collapsed, overflow-hidden depth-02 SP Local Navigation parent. The correction follows the existing
+            runtime's real user path: open the authoritative parent with a normal pointer click, assert its semantic state, then
+            hit-test and cycle the now-visible nested disclosure. No production pointer-events or stacking change was needed.
+      contradicts: []
+    notes:
+      - "Promotion review disposition requested 2026-09-08: KEEP_PROJECT_ONLY; Budokan-only evidence, no auto-promotion."
