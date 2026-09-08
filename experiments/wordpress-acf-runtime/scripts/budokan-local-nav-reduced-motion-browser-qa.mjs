@@ -24,6 +24,8 @@ const context = await browser.newContext({
 });
 const page = await context.newPage();
 
+const parentItemSelector = '.lnl_item-02';
+const parentButtonSelector = '.lnl_item-02 > .lnl_title-02 > .lnl_button-02';
 const itemSelector = '.lnl_item-03._hasChild';
 const buttonSelector = '.lnl_item-03._hasChild > .lnl_title-03 > .lnl_button-03';
 const wrapperSelector = '.lnl_item-03._hasChild > .lnl_wrapper-03';
@@ -38,8 +40,8 @@ const snapshot = async () => page.evaluate(({ itemSelector, buttonSelector, wrap
   const wrapperRect = wrapper.getBoundingClientRect();
   const buttonStyle = getComputedStyle(button, '::after');
   const wrapperStyle = getComputedStyle(wrapper);
-  const pointX = buttonRect.left + buttonRect.width / 2;
-  const pointY = buttonRect.top + buttonRect.height / 2;
+  const pointX = Math.min(window.innerWidth - 1, Math.max(0, buttonRect.left + buttonRect.width / 2));
+  const pointY = Math.min(window.innerHeight - 1, Math.max(0, buttonRect.top + buttonRect.height / 2));
   const hit = document.elementFromPoint(pointX, pointY);
 
   return {
@@ -53,7 +55,9 @@ const snapshot = async () => page.evaluate(({ itemSelector, buttonSelector, wrap
     wrapperHeight: wrapperRect.height,
     wrapperTransitionDuration: wrapperStyle.transitionDuration,
     buttonAfterTransitionDuration: buttonStyle.transitionDuration,
-    hitOwnsButton: hit === button || button.contains(hit),
+    hitOwnsButton: Boolean(hit && (hit === button || button.contains(hit))),
+    hitTag: hit?.tagName || null,
+    hitClass: hit?.className || null,
     activeIsButton: document.activeElement === button,
     documentScrollWidth: document.documentElement.scrollWidth,
     documentClientWidth: document.documentElement.clientWidth,
@@ -65,6 +69,25 @@ try {
   page.on('pageerror', (error) => pageErrors.push(error.message));
 
   await page.goto(url, { waitUntil: 'networkidle' });
+
+  // The real depth-03 disclosure lives inside the collapsed SP depth-02 Local
+  // Navigation selector. Open that authoritative parent first with a real
+  // pointer click; hit-testing a child while its overflow-hidden parent is
+  // collapsed would only test invisible geometry, not a user-reachable control.
+  const parentButton = page.locator(parentButtonSelector).first();
+  await parentButton.scrollIntoViewIfNeeded();
+  await parentButton.click();
+  await page.waitForTimeout(400);
+  const parentOpen = await page.evaluate(({ parentItemSelector, parentButtonSelector }) => {
+    const item = document.querySelector(parentItemSelector);
+    const button = document.querySelector(parentButtonSelector);
+    return {
+      itemOpen: item?.getAttribute('data-open') || null,
+      ariaExpanded: button?.getAttribute('aria-expanded') || null,
+    };
+  }, { parentItemSelector, parentButtonSelector });
+  assert(parentOpen.itemOpen === 'true', `Reduced Motion parent Local Navigation did not open, got ${parentOpen.itemOpen}.`);
+  assert(parentOpen.ariaExpanded === 'true', `Reduced Motion parent Local Navigation aria-expanded expected true, got ${parentOpen.ariaExpanded}.`);
 
   const button = page.locator(buttonSelector).first();
   await button.scrollIntoViewIfNeeded();
@@ -78,7 +101,7 @@ try {
   assert(before.wrapperHeight <= 1, `Disclosure must begin collapsed, got ${before.wrapperHeight}px.`);
   assert(allDurationsZero(before.wrapperTransitionDuration), `Reduced Motion wrapper must not animate grid rows, got ${before.wrapperTransitionDuration}.`);
   assert(allDurationsZero(before.buttonAfterTransitionDuration), `Reduced Motion disclosure icon must not rotate with a transition, got ${before.buttonAfterTransitionDuration}.`);
-  assert(before.hitOwnsButton, 'Reduced Motion disclosure button does not own its pointer hit area before open.');
+  assert(before.hitOwnsButton, `Reduced Motion disclosure button hit-test resolves to ${before.hitTag}.${before.hitClass} before open.`);
 
   const cycle = async (expectedOpen, label) => {
     const baseline = await snapshot();
