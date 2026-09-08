@@ -14,6 +14,7 @@ on:
       - 'experiments/wordpress-acf-runtime/scripts/budokan-local-nav-browser-qa.mjs'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-page-master-browser-qa.mjs'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-local-nav-interaction-browser-qa.mjs'
+      - 'experiments/wordpress-acf-runtime/scripts/budokan-local-nav-reduced-motion-browser-qa.mjs'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-local-nav-pointer-browser-qa.mjs'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-anchor-interaction-browser-qa.mjs'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-disclosure-interaction-browser-qa.mjs'
@@ -69,6 +70,7 @@ jobs:
           node experiments/wordpress-acf-runtime/scripts/budokan-local-nav-browser-qa.mjs "$qa_url"
           node experiments/wordpress-acf-runtime/scripts/budokan-page-master-browser-qa.mjs "$qa_url"
           node experiments/wordpress-acf-runtime/scripts/budokan-local-nav-interaction-browser-qa.mjs "$qa_url"
+          node experiments/wordpress-acf-runtime/scripts/budokan-local-nav-reduced-motion-browser-qa.mjs "$qa_url"
           node experiments/wordpress-acf-runtime/scripts/budokan-local-nav-pointer-browser-qa.mjs "$qa_url"
           node experiments/wordpress-acf-runtime/scripts/budokan-anchor-interaction-browser-qa.mjs "$qa_url"
 
