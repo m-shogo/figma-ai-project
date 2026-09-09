@@ -1,26 +1,34 @@
 # Update Radar — Latest Official Source Scan
 
-Generated: `2026-09-08T08:07:53+00:00`
+Generated: `2026-09-09T08:11:15+00:00`
 
 Active lanes: ACCESSIBILITY, CLAUDE_CODE, CODEX, CURSOR, DESIGN_SYSTEMS, FIGMA, FRONTEND_TOOLING, MCP, WEB_PLATFORM, WORDPRESS_ACF
 
 ## Summary
 
 - Sources checked: 37
-- Changed since previous snapshot: 2
+- Changed since previous snapshot: 3
 - First observations: 0
 - Fetch errors: 3
-- RETEST candidates: AGENT_CONTEXT, ANIMATION, ASSET_FIDELITY, COLOR_GRADIENT, CSS_RESET, FIGMA_LAYOUT_GENERATION, FIGMA_MCP, LAYOUT, PARALLEL_EXECUTION, SCROLL, TYPOGRAPHY_RUNTIME
+- RETEST candidates: ACCESSIBILITY, AGENT_CONTEXT, ASSET_FIDELITY, COLOR_GRADIENT, FIGMA_MCP, PARALLEL_EXECUTION, VARIABLE_MODE_RUNTIME
 
 ## Changed sources
 
-### web-features-releases
+### claude-code-releases
 
-- Lane: `WEB_PLATFORM`
-- Latest title: web-features@next
-- Impacts: CSS, WEB_PLATFORM, BROWSER_SUPPORT, FEATURE_ADOPTION
-- RETEST: CSS_RESET, SCROLL, ANIMATION, LAYOUT, FIGMA_LAYOUT_GENERATION, TYPOGRAPHY_RUNTIME, ASSET_FIDELITY, COLOR_GRADIENT, FIGMA_MCP, AGENT_CONTEXT, PARALLEL_EXECUTION
-- Source: https://api.github.com/repos/web-platform-dx/web-features/releases?per_page=12
+- Lane: `CLAUDE_CODE`
+- Latest title: v2.1.266
+- Impacts: AGENT_CAPABILITY, MCP, PARALLEL_EXECUTION, CONTEXT_HANDLING
+- RETEST: ASSET_FIDELITY, VARIABLE_MODE_RUNTIME, ACCESSIBILITY, FIGMA_MCP, AGENT_CONTEXT, PARALLEL_EXECUTION
+- Source: https://api.github.com/repos/anthropics/claude-code/releases?per_page=12
+
+### claude-code-feed
+
+- Lane: `CLAUDE_CODE`
+- Latest title: Claude Code v2.1.266
+- Impacts: AGENT_CAPABILITY, MCP, CONTEXT_HANDLING
+- RETEST: ASSET_FIDELITY, VARIABLE_MODE_RUNTIME, ACCESSIBILITY, FIGMA_MCP, AGENT_CONTEXT, PARALLEL_EXECUTION
+- Source: https://raw.githubusercontent.com/anthropics/claude-code/main/feed.xml
 
 ### mdn-browser-compat-data-releases
 
