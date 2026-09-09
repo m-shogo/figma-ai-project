@@ -1,6 +1,6 @@
 # Update Radar — Latest Official Source Scan
 
-Generated: `2026-09-07T08:21:52+00:00`
+Generated: `2026-09-08T08:07:53+00:00`
 
 Active lanes: ACCESSIBILITY, CLAUDE_CODE, CODEX, CURSOR, DESIGN_SYSTEMS, FIGMA, FRONTEND_TOOLING, MCP, WEB_PLATFORM, WORDPRESS_ACF
 
@@ -10,9 +10,17 @@ Active lanes: ACCESSIBILITY, CLAUDE_CODE, CODEX, CURSOR, DESIGN_SYSTEMS, FIGMA, 
 - Changed since previous snapshot: 2
 - First observations: 0
 - Fetch errors: 3
-- RETEST candidates: ACCESSIBILITY, AGENT_CONTEXT, ASSET_FIDELITY, COLOR_GRADIENT, FIGMA_MCP
+- RETEST candidates: AGENT_CONTEXT, ANIMATION, ASSET_FIDELITY, COLOR_GRADIENT, CSS_RESET, FIGMA_LAYOUT_GENERATION, FIGMA_MCP, LAYOUT, PARALLEL_EXECUTION, SCROLL, TYPOGRAPHY_RUNTIME
 
 ## Changed sources
+
+### web-features-releases
+
+- Lane: `WEB_PLATFORM`
+- Latest title: web-features@next
+- Impacts: CSS, WEB_PLATFORM, BROWSER_SUPPORT, FEATURE_ADOPTION
+- RETEST: CSS_RESET, SCROLL, ANIMATION, LAYOUT, FIGMA_LAYOUT_GENERATION, TYPOGRAPHY_RUNTIME, ASSET_FIDELITY, COLOR_GRADIENT, FIGMA_MCP, AGENT_CONTEXT, PARALLEL_EXECUTION
+- Source: https://api.github.com/repos/web-platform-dx/web-features/releases?per_page=12
 
 ### mdn-browser-compat-data-releases
 
@@ -21,14 +29,6 @@ Active lanes: ACCESSIBILITY, CLAUDE_CODE, CODEX, CURSOR, DESIGN_SYSTEMS, FIGMA, 
 - Impacts: CSS, BROWSER_SUPPORT, FEATURE_DETECTION
 - RETEST: ASSET_FIDELITY, COLOR_GRADIENT, FIGMA_MCP, AGENT_CONTEXT
 - Source: https://api.github.com/repos/mdn/browser-compat-data/releases?per_page=12
-
-### style-dictionary-releases
-
-- Lane: `DESIGN_SYSTEMS`
-- Latest title: v5.5.3
-- Impacts: TOKENS, DESIGN_SYSTEM, FIGMA_VARIABLES, BUILD_TOOLING
-- RETEST: ASSET_FIDELITY, COLOR_GRADIENT, ACCESSIBILITY
-- Source: https://api.github.com/repos/style-dictionary/style-dictionary/releases?per_page=12
 
 ## Fetch errors
 
