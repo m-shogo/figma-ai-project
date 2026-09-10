@@ -535,6 +535,27 @@
         /* ステータス end */
     }
 
+    /* MARK: Reduced Motion */
+    @media (prefers-reduced-motion: reduce) {
+        .mm_button-02,
+        .mm_button-03,
+        .mm_button-04,
+        .mm_button-05,
+        .mm_button-06 {
+            &::before,
+            &::after {
+                transition-duration: 0s;
+            }
+        }
+        .mm_wrapper-02,
+        .mm_wrapper-03,
+        .mm_wrapper-04,
+        .mm_wrapper-05,
+        .mm_wrapper-06 {
+            transition-duration: 0s;
+        }
+    }
+
     /* MARK: hover */
     @media (any-hover: hover) {
         .mm_title-03 {

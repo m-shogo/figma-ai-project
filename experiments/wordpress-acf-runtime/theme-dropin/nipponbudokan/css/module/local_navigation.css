@@ -136,6 +136,16 @@
         margin-top: 10px;
     }
 
+    /* Reduced Motion only removes the outer SP selector's geometry/icon
+       transition. State, geometry, menu data and normal-preference motion stay
+       owned by the existing Local Navigation implementation. */
+    @media (prefers-reduced-motion: reduce) {
+        .lnl_button-02::after,
+        .lnl_wrapper-02 {
+            transition-duration: 0s;
+        }
+    }
+
     /* The current Figma only authors the closed SP state. Keep the existing
        shared module-menu behavior for deeper open-state content instead of
        inventing a mobile hierarchy presentation here. */
