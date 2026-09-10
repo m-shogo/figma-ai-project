@@ -50,7 +50,7 @@ jobs:
           qa_page_id="$(docker compose run --rm cli option get budokan_mega_touch_qa_page_id)"
           qa_url="${WP_URL}/?page_id=${qa_page_id}"
           cd ../..
-          node experiments/wordpress-acf-runtime/scripts/budokan-mega-touch-browser-qa.mjs "$qa_url"
+          xvfb-run -a node experiments/wordpress-acf-runtime/scripts/budokan-mega-touch-browser-qa.mjs "$qa_url"
       - name: Cleanup disposable WordPress runtime
         if: always()
         run: |

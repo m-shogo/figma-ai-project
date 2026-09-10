@@ -1,18 +1,34 @@
 # Update Radar — Latest Official Source Scan
 
-Generated: `2026-09-07T08:21:52+00:00`
+Generated: `2026-09-09T08:11:15+00:00`
 
 Active lanes: ACCESSIBILITY, CLAUDE_CODE, CODEX, CURSOR, DESIGN_SYSTEMS, FIGMA, FRONTEND_TOOLING, MCP, WEB_PLATFORM, WORDPRESS_ACF
 
 ## Summary
 
 - Sources checked: 37
-- Changed since previous snapshot: 2
+- Changed since previous snapshot: 3
 - First observations: 0
 - Fetch errors: 3
-- RETEST candidates: ACCESSIBILITY, AGENT_CONTEXT, ASSET_FIDELITY, COLOR_GRADIENT, FIGMA_MCP
+- RETEST candidates: ACCESSIBILITY, AGENT_CONTEXT, ASSET_FIDELITY, COLOR_GRADIENT, FIGMA_MCP, PARALLEL_EXECUTION, VARIABLE_MODE_RUNTIME
 
 ## Changed sources
+
+### claude-code-releases
+
+- Lane: `CLAUDE_CODE`
+- Latest title: v2.1.266
+- Impacts: AGENT_CAPABILITY, MCP, PARALLEL_EXECUTION, CONTEXT_HANDLING
+- RETEST: ASSET_FIDELITY, VARIABLE_MODE_RUNTIME, ACCESSIBILITY, FIGMA_MCP, AGENT_CONTEXT, PARALLEL_EXECUTION
+- Source: https://api.github.com/repos/anthropics/claude-code/releases?per_page=12
+
+### claude-code-feed
+
+- Lane: `CLAUDE_CODE`
+- Latest title: Claude Code v2.1.266
+- Impacts: AGENT_CAPABILITY, MCP, CONTEXT_HANDLING
+- RETEST: ASSET_FIDELITY, VARIABLE_MODE_RUNTIME, ACCESSIBILITY, FIGMA_MCP, AGENT_CONTEXT, PARALLEL_EXECUTION
+- Source: https://raw.githubusercontent.com/anthropics/claude-code/main/feed.xml
 
 ### mdn-browser-compat-data-releases
 
@@ -21,14 +37,6 @@ Active lanes: ACCESSIBILITY, CLAUDE_CODE, CODEX, CURSOR, DESIGN_SYSTEMS, FIGMA, 
 - Impacts: CSS, BROWSER_SUPPORT, FEATURE_DETECTION
 - RETEST: ASSET_FIDELITY, COLOR_GRADIENT, FIGMA_MCP, AGENT_CONTEXT
 - Source: https://api.github.com/repos/mdn/browser-compat-data/releases?per_page=12
-
-### style-dictionary-releases
-
-- Lane: `DESIGN_SYSTEMS`
-- Latest title: v5.5.3
-- Impacts: TOKENS, DESIGN_SYSTEM, FIGMA_VARIABLES, BUILD_TOOLING
-- RETEST: ASSET_FIDELITY, COLOR_GRADIENT, ACCESSIBILITY
-- Source: https://api.github.com/repos/style-dictionary/style-dictionary/releases?per_page=12
 
 ## Fetch errors
 

@@ -46,6 +46,19 @@ const runCase = async ({ label, width, mobile = false }) => {
     };
   });
 
+  const assertBackgroundStable = (before, after, action) => {
+    assert(close(after.scrollY, before.scrollY), `${label}: ${action} changed scrollY ${before.scrollY} -> ${after.scrollY}.`);
+    assert(close(after.header.top, before.header.top), `${label}: ${action} moved header top ${before.header.top} -> ${after.header.top}.`);
+    assert(close(after.header.left, before.header.left), `${label}: ${action} moved header left ${before.header.left} -> ${after.header.left}.`);
+    assert(close(after.header.width, before.header.width), `${label}: ${action} resized header ${before.header.width} -> ${after.header.width}.`);
+    assert(close(after.trigger.top, before.trigger.top), `${label}: ${action} moved trigger top ${before.trigger.top} -> ${after.trigger.top}.`);
+    assert(close(after.trigger.left, before.trigger.left), `${label}: ${action} moved trigger left ${before.trigger.left} -> ${after.trigger.left}.`);
+    assert(close(after.trigger.width, before.trigger.width), `${label}: ${action} resized trigger ${before.trigger.width} -> ${after.trigger.width}.`);
+    assert(close(after.bodyWidth, before.bodyWidth), `${label}: ${action} resized body ${before.bodyWidth} -> ${after.bodyWidth}.`);
+    assert(close(after.clientWidth, before.clientWidth), `${label}: ${action} changed document client width ${before.clientWidth} -> ${after.clientWidth}.`);
+    assert(after.docWidth <= after.clientWidth + 1, `${label}: ${action} introduced horizontal overflow ${after.docWidth}px > ${after.clientWidth}px.`);
+  };
+
   try {
     const origin = new URL(url).origin;
     await page.goto(url, { waitUntil: 'networkidle' });
@@ -54,6 +67,7 @@ const runCase = async ({ label, width, mobile = false }) => {
     await page.waitForTimeout(150);
     const before = await snapshot();
     assert(before.header && before.trigger, `${label}: modal fixture/header missing.`);
+    assert(before.scrollY > 100, `${label}: modal deep-scroll precondition missing; scrollY=${before.scrollY}.`);
     assert(before.docWidth <= before.clientWidth + 1, `${label}: baseline horizontal overflow ${before.docWidth}px > ${before.clientWidth}px.`);
 
     await trigger.click();
@@ -62,11 +76,7 @@ const runCase = async ({ label, width, mobile = false }) => {
     const opened = await snapshot();
     assert(opened.modalOpen, `${label}: Modaal did not open.`);
     assert(opened.bodyClass.includes('modaal-noscroll'), `${label}: Modaal did not lock background scroll.`);
-    assert(close(opened.scrollY, before.scrollY), `${label}: open changed scrollY ${before.scrollY} -> ${opened.scrollY}.`);
-    assert(close(opened.header.left, before.header.left), `${label}: open moved header left ${before.header.left} -> ${opened.header.left}.`);
-    assert(close(opened.header.width, before.header.width), `${label}: open resized header ${before.header.width} -> ${opened.header.width}.`);
-    assert(close(opened.bodyWidth, before.bodyWidth), `${label}: open resized body ${before.bodyWidth} -> ${opened.bodyWidth}.`);
-    assert(opened.docWidth <= opened.clientWidth + 1, `${label}: open introduced horizontal overflow ${opened.docWidth}px > ${opened.clientWidth}px.`);
+    assertBackgroundStable(before, opened, 'open');
     assert(opened.activeInsideModal, `${label}: focus did not move inside modal.`);
 
     await page.keyboard.press('Escape');
@@ -74,13 +84,18 @@ const runCase = async ({ label, width, mobile = false }) => {
     await page.waitForTimeout(400);
     const escaped = await snapshot();
     assert(!escaped.bodyClass.includes('modaal-noscroll'), `${label}: Escape close left background scroll locked.`);
-    assert(close(escaped.scrollY, before.scrollY), `${label}: Escape close changed scrollY ${before.scrollY} -> ${escaped.scrollY}.`);
-    assert(close(escaped.header.width, before.header.width), `${label}: Escape close did not restore header width.`);
+    assertBackgroundStable(before, escaped, 'Escape close');
     assert(escaped.activeIsTrigger, `${label}: Escape close did not return focus to trigger.`);
 
     await trigger.click();
     await page.locator('.modaal-wrapper').waitFor({ state: 'visible' });
     await page.waitForTimeout(400);
+    const reopened = await snapshot();
+    assert(reopened.modalOpen, `${label}: Modaal did not reopen.`);
+    assert(reopened.bodyClass.includes('modaal-noscroll'), `${label}: Modaal reopen did not lock background scroll.`);
+    assertBackgroundStable(before, reopened, 'reopen');
+    assert(reopened.activeInsideModal, `${label}: focus did not move inside modal on reopen.`);
+
     const closeButton = page.locator('.modaal-close');
     const hit = await closeButton.evaluate(el => {
       const r = el.getBoundingClientRect();
@@ -92,7 +107,7 @@ const runCase = async ({ label, width, mobile = false }) => {
     await page.locator('.modaal-wrapper').waitFor({ state: 'detached' });
     await page.waitForTimeout(400);
     const closed = await snapshot();
-    assert(close(closed.scrollY, before.scrollY), `${label}: pointer close changed scrollY ${before.scrollY} -> ${closed.scrollY}.`);
+    assertBackgroundStable(before, closed, 'pointer close after reopen');
     assert(closed.activeIsTrigger, `${label}: pointer close did not return focus to trigger.`);
 
     const criticalRequestFailures = failedRequests.filter(({ resourceType, requestUrl }) => {
@@ -108,7 +123,7 @@ const runCase = async ({ label, width, mobile = false }) => {
     if (failedRequests.length > 0) {
       console.log(`NOTE ${label}: ignored non-critical request failures: ${failedRequests.map(({ resourceType, requestUrl, failure }) => `${resourceType} ${requestUrl} (${failure})`).join(' | ')}`);
     }
-    console.log(`PASS ${label}: Modaal keeps background geometry/scroll stable and restores focus after Escape/pointer close.`);
+    console.log(`PASS ${label}: Modaal keeps deep-scroll background geometry stable across open/Escape/reopen/pointer-close and restores focus.`);
   } finally {
     await context.close();
   }

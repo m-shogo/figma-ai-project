@@ -2,7 +2,10 @@ import { chromium } from 'playwright';
 
 const url = process.argv[2];
 if (!url) throw new Error('Usage: node budokan-mega-touch-browser-qa.mjs <url>');
-const browser = await chromium.launch({ headless: true });
+// Run headed under Xvfb in CI so Chromium uses its desktop scrollbar geometry.
+// Headless Chromium uses overlay-style viewport metrics and cannot reproduce the
+// clientWidth < innerWidth condition this boundary audit needs.
+const browser = await chromium.launch({ headless: false, args: ['--disable-features=OverlayScrollbar'] });
 const context = await browser.newContext({ viewport: { width: 1395, height: 900 }, hasTouch: true, isMobile: false });
 const page = await context.newPage();
 
@@ -58,6 +61,62 @@ try {
   if (await first.evaluate(el=>el.classList.contains('_touchOpen'))) throw new Error('Breakpoint crossing left _touchOpen stale.');
   if ((await firstButton.getAttribute('aria-expanded')) !== 'false') throw new Error('Breakpoint crossing left aria-expanded stale.');
   if (await page.evaluate(()=>document.documentElement.scrollWidth > document.documentElement.clientWidth + 1)) throw new Error('Horizontal overflow after breakpoint crossing.');
+
+  // Classic scrollbars can make layout/client width narrower than innerWidth.
+  // The authoritative question is the CSS media query itself, not an assumed
+  // relationship between viewport metrics. Only call this a defect if CSS
+  // remains on its min-width:768px side while JS projects SP/cleans PC state.
+  await page.setViewportSize({width:790,height:900});
+  await page.evaluate(() => {
+    document.documentElement.style.overflowY='scroll';
+    document.body.style.minHeight='1800px';
+  });
+  await page.waitForTimeout(100);
+  const gutterBefore=await page.evaluate(() => ({
+    innerWidth: window.innerWidth,
+    clientWidth: document.documentElement.clientWidth,
+    scrollWidth: document.documentElement.scrollWidth,
+    bodyScrollWidth: document.body.scrollWidth,
+    jqueryWidth: window.jQuery ? window.jQuery(window).width() : null,
+    cssPc: window.matchMedia('(min-width: 768px)').matches,
+    htmlClass: document.documentElement.className,
+  }));
+  if (!(gutterBefore.clientWidth < gutterBefore.innerWidth)) throw new Error(`QA environment did not reserve a classic scrollbar gutter: ${JSON.stringify(gutterBefore)}`);
+  if (!gutterBefore.cssPc) throw new Error(`Expected authoritative CSS PC state before gutter resize: ${JSON.stringify(gutterBefore)}`);
+  if (!(await hitOwns(firstTitle))) throw new Error('Mega parent row is pointer-intercepted before scrollbar breakpoint audit.');
+  await touchCenter(firstTitle); await page.waitForTimeout(50);
+  if (!(await first.evaluate(el=>el.classList.contains('_touchOpen')))) throw new Error('Mega did not open before scrollbar breakpoint audit.');
+
+  await page.setViewportSize({width:780,height:900}); await page.waitForTimeout(100);
+  const gutterAfter=await page.evaluate(() => {
+    const clientWidth=document.documentElement.clientWidth;
+    const offenders=[...document.querySelectorAll('body *')]
+      .map(el=>{ const r=el.getBoundingClientRect(); return {tag:el.tagName.toLowerCase(),id:el.id,className:typeof el.className==='string'?el.className:'',left:r.left,right:r.right,width:r.width}; })
+      .filter(x=>x.right > clientWidth + 1 || x.left < -1)
+      .sort((a,b)=>Math.max(b.right-clientWidth,-b.left)-Math.max(a.right-clientWidth,-a.left))
+      .slice(0,12);
+    return {
+      innerWidth: window.innerWidth,
+      clientWidth,
+      scrollWidth: document.documentElement.scrollWidth,
+      bodyScrollWidth: document.body.scrollWidth,
+      jqueryWidth: window.jQuery ? window.jQuery(window).width() : null,
+      cssPc: window.matchMedia('(min-width: 768px)').matches,
+      htmlClass: document.documentElement.className,
+      offenders,
+    };
+  });
+  if (!gutterAfter.cssPc) throw new Error(`Authoritative CSS crossed to SP; this is not a scrollbar-only JS disagreement: ${JSON.stringify({gutterBefore,gutterAfter})}`);
+  if (await first.evaluate(el=>!el.classList.contains('_touchOpen'))) throw new Error(`JS closed a PC touch mega while CSS remained PC: ${JSON.stringify({gutterBefore,gutterAfter})}`);
+  if ((await firstButton.getAttribute('aria-expanded')) !== 'true') throw new Error('Scrollbar-only width delta left touch mega aria-expanded stale.');
+  if (await page.evaluate(()=>document.documentElement.classList.contains('_sp'))) throw new Error(`JS projected SP state while authoritative CSS remained PC: ${JSON.stringify(gutterAfter)}`);
+  // This artificial 780px PC-side probe intentionally lands below the Theme's
+  // established 1280px PC body minimum. Do not misclassify that pre-existing PC
+  // shell overflow as a mega interaction defect; require the resize/open cycle
+  // not to create any additional document/body overflow beyond its baseline.
+  if (gutterAfter.scrollWidth > gutterBefore.scrollWidth + 1 || gutterAfter.bodyScrollWidth > gutterBefore.bodyScrollWidth + 1) {
+    throw new Error(`Scrollbar breakpoint audit introduced additional overflow: ${JSON.stringify({gutterBefore,gutterAfter})}`);
+  }
 
   console.log('PASS Budokan PC touch Mega interaction stability');
 } finally { await context.close(); await browser.close(); }

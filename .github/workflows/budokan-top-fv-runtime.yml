@@ -18,6 +18,7 @@ on:
       - 'experiments/wordpress-acf-runtime/scripts/budokan-top-fv-browser-qa.mjs'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-top-slider-motion-browser-qa.mjs'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-overlay-stability-browser-qa.mjs'
+      - 'experiments/wordpress-acf-runtime/scripts/budokan-search-backdrop-close-browser-qa.mjs'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-header-state-stability-browser-qa.mjs'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-footer-browser-qa.mjs'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-fallback-navigation-browser-qa.mjs'
@@ -68,6 +69,14 @@ jobs:
           qa_url="${WP_URL}/"
           cd ../..
           node experiments/wordpress-acf-runtime/scripts/budokan-overlay-stability-browser-qa.mjs "$qa_url"
+
+      - name: Run SP and PC search backdrop close pointer QA
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          qa_url="${WP_URL}/"
+          cd ../..
+          node experiments/wordpress-acf-runtime/scripts/budokan-search-backdrop-close-browser-qa.mjs "$qa_url"
 
       - name: Run SP and PC header interaction state stability QA
         run: |
