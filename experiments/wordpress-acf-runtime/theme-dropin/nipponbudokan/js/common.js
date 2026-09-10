@@ -536,7 +536,7 @@ window.addEventListener('resize', setVw);
     // ブレークポイントを跨いだときに不要なクラスを削除
     let lastWidthForBreakpoint = null;
     $(window).on('load resize', function () {
-      const currentWidth = $(window).width();
+      const currentWidth = window.innerWidth;
       const wasPcOrOver = lastWidthForBreakpoint !== null && lastWidthForBreakpoint >= headerBreakpointMin;
       const isPcOrOver = currentWidth >= headerBreakpointMin;
       if (lastWidthForBreakpoint !== null && wasPcOrOver !== isPcOrOver) {
@@ -648,7 +648,7 @@ window.addEventListener('resize', setVw);
     // });
     // ウィンドウ幅によってクラス付与
     $(window).on('load resize', function () {
-      const w = $(window).width();
+      const w = window.innerWidth;
       if (w < 768) {
         $('html').addClass('_sp').removeClass('_pc _tablet');
       } else if (w < 1024) {
@@ -787,7 +787,7 @@ window.addEventListener('resize', setVw);
     const headerBreakpointMin = 768;
     let lastWidthForContentFixedBreakpoint = null;
     $(window).on('load resize', function () {
-      const currentWidth = $(window).width();
+      const currentWidth = window.innerWidth;
       const wasPcOrOver = lastWidthForContentFixedBreakpoint !== null && lastWidthForContentFixedBreakpoint >= headerBreakpointMin;
       const isPcOrOver = currentWidth >= headerBreakpointMin;
       if (lastWidthForContentFixedBreakpoint !== null && wasPcOrOver !== isPcOrOver) {
