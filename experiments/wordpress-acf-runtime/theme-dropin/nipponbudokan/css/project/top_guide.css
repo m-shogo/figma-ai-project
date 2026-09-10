@@ -86,6 +86,7 @@
         letter-spacing: 0.05em;
         color: var(--color-accent);
         white-space: nowrap;
+        text-transform: capitalize;
 
         &::before {
             content: '';
@@ -259,6 +260,7 @@
             font-weight: 500;
             letter-spacing: 0.05em;
             color: var(--color-accent);
+            text-transform: none;
 
             &::before {
                 position: absolute;
