@@ -61,7 +61,7 @@ const pointerClick = async (state, label) => {
 
 const auditDisclosure = async ({ label, itemSelector, buttonSelector, wrapperSelector }) => {
   const button = page.locator(buttonSelector).first();
-  await button.scrollIntoViewIfNeeded();
+  assert(await button.isVisible(), `${label} disclosure button must be visible before interaction audit.`);
   await page.waitForTimeout(100);
 
   const before = await snapshot({ itemSelector, buttonSelector, wrapperSelector });
@@ -80,6 +80,7 @@ const auditDisclosure = async ({ label, itemSelector, buttonSelector, wrapperSel
   assert(close(opened.buttonTop, before.buttonTop), `${label} pointer open moved control vertically ${before.buttonTop} -> ${opened.buttonTop}.`);
   assert(close(opened.buttonLeft, before.buttonLeft), `${label} pointer open moved control horizontally ${before.buttonLeft} -> ${opened.buttonLeft}.`);
   assert(close(opened.buttonWidth, before.buttonWidth), `${label} pointer open resized control width ${before.buttonWidth} -> ${opened.buttonWidth}.`);
+  assert(close(opened.documentClientWidth, before.documentClientWidth), `${label} pointer open changed document client width ${before.documentClientWidth} -> ${opened.documentClientWidth}.`);
   assert(opened.hitOwnsButton, `${label} pointer hit-test is intercepted after open by ${opened.hitTag}.${opened.hitClass}.`);
   assert(opened.documentScrollWidth <= opened.documentClientWidth + 1, `${label} pointer open introduced horizontal overflow ${opened.documentScrollWidth}px > ${opened.documentClientWidth}px.`);
 
@@ -90,6 +91,30 @@ const auditDisclosure = async ({ label, itemSelector, buttonSelector, wrapperSel
   assert(closed?.ariaExpanded === 'false', `${label} pointer close did not set aria-expanded=false, got ${closed?.ariaExpanded}.`);
   assert(closed.wrapperHeight <= 1, `${label} pointer close did not collapse, got ${closed.wrapperHeight}px.`);
   assert(close(closed.scrollY, before.scrollY), `${label} pointer close changed scroll position ${before.scrollY} -> ${closed.scrollY}.`);
+  assert(close(closed.documentClientWidth, before.documentClientWidth), `${label} pointer close changed document client width ${before.documentClientWidth} -> ${closed.documentClientWidth}.`);
+
+  await pointerClick(closed, `${label} before reopen`);
+  await page.waitForTimeout(400);
+  const reopened = await snapshot({ itemSelector, buttonSelector, wrapperSelector });
+  assert(reopened?.itemOpen === 'true', `${label} pointer reopen did not set data-open=true.`);
+  assert(reopened?.ariaExpanded === 'true', `${label} pointer reopen did not set aria-expanded=true, got ${reopened?.ariaExpanded}.`);
+  assert(reopened.wrapperHeight > 20, `${label} pointer reopen did not visibly expand, got ${reopened.wrapperHeight}px.`);
+  assert(close(reopened.scrollY, before.scrollY), `${label} pointer reopen changed scroll position ${before.scrollY} -> ${reopened.scrollY}.`);
+  assert(close(reopened.buttonTop, before.buttonTop), `${label} pointer reopen moved control vertically ${before.buttonTop} -> ${reopened.buttonTop}.`);
+  assert(close(reopened.buttonLeft, before.buttonLeft), `${label} pointer reopen moved control horizontally ${before.buttonLeft} -> ${reopened.buttonLeft}.`);
+  assert(close(reopened.buttonWidth, before.buttonWidth), `${label} pointer reopen resized control width ${before.buttonWidth} -> ${reopened.buttonWidth}.`);
+  assert(close(reopened.documentClientWidth, before.documentClientWidth), `${label} pointer reopen changed document client width ${before.documentClientWidth} -> ${reopened.documentClientWidth}.`);
+  assert(reopened.hitOwnsButton, `${label} pointer hit-test is intercepted after reopen by ${reopened.hitTag}.${reopened.hitClass}.`);
+  assert(reopened.documentScrollWidth <= reopened.documentClientWidth + 1, `${label} pointer reopen introduced horizontal overflow ${reopened.documentScrollWidth}px > ${reopened.documentClientWidth}px.`);
+
+  await pointerClick(reopened, `${label} after reopen`);
+  await page.waitForTimeout(400);
+  const reclosed = await snapshot({ itemSelector, buttonSelector, wrapperSelector });
+  assert(reclosed?.itemOpen === 'false', `${label} pointer reclose did not set data-open=false.`);
+  assert(reclosed?.ariaExpanded === 'false', `${label} pointer reclose did not set aria-expanded=false, got ${reclosed?.ariaExpanded}.`);
+  assert(reclosed.wrapperHeight <= 1, `${label} pointer reclose did not collapse, got ${reclosed.wrapperHeight}px.`);
+  assert(close(reclosed.scrollY, before.scrollY), `${label} pointer reclose changed scroll position ${before.scrollY} -> ${reclosed.scrollY}.`);
+  assert(close(reclosed.documentClientWidth, before.documentClientWidth), `${label} pointer reclose changed document client width ${before.documentClientWidth} -> ${reclosed.documentClientWidth}.`);
 
   await button.focus();
   assert(await button.evaluate((el) => document.activeElement === el), `${label} could not receive keyboard focus.`);
@@ -143,6 +168,12 @@ try {
   const footerBaseline = await snapshot(footerDisclosure);
   assert(footerBaseline, 'SP footer navigation child disclosure fixture is missing.');
 
+  const footerButton = page.locator(footerDisclosure.buttonSelector).first();
+  const footerLinksWrap = page.locator('#global_footer .gf_links-wrap').first();
+  assert(!(await footerButton.isVisible()), 'SP footer nested-menu button unexpectedly became pointer-visible.');
+  assert(!(await footerLinksWrap.isVisible()), 'SP footer WordPress links wrapper unexpectedly became visible.');
+  assert(footerBaseline.wrapperHeight <= 1, `SP footer hidden nested wrapper must remain collapsed, got ${footerBaseline.wrapperHeight}px.`);
+
   const semanticFailures = [];
   if (globalBaseline.ariaExpanded !== 'false') semanticFailures.push(`global aria-expanded=${globalBaseline.ariaExpanded}`);
   if (footerBaseline.ariaExpanded !== 'false') semanticFailures.push(`footer aria-expanded=${footerBaseline.ariaExpanded}`);
@@ -157,10 +188,15 @@ try {
   assert(await page.locator('body').evaluate((body) => !body.classList.contains('_open-menu')), 'SP global menu did not close after disclosure interaction cycle.');
   await page.locator('#global_footer').scrollIntoViewIfNeeded();
   await page.waitForTimeout(100);
-  await auditDisclosure(footerDisclosure);
+  const footerAfterGlobalCycle = await snapshot(footerDisclosure);
+  assert(footerAfterGlobalCycle?.itemOpen === null || footerAfterGlobalCycle?.itemOpen === 'false', `SP footer hidden item changed state after global interaction, got data-open=${footerAfterGlobalCycle?.itemOpen}.`);
+  assert(footerAfterGlobalCycle?.ariaExpanded === 'false', `SP footer hidden button changed aria-expanded after global interaction, got ${footerAfterGlobalCycle?.ariaExpanded}.`);
+  assert(footerAfterGlobalCycle?.wrapperHeight <= 1, `SP footer hidden wrapper expanded after global interaction, got ${footerAfterGlobalCycle?.wrapperHeight}px.`);
+  assert(!(await footerButton.isVisible()), 'SP footer nested-menu button became pointer-visible after global interaction cycle.');
+  assert(footerAfterGlobalCycle.documentScrollWidth <= footerAfterGlobalCycle.documentClientWidth + 1, `SP footer state introduced horizontal overflow ${footerAfterGlobalCycle.documentScrollWidth}px > ${footerAfterGlobalCycle.documentClientWidth}px.`);
 
   assert(pageErrors.length === 0, `Global/Footer disclosure interaction produced page errors: ${pageErrors.join(' | ')}`);
-  console.log('PASS Budokan SP Global/Footer WordPress Menu disclosure geometry, pointer ownership, keyboard stability, and aria-expanded synchronization QA');
+  console.log('PASS Budokan SP Global WordPress Menu disclosure open-close-reopen geometry, pointer ownership, keyboard stability, document-width stability, plus non-interactive Footer menu visibility contract QA');
 } finally {
   await browser.close();
 }
