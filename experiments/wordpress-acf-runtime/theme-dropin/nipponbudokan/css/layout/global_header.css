@@ -248,10 +248,14 @@ body._contentFixed {
 /* PC body intentionally has min-width: 1280px. When scroll lock promotes the
    header from sticky to fixed, width:100% resolves against the scrollbar-gutter
    viewport instead of that body minimum. Keep the same established PC width so
-   menu/search opening cannot pull the header inward. */
+   menu/search opening cannot pull the header inward. Modaal's body overflow
+   lock also breaks sticky containment on desktop, so use the same fixed header
+   geometry while the modal is open; global_wrapper preserves its flow space. */
 @media screen and (min-width: 768px) {
-    body._contentFixed {
+    body._contentFixed,
+    body.modaal-noscroll {
         .global_header {
+            position: fixed;
             min-width: 1280px;
         }
     }
