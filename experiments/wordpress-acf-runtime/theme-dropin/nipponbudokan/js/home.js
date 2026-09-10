@@ -12,15 +12,17 @@
       // スライド1枚のときは loop / autoplay / pagination を無効化（Swiper 14 対応）
       const slideCount = topSliderContainer.querySelectorAll('.swiper-slide').length;
       const canLoop = slideCount > 1;
+      const prefersReducedMotion = window.matchMedia
+        && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       const tm_swiper = new Swiper('.tm_swiper-container', {
         effect: 'fade',
         fadeEffect: {
           crossFade: true
         },
         loop: canLoop,
-        speed: 1000,
+        speed: prefersReducedMotion ? 0 : 1000,
         watchOverflow: true,
-        autoplay: canLoop ? {
+        autoplay: canLoop && !prefersReducedMotion ? {
           delay: 3000,
           disableOnInteraction: false
         } : false,

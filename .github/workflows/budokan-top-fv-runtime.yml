@@ -16,6 +16,7 @@ on:
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/home.js'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-top-fv-runtime-qa.sh'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-top-fv-browser-qa.mjs'
+      - 'experiments/wordpress-acf-runtime/scripts/budokan-top-slider-motion-browser-qa.mjs'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-overlay-stability-browser-qa.mjs'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-search-backdrop-close-browser-qa.mjs'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-header-state-stability-browser-qa.mjs'
@@ -52,6 +53,14 @@ jobs:
           qa_url="${WP_URL}/"
           cd ../..
           node experiments/wordpress-acf-runtime/scripts/budokan-top-fv-browser-qa.mjs "$qa_url"
+
+      - name: Run TOP slider reduced-motion browser QA
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          qa_url="${WP_URL}/"
+          cd ../..
+          node experiments/wordpress-acf-runtime/scripts/budokan-top-slider-motion-browser-qa.mjs "$qa_url"
 
       - name: Run SP and PC overlay background stability QA
         run: |

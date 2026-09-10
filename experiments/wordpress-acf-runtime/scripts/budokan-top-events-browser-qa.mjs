@@ -102,6 +102,8 @@ try {
     const headingEn = section?.querySelector('.te_heading_en');
     const layout = section?.querySelector('.te_layout');
     const banner = section?.querySelector('.te_featured_banner');
+    const bannerText = banner?.querySelector('span');
+    const bannerIcon = banner?.querySelector('img');
     const cards = section ? [...section.querySelectorAll('.te_card')] : [];
     const firstImage = cards[0]?.querySelector('.te_card_image img');
     const cardTitle = cards[0]?.querySelector('.te_card_title');
@@ -109,9 +111,11 @@ try {
     const monthLabel = section?.querySelector('.te_cal_label');
     const snsLinks = section ? [...section.querySelectorAll('.te_sns a')] : [];
     const sns = section?.querySelector('.te_sns');
-    if (!section || !heading || !headingEn || !layout || !banner || cards.length !== 4 || !firstImage || !cardTitle || !cal || !monthLabel || snsLinks.length !== 3 || !sns) return null;
+    if (!section || !heading || !headingEn || !layout || !banner || !bannerText || !bannerIcon || cards.length !== 4 || !firstImage || !cardTitle || !cal || !monthLabel || snsLinks.length !== 3 || !sns) return null;
     const layoutStyle = getComputedStyle(layout);
     const bannerRect = banner.getBoundingClientRect();
+    const bannerTextRect = bannerText.getBoundingClientRect();
+    const bannerIconRect = bannerIcon.getBoundingClientRect();
     const imageRect = firstImage.getBoundingClientRect();
     const calRect = cal.getBoundingClientRect();
     const snsRect = sns.getBoundingClientRect();
@@ -126,6 +130,11 @@ try {
       bannerWritingMode: getComputedStyle(banner).writingMode,
       bannerFamily: getComputedStyle(banner).fontFamily,
       bannerWidth: bannerRect.width,
+      bannerHeight: bannerRect.height,
+      bannerTextWidth: bannerTextRect.width,
+      bannerTextHeight: bannerTextRect.height,
+      bannerIconWidth: bannerIconRect.width,
+      bannerIconHeight: bannerIconRect.height,
       imageWidth: imageRect.width,
       imageHeight: imageRect.height,
       cardTitleFamily: getComputedStyle(cardTitle).fontFamily,
@@ -149,8 +158,14 @@ try {
   assert(isKakuFamily(pc.snsFamily), `PC SNS must resolve to Zen Kaku Gothic New, got ${pc.snsFamily}.`);
   assert(pc.layoutDisplay === 'grid', `PC layout display ${pc.layoutDisplay}`);
   assert(close(pc.layoutGap, 80, 1), `PC layout gap ${pc.layoutGap}`);
-  assert(pc.bannerWritingMode.includes('vertical'), `PC banner writing-mode ${pc.bannerWritingMode}`);
-  assert(close(pc.bannerWidth, 48, 1), `PC banner width ${pc.bannerWidth}`);
+  // Current Figma PC 1603:7497 is a physical vertical stack (44×267):
+  // 28×21 icon + 12 gap + 20×184 narrow text, with 20/30/8/8 padding.
+  // Do not infer a CSS writing-mode contract from that visual geometry.
+  assert(pc.bannerWritingMode.includes('horizontal'), `PC banner writing-mode ${pc.bannerWritingMode}`);
+  assert(close(pc.bannerWidth, 44, 1), `PC banner width ${pc.bannerWidth}`);
+  assert(close(pc.bannerHeight, 267, 2), `PC banner height ${pc.bannerHeight}`);
+  assert(close(pc.bannerIconWidth, 28, 1) && close(pc.bannerIconHeight, 21, 1), `PC featured icon ${pc.bannerIconWidth}x${pc.bannerIconHeight}`);
+  assert(close(pc.bannerTextWidth, 20, 1) && close(pc.bannerTextHeight, 184, 2), `PC featured text ${pc.bannerTextWidth}x${pc.bannerTextHeight}`);
   assert(close(pc.imageWidth, 200) && close(pc.imageHeight, 150), `PC event image ${pc.imageWidth}x${pc.imageHeight}`);
   assert(close(pc.calendarWidth, 420, 1), `PC calendar rail ${pc.calendarWidth}`);
   assert(pc.snsWidth >= 1370, `PC SNS full-width breakout ${pc.snsWidth}`);
@@ -160,7 +175,7 @@ try {
   await desktopContext.close();
 
   console.log('PASS Budokan TOP Events SP geometry, type families, and FullCalendar runtime QA.');
-  console.log('PASS Budokan TOP Events PC two-rail geometry, type families, and SNS derivative QA.');
+  console.log('PASS Budokan TOP Events PC two-rail geometry, current-Figma featured label geometry, type families, and SNS derivative QA.');
 } finally {
   await browser.close();
 }
