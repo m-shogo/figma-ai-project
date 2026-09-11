@@ -2,7 +2,7 @@
 /* // ------------------------------
 // Gutenberg Tabs（core/tabs）
 // Same Figma family as ACF module_tab: SP 3-col / PC 120×48 chips.
-// Current Figma fileKey FKQaJDu5TZXHoCzPsfP92E — PC 1663:5661
+// Current Figma fileKey jqYoPtusYfTeDqRegMCsx3 — PC 1663:5661
 // Flattened selectors so they beat `button { font: inherit; border: none }`.
 // ------------------------------ */
 .block-editor_wrap .wp-block-tabs,
@@ -128,8 +128,10 @@
 
 @media (any-hover: hover) {
     .block-editor_wrap .wp-block-tabs .wp-block-tab-list [role='tab']:not([aria-selected='true']):hover,
-    .editor-styles-wrapper .wp-block-tabs .wp-block-tab-list [role='tab']:not([aria-selected='true']):hover {
-        background-color: color-mix(in oklch, var(--color-primary) 70%, transparent 0%);
+    .block-editor_wrap .wp-block-tabs .wp-block-tab-list [role='tab']:not([aria-selected='true']):focus-visible,
+    .editor-styles-wrapper .wp-block-tabs .wp-block-tab-list [role='tab']:not([aria-selected='true']):hover,
+    .editor-styles-wrapper .wp-block-tabs .wp-block-tab-list [role='tab']:not([aria-selected='true']):focus-visible {
+        background-color: var(--color-text);
         color: var(--color-secondary);
     }
 }

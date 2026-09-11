@@ -1,0 +1,105 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: CAND-OCTAGON-SVG-CHIP-NOT-CLIP-INSET
+    summary: >-
+      Octagon negative invert must keep the visible edge. Prefer an SVG chip
+      (white fill + colored stroke) over clip-path plus inset box-shadow, which
+      eats the stroke when the fill becomes white. Do not reintroduce clip+inset
+      on a sibling component after buttons already solved it with SVG chips.
+    category: RUNTIME
+    applicability:
+      scope: REFERENCE
+      conditions:
+        - Octagon / clip-path chip with hover invert (white fill, colored edge, colored glyph).
+        - Same family already uses SVG chips elsewhere in the Theme.
+      exclusions:
+        - Rest-only solid fill with no hover invert and no need for a visible edge.
+        - Do not copy chip pixel sizes across projects without Figma evidence.
+    promotion_state: CANDIDATE
+    promotion:
+      candidate: true
+      rationale: >-
+        Budokan 2026-09-11 Local Nav heading repeated the same Human FB already
+        fixed on buttons/sliders: clip-path invert removed the octagon border.
+        Reinforces W3 and the existing hover/clip-stroke candidate with a concrete
+        implementation pattern (SVG chip). Still one reference.
+      blocked_by:
+        - Second project or component family that adopts SVG chip invert after a clip+inset failure.
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-LN-OCTAGON-SVG-20260911
+          kind: LOCAL_RESEARCH
+          reference_id: BUDOKAN-WORDPRESS
+          run_id: ''
+          path: experiments/budokan-wordpress/learning-notes/2026-09-11-local-nav-acf-hover-spacing.md
+          commit: ''
+          note: Local Nav heading hover reintroduced clip+inset; Human called out missing octagon edge; switched to SVG chip.
+        - evidence_id: EV-LN-OCTAGON-CSS-20260911
+          kind: IMPLEMENTATION
+          reference_id: BUDOKAN-WORDPRESS
+          run_id: ''
+          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/module/local_navigation.css
+          commit: ''
+          note: --_ln-octagon-rest / --_ln-octagon-hover SVG chips; clip-path none on heading ::before.
+        - evidence_id: EV-BTN-OCTAGON-CHIP-PRIOR
+          kind: IMPLEMENTATION
+          reference_id: BUDOKAN-WORDPRESS
+          run_id: ''
+          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/blocks/wp-block-buttonLink-style.css
+          commit: ''
+          note: Same Theme already documented clip-path eats stroke; SVG chip is the proven owner pattern.
+      contradicts: []
+    notes:
+      - Complements CAND-HOVER-HIT-INVERT-CLIP-STROKE with a concrete fix pattern, not a new weak-spot category.
+
+  - learning_id: CAND-NO-FIXED-HEIGHT-CLIP-ROW-GAP
+    summary: >-
+      Do not give a menu/title parent a fixed height shorter than its link's
+      padding-bottom plus border. The overflow visually eats the next grid row
+      gap even when gap is correct on paper. Prefer height auto or min-height.
+      Do not use white-space nowrap to lock a Figma one-line screenshot.
+    category: MAINTAINABILITY
+    applicability:
+      scope: REFERENCE
+      conditions:
+        - Grid or stacked interactive rows with padding-bottom and border-bottom on the link.
+        - Parent title/wrapper sized from a closed-state Figma measure.
+      exclusions:
+        - Art-directed single-line labels with an explicit Current Authority nowrap contract.
+    promotion_state: CANDIDATE
+    promotion:
+      candidate: true
+      rationale: >-
+        Budokan Local Nav child row measured ~13px between items while CSS gap was
+        20px because .lnl_title-04 height 34px clipped the 20px padding+border.
+        Human also rejected nowrap on the same surface. One reference.
+      blocked_by:
+        - Second component where fixed parent height silently collapses perceived row gap.
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-LN-ROW-GAP-CLIP-20260911
+          kind: LOCAL_RESEARCH
+          reference_id: BUDOKAN-WORDPRESS
+          run_id: ''
+          path: experiments/budokan-wordpress/learning-notes/2026-09-11-local-nav-acf-hover-spacing.md
+          commit: ''
+          note: Runtime measure gap 13px with height 34px parent; 20px after height auto.
+        - evidence_id: EV-LN-NOWRAP-CONTRACT
+          kind: CANONICAL_DOC
+          reference_id: BUDOKAN-WORDPRESS
+          run_id: ''
+          path: docs/frontend-quick-contract.md
+          commit: ''
+          note: Existing contract already rejects nowrap used only to lock screenshot line breaks.
+      contradicts: []
+    notes:
+      - Local Nav ACF ownership (page_local_nav / ローカル：) stays PROJECT_ONLY in CURRENT_AUTHORITY.

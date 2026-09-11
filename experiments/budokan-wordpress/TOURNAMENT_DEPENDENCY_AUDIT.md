@@ -4,7 +4,7 @@ Updated: 2026-09-06
 
 This audit records the current implementation decision for the three remaining tournament/event information pages. It is a dependency/authority record, not permission to invent page-specific CMS structure or styling.
 
-Canonical authority remains `CURRENT_AUTHORITY.md` and current Figma file `FKQaJDu5TZXHoCzPsfP92E`.
+Canonical authority remains `CURRENT_AUTHORITY.md` and current Figma file `jqYoPtusYfTeDqRegMCsx3`.
 
 ## Current Figma authority
 

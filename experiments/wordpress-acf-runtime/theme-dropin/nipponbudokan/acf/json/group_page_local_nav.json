@@ -1,0 +1,53 @@
+{
+    "key": "group_page_local_nav",
+    "title": "ローカルナビ",
+    "fields": [
+        {
+            "key": "field_68d9b2a10001",
+            "label": "ローカルナビ",
+            "name": "page_local_nav",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "外観 → メニューで、名前を「ローカル：」で始めたメニューだけ選べます。グローバル／メガ／フッターは出ません。メニューを増やすとこの一覧に自動で入ります。なし＝このページでは非表示。",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {},
+            "default_value": "",
+            "allow_null": 1,
+            "multiple": 0,
+            "ui": 1,
+            "ajax": 0,
+            "return_format": "value",
+            "placeholder": "なし"
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "page"
+            },
+            {
+                "param": "page_type",
+                "operator": "!=",
+                "value": "front_page"
+            }
+        ]
+    ],
+    "menu_order": 2,
+    "position": "side",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "display_title": ""
+}

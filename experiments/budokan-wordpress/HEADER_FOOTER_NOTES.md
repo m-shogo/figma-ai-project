@@ -1,6 +1,6 @@
 # Header / Footer — Figma vs Theme（作業メモ）
 
-更新: 2026-09-03（現行 Figma `FKQaJDu5TZXHoCzPsfP92E`。旧 file は見ない）
+更新: 2026-09-11（現行 Figma `jqYoPtusYfTeDqRegMCsx3`。旧 file は見ない）
 
 ## Frontend 契約（人が触る）
 
@@ -8,7 +8,7 @@
 - 通常 layout は Flow / Flex / Grid。absolute は極力使わない（icon 線など意図的 micro UI のみ可）
 - 学びは実装後 `research/frontend-learning-evidence*.yaml` 等へ戻す
 
-## Figma（現行 `FKQaJDu5TZXHoCzPsfP92E`）
+## Figma（現行 `jqYoPtusYfTeDqRegMCsx3`）
 
 実装前にこの file から LIVE 再取得する。旧 file の計測を引き継がない。
 
@@ -22,6 +22,8 @@
 | Footer SP | `2189:10106` | footer-sp |
 
 PC には `menu` / `megamenu` / `search` overlay が current top-level として存在する。見た目差分は LIVE context で取る。
+
+PC menu `2096:6235`（Human 2026-09-11）: 暗幕は width 100% でヘッダーごと覆う。白パネル 888px も viewport 上端からヘッダーの上。ヘッダークロームは消さない。閉じる × はパネル内。詳細は `CURRENT_AUTHORITY.md`。
 
 色: main `#bf3e2b` / sec `#ca9957` / text `#333` / search `#4e5055` / logo rail `#2c3036`
 

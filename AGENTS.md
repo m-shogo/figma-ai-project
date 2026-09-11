@@ -54,8 +54,9 @@ Canonical: `docs/agent-adapters.md`
 - 同じ原因で2回詰まったら同じ方法を繰り返さずrouteを変える。
 - HumanのMaster Authority 1つで互換調査・legacy維持を大幅に省けるなら、遠回りを始める前に短くHumanへescalateする。
 - repoを読めば解決するroutine implementation decisionはHumanへ丸投げしない。
+- Human がよく指摘する欠落（閉じ状態だけ、hover/open 未操作、暗幕の穴、family の取りこぼし）は **言われる前に** `docs/agent-human-fb-weak-spots.md` を自分で回す。静止画1枚で完了と言わない。
 
-Canonical: `docs/agent-execution-policy.md`
+Canonical: `docs/agent-execution-policy.md` / `docs/agent-human-fb-weak-spots.md`
 
 ## Source of truth / authority
 
@@ -300,8 +301,8 @@ Company/Existingに指定が無い場合のみcurrent candidateを使う。
 
 - anchor smooth scroll: native CSS first + reduced motion + fixed-header offset
 - cinematic/controlled scroll: native smooth scrollと別契約
-- hover: hover/pointer capability gate + keyboard focus equivalent + touch fallback。状態で border-width を新設して箱をずらさない
-- hamburger: site navigationはDisclosure patternがdefault
+- hover: hover/pointer capability gate + keyboard focus equivalent + touch fallback。状態で border-width を新設して箱をずらさない。ネガポジは塗りと文字、rest 枠は残す。テキストリンク当たりは文字幅。disabled に enabled 箱を出さない
+- hamburger: site navigationはDisclosure patternがdefault。Figma が暗幕+パネルなら暗幕は viewport 全体・パネルはその上・ヘッダーは消さず覆う。閉じは開いた形のまま transform。詳細は `docs/frontend-quick-contract.md` 節4
 - carousel simple: CSS Scroll Snap candidate
 - carousel complex: existing/approved specialist library
 - autoplay: default off;必要時はpause/focus/hover/reduced-motion/keyboard対応
@@ -546,6 +547,8 @@ FIRST_PASSを消さない。
 - Verify前にFIRST_PASSを上書きする
 - hoverだけに重要情報を置く
 - hover で初めて border を足して箱をずらす
+- 閉じ状態・静止画だけで UI 完了と言う。現行 Figma の hover / open / overlay を Human 待ちする
+- Human が繰り返す欠落種類を、言われるまで実装チェックから外す
 - complex carouselを毎回hand-rollする
 - all animationを1libraryへ寄せる
 - ACF fieldへdesign tokens/layout valuesを無条件に移す

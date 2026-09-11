@@ -51,16 +51,8 @@ fi
 
 docker compose run --rm cli option update blog_public 0 >/dev/null
 docker compose run --rm cli option update permalink_structure '/%postname%/' >/dev/null
-# The Budokan Theme header calls the established ACF contract immediately.
-# Load the public ACF runtime in this disposable WordPress instance rather than
-# stubbing get_field(), so the QA executes the actual Theme dependency path.
 docker compose run --rm cli plugin install advanced-custom-fields --activate >/dev/null
 docker compose run --rm cli theme activate "$THEME_SLUG" >/dev/null
-# The disposable fixture deliberately refuses non-local environments. The
-# Apache service receives WP_ENVIRONMENT_TYPE through WORDPRESS_CONFIG_EXTRA,
-# while the separate WP-CLI service does not inherit that container setting.
-# Pass the environment explicitly to this one QA mutation instead of weakening
-# the fixture's production safety guard.
 docker compose run --rm -e WP_ENVIRONMENT_TYPE=local cli eval-file /fixture/scripts/seed-budokan-local-nav-qa.php >/dev/null
 
 page_id="$(docker compose run --rm cli option get budokan_local_nav_qa_page_id)"
@@ -70,16 +62,18 @@ page_id="$(docker compose run --rm cli option get budokan_local_nav_qa_page_id)"
 }
 
 template="$(docker compose run --rm cli post meta get "$page_id" _wp_page_template)"
-[[ "$template" == "templates/template-oneColumnLocalNav.php" ]] || {
+[[ "$template" == "templates/template-oneColumn.php" ]] || {
   echo "FAIL QA page template mismatch: ${template}." >&2
   exit 1
 }
 
+acf_menu="$(docker compose run --rm cli post meta get "$page_id" page_local_nav)"
+[[ "$acf_menu" =~ ^[0-9]+$ ]] || {
+  echo "FAIL page_local_nav was not set on QA page: ${acf_menu}." >&2
+  exit 1
+}
+
 html="$(mktemp)"
-# WordPress may canonically redirect ?page_id=N to the pretty permalink after
-# permalink_structure is enabled. Follow only a small bounded redirect chain
-# and assert the final response is 200; a normal canonical redirect is not a
-# product/runtime failure.
 http_code="$(curl --silent --show-error --location --max-redirs 3 --output "$html" --write-out '%{http_code}' "$WP_URL/?page_id=$page_id")"
 if [[ "$http_code" != "200" ]]; then
   echo "FAIL Local Navigation fixture returned final HTTP ${http_code}." >&2
@@ -93,12 +87,11 @@ fi
 
 for required in \
   'class="local_navigation"' \
-  '武道 振興・普及事業' \
-  '指導者研修・指導法研究' \
-  '全国武道指導者研修会' \
-  '地域社会武道指導者研修会' \
-  '中学校武道授業指導法研究事業' \
-  'ローカルナビゲーション' \
+  '大会・イベント' \
+  '全日本少年少女武道錬成大会' \
+  '合気道' \
+  '地方青少年武道錬成大会' \
+  '日本武道館で武道を体験してみよう' \
   'lnl_item-02' \
   'lnl_item-03' \
   'lnl_item-04'; do
@@ -109,8 +102,8 @@ for required in \
 done
 
 child_count="$(grep -o 'lnl_item-04' "$html" | wc -l | tr -d ' ')"
-if (( child_count < 4 )); then
-  echo "FAIL expected at least four depth-04 Local Navigation items; got ${child_count}." >&2
+if (( child_count < 15 )); then
+  echo "FAIL expected at least fifteen depth-04 Local Navigation items; got ${child_count}." >&2
   exit 1
 fi
 
@@ -121,10 +114,8 @@ grep -Eq 'current-menu-item|current_page_item' "$html" || {
 
 rm -f "$html"
 
-echo "PASS Budokan Local Navigation disposable WordPress hierarchy rendered."
-echo "PASS Walker exposes broad family at depth 02, subgroup at depth 03, and four children at depth 04."
-echo "PASS Current page uses templates/template-oneColumnLocalNav.php and WordPress current-item classes."
-echo "NOTE This is structural runtime evidence only; SP open-state and production menu/template assignment remain Human/WordPress authority gates."
+echo "PASS Budokan Local Navigation ACF menu rendered (Figma 2108:10846; 3-level)."
+echo "PASS page_local_nav=${acf_menu}; template=templates/template-oneColumn.php; page_id=${page_id}."
 
 if [[ "${BUDOKAN_LOCAL_NAV_KEEP_RUNTIME:-0}" == "1" ]]; then
   trap - EXIT

@@ -39,12 +39,12 @@
             content: var(--icon-pdf);
         }
     }
-    /* MARK: hover */
+    /* MARK: hover — 実装指示 2377:6598 Zoom 100% */
     @media (any-hover: hover) {
-        &:hover {
-            &::after {
-                opacity: 0.8;
-            }
+        &:hover::after,
+        &:focus-visible::after {
+            opacity: 1;
+            background-color: rgb(51 51 51);
         }
     }
 }

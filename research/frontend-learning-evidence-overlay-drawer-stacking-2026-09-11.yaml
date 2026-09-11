@@ -1,0 +1,135 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: CAND-OVERLAY-FULL-DIM-COVER-HEADER
+    summary: >-
+      When Figma's open overlay shows a dim plus a drawer panel, paint the dim across the full
+      viewport and put the panel on top; cover header chrome instead of hiding it, keep sticky
+      header positioning, and close by translating the intact open layout.
+    category: RUNTIME
+    applicability:
+      scope: REFERENCE
+      conditions:
+        - Figma open-state shows a dim/scrim plus an overlay panel such as hamburger, search, or modal drawer.
+        - A persistent sticky or fixed header remains in the document while the overlay is open.
+      exclusions:
+        - Figma actually authors a dim that stops at the panel edge or a header that stays undimmed and fully interactive.
+        - Do not copy project-specific panel widths, node IDs, or z-index numbers to other references.
+    promotion_state: CANDIDATE
+    promotion:
+      candidate: true
+      rationale: >-
+        Budokan 2026-09-11 Human FB repeated the same overlay defects across one reference:
+        clipping the dim around the panel, visibility-hiding header chrome, offsetting the panel
+        by header height, unsticking the header (page background dropped), and dropping the open
+        class at close start (layout collapsed). Human asked the next project to auto-apply the
+        distilled rule. Still CANDIDATE until a second reference reproduces it.
+      blocked_by:
+        - Independent reference or project reproducing full-viewport dim, cover-not-hide header chrome, and intact-slide close.
+        - Confirm Figma-authored exceptions (dim that truly stops at the panel) stay exclusions.
+      contradiction_review: >-
+        2026-09-01 Budokan note said the PC panel sits under the 100px header. Human 2026-09-11
+        and current node 2096:6235 supersede that: dim and panel cover the header from the viewport top.
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-OVERLAY-FB-INTAKE-20260911
+          kind: LOCAL_RESEARCH
+          reference_id: BUDOKAN-WORDPRESS
+          run_id: ''
+          path: experiments/budokan-wordpress/learning-notes/2026-09-11-overlay-drawer-human-fb.md
+          commit: ''
+          note: >-
+            Distills Human orders from 2026-09-11: full-width dim, cover header, close intact to
+            the right, shared 0.3s, close control in the panel, do not unstick the header.
+        - evidence_id: EV-BUDOKAN-OVERLAY-CURRENT-AUTHORITY-20260911
+          kind: CANONICAL_DOC
+          reference_id: BUDOKAN-WORDPRESS
+          run_id: ''
+          path: experiments/budokan-wordpress/CURRENT_AUTHORITY.md
+          commit: ''
+          note: >-
+            Project contract for 2096:6235 / 2182:8277: width 100% dim, 888px panel from viewport
+            top, no visibility:hidden on header chrome, gn_close in panel, header stays sticky.
+        - evidence_id: EV-OVERLAY-QUICK-CONTRACT-20260911
+          kind: CANONICAL_DOC
+          reference_id: BUDOKAN-WORDPRESS
+          run_id: ''
+          path: docs/frontend-quick-contract.md
+          commit: ''
+          note: >-
+            Portable overlay/drawer checklist added to section 4 so later projects can auto-judge
+            without copying Budokan pixel values.
+        - evidence_id: EV-BUDOKAN-OVERLAY-OWNER-CSS-20260911
+          kind: LOCAL_RESEARCH
+          reference_id: BUDOKAN-WORDPRESS
+          run_id: ''
+          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/layout/global_navigation.css
+          commit: ''
+          note: >-
+            PC open dim is header::before inset 0 / width 100% with no clip-path hole; white panel
+            sits above it; close uses transform while _open-menu remains during _closing-menu.
+      contradicts:
+        - evidence_id: EV-BUDOKAN-OVERLAY-UNDER-HEADER-SUPERSEDED-20260901
+          kind: LOCAL_RESEARCH
+          reference_id: BUDOKAN-WORDPRESS
+          run_id: ''
+          path: experiments/budokan-wordpress/learning-notes/2026-09-01-pc-hamburger-overlay-current-figma-resync.md
+          commit: ''
+          note: >-
+            Earlier note placed the PC two-column panel under the 100px header. Marked SUPERSEDED
+            2026-09-11; only the lesson that a closed header is not proof hamburger is SP-only remains.
+    notes:
+      - Human 2026-09-11 asked future projects to auto-apply this when the same overlay symptoms appear.
+      - Do not promote panel width 888px, node 2096:6235, or header::before as the only mechanism.
+
+  - learning_id: CAND-HOVER-HIT-INVERT-CLIP-STROKE
+    summary: >-
+      Hover must keep rest geometry: invert fill and type not the rest border, hit text links on
+      text width, give disabled controls no enabled hover box, and not eat octagon/clip-path stroke.
+    category: VISUAL_FIDELITY
+    applicability:
+      scope: REFERENCE
+      conditions:
+        - Figma hover/focus is invert, underline, or color change on a control that already has a rest border or text-sized hit.
+        - A clipped or octagon control exposes a stroke that must remain visible on hover.
+      exclusions:
+        - Figma authors a full-row hover band or an intentional hover-only stroke that is reserved at rest by the existing box-shift rule.
+        - Company/Existing hover contract already specifies a different hit or invert behavior.
+    promotion_state: CANDIDATE
+    promotion:
+      candidate: true
+      rationale: >-
+        Same Budokan 2026-09-11 pass: disabled pager showed a red hover square, text links hovered
+        at width 100%, invert chips dropped or added border, and octagon stroke vanished on hover
+        after a clip-path swap. Complements the already-ACTIVE rest-border rule rather than replacing it.
+      blocked_by:
+        - Independent reference reproducing text-width hit, disabled no-box, invert-keeps-border, or clip-path stroke loss.
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-HOVER-FB-INTAKE-20260911
+          kind: LOCAL_RESEARCH
+          reference_id: BUDOKAN-WORDPRESS
+          run_id: ''
+          path: experiments/budokan-wordpress/learning-notes/2026-09-11-overlay-drawer-human-fb.md
+          commit: ''
+          note: >-
+            Human FB: pager disabled hover square, text-link hover should be text width, invert
+            keeps rest border, search matches EN invert, octagon stroke must remain on hover.
+        - evidence_id: EV-HOVER-QUICK-CONTRACT-20260911
+          kind: CANONICAL_DOC
+          reference_id: BUDOKAN-WORDPRESS
+          run_id: ''
+          path: docs/frontend-quick-contract.md
+          commit: ''
+          note: Section 4 now states invert/hit/disabled/clip-stroke alongside the existing rest-border rule.
+      contradicts: []
+    notes:
+      - Rest-border / no box-shift on hover is already ACTIVE in the quick contract and implementation policy.
+      - These additions are CANDIDATE refinements from one reference.

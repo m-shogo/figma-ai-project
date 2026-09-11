@@ -344,73 +344,123 @@ window.addEventListener('resize', setVw);
   // ==========================================================================
   const toggleMenu = function () {
     const $body = $('body');
-    const $nav = $('#global_navigation');
-    const $searchBlock = $nav.children('.gn_search');
     const $searchButton = $('#gh_search');
     const searchDuration = 300;
-    const $searchPanel = $('<div id="gh_searchPanel" class="gh_searchPanel" hidden />');
-    $body.append($searchPanel);
+    const $searchPanel = $('#gh_searchPanel');
 
     const searchPanelHeight = function () {
+      if (!$searchPanel.length) return 100;
       const raw = window.getComputedStyle($searchPanel.get(0)).getPropertyValue('--_search-panel-height');
       const parsed = parseFloat(raw);
-      return Number.isFinite(parsed) ? parsed : 180;
+      return Number.isFinite(parsed) ? parsed : 100;
     };
 
-    const restoreSearchToNav = function () {
-      $searchPanel.stop(true, true).hide().attr('hidden', true).css({ height: '' });
-      if ($searchBlock.length && $searchBlock.parent()[0] !== $nav[0]) {
-        $nav.append($searchBlock);
+    const hideSearchPanel = function () {
+      if (!$searchPanel.length) return;
+      $searchPanel.stop(true, true).hide().attr('hidden', true).css({ height: '', overflow: '' });
+    };
+
+    let menuCloseSeq = 0;
+    const isPcMenu = function () {
+      return window.matchMedia('(min-width: 768px)').matches;
+    };
+
+    const closeMenuUi = function (immediate, onDone) {
+      const finish = function () {
+        $body.removeClass('_open-menu _closing-menu');
+        if (!$body.hasClass('_open-search')) {
+          $body.removeClass('_open-bg');
+        }
+        $('#gh_menu').attr('aria-expanded', 'false');
+        if (typeof onDone === 'function') onDone();
+      };
+
+      if (!$body.hasClass('_open-menu')) {
+        $('#gh_menu').attr('aria-expanded', 'false');
+        if (typeof onDone === 'function') onDone();
+        return;
       }
-    };
 
-    const closeMenuUi = function () {
-      $body.removeClass('_open-menu');
       $('#gh_menu').attr('aria-expanded', 'false');
+      if (immediate || !isPcMenu()) {
+        finish();
+        return;
+      }
+
+      const seq = ++menuCloseSeq;
+      if (!$body.hasClass('_open-search')) {
+        $body.removeClass('_open-bg');
+      }
+      $body.addClass('_closing-menu');
+      window.setTimeout(function () {
+        if (seq !== menuCloseSeq) return;
+        finish();
+      }, 300);
     };
 
     const closeSearchUi = function (immediate, onDone) {
       $searchButton.attr('aria-expanded', 'false');
       const finish = function () {
-        restoreSearchToNav();
+        hideSearchPanel();
         $body.removeClass('_open-search');
         $body.trigger('nb:overlaychange');
         if (typeof onDone === 'function') {
           onDone();
         }
       };
-      if (immediate || !$searchPanel.is(':visible')) {
+      if (immediate || !$searchPanel.length || !$searchPanel.is(':visible')) {
         finish();
         return;
+      }
+      if (!$body.hasClass('_open-menu')) {
+        $body.removeClass('_open-bg');
       }
       $searchPanel.stop(true, true).animate({ height: 0 }, searchDuration, 'swing', finish);
     };
 
     const closeOverlays = function (immediate) {
-      closeMenuUi();
-      closeSearchUi(immediate, function () {
-        if (!$body.hasClass('_open-menu')) {
-          $body.removeClass('_open-bg');
-        }
-        $body.trigger('nb:overlaychange');
+      closeMenuUi(immediate, function () {
+        closeSearchUi(immediate, function () {
+          if (!$body.hasClass('_open-menu') && !$body.hasClass('_open-search')) {
+            $body.removeClass('_open-bg');
+          }
+          $body.trigger('nb:overlaychange');
+        });
       });
     };
 
     // グローバルナビゲーション（PCは右から / 検索は別パネル）
     $('#gh_menu').on('click', function () {
+      if ($body.hasClass('_closing-menu')) {
+        menuCloseSeq += 1;
+        $body.removeClass('_closing-menu');
+        $body.addClass('_open-menu _open-bg');
+        $(this).attr('aria-expanded', 'true');
+        $body.trigger('nb:overlaychange');
+        return;
+      }
       const opening = !$body.hasClass('_open-menu');
       closeSearchUi(true);
       closeAllTouchMenusKeepBg();
       if (opening) {
+        menuCloseSeq += 1;
+        $body.removeClass('_closing-menu');
         $body.addClass('_open-menu _open-bg');
       } else {
-        closeMenuUi();
-        $body.removeClass('_open-bg');
+        closeMenuUi(false, function () {
+          $body.trigger('nb:overlaychange');
+        });
       }
       $(this).attr('aria-expanded', opening ? 'true' : 'false');
+      $body.trigger('nb:overlaychange');
+    });
+    $('#global_header').on('click', function (e) {
+      if (!$body.hasClass('_open-menu') || $body.hasClass('_closing-menu')) return;
+      if ($(e.target).closest('#global_navigation, .gh_buttons').length) return;
+      closeOverlays(false);
     });
     $('#gn_close').on('click', function () {
-      closeOverlays(true);
+      closeOverlays(false);
     });
     const globalNavItems = document.querySelectorAll('[class*="gnl_item"]._hasChild');
     globalNavItems.forEach(item => {
@@ -581,14 +631,14 @@ window.addEventListener('resize', setVw);
     //   },
     // });
 
-    // 検索：メニューを閉じて、既存 .gn_search を上から下ろす（Figma 2295:8023）
+    // 検索：専用パネル（Figma 2295:8023）。ハンバーガー内 .gn_search は動かさない。
     $searchButton.attr('aria-expanded', 'false');
     $searchButton.on('click', function () {
+      if (!$searchPanel.length) return;
       const opening = !$body.hasClass('_open-search');
       closeAllTouchMenusKeepBg();
-      closeMenuUi();
+      closeMenuUi(true);
       if (opening) {
-        $searchPanel.append($searchBlock);
         $body.addClass('_open-search _open-bg');
         $searchButton.attr('aria-expanded', 'true');
         $searchPanel
@@ -596,7 +646,8 @@ window.addEventListener('resize', setVw);
           .removeAttr('hidden')
           .stop(true, true)
           .animate({ height: searchPanelHeight() }, searchDuration, 'swing', function () {
-            $searchBlock.find('.ms_input').trigger('focus');
+            $searchPanel.css({ overflow: 'visible' });
+            $searchPanel.find('.ghs_input').trigger('focus');
           });
       } else {
         closeSearchUi(false, function () {
@@ -607,7 +658,7 @@ window.addEventListener('resize', setVw);
       }
     });
 
-    $('#gns_close, #overlay').on('click', function () {
+    $('#ghs_close, #overlay').on('click', function () {
       closeOverlays(false);
     });
 
@@ -774,8 +825,8 @@ window.addEventListener('resize', setVw);
         window.scrollTo(0, scrollpos);
       }
     };
-    $('#gh_menu, #gh_search, #gn_close, #overlay').on('click', function () {
-      window.setTimeout(apply, 0);
+    $('#gh_menu, #gh_search, #gn_close, #ghs_close, #overlay').on('click', function () {
+      apply();
     });
     $body.on('nb:overlaychange', apply);
     $(document).on('keydown', function (e) {

@@ -10,6 +10,7 @@ Frontend実装時に最初に読む短い契約。
 - External integration / retirement: `docs/frontend-external-integration-matrix.md`
 - Decorative patterns: `docs/frontend-decorative-pattern-cookbook.md`
 - Visual repair / learning: `docs/frontend-visual-repair-learning-loop.md`
+- Human FB を待たない AI 弱点: `docs/agent-human-fb-weak-spots.md`
 - CSS / Reset foundation: `docs/css-foundation-reset-policy.md`
 - Font loading: `docs/frontend-font-loading-policy.md`
 - Production runtime: `docs/frontend-production-runtime-contract.md`
@@ -52,11 +53,26 @@ Flow / Flex / Grid / relational overlap / intentional absolute・fixed・sticky 
 
 ## 4. 状態変化で箱をずらさない
 
-Figmaに「hoverで枠が付く」と書いてあっても、Webでは rest から同じ太さの枠を確保する。Company / Existing / 明示Projectが別契約ならそちらが勝つ。
+Figmaに「hoverで枠が付く」と書いてあっても、Webでは rest から同じ太さの枠を確保する。Company / Existing / 明示Projectが別契約ならそちらが勝つ。**Human が言わなくても** 適用する。詳細な欠落種類は `docs/agent-human-fb-weak-spots.md`。
 
 - hover / focus / active / open で初めて `border-width`・`padding`・寸法を変えて箱をずらさない。見える枠が rest に無いなら同じ太さの `transparent` か同色 border を先に置く
 - 位置は `transform`。状態変化に transition が無ければ Existing token、無ければ `0.3s`（`::before` / `::after` 含む）
 - 外寸・font・gap が近くても、子の線と hover を見てから閉じる
+- ネガポジ反転は塗りと文字を反転する。rest の枠は残し、枠だけ反転したり hover で新設したりしない
+- テキストリンクの hover 当たりは Figma が全幅ヒットを示さない限り **文字幅**。親 `width: 100%` で色帯を出さない
+- disabled / inert に enabled と同じ hover 箱を出さない
+- `clip-path` / 八角は hover で stroke を消さない。見えていた線が消えたら clip 差し替えを疑う。ネガ反転は **SVG chip**（白塗り + 色 stroke）を優先し、`clip-path` + `inset box-shadow` で invert しない
+
+Figma の open-state が **暗幕 + オーバーレイパネル**（ハンバーガー / 検索 / modal drawer）なら、数値は案件の Figma に合わせ、次を自動判断する。Figma が明らかに違う配置なら Figma が勝つ。
+
+- 暗幕は `width: 100%` / `inset: 0` の viewport 全体。パネル外形に合わせて `clip-path` や mask で穴を開けない。パネルは暗幕の上
+- 閉じヘッダーの GNavi / 言語 / 検索 / MENU は `visibility: hidden` や `display: none` で消さない。覆う
+- 開いた frame がヘッダーの上に暗幕とパネルを置いているなら、パネルを `--header-height` 分下げない
+- 閉じるコントロールの位置は Figma に従う。パネル内の × のためにヘッダークロームを消さない
+- open のために sticky/fixed ヘッダーを `relative` にしない。scroll-lock の `padding-top: header-height` と二重になり背景が落ちる
+- sticky/fixed ヘッダーは stacking context を作る。パネルがその子孫なら、兄弟 overlay を上げるとパネルまで暗幕の下に入る。暗幕をクリップして逃げるな。同じ stacking context 内で全面暗幕を描き、パネルをその上にする
+- 暗幕フェードとパネル移動は同じ duration（Existing、無ければ `0.3s`）。header と overlay の時差を作らない
+- 閉じるときは開いた layout のまま `transform` で退避する。close 開始で open class を外して閉じ/SP グリッドに戻さない。transition 後に class を外す
 
 ## 5. Owner/searchabilityを守る
 
@@ -288,7 +304,7 @@ Layout → Typography → Asset → Color → Decoration → subpixel
 
 Runtime/interaction failureはblind rerunよりTrace等の既存evidenceを先に使う。修正はcanonical ownerへ戻す。
 
-「前にも言った」「また同じ」等のfeedbackは単発bugで閉じず、failure category → root cause → detection → Observation → replay → promotion/demotionへ戻す。
+「前にも言った」「また同じ」等のfeedbackは単発bugで閉じず、failure category → root cause → detection → Observation → replay → promotion/demotionへ戻す。繰り返す種類は `docs/agent-human-fb-weak-spots.md` へ割り当て、次の実装では Human 待ちしない。
 
 Human correction count/timeはdiagnosticとして記録し、現時点で全案件共通の固定分数gateにはしない。
 

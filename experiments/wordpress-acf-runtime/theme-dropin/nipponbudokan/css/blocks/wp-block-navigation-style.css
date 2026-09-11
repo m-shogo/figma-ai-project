@@ -109,8 +109,17 @@
                         gap: 16px;
                         padding: 24px 20px;
                         overflow: visible;
-                        background: var(--color-secondary);
-                        border-bottom: 1px solid var(--color-line);
+                        background-color: var(--color-secondary);
+                        border-bottom: 1px solid transparent;
+                        background-image:
+                            linear-gradient(var(--color-primary), var(--color-primary)),
+                            linear-gradient(var(--color-line), var(--color-line));
+                        background-repeat: no-repeat;
+                        background-position: left bottom, left bottom;
+                        background-size: 0 1px, 100% 1px;
+                        transition:
+                            background-size var(--transition-duration),
+                            opacity var(--transition-duration);
                         .title {
                             display: flex;
                             align-items: center;
@@ -142,13 +151,19 @@
                                 color: var(--color-primary);
                                 border: 0;
                                 padding: 0;
+                                --_octagon-chip: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'%3E%3Cpolygon fill='%23fff' stroke='%23d7d4d4' stroke-width='1' stroke-linejoin='round' points='13,0.6 21.78,4.22 25.4,13 21.78,21.78 13,25.4 4.22,21.78 0.6,13 4.22,4.22'/%3E%3C/svg%3E");
+                                --_octagon-chip-hover: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'%3E%3Cpolygon fill='%23bf3e2b' stroke='%23d7d4d4' stroke-width='1' stroke-linejoin='round' points='13,0.6 21.78,4.22 25.4,13 21.78,21.78 13,25.4 4.22,21.78 0.6,13 4.22,4.22'/%3E%3C/svg%3E");
                                 background-color: transparent;
-                                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'%3E%3Cpolygon fill='%23fff' stroke='%23d7d4d4' stroke-width='1' stroke-linejoin='round' points='13,0.6 21.78,4.22 25.4,13 21.78,21.78 13,25.4 4.22,21.78 0.6,13 4.22,4.22'/%3E%3C/svg%3E");
+                                background-image: var(--_octagon-chip);
                                 background-repeat: no-repeat;
                                 background-position: center;
                                 background-size: 26px 26px;
                                 clip-path: none;
+                                box-shadow: none;
                                 filter: none;
+                                transition:
+                                    color var(--transition-duration),
+                                    background-image var(--transition-duration);
                             }
                             &::after {
                                 flex-shrink: 0;
@@ -242,20 +257,35 @@
             }
         }
 
-        /* MARK: hover */
+        /* MARK: hover
+           Large: 実装指示 2377:6598（矢印反転 + カード下線 + 画像拡大）。
+           Small: current Figma specimen 無し。既存 Theme の opacity を維持し、
+           Large へ漏れないよう owner を --small に限定する。 */
         @media (any-hover: hover) {
-            .navigation {
-                a {
-                    &:hover {
-                        .content {
-                            opacity: 0.7;
-                        }
-                        .image {
-                            img {
-                                transform: scale(1.05);
-                            }
-                        }
-                    }
+            &.--small .navigation a:hover,
+            &.--small .navigation a:focus-visible {
+                .content {
+                    opacity: 0.7;
+                }
+                .image img {
+                    transform: scale(1.05);
+                }
+            }
+            &.--large .navigation a:hover,
+            &.--large .navigation a:focus-visible {
+                .content {
+                    opacity: 1;
+                    background-size: 100% 1px, 100% 1px;
+                }
+                .title::before {
+                    color: var(--color-secondary);
+                    background-color: transparent;
+                    background-image: var(--_octagon-chip-hover);
+                    clip-path: none;
+                    box-shadow: none;
+                }
+                .image img {
+                    transform: scale(1.05);
                 }
             }
         }

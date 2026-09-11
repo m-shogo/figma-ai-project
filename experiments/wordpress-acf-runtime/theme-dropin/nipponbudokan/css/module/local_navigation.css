@@ -1,196 +1,34 @@
 @charset "utf-8";
 /* // ==========================================================================
 // サイト共通ローカルナビ
-// Figma: current PC 1216:6311. Old SP closed specimen 560:632 is absent from the current file.
+// Figma PC: 2108:10846（白帯・見出し＋4列）。SP 専用デザインは無し → 非表示。
+// メニュー3階層:
+//   02 = 1階層目（家族。PCでは隠す）
+//   03 = 2階層目（大会・イベント 等。リンク。PC見出し）
+//   04 = 3階層目（各ページ。4列）
 // ========================================================================== */
 .local_navigation {
-    margin-inline: calc(var(--padding-SP) * -1);
-    padding: 40px var(--padding-SP);
-    background-color: var(--color-heading-band);
-
-    .ln_links {
-        width: 100%;
-
-        & + .ln_links {
-            margin-top: 48px;
-        }
-    }
-
-    /* SP closed state: the broad business-family item owns the visible heading
-       and its existing module-menu button owns the selector interaction. */
-    .lnl_item-02 > .lnl_title-02 {
-        display: grid;
-        grid-template-columns: 1fr;
-        background-color: transparent;
-        text-align: left;
-    }
-
-    .lnl_link-02 {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        margin-bottom: 24px;
-        padding: 0;
-        color: var(--color-text);
-        font-family: var(--font-zen-kaku-gothic);
-        font-size: 16px;
-        font-weight: 500;
-        line-height: 1.4;
-        letter-spacing: 0.05em;
-
-        &::before {
-            content: var(--icon-arrow-right);
-            display: grid;
-            place-items: center;
-            flex: 0 0 auto;
-            width: 20px;
-            height: 20px;
-            border: 1px solid var(--color-line);
-            border-radius: 50%;
-            background-color: #fff;
-            color: var(--color-primary);
-            font-family: var(--font-awesome);
-            font-size: 8px;
-            line-height: 1;
-            transform: rotate(180deg);
-        }
-    }
-
-    .lnl_button-02 {
-        position: relative;
-        display: flex;
-        align-items: center;
-        width: 100%;
-        height: 50px;
-        padding: 0 65px 0 15px;
-        border: 1px solid var(--color-text);
-        background-color: #fff;
-        color: var(--color-text);
-        text-align: left;
-
-        &::before {
-            content: '選択してください';
-            position: static;
-            transform: none;
-            width: auto;
-            height: auto;
-            border-radius: 0;
-            background: transparent;
-            color: var(--color-text);
-            font-family: var(--font-zen-kaku-gothic);
-            font-size: 13px;
-            font-weight: 500;
-            line-height: 1;
-            letter-spacing: 0.05em;
-        }
-
-        &::after {
-            content: var(--icon-chevron-right);
-            position: absolute;
-            top: -1px;
-            right: -1px;
-            left: auto;
-            display: grid;
-            place-items: center;
-            transform: rotate(90deg);
-            width: 50px;
-            height: 50px;
-            border-radius: 0;
-            background-color: var(--color-text);
-            color: #fff;
-            font-family: var(--font-awesome);
-            font-size: 12px;
-            line-height: 1;
-            transition: transform var(--transition-duration);
-        }
-
-        span {
-            display: none;
-        }
-    }
-
-    .lnl_wrapper-02 {
-        display: grid;
-        grid-template-rows: 0fr;
-        margin-top: 0;
-        transition: grid-template-rows var(--transition-duration);
-    }
-
-    .lnl_inner-02 {
-        overflow: hidden;
-    }
-
-    .lnl_item-02[data-open='true'] {
-        > .lnl_title-02 .lnl_button-02::after {
-            transform: rotate(-90deg);
-        }
-
-        > .lnl_wrapper-02 {
-            grid-template-rows: 1fr;
-        }
-    }
-
-    .lnl_list-02 {
-        display: grid;
-        gap: 0;
-        margin-top: 10px;
-    }
-
-    /* The current Figma only authors the closed SP state. Keep the existing
-       shared module-menu behavior for deeper open-state content instead of
-       inventing a mobile hierarchy presentation here. */
-    .lnl_title-03 {
-        background-color: #fff;
-    }
-
-    .lnl_link-03 {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 14px 15px;
-        border-bottom: 1px solid var(--color-line);
-        color: var(--color-text);
-        font-family: var(--font-zen-kaku-gothic);
-        font-size: 13px;
-        font-weight: 400;
-        line-height: 1.4;
-
-        &::after {
-            content: var(--icon-chevron-right);
-            flex: 0 0 auto;
-            margin-left: 10px;
-            color: var(--color-primary);
-            font-family: var(--font-awesome);
-            font-size: 10px;
-        }
-    }
-
-    .lnl_item-03.current-menu-item > .lnl_title-03 > .lnl_link-03,
-    .lnl_item-03.current_page_item > .lnl_title-03 > .lnl_link-03 {
-        color: var(--color-text);
-        font-weight: 500;
-    }
+    display: none;
 
     @media screen and (min-width: 768px) {
+        display: block;
         margin-inline: calc(var(--padding-TB) * -1);
-        /* The generic PC shell inset is 60px, while the current Local Navigation
-           Figma master owns a distinct 110px content inset. Keep the negative
-           margin tied to the shell token so the surface reaches the viewport,
-           but use the authored Local Navigation inset for its own content. */
         padding: 56px 110px;
-        /* Figma's 1px top/bottom strokes are drawn inside the authored 222px
-           frame and do not add to layout height. Inset shadows preserve that
-           geometry while rendering the same separators. */
         border-block: 0;
         box-shadow:
             inset 0 1px 0 var(--color-line),
             inset 0 -1px 0 var(--color-line);
         background-color: #fff;
 
-        /* PC intentionally promotes the verified subgroup (depth 03) to the
-           visible heading. The broader depth-02 family remains the SP label. */
-        .lnl_item-02 > .lnl_title-02 {
-            display: none;
+        /* clip-path eats octagon stroke on invert. SVG chip keeps the 1px edge. */
+        --_ln-octagon-rest: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'%3E%3Cpolygon fill='%23bf3e2b' stroke='%23bf3e2b' stroke-width='1' stroke-linejoin='round' points='13,0.6 21.78,4.22 25.4,13 21.78,21.78 13,25.4 4.22,21.78 0.6,13 4.22,4.22'/%3E%3C/svg%3E");
+        --_ln-octagon-hover: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'%3E%3Cpolygon fill='%23fff' stroke='%23bf3e2b' stroke-width='1' stroke-linejoin='round' points='13,0.6 21.78,4.22 25.4,13 21.78,21.78 13,25.4 4.22,21.78 0.6,13 4.22,4.22'/%3E%3C/svg%3E");
+
+        .ln_links {
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            list-style: none;
         }
 
         .lnl_button-02,
@@ -209,18 +47,28 @@
             overflow: visible;
         }
 
+        /* PC: hide family (1階層目). Subgroup (2階層目) owns the visible heading. */
+        .lnl_item-02 > .lnl_title-02 {
+            display: none;
+        }
+
         .lnl_list-02 {
             display: block;
             margin-top: 0;
             padding: 0;
+            list-style: none;
         }
 
+        /* Heading link: 大会・イベント */
         .lnl_item-03 > .lnl_title-03 {
+            display: block;
             height: auto;
+            justify-content: flex-start;
             background-color: transparent;
+            text-align: left;
         }
 
-        .lnl_link-03 {
+        .lnl_item-03 > .lnl_title-03 > .lnl_link-03 {
             display: flex;
             align-items: center;
             justify-content: flex-start;
@@ -230,32 +78,55 @@
             border: 0;
             background-color: transparent;
             color: var(--color-text);
+            font-family: var(--font-zen-kaku-gothic);
             font-size: 20px;
             font-weight: 500;
             line-height: 1.4;
             letter-spacing: 0.05em;
+            text-decoration: none;
 
             &::before {
                 content: var(--icon-arrow-right);
-                display: grid;
-                place-items: center;
+                box-sizing: border-box;
+                display: flex;
+                align-items: center;
+                justify-content: center;
                 flex: 0 0 auto;
                 width: 26px;
                 height: 26px;
-                clip-path: var(--clip-octagon);
-                background-color: var(--color-primary);
+                padding: 0;
+                border: 0;
+                clip-path: none;
+                background-color: transparent;
+                background-image: var(--_ln-octagon-rest);
+                background-repeat: no-repeat;
+                background-position: center;
+                background-size: 26px 26px;
+                box-shadow: none;
                 color: #fff;
                 font-family: var(--font-awesome);
                 font-size: 8px;
                 line-height: 1;
                 transform: rotate(180deg);
+                transition:
+                    color var(--transition-duration),
+                    background-image var(--transition-duration);
             }
 
             &::after {
                 content: none;
+                display: none;
             }
         }
 
+        .lnl_item-03.current-menu-item > .lnl_title-03 > .lnl_link-03,
+        .lnl_item-03.current_page_item > .lnl_title-03 > .lnl_link-03,
+        .lnl_item-03.current-menu-ancestor > .lnl_title-03 > .lnl_link-03,
+        .lnl_item-03.current_page_parent > .lnl_title-03 > .lnl_link-03 {
+            color: var(--color-text);
+        }
+
+        /* Child grid */
         .lnl_list-03 {
             display: grid;
             grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -263,41 +134,61 @@
             margin-top: 48px;
             padding-block: 0;
             padding-inline: 36px;
+            list-style: none;
         }
 
+        /* Fixed 34px clipped the link's padding-bottom + border and ate the
+           row gap above the next item (e.g. 体験してみよう). */
         .lnl_title-04 {
-            height: 34px;
+            height: auto;
+            width: 100%;
             background-color: transparent;
         }
 
-        .lnl_link-04 {
-            display: flex;
+        /* Beat .module_menu .mm_item-04._noChild .mm_link-04 (::before chevron).
+           Do not lock Figma line breaks with nowrap. */
+        .lnl_item-04._noChild > .lnl_title-04 > .lnl_link-04,
+        .lnl_item-04 > .lnl_title-04 > .lnl_link-04 {
+            display: inline-flex;
             align-items: center;
             justify-content: flex-start;
             gap: 12px;
-            height: 34px;
+            width: 100%;
+            max-width: 100%;
+            min-height: 34px;
+            height: auto;
+            margin: 0;
             padding: 0 0 20px;
+            border: 0;
             border-bottom: 1px solid var(--color-line);
             background-color: transparent;
             color: var(--color-text);
             font-family: var(--font-zen-kaku-gothic);
             font-size: 14px;
             font-weight: 400;
-            line-height: 1;
+            line-height: 1.4;
             letter-spacing: 0.05em;
-            white-space: nowrap;
+            text-decoration: none;
+            transition:
+                color var(--transition-duration),
+                border-bottom-color var(--transition-duration);
 
             &::before {
                 content: '';
                 flex: 0 0 auto;
                 width: 5px;
                 height: 5px;
+                margin: 0;
                 border-radius: 50%;
                 background-color: var(--color-accent);
+                font-size: 0;
+                color: transparent;
             }
 
             &::after {
                 content: none;
+                display: none;
+                margin: 0;
             }
         }
 
@@ -309,11 +200,39 @@
         }
     }
 
-    /* MARK: hover */
+    /* MARK: hover — 見出しはアイコンのみネガ反転（白塗り + プライマリ枠/矢印）。
+       SVG chip で枠を残す。clip-path + inset shadow は使わない。
+       module_menu の mm_title-03:has(...): #ccc 背景は出さない。文字色は据え置き。 */
     @media (any-hover: hover) {
-        .lnl_link-03:hover,
-        .lnl_link-04:hover {
-            color: var(--color-primary);
+        @media screen and (min-width: 768px) {
+            .lnl_item-03 > .lnl_title-03:has(.lnl_link-03:hover),
+            .lnl_item-03 > .lnl_title-03:has(.lnl_link-03:focus-visible) {
+                background-color: transparent;
+            }
+
+            .lnl_item-03 > .lnl_title-03 > .lnl_link-03:hover,
+            .lnl_item-03 > .lnl_title-03 > .lnl_link-03:focus-visible,
+            .lnl_item-03.current-menu-ancestor > .lnl_title-03 > .lnl_link-03:hover,
+            .lnl_item-03.current-menu-ancestor > .lnl_title-03 > .lnl_link-03:focus-visible,
+            .lnl_item-03.current_page_parent > .lnl_title-03 > .lnl_link-03:hover,
+            .lnl_item-03.current_page_parent > .lnl_title-03 > .lnl_link-03:focus-visible {
+                color: var(--color-text);
+                background-color: transparent;
+
+                &::before {
+                    color: var(--color-primary);
+                    clip-path: none;
+                    background-color: transparent;
+                    background-image: var(--_ln-octagon-hover);
+                    box-shadow: none;
+                }
+            }
+
+            .lnl_item-04 > .lnl_title-04 > .lnl_link-04:hover,
+            .lnl_item-04 > .lnl_title-04 > .lnl_link-04:focus-visible {
+                color: var(--color-text);
+                border-bottom-color: var(--color-accent);
+            }
         }
     }
 }

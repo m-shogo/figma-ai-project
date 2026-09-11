@@ -162,7 +162,7 @@ try {
   assert(isKakuFamily(pc.headingFamily), `PC subgroup heading must resolve to Zen Kaku Gothic New, got ${pc.headingFamily}.`);
   assert(isKakuFamily(pc.childFamily), `PC current child must resolve to Zen Kaku Gothic New, got ${pc.childFamily}.`);
 
-  // Current Figma Local Navigation authority: FKQaJDu5TZXHoCzPsfP92E / 1216:6311.
+  // Current Figma Local Navigation authority: jqYoPtusYfTeDqRegMCsx3 / 1216:6311.
   // The reference frame is 1380px wide, while the live Theme deliberately uses
   // scrollbar-gutter: stable. Chromium reserves that gutter inside the body's
   // containing block even when root clientWidth remains equal to window.innerWidth.

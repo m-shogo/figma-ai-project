@@ -84,13 +84,13 @@
         }
     }
 
-    /* MARK: hover — current Theme interaction retained because Figma only
-       supplies default/active visual authority for this Parts master. */
+    /* MARK: hover — 実装指示 2377:6598 タブ hover = active */
     @media (any-hover: hover) {
         .tab-button {
             &:not(.active) {
-                &:hover {
-                    background-color: color-mix(in oklch, var(--color-primary) 70%, transparent 0%);
+                &:hover,
+                &:focus-visible {
+                    background-color: var(--color-text);
                     color: var(--color-secondary);
                 }
             }

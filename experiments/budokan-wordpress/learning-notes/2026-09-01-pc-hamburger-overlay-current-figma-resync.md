@@ -1,5 +1,7 @@
 # PC hamburger overlay resync — 2026-09-01
 
+**SUPERSEDED 2026-09-11.** 「two-column panel under the 100px header」は現行 Figma `jqYoPtusYfTeDqRegMCsx3` `2096:6235` と Human FB に反する。暗幕も白パネルも viewport 上端からヘッダーを覆う。正本は `CURRENT_AUTHORITY.md` と `learning-notes/2026-09-11-overlay-drawer-human-fb.md`。このメモの Lesson（閉じ Header だけで hamburger を SP-only と決めない）だけ残す。
+
 ## Scope
 
 Current file `fKYDn9ikpJk1nW7IWFtaUx` PC open menu `2096:6235` / panel `2183:9964`. Owner is `_header.php` + `css/layout/global_navigation.css` + `global_header.css`. Closed PC GNavi `2209:9850` and hover mega stay. Overlay EN `2182:9959` is not duplicated; `.gh_lang` already owns language.

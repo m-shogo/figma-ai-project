@@ -90,23 +90,33 @@
     }
     .gh_lang {
         background-color: var(--color-accent);
+        box-shadow: inset 0 0 0 1px var(--color-accent);
         font-family: var(--font-zen-kaku-gothic);
         font-size: 14px;
         font-weight: 500;
         letter-spacing: 0.1em;
+        transition:
+            background-color var(--transition-duration),
+            color var(--transition-duration);
     }
     .gh_search {
         background-color: var(--color-header-search);
+        box-shadow: inset 0 0 0 1px var(--color-header-search);
+        transition:
+            background-color var(--transition-duration),
+            color var(--transition-duration);
         .icon {
             display: block;
             width: 18px;
             height: 18px;
+            color: inherit;
             &::before {
                 content: var(--icon-zoom);
                 font-family: var(--font-awesome);
                 font-size: 18px;
                 font-weight: 400;
                 line-height: 1;
+                color: inherit;
             }
         }
     }
@@ -206,32 +216,40 @@
                 }
             }
         }
-        .gh_lang,
-        .gh_search,
-        .gh_menu {
-            &:hover {
-                opacity: var(--opacity-hover);
-            }
+        .gh_lang:hover,
+        .gh_lang:focus-visible {
+            background-color: var(--color-secondary);
+            color: var(--color-accent);
+        }
+        .gh_search:hover,
+        .gh_search:focus-visible {
+            background-color: var(--color-secondary);
+            color: var(--color-header-search);
+        }
+        .gh_menu:hover {
+            opacity: var(--opacity-hover);
         }
     }
 }
 
-/* MARK: open_menu — SP はハンバーガーを × に */
-body._open-menu {
-    .global_header {
-        .gh_menu {
-            .icon {
-                background-color: transparent;
-                padding-block: 0;
-                height: 20px;
-                &::before {
-                    top: 9.5px;
-                    transform: rotate(45deg);
-                }
-                &::after {
-                    top: 9.5px;
-                    bottom: auto;
-                    transform: rotate(-45deg);
+/* MARK: open_menu — SP はハンバーガーを × に。PC の × はパネル内 .gn_close */
+@media screen and (max-width: 767px) {
+    body._open-menu {
+        .global_header {
+            .gh_menu {
+                .icon {
+                    background-color: transparent;
+                    padding-block: 0;
+                    height: 20px;
+                    &::before {
+                        top: 9.5px;
+                        transform: rotate(45deg);
+                    }
+                    &::after {
+                        top: 9.5px;
+                        bottom: auto;
+                        transform: rotate(-45deg);
+                    }
                 }
             }
         }
@@ -261,79 +279,148 @@ body._contentFixed {
     }
 }
 
-/* Figma search 2295:8023 — JS (#gh_search) moves .gn_search here and animates height. */
+/* Figma search overlay 2295:8023 — gray bar covers the header; dedicated field + close. */
 .gh_searchPanel {
-    --_search-panel-height: 180px;
+    --_search-panel-height: 100px;
     position: fixed;
-    top: var(--header-height-SP);
+    top: 0;
     left: 0;
     z-index: 101;
     display: none;
     align-items: center;
     justify-content: center;
+    box-sizing: border-box;
     width: 100%;
-    background-color: var(--color-secondary);
-    .gn_search {
+    height: var(--_search-panel-height);
+    padding-inline: 20px 52px;
+    background-color: var(--color-heading-band);
+    .ghs_form {
         display: flex;
-        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        box-sizing: border-box;
+        width: 100%;
+        height: 50px;
+        padding-inline: 20px 8px;
+        border: 1px solid var(--color-line);
+        background-color: var(--color-secondary);
+        transition: border-color var(--transition-duration);
+    }
+    .ghs_input {
+        flex: 1 1 auto;
+        min-width: 0;
+        height: 100%;
+        padding: 0;
+        border: 0;
+        background-color: transparent;
+        color: var(--color-text);
+        font-family: var(--font-zen-old-mincho);
+        font-size: 16px;
+        font-weight: 400;
+        letter-spacing: 0.05em;
+        line-height: 1.5;
+        outline: none;
+        &::placeholder {
+            color: #aaa;
+        }
+        &::-webkit-search-decoration,
+        &::-webkit-search-cancel-button {
+            appearance: none;
+        }
+    }
+    .ghs_submit {
+        flex: 0 0 auto;
+        display: flex;
         align-items: center;
         justify-content: center;
-        width: 100%;
-        max-width: 300px;
-        margin: 0;
-        padding: 24px 20px;
-        .module_search-01 {
-            width: 100%;
-            .ms_from {
-                background-color: transparent;
-                grid-template-columns: minmax(0, 1fr) 50px;
-                .ms_input {
-                    height: 50px;
-                    border-color: var(--color-header-search);
-                }
-                .ms_button {
-                    height: 50px;
-                    border-color: var(--color-header-search);
-                    background-color: var(--color-header-search);
-                    span {
-                        font-size: 0;
-                        &::after {
-                            margin-left: 0;
-                            font-size: 13px;
-                            font-weight: 400;
-                        }
-                    }
-                    &:hover,
-                    &:focus {
-                        background-color: var(--color-header-search);
-                        span,
-                        span::after {
-                            color: var(--color-secondary);
-                        }
-                    }
-                }
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        border: 0;
+        background-color: transparent;
+        color: var(--color-primary);
+        cursor: pointer;
+        span {
+            font-size: 0;
+            line-height: 1;
+            &::after {
+                content: var(--icon-zoom);
+                font-family: var(--font-awesome);
+                font-size: 18px;
+                font-weight: 400;
+                line-height: 1;
+                color: var(--color-primary);
             }
         }
     }
-    .gn_close {
-        display: none;
+    .ghs_close {
+        position: absolute;
+        top: 50%;
+        right: 20px;
+        width: 22px;
+        height: 22px;
+        padding: 0;
+        border: 0;
+        background-color: transparent;
+        transform: translateY(-50%);
+        cursor: pointer;
+        &::before,
+        &::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 30px;
+            height: 1px;
+            background-color: var(--color-text);
+        }
+        &::before {
+            transform: translate(-50%, -50%) rotate(45deg);
+        }
+        &::after {
+            transform: translate(-50%, -50%) rotate(-45deg);
+        }
     }
 }
 
+@media (any-hover: hover) {
+    .gh_searchPanel .ghs_form:hover {
+        border-color: var(--color-text);
+    }
+}
+
+.gh_searchPanel .ghs_form:focus-within {
+    border-color: var(--color-text);
+}
+
 .admin-bar .gh_searchPanel {
-    top: calc(var(--header-height-SP) + var(--wp-admin--admin-bar--height, 0px));
+    top: var(--wp-admin--admin-bar--height, 0px);
 }
 
 @media screen and (min-width: 768px) {
     .gh_searchPanel {
-        --_search-panel-height: 323px;
-        top: var(--header-height-PC);
-        .gn_search {
-            max-width: 300px;
-            padding: 0;
+        --_search-panel-height: 150px;
+        padding-inline: 0;
+        .ghs_form {
+            width: 560px;
+            height: 60px;
+            padding-inline: 20px 12px;
+        }
+        .ghs_input {
+            font-size: 18px;
+        }
+        .ghs_submit {
+            width: 48px;
+            height: 48px;
+            span::after {
+                font-size: 24px;
+            }
+        }
+        .ghs_close {
+            right: 72px;
         }
     }
     .admin-bar .gh_searchPanel {
-        top: calc(var(--header-height-PC) + var(--wp-admin--admin-bar--height, 0px));
+        top: var(--wp-admin--admin-bar--height, 0px);
     }
 }

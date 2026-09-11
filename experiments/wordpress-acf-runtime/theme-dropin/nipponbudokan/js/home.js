@@ -135,8 +135,76 @@
     });
   };
 
+  const aboutCardsSlider = function () {
+    const root = document.querySelector('.top_about-01');
+    const el = root ? root.querySelector('.ta_cards_swiper') : null;
+    if (!root || !el || typeof Swiper === 'undefined') {
+      return;
+    }
+    const mq = window.matchMedia('(min-width: 768px)');
+    let swiper = null;
+    const create = function () {
+      if (swiper || mq.matches) {
+        return;
+      }
+      const slideCount = el.querySelectorAll('.swiper-slide').length;
+      if (slideCount < 2) {
+        return;
+      }
+      const prefersReducedMotion = window.matchMedia
+        && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const bar = root.querySelector('.ta_scroll_bar');
+      const track = root.querySelector('.ta_scroll');
+      const moveBar = function (progress) {
+        if (!bar || !track) {
+          return;
+        }
+        const max = Math.max(0, track.clientWidth - bar.offsetWidth);
+        bar.style.transform = 'translate3d(' + (progress * max) + 'px, 0, 0)';
+      };
+      swiper = new Swiper(el, {
+        slidesPerView: 'auto',
+        spaceBetween: 20,
+        centeredSlides: true,
+        watchOverflow: true,
+        speed: prefersReducedMotion ? 0 : 300,
+        resistanceRatio: 0.85,
+        on: {
+          progress: function (instance, progress) {
+            moveBar(progress);
+          }
+        }
+      });
+    };
+    const destroy = function () {
+      if (!swiper) {
+        return;
+      }
+      swiper.destroy(true, true);
+      swiper = null;
+      const bar = root.querySelector('.ta_scroll_bar');
+      if (bar) {
+        bar.style.transform = '';
+      }
+    };
+    const sync = function () {
+      if (mq.matches) {
+        destroy();
+      } else {
+        create();
+      }
+    };
+    if (mq.addEventListener) {
+      mq.addEventListener('change', sync);
+    } else if (mq.addListener) {
+      mq.addListener(sync);
+    }
+    sync();
+  };
+
   topSlider();
   //newsSlider();
   $(topCalendar);
+  $(aboutCardsSlider);
 
 })(jQuery);

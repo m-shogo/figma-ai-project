@@ -166,24 +166,20 @@
     }
 
     .ta_cards {
-        display: flex;
-        gap: 20px;
         margin-inline: calc(var(--padding-SP) * -1);
-        padding-inline: calc((100vw - 295px) / 2);
-        overflow-x: auto;
-        scroll-snap-type: x mandatory;
-        scroll-padding-inline: calc((100vw - 295px) / 2);
-        scrollbar-width: none;
+    }
 
-        &::-webkit-scrollbar {
-            display: none;
-        }
+    .ta_cards_swiper {
+        overflow: hidden;
+    }
+
+    .ta_cards_swiper .swiper-slide {
+        width: 295px;
+        height: auto;
     }
 
     .ta_card {
-        flex: 0 0 295px;
         min-width: 0;
-        scroll-snap-align: center;
     }
 
     .ta_card_link {
@@ -220,7 +216,7 @@
         object-position: 68% 95%;
     }
 
-    .ta_card:nth-child(4) .ta_card_image img {
+    .ta_card_pc .ta_card_image img {
         object-position: 44% 50%;
     }
 
@@ -295,6 +291,7 @@
     }
 
     .ta_scroll {
+        position: relative;
         display: block;
         width: 327px;
         height: 5px;
@@ -305,11 +302,15 @@
     }
 
     .ta_scroll_bar {
+        position: absolute;
+        top: 0;
+        left: 0;
         display: block;
         width: 110px;
         height: 5px;
         border-radius: 2.5px 0 0 2.5px;
         background-color: var(--color-accent);
+        will-change: transform;
     }
 
     @media screen and (min-width: 768px) {
@@ -488,6 +489,12 @@
             overflow: visible;
         }
 
+        .ta_cards_swiper,
+        .ta_cards_swiper .swiper-wrapper {
+            display: contents;
+        }
+
+        .ta_cards_swiper .swiper-slide,
         .ta_card {
             flex: none;
             display: block;
@@ -510,7 +517,7 @@
             object-position: 31% 99%;
         }
 
-        .ta_card:nth-child(4) .ta_card_image img {
+        .ta_card_pc .ta_card_image img {
             object-position: 44% 50%;
         }
 

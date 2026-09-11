@@ -12,6 +12,87 @@ add_action('after_setup_theme', function () {
 });
 
 /**
+ * Local Navigation menus are not theme locations.
+ * Editors name them 「ローカル：…」; slug is kept as local-*.
+ * Per-page assignment is ACF `page_local_nav` (Human 2026-09-11).
+ */
+function nipponbudokan_is_local_nav_menu($menu)
+{
+    $menu = is_object($menu) ? $menu : wp_get_nav_menu_object($menu);
+    if (!$menu) {
+        return false;
+    }
+    if (strpos((string) $menu->slug, 'local-') === 0) {
+        return true;
+    }
+    return (bool) preg_match('/^ローカル[:：]/u', (string) $menu->name);
+}
+
+function nipponbudokan_get_local_nav_menu_choices()
+{
+    $assigned = array_filter(array_map('intval', (array) get_nav_menu_locations()));
+    $choices = array();
+    foreach (wp_get_nav_menus() as $menu) {
+        if (!nipponbudokan_is_local_nav_menu($menu)) {
+            continue;
+        }
+        if (in_array((int) $menu->term_id, $assigned, true)) {
+            continue;
+        }
+        $choices[(string) $menu->term_id] = $menu->name;
+    }
+    return $choices;
+}
+
+function nipponbudokan_get_page_local_nav_menu_id($post_id = 0)
+{
+    $post_id = $post_id ? (int) $post_id : (int) get_queried_object_id();
+    if ($post_id < 1 || !function_exists('get_field')) {
+        return 0;
+    }
+    return absint(get_field('page_local_nav', $post_id));
+}
+
+function nipponbudokan_sync_local_nav_menu_slug($menu_id)
+{
+    static $syncing = false;
+    if ($syncing) {
+        return;
+    }
+    $menu = wp_get_nav_menu_object((int) $menu_id);
+    if (!$menu || !preg_match('/^ローカル[:：]\s*(.+)$/u', (string) $menu->name, $matches)) {
+        return;
+    }
+    if (strpos((string) $menu->slug, 'local-') === 0 && strpos((string) $menu->slug, '%') === false) {
+        return;
+    }
+    $rest = sanitize_title($matches[1]);
+    // Japanese titles become percent-encoded; keep a stable ASCII slug instead.
+    if ($rest === '' || strpos($rest, '%') !== false || !preg_match('/^[a-z0-9_-]+$/', $rest)) {
+        $slug = 'local-menu-' . (int) $menu_id;
+    } else {
+        $slug = 'local-' . $rest;
+    }
+    if ((string) $menu->slug === $slug) {
+        return;
+    }
+    $syncing = true;
+    wp_update_term((int) $menu_id, 'nav_menu', array('slug' => $slug));
+    $syncing = false;
+}
+add_action('wp_create_nav_menu', 'nipponbudokan_sync_local_nav_menu_slug', 20);
+add_action('wp_update_nav_menu', 'nipponbudokan_sync_local_nav_menu_slug', 20);
+
+add_filter('acf/load_field/name=page_local_nav', function ($field) {
+    $field['choices'] = nipponbudokan_get_local_nav_menu_choices();
+    $field['allow_null'] = 1;
+    if (!isset($field['placeholder']) || $field['placeholder'] === '') {
+        $field['placeholder'] = 'なし';
+    }
+    return $field;
+});
+
+/**
  * global-nav 未設定時の sample（赤ハンバーガー。中身は WP メニューが正）
  */
 function nipponbudokan_hamburger_nav_fallback()
@@ -166,8 +247,13 @@ class Custom_Global_Walker_Nav_Menu extends Walker_Nav_Menu
         // 深度に応じたクラス名（2階層:gn_title-01, 3階層:gn_title-02, 4階層:gn_title-03）
         $li_class = 'gnl_item-' . $depth_number;
         $title_class = 'gnl_title-' . $depth_number;
-        $is_mega_top = isset($args->theme_location) && $args->theme_location === 'mega-nav' && (int) $depth === 0;
-        $link_class = 'gnl_link-' . $depth_number . ($is_mega_top ? '' : ' module_textLink');
+        $is_mega_nav = isset($args->theme_location) && $args->theme_location === 'mega-nav';
+        $is_mega_top = $is_mega_nav && (int) $depth === 0;
+        /* Mega L3 (実装指示 2377:4084): full-row octagon + LTR underline, not module_textLink. */
+        $is_mega_l3_row = $is_mega_nav && (int) $depth === 1;
+        /* Mega L4 group heading (実装指示 2377:4054): gray band is not a link. */
+        $is_mega_group_heading = $is_mega_nav && $has_children && (int) $depth === 2;
+        $link_class = 'gnl_link-' . $depth_number . (($is_mega_top || $is_mega_l3_row || $is_mega_group_heading) ? '' : ' module_textLink');
         $button_class = 'gnl_button-' . $depth_number;
         $wrapper_class = 'gnl_wrapper-' . $depth_number;
         $inner_class = 'gnl_inner-' . $depth_number;
@@ -177,7 +263,7 @@ class Custom_Global_Walker_Nav_Menu extends Walker_Nav_Menu
             $li_classes = trim(implode(' ', $item->classes)) . ' ' . $li_class . ' _hasChild';
             $output .= '<li class="' . esc_attr($li_classes) . '">';
             $output .=   '<div class="' . esc_attr($title_class) . '">';
-            if ($is_mega_top) {
+            if ($is_mega_top || $is_mega_group_heading) {
                 $output .=     '<span class="' . esc_attr($link_class) . '">';
                 $output .=       '<span>' . esc_html($title) . '</span>';
                 $output .=     '</span>';
@@ -423,7 +509,8 @@ class Custom_Footer_Sub_Walker_Nav_Menu extends Walker_Nav_Menu
 
 /**
  * サイドバーナビゲーション用カスタムWalker
- * 現在のページの配下（子孫ページ）にあるメニューのみを出力
+ * ACF 指定メニューは全件出力（local_nav_show_all）。
+ * それ以外は現在ページの枝だけ出す。
  * sidebar.php の ln_links / lnl_title 構造に合わせたHTMLを出力
  */
 class Custom_Sidebar_Walker_Nav_Menu extends Walker_Nav_Menu
@@ -443,19 +530,24 @@ class Custom_Sidebar_Walker_Nav_Menu extends Walker_Nav_Menu
      */
     public function display_element($element, &$children_elements, $max_depth, $depth, $args, &$output)
     {
-        // current_page_item（現在のページ）または current_page_parent（先祖）の項目を出力。
-        // 子要素は親出力時に再帰で全て出力され、孫が現在ページの場合は最上位の親まで遡って出力。
-        // 互換のため current-menu-item / current-menu-ancestor も判定
-        $elementClasses = isset($element->classes) ? (array) $element->classes : array();
-        $isCurrentPage = in_array('current_page_item', $elementClasses, true) || in_array('current-menu-item', $elementClasses, true);
-        $isAncestor = in_array('current_page_parent', $elementClasses, true) || in_array('current-menu-ancestor', $elementClasses, true);
+        $show_all = false;
+        if (isset($args[0]) && is_object($args[0]) && !empty($args[0]->local_nav_show_all)) {
+            $show_all = true;
+        } elseif (is_object($args) && !empty($args->local_nav_show_all)) {
+            $show_all = true;
+        }
 
-        $currentPageId = get_the_ID();
-        if ($currentPageId) {
-            // 最上位(depth 0)では current_page_item / current_page_parent のときのみ出力
-            // 子要素(depth > 0)は親が出力された時点でパス上にあるので全件出力
-            if ($depth === 0 && !$isCurrentPage && !$isAncestor) {
-                return;
+        // ACF 指定メニューは全件。それ以外は現在ページの枝だけ。
+        if (!$show_all) {
+            $elementClasses = isset($element->classes) ? (array) $element->classes : array();
+            $isCurrentPage = in_array('current_page_item', $elementClasses, true) || in_array('current-menu-item', $elementClasses, true);
+            $isAncestor = in_array('current_page_parent', $elementClasses, true) || in_array('current-menu-ancestor', $elementClasses, true);
+
+            $currentPageId = get_the_ID();
+            if ($currentPageId) {
+                if ($depth === 0 && !$isCurrentPage && !$isAncestor) {
+                    return;
+                }
             }
         }
 

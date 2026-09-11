@@ -99,7 +99,7 @@ try {
 
   assert(pc, 'PC normal-page master owner elements were not found.');
 
-  // Current Figma normal-page authority: FKQaJDu5TZXHoCzPsfP92E / 1203:4865.
+  // Current Figma normal-page authority: jqYoPtusYfTeDqRegMCsx3 / 1203:4865.
   // Header occupies y=0..100, page title y=100..320, authored content is
   // x=210..1170 (960px), Local Navigation follows content at full width,
   // then breadcrumb, then footer.

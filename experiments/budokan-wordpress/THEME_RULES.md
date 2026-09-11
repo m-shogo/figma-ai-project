@@ -134,6 +134,7 @@ QA は 〜767 と ≥1280 を主にする。
 3. logo は `images/common/logo.svg`（アウトライン SVG）
 4. Footer 住所・TEL・copyright は現状プレースホルダ → 実データは Human 指示待ちでよい
 5. SP ハンバーガーは `#gh_menu` / `#global_navigation` / `#overlay`（`common.js` 連動）
+6. PC メニュー overlay は暗幕 width 100%・白パネルはその上・ヘッダークロームは消さない。open で header を `relative` にしない。閉じは中身を崩さず右へ。正本は `CURRENT_AUTHORITY.md`
 
 ---
 

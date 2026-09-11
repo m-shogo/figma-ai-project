@@ -339,6 +339,10 @@
 
     @media (any-hover: hover) {
         .top_news_articles .news_item_link:hover .news_item_title,
+        .top_news_articles .news_item_link:focus-visible .news_item_title {
+            color: var(--color-text);
+            background-size: 100% 1px;
+        }
         .top_news_more:hover {
             color: var(--color-link);
         }

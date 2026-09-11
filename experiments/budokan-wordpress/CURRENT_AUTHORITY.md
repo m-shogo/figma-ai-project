@@ -3,7 +3,7 @@
 このファイルは **日本武道館 WordPress 案件**の会話決定を正本化する。  
 以降の Agent は、ここを Current Authority として扱い、矛盾する旧命名・旧 LP runtime 前提で進めない。
 
-更新日: 2026-09-04
+更新日: 2026-09-11
 
 ---
 
@@ -129,7 +129,7 @@ Theme 専用の enqueue・命名は `THEME_RULES.md`。Frontend Standard は Com
 
 フィールド名・用途はこの節が正本。WordPress 実行時の Local JSON / block PHP は Theme 内に残るが、**Agent は `theme-dropin/nipponbudokan/acf/` を再読してフィールドを増やしたり推測したりしない。** `acf-export.json` は退役（旧 portable dump。メニュー ACF グループを含むため使わない）。
 
-フィールドグループ JSON は編集しない。ブロック見た目の markup 修正が必要なときだけ既存 block PHP を触る。新しい ACF / CPT / スラッグは発明しない。**例外:** 2026-09-04 Human が `parts2.php` 用スライダーを指示したので `acf/slider`（`slider_items` → `image` / `caption`）だけ追加済み。
+フィールドグループ JSON は編集しない。ブロック見た目の markup 修正が必要なときだけ既存 block PHP を触る。新しい ACF / CPT / スラッグは発明しない。**例外:** 2026-09-04 Human が `parts2.php` 用スライダーを指示したので `acf/slider`（`slider_items` → `image` / `caption`）だけ追加済み。**例外:** 2026-09-11 Human がローカルナビを ACF 選択（動的メニュー一覧）で指示したので `page_local_nav` を追加済み。
 
 | 用途 | フィールド |
 | --- | --- |
@@ -137,6 +137,7 @@ Theme 専用の enqueue・命名は `THEME_RULES.md`。Frontend Standard は Com
 | TOP お知らせ | `top_notice_select`（表示する） / `top_notice-01` → `date` / `textarea` / `none`（`_hide`） |
 | TOP バナー | `top_banner-01` → `img` / `title` / `url` / `target` |
 | 固定ページ タイトル帯画像 | `page_img` |
+| 固定ページ ローカルナビ | `page_local_nav`（メニュー ID。なし＝非表示） |
 | 投稿タイプ既定画像（Options `common_visual`） | `page_img-post` / `page_img-sampleslug` / `page_img-other` |
 | SEO（固定ページ） | `page_title` / `page_description` |
 | head/body タグ（Options `common_tag`） | `headTag_after` / `headTag_before` / `bodyTag_after` / `bodyTag_before` |
@@ -149,6 +150,7 @@ Theme 専用の enqueue・命名は `THEME_RULES.md`。Frontend Standard は Com
 | ブロック スライダー | `slider_items` → `image` / `caption` |
 
 - グローバルナビは WordPress メニュー。旧 `common-menu-01` / `common-submenu-01` は現行 ACF に無い
+- ローカルナビ（Human 2026-09-11）: 外観 → メニューで名前を `ローカル：` で始める（slug は `local-*` に同期）。位置には割り当てない。固定ページ ACF `page_local_nav` の動的一覧にだけ出る（`global-nav` / `mega-nav` / `sub-nav` / `footer-nav` 等の位置割当メニューは除外）。パンくず上・幅いっぱい・白背景。PC Figma `2108:10846`。SP 専用デザイン無し（非表示）。メニューは**3階層**（1=家族 / 2=大会・イベント等のリンク見出し / 3=各ページ）。PC は2階層目を見出し、3階層目を4列で出す。1階層目は PC では隠す
 - CPT `event` + `event_cat` は Theme `inc/custom.php`。開催日・募集ステータス用フィールドは **無い** → 当該 UI は fail-closed
 - Gutenberg ボタンスタイル「小ボタン」= `is-style-small`（Figma btn-02）。wrapper `.small` も互換で残す
 - ブロック スライダーは Human 2026-09-04: `parts2.php` 用に `acf/` へ追加してよい
@@ -173,18 +175,34 @@ Theme 専用の enqueue・命名は `THEME_RULES.md`。Frontend Standard は Com
 
 ## Figma（現行正本）
 
-Human Authority 2026-09-03: この file だけを LIVE 再取得する。過去 file の node / 計測 / スクリーンショットを引き継がない。
+Human Authority 2026-09-10: この file だけを LIVE 再取得する。過去 file の node / 計測 / スクリーンショットを引き継がない。
 
-File: [nipponbudokan](https://www.figma.com/design/FKQaJDu5TZXHoCzPsfP92E/nipponbudokan)
+File: [nipponbudokan](https://www.figma.com/design/jqYoPtusYfTeDqRegMCsx3/nipponbudokan)
 
 | 面 | URL | fileKey | node-id |
 | --- | --- | --- | --- |
-| PC | https://www.figma.com/design/FKQaJDu5TZXHoCzPsfP92E/nipponbudokan?node-id=0-1 | `FKQaJDu5TZXHoCzPsfP92E` | `0:1` |
-| SP | https://www.figma.com/design/FKQaJDu5TZXHoCzPsfP92E/nipponbudokan?node-id=114-5409 | `FKQaJDu5TZXHoCzPsfP92E` | `114:5409` |
+| PC | https://www.figma.com/design/jqYoPtusYfTeDqRegMCsx3/nipponbudokan?node-id=0-1 | `jqYoPtusYfTeDqRegMCsx3` | `0:1` |
+| SP | https://www.figma.com/design/jqYoPtusYfTeDqRegMCsx3/nipponbudokan?node-id=114-5409 | `jqYoPtusYfTeDqRegMCsx3` | `114:5409` |
 
-- 旧 file key `fKYDn9ikpJk1nW7IWFtaUx` / `w7SGVY63FuW6JpaQVKjxm2` / `RfAQQ28V1HGaeIcpgRmQq1` は使わない（証拠 lineage 参照のみ）
+- 旧 file key `FKQaJDu5TZXHoCzPsfP92E` / `fKYDn9ikpJk1nW7IWFtaUx` / `w7SGVY63FuW6JpaQVKjxm2` / `RfAQQ28V1HGaeIcpgRmQq1` は使わない（証拠 lineage 参照のみ）
 - Visual の正本は上記 Figma。既存実装の正本は Theme。差分は Theme をこの Figma へ合わせる
 - Figma から入れる画像（Theme / LP / HTML 共通）: 写真・ラスターは **WebP**。logo / icon はベクターをアウトライン化して **SVG**。短命 URL は直貼りしない。ラスターしか無い logo はトレースしない。正本は `AGENTS.md` Images 節 / `docs/image-gradient-visual-tolerance.md` / `config/frontend-raster-asset-export-policy.yaml`。Budokan Theme 適用は `THEME_RULES.md` 節 12
+
+---
+
+## PC メニュー overlay（Human Authority 2026-09-11）
+
+現行 PC open menu は `2096:6235`（1380×768）。暗幕色は `2182:8277` = `rgb(51 51 51 / 0.9)`。検索 overlay は `2295:8023`。
+
+- 暗幕は **width 100% で viewport 全体**。右 888px を `clip-path` で欠けさせない
+- 白パネル（888px）は viewport **上端から**ヘッダーを覆う。`--header-height-PC` 分下げない
+- ヘッダー GNavi / EN / 検索 / MENU は **`visibility: hidden` しない**。暗幕とパネルが覆う
+- PC の × はパネル内 `#gn_close`（top 20 / right 30 / 60×60）。ハンバーガーを × にしない
+- メニュー open でヘッダーを `position: relative` にしない（`_contentFixed` の padding と二重になり背景が落ちる）
+- 閉じは検索パネルと同じ: 中身を崩さず 0.3s で右へ隠す。`_closing-menu` 中は `_open-menu` を残す
+- sticky ヘッダー stacking のため、PC 開時の全面暗幕はヘッダー SC 内（`header::before`）で描き、白パネルをその上にする。兄弟 `#overlay` だけ上げてパネルを暗幕の下に入れない
+
+ポータブルな判断（次案件）は `docs/frontend-quick-contract.md` 節4。この節の px / node は Budokan 固有。
 
 ---
 

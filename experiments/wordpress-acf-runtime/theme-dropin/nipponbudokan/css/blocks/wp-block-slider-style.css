@@ -1,10 +1,10 @@
 @charset "utf-8";
 /* // ------------------------------
 // スライダー（Figma parts / スライダー）
-// Current Figma fileKey FKQaJDu5TZXHoCzPsfP92E
+// Current Figma fileKey jqYoPtusYfTeDqRegMCsx3
 // SP 1399:18943 / PC 1157:8380 — 3:2 image, caption 14/500/1.6/5%,
 // PC: image max 645px, 60px side rails, 40px arrows outside the image.
-// SP: 40px primary octagon arrows overlap the image edges.
+// SP: 20px image inset, 40px primary octagon arrows overlap the image edges.
 // ------------------------------ */
 .block-editor_wrap,
 .editor-styles-wrapper {
@@ -43,6 +43,7 @@
             z-index: 0;
             overflow: hidden;
             aspect-ratio: 3 / 2;
+            margin-inline: 20px;
             img {
                 width: 100%;
                 height: 100%;
@@ -53,7 +54,7 @@
 
         figcaption {
             margin: 0;
-            padding: 0 20px;
+            padding: 0;
             text-align: center;
             color: var(--color-text);
             font-family: var(--font-zen-kaku-gothic);
@@ -70,25 +71,39 @@
             left: 0;
             width: 100%;
             max-width: 100%;
-            aspect-ratio: 3 / 2;
+            height: calc((100cqi - 40px) * 2 / 3);
             pointer-events: none;
             overflow: visible;
         }
 
         .swiper-button-prev,
         .swiper-button-next {
+            /* clip-path eats the octagon stroke on invert. Small-button (btn-02) chip. */
+            --_octagon-chip: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpolygon fill='%23bf3e2b' stroke='%23bf3e2b' stroke-width='1' stroke-linejoin='round' points='20,0.75 33.51,6.49 39.25,20 33.51,33.51 20,39.25 6.49,33.51 0.75,20 6.49,6.49'/%3E%3C/svg%3E");
+            --_octagon-chip-invert: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpolygon fill='%23fff' stroke='%23bf3e2b' stroke-width='1' stroke-linejoin='round' points='20,0.75 33.51,6.49 39.25,20 33.51,33.51 20,39.25 6.49,33.51 0.75,20 6.49,6.49'/%3E%3C/svg%3E");
             pointer-events: auto;
             position: absolute;
             top: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
             width: 40px;
             height: 40px;
             margin: 0;
             padding: 0;
             border: 0;
-            background-color: var(--color-primary);
+            background-color: transparent;
+            background-image: var(--_octagon-chip);
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 40px 40px;
             color: var(--color-secondary);
-            clip-path: var(--clip-octagon);
-            transition: opacity var(--transition-duration);
+            clip-path: none;
+            cursor: pointer;
+            transition:
+                background-image var(--transition-duration),
+                color var(--transition-duration);
             &::after {
                 content: none;
             }
@@ -98,14 +113,14 @@
             &::before {
                 font-family: var(--font-awesome);
                 font-weight: 400;
-                font-size: 14px;
+                font-size: 12px;
                 line-height: 1;
-                color: var(--color-secondary);
+                color: currentColor;
             }
         }
         .swiper-button-prev {
             left: 0;
-            transform: translate(-50%, -50%);
+            transform: translateY(-50%);
             &::before {
                 content: var(--icon-arrow-left);
             }
@@ -113,7 +128,7 @@
         .swiper-button-next {
             right: 0;
             left: auto;
-            transform: translate(50%, -50%);
+            transform: translateY(-50%);
             &::before {
                 content: var(--icon-arrow-right);
             }
@@ -135,6 +150,10 @@
             .image {
                 width: 100%;
                 max-width: 645px;
+                margin-inline: auto;
+            }
+
+            .image {
                 margin-inline: auto;
             }
 
@@ -167,9 +186,12 @@
         }
 
         @media (any-hover: hover) {
-            .swiper-button-prev:hover,
-            .swiper-button-next:hover {
-                opacity: var(--opacity-hover);
+            .swiper-button-prev:not(.swiper-button-disabled):hover,
+            .swiper-button-prev:not(.swiper-button-disabled):focus-visible,
+            .swiper-button-next:not(.swiper-button-disabled):hover,
+            .swiper-button-next:not(.swiper-button-disabled):focus-visible {
+                background-image: var(--_octagon-chip-invert);
+                color: var(--color-primary);
             }
         }
     }

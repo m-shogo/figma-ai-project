@@ -15,6 +15,7 @@ Status: ACTIVE audit map
 | External integration / fallback / retirement status | `frontend-external-integration-matrix.md` |
 | Decorative implementation mechanism / Complexity Escape | `frontend-decorative-pattern-cookbook.md` |
 | Section visual repair / root-cause learning loop | `frontend-visual-repair-learning-loop.md` |
+| Human FB categories as AI weak spots; run without being asked | `agent-human-fb-weak-spots.md` |
 | CSS technology/architecture selection | `css-strategy.md` |
 | CSS reset/base/environment selection | `css-foundation-reset-policy.md` |
 | Font loading/metrics | `frontend-font-loading-policy.md` |
@@ -61,6 +62,8 @@ Status: ACTIVE audit map
 | Figma rendered coordinates != Web constraints | authority model + standard |
 | hover/focus must not introduce border-width or box metrics | quick contract + standard + interaction policy + policy |
 | reserve hover border at rest; transition 0.3s / Existing token including pseudos | quick contract + interaction policy |
+| invert hover keeps rest border; text-link hit is text width; disabled has no enabled hover box | quick contract + interaction policy |
+| clip-path/octagon hover must not eat stroke | quick contract + decorative cookbook |
 | clamp/auto-fit are tools, not universal | `css-strategy.md` + standard |
 | breakpoint is layout boundary | standard + device policy |
 | product support floor resolves from Effective Environment Contract; 360px is unresolved CANDIDATE only | quick contract + runtime contract + policy |
@@ -69,6 +72,9 @@ Status: ACTIVE audit map
 | modern CSS candidate adoption | standard + `css-strategy.md` |
 | Cascade Layers are tool, not goal | `css-strategy.md` |
 | z-index/local stacking/isolation | `css-strategy.md` |
+| overlay dim is full viewport; panel on top; do not clip a hole; cover header chrome | quick contract + interaction policy + `css-strategy.md` |
+| sticky header stacking: dim in same SC as panel; do not unstick header | quick contract + `css-strategy.md` |
+| overlay close keeps open layout and shared duration | quick contract + interaction policy |
 | Existing Browserslist as shared browser-target source when present | reuse-before-build + external integration matrix |
 | Existing Stylelint/PostCSS before new regex CSS parser | reuse-before-build + external integration matrix |
 
@@ -347,6 +353,7 @@ Status: ACTIVE audit map
 | one failure does not create permanent ban | standard + pattern library + visual repair loop |
 | evidence promotion | standard + existing evidence maturity + visual repair loop |
 | repeated user feedback triggers root-cause learning | visual repair loop + policy |
+| frequent Human FB types are AI weak spots; do not wait to be asked | `agent-human-fb-weak-spots.md` + `AGENTS.md` + execution policy |
 | root-cause taxonomy | visual repair loop + run record |
 | Human Correction Count/Minutes diagnostic | visual repair loop + run record |
 | reuse-rate observations are diagnostic, not hard KPI | reuse-before-build + run record + policy |

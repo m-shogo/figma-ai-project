@@ -64,7 +64,7 @@ try {
 
   assert(pc, 'PC normal-page content owner elements were not found.');
 
-  // Current Figma authority: FKQaJDu5TZXHoCzPsfP92E / 1203:4878.
+  // Current Figma authority: jqYoPtusYfTeDqRegMCsx3 / 1203:4878.
   // The 960px content container starts immediately after the 220px page title,
   // then owns a 64px top inset and a 100px bottom inset. Its first body copy
   // is Zen Kaku Gothic New Regular 17px / 160% / 5% tracking (1203:4882).

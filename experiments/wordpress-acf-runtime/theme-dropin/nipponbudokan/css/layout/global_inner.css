@@ -19,7 +19,7 @@
         &._content {
             max-width: calc(var(--width-content) + var(--padding-TB) * 2);
         }
-        /* Current normal-page PC authority FKQaJDu5TZXHoCzPsfP92E / 1203:4878
+        /* Current normal-page PC authority jqYoPtusYfTeDqRegMCsx3 / 1203:4878
            owns 64px above authored content and 100px below it. Scope those
            vertical insets to the proven local-nav page master rather than
            changing every shared _content consumer (single/detail/password). */

@@ -51,11 +51,32 @@ $cards = array(
     <div class="ta_cards_wrap">
         <div class="global_inner">
             <div class="ta_cards">
+                <div class="swiper ta_cards_swiper" aria-label="日本武道館とは">
+                    <div class="swiper-wrapper">
+                        <?php foreach ($cards as $index => $card): ?>
+                            <?php if (!empty($card['pc_only'])) continue; ?>
+                            <article class="swiper-slide ta_card">
+                                <a class="ta_card_link" href="#">
+                                    <p class="ta_card_image">
+                                        <img src="<?php echo esc_url($theme_uri . '/images/top/' . $card['image']); ?>" alt="" width="295" height="197" loading="lazy">
+                                        <span class="ta_card_overlay">
+                                            <?php foreach ($card['overlay'] as $line): ?>
+                                                <span><?php echo esc_html($line); ?></span>
+                                            <?php endforeach; ?>
+                                        </span>
+                                    </p>
+                                    <p class="ta_card_label"><?php echo esc_html($card['label']); ?></p>
+                                </a>
+                            </article>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
                 <?php foreach ($cards as $index => $card): ?>
-                    <article class="ta_card<?php echo !empty($card['pc_only']) ? ' ta_card_pc' : ''; ?>">
+                    <?php if (empty($card['pc_only'])) continue; ?>
+                    <article class="ta_card ta_card_pc">
                         <a class="ta_card_link" href="#">
                             <p class="ta_card_image">
-                                <img src="<?php echo esc_url($theme_uri . '/images/top/' . $card['image']); ?>" alt="" width="<?php echo $index === 3 ? '195' : '295'; ?>" height="<?php echo $index === 3 ? '360' : '197'; ?>" loading="lazy">
+                                <img src="<?php echo esc_url($theme_uri . '/images/top/' . $card['image']); ?>" alt="" width="195" height="360" loading="lazy">
                                 <span class="ta_card_overlay">
                                     <?php foreach ($card['overlay'] as $line): ?>
                                         <span><?php echo esc_html($line); ?></span>

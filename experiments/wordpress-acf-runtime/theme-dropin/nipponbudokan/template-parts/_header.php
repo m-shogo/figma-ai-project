@@ -29,6 +29,7 @@
             ?>
         </div>
         <nav id="global_navigation" class="global_navigation" itemscope itemtype="https://schema.org/SiteNavigationElement">
+            <button type="button" class="gn_close" id="gn_close" aria-label="閉じる"><span>閉じる</span></button>
             <div class="gn_menu">
                 <?php
                 wp_nav_menu(array(
@@ -76,13 +77,12 @@
                         <button class="ms_button" type="submit"><span>検索</span></button>
                     </form>
                 </div>
-                <button type="button" class="gn_close" id="gn_close"><span>閉じる</span></button>
             </div>
         </nav>
 
         <div class="gh_buttons">
             <a class="gh_lang" href="<?php echo esc_url(home_url('/en/')); ?>"><span>EN</span></a>
-            <button type="button" class="gh_search" id="gh_search" aria-label="検索">
+            <button type="button" class="gh_search" id="gh_search" aria-label="検索" aria-controls="gh_searchPanel" aria-expanded="false">
                 <span class="icon" aria-hidden="true"></span>
             </button>
             <button type="button" class="gh_menu" id="gh_menu" aria-label="メニュー" aria-controls="global_navigation" aria-expanded="false">
@@ -92,4 +92,11 @@
         </div>
     </div>
 </header>
+<div id="gh_searchPanel" class="gh_searchPanel" hidden>
+    <form class="ghs_form" role="search" method="get" action="<?php echo esc_url(home_url('/')); ?>">
+        <input class="ghs_input" type="search" value="" name="s" id="ghs_s" placeholder="サイト内検索" autocomplete="off">
+        <button class="ghs_submit" type="submit"><span>検索</span></button>
+    </form>
+    <button type="button" class="ghs_close" id="ghs_close" aria-label="閉じる"></button>
+</div>
 <div class="overlay" id="overlay"></div>

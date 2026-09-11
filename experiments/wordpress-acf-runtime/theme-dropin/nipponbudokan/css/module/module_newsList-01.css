@@ -64,6 +64,9 @@
         letter-spacing: 0.05em;
         text-decoration: none;
         white-space: nowrap;
+        transition:
+            background-color var(--transition-duration),
+            color var(--transition-duration);
     }
 
     .news_tabs_item:nth-child(3n + 2) .news_tabs_link {
@@ -92,6 +95,12 @@
 .news_item {
     margin: 0;
     border-bottom: 1px solid var(--color-line);
+}
+
+/* Figma SP 1399:14225 and PC 413:2191 both draw a 1px list start rule.
+   Keep it on the shared master; TOP PC zeroes it in top_news.css. */
+.module_newsList-01 .news_item:first-child {
+    border-top: 1px solid var(--color-line);
 }
 
 .news_item_link {
@@ -144,6 +153,8 @@
 
 .news_item_title {
     margin: 0;
+    width: fit-content;
+    max-width: 100%;
     min-width: 0;
     color: var(--color-text);
     font-family: var(--font-zen-kaku-gothic);
@@ -151,10 +162,13 @@
     font-weight: 500;
     line-height: 1.6;
     letter-spacing: 0.05em;
-    text-decoration: underline;
-    text-underline-offset: 0.12em;
+    text-decoration: none;
+    background-image: linear-gradient(currentColor, currentColor);
+    background-repeat: no-repeat;
+    background-position: left bottom;
+    background-size: 0 1px;
     overflow-wrap: anywhere;
-    transition: color var(--transition-duration);
+    transition: background-size var(--transition-duration), color var(--transition-duration);
 }
 
 .news_item_link[target='_blank'] .news_item_title::after {
@@ -299,6 +313,11 @@
     background-color: var(--color-primary);
     color: var(--color-secondary);
     clip-path: var(--clip-octagon);
+    box-shadow: inset 0 0 0 1px var(--color-primary);
+    transition:
+        background-color var(--transition-duration),
+        color var(--transition-duration),
+        box-shadow var(--transition-duration);
 }
 
 .news_pager_prev .page-numbers span::before,
@@ -316,6 +335,18 @@
 
 .news_pager_next .page-numbers span::before {
     content: '\f061';
+}
+
+.news_pager_prev .page-numbers.is-disabled,
+.news_pager_next .page-numbers.is-disabled,
+.news_pager_prev .page-numbers[aria-disabled='true'],
+.news_pager_next .page-numbers[aria-disabled='true'],
+.news_pager_prev .page-numbers.is-disabled *,
+.news_pager_next .page-numbers.is-disabled *,
+.news_pager_prev .page-numbers[aria-disabled='true'] *,
+.news_pager_next .page-numbers[aria-disabled='true'] * {
+    pointer-events: none;
+    cursor: default;
 }
 
 @media screen and (min-width: 768px) {
@@ -364,10 +395,6 @@
         }
     }
 
-    .module_newsList-01 .news_item:first-child {
-        border-top: 1px solid var(--color-line);
-    }
-
     .news_item_link {
         flex-direction: row;
         align-items: center;
@@ -386,7 +413,9 @@
     }
 
     .news_item_title {
-        flex: 1 1 auto;
+        flex: 0 1 auto;
+        width: fit-content;
+        max-width: 100%;
         line-height: 1.4;
     }
 
@@ -400,17 +429,37 @@
 
 @media (any-hover: hover) {
     .news_item_link:hover .news_item_title,
-    .news_tabs_archive .news_tabs_link:hover {
-        color: var(--color-link);
+    .news_item_link:focus-visible .news_item_title {
+        color: var(--color-text);
+        background-size: 100% 1px;
+    }
+
+    .news_tabs_archive .news_tabs_item:not(.is-active) .news_tabs_link:hover,
+    .news_tabs_archive .news_tabs_item:not(.is-active) .news_tabs_link:focus-visible {
+        background-color: var(--color-text);
+        color: var(--color-secondary);
     }
 
     .news_tabs_archive .news_tabs_item.is-active .news_tabs_link:hover {
         color: var(--color-secondary);
     }
 
-    .news_pager_numbers .page-numbers:hover:not(.current):not(.dots) {
-        border-bottom-color: var(--color-primary);
+    .news_pager_numbers .page-numbers:hover:not(.current):not(.dots),
+    .news_pager_numbers .page-numbers:focus-visible:not(.current):not(.dots) {
+        border-bottom-color: var(--color-text);
         background: transparent;
-        color: var(--color-link);
+        color: var(--color-text);
+        font-weight: 700;
+    }
+
+    .news_pager_prev .page-numbers:not(.is-disabled):not([aria-disabled='true']):hover span,
+    .news_pager_next .page-numbers:not(.is-disabled):not([aria-disabled='true']):hover span,
+    .news_pager_prev a.page-numbers:focus-visible span,
+    .news_pager_next a.page-numbers:focus-visible span {
+        background-color: var(--color-secondary);
+        color: var(--color-primary);
+        clip-path: var(--clip-octagon);
+        box-shadow: inset 0 0 0 1px var(--color-primary);
+        background-image: none;
     }
 }

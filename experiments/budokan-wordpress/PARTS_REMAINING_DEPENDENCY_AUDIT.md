@@ -6,7 +6,7 @@ This audit re-checks the current Human-selected Figma, tracked `nipponbudokan` T
 
 ## Current authority
 
-- Canonical Figma file: `fKYDn9ikpJk1nW7IWFtaUx`
+- Canonical Figma file: `jqYoPtusYfTeDqRegMCsx3`（正本は `CURRENT_AUTHORITY.md`）
 - PC page: `0:1`
 - SP page: `114:5409`
 - Parts PC frame: `1163:4245` (`parts`)
@@ -16,7 +16,7 @@ This audit re-checks the current Human-selected Figma, tracked `nipponbudokan` T
 - `parts.php`: read-only reference; unchanged
 - Forms / Formidable: Human-owned; out of scope
 
-The former canonical key `w7SGVY63FuW6JpaQVKjxm2` is historical lineage only. It must not be used to recover missing nodes, geometry, or responsive behavior. `CURRENT_AUTHORITY.md` and a live re-scan of the Human-selected file win over older audit text.
+The former canonical keys `FKQaJDu5TZXHoCzPsfP92E` / `fKYDn9ikpJk1nW7IWFtaUx` / `w7SGVY63FuW6JpaQVKjxm2` are historical lineage only. They must not be used to recover missing nodes, geometry, or responsive behavior. `CURRENT_AUTHORITY.md` and a live re-scan of the Human-selected file win over older audit text.
 
 ## Re-audited Parts completion
 

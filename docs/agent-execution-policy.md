@@ -302,6 +302,8 @@ HumanがMaster Authorityを与えたら、その判断をactive contractへ反�
 
 「自分でrepoを読めば解決する質問」をHumanへ丸投げしない。
 
+UI / hover / overlay では、現行 Figma に既にある open / hover / disabled を Human が URL 貼るまで待たない。完了前に `docs/agent-human-fb-weak-spots.md` を自分で回す。
+
 ## 12. Local CLI fast path
 
 local repositoryへアクセスできるimplementation Agentは、細かいAPI往復より既存toolchainを優先する。

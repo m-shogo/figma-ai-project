@@ -1,0 +1,60 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: CAND-HUMAN-FB-WEAK-SPOTS-AUTORUN
+    summary: >-
+      Repeated Human feedback types are AI blind spots (rest-only, convenience stacking, additive
+      hover, motion/class, stale authority, wrong owner, screenshot-as-done, incomplete family).
+      Run the weak-spot list before declaring UI work done; do not wait to be asked.
+    category: MAINTAINABILITY
+    applicability:
+      scope: REFERENCE
+      conditions:
+        - UI, hover, overlay, or open/close implementation in this repository.
+        - Human has already named the same failure type at least once on the current project.
+      exclusions:
+        - Do not invent extra CI validators for checks existing runtime/browser QA can perform.
+        - Do not grow a new category for every bug; map first to the eight weak spots.
+    promotion_state: CANDIDATE
+    promotion:
+      candidate: true
+      rationale: >-
+        Human 2026-09-11 authorized auto-running frequent FB types without being asked. Budokan
+        supplied the eight-type map from one conversation plus prior learning notes. The process
+        contract is in AGENTS.md and docs/agent-human-fb-weak-spots.md. Keep CANDIDATE until a
+        second project shows Human FB of the same types actually dropped.
+      blocked_by:
+        - Second project or reference where the weak-spot list is used prospectively and Human FB of those types decreases.
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-HUMAN-FB-WEAK-SPOTS-DOC-20260911
+          kind: CANONICAL_DOC
+          reference_id: BUDOKAN-WORDPRESS
+          run_id: ''
+          path: docs/agent-human-fb-weak-spots.md
+          commit: ''
+          note: Eight AI weak-spot types and a mandatory before-done checklist Human asked to run unprompted.
+        - evidence_id: EV-HUMAN-FB-WEAK-SPOTS-INTAKE-20260911
+          kind: LOCAL_RESEARCH
+          reference_id: BUDOKAN-WORDPRESS
+          run_id: ''
+          path: experiments/budokan-wordpress/learning-notes/2026-09-11-human-fb-ai-weak-spots.md
+          commit: ''
+          note: Maps this week's Budokan Human FB lines onto the eight types.
+        - evidence_id: EV-HUMAN-FB-WEAK-SPOTS-AGENTS-20260911
+          kind: CANONICAL_DOC
+          reference_id: BUDOKAN-WORDPRESS
+          run_id: ''
+          path: AGENTS.md
+          commit: ''
+          note: Execution and Do-not routing now require the weak-spot pass before calling UI work done.
+      contradicts: []
+    notes:
+      - Overlay/hover geometric rules stay in frontend-quick-contract section 4. This record is the autorun process.

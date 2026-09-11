@@ -1,6 +1,6 @@
 # Budokan Implementation Learnings
 
-更新: 2026-08-28
+更新: 2026-09-11
 
 このファイルは、完成形の仕様ではなく **失敗・手戻り・レビュー指摘から得た再発防止知識** を残す。
 `CURRENT_AUTHORITY.md` / `THEME_RULES.md` が正本仕様、ここは判断理由と学習ログ。
@@ -211,6 +211,50 @@ News masterへ通常投稿archiveを寄せる際、`is_date()` をOR条件で直
 
 ---
 
+## 2026-09-11 Overlay / hover Human FB
+
+詳細: `learning-notes/2026-09-11-overlay-drawer-human-fb.md`。案件正本: `CURRENT_AUTHORITY.md`。次案件の自動判断: `docs/frontend-quick-contract.md` 節4。
+
+**起きたこと**
+
+PC メニュー暗幕をパネル外形に合わせて欠ける、ヘッダーを `visibility: hidden`、パネルを header-height 分下げる、open で sticky を外す、閉じ開始で open class を外す、hover で枠や 100% 幅の箱が出る、という直しを繰り返した。
+
+**原因**
+
+閉じ Header の DOM 都合（sticky stacking、ハンバーガーが ×、パネルがヘッダー子孫）を、開いた Figma より先に最適化した。
+
+**次回ルール**
+
+- 暗幕は全面。パネルはその上。ヘッダーは消さず覆う
+- sticky を relative にしない。閉じは開いた形のまま transform。duration は揃える
+- hover は rest 枠・文字幅ヒット・disabled に箱を出さない・clip で stroke を食べない
+
+**一般化候補**
+
+PATTERN_LEVEL CANDIDATE。888px 等の数値は持っていかない。
+
+## 2026-09-11 Local Nav ACF / octagon / row gap
+
+詳細: `learning-notes/2026-09-11-local-nav-acf-hover-spacing.md`。
+
+**起きたこと**
+
+Local Nav を ACF 選択メニューで出したあと、(1) nowrap で1行固定、(2) 見出し八角 hover を clip+inset にして枠消失（再発）、(3) 親 `height: 34px` が次行 gap を約13px まで潰した。
+
+**原因**
+
+screenshot lock と、既に Theme 内で SVG chip 解決済みの family を見なかったこと。完了前に実測しなかった。
+
+**次回ルール**
+
+- nowrap しない。八角 invert は SVG chip。親の固定 height で padding/border をクリップしない
+- メニューは3階層。ACF `page_local_nav` + 名前 `ローカル：`。位置割当4本は選択肢に出さない
+- 完了前に対象行の上下 gap を測り、見出しを hover して枠が残るか見る
+
+**一般化候補**
+
+CANDIDATE evidence: `research/frontend-learning-evidence-local-nav-octagon-nowrap-2026-09-11.yaml`
+
 ## 今後の実装前チェック
 
 新セクション開始前に最低限これを確認する。
@@ -228,6 +272,12 @@ News masterへ通常投稿archiveを寄せる際、`is_date()` をOR条件で直
 - variantがgeneric CSSを本当に継承すべきか確認したか
 - archive分岐で別post typeを巻き込んでいないか
 - 一時fixture/workflowを最終diffに残していないか
+- 開いた Figma の暗幕は全面か、パネル外形に合わせて欠けるデザインか
+- overlay 開で sticky header を relative にしていないか、閉じで open layout を崩していないか
+- hover 当たりが文字幅か、disabled に enabled 箱が出ていないか
+- 八角 invert を clip+inset にして枠を消していないか（SVG chip か）
+- 行親の固定 height が次行 gap を食っていないか、nowrap で1行固定していないか
+- Local Nav なら ACF `page_local_nav` / `ローカル：` 接頭辞 / 3階層 / SP 非表示を守っているか
 
 ## 昇格ルール
 

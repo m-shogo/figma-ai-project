@@ -3,9 +3,8 @@
 /**
  * Template Name: 1カラム＋ローカルナビテンプレート
  *
- * Reuses the canonical one-column content shell and renders the existing
- * sidebar-nav owner after the content so Local Navigation can span the
- * viewport without being constrained to the 260px sidebar.
+ * Local Navigation is driven by ACF `page_local_nav` (same as 1カラム).
+ * Kept for existing page assignments; prefer assigning the menu on the page.
  */
 global $post;
 ?>
@@ -21,9 +20,7 @@ global $post;
                     </div>
                 </div>
             </div>
-            <div class="global_inner _localNavigation">
-                <?php get_sidebar(); ?>
-            </div>
+            <?php get_template_part('template-parts/_local-navigation'); ?>
             <?php get_template_part('template-parts/_breadCrumb'); ?>
         </section>
     <?php else: ?>

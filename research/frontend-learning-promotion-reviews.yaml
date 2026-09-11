@@ -36,3 +36,52 @@ reviews:
       This strengthens the same Budokan reference but does not create a third independent reference or a
       prospective Human Correction Cost measurement. Keep CANDIDATE, preserve the existing blocker, and
       revisit by 2026-09-16 or sooner when another implementation consumes the rule prospectively.
+  CAND-HUMAN-FB-WEAK-SPOTS-AUTORUN:
+    last_reviewed_at: '2026-09-11'
+    next_review_due: '2026-09-25'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_CANDIDATE
+    rationale: >-
+      Human authorized unprompted execution of frequent FB types. One-project map so far. Keep
+      CANDIDATE until a second project shows those FB types drop. Revisit by 2026-09-25.
+  CAND-OVERLAY-FULL-DIM-COVER-HEADER:
+    last_reviewed_at: '2026-09-11'
+    next_review_due: '2026-09-25'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 1
+    disposition: KEEP_CANDIDATE
+    rationale: >-
+      Human 2026-09-11 asked later projects to auto-apply the distilled overlay rule. The contradicting
+      2026-09-01 note (panel under the 100px header) is superseded by current Figma 2096:6235 and does
+      not invalidate the new rule. Keep CANDIDATE: one reference, portable checklist in the quick
+      contract, Budokan px/node stay project-only. Revisit by 2026-09-25 or when a second overlay
+      implementation consumes the rule.
+  CAND-HOVER-HIT-INVERT-CLIP-STROKE:
+    last_reviewed_at: '2026-09-11'
+    next_review_due: '2026-09-25'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_CANDIDATE
+    rationale: >-
+      Complements the already-ACTIVE rest-border rule with invert-keeps-border, text-width hit,
+      disabled no-box, and clip-path stroke. One Budokan reference. Keep CANDIDATE until a second
+      reference reproduces it. Revisit by 2026-09-25.
+  CAND-OCTAGON-SVG-CHIP-NOT-CLIP-INSET:
+    last_reviewed_at: '2026-09-11'
+    next_review_due: '2026-09-25'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_CANDIDATE
+    rationale: >-
+      Local Nav heading reintroduced clip+inset invert and lost the octagon edge after buttons
+      already used SVG chips. Concrete fix pattern for W3. One reference. Revisit by 2026-09-25.
+  CAND-NO-FIXED-HEIGHT-CLIP-ROW-GAP:
+    last_reviewed_at: '2026-09-11'
+    next_review_due: '2026-09-25'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_CANDIDATE
+    rationale: >-
+      Fixed parent height 34px clipped Local Nav link padding/border and collapsed perceived row
+      gap from 20px to ~13px. Also rejects screenshot nowrap. One reference. Revisit by 2026-09-25.

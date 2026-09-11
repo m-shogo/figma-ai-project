@@ -6,7 +6,7 @@
 
 Local Navigation の WordPress owner / PHP render path / shared interaction / PC current visual authority は確認済みで、既存実装を再利用する方針は変わらない。
 
-- current Figma file: `fKYDn9ikpJk1nW7IWFtaUx`
+- current Figma file: `jqYoPtusYfTeDqRegMCsx3`（正本は `CURRENT_AUTHORITY.md`。旧 `fKYDn9ikpJk1nW7IWFtaUx` は見ない）
 - PC current Figma authority: `1216:6311` `local_nav`
 - SP current dedicated Local Nav authority: **UNDETERMINED**
 - WordPress owner: `sidebar-nav`

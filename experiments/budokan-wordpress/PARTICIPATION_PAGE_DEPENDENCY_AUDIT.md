@@ -6,7 +6,7 @@ Updated: 2026-09-02
 
 ## Current authority
 
-- current Human-selected Figma file: `fKYDn9ikpJk1nW7IWFtaUx`
+- current Human-selected Figma file: `jqYoPtusYfTeDqRegMCsx3`（正本は `CURRENT_AUTHORITY.md`。旧 `fKYDn9ikpJk1nW7IWFtaUx` は見ない）
 - current SP page: `114:5409`
 - current PC page: `0:1`
 - current SP frame: `1468:7508` (`SP_navigation`)

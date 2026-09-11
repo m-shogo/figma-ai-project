@@ -2,11 +2,11 @@ schema_version: 1
 intake_id: BUDOKAN-WORDPRESS
 status: THEME_OBSERVED
 created_at: "2026-08-28"
-updated_at: "2026-09-03"
+updated_at: "2026-09-10"
 
 project:
   reference_id: BUDOKAN
-  figma_file_key: FKQaJDu5TZXHoCzPsfP92E
+  figma_file_key: jqYoPtusYfTeDqRegMCsx3
   section_evidence_path: tools/implementation-intake/REAL_WEB_VALIDATION.md
   evidence_paths:
     - experiments/budokan-wordpress/CURRENT_AUTHORITY.md
@@ -22,8 +22,8 @@ project:
   figma_nodes:
     pc: "0:1"
     sp: "114:5409"
-    pc_url: "https://www.figma.com/design/FKQaJDu5TZXHoCzPsfP92E/nipponbudokan?node-id=0-1"
-    sp_url: "https://www.figma.com/design/FKQaJDu5TZXHoCzPsfP92E/nipponbudokan?node-id=114-5409"
+    pc_url: "https://www.figma.com/design/jqYoPtusYfTeDqRegMCsx3/nipponbudokan?node-id=0-1"
+    sp_url: "https://www.figma.com/design/jqYoPtusYfTeDqRegMCsx3/nipponbudokan?node-id=114-5409"
 
 theme_delivery:
   state: OBSERVED

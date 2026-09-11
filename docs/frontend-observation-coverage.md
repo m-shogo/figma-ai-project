@@ -51,7 +51,7 @@ PC側のrepairがshared CSS/component/DOM/JS/asset/token/container等へ触れ�
 - logo/vectorが消えている
 - 背景/大きな装飾が抜けている
 - SPだけ存在する構成差をPC縮小で済ませている
-- supplied stateがあるのに無視している
+- supplied stateがあるのに無視している（閉じ / rest の静止画だけで INTERACTION_STATE を見たことにする）
 
 といった**大きな見落としを先に0にする**。
 

@@ -284,3 +284,5 @@ Observation
 Contradictionが出たらhistoryを消さず、scope変更・demotion・retireを記録する。
 
 V2/V3からの今回のObservationは `research/ref001-v2-v3-frontend-learning-2026-08-20.md` を参照する。
+
+繰り返す Human FB の種類は `docs/agent-human-fb-weak-spots.md`。次の実装では指摘を待たず、その detection を自分で回す。

@@ -1,7 +1,7 @@
 @charset "utf-8";
 /* // ==========================================================================
 // サイト共通ナビゲーション
-// Current Figma fileKey FKQaJDu5TZXHoCzPsfP92E
+// Current Figma fileKey jqYoPtusYfTeDqRegMCsx3
 // SP open menu 2297:14268 — L2 Mincho SemiBold 18 / L3 gray band /
 // gold group headings / L4 dash + Kaku Regular 15
 // PC GNavi top remains Mincho Medium 16. Mega panels 2225:10730 /
@@ -434,7 +434,10 @@
         border-radius: 999px;
         background-color: var(--color-text);
         color: var(--color-secondary);
-        transition: opacity var(--transition-duration);
+        box-shadow: inset 0 0 0 1px var(--color-text);
+        transition:
+            background-color var(--transition-duration),
+            color var(--transition-duration);
         span {
             position: absolute;
             width: 1px;
@@ -476,7 +479,10 @@
         font-weight: 500;
         letter-spacing: 0.1em;
         text-decoration: none;
-        transition: opacity 0.3s;
+        box-shadow: inset 0 0 0 1px var(--color-accent);
+        transition:
+            background-color var(--transition-duration),
+            color var(--transition-duration);
         span {
             line-height: 1;
         }
@@ -553,20 +559,54 @@
         transition: transform var(--transition-duration);
     }
 
-    /* MARK: hover */
+    /* Overlay hamburger LTR underline lives on the inner label, not the dash/octagon. */
+    .gn_menu .gnl_link-02 > span,
+    .gn_menu .gnl_link-03 > span,
+    .gn_menu .gnl_item-04._noChild .gnl_link-04 > span,
+    .gn_menu .gnl_item-05 .gnl_link-05 > span,
+    .gn_menu .gnl_item-06 .gnl_link-06 > span,
+    .gn_links-02 a > span {
+        display: inline;
+        flex: 0 1 auto;
+        width: max-content;
+        max-width: 100%;
+        background-image: linear-gradient(currentColor, currentColor);
+        background-repeat: no-repeat;
+        background-position: left bottom;
+        background-size: 0 1px;
+        transition: background-size var(--transition-duration);
+    }
+
+    /* MARK: hover — 実装指示 2377:4360 hamburger */
     @media (any-hover: hover) {
-        a {
-            &:hover {
-                color: var(--color-link);
-            }
+        .gn_menu .gnl_link-02:hover,
+        .gn_menu .gnl_link-03:hover,
+        .gn_menu .gnl_item-04._noChild .gnl_link-04:hover,
+        .gn_menu .gnl_item-05 .gnl_link-05:hover,
+        .gn_menu .gnl_item-06 .gnl_link-06:hover,
+        .gn_links-02 a:hover {
+            color: var(--color-text);
+        }
+        .gn_menu .module_textLink:hover,
+        .gn_links-02 .module_textLink:hover {
+            text-decoration: none;
+            text-decoration-line: none;
+        }
+        .gn_menu .gnl_link-02:hover > span,
+        .gn_menu .gnl_link-03:hover > span,
+        .gn_menu .gnl_item-04._noChild .gnl_link-04:hover > span,
+        .gn_menu .gnl_item-05 .gnl_link-05:hover > span,
+        .gn_menu .gnl_item-06 .gnl_link-06:hover > span,
+        .gn_links-02 a:hover > span {
+            background-size: 100% 1px;
         }
         .gn_sns_link:hover {
-            opacity: var(--opacity-hover);
-            color: var(--color-secondary);
+            background-color: var(--color-secondary);
+            color: var(--color-text);
         }
         .gn_lang:hover {
-            color: var(--color-secondary);
-            opacity: var(--opacity-hover);
+            background-color: var(--color-secondary);
+            color: var(--color-accent);
         }
         @media screen and (min-width: 768px) {
             .gn_mega .gn_links-01 > .gnl_item-02 {
@@ -578,6 +618,22 @@
                 }
             }
         }
+    }
+    .gn_menu .gnl_link-02:focus-visible > span,
+    .gn_menu .gnl_link-03:focus-visible > span,
+    .gn_menu .gnl_item-04._noChild .gnl_link-04:focus-visible > span,
+    .gn_menu .gnl_item-05 .gnl_link-05:focus-visible > span,
+    .gn_menu .gnl_item-06 .gnl_link-06:focus-visible > span,
+    .gn_links-02 a:focus-visible > span {
+        background-size: 100% 1px;
+    }
+    .gn_sns_link:focus-visible {
+        background-color: var(--color-secondary);
+        color: var(--color-text);
+    }
+    .gn_lang:focus-visible {
+        background-color: var(--color-secondary);
+        color: var(--color-accent);
     }
     /* タブレット端末でも反応させたいのでany-hoverから外す。PCメガのみ */
     .gn_mega .gn_links-01 {
@@ -726,7 +782,6 @@
                 color: var(--color-text);
                 cursor: default;
                 text-decoration: none;
-                transition: font-weight 0.3s;
             }
             .gnl_wrapper-02 {
                 position: fixed;
@@ -770,11 +825,15 @@
                 letter-spacing: 0.05em;
                 line-height: 1;
                 text-decoration: none;
+                box-shadow: inset 0 0 0 1px var(--color-primary);
+                transition:
+                    background-color var(--transition-duration),
+                    color var(--transition-duration);
                 &::after {
                     content: var(--icon-chevron-right);
                     font-family: var(--font-awesome);
                     font-size: 13px;
-                    color: var(--color-secondary);
+                    color: inherit;
                     flex-shrink: 0;
                 }
             }
@@ -792,7 +851,8 @@
             }
             .gnl_title-03 {
                 padding: 0;
-                border-bottom: 1px solid var(--color-text);
+                border-bottom: none;
+                background-image: none;
                 &::before,
                 &::after {
                     content: none;
@@ -811,7 +871,16 @@
                 line-height: 1;
                 color: var(--color-text);
                 text-decoration: none;
-                transition: color 0.3s, opacity 0.3s;
+                border-bottom: 1px solid transparent;
+                background-image:
+                    linear-gradient(var(--color-primary), var(--color-primary)),
+                    linear-gradient(var(--color-text), var(--color-text));
+                background-repeat: no-repeat;
+                background-position: left bottom, left bottom;
+                background-size: 0 1px, 100% 1px;
+                transition:
+                    color var(--transition-duration),
+                    background-size var(--transition-duration);
                 &::before {
                     content: var(--icon-chevron-right);
                     font-family: var(--font-awesome);
@@ -872,7 +941,17 @@
                 line-break: auto;
                 text-decoration: none;
                 text-decoration-line: none;
-                transition: color 0.3s, opacity 0.3s;
+                transition: color var(--transition-duration);
+                > span {
+                    flex: 0 1 auto;
+                    width: max-content;
+                    max-width: 100%;
+                    background-image: linear-gradient(currentColor, currentColor);
+                    background-repeat: no-repeat;
+                    background-position: left bottom;
+                    background-size: 0 1px;
+                    transition: background-size var(--transition-duration);
+                }
                 &::before {
                     content: none;
                 }
@@ -954,7 +1033,17 @@
                 line-break: auto;
                 text-decoration: none;
                 text-decoration-line: none;
-                transition: color 0.3s, opacity 0.3s;
+                transition: color var(--transition-duration);
+                > span {
+                    flex: 0 1 auto;
+                    width: max-content;
+                    max-width: 100%;
+                    background-image: linear-gradient(currentColor, currentColor);
+                    background-repeat: no-repeat;
+                    background-position: left bottom;
+                    background-size: 0 1px;
+                    transition: background-size var(--transition-duration);
+                }
                 &::before {
                     content: none;
                 }
@@ -990,34 +1079,39 @@
             &._touchOpen::after {
                 opacity: 1;
             }
-            &:hover .gnl_link-02,
-            &._touchOpen .gnl_link-02 {
-                font-weight: 600;
-            }
         }
-        .global_header .gn_mega .gnl_link-03:hover,
-        .global_header .gn_mega .gnl_item-04._noChild .gnl_link-04:hover,
-        .global_header .gn_mega .gnl_link-05:hover,
-        .global_header .gn_mega .gnl_link-06:hover,
-        .global_header .gn_mega .gnl_panelTitle:hover {
-            opacity: var(--opacity-hover);
-            color: var(--color-text);
-            transition: opacity 0.3s, color 0.3s;
+        .global_header .gn_mega .gnl_link-03:hover {
+            background-size: 100% 1px, 100% 1px;
+        }
+        .global_header .gn_mega .gnl_item-04._noChild .gnl_link-04:hover > span,
+        .global_header .gn_mega .gnl_link-05:hover > span,
+        .global_header .gn_mega .gnl_link-06:hover > span {
+            background-size: 100% 1px;
         }
         .global_header .gn_mega .gnl_panelTitle:hover {
-            color: var(--color-secondary);
+            background-color: var(--color-secondary);
+            color: var(--color-primary);
         }
     }
+}
+
+.global_header .gn_mega .gnl_link-03:focus-visible {
+    background-size: 100% 1px, 100% 1px;
+}
+.global_header .gn_mega .gnl_item-04._noChild .gnl_link-04:focus-visible > span,
+.global_header .gn_mega .gnl_link-05:focus-visible > span,
+.global_header .gn_mega .gnl_link-06:focus-visible > span {
+    background-size: 100% 1px;
+}
+.global_header .gn_mega .gnl_panelTitle:focus-visible {
+    background-color: var(--color-secondary);
+    color: var(--color-primary);
 }
 
 .global_header .gn_mega .gn_links-01 .gnl_item-02._hasChild {
     &:hover::after,
     &._touchOpen::after {
         opacity: 1;
-    }
-    &:hover .gnl_link-02,
-    &._touchOpen .gnl_link-02 {
-        font-weight: 600;
     }
     &:hover .gnl_wrapper-02,
     &._touchOpen .gnl_wrapper-02 {
@@ -1027,15 +1121,14 @@
 
 #overlay {
     position: fixed;
-    bottom: 0;
-    left: 0;
+    inset: 0;
     z-index: 99;
     width: 100%;
     height: 100%;
     display: block;
     background-color: transparent;
     visibility: hidden;
-    transition: visibility 0.3s, background-color 0.3s;
+    transition: visibility var(--transition-duration), background-color var(--transition-duration);
 }
 
 /* modifier */
@@ -1056,7 +1149,7 @@ body._open-menu {
             top: 0;
             right: calc(100% - 100vw);
             left: auto;
-            z-index: 2;
+            z-index: 102;
             display: grid;
             grid-template-columns: 300px minmax(0, 1fr);
             grid-template-rows: auto 1fr auto auto auto;
@@ -1426,8 +1519,9 @@ body._open-menu {
 body._open-bg {
     #overlay {
         visibility: visible;
-        background-color: color-mix(in oklch, #000 30%, transparent);
-        transition: visibility 0.3s, background-color 0.3s;
+        /* Figma 2182:8277 / 2295:8374 — #333 @ 90%. */
+        background-color: rgb(51 51 51 / 0.9);
+        transition: visibility var(--transition-duration), background-color var(--transition-duration);
     }
 }
 
@@ -1437,9 +1531,131 @@ body._open-search {
     }
 }
 
+@keyframes nb-menu-dim-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* PC 2096:6235 — full-viewport dim (width 100%) over the header.
+   White panel sits above it. Header chrome is not visibility:hidden. */
+@media screen and (min-width: 768px) {
+    body._open-menu,
+    body._open-search {
+        #overlay {
+            z-index: 101;
+            width: 100%;
+            clip-path: none;
+        }
+    }
+    body._open-menu {
+        #overlay {
+            /* Sibling overlay would sit under the header SC; ::before is the dim. */
+            background-color: transparent;
+        }
+        .global_header {
+            z-index: 102;
+            &::before {
+                content: '';
+                position: fixed;
+                inset: 0;
+                z-index: 1;
+                width: 100%;
+                height: 100%;
+                background-color: rgb(51 51 51 / 0.9);
+                pointer-events: auto;
+                opacity: 1;
+                animation: nb-menu-dim-in var(--transition-duration);
+                transition: opacity var(--transition-duration);
+            }
+        }
+        .gh_logo,
+        .gn_mega,
+        .gh_buttons {
+            z-index: 0;
+        }
+        .global_navigation {
+            z-index: 2;
+        }
+        .gn_close {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            z-index: 3;
+            box-sizing: border-box;
+            width: var(--header-action-size);
+            height: var(--header-action-size);
+            min-width: 0;
+            margin: 0;
+            padding: 0;
+            border: 0;
+            border-radius: 3px;
+            background-color: var(--color-primary);
+            color: var(--color-secondary);
+            cursor: pointer;
+            span {
+                position: absolute;
+                width: 1px;
+                height: 1px;
+                padding: 0;
+                margin: -1px;
+                overflow: hidden;
+                clip: rect(0, 0, 0, 0);
+                white-space: nowrap;
+                border: 0;
+            }
+            &::before,
+            &::after {
+                content: '';
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                width: 20px;
+                height: 1px;
+                background-color: currentColor;
+            }
+            &::before {
+                transform: translate(-50%, -50%) rotate(45deg);
+            }
+            &::after {
+                transform: translate(-50%, -50%) rotate(-45deg);
+            }
+            transition: opacity var(--transition-duration);
+        }
+        @media (any-hover: hover) {
+            .gn_close:hover,
+            .gn_close:focus-visible {
+                opacity: var(--opacity-hover);
+            }
+        }
+    }
+    body._open-menu._closing-menu {
+        .global_header::before {
+            animation: none;
+            opacity: 0;
+        }
+        .global_navigation {
+            transform: translateX(100%);
+            pointer-events: none;
+            transition: transform var(--transition-duration);
+        }
+    }
+    body._open-search {
+        .gh_searchPanel {
+            z-index: 102;
+        }
+    }
+}
+
 body:not(._open-menu):not(._open-search):has(.global_header .gn_mega .gnl_item-02._hasChild:hover) #overlay,
 body:not(._open-menu):not(._open-search):has(.global_header .gn_mega .gnl_item-02._touchOpen) #overlay {
     visibility: visible;
     background-color: rgb(51 51 51 / 0.9);
-    transition: visibility 0.3s, background-color 0.3s;
+    transition: visibility var(--transition-duration), background-color var(--transition-duration);
 }

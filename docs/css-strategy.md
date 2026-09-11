@@ -377,6 +377,8 @@ Useful:
 
 z-index値を小さくすること自体ではなく、**stacking ownershipを局所化すること**が目的。
 
+sticky / fixed ヘッダーは stacking context を作る。オーバーレイパネルがその子孫のとき、兄弟の全画面 overlay をヘッダーより上へ上げるとパネルまで暗幕の下に入る。パネル外形に合わせて overlay を `clip-path` する逃げはしない。同じ stacking context 内で全面暗幕を描き、パネルをその上にする。判断の正本は `docs/frontend-quick-contract.md` 節4。
+
 ---
 
 ## Utilities

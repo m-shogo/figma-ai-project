@@ -7,16 +7,14 @@ global $post;
         <section>
             <?php get_template_part('template-parts/_visual'); ?>
             <?php get_template_part('template-parts/_dropdown-navigation'); ?>
-            <div class="global_inner _column">
-                <div class="gc_main">
+            <div class="global_inner _content _normalPage">
+                <div class="gc_main _oneColumn">
                     <div class="block-editor_wrap">
                         <?php the_content(); ?>
                     </div>
                 </div>
-                <aside class="gc_sub">
-                    <?php get_sidebar(); ?>
-                </aside>
             </div>
+            <?php get_template_part('template-parts/_local-navigation'); ?>
             <?php get_template_part('template-parts/_breadCrumb'); ?>
         </section>
     <?php else: ?>

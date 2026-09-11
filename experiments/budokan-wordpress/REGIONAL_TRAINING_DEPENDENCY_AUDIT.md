@@ -4,7 +4,7 @@
 
 ## 結論
 
-current Human-selected Figma `FKQaJDu5TZXHoCzPsfP92E` とThemeを再確認した結果、このページで確定しているのはPC authorityとshared WordPress ownerであり、旧SP `560:*` はcurrent authorityではない。
+current Human-selected Figma `jqYoPtusYfTeDqRegMCsx3` とThemeを再確認した結果、このページで確定しているのはPC authorityとshared WordPress ownerであり、旧SP `560:*` はcurrent authorityではない。
 
 - PC current authority: `1203:4865` (`page`, 1380 × 2182)
 - SP current dedicated full-page authority: **UNDETERMINED**

@@ -184,6 +184,8 @@ hover / focus / active で初めて `border-width` を足さない。rest から
 
 Figmaの「hoverで枠が付く」は visual result であり、CSS で hover 時に border を新設する指示ではない。正本は `docs/frontend-quick-contract.md` 節4。
 
+ネガポジ反転は塗りと文字の反転。rest の枠は残す。テキストリンクの当たりは、Figma が全幅ヒットを示さない限り文字幅。disabled / inert に enabled の hover 箱を出さない。`clip-path` 差し替えで八角 stroke を消さない。
+
 ---
 
 ## Touch gestures
@@ -263,6 +265,14 @@ ARIA `menu` / `menubar` roleは通常のsite navigationへ安易に使わない�
 Full-screen modal drawerで背景を完全に操作不可にする必要がある場合はCompany browser matrixを確認したうえでnative `<dialog>`/`inert`等を候補にする。
 
 Mobile environmentではsoftware keyboard/visual viewport/scroll lockも併せてQAする。
+
+Figma の open-state が暗幕 + パネルなら、詳細判断は `docs/frontend-quick-contract.md` 節4。要約:
+
+- 暗幕は viewport 全体。パネル外形に合わせて欠けるな
+- ヘッダークロームは消さず覆う。閉じるコントロールの位置は Figma
+- sticky header を open で `relative` にするな
+- 閉じは開いた形のまま transform。open class は transition 後に外す
+- 暗幕とパネルの duration を揃える（Existing、無ければ `0.3s`）
 
 ---
 

@@ -6,7 +6,7 @@ Updated: 2026-09-06
 
 ## Current-state correction
 
-The current implementation authority is the Human-selected Figma file `FKQaJDu5TZXHoCzPsfP92E`, as defined by `CURRENT_AUTHORITY.md`. Older file keys including `fKYDn9ikpJk1nW7IWFtaUx`, `w7SGVY63FuW6JpaQVKjxm2`, and `RfAQQ28V1HGaeIcpgRmQq1` are historical lineage only and must not be used as current implementation authority.
+The current implementation authority is the Human-selected Figma file `jqYoPtusYfTeDqRegMCsx3`, as defined by `CURRENT_AUTHORITY.md`. Older file keys including `FKQaJDu5TZXHoCzPsfP92E`, `fKYDn9ikpJk1nW7IWFtaUx`, `w7SGVY63FuW6JpaQVKjxm2`, and `RfAQQ28V1HGaeIcpgRmQq1` are historical lineage only and must not be used as current implementation authority.
 
 A live re-scan confirms:
 
@@ -41,7 +41,7 @@ Accordingly:
 
 ## Current authority
 
-- Figma file: `FKQaJDu5TZXHoCzPsfP92E`.
+- Figma file: `jqYoPtusYfTeDqRegMCsx3`.
 - Current PC full-page authority: `1634:10806` (`publications`).
 - Current SP page: `114:5409`; dedicated Backnumber counterpart: **UNDETERMINED / absent from current top-level frames**.
 - Current disposable DIRECTORY_MAP runtime assigns `publications/budo/back` to default `page.php`.
