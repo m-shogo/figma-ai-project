@@ -1,0 +1,56 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: OBS-BUDOKAN-DROPDOWN-EXPANDED-SEMANTICS
+    summary: >-
+      A disclosure can be visually and mechanically correct while still exposing stale semantic state. When an existing
+      button toggles a project-owned open-state attribute, keep aria-expanded synchronized with that same owner from the
+      initial rendered state through pointer and keyboard activation. Prove the mismatch in real runtime first, then fix
+      the existing interaction owner rather than inventing parallel menu data or changing layout merely for accessibility.
+    category: TOOLING
+    applicability:
+      scope: PROJECT
+      conditions:
+        - A native button controls disclosure visibility through an existing state attribute or class.
+        - Pointer and keyboard activation already use the same existing button and visual state owner.
+        - Runtime QA can observe the rendered control before and after open/close transitions.
+      exclusions:
+        - Do not add a second open-state data model solely for ARIA.
+        - Do not add aria-controls unless a stable controlled-element identifier is already authoritative or independently established.
+        - Do not broaden a bounded semantic repair to sibling disclosure families without reproducing and testing those owners separately.
+        - Same-project evidence is not independent evidence for cross-project promotion.
+    promotion_state: PROJECT_ONLY
+    promotion:
+      candidate: false
+      rationale: >-
+        PR #427 first extended the existing Disposable WordPress + Playwright dropdown disclosure audit and reproduced a
+        failure only in the new semantic assertion while existing Local Navigation and anchor behavior stayed green.
+        The bounded production repair kept WordPress menu/Walker ownership, URLs, geometry, animation and data-open behavior
+        unchanged, and made dropdownNavToggle initialize and resynchronize aria-expanded from the existing data-open owner.
+        Shared common.js blast-radius workflows for Local Navigation, Modal, Tab, Content Interaction, TOP Body, TOP FV and
+        REF001 all passed before squash merge. An unrelated two-line comment-only drift introduced during file replacement
+        was detected by commit diff inspection and removed before the final CI/merge.
+      blocked_by:
+        - NEEDS_INDEPENDENT_REFERENCE_EVIDENCE_BEFORE_CROSS_PROJECT_PROMOTION
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-DROPDOWN-EXPANDED-SEMANTICS-20260905
+          kind: COMMIT
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/common.js
+          commit: 4a3259127702689c8cdd20a1ecbfb16808f8e8cc
+          note: >-
+            PR #427 squash-merged after reproduction-first disclosure QA, exact diff cleanup, and all triggered shared
+            common.js runtime workflows passed. No CSS, ACF schema/data model, WordPress Theme Location, Walker, Form or
+            TOP Calendar ownership changed.
+      contradicts: []
+    notes:
+      - "Promotion review disposition 2026-09-05: KEEP_PROJECT_ONLY; Budokan-only evidence, no auto-promotion."
