@@ -1,0 +1,50 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: OBS-BUDOKAN-PUBLICATIONS-SHELL-OWNERSHIP-CONFLICT
+    summary: >-
+      WordPress runtime template assignment and Figma visual shell are separate authority dimensions. When a canonical runtime fixture assigns a page
+      to a two-column default template but current Figma proves a one-column shell, do not silently choose a visually closer template or compensate
+      with route-specific CSS. Record the ownership conflict and keep production changes fail-closed until the canonical WordPress/Human owner is known.
+    category: RUNTIME
+    applicability:
+      scope: PROJECT
+      conditions:
+        - Nippon Budokan DIRECTORY_MAP runtime seed classifies Publications Backnumber and Hardcover pages as kind=page and assigns the default WordPress template.
+        - Current Theme page.php renders a two-column .global_inner._column with .gc_main and .gc_sub sidebar.
+        - Current Figma Backnumber 1634:10806 proves a 1040px one-column shell with 64px/100px vertical padding and no sidebar.
+        - Current Figma Hardcover 1656:5309 proves a 960px one-column shell with 64px/100px vertical padding and no sidebar.
+      exclusions:
+        - Do not reassign either page to an existing one-column template merely because its geometry looks closer to Figma.
+        - Do not hide the sidebar by pathname or add arbitrary width/padding compensation to disguise unresolved template ownership.
+        - Do not infer CPT, ACF Repeater, Flexible Content, taxonomy or other data ownership from repeated Figma rows/cards.
+        - Do not generalize this project-only finding without independent evidence.
+    promotion_state: PROJECT_ONLY
+    promotion:
+      candidate: false
+      rationale: >-
+        PR #452 corrected Backnumber and Hardcover dependency audits after current DIRECTORY_MAP runtime, Theme page.php and LIVE Figma were re-read together.
+        The contradiction was documented without changing production PHP/CSS/JS, WordPress menu ownership, ACF contracts or protected project surfaces.
+      blocked_by:
+        - NEEDS_INDEPENDENT_REFERENCE_EVIDENCE_BEFORE_CROSS_PROJECT_PROMOTION
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-PUBLICATIONS-SHELL-AUTHORITY-20260906
+          kind: COMMIT
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/budokan-wordpress/HARDCOVER_DEPENDENCY_AUDIT.md
+          commit: b910659a64b1cbc109db85820eecc5a12efa70db
+          note: >-
+            PR #452 squash-merged the authority correction after REF001 passed. The same commit also updates BACKNUMBER_DEPENDENCY_AUDIT.md to make
+            page-template ownership an explicit blocker rather than assuming default page.php or choosing template-oneColumnWide.php from appearance.
+      contradicts: []
+    notes:
+      - "Promotion review disposition 2026-09-06: KEEP_PROJECT_ONLY; Budokan-only authority evidence, no auto-promotion."
