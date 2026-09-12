@@ -1,0 +1,1295 @@
+/* Header — Figma 21378:8066 / 21376:4918 */
+.v3-header {
+  height: 94px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+.v3-header__inner {
+  width: 100%;
+  padding: 0 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.v3-header__actions {
+  display: flex;
+  gap: 16px;
+}
+
+.v3-header__actions .v3-btn {
+  width: 201px;
+  height: 46px;
+  min-height: 46px;
+  font-size: 14px;
+}
+
+/* Main visual — Figma 21378:8032 / 21376:4886 */
+.v3-mv {
+  position: relative;
+  height: 714px;
+  overflow: hidden;
+  background: var(--v3-light-yellow);
+}
+
+.v3-mv__planes {
+  position: absolute;
+  left: 0;
+  top: 40px;
+  width: 100%;
+  height: 636px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.v3-mv__plane {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: fill;
+}
+
+.v3-mv__plane--back {
+  transform: rotate(180deg);
+}
+
+.v3-mv__people {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.v3-mv__person {
+  position: absolute;
+  width: 570px;
+  height: 614px;
+  background: transparent;
+}
+
+.v3-mv__person img {
+  object-fit: contain;
+  object-position: center;
+}
+
+.v3-mv__person--left {
+  left: 0;
+  top: 0;
+}
+
+.v3-mv__person--right {
+  right: 0;
+  top: 80px;
+}
+
+.v3-mv__copy {
+  position: relative;
+  z-index: 2;
+  width: min(560px, calc(100% - 32px));
+  margin: 0 auto;
+  padding-top: 106px;
+  text-align: center;
+}
+
+.v3-mv__hero {
+  margin: 0;
+  font-weight: 500;
+}
+
+.v3-mv__quotes {
+  color: var(--v3-purple);
+  font-family: var(--v3-font-quote);
+  font-size: 119px;
+  line-height: 1;
+  font-weight: 900;
+  vertical-align: -0.28em;
+}
+
+.v3-mv__word {
+  display: inline;
+  color: #fff;
+  font-family: var(--v3-font-display);
+  font-weight: 900;
+  -webkit-text-stroke: 1px #333;
+  paint-order: stroke fill;
+  text-shadow: 0 0 18px rgba(132, 115, 170, 0.35);
+  font-size: 77px;
+  line-height: 1.15;
+  letter-spacing: 0.02em;
+}
+
+.v3-mv__end {
+  display: block;
+  color: #fff;
+  font-family: var(--v3-font-display);
+  font-weight: 900;
+  -webkit-text-stroke: 1px #333;
+  paint-order: stroke fill;
+  text-shadow: 0 0 18px rgba(132, 115, 170, 0.35);
+  font-size: 71px;
+  line-height: 1.15;
+  letter-spacing: 0.05em;
+}
+
+.v3-mv__mid {
+  display: block;
+  font-family: var(--v3-font-display);
+  font-weight: 900;
+  font-size: 44px;
+  letter-spacing: 0.05em;
+  margin: 4px 0 8px;
+}
+
+.v3-mv__desc {
+  font-size: 20px;
+  line-height: 2;
+  letter-spacing: 0.06em;
+  margin: 28px auto 0;
+  max-width: 470px;
+}
+
+.v3-mv__oc {
+  position: absolute;
+  right: 56px;
+  bottom: 0;
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+  background: var(--v3-orange);
+  color: #fff;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 36px 12px 20px;
+  text-align: center;
+  z-index: 2;
+}
+
+.v3-mv__oc-kicker {
+  position: absolute;
+  top: 9px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 187px;
+  height: 47px;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  padding: 0;
+}
+
+.v3-mv__oc-kicker-shape {
+  position: absolute;
+  inset: 0;
+  width: 187px;
+  height: 47px;
+  max-width: none;
+}
+
+.v3-mv__oc-kicker-shape--line {
+  left: 2px;
+  top: -2px;
+}
+
+.v3-mv__oc-kicker-text {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  height: 38px;
+  color: var(--v3-text);
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.v3-mv__oc-title {
+  font-family: var(--v3-font-en);
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: 0.05em;
+  color: #fff;
+  -webkit-text-stroke: 1px #333;
+  paint-order: stroke fill;
+}
+
+.v3-mv__oc-status {
+  color: var(--v3-text);
+  font-size: 22px;
+  margin-top: 8px;
+  letter-spacing: 0.05em;
+}
+
+.v3-mv__oc-go {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #fff;
+  border: 1px solid var(--v3-orange);
+  display: grid;
+  place-items: center;
+}
+
+.v3-mv__oc-arrow {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+}
+
+/* Reason — Figma 21378:7999 / 21376:4852 */
+.v3-reason {
+  padding: 78px 0 96px;
+  background: #fff;
+}
+
+.v3-reason__intro {
+  text-align: center;
+  font-size: 16px;
+  line-height: 1.6;
+  letter-spacing: 0.05em;
+  margin: 22px auto 18px;
+  max-width: 760px;
+}
+
+.v3-reason__cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 360px));
+  gap: 40px;
+  justify-content: center;
+}
+
+.v3-reason-card {
+  background: var(--v3-beige);
+  width: 100%;
+  max-width: 360px;
+}
+
+.v3-reason-card__media {
+  width: 100%;
+  height: 240px;
+}
+
+.v3-reason-card__body {
+  position: relative;
+  padding: 40px 24px 26px;
+  min-height: 124px;
+}
+
+.v3-reason-card__title {
+  position: absolute;
+  top: -20px;
+  left: 24px;
+  background: #fff;
+  border: 1px solid var(--v3-text);
+  padding: 8px 24px;
+  font-size: 20px;
+  line-height: 1;
+  letter-spacing: 0.05em;
+  font-weight: 500;
+  margin: 0;
+}
+
+.v3-reason-card__text {
+  font-size: 16px;
+  line-height: 1.6;
+  letter-spacing: 0.05em;
+  margin: 12px 0 0;
+}
+
+/* Education — Figma 21378:7868 / 21376:4720 */
+.v3-education {
+  background: var(--v3-beige);
+  padding: 72px 0 80px;
+}
+
+.v3-education .v3-kicker {
+  background: #fff;
+  border: 1px solid #d0d0d0;
+}
+
+.v3-education .v3-heading__title {
+  font-size: 42px;
+  white-space: nowrap;
+}
+
+.v3-education__head {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 42px;
+  align-items: center;
+  margin-bottom: 38px;
+}
+
+.v3-education__intro {
+  position: relative;
+  border-left: 0;
+  padding-left: 42px;
+}
+
+.v3-education__intro::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 2px;
+  height: 112px;
+  background: #7fc9ed;
+}
+
+.v3-education__intro h3 {
+  font-size: 24px;
+  font-weight: 500;
+  margin: 0;
+  display: inline-block;
+}
+
+.v3-education__intro h3::after {
+  content: "";
+  display: block;
+  width: 402px;
+  max-width: 100%;
+  height: 8px;
+  background: var(--v3-orange);
+  margin-top: 8px;
+}
+
+.v3-education__intro p {
+  font-size: 16px;
+  line-height: 1.6;
+  margin: 10px 0 0;
+}
+
+.v3-education__steps {
+  width: min(1244px, calc(100% - 64px));
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 281px));
+  gap: 40px;
+  justify-content: center;
+}
+
+.v3-edu-card {
+  width: 100%;
+  max-width: 281px;
+  background: transparent;
+  border: 0;
+  min-height: 380px;
+  position: relative;
+  padding: 62px 24px 22px;
+}
+
+.v3-edu-card::before {
+  content: "";
+  position: absolute;
+  left: 8px;
+  top: 8px;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(-90deg, var(--v3-purple), var(--v3-blue));
+  z-index: 0;
+}
+
+.v3-edu-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  border: 1px solid var(--v3-text);
+  z-index: 1;
+}
+
+.v3-edu-card > * {
+  position: relative;
+  z-index: 2;
+}
+
+.v3-edu-card__next {
+  position: absolute;
+  right: -28px;
+  top: 176px;
+  width: 16px;
+  height: 13px;
+  background: url("../assets/icons/arrow-right.svg") left center / 14px 13px no-repeat,
+    url("../assets/icons/arrow-right.svg") 10px center / 14px 13px no-repeat;
+  z-index: 3;
+  pointer-events: none;
+}
+
+@media (min-width: 768px) and (max-width: 1308px) {
+  .v3-edu-card__next {
+    display: none;
+  }
+}
+
+.v3-edu-card__badge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 3;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  background: var(--v3-purple);
+  color: #fff;
+  padding: 12px 16px;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.v3-edu-card__no {
+  font-family: var(--v3-font-en);
+  font-size: 22px;
+  font-weight: 500;
+}
+
+.v3-edu-card__badge small {
+  color: rgb(255 255 255 / 40%);
+  font-size: 14px;
+  font-family: var(--v3-font-body);
+}
+
+.v3-edu-card h3 {
+  text-align: center;
+  font-size: 20px;
+  font-weight: 500;
+  margin: 0 0 14px;
+}
+
+.v3-edu-card__media {
+  width: 233px;
+  height: 131px;
+  margin: 0 auto 16px;
+}
+
+.v3-edu-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 12px;
+  font-size: 15px;
+  line-height: 1.2;
+}
+
+.v3-edu-card li,
+.v3-course__rec li {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.v3-edu-card__check,
+.v3-course__check {
+  width: 11px;
+  height: 10px;
+  margin-top: 3px;
+}
+
+/* Shared CTA — Figma 21378:7867 / 21378:7730 */
+.v3-shared-cta {
+  height: 328px;
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: #38a1db;
+}
+
+.v3-shared-cta__wash {
+  position: absolute;
+  inset: -12px -16.67% 0 -1.59%;
+  width: auto;
+  height: calc(100% + 12px);
+  max-width: none;
+  object-fit: cover;
+  object-position: 70% center;
+  z-index: 0;
+}
+
+.v3-shared-cta__veil {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(-90deg, var(--v3-purple) 0%, var(--v3-blue) 100%);
+  opacity: 0.8;
+  z-index: 1;
+}
+
+.v3-shared-cta__inner {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+.v3-shared-cta h2 {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-size: 32px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  margin: 0 0 36px;
+  text-shadow: 0 0 20px var(--v3-purple);
+}
+
+.v3-shared-cta__slash {
+  width: 21px;
+  height: 27px;
+  max-width: none;
+  flex: none;
+}
+
+.v3-shared-cta__slash--end {
+  transform: scaleX(-1);
+}
+
+.v3-shared-cta__actions {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.v3-shared-cta .v3-btn {
+  width: 260px;
+  height: 64px;
+  background: #fff;
+}
+
+.v3-shared-cta .v3-btn--blue {
+  color: var(--v3-blue);
+}
+
+.v3-shared-cta .v3-btn--purple {
+  color: var(--v3-purple);
+}
+
+/* Student voice — Figma 21378:7766 */
+.v3-voice {
+  padding: 96px 0 183px;
+}
+
+.v3-voice .v3-heading {
+  margin-bottom: 14px;
+}
+
+.v3-voice-item + .v3-voice-item {
+  margin-top: 40px;
+}
+
+.v3-voice-item {
+  padding: 40px 0;
+  background: var(--v3-light-blue);
+}
+
+.v3-voice-item--open {
+  min-height: 591px;
+}
+
+.v3-voice-item--collapsed {
+  min-height: 290px;
+}
+
+.v3-voice-item:nth-of-type(even) {
+  background: var(--v3-light-yellow);
+}
+
+.v3-voice-item__top {
+  display: grid;
+  grid-template-columns: 160px minmax(0, 833px);
+  gap: 85px;
+  align-items: center;
+  justify-content: start;
+}
+
+.v3-avatar {
+  width: 160px;
+  height: 160px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+}
+
+.v3-speech {
+  width: 833px;
+  max-width: 100%;
+  min-height: 160px;
+  border: 1px solid #777;
+  background: #fff;
+  box-shadow: -8px -8px 0 #fff;
+  padding: 28px 40px;
+  box-sizing: border-box;
+}
+
+.v3-speech h3 {
+  color: var(--v3-purple);
+  font-size: 24px;
+  font-weight: 500;
+  margin: 0 0 14px;
+}
+
+.v3-speech p {
+  margin: 0;
+  line-height: 1.6;
+  font-size: 16px;
+}
+
+.v3-voice-open {
+  display: grid;
+  grid-template-columns: 404px 1fr;
+  gap: 62px;
+  margin-top: 40px;
+  align-items: start;
+}
+
+.v3-voice-open__photo {
+  width: 404px;
+  height: 227px;
+}
+
+.v3-pointbox {
+  background: #fff;
+  padding: 18px 24px;
+  margin-top: 18px;
+  display: grid;
+  gap: 12px;
+}
+
+.v3-pointbox p {
+  margin: 0;
+}
+
+.v3-pointbox strong {
+  display: inline-block;
+  background: var(--v3-blue);
+  color: #fff;
+  padding: 3px 20px;
+  min-width: 160px;
+  margin-right: 12px;
+  font-weight: 500;
+}
+
+.v3-voice-open__advice {
+  display: grid;
+  grid-template-columns: 240.5px 1fr;
+  gap: 34px;
+  margin-top: 28px;
+  align-items: start;
+}
+
+.v3-voice-open__advice strong {
+  display: grid;
+  place-items: center;
+  width: 240.5px;
+  height: 50px;
+  background: var(--v3-purple);
+  color: #fff;
+  border-radius: 4px;
+  padding: 0;
+  text-align: center;
+  font-weight: 500;
+}
+
+.v3-voice-details {
+  margin: 0;
+}
+
+.v3-voice-more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--v3-blue);
+  font-size: 16px;
+  margin: 28px 0 0;
+  cursor: pointer;
+  list-style: none;
+}
+
+.v3-voice-more::-webkit-details-marker {
+  display: none;
+}
+
+.v3-voice-details[open] > .v3-voice-more {
+  display: none;
+}
+
+.v3-voice-more::before {
+  content: "+";
+  width: 16px;
+  height: 16px;
+  display: grid;
+  place-items: center;
+  font-size: 16px;
+  line-height: 1;
+  font-weight: 400;
+}
+
+/* Messages — Figma 21378:7746 */
+.v3-messages {
+  padding: 0 0 118px;
+  position: relative;
+}
+
+.v3-messages__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 500px) minmax(0, 660px);
+  min-height: 440px;
+  align-items: stretch;
+  gap: 0;
+}
+
+.v3-messages__copy {
+  position: relative;
+  z-index: 1;
+  padding: 0 0 0 0;
+}
+
+.v3-messages .v3-heading {
+  margin-bottom: 24px;
+}
+
+.v3-messages .v3-heading__title {
+  font-size: 30px;
+}
+
+.v3-messages .v3-heading__title strong {
+  font-size: 42px;
+}
+
+.v3-messages__quote {
+  font-size: 28px;
+  line-height: 2.1;
+  color: #fff;
+  margin: 44px 0 0;
+}
+
+.v3-messages__quote span {
+  display: table;
+  background: #333;
+  padding: 0 24px;
+  height: 49px;
+  line-height: 49px;
+  margin-bottom: 11px;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.v3-messages__profile {
+  color: var(--v3-purple);
+  font-size: 16px;
+  line-height: 1.6;
+  letter-spacing: 0.05em;
+  margin-top: 24px;
+}
+
+.v3-messages__stage {
+  position: relative;
+  width: 100%;
+  max-width: 660px;
+}
+
+.v3-messages__photo {
+  width: 100%;
+  max-width: 660px;
+  height: 440px;
+  background: transparent;
+}
+
+.v3-messages__quote--on-photo {
+  display: none;
+}
+
+.v3-messages__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.v3-messages__indicator {
+  display: flex;
+  gap: 22px;
+  align-items: center;
+  margin-top: 44px;
+  font-family: var(--v3-font-en);
+  font-size: 24px;
+}
+
+.v3-messages__bar {
+  width: 146px;
+  height: 2px;
+  background: rgb(150 150 150 / 50%);
+  position: relative;
+}
+
+.v3-messages__bar::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 44px;
+  height: 2px;
+  background: var(--v3-blue);
+}
+
+.v3-messages__arrow {
+  width: 16px;
+  height: 16px;
+}
+
+/* Courses — Figma 21378:7505 / 21376:4403 */
+.v3-courses {
+  background: var(--v3-beige);
+  padding: 72px 0 68px;
+}
+
+.v3-courses .v3-heading {
+  margin-bottom: 46px;
+}
+
+.v3-courses .v3-heading__title strong {
+  background: linear-gradient(90deg, var(--v3-blue), var(--v3-purple));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 900;
+}
+
+.v3-courses__title-line {
+  display: inline;
+}
+
+.v3-courses__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 560px));
+  gap: 40px;
+  justify-content: center;
+}
+
+.v3-course {
+  background: #fff;
+  width: 100%;
+  max-width: 560px;
+  min-height: 271px;
+  position: relative;
+  padding: 30px 32px 24px 124px;
+}
+
+.v3-course:nth-child(7) {
+  grid-column: 1 / -1;
+  width: 560px;
+  justify-self: center;
+}
+
+.v3-course__icon {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100px;
+  height: 100px;
+  background: var(--course);
+  display: grid;
+  place-items: center;
+}
+
+.v3-course__icon-svg {
+  width: 42px;
+  height: 42px;
+}
+
+.v3-course h3 {
+  font-size: 20px;
+  font-weight: 500;
+  margin: 0 0 12px;
+  display: inline;
+  background: linear-gradient(transparent 68%, color-mix(in srgb, var(--course) 30%, transparent) 0);
+}
+
+.v3-course__desc {
+  font-size: 16px;
+  line-height: 1.3;
+  margin: 0 0 22px;
+}
+
+.v3-course__rec {
+  position: relative;
+  width: auto;
+  max-width: 496px;
+  min-height: 102px;
+  box-sizing: border-box;
+  background: var(--v3-light-blue);
+  border-radius: 4px;
+  padding: 38px 20px 16px;
+  margin-left: -92px;
+}
+
+.v3-course__rec-label {
+  position: absolute;
+  top: -18px;
+  left: 20px;
+  background: #fff;
+  border: 1px solid #333;
+  border-radius: 2px;
+  box-shadow: 2px 2px 0 #fff, 3px 3px 0 #333;
+  padding: 8px 16px;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.v3-course__rec-label::before,
+.v3-course__rec-label::after {
+  content: "";
+  position: absolute;
+  border: 8px solid transparent;
+  border-bottom-width: 0;
+}
+
+.v3-course__rec-label::before {
+  left: 20px;
+  bottom: -8px;
+  border-top-color: #333;
+}
+
+.v3-course__rec-label::after {
+  left: 18px;
+  bottom: -6px;
+  border-top-color: #fff;
+}
+
+.v3-course__rec ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 12px;
+  font-size: 13px;
+  line-height: 1.25;
+}
+
+/* Links — Figma 21378:7458 / 21376:4919 */
+.v3-links {
+  padding: 77px 0;
+}
+
+.v3-links__grid {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.v3-link-tile {
+  width: 250px;
+  height: 250px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 1px solid #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  box-shadow: 10px 10px 0 var(--tile-shadow);
+  background: var(--tile-bg);
+  font-size: 22px;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+}
+
+.v3-link-tile--instagram {
+  box-shadow: none;
+  background: transparent;
+  border-color: transparent;
+}
+
+.v3-link-tile--instagram::before {
+  content: "";
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  background: linear-gradient(147deg, #4c64d3 14%, #cf2e92 32%, #f26939 59%, #ffdd83 86%);
+  opacity: 0.7;
+  z-index: 0;
+}
+
+.v3-link-tile--instagram::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--tile-bg);
+  border: 1px solid #333;
+  z-index: 1;
+}
+
+.v3-link-tile--instagram > * {
+  position: relative;
+  z-index: 2;
+}
+
+.v3-link-tile__label {
+  display: grid;
+  gap: 8px;
+  justify-items: center;
+}
+
+.v3-link-tile__lead {
+  font-size: 18px;
+  line-height: 1.4;
+}
+
+.v3-link-tile--instagram .v3-link-tile__label {
+  font-family: var(--v3-font-en);
+  font-size: 20px;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  gap: 0.35em;
+}
+
+.v3-link-tile__handle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--v3-font-en);
+  font-size: 14px;
+}
+
+.v3-link-tile__ig {
+  width: 16px;
+  height: 16px;
+}
+
+.v3-link-tile__arrow {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 52px;
+}
+
+.v3-link-tile__arrow .v3-icon {
+  width: 14px;
+  height: 13px;
+  margin: auto;
+}
+
+.v3-link-tile small {
+  display: block;
+  font-family: var(--v3-font-en);
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+/* CTA value — Figma 21378:7481 / 21376:4942 */
+.v3-cta-value {
+  height: 328px;
+  background: linear-gradient(90deg, #e4deff, #d2faff);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.v3-cta-value__border {
+  position: absolute;
+  inset: 20px;
+  border: 2px solid var(--v3-purple);
+  pointer-events: none;
+}
+
+.v3-portrait {
+  position: absolute;
+  bottom: 0;
+  background: transparent;
+  z-index: 1;
+}
+
+.v3-portrait img {
+  object-fit: contain;
+  object-position: center top;
+}
+
+.v3-portrait--left {
+  left: 104px;
+  width: 280px;
+  height: 294px;
+}
+
+.v3-portrait--right {
+  right: 54px;
+  width: 335px;
+  height: 293px;
+}
+
+.v3-cta-value__inner {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+.v3-cta-value h2 {
+  position: relative;
+  z-index: 1;
+  font-size: 32px;
+  font-weight: 500;
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  letter-spacing: 0.05em;
+}
+
+.v3-cta-value h2::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 2px;
+  transform: translateX(-50%);
+  width: 469px;
+  max-width: calc(100% - 48px);
+  height: 16px;
+  background: var(--v3-yellow);
+  z-index: -1;
+}
+
+.v3-cta-value__slash {
+  width: 21px;
+  height: 27px;
+  max-width: none;
+  flex: none;
+}
+
+.v3-cta-value__slash--end {
+  transform: scaleX(-1);
+}
+
+.v3-cta-value__actions {
+  display: flex;
+  gap: 20px;
+  margin-top: 30px;
+  position: relative;
+  z-index: 3;
+}
+
+.v3-cta-value .v3-btn {
+  width: 260px;
+  height: 64px;
+  color: #fff;
+}
+
+/* Footer — Figma 21378:7457 / 21376:4402 */
+.v3-footer {
+  position: relative;
+  background: #fff;
+  min-height: 357px;
+}
+
+.v3-footer__inner {
+  padding: 72px 80px 96px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+}
+
+.v3-footer .v3-brand {
+  width: 240px;
+  height: 61px;
+}
+
+.v3-footer .v3-brand__logo {
+  transform: scale(1.283);
+  transform-origin: top left;
+}
+
+.v3-footer__address {
+  font-size: 16px;
+  line-height: 1.3;
+  letter-spacing: 0.05em;
+  margin-top: 32px;
+}
+
+.v3-footer__address--sp {
+  display: none;
+}
+
+.v3-footer__related {
+  display: flex;
+  gap: 0;
+  justify-content: flex-end;
+  align-items: center;
+  font-size: 16px;
+  margin-top: 24px;
+}
+
+.v3-footer__related-sep {
+  color: #858585;
+  font-size: 14px;
+  margin: 0 20px;
+}
+
+.v3-footer__sns {
+  display: flex;
+  justify-content: flex-end;
+  gap: 32px;
+  margin-top: 30px;
+}
+
+.v3-footer__sns-link {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  text-decoration: none;
+}
+
+.v3-footer__sns-icon {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.v3-footer__copyright {
+  position: absolute;
+  left: 80px;
+  bottom: 72px;
+  font-family: var(--v3-font-en);
+  font-size: 14px;
+  letter-spacing: 0.05em;
+}
+
+.v3-footer__pagetop {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(-90deg, var(--v3-purple), var(--v3-blue));
+  color: #fff;
+  display: grid;
+  place-items: center;
+  text-decoration: none;
+}
+
+.v3-footer__pagetop-icon {
+  width: 12px;
+  height: 12px;
+  border-left: 2px solid #fff;
+  border-top: 2px solid #fff;
+  transform: rotate(45deg);
+  margin-top: 4px;
+}
