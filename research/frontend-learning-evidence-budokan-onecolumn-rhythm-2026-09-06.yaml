@@ -1,0 +1,47 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: OBS-BUDOKAN-EXPLICIT-ONECOLUMN-RHYTHM-REUSE
+    summary: >-
+      When a current page family and an existing explicit one-column template share the same proven authored-content rhythm,
+      reuse the existing scoped layout modifier instead of duplicating padding in the template or broadening a generic shared selector.
+      Prove the missing modifier with disposable WordPress/browser QA before changing production.
+    category: RUNTIME
+    applicability:
+      scope: PROJECT
+      conditions:
+        - Current Figma navigation_training-center 1137:5348 proves a 960px PC content rail with 64px top and 100px bottom content insets.
+        - The existing templates/template-oneColumn.php already owns the 960px one-column shell but previously omitted the _normalPage modifier.
+        - global_inner.css already owns the proven PC 64px/100px rhythm through the scoped ._content._normalPage contract.
+      exclusions:
+        - Do not infer or change WordPress page-template assignment for DIRECTORY_MAP pages whose Human/runtime owner remains ambiguous.
+        - Do not apply the 64px/100px contract to shared single/detail/password shells without current Figma evidence.
+        - Do not generalize this project-only finding without independent evidence.
+    promotion_state: PROJECT_ONLY
+    promotion:
+      candidate: false
+      rationale: >-
+        PR #454 first failed the dedicated disposable WordPress/Playwright one-column rhythm QA, then passed after the explicit one-column template reused
+        the existing _normalPage modifier. REF001 and the dedicated runtime were green before squash merge.
+      blocked_by:
+        - NEEDS_INDEPENDENT_REFERENCE_EVIDENCE_BEFORE_CROSS_PROJECT_PROMOTION
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-EXPLICIT-ONECOLUMN-RHYTHM-20260906
+          kind: COMMIT
+          reference_id: REF-002-BUDOKAN
+          run_id: '34012765352'
+          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/templates/template-oneColumn.php
+          commit: 9aa1ea0110ec64cf235fdb6e2f70058b058a71e1
+          note: >-
+            PR #454 squash-merged the scoped modifier reuse together with a local-only seed, Playwright geometry regression and dedicated runtime workflow.
+      contradicts: []
+    notes:
+      - "Promotion review disposition 2026-09-06: KEEP_PROJECT_ONLY; Budokan-only runtime/Figma evidence, no auto-promotion."
