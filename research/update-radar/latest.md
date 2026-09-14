@@ -1,34 +1,18 @@
 # Update Radar — Latest Official Source Scan
 
-Generated: `2026-09-13T08:21:12+00:00`
+Generated: `2026-09-14T08:59:10+00:00`
 
 Active lanes: ACCESSIBILITY, CLAUDE_CODE, CODEX, CURSOR, DESIGN_SYSTEMS, FIGMA, FRONTEND_TOOLING, MCP, WEB_PLATFORM, WORDPRESS_ACF
 
 ## Summary
 
 - Sources checked: 37
-- Changed since previous snapshot: 3
-- First observations: 1
-- Fetch errors: 2
-- RETEST candidates: ACCESSIBILITY, AGENT_CONTEXT, FIGMA_MCP, LAYOUT, PARALLEL_EXECUTION, SCROLL, VARIABLE_MODE_RUNTIME, VISUAL_QA_TOOLING
+- Changed since previous snapshot: 1
+- First observations: 0
+- Fetch errors: 3
+- RETEST candidates: AGENT_CONTEXT, FIGMA_MCP
 
 ## Changed sources
-
-### claude-code-releases
-
-- Lane: `CLAUDE_CODE`
-- Latest title: v2.1.270
-- Impacts: AGENT_CAPABILITY, MCP, PARALLEL_EXECUTION, CONTEXT_HANDLING
-- RETEST: SCROLL, LAYOUT, VARIABLE_MODE_RUNTIME, ACCESSIBILITY, FIGMA_MCP, VISUAL_QA_TOOLING, AGENT_CONTEXT, PARALLEL_EXECUTION
-- Source: https://api.github.com/repos/anthropics/claude-code/releases?per_page=12
-
-### claude-code-feed
-
-- Lane: `CLAUDE_CODE`
-- Latest title: Claude Code v2.1.270
-- Impacts: AGENT_CAPABILITY, MCP, CONTEXT_HANDLING
-- RETEST: SCROLL, LAYOUT, VARIABLE_MODE_RUNTIME, ACCESSIBILITY, FIGMA_MCP, VISUAL_QA_TOOLING, AGENT_CONTEXT, PARALLEL_EXECUTION
-- Source: https://raw.githubusercontent.com/anthropics/claude-code/main/feed.xml
 
 ### mdn-browser-compat-data-releases
 
@@ -40,6 +24,7 @@ Active lanes: ACCESSIBILITY, CLAUDE_CODE, CODEX, CURSOR, DESIGN_SYSTEMS, FIGMA, 
 
 ## Fetch errors
 
+- `openai-product-release-notes` — HTTPError: HTTP Error 403: Forbidden
 - `openai-codex-changelog` — HTTPError: HTTP Error 403: Forbidden
 - `chrome-status-features` — JSONDecodeError: Expecting value: line 1 column 1 (char 0)
 
