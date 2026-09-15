@@ -3,7 +3,17 @@
 このファイルは **日本武道館 WordPress 案件**の会話決定を正本化する。  
 以降の Agent は、ここを Current Authority として扱い、矛盾する旧命名・旧 LP runtime 前提で進めない。
 
-更新日: 2026-09-15
+更新日: 2026-09-16
+
+---
+
+## Agent connector preflight（Human Authority 2026-09-16）
+
+- この案件を継続する各 run / 各セッションでは、**毎回 `@GitHub` と `@Figma` の両 connector を実際に呼んでから着手する**。会話履歴だけで接続可否・最新状態を推測しない。
+- GitHub 正本は `m-shogo/figma-ai-project` branch `so`。着手時に最新 ref / authority / 対象コードを直接取得し、前回完了箇所から続ける。
+- Figma 正本は file `jqYoPtusYfTeDqRegMCsx3` のみ。対象 node を LIVE 取得する。旧 file key / 旧 screenshot を実装判断に使わない。
+- 片方の取得が失敗しても即「接続不可」と断定せず、対象 connector を実際に呼んだ結果で判断する。
+- この preflight 自体を毎回の成果物にせず、確認後は未完了の実装・QAを小さく前進させる。同じ確認だけを繰り返さない。
 
 ---
 
@@ -280,4 +290,3 @@ Form は Human 担当のためこの順に含めない。
 - `css/style.css` / `css/global/variables.css` / `css/layout/`
 - `inc/front.php` / `header.php` / `footer.php` / `_header.php` / `_footer.php`
 - ACF JSON / `parts.php` / Formidable
-
