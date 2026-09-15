@@ -12,7 +12,10 @@ $category_name = isset($item['category']) ? (string) $item['category'] : '';
 $title = isset($item['title']) ? (string) $item['title'] : '';
 $url = isset($item['url']) ? (string) $item['url'] : '';
 $target_attr = isset($item['target_attr']) ? (string) $item['target_attr'] : '';
-$tone_class = isset($item['tone_class']) ? sanitize_html_class($item['tone_class']) : '';
+$label_color = isset($item['label_color']) ? (string) $item['label_color'] : '';
+if ($label_color !== '' && !preg_match('/^#[0-9a-fA-F]{6}$/', $label_color)) {
+    $label_color = '';
+}
 
 $is_link = $url !== '';
 $tag_name = $is_link ? 'a' : 'div';
@@ -33,9 +36,9 @@ if ($context === 'top') {
     $link_classes[] = $is_link ? 'link' : 'no-link';
 }
 
-if ($tone_class !== '') {
-    $label_classes[] = $tone_class;
-}
+$label_style = $label_color !== ''
+    ? '--news-label-color:' . $label_color . ';'
+    : '';
 ?>
 <article class="<?php echo esc_attr(implode(' ', $article_classes)); ?>">
     <<?php echo $tag_name; ?> class="<?php echo esc_attr(implode(' ', $link_classes)); ?>"<?php if ($is_link): ?> href="<?php echo esc_url($url); ?>" <?php echo $target_attr; ?><?php endif; ?>>
@@ -44,7 +47,7 @@ if ($tone_class !== '') {
                 <time class="news_item_date"<?php if ($date_attr !== ''): ?> datetime="<?php echo esc_attr($date_attr); ?>"<?php endif; ?>><?php echo esc_html($date_display); ?></time>
             <?php endif; ?>
             <?php if ($category_name !== ''): ?>
-                <span class="<?php echo esc_attr(implode(' ', $label_classes)); ?>"><?php echo esc_html($category_name); ?></span>
+                <span class="<?php echo esc_attr(implode(' ', $label_classes)); ?>"<?php if ($label_style !== ''): ?> style="<?php echo esc_attr($label_style); ?>"<?php endif; ?>><?php echo esc_html($category_name); ?></span>
             <?php endif; ?>
         </div>
         <<?php echo $heading_tag; ?> class="<?php echo esc_attr(implode(' ', $title_classes)); ?>"><?php echo esc_html($title); ?></<?php echo $heading_tag; ?>>

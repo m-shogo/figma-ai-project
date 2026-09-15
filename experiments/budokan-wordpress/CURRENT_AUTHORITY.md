@@ -129,7 +129,7 @@ Theme 専用の enqueue・命名は `THEME_RULES.md`。Frontend Standard は Com
 
 フィールド名・用途はこの節が正本。WordPress 実行時の Local JSON / block PHP は Theme 内に残るが、**Agent は `theme-dropin/nipponbudokan/acf/` を再読してフィールドを増やしたり推測したりしない。** `acf-export.json` は退役（旧 portable dump。メニュー ACF グループを含むため使わない）。
 
-フィールドグループ JSON は編集しない。ブロック見た目の markup 修正が必要なときだけ既存 block PHP を触る。新しい ACF / CPT / スラッグは発明しない。**例外:** 2026-09-04 Human が `parts2.php` 用スライダーを指示したので `acf/slider`（`slider_items` → `image` / `caption`）だけ追加済み。**例外:** 2026-09-11 Human がローカルナビを ACF 選択（動的メニュー一覧）で指示したので `page_local_nav` を追加済み。
+フィールドグループ JSON は編集しない。ブロック見た目の markup 修正が必要なときだけ既存 block PHP を触る。新しい ACF / CPT / スラッグは発明しない。**例外:** 2026-09-04 Human が `parts2.php` 用スライダーを指示したので `acf/slider`（`slider_items` → `image` / `caption`）だけ追加済み。**例外:** 2026-09-11 Human がローカルナビを ACF 選択（動的メニュー一覧）で指示したので `page_local_nav` を追加済み。**例外:** 2026-09-15 Human がカテゴリー毎のラベル色を指示したので `category_color`（taxonomy `category`）を追加済み。
 
 | 用途 | フィールド |
 | --- | --- |
@@ -138,6 +138,7 @@ Theme 専用の enqueue・命名は `THEME_RULES.md`。Frontend Standard は Com
 | TOP バナー | `top_banner-01` → `img` / `title` / `url` / `target` |
 | 固定ページ タイトル帯画像 | `page_img` |
 | 固定ページ ローカルナビ | `page_local_nav`（メニュー ID。なし＝非表示） |
+| カテゴリー ラベル色 | `category_color`（枠線・文字。未設定＝本文色） |
 | 投稿タイプ既定画像（Options `common_visual`） | `page_img-post` / `page_img-sampleslug` / `page_img-other` |
 | SEO（固定ページ） | `page_title` / `page_description` |
 | head/body タグ（Options `common_tag`） | `headTag_after` / `headTag_before` / `bodyTag_after` / `bodyTag_before` |
@@ -150,7 +151,7 @@ Theme 専用の enqueue・命名は `THEME_RULES.md`。Frontend Standard は Com
 | ブロック スライダー | `slider_items` → `image` / `caption` |
 
 - グローバルナビは WordPress メニュー。旧 `common-menu-01` / `common-submenu-01` は現行 ACF に無い
-- ローカルナビ（Human 2026-09-11）: 外観 → メニューで名前を `ローカル：` で始める（slug は `local-*` に同期）。位置には割り当てない。固定ページ ACF `page_local_nav` の動的一覧にだけ出る（`global-nav` / `mega-nav` / `sub-nav` / `footer-nav` 等の位置割当メニューは除外）。パンくず上・幅いっぱい・白背景。PC Figma `2108:10846`。SP 専用デザイン無し（非表示）。メニューは**3階層**（1=家族 / 2=大会・イベント等のリンク見出し / 3=各ページ）。PC は2階層目を見出し、3階層目を4列で出す。1階層目は PC では隠す
+- ローカルナビ（Human 2026-09-11 / 2026-09-15）: 外観 → メニューで名前を `ローカル：` で始める（slug は `local-*` に同期）。位置には割り当てない。固定ページ ACF `page_local_nav` の動的一覧にだけ出る（`global-nav` / `mega-nav` / `sub-nav` / `footer-nav` 等の位置割当メニューは除外）。**出すテンプレートはデフォルト `page.php` と `template-form.php` のみ**（1カラム系は出さない）。パンくず上・幅いっぱい・白背景。PC Figma `2108:10846`。SP 専用デザイン無し（非表示）。メニューは**3階層**（1=家族 / 2=大会・イベント等のリンク見出し / 3=各ページ）。PC は2階層目を見出し、3階層目を4列で出す。1階層目は PC では隠す。2行リンクがある row は高さを揃え下線をセル下端に揃える。詳細: `LOCAL_NAV_DEPENDENCY_AUDIT.md`
 - CPT `event` + `event_cat` は Theme `inc/custom.php`。開催日・募集ステータス用フィールドは **無い** → 当該 UI は fail-closed
 - Gutenberg ボタンスタイル「小ボタン」= `is-style-small`（Figma btn-02）。wrapper `.small` も互換で残す
 - ブロック スライダーは Human 2026-09-04: `parts2.php` 用に `acf/` へ追加してよい
@@ -166,6 +167,7 @@ Theme 専用の enqueue・命名は `THEME_RULES.md`。Frontend Standard は Com
 - これから言うメニューも、このマップの path / 階層 / 種類に合わせる
 - 2026-09-04 Human: メニューは **作成済み**。作り直さない。追加 locaton はマップから載せる
 - 2026-09-03 Human: メニューは **4本**。赤ハンバーガーメイン=`global-nav`（Figma SP/PC overlay の項目。URL はマップ）。サブハンバーガー=`sub-nav`。PCメガ=`mega-nav`（Figma 4本＋中身。URL はマップ）。フッター=`footer-nav`（指定10件を1本。見た目2列）。グループ見出しのみ `/`。固定ページはマップ全件（CPT一覧・外部ページは除く）
+- PC メガの特殊パネル（Human 2026-09-15 / Figma `2206:9672`）: 外観 → メニューの CSS クラス。L2 に `_megaGrid`（セクション積み + グループ3つ以上は全幅、他は2列）。L4 グループに `_megaCols`（ダッシュ子を2列）。事業案内に限らず同じクラスで使える
 - 作るときは完全一致より、マップからそれなりに載せる
 - 種類「ナビゲーション」= ナビゲーションテンプレート + **画像付きビジュアル**（`page_img`）
 - デフォルト（固定ページ等）= **黄土色**タイトル帯（`page_img` なし）

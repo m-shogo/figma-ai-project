@@ -126,7 +126,8 @@
             color: var(--color-text);
         }
 
-        /* Child grid */
+        /* Child grid — same row stretches so 2-line links set the row height;
+           underlines sit on the shared cell bottom. */
         .lnl_list-03 {
             display: grid;
             grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -135,53 +136,74 @@
             padding-block: 0;
             padding-inline: 36px;
             list-style: none;
+            align-items: stretch;
         }
 
-        /* Fixed 34px clipped the link's padding-bottom + border and ate the
-           row gap above the next item (e.g. 体験してみよう). */
+        .lnl_item-04 {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            height: 100%;
+            border-bottom: 1px solid var(--color-line);
+        }
+
+        .lnl_item-04.current-menu-item,
+        .lnl_item-04.current_page_item {
+            border-bottom-color: var(--color-accent);
+        }
+
+        /* Beat .module_menu .mm_title-04 { align-items: center }. */
         .lnl_title-04 {
-            height: auto;
+            display: flex;
+            flex: 1 1 auto;
+            flex-direction: column;
+            align-items: stretch;
             width: 100%;
+            height: auto;
+            min-height: 0;
             background-color: transparent;
         }
 
         /* Beat .module_menu .mm_item-04._noChild .mm_link-04 (::before chevron).
-           Do not lock Figma line breaks with nowrap. */
+           Human 2026-09-15: align-items center + line-height 1.3.
+           Border on the item keeps row underlines aligned; link hugs content. */
         .lnl_item-04._noChild > .lnl_title-04 > .lnl_link-04,
         .lnl_item-04 > .lnl_title-04 > .lnl_link-04 {
-            display: inline-flex;
+            display: flex;
             align-items: center;
             justify-content: flex-start;
             gap: 12px;
+            box-sizing: border-box;
             width: 100%;
             max-width: 100%;
+            flex: 0 0 auto;
             min-height: 34px;
             height: auto;
             margin: 0;
             padding: 0 0 20px;
             border: 0;
-            border-bottom: 1px solid var(--color-line);
             background-color: transparent;
             color: var(--color-text);
             font-family: var(--font-zen-kaku-gothic);
             font-size: 14px;
             font-weight: 400;
-            line-height: 1.4;
+            line-height: 1.3;
             letter-spacing: 0.05em;
             text-decoration: none;
-            transition:
-                color var(--transition-duration),
-                border-bottom-color var(--transition-duration);
+            transition: color var(--transition-duration);
 
             &::before {
                 content: '';
                 flex: 0 0 auto;
+                box-sizing: border-box;
                 width: 5px;
                 height: 5px;
                 margin: 0;
+                border: 0;
                 border-radius: 50%;
                 background-color: var(--color-accent);
-                font-size: 0;
+                background-image: none;
+                box-shadow: none;
                 color: transparent;
             }
 
@@ -194,7 +216,6 @@
 
         .lnl_item-04.current-menu-item > .lnl_title-04 > .lnl_link-04,
         .lnl_item-04.current_page_item > .lnl_title-04 > .lnl_link-04 {
-            border-bottom-color: var(--color-accent);
             color: var(--color-text);
             font-weight: 500;
         }

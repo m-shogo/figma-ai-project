@@ -27,11 +27,7 @@ if (function_exists('have_rows') && have_rows('top_banner-01')) {
 }
 
 if (!$banner_items) {
-    // Visual samples for empty ACF. Production repeater rows remain the data authority.
-    $banner_items = [
-        ['title' => 'スポーツくじ', 'url' => '', 'external' => true],
-        ['title' => '日本宝くじ協会', 'url' => '', 'external' => true],
-    ];
+    return;
 }
 
 $default_background_url = get_template_directory_uri() . '/images/top/bg-banner-sp.webp';

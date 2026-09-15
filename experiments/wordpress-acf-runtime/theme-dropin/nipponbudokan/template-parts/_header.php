@@ -22,7 +22,7 @@
                 'container' => 'div',
                 'container_class' => 'gn_container-01',
                 'container_id' => 'gn_container-mega',
-                'fallback_cb' => 'nipponbudokan_global_nav_fallback',
+                'fallback_cb' => false,
                 'theme_location' => 'mega-nav',
                 'walker' => new Custom_Global_Walker_Nav_Menu(),
             ));

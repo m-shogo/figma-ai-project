@@ -71,7 +71,8 @@ $page_id = budokan_qa_upsert_page(
     '全日本少年少女武道錬成大会',
     $group_id
 );
-update_post_meta($page_id, '_wp_page_template', 'templates/template-oneColumn.php');
+delete_post_meta($page_id, '_wp_page_template');
+// Default template = page.php (Local Nav shell). Not one-column templates.
 
 $children = array(
     array('slug' => 'qa-ln-youth-budo', 'title' => '全日本少年少女武道錬成大会'),

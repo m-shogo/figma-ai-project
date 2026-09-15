@@ -9,12 +9,6 @@ $event_query = new WP_Query(array(
     'post_status' => 'publish',
 ));
 $has_events = $event_query->have_posts();
-$samples = array(
-    array('status' => '募集中', 'title' => '武道学園 入学案内'),
-    array('status' => '開催中', 'title' => '少年少女武道錬成大会'),
-    array('status' => '受付終了', 'title' => '書初め大展覧会'),
-    array('status' => '募集中', 'title' => '古武道演武大会'),
-);
 ?>
 <section id="top_events-01" class="top_events-01">
     <div class="global_inner">
@@ -51,22 +45,6 @@ $samples = array(
                             </article>
                         <?php endwhile; ?>
                         <?php wp_reset_postdata(); ?>
-                    <?php else: ?>
-                        <?php foreach ($samples as $sample): ?>
-                            <article class="te_card">
-                                <a class="te_card_link" href="<?php echo esc_url(get_post_type_archive_link('event')); ?>">
-                                    <p class="te_card_image"><img src="<?php echo esc_url($theme_uri . '/images/common/noimage.webp'); ?>" alt="" width="240" height="160" loading="lazy"></p>
-                                    <div class="te_card_body">
-                                        <p class="te_card_labels">
-                                            <span class="te_label<?php echo ($sample['status'] === '受付終了') ? ' te_label_closed' : ' te_label_open'; ?>"><?php echo esc_html($sample['status']); ?></span>
-                                            <span class="te_label te_label_cat">カテゴリー</span>
-                                        </p>
-                                        <p class="te_card_date">開催日 : 2026.00.00～00.00</p>
-                                        <h3 class="te_card_title"><?php echo esc_html($sample['title']); ?></h3>
-                                    </div>
-                                </a>
-                            </article>
-                        <?php endforeach; ?>
                     <?php endif; ?>
                 </div>
             </div>

@@ -151,8 +151,6 @@ $default_lead_sp = '武道の振興、書道文化の継承、<br>公益事業�
                                 <li class="tn_item"><?php echo $textarea; ?></li>
                             <?php endforeach; ?>
                         </ul>
-                    <?php else: ?>
-                        <p class="tn_text"><a class="tn_placeholder" aria-disabled="true">令和8年8月4日(火) 令和8年熊本地震　お見舞い</a></p>
                     <?php endif; ?>
                 </div>
             </div>

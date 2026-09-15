@@ -1,129 +1,86 @@
 # Budokan — Local Navigation dependency / responsive authority audit
 
-更新: 2026-09-01
+更新: 2026-09-15
 
 ## 結論
 
-Local Navigation の WordPress owner / PHP render path / shared interaction / PC current visual authority は確認済みで、既存実装を再利用する方針は変わらない。
+Local Navigation の WordPress owner は **ACF `page_local_nav` + 名前接頭辞 `ローカル：` の WP メニュー**。位置 `sidebar-nav` は使わない。
 
-- current Figma file: `jqYoPtusYfTeDqRegMCsx3`（正本は `CURRENT_AUTHORITY.md`。旧 `fKYDn9ikpJk1nW7IWFtaUx` は見ない）
-- PC current Figma authority: `1216:6311` `local_nav`
-- SP current dedicated Local Nav authority: **UNDETERMINED**
-- WordPress owner: `sidebar-nav`
-- shell derivative: `templates/template-oneColumnLocalNav.php`
-- PHP render path: `template-oneColumnLocalNav.php` → `get_sidebar()` → `sidebar.php`
-- markup owner: `.local_navigation` / `.ln_links` + `Custom_Sidebar_Walker_Nav_Menu`
-- interaction base: walker の `mm_*` class + `common.js` `moduleNavToggle()`
-- component CSS: `css/module/local_navigation.css`
-- disposable runtime hierarchy proof: `lnl_item-02` → `lnl_item-03` → four `lnl_item-04`
+- current Figma file: `jqYoPtusYfTeDqRegMCsx3`（正本は `CURRENT_AUTHORITY.md`）
+- PC current Figma authority: `2108:10846`（大会・イベント標本）。旧参照 `1216:6311` は同 family
+- SP dedicated Local Nav: **UNDETERMINED** → PC 以外は非表示（Human 2026-09-11）
+- WordPress owner: ACF `page_local_nav`（メニュー ID。なし＝非表示）
+- メニュー命名: 表示名 `ローカル：…` / slug `local-*`（日本語名は `local-menu-{id}`）
+- 位置割当メニュー（`global-nav` / `mega-nav` / `sub-nav` / `footer-nav` 等）は ACF 選択肢から除外
+- PHP render path: `page.php` または `templates/template-form.php` → `_local-navigation.php` → `sidebar.php` → `wp_nav_menu(menu => id)` + `Custom_Sidebar_Walker_Nav_Menu`（`local_nav_show_all`）
+- markup: `.local_navigation` / `.ln_links` / `lnl_*` + `mm_*`
+- CSS: `css/module/local_navigation.css`
+- メニュー階層: 02 家族（PC 非表示）→ 03 グループリンク（PC 見出し）→ 04 子（4列）
 
-旧監査で current としていた SP `560:632` / page `560:537` は、2026-09-01 の current SP page re-scanでは top-level authorityとして存在を確認できない。旧lineageのSP specimenを current visual authorityへ戻さない。
+`parts.php` と Formidable 本体は対象外。フォーム**テンプレート**への Local Nav 出しは可（Human 指示 2026-09-15）。
 
-`parts.php` と Form/Formidable は対象外。
+## Shell / template contract
 
-## Current Figma authority
+Local Nav を出すのは次だけ。
 
-### PC `1216:6311`
+| テンプレート | 出し |
+| --- | --- |
+| デフォルト `page.php` | する |
+| `templates/template-form.php` | する |
+| `template-oneColumn.php` / `oneColumnWide` / `oneColumnLocalNav` | **しない** |
 
-2026-09-01 に current file `fKYDn9ikpJk1nW7IWFtaUx` から `get_design_context` をLIVE再取得した。
+`template-oneColumnLocalNav.php` は既存割当互換で残してよいが、Local Nav 呼び出しは持たない。ACF が空ならセクション自体出ない。
 
-- full-width white section + top/bottom separator
+## Current Figma authority（PC）
+
+### `2108:10846`
+
+- 幅いっぱい白帯、上下 separator
 - padding `56px 110px`
-- visible subgroup heading: `指導者研修・指導法研究`
-- heading: Zen Kaku Gothic New Medium, 20px
-- heading/list gap: `48px`
-- child list: 4 columns, gap `20px`, inset `36px`
-- child copy: Zen Kaku Gothic New, 14px
-- bullet: 5px gold
-- current item: gold bottom rule + medium weight
-
-Figma children:
-
-1. `全国武道指導者研修会`
-2. `地域社会武道指導者研修会`（current）
-3. `中学校武道授業指導法研究事業`
-4. literal placeholder `ローカルナビゲーション`
-
-4枠目のproduction destinationは推測しない。
+- 見出し（2階層目リンク）+ 八角アイコン
+- 子: 4列、gap `20px`、inset `36px`
+- bullet 5px gold、current は金下線
+- 2行折り返し可（`nowrap` 禁止）。同一 row は高さを揃え、下線はセル下端に揃える
 
 ### SP
 
-旧監査では `560:632` をcurrent SP authorityとしていたが、current Figma `fKYDn9ikpJk1nW7IWFtaUx` のSP page `114:5409` を2026-09-01に再走査した結果、Regional Trainingのdedicated current full-page counterpartおよび専用Local Nav closed-state frameは確認できなかった。
-
-したがって現在の扱いは以下。
-
-- current SP pixel-perfect Local Nav authority = **UNDETERMINED**
-- `560:632` / `560:537` の旧geometryを新規変更の根拠にしない
-- 既存ThemeのSP selector behaviorはshared runtime behaviorとして維持してよい
-- shared runtimeが旧specimenと一致していても「current Figma parity」とは呼ばない
-- current SP counterpart、またはHumanによる「shared SP behaviorをownerとする」明示が出るまでSP visual再設計はfail closed
+専用 frame 無し → **非表示**。旧 SP specimen を current にしない。
 
 ## Owner proof
 
-`sidebar.php` が次を所有する。
+`sidebar.php`:
 
-- `<nav class="local_navigation" ...>`
-- `theme_location => sidebar-nav`
-- `menu_class => ln_links module_menu`
+- ACF `page_local_nav` のメニュー ID のみ
+- `local_nav_show_all => true`（ページ階層で枝切りしない）
 - `Custom_Sidebar_Walker_Nav_Menu`
 
-walker はLocal Navとshared menuのclassを併記する。
+`inc/menu.php`:
 
-- `lnl_item-* mm_item-*`
-- `lnl_title-* mm_title-*`
-- `lnl_link-* mm_link-*`
-- `lnl_button-* mm_button-*`
-- `lnl_wrapper-* mm_wrapper-*`
-- `lnl_list-* mm_list-*`
+- `nipponbudokan_is_local_nav_menu` / `nipponbudokan_get_local_nav_menu_choices`
+- `acf/load_field/name=page_local_nav` で動的 choices
 
-`common.js` の既存 `moduleNavToggle()` が `mm_item*._hasChild` を処理するため、Local Navigation専用JSを新設しない。
+## Runtime fixture
 
-`_dropdown-navigation.php` は別の `dropdown-nav` ownerで本文前に描画されるため、Local Navigation rendererへ統合しない。
+`scripts/seed-budokan-local-nav-qa.php`（local only）:
 
-## Shell / reuse contract
+- メニュー `ローカル：大会・イベント`
+- 3階層 + ACF 割当
+- QA ページはデフォルトテンプレート想定
 
-default `page.php` はPCで本文とsidebarを2columnにするため、Figmaの「one-column本文 → global-width Local Navigation」という親layoutとは一致しない。
+## 残る authority gate
 
-既存 `template-oneColumn.php` をmasterとし、`template-oneColumnLocalNav.php` は本文後に既存 `get_sidebar()` を置く薄いderivativeとして維持する。
+- 本番の `ローカル：…` メニュー作成と各固定ページの ACF 割当
+- グループ見出しページの正式 URL（マップ上グループに path が無い場合は Human）
+- SP dedicated frame が出たら再検討（現状は非表示のまま）
 
-新しいpage-body renderer、Local Nav renderer、menu data contractは作らない。
-
-## Runtime proofの扱い
-
-既存local-only fixture `scripts/seed-budokan-local-nav-qa.php` では、WordPress/WP menu/Waker/runtime pathが以下を出せることを確認済み。
-
-`lnl_item-02` broad family → `lnl_item-03` subgroup → four `lnl_item-04` child links.
-
-PC 1380px runtimeでは以下が確認済み。
-
-- broad-family heading非表示
-- subgroup heading `指導者研修・指導法研究` 表示
-- depth-02/depth-03 selector button非表示
-- depth-04 child 4件が同一row 4 columns
-- current item stateがgold bottom rule + medium weight
-
-SP runtime proofはinteraction/shell regression proofとして保持するが、旧 `560:632` をcurrent design authorityへ再昇格させない。
-
-## 現在残るauthority gate
-
-Local Navigationのshared ownerとPC current visualは閉じている。残るのはproduction assignment/dataおよびcurrent SP authority。
-
-- real page(s) の `template-oneColumnLocalNav.php` production assignment
-- actual production `sidebar-nav` hierarchy/menu IDs/URLs
-- Figma 4枠目の正式destination
-- current SP dedicated visual authority、またはshared SP behaviorをownerとするHuman明示
-- SP open-stateの正式visual/content behavior
-
-これらが無い状態でQA fixtureをproduction menuへseedしたり、4枠目やSP presentationを推測したりしない。
+QA fixture を production メニューへ seed しない。
 
 ## Reuse rule
 
-次の変更でも必ず次を先に再利用する。
+`page.php` / `template-form.php` → `_local-navigation.php` → `sidebar.php`（ACF menu）→ walker → `local_navigation.css`
 
-`one-column shell` → `template-oneColumnLocalNav.php` thin derivative → existing `sidebar-nav` walker → shared `moduleNavToggle()` → `local_navigation.css` responsive specialization.
-
-PC visual diffで差が証明されない限り、新しいpage-specific Local Nav CSSや別rendererを作らない。
+ページ専用 Local Nav CSS / 別 renderer / 位置 `sidebar-nav` 再導入をしない。
 
 ## Promotion boundary
 
-runtime/harness lessonはプロジェクト内で再現可能だが、Company/frontend standardへ自動昇格しない。別component familyでも同じ失敗パターンが繰り返された場合に上位evidence候補とする。
+案件固有は `CURRENT_AUTHORITY.md`。hover/octagon/nowrap/row-height の再発防止は learning notes / evidence CANDIDATE。Company Policy へ自動昇格しない。

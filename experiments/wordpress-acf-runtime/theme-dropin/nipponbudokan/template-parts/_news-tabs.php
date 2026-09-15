@@ -48,11 +48,6 @@ if ($taxonomy === 'event_cat') {
         }
     }
 } else {
-    $default_labels = array('武道', '書道', '刊行物', '研修', '事務局');
-    $labels = isset($args['labels']) && is_array($args['labels'])
-        ? $args['labels']
-        : apply_filters('nipponbudokan_news_category_labels', $default_labels);
-
     $posts_page_id = (int) get_option('page_for_posts');
     $all_url = $posts_page_id ? get_permalink($posts_page_id) : home_url('/');
     $current_category_id = is_category() ? (int) get_queried_object_id() : 0;
@@ -78,22 +73,28 @@ if ($taxonomy === 'event_cat') {
         'active' => $current_category_id === 0,
     );
 
-    foreach ($labels as $label) {
-        $label = (string) $label;
-        if ($label === '' || $label === 'すべて') {
-            continue;
-        }
+    // WP カテゴリー（投稿が1件以上あるものだけ）。名前決め打ちしない。タブ色は CSS のまま。
+    $terms = get_terms(array(
+        'taxonomy' => 'category',
+        'hide_empty' => true,
+        'parent' => 0,
+        'orderby' => 'name',
+        'order' => 'ASC',
+    ));
 
-        $term = get_term_by('name', $label, 'category');
-        if (!$term || is_wp_error($term)) {
-            $term = null;
-        }
+    if (!empty($terms) && !is_wp_error($terms)) {
+        foreach ($terms as $term) {
+            $term_link = get_term_link($term);
+            if (is_wp_error($term_link)) {
+                continue;
+            }
 
-        $tabs[] = array(
-            'label' => $label,
-            'url' => $term ? get_category_link($term->term_id) : '',
-            'active' => $term ? $current_top_category_id === (int) $term->term_id : false,
-        );
+            $tabs[] = array(
+                'label' => $term->name,
+                'url' => $term_link,
+                'active' => $current_top_category_id === (int) $term->term_id,
+            );
+        }
     }
 }
 

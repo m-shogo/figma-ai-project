@@ -75,18 +75,6 @@
     }
     const cfg = window.nipponbudokanTopCal || {};
     const label = root.querySelector('.te_cal_label');
-    const sampleColors = ['#e8dcc8', '#c5dce8', '#c8e0c8'];
-    const sampleEvents = function () {
-      const now = new Date();
-      const y = now.getFullYear();
-      const m = String(now.getMonth() + 1).padStart(2, '0');
-      return [
-        { title: 'イベント名', start: y + '-' + m + '-04', backgroundColor: sampleColors[0], borderColor: sampleColors[0], textColor: '#333' },
-        { title: 'イベント名', start: y + '-' + m + '-11', backgroundColor: sampleColors[1], borderColor: sampleColors[1], textColor: '#333' },
-        { title: 'イベント名', start: y + '-' + m + '-16', backgroundColor: sampleColors[2], borderColor: sampleColors[2], textColor: '#333' },
-        { title: 'イベント名', start: y + '-' + m + '-22', backgroundColor: sampleColors[0], borderColor: sampleColors[0], textColor: '#333' }
-      ];
-    };
     const hasGoogle = Boolean(cfg.googleCalendarApiKey && cfg.googleCalendarId);
     const calendar = new FullCalendar.Calendar(el, {
       locale: 'ja',
@@ -97,7 +85,7 @@
       googleCalendarApiKey: hasGoogle ? cfg.googleCalendarApiKey : undefined,
       events: hasGoogle
         ? { googleCalendarId: cfg.googleCalendarId }
-        : sampleEvents(),
+        : [],
       datesSet: function (info) {
         if (!label) {
           return;

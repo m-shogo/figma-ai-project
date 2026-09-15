@@ -3,8 +3,8 @@
 /**
  * Template Name: 1カラム＋ローカルナビテンプレート
  *
- * Local Navigation is driven by ACF `page_local_nav` (same as 1カラム).
- * Kept for existing page assignments; prefer assigning the menu on the page.
+ * Legacy name kept for existing page assignments.
+ * Local Nav is only on default page.php and template-form.php (Human 2026-09-15).
  */
 global $post;
 ?>
@@ -20,7 +20,6 @@ global $post;
                     </div>
                 </div>
             </div>
-            <?php get_template_part('template-parts/_local-navigation'); ?>
             <?php get_template_part('template-parts/_breadCrumb'); ?>
         </section>
     <?php else: ?>

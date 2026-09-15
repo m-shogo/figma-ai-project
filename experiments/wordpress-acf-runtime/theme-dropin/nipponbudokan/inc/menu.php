@@ -93,58 +93,18 @@ add_filter('acf/load_field/name=page_local_nav', function ($field) {
 });
 
 /**
- * global-nav 未設定時の sample（赤ハンバーガー。中身は WP メニューが正）
+ * Nav fallbacks: do not invent menu labels. Empty until theme_location has a menu.
  */
 function nipponbudokan_hamburger_nav_fallback()
 {
-    echo '<div class="gn_container-01" id="gn_container-01"><ul id="gn_links-01" class="menu gn_links-01">';
-    echo '<li class="gnl_item-02 _noChild"><div class="gnl_title-02"><a class="gnl_link-02 module_textLink" href="#"><span>日本武道館について</span></a></div></li>';
-    echo '<li class="gnl_item-02 _hasChild"><div class="gnl_title-02"><a class="gnl_link-02 module_textLink" href="#"><span>事業案内</span></a></div></li>';
-    echo '<li class="gnl_item-02 _hasChild"><div class="gnl_title-02"><a class="gnl_link-02 module_textLink" href="#"><span>刊行物について</span></a></div></li>';
-    echo '<li class="gnl_item-02 _hasChild"><div class="gnl_title-02"><a class="gnl_link-02 module_textLink" href="#"><span>研修センターについて</span></a></div></li>';
-    echo '</ul></div>';
 }
 
-/**
- * mega-nav 未設定時の sample（Figma Header PC 4項目）
- */
 function nipponbudokan_global_nav_fallback()
 {
-    $items = array(
-        '日本武道館について',
-        '事業案内',
-        '刊行物',
-        '研修センター',
-    );
-    echo '<div class="gn_container-01" id="gn_container-01"><ul id="gn_links-01" class="menu gn_links-01">';
-    foreach ($items as $label) {
-        echo '<li class="gnl_item-02 _hasChild"><div class="gnl_title-02"><span class="gnl_link-02"><span>' . esc_html($label) . '</span></span></div></li>';
-    }
-    echo '</ul></div>';
 }
 
-/**
- * footer-nav 未設定時の sample（Figma footer_subpage 2列）
- */
 function nipponbudokan_footer_nav_fallback()
 {
-    $items = array(
-        '日本武道館について',
-        'よくあるご質問',
-        '武道振興・普及事業',
-        'お問い合わせ',
-        '書道普及・奨励事業',
-        'パンフレットのご案内',
-        '武道刊行物事業',
-        '個人情報保護方針',
-        '研修センター',
-        '業務・財務に関する資料',
-    );
-    echo '<div class="gf_container-01" id="gf_container-01"><ul id="gf_links-01" class="menu gf_links-01">';
-    foreach ($items as $label) {
-        echo '<li class="gfl_item-02 _noChild"><div class="gfl_title-02"><a class="gfl_link-02" href="#"><span>' . esc_html($label) . '</span></a></div></li>';
-    }
-    echo '</ul></div>';
 }
 
 /**
@@ -248,6 +208,8 @@ class Custom_Global_Walker_Nav_Menu extends Walker_Nav_Menu
         $li_class = 'gnl_item-' . $depth_number;
         $title_class = 'gnl_title-' . $depth_number;
         $is_mega_nav = isset($args->theme_location) && $args->theme_location === 'mega-nav';
+        /* Mega panel variants (Appearance → Menus → CSS class, any L2 item):
+           `_megaGrid` = Figma 2206:9672 section layout. `_megaCols` on an L4 group = 2-col dashes. */
         $is_mega_top = $is_mega_nav && (int) $depth === 0;
         /* Mega L3 (実装指示 2377:4084): full-row octagon + LTR underline, not module_textLink. */
         $is_mega_l3_row = $is_mega_nav && (int) $depth === 1;

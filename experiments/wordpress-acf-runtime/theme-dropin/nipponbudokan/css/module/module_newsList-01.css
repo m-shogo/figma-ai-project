@@ -139,10 +139,10 @@
     min-height: 23px;
     padding: 0 8px;
     flex-shrink: 0;
-    border: 1px solid var(--color-text);
+    border: 1px solid var(--news-label-color, var(--color-text));
     border-radius: 2px;
     background-color: var(--color-secondary);
-    color: var(--color-text);
+    color: var(--news-label-color, var(--color-text));
     font-family: var(--font-zen-kaku-gothic);
     font-size: 13px;
     font-weight: 500;
@@ -409,7 +409,8 @@
     }
 
     .news_item_label {
-        border-color: var(--color-text);
+        border-color: var(--news-label-color, var(--color-text));
+        color: var(--news-label-color, var(--color-text));
     }
 
     .news_item_title {

@@ -7,7 +7,7 @@
 @import './layout/global_footer.css?v=20260911-pagetop';
 @import './layout/global_wrapper.css?v=20260904-sticky2';
 @import './layout/global_inner.css';
-@import './layout/global_navigation.css?v=20260911-fulloverlay';
+@import './layout/global_navigation.css?v=20260915-pc-ham';
 @import './layout/global_contents.css?v=20260911-ln-crumb';
 
 @import './blocks/wp-block-buttonLink-style.css?v=20260911-octagon-stroke';
@@ -39,9 +39,9 @@
 @import './module/module_menu.css';
 /* Local Navigation intentionally follows module_menu so its Figma-specific
    SP selector / PC grid can override the shared menu baseline without !important. */
-@import './module/local_navigation.css?v=20260911-octagon-svg';
+@import './module/local_navigation.css?v=20260915-lh13-center';
 @import './module/module_newsCard-01.css';
-@import './module/module_newsList-01.css?v=20260910-pagerhover';
+@import './module/module_newsList-01.css?v=20260915-catcolor';
 @import './module/module_pager-01.css';
 @import './module/module_pager-02.css';
 @import './module/module_search-01.css';
@@ -57,7 +57,7 @@
 @import './project/top_events.css?v=20260904-event2'; /* TOP events + FullCalendar 2026-08-28 */
 @import './project/top_guide.css?v=20260904-octagon2'; /* TOP 目的から探す（大） 2026-08-28 */
 @import './project/top_about.css?v=20260910-about-swiper'; /* TOP 日本武道館とは SP Swiper */
-@import './project/top_news.css?v=20260910-hover';
+@import './project/top_news.css?v=20260915-catcolor';
 @import './project/top_partner.css?v=20260904-topfix3'; /* TOP 公式パートナー PC+SP 2026-08-28 */
 @import './project/top_instagram.css?v=20260904-octagon2'; /* TOP 月刊「武道」編集部 PC+SP 2026-08-29 */
 @import './project/top_banner.css?v=20260904-topfix2';

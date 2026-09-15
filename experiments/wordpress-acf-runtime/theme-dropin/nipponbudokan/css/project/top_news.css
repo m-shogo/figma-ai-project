@@ -160,7 +160,8 @@
 
     .top_news_articles .news_item_label {
         min-height: 23px;
-        border-color: var(--color-text);
+        border-color: var(--news-label-color, var(--color-text));
+        color: var(--news-label-color, var(--color-text));
         font-family: var(--font-zen-kaku-gothic);
         font-weight: 500;
     }
@@ -309,27 +310,8 @@
         }
 
         .top_news_articles .news_item_label {
-            border-color: currentColor;
-
-            &.is-publication {
-                color: #21635f;
-            }
-
-            &.is-office {
-                color: var(--color-primary);
-            }
-
-            &.is-budo {
-                color: var(--color-accent);
-            }
-
-            &.is-shodo {
-                color: #638093;
-            }
-
-            &.is-training {
-                color: var(--color-text);
-            }
+            border-color: var(--news-label-color, currentColor);
+            color: var(--news-label-color, currentColor);
         }
 
         .top_news_articles .news_item_title {

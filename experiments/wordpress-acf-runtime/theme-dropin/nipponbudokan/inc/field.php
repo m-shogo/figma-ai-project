@@ -68,6 +68,42 @@ add_filter('acf/settings/load_json', function ($paths) {
     return $paths;
 });
 
+/**
+ * Category label color (ACF `category_color` on taxonomy category).
+ * Empty / invalid → '' (caller falls back to default text color).
+ *
+ * @param int|WP_Term|null $term Term ID, term object, or null.
+ * @return string Sanitized #RRGGBB or ''.
+ */
+function nipponbudokan_get_category_color($term = null)
+{
+    $term_id = 0;
+    if ($term instanceof WP_Term) {
+        $term_id = (int) $term->term_id;
+    } elseif (is_numeric($term)) {
+        $term_id = (int) $term;
+    }
+
+    if ($term_id <= 0 || !function_exists('get_field')) {
+        return '';
+    }
+
+    $raw = get_field('category_color', 'category_' . $term_id);
+    if (!is_string($raw) || $raw === '') {
+        return '';
+    }
+
+    $raw = trim($raw);
+    if (preg_match('/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/', $raw)) {
+        if (strlen($raw) === 4) {
+            return '#' . $raw[1] . $raw[1] . $raw[2] . $raw[2] . $raw[3] . $raw[3];
+        }
+        return strtolower($raw);
+    }
+
+    return '';
+}
+
 // ==========================================================================
 // カスタムフィールドオプションページ追加
 // ==========================================================================

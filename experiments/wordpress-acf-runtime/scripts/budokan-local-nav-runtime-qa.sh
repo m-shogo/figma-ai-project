@@ -61,11 +61,12 @@ page_id="$(docker compose run --rm cli option get budokan_local_nav_qa_page_id)"
   exit 1
 }
 
-template="$(docker compose run --rm cli post meta get "$page_id" _wp_page_template)"
-[[ "$template" == "templates/template-oneColumn.php" ]] || {
-  echo "FAIL QA page template mismatch: ${template}." >&2
+template="$(docker compose run --rm cli post meta get "$page_id" _wp_page_template 2>/dev/null || true)"
+# Default page.php leaves _wp_page_template empty / absent.
+if [[ -n "${template}" && "$template" != "default" ]]; then
+  echo "FAIL QA page template should be default page.php; got: ${template}." >&2
   exit 1
-}
+fi
 
 acf_menu="$(docker compose run --rm cli post meta get "$page_id" page_local_nav)"
 [[ "$acf_menu" =~ ^[0-9]+$ ]] || {
@@ -115,7 +116,7 @@ grep -Eq 'current-menu-item|current_page_item' "$html" || {
 rm -f "$html"
 
 echo "PASS Budokan Local Navigation ACF menu rendered (Figma 2108:10846; 3-level)."
-echo "PASS page_local_nav=${acf_menu}; template=templates/template-oneColumn.php; page_id=${page_id}."
+echo "PASS page_local_nav=${acf_menu}; template=page.php (default); page_id=${page_id}."
 
 if [[ "${BUDOKAN_LOCAL_NAV_KEEP_RUNTIME:-0}" == "1" ]]; then
   trap - EXIT
