@@ -1,0 +1,119 @@
+@charset "utf-8";
+
+/* 月刊「武道」号詳細 / Figma publications_detail 1637:11288 */
+.publication_budo-head {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    margin-bottom: 48px;
+}
+
+.publication_budo-title {
+    margin: 0;
+}
+
+.publication_budo-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+.publication_budo-cover {
+    width: min(140px, 42vw);
+    margin: 0;
+}
+
+.publication_budo-cover img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.publication_budo-specs {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 0;
+    margin: 0;
+}
+
+.publication_budo-spec {
+    display: grid;
+    grid-template-columns: minmax(88px, auto) minmax(0, 1fr);
+    gap: 12px;
+    align-items: baseline;
+    margin: 0;
+    font-family: var(--font-zen-kaku-gothic);
+    color: var(--color-text);
+    font-size: 16px;
+    line-height: 1.6;
+    letter-spacing: 0.05em;
+}
+
+.publication_budo-spec::before {
+    content: '';
+    grid-column: 1;
+    grid-row: 1;
+    align-self: center;
+    width: 6px;
+    height: 6px;
+    margin-right: -3px;
+    border-radius: 3px;
+    background: var(--color-accent);
+}
+
+.publication_budo-spec dt {
+    grid-column: 1;
+    grid-row: 1;
+    margin: 0 0 0 21px;
+    font-weight: 500;
+}
+
+.publication_budo-spec dd {
+    grid-column: 2;
+    grid-row: 1;
+    min-width: 0;
+    margin: 0;
+    overflow-wrap: break-word;
+}
+
+.publication_budo-order {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.publication_budo-order .wp-block-buttons {
+    margin-top: 0;
+}
+
+.publication_budo-content {
+    margin-top: 0;
+}
+
+@media screen and (min-width: 768px) {
+    .publication_budo-head {
+        gap: 40px;
+        margin-bottom: 72px;
+    }
+
+    .publication_budo-summary {
+        display: grid;
+        grid-template-columns: 140px minmax(0, 1fr);
+        gap: 40px;
+        align-items: start;
+    }
+
+    .publication_budo-specs {
+        gap: 16px;
+        padding-top: 4px;
+    }
+
+    .publication_budo-spec {
+        grid-template-columns: 132px minmax(0, 1fr);
+        font-size: 17px;
+    }
+
+    .publication_budo-order {
+        justify-content: flex-end;
+    }
+}
