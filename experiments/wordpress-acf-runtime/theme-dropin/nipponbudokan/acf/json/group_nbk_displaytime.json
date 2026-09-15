@@ -1,0 +1,62 @@
+{
+    "key": "group_nbk_displaytime",
+    "title": "サイト表示日時",
+    "fields": [
+        {
+            "key": "field_nbk_displaytime",
+            "label": "表示する日時",
+            "name": "displaytime",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "空の場合、公開日時が表示されます",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "post"
+            }
+        ],
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "news"
+            }
+        ],
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "shosyashodou"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "CFS「サイト表示日時」から移行。post \/ news \/ shosyashodou に表示。",
+    "show_in_rest": 0,
+    "display_title": "",
+    "allow_ai_access": false,
+    "ai_description": "",
+    "modified": 1788944888
+}

@@ -1,0 +1,599 @@
+{
+    "key": "group_nbk_gekkan_budo",
+    "title": "月刊武道",
+    "fields": [
+        {
+            "key": "field_nbk_budo_month",
+            "label": "発行月",
+            "name": "budo_month",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "数字のみ記入",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_nbk_budo_size",
+            "label": "版型",
+            "name": "budo_size",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "allow_in_bindings": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_nbk_budo_page",
+            "label": "ページ数",
+            "name": "budo_page",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_nbk_budo_price",
+            "label": "定価",
+            "name": "budo_price",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_nbk_budo_teiki",
+            "label": "定期購読料",
+            "name": "budo_teiki",
+            "aria-label": "",
+            "type": "textarea",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "allow_in_bindings": 1,
+            "rows": 4,
+            "placeholder": "",
+            "new_lines": ""
+        },
+        {
+            "key": "field_nbk_budo_topimg",
+            "label": "トップ掲載用画像",
+            "name": "budo_topimg",
+            "aria-label": "",
+            "type": "image",
+            "instructions": "get_field がURLを返す（CFS return_value=url 相当）",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "url",
+            "library": "all",
+            "min_width": 0,
+            "min_height": 0,
+            "min_size": 0,
+            "max_width": 0,
+            "max_height": 0,
+            "max_size": 0,
+            "mime_types": "",
+            "preview_size": "medium"
+        },
+        {
+            "key": "field_nbk_budo_pickup",
+            "label": "今月のピックアップ",
+            "name": "budo_pickup",
+            "aria-label": "",
+            "type": "repeater",
+            "instructions": "CFS loop 相当",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "layout": "block",
+            "pagination": 0,
+            "min": 0,
+            "max": 0,
+            "collapsed": "field_nbk_budo_pickup_ttl",
+            "button_label": "追加",
+            "rows_per_page": 20,
+            "sub_fields": [
+                {
+                    "key": "field_nbk_budo_pickup_ttl",
+                    "label": "タイトル",
+                    "name": "budo_pickup_ttl",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_nbk_budo_pickup"
+                },
+                {
+                    "key": "field_nbk_budo_pickup_txt",
+                    "label": "テキスト",
+                    "name": "budo_pickup_txt",
+                    "aria-label": "",
+                    "type": "textarea",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": "",
+                    "rows": 4,
+                    "placeholder": "",
+                    "new_lines": "br",
+                    "parent_repeater": "field_nbk_budo_pickup"
+                },
+                {
+                    "key": "field_nbk_budo_pickup_img",
+                    "label": "写真",
+                    "name": "budo_pickup_img",
+                    "aria-label": "",
+                    "type": "image",
+                    "instructions": "get_field がURLを返す",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "return_format": "url",
+                    "library": "all",
+                    "min_width": 0,
+                    "min_height": 0,
+                    "min_size": 0,
+                    "max_width": 0,
+                    "max_height": 0,
+                    "max_size": 0,
+                    "mime_types": "",
+                    "preview_size": "medium",
+                    "parent_repeater": "field_nbk_budo_pickup"
+                }
+            ]
+        },
+        {
+            "key": "field_nbk_monthpickup",
+            "label": "今月のおすすめ",
+            "name": "monthpickup",
+            "aria-label": "",
+            "type": "repeater",
+            "instructions": "CFS loop 相当。子フィールド名 pickupImg \/ pickuptitle \/ pickupdesc を維持",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "layout": "block",
+            "pagination": 0,
+            "min": 0,
+            "max": 0,
+            "collapsed": "field_nbk_pickuptitle",
+            "button_label": "追加",
+            "rows_per_page": 20,
+            "sub_fields": [
+                {
+                    "key": "field_nbk_pickupimg",
+                    "label": "写真",
+                    "name": "pickupImg",
+                    "aria-label": "",
+                    "type": "image",
+                    "instructions": "テーマは img src にURLを出力するため Image + url。CFSは file 型",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "return_format": "url",
+                    "library": "all",
+                    "min_width": 0,
+                    "min_height": 0,
+                    "min_size": 0,
+                    "max_width": 0,
+                    "max_height": 0,
+                    "max_size": 0,
+                    "mime_types": "",
+                    "preview_size": "medium",
+                    "parent_repeater": "field_nbk_monthpickup"
+                },
+                {
+                    "key": "field_nbk_pickuptitle",
+                    "label": "タイトル",
+                    "name": "pickuptitle",
+                    "aria-label": "",
+                    "type": "textarea",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": "",
+                    "rows": 3,
+                    "placeholder": "",
+                    "new_lines": "br",
+                    "parent_repeater": "field_nbk_monthpickup"
+                },
+                {
+                    "key": "field_nbk_pickupdesc",
+                    "label": "その他",
+                    "name": "pickupdesc",
+                    "aria-label": "",
+                    "type": "textarea",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": "",
+                    "rows": 3,
+                    "placeholder": "",
+                    "new_lines": "br",
+                    "parent_repeater": "field_nbk_monthpickup"
+                }
+            ]
+        },
+        {
+            "key": "field_nbk_budo_speacial",
+            "label": "今月の特集・企画",
+            "name": "budo_speacial",
+            "aria-label": "",
+            "type": "wysiwyg",
+            "instructions": "CFS フィールド名 speacial を維持",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 1,
+            "delay": 0
+        },
+        {
+            "key": "field_nbk_budo_new",
+            "label": "新連載",
+            "name": "budo_new",
+            "aria-label": "",
+            "type": "wysiwyg",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 1,
+            "delay": 0
+        },
+        {
+            "key": "field_nbk_budo_rensai",
+            "label": "好評連載中",
+            "name": "budo_rensai",
+            "aria-label": "",
+            "type": "wysiwyg",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 1,
+            "delay": 0
+        },
+        {
+            "key": "field_nbk_budo_contribution",
+            "label": "特別寄稿",
+            "name": "budo_contribution",
+            "aria-label": "",
+            "type": "textarea",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "rows": 6,
+            "placeholder": "",
+            "new_lines": "br"
+        },
+        {
+            "key": "field_nbk_budo_zuihitsu",
+            "label": "随筆",
+            "name": "budo_zuihitsu",
+            "aria-label": "",
+            "type": "wysiwyg",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 1,
+            "delay": 0
+        },
+        {
+            "key": "field_nbk_budo_calender",
+            "label": "武道カレンダー",
+            "name": "budo_calender",
+            "aria-label": "",
+            "type": "textarea",
+            "instructions": "CFS フィールド名 calender を維持",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "rows": 6,
+            "placeholder": "",
+            "new_lines": "br"
+        },
+        {
+            "key": "field_nbk_budo_dantai",
+            "label": "少年少女武道優良団体",
+            "name": "budo_dantai",
+            "aria-label": "",
+            "type": "textarea",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "rows": 6,
+            "placeholder": "",
+            "new_lines": "br"
+        },
+        {
+            "key": "field_nbk_budo_tainin",
+            "label": "退任のご挨拶",
+            "name": "budo_tainin",
+            "aria-label": "",
+            "type": "textarea",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "rows": 6,
+            "placeholder": "",
+            "new_lines": "br"
+        },
+        {
+            "key": "field_nbk_budo_news",
+            "label": "今月のニュース",
+            "name": "budo_news",
+            "aria-label": "",
+            "type": "textarea",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "rows": 6,
+            "placeholder": "",
+            "new_lines": "br"
+        },
+        {
+            "key": "field_nbk_budo_report",
+            "label": "特別レポート",
+            "name": "budo_report",
+            "aria-label": "",
+            "type": "textarea",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "rows": 6,
+            "placeholder": "",
+            "new_lines": "br"
+        },
+        {
+            "key": "field_nbk_budo_mokuji",
+            "label": "二〇二二年　月刊「武道」総目次",
+            "name": "budo_mokuji",
+            "aria-label": "",
+            "type": "textarea",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "rows": 8,
+            "placeholder": "",
+            "new_lines": "br"
+        },
+        {
+            "key": "field_nbk_budo_backcontent",
+            "label": "バックナンバー用リスト",
+            "name": "budo_backcontent",
+            "aria-label": "",
+            "type": "wysiwyg",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 1,
+            "delay": 0
+        },
+        {
+            "key": "field_nbk_budo_topcontent",
+            "label": "TOP用掲載内容",
+            "name": "budo_topcontent",
+            "aria-label": "",
+            "type": "wysiwyg",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 1,
+            "delay": 0
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "budo-book"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "CFS「月刊武道」から移行。フィールド名はCFSと同じ。画像は get_field がURLを返す。",
+    "show_in_rest": 0,
+    "display_title": "",
+    "allow_ai_access": false,
+    "ai_description": "",
+    "modified": 1788944888
+}

@@ -1,0 +1,296 @@
+{
+    "key": "group_nbk_tankoubon",
+    "title": "単行本",
+    "fields": [
+        {
+            "key": "field_nbk_readingttl",
+            "label": "ボタンテキスト",
+            "name": "readingttl",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "試し読み",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_nbk_readingtest",
+            "label": "単行本データ",
+            "name": "readingtest",
+            "aria-label": "",
+            "type": "file",
+            "instructions": "a href 用。return_format は url",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "url",
+            "library": "all",
+            "min_size": 0,
+            "max_size": 0,
+            "mime_types": ""
+        },
+        {
+            "key": "field_nbk_book_author",
+            "label": "著者",
+            "name": "book_author",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_nbk_book_desc",
+            "label": "本の説明",
+            "name": "book_desc",
+            "aria-label": "",
+            "type": "textarea",
+            "instructions": "CFS auto_br 相当",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "rows": 6,
+            "placeholder": "",
+            "new_lines": "br"
+        },
+        {
+            "key": "field_nbk_book_info",
+            "label": "版型 ページ数等",
+            "name": "book_info",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_nbk_book_price",
+            "label": "価格",
+            "name": "book_price",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "空の場合、テーマ側で「非売品」と表示する",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_nbk_book_content",
+            "label": "内容",
+            "name": "book_content",
+            "aria-label": "",
+            "type": "wysiwyg",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 1,
+            "delay": 0
+        },
+        {
+            "key": "field_nbk_amazon",
+            "label": "Amazonリンク",
+            "name": "amazon",
+            "aria-label": "",
+            "type": "url",
+            "instructions": "CFSは text。リンク用途のため ACF URL にした（値は同じ文字列）",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "https:\/\/"
+        },
+        {
+            "key": "field_nbk_book_select",
+            "label": "下部ボタン",
+            "name": "book_select",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "CFSは選択値を連想配列で返す。ACFは値文字列（order \/ read）を返す。テーマ側の foreach は要改修",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "order": "単行本注文書",
+                "read": "単行本データ"
+            },
+            "default_value": false,
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 1,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_nbk_css",
+            "label": "個別css",
+            "name": "css",
+            "aria-label": "",
+            "type": "textarea",
+            "instructions": "CFS formatting=none 相当。styleタグ内にそのまま出力",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "rows": 8,
+            "placeholder": "",
+            "new_lines": ""
+        },
+        {
+            "key": "field_nbk_book_addbtn",
+            "label": "汎用ボタン",
+            "name": "book_addbtn",
+            "aria-label": "",
+            "type": "repeater",
+            "instructions": "CFS loop 相当。get_field('book_addbtn') は行配列を返す",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "layout": "table",
+            "pagination": 0,
+            "min": 0,
+            "max": 0,
+            "collapsed": "",
+            "button_label": "追加",
+            "rows_per_page": 20,
+            "sub_fields": [
+                {
+                    "key": "field_nbk_book_btntitle",
+                    "label": "ボタンテキスト",
+                    "name": "book_btntitle",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_nbk_book_addbtn"
+                },
+                {
+                    "key": "field_nbk_book_addurl",
+                    "label": "URL",
+                    "name": "book_addurl",
+                    "aria-label": "",
+                    "type": "url",
+                    "instructions": "CFSは text。リンク用途のため ACF URL にした",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "https:\/\/",
+                    "parent_repeater": "field_nbk_book_addbtn"
+                }
+            ]
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "tankoubon"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "CFS「単行本」から移行。フィールド名はCFSと同じ。ファイルは get_field がURLを返す設定。",
+    "show_in_rest": 0,
+    "display_title": "",
+    "allow_ai_access": false,
+    "ai_description": "",
+    "modified": 1788944888
+}

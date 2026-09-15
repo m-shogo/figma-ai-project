@@ -1,0 +1,48 @@
+{
+    "key": "group_nbk_sousakuin",
+    "title": "総索引",
+    "fields": [
+        {
+            "key": "field_nbk_sousakuin",
+            "label": "総索引ファイル",
+            "name": "sousakuin",
+            "aria-label": "",
+            "type": "file",
+            "instructions": "ショートコード [sousakuin_data] がURLを出力する。get_field がURLを返す（CFS return_value=url 相当）",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "url",
+            "library": "all",
+            "min_size": 0,
+            "max_size": 0,
+            "mime_types": ""
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "budo-book"
+            }
+        ]
+    ],
+    "menu_order": 2,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "CFS「総索引」から移行。月刊武道（budo-book）に追加表示。",
+    "show_in_rest": 0,
+    "display_title": "",
+    "allow_ai_access": false,
+    "ai_description": "",
+    "modified": 1788944888
+}

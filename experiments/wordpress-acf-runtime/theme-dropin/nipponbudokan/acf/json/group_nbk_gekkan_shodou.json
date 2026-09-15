@@ -1,0 +1,219 @@
+{
+    "key": "group_nbk_gekkan_shodou",
+    "title": "月刊書写書道",
+    "fields": [
+        {
+            "key": "field_nbk_shodou_month",
+            "label": "発行月",
+            "name": "shodou_month",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_nbk_shodou_size",
+            "label": "版型・ページ数",
+            "name": "size",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "CFS フィールド名 size を維持",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "A4判・○○ページ",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_nbk_shodou_price",
+            "label": "定価",
+            "name": "price",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "CFS フィールド名 price を維持",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 550,
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_nbk_shodou_teiki",
+            "label": "定期購読料",
+            "name": "teiki",
+            "aria-label": "",
+            "type": "textarea",
+            "instructions": "CFS formatting=none 相当。現行テンプレートでは未使用",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "<p>1年間6,480円（送料込）<\/p>\r\n半年間3,240円",
+            "maxlength": "",
+            "rows": 4,
+            "placeholder": "",
+            "new_lines": ""
+        },
+        {
+            "key": "field_nbk_rensailist",
+            "label": "連載リスト",
+            "name": "rensailist",
+            "aria-label": "",
+            "type": "repeater",
+            "instructions": "CFS loop 相当。min 1 \/ max 10",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "layout": "table",
+            "pagination": 0,
+            "min": 1,
+            "max": 10,
+            "collapsed": "",
+            "button_label": "追加",
+            "rows_per_page": 20,
+            "sub_fields": [
+                {
+                    "key": "field_nbk_rensaipdf",
+                    "label": "連載PDF",
+                    "name": "rensaipdf",
+                    "aria-label": "",
+                    "type": "file",
+                    "instructions": "a href 用。return_format は url",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "return_format": "url",
+                    "library": "all",
+                    "min_size": 0,
+                    "max_size": 0,
+                    "mime_types": "pdf",
+                    "parent_repeater": "field_nbk_rensailist"
+                },
+                {
+                    "key": "field_nbk_rensainame",
+                    "label": "連載名",
+                    "name": "rensainame",
+                    "aria-label": "",
+                    "type": "wysiwyg",
+                    "instructions": "CFSどおりソースコードで記述。aタグ内に出力される",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "tabs": "all",
+                    "toolbar": "basic",
+                    "media_upload": 0,
+                    "delay": 0,
+                    "parent_repeater": "field_nbk_rensailist"
+                }
+            ]
+        },
+        {
+            "key": "field_nbk_topimage",
+            "label": "TOP画像",
+            "name": "topimage",
+            "aria-label": "",
+            "type": "image",
+            "instructions": "テーマは img src にURLを出力。CFSは file 型だが画像用途のため Image + url にした",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "url",
+            "library": "all",
+            "min_width": 0,
+            "min_height": 0,
+            "min_size": 0,
+            "max_width": 0,
+            "max_height": 0,
+            "max_size": 0,
+            "mime_types": "",
+            "preview_size": "medium"
+        },
+        {
+            "key": "field_nbk_toprensailist",
+            "label": "TOP用連載リスト",
+            "name": "toprensailist",
+            "aria-label": "",
+            "type": "wysiwyg",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 1,
+            "delay": 0
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "shodou-book"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "CFS「月刊書写書道」から移行。フィールド名はCFSと同じ。画像・PDFは get_field がURLを返す設定。",
+    "show_in_rest": 0,
+    "display_title": "",
+    "allow_ai_access": false,
+    "ai_description": "",
+    "modified": 1788944888
+}

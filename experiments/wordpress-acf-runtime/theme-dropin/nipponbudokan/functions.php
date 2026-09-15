@@ -71,6 +71,13 @@ if (locate_template('inc/menu.php') !== '') {
 }
 
 /**
+ * Formidable Forms の部署別アクセス制限
+ */
+if (locate_template('inc/formidable-access.php') !== '') {
+    require_once locate_template('inc/formidable-access.php');
+}
+
+/**
  * Modaal 0.4.4はclose時のfocus復帰をscroll-lock解除前に行うため、
  * 深い位置の画像モーダルを閉じると背景が移動するブラウザがある。
  * 既存Modaal/common.jsのownershipを保ったまま、focus復帰だけpreventScrollで補正する。

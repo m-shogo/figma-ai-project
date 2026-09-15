@@ -13,26 +13,142 @@
 // ==========================================================================
 function add_custom_post()
 {
-  $args = array(
-    'label' => 'イベント',
-    'public' => true,
-    'publicly_queryable' => true,
-    'show_ui' => true,
-    'query_var' => true,
-    'capability_type' => 'post',
-    'hierarchical' => false,
-    'menu_position' => 5,
-    'has_archive' => true,
-    'show_in_rest' => true,
-    'rewrite' => array('with_front' => false),
-    'supports' => array(
-      'title',
-      'thumbnail',
-      'editor',
-      'revisions',
+  register_post_type(
+    'news', /* post-type */
+    array(
+      'labels' => array(
+        'name' => __('総務課'),
+        'all_items' => __('お知らせ一覧')
+      ),
+      'public' => true,
+      'menu_icon' => 'dashicons-groups',
+      'menu_position' => 5,
+      'has_archive' => 'news',
+      'rewrite' => true,
+      'capability_type' => 'soumu',
+      'capabilities' => array(
+        'edit_posts' => 'edit_soumu', //-------------記事の投稿と編集
+        'publish_posts' => 'publish_soumu', //----------記事の公開
+        'edit_published_posts' => 'edit_published_soumu', //---公開した記事の編集
+        'delete_posts' => 'delete_soumu', //-----------記事の削除
+        'delete_published_posts' => 'delete_published_soumu' //-公開した記事の削除
+      ),
+      'supports' => array('title', 'editor', 'thumbnail', 'custom-fields', 'excerpt', 'page-attributes')
+      /* ここまで */
     )
   );
-  register_post_type('event', $args);
+  register_post_type(
+    'budo-video', /* post-type */
+    array(
+      'labels' => array(
+        'name' => __('YouTube'),
+        'all_items' => __('YouTube一覧')
+      ),
+      'public' => true,
+      'menu_icon' => 'dashicons-format-aside',
+      'menu_position' => 11,
+      'has_archive' => 'budo-video',
+      'rewrite' => true,
+      'capability_type' => 'soumu',
+      'capabilities' => array(
+        'edit_posts' => 'edit_soumu', //-------------記事の投稿と編集
+        'publish_posts' => 'publish_soumu', //----------記事の公開
+        'edit_published_posts' => 'edit_published_soumu', //---公開した記事の編集
+        'delete_posts' => 'delete_soumu', //-----------記事の削除
+        'delete_published_posts' => 'delete_published_soumu' //-公開した記事の削除
+      ),
+      'supports' => array('title', 'editor', 'thumbnail', 'custom-fields', 'excerpt')
+      /* ここまで */
+    )
+  );
+  register_post_type(
+    'shosyashodou', /* post-type */
+    array(
+      'labels' => array(
+        'name' => __('教育文化課'),
+        'all_items' => __('お知らせ一覧')
+      ),
+      'public' => true,
+      'menu_icon' => 'dashicons-groups',
+      'menu_position' => 6,
+      'has_archive' => 'shosyashodou',
+      'rewrite' => true,
+      'capability_type' => 'shosyashodou',
+      'capabilities' => array(
+        'edit_posts' => 'edit_shosyashodou', //-------------記事の投稿と編集
+        'publish_posts' => 'publish_shosyashodou', //----------記事の公開
+        'edit_published_posts' => 'edit_published_shosyashodou', //---公開した記事の編集
+        'delete_posts' => 'delete_shosyashodou', //-----------記事の削除
+        'delete_published_posts' => 'delete_published_shosyashodou' //-公開した記事の削除
+      ),
+      'supports' => array('title', 'editor', 'thumbnail', 'custom-fields', 'excerpt', 'page-attributes')
+      /* ここまで */
+    )
+  );
+  register_post_type(
+    'shodou-book', /* post-type */
+    array(
+      'labels' => array(
+        'name' => __('月刊書写書道'),
+        'all_items' => __('月刊書写書道一覧')
+      ),
+      'public' => true,
+      'menu_position' => 7,
+      'menu_icon' => 'dashicons-book',
+      'has_archive' => 'shodou-book',
+      'rewrite' => true,
+      'supports' => array('title', 'editor', 'thumbnail', 'custom-fields', 'excerpt')
+      /* ここまで */
+    )
+  );
+  register_post_type(
+    'budo-book', /* post-type */
+    array(
+      'labels' => array(
+        'name' => __('月刊「武道」'),
+        'all_items' => __('月刊「武道」一覧')
+      ),
+      'public' => true,
+      'menu_icon' => 'dashicons-book',
+      'menu_position' => 8,
+      'has_archive' => 'budo-book',
+      'rewrite' => true,
+      'supports' => array('title', 'editor', 'thumbnail', 'custom-fields', 'excerpt')
+      /* ここまで */
+    )
+  );
+  register_post_type(
+    'budo-news', /* post-type */
+    array(
+      'labels' => array(
+        'name' => __('武道ニュース'),
+        'all_items' => __('武道ニュース一覧')
+      ),
+      'public' => true,
+      'menu_icon' => 'dashicons-format-aside',
+      'menu_position' => 9,
+      'has_archive' => 'budo-news',
+      'rewrite' => true,
+      'supports' => array('title', 'editor', 'thumbnail', 'custom-fields', 'excerpt')
+      /* ここまで */
+    )
+  );
+  register_post_type(
+    'tankoubon', /* post-type */
+    array(
+      'labels' => array(
+        'name' => __('単行本'),
+        'all_items' => __('単行本一覧')
+      ),
+      'public' => true,
+      'menu_position' => 10,
+      'menu_icon' => 'dashicons-book-alt',
+      'has_archive' => 'tankoubon',
+      'rewrite' => true,
+      'supports' => array('title', 'editor', 'thumbnail', 'custom-fields', 'excerpt')
+      /* ここまで */
+    )
+  );
 }
 add_action('init', 'add_custom_post');
 
@@ -42,15 +158,39 @@ add_action('init', 'add_custom_post');
 function add_custom_taxonomy()
 {
   register_taxonomy(
-    'event_cat',
-    'event',
+    'item', /* タクソノミーの名前 */
+    'news', /* books投稿で設定する */
     array(
-      'label' => 'カテゴリー',
-      'hierarchical' => true,
+      'hierarchical' => true, /* 親子関係が必要なければ false */
+      'update_count_callback' => '_update_post_term_count',
+      'label' => '総務課のカテゴリー',
+      'singular_label' => '総務課のカテゴリー',
       'public' => true,
-      'show_admin_column' => true,
-      'show_in_rest'      => true,
-      'rewrite' => array('slug' => 'category', 'with_front' => false)
+      'show_ui' => true
+    )
+  );
+  register_taxonomy(
+    'news', /* タクソノミーの名前 */
+    'shosyashodou', /* books投稿で設定する */
+    array(
+      'hierarchical' => true, /* 親子関係が必要なければ false */
+      'update_count_callback' => '_update_post_term_count',
+      'label' => '教育文化課のカテゴリー',
+      'singular_label' => '教育文化課のカテゴリー',
+      'public' => true,
+      'show_ui' => true
+    )
+  );
+  register_taxonomy(
+    'book', /* タクソノミーの名前 */
+    'tankoubon', /* books投稿で設定する */
+    array(
+      'hierarchical' => true, /* 親子関係が必要なければ false */
+      'update_count_callback' => '_update_post_term_count',
+      'label' => '単行本のカテゴリー',
+      'singular_label' => '単行本のカテゴリー',
+      'public' => true,
+      'show_ui' => true
     )
   );
 }
