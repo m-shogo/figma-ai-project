@@ -7,6 +7,19 @@
     padding-inline: var(--padding-SP);
     width: 100%;
     /* transition: padding-inline var(--transition-duration); */
+    /* Current Navigation SP authority FKQaJDu5TZXHoCzPsfP92E / 1455:5489
+       owns 24px inline insets with 48px above and 64px below the authored
+       body. The shared SP token remains 20px for its other consumers, so keep
+       this current-Figma correction scoped to the dedicated Navigation owner.
+       Keep the rule inside the SP media range so its higher selector specificity
+       cannot override the shared 60px PC inset. */
+    @media screen and (max-width: 767px) {
+        &._content._navigationPage {
+            padding-inline: 24px;
+            padding-top: 48px;
+            padding-bottom: 64px;
+        }
+    }
     @media screen and (min-width: 768px) {
         max-width: calc(var(--width-base) + var(--padding-TB) * 2);
         margin-inline: auto;
