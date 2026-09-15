@@ -9,7 +9,13 @@ $post_type_taxonomy_map = [
         'taxonomy' => 'event_cat',
         'field' => 'block_event_cat'
     ],
+    'tankoubon' => [
+        'taxonomy' => 'book',
+        'field' => 'block_book'
+    ],
 ];
+
+$publication_post_types = array('budo-book', 'shodou-book', 'tankoubon');
 
 // 基本設定の取得
 $post_type = get_field('block_post_type') ?: 'post';
@@ -47,6 +53,13 @@ $args = [
     'post_status' => 'publish',
     'posts_per_page' => $posts_per_page ?: -1,
 ];
+
+if (is_singular($post_type)) {
+    $current_id = get_queried_object_id();
+    if ($current_id) {
+        $args['post__not_in'] = array($current_id);
+    }
+}
 
 // タームによる絞り込み
 if (!empty($terms)) {
@@ -90,6 +103,28 @@ switch ($post_type) {
             $wp_query = $main_query;
         } else {
             echo '<p>該当する投稿はございません。</p>';
+        }
+        break;
+
+    default:
+        if (in_array($post_type, $publication_post_types, true)) {
+            if (!$query->have_posts()) {
+                echo '<p>該当する投稿はございません。</p>';
+                break;
+            }
+            echo '<figure class="wp-block-gallery has-nested-images columns-default is-cropped">';
+            while ($query->have_posts()) {
+                $query->the_post();
+                if (!has_post_thumbnail()) {
+                    continue;
+                }
+                echo '<figure class="wp-block-image">';
+                echo '<a href="' . esc_url(get_permalink()) . '">';
+                the_post_thumbnail('large', array('alt' => get_the_title()));
+                echo '</a>';
+                echo '</figure>';
+            }
+            echo '</figure>';
         }
         break;
 }

@@ -1,6 +1,6 @@
 # Budokan Implementation Learnings
 
-更新: 2026-09-11
+更新: 2026-09-15
 
 このファイルは、完成形の仕様ではなく **失敗・手戻り・レビュー指摘から得た再発防止知識** を残す。
 `CURRENT_AUTHORITY.md` / `THEME_RULES.md` が正本仕様、ここは判断理由と学習ログ。
@@ -15,6 +15,28 @@
 4. どこまで一般化できるか
 
 案件固有の内容はここに残し、複数案件で再現したものだけ Frontend Standard / Figma-to-Web Learning 側へ昇格する。
+
+---
+
+## 2026-09-15 刊行物は CPT archive と公開一覧が別物
+
+**起きたこと**
+
+CPT に `has_archive` があるので「一覧 = archive.php、詳細 = single」と短絡した。現行 Theme は固定ページが CPT を query し、ネイティブ `/budo-book/` はナビ非使用の二重 URL。DIRECTORY_MAP も最新号・バック・単行本を page path に置いている。
+
+**原因**
+
+データ層（CPT）と公開 IA（マップ path）を同じ「一覧 URL」として扱った。現行は最新号レイアウト、バック（最新 skip）、単行本の tax 1ページ、書写書道 PDF 行が、どれも標準 archive ループではない。
+
+**次回ルール**
+
+- 刊行物着手前に `PUBLICATIONS_CPT_ARCHITECTURE.md` を読む。
+- お知らせ `/news/` だけ archive。刊行物一覧は DIRECTORY_MAP の page + query。
+- 現行 `budokan` からクラスを移植しない。query 契約と既存 ACF 名だけ継承する。
+
+**一般化候補**
+
+`has_archive` があることと、公開メニューの一覧 URL が一致するとは限らない。既存 Theme の page template query を先に読む。
 
 ---
 
@@ -248,12 +270,34 @@ screenshot lock と、既に Theme 内で SVG chip 解決済みの family を見
 **次回ルール**
 
 - nowrap しない。八角 invert は SVG chip。親の固定 height で padding/border をクリップしない
-- メニューは3階層。ACF `page_local_nav` + 名前 `ローカル：`。位置割当4本は選択肢に出さない
+- メニューは2階層（見出し + 子）。ACF `page_local_nav` + 名前 `ローカル：`。位置割当4本は選択肢に出さない
 - 完了前に対象行の上下 gap を測り、見出しを hover して枠が残るか見る
 
 **一般化候補**
 
 CANDIDATE evidence: `research/frontend-learning-evidence-local-nav-octagon-nowrap-2026-09-11.yaml`
+
+## 2026-09-15 イベント一覧のリズムを News archive の gap に任せない
+
+**起きたこと**
+
+開催イベント PC（1619:9554）は `64`（月ナビ / 見出し塊 / カード行 / pager）の中に、見出し行とタブだけ `40` がある。`.news_archive` の一列 gap にタブを載せると見出し→タブが 64 になり、カード最終行の罫線も News 一覧の「末尾行は消す」に引きずられた。
+
+**原因**
+
+同じタブ部品（`news_tabs_archive`）と pager を再利用したあと、親の余白契約まで News のままにした。Event SP 専用 frame が無いので News SP の3列罫線タブも黙って継承していた。
+
+**次回ルール**
+
+- イベント一覧の見出し＋タブは内側 40 の塊。カード行は Figma どおり最終行も下罫線。
+- SP は1カラム＋PC pill タブの折返し。`SP_archive` のニュース3列は流用しない。
+- 募集チップ・日付 `～`・「開催日：」プレフィックスは出さない。
+
+**一般化候補**
+
+共有部品を流用しても、親の rhythm / SP グリッドは面の Figma owner を先に取る。
+
+---
 
 ## 今後の実装前チェック
 
@@ -277,7 +321,7 @@ CANDIDATE evidence: `research/frontend-learning-evidence-local-nav-octagon-nowra
 - hover 当たりが文字幅か、disabled に enabled 箱が出ていないか
 - 八角 invert を clip+inset にして枠を消していないか（SVG chip か）
 - 行親の固定 height が次行 gap を食っていないか、nowrap で1行固定していないか
-- Local Nav なら ACF `page_local_nav` / `ローカル：` 接頭辞 / 3階層 / SP 非表示を守っているか
+- Local Nav なら ACF `page_local_nav` / `ローカル：` 接頭辞 / 2階層 / SP 非表示を守っているか
 
 ## 昇格ルール
 

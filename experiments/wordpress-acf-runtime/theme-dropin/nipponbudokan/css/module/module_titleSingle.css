@@ -43,10 +43,10 @@
                 justify-content: center;
                 min-width: 80px;
                 min-height: 23px;
-                border: 1px solid var(--color-text);
+                border: 1px solid var(--news-label-color, var(--color-text));
                 border-radius: 2px;
                 padding: 4px 8px;
-                color: var(--color-text);
+                color: var(--news-label-color, var(--color-text));
                 font-family: var(--font-zen-kaku-gothic);
                 font-size: 13px;
                 font-weight: 500;
@@ -94,11 +94,54 @@
     margin-bottom: 48px;
 }
 
+/* News single PC 1235:6361 / SP 1451:5197
+   区切りは Parts の wp-block-separator。前へ次へは出さない。 */
+.single-post .gc_main > .wp-block-separator {
+    margin-top: var(--wp-block-margin-medium);
+    margin-bottom: 0;
+}
+
+.single-post .module_pager-02,
+.single-event .module_pager-02 {
+    justify-content: center;
+    margin-top: var(--wp-block-margin-medium);
+
+    .back {
+        margin-inline: auto;
+    }
+}
+
+body.single-post .global_contents > section > .module_breadCrumb {
+    margin-top: 64px;
+}
+
 .single-event .module_titleSingle {
     @media screen and (min-width: 768px) {
         .body .module_title-01 {
             font-size: 32px;
         }
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .single-post .gc_main > .wp-block-separator {
+        margin-top: 56px;
+    }
+
+    .single-post .module_pager-02 {
+        margin-top: 56px;
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    .single-event .module_pager-02 {
+        margin-top: 48px;
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    body.single-post .global_contents > section > .module_breadCrumb {
+        margin-top: 100px;
     }
 }
 

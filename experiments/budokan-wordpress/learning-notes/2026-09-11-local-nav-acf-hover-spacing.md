@@ -19,7 +19,7 @@
 - 八角ネガ反転は **SVG chip**（白塗り + 色 stroke）。`clip-path` + inset shadow で invert しない。
 - 行の親にコンテンツより低い固定 `height` を置かない。`min-height` / `auto`。padding+border が次行 gap を食う。
 - Local Nav 直後のパンくずは汎用 100px を重ねない。
-- メニューは3階層（家族 / グループリンク / 子）。PC は 03 見出し + 04 グリッド。SP 専用無し（非表示）。
+- メニューは2階層（見出し / 子）。PC は 02 見出し + 03 グリッド。SP 専用無し（非表示）。
 - 完了前に対象リンクの上下 gap を測り、見出しを hover して枠が残るか見る。
 
 ## 契約

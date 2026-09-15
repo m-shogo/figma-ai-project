@@ -473,6 +473,7 @@ class Custom_Footer_Sub_Walker_Nav_Menu extends Walker_Nav_Menu
  * サイドバーナビゲーション用カスタムWalker
  * ACF 指定メニューは全件出力（local_nav_show_all）。
  * それ以外は現在ページの枝だけ出す。
+ * Local Nav 契約は2階層: 02 見出し / 03 子（4列）。家族ラッパーは置かない。
  * sidebar.php の ln_links / lnl_title 構造に合わせたHTMLを出力
  */
 class Custom_Sidebar_Walker_Nav_Menu extends Walker_Nav_Menu
@@ -537,7 +538,7 @@ class Custom_Sidebar_Walker_Nav_Menu extends Walker_Nav_Menu
      *
      * @param string   $output 出力バッファ
      * @param WP_Post  $item メニューアイテム
-     * @param int      $depth 深度（0=1階層目, 1=2階層目, 2=3階層目）
+     * @param int      $depth 深度（0=見出し 02, 1=子 03）
      * @param stdClass $args wp_nav_menuの引数
      * @param int      $id アイテムID
      */
@@ -556,7 +557,7 @@ class Custom_Sidebar_Walker_Nav_Menu extends Walker_Nav_Menu
         // URL末尾のパスセグメント（英単語スラッグ）のみを取得
         $path = parse_url($item_url, PHP_URL_PATH);
         $slug = $path ? basename(rtrim($path, '/')) : '';
-        // 深度に応じた数字（2階層:01, 3階層:02, 4階層:03）。start_el / start_lvl で共通利用
+        // 深度に応じた数字（depth 0 → 02 見出し, depth 1 → 03 子）。start_el / start_lvl で共通利用
         $depth_number = isset($args->depth_number) ? $args->depth_number : str_pad((string) $depth + 2, 2, '0', STR_PAD_LEFT);
 
         $li_class = 'lnl_item-' . $depth_number . ' mm_item-' . $depth_number;

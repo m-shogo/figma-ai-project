@@ -14,6 +14,21 @@
 function add_custom_post()
 {
   register_post_type(
+    'event', /* post-type */
+    array(
+      'labels' => array(
+        'name' => __('開催イベント'),
+        'all_items' => __('開催イベント一覧')
+      ),
+      'public' => true,
+      'menu_position' => 7,
+      'has_archive' => 'event',
+      'rewrite' => true,
+      'supports' => array('title', 'editor', 'thumbnail', 'custom-fields', 'excerpt')
+      /* ここまで */
+    )
+  );
+  register_post_type(
     'news', /* post-type */
     array(
       'labels' => array(
@@ -158,8 +173,20 @@ add_action('init', 'add_custom_post');
 function add_custom_taxonomy()
 {
   register_taxonomy(
-    'item', /* タクソノミーの名前 */
-    'news', /* books投稿で設定する */
+    'event_cat', /* タクソノミーの名前 */
+    'event', /* event投稿で設定する */
+    array(
+      'hierarchical' => true, /* 親子関係が必要なければ false */
+      'update_count_callback' => '_update_post_term_count',
+      'label' => '開催イベントのカテゴリー',
+      'singular_label' => '開催イベントのカテゴリー',
+      'public' => true,
+      'show_ui' => true
+    )
+  );
+  register_taxonomy(
+    'budo-video', /* タクソノミーの名前 */
+    'budo-video', /* books投稿で設定する */
     array(
       'hierarchical' => true, /* 親子関係が必要なければ false */
       'update_count_callback' => '_update_post_term_count',
@@ -250,7 +277,7 @@ function change_post_menu_label()
 {
   global $menu;
   global $submenu;
-  $name = '新着情報';
+  $name = 'お知らせ';
   if (isset($menu[5])) {
     $menu[5][0] = $name;
   }
@@ -268,7 +295,7 @@ function change_post_menu_label()
 function change_post_object_label()
 {
   global $wp_post_types;
-  $name = '新着情報';
+  $name = 'お知らせ';
   $labels = &$wp_post_types['post']->labels;
   $labels->name = $name;
   $labels->singular_name = $name;

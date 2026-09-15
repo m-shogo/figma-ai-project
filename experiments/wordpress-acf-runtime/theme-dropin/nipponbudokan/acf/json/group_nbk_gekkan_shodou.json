@@ -28,7 +28,7 @@
             "name": "size",
             "aria-label": "",
             "type": "text",
-            "instructions": "CFS フィールド名 size を維持",
+            "instructions": "",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -48,7 +48,7 @@
             "name": "price",
             "aria-label": "",
             "type": "text",
-            "instructions": "CFS フィールド名 price を維持",
+            "instructions": "",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -68,7 +68,7 @@
             "name": "teiki",
             "aria-label": "",
             "type": "textarea",
-            "instructions": "CFS formatting=none 相当。現行テンプレートでは未使用",
+            "instructions": "",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -88,7 +88,7 @@
             "name": "rensailist",
             "aria-label": "",
             "type": "repeater",
-            "instructions": "CFS loop 相当。min 1 \/ max 10",
+            "instructions": "",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -110,7 +110,7 @@
                     "name": "rensaipdf",
                     "aria-label": "",
                     "type": "file",
-                    "instructions": "a href 用。return_format は url",
+                    "instructions": "",
                     "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
@@ -131,7 +131,7 @@
                     "name": "rensainame",
                     "aria-label": "",
                     "type": "wysiwyg",
-                    "instructions": "CFSどおりソースコードで記述。aタグ内に出力される",
+                    "instructions": "",
                     "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
@@ -154,7 +154,7 @@
             "name": "topimage",
             "aria-label": "",
             "type": "image",
-            "instructions": "テーマは img src にURLを出力。CFSは file 型だが画像用途のため Image + url にした",
+            "instructions": "",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -210,10 +210,10 @@
     "instruction_placement": "label",
     "hide_on_screen": "",
     "active": true,
-    "description": "CFS「月刊書写書道」から移行。フィールド名はCFSと同じ。画像・PDFは get_field がURLを返す設定。",
+    "description": "",
     "show_in_rest": 0,
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1788944888
+    "modified": 1789548160
 }

@@ -2,10 +2,9 @@
 /* // ==========================================================================
 // サイト共通ローカルナビ
 // Figma PC: 2108:10846（白帯・見出し＋4列）。SP 専用デザインは無し → 非表示。
-// メニュー3階層:
-//   02 = 1階層目（家族。PCでは隠す）
-//   03 = 2階層目（大会・イベント 等。リンク。PC見出し）
-//   04 = 3階層目（各ページ。4列）
+// メニュー2階層:
+//   02 = 1階層目（大会・イベント 等。リンク。PC見出し）
+//   03 = 2階層目（各ページ。4列）
 // ========================================================================== */
 .local_navigation {
     display: none;
@@ -31,44 +30,29 @@
             list-style: none;
         }
 
-        .lnl_button-02,
-        .lnl_button-03 {
+        .lnl_button-02 {
             display: none;
         }
 
-        .lnl_wrapper-02,
-        .lnl_wrapper-03 {
+        .lnl_wrapper-02 {
             display: block;
             margin-top: 0;
         }
 
-        .lnl_inner-02,
-        .lnl_inner-03 {
+        .lnl_inner-02 {
             overflow: visible;
         }
 
-        /* PC: hide family (1階層目). Subgroup (2階層目) owns the visible heading. */
-        .lnl_item-02 > .lnl_title-02 {
-            display: none;
-        }
-
-        .lnl_list-02 {
-            display: block;
-            margin-top: 0;
-            padding: 0;
-            list-style: none;
-        }
-
         /* Heading link: 大会・イベント */
-        .lnl_item-03 > .lnl_title-03 {
-            display: block;
+        .lnl_item-02 > .lnl_title-02 {
+            display: flex;
             height: auto;
             justify-content: flex-start;
             background-color: transparent;
             text-align: left;
         }
 
-        .lnl_item-03 > .lnl_title-03 > .lnl_link-03 {
+        .lnl_item-02 > .lnl_title-02 > .lnl_link-02 {
             display: flex;
             align-items: center;
             justify-content: flex-start;
@@ -119,16 +103,16 @@
             }
         }
 
-        .lnl_item-03.current-menu-item > .lnl_title-03 > .lnl_link-03,
-        .lnl_item-03.current_page_item > .lnl_title-03 > .lnl_link-03,
-        .lnl_item-03.current-menu-ancestor > .lnl_title-03 > .lnl_link-03,
-        .lnl_item-03.current_page_parent > .lnl_title-03 > .lnl_link-03 {
+        .lnl_item-02.current-menu-item > .lnl_title-02 > .lnl_link-02,
+        .lnl_item-02.current_page_item > .lnl_title-02 > .lnl_link-02,
+        .lnl_item-02.current-menu-ancestor > .lnl_title-02 > .lnl_link-02,
+        .lnl_item-02.current_page_parent > .lnl_title-02 > .lnl_link-02 {
             color: var(--color-text);
         }
 
         /* Child grid — same row stretches so 2-line links set the row height;
            underlines sit on the shared cell bottom. */
-        .lnl_list-03 {
+        .lnl_list-02 {
             display: grid;
             grid-template-columns: repeat(4, minmax(0, 1fr));
             gap: 20px;
@@ -139,21 +123,22 @@
             align-items: stretch;
         }
 
-        .lnl_item-04 {
+        .lnl_item-03 {
             display: flex;
             flex-direction: column;
             min-width: 0;
             height: 100%;
             border-bottom: 1px solid var(--color-line);
+            transition: border-bottom-color var(--transition-duration);
         }
 
-        .lnl_item-04.current-menu-item,
-        .lnl_item-04.current_page_item {
+        .lnl_item-03.current-menu-item,
+        .lnl_item-03.current_page_item {
             border-bottom-color: var(--color-accent);
         }
 
-        /* Beat .module_menu .mm_title-04 { align-items: center }. */
-        .lnl_title-04 {
+        /* Beat .module_menu .mm_title-03 { gray band }. */
+        .lnl_title-03 {
             display: flex;
             flex: 1 1 auto;
             flex-direction: column;
@@ -164,11 +149,11 @@
             background-color: transparent;
         }
 
-        /* Beat .module_menu .mm_item-04._noChild .mm_link-04 (::before chevron).
+        /* Beat .module_menu .mm_item-03._noChild .mm_link-03 (::after chevron).
            Human 2026-09-15: align-items center + line-height 1.3.
            Border on the item keeps row underlines aligned; link hugs content. */
-        .lnl_item-04._noChild > .lnl_title-04 > .lnl_link-04,
-        .lnl_item-04 > .lnl_title-04 > .lnl_link-04 {
+        .lnl_item-03._noChild > .lnl_title-03 > .lnl_link-03,
+        .lnl_item-03 > .lnl_title-03 > .lnl_link-03 {
             display: flex;
             align-items: center;
             justify-content: flex-start;
@@ -214,8 +199,8 @@
             }
         }
 
-        .lnl_item-04.current-menu-item > .lnl_title-04 > .lnl_link-04,
-        .lnl_item-04.current_page_item > .lnl_title-04 > .lnl_link-04 {
+        .lnl_item-03.current-menu-item > .lnl_title-03 > .lnl_link-03,
+        .lnl_item-03.current_page_item > .lnl_title-03 > .lnl_link-03 {
             color: var(--color-text);
             font-weight: 500;
         }
@@ -226,17 +211,17 @@
        module_menu の mm_title-03:has(...): #ccc 背景は出さない。文字色は据え置き。 */
     @media (any-hover: hover) {
         @media screen and (min-width: 768px) {
-            .lnl_item-03 > .lnl_title-03:has(.lnl_link-03:hover),
-            .lnl_item-03 > .lnl_title-03:has(.lnl_link-03:focus-visible) {
+            .lnl_item-02 > .lnl_title-02:has(.lnl_link-02:hover),
+            .lnl_item-02 > .lnl_title-02:has(.lnl_link-02:focus-visible) {
                 background-color: transparent;
             }
 
-            .lnl_item-03 > .lnl_title-03 > .lnl_link-03:hover,
-            .lnl_item-03 > .lnl_title-03 > .lnl_link-03:focus-visible,
-            .lnl_item-03.current-menu-ancestor > .lnl_title-03 > .lnl_link-03:hover,
-            .lnl_item-03.current-menu-ancestor > .lnl_title-03 > .lnl_link-03:focus-visible,
-            .lnl_item-03.current_page_parent > .lnl_title-03 > .lnl_link-03:hover,
-            .lnl_item-03.current_page_parent > .lnl_title-03 > .lnl_link-03:focus-visible {
+            .lnl_item-02 > .lnl_title-02 > .lnl_link-02:hover,
+            .lnl_item-02 > .lnl_title-02 > .lnl_link-02:focus-visible,
+            .lnl_item-02.current-menu-ancestor > .lnl_title-02 > .lnl_link-02:hover,
+            .lnl_item-02.current-menu-ancestor > .lnl_title-02 > .lnl_link-02:focus-visible,
+            .lnl_item-02.current_page_parent > .lnl_title-02 > .lnl_link-02:hover,
+            .lnl_item-02.current_page_parent > .lnl_title-02 > .lnl_link-02:focus-visible {
                 color: var(--color-text);
                 background-color: transparent;
 
@@ -249,10 +234,21 @@
                 }
             }
 
-            .lnl_item-04 > .lnl_title-04 > .lnl_link-04:hover,
-            .lnl_item-04 > .lnl_title-04 > .lnl_link-04:focus-visible {
-                color: var(--color-text);
+            .lnl_item-03 > .lnl_title-03:has(.lnl_link-03:hover),
+            .lnl_item-03 > .lnl_title-03:has(.lnl_link-03:focus-visible) {
+                background-color: transparent;
+            }
+
+            /* Underline lives on the li (row-aligned). Do not put it on the
+               link — that rule is a no-op after border: 0. */
+            .lnl_item-03:has(.lnl_link-03:hover),
+            .lnl_item-03:has(.lnl_link-03:focus-visible) {
                 border-bottom-color: var(--color-accent);
+            }
+
+            .lnl_item-03 > .lnl_title-03 > .lnl_link-03:hover,
+            .lnl_item-03 > .lnl_title-03 > .lnl_link-03:focus-visible {
+                color: var(--color-text);
             }
         }
     }

@@ -36,6 +36,13 @@ if (locate_template('inc/field.php') !== '') {
 }
 
 /**
+ * 開催イベント archive / 詳細
+ */
+if (locate_template('inc/event.php') !== '') {
+    require_once locate_template('inc/event.php');
+}
+
+/**
  * エディターの設定
  */
 if (locate_template('inc/editor.php') !== '') {

@@ -15,7 +15,7 @@ Local Navigation の WordPress owner は **ACF `page_local_nav` + 名前接頭�
 - PHP render path: `page.php` または `templates/template-form.php` → `_local-navigation.php` → `sidebar.php` → `wp_nav_menu(menu => id)` + `Custom_Sidebar_Walker_Nav_Menu`（`local_nav_show_all`）
 - markup: `.local_navigation` / `.ln_links` / `lnl_*` + `mm_*`
 - CSS: `css/module/local_navigation.css`
-- メニュー階層: 02 家族（PC 非表示）→ 03 グループリンク（PC 見出し）→ 04 子（4列）
+- メニュー階層: 02 グループリンク（PC 見出し。例: 大会・イベント）→ 03 子（4列）。家族ラッパーは置かない
 
 `parts.php` と Formidable 本体は対象外。フォーム**テンプレート**への Local Nav 出しは可（Human 指示 2026-09-15）。
 
@@ -37,7 +37,7 @@ Local Nav を出すのは次だけ。
 
 - 幅いっぱい白帯、上下 separator
 - padding `56px 110px`
-- 見出し（2階層目リンク）+ 八角アイコン
+- 見出し（1階層目リンク）+ 八角アイコン
 - 子: 4列、gap `20px`、inset `36px`
 - bullet 5px gold、current は金下線
 - 2行折り返し可（`nowrap` 禁止）。同一 row は高さを揃え、下線はセル下端に揃える
@@ -64,7 +64,7 @@ Local Nav を出すのは次だけ。
 `scripts/seed-budokan-local-nav-qa.php`（local only）:
 
 - メニュー `ローカル：大会・イベント`
-- 3階層 + ACF 割当
+- 2階層 + ACF 割当
 - QA ページはデフォルトテンプレート想定
 
 ## 残る authority gate

@@ -28,7 +28,7 @@
             "name": "readingtest",
             "aria-label": "",
             "type": "file",
-            "instructions": "a href 用。return_format は url",
+            "instructions": "",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -68,7 +68,7 @@
             "name": "book_desc",
             "aria-label": "",
             "type": "textarea",
-            "instructions": "CFS auto_br 相当",
+            "instructions": "",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -108,7 +108,7 @@
             "name": "book_price",
             "aria-label": "",
             "type": "text",
-            "instructions": "空の場合、テーマ側で「非売品」と表示する",
+            "instructions": "",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -147,8 +147,8 @@
             "label": "Amazonリンク",
             "name": "amazon",
             "aria-label": "",
-            "type": "url",
-            "instructions": "CFSは text。リンク用途のため ACF URL にした（値は同じ文字列）",
+            "type": "text",
+            "instructions": "",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -157,7 +157,10 @@
                 "id": ""
             },
             "default_value": "",
-            "placeholder": "https:\/\/"
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
         },
         {
             "key": "field_nbk_book_select",
@@ -165,7 +168,7 @@
             "name": "book_select",
             "aria-label": "",
             "type": "select",
-            "instructions": "CFSは選択値を連想配列で返す。ACFは値文字列（order \/ read）を返す。テーマ側の foreach は要改修",
+            "instructions": "",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -193,7 +196,7 @@
             "name": "css",
             "aria-label": "",
             "type": "textarea",
-            "instructions": "CFS formatting=none 相当。styleタグ内にそのまま出力",
+            "instructions": "",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -213,7 +216,7 @@
             "name": "book_addbtn",
             "aria-label": "",
             "type": "repeater",
-            "instructions": "CFS loop 相当。get_field('book_addbtn') は行配列を返す",
+            "instructions": "",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -255,8 +258,8 @@
                     "label": "URL",
                     "name": "book_addurl",
                     "aria-label": "",
-                    "type": "url",
-                    "instructions": "CFSは text。リンク用途のため ACF URL にした",
+                    "type": "text",
+                    "instructions": "",
                     "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
@@ -265,7 +268,10 @@
                         "id": ""
                     },
                     "default_value": "",
-                    "placeholder": "https:\/\/",
+                    "maxlength": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
                     "parent_repeater": "field_nbk_book_addbtn"
                 }
             ]
@@ -287,10 +293,10 @@
     "instruction_placement": "label",
     "hide_on_screen": "",
     "active": true,
-    "description": "CFS「単行本」から移行。フィールド名はCFSと同じ。ファイルは get_field がURLを返す設定。",
+    "description": "",
     "show_in_rest": 0,
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1788944888
+    "modified": 1789548160
 }

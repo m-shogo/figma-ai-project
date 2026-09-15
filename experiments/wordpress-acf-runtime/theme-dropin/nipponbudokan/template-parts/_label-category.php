@@ -24,7 +24,15 @@ if (get_post_type() === 'post'): //通常投稿
                     }
                 }
                 ?>
-                <span class="label <?php echo esc_attr($cat->slug); ?><?php echo $parent ? $parent_slug : ''; ?>"><?php echo esc_html($cat->$name); ?></span>
+                <?php
+                $label_color = function_exists('nipponbudokan_get_category_color')
+                    ? nipponbudokan_get_category_color($cat)
+                    : '';
+                $label_style = $label_color !== ''
+                    ? ' style="--news-label-color:' . esc_attr($label_color) . ';"'
+                    : '';
+                ?>
+                <span class="label <?php echo esc_attr($cat->slug); ?><?php echo $parent ? $parent_slug : ''; ?>"<?php echo $label_style; ?>><?php echo esc_html($cat->$name); ?></span>
             <?php endforeach; ?>
         </p>
     <?php endif; ?>

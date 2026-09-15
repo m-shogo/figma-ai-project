@@ -54,9 +54,20 @@ if (get_field('post_type') === 'file') {
 
                 <div class="module_titleSingle">
                     <div class="head">
+                        <?php
+                        $event_date_short = get_post_type() === 'event' ? nipponbudokan_event_date_short() : '';
+                        $event_date_ts = get_post_type() === 'event' ? nipponbudokan_event_datetime() : 0;
+                        $show_title_date = get_post_type() !== 'event' || $event_date_short !== '';
+                        ?>
+                        <?php if ($show_title_date) : ?>
                         <p class="date">
-                            <time datetime="<?php echo esc_attr(get_the_time('Y-m-d')); ?>"><?php the_time('Y.m.d'); ?></time>
+                            <?php if (get_post_type() === 'event') : ?>
+                                <time datetime="<?php echo esc_attr(wp_date('Y-m-d', $event_date_ts)); ?>"><?php echo esc_html($event_date_short); ?></time>
+                            <?php else : ?>
+                                <time datetime="<?php echo esc_attr(get_the_time('Y-m-d')); ?>"><?php the_time('Y.m.d'); ?></time>
+                            <?php endif; ?>
                         </p>
+                        <?php endif; ?>
                         <?php
                         get_template_part('template-parts/_label-category', null, [
                             'taxonomy' => '_cat',
@@ -87,12 +98,12 @@ if (get_field('post_type') === 'file') {
                         <div class="block-editor_wrap" itemprop="articleBody">
                             <?php the_content(); ?>
                         </div>
+                        <?php if (get_post_type() === 'post') : ?>
+                            <hr class="wp-block-separator has-alpha-channel-opacity">
+                        <?php endif; ?>
 
                         <ul class="module_pager-02">
                             <?php
-                            // ACF「投稿選択」が「記事（post）」の投稿のみを前後ナビの対象とする
-                            $prev_post = get_adjacent_article_post('previous');
-                            $next_post = get_adjacent_article_post('next');
                             $current_post_type = get_post_type();
 
                             if ($current_post_type === 'post') {
@@ -105,23 +116,9 @@ if (get_field('post_type') === 'file') {
                                 }
                             }
                             ?>
-                            <?php if ($prev_post): ?>
-                                <li class="prev">
-                                    <a href="<?php echo esc_url(get_permalink($prev_post->ID)); ?>"><span>前へ</span></a>
-                                </li>
-                            <?php else: ?>
-                                <li class="prev _hidden"><span>前へ</span></li>
-                            <?php endif; ?>
                             <li class="back">
                                 <a href="<?php echo esc_url($back_link); ?>"><span>一覧へ戻る</span></a>
                             </li>
-                            <?php if ($next_post): ?>
-                                <li class="next">
-                                    <a href="<?php echo esc_url(get_permalink($next_post->ID)); ?>"><span>次へ</span></a>
-                                </li>
-                            <?php else: ?>
-                                <li class="next _hidden"><span>次へ</span></li>
-                            <?php endif; ?>
                         </ul>
                     </div>
                 </div>

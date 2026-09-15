@@ -1,39 +1,54 @@
 @charset "utf-8";
 /* // ------------------------------
 // Gutenberg Tabs（core/tabs）
-// Same Figma family as ACF module_tab: SP 3-col / PC 120×48 chips.
-// Current Figma fileKey jqYoPtusYfTeDqRegMCsx3 — PC 1663:5661
+// Same Figma family as ACF module_tab.
+// SP 1399:19390（Parts タブ 1399:18962）3列グリッド・外枠1px。
+// PC 1663:5661 — 120×48 chips, gap 12.
+// Beat WP `.is-layout-flex { display: flex !important }`.
 // Flattened selectors so they beat `button { font: inherit; border: none }`.
 // ------------------------------ */
+.wp-block-tabs,
 .block-editor_wrap .wp-block-tabs,
 .editor-styles-wrapper .wp-block-tabs {
     margin-top: var(--wp-block-margin);
 }
 
+.wp-block-tabs .wp-block-tab-list,
 .block-editor_wrap .wp-block-tabs .wp-block-tab-list,
 .editor-styles-wrapper .wp-block-tabs .wp-block-tab-list {
     box-sizing: border-box;
-    display: grid;
+    display: grid !important;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 0;
+    gap: 0 !important;
     position: relative;
     z-index: 0;
     height: auto;
     overflow: visible;
     padding: 0;
     margin: 0;
-    border: 0;
-    box-shadow: inset 0 0 0 1px var(--color-text);
+    border: 1px solid var(--color-text);
+    box-shadow: none;
     background: transparent;
+    align-items: stretch;
 }
 
+.wp-block-tabs .wp-block-tab-list:has([role='tab']:nth-child(2)):not(:has([role='tab']:nth-child(3))),
+.block-editor_wrap .wp-block-tabs .wp-block-tab-list:has([role='tab']:nth-child(2)):not(:has([role='tab']:nth-child(3))),
+.editor-styles-wrapper .wp-block-tabs .wp-block-tab-list:has([role='tab']:nth-child(2)):not(:has([role='tab']:nth-child(3))) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.wp-block-tabs .wp-block-tab-list [role='tab'],
 .block-editor_wrap .wp-block-tabs .wp-block-tab-list [role='tab'],
 .editor-styles-wrapper .wp-block-tabs .wp-block-tab-list [role='tab'] {
     box-sizing: border-box;
     appearance: none;
+    flex: none;
     min-width: 0;
     width: auto;
-    height: 34px;
+    max-width: none;
+    height: auto;
+    min-height: 34px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -53,22 +68,40 @@
     transition: background-color var(--transition-duration), color var(--transition-duration);
 }
 
+.wp-block-tabs .wp-block-tab-list [role='tab']:nth-child(3n),
 .block-editor_wrap .wp-block-tabs .wp-block-tab-list [role='tab']:nth-child(3n),
 .editor-styles-wrapper .wp-block-tabs .wp-block-tab-list [role='tab']:nth-child(3n) {
     border-right: 0;
 }
 
-.block-editor_wrap .wp-block-tabs .wp-block-tab-list [role='tab']:nth-child(n + 4),
-.editor-styles-wrapper .wp-block-tabs .wp-block-tab-list [role='tab']:nth-child(n + 4) {
-    border-top: 1px solid var(--color-text);
+.wp-block-tabs .wp-block-tab-list:has([role='tab']:nth-child(2)):not(:has([role='tab']:nth-child(3))) [role='tab']:last-child,
+.block-editor_wrap .wp-block-tabs .wp-block-tab-list:has([role='tab']:nth-child(2)):not(:has([role='tab']:nth-child(3))) [role='tab']:last-child,
+.editor-styles-wrapper .wp-block-tabs .wp-block-tab-list:has([role='tab']:nth-child(2)):not(:has([role='tab']:nth-child(3))) [role='tab']:last-child {
+    border-right: 0;
 }
 
+/* 2段目以降があるとき、上段3セル全部に下線。途中までの2段目だと n+4 の border-top だけでは途切れる。 */
+.wp-block-tabs .wp-block-tab-list:has([role='tab']:nth-child(4)) [role='tab']:nth-child(-n + 3),
+.block-editor_wrap .wp-block-tabs .wp-block-tab-list:has([role='tab']:nth-child(4)) [role='tab']:nth-child(-n + 3),
+.editor-styles-wrapper .wp-block-tabs .wp-block-tab-list:has([role='tab']:nth-child(4)) [role='tab']:nth-child(-n + 3) {
+    border-bottom: 1px solid var(--color-text);
+}
+
+.wp-block-tabs .wp-block-tab-list:has([role='tab']:nth-child(7)) [role='tab']:nth-child(n + 4):nth-child(-n + 6),
+.block-editor_wrap .wp-block-tabs .wp-block-tab-list:has([role='tab']:nth-child(7)) [role='tab']:nth-child(n + 4):nth-child(-n + 6),
+.editor-styles-wrapper .wp-block-tabs .wp-block-tab-list:has([role='tab']:nth-child(7)) [role='tab']:nth-child(n + 4):nth-child(-n + 6) {
+    border-bottom: 1px solid var(--color-text);
+}
+
+.wp-block-tabs .wp-block-tab-list [role='tab'][aria-selected='true'],
 .block-editor_wrap .wp-block-tabs .wp-block-tab-list [role='tab'][aria-selected='true'],
 .editor-styles-wrapper .wp-block-tabs .wp-block-tab-list [role='tab'][aria-selected='true'] {
     background-color: var(--color-text);
     color: var(--color-secondary);
 }
 
+.wp-block-tabs .wp-block-tab-list [role='tab'][aria-selected='true']::before,
+.wp-block-tabs .wp-block-tab-list button[aria-selected='true']::before,
 .block-editor_wrap .wp-block-tabs .wp-block-tab-list [role='tab'][aria-selected='true']::before,
 .block-editor_wrap .wp-block-tabs .wp-block-tab-list button[aria-selected='true']::before,
 .editor-styles-wrapper .wp-block-tabs .wp-block-tab-list [role='tab'][aria-selected='true']::before,
@@ -79,6 +112,8 @@
     display: none;
 }
 
+.wp-block-tabs .wp-block-tab-panels,
+.wp-block-tabs .wp-block-tab-panel,
 .block-editor_wrap .wp-block-tabs .wp-block-tab-panels,
 .block-editor_wrap .wp-block-tabs .wp-block-tab-panel,
 .editor-styles-wrapper .wp-block-tabs .wp-block-tab-panels,
@@ -90,36 +125,43 @@
 }
 
 @media screen and (min-width: 768px) {
+    .wp-block-tabs .wp-block-tab-list,
     .block-editor_wrap .wp-block-tabs .wp-block-tab-list,
     .editor-styles-wrapper .wp-block-tabs .wp-block-tab-list {
-        display: flex;
+        display: flex !important;
         flex-wrap: wrap;
-        gap: 12px;
+        gap: 12px !important;
         height: auto;
+        border: 0;
         box-shadow: none;
     }
 
+    .wp-block-tabs .wp-block-tab-list [role='tab'],
     .block-editor_wrap .wp-block-tabs .wp-block-tab-list [role='tab'],
     .editor-styles-wrapper .wp-block-tabs .wp-block-tab-list [role='tab'] {
         width: 120px;
         flex: 0 0 120px;
         height: 48px;
+        min-height: 48px;
         padding: 0 16px;
         border: 1px solid var(--color-text);
         border-radius: 3px;
         line-height: 1.5;
     }
 
+    .wp-block-tabs .wp-block-tab-list [role='tab']:nth-child(3n),
     .block-editor_wrap .wp-block-tabs .wp-block-tab-list [role='tab']:nth-child(3n),
     .editor-styles-wrapper .wp-block-tabs .wp-block-tab-list [role='tab']:nth-child(3n) {
         border-right: 1px solid var(--color-text);
     }
 
+    .wp-block-tabs .wp-block-tab-list [role='tab']:nth-child(n + 4),
     .block-editor_wrap .wp-block-tabs .wp-block-tab-list [role='tab']:nth-child(n + 4),
     .editor-styles-wrapper .wp-block-tabs .wp-block-tab-list [role='tab']:nth-child(n + 4) {
         border-top: 1px solid var(--color-text);
     }
 
+    .wp-block-tabs .wp-block-tab-list [role='tab'][aria-selected='true'],
     .block-editor_wrap .wp-block-tabs .wp-block-tab-list [role='tab'][aria-selected='true'],
     .editor-styles-wrapper .wp-block-tabs .wp-block-tab-list [role='tab'][aria-selected='true'] {
         line-height: 1;
@@ -127,6 +169,8 @@
 }
 
 @media (any-hover: hover) {
+    .wp-block-tabs .wp-block-tab-list [role='tab']:not([aria-selected='true']):hover,
+    .wp-block-tabs .wp-block-tab-list [role='tab']:not([aria-selected='true']):focus-visible,
     .block-editor_wrap .wp-block-tabs .wp-block-tab-list [role='tab']:not([aria-selected='true']):hover,
     .block-editor_wrap .wp-block-tabs .wp-block-tab-list [role='tab']:not([aria-selected='true']):focus-visible,
     .editor-styles-wrapper .wp-block-tabs .wp-block-tab-list [role='tab']:not([aria-selected='true']):hover,

@@ -94,17 +94,21 @@ for required in \
   '地方青少年武道錬成大会' \
   '日本武道館で武道を体験してみよう' \
   'lnl_item-02' \
-  'lnl_item-03' \
-  'lnl_item-04'; do
+  'lnl_item-03'; do
   grep -Fq "$required" "$html" || {
     echo "FAIL required Local Navigation runtime marker missing: ${required}" >&2
     exit 1
   }
 done
 
-child_count="$(grep -o 'lnl_item-04' "$html" | wc -l | tr -d ' ')"
+if grep -Fq 'lnl_item-04' "$html"; then
+  echo "FAIL Local Navigation should be 2-level (heading 02 + children 03); found lnl_item-04." >&2
+  exit 1
+fi
+
+child_count="$(grep -o 'lnl_item-03' "$html" | wc -l | tr -d ' ')"
 if (( child_count < 15 )); then
-  echo "FAIL expected at least fifteen depth-04 Local Navigation items; got ${child_count}." >&2
+  echo "FAIL expected at least fifteen depth-03 Local Navigation items; got ${child_count}." >&2
   exit 1
 fi
 
@@ -115,7 +119,7 @@ grep -Eq 'current-menu-item|current_page_item' "$html" || {
 
 rm -f "$html"
 
-echo "PASS Budokan Local Navigation ACF menu rendered (Figma 2108:10846; 3-level)."
+echo "PASS Budokan Local Navigation ACF menu rendered (Figma 2108:10846; 2-level)."
 echo "PASS page_local_nav=${acf_menu}; template=page.php (default); page_id=${page_id}."
 
 if [[ "${BUDOKAN_LOCAL_NAV_KEEP_RUNTIME:-0}" == "1" ]]; then

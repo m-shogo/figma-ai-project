@@ -50,11 +50,6 @@ body:not(.home) {
     }
     @media screen and (min-width: 768px) {
         .global_contents > section > .module_breadCrumb {
-            margin-top: 100px;
-        }
-        /* Local Nav already owns bottom padding inside its white band.
-           Do not stack the generic 100px breadcrumb gap on top. */
-        .global_contents > section > .global_inner._localNavigation + .module_breadCrumb {
             margin-top: 0;
         }
     }

@@ -38,7 +38,12 @@ $has_events = $event_query->have_posts();
                                         <?php if ($cat_name): ?>
                                             <p class="te_card_labels"><span class="te_label te_label_cat"><?php echo esc_html($cat_name); ?></span></p>
                                         <?php endif; ?>
-                                        <p class="te_card_date">開催日 : <?php echo esc_html(get_the_date('Y.m.d')); ?></p>
+                                        <?php
+                                        $top_event_date = nipponbudokan_event_date_short();
+                                        ?>
+                                        <?php if ($top_event_date !== '') : ?>
+                                            <p class="te_card_date">開催日 : <?php echo esc_html($top_event_date); ?></p>
+                                        <?php endif; ?>
                                         <h3 class="te_card_title"><?php the_title(); ?></h3>
                                     </div>
                                 </a>

@@ -6,6 +6,10 @@
     position: relative;
     padding-inline: var(--padding-SP);
     width: 100%;
+    /* SP Parts / normal page: 48px above authored content. */
+    &._content._normalPage {
+        padding-top: 48px;
+    }
     /* transition: padding-inline var(--transition-duration); */
     @media screen and (min-width: 768px) {
         max-width: calc(var(--width-base) + var(--padding-TB) * 2);

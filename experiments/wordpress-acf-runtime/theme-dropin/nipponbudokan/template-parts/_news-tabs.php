@@ -26,6 +26,19 @@ if ($taxonomy === 'event_cat') {
         }
     }
 
+    $event_filter = array();
+    $event_y = (int) get_query_var('event_y');
+    $event_m = (int) get_query_var('event_m');
+    if ($event_y > 1970) {
+        $event_filter['event_y'] = $event_y;
+    }
+    if ($event_m >= 1 && $event_m <= 12) {
+        $event_filter['event_m'] = $event_m;
+    }
+    if ($event_filter && $all_url) {
+        $all_url = add_query_arg($event_filter, $all_url);
+    }
+
     $tabs[] = array(
         'label' => 'すべて',
         'url' => $all_url,
@@ -40,9 +53,13 @@ if ($taxonomy === 'event_cat') {
 
     if (!empty($terms) && !is_wp_error($terms)) {
         foreach ($terms as $term) {
+            $term_url = get_term_link($term);
+            if (!is_wp_error($term_url) && $event_filter) {
+                $term_url = add_query_arg($event_filter, $term_url);
+            }
             $tabs[] = array(
                 'label' => $term->name,
-                'url' => get_term_link($term),
+                'url' => $term_url,
                 'active' => $current_top_term_id === (int) $term->term_id,
             );
         }

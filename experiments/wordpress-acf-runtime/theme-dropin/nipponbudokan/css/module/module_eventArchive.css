@@ -1,0 +1,431 @@
+@charset "utf-8";
+/* // ==========================================================================
+// 開催イベント archive
+// PC Figma 1619:9554 card_event 2397:4372
+// 募集中チップはフィールド無し → 出さない
+// SP 専用無し → PC 参考・1カラム。News SP_archive の3列タブは使わない
+// ========================================================================== */
+.event_archive {
+    .ea_monthNav {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        width: 100%;
+    }
+
+    .ea_years {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+    }
+
+    .ea_year {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--color-text);
+        font-family: var(--font-zen-kaku-gothic);
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 1;
+        letter-spacing: 0.05em;
+        text-decoration: none;
+        transition: color var(--transition-duration);
+
+        &::before,
+        &::after {
+            content: var(--icon-arrow-right);
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 26px;
+            height: 26px;
+            color: var(--color-primary);
+            font-family: var(--font-awesome);
+            font-size: 8px;
+            font-weight: 900;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'%3E%3Cpolygon fill='%23fff' stroke='%23d7d4d4' stroke-width='1' stroke-linejoin='round' points='13,0.6 21.78,4.22 25.4,13 21.78,21.78 13,25.4 4.22,21.78 0.6,13 4.22,4.22'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 26px 26px;
+        }
+    }
+
+    .ea_year-prev::after {
+        content: none;
+    }
+
+    .ea_year-next::before {
+        content: none;
+    }
+
+    .ea_year-prev::before {
+        transform: scaleX(-1);
+    }
+
+    .ea_months {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        border: 1px solid var(--color-line);
+        background-color: #f2f2f2;
+    }
+
+    .ea_month {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 40px;
+        border-right: 1px solid var(--color-line);
+        border-bottom: 1px solid var(--color-line);
+        color: var(--color-text);
+        font-family: var(--font-zen-kaku-gothic);
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 1;
+        letter-spacing: 0.05em;
+        text-decoration: none;
+        transition:
+            background-color var(--transition-duration),
+            color var(--transition-duration);
+
+        &.is-current {
+            background-color: var(--color-primary);
+            color: var(--color-secondary);
+        }
+    }
+
+    .ea_months li:nth-child(4n) .ea_month {
+        border-right: 0;
+    }
+
+    .ea_months li:nth-last-child(-n + 4) .ea_month {
+        border-bottom: 0;
+    }
+
+    /* PC 1619:9890 → 1663:5662 は 64。見出し行とタブは内側 40。 */
+    .ea_board {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        width: 100%;
+    }
+
+    .ea_toolbar {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+        width: 100%;
+    }
+
+    .ea_heading {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 0;
+        color: var(--color-text);
+        font-family: var(--font-zen-old-mincho);
+        font-size: 24px;
+        font-weight: 500;
+        line-height: 1.4;
+        letter-spacing: 0.05em;
+
+        &::before {
+            content: '';
+            width: 10px;
+            height: 10px;
+            flex-shrink: 0;
+            background-color: var(--color-primary);
+            clip-path: var(--clip-octagon);
+        }
+    }
+
+    .ea_cal a {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        width: fit-content;
+        color: var(--color-text);
+        font-family: var(--font-zen-kaku-gothic);
+        font-size: 15px;
+        font-weight: 500;
+        line-height: 1.5;
+        letter-spacing: 0.05em;
+        text-decoration: none;
+        transition: color var(--transition-duration);
+
+        &::before {
+            content: var(--icon-arrow-right);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            color: var(--color-secondary);
+            font-family: var(--font-awesome);
+            font-size: 12px;
+            font-weight: 400;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpolygon fill='%23ca9957' stroke='%23ca9957' stroke-width='1' stroke-linejoin='round' points='16,0.6 26.81,5.19 31.4,16 26.81,26.81 16,31.4 5.19,26.81 0.6,16 5.19,5.19'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 32px 32px;
+            transition:
+                background-image var(--transition-duration),
+                color var(--transition-duration);
+        }
+    }
+
+    /* News 一覧 SP の3列罫線グリッドは使わない。PC タブ（枠つき pill）を折返す。 */
+    .news_tabs_archive .news_tabs_list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        gap: 8px;
+        border: 0;
+    }
+
+    .news_tabs_archive .news_tabs_item {
+        width: auto;
+        min-width: 0;
+    }
+
+    .news_tabs_archive .news_tabs_link {
+        box-sizing: border-box;
+        width: auto;
+        min-width: 96px;
+        height: 40px;
+        padding: 10px 16px;
+        border: 1px solid var(--color-text);
+        border-radius: 3px;
+    }
+
+    .news_tabs_archive .news_tabs_item:nth-child(3n + 2) .news_tabs_link,
+    .news_tabs_archive .news_tabs_item:nth-child(n + 4) .news_tabs_link {
+        border: 1px solid var(--color-text);
+    }
+
+    .ea_list {
+        display: grid;
+        grid-template-columns: 1fr;
+        row-gap: 32px;
+        width: 100%;
+    }
+
+    .ea_card {
+        display: flex;
+        min-width: 0;
+        padding-bottom: 32px;
+        border-bottom: 1px solid var(--color-line);
+    }
+
+    .ea_card_link {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        gap: 24px;
+        width: 100%;
+        color: var(--color-text);
+        text-decoration: none;
+        transition: color var(--transition-duration);
+    }
+
+    .ea_card .category {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: 0;
+
+        .label {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 20px;
+            padding: 0 10px;
+            border: 1px solid #e7e7e7;
+            border-radius: 2px;
+            color: var(--color-text);
+            font-family: var(--font-zen-kaku-gothic);
+            font-size: 13px;
+            font-weight: 500;
+            line-height: 1;
+            letter-spacing: 0.05em;
+        }
+    }
+
+    .ea_copy {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .ea_date {
+        margin: 0;
+        font-family: var(--font-zen-kaku-gothic);
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 1;
+        letter-spacing: 0.05em;
+    }
+
+    .ea_wday.is-sat {
+        color: #146ca5;
+    }
+
+    .ea_wday.is-sun {
+        color: var(--color-primary);
+    }
+
+    .ea_title {
+        margin: 0;
+        font-family: var(--font-zen-kaku-gothic);
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 1.6;
+        letter-spacing: 0.05em;
+        overflow-wrap: anywhere;
+        transition: color var(--transition-duration);
+    }
+
+    .ea_meta {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin: 0;
+        padding-left: 20px;
+        border-left: 1px solid var(--color-text);
+        font-family: var(--font-zen-kaku-gothic);
+        font-size: 15px;
+        line-height: 1.6;
+        letter-spacing: 0.05em;
+    }
+
+    .ea_meta_row,
+    .ea_meta_row-split,
+    .ea_meta_row-split > div {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        align-items: flex-start;
+    }
+
+    .ea_meta_row-split {
+        gap: 40px;
+    }
+
+    .ea_meta_row > dt {
+        flex: 0 0 47px;
+        margin: 0;
+        font-weight: 500;
+    }
+
+    .ea_meta_row-split dt {
+        flex: 0 0 auto;
+        margin: 0;
+        font-weight: 500;
+    }
+
+    .ea_meta dd {
+        margin: 0;
+        font-weight: 400;
+    }
+
+    @media screen and (min-width: 768px) {
+        .ea_monthNav {
+            gap: 24px;
+        }
+
+        .ea_months {
+            grid-template-columns: repeat(12, minmax(0, 1fr));
+        }
+
+        .ea_month {
+            border-bottom: 0;
+        }
+
+        .ea_months li:nth-child(4n) .ea_month {
+            border-right: 1px solid var(--color-line);
+        }
+
+        .ea_months li:nth-last-child(-n + 4) .ea_month {
+            border-bottom: 0;
+        }
+
+        .ea_months li:nth-child(12n) .ea_month {
+            border-right: 0;
+        }
+
+        .ea_board {
+            gap: 40px;
+        }
+
+        .ea_toolbar {
+            flex-direction: row;
+            align-items: flex-end;
+            justify-content: space-between;
+        }
+
+        .ea_heading {
+            gap: 20px;
+            font-size: 26px;
+        }
+
+        .news_tabs_archive .news_tabs_list {
+            gap: 12px;
+        }
+
+        .news_tabs_archive .news_tabs_item {
+            width: 120px;
+        }
+
+        .news_tabs_archive .news_tabs_link {
+            width: 100%;
+            height: 48px;
+            padding: 16px;
+        }
+
+        .ea_list {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            column-gap: 56px;
+            row-gap: 64px;
+        }
+
+        .ea_card {
+            padding-bottom: 56px;
+        }
+
+        .ea_title {
+            font-size: 18px;
+        }
+    }
+
+    /* MARK: hover — rest の枠を維持。現在月の箱サイズは変えない */
+    @media (any-hover: hover) {
+        .ea_year:hover,
+        .ea_year:focus-visible,
+        .ea_card_link:hover .ea_title,
+        .ea_card_link:focus-visible .ea_title {
+            color: var(--color-link);
+        }
+
+        .ea_month:hover:not(.is-current),
+        .ea_month:focus-visible:not(.is-current) {
+            background-color: var(--color-secondary);
+        }
+
+        .ea_cal a:hover,
+        .ea_cal a:focus-visible {
+            color: var(--color-text);
+        }
+
+        .ea_cal a:hover::before,
+        .ea_cal a:focus-visible::before {
+            color: var(--color-accent);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpolygon fill='%23fff' stroke='%23ca9957' stroke-width='1' stroke-linejoin='round' points='16,0.6 26.81,5.19 31.4,16 26.81,26.81 16,31.4 5.19,26.81 0.6,16 5.19,5.19'/%3E%3C/svg%3E");
+        }
+    }
+}

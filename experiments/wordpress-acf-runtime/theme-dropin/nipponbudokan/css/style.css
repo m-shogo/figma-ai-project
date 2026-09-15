@@ -6,9 +6,9 @@
 @import './layout/global_header.css?v=20260911-panelx';
 @import './layout/global_footer.css?v=20260911-pagetop';
 @import './layout/global_wrapper.css?v=20260904-sticky2';
-@import './layout/global_inner.css';
+@import './layout/global_inner.css?v=20260915-pt48';
 @import './layout/global_navigation.css?v=20260915-pc-ham';
-@import './layout/global_contents.css?v=20260911-ln-crumb';
+@import './layout/global_contents.css?v=20260915-crumb1';
 
 @import './blocks/wp-block-buttonLink-style.css?v=20260911-octagon-stroke';
 @import './blocks/wp-block-columns-style.css';
@@ -22,10 +22,10 @@
 @import './blocks/wp-block-media-text-style.css';
 @import './blocks/wp-block-navigation-style.css?v=20260911-octagon-stroke';
 @import './blocks/wp-block-quote-style.css';
-@import './blocks/wp-block-separator-style.css';
+@import './blocks/wp-block-separator-style.css?v=20260915-news-hr';
 @import './blocks/wp-block-slider-style.css?v=20260911-invert';
 @import './blocks/wp-block-table-style.css';
-@import './blocks/wp-block-tabs-style.css?v=20260910-hover';
+@import './blocks/wp-block-tabs-style.css?v=20260915-2col';
 @import './blocks/wp-block-text-style.css';
 @import './blocks/wp-block-textLink-style.css';
 @import './blocks/wp-lightbox-overlay.css';
@@ -35,21 +35,22 @@
 @import './module/module_bg.css';
 @import './module/module_breadCrumb.css';
 @import './module/module_dropdown.css';
+@import './module/module_eventArchive.css?v=20260915-event2';
 @import './module/module_line-01.css';
 @import './module/module_menu.css';
 /* Local Navigation intentionally follows module_menu so its Figma-specific
    SP selector / PC grid can override the shared menu baseline without !important. */
-@import './module/local_navigation.css?v=20260915-lh13-center';
+@import './module/local_navigation.css?v=20260915-ln-hover';
 @import './module/module_newsCard-01.css';
 @import './module/module_newsList-01.css?v=20260915-catcolor';
 @import './module/module_pager-01.css';
-@import './module/module_pager-02.css';
+@import './module/module_pager-02.css?v=20260915-back-only';
 @import './module/module_search-01.css';
 @import './module/module_searchList-01.css';
-@import './module/module_tab.css?v=20260910-hover';
+@import './module/module_tab.css?v=20260915-2col';
 @import './module/module_table.css';
 @import './module/module_textLink.css';
-@import './module/module_titleSingle.css';
+@import './module/module_titleSingle.css?v=20260915-news-single';
 @import './module/module_zoom-button.css?v=20260910-hover';
 
 /* top_module.css は .top_notice-01 を absolute にするので FV と衝突する。title/button は top_news.css へ */

@@ -8,7 +8,7 @@
             "name": "sousakuin",
             "aria-label": "",
             "type": "file",
-            "instructions": "ショートコード [sousakuin_data] がURLを出力する。get_field がURLを返す（CFS return_value=url 相当）",
+            "instructions": "",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -39,10 +39,10 @@
     "instruction_placement": "label",
     "hide_on_screen": "",
     "active": true,
-    "description": "CFS「総索引」から移行。月刊武道（budo-book）に追加表示。",
+    "description": "",
     "show_in_rest": 0,
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1788944888
+    "modified": 1789548160
 }

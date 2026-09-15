@@ -3,7 +3,8 @@
 // 区切り線
 // ------------------------------ */
 .block-editor_wrap,
-.editor-styles-wrapper {
+.editor-styles-wrapper,
+.gc_main {
     .wp-block-separator {
         position: relative;
         width: 100%;

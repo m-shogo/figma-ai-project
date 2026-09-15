@@ -18,7 +18,10 @@
             },
             "choices": {
                 "post": "新着情報",
-                "event": "イベント"
+                "event": "イベント",
+                "budo-book": "月刊「武道」",
+                "shodou-book": "月刊書写書道",
+                "tankoubon": "単行本"
             },
             "default_value": "post",
             "return_format": "value",
@@ -121,6 +124,40 @@
             "step": 1,
             "prepend": "",
             "append": "件"
+        },
+        {
+            "key": "field_nbk_block_book",
+            "label": "カテゴリー（単行本）",
+            "name": "block_book",
+            "aria-label": "",
+            "type": "taxonomy",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_6822b4e4ac8f3",
+                        "operator": "==",
+                        "value": "tankoubon"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "taxonomy": "book",
+            "add_term": 0,
+            "save_terms": 0,
+            "load_terms": 0,
+            "return_format": "object",
+            "field_type": "checkbox",
+            "allow_in_bindings": 0,
+            "bidirectional": 0,
+            "multiple": 0,
+            "allow_null": 0,
+            "bidirectional_target": []
         }
     ],
     "location": [

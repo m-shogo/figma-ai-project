@@ -5,11 +5,11 @@
  *
  *   wp eval-file /fixture/scripts/seed-budokan-local-nav-qa.php
  *
- * Menu 「ローカル：大会・イベント」(NOT a theme location), 3 levels:
- *   1) 武道 振興・普及事業
- *   2) 大会・イベント（リンク）
- *   3) 各ページリンク
- * PC Figma 2108:10846 shows level-2 heading + level-3 grid.
+ * Menu 「ローカル：大会・イベント」(NOT a theme location), 2 levels:
+ *   1) 大会・イベント（リンク見出し）
+ *   2) 各ページリンク（4列）
+ * PC Figma 2108:10846 shows level-1 heading + level-2 grid.
+ * Page tree may still nest under 武道 振興・普及事業; the WP menu does not.
  */
 
 if (!defined('WP_CLI') || !WP_CLI) {
@@ -130,23 +130,11 @@ if (function_exists('nipponbudokan_sync_local_nav_menu_slug')) {
     nipponbudokan_sync_local_nav_menu_slug($menu_id);
 }
 
-$family_menu_id = wp_update_nav_menu_item($menu_id, 0, array(
-    'menu-item-title' => '武道 振興・普及事業',
-    'menu-item-object-id' => $family_id,
-    'menu-item-object' => 'page',
-    'menu-item-type' => 'post_type',
-    'menu-item-status' => 'publish',
-));
-if (is_wp_error($family_menu_id)) {
-    WP_CLI::error($family_menu_id->get_error_message());
-}
-
 $group_menu_id = wp_update_nav_menu_item($menu_id, 0, array(
     'menu-item-title' => '大会・イベント',
     'menu-item-object-id' => $group_id,
     'menu-item-object' => 'page',
     'menu-item-type' => 'post_type',
-    'menu-item-parent-id' => (int) $family_menu_id,
     'menu-item-status' => 'publish',
 ));
 if (is_wp_error($group_menu_id)) {
