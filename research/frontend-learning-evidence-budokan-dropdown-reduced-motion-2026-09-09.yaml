@@ -1,0 +1,69 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: OBS-BUDOKAN-DROPDOWN-REDUCED-MOTION
+    summary: >-
+      A disclosure can be pointer-, focus-, aria-, scroll- and geometry-stable while still violating Reduced Motion because its
+      component-owned grid-row and indicator transitions remain active. Treat computed transition duration under the user's motion
+      preference as an independent runtime contract; prove the failure before patching and repair the semantic component owner rather
+      than weakening clickability checks or adding layout compensation.
+    category: RUNTIME
+    applicability:
+      scope: PROJECT
+      conditions:
+        - The Budokan dropdown uses the existing Human-editable dropdown-nav WordPress Theme Location and existing Walker/state ownership.
+        - Production disclosure geometry is owned by module_dropdown.css through mdd_wrapper-* grid-template-rows transitions.
+        - Production plus/minus indicator motion is owned by module_dropdown.css through mdd_button-* pseudo-element transform transitions.
+        - Browser QA exercises a real WordPress fixture with elementFromPoint pointer ownership, repeated open-close-reopen, keyboard focus, scroll position, control geometry, document width and horizontal overflow.
+      exclusions:
+        - Do not infer a Reduced Motion defect from source inspection alone when runtime proof is available.
+        - Do not change WordPress menu data, Walker markup, ACF ownership, z-index or pointer-events solely to satisfy motion QA.
+        - Do not remove normal-preference transitions when only Reduced Motion behavior is defective.
+        - Same-project evidence is not independent evidence for cross-project promotion.
+    promotion_state: PROJECT_ONLY
+    promotion:
+      candidate: false
+      rationale: >-
+        PR #465 first extended the existing real WordPress dropdown interaction QA without changing production behavior. The focused
+        Reduced Motion assertion failed on runtime run 34247531268 because the live mdd_wrapper transition duration remained 0.3s
+        under prefers-reduced-motion: reduce. Current Theme inspection confirmed module_dropdown.css as the transition owner for both
+        grid-row expansion and the plus/minus indicator, with no Reduced Motion override. Commit
+        833f083f7c1a1360b1e916fd339536bb92262023 then set only those component transition durations to zero inside the existing
+        component owner. Budokan Local Navigation Runtime 34254943844 passed the unchanged Local Navigation browser QA and the same
+        dropdown disclosure interaction QA, including Reduced Motion, real pointer ownership, repeated activation, keyboard, scroll,
+        geometry, document-width and horizontal-overflow checks. Evidence remains Budokan-specific and PR #465 is not yet merged.
+      blocked_by:
+        - NEEDS_INDEPENDENT_REFERENCE_EVIDENCE_BEFORE_CROSS_PROJECT_PROMOTION
+        - PR_465_NOT_YET_MERGED
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-DROPDOWN-REDUCED-MOTION-FAIL-20260909
+          kind: COMMIT
+          reference_id: REF-002-BUDOKAN
+          run_id: '34247531268'
+          path: experiments/wordpress-acf-runtime/scripts/budokan-disclosure-interaction-browser-qa.mjs
+          commit: eb957b8dbc804c83bb57720f4e970f35b6a83e25
+          note: >-
+            The focused real-browser QA failed because the live dropdown wrapper reported a 0.3s transition under Reduced Motion.
+            Existing disclosure semantics and Local Navigation runtime checks otherwise remained green, separating the motion defect
+            from pointer, aria, scroll or geometry failures.
+        - evidence_id: EV-BUDOKAN-DROPDOWN-REDUCED-MOTION-PASS-20260909
+          kind: COMMIT
+          reference_id: REF-002-BUDOKAN
+          run_id: '34254943844'
+          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/module/module_dropdown.css
+          commit: 833f083f7c1a1360b1e916fd339536bb92262023
+          note: >-
+            The component-owner repair removed only wrapper grid-row and indicator transform transition duration under Reduced Motion.
+            The same disposable WordPress + Playwright workflow then passed existing Local Navigation QA and dropdown Reduced Motion,
+            real pointer, open-close-reopen, keyboard, scroll, geometry, width and overflow assertions.
+      contradicts: []
+    notes:
+      - "Promotion review disposition requested 2026-09-09: KEEP_PROJECT_ONLY; Budokan-only evidence, no auto-promotion."
