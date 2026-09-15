@@ -1,18 +1,42 @@
 # Update Radar — Latest Official Source Scan
 
-Generated: `2026-09-14T08:59:10+00:00`
+Generated: `2026-09-15T08:43:54+00:00`
 
 Active lanes: ACCESSIBILITY, CLAUDE_CODE, CODEX, CURSOR, DESIGN_SYSTEMS, FIGMA, FRONTEND_TOOLING, MCP, WEB_PLATFORM, WORDPRESS_ACF
 
 ## Summary
 
 - Sources checked: 37
-- Changed since previous snapshot: 1
+- Changed since previous snapshot: 4
 - First observations: 0
 - Fetch errors: 3
-- RETEST candidates: AGENT_CONTEXT, FIGMA_MCP
+- RETEST candidates: ACCESSIBILITY, AGENT_CONTEXT, ANIMATION, ASSET_FIDELITY, COLOR_GRADIENT, FIGMA_LAYOUT_GENERATION, FIGMA_MCP, INPUT_CAPABILITY, LAYOUT, PARALLEL_EXECUTION, SCROLL, TYPOGRAPHY_RUNTIME
 
 ## Changed sources
+
+### claude-code-releases
+
+- Lane: `CLAUDE_CODE`
+- Latest title: v2.1.272
+- Impacts: AGENT_CAPABILITY, MCP, PARALLEL_EXECUTION, CONTEXT_HANDLING
+- RETEST: INPUT_CAPABILITY, SCROLL, LAYOUT, ACCESSIBILITY, AGENT_CONTEXT, PARALLEL_EXECUTION
+- Source: https://api.github.com/repos/anthropics/claude-code/releases?per_page=12
+
+### claude-code-feed
+
+- Lane: `CLAUDE_CODE`
+- Latest title: Claude Code v2.1.272
+- Impacts: AGENT_CAPABILITY, MCP, CONTEXT_HANDLING
+- RETEST: INPUT_CAPABILITY, SCROLL, LAYOUT, ACCESSIBILITY, AGENT_CONTEXT, PARALLEL_EXECUTION
+- Source: https://raw.githubusercontent.com/anthropics/claude-code/main/feed.xml
+
+### web-features-releases
+
+- Lane: `WEB_PLATFORM`
+- Latest title: web-features@next
+- Impacts: CSS, WEB_PLATFORM, BROWSER_SUPPORT, FEATURE_ADOPTION
+- RETEST: SCROLL, ANIMATION, LAYOUT, FIGMA_LAYOUT_GENERATION, TYPOGRAPHY_RUNTIME, ASSET_FIDELITY, COLOR_GRADIENT, FIGMA_MCP, AGENT_CONTEXT, PARALLEL_EXECUTION
+- Source: https://api.github.com/repos/web-platform-dx/web-features/releases?per_page=12
 
 ### mdn-browser-compat-data-releases
 
