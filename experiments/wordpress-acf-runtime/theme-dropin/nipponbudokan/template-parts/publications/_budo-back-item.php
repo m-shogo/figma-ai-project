@@ -12,10 +12,9 @@ $month = get_field('budo_month', $post_id);
 $summary = get_field('budo_backcontent', $post_id);
 $thumbnail_id = get_post_thumbnail_id($post_id);
 $title = get_the_title($post_id);
-$heading = trim((nbk_acf_value_present($month) ? '月刊「武道」' . wp_strip_all_tags((string) $month) : '') . (nbk_acf_value_present($month) && $title !== '' ? ' ' : '') . $title);
-if ($heading === '') {
-    $heading = $title;
-}
+$heading = nbk_acf_value_present($month)
+    ? '月刊「武道」' . wp_strip_all_tags((string) $month)
+    : $title;
 ?>
 <article class="publication_budo-backItem">
     <?php if ($heading !== '') : ?>
