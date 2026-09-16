@@ -22,6 +22,8 @@ $action_icon_url = get_template_directory_uri() . '/images/common/icon-arrow-oct
 $external_icon_url = get_template_directory_uri() . '/images/common/icon-external-link.svg';
 ?>
 <div class="publication_book-head">
+    <h2 class="publication_book-sectionHeading"><span class="publication_book-sectionMark" aria-hidden="true"></span><span>日本武道館発行の単行本</span></h2>
+
     <?php if (nbk_acf_value_present($title)) : ?>
         <h1 class="publication_book-heading"><?php echo esc_html($title); ?></h1>
     <?php endif; ?>
