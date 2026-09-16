@@ -19,6 +19,7 @@ $reading_label = get_field('readingttl', $post_id);
 $reading_url = get_field('readingtest', $post_id);
 $amazon_url = get_field('amazon', $post_id);
 $action_icon_url = get_template_directory_uri() . '/images/common/icon-arrow-octagon.svg';
+$external_icon_url = get_template_directory_uri() . '/images/common/icon-external-link.svg';
 ?>
 <div class="publication_book-head">
     <?php if (nbk_acf_value_present($title)) : ?>
@@ -59,11 +60,11 @@ $action_icon_url = get_template_directory_uri() . '/images/common/icon-arrow-oct
     <?php if ((nbk_acf_value_present($reading_url) && nbk_acf_value_present($reading_label)) || nbk_acf_value_present($amazon_url) || have_rows('book_addbtn', $post_id)) : ?>
         <div class="publication_book-actions">
             <?php if (nbk_acf_value_present($reading_url) && nbk_acf_value_present($reading_label)) : ?>
-                <a class="publication_book-action" href="<?php echo esc_url($reading_url); ?>" target="_blank" rel="noopener noreferrer"><img class="publication_book-actionIcon" src="<?php echo esc_url($action_icon_url); ?>" alt="" aria-hidden="true"><?php echo esc_html((string) $reading_label); ?></a>
+                <a class="publication_book-action" href="<?php echo esc_url($reading_url); ?>" target="_blank" rel="noopener noreferrer"><img class="publication_book-actionIcon" src="<?php echo esc_url($action_icon_url); ?>" alt="" aria-hidden="true"><span class="publication_book-actionLabel"><?php echo esc_html((string) $reading_label); ?></span><img class="publication_book-externalIcon" src="<?php echo esc_url($external_icon_url); ?>" alt="" aria-hidden="true"></a>
             <?php endif; ?>
 
             <?php if (nbk_acf_value_present($amazon_url)) : ?>
-                <a class="publication_book-action" href="<?php echo esc_url($amazon_url); ?>" target="_blank" rel="noopener noreferrer"><img class="publication_book-actionIcon" src="<?php echo esc_url($action_icon_url); ?>" alt="" aria-hidden="true">Amazonで購入</a>
+                <a class="publication_book-action" href="<?php echo esc_url($amazon_url); ?>" target="_blank" rel="noopener noreferrer"><img class="publication_book-actionIcon" src="<?php echo esc_url($action_icon_url); ?>" alt="" aria-hidden="true"><span class="publication_book-actionLabel">Amazonで購入</span><img class="publication_book-externalIcon" src="<?php echo esc_url($external_icon_url); ?>" alt="" aria-hidden="true"></a>
             <?php endif; ?>
 
             <?php if (have_rows('book_addbtn', $post_id)) : ?>
@@ -75,7 +76,7 @@ $action_icon_url = get_template_directory_uri() . '/images/common/icon-arrow-oct
                         continue;
                     }
                     ?>
-                    <a class="publication_book-action" href="<?php echo esc_url($button_url); ?>" target="_blank" rel="noopener noreferrer"><img class="publication_book-actionIcon" src="<?php echo esc_url($action_icon_url); ?>" alt="" aria-hidden="true"><?php echo esc_html((string) $button_title); ?></a>
+                    <a class="publication_book-action" href="<?php echo esc_url($button_url); ?>" target="_blank" rel="noopener noreferrer"><img class="publication_book-actionIcon" src="<?php echo esc_url($action_icon_url); ?>" alt="" aria-hidden="true"><span class="publication_book-actionLabel"><?php echo esc_html((string) $button_title); ?></span><img class="publication_book-externalIcon" src="<?php echo esc_url($external_icon_url); ?>" alt="" aria-hidden="true"></a>
                 <?php endwhile; ?>
             <?php endif; ?>
         </div>
