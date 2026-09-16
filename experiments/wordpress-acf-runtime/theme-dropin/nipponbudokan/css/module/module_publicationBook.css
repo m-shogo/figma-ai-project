@@ -1,0 +1,194 @@
+@charset "utf-8";
+
+/* 単行本詳細 / Figma hardcover_detail 1686:5574 */
+.publication_book-head {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    margin-bottom: 48px;
+}
+
+.publication_book-heading {
+    margin: 0;
+    padding: 16px 20px;
+    border-top: 1px solid var(--color-line);
+    border-bottom: 1px solid var(--color-line);
+    background: var(--color-heading-band);
+    color: var(--color-text);
+    font-family: var(--font-zen-old-mincho);
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.05em;
+    overflow-wrap: break-word;
+}
+
+.publication_book-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    min-width: 0;
+}
+
+.publication_book-cover {
+    width: min(170px, 52vw);
+    margin: 0;
+}
+
+.publication_book-cover img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.publication_book-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 0;
+    color: var(--color-text);
+    font-family: var(--font-zen-kaku-gothic);
+}
+
+.publication_book-author {
+    font-size: 14px;
+    line-height: 1.6;
+    letter-spacing: 0.05em;
+    overflow-wrap: break-word;
+}
+
+.publication_book-description {
+    font-size: 16px;
+    line-height: 1.6;
+    letter-spacing: 0.05em;
+    overflow-wrap: break-word;
+}
+
+.publication_book-description > :first-child {
+    margin-top: 0;
+}
+
+.publication_book-description > :last-child {
+    margin-bottom: 0;
+}
+
+.publication_book-spec {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+}
+
+.publication_book-info,
+.publication_book-price {
+    overflow-wrap: break-word;
+}
+
+.publication_book-info {
+    font-size: 14px;
+    line-height: 1.6;
+    letter-spacing: 0.05em;
+}
+
+.publication_book-price {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.6;
+    letter-spacing: 0.05em;
+}
+
+.publication_book-actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+    width: 100%;
+}
+
+.publication_book-action {
+    display: flex;
+    min-height: 60px;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px 12px 16px;
+    border: 1px solid var(--color-line);
+    border-radius: 3px;
+    color: var(--color-text);
+    background: #fff;
+    font-family: var(--font-zen-kaku-gothic);
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    overflow-wrap: break-word;
+}
+
+.publication_book-action::before {
+    content: var(--icon-arrow-right, '\\f061');
+    display: grid;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    flex: 0 0 26px;
+    clip-path: var(--clip-octagon);
+    color: var(--color-main);
+    background: var(--color-accent);
+    font-family: var(--font-awesome-6-pro);
+    font-size: 8px;
+    line-height: 1;
+}
+
+.publication_book-content {
+    margin-top: 0;
+}
+
+@media screen and (min-width: 768px) {
+    .publication_book-head {
+        gap: 24px;
+        margin-bottom: 72px;
+    }
+
+    .publication_book-heading {
+        min-height: 60px;
+        padding: 16px 20px;
+        font-size: 20px;
+    }
+
+    .publication_book-summary {
+        display: grid;
+        grid-template-columns: 170px minmax(0, 1fr);
+        gap: 40px;
+        align-items: start;
+    }
+
+    .publication_book-summary._noImage {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .publication_book-meta {
+        gap: 24px;
+    }
+
+    .publication_book-description {
+        font-size: 17px;
+    }
+
+    .publication_book-spec {
+        flex-direction: row;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 24px;
+    }
+
+    .publication_book-price {
+        flex: 0 0 auto;
+        font-size: 20px;
+    }
+
+    .publication_book-actions {
+        grid-template-columns: repeat(2, 270px);
+        justify-content: center;
+        gap: 20px;
+        padding-top: 24px;
+    }
+}
