@@ -16,7 +16,7 @@ $heading = nbk_acf_value_present($month)
     ? '月刊「武道」' . wp_strip_all_tags((string) $month)
     : $title;
 ?>
-<article class="publication_budo-backItem">
+<article class="publication_budo-backItem<?php echo !$thumbnail_id ? ' _noImage' : ''; ?>">
     <?php if ($heading !== '') : ?>
         <header class="publication_budo-backHeader">
             <h2 class="publication_budo-backTitle"><?php echo esc_html($heading); ?></h2>
