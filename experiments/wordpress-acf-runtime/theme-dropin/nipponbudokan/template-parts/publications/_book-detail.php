@@ -18,6 +18,7 @@ $price = get_field('book_price', $post_id);
 $reading_label = get_field('readingttl', $post_id);
 $reading_url = get_field('readingtest', $post_id);
 $amazon_url = get_field('amazon', $post_id);
+$action_icon_url = get_template_directory_uri() . '/images/common/icon-arrow-octagon.svg';
 ?>
 <div class="publication_book-head">
     <?php if (nbk_acf_value_present($title)) : ?>
@@ -58,11 +59,11 @@ $amazon_url = get_field('amazon', $post_id);
     <?php if ((nbk_acf_value_present($reading_url) && nbk_acf_value_present($reading_label)) || nbk_acf_value_present($amazon_url) || have_rows('book_addbtn', $post_id)) : ?>
         <div class="publication_book-actions">
             <?php if (nbk_acf_value_present($reading_url) && nbk_acf_value_present($reading_label)) : ?>
-                <a class="publication_book-action" href="<?php echo esc_url($reading_url); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html((string) $reading_label); ?></a>
+                <a class="publication_book-action" href="<?php echo esc_url($reading_url); ?>" target="_blank" rel="noopener noreferrer"><img class="publication_book-actionIcon" src="<?php echo esc_url($action_icon_url); ?>" alt="" aria-hidden="true"><?php echo esc_html((string) $reading_label); ?></a>
             <?php endif; ?>
 
             <?php if (nbk_acf_value_present($amazon_url)) : ?>
-                <a class="publication_book-action" href="<?php echo esc_url($amazon_url); ?>" target="_blank" rel="noopener noreferrer">Amazonで購入</a>
+                <a class="publication_book-action" href="<?php echo esc_url($amazon_url); ?>" target="_blank" rel="noopener noreferrer"><img class="publication_book-actionIcon" src="<?php echo esc_url($action_icon_url); ?>" alt="" aria-hidden="true">Amazonで購入</a>
             <?php endif; ?>
 
             <?php if (have_rows('book_addbtn', $post_id)) : ?>
@@ -74,7 +75,7 @@ $amazon_url = get_field('amazon', $post_id);
                         continue;
                     }
                     ?>
-                    <a class="publication_book-action" href="<?php echo esc_url($button_url); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html((string) $button_title); ?></a>
+                    <a class="publication_book-action" href="<?php echo esc_url($button_url); ?>" target="_blank" rel="noopener noreferrer"><img class="publication_book-actionIcon" src="<?php echo esc_url($action_icon_url); ?>" alt="" aria-hidden="true"><?php echo esc_html((string) $button_title); ?></a>
                 <?php endwhile; ?>
             <?php endif; ?>
         </div>
