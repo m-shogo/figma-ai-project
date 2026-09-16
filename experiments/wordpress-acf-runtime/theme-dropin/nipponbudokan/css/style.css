@@ -1,21 +1,20 @@
-@import './base/reset.css';
-@import './base/normalize.css';
-@import './global/variables.css'; /* octagon vertices + body fill 2026-09-01 */
-/* @import './global/component.css'; */
+@charset "utf-8";
 
-@import './layout/global_header.css?v=20260911-panelx';
-@import './layout/global_footer.css?v=20260911-pagetop';
-@import './layout/global_wrapper.css?v=20260904-sticky2';
-@import './layout/global_inner.css?v=20260915-pt48';
-@import './layout/global_navigation.css?v=20260915-pc-ham';
-@import './layout/global_contents.css?v=20260915-crumb1';
+/*
+Theme stylesheet imports.
+*/
 
-@import './blocks/wp-block-buttonLink-style.css?v=20260911-octagon-stroke';
+@import './foundation/reset.css';
+@import './foundation/base.css';
+
+@import './layout/global_header.css';
+@import './layout/global_footer.css';
+@import './layout/layout.css';
+
+@import './blocks/wp-block-button-style.css';
+@import './blocks/wp-block-column-style.css';
 @import './blocks/wp-block-columns-style.css';
-@import './blocks/wp-block-details-style.css';
-@import './blocks/wp-block-gallery-style.css';
-@import './blocks/wp-block-group-style.css';
-@import './blocks/wp-block-heading-style.css'; /* parts Figma headings 2026-08-28 */
+@import './blocks/wp-block-heading-style.css';
 @import './blocks/wp-block-image-style.css';
 @import './blocks/wp-block-inPageLink-style.css?v=20260910-hover';
 @import './blocks/wp-block-list-style.css';
@@ -28,6 +27,7 @@
 @import './blocks/wp-block-tabs-style.css?v=20260915-2col';
 @import './blocks/wp-block-text-style.css';
 @import './blocks/wp-block-textLink-style.css';
+@import './blocks/wp-lightbox-overlay.css';
 
 @import './module/archive_navigation.css';
 @import './module/global_mainVisual.css';
@@ -53,42 +53,3 @@
 @import './module/module_textLink.css';
 @import './module/module_titleSingle.css?v=20260915-news-single';
 @import './module/module_zoom-button.css?v=20260910-hover';
-
-/* top_module.css は .top_notice-01 を absolute にするので FV と衝突する。title/button は top_news.css へ */
-@import './project/top_mainVisual.css?v=20260904-fv2'; /* TOP FV PC+SP 2026-08-28 */
-@import './project/top_events.css?v=20260904-event2'; /* TOP events + FullCalendar 2026-08-28 */
-@import './project/top_guide.css?v=20260904-octagon2'; /* TOP 目的から探す（大） 2026-08-28 */
-@import './project/top_about.css?v=20260910-about-swiper'; /* TOP 日本武道館とは SP Swiper */
-@import './project/top_news.css?v=20260915-catcolor';
-@import './project/top_partner.css?v=20260904-topfix3'; /* TOP 公式パートナー PC+SP 2026-08-28 */
-@import './project/top_instagram.css?v=20260904-octagon2'; /* TOP 月刊「武道」編集部 PC+SP 2026-08-29 */
-@import './project/top_banner.css?v=20260904-topfix2';
-
-@import './wordpress/form.css';
-@import './wordpress/wordpress.css?v=20260911-overheader';
-
-/* Cardinal-vertex octagon + Parts body fill live on this cache-busted file.
-   :root beats the :where(:root) token sheet if a stale @import is cached. */
-:root {
-    --icon-arrow-down: '\\f063';
-    --clip-octagon: polygon(50% 0%, 85.355% 14.645%, 100% 50%, 85.355% 85.355%, 50% 100%, 14.645% 85.355%, 0% 50%, 14.645% 14.645%);
-}
-
-/* Native fragment navigation must land at the same clearance as common.js.
-   This prevents the browser's first hash position from being visibly corrected
-   300ms later, while retaining the Theme-owned measured click scroll routine. */
-html {
-    scroll-padding-top: calc(var(--header-height-SP) + 30px);
-}
-@media screen and (min-width: 768px) {
-    html {
-        scroll-padding-top: calc(var(--header-height-PC) + 30px);
-    }
-}
-
-body {
-    background-image: url('../images/common/bg-pattern.png');
-    background-repeat: repeat;
-    background-position: top left;
-    background-size: 700px 700px;
-}
