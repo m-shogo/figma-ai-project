@@ -90,6 +90,139 @@
     margin-top: 0;
 }
 
+/* 月刊「武道」バックナンバー / Figma publications 1634:10806 */
+.publication_budo-backList {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+}
+
+.publication_budo-backItem {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    min-width: 0;
+}
+
+.publication_budo-backHeader {
+    display: flex;
+    align-items: stretch;
+    min-width: 0;
+    border-top: 1px solid var(--color-separator);
+    border-bottom: 1px solid var(--color-separator);
+    background: var(--color-heading-band);
+}
+
+.publication_budo-backTitle {
+    flex: 1 1 auto;
+    min-width: 0;
+    margin: 0;
+    padding: 16px;
+    color: var(--color-text);
+    font-family: var(--font-zen-old-mincho);
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.05em;
+    overflow-wrap: break-word;
+}
+
+.publication_budo-backOrder {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    border-left: 1px solid var(--color-separator);
+    color: var(--color-text);
+    font-family: var(--font-zen-kaku-gothic);
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+}
+
+.publication_budo-backOrder::before {
+    content: var(--icon-arrow-right, '\f061');
+    display: grid;
+    place-items: center;
+    width: 20px;
+    height: 20px;
+    border: 1px solid var(--color-separator);
+    border-radius: 50%;
+    color: var(--color-main);
+    background: var(--color-white);
+    font-family: var(--font-awesome-6-pro);
+    font-size: 8px;
+    line-height: 1;
+}
+
+.publication_budo-backBody {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    min-width: 0;
+}
+
+.publication_budo-backCover {
+    width: min(160px, 48vw);
+    margin: 0;
+}
+
+.publication_budo-backCover img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.publication_budo-backSummary {
+    min-width: 0;
+    color: var(--color-text);
+    font-family: var(--font-zen-kaku-gothic);
+    font-size: 15px;
+    line-height: 1.6;
+    letter-spacing: 0.05em;
+    overflow-wrap: break-word;
+}
+
+.publication_budo-backSummary > :first-child {
+    margin-top: 0;
+}
+
+.publication_budo-backSummary > :last-child {
+    margin-bottom: 0;
+}
+
+.publication_budo-backDetail {
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    gap: 8px;
+    color: var(--color-text);
+    font-family: var(--font-zen-kaku-gothic);
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+}
+
+.publication_budo-backDetail::before {
+    content: var(--icon-arrow-right, '\f061');
+    display: grid;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    flex: 0 0 26px;
+    clip-path: var(--clip-octagon);
+    color: var(--color-main);
+    background: var(--color-accent);
+    font-family: var(--font-awesome-6-pro);
+    font-size: 8px;
+    line-height: 1;
+}
+
 @media screen and (min-width: 768px) {
     .publication_budo-head {
         gap: 40px;
@@ -115,5 +248,35 @@
 
     .publication_budo-order {
         justify-content: flex-end;
+    }
+
+    .publication_budo-backList {
+        gap: 56px;
+    }
+
+    .publication_budo-backTitle {
+        padding: 17px 20px;
+        font-size: 20px;
+    }
+
+    .publication_budo-backOrder {
+        padding: 12px 20px 12px 16px;
+        font-size: 16px;
+    }
+
+    .publication_budo-backBody {
+        display: grid;
+        grid-template-columns: 160px minmax(0, 1fr);
+        gap: 40px;
+        align-items: start;
+    }
+
+    .publication_budo-backBody._noImage {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .publication_budo-backDetail {
+        margin-left: 200px;
+        font-size: 18px;
     }
 }
