@@ -279,4 +279,8 @@
         margin-left: 200px;
         font-size: 18px;
     }
+
+    .publication_budo-backItem._noImage .publication_budo-backDetail {
+        margin-left: 0;
+    }
 }
