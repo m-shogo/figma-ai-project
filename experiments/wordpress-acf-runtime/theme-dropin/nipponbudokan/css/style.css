@@ -46,6 +46,7 @@
 @import './module/module_pager-01.css';
 @import './module/module_pager-02.css?v=20260915-back-only';
 @import './module/module_publicationBudo.css?v=20260915-budo1';
+@import './module/module_publicationBook.css?v=20260916-book1';
 @import './module/module_search-01.css';
 @import './module/module_searchList-01.css';
 @import './module/module_tab.css?v=20260915-2col';
@@ -70,7 +71,7 @@
 /* Cardinal-vertex octagon + Parts body fill live on this cache-busted file.
    :root beats the :where(:root) token sheet if a stale @import is cached. */
 :root {
-    --icon-arrow-down: '\f063';
+    --icon-arrow-down: '\\f063';
     --clip-octagon: polygon(50% 0%, 85.355% 14.645%, 100% 50%, 85.355% 85.355%, 50% 100%, 14.645% 85.355%, 0% 50%, 14.645% 14.645%);
 }
 
