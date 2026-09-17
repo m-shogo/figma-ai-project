@@ -18,11 +18,12 @@ $price = get_field('book_price', $post_id);
 $reading_label = get_field('readingttl', $post_id);
 $reading_url = get_field('readingtest', $post_id);
 $amazon_url = get_field('amazon', $post_id);
+$heading_icon_url = get_template_directory_uri() . '/images/common/icon-octagon.svg';
 $action_icon_url = get_template_directory_uri() . '/images/common/icon-arrow-octagon.svg';
 $external_icon_url = get_template_directory_uri() . '/images/common/icon-external-link.svg';
 ?>
 <div class="publication_book-head">
-    <h2 class="publication_book-sectionHeading"><span class="publication_book-sectionMark" aria-hidden="true"></span><span>日本武道館発行の単行本</span></h2>
+    <h2 class="publication_book-sectionHeading"><img class="publication_book-sectionMark" src="<?php echo esc_url($heading_icon_url); ?>" alt="" aria-hidden="true"><span>日本武道館発行の単行本</span></h2>
 
     <?php if (nbk_acf_value_present($title)) : ?>
         <h1 class="publication_book-heading"><?php echo esc_html($title); ?></h1>
