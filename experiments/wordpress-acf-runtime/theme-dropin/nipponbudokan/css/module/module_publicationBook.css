@@ -8,6 +8,27 @@
     margin-bottom: 48px;
 }
 
+.publication_book-sectionHeading {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 0 0 16px;
+    color: var(--color-text);
+    font-family: var(--font-zen-old-mincho);
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.05em;
+}
+
+.publication_book-sectionMark {
+    width: 8px;
+    height: 8px;
+    flex: 0 0 8px;
+    border-radius: 50%;
+    background: var(--color-main);
+}
+
 .publication_book-heading {
     margin: 0;
     padding: 16px 20px;
@@ -151,6 +172,18 @@
     .publication_book-head {
         gap: 24px;
         margin-bottom: 72px;
+    }
+
+    .publication_book-sectionHeading {
+        gap: 20px;
+        margin-bottom: 16px;
+        font-size: 26px;
+    }
+
+    .publication_book-sectionMark {
+        width: 10px;
+        height: 10px;
+        flex-basis: 10px;
     }
 
     .publication_book-heading {
