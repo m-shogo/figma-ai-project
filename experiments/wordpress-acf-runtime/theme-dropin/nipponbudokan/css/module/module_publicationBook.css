@@ -22,11 +22,10 @@
 }
 
 .publication_book-sectionMark {
+    display: block;
     width: 8px;
     height: 8px;
     flex: 0 0 8px;
-    border-radius: 50%;
-    background: var(--color-main);
 }
 
 .publication_book-heading {
