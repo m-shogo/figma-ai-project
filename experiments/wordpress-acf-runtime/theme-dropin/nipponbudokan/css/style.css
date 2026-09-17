@@ -6,14 +6,14 @@
 @import './layout/global_header.css?v=20260911-panelx';
 @import './layout/global_footer.css?v=20260911-pagetop';
 @import './layout/global_wrapper.css?v=20260904-sticky2';
-@import './layout/global_inner.css?v=20260915-pt48';
+@import './layout/global_inner.css?v=20260917-content-pad';
 @import './layout/global_navigation.css?v=20260915-pc-ham';
 @import './layout/global_contents.css?v=20260915-crumb1';
 
 @import './blocks/wp-block-buttonLink-style.css?v=20260911-octagon-stroke';
 @import './blocks/wp-block-columns-style.css';
 @import './blocks/wp-block-details-style.css';
-@import './blocks/wp-block-gallery-style.css';
+@import './blocks/wp-block-gallery-style.css?v=20260917-gallery1';
 @import './blocks/wp-block-group-style.css';
 @import './blocks/wp-block-heading-style.css'; /* parts Figma headings 2026-08-28 */
 @import './blocks/wp-block-image-style.css';
@@ -33,9 +33,9 @@
 @import './module/archive_navigation.css';
 @import './module/global_mainVisual.css';
 @import './module/module_bg.css';
-@import './module/module_breadCrumb.css';
+@import './module/module_breadCrumb.css?v=20260917-crumb-lh';
 @import './module/module_dropdown.css';
-@import './module/module_eventArchive.css?v=20260915-event2';
+@import './module/module_eventArchive.css?v=20260917-status1';
 @import './module/module_line-01.css';
 @import './module/module_menu.css';
 /* Local Navigation intentionally follows module_menu so its Figma-specific
@@ -45,15 +45,15 @@
 @import './module/module_newsList-01.css?v=20260915-catcolor';
 @import './module/module_pager-01.css';
 @import './module/module_pager-02.css?v=20260915-back-only';
-@import './module/module_publicationBudo.css?v=20260915-budo1';
 @import './module/module_publicationBook.css?v=20260917-book3';
 @import './module/module_search-01.css';
 @import './module/module_searchList-01.css';
 @import './module/module_tab.css?v=20260915-2col';
 @import './module/module_table.css';
 @import './module/module_textLink.css';
-@import './module/module_titleSingle.css?v=20260915-news-single';
-@import './module/module_zoom-button.css?v=20260910-hover';
+@import './module/module_titleSingle.css?v=20260917-event-single';
+@import './module/module_zoom-button.css?v=20260917-coverlink2';
+@import './module/module_publicationBudo.css?v=20260917-coverlink3';
 
 /* top_module.css は .top_notice-01 を absolute にするので FV と衝突する。title/button は top_news.css へ */
 @import './project/top_mainVisual.css?v=20260904-fv2'; /* TOP FV PC+SP 2026-08-28 */

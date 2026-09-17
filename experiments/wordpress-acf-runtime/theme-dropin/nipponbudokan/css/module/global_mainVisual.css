@@ -1,9 +1,10 @@
 @charset "utf-8";
 /* // ==========================================================================
 // サイト共通メインビジュアル
-// Current Figma fileKey fKYDn9ikpJk1nW7IWFtaUx
-// - archive/single/search/error, and pages without page_img: page_title-sp 1399:18544 / page_title-pc 2169:10270
-// - pages with page_img: page_title-img-sp 1465:6339 / page_title-img-pc 1450:5147
+// Current Figma fileKey jqYoPtusYfTeDqRegMCsx3
+// - archive/single/search/error, and pages without page_img: gold bar (keep current)
+// - pages with page_img: page_title-img-sp 2196:5195 / page_title-img-pc 1450:5148
+//   page examples: PC 1145:6042 / SP 1455:5489
 // ========================================================================== */
 .global_mainVisual {
     position: relative;
@@ -52,7 +53,7 @@
     }
 
     /*
-     * Current Figma page_title-img-sp 1465:6339 / page_title-img-pc 1450:5147.
+     * Current Figma page_title-img-sp 2196:5195 / page_title-img-pc 1450:5148.
      * CMS `page_img` stays the image authority. Title-panel paper texture is not
      * a durable Theme asset; --color-secondary is the fallback fill.
      * Title overlaps the photo by negative margin (not Figma-coordinate absolute).
@@ -126,6 +127,19 @@
         &._fixedPage {
             height: auto;
 
+            /* PC 1450:5148 — 60px rail left of the photo uses header/copyright #2c3036. */
+            .gm_inner::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 0;
+                z-index: 1;
+                width: 60px;
+                height: 320px;
+                background-color: var(--color-copyright);
+                pointer-events: none;
+            }
+
             /* Photo starts 60px in and runs to the right canvas edge. */
             .gm_background {
                 margin-left: 60px;
@@ -136,10 +150,13 @@
             .gm_title {
                 margin-top: -67px;
                 padding: 24px 40px 10px;
-                width: 360px;
+                width: max-content;
+                min-width: 360px;
+                max-width: 100%;
                 min-height: 79px;
                 font-size: 32px;
                 text-align: center;
+                white-space: nowrap;
             }
         }
     }

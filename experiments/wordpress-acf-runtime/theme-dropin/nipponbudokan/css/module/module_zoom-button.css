@@ -2,8 +2,8 @@
 /* // ==========================================================================
 // ズームボタンモジュール
 // ========================================================================== */
-.wp-block-image:has(> a) > a,
-.wp-block-media-text .wp-block-media-text__media:has(> a) > a,
+.wp-block-image:has(> a:not(.publication_budo-coverLink)) > a:not(.publication_budo-coverLink),
+.wp-block-media-text .wp-block-media-text__media:has(> a:not(.publication_budo-coverLink)) > a:not(.publication_budo-coverLink),
 .wp-lightbox-container .lightbox_wrap {
     display: block;
     position: relative;

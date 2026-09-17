@@ -10,11 +10,31 @@
  * Inner-page Figma places the breadcrumb after the main content, immediately
  * before the footer. Templates own that placement; this visual does not.
  */
+if (!function_exists('nipponbudokan_visual_image_url')) {
+    /**
+     * Resolve a visual photo URL from an ACF image ID.
+     * Cover cropping is CSS (`background-size: cover`); prefer the original file.
+     */
+    function nipponbudokan_visual_image_url($attachment_id)
+    {
+        $attachment_id = (int) $attachment_id;
+        if ($attachment_id <= 0) {
+            return '';
+        }
+        $thumb = wp_get_attachment_image_src($attachment_id, 'full');
+        if (!$thumb) {
+            $thumb = wp_get_attachment_image_src($attachment_id, 'page_img');
+        }
+        return ($thumb && !empty($thumb[0])) ? $thumb[0] : '';
+    }
+}
+
 global $post;
 $page_img = (is_page() && !is_front_page() && !is_404() && !is_search())
     ? get_field('page_img', get_the_ID())
     : null;
 $is_fixed_page_visual = !empty($page_img);
+$visual_fallback = get_template_directory_uri() . '/images/common/noimage_visual-01.webp';
 ?>
 <div class="global_mainVisual<?php echo $is_fixed_page_visual ? ' _fixedPage' : ''; ?>">
     <div class="global_inner gm_inner">
@@ -24,11 +44,9 @@ $is_fixed_page_visual = !empty($page_img);
             $postType_name = get_current_post_type();
             $field_name = 'page_img-' . $postType_name; //ビジュアル設定（投稿タイプ）名前に合わせる
             $img = get_field($field_name, 'option');
-            if ($img) {
-                $thumb = wp_get_attachment_image_src($img, 'head_img');
-                $img_url = $thumb[0];
-            } else {
-                $img_url = esc_url(get_template_directory_uri()) . '/images/common/noimage_visual-01.webp';
+            $img_url = nipponbudokan_visual_image_url($img);
+            if ($img_url === '') {
+                $img_url = $visual_fallback;
             }
 
             // 通常投稿は一覧・カテゴリ・詳細で同じ「お知らせ」マスター見出しを使う。
@@ -52,11 +70,9 @@ $is_fixed_page_visual = !empty($page_img);
         ?>
             <?php
             $img = get_field('page_img-other', 'option');
-            if ($img) {
-                $thumb = wp_get_attachment_image_src($img, 'head_img');
-                $img_url = $thumb[0];
-            } else {
-                $img_url = esc_url(get_template_directory_uri()) . '/images/common/noimage_visual-01.webp';
+            $img_url = nipponbudokan_visual_image_url($img);
+            if ($img_url === '') {
+                $img_url = $visual_fallback;
             }
             ?>
             <div class="gm_background" style="background-image: url(<?php echo esc_url($img_url); ?>)"></div>
@@ -65,23 +81,18 @@ $is_fixed_page_visual = !empty($page_img);
         ?>
             <?php
             $img = get_field('page_img-other', 'option');
-            if ($img) {
-                $thumb = wp_get_attachment_image_src($img, 'head_img');
-                $img_url = $thumb[0];
-            } else {
-                $img_url = esc_url(get_template_directory_uri()) . '/images/common/noimage_visual-01.webp';
+            $img_url = nipponbudokan_visual_image_url($img);
+            if ($img_url === '') {
+                $img_url = $visual_fallback;
             }
             ?>
             <div class="gm_background" style="background-image: url(<?php echo esc_url($img_url); ?>)"></div>
             <h1 class="gm_title"><span><?php if (empty(get_search_query())) : ?>検索キーワードが未入力です<?php else: ?><?php the_search_query(); ?>の検索結果<?php endif; ?></span></h1>
         <?php else: ?>
             <?php
-            $img = $page_img;
-            if ($img) {
-                $thumb = wp_get_attachment_image_src($img, 'head_img');
-                $img_url = $thumb[0];
-            } else {
-                $img_url = esc_url(get_template_directory_uri()) . '/images/common/noimage_visual-01.webp';
+            $img_url = nipponbudokan_visual_image_url($page_img);
+            if ($img_url === '') {
+                $img_url = $visual_fallback;
             }
             ?>
             <div class="gm_background" style="background-image: url(<?php echo esc_url($img_url); ?>)"></div>

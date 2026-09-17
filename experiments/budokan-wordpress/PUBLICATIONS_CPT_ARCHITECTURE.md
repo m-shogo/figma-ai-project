@@ -79,6 +79,26 @@ Figma の「今月のおすすめ」「今月のピックアップ」「今月�
 
 `group_nbk_rensai` / `sousakuin` は号詳細 Figma のこの3段には出ていない。総索引 page 用。詳細テンプレに無理に出さない。
 
+### Human 2026-09-17 override（月刊「武道」）
+
+Classic のため ② を Gutenberg にしない。号詳細は埋まっている ACF を PHP で出す（空は出さない）。キャッチ / 紹介 / 編集・発行 / 毎月28日発売は現行 Theme `content-budobook.php` と同じくテンプレ固定。版型・ページ数は ACF があれば出す。詳細下の5冊は表示中の号 ID を除く最新5の PHP query（本文ブロックに置かない）。一覧は公開済み号を最新から全件・ページャーなし（最新号も出す）。総索引は `/publications/budo/back/` 先頭の Parts `core/details`。ファイルは最新号 `sousakuin`。
+
+Parts にある見出し・リスト・ボタン・details・gallery・media-text は流用（必要なら class 追加）。Parts に無いのは表紙ラベル・ピックアップカード・一覧見出し帯だけ module。
+
+### Human 2026-09-17 override（月刊書写書道）
+
+デザイン・仕様は武道と同じ。**テンプレは分ける。** ACF は `group_nbk_gekkan_shodou` だけ使う。
+
+- 号詳細 / 最新号: `single-shodou-book.php` / `page-publications-shodo-latest.php` → `_shodou-detail.php`
+- バック: `page-publications-shodo-back.php` → `_shodou-back-item.php`。公開済み号を最新から全件（最新号も出す）。行は **アイキャッチ** + `rensailist` PDF（Parts テキストリンク）+ **詳細はこちら**。`topimage` は出さない
+- 号詳細 / 最新号の関連5冊もアイキャッチ。`topimage` は TOP 専用
+- `size` は1行「版型・ページ数」。`price` が数字だけなら現行最新号と同じく `円（税込）` を足す
+- キャッチ / 紹介 / 文部科学省学習指導要領準拠 / 編集・発行 / 毎月1日発売は現行 `content-shodou.php` / `page-shodoubooknew.php` の固定文
+- CTA ご注文 → `/publications/shodo/form-shodo/`
+- `topimage` / `toprensailist` は TOP 専用。latest / back / single に出さない
+- 総索引・おすすめ wysiwyg ファミリーは書写に無い。出さない
+- 現行バックの「その他」ハードコードは出さない。埋まっている `rensailist` を全部出す
+
 ---
 
 ## 1. 結論（破綻しない一本）
@@ -101,14 +121,14 @@ CPT（budo-book / shodou-book / tankoubon）
 | 役割 | 公開 URL の owner | WP オブジェクト | テンプレート |
 | --- | --- | --- | --- |
 | 武道 最新号 | `/publications/budo/latest/` | **page** が `budo-book` を 1件 query | page 専用（最新号レイアウト） |
-| 武道 バックナンバー | `/publications/budo/back/` | **page** が `budo-book` を一覧 query（最新号は除外） | page 専用（Figma `publications`） |
+| 武道 バックナンバー | `/publications/budo/back/` | **page** が `budo-book` を一覧 query（最新号も出す） | `page-publications-budo-back.php`（Figma `publications`） |
 | 武道 号詳細 | `/budo-book/{slug}/` | **CPT single** | `single-budo-book.php`（号レイアウト。最新号 page と markup 共有） |
 | 武道 総索引 | `/publications/budo/back/` に同居する別 page 現行 `/shupan/sousakuin`。新マップは back と同一行 | **page**（現行）。ACF `sousakuin` は `budo-book` 側グループ | page。フィールドを page に移さない。出し方は Human 確定まで fail-closed |
 | 単行本一覧 | `/publications/budo/books/` | **page** が `tankoubon` を tax `book` ごとに query | page 専用（Figma `hardcover`）。現行は `page.php` + `is_page('tankoubon')` |
 | 単行本詳細 | `/tankoubon/{slug}/` | **CPT single** | `single-tankoubon.php` |
-| 書写書道 最新号 | `/publications/shodo/latest/` | **page** が `shodou-book` 1件 | page 専用。Figma 専用 frame **なし** |
-| 書写書道 バック | `/publications/shodo/back/` | **page** が `shodou-book` 一覧（最新除外）。**single へ張らない** | page 専用。行は表紙 + `rensailist` PDF |
-| 書写書道 号詳細 | `/shodou-book/{slug}/` | CPT は存在するが現行バックは未使用 | single は残す。公開導線に出すかは Human。Figma **なし** |
+| 書写書道 最新号 | `/publications/shodo/latest/` | **page** が `shodou-book` 1件 | `page-publications-shodo-latest.php`。武道詳細 chrome。Figma 専用 frame **なし** |
+| 書写書道 バック | `/publications/shodo/back/` | **page** が `shodou-book` 一覧（最新号も出す） | `page-publications-shodo-back.php`。行はアイキャッチ + `rensailist` PDF + 詳細はこちら |
+| 書写書道 号詳細 | `/shodou-book/{slug}/` | **CPT single** | `single-shodou-book.php`。latest と同じ `_shodou-detail`。一覧の詳細はこちらから入る |
 | お知らせ一覧 | `/news/` | **CPT archive** | `archive-news.php` / 既存 news 系。現行 `/news/ichiran/` は新サイトに持ち込まない |
 | お知らせ詳細 | `/news/{slug}/` | **CPT single** | 既存 `single.php` news 分岐 |
 
@@ -179,10 +199,10 @@ acf/json/group_nbk_tankoubon.json
 推奨:
 
 ```text
-template-parts/publications/_issue-budo.php      … 号の中身（latest と single が同じ）
-template-parts/publications/_issue-shodou.php    … 最新号 page 用。single は導線確定まで dump または同一 part
-template-parts/publications/_back-budo.php       … バック行
-template-parts/publications/_back-shodou.php     … PDF 行
+template-parts/publications/_budo-detail.php     … 武道 latest と single
+template-parts/publications/_shodou-detail.php   … 書写 latest と single
+template-parts/publications/_budo-back-item.php  … 武道バック行（要約＋詳細）
+template-parts/publications/_shodou-back-item.php … 書写バック行（表紙＋PDF）
 template-parts/publications/_book-card.php       … 単行本カード
 template-parts/publications/_book-detail.php     … 単行本詳細
 ```

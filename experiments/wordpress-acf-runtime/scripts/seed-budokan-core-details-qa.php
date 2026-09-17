@@ -68,7 +68,7 @@ if (is_wp_error($page_id)) {
     WP_CLI::error($page_id->get_error_message());
 }
 
-update_post_meta((int) $page_id, '_wp_page_template', 'templates/template-oneColumn.php');
+update_post_meta((int) $page_id, '_wp_page_template', 'default');
 update_option('budokan_core_details_qa_page_id', (int) $page_id, false);
 flush_rewrite_rules(false);
 

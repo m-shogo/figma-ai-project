@@ -6,12 +6,9 @@
         $current_post_type = get_current_post_type();
         $is_news_archive = $current_post_type === 'post'
             || (empty($current_post_type) && (is_category() || is_tag() || is_date()));
-        $is_event_archive = $current_post_type === 'event' || is_tax('event_cat');
         ?>
         <?php if ($is_news_archive): ?>
             <?php get_template_part('template-parts/_news-archive'); ?>
-        <?php elseif ($is_event_archive): ?>
-            <?php get_template_part('template-parts/_event-archive'); ?>
         <?php else: ?>
             <?php get_template_part('template-parts/_dropdown-archive'); ?>
             <div class="global_inner">

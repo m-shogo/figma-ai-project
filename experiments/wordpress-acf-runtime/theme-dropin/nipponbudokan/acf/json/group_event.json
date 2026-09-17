@@ -7,7 +7,7 @@
             "label": "開催日",
             "name": "event_date",
             "aria-label": "",
-            "type": "date_time_picker",
+            "type": "date_picker",
             "instructions": "",
             "required": 0,
             "conditional_logic": 0,
@@ -16,8 +16,8 @@
                 "class": "",
                 "id": ""
             },
-            "display_format": "Y/m/d H:i",
-            "return_format": "Y-m-d H:i:s",
+            "display_format": "Y/m/d",
+            "return_format": "Y-m-d",
             "first_day": 1,
             "default_to_current_date": 0
         },
@@ -100,6 +100,33 @@
             "placeholder": "",
             "prepend": "",
             "append": ""
+        },
+        {
+            "key": "field_event_status",
+            "label": "募集ステータス",
+            "name": "event_status",
+            "aria-label": "",
+            "type": "radio",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "募集中": "募集中",
+                "開催中": "開催中",
+                "受付終了": "受付終了"
+            },
+            "default_value": "",
+            "return_format": "value",
+            "allow_null": 1,
+            "other_choice": 0,
+            "allow_in_bindings": 0,
+            "layout": "horizontal",
+            "save_other_choice": 0
         }
     ],
     "location": [
@@ -123,5 +150,5 @@
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1789550000
+    "modified": 1789635600
 }

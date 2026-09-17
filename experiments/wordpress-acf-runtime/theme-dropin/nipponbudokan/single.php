@@ -54,20 +54,9 @@ if (get_field('post_type') === 'file') {
 
                 <div class="module_titleSingle">
                     <div class="head">
-                        <?php
-                        $event_date_short = get_post_type() === 'event' ? nipponbudokan_event_date_short() : '';
-                        $event_date_ts = get_post_type() === 'event' ? nipponbudokan_event_datetime() : 0;
-                        $show_title_date = get_post_type() !== 'event' || $event_date_short !== '';
-                        ?>
-                        <?php if ($show_title_date) : ?>
                         <p class="date">
-                            <?php if (get_post_type() === 'event') : ?>
-                                <time datetime="<?php echo esc_attr(wp_date('Y-m-d', $event_date_ts)); ?>"><?php echo esc_html($event_date_short); ?></time>
-                            <?php else : ?>
-                                <time datetime="<?php echo esc_attr(get_the_time('Y-m-d')); ?>"><?php the_time('Y.m.d'); ?></time>
-                            <?php endif; ?>
+                            <time datetime="<?php echo esc_attr(get_the_time('Y-m-d')); ?>"><?php the_time('Y.m.d'); ?></time>
                         </p>
-                        <?php endif; ?>
                         <?php
                         get_template_part('template-parts/_label-category', null, [
                             'taxonomy' => '_cat',
@@ -86,7 +75,7 @@ if (get_field('post_type') === 'file') {
                         $thumb = $thumbnailId ? wp_get_attachment_image_src($thumbnailId, 'full') : false;
                         $caption = $thumbnailId ? wp_get_attachment_caption($thumbnailId) : '';
                         ?>
-                        <?php // Current News detail owns a lead featured image; Event uses its thumbnail for archive-card media only. ?>
+                        <?php // Current News detail owns a lead featured image. ?>
                         <?php if (get_post_type() === 'post' && $thumbnailId && $thumb) : ?>
                             <figure class="single_featured">
                                 <img itemprop="image" src="<?php echo esc_url($thumb[0]); ?>" alt="<?php echo esc_attr(get_post_meta($thumbnailId, '_wp_attachment_image_alt', true) ?: get_the_title()); ?>" width="800" height="534">

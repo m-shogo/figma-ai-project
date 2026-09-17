@@ -1,8 +1,9 @@
 @charset "utf-8";
 /* // ==========================================================================
 // 開催イベント archive
-// PC Figma 1619:9554 card_event 2397:4372
-// 募集中チップはフィールド無し → 出さない
+// PC Figma 1619:9554 card_event 2397:4372 / 2397:4722
+// 募集ステータス: event_status（空は出さない）
+// Human 2026-09-17: 「カレンダーで見る」は出さない
 // SP 専用無し → PC 参考・1カラム。News SP_archive の3列タブは使わない
 // ========================================================================== */
 .event_archive {
@@ -145,39 +146,28 @@
         }
     }
 
-    .ea_cal a {
+    .ea_status {
+        box-sizing: border-box;
         display: inline-flex;
         align-items: center;
-        gap: 10px;
-        width: fit-content;
-        color: var(--color-text);
+        justify-content: center;
+        min-height: 20px;
+        padding: 0 10px;
+        border: 1px solid var(--color-primary);
+        border-radius: 2px;
+        background-color: var(--color-secondary);
+        color: var(--color-primary);
         font-family: var(--font-zen-kaku-gothic);
-        font-size: 15px;
+        font-size: 13px;
         font-weight: 500;
-        line-height: 1.5;
+        line-height: 1;
         letter-spacing: 0.05em;
-        text-decoration: none;
-        transition: color var(--transition-duration);
+    }
 
-        &::before {
-            content: var(--icon-arrow-right);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 32px;
-            height: 32px;
-            color: var(--color-secondary);
-            font-family: var(--font-awesome);
-            font-size: 12px;
-            font-weight: 400;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpolygon fill='%23ca9957' stroke='%23ca9957' stroke-width='1' stroke-linejoin='round' points='16,0.6 26.81,5.19 31.4,16 26.81,26.81 16,31.4 5.19,26.81 0.6,16 5.19,5.19'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: center;
-            background-size: 32px 32px;
-            transition:
-                background-image var(--transition-duration),
-                color var(--transition-duration);
-        }
+    .ea_status.is-closed {
+        border-color: #e7e7e7;
+        background-color: #e7e7e7;
+        color: #828282;
     }
 
     /* News 一覧 SP の3列罫線グリッドは使わない。PC タブ（枠つき pill）を折返す。 */
@@ -417,15 +407,5 @@
             background-color: var(--color-secondary);
         }
 
-        .ea_cal a:hover,
-        .ea_cal a:focus-visible {
-            color: var(--color-text);
-        }
-
-        .ea_cal a:hover::before,
-        .ea_cal a:focus-visible::before {
-            color: var(--color-accent);
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpolygon fill='%23fff' stroke='%23ca9957' stroke-width='1' stroke-linejoin='round' points='16,0.6 26.81,5.19 31.4,16 26.81,26.81 16,31.4 5.19,26.81 0.6,16 5.19,5.19'/%3E%3C/svg%3E");
-        }
     }
 }

@@ -6,8 +6,9 @@
     position: relative;
     padding-inline: var(--padding-SP);
     width: 100%;
-    /* SP Parts / normal page: 48px above authored content. */
-    &._content._normalPage {
+    /* Human 2026-09-17: 固定ページも CPT 詳細も、今後の一覧・詳細も _content 共通。
+       SP 上 48 / PC 上 64・下 100（1203:4878）。差はローカルナビの有無だけ。 */
+    &._content {
         padding-top: 48px;
     }
     /* transition: padding-inline var(--transition-duration); */
@@ -22,12 +23,6 @@
         }
         &._content {
             max-width: calc(var(--width-content) + var(--padding-TB) * 2);
-        }
-        /* Current normal-page PC authority jqYoPtusYfTeDqRegMCsx3 / 1203:4878
-           owns 64px above authored content and 100px below it. Scope those
-           vertical insets to the proven local-nav page master rather than
-           changing every shared _content consumer (single/detail/password). */
-        &._content._normalPage {
             padding-top: 64px;
             padding-bottom: 100px;
         }
@@ -38,4 +33,16 @@
             max-width: none;
         }
     }
+}
+
+/* News / Event はタブ・月ナビ・詳細帯が自前の上下リズム。二重にしない。 */
+body.blog .global_inner._content,
+body.archive .global_inner._content,
+body.category .global_inner._content,
+body.tag .global_inner._content,
+body.date .global_inner._content,
+body.single-post .global_inner._content,
+body.single-event .global_inner._content {
+    padding-top: 0;
+    padding-bottom: 0;
 }

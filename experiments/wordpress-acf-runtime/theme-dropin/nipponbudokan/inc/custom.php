@@ -11,6 +11,14 @@
 // ==========================================================================
 // カスタムポストの設定
 // ==========================================================================
+function nipponbudokan_rewrite($slug, $with_front = false)
+{
+  return array(
+    'slug' => $slug,
+    'with_front' => $with_front,
+  );
+}
+
 function add_custom_post()
 {
   register_post_type(
@@ -23,7 +31,8 @@ function add_custom_post()
       'public' => true,
       'menu_position' => 7,
       'has_archive' => 'event',
-      'rewrite' => true,
+      'rewrite' => nipponbudokan_rewrite('event'),
+      'show_in_rest' => true,
       'supports' => array('title', 'editor', 'thumbnail', 'custom-fields', 'excerpt')
       /* ここまで */
     )
@@ -39,7 +48,9 @@ function add_custom_post()
       'menu_icon' => 'dashicons-groups',
       'menu_position' => 5,
       'has_archive' => 'news',
-      'rewrite' => true,
+      // slug が news なので with_front を外すとお知らせ /news/ と衝突する。総務課は /news/news/ のまま。
+      'rewrite' => nipponbudokan_rewrite('news', true),
+      'show_in_rest' => true,
       'capability_type' => 'soumu',
       'capabilities' => array(
         'edit_posts' => 'edit_soumu', //-------------記事の投稿と編集
@@ -63,7 +74,8 @@ function add_custom_post()
       'menu_icon' => 'dashicons-format-aside',
       'menu_position' => 11,
       'has_archive' => 'budo-video',
-      'rewrite' => true,
+      'rewrite' => nipponbudokan_rewrite('budo-video'),
+      'show_in_rest' => true,
       'capability_type' => 'soumu',
       'capabilities' => array(
         'edit_posts' => 'edit_soumu', //-------------記事の投稿と編集
@@ -87,7 +99,8 @@ function add_custom_post()
       'menu_icon' => 'dashicons-groups',
       'menu_position' => 6,
       'has_archive' => 'shosyashodou',
-      'rewrite' => true,
+      'rewrite' => nipponbudokan_rewrite('shosyashodou'),
+      'show_in_rest' => true,
       'capability_type' => 'shosyashodou',
       'capabilities' => array(
         'edit_posts' => 'edit_shosyashodou', //-------------記事の投稿と編集
@@ -111,7 +124,8 @@ function add_custom_post()
       'menu_position' => 7,
       'menu_icon' => 'dashicons-book',
       'has_archive' => 'shodou-book',
-      'rewrite' => true,
+      'rewrite' => nipponbudokan_rewrite('shodou-book'),
+      'show_in_rest' => false,
       'supports' => array('title', 'editor', 'thumbnail', 'custom-fields', 'excerpt')
       /* ここまで */
     )
@@ -127,7 +141,8 @@ function add_custom_post()
       'menu_icon' => 'dashicons-book',
       'menu_position' => 8,
       'has_archive' => 'budo-book',
-      'rewrite' => true,
+      'rewrite' => nipponbudokan_rewrite('budo-book'),
+      'show_in_rest' => false,
       'supports' => array('title', 'editor', 'thumbnail', 'custom-fields', 'excerpt')
       /* ここまで */
     )
@@ -143,7 +158,8 @@ function add_custom_post()
       'menu_icon' => 'dashicons-format-aside',
       'menu_position' => 9,
       'has_archive' => 'budo-news',
-      'rewrite' => true,
+      'rewrite' => nipponbudokan_rewrite('budo-news'),
+      'show_in_rest' => true,
       'supports' => array('title', 'editor', 'thumbnail', 'custom-fields', 'excerpt')
       /* ここまで */
     )
@@ -159,7 +175,8 @@ function add_custom_post()
       'menu_position' => 10,
       'menu_icon' => 'dashicons-book-alt',
       'has_archive' => 'tankoubon',
-      'rewrite' => true,
+      'rewrite' => nipponbudokan_rewrite('tankoubon'),
+      'show_in_rest' => true,
       'supports' => array('title', 'editor', 'thumbnail', 'custom-fields', 'excerpt')
       /* ここまで */
     )
@@ -181,7 +198,9 @@ function add_custom_taxonomy()
       'label' => '開催イベントのカテゴリー',
       'singular_label' => '開催イベントのカテゴリー',
       'public' => true,
-      'show_ui' => true
+      'show_ui' => true,
+      'show_in_rest' => true,
+      'rewrite' => nipponbudokan_rewrite('event_cat'),
     )
   );
   register_taxonomy(
@@ -193,7 +212,9 @@ function add_custom_taxonomy()
       'label' => '総務課のカテゴリー',
       'singular_label' => '総務課のカテゴリー',
       'public' => true,
-      'show_ui' => true
+      'show_ui' => true,
+      'show_in_rest' => true,
+      'rewrite' => nipponbudokan_rewrite('budo-video'),
     )
   );
   register_taxonomy(
@@ -205,7 +226,10 @@ function add_custom_taxonomy()
       'label' => '教育文化課のカテゴリー',
       'singular_label' => '教育文化課のカテゴリー',
       'public' => true,
-      'show_ui' => true
+      'show_ui' => true,
+      'show_in_rest' => true,
+      // taxonomy slug が news なので with_front を外すとお知らせ /news/{id}/ と衝突する。
+      'rewrite' => nipponbudokan_rewrite('news', true),
     )
   );
   register_taxonomy(
@@ -217,7 +241,9 @@ function add_custom_taxonomy()
       'label' => '単行本のカテゴリー',
       'singular_label' => '単行本のカテゴリー',
       'public' => true,
-      'show_ui' => true
+      'show_ui' => true,
+      'show_in_rest' => true,
+      'rewrite' => nipponbudokan_rewrite('book'),
     )
   );
 }

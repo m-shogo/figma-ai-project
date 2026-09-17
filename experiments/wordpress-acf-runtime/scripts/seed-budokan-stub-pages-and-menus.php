@@ -236,10 +236,17 @@ function budokan_stub_upsert_page(string $path, array $spec, array $page_ids, in
     $page = $matches ? $matches[0] : null;
 
     $template = '';
-    if ($spec['kind'] === 'nav') {
-        $template = 'templates/template-oneColumn.php';
-    } elseif ($spec['kind'] === 'form') {
+    if ($spec['kind'] === 'form') {
         $template = 'templates/template-form.php';
+    }
+    $publication_templates = array(
+        'publications/budo/back' => 'page-publications-budo-back.php',
+        'publications/budo/latest' => 'page-publications-budo-latest.php',
+        'publications/shodo/back' => 'page-publications-shodo-back.php',
+        'publications/shodo/latest' => 'page-publications-shodo-latest.php',
+    );
+    if (isset($publication_templates[$path])) {
+        $template = $publication_templates[$path];
     }
 
     $payload = array(

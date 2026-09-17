@@ -75,52 +75,57 @@ $items = array(
     array(
         'slug' => 'qa-event-2026-09-01-gakuen',
         'title' => '武道学園 入学案内',
-        'date' => '2026-09-01 10:00:00',
+        'date' => '2026-09-01',
         'time' => '10時開会',
         'capacity' => '80名',
         'fee' => '1,000円',
         'host' => '日本武道協議会',
         'term' => $taiken,
+        'status' => '募集中',
     ),
     array(
         'slug' => 'qa-event-2026-09-01-shonen',
         'title' => '昭和100年記念 令和8年度 全日本少年少女武道錬成大会',
-        'date' => '2026-09-01 00:00:00',
+        'date' => '2026-09-01',
         'time' => '11時開会',
         'capacity' => '80名',
         'fee' => '1,000円',
         'host' => '日本武道協議会',
         'term' => $taikai,
+        'status' => '開催中',
     ),
     array(
         'slug' => 'qa-event-2026-09-03-kakizome',
         'title' => '第62回全日本書初め大展覧会',
-        'date' => '2026-09-03 11:00:00',
+        'date' => '2026-09-03',
         'time' => '11時開会',
         'capacity' => '80名',
         'fee' => '1,000円',
         'host' => '日本武道協議会',
         'term' => $taikai,
+        'status' => '受付終了',
     ),
     array(
         'slug' => 'qa-event-2026-09-05-gakuen',
         'title' => '武道学園 入学案内',
-        'date' => '2026-09-05 10:00:00',
+        'date' => '2026-09-05',
         'time' => '10時開会',
         'capacity' => '',
         'fee' => '',
         'host' => '日本武道協議会',
         'term' => $taiken,
+        'status' => '募集中',
     ),
     array(
         'slug' => 'qa-event-2026-08-01-shonen',
         'title' => '8月サンプル（月切替確認）',
-        'date' => '2026-08-01 10:00:00',
+        'date' => '2026-08-01',
         'time' => '10時開会',
         'capacity' => '30名',
         'fee' => '無料',
         'host' => '日本武道館',
         'term' => $taikai,
+        'status' => '',
     ),
 );
 
@@ -131,6 +136,11 @@ foreach ($items as $item) {
     update_field('event_capacity', $item['capacity'], $id);
     update_field('event_fee', $item['fee'], $id);
     update_field('event_host', $item['host'], $id);
+    if ($item['status'] === '') {
+        delete_field('event_status', $id);
+    } else {
+        update_field('event_status', $item['status'], $id);
+    }
     wp_set_object_terms($id, array((int) $item['term']), 'event_cat', false);
     WP_CLI::log(sprintf('#%d %s %s', $id, $item['date'], get_permalink($id)));
 }

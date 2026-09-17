@@ -39,7 +39,7 @@ jobs:
           docker compose run --rm -e WP_ENVIRONMENT_TYPE=local cli eval-file /fixture/scripts/seed-budokan-mega-touch-qa.php
           qa_page_id="$(docker compose run --rm cli option get budokan_mega_touch_qa_page_id)"
           qa_template="$(docker compose run --rm cli post meta get "$qa_page_id" _wp_page_template)"
-          if [[ "$qa_template" != "templates/template-oneColumn.php" ]]; then echo "FAIL Mega touch QA page template mismatch: ${qa_template}." >&2; exit 1; fi
+          if [[ "$qa_template" != "default" ]]; then echo "FAIL Mega touch QA page template mismatch: ${qa_template}." >&2; exit 1; fi
           cd ../..
           npm install --no-save --package-lock=false playwright@1.54.2
           npx playwright install --with-deps chromium

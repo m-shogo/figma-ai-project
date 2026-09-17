@@ -38,7 +38,7 @@ if ($existing) {
     $page_id = wp_insert_post($payload, true);
 }
 if (is_wp_error($page_id)) WP_CLI::error($page_id->get_error_message());
-update_post_meta((int) $page_id, '_wp_page_template', 'templates/template-oneColumn.php');
+update_post_meta((int) $page_id, '_wp_page_template', 'default');
 update_option('budokan_modal_qa_page_id', (int) $page_id, false);
 flush_rewrite_rules(false);
 WP_CLI::success(sprintf('Seeded Budokan modal interaction QA page #%d.', (int) $page_id));

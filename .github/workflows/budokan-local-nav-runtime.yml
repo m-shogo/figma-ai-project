@@ -8,7 +8,7 @@ on:
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/module/module_menu.css'
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/inc/menu.php'
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/sidebar.php'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/templates/template-oneColumnLocalNav.php'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/page.php'
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/common.js'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-local-nav-runtime-qa.sh'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-local-nav-browser-qa.mjs'
@@ -36,7 +36,7 @@ jobs:
         run: |
           php -l experiments/wordpress-acf-runtime/scripts/seed-budokan-local-nav-qa.php
           php -l experiments/wordpress-acf-runtime/scripts/seed-budokan-disclosure-qa.php
-          php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/templates/template-oneColumnLocalNav.php
+          php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/page.php
           php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/inc/menu.php
 
       - name: Run disposable WordPress Local Navigation hierarchy QA
@@ -51,7 +51,7 @@ jobs:
           docker compose run --rm -e WP_ENVIRONMENT_TYPE=local cli eval-file /fixture/scripts/seed-budokan-disclosure-qa.php
           disclosure_page_id="$(docker compose run --rm cli option get budokan_disclosure_qa_page_id)"
           disclosure_template="$(docker compose run --rm cli post meta get "$disclosure_page_id" _wp_page_template)"
-          if [[ "$disclosure_template" != "templates/template-oneColumn.php" ]]; then
+          if [[ "$disclosure_template" != "default" ]]; then
             echo "FAIL disclosure QA page template mismatch: ${disclosure_template}." >&2
             exit 1
           fi

@@ -1,20 +1,19 @@
 <?php
 /**
- * バックナンバー一覧の1行。Figma 1634:10806。
- * 表紙リンクは独自（media-text / gallery に載せない）。hover は opacity 0.7 のみ。
+ * 書写書道バック一覧の1行。表紙リンクは独自。PDF は Parts テキストリンク。TOP画像は出さない。
  */
-get_template_part('template-parts/publications/_budo-helpers');
+get_template_part('template-parts/publications/_shodou-helpers');
 
 $post_id = isset($args['post_id']) ? (int) $args['post_id'] : get_the_ID();
 if (!$post_id) {
     return;
 }
 
-$summary = get_field('budo_backcontent', $post_id);
-$thumbnail_id = get_post_thumbnail_id($post_id);
+$thumbnail_id = nbk_shodou_cover_id($post_id);
 $title = get_the_title($post_id);
-$heading = nbk_budo_issue_heading($post_id);
-$order_url = home_url('/publications/budo/order/');
+$heading = nbk_shodou_issue_heading($post_id);
+$order_url = home_url('/publications/shodo/form-shodo/');
+$rensai_rows = nbk_shodou_rensai_rows($post_id);
 $cover_alt = $thumbnail_id
     ? (get_post_meta($thumbnail_id, '_wp_attachment_image_alt', true) ?: $title)
     : $title;
@@ -40,13 +39,13 @@ $permalink = get_permalink($post_id);
     };
     ?>
 
-    <?php if ($thumbnail_id && nbk_acf_value_present($summary)) : ?>
+    <?php if ($thumbnail_id && $rensai_rows) : ?>
         <div class="publication_budo-backBody">
             <a class="publication_budo-coverLink" href="<?php echo esc_url($permalink); ?>">
                 <?php echo wp_get_attachment_image($thumbnail_id, 'full', false, array('alt' => $cover_alt)); ?>
             </a>
             <div class="publication_budo-backSummary">
-                <?php echo wp_kses_post($summary); ?>
+                <?php nbk_shodou_echo_pdf_links($rensai_rows); ?>
                 <?php $detail_button($post_id); ?>
             </div>
         </div>
@@ -55,9 +54,9 @@ $permalink = get_permalink($post_id);
             <?php echo wp_get_attachment_image($thumbnail_id, 'full', false, array('alt' => $cover_alt)); ?>
         </a>
         <?php $detail_button($post_id); ?>
-    <?php elseif (nbk_acf_value_present($summary)) : ?>
+    <?php elseif ($rensai_rows) : ?>
         <div class="publication_budo-backSummary">
-            <?php echo wp_kses_post($summary); ?>
+            <?php nbk_shodou_echo_pdf_links($rensai_rows); ?>
             <?php $detail_button($post_id); ?>
         </div>
     <?php else : ?>

@@ -1,14 +1,14 @@
 <?php
 /**
- * Template Name: 月刊「武道」最新号
+ * Template Name: 月刊「書写書道」最新号
  *
- * /publications/budo/latest/ 。最新 budo-book 1件を CPT single と同じ part で描画する。
+ * /publications/shodo/latest/ 。最新 shodou-book 1件を CPT single と同じ part で描画する。
  */
 get_template_part('template-parts/publications/_acf-has-value');
 get_header();
 
-$latest_budo = new WP_Query(array(
-    'post_type'           => 'budo-book',
+$latest_shodou = new WP_Query(array(
+    'post_type'           => 'shodou-book',
     'post_status'         => 'publish',
     'posts_per_page'      => 1,
     'orderby'             => 'date',
@@ -22,9 +22,9 @@ $latest_budo = new WP_Query(array(
         <?php get_template_part('template-parts/_visual'); ?>
         <div class="global_inner _content">
             <div class="gc_main _oneColumn">
-                <?php if ($latest_budo->have_posts()) : ?>
-                    <?php while ($latest_budo->have_posts()) : $latest_budo->the_post(); ?>
-                        <?php get_template_part('template-parts/publications/_budo-detail', null, array('post_id' => get_the_ID())); ?>
+                <?php if ($latest_shodou->have_posts()) : ?>
+                    <?php while ($latest_shodou->have_posts()) : $latest_shodou->the_post(); ?>
+                        <?php get_template_part('template-parts/publications/_shodou-detail', null, array('post_id' => get_the_ID())); ?>
                     <?php endwhile; ?>
                     <?php wp_reset_postdata(); ?>
                 <?php endif; ?>

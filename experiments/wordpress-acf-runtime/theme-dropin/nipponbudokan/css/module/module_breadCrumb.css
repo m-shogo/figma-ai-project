@@ -10,7 +10,7 @@
     font-size: 13px;
     font-weight: 400;
     color: var(--color-text);
-    line-height: 1;
+    line-height: 1.6;
     letter-spacing: 0.05em;
     .mb_inner {
         max-width: none;

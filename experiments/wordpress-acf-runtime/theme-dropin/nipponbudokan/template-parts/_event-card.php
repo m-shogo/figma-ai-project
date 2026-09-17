@@ -6,6 +6,12 @@ $time = function_exists('get_field') ? get_field('event_time') : '';
 $capacity = function_exists('get_field') ? get_field('event_capacity') : '';
 $fee = function_exists('get_field') ? get_field('event_fee') : '';
 $host = function_exists('get_field') ? get_field('event_host') : '';
+$status = nipponbudokan_event_status();
+$status_html = '';
+if ($status !== '') {
+    $status_mod = nipponbudokan_event_status_mod($status);
+    $status_html = '<span class="ea_status' . ($status_mod !== '' ? ' ' . esc_attr($status_mod) : '') . '">' . esc_html($status) . '</span>';
+}
 $has_meta = nipponbudokan_event_value_present($time)
     || nipponbudokan_event_value_present($capacity)
     || nipponbudokan_event_value_present($fee)
@@ -16,6 +22,7 @@ $has_meta = nipponbudokan_event_value_present($time)
         <?php
         get_template_part('template-parts/_label-category', null, [
             'taxonomy' => '_cat',
+            'before' => $status_html,
         ]);
         ?>
         <div class="ea_copy">

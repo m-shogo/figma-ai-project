@@ -98,7 +98,7 @@ function budokan_disclosure_qa_menu(string $menu_name, string $parent_title, str
 }
 
 $page_id = budokan_disclosure_qa_page('qa-budokan-global-footer-disclosure', 'Global Footer Disclosure QA');
-update_post_meta($page_id, '_wp_page_template', 'templates/template-oneColumn.php');
+update_post_meta($page_id, '_wp_page_template', 'default');
 
 $global_menu_id = budokan_disclosure_qa_menu(
     'global-nav-qa',

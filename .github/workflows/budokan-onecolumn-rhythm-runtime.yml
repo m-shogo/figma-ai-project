@@ -3,7 +3,7 @@ name: Budokan One Column Rhythm Runtime
 on:
   pull_request:
     paths:
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/templates/template-oneColumn.php'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/page.php'
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/layout/global_inner.css'
       - 'experiments/wordpress-acf-runtime/scripts/seed-budokan-onecolumn-rhythm-qa.php'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-onecolumn-rhythm-browser-qa.mjs'

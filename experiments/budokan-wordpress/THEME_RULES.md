@@ -89,8 +89,10 @@ QA は 〜767 と ≥1280 を主にする。
 ## 7. Patterns / パーツ集
 
 - `patterns.json` … ブロックパターン書き出し
-- `parts.php` … 「●●パーツ集●●」本文正本（**変更なし・タグ追加禁止**）
-- 固定ページは 1カラム（`templates/template-oneColumn.php`）。見た目は `css/blocks/` とページタイトル帯（`global_mainVisual.css`）で Figma parts / SP_parts に合わせる
+- `parts.php` … 「●●パーツ集●●」本文正本（**変更なし・タグ追加禁止**）。Parts にある UI は markup 流用か既存 class の追加改良。Parts に無い塊だけ `module_*`（Human 2026-09-17）
+- page module を `.block-editor_wrap` と同じ要素に載せるとき、セレクタは `.block-editor_wrap.publication_budo`（同一要素）。空白の子孫 combinator は当たらない。完了前に `FIRST_PASS_MEASURE.md` を実行する（2026-09-17）
+- 固定ページはデフォルト `page.php`（1カラム）。見た目は `css/blocks/` とページタイトル帯（`global_mainVisual.css`）で Figma parts / SP_parts に合わせる
+- 固定ページも CPT 詳細も、今後作る一覧・詳細も、本文上下は `.global_inner._content` が共通 owner（SP 上 48 / PC 上 64・下 100）。テンプレごとに `_normalPage` や同等 padding を足さない。差はローカルナビの有無だけ。例外は News / Event の archive・single（タイトル帯・タブが自前リズム）だけ
 - form ブロックがあっても Agent は触らない
 - Gutenberg の style / palette 名は editor hook。Figma の見た目ではない（2026-09-01 Human）:
   - 標準 `.wp-block-button` = `button_L`。hover は `1163:4229`（閉じるとき default だけでは不足）
@@ -107,14 +109,29 @@ QA は 〜767 と ≥1280 を主にする。
 
 - TOP: `front-page.php`（ACF slider / notice / news / event list）
 - 固定ページ: `page.php` + `templates/template-*.php`
+- CPT 詳細: `single-{post_type}.php`（例: `single-budo-book.php` / `single-shodou-book.php` / `single-tankoubon.php`）。本文は `.global_inner._content`。今後の詳細も同じ。ページ用 padding を詳細で省略しない
+- 本文上下は `.global_inner._content` 共通。ローカルナビは ACF があるときだけ `_local-navigation`
 - 共通帯: `template-parts/_visual.php`
 - 種類「ナビゲーション」: ナビゲーションテンプレート + `page_img`（画像タイトル）。デフォルトページは `page_img` なし（黄土色）。正本は `CURRENT_AUTHORITY.md` / `DIRECTORY_MAP.md`
+
+**テンプレートは人が見て分かる入口にする。言われてから作らない（Human 2026-09-17）。**
+
+考える順: 公開 IA → WP hierarchy のファイル名 → そのファイルを入口 → 共通は part。
+
+- ネイティブ公開 CPT 一覧: `archive-{post_type}.php`
+- taxonomy: `taxonomy-{taxonomy}.php`
+- 詳細が `single.php` 分岐の奥になるなら: `single-{post_type}.php`
+- シェルが同じなのに `Template Name` 付き page template を増やさない
+- 公開 IA が固定 page + query の CPT（刊行物）はネイティブ archive に寄せない。正本: `PUBLICATIONS_CPT_ARCHITECTURE.md`
+
 
 ---
 
 ## 9. CPT
 
-- `event` + taxonomy `event_cat`
+- `event` + taxonomy `event_cat`。一覧 owner: `archive-event.php` / `taxonomy-event_cat.php` → `_event-archive.php`。詳細 owner: `single-event.php`（下端の区切り・一覧へ戻るは News `single.php` と同じ）
+- CPT / taxonomy は `'show_in_rest' => true`。無いと Gutenberg が出ず Classic になる（`supports` に `editor` があっても）。例外: `budo-book` / `shodou-book` は Classic（Human 2026-09-17）
+- お知らせ permalink は `/news/%post_id%/`。他 CPT は `rewrite.with_front = false`（`/event/1094/` など）。例外: 総務課 CPT `news` と教育文化課 taxonomy `news` は slug が `news` なので `/news/news/` のまま（お知らせと衝突）
 - News 相当は core `post` を使用している形跡（TOP の `get_posts`）
 - sample 運用で進める（本番運用は随時）
 

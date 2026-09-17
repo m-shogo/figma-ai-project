@@ -94,9 +94,10 @@
     margin-bottom: 48px;
 }
 
-/* News single PC 1235:6361 / SP 1451:5197
-   区切りは Parts の wp-block-separator。前へ次へは出さない。 */
-.single-post .gc_main > .wp-block-separator {
+/* News PC 1235:6361 / SP 1451:5197 と Event PC 1632:10382 は
+   同じ Parts hr + 一覧へ戻る。Event SP 専用 frame は無いので News SP と同じ下端。 */
+.single-post .gc_main > .wp-block-separator,
+.single-event .gc_main > .wp-block-separator {
     margin-top: var(--wp-block-margin-medium);
     margin-bottom: 0;
 }
@@ -111,7 +112,8 @@
     }
 }
 
-body.single-post .global_contents > section > .module_breadCrumb {
+body.single-post .global_contents > section > .module_breadCrumb,
+body.single-event .global_contents > section > .module_breadCrumb {
     margin-top: 64px;
 }
 
@@ -124,23 +126,20 @@ body.single-post .global_contents > section > .module_breadCrumb {
 }
 
 @media screen and (min-width: 768px) {
-    .single-post .gc_main > .wp-block-separator {
+    .single-post .gc_main > .wp-block-separator,
+    .single-event .gc_main > .wp-block-separator {
         margin-top: 56px;
     }
 
-    .single-post .module_pager-02 {
-        margin-top: 56px;
-        flex-direction: row;
-        justify-content: center;
-    }
-
+    .single-post .module_pager-02,
     .single-event .module_pager-02 {
-        margin-top: 48px;
+        margin-top: 56px;
         flex-direction: row;
         justify-content: center;
     }
 
-    body.single-post .global_contents > section > .module_breadCrumb {
+    body.single-post .global_contents > section > .module_breadCrumb,
+    body.single-event .global_contents > section > .module_breadCrumb {
         margin-top: 100px;
     }
 }
