@@ -43,7 +43,7 @@ $heading = nbk_acf_value_present($month)
         </div>
     <?php endif; ?>
 
-    <a class="publication_budo-backDetail" href="<?php echo esc_url($permalink); ?>">
-        <span>詳細はこちら</span>
-    </a>
+    <div class="wp-block-button is-style-small publication_budo-backDetail">
+        <a class="wp-block-button__link wp-element-button" href="<?php echo esc_url($permalink); ?>">詳細はこちら</a>
+    </div>
 </article>
