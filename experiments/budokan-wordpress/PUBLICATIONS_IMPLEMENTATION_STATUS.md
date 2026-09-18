@@ -44,8 +44,10 @@ Human override 2026-09-18: 武道と同じ publication layout family として *
 
 現状:
 
-- `single-shodou-book.php` は旧 ACF dump/sample のままで production detail 未実装。`topimage` も出しているため置換対象
-- 書道 back/latest/detail を武道 family と同じ shared visual rules に載せる必要がある
+- `single-shodou-book.php` は production detail へ移行済み。shared `_budo-detail.php` を使い、書道固有の ACF field map だけを args で差し替える
+- 表紙はアイキャッチを使用し、`topimage` / `toprensailist` は single に出さない。本文は `the_content()`、空本文は wrapper ごと非表示
+- detail visual markup/CSS は武道と共有済みで、書道専用 layout CSS は追加していない
+- 残り: 書道 back/latest を同じ shared publication family へ載せること、一覧/詳細の `is-style-small` 統一、新 Figma PC/SP geometry/typography、実ブラウザ Visual QA
 
 ### 単行本
 
