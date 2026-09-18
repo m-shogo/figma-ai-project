@@ -1,7 +1,7 @@
 <?php
 /**
  * 月刊「武道」バックナンバー一覧の1件。
- * Figma publications 1634:10806 の「月号 + 注文 / 表紙 + 概要 + 詳細」構造。
+ * Figma publications family の「月号 + 注文 / 表紙 + 概要 + 詳細」構造。
  */
 $post_id = isset($args['post_id']) ? (int) $args['post_id'] : get_the_ID();
 if (!$post_id) {
@@ -12,6 +12,7 @@ $month = get_field('budo_month', $post_id);
 $summary = get_field('budo_backcontent', $post_id);
 $thumbnail_id = get_post_thumbnail_id($post_id);
 $title = get_the_title($post_id);
+$permalink = get_permalink($post_id);
 $heading = nbk_acf_value_present($month)
     ? '月刊「武道」' . wp_strip_all_tags((string) $month)
     : $title;
@@ -30,7 +31,9 @@ $heading = nbk_acf_value_present($month)
         <div class="publication_budo-backBody<?php echo !$thumbnail_id ? ' _noImage' : ''; ?>">
             <?php if ($thumbnail_id) : ?>
                 <figure class="publication_budo-backCover">
-                    <?php echo wp_get_attachment_image($thumbnail_id, 'full', false, array('alt' => get_post_meta($thumbnail_id, '_wp_attachment_image_alt', true) ?: $title)); ?>
+                    <a class="publication_budo-coverLink" href="<?php echo esc_url($permalink); ?>" aria-label="<?php echo esc_attr($heading !== '' ? $heading . 'の詳細' : $title . 'の詳細'); ?>">
+                        <?php echo wp_get_attachment_image($thumbnail_id, 'full', false, array('alt' => get_post_meta($thumbnail_id, '_wp_attachment_image_alt', true) ?: $title)); ?>
+                    </a>
                 </figure>
             <?php endif; ?>
 
@@ -40,7 +43,7 @@ $heading = nbk_acf_value_present($month)
         </div>
     <?php endif; ?>
 
-    <a class="publication_budo-backDetail" href="<?php echo esc_url(get_permalink($post_id)); ?>">
+    <a class="publication_budo-backDetail" href="<?php echo esc_url($permalink); ?>">
         <span>詳細はこちら</span>
     </a>
 </article>
