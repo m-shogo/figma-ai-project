@@ -1,81 +1,98 @@
-# 刊行物 CPT 実装進捗 — pause checkpoint
+# 刊行物 CPT 実装進捗 — active checkpoint
 
-更新: 2026-09-17
+更新: 2026-09-18
 
 ## 正本
 
-- GitHub: `m-shogo/figma-ai-project` / branch `so`
-- Figma: `jqYoPtusYfTeDqRegMCsx3` のみ。旧 file は見ない
-- 契約: `CURRENT_AUTHORITY.md` / `FOUR_FAMILIES.md` / `PUBLICATIONS_CPT_ARCHITECTURE.md`
+- GitHub: `m-shogo/figma-ai-project` / canonical branch `so`
+- Figma の唯一の現行 Visual authority: `zMjOY4euPBi9T23y7ZSM6y`
+- PC authority page/node: `0:1`
+- SP authority page/node: `114:5409`
+- 武道・書道 一覧 SP authority: `2608:5702`
+- 武道・書道 詳細 SP authority: `2608:6933`
+- 旧 Figma `jqYoPtusYfTeDqRegMCsx3` は実装漏れ監査にだけ使用し、最終実装値の正本にはしない
+- 契約: `CURRENT_AUTHORITY.md` / `FOUR_FAMILIES.md` / `PUBLICATIONS_CPT_ARCHITECTURE.md`。本ファイルの 2026-09-18 Human override と矛盾する古い Figma key / 「書道 single 未確定」記述は superseded とする
 - 未決事項: `PENDING_QUESTIONS.md`
 
 ## 現在地
 
 ### イベント
 
-- `/event/` 一覧: 実装済み
-- `/event/{slug}/` 詳細: 実装済み
-- 既存完了面として回帰させない
+- `/event/` 一覧・`/event/{slug}/` 詳細は既存完了面。刊行物作業で回帰させない。
 
 ### 月刊「武道」
 
-- `/budo-book/{slug}/` 詳細: コード実装済み
-  - 共通 `_budo-detail.php`
-  - 既存 ACF の空値は出さない
-  - 本文 owner は `the_content()`
-- `/publications/budo/latest/`: コード実装済み
-  - single と同じ detail part を共有
-- `/publications/budo/back/`: コード実装済み
-  - 固定 page query
-  - 最新号を除外
-  - 空概要・画像なし対応を実装
-- 残り: ユーザーのローカル WordPress で PC/SP Visual QA を完了確認すること
-
-### 単行本
-
-- `/tankoubon/{slug}/` 詳細: コード実装済み、現在の停止地点
-  - Figma `1686:5574` と構造照合済み
-  - 「日本武道館発行の単行本」H2 + SVG octagon
-  - アイキャッチ + `book_author` / `book_desc` / `book_info` / `book_price`
-  - `readingttl` + `readingtest` / `amazon` / `book_addbtn` の CTA
-  - CTA の octagon と external-link icon は SVG
-  - 空値は要素ごと出さない
-  - 本文 owner は `the_content()`
-  - PC/SP CSS 実装済み
-- 残り: 通常値 / 長文 / 空 ACF / 画像なし / CTA 長文の PC/SP Visual QA
-- `/publications/budo/books/` 一覧: 未着手。次の実装対象
-  - Figma `1656:5309`
-  - 固定 page + tax `book`
+- `/budo-book/{slug}/` 詳細: shared `_budo-detail.php` + `the_content()` の production 構造あり
+- `/publications/budo/latest/`: single と detail part を共有
+- `/publications/budo/back/`: 固定 page query、最新号除外、空概要・画像なし対応あり
+- 2026-09-18 `so` で SP back-list geometry を新 Figma `2608:5702` に寄せた
+- `.publication_budo-coverLink`: 箱サイズ固定 + `overflow:hidden`; img `width/height:100%`; hover は img `opacity:0.7` のみ。layout shift を起こす border/padding/transform 等を hover で変更しない
+- 残り: 新 Figma PC/SP との詳細 geometry/typography、`is-style-small` 契約、実ブラウザ Visual QA
 
 ### 月刊書写書道
 
-- `/publications/shodo/back/`: 未着手
-- Figma 専用 frame なし → PC既存設計を参考に SP 1カラム
-- PDF 一覧。single 公開はまだ作らない
-- `/shodou-book/{slug}/` の public single は Human 未確定のため着手しない
+Human override 2026-09-18: 武道と同じ publication layout family として **一覧・最新号・public single を PC/SP とも実装対象にする**。旧「PDF back のみ / single 公開未確定」は superseded。
 
-## 未完了を完了扱いにしない理由
+固定契約:
 
-このエージェント実行環境から、ユーザー Mac 上の `http://127.0.0.1:27247/` を直接ブラウザ操作できない。したがって QA seed の投入と実画面 PC/SP Visual QA は未確認のまま「完了」としない。
+- ACF group `group_nbk_gekkan_shodou` を維持。`group_nbk_*.json` は変更しない
+- 表紙はアイキャッチ。`topimage` は TOP 専用で、刊行物詳細/一覧の表紙として出さない
+- PDF はテキストリンク
+- 空 ACF は表示しない。ダミー文字列を production 表示へハードコードしない
+- 一覧「詳細はこちら」と詳細「バックナンバー一覧」は武道と同じ既存 `is-style-small` owner を使う
+- 武道/書道の視覚値は共通 CSS/component owner へ寄せ、片方専用のコピペ layout CSS を増やさない
 
-## 再開地点
+現状:
 
-1. `@GitHub` で `so` の最新 SHA と authority を確認
-2. `@Figma` で正本 file の対象 node を直接取得
-3. ローカル WP が操作できる環境なら、単行本詳細の QA を最優先で完了
-4. QA が通れば単行本詳細を明示的に完了扱いにする
-5. 単行本一覧 `/publications/budo/books/`（Figma `1656:5309`）を実装
-6. 単行本一覧の QA 後、書写バックへ進む
+- `single-shodou-book.php` は旧 ACF dump/sample のままで production detail 未実装。`topimage` も出しているため置換対象
+- 書道 back/latest/detail を武道 family と同じ shared visual rules に載せる必要がある
 
-## 守る契約（再開時の短縮版）
+### 単行本
 
-- 空フィールドを出さない・値を発明しない
-- `group_nbk_*.json` は触らない
-- 刊行物一覧は固定 page query。ネイティブ CPT archive をメニュー一覧にしない
-- `parts.php` / Form は触らない
-- hover で枠を足さない
-- octagon invert は SVG chip
-- 旧 `budokan` Theme の HTML/CSS はコピーしない
-- SP frame が無い面は PC 参考・1カラム
-- 未決は `PENDING_QUESTIONS.md` に寄せ、推測実装しない
-- 既存のお知らせ・イベント・stylesheet import graph を回帰させない
+- 既存実装を回帰させない。武道・書道 publication 完了ゲートを優先し、その途中で単行本へ飛ばない。
+
+## 新 Figma SP で確認済みの主要 geometry
+
+`2608:5702`（一覧 SP 375px）:
+
+- page width 375px
+- content horizontal padding 24px → content width 327px
+- container top padding 48px / bottom 64px / major section gap 64px
+- backnumber list gap 40px
+- item internal gap 24px
+- item header: vertical stack, gap 16px, padding 16px 20px
+- item title 20px Zen Old Mincho, letter spacing 1px
+- cover 160×226px
+- cover → text 24px
+- body 15px / line-height 1.6 / letter spacing .75px
+- detail link 16px
+
+`2608:6933`（詳細 SP 375px）は detail family の SP authority。cover 140×198px、情報は縦積み。実装時に node の live context を再取得して exact geometry を照合する。
+
+## TOP へ進む前の完了ゲート
+
+1. 武道 一覧 PC/SP が新 Figma と高精度一致
+2. 書道 一覧 PC/SP が同じ共通 CSS で高精度一致
+3. 武道 詳細 PC/SP が高精度一致
+4. 書道 詳細 PC/SP が同じ共通 CSS で高精度一致
+5. cover hover layout shift 0、画像 opacity のみ変化
+6. 空 ACF / 長文 / 長タイトル / 画像比率差 / PDF 有無で崩れなし
+7. SP/PC breakpoint 前後で横スクロール・gap 崩れなし
+8. shared CSS blast radius を武道/書道双方で確認
+9. 重複 CSS・不要な片方専用 override を増やさない
+10. 実ブラウザ Visual QA evidence を残し、未確認を PASS 扱いしない
+
+全ゲートを満たすまで TOP の実装へ進まない。
+
+## 実行契約
+
+- 各 run 開始時と write 直前に最新 `so` / open PR / CI / authority / Figma を再取得する
+- 旧 Figma → 現行実装で実装漏れを監査した後、必ず新 Figma を最終正本として差分実装する
+- SP `2608:5702` / `2608:6933` を優先。PC は新 file の PC authority `0:1` から対応 frame を毎回検索・特定し、古い node 番号を実装値として流用しない
+- Visual QA は最低 SP 375px、必要に応じ 390/430px、PC 1380相当、768px breakpoint 前後
+- 武道を修正したら同 viewport の書道も確認し、その逆も行う
+- `parts.php` / Form / Formidable / `group_nbk_*.json` は触らない
+- native `/budo-book/` を公開メニュー一覧として流用しない
+- tmp/cache/`__pycache__` を commit しない
+- force push/history rewrite 禁止
+- 実ブラウザを操作できない環境では未確認を PASS にせず、read-only Figma/code 差分監査と次の安全な修正特定を進める
