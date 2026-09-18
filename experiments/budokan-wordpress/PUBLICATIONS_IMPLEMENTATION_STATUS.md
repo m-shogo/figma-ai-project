@@ -1,6 +1,6 @@
 # 刊行物 CPT 実装進捗 — active checkpoint
 
-更新: 2026-09-18
+更新: 2026-09-19
 
 ## 正本
 
@@ -26,8 +26,9 @@
 - `/publications/budo/latest/`: single と detail part を共有
 - `/publications/budo/back/`: 固定 page query、最新号除外、空概要・画像なし対応あり
 - 2026-09-18 `so` で SP back-list geometry を新 Figma `2608:5702` に寄せた
+- 一覧「詳細はこちら」は `wp-block-button is-style-small` 契約へ統一済み
 - `.publication_budo-coverLink`: 箱サイズ固定 + `overflow:hidden`; img `width/height:100%`; hover は img `opacity:0.7` のみ。layout shift を起こす border/padding/transform 等を hover で変更しない
-- 残り: 新 Figma PC/SP との詳細 geometry/typography、`is-style-small` 契約、実ブラウザ Visual QA
+- 残り: 新 Figma PC/SP との exact geometry/typography、実ブラウザ Visual QA
 
 ### 月刊書写書道
 
@@ -46,8 +47,11 @@ Human override 2026-09-18: 武道と同じ publication layout family として *
 
 - `single-shodou-book.php` は production detail へ移行済み。shared `_budo-detail.php` を使い、書道固有の ACF field map だけを args で差し替える
 - 表紙はアイキャッチを使用し、`topimage` / `toprensailist` は single に出さない。本文は `the_content()`、空本文は wrapper ごと非表示
-- detail visual markup/CSS は武道と共有済みで、書道専用 layout CSS は追加していない
-- 残り: 書道 back/latest を同じ shared publication family へ載せること、一覧/詳細の `is-style-small` 統一、新 Figma PC/SP geometry/typography、実ブラウザ Visual QA
+- `/publications/shodo/latest/` は最新 `shodou-book` 1件を query し、single と同じ shared detail part を使用する production 構造を実装済み
+- `/publications/shodo/back/` は最新号を除外する fixed-page query を実装済み。表紙、`shodou_month`、`rensailist` の PDF テキストリンク、詳細導線を既存 publication family owner で出す
+- 一覧「詳細はこちら」は武道と同じ `wp-block-button is-style-small` 契約へ統一済み
+- detail/back visual markup/CSS は武道と共有し、書道専用の layout CSS は追加していない
+- 残り: 新 Figma PC/SP との exact geometry/typography、実ブラウザ Visual QA
 
 ### 単行本
 
