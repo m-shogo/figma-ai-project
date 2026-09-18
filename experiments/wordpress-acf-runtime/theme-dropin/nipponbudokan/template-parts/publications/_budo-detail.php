@@ -1,21 +1,33 @@
 <?php
 /**
- * 月刊「武道」詳細のテンプレート頭。
- * CPT single と最新号固定ページで共有する。
+ * 月刊刊行物の詳細ヘッド。
+ * 武道を既定値とし、書写書道は field map / label を args で差し替える。
+ * 視覚 markup / CSS owner は両 family で共有する。
  */
 $post_id = isset($args['post_id']) ? (int) $args['post_id'] : get_the_ID();
 if (!$post_id) {
     return;
 }
 
-$month = get_field('budo_month', $post_id);
-$size = get_field('budo_size', $post_id);
-$pages = get_field('budo_page', $post_id);
-$price = get_field('budo_price', $post_id);
-$subscription = get_field('budo_teiki', $post_id);
+$defaults = array(
+    'month_field' => 'budo_month',
+    'size_field' => 'budo_size',
+    'pages_field' => 'budo_page',
+    'price_field' => 'budo_price',
+    'subscription_field' => 'budo_teiki',
+    'publication_label' => '月刊「武道」',
+    'order_url' => home_url('/publications/budo/order/'),
+);
+$config = wp_parse_args(isset($args['config']) && is_array($args['config']) ? $args['config'] : array(), $defaults);
+
+$month = get_field($config['month_field'], $post_id);
+$size = $config['size_field'] ? get_field($config['size_field'], $post_id) : null;
+$pages = $config['pages_field'] ? get_field($config['pages_field'], $post_id) : null;
+$price = $config['price_field'] ? get_field($config['price_field'], $post_id) : null;
+$subscription = $config['subscription_field'] ? get_field($config['subscription_field'], $post_id) : null;
 $thumbnail_id = get_post_thumbnail_id($post_id);
 $title = get_the_title($post_id);
-$heading = trim((nbk_acf_value_present($month) ? '月刊「武道」' . wp_strip_all_tags((string) $month) : '') . (nbk_acf_value_present($month) && $title !== '' ? ' ' : '') . $title);
+$heading = trim((nbk_acf_value_present($month) ? $config['publication_label'] . wp_strip_all_tags((string) $month) : '') . (nbk_acf_value_present($month) && $title !== '' ? ' ' : '') . $title);
 if ($heading === '') {
     $heading = $title;
 }
@@ -58,11 +70,13 @@ if (nbk_acf_value_present($subscription)) {
         <?php endif; ?>
     </div>
 
-    <div class="block-editor_wrap publication_budo-order">
-        <div class="wp-block-buttons cta">
-            <div class="wp-block-button">
-                <a class="wp-block-button__link wp-element-button" href="<?php echo esc_url(home_url('/publications/budo/order/')); ?>">ご注文</a>
+    <?php if (!empty($config['order_url'])) : ?>
+        <div class="block-editor_wrap publication_budo-order">
+            <div class="wp-block-buttons cta">
+                <div class="wp-block-button">
+                    <a class="wp-block-button__link wp-element-button" href="<?php echo esc_url($config['order_url']); ?>">ご注文</a>
+                </div>
             </div>
         </div>
-    </div>
+    <?php endif; ?>
 </div>
