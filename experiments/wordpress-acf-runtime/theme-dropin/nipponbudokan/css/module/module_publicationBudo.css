@@ -1,6 +1,6 @@
 @charset "utf-8";
 
-/* 月刊「武道」号詳細 / Figma publications_detail 1637:11288 */
+/* 武道・書写書道の号詳細 / publication family shared visual owner */
 .publication_budo-head {
     display: flex;
     flex-direction: column;
@@ -90,11 +90,11 @@
     margin-top: 0;
 }
 
-/* 月刊「武道」バックナンバー / Figma publications 1634:10806 */
+/* 武道・書写書道バックナンバー / latest SP 2608:5702 + PC publication family */
 .publication_budo-backList {
     display: flex;
     flex-direction: column;
-    gap: 48px;
+    gap: 40px;
 }
 
 .publication_budo-backItem {
@@ -106,23 +106,25 @@
 
 .publication_budo-backHeader {
     display: flex;
-    align-items: stretch;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 16px;
     min-width: 0;
+    padding: 16px 20px;
     border-top: 1px solid var(--color-separator);
     border-bottom: 1px solid var(--color-separator);
     background: var(--color-heading-band);
 }
 
 .publication_budo-backTitle {
-    flex: 1 1 auto;
+    width: 100%;
     min-width: 0;
     margin: 0;
-    padding: 16px;
     color: var(--color-text);
     font-family: var(--font-zen-old-mincho);
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 500;
-    line-height: 1.4;
+    line-height: 1;
     letter-spacing: 0.05em;
     overflow-wrap: break-word;
 }
@@ -131,14 +133,16 @@
     display: flex;
     flex: 0 0 auto;
     align-items: center;
-    gap: 8px;
-    padding: 12px 16px;
-    border-left: 1px solid var(--color-separator);
+    justify-content: center;
+    gap: 4px;
+    padding: 8px 16px;
+    border: 1px solid var(--color-separator);
+    border-radius: 3px;
     color: var(--color-text);
     font-family: var(--font-zen-kaku-gothic);
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 500;
-    line-height: 1.4;
+    line-height: 1;
     letter-spacing: 0.05em;
     text-decoration: none;
 }
@@ -161,22 +165,41 @@
 .publication_budo-backBody {
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 24px;
     min-width: 0;
 }
 
 .publication_budo-backCover {
-    width: min(160px, 48vw);
+    width: 160px;
+    height: 226px;
     margin: 0;
 }
 
-.publication_budo-backCover img {
+.publication_budo-coverLink {
     display: block;
     width: 100%;
-    height: auto;
+    height: 100%;
+    overflow: hidden;
+}
+
+.publication_budo-coverLink img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 1;
+    transition: opacity 0.2s ease;
+}
+
+@media (any-hover: hover) {
+    .publication_budo-coverLink:hover img {
+        opacity: 0.7;
+    }
 }
 
 .publication_budo-backSummary {
+    width: 100%;
     min-width: 0;
     color: var(--color-text);
     font-family: var(--font-zen-kaku-gothic);
@@ -203,7 +226,7 @@
     font-family: var(--font-zen-kaku-gothic);
     font-size: 16px;
     font-weight: 500;
-    line-height: 1.4;
+    line-height: 1;
     letter-spacing: 0.05em;
     text-decoration: none;
 }
@@ -254,14 +277,26 @@
         gap: 56px;
     }
 
+    .publication_budo-backHeader {
+        flex-direction: row;
+        align-items: center;
+        gap: 0;
+        min-height: 60px;
+        padding: 0 20px;
+    }
+
     .publication_budo-backTitle {
-        padding: 17px 20px;
-        font-size: 20px;
+        flex: 1 1 auto;
+        width: auto;
+        line-height: 1;
     }
 
     .publication_budo-backOrder {
-        padding: 12px 20px 12px 16px;
-        font-size: 16px;
+        gap: 8px;
+        padding: 4px 0 4px 16px;
+        border: 0;
+        border-left: 1px solid var(--color-separator);
+        border-radius: 0;
     }
 
     .publication_budo-backBody {
