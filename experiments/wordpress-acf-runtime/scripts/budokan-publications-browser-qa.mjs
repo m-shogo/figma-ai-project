@@ -79,17 +79,14 @@ async function assertList(url, label, viewport, { pdf = false } = {}) {
     if (viewport.width === 1380) almost(metrics.mainWidth, 1040);
     almost(metrics.coverWidth, 160);
     almost(metrics.coverHeight, 226);
-    // Publication detail links intentionally reuse the Theme's existing
-    // is-style-small component owner. Its authored/computed typography is 15px
-    // at every viewport; do not create a publication-only font override.
-    almost(metrics.detailFont, 15);
-    // The publication link deliberately reuses the Theme's existing
-    // is-style-small owner. Its current computed contract is a 10px flex gap
-    // with the 32px small octagon chip; do not duplicate/override that shared
-    // component merely to make a publication-only QA expectation pass.
-    almost(metrics.detailGap, 10);
-    almost(metrics.detailIconWidth, 32);
-    almost(metrics.detailIconHeight, 32);
+    // New Figma authority OtS... (Budo SP 2608:5702 / Shodou PC 2629:7385)
+    // uses the small-button family but its publication CTA geometry is 16px text,
+    // 8px gap and a 26px octagon. Guard the visual authority rather than silently
+    // accepting a later shared-button cascade that changes the computed result.
+    almost(metrics.detailFont, 16);
+    almost(metrics.detailGap, 8);
+    almost(metrics.detailIconWidth, 26);
+    almost(metrics.detailIconHeight, 26);
     if (!metrics.noImage) throw new Error(`${label}: no-image fixture not represented in real output`);
 
     if (pdf) {
@@ -185,5 +182,5 @@ if (hasShodou) {
   await assertDetail(postUrl(shodouIds.full, 'shodou-book'), 'Shodou detail PC 1380', pc);
 }
 
-console.log(`PASS Budokan publication real WordPress browser QA: Budo${hasShodou ? ' + Shodou' : ''}; shared rails, cover geometry, is-style-small detail links, hover/focus opacity, empty-image cases, responsive overflow${hasShodou ? ', PDF links' : ''}.`);
+console.log(`PASS Budokan publication real WordPress browser QA: Budo${hasShodou ? ' + Shodou' : ''}; shared rails, cover geometry, Figma-authoritative publication CTA geometry, hover/focus opacity, empty-image cases, responsive overflow${hasShodou ? ', PDF links' : ''}.`);
 await browser.close();
