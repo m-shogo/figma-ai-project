@@ -41,9 +41,9 @@ docker compose run --rm cli option update permalink_structure '/%postname%/' >/d
 docker compose run --rm cli plugin install advanced-custom-fields --activate >/dev/null
 docker compose run --rm cli theme activate "$THEME_SLUG" >/dev/null
 
-docker compose run --rm cli eval-file /fixture/scripts/seed-budo-detail-qa.php >/dev/null
-docker compose run --rm cli eval-file /fixture/scripts/seed-budo-back-qa.php >/dev/null
-docker compose run --rm cli eval-file /fixture/scripts/seed-publications-visual-qa-pages.php >/dev/null
+docker compose run --rm -e WP_ENVIRONMENT_TYPE=local cli eval-file /fixture/scripts/seed-budo-detail-qa.php >/dev/null
+docker compose run --rm -e WP_ENVIRONMENT_TYPE=local cli eval-file /fixture/scripts/seed-budo-back-qa.php >/dev/null
+docker compose run --rm -e WP_ENVIRONMENT_TYPE=local cli eval-file /fixture/scripts/seed-publications-visual-qa-pages.php >/dev/null
 
 pages_json="$(docker compose run --rm cli option get budokan_publication_visual_qa_pages --format=json)"
 budo_json="$(docker compose run --rm cli option get budokan_budo_detail_qa_ids --format=json)"
