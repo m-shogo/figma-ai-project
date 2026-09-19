@@ -1,0 +1,54 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: OBS-BUDOKAN-NEWS-SINGLE-RHYTHM-OWNERSHIP
+    summary: >-
+      When a shared detail-title component is consumed by multiple post-type families, a current Figma spacing mismatch proven for one family
+      should not be repaired at the shared owner unless equivalent authority proves the same contract for the other consumers. Isolate the
+      runtime assertion to one geometry contract, then scope the smallest production correction to the proven family when sibling authority
+      is missing or ambiguous.
+    category: RUNTIME
+    applicability:
+      scope: PROJECT
+      conditions:
+        - Nippon Budokan News and Event details share .module_titleSingle in single.php.
+        - Current News SP authority FKQaJDu5TZXHoCzPsfP92E / 1451:5197 explicitly owns 48px between the detail-title band and article content.
+        - Disposable WordPress plus Playwright can measure title-bottom to the first featured visual on a real News post.
+      exclusions:
+        - Do not change the shared mobile title margin for Event merely because News uses the same PHP/CSS component.
+        - Do not infer a sibling responsive design contract from a PC-only Event-detail frame when the corresponding current SP authority is not proven.
+        - Do not patch production from a broad failing QA when several assertions could have caused the failure; narrow the probe first.
+        - Do not generalize this project-only post-type ownership boundary without independent evidence.
+    promotion_state: PROJECT_ONLY
+    promotion:
+      candidate: false
+      rationale: >-
+        PR #446 first added a broad News detail geometry probe whose browser step failed after the disposable WordPress fixture succeeded.
+        Because the available CI surface did not expose which broad assertion failed, the probe was reduced to the single current-Figma
+        contract: SP title-bottom to featured-top must be 48px. That isolated probe failed against the unchanged Theme, proving the mismatch.
+        Inspection then showed the shared mobile .module_titleSingle owner used 32px. Current SP Event-detail authority could not be established,
+        so the correction was scoped to .single-post only rather than changing the shared family. The same disposable WordPress workflow,
+        existing News/Event interaction checks and REF001 audit passed on the final head before squash merge.
+      blocked_by:
+        - NEEDS_INDEPENDENT_REFERENCE_EVIDENCE_BEFORE_CROSS_PROJECT_PROMOTION
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-NEWS-SINGLE-RHYTHM-20260906
+          kind: COMMIT
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/module/module_titleSingle.css
+          commit: 566231c26bec4be6aea804042b41321aa39e3482
+          note: >-
+            PR #446 squash-merged after the single-purpose SP News rhythm assertion failed before the repair and the final disposable
+            WordPress/Playwright runtime passed after a News-only 48px margin override. The workflow now also watches the detail-title CSS owner.
+      contradicts: []
+    notes:
+      - "Promotion review disposition 2026-09-06: KEEP_PROJECT_ONLY; Budokan-only evidence, no auto-promotion."
