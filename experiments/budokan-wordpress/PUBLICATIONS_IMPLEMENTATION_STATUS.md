@@ -1,6 +1,6 @@
 # 刊行物 CPT 実装進捗 — active checkpoint
 
-更新: 2026-09-19
+更新: 2026-09-20
 
 ## 正本
 
@@ -36,7 +36,8 @@ TOP を先に実装しない。
 - 一覧「詳細はこちら」は `is-style-small`
 - `.publication_budo-coverLink`: 固定 box + `overflow:hidden`、img `width/height:100%`、hover/focus は img `opacity:0.7` のみ
 - SP 一覧 `2608:5702` / 詳細 `2608:6933` は新 file `OtS...` 内にも存在することを LIVE 確認済み
-- 残り: 新 Figma exact geometry/typography、PC/SP 実ブラウザ QA、breakpoint/long-content 回帰
+- disposable WordPress + Playwright の publication runtime は 375/390/430/767/768/1380px を通過済み
+- 残り: 新 Figma exact geometry/typography の最終照合と shared CSS blast-radius の継続確認
 
 ### 月刊書写書道
 
@@ -45,9 +46,12 @@ TOP を先に実装しない。
 - ACF は `group_nbk_gekkan_shodou` を維持
 - 表紙はアイキャッチ。 `topimage` / `toprensailist` は TOP 専用
 - PDF はテキストリンク
+- ACF file field `rensailist > rensaipdf` は template boundary で array / attachment ID / URL を正規化し、schema は変更しない
 - PC visual authority は一覧 `2629:7385`、詳細 `2630:8447`
 - 専用 SP Figma は無い。武道 publication family の SP と共通 CSS/component owner を基準にする。書道専用のコピペ layout CSS を作らない
-- 残り: PC exact visual、shared responsive SP、実ブラウザ QA
+- 2026-09-20: 新 Figma PC を LIVE 再取得。一覧は 1040px rail / item gap 56px / header 60px / cover 160×226 / body gap 40px / PDF row 32px icon + 15px text、詳細は 960px rail / cover 140×198 / h2 26px / summary gap 40px を authority として再確認
+- `Budokan Publications Runtime` run `35449875105` は static + disposable WordPress seed + Chromium + Budo/Shodou browser QA が全 step GREEN。PDF正規化後の実出力も通過
+- 残り: CI GREENだけで完了扱いせず、書道PCのFigma exact visual（特に一覧 header/order/PDF rows、詳細 typography/CTA/content spacing）を実ブラウザ computed geometry と突合。SPは武道shared responsiveで長文/空値/画像なし/PDF有無を継続回帰
 
 ### 単行本
 
