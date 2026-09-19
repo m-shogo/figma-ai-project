@@ -35,14 +35,14 @@ jobs:
           bash -n experiments/wordpress-acf-runtime/scripts/budokan-publications-runtime-qa.sh
           node --check experiments/wordpress-acf-runtime/scripts/budokan-publications-browser-qa.mjs
 
-  budo-runtime:
+  publication-runtime:
     needs: static
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
 
-      - name: Start real WordPress and seed Budo QA data
+      - name: Start real WordPress and seed Budo + Shodou QA data
         env:
           BUDOKAN_PUBLICATIONS_KEEP_RUNTIME: '1'
         run: bash experiments/wordpress-acf-runtime/scripts/budokan-publications-runtime-qa.sh
@@ -52,14 +52,15 @@ jobs:
           npm install --no-save --package-lock=false playwright@1.54.2
           npx playwright install --with-deps chromium
 
-      - name: Run Budo browser QA
+      - name: Run Budo + Shodou browser QA
         run: |
           cd experiments/wordpress-acf-runtime
           source scripts/runtime-env.sh
           pages_json="$(docker compose run --rm cli option get budokan_publication_visual_qa_pages --format=json)"
           budo_json="$(docker compose run --rm cli option get budokan_budo_detail_qa_ids --format=json)"
+          shodou_json="$(docker compose run --rm cli option get budokan_shodou_publication_qa_ids --format=json)"
           cd ../..
-          node experiments/wordpress-acf-runtime/scripts/budokan-publications-browser-qa.mjs "$WP_URL" "$pages_json" "$budo_json"
+          node experiments/wordpress-acf-runtime/scripts/budokan-publications-browser-qa.mjs "$WP_URL" "$pages_json" "$budo_json" "$shodou_json"
 
       - name: Cleanup disposable WordPress runtime
         if: always()
