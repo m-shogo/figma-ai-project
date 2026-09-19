@@ -19,14 +19,16 @@
 }
 
 .publication_budo-cover {
-    width: min(140px, 42vw);
+    width: 140px;
+    height: 198px;
     margin: 0;
 }
 
 .publication_budo-cover img {
     display: block;
     width: 100%;
-    height: auto;
+    height: 100%;
+    object-fit: cover;
 }
 
 .publication_budo-specs {
