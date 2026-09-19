@@ -1,0 +1,46 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: OBS-BUDOKAN-SEARCH-SCROLL-LOCK-QA
+    summary: >-
+      When a site freezes the background by saving the current scroll position and moving the body with a negative top offset, an overlay QA must not require window.scrollY itself to remain equal while the lock is active. During the locked state, verify the user-visible background geometry, document width, overflow, focus and pointer ownership; after close, verify that the saved document scroll position is restored.
+    category: RUNTIME
+    applicability:
+      scope: PROJECT
+      conditions:
+        - "Budokan menu/search contentFixed() stores the pre-open scroll position and applies body._contentFixed with top: -scrollpos."
+        - Search moves the existing WordPress-owned search block into a fixed panel, focuses .ms_input after its opening animation, and can close from the visible #overlay backdrop.
+        - Real WordPress plus Playwright can compare header/FV/document geometry and real pointer ownership at a deep-scroll baseline.
+      exclusions:
+        - Do not ignore scroll restoration after close; only the locked-state window.scrollY assertion is inappropriate for this implementation.
+        - Do not use forced clicks for hidden or intercepted controls.
+        - Do not treat hidden #gns_close markup as an active interaction owner when current CSS intentionally sets .gn_close to display:none in the search panel.
+        - Do not generalize this implementation-specific measurement rule across unrelated scroll-lock systems without independent evidence.
+        - Do not promote this project-only finding without independent reference evidence.
+    promotion_state: PROJECT_ONLY
+    promotion:
+      candidate: false
+      rationale: >-
+        PR #468 added a dedicated real-pointer backdrop-close QA for the current Budokan search overlay. The first runtime, 34080932380, failed because the new QA incorrectly required window.scrollY to equal the deep-scroll baseline while body._contentFixed was active. Inspection of the established contentFixed() owner showed that the implementation intentionally stores scrollpos and applies body top:-scrollpos while locked; the existing overlay stability suite likewise treats visible geometry as the locked-state invariant and checks document scroll restoration on close. The corrected QA keeps header/FV/document geometry, focus, overflow and pointer checks during open/reopen, and checks scrollY after backdrop close. Budokan TOP FV Runtime 34081179764 then passed the new SP 375 and PC 1380 search-backdrop path together with the existing TOP FV, overlay, header-state, footer and fallback suites. Evidence is still limited to this project, so promotion remains PROJECT_ONLY.
+      blocked_by:
+        - NEEDS_INDEPENDENT_REFERENCE_EVIDENCE_BEFORE_CROSS_PROJECT_PROMOTION
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-SEARCH-SCROLL-LOCK-QA-20260907
+          kind: COMMIT
+          reference_id: REF-002-BUDOKAN
+          run_id: '34081179764'
+          path: .github/workflows/budokan-top-fv-runtime.yml
+          commit: 8cc13ac265880414bba6e8115568a0c149342282
+          note: >-
+            PR #468 is QA/CI-only. The corrected runtime proves a visible #overlay pointer-owned close path at deep scroll on SP and PC, post-animation .ms_input focus without background geometry movement, reopen behavior, and restoration of the saved document scroll position after both backdrop closes. The cited workflow path already exists on the base branch and is the runtime owner extended by PR #468 to execute the new browser QA; the new script itself remains unmerged in PR #468. No Theme PHP/CSS/JS, WordPress Menu ownership or ACF schema changed.
+      contradicts: []
+    notes:
+      - "Promotion review disposition requested: KEEP_PROJECT_ONLY; evidence is limited to the Budokan project and does not justify cross-project auto-promotion."
