@@ -10,6 +10,7 @@ on:
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/swiper-bundle.min.js'
       - 'experiments/wordpress-acf-runtime/scripts/seed-budokan-slider-qa.php'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-slider-interaction-browser-qa.mjs'
+      - 'experiments/wordpress-acf-runtime/scripts/budokan-slider-reduced-motion-browser-qa.mjs'
       - '.github/workflows/budokan-slider-runtime.yml'
   workflow_dispatch:
 
@@ -76,6 +77,15 @@ jobs:
           slider_qa_url="${WP_URL}/?page_id=${slider_page_id}"
           cd ../..
           node experiments/wordpress-acf-runtime/scripts/budokan-slider-interaction-browser-qa.mjs "$slider_qa_url"
+
+      - name: Run slider Reduced Motion browser QA
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          slider_page_id="$(docker compose run --rm cli option get budokan_slider_qa_page_id)"
+          slider_qa_url="${WP_URL}/?page_id=${slider_page_id}"
+          cd ../..
+          node experiments/wordpress-acf-runtime/scripts/budokan-slider-reduced-motion-browser-qa.mjs "$slider_qa_url"
 
       - name: Cleanup disposable WordPress runtime
         if: always()
