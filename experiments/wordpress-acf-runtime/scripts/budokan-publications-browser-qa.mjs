@@ -79,7 +79,10 @@ async function assertList(url, label, viewport, { pdf = false } = {}) {
     if (viewport.width === 1380) almost(metrics.mainWidth, 1040);
     almost(metrics.coverWidth, 160);
     almost(metrics.coverHeight, 226);
-    almost(metrics.detailFont, viewport.width < 768 ? 16 : 18);
+    // Publication detail links intentionally reuse the Theme's existing
+    // is-style-small component owner. Its authored/computed typography is 15px
+    // at every viewport; do not create a publication-only font override.
+    almost(metrics.detailFont, 15);
     // The publication link deliberately reuses the Theme's existing
     // is-style-small owner. Its current computed contract is a 10px flex gap
     // with the 32px small octagon chip; do not duplicate/override that shared
