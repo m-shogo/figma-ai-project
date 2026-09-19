@@ -3,7 +3,7 @@
 このファイルは **日本武道館 WordPress 案件**の会話決定を正本化する。  
 以降の Agent は、ここを Current Authority として扱い、矛盾する旧命名・旧 LP runtime 前提で進めない。
 
-更新日: 2026-09-16
+更新日: 2026-09-19
 
 ---
 
@@ -11,7 +11,7 @@
 
 - この案件を継続する各 run / 各セッションでは、**毎回 `@GitHub` と `@Figma` の両 connector を実際に呼んでから着手する**。会話履歴だけで接続可否・最新状態を推測しない。
 - GitHub 正本は `m-shogo/figma-ai-project` branch `so`。着手時に最新 ref / authority / 対象コードを直接取得し、前回完了箇所から続ける。
-- Figma 正本は file `jqYoPtusYfTeDqRegMCsx3` のみ。対象 node を LIVE 取得する。旧 file key / 旧 screenshot を実装判断に使わない。
+- Figma 正本は file `OtS7731mhY2oD44HSpdADo` のみ。対象 node を LIVE 取得する。`jqYoPtusYfTeDqRegMCsx3` / `zMjOY4euPBi9T23y7ZSM6y` その他旧 file / screenshot は最終実装判断に使わない。
 - 片方の取得が失敗しても即「接続不可」と断定せず、対象 connector を実際に呼んだ結果で判断する。
 - この preflight 自体を毎回の成果物にせず、確認後は未完了の実装・QAを小さく前進させる。同じ確認だけを繰り返さない。
 
@@ -190,17 +190,25 @@ Theme 専用の enqueue・命名は `THEME_RULES.md`。Frontend Standard は Com
 
 ## Figma（現行正本）
 
-Human Authority 2026-09-10: この file だけを LIVE 再取得する。過去 file の node / 計測 / スクリーンショットを引き継がない。
+Human Authority 2026-09-19: デザイン変更。**この file だけを最終 Visual authority として LIVE 再取得する。**
 
-File: [nipponbudokan](https://www.figma.com/design/jqYoPtusYfTeDqRegMCsx3/nipponbudokan)
+File: [nipponbudokan](https://www.figma.com/design/OtS7731mhY2oD44HSpdADo/nipponbudokan)
 
-| 面 | URL | fileKey | node-id |
-| --- | --- | --- | --- |
-| PC | https://www.figma.com/design/jqYoPtusYfTeDqRegMCsx3/nipponbudokan?node-id=0-1 | `jqYoPtusYfTeDqRegMCsx3` | `0:1` |
-| SP | https://www.figma.com/design/jqYoPtusYfTeDqRegMCsx3/nipponbudokan?node-id=114-5409 | `jqYoPtusYfTeDqRegMCsx3` | `114:5409` |
+| 面 | node-id | 備考 |
+| --- | --- | --- |
+| PC page | `0:1` | 🎨pc |
+| SP page | `114:5409` | 🎨sp |
+| 武道一覧 PC / SP | `1634:10806` / `2608:5702` | publications |
+| 武道詳細 PC / SP | `1637:11288` / `2608:6933` | publications_detail |
+| 書写書道一覧 PC | `2629:7385` | 専用 SP frame なし。武道 publication family を shared responsive authority とする |
+| 書写書道詳細 PC | `2630:8447` | 専用 SP frame なし。武道 publication family を shared responsive authority とする |
+| 単行本一覧 PC / SP | `1656:5309` / `2627:6075` | hardcover / SP_hardcover |
+| 単行本詳細 PC / SP | `1686:5574` / `2628:6964` | hardcover_detail / SP_hardcover_detail |
+| TOP 大会・イベント情報 PC | `1603:7488` | TOP 差分確認の重点箇所 |
 
-- 旧 file key `FKQaJDu5TZXHoCzPsfP92E` / `fKYDn9ikpJk1nW7IWFtaUx` / `w7SGVY63FuW6JpaQVKjxm2` / `RfAQQ28V1HGaeIcpgRmQq1` は使わない（証拠 lineage 参照のみ）
+- 旧 `jqYoPtusYfTeDqRegMCsx3` / `zMjOY4euPBi9T23y7ZSM6y` とそれ以前の file は historical/audit 参照に限る
 - Visual の正本は上記 Figma。既存実装の正本は Theme。差分は Theme をこの Figma へ合わせる
+- 書写書道 SP は専用 frame を発明せず、武道 publication family の共通 CSS/component owner で成立させる
 - Figma から入れる画像（Theme / LP / HTML 共通）: 写真・ラスターは **WebP**。logo / icon はベクターをアウトライン化して **SVG**。短命 URL は直貼りしない。ラスターしか無い logo はトレースしない。正本は `AGENTS.md` Images 節 / `docs/image-gradient-visual-tolerance.md` / `config/frontend-raster-asset-export-policy.yaml`。Budokan Theme 適用は `THEME_RULES.md` 節 12
 
 ---

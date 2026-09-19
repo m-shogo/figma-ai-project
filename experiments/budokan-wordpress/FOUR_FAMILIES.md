@@ -1,8 +1,8 @@
 # 当面4 family（一覧＋詳細）
 
 更新: 2026-09-19  
-Figma visual authority: `zMjOY4euPBi9T23y7ZSM6y`  
-旧 Figma `jqYoPtusYfTeDqRegMCsx3` は実装漏れ監査専用で、最終実装値の正本にはしない。  
+Figma visual authority: `OtS7731mhY2oD44HSpdADo`  
+旧 Figma `jqYoPtusYfTeDqRegMCsx3` / `zMjOY4euPBi9T23y7ZSM6y` は historical/audit 参照専用で、最終実装値の正本にはしない。  
 正本の詳細: [`PUBLICATIONS_IMPLEMENTATION_STATUS.md`](PUBLICATIONS_IMPLEMENTATION_STATUS.md) / [`PUBLICATIONS_CPT_ARCHITECTURE.md`](PUBLICATIONS_CPT_ARCHITECTURE.md) / [`DIRECTORY_MAP.md`](DIRECTORY_MAP.md) / [`FIGMA_MAP.md`](FIGMA_MAP.md)  
 溜め質問: [`PENDING_QUESTIONS.md`](PENDING_QUESTIONS.md)
 
@@ -18,11 +18,19 @@ Figma visual authority: `zMjOY4euPBi9T23y7ZSM6y`
 
 ## 現行 Figma authority
 
-- PC authority page/node: `0:1`
-- SP authority page/node: `114:5409`
-- 武道・書道 一覧 SP: `2608:5702`
-- 武道・書道 詳細 SP: `2608:6933`
-- PC の対象 frame は現行 file の PC authority から都度検索・特定し、旧 node 番号を最終実装値として流用しない
+Human Authority 2026-09-19:
+
+- file: `OtS7731mhY2oD44HSpdADo`
+- PC page: `0:1`
+- SP page: `114:5409`
+- 武道一覧 PC/SP: `1634:10806` / `2608:5702`
+- 武道詳細 PC/SP: `1637:11288` / `2608:6933`
+- 書写一覧 PC: `2629:7385`。専用 SP なし → 武道 publication family を shared responsive authority とする
+- 書写詳細 PC: `2630:8447`。専用 SP なし → 武道 publication family を shared responsive authority とする
+- 単行本一覧 PC/SP: `1656:5309` / `2627:6075`
+- 単行本詳細 PC/SP: `1686:5574` / `2628:6964`
+- TOP 大会・イベント情報 PC: `1603:7488`
+
 
 ## 8面＋公開 URL / WP owner
 
@@ -30,14 +38,14 @@ Figma visual authority: `zMjOY4euPBi9T23y7ZSM6y`
 | --- | --- | --- | --- | --- | --- |
 | 1 | イベント | 一覧 | `/event/` | CPT archive `event` | 既存完成面。刊行物作業で回帰させない |
 | 2 | イベント | 詳細 | `/event/{slug}/` | CPT single | 既存完成面。刊行物作業で回帰させない |
-| 3 | 月刊「武道」 | 一覧 | `/publications/budo/back/` | **page** | 新Figma。SP `2608:5702` |
-| 4 | 月刊「武道」 | 詳細 | `/budo-book/{slug}/` | CPT single | 新Figma。SP `2608:6933` |
+| 3 | 月刊「武道」 | 一覧 | `/publications/budo/back/` | **page** | PC `1634:10806` / SP `2608:5702` |
+| 4 | 月刊「武道」 | 詳細 | `/budo-book/{slug}/` | CPT single | PC `1637:11288` / SP `2608:6933` |
 | 4' | 月刊「武道」 | 最新号 | `/publications/budo/latest/` | **page** 1件 | 詳細と shared part |
-| 5 | 月刊書写書道 | 一覧 | `/publications/shodo/back/` | **page** | 武道と同一 publication family。SP `2608:5702` |
-| 6 | 月刊書写書道 | 詳細 | `/shodou-book/{slug}/` | CPT single | 武道と同一 publication family。SP `2608:6933` |
+| 5 | 月刊書写書道 | 一覧 | `/publications/shodo/back/` | **page** | PC `2629:7385`。専用SPなし、武道shared family |
+| 6 | 月刊書写書道 | 詳細 | `/shodou-book/{slug}/` | CPT single | PC `2630:8447`。専用SPなし、武道shared family |
 | 6' | 月刊書写書道 | 最新号 | `/publications/shodo/latest/` | **page** 1件 | 詳細と shared part |
-| 7 | 単行本 | 一覧 | `/publications/budo/books/` | **page** + tax `book` | 既存実装を回帰させない |
-| 8 | 単行本 | 詳細 | `/tankoubon/{slug}/` | CPT single | 既存実装を回帰させない |
+| 7 | 単行本 | 一覧 | `/publications/budo/books/` | **page** + tax `book` | PC `1656:5309` / SP `2627:6075` |
+| 8 | 単行本 | 詳細 | `/tankoubon/{slug}/` | CPT single | PC `1686:5574` / SP `2628:6964` |
 
 刊行物の一覧はネイティブ `/budo-book/` 等ではない。
 

@@ -1,6 +1,6 @@
 # 刊行物 CPT / 公開URL の組み立て（次の大きな実装の正本）
 
-更新: 2026-09-15  
+更新: 2026-09-19  
 参照 Theme（現行サイト）: `C:\htdocs\f-nipponbudokan\wp\wp-content\themes\budokan`  
 実装 Theme: `experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/`  
 公開 IA: `DIRECTORY_MAP.md`  
@@ -13,6 +13,24 @@ Visual: `FIGMA_MAP.md` / `CURRENT_AUTHORITY.md` の file key のみ
 **固定ページも CPT も同じ型。** 号詳細だけの話ではない。迷う分割は Human に聞く。Agent がページごとに ACF / 本文 / 自動を自己判断しない。
 
 ---
+## Human override 2026-09-19 — Visual / 実装順
+
+この節は本ファイル内の古い「書写 single 未確定」「SP counterpart 未確定」「旧 Figma key」記述を supersede する。
+
+- 現行唯一の Figma Visual authority: `OtS7731mhY2oD44HSpdADo`
+- PC page: `0:1` / SP page: `114:5409`
+- 武道一覧 PC/SP: `1634:10806` / `2608:5702`
+- 武道詳細 PC/SP: `1637:11288` / `2608:6933`
+- 書写一覧 PC: `2629:7385`、書写詳細 PC: `2630:8447`。専用 SP は無く、武道 publication family の shared responsive rule を使う
+- 単行本一覧 PC/SP: `1656:5309` / `2627:6075`
+- 単行本詳細 PC/SP: `1686:5574` / `2628:6964`
+- 実装順: 武道残り完了 → 書写詳細/一覧 → 単行本詳細/一覧 → 全 gate 完了後 TOP
+- TOP は新旧差分表を先に作る。重点確認 node は大会・イベント情報 PC `1603:7488`
+
+単行本一覧は「最新刊自動取得」「カテゴリ見出しへのページ内リンク」「カテゴリごとに全件自動取得」「ページャーなし」。単行本詳細は現行サイト同等の仕様を既存 `tankoubon` CPT/ACF/content owner で実現し、新 data model を発明しない。
+
+---
+
 
 ## 0. 共通のページ型（Human 2026-09-15）
 
@@ -42,7 +60,7 @@ Figma を見て「これは①か②か」が一本に決まらないときは�
 
 ## 1.1 号詳細 `1637:11288` の3段（Human 2026-09-15）
 
-PC Figma: [publications_detail](https://www.figma.com/design/jqYoPtusYfTeDqRegMCsx3/nipponbudokan?node-id=1637-11288)
+PC Figma: [publications_detail](https://www.figma.com/design/OtS7731mhY2oD44HSpdADo/nipponbudokan?node-id=1637-11288)
 
 `single-budo-book.php`（最新号 page も同じ part）の中身は次の3段。**オリジナルテンプレートに書く。**
 
@@ -107,8 +125,8 @@ CPT（budo-book / shodou-book / tankoubon）
 | 単行本一覧 | `/publications/budo/books/` | **page** が `tankoubon` を tax `book` ごとに query | page 専用（Figma `hardcover`）。現行は `page.php` + `is_page('tankoubon')` |
 | 単行本詳細 | `/tankoubon/{slug}/` | **CPT single** | `single-tankoubon.php` |
 | 書写書道 最新号 | `/publications/shodo/latest/` | **page** が `shodou-book` 1件 | page 専用。Figma 専用 frame **なし** |
-| 書写書道 バック | `/publications/shodo/back/` | **page** が `shodou-book` 一覧（最新除外）。**single へ張らない** | page 専用。行は表紙 + `rensailist` PDF |
-| 書写書道 号詳細 | `/shodou-book/{slug}/` | CPT は存在するが現行バックは未使用 | single は残す。公開導線に出すかは Human。Figma **なし** |
+| 書写書道 バック | `/publications/shodo/back/` | **page** が `shodou-book` 一覧（最新除外） | page 専用。表紙 + `rensailist` PDF + public single 導線。武道と shared publication family |
+| 書写書道 号詳細 | `/shodou-book/{slug}/` | CPT single | public single。PC `2630:8447`、専用SPなし。shared publication family |
 | お知らせ一覧 | `/news/` | **CPT archive** | `archive-news.php` / 既存 news 系。現行 `/news/ichiran/` は新サイトに持ち込まない |
 | お知らせ詳細 | `/news/{slug}/` | **CPT single** | 既存 `single.php` news 分岐 |
 
@@ -157,7 +175,7 @@ CPT（budo-book / shodou-book / tankoubon）
 - 種目ごとの WP_Query を 9回コピペ。term 配列を1つにしてループする（term 集合自体は現行 slug のまま）。
 - ネイティブ archive を「とりあえず archive.php で公開」。
 - `SP_archive`（お知らせ）を刊行物 SP に流用。刊行物 SP は UNDETERMINED。
-- 書写書道・総索引・最新号の Figma を武道 `publications` から推測して作る。
+- 書写書道 SP に専用 frame が無いことを理由に書写専用 layout/CSS を発明する。SP は shared publication family を使う。
 
 ---
 
@@ -205,38 +223,39 @@ Custom Post Type Permalinks: 詳細を `/publications/...` 配下に書き換え
 
 ## 5. Visual / Figma
 
+唯一の現行 file: `OtS7731mhY2oD44HSpdADo`
+
 | 面 | PC | SP |
 | --- | --- | --- |
-| 武道バック | `1634:10806` publications | UNDETERMINED。Theme responsive は shared。page-specific SP parity と言わない |
-| 武道号詳細 | `1637:11288` publications_detail | 同上 |
-| 単行本一覧 | `1656:5309` hardcover | 同上 |
-| 単行本詳細 | `1686:5574` hardcover_detail | 同上 |
-| 最新号・書写書道・総索引 | 専用 current frame なし | 専用なし |
+| 武道バック | `1634:10806` publications | `2608:5702` SP_publications |
+| 武道号詳細 | `1637:11288` publications_detail | `2608:6933` SP_publications_detail |
+| 書写一覧 | `2629:7385` publications_calligraphy | 専用 frame なし。武道 publication family の shared responsive rule |
+| 書写詳細 | `2630:8447` publications_calligraphy_detail | 専用 frame なし。武道 publication family の shared responsive rule |
+| 単行本一覧 | `1656:5309` hardcover | `2627:6075` SP_hardcover |
+| 単行本詳細 | `1686:5574` hardcover_detail | `2628:6964` SP_hardcover_detail |
 
-Figma の繰り返し行は CPT の証拠にはなるが、**フィールド追加の証拠ではない。** 既存 ACF で足りる範囲だけ描く。
+Figma の繰り返し行はフィールド追加の根拠ではない。既存 ACF/CPT/taxonomy/content owner で足りる範囲だけ描く。
 
 注文 CTA の URL は DIRECTORY_MAP `/publications/budo/order/`（Form は Human）。現行 `/shupan/koudoku` をハードコードしない。
 
 ---
 
-## 6. 実装順（手戻り最小）
+## 6. 実装順（Human 2026-09-19）
 
-1. この文書の URL 表をコードコメントとテンプレ割り当てに写す（path を変えない）。
-2. `_issue-budo.php` を ACF で1回実装 → `single-budo-book.php` に載せる → latest page が同じ part を query 1件で呼ぶ。
-3. `_back-budo.php` + back page。最新 skip を残す。
-4. `_book-detail.php` + `_book-card.php` + books page（tax ループ）。
-5. 書写書道 latest/back（Figma なし。現行構造 + 既存 heading/list/PDF Parts。デザイン発明しない）。
-6. ネイティブ archive の 301/noindex。
-7. PC Figma diff。SP は Human が counterpart を出すまで page-specific を閉じない。
+1. 武道 publication の残りを一覧 / latest / single、PC/SP、実ブラウザ QA まで完了。
+2. 書写詳細・一覧を PC `2630:8447` / `2629:7385` に合わせる。SP は武道 shared publication family。
+3. 単行本詳細・一覧を PC/SP `1686:5574` / `2628:6964`、`1656:5309` / `2627:6075` に合わせる。
+4. 単行本一覧の最新刊自動取得、カテゴリanchor、カテゴリ全件 query、pagerなしを完成。
+5. 刊行物/単行本の実ブラウザ QA と回帰 gate を全部満たした後だけ TOP。
+6. TOP は旧実装→新 `OtS...` の差分 inventory を先に作り、特に `1603:7488` 大会・イベント情報を確認して mobile-first 実装。
 
-お知らせは既存 news archive を触らない（別 family）。
+お知らせ / 既存イベントは回帰させない。ネイティブ archive の 301/noindex は別 Human decision のまま。
 
 ---
 
 ## 7. まだ Human が決めること（実装ブロックになるものだけ）
 
 - ネイティブ `/budo-book/` を 301 するか noindex か。
-- 書写書道 single を公開するか（現行バックは PDF only）。
 - 総索引を独立 page にするか、back に含めるか、最新号の `sousakuin` ファイルを出すか。
 - 英語単行本 `/publications/budo/books-en/` と tax の対応（現行は別 page `/english/tankoubon_30`）。
 - 刊行物 PC の Local Nav 有無（Figma 1カラム vs 下層 Local Nav 契約）。
