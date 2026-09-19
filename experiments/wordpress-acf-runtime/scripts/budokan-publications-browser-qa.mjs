@@ -1,13 +1,14 @@
 import { chromium } from 'playwright';
 
-const [baseUrl, pagesJson, budoJson, shodouJson] = process.argv.slice(2);
-if (!baseUrl || !pagesJson || !budoJson || !shodouJson) {
-  throw new Error('usage: node budokan-publications-browser-qa.mjs <baseUrl> <pagesJson> <budoIdsJson> <shodouIdsJson>');
+const [baseUrl, pagesJson, budoJson, shodouJson = '{}'] = process.argv.slice(2);
+if (!baseUrl || !pagesJson || !budoJson) {
+  throw new Error('usage: node budokan-publications-browser-qa.mjs <baseUrl> <pagesJson> <budoIdsJson> [shodouIdsJson]');
 }
 
 const pages = JSON.parse(pagesJson);
 const budoIds = JSON.parse(budoJson);
 const shodouIds = JSON.parse(shodouJson);
+const hasShodou = Boolean(pages.shodou_back && shodouIds.full);
 const browser = await chromium.launch({ headless: true });
 
 const almost = (actual, expected, tolerance = 1) => {
@@ -158,20 +159,24 @@ async function assertDetail(url, label, viewport) {
 const spViewports = [{ width: 375, height: 900 }, { width: 390, height: 900 }, { width: 430, height: 900 }, { width: 767, height: 900 }];
 for (const viewport of spViewports) {
   await assertList(pageUrl(pages.budo_back), `Budo list SP ${viewport.width}`, viewport);
-  await assertList(pageUrl(pages.shodou_back), `Shodou list SP ${viewport.width}`, viewport, { pdf: true });
   await assertDetail(postUrl(budoIds.full, 'budo-book'), `Budo detail SP ${viewport.width}`, viewport);
-  await assertDetail(postUrl(shodouIds.full, 'shodou-book'), `Shodou detail SP ${viewport.width}`, viewport);
+  if (hasShodou) {
+    await assertList(pageUrl(pages.shodou_back), `Shodou list SP ${viewport.width}`, viewport, { pdf: true });
+    await assertDetail(postUrl(shodouIds.full, 'shodou-book'), `Shodou detail SP ${viewport.width}`, viewport);
+  }
 }
 
 const breakpoint = { width: 768, height: 900 };
 await assertList(pageUrl(pages.budo_back), 'Budo list breakpoint 768', breakpoint);
-await assertList(pageUrl(pages.shodou_back), 'Shodou list breakpoint 768', breakpoint, { pdf: true });
+if (hasShodou) await assertList(pageUrl(pages.shodou_back), 'Shodou list breakpoint 768', breakpoint, { pdf: true });
 
 const pc = { width: 1380, height: 1000 };
 await assertList(pageUrl(pages.budo_back), 'Budo list PC 1380', pc);
-await assertList(pageUrl(pages.shodou_back), 'Shodou list PC 1380', pc, { pdf: true });
 await assertDetail(postUrl(budoIds.full, 'budo-book'), 'Budo detail PC 1380', pc);
-await assertDetail(postUrl(shodouIds.full, 'shodou-book'), 'Shodou detail PC 1380', pc);
+if (hasShodou) {
+  await assertList(pageUrl(pages.shodou_back), 'Shodou list PC 1380', pc, { pdf: true });
+  await assertDetail(postUrl(shodouIds.full, 'shodou-book'), 'Shodou detail PC 1380', pc);
+}
 
-console.log('PASS Budokan publications real WordPress browser QA: shared rails, cover geometry, is-style-small detail links, hover/focus opacity, PDF links, empty-image cases, responsive overflow.');
+console.log(`PASS Budokan publication real WordPress browser QA: Budo${hasShodou ? ' + Shodou' : ''}; shared rails, cover geometry, is-style-small detail links, hover/focus opacity, empty-image cases, responsive overflow${hasShodou ? ', PDF links' : ''}.`);
 await browser.close();

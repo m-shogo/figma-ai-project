@@ -1,0 +1,80 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$ROOT"
+# shellcheck disable=SC1091
+source "$ROOT/scripts/runtime-env.sh"
+
+if [[ "$THEME_SLUG" != "nipponbudokan" ]]; then
+  echo "FAIL publication QA requires nipponbudokan theme; got ${THEME_SLUG}." >&2
+  exit 2
+fi
+
+cleanup() {
+  docker compose down -v --remove-orphans >/dev/null 2>&1 || true
+}
+trap cleanup EXIT
+cleanup
+
+docker compose up -d db wordpress
+ready=0
+for _ in $(seq 1 90); do
+  if docker compose exec -T wordpress test -f /var/www/html/wp-includes/version.php >/dev/null 2>&1; then
+    ready=1
+    break
+  fi
+  sleep 1
+done
+if [[ "$ready" != "1" ]]; then
+  docker compose logs wordpress
+  echo "FAIL WordPress files were not initialized." >&2
+  exit 1
+fi
+
+if ! docker compose run --rm cli core is-installed >/dev/null 2>&1; then
+  docker compose run --rm cli core install     --url="$WP_URL"     --title="Budokan Publication QA"     --admin_user="fixture-admin"     --admin_password="fixture-admin-change-me"     --admin_email="fixture@example.invalid"     --skip-email >/dev/null
+fi
+
+docker compose run --rm cli option update blog_public 0 >/dev/null
+docker compose run --rm cli option update permalink_structure '/%postname%/' >/dev/null
+docker compose run --rm cli plugin install advanced-custom-fields --activate >/dev/null
+docker compose run --rm cli theme activate "$THEME_SLUG" >/dev/null
+
+docker compose run --rm cli eval-file /fixture/scripts/seed-budo-detail-qa.php >/dev/null
+docker compose run --rm cli eval-file /fixture/scripts/seed-budo-back-qa.php >/dev/null
+docker compose run --rm cli eval-file /fixture/scripts/seed-publications-visual-qa-pages.php >/dev/null
+
+pages_json="$(docker compose run --rm cli option get budokan_publication_visual_qa_pages --format=json)"
+budo_json="$(docker compose run --rm cli option get budokan_budo_detail_qa_ids --format=json)"
+budo_back_id="$(php -r '$v=json_decode($argv[1], true); echo (int)($v["budo_back"] ?? 0);' "$pages_json")"
+budo_full_id="$(php -r '$v=json_decode($argv[1], true); echo (int)($v["full"] ?? 0);' "$budo_json")"
+
+if [[ "$budo_back_id" -le 0 || "$budo_full_id" -le 0 ]]; then
+  echo "FAIL publication fixtures did not expose numeric QA ids." >&2
+  exit 1
+fi
+
+for url in "$WP_URL/?page_id=$budo_back_id" "$WP_URL/?p=$budo_full_id&post_type=budo-book"; do
+  html="$(mktemp)"
+  code="$(curl --silent --show-error --location --max-redirs 3 --output "$html" --write-out '%{http_code}' "$url")"
+  if [[ "$code" != "200" ]]; then
+    echo "FAIL publication fixture returned HTTP ${code}: ${url}" >&2
+    cat "$html" >&2 || true
+    exit 1
+  fi
+  grep -Fq 'publication_budo-shell' "$html" || {
+    echo "FAIL publication shared shell missing: ${url}" >&2
+    exit 1
+  }
+  rm -f "$html"
+done
+
+echo "PASS Budo fixture data rendered through real WordPress + ACF."
+echo "PASS pages_json=${pages_json}"
+echo "PASS budo_json=${budo_json}"
+
+if [[ "${BUDOKAN_PUBLICATIONS_KEEP_RUNTIME:-0}" == "1" ]]; then
+  trap - EXIT
+  echo "PASS runtime retained for Playwright QA at ${WP_URL}."
+fi
