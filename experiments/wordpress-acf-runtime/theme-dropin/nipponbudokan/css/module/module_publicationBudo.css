@@ -263,13 +263,19 @@
     margin-top: 0;
 }
 
-.publication_budo-backDetail .wp-block-button.is-style-small .wp-block-button__link {
+/* Keep the shared is-style-small markup, but the publication Figma authority
+   uses the 26px octagon / 16px label variant. Include the editor wrappers in
+   specificity so the generic small-button rule loaded later cannot silently
+   replace the publication geometry with its 32px / 15px variant. */
+.block-editor_wrap .publication_budo-backDetail .wp-block-buttons .wp-block-button.is-style-small .wp-block-button__link,
+.editor-styles-wrapper .publication_budo-backDetail .wp-block-buttons .wp-block-button.is-style-small .wp-block-button__link {
     gap: 8px;
     font-size: 16px;
     line-height: 1;
 }
 
-.publication_budo-backDetail .wp-block-button.is-style-small .wp-block-button__link::before {
+.block-editor_wrap .publication_budo-backDetail .wp-block-buttons .wp-block-button.is-style-small .wp-block-button__link::before,
+.editor-styles-wrapper .publication_budo-backDetail .wp-block-buttons .wp-block-button.is-style-small .wp-block-button__link::before {
     width: 26px;
     height: 26px;
     background-size: 26px 26px;
@@ -341,10 +347,6 @@
 
     .publication_budo-backDetail {
         margin-left: 200px;
-    }
-
-    .publication_budo-backDetail .wp-block-button.is-style-small .wp-block-button__link {
-        font-size: 18px;
     }
 
     .publication_budo-backItem._noImage .publication_budo-backDetail {
