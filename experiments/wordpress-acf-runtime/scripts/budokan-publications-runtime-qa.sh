@@ -33,7 +33,13 @@ if [[ "$ready" != "1" ]]; then
 fi
 
 if ! docker compose run --rm cli core is-installed >/dev/null 2>&1; then
-  docker compose run --rm cli core install     --url="$WP_URL"     --title="Budokan Publication QA"     --admin_user="fixture-admin"     --admin_password="fixture-admin-change-me"     --admin_email="fixture@example.invalid"     --skip-email >/dev/null
+  docker compose run --rm cli core install \
+    --url="$WP_URL" \
+    --title="Budokan Publication QA" \
+    --admin_user="fixture-admin" \
+    --admin_password="fixture-admin-change-me" \
+    --admin_email="fixture@example.invalid" \
+    --skip-email >/dev/null
 fi
 
 docker compose run --rm cli option update blog_public 0 >/dev/null
@@ -43,19 +49,27 @@ docker compose run --rm cli theme activate "$THEME_SLUG" >/dev/null
 
 docker compose run --rm -e WP_ENVIRONMENT_TYPE=local cli eval-file /fixture/scripts/seed-budo-detail-qa.php >/dev/null
 docker compose run --rm -e WP_ENVIRONMENT_TYPE=local cli eval-file /fixture/scripts/seed-budo-back-qa.php >/dev/null
+docker compose run --rm -e WP_ENVIRONMENT_TYPE=local cli eval-file /fixture/scripts/seed-shodou-publication-qa.php >/dev/null
 docker compose run --rm -e WP_ENVIRONMENT_TYPE=local cli eval-file /fixture/scripts/seed-publications-visual-qa-pages.php >/dev/null
 
 pages_json="$(docker compose run --rm cli option get budokan_publication_visual_qa_pages --format=json)"
 budo_json="$(docker compose run --rm cli option get budokan_budo_detail_qa_ids --format=json)"
+shodou_json="$(docker compose run --rm cli option get budokan_shodou_publication_qa_ids --format=json)"
 budo_back_id="$(php -r '$v=json_decode($argv[1], true); echo (int)($v["budo_back"] ?? 0);' "$pages_json")"
+shodou_back_id="$(php -r '$v=json_decode($argv[1], true); echo (int)($v["shodou_back"] ?? 0);' "$pages_json")"
 budo_full_id="$(php -r '$v=json_decode($argv[1], true); echo (int)($v["full"] ?? 0);' "$budo_json")"
+shodou_full_id="$(php -r '$v=json_decode($argv[1], true); echo (int)($v["full"] ?? 0);' "$shodou_json")"
 
-if [[ "$budo_back_id" -le 0 || "$budo_full_id" -le 0 ]]; then
-  echo "FAIL publication fixtures did not expose numeric QA ids." >&2
+if [[ "$budo_back_id" -le 0 || "$budo_full_id" -le 0 || "$shodou_back_id" -le 0 || "$shodou_full_id" -le 0 ]]; then
+  echo "FAIL publication fixtures did not expose numeric Budo + Shodou QA ids." >&2
   exit 1
 fi
 
-for url in "$WP_URL/?page_id=$budo_back_id" "$WP_URL/?p=$budo_full_id&post_type=budo-book"; do
+for url in \
+  "$WP_URL/?page_id=$budo_back_id" \
+  "$WP_URL/?p=$budo_full_id&post_type=budo-book" \
+  "$WP_URL/?page_id=$shodou_back_id" \
+  "$WP_URL/?p=$shodou_full_id&post_type=shodou-book"; do
   html="$(mktemp)"
   code="$(curl --silent --show-error --location --max-redirs 3 --output "$html" --write-out '%{http_code}' "$url")"
   if [[ "$code" != "200" ]]; then
@@ -70,9 +84,10 @@ for url in "$WP_URL/?page_id=$budo_back_id" "$WP_URL/?p=$budo_full_id&post_type=
   rm -f "$html"
 done
 
-echo "PASS Budo fixture data rendered through real WordPress + ACF."
+echo "PASS Budo + Shodou fixture data rendered through real WordPress + ACF."
 echo "PASS pages_json=${pages_json}"
 echo "PASS budo_json=${budo_json}"
+echo "PASS shodou_json=${shodou_json}"
 
 if [[ "${BUDOKAN_PUBLICATIONS_KEEP_RUNTIME:-0}" == "1" ]]; then
   trap - EXIT
