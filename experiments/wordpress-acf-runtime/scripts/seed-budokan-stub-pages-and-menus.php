@@ -5,7 +5,7 @@
  *
  *   wp eval-file /fixture/scripts/seed-budokan-stub-pages-and-menus.php
  *
- * Pages: empty body. Navigation kind → oneColumn + page_img.
+ * Pages: empty body. Navigation kind → Navigation template + page_img.
  * Default pages stay on page.php without page_img (gold bar).
  * Form URLs use the form template; Formidable is not touched.
  * CPT archives (/event/ /news/ /feature/) and external pages are not created.
@@ -237,7 +237,7 @@ function budokan_stub_upsert_page(string $path, array $spec, array $page_ids, in
 
     $template = '';
     if ($spec['kind'] === 'nav') {
-        $template = 'templates/template-oneColumn.php';
+        $template = 'templates/template-navigation.php';
     } elseif ($spec['kind'] === 'form') {
         $template = 'templates/template-form.php';
     }
