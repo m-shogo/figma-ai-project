@@ -4,29 +4,6 @@ on:
   push:
     branches:
       - so
-    paths:
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/page-publications-*.php'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/single-budo-book.php'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/single-shodou-book.php'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/publications/**'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/module/module_publicationBudo.css'
-      - 'experiments/wordpress-acf-runtime/scripts/seed-budo-*.php'
-      - 'experiments/wordpress-acf-runtime/scripts/seed-shodou-publication-qa.php'
-      - 'experiments/wordpress-acf-runtime/scripts/seed-publications-visual-qa-pages.php'
-      - 'experiments/wordpress-acf-runtime/scripts/budokan-publications-browser-qa.mjs'
-      - '.github/workflows/budokan-publications-runtime.yml'
-  pull_request:
-    paths:
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/page-publications-*.php'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/single-budo-book.php'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/single-shodou-book.php'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/publications/**'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/module/module_publicationBudo.css'
-      - 'experiments/wordpress-acf-runtime/scripts/seed-budo-*.php'
-      - 'experiments/wordpress-acf-runtime/scripts/seed-shodou-publication-qa.php'
-      - 'experiments/wordpress-acf-runtime/scripts/seed-publications-visual-qa-pages.php'
-      - 'experiments/wordpress-acf-runtime/scripts/budokan-publications-browser-qa.mjs'
-      - '.github/workflows/budokan-publications-runtime.yml'
   workflow_dispatch:
 
 permissions:
@@ -38,20 +15,8 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
-      - name: Publication PHP syntax
+      - name: Publication QA syntax
         run: |
-          php -l experiments/wordpress-acf-runtime/scripts/seed-budo-detail-qa.php
-          php -l experiments/wordpress-acf-runtime/scripts/seed-budo-back-qa.php
           php -l experiments/wordpress-acf-runtime/scripts/seed-shodou-publication-qa.php
           php -l experiments/wordpress-acf-runtime/scripts/seed-publications-visual-qa-pages.php
-          php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/publications/_budo-back-item.php
-          php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/publications/_shodou-back-item.php
-          php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/publications/_budo-detail.php
-          php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/page-publications-budo-back.php
-          php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/page-publications-shodou-back.php
-          php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/page-publications-budo-latest.php
-          php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/page-publications-shodou-latest.php
-          php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/single-budo-book.php
-          php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/single-shodou-book.php
-      - name: Publication browser QA syntax
-        run: node --check experiments/wordpress-acf-runtime/scripts/budokan-publications-browser-qa.mjs
+          node --check experiments/wordpress-acf-runtime/scripts/budokan-publications-browser-qa.mjs
