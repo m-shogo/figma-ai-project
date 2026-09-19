@@ -7,6 +7,7 @@ on:
       - 'experiments/wordpress-acf-runtime/scripts/seed-budokan-core-details-qa.php'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-core-details-runtime-qa.sh'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-core-details-interaction-browser-qa.mjs'
+      - 'experiments/wordpress-acf-runtime/scripts/budokan-core-details-content-layout-browser-qa.mjs'
       - '.github/workflows/budokan-core-details-runtime.yml'
   workflow_dispatch:
 
@@ -36,6 +37,7 @@ jobs:
           npx playwright install --with-deps chromium
           set -o pipefail
           node experiments/wordpress-acf-runtime/scripts/budokan-core-details-interaction-browser-qa.mjs "$qa_url" 2>&1 | tee budokan-core-details-browser-qa.log
+          node experiments/wordpress-acf-runtime/scripts/budokan-core-details-content-layout-browser-qa.mjs "$qa_url" 2>&1 | tee -a budokan-core-details-browser-qa.log
 
       - name: Upload Core Details browser QA log
         if: always()
