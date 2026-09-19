@@ -92,7 +92,7 @@
     margin-top: 0;
 }
 
-/* 武道・書写書道バックナンバー / latest SP 2608:5702 + PC publication family */
+/* 武道・書写書道バックナンバー / SP 2608:5702 + PC publication family */
 .publication_budo-backList {
     display: flex;
     flex-direction: column;
@@ -194,6 +194,10 @@
     transition: opacity 0.2s ease;
 }
 
+.publication_budo-coverLink:focus-visible img {
+    opacity: 0.7;
+}
+
 @media (any-hover: hover) {
     .publication_budo-coverLink:hover img {
         opacity: 0.7;
@@ -219,33 +223,40 @@
     margin-bottom: 0;
 }
 
-.publication_budo-backDetail {
-    display: inline-flex;
-    align-items: center;
-    align-self: flex-start;
-    gap: 8px;
-    color: var(--color-text);
-    font-family: var(--font-zen-kaku-gothic);
-    font-size: 16px;
-    font-weight: 500;
-    line-height: 1;
-    letter-spacing: 0.05em;
-    text-decoration: none;
+.publication_budo-backPdfList {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
-.publication_budo-backDetail::before {
-    content: var(--icon-arrow-right, '\f061');
-    display: grid;
-    place-items: center;
+.publication_budo-backPdf {
+    margin: 0;
+}
+
+.publication_budo-backPdf a {
+    color: inherit;
+    overflow-wrap: anywhere;
+}
+
+.publication_budo-backDetail {
+    align-self: flex-start;
+    margin: 0;
+}
+
+.publication_budo-backDetail .wp-block-buttons {
+    margin-top: 0;
+}
+
+.publication_budo-backDetail .wp-block-button.is-style-small .wp-block-button__link {
+    gap: 8px;
+    font-size: 16px;
+    line-height: 1;
+}
+
+.publication_budo-backDetail .wp-block-button.is-style-small .wp-block-button__link::before {
     width: 26px;
     height: 26px;
-    flex: 0 0 26px;
-    clip-path: var(--clip-octagon);
-    color: var(--color-main);
-    background: var(--color-accent);
-    font-family: var(--font-awesome-6-pro);
-    font-size: 8px;
-    line-height: 1;
+    background-size: 26px 26px;
 }
 
 @media screen and (min-width: 768px) {
@@ -314,6 +325,9 @@
 
     .publication_budo-backDetail {
         margin-left: 200px;
+    }
+
+    .publication_budo-backDetail .wp-block-button.is-style-small .wp-block-button__link {
         font-size: 18px;
     }
 
