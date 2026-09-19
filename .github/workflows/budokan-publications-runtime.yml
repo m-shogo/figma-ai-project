@@ -15,8 +15,85 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
-      - name: Publication QA syntax
+      - name: Publication PHP syntax
         run: |
+          php -l experiments/wordpress-acf-runtime/scripts/seed-budo-detail-qa.php
+          php -l experiments/wordpress-acf-runtime/scripts/seed-budo-back-qa.php
           php -l experiments/wordpress-acf-runtime/scripts/seed-shodou-publication-qa.php
           php -l experiments/wordpress-acf-runtime/scripts/seed-publications-visual-qa-pages.php
-          node --check experiments/wordpress-acf-runtime/scripts/budokan-publications-browser-qa.mjs
+          php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/publications/_budo-back-item.php
+          php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/publications/_shodou-back-item.php
+          php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/publications/_budo-detail.php
+          php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/page-publications-budo-back.php
+          php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/page-publications-shodou-back.php
+          php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/page-publications-budo-latest.php
+          php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/page-publications-shodou-latest.php
+          php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/single-budo-book.php
+          php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/single-shodou-book.php
+      - name: Publication browser QA syntax
+        run: node --check experiments/wordpress-acf-runtime/scripts/budokan-publications-browser-qa.mjs
+
+  runtime:
+    needs: static
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Resolve ACF PRO runtime availability
+        id: gate
+        env:
+          ACF_PRO_LICENSE_KEY: ${{ secrets.ACF_PRO_LICENSE_KEY }}
+        run: |
+          if [ -z "$ACF_PRO_LICENSE_KEY" ]; then
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "## Publication browser QA: SKIP_NO_ACF_PRO_LICENSE_KEY" >> "$GITHUB_STEP_SUMMARY"
+            echo "Real WordPress visual QA was not executed and must not be treated as PASS." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Start disposable WordPress with ACF PRO
+        if: steps.gate.outputs.enabled == 'true'
+        working-directory: experiments/wordpress-acf-runtime
+        env:
+          ACF_PRO_LICENSE_KEY: ${{ secrets.ACF_PRO_LICENSE_KEY }}
+        run: bash scripts/setup.sh
+
+      - name: Seed publication QA data
+        if: steps.gate.outputs.enabled == 'true'
+        working-directory: experiments/wordpress-acf-runtime
+        run: |
+          source scripts/runtime-env.sh
+          docker compose run --rm cli eval-file /fixture/scripts/seed-budo-detail-qa.php
+          docker compose run --rm cli eval-file /fixture/scripts/seed-budo-back-qa.php
+          docker compose run --rm cli eval-file /fixture/scripts/seed-shodou-publication-qa.php
+          docker compose run --rm cli eval-file /fixture/scripts/seed-publications-visual-qa-pages.php
+
+      - name: Install Chromium
+        if: steps.gate.outputs.enabled == 'true'
+        run: |
+          npm install --no-save --package-lock=false playwright@1.54.2
+          npx playwright install --with-deps chromium
+
+      - name: Run real WordPress publication browser QA
+        if: steps.gate.outputs.enabled == 'true'
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          pages_json="$(docker compose run --rm cli option get budokan_publication_visual_qa_pages --format=json)"
+          budo_json="$(docker compose run --rm cli option get budokan_budo_detail_qa_ids --format=json)"
+          shodou_json="$(docker compose run --rm cli option get budokan_shodou_publication_qa_ids --format=json)"
+          cd ../..
+          node experiments/wordpress-acf-runtime/scripts/budokan-publications-browser-qa.mjs "$WP_URL" "$pages_json" "$budo_json" "$shodou_json"
+
+      - name: Record runtime PASS
+        if: steps.gate.outputs.enabled == 'true' && success()
+        run: echo "REAL WORDPRESS + ACF PRO + PLAYWRIGHT: PASS" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Cleanup disposable WordPress runtime
+        if: always()
+        working-directory: experiments/wordpress-acf-runtime
+        run: |
+          source scripts/runtime-env.sh
+          docker compose down -v --remove-orphans || true

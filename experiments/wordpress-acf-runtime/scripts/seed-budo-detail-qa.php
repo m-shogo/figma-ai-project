@@ -13,6 +13,10 @@ if (!defined('WP_CLI') || !WP_CLI) {
     exit(2);
 }
 
+if (function_exists('wp_get_environment_type') && wp_get_environment_type() !== 'local') {
+    WP_CLI::error('Refusing to seed Budo detail QA outside local WordPress.');
+}
+
 if (!function_exists('update_field')) {
     WP_CLI::error('ACF PRO is required; refusing to fake ACF values with hard-coded template data.');
 }
@@ -147,6 +151,7 @@ foreach ($cases as $case) {
     $ids[$case['case']] = nbk_budo_qa_upsert($case);
 }
 
+update_option('budokan_budo_detail_qa_ids', $ids, false);
 flush_rewrite_rules(false);
 WP_CLI::success(sprintf(
     'Seeded budo detail QA posts: full #%d, long #%d, empty #%d.',
