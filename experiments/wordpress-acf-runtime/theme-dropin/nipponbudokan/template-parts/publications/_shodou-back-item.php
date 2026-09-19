@@ -27,8 +27,27 @@ if (is_array($rensai_list)) {
         if (!nbk_acf_value_present($pdf) || !nbk_acf_value_present($name)) {
             continue;
         }
+
+        // ACF file fields may return an attachment array, attachment ID, or URL
+        // depending on the field's return_format. Normalize at the template
+        // boundary so the existing schema remains authoritative.
+        $pdf_url = '';
+        if (is_array($pdf)) {
+            $pdf_url = isset($pdf['url']) ? (string) $pdf['url'] : '';
+            if ($pdf_url === '' && !empty($pdf['ID'])) {
+                $pdf_url = (string) wp_get_attachment_url((int) $pdf['ID']);
+            }
+        } elseif (is_numeric($pdf)) {
+            $pdf_url = (string) wp_get_attachment_url((int) $pdf);
+        } else {
+            $pdf_url = (string) $pdf;
+        }
+        if ($pdf_url === '') {
+            continue;
+        }
+
         $valid_rensai[] = array(
-            'pdf' => $pdf,
+            'pdf' => $pdf_url,
             'name' => wp_strip_all_tags((string) $name),
         );
     }
