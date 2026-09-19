@@ -21,7 +21,7 @@ $latest_budo = new WP_Query(array(
 <main id="global_contents" class="global_contents" itemscope itemprop="mainContentOfPage">
     <section>
         <?php get_template_part('template-parts/_visual'); ?>
-        <div class="global_inner _content">
+        <div class="global_inner _content publication_budo-shell publication_budo-shell--detail">
             <div class="gc_main _oneColumn">
                 <?php if ($latest_budo->have_posts()) : ?>
                     <?php while ($latest_budo->have_posts()) : $latest_budo->the_post(); ?>

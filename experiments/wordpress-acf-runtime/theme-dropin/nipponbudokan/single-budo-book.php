@@ -14,7 +14,7 @@ get_header();
 <main id="global_contents" class="global_contents" itemscope itemprop="mainContentOfPage">
     <section>
         <?php get_template_part('template-parts/_visual'); ?>
-        <div class="global_inner _content">
+        <div class="global_inner _content publication_budo-shell publication_budo-shell--detail">
             <div class="gc_main _oneColumn">
                 <?php get_template_part('template-parts/publications/_budo-detail', null, array('post_id' => get_the_ID())); ?>
 

@@ -23,7 +23,7 @@ $budo_backnumbers = new WP_Query(array(
 <main id="global_contents" class="global_contents" itemscope itemprop="mainContentOfPage">
     <section>
         <?php get_template_part('template-parts/_visual'); ?>
-        <div class="global_inner _content">
+        <div class="global_inner _content publication_budo-shell publication_budo-shell--list">
             <div class="gc_main _oneColumn">
                 <?php if ($budo_backnumbers->have_posts()) : ?>
                     <div class="publication_budo-backList">

@@ -1,5 +1,21 @@
 @charset "utf-8";
 
+/* Publication page shell: current Figma uses 24px SP horizontal inset,
+   48/64px vertical inset; PC detail = 960px rail, list = 1040px rail. */
+.global_inner._content.publication_budo-shell {
+    padding: 48px 24px 64px;
+}
+
+@media screen and (min-width: 768px) {
+    .global_inner._content.publication_budo-shell {
+        padding: 64px var(--padding-TB) 100px;
+    }
+
+    .global_inner._content.publication_budo-shell--list {
+        max-width: calc(1040px + var(--padding-TB) * 2);
+    }
+}
+
 /* 武道・書写書道の号詳細 / publication family shared visual owner */
 .publication_budo-head {
     display: flex;
