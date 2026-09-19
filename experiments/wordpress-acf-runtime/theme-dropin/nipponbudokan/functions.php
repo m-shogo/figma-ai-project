@@ -151,3 +151,19 @@ function nipponbudokan_enqueue_page_top_focus_stability() {
     );
 }
 add_action('wp_enqueue_scripts', 'nipponbudokan_enqueue_page_top_focus_stability', 20);
+
+/**
+ * Tabの表示切替は既存common.jsがowner。生成済みbutton/panelへARIA stateと
+ * roving tabindexだけを投影し、既存の表示・layout・ACF ownershipを変えない。
+ */
+function nipponbudokan_enqueue_tab_semantics() {
+    $path = get_theme_file_path('/js/tab-semantics.js');
+    wp_enqueue_script(
+        'tab-semantics-script',
+        get_theme_file_uri('/js/tab-semantics.js'),
+        array('common-script'),
+        file_exists($path) ? filemtime($path) : null,
+        array('strategy' => 'defer', 'in_footer' => false)
+    );
+}
+add_action('wp_enqueue_scripts', 'nipponbudokan_enqueue_tab_semantics', 20);
