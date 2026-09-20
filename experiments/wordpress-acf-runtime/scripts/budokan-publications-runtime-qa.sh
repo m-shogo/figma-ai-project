@@ -50,18 +50,21 @@ docker compose run --rm cli theme activate "$THEME_SLUG" >/dev/null
 docker compose run --rm -e WP_ENVIRONMENT_TYPE=local cli eval-file /fixture/scripts/seed-budo-detail-qa.php >/dev/null
 docker compose run --rm -e WP_ENVIRONMENT_TYPE=local cli eval-file /fixture/scripts/seed-budo-back-qa.php >/dev/null
 docker compose run --rm -e WP_ENVIRONMENT_TYPE=local cli eval-file /fixture/scripts/seed-shodou-publication-qa.php >/dev/null
+docker compose run --rm -e WP_ENVIRONMENT_TYPE=local cli eval-file /fixture/scripts/seed-tankoubon-detail-qa.php >/dev/null
 docker compose run --rm -e WP_ENVIRONMENT_TYPE=local cli eval-file /fixture/scripts/seed-publications-visual-qa-pages.php >/dev/null
 
 pages_json="$(docker compose run --rm cli option get budokan_publication_visual_qa_pages --format=json)"
 budo_json="$(docker compose run --rm cli option get budokan_budo_detail_qa_ids --format=json)"
 shodou_json="$(docker compose run --rm cli option get budokan_shodou_publication_qa_ids --format=json)"
+tankoubon_json="$(docker compose run --rm cli option get budokan_tankoubon_detail_qa_ids --format=json)"
 budo_back_id="$(php -r '$v=json_decode($argv[1], true); echo (int)($v["budo_back"] ?? 0);' "$pages_json")"
 shodou_back_id="$(php -r '$v=json_decode($argv[1], true); echo (int)($v["shodou_back"] ?? 0);' "$pages_json")"
 budo_full_id="$(php -r '$v=json_decode($argv[1], true); echo (int)($v["full"] ?? 0);' "$budo_json")"
 shodou_full_id="$(php -r '$v=json_decode($argv[1], true); echo (int)($v["full"] ?? 0);' "$shodou_json")"
+tankoubon_standard_id="$(php -r '$v=json_decode($argv[1], true); echo (int)($v["standard"] ?? 0);' "$tankoubon_json")"
 
-if [[ "$budo_back_id" -le 0 || "$budo_full_id" -le 0 || "$shodou_back_id" -le 0 || "$shodou_full_id" -le 0 ]]; then
-  echo "FAIL publication fixtures did not expose numeric Budo + Shodou QA ids." >&2
+if [[ "$budo_back_id" -le 0 || "$budo_full_id" -le 0 || "$shodou_back_id" -le 0 || "$shodou_full_id" -le 0 || "$tankoubon_standard_id" -le 0 ]]; then
+  echo "FAIL publication fixtures did not expose numeric Budo + Shodou + Tankoubon QA ids." >&2
   exit 1
 fi
 
@@ -84,10 +87,29 @@ for url in \
   rm -f "$html"
 done
 
-echo "PASS Budo + Shodou fixture data rendered through real WordPress + ACF."
+tankoubon_url="$WP_URL/?p=$tankoubon_standard_id&post_type=tankoubon"
+tankoubon_html="$(mktemp)"
+tankoubon_code="$(curl --silent --show-error --location --max-redirs 3 --output "$tankoubon_html" --write-out '%{http_code}' "$tankoubon_url")"
+if [[ "$tankoubon_code" != "200" ]]; then
+  echo "FAIL tankoubon detail fixture returned HTTP ${tankoubon_code}: ${tankoubon_url}" >&2
+  cat "$tankoubon_html" >&2 || true
+  exit 1
+fi
+grep -Fq 'publication_book-head' "$tankoubon_html" || {
+  echo "FAIL tankoubon detail production head missing: ${tankoubon_url}" >&2
+  exit 1
+}
+grep -Fq 'publication_book-content' "$tankoubon_html" || {
+  echo "FAIL tankoubon detail the_content owner missing: ${tankoubon_url}" >&2
+  exit 1
+}
+rm -f "$tankoubon_html"
+
+echo "PASS Budo + Shodou + Tankoubon detail fixture data rendered through real WordPress + ACF."
 echo "PASS pages_json=${pages_json}"
 echo "PASS budo_json=${budo_json}"
 echo "PASS shodou_json=${shodou_json}"
+echo "PASS tankoubon_json=${tankoubon_json}"
 
 if [[ "${BUDOKAN_PUBLICATIONS_KEEP_RUNTIME:-0}" == "1" ]]; then
   trap - EXIT
