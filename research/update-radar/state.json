@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-19T08:05:42+00:00",
+  "updated_at": "2026-09-20T08:38:05+00:00",
   "fingerprints": {
     "figma-release-notes": "93ec16d016b0463b5766a4bd2d99545a1855e2c41658ee8a65dceebbcb1c2ae6",
     "figma-auto-layout-current": "9f549da5798e1af9cdcdd2914ad0e3c97206f93a17fa5e0fec762bfedad6baaf",
@@ -26,7 +26,7 @@
     "lighthouse-ci-releases": "5cd178cff75b4eea6878530d6e489104ed1348fc6c5466d464a982eb767a03dc",
     "svgo-releases": "84d12299ec1df40268307327551bbaff33fb8dd51151020ed55ab3515d82ec86",
     "web-features-releases": "1a085e0f4fde0207f1cd2f59d0a280de453bd5a532c44087b133d019130504ba",
-    "mdn-browser-compat-data-releases": "112a5a2e0e13edd2661b004fd83fec0c95dc34d4e7a61bd82c0978c2cd58b2d5",
+    "mdn-browser-compat-data-releases": "33f87cceef9d3066f2cb2af11d4655404e3a75c15882df8e6ba95f745155cc20",
     "w3c-wai-news": "05009e7199b5cc8f603eb6e8bfd6742096c18b2bc0551e26dbae2dc4f84dd8a2",
     "design-tokens-spec": "e7526f9a4360fd590555d5b3a1107042f18a6ace66a09cbbfd266f86621266fb",
     "style-dictionary-releases": "e4356806129ac974c7d8f0871895bb2b0e73aeaa631bd9b98141ae332a9a2f39",
