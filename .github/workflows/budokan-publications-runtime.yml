@@ -20,16 +20,19 @@ jobs:
           php -l experiments/wordpress-acf-runtime/scripts/seed-budo-detail-qa.php
           php -l experiments/wordpress-acf-runtime/scripts/seed-budo-back-qa.php
           php -l experiments/wordpress-acf-runtime/scripts/seed-shodou-publication-qa.php
+          php -l experiments/wordpress-acf-runtime/scripts/seed-tankoubon-detail-qa.php
           php -l experiments/wordpress-acf-runtime/scripts/seed-publications-visual-qa-pages.php
           php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/publications/_budo-back-item.php
           php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/publications/_shodou-back-item.php
           php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/publications/_budo-detail.php
+          php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/publications/_book-detail.php
           php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/page-publications-budo-back.php
           php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/page-publications-shodou-back.php
           php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/page-publications-budo-latest.php
           php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/page-publications-shodou-latest.php
           php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/single-budo-book.php
           php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/single-shodou-book.php
+          php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/single-tankoubon.php
       - name: Publication script syntax
         run: |
           bash -n experiments/wordpress-acf-runtime/scripts/budokan-publications-runtime-qa.sh
@@ -42,7 +45,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Start real WordPress and seed Budo + Shodou QA data
+      - name: Start real WordPress and seed Budo + Shodou + Tankoubon QA data
         env:
           BUDOKAN_PUBLICATIONS_KEEP_RUNTIME: '1'
         run: bash experiments/wordpress-acf-runtime/scripts/budokan-publications-runtime-qa.sh
