@@ -79,11 +79,11 @@ $fixtures = array(
             'book_info' => '四六判・並製（POD版）・322頁／電子書籍版',
             'book_price' => '2,530円／2,500円',
             'readingttl' => '試し読み',
-            'readingtest' => 'https://example.com/qa-reading.pdf',
+            'readingtest' => $standard_cover,
             'amazon' => 'https://example.com/qa-amazon',
             'book_addbtn' => array(
-                array('book_btntitle' => '三省堂書店で購入', 'book_addurl' => 'https://example.com/qa-store'),
-                array('book_btntitle' => '楽天ブックスで購入', 'book_addurl' => 'https://example.com/qa-rakuten'),
+                array('field_nbk_book_btntitle' => '三省堂書店で購入', 'field_nbk_book_addurl' => 'https://example.com/qa-store'),
+                array('field_nbk_book_btntitle' => '楽天ブックスで購入', 'field_nbk_book_addurl' => 'https://example.com/qa-rakuten'),
             ),
         ),
     ),
@@ -99,10 +99,10 @@ $fixtures = array(
             'book_info' => 'A5判・上製・本文512頁・別冊付録128頁・オンデマンド版および電子書籍版',
             'book_price' => '12,345円（税込）／電子版 9,876円（税込）',
             'readingttl' => '長いラベルの試し読み資料を別ウィンドウで開く',
-            'readingtest' => 'https://example.com/qa-long-reading.pdf',
+            'readingtest' => $wide_cover,
             'amazon' => 'https://example.com/qa-long-amazon',
             'book_addbtn' => array(
-                array('book_btntitle' => '非常に長い書店名のオンラインストアで購入する', 'book_addurl' => 'https://example.com/qa-long-store'),
+                array('field_nbk_book_btntitle' => '非常に長い書店名のオンラインストアで購入する', 'field_nbk_book_addurl' => 'https://example.com/qa-long-store'),
             ),
         ),
     ),
@@ -125,6 +125,17 @@ $fixtures = array(
     ),
 );
 
+$field_keys = array(
+    'book_author' => 'field_nbk_book_author',
+    'book_desc' => 'field_nbk_book_desc',
+    'book_info' => 'field_nbk_book_info',
+    'book_price' => 'field_nbk_book_price',
+    'readingttl' => 'field_nbk_readingttl',
+    'readingtest' => 'field_nbk_readingtest',
+    'amazon' => 'field_nbk_amazon',
+    'book_addbtn' => 'field_nbk_book_addbtn',
+);
+
 $ids = array();
 foreach ($fixtures as $fixture) {
     $existing = get_page_by_path($fixture['slug'], OBJECT, 'tankoubon');
@@ -143,7 +154,8 @@ foreach ($fixtures as $fixture) {
     }
 
     foreach ($fixture['fields'] as $field => $value) {
-        update_field($field, $value, $post_id);
+        $field_key = isset($field_keys[$field]) ? $field_keys[$field] : $field;
+        update_field($field_key, $value, $post_id);
     }
 
     if (!empty($fixture['thumbnail_id'])) {
