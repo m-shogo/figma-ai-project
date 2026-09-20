@@ -51,17 +51,21 @@ async function assertStandard(viewport) {
       const summary = document.querySelector('.publication_book-summary');
       const cover = document.querySelector('.publication_book-cover');
       const image = cover?.querySelector('img');
-      const actions = document.querySelectorAll('.publication_book-action');
+      const actions = [...document.querySelectorAll('.publication_book-action')];
       return {
         summaryDisplay: summary ? getComputedStyle(summary).display : '',
         coverWidth: cover?.getBoundingClientRect().width || 0,
         imageWidth: image?.getBoundingClientRect().width || 0,
         imageHeight: image?.getBoundingClientRect().height || 0,
         actionCount: actions.length,
+        actions: actions.map(action => ({
+          label: action.querySelector('.publication_book-actionLabel')?.textContent?.trim() || action.textContent?.trim() || '',
+          href: action.getAttribute('href') || '',
+        })),
       };
     });
     if (metrics.coverWidth <= 0 || metrics.imageWidth <= 0 || metrics.imageHeight <= 0) throw new Error(`${label}: cover has no rendered geometry`);
-    if (metrics.actionCount < 4) throw new Error(`${label}: expected reading + Amazon + additional CTA output, got ${metrics.actionCount}`);
+    if (metrics.actionCount < 4) throw new Error(`${label}: expected reading + Amazon + additional CTA output, got ${metrics.actionCount}; rendered=${JSON.stringify(metrics.actions)}`);
     if (viewport.width < 768 && metrics.summaryDisplay !== 'flex') throw new Error(`${label}: SP summary must use responsive one-column flex owner, got ${metrics.summaryDisplay}`);
     if (viewport.width >= 768 && metrics.summaryDisplay !== 'grid') throw new Error(`${label}: PC summary must use grid owner, got ${metrics.summaryDisplay}`);
   } finally {
