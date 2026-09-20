@@ -118,11 +118,27 @@ const viewports = [
   { width: 1380, height: 1000 },
 ];
 
-for (const viewport of viewports) {
-  await assertStandard(viewport);
-  await assertLong(viewport);
-  await assertEmpty(viewport);
-}
+const cases = [
+  ['standard', assertStandard],
+  ['long', assertLong],
+  ['empty', assertEmpty],
+];
 
-console.log('PASS Tankoubon detail real WordPress browser QA: standard/long/empty fixtures at 375/390/430/767/768/1380; responsive owner, empty suppression, CTA/content output and overflow boundaries.');
-await browser.close();
+try {
+  for (const viewport of viewports) {
+    for (const [caseName, assertion] of cases) {
+      console.log(`[Tankoubon QA] START case=${caseName} viewport=${viewport.width}x${viewport.height}`);
+      try {
+        await assertion(viewport);
+        console.log(`[Tankoubon QA] PASS case=${caseName} viewport=${viewport.width}x${viewport.height}`);
+      } catch (error) {
+        console.error(`[Tankoubon QA] FAIL case=${caseName} viewport=${viewport.width}x${viewport.height}: ${error?.stack || error}`);
+        throw error;
+      }
+    }
+  }
+
+  console.log('PASS Tankoubon detail real WordPress browser QA: standard/long/empty fixtures at 375/390/430/767/768/1380; responsive owner, empty suppression, CTA/content output and overflow boundaries.');
+} finally {
+  await browser.close();
+}
