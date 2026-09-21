@@ -41,10 +41,12 @@ $field_keys = array(
     'book_price' => 'field_nbk_book_price',
 );
 
-// Keep every fixture safely in the past relative to the runtime's WordPress
-// timezone. Fixed same-day clock values can become future posts in UTC CI and
-// silently change `publish` to `future`, invalidating the list query contract.
-$base_timestamp = current_time('timestamp') - HOUR_IN_SECONDS;
+// Anchor the newest list fixture at the runtime's current WordPress time.
+// The detail QA fixtures are seeded immediately before this script and use
+// their insertion time, so subtracting an hour here made a detail fixture win
+// the production "latest published tankoubon" query. `publish` remains stable
+// because this timestamp is not in the future; older list cases step backward.
+$base_timestamp = current_time('timestamp');
 $fixture_date = static function ($hours_ago) use ($base_timestamp) {
     return wp_date('Y-m-d H:i:s', $base_timestamp - ((int) $hours_ago * HOUR_IN_SECONDS), wp_timezone());
 };
