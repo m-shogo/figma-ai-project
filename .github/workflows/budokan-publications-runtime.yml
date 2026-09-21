@@ -42,6 +42,7 @@ jobs:
           bash -n experiments/wordpress-acf-runtime/scripts/budokan-publications-runtime-qa.sh
           node --check experiments/wordpress-acf-runtime/scripts/budokan-publications-browser-qa.mjs
           node --check experiments/wordpress-acf-runtime/scripts/budokan-tankoubon-detail-browser-qa.mjs
+          node --check experiments/wordpress-acf-runtime/scripts/budokan-tankoubon-list-browser-qa.mjs
 
   publication-runtime:
     needs: static
@@ -94,6 +95,14 @@ jobs:
           tankoubon_json="$(docker compose run --rm cli option get budokan_tankoubon_detail_qa_ids --format=json)"
           cd ../..
           node experiments/wordpress-acf-runtime/scripts/budokan-tankoubon-detail-browser-qa.mjs "$WP_URL" "$tankoubon_json"
+
+      - name: Run Tankoubon list browser QA
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          page_id="$(docker compose run --rm cli option get budokan_tankoubon_list_qa_page_id)"
+          cd ../..
+          node experiments/wordpress-acf-runtime/scripts/budokan-tankoubon-list-browser-qa.mjs "$WP_URL" "$page_id"
 
       - name: Cleanup disposable WordPress runtime
         if: always()
