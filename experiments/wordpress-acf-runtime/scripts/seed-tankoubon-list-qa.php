@@ -41,12 +41,20 @@ $field_keys = array(
     'book_price' => 'field_nbk_book_price',
 );
 
+// Keep every fixture safely in the past relative to the runtime's WordPress
+// timezone. Fixed same-day clock values can become future posts in UTC CI and
+// silently change `publish` to `future`, invalidating the list query contract.
+$base_timestamp = current_time('timestamp') - HOUR_IN_SECONDS;
+$fixture_date = static function ($hours_ago) use ($base_timestamp) {
+    return wp_date('Y-m-d H:i:s', $base_timestamp - ((int) $hours_ago * HOUR_IN_SECONDS), wp_timezone());
+};
+
 $fixtures = array(
     array(
         'key' => 'latest',
         'slug' => 'qa-tankoubon-list-latest',
         'title' => 'QA 単行本一覧 最新刊',
-        'date' => '2026-09-21 09:00:00',
+        'date' => $fixture_date(0),
         'terms' => array('budo'),
         'fields' => array('book_author' => 'QA 著者', 'book_desc' => '今月のおすすめ自動取得確認用', 'book_info' => 'A5判・200頁', 'book_price' => '2,200円'),
     ),
@@ -54,7 +62,7 @@ $fixtures = array(
         'key' => 'multi',
         'slug' => 'qa-tankoubon-list-multi',
         'title' => 'QA 単行本一覧 複数カテゴリ所属',
-        'date' => '2026-09-20 09:00:00',
+        'date' => $fixture_date(24),
         'terms' => array('budo', 'judo'),
         'fields' => array('book_author' => 'QA 共著', 'book_desc' => '複数taxonomy所属確認用', 'book_info' => '四六判・180頁', 'book_price' => '1,980円'),
     ),
@@ -62,7 +70,7 @@ $fixtures = array(
         'key' => 'long',
         'slug' => 'qa-tankoubon-list-long',
         'title' => 'QA 単行本一覧 非常に長いタイトルがカード内で自然に折り返して横スクロールを起こさないことを確認するための投稿',
-        'date' => '2026-09-19 09:00:00',
+        'date' => $fixture_date(48),
         'terms' => array('judo'),
         'fields' => array(
             'book_author' => '非常に長い著者・編者・監修者名を想定したQA文字列 日本武道館刊行物編集委員会ほか',
@@ -75,7 +83,7 @@ $fixtures = array(
         'key' => 'empty',
         'slug' => 'qa-tankoubon-list-empty',
         'title' => 'QA 単行本一覧 空ACF・画像なし',
-        'date' => '2026-09-18 09:00:00',
+        'date' => $fixture_date(72),
         'terms' => array('other'),
         'fields' => array('book_author' => '', 'book_desc' => '', 'book_info' => '', 'book_price' => ''),
     ),
