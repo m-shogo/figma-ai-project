@@ -22,15 +22,18 @@ jobs:
           php -l experiments/wordpress-acf-runtime/scripts/seed-shodou-publication-qa.php
           php -l experiments/wordpress-acf-runtime/scripts/seed-tankoubon-detail-qa.php
           php -l experiments/wordpress-acf-runtime/scripts/seed-tankoubon-list-qa.php
+          php -l experiments/wordpress-acf-runtime/scripts/seed-tankoubon-list-page-qa.php
           php -l experiments/wordpress-acf-runtime/scripts/seed-publications-visual-qa-pages.php
           php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/publications/_budo-back-item.php
           php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/publications/_shodou-back-item.php
           php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/publications/_budo-detail.php
           php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/publications/_book-detail.php
+          php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/publications/_book-list-card.php
           php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/page-publications-budo-back.php
           php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/page-publications-shodou-back.php
           php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/page-publications-budo-latest.php
           php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/page-publications-shodou-latest.php
+          php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/page-publications-budo-books.php
           php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/single-budo-book.php
           php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/single-shodou-book.php
           php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/single-tankoubon.php
@@ -51,6 +54,23 @@ jobs:
         env:
           BUDOKAN_PUBLICATIONS_KEEP_RUNTIME: '1'
         run: bash experiments/wordpress-acf-runtime/scripts/budokan-publications-runtime-qa.sh
+
+      - name: Seed and verify Tankoubon list production page
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          docker compose run --rm -e WP_ENVIRONMENT_TYPE=local cli eval-file /fixture/scripts/seed-tankoubon-list-qa.php
+          docker compose run --rm -e WP_ENVIRONMENT_TYPE=local cli eval-file /fixture/scripts/seed-tankoubon-list-page-qa.php
+          page_id="$(docker compose run --rm cli option get budokan_tankoubon_list_qa_page_id)"
+          html="$(mktemp)"
+          code="$(curl --silent --show-error --location --max-redirs 3 --output "$html" --write-out '%{http_code}' "$WP_URL/?page_id=$page_id")"
+          test "$code" = "200"
+          grep -Fq 'publication_book-latest' "$html"
+          grep -Fq 'publication_book-categoryNav' "$html"
+          grep -Fq 'QA 単行本一覧 最新刊' "$html"
+          grep -Fq 'QA 単行本一覧 複数カテゴリ所属' "$html"
+          grep -Fq 'QA 単行本一覧 空ACF・画像なし' "$html"
+          rm -f "$html"
 
       - name: Install Chromium
         run: |
