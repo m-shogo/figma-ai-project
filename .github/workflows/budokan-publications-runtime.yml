@@ -21,6 +21,7 @@ jobs:
           php -l experiments/wordpress-acf-runtime/scripts/seed-budo-back-qa.php
           php -l experiments/wordpress-acf-runtime/scripts/seed-shodou-publication-qa.php
           php -l experiments/wordpress-acf-runtime/scripts/seed-tankoubon-detail-qa.php
+          php -l experiments/wordpress-acf-runtime/scripts/seed-tankoubon-list-qa.php
           php -l experiments/wordpress-acf-runtime/scripts/seed-publications-visual-qa-pages.php
           php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/publications/_budo-back-item.php
           php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/publications/_shodou-back-item.php
