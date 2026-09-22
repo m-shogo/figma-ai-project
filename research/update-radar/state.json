@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-21T09:00:13+00:00",
+  "updated_at": "2026-09-22T08:35:19+00:00",
   "fingerprints": {
-    "figma-release-notes": "93ec16d016b0463b5766a4bd2d99545a1855e2c41658ee8a65dceebbcb1c2ae6",
+    "figma-release-notes": "ab50e0b6c19a72591569be0e2a7e3a135e519100b81081f283414a501d8f444f",
     "figma-auto-layout-current": "9f549da5798e1af9cdcdd2914ad0e3c97206f93a17fa5e0fec762bfedad6baaf",
     "figma-auto-layout-flexbox-generation": "d020c071cd55337124a0eb332e13963fedae93b2060f82601c49ed5d112727b1",
     "figma-grid-auto-layout-current": "03384770b3c24260fa6d9236adeff4bc52c6aafded19f80142466e0d8a97f547",
@@ -25,9 +25,9 @@
     "axe-core-releases": "5fae27baa28621415d7da5d33500f937f2d77ed6cfa45ca4b25a7103bb5be345",
     "lighthouse-ci-releases": "5cd178cff75b4eea6878530d6e489104ed1348fc6c5466d464a982eb767a03dc",
     "svgo-releases": "84d12299ec1df40268307327551bbaff33fb8dd51151020ed55ab3515d82ec86",
-    "web-features-releases": "1a085e0f4fde0207f1cd2f59d0a280de453bd5a532c44087b133d019130504ba",
-    "mdn-browser-compat-data-releases": "3f1f131d2b72d9d3f1a824614b24d40d0eeff097b81e34c26069532dd9a61395",
-    "w3c-wai-news": "05009e7199b5cc8f603eb6e8bfd6742096c18b2bc0551e26dbae2dc4f84dd8a2",
+    "web-features-releases": "781642ff42d388a2bc797d0ba7ddd21a7c5d6e6e8616b909102c2c9e67f808e9",
+    "mdn-browser-compat-data-releases": "28edb3b0c90f374456fe13eaa0fe384c109062b58ccf144dc4b924b1c08976dc",
+    "w3c-wai-news": "e2d145caddeba9da847fdc927b6e516ad52eea0649d682ccd43dea9f9d0962b1",
     "design-tokens-spec": "e7526f9a4360fd590555d5b3a1107042f18a6ace66a09cbbfd266f86621266fb",
     "style-dictionary-releases": "a22eb2bb274d6dbfe595b244ad77a53a40d4bb220244f29e5559058a7352e481",
     "wordpress-releases": "6fb23d8b43533e8d103fc7f268e1e07fcd13702c4075c9746f53dc79119941a2",
