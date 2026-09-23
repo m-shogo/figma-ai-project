@@ -1,4 +1,6 @@
 import { chromium } from 'playwright';
+import { mkdir, writeFile } from 'node:fs/promises';
+import path from 'node:path';
 
 const [baseUrl, pageId] = process.argv.slice(2);
 if (!baseUrl || !pageId) {
@@ -7,6 +9,10 @@ if (!baseUrl || !pageId) {
 
 const browser = await chromium.launch({ headless: true });
 const pageUrl = `${baseUrl}/?page_id=${pageId}`;
+const artifactDir = process.env.BUDOKAN_QA_ARTIFACT_DIR || '';
+const evidence = [];
+
+if (artifactDir) await mkdir(artifactDir, { recursive: true });
 
 async function open(viewport) {
   const context = await browser.newContext({ viewport });
@@ -22,6 +28,47 @@ async function metrics(page) {
     scroll: document.documentElement.scrollWidth,
     bodyMin: parseFloat(getComputedStyle(document.body).minWidth || '0'),
   }));
+}
+
+async function visualEvidence(page, viewport) {
+  return page.evaluate(({ width, height }) => {
+    const rect = selector => {
+      const node = document.querySelector(selector);
+      if (!node) return null;
+      const box = node.getBoundingClientRect();
+      const style = getComputedStyle(node);
+      return {
+        x: box.x,
+        y: box.y,
+        width: box.width,
+        height: box.height,
+        display: style.display,
+        gap: style.gap,
+        padding: style.padding,
+        margin: style.margin,
+        fontSize: style.fontSize,
+        lineHeight: style.lineHeight,
+      };
+    };
+    return {
+      viewport: { width, height },
+      document: {
+        clientWidth: document.documentElement.clientWidth,
+        scrollWidth: document.documentElement.scrollWidth,
+        scrollHeight: document.documentElement.scrollHeight,
+        bodyMinWidth: getComputedStyle(document.body).minWidth,
+      },
+      geometry: {
+        shell: rect('.publication_book-listShell'),
+        latest: rect('.publication_book-latest'),
+        categoryNav: rect('.publication_book-categoryNav'),
+        categorySections: rect('.publication_book-categorySections'),
+        firstSection: rect('.publication_book-categorySection'),
+        firstCardList: rect('.publication_book-cardList'),
+        firstCard: rect('.publication_book-card'),
+      },
+    };
+  }, viewport);
 }
 
 async function assertViewport(viewport) {
@@ -85,6 +132,12 @@ async function assertViewport(viewport) {
     if (!result.latestText.includes('QA 単行本一覧 最新刊')) throw new Error(`${label}: latest owner did not render latest fixture`);
     if (result.emptyHasImage) throw new Error(`${label}: image-less fixture unexpectedly rendered an image`);
     if (result.longScroll > result.longWidth + 1) throw new Error(`${label}: long card overflows ${result.longScroll} > ${result.longWidth}`);
+
+    if (artifactDir) {
+      const snapshot = await visualEvidence(page, viewport);
+      evidence.push(snapshot);
+      await page.screenshot({ path: path.join(artifactDir, `tankoubon-list-${viewport.width}.png`), fullPage: true });
+    }
   } finally {
     await context.close();
   }
@@ -109,6 +162,9 @@ try {
       console.error(`[Tankoubon List QA] FAIL viewport=${viewport.width}x${viewport.height}: ${error?.stack || error}`);
       throw error;
     }
+  }
+  if (artifactDir) {
+    await writeFile(path.join(artifactDir, 'tankoubon-list-geometry.json'), `${JSON.stringify(evidence, null, 2)}\n`);
   }
   console.log('PASS Tankoubon list real WordPress browser QA: latest/category anchors/all-list fixtures at 375/390/430/767/768/1380 with overflow and empty-image boundaries.');
 } finally {
