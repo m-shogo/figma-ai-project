@@ -97,12 +97,23 @@ jobs:
           node experiments/wordpress-acf-runtime/scripts/budokan-tankoubon-detail-browser-qa.mjs "$WP_URL" "$tankoubon_json"
 
       - name: Run Tankoubon list browser QA
+        env:
+          BUDOKAN_QA_ARTIFACT_DIR: ${{ github.workspace }}/tmp/budokan-tankoubon-list-visual-evidence
         run: |
           cd experiments/wordpress-acf-runtime
           source scripts/runtime-env.sh
           page_id="$(docker compose run --rm cli option get budokan_tankoubon_list_qa_page_id)"
           cd ../..
           node experiments/wordpress-acf-runtime/scripts/budokan-tankoubon-list-browser-qa.mjs "$WP_URL" "$page_id"
+
+      - name: Upload Tankoubon list visual evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: budokan-tankoubon-list-visual-evidence
+          path: tmp/budokan-tankoubon-list-visual-evidence
+          if-no-files-found: warn
+          retention-days: 14
 
       - name: Cleanup disposable WordPress runtime
         if: always()
