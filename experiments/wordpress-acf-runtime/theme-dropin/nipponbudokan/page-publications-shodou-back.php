@@ -3,13 +3,12 @@
  * Template Name: 月刊「書写書道」バックナンバー
  *
  * /publications/shodo/back/ の固定ページ用。
- * 公開済み shodou-book を新しい順に取得し、最新号だけを除外して表示する。
+ * 公開済み shodou-book を新しい順に、ページャーなしで出す。最新号は除く。
  * Visual owner は武道と同じ publication_budo-* family。
  */
 get_template_part('template-parts/publications/_acf-has-value');
 get_header();
 
-// posts_per_page -1 は LIMIT を付けないため offset が無視される。最新1件の ID を除く。
 $latest_shodou = get_posts(array(
     'post_type'           => 'shodou-book',
     'post_status'         => 'publish',

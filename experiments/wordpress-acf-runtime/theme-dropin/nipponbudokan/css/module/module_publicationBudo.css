@@ -601,6 +601,21 @@
     min-width: 0;
 }
 
+.publication_shodou-backCopy {
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.publication_shodou-backNote {
+    margin: 0;
+    color: var(--color-text);
+    font-family: var(--font-zen-kaku-gothic);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: 0.05em;
+}
+
 .publication_budo-backCover {
     width: 160px;
     height: 226px;
@@ -867,6 +882,10 @@
     .publication_budo-backCopy {
         align-items: flex-start;
         gap: 30px;
+    }
+
+    .publication_shodou-backCopy {
+        gap: 16px;
     }
 
     .publication_budo-backDetail {
