@@ -4,9 +4,8 @@
  *
  * PUBLICATIONS_CPT_ARCHITECTURE.md の共通契約:
  * ① テンプレ頭 = 既存 ACF + タイトル + アイキャッチ + 固定CTA（空は出さない）
- * ② 本文 = Gutenberg / 既存 Parts（the_content）
- *
- * 最新号固定ページも ① の markup を共有できるよう、表示本体は template part に寄せる。
+ * ② 本文 = ACF のみ。投稿本文は出さない。
+ * ③ バックナンバー = 表示中の号を除く最新5件
  */
 get_template_part('template-parts/publications/_acf-has-value');
 get_header();
@@ -17,12 +16,10 @@ get_header();
         <div class="global_inner _content publication_budo-shell publication_budo-shell--detail">
             <div class="gc_main _oneColumn">
                 <?php get_template_part('template-parts/publications/_budo-detail', null, array('post_id' => get_the_ID())); ?>
-
-                <?php if (nbk_acf_value_present(get_post()->post_content)) : ?>
-                    <div class="block-editor_wrap publication_budo-content">
-                        <?php the_content(); ?>
-                    </div>
-                <?php endif; ?>
+                <div class="block-editor_wrap publication_budo-content">
+                    <?php get_template_part('template-parts/publications/_budo-body', null, array('post_id' => get_the_ID())); ?>
+                    <?php get_template_part('template-parts/publications/_budo-related', null, array('post_id' => get_the_ID())); ?>
+                </div>
             </div>
         </div>
 

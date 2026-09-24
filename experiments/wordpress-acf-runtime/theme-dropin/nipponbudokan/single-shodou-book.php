@@ -4,6 +4,7 @@
  *
  * 武道と同じ publication visual family を使い、データ field map だけを差し替える。
  * 表紙はアイキャッチ。topimage / toprensailist は TOP 専用のためここでは出力しない。
+ * 本文は出さない。連載は ACF rensailist のみ。
  */
 get_template_part('template-parts/publications/_acf-has-value');
 get_header();
@@ -33,11 +34,14 @@ get_header();
                 );
                 ?>
 
-                <?php if (nbk_acf_value_present(get_post()->post_content)) : ?>
-                    <div class="block-editor_wrap publication_budo-content">
-                        <?php the_content(); ?>
-                    </div>
-                <?php endif; ?>
+                <?php
+                get_template_part(
+                    'acf/blocks/shodouRensaiList',
+                    null,
+                    array('post_id' => get_the_ID())
+                );
+                get_template_part('template-parts/publications/_shodou-contact');
+                ?>
             </div>
         </div>
 

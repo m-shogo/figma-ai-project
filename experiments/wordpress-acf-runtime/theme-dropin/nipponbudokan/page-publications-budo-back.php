@@ -3,22 +3,11 @@
  * Template Name: 月刊「武道」バックナンバー
  *
  * /publications/budo/back/ の固定ページ用。
- * 公開済み budo-book を新しい順に取得し、最新号だけを除外して表示する。
- * 総索引は Human 確定まで fail-closed のため、このテンプレートでは描画しない。
+ * 公開済み budo-book を新しい順に、最新号を含めて表示する。
+ * 先頭は総索引アコーディオン。ファイル URL は最新号の sousakuin のみ。
  */
 get_template_part('template-parts/publications/_acf-has-value');
 get_header();
-
-// posts_per_page -1 は LIMIT を付けないため offset が無視される。最新1件の ID を除く。
-$latest_budo = get_posts(array(
-    'post_type'           => 'budo-book',
-    'post_status'         => 'publish',
-    'posts_per_page'      => 1,
-    'orderby'             => 'date',
-    'order'               => 'DESC',
-    'fields'              => 'ids',
-    'ignore_sticky_posts' => true,
-));
 
 $budo_backnumbers = new WP_Query(array(
     'post_type'           => 'budo-book',
@@ -28,7 +17,6 @@ $budo_backnumbers = new WP_Query(array(
     'order'               => 'DESC',
     'ignore_sticky_posts' => true,
     'no_found_rows'       => true,
-    'post__not_in'        => $latest_budo ? array((int) $latest_budo[0]) : array(),
 ));
 ?>
 <main id="global_contents" class="global_contents" itemscope itemprop="mainContentOfPage">
@@ -36,6 +24,7 @@ $budo_backnumbers = new WP_Query(array(
         <?php get_template_part('template-parts/_visual'); ?>
         <div class="global_inner _content publication_budo-shell publication_budo-shell--list">
             <div class="gc_main _oneColumn">
+                <?php get_template_part('template-parts/publications/_budo-sousakuin'); ?>
                 <?php if ($budo_backnumbers->have_posts()) : ?>
                     <div class="publication_budo-backList">
                         <?php while ($budo_backnumbers->have_posts()) : $budo_backnumbers->the_post(); ?>

@@ -10,7 +10,8 @@ Figma visual authority: `OtS7731mhY2oD44HSpdADo`
 
 ```text
 イベント 一覧・詳細は Human 2026-09-24 で終了。次の指示があるまで触らない
-→ 武道＋月刊書写書道を同一 publication family として一覧／最新号／詳細 PC/SP 完成
+武道 一覧・詳細は Human 2026-09-24 で終了。次の指示があるまで触らない。最新号は同じ詳細部品なので、指示があるまでまとめて触らない
+→ 月刊書写書道は publication family として一覧／最新号／詳細 PC/SP を続ける
 → 完了ゲート後のみ TOP
 ```
 

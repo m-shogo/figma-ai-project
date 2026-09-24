@@ -96,7 +96,7 @@
                 "class": "",
                 "id": ""
             },
-            "layout": "table",
+            "layout": "block",
             "pagination": 0,
             "min": 1,
             "max": 10,
@@ -215,5 +215,5 @@
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1789548160
+    "modified": 1790400000
 }

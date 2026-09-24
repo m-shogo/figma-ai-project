@@ -22,7 +22,13 @@ $budo_defaults = array(
     'lead_note' => '',
     'publisher' => '公益財団法人 日本武道館',
     'order_url' => home_url('/publications/budo/order/'),
+    'digital_url' => '',
+    'digital_label' => '',
     'back_url' => '',
+    'back_label' => 'バックナンバー一覧',
+    'size_label' => '版型',
+    'month_format' => 'year',
+    'spec_order' => 'budo',
 );
 $shodou_defaults = array(
     'month_field' => 'shodou_month',
@@ -37,7 +43,13 @@ $shodou_defaults = array(
     'lead_note' => '文部科学省学習指導要領準拠',
     'publisher' => '公益財団法人 日本武道館',
     'order_url' => '',
+    'digital_url' => home_url('/publications/shodo/digital/'),
+    'digital_label' => '月刊「書写書道」電子版・<br>会員Webサイトのご案内',
     'back_url' => home_url('/publications/shodo/back/'),
+    'back_label' => 'バックナンバー一覧',
+    'size_label' => 'ページ数',
+    'month_format' => 'month',
+    'spec_order' => 'shodou',
 );
 $defaults = get_post_type($post_id) === 'shodou-book' ? $shodou_defaults : $budo_defaults;
 $config = wp_parse_args(isset($args['config']) && is_array($args['config']) ? $args['config'] : array(), $defaults);
@@ -50,23 +62,43 @@ $subscription = $config['subscription_field'] ? get_field($config['subscription_
 $thumbnail_id = get_post_thumbnail_id($post_id);
 $title = get_the_title($post_id);
 $month_text = nbk_acf_value_present($month) ? wp_strip_all_tags((string) $month) : '';
+if ($month_text !== '' && preg_match('/^\d{1,2}$/', $month_text)) {
+    if (($config['month_format'] ?? 'year') === 'month') {
+        $month_text = (int) $month_text . '月号';
+    } else {
+        $issue_year = (int) get_post_time('Y', false, $post_id);
+        $month_text = ($issue_year > 1970 ? $issue_year . '年' : '') . (int) $month_text . '月号';
+    }
+}
 $heading = $month_text !== '' ? $config['publication_label'] . $month_text : $title;
 
 $specs = array();
-if (nbk_acf_value_present($config['publisher'])) {
-    $specs[] = array('label' => '編集・発行', 'value' => $config['publisher']);
-}
-if (nbk_acf_value_present($size)) {
-    $specs[] = array('label' => '版型', 'value' => $size);
-}
-if (nbk_acf_value_present($pages)) {
-    $specs[] = array('label' => 'ページ数', 'value' => $pages);
-}
-if (nbk_acf_value_present($price)) {
-    $specs[] = array('label' => '定価', 'value' => $price);
-}
-if (nbk_acf_value_present($subscription)) {
-    $specs[] = array('label' => '定期購読料', 'value' => $subscription, 'html' => true);
+if (($config['spec_order'] ?? 'budo') === 'shodou') {
+    if (nbk_acf_value_present($size)) {
+        $specs[] = array('label' => $config['size_label'], 'value' => $size);
+    }
+    if (nbk_acf_value_present($config['publisher'])) {
+        $specs[] = array('label' => '編集・発行', 'value' => $config['publisher']);
+    }
+    if (nbk_acf_value_present($price)) {
+        $specs[] = array('label' => '定価', 'value' => $price);
+    }
+} else {
+    if (nbk_acf_value_present($config['publisher'])) {
+        $specs[] = array('label' => '編集・発行', 'value' => $config['publisher']);
+    }
+    if (nbk_acf_value_present($size)) {
+        $specs[] = array('label' => $config['size_label'], 'value' => $size);
+    }
+    if (nbk_acf_value_present($pages)) {
+        $specs[] = array('label' => 'ページ数', 'value' => $pages);
+    }
+    if (nbk_acf_value_present($price)) {
+        $specs[] = array('label' => '定価', 'value' => $price);
+    }
+    if (nbk_acf_value_present($subscription)) {
+        $specs[] = array('label' => '定期購読料', 'value' => $subscription, 'html' => true);
+    }
 }
 ?>
 <div class="block-editor_wrap publication_budo-head">
@@ -121,19 +153,39 @@ if (nbk_acf_value_present($subscription)) {
         <?php endif; ?>
     </div>
 
-    <?php if (nbk_acf_value_present($config['order_url']) || nbk_acf_value_present($config['back_url'])) : ?>
-        <div class="block-editor_wrap publication_budo-order">
-            <div class="wp-block-buttons<?php echo nbk_acf_value_present($config['order_url']) ? ' cta' : ''; ?>">
-                <?php if (nbk_acf_value_present($config['order_url'])) : ?>
+    <?php
+    $order_buttons = array();
+    if (nbk_acf_value_present($config['order_url'])) {
+        $order_buttons[] = array('url' => $config['order_url'], 'label' => 'ご注文', 'cta' => true);
+    }
+    if (nbk_acf_value_present($config['digital_url'])) {
+        $order_buttons[] = array(
+            'url' => $config['digital_url'],
+            'label' => $config['digital_label'],
+            'html' => true,
+        );
+    }
+    if (nbk_acf_value_present($config['back_url'])) {
+        $order_buttons[] = array(
+            'url' => $config['back_url'],
+            'label' => $config['back_label'],
+        );
+    }
+    $order_is_cta = false;
+    foreach ($order_buttons as $order_button) {
+        if (!empty($order_button['cta'])) {
+            $order_is_cta = true;
+        }
+    }
+    ?>
+    <?php if ($order_buttons) : ?>
+        <div class="block-editor_wrap publication_budo-order<?php echo ($config['spec_order'] ?? '') === 'shodou' ? ' publication_shodou-actions' : ''; ?>">
+            <div class="wp-block-buttons<?php echo $order_is_cta ? ' cta' : ''; ?>">
+                <?php foreach ($order_buttons as $order_button) : ?>
                     <div class="wp-block-button">
-                        <a class="wp-block-button__link wp-element-button" href="<?php echo esc_url($config['order_url']); ?>">ご注文</a>
+                        <a class="wp-block-button__link wp-element-button" href="<?php echo esc_url($order_button['url']); ?>"><?php echo !empty($order_button['html']) ? wp_kses($order_button['label'], array('br' => array())) : esc_html($order_button['label']); ?></a>
                     </div>
-                <?php endif; ?>
-                <?php if (nbk_acf_value_present($config['back_url'])) : ?>
-                    <div class="wp-block-button">
-                        <a class="wp-block-button__link wp-element-button" href="<?php echo esc_url($config['back_url']); ?>">バックナンバー一覧</a>
-                    </div>
-                <?php endif; ?>
+                <?php endforeach; ?>
             </div>
         </div>
     <?php endif; ?>

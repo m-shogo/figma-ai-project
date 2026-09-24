@@ -166,6 +166,7 @@ Theme 専用の enqueue・命名は `THEME_RULES.md`。Frontend Standard は Com
 - グローバルナビは WordPress メニュー。旧 `common-menu-01` / `common-submenu-01` は現行 ACF に無い
 - ローカルナビ（Human 2026-09-11 / 2026-09-15）: 外観 → メニューで名前を `ローカル：` で始める（slug は `local-*` に同期）。位置には割り当てない。固定ページ ACF `page_local_nav` の動的一覧にだけ出る（`global-nav` / `mega-nav` / `sub-nav` / `footer-nav` 等の位置割当メニューは除外）。**出すテンプレートはデフォルト `page.php` と `template-form.php` のみ**（1カラム系は出さない）。パンくず上・幅いっぱい・白背景。PC Figma `2108:10846`。SP 専用デザイン無し（非表示）。メニューは**2階層**（1=大会・イベント等のリンク見出し / 2=各ページ）。家族名（武道 振興・普及事業）はメニューに置かない。PC は1階層目を見出し、2階層目を4列で出す。2行リンクがある row は高さを揃え下線をセル下端に揃える。詳細: `LOCAL_NAV_DEPENDENCY_AUDIT.md`
 - CPT `event` + `event_cat` は Theme `inc/custom.php`。イベント専用 ACF は上表。空は出さない。`event_status` の「なし」はチップを出さない。一覧は `event_date` の降順（開催日が遠い順）。**Human 2026-09-24: イベント一覧・詳細は終了。次の指示があるまで触らない。**
+- **Human 2026-09-24: 武道の一覧・詳細は終了。次の指示があるまで触らない。** 対象は `/publications/budo/back/` と `budo-book` 詳細。最新号は同じ詳細部品（`_budo-detail` / `_budo-body` / `_budo-related` / 総索引）を使うので、指示があるまでまとめて触らない。
 - Gutenberg ボタンスタイル「小ボタン」= `is-style-small`（Figma btn-02）。wrapper `.small` も互換で残す
 - ブロック スライダーは Human 2026-09-04: `parts2.php` 用に `acf/` へ追加してよい
 - `parts.php` / Form / Formidable は触らない

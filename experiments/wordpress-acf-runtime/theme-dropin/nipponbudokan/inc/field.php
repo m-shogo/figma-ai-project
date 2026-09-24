@@ -260,6 +260,17 @@ add_action('acf/init', function () {
         'innerBlocks' => true,
       ],
     ]);
+
+    acf_register_block_type(array(
+      'name'            => 'shodou-rensai-list',
+      'title'           => '月刊書写書道 連載リスト',
+      'description'     => 'この号の連載PDFをFigmaの並びで出す',
+      'render_template' => get_template_directory() . '/acf/blocks/shodouRensaiList.php',
+      'category'        => 'formatting',
+      'icon'            => 'media-document',
+      'keywords'        => array('書写', '書道', '連載', 'PDF'),
+      'post_types'      => array('shodou-book'),
+    ));
   }
 });
 

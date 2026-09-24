@@ -154,8 +154,358 @@
     margin-top: 72px;
 }
 
+.publication_shodou-actions .wp-block-buttons {
+    gap: 24px;
+}
+
+.block-editor_wrap.publication_shodou-actions .wp-block-buttons .wp-block-button:not(.has-custom-width):not(.is-style-small) {
+    width: auto;
+    min-width: 0;
+    max-width: 100%;
+}
+
+.publication_shodou-rensai {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.publication_shodou-rensai > .wp-block-heading {
+    margin: 0;
+}
+
+.publication_shodou-rensaiList {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.publication_shodou-rensaiList a,
+.publication_shodou-rensaiList span {
+    --_octagon-chip-small-invert: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpolygon fill='%23fff' stroke='%23ca9957' stroke-width='1' stroke-linejoin='round' points='16,0.6 26.81,5.19 31.4,16 26.81,26.81 16,31.4 5.19,26.81 0.6,16 5.19,5.19'/%3E%3C/svg%3E");
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--color-text);
+    font-family: var(--font-zen-kaku-gothic);
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+}
+
+.publication_shodou-rensaiList a::before,
+.publication_shodou-rensaiList span::before {
+    content: var(--icon-pdf);
+    display: grid;
+    place-items: center;
+    flex: 0 0 32px;
+    width: 32px;
+    height: 32px;
+    color: var(--color-secondary);
+    background-color: transparent;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpolygon fill='%23ca9957' stroke='%23ca9957' stroke-width='1' stroke-linejoin='round' points='16,0.6 26.81,5.19 31.4,16 26.81,26.81 16,31.4 5.19,26.81 0.6,16 5.19,5.19'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 32px 32px;
+    font-family: var(--font-awesome);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1;
+    transition:
+        background-image var(--transition-duration),
+        color var(--transition-duration);
+}
+
+@media (any-hover: hover) {
+    .publication_shodou-rensaiList a:hover::before {
+        background-image: var(--_octagon-chip-small-invert);
+        color: var(--color-accent);
+    }
+}
+
+.publication_shodou-rensaiList a:focus-visible::before {
+    background-image: var(--_octagon-chip-small-invert);
+    color: var(--color-accent);
+}
+
+.publication_shodou-contact {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 32px;
+}
+
+.publication_shodou-phone .wp-block-heading,
+.publication_shodou-phone p {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.publication_shodou-phone {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.publication_shodou-phoneNumber {
+    color: var(--color-text);
+    font-family: var(--font-zen-old-mincho);
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.05em;
+}
+
+.publication_shodou-phoneNumber::before {
+    content: '\f8d3';
+    margin-right: 8px;
+    font-family: var(--font-awesome);
+    font-weight: 900;
+}
+
+.publication_shodou-phoneHours {
+    color: var(--color-text);
+    font-family: var(--font-zen-kaku-gothic);
+    font-size: 17px;
+    line-height: 1.6;
+    letter-spacing: 0.05em;
+}
+
 .block-editor_wrap.publication_budo-content > * + h3.wp-block-heading {
     margin-top: 72px;
+}
+
+.publication_budo-content > h3.wp-block-heading + h4.wp-block-heading {
+    margin-top: 24px;
+}
+
+.publication_budo-sectionBody {
+    margin-top: 24px;
+}
+
+.publication_budo-sectionBody > :first-child {
+    margin-top: 0;
+}
+
+.publication_budo-featureImage {
+    max-width: 800px;
+    width: 100%;
+    margin-inline: auto;
+}
+
+.publication_budo-featureImage img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.publication_budo-pickups {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+    margin-top: 24px;
+}
+
+.publication_budo-pickup {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    min-width: 0;
+    padding: 20px;
+    border: 1px solid var(--color-line);
+    border-radius: 3px;
+    background-color: var(--color-secondary);
+}
+
+.publication_budo-pickupMedia {
+    flex: 0 0 100px;
+    width: 100px;
+    margin: 0;
+}
+
+.publication_budo-pickupMedia img {
+    display: block;
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+}
+
+.publication_budo-pickupBody {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 0;
+}
+
+.publication_budo-pickupTitle,
+.publication_budo-pickupDesc {
+    margin: 0;
+    color: var(--color-text);
+    font-family: var(--font-zen-kaku-gothic);
+    line-height: 1.6;
+    letter-spacing: 0.05em;
+    overflow-wrap: break-word;
+}
+
+.publication_budo-pickupTitle {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.publication_budo-pickupDesc {
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.publication_budo-related {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    margin-top: 72px;
+}
+
+.publication_budo-related > .wp-block-heading {
+    margin-top: 0;
+}
+
+.publication_budo-related > .wp-block-buttons {
+    align-self: flex-end;
+    margin-top: 0;
+}
+
+.publication_budo-relatedCovers {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    width: 100%;
+}
+
+.publication_budo-relatedCovers .publication_budo-coverLink {
+    width: 100%;
+    aspect-ratio: 140 / 198;
+}
+
+@media screen and (min-width: 768px) {
+    .publication_budo-pickups {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 24px;
+    }
+
+    .publication_budo-pickup {
+        gap: 24px;
+    }
+
+    .publication_budo-relatedCovers {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 24px;
+    }
+}
+
+/* 武道バックナンバー先頭の総索引 / Figma PC 1767:9488 / SP 2608:6210 */
+.publication_budo-sousakuin {
+    margin-bottom: 64px;
+}
+
+.block-editor_wrap.publication_budo-sousakuin > .wp-block-details {
+    margin-top: 0;
+    --_details-content-padding-block: 32px;
+}
+
+.block-editor_wrap.publication_budo-sousakuin > .wp-block-details > summary {
+    padding-left: 32px;
+}
+
+.publication_budo-sousakuin > .wp-block-details:not([open]) > :not(summary) {
+    display: none;
+}
+
+.publication_budo-sousakuin details[open] > .publication_budo-sousakuinLead,
+.publication_budo-sousakuin details[open] > .publication_budo-sousakuinGuide {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.publication_budo-sousakuinLead {
+    gap: 32px;
+}
+
+.publication_budo-sousakuinGuide {
+    gap: 24px;
+    margin-top: 40px;
+}
+
+.block-editor_wrap.publication_budo-sousakuin .wp-block-list + .wp-block-list {
+    margin-top: 0;
+}
+
+.block-editor_wrap.publication_budo-sousakuin .publication_budo-sousakuinLead > *,
+.block-editor_wrap.publication_budo-sousakuin .publication_budo-sousakuinGuide > *,
+.block-editor_wrap.publication_budo-sousakuin .publication_budo-sousakuinLead .wp-block-buttons {
+    width: 100%;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.block-editor_wrap.publication_budo-sousakuin .publication_budo-sousakuinLead > p {
+    margin: 0;
+    color: var(--color-text);
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: 0.05em;
+}
+
+.publication_budo-sousakuinBr {
+    display: block;
+}
+
+.block-editor_wrap.publication_budo-sousakuin .wp-block-buttons .wp-block-button:not(.has-custom-width):not(.is-style-small) {
+    width: 100%;
+    min-width: 0;
+}
+
+.block-editor_wrap.publication_budo-sousakuin .wp-block-buttons .wp-block-button .wp-block-button__link {
+    width: 100%;
+    min-height: 60px;
+    padding-block: 8px;
+}
+
+.block-editor_wrap.publication_budo-sousakuin .wp-block-buttons .wp-block-button .wp-block-button__link > span {
+    flex: 1 1 auto;
+    min-width: 0;
+    text-align: center;
+}
+
+.block-editor_wrap.publication_budo-sousakuin ol.wp-block-list:not(.annotation-list) {
+    gap: 15px;
+}
+
+.block-editor_wrap.publication_budo-sousakuin ol.wp-block-list:not(.annotation-list) > li {
+    font-size: 16px;
+    line-height: 1.5;
+    letter-spacing: 0.05em;
+}
+
+.block-editor_wrap.publication_budo-sousakuin ol.wp-block-list:not(.annotation-list) > li::before {
+    content: counter(li) '.';
+    font-family: var(--font-sansSerif-en);
+    font-weight: 500;
+    letter-spacing: 0.1em;
+}
+
+.block-editor_wrap.publication_budo-sousakuin ul.annotation-list {
+    gap: 8px;
+}
+
+.block-editor_wrap.publication_budo-sousakuin ul.annotation-list > li {
+    font-size: 13px;
 }
 
 /* 武道・書写書道バックナンバー / SP 2608:5702 + PC publication family */
@@ -203,8 +553,9 @@
     align-items: center;
     justify-content: center;
     gap: 4px;
+    transition: opacity 0.3s;
     padding: 8px 16px;
-    border: 1px solid var(--color-separator);
+    border: 1px solid var(--color-line);
     border-radius: 3px;
     color: var(--color-text);
     font-family: var(--font-zen-kaku-gothic);
@@ -216,18 +567,21 @@
 }
 
 .publication_budo-backOrder::before {
-    content: var(--icon-arrow-right, '\f061');
+    content: var(--icon-arrow-right);
     display: grid;
     place-items: center;
+    flex: 0 0 20px;
     width: 20px;
     height: 20px;
-    border: 1px solid var(--color-separator);
-    border-radius: 50%;
-    color: var(--color-main);
-    background: var(--color-white);
-    font-family: var(--font-awesome-6-pro);
+    border: 1px solid var(--color-line);
+    border-radius: 10px;
+    color: var(--color-primary);
+    background: var(--color-secondary);
+    font-family: var(--font-awesome);
+    font-weight: 900;
     font-size: 8px;
     line-height: 1;
+    letter-spacing: 0;
 }
 
 .publication_budo-backBody {
@@ -251,6 +605,23 @@
     width: 160px;
     height: 226px;
     margin: 0;
+}
+
+.publication_budo-backCover img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+@media (any-hover: hover) {
+    .publication_budo-backOrder:hover {
+        opacity: 0.7;
+    }
+}
+
+.publication_budo-backOrder:focus-visible {
+    opacity: 0.7;
 }
 
 .publication_budo-coverLink {
@@ -298,6 +669,27 @@
     margin-bottom: 0;
 }
 
+.publication_budo-backSummary ul {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.publication_budo-backSummary li {
+    margin: 0;
+}
+
+.publication_budo-backSummary p {
+    margin: 0 0 10px;
+}
+
+.publication_budo-backSummary p:last-child {
+    margin-bottom: 0;
+}
+
 .publication_budo-backPdfList {
     display: flex;
     flex-direction: column;
@@ -328,7 +720,7 @@
 }
 
 .publication_budo-backDetail {
-    align-self: flex-start;
+    align-self: flex-end;
     margin: 0;
 }
 
@@ -349,7 +741,7 @@
 }
 
 .page-template-page-publications-budo-back .block-editor_wrap.publication_budo-backDetail .wp-block-buttons .wp-block-button.is-style-small .wp-block-button__link {
-    font-size: 18px;
+    font-size: 16px;
 }
 
 .block-editor_wrap.publication_budo-backDetail .wp-block-buttons .wp-block-button.is-style-small .wp-block-button__link::before,
@@ -386,6 +778,16 @@
         font-size: 17px;
     }
 
+    .publication_shodou-contact {
+        flex-direction: row;
+        align-items: center;
+        gap: 64px;
+    }
+
+    .publication_shodou-contact .block-editor_wrap .wp-block-buttons.cta:not(.small) .wp-block-button:not(.is-style-small) .wp-block-button__link {
+        min-height: 80px;
+    }
+
     .publication_budo-order {
         justify-content: center;
     }
@@ -397,6 +799,32 @@
 
     .block-editor_wrap.publication_budo-order .wp-block-buttons.cta:not(.small) .wp-block-button:not(.is-style-small) .wp-block-button__link {
         font-size: 20px;
+    }
+
+    .publication_budo-sousakuin {
+        margin-bottom: 80px;
+    }
+
+    .publication_budo-sousakuinBr {
+        display: none;
+    }
+
+    .block-editor_wrap.publication_budo-sousakuin .publication_budo-sousakuinLead .wp-block-buttons {
+        width: auto;
+    }
+
+    .block-editor_wrap.publication_budo-sousakuin .wp-block-buttons .wp-block-button:not(.has-custom-width):not(.is-style-small) {
+        width: auto;
+        min-width: 270px;
+    }
+
+    .block-editor_wrap.publication_budo-sousakuin .wp-block-buttons .wp-block-button .wp-block-button__link {
+        width: auto;
+    }
+
+    .block-editor_wrap.publication_budo-sousakuin .wp-block-buttons .wp-block-button .wp-block-button__link > span {
+        flex: 0 1 auto;
+        text-align: left;
     }
 
     .publication_budo-backList {
@@ -421,7 +849,7 @@
         gap: 8px;
         padding: 4px 0 4px 16px;
         border: 0;
-        border-left: 1px solid var(--color-separator);
+        border-left: 1px solid var(--color-line);
         border-radius: 0;
     }
 
@@ -439,5 +867,13 @@
     .publication_budo-backCopy {
         align-items: flex-start;
         gap: 30px;
+    }
+
+    .publication_budo-backDetail {
+        align-self: flex-start;
+    }
+
+    .page-template-page-publications-budo-back .block-editor_wrap.publication_budo-backDetail .wp-block-buttons .wp-block-button.is-style-small .wp-block-button__link {
+        font-size: 18px;
     }
 }

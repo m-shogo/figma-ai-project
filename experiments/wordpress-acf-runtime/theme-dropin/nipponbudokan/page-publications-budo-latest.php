@@ -3,7 +3,8 @@
  * Template Name: 月刊「武道」最新号
  *
  * /publications/budo/latest/ の固定ページ用。
- * 最新の budo-book 1件を取得し、CPT single と同じ詳細 head + 本文を描画する。
+ * 最新の budo-book 1件を取得し、CPT single と同じ ACF 詳細を描画する。
+ * 投稿本文は出さない。バックナンバーは表示中の号を除く最新5件。
  */
 get_template_part('template-parts/publications/_acf-has-value');
 get_header();
@@ -26,12 +27,10 @@ $latest_budo = new WP_Query(array(
                 <?php if ($latest_budo->have_posts()) : ?>
                     <?php while ($latest_budo->have_posts()) : $latest_budo->the_post(); ?>
                         <?php get_template_part('template-parts/publications/_budo-detail', null, array('post_id' => get_the_ID())); ?>
-
-                        <?php if (nbk_acf_value_present(get_post()->post_content)) : ?>
-                            <div class="block-editor_wrap publication_budo-content">
-                                <?php the_content(); ?>
-                            </div>
-                        <?php endif; ?>
+                        <div class="block-editor_wrap publication_budo-content">
+                            <?php get_template_part('template-parts/publications/_budo-body', null, array('post_id' => get_the_ID())); ?>
+                            <?php get_template_part('template-parts/publications/_budo-related', null, array('post_id' => get_the_ID())); ?>
+                        </div>
                     <?php endwhile; ?>
                     <?php wp_reset_postdata(); ?>
                 <?php endif; ?>
