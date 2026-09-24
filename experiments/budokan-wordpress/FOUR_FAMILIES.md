@@ -64,7 +64,7 @@ JSON: `acf/json/group_event.json`。location = `event`。instructions 空。空�
 
 会場などは足さない。`event_status` の「なし」はチップを出さない。`group_nbk_*.json` は触らない。
 
-一覧はニュースカードを使わない（Figma `card_event`）。並びは `event_date` の昇順。月フィルタも `event_date`。詳細の表・お申込みは本文。
+一覧はニュースカードを使わない（Figma `card_event`）。並びは `event_date` の降順（開催日が遠い順）。月フィルタも `event_date`。詳細の表・お申込みは本文。
 
 ## 刊行物共通契約
 

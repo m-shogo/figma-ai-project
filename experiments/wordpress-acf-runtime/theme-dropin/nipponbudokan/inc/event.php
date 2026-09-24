@@ -142,7 +142,7 @@ add_action('pre_get_posts', function ($query) {
     $query->set('meta_key', 'event_date');
     $query->set('meta_type', 'CHAR');
     $query->set('orderby', 'meta_value');
-    $query->set('order', 'ASC');
+    $query->set('order', 'DESC');
 
     $month = (int) $query->get('event_m');
     if ($month < 1 || $month > 12) {
