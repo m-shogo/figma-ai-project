@@ -22,7 +22,7 @@ const postUrl = (id, type) => `${baseUrl}/?p=${id}&post_type=${encodeURIComponen
 async function open(viewport, url) {
   const context = await browser.newContext({ viewport });
   const page = await context.newPage();
-  const response = await page.goto(url, { waitUntil: 'networkidle' });
+  const response = await page.goto(url, { waitUntil: 'load' });
   if (!response || !response.ok()) throw new Error(`HTTP failure ${url}: ${response?.status()}`);
   return { context, page };
 }
@@ -58,6 +58,8 @@ async function assertList(url, label, viewport, { pdf = false } = {}) {
       const ds = detail ? getComputedStyle(detail) : null;
       const before = detail ? getComputedStyle(detail, '::before') : null;
       const noImage = document.querySelector('.publication_budo-backItem._noImage');
+      const copy = document.querySelector('.publication_budo-backItem .publication_budo-backCopy');
+      const copyCs = copy ? getComputedStyle(copy) : null;
       return {
         shellPaddingLeft: cs ? parseFloat(cs.paddingLeft) : -1,
         shellPaddingTop: cs ? parseFloat(cs.paddingTop) : -1,
@@ -70,6 +72,9 @@ async function assertList(url, label, viewport, { pdf = false } = {}) {
         detailIconWidth: before ? parseFloat(before.width) : 0,
         detailIconHeight: before ? parseFloat(before.height) : 0,
         noImage: Boolean(noImage),
+        copyGap: copyCs ? parseFloat(copyCs.columnGap || copyCs.gap) : -1,
+        copyAlign: copyCs ? copyCs.alignItems : '',
+        detailInCopy: Boolean(copy?.querySelector('.publication_budo-backDetail')),
       };
     });
 
@@ -87,6 +92,12 @@ async function assertList(url, label, viewport, { pdf = false } = {}) {
     almost(metrics.detailGap, 8);
     almost(metrics.detailIconWidth, 26);
     almost(metrics.detailIconHeight, 26);
+    if (!metrics.detailInCopy) throw new Error(`${label}: detail CTA must sit in the summary column`);
+    almost(metrics.copyGap, viewport.width < 768 ? 24 : 30);
+    const expectedAlign = viewport.width < 768 ? 'flex-end' : 'flex-start';
+    if (metrics.copyAlign !== expectedAlign) {
+      throw new Error(`${label}: summary column align ${metrics.copyAlign}, expected ${expectedAlign}`);
+    }
     if (!metrics.noImage) throw new Error(`${label}: no-image fixture not represented in real output`);
 
     if (pdf) {

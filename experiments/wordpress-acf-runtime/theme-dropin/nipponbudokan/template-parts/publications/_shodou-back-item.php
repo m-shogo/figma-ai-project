@@ -64,16 +64,16 @@ if (!$thumbnail_id && $heading === '' && empty($valid_rensai)) {
         </header>
     <?php endif; ?>
 
-    <?php if ($thumbnail_id || !empty($valid_rensai)) : ?>
-        <div class="publication_budo-backBody<?php echo !$thumbnail_id ? ' _noImage' : ''; ?>">
-            <?php if ($thumbnail_id) : ?>
-                <figure class="publication_budo-backCover">
-                    <a class="publication_budo-coverLink" href="<?php echo esc_url($detail_url); ?>" aria-label="<?php echo esc_attr($heading !== '' ? $heading . 'の詳細' : $title . 'の詳細'); ?>">
-                        <?php echo wp_get_attachment_image($thumbnail_id, 'full', false, array('alt' => get_post_meta($thumbnail_id, '_wp_attachment_image_alt', true) ?: $title)); ?>
-                    </a>
-                </figure>
-            <?php endif; ?>
+    <div class="publication_budo-backBody<?php echo !$thumbnail_id ? ' _noImage' : ''; ?>">
+        <?php if ($thumbnail_id) : ?>
+            <figure class="publication_budo-backCover">
+                <a class="publication_budo-coverLink" href="<?php echo esc_url($detail_url); ?>" aria-label="<?php echo esc_attr($heading !== '' ? $heading . 'の詳細' : $title . 'の詳細'); ?>">
+                    <?php echo wp_get_attachment_image($thumbnail_id, 'full', false, array('alt' => get_post_meta($thumbnail_id, '_wp_attachment_image_alt', true) ?: $title)); ?>
+                </a>
+            </figure>
+        <?php endif; ?>
 
+        <div class="publication_budo-backCopy">
             <?php if (!empty($valid_rensai)) : ?>
                 <div class="publication_budo-backSummary publication_budo-backPdfList">
                     <?php foreach ($valid_rensai as $row) : ?>
@@ -83,13 +83,12 @@ if (!$thumbnail_id && $heading === '' && empty($valid_rensai)) {
                     <?php endforeach; ?>
                 </div>
             <?php endif; ?>
-        </div>
-    <?php endif; ?>
-
-    <div class="block-editor_wrap publication_budo-backDetail">
-        <div class="wp-block-buttons">
-            <div class="wp-block-button is-style-small">
-                <a class="wp-block-button__link wp-element-button" href="<?php echo esc_url($detail_url); ?>">詳細はこちら</a>
+            <div class="block-editor_wrap publication_budo-backDetail">
+                <div class="wp-block-buttons">
+                    <div class="wp-block-button is-style-small">
+                        <a class="wp-block-button__link wp-element-button" href="<?php echo esc_url($detail_url); ?>">詳細はこちら</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

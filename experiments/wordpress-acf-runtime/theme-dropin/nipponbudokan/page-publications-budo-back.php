@@ -9,6 +9,17 @@
 get_template_part('template-parts/publications/_acf-has-value');
 get_header();
 
+// posts_per_page -1 は LIMIT を付けないため offset が無視される。最新1件の ID を除く。
+$latest_budo = get_posts(array(
+    'post_type'           => 'budo-book',
+    'post_status'         => 'publish',
+    'posts_per_page'      => 1,
+    'orderby'             => 'date',
+    'order'               => 'DESC',
+    'fields'              => 'ids',
+    'ignore_sticky_posts' => true,
+));
+
 $budo_backnumbers = new WP_Query(array(
     'post_type'           => 'budo-book',
     'post_status'         => 'publish',
@@ -17,7 +28,7 @@ $budo_backnumbers = new WP_Query(array(
     'order'               => 'DESC',
     'ignore_sticky_posts' => true,
     'no_found_rows'       => true,
-    'offset'              => 1,
+    'post__not_in'        => $latest_budo ? array((int) $latest_budo[0]) : array(),
 ));
 ?>
 <main id="global_contents" class="global_contents" itemscope itemprop="mainContentOfPage">

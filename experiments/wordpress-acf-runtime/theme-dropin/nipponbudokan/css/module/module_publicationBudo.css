@@ -188,6 +188,15 @@
     min-width: 0;
 }
 
+.publication_budo-backCopy {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 24px;
+    width: 100%;
+    min-width: 0;
+}
+
 .publication_budo-backCover {
     width: 160px;
     height: 226px;
@@ -346,11 +355,8 @@
         grid-template-columns: minmax(0, 1fr);
     }
 
-    .publication_budo-backDetail {
-        margin-left: 200px;
-    }
-
-    .publication_budo-backItem._noImage .publication_budo-backDetail {
-        margin-left: 0;
+    .publication_budo-backCopy {
+        align-items: flex-start;
+        gap: 30px;
     }
 }

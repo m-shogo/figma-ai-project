@@ -57,11 +57,18 @@ pages_json="$(docker compose run --rm cli option get budokan_publication_visual_
 budo_json="$(docker compose run --rm cli option get budokan_budo_detail_qa_ids --format=json)"
 shodou_json="$(docker compose run --rm cli option get budokan_shodou_publication_qa_ids --format=json)"
 tankoubon_json="$(docker compose run --rm cli option get budokan_tankoubon_detail_qa_ids --format=json)"
-budo_back_id="$(php -r '$v=json_decode($argv[1], true); echo (int)($v["budo_back"] ?? 0);' "$pages_json")"
-shodou_back_id="$(php -r '$v=json_decode($argv[1], true); echo (int)($v["shodou_back"] ?? 0);' "$pages_json")"
-budo_full_id="$(php -r '$v=json_decode($argv[1], true); echo (int)($v["full"] ?? 0);' "$budo_json")"
-shodou_full_id="$(php -r '$v=json_decode($argv[1], true); echo (int)($v["full"] ?? 0);' "$shodou_json")"
-tankoubon_standard_id="$(php -r '$v=json_decode($argv[1], true); echo (int)($v["standard"] ?? 0);' "$tankoubon_json")"
+read_json_int() {
+  if command -v php >/dev/null 2>&1; then
+    php -r '$v=json_decode($argv[1], true); echo (int)($v[$argv[2]] ?? 0);' "$1" "$2"
+  else
+    printf '%s' "$1" | docker compose exec -T wordpress php -r '$v=json_decode(stream_get_contents(STDIN), true); echo (int)($v[$argv[1]] ?? 0);' "$2"
+  fi
+}
+budo_back_id="$(read_json_int "$pages_json" budo_back)"
+shodou_back_id="$(read_json_int "$pages_json" shodou_back)"
+budo_full_id="$(read_json_int "$budo_json" full)"
+shodou_full_id="$(read_json_int "$shodou_json" full)"
+tankoubon_standard_id="$(read_json_int "$tankoubon_json" standard)"
 
 if [[ "$budo_back_id" -le 0 || "$budo_full_id" -le 0 || "$shodou_back_id" -le 0 || "$shodou_full_id" -le 0 || "$tankoubon_standard_id" -le 0 ]]; then
   echo "FAIL publication fixtures did not expose numeric Budo + Shodou + Tankoubon QA ids." >&2
