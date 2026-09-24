@@ -396,8 +396,31 @@
     font-size: 16px;
 }
 
-.publication_book-cardButton {
-    margin-top: auto;
+.publication_book-card._featured .publication_book-cardButton {
+    margin-top: 4px;
+}
+
+.publication_book-card._featured .publication_book-cardButton .wp-block-button__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 32px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--color-text, #333);
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.5;
+    text-decoration: none;
+}
+
+.publication_book-card._featured .publication_book-cardButton .wp-block-button__link::before {
+    content: "";
+    flex: 0 0 32px;
+    width: 32px;
+    height: 32px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpolygon fill='%23ca9957' stroke='%23ca9957' stroke-width='1' stroke-linejoin='round' points='16,0.6 26.81,5.19 31.4,16 26.81,26.81 16,31.4 5.19,26.81 0.6,16 5.19,5.19'/%3E%3C/svg%3E") center / 32px 32px no-repeat;
 }
 
 .publication_book-latest .publication_book-card {

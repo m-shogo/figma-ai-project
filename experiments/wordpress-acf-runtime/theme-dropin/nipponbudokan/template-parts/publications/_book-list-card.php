@@ -44,7 +44,9 @@ $is_featured = !empty($args['featured']);
         <?php endif; ?>
 
         <?php if ($is_featured) : ?>
-            <div class="wp-block-button is-style-small publication_book-cardButton"><a class="wp-block-button__link wp-element-button" href="<?php echo esc_url($permalink); ?>">詳細はこちら</a></div>
+            <div class="block-editor_wrap publication_book-cardButton">
+                <div class="wp-block-button is-style-small"><a class="wp-block-button__link wp-element-button" href="<?php echo esc_url($permalink); ?>">詳細はこちら</a></div>
+            </div>
         <?php endif; ?>
     </div>
 </article>
