@@ -23,7 +23,11 @@ function add_custom_post()
       'public' => true,
       'menu_position' => 7,
       'has_archive' => 'event',
-      'rewrite' => true,
+      'rewrite' => array(
+        'slug' => 'event',
+        'with_front' => false,
+      ),
+      'show_in_rest' => true,
       'supports' => array('title', 'editor', 'thumbnail', 'custom-fields', 'excerpt')
       /* ここまで */
     )

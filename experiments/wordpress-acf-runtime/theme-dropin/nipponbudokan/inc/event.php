@@ -146,3 +146,14 @@ add_action('pre_get_posts', function ($query) {
         ),
     ));
 }, 5);
+
+add_action('init', function () {
+    add_rewrite_rule('^event/([0-9]+)/?$', 'index.php?post_type=event&p=$matches[1]', 'top');
+}, 20);
+
+add_filter('redirect_canonical', function ($redirect_url) {
+    if (is_singular('event')) {
+        return false;
+    }
+    return $redirect_url;
+});
