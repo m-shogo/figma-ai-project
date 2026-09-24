@@ -35,7 +35,7 @@
 @import './module/module_bg.css';
 @import './module/module_breadCrumb.css';
 @import './module/module_dropdown.css';
-@import './module/module_eventArchive.css?v=20260924-event-status2';
+@import './module/module_eventArchive.css?v=20260924-event-nocal';
 @import './module/module_line-01.css';
 @import './module/module_menu.css';
 /* Local Navigation intentionally follows module_menu so its Figma-specific
