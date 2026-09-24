@@ -151,7 +151,11 @@
 }
 
 .publication_budo-content {
-    margin-top: 0;
+    margin-top: 72px;
+}
+
+.block-editor_wrap.publication_budo-content > * + h3.wp-block-heading {
+    margin-top: 72px;
 }
 
 /* 武道・書写書道バックナンバー / SP 2608:5702 + PC publication family */

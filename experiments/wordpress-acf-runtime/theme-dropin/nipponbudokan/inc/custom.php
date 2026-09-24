@@ -111,7 +111,10 @@ function add_custom_post()
       'menu_position' => 7,
       'menu_icon' => 'dashicons-book',
       'has_archive' => 'shodou-book',
-      'rewrite' => true,
+      'rewrite' => array(
+        'slug' => 'shodou-book',
+        'with_front' => false,
+      ),
       'supports' => array('title', 'editor', 'thumbnail', 'custom-fields', 'excerpt')
       /* ここまで */
     )
@@ -127,7 +130,10 @@ function add_custom_post()
       'menu_icon' => 'dashicons-book',
       'menu_position' => 8,
       'has_archive' => 'budo-book',
-      'rewrite' => true,
+      'rewrite' => array(
+        'slug' => 'budo-book',
+        'with_front' => false,
+      ),
       'supports' => array('title', 'editor', 'thumbnail', 'custom-fields', 'excerpt')
       /* ここまで */
     )
@@ -159,7 +165,10 @@ function add_custom_post()
       'menu_position' => 10,
       'menu_icon' => 'dashicons-book-alt',
       'has_archive' => 'tankoubon',
-      'rewrite' => true,
+      'rewrite' => array(
+        'slug' => 'tankoubon',
+        'with_front' => false,
+      ),
       'supports' => array('title', 'editor', 'thumbnail', 'custom-fields', 'excerpt')
       /* ここまで */
     )
