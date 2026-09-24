@@ -1,0 +1,123 @@
+name: Budokan Publications Runtime
+
+on:
+  push:
+    branches:
+      - so
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  static:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Publication PHP syntax
+        run: |
+          php -l experiments/wordpress-acf-runtime/scripts/seed-budo-detail-qa.php
+          php -l experiments/wordpress-acf-runtime/scripts/seed-budo-back-qa.php
+          php -l experiments/wordpress-acf-runtime/scripts/seed-shodou-publication-qa.php
+          php -l experiments/wordpress-acf-runtime/scripts/seed-tankoubon-detail-qa.php
+          php -l experiments/wordpress-acf-runtime/scripts/seed-tankoubon-list-qa.php
+          php -l experiments/wordpress-acf-runtime/scripts/seed-tankoubon-list-page-qa.php
+          php -l experiments/wordpress-acf-runtime/scripts/seed-publications-visual-qa-pages.php
+          php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/publications/_budo-back-item.php
+          php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/publications/_shodou-back-item.php
+          php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/publications/_budo-detail.php
+          php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/publications/_book-detail.php
+          php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/publications/_book-list-card.php
+          php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/page-publications-budo-back.php
+          php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/page-publications-shodou-back.php
+          php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/page-publications-budo-latest.php
+          php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/page-publications-shodou-latest.php
+          php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/page-publications-budo-books.php
+          php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/single-budo-book.php
+          php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/single-shodou-book.php
+          php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/single-tankoubon.php
+      - name: Publication script syntax
+        run: |
+          bash -n experiments/wordpress-acf-runtime/scripts/budokan-publications-runtime-qa.sh
+          node --check experiments/wordpress-acf-runtime/scripts/budokan-publications-browser-qa.mjs
+          node --check experiments/wordpress-acf-runtime/scripts/budokan-tankoubon-detail-browser-qa.mjs
+          node --check experiments/wordpress-acf-runtime/scripts/budokan-tankoubon-list-browser-qa.mjs
+
+  publication-runtime:
+    needs: static
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Start real WordPress and seed Budo + Shodou + Tankoubon QA data
+        env:
+          BUDOKAN_PUBLICATIONS_KEEP_RUNTIME: '1'
+        run: bash experiments/wordpress-acf-runtime/scripts/budokan-publications-runtime-qa.sh
+
+      - name: Seed and verify Tankoubon list production page
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          docker compose run --rm -e WP_ENVIRONMENT_TYPE=local cli eval-file /fixture/scripts/seed-tankoubon-list-qa.php
+          docker compose run --rm -e WP_ENVIRONMENT_TYPE=local cli eval-file /fixture/scripts/seed-tankoubon-list-page-qa.php
+          page_id="$(docker compose run --rm cli option get budokan_tankoubon_list_qa_page_id)"
+          html="$(mktemp)"
+          code="$(curl --silent --show-error --location --max-redirs 3 --output "$html" --write-out '%{http_code}' "$WP_URL/?page_id=$page_id")"
+          test "$code" = "200"
+          grep -Fq 'publication_book-latest' "$html"
+          grep -Fq 'publication_book-categoryNav' "$html"
+          grep -Fq 'QA 単行本一覧 最新刊' "$html"
+          grep -Fq 'QA 単行本一覧 複数カテゴリ所属' "$html"
+          grep -Fq 'QA 単行本一覧 空ACF・画像なし' "$html"
+          rm -f "$html"
+
+      - name: Install Chromium
+        run: |
+          npm install --no-save --package-lock=false playwright@1.54.2
+          npx playwright install --with-deps chromium
+
+      - name: Run Budo + Shodou browser QA
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          pages_json="$(docker compose run --rm cli option get budokan_publication_visual_qa_pages --format=json)"
+          budo_json="$(docker compose run --rm cli option get budokan_budo_detail_qa_ids --format=json)"
+          shodou_json="$(docker compose run --rm cli option get budokan_shodou_publication_qa_ids --format=json)"
+          cd ../..
+          node experiments/wordpress-acf-runtime/scripts/budokan-publications-browser-qa.mjs "$WP_URL" "$pages_json" "$budo_json" "$shodou_json"
+
+      - name: Run Tankoubon detail browser QA
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          tankoubon_json="$(docker compose run --rm cli option get budokan_tankoubon_detail_qa_ids --format=json)"
+          cd ../..
+          node experiments/wordpress-acf-runtime/scripts/budokan-tankoubon-detail-browser-qa.mjs "$WP_URL" "$tankoubon_json"
+
+      - name: Run Tankoubon list browser QA
+        env:
+          BUDOKAN_QA_ARTIFACT_DIR: ${{ github.workspace }}/tmp/budokan-tankoubon-list-visual-evidence
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          page_id="$(docker compose run --rm cli option get budokan_tankoubon_list_qa_page_id)"
+          cd ../..
+          node experiments/wordpress-acf-runtime/scripts/budokan-tankoubon-list-browser-qa.mjs "$WP_URL" "$page_id"
+
+      - name: Upload Tankoubon list visual evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: budokan-tankoubon-list-visual-evidence
+          path: tmp/budokan-tankoubon-list-visual-evidence
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Cleanup disposable WordPress runtime
+        if: always()
+        run: |
+          cd experiments/wordpress-acf-runtime
+          source scripts/runtime-env.sh
+          docker compose down -v --remove-orphans || true

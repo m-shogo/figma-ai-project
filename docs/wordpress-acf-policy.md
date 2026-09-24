@@ -32,37 +32,6 @@ Hybrid
 
 ---
 
-## PHP template ownership（Human 2026-09-17）
-
-WordPress実装では、テンプレートを **言われるまで後回しにしない**。人がファイル一覧を見て owner が分かり、実装も探しやすい形にする。
-
-考える順:
-
-```text
-公開 IA は何か（ネイティブ archive / 固定 page + query / single）
-→ WordPress template hierarchy に載るファイル名があるか
-→ そのファイルを入口にする
-→ 共通 markup だけ template-parts へ
-```
-
-やる:
-
-- ネイティブ公開する CPT 一覧 → `archive-{post_type}.php`
-- その taxonomy 一覧 → `taxonomy-{taxonomy}.php`
-- その CPT 詳細が generic `single.php` 分岐の奥に埋まるなら → `single-{post_type}.php`
-- 入口は薄く、カード等は part
-
-やらない:
-
-- 汎用 `archive.php` / `single.php` に CPT の `elseif` を足して済ませる
-- Human に「専用テンプレにして」と言われてから作る
-- シェルが同じなのに `Template Name` 付き page template を増やしてセレクトを汚す
-- `has_archive` があるだけで刊行物などをネイティブ archive に寄せる（公開 IA が page なら page）
-
-既存 Theme の hierarchy / 公開 URL を先に読む。既存と違う入口を発明しない。
-
----
-
 ## Do not invent fields / CPT
 
 既存project / 案件 Current Authority が持っているフィールド契約だけを使う。

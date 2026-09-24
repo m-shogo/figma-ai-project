@@ -214,7 +214,7 @@ template_coverage:
     ownership: THEME
     target_path: "templates/"
     notes:
-      - "template-form.php 等"
+      - "template-oneColumn.php template-oneColumnWide.php template-form.php 等"
   - surface: PART
     hierarchy_name: shared template parts
     required: REQUIRED

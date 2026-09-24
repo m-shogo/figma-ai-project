@@ -45,7 +45,7 @@ jobs:
           docker compose run --rm -e WP_ENVIRONMENT_TYPE=local cli eval-file /fixture/scripts/seed-budokan-slider-qa.php
           slider_page_id="$(docker compose run --rm cli option get budokan_slider_qa_page_id)"
           slider_template="$(docker compose run --rm cli post meta get "$slider_page_id" _wp_page_template)"
-          if [[ "$slider_template" != "default" ]]; then
+          if [[ "$slider_template" != "templates/template-oneColumn.php" ]]; then
             echo "FAIL slider QA page template mismatch: ${slider_template}." >&2
             exit 1
           fi

@@ -8,7 +8,7 @@ $page = get_page_by_path('qa-budokan-mega-touch');
 $payload = array('post_type'=>'page','post_status'=>'publish','post_title'=>'Mega Touch QA','post_name'=>'qa-budokan-mega-touch','post_content'=>'<!-- wp:paragraph --><p>Mega touch runtime QA fixture.</p><!-- /wp:paragraph --><!-- wp:spacer {"height":"1800px"} --><div style="height:1800px" aria-hidden="true" class="wp-block-spacer"></div><!-- /wp:spacer -->');
 if ($page) { $payload['ID']=(int)$page->ID; $page_id=wp_update_post($payload,true); } else { $page_id=wp_insert_post($payload,true); }
 if (is_wp_error($page_id)) { WP_CLI::error($page_id->get_error_message()); }
-update_post_meta((int)$page_id,'_wp_page_template','default');
+update_post_meta((int)$page_id,'_wp_page_template','templates/template-oneColumn.php');
 
 $menu = wp_get_nav_menu_object('mega-nav-touch-qa');
 if ($menu) { $menu_id=(int)$menu->term_id; foreach (wp_get_nav_menu_items($menu_id,array('post_status'=>'any')) ?: array() as $item) wp_delete_post((int)$item->ID,true); }

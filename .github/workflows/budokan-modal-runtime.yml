@@ -41,7 +41,7 @@ jobs:
           docker compose run --rm -e WP_ENVIRONMENT_TYPE=local cli eval-file /fixture/scripts/seed-budokan-modal-qa.php
           modal_page_id="$(docker compose run --rm cli option get budokan_modal_qa_page_id)"
           modal_template="$(docker compose run --rm cli post meta get "$modal_page_id" _wp_page_template)"
-          if [[ "$modal_template" != "default" ]]; then
+          if [[ "$modal_template" != "templates/template-oneColumn.php" ]]; then
             echo "FAIL modal QA page template mismatch: ${modal_template}." >&2
             exit 1
           fi

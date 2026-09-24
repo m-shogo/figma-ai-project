@@ -15,6 +15,6 @@ $payload = array(
 if ($page) { $payload['ID'] = (int) $page->ID; $id = wp_update_post($payload, true); }
 else { $id = wp_insert_post($payload, true); }
 if (is_wp_error($id)) { WP_CLI::error($id->get_error_message()); }
-update_post_meta((int)$id, '_wp_page_template', 'default');
+update_post_meta((int)$id, '_wp_page_template', 'templates/template-oneColumn.php');
 update_option('budokan_onecolumn_rhythm_qa_page_id', (int)$id, false);
 WP_CLI::success('Seeded one-column rhythm QA page.');

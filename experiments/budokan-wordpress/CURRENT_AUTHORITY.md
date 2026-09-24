@@ -3,7 +3,7 @@
 このファイルは **日本武道館 WordPress 案件**の会話決定を正本化する。  
 以降の Agent は、ここを Current Authority として扱い、矛盾する旧命名・旧 LP runtime 前提で進めない。
 
-更新日: 2026-09-17
+更新日: 2026-09-19
 
 ---
 
@@ -11,7 +11,7 @@
 
 - この案件を継続する各 run / 各セッションでは、**毎回 `@GitHub` と `@Figma` の両 connector を実際に呼んでから着手する**。会話履歴だけで接続可否・最新状態を推測しない。
 - GitHub 正本は `m-shogo/figma-ai-project` branch `so`。着手時に最新 ref / authority / 対象コードを直接取得し、前回完了箇所から続ける。
-- Figma 正本は file `jqYoPtusYfTeDqRegMCsx3` のみ。対象 node を LIVE 取得する。旧 file key / 旧 screenshot を実装判断に使わない。
+- Figma 正本は file `OtS7731mhY2oD44HSpdADo` のみ。対象 node を LIVE 取得する。`jqYoPtusYfTeDqRegMCsx3` / `zMjOY4euPBi9T23y7ZSM6y` その他旧 file / screenshot は最終実装判断に使わない。
 - 片方の取得が失敗しても即「接続不可」と断定せず、対象 connector を実際に呼んだ結果で判断する。
 - この preflight 自体を毎回の成果物にせず、確認後は未完了の実装・QAを小さく前進させる。同じ確認だけを繰り返さない。
 
@@ -35,13 +35,7 @@
 - **この案件のみ Theme を git 追跡する**（Human Authority A）。他案件の drop-in Theme は引き続き ignore
 - 差し込みは `theme-dropin/` に **1 Theme のみ**（倉庫として溜めない）
 - 本番 Theme 構造を `theme/sample-theme` から継承しない
-- Human 2026-09-17: `experiments/wordpress-acf-runtime/theme-dropin/現行サンプルbudokan/` は **現行サイト Theme の参照コピー**。**編集しない。** 固定コピー・query・CFS 名の確認にだけ使う。クラス移植はしない
-- Human 2026-09-17: Parts にある UI は Gutenberg markup を流用するか、既存 class を足して改良する。Parts に無い塊だけ `css/module/` を作る。`parts.php` は書き換えない
 - 専用ルール: [`THEME_RULES.md`](THEME_RULES.md)
-- ページ実装の完了ゲート: [`FIRST_PASS_MEASURE.md`](FIRST_PASS_MEASURE.md)
-- Human 2026-09-17: PHP テンプレートは **人が見て分かる owner** にする。言われるまで汎用 `archive.php` / `single.php` へ CPT 分岐を足さない。ネイティブ公開する CPT 一覧は `archive-{post_type}.php`、taxonomy は `taxonomy-{taxonomy}.php`、詳細が埋まるなら `single-{post_type}.php`。シェルが同じ page template は増やさない。イベント一覧は `archive-event.php` / `taxonomy-event_cat.php`。イベント詳細は `single-event.php`（下端の区切り・一覧へ戻る・余白は News `single.php` / `/news/888/` と同じ。Figma `1632:10382` も同じ chrome）。刊行物は固定 page + query のまま。詳細: `THEME_RULES.md` §8 / `docs/wordpress-acf-policy.md`
-- Human 2026-09-17: CPT / taxonomy は `'show_in_rest' => true`。無いとブロックエディタが出ない。**例外:** `budo-book`（月刊「武道」）と `shodou-book`（月刊書写書道）は Classic。ACF グループ JSON の `show_in_rest` は別物なので触らない。
-- Human 2026-09-17: お知らせは `/news/%post_id%/` のまま。他 CPT は `custom.php` の `with_front => false`（イベント `/event/1094/`、カテゴリ `/event_cat/{term}/`）。総務課 CPT `news` と教育文化課 taxonomy `news` は slug 衝突のため `/news/news/` を維持。設定画面の共通構造は変えない。
 - 当面4 family（イベント / 書写書道 / 武道 / 単行本）の一覧＋詳細表: [`FOUR_FAMILIES.md`](FOUR_FAMILIES.md)
 - 刊行物 / 単行本の URL・テンプレ分担: [`PUBLICATIONS_CPT_ARCHITECTURE.md`](PUBLICATIONS_CPT_ARCHITECTURE.md)（Human 2026-09-15。次の大きな実装の正本。現行 Theme `budokan` の役割だけ継承し、archive と公開 IA を同一視しない）
 
@@ -116,7 +110,6 @@ experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/parts.php
 
 この案件での読み:
 
-- 固定ページも CPT 詳細も、今後の一覧・詳細も本文上下は `css/layout/global_inner.css` の `.global_inner._content`（SP 上 48 / PC 上 64・下 100）。ページ／詳細ごとに `_normalPage` や同等 padding を足さない。差はローカルナビの有無だけ。例外は News / Event の archive・single だけ（タイトル帯・タブが自前リズム）
 - **absolute 禁止ではないが、通常 content は極力使わない**
 - 先に Flow / Flex / Grid。Hero artwork 等 art direction だけ intentional absolute
 - Figma 座標の直写で Web を固くしない
@@ -148,7 +141,7 @@ Theme 専用の enqueue・命名は `THEME_RULES.md`。Frontend Standard は Com
 
 フィールド名・用途はこの節が正本。WordPress 実行時の Local JSON / block PHP は Theme 内に残るが、**Agent は `theme-dropin/nipponbudokan/acf/` を再読してフィールドを増やしたり推測したりしない。** `acf-export.json` は退役（旧 portable dump。メニュー ACF グループを含むため使わない）。
 
-フィールドグループ JSON は編集しない。ブロック見た目の markup 修正が必要なときだけ既存 block PHP を触る。新しい ACF / CPT / スラッグは発明しない。**例外:** 2026-09-04 Human が `parts2.php` 用スライダーを指示したので `acf/slider`（`slider_items` → `image` / `caption`）だけ追加済み。**例外:** 2026-09-11 Human がローカルナビを ACF 選択（動的メニュー一覧）で指示したので `page_local_nav` を追加済み。**例外:** 2026-09-15 Human が投稿一覧ブロックへ刊行物 CPT を足すと指示したので `block_post_type` に `budo-book` / `shodou-book` / `tankoubon`、単行本絞り込み `block_book`（taxonomy `book`）を追加済み。**例外:** 2026-09-15 Human がイベント詳細用に次の5フィールドだけ追加してよいと指示。`group_event.json`。**例外:** 2026-09-17 Human がイベント一覧用に `event_status`（募集中 / 開催中 / 受付終了ラジオ）を追加してよいと指示。**例外:** 2026-09-17 Human が月刊書写書道 `rensailist`（連載リスト）の repeater `layout` を `table` から `block` にしてよいと指示。フィールド名・型は変えない。他グループは触らない。
+フィールドグループ JSON は編集しない。ブロック見た目の markup 修正が必要なときだけ既存 block PHP を触る。新しい ACF / CPT / スラッグは発明しない。**例外:** 2026-09-04 Human が `parts2.php` 用スライダーを指示したので `acf/slider`（`slider_items` → `image` / `caption`）だけ追加済み。**例外:** 2026-09-11 Human がローカルナビを ACF 選択（動的メニュー一覧）で指示したので `page_local_nav` を追加済み。**例外:** 2026-09-15 Human が投稿一覧ブロックへ刊行物 CPT を足すと指示したので `block_post_type` に `budo-book` / `shodou-book` / `tankoubon`、単行本絞り込み `block_book`（taxonomy `book`）を追加済み。**例外:** 2026-09-15 Human がイベント詳細用に次の5フィールドだけ追加してよいと指示。`group_event.json`。他グループは触らない。
 
 | 用途 | フィールド |
 | --- | --- |
@@ -168,11 +161,11 @@ Theme 専用の enqueue・命名は `THEME_RULES.md`。Frontend Standard は Com
 | ブロック 投稿一覧 | `block_post_type`（`post` / `event` / `budo-book` / `shodou-book` / `tankoubon`） / `block_category` / `block_event_cat` / `block_book` / `block_posts_per_page` |
 | ブロック タブ | コンテナは message のみ。パネルは `panel_title` |
 | ブロック スライダー | `slider_items` → `image` / `caption` |
-| 開催イベント | `event_date`（日付） / `event_time` / `event_capacity`（入場数） / `event_fee`（入場料） / `event_host`（主催） / `event_status`（ラジオ: 募集中 / 開催中 / 受付終了。空は出さない） |
+| 開催イベント | `event_date`（日時） / `event_time` / `event_capacity`（入場数） / `event_fee`（入場料） / `event_host`（主催）。これ以外のイベント専用フィールドは無い |
 
 - グローバルナビは WordPress メニュー。旧 `common-menu-01` / `common-submenu-01` は現行 ACF に無い
-- ローカルナビ（Human 2026-09-11 / 2026-09-15）: 外観 → メニューで名前を `ローカル：` で始める（slug は `local-*` に同期）。位置には割り当てない。固定ページ ACF `page_local_nav` の動的一覧にだけ出る（`global-nav` / `mega-nav` / `sub-nav` / `footer-nav` 等の位置割当メニューは除外）。**出すテンプレートはデフォルト `page.php` と `template-form.php` のみ**。Human 2026-09-17: `template-oneColumn.php` / `template-oneColumnLocalNav.php` / `template-oneColumnWide.php` は削除。パンくず上・幅いっぱい・白背景。PC Figma `2108:10846`。SP 専用デザイン無し（非表示）。メニューは**2階層**（1=大会・イベント等のリンク見出し / 2=各ページ）。家族名（武道 振興・普及事業）はメニューに置かない。PC は1階層目を見出し、2階層目を4列で出す。2行リンクがある row は高さを揃え下線をセル下端に揃える。詳細: `LOCAL_NAV_DEPENDENCY_AUDIT.md`
-- CPT `event` + `event_cat` は Theme `inc/custom.php`。イベント専用 ACF は上表の6本。空は出さない。`event_status` は Human 2026-09-17 で `group_event.json` に追加（一覧チップ）。他グループは触らない
+- ローカルナビ（Human 2026-09-11 / 2026-09-15）: 外観 → メニューで名前を `ローカル：` で始める（slug は `local-*` に同期）。位置には割り当てない。固定ページ ACF `page_local_nav` の動的一覧にだけ出る（`global-nav` / `mega-nav` / `sub-nav` / `footer-nav` 等の位置割当メニューは除外）。**出すテンプレートはデフォルト `page.php` と `template-form.php` のみ**（1カラム系は出さない）。パンくず上・幅いっぱい・白背景。PC Figma `2108:10846`。SP 専用デザイン無し（非表示）。メニューは**2階層**（1=大会・イベント等のリンク見出し / 2=各ページ）。家族名（武道 振興・普及事業）はメニューに置かない。PC は1階層目を見出し、2階層目を4列で出す。2行リンクがある row は高さを揃え下線をセル下端に揃える。詳細: `LOCAL_NAV_DEPENDENCY_AUDIT.md`
+- CPT `event` + `event_cat` は Theme `inc/custom.php`。イベント専用 ACF は上表の5本だけ。空は出さない。募集ステータス等は無い → 出さない
 - Gutenberg ボタンスタイル「小ボタン」= `is-style-small`（Figma btn-02）。wrapper `.small` も互換で残す
 - ブロック スライダーは Human 2026-09-04: `parts2.php` 用に `acf/` へ追加してよい
 - `parts.php` / Form / Formidable は触らない
@@ -197,17 +190,25 @@ Theme 専用の enqueue・命名は `THEME_RULES.md`。Frontend Standard は Com
 
 ## Figma（現行正本）
 
-Human Authority 2026-09-10: この file だけを LIVE 再取得する。過去 file の node / 計測 / スクリーンショットを引き継がない。
+Human Authority 2026-09-19: デザイン変更。**この file だけを最終 Visual authority として LIVE 再取得する。**
 
-File: [nipponbudokan](https://www.figma.com/design/jqYoPtusYfTeDqRegMCsx3/nipponbudokan)
+File: [nipponbudokan](https://www.figma.com/design/OtS7731mhY2oD44HSpdADo/nipponbudokan)
 
-| 面 | URL | fileKey | node-id |
-| --- | --- | --- | --- |
-| PC | https://www.figma.com/design/jqYoPtusYfTeDqRegMCsx3/nipponbudokan?node-id=0-1 | `jqYoPtusYfTeDqRegMCsx3` | `0:1` |
-| SP | https://www.figma.com/design/jqYoPtusYfTeDqRegMCsx3/nipponbudokan?node-id=114-5409 | `jqYoPtusYfTeDqRegMCsx3` | `114:5409` |
+| 面 | node-id | 備考 |
+| --- | --- | --- |
+| PC page | `0:1` | 🎨pc |
+| SP page | `114:5409` | 🎨sp |
+| 武道一覧 PC / SP | `1634:10806` / `2608:5702` | publications |
+| 武道詳細 PC / SP | `1637:11288` / `2608:6933` | publications_detail |
+| 書写書道一覧 PC | `2629:7385` | 専用 SP frame なし。武道 publication family を shared responsive authority とする |
+| 書写書道詳細 PC | `2630:8447` | 専用 SP frame なし。武道 publication family を shared responsive authority とする |
+| 単行本一覧 PC / SP | `1656:5309` / `2627:6075` | hardcover / SP_hardcover |
+| 単行本詳細 PC / SP | `1686:5574` / `2628:6964` | hardcover_detail / SP_hardcover_detail |
+| TOP 大会・イベント情報 PC | `1603:7488` | TOP 差分確認の重点箇所 |
 
-- 旧 file key `FKQaJDu5TZXHoCzPsfP92E` / `fKYDn9ikpJk1nW7IWFtaUx` / `w7SGVY63FuW6JpaQVKjxm2` / `RfAQQ28V1HGaeIcpgRmQq1` は使わない（証拠 lineage 参照のみ）
+- 旧 `jqYoPtusYfTeDqRegMCsx3` / `zMjOY4euPBi9T23y7ZSM6y` とそれ以前の file は historical/audit 参照に限る
 - Visual の正本は上記 Figma。既存実装の正本は Theme。差分は Theme をこの Figma へ合わせる
+- 書写書道 SP は専用 frame を発明せず、武道 publication family の共通 CSS/component owner で成立させる
 - Figma から入れる画像（Theme / LP / HTML 共通）: 写真・ラスターは **WebP**。logo / icon はベクターをアウトライン化して **SVG**。短命 URL は直貼りしない。ラスターしか無い logo はトレースしない。正本は `AGENTS.md` Images 節 / `docs/image-gradient-visual-tolerance.md` / `config/frontend-raster-asset-export-policy.yaml`。Budokan Theme 適用は `THEME_RULES.md` 節 12
 
 ---
@@ -270,13 +271,11 @@ Form は Human 担当のためこの順に含めない。
 13. Figma は本ファイルの file key だけを LIVE 取得する。旧 file は見ない
 14. ACF フィールドは本ファイルの表だけ使う。`acf/` と `acf-export.json` を再読しない
 15. サイト階層は `DIRECTORY_MAP.md`。メニューは既に作成済み。ナビゲーションは画像ビジュアル、デフォルトは黄土色。刊行物の一覧は CPT ネイティブ archive ではなくマップ path の固定ページが CPT を query する。詳細だけ CPT single。正本は `PUBLICATIONS_CPT_ARCHITECTURE.md`
-16. 現行サイト Theme 参照は `experiments/wordpress-acf-runtime/theme-dropin/現行サンプルbudokan/`（Git 正本。**編集しない**）。手元 `C:\htdocs\f-nipponbudokan\wp\wp-content\themes\budokan` と同じ系統。クラス移植禁止。query / tax `book` / CFS→既存 ACF 名だけ継承する。**月刊「武道」一覧は最新号も全件出す**（現行 skip-latest は使わない）。正本は `PUBLICATIONS_CPT_ARCHITECTURE.md`
+16. 現行サイト Theme 参照は手元 `C:\htdocs\f-nipponbudokan\wp\wp-content\themes\budokan`。クラス移植禁止。query / skip-latest / tax `book` / CFS→既存 ACF 名だけ継承する。正本は `PUBLICATIONS_CPT_ARCHITECTURE.md`
 17. 流用しうる塊は明示パラメーター。`body.home` で再利用 UI を縛らない。正本は `THEME_RULES.md` 節 13 / `docs/wordpress-acf-policy.md`
-18. 固定ページも CPT もテンプレは 頭ACF / 本文ブロックが default。**例外 Human 2026-09-17:** `budo-book` / `shodou-book` は Classic。号詳細の埋まっている ACF を PHP で出す（空は出さない）。武道と書写は **同じデザイン・同じ仕様**、**ACF 出力だけ違う**。テンプレは CPT ごとに分ける（generic `single.php` へ混ぜない）。詳細下のバックナンバー5件は表示中の号 ID を除く最新5。一覧は最新号も含め全件。武道一覧は要約＋詳細はこちら。書写一覧はアイキャッチ＋`rensailist` PDF＋詳細はこちら。表紙はアイキャッチ。`topimage` は TOP 専用。詳細はこちら / バックナンバー一覧は武道 `is-style-small`。PDF は Parts テキストリンク。表紙リンクは `.publication_budo-coverLink`（media-text / gallery / zoom に載せない。hover は画像 `opacity: 0.7` のみ、箱は固定）。書写に総索引・おすすめ wysiwyg は無い。分割に迷ったら Human。`PUBLICATIONS_CPT_ARCHITECTURE.md` 節0
+18. 固定ページも CPT もテンプレは 頭ACF / 本文ブロック（既存 Parts。他件一覧は投稿一覧ブロック）。分割に迷ったら Human。`PUBLICATIONS_CPT_ARCHITECTURE.md` 節0
 19. **空フィールドは出力しない。** 値が無いときに「非売品」「データなし」「未選択」等の代替文言をテーマ側で出さない。ACF JSON に移行メモ（CFS、非売品、型変更の説明）を書かない。フィールド名と型を勝手に変えない。対象: `group_nbk_displaytime.json` / `group_nbk_gekkan_budo.json` / `group_nbk_gekkan_shodou.json` / `group_nbk_rensai.json` / `group_nbk_sousakuin.json` / `group_nbk_tankoubon.json`
 20. 当面の実装単位はイベント / 書写書道 / 武道 / 単行本の一覧＋詳細。早見表は `FOUR_FAMILIES.md`
-21. 固定ページも CPT 詳細も、今後作るページ／詳細も `.global_inner._content` の共通上下（SP 上 48 / PC 上 64・下 100）。詳細だから抜かない。差はローカルナビの有無だけ。News / Event 以外でページ専用 padding を書かない。正本は `THEME_RULES.md` 節 7–8
-22. 「完璧？」「丁寧に」の前に `FIRST_PASS_MEASURE.md` を実行する。塊ごとに Figma 数値と live computed。未測りで完了禁止。`.block-editor_wrap.publication_budo` は同一要素。Parts 上書きは computed で確認。`--color-white` 禁止。数字で一意な差は Human 待ちしない。
 
 ---
 

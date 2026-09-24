@@ -37,8 +37,6 @@ Last inference = Agent
 
 Existingを無視してgeneric best practiceへ飛ばない。一方、Company/security/protected scopeに反しない明示Current Authorityはstale Existing baselineを更新できる。
 
-Figma に幅・高さ・gap・塗りがある塊は、完了前に live computed と照合する。Budokan は `experiments/budokan-wordpress/FIRST_PASS_MEASURE.md`。目視「近い」は PASS にしない。
-
 StandardはEffective Project ContractやFigma visual truthを上書きしない。Figma内部構造もWeb mechanismへ直写ししない。
 
 ## 2. Property-banしない

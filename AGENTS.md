@@ -54,7 +54,7 @@ Canonical: `docs/agent-adapters.md`
 - 同じ原因で2回詰まったら同じ方法を繰り返さずrouteを変える。
 - HumanのMaster Authority 1つで互換調査・legacy維持を大幅に省けるなら、遠回りを始める前に短くHumanへescalateする。
 - repoを読めば解決するroutine implementation decisionはHumanへ丸投げしない。
-- Human がよく指摘する欠落（閉じ状態だけ、hover/open 未操作、暗幕の穴、family の取りこぼし、Figma 数値の未測り）は **言われる前に** `docs/agent-human-fb-weak-spots.md` を自分で回す。Budokan のページ実装は `experiments/budokan-wordpress/FIRST_PASS_MEASURE.md`。静止画1枚で完了と言わない。
+- Human がよく指摘する欠落（閉じ状態だけ、hover/open 未操作、暗幕の穴、family の取りこぼし）は **言われる前に** `docs/agent-human-fb-weak-spots.md` を自分で回す。静止画1枚で完了と言わない。
 
 Canonical: `docs/agent-execution-policy.md` / `docs/agent-human-fb-weak-spots.md`
 
@@ -343,16 +343,6 @@ Local WP runtime は php.ini デフォルト 2M のまま起動しない。正�
 既存フィールド契約に無い ACF / CPT / スラッグを発明しない。契約に無い開催日・募集ステータス等は fail-closed。
 
 流用しうる template part は `body.home` 等のページ身元で出さず、呼び出し側の明示パラメーターにする。ページ専用で変動しないものだけ `is_front_page()` / `is_home()` でよい。
-
-PHP テンプレートは人が見て分かる owner にする。言われるまで汎用 `archive.php` / `single.php` へ CPT 分岐を足さない。
-
-- ネイティブ公開する CPT 一覧 → `archive-{post_type}.php`
-- taxonomy → `taxonomy-{taxonomy}.php`
-- 詳細が埋まるなら → `single-{post_type}.php`
-- 共通 markup は `template-parts/`
-- シェルが同じ page template を増やさない
-- 公開一覧が固定 page + query の CPT はネイティブ archive に寄せない
-
 
 Canonical:
 

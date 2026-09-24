@@ -302,7 +302,7 @@ HumanがMaster Authorityを与えたら、その判断をactive contractへ反�
 
 「自分でrepoを読めば解決する質問」をHumanへ丸投げしない。
 
-UI / hover / overlay では、現行 Figma に既にある open / hover / disabled を Human が URL 貼るまで待たない。完了前に `docs/agent-human-fb-weak-spots.md` を自分で回す。Figma に幅・高さ・gap・塗りがある塊は live computed と照合する。Budokan ページ実装は `experiments/budokan-wordpress/FIRST_PASS_MEASURE.md`。未測りで完了しない。
+UI / hover / overlay では、現行 Figma に既にある open / hover / disabled を Human が URL 貼るまで待たない。完了前に `docs/agent-human-fb-weak-spots.md` を自分で回す。
 
 ## 12. Local CLI fast path
 
@@ -354,7 +354,6 @@ latest base
 - requested implementation complete
 - relevant tests green
 - relevant runtime / Visual QA green
-- Figma UI を触ったなら、対象塊の Figma 数値と live computed を照合済み（Budokan は `experiments/budokan-wordpress/FIRST_PASS_MEASURE.md`）
 - no unrelated diff
 - no secrets / temp garbage
 - Git clean

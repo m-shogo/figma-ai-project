@@ -64,4 +64,3 @@ function auto_generate_slug_for_new_posts($slug, $post_ID, $post_status, $post_t
   return $slug;
 }
 // add_filter('wp_unique_post_slug', 'auto_generate_slug_for_new_posts', 10, 4);
-

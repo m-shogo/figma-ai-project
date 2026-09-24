@@ -7,7 +7,7 @@ global $post;
         <section>
             <?php get_template_part('template-parts/_visual'); ?>
             <?php get_template_part('template-parts/_dropdown-navigation'); ?>
-            <div class="global_inner _content">
+            <div class="global_inner _content _normalPage">
                 <div class="gc_main _oneColumn">
                     <div class="block-editor_wrap">
                         <?php the_content(); ?>

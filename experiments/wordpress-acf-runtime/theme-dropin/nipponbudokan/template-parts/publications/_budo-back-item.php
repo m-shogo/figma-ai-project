@@ -1,66 +1,53 @@
 <?php
 /**
- * バックナンバー一覧の1行。Figma 1634:10806。
- * 表紙リンクは独自（media-text / gallery に載せない）。hover は opacity 0.7 のみ。
+ * 月刊「武道」バックナンバー一覧の1件。
+ * Figma publications family の「月号 + 注文 / 表紙 + 概要 + 詳細」構造。
  */
-get_template_part('template-parts/publications/_budo-helpers');
-
 $post_id = isset($args['post_id']) ? (int) $args['post_id'] : get_the_ID();
 if (!$post_id) {
     return;
 }
 
+$month = get_field('budo_month', $post_id);
 $summary = get_field('budo_backcontent', $post_id);
 $thumbnail_id = get_post_thumbnail_id($post_id);
 $title = get_the_title($post_id);
-$heading = nbk_budo_issue_heading($post_id);
-$order_url = home_url('/publications/budo/order/');
-$cover_alt = $thumbnail_id
-    ? (get_post_meta($thumbnail_id, '_wp_attachment_image_alt', true) ?: $title)
-    : $title;
 $permalink = get_permalink($post_id);
+$heading = nbk_acf_value_present($month)
+    ? '月刊「武道」' . wp_strip_all_tags((string) $month)
+    : $title;
 ?>
 <article class="publication_budo-backItem<?php echo !$thumbnail_id ? ' _noImage' : ''; ?>">
     <?php if ($heading !== '') : ?>
         <header class="publication_budo-backHeader">
             <h2 class="publication_budo-backTitle"><?php echo esc_html($heading); ?></h2>
-            <a class="publication_budo-backOrder" href="<?php echo esc_url($order_url); ?>">ご注文</a>
+            <a class="publication_budo-backOrder" href="<?php echo esc_url(home_url('/publications/budo/order/')); ?>">
+                <span>ご注文</span>
+            </a>
         </header>
     <?php endif; ?>
 
-    <?php
-    $detail_button = static function ($post_id) {
-        ?>
-        <div class="wp-block-buttons publication_budo-backDetail">
-            <div class="wp-block-button is-style-small">
-                <a class="wp-block-button__link wp-element-button" href="<?php echo esc_url(get_permalink($post_id)); ?>">詳細はこちら</a>
-            </div>
-        </div>
-        <?php
-    };
-    ?>
+    <?php if ($thumbnail_id || nbk_acf_value_present($summary)) : ?>
+        <div class="publication_budo-backBody<?php echo !$thumbnail_id ? ' _noImage' : ''; ?>">
+            <?php if ($thumbnail_id) : ?>
+                <figure class="publication_budo-backCover">
+                    <a class="publication_budo-coverLink" href="<?php echo esc_url($permalink); ?>" aria-label="<?php echo esc_attr($heading !== '' ? $heading . 'の詳細' : $title . 'の詳細'); ?>">
+                        <?php echo wp_get_attachment_image($thumbnail_id, 'full', false, array('alt' => get_post_meta($thumbnail_id, '_wp_attachment_image_alt', true) ?: $title)); ?>
+                    </a>
+                </figure>
+            <?php endif; ?>
 
-    <?php if ($thumbnail_id && nbk_acf_value_present($summary)) : ?>
-        <div class="publication_budo-backBody">
-            <a class="publication_budo-coverLink" href="<?php echo esc_url($permalink); ?>">
-                <?php echo wp_get_attachment_image($thumbnail_id, 'full', false, array('alt' => $cover_alt)); ?>
-            </a>
-            <div class="publication_budo-backSummary">
-                <?php echo wp_kses_post($summary); ?>
-                <?php $detail_button($post_id); ?>
+            <?php if (nbk_acf_value_present($summary)) : ?>
+                <div class="publication_budo-backSummary"><?php echo wp_kses_post($summary); ?></div>
+            <?php endif; ?>
+        </div>
+    <?php endif; ?>
+
+    <div class="block-editor_wrap publication_budo-backDetail">
+        <div class="wp-block-buttons">
+            <div class="wp-block-button is-style-small">
+                <a class="wp-block-button__link wp-element-button" href="<?php echo esc_url($permalink); ?>">詳細はこちら</a>
             </div>
         </div>
-    <?php elseif ($thumbnail_id) : ?>
-        <a class="publication_budo-coverLink publication_budo-backCover" href="<?php echo esc_url($permalink); ?>">
-            <?php echo wp_get_attachment_image($thumbnail_id, 'full', false, array('alt' => $cover_alt)); ?>
-        </a>
-        <?php $detail_button($post_id); ?>
-    <?php elseif (nbk_acf_value_present($summary)) : ?>
-        <div class="publication_budo-backSummary">
-            <?php echo wp_kses_post($summary); ?>
-            <?php $detail_button($post_id); ?>
-        </div>
-    <?php else : ?>
-        <?php $detail_button($post_id); ?>
-    <?php endif; ?>
+    </div>
 </article>

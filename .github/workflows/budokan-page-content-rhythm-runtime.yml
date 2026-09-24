@@ -6,7 +6,7 @@ on:
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/layout/global_contents.css'
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/layout/global_inner.css'
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/blocks/wp-block-text-style.css'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/page.php'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/templates/template-oneColumnLocalNav.php'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-page-content-rhythm-browser-qa.mjs'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-local-nav-runtime-qa.sh'
       - 'experiments/wordpress-acf-runtime/scripts/seed-budokan-local-nav-qa.php'

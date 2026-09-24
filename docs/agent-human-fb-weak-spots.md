@@ -18,7 +18,6 @@ UI / layout / hover / overlay / 開閉を触ったら、Human が「確認して
 4. 同じ family の兄弟（他ボタン、他 overlay、EN と検索、など）を見る
 5. 暗幕・ホバー幾何は節4を黙って適用する
 6. 見た目が似ていても owner が違う塊を流用して終わらせない
-7. Figma に幅・高さ・gap・塗りがある塊は、live `getComputedStyle` と突き合わせる。CSS を書いたことと当たったことは別。目視「だいたい」で PASS にしない。Budokan は `experiments/budokan-wordpress/FIRST_PASS_MEASURE.md` を完了前に実行する。
 
 ## 弱点
 
@@ -74,9 +73,9 @@ hover で border / 当たり / clip を新設する。disabled にも enabled �
 
 **FB の出方:** 「画面確認した？？？」「docker WP 起動して確認して」
 
-render 1枚。hover / 開閉 / 閉じ戻りをやっていない。Figma の 800 / 72 / 140×198 を測らず「近い」で閉じる。
+render 1枚。hover / 開閉 / 閉じ戻りをやっていない。
 
-**自動:** 変えた操作をユーザーと同じ経路で実行する。ブラウザが無ければ最も近い runtime でやり、未確認を明示する。完了扱いしない。塊ごとに Figma 数値と computed を照合する。module の descendant selector が、`.block-editor_wrap.publication_budo` のように **同一要素の複数 class** を外していないか見る。
+**自動:** 変えた操作をユーザーと同じ経路で実行する。ブラウザが無ければ最も近い runtime でやり、未確認を明示する。完了扱いしない。
 
 ### W8 1個直して family を見ない / 隣を Human 待ちする
 
