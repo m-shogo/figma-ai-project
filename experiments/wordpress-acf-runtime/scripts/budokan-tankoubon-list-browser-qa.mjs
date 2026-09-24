@@ -17,7 +17,7 @@ if (artifactDir) await mkdir(artifactDir, { recursive: true });
 async function open(viewport) {
   const context = await browser.newContext({ viewport });
   const page = await context.newPage();
-  const response = await page.goto(pageUrl, { waitUntil: 'networkidle' });
+  const response = await page.goto(pageUrl, { waitUntil: 'load' });
   if (!response || !response.ok()) throw new Error(`HTTP failure Tankoubon list: ${response?.status()}`);
   return { context, page };
 }
