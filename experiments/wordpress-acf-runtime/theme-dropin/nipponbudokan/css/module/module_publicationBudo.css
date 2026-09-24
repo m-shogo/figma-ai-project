@@ -309,8 +309,22 @@
 }
 
 .publication_budo-backPdf a {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
     color: inherit;
+    font-size: 15px;
+    line-height: 1.6;
     overflow-wrap: anywhere;
+}
+
+.publication_budo-backPdf a::before {
+    content: var(--icon-pdf);
+    flex: 0 0 32px;
+    font-family: var(--font-awesome);
+    font-size: 32px;
+    font-weight: 400;
+    line-height: 1;
 }
 
 .publication_budo-backDetail {
@@ -332,6 +346,10 @@
     gap: 8px;
     font-size: 16px;
     line-height: 1;
+}
+
+.page-template-page-publications-budo-back .block-editor_wrap.publication_budo-backDetail .wp-block-buttons .wp-block-button.is-style-small .wp-block-button__link {
+    font-size: 18px;
 }
 
 .block-editor_wrap.publication_budo-backDetail .wp-block-buttons .wp-block-button.is-style-small .wp-block-button__link::before,
@@ -370,6 +388,15 @@
 
     .publication_budo-order {
         justify-content: center;
+    }
+
+    .block-editor_wrap.publication_budo-order .wp-block-buttons.cta:not(.small) .wp-block-button:not(.has-custom-width):not(.is-style-small) {
+        width: 410px;
+        min-width: 410px;
+    }
+
+    .block-editor_wrap.publication_budo-order .wp-block-buttons.cta:not(.small) .wp-block-button:not(.is-style-small) .wp-block-button__link {
+        font-size: 20px;
     }
 
     .publication_budo-backList {
