@@ -52,7 +52,7 @@
 @import './module/module_tab.css?v=20260915-2col';
 @import './module/module_table.css';
 @import './module/module_textLink.css';
-@import './module/module_titleSingle.css?v=20260915-news-single';
+@import './module/module_titleSingle.css?v=20260924-event-crumb';
 @import './module/module_zoom-button.css?v=20260910-hover';
 
 /* top_module.css は .top_notice-01 を absolute にするので FV と衝突する。title/button は top_news.css へ */

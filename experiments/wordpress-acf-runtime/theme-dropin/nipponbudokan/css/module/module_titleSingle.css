@@ -140,7 +140,9 @@ body.single-post .global_contents > section > .module_breadCrumb {
         justify-content: center;
     }
 
-    body.single-post .global_contents > section > .module_breadCrumb {
+    /* Event detail PC 1632:10382 — 一覧へ戻るの下端からパンくずまで 100 */
+    body.single-post .global_contents > section > .module_breadCrumb,
+    body.single-event .global_contents > section > .module_breadCrumb {
         margin-top: 100px;
     }
 }
