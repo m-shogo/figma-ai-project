@@ -11,11 +11,11 @@
 .publication_book-sectionHeading {
     display: flex;
     align-items: center;
-    gap: 16px;
-    margin: 0 0 16px;
+    gap: 12px;
+    margin: 0;
     color: var(--color-text);
     font-family: var(--font-zen-old-mincho);
-    font-size: 22px;
+    font-size: 24px;
     font-weight: 500;
     line-height: 1.4;
     letter-spacing: 0.05em;
@@ -30,13 +30,13 @@
 
 .publication_book-heading {
     margin: 0;
-    padding: 16px 20px;
+    padding: 12px 16px;
     border-top: 1px solid var(--color-line);
     border-bottom: 1px solid var(--color-line);
     background: var(--color-heading-band);
     color: var(--color-text);
     font-family: var(--font-zen-old-mincho);
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 500;
     line-height: 1.4;
     letter-spacing: 0.05em;
@@ -46,25 +46,30 @@
 .publication_book-summary {
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 24px;
     min-width: 0;
 }
 
 .publication_book-cover {
-    width: min(170px, 52vw);
+    width: 152px;
+    aspect-ratio: 170 / 250;
     margin: 0;
+    overflow: hidden;
 }
 
 .publication_book-cover img {
     display: block;
     width: 100%;
-    height: auto;
+    height: 100%;
+    object-fit: cover;
 }
 
 .publication_book-meta {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    width: 100%;
     min-width: 0;
     color: var(--color-text);
     font-family: var(--font-zen-kaku-gothic);
@@ -78,7 +83,7 @@
 }
 
 .publication_book-description {
-    font-size: 16px;
+    font-size: 17px;
     line-height: 1.6;
     letter-spacing: 0.05em;
     overflow-wrap: break-word;
@@ -95,7 +100,8 @@
 .publication_book-spec {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    align-items: stretch;
+    gap: 12px;
     min-width: 0;
 }
 
@@ -111,25 +117,30 @@
 }
 
 .publication_book-price {
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 700;
     line-height: 1.6;
     letter-spacing: 0.05em;
+    text-align: right;
 }
 
 .publication_book-actions {
     display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: 12px;
+    grid-template-columns: 270px;
+    justify-content: center;
+    gap: 20px;
     width: 100%;
+    margin-top: 16px;
 }
 
 .publication_book-action {
     display: flex;
+    box-sizing: border-box;
+    width: 100%;
     min-height: 60px;
     align-items: center;
     gap: 12px;
-    padding: 12px 16px;
+    padding: 0 20px 0 16px;
     border: 1px solid var(--color-line);
     border-radius: 3px;
     color: var(--color-text);
@@ -441,16 +452,13 @@
         align-items: start;
     }
 
-    .publication_book-summary._noImage {
-        grid-template-columns: minmax(0, 1fr);
+    .publication_book-cover {
+        width: 170px;
+        height: 250px;
     }
 
     .publication_book-meta {
         gap: 24px;
-    }
-
-    .publication_book-description {
-        font-size: 17px;
     }
 
     .publication_book-spec {
@@ -460,16 +468,22 @@
         gap: 24px;
     }
 
+    .publication_book-actions {
+        grid-template-columns: repeat(2, 270px);
+        margin-top: 24px;
+    }
+
+    .publication_book-summary._noImage {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .publication_book-description {
+        font-size: 17px;
+    }
+
     .publication_book-price {
         flex: 0 0 auto;
         font-size: 20px;
-    }
-
-    .publication_book-actions {
-        grid-template-columns: repeat(2, 270px);
-        justify-content: center;
-        gap: 20px;
-        padding-top: 24px;
     }
 
     .publication_book-listShell {
