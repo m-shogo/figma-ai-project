@@ -2,7 +2,7 @@
 /* // ==========================================================================
 // 開催イベント archive
 // PC Figma 1619:9554 card_event 2397:4372
-// 募集中チップはフィールド無し → 出さない
+// 募集状況チップ 1630:9917 募集中 / 2397:4008 開催中 / 2397:4005 受付終了。なしは出さない
 // SP 専用無し → PC 参考・1カラム。News SP_archive の3列タブは使わない
 // ========================================================================== */
 .event_archive {
@@ -234,27 +234,45 @@
         transition: color var(--transition-duration);
     }
 
-    .ea_card .category {
+    .ea_labels {
         display: flex;
         flex-wrap: wrap;
+        align-items: center;
         gap: 10px;
-        margin: 0;
+    }
 
-        .label {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 20px;
-            padding: 0 10px;
-            border: 1px solid #e7e7e7;
-            border-radius: 2px;
-            color: var(--color-text);
-            font-family: var(--font-zen-kaku-gothic);
-            font-size: 13px;
-            font-weight: 500;
-            line-height: 1;
-            letter-spacing: 0.05em;
-        }
+    .ea_card .category {
+        display: contents;
+    }
+
+    .ea_card .label {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        min-height: 20px;
+        padding: 0 10px;
+        border: 1px solid #e7e7e7;
+        border-radius: 2px;
+        background-color: #fff;
+        color: var(--color-text);
+        font-family: var(--font-zen-kaku-gothic);
+        font-size: 13px;
+        font-weight: 500;
+        line-height: 1;
+        letter-spacing: 0.05em;
+    }
+
+    .ea_card .label.ea_status-recruiting,
+    .ea_card .label.ea_status-ongoing {
+        border-color: var(--color-primary);
+        color: var(--color-primary);
+    }
+
+    .ea_card .label.ea_status-closed {
+        border-color: #e7e7e7;
+        background-color: #e7e7e7;
+        color: #828282;
     }
 
     .ea_copy {

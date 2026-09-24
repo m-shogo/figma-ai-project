@@ -3,6 +3,33 @@
     "title": "開催イベント",
     "fields": [
         {
+            "key": "field_event_status",
+            "label": "募集状況",
+            "name": "event_status",
+            "aria-label": "",
+            "type": "radio",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "none": "なし",
+                "recruiting": "募集中",
+                "ongoing": "開催中",
+                "closed": "受付終了"
+            },
+            "default_value": "none",
+            "return_format": "value",
+            "allow_null": 0,
+            "other_choice": 0,
+            "layout": "horizontal",
+            "save_other_choice": 0
+        },
+        {
             "key": "field_event_date",
             "label": "開催日",
             "name": "event_date",
@@ -123,5 +150,5 @@
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1789550000
+    "modified": 1790208000
 }

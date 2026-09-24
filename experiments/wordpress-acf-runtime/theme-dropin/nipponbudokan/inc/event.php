@@ -2,7 +2,8 @@
 
 /**
  * 開催イベント archive / 詳細。
- * ACF は event_date / event_time / event_capacity / event_fee / event_host のみ。
+ * ACF は event_status / event_date / event_time / event_capacity / event_fee / event_host。
+ * event_status の「なし」は一覧チップを出さない。
  */
 
 function nipponbudokan_event_value_present($value)
@@ -22,6 +23,27 @@ function nipponbudokan_event_value_present($value)
         return true;
     }
     return trim(wp_strip_all_tags((string) $value)) !== '';
+}
+
+function nipponbudokan_event_status($post_id = 0)
+{
+    $post_id = $post_id ?: get_the_ID();
+    if (!$post_id || !function_exists('get_field')) {
+        return array();
+    }
+    $labels = array(
+        'recruiting' => '募集中',
+        'ongoing' => '開催中',
+        'closed' => '受付終了',
+    );
+    $value = get_field('event_status', $post_id);
+    if (!is_string($value) || !isset($labels[$value])) {
+        return array();
+    }
+    return array(
+        'slug' => $value,
+        'label' => $labels[$value],
+    );
 }
 
 function nipponbudokan_event_datetime($post_id = 0)
@@ -115,15 +137,18 @@ add_action('pre_get_posts', function ($query) {
         return;
     }
 
-    $year = (int) $query->get('event_y');
+    $query->set('posts_per_page', 10);
+    $query->set('meta_key', 'event_date');
+    $query->set('orderby', 'meta_value');
+    $query->set('order', 'ASC');
+
     $month = (int) $query->get('event_m');
+    if ($month < 1 || $month > 12) {
+        return;
+    }
+    $year = (int) $query->get('event_y');
     if ($year < 1970) {
         $year = (int) wp_date('Y');
-        $query->set('event_y', $year);
-    }
-    if ($month < 1 || $month > 12) {
-        $month = (int) wp_date('n');
-        $query->set('event_m', $month);
     }
 
     $month_start = date_create(sprintf('%04d-%02d-01', $year, $month), wp_timezone());

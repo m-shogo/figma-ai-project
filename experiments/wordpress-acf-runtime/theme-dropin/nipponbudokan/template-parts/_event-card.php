@@ -10,14 +10,20 @@ $has_meta = nipponbudokan_event_value_present($time)
     || nipponbudokan_event_value_present($capacity)
     || nipponbudokan_event_value_present($fee)
     || nipponbudokan_event_value_present($host);
+$status = nipponbudokan_event_status();
 ?>
 <article class="ea_card">
     <a class="ea_card_link" href="<?php echo esc_url($href); ?>"<?php echo !empty($link_attrs['targetAttr']) ? ' ' . $link_attrs['targetAttr'] : ''; ?>>
-        <?php
-        get_template_part('template-parts/_label-category', null, [
-            'taxonomy' => '_cat',
-        ]);
-        ?>
+        <div class="ea_labels">
+            <?php if ($status) : ?>
+                <span class="label ea_status ea_status-<?php echo esc_attr($status['slug']); ?>"><?php echo esc_html($status['label']); ?></span>
+            <?php endif; ?>
+            <?php
+            get_template_part('template-parts/_label-category', null, [
+                'taxonomy' => '_cat',
+            ]);
+            ?>
+        </div>
         <div class="ea_copy">
         <?php if ($date_html !== '') : ?>
             <p class="ea_date"><?php echo $date_html; ?></p>

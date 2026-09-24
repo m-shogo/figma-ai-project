@@ -13,7 +13,7 @@ $next_year_url = nipponbudokan_event_archive_url($year + 1, $month, $term);
     <ol class="ea_months">
         <?php for ($m = 1; $m <= 12; $m++) : ?>
             <li>
-                <a class="ea_month<?php echo $m === $month ? ' is-current' : ''; ?>" href="<?php echo esc_url(nipponbudokan_event_archive_url($year, $m, $term)); ?>"><?php echo esc_html($m . '月'); ?></a>
+                <a class="ea_month" href="<?php echo esc_url(nipponbudokan_event_archive_url($year, $m, $term)); ?>"><?php echo esc_html($m . '月'); ?></a>
             </li>
         <?php endfor; ?>
     </ol>
