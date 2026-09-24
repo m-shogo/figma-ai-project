@@ -55,15 +55,16 @@ JSON: `acf/json/group_event.json`。location = `event`。instructions 空。空�
 
 | ラベル | name | 型 |
 | --- | --- | --- |
-| 開催日 | `event_date` | datetime |
+| 募集状況 | `event_status` | radio（なし / 募集中 / 開催中 / 受付終了） |
+| 開催日 | `event_date` | date |
 | 時間 | `event_time` | text |
 | 入場数 | `event_capacity` | text |
 | 入場料 | `event_fee` | text |
 | 主催 | `event_host` | text |
 
-会場・募集ステータス等は足さない。`group_nbk_*.json` は触らない。
+会場などは足さない。`event_status` の「なし」はチップを出さない。`group_nbk_*.json` は触らない。
 
-一覧はニュースカードを使わない（Figma `card_event`）。募集チップは出さない。月フィルタは `event_date`。詳細の表・お申込みは本文。
+一覧はニュースカードを使わない（Figma `card_event`）。並びは `event_date` の昇順。月フィルタも `event_date`。詳細の表・お申込みは本文。
 
 ## 刊行物共通契約
 

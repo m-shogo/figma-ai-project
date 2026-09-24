@@ -56,8 +56,9 @@ function nipponbudokan_event_datetime($post_id = 0)
     if (!nipponbudokan_event_value_present($raw)) {
         return 0;
     }
-    if (is_numeric($raw)) {
-        return (int) $raw;
+    if (is_numeric($raw) || (is_string($raw) && preg_match('/^\d{8}$/', $raw))) {
+        $parsed = date_create_from_format('Ymd', (string) $raw, wp_timezone());
+        return $parsed ? $parsed->getTimestamp() : 0;
     }
     $ts = strtotime((string) $raw);
     return $ts ? $ts : 0;
@@ -139,6 +140,7 @@ add_action('pre_get_posts', function ($query) {
 
     $query->set('posts_per_page', 10);
     $query->set('meta_key', 'event_date');
+    $query->set('meta_type', 'CHAR');
     $query->set('orderby', 'meta_value');
     $query->set('order', 'ASC');
 
@@ -155,19 +157,15 @@ add_action('pre_get_posts', function ($query) {
     if (!$month_start) {
         return;
     }
-    $start = $month_start->format('Y-m-d 00:00:00');
-    $end = $month_start->format('Y-m-t 23:59:59');
+    $start = $month_start->format('Ymd');
+    $end = $month_start->format('Ymt');
 
-    $query->set('posts_per_page', 10);
-    $query->set('meta_key', 'event_date');
-    $query->set('orderby', 'meta_value');
-    $query->set('order', 'ASC');
     $query->set('meta_query', array(
         array(
             'key' => 'event_date',
             'value' => array($start, $end),
             'compare' => 'BETWEEN',
-            'type' => 'DATETIME',
+            'type' => 'CHAR',
         ),
     ));
 }, 5);

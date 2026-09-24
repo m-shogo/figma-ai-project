@@ -34,7 +34,7 @@
             "label": "開催日",
             "name": "event_date",
             "aria-label": "",
-            "type": "date_time_picker",
+            "type": "date_picker",
             "instructions": "",
             "required": 0,
             "conditional_logic": 0,
@@ -43,8 +43,8 @@
                 "class": "",
                 "id": ""
             },
-            "display_format": "Y/m/d H:i",
-            "return_format": "Y-m-d H:i:s",
+            "display_format": "Y/m/d",
+            "return_format": "Y-m-d",
             "first_day": 1,
             "default_to_current_date": 0
         },
@@ -150,5 +150,5 @@
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1790208000
+    "modified": 1790232000
 }
