@@ -126,7 +126,18 @@
         &._fixedPage {
             height: auto;
 
-            /* Photo starts 60px in and runs to the right canvas edge. */
+            /* Photo starts 60px in. The left strip is #2C3036 (Figma page_title-img-pc). */
+            .gm_inner::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                z-index: 0;
+                width: 60px;
+                height: 320px;
+                background-color: var(--color-copyright);
+            }
+
             .gm_background {
                 margin-left: 60px;
                 width: calc(100% - 60px);

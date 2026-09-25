@@ -10,7 +10,7 @@
 @import './layout/global_navigation.css?v=20260915-pc-ham';
 @import './layout/global_contents.css?v=20260915-crumb1';
 
-@import './blocks/wp-block-buttonLink-style.css?v=20260911-octagon-stroke';
+@import './blocks/wp-block-buttonLink-style.css?v=20260925-btn-small2';
 @import './blocks/wp-block-columns-style.css';
 @import './blocks/wp-block-details-style.css';
 @import './blocks/wp-block-gallery-style.css';
@@ -31,7 +31,7 @@
 @import './blocks/wp-lightbox-overlay.css';
 
 @import './module/archive_navigation.css';
-@import './module/global_mainVisual.css';
+@import './module/global_mainVisual.css?v=20260925-visual-left';
 @import './module/module_bg.css';
 @import './module/module_breadCrumb.css';
 @import './module/module_dropdown.css';
@@ -46,7 +46,7 @@
 @import './module/module_pager-01.css';
 @import './module/module_pager-02.css?v=20260915-back-only';
 @import './module/module_publicationBudo.css?v=20260924-shodou-back';
-@import './module/module_publicationBook.css?v=20260925-book-sp-135';
+@import './module/module_publicationBook.css?v=20260925-book-price-gap';
 @import './module/module_search-01.css';
 @import './module/module_searchList-01.css';
 @import './module/module_tab.css?v=20260915-2col';

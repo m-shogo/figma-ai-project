@@ -11,7 +11,7 @@
 
 - この案件を継続する各 run / 各セッションでは、**毎回 `@GitHub` と `@Figma` の両 connector を実際に呼んでから着手する**。会話履歴だけで接続可否・最新状態を推測しない。
 - GitHub 正本は `m-shogo/figma-ai-project` branch `so`。着手時に最新 ref / authority / 対象コードを直接取得し、前回完了箇所から続ける。
-- Figma 正本は file `OtS7731mhY2oD44HSpdADo` のみ。対象 node を LIVE 取得する。`jqYoPtusYfTeDqRegMCsx3` / `zMjOY4euPBi9T23y7ZSM6y` その他旧 file / screenshot は最終実装判断に使わない。
+- Figma 正本は file `d1pD6gL2Sqal8Cf6h9WLp6` のみ（Human 2026-09-25）。対象 node を LIVE 取得する。`OtS7731mhY2oD44HSpdADo` / `jqYoPtusYfTeDqRegMCsx3` / `zMjOY4euPBi9T23y7ZSM6y` その他旧 file / screenshot は最終実装判断に使わない。旧 file の frame node-id は新 file へ引き継がない。
 - 片方の取得が失敗しても即「接続不可」と断定せず、対象 connector を実際に呼んだ結果で判断する。
 - この preflight 自体を毎回の成果物にせず、確認後は未完了の実装・QAを小さく前進させる。同じ確認だけを繰り返さない。
 
@@ -141,7 +141,9 @@ Theme 専用の enqueue・命名は `THEME_RULES.md`。Frontend Standard は Com
 
 フィールド名・用途はこの節が正本。WordPress 実行時の Local JSON / block PHP は Theme 内に残るが、**Agent は `theme-dropin/nipponbudokan/acf/` を再読してフィールドを増やしたり推測したりしない。** `acf-export.json` は退役（旧 portable dump。メニュー ACF グループを含むため使わない）。
 
-フィールドグループ JSON は編集しない。ブロック見た目の markup 修正が必要なときだけ既存 block PHP を触る。新しい ACF / CPT / スラッグは発明しない。**例外:** 2026-09-04 Human が `parts2.php` 用スライダーを指示したので `acf/slider`（`slider_items` → `image` / `caption`）だけ追加済み。**例外:** 2026-09-11 Human がローカルナビを ACF 選択（動的メニュー一覧）で指示したので `page_local_nav` を追加済み。**例外:** 2026-09-15 Human が投稿一覧ブロックへ刊行物 CPT を足すと指示したので `block_post_type` に `budo-book` / `shodou-book` / `tankoubon`、単行本絞り込み `block_book`（taxonomy `book`）を追加済み。**例外:** 2026-09-15 Human がイベント詳細用に次の5フィールドだけ追加してよいと指示。`group_event.json`。他グループは触らない。
+フィールドグループ JSON は編集しない。ブロック見た目の markup 修正が必要なときだけ既存 block PHP を触る。
+
+**Human 2026-09-25: ACF `modified` を未来の時刻にしない。** 同期ボタンは `JSON の modified > データベースの post_modified` のときだけ出る。同期しても WP Engine はテーマ JSON を書き換えない。未来の時刻のままだと「同期しました」のあと一覧に「同期が利用できます」が残る。`modified` を動かすときは、その時点より前で、データベースのフィールドグループ更新時刻より新しい値だけ。SEO設定とビジュアル設定の position は `normal`（本文下のメタボックス）。`side` に戻さない。エディタの説明文は JSON ではなくデータベースのフィールドが正。JSON を直しただけでは画面は変わらない。新しい ACF / CPT / スラッグは発明しない。**例外:** 2026-09-04 Human が `parts2.php` 用スライダーを指示したので `acf/slider`（`slider_items` → `image` / `caption`）だけ追加済み。**例外:** 2026-09-11 Human がローカルナビを ACF 選択（動的メニュー一覧）で指示したので `page_local_nav` を追加済み。**例外:** 2026-09-15 Human が投稿一覧ブロックへ刊行物 CPT を足すと指示したので `block_post_type` に `budo-book` / `shodou-book` / `tankoubon`、単行本絞り込み `block_book`（taxonomy `book`）を追加済み。**例外:** 2026-09-15 Human がイベント詳細用に次の5フィールドだけ追加してよいと指示。`group_event.json`。他グループは触らない。
 
 | 用途 | フィールド |
 | --- | --- |
@@ -192,23 +194,19 @@ Theme 専用の enqueue・命名は `THEME_RULES.md`。Frontend Standard は Com
 
 ## Figma（現行正本）
 
-Human Authority 2026-09-19: デザイン変更。**この file だけを最終 Visual authority として LIVE 再取得する。**
+Human Authority 2026-09-25: デザインの Figma を変更。**この file だけを最終 Visual authority として LIVE 再取得する。**
 
-File: [nipponbudokan](https://www.figma.com/design/OtS7731mhY2oD44HSpdADo/nipponbudokan)
+File: [nipponbudokan](https://www.figma.com/design/d1pD6gL2Sqal8Cf6h9WLp6/nipponbudokan)
 
-| 面 | node-id | 備考 |
+2026-09-25 にページ一覧を LIVE 確認済み:
+
+| 面 | node-id | URL |
 | --- | --- | --- |
-| PC page | `0:1` | 🎨pc |
-| SP page | `114:5409` | 🎨sp |
-| 武道一覧 PC / SP | `1634:10806` / `2608:5702` | publications |
-| 武道詳細 PC / SP | `1637:11288` / `2608:6933` | publications_detail |
-| 書写書道一覧 PC | `2629:7385` | 専用 SP frame なし。武道 publication family を shared responsive authority とする |
-| 書写書道詳細 PC | `2630:8447` | 専用 SP frame なし。武道 publication family を shared responsive authority とする |
-| 単行本一覧 PC / SP | `1656:5309` / `2627:6075` | hardcover / SP_hardcover |
-| 単行本詳細 PC / SP | `1686:5574` / `2628:6964` | hardcover_detail / SP_hardcover_detail |
-| TOP 大会・イベント情報 PC | `1603:7488` | TOP 差分確認の重点箇所 |
+| PC page | `0:1` 🎨pc | https://www.figma.com/design/d1pD6gL2Sqal8Cf6h9WLp6/nipponbudokan?node-id=0-1 |
+| SP page | `114:5409` 🎨sp | https://www.figma.com/design/d1pD6gL2Sqal8Cf6h9WLp6/nipponbudokan?node-id=114-5409 |
 
-- 旧 `jqYoPtusYfTeDqRegMCsx3` / `zMjOY4euPBi9T23y7ZSM6y` とそれ以前の file は historical/audit 参照に限る
+- 旧 file `OtS7731mhY2oD44HSpdADo` の frame（武道 `1634:10806` / `2608:5702`、詳細 `1637:11288` / `2608:6933`、書写 `2629:7385` / `2630:8447`、単行本 `1656:5309` / `2627:6075`、詳細 `1686:5574` / `2628:6964`、TOP `1603:7488`）は新 file の node として使わない。着手時に新 file の `0:1` / `114:5409` を再走査する
+- 旧 `OtS7731mhY2oD44HSpdADo` / `jqYoPtusYfTeDqRegMCsx3` / `zMjOY4euPBi9T23y7ZSM6y` とそれ以前の file は historical/audit 参照に限る
 - Visual の正本は上記 Figma。既存実装の正本は Theme。差分は Theme をこの Figma へ合わせる
 - 書写書道 SP は専用 frame を発明せず、武道 publication family の共通 CSS/component owner で成立させる
 - Figma から入れる画像（Theme / LP / HTML 共通）: 写真・ラスターは **WebP**。logo / icon はベクターをアウトライン化して **SVG**。短命 URL は直貼りしない。ラスターしか無い logo はトレースしない。正本は `AGENTS.md` Images 節 / `docs/image-gradient-visual-tolerance.md` / `config/frontend-raster-asset-export-policy.yaml`。Budokan Theme 適用は `THEME_RULES.md` 節 12

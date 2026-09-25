@@ -17,8 +17,9 @@ Visual: `FIGMA_MAP.md` / `CURRENT_AUTHORITY.md` の file key のみ
 
 この節は本ファイル内の古い「書写 single 未確定」「SP counterpart 未確定」「旧 Figma key」記述を supersede する。
 
-- 現行唯一の Figma Visual authority: `OtS7731mhY2oD44HSpdADo`
+- 現行唯一の Figma Visual authority: `d1pD6gL2Sqal8Cf6h9WLp6`（Human 2026-09-25）
 - PC page: `0:1` / SP page: `114:5409`
+- この節より下の frame node-id は前 file `OtS7731mhY2oD44HSpdADo` の記録。新 file では未確認なので、実装前にページを再走査する
 - 武道一覧 PC/SP: `1634:10806` / `2608:5702`
 - 武道詳細 PC/SP: `1637:11288` / `2608:6933`
 - 書写一覧 PC: `2629:7385`、書写詳細 PC: `2630:8447`。専用 SP は無く、武道 publication family の shared responsive rule を使う
@@ -60,7 +61,7 @@ Figma を見て「これは①か②か」が一本に決まらないときは�
 
 ## 1.1 号詳細 `1637:11288` の3段（Human 2026-09-15）
 
-PC Figma: [publications_detail](https://www.figma.com/design/OtS7731mhY2oD44HSpdADo/nipponbudokan?node-id=1637-11288)
+前 file の記録: `OtS7731mhY2oD44HSpdADo` の `1637:11288`。現行 file `d1pD6gL2Sqal8Cf6h9WLp6` の node ではない。
 
 `single-budo-book.php`（最新号 page も同じ part）の中身は次の3段。**オリジナルテンプレートに書く。**
 
@@ -223,7 +224,7 @@ Custom Post Type Permalinks: 詳細を `/publications/...` 配下に書き換え
 
 ## 5. Visual / Figma
 
-唯一の現行 file: `OtS7731mhY2oD44HSpdADo`
+唯一の現行 file: `d1pD6gL2Sqal8Cf6h9WLp6`（Human 2026-09-25）。下表の node-id は前 file `OtS7731mhY2oD44HSpdADo` の記録で、新 file の正本ではない。
 
 | 面 | PC | SP |
 | --- | --- | --- |

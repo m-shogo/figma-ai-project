@@ -2,7 +2,7 @@
 
 更新: 2026-09-06
 
-対象は現行 Figma `jqYoPtusYfTeDqRegMCsx3` の PC full-page authority:
+対象は当時の Figma `jqYoPtusYfTeDqRegMCsx3` の記録。現行 Visual authority は `CURRENT_AUTHORITY.md` の `d1pD6gL2Sqal8Cf6h9WLp6`。下の node は新 file では使わない。
 
 - Hardcover / 日本武道館発行の単行本: `1656:5309`
 - Hardcover detail: `1686:5574`

@@ -6,7 +6,7 @@ Updated: 2026-09-06
 
 ## Current-state correction
 
-The current implementation authority is the Human-selected Figma file `jqYoPtusYfTeDqRegMCsx3`, as defined by `CURRENT_AUTHORITY.md`. Older file keys including `FKQaJDu5TZXHoCzPsfP92E`, `fKYDn9ikpJk1nW7IWFtaUx`, `w7SGVY63FuW6JpaQVKjxm2`, and `RfAQQ28V1HGaeIcpgRmQq1` are historical lineage only and must not be used as current implementation authority.
+この監査の file `jqYoPtusYfTeDqRegMCsx3` は 2026-09-06 時点の記録。現行 Visual authority は `CURRENT_AUTHORITY.md` の `d1pD6gL2Sqal8Cf6h9WLp6`（Human 2026-09-25）。`jqYoPtusYfTeDqRegMCsx3` / `FKQaJDu5TZXHoCzPsfP92E` / `fKYDn9ikpJk1nW7IWFtaUx` / `w7SGVY63FuW6JpaQVKjxm2` / `RfAQQ28V1HGaeIcpgRmQq1` / `OtS7731mhY2oD44HSpdADo` は現行に使わない。
 
 A live re-scan confirms:
 

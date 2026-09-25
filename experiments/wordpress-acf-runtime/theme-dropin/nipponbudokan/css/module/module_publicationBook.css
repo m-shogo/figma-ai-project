@@ -130,12 +130,17 @@ body:not(.home) .global_contents > section:has(.publication_book-listShell) > .m
     text-align: right;
 }
 
+/* 値段の下端からボタンまで。head の gap 24px に足して SP は 40px。 */
+.publication_book-actions {
+    margin-top: 16px;
+}
+
 .publication_book-actions .wp-block-buttons {
     justify-content: center;
     gap: 20px;
     width: 100%;
     max-width: 560px;
-    margin: 16px auto 0;
+    margin: 0 auto;
 }
 
 .publication_book-content {
@@ -456,7 +461,8 @@ body:not(.home) .global_contents > section:has(.publication_book-listShell) > .m
         gap: 24px;
     }
 
-    .publication_book-actions .wp-block-buttons {
+    /* head の gap 24px に足して、値段からボタンまで 48px。 */
+    .publication_book-actions {
         margin-top: 24px;
     }
 

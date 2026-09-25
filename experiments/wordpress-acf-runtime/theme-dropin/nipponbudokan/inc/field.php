@@ -68,6 +68,14 @@ add_filter('acf/settings/load_json', function ($paths) {
     return $paths;
 });
 
+// 検証DBに position:side が残っていても、本文下のメタボックスへ出す。
+add_filter('acf/load_field_group', function ($group) {
+    if (in_array($group['key'] ?? '', array('group_seo_setting', 'group_visual_setting'), true)) {
+        $group['position'] = 'normal';
+    }
+    return $group;
+});
+
 /**
  * Category label color (ACF `category_color` on taxonomy category).
  * Empty / invalid → '' (caller falls back to default text color).
