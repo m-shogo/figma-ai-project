@@ -38,6 +38,31 @@ async function state(locator) {
   });
 }
 
+async function assertLargeFigmaGap(page, label, viewportWidth) {
+  const grid = page.locator('.module_navigation.--large').first();
+  await grid.waitFor({ state: 'visible' });
+  const layout = await grid.evaluate((el) => {
+    const style = getComputedStyle(el);
+    return {
+      columnGap: parseFloat(style.columnGap),
+      rowGap: parseFloat(style.rowGap),
+      columns: style.gridTemplateColumns.split(' ').filter(Boolean).length,
+      scrollWidth: document.documentElement.scrollWidth,
+      clientWidth: document.documentElement.clientWidth,
+    };
+  });
+  if (viewportWidth < 768) {
+    assert(near(layout.rowGap, 32), `${label}/large: SP row gap ${layout.rowGap}, expected current Figma 32`);
+    assert(near(layout.columnGap, 32), `${label}/large: SP column gap ${layout.columnGap}, expected current Figma 32`);
+    assert(layout.columns === 1, `${label}/large: SP columns=${layout.columns}, expected 1`);
+  } else {
+    assert(near(layout.columnGap, 40), `${label}/large: PC column gap ${layout.columnGap}, expected current Figma 40`);
+    assert(near(layout.rowGap, 56), `${label}/large: PC row gap ${layout.rowGap}, expected current Figma 56`);
+    assert(layout.columns === 3, `${label}/large: PC columns=${layout.columns}, expected 3`);
+  }
+  assert(layout.scrollWidth <= layout.clientWidth + 1, `${label}/large: horizontal overflow after gap contract`);
+}
+
 async function place(page, locator) {
   await locator.scrollIntoViewIfNeeded();
   await locator.evaluate((el) => {
@@ -122,6 +147,7 @@ async function run(label, viewport) {
   const page = await context.newPage();
   try {
     await page.goto(targetUrl, { waitUntil: 'networkidle' });
+    await assertLargeFigmaGap(page, label, viewport.width);
     for (const family of ['large', 'small']) {
       await auditFamily(page, label, family);
     }
@@ -130,7 +156,7 @@ async function run(label, viewport) {
         await auditStickyFocusBoundary(page, label, family);
       }
     }
-    console.log(`PASS ${label}: ACF Navigation Large/Small URL-less cards fail closed for pointer and keyboard, enabled cards keep stable hover/focus geometry, and SP document-end focus clears fixed shortcuts.`);
+    console.log(`PASS ${label}: Navigation Large matches current Figma responsive gaps; URL-less cards fail closed for pointer and keyboard, enabled cards keep stable hover/focus geometry, and SP document-end focus clears fixed shortcuts.`);
   } finally {
     await context.close();
     await browser.close();
@@ -139,3 +165,4 @@ async function run(label, viewport) {
 
 await run('PC 1395', { width: 1395, height: 900 });
 await run('SP 390', { width: 390, height: 844 });
+await run('SP 375', { width: 375, height: 812 });
