@@ -59,8 +59,12 @@ foreach ($book_terms as $term) {
     <section>
         <?php get_template_part('template-parts/_visual'); ?>
 
-        <div class="global_inner _content publication_book-listShell">
+        <div class="global_inner _content publication_budo-shell publication_book-listShell">
             <div class="gc_main _oneColumn">
+                <div class="block-editor_wrap">
+                    <h2 class="wp-block-heading">日本武道館発行の単行本</h2>
+                </div>
+
                 <?php if ($latest_id) : ?>
                     <section class="publication_book-listSection publication_book-latest" aria-labelledby="publication-book-latest-heading">
                         <h2 id="publication-book-latest-heading" class="publication_book-listHeading">今月のおすすめ</h2>
@@ -69,12 +73,11 @@ foreach ($book_terms as $term) {
                 <?php endif; ?>
 
                 <?php if (!empty($term_sections)) : ?>
-                    <nav class="publication_book-categoryNav" aria-labelledby="publication-book-category-heading">
-                        <h2 id="publication-book-category-heading" class="publication_book-listHeading">カテゴリ一覧</h2>
-                        <ul class="publication_book-categoryList">
+                    <nav class="block-editor_wrap publication_book-categoryNav" aria-label="カテゴリ">
+                        <ul class="module_inPageLink-01" data-column="4">
                             <?php foreach ($term_sections as $section) : ?>
                                 <?php $term = $section['term']; ?>
-                                <li><a href="#book-category-<?php echo esc_attr($term->term_id); ?>"><?php echo esc_html($term->name); ?></a></li>
+                                <li class="inPageLink"><a href="#book-category-<?php echo esc_attr($term->term_id); ?>"><span class="title"><?php echo esc_html($term->name); ?></span></a></li>
                             <?php endforeach; ?>
                         </ul>
                     </nav>
