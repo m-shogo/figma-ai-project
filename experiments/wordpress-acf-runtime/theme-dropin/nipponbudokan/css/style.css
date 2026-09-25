@@ -10,7 +10,7 @@
 @import './layout/global_navigation.css?v=20260915-pc-ham';
 @import './layout/global_contents.css?v=20260915-crumb1';
 
-@import './blocks/wp-block-buttonLink-style.css?v=20260925-btn-small2';
+@import './blocks/wp-block-buttonLink-style.css?v=20260925-btn-min306';
 @import './blocks/wp-block-columns-style.css';
 @import './blocks/wp-block-details-style.css';
 @import './blocks/wp-block-gallery-style.css';
@@ -24,14 +24,14 @@
 @import './blocks/wp-block-quote-style.css';
 @import './blocks/wp-block-separator-style.css?v=20260915-news-hr';
 @import './blocks/wp-block-slider-style.css?v=20260911-invert';
-@import './blocks/wp-block-table-style.css';
+@import './blocks/wp-block-table-style.css?v=20260925-table-stripe-rev';
 @import './blocks/wp-block-tabs-style.css?v=20260915-2col';
 @import './blocks/wp-block-text-style.css';
 @import './blocks/wp-block-textLink-style.css';
 @import './blocks/wp-lightbox-overlay.css';
 
 @import './module/archive_navigation.css';
-@import './module/global_mainVisual.css?v=20260925-visual-left';
+@import './module/global_mainVisual.css?v=20260925-title-width';
 @import './module/module_bg.css';
 @import './module/module_breadCrumb.css';
 @import './module/module_dropdown.css';
@@ -42,14 +42,14 @@
    SP selector / PC grid can override the shared menu baseline without !important. */
 @import './module/local_navigation.css?v=20260915-ln-hover';
 @import './module/module_newsCard-01.css';
-@import './module/module_newsList-01.css?v=20260915-catcolor';
+@import './module/module_newsList-01.css?v=20260925-news-even';
 @import './module/module_pager-01.css';
 @import './module/module_pager-02.css?v=20260915-back-only';
 @import './module/module_publicationBudo.css?v=20260924-shodou-back';
 @import './module/module_publicationBook.css?v=20260925-book-price-gap';
 @import './module/module_search-01.css';
 @import './module/module_searchList-01.css';
-@import './module/module_tab.css?v=20260915-2col';
+@import './module/module_tab.css?v=20260925-tab-border';
 @import './module/module_table.css';
 @import './module/module_textLink.css';
 @import './module/module_titleSingle.css?v=20260924-event-crumb';
@@ -66,7 +66,7 @@
 @import './project/top_banner.css?v=20260904-topfix2';
 
 @import './wordpress/form.css';
-@import './wordpress/wordpress.css?v=20260911-overheader';
+@import './wordpress/wordpress.css?v=20260925-mega-adminbar';
 
 /* Cardinal-vertex octagon + Parts body fill live on this cache-busted file.
    :root beats the :where(:root) token sheet if a stale @import is cached. */

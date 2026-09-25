@@ -13,5 +13,6 @@
 - `modified` は未来にしない。動かすときは今より前、かつデータベースのフィールドグループ更新時刻より新しい値だけ。
 - エディタに出る説明文・位置はデータベース側。JSON を保存しただけでは反映されない。
 - SEO設定とビジュアル設定の position は `normal`。サイドバー `side` に戻さない。
+- 一度保存された `meta-box-order_page` は ACF の position より優先される。この2つだけ、その保存列から外して ACF の position を画面に出す。他の枠は触らない。
 
 正本: `CURRENT_AUTHORITY.md` の ACF 節。

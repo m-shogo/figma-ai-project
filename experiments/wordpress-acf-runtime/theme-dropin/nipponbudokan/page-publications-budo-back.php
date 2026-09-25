@@ -4,7 +4,7 @@
  *
  * /publications/budo/back/ の固定ページ用。
  * 公開済み budo-book を新しい順に、最新号を含めて表示する。
- * 先頭は総索引アコーディオン。ファイル URL は最新号の sousakuin のみ。
+ * 先頭は総索引アコーディオン。ファイル URL はこの固定ページの sousakuin。無いときはボタンを出さない。
  */
 get_template_part('template-parts/publications/_acf-has-value');
 get_header();

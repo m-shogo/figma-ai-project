@@ -291,21 +291,16 @@
 }
 
 /*
- * Fixed-page content rail only (page.php / 1カラム). PC gap is 20px, so
- * (960 - 40) / 3 lets three 標準 / 輪郭 buttons fill the rail. CPT singles,
- * publication templates, 小ボタン, and the wide template keep 270 / 400.
+ * Fixed pages only (page.php / 1カラム). 標準 / 輪郭の最小幅は 306px。
+ * 3つまで 960px に並び、文字が長いボタンはその分だけ広がる。
+ * CPT singles, publication templates, 小ボタン, and the wide template stay 270 / 400.
  */
 @media screen and (min-width: 768px) {
     .global_inner._content._normalPage .block-editor_wrap .wp-block-buttons:not(.small),
     body.post-type-page .editor-styles-wrapper .wp-block-buttons:not(.small) {
-        .wp-block-button:not(.has-custom-width):not(.is-style-small):not(.is-style-small-2):not(.is-style-outline) {
-            min-width: calc((var(--width-content) - 40px) / 3);
-        }
-
-        &.cta .wp-block-button:not(.has-custom-width):not(.is-style-small),
-        .wp-block-button.is-style-outline:not(.has-custom-width):not(.is-style-small) {
-            width: calc((var(--width-content) - 40px) / 3);
-            min-width: calc((var(--width-content) - 40px) / 3);
+        .wp-block-button:not(.has-custom-width):not(.is-style-small):not(.is-style-small-2) {
+            width: auto;
+            min-width: 306px;
         }
     }
 }

@@ -53,8 +53,8 @@
 
     /*
      * Current Figma page_title-img-sp 1465:6339 / page_title-img-pc 1450:5147.
-     * CMS `page_img` stays the image authority. Title-panel paper texture is not
-     * a durable Theme asset; --color-secondary is the fallback fill.
+     * CMS `page_img` stays the image authority. The title panel uses the same
+     * paper texture as the page body (`images/common/bg-pattern.png`).
      * Title overlaps the photo by negative margin (not Figma-coordinate absolute).
      */
     &._fixedPage {
@@ -102,7 +102,11 @@
             width: min(327px, 100%);
             min-height: 66px;
             border-radius: 0 3px 0 0;
-            background-color: var(--color-secondary);
+            background-color: transparent;
+            background-image: url('../../images/common/bg-pattern.png');
+            background-repeat: repeat;
+            background-position: top left;
+            background-size: 700px 700px;
             color: var(--color-text);
             font-family: var(--font-zen-old-mincho);
             font-size: 24px;
@@ -147,7 +151,9 @@
             .gm_title {
                 margin-top: -67px;
                 padding: 24px 40px 10px;
-                width: 360px;
+                width: fit-content;
+                min-width: 360px;
+                max-width: 680px;
                 min-height: 79px;
                 font-size: 32px;
                 text-align: center;
