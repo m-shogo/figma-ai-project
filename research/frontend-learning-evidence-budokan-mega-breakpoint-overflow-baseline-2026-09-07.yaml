@@ -1,0 +1,55 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: OBS-BUDOKAN-MEGA-BREAKPOINT-OVERFLOW-BASELINE
+    summary: >-
+      Breakpoint interaction QA performed below an established desktop minimum width must distinguish pre-existing shell overflow
+      from overflow introduced by the interaction itself. When a synthetic viewport intentionally keeps the CSS desktop branch
+      active below the Theme's desktop minimum, compare document/body overflow before and after the interaction instead of
+      requiring scrollWidth to fit clientWidth absolutely.
+    category: TOOLING
+    applicability:
+      scope: PROJECT
+      conditions:
+        - A real browser QA intentionally probes a desktop-side media-query state at a viewport narrower than the Theme's established desktop minimum width.
+        - The purpose of the probe is to detect JS/CSS breakpoint disagreement caused by scrollbar gutter metrics.
+        - Existing Theme ownership already permits horizontal shell overflow at that synthetic desktop-side width.
+      exclusions:
+        - Do not weaken ordinary supported-viewport overflow assertions.
+        - Do not treat an existing desktop minimum-width contract as permission to introduce additional overflow during an interaction.
+        - Do not patch production offsets, z-index, or minimum widths merely to satisfy an artificial breakpoint fixture.
+        - Same-project confirmation is not independent cross-project evidence.
+    promotion_state: PROJECT_ONLY
+    promotion:
+      candidate: false
+      rationale: >-
+        PR #474 reproduced the classic-scrollbar breakpoint boundary with real WordPress plus headed Chromium/Xvfb. The first
+        assertion incorrectly classified Budokan's pre-existing 1280px desktop body minimum as a mega-menu interaction overflow
+        defect when probing a synthetic 780px CSS-desktop viewport. After changing only the QA contract to compare pre/post
+        document and body scroll widths, Budokan Mega Touch Runtime 34118785903 passed while production breakpoint ownership
+        remained under the bounded PR. This is Budokan-only evidence and is not ready for cross-project promotion.
+      blocked_by:
+        - NEEDS_INDEPENDENT_REFERENCE_EVIDENCE_BEFORE_CROSS_PROJECT_PROMOTION
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-MEGA-BREAKPOINT-OVERFLOW-BASELINE-20260907
+          kind: COMMIT
+          reference_id: REF-002-BUDOKAN
+          run_id: '34118785903'
+          path: .github/workflows/budokan-mega-touch-runtime.yml
+          commit: ba931a48cde92360de9774915f218cb277187eeb
+          note: >-
+            PR #474's corrected real WordPress + headed Chromium QA passed the touch-mega scrollbar breakpoint scenario after the
+            test stopped treating the Theme's established desktop minimum-width overflow as interaction-created overflow. Shared
+            Modal, Tab, Local Navigation, Content Interaction, Page Top Focus, Anchor Sticky, TOP Body Interaction and TOP FV
+            runtimes also passed on the same head. No production CSS offset or z-index workaround was added for the QA mistake.
+      contradicts: []
+    notes:
+      - "Promotion review disposition 2026-09-07: KEEP_PROJECT_ONLY; Budokan-only evidence, no auto-promotion."
