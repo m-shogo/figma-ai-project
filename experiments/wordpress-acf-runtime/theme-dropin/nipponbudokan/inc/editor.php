@@ -123,6 +123,13 @@ add_action('init', function () {
       'label' => '小ボタン',
     )
   );
+  register_block_style(
+    'core/button',
+    array(
+      'name'  => 'small-2',
+      'label' => '小ボタン2',
+    )
+  );
 });
 
 // ==========================================================================

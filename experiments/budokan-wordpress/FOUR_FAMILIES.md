@@ -1,8 +1,8 @@
 # 当面4 family（一覧＋詳細）
 
-更新: 2026-09-19  
-Figma visual authority: `OtS7731mhY2oD44HSpdADo`  
-旧 Figma `jqYoPtusYfTeDqRegMCsx3` / `zMjOY4euPBi9T23y7ZSM6y` は historical/audit 参照専用で、最終実装値の正本にはしない。  
+更新: 2026-09-25  
+Figma visual authority: `d1pD6gL2Sqal8Cf6h9WLp6`（Human 2026-09-25。PC `0:1` / SP `114:5409`）  
+旧 Figma `OtS7731mhY2oD44HSpdADo` / `jqYoPtusYfTeDqRegMCsx3` / `zMjOY4euPBi9T23y7ZSM6y` は historical/audit 参照専用で、最終実装値の正本にはしない。旧 file の frame node-id は新 file へ引き継がない。  
 正本の詳細: [`PUBLICATIONS_IMPLEMENTATION_STATUS.md`](PUBLICATIONS_IMPLEMENTATION_STATUS.md) / [`PUBLICATIONS_CPT_ARCHITECTURE.md`](PUBLICATIONS_CPT_ARCHITECTURE.md) / [`DIRECTORY_MAP.md`](DIRECTORY_MAP.md) / [`FIGMA_MAP.md`](FIGMA_MAP.md)  
 溜め質問: [`PENDING_QUESTIONS.md`](PENDING_QUESTIONS.md)
 
@@ -11,6 +11,7 @@ Figma visual authority: `OtS7731mhY2oD44HSpdADo`
 ```text
 イベント 一覧・詳細は Human 2026-09-24 で終了。次の指示があるまで触らない
 武道 一覧・詳細は Human 2026-09-24 で終了。次の指示があるまで触らない。最新号は同じ詳細部品なので、指示があるまでまとめて触らない
+単行本 一覧・詳細は Human 2026-09-25 で終了。次の指示があるまで触らない
 → 月刊書写書道は publication family として一覧／最新号／詳細 PC/SP を続ける
 → 完了ゲート後のみ TOP
 ```
@@ -19,23 +20,17 @@ Figma visual authority: `OtS7731mhY2oD44HSpdADo`
 
 ## 現行 Figma authority
 
-Human Authority 2026-09-19:
+Human Authority 2026-09-25:
 
-- file: `OtS7731mhY2oD44HSpdADo`
-- PC page: `0:1`
-- SP page: `114:5409`
-- 武道一覧 PC/SP: `1634:10806` / `2608:5702`
-- 武道詳細 PC/SP: `1637:11288` / `2608:6933`
-- 書写一覧 PC: `2629:7385`。専用 SP なし → 武道 publication family を shared responsive authority とする
-- 書写詳細 PC: `2630:8447`。専用 SP なし → 武道 publication family を shared responsive authority とする
-- 単行本一覧 PC/SP: `1656:5309` / `2627:6075`
-- 単行本詳細 PC/SP: `1686:5574` / `2628:6964`
-- TOP 大会・イベント情報 PC: `1603:7488`
+- file: `d1pD6gL2Sqal8Cf6h9WLp6`
+- PC page: `0:1`（🎨pc）https://www.figma.com/design/d1pD6gL2Sqal8Cf6h9WLp6/nipponbudokan?node-id=0-1
+- SP page: `114:5409`（🎨sp）https://www.figma.com/design/d1pD6gL2Sqal8Cf6h9WLp6/nipponbudokan?node-id=114-5409
+- 個別 frame の node-id は、前 file `OtS7731mhY2oD44HSpdADo` のもの。新 file では未確認。実装前に上記ページを再走査する
 
 
 ## 8面＋公開 URL / WP owner
 
-| # | family | 面 | 公開 URL | WP | 現行 visual authority |
+| # | family | 面 | 公開 URL | WP | 前 file の frame（新 file では使わない） |
 | --- | --- | --- | --- | --- | --- |
 | 1 | イベント | 一覧 | `/event/` | CPT archive `event` | 既存完成面。刊行物作業で回帰させない |
 | 2 | イベント | 詳細 | `/event/{slug}/` | CPT single | 既存完成面。刊行物作業で回帰させない |

@@ -1,9 +1,11 @@
 # Figma node map（nipponbudokan）
 
-File: `jqYoPtusYfTeDqRegMCsx3`  
+**このファイルの node 表は現行正本ではない。** Human 2026-09-25 の Visual authority は `CURRENT_AUTHORITY.md` の file `d1pD6gL2Sqal8Cf6h9WLp6`、PC `0:1`、SP `114:5409` だけ。下の node-id は旧 file の記録なので、実装の取得先にしない。
+
+記録当時の file: `jqYoPtusYfTeDqRegMCsx3`  
 Pages: PC `0:1` (`🎨pc`) / SP `114:5409` (`🎨sp`)
 
-Human-selected current authority. Last live re-scan: **2026-09-10**.
+Last live re-scan of that old file: **2026-09-10**.
 
 実装時は保存済みnode-idを信用して始めない。必ず `CURRENT_AUTHORITY.md` のfile keyを確認 → current pageのtop-level frameを再走査 → 対象full-page frameを `get_design_context` で再取得する。
 

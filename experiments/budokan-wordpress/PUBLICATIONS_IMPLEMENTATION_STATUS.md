@@ -5,17 +5,11 @@
 ## 正本
 
 - GitHub: `m-shogo/figma-ai-project` / canonical branch `so`
-- Figma の唯一の現行 Visual authority: `OtS7731mhY2oD44HSpdADo`
+- Figma の唯一の現行 Visual authority: `d1pD6gL2Sqal8Cf6h9WLp6`（Human 2026-09-25）
 - PC authority page: `0:1`（🎨pc）
 - SP authority page: `114:5409`（🎨sp）
-- 武道一覧: PC `1634:10806` / SP `2608:5702`
-- 武道詳細: PC `1637:11288` / SP `2608:6933`
-- 書写書道一覧: PC `2629:7385`。専用 SP frame なし
-- 書写書道詳細: PC `2630:8447`。専用 SP frame なし
-- 単行本一覧: PC `1656:5309` / SP `2627:6075`
-- 単行本詳細: PC `1686:5574` / SP `2628:6964`
-- TOP の変更確認起点: 大会・イベント情報 PC `1603:7488`
-- 旧 Figma `jqYoPtusYfTeDqRegMCsx3` / `zMjOY4euPBi9T23y7ZSM6y` とそれ以前の file は historical/audit 参照に限り、最終実装値の正本にしない
+- 旧 file `OtS7731mhY2oD44HSpdADo` 上の frame node-id（武道・書写・単行本・TOP）は新 file の正本にしない。着手時に新 file のページを再走査する
+- 旧 Figma `OtS7731mhY2oD44HSpdADo` / `jqYoPtusYfTeDqRegMCsx3` / `zMjOY4euPBi9T23y7ZSM6y` とそれ以前の file は historical/audit 参照に限り、最終実装値の正本にしない
 
 ## 実装順（Human Authority 2026-09-19）
 
@@ -56,8 +50,9 @@ TOP を先に実装しない。
 ### 単行本
 
 Visual authority:
-- 一覧: PC `1656:5309` / SP `2627:6075`
-- 詳細: PC `1686:5574` / SP `2628:6964`
+- 現行 file は `d1pD6gL2Sqal8Cf6h9WLp6` の PC `0:1` / SP `114:5409`。下の番号は前 file の記録で、新 file では使わない
+- 前 file の一覧: PC `1656:5309` / SP `2627:6075`
+- 前 file の詳細: PC `1686:5574` / SP `2628:6964`
 
 一覧の機能契約:
 - 「今月のおすすめ」は最新刊を自動取得
@@ -100,7 +95,7 @@ Visual authority:
 
 ## TOP 着手後
 
-- 新 Figma `OtS7731mhY2oD44HSpdADo` を LIVE 再取得
+- 現行 Figma `d1pD6gL2Sqal8Cf6h9WLp6` の PC `0:1` / SP `114:5409` を LIVE 再取得。前 file の node は使わない
 - section inventory / content order / visibility / copy owner / image / component / spacing / typography / responsive / interaction の旧→新差分表を先に作る
 - 特に大会・イベント情報 `1603:7488` を確認
 - mobile-first で SP → PC
@@ -110,7 +105,7 @@ Visual authority:
 ## 実行契約
 
 - 各 run 開始時と write 直前に最新 `so` / open PR / CI / authority / Figma を再取得
-- Figma `OtS...` の対象 node は実装前に LIVE `get_design_context` で確認
+- Figma `d1pD6gL2Sqal8Cf6h9WLp6` の対象 node は実装前に LIVE `get_design_context` で確認。`OtS7731mhY2oD44HSpdADo` は開かない
 - 実ブラウザ QA は最低 SP375px、必要に応じ390/430px、PC1380相当、768px breakpoint 前後
 - 武道を直したら同 viewport の書道も確認し、その逆も行う
 - 安全で高価値な作業がある限り、小さな1修正で止めず、実装 → QA → 差分修正 → 回帰 → commit/push/CI/readback まで進める

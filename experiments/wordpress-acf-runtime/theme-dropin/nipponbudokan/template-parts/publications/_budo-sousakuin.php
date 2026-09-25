@@ -1,11 +1,11 @@
 <?php
 /**
  * バックナンバー一覧の総索引。Parts の core/details + 番号リスト + 注釈リスト + button_L。
- * ダウンロード URL だけ最新号 ACF sousakuin。固定文は Figma 1767:9488。
+ * ダウンロード URL は表示中の固定ページの ACF sousakuin。無いときはボタンを出さない。
  */
 get_template_part('template-parts/publications/_budo-helpers');
 
-$file_url = nbk_budo_latest_sousakuin_url();
+$file_url = nbk_budo_page_sousakuin_url(get_queried_object_id());
 ?>
 <div class="block-editor_wrap publication_budo-sousakuin">
     <details class="wp-block-details">

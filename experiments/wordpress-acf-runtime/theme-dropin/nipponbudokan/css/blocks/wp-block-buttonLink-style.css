@@ -19,7 +19,7 @@
         }
         .wp-block-button {
             display: block;
-            &:not(.has-custom-width):not(.is-style-small) {
+            &:not(.has-custom-width):not(.is-style-small):not(.is-style-small-2) {
                 width: auto;
                 min-width: 270px;
                 max-width: 100%;
@@ -29,8 +29,12 @@
                 /* clip-path eats the octagon stroke. SVG chip keeps the 1px edge
                    on rest and hover without swapping clip-path (that flashed a square). */
                 --_octagon-chip: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'%3E%3Cpolygon fill='%23fff' stroke='%23d7d4d4' stroke-width='1' stroke-linejoin='round' points='13,0.6 21.78,4.22 25.4,13 21.78,21.78 13,25.4 4.22,21.78 0.6,13 4.22,4.22'/%3E%3C/svg%3E");
-                --_octagon-chip-hover: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'%3E%3Cpolygon fill='%23bf3e2b' stroke='%23d7d4d4' stroke-width='1' stroke-linejoin='round' points='13,0.6 21.78,4.22 25.4,13 21.78,21.78 13,25.4 4.22,21.78 0.6,13 4.22,4.22'/%3E%3C/svg%3E");
-                --_octagon-chip-outline-hover: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'%3E%3Cpolygon fill='%23fff' stroke='%23bf3e2b' stroke-width='1' stroke-linejoin='round' points='13,0.6 21.78,4.22 25.4,13 21.78,21.78 13,25.4 4.22,21.78 0.6,13 4.22,4.22'/%3E%3C/svg%3E");
+                --_octagon-chip-hover: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'%3E%3Cpolygon fill='%23bf3e2b' stroke='%23bf3e2b' stroke-width='1' stroke-linejoin='round' points='13,0.6 21.78,4.22 25.4,13 21.78,21.78 13,25.4 4.22,21.78 0.6,13 4.22,4.22'/%3E%3C/svg%3E");
+                /* Outline rest is a solid white octagon. Hover keeps that same white
+                   shape and draws the red frame outside it, so the white does not
+                   shrink by the 1px stroke. */
+                --_octagon-chip-outline: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'%3E%3Cpolygon fill='%23fff' points='14,1.1 23.13,4.87 26.9,14 23.13,23.13 14,26.9 4.87,23.13 1.1,14 4.87,4.87'/%3E%3C/svg%3E");
+                --_octagon-chip-outline-hover: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'%3E%3Cpolygon fill='%23bf3e2b' points='14,0.1 23.84,4.16 27.9,14 23.84,23.84 14,27.9 4.16,23.84 0.1,14 4.16,4.16'/%3E%3Cpolygon fill='%23fff' points='14,1.1 23.13,4.87 26.9,14 23.13,23.13 14,26.9 4.87,23.13 1.1,14 4.87,4.87'/%3E%3C/svg%3E");
                 position: relative;
                 overflow: visible;
                 text-decoration: none;
@@ -125,7 +129,7 @@
             }
 
             /* Live Figma button_L: white octagon, gray edge, 26×2 primary underline. */
-            &:not(.is-style-outline):not(.is-style-small) {
+            &:not(.is-style-outline):not(.is-style-small):not(.is-style-small-2) {
                 .wp-block-button__link {
                     background-image: linear-gradient(var(--color-primary), var(--color-primary));
                     background-repeat: no-repeat;
@@ -183,6 +187,26 @@
             }
         }
 
+        /* 小ボタン2 — 標準ボタンの八角と文字。周りの枠・下線は付けない。Figma 2377:6311 */
+        .wp-block-button.is-style-small-2 {
+            width: auto;
+            min-width: 0;
+
+            .wp-block-button__link {
+                min-height: 0;
+                width: auto;
+                padding: 0;
+                gap: 8px;
+                border: 0;
+                border-radius: 0;
+                background: none;
+                font-size: 18px;
+                font-weight: 500;
+                line-height: 1;
+                letter-spacing: 0.05em;
+            }
+        }
+
         /* CTA（btn-03）and 輪郭（Human: outline uses the same family）. */
         &:not(.small) {
             &.cta .wp-block-button:not(.is-style-small),
@@ -207,8 +231,11 @@
 
                     &::before {
                         padding: 0;
+                        width: 28px;
+                        height: 28px;
+                        background-size: 28px 28px;
                         background-color: transparent;
-                        background-image: var(--_octagon-chip);
+                        background-image: var(--_octagon-chip-outline);
                         color: var(--color-primary);
                         font-size: 8px;
                         font-weight: 900;
@@ -231,7 +258,7 @@
                 &.has-custom-width {
                     width: 100%;
                 }
-                &:not(.has-custom-width):not(.is-style-small) {
+                &:not(.has-custom-width):not(.is-style-small):not(.is-style-small-2) {
                     width: auto;
                     min-width: 270px;
                 }
@@ -259,6 +286,21 @@
                     font-size: 20px;
                 }
             }
+        }
+    }
+}
+
+/*
+ * Fixed pages only (page.php / 1カラム). 標準 / 輪郭の最小幅は 306px。
+ * 3つまで 960px に並び、文字が長いボタンはその分だけ広がる。
+ * CPT singles, publication templates, 小ボタン, and the wide template stay 270 / 400.
+ */
+@media screen and (min-width: 768px) {
+    .global_inner._content._normalPage .block-editor_wrap .wp-block-buttons:not(.small),
+    body.post-type-page .editor-styles-wrapper .wp-block-buttons:not(.small) {
+        .wp-block-button:not(.has-custom-width):not(.is-style-small):not(.is-style-small-2) {
+            width: auto;
+            min-width: 306px;
         }
     }
 }

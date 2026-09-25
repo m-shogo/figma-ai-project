@@ -1,6 +1,6 @@
 # Header / Footer — Figma vs Theme（作業メモ）
 
-更新: 2026-09-11（現行 Figma `jqYoPtusYfTeDqRegMCsx3`。旧 file は見ない）
+更新: 2026-09-11。このメモの file `jqYoPtusYfTeDqRegMCsx3` は旧記録。現行 Visual authority は `CURRENT_AUTHORITY.md` の `d1pD6gL2Sqal8Cf6h9WLp6`。
 
 ## Frontend 契約（人が触る）
 

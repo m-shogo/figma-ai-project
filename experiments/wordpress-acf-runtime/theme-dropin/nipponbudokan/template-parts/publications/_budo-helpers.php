@@ -87,24 +87,17 @@ if (!function_exists('nbk_budo_echo_rich_field')) {
     }
 }
 
-if (!function_exists('nbk_budo_latest_sousakuin_url')) {
+if (!function_exists('nbk_budo_page_sousakuin_url')) {
     /**
-     * 一覧の総索引ファイルは最新号の ACF sousakuin。無いときは空。
+     * バックナンバー固定ページの ACF sousakuin（総索引ファイル）。無いときは空。
      */
-    function nbk_budo_latest_sousakuin_url()
+    function nbk_budo_page_sousakuin_url($post_id)
     {
-        $latest = get_posts(array(
-            'post_type'           => 'budo-book',
-            'post_status'         => 'publish',
-            'numberposts'         => 1,
-            'orderby'             => 'date',
-            'order'               => 'DESC',
-            'ignore_sticky_posts' => true,
-        ));
-        if (!$latest) {
+        $post_id = (int) $post_id;
+        if ($post_id <= 0) {
             return '';
         }
-        $file = get_field('sousakuin', $latest[0]->ID);
+        $file = get_field('sousakuin', $post_id);
         if (is_array($file) && !empty($file['url'])) {
             return (string) $file['url'];
         }

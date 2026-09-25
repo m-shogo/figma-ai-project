@@ -68,6 +68,42 @@ add_filter('acf/settings/load_json', function ($paths) {
     return $paths;
 });
 
+// 保存済みの meta-box-order_page が ACF の position を上書きしないように外す。
+// 表示列はフィールドグループの position に従う。ローカルナビなど他の枠は触らない。
+add_filter('get_user_option_meta-box-order_page', function ($result) {
+    if (!is_array($result)) {
+        return $result;
+    }
+
+    $ids = array('acf-group_seo_setting', 'acf-group_visual_setting');
+    foreach ($result as $context => $column) {
+        if (!is_string($column) || $column === '') {
+            continue;
+        }
+        $parts = array_values(array_filter(array_map('trim', explode(',', $column))));
+        $result[$context] = implode(',', array_values(array_diff($parts, $ids)));
+    }
+
+    return $result;
+});
+
+// 総索引は月刊「武道」バックナンバーのテンプレートだけ。号の編集画面には出さない。
+add_filter('acf/load_field_group', function ($group) {
+    if (($group['key'] ?? '') !== 'group_nbk_sousakuin') {
+        return $group;
+    }
+    $group['location'] = array(
+        array(
+            array(
+                'param' => 'page_template',
+                'operator' => '==',
+                'value' => 'page-publications-budo-back.php',
+            ),
+        ),
+    );
+    return $group;
+});
+
 /**
  * Category label color (ACF `category_color` on taxonomy category).
  * Empty / invalid → '' (caller falls back to default text color).

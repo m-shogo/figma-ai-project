@@ -79,50 +79,17 @@
         }
         /* MARK: ストライプ スタイル */
         &.is-style-stripes {
-            /* Figma color/base--lightgray authority for the shared table. */
-            --_stripe-color: #f2f2f2;
-            /* Figma's table master starts the body on white and stripes the
-               second row. Keep stacked-table behavior separate below. */
-            table:not(.is-stacked-on-mobile) {
+            /* tbody は上から白。偶数行だけ透明。結合セルでも行単位。 */
+            table {
                 tbody {
-                    tr:nth-child(even) {
-                        td {
-                            background-color: var(--_stripe-color, #f2f2f2);
-                        }
+                    tr:nth-child(odd),
+                    tr:nth-child(odd) > td {
+                        background-color: #fff;
                     }
-                }
-            }
-            @media screen and (max-width: 767px) {
-                > table.is-stacked-on-mobile {
-                    tbody {
-                        tr {
-                            &:nth-child(odd) {
-                                td {
-                                    background-color: transparent;
-                                }
-                            }
-                            /* 子要素の個数が「奇数」のとき tr の奇数と偶数で td の背景色を交互にする */
-                            &:has(> *:nth-child(odd):last-child) {
-                                &:nth-child(odd) {
-                                    *:nth-child(odd) {
-                                        background-color: var(--_stripe-color, #f2f2f2);
-                                    }
-                                }
-                                &:nth-child(even) {
-                                    *:nth-child(even) {
-                                        background-color: var(--_stripe-color, #f2f2f2);
-                                    }
-                                }
-                            }
-                            /* 子要素の個数が「偶数」のとき */
-                            &:not(:has(> *:nth-child(odd):last-child)) {
-                                & {
-                                    *:nth-child(odd) {
-                                        background-color: var(--_stripe-color, #f2f2f2);
-                                    }
-                                }
-                            }
-                        }
+
+                    tr:nth-child(even),
+                    tr:nth-child(even) > td {
+                        background-color: transparent;
                     }
                 }
             }

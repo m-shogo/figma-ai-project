@@ -2,7 +2,7 @@
 /**
  * 月刊「書写書道」バックナンバー1件。
  *
- * 表紙はリンクなし。出すのはご注文と連載PDFだけ。詳細ボタンは出さない。
+ * 表紙はリンクなし。出すのは連載PDFだけ。ご注文と詳細ボタンは出さない。
  */
 get_template_part('template-parts/publications/_budo-helpers');
 
@@ -51,9 +51,6 @@ if (is_array($rensai_list)) {
     <?php if ($heading !== '') : ?>
         <header class="publication_budo-backHeader">
             <h2 class="publication_budo-backTitle"><?php echo esc_html($heading); ?></h2>
-            <a class="publication_budo-backOrder" href="<?php echo esc_url(home_url('/publications/shodo/form-shodo/')); ?>">
-                <span>ご注文</span>
-            </a>
         </header>
     <?php endif; ?>
 

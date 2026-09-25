@@ -21,7 +21,7 @@ $heading = nbk_publication_month_heading($post_id, $month, '月刊「武道」')
     <?php if ($heading !== '') : ?>
         <header class="publication_budo-backHeader">
             <h2 class="publication_budo-backTitle"><?php echo esc_html($heading); ?></h2>
-            <a class="publication_budo-backOrder" href="<?php echo esc_url(home_url('/publications/budo/order/')); ?>">
+            <a class="publication_budo-backOrder" href="<?php echo esc_url(home_url('/publications/budo/books/form-order/')); ?>">
                 <span>ご注文</span>
             </a>
         </header>

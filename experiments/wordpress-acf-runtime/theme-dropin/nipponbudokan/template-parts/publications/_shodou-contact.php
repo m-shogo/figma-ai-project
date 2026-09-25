@@ -8,7 +8,7 @@
         <div class="block-editor_wrap">
             <div class="wp-block-buttons cta">
                 <div class="wp-block-button">
-                    <a class="wp-block-button__link wp-element-button" href="<?php echo esc_url(home_url('/publications/shodo/form-shodo/')); ?>">見本誌の請求はこちら</a>
+                    <a class="wp-block-button__link wp-element-button" href="<?php echo esc_url(home_url('/publications/shodo/form-digital/')); ?>">見本誌の請求はこちら</a>
                 </div>
             </div>
         </div>
