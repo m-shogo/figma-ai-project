@@ -152,6 +152,9 @@ body:not(.home) .global_contents > section:has(.publication_book-listShell) > .m
 
 /* 単行本一覧 / Figma hardcover 1656:5309, SP_hardcover 2627:6075 */
 .publication_book-listShell .gc_main {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
     min-width: 0;
 }
 
@@ -163,6 +166,8 @@ body:not(.home) .global_contents > section:has(.publication_book-listShell) > .m
 
 .publication_book-categoryNav .module_inPageLink-01 {
     margin-top: 0;
+    margin-bottom: 0;
+    padding-block: 8px;
 }
 
 .publication_book-categorySection + .publication_book-categorySection {
@@ -231,26 +236,31 @@ body:not(.home) .global_contents > section:has(.publication_book-listShell) > .m
 
 .publication_book-cardList {
     display: grid;
-    grid-template-columns: repeat(2, 152px);
-    justify-content: space-between;
+    grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
+    column-gap: 24px;
     row-gap: 32px;
 }
 
 .publication_book-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 16px;
     min-width: 0;
     text-align: center;
 }
 
-.publication_book-card._featured {
+.publication_book-cardLink {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    color: inherit;
+    text-decoration: none;
+}
+
+.publication_book-card._featured .publication_book-cardLink {
     display: grid;
     grid-template-columns: 152px minmax(0, 1fr);
     align-items: start;
     gap: 24px;
-    width: 100%;
     text-align: left;
 }
 
@@ -307,13 +317,12 @@ body:not(.home) .global_contents > section:has(.publication_book-listShell) > .m
     font-size: 18px;
 }
 
-.publication_book-cardTitle a {
-    color: inherit;
+.publication_book-cardTitle {
     text-decoration: underline;
     text-underline-offset: 2px;
 }
 
-.publication_book-card._featured .publication_book-cardTitle a {
+.publication_book-card._featured .publication_book-cardTitle {
     text-decoration: none;
 }
 
@@ -351,8 +360,15 @@ body:not(.home) .global_contents > section:has(.publication_book-listShell) > .m
     display: flex;
     flex-wrap: wrap;
     align-items: baseline;
+    justify-content: center;
     gap: 8px 20px;
     width: 100%;
+    text-align: center;
+}
+
+.publication_book-card._featured .publication_book-cardSpec {
+    justify-content: flex-start;
+    text-align: left;
 }
 
 .publication_book-cardPrice {
@@ -367,6 +383,10 @@ body:not(.home) .global_contents > section:has(.publication_book-listShell) > .m
     font-size: 16px;
 }
 
+.publication_book-card._featured .publication_book-cardButton {
+    align-self: flex-end;
+}
+
 .publication_book-card._featured .publication_book-cardButton .wp-block-buttons {
     margin-top: 0;
 }
@@ -376,16 +396,13 @@ body:not(.home) .global_contents > section:has(.publication_book-listShell) > .m
 }
 
 @media (any-hover: hover) {
-    .publication_book-cardCover img,
-    .publication_book-cardTitle a,
+    a.publication_book-cardLink,
     .publication_book-categoryList a {
-        transition: opacity 0.2s ease;
+        transition: opacity 0.3s;
     }
 
-    .publication_book-cardCover:hover img,
-    .publication_book-cardCover:focus-visible img,
-    .publication_book-cardTitle a:hover,
-    .publication_book-cardTitle a:focus-visible,
+    a.publication_book-cardLink:hover,
+    a.publication_book-cardLink:focus-visible,
     .publication_book-categoryList a:hover,
     .publication_book-categoryList a:focus-visible {
         opacity: 0.7;
@@ -460,6 +477,14 @@ body:not(.home) .global_contents > section:has(.publication_book-listShell) > .m
         max-width: calc(960px + var(--padding-TB, 0px) * 2);
     }
 
+    .publication_book-categoryNav .module_inPageLink-01 {
+        padding-block: 24px;
+    }
+
+    .publication_book-card._featured .publication_book-cardButton {
+        align-self: flex-start;
+    }
+
     .publication_book-categorySection + .publication_book-categorySection {
         margin-top: 70px;
     }
@@ -484,7 +509,7 @@ body:not(.home) .global_contents > section:has(.publication_book-listShell) > .m
         row-gap: 56px;
     }
 
-    .publication_book-card._featured {
+    .publication_book-card._featured .publication_book-cardLink {
         grid-template-columns: 170px minmax(0, 1fr);
         align-items: center;
         gap: 40px;
