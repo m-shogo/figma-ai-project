@@ -8,7 +8,7 @@
  * ========================================================================== */
 :root {
   --vw: 1vw;
-  scrollbar-gutter: stable;
+  scrollbar-gutter: auto;
 }
 * {
   box-sizing: border-box;

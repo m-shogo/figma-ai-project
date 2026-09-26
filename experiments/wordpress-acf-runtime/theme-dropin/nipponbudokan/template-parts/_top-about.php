@@ -7,11 +7,6 @@ $cards = array(
         'label' => '日本武道館とは',
     ),
     array(
-        'image' => 'about-card-02.webp',
-        'overlay' => array('人間形成を目指す', '心身の鍛錬を通じて'),
-        'label' => '武道とは',
-    ),
-    array(
         'image' => 'about-card-03.webp',
         'overlay' => array('半世紀の歴史', '武道を結び音楽を刻んだ'),
         'label' => '武道館の歴史',
@@ -20,7 +15,11 @@ $cards = array(
         'image' => 'about-card-04.webp',
         'overlay' => array('集中と成長を支える拠点', '武道から研修まで'),
         'label' => '武道館の施設',
-        'pc_only' => true,
+    ),
+    array(
+        'image' => 'about-card-02.webp',
+        'overlay' => array('人間形成を目指す', '心身の鍛錬を通じて'),
+        'label' => '武道とは',
     ),
 );
 ?>
@@ -41,7 +40,7 @@ $cards = array(
                 <div class="ta_panel">
                     <p class="ta_lead">日本武道館は、武道の普及・振興と書道文化の継承を目的として設立された公益財団法人です。<br class="ta_lead_break">武道大会・研修会・青少年育成・書初め大展覧会・刊行物発行など、多岐にわたる事業を展開しています。1964年東京オリンピックでは柔道競技の会場となり、現在は式典やコンサート会場としても利用されています。</p>
                     <div class="ta_actions">
-                        <a class="ta_btn ta_btn_pdf" href="#">パンフレット（10MB）</a>
+                        <a class="ta_btn ta_btn_pdf" href="#">パンフレット（1.2MB）</a>
                         <a class="ta_btn ta_btn_video" href="#">ご紹介動画</a>
                     </div>
                 </div>
@@ -54,7 +53,6 @@ $cards = array(
                 <div class="swiper ta_cards_swiper" aria-label="日本武道館とは">
                     <div class="swiper-wrapper">
                         <?php foreach ($cards as $index => $card): ?>
-                            <?php if (!empty($card['pc_only'])) continue; ?>
                             <article class="swiper-slide ta_card">
                                 <a class="ta_card_link" href="#">
                                     <p class="ta_card_image">
@@ -71,23 +69,7 @@ $cards = array(
                         <?php endforeach; ?>
                     </div>
                 </div>
-                <?php foreach ($cards as $index => $card): ?>
-                    <?php if (empty($card['pc_only'])) continue; ?>
-                    <article class="ta_card ta_card_pc">
-                        <a class="ta_card_link" href="#">
-                            <p class="ta_card_image">
-                                <img src="<?php echo esc_url($theme_uri . '/images/top/' . $card['image']); ?>" alt="" width="195" height="360" loading="lazy">
-                                <span class="ta_card_overlay">
-                                    <?php foreach ($card['overlay'] as $line): ?>
-                                        <span><?php echo esc_html($line); ?></span>
-                                    <?php endforeach; ?>
-                                </span>
-                            </p>
-                            <p class="ta_card_label"><?php echo esc_html($card['label']); ?></p>
-                        </a>
-                    </article>
-                <?php endforeach; ?>
-            </div>
+             </div>
             <p class="ta_scroll" aria-hidden="true"><span class="ta_scroll_bar"></span></p>
         </div>
     </div>

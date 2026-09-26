@@ -1,21 +1,28 @@
 @charset "utf-8";
 /* // ==========================================================================
 // TOP 下部バナー（mobile first）
-// Figma SP 1360:9354 / PC 1603:7145
-// 既存 top_banner-01 ACF Repeater をデータ正本として再利用する。
+// Current Figma: SP 2688:14305 / PC 1603:7145
+// Existing top_banner-01 ACF Repeater remains authoritative.
 // ========================================================================== */
 .global_contents > .top_banner-01 {
     position: relative;
     isolation: isolate;
     overflow: hidden;
-    padding: 40px 0;
-    min-height: 216px;
-    background-color: #263033;
-    background-image:
-        linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
-        var(--tb-background-image, none);
-    background-position: center;
-    background-size: cover;
+    min-height: 312px;
+    padding: 64px 0;
+    background-color: var(--color-secondary);
+
+    &::before {
+        content: '';
+        position: absolute;
+        z-index: 0;
+        top: 0;
+        right: 0;
+        width: 294px;
+        height: 312px;
+        background: url('../../images/top/banner-octagon-sp.svg') center / 100% 100% no-repeat;
+        pointer-events: none;
+    }
 
     .tb_inner {
         position: relative;
@@ -28,147 +35,78 @@
     .tb_list {
         display: flex;
         flex-direction: column;
-        gap: 16px;
-        width: 270px;
+        gap: 24px;
+        align-items: center;
+        width: 100%;
         margin: 0;
         padding: 0;
         list-style: none;
     }
 
     .tb_item {
-        width: 100%;
+        width: fit-content;
+        max-width: calc(100% - 48px);
         margin: 0;
         padding: 0;
     }
 
     .tb_link {
-        position: relative;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        width: 100%;
-        min-height: 60px;
-        padding: 0 20px 0 16px;
-        border: 1px solid var(--color-line);
-        border-radius: 3px;
-        background-color: var(--color-secondary);
-        color: var(--color-text);
-        font-family: var(--font-zen-kaku-gothic);
-        font-size: 15px;
-        font-weight: 500;
-        line-height: 1;
-        letter-spacing: 0.05em;
+        display: block;
+        width: fit-content;
+        max-width: 100%;
+        color: inherit;
         text-decoration: none;
-        transition: border-color var(--transition-duration), opacity var(--transition-duration);
-
-        &::after {
-            content: '';
-            position: absolute;
-            bottom: -1px;
-            left: 15px;
-            width: 26px;
-            height: 2px;
-            background-color: var(--color-primary);
-        }
-
-        &.is-disabled {
-            cursor: default;
-        }
     }
 
-    .tb_arrow {
-        --_octagon-chip: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'%3E%3Cpolygon fill='%23fff' stroke='%23d7d4d4' stroke-width='1' stroke-linejoin='round' points='13,0.6 21.78,4.22 25.4,13 21.78,21.78 13,25.4 4.22,21.78 0.6,13 4.22,4.22'/%3E%3C/svg%3E");
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 26px;
-        height: 26px;
-        flex-shrink: 0;
-        background-color: transparent;
-        background-image: var(--_octagon-chip);
-        background-repeat: no-repeat;
-        background-position: center;
-        background-size: 26px 26px;
-        clip-path: none;
-
-        &::before {
-            content: none;
-        }
+    .tb_link.is-disabled {
+        cursor: default;
     }
 
-    .tb_arrow_icon {
-        position: relative;
-        z-index: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--color-primary);
-
-        &::before {
-            content: var(--icon-arrow-right);
-            font-family: var(--font-awesome);
-            font-size: 8px;
-            font-weight: 900;
-            line-height: 1;
-            transform: translateX(1px);
-        }
+    .tb_image {
+        display: block;
+        width: auto;
+        max-width: 100%;
+        height: 80px;
+        box-sizing: border-box;
+        border: 1px solid var(--color-line);
+        object-fit: cover;
     }
 
-    .tb_title {
-        min-width: 0;
-        margin-right: auto;
-        white-space: nowrap;
+    /* Current Figma has two authored banner slots: 253×80 and 204×80. */
+    .tb_item:nth-child(1) .tb_image {
+        width: 253px;
     }
 
-    .tb_external {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 16px;
-        height: 16px;
-        flex-shrink: 0;
-        font-size: 16px;
-        line-height: 1;
-
-        &::before {
-            content: var(--icon-blank);
-            font-family: var(--font-awesome);
-            font-weight: 400;
-        }
+    .tb_item:nth-child(2) .tb_image {
+        width: 204px;
     }
 
     @media screen and (min-width: 768px) {
         min-height: 160px;
-        background-color: var(--color-secondary);
-        background-image: none;
+        padding: 0 0 80px;
+
+        &::before {
+            display: none;
+        }
 
         .tb_list {
             flex-direction: row;
             gap: 48px;
-            width: auto;
+            justify-content: center;
         }
 
         .tb_item {
-            width: 300px;
-        }
-
-        .tb_link {
-            min-height: 80px;
-            font-size: 16px;
-        }
-
-        .tb_external {
-            width: 14px;
-            height: 14px;
-            font-size: 14px;
+            max-width: none;
         }
     }
 
-    /* MARK: hover */
     @media (any-hover: hover) {
+        a.tb_link {
+            transition: opacity var(--transition-duration);
+        }
+
         a.tb_link:hover {
-            border-color: var(--color-text);
+            opacity: var(--opacity-hover);
         }
     }
 }
