@@ -372,3 +372,9 @@
         }
     }
 }
+
+
+/* Figma section ends at the panel edge; beat the generic .global_contents > section bottom padding locally. */
+.global_contents > .top_news-01 {
+    padding-bottom: 0;
+}
