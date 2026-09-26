@@ -86,7 +86,7 @@ for required in \
   'class="ta_actions"' \
   'class="ta_cards"' \
   '日本武道館とは' \
-  'About&nbsp;us' \
+  'class="ta_heading_en_text"' \
   'パンフレット（1.2MB）' \
   'ご紹介動画'; do
   grep -Fq "$required" "$html" || {
