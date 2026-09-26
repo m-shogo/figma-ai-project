@@ -157,6 +157,7 @@ $default_lead_sp = $default_lead_pc;
 </div>
 <main id="global_contents" class="global_contents" itemscope itemprop="mainContentOfPage">
     <?php get_template_part('template-parts/_top-events'); ?>
+    <?php get_template_part('template-parts/_top-sns'); ?>
     <?php get_template_part('template-parts/_top-guide'); ?>
     <?php get_template_part('template-parts/_top-about'); ?>
     <?php get_template_part('template-parts/_top-news'); ?>
