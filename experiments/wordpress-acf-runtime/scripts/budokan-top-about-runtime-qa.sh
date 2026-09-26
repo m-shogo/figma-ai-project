@@ -95,7 +95,7 @@ for required in \
   }
 done
 
-card_count="$(grep -o 'class="ta_card"' "$html" | wc -l | tr -d ' ')"
+card_count="$(grep -o 'class="swiper-slide ta_card"' "$html" | wc -l | tr -d ' ')"
 [[ "$card_count" == "4" ]] || {
   echo "FAIL expected exactly four TOP About cards; got ${card_count}." >&2
   exit 1
