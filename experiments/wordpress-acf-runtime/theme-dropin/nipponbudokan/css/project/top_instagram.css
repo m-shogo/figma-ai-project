@@ -2,7 +2,7 @@
 /* TOP 月刊「武道」編集部 / Instagram */
 
 .global_contents > .top_instagram-01 {
-    padding: 64px 32px;
+    padding: 64px 32px 0;
 }
 
 .top_instagram-01 {
@@ -22,39 +22,58 @@
     .ti_titleGroup {
         display: flex;
         flex-direction: column;
-        gap: 20px;
+        gap: 12px;
         align-items: center;
     }
     .ti_title {
         margin: 0;
         color: var(--color-text);
-        font-family: var(--font-zen-kaku-gothic);
+        font-family: var(--font-zen-old-mincho);
         font-size: 22px;
         font-weight: 500;
         line-height: 1;
         letter-spacing: 0.05em;
     }
     .ti_label {
+        position: relative;
         display: flex;
-        gap: 8px;
+        gap: 0;
         align-items: center;
+        min-height: 28px;
         margin: 0;
         color: var(--color-primary);
-        font-family: var(--font-sansSerif-en);
+        font-family: var(--font-zen-old-mincho);
         font-size: 14px;
+        font-weight: 500;
         line-height: 1;
         letter-spacing: 0.05em;
     }
     .ti_marker {
+        position: absolute;
+        top: 50%;
+        left: 0;
         display: block;
         flex: none;
-        width: 10px;
-        height: 10px;
+        width: 28px;
+        height: 28px;
+        transform: translateY(-50%);
         background-color: var(--color-primary);
         clip-path: var(--clip-octagon);
     }
+    .ti_labelText {
+        position: relative;
+        z-index: 1;
+        display: inline-flex;
+        align-items: center;
+        white-space: nowrap;
+    }
     .ti_labelInitial {
-        color: inherit;
+        display: inline-grid;
+        place-items: center;
+        width: 28px;
+        height: 28px;
+        line-height: 1;
+        color: #fff;
     }
     .ti_lead {
         width: 100%;
