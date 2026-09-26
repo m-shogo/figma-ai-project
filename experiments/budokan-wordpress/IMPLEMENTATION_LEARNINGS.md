@@ -406,3 +406,16 @@ SP Runtime/Visual QAでカードのcolumn gapが `-327px` になった。Figma�
 TOP Events SPの背景色QAが `rgb(242, 242, 242)` を表示しながら失敗した。実装値はFigma想定の `#f2f2f2` と一致しており、原因はQA側の空白除去regexが `/\\\\s+/g` となっていたことだった。
 
 再発防止として、assertionのエラーメッセージに期待値と同等のcomputed valueが出ている場合は、CSSを変更する前にnormalizer・単位変換・文字列比較を確認する。Visual QAを通すために正しい実装値を歪めない。
+
+
+## 2026-09-27 TOP Partner は旧SP装飾を現行Figmaへ持ち越さない
+
+**起きたこと**
+
+TOP Partner の既存SP CSSには薄灰色面と左上mask画像が残っていたが、現行Figma正本 `d1pD6gL2Sqal8Cf6h9WLp6` の SP `1363:9405` は白地＋`#e7e7e7` 下罫線で、mask/background asset は存在しない。PC `1603:7187` は従来どおり赤い下罫線。
+
+**次回ルール**
+
+- 旧Figma由来とコメントされた装飾でも、現行nodeに存在しなければ維持理由にしない。
+- sectionのDOM、12件grid、logo、typography、CTAが一致している場合は再実装せず、surface/background/borderだけを最小差分で直す。
+- PC/SPでsurface contractが異なる場合、SP baseを現行SPに合わせ、PC media queryでPC固有borderだけを上書きする。
