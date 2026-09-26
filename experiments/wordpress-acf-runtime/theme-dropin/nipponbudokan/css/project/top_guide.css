@@ -226,7 +226,7 @@
         }
 
         .tg_body {
-            padding: 0;
+            padding: 0 0 100px;
             background-color: var(--color-gray-background);
 
             .global_inner {
@@ -303,7 +303,7 @@
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
             gap: 0;
-            margin-top: -102px;
+            margin-top: -97px;
         }
 
         .tg_card {
