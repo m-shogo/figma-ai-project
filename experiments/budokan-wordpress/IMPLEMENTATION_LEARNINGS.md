@@ -332,3 +332,28 @@ CANDIDATE evidence: `research/frontend-learning-evidence-local-nav-octagon-nowra
 - 複数案件で再現: Frontend Standard / Figma-to-Web Learningへ昇格
 
 これにより、反省を増やすだけのgovernanceではなく、**再発したものほど上位の知識へ昇格する**運用にする。
+
+
+## 2026-09-26 TOP差分改修は既存ベースを再実装せず、変わったvisual propertyだけ直す
+
+**起きたこと**
+
+TOP Main Visual は既存実装がほぼ成立していたが、新Figmaとの比較で SP の画像cropとgradient、PCのoverlay表現だけが旧値のまま残っていた。全面監査やDOM再設計を続けると、差分改修なのに新規実装相当の時間が掛かる。
+
+**今回の確認結果**
+
+- visual authority: Figma file `d1pD6gL2Sqal8Cf6h9WLp6`
+- SP MV `1455:5811`: image は `object-bottom`、gradient は `36.443deg / 23.906% → 48.72%`
+- PC FV `1603:7662`: hero crop は center、旧全面gradientではなく lead 背後に `#333 / blur(20px) / 612×44` の局所shadow layer
+- title / lead の既存WordPress/ACF ownershipは維持し、画像自体の差替えは不要だった
+
+**次回ルール**
+
+- TOPは新規構築ではなく差分改修として扱う。既存で一致しているDOM・ACF/CPT・Swiper・画像・responsiveは掘り直さない。
+- 画像が同じなら asset replacement をしない。crop差なら `object-position`、gradient差ならgradient、copy差ならcopy ownerだけ直す。
+- 1セクションで最初に visual diff を property 単位（image / crop / gradient / copy / spacing / typography / responsive）に分け、差分が無い項目は即PASSする。
+- Figmaの短命asset URLはvisual確認専用。本番Themeへ残さない。
+
+**再発防止**
+
+同一セクションで「owner確認だけ」を繰り返さない。2run続けて閉じられなければ、3run目は別routeへ切り替え、最低でも実diff・QA evidence・blocker root cause・次回即write可能差分のいずれかを残す。
