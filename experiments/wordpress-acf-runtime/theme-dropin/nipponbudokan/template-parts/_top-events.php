@@ -160,7 +160,7 @@ $has_upcoming = $upcoming_query->have_posts();
                                         </p>
                                     <?php endif; ?>
                                     <?php if (function_exists('nipponbudokan_event_value_present') && nipponbudokan_event_value_present($time)): ?>
-                                        <p class="te_upcoming_time"><?php echo nl2br(esc_html($time)); ?></p>
+                                        <p class="te_upcoming_time"><?php echo esc_html($time); ?></p>
                                     <?php endif; ?>
                                 </div>
 
