@@ -31,7 +31,7 @@ try {
     const leadSp = lead?.querySelector('.tm_copy_sp');
     const notice = root?.querySelector('.top_notice-01');
     const noticeInner = notice?.querySelector('.tn_inner');
-    const noticeText = notice?.querySelector('.tn_text, .tn_item');
+    const noticeText = notice?.querySelector('.tn_text, .tn_item, .tn_placeholder');
     const guide = root?.querySelector('.tm_guide');
     if (!root || !mv || !bg || !inner || !title || !lead || !titlePc || !titleSp || !leadPc || !leadSp || !notice || !noticeInner || !noticeText || !guide) return null;
     const rootRect = root.getBoundingClientRect();
