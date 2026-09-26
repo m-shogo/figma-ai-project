@@ -67,8 +67,8 @@ async function readSection(page) {
     const featuredRect = rect(featured);
     const featuredHeadRect = rect(featuredHead);
     const featuredIconStyle = css(featuredIcon);
-    const cardsStyle = css(q('.te_cards'));
     const imageRect = rect(firstImage);
+    const cardRects = cards.map(card => rect(card));
     const labelRect = rect(firstLabel);
     const upcomingRect = rect(upcoming);
     const upcomingHeadRect = rect(upcomingHead);
@@ -107,9 +107,8 @@ async function readSection(page) {
         iconWidth: rect(featuredIcon).width,
         iconHeight: rect(featuredIcon).height,
         iconBackground: featuredIconStyle.backgroundImage,
-        cardGridColumns: cardsStyle.gridTemplateColumns,
-        cardColumnGap: number(cardsStyle.columnGap),
-        cardRowGap: number(cardsStyle.rowGap),
+        cardColumnGap: cardRects[1].left - cardRects[0].right,
+        cardRowGap: cardRects[2].top - cardRects[0].bottom,
         imageWidth: imageRect.width,
         imageHeight: imageRect.height,
         labelHeight: labelRect.height,
