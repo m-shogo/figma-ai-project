@@ -149,6 +149,8 @@ $default_lead_sp = $default_lead_pc;
                                 <li class="tn_item"><?php echo $textarea; ?></li>
                             <?php endforeach; ?>
                         </ul>
+                    <?php else: ?>
+                        <span class="tn_placeholder" aria-disabled="true">重要なお知らせ</span>
                     <?php endif; ?>
                 </div>
             </div>
