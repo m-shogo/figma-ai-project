@@ -258,7 +258,8 @@
             list-style: none;
         }
         .tn_text,
-        .tn_item {
+        .tn_item,
+        .tn_placeholder {
             margin: 0;
             font-family: var(--font-zen-kaku-gothic);
             font-size: 13px;
