@@ -171,15 +171,15 @@ try {
 
   assert(pc, 'PC TOP Guide elements were not found.');
   assert(pc.sectionOverflowX === 'visible', `PC guide overflow-x must return to visible, got ${pc.sectionOverflowX}.`);
-  assert(close(pc.sectionHeight, 689), `PC section height expected 689px, got ${pc.sectionHeight}.`);
+  assert(close(pc.sectionHeight, 794), `PC section height expected 794px, got ${pc.sectionHeight}.`);
   assert(close(pc.introHeight, 320), `PC intro expected 320px, got ${pc.introHeight}.`);
-  assert(close(pc.cardsTop, 218), `PC card rail y expected 218px, got ${pc.cardsTop}.`);
+  assert(close(pc.cardsTop, 223), `PC card rail y expected 223px, got ${pc.cardsTop}.`);
   const expectedCenteredLeft = (pc.sectionWidth - 960) / 2;
   assert(close(pc.cardsLeft, expectedCenteredLeft), `PC 960px card rail should be centered; section=${pc.sectionWidth}, left=${pc.cardsLeft}, expected=${expectedCenteredLeft}.`);
   assert(pc.widths.every((width) => close(width, 320)), `PC cards expected 320px each, got ${pc.widths.join(',')}.`);
   assert(close(pc.xStarts[1] - pc.xStarts[0], 320) && close(pc.xStarts[2] - pc.xStarts[1], 320), `PC cards are not contiguous 320px columns: ${pc.xStarts.join(',')}.`);
   assert(close(pc.imageHeight, 194), `PC image height expected 194px, got ${pc.imageHeight}.`);
-  assert(close(pc.lastCardBottomGap, 0), `PC card rail should end with the section; gap=${pc.lastCardBottomGap}.`);
+  assert(close(pc.lastCardBottomGap, 100), `PC card rail bottom gap expected 100px, got ${pc.lastCardBottomGap}.`);
   assert(pc.bodyAlign === 'flex-start', `PC card body expected flex-start, got ${pc.bodyAlign}.`);
   assert(pc.titleDirection === 'row', `PC card title expected row, got ${pc.titleDirection}.`);
   assert(close(pc.titleSize, 20, 0.5), `PC card title expected 20px, got ${pc.titleSize}.`);
@@ -197,7 +197,7 @@ try {
   await desktopContext.close();
 
   console.log('PASS Budokan TOP Guide SP geometry, typography, responsive label casing, and local overflow containment QA.');
-  console.log('PASS Budokan TOP Guide PC geometry, type family, and responsive label casing QA.');
+  console.log('PASS Budokan TOP Guide PC current-Figma 794px section, 223px rail, 100px bottom rhythm, type family, and responsive label casing QA.');
 } finally {
   await browser.close();
 }
