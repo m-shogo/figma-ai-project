@@ -72,6 +72,15 @@
         object-fit: cover;
     }
 
+    /* Current Figma has two authored banner slots: 253×80 and 204×80. */
+    .tb_item:nth-child(1) .tb_image {
+        width: 253px;
+    }
+
+    .tb_item:nth-child(2) .tb_image {
+        width: 204px;
+    }
+
     @media screen and (min-width: 768px) {
         min-height: 160px;
         padding: 0 0 80px;
