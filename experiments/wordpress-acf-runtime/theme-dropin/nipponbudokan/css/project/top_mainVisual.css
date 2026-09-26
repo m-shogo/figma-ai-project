@@ -1,7 +1,7 @@
 @charset "utf-8";
 /* // ==========================================================================
 // メインビジュアル（TOP FV）
-// Current Figma fileKey jqYoPtusYfTeDqRegMCsx3
+// Current Figma fileKey d1pD6gL2Sqal8Cf6h9WLp6
 // PC TOP: 1603:7062; FV reference: 1603:7662
 // SP TOP: 446:10020; FV/MV reference: 1455:5811
 // ========================================================================== */
@@ -44,7 +44,7 @@
                         display: block;
                         position: absolute;
                         inset: 0;
-                        background-image: linear-gradient(53deg, rgba(16, 24, 39, 0.7) 29%, rgba(16, 24, 39, 0) 56%);
+                        background-image: linear-gradient(36.443deg, rgba(16, 24, 39, 0.7) 23.906%, rgba(16, 24, 39, 0) 48.72%);
                         pointer-events: none;
                     }
                     img {
@@ -52,8 +52,8 @@
                         width: 100%;
                         height: 100%;
                         object-fit: cover;
-                        /* Current SP Figma 1455:5811 crops the shared hero image right/down of center. */
-                        object-position: 64.4% 59.8%;
+                        /* Figma SP 1455:5811 uses an object-bottom crop for the shared hero image. */
+                        object-position: center bottom;
                     }
                 }
             }
@@ -311,7 +311,7 @@
                     .tm_background {
                         height: 600px;
                         &::after {
-                            background-image: linear-gradient(25.47deg, rgba(16, 24, 39, 0.6) 17.905%, rgba(16, 24, 39, 0) 46.76%);
+                            background-image: none;
                         }
                         img {
                             /* PC 1603:7662 is effectively centered; keep the SP crop from leaking upward. */
@@ -342,8 +342,22 @@
                 text-shadow: none;
             }
             .tm_lead {
+                position: relative;
+                z-index: 0;
                 font-size: 18px;
                 line-height: 1.4;
+                &::before {
+                    content: '';
+                    position: absolute;
+                    top: -8px;
+                    left: -10px;
+                    z-index: -1;
+                    width: 612px;
+                    height: 44px;
+                    background-color: #333;
+                    filter: blur(20px);
+                    pointer-events: none;
+                }
             }
         }
         .tm_guide {
