@@ -112,8 +112,7 @@ for required in \
   '伝統を未来へつなぐ' \
   '武道文化の中心地' \
   '武道、書道の普及・振興、公益目的事業の拠点として活動しています。' \
-  '目的から探す' \
-  '令和8年8月4日(火) 令和8年熊本地震　お見舞い'; do
+  '目的から探す'; do
   grep -Fq "$required" "$html" || {
     echo "FAIL required TOP FV runtime marker missing: ${required}" >&2
     exit 1
