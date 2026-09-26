@@ -376,3 +376,26 @@ TOP Main Visual は既存実装がほぼ成立していたが、新Figmaとの�
 **再発防止**
 
 既存コードに大きな機能ownerが残っていても、「以前存在したから維持」では判断しない。新FigmaとHuman overrideで廃止が確認できたTOP専用UIは、共有データownerを守ったまま表示層だけ差し替える。
+
+
+## 2026-09-26 TOP Eventsのgeometry異常はCSS値を動かす前に構文境界を確認する
+
+**起きたこと**
+
+SP Runtime/Visual QAでカードのcolumn gapが `-327px` になった。Figma正本は2列・17px gapであり、通常のspacing誤差では説明できない値だった。
+
+**根本原因**
+
+`top_events.css` の `.te_upcoming_icon` と `.te_cards` の境界が編集時に連結・重複し、`.te_cards` のgrid宣言が有効なselector blockから外れていた。そのためカードが2列gridにならず、座標差を測るQAが負値を返した。
+
+**今回の修正**
+
+- DOM / event CPT / ACF / asset / shared CSSは変更しない。
+- 破損したselector境界だけを復元し、既定のSP `repeat(2, minmax(0, 1fr)) / 17px / 32px` を戻した。
+- geometry assertion自体は弱めず、実座標による検知を維持した。
+
+**次回ルール**
+
+- gap / width / positionの実測値が負値、0、親幅相当など通常の微差を超える場合、magic numberを調整する前にCSSのselector境界・brace・重複挿入・computed displayを確認する。
+- 大きな置換diffの後は対象selectorの前後を再読し、隣接blockが連結されていないことを確認する。
+- Visual QAが異常値を出した場合、QAを緩めるより先に「layout modeが成立しているか」を確認する。
