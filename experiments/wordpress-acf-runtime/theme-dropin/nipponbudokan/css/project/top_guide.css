@@ -34,7 +34,9 @@
         background-color: var(--color-gray-background);
 
         .global_inner {
+            width: 320px;
             max-width: 320px;
+            margin-inline: auto;
             padding-inline: 0;
         }
     }
@@ -228,7 +230,9 @@
             background-color: var(--color-gray-background);
 
             .global_inner {
+                width: 960px;
                 max-width: 960px;
+                margin-inline: auto;
                 padding-inline: 0;
             }
         }
