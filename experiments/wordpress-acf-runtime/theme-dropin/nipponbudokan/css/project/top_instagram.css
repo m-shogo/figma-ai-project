@@ -187,3 +187,185 @@
         }
     }
 }
+
+/* // ==========================================================================
+// TOP SNS strip
+// Current Figma: SP 2688:14450 / PC 1603:7477
+// URLs remain fail-closed like the existing global footer until an owner exists.
+// ========================================================================== */
+.global_contents > .top_sns-01 {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    min-height: 328px;
+    padding: 64px 0;
+    background-color: var(--color-secondary);
+
+    &::before {
+        content: '';
+        position: absolute;
+        z-index: 0;
+        top: 145px;
+        right: 0;
+        width: 260px;
+        height: 183px;
+        background: url('../../images/top/sns-octagon-sp.svg') center / 100% 100% no-repeat;
+        pointer-events: none;
+    }
+
+    .ts_inner {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        align-items: flex-start;
+        width: 312px;
+        margin-inline: auto;
+    }
+
+    .ts_group {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        width: 100%;
+        min-height: 40px;
+    }
+
+    .ts_group_editorial {
+        min-height: 80px;
+        padding-block: 20px;
+        border-top: 1px solid var(--color-line);
+        border-bottom: 1px solid var(--color-line);
+    }
+
+    .ts_label,
+    .ts_official_label {
+        margin: 0;
+        color: var(--color-text);
+        font-family: var(--font-zen-kaku-gothic);
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 1;
+        letter-spacing: 0.05em;
+    }
+
+    .ts_label {
+        white-space: nowrap;
+    }
+
+    .ts_label_youtube {
+        width: 84px;
+    }
+
+    .ts_official_label {
+        display: flex;
+        flex-direction: column;
+        width: 196px;
+        line-height: 1.4;
+        text-align: right;
+        white-space: nowrap;
+    }
+
+    .ts_official_label_small {
+        font-size: 10px;
+    }
+
+    .ts_icons {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .ts_icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        flex: 0 0 40px;
+        border-radius: 50%;
+        background-color: var(--color-text);
+        color: var(--color-secondary);
+
+        &::before {
+            font-family: var(--font-awesomeBrands);
+            font-size: 18px;
+            font-weight: 400;
+            line-height: 1;
+        }
+    }
+
+    .ts_icon_youtube::before {
+        content: '\\f167';
+    }
+
+    .ts_icon_instagram::before {
+        content: '\\f16d';
+    }
+
+    .ts_icon_x::before {
+        content: '\\e61b';
+    }
+
+    @media screen and (min-width: 768px) {
+        min-height: 240px;
+        padding: 80px 0;
+
+        &::before {
+            display: none;
+        }
+
+        .ts_inner {
+            flex-direction: row;
+            gap: 48px;
+            align-items: center;
+            width: 954px;
+            height: 80px;
+        }
+
+        .ts_group {
+            width: auto;
+            height: 80px;
+            min-height: 80px;
+        }
+
+        .ts_group_youtube {
+            width: 156px;
+        }
+
+        .ts_group_editorial {
+            width: 363px;
+            padding: 0 48px;
+            border-top: 0;
+            border-bottom: 0;
+            border-left: 1px solid var(--color-line);
+            border-right: 1px solid var(--color-line);
+        }
+
+        .ts_group_official {
+            width: 339px;
+        }
+
+        .ts_label,
+        .ts_official_label {
+            font-size: 16px;
+        }
+
+        .ts_label_youtube {
+            width: auto;
+        }
+
+        .ts_official_label {
+            width: 223px;
+        }
+
+        .ts_official_label_small {
+            font-size: 13px;
+        }
+    }
+}
+
