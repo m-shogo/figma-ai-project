@@ -9,14 +9,7 @@
     overflow-x: clip;
 
     .tg_deco {
-        position: absolute;
-        left: calc(100% - 75px);
-        bottom: 0;
-        z-index: 0;
-        width: 300px;
-        height: 297px;
-        background: url("../../images/top/guide-octagon-sp.svg") no-repeat center / contain;
-        pointer-events: none;
+        display: none;
     }
 
     .tg_intro {
@@ -25,26 +18,23 @@
         box-sizing: border-box;
         min-height: 514px;
         padding-block: 64px 0;
-        background-color: #2b2d32;
-        background-image: url("../../images/top/guide-texture.webp");
-        background-size: 1000px 1000px;
-        background-blend-mode: multiply;
-        color: #fff;
+        background-color: #f9f2e5;
+        color: var(--color-text);
 
         .global_inner {
             max-width: 375px;
-            padding-inline: 32px;
+            padding-inline: 24px;
         }
     }
 
     .tg_body {
         position: relative;
         z-index: 1;
-        padding: 0 32px 64px;
+        padding: 0 0 64px;
         background-color: var(--color-gray-background);
 
         .global_inner {
-            max-width: 311px;
+            max-width: 320px;
             padding-inline: 0;
         }
     }
@@ -53,54 +43,67 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 24px;
+        gap: 32px;
     }
 
     .tg_heading {
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 20px;
+        gap: 14px;
         margin: 0;
         text-align: center;
     }
 
     .tg_heading_ja {
-        font-family: var(--font-zen-kaku-gothic);
-        font-size: 30px;
+        font-family: var(--font-zen-old-mincho);
+        font-size: 28px;
         font-weight: 500;
         line-height: 1;
         letter-spacing: 0.05em;
-        color: #fff;
+        color: var(--color-text);
     }
 
     .tg_heading_en {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        gap: 8px;
-        font-family: var(--font-sansSerif-en);
-        font-size: 14px;
-        font-weight: 400;
+        position: relative;
+        gap: 0;
+        min-height: 36px;
+        font-family: var(--font-zen-old-mincho);
+        font-size: 22px;
+        font-weight: 500;
         line-height: 1;
         letter-spacing: 0.05em;
         color: var(--color-accent);
         white-space: nowrap;
-        text-transform: capitalize;
+        text-transform: none;
 
         &::before {
             content: '';
-            width: 10px;
-            height: 10px;
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 36px;
+            height: 36px;
             flex-shrink: 0;
+            transform: translateY(-50%);
             background-color: var(--color-accent);
             clip-path: var(--clip-octagon);
         }
     }
 
     .tg_heading_en_initial {
+        position: relative;
+        z-index: 1;
+        display: inline-grid;
+        place-items: center;
+        width: 36px;
+        height: 36px;
         font: inherit;
-        color: inherit;
+        line-height: 1;
+        color: var(--color-secondary);
     }
 
     .tg_lead {
@@ -111,7 +114,7 @@
         font-weight: 400;
         line-height: 1.8;
         letter-spacing: 0.05em;
-        color: #fff;
+        color: var(--color-text);
         text-align: left;
     }
 
@@ -119,7 +122,7 @@
         display: flex;
         flex-direction: column;
         gap: 0;
-        margin-top: -113px;
+        margin-top: -97px;
     }
 
     .tg_card {
@@ -133,7 +136,7 @@
         img {
             display: block;
             width: 100%;
-            height: 189px;
+            height: 194px;
             object-fit: cover;
             object-position: center bottom;
         }
@@ -157,7 +160,7 @@
         align-items: center;
         gap: 10px;
         margin: 0;
-        font-family: var(--font-zen-kaku-gothic);
+        font-family: var(--font-zen-old-mincho);
         font-size: 18px;
         font-weight: 500;
         line-height: 1.2;
