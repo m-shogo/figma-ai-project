@@ -328,8 +328,7 @@ try {
   }
   await mobileContext.close();
 
-  // The Theme reserves a 15px desktop scrollbar gutter. Request 1395px so the CSS layout viewport matches the 1380px Figma canvas.
-  const desktopContext = await browser.newContext({ viewport: { width: 1395, height: 1500 } });
+  const desktopContext = await browser.newContext({ viewport: { width: 1380, height: 1500 } });
   const desktopPage = await desktopContext.newPage();
   await desktopPage.goto(url, { waitUntil: 'networkidle' });
   const pc = await desktopPage.evaluate(() => {
@@ -346,6 +345,8 @@ try {
     const cards = section ? [...section.querySelectorAll('.ta_card')] : [];
     const firstImage = cards[0]?.querySelector('.ta_card_image img');
     const firstLabel = cards[0]?.querySelector('.ta_card_label');
+    const stageBg = section?.querySelector('.ta_stage_bg');
+    const blurOwner = stageBg ? getComputedStyle(stageBg, '::before') : null;
     if (!section || !heading || !headingEn || !panel || !lead || !actions || buttons.length !== 1 || !stageInner || !top || !cardsWrapInner || cards.length !== 4 || !firstImage || !firstLabel) return null;
     const sectionRect = section.getBoundingClientRect();
     const topRect = top.getBoundingClientRect();
