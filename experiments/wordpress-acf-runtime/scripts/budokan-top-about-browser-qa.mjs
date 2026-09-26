@@ -103,17 +103,20 @@ try {
     const headingEn = section?.querySelector('.ta_heading_en');
     const panel = section?.querySelector('.ta_panel');
     const lead = section?.querySelector('.ta_lead');
-    const buttons = section ? [...section.querySelectorAll('.ta_btn')] : [];
+    const buttons = section ? [...section.querySelectorAll('.ta_btn')].filter(button => getComputedStyle(button).display !== 'none') : [];
     const cards = section ? [...section.querySelectorAll('.ta_card')] : [];
+    const cardsTrack = section?.querySelector('.ta_cards_swiper .swiper-wrapper');
     const firstImage = cards[0]?.querySelector('.ta_card_image img');
     const firstLabel = cards[0]?.querySelector('.ta_card_label');
-    if (!section || !heading || !headingEn || !panel || !lead || buttons.length !== 2 || cards.length !== 4 || !firstImage || !firstLabel) return null;
+    const firstOverlay = cards[0]?.querySelector('.ta_card_overlay');
+    if (!section || !heading || !headingEn || !panel || !lead || buttons.length !== 1 || cards.length !== 4 || !cardsTrack || !firstImage || !firstLabel || !firstOverlay) return null;
     const sectionRect = section.getBoundingClientRect();
     const panelRect = panel.getBoundingClientRect();
     const cardRects = cards.map(card => card.getBoundingClientRect());
     const imageRect = firstImage.getBoundingClientRect();
     return {
       sectionWidth: sectionRect.width,
+      sectionHeight: sectionRect.height,
       headingSize: parseFloat(getComputedStyle(heading).fontSize),
       headingFamily: getComputedStyle(heading).fontFamily,
       headingEnSize: parseFloat(getComputedStyle(headingEn).fontSize),
@@ -123,34 +126,47 @@ try {
       leadSize: parseFloat(getComputedStyle(lead).fontSize),
       leadFamily: getComputedStyle(lead).fontFamily,
       buttonHeights: buttons.map(button => button.getBoundingClientRect().height),
+      buttonWidths: buttons.map(button => button.getBoundingClientRect().width),
       buttonSize: parseFloat(getComputedStyle(buttons[0]).fontSize),
       buttonFamily: getComputedStyle(buttons[0]).fontFamily,
       cardWidths: cardRects.map(rect => rect.width),
+      cardGap01: cardRects[1].top - cardRects[0].bottom,
+      cardGap12: cardRects[2].top - cardRects[1].bottom,
+      cardGap23: cardRects[3].top - cardRects[2].bottom,
       firstImageWidth: imageRect.width,
       firstImageHeight: imageRect.height,
       labelSize: parseFloat(getComputedStyle(firstLabel).fontSize),
       labelFamily: getComputedStyle(firstLabel).fontFamily,
-      cardsDisplay: getComputedStyle(section.querySelector('.ta_cards')).display,
+      labelWeight: getComputedStyle(firstLabel).fontWeight,
+      overlaySize: parseFloat(getComputedStyle(firstOverlay).fontSize),
+      overlayFamily: getComputedStyle(firstOverlay).fontFamily,
+      cardsDirection: getComputedStyle(cardsTrack).flexDirection,
     };
   });
   assert(sp, 'SP TOP About elements missing');
   assert(close(sp.sectionWidth, 375), `SP width ${sp.sectionWidth}`);
-  assert(close(sp.headingSize, 30, 0.5), `SP heading ${sp.headingSize}`);
-  assert(isKakuFamily(sp.headingFamily), `SP heading JA must resolve to Zen Kaku Gothic New, got ${sp.headingFamily}.`);
-  assert(close(sp.headingEnSize, 14, 0.5), `SP heading EN ${sp.headingEnSize}`);
-  assert(isRobotoFamily(sp.headingEnFamily), `SP heading EN must resolve to Roboto, got ${sp.headingEnFamily}.`);
+  assert(close(sp.sectionHeight, 1800, 4), `SP section height ${sp.sectionHeight}`);
+  assert(close(sp.headingSize, 28, 0.5), `SP heading ${sp.headingSize}`);
+  assert(isMinchoFamily(sp.headingFamily), `SP heading JA must resolve to Zen Old Mincho, got ${sp.headingFamily}.`);
+  assert(close(sp.headingEnSize, 22, 0.5), `SP heading EN ${sp.headingEnSize}`);
+  assert(isMinchoFamily(sp.headingEnFamily), `SP heading EN must resolve to Zen Old Mincho, got ${sp.headingEnFamily}.`);
   assert(close(sp.panelWidth, 327), `SP panel ${sp.panelWidth}`);
   assert(sp.leadAlign === 'left' || sp.leadAlign === 'start', `SP lead align ${sp.leadAlign}`);
   assert(close(sp.leadSize, 16, 0.5), `SP lead ${sp.leadSize}`);
   assert(isKakuFamily(sp.leadFamily), `SP lead must resolve to Zen Kaku Gothic New, got ${sp.leadFamily}.`);
   assert(sp.buttonHeights.every(height => close(height, 50)), `SP CTA heights ${sp.buttonHeights.join(',')}`);
+  assert(sp.buttonWidths.every(width => close(width, 300)), `SP CTA widths ${sp.buttonWidths.join(',')}`);
   assert(close(sp.buttonSize, 16, 0.5), `SP CTA size ${sp.buttonSize}`);
   assert(isKakuFamily(sp.buttonFamily), `SP CTA must resolve to Zen Kaku Gothic New, got ${sp.buttonFamily}.`);
   assert(close(sp.labelSize, 16, 0.5), `SP card label ${sp.labelSize}`);
-  assert(isKakuFamily(sp.labelFamily), `SP card label must resolve to Zen Kaku Gothic New, got ${sp.labelFamily}.`);
-  assert(sp.cardsDisplay === 'flex', `SP cards display ${sp.cardsDisplay}`);
-  assert(sp.cardWidths.every(width => close(width, 295)), `SP card widths ${sp.cardWidths.join(',')}`);
-  assert(close(sp.firstImageWidth, 295) && close(sp.firstImageHeight, 197), `SP image ${sp.firstImageWidth}x${sp.firstImageHeight}`);
+  assert(isMinchoFamily(sp.labelFamily), `SP card label must resolve to Zen Old Mincho, got ${sp.labelFamily}.`);
+  assert(sp.labelWeight === '600' || sp.labelWeight === 'bold', `SP card label weight ${sp.labelWeight}`);
+  assert(close(sp.overlaySize, 16, 0.5), `SP card overlay size ${sp.overlaySize}`);
+  assert(isKakuFamily(sp.overlayFamily), `SP card overlay must resolve to Zen Kaku Gothic New, got ${sp.overlayFamily}.`);
+  assert(sp.cardsDirection === 'column', `SP cards direction ${sp.cardsDirection}`);
+  assert(sp.cardWidths.every(width => close(width, 300)), `SP card widths ${sp.cardWidths.join(',')}`);
+  assert(close(sp.cardGap01, 24) && close(sp.cardGap12, 24) && close(sp.cardGap23, 24), `SP card gaps ${sp.cardGap01},${sp.cardGap12},${sp.cardGap23}`);
+  assert(close(sp.firstImageWidth, 300) && close(sp.firstImageHeight, 183), `SP image ${sp.firstImageWidth}x${sp.firstImageHeight}`);
   const spNews = await measureTopNews(mobilePage);
   assert(spNews, 'SP TOP News elements missing');
   assert(close(spNews.headingSize, 30, 0.5), `SP news heading ${spNews.headingSize}`);
@@ -197,14 +213,14 @@ try {
     const panel = section?.querySelector('.ta_panel');
     const lead = section?.querySelector('.ta_lead');
     const actions = section?.querySelector('.ta_actions');
-    const buttons = section ? [...section.querySelectorAll('.ta_btn')] : [];
+    const buttons = section ? [...section.querySelectorAll('.ta_btn')].filter(button => getComputedStyle(button).display !== 'none') : [];
     const stageInner = section?.querySelector('.ta_stage .global_inner');
     const top = section?.querySelector('.ta_top');
     const cardsWrapInner = section?.querySelector('.ta_cards_wrap .global_inner');
     const cards = section ? [...section.querySelectorAll('.ta_card')] : [];
     const firstImage = cards[0]?.querySelector('.ta_card_image img');
     const firstLabel = cards[0]?.querySelector('.ta_card_label');
-    if (!section || !heading || !headingEn || !panel || !lead || !actions || buttons.length !== 2 || !stageInner || !top || !cardsWrapInner || cards.length !== 4 || !firstImage || !firstLabel) return null;
+    if (!section || !heading || !headingEn || !panel || !lead || !actions || buttons.length !== 1 || !stageInner || !top || !cardsWrapInner || cards.length !== 4 || !firstImage || !firstLabel) return null;
     const sectionRect = section.getBoundingClientRect();
     const topRect = top.getBoundingClientRect();
     const headingRect = heading.getBoundingClientRect();
@@ -268,7 +284,7 @@ try {
   assert(pc.labelWeight === '600' || pc.labelWeight === 'bold', `PC card label weight ${pc.labelWeight}`);
   assert(pc.panelDisplay === 'contents', `PC panel display ${pc.panelDisplay}`);
   assert(close(pc.actionsWidth, 240), `PC actions width ${pc.actionsWidth}`);
-  assert(close(pc.actionsTop, 521), `PC actions top ${pc.actionsTop}`);
+  assert(close(pc.actionsTop, 465), `PC actions top ${pc.actionsTop}`);
   assert(pc.buttonHeights.every(height => close(height, 50)), `PC CTA heights ${pc.buttonHeights.join(',')}`);
   assert(close(pc.innerPaddingLeft, 380), `PC card rail inset ${pc.innerPaddingLeft}`);
   assert(pc.cardsDisplay === 'grid', `PC cards display ${pc.cardsDisplay}`);
@@ -311,7 +327,7 @@ try {
   assert(close(pcBanner.size, 16, 0.5), `PC banner size ${pcBanner.size}`);
   assert(isKakuFamily(pcBanner.family), `PC banner must resolve to Zen Kaku Gothic New, got ${pcBanner.family}.`);
   await desktopContext.close();
-  console.log('PASS Budokan TOP About current SP 327px panel + 295x197 card rail and type family QA.');
+  console.log('PASS Budokan TOP About current SP 327px content + 300x225 stacked cards and type family QA.');
   console.log('PASS Budokan TOP About PC current-Figma section, rail, CTA, and type geometry QA.');
   console.log('PASS Budokan TOP News SP/PC type family QA hosted on the About front-page runtime.');
   console.log('PASS Budokan TOP Partner SP/PC type family QA hosted on the About front-page runtime.');
