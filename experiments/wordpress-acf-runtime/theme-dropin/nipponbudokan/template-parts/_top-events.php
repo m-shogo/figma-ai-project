@@ -11,8 +11,8 @@ $event_query = new WP_Query(array(
 ));
 $has_events = $event_query->have_posts();
 
-$selected_event_cat = isset($_GET['event_cat'])
-    ? sanitize_title(wp_unslash($_GET['event_cat']))
+$selected_event_cat = isset($_GET['top_event_cat'])
+    ? sanitize_title(wp_unslash($_GET['top_event_cat']))
     : '';
 
 $event_terms = get_terms(array(
@@ -123,9 +123,9 @@ $has_upcoming = $upcoming_query->have_posts();
                         <h3 class="te_section_title">近日開催の行事予定</h3>
                     </div>
 
-                    <form class="te_filter" method="get" action="<?php echo esc_url(get_permalink(get_queried_object_id())); ?>">
+                    <form class="te_filter" method="get" action="<?php echo esc_url(home_url('/')); ?>">
                         <label class="screen-reader-text" for="te_event_cat">イベントカテゴリー</label>
-                        <select id="te_event_cat" name="event_cat" onchange="this.form.submit()">
+                        <select id="te_event_cat" name="top_event_cat" onchange="this.form.submit()">
                             <option value="">カテゴリーを選択</option>
                             <?php foreach ($event_terms as $term): ?>
                                 <option value="<?php echo esc_attr($term->slug); ?>"<?php selected($selected_event_cat, $term->slug); ?>><?php echo esc_html($term->name); ?></option>
@@ -145,7 +145,9 @@ $has_upcoming = $upcoming_query->have_posts();
                             $time = function_exists('get_field') ? get_field('event_time') : '';
                             $host = function_exists('get_field') ? get_field('event_host') : '';
                             $link_attrs = get_post_link_attributes();
-                            $href = !empty($link_attrs['url']) ? $link_attrs['url'] : get_permalink();
+                            $href = !empty($link_attrs['url']) ? $link_attrs['url'] : '';
+                            $link_type = function_exists('get_field') ? get_field('post_type') : '';
+                            $external_url = ($link_type === 'url' && $href !== '') ? $href : '';
                             ?>
                             <article class="te_upcoming_item">
                                 <div class="te_upcoming_when">
@@ -166,14 +168,18 @@ $has_upcoming = $upcoming_query->have_posts();
 
                                 <div class="te_upcoming_body">
                                     <h4 class="te_upcoming_title">
-                                        <a href="<?php echo esc_url($href); ?>"<?php echo !empty($link_attrs['targetAttr']) ? ' ' . $link_attrs['targetAttr'] : ''; ?>><?php the_title(); ?></a>
+                                        <?php if ($href !== ''): ?>
+                                            <a href="<?php echo esc_url($href); ?>"<?php echo !empty($link_attrs['targetAttr']) ? ' ' . $link_attrs['targetAttr'] : ''; ?>><?php the_title(); ?></a>
+                                        <?php else: ?>
+                                            <?php the_title(); ?>
+                                        <?php endif; ?>
                                     </h4>
                                     <?php if (function_exists('nipponbudokan_event_value_present') && nipponbudokan_event_value_present($host)): ?>
                                         <p class="te_upcoming_host"><?php echo esc_html($host); ?></p>
                                     <?php endif; ?>
-                                    <?php if ($href): ?>
+                                    <?php if ($external_url !== ''): ?>
                                         <p class="te_upcoming_url">
-                                            <a href="<?php echo esc_url($href); ?>"<?php echo !empty($link_attrs['targetAttr']) ? ' ' . $link_attrs['targetAttr'] : ''; ?>><?php echo esc_html($href); ?></a>
+                                            <a href="<?php echo esc_url($external_url); ?>"<?php echo !empty($link_attrs['targetAttr']) ? ' ' . $link_attrs['targetAttr'] : ''; ?>><?php echo esc_html($external_url); ?></a>
                                         </p>
                                     <?php endif; ?>
                                 </div>
