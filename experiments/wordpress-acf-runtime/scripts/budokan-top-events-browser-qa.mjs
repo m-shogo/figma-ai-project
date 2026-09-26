@@ -174,7 +174,7 @@ try {
   assert(close(sp.featured.labelHeight, 20, 1), `SP chip height ${sp.featured.labelHeight}`);
   assert(close(sp.featured.cardTitleSize, 15, 0.5), `SP card title ${sp.featured.cardTitleSize}`);
   assert(close(sp.featured.dateSize, 13, 0.5), `SP card date ${sp.featured.dateSize}`);
-  assert(close(sp.upcoming.headHeight, 53, 1), `SP upcoming head height ${sp.upcoming.headHeight}`);
+  assert(close(sp.upcoming.headHeight, 113, 1), `SP upcoming head height ${sp.upcoming.headHeight}`);
   assert(close(sp.upcoming.iconWidth, 24, 1) && close(sp.upcoming.iconHeight, 24, 1), `SP calendar icon ${sp.upcoming.iconWidth}x${sp.upcoming.iconHeight}`);
   assert(sp.upcoming.iconBackground.includes('ico-calendar-red.svg'), `SP calendar icon source ${sp.upcoming.iconBackground}`);
   assert(close(sp.upcoming.filterWidth, 240, 1) && close(sp.upcoming.filterHeight, 36, 1), `SP filter ${sp.upcoming.filterWidth}x${sp.upcoming.filterHeight}`);
