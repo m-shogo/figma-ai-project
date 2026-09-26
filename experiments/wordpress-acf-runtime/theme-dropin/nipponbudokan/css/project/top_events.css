@@ -113,12 +113,12 @@
     .te_upcoming_icon {
         width: 24px;
         height: 24px;
-        margin-t    .te_upcoming_icon {
-        width: 24px;
-        height: 24px;
         margin-top: 5px;
         background: url('../../images/top/ico-calendar-red.svg') no-repeat center / contain;
-    }inmax(0, 1fr));
+    }
+    .te_cards {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         column-gap: 17px;
         row-gap: 32px;
     }
