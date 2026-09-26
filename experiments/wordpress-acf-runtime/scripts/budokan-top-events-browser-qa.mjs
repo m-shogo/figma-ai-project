@@ -7,7 +7,7 @@ const assert = (condition, message) => {
   if (!condition) throw new Error(message);
 };
 const close = (actual, expected, tolerance = 2) => Math.abs(actual - expected) <= tolerance;
-const rgb = (value) => String(value || '').replace(/\\s+/g, '');
+const rgb = (value) => String(value || '').replace(/\s+/g, '');
 
 async function open(page, target) {
   const errors = [];
