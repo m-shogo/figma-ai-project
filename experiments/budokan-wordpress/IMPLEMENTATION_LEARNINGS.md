@@ -419,3 +419,37 @@ TOP Partner の既存SP CSSには薄灰色面と左上mask画像が残ってい�
 - 旧Figma由来とコメントされた装飾でも、現行nodeに存在しなければ維持理由にしない。
 - sectionのDOM、12件grid、logo、typography、CTAが一致している場合は再実装せず、surface/background/borderだけを最小差分で直す。
 - PC/SPでsurface contractが異なる場合、SP baseを現行SPに合わせ、PC media queryでPC固有borderだけを上書きする。
+
+
+## 2026-09-27 TOP差分QAは「期待値を実測へ寄せる」前にFigma座標を再確認する
+
+**起きたこと**
+
+TOP AboutのPC browser QAで、Figma由来のカード先頭Y=235に対してruntimeがY=305となり失敗した。直前にsection高やblurを更新していたため、QA期待値側をruntimeへ合わせる余地があった。
+
+**原因**
+
+カード群は既存DOM上で本文gridの外にあり、`.ta_cards_wrap` の負marginでFigma位置へ重ねる構造だった。section高の更新後も旧 `margin-top: -280px` が残り、70px下へずれた。
+
+**次回ルール**
+
+- geometry assertionが失敗したら、runtime値を新しい期待値にする前にFigmaの該当子nodeを再取得する。
+- 既存DOMを維持する場合は、section height / flow height / negative margin の連動を確認する。
+- 位置差だけならDOMやownershipを再設計せず、差分を所有する最小CSSだけ直す。
+- SP/PCの片方を直した後、もう片方と隣接sectionのruntime/visual回帰を必ず確認する。
+
+## 2026-09-27 Runtime fixtureは本番ACFコンテンツ文言を所有しない
+
+**起きたこと**
+
+TOP FVとBody Interaction workflowが、Theme本体ではなくruntime fixture内の固定された熊本地震お見舞い文言assertで入口failureになり、browser QAまで到達しなかった。
+
+**原因**
+
+ACFが所有する可変notice本文を、ACF Pro repeaterを持たないdisposable fixtureの必須markerとして固定していた。
+
+**次回ルール**
+
+- fixtureはDOM owner・fallback契約・必要assetを検証し、production ACFが所有する可変本文を固定値で要求しない。
+- 共有fixture failureで複数workflowが落ちた場合、各componentを別々に修正せず共通入口を先に分類する。
+- content更新をVisual regressionとして誤認しない。
