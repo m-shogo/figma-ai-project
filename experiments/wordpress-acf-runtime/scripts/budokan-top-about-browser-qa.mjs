@@ -200,11 +200,31 @@ try {
       cardGap23: cardRects[3].top - cardRects[2].bottom,
       firstImageWidth: imageRect.width,
       firstImageHeight: imageRect.height,
+      blur: (() => {
+        const bg = section.querySelector('.ta_stage_bg');
+        const style = bg ? getComputedStyle(bg, '::before') : null;
+        return style ? {
+          top: parseFloat(style.top),
+          width: parseFloat(style.width),
+          height: parseFloat(style.height),
+          filter: style.filter,
+        } : null;
+      })(),
       labelSize: parseFloat(getComputedStyle(firstLabel).fontSize),
       labelFamily: getComputedStyle(firstLabel).fontFamily,
       labelWeight: getComputedStyle(firstLabel).fontWeight,
       overlaySize: parseFloat(getComputedStyle(firstOverlay).fontSize),
       overlayFamily: getComputedStyle(firstOverlay).fontFamily,
+      blur: (() => {
+        const bg = section.querySelector('.ta_stage_bg');
+        const style = bg ? getComputedStyle(bg, '::after') : null;
+        return style ? {
+          top: parseFloat(style.top),
+          width: parseFloat(style.width),
+          height: parseFloat(style.height),
+          filter: style.filter,
+        } : null;
+      })(),
       cardsDirection: getComputedStyle(cardsTrack).flexDirection,
     };
   });
@@ -228,6 +248,11 @@ try {
   assert(sp.labelWeight === '600' || sp.labelWeight === 'bold', `SP card label weight ${sp.labelWeight}`);
   assert(close(sp.overlaySize, 16, 0.5), `SP card overlay size ${sp.overlaySize}`);
   assert(isKakuFamily(sp.overlayFamily), `SP card overlay must resolve to Zen Kaku Gothic New, got ${sp.overlayFamily}.`);
+  assert(sp.blur, 'SP About blur owner missing');
+  assert(close(sp.blur.top, 1346), `SP About blur top ${sp.blur.top}`);
+  assert(close(sp.blur.width, 375), `SP About blur width ${sp.blur.width}`);
+  assert(close(sp.blur.height, 190), `SP About blur height ${sp.blur.height}`);
+  assert(sp.blur.filter.includes('blur(50px)'), `SP About blur filter ${sp.blur.filter}`);
   assert(sp.cardsDirection === 'column', `SP cards direction ${sp.cardsDirection}`);
   assert(sp.cardWidths.every(width => close(width, 300)), `SP card widths ${sp.cardWidths.join(',')}`);
   assert(close(sp.cardGap01, 24) && close(sp.cardGap12, 24) && close(sp.cardGap23, 24), `SP card gaps ${sp.cardGap01},${sp.cardGap12},${sp.cardGap23}`);
@@ -364,7 +389,7 @@ try {
   });
   assert(pc, 'PC TOP About elements missing');
   assert(close(pc.sectionWidth, 1380), `PC section width ${pc.sectionWidth}`);
-  assert(close(pc.sectionHeight, 1063), `PC section height ${pc.sectionHeight}`);
+  assert(close(pc.sectionHeight, 1040), `PC section height ${pc.sectionHeight}`);
   assert(close(pc.contentLeft, 110), `PC content left ${pc.contentLeft}`);
   assert(close(pc.contentWidth, 1160), `PC content width ${pc.contentWidth}`);
   assert(pc.writingMode.includes('vertical'), `PC writing mode ${pc.writingMode}`);
@@ -393,6 +418,11 @@ try {
   assert(pc.cardLefts.every((left, index) => close(left, 430 + (215 * index))), `PC card lefts ${pc.cardLefts.join(',')}`);
   assert(close(pc.firstCardTop, 235), `PC first card top ${pc.firstCardTop}`);
   assert(close(pc.firstImageWidth, 195) && close(pc.firstImageHeight, 360), `PC image ${pc.firstImageWidth}x${pc.firstImageHeight}`);
+  assert(pc.blur, 'PC About blur owner missing');
+  assert(close(pc.blur.top, 552), `PC About blur top ${pc.blur.top}`);
+  assert(close(pc.blur.width, 1380), `PC About blur width ${pc.blur.width}`);
+  assert(close(pc.blur.height, 150), `PC About blur height ${pc.blur.height}`);
+  assert(pc.blur.filter.includes('blur(50px)'), `PC About blur filter ${pc.blur.filter}`);
   const pcNews = await measureTopNews(desktopPage);
   assert(pcNews, 'PC TOP News elements missing');
   assert(close(pcNews.sectionPaddingTop, 100), `PC news section padding-top ${pcNews.sectionPaddingTop}`);
@@ -459,8 +489,8 @@ try {
     assert(pcBanner.decorationDisplay === 'none', `PC banner SP decoration must be hidden, got ${pcBanner.decorationDisplay}`);
   }
   await desktopContext.close();
-  console.log('PASS Budokan TOP About current SP 327px content + 300x225 stacked cards and type family QA.');
-  console.log('PASS Budokan TOP About PC current-Figma section, rail, CTA, and type geometry QA.');
+  console.log('PASS Budokan TOP About current SP 327px content, current blur, stacked cards, and type family QA.');
+  console.log('PASS Budokan TOP About PC current-Figma 1040px section, blur, rail, CTA, crop, and type geometry QA.');
   console.log('PASS Budokan TOP News SP/PC type family QA hosted on the About front-page runtime.');
   console.log('PASS Budokan TOP Partner SP/PC type family QA hosted on the About front-page runtime.');
   console.log('PASS Budokan TOP Instagram SP/PC type family QA hosted on the About front-page runtime.');
