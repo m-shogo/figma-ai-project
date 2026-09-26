@@ -399,3 +399,10 @@ SP Runtime/Visual QAでカードのcolumn gapが `-327px` になった。Figma�
 - gap / width / positionの実測値が負値、0、親幅相当など通常の微差を超える場合、magic numberを調整する前にCSSのselector境界・brace・重複挿入・computed displayを確認する。
 - 大きな置換diffの後は対象selectorの前後を再読し、隣接blockが連結されていないことを確認する。
 - Visual QAが異常値を出した場合、QAを緩めるより先に「layout modeが成立しているか」を確認する。
+
+
+## 2026-09-26 Computed CSSのQAは値変更前に正規化helperを検証する
+
+TOP Events SPの背景色QAが `rgb(242, 242, 242)` を表示しながら失敗した。実装値はFigma想定の `#f2f2f2` と一致しており、原因はQA側の空白除去regexが `/\\\\s+/g` となっていたことだった。
+
+再発防止として、assertionのエラーメッセージに期待値と同等のcomputed valueが出ている場合は、CSSを変更する前にnormalizer・単位変換・文字列比較を確認する。Visual QAを通すために正しい実装値を歪めない。
