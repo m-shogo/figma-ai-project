@@ -3,7 +3,7 @@
 // TOP 大会・イベント情報
 // Figma: PC 1603:7488 / SP 2674:12919
 // Existing event CPT / event_cat / event_status / event_date / event_time /
-// event_host remain the data owners. FullCalendar is not part of current TOP.
+// event_host remain the data owners. Legacy calendar UI is not part of current TOP.
 // ========================================================================== */
 .top_events-01 {
     padding-block: 64px;
