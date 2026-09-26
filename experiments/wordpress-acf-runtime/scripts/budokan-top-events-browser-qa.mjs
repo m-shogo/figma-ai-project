@@ -2,180 +2,231 @@ import { chromium } from 'playwright';
 
 const url = process.argv[2];
 if (!url) process.exit(2);
-const assert = (condition, message) => { if (!condition) throw new Error(message); };
-const close = (actual, expected, tolerance = 2) => Math.abs(actual - expected) <= tolerance;
-function isMinchoFamily(family) {
-  const value = String(family || '').toLowerCase();
-  if (value.includes('sans-serif')) return false;
-  return value.includes('mincho') || value.includes('zen old');
-}
-function isKakuFamily(family) {
-  return String(family || '').toLowerCase().includes('kaku');
-}
-function isRobotoFamily(family) {
-  return String(family || '').toLowerCase().includes('roboto');
-}
 
-async function requireCalendar(page, label) {
+const assert = (condition, message) => {
+  if (!condition) throw new Error(message);
+};
+const close = (actual, expected, tolerance = 2) => Math.abs(actual - expected) <= tolerance;
+const rgb = (value) => String(value || '').replace(/\\s+/g, '');
+
+async function open(page, target) {
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
-  await page.goto(url, { waitUntil: 'networkidle' });
-  await page.waitForTimeout(1500);
-  const state = await page.evaluate(() => ({
-    hasCalendarNode: Boolean(document.querySelector('#top_calendar')),
-    hasRenderedCalendar: Boolean(document.querySelector('#top_calendar.fc')),
-    fullCalendarType: typeof window.FullCalendar,
-    jqueryType: typeof window.jQuery,
-    localizedConfig: typeof window.nipponbudokanTopCal,
-    readyState: document.readyState,
-    scripts: [...document.scripts].map(s => s.src).filter(Boolean).filter(src => /fullcalendar|home\.js|jquery/.test(src)),
-  }));
-  if (!state.hasRenderedCalendar) {
-    throw new Error(`${label} FullCalendar did not render: ${JSON.stringify({ ...state, pageErrors: errors })}`);
-  }
+  await page.goto(target, { waitUntil: 'networkidle' });
+  await page.waitForTimeout(300);
+  assert(errors.length === 0, `page errors: ${errors.join(' | ')}`);
+}
+
+async function readSection(page) {
+  return page.evaluate(() => {
+    const section = document.querySelector('#top_events-01');
+    if (!section) return null;
+
+    const q = (selector) => section.querySelector(selector);
+    const qa = (selector) => [...section.querySelectorAll(selector)];
+    const rect = (el) => el?.getBoundingClientRect();
+    const css = (el) => el ? getComputedStyle(el) : null;
+    const number = (value) => Number.parseFloat(value || '0');
+
+    const heading = q('.te_heading_ja');
+    const headingEn = q('.te_heading_en');
+    const layout = q('.te_layout');
+    const featured = q('.te_featured');
+    const featuredHead = q('.te_featured_head');
+    const featuredIcon = q('.te_featured_icon');
+    const featuredTitle = q('.te_featured_head .te_section_title');
+    const cards = qa('.te_card');
+    const firstImage = cards[0]?.querySelector('.te_card_image img');
+    const firstLabel = cards[0]?.querySelector('.te_label');
+    const firstTitle = cards[0]?.querySelector('.te_card_title');
+    const firstDate = cards[0]?.querySelector('.te_card_date');
+    const upcoming = q('.te_upcoming');
+    const upcomingHead = q('.te_upcoming_head');
+    const upcomingIcon = q('.te_upcoming_icon');
+    const upcomingTitle = q('.te_upcoming_head .te_section_title');
+    const filter = q('.te_filter');
+    const select = q('.te_filter select');
+    const rows = qa('.te_upcoming_item');
+    const firstRow = rows[0];
+    const firstDay = firstRow?.querySelector('.te_upcoming_day');
+    const firstWhen = firstRow?.querySelector('.te_upcoming_when');
+    const firstUpcomingTitle = firstRow?.querySelector('.te_upcoming_title');
+    const firstHost = firstRow?.querySelector('.te_upcoming_host');
+    const urls = qa('.te_upcoming_url');
+    const more = q('.te_more');
+    const moreIcon = q('.te_more_icon');
+
+    if (!heading || !headingEn || !layout || !featured || !featuredHead || !featuredIcon ||
+        !featuredTitle || cards.length !== 4 || !firstImage || !firstLabel || !firstTitle || !firstDate ||
+        !upcoming || !upcomingHead || !upcomingIcon || !upcomingTitle || !filter || !select ||
+        rows.length !== 5 || !firstRow || !firstDay || !firstWhen || !firstUpcomingTitle || !firstHost ||
+        !more || !moreIcon) return null;
+
+    const sectionRect = rect(section);
+    const layoutRect = rect(layout);
+    const featuredRect = rect(featured);
+    const featuredHeadRect = rect(featuredHead);
+    const featuredIconStyle = css(featuredIcon);
+    const cardsStyle = css(q('.te_cards'));
+    const imageRect = rect(firstImage);
+    const labelRect = rect(firstLabel);
+    const upcomingRect = rect(upcoming);
+    const upcomingHeadRect = rect(upcomingHead);
+    const upcomingIconStyle = css(upcomingIcon);
+    const filterRect = rect(filter);
+    const selectRect = rect(select);
+    const firstRowRect = rect(firstRow);
+    const firstRowStyle = css(firstRow);
+    const secondRowStyle = css(rows[1]);
+    const firstWhenStyle = css(firstWhen);
+    const moreRect = rect(more);
+    const moreIconRect = rect(moreIcon);
+
+    return {
+      legacyCalendar: Boolean(q('#top_calendar') || q('.te_cal_view') || q('.te_calendar')),
+      legacySns: Boolean(q('.te_sns')),
+      section: { width: sectionRect.width },
+      heading: {
+        size: number(css(heading).fontSize),
+        family: css(heading).fontFamily,
+        enSize: number(css(headingEn).fontSize),
+        enFamily: css(headingEn).fontFamily,
+      },
+      layout: {
+        display: css(layout).display,
+        direction: css(layout).flexDirection,
+        rowGap: number(css(layout).rowGap),
+        columnGap: number(css(layout).columnGap),
+        width: layoutRect.width,
+      },
+      featured: {
+        width: featuredRect.width,
+        headWidth: featuredHeadRect.width,
+        headHeight: featuredHeadRect.height,
+        sectionTitleSize: number(css(featuredTitle).fontSize),
+        iconWidth: rect(featuredIcon).width,
+        iconHeight: rect(featuredIcon).height,
+        iconBackground: featuredIconStyle.backgroundImage,
+        cardGridColumns: cardsStyle.gridTemplateColumns,
+        cardColumnGap: number(cardsStyle.columnGap),
+        cardRowGap: number(cardsStyle.rowGap),
+        imageWidth: imageRect.width,
+        imageHeight: imageRect.height,
+        labelHeight: labelRect.height,
+        cardTitleSize: number(css(firstTitle).fontSize),
+        dateSize: number(css(firstDate).fontSize),
+      },
+      upcoming: {
+        width: upcomingRect.width,
+        headWidth: upcomingHeadRect.width,
+        headHeight: upcomingHeadRect.height,
+        titleSize: number(css(upcomingTitle).fontSize),
+        iconWidth: rect(upcomingIcon).width,
+        iconHeight: rect(upcomingIcon).height,
+        iconBackground: upcomingIconStyle.backgroundImage,
+        filterWidth: filterRect.width,
+        filterHeight: filterRect.height,
+        selectWidth: selectRect.width,
+        selectHeight: selectRect.height,
+        rowWidth: firstRowRect.width,
+        rowHeight: firstRowRect.height,
+        rowDirection: firstRowStyle.flexDirection,
+        rowBg: firstRowStyle.backgroundColor,
+        secondRowBg: secondRowStyle.backgroundColor,
+        whenBorderRight: firstWhenStyle.borderRightWidth,
+        whenBorderBottom: firstWhenStyle.borderBottomWidth,
+        daySize: number(css(firstDay).fontSize),
+        titleSizeRow: number(css(firstUpcomingTitle).fontSize),
+        hostSize: number(css(firstHost).fontSize),
+        rawUrlCount: urls.length,
+      },
+      more: {
+        justify: css(more).justifyContent,
+        width: moreRect.width,
+        iconWidth: moreIconRect.width,
+        iconHeight: moreIconRect.height,
+      },
+    };
+  });
 }
 
 const browser = await chromium.launch({ headless: true });
 try {
   const mobileContext = await browser.newContext({ viewport: { width: 375, height: 2600 }, isMobile: true, hasTouch: true });
   const mobilePage = await mobileContext.newPage();
-  await requireCalendar(mobilePage, 'SP');
-  const sp = await mobilePage.evaluate(() => {
-    const section = document.querySelector('#top_events-01');
-    const heading = section?.querySelector('.te_heading_ja');
-    const headingEn = section?.querySelector('.te_heading_en');
-    const banner = section?.querySelector('.te_featured_banner');
-    const cards = section ? [...section.querySelectorAll('.te_card')] : [];
-    const firstImage = cards[0]?.querySelector('.te_card_image img');
-    const cardTitle = cards[0]?.querySelector('.te_card_title');
-    const views = section ? [...section.querySelectorAll('.te_cal_view')] : [];
-    const monthLabel = section?.querySelector('.te_cal_label');
-    const snsLinks = section ? [...section.querySelectorAll('.te_sns a')] : [];
-    if (!section || !heading || !headingEn || !banner || cards.length !== 4 || !firstImage || !cardTitle || views.length !== 2 || !monthLabel || snsLinks.length !== 3) return null;
-    return {
-      sectionWidth: section.getBoundingClientRect().width,
-      headingSize: parseFloat(getComputedStyle(heading).fontSize),
-      headingFamily: getComputedStyle(heading).fontFamily,
-      headingEnSize: parseFloat(getComputedStyle(headingEn).fontSize),
-      headingEnFamily: getComputedStyle(headingEn).fontFamily,
-      bannerWidth: banner.getBoundingClientRect().width,
-      bannerHeight: banner.getBoundingClientRect().height,
-      bannerWritingMode: getComputedStyle(banner).writingMode,
-      bannerFamily: getComputedStyle(banner).fontFamily,
-      firstImageWidth: firstImage.getBoundingClientRect().width,
-      firstImageHeight: firstImage.getBoundingClientRect().height,
-      cardTitleFamily: getComputedStyle(cardTitle).fontFamily,
-      viewHeights: views.map(el => el.getBoundingClientRect().height),
-      monthFamily: getComputedStyle(monthLabel).fontFamily,
-      snsWidths: snsLinks.map(el => el.getBoundingClientRect().width),
-      snsHeights: snsLinks.map(el => el.getBoundingClientRect().height),
-      snsFamily: getComputedStyle(snsLinks[0]).fontFamily,
-      snsFlow: getComputedStyle(section.querySelector('.te_sns ul')).flexDirection,
-    };
-  });
+  await open(mobilePage, url);
+  const sp = await readSection(mobilePage);
   assert(sp, 'SP TOP Events elements missing');
-  assert(close(sp.sectionWidth, 375), `SP section width ${sp.sectionWidth}`);
-  assert(close(sp.headingSize, 28, 0.5), `SP heading size ${sp.headingSize}`);
-  assert(isKakuFamily(sp.headingFamily), `SP heading JA must resolve to Zen Kaku Gothic New, got ${sp.headingFamily}.`);
-  assert(close(sp.headingEnSize, 14, 0.5), `SP heading EN size ${sp.headingEnSize}`);
-  assert(isRobotoFamily(sp.headingEnFamily), `SP heading EN must resolve to Roboto, got ${sp.headingEnFamily}.`);
-  assert(isKakuFamily(sp.bannerFamily), `SP banner must resolve to Zen Kaku Gothic New, got ${sp.bannerFamily}.`);
-  assert(isKakuFamily(sp.cardTitleFamily), `SP card title must resolve to Zen Kaku Gothic New, got ${sp.cardTitleFamily}.`);
-  assert(isKakuFamily(sp.monthFamily), `SP month label must resolve to Zen Kaku Gothic New, got ${sp.monthFamily}.`);
-  assert(isKakuFamily(sp.snsFamily), `SP SNS must resolve to Zen Kaku Gothic New, got ${sp.snsFamily}.`);
-  assert(sp.bannerWidth >= 325 && sp.bannerWidth <= 335, `SP banner width ${sp.bannerWidth}`);
-  assert(close(sp.bannerHeight, 50, 1), `SP banner height ${sp.bannerHeight}`);
-  assert(sp.bannerWritingMode.includes('horizontal'), `SP banner writing-mode ${sp.bannerWritingMode}`);
-  assert(close(sp.firstImageWidth, 104) && close(sp.firstImageHeight, 78), `SP event image ${sp.firstImageWidth}x${sp.firstImageHeight}`);
-  assert(sp.viewHeights.every(h => close(h, 50, 1)), `SP tabs ${sp.viewHeights.join(',')}`);
-  assert(sp.snsFlow === 'column', `SP SNS flow ${sp.snsFlow}`);
-  assert(sp.snsWidths.every(w => close(w, 280, 1)), `SP SNS widths ${sp.snsWidths.join(',')}`);
-  assert(sp.snsHeights.every(h => close(h, 60, 1)), `SP SNS heights ${sp.snsHeights.join(',')}`);
+  assert(!sp.legacyCalendar, 'SP legacy calendar DOM must be absent');
+  assert(!sp.legacySns, 'SP legacy Events SNS DOM must be absent');
+  assert(close(sp.section.width, 375, 1), `SP section width ${sp.section.width}`);
+  assert(close(sp.heading.size, 28, 0.5), `SP heading ${sp.heading.size}`);
+  assert(close(sp.heading.enSize, 22, 0.5), `SP Event label ${sp.heading.enSize}`);
+  assert(sp.layout.display === 'flex' && sp.layout.direction === 'column', `SP layout ${sp.layout.display}/${sp.layout.direction}`);
+  assert(close(sp.layout.rowGap, 48, 1), `SP layout gap ${sp.layout.rowGap}`);
+  assert(close(sp.featured.headHeight, 53, 1), `SP featured head height ${sp.featured.headHeight}`);
+  assert(close(sp.featured.sectionTitleSize, 24, 0.5), `SP featured title ${sp.featured.sectionTitleSize}`);
+  assert(close(sp.featured.iconWidth, 32, 1) && close(sp.featured.iconHeight, 24, 1), `SP facility icon ${sp.featured.iconWidth}x${sp.featured.iconHeight}`);
+  assert(sp.featured.iconBackground.includes('ico-facilities-red.svg'), `SP facility icon source ${sp.featured.iconBackground}`);
+  assert(close(sp.featured.cardColumnGap, 17, 2), `SP card column gap ${sp.featured.cardColumnGap}`);
+  assert(close(sp.featured.cardRowGap, 32, 2), `SP card row gap ${sp.featured.cardRowGap}`);
+  assert(sp.featured.imageWidth >= 153 && sp.featured.imageWidth <= 157, `SP card image width ${sp.featured.imageWidth}`);
+  assert(close(sp.featured.imageHeight, sp.featured.imageWidth * 0.75, 2), `SP card image ${sp.featured.imageWidth}x${sp.featured.imageHeight}`);
+  assert(close(sp.featured.labelHeight, 20, 1), `SP chip height ${sp.featured.labelHeight}`);
+  assert(close(sp.featured.cardTitleSize, 15, 0.5), `SP card title ${sp.featured.cardTitleSize}`);
+  assert(close(sp.featured.dateSize, 13, 0.5), `SP card date ${sp.featured.dateSize}`);
+  assert(close(sp.upcoming.headHeight, 53, 1), `SP upcoming head height ${sp.upcoming.headHeight}`);
+  assert(close(sp.upcoming.iconWidth, 24, 1) && close(sp.upcoming.iconHeight, 24, 1), `SP calendar icon ${sp.upcoming.iconWidth}x${sp.upcoming.iconHeight}`);
+  assert(sp.upcoming.iconBackground.includes('ico-calendar-red.svg'), `SP calendar icon source ${sp.upcoming.iconBackground}`);
+  assert(close(sp.upcoming.filterWidth, 240, 1) && close(sp.upcoming.filterHeight, 36, 1), `SP filter ${sp.upcoming.filterWidth}x${sp.upcoming.filterHeight}`);
+  assert(close(sp.upcoming.rowWidth, 327, 2), `SP upcoming row width ${sp.upcoming.rowWidth}`);
+  assert(sp.upcoming.rowDirection === 'column', `SP upcoming row direction ${sp.upcoming.rowDirection}`);
+  assert(rgb(sp.upcoming.rowBg) === 'rgb(242,242,242)', `SP first upcoming row bg ${sp.upcoming.rowBg}`);
+  assert(rgb(sp.upcoming.secondRowBg) !== 'rgb(242,242,242)', `SP second upcoming row bg ${sp.upcoming.secondRowBg}`);
+  assert(close(sp.upcoming.daySize, 20, 0.5), `SP upcoming day ${sp.upcoming.daySize}`);
+  assert(sp.upcoming.rawUrlCount === 1, `SP expected one externally-owned raw URL, got ${sp.upcoming.rawUrlCount}`);
+  assert(close(sp.more.iconWidth, 40, 1) && close(sp.more.iconHeight, 40, 1), `SP more icon ${sp.more.iconWidth}x${sp.more.iconHeight}`);
   await mobileContext.close();
 
   const desktopContext = await browser.newContext({ viewport: { width: 1380, height: 1800 } });
   const desktopPage = await desktopContext.newPage();
-  await requireCalendar(desktopPage, 'PC');
-  const pc = await desktopPage.evaluate(() => {
-    const section = document.querySelector('#top_events-01');
-    const heading = section?.querySelector('.te_heading_ja');
-    const headingEn = section?.querySelector('.te_heading_en');
-    const layout = section?.querySelector('.te_layout');
-    const banner = section?.querySelector('.te_featured_banner');
-    const bannerText = banner?.querySelector('span');
-    const bannerIcon = banner?.querySelector('img');
-    const cards = section ? [...section.querySelectorAll('.te_card')] : [];
-    const firstImage = cards[0]?.querySelector('.te_card_image img');
-    const cardTitle = cards[0]?.querySelector('.te_card_title');
-    const cal = section?.querySelector('.te_calendar_wrap');
-    const monthLabel = section?.querySelector('.te_cal_label');
-    const snsLinks = section ? [...section.querySelectorAll('.te_sns a')] : [];
-    const sns = section?.querySelector('.te_sns');
-    if (!section || !heading || !headingEn || !layout || !banner || !bannerText || !bannerIcon || cards.length !== 4 || !firstImage || !cardTitle || !cal || !monthLabel || snsLinks.length !== 3 || !sns) return null;
-    const layoutStyle = getComputedStyle(layout);
-    const bannerRect = banner.getBoundingClientRect();
-    const bannerTextRect = bannerText.getBoundingClientRect();
-    const bannerIconRect = bannerIcon.getBoundingClientRect();
-    const imageRect = firstImage.getBoundingClientRect();
-    const calRect = cal.getBoundingClientRect();
-    const snsRect = sns.getBoundingClientRect();
-    const linkRects = snsLinks.map(el => el.getBoundingClientRect());
-    return {
-      headingSize: parseFloat(getComputedStyle(heading).fontSize),
-      headingFamily: getComputedStyle(heading).fontFamily,
-      headingEnSize: parseFloat(getComputedStyle(headingEn).fontSize),
-      headingEnFamily: getComputedStyle(headingEn).fontFamily,
-      layoutDisplay: layoutStyle.display,
-      layoutGap: parseFloat(layoutStyle.columnGap),
-      bannerWritingMode: getComputedStyle(banner).writingMode,
-      bannerFamily: getComputedStyle(banner).fontFamily,
-      bannerWidth: bannerRect.width,
-      bannerHeight: bannerRect.height,
-      bannerTextWidth: bannerTextRect.width,
-      bannerTextHeight: bannerTextRect.height,
-      bannerIconWidth: bannerIconRect.width,
-      bannerIconHeight: bannerIconRect.height,
-      imageWidth: imageRect.width,
-      imageHeight: imageRect.height,
-      cardTitleFamily: getComputedStyle(cardTitle).fontFamily,
-      monthFamily: getComputedStyle(monthLabel).fontFamily,
-      calendarWidth: calRect.width,
-      snsWidth: snsRect.width,
-      snsFlow: getComputedStyle(section.querySelector('.te_sns ul')).flexDirection,
-      snsFamily: getComputedStyle(snsLinks[0]).fontFamily,
-      snsWidths: linkRects.map(r => r.width),
-      snsHeights: linkRects.map(r => r.height),
-    };
-  });
+  await open(desktopPage, url);
+  const pc = await readSection(desktopPage);
   assert(pc, 'PC TOP Events elements missing');
-  assert(close(pc.headingSize, 32, 0.5), `PC heading size ${pc.headingSize}`);
-  assert(isMinchoFamily(pc.headingFamily), `PC heading JA must resolve to Zen Old Mincho, got ${pc.headingFamily}.`);
-  assert(close(pc.headingEnSize, 22, 0.5), `PC heading EN size ${pc.headingEnSize}`);
-  assert(isMinchoFamily(pc.headingEnFamily), `PC heading EN must resolve to Zen Old Mincho, got ${pc.headingEnFamily}.`);
-  assert(isMinchoFamily(pc.bannerFamily), `PC banner must resolve to Zen Old Mincho, got ${pc.bannerFamily}.`);
-  assert(isKakuFamily(pc.cardTitleFamily), `PC card title must resolve to Zen Kaku Gothic New, got ${pc.cardTitleFamily}.`);
-  assert(isKakuFamily(pc.monthFamily), `PC month label must resolve to Zen Kaku Gothic New, got ${pc.monthFamily}.`);
-  assert(isKakuFamily(pc.snsFamily), `PC SNS must resolve to Zen Kaku Gothic New, got ${pc.snsFamily}.`);
-  assert(pc.layoutDisplay === 'grid', `PC layout display ${pc.layoutDisplay}`);
-  assert(close(pc.layoutGap, 80, 1), `PC layout gap ${pc.layoutGap}`);
-  // Current Figma PC 1603:7497 is a physical vertical stack (44×267):
-  // 28×21 icon + 12 gap + 20×184 narrow text, with 20/30/8/8 padding.
-  // Do not infer a CSS writing-mode contract from that visual geometry.
-  assert(pc.bannerWritingMode.includes('horizontal'), `PC banner writing-mode ${pc.bannerWritingMode}`);
-  assert(close(pc.bannerWidth, 44, 1), `PC banner width ${pc.bannerWidth}`);
-  assert(close(pc.bannerHeight, 267, 2), `PC banner height ${pc.bannerHeight}`);
-  assert(close(pc.bannerIconWidth, 28, 1) && close(pc.bannerIconHeight, 21, 1), `PC featured icon ${pc.bannerIconWidth}x${pc.bannerIconHeight}`);
-  assert(close(pc.bannerTextWidth, 20, 1) && close(pc.bannerTextHeight, 184, 2), `PC featured text ${pc.bannerTextWidth}x${pc.bannerTextHeight}`);
-  assert(close(pc.imageWidth, 200) && close(pc.imageHeight, 150), `PC event image ${pc.imageWidth}x${pc.imageHeight}`);
-  assert(close(pc.calendarWidth, 420, 1), `PC calendar rail ${pc.calendarWidth}`);
-  assert(pc.snsWidth >= 1370, `PC SNS full-width breakout ${pc.snsWidth}`);
-  assert(pc.snsFlow === 'row', `PC SNS flow ${pc.snsFlow}`);
-  assert(pc.snsWidths.every(w => close(w, 280, 1)), `PC SNS widths ${pc.snsWidths.join(',')}`);
-  assert(pc.snsHeights.every(h => close(h, 80, 1)), `PC SNS heights ${pc.snsHeights.join(',')}`);
-  await desktopContext.close();
+  assert(!pc.legacyCalendar, 'PC legacy calendar DOM must be absent');
+  assert(!pc.legacySns, 'PC legacy Events SNS DOM must be absent');
+  assert(close(pc.heading.size, 32, 0.5), `PC heading ${pc.heading.size}`);
+  assert(close(pc.heading.enSize, 22, 0.5), `PC Event label ${pc.heading.enSize}`);
+  assert(pc.layout.display === 'grid', `PC layout display ${pc.layout.display}`);
+  assert(close(pc.layout.columnGap, 80, 1), `PC layout gap ${pc.layout.columnGap}`);
+  assert(close(pc.featured.width, 480, 2), `PC featured width ${pc.featured.width}`);
+  assert(close(pc.upcoming.width, 600, 2), `PC upcoming width ${pc.upcoming.width}`);
+  assert(close(pc.featured.headWidth, 480, 2) && close(pc.featured.headHeight, 53, 1), `PC featured head ${pc.featured.headWidth}x${pc.featured.headHeight}`);
+  assert(close(pc.featured.sectionTitleSize, 24, 0.5), `PC featured title ${pc.featured.sectionTitleSize}`);
+  assert(close(pc.featured.iconWidth, 32, 1) && close(pc.featured.iconHeight, 24, 1), `PC facility icon ${pc.featured.iconWidth}x${pc.featured.iconHeight}`);
+  assert(pc.featured.iconBackground.includes('ico-facilities-red.svg'), `PC facility icon source ${pc.featured.iconBackground}`);
+  assert(close(pc.featured.cardColumnGap, 40, 1), `PC card column gap ${pc.featured.cardColumnGap}`);
+  assert(close(pc.featured.cardRowGap, 56, 2), `PC card row gap ${pc.featured.cardRowGap}`);
+  assert(close(pc.featured.imageWidth, 220, 1) && close(pc.featured.imageHeight, 165, 1), `PC card image ${pc.featured.imageWidth}x${pc.featured.imageHeight}`);
+  assert(close(pc.featured.cardTitleSize, 16, 0.5), `PC card title ${pc.featured.cardTitleSize}`);
+  assert(close(pc.featured.dateSize, 14, 0.5), `PC card date ${pc.featured.dateSize}`);
+  assert(close(pc.upcoming.headWidth, 600, 2) && close(pc.upcoming.headHeight, 53, 1), `PC upcoming head ${pc.upcoming.headWidth}x${pc.upcoming.headHeight}`);
+  assert(close(pc.upcoming.iconWidth, 24, 1) && close(pc.upcoming.iconHeight, 24, 1), `PC calendar icon ${pc.upcoming.iconWidth}x${pc.upcoming.iconHeight}`);
+  assert(pc.upcoming.iconBackground.includes('ico-calendar-red.svg'), `PC calendar icon source ${pc.upcoming.iconBackground}`);
+  assert(close(pc.upcoming.filterWidth, 180, 1) && close(pc.upcoming.filterHeight, 36, 1), `PC filter ${pc.upcoming.filterWidth}x${pc.upcoming.filterHeight}`);
+  assert(close(pc.upcoming.rowWidth, 600, 2), `PC upcoming row width ${pc.upcoming.rowWidth}`);
+  assert(pc.upcoming.rowDirection === 'row', `PC upcoming row direction ${pc.upcoming.rowDirection}`);
+  assert(pc.upcoming.rowHeight >= 123 && pc.upcoming.rowHeight <= 132, `PC upcoming row height ${pc.upcoming.rowHeight}`);
+  assert(rgb(pc.upcoming.rowBg) === 'rgb(242,242,242)', `PC first upcoming row bg ${pc.upcoming.rowBg}`);
+  assert(close(pc.upcoming.daySize, 24, 0.5), `PC upcoming day ${pc.upcoming.daySize}`);
+  assert(pc.upcoming.whenBorderRight !== '0px' && pc.upcoming.whenBorderBottom === '0px', `PC date separator right=${pc.upcoming.whenBorderRight} bottom=${pc.upcoming.whenBorderBottom}`);
+  assert(pc.upcoming.rawUrlCount === 1, `PC expected one externally-owned raw URL, got ${pc.upcoming.rawUrlCount}`);
+  assert(pc.more.justify === 'flex-end', `PC more alignment ${pc.more.justify}`);
+  assert(close(pc.more.iconWidth, 40, 1) && close(pc.more.iconHeight, 40, 1), `PC more icon ${pc.more.iconWidth}x${pc.more.iconHeight}`);
 
-  console.log('PASS Budokan TOP Events SP geometry, type families, and FullCalendar runtime QA.');
-  console.log('PASS Budokan TOP Events PC two-rail geometry, current-Figma featured label geometry, type families, and SNS derivative QA.');
+  await desktopContext.close();
+  console.log('PASS Budokan TOP Events current-Figma SP/PC geometry and data-owner QA.');
+  console.log('PASS legacy FullCalendar/SNS section DOM is absent and exact Figma heading SVG assets are used.');
 } finally {
   await browser.close();
 }
