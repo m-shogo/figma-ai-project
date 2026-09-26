@@ -1,7 +1,7 @@
 @charset "utf-8";
 /* // ==========================================================================
 // TOP お知らせ（archive news master の派生 / mobile first）
-// Figma SP 446:11772 → PC 1603:7236
+// Current Figma authority: SP outer 2675:13532 / panel 2675:13533 → PC panel 1603:7236
 // 共通 item / tabs の基礎は module_newsList-01.css。ここにはTOP固有差分だけ置く。
 // ========================================================================== */
 .top_news-01 {
