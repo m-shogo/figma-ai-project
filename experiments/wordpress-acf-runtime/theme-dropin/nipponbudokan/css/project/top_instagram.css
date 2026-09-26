@@ -300,15 +300,15 @@
     }
 
     .ts_icon_youtube::before {
-        content: '\\f167';
+        content: '\f167';
     }
 
     .ts_icon_instagram::before {
-        content: '\\f16d';
+        content: '\f16d';
     }
 
     .ts_icon_x::before {
-        content: '\\e61b';
+        content: '\e61b';
     }
 
     @media screen and (min-width: 768px) {
