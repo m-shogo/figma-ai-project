@@ -70,14 +70,25 @@ async function measureTopPartner(page) {
 async function measureTopNews(page) {
   return page.evaluate(() => {
     const section = document.querySelector('#top_news-01');
+    const panel = section?.querySelector('.top_news_panel');
     const heading = section?.querySelector('.top_news_heading_ja');
     const headingEn = section?.querySelector('.top_news_heading_en');
     const more = section?.querySelector('.top_news_more_sp, .top_news_more_pc');
     const tab = section?.querySelector('.news_tabs_link');
+    const firstLink = section?.querySelector('.news_item_link');
     const date = section?.querySelector('.news_item_date');
     const title = section?.querySelector('.news_item_title');
-    if (!section || !heading || !headingEn || !more || !tab || !date || !title) return null;
+    if (!section || !panel || !heading || !headingEn || !more || !tab || !firstLink || !date || !title) return null;
+    const sectionStyle = getComputedStyle(section);
+    const panelStyle = getComputedStyle(panel);
     return {
+      sectionPaddingTop: parseFloat(sectionStyle.paddingTop),
+      sectionPaddingBottom: parseFloat(sectionStyle.paddingBottom),
+      panelPaddingTop: parseFloat(panelStyle.paddingTop),
+      panelPaddingLeft: parseFloat(panelStyle.paddingLeft),
+      panelGap: parseFloat(panelStyle.gap),
+      panelRadius: parseFloat(panelStyle.borderTopLeftRadius),
+      firstLinkPaddingTop: parseFloat(getComputedStyle(firstLink).paddingTop),
       headingSize: parseFloat(getComputedStyle(heading).fontSize),
       headingFamily: getComputedStyle(heading).fontFamily,
       headingEnSize: parseFloat(getComputedStyle(headingEn).fontSize),
@@ -169,10 +180,17 @@ try {
   assert(close(sp.firstImageWidth, 300) && close(sp.firstImageHeight, 183), `SP image ${sp.firstImageWidth}x${sp.firstImageHeight}`);
   const spNews = await measureTopNews(mobilePage);
   assert(spNews, 'SP TOP News elements missing');
-  assert(close(spNews.headingSize, 30, 0.5), `SP news heading ${spNews.headingSize}`);
-  assert(isKakuFamily(spNews.headingFamily), `SP news heading JA must resolve to Zen Kaku Gothic New, got ${spNews.headingFamily}.`);
-  assert(close(spNews.headingEnSize, 14, 0.5), `SP news heading EN ${spNews.headingEnSize}`);
-  assert(isRobotoFamily(spNews.headingEnFamily), `SP news heading EN must resolve to Roboto, got ${spNews.headingEnFamily}.`);
+  assert(close(spNews.sectionPaddingTop, 64), `SP news section padding-top ${spNews.sectionPaddingTop}`);
+  assert(close(spNews.sectionPaddingBottom, 0), `SP news section padding-bottom ${spNews.sectionPaddingBottom}`);
+  assert(close(spNews.panelPaddingTop, 48), `SP news panel padding-top ${spNews.panelPaddingTop}`);
+  assert(close(spNews.panelPaddingLeft, 24), `SP news panel padding-left ${spNews.panelPaddingLeft}`);
+  assert(close(spNews.panelGap, 40), `SP news panel gap ${spNews.panelGap}`);
+  assert(close(spNews.panelRadius, 10), `SP news panel radius ${spNews.panelRadius}`);
+  assert(close(spNews.firstLinkPaddingTop, 0), `SP news first item padding-top ${spNews.firstLinkPaddingTop}`);
+  assert(close(spNews.headingSize, 24, 0.5), `SP news heading ${spNews.headingSize}`);
+  assert(isMinchoFamily(spNews.headingFamily), `SP news heading JA must resolve to Zen Old Mincho, got ${spNews.headingFamily}.`);
+  assert(close(spNews.headingEnSize, 18, 0.5), `SP news heading EN ${spNews.headingEnSize}`);
+  assert(isMinchoFamily(spNews.headingEnFamily), `SP news heading EN must resolve to Zen Old Mincho, got ${spNews.headingEnFamily}.`);
   assert(isKakuFamily(spNews.moreFamily), `SP news more must resolve to Zen Kaku Gothic New, got ${spNews.moreFamily}.`);
   assert(isKakuFamily(spNews.tabFamily), `SP news tab must resolve to Zen Kaku Gothic New, got ${spNews.tabFamily}.`);
   assert(close(spNews.dateSize, 14, 0.5), `SP news date ${spNews.dateSize}`);
@@ -295,6 +313,13 @@ try {
   assert(close(pc.firstImageWidth, 195) && close(pc.firstImageHeight, 360), `PC image ${pc.firstImageWidth}x${pc.firstImageHeight}`);
   const pcNews = await measureTopNews(desktopPage);
   assert(pcNews, 'PC TOP News elements missing');
+  assert(close(pcNews.sectionPaddingTop, 100), `PC news section padding-top ${pcNews.sectionPaddingTop}`);
+  assert(close(pcNews.sectionPaddingBottom, 0), `PC news section padding-bottom ${pcNews.sectionPaddingBottom}`);
+  assert(close(pcNews.panelPaddingTop, 80), `PC news panel padding-top ${pcNews.panelPaddingTop}`);
+  assert(close(pcNews.panelPaddingLeft, 80), `PC news panel padding-left ${pcNews.panelPaddingLeft}`);
+  assert(close(pcNews.panelGap, 80), `PC news panel gap ${pcNews.panelGap}`);
+  assert(close(pcNews.panelRadius, 10), `PC news panel radius ${pcNews.panelRadius}`);
+  assert(close(pcNews.firstLinkPaddingTop, 0), `PC news first item padding-top ${pcNews.firstLinkPaddingTop}`);
   assert(close(pcNews.headingSize, 28, 0.5), `PC news heading ${pcNews.headingSize}`);
   assert(isMinchoFamily(pcNews.headingFamily), `PC news heading JA must resolve to Zen Old Mincho, got ${pcNews.headingFamily}.`);
   assert(close(pcNews.headingEnSize, 18, 0.5), `PC news heading EN ${pcNews.headingEnSize}`);
