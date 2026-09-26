@@ -161,31 +161,36 @@
 
     .ta_cards_wrap {
         position: relative;
-        padding-block: 40px 120px;
+        padding-block: 32px 120px;
         background-color: var(--color-heading-band);
     }
 
     .ta_cards {
-        margin-inline: calc(var(--padding-SP) * -1);
+        width: 300px;
+        margin-inline: auto;
     }
 
     .ta_cards_swiper {
-        overflow: hidden;
+        overflow: visible;
     }
 
-    .ta_cards_swiper .swiper-slide {
-        width: 295px;
-        height: auto;
+    .ta_cards_swiper .swiper-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
     }
 
+    .ta_cards_swiper .swiper-slide,
     .ta_card {
-        min-width: 0;
+        width: 300px;
+        height: auto;
+        flex: none;
     }
 
     .ta_card_link {
         display: flex;
         flex-direction: column;
-        gap: 20px;
+        gap: 0;
         color: var(--color-text);
         text-decoration: none;
     }
@@ -198,8 +203,8 @@
 
         img {
             display: block;
-            width: 100%;
-            height: 197px;
+            width: 300px;
+            height: 225px;
             object-fit: cover;
         }
     }
@@ -209,19 +214,15 @@
     }
 
     .ta_card:nth-child(2) .ta_card_image img {
-        object-position: 99% 50%;
-    }
-
-    .ta_card:nth-child(3) .ta_card_image img {
         object-position: 68% 95%;
     }
 
-    .ta_card_pc .ta_card_image img {
+    .ta_card:nth-child(3) .ta_card_image img {
         object-position: 44% 50%;
     }
 
-    .ta_card_pc {
-        display: none;
+    .ta_card:nth-child(4) .ta_card_image img {
+        object-position: 99% 50%;
     }
 
     .ta_card_overlay {
@@ -260,6 +261,8 @@
         align-items: center;
         gap: 8px;
         margin: 0;
+        padding: 14px 16px;
+        background-color: var(--color-secondary);
         font-family: var(--font-zen-kaku-gothic);
         font-size: 16px;
         font-weight: 500;
@@ -275,14 +278,11 @@
             width: 26px;
             height: 26px;
             flex-shrink: 0;
-            background-color: transparent;
             background-image: var(--_octagon-chip);
             background-repeat: no-repeat;
             background-position: center;
             background-size: 26px 26px;
             color: var(--color-primary);
-            clip-path: none;
-            filter: none;
             font-family: var(--font-awesome);
             font-weight: 900;
             font-size: 8px;
@@ -291,26 +291,7 @@
     }
 
     .ta_scroll {
-        position: relative;
-        display: block;
-        width: 327px;
-        height: 5px;
-        margin: 40px auto 0;
-        overflow: hidden;
-        border-radius: 2.5px 0 0 2.5px;
-        background-color: var(--color-line);
-    }
-
-    .ta_scroll_bar {
-        position: absolute;
-        top: 0;
-        left: 0;
-        display: block;
-        width: 110px;
-        height: 5px;
-        border-radius: 2.5px 0 0 2.5px;
-        background-color: var(--color-accent);
-        will-change: transform;
+        display: none;
     }
 
     @media screen and (min-width: 768px) {
@@ -489,9 +470,15 @@
             overflow: visible;
         }
 
-        .ta_cards_swiper,
+        .ta_cards_swiper {
+            display: block;
+            overflow: visible;
+        }
+
         .ta_cards_swiper .swiper-wrapper {
-            display: contents;
+            display: grid;
+            grid-template-columns: repeat(4, 195px);
+            gap: 20px;
         }
 
         .ta_cards_swiper .swiper-slide,
@@ -501,24 +488,20 @@
             width: 195px;
         }
 
-        .ta_card_pc {
-            display: block;
-        }
-
         .ta_card:nth-child(1) .ta_card_image img {
             object-position: 38% 50%;
         }
 
         .ta_card:nth-child(2) .ta_card_image img {
-            object-position: 15% 100%;
-        }
-
-        .ta_card:nth-child(3) .ta_card_image img {
             object-position: 31% 99%;
         }
 
-        .ta_card_pc .ta_card_image img {
+        .ta_card:nth-child(3) .ta_card_image img {
             object-position: 44% 50%;
+        }
+
+        .ta_card:nth-child(4) .ta_card_image img {
+            object-position: 15% 100%;
         }
 
         .ta_scroll {
@@ -527,6 +510,11 @@
 
         .ta_card_link {
             gap: 20px;
+        }
+
+        .ta_card_label {
+            padding: 0;
+            background-color: transparent;
         }
 
         .ta_card_image img {
