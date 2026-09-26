@@ -9,21 +9,9 @@
     isolation: isolate;
     overflow: hidden;
     padding-block: 64px;
-    background-color: var(--color-heading-band);
+    border-bottom: 1px solid #e7e7e7;
+    background-color: var(--color-secondary);
     color: var(--color-text);
-
-    /* SP Figma の実mask asset。PC root には存在しないためPCでは消す。 */
-    &::before {
-        content: '';
-        position: absolute;
-        z-index: -1;
-        top: 0;
-        left: 0;
-        width: 300px;
-        height: 314px;
-        background: url('../../images/top/partner/partner-bg-sp.webp') center / 100% 100% no-repeat;
-        pointer-events: none;
-    }
 
     .tp_layout {
         display: flex;
@@ -208,10 +196,6 @@
         padding-block: 0;
         background-color: transparent;
         border-bottom: 1px solid var(--color-primary);
-
-        &::before {
-            display: none;
-        }
 
         .tp_layout {
             display: grid;
