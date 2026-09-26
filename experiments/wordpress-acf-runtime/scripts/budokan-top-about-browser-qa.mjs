@@ -173,6 +173,7 @@ try {
     const cardsTrack = section?.querySelector('.ta_cards_swiper .swiper-wrapper');
     const firstImage = cards[0]?.querySelector('.ta_card_image img');
     const firstLabel = cards[0]?.querySelector('.ta_card_label');
+    const blurOwner = section ? getComputedStyle(section.querySelector('.ta_stage_bg'), '::before') : null;
     const firstOverlay = cards[0]?.querySelector('.ta_card_overlay');
     if (!section || !heading || !headingEn || !panel || !lead || buttons.length !== 1 || cards.length !== 4 || !cardsTrack || !firstImage || !firstLabel || !firstOverlay) return null;
     const sectionRect = section.getBoundingClientRect();
@@ -385,6 +386,12 @@ try {
       firstCardTop: cardRects[0].top - sectionRect.top,
       firstImageWidth: imageRect.width,
       firstImageHeight: imageRect.height,
+      blur: blurOwner ? {
+        top: parseFloat(blurOwner.top),
+        width: parseFloat(blurOwner.width),
+        height: parseFloat(blurOwner.height),
+        filter: blurOwner.filter,
+      } : null,
     };
   });
   assert(pc, 'PC TOP About elements missing');
