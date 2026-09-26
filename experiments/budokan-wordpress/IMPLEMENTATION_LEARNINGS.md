@@ -357,3 +357,22 @@ TOP Main Visual は既存実装がほぼ成立していたが、新Figmaとの�
 **再発防止**
 
 同一セクションで「owner確認だけ」を繰り返さない。2run続けて閉じられなければ、3run目は別routeへ切り替え、最低でも実diff・QA evidence・blocker root cause・次回即write可能差分のいずれかを残す。
+
+
+## 2026-09-26 TOP大会・イベントは旧Calendar ownerを延命せず既存event CPTを新レイアウトへ投影する
+
+**起きたこと**
+
+既存TOPには FullCalendar 用markup/CSSが残っていたが、新Figma PC `1603:7488` / SP `2674:12919` ではカレンダーUI自体が廃止され、「注目の主催事業」4件と「近日開催の行事予定」リストへ変更されていた。
+
+**今回の判断**
+
+- データモデルは作り直さず、既存 `event` CPT / `event_cat` / `event_status` / `event_date` / `event_time` / `event_host` を継続利用する。
+- 注目枠は既存TOPの4件取得を維持し、見た目とstatus/category投影だけ新Figmaへ合わせる。
+- 近日開催は既存 `event_date` を使い、当日以降を日付昇順で最大5件取得する。空値は表示しない。
+- Figma上のダミー電話番号・URLはハードコードしない。外部URLは既存 `post_type=url` / `postType_url` ownerがある場合だけ表示する。
+- TOP専用の旧Calendar markup/CSSとイベント内SNSは新Figma section外なので残さない。SNSは別sectionとして扱う。
+
+**再発防止**
+
+既存コードに大きな機能ownerが残っていても、「以前存在したから維持」では判断しない。新FigmaとHuman overrideで廃止が確認できたTOP専用UIは、共有データownerを守ったまま表示層だけ差し替える。
