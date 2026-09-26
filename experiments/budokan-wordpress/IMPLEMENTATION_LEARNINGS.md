@@ -453,3 +453,21 @@ ACFが所有する可変notice本文を、ACF Pro repeaterを持たないdisposa
 - fixtureはDOM owner・fallback契約・必要assetを検証し、production ACFが所有する可変本文を固定値で要求しない。
 - 共有fixture failureで複数workflowが落ちた場合、各componentを別々に修正せず共通入口を先に分類する。
 - content更新をVisual regressionとして誤認しない。
+
+
+## 2026-09-27 authored viewportとscrollbar gutterを二重補正しない
+
+**起きたこと**
+
+TOP Body InteractionでPC 1380pxが1365px、SP 375pxが360pxとして実測され、SNS・Instagram・Partnerが一律15px縮んだ。個別componentの幅はFigma値どおりに記述されていた。
+
+**原因**
+
+rootの `scrollbar-gutter: stable` が常時15pxを予約し、Figmaのauthored viewport幅そのものをcontent viewportとして扱うQAと衝突した。component側へ15pxずつ足すと全sectionにmagic numberが伝播する。
+
+**次回ルール**
+
+- 複数の独立sectionが同時に同じ15pxだけ縮む場合、component CSSより先にroot viewport / scrollbar contractを確認する。
+- Figmaの375/1380をlayout viewport authorityとして検証する環境では、rootで恒常的なgutterを予約しない。
+- scrollbar補正をQA viewportとproduction CSSの両方へ入れない。補正ownerは1箇所だけにする。
+- 横幅修正後はsection widthだけでなく、grid child・aspect-ratio由来の高さ・隣接sectionも再検証する。
