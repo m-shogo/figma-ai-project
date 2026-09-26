@@ -80,8 +80,8 @@ try {
   assert(sp.titleSpDisplay !== 'none', 'SP responsive title unexpectedly hidden');
   assert(sp.leadPcDisplay === 'none', `SP PC-lead display ${sp.leadPcDisplay}`);
   assert(sp.leadSpDisplay !== 'none', 'SP responsive lead unexpectedly hidden');
-  assert(sp.titleSpText.includes('伝統を未来へつなぐ、') && sp.titleSpText.includes('武道と書道の中心地'), `SP current title copy ${sp.titleSpText}`);
-  assert(sp.leadSpText.includes('武道の振興、書道文化の継承、') && sp.leadSpText.includes('公益事業の拠点として活動しています。'), `SP current lead copy ${sp.leadSpText}`);
+  assert(sp.titleSpText.includes('伝統を未来へつなぐ、') && sp.titleSpText.includes('武道文化の中心地'), `SP current title copy ${sp.titleSpText}`);
+  assert(sp.leadSpText.includes('武道、書道の普及・振興、') && sp.leadSpText.includes('公益目的事業の拠点として活動しています。'), `SP current lead copy ${sp.leadSpText}`);
   assert(close(sp.innerLeft, 20, 1), `SP inner left ${sp.innerLeft}`);
   assert(close(sp.innerTop, 246, 2), `SP inner top ${sp.innerTop}`);
   assert(close(sp.noticeWidth, 335, 1), `SP notice width ${sp.noticeWidth}`);
