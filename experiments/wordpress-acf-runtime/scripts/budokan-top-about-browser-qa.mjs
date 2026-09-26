@@ -48,13 +48,30 @@ async function measureTopInstagram(page) {
 async function measureTopPartner(page) {
   return page.evaluate(() => {
     const section = document.querySelector('#top_partner-01');
+    const layout = section?.querySelector('.tp_layout');
+    const list = section?.querySelector('.tp_list');
+    const items = section ? [...section.querySelectorAll('.tp_item')] : [];
     const title = section?.querySelector('.tp_title');
     const titleEn = section?.querySelector('.tp_title_en');
     const lead = section?.querySelector('.tp_lead');
     const name = section?.querySelector('.tp_name');
-    const more = section?.querySelector('.tp_more');
-    if (!section || !title || !titleEn || !lead || !name || !more) return null;
+    const more = section ? [...section.querySelectorAll('.tp_more')].find(node => getComputedStyle(node).display !== 'none') : null;
+    if (!section || !layout || !list || items.length !== 12 || !title || !titleEn || !lead || !name || !more) return null;
+    const sectionRect = section.getBoundingClientRect();
+    const layoutRect = layout.getBoundingClientRect();
+    const listRect = list.getBoundingClientRect();
+    const itemRects = items.map(item => item.getBoundingClientRect());
+    const listStyle = getComputedStyle(list);
     return {
+      sectionWidth: sectionRect.width,
+      sectionHeight: sectionRect.height,
+      layoutWidth: layoutRect.width,
+      listWidth: listRect.width,
+      listHeight: listRect.height,
+      itemWidths: itemRects.map(rect => rect.width),
+      itemHeights: itemRects.map(rect => rect.height),
+      listColumnGap: parseFloat(listStyle.columnGap),
+      listRowGap: parseFloat(listStyle.rowGap),
       titleSize: parseFloat(getComputedStyle(title).fontSize),
       titleFamily: getComputedStyle(title).fontFamily,
       titleEnSize: parseFloat(getComputedStyle(titleEn).fontSize),
@@ -199,10 +216,18 @@ try {
   assert(isKakuFamily(spNews.titleFamily), `SP news title must resolve to Zen Kaku Gothic New, got ${spNews.titleFamily}.`);
   const spPartner = await measureTopPartner(mobilePage);
   assert(spPartner, 'SP TOP Partner elements missing');
+  assert(close(spPartner.sectionWidth, 375), `SP partner section width ${spPartner.sectionWidth}`);
+  assert(close(spPartner.sectionHeight, 774, 2), `SP partner section height ${spPartner.sectionHeight}`);
+  assert(close(spPartner.layoutWidth, 335), `SP partner layout width ${spPartner.layoutWidth}`);
+  assert(close(spPartner.listWidth, 335), `SP partner list width ${spPartner.listWidth}`);
+  assert(close(spPartner.listHeight, 456), `SP partner list height ${spPartner.listHeight}`);
+  assert(spPartner.itemWidths.every(width => close(width, 161.5)), `SP partner item widths ${spPartner.itemWidths.join(',')}`);
+  assert(spPartner.itemHeights.every(height => close(height, 66)), `SP partner item heights ${spPartner.itemHeights.join(',')}`);
+  assert(close(spPartner.listColumnGap, 12) && close(spPartner.listRowGap, 12), `SP partner gaps ${spPartner.listColumnGap},${spPartner.listRowGap}`);
   assert(close(spPartner.titleSize, 22, 0.5), `SP partner title ${spPartner.titleSize}`);
-  assert(isKakuFamily(spPartner.titleFamily), `SP partner title must resolve to Zen Kaku Gothic New, got ${spPartner.titleFamily}.`);
+  assert(isMinchoFamily(spPartner.titleFamily), `SP partner title must resolve to Zen Old Mincho, got ${spPartner.titleFamily}.`);
   assert(close(spPartner.titleEnSize, 14, 0.5), `SP partner EN ${spPartner.titleEnSize}`);
-  assert(isRobotoFamily(spPartner.titleEnFamily), `SP partner EN must resolve to Roboto, got ${spPartner.titleEnFamily}.`);
+  assert(isMinchoFamily(spPartner.titleEnFamily), `SP partner EN must resolve to Zen Old Mincho, got ${spPartner.titleEnFamily}.`);
   assert(isKakuFamily(spPartner.leadFamily), `SP partner lead must resolve to Zen Kaku Gothic New, got ${spPartner.leadFamily}.`);
   assert(close(spPartner.nameSize, 12, 0.5), `SP partner name ${spPartner.nameSize}`);
   assert(isKakuFamily(spPartner.nameFamily), `SP partner name must resolve to Zen Kaku Gothic New, got ${spPartner.nameFamily}.`);
@@ -332,6 +357,14 @@ try {
   assert(isKakuFamily(pcNews.titleFamily), `PC news title must resolve to Zen Kaku Gothic New, got ${pcNews.titleFamily}.`);
   const pcPartner = await measureTopPartner(desktopPage);
   assert(pcPartner, 'PC TOP Partner elements missing');
+  assert(close(pcPartner.sectionWidth, 1380), `PC partner section width ${pcPartner.sectionWidth}`);
+  assert(close(pcPartner.sectionHeight, 421, 2), `PC partner section height ${pcPartner.sectionHeight}`);
+  assert(close(pcPartner.layoutWidth, 1160), `PC partner layout width ${pcPartner.layoutWidth}`);
+  assert(close(pcPartner.listWidth, 860), `PC partner list width ${pcPartner.listWidth}`);
+  assert(close(pcPartner.listHeight, 220), `PC partner list height ${pcPartner.listHeight}`);
+  assert(pcPartner.itemWidths.every(width => close(width, 200)), `PC partner item widths ${pcPartner.itemWidths.join(',')}`);
+  assert(pcPartner.itemHeights.every(height => close(height, 60)), `PC partner item heights ${pcPartner.itemHeights.join(',')}`);
+  assert(close(pcPartner.listColumnGap, 20) && close(pcPartner.listRowGap, 20), `PC partner gaps ${pcPartner.listColumnGap},${pcPartner.listRowGap}`);
   assert(close(pcPartner.titleSize, 24, 0.5), `PC partner title ${pcPartner.titleSize}`);
   assert(isMinchoFamily(pcPartner.titleFamily), `PC partner title must resolve to Zen Old Mincho, got ${pcPartner.titleFamily}.`);
   assert(close(pcPartner.titleEnSize, 16, 0.5), `PC partner EN ${pcPartner.titleEnSize}`);
