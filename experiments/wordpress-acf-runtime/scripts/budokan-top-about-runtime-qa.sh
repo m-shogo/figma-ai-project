@@ -86,8 +86,8 @@ for required in \
   'class="ta_actions"' \
   'class="ta_cards"' \
   '日本武道館とは' \
-  'About us' \
-  'パンフレット（10MB）' \
+  'About&nbsp;us' \
+  'パンフレット（1.2MB）' \
   'ご紹介動画'; do
   grep -Fq "$required" "$html" || {
     echo "FAIL required TOP About runtime marker missing: ${required}" >&2
