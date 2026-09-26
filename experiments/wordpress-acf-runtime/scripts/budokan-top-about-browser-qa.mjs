@@ -31,11 +31,31 @@ async function measureTopBanner(page) {
 async function measureTopInstagram(page) {
   return page.evaluate(() => {
     const section = document.querySelector('#top_instagram-01');
+    const inner = section?.querySelector('.ti_inner');
+    const head = section?.querySelector('.ti_head');
+    const thumbs = section?.querySelector('.ti_thumbnails');
+    const visibleThumbs = section ? [...section.querySelectorAll('.ti_thumbnail')].filter(node => getComputedStyle(node).display !== 'none') : [];
     const title = section?.querySelector('.ti_title');
     const label = section?.querySelector('.ti_label');
     const lead = section?.querySelector('.ti_lead');
-    if (!section || !title || !label || !lead) return null;
+    if (!section || !inner || !head || !thumbs || visibleThumbs.length === 0 || !title || !label || !lead) return null;
+    const sectionRect = section.getBoundingClientRect();
+    const innerRect = inner.getBoundingClientRect();
+    const headRect = head.getBoundingClientRect();
+    const thumbsRect = thumbs.getBoundingClientRect();
+    const thumbRects = visibleThumbs.map(node => node.getBoundingClientRect());
+    const sectionStyle = getComputedStyle(section);
     return {
+      sectionWidth: sectionRect.width,
+      sectionHeight: sectionRect.height,
+      sectionPaddingTop: parseFloat(sectionStyle.paddingTop),
+      sectionPaddingBottom: parseFloat(sectionStyle.paddingBottom),
+      innerWidth: innerRect.width,
+      headHeight: headRect.height,
+      thumbsWidth: thumbsRect.width,
+      thumbsHeight: thumbsRect.height,
+      thumbWidths: thumbRects.map(rect => rect.width),
+      thumbHeights: thumbRects.map(rect => rect.height),
       titleSize: parseFloat(getComputedStyle(title).fontSize),
       titleFamily: getComputedStyle(title).fontFamily,
       labelSize: parseFloat(getComputedStyle(label).fontSize),
@@ -234,10 +254,20 @@ try {
   assert(isKakuFamily(spPartner.moreFamily), `SP partner more must resolve to Zen Kaku Gothic New, got ${spPartner.moreFamily}.`);
   const spInstagram = await measureTopInstagram(mobilePage);
   assert(spInstagram, 'SP TOP Instagram elements missing');
+  assert(close(spInstagram.sectionWidth, 375), `SP instagram section width ${spInstagram.sectionWidth}`);
+  assert(close(spInstagram.sectionHeight, 625.75, 2), `SP instagram section height ${spInstagram.sectionHeight}`);
+  assert(close(spInstagram.sectionPaddingTop, 64), `SP instagram padding-top ${spInstagram.sectionPaddingTop}`);
+  assert(close(spInstagram.sectionPaddingBottom, 0), `SP instagram padding-bottom ${spInstagram.sectionPaddingBottom}`);
+  assert(close(spInstagram.innerWidth, 311), `SP instagram inner width ${spInstagram.innerWidth}`);
+  assert(close(spInstagram.headHeight, 140, 2), `SP instagram head height ${spInstagram.headHeight}`);
+  assert(close(spInstagram.thumbsWidth, 311), `SP instagram thumbnails width ${spInstagram.thumbsWidth}`);
+  assert(close(spInstagram.thumbsHeight, 389.75, 2), `SP instagram thumbnails height ${spInstagram.thumbsHeight}`);
+  assert(spInstagram.thumbWidths.every(width => close(width, 155.5, 1)), `SP instagram thumbnail widths ${spInstagram.thumbWidths.join(',')}`);
+  assert(spInstagram.thumbHeights.every(height => close(height, 194.375, 1)), `SP instagram thumbnail heights ${spInstagram.thumbHeights.join(',')}`);
   assert(close(spInstagram.titleSize, 22, 0.5), `SP instagram title ${spInstagram.titleSize}`);
-  assert(isKakuFamily(spInstagram.titleFamily), `SP instagram title must resolve to Zen Kaku Gothic New, got ${spInstagram.titleFamily}.`);
+  assert(isMinchoFamily(spInstagram.titleFamily), `SP instagram title must resolve to Zen Old Mincho, got ${spInstagram.titleFamily}.`);
   assert(close(spInstagram.labelSize, 14, 0.5), `SP instagram label ${spInstagram.labelSize}`);
-  assert(isRobotoFamily(spInstagram.labelFamily), `SP instagram label must resolve to Roboto, got ${spInstagram.labelFamily}.`);
+  assert(isMinchoFamily(spInstagram.labelFamily), `SP instagram label must resolve to Zen Old Mincho, got ${spInstagram.labelFamily}.`);
   assert(isKakuFamily(spInstagram.leadFamily), `SP instagram lead must resolve to Zen Kaku Gothic New, got ${spInstagram.leadFamily}.`);
   const spBanner = await measureTopBanner(mobilePage);
   assert(spBanner, 'SP TOP Banner elements missing');
@@ -375,6 +405,16 @@ try {
   assert(isKakuFamily(pcPartner.moreFamily), `PC partner more must resolve to Zen Kaku Gothic New, got ${pcPartner.moreFamily}.`);
   const pcInstagram = await measureTopInstagram(desktopPage);
   assert(pcInstagram, 'PC TOP Instagram elements missing');
+  assert(close(pcInstagram.sectionWidth, 1380), `PC instagram section width ${pcInstagram.sectionWidth}`);
+  assert(close(pcInstagram.sectionHeight, 571, 2), `PC instagram section height ${pcInstagram.sectionHeight}`);
+  assert(close(pcInstagram.sectionPaddingTop, 100), `PC instagram padding-top ${pcInstagram.sectionPaddingTop}`);
+  assert(close(pcInstagram.sectionPaddingBottom, 80), `PC instagram padding-bottom ${pcInstagram.sectionPaddingBottom}`);
+  assert(close(pcInstagram.innerWidth, 1160), `PC instagram inner width ${pcInstagram.innerWidth}`);
+  assert(close(pcInstagram.headHeight, 62, 2), `PC instagram head height ${pcInstagram.headHeight}`);
+  assert(close(pcInstagram.thumbsWidth, 1159, 2), `PC instagram thumbnails width ${pcInstagram.thumbsWidth}`);
+  assert(close(pcInstagram.thumbsHeight, 289, 2), `PC instagram thumbnails height ${pcInstagram.thumbsHeight}`);
+  assert(pcInstagram.thumbWidths.every(width => close(width, 231)), `PC instagram thumbnail widths ${pcInstagram.thumbWidths.join(',')}`);
+  assert(pcInstagram.thumbHeights.every(height => close(height, 289)), `PC instagram thumbnail heights ${pcInstagram.thumbHeights.join(',')}`);
   assert(close(pcInstagram.titleSize, 24, 0.5), `PC instagram title ${pcInstagram.titleSize}`);
   assert(isMinchoFamily(pcInstagram.titleFamily), `PC instagram title must resolve to Zen Old Mincho, got ${pcInstagram.titleFamily}.`);
   assert(close(pcInstagram.labelSize, 16, 0.5), `PC instagram label ${pcInstagram.labelSize}`);
