@@ -506,3 +506,11 @@ TOPのFigma viewport 1380/375を守るため `top_mainVisual.css` に `:root { s
 - root/html/bodyへのoverrideは、stylesheetのload範囲を確認してからページ存在条件でscopeする。
 - TOP viewport補正は `html:has(.top_mainVisual)` のようにTOP DOMの存在へ結び、共有 `normalize.css` の契約を他ページで維持する。
 - geometry QAがPASSしていても、他ページへのselector leakageは別軸で最終監査する。
+
+
+## 2026-09-28 fail-closed要素にhover affordanceを残さない
+
+- 未確定URLを `href="#"` からfail-closedへ変更しても、CSSの `:hover` がclassだけを見ていると、無効要素がリンクのように反応して誤誘導になる。
+- URL未確定のplaceholderは遷移を止めるだけでなく、hover/focus/keyboardのaffordanceも無効状態と一致させる。
+- TOP Aboutではhover selectorを `[href]` を持つ実リンクだけへ限定する。正しいURLが供給された時は既存hoverが自動で復帰する。
+- Visual geometry PASSとは別に、disabled/fail-closed stateのinteraction QAを確認する。
