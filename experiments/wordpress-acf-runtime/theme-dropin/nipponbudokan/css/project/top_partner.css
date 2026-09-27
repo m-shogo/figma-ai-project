@@ -305,6 +305,17 @@
             text-align: left;
         }
 
+        @media screen and (max-width: 1279px) {
+            .tp_layout {
+                grid-template-columns: 189px minmax(0, 1fr);
+                gap: 32px;
+            }
+
+            .tp_list {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
         a.tp_more {
             transition: opacity var(--transition-duration);
         }
