@@ -1,4 +1,6 @@
 @charset "utf-8";
+/* TOP Figma frames use the full viewport width; this project stylesheet is TOP-owned. */
+:root { scrollbar-gutter: auto; }
 /* // ==========================================================================
 // メインビジュアル（TOP FV）
 // Current Figma fileKey d1pD6gL2Sqal8Cf6h9WLp6
