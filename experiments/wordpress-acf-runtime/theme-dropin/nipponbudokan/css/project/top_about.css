@@ -588,6 +588,40 @@
         }
     }
 
+    /* Tablet bridge: preserve the 1380px Figma contract at >=1280px while
+       preventing the fixed 1160px desktop composition from overflowing at 768-1279px. */
+    @media screen and (min-width: 768px) and (max-width: 1279px) {
+        .ta_top {
+            grid-template-columns: 240px minmax(0, 1fr);
+            column-gap: 40px;
+        }
+
+        .ta_lead {
+            width: 100%;
+            min-width: 0;
+        }
+
+        .ta_cards_wrap .global_inner {
+            padding-left: 320px;
+        }
+
+        .ta_cards,
+        .ta_cards_swiper .swiper-wrapper {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            width: 100%;
+        }
+
+        .ta_cards_swiper .swiper-slide,
+        .ta_card {
+            width: 100%;
+            min-width: 0;
+        }
+
+        .ta_card_image img {
+            width: 100%;
+        }
+    }
+
     @media (any-hover: hover) {
         .ta_btn[href]:hover {
             border-color: var(--color-text);
