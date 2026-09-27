@@ -40,8 +40,8 @@ $cards = array(
                 <div class="ta_panel">
                     <p class="ta_lead">日本武道館は、武道の普及・振興と書道文化の継承を目的として設立された公益財団法人です。<br class="ta_lead_break">武道大会・研修会・青少年育成・書初め大展覧会・刊行物発行など、多岐にわたる事業を展開しています。1964年東京オリンピックでは柔道競技の会場となり、現在は式典やコンサート会場としても利用されています。</p>
                     <div class="ta_actions">
-                        <a class="ta_btn ta_btn_pdf" href="#">パンフレット（1.2MB）</a>
-                        <a class="ta_btn ta_btn_video" href="#">ご紹介動画</a>
+                        <a class="ta_btn ta_btn_pdf" aria-disabled="true">パンフレット（1.2MB）</a>
+                        <a class="ta_btn ta_btn_video" aria-disabled="true">ご紹介動画</a>
                     </div>
                 </div>
             </div>
@@ -54,7 +54,7 @@ $cards = array(
                     <div class="swiper-wrapper">
                         <?php foreach ($cards as $index => $card): ?>
                             <article class="swiper-slide ta_card">
-                                <a class="ta_card_link" href="#">
+                                <a class="ta_card_link" aria-disabled="true">
                                     <p class="ta_card_image">
                                         <img src="<?php echo esc_url($theme_uri . '/images/top/' . $card['image']); ?>" alt="" width="295" height="197" loading="lazy">
                                         <span class="ta_card_overlay">
