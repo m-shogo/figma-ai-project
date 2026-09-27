@@ -479,3 +479,16 @@ rootの `scrollbar-gutter: stable` が常時15pxを予約し、Figmaのauthored 
 - 既存の `object-fit: cover` は素材owner自体は維持できても、このcropを再現しない。
 - 画像差替えが証明されていない場合はACF画像ownerを維持し、wrapperのclip + Figmaで証明されたcrop値だけをCSSへ反映する。
 - PC/SPで同一cropが証明された場合はresponsive別の重複ルールを作らない。
+
+
+## 2026-09-27 TOP差分で固定columnがFigma authorityならcontent依存max-contentを残さない
+
+**起きたこと**
+
+TOP PartnerはSPの2列grid・12件・surface・borderが現行Figmaと一致していた。一方PCはFigmaで左intro 189px / 右list 860px / gap 111pxと固定されているのに、実装だけ左columnが `max-content` で文言幅依存だった。
+
+**次回ルール**
+
+- DOM・データ・子componentが一致している場合は再実装せず、Figmaが固定した親geometryだけを最小修正する。
+- Figmaでcolumn幅が明示されている箇所を、たまたま現行文言で近似する `max-content` に委ねない。
+- 固定column化後はSP variantを変えず、PCの隣接column・gap・全幅が維持されることを回帰確認する。
