@@ -199,7 +199,7 @@
 
         .tp_layout {
             display: grid;
-            grid-template-columns: max-content minmax(0, 860px);
+            grid-template-columns: 189px minmax(0, 860px);
             align-items: center;
             justify-content: space-between;
             gap: 111px;
