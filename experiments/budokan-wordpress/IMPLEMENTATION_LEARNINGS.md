@@ -471,3 +471,11 @@ rootの `scrollbar-gutter: stable` が常時15pxを予約し、Figmaのauthored 
 - Figmaの375/1380をlayout viewport authorityとして検証する環境では、rootで恒常的なgutterを予約しない。
 - scrollbar補正をQA viewportとproduction CSSの両方へ入れない。補正ownerは1箇所だけにする。
 - 横幅修正後はsection widthだけでなく、grid child・aspect-ratio由来の高さ・隣接sectionも再検証する。
+
+
+## 2026-09-27 TOP banner: object-fit と authored crop を同一視しない
+
+- Figma SP `2688:14305` / PC `1603:7145` は同じ宝くじバナー素材を使うが、1枠目は 253×80 の窓に対して画像を約 202.11%×360% へ拡大し、left -54.32% / top -148.33% で切り抜く authored crop だった。
+- 既存の `object-fit: cover` は素材owner自体は維持できても、このcropを再現しない。
+- 画像差替えが証明されていない場合はACF画像ownerを維持し、wrapperのclip + Figmaで証明されたcrop値だけをCSSへ反映する。
+- PC/SPで同一cropが証明された場合はresponsive別の重複ルールを作らない。
