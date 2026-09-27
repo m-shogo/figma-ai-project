@@ -584,11 +584,11 @@
     }
 
     @media (any-hover: hover) {
-        .ta_btn:hover {
+        .ta_btn[href]:hover {
             border-color: var(--color-text);
         }
 
-        .ta_card_link:hover .ta_card_label {
+        .ta_card_link[href]:hover .ta_card_label {
             color: var(--color-link);
         }
     }
