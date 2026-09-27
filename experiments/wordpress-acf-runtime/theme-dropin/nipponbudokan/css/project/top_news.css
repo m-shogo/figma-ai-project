@@ -196,6 +196,7 @@
     }
 
     .top_news_articles .news_item_label {
+        width: 90px;
         min-height: 23px;
         border-color: var(--news-label-color, var(--color-text));
         color: var(--news-label-color, var(--color-text));
