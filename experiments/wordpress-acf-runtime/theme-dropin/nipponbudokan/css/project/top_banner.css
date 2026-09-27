@@ -73,8 +73,26 @@
     }
 
     /* Current Figma has two authored banner slots: 253×80 and 204×80. */
-    .tb_item:nth-child(1) .tb_image {
+    .tb_item:nth-child(1) .tb_link {
+        position: relative;
+        overflow: hidden;
         width: 253px;
+        height: 80px;
+        border: 1px solid var(--color-line);
+    }
+
+    /* Figma uses the existing 16:9 treasure-lottery artwork as an authored crop,
+       not a generic object-fit cover. Keep the ACF image owner and reproduce only
+       the proven crop window on both SP and PC. */
+    .tb_item:nth-child(1) .tb_image {
+        position: absolute;
+        top: -148.33%;
+        left: -54.32%;
+        width: 202.11%;
+        max-width: none;
+        height: 360%;
+        border: 0;
+        object-fit: fill;
     }
 
     .tb_item:nth-child(2) .tb_image {
