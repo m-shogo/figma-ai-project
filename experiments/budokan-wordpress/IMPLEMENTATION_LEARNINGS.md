@@ -492,3 +492,17 @@ TOP PartnerはSPの2列grid・12件・surface・borderが現行Figmaと一致し
 - DOM・データ・子componentが一致している場合は再実装せず、Figmaが固定した親geometryだけを最小修正する。
 - Figmaでcolumn幅が明示されている箇所を、たまたま現行文言で近似する `max-content` に委ねない。
 - 固定column化後はSP variantを変えず、PCの隣接column・gap・全幅が維持されることを回帰確認する。
+
+
+## 2026-09-27 TOP project CSSでも :root はサイト全体へ漏れる
+
+**起きたこと**
+
+TOPのFigma viewport 1380/375を守るため `top_mainVisual.css` に `:root { scrollbar-gutter: auto; }` を置いていたが、`css/style.css` はTOP project CSSを全ページimportするため、ファイル名がTOP専用でも `:root` selectorは他ページのroot scroll contractまで上書きし得る。
+
+**再発防止**
+
+- project CSSに書いたという理由だけでselector scopeまでproject限定だと判断しない。
+- root/html/bodyへのoverrideは、stylesheetのload範囲を確認してからページ存在条件でscopeする。
+- TOP viewport補正は `html:has(.top_mainVisual)` のようにTOP DOMの存在へ結び、共有 `normalize.css` の契約を他ページで維持する。
+- geometry QAがPASSしていても、他ページへのselector leakageは別軸で最終監査する。
