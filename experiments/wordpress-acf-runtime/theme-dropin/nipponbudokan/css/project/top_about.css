@@ -123,6 +123,7 @@
         position: relative;
         z-index: 1;
         width: 327px;
+        max-width: 100%;
         padding: 0;
         background-color: transparent;
         color: var(--color-text);
@@ -148,6 +149,7 @@
         flex-direction: column;
         gap: 16px;
         width: 300px;
+        max-width: 100%;
         margin-inline: auto;
     }
 
@@ -197,6 +199,7 @@
 
     .ta_cards {
         width: 300px;
+        max-width: 100%;
         margin-inline: auto;
     }
 
@@ -213,6 +216,7 @@
     .ta_cards_swiper .swiper-slide,
     .ta_card {
         width: 300px;
+        max-width: 100%;
         height: auto;
         flex: none;
     }
@@ -234,6 +238,7 @@
         img {
             display: block;
             width: 300px;
+            max-width: 100%;
             height: 183px;
             object-fit: cover;
         }
