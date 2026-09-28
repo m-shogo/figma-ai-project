@@ -38,6 +38,13 @@
         gap: 20px;
     }
 
+    /* 見出しと一覧リンクは nowrap。合計が panel 境界を越える幅だけ折り返す。375px の1行は維持する。 */
+    @media (max-width: 354px) {
+        .top_news_head {
+            flex-wrap: wrap;
+        }
+    }
+
     .top_news_heading {
         display: flex;
         flex-direction: column;
