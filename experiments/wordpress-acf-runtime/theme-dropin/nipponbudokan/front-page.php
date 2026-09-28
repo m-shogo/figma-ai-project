@@ -4,9 +4,9 @@ $theme_uri = get_template_directory_uri();
 $has_acf_pro_repeater = class_exists('acf_field_repeater');
 $has_slider = $has_acf_pro_repeater && function_exists('have_rows') && have_rows('top_slider-01');
 $default_title_pc = '伝統を未来へつなぐ、<br>武道文化の中心地';
-$default_title_sp = '伝統を未来へつなぐ、<br>武道と書道の中心地';
+$default_title_sp = $default_title_pc;
 $default_lead_pc = '武道、書道の普及・振興、公益目的事業の拠点として活動しています。';
-$default_lead_sp = '武道の振興、書道文化の継承、<br>公益事業の拠点として活動しています。';
+$default_lead_sp = $default_lead_pc;
 ?>
 <div class="top_mainVisual">
     <div class="tm_stage">
@@ -34,15 +34,13 @@ $default_lead_sp = '武道の振興、書道文化の継承、<br>公益事業�
                             }
                             $is_canonical_title = strpos(wp_strip_all_tags($title_pc), '武道文化の中心地') !== false;
                             if (!$title_sp) {
-                                $title_sp = $is_canonical_title
-                                    ? str_replace('武道文化の中心地', '武道と書道の中心地', $title_pc)
-                                    : $title_pc;
+                                $title_sp = $title_pc;
                             }
                             if (!$lead_pc && $is_canonical_title) {
                                 $lead_pc = $default_lead_pc;
                             }
                             if (!$lead_sp) {
-                                $lead_sp = $is_canonical_title ? $default_lead_sp : $lead_pc;
+                                $lead_sp = $lead_pc;
                             }
                             ?>
                             <li class="swiper-slide">
@@ -151,6 +149,8 @@ $default_lead_sp = '武道の振興、書道文化の継承、<br>公益事業�
                                 <li class="tn_item"><?php echo $textarea; ?></li>
                             <?php endforeach; ?>
                         </ul>
+                    <?php else: ?>
+                        <span class="tn_placeholder" aria-disabled="true">重要なお知らせ</span>
                     <?php endif; ?>
                 </div>
             </div>
@@ -159,6 +159,7 @@ $default_lead_sp = '武道の振興、書道文化の継承、<br>公益事業�
 </div>
 <main id="global_contents" class="global_contents" itemscope itemprop="mainContentOfPage">
     <?php get_template_part('template-parts/_top-events'); ?>
+    <?php get_template_part('template-parts/_top-sns'); ?>
     <?php get_template_part('template-parts/_top-guide'); ?>
     <?php get_template_part('template-parts/_top-about'); ?>
     <?php get_template_part('template-parts/_top-news'); ?>

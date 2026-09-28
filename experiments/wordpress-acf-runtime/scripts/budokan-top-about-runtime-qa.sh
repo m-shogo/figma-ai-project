@@ -86,8 +86,8 @@ for required in \
   'class="ta_actions"' \
   'class="ta_cards"' \
   '日本武道館とは' \
-  'About us' \
-  'パンフレット（10MB）' \
+  'class="ta_heading_en_text"' \
+  'パンフレット（1.2MB）' \
   'ご紹介動画'; do
   grep -Fq "$required" "$html" || {
     echo "FAIL required TOP About runtime marker missing: ${required}" >&2
@@ -95,7 +95,7 @@ for required in \
   }
 done
 
-card_count="$(grep -o 'class="ta_card"' "$html" | wc -l | tr -d ' ')"
+card_count="$(grep -o 'class="swiper-slide ta_card"' "$html" | wc -l | tr -d ' ')"
 [[ "$card_count" == "4" ]] || {
   echo "FAIL expected exactly four TOP About cards; got ${card_count}." >&2
   exit 1

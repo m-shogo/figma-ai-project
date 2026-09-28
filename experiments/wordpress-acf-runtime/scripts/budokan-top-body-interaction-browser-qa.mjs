@@ -77,6 +77,16 @@ async function geometry(target) {
   });
 }
 
+async function assertBox(target, expected, label, tolerance = 1) {
+  const box = await geometry(target);
+  for (const [key, value] of Object.entries(expected)) {
+    if (!near(box[key], value, tolerance)) {
+      failures.push(`${label} ${key} mismatch: expected ${value}, got ${box[key]}`);
+    }
+  }
+  return box;
+}
+
 async function assertPointerOwnsCenter(target, label) {
   const result = await target.evaluate(el => {
     const r = el.getBoundingClientRect();
@@ -167,6 +177,53 @@ async function auditHoverAndFocus(page, selector, label) {
     }
   }
 
+  // Current-Figma structural/visual contracts for the newly restored SNS strip.
+  const pcSns = await visibleTarget(page, '.top_sns-01', 'PC TOP SNS');
+  await assertBox(pcSns, { width: 1380, height: 240 }, 'PC TOP SNS', 1);
+  const pcSnsInner = await visibleTarget(page, '.top_sns-01 .ts_inner', 'PC TOP SNS inner');
+  await assertBox(pcSnsInner, { width: 954, height: 80 }, 'PC TOP SNS inner', 1);
+  await assertBox(await visibleTarget(page, '.top_sns-01 .ts_group_youtube', 'PC TOP SNS YouTube'), { width: 156, height: 80 }, 'PC TOP SNS YouTube', 1);
+  await assertBox(await visibleTarget(page, '.top_sns-01 .ts_group_editorial', 'PC TOP SNS editorial'), { width: 363, height: 80 }, 'PC TOP SNS editorial', 1);
+  await assertBox(await visibleTarget(page, '.top_sns-01 .ts_group_official', 'PC TOP SNS official'), { width: 339, height: 80 }, 'PC TOP SNS official', 1);
+  const pcSnsIcons = await page.locator('.top_sns-01 .ts_icon').count();
+  if (pcSnsIcons !== 5) failures.push(`PC TOP SNS should expose five Figma brand circles; got ${pcSnsIcons}`);
+  const pcSnsLinks = await page.locator('.top_sns-01 a').count();
+  if (pcSnsLinks !== 0) failures.push(`PC TOP SNS unresolved destinations must fail closed; found ${pcSnsLinks} anchors`);
+
+  const order = await page.evaluate(() => {
+    const events = document.querySelector('#top_events-01');
+    const sns = document.querySelector('#top_sns-01');
+    const guide = document.querySelector('#top_guide-01');
+    return {
+      eventsBeforeSns: !!events && !!sns && !!(events.compareDocumentPosition(sns) & Node.DOCUMENT_POSITION_FOLLOWING),
+      snsBeforeGuide: !!sns && !!guide && !!(sns.compareDocumentPosition(guide) & Node.DOCUMENT_POSITION_FOLLOWING),
+    };
+  });
+  if (!order.eventsBeforeSns || !order.snsBeforeGuide) {
+    failures.push(`PC TOP section order must be Events -> SNS -> Guide; got ${JSON.stringify(order)}`);
+  }
+
+  // Existing lower sections must retain their current-Figma geometry while adjacent SNS is inserted.
+  const pcInstagramInner = await visibleTarget(page, '.top_instagram-01 .ti_inner', 'PC TOP Instagram inner');
+  await assertBox(pcInstagramInner, { width: 1160 }, 'PC TOP Instagram inner', 1);
+  const pcInstagramThumbs = page.locator('.top_instagram-01 .ti_thumbnail:visible');
+  if (await pcInstagramThumbs.count() !== 5) failures.push(`PC TOP Instagram should show five thumbnails; got ${await pcInstagramThumbs.count()}`);
+  if (await pcInstagramThumbs.count() > 0) {
+    await assertBox(pcInstagramThumbs.first(), { width: 231, height: 289 }, 'PC TOP Instagram first thumbnail', 1);
+  }
+
+  const pcPartnerSurface = await page.locator('.top_partner-01').first().evaluate(el => {
+    const style = getComputedStyle(el);
+    return {
+      borderBottomWidth: style.borderBottomWidth,
+      borderBottomColor: style.borderBottomColor,
+      backgroundColor: style.backgroundColor,
+    };
+  });
+  if (pcPartnerSurface.borderBottomWidth !== '1px' || pcPartnerSurface.borderBottomColor !== 'rgb(191, 62, 43)') {
+    failures.push(`PC TOP Partner bottom rule drifted: ${JSON.stringify(pcPartnerSurface)}`);
+  }
+
   await auditHoverAndFocus(page, '.top_news_more_pc', 'PC TOP News more CTA');
   await auditHoverAndFocus(page, '.top_news_articles .news_item_link', 'PC TOP News item');
 
@@ -177,6 +234,66 @@ async function auditHoverAndFocus(page, selector, label) {
 // SP: same body CTA stability plus the fixed purpose shortcut must scroll only to its authored Guide target.
 {
   const { page, pageErrors } = await openPage({ width: 375, height: 812 });
+  const spSns = await visibleTarget(page, '.top_sns-01', 'SP TOP SNS');
+  await assertBox(spSns, { width: 375, height: 328 }, 'SP TOP SNS', 1);
+  const spSnsInner = await visibleTarget(page, '.top_sns-01 .ts_inner', 'SP TOP SNS inner');
+  await assertBox(spSnsInner, { width: 312 }, 'SP TOP SNS inner', 1);
+  await assertBox(await visibleTarget(page, '.top_sns-01 .ts_group_youtube', 'SP TOP SNS YouTube'), { width: 312, height: 40 }, 'SP TOP SNS YouTube', 1);
+  await assertBox(await visibleTarget(page, '.top_sns-01 .ts_group_editorial', 'SP TOP SNS editorial'), { width: 312, height: 80 }, 'SP TOP SNS editorial', 1);
+  await assertBox(await visibleTarget(page, '.top_sns-01 .ts_group_official', 'SP TOP SNS official'), { width: 312, height: 40 }, 'SP TOP SNS official', 1);
+  const spSnsDecoration = await spSns.evaluate(el => {
+    const style = getComputedStyle(el, '::before');
+    return {
+      content: style.content,
+      top: style.top,
+      right: style.right,
+      width: style.width,
+      height: style.height,
+      backgroundImage: style.backgroundImage,
+    };
+  });
+  if (
+    spSnsDecoration.content === 'none' ||
+    spSnsDecoration.top !== '145px' ||
+    spSnsDecoration.right !== '0px' ||
+    spSnsDecoration.width !== '260px' ||
+    spSnsDecoration.height !== '183px' ||
+    !spSnsDecoration.backgroundImage.includes('sns-octagon-sp.svg')
+  ) {
+    failures.push(`SP TOP SNS octagon geometry/asset drifted: ${JSON.stringify(spSnsDecoration)}`);
+  }
+  const spSnsLinks = await page.locator('.top_sns-01 a').count();
+  if (spSnsLinks !== 0) failures.push(`SP TOP SNS unresolved destinations must fail closed; found ${spSnsLinks} anchors`);
+
+  const spInstagramInner = await visibleTarget(page, '.top_instagram-01 .ti_inner', 'SP TOP Instagram inner');
+  await assertBox(spInstagramInner, { width: 311 }, 'SP TOP Instagram inner', 1);
+  const spInstagramThumbs = page.locator('.top_instagram-01 .ti_thumbnail:visible');
+  if (await spInstagramThumbs.count() !== 4) failures.push(`SP TOP Instagram should show four thumbnails; got ${await spInstagramThumbs.count()}`);
+  if (await spInstagramThumbs.count() > 0) {
+    await assertBox(spInstagramThumbs.first(), { width: 155.5, height: 194.375 }, 'SP TOP Instagram first thumbnail', 1);
+  }
+
+  const spPartner = await visibleTarget(page, '.top_partner-01', 'SP TOP Partner');
+  const spPartnerLayout = await visibleTarget(page, '.top_partner-01 .tp_layout', 'SP TOP Partner layout');
+  await assertBox(spPartnerLayout, { width: 335 }, 'SP TOP Partner layout', 1);
+  const spPartnerSurface = await spPartner.evaluate(el => {
+    const style = getComputedStyle(el);
+    return {
+      backgroundColor: style.backgroundColor,
+      backgroundImage: style.backgroundImage,
+      borderBottomWidth: style.borderBottomWidth,
+      borderBottomColor: style.borderBottomColor,
+    };
+  });
+  if (
+    spPartnerSurface.backgroundColor !== 'rgb(255, 255, 255)' ||
+    spPartnerSurface.backgroundImage !== 'none' ||
+    spPartnerSurface.borderBottomWidth !== '1px' ||
+    spPartnerSurface.borderBottomColor !== 'rgb(231, 231, 231)'
+  ) {
+    failures.push(`SP TOP Partner surface does not match current Figma: ${JSON.stringify(spPartnerSurface)}`);
+  }
+
   await auditHoverAndFocus(page, '.top_news_more_sp', 'SP TOP News more CTA');
   await auditHoverAndFocus(page, '.top_news_articles .news_item_link', 'SP TOP News item');
 
@@ -227,6 +344,8 @@ if (failures.length) {
   process.exit(1);
 }
 
+console.log('PASS TOP SNS current-Figma PC/SP geometry, ordering, brand counts and fail-closed link ownership.');
+console.log('PASS TOP Partner/Instagram adjacent lower-section geometry remains stable on PC/SP.');
 console.log('PASS TOP body hover/focus states preserve geometry, scroll position, focus and root width.');
 console.log('PASS unresolved TOP FV fallback destinations fail closed instead of behaving like page-top links.');
 console.log('PASS SP fixed purpose CTA owns its pointer target and lands at the authored Guide anchor without horizontal overflow.');

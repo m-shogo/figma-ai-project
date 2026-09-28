@@ -332,3 +332,195 @@ CANDIDATE evidence: `research/frontend-learning-evidence-local-nav-octagon-nowra
 - 複数案件で再現: Frontend Standard / Figma-to-Web Learningへ昇格
 
 これにより、反省を増やすだけのgovernanceではなく、**再発したものほど上位の知識へ昇格する**運用にする。
+
+
+## 2026-09-26 TOP差分改修は既存ベースを再実装せず、変わったvisual propertyだけ直す
+
+**起きたこと**
+
+TOP Main Visual は既存実装がほぼ成立していたが、新Figmaとの比較で SP の画像cropとgradient、PCのoverlay表現だけが旧値のまま残っていた。全面監査やDOM再設計を続けると、差分改修なのに新規実装相当の時間が掛かる。
+
+**今回の確認結果**
+
+- visual authority: Figma file `d1pD6gL2Sqal8Cf6h9WLp6`
+- SP MV `1455:5811`: image は `object-bottom`、gradient は `36.443deg / 23.906% → 48.72%`
+- PC FV `1603:7662`: hero crop は center、旧全面gradientではなく lead 背後に `#333 / blur(20px) / 612×44` の局所shadow layer
+- title / lead の既存WordPress/ACF ownershipは維持し、画像自体の差替えは不要だった
+
+**次回ルール**
+
+- TOPは新規構築ではなく差分改修として扱う。既存で一致しているDOM・ACF/CPT・Swiper・画像・responsiveは掘り直さない。
+- 画像が同じなら asset replacement をしない。crop差なら `object-position`、gradient差ならgradient、copy差ならcopy ownerだけ直す。
+- 1セクションで最初に visual diff を property 単位（image / crop / gradient / copy / spacing / typography / responsive）に分け、差分が無い項目は即PASSする。
+- Figmaの短命asset URLはvisual確認専用。本番Themeへ残さない。
+
+**再発防止**
+
+同一セクションで「owner確認だけ」を繰り返さない。2run続けて閉じられなければ、3run目は別routeへ切り替え、最低でも実diff・QA evidence・blocker root cause・次回即write可能差分のいずれかを残す。
+
+
+## 2026-09-26 TOP大会・イベントは旧Calendar ownerを延命せず既存event CPTを新レイアウトへ投影する
+
+**起きたこと**
+
+既存TOPには FullCalendar 用markup/CSSが残っていたが、新Figma PC `1603:7488` / SP `2674:12919` ではカレンダーUI自体が廃止され、「注目の主催事業」4件と「近日開催の行事予定」リストへ変更されていた。
+
+**今回の判断**
+
+- データモデルは作り直さず、既存 `event` CPT / `event_cat` / `event_status` / `event_date` / `event_time` / `event_host` を継続利用する。
+- 注目枠は既存TOPの4件取得を維持し、見た目とstatus/category投影だけ新Figmaへ合わせる。
+- 近日開催は既存 `event_date` を使い、当日以降を日付昇順で最大5件取得する。空値は表示しない。
+- Figma上のダミー電話番号・URLはハードコードしない。外部URLは既存 `post_type=url` / `postType_url` ownerがある場合だけ表示する。
+- TOP専用の旧Calendar markup/CSSとイベント内SNSは新Figma section外なので残さない。SNSは別sectionとして扱う。
+
+**再発防止**
+
+既存コードに大きな機能ownerが残っていても、「以前存在したから維持」では判断しない。新FigmaとHuman overrideで廃止が確認できたTOP専用UIは、共有データownerを守ったまま表示層だけ差し替える。
+
+
+## 2026-09-26 TOP Eventsのgeometry異常はCSS値を動かす前に構文境界を確認する
+
+**起きたこと**
+
+SP Runtime/Visual QAでカードのcolumn gapが `-327px` になった。Figma正本は2列・17px gapであり、通常のspacing誤差では説明できない値だった。
+
+**根本原因**
+
+`top_events.css` の `.te_upcoming_icon` と `.te_cards` の境界が編集時に連結・重複し、`.te_cards` のgrid宣言が有効なselector blockから外れていた。そのためカードが2列gridにならず、座標差を測るQAが負値を返した。
+
+**今回の修正**
+
+- DOM / event CPT / ACF / asset / shared CSSは変更しない。
+- 破損したselector境界だけを復元し、既定のSP `repeat(2, minmax(0, 1fr)) / 17px / 32px` を戻した。
+- geometry assertion自体は弱めず、実座標による検知を維持した。
+
+**次回ルール**
+
+- gap / width / positionの実測値が負値、0、親幅相当など通常の微差を超える場合、magic numberを調整する前にCSSのselector境界・brace・重複挿入・computed displayを確認する。
+- 大きな置換diffの後は対象selectorの前後を再読し、隣接blockが連結されていないことを確認する。
+- Visual QAが異常値を出した場合、QAを緩めるより先に「layout modeが成立しているか」を確認する。
+
+
+## 2026-09-26 Computed CSSのQAは値変更前に正規化helperを検証する
+
+TOP Events SPの背景色QAが `rgb(242, 242, 242)` を表示しながら失敗した。実装値はFigma想定の `#f2f2f2` と一致しており、原因はQA側の空白除去regexが `/\\\\s+/g` となっていたことだった。
+
+再発防止として、assertionのエラーメッセージに期待値と同等のcomputed valueが出ている場合は、CSSを変更する前にnormalizer・単位変換・文字列比較を確認する。Visual QAを通すために正しい実装値を歪めない。
+
+
+## 2026-09-27 TOP Partner は旧SP装飾を現行Figmaへ持ち越さない
+
+**起きたこと**
+
+TOP Partner の既存SP CSSには薄灰色面と左上mask画像が残っていたが、現行Figma正本 `d1pD6gL2Sqal8Cf6h9WLp6` の SP `1363:9405` は白地＋`#e7e7e7` 下罫線で、mask/background asset は存在しない。PC `1603:7187` は従来どおり赤い下罫線。
+
+**次回ルール**
+
+- 旧Figma由来とコメントされた装飾でも、現行nodeに存在しなければ維持理由にしない。
+- sectionのDOM、12件grid、logo、typography、CTAが一致している場合は再実装せず、surface/background/borderだけを最小差分で直す。
+- PC/SPでsurface contractが異なる場合、SP baseを現行SPに合わせ、PC media queryでPC固有borderだけを上書きする。
+
+
+## 2026-09-27 TOP差分QAは「期待値を実測へ寄せる」前にFigma座標を再確認する
+
+**起きたこと**
+
+TOP AboutのPC browser QAで、Figma由来のカード先頭Y=235に対してruntimeがY=305となり失敗した。直前にsection高やblurを更新していたため、QA期待値側をruntimeへ合わせる余地があった。
+
+**原因**
+
+カード群は既存DOM上で本文gridの外にあり、`.ta_cards_wrap` の負marginでFigma位置へ重ねる構造だった。section高の更新後も旧 `margin-top: -280px` が残り、70px下へずれた。
+
+**次回ルール**
+
+- geometry assertionが失敗したら、runtime値を新しい期待値にする前にFigmaの該当子nodeを再取得する。
+- 既存DOMを維持する場合は、section height / flow height / negative margin の連動を確認する。
+- 位置差だけならDOMやownershipを再設計せず、差分を所有する最小CSSだけ直す。
+- SP/PCの片方を直した後、もう片方と隣接sectionのruntime/visual回帰を必ず確認する。
+
+## 2026-09-27 Runtime fixtureは本番ACFコンテンツ文言を所有しない
+
+**起きたこと**
+
+TOP FVとBody Interaction workflowが、Theme本体ではなくruntime fixture内の固定された熊本地震お見舞い文言assertで入口failureになり、browser QAまで到達しなかった。
+
+**原因**
+
+ACFが所有する可変notice本文を、ACF Pro repeaterを持たないdisposable fixtureの必須markerとして固定していた。
+
+**次回ルール**
+
+- fixtureはDOM owner・fallback契約・必要assetを検証し、production ACFが所有する可変本文を固定値で要求しない。
+- 共有fixture failureで複数workflowが落ちた場合、各componentを別々に修正せず共通入口を先に分類する。
+- content更新をVisual regressionとして誤認しない。
+
+
+## 2026-09-27 authored viewportとscrollbar gutterを二重補正しない
+
+**起きたこと**
+
+TOP Body InteractionでPC 1380pxが1365px、SP 375pxが360pxとして実測され、SNS・Instagram・Partnerが一律15px縮んだ。個別componentの幅はFigma値どおりに記述されていた。
+
+**原因**
+
+rootの `scrollbar-gutter: stable` が常時15pxを予約し、Figmaのauthored viewport幅そのものをcontent viewportとして扱うQAと衝突した。component側へ15pxずつ足すと全sectionにmagic numberが伝播する。
+
+**次回ルール**
+
+- 複数の独立sectionが同時に同じ15pxだけ縮む場合、component CSSより先にroot viewport / scrollbar contractを確認する。
+- Figmaの375/1380をlayout viewport authorityとして検証する環境では、rootで恒常的なgutterを予約しない。
+- scrollbar補正をQA viewportとproduction CSSの両方へ入れない。補正ownerは1箇所だけにする。
+- 横幅修正後はsection widthだけでなく、grid child・aspect-ratio由来の高さ・隣接sectionも再検証する。
+
+
+## 2026-09-27 TOP banner: object-fit と authored crop を同一視しない
+
+- Figma SP `2688:14305` / PC `1603:7145` は同じ宝くじバナー素材を使うが、1枠目は 253×80 の窓に対して画像を約 202.11%×360% へ拡大し、left -54.32% / top -148.33% で切り抜く authored crop だった。
+- 既存の `object-fit: cover` は素材owner自体は維持できても、このcropを再現しない。
+- 画像差替えが証明されていない場合はACF画像ownerを維持し、wrapperのclip + Figmaで証明されたcrop値だけをCSSへ反映する。
+- PC/SPで同一cropが証明された場合はresponsive別の重複ルールを作らない。
+
+
+## 2026-09-27 TOP差分で固定columnがFigma authorityならcontent依存max-contentを残さない
+
+**起きたこと**
+
+TOP PartnerはSPの2列grid・12件・surface・borderが現行Figmaと一致していた。一方PCはFigmaで左intro 189px / 右list 860px / gap 111pxと固定されているのに、実装だけ左columnが `max-content` で文言幅依存だった。
+
+**次回ルール**
+
+- DOM・データ・子componentが一致している場合は再実装せず、Figmaが固定した親geometryだけを最小修正する。
+- Figmaでcolumn幅が明示されている箇所を、たまたま現行文言で近似する `max-content` に委ねない。
+- 固定column化後はSP variantを変えず、PCの隣接column・gap・全幅が維持されることを回帰確認する。
+
+
+## 2026-09-27 TOP project CSSでも :root はサイト全体へ漏れる
+
+**起きたこと**
+
+TOPのFigma viewport 1380/375を守るため `top_mainVisual.css` に `:root { scrollbar-gutter: auto; }` を置いていたが、`css/style.css` はTOP project CSSを全ページimportするため、ファイル名がTOP専用でも `:root` selectorは他ページのroot scroll contractまで上書きし得る。
+
+**再発防止**
+
+- project CSSに書いたという理由だけでselector scopeまでproject限定だと判断しない。
+- root/html/bodyへのoverrideは、stylesheetのload範囲を確認してからページ存在条件でscopeする。
+- TOP viewport補正は `html:has(.top_mainVisual)` のようにTOP DOMの存在へ結び、共有 `normalize.css` の契約を他ページで維持する。
+- geometry QAがPASSしていても、他ページへのselector leakageは別軸で最終監査する。
+
+
+## 2026-09-28 fail-closed要素にhover affordanceを残さない
+
+- 未確定URLを `href="#"` からfail-closedへ変更しても、CSSの `:hover` がclassだけを見ていると、無効要素がリンクのように反応して誤誘導になる。
+- URL未確定のplaceholderは遷移を止めるだけでなく、hover/focus/keyboardのaffordanceも無効状態と一致させる。
+- TOP Aboutではhover selectorを `[href]` を持つ実リンクだけへ限定する。正しいURLが供給された時は既存hoverが自動で復帰する。
+- Visual geometry PASSとは別に、disabled/fail-closed stateのinteraction QAを確認する。
+
+## 2026-09-28 検索シートはトグルを覆うので、閉じるQAは閉じるボタンを押す
+
+FV overlay QA は検索を `#gh_search` の再クリックで閉じようとして、`#gh_search does not own its pointer hit target` で落ちていた。開いた `.gh_searchPanel` は header 全面を覆う fixed sheet で、閉じる操作の owner は `#ghs_close` である。header の z-index を上げてトグルをシートの上に出すと、Figma の「gray bar covers the header」と衝突する。
+
+**再発防止**
+
+- この失敗を TOP FV CSS や header の重ね順の不具合として直さない。
+- 検索を閉じる pointer QA は `#ghs_close`、暗幕、Escape を使う。
+- `#gh_search` の hit 確認は、シートが閉じている開く操作に限る。

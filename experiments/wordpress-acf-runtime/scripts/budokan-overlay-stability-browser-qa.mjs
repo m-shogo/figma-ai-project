@@ -128,7 +128,7 @@ function assertClosedStable(before, closed, openClass, label) {
   assertOverlayDoesNotIncreaseOverflow(before, closed, `${label} closed`);
 }
 
-async function exerciseOverlay(page, selector, openClass, label, cycles = 1) {
+async function exerciseOverlay(page, selector, openClass, label, cycles = 1, closeSelector = selector) {
   for (let cycle = 1; cycle <= cycles; cycle += 1) {
     const before = await snapshot(page);
     assert(before, `${label}: initial geometry missing.`);
@@ -139,7 +139,7 @@ async function exerciseOverlay(page, selector, openClass, label, cycles = 1) {
     assert(opened.bodyClass.includes(openClass), `${label}: expected ${openClass} after open.`);
     assertStable(before, opened, `${label} cycle ${cycle}`);
 
-    await pointerClick(page, selector);
+    await pointerClick(page, closeSelector);
     await page.waitForTimeout(450);
     const closed = await snapshot(page);
     assertClosedStable(before, closed, openClass, `${label} cycle ${cycle}`);
@@ -215,7 +215,8 @@ async function exerciseOverlaysAtScroll(page, scrollY, label) {
 
   await exerciseOverlay(page, '#gh_menu', '_open-menu', `${label} menu`, 2);
   await exerciseEscapeClose(page, '#gh_menu', '_open-menu', `${label} menu`);
-  await exerciseOverlay(page, '#gh_search', '_open-search', `${label} search`, 1);
+  // The search sheet is position:fixed over the header, so the toggle is not the close hit target.
+  await exerciseOverlay(page, '#gh_search', '_open-search', `${label} search`, 1, '#ghs_close');
   await exerciseEscapeClose(page, '#gh_search', '_open-search', `${label} search`);
 }
 
