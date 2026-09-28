@@ -3,7 +3,7 @@
 このファイルは **日本武道館 WordPress 案件**の会話決定を正本化する。  
 以降の Agent は、ここを Current Authority として扱い、矛盾する旧命名・旧 LP runtime 前提で進めない。
 
-更新日: 2026-09-19
+更新日: 2026-09-28
 
 ---
 
@@ -11,7 +11,7 @@
 
 - この案件を継続する各 run / 各セッションでは、**毎回 `@GitHub` と `@Figma` の両 connector を実際に呼んでから着手する**。会話履歴だけで接続可否・最新状態を推測しない。
 - GitHub 正本は `m-shogo/figma-ai-project` branch `so`。着手時に最新 ref / authority / 対象コードを直接取得し、前回完了箇所から続ける。
-- Figma 正本は file `d1pD6gL2Sqal8Cf6h9WLp6` のみ（Human 2026-09-25）。対象 node を LIVE 取得する。`OtS7731mhY2oD44HSpdADo` / `jqYoPtusYfTeDqRegMCsx3` / `zMjOY4euPBi9T23y7ZSM6y` その他旧 file / screenshot は最終実装判断に使わない。旧 file の frame node-id は新 file へ引き継がない。
+- Figma 正本は file `8IPfWSLrXPBQlw3xGyV3an` のみ（Human 2026-09-28）。対象 node を LIVE 取得する。`d1pD6gL2Sqal8Cf6h9WLp6` は参考だけ。`OtS7731mhY2oD44HSpdADo` / `jqYoPtusYfTeDqRegMCsx3` / `zMjOY4euPBi9T23y7ZSM6y` その他旧 file / screenshot は最終実装判断に使わない。旧 file の frame node-id は新 file へ引き継がない。
 - 片方の取得が失敗しても即「接続不可」と断定せず、対象 connector を実際に呼んだ結果で判断する。
 - この preflight 自体を毎回の成果物にせず、確認後は未完了の実装・QAを小さく前進させる。同じ確認だけを繰り返さない。
 
@@ -194,19 +194,18 @@ Theme 専用の enqueue・命名は `THEME_RULES.md`。Frontend Standard は Com
 
 ## Figma（現行正本）
 
-Human Authority 2026-09-25: デザインの Figma を変更。**この file だけを最終 Visual authority として LIVE 再取得する。**
+Human Authority 2026-09-28: デザインの Figma を変更。**この file だけを最終 Visual authority として LIVE 再取得する。** 前 file `d1pD6gL2Sqal8Cf6h9WLp6` は参考だけ。
 
-File: [nipponbudokan](https://www.figma.com/design/d1pD6gL2Sqal8Cf6h9WLp6/nipponbudokan)
-
-2026-09-25 にページ一覧を LIVE 確認済み:
+File: [nipponbudokan](https://www.figma.com/design/8IPfWSLrXPBQlw3xGyV3an/nipponbudokan)
 
 | 面 | node-id | URL |
 | --- | --- | --- |
-| PC page | `0:1` 🎨pc | https://www.figma.com/design/d1pD6gL2Sqal8Cf6h9WLp6/nipponbudokan?node-id=0-1 |
-| SP page | `114:5409` 🎨sp | https://www.figma.com/design/d1pD6gL2Sqal8Cf6h9WLp6/nipponbudokan?node-id=114-5409 |
+| PC page | `0:1` | https://www.figma.com/design/8IPfWSLrXPBQlw3xGyV3an/nipponbudokan?node-id=0-1 |
+| SP page | `114:5409` | https://www.figma.com/design/8IPfWSLrXPBQlw3xGyV3an/nipponbudokan?node-id=114-5409 |
 
-- 旧 file `OtS7731mhY2oD44HSpdADo` の frame（武道 `1634:10806` / `2608:5702`、詳細 `1637:11288` / `2608:6933`、書写 `2629:7385` / `2630:8447`、単行本 `1656:5309` / `2627:6075`、詳細 `1686:5574` / `2628:6964`、TOP `1603:7488`）は新 file の node として使わない。着手時に新 file の `0:1` / `114:5409` を再走査する
-- 旧 `OtS7731mhY2oD44HSpdADo` / `jqYoPtusYfTeDqRegMCsx3` / `zMjOY4euPBi9T23y7ZSM6y` とそれ以前の file は historical/audit 参照に限る
+- 前 file `d1pD6gL2Sqal8Cf6h9WLp6` の frame（TOP PC `1603:7062`、TOP SP `446:10020` を含む）は参考だけ。新 file の node として使わない。着手時に新 file の `0:1` / `114:5409` を再走査する
+- 旧 file `OtS7731mhY2oD44HSpdADo` の frame（武道 `1634:10806` / `2608:5702`、詳細 `1637:11288` / `2608:6933`、書写 `2629:7385` / `2630:8447`、単行本 `1656:5309` / `2627:6075`、詳細 `1686:5574` / `2628:6964`、TOP `1603:7488`）も新 file の node として使わない
+- 旧 `d1pD6gL2Sqal8Cf6h9WLp6` / `OtS7731mhY2oD44HSpdADo` / `jqYoPtusYfTeDqRegMCsx3` / `zMjOY4euPBi9T23y7ZSM6y` とそれ以前の file は historical/audit 参照に限る
 - Visual の正本は上記 Figma。既存実装の正本は Theme。差分は Theme をこの Figma へ合わせる
 - 書写書道 SP は専用 frame を発明せず、武道 publication family の共通 CSS/component owner で成立させる
 - Figma から入れる画像（Theme / LP / HTML 共通）: 写真・ラスターは **WebP**。logo / icon はベクターをアウトライン化して **SVG**。短命 URL は直貼りしない。ラスターしか無い logo はトレースしない。正本は `AGENTS.md` Images 節 / `docs/image-gradient-visual-tolerance.md` / `config/frontend-raster-asset-export-policy.yaml`。Budokan Theme 適用は `THEME_RULES.md` 節 12

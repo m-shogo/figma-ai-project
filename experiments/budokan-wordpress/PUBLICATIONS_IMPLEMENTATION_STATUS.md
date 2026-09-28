@@ -5,7 +5,7 @@
 ## 正本
 
 - GitHub: `m-shogo/figma-ai-project` / canonical branch `so`
-- Figma の唯一の現行 Visual authority: `d1pD6gL2Sqal8Cf6h9WLp6`（Human 2026-09-25）
+- Figma の唯一の現行 Visual authority: `8IPfWSLrXPBQlw3xGyV3an`（Human 2026-09-28。PC `0:1` / SP `114:5409`）。前 file `d1pD6gL2Sqal8Cf6h9WLp6` は参考だけ。詳細は `CURRENT_AUTHORITY.md`
 - PC authority page: `0:1`（🎨pc）
 - SP authority page: `114:5409`（🎨sp）
 - 旧 file `OtS7731mhY2oD44HSpdADo` 上の frame node-id（武道・書写・単行本・TOP）は新 file の正本にしない。着手時に新 file のページを再走査する
@@ -50,7 +50,7 @@ TOP を先に実装しない。
 ### 単行本
 
 Visual authority:
-- 現行 file は `d1pD6gL2Sqal8Cf6h9WLp6` の PC `0:1` / SP `114:5409`。下の番号は前 file の記録で、新 file では使わない
+- 現行 file は `8IPfWSLrXPBQlw3xGyV3an` の PC `0:1` / SP `114:5409`。下の番号は前 file の記録で、新 file では使わない
 - 前 file の一覧: PC `1656:5309` / SP `2627:6075`
 - 前 file の詳細: PC `1686:5574` / SP `2628:6964`
 
@@ -95,7 +95,7 @@ Visual authority:
 
 ## TOP 着手後
 
-- 現行 Figma `d1pD6gL2Sqal8Cf6h9WLp6` の PC `0:1` / SP `114:5409` を LIVE 再取得。前 file の node は使わない
+- 現行 Figma `8IPfWSLrXPBQlw3xGyV3an` の PC `0:1` / SP `114:5409` を LIVE 再取得。前 file の node は使わない
 - section inventory / content order / visibility / copy owner / image / component / spacing / typography / responsive / interaction の旧→新差分表を先に作る
 - 特に大会・イベント情報 `1603:7488` を確認
 - mobile-first で SP → PC

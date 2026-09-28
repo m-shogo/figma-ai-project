@@ -1,8 +1,8 @@
 # 当面4 family（一覧＋詳細）
 
-更新: 2026-09-25  
-Figma visual authority: `d1pD6gL2Sqal8Cf6h9WLp6`（Human 2026-09-25。PC `0:1` / SP `114:5409`）  
-旧 Figma `OtS7731mhY2oD44HSpdADo` / `jqYoPtusYfTeDqRegMCsx3` / `zMjOY4euPBi9T23y7ZSM6y` は historical/audit 参照専用で、最終実装値の正本にはしない。旧 file の frame node-id は新 file へ引き継がない。  
+更新: 2026-09-28  
+Figma visual authority: `8IPfWSLrXPBQlw3xGyV3an`（Human 2026-09-28。PC `0:1` / SP `114:5409`）  
+前 file `d1pD6gL2Sqal8Cf6h9WLp6` は参考だけ。旧 Figma `OtS7731mhY2oD44HSpdADo` / `jqYoPtusYfTeDqRegMCsx3` / `zMjOY4euPBi9T23y7ZSM6y` は historical/audit 参照専用で、最終実装値の正本にはしない。旧 file の frame node-id は新 file へ引き継がない。  
 正本の詳細: [`PUBLICATIONS_IMPLEMENTATION_STATUS.md`](PUBLICATIONS_IMPLEMENTATION_STATUS.md) / [`PUBLICATIONS_CPT_ARCHITECTURE.md`](PUBLICATIONS_CPT_ARCHITECTURE.md) / [`DIRECTORY_MAP.md`](DIRECTORY_MAP.md) / [`FIGMA_MAP.md`](FIGMA_MAP.md)  
 溜め質問: [`PENDING_QUESTIONS.md`](PENDING_QUESTIONS.md)
 
@@ -20,12 +20,12 @@ Figma visual authority: `d1pD6gL2Sqal8Cf6h9WLp6`（Human 2026-09-25。PC `0:1` /
 
 ## 現行 Figma authority
 
-Human Authority 2026-09-25:
+Human Authority 2026-09-28:
 
-- file: `d1pD6gL2Sqal8Cf6h9WLp6`
-- PC page: `0:1`（🎨pc）https://www.figma.com/design/d1pD6gL2Sqal8Cf6h9WLp6/nipponbudokan?node-id=0-1
-- SP page: `114:5409`（🎨sp）https://www.figma.com/design/d1pD6gL2Sqal8Cf6h9WLp6/nipponbudokan?node-id=114-5409
-- 個別 frame の node-id は、前 file `OtS7731mhY2oD44HSpdADo` のもの。新 file では未確認。実装前に上記ページを再走査する
+- file: `8IPfWSLrXPBQlw3xGyV3an`
+- PC page: `0:1` https://www.figma.com/design/8IPfWSLrXPBQlw3xGyV3an/nipponbudokan?node-id=0-1
+- SP page: `114:5409` https://www.figma.com/design/8IPfWSLrXPBQlw3xGyV3an/nipponbudokan?node-id=114-5409
+- 前 file `d1pD6gL2Sqal8Cf6h9WLp6` は参考だけ。個別 frame の node-id は、それより前の file の記録。新 file では未確認。実装前に上記ページを再走査する
 
 
 ## 8面＋公開 URL / WP owner

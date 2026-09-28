@@ -1,6 +1,6 @@
 # Figma node map（nipponbudokan）
 
-**このファイルの node 表は現行正本ではない。** Human 2026-09-25 の Visual authority は `CURRENT_AUTHORITY.md` の file `d1pD6gL2Sqal8Cf6h9WLp6`、PC `0:1`、SP `114:5409` だけ。下の node-id は旧 file の記録なので、実装の取得先にしない。
+**このファイルの node 表は現行正本ではない。** Human 2026-09-28 の Visual authority は `CURRENT_AUTHORITY.md` の file `8IPfWSLrXPBQlw3xGyV3an`、PC `0:1`、SP `114:5409` だけ。前 file `d1pD6gL2Sqal8Cf6h9WLp6` と、下の node-id は参考だけなので、実装の取得先にしない。
 
 記録当時の file: `jqYoPtusYfTeDqRegMCsx3`  
 Pages: PC `0:1` (`🎨pc`) / SP `114:5409` (`🎨sp`)
