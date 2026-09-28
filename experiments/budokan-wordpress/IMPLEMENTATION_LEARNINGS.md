@@ -514,3 +514,13 @@ TOPのFigma viewport 1380/375を守るため `top_mainVisual.css` に `:root { s
 - URL未確定のplaceholderは遷移を止めるだけでなく、hover/focus/keyboardのaffordanceも無効状態と一致させる。
 - TOP Aboutではhover selectorを `[href]` を持つ実リンクだけへ限定する。正しいURLが供給された時は既存hoverが自動で復帰する。
 - Visual geometry PASSとは別に、disabled/fail-closed stateのinteraction QAを確認する。
+
+## 2026-09-28 検索シートはトグルを覆うので、閉じるQAは閉じるボタンを押す
+
+FV overlay QA は検索を `#gh_search` の再クリックで閉じようとして、`#gh_search does not own its pointer hit target` で落ちていた。開いた `.gh_searchPanel` は header 全面を覆う fixed sheet で、閉じる操作の owner は `#ghs_close` である。header の z-index を上げてトグルをシートの上に出すと、Figma の「gray bar covers the header」と衝突する。
+
+**再発防止**
+
+- この失敗を TOP FV CSS や header の重ね順の不具合として直さない。
+- 検索を閉じる pointer QA は `#ghs_close`、暗幕、Escape を使う。
+- `#gh_search` の hit 確認は、シートが閉じている開く操作に限る。
