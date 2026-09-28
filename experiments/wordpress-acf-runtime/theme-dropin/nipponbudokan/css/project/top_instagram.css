@@ -290,6 +290,10 @@
         border-radius: 50%;
         background-color: var(--color-text);
         color: var(--color-secondary);
+        box-shadow: inset 0 0 0 1px var(--color-text);
+        transition:
+            background-color var(--transition-duration),
+            color var(--transition-duration);
 
         &::before {
             font-family: var(--font-awesomeBrands);
@@ -366,6 +370,18 @@
         .ts_official_label_small {
             font-size: 13px;
         }
+    }
+}
+
+.global_contents > .top_sns-01 .ts_icon:focus-visible {
+    background-color: var(--color-secondary);
+    color: var(--color-text);
+}
+
+@media (any-hover: hover) {
+    .global_contents > .top_sns-01 .ts_icon:hover {
+        background-color: var(--color-secondary);
+        color: var(--color-text);
     }
 }
 

@@ -23,15 +23,19 @@ $show_map = !empty(($args ?? array())['map']);
                     </a>
                 </p>
             </address>
-            <ul class="gf_sns">
-                <li class="gf_sns_item">
-                    <span class="gf_sns_link gf_sns_youtube" aria-disabled="true" aria-label="YouTube"><span>YouTube</span></span>
+            <ul class="gf_sns" aria-label="公式SNS">
+                <li class="gf_sns_group gf_sns_group_youtube">
+                    <p class="gf_sns_label">公式Youtube</p>
+                    <span class="gf_sns_icons">
+                        <span class="gf_sns_link gf_sns_youtube" aria-disabled="true" aria-label="YouTube"><span>YouTube</span></span>
+                    </span>
                 </li>
-                <li class="gf_sns_item">
-                    <span class="gf_sns_link gf_sns_instagram" aria-disabled="true" aria-label="Instagram"><span>Instagram</span></span>
-                </li>
-                <li class="gf_sns_item">
-                    <span class="gf_sns_link gf_sns_x" aria-disabled="true" aria-label="X"><span>X</span></span>
+                <li class="gf_sns_group gf_sns_group_editorial">
+                    <p class="gf_sns_label">月刊「武道」編集部</p>
+                    <span class="gf_sns_icons">
+                        <span class="gf_sns_link gf_sns_instagram" aria-disabled="true" aria-label="Instagram"><span>Instagram</span></span>
+                        <span class="gf_sns_link gf_sns_x" aria-disabled="true" aria-label="X"><span>X</span></span>
+                    </span>
                 </li>
             </ul>
         </div>

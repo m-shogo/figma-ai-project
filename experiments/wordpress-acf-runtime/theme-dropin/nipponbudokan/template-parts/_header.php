@@ -59,14 +59,18 @@
                 ?>
             </div>
             <ul class="gn_sns" aria-label="公式SNS">
-                <li class="gn_sns_item">
-                    <span class="gn_sns_link gn_sns_youtube" aria-disabled="true" aria-label="YouTube"><span>YouTube</span></span>
+                <li class="gn_sns_group gn_sns_group_youtube">
+                    <p class="gn_sns_label">公式Youtube</p>
+                    <span class="gn_sns_icons">
+                        <span class="gn_sns_link gn_sns_youtube" aria-disabled="true" aria-label="YouTube"><span>YouTube</span></span>
+                    </span>
                 </li>
-                <li class="gn_sns_item">
-                    <span class="gn_sns_link gn_sns_instagram" aria-disabled="true" aria-label="Instagram"><span>Instagram</span></span>
-                </li>
-                <li class="gn_sns_item">
-                    <span class="gn_sns_link gn_sns_x" aria-disabled="true" aria-label="X"><span>X</span></span>
+                <li class="gn_sns_group gn_sns_group_editorial">
+                    <p class="gn_sns_label">月刊「武道」編集部</p>
+                    <span class="gn_sns_icons">
+                        <span class="gn_sns_link gn_sns_instagram" aria-disabled="true" aria-label="Instagram"><span>Instagram</span></span>
+                        <span class="gn_sns_link gn_sns_x" aria-disabled="true" aria-label="X"><span>X</span></span>
+                    </span>
                 </li>
             </ul>
             <a class="gn_lang" href="<?php echo esc_url(home_url('/en/')); ?>"><span>EN</span></a>

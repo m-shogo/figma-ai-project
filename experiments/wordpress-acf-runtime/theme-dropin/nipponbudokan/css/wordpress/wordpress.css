@@ -5,7 +5,7 @@
 // ブロック共通
 // ========================================================================== */
 .block-editor_wrap {
-    > *:first-child {
+    > *:first-child:not(.frm_forms) {
         margin-top: 0;
     }
 }
