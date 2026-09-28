@@ -1,18 +1,26 @@
 # Update Radar — Latest Official Source Scan
 
-Generated: `2026-09-27T09:18:45+00:00`
+Generated: `2026-09-28T09:50:54+00:00`
 
 Active lanes: ACCESSIBILITY, CLAUDE_CODE, CODEX, CURSOR, DESIGN_SYSTEMS, FIGMA, FRONTEND_TOOLING, MCP, WEB_PLATFORM, WORDPRESS_ACF
 
 ## Summary
 
 - Sources checked: 37
-- Changed since previous snapshot: 1
+- Changed since previous snapshot: 2
 - First observations: 0
 - Fetch errors: 3
-- RETEST candidates: ACCESSIBILITY, ANIMATION, ASSET_FIDELITY, FIGMA_LAYOUT_GENERATION, FIGMA_MCP, SCROLL
+- RETEST candidates: ACCESSIBILITY, ANIMATION, ASSET_FIDELITY, CSS_TOOLING, FIGMA_LAYOUT_GENERATION, FIGMA_MCP, SCROLL
 
 ## Changed sources
+
+### browserslist-releases
+
+- Lane: `FRONTEND_TOOLING`
+- Latest title: 4.29.2
+- Impacts: BROWSER_SUPPORT, CSS, JS, ENVIRONMENT_CONTRACT
+- RETEST: ACCESSIBILITY, CSS_TOOLING
+- Source: https://api.github.com/repos/browserslist/browserslist/releases?per_page=12
 
 ### mdn-browser-compat-data-releases
 
