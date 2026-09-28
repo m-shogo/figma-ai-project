@@ -421,6 +421,14 @@ html:has(.top_mainVisual) { scrollbar-gutter: auto; }
         }
     }
 
+    .tm_guide_list a:focus-visible {
+        color: var(--color-link);
+    }
+
+    .top_notice-01 a:focus-visible {
+        opacity: var(--opacity-hover);
+    }
+
     /* MARK: hover */
     @media (any-hover: hover) {
         .tm_guide_list {

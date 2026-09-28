@@ -118,11 +118,15 @@
         }
     }
 
-    @media (any-hover: hover) {
-        a.tb_link {
-            transition: opacity var(--transition-duration);
-        }
+    a.tb_link {
+        transition: opacity var(--transition-duration);
+    }
 
+    a.tb_link:focus-visible {
+        opacity: var(--opacity-hover);
+    }
+
+    @media (any-hover: hover) {
         a.tb_link:hover {
             opacity: var(--opacity-hover);
         }

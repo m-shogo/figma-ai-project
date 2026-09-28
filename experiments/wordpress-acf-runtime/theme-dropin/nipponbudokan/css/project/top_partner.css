@@ -320,7 +320,8 @@
             transition: opacity var(--transition-duration);
         }
 
-        a.tp_more:hover {
+        a.tp_more:hover,
+        a.tp_more:focus-visible {
             opacity: var(--opacity-hover);
         }
     }

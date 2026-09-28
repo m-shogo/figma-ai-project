@@ -622,6 +622,14 @@
         }
     }
 
+    .ta_btn[href]:focus-visible {
+        border-color: var(--color-text);
+    }
+
+    .ta_card_link[href]:focus-visible .ta_card_label {
+        color: var(--color-link);
+    }
+
     @media (any-hover: hover) {
         .ta_btn[href]:hover {
             border-color: var(--color-text);

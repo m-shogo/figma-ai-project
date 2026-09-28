@@ -518,6 +518,13 @@
         }
     }
 
+    .te_card_link:focus-visible .te_card_title,
+    .te_upcoming_title a:focus-visible,
+    .te_upcoming_url a:focus-visible,
+    .te_more a:focus-visible {
+        color: var(--color-primary);
+    }
+
     @media (any-hover: hover) {
         .te_card_link:hover .te_card_title,
         .te_upcoming_title a:hover,
