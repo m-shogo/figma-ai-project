@@ -257,10 +257,16 @@
         }
     }
 
+    .te_upcoming_lists {
+        margin-top: 24px;
+    }
     .te_upcoming_list {
         display: flex;
         flex-direction: column;
-        margin-top: 24px;
+
+        &[hidden] {
+            display: none;
+        }
     }
     .te_upcoming_item {
         display: flex;
@@ -368,35 +374,6 @@
         display: flex;
         justify-content: center;
         margin: 24px 0 0;
-        a {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--color-text);
-            font-family: var(--font-zen-kaku-gothic);
-            font-size: 15px;
-            font-weight: 500;
-            line-height: 1;
-            letter-spacing: 0.05em;
-            text-decoration: none;
-        }
-    }
-    .te_more_icon {
-        position: relative;
-        display: grid;
-        place-items: center;
-        width: 40px;
-        height: 40px;
-        flex-shrink: 0;
-        background: url('../../images/top/polygon-arrow.svg') no-repeat center / contain;
-        color: var(--color-secondary);
-        &::before {
-            content: var(--icon-arrow-right);
-            font-family: var(--font-awesome);
-            font-size: 11px;
-            font-weight: 900;
-            line-height: 1;
-        }
     }
 
     @media screen and (min-width: 768px) {
@@ -472,7 +449,7 @@
             width: 180px;
         }
 
-        .te_upcoming_list {
+        .te_upcoming_lists {
             margin-top: 32px;
         }
         .te_upcoming_item {
@@ -520,16 +497,14 @@
 
     .te_card_link:focus-visible .te_card_title,
     .te_upcoming_title a:focus-visible,
-    .te_upcoming_url a:focus-visible,
-    .te_more a:focus-visible {
+    .te_upcoming_url a:focus-visible {
         color: var(--color-primary);
     }
 
     @media (any-hover: hover) {
         .te_card_link:hover .te_card_title,
         .te_upcoming_title a:hover,
-        .te_upcoming_url a:hover,
-        .te_more a:hover {
+        .te_upcoming_url a:hover {
             color: var(--color-primary);
         }
     }

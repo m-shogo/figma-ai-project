@@ -190,9 +190,73 @@
     sync();
   };
 
+  const topNewsTabs = function () {
+    const root = document.querySelector('.top_news-01');
+    if (!root) {
+      return;
+    }
+    const tabs = root.querySelectorAll('[data-news-filter]');
+    const panels = root.querySelectorAll('[data-news-panel]');
+    const mores = root.querySelectorAll('[data-news-more]');
+    const select = function (tab) {
+      const id = tab.getAttribute('data-news-filter');
+      const archive = tab.getAttribute('data-news-archive');
+      tabs.forEach(function (item) {
+        const on = item === tab;
+        const li = item.closest('.news_tabs_item');
+        if (li) {
+          li.classList.toggle('is-active', on);
+        }
+        item.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+      panels.forEach(function (panel) {
+        panel.hidden = panel.getAttribute('data-news-panel') !== id;
+      });
+      if (archive) {
+        mores.forEach(function (link) {
+          link.href = archive;
+        });
+      }
+    };
+    tabs.forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        select(tab);
+      });
+    });
+  };
+
+  const topEventFilter = function () {
+    const root = document.querySelector('.top_events-01');
+    if (!root) {
+      return;
+    }
+    const select = root.querySelector('#te_event_cat');
+    const panels = root.querySelectorAll('[data-event-panel]');
+    const more = root.querySelector('[data-event-more]');
+    if (!select) {
+      return;
+    }
+    const apply = function () {
+      const option = select.options[select.selectedIndex];
+      const id = select.value;
+      panels.forEach(function (panel) {
+        panel.hidden = panel.getAttribute('data-event-panel') !== id;
+      });
+      if (more && option) {
+        const archive = option.getAttribute('data-event-archive');
+        if (archive) {
+          more.href = archive;
+        }
+      }
+    };
+    select.addEventListener('change', apply);
+  };
+
   topSlider();
   //newsSlider();
   $(topCalendar);
   $(aboutCardsSlider);
+  topNewsTabs();
+  topEventFilter();
 
 })(jQuery);

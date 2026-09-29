@@ -11,10 +11,6 @@ $event_query = new WP_Query(array(
 ));
 $has_events = $event_query->have_posts();
 
-$selected_event_cat = isset($_GET['top_event_cat'])
-    ? sanitize_title(wp_unslash($_GET['top_event_cat']))
-    : '';
-
 $event_terms = get_terms(array(
     'taxonomy' => 'event_cat',
     'hide_empty' => true,
@@ -42,18 +38,88 @@ $upcoming_args = array(
     ),
 );
 
-if ($selected_event_cat !== '') {
-    $upcoming_args['tax_query'] = array(
+$event_archive = get_post_type_archive_link('event') ?: '';
+$event_panels = array(
+    array(
+        'id' => 'all',
+        'label' => 'すべて',
+        'url' => $event_archive,
+        'query' => new WP_Query($upcoming_args),
+    ),
+);
+foreach ($event_terms as $term) {
+    $term_url = get_term_link($term);
+    if (is_wp_error($term_url)) {
+        continue;
+    }
+    $term_args = $upcoming_args;
+    $term_args['tax_query'] = array(
         array(
             'taxonomy' => 'event_cat',
-            'field' => 'slug',
-            'terms' => $selected_event_cat,
+            'field' => 'term_id',
+            'terms' => (int) $term->term_id,
         ),
+    );
+    $event_panels[] = array(
+        'id' => (string) $term->term_id,
+        'label' => $term->name,
+        'url' => $term_url,
+        'query' => new WP_Query($term_args),
     );
 }
 
-$upcoming_query = new WP_Query($upcoming_args);
-$has_upcoming = $upcoming_query->have_posts();
+$render_upcoming_items = static function ($query) {
+    if (!$query->have_posts()) {
+        return;
+    }
+    while ($query->have_posts()) {
+        $query->the_post();
+        $timestamp = function_exists('nipponbudokan_event_datetime')
+            ? nipponbudokan_event_datetime()
+            : 0;
+        $time = function_exists('get_field') ? get_field('event_time') : '';
+        $host = function_exists('get_field') ? get_field('event_host') : '';
+        $link_attrs = get_post_link_attributes();
+        $href = !empty($link_attrs['url']) ? $link_attrs['url'] : '';
+        $link_type = function_exists('get_field') ? get_field('post_type') : '';
+        $external_url = ($link_type === 'url' && $href !== '') ? $href : '';
+        $weekday_index = $timestamp ? (int) wp_date('w', $timestamp) : 0;
+        $weekday_labels = array('日', '月', '火', '水', '木', '金', '土');
+        $weekday_class = $weekday_index === 0 ? ' is-sun' : ($weekday_index === 6 ? ' is-sat' : '');
+        ?>
+        <article class="te_upcoming_item">
+            <div class="te_upcoming_when">
+                <?php if ($timestamp): ?>
+                    <p class="te_upcoming_day<?php echo esc_attr($weekday_class); ?>">
+                        <time datetime="<?php echo esc_attr(wp_date('Y-m-d', $timestamp)); ?>"><?php echo esc_html(wp_date('n/j', $timestamp)); ?> <span>(<?php echo esc_html($weekday_labels[$weekday_index]); ?>)</span></time>
+                    </p>
+                <?php endif; ?>
+                <?php if (function_exists('nipponbudokan_event_value_present') && nipponbudokan_event_value_present($time)): ?>
+                    <p class="te_upcoming_time"><?php echo esc_html($time); ?></p>
+                <?php endif; ?>
+            </div>
+            <div class="te_upcoming_body">
+                <h4 class="te_upcoming_title">
+                    <?php if ($href !== ''): ?>
+                        <a href="<?php echo esc_url($href); ?>"<?php echo !empty($link_attrs['targetAttr']) ? ' ' . $link_attrs['targetAttr'] : ''; ?>><?php the_title(); ?></a>
+                    <?php else: ?>
+                        <?php the_title(); ?>
+                    <?php endif; ?>
+                </h4>
+                <?php if (function_exists('nipponbudokan_event_value_present') && nipponbudokan_event_value_present($host)): ?>
+                    <p class="te_upcoming_host"><?php echo esc_html($host); ?></p>
+                <?php endif; ?>
+                <?php if ($external_url !== ''): ?>
+                    <p class="te_upcoming_url">
+                        <a href="<?php echo esc_url($external_url); ?>"<?php echo !empty($link_attrs['targetAttr']) ? ' ' . $link_attrs['targetAttr'] : ''; ?>><?php echo esc_html($external_url); ?></a>
+                    </p>
+                <?php endif; ?>
+            </div>
+        </article>
+        <?php
+    }
+    wp_reset_postdata();
+};
 ?>
 <section id="top_events-01" class="top_events-01">
     <div class="global_inner">
@@ -123,75 +189,27 @@ $has_upcoming = $upcoming_query->have_posts();
                         <h3 class="te_section_title">近日開催の行事予定</h3>
                     </div>
 
-                    <form class="te_filter" method="get" action="<?php echo esc_url(home_url('/')); ?>">
+                    <div class="te_filter">
                         <label class="screen-reader-text" for="te_event_cat">イベントカテゴリー</label>
-                        <select id="te_event_cat" name="top_event_cat" onchange="this.form.submit()">
-                            <option value="">カテゴリーを選択</option>
-                            <?php foreach ($event_terms as $term): ?>
-                                <option value="<?php echo esc_attr($term->slug); ?>"<?php selected($selected_event_cat, $term->slug); ?>><?php echo esc_html($term->name); ?></option>
+                        <select id="te_event_cat">
+                            <?php foreach ($event_panels as $index => $panel): ?>
+                                <option value="<?php echo esc_attr($panel['id']); ?>" data-event-archive="<?php echo esc_url($panel['url']); ?>"<?php echo $index === 0 ? ' selected' : ''; ?>><?php echo esc_html($panel['label']); ?></option>
                             <?php endforeach; ?>
                         </select>
-                        <button class="screen-reader-text" type="submit">絞り込む</button>
-                    </form>
+                    </div>
                 </div>
 
-                <div class="te_upcoming_list">
-                    <?php if ($has_upcoming): ?>
-                        <?php while ($upcoming_query->have_posts()): $upcoming_query->the_post(); ?>
-                            <?php
-                            $timestamp = function_exists('nipponbudokan_event_datetime')
-                                ? nipponbudokan_event_datetime()
-                                : 0;
-                            $time = function_exists('get_field') ? get_field('event_time') : '';
-                            $host = function_exists('get_field') ? get_field('event_host') : '';
-                            $link_attrs = get_post_link_attributes();
-                            $href = !empty($link_attrs['url']) ? $link_attrs['url'] : '';
-                            $link_type = function_exists('get_field') ? get_field('post_type') : '';
-                            $external_url = ($link_type === 'url' && $href !== '') ? $href : '';
-                            ?>
-                            <article class="te_upcoming_item">
-                                <div class="te_upcoming_when">
-                                    <?php if ($timestamp): ?>
-                                        <?php
-                                        $weekday_index = (int) wp_date('w', $timestamp);
-                                        $weekday_labels = array('日', '月', '火', '水', '木', '金', '土');
-                                        $weekday_class = $weekday_index === 0 ? ' is-sun' : ($weekday_index === 6 ? ' is-sat' : '');
-                                        ?>
-                                        <p class="te_upcoming_day<?php echo esc_attr($weekday_class); ?>">
-                                            <time datetime="<?php echo esc_attr(wp_date('Y-m-d', $timestamp)); ?>"><?php echo esc_html(wp_date('n/j', $timestamp)); ?> <span>(<?php echo esc_html($weekday_labels[$weekday_index]); ?>)</span></time>
-                                        </p>
-                                    <?php endif; ?>
-                                    <?php if (function_exists('nipponbudokan_event_value_present') && nipponbudokan_event_value_present($time)): ?>
-                                        <p class="te_upcoming_time"><?php echo esc_html($time); ?></p>
-                                    <?php endif; ?>
-                                </div>
-
-                                <div class="te_upcoming_body">
-                                    <h4 class="te_upcoming_title">
-                                        <?php if ($href !== ''): ?>
-                                            <a href="<?php echo esc_url($href); ?>"<?php echo !empty($link_attrs['targetAttr']) ? ' ' . $link_attrs['targetAttr'] : ''; ?>><?php the_title(); ?></a>
-                                        <?php else: ?>
-                                            <?php the_title(); ?>
-                                        <?php endif; ?>
-                                    </h4>
-                                    <?php if (function_exists('nipponbudokan_event_value_present') && nipponbudokan_event_value_present($host)): ?>
-                                        <p class="te_upcoming_host"><?php echo esc_html($host); ?></p>
-                                    <?php endif; ?>
-                                    <?php if ($external_url !== ''): ?>
-                                        <p class="te_upcoming_url">
-                                            <a href="<?php echo esc_url($external_url); ?>"<?php echo !empty($link_attrs['targetAttr']) ? ' ' . $link_attrs['targetAttr'] : ''; ?>><?php echo esc_html($external_url); ?></a>
-                                        </p>
-                                    <?php endif; ?>
-                                </div>
-                            </article>
-                        <?php endwhile; ?>
-                        <?php wp_reset_postdata(); ?>
-                    <?php endif; ?>
+                <div class="te_upcoming_lists">
+                    <?php foreach ($event_panels as $index => $panel): ?>
+                        <div class="te_upcoming_list" data-event-panel="<?php echo esc_attr($panel['id']); ?>"<?php echo $index === 0 ? '' : ' hidden'; ?>>
+                            <?php $render_upcoming_items($panel['query']); ?>
+                        </div>
+                    <?php endforeach; ?>
                 </div>
 
                 <p class="te_more">
-                    <a href="<?php echo esc_url(get_post_type_archive_link('event')); ?>">
-                        <span class="te_more_icon" aria-hidden="true"></span>
+                    <a class="module_listMore" data-event-more href="<?php echo esc_url($event_archive); ?>">
+                        <span class="module_listMore_icon" aria-hidden="true"></span>
                         <span>一覧を表示</span>
                     </a>
                 </p>

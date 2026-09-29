@@ -1,0 +1,78 @@
+@charset "utf-8";
+/* // ==========================================================================
+// 一覧を表示
+// 赤八角形 + 白矢印。hover / focus-visible は塗りと矢印を反転し、外枠の赤は残す。
+// ========================================================================== */
+.module_listMore {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    width: fit-content;
+    color: var(--color-text);
+    font-family: var(--font-zen-kaku-gothic);
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color var(--transition-duration);
+
+    &:focus-visible {
+        color: var(--color-link);
+
+        .module_listMore_icon {
+            color: var(--color-primary);
+
+            &::before {
+                background-color: var(--color-secondary);
+            }
+        }
+    }
+}
+
+.module_listMore_icon {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
+    clip-path: var(--clip-octagon);
+    transition: color var(--transition-duration);
+
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 1px;
+        background-color: var(--color-primary);
+        clip-path: var(--clip-octagon);
+        transition: background-color var(--transition-duration);
+    }
+
+    &::after {
+        content: var(--icon-arrow-right);
+        position: relative;
+        z-index: 1;
+        font-family: var(--font-awesome);
+        font-size: 12px;
+        font-weight: 900;
+        line-height: 1;
+    }
+}
+
+@media (any-hover: hover) {
+    .module_listMore:hover {
+        color: var(--color-link);
+
+        .module_listMore_icon {
+            color: var(--color-primary);
+
+            &::before {
+                background-color: var(--color-secondary);
+            }
+        }
+    }
+}

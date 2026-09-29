@@ -96,41 +96,6 @@
         color: var(--color-secondary);
     }
 
-    .top_news_more {
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        width: fit-content;
-        color: var(--color-text);
-        font-family: var(--font-zen-kaku-gothic);
-        font-size: 15px;
-        font-weight: 500;
-        line-height: 1;
-        letter-spacing: 0.05em;
-        text-decoration: none;
-        white-space: nowrap;
-    }
-
-    .top_news_more_icon {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 40px;
-        height: 40px;
-        flex-shrink: 0;
-        background-color: var(--color-primary);
-        color: var(--color-secondary);
-        clip-path: var(--clip-octagon);
-
-        &::before {
-            content: var(--icon-arrow-right);
-            font-family: var(--font-awesome);
-            font-size: 12px;
-            font-weight: 900;
-            line-height: 1;
-        }
-    }
-
     .top_news_more_pc {
         display: none;
     }
@@ -148,6 +113,10 @@
         min-width: 0;
         border-left: 1px solid var(--color-text);
         color: var(--color-text);
+        transition:
+            background-color var(--transition-duration),
+            color var(--transition-duration),
+            border-radius var(--transition-duration);
 
         &:nth-child(3n + 1) {
             border-left: 0;
@@ -167,8 +136,11 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        width: 100%;
         min-height: 34px;
         padding: 8px 6px;
+        border: 0;
+        background: transparent;
         color: inherit;
         font-family: var(--font-zen-kaku-gothic);
         font-size: 14px;
@@ -176,6 +148,11 @@
         line-height: 1;
         letter-spacing: 0.05em;
         text-decoration: none;
+        cursor: pointer;
+    }
+
+    .top_news_lists .top_news_articles[hidden] {
+        display: none;
     }
 
     /* archive item master からのSP差分 */
@@ -312,7 +289,14 @@
                 border-top: 0;
             }
 
-            &.is-active {
+            &.is-active,
+            &:has(.news_tabs_link:focus-visible) {
+                border-radius: 3px;
+            }
+        }
+
+        @media (any-hover: hover) {
+            .top_news_tabs .news_tabs_item:hover {
                 border-radius: 3px;
             }
         }
@@ -330,10 +314,12 @@
                 flex-shrink: 0;
                 background-color: var(--color-text);
                 clip-path: var(--clip-octagon);
+                transition: background-color var(--transition-duration);
             }
         }
 
-        .top_news_tabs .news_tabs_item.is-active .news_tabs_link::before {
+        .top_news_tabs .news_tabs_item.is-active .news_tabs_link::before,
+        .top_news_tabs .news_tabs_item:has(.news_tabs_link:focus-visible) .news_tabs_link::before {
             background-color: var(--color-secondary);
         }
 
@@ -374,8 +360,9 @@
         background-size: 100% 1px;
     }
 
-    .top_news_more:focus-visible {
-        color: var(--color-link);
+    .top_news_tabs .news_tabs_item:has(.news_tabs_link:focus-visible) {
+        background-color: var(--color-text);
+        color: var(--color-secondary);
     }
 
     @media (any-hover: hover) {
@@ -384,8 +371,13 @@
             background-size: 100% 1px;
         }
 
-        .top_news_more:hover {
-            color: var(--color-link);
+        .top_news_tabs .news_tabs_item:hover {
+            background-color: var(--color-text);
+            color: var(--color-secondary);
+        }
+
+        .top_news_tabs .news_tabs_item:hover .news_tabs_link::before {
+            background-color: var(--color-secondary);
         }
     }
 }

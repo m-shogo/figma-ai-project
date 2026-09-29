@@ -40,6 +40,7 @@ if ($taxonomy === 'event_cat') {
     }
 
     $tabs[] = array(
+        'id' => 'all',
         'label' => 'すべて',
         'url' => $all_url,
         'active' => $current_term_id === 0,
@@ -58,6 +59,7 @@ if ($taxonomy === 'event_cat') {
                 $term_url = add_query_arg($event_filter, $term_url);
             }
             $tabs[] = array(
+                'id' => (string) $term->term_id,
                 'label' => $term->name,
                 'url' => $term_url,
                 'active' => $current_top_term_id === (int) $term->term_id,
@@ -85,6 +87,7 @@ if ($taxonomy === 'event_cat') {
     }
 
     $tabs[] = array(
+        'id' => 'all',
         'label' => 'すべて',
         'url' => $all_url,
         'active' => $current_category_id === 0,
@@ -107,6 +110,7 @@ if ($taxonomy === 'event_cat') {
             }
 
             $tabs[] = array(
+                'id' => (string) $term->term_id,
                 'label' => $term->name,
                 'url' => $term_link,
                 'active' => $current_top_category_id === (int) $term->term_id,
@@ -128,6 +132,10 @@ if ($context === 'top') {
                     <a class="news_tabs_link" href="<?php echo esc_url($tab['url']); ?>">
                         <span><?php echo esc_html($tab['label']); ?></span>
                     </a>
+                <?php elseif ($context === 'top'): ?>
+                    <button type="button" class="news_tabs_link" data-news-filter="<?php echo esc_attr($tab['id']); ?>" data-news-archive="<?php echo esc_url($tab['url']); ?>" aria-selected="<?php echo $tab['active'] ? 'true' : 'false'; ?>">
+                        <span><?php echo esc_html($tab['label']); ?></span>
+                    </button>
                 <?php else: ?>
                     <span class="news_tabs_link">
                         <span><?php echo esc_html($tab['label']); ?></span>
