@@ -1,26 +1,42 @@
 # Update Radar — Latest Official Source Scan
 
-Generated: `2026-09-28T09:50:54+00:00`
+Generated: `2026-09-29T09:53:10+00:00`
 
 Active lanes: ACCESSIBILITY, CLAUDE_CODE, CODEX, CURSOR, DESIGN_SYSTEMS, FIGMA, FRONTEND_TOOLING, MCP, WEB_PLATFORM, WORDPRESS_ACF
 
 ## Summary
 
 - Sources checked: 37
-- Changed since previous snapshot: 2
+- Changed since previous snapshot: 4
 - First observations: 0
 - Fetch errors: 3
-- RETEST candidates: ACCESSIBILITY, ANIMATION, ASSET_FIDELITY, CSS_TOOLING, FIGMA_LAYOUT_GENERATION, FIGMA_MCP, SCROLL
+- RETEST candidates: ACCESSIBILITY, AGENT_CONTEXT, ANIMATION, ASSET_FIDELITY, COLOR_GRADIENT, FIGMA_LAYOUT_GENERATION, FIGMA_MCP, LAYOUT, PARALLEL_EXECUTION, SCROLL, TYPOGRAPHY_RUNTIME
 
 ## Changed sources
 
-### browserslist-releases
+### claude-code-releases
 
-- Lane: `FRONTEND_TOOLING`
-- Latest title: 4.29.2
-- Impacts: BROWSER_SUPPORT, CSS, JS, ENVIRONMENT_CONTRACT
-- RETEST: ACCESSIBILITY, CSS_TOOLING
-- Source: https://api.github.com/repos/browserslist/browserslist/releases?per_page=12
+- Lane: `CLAUDE_CODE`
+- Latest title: v2.1.284
+- Impacts: AGENT_CAPABILITY, MCP, PARALLEL_EXECUTION, CONTEXT_HANDLING
+- RETEST: SCROLL, ASSET_FIDELITY, ACCESSIBILITY, FIGMA_MCP, AGENT_CONTEXT, PARALLEL_EXECUTION
+- Source: https://api.github.com/repos/anthropics/claude-code/releases?per_page=12
+
+### claude-code-feed
+
+- Lane: `CLAUDE_CODE`
+- Latest title: Claude Code v2.1.284
+- Impacts: AGENT_CAPABILITY, MCP, CONTEXT_HANDLING
+- RETEST: SCROLL, ASSET_FIDELITY, ACCESSIBILITY, FIGMA_MCP, AGENT_CONTEXT, PARALLEL_EXECUTION
+- Source: https://raw.githubusercontent.com/anthropics/claude-code/main/feed.xml
+
+### web-features-releases
+
+- Lane: `WEB_PLATFORM`
+- Latest title: web-features@next
+- Impacts: CSS, WEB_PLATFORM, BROWSER_SUPPORT, FEATURE_ADOPTION
+- RETEST: ANIMATION, LAYOUT, FIGMA_LAYOUT_GENERATION, TYPOGRAPHY_RUNTIME, ASSET_FIDELITY, COLOR_GRADIENT, ACCESSIBILITY, FIGMA_MCP, AGENT_CONTEXT, PARALLEL_EXECUTION
+- Source: https://api.github.com/repos/web-platform-dx/web-features/releases?per_page=12
 
 ### mdn-browser-compat-data-releases
 
