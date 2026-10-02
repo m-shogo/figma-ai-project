@@ -40,6 +40,7 @@
     }
     > .gn_subMenu {
         grid-area: gn_subMenu;
+        margin-top: 40px;
     }
     > .gn_sns {
         grid-area: gn_sns;
@@ -1413,6 +1414,7 @@ body._open-menu {
                 grid-area: gn_subMenu;
                 align-items: flex-start;
                 justify-content: center;
+                margin-top: 0;
             }
             > .gn_sns {
                 grid-area: gn_sns;

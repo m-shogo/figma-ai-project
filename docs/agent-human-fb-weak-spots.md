@@ -18,6 +18,8 @@ UI / layout / hover / overlay / 開閉を触ったら、Human が「確認して
 4. 同じ family の兄弟（他ボタン、他 overlay、EN と検索、など）を見る
 5. 暗幕・ホバー幾何は節4を黙って適用する
 6. 見た目が似ていても owner が違う塊を流用して終わらせない
+7. `gap` を置いたら、先頭・末尾・padding 側に余計な空きが無いことを実測する。端の空きは `padding` / `margin`。quick contract 節3。この指摘は多い
+8. Repeater / CMS のカードへ Figma の描画高・描画幅を `height` / `width` で固定しない。中身で伸びる。logo など素材寸法は固定してよい。quick contract 節12。この指摘は多い
 
 ## 弱点
 

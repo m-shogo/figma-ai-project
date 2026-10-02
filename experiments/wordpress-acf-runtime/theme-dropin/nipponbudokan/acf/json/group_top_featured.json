@@ -1,0 +1,207 @@
+{
+    "key": "group_top_featured",
+    "title": "トップ_注目の主催事業",
+    "fields": [
+        {
+            "key": "field_top_featured",
+            "label": "注目の主催事業",
+            "name": "top_featured-01",
+            "aria-label": "",
+            "type": "repeater",
+            "instructions": "最大4件。URLが空の項目はリンクになりません。ステータス「なし」は表示しません。",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "collapsed": "field_top_featured_title",
+            "min": 0,
+            "max": 4,
+            "layout": "row",
+            "button_label": "+ 主催事業を追加",
+            "rows_per_page": 20,
+            "sub_fields": [
+                {
+                    "key": "field_top_featured_thumb",
+                    "label": "サムネイル",
+                    "name": "thumb",
+                    "aria-label": "",
+                    "type": "image",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "return_format": "id",
+                    "preview_size": "medium",
+                    "library": "all",
+                    "min_width": "",
+                    "min_height": "",
+                    "min_size": "",
+                    "max_width": "",
+                    "max_height": "",
+                    "max_size": "",
+                    "mime_types": "",
+                    "parent_repeater": "field_top_featured"
+                },
+                {
+                    "key": "field_top_featured_title",
+                    "label": "イベント名",
+                    "name": "title",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_top_featured"
+                },
+                {
+                    "key": "field_top_featured_date",
+                    "label": "開催日付",
+                    "name": "date",
+                    "aria-label": "",
+                    "type": "date_picker",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "50",
+                        "class": "",
+                        "id": ""
+                    },
+                    "display_format": "Y/m/d",
+                    "return_format": "Y-m-d",
+                    "first_day": 1,
+                    "default_to_current_date": 0,
+                    "parent_repeater": "field_top_featured"
+                },
+                {
+                    "key": "field_top_featured_category",
+                    "label": "カテゴリー",
+                    "name": "category",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "50",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_top_featured"
+                },
+                {
+                    "key": "field_top_featured_url",
+                    "label": "URL",
+                    "name": "url",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "空のときはリンクになりません。https:// または /test/ 。",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_top_featured"
+                },
+                {
+                    "key": "field_top_featured_external",
+                    "label": "外部リンク",
+                    "name": "external",
+                    "aria-label": "",
+                    "type": "true_false",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "message": "別タブで開く",
+                    "default_value": 0,
+                    "ui": 1,
+                    "ui_on_text": "はい",
+                    "ui_off_text": "いいえ",
+                    "parent_repeater": "field_top_featured"
+                },
+                {
+                    "key": "field_top_featured_status",
+                    "label": "ステータス",
+                    "name": "status",
+                    "aria-label": "",
+                    "type": "radio",
+                    "instructions": "「なし」は表示しません。",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "choices": {
+                        "none": "なし",
+                        "recruiting": "募集中",
+                        "ongoing": "開催中",
+                        "closed": "受付終了"
+                    },
+                    "default_value": "none",
+                    "return_format": "value",
+                    "allow_null": 0,
+                    "other_choice": 0,
+                    "layout": "horizontal",
+                    "save_other_choice": 0,
+                    "parent_repeater": "field_top_featured"
+                }
+            ]
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "page_type",
+                "operator": "==",
+                "value": "front_page"
+            }
+        ]
+    ],
+    "menu_order": 3,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "注目の主催事業。最大4件。",
+    "show_in_rest": false,
+    "display_title": "",
+    "modified": 1759300000
+}

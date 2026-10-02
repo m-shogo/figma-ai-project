@@ -1,0 +1,260 @@
+{
+    "key": "group_top_main_visual",
+    "title": "トップ_メインビジュアル",
+    "fields": [
+        {
+            "key": "field_top_mv_copy",
+            "label": "キャッチコピー",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "固定です。管理画面からは編集できません。<br>伝統を未来へつなぐ、武道文化の中心地<br>武道、書道の普及・振興、公益目的事業の拠点として活動しています。",
+            "new_lines": "",
+            "esc_html": 0
+        },
+        {
+            "key": "field_top_mv_morning",
+            "label": "6:00-12:00",
+            "name": "top_mv_morning",
+            "aria-label": "",
+            "type": "group",
+            "instructions": "日本時間 6:00 から 12:00 の直前まで表示します。",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "layout": "block",
+            "sub_fields": [
+                {
+                    "key": "field_top_mv_morning_pc",
+                    "label": "画像（PC）",
+                    "name": "img_pc",
+                    "aria-label": "",
+                    "type": "image",
+                    "instructions": "推奨 横1380px・縦600px以上",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "50",
+                        "class": "",
+                        "id": ""
+                    },
+                    "return_format": "id",
+                    "preview_size": "top_main_pc",
+                    "library": "all",
+                    "min_width": "",
+                    "min_height": "",
+                    "min_size": "",
+                    "max_width": "",
+                    "max_height": "",
+                    "max_size": "",
+                    "mime_types": ""
+                },
+                {
+                    "key": "field_top_mv_morning_sp",
+                    "label": "画像（スマホ）",
+                    "name": "img_sp",
+                    "aria-label": "",
+                    "type": "image",
+                    "instructions": "推奨 横750px・縦750px以上",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "50",
+                        "class": "",
+                        "id": ""
+                    },
+                    "return_format": "id",
+                    "preview_size": "medium",
+                    "library": "all",
+                    "min_width": "",
+                    "min_height": "",
+                    "min_size": "",
+                    "max_width": "",
+                    "max_height": "",
+                    "max_size": "",
+                    "mime_types": ""
+                }
+            ]
+        },
+        {
+            "key": "field_top_mv_day",
+            "label": "12:00-18:00",
+            "name": "top_mv_day",
+            "aria-label": "",
+            "type": "group",
+            "instructions": "日本時間 12:00 から 18:00 の直前まで表示します。",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "layout": "block",
+            "sub_fields": [
+                {
+                    "key": "field_top_mv_day_pc",
+                    "label": "画像（PC）",
+                    "name": "img_pc",
+                    "aria-label": "",
+                    "type": "image",
+                    "instructions": "推奨 横1380px・縦600px以上",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "50",
+                        "class": "",
+                        "id": ""
+                    },
+                    "return_format": "id",
+                    "preview_size": "top_main_pc",
+                    "library": "all",
+                    "min_width": "",
+                    "min_height": "",
+                    "min_size": "",
+                    "max_width": "",
+                    "max_height": "",
+                    "max_size": "",
+                    "mime_types": ""
+                },
+                {
+                    "key": "field_top_mv_day_sp",
+                    "label": "画像（スマホ）",
+                    "name": "img_sp",
+                    "aria-label": "",
+                    "type": "image",
+                    "instructions": "推奨 横750px・縦750px以上",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "50",
+                        "class": "",
+                        "id": ""
+                    },
+                    "return_format": "id",
+                    "preview_size": "medium",
+                    "library": "all",
+                    "min_width": "",
+                    "min_height": "",
+                    "min_size": "",
+                    "max_width": "",
+                    "max_height": "",
+                    "max_size": "",
+                    "mime_types": ""
+                }
+            ]
+        },
+        {
+            "key": "field_top_mv_night",
+            "label": "18:00-6:00",
+            "name": "top_mv_night",
+            "aria-label": "",
+            "type": "group",
+            "instructions": "日本時間 18:00 から翌朝 6:00 の直前まで表示します。",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "layout": "block",
+            "sub_fields": [
+                {
+                    "key": "field_top_mv_night_pc",
+                    "label": "画像（PC）",
+                    "name": "img_pc",
+                    "aria-label": "",
+                    "type": "image",
+                    "instructions": "推奨 横1380px・縦600px以上",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "50",
+                        "class": "",
+                        "id": ""
+                    },
+                    "return_format": "id",
+                    "preview_size": "top_main_pc",
+                    "library": "all",
+                    "min_width": "",
+                    "min_height": "",
+                    "min_size": "",
+                    "max_width": "",
+                    "max_height": "",
+                    "max_size": "",
+                    "mime_types": ""
+                },
+                {
+                    "key": "field_top_mv_night_sp",
+                    "label": "画像（スマホ）",
+                    "name": "img_sp",
+                    "aria-label": "",
+                    "type": "image",
+                    "instructions": "推奨 横750px・縦750px以上",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "50",
+                        "class": "",
+                        "id": ""
+                    },
+                    "return_format": "id",
+                    "preview_size": "medium",
+                    "library": "all",
+                    "min_width": "",
+                    "min_height": "",
+                    "min_size": "",
+                    "max_width": "",
+                    "max_height": "",
+                    "max_size": "",
+                    "mime_types": ""
+                }
+            ]
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "page_type",
+                "operator": "==",
+                "value": "front_page"
+            }
+        ]
+    ],
+    "menu_order": 1,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": [
+        "the_content",
+        "excerpt",
+        "discussion",
+        "comments",
+        "revisions",
+        "slug",
+        "author",
+        "format",
+        "featured_image",
+        "tags",
+        "send-trackbacks"
+    ],
+    "active": true,
+    "description": "日本時間で 6:00-12:00／12:00-18:00／18:00-6:00 の固定画像を切り替える。スライドショーはない。キャッチコピーは編集しない。",
+    "show_in_rest": false,
+    "display_title": "",
+    "modified": 1759290000
+}

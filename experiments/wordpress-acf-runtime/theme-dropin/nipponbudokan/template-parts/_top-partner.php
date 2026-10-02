@@ -1,22 +1,38 @@
 <?php
 $theme_uri = get_template_directory_uri();
 
-// Figma 正本の12件を第一通のfallbackとして保持する。
-// 本番の管理方法が確定するまでは、存在しないACF fieldや外部URLを推測しない。
-$partner_items = array(
-    array('name' => '全日本柔道連盟', 'image' => 'partner-01.webp'),
-    array('name' => '全日本剣道連盟', 'image' => 'partner-02.webp'),
-    array('name' => '全日本弓道連盟', 'image' => 'partner-03.webp'),
-    array('name' => '日本相撲連盟', 'image' => 'partner-04.webp'),
-    array('name' => '全日本空手道連盟', 'image' => 'partner-05.webp'),
-    array('name' => '合気会', 'image' => 'partner-06.webp'),
-    array('name' => '少林寺拳法連盟', 'image' => 'partner-07.webp'),
-    array('name' => '全日本なぎなた', 'image' => 'partner-08.webp'),
-    array('name' => '全日本銃剣道連盟', 'image' => 'partner-09.webp'),
-    array('name' => '日本武道協議会', 'image' => 'partner-10.webp'),
-    array('name' => '日本古武道協会', 'image' => 'partner-11.webp'),
-    array('name' => '株式会社光洋商事', 'image' => 'partner-12.webp'),
-);
+$partner_rows = function_exists('get_field') ? get_field('top_partner-01', get_queried_object_id()) : array();
+$partner_items = array();
+if (is_array($partner_rows)) {
+    foreach ($partner_rows as $row) {
+        if (!is_array($row)) {
+            continue;
+        }
+        $logo_id = isset($row['logo']) ? (int) $row['logo'] : 0;
+        $logo = $logo_id ? wp_get_attachment_image_src($logo_id, 'full') : null;
+        $partner_items[] = array(
+            'name' => isset($row['name']) ? (string) $row['name'] : '',
+            'src' => !empty($logo[0]) ? $logo[0] : '',
+            'url' => isset($row['url']) ? trim(str_replace(array("\r", "\n"), '', (string) $row['url'])) : '',
+        );
+    }
+}
+if ($partner_items === array()) {
+    $partner_items = array(
+        array('name' => '全日本柔道連盟', 'src' => $theme_uri . '/images/top/partner/partner-01.webp', 'url' => ''),
+        array('name' => '全日本剣道連盟', 'src' => $theme_uri . '/images/top/partner/partner-02.webp', 'url' => ''),
+        array('name' => '全日本弓道連盟', 'src' => $theme_uri . '/images/top/partner/partner-03.webp', 'url' => ''),
+        array('name' => '日本相撲連盟', 'src' => $theme_uri . '/images/top/partner/partner-04.webp', 'url' => ''),
+        array('name' => '全日本空手道連盟', 'src' => $theme_uri . '/images/top/partner/partner-05.webp', 'url' => ''),
+        array('name' => '合気会', 'src' => $theme_uri . '/images/top/partner/partner-06.webp', 'url' => ''),
+        array('name' => '少林寺拳法連盟', 'src' => $theme_uri . '/images/top/partner/partner-07.webp', 'url' => ''),
+        array('name' => '全日本なぎなた', 'src' => $theme_uri . '/images/top/partner/partner-08.webp', 'url' => ''),
+        array('name' => '全日本銃剣道連盟', 'src' => $theme_uri . '/images/top/partner/partner-09.webp', 'url' => ''),
+        array('name' => '日本武道協議会', 'src' => $theme_uri . '/images/top/partner/partner-10.webp', 'url' => ''),
+        array('name' => '日本古武道協会', 'src' => $theme_uri . '/images/top/partner/partner-11.webp', 'url' => ''),
+        array('name' => '株式会社光洋商事', 'src' => $theme_uri . '/images/top/partner/partner-12.webp', 'url' => ''),
+    );
+}
 
 $partner_items = apply_filters('nipponbudokan_top_partner_items', $partner_items);
 $partner_archive_url = apply_filters('nipponbudokan_top_partner_url', '');
@@ -46,15 +62,22 @@ $partner_archive_url = apply_filters('nipponbudokan_top_partner_url', '');
             <ul class="tp_list" aria-label="公式パートナー">
                 <?php foreach ($partner_items as $partner): ?>
                     <?php
-                    $name = isset($partner['name']) ? (string) $partner['name'] : '';
-                    $image = isset($partner['image']) ? basename((string) $partner['image']) : '';
-                    if ($name === '' || $image === '') {
+                    $name = isset($partner['name']) ? trim((string) $partner['name']) : '';
+                    $src = isset($partner['src']) ? (string) $partner['src'] : '';
+                    $url = isset($partner['url']) ? trim(str_replace(array("\r", "\n"), '', (string) $partner['url'])) : '';
+                    if ($name === '' || $src === '') {
                         continue;
                     }
                     ?>
                     <li class="tp_item">
-                        <img class="tp_logo" src="<?php echo esc_url($theme_uri . '/images/top/partner/' . $image); ?>" alt="" width="40" height="40" loading="lazy">
+                        <?php if ($url !== ''): ?>
+                            <a href="<?php echo esc_url($url); ?>" target="_blank" rel="noopener noreferrer">
+                        <?php endif; ?>
+                        <img class="tp_logo" src="<?php echo esc_url($src); ?>" alt="" width="40" height="40" loading="lazy">
                         <span class="tp_name"><?php echo esc_html($name); ?></span>
+                        <?php if ($url !== ''): ?>
+                            </a>
+                        <?php endif; ?>
                     </li>
                 <?php endforeach; ?>
             </ul>

@@ -7,7 +7,7 @@ html:has(.top_mainVisual) { scrollbar-gutter: auto; }
 // PC TOP: 1603:7062; FV reference: 1603:7662
 // SP TOP: 446:10020; FV/MV reference: 1455:5811
 // ========================================================================== */
-.top_mainVisual {
+:is(.top_mainVisual, .purposeBanner) {
     position: relative;
     overflow-x: clip;
     display: flex;
@@ -25,53 +25,63 @@ html:has(.top_mainVisual) { scrollbar-gutter: auto; }
         order: 3;
     }
     .top_notice-01 {
-        order: 2;
+        order: 75;
         width: 335px;
         margin-top: -35px;
-        margin-bottom: 48px;
-    }
-    .tm_swiper-container {
+        margin-bottom: 0;
+        margin-inline: auto;
         position: relative;
-        .swiper-wrapper {
-            .swiper-slide {
-                position: relative;
-                .tm_background {
-                    position: relative;
-                    overflow: hidden;
-                    width: 100%;
-                    height: 483px;
-                    border-radius: 3px;
-                    &::after {
-                        content: '';
-                        display: block;
-                        position: absolute;
-                        inset: 0;
-                        background-image: linear-gradient(36.443deg, rgba(16, 24, 39, 0.7) 23.906%, rgba(16, 24, 39, 0) 48.72%);
-                        pointer-events: none;
-                    }
-                    img {
-                        display: block;
-                        width: 100%;
-                        height: 100%;
-                        object-fit: cover;
-                        /* Figma SP 1455:5811 uses an object-bottom crop for the shared hero image. */
-                        object-position: center bottom;
-                    }
-                }
+        z-index: 2;
+    }
+    .tm_mv {
+        position: relative;
+        .tm_background {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            height: 483px;
+            border-radius: 3px;
+            &::after {
+                content: '';
+                display: block;
+                position: absolute;
+                inset: 0;
+                background-image: linear-gradient(36.443deg, rgba(16, 24, 39, 0.7) 23.906%, rgba(16, 24, 39, 0) 48.72%);
+                pointer-events: none;
+            }
+            img {
+                display: block;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                /* Figma SP 1455:5811 uses an object-bottom crop for the shared hero image. */
+                object-position: center bottom;
             }
         }
         .tm_inner {
             display: flex;
             flex-direction: column;
-            gap: 24px;
+            gap: 20px;
             align-items: flex-start;
             position: absolute;
-            top: 246px;
+            top: 266px;
             right: 20px;
             bottom: auto;
             left: 20px;
             z-index: 1;
             color: var(--color-secondary);
+            &::before {
+                content: '';
+                position: absolute;
+                z-index: -1;
+                top: 103px;
+                left: -11px;
+                width: 358px;
+                height: 64px;
+                background-color: rgb(51 51 51 / 0.2);
+                filter: blur(25px);
+                pointer-events: none;
+            }
         }
         .tm_copy_pc {
             display: none;
@@ -85,7 +95,7 @@ html:has(.top_mainVisual) { scrollbar-gutter: auto; }
             font-weight: 500;
             line-height: 1.4;
             letter-spacing: 0.05em;
-            text-shadow: 1px 1px 5px #000;
+            text-shadow: 1px 1px 1px var(--color-text);
         }
         .tm_lead {
             font-family: var(--font-zen-kaku-gothic);
@@ -93,27 +103,7 @@ html:has(.top_mainVisual) { scrollbar-gutter: auto; }
             font-weight: 500;
             line-height: 1.6;
             letter-spacing: 0.05em;
-        }
-        .swiper-pagination {
-            display: flex;
-            justify-content: center;
-            position: absolute;
-            left: 50%;
-            bottom: 12px;
-            z-index: 2;
-            transform: translateX(-50%);
-            .swiper-pagination-bullet {
-                opacity: 1;
-                margin-inline: 5px;
-                width: 12px;
-                height: 12px;
-                background-color: var(--color-secondary);
-                transition: background-color var(--transition-duration);
-                &:hover,
-                &.swiper-pagination-bullet-active {
-                    background-color: var(--color-primary);
-                }
-            }
+            text-shadow: 1px 1px 1px var(--color-text);
         }
     }
 
@@ -186,6 +176,9 @@ html:has(.top_mainVisual) { scrollbar-gutter: auto; }
         margin: 0;
         padding: 0;
         list-style: none;
+        li {
+            display: flex;
+        }
         a {
             --_octagon-chip: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpolygon fill='%23fff' stroke='%23d7d4d4' stroke-width='1' stroke-linejoin='round' points='8,0.5 13.4,2.7 15.5,8 13.4,13.3 8,15.5 2.6,13.3 0.5,8 2.6,2.7'/%3E%3C/svg%3E");
             display: inline-flex;
@@ -198,6 +191,7 @@ html:has(.top_mainVisual) { scrollbar-gutter: auto; }
             letter-spacing: 0.05em;
             line-height: 1.2;
             text-decoration: none;
+            transition: color var(--transition-duration);
             &::before {
                 content: var(--icon-arrow-right);
                 display: flex;
@@ -224,12 +218,14 @@ html:has(.top_mainVisual) { scrollbar-gutter: auto; }
         .tn_inner {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 12px;
+            box-sizing: border-box;
             min-height: 70px;
-            padding: 14px 16px;
-            border-radius: 0 5px 5px 0;
-            background-color: #c84a32;
-            color: var(--color-secondary);
+            padding-inline: 16px;
+            border: 1px solid var(--color-primary);
+            border-radius: 3px;
+            background-color: var(--color-secondary);
+            color: var(--color-primary);
         }
         .tn_icon {
             display: flex;
@@ -239,25 +235,34 @@ html:has(.top_mainVisual) { scrollbar-gutter: auto; }
             height: 20px;
             flex-shrink: 0;
             margin: 0;
-            color: #e6e6e6;
+            color: var(--color-primary);
             &::before {
-                content: '\f06a';
-                font-family: var(--font-awesome);
-                font-size: 20px;
-                font-weight: 300;
-                line-height: 1;
+                content: none;
             }
             img {
-                display: none;
+                display: block;
+                width: 20px;
+                height: 20px;
             }
         }
         .tn_body {
             min-width: 0;
+            flex: 1 1 auto;
         }
-        .tn_list {
-            margin: 0;
-            padding: 0;
-            list-style: none;
+        .tn_swiper {
+            width: 100%;
+            min-width: 0;
+            overflow: hidden;
+            .swiper-wrapper {
+                align-items: flex-start;
+                transition-property: transform;
+            }
+            .swiper-slide {
+                display: flex;
+                align-items: flex-start;
+                width: 100%;
+                height: auto;
+            }
         }
         .tn_text,
         .tn_item,
@@ -265,19 +270,79 @@ html:has(.top_mainVisual) { scrollbar-gutter: auto; }
             margin: 0;
             font-family: var(--font-zen-kaku-gothic);
             font-size: 13px;
+            font-weight: 500;
             letter-spacing: 0.05em;
             line-height: 1.4;
-            a {
-                color: inherit;
-                text-decoration: underline;
+            text-decoration: none;
+            overflow-wrap: anywhere;
+        }
+        a.tn_text {
+            color: inherit;
+            text-decoration: underline;
+        }
+        .tn_inner:has(.tn_nav) {
+            padding-right: 72px;
+        }
+        .tn_nav {
+            position: absolute;
+            top: 50%;
+            right: 16px;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transform: translateY(-50%);
+        }
+        .tn_nav .swiper-button-prev,
+        .tn_nav .swiper-button-next {
+            position: static;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            margin: 0;
+            padding: 0;
+            border: 0;
+            color: var(--color-primary);
+            background: none;
+            cursor: pointer;
+            transition: opacity var(--transition-duration);
+            .swiper-navigation-icon {
+                display: none;
             }
+            &::after {
+                content: none;
+            }
+            &::before {
+                font-family: var(--font-awesome);
+                font-weight: 900;
+                font-size: 12px;
+                line-height: 1;
+                color: currentColor;
+            }
+        }
+        .tn_nav .swiper-button-prev::before {
+            content: var(--icon-arrow-left);
+        }
+        .tn_nav .swiper-button-next::before {
+            content: var(--icon-arrow-right);
+        }
+        .tn_nav .swiper-button-disabled {
+            color: var(--color-gray-text);
+            opacity: 1;
+            pointer-events: none;
+            cursor: default;
+        }
+        .tn_nav .swiper-button-lock {
+            display: none;
         }
     }
 
     /* MARK: layout_breakpoint */
     @media screen and (min-width: 768px) {
         /* Figma 1603:8093 — logo rail continues 200px below the 100px header. */
-        &::before {
+        &:not(.purposeBanner)::before {
             content: '';
             position: absolute;
             left: 0;
@@ -302,35 +367,32 @@ html:has(.top_mainVisual) { scrollbar-gutter: auto; }
             flex: 1 1 auto;
             padding-inline: 0;
             height: 600px;
-        }
-        .tm_swiper-container,
-        .tm_swiper-container .swiper-wrapper,
-        .tm_swiper-container .swiper-slide {
-            height: 100%;
-        }
-        .tm_swiper-container {
-            .swiper-wrapper {
-                .swiper-slide {
-                    .tm_background {
-                        height: 600px;
-                        &::after {
-                            background-image: none;
-                        }
-                        img {
-                            /* PC 1603:7662 is effectively centered; keep the SP crop from leaking upward. */
-                            object-position: 50% 50%;
-                        }
-                    }
+            .tm_background {
+                height: 600px;
+                &::after {
+                    background-image: none;
+                }
+                img {
+                    /* PC 1603:7662 is effectively centered; keep the SP crop from leaking upward. */
+                    object-position: 50% 50%;
                 }
             }
             .tm_inner {
                 right: auto;
                 bottom: auto;
-                top: 307px;
+                top: 338px;
                 left: 60px;
                 width: auto;
                 max-width: calc(100% - 120px);
                 gap: 24px;
+                &::before {
+                    top: 6px;
+                    left: -10px;
+                    width: 614px;
+                    height: 196px;
+                    background-color: rgb(51 51 51 / 0.1);
+                    filter: blur(20px);
+                }
             }
             .tm_copy_pc {
                 display: inline;
@@ -342,24 +404,16 @@ html:has(.top_mainVisual) { scrollbar-gutter: auto; }
                 font-size: 46px;
                 line-height: 1.5;
                 letter-spacing: 0.05em;
-                text-shadow: none;
+                text-shadow: 1px 1px 1px var(--color-text);
             }
             .tm_lead {
                 position: relative;
                 z-index: 0;
                 font-size: 18px;
                 line-height: 1.4;
+                text-shadow: 1px 1px 0 var(--color-text);
                 &::before {
-                    content: '';
-                    position: absolute;
-                    top: -8px;
-                    left: -10px;
-                    z-index: -1;
-                    width: 612px;
-                    height: 44px;
-                    background-color: #333;
-                    filter: blur(20px);
-                    pointer-events: none;
+                    content: none;
                 }
             }
         }
@@ -379,8 +433,8 @@ html:has(.top_mainVisual) { scrollbar-gutter: auto; }
         }
         .tm_guide_body {
             box-sizing: border-box;
-            min-height: 540px;
-            padding: 20px 24px 28px;
+            height: 540px;
+            padding: 20px 24px 0;
         }
         .top_notice-01 {
             order: unset;
@@ -417,6 +471,10 @@ html:has(.top_mainVisual) { scrollbar-gutter: auto; }
                 font-size: 16px;
                 font-weight: 500;
                 line-height: 1;
+                text-decoration: none;
+            }
+            .tn_inner:has(.tn_nav) {
+                padding-right: 80px;
             }
         }
     }
@@ -425,8 +483,13 @@ html:has(.top_mainVisual) { scrollbar-gutter: auto; }
         color: var(--color-link);
     }
 
-    .top_notice-01 a:focus-visible {
+    .top_notice-01 .tn_nav .swiper-button-prev:not(.swiper-button-disabled):focus-visible,
+    .top_notice-01 .tn_nav .swiper-button-next:not(.swiper-button-disabled):focus-visible {
         opacity: var(--opacity-hover);
+    }
+
+    .top_notice-01 a.tn_text:focus-visible {
+        text-decoration: none;
     }
 
     /* MARK: hover */
@@ -439,10 +502,14 @@ html:has(.top_mainVisual) { scrollbar-gutter: auto; }
             }
         }
         .top_notice-01 {
-            a {
+            a.tn_text {
                 &:hover {
-                    opacity: var(--opacity-hover);
+                    text-decoration: none;
                 }
+            }
+            .tn_nav .swiper-button-prev:not(.swiper-button-disabled):hover,
+            .tn_nav .swiper-button-next:not(.swiper-button-disabled):hover {
+                opacity: var(--opacity-hover);
             }
         }
     }

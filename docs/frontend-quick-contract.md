@@ -51,6 +51,8 @@ Flow / Flex / Grid / relational overlap / intentional absolute・fixed・sticky 
 
 順番や使用件数をKPIにしない。
 
+`gap` は並びの**あいだ**だけに入る。先頭の上、末尾の下、すでに padding がある辺には入らない。`justify-content` / `align-content` の余りも、Figma がその側に空きを置いていないなら配らない。空きの所有者を Figma で見てから、間は `gap`、端や片側だけは `padding` / `margin`。入れたあと、意図しない辺に空きが増えていないか実測する。Human 2026-10-01。この取り違えは多い。
+
 ## 4. 状態変化で箱をずらさない
 
 Figmaに「hoverで枠が付く」と書いてあっても、Webでは rest から同じ太さの枠を確保する。Company / Existing / 明示Projectが別契約ならそちらが勝つ。**Human が言わなくても** 適用する。詳細な欠落種類は `docs/agent-human-fb-weak-spots.md`。
@@ -178,6 +180,8 @@ Phrase単位spanは有力だが、CMS/翻訳文言へ機械適用しない。
 Parentがcollection layout、itemが内部layoutを所有する。
 
 通常件数変更・reorder・optional field・incomplete last rowを必要なsupported rangeで考える。CMS化そのものは強制しない。
+
+Repeater / CMS の項目（カード、名前、本文）へ、Figma の描画結果を `height` / `width` として固定しない。中身が増えたら箱が伸びる。logo / icon など素材側の寸法は固定してよい。Human 2026-10-02。
 
 ## 13. Runtime state / Form / Font / Third-partyを該当時に見る
 

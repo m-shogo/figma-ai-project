@@ -156,8 +156,8 @@
     }
 
     /* archive item master からのSP差分 */
-    .top_news_articles .news_item:first-child {
-        border-top: 1px solid var(--color-line);
+    .top_news_articles.module_newsList-01 .news_item:first-child {
+        border-top: 0;
     }
 
     .top_news_articles .news_item_link {
@@ -323,7 +323,7 @@
             background-color: var(--color-secondary);
         }
 
-        .top_news_articles .news_item:first-child {
+        .top_news_articles.module_newsList-01 .news_item:first-child {
             border-top: 0;
         }
 
@@ -335,10 +335,6 @@
 
         .top_news_articles .news_item:first-child .news_item_link {
             padding-top: 0;
-        }
-
-        .top_news_articles .news_item:last-child .news_item_link {
-            padding-bottom: 0;
         }
 
         .top_news_articles .news_item_meta {

@@ -976,5 +976,74 @@ window.addEventListener('resize', setVw);
   // menuTextChange();
   lightboxWrap();
   tab();
+  purposeBanner();
 //   archiveNavigation();
+
+  function purposeBanner() {
+    const root = document.querySelector('[data-purpose-banner]');
+    if (!root) {
+      return;
+    }
+    const banner = root.querySelector('.purposeBanner');
+    const toggle = root.querySelector('.purposeBanner_toggle');
+    const overlay = root.querySelector('.purposeBanner_overlay');
+    const mv = document.querySelector('.top_mainVisual');
+    const footer = document.querySelector('#global_footer');
+    const desktop = window.matchMedia('(min-width: 768px)');
+    const isTop = root.hasAttribute('data-purpose-top');
+    let pastMv = !isTop;
+    let footerIn = false;
+
+    const sync = function () {
+      if (!desktop.matches || !banner) {
+        return;
+      }
+      const show = pastMv && !footerIn;
+      banner.classList.toggle('is-shown', show);
+      if (!show) {
+        setOpen(false);
+      }
+    };
+    const setOpen = function (open) {
+      root.classList.toggle('is-open', open);
+      if (toggle) {
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      }
+    };
+
+    if (isTop && mv && 'IntersectionObserver' in window) {
+      const mvObserver = new IntersectionObserver(function (entries) {
+        const entry = entries[0];
+        pastMv = !entry.isIntersecting && entry.boundingClientRect.bottom <= 0;
+        sync();
+      });
+      mvObserver.observe(mv);
+    }
+    if (footer && 'IntersectionObserver' in window) {
+      const footerObserver = new IntersectionObserver(function (entries) {
+        footerIn = entries[0].isIntersecting;
+        sync();
+      });
+      footerObserver.observe(footer);
+    }
+    if (desktop.addEventListener) {
+      desktop.addEventListener('change', sync);
+    }
+    if (toggle) {
+      toggle.addEventListener('click', function () {
+        setOpen(!root.classList.contains('is-open'));
+      });
+    }
+    if (overlay) {
+      overlay.addEventListener('click', function () {
+        setOpen(false);
+      });
+    }
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape') {
+        setOpen(false);
+      }
+    });
+    sync();
+  }
 })(jQuery);

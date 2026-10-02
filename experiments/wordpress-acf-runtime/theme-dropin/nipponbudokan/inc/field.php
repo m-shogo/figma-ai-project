@@ -68,6 +68,87 @@ add_filter('acf/settings/load_json', function ($paths) {
     return $paths;
 });
 
+// メインビジュアルは時間帯の固定画像。旧スライダーは編集画面に出さない。
+add_filter('acf/load_field_group', function ($field_group) {
+    if (is_array($field_group) && ($field_group['key'] ?? '') === 'group_top_slider') {
+        $field_group['active'] = false;
+    }
+    return $field_group;
+});
+
+function nipponbudokan_notice_content_fields()
+{
+    $parent = 'field_5d5cb6ecb6e82';
+
+    return array(
+        array(
+            'key' => 'field_nbk_notice_title',
+            'label' => 'タイトル',
+            'name' => 'title',
+            'type' => 'text',
+            'instructions' => '30文字まで。',
+            'required' => 0,
+            'conditional_logic' => 0,
+            'wrapper' => array('width' => '', 'class' => '', 'id' => ''),
+            'default_value' => '',
+            'maxlength' => 30,
+            'placeholder' => '',
+            'prepend' => '',
+            'append' => '',
+            'parent_repeater' => $parent,
+        ),
+        array(
+            'key' => 'field_nbk_notice_url',
+            'label' => 'リンク先',
+            'name' => 'url',
+            'type' => 'text',
+            'instructions' => 'https:// または /test/ 。空ならリンクになりません。',
+            'required' => 0,
+            'conditional_logic' => 0,
+            'wrapper' => array('width' => '', 'class' => '', 'id' => ''),
+            'default_value' => '',
+            'maxlength' => '',
+            'placeholder' => '',
+            'prepend' => '',
+            'append' => '',
+            'parent_repeater' => $parent,
+        ),
+        array(
+            'key' => 'field_nbk_notice_external',
+            'label' => '外部リンク',
+            'name' => 'external',
+            'type' => 'true_false',
+            'instructions' => '',
+            'required' => 0,
+            'conditional_logic' => 0,
+            'wrapper' => array('width' => '', 'class' => '', 'id' => ''),
+            'message' => '別タブで開く',
+            'default_value' => 0,
+            'ui' => 1,
+            'ui_on_text' => '別タブ',
+            'ui_off_text' => '同じタブ',
+            'parent_repeater' => $parent,
+        ),
+    );
+}
+
+add_filter('acf/load_field/key=field_5d5cb6ecb6e82', function ($field) {
+    if (empty($field['sub_fields']) || !is_array($field['sub_fields'])) {
+        $field['sub_fields'] = array();
+    }
+    $field['max'] = 0;
+    $keep = array();
+    foreach ($field['sub_fields'] as $sub) {
+        $name = $sub['name'] ?? '';
+        if (in_array($name, array('date', 'textarea', 'title', 'url', 'external'), true)) {
+            continue;
+        }
+        $keep[] = $sub;
+    }
+    $field['sub_fields'] = array_merge(nipponbudokan_notice_content_fields(), $keep);
+    return $field;
+});
+
 // 保存済みの meta-box-order_page が ACF の position を上書きしないように外す。
 // 表示列はフィールドグループの position に従う。ローカルナビなど他の枠は触らない。
 add_filter('get_user_option_meta-box-order_page', function ($result) {

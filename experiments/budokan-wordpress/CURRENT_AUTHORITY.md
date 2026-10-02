@@ -3,7 +3,7 @@
 このファイルは **日本武道館 WordPress 案件**の会話決定を正本化する。  
 以降の Agent は、ここを Current Authority として扱い、矛盾する旧命名・旧 LP runtime 前提で進めない。
 
-更新日: 2026-09-28
+更新日: 2026-10-01
 
 ---
 
@@ -11,7 +11,7 @@
 
 - この案件を継続する各 run / 各セッションでは、**毎回 `@GitHub` と `@Figma` の両 connector を実際に呼んでから着手する**。会話履歴だけで接続可否・最新状態を推測しない。
 - GitHub 正本は `m-shogo/figma-ai-project` branch `so`。着手時に最新 ref / authority / 対象コードを直接取得し、前回完了箇所から続ける。
-- Figma 正本は file `8IPfWSLrXPBQlw3xGyV3an` のみ（Human 2026-09-28）。対象 node を LIVE 取得する。`d1pD6gL2Sqal8Cf6h9WLp6` は参考だけ。`OtS7731mhY2oD44HSpdADo` / `jqYoPtusYfTeDqRegMCsx3` / `zMjOY4euPBi9T23y7ZSM6y` その他旧 file / screenshot は最終実装判断に使わない。旧 file の frame node-id は新 file へ引き継がない。
+- Figma 正本は file `gFQN86tMpcUxkvY1pcXvN3` のみ（Human 2026-10-01）。対象 node を LIVE 取得する。`8IPfWSLrXPBQlw3xGyV3an` と `d1pD6gL2Sqal8Cf6h9WLp6` は参考だけ。`OtS7731mhY2oD44HSpdADo` / `jqYoPtusYfTeDqRegMCsx3` / `zMjOY4euPBi9T23y7ZSM6y` その他旧 file / screenshot は最終実装判断に使わない。旧 file の frame node-id は新 file へ引き継がない。
 - 片方の取得が失敗しても即「接続不可」と断定せず、対象 connector を実際に呼んだ結果で判断する。
 - この preflight 自体を毎回の成果物にせず、確認後は未完了の実装・QAを小さく前進させる。同じ確認だけを繰り返さない。
 
@@ -143,13 +143,15 @@ Theme 専用の enqueue・命名は `THEME_RULES.md`。Frontend Standard は Com
 
 フィールドグループ JSON は編集しない。ブロック見た目の markup 修正が必要なときだけ既存 block PHP を触る。
 
-**Human 2026-09-25: ACF `modified` を未来の時刻にしない。** 同期ボタンは `JSON の modified > データベースの post_modified` のときだけ出る。同期しても WP Engine はテーマ JSON を書き換えない。未来の時刻のままだと「同期しました」のあと一覧に「同期が利用できます」が残る。`modified` を動かすときは、その時点より前で、データベースのフィールドグループ更新時刻より新しい値だけ。SEO設定とビジュアル設定の position は `normal`（本文下のメタボックス）。`side` に戻さない。一度保存された `meta-box-order_page` はこの2つについては使わず、ACF の position を画面に出す。他の枠は触らない。エディタの説明文は JSON ではなくデータベースのフィールドが正。JSON を直しただけでは画面は変わらない。新しい ACF / CPT / スラッグは発明しない。**例外:** 2026-09-04 Human が `parts2.php` 用スライダーを指示したので `acf/slider`（`slider_items` → `image` / `caption`）だけ追加済み。**例外:** 2026-09-11 Human がローカルナビを ACF 選択（動的メニュー一覧）で指示したので `page_local_nav` を追加済み。**例外:** 2026-09-15 Human が投稿一覧ブロックへ刊行物 CPT を足すと指示したので `block_post_type` に `budo-book` / `shodou-book` / `tankoubon`、単行本絞り込み `block_book`（taxonomy `book`）を追加済み。**例外:** 2026-09-15 Human がイベント詳細用に次の5フィールドだけ追加してよいと指示。`group_event.json`。他グループは触らない。
+**Human 2026-09-25: ACF `modified` を未来の時刻にしない。** 同期ボタンは `JSON の modified > データベースの post_modified` のときだけ出る。同期しても WP Engine はテーマ JSON を書き換えない。未来の時刻のままだと「同期しました」のあと一覧に「同期が利用できます」が残る。`modified` を動かすときは、その時点より前で、データベースのフィールドグループ更新時刻より新しい値だけ。SEO設定とビジュアル設定の position は `normal`（本文下のメタボックス）。`side` に戻さない。一度保存された `meta-box-order_page` はこの2つについては使わず、ACF の position を画面に出す。他の枠は触らない。エディタの説明文は JSON ではなくデータベースのフィールドが正。JSON を直しただけでは画面は変わらない。新しい ACF / CPT / スラッグは発明しない。**例外:** 2026-09-04 Human が `parts2.php` 用スライダーを指示したので `acf/slider`（`slider_items` → `image` / `caption`）だけ追加済み。**例外:** 2026-09-11 Human がローカルナビを ACF 選択（動的メニュー一覧）で指示したので `page_local_nav` を追加済み。**例外:** 2026-09-15 Human が投稿一覧ブロックへ刊行物 CPT を足すと指示したので `block_post_type` に `budo-book` / `shodou-book` / `tankoubon`、単行本絞り込み `block_book`（taxonomy `book`）を追加済み。**例外:** 2026-09-15 Human がイベント詳細用に次の5フィールドだけ追加してよいと指示。`group_event.json`。他グループは触らない。**例外:** 2026-10-01 Human がメインビジュアルを時間帯の固定画像にすると指示。`group_top_main_visual.json` だけ追加し、`group_top_slider` は無効。キャッチコピーはフィールドにしない。**例外:** 2026-10-01 Human が注目の主催事業をフロントページの繰り返し項目にすると指示。`top_featured-01` は最大4件。開催イベント CPT のフィールドは変えない。**例外:** 2026-10-01 Human が重要なお知らせの日付を外し、公式パートナーを `top_partner-01`（`logo` / `name` / `url`、件数上限なし、リンクは外部）にすると指示。
 
 | 用途 | フィールド |
 | --- | --- |
-| TOP スライダー | `top_slider-01` → `img_pc` / `img_sp` / `text` |
-| TOP お知らせ | `top_notice_select`（表示する） / `top_notice-01` → `date` / `textarea` / `none`（`_hide`） |
-| TOP バナー | `top_banner-01` → `img` / `title` / `url` / `target` |
+| TOP メインビジュアル | `top_mv_morning` / `top_mv_day` / `top_mv_night` → 各 `img_pc` / `img_sp`。日本時間 6:00-12:00／12:00-18:00／18:00-6:00。開始時刻を含み終了時刻の直前まで。スライドなし。キャッチコピーは固定 |
+| TOP 注目の主催事業 | `top_featured-01` 最大4件 → `thumb` / `title` / `date` / `category` / `url` / `external` / `status`（なし / 募集中 / 開催中 / 受付終了）。URL空はリンクなし。「なし」は非表示 |
+| TOP 公式パートナー | `top_partner-01` 件数上限なし → `logo` / `name` / `url`。リンクはすべて外部。空URLはリンクにしない |
+| TOP お知らせ | `top_notice_select`（表示する） / `top_notice-01` → `textarea` / `none`（`_hide`）。日付フィールドは使わない |
+| TOP バナー | 表示は固定2枚（日本宝くじ協会 / スポーツくじ）。`top_banner-01` は使わない |
 | 固定ページ タイトル帯画像 | `page_img` |
 | 固定ページ ローカルナビ | `page_local_nav`（メニュー ID。なし＝非表示） |
 | カテゴリー ラベル色 | `category_color`（枠線・文字。未設定＝本文色） |
@@ -194,16 +196,16 @@ Theme 専用の enqueue・命名は `THEME_RULES.md`。Frontend Standard は Com
 
 ## Figma（現行正本）
 
-Human Authority 2026-09-28: デザインの Figma を変更。**この file だけを最終 Visual authority として LIVE 再取得する。** 前 file `d1pD6gL2Sqal8Cf6h9WLp6` は参考だけ。
+Human Authority 2026-10-01: デザインの Figma を変更。**この file だけを最終 Visual authority として LIVE 再取得する。** 前 file `8IPfWSLrXPBQlw3xGyV3an` は参考だけ。
 
-File: [nipponbudokan](https://www.figma.com/design/8IPfWSLrXPBQlw3xGyV3an/nipponbudokan)
+File: [nipponbudokan](https://www.figma.com/design/gFQN86tMpcUxkvY1pcXvN3/nipponbudokan)
 
 | 面 | node-id | URL |
 | --- | --- | --- |
-| PC page | `0:1` | https://www.figma.com/design/8IPfWSLrXPBQlw3xGyV3an/nipponbudokan?node-id=0-1 |
-| SP page | `114:5409` | https://www.figma.com/design/8IPfWSLrXPBQlw3xGyV3an/nipponbudokan?node-id=114-5409 |
+| PC page | `0:1` | https://www.figma.com/design/gFQN86tMpcUxkvY1pcXvN3/nipponbudokan?node-id=0-1 |
+| SP page | `1468:7225` | https://www.figma.com/design/gFQN86tMpcUxkvY1pcXvN3/nipponbudokan?node-id=1468-7225 |
 
-- 前 file `d1pD6gL2Sqal8Cf6h9WLp6` の frame（TOP PC `1603:7062`、TOP SP `446:10020` を含む）は参考だけ。新 file の node として使わない。着手時に新 file の `0:1` / `114:5409` を再走査する
+- 前 file `8IPfWSLrXPBQlw3xGyV3an` / `d1pD6gL2Sqal8Cf6h9WLp6` の frame は参考だけ。新 file の node として使わない。着手時に新 file の `0:1` / `1468:7225` を再走査する
 - 旧 file `OtS7731mhY2oD44HSpdADo` の frame（武道 `1634:10806` / `2608:5702`、詳細 `1637:11288` / `2608:6933`、書写 `2629:7385` / `2630:8447`、単行本 `1656:5309` / `2627:6075`、詳細 `1686:5574` / `2628:6964`、TOP `1603:7488`）も新 file の node として使わない
 - 旧 `d1pD6gL2Sqal8Cf6h9WLp6` / `OtS7731mhY2oD44HSpdADo` / `jqYoPtusYfTeDqRegMCsx3` / `zMjOY4euPBi9T23y7ZSM6y` とそれ以前の file は historical/audit 参照に限る
 - Visual の正本は上記 Figma。既存実装の正本は Theme。差分は Theme をこの Figma へ合わせる

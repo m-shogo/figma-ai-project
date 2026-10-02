@@ -1,0 +1,117 @@
+{
+    "key": "group_top_partner",
+    "title": "トップ_公式パートナー",
+    "fields": [
+        {
+            "key": "field_top_partner",
+            "label": "公式パートナー",
+            "name": "top_partner-01",
+            "aria-label": "",
+            "type": "repeater",
+            "instructions": "件数の上限はありません。リンクはすべて外部リンクです。URLが空の項目はリンクになりません。",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "collapsed": "field_top_partner_name",
+            "min": 0,
+            "max": 0,
+            "layout": "row",
+            "button_label": "+ パートナーを追加",
+            "rows_per_page": 20,
+            "sub_fields": [
+                {
+                    "key": "field_top_partner_logo",
+                    "label": "ロゴ",
+                    "name": "logo",
+                    "aria-label": "",
+                    "type": "image",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "return_format": "id",
+                    "preview_size": "thumbnail",
+                    "library": "all",
+                    "min_width": "",
+                    "min_height": "",
+                    "min_size": "",
+                    "max_width": "",
+                    "max_height": "",
+                    "max_size": "",
+                    "mime_types": "",
+                    "parent_repeater": "field_top_partner"
+                },
+                {
+                    "key": "field_top_partner_name",
+                    "label": "団体名",
+                    "name": "name",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_top_partner"
+                },
+                {
+                    "key": "field_top_partner_url",
+                    "label": "リンク先",
+                    "name": "url",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "すべて外部リンクです。空のときはリンクになりません。https:// または /test/ 。",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_top_partner"
+                }
+            ]
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "page_type",
+                "operator": "==",
+                "value": "front_page"
+            }
+        ]
+    ],
+    "menu_order": 4,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "公式パートナー。件数上限なし。リンクは外部。",
+    "show_in_rest": false,
+    "display_title": "",
+    "modified": 1759301000
+}

@@ -189,7 +189,7 @@
         "tags",
         "send-trackbacks"
     ],
-    "active": true,
+    "active": false,
     "description": "",
     "show_in_rest": false,
     "display_title": ""

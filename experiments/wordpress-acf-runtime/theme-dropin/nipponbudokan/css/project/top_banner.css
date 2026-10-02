@@ -1,8 +1,8 @@
 @charset "utf-8";
 /* // ==========================================================================
 // TOP 下部バナー（mobile first）
-// Current Figma: SP 2688:14305 / PC 1603:7145
-// Existing top_banner-01 ACF Repeater remains authoritative.
+// SP 2688:14305 / PC 2801:10634
+// 画像とリンクは固定。ACF は使わない。
 // ========================================================================== */
 .global_contents > .top_banner-01 {
     position: relative;
@@ -52,55 +52,46 @@
 
     .tb_link {
         display: block;
-        width: fit-content;
+        box-sizing: border-box;
+        height: 80px;
         max-width: 100%;
+        border: 1px solid var(--color-line);
         color: inherit;
         text-decoration: none;
+        overflow: hidden;
     }
 
-    .tb_link.is-disabled {
-        cursor: default;
+    .tb_item:nth-child(1) .tb_link {
+        width: 253px;
+    }
+
+    .tb_item:nth-child(2) .tb_link {
+        width: 204px;
     }
 
     .tb_image {
         display: block;
-        width: auto;
-        max-width: 100%;
-        height: 80px;
-        box-sizing: border-box;
-        border: 1px solid var(--color-line);
+        width: 100%;
+        height: 100%;
         object-fit: cover;
     }
 
-    /* Current Figma has two authored banner slots: 253×80 and 204×80. */
-    .tb_item:nth-child(1) .tb_link {
-        position: relative;
-        overflow: hidden;
-        width: 253px;
-        height: 80px;
-        border: 1px solid var(--color-line);
+    a.tb_link {
+        transition: opacity 0.3s;
     }
 
-    /* Figma uses the existing 16:9 treasure-lottery artwork as an authored crop,
-       not a generic object-fit cover. Keep the ACF image owner and reproduce only
-       the proven crop window on both SP and PC. */
-    .tb_item:nth-child(1) .tb_image {
-        position: absolute;
-        top: -148.33%;
-        left: -54.32%;
-        width: 202.11%;
-        max-width: none;
-        height: 360%;
-        border: 0;
-        object-fit: fill;
+    a.tb_link:focus-visible {
+        opacity: 0.7;
     }
 
-    .tb_item:nth-child(2) .tb_image {
-        width: 204px;
+    @media (any-hover: hover) {
+        a.tb_link:hover {
+            opacity: 0.7;
+        }
     }
 
     @media screen and (min-width: 768px) {
-        min-height: 160px;
+        min-height: 0;
         padding: 0 0 80px;
 
         &::before {
@@ -115,20 +106,6 @@
 
         .tb_item {
             max-width: none;
-        }
-    }
-
-    a.tb_link {
-        transition: opacity var(--transition-duration);
-    }
-
-    a.tb_link:focus-visible {
-        opacity: var(--opacity-hover);
-    }
-
-    @media (any-hover: hover) {
-        a.tb_link:hover {
-            opacity: var(--opacity-hover);
         }
     }
 }

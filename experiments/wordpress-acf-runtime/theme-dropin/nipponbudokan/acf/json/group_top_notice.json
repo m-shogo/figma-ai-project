@@ -44,12 +44,12 @@
             "rows_per_page": 20,
             "sub_fields": [
                 {
-                    "key": "field_5d5cb73db6e83",
-                    "label": "日付",
-                    "name": "date",
+                    "key": "field_nbk_notice_title",
+                    "label": "タイトル",
+                    "name": "title",
                     "aria-label": "",
-                    "type": "date_picker",
-                    "instructions": "",
+                    "type": "text",
+                    "instructions": "30文字まで。",
                     "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
@@ -57,19 +57,21 @@
                         "class": "",
                         "id": ""
                     },
-                    "display_format": "Y/n/j",
-                    "return_format": "Y/n/j",
-                    "first_day": 1,
-                    "parent_repeater": "field_5d5cb6ecb6e82",
-                    "default_to_current_date": 0
+                    "default_value": "",
+                    "maxlength": 30,
+                    "allow_in_bindings": 0,
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_5d5cb6ecb6e82"
                 },
                 {
-                    "key": "field_5d5cb752b6e84",
-                    "label": "テキストエリア",
-                    "name": "textarea",
+                    "key": "field_nbk_notice_url",
+                    "label": "リンク先",
+                    "name": "url",
                     "aria-label": "",
-                    "type": "textarea",
-                    "instructions": "",
+                    "type": "text",
+                    "instructions": "https:// または /test/ 。空ならリンクになりません。",
                     "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
@@ -80,9 +82,30 @@
                     "default_value": "",
                     "maxlength": "",
                     "allow_in_bindings": 0,
-                    "rows": "",
                     "placeholder": "",
-                    "new_lines": "br",
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_5d5cb6ecb6e82"
+                },
+                {
+                    "key": "field_nbk_notice_external",
+                    "label": "外部リンク",
+                    "name": "external",
+                    "aria-label": "",
+                    "type": "true_false",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "message": "別タブで開く",
+                    "default_value": 0,
+                    "ui": 1,
+                    "ui_on_text": "別タブ",
+                    "ui_off_text": "同じタブ",
                     "parent_repeater": "field_5d5cb6ecb6e82"
                 },
                 {

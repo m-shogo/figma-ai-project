@@ -1,38 +1,5 @@
 "use strict";
 (function ($) {
-  // ==========================================================================
-  // トップスライダー設定
-  // ==========================================================================
-  const topSlider = function () {
-    $(window).on('load', function () {
-      const topSliderContainer = document.querySelector('.tm_swiper-container');
-      if (!topSliderContainer) {
-        return;
-      }
-      // スライド1枚のときは loop / autoplay / pagination を無効化（Swiper 14 対応）
-      const slideCount = topSliderContainer.querySelectorAll('.swiper-slide').length;
-      const canLoop = slideCount > 1;
-      const prefersReducedMotion = window.matchMedia
-        && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      const tm_swiper = new Swiper('.tm_swiper-container', {
-        effect: 'fade',
-        fadeEffect: {
-          crossFade: true
-        },
-        loop: canLoop,
-        speed: prefersReducedMotion ? 0 : 1000,
-        watchOverflow: true,
-        autoplay: canLoop && !prefersReducedMotion ? {
-          delay: 3000,
-          disableOnInteraction: false
-        } : false,
-        pagination: canLoop ? {
-          el: '.tm_swiper-container .swiper-pagination',
-          clickable: true
-        } : false
-      });
-    });
-  };
   // 再有効化時: front-page.php 等に .news_swiper-container の HTML が必要
   const newsSlider = function () {
     $(window).on('load', function () {
@@ -190,6 +157,31 @@
     sync();
   };
 
+  const noticeSlider = function () {
+    const root = document.querySelector('.top_notice-01');
+    const el = root ? root.querySelector('.tn_swiper') : null;
+    if (!root || !el || typeof Swiper === 'undefined') {
+      return;
+    }
+    const slideCount = el.querySelectorAll('.swiper-slide').length;
+    if (slideCount < 2) {
+      return;
+    }
+    const prefersReducedMotion = window.matchMedia
+      && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    new Swiper(el, {
+      slidesPerView: 1,
+      spaceBetween: 0,
+      speed: prefersReducedMotion ? 0 : 300,
+      autoHeight: false,
+      watchOverflow: true,
+      navigation: {
+        nextEl: root.querySelector('.tn_next'),
+        prevEl: root.querySelector('.tn_prev')
+      }
+    });
+  };
+
   const topNewsTabs = function () {
     const root = document.querySelector('.top_news-01');
     if (!root) {
@@ -252,10 +244,10 @@
     select.addEventListener('change', apply);
   };
 
-  topSlider();
   //newsSlider();
   $(topCalendar);
   $(aboutCardsSlider);
+  noticeSlider();
   topNewsTabs();
   topEventFilter();
 

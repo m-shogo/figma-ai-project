@@ -1,15 +1,16 @@
 <?php
 $theme_uri = get_template_directory_uri();
 
-$event_query = new WP_Query(array(
-    'post_type' => 'event',
-    'posts_per_page' => 4,
-    'has_password' => false,
-    'orderby' => 'date',
-    'order' => 'DESC',
-    'post_status' => 'publish',
-));
-$has_events = $event_query->have_posts();
+$featured_rows = function_exists('get_field') ? get_field('top_featured-01', get_queried_object_id()) : array();
+if (!is_array($featured_rows)) {
+    $featured_rows = array();
+}
+$featured_rows = array_slice($featured_rows, 0, 4);
+$featured_status_labels = array(
+    'recruiting' => '募集中',
+    'ongoing' => '開催中',
+    'closed' => '受付終了',
+);
 
 $event_terms = get_terms(array(
     'taxonomy' => 'event_cat',
@@ -86,8 +87,9 @@ $render_upcoming_items = static function ($query) {
         $weekday_index = $timestamp ? (int) wp_date('w', $timestamp) : 0;
         $weekday_labels = array('日', '月', '火', '水', '木', '金', '土');
         $weekday_class = $weekday_index === 0 ? ' is-sun' : ($weekday_index === 6 ? ' is-sat' : '');
+        $item_tag = $href !== '' ? 'a' : 'article';
         ?>
-        <article class="te_upcoming_item">
+        <<?php echo $item_tag; ?> class="te_upcoming_item"<?php echo $href !== '' ? ' href="' . esc_url($href) . '"' . (!empty($link_attrs['targetAttr']) ? ' ' . $link_attrs['targetAttr'] : '') : ''; ?>>
             <div class="te_upcoming_when">
                 <?php if ($timestamp): ?>
                     <p class="te_upcoming_day<?php echo esc_attr($weekday_class); ?>">
@@ -99,23 +101,15 @@ $render_upcoming_items = static function ($query) {
                 <?php endif; ?>
             </div>
             <div class="te_upcoming_body">
-                <h4 class="te_upcoming_title">
-                    <?php if ($href !== ''): ?>
-                        <a href="<?php echo esc_url($href); ?>"<?php echo !empty($link_attrs['targetAttr']) ? ' ' . $link_attrs['targetAttr'] : ''; ?>><?php the_title(); ?></a>
-                    <?php else: ?>
-                        <?php the_title(); ?>
-                    <?php endif; ?>
-                </h4>
+                <h4 class="te_upcoming_title"><?php the_title(); ?></h4>
                 <?php if (function_exists('nipponbudokan_event_value_present') && nipponbudokan_event_value_present($host)): ?>
                     <p class="te_upcoming_host"><?php echo esc_html($host); ?></p>
                 <?php endif; ?>
                 <?php if ($external_url !== ''): ?>
-                    <p class="te_upcoming_url">
-                        <a href="<?php echo esc_url($external_url); ?>"<?php echo !empty($link_attrs['targetAttr']) ? ' ' . $link_attrs['targetAttr'] : ''; ?>><?php echo esc_html($external_url); ?></a>
-                    </p>
+                    <p class="te_upcoming_url"><span><?php echo esc_html($external_url); ?></span></p>
                 <?php endif; ?>
             </div>
-        </article>
+        </<?php echo $item_tag; ?>>
         <?php
     }
     wp_reset_postdata();
@@ -136,49 +130,73 @@ $render_upcoming_items = static function ($query) {
                 </div>
 
                 <div class="te_cards">
-                    <?php if ($has_events): ?>
-                        <?php while ($event_query->have_posts()): $event_query->the_post(); ?>
-                            <?php
-                            $link_attrs = get_post_link_attributes();
-                            $href = !empty($link_attrs['url']) ? $link_attrs['url'] : get_permalink();
-                            $terms = get_the_terms(get_the_ID(), 'event_cat');
-                            $cat_name = ($terms && !is_wp_error($terms)) ? $terms[0]->name : '';
-                            $thumb_id = get_post_thumbnail_id();
-                            $thumb = $thumb_id ? wp_get_attachment_image_src($thumb_id, 'medium') : null;
-                            $img = !empty($thumb[0]) ? $thumb[0] : $theme_uri . '/images/common/noimage.webp';
-                            $status = function_exists('nipponbudokan_event_status')
-                                ? nipponbudokan_event_status()
-                                : array();
-                            $date_html = function_exists('nipponbudokan_event_date_label_html')
-                                ? nipponbudokan_event_date_label_html()
-                                : '';
-                            ?>
-                            <article class="te_card">
-                                <a class="te_card_link" href="<?php echo esc_url($href); ?>"<?php echo !empty($link_attrs['targetAttr']) ? ' ' . $link_attrs['targetAttr'] : ''; ?>>
-                                    <p class="te_card_image">
-                                        <img src="<?php echo esc_url($img); ?>" alt="" width="220" height="165" loading="lazy">
-                                    </p>
-                                    <div class="te_card_body">
-                                        <?php if ($status || $cat_name): ?>
-                                            <p class="te_card_labels">
-                                                <?php if ($status): ?>
-                                                    <span class="te_label te_status te_status-<?php echo esc_attr($status['slug']); ?>"><?php echo esc_html($status['label']); ?></span>
-                                                <?php endif; ?>
-                                                <?php if ($cat_name): ?>
-                                                    <span class="te_label te_label_cat"><?php echo esc_html($cat_name); ?></span>
-                                                <?php endif; ?>
-                                            </p>
-                                        <?php endif; ?>
-                                        <h3 class="te_card_title"><?php the_title(); ?></h3>
-                                        <?php if ($date_html !== ''): ?>
-                                            <p class="te_card_date"><span class="te_card_date_label">開催日</span><?php echo $date_html; ?></p>
-                                        <?php endif; ?>
-                                    </div>
+                    <?php foreach ($featured_rows as $row): ?>
+                        <?php
+                        if (!is_array($row)) {
+                            continue;
+                        }
+                        $title = isset($row['title']) ? trim((string) $row['title']) : '';
+                        $category = isset($row['category']) ? trim((string) $row['category']) : '';
+                        $url = isset($row['url']) ? trim(str_replace(array("\r", "\n"), '', (string) $row['url'])) : '';
+                        $external = !empty($row['external']);
+                        $status_value = isset($row['status']) ? (string) $row['status'] : '';
+                        $status_label = $featured_status_labels[$status_value] ?? '';
+                        $thumb_id = isset($row['thumb']) ? (int) $row['thumb'] : 0;
+                        $thumb = $thumb_id ? wp_get_attachment_image_src($thumb_id, 'medium') : null;
+                        $img = !empty($thumb[0]) ? $thumb[0] : $theme_uri . '/images/common/noimage.webp';
+                        $date_html = '';
+                        $date_raw = isset($row['date']) ? (string) $row['date'] : '';
+                        if (preg_match('/^\d{8}$/', $date_raw)) {
+                            $date_raw = substr($date_raw, 0, 4) . '-' . substr($date_raw, 4, 2) . '-' . substr($date_raw, 6, 2);
+                        }
+                        if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $date_raw)) {
+                            $parsed = date_create_from_format('!Y-m-d', $date_raw, wp_timezone());
+                            if ($parsed instanceof DateTimeInterface) {
+                                $timestamp = $parsed->getTimestamp();
+                                $weekday_index = (int) wp_date('w', $timestamp);
+                                $weekday_labels = array('日', '月', '火', '水', '木', '金', '土');
+                                $weekday_class = $weekday_index === 0 ? ' is-sun' : ($weekday_index === 6 ? ' is-sat' : '');
+                                $date_html = '<time datetime="' . esc_attr(wp_date('Y-m-d', $timestamp)) . '">' . esc_html(wp_date('Y年n月j日', $timestamp)) . '(<span class="ea_wday' . esc_attr($weekday_class) . '">' . esc_html($weekday_labels[$weekday_index]) . '</span>)</time>';
+                            }
+                        }
+                        if ($title === '' && $category === '' && $url === '' && $date_html === '' && !$thumb_id && $status_label === '') {
+                            continue;
+                        }
+                        ?>
+                        <article class="te_card">
+                            <?php if ($url !== ''): ?>
+                                <a class="te_card_link" href="<?php echo esc_url($url); ?>"<?php echo $external ? ' target="_blank" rel="noopener noreferrer"' : ''; ?>>
+                            <?php else: ?>
+                                <div class="te_card_link">
+                            <?php endif; ?>
+                                <p class="te_card_image">
+                                    <img src="<?php echo esc_url($img); ?>" alt="" width="220" height="165" loading="lazy">
+                                </p>
+                                <div class="te_card_body">
+                                    <?php if ($status_label !== '' || $category !== ''): ?>
+                                        <p class="te_card_labels">
+                                            <?php if ($status_label !== ''): ?>
+                                                <span class="te_label te_status te_status-<?php echo esc_attr($status_value); ?>"><?php echo esc_html($status_label); ?></span>
+                                            <?php endif; ?>
+                                            <?php if ($category !== ''): ?>
+                                                <span class="te_label te_label_cat"><?php echo esc_html($category); ?></span>
+                                            <?php endif; ?>
+                                        </p>
+                                    <?php endif; ?>
+                                    <?php if ($title !== ''): ?>
+                                        <h3 class="te_card_title"><?php echo esc_html($title); ?></h3>
+                                    <?php endif; ?>
+                                    <?php if ($date_html !== ''): ?>
+                                        <p class="te_card_date"><span class="te_card_date_label">開催日</span><?php echo $date_html; ?></p>
+                                    <?php endif; ?>
+                                </div>
+                            <?php if ($url !== ''): ?>
                                 </a>
-                            </article>
-                        <?php endwhile; ?>
-                        <?php wp_reset_postdata(); ?>
-                    <?php endif; ?>
+                            <?php else: ?>
+                                </div>
+                            <?php endif; ?>
+                        </article>
+                    <?php endforeach; ?>
                 </div>
             </div>
 

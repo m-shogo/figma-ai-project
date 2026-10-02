@@ -352,11 +352,12 @@
             object-position: 50% 55.6%;
         }
 
-        .ta_stage_bg::after {
+        .ta_stage_bg::after,
+        .ta_stage_bg::before {
             content: none;
         }
 
-        .ta_stage_bg::before {
+        &::before {
             content: '';
             position: absolute;
             top: 552px;
@@ -365,9 +366,15 @@
             width: 1380px;
             height: 150px;
             transform: translateX(-50%);
-            background-color: rgba(255, 255, 255, 0.9);
+            background-color: rgb(255 255 255 / 0.9);
             filter: blur(50px);
             pointer-events: none;
+        }
+
+        .ta_stage,
+        .ta_cards_wrap {
+            position: relative;
+            z-index: 1;
         }
 
         .ta_stage {
@@ -611,12 +618,6 @@
 
         .ta_cards_wrap .global_inner {
             padding-left: 320px;
-        }
-
-        .ta_cards,
-        .ta_cards_swiper .swiper-wrapper {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            width: 100%;
         }
 
         .ta_cards_swiper .swiper-slide,

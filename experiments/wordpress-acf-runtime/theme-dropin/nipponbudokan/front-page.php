@@ -2,91 +2,48 @@
 <?php
 $theme_uri = get_template_directory_uri();
 $has_acf_pro_repeater = class_exists('acf_field_repeater');
-$has_slider = $has_acf_pro_repeater && function_exists('have_rows') && have_rows('top_slider-01');
 $default_title_pc = '伝統を未来へつなぐ、<br>武道文化の中心地';
 $default_title_sp = $default_title_pc;
 $default_lead_pc = '武道、書道の普及・振興、公益目的事業の拠点として活動しています。';
 $default_lead_sp = $default_lead_pc;
+$mv_fallback = $theme_uri . '/images/top/mv-sample.webp';
+$mv_hour = (int) (new DateTimeImmutable('now', new DateTimeZone('Asia/Tokyo')))->format('G');
+if ($mv_hour >= 6 && $mv_hour < 12) {
+    $mv_field = 'top_mv_morning';
+} elseif ($mv_hour >= 12 && $mv_hour < 18) {
+    $mv_field = 'top_mv_day';
+} else {
+    $mv_field = 'top_mv_night';
+}
+$mv_group = function_exists('get_field') ? get_field($mv_field, get_queried_object_id()) : null;
+$mv_pc_id = is_array($mv_group) ? (int) ($mv_group['img_pc'] ?? 0) : 0;
+$mv_sp_id = is_array($mv_group) ? (int) ($mv_group['img_sp'] ?? 0) : 0;
+$mv_pc = $mv_pc_id ? wp_get_attachment_image_src($mv_pc_id, 'full') : null;
+$mv_sp = $mv_sp_id ? wp_get_attachment_image_src($mv_sp_id, 'full') : null;
+$mv_pc_src = !empty($mv_pc[0]) ? $mv_pc[0] : $mv_fallback;
+$mv_sp_src = !empty($mv_sp[0]) ? $mv_sp[0] : $mv_pc_src;
+$mv_alt_pc = $mv_pc_id ? (string) get_post_meta($mv_pc_id, '_wp_attachment_image_alt', true) : '';
+$mv_alt_sp = $mv_sp_id ? (string) get_post_meta($mv_sp_id, '_wp_attachment_image_alt', true) : '';
+$mv_alt = $mv_alt_sp !== '' ? $mv_alt_sp : $mv_alt_pc;
 ?>
 <div class="top_mainVisual">
     <div class="tm_stage">
         <div class="tm_mv">
-            <div class="swiper tm_swiper-container">
-                <ul class="swiper-wrapper">
-                    <?php if ($has_slider): ?>
-                        <?php while (have_rows('top_slider-01')): the_row(); ?>
-                            <?php
-                            $img_pc = get_sub_field('img_pc');
-                            $thumb_pc = $img_pc ? wp_get_attachment_image_src($img_pc, 'top_main_pc') : null;
-                            $alt_pc = ($img_pc && get_post($img_pc)) ? get_post_meta($img_pc, '_wp_attachment_image_alt', true) : '';
-                            $img_sp = get_sub_field('img_sp');
-                            $thumb_sp = $img_sp ? wp_get_attachment_image_src($img_sp, 'top_main_sp') : null;
-                            $alt_sp = ($img_sp && get_post($img_sp)) ? get_post_meta($img_sp, '_wp_attachment_image_alt', true) : '';
-                            $title_pc = get_sub_field('text');
-                            $title_sp = get_sub_field('text_sp');
-                            $lead_pc = get_sub_field('lead_pc');
-                            $lead_sp = get_sub_field('lead_sp');
-                            $pc_src = !empty($thumb_pc[0]) ? $thumb_pc[0] : $theme_uri . '/images/top/mv-sample.webp';
-                            $sp_src = !empty($thumb_sp[0]) ? $thumb_sp[0] : $pc_src;
-
-                            if (!$title_pc) {
-                                $title_pc = $default_title_pc;
-                            }
-                            $is_canonical_title = strpos(wp_strip_all_tags($title_pc), '武道文化の中心地') !== false;
-                            if (!$title_sp) {
-                                $title_sp = $title_pc;
-                            }
-                            if (!$lead_pc && $is_canonical_title) {
-                                $lead_pc = $default_lead_pc;
-                            }
-                            if (!$lead_sp) {
-                                $lead_sp = $lead_pc;
-                            }
-                            ?>
-                            <li class="swiper-slide">
-                                <div class="tm_background">
-                                    <picture>
-                                        <source srcset="<?php echo esc_url($pc_src); ?>" media="(min-width: 768px)">
-                                        <img src="<?php echo esc_url($sp_src); ?>" alt="<?php echo esc_attr($alt_sp ?: $alt_pc); ?>" width="1030" height="600" fetchpriority="high">
-                                    </picture>
-                                </div>
-                                <?php if ($title_pc || $title_sp): ?>
-                                    <div class="tm_inner">
-                                        <p class="tm_title">
-                                            <span class="tm_copy_pc"><?php echo wp_kses_post($title_pc); ?></span>
-                                            <span class="tm_copy_sp"><?php echo wp_kses_post($title_sp); ?></span>
-                                        </p>
-                                        <?php if ($lead_pc || $lead_sp): ?>
-                                            <p class="tm_lead">
-                                                <span class="tm_copy_pc"><?php echo wp_kses_post($lead_pc); ?></span>
-                                                <span class="tm_copy_sp"><?php echo wp_kses_post($lead_sp ?: $lead_pc); ?></span>
-                                            </p>
-                                        <?php endif; ?>
-                                    </div>
-                                <?php endif; ?>
-                            </li>
-                        <?php endwhile; ?>
-                    <?php else: ?>
-                        <li class="swiper-slide">
-                            <div class="tm_background">
-                                <img src="<?php echo esc_url($theme_uri . '/images/top/mv-sample.webp'); ?>" alt="<?php bloginfo('name'); ?>" width="1030" height="600" fetchpriority="high">
-                            </div>
-                            <div class="tm_inner">
-                                <p class="tm_title">
-                                    <span class="tm_copy_pc"><?php echo wp_kses_post($default_title_pc); ?></span>
-                                    <span class="tm_copy_sp"><?php echo wp_kses_post($default_title_sp); ?></span>
-                                </p>
-                                <p class="tm_lead">
-                                    <span class="tm_copy_pc"><?php echo wp_kses_post($default_lead_pc); ?></span>
-                                    <span class="tm_copy_sp"><?php echo wp_kses_post($default_lead_sp); ?></span>
-                                </p>
-                            </div>
-                        </li>
-                    <?php endif; ?>
-                </ul>
-                <?php if ($has_slider): ?>
-                    <div class="swiper-pagination"></div>
-                <?php endif; ?>
+            <div class="tm_background">
+                <picture>
+                    <source srcset="<?php echo esc_url($mv_pc_src); ?>" media="(min-width: 768px)">
+                    <img src="<?php echo esc_url($mv_sp_src); ?>" alt="<?php echo esc_attr($mv_alt); ?>" width="1030" height="600" fetchpriority="high">
+                </picture>
+            </div>
+            <div class="tm_inner">
+                <p class="tm_title">
+                    <span class="tm_copy_pc"><?php echo wp_kses_post($default_title_pc); ?></span>
+                    <span class="tm_copy_sp"><?php echo wp_kses_post($default_title_sp); ?></span>
+                </p>
+                <p class="tm_lead">
+                    <span class="tm_copy_pc"><?php echo wp_kses_post($default_lead_pc); ?></span>
+                    <span class="tm_copy_sp"><?php echo wp_kses_post($default_lead_sp); ?></span>
+                </p>
             </div>
         </div>
 
@@ -111,9 +68,9 @@ $default_lead_sp = $default_lead_pc;
                 <div class="tm_guide_group">
                     <p class="tm_guide_title"><img src="<?php echo esc_url($theme_uri . '/images/top/ico-budokan.svg'); ?>" alt="" width="36" height="36" loading="lazy"><span>日本武道館</span></p>
                     <ul class="tm_guide_list">
+                        <li><a class="tm_guide_link" aria-disabled="true">武道館について知りたい</a></li>
                         <li><a class="tm_guide_link" aria-disabled="true">研修施設を利用したい</a></li>
                         <li><a class="tm_guide_link" aria-disabled="true">コンサートに行きたい</a></li>
-                        <li><a class="tm_guide_link" aria-disabled="true">武道館について知りたい</a></li>
                     </ul>
                 </div>
             </div>
@@ -128,11 +85,29 @@ $default_lead_sp = $default_lead_pc;
         if ($show_notice && have_rows('top_notice-01')) {
             while (have_rows('top_notice-01')) {
                 the_row();
-                $textarea = get_sub_field('textarea');
                 $none = get_sub_field('none');
-                if (!$none && $textarea) {
-                    $notice_items[] = $textarea;
+                if ($none) {
+                    continue;
                 }
+                $title = get_sub_field('title');
+                $title = is_string($title) ? trim(wp_strip_all_tags($title)) : '';
+                if ($title === '') {
+                    $legacy = get_sub_field('textarea');
+                    $title = is_string($legacy) ? trim(wp_strip_all_tags($legacy)) : '';
+                }
+                if ($title === '') {
+                    continue;
+                }
+                if (function_exists('mb_substr')) {
+                    $title = mb_substr($title, 0, 30);
+                }
+                $url = get_sub_field('url');
+                $url = is_string($url) ? trim(str_replace(array("\r", "\n"), '', $url)) : '';
+                $notice_items[] = array(
+                    'title' => $title,
+                    'url' => $url,
+                    'external' => $url !== '' && (bool) get_sub_field('external'),
+                );
             }
         }
         $show_notice = $show_notice && $notice_items !== array();
@@ -144,15 +119,29 @@ $default_lead_sp = $default_lead_pc;
                 <p class="tn_icon" aria-hidden="true"><img src="<?php echo esc_url($theme_uri . '/images/top/ico-attention.svg'); ?>" alt="" width="24" height="24" loading="lazy"></p>
                 <div class="tn_body">
                     <?php if ($notice_items): ?>
-                        <ul class="tn_list">
-                            <?php foreach ($notice_items as $textarea): ?>
-                                <li class="tn_item"><?php echo $textarea; ?></li>
-                            <?php endforeach; ?>
-                        </ul>
+                        <div class="swiper tn_swiper">
+                            <div class="swiper-wrapper">
+                                <?php foreach ($notice_items as $notice): ?>
+                                    <div class="swiper-slide">
+                                        <?php if ($notice['url'] !== ''): ?>
+                                            <a class="tn_text" href="<?php echo esc_url($notice['url']); ?>"<?php echo $notice['external'] ? ' target="_blank" rel="noopener noreferrer"' : ''; ?>><?php echo esc_html($notice['title']); ?></a>
+                                        <?php else: ?>
+                                            <p class="tn_text"><?php echo esc_html($notice['title']); ?></p>
+                                        <?php endif; ?>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
                     <?php else: ?>
                         <span class="tn_placeholder" aria-disabled="true">重要なお知らせ</span>
                     <?php endif; ?>
                 </div>
+                <?php if (count($notice_items) > 1): ?>
+                    <div class="tn_nav">
+                        <button type="button" class="tn_prev swiper-button-prev" aria-label="前のお知らせ"></button>
+                        <button type="button" class="tn_next swiper-button-next" aria-label="次のお知らせ"></button>
+                    </div>
+                <?php endif; ?>
             </div>
         </section>
     <?php endif; ?>
