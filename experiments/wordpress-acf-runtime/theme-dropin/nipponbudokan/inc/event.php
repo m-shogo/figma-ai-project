@@ -121,11 +121,13 @@ add_action('pre_get_posts', function ($query) {
     $query->set('meta_key', 'event_date');
     $query->set('meta_type', 'CHAR');
     $query->set('orderby', 'meta_value');
-    $query->set('order', 'DESC');
+    $query->set('order', 'ASC');
 
+    // /event/ 自体も Figma の「選択月」表示と同じ契約にする。
+    // event_y / event_m が無い場合は日本時間の当月へ絞り込む。
     $month = (int) $query->get('event_m');
     if ($month < 1 || $month > 12) {
-        return;
+        $month = (int) wp_date('n');
     }
     $year = (int) $query->get('event_y');
     if ($year < 1970) {
