@@ -78,8 +78,9 @@ $render_upcoming_items = static function ($query) {
         $timestamp = function_exists('nipponbudokan_event_datetime')
             ? nipponbudokan_event_datetime()
             : 0;
-        $time = function_exists('get_field') ? get_field('event_time') : '';
-        $host = function_exists('get_field') ? get_field('event_host') : '';
+        $open_time = function_exists('get_field') ? get_field('event_open_time') : '';
+        $start_time = function_exists('get_field') ? get_field('event_start_time') : '';
+        $contact = function_exists('get_field') ? get_field('event_contact') : '';
         $link_attrs = get_post_link_attributes();
         $href = !empty($link_attrs['url']) ? $link_attrs['url'] : '';
         $link_type = function_exists('get_field') ? get_field('post_type') : '';
@@ -96,14 +97,18 @@ $render_upcoming_items = static function ($query) {
                         <time datetime="<?php echo esc_attr(wp_date('Y-m-d', $timestamp)); ?>"><?php echo esc_html(wp_date('n/j', $timestamp)); ?> <span>(<?php echo esc_html($weekday_labels[$weekday_index]); ?>)</span></time>
                     </p>
                 <?php endif; ?>
-                <?php if (function_exists('nipponbudokan_event_value_present') && nipponbudokan_event_value_present($time)): ?>
-                    <p class="te_upcoming_time"><?php echo esc_html($time); ?></p>
+                <?php if (function_exists('nipponbudokan_event_value_present') && (nipponbudokan_event_value_present($open_time) || nipponbudokan_event_value_present($start_time))): ?>
+                    <p class="te_upcoming_time">
+                        <?php if (nipponbudokan_event_value_present($open_time)): ?><span>開場：<?php echo esc_html($open_time); ?></span><?php endif; ?>
+                        <?php if (nipponbudokan_event_value_present($open_time) && nipponbudokan_event_value_present($start_time)): ?><span aria-hidden="true"> / </span><?php endif; ?>
+                        <?php if (nipponbudokan_event_value_present($start_time)): ?><span>開会：<?php echo esc_html($start_time); ?></span><?php endif; ?>
+                    </p>
                 <?php endif; ?>
             </div>
             <div class="te_upcoming_body">
                 <h4 class="te_upcoming_title"><?php the_title(); ?></h4>
-                <?php if (function_exists('nipponbudokan_event_value_present') && nipponbudokan_event_value_present($host)): ?>
-                    <p class="te_upcoming_host"><?php echo esc_html($host); ?></p>
+                <?php if (function_exists('nipponbudokan_event_value_present') && nipponbudokan_event_value_present($contact)): ?>
+                    <p class="te_upcoming_host"><?php echo wp_kses_post(nl2br(esc_html($contact))); ?></p>
                 <?php endif; ?>
                 <?php if ($external_url !== ''): ?>
                     <p class="te_upcoming_url"><span><?php echo esc_html($external_url); ?></span></p>
