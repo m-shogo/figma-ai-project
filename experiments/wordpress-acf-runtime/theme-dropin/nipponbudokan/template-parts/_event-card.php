@@ -1,23 +1,18 @@
 <?php
 $link_attrs = get_post_link_attributes();
-$href = !empty($link_attrs['url']) ? $link_attrs['url'] : get_permalink();
+$href = !empty($link_attrs['url']) ? $link_attrs['url'] : '';
 $date_html = nipponbudokan_event_date_label_html();
-$time = function_exists('get_field') ? get_field('event_time') : '';
-$capacity = function_exists('get_field') ? get_field('event_capacity') : '';
-$fee = function_exists('get_field') ? get_field('event_fee') : '';
-$host = function_exists('get_field') ? get_field('event_host') : '';
-$has_meta = nipponbudokan_event_value_present($time)
-    || nipponbudokan_event_value_present($capacity)
-    || nipponbudokan_event_value_present($fee)
-    || nipponbudokan_event_value_present($host);
-$status = nipponbudokan_event_status();
+$open_time = function_exists('get_field') ? get_field('event_open_time') : '';
+$start_time = function_exists('get_field') ? get_field('event_start_time') : '';
+$contact = function_exists('get_field') ? get_field('event_contact') : '';
+$has_meta = nipponbudokan_event_value_present($open_time)
+    || nipponbudokan_event_value_present($start_time)
+    || nipponbudokan_event_value_present($contact);
+$card_tag = $href !== '' ? 'a' : 'div';
 ?>
 <article class="ea_card">
-    <a class="ea_card_link" href="<?php echo esc_url($href); ?>"<?php echo !empty($link_attrs['targetAttr']) ? ' ' . $link_attrs['targetAttr'] : ''; ?>>
+    <<?php echo $card_tag; ?> class="ea_card_link"<?php echo $href !== '' ? ' href="' . esc_url($href) . '"' . (!empty($link_attrs['targetAttr']) ? ' ' . $link_attrs['targetAttr'] : '') : ''; ?>>
         <div class="ea_labels">
-            <?php if ($status) : ?>
-                <span class="label ea_status ea_status-<?php echo esc_attr($status['slug']); ?>"><?php echo esc_html($status['label']); ?></span>
-            <?php endif; ?>
             <?php
             get_template_part('template-parts/_label-category', null, [
                 'taxonomy' => '_cat',
@@ -31,36 +26,24 @@ $status = nipponbudokan_event_status();
         <h2 class="ea_title"><?php the_title(); ?></h2>
         </div>
         <?php if ($has_meta) : ?>
-            <dl class="ea_meta">
-                <?php if (nipponbudokan_event_value_present($time)) : ?>
-                    <div class="ea_meta_row">
-                        <dt>時間</dt>
-                        <dd><?php echo esc_html($time); ?></dd>
-                    </div>
-                <?php endif; ?>
-                <?php if (nipponbudokan_event_value_present($capacity) || nipponbudokan_event_value_present($fee)) : ?>
-                    <div class="ea_meta_row ea_meta_row-split">
-                        <?php if (nipponbudokan_event_value_present($capacity)) : ?>
-                            <div>
-                                <dt>入場数</dt>
-                                <dd><?php echo esc_html($capacity); ?></dd>
-                            </div>
+            <div class="ea_meta">
+                <?php if (nipponbudokan_event_value_present($open_time) || nipponbudokan_event_value_present($start_time)) : ?>
+                    <p class="ea_meta_row">
+                        <?php if (nipponbudokan_event_value_present($open_time)) : ?>
+                            <span>開場：<?php echo esc_html($open_time); ?></span>
                         <?php endif; ?>
-                        <?php if (nipponbudokan_event_value_present($fee)) : ?>
-                            <div>
-                                <dt>入場料</dt>
-                                <dd><?php echo esc_html($fee); ?></dd>
-                            </div>
+                        <?php if (nipponbudokan_event_value_present($open_time) && nipponbudokan_event_value_present($start_time)) : ?>
+                            <span aria-hidden="true"> / </span>
                         <?php endif; ?>
-                    </div>
+                        <?php if (nipponbudokan_event_value_present($start_time)) : ?>
+                            <span>開会：<?php echo esc_html($start_time); ?></span>
+                        <?php endif; ?>
+                    </p>
                 <?php endif; ?>
-                <?php if (nipponbudokan_event_value_present($host)) : ?>
-                    <div class="ea_meta_row">
-                        <dt>主催</dt>
-                        <dd><?php echo esc_html($host); ?></dd>
-                    </div>
+                <?php if (nipponbudokan_event_value_present($contact)) : ?>
+                    <p class="ea_meta_row ea_contact"><?php echo wp_kses_post(nl2br(esc_html($contact))); ?></p>
                 <?php endif; ?>
-            </dl>
+            </div>
         <?php endif; ?>
-    </a>
+    </<?php echo $card_tag; ?>>
 </article>
