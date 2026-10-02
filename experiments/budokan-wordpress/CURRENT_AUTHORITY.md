@@ -11,7 +11,7 @@
 
 - この案件を継続する各 run / 各セッションでは、**毎回 `@GitHub` と `@Figma` の両 connector を実際に呼んでから着手する**。会話履歴だけで接続可否・最新状態を推測しない。
 - GitHub 正本は `m-shogo/figma-ai-project` branch `so`。着手時に最新 ref / authority / 対象コードを直接取得し、前回完了箇所から続ける。
-- Figma 正本は file `gFQN86tMpcUxkvY1pcXvN3` のみ（Human 2026-10-01）。対象 node を LIVE 取得する。`8IPfWSLrXPBQlw3xGyV3an` と `d1pD6gL2Sqal8Cf6h9WLp6` は参考だけ。`OtS7731mhY2oD44HSpdADo` / `jqYoPtusYfTeDqRegMCsx3` / `zMjOY4euPBi9T23y7ZSM6y` その他旧 file / screenshot は最終実装判断に使わない。旧 file の frame node-id は新 file へ引き継がない。
+- Figma 正本は file `D4c05PxMEw6oZxgRggfcks` のみ（Human 2026-10-02）。PC page `0:1` / SP page `114:5409` を LIVE 取得する。イベント一覧は PC `1619:9554` / SP `2991:11982`。それ以前の Figma file / screenshot は historical/audit 参照に限り、最終実装判断に使わない。旧 file の frame node-id は新 file へ引き継がない。
 - 片方の取得が失敗しても即「接続不可」と断定せず、対象 connector を実際に呼んだ結果で判断する。
 - この preflight 自体を毎回の成果物にせず、確認後は未完了の実装・QAを小さく前進させる。同じ確認だけを繰り返さない。
 
@@ -170,6 +170,7 @@ Theme 専用の enqueue・命名は `THEME_RULES.md`。Frontend Standard は Com
 - グローバルナビは WordPress メニュー。旧 `common-menu-01` / `common-submenu-01` は現行 ACF に無い
 - ローカルナビ（Human 2026-09-11 / 2026-09-15）: 外観 → メニューで名前を `ローカル：` で始める（slug は `local-*` に同期）。位置には割り当てない。固定ページ ACF `page_local_nav` の動的一覧にだけ出る（`global-nav` / `mega-nav` / `sub-nav` / `footer-nav` 等の位置割当メニューは除外）。**出すテンプレートはデフォルト `page.php` と `template-form.php` のみ**（1カラム系は出さない）。パンくず上・幅いっぱい・白背景。PC Figma `2108:10846`。SP 専用デザイン無し（非表示）。メニューは**2階層**（1=大会・イベント等のリンク見出し / 2=各ページ）。家族名（武道 振興・普及事業）はメニューに置かない。PC は1階層目を見出し、2階層目を4列で出す。2行リンクがある row は高さを揃え下線をセル下端に揃える。詳細: `LOCAL_NAV_DEPENDENCY_AUDIT.md`
 - CPT `event` + `event_cat` は Theme `inc/custom.php`。**2026-10-02 Human 指示でイベント ACF を更新。** イベント名は投稿タイトル、投稿選択は「詳細 / リンク / なし」、開催日・開場時間・開会時間・問合せ先を使用する。旧 `event_status` / `event_time` / `event_capacity` / `event_fee` / `event_host` は現行イベント表示では使用しない。空項目は出さない。
+- **イベント一覧 Visual（Human 2026-10-02）:** PC `1619:9554` / SP `2991:11982`。カテゴリ owner は既存 taxonomy `event_cat`（ACFで重複フィールドを作らない）。タブ表示は `全て / 一般 / 武道 / 書道`、1ページ10件、選択月内を開催日昇順。PC は12か月表示、SP は選択月の前月 / 当月 / 翌月の3か月表示。イベント行は1カラムの交互背景で、旧2カラムカードへ戻さない。SPでは日付・曜日・カテゴリを左列、タイトル・時間・問合せ先を右列に置く。
 - **Human 2026-09-24: 武道の一覧・詳細は終了。次の指示があるまで触らない。** 対象は `/publications/budo/back/` と `budo-book` 詳細。最新号は同じ詳細部品（`_budo-detail` / `_budo-body` / `_budo-related` / 総索引）を使うので、指示があるまでまとめて触らない。
 - **Human 2026-09-25: 単行本の一覧・詳細は終了。次の指示があるまで触らない。** 対象は `/publications/budo/books/` と `tankoubon` 詳細、および `module_publicationBook.css` / `_book-detail.php` / `_book-list-card.php`。
 - Gutenberg ボタンスタイル「小ボタン」= `is-style-small`（Figma btn-02）。wrapper `.small` も互換で残す
@@ -194,22 +195,16 @@ Theme 専用の enqueue・命名は `THEME_RULES.md`。Frontend Standard は Com
 
 ---
 
-## Figma\n\n- **2026-10-02 Human Authority:** 最新デザイン正本は Figma `D4c05PxMEw6oZxgRggfcks`。PC page `0:1`、SP page `114:5409`。イベント PC `1619:9554`、イベント詳細 PC `1632:10382`、イベント SP `2991:11982`。旧 Figma より優先する。（現行正本）
+## Figma
 
-Human Authority 2026-10-01: デザインの Figma を変更。**この file だけを最終 Visual authority として LIVE 再取得する。** 前 file `8IPfWSLrXPBQlw3xGyV3an` は参考だけ。
-
-File: [nipponbudokan](https://www.figma.com/design/gFQN86tMpcUxkvY1pcXvN3/nipponbudokan)
-
-| 面 | node-id | URL |
-| --- | --- | --- |
-| PC page | `0:1` | https://www.figma.com/design/gFQN86tMpcUxkvY1pcXvN3/nipponbudokan?node-id=0-1 |
-| SP page | `1468:7225` | https://www.figma.com/design/gFQN86tMpcUxkvY1pcXvN3/nipponbudokan?node-id=1468-7225 |
-
-- 前 file `8IPfWSLrXPBQlw3xGyV3an` / `d1pD6gL2Sqal8Cf6h9WLp6` の frame は参考だけ。新 file の node として使わない。着手時に新 file の `0:1` / `1468:7225` を再走査する
-- 旧 file `OtS7731mhY2oD44HSpdADo` の frame（武道 `1634:10806` / `2608:5702`、詳細 `1637:11288` / `2608:6933`、書写 `2629:7385` / `2630:8447`、単行本 `1656:5309` / `2627:6075`、詳細 `1686:5574` / `2628:6964`、TOP `1603:7488`）も新 file の node として使わない
-- 旧 `d1pD6gL2Sqal8Cf6h9WLp6` / `OtS7731mhY2oD44HSpdADo` / `jqYoPtusYfTeDqRegMCsx3` / `zMjOY4euPBi9T23y7ZSM6y` とそれ以前の file は historical/audit 参照に限る
-- Visual の正本は上記 Figma。既存実装の正本は Theme。差分は Theme をこの Figma へ合わせる
-- 書写書道 SP は専用 frame を発明せず、武道 publication family の共通 CSS/component owner で成立させる
+- **2026-10-02 Human Authority:** 最新デザイン正本は Figma `D4c05PxMEw6oZxgRggfcks`。この file だけを最終 Visual authority として LIVE 再取得する。
+- PC page: `0:1`
+- SP page: `114:5409`
+- イベント一覧 PC: `1619:9554`
+- イベント一覧 SP: `2991:11982`
+- イベント詳細 PC: `1632:10382`
+- それ以前の `gFQN86tMpcUxkvY1pcXvN3` / `8IPfWSLrXPBQlw3xGyV3an` / `d1pD6gL2Sqal8Cf6h9WLp6` / `OtS7731mhY2oD44HSpdADo` / `jqYoPtusYfTeDqRegMCsx3` / `zMjOY4euPBi9T23y7ZSM6y` は historical/audit 参照専用。
+- Visual の正本は上記 Figma。既存実装の正本は Theme。差分は Theme をこの Figma へ合わせる。
 - Figma から入れる画像（Theme / LP / HTML 共通）: 写真・ラスターは **WebP**。logo / icon はベクターをアウトライン化して **SVG**。短命 URL は直貼りしない。ラスターしか無い logo はトレースしない。正本は `AGENTS.md` Images 節 / `docs/image-gradient-visual-tolerance.md` / `config/frontend-raster-asset-export-policy.yaml`。Budokan Theme 適用は `THEME_RULES.md` 節 12
 
 ---
