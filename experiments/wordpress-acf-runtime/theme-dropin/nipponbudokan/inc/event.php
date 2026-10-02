@@ -2,8 +2,8 @@
 
 /**
  * 開催イベント archive / 詳細。
- * ACF は event_status / event_date / event_time / event_capacity / event_fee / event_host。
- * event_status の「なし」は一覧チップを出さない。
+ * ACF は post_type / event_date / event_open_time / event_start_time / event_contact。
+ * イベント名は WordPress の投稿タイトルを使用する。
  */
 
 function nipponbudokan_event_value_present($value)
