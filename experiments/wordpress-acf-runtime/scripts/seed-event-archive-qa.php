@@ -76,50 +76,50 @@ $items = array(
         'slug' => 'qa-event-2026-09-01-gakuen',
         'title' => '武道学園 入学案内',
         'date' => '2026-09-01',
-        'time' => '10時開会',
+        'open_time' => '10:00',\n        'start_time' => '11:00',
         'capacity' => '80名',
         'fee' => '1,000円',
-        'host' => '日本武道協議会',
+        'contact' => '日本武道協議会  03-3216-5134 月〜金 午前10時30分〜午後4時まで（祝日を除く）',
         'term' => $taiken,
     ),
     array(
         'slug' => 'qa-event-2026-09-01-shonen',
         'title' => '昭和100年記念 令和8年度 全日本少年少女武道錬成大会',
         'date' => '2026-09-01',
-        'time' => '11時開会',
+        'open_time' => '10:00',\n        'start_time' => '11:00',
         'capacity' => '80名',
         'fee' => '1,000円',
-        'host' => '日本武道協議会',
+        'contact' => '日本武道協議会  03-3216-5134 月〜金 午前10時30分〜午後4時まで（祝日を除く）',
         'term' => $taikai,
     ),
     array(
         'slug' => 'qa-event-2026-09-03-kakizome',
         'title' => '第62回全日本書初め大展覧会',
         'date' => '2026-09-03',
-        'time' => '11時開会',
+        'open_time' => '10:00',\n        'start_time' => '11:00',
         'capacity' => '80名',
         'fee' => '1,000円',
-        'host' => '日本武道協議会',
+        'contact' => '日本武道協議会  03-3216-5134 月〜金 午前10時30分〜午後4時まで（祝日を除く）',
         'term' => $taikai,
     ),
     array(
         'slug' => 'qa-event-2026-09-05-gakuen',
         'title' => '武道学園 入学案内',
         'date' => '2026-09-05',
-        'time' => '10時開会',
+        'open_time' => '10:00',\n        'start_time' => '11:00',
         'capacity' => '',
         'fee' => '',
-        'host' => '日本武道協議会',
+        'contact' => '日本武道協議会  03-3216-5134 月〜金 午前10時30分〜午後4時まで（祝日を除く）',
         'term' => $taiken,
     ),
     array(
         'slug' => 'qa-event-2026-08-01-shonen',
         'title' => '8月サンプル（月切替確認）',
         'date' => '2026-08-01',
-        'time' => '10時開会',
+        'open_time' => '10:00',\n        'start_time' => '11:00',
         'capacity' => '30名',
         'fee' => '無料',
-        'host' => '日本武道館',
+        'contact' => '日本武道館',
         'term' => $taikai,
     ),
 );
@@ -127,10 +127,10 @@ $items = array(
 foreach ($items as $item) {
     $id = event_qa_upsert($item['slug'], $item['title'], $body);
     update_field('event_date', $item['date'], $id);
-    update_field('event_time', $item['time'], $id);
-    update_field('event_capacity', $item['capacity'], $id);
-    update_field('event_fee', $item['fee'], $id);
-    update_field('event_host', $item['host'], $id);
+    update_field('post_type', 'post', $id);
+    update_field('event_open_time', $item['open_time'], $id);
+    update_field('event_start_time', $item['start_time'], $id);
+    update_field('event_contact', $item['contact'], $id);
     wp_set_object_terms($id, array((int) $item['term']), 'event_cat', false);
     WP_CLI::log(sprintf('#%d %s %s', $id, $item['date'], get_permalink($id)));
 }
