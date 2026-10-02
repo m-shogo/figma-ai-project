@@ -23,7 +23,7 @@ $card_tag = $href !== '' ? 'a' : 'div';
         <?php if ($timestamp || $has_category) : ?>
             <div class="ea_day">
                 <?php if ($timestamp) : ?>
-                    <p class="ea_date">
+                    <p class="ea_date<?php echo esc_attr($weekday_class); ?>">
                         <time datetime="<?php echo esc_attr(wp_date('Y-m-d', $timestamp)); ?>">
                             <span class="ea_date-md"><?php echo esc_html($month_day); ?></span>
                             <span class="ea_wday<?php echo esc_attr($weekday_class); ?>">(<?php echo esc_html($weekday); ?>)</span>
