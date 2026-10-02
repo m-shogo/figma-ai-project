@@ -1,15 +1,15 @@
 # 当面4 family（一覧＋詳細）
 
-更新: 2026-09-28  
-Figma visual authority: `8IPfWSLrXPBQlw3xGyV3an`（Human 2026-09-28。PC `0:1` / SP `114:5409`）  
-前 file `d1pD6gL2Sqal8Cf6h9WLp6` は参考だけ。旧 Figma `OtS7731mhY2oD44HSpdADo` / `jqYoPtusYfTeDqRegMCsx3` / `zMjOY4euPBi9T23y7ZSM6y` は historical/audit 参照専用で、最終実装値の正本にはしない。旧 file の frame node-id は新 file へ引き継がない。  
+更新: 2026-10-02  
+Figma visual authority: `D4c05PxMEw6oZxgRggfcks`（Human 2026-10-02。PC `0:1` / SP `114:5409`）  
+イベント一覧は PC `1619:9554` / SP `2991:11982`。それ以前の Figma file は historical/audit 参照専用。  
 正本の詳細: [`PUBLICATIONS_IMPLEMENTATION_STATUS.md`](PUBLICATIONS_IMPLEMENTATION_STATUS.md) / [`PUBLICATIONS_CPT_ARCHITECTURE.md`](PUBLICATIONS_CPT_ARCHITECTURE.md) / [`DIRECTORY_MAP.md`](DIRECTORY_MAP.md) / [`FIGMA_MAP.md`](FIGMA_MAP.md)  
 溜め質問: [`PENDING_QUESTIONS.md`](PENDING_QUESTIONS.md)
 
 ## 順番（現在の Human authority）
 
 ```text
-イベント 一覧・詳細は Human 2026-09-24 で終了。次の指示があるまで触らない
+イベント 一覧は Human 2026-10-02 の新デザインへ更新中。PC `1619:9554` / SP `2991:11982` を正本にする。詳細は別指示まで現行を維持
 武道 一覧・詳細は Human 2026-09-24 で終了。次の指示があるまで触らない。最新号は同じ詳細部品なので、指示があるまでまとめて触らない
 単行本 一覧・詳細は Human 2026-09-25 で終了。次の指示があるまで触らない
 → 月刊書写書道は publication family として一覧／最新号／詳細 PC/SP を続ける
@@ -20,12 +20,14 @@ Figma visual authority: `8IPfWSLrXPBQlw3xGyV3an`（Human 2026-09-28。PC `0:1` /
 
 ## 現行 Figma authority
 
-Human Authority 2026-09-28:
+Human Authority 2026-10-02:
 
-- file: `8IPfWSLrXPBQlw3xGyV3an`
-- PC page: `0:1` https://www.figma.com/design/8IPfWSLrXPBQlw3xGyV3an/nipponbudokan?node-id=0-1
-- SP page: `114:5409` https://www.figma.com/design/8IPfWSLrXPBQlw3xGyV3an/nipponbudokan?node-id=114-5409
-- 前 file `d1pD6gL2Sqal8Cf6h9WLp6` は参考だけ。個別 frame の node-id は、それより前の file の記録。新 file では未確認。実装前に上記ページを再走査する
+- file: `D4c05PxMEw6oZxgRggfcks`
+- PC page: `0:1`
+- SP page: `114:5409`
+- イベント一覧 PC: `1619:9554`
+- イベント一覧 SP: `2991:11982`
+- 旧 file / 旧 node は historical/audit 参照専用。実装値は必ず上記 file から LIVE 再取得する。
 
 
 ## 8面＋公開 URL / WP owner
@@ -45,22 +47,22 @@ Human Authority 2026-09-28:
 
 刊行物の一覧はネイティブ `/budo-book/` 等ではない。
 
-## イベント ACF（これだけ。他グループは触らない）
+## イベント ACF / 一覧契約
 
-JSON: `acf/json/group_event.json`。location = `event`。instructions 空。空値は出力しない。
+イベント名は WordPress 投稿タイトル。カテゴリは既存 taxonomy `event_cat` が owner で、ACF に重複カテゴリフィールドを作らない。空値は出力しない。
 
 | ラベル | name | 型 |
 | --- | --- | --- |
-| 募集状況 | `event_status` | radio（なし / 募集中 / 開催中 / 受付終了） |
+| 投稿選択 | `post_type` | radio（詳細 / リンク / なし） |
 | 開催日 | `event_date` | date |
-| 時間 | `event_time` | text |
-| 入場数 | `event_capacity` | text |
-| 入場料 | `event_fee` | text |
-| 主催 | `event_host` | text |
+| 開場時間 | `event_open_time` | time |
+| 開会時間 | `event_start_time` | time |
+| 問合せ先 | `event_contact` | textarea |
 
-会場などは足さない。`event_status` の「なし」はチップを出さない。`group_nbk_*.json` は触らない。
+「リンク」の場合のみ既存 `postType_url` / `postType_target` を使用する。旧 `event_status` / `event_time` / `event_capacity` / `event_fee` / `event_host` は現行イベント表示では使わない。
 
-一覧はニュースカードを使わない（Figma `card_event`）。並びは `event_date` の降順（開催日が遠い順）。月フィルタも `event_date`。詳細の表・お申込みは本文。
+一覧は PC `1619:9554` / SP `2991:11982`。カテゴリタブは `全て / 一般 / 武道 / 書道`。選択月内を `event_date` 昇順、10件/ページ。PCは12か月、SPは前月・当月・翌月の3か月を表示する。イベント行は1カラムの交互背景で、旧2カラムカードへ戻さない。
+
 
 ## 刊行物共通契約
 
