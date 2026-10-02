@@ -25,27 +25,6 @@ function nipponbudokan_event_value_present($value)
     return trim(wp_strip_all_tags((string) $value)) !== '';
 }
 
-function nipponbudokan_event_status($post_id = 0)
-{
-    $post_id = $post_id ?: get_the_ID();
-    if (!$post_id || !function_exists('get_field')) {
-        return array();
-    }
-    $labels = array(
-        'recruiting' => '募集中',
-        'ongoing' => '開催中',
-        'closed' => '受付終了',
-    );
-    $value = get_field('event_status', $post_id);
-    if (!is_string($value) || !isset($labels[$value])) {
-        return array();
-    }
-    return array(
-        'slug' => $value,
-        'label' => $labels[$value],
-    );
-}
-
 function nipponbudokan_event_datetime($post_id = 0)
 {
     $post_id = $post_id ?: get_the_ID();
