@@ -3,13 +3,13 @@
     "title": "開催イベント",
     "fields": [
         {
-            "key": "field_event_status",
-            "label": "募集状況",
-            "name": "event_status",
+            "key": "field_event_post_type",
+            "label": "投稿選択",
+            "name": "post_type",
             "aria-label": "",
             "type": "radio",
-            "instructions": "",
-            "required": 0,
+            "instructions": "詳細ページへ遷移する場合は「詳細」、指定URLへ遷移する場合は「リンク」、リンクさせない場合は「なし」を選択してください。",
+            "required": 1,
             "conditional_logic": 0,
             "wrapper": {
                 "width": "",
@@ -17,12 +17,11 @@
                 "id": ""
             },
             "choices": {
-                "none": "なし",
-                "recruiting": "募集中",
-                "ongoing": "開催中",
-                "closed": "受付終了"
+                "post": "詳細",
+                "url": "リンク",
+                "none": "なし"
             },
-            "default_value": "none",
+            "default_value": "post",
             "return_format": "value",
             "allow_null": 0,
             "other_choice": 0,
@@ -39,7 +38,7 @@
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
-                "width": "",
+                "width": "25",
                 "class": "",
                 "id": ""
             },
@@ -49,51 +48,45 @@
             "default_to_current_date": 0
         },
         {
-            "key": "field_event_time",
-            "label": "時間",
-            "name": "event_time",
+            "key": "field_event_open_time",
+            "label": "開場時間",
+            "name": "event_open_time",
             "aria-label": "",
-            "type": "text",
+            "type": "time_picker",
             "instructions": "",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
-                "width": "",
+                "width": "25",
                 "class": "",
                 "id": ""
             },
-            "default_value": "",
-            "maxlength": "",
-            "placeholder": "",
-            "prepend": "",
-            "append": ""
+            "display_format": "H:i",
+            "return_format": "H:i"
         },
         {
-            "key": "field_event_capacity",
-            "label": "入場数",
-            "name": "event_capacity",
+            "key": "field_event_start_time",
+            "label": "開会時間",
+            "name": "event_start_time",
             "aria-label": "",
-            "type": "text",
+            "type": "time_picker",
             "instructions": "",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
-                "width": "",
+                "width": "25",
                 "class": "",
                 "id": ""
             },
-            "default_value": "",
-            "maxlength": "",
-            "placeholder": "",
-            "prepend": "",
-            "append": ""
+            "display_format": "H:i",
+            "return_format": "H:i"
         },
         {
-            "key": "field_event_fee",
-            "label": "入場料",
-            "name": "event_fee",
+            "key": "field_event_contact",
+            "label": "問合せ先",
+            "name": "event_contact",
             "aria-label": "",
-            "type": "text",
+            "type": "textarea",
             "instructions": "",
             "required": 0,
             "conditional_logic": 0,
@@ -104,29 +97,9 @@
             },
             "default_value": "",
             "maxlength": "",
+            "rows": 5,
             "placeholder": "",
-            "prepend": "",
-            "append": ""
-        },
-        {
-            "key": "field_event_host",
-            "label": "主催",
-            "name": "event_host",
-            "aria-label": "",
-            "type": "text",
-            "instructions": "",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "default_value": "",
-            "maxlength": "",
-            "placeholder": "",
-            "prepend": "",
-            "append": ""
+            "new_lines": "br"
         }
     ],
     "location": [
@@ -145,10 +118,10 @@
     "instruction_placement": "label",
     "hide_on_screen": "",
     "active": true,
-    "description": "",
+    "description": "開催イベント一覧用。イベント名はWordPressのページタイトルを使用します。",
     "show_in_rest": 0,
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1790232000
+    "modified": 1790937600
 }
