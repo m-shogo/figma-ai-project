@@ -165,11 +165,11 @@ Theme 専用の enqueue・命名は `THEME_RULES.md`。Frontend Standard は Com
 | ブロック 投稿一覧 | `block_post_type`（`post` / `event` / `budo-book` / `shodou-book` / `tankoubon`） / `block_category` / `block_event_cat` / `block_book` / `block_posts_per_page` |
 | ブロック タブ | コンテナは message のみ。パネルは `panel_title` |
 | ブロック スライダー | `slider_items` → `image` / `caption` |
-| 開催イベント | `event_status`（なし / 募集中 / 開催中 / 受付終了） / `event_date`（日付） / `event_time` / `event_capacity`（入場数） / `event_fee`（入場料） / `event_host`（主催） |
+| 開催イベント | イベント名は投稿タイトル。`post_type`（詳細 / リンク / なし） / `event_date`（開催日） / `event_open_time`（開場時間） / `event_start_time`（開会時間） / `event_contact`（問合せ先）。「リンク」のときだけ `postType_url` / `postType_target` を使用 |
 
 - グローバルナビは WordPress メニュー。旧 `common-menu-01` / `common-submenu-01` は現行 ACF に無い
 - ローカルナビ（Human 2026-09-11 / 2026-09-15）: 外観 → メニューで名前を `ローカル：` で始める（slug は `local-*` に同期）。位置には割り当てない。固定ページ ACF `page_local_nav` の動的一覧にだけ出る（`global-nav` / `mega-nav` / `sub-nav` / `footer-nav` 等の位置割当メニューは除外）。**出すテンプレートはデフォルト `page.php` と `template-form.php` のみ**（1カラム系は出さない）。パンくず上・幅いっぱい・白背景。PC Figma `2108:10846`。SP 専用デザイン無し（非表示）。メニューは**2階層**（1=大会・イベント等のリンク見出し / 2=各ページ）。家族名（武道 振興・普及事業）はメニューに置かない。PC は1階層目を見出し、2階層目を4列で出す。2行リンクがある row は高さを揃え下線をセル下端に揃える。詳細: `LOCAL_NAV_DEPENDENCY_AUDIT.md`
-- CPT `event` + `event_cat` は Theme `inc/custom.php`。イベント専用 ACF は上表。空は出さない。`event_status` の「なし」はチップを出さない。一覧は `event_date` の降順（開催日が遠い順）。**Human 2026-09-24: イベント一覧・詳細は終了。次の指示があるまで触らない。**
+- CPT `event` + `event_cat` は Theme `inc/custom.php`。**2026-10-02 Human 指示でイベント ACF を更新。** イベント名は投稿タイトル、投稿選択は「詳細 / リンク / なし」、開催日・開場時間・開会時間・問合せ先を使用する。旧 `event_status` / `event_time` / `event_capacity` / `event_fee` / `event_host` は現行イベント表示では使用しない。空項目は出さない。
 - **Human 2026-09-24: 武道の一覧・詳細は終了。次の指示があるまで触らない。** 対象は `/publications/budo/back/` と `budo-book` 詳細。最新号は同じ詳細部品（`_budo-detail` / `_budo-body` / `_budo-related` / 総索引）を使うので、指示があるまでまとめて触らない。
 - **Human 2026-09-25: 単行本の一覧・詳細は終了。次の指示があるまで触らない。** 対象は `/publications/budo/books/` と `tankoubon` 詳細、および `module_publicationBook.css` / `_book-detail.php` / `_book-list-card.php`。
 - Gutenberg ボタンスタイル「小ボタン」= `is-style-small`（Figma btn-02）。wrapper `.small` も互換で残す
@@ -194,7 +194,7 @@ Theme 専用の enqueue・命名は `THEME_RULES.md`。Frontend Standard は Com
 
 ---
 
-## Figma（現行正本）
+## Figma\n\n- **2026-10-02 Human Authority:** 最新デザイン正本は Figma `D4c05PxMEw6oZxgRggfcks`。PC page `0:1`、SP page `114:5409`。イベント PC `1619:9554`、イベント詳細 PC `1632:10382`、イベント SP `2991:11982`。旧 Figma より優先する。（現行正本）
 
 Human Authority 2026-10-01: デザインの Figma を変更。**この file だけを最終 Visual authority として LIVE 再取得する。** 前 file `8IPfWSLrXPBQlw3xGyV3an` は参考だけ。
 
