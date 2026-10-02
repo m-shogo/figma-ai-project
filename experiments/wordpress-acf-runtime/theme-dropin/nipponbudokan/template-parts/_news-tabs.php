@@ -41,7 +41,7 @@ if ($taxonomy === 'event_cat') {
 
     $tabs[] = array(
         'id' => 'all',
-        'label' => 'すべて',
+        'label' => '全て',
         'url' => $all_url,
         'active' => $current_term_id === 0,
     );
@@ -50,9 +50,27 @@ if ($taxonomy === 'event_cat') {
         'taxonomy' => $taxonomy,
         'parent' => 0,
         'hide_empty' => false,
+        'orderby' => 'name',
+        'order' => 'ASC',
     ));
 
     if (!empty($terms) && !is_wp_error($terms)) {
+        // Event archive visual authority: 全て → 一般 → 武道 → 書道。
+        // Taxonomy remains the data owner; unknown future terms are appended.
+        $event_term_priority = array(
+            '一般' => 0,
+            '武道' => 1,
+            '書道' => 2,
+        );
+        usort($terms, static function ($a, $b) use ($event_term_priority) {
+            $a_priority = $event_term_priority[$a->name] ?? PHP_INT_MAX;
+            $b_priority = $event_term_priority[$b->name] ?? PHP_INT_MAX;
+            if ($a_priority === $b_priority) {
+                return strcmp($a->name, $b->name);
+            }
+            return $a_priority <=> $b_priority;
+        });
+
         foreach ($terms as $term) {
             $term_url = get_term_link($term);
             if (!is_wp_error($term_url) && $event_filter) {
@@ -143,5 +161,12 @@ if ($context === 'top') {
                 <?php endif; ?>
             </li>
         <?php endforeach; ?>
+
+        <?php if ($taxonomy === 'event_cat' && $context === 'archive'): ?>
+            <?php $event_tab_fillers = (3 - (count($tabs) % 3)) % 3; ?>
+            <?php for ($i = 0; $i < $event_tab_fillers; $i++): ?>
+                <li class="news_tabs_item news_tabs_item-filler" aria-hidden="true"></li>
+            <?php endfor; ?>
+        <?php endif; ?>
     </ul>
 </nav>
