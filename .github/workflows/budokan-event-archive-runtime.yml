@@ -4,12 +4,15 @@ on:
   pull_request:
     paths:
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/archive.php'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/inc/event.php'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/acf/json/group_event.json'
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_event-archive.php'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_event-card.php'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_event-month-nav.php'
       - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_news-tabs.php'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_list-card.php'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_list-card_article.php'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/module/module_newsList-01.css'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/module/module_newsCard-01.css'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_label-category.php'
+      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/module/module_eventArchive.css'
+      - 'experiments/wordpress-acf-runtime/scripts/seed-event-archive-qa.php'
       - 'experiments/wordpress-acf-runtime/scripts/budokan-event-archive-rhythm-browser-qa.mjs'
       - '.github/workflows/budokan-event-archive-runtime.yml'
   workflow_dispatch:
@@ -24,40 +27,31 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Start disposable WordPress runtime using existing News archive fixture
+      - name: Start disposable WordPress runtime
         env:
           BUDOKAN_NEWS_ARCHIVE_KEEP_RUNTIME: '1'
         run: bash experiments/wordpress-acf-runtime/scripts/budokan-news-archive-runtime-qa.sh
 
-      - name: Seed Event archive fixture through existing CPT and taxonomy ownership
+      - name: Seed current-month Event archive fixture
         run: |
           cd experiments/wordpress-acf-runtime
           source scripts/runtime-env.sh
-          declare -a labels=('武道' '書道' '研修')
-          declare -a term_ids=()
-          for label in "${labels[@]}"; do
-            term_id="$(docker compose run --rm cli term create event_cat "$label" --porcelain)"
-            term_ids+=("$term_id")
-          done
-          for index in $(seq 1 12); do
-            post_id="$(docker compose run --rm cli post create \
-              --post_type=event \
-              --post_status=publish \
-              --post_title="Budokan Event QA ${index}" \
-              --post_date="2026-08-$(printf '%02d' "$index") 12:00:00" \
-              --porcelain)"
-            term_index=$(( (index - 1) % ${#term_ids[@]} ))
-            docker compose run --rm cli post term set "$post_id" event_cat "${term_ids[$term_index]}" --by=id >/dev/null
-          done
+          docker compose run --rm cli eval-file /fixture/scripts/seed-event-archive-qa.php
+
           html="$(mktemp)"
           http_code="$(curl --silent --show-error --location --max-redirs 3 --output "$html" --write-out '%{http_code}' "${WP_URL}/event/")"
           [[ "$http_code" == "200" ]]
-          grep -Fq 'class="news_archive event_archive"' "$html"
-          grep -Fq 'class="module_newsCard-01"' "$html"
-          grep -Fq 'class="module_pager-01 news_pager"' "$html"
+          grep -Fq 'class="global_inner _content event_archive_inner"' "$html"
+          grep -Fq 'class="ea_list"' "$html"
+          grep -Fq 'class="ea_card"' "$html"
+          grep -Fq '一般' "$html"
+          grep -Fq '武道' "$html"
+          grep -Fq '書道' "$html"
+          card_count="$(grep -o 'class="ea_card"' "$html" | wc -l | tr -d ' ')"
+          [[ "$card_count" -eq 10 ]]
           rm -f "$html"
 
-      - name: Run PC Event archive browser rhythm QA
+      - name: Run PC and SP Event archive browser QA
         run: |
           cd experiments/wordpress-acf-runtime
           source scripts/runtime-env.sh

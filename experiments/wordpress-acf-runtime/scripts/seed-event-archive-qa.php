@@ -1,7 +1,10 @@
 <?php
 
 /**
- * Local-only seed: event archive/detail cards for Figma 1619:9554 / 1632:10382 QA.
+ * Local-only seed: event archive cards for the current Figma authority.
+ *
+ * PC: D4c05PxMEw6oZxgRggfcks / 1619:9554
+ * SP: D4c05PxMEw6oZxgRggfcks / 2991:11982
  *
  *   wp eval-file /fixture/scripts/seed-event-archive-qa.php
  */
@@ -25,10 +28,12 @@ function event_qa_term(string $name): int
     if ($existing && !is_wp_error($existing)) {
         return (int) $existing->term_id;
     }
+
     $created = wp_insert_term($name, 'event_cat');
     if (is_wp_error($created)) {
         WP_CLI::error($created->get_error_message());
     }
+
     return (int) $created['term_id'];
 }
 
@@ -43,6 +48,7 @@ function event_qa_upsert(string $slug, string $title, string $content): int
         'order' => 'ASC',
         'no_found_rows' => true,
     ));
+
     $payload = array(
         'post_type' => 'event',
         'post_status' => 'publish',
@@ -50,89 +56,77 @@ function event_qa_upsert(string $slug, string $title, string $content): int
         'post_name' => $slug,
         'post_content' => $content,
     );
+
     if ($matches) {
         $payload['ID'] = (int) $matches[0]->ID;
         $result = wp_update_post($payload, true);
     } else {
         $result = wp_insert_post($payload, true);
     }
+
     if (is_wp_error($result)) {
         WP_CLI::error($result->get_error_message());
     }
+
     return (int) $result;
 }
 
-$taikai = event_qa_term('大会');
-$taiken = event_qa_term('体験');
+$general = event_qa_term('一般');
+$budo = event_qa_term('武道');
+$shodo = event_qa_term('書道');
+
+$now = new DateTimeImmutable('now', wp_timezone());
+$year = (int) $now->format('Y');
+$month = (int) $now->format('n');
 
 $body = <<<HTML
 <!-- wp:paragraph -->
-<p>世界中から参集した柔道・空手競技の精鋭エキスパートたちが究極の技を競った2020オリンピック・パラリンピック大会。その開催に備え東京都から補助金を得て新たに整備された日本武道館の中道場を使って都民の皆様を中心に、日本武道館武道学園のなぎなた講師による体験会を実施します。</p>
+<p>開催イベントQA用の本文です。イベント一覧の表示契約と詳細遷移の確認に使用します。</p>
 <!-- /wp:paragraph -->
 HTML;
 
-$items = array(
-    array(
-        'slug' => 'qa-event-2026-09-01-gakuen',
-        'title' => '武道学園 入学案内',
-        'date' => '2026-09-01',
-        'open_time' => '10:00',\n        'start_time' => '11:00',
-        'capacity' => '80名',
-        'fee' => '1,000円',
-        'contact' => '日本武道協議会  03-3216-5134 月〜金 午前10時30分〜午後4時まで（祝日を除く）',
-        'term' => $taiken,
-    ),
-    array(
-        'slug' => 'qa-event-2026-09-01-shonen',
-        'title' => '昭和100年記念 令和8年度 全日本少年少女武道錬成大会',
-        'date' => '2026-09-01',
-        'open_time' => '10:00',\n        'start_time' => '11:00',
-        'capacity' => '80名',
-        'fee' => '1,000円',
-        'contact' => '日本武道協議会  03-3216-5134 月〜金 午前10時30分〜午後4時まで（祝日を除く）',
-        'term' => $taikai,
-    ),
-    array(
-        'slug' => 'qa-event-2026-09-03-kakizome',
-        'title' => '第62回全日本書初め大展覧会',
-        'date' => '2026-09-03',
-        'open_time' => '10:00',\n        'start_time' => '11:00',
-        'capacity' => '80名',
-        'fee' => '1,000円',
-        'contact' => '日本武道協議会  03-3216-5134 月〜金 午前10時30分〜午後4時まで（祝日を除く）',
-        'term' => $taikai,
-    ),
-    array(
-        'slug' => 'qa-event-2026-09-05-gakuen',
-        'title' => '武道学園 入学案内',
-        'date' => '2026-09-05',
-        'open_time' => '10:00',\n        'start_time' => '11:00',
-        'capacity' => '',
-        'fee' => '',
-        'contact' => '日本武道協議会  03-3216-5134 月〜金 午前10時30分〜午後4時まで（祝日を除く）',
-        'term' => $taiken,
-    ),
-    array(
-        'slug' => 'qa-event-2026-08-01-shonen',
-        'title' => '8月サンプル（月切替確認）',
-        'date' => '2026-08-01',
-        'open_time' => '10:00',\n        'start_time' => '11:00',
-        'capacity' => '30名',
-        'fee' => '無料',
-        'contact' => '日本武道館',
-        'term' => $taikai,
-    ),
+$contact = 'ホットスタッフ・プロモーション  050-5211-6077(平日12:00〜18:00)';
+$categories = array($general, $budo, $budo, $shodo, $general, $budo, $shodo, $general, $budo, $shodo);
+$titles = array(
+    'DREAMS COME TRUEコンサート',
+    '武道学園 入学案内',
+    '昭和100年記念 令和8年度 全日本少年少女武道錬成大会',
+    '第62回全日本書初め大展覧会',
+    '日本武道館 開催イベント05',
+    '日本武道館 開催イベント06',
+    '日本武道館 開催イベント07',
+    '日本武道館 開催イベント08',
+    '日本武道館 開催イベント09',
+    '日本武道館 開催イベント10',
 );
 
-foreach ($items as $item) {
-    $id = event_qa_upsert($item['slug'], $item['title'], $body);
-    update_field('event_date', $item['date'], $id);
-    update_field('post_type', 'post', $id);
-    update_field('event_open_time', $item['open_time'], $id);
-    update_field('event_start_time', $item['start_time'], $id);
-    update_field('event_contact', $item['contact'], $id);
-    wp_set_object_terms($id, array((int) $item['term']), 'event_cat', false);
-    WP_CLI::log(sprintf('#%d %s %s', $id, $item['date'], get_permalink($id)));
+for ($index = 0; $index < 10; $index++) {
+    $day = $index + 1;
+    $date = sprintf('%04d-%02d-%02d', $year, $month, $day);
+    $slug = sprintf('qa-event-archive-%02d', $day);
+    $id = event_qa_upsert($slug, $titles[$index], $body);
+
+    update_field('event_date', $date, $id);
+    update_field('event_open_time', '10:00', $id);
+    update_field('event_start_time', '11:00', $id);
+    update_field('event_contact', $contact, $id);
+
+    if ($index === 8) {
+        update_field('post_type', 'url', $id);
+        update_field('postType_url', home_url('/contact/'), $id);
+        update_field('postType_target', 0, $id);
+    } elseif ($index === 9) {
+        update_field('post_type', 'none', $id);
+        update_field('postType_url', '', $id);
+        update_field('postType_target', 0, $id);
+    } else {
+        update_field('post_type', 'post', $id);
+        update_field('postType_url', '', $id);
+        update_field('postType_target', 0, $id);
+    }
+
+    wp_set_object_terms($id, array((int) $categories[$index]), 'event_cat', false);
+    WP_CLI::log(sprintf('#%d %s %s', $id, $date, get_permalink($id)));
 }
 
-WP_CLI::success('Seeded event archive QA posts.');
+WP_CLI::success(sprintf('Seeded 10 Event archive QA posts for %04d-%02d.', $year, $month));
