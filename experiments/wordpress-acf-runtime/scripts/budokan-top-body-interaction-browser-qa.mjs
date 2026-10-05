@@ -8,6 +8,13 @@ if (!targetUrl) {
 
 const browser = await chromium.launch({ headless: true });
 const failures = [];
+const officialSnsHrefs = [
+  'https://www.youtube.com/channel/UCe3FE8c-lETtgi4Z8xseGRg',
+  'https://www.instagram.com/nipponbudokan.koho/',
+  'https://x.com/Koho_Budokan',
+  'https://www.youtube.com/channel/UCe3FE8c-lETtgi4Z8xseGRg',
+  'https://www.instagram.com/nipponbudokan.koho/',
+];
 
 const near = (a, b, tolerance = 1) => Math.abs(a - b) <= tolerance;
 const rectStable = (before, after, label, tolerance = 1) => {
@@ -187,8 +194,10 @@ async function auditHoverAndFocus(page, selector, label) {
   await assertBox(await visibleTarget(page, '.top_sns-01 .ts_group_official', 'PC TOP SNS official'), { width: 339, height: 80 }, 'PC TOP SNS official', 1);
   const pcSnsIcons = await page.locator('.top_sns-01 .ts_icon').count();
   if (pcSnsIcons !== 5) failures.push(`PC TOP SNS should expose five Figma brand circles; got ${pcSnsIcons}`);
-  const pcSnsLinks = await page.locator('.top_sns-01 a').count();
-  if (pcSnsLinks !== 0) failures.push(`PC TOP SNS unresolved destinations must fail closed; found ${pcSnsLinks} anchors`);
+  const pcSnsLinks = await page.locator('.top_sns-01 a.ts_icon[target="_blank"]').evaluateAll((elements) => elements.map((element) => element.getAttribute('href')));
+  if (JSON.stringify(pcSnsLinks) !== JSON.stringify(officialSnsHrefs)) {
+    failures.push(`PC TOP SNS destinations changed unexpectedly: ${JSON.stringify(pcSnsLinks)}`);
+  }
 
   const order = await page.evaluate(() => {
     const events = document.querySelector('#top_events-01');
@@ -262,8 +271,10 @@ async function auditHoverAndFocus(page, selector, label) {
   ) {
     failures.push(`SP TOP SNS octagon geometry/asset drifted: ${JSON.stringify(spSnsDecoration)}`);
   }
-  const spSnsLinks = await page.locator('.top_sns-01 a').count();
-  if (spSnsLinks !== 0) failures.push(`SP TOP SNS unresolved destinations must fail closed; found ${spSnsLinks} anchors`);
+  const spSnsLinks = await page.locator('.top_sns-01 a.ts_icon[target="_blank"]').evaluateAll((elements) => elements.map((element) => element.getAttribute('href')));
+  if (JSON.stringify(spSnsLinks) !== JSON.stringify(officialSnsHrefs)) {
+    failures.push(`SP TOP SNS destinations changed unexpectedly: ${JSON.stringify(spSnsLinks)}`);
+  }
 
   const spInstagramInner = await visibleTarget(page, '.top_instagram-01 .ti_inner', 'SP TOP Instagram inner');
   await assertBox(spInstagramInner, { width: 311 }, 'SP TOP Instagram inner', 1);

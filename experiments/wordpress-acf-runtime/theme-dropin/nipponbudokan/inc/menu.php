@@ -12,6 +12,21 @@ add_action('after_setup_theme', function () {
 });
 
 /**
+ * Human 2026-10-05: official SNS destinations for TOP, Footer, and the
+ * hamburger panel. One URL per network.
+ */
+function nipponbudokan_official_sns_url($network)
+{
+    $urls = array(
+        'youtube' => 'https://www.youtube.com/channel/UCe3FE8c-lETtgi4Z8xseGRg',
+        'instagram' => 'https://www.instagram.com/nipponbudokan.koho/',
+        'x' => 'https://x.com/Koho_Budokan',
+    );
+
+    return $urls[$network] ?? '';
+}
+
+/**
  * Local Navigation menus are not theme locations.
  * Editors name them 「ローカル：…」; slug is kept as local-*.
  * Per-page assignment is ACF `page_local_nav` (Human 2026-09-11).

@@ -19,19 +19,25 @@ function isSansFamily(family) {
   return value.includes('sans-serif') || value.includes('gothic') || value.includes('kaku') || value.includes('roboto');
 }
 
-async function assertFooterSnsPlaceholdersFailClosed(page, label) {
+async function assertFooterSnsLinks(page, label) {
   const legacyLinks = await page.locator('.gf_sns a[href="#"]').count();
   assert(legacyLinks === 0, `${label}: unresolved footer SNS destinations still render as href="#" links (${legacyLinks}).`);
 
-  const disabledOwners = page.locator('.gf_sns .gf_sns_link[aria-disabled="true"]');
-  const disabledCount = await disabledOwners.count();
-  assert(disabledCount === 3, `${label}: expected 3 fail-closed footer SNS visual owners, got ${disabledCount}.`);
+  const links = page.locator('.gf_sns a.gf_sns_link');
+  const count = await links.count();
+  assert(count === 3, `${label}: expected 3 footer SNS links, got ${count}.`);
 
-  const labels = await disabledOwners.evaluateAll((elements) => elements.map((element) => element.getAttribute('aria-label')));
-  assert(
-    JSON.stringify(labels) === JSON.stringify(['YouTube', 'Instagram', 'X']),
-    `${label}: footer SNS placeholder labels changed unexpectedly: ${JSON.stringify(labels)}.`,
-  );
+  const actual = await links.evaluateAll((elements) => elements.map((element) => ({
+    label: element.getAttribute('aria-label'),
+    href: element.getAttribute('href'),
+    target: element.getAttribute('target'),
+  })));
+  const expected = [
+    { label: 'YouTube', href: 'https://www.youtube.com/channel/UCe3FE8c-lETtgi4Z8xseGRg', target: '_blank' },
+    { label: 'Instagram', href: 'https://www.instagram.com/nipponbudokan.koho/', target: '_blank' },
+    { label: 'X', href: 'https://x.com/Koho_Budokan', target: '_blank' },
+  ];
+  assert(JSON.stringify(actual) === JSON.stringify(expected), `${label}: footer SNS links changed unexpectedly: ${JSON.stringify(actual)}.`);
 }
 
 async function measure(page) {
@@ -94,7 +100,7 @@ try {
   });
   const mobilePage = await mobileContext.newPage();
   await mobilePage.goto(url, { waitUntil: 'networkidle' });
-  await assertFooterSnsPlaceholdersFailClosed(mobilePage, 'SP Footer');
+  await assertFooterSnsLinks(mobilePage, 'SP Footer');
   const sp = await measure(mobilePage);
   assert(sp, 'SP Footer was not found.');
   assert(sp.footerBg === 'rgb(255, 255, 255)', `SP footer background expected white, got ${sp.footerBg}.`);
@@ -122,7 +128,7 @@ try {
   const desktopContext = await browser.newContext({ viewport: { width: 1380, height: 900 } });
   const desktopPage = await desktopContext.newPage();
   await desktopPage.goto(url, { waitUntil: 'networkidle' });
-  await assertFooterSnsPlaceholdersFailClosed(desktopPage, 'PC Footer');
+  await assertFooterSnsLinks(desktopPage, 'PC Footer');
   const pc = await measure(desktopPage);
   assert(pc, 'PC Footer was not found.');
   assert(pc.footerBg === 'rgb(255, 255, 255)', `PC footer background expected white, got ${pc.footerBg}.`);

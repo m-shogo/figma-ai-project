@@ -77,19 +77,25 @@ async function pointerClick(page, selector) {
   await page.mouse.click(x, y);
 }
 
-async function assertHeaderSnsPlaceholdersFailClosed(page, label) {
+async function assertHeaderSnsLinks(page, label) {
   const legacyLinks = await page.locator('.gn_sns a[href="#"]').count();
   assert(legacyLinks === 0, `${label}: unresolved header SNS destinations still render as href="#" links (${legacyLinks}).`);
 
-  const disabledOwners = page.locator('.gn_sns .gn_sns_link[aria-disabled="true"]');
-  const disabledCount = await disabledOwners.count();
-  assert(disabledCount === 3, `${label}: expected 3 fail-closed header SNS visual owners, got ${disabledCount}.`);
+  const links = page.locator('.gn_sns a.gn_sns_link');
+  const count = await links.count();
+  assert(count === 3, `${label}: expected 3 header SNS links, got ${count}.`);
 
-  const labels = await disabledOwners.evaluateAll((elements) => elements.map((element) => element.getAttribute('aria-label')));
-  assert(
-    JSON.stringify(labels) === JSON.stringify(['YouTube', 'Instagram', 'X']),
-    `${label}: header SNS placeholder labels changed unexpectedly: ${JSON.stringify(labels)}.`,
-  );
+  const actual = await links.evaluateAll((elements) => elements.map((element) => ({
+    label: element.getAttribute('aria-label'),
+    href: element.getAttribute('href'),
+    target: element.getAttribute('target'),
+  })));
+  const expected = [
+    { label: 'YouTube', href: 'https://www.youtube.com/channel/UCe3FE8c-lETtgi4Z8xseGRg', target: '_blank' },
+    { label: 'Instagram', href: 'https://www.instagram.com/nipponbudokan.koho/', target: '_blank' },
+    { label: 'X', href: 'https://x.com/Koho_Budokan', target: '_blank' },
+  ];
+  assert(JSON.stringify(actual) === JSON.stringify(expected), `${label}: header SNS links changed unexpectedly: ${JSON.stringify(actual)}.`);
 }
 
 function assertOverlayDoesNotIncreaseOverflow(before, state, label) {
@@ -227,7 +233,7 @@ async function exerciseTouchMegaMenuBreakpoint(browser, width, label) {
   });
   const page = await context.newPage();
   await page.goto(url, { waitUntil: 'networkidle' });
-  await assertHeaderSnsPlaceholdersFailClosed(page, label);
+  await assertHeaderSnsLinks(page, label);
 
   const state = await page.evaluate(() => {
     const header = document.querySelector('#global_header');
@@ -256,7 +262,7 @@ async function runViewport(browser, viewport, contextOptions, label) {
   const context = await browser.newContext({ viewport, ...contextOptions });
   const page = await context.newPage();
   await page.goto(url, { waitUntil: 'networkidle' });
-  await assertHeaderSnsPlaceholdersFailClosed(page, label);
+  await assertHeaderSnsLinks(page, label);
 
   const maxScrollY = await exerciseStickyScrollStability(page, label);
   await exerciseOverlaysAtScroll(page, Math.min(350, Math.max(1, maxScrollY)), `${label} shallow-scroll`);

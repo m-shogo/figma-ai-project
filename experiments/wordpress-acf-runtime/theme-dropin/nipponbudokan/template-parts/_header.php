@@ -62,14 +62,14 @@
                 <li class="gn_sns_group gn_sns_group_youtube">
                     <p class="gn_sns_label">公式Youtube</p>
                     <span class="gn_sns_icons">
-                        <span class="gn_sns_link gn_sns_youtube" aria-disabled="true" aria-label="YouTube"><span>YouTube</span></span>
+                        <a class="gn_sns_link gn_sns_youtube" href="<?php echo esc_url(nipponbudokan_official_sns_url('youtube')); ?>" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><span>YouTube</span></a>
                     </span>
                 </li>
                 <li class="gn_sns_group gn_sns_group_editorial">
                     <p class="gn_sns_label">月刊「武道」編集部</p>
                     <span class="gn_sns_icons">
-                        <span class="gn_sns_link gn_sns_instagram" aria-disabled="true" aria-label="Instagram"><span>Instagram</span></span>
-                        <span class="gn_sns_link gn_sns_x" aria-disabled="true" aria-label="X"><span>X</span></span>
+                        <a class="gn_sns_link gn_sns_instagram" href="<?php echo esc_url(nipponbudokan_official_sns_url('instagram')); ?>" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><span>Instagram</span></a>
+                        <a class="gn_sns_link gn_sns_x" href="<?php echo esc_url(nipponbudokan_official_sns_url('x')); ?>" target="_blank" rel="noopener noreferrer" aria-label="X"><span>X</span></a>
                     </span>
                 </li>
             </ul>
