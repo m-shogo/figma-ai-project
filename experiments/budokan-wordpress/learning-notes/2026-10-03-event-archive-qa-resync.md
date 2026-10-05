@@ -39,3 +39,5 @@ The same seed must delete retired QA terms `体験` / `大会`. Otherwise the ca
 QA collection must measure the label that has a client rect. The card renders the SP label first, and that node is `display: none` on PC, so `.label` alone reports width 0 even when the visible PC label is 90px.
 
 `networkidle` does not settle while the local hot-reload stamp poll is running. Windows classic scrollbars also shrink a requested 375px viewport to a 360px layout box; the harness has to grow the window until the document box is the Figma width. Neither of those is a reason to change Event CSS.
+
+PC contact text underlines only the organizer name. Figma separates that name from the phone with two spaces inside the single `event_contact` textarea. SP leaves the contact plain and underlines the linked title instead. A contact without that two-space split stays plain on both.

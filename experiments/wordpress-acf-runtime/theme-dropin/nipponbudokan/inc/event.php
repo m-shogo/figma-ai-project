@@ -25,6 +25,28 @@ function nipponbudokan_event_value_present($value)
     return trim(wp_strip_all_tags((string) $value)) !== '';
 }
 
+/**
+ * Figma PC contact splits the organizer name from the detail with two spaces
+ * and underlines only the name. A single textarea stays the data owner.
+ *
+ * @return array{name: string, rest: string}
+ */
+function nipponbudokan_event_contact_parts($contact)
+{
+    $contact = (string) $contact;
+    if (!preg_match('/^(.*?)( {2,}[\s\S]*)$/u', $contact, $matches)) {
+        return array('name' => '', 'rest' => $contact);
+    }
+    if (trim($matches[1]) === '') {
+        return array('name' => '', 'rest' => $contact);
+    }
+
+    return array(
+        'name' => $matches[1],
+        'rest' => $matches[2],
+    );
+}
+
 function nipponbudokan_event_datetime($post_id = 0)
 {
     $post_id = $post_id ?: get_the_ID();

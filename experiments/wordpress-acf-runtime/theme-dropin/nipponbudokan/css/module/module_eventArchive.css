@@ -407,6 +407,10 @@
         overflow-wrap: anywhere;
     }
 
+    .ea_contact {
+        white-space: pre-wrap;
+    }
+
     .ea_empty {
         margin: 0;
         font-family: var(--font-zen-kaku-gothic);
@@ -532,6 +536,12 @@
 
         .ea_card_link[href] .ea_title {
             text-decoration: none;
+        }
+
+        .ea_contact_name {
+            text-decoration: underline;
+            text-decoration-skip-ink: none;
+            text-underline-position: from-font;
         }
     }
 

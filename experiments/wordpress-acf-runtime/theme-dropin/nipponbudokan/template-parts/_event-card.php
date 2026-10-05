@@ -67,7 +67,14 @@ $card_tag = $href !== '' ? 'a' : 'div';
                     <?php endif; ?>
 
                     <?php if (nipponbudokan_event_value_present($contact)) : ?>
-                        <p class="ea_meta_row ea_contact"><?php echo wp_kses_post(nl2br(esc_html($contact))); ?></p>
+                        <?php $contact_parts = nipponbudokan_event_contact_parts($contact); ?>
+                        <p class="ea_meta_row ea_contact"><?php
+                        if ($contact_parts['name'] !== '') {
+                            echo '<span class="ea_contact_name">' . esc_html($contact_parts['name']) . '</span>' . esc_html($contact_parts['rest']);
+                        } else {
+                            echo esc_html($contact);
+                        }
+                        ?></p>
                     <?php endif; ?>
                 </div>
             <?php endif; ?>
