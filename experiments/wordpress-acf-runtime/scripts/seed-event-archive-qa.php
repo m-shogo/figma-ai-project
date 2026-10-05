@@ -75,6 +75,18 @@ $general = event_qa_term('一般');
 $budo = event_qa_term('武道');
 $shodo = event_qa_term('書道');
 
+// Older local fixtures created 体験 / 大会. The current archive contract is
+// 全て → 一般 → 武道 → 書道, so those retired QA terms must not remain.
+foreach (array('体験', '大会') as $legacy_name) {
+    $legacy = get_term_by('name', $legacy_name, 'event_cat');
+    if ($legacy && !is_wp_error($legacy)) {
+        $deleted = wp_delete_term((int) $legacy->term_id, 'event_cat');
+        if (is_wp_error($deleted)) {
+            WP_CLI::error($deleted->get_error_message());
+        }
+    }
+}
+
 $now = new DateTimeImmutable('now', wp_timezone());
 $year = (int) $now->format('Y');
 $month = (int) $now->format('n');
@@ -102,7 +114,9 @@ $titles = array(
 
 for ($index = 0; $index < 10; $index++) {
     $day = $index + 1;
-    $date = sprintf('%04d-%02d-%02d', $year, $month, $day);
+    // Archive query compares event_date as Ymd. ACF date_picker stores that
+    // format; a raw Y-m-d string is excluded from the current-month BETWEEN.
+    $date = sprintf('%04d%02d%02d', $year, $month, $day);
     $slug = sprintf('qa-event-archive-%02d', $day);
     $id = event_qa_upsert($slug, $titles[$index], $body);
 

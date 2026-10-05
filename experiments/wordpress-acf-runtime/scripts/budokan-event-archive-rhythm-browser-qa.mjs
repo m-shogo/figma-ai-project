@@ -17,8 +17,17 @@ function close(actual, expected, tolerance = 2) {
 async function openPage(browser, viewport) {
   const context = await browser.newContext({ viewport });
   const page = await context.newPage();
-  await page.goto(url, { waitUntil: 'networkidle' });
+  // Local hot reload polls /wp-json/figma-ai-local/v1/stamp, so networkidle never settles.
+  await page.goto(url, { waitUntil: 'load' });
   await page.evaluate(() => document.fonts?.ready);
+  // Windows classic scrollbars shrink the layout box below the requested viewport.
+  // Grow the window until the document box matches the Figma frame width.
+  const layoutWidth = await page.evaluate(() => document.documentElement.getBoundingClientRect().width);
+  const missing = viewport.width - layoutWidth;
+  if (missing > 0.5) {
+    await page.setViewportSize({ width: Math.ceil(viewport.width + missing), height: viewport.height });
+    await page.evaluate(() => document.fonts?.ready);
+  }
   return { context, page };
 }
 
@@ -36,7 +45,8 @@ async function collect(page) {
     const firstCardLink = firstCard?.querySelector('.ea_card_link') || null;
     const firstDay = firstCard?.querySelector('.ea_day') || null;
     const firstBody = firstCard?.querySelector('.ea_body') || null;
-    const firstLabel = firstCard?.querySelector('.label') || null;
+    const labelCandidates = firstCard ? Array.from(firstCard.querySelectorAll('.label')) : [];
+    const firstLabel = labelCandidates.find((el) => el.getClientRects().length > 0) || null;
     const firstTitle = firstCard?.querySelector('.ea_title') || null;
     const monthSp = document.querySelector('.event_archive .ea_months-sp');
     const monthPc = document.querySelector('.event_archive .ea_months-pc');

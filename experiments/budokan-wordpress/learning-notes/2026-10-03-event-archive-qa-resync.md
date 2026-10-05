@@ -29,3 +29,13 @@ The local Event seed also contained literal `\\n` fragments in PHP array entries
 ## Prevention rule
 
 Event archive QA must use only the current Event DOM (`.ea_*`), seed through the current ACF contract, preserve `一般 / 武道 / 書道`, and verify both 1380px PC and 375px SP. Do not repair a failing old QA by changing the implementation back toward News archive markup.
+
+## 2026-10-05 local replay
+
+Figma PC `1619:9554` and SP `2991:11982` still match the current CSS at the authored rails (PC 960 / SP 327). The local archive looked empty of the new cards because `seed-event-archive-qa.php` wrote `event_date` as `Y-m-d`, while the archive `BETWEEN` compares the ACF storage format `Ymd`.
+
+The same seed must delete retired QA terms `体験` / `大会`. Otherwise the category board is no longer the authored 4 items plus two SP filler cells.
+
+QA collection must measure the label that has a client rect. The card renders the SP label first, and that node is `display: none` on PC, so `.label` alone reports width 0 even when the visible PC label is 90px.
+
+`networkidle` does not settle while the local hot-reload stamp poll is running. Windows classic scrollbars also shrink a requested 375px viewport to a 360px layout box; the harness has to grow the window until the document box is the Figma width. Neither of those is a reason to change Event CSS.
