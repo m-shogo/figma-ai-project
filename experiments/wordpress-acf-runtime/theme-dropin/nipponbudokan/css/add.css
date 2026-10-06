@@ -171,8 +171,8 @@
         }
 
         .gn_lang {
-            width: 120px;
-            height: 40px;
+            width: auto;
+            height: auto;
         }
     }
 }

@@ -557,8 +557,3 @@ body._open-search {
     }
 }
 
-@media screen and (max-width: 767px) {
-    .global_footer .gf_sticky {
-        bottom: calc(64px + env(safe-area-inset-bottom, 0px));
-    }
-}

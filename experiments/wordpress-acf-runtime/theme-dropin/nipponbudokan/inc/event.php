@@ -26,25 +26,20 @@ function nipponbudokan_event_value_present($value)
 }
 
 /**
- * Figma PC contact splits the organizer name from the detail with two spaces
- * and underlines only the name. A single textarea stays the data owner.
- *
- * @return array{name: string, rest: string}
+ * 問合せ先は記事ごとの自由入力。リンクは本文中の a だけ。
+ * 旧プレーンテキストは改行を残して出す。
  */
-function nipponbudokan_event_contact_parts($contact)
+function nipponbudokan_event_contact_html($contact)
 {
-    $contact = (string) $contact;
-    if (!preg_match('/^(.*?)( {2,}[\s\S]*)$/u', $contact, $matches)) {
-        return array('name' => '', 'rest' => $contact);
+    $contact = is_string($contact) ? $contact : '';
+    if (!nipponbudokan_event_value_present($contact)) {
+        return '';
     }
-    if (trim($matches[1]) === '') {
-        return array('name' => '', 'rest' => $contact);
+    if ($contact === wp_strip_all_tags($contact)) {
+        return wp_kses_post(nl2br(esc_html($contact), false));
     }
 
-    return array(
-        'name' => $matches[1],
-        'rest' => $matches[2],
-    );
+    return wp_kses_post($contact);
 }
 
 function nipponbudokan_event_datetime($post_id = 0)
@@ -93,16 +88,28 @@ function nipponbudokan_event_date_short($post_id = 0)
     return wp_date('Y.m.d', $ts);
 }
 
-function nipponbudokan_event_selected_year()
+function nipponbudokan_event_requested_year()
 {
     $year = (int) get_query_var('event_y');
-    return $year > 1970 ? $year : (int) wp_date('Y');
+    return $year > 1970 ? $year : 0;
+}
+
+function nipponbudokan_event_requested_month()
+{
+    $month = (int) get_query_var('event_m');
+    return ($month >= 1 && $month <= 12) ? $month : 0;
+}
+
+function nipponbudokan_event_selected_year()
+{
+    $year = nipponbudokan_event_requested_year();
+    return $year > 0 ? $year : (int) wp_date('Y');
 }
 
 function nipponbudokan_event_selected_month()
 {
-    $month = (int) get_query_var('event_m');
-    return ($month >= 1 && $month <= 12) ? $month : (int) wp_date('n');
+    $month = nipponbudokan_event_requested_month();
+    return $month > 0 ? $month : (int) wp_date('n');
 }
 
 function nipponbudokan_event_archive_url($year, $month, $term = null)
@@ -145,13 +152,15 @@ add_action('pre_get_posts', function ($query) {
     $query->set('orderby', 'meta_value');
     $query->set('order', 'ASC');
 
-    // /event/ 自体も Figma の「選択月」表示と同じ契約にする。
-    // event_y / event_m が無い場合は日本時間の当月へ絞り込む。
+    // /event/ は全件。月の絞り込みは event_y / event_m があるときだけ。
     $month = (int) $query->get('event_m');
+    $year = (int) $query->get('event_y');
+    if (($month < 1 || $month > 12) && $year < 1970) {
+        return;
+    }
     if ($month < 1 || $month > 12) {
         $month = (int) wp_date('n');
     }
-    $year = (int) $query->get('event_y');
     if ($year < 1970) {
         $year = (int) wp_date('Y');
     }
@@ -175,7 +184,34 @@ add_action('pre_get_posts', function ($query) {
 
 add_action('init', function () {
     add_rewrite_rule('^event/([0-9]+)/?$', 'index.php?post_type=event&p=$matches[1]', 'top');
-}, 20);
+    if (get_option('nb_event_cat_rewrite') === 'event/event_cat') {
+        return;
+    }
+    flush_rewrite_rules(false);
+    update_option('nb_event_cat_rewrite', 'event/event_cat', false);
+}, 99);
+
+add_action('template_redirect', function () {
+    if (is_admin()) {
+        return;
+    }
+    $path = wp_parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH);
+    $relative = trim((string) $path, '/');
+    $home_path = trim((string) wp_parse_url(home_url('/'), PHP_URL_PATH), '/');
+    if ($home_path !== '' && ($relative === $home_path || str_starts_with($relative, $home_path . '/'))) {
+        $relative = trim(substr($relative, strlen($home_path)), '/');
+    }
+    if (!preg_match('#^news/event_cat/(.+)$#', $relative, $matches)) {
+        return;
+    }
+    $target = home_url('/event/event_cat/' . $matches[1] . '/');
+    $query = wp_parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_QUERY);
+    if (is_string($query) && $query !== '') {
+        $target .= '?' . $query;
+    }
+    wp_safe_redirect($target, 301);
+    exit;
+});
 
 add_filter('redirect_canonical', function ($redirect_url) {
     if (is_singular('event')) {

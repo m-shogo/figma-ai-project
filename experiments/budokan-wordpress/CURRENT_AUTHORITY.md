@@ -165,13 +165,13 @@ Theme 専用の enqueue・命名は `THEME_RULES.md`。Frontend Standard は Com
 | ブロック 投稿一覧 | `block_post_type`（`post` / `event` / `budo-book` / `shodou-book` / `tankoubon`） / `block_category` / `block_event_cat` / `block_book` / `block_posts_per_page` |
 | ブロック タブ | コンテナは message のみ。パネルは `panel_title` |
 | ブロック スライダー | `slider_items` → `image` / `caption` |
-| 開催イベント | イベント名は投稿タイトル。`post_type`（詳細 / リンク / なし） / `event_date`（開催日） / `event_open_time`（開場時間） / `event_start_time`（開会時間） / `event_contact`（問合せ先）。「リンク」のときだけ `postType_url` / `postType_target` を使用 |
+| 開催イベント | イベント名は投稿タイトル。`post_type`（詳細 / リンク / なし） / `event_date`（開催日） / `event_open_time`（開場時間） / `event_start_time`（開会時間） / `event_contact`（問合せ先・WYSIWYG）。「リンク」のときだけ `postType_url` / `postType_target` を使用。カテゴリは taxonomy `event_cat` を編集画面サイドで選ぶ |
 
 - グローバルナビは WordPress メニュー。旧 `common-menu-01` / `common-submenu-01` は現行 ACF に無い
 - ローカルナビ（Human 2026-09-11 / 2026-09-15）: 外観 → メニューで名前を `ローカル：` で始める（slug は `local-*` に同期）。位置には割り当てない。固定ページ ACF `page_local_nav` の動的一覧にだけ出る（`global-nav` / `mega-nav` / `sub-nav` / `footer-nav` 等の位置割当メニューは除外）。**出すテンプレートはデフォルト `page.php` と `template-form.php` のみ**（1カラム系は出さない）。パンくず上・幅いっぱい・白背景。PC Figma `2108:10846`。SP 専用デザイン無し（非表示）。メニューは**2階層**（1=大会・イベント等のリンク見出し / 2=各ページ）。家族名（武道 振興・普及事業）はメニューに置かない。PC は1階層目を見出し、2階層目を4列で出す。2行リンクがある row は高さを揃え下線をセル下端に揃える。詳細: `LOCAL_NAV_DEPENDENCY_AUDIT.md`
-- CPT `event` + `event_cat` は Theme `inc/custom.php`。**2026-10-02 Human 指示でイベント ACF を更新。** イベント名は投稿タイトル、投稿選択は「詳細 / リンク / なし」、開催日・開場時間・開会時間・問合せ先を使用する。旧 `event_status` / `event_time` / `event_capacity` / `event_fee` / `event_host` は現行イベント表示では使用しない。空項目は出さない。
+- CPT `event` + `event_cat` は Theme `inc/custom.php`。**2026-10-06 Human 指示:** 問合せ先は WYSIWYG。一覧の遷移リンクはタイトルだけ。問合せ先の `<a>` は記事ごとの任意で、あるときだけ下線。カテゴリは `event_cat` をブロックエディタのサイドパネルで選ぶ（ACFでは作らない）。**2026-10-02** の開催日・開場・開会・投稿選択（詳細 / リンク / なし）はそのまま。旧 `event_status` / `event_time` / `event_capacity` / `event_fee` / `event_host` は現行イベント表示では使用しない。空項目は出さない。
 - **イベント一覧 Visual（Human 2026-10-02）:** PC `1619:9554` / SP `2991:11982`。カテゴリ owner は既存 taxonomy `event_cat`（ACFで重複フィールドを作らない）。タブ表示は `全て / 一般 / 武道 / 書道`、1ページ10件、選択月内を開催日昇順。PC は12か月表示、SP は選択月の前月 / 当月 / 翌月の3か月表示。イベント行は1カラムの交互背景で、旧2カラムカードへ戻さない。SPでは日付・曜日・カテゴリを左列、タイトル・時間・問合せ先を右列に置く。
-- **Human 2026-09-24: 武道の一覧・詳細は終了。次の指示があるまで触らない。** 対象は `/publications/budo/back/` と `budo-book` 詳細。最新号は同じ詳細部品（`_budo-detail` / `_budo-body` / `_budo-related` / 総索引）を使うので、指示があるまでまとめて触らない。
+- **Human 2026-09-24: 武道の一覧・詳細は終了。次の指示があるまで触らない。** 対象は `/publications/budo/back/` と `budo-book` 詳細。最新号は同じ詳細部品（`_budo-detail` / `_budo-body` / `_budo-related` / 総索引）を使うので、指示があるまでまとめて触らない。**2026-10-06 の例外:** 月刊武道の `budo_size`（版型）はフィールドと詳細出力から外す。`budo_teiki`（定期購読料）は textarea の改行を `<br>` にする。書写書道の版型・ページ数は残す。
 - **Human 2026-09-25: 単行本の一覧・詳細は終了。次の指示があるまで触らない。** 対象は `/publications/budo/books/` と `tankoubon` 詳細、および `module_publicationBook.css` / `_book-detail.php` / `_book-list-card.php`。
 - Gutenberg ボタンスタイル「小ボタン」= `is-style-small`（Figma btn-02）。wrapper `.small` も互換で残す
 - ブロック スライダーは Human 2026-09-04: `parts2.php` 用に `acf/` へ追加してよい

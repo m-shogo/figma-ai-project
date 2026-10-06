@@ -1,16 +1,18 @@
 <?php
-$year = nipponbudokan_event_selected_year();
-$month = nipponbudokan_event_selected_month();
-$heading = $year . '年' . $month . '月';
+$year = nipponbudokan_event_requested_year() ?: nipponbudokan_event_selected_year();
+$month = nipponbudokan_event_requested_month();
+$heading = $month > 0 ? $year . '年' . $month . '月' : '';
 ?>
 <div class="global_inner _content event_archive_inner">
     <div class="event_archive">
         <?php get_template_part('template-parts/_event-month-nav'); ?>
 
         <div class="ea_board">
-            <div class="ea_toolbar">
-                <h2 class="ea_heading"><?php echo esc_html($heading); ?></h2>
-            </div>
+            <?php if ($heading !== '') : ?>
+                <div class="ea_toolbar">
+                    <h2 class="ea_heading"><?php echo esc_html($heading); ?></h2>
+                </div>
+            <?php endif; ?>
 
             <?php get_template_part('template-parts/_news-tabs', null, array(
                 'context' => 'archive',

@@ -169,17 +169,16 @@
         }
     }
 
-    /* SP: Figma is a 3-column × 2-row grid.
-       Decorative filler cells are emitted by _news-tabs.php so the second row
-       keeps its authored vertical rules without inventing taxonomy entries. */
+    /* SP: 3 columns. Rows grow with the category count.
+       Filler cells in _news-tabs.php complete the last row. */
     .news_tabs_archive .news_tabs_list {
         box-sizing: border-box;
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
-        grid-template-rows: repeat(2, minmax(0, 1fr));
+        grid-auto-rows: 34px;
         gap: 0;
         width: 100%;
-        height: 68px;
+        height: auto;
         margin: 0;
         padding: 0;
         list-style: none;
@@ -202,7 +201,9 @@
         border-top: 1px solid var(--color-text);
     }
 
-    .news_tabs_archive .news_tabs_link {
+    .news_tabs_archive .news_tabs_link,
+    .news_tabs_archive .news_tabs_item:nth-child(3n + 2) .news_tabs_link,
+    .news_tabs_archive .news_tabs_item:nth-child(n + 4) .news_tabs_link {
         box-sizing: border-box;
         display: flex;
         align-items: center;
@@ -378,10 +379,16 @@
         overflow-wrap: anywhere;
     }
 
-    .ea_card_link[href] .ea_title {
-        text-decoration: underline;
-        text-decoration-skip-ink: none;
-        text-underline-position: from-font;
+    .ea_title a {
+        color: inherit;
+        text-decoration: none;
+        background-image: linear-gradient(currentColor, currentColor);
+        background-repeat: no-repeat;
+        background-position: left bottom;
+        background-size: 0 1px;
+        box-decoration-break: clone;
+        -webkit-box-decoration-break: clone;
+        transition: background-size var(--transition-duration);
     }
 
     .ea_meta {
@@ -407,8 +414,15 @@
         overflow-wrap: anywhere;
     }
 
-    .ea_contact {
-        white-space: pre-wrap;
+    .ea_contact p {
+        margin: 0;
+    }
+
+    .ea_contact a {
+        color: inherit;
+        text-decoration: underline;
+        text-decoration-skip-ink: none;
+        text-underline-position: from-font;
     }
 
     .ea_empty {
@@ -467,13 +481,22 @@
             border: 0;
         }
 
-        .news_tabs_archive .news_tabs_link {
+        .news_tabs_archive .news_tabs_link,
+        .news_tabs_archive .news_tabs_item:nth-child(3n + 2) .news_tabs_link,
+        .news_tabs_archive .news_tabs_item:nth-child(n + 4) .news_tabs_link {
             width: 120px;
             height: 48px;
             padding: 16px;
             border: 1px solid var(--color-text);
             border-radius: 3px;
+            background-color: var(--color-secondary);
             line-height: 1;
+        }
+
+        .news_tabs_archive .news_tabs_item.is-active .news_tabs_link {
+            border-color: var(--color-text);
+            background-color: var(--color-text);
+            color: var(--color-secondary);
         }
 
         .news_tabs_item-filler {
@@ -533,16 +556,6 @@
         .ea_titleRow {
             gap: 16px;
         }
-
-        .ea_card_link[href] .ea_title {
-            text-decoration: none;
-        }
-
-        .ea_contact_name {
-            text-decoration: underline;
-            text-decoration-skip-ink: none;
-            text-underline-position: from-font;
-        }
     }
 
     @media (any-hover: hover) {
@@ -562,9 +575,9 @@
             color: var(--color-secondary);
         }
 
-        .ea_card_link[href]:hover .ea_title,
-        .ea_card_link[href]:focus-visible .ea_title {
-            text-decoration: underline;
+        .ea_title a:hover,
+        .ea_title a:focus-visible {
+            background-size: 100% 1px;
         }
     }
 }

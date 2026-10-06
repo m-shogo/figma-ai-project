@@ -353,6 +353,9 @@
 
     .top_news_articles .news_item_link:focus-visible .news_item_title {
         color: var(--color-text);
+    }
+
+    .top_news_articles .news_item_link:focus-visible .news_item_title_line {
         background-size: 100% 1px;
     }
 
@@ -364,6 +367,9 @@
     @media (any-hover: hover) {
         .top_news_articles .news_item_link:hover .news_item_title {
             color: var(--color-text);
+        }
+
+        .top_news_articles .news_item_link:hover .news_item_title_line {
             background-size: 100% 1px;
         }
 

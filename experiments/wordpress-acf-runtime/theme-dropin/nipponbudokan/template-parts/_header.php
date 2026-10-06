@@ -73,7 +73,10 @@
                     </span>
                 </li>
             </ul>
-            <a class="gn_lang" href="<?php echo esc_url(home_url('/en/')); ?>"><span>EN</span></a>
+            <div class="gn_lang notranslate">
+                <p class="gn_lang_label"><span class="icon" aria-hidden="true"></span><span>LANGUAGE</span></p>
+                <?php echo nipponbudokan_language_switch_list('gn_lang_list'); ?>
+            </div>
             <div class="gn_search">
                 <div class="gns_form module_search-01">
                     <form class="ms_from" role="search" method="get" action="<?php echo esc_url(home_url('/')); ?>">
@@ -85,7 +88,14 @@
         </nav>
 
         <div class="gh_buttons">
-            <a class="gh_lang" href="<?php echo esc_url(home_url('/en/')); ?>"><span>EN</span></a>
+            <div class="gh_langWrap notranslate">
+                <button type="button" class="gh_lang" id="gh_lang" aria-expanded="false" aria-controls="gh_langPanel" aria-haspopup="true" aria-label="言語">
+                    <span class="icon" aria-hidden="true"></span>
+                </button>
+                <div class="gh_langPanel" id="gh_langPanel" hidden>
+                    <?php echo nipponbudokan_language_switch_list('gh_langList'); ?>
+                </div>
+            </div>
             <button type="button" class="gh_search" id="gh_search" aria-label="検索" aria-controls="gh_searchPanel" aria-expanded="false">
                 <span class="icon" aria-hidden="true"></span>
             </button>

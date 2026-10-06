@@ -81,7 +81,7 @@ Figma を見て「これは①か②か」が一本に決まらないときは�
 
 - 表紙: アイキャッチ（必要なら `budo_topimg` は TOP 用のまま）
 - 見出し月号: `budo_month` + タイトル
-- キャッチ・紹介・版型/ページ/定価/定期購読: 既存 `budo_size` `budo_page` `budo_price` `budo_teiki` 等。キャッチ文言を新フィールドにしない（現行 Theme は PHP 直書き。Figma と差があれば既存フィールドか本文の外に出さない）
+- キャッチ・紹介・ページ/定価/定期購読: 既存 `budo_page` `budo_price` `budo_teiki` 等。`budo_size`（版型）は 2026-10-06 に月刊武道から外した。キャッチ文言を新フィールドにしない（現行 Theme は PHP 直書き。Figma と差があれば既存フィールドか本文の外に出さない）
 - **ご注文**: テンプレ固定リンク → DIRECTORY_MAP `/publications/budo/order/`（Form は Human）。ACF ボタンにしない
 
 ### ② ブロックエディタ

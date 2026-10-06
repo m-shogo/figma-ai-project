@@ -23,27 +23,6 @@
             "append": ""
         },
         {
-            "key": "field_nbk_budo_size",
-            "label": "版型",
-            "name": "budo_size",
-            "aria-label": "",
-            "type": "text",
-            "instructions": "",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "default_value": "",
-            "maxlength": "",
-            "allow_in_bindings": 1,
-            "placeholder": "",
-            "prepend": "",
-            "append": ""
-        },
-        {
             "key": "field_nbk_budo_page",
             "label": "ページ数",
             "name": "budo_page",
@@ -102,7 +81,7 @@
             "allow_in_bindings": 1,
             "rows": 4,
             "placeholder": "",
-            "new_lines": ""
+            "new_lines": "br"
         },
         {
             "key": "field_nbk_budo_topimg",
@@ -595,5 +574,5 @@
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1789548160
+    "modified": 1791274620
 }

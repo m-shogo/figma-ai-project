@@ -139,8 +139,8 @@
             "label": "問合せ先",
             "name": "event_contact",
             "aria-label": "",
-            "type": "textarea",
-            "instructions": "",
+            "type": "wysiwyg",
+            "instructions": "リンクにする文字だけを選択してリンクを付けてください。電話番号などはリンクの外に書きます。リンクは記事ごとに任意です。",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -149,10 +149,10 @@
                 "id": ""
             },
             "default_value": "",
-            "maxlength": "",
-            "rows": 5,
-            "placeholder": "",
-            "new_lines": "br"
+            "tabs": "all",
+            "toolbar": "basic",
+            "media_upload": 0,
+            "delay": 0
         }
     ],
     "location": [
@@ -176,5 +176,5 @@
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1790937600
+    "modified": 1791302400
 }

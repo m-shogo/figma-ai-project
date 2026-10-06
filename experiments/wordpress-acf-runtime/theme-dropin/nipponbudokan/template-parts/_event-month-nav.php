@@ -1,6 +1,8 @@
 <?php
 $year = nipponbudokan_event_selected_year();
 $month = nipponbudokan_event_selected_month();
+$requested_year = nipponbudokan_event_requested_year();
+$requested_month = nipponbudokan_event_requested_month();
 $term = is_tax('event_cat') ? get_queried_object() : null;
 
 $prev_year_url = nipponbudokan_event_archive_url($year - 1, $month, $term);
@@ -16,7 +18,7 @@ for ($offset = -1; $offset <= 1; $offset++) {
         'year' => $item_year,
         'month' => $item_month,
         'url' => nipponbudokan_event_archive_url($item_year, $item_month, $term),
-        'current' => $offset === 0,
+        'current' => $requested_month > 0 && $item_year === ($requested_year > 0 ? $requested_year : $year) && $item_month === $requested_month,
     );
 }
 ?>
@@ -39,7 +41,7 @@ for ($offset = -1; $offset <= 1; $offset++) {
     <ol class="ea_months ea_months-pc">
         <?php for ($m = 1; $m <= 12; $m++) : ?>
             <li>
-                <a class="ea_month<?php echo $m === $month ? ' is-current' : ''; ?>" href="<?php echo esc_url(nipponbudokan_event_archive_url($year, $m, $term)); ?>">
+                <a class="ea_month<?php echo ($requested_month === $m && ($requested_year === 0 || $requested_year === $year)) ? ' is-current' : ''; ?>" href="<?php echo esc_url(nipponbudokan_event_archive_url($year, $m, $term)); ?>">
                     <?php echo esc_html($m . '月'); ?>
                 </a>
             </li>

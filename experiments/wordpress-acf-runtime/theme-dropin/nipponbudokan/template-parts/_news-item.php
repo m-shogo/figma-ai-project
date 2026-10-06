@@ -50,6 +50,6 @@ $label_style = $label_color !== ''
                 <span class="<?php echo esc_attr(implode(' ', $label_classes)); ?>"<?php if ($label_style !== ''): ?> style="<?php echo esc_attr($label_style); ?>"<?php endif; ?>><?php echo esc_html($category_name); ?></span>
             <?php endif; ?>
         </div>
-        <<?php echo $heading_tag; ?> class="<?php echo esc_attr(implode(' ', $title_classes)); ?>"><?php echo esc_html($title); ?></<?php echo $heading_tag; ?>>
+        <<?php echo $heading_tag; ?> class="<?php echo esc_attr(implode(' ', $title_classes)); ?>"><span class="news_item_title_line"><?php echo esc_html($title); ?></span></<?php echo $heading_tag; ?>>
     </<?php echo $tag_name; ?>>
 </article>

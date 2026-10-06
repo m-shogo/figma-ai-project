@@ -194,7 +194,13 @@ function add_custom_taxonomy()
       'label' => '開催イベントのカテゴリー',
       'singular_label' => '開催イベントのカテゴリー',
       'public' => true,
-      'show_ui' => true
+      'show_ui' => true,
+      'show_in_rest' => true,
+      'rewrite' => array(
+        'slug' => 'event/event_cat',
+        'with_front' => false,
+        'hierarchical' => true,
+      ),
     )
   );
   register_taxonomy(

@@ -88,9 +88,8 @@ $render_upcoming_items = static function ($query) {
         $weekday_index = $timestamp ? (int) wp_date('w', $timestamp) : 0;
         $weekday_labels = array('日', '月', '火', '水', '木', '金', '土');
         $weekday_class = $weekday_index === 0 ? ' is-sun' : ($weekday_index === 6 ? ' is-sat' : '');
-        $item_tag = $href !== '' ? 'a' : 'article';
         ?>
-        <<?php echo $item_tag; ?> class="te_upcoming_item"<?php echo $href !== '' ? ' href="' . esc_url($href) . '"' . (!empty($link_attrs['targetAttr']) ? ' ' . $link_attrs['targetAttr'] : '') : ''; ?>>
+        <article class="te_upcoming_item">
             <div class="te_upcoming_when">
                 <?php if ($timestamp): ?>
                     <p class="te_upcoming_day<?php echo esc_attr($weekday_class); ?>">
@@ -106,15 +105,18 @@ $render_upcoming_items = static function ($query) {
                 <?php endif; ?>
             </div>
             <div class="te_upcoming_body">
-                <h4 class="te_upcoming_title"><?php the_title(); ?></h4>
-                <?php if (function_exists('nipponbudokan_event_value_present') && nipponbudokan_event_value_present($contact)): ?>
-                    <p class="te_upcoming_host"><?php echo wp_kses_post(nl2br(esc_html($contact))); ?></p>
+                <h4 class="te_upcoming_title"><?php if ($href !== '') : ?><a href="<?php echo esc_url($href); ?>"<?php echo !empty($link_attrs['targetAttr']) ? $link_attrs['targetAttr'] : ''; ?>><?php the_title(); ?></a><?php else : ?><?php the_title(); ?><?php endif; ?></h4>
+                <?php if (function_exists('nipponbudokan_event_contact_html')) : ?>
+                    <?php $contact_html = nipponbudokan_event_contact_html($contact); ?>
+                    <?php if ($contact_html !== '') : ?>
+                        <div class="te_upcoming_host"><?php echo $contact_html; ?></div>
+                    <?php endif; ?>
                 <?php endif; ?>
                 <?php if ($external_url !== ''): ?>
                     <p class="te_upcoming_url"><span><?php echo esc_html($external_url); ?></span></p>
                 <?php endif; ?>
             </div>
-        </<?php echo $item_tag; ?>>
+        </article>
         <?php
     }
     wp_reset_postdata();

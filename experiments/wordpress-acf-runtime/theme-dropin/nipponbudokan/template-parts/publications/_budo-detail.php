@@ -11,7 +11,7 @@ if (!$post_id) {
 
 $budo_defaults = array(
     'month_field' => 'budo_month',
-    'size_field' => 'budo_size',
+    'size_field' => '',
     'pages_field' => 'budo_page',
     'price_field' => 'budo_price',
     'subscription_field' => 'budo_teiki',
@@ -26,7 +26,6 @@ $budo_defaults = array(
     'digital_label' => '',
     'back_url' => '',
     'back_label' => 'バックナンバー一覧',
-    'size_label' => '版型',
     'month_format' => 'year',
     'spec_order' => 'budo',
 );
@@ -86,9 +85,6 @@ if (($config['spec_order'] ?? 'budo') === 'shodou') {
 } else {
     if (nbk_acf_value_present($config['publisher'])) {
         $specs[] = array('label' => '編集・発行', 'value' => $config['publisher']);
-    }
-    if (nbk_acf_value_present($size)) {
-        $specs[] = array('label' => $config['size_label'], 'value' => $size);
     }
     if (nbk_acf_value_present($pages)) {
         $specs[] = array('label' => 'ページ数', 'value' => $pages);

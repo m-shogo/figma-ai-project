@@ -15,11 +15,10 @@ $contact = function_exists('get_field') ? get_field('event_contact') : '';
 $has_schedule = nipponbudokan_event_value_present($open_time) || nipponbudokan_event_value_present($start_time);
 $has_meta = $has_schedule || nipponbudokan_event_value_present($contact);
 $has_category = has_term('', 'event_cat', get_the_ID());
-
-$card_tag = $href !== '' ? 'a' : 'div';
+$contact_html = nipponbudokan_event_contact_html($contact);
 ?>
 <article class="ea_card">
-    <<?php echo $card_tag; ?> class="ea_card_link"<?php echo $href !== '' ? ' href="' . esc_url($href) . '"' . (!empty($link_attrs['targetAttr']) ? ' ' . $link_attrs['targetAttr'] : '') : ''; ?>>
+    <div class="ea_card_link">
         <?php if ($timestamp || $has_category) : ?>
             <div class="ea_day">
                 <?php if ($timestamp) : ?>
@@ -47,7 +46,7 @@ $card_tag = $href !== '' ? 'a' : 'div';
                     </div>
                 <?php endif; ?>
 
-                <h2 class="ea_title"><?php the_title(); ?></h2>
+                <h2 class="ea_title"><?php if ($href !== '') : ?><a href="<?php echo esc_url($href); ?>"<?php echo !empty($link_attrs['targetAttr']) ? $link_attrs['targetAttr'] : ''; ?>><?php the_title(); ?></a><?php else : ?><?php the_title(); ?><?php endif; ?></h2>
             </div>
 
             <?php if ($has_meta) : ?>
@@ -66,18 +65,11 @@ $card_tag = $href !== '' ? 'a' : 'div';
                         </p>
                     <?php endif; ?>
 
-                    <?php if (nipponbudokan_event_value_present($contact)) : ?>
-                        <?php $contact_parts = nipponbudokan_event_contact_parts($contact); ?>
-                        <p class="ea_meta_row ea_contact"><?php
-                        if ($contact_parts['name'] !== '') {
-                            echo '<span class="ea_contact_name">' . esc_html($contact_parts['name']) . '</span>' . esc_html($contact_parts['rest']);
-                        } else {
-                            echo esc_html($contact);
-                        }
-                        ?></p>
+                    <?php if ($contact_html !== '') : ?>
+                        <div class="ea_meta_row ea_contact"><?php echo $contact_html; ?></div>
                     <?php endif; ?>
                 </div>
             <?php endif; ?>
         </div>
-    </<?php echo $card_tag; ?>>
+    </div>
 </article>
