@@ -32,6 +32,29 @@
         return lines;
     }
 
+    function restoreSource(element) {
+        if (element.dataset.titleSource == null) {
+            element.dataset.titleSource = element.innerHTML;
+        }
+        element.classList.remove('is-multiline');
+        element.innerHTML = element.dataset.titleSource;
+    }
+
+    function hardLines(element) {
+        const lines = [];
+        let current = '';
+        Array.from(element.childNodes).forEach(function (node) {
+            if (node.nodeName === 'BR') {
+                lines.push(current);
+                current = '';
+                return;
+            }
+            current += node.textContent || '';
+        });
+        lines.push(current);
+        return lines;
+    }
+
     function ownerWidth(element) {
         const owner = element.closest('.news_item_link, .ea_body, .te_upcoming_body') || element.parentElement;
         return Math.round(owner.getBoundingClientRect().width);
@@ -43,12 +66,8 @@
             return;
         }
 
-        const text = element.dataset.titleSource != null ? element.dataset.titleSource : element.textContent;
-        element.dataset.titleSource = text;
-        element.classList.remove('is-multiline');
-        element.replaceChildren(document.createTextNode(text));
-
-        const lines = measureLines(element).filter(function (line) {
+        restoreSource(element);
+        const lines = (element.querySelector('br') ? hardLines(element) : measureLines(element)).filter(function (line) {
             return line !== '';
         });
         element.dataset.titleWidth = String(width);

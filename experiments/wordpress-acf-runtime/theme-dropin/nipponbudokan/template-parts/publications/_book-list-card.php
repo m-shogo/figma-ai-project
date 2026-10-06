@@ -24,13 +24,13 @@ $is_featured = !empty($args['featured']);
     <?php endif; ?>
         <?php if ($thumbnail_id) : ?>
             <span class="publication_book-cardCover">
-                <?php echo wp_get_attachment_image($thumbnail_id, 'full', false, array('alt' => get_post_meta($thumbnail_id, '_wp_attachment_image_alt', true) ?: $title)); ?>
+                <?php echo wp_get_attachment_image($thumbnail_id, 'full', false, array('alt' => get_post_meta($thumbnail_id, '_wp_attachment_image_alt', true) ?: nbk_title_plain($title))); ?>
             </span>
         <?php endif; ?>
 
         <span class="publication_book-cardBody<?php echo !$thumbnail_id ? ' _noImage' : ''; ?>">
             <?php if (nbk_acf_value_present($title)) : ?>
-                <span class="publication_book-cardTitle"><?php echo esc_html($title); ?></span>
+                <span class="publication_book-cardTitle"><?php echo nbk_title_html($title); ?></span>
             <?php endif; ?>
 
             <?php if (nbk_acf_value_present($author)) : ?>

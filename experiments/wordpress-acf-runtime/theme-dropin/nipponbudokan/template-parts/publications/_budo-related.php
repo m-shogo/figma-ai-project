@@ -45,9 +45,9 @@ if (!$related->have_posts()) {
             } else {
                 $related_label = $related_month !== '' ? $related_month : get_the_title($related_id);
             }
-            $alt = get_post_meta($thumb_id, '_wp_attachment_image_alt', true) ?: $related_label;
+            $alt = get_post_meta($thumb_id, '_wp_attachment_image_alt', true) ?: nbk_title_plain($related_label);
             ?>
-            <a class="publication_budo-coverLink" href="<?php echo esc_url(get_permalink($related_id)); ?>" aria-label="<?php echo esc_attr($related_label); ?>">
+            <a class="publication_budo-coverLink" href="<?php echo esc_url(get_permalink($related_id)); ?>" aria-label="<?php echo esc_attr(nbk_title_plain($related_label)); ?>">
                 <?php echo wp_get_attachment_image($thumb_id, 'full', false, array('alt' => $alt)); ?>
             </a>
         <?php endwhile; ?>

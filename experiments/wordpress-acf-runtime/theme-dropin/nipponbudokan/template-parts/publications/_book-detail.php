@@ -25,14 +25,14 @@ $amazon_url = get_field('amazon', $post_id);
     </div>
 
     <?php if (nbk_acf_value_present($title)) : ?>
-        <h1 class="publication_book-heading"><?php echo esc_html($title); ?></h1>
+        <h1 class="publication_book-heading"><?php echo nbk_title_html($title); ?></h1>
     <?php endif; ?>
 
     <?php if ($thumbnail_id || nbk_acf_value_present($author) || nbk_acf_value_present($description) || nbk_acf_value_present($book_info) || nbk_acf_value_present($price)) : ?>
         <div class="publication_book-summary<?php echo !$thumbnail_id ? ' _noImage' : ''; ?>">
             <?php if ($thumbnail_id) : ?>
                 <figure class="publication_book-cover">
-                    <?php echo wp_get_attachment_image($thumbnail_id, 'full', false, array('alt' => get_post_meta($thumbnail_id, '_wp_attachment_image_alt', true) ?: $title)); ?>
+                    <?php echo wp_get_attachment_image($thumbnail_id, 'full', false, array('alt' => get_post_meta($thumbnail_id, '_wp_attachment_image_alt', true) ?: nbk_title_plain($title))); ?>
                 </figure>
             <?php endif; ?>
 

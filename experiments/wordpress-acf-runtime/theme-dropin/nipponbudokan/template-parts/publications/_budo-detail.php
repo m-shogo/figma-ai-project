@@ -99,7 +99,7 @@ if (($config['spec_order'] ?? 'budo') === 'shodou') {
 ?>
 <div class="block-editor_wrap publication_budo-head">
     <?php if ($heading !== '') : ?>
-        <h2 class="wp-block-heading publication_budo-title"><?php echo esc_html($heading); ?></h2>
+        <h2 class="wp-block-heading publication_budo-title"><?php echo nbk_title_html($heading); ?></h2>
     <?php endif; ?>
 
     <div class="publication_budo-summary<?php echo !$thumbnail_id ? ' _noImage' : ''; ?>">
@@ -107,7 +107,7 @@ if (($config['spec_order'] ?? 'budo') === 'shodou') {
             <div class="publication_budo-coverCol">
                 <?php if ($thumbnail_id) : ?>
                     <figure class="publication_budo-cover">
-                        <?php echo wp_get_attachment_image($thumbnail_id, 'full', false, array('alt' => get_post_meta($thumbnail_id, '_wp_attachment_image_alt', true) ?: $title)); ?>
+                        <?php echo wp_get_attachment_image($thumbnail_id, 'full', false, array('alt' => get_post_meta($thumbnail_id, '_wp_attachment_image_alt', true) ?: nbk_title_plain($title))); ?>
                     </figure>
                 <?php endif; ?>
                 <?php if (nbk_acf_value_present($config['sale_label'])) : ?>

@@ -46,18 +46,19 @@ if (is_array($rensai_list)) {
         );
     }
 }
+$valid_rensai = array_slice($valid_rensai, 0, 5);
 ?>
 <article class="publication_budo-backItem<?php echo !$thumbnail_id ? ' _noImage' : ''; ?>">
     <?php if ($heading !== '') : ?>
         <header class="publication_budo-backHeader">
-            <h2 class="publication_budo-backTitle"><?php echo esc_html($heading); ?></h2>
+            <h2 class="publication_budo-backTitle"><?php echo nbk_title_html($heading); ?></h2>
         </header>
     <?php endif; ?>
 
     <div class="publication_budo-backBody<?php echo !$thumbnail_id ? ' _noImage' : ''; ?>">
         <?php if ($thumbnail_id) : ?>
             <figure class="publication_budo-backCover">
-                <?php echo wp_get_attachment_image($thumbnail_id, 'full', false, array('alt' => get_post_meta($thumbnail_id, '_wp_attachment_image_alt', true) ?: $title)); ?>
+                <?php echo wp_get_attachment_image($thumbnail_id, 'full', false, array('alt' => get_post_meta($thumbnail_id, '_wp_attachment_image_alt', true) ?: nbk_title_plain($title))); ?>
             </figure>
         <?php endif; ?>
 
@@ -67,7 +68,7 @@ if (is_array($rensai_list)) {
                     <?php foreach ($valid_rensai as $row) : ?>
                         <li>
                             <?php if ($row['pdf'] !== '') : ?>
-                                <a href="<?php echo esc_url($row['pdf']); ?>"><?php echo esc_html($row['name']); ?></a>
+                                <a href="<?php echo esc_url($row['pdf']); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html($row['name']); ?></a>
                             <?php else : ?>
                                 <span><?php echo esc_html($row['name']); ?></span>
                             <?php endif; ?>

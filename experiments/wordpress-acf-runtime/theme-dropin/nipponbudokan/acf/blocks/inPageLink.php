@@ -30,7 +30,7 @@ if ($count > 1) {
             ?>
             <li class="inPageLink">
                 <a href="#<?php echo esc_attr($id); ?>">
-                    <div class="title"><?php echo nl2br(esc_html($title)); ?></div>
+                    <div class="title"><?php echo nbk_title_html(nl2br((string) $title)); ?></div>
                 </a>
             </li>
         <?php endforeach; ?>

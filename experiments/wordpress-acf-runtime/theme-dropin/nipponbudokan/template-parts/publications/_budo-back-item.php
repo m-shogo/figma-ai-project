@@ -20,7 +20,7 @@ $heading = nbk_publication_month_heading($post_id, $month, '月刊「武道」')
 <article class="publication_budo-backItem<?php echo !$thumbnail_id ? ' _noImage' : ''; ?>">
     <?php if ($heading !== '') : ?>
         <header class="publication_budo-backHeader">
-            <h2 class="publication_budo-backTitle"><?php echo esc_html($heading); ?></h2>
+            <h2 class="publication_budo-backTitle"><?php echo nbk_title_html($heading); ?></h2>
             <a class="publication_budo-backOrder" href="<?php echo esc_url(home_url('/publications/budo/books/form-order/')); ?>">
                 <span>ご注文</span>
             </a>
@@ -30,7 +30,7 @@ $heading = nbk_publication_month_heading($post_id, $month, '月刊「武道」')
     <div class="publication_budo-backBody<?php echo !$thumbnail_id ? ' _noImage' : ''; ?>">
         <?php if ($thumbnail_id) : ?>
             <figure class="publication_budo-backCover">
-                <?php echo wp_get_attachment_image($thumbnail_id, 'full', false, array('alt' => get_post_meta($thumbnail_id, '_wp_attachment_image_alt', true) ?: $title)); ?>
+                <?php echo wp_get_attachment_image($thumbnail_id, 'full', false, array('alt' => get_post_meta($thumbnail_id, '_wp_attachment_image_alt', true) ?: nbk_title_plain($title))); ?>
             </figure>
         <?php endif; ?>
 

@@ -44,9 +44,9 @@ $is_fixed_page_visual = !empty($page_img);
             ?>
             <div class="gm_background" style="background-image: url(<?php echo esc_url($img_url); ?>)"></div>
             <?php if (!is_single()): ?>
-                <h1 class="gm_title"><span><?php echo esc_html($archive_heading); ?></span></h1>
+                <h1 class="gm_title"><span><?php echo nbk_title_html($archive_heading); ?></span></h1>
             <?php else: ?>
-                <p class="gm_title"><span><?php echo esc_html($archive_heading); ?></span></p>
+                <p class="gm_title"><span><?php echo nbk_title_html($archive_heading); ?></span></p>
             <?php endif; ?>
         <?php elseif (is_404()): //404 
         ?>

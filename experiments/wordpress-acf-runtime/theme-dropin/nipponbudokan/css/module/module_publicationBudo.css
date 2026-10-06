@@ -233,6 +233,10 @@
     color: var(--color-accent);
 }
 
+.publication_shodou-backCopy .publication_shodou-rensaiList a::before {
+    content: var(--icon-blank);
+}
+
 .publication_shodou-contact {
     display: flex;
     flex-direction: column;

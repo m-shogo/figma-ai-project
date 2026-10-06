@@ -359,6 +359,28 @@ function my_body_id()
   echo ($body_id) ? 'id="' . $body_id . '"' : '';
 }
 
+function nbk_title_html($title)
+{
+    return wp_kses((string) $title, array(
+        'br' => array(),
+    ));
+}
+
+function nbk_title_plain($title)
+{
+    $text = preg_replace('/<br\s*\/?>/i', ' ', (string) $title);
+    $text = wp_strip_all_tags((string) $text);
+    $text = html_entity_decode($text, ENT_QUOTES, 'UTF-8');
+    return trim((string) preg_replace('/\s+/u', ' ', $text));
+}
+
+add_filter('document_title_parts', function ($parts) {
+    if (isset($parts['title'])) {
+        $parts['title'] = nbk_title_plain($parts['title']);
+    }
+    return $parts;
+});
+
 // ==========================================================================
 // echo get_archive_title(); 余計な文字を削除
 // https://wemo.tech/1161

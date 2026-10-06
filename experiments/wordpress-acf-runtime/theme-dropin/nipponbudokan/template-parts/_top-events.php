@@ -191,7 +191,7 @@ $render_upcoming_items = static function ($query) {
                                         </p>
                                     <?php endif; ?>
                                     <?php if ($title !== ''): ?>
-                                        <h3 class="te_card_title"><?php echo esc_html($title); ?></h3>
+                                        <h3 class="te_card_title"><?php echo nbk_title_html($title); ?></h3>
                                     <?php endif; ?>
                                     <?php if ($date_html !== ''): ?>
                                         <p class="te_card_date"><span class="te_card_date_label">開催日</span><?php echo $date_html; ?></p>

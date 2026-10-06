@@ -27,7 +27,7 @@
                     <?php endif; ?>
                     <div class="content">
                         <?php if ($title) : ?>
-                            <h2 class="title"><?php echo nl2br(esc_html($title)); ?></h2>
+                            <h2 class="title"><?php echo nbk_title_html(nl2br((string) $title)); ?></h2>
                         <?php endif; ?>
                         <?php if ($text) : ?>
                             <div class="text"><?php echo nl2br(esc_html($text)); ?></div>

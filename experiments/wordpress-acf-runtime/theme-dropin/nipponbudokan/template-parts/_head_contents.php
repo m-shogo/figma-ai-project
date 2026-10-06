@@ -59,10 +59,10 @@ if (is_singular() && $post && !$page_acf_description) {
     }
 }
 ?>
-<title><?php echo esc_html($display_title); ?></title>
-<meta name="title" content="<?php echo esc_attr($display_title); ?>">
+<title><?php echo esc_html(nbk_title_plain($display_title)); ?></title>
+<meta name="title" content="<?php echo esc_attr(nbk_title_plain($display_title)); ?>">
 <meta name="description" content="<?php echo esc_attr($display_description); ?>">
-<meta itemprop="name" content="<?php echo esc_attr($display_title); ?>">
+<meta itemprop="name" content="<?php echo esc_attr(nbk_title_plain($display_title)); ?>">
 <meta itemprop="description" content="<?php echo esc_attr($display_description); ?>">
 
 <script>

@@ -14,7 +14,7 @@
             ?>
             <?php if ($img) : ?>
                 <div class="image">
-                    <img src="<?php echo $thumb[0]; ?>" alt="<?php the_title_attribute(); ?>" width="360" height="240" loading="lazy">
+                    <img src="<?php echo $thumb[0]; ?>" alt="<?php echo esc_attr(nbk_title_plain(get_the_title())); ?>" width="360" height="240" loading="lazy">
                 </div>
             <?php else : ?>
                 <div class="image _noImage">

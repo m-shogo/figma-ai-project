@@ -120,7 +120,7 @@ switch ($post_type) {
                 }
                 echo '<figure class="wp-block-image">';
                 echo '<a href="' . esc_url(get_permalink()) . '">';
-                the_post_thumbnail('large', array('alt' => get_the_title()));
+                the_post_thumbnail('large', array('alt' => nbk_title_plain(get_the_title())));
                 echo '</a>';
                 echo '</figure>';
             }

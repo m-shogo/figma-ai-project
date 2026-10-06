@@ -35,10 +35,10 @@ class BreadcrumbTrail
 
       if ($item['url']) {
         $html .= '<a itemscope itemtype="https://schema.org/Thing" itemprop="item" itemid="' . esc_url($item['url']) . '" href="' . esc_url($item['url']) . '">';
-        $html .= '<span itemprop="name">' . esc_html($item['name']) . '</span>';
+        $html .= '<span itemprop="name">' . esc_html(nbk_title_plain($item['name'])) . '</span>';
         $html .= '</a>';
       } else {
-        $html .= '<span itemprop="name">' . esc_html($item['name']) . '</span>';
+        $html .= '<span itemprop="name">' . esc_html(nbk_title_plain($item['name'])) . '</span>';
       }
 
       $html .= '<meta itemprop="position" content="' . $item['position'] . '" />';
