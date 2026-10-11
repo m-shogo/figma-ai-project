@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-10-10T09:53:56+00:00",
+  "updated_at": "2026-10-11T10:03:51+00:00",
   "fingerprints": {
     "figma-release-notes": "9b4b613e442c6bc2bf6b4c93233efb925db4da88585f7d7173d751eb326c2a86",
     "figma-auto-layout-current": "6aa0c637a9f86321a1db061e49edaf386a18cde066f037caaf1dabcf5482eb6e",
@@ -26,10 +26,10 @@
     "lighthouse-ci-releases": "5cd178cff75b4eea6878530d6e489104ed1348fc6c5466d464a982eb767a03dc",
     "svgo-releases": "84d12299ec1df40268307327551bbaff33fb8dd51151020ed55ab3515d82ec86",
     "web-features-releases": "cc795013961a9d9b07c47cbb71e58621ce44be8c8518cb104ea8265202e4869b",
-    "mdn-browser-compat-data-releases": "57e97e015b5e982ee5cbab391013e8ba38f37917950f981ec2330b59885f09dc",
+    "mdn-browser-compat-data-releases": "8a3aaecdb46fd47fe5e1c95edc0db7a991548a3412d60afe0650618e185094e3",
     "w3c-wai-news": "1b6c3e0569321eaab8a2eb2b67bdac7c893316cec1ab742511f9abb59c262d28",
     "design-tokens-spec": "e7526f9a4360fd590555d5b3a1107042f18a6ace66a09cbbfd266f86621266fb",
-    "style-dictionary-releases": "f7af475fbe351a27bbbe8ff05c8383414261243770752cb484c90e76d298f378",
+    "style-dictionary-releases": "ae610468a84d22c350e7df3e201fe83cb5ac7546139f0dcf9779cb41fb84d790",
     "wordpress-releases": "b28ec1e81c4997cc83040d53fcbd67873f7333db66a0b5399994d9dea6a52085",
     "wordpress-developer-news": "702198317a214d6c380da2e8510fb30039b8e52c76c18985f56e647231ccdcf1",
     "wordpress-wp-env": "a21722fe3fc6dede642c78ae2f3e004734eeb3d0d790fa261c08eabcc544ce18",
