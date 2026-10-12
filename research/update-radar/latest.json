@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-11T10:03:51+00:00",
+  "generated_at": "2026-10-12T10:55:14+00:00",
   "company_policy": {
     "path": "",
     "policy_id": "",
@@ -25,7 +25,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://www.figma.com/release-notes/",
-      "fetched_at": "2026-10-11T10:03:34+00:00",
+      "fetched_at": "2026-10-12T10:54:55+00:00",
       "fingerprint": "9b4b613e442c6bc2bf6b4c93233efb925db4da88585f7d7173d751eb326c2a86",
       "title": "Figma product news and release notes",
       "items": [],
@@ -80,7 +80,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://help.figma.com/hc/en-us/articles/360040451373-Guide-to-auto-layout",
-      "fetched_at": "2026-10-11T10:03:34+00:00",
+      "fetched_at": "2026-10-12T10:54:55+00:00",
       "fingerprint": "6aa0c637a9f86321a1db061e49edaf386a18cde066f037caaf1dabcf5482eb6e",
       "title": "Guide to auto layout in Figma – Figma Learn - Help Center",
       "items": [],
@@ -127,7 +127,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://help.figma.com/hc/en-us/articles/42031586813719-Use-auto-layout-with-CSS-Flexbox-in-mind",
-      "fetched_at": "2026-10-11T10:03:35+00:00",
+      "fetched_at": "2026-10-12T10:54:56+00:00",
       "fingerprint": "473a484f3c46731f98dfceb968be50a240ccaf3fe10d421049a01b3f92801654",
       "title": "Use auto layout with CSS Flexbox in mind – Figma Learn - Help Center",
       "items": [],
@@ -171,7 +171,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://help.figma.com/hc/en-us/articles/31289469907863-Use-the-grid-auto-layout-flow",
-      "fetched_at": "2026-10-11T10:03:35+00:00",
+      "fetched_at": "2026-10-12T10:54:56+00:00",
       "fingerprint": "70fbc66f4444be005c5203f77549ff2a65c2e01d05ae911ec15773a5e6bfb201",
       "title": "Use the grid auto layout flow – Figma Learn - Help Center",
       "items": [],
@@ -217,7 +217,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://help.figma.com/hc/en-us/articles/360039956634-Explore-text-properties",
-      "fetched_at": "2026-10-11T10:03:36+00:00",
+      "fetched_at": "2026-10-12T10:54:56+00:00",
       "fingerprint": "11a346ec6e477a97357df666f65cbb9683a7672645eb562c9e7262389e9c9888",
       "title": "Explore text properties – Figma Learn - Help Center",
       "items": [],
@@ -263,7 +263,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://help.figma.com/hc/en-us/articles/13402894554519-Export-formats-and-settings",
-      "fetched_at": "2026-10-11T10:03:36+00:00",
+      "fetched_at": "2026-10-12T10:54:56+00:00",
       "fingerprint": "755ecf3b4213c87c4d710c86df15b92e995a84d93bf92f897e28aa250ab673f9",
       "title": "Export formats and settings for static designs – Figma Learn - Help Center",
       "items": [],
@@ -313,7 +313,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://help.figma.com/hc/en-us/articles/360040675194-Crop-an-image",
-      "fetched_at": "2026-10-11T10:03:36+00:00",
+      "fetched_at": "2026-10-12T10:54:57+00:00",
       "fingerprint": "4fb9ebee824365b96efbaa960ea33659810f61ff7cca3da2d0465597599f4632",
       "title": "Crop an image – Figma Learn - Help Center",
       "items": [],
@@ -357,7 +357,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://help.figma.com/hc/en-us/articles/27882809912471-Variables-in-Dev-Mode",
-      "fetched_at": "2026-10-11T10:03:37+00:00",
+      "fetched_at": "2026-10-12T10:54:57+00:00",
       "fingerprint": "34233ed673437c4cdeb4c81ec6d91ed46c6f46d0c676fa362a86d921cdfe2c12",
       "title": "Variables in Dev Mode – Figma Learn - Help Center",
       "items": [],
@@ -400,7 +400,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://developers.figma.com/docs/figma-mcp-server/",
-      "fetched_at": "2026-10-11T10:03:37+00:00",
+      "fetched_at": "2026-10-12T10:54:57+00:00",
       "fingerprint": "88d81f48e804225baa40831a68e1f1b80e538bb787714d34fcee64aff3b48c48",
       "title": "Introduction | Developer Docs",
       "items": [],
@@ -441,7 +441,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://developers.figma.com/docs/figma-mcp-server/tools-and-prompts/",
-      "fetched_at": "2026-10-11T10:03:37+00:00",
+      "fetched_at": "2026-10-12T10:54:57+00:00",
       "fingerprint": "5a9efc7e670343d89f6712b8e34572362c4d8bb9e583b01f13c3514b8d9f313f",
       "title": "Tools and prompts | Developer Docs",
       "items": [],
@@ -490,7 +490,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/figma/code-connect/releases?per_page=12",
-      "fetched_at": "2026-10-11T10:03:37+00:00",
+      "fetched_at": "2026-10-12T10:54:57+00:00",
       "fingerprint": "11bdf81fbe7299b57c8480f4da73254c9583c72cc547b6ab25b074bc70c7f1e5",
       "title": "Code Connect 2.0.1",
       "items": [
@@ -648,7 +648,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/modelcontextprotocol/modelcontextprotocol/releases?per_page=12",
-      "fetched_at": "2026-10-11T10:03:38+00:00",
+      "fetched_at": "2026-10-12T10:54:58+00:00",
       "fingerprint": "98a021f7b460f9a3980efeb31c5af68395d6c2beaa5c809f0bd640ab3c83d210",
       "title": "2026-07-28",
       "items": [
@@ -768,7 +768,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://modelcontextprotocol.io/specification/latest",
-      "fetched_at": "2026-10-11T10:03:38+00:00",
+      "fetched_at": "2026-10-12T10:54:58+00:00",
       "fingerprint": "cd9f9559ca7036c6cfd70de8280393d15f885191ca4002067eb2d3d462207d98",
       "title": "Specification - Model Context Protocol",
       "items": [],
@@ -802,7 +802,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://openai.com/products/release-notes/",
-      "fetched_at": "2026-10-11T10:03:39+00:00",
+      "fetched_at": "2026-10-12T10:54:59+00:00",
       "fingerprint": "",
       "title": "",
       "items": [],
@@ -835,7 +835,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://help.openai.com/en/articles/11428266-codex-changelog/",
-      "fetched_at": "2026-10-11T10:03:39+00:00",
+      "fetched_at": "2026-10-12T10:54:59+00:00",
       "fingerprint": "",
       "title": "",
       "items": [],
@@ -864,7 +864,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/anthropics/claude-code/releases?per_page=12",
-      "fetched_at": "2026-10-11T10:03:39+00:00",
+      "fetched_at": "2026-10-12T10:54:59+00:00",
       "fingerprint": "e2915f52bb757a3870f71de2f5766a113617d6db4c908aaae9140c9164bcf6f6",
       "title": "v2.1.296",
       "items": [
@@ -1018,7 +1018,7 @@
       "authority": "OFFICIAL",
       "kind": "XML_FEED",
       "url": "https://raw.githubusercontent.com/anthropics/claude-code/main/feed.xml",
-      "fetched_at": "2026-10-11T10:03:40+00:00",
+      "fetched_at": "2026-10-12T10:55:00+00:00",
       "fingerprint": "0d520c583fbfe9c495d74d75435706a2409e5f842087d120cdb4e2adb0e52373",
       "title": "Claude Code v2.1.296",
       "items": [
@@ -1124,7 +1124,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://cursor.com/changelog",
-      "fetched_at": "2026-10-11T10:03:40+00:00",
+      "fetched_at": "2026-10-12T10:55:00+00:00",
       "fingerprint": "453d2c856127563a8ec30722ae4f76b39057c8f1bb70ecc668b2d90bb8c6117f",
       "title": "What's New in Cursor — Latest Updates & Release Notes",
       "items": [],
@@ -1171,7 +1171,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/microsoft/playwright/releases?per_page=12",
-      "fetched_at": "2026-10-11T10:03:40+00:00",
+      "fetched_at": "2026-10-12T10:55:01+00:00",
       "fingerprint": "022d9c5ad0b5789dd50dbd607b0304d8aba2534fc275244e52ad2f0ef0ecf019",
       "title": "v1.64.0",
       "items": [
@@ -1331,7 +1331,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/storybookjs/storybook/releases?per_page=12",
-      "fetched_at": "2026-10-11T10:03:41+00:00",
+      "fetched_at": "2026-10-12T10:55:01+00:00",
       "fingerprint": "277f8f84c5ae00d6416bae5382838d570e2fb2ce29ce5b36946e9b1fdcd87a5d",
       "title": "v11.0.0-alpha.5",
       "items": [
@@ -1483,7 +1483,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/browserslist/browserslist/releases?per_page=12",
-      "fetched_at": "2026-10-11T10:03:41+00:00",
+      "fetched_at": "2026-10-12T10:55:02+00:00",
       "fingerprint": "0267a45330aec86b30a874488e1e64fea96a068b821a0f06961a12f392cc8394",
       "title": "4.29.3",
       "items": [
@@ -1627,7 +1627,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/stylelint/stylelint/releases?per_page=12",
-      "fetched_at": "2026-10-11T10:03:42+00:00",
+      "fetched_at": "2026-10-12T10:55:02+00:00",
       "fingerprint": "74ecc0a3e7bf21a991bff89313f35a50d42e2781959d858d696271915b60b5a3",
       "title": "17.16.0",
       "items": [
@@ -1780,7 +1780,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/dequelabs/axe-core/releases?per_page=12",
-      "fetched_at": "2026-10-11T10:03:42+00:00",
+      "fetched_at": "2026-10-12T10:55:03+00:00",
       "fingerprint": "ee7485148047a95e830154aa39c5dee8ab309b0521c6e4d1139d53f5888c54c1",
       "title": "Release 4.14.0",
       "items": [
@@ -1930,7 +1930,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/GoogleChrome/lighthouse-ci/releases?per_page=12",
-      "fetched_at": "2026-10-11T10:03:43+00:00",
+      "fetched_at": "2026-10-12T10:55:04+00:00",
       "fingerprint": "5cd178cff75b4eea6878530d6e489104ed1348fc6c5466d464a982eb767a03dc",
       "title": "v0.15.1",
       "items": [
@@ -2079,7 +2079,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/svg/svgo/releases?per_page=12",
-      "fetched_at": "2026-10-11T10:03:43+00:00",
+      "fetched_at": "2026-10-12T10:55:04+00:00",
       "fingerprint": "84d12299ec1df40268307327551bbaff33fb8dd51151020ed55ab3515d82ec86",
       "title": "v4.1.0",
       "items": [
@@ -2224,10 +2224,19 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/web-platform-dx/web-features/releases?per_page=12",
-      "fetched_at": "2026-10-11T10:03:44+00:00",
-      "fingerprint": "cc795013961a9d9b07c47cbb71e58621ce44be8c8518cb104ea8265202e4869b",
-      "title": "v3.42.0",
+      "fetched_at": "2026-10-12T10:55:05+00:00",
+      "fingerprint": "45207f88a1abecc185ef17e2117b7f11673171791b58720d5f3549ba8e89d29e",
+      "title": "web-features@next",
       "items": [
+        {
+          "id": "191403881",
+          "name": "web-features@next",
+          "tag": "next",
+          "published_at": "2026-10-12T10:38:35Z",
+          "prerelease": true,
+          "url": "https://github.com/web-platform-dx/web-features/releases/tag/next",
+          "summary": "This is a continuously-updated prerelease generated from `main` (currently at 9660ca9)."
+        },
         {
           "id": "407923146",
           "name": "v3.42.0",
@@ -2236,15 +2245,6 @@
           "prerelease": false,
           "url": "https://github.com/web-platform-dx/web-features/releases/tag/v3.42.0",
           "summary": "## What's New * To improve the accuracy of status calculations, multiple features may share `@mdn/browser-compat-data` (BCD) keys. In this release, both the `audio` and `video` features reference `api.HTMLMediaElement` and descendant keys. This relaxes an undocumented constraint on feature definitions and browser compatibility data. Previously, BCD keys were associated with only one feature entry at a time. ## What's Changed * Allow overlapping compat keys by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4034 **Full Changelog**: https://github.com/web-platform-dx/web-features/compare/v3.41.0...v3.42.0 Subscribe to the [Upcoming changes](https://github.com/web-platform-dx/web-features/discussions/2613) announcements thread for news about upcoming releases, such as breaking changes or major features."
-        },
-        {
-          "id": "191403881",
-          "name": "web-features@next",
-          "tag": "next",
-          "published_at": "2026-10-09T14:29:52Z",
-          "prerelease": true,
-          "url": "https://github.com/web-platform-dx/web-features/releases/tag/next",
-          "summary": "This is a continuously-updated prerelease generated from `main` (currently at 98723fd)."
         },
         {
           "id": "407018691",
@@ -2337,7 +2337,7 @@
           "summary": "## What's New * Status changes: * Baseline widely available: `array-fromasync`, `avif` ## What's Changed * Bump @mdn/browser-compat-data from 8.0.8 to 8.0.9 by @dependabot[bot] in https://github.com/web-platform-dx/web-features/pull/4218 **Full Changelog**: https://github.com/web-platform-dx/web-features/compare/v3.34.2...v3.34.3 Subscribe to the [Upcoming changes](https://github.com/web-platform-dx/web-features/discussions/2613) announcements thread for news about upcoming releases, such as breaking changes or major features."
         }
       ],
-      "excerpt": "v3.42.0 ## What's New * To improve the accuracy of status calculations, multiple features may share `@mdn/browser-compat-data` (BCD) keys. In this release, both the `audio` and `video` features reference `api.HTMLMediaElement` and descendant keys. This relaxes an undocumented constraint on feature definitions and browser compatibility data. Previously, BCD keys were associated with only one feature entry at a time. ## What's Changed * Allow overlapping compat keys by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4034 **Full Changelog**: https://github.com/web-platform-dx/web-features/compare/v3.41.0...v3.42.0 Subscribe to the [Upcoming changes](https://github.com/web-platform-dx/web-features/discussions/2613) announcements thread for news about upcoming releases, such as breaking changes or major features. web-features@next This is a continuously-updated prerelease generated from `main` (currently at 98723fd). v3.41.0 ## What's Upcoming * In an October release, web-features will relax a constraint on feature entries, such that `@mdn/browser-compat-data` keys may appear in more than one feature at a time. See https://github.com/web-platform-dx/web-features/discussions/2613#discussioncomment-17075566 for more information. ## What's New * 10 features: `animations-css-animation-accessors`, `css-object-model-csspseudoelement`, `iterator-includes`, `iterator-zip-zipkeyed`, `retriable-module-loading`, `scroll-axis-lock`, `string-substr`, `text-decoration-skip-spaces`, `wheel-events-momentum`, `x-frame-options` ## What's Changed * `http11`: backfill `Upgrade` header compat key by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4434 * `input`: backfill compat key by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4435 * `multi-column`: backfill `auto` value compat key by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4436 * `postmessage`: backfill compat key by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4437 * `border-image`: backfill `border-image-source: none` compat key by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4438 * `selection-api`: backfill `offset_parameter_optional` compat keys by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4440 * `svg`: backfill compat key by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4442 * Add wheel events momentum feature by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4448 * Add `scroll-axis-lock` feature by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4455 * Add `text-decoration-skip-spaces` feature by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4406 * Add iterator `includes()` method feature by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4405 * Add feature for joint iteration (`Iterator.zip()` and `Iterator.zipKeyed()`) by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4404 * Add `substr()` string method feature (discouraged) by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4393 * Re-run dist for iterator includes by @Elchi3 in https://github.com/web-platform-dx/web-features/pull/4467 * Add `CSSPseudoElement` feature by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4450 * Add a feature for the `X-Frame-Options` header by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4441 * Add feature for animation event animation accessors by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4444 * Bump @mdn/browser-compat-data from 8.1.4 to 8.1.5 by @dependabot[bot] in https://github.com/web-platform-dx/web-features/pull/4483 * Add retriable module loading feature by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4387 **Full Changelog**: https://github.com/web-platform-dx/web-features/compare/v3.40.1...v3.41.0 Subscribe to the [Upcoming changes](https://github.com/web-platform-dx/web-features/discussions/2613) announcements thread for news about upcoming releases, such as breaking changes or major features. v3.40.1 ## What's Upcoming * In an October release, web-features will relax a constraint on feature entries, such that `@mdn/browser-compat-data` keys may appear in more than one feature at a time. See https://github.com/web-platform-dx/web-features/discussions/2613#discussioncomment-17075566 for more information. ## What's Changed * `background-position`: backfill compat keys by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4414 * `clip-path`: backfill `none` value compat key by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4416 * `font-size`: backfill keyword values compat keys by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4417 * `text-shadow`: backfill `none` value compat key by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4409 * `pointer-events`: backfill compat keys by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4411 * `svg`: backfill compat keys by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4412 * Group more CSS text features by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4407 * `html-setters` and `html-streaming-setters`: remove `DocumentType` APIs by @tunetheweb in https://github.com/web-platform-dx/web-features/pull/4449 * `display-contents`: reinstate compat keys and unfreeze status by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4388 * Bump @mdn/browser-compat-data from 8.1.3 to 8.1.4 by @dependabot[bot] in https://github.com/web-platform-dx/web-features/pull/4458 **Full Changelog**: https://github.com/web-platform-dx/web-features/compare/v3.40.0...v3.40.1 Subscribe to the [Upcoming changes](https://github.com/web-platform-dx/web-features/discussions/2613) announcements thread for news about upcoming releases, such as breaking changes or major features. v3.40.0 ## What's Upcoming * In an October release, web-features will relax a constraint on feature entries, such that `@mdn/browser-compat-data` keys may appear in more than one feature at a time. See https://github.com/web-platform-dx/web-features/discussions/2613#discussioncomment-17075566 for more information. ## What's New * 6 features: `container-name-queries`, `gamut-mapping`, `iterator-join`, `string-trim-leftright`, `supports-named-feature`, `symbols-function` * 4 status changes: * Baseline newly available: `arianotify` * Baseline widely available: `abortsignal-any`, `paint-order`, `white-space-collapse` ## What's Changed * Update `wasm-extended-constant-expressions` spec URL by @gsnedders in https://github.com/web-platform-dx/web-features/pull/4354 * Update `wasm-jspi` spec URL by @gsnedders in https://github.com/web-platform-dx/web-features/pull/4355 * Update `wasm-memory64` spec URL by @gsnedders in https://github.com/web-platform-dx/web-features/pull/4356 * Update `wasm-tail-call-optimization` spec URL by @gsnedders in https://github.com/web-platform-dx/web-features/pull/4361 * Update `wasm-typed-fun-refs` spec URL by @gsnedders in https://github.com/web-platform-dx/web-features/pull/4362 * `import-defer`: include `import.defer()` as part of this feature by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4385 * Add `named-feature()` feature by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4272 * `uint8array-base64-hex`: revise description by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4254 * Add discouraged feature for `trimLeft()` and `trimRight()` by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4386 * Disambiguate container size queries feature by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4310 * Add name-only container queries feature by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4311 * Remove `replaceHTML` from HTML setters features by @tunetheweb in https://github.com/web-platform-dx/web-features/pull/4382 * Extract the `symbols()` CSS function to a separate feature by @captainbrosset in https://github.com/web-platform-dx/web-features/pull/4394 * `symbols()` CSS function: revise ID and description by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4400 * Add `textStream` to `html-streaming-setters` by @tunetheweb in https://github.com/web-platform-dx/web-features/pull/4383 * Add gamut mapping feature by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4392 * Add feature for `Iterator.prototype.join()` by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4403 * `outline`: assign `auto` value compat key by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4408 * Bump @mdn/browser-compat-data from 8.1.2 to 8.1.3 by @dependabot[bot] in https://github.com/web-platform-dx/web-features/pull/4422 **Full Changelog**: https://github.com/web-platform-dx/web-features/compare/v3.39.0...v3.40.0 Subscribe to the [Upcoming changes](https://github.com/web-platform-dx/web-features/discussions/2613) announcements thread for news about upcoming releases, such as breaking changes or major features. v3.39.0 ## What's New * The `grid-lanes` ID is now the canonical ID for `masonry`. The `masonry` entry now has the `\"moved\"` `kind`, with a redirect to the new ID. The `grid-lanes` entry now contains an updated name and description. * The `media-pseudos` feature regressed from Baseline newly available to limited availability. This is due to an an upstream data error that prematurely showed media element pseudo-classes as shipped. * 7 features: `geolocation-element-initialpermissionstatus`, `html-setters`, `html-streaming-setters`, `import-maps-multiple`, `input-date-time-month`, `input-date-time-week`, `shared-workers-extended-lifetime` * 1 group: `anchor-positioning` * 8 status changes: * Baseline newly available: `alpha`, `async-iterable-streams`, `autocorrect`, `light-dark-image`, `overflow-anchor`, `top-level-await`, `wasm-jspi` * Limited availability: `media-pseudos` ## What's Changed * Make grid lanes canonical and masonry redirect by @jdatapple in https://github.com/web-platform-dx/web-features/pull/4225 * Add `container-anchor-position-queries` to `container-queries` group by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4312 * Add an `anchor-positioning` group by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4313 * Revise performance timing entries' names and descriptions by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4278 * Update `arianotify` spec URL by @gsnedders in https://github.com/web-platform-dx/web-features/pull/4347 * `select`: add `HTMLOptionsCollection` compat keys by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4367 * Update `webdriver-bidi` with the new BCD keys by @captainbrosset in https://github.com/web-platform-dx/web-features/pull/2777 * Update `install` spec URL by @gsnedders in https://github.com/web-platform-dx/web-features/pull/4348 * `webdriver-bidi`: refresh data by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4368 * Update `languagemodel` spec URL by @gsnedders in https://github.com/web-platform-dx/web-features/pull/4349 * Update `wasm-branch-hinting` spec URL by @gsnedders in https://github.com/web-platform-dx/web-features/pull/4352 * Add HTML setters features by @tunetheweb in https://github.com/web-platform-dx/web-features/pull/4318 * Update `loading-lazy-media` spec URL by @gsnedders in https://github.com/web-platform-dx/web-features/pull/4350 * Add caniuse mappings where the IDs are different by @foolip in https://github.com/web-platform-dx/web-features/pull/3301 * Add feature for extended-lifetime shared workers by @jgraham in https://github.com/web-platform-dx/web-features/pull/4341 * Update `usermedia` spec URL by @gsnedders in https://github.com/web-platform-dx/web-features/pull/4351 * Add `initialPermissionStatus` disco",
+      "excerpt": "web-features@next This is a continuously-updated prerelease generated from `main` (currently at 9660ca9). v3.42.0 ## What's New * To improve the accuracy of status calculations, multiple features may share `@mdn/browser-compat-data` (BCD) keys. In this release, both the `audio` and `video` features reference `api.HTMLMediaElement` and descendant keys. This relaxes an undocumented constraint on feature definitions and browser compatibility data. Previously, BCD keys were associated with only one feature entry at a time. ## What's Changed * Allow overlapping compat keys by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4034 **Full Changelog**: https://github.com/web-platform-dx/web-features/compare/v3.41.0...v3.42.0 Subscribe to the [Upcoming changes](https://github.com/web-platform-dx/web-features/discussions/2613) announcements thread for news about upcoming releases, such as breaking changes or major features. v3.41.0 ## What's Upcoming * In an October release, web-features will relax a constraint on feature entries, such that `@mdn/browser-compat-data` keys may appear in more than one feature at a time. See https://github.com/web-platform-dx/web-features/discussions/2613#discussioncomment-17075566 for more information. ## What's New * 10 features: `animations-css-animation-accessors`, `css-object-model-csspseudoelement`, `iterator-includes`, `iterator-zip-zipkeyed`, `retriable-module-loading`, `scroll-axis-lock`, `string-substr`, `text-decoration-skip-spaces`, `wheel-events-momentum`, `x-frame-options` ## What's Changed * `http11`: backfill `Upgrade` header compat key by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4434 * `input`: backfill compat key by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4435 * `multi-column`: backfill `auto` value compat key by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4436 * `postmessage`: backfill compat key by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4437 * `border-image`: backfill `border-image-source: none` compat key by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4438 * `selection-api`: backfill `offset_parameter_optional` compat keys by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4440 * `svg`: backfill compat key by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4442 * Add wheel events momentum feature by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4448 * Add `scroll-axis-lock` feature by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4455 * Add `text-decoration-skip-spaces` feature by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4406 * Add iterator `includes()` method feature by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4405 * Add feature for joint iteration (`Iterator.zip()` and `Iterator.zipKeyed()`) by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4404 * Add `substr()` string method feature (discouraged) by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4393 * Re-run dist for iterator includes by @Elchi3 in https://github.com/web-platform-dx/web-features/pull/4467 * Add `CSSPseudoElement` feature by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4450 * Add a feature for the `X-Frame-Options` header by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4441 * Add feature for animation event animation accessors by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4444 * Bump @mdn/browser-compat-data from 8.1.4 to 8.1.5 by @dependabot[bot] in https://github.com/web-platform-dx/web-features/pull/4483 * Add retriable module loading feature by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4387 **Full Changelog**: https://github.com/web-platform-dx/web-features/compare/v3.40.1...v3.41.0 Subscribe to the [Upcoming changes](https://github.com/web-platform-dx/web-features/discussions/2613) announcements thread for news about upcoming releases, such as breaking changes or major features. v3.40.1 ## What's Upcoming * In an October release, web-features will relax a constraint on feature entries, such that `@mdn/browser-compat-data` keys may appear in more than one feature at a time. See https://github.com/web-platform-dx/web-features/discussions/2613#discussioncomment-17075566 for more information. ## What's Changed * `background-position`: backfill compat keys by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4414 * `clip-path`: backfill `none` value compat key by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4416 * `font-size`: backfill keyword values compat keys by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4417 * `text-shadow`: backfill `none` value compat key by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4409 * `pointer-events`: backfill compat keys by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4411 * `svg`: backfill compat keys by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4412 * Group more CSS text features by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4407 * `html-setters` and `html-streaming-setters`: remove `DocumentType` APIs by @tunetheweb in https://github.com/web-platform-dx/web-features/pull/4449 * `display-contents`: reinstate compat keys and unfreeze status by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4388 * Bump @mdn/browser-compat-data from 8.1.3 to 8.1.4 by @dependabot[bot] in https://github.com/web-platform-dx/web-features/pull/4458 **Full Changelog**: https://github.com/web-platform-dx/web-features/compare/v3.40.0...v3.40.1 Subscribe to the [Upcoming changes](https://github.com/web-platform-dx/web-features/discussions/2613) announcements thread for news about upcoming releases, such as breaking changes or major features. v3.40.0 ## What's Upcoming * In an October release, web-features will relax a constraint on feature entries, such that `@mdn/browser-compat-data` keys may appear in more than one feature at a time. See https://github.com/web-platform-dx/web-features/discussions/2613#discussioncomment-17075566 for more information. ## What's New * 6 features: `container-name-queries`, `gamut-mapping`, `iterator-join`, `string-trim-leftright`, `supports-named-feature`, `symbols-function` * 4 status changes: * Baseline newly available: `arianotify` * Baseline widely available: `abortsignal-any`, `paint-order`, `white-space-collapse` ## What's Changed * Update `wasm-extended-constant-expressions` spec URL by @gsnedders in https://github.com/web-platform-dx/web-features/pull/4354 * Update `wasm-jspi` spec URL by @gsnedders in https://github.com/web-platform-dx/web-features/pull/4355 * Update `wasm-memory64` spec URL by @gsnedders in https://github.com/web-platform-dx/web-features/pull/4356 * Update `wasm-tail-call-optimization` spec URL by @gsnedders in https://github.com/web-platform-dx/web-features/pull/4361 * Update `wasm-typed-fun-refs` spec URL by @gsnedders in https://github.com/web-platform-dx/web-features/pull/4362 * `import-defer`: include `import.defer()` as part of this feature by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4385 * Add `named-feature()` feature by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4272 * `uint8array-base64-hex`: revise description by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4254 * Add discouraged feature for `trimLeft()` and `trimRight()` by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4386 * Disambiguate container size queries feature by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4310 * Add name-only container queries feature by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4311 * Remove `replaceHTML` from HTML setters features by @tunetheweb in https://github.com/web-platform-dx/web-features/pull/4382 * Extract the `symbols()` CSS function to a separate feature by @captainbrosset in https://github.com/web-platform-dx/web-features/pull/4394 * `symbols()` CSS function: revise ID and description by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4400 * Add `textStream` to `html-streaming-setters` by @tunetheweb in https://github.com/web-platform-dx/web-features/pull/4383 * Add gamut mapping feature by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4392 * Add feature for `Iterator.prototype.join()` by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4403 * `outline`: assign `auto` value compat key by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4408 * Bump @mdn/browser-compat-data from 8.1.2 to 8.1.3 by @dependabot[bot] in https://github.com/web-platform-dx/web-features/pull/4422 **Full Changelog**: https://github.com/web-platform-dx/web-features/compare/v3.39.0...v3.40.0 Subscribe to the [Upcoming changes](https://github.com/web-platform-dx/web-features/discussions/2613) announcements thread for news about upcoming releases, such as breaking changes or major features. v3.39.0 ## What's New * The `grid-lanes` ID is now the canonical ID for `masonry`. The `masonry` entry now has the `\"moved\"` `kind`, with a redirect to the new ID. The `grid-lanes` entry now contains an updated name and description. * The `media-pseudos` feature regressed from Baseline newly available to limited availability. This is due to an an upstream data error that prematurely showed media element pseudo-classes as shipped. * 7 features: `geolocation-element-initialpermissionstatus`, `html-setters`, `html-streaming-setters`, `import-maps-multiple`, `input-date-time-month`, `input-date-time-week`, `shared-workers-extended-lifetime` * 1 group: `anchor-positioning` * 8 status changes: * Baseline newly available: `alpha`, `async-iterable-streams`, `autocorrect`, `light-dark-image`, `overflow-anchor`, `top-level-await`, `wasm-jspi` * Limited availability: `media-pseudos` ## What's Changed * Make grid lanes canonical and masonry redirect by @jdatapple in https://github.com/web-platform-dx/web-features/pull/4225 * Add `container-anchor-position-queries` to `container-queries` group by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4312 * Add an `anchor-positioning` group by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4313 * Revise performance timing entries' names and descriptions by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4278 * Update `arianotify` spec URL by @gsnedders in https://github.com/web-platform-dx/web-features/pull/4347 * `select`: add `HTMLOptionsCollection` compat keys by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4367 * Update `webdriver-bidi` with the new BCD keys by @captainbrosset in https://github.com/web-platform-dx/web-features/pull/2777 * Update `install` spec URL by @gsnedders in https://github.com/web-platform-dx/web-features/pull/4348 * `webdriver-bidi`: refresh data by @ddbeck in https://github.com/web-platform-dx/web-features/pull/4368 * Update `languagemodel` spec URL by @gsnedders in https://github.com/web-platform-dx/web-features/pull/4349 * Update `wasm-branch-hinting` spec URL by @gsnedders in https://github.com/web-platform-dx/web-features/pull/4352 * Add HTML setters features by @tunetheweb in https://github.com/web-platform-dx/web-features/pull/4318 * Update `loading-lazy-media` spec URL by @gsnedders in https://github.com/web-platform-dx/web-features/pull/4350 * Add caniuse mappings where the IDs are different by @foolip in https://github.com/web-platform-dx/web-features/pull/3301 * Add feature for extended-lifetime shared workers by @jgraham in https://github.com/web-platform-dx/web-features/pull/4341 * Update `usermedia` spec URL by @gsnedders in https://github.com/web-platform-dx/web-features/pull/4351 * Add `initialPermissionStatus` disco",
       "matched_keywords": [
         "baseline",
         "css",
@@ -2369,7 +2369,7 @@
       ],
       "error": "",
       "previous_fingerprint": "cc795013961a9d9b07c47cbb71e58621ce44be8c8518cb104ea8265202e4869b",
-      "changed": false,
+      "changed": true,
       "first_observation": false
     },
     {
@@ -2378,15 +2378,15 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/mdn/browser-compat-data/releases?per_page=12",
-      "fetched_at": "2026-10-11T10:03:44+00:00",
-      "fingerprint": "8a3aaecdb46fd47fe5e1c95edc0db7a991548a3412d60afe0650618e185094e3",
+      "fetched_at": "2026-10-12T10:55:05+00:00",
+      "fingerprint": "e8f7d49bce0bdc8e3403605366f5b0af7e9400f005b3deb6822aef219bc8d6aa",
       "title": "@mdn/browser-compat-data@next",
       "items": [
         {
           "id": "327303933",
           "name": "@mdn/browser-compat-data@next",
           "tag": "next",
-          "published_at": "2026-10-11T00:02:27Z",
+          "published_at": "2026-10-12T00:02:29Z",
           "prerelease": true,
           "url": "https://github.com/mdn/browser-compat-data/releases/tag/next",
           "summary": "Experimental nightly prerelease generated from the [`main`](https://github.com/mdn/browser-compat-data/tree/main) branch (currently at [`3b28abe`](https://github.com/mdn/browser-compat-data/commit/3b28abed321540dcbe571c16174af543c4e02ac0))."
@@ -2515,7 +2515,7 @@
         "web-api"
       ],
       "error": "",
-      "previous_fingerprint": "57e97e015b5e982ee5cbab391013e8ba38f37917950f981ec2330b59885f09dc",
+      "previous_fingerprint": "8a3aaecdb46fd47fe5e1c95edc0db7a991548a3412d60afe0650618e185094e3",
       "changed": true,
       "first_observation": false
     },
@@ -2525,7 +2525,7 @@
       "authority": "OFFICIAL",
       "kind": "JSON_DIGEST",
       "url": "https://chromestatus.com/features.json",
-      "fetched_at": "2026-10-11T10:03:45+00:00",
+      "fetched_at": "2026-10-12T10:55:06+00:00",
       "fingerprint": "",
       "title": "",
       "items": [],
@@ -2554,7 +2554,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://www.w3.org/WAI/news/",
-      "fetched_at": "2026-10-11T10:03:46+00:00",
+      "fetched_at": "2026-10-12T10:55:07+00:00",
       "fingerprint": "1b6c3e0569321eaab8a2eb2b67bdac7c893316cec1ab742511f9abb59c262d28",
       "title": "News | Web Accessibility Initiative (WAI) | W3C",
       "items": [],
@@ -2592,7 +2592,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/design-tokens/community-group/releases?per_page=12",
-      "fetched_at": "2026-10-11T10:03:46+00:00",
+      "fetched_at": "2026-10-12T10:55:07+00:00",
       "fingerprint": "e7526f9a4360fd590555d5b3a1107042f18a6ace66a09cbbfd266f86621266fb",
       "title": "",
       "items": [],
@@ -2620,7 +2620,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/style-dictionary/style-dictionary/releases?per_page=12",
-      "fetched_at": "2026-10-11T10:03:46+00:00",
+      "fetched_at": "2026-10-12T10:55:09+00:00",
       "fingerprint": "ae610468a84d22c350e7df3e201fe83cb5ac7546139f0dcf9779cb41fb84d790",
       "title": "v5.6.1",
       "items": [
@@ -2755,8 +2755,8 @@
         "build"
       ],
       "error": "",
-      "previous_fingerprint": "f7af475fbe351a27bbbe8ff05c8383414261243770752cb484c90e76d298f378",
-      "changed": true,
+      "previous_fingerprint": "ae610468a84d22c350e7df3e201fe83cb5ac7546139f0dcf9779cb41fb84d790",
+      "changed": false,
       "first_observation": false
     },
     {
@@ -2765,7 +2765,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://wordpress.org/news/category/releases/",
-      "fetched_at": "2026-10-11T10:03:47+00:00",
+      "fetched_at": "2026-10-12T10:55:10+00:00",
       "fingerprint": "b28ec1e81c4997cc83040d53fcbd67873f7333db66a0b5399994d9dea6a52085",
       "title": "Releases – WordPress News",
       "items": [],
@@ -2810,7 +2810,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://developer.wordpress.org/news/",
-      "fetched_at": "2026-10-11T10:03:48+00:00",
+      "fetched_at": "2026-10-12T10:55:11+00:00",
       "fingerprint": "702198317a214d6c380da2e8510fb30039b8e52c76c18985f56e647231ccdcf1",
       "title": "WordPress Developer Blog – A site for plugin and theme developers, freelancers, and agency developers",
       "items": [],
@@ -2851,7 +2851,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://developer.wordpress.org/block-editor/getting-started/devenv/get-started-with-wp-env/",
-      "fetched_at": "2026-10-11T10:03:49+00:00",
+      "fetched_at": "2026-10-12T10:55:12+00:00",
       "fingerprint": "a21722fe3fc6dede642c78ae2f3e004734eeb3d0d790fa261c08eabcc544ce18",
       "title": "Get started with wp-env – Block Editor Handbook | Developer.WordPress.org",
       "items": [],
@@ -2893,7 +2893,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/AdvancedCustomFields/acf/releases?per_page=12",
-      "fetched_at": "2026-10-11T10:03:50+00:00",
+      "fetched_at": "2026-10-12T10:55:13+00:00",
       "fingerprint": "4bb858d58bd64f96180623bc4681c1a13b7276608894435d6c7af0905e1e4c37",
       "title": "Advanced Custom Fields v6.8.10",
       "items": [
@@ -3050,7 +3050,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://www.advancedcustomfields.com/changelog/",
-      "fetched_at": "2026-10-11T10:03:51+00:00",
+      "fetched_at": "2026-10-12T10:55:13+00:00",
       "fingerprint": "82b6e6746f1e79fb3ea0f3277499de8b29835c8bea2a5aa35a3bb5ab9a3d3a23",
       "title": "ACF | Changelog",
       "items": [],
@@ -3098,7 +3098,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://www.advancedcustomfields.com/resources/wp-acf-json/",
-      "fetched_at": "2026-10-11T10:03:51+00:00",
+      "fetched_at": "2026-10-12T10:55:14+00:00",
       "fingerprint": "84a646f3552f8ca68ed09f62634ddb137c96cb473c2acee828c52fcefd92bef7",
       "title": "ACF | wp acf json",
       "items": [],
@@ -3139,6 +3139,29 @@
   ],
   "changes": [
     {
+      "source_id": "web-features-releases",
+      "lane": "WEB_PLATFORM",
+      "title": "web-features@next",
+      "retest_categories": [
+        "INPUT_CAPABILITY",
+        "SCROLL",
+        "ANIMATION",
+        "LAYOUT",
+        "FIGMA_LAYOUT_GENERATION",
+        "ASSET_FIDELITY",
+        "COLOR_GRADIENT",
+        "ACCESSIBILITY",
+        "CSS_TOOLING"
+      ],
+      "impacts": [
+        "CSS",
+        "WEB_PLATFORM",
+        "BROWSER_SUPPORT",
+        "FEATURE_ADOPTION"
+      ],
+      "url": "https://api.github.com/repos/web-platform-dx/web-features/releases?per_page=12"
+    },
+    {
       "source_id": "mdn-browser-compat-data-releases",
       "lane": "WEB_PLATFORM",
       "title": "@mdn/browser-compat-data@next",
@@ -3156,23 +3179,6 @@
         "FEATURE_DETECTION"
       ],
       "url": "https://api.github.com/repos/mdn/browser-compat-data/releases?per_page=12"
-    },
-    {
-      "source_id": "style-dictionary-releases",
-      "lane": "DESIGN_SYSTEMS",
-      "title": "v5.6.1",
-      "retest_categories": [
-        "ASSET_FIDELITY",
-        "COLOR_GRADIENT",
-        "ACCESSIBILITY"
-      ],
-      "impacts": [
-        "TOKENS",
-        "DESIGN_SYSTEM",
-        "FIGMA_VARIABLES",
-        "BUILD_TOOLING"
-      ],
-      "url": "https://api.github.com/repos/style-dictionary/style-dictionary/releases?per_page=12"
     }
   ],
   "fetch_errors": [
@@ -3200,8 +3206,11 @@
       "ANIMATION",
       "ASSET_FIDELITY",
       "COLOR_GRADIENT",
+      "CSS_TOOLING",
       "FIGMA_LAYOUT_GENERATION",
-      "LAYOUT"
+      "INPUT_CAPABILITY",
+      "LAYOUT",
+      "SCROLL"
     ]
   }
 }
