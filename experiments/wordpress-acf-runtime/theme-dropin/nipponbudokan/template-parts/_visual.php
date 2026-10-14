@@ -24,12 +24,10 @@ $is_fixed_page_visual = !empty($page_img);
             $postType_name = get_current_post_type();
             $field_name = 'page_img-' . $postType_name; //ビジュアル設定（投稿タイプ）名前に合わせる
             $img = get_field($field_name, 'option');
-            if ($img) {
-                $thumb = wp_get_attachment_image_src($img, 'head_img');
-                $img_url = $thumb[0];
-            } else {
-                $img_url = esc_url(get_template_directory_uri()) . '/images/common/noimage_visual-01.webp';
-            }
+            $thumb = $img ? wp_get_attachment_image_src($img, 'head_img') : false;
+            $img_url = (is_array($thumb) && !empty($thumb[0]))
+                ? $thumb[0]
+                : esc_url(get_template_directory_uri()) . '/images/common/noimage_visual-01.webp';
 
             // 通常投稿は一覧・カテゴリ・詳細で同じ「お知らせ」マスター見出しを使う。
             // get_archive_title() は posts index で "Archives"、category でカテゴリ名になるため Figma と一致しない。
@@ -52,12 +50,10 @@ $is_fixed_page_visual = !empty($page_img);
         ?>
             <?php
             $img = get_field('page_img-other', 'option');
-            if ($img) {
-                $thumb = wp_get_attachment_image_src($img, 'head_img');
-                $img_url = $thumb[0];
-            } else {
-                $img_url = esc_url(get_template_directory_uri()) . '/images/common/noimage_visual-01.webp';
-            }
+            $thumb = $img ? wp_get_attachment_image_src($img, 'head_img') : false;
+            $img_url = (is_array($thumb) && !empty($thumb[0]))
+                ? $thumb[0]
+                : esc_url(get_template_directory_uri()) . '/images/common/noimage_visual-01.webp';
             ?>
             <div class="gm_background" style="background-image: url(<?php echo esc_url($img_url); ?>)"></div>
             <h1 class="gm_title"><span>お探しのページは<br>見つかりませんでした</span></h1>
@@ -65,24 +61,20 @@ $is_fixed_page_visual = !empty($page_img);
         ?>
             <?php
             $img = get_field('page_img-other', 'option');
-            if ($img) {
-                $thumb = wp_get_attachment_image_src($img, 'head_img');
-                $img_url = $thumb[0];
-            } else {
-                $img_url = esc_url(get_template_directory_uri()) . '/images/common/noimage_visual-01.webp';
-            }
+            $thumb = $img ? wp_get_attachment_image_src($img, 'head_img') : false;
+            $img_url = (is_array($thumb) && !empty($thumb[0]))
+                ? $thumb[0]
+                : esc_url(get_template_directory_uri()) . '/images/common/noimage_visual-01.webp';
             ?>
             <div class="gm_background" style="background-image: url(<?php echo esc_url($img_url); ?>)"></div>
             <h1 class="gm_title"><span><?php if (empty(get_search_query())) : ?>検索キーワードが未入力です<?php else: ?><?php the_search_query(); ?>の検索結果<?php endif; ?></span></h1>
         <?php else: ?>
             <?php
             $img = $page_img;
-            if ($img) {
-                $thumb = wp_get_attachment_image_src($img, 'head_img');
-                $img_url = $thumb[0];
-            } else {
-                $img_url = esc_url(get_template_directory_uri()) . '/images/common/noimage_visual-01.webp';
-            }
+            $thumb = $img ? wp_get_attachment_image_src($img, 'head_img') : false;
+            $img_url = (is_array($thumb) && !empty($thumb[0]))
+                ? $thumb[0]
+                : esc_url(get_template_directory_uri()) . '/images/common/noimage_visual-01.webp';
             ?>
             <div class="gm_background" style="background-image: url(<?php echo esc_url($img_url); ?>)"></div>
             <h1 class="gm_title"><span><?php the_title(); ?></span></h1>

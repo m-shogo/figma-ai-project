@@ -140,7 +140,8 @@ function my_enqueue_scripts() {
     // JavaScript
     wp_enqueue_script('swiper-script', get_theme_file_uri('/js/swiper-bundle.min.js'), array(), '14.0.1', ['strategy' => 'defer','in_footer' => false]);
     wp_enqueue_script('modaal-script', get_theme_file_uri('/js/modaal.min.js'), array('jquery'), '0.4.4', ['strategy' => 'defer','in_footer' => false]);
-    wp_enqueue_script('common-script', get_theme_file_uri('/js/common.js'), array('jquery','swiper-script','modaal-script'), filemtime(get_theme_file_path('/js/common.js')), ['strategy' => 'defer','in_footer' => false]);
+    wp_enqueue_script('scroll-hint-script', get_theme_file_uri('/js/scroll-hint.min.js'), array(), '1.2.8', ['strategy' => 'defer','in_footer' => false]);
+    wp_enqueue_script('common-script', get_theme_file_uri('/js/common.js'), array('jquery','swiper-script','modaal-script','scroll-hint-script'), filemtime(get_theme_file_path('/js/common.js')), ['strategy' => 'defer','in_footer' => false]);
 
     if (is_front_page()) {
         wp_enqueue_script('fullcalendar-script', get_theme_file_uri('/js/fullcalendar.min.js'), array(), '6.1.15', ['strategy' => 'defer', 'in_footer' => false]);
@@ -176,6 +177,7 @@ function my_enqueue_scripts() {
     wp_enqueue_style('css-style', get_stylesheet_uri(), array(), null);
     wp_enqueue_style('swiper-style', get_theme_file_uri('/css/swiper-bundle.min.css'), array(), '14.0.1', 'all');
     wp_enqueue_style('modaal-style', get_theme_file_uri('/css/modaal.min.css'), array(), '0.4.4', 'all');
+    wp_enqueue_style('scroll-hint-style', get_theme_file_uri('/css/scroll-hint.css'), array(), '1.2.8', 'all');
     // wp_enqueue_style('fontawesome-style', get_theme_file_uri('/css/all.min.css'), array(), '6.7.2', 'all');
     wp_enqueue_style('flexible-table-block'); // プラグインで登録済みのスタイルをenqueue（テンプレートでテーブルクラスを直接使用しているため必要）
     wp_enqueue_style('common-style', get_theme_file_uri('/css/style.css'), array(), filemtime(get_theme_file_path('/css/style.css')), 'all');

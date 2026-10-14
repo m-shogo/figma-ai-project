@@ -138,10 +138,10 @@
     align-items: center;
     justify-content: center;
     box-sizing: border-box;
-    width: 80px;
+    width: 96px;
     height: 23px;
     min-height: 23px;
-    padding: 0 8px;
+    padding: 2px 3px;
     flex-shrink: 0;
     border: 1px solid var(--news-label-color, var(--color-text));
     border-radius: 2px;

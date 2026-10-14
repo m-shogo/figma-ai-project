@@ -5,7 +5,7 @@ global $post, $wp_query;
 <main id="global_contents" class="global_contents" itemscope itemprop="mainContentOfPage">
     <section>
         <?php get_template_part('template-parts/_visual'); ?>
-        <div class="global_inner _content">
+        <div class="global_inner _content _normalPage">
             <div class="gc_main _oneColumn">
                 <?php if (empty(get_search_query())) : //検索キーワードが入っているか 
                 ?>
@@ -49,7 +49,9 @@ global $post, $wp_query;
                                 </li>
                             <?php endwhile; ?>
                         </ul>
-                        <?php get_template_part('template-parts/_pagination'); ?>
+                        <?php get_template_part('template-parts/_pagination', null, array(
+                            'variant' => 'news',
+                        )); ?>
                     <?php else: ?>
                         <div class="block-editor_wrap">
                             <h4 class="wp-block-heading"><span>お探しのページは見つかりませんでした</span></h4>

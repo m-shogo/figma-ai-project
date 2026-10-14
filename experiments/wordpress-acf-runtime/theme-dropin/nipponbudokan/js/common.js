@@ -977,7 +977,23 @@ window.addEventListener('resize', setVw);
   lightboxWrap();
   tab();
   purposeBanner();
+  scrollHint();
 //   archiveNavigation();
+
+  function scrollHint() {
+    if (typeof ScrollHint !== 'function') {
+      return;
+    }
+    if (!document.querySelector('.wp-block-flexible-table-block-table.is-scroll-on-mobile')) {
+      return;
+    }
+    new ScrollHint('.wp-block-flexible-table-block-table.is-scroll-on-mobile', {
+      suggestiveShadow: true,
+      i18n: {
+        scrollable: 'スクロールできます',
+      },
+    });
+  }
 
   function purposeBanner() {
     const root = document.querySelector('[data-purpose-banner]');

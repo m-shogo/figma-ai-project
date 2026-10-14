@@ -68,7 +68,7 @@
                     font-size: 15px;
                     letter-spacing: 0.05em;
                     line-height: 1.6;
-                    text-align: center;
+                    text-align: left;
                 }
                 th {
                     background-color: var(--color-table-head) !important;
@@ -126,4 +126,13 @@
             }
         }
     }
+}
+
+/* scroll-hint 1.2.8 の .scroll-hint-icon-wrap は height:100%。
+   縦長テーブルだとアイコンが表の中央＝画面外に落ちる。
+   上端 240px に収め、短い表は max-height:100% で従来どおり中央。
+   common-style は scroll-hint.css の後に読む。 */
+.scroll-hint-icon-wrap {
+    height: 240px;
+    max-height: 100%;
 }

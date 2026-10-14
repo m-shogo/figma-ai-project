@@ -40,3 +40,14 @@
         }
     }
 }
+
+/* お知らせ一覧と同じ八角ページャ。一覧との間隔は news_archive の gap に合わせる。 */
+body.search .gc_main > .news_pager {
+    margin-top: 32px;
+}
+
+@media screen and (min-width: 768px) {
+    body.search .gc_main > .news_pager {
+        margin-top: 56px;
+    }
+}

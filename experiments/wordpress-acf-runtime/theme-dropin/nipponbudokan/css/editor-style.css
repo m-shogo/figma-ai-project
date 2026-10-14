@@ -15,6 +15,7 @@
 @import './blocks/wp-block-quote-style.css';
 @import './blocks/wp-block-separator-style.css';
 @import './blocks/wp-block-slider-style.css';
+@import './blocks/wp-block-embed-style.css';
 @import './blocks/wp-block-table-style.css';
 @import './blocks/wp-block-tabs-style.css';
 @import './blocks/wp-block-text-style.css';

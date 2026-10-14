@@ -1,0 +1,8 @@
+@charset "utf-8";
+/* // ------------------------------
+// 埋め込み（YouTube）
+// ------------------------------ */
+.wp-block-embed-youtube .wp-block-embed__wrapper {
+    display: flex;
+    justify-content: center;
+}

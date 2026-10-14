@@ -1,7 +1,7 @@
 @charset "utf-8";
 /* // ==========================================================================
 // ページネーション
-// Generic circular family for search.php. News/Event archives use .news_pager.
+// Generic circular family. News / Event / search results use .news_pager.
 // --enText is not a Theme token; numbers use Zen Kaku like the rest of JA UI.
 // ========================================================================== */
 /* // 一覧用 */

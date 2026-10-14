@@ -207,6 +207,51 @@
             }
         }
 
+        /* PDF / 別ウィンドウ / 添付は文字の後ろではなく、矢印と同じ八角の中に置く。 */
+        &.small .wp-block-button,
+        .wp-block-button.is-style-small,
+        .wp-block-button.is-style-small-2 {
+            .wp-block-button__link {
+                &[target='_blank']::before {
+                    content: var(--icon-blank);
+                    font-weight: 900;
+                }
+                &[href$='.pdf']::before {
+                    content: var(--icon-pdf);
+                    font-weight: 900;
+                }
+                &[href$='.doc']::before,
+                &[href$='.docx']::before,
+                &[href$='.docm']::before,
+                &[href$='.xls']::before,
+                &[href$='.xlsx']::before,
+                &[href$='.xlsm']::before,
+                &[href$='.png']::before,
+                &[href$='.jpg']::before,
+                &[href$='.jpeg']::before,
+                &[href$='.gif']::before,
+                &[href$='.webp']::before {
+                    content: var(--icon-file);
+                    font-weight: 900;
+                }
+                &[target='_blank']::after,
+                &[href$='.pdf']::after,
+                &[href$='.doc']::after,
+                &[href$='.docx']::after,
+                &[href$='.docm']::after,
+                &[href$='.xls']::after,
+                &[href$='.xlsx']::after,
+                &[href$='.xlsm']::after,
+                &[href$='.png']::after,
+                &[href$='.jpg']::after,
+                &[href$='.jpeg']::after,
+                &[href$='.gif']::after,
+                &[href$='.webp']::after {
+                    content: none;
+                }
+            }
+        }
+
         /* CTA（btn-03）and 輪郭（Human: outline uses the same family）. */
         &:not(.small) {
             &.cta .wp-block-button:not(.is-style-small),

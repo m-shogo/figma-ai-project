@@ -516,10 +516,12 @@
             gap: 0;
             padding-right: 24px;
             border-right: 1px solid var(--color-line);
+            width: 110px;
         }
 
         .ea_date time {
             flex-direction: row;
+            align-items: baseline;
             gap: 0;
             white-space: nowrap;
         }

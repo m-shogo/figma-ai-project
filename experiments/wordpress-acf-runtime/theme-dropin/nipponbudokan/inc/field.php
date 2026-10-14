@@ -597,6 +597,7 @@ function custom_allowed_block_types_all($allowed_block_types, $block_editor_cont
 
     // ---------- サードパーティ ----------
     'flexible-table-block/table', // Flexible Table block
+    'formidable/simple-form',     // Formidable Forms
 
     // ---------- ACF ----------
     'acf/accordion',              // ACF アコーディオン

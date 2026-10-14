@@ -9,6 +9,40 @@
  */
 
 // ==========================================================================
+// 404 の URL 自動補完リダイレクトを止める
+// 存在しない URL の末尾スラッグが別ページと一致しても、近いページへ飛ばさない。
+// 末尾スラッシュなどの正規化（redirect_canonical）は残す。
+// ==========================================================================
+add_filter('do_redirect_guess_404_permalink', '__return_false');
+
+// 2026-10-28 09:00 JST まで。ブラウザが保持している 301 は、問題の URL だけではサーバーに届かない。
+// 同じサイトのどれか1ページを開いた応答で HTTP キャッシュだけ捨てさせる。Cookie は消さない。
+add_action('send_headers', 'nipponbudokan_clear_cached_redirects');
+
+function nipponbudokan_clear_cached_redirects()
+{
+  if (is_admin() || wp_doing_ajax() || wp_doing_cron()) {
+    return;
+  }
+  $until = strtotime('2026-10-28T00:00:00+09:00');
+  if ($until === false || time() >= $until) {
+    return;
+  }
+  header('Clear-Site-Data: "cache"');
+}
+
+// これから出す 301 をブラウザと中間キャッシュに保存させない。
+add_filter('wp_redirect', 'nipponbudokan_redirect_do_not_store', 10, 2);
+
+function nipponbudokan_redirect_do_not_store($location, $status)
+{
+  if ((int) $status === 301) {
+    header('Cache-Control: no-store');
+  }
+  return $location;
+}
+
+// ==========================================================================
 // リライトルールが作成された時に、数字4桁のURLが年のアーカイブページ扱いになることを無効化する
 // ==========================================================================
 function mycus_year_rewrite_rules_invalid($rules)
