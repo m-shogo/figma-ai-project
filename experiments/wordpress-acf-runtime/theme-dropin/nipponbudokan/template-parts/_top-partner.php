@@ -1,7 +1,14 @@
 <?php
-$theme_uri = get_template_directory_uri();
+$partner_post_id = get_queried_object_id();
+$show_partners = true;
+if (function_exists('get_field')) {
+    $partner_select = get_field('top_partner_select', $partner_post_id);
+    if ($partner_select !== null && $partner_select !== '') {
+        $show_partners = $partner_select === true || $partner_select === 1 || $partner_select === '1';
+    }
+}
 
-$partner_rows = function_exists('get_field') ? get_field('top_partner-01', get_queried_object_id()) : array();
+$partner_rows = function_exists('get_field') ? get_field('top_partner-01', $partner_post_id) : array();
 $partner_items = array();
 if (is_array($partner_rows)) {
     foreach ($partner_rows as $row) {
@@ -10,31 +17,23 @@ if (is_array($partner_rows)) {
         }
         $logo_id = isset($row['logo']) ? (int) $row['logo'] : 0;
         $logo = $logo_id ? wp_get_attachment_image_src($logo_id, 'full') : null;
+        $name = isset($row['name']) ? trim((string) $row['name']) : '';
+        $src = !empty($logo[0]) ? $logo[0] : '';
+        if ($name === '' || $src === '') {
+            continue;
+        }
         $partner_items[] = array(
-            'name' => isset($row['name']) ? (string) $row['name'] : '',
-            'src' => !empty($logo[0]) ? $logo[0] : '',
+            'name' => $name,
+            'src' => $src,
             'url' => isset($row['url']) ? trim(str_replace(array("\r", "\n"), '', (string) $row['url'])) : '',
         );
     }
 }
-if ($partner_items === array()) {
-    $partner_items = array(
-        array('name' => '全日本柔道連盟', 'src' => $theme_uri . '/images/top/partner/partner-01.webp', 'url' => ''),
-        array('name' => '全日本剣道連盟', 'src' => $theme_uri . '/images/top/partner/partner-02.webp', 'url' => ''),
-        array('name' => '全日本弓道連盟', 'src' => $theme_uri . '/images/top/partner/partner-03.webp', 'url' => ''),
-        array('name' => '日本相撲連盟', 'src' => $theme_uri . '/images/top/partner/partner-04.webp', 'url' => ''),
-        array('name' => '全日本空手道連盟', 'src' => $theme_uri . '/images/top/partner/partner-05.webp', 'url' => ''),
-        array('name' => '合気会', 'src' => $theme_uri . '/images/top/partner/partner-06.webp', 'url' => ''),
-        array('name' => '少林寺拳法連盟', 'src' => $theme_uri . '/images/top/partner/partner-07.webp', 'url' => ''),
-        array('name' => '全日本なぎなた', 'src' => $theme_uri . '/images/top/partner/partner-08.webp', 'url' => ''),
-        array('name' => '全日本銃剣道連盟', 'src' => $theme_uri . '/images/top/partner/partner-09.webp', 'url' => ''),
-        array('name' => '日本武道協議会', 'src' => $theme_uri . '/images/top/partner/partner-10.webp', 'url' => ''),
-        array('name' => '日本古武道協会', 'src' => $theme_uri . '/images/top/partner/partner-11.webp', 'url' => ''),
-        array('name' => '株式会社光洋商事', 'src' => $theme_uri . '/images/top/partner/partner-12.webp', 'url' => ''),
-    );
-}
 
 $partner_items = apply_filters('nipponbudokan_top_partner_items', $partner_items);
+if (!$show_partners || $partner_items === array()) {
+    return;
+}
 $partner_archive_url = apply_filters('nipponbudokan_top_partner_url', '');
 ?>
 <section id="top_partner-01" class="top_partner-01" aria-labelledby="top_partner_title">

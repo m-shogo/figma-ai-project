@@ -8,6 +8,26 @@
  * --------------------------------------------------------------------------------
  */
 
+function nipponbudokan_term_orderby()
+{
+    global $wpdb;
+
+    static $orderby = null;
+    if ($orderby === null) {
+        $orderby = $wpdb->get_var("SHOW COLUMNS FROM {$wpdb->terms} LIKE 'term_order'") ? 'term_order' : 'name';
+    }
+
+    return $orderby;
+}
+
+function nipponbudokan_term_query($args = array())
+{
+    $args['orderby'] = nipponbudokan_term_orderby();
+    $args['order'] = 'ASC';
+
+    return $args;
+}
+
 // ==========================================================================
 // カスタムポストの設定
 // ==========================================================================
@@ -17,8 +37,8 @@ function add_custom_post()
     'event', /* post-type */
     array(
       'labels' => array(
-        'name' => __('開催イベント'),
-        'all_items' => __('開催イベント一覧')
+        'name' => __('行事予定'),
+        'all_items' => __('行事予定一覧')
       ),
       'public' => true,
       'menu_position' => 7,
@@ -32,78 +52,78 @@ function add_custom_post()
       /* ここまで */
     )
   );
-  register_post_type(
-    'news', /* post-type */
-    array(
-      'labels' => array(
-        'name' => __('総務課'),
-        'all_items' => __('お知らせ一覧')
-      ),
-      'public' => true,
-      'menu_icon' => 'dashicons-groups',
-      'menu_position' => 5,
-      'has_archive' => 'news',
-      'rewrite' => true,
-      'capability_type' => 'soumu',
-      'capabilities' => array(
-        'edit_posts' => 'edit_soumu', //-------------記事の投稿と編集
-        'publish_posts' => 'publish_soumu', //----------記事の公開
-        'edit_published_posts' => 'edit_published_soumu', //---公開した記事の編集
-        'delete_posts' => 'delete_soumu', //-----------記事の削除
-        'delete_published_posts' => 'delete_published_soumu' //-公開した記事の削除
-      ),
-      'supports' => array('title', 'editor', 'thumbnail', 'custom-fields', 'excerpt', 'page-attributes')
-      /* ここまで */
-    )
-  );
-  register_post_type(
-    'budo-video', /* post-type */
-    array(
-      'labels' => array(
-        'name' => __('YouTube'),
-        'all_items' => __('YouTube一覧')
-      ),
-      'public' => true,
-      'menu_icon' => 'dashicons-format-aside',
-      'menu_position' => 11,
-      'has_archive' => 'budo-video',
-      'rewrite' => true,
-      'capability_type' => 'soumu',
-      'capabilities' => array(
-        'edit_posts' => 'edit_soumu', //-------------記事の投稿と編集
-        'publish_posts' => 'publish_soumu', //----------記事の公開
-        'edit_published_posts' => 'edit_published_soumu', //---公開した記事の編集
-        'delete_posts' => 'delete_soumu', //-----------記事の削除
-        'delete_published_posts' => 'delete_published_soumu' //-公開した記事の削除
-      ),
-      'supports' => array('title', 'editor', 'thumbnail', 'custom-fields', 'excerpt')
-      /* ここまで */
-    )
-  );
-  register_post_type(
-    'shosyashodou', /* post-type */
-    array(
-      'labels' => array(
-        'name' => __('教育文化課'),
-        'all_items' => __('お知らせ一覧')
-      ),
-      'public' => true,
-      'menu_icon' => 'dashicons-groups',
-      'menu_position' => 6,
-      'has_archive' => 'shosyashodou',
-      'rewrite' => true,
-      'capability_type' => 'shosyashodou',
-      'capabilities' => array(
-        'edit_posts' => 'edit_shosyashodou', //-------------記事の投稿と編集
-        'publish_posts' => 'publish_shosyashodou', //----------記事の公開
-        'edit_published_posts' => 'edit_published_shosyashodou', //---公開した記事の編集
-        'delete_posts' => 'delete_shosyashodou', //-----------記事の削除
-        'delete_published_posts' => 'delete_published_shosyashodou' //-公開した記事の削除
-      ),
-      'supports' => array('title', 'editor', 'thumbnail', 'custom-fields', 'excerpt', 'page-attributes')
-      /* ここまで */
-    )
-  );
+  // register_post_type(
+  //   'news', /* post-type */
+  //   array(
+  //     'labels' => array(
+  //       'name' => __('総務課'),
+  //       'all_items' => __('お知らせ一覧')
+  //     ),
+  //     'public' => true,
+  //     'menu_icon' => 'dashicons-groups',
+  //     'menu_position' => 5,
+  //     'has_archive' => 'news',
+  //     'rewrite' => true,
+  //     'capability_type' => 'soumu',
+  //     'capabilities' => array(
+  //       'edit_posts' => 'edit_soumu', //-------------記事の投稿と編集
+  //       'publish_posts' => 'publish_soumu', //----------記事の公開
+  //       'edit_published_posts' => 'edit_published_soumu', //---公開した記事の編集
+  //       'delete_posts' => 'delete_soumu', //-----------記事の削除
+  //       'delete_published_posts' => 'delete_published_soumu' //-公開した記事の削除
+  //     ),
+  //     'supports' => array('title', 'editor', 'thumbnail', 'custom-fields', 'excerpt', 'page-attributes')
+  //     /* ここまで */
+  //   )
+  // );
+  // register_post_type(
+  //   'budo-video', /* post-type */
+  //   array(
+  //     'labels' => array(
+  //       'name' => __('YouTube'),
+  //       'all_items' => __('YouTube一覧')
+  //     ),
+  //     'public' => true,
+  //     'menu_icon' => 'dashicons-format-aside',
+  //     'menu_position' => 11,
+  //     'has_archive' => 'budo-video',
+  //     'rewrite' => true,
+  //     'capability_type' => 'soumu',
+  //     'capabilities' => array(
+  //       'edit_posts' => 'edit_soumu', //-------------記事の投稿と編集
+  //       'publish_posts' => 'publish_soumu', //----------記事の公開
+  //       'edit_published_posts' => 'edit_published_soumu', //---公開した記事の編集
+  //       'delete_posts' => 'delete_soumu', //-----------記事の削除
+  //       'delete_published_posts' => 'delete_published_soumu' //-公開した記事の削除
+  //     ),
+  //     'supports' => array('title', 'editor', 'thumbnail', 'custom-fields', 'excerpt')
+  //     /* ここまで */
+  //   )
+  // );
+  // register_post_type(
+  //   'shosyashodou', /* post-type */
+  //   array(
+  //     'labels' => array(
+  //       'name' => __('教育文化課'),
+  //       'all_items' => __('お知らせ一覧')
+  //     ),
+  //     'public' => true,
+  //     'menu_icon' => 'dashicons-groups',
+  //     'menu_position' => 6,
+  //     'has_archive' => 'shosyashodou',
+  //     'rewrite' => true,
+  //     'capability_type' => 'shosyashodou',
+  //     'capabilities' => array(
+  //       'edit_posts' => 'edit_shosyashodou', //-------------記事の投稿と編集
+  //       'publish_posts' => 'publish_shosyashodou', //----------記事の公開
+  //       'edit_published_posts' => 'edit_published_shosyashodou', //---公開した記事の編集
+  //       'delete_posts' => 'delete_shosyashodou', //-----------記事の削除
+  //       'delete_published_posts' => 'delete_published_shosyashodou' //-公開した記事の削除
+  //     ),
+  //     'supports' => array('title', 'editor', 'thumbnail', 'custom-fields', 'excerpt', 'page-attributes')
+  //     /* ここまで */
+  //   )
+  // );
   register_post_type(
     'shodou-book', /* post-type */
     array(
@@ -142,22 +162,22 @@ function add_custom_post()
       /* ここまで */
     )
   );
-  register_post_type(
-    'budo-news', /* post-type */
-    array(
-      'labels' => array(
-        'name' => __('武道ニュース'),
-        'all_items' => __('武道ニュース一覧')
-      ),
-      'public' => true,
-      'menu_icon' => 'dashicons-format-aside',
-      'menu_position' => 9,
-      'has_archive' => 'budo-news',
-      'rewrite' => true,
-      'supports' => array('title', 'editor', 'thumbnail', 'custom-fields', 'excerpt')
-      /* ここまで */
-    )
-  );
+  // register_post_type(
+  //   'budo-news', /* post-type */
+  //   array(
+  //     'labels' => array(
+  //       'name' => __('武道ニュース'),
+  //       'all_items' => __('武道ニュース一覧')
+  //     ),
+  //     'public' => true,
+  //     'menu_icon' => 'dashicons-format-aside',
+  //     'menu_position' => 9,
+  //     'has_archive' => 'budo-news',
+  //     'rewrite' => true,
+  //     'supports' => array('title', 'editor', 'thumbnail', 'custom-fields', 'excerpt')
+  //     /* ここまで */
+  //   )
+  // );
   register_post_type(
     'tankoubon', /* post-type */
     array(
@@ -191,8 +211,8 @@ function add_custom_taxonomy()
     array(
       'hierarchical' => true, /* 親子関係が必要なければ false */
       'update_count_callback' => '_update_post_term_count',
-      'label' => '開催イベントのカテゴリー',
-      'singular_label' => '開催イベントのカテゴリー',
+      'label' => '行事予定のカテゴリー',
+      'singular_label' => '行事予定のカテゴリー',
       'public' => true,
       'show_ui' => true,
       'show_in_rest' => true,
@@ -203,30 +223,30 @@ function add_custom_taxonomy()
       ),
     )
   );
-  register_taxonomy(
-    'budo-video', /* タクソノミーの名前 */
-    'budo-video', /* books投稿で設定する */
-    array(
-      'hierarchical' => true, /* 親子関係が必要なければ false */
-      'update_count_callback' => '_update_post_term_count',
-      'label' => '総務課のカテゴリー',
-      'singular_label' => '総務課のカテゴリー',
-      'public' => true,
-      'show_ui' => true
-    )
-  );
-  register_taxonomy(
-    'news', /* タクソノミーの名前 */
-    'shosyashodou', /* books投稿で設定する */
-    array(
-      'hierarchical' => true, /* 親子関係が必要なければ false */
-      'update_count_callback' => '_update_post_term_count',
-      'label' => '教育文化課のカテゴリー',
-      'singular_label' => '教育文化課のカテゴリー',
-      'public' => true,
-      'show_ui' => true
-    )
-  );
+  // register_taxonomy(
+  //   'budo-video', /* タクソノミーの名前 */
+  //   'budo-video', /* books投稿で設定する */
+  //   array(
+  //     'hierarchical' => true, /* 親子関係が必要なければ false */
+  //     'update_count_callback' => '_update_post_term_count',
+  //     'label' => '総務課のカテゴリー',
+  //     'singular_label' => '総務課のカテゴリー',
+  //     'public' => true,
+  //     'show_ui' => true
+  //   )
+  // );
+  // register_taxonomy(
+  //   'news', /* タクソノミーの名前 */
+  //   'shosyashodou', /* books投稿で設定する */
+  //   array(
+  //     'hierarchical' => true, /* 親子関係が必要なければ false */
+  //     'update_count_callback' => '_update_post_term_count',
+  //     'label' => '教育文化課のカテゴリー',
+  //     'singular_label' => '教育文化課のカテゴリー',
+  //     'public' => true,
+  //     'show_ui' => true
+  //   )
+  // );
   register_taxonomy(
     'book', /* タクソノミーの名前 */
     'tankoubon', /* books投稿で設定する */

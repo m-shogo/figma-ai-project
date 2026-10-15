@@ -15,13 +15,11 @@ $news_panels = array(
     ),
 );
 
-$news_terms = get_terms(array(
+$news_terms = get_terms(nipponbudokan_term_query(array(
     'taxonomy' => 'category',
     'hide_empty' => true,
     'parent' => 0,
-    'orderby' => 'name',
-    'order' => 'ASC',
-));
+)));
 
 if (!empty($news_terms) && !is_wp_error($news_terms)) {
     foreach ($news_terms as $news_term) {

@@ -46,31 +46,12 @@ if ($taxonomy === 'event_cat') {
         'active' => $current_term_id === 0,
     );
 
-    $terms = get_terms(array(
-        'taxonomy' => $taxonomy,
+    $terms = get_terms(nipponbudokan_event_cat_query(array(
         'parent' => 0,
         'hide_empty' => false,
-        'orderby' => 'name',
-        'order' => 'ASC',
-    ));
+    )));
 
     if (!empty($terms) && !is_wp_error($terms)) {
-        // Event archive visual authority: 全て → 一般 → 武道 → 書道。
-        // Taxonomy remains the data owner; unknown future terms are appended.
-        $event_term_priority = array(
-            '一般' => 0,
-            '武道' => 1,
-            '書道' => 2,
-        );
-        usort($terms, static function ($a, $b) use ($event_term_priority) {
-            $a_priority = $event_term_priority[$a->name] ?? PHP_INT_MAX;
-            $b_priority = $event_term_priority[$b->name] ?? PHP_INT_MAX;
-            if ($a_priority === $b_priority) {
-                return strcmp($a->name, $b->name);
-            }
-            return $a_priority <=> $b_priority;
-        });
-
         foreach ($terms as $term) {
             $term_url = get_term_link($term);
             if (!is_wp_error($term_url) && $event_filter) {
@@ -111,14 +92,11 @@ if ($taxonomy === 'event_cat') {
         'active' => $current_category_id === 0,
     );
 
-    // WP カテゴリー（投稿が1件以上あるものだけ）。名前決め打ちしない。タブ色は CSS のまま。
-    $terms = get_terms(array(
+    $terms = get_terms(nipponbudokan_term_query(array(
         'taxonomy' => 'category',
         'hide_empty' => true,
         'parent' => 0,
-        'orderby' => 'name',
-        'order' => 'ASC',
-    ));
+    )));
 
     if (!empty($terms) && !is_wp_error($terms)) {
         foreach ($terms as $term) {

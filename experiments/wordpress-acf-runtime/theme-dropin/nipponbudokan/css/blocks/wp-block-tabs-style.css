@@ -56,6 +56,7 @@
     margin: 0;
     border: 0;
     border-right: 1px solid var(--color-text);
+    border-bottom: 1px solid var(--color-text);
     border-radius: 0;
     background-color: var(--color-secondary);
     color: var(--color-text);
@@ -80,17 +81,14 @@
     border-right: 0;
 }
 
-/* 2段目以降があるとき、上段3セル全部に下線。途中までの2段目だと n+4 の border-top だけでは途切れる。 */
-.wp-block-tabs .wp-block-tab-list:has([role='tab']:nth-child(4)) [role='tab']:nth-child(-n + 3),
-.block-editor_wrap .wp-block-tabs .wp-block-tab-list:has([role='tab']:nth-child(4)) [role='tab']:nth-child(-n + 3),
-.editor-styles-wrapper .wp-block-tabs .wp-block-tab-list:has([role='tab']:nth-child(4)) [role='tab']:nth-child(-n + 3) {
-    border-bottom: 1px solid var(--color-text);
-}
-
-.wp-block-tabs .wp-block-tab-list:has([role='tab']:nth-child(7)) [role='tab']:nth-child(n + 4):nth-child(-n + 6),
-.block-editor_wrap .wp-block-tabs .wp-block-tab-list:has([role='tab']:nth-child(7)) [role='tab']:nth-child(n + 4):nth-child(-n + 6),
-.editor-styles-wrapper .wp-block-tabs .wp-block-tab-list:has([role='tab']:nth-child(7)) [role='tab']:nth-child(n + 4):nth-child(-n + 6) {
-    border-bottom: 1px solid var(--color-text);
+/* 最終段だけ下線を消す。段数に依存しない。 */
+.wp-block-tabs .wp-block-tab-list [role='tab']:nth-last-child(-n + 3):nth-child(3n + 1),
+.wp-block-tabs .wp-block-tab-list [role='tab']:nth-last-child(-n + 3):nth-child(3n + 1) ~ [role='tab'],
+.block-editor_wrap .wp-block-tabs .wp-block-tab-list [role='tab']:nth-last-child(-n + 3):nth-child(3n + 1),
+.block-editor_wrap .wp-block-tabs .wp-block-tab-list [role='tab']:nth-last-child(-n + 3):nth-child(3n + 1) ~ [role='tab'],
+.editor-styles-wrapper .wp-block-tabs .wp-block-tab-list [role='tab']:nth-last-child(-n + 3):nth-child(3n + 1),
+.editor-styles-wrapper .wp-block-tabs .wp-block-tab-list [role='tab']:nth-last-child(-n + 3):nth-child(3n + 1) ~ [role='tab'] {
+    border-bottom: 0;
 }
 
 .wp-block-tabs .wp-block-tab-list [role='tab'][aria-selected='true'],
@@ -150,21 +148,18 @@
     }
 
     .wp-block-tabs .wp-block-tab-list [role='tab']:nth-child(3n),
+    .wp-block-tabs .wp-block-tab-list [role='tab']:nth-last-child(-n + 3):nth-child(3n + 1),
+    .wp-block-tabs .wp-block-tab-list [role='tab']:nth-last-child(-n + 3):nth-child(3n + 1) ~ [role='tab'],
+    .wp-block-tabs .wp-block-tab-list:has([role='tab']:nth-child(2)):not(:has([role='tab']:nth-child(3))) [role='tab']:last-child,
     .block-editor_wrap .wp-block-tabs .wp-block-tab-list [role='tab']:nth-child(3n),
-    .editor-styles-wrapper .wp-block-tabs .wp-block-tab-list [role='tab']:nth-child(3n) {
-        border-right: 1px solid var(--color-text);
-    }
-
-    .wp-block-tabs .wp-block-tab-list [role='tab']:nth-child(n + 4),
-    .block-editor_wrap .wp-block-tabs .wp-block-tab-list [role='tab']:nth-child(n + 4),
-    .editor-styles-wrapper .wp-block-tabs .wp-block-tab-list [role='tab']:nth-child(n + 4) {
-        border-top: 1px solid var(--color-text);
-    }
-
-    .wp-block-tabs .wp-block-tab-list [role='tab'][aria-selected='true'],
-    .block-editor_wrap .wp-block-tabs .wp-block-tab-list [role='tab'][aria-selected='true'],
-    .editor-styles-wrapper .wp-block-tabs .wp-block-tab-list [role='tab'][aria-selected='true'] {
-        line-height: 1;
+    .block-editor_wrap .wp-block-tabs .wp-block-tab-list [role='tab']:nth-last-child(-n + 3):nth-child(3n + 1),
+    .block-editor_wrap .wp-block-tabs .wp-block-tab-list [role='tab']:nth-last-child(-n + 3):nth-child(3n + 1) ~ [role='tab'],
+    .block-editor_wrap .wp-block-tabs .wp-block-tab-list:has([role='tab']:nth-child(2)):not(:has([role='tab']:nth-child(3))) [role='tab']:last-child,
+    .editor-styles-wrapper .wp-block-tabs .wp-block-tab-list [role='tab']:nth-child(3n),
+    .editor-styles-wrapper .wp-block-tabs .wp-block-tab-list [role='tab']:nth-last-child(-n + 3):nth-child(3n + 1),
+    .editor-styles-wrapper .wp-block-tabs .wp-block-tab-list [role='tab']:nth-last-child(-n + 3):nth-child(3n + 1) ~ [role='tab'],
+    .editor-styles-wrapper .wp-block-tabs .wp-block-tab-list:has([role='tab']:nth-child(2)):not(:has([role='tab']:nth-child(3))) [role='tab']:last-child {
+        border: 1px solid var(--color-text);
     }
 }
 

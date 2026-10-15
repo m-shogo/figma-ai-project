@@ -10,7 +10,6 @@
     overflow: hidden;
     min-height: 312px;
     padding: 64px 0;
-    background-color: var(--color-secondary);
 
     &::before {
         content: '';
@@ -91,11 +90,18 @@
     }
 
     @media screen and (min-width: 768px) {
+        overflow: visible;
         min-height: 0;
         padding: 0 0 80px;
 
+        /* PC 1603:7169. 下端はバナー下端、右端はバナー右端。325px はバナーより上へ出る。 */
         &::before {
-            display: none;
+            top: auto;
+            bottom: 0;
+            z-index: 2;
+            width: 307px;
+            height: 325px;
+            background-image: url('../../images/top/banner-octagon-pc.svg');
         }
 
         .tb_list {

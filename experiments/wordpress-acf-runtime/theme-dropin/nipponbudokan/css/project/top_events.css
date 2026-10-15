@@ -195,10 +195,14 @@
         font-size: 15px;
         line-height: 1.4;
         letter-spacing: 0.05em;
+    }
+    .te_card_title_line {
         background-image: linear-gradient(currentColor, currentColor);
         background-repeat: no-repeat;
         background-position: left bottom;
         background-size: 0 1px;
+        box-decoration-break: clone;
+        -webkit-box-decoration-break: clone;
         transition: background-size var(--transition-duration);
     }
     .te_card_date {
@@ -422,6 +426,9 @@
             gap: 80px;
             align-items: start;
         }
+        .te_layout:not(:has(.te_cards)) {
+            grid-template-columns: minmax(0, 600px);
+        }
 
         .te_featured {
             gap: 32px;
@@ -525,7 +532,7 @@
         transform: scale(1.17);
     }
 
-    a.te_card_link:focus-visible .te_card_title,
+    a.te_card_link:focus-visible .te_card_title_line,
     .te_upcoming_title a:focus-visible {
         background-size: 100% 1px;
     }
@@ -535,7 +542,7 @@
             transform: scale(1.17);
         }
 
-        a.te_card_link:hover .te_card_title,
+        a.te_card_link:hover .te_card_title_line,
         .te_upcoming_title a:hover {
             background-size: 100% 1px;
         }

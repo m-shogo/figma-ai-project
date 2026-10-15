@@ -22,10 +22,10 @@ $latest_posts = get_posts(array(
 ));
 $latest_id = !empty($latest_posts) ? (int) $latest_posts[0]->ID : 0;
 
-$book_terms = get_terms(array(
+$book_terms = get_terms(nipponbudokan_term_query(array(
     'taxonomy'   => 'book',
     'hide_empty' => true,
-));
+)));
 if (is_wp_error($book_terms)) {
     $book_terms = array();
 }

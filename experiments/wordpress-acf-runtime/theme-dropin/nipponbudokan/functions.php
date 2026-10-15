@@ -36,7 +36,7 @@ if (locate_template('inc/field.php') !== '') {
 }
 
 /**
- * 開催イベント archive / 詳細
+ * 行事予定 archive / 詳細
  */
 if (locate_template('inc/event.php') !== '') {
     require_once locate_template('inc/event.php');
@@ -159,14 +159,3 @@ function nipponbudokan_enqueue_page_top_focus_stability() {
 }
 add_action('wp_enqueue_scripts', 'nipponbudokan_enqueue_page_top_focus_stability', 20);
 
-function nipponbudokan_enqueue_title_underline() {
-    $path = get_theme_file_path('/js/title-underline.js');
-    wp_enqueue_script(
-        'title-underline-script',
-        get_theme_file_uri('/js/title-underline.js'),
-        array(),
-        file_exists($path) ? filemtime($path) : null,
-        array('strategy' => 'defer', 'in_footer' => true)
-    );
-}
-add_action('wp_enqueue_scripts', 'nipponbudokan_enqueue_title_underline', 20);

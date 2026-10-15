@@ -281,7 +281,7 @@ CANDIDATE evidence: `research/frontend-learning-evidence-local-nav-octagon-nowra
 
 **起きたこと**
 
-開催イベント PC（1619:9554）は `64`（月ナビ / 見出し塊 / カード行 / pager）の中に、見出し行とタブだけ `40` がある。`.news_archive` の一列 gap にタブを載せると見出し→タブが 64 になり、カード最終行の罫線も News 一覧の「末尾行は消す」に引きずられた。
+行事予定 PC（1619:9554）は `64`（月ナビ / 見出し塊 / カード行 / pager）の中に、見出し行とタブだけ `40` がある。`.news_archive` の一列 gap にタブを載せると見出し→タブが 64 になり、カード最終行の罫線も News 一覧の「末尾行は消す」に引きずられた。
 
 **原因**
 

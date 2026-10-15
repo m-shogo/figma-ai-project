@@ -984,15 +984,32 @@ window.addEventListener('resize', setVw);
     if (typeof ScrollHint !== 'function') {
       return;
     }
-    if (!document.querySelector('.wp-block-flexible-table-block-table.is-scroll-on-mobile')) {
-      return;
-    }
-    new ScrollHint('.wp-block-flexible-table-block-table.is-scroll-on-mobile', {
-      suggestiveShadow: true,
-      i18n: {
-        scrollable: 'スクロールできます',
-      },
-    });
+    const desktop = window.matchMedia('(min-width: 769px)');
+    const all = '.wp-block-flexible-table-block-table.is-scroll-on-pc, .wp-block-flexible-table-block-table.is-scroll-on-mobile';
+    const mount = function () {
+      document.querySelectorAll(all).forEach(function (element) {
+        element.style.overflow = '';
+        element.style.position = '';
+        element.classList.remove('scroll-hint');
+        element.querySelectorAll('.scroll-hint-icon-wrap, .scroll-hint-shadow-wrap').forEach(function (node) {
+          node.remove();
+        });
+      });
+      const selector = desktop.matches
+        ? '.wp-block-flexible-table-block-table.is-scroll-on-pc'
+        : '.wp-block-flexible-table-block-table.is-scroll-on-mobile';
+      if (!document.querySelector(selector)) {
+        return;
+      }
+      new ScrollHint(selector, {
+        suggestiveShadow: true,
+        i18n: {
+          scrollable: 'スクロールできます',
+        },
+      });
+    };
+    mount();
+    desktop.addEventListener('change', mount);
   }
 
   function purposeBanner() {

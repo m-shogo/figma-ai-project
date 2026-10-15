@@ -41,20 +41,20 @@
             letter-spacing: 0.05em;
             transition: var(--transition-duration);
 
+            border-bottom: 1px solid var(--color-text);
+
             &:nth-child(3n) {
                 border-right: 0;
+            }
+            /* 最終段だけ下線を消す。段数に依存しない。 */
+            &:nth-last-child(-n + 3):nth-child(3n + 1),
+            &:nth-last-child(-n + 3):nth-child(3n + 1) ~ .tab-button {
+                border-bottom: 0;
             }
             &.active {
                 background-color: var(--color-text);
                 color: var(--color-secondary);
             }
-        }
-
-        &:has(.tab-button:nth-child(4)) .tab-button:nth-child(-n + 3) {
-            border-bottom: 1px solid var(--color-text);
-        }
-        &:has(.tab-button:nth-child(7)) .tab-button:nth-child(n + 4):nth-child(-n + 6) {
-            border-bottom: 1px solid var(--color-text);
         }
 
         &:has(.tab-button:nth-child(2)):not(:has(.tab-button:nth-child(3))) {
@@ -83,16 +83,13 @@
                 border: 1px solid var(--color-text);
                 border-radius: 3px;
                 line-height: 1.5;
+            }
 
-                &:nth-child(3n) {
-                    border-right: 1px solid var(--color-text);
-                }
-                &:nth-child(n + 4) {
-                    border-top: 1px solid var(--color-text);
-                }
-                &.active {
-                    line-height: 1;
-                }
+            .tab-button:nth-child(3n),
+            .tab-button:nth-last-child(-n + 3):nth-child(3n + 1),
+            .tab-button:nth-last-child(-n + 3):nth-child(3n + 1) ~ .tab-button,
+            &:has(.tab-button:nth-child(2)):not(:has(.tab-button:nth-child(3))) .tab-button:last-child {
+                border: 1px solid var(--color-text);
             }
         }
     }

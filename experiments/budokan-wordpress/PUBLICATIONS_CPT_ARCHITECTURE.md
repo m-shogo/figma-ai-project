@@ -115,7 +115,7 @@ CPT（budo-book / shodou-book / tankoubon）
   = 現行でも存在するがナビ非使用。新サイトでは公開正本にしない。
 ```
 
-お知らせ `/news/` と開催イベント `/event/` だけが、DIRECTORY_MAP 上も **CPT archive そのもの**。刊行物は違う。
+お知らせ `/news/` と行事予定 `/event/` だけが、DIRECTORY_MAP 上も **CPT archive そのもの**。刊行物は違う。
 
 | 役割 | 公開 URL の owner | WP オブジェクト | テンプレート |
 | --- | --- | --- | --- |

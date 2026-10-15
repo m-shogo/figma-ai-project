@@ -20,7 +20,7 @@
                             <?php
                             $args = array(
                                 'post_type' => 'post', // 投稿タイプの指定
-                                'orderby' => 'id',
+                                'orderby' => nipponbudokan_term_orderby(),
                                 'hide_empty' => false, // 投稿がないカテゴリを出すかどうか
                                 'parent' => 0,
                             );
@@ -48,7 +48,7 @@
                                                     <?php
                                                     //子カテゴリの一覧取得条件
                                                     $category_children_args = array(
-                                                        'orderby' => 'id',
+                                                        'orderby' => nipponbudokan_term_orderby(),
                                                         'hide_empty' => 0,
                                                         'parent' => $category->cat_ID,
                                                     );
@@ -199,7 +199,7 @@
                                 <?php
                                 $taxonomies = $postType_cat;
                                 $args = array(
-                                    'orderby' => 'id',
+                                    'orderby' => nipponbudokan_term_orderby(),
                                     'hide_empty' => false, // 投稿がないカテゴリを出すかどうか
                                     'parent' => 0,
                                 );
@@ -229,7 +229,7 @@
                                                                 <?php
                                                                 //子カテゴリの一覧取得条件
                                                                 $term_children_args = array(
-                                                                    'orderby' => 'id',
+                                                                    'orderby' => nipponbudokan_term_orderby(),
                                                                     'hide_empty' => 0,
                                                                     'parent' => $term->term_id,
                                                                 );

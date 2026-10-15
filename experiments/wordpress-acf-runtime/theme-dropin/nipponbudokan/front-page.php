@@ -6,7 +6,6 @@ $default_title_pc = '伝統を未来へつなぐ、<br>武道文化の中心地'
 $default_title_sp = $default_title_pc;
 $default_lead_pc = '武道、書道の普及・振興、公益目的事業の拠点として活動しています。';
 $default_lead_sp = $default_lead_pc;
-$mv_fallback = $theme_uri . '/images/top/mv-sample.webp';
 $mv_hour = (int) (new DateTimeImmutable('now', new DateTimeZone('Asia/Tokyo')))->format('G');
 if ($mv_hour >= 6 && $mv_hour < 12) {
     $mv_field = 'top_mv_morning';
@@ -20,8 +19,9 @@ $mv_pc_id = is_array($mv_group) ? (int) ($mv_group['img_pc'] ?? 0) : 0;
 $mv_sp_id = is_array($mv_group) ? (int) ($mv_group['img_sp'] ?? 0) : 0;
 $mv_pc = $mv_pc_id ? wp_get_attachment_image_src($mv_pc_id, 'full') : null;
 $mv_sp = $mv_sp_id ? wp_get_attachment_image_src($mv_sp_id, 'full') : null;
-$mv_pc_src = !empty($mv_pc[0]) ? $mv_pc[0] : $mv_fallback;
+$mv_pc_src = !empty($mv_pc[0]) ? $mv_pc[0] : '';
 $mv_sp_src = !empty($mv_sp[0]) ? $mv_sp[0] : $mv_pc_src;
+$mv_img_src = $mv_sp_src !== '' ? $mv_sp_src : $mv_pc_src;
 $mv_alt_pc = $mv_pc_id ? (string) get_post_meta($mv_pc_id, '_wp_attachment_image_alt', true) : '';
 $mv_alt_sp = $mv_sp_id ? (string) get_post_meta($mv_sp_id, '_wp_attachment_image_alt', true) : '';
 $mv_alt = $mv_alt_sp !== '' ? $mv_alt_sp : $mv_alt_pc;
@@ -29,12 +29,16 @@ $mv_alt = $mv_alt_sp !== '' ? $mv_alt_sp : $mv_alt_pc;
 <div class="top_mainVisual">
     <div class="tm_stage">
         <div class="tm_mv">
+            <?php if ($mv_img_src !== ''): ?>
             <div class="tm_background">
                 <picture>
-                    <source srcset="<?php echo esc_url($mv_pc_src); ?>" media="(min-width: 768px)">
-                    <img src="<?php echo esc_url($mv_sp_src); ?>" alt="<?php echo esc_attr($mv_alt); ?>" width="1030" height="600" fetchpriority="high">
+                    <?php if ($mv_pc_src !== ''): ?>
+                        <source srcset="<?php echo esc_url($mv_pc_src); ?>" media="(min-width: 768px)">
+                    <?php endif; ?>
+                    <img src="<?php echo esc_url($mv_img_src); ?>" alt="<?php echo esc_attr($mv_alt); ?>" width="1030" height="600" fetchpriority="high">
                 </picture>
             </div>
+            <?php endif; ?>
             <div class="tm_inner">
                 <p class="tm_title">
                     <span class="tm_copy_pc"><?php echo wp_kses_post($default_title_pc); ?></span>

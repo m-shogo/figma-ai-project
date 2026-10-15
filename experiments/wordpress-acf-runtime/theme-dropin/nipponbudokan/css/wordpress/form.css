@@ -1213,6 +1213,11 @@ textarea {
         width: calc(50% - 18px) !important;
     }
 }
+.frm-datepicker .ui-datepicker .ui-datepicker-header,
+.frm-datepicker.ui-datepicker .ui-datepicker-header {
+    position: relative;
+    padding: 6px 0 !important;
+}
 .ui-datepicker-title {
     display: flex;
     align-items: center;
@@ -1227,15 +1232,19 @@ textarea {
     display: flex;
     align-items: center;
     justify-content: center;
-    transform: translateY(12px) !important;
+    transform: translateY(0) !important;
     text-decoration: none;
 }
 .ui-datepicker .ui-datepicker-prev::before,
 .ui-datepicker .ui-datepicker-next::before {
     position: static;
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin: 0;
+    mask: none;
     font-family: sans-serif;
+    font-size: 15px !important;
     font-weight: 400;
     line-height: 1;
     text-indent: 0;
@@ -1565,6 +1574,17 @@ textarea {
             min-width: auto;
         }
     }
+}
+
+/* フォーム単体の上下マージンは、ビジュアル下とパンくず上のページ余白を兼ねている。
+   通常ページと同じ _normalPage の padding が余白を持つので、先頭・末尾では足さない。
+   前後にブロックがあるときだけ、フォームとそのブロックの間隔として残す。 */
+.global_inner._content._normalPage .block-editor_wrap > .frm_forms:first-child {
+    margin-top: 0;
+}
+
+.global_inner._content._normalPage .block-editor_wrap > .frm_forms:last-child {
+    margin-bottom: 0;
 }
 
 @media screen and (min-width: 768px) {

@@ -16,6 +16,15 @@ $items = array(
  * replace the visual fallback items without changing this template's structure.
  */
 $items = apply_filters('nipponbudokan_top_instagram_items', $items);
+if (!is_array($items)) {
+    $items = array();
+}
+$items = array_values(array_filter($items, static function ($item) {
+    return is_array($item) && !empty($item['src']);
+}));
+if ($items === array()) {
+    return;
+}
 ?>
 <section id="top_instagram-01" class="top_instagram-01" aria-labelledby="ti_title">
     <div class="ti_inner">

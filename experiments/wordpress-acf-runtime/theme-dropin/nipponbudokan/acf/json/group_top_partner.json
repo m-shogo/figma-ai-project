@@ -3,6 +3,26 @@
     "title": "トップ_公式パートナー",
     "fields": [
         {
+            "key": "field_top_partner_select",
+            "label": "表示設定",
+            "name": "top_partner_select",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "「表示しない」のときは登録があっても出しません。0件のときは「表示する」でも出しません。",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "ui": 1,
+            "ui_on_text": "表示する",
+            "ui_off_text": "表示しない"
+        },
+        {
             "key": "field_top_partner",
             "label": "公式パートナー",
             "name": "top_partner-01",
@@ -113,5 +133,5 @@
     "description": "公式パートナー。件数上限なし。リンクは外部。",
     "show_in_rest": false,
     "display_title": "",
-    "modified": 1759301000
+    "modified": 1792034900
 }

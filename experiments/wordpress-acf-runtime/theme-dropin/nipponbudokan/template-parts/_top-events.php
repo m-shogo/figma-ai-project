@@ -12,10 +12,9 @@ $featured_status_labels = array(
     'closed' => '受付終了',
 );
 
-$event_terms = get_terms(array(
-    'taxonomy' => 'event_cat',
+$event_terms = get_terms(nipponbudokan_event_cat_query(array(
     'hide_empty' => true,
-));
+)));
 if (is_wp_error($event_terms)) {
     $event_terms = array();
 }
@@ -129,7 +128,26 @@ $render_upcoming_items = static function ($query) {
             <span class="te_heading_en"><span class="te_heading_en_initial">E</span>vent</span>
         </h2>
 
+        <?php
+        $featured_visible = array();
+        foreach ($featured_rows as $featured_row) {
+            if (!is_array($featured_row)) {
+                continue;
+            }
+            $featured_title = isset($featured_row['title']) ? trim((string) $featured_row['title']) : '';
+            $featured_category = isset($featured_row['category']) ? trim((string) $featured_row['category']) : '';
+            $featured_url = isset($featured_row['url']) ? trim((string) $featured_row['url']) : '';
+            $featured_status = $featured_status_labels[(string) ($featured_row['status'] ?? '')] ?? '';
+            $featured_thumb = !empty($featured_row['thumb']);
+            $featured_date = isset($featured_row['date']) ? trim((string) $featured_row['date']) : '';
+            if ($featured_title === '' && $featured_category === '' && $featured_url === '' && $featured_date === '' && !$featured_thumb && $featured_status === '') {
+                continue;
+            }
+            $featured_visible[] = $featured_row;
+        }
+        ?>
         <div class="te_layout">
+            <?php if ($featured_visible !== array()): ?>
             <div class="te_featured">
                 <div class="te_section_head te_featured_head">
                     <span class="te_section_icon te_featured_icon" aria-hidden="true"></span>
@@ -137,7 +155,7 @@ $render_upcoming_items = static function ($query) {
                 </div>
 
                 <div class="te_cards">
-                    <?php foreach ($featured_rows as $row): ?>
+                    <?php foreach ($featured_visible as $row): ?>
                         <?php
                         if (!is_array($row)) {
                             continue;
@@ -191,7 +209,7 @@ $render_upcoming_items = static function ($query) {
                                         </p>
                                     <?php endif; ?>
                                     <?php if ($title !== ''): ?>
-                                        <h3 class="te_card_title"><?php echo nbk_title_html($title); ?></h3>
+                                        <h3 class="te_card_title"><span class="te_card_title_line"><?php echo nbk_title_html($title); ?></span></h3>
                                     <?php endif; ?>
                                     <?php if ($date_html !== ''): ?>
                                         <p class="te_card_date"><span class="te_card_date_label">開催日</span><?php echo $date_html; ?></p>
@@ -206,6 +224,7 @@ $render_upcoming_items = static function ($query) {
                     <?php endforeach; ?>
                 </div>
             </div>
+            <?php endif; ?>
 
             <div class="te_upcoming">
                 <div class="te_section_head te_upcoming_head">

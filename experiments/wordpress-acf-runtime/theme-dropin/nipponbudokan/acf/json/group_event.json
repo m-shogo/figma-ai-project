@@ -1,6 +1,6 @@
 {
     "key": "group_event",
-    "title": "開催イベント",
+    "title": "行事予定",
     "fields": [
         {
             "key": "field_event_post_type",
@@ -171,7 +171,7 @@
     "instruction_placement": "label",
     "hide_on_screen": "",
     "active": true,
-    "description": "開催イベント一覧用。イベント名はWordPressのページタイトルを使用します。",
+    "description": "行事予定一覧用。イベント名はWordPressのページタイトルを使用します。",
     "show_in_rest": 0,
     "display_title": "",
     "allow_ai_access": false,

@@ -120,7 +120,7 @@
 - `template-parts/_top-partner.php` + `css/project/top_partner.css`。
 - TOP News直後へ接続。
 - 12団体のロゴはFigmaからTheme内 `images/top/partner/` へ永続保存し、一時Figma URLへhotlinkしない。
-- 未確定ACF構造や本番URLは作らず、fallback data + `nipponbudokan_top_partner_items` / `nipponbudokan_top_partner_url` filterで差し替え可能にした。
+- 登録0件、または `top_partner_select` が「表示しない」のときはセクションを出さない。ダミーロゴは出さない。`nipponbudokan_top_partner_items` / `nipponbudokan_top_partner_url` filterは残す。
 - 同一DOMをSP 2列 → PC 4列へCSSで展開。
 
 ### Runtime QA

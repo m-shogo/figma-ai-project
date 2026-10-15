@@ -94,24 +94,11 @@
                 }
             }
         }
-        /* MARK: モバイルでスクロール スタイル */
+        /* プラグインの breakpoint 768。
+           PC は 769px 以上、SP は 768px 以下。
+           表を幅いっぱいに縮めると overflow だけではスクロールが出ない。 */
+        &.is-scroll-on-pc,
         &.is-scroll-on-mobile {
-            @media screen and (max-width: 767px) {
-                overflow-x: auto;
-                padding-bottom: 10px;
-                /* WordPress runtime wraps the table before display, so the
-                   authored mobile scroll contract must target the descendant
-                   table rather than assume it is a direct child. */
-                table {
-                    width: 960px !important;
-                    min-width: 960px !important;
-                    th,
-                    td {
-                        min-width: 240px;
-                    }
-                }
-            }
-            /* Figma SP uses a 5px horizontal track/thumb. */
             &::-webkit-scrollbar {
                 width: 5px;
                 height: 5px;
@@ -123,6 +110,28 @@
             &::-webkit-scrollbar-thumb {
                 border-radius: 2.5px;
                 background: var(--color-primary);
+            }
+        }
+        &.is-scroll-on-mobile {
+            @media screen and (max-width: 768px) {
+                overflow-x: auto;
+                padding-bottom: 10px;
+                table {
+                    width: max-content !important;
+                    min-width: 100%;
+                    max-width: none !important;
+                }
+            }
+        }
+        &.is-scroll-on-pc {
+            @media screen and (min-width: 769px) {
+                overflow-x: auto;
+                padding-bottom: 10px;
+                table {
+                    width: max-content !important;
+                    min-width: 100%;
+                    max-width: none !important;
+                }
             }
         }
     }

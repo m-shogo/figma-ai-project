@@ -557,7 +557,7 @@ $hamburger_tree = array(
         'title' => '研修センターについて',
         'children' => $training_children,
     ),
-    array('custom' => true, 'title' => '開催イベント', 'url' => '/event/'),
+    array('custom' => true, 'title' => '行事予定', 'url' => '/event/'),
     array('custom' => true, 'title' => 'お知らせ', 'url' => '/news/'),
     array('path' => 'mandatory-budo', 'title' => '中学校武道必修化サイト'),
     array(

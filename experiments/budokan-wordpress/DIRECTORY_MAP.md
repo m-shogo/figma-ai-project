@@ -116,7 +116,7 @@
     - 食事 `/training-center/meals/` 固定ページ
     - 武道学園（勝浦分園） `/training-center/budo-school/` 固定ページ
     - アクセス `/training-center/access/` 固定ページ
-  - 開催イベント `/event/` イベント一覧
+  - 行事予定 `/event/` イベント一覧
   - お知らせ `/news/` お知らせ一覧
   - 特集記事 `/feature/` 特集一覧
   - 中学校武道必修化サイト `/mandatory-budo/` ナビゲーション

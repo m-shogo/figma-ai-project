@@ -4,7 +4,7 @@
 /* @import './global/component.css'; */
 
 @import './layout/global_header.css?v=20260911-panelx';
-@import './layout/global_footer.css?v=20261001-footer-pad';
+@import './layout/global_footer.css?v=20261015-octagon-banner';
 @import './layout/global_wrapper.css?v=20260904-sticky2';
 @import './layout/global_inner.css?v=20260915-pt48';
 @import './layout/global_navigation.css?v=20261002-menu-gap';
@@ -26,8 +26,8 @@
 @import './blocks/wp-block-separator-style.css?v=20260915-news-hr';
 @import './blocks/wp-block-slider-style.css?v=20260911-invert';
 @import './blocks/wp-block-embed-style.css?v=20261014-yt-center';
-@import './blocks/wp-block-table-style.css?v=20261014-table-align-left';
-@import './blocks/wp-block-tabs-style.css?v=20260915-2col';
+@import './blocks/wp-block-table-style.css?v=20261015-table-scroll2';
+@import './blocks/wp-block-tabs-style.css?v=20261015-tab-border';
 @import './blocks/wp-block-text-style.css';
 @import './blocks/wp-block-textLink-style.css';
 @import './blocks/wp-lightbox-overlay.css';
@@ -45,14 +45,14 @@
    SP selector / PC grid can override the shared menu baseline without !important. */
 @import './module/local_navigation.css?v=20260915-ln-hover';
 @import './module/module_newsCard-01.css';
-@import './module/module_newsList-01.css?v=20261006-title-seq';
+@import './module/module_newsList-01.css?v=20261015-title-clone';
 @import './module/module_pager-01.css';
 @import './module/module_pager-02.css?v=20260915-back-only';
 @import './module/module_publicationBudo.css?v=20261006-shodou-external';
 @import './module/module_publicationBook.css?v=20260925-book-price-gap';
 @import './module/module_search-01.css';
 @import './module/module_searchList-01.css?v=20261014-search-pager';
-@import './module/module_tab.css?v=20260925-tab-border';
+@import './module/module_tab.css?v=20261015-tab-border';
 @import './module/module_table.css';
 @import './module/module_textLink.css';
 @import './module/module_titleSingle.css?v=20260924-event-crumb';
@@ -60,15 +60,15 @@
 
 /* top_module.css は .top_notice-01 を absolute にするので FV と衝突する。title/button は top_news.css へ */
 @import './project/top_mainVisual.css?v=20261002-notice-hover'; /* TOP FV PC+SP 2026-08-28 */
-@import './project/top_events.css?v=20261006-title-line'; /* TOP events + FullCalendar 2026-08-28 */
-@import './project/top_guide.css?v=20261001-guide-line'; /* TOP 目的から探す（大） 2026-08-28 */
+@import './project/top_events.css?v=20261015-title-clone'; /* TOP events + FullCalendar 2026-08-28 */
+@import './project/top_guide.css?v=20261015-guide-bg'; /* TOP 目的から探す（大） 2026-08-28 */
 @import './project/top_about.css?v=20261002-about-cols'; /* TOP 日本武道館とは SP Swiper */
 @import './project/top_news.css?v=20261006-title-line';
 @import './project/top_partner.css?v=20261014-partner-hit'; /* TOP 公式パートナー PC+SP 2026-08-28 */
-@import './project/top_instagram.css?v=20260904-octagon2'; /* TOP 月刊「武道」編集部 PC+SP 2026-08-29 */
-@import './project/top_banner.css?v=20261001-banner-static';
+@import './project/top_instagram.css?v=20261015-ti-inner'; /* TOP 月刊「武道」編集部 PC+SP 2026-08-29 */
+@import './project/top_banner.css?v=20261015-octagon-banner';
 
-@import './wordpress/form.css?v=20260928-frm-btn';
+@import './wordpress/form.css?v=20261015-datepicker2';
 @import './wordpress/wordpress.css?v=20260928-frm-margin';
 
 /* Cardinal-vertex octagon + Parts body fill live on this cache-busted file.

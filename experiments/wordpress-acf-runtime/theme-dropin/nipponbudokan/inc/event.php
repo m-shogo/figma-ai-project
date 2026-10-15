@@ -1,10 +1,17 @@
 <?php
 
 /**
- * 開催イベント archive / 詳細。
+ * 行事予定 archive / 詳細。
  * ACF は post_type / event_date / event_open_time / event_start_time / event_contact。
  * イベント名は WordPress の投稿タイトルを使用する。
  */
+
+function nipponbudokan_event_cat_query($args = array())
+{
+    $args['taxonomy'] = 'event_cat';
+
+    return nipponbudokan_term_query($args);
+}
 
 function nipponbudokan_event_value_present($value)
 {
