@@ -37,6 +37,7 @@ $latest_budo = new WP_Query(array(
             </div>
         </div>
 
+        <?php get_template_part('template-parts/_local-navigation'); ?>
         <?php get_template_part('template-parts/_breadCrumb'); ?>
     </section>
 </main>

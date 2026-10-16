@@ -12,7 +12,7 @@ Local Navigation の WordPress owner は **ACF `page_local_nav` + 名前接頭�
 - WordPress owner: ACF `page_local_nav`（メニュー ID。なし＝非表示）
 - メニュー命名: 表示名 `ローカル：…` / slug `local-*`（日本語名は `local-menu-{id}`）
 - 位置割当メニュー（`global-nav` / `mega-nav` / `sub-nav` / `footer-nav` 等）は ACF 選択肢から除外
-- PHP render path: `page.php` または `templates/template-form.php` → `_local-navigation.php` → `sidebar.php` → `wp_nav_menu(menu => id)` + `Custom_Sidebar_Walker_Nav_Menu`（`local_nav_show_all`）
+- PHP render path: 固定ページの全テンプレート（`page.php` / `templates/template-form.php` / 刊行物 `page-publications-*.php`）→ `_local-navigation.php` → `sidebar.php` → `wp_nav_menu(menu => id)` + `Custom_Sidebar_Walker_Nav_Menu`（`local_nav_show_all`）
 - markup: `.local_navigation` / `.ln_links` / `lnl_*` + `mm_*`
 - CSS: `css/module/local_navigation.css`
 - メニュー階層: 02 グループリンク（PC 見出し。例: 大会・イベント）→ 03 子（4列）。家族ラッパーは置かない
@@ -21,15 +21,13 @@ Local Navigation の WordPress owner は **ACF `page_local_nav` + 名前接頭�
 
 ## Shell / template contract
 
-Local Nav を出すのは次だけ。
+Local Nav は固定ページの全テンプレートで出す。Human 2026-10-16。フロントページは ACF の対象外。ACF が「なし」ならセクション自体出ない。
 
 | テンプレート | 出し |
 | --- | --- |
 | デフォルト `page.php` | する |
 | `templates/template-form.php` | する |
-| `template-oneColumn.php` / `oneColumnWide` / `oneColumnLocalNav` | **しない** |
-
-`template-oneColumnLocalNav.php` は既存割当互換で残してよいが、Local Nav 呼び出しは持たない。ACF が空ならセクション自体出ない。
+| 刊行物 `page-publications-*.php` | する |
 
 ## Current Figma authority（PC）
 
@@ -77,7 +75,7 @@ QA fixture を production メニューへ seed しない。
 
 ## Reuse rule
 
-`page.php` / `template-form.php` → `_local-navigation.php` → `sidebar.php`（ACF menu）→ walker → `local_navigation.css`
+固定ページの全テンプレート → `_local-navigation.php` → `sidebar.php`（ACF menu）→ walker → `local_navigation.css`
 
 ページ専用 Local Nav CSS / 別 renderer / 位置 `sidebar-nav` 再導入をしない。
 

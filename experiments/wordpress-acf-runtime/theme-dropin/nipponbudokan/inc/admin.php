@@ -568,11 +568,31 @@ function remove_editor_init()
 function add_file_types_to_uploads($file_types)
 {
 
-  $new_filetypes        = array();
-  $new_filetypes['svg'] = 'image/svg+xml';
-  $file_types           = array_merge($file_types, $new_filetypes);
+  $new_filetypes         = array();
+  $new_filetypes['svg']  = 'image/svg+xml';
+  $new_filetypes['epub'] = 'application/epub+zip';
+  $file_types            = array_merge($file_types, $new_filetypes);
 
   return $file_types;
 }
 
-add_action('upload_mimes', 'add_file_types_to_uploads');
+add_filter('upload_mimes', 'add_file_types_to_uploads');
+
+/**
+ * EPUB は ZIP コンテナなので、fileinfo は application/zip と判定する。
+ * 拡張子が epub のときだけ、WordPress の実体MIME不一致で落とさない。
+ */
+function nipponbudokan_allow_epub_filetype($data, $file, $filename, $mimes)
+{
+  if (strtolower(pathinfo((string) $filename, PATHINFO_EXTENSION)) !== 'epub') {
+    return $data;
+  }
+
+  $data['ext']             = 'epub';
+  $data['type']            = 'application/epub+zip';
+  $data['proper_filename'] = false;
+
+  return $data;
+}
+
+add_filter('wp_check_filetype_and_ext', 'nipponbudokan_allow_epub_filetype', 10, 4);

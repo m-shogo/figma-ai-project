@@ -2,192 +2,197 @@
 /* TOP 月刊「武道」編集部 / Instagram — Current Figma: SP 1360:9389 / PC 1603:7173 */
 
 .global_contents > .top_instagram-01 {
-    padding: 64px 32px 0;
+  padding: 64px 32px 0;
 }
 
 .top_instagram-01 {
-    .ti_inner {
-        display: flex;
-        flex-direction: column;
-        gap: 32px;
-        width: 100%;
-        margin-inline: auto;
-        position: relative;
-        z-index: 2;
-    }
-    .ti_head {
-        display: flex;
-        flex-direction: column;
-        gap: 24px;
-        align-items: center;
-    }
-    .ti_titleGroup {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        align-items: center;
-    }
-    .ti_title {
-        margin: 0;
-        color: var(--color-text);
-        font-family: var(--font-zen-old-mincho);
-        font-size: 22px;
-        font-weight: 500;
-        line-height: 1;
-        letter-spacing: 0.05em;
-    }
-    .ti_label {
-        position: relative;
-        display: flex;
-        gap: 0;
-        align-items: center;
-        min-height: 28px;
-        margin: 0;
-        color: var(--color-primary);
-        font-family: var(--font-zen-old-mincho);
-        font-size: 14px;
-        font-weight: 500;
-        line-height: 1;
-        letter-spacing: 0.05em;
-    }
-    .ti_marker {
-        position: absolute;
-        top: 50%;
-        left: 0;
-        display: block;
-        flex: none;
-        width: 28px;
-        height: 28px;
-        transform: translateY(-50%);
-        background-color: var(--color-primary);
-        clip-path: var(--clip-octagon);
-    }
-    .ti_labelText {
-        position: relative;
-        z-index: 1;
-        display: inline-flex;
-        align-items: center;
-        white-space: nowrap;
-    }
-    .ti_labelInitial {
-        display: inline-grid;
-        place-items: center;
-        width: 28px;
-        height: 28px;
-        line-height: 1;
-        color: #fff;
-    }
-    .ti_lead {
-        width: 100%;
-        margin: 0;
-        color: var(--color-text);
-        font-family: var(--font-zen-kaku-gothic);
-        font-size: 15px;
-        line-height: 1.8;
-        letter-spacing: 0.05em;
-    }
-    .ti_thumbnails {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 1px;
-        width: 100%;
-        margin: 0;
-        padding: 0;
-        list-style: none;
-    }
-    .ti_thumbnail {
-        overflow: hidden;
-        aspect-ratio: 4 / 5;
-    }
-    .ti_thumbnail:nth-child(n + 5) {
-        display: none;
-    }
-    .ti_link,
-    .ti_thumbnail img {
-        display: block;
-        width: 100%;
-        height: 100%;
-    }
-    .ti_thumbnail img {
-        object-fit: cover;
-    }
+  .ti_inner {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    width: 100%;
+    margin-inline: auto;
+    position: relative;
+    z-index: 2;
+  }
+  .ti_head {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    align-items: center;
+  }
+  .ti_titleGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+  }
+  .ti_title {
+    margin: 0;
+    color: var(--color-text);
+    font-family: var(--font-zen-old-mincho);
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: 0.05em;
+  }
+  .ti_label {
+    position: relative;
+    display: flex;
+    gap: 0;
+    align-items: center;
+    min-height: 28px;
+    margin: 0;
+    color: var(--color-primary);
+    font-family: var(--font-zen-old-mincho);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: 0.05em;
+  }
+  .ti_marker {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    display: block;
+    flex: none;
+    width: 28px;
+    height: 28px;
+    transform: translateY(-50%);
+    background-color: var(--color-primary);
+    clip-path: var(--clip-octagon);
+  }
+  .ti_labelText {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+  }
+  .ti_labelInitial {
+    display: inline-grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    line-height: 1;
+    color: #fff;
+  }
+  .ti_lead {
+    width: 100%;
+    margin: 0;
+    color: var(--color-text);
+    font-family: var(--font-zen-kaku-gothic);
+    font-size: 15px;
+    line-height: 1.8;
+    letter-spacing: 0.05em;
+  }
+  .ti_thumbnails {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .ti_thumbnail {
+    overflow: hidden;
+    aspect-ratio: 4 / 5;
+  }
+  .ti_thumbnail:nth-child(n + 5) {
+    display: none;
+  }
+  .ti_link,
+  .ti_thumbnail img {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  .ti_thumbnail img {
+    object-fit: cover;
+  }
 }
 
 /* MARK: instagram_pc */
 @media screen and (min-width: 768px) {
-    .global_contents > .top_instagram-01 {
-        padding: 100px 110px 80px;
+  .global_contents > .top_instagram-01 {
+    padding: 100px 110px 80px;
+  }
+  .top_instagram-01 {
+    .ti_inner {
+      gap: 40px;
+      width: 1160px;
     }
-    .top_instagram-01 {
-        .ti_inner {
-            gap: 40px;
-            width: 1160px;
-        }
-        .ti_head {
-            flex-direction: row;
-            gap: 40px;
-            align-items: flex-end;
-            justify-content: space-between;
-        }
-        .ti_titleGroup {
-            gap: 10px;
-            align-items: flex-start;
-            min-width: 226px;
-        }
-        .ti_title {
-            font-family: var(--font-zen-old-mincho);
-            font-size: 24px;
-            font-weight: 500;
-        }
-        .ti_label {
-            position: relative;
-            gap: 0;
-            min-height: 28px;
-            padding-left: 0;
-            font-family: var(--font-zen-old-mincho);
-            font-size: 16px;
-            font-weight: 500;
-            white-space: nowrap;
-        }
-        .ti_marker {
-            position: absolute;
-            top: 50%;
-            left: 0;
-            width: 28px;
-            height: 28px;
-            transform: translateY(-50%);
-        }
-        .ti_labelText {
-            position: relative;
-            z-index: 1;
-            display: inline-flex;
-            align-items: center;
-            white-space: nowrap;
-        }
-        .ti_labelInitial {
-            display: inline-grid;
-            place-items: center;
-            width: 28px;
-            height: 28px;
-            line-height: 1;
-            color: #fff;
-        }
-        .ti_lead {
-            width: auto;
-            white-space: nowrap;
-        }
-        .ti_thumbnails {
-            grid-template-columns: repeat(5, 231px);
-            gap: 1px;
-        }
-        .ti_thumbnail,
-        .ti_thumbnail:nth-child(n + 5) {
-            display: block;
-            width: 231px;
-            height: 289px;
-            aspect-ratio: auto;
-        }
+    .ti_head {
+      flex-direction: row;
+      gap: 40px;
+      align-items: flex-start;
+      justify-content: space-between;
     }
+    .ti_titleGroup {
+      flex: 0 1 360px;
+      gap: 10px;
+      align-items: flex-start;
+      min-width: 226px;
+      max-width: 360px;
+    }
+    .ti_title {
+      font-family: var(--font-zen-old-mincho);
+      font-size: 24px;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+    .ti_label {
+      position: relative;
+      gap: 0;
+      min-height: 28px;
+      padding-left: 0;
+      font-family: var(--font-zen-old-mincho);
+      font-size: 16px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    .ti_marker {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 28px;
+      height: 28px;
+      transform: translateY(-50%);
+    }
+    .ti_labelText {
+      position: relative;
+      z-index: 1;
+      display: inline-flex;
+      align-items: center;
+      white-space: nowrap;
+    }
+    .ti_labelInitial {
+      display: inline-grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      line-height: 1;
+      color: #fff;
+    }
+    .ti_lead {
+      flex: 1 1 auto;
+      width: auto;
+      min-width: 0;
+      white-space: normal;
+    }
+    .ti_thumbnails {
+      grid-template-columns: repeat(5, 231px);
+      gap: 1px;
+    }
+    .ti_thumbnail,
+    .ti_thumbnail:nth-child(n + 5) {
+      display: block;
+      width: 231px;
+      height: 289px;
+      aspect-ratio: auto;
+    }
+  }
 }
 
 /* // ==========================================================================
@@ -196,199 +201,188 @@
 // URLs remain fail-closed like the existing global footer until an owner exists.
 // ========================================================================== */
 .global_contents > .top_sns-01 {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 328px;
+  padding: 64px 0;
+  background-color: var(--color-secondary);
+
+  &::before {
+    content: "";
+    position: absolute;
+    z-index: 0;
+    top: 145px;
+    right: 0;
+    width: 260px;
+    height: 183px;
+    background: url("../../images/top/sns-octagon-sp.svg") center / 100% 100%
+      no-repeat;
+    pointer-events: none;
+  }
+
+  .ts_inner {
     position: relative;
-    isolation: isolate;
-    overflow: hidden;
-    min-height: 328px;
-    padding: 64px 0;
-    background-color: var(--color-secondary);
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: flex-start;
+    width: 312px;
+    margin-inline: auto;
+  }
+
+  .ts_group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+    min-height: 40px;
+  }
+
+  .ts_group_editorial {
+    min-height: 80px;
+    padding-block: 19px;
+    border-top: 1px solid var(--color-line);
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  .ts_label,
+  .ts_official_label {
+    margin: 0;
+    color: var(--color-text);
+    font-family: var(--font-zen-kaku-gothic);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: 0.05em;
+  }
+
+  .ts_label {
+    white-space: nowrap;
+  }
+
+  .ts_official_label {
+    display: flex;
+    flex-direction: column;
+    width: 196px;
+    line-height: 1.4;
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .ts_official_label_small {
+    font-size: 10px;
+  }
+
+  .ts_icons {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .ts_icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    flex: 0 0 40px;
+    border-radius: 50%;
+    background-color: var(--color-text);
+    color: var(--color-secondary);
+    text-decoration: none;
+    box-shadow: inset 0 0 0 1px var(--color-text);
+    transition:
+      background-color var(--transition-duration),
+      color var(--transition-duration);
 
     &::before {
-        content: '';
-        position: absolute;
-        z-index: 0;
-        top: 145px;
-        right: 0;
-        width: 260px;
-        height: 183px;
-        background: url('../../images/top/sns-octagon-sp.svg') center / 100% 100% no-repeat;
-        pointer-events: none;
+      font-family: var(--font-awesomeBrands);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1;
+    }
+  }
+
+  .ts_icon_youtube::before {
+    content: "\f167";
+  }
+
+  .ts_icon_instagram::before {
+    content: "\f16d";
+  }
+
+  .ts_icon_x::before {
+    content: "\e61b";
+  }
+
+  @media screen and (min-width: 768px) {
+    overflow: visible;
+    min-height: 240px;
+    padding: 80px 0;
+
+    &::before {
+      top: 16px;
+      width: 340px;
+      height: 240px;
+      background-image: url("../../images/top/sns-octagon-pc.svg");
     }
 
     .ts_inner {
-        position: relative;
-        z-index: 1;
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-        align-items: flex-start;
-        width: 312px;
-        margin-inline: auto;
+      flex-direction: row;
+      gap: 48px;
+      align-items: stretch;
+      width: 954px;
+      height: auto;
+      min-height: 80px;
     }
 
     .ts_group {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 20px;
-        width: 100%;
-        min-height: 40px;
+      width: auto;
+      height: auto;
+      min-width: 0;
+      min-height: 80px;
     }
 
     .ts_group_editorial {
-        min-height: 80px;
-        padding-block: 19px;
-        border-top: 1px solid var(--color-line);
-        border-bottom: 1px solid var(--color-line);
+      padding: 0 48px;
+      border-top: 0;
+      border-bottom: 0;
+      border-left: 1px solid var(--color-line);
+      border-right: 1px solid var(--color-line);
     }
 
     .ts_label,
     .ts_official_label {
-        margin: 0;
-        color: var(--color-text);
-        font-family: var(--font-zen-kaku-gothic);
-        font-size: 14px;
-        font-weight: 500;
-        line-height: 1;
-        letter-spacing: 0.05em;
-    }
-
-    .ts_label {
-        white-space: nowrap;
-    }
-
-    .ts_label_youtube {
-        width: 84px;
+      min-width: 0;
+      font-size: 16px;
+      line-height: 1.4;
+      white-space: normal;
+      overflow-wrap: anywhere;
     }
 
     .ts_official_label {
-        display: flex;
-        flex-direction: column;
-        width: 196px;
-        line-height: 1.4;
-        text-align: right;
-        white-space: nowrap;
+      width: auto;
     }
 
     .ts_official_label_small {
-        font-size: 10px;
+      font-size: 13px;
     }
-
-    .ts_icons {
-        display: flex;
-        gap: 16px;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-    }
-
-    .ts_icon {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 40px;
-        height: 40px;
-        flex: 0 0 40px;
-        border-radius: 50%;
-        background-color: var(--color-text);
-        color: var(--color-secondary);
-        text-decoration: none;
-        box-shadow: inset 0 0 0 1px var(--color-text);
-        transition:
-            background-color var(--transition-duration),
-            color var(--transition-duration);
-
-        &::before {
-            font-family: var(--font-awesomeBrands);
-            font-size: 18px;
-            font-weight: 400;
-            line-height: 1;
-        }
-    }
-
-    .ts_icon_youtube::before {
-        content: '\f167';
-    }
-
-    .ts_icon_instagram::before {
-        content: '\f16d';
-    }
-
-    .ts_icon_x::before {
-        content: '\e61b';
-    }
-
-    @media screen and (min-width: 768px) {
-        overflow: visible;
-        min-height: 240px;
-        padding: 80px 0;
-
-        &::before {
-            top: 14px;
-            width: 340px;
-            height: 240px;
-            background-image: url('../../images/top/sns-octagon-pc.svg');
-        }
-
-        .ts_inner {
-            flex-direction: row;
-            gap: 48px;
-            align-items: center;
-            width: 954px;
-            height: 80px;
-        }
-
-        .ts_group {
-            width: auto;
-            height: 80px;
-            min-height: 80px;
-        }
-
-        .ts_group_youtube {
-            width: 156px;
-        }
-
-        .ts_group_editorial {
-            width: 363px;
-            padding: 0 48px;
-            border-top: 0;
-            border-bottom: 0;
-            border-left: 1px solid var(--color-line);
-            border-right: 1px solid var(--color-line);
-        }
-
-        .ts_group_official {
-            width: 339px;
-        }
-
-        .ts_label,
-        .ts_official_label {
-            font-size: 16px;
-        }
-
-        .ts_label_youtube {
-            width: auto;
-        }
-
-        .ts_official_label {
-            width: 223px;
-        }
-
-        .ts_official_label_small {
-            font-size: 13px;
-        }
-    }
+  }
 }
 
 .global_contents > .top_sns-01 .ts_icon:focus-visible {
-    background-color: var(--color-secondary);
-    color: var(--color-text);
+  background-color: var(--color-secondary);
+  color: var(--color-text);
 }
 
 @media (any-hover: hover) {
-    .global_contents > .top_sns-01 .ts_icon:hover {
-        background-color: var(--color-secondary);
-        color: var(--color-text);
-    }
+  .global_contents > .top_sns-01 .ts_icon:hover {
+    background-color: var(--color-secondary);
+    color: var(--color-text);
+  }
 }
-

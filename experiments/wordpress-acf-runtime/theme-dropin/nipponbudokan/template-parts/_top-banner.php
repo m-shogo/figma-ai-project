@@ -2,17 +2,17 @@
 $theme_uri = get_template_directory_uri();
 $banners = array(
     array(
-        'src' => $theme_uri . '/images/top/bnr-takarakuji.webp',
-        'alt' => '一般財団法人 日本宝くじ協会',
-        'url' => 'https://jla-takarakuji.or.jp/',
-        'width' => 253,
-        'height' => 80,
-    ),
-    array(
         'src' => $theme_uri . '/images/top/bnr-sports.webp',
         'alt' => 'スポーツくじ',
         'url' => 'https://www.toto-dream.com/',
         'width' => 204,
+        'height' => 80,
+    ),
+    array(
+        'src' => $theme_uri . '/images/top/bnr-takarakuji.webp',
+        'alt' => '一般財団法人 日本宝くじ協会',
+        'url' => 'https://jla-takarakuji.or.jp/',
+        'width' => 253,
         'height' => 80,
     ),
 );

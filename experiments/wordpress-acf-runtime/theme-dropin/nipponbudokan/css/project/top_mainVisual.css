@@ -64,9 +64,9 @@ html:has(.top_mainVisual) { scrollbar-gutter: auto; }
             gap: 20px;
             align-items: flex-start;
             position: absolute;
-            top: 266px;
+            top: auto;
             right: 20px;
-            bottom: auto;
+            bottom: 59px;
             left: 20px;
             z-index: 1;
             color: var(--color-secondary);
@@ -379,8 +379,8 @@ html:has(.top_mainVisual) { scrollbar-gutter: auto; }
             }
             .tm_inner {
                 right: auto;
-                bottom: auto;
-                top: 338px;
+                top: auto;
+                bottom: 75px;
                 left: 60px;
                 width: auto;
                 max-width: calc(100% - 120px);

@@ -22,11 +22,10 @@
 
         img {
             position: absolute;
-            top: 959px;
+            bottom: 0;
             left: 0;
             display: block;
             width: 100%;
-            height: 841px;
             object-fit: cover;
             object-position: 50% 50%;
         }
@@ -55,11 +54,17 @@
         gap: 32px;
     }
 
+    .ta_side,
+    .ta_copy {
+        display: contents;
+    }
+
     .ta_heading {
         display: flex;
         flex-direction: column;
         align-items: center;
         gap: 14px;
+        order: 1;
         margin: 0;
         text-align: center;
     }
@@ -119,22 +124,13 @@
         color: var(--color-secondary);
     }
 
-    .ta_panel {
-        position: relative;
-        z-index: 1;
-        width: 327px;
-        max-width: 100%;
-        padding: 0;
-        background-color: transparent;
-        color: var(--color-text);
-    }
-
     .ta_lead_break {
         display: none;
     }
 
     .ta_lead {
-        margin: 0 0 32px;
+        order: 2;
+        margin: 0;
         font-family: var(--font-zen-kaku-gothic);
         font-size: 16px;
         font-weight: 400;
@@ -145,6 +141,7 @@
     }
 
     .ta_actions {
+        order: 3;
         display: flex;
         flex-direction: column;
         gap: 16px;
@@ -193,7 +190,9 @@
 
     .ta_cards_wrap {
         position: relative;
-        padding: 32px 0 308px;
+        order: 4;
+        width: 100%;
+        padding: 0 0 308px;
         background-color: transparent;
     }
 
@@ -266,7 +265,7 @@
         top: 0;
         right: 0;
         display: flex;
-        flex-direction: column;
+        flex-direction: column-reverse;
         align-items: flex-end;
         gap: 3px;
         color: var(--color-secondary);
@@ -337,14 +336,15 @@
         background-color: transparent;
 
         .ta_stage_bg {
-            height: 1040px;
-            bottom: auto;
+            height: 100%;
+            bottom: 0;
             background-color: #dbebf8;
         }
 
         .ta_stage_bg img {
             position: absolute;
             top: 0;
+            bottom: auto;
             left: 0;
             width: 100%;
             height: 100%;
@@ -384,26 +384,38 @@
 
         .ta_top {
             display: grid;
-            grid-template-columns: 240px 840px;
-            grid-template-rows: 317px 120px;
-            grid-template-areas:
-                'heading lead'
-                'actions lead';
+            grid-template-columns: 240px minmax(0, 840px);
             align-items: start;
             justify-items: start;
             column-gap: 80px;
-            row-gap: 48px;
             text-align: left;
         }
 
+        .ta_side,
+        .ta_copy {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            min-width: 0;
+        }
+
+        .ta_side {
+            gap: 48px;
+            width: 240px;
+        }
+
+        .ta_copy {
+            gap: 49px;
+            width: 100%;
+        }
+
         .ta_heading {
-            grid-area: heading;
             position: relative;
             display: block;
+            order: 0;
             width: 166px;
             height: 317px;
-            justify-self: center;
-            margin: 0;
+            margin-inline: auto;
             text-align: left;
 
             &::before {
@@ -469,13 +481,9 @@
             color: #fff;
         }
 
-        .ta_panel {
-            display: contents;
-        }
-
         .ta_lead {
-            grid-area: lead;
-            width: 840px;
+            order: 0;
+            width: 100%;
             margin: 0;
             max-width: none;
             font-size: 16px;
@@ -484,7 +492,7 @@
         }
 
         .ta_actions {
-            grid-area: actions;
+            order: 0;
             width: 240px;
             height: 50px;
             margin-inline: 0;
@@ -500,20 +508,16 @@
         }
 
         .ta_cards_wrap {
-            margin-top: -350px;
-            padding-block: 0;
+            order: 0;
+            width: 100%;
+            margin-top: 0;
+            padding: 0;
             background-color: transparent;
         }
 
-        .ta_cards_wrap .global_inner {
-            padding-left: 380px;
-        }
-
         .ta_cards {
-            display: grid;
-            grid-template-columns: repeat(4, 195px);
-            gap: 20px;
-            width: 840px;
+            display: block;
+            width: 100%;
             margin-inline: 0;
             padding-inline: 0;
             overflow: visible;
@@ -521,20 +525,23 @@
 
         .ta_cards_swiper {
             display: block;
+            width: 100%;
             overflow: visible;
         }
 
         .ta_cards_swiper .swiper-wrapper {
             display: grid;
-            grid-template-columns: repeat(4, 195px);
+            grid-template-columns: repeat(4, minmax(0, 1fr));
             gap: 20px;
+            width: 100%;
         }
 
         .ta_cards_swiper .swiper-slide,
         .ta_card {
             flex: none;
             display: block;
-            width: 195px;
+            width: auto;
+            min-width: 0;
         }
 
         .ta_card:nth-child(1) .ta_card_image img {
@@ -567,7 +574,7 @@
         }
 
         .ta_card_image img {
-            width: 195px;
+            width: 100%;
             height: 360px;
             aspect-ratio: auto;
             object-fit: cover;
@@ -587,6 +594,24 @@
                 overflow-wrap: anywhere;
                 word-break: break-all;
                 text-align: center;
+            }
+        }
+
+        html:is(.nb-lang-en, .nb-lang-zh-cn, .nb-lang-zh-tw, .nb-lang-ko) & .ta_card_overlay {
+            top: 8px;
+            left: 8px;
+            right: auto;
+            width: calc(100% - 16px);
+            flex-direction: column;
+            align-items: stretch;
+
+            span {
+                width: 100%;
+                max-width: none;
+                line-break: auto;
+                word-break: normal;
+                overflow-wrap: break-word;
+                text-align: left;
             }
         }
 
@@ -614,10 +639,6 @@
         .ta_lead {
             width: 100%;
             min-width: 0;
-        }
-
-        .ta_cards_wrap .global_inner {
-            padding-left: 320px;
         }
 
         .ta_cards_swiper .swiper-slide,
@@ -662,4 +683,23 @@
 
 .global_contents > .top_about-01 {
     padding-bottom: 0;
+}
+
+/* Japanese stays the vertical caption. Translated copy is too long for the 35px columns. */
+html:is(.nb-lang-en, .nb-lang-zh-cn, .nb-lang-zh-tw, .nb-lang-ko) .top_about-01 .ta_card_overlay {
+    top: 8px;
+    left: 8px;
+    right: auto;
+    width: calc(100% - 16px);
+    align-items: stretch;
+
+    span {
+        width: 100%;
+        max-width: none;
+        white-space: normal;
+        line-break: auto;
+        word-break: normal;
+        overflow-wrap: break-word;
+        text-align: left;
+    }
 }

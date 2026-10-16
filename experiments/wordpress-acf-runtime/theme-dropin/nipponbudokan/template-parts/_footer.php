@@ -57,7 +57,7 @@ $show_map = !empty(($args ?? array())['map']);
         </div>
         <?php if ($show_map): ?>
         <p class="gf_map">
-            <img src="<?php echo esc_url($theme_uri . '/images/common/footer-map.png'); ?>" alt="日本武道館周辺の地図" width="670" height="356" decoding="async" loading="lazy">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3240.338394407679!2d139.74869766164556!3d35.693289472468955!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x60188c6b802bf413%3A0x215b5c71c9657188!2z5pel5pys5q2m6YGT6aSo!5e0!3m2!1sja!2sjp!4v1792123463773!5m2!1sja!2sjp" width="670" height="356" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
         </p>
         <?php endif; ?>
     </div>
