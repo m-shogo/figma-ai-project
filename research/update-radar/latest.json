@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-17T07:50:54+00:00",
+  "generated_at": "2026-10-18T08:04:58+00:00",
   "company_policy": {
     "path": "",
     "policy_id": "",
@@ -25,7 +25,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://www.figma.com/release-notes/",
-      "fetched_at": "2026-10-17T07:50:43+00:00",
+      "fetched_at": "2026-10-18T08:04:43+00:00",
       "fingerprint": "8f19f99059f3b597e28ef1310539588cea9ed700e3eec7ce52a71d04f2caae87",
       "title": "Figma product news and release notes",
       "items": [],
@@ -81,7 +81,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://help.figma.com/hc/en-us/articles/360040451373-Guide-to-auto-layout",
-      "fetched_at": "2026-10-17T07:50:43+00:00",
+      "fetched_at": "2026-10-18T08:04:44+00:00",
       "fingerprint": "6aa0c637a9f86321a1db061e49edaf386a18cde066f037caaf1dabcf5482eb6e",
       "title": "Guide to auto layout in Figma – Figma Learn - Help Center",
       "items": [],
@@ -128,7 +128,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://help.figma.com/hc/en-us/articles/42031586813719-Use-auto-layout-with-CSS-Flexbox-in-mind",
-      "fetched_at": "2026-10-17T07:50:44+00:00",
+      "fetched_at": "2026-10-18T08:04:44+00:00",
       "fingerprint": "473a484f3c46731f98dfceb968be50a240ccaf3fe10d421049a01b3f92801654",
       "title": "Use auto layout with CSS Flexbox in mind – Figma Learn - Help Center",
       "items": [],
@@ -172,7 +172,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://help.figma.com/hc/en-us/articles/31289469907863-Use-the-grid-auto-layout-flow",
-      "fetched_at": "2026-10-17T07:50:44+00:00",
+      "fetched_at": "2026-10-18T08:04:45+00:00",
       "fingerprint": "70fbc66f4444be005c5203f77549ff2a65c2e01d05ae911ec15773a5e6bfb201",
       "title": "Use the grid auto layout flow – Figma Learn - Help Center",
       "items": [],
@@ -218,7 +218,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://help.figma.com/hc/en-us/articles/360039956634-Explore-text-properties",
-      "fetched_at": "2026-10-17T07:50:44+00:00",
+      "fetched_at": "2026-10-18T08:04:45+00:00",
       "fingerprint": "11a346ec6e477a97357df666f65cbb9683a7672645eb562c9e7262389e9c9888",
       "title": "Explore text properties – Figma Learn - Help Center",
       "items": [],
@@ -264,7 +264,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://help.figma.com/hc/en-us/articles/13402894554519-Export-formats-and-settings",
-      "fetched_at": "2026-10-17T07:50:44+00:00",
+      "fetched_at": "2026-10-18T08:04:45+00:00",
       "fingerprint": "755ecf3b4213c87c4d710c86df15b92e995a84d93bf92f897e28aa250ab673f9",
       "title": "Export formats and settings for static designs – Figma Learn - Help Center",
       "items": [],
@@ -314,7 +314,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://help.figma.com/hc/en-us/articles/360040675194-Crop-an-image",
-      "fetched_at": "2026-10-17T07:50:44+00:00",
+      "fetched_at": "2026-10-18T08:04:45+00:00",
       "fingerprint": "4fb9ebee824365b96efbaa960ea33659810f61ff7cca3da2d0465597599f4632",
       "title": "Crop an image – Figma Learn - Help Center",
       "items": [],
@@ -358,7 +358,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://help.figma.com/hc/en-us/articles/27882809912471-Variables-in-Dev-Mode",
-      "fetched_at": "2026-10-17T07:50:44+00:00",
+      "fetched_at": "2026-10-18T08:04:46+00:00",
       "fingerprint": "34233ed673437c4cdeb4c81ec6d91ed46c6f46d0c676fa362a86d921cdfe2c12",
       "title": "Variables in Dev Mode – Figma Learn - Help Center",
       "items": [],
@@ -401,7 +401,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://developers.figma.com/docs/figma-mcp-server/",
-      "fetched_at": "2026-10-17T07:50:45+00:00",
+      "fetched_at": "2026-10-18T08:04:46+00:00",
       "fingerprint": "20c7a7dbcc3a08a55bb7f2132d2723409a93987d763c603f3da2d9f29e224a40",
       "title": "Introduction | Developer Docs",
       "items": [],
@@ -442,7 +442,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://developers.figma.com/docs/figma-mcp-server/tools-and-prompts/",
-      "fetched_at": "2026-10-17T07:50:45+00:00",
+      "fetched_at": "2026-10-18T08:04:46+00:00",
       "fingerprint": "50669fbb3494da38ff765a6054cd3fafcace26934cd777fac7820684bd833819",
       "title": "Tools and prompts | Developer Docs",
       "items": [],
@@ -491,7 +491,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/figma/code-connect/releases?per_page=12",
-      "fetched_at": "2026-10-17T07:50:45+00:00",
+      "fetched_at": "2026-10-18T08:04:47+00:00",
       "fingerprint": "99f008665a63c30595068492752b14a895ead15e1c27ea3a6ce3a9a2de2cabe1",
       "title": "Code Connect 2.0.2",
       "items": [
@@ -650,7 +650,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/modelcontextprotocol/modelcontextprotocol/releases?per_page=12",
-      "fetched_at": "2026-10-17T07:50:45+00:00",
+      "fetched_at": "2026-10-18T08:04:47+00:00",
       "fingerprint": "98a021f7b460f9a3980efeb31c5af68395d6c2beaa5c809f0bd640ab3c83d210",
       "title": "2026-07-28",
       "items": [
@@ -770,7 +770,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://modelcontextprotocol.io/specification/latest",
-      "fetched_at": "2026-10-17T07:50:46+00:00",
+      "fetched_at": "2026-10-18T08:04:47+00:00",
       "fingerprint": "cd9f9559ca7036c6cfd70de8280393d15f885191ca4002067eb2d3d462207d98",
       "title": "Specification - Model Context Protocol",
       "items": [],
@@ -804,7 +804,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://openai.com/products/release-notes/",
-      "fetched_at": "2026-10-17T07:50:46+00:00",
+      "fetched_at": "2026-10-18T08:04:48+00:00",
       "fingerprint": "",
       "title": "",
       "items": [],
@@ -837,7 +837,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://help.openai.com/en/articles/11428266-codex-changelog/",
-      "fetched_at": "2026-10-17T07:50:46+00:00",
+      "fetched_at": "2026-10-18T08:04:48+00:00",
       "fingerprint": "",
       "title": "",
       "items": [],
@@ -866,7 +866,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/anthropics/claude-code/releases?per_page=12",
-      "fetched_at": "2026-10-17T07:50:46+00:00",
+      "fetched_at": "2026-10-18T08:04:48+00:00",
       "fingerprint": "5f7a499267b48a800f6563a1846dd6fa9c60257e92f6ff433a92a50ee793a317",
       "title": "v2.1.302",
       "items": [
@@ -1013,8 +1013,8 @@
         "browser"
       ],
       "error": "",
-      "previous_fingerprint": "ade048a5a5d4fe6c73c78cf7577d22d4e4a78eea8f4675996881139a579a5294",
-      "changed": true,
+      "previous_fingerprint": "5f7a499267b48a800f6563a1846dd6fa9c60257e92f6ff433a92a50ee793a317",
+      "changed": false,
       "first_observation": false
     },
     {
@@ -1023,7 +1023,7 @@
       "authority": "OFFICIAL",
       "kind": "XML_FEED",
       "url": "https://raw.githubusercontent.com/anthropics/claude-code/main/feed.xml",
-      "fetched_at": "2026-10-17T07:50:47+00:00",
+      "fetched_at": "2026-10-18T08:04:49+00:00",
       "fingerprint": "d4df7412f44276211cbce4eda0f88d09c943827c1c9941ae3ad8ef2291d940d0",
       "title": "Claude Code v2.1.302",
       "items": [
@@ -1122,8 +1122,8 @@
         "releases"
       ],
       "error": "",
-      "previous_fingerprint": "c03cb9adb4add7845359a865ed71fb0814573bcad096f1484aa717c18c07aa1e",
-      "changed": true,
+      "previous_fingerprint": "d4df7412f44276211cbce4eda0f88d09c943827c1c9941ae3ad8ef2291d940d0",
+      "changed": false,
       "first_observation": false
     },
     {
@@ -1132,7 +1132,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://cursor.com/changelog",
-      "fetched_at": "2026-10-17T07:50:47+00:00",
+      "fetched_at": "2026-10-18T08:04:49+00:00",
       "fingerprint": "814f7152c79df294b3f42dab2074cd429e51c534cc5734f22f35d630d7e46fe9",
       "title": "What's New in Cursor — Latest Updates & Release Notes",
       "items": [],
@@ -1166,8 +1166,8 @@
         "skills"
       ],
       "error": "",
-      "previous_fingerprint": "70c4e27997ff0ad17500282dd86e7b44cd004bda1dd1f26a3272f4de168acb86",
-      "changed": true,
+      "previous_fingerprint": "814f7152c79df294b3f42dab2074cd429e51c534cc5734f22f35d630d7e46fe9",
+      "changed": false,
       "first_observation": false
     },
     {
@@ -1176,7 +1176,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/microsoft/playwright/releases?per_page=12",
-      "fetched_at": "2026-10-17T07:50:47+00:00",
+      "fetched_at": "2026-10-18T08:04:49+00:00",
       "fingerprint": "4240f0aa21f0625224344e5326c4102e92f8bcc95d5d3d57cbeebf101c4e18e7",
       "title": "v1.64.1",
       "items": [
@@ -1336,7 +1336,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/storybookjs/storybook/releases?per_page=12",
-      "fetched_at": "2026-10-17T07:50:47+00:00",
+      "fetched_at": "2026-10-18T08:04:50+00:00",
       "fingerprint": "25651b56ce42464c50b0f7063f8386650bba03737bc64aceffb38aca6598d6be",
       "title": "v11.0.0-alpha.6",
       "items": [
@@ -1490,7 +1490,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/browserslist/browserslist/releases?per_page=12",
-      "fetched_at": "2026-10-17T07:50:48+00:00",
+      "fetched_at": "2026-10-18T08:04:50+00:00",
       "fingerprint": "0267a45330aec86b30a874488e1e64fea96a068b821a0f06961a12f392cc8394",
       "title": "4.29.3",
       "items": [
@@ -1634,7 +1634,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/stylelint/stylelint/releases?per_page=12",
-      "fetched_at": "2026-10-17T07:50:48+00:00",
+      "fetched_at": "2026-10-18T08:04:50+00:00",
       "fingerprint": "74ecc0a3e7bf21a991bff89313f35a50d42e2781959d858d696271915b60b5a3",
       "title": "17.16.0",
       "items": [
@@ -1787,7 +1787,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/dequelabs/axe-core/releases?per_page=12",
-      "fetched_at": "2026-10-17T07:50:48+00:00",
+      "fetched_at": "2026-10-18T08:04:51+00:00",
       "fingerprint": "ee7485148047a95e830154aa39c5dee8ab309b0521c6e4d1139d53f5888c54c1",
       "title": "Release 4.14.0",
       "items": [
@@ -1937,7 +1937,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/GoogleChrome/lighthouse-ci/releases?per_page=12",
-      "fetched_at": "2026-10-17T07:50:49+00:00",
+      "fetched_at": "2026-10-18T08:04:51+00:00",
       "fingerprint": "5cd178cff75b4eea6878530d6e489104ed1348fc6c5466d464a982eb767a03dc",
       "title": "v0.15.1",
       "items": [
@@ -2086,7 +2086,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/svg/svgo/releases?per_page=12",
-      "fetched_at": "2026-10-17T07:50:49+00:00",
+      "fetched_at": "2026-10-18T08:04:52+00:00",
       "fingerprint": "84d12299ec1df40268307327551bbaff33fb8dd51151020ed55ab3515d82ec86",
       "title": "v4.1.0",
       "items": [
@@ -2231,7 +2231,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/web-platform-dx/web-features/releases?per_page=12",
-      "fetched_at": "2026-10-17T07:50:49+00:00",
+      "fetched_at": "2026-10-18T08:04:52+00:00",
       "fingerprint": "6230f42d283c48e93e92b8f92204355174f67e4dfc4e8685073e155b41babf42",
       "title": "web-features@next",
       "items": [
@@ -2376,8 +2376,8 @@
         "browser-support"
       ],
       "error": "",
-      "previous_fingerprint": "3c08d33bcb16d9d235b78a94bfc6da1f87ec032893feffd77aefe19aacf95878",
-      "changed": true,
+      "previous_fingerprint": "6230f42d283c48e93e92b8f92204355174f67e4dfc4e8685073e155b41babf42",
+      "changed": false,
       "first_observation": false
     },
     {
@@ -2386,15 +2386,15 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/mdn/browser-compat-data/releases?per_page=12",
-      "fetched_at": "2026-10-17T07:50:50+00:00",
-      "fingerprint": "74281b644228a0af6eb2441006ee1f11963a780769af59042e997ed747bb76e7",
+      "fetched_at": "2026-10-18T08:04:52+00:00",
+      "fingerprint": "1f288badfd0f8cb460c61f814922cf1c9186ea20b99f9e1d4283c54446f42017",
       "title": "@mdn/browser-compat-data@next",
       "items": [
         {
           "id": "327303933",
           "name": "@mdn/browser-compat-data@next",
           "tag": "next",
-          "published_at": "2026-10-17T00:02:00Z",
+          "published_at": "2026-10-18T00:01:50Z",
           "prerelease": true,
           "url": "https://github.com/mdn/browser-compat-data/releases/tag/next",
           "summary": "Experimental nightly prerelease generated from the [`main`](https://github.com/mdn/browser-compat-data/tree/main) branch (currently at [`0416078`](https://github.com/mdn/browser-compat-data/commit/0416078da7a1eafd7b308b37366eeac492bc1e46))."
@@ -2520,7 +2520,7 @@
         "web-api"
       ],
       "error": "",
-      "previous_fingerprint": "3dc3f70eb910da9d27839d44b4ae00ff0d26f1fe2a5f3c8122ec9c520a748e3f",
+      "previous_fingerprint": "74281b644228a0af6eb2441006ee1f11963a780769af59042e997ed747bb76e7",
       "changed": true,
       "first_observation": false
     },
@@ -2530,7 +2530,7 @@
       "authority": "OFFICIAL",
       "kind": "JSON_DIGEST",
       "url": "https://chromestatus.com/features.json",
-      "fetched_at": "2026-10-17T07:50:50+00:00",
+      "fetched_at": "2026-10-18T08:04:53+00:00",
       "fingerprint": "",
       "title": "",
       "items": [],
@@ -2559,7 +2559,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://www.w3.org/WAI/news/",
-      "fetched_at": "2026-10-17T07:50:51+00:00",
+      "fetched_at": "2026-10-18T08:04:54+00:00",
       "fingerprint": "1b6c3e0569321eaab8a2eb2b67bdac7c893316cec1ab742511f9abb59c262d28",
       "title": "News | Web Accessibility Initiative (WAI) | W3C",
       "items": [],
@@ -2597,7 +2597,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/design-tokens/community-group/releases?per_page=12",
-      "fetched_at": "2026-10-17T07:50:51+00:00",
+      "fetched_at": "2026-10-18T08:04:54+00:00",
       "fingerprint": "e7526f9a4360fd590555d5b3a1107042f18a6ace66a09cbbfd266f86621266fb",
       "title": "",
       "items": [],
@@ -2625,7 +2625,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/style-dictionary/style-dictionary/releases?per_page=12",
-      "fetched_at": "2026-10-17T07:50:51+00:00",
+      "fetched_at": "2026-10-18T08:04:54+00:00",
       "fingerprint": "a11d9ce28d3461b2443a6e02575f8f56c700bdc1c4d7249aa5861ddd01b25e87",
       "title": "v5.7.0",
       "items": [
@@ -2761,8 +2761,8 @@
         "build"
       ],
       "error": "",
-      "previous_fingerprint": "ae610468a84d22c350e7df3e201fe83cb5ac7546139f0dcf9779cb41fb84d790",
-      "changed": true,
+      "previous_fingerprint": "a11d9ce28d3461b2443a6e02575f8f56c700bdc1c4d7249aa5861ddd01b25e87",
+      "changed": false,
       "first_observation": false
     },
     {
@@ -2771,7 +2771,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://wordpress.org/news/category/releases/",
-      "fetched_at": "2026-10-17T07:50:52+00:00",
+      "fetched_at": "2026-10-18T08:04:55+00:00",
       "fingerprint": "b28ec1e81c4997cc83040d53fcbd67873f7333db66a0b5399994d9dea6a52085",
       "title": "Releases – WordPress News",
       "items": [],
@@ -2816,7 +2816,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://developer.wordpress.org/news/",
-      "fetched_at": "2026-10-17T07:50:53+00:00",
+      "fetched_at": "2026-10-18T08:04:56+00:00",
       "fingerprint": "8c76a80f114306215636a60f430dd77d5005c48865cac13f62a64ec3a03ba5d6",
       "title": "WordPress Developer Blog – A site for plugin and theme developers, freelancers, and agency developers",
       "items": [],
@@ -2856,7 +2856,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://developer.wordpress.org/block-editor/getting-started/devenv/get-started-with-wp-env/",
-      "fetched_at": "2026-10-17T07:50:53+00:00",
+      "fetched_at": "2026-10-18T08:04:57+00:00",
       "fingerprint": "ec25248b25ac0dcac40f8d890a6922a28dacd279ec48d3c5f4412146dc530634",
       "title": "Get started with wp-env – Block Editor Handbook | Developer.WordPress.org",
       "items": [],
@@ -2898,7 +2898,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/AdvancedCustomFields/acf/releases?per_page=12",
-      "fetched_at": "2026-10-17T07:50:54+00:00",
+      "fetched_at": "2026-10-18T08:04:57+00:00",
       "fingerprint": "4bb858d58bd64f96180623bc4681c1a13b7276608894435d6c7af0905e1e4c37",
       "title": "Advanced Custom Fields v6.8.10",
       "items": [
@@ -3055,7 +3055,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://www.advancedcustomfields.com/changelog/",
-      "fetched_at": "2026-10-17T07:50:54+00:00",
+      "fetched_at": "2026-10-18T08:04:58+00:00",
       "fingerprint": "82b6e6746f1e79fb3ea0f3277499de8b29835c8bea2a5aa35a3bb5ab9a3d3a23",
       "title": "ACF | Changelog",
       "items": [],
@@ -3103,7 +3103,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://www.advancedcustomfields.com/resources/wp-acf-json/",
-      "fetched_at": "2026-10-17T07:50:54+00:00",
+      "fetched_at": "2026-10-18T08:04:58+00:00",
       "fingerprint": "84a646f3552f8ca68ed09f62634ddb137c96cb473c2acee828c52fcefd92bef7",
       "title": "ACF | wp acf json",
       "items": [],
@@ -3144,91 +3144,6 @@
   ],
   "changes": [
     {
-      "source_id": "claude-code-releases",
-      "lane": "CLAUDE_CODE",
-      "title": "v2.1.302",
-      "retest_categories": [
-        "CSS_RESET",
-        "ANIMATION",
-        "FIGMA_LAYOUT_GENERATION",
-        "VARIABLE_MODE_RUNTIME",
-        "FIGMA_MCP",
-        "VISUAL_QA_TOOLING",
-        "AGENT_CONTEXT",
-        "PARALLEL_EXECUTION"
-      ],
-      "impacts": [
-        "AGENT_CAPABILITY",
-        "MCP",
-        "PARALLEL_EXECUTION",
-        "CONTEXT_HANDLING"
-      ],
-      "url": "https://api.github.com/repos/anthropics/claude-code/releases?per_page=12"
-    },
-    {
-      "source_id": "claude-code-feed",
-      "lane": "CLAUDE_CODE",
-      "title": "Claude Code v2.1.302",
-      "retest_categories": [
-        "CSS_RESET",
-        "ANIMATION",
-        "FIGMA_LAYOUT_GENERATION",
-        "VARIABLE_MODE_RUNTIME",
-        "FIGMA_MCP",
-        "VISUAL_QA_TOOLING",
-        "AGENT_CONTEXT",
-        "PARALLEL_EXECUTION"
-      ],
-      "impacts": [
-        "AGENT_CAPABILITY",
-        "MCP",
-        "CONTEXT_HANDLING"
-      ],
-      "url": "https://raw.githubusercontent.com/anthropics/claude-code/main/feed.xml"
-    },
-    {
-      "source_id": "cursor-changelog",
-      "lane": "CURSOR",
-      "title": "What's New in Cursor — Latest Updates & Release Notes",
-      "retest_categories": [
-        "FIGMA_MCP",
-        "VISUAL_QA_TOOLING",
-        "AGENT_CONTEXT"
-      ],
-      "impacts": [
-        "AGENT_CAPABILITY",
-        "MCP",
-        "VISUAL_BROWSER_TOOLING",
-        "PARALLEL_EXECUTION",
-        "CONTEXT_HANDLING"
-      ],
-      "url": "https://cursor.com/changelog"
-    },
-    {
-      "source_id": "web-features-releases",
-      "lane": "WEB_PLATFORM",
-      "title": "web-features@next",
-      "retest_categories": [
-        "INPUT_CAPABILITY",
-        "SCROLL",
-        "ANIMATION",
-        "LAYOUT",
-        "FIGMA_LAYOUT_GENERATION",
-        "ASSET_FIDELITY",
-        "COLOR_GRADIENT",
-        "ACCESSIBILITY",
-        "FIGMA_MCP",
-        "CSS_TOOLING"
-      ],
-      "impacts": [
-        "CSS",
-        "WEB_PLATFORM",
-        "BROWSER_SUPPORT",
-        "FEATURE_ADOPTION"
-      ],
-      "url": "https://api.github.com/repos/web-platform-dx/web-features/releases?per_page=12"
-    },
-    {
       "source_id": "mdn-browser-compat-data-releases",
       "lane": "WEB_PLATFORM",
       "title": "@mdn/browser-compat-data@next",
@@ -3243,23 +3158,6 @@
         "FEATURE_DETECTION"
       ],
       "url": "https://api.github.com/repos/mdn/browser-compat-data/releases?per_page=12"
-    },
-    {
-      "source_id": "style-dictionary-releases",
-      "lane": "DESIGN_SYSTEMS",
-      "title": "v5.7.0",
-      "retest_categories": [
-        "ANIMATION",
-        "ASSET_FIDELITY",
-        "COLOR_GRADIENT"
-      ],
-      "impacts": [
-        "TOKENS",
-        "DESIGN_SYSTEM",
-        "FIGMA_VARIABLES",
-        "BUILD_TOOLING"
-      ],
-      "url": "https://api.github.com/repos/style-dictionary/style-dictionary/releases?per_page=12"
     }
   ],
   "fetch_errors": [
@@ -3278,25 +3176,13 @@
   ],
   "summary": {
     "source_count": 37,
-    "changed_count": 6,
+    "changed_count": 1,
     "error_count": 3,
     "first_observation_count": 0,
     "retest_categories": [
-      "ACCESSIBILITY",
       "AGENT_CONTEXT",
-      "ANIMATION",
-      "ASSET_FIDELITY",
-      "COLOR_GRADIENT",
-      "CSS_RESET",
-      "CSS_TOOLING",
       "FIGMA_LAYOUT_GENERATION",
-      "FIGMA_MCP",
-      "INPUT_CAPABILITY",
-      "LAYOUT",
-      "PARALLEL_EXECUTION",
-      "SCROLL",
-      "VARIABLE_MODE_RUNTIME",
-      "VISUAL_QA_TOOLING"
+      "LAYOUT"
     ]
   }
 }
