@@ -34,24 +34,32 @@
   list-style: none;
 }
 
-.news_tabs_archive {
+.news_archive .news_tabs_archive {
   .news_tabs_list {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 0;
-    border: 1px solid var(--color-text);
+    border-top: 1px solid var(--color-text);
+    border-right: 0;
+    border-bottom: 0;
+    border-left: 1px solid var(--color-text);
   }
 
   .news_tabs_item {
     min-width: 0;
+    box-sizing: border-box;
+    border-right: 1px solid var(--color-text);
+    border-bottom: 1px solid var(--color-text);
   }
 
   .news_tabs_link {
+    text-align: center;
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
-    height: 34px;
+    height: 100%;
+    min-height: 34px;
     padding: 10px;
     border: 0;
     border-radius: 0;
@@ -60,22 +68,12 @@
     font-family: var(--font-zen-kaku-gothic);
     font-size: 14px;
     font-weight: 500;
-    line-height: 1;
+    line-height: 1.3;
     letter-spacing: 0.05em;
     text-decoration: none;
-    white-space: nowrap;
     transition:
       background-color var(--transition-duration),
       color var(--transition-duration);
-  }
-
-  .news_tabs_item:nth-child(3n + 2) .news_tabs_link {
-    border-right: 1px solid var(--color-text);
-    border-left: 1px solid var(--color-text);
-  }
-
-  .news_tabs_item:nth-child(n + 4) .news_tabs_link {
-    border-top: 1px solid var(--color-text);
   }
 
   .news_tabs_item.is-active .news_tabs_link {
@@ -395,7 +393,7 @@
     gap: 64px;
   }
 
-  .news_tabs_archive {
+  .news_archive .news_tabs_archive {
     .news_tabs_list {
       display: flex;
       flex-wrap: wrap;
@@ -406,6 +404,7 @@
 
     .news_tabs_item {
       width: 120px;
+      border: 0;
     }
 
     .news_tabs_link {
@@ -414,11 +413,6 @@
       border: 1px solid var(--color-text);
       border-radius: 3px;
       background-color: var(--color-secondary);
-    }
-
-    .news_tabs_item:nth-child(3n + 2) .news_tabs_link,
-    .news_tabs_item:nth-child(n + 4) .news_tabs_link {
-      border: 1px solid var(--color-text);
     }
 
     .news_tabs_item.is-active .news_tabs_link {

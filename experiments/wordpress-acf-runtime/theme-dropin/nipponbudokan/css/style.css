@@ -45,7 +45,7 @@
    SP selector / PC grid can override the shared menu baseline without !important. */
 @import './module/local_navigation.css?v=20260915-ln-hover';
 @import './module/module_newsCard-01.css';
-@import './module/module_newsList-01.css?v=20261015-title-clone';
+@import './module/module_newsList-01.css?v=20261019-tabs-grid';
 @import './module/module_pager-01.css';
 @import './module/module_pager-02.css?v=20260915-back-only';
 @import './module/module_publicationBudo.css?v=20261006-shodou-external';
