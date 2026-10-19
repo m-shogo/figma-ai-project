@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-18T08:04:58+00:00",
+  "generated_at": "2026-10-19T08:57:06+00:00",
   "company_policy": {
     "path": "",
     "policy_id": "",
@@ -25,7 +25,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://www.figma.com/release-notes/",
-      "fetched_at": "2026-10-18T08:04:43+00:00",
+      "fetched_at": "2026-10-19T08:56:46+00:00",
       "fingerprint": "8f19f99059f3b597e28ef1310539588cea9ed700e3eec7ce52a71d04f2caae87",
       "title": "Figma product news and release notes",
       "items": [],
@@ -81,7 +81,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://help.figma.com/hc/en-us/articles/360040451373-Guide-to-auto-layout",
-      "fetched_at": "2026-10-18T08:04:44+00:00",
+      "fetched_at": "2026-10-19T08:56:46+00:00",
       "fingerprint": "6aa0c637a9f86321a1db061e49edaf386a18cde066f037caaf1dabcf5482eb6e",
       "title": "Guide to auto layout in Figma – Figma Learn - Help Center",
       "items": [],
@@ -128,7 +128,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://help.figma.com/hc/en-us/articles/42031586813719-Use-auto-layout-with-CSS-Flexbox-in-mind",
-      "fetched_at": "2026-10-18T08:04:44+00:00",
+      "fetched_at": "2026-10-19T08:56:47+00:00",
       "fingerprint": "473a484f3c46731f98dfceb968be50a240ccaf3fe10d421049a01b3f92801654",
       "title": "Use auto layout with CSS Flexbox in mind – Figma Learn - Help Center",
       "items": [],
@@ -172,7 +172,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://help.figma.com/hc/en-us/articles/31289469907863-Use-the-grid-auto-layout-flow",
-      "fetched_at": "2026-10-18T08:04:45+00:00",
+      "fetched_at": "2026-10-19T08:56:47+00:00",
       "fingerprint": "70fbc66f4444be005c5203f77549ff2a65c2e01d05ae911ec15773a5e6bfb201",
       "title": "Use the grid auto layout flow – Figma Learn - Help Center",
       "items": [],
@@ -218,7 +218,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://help.figma.com/hc/en-us/articles/360039956634-Explore-text-properties",
-      "fetched_at": "2026-10-18T08:04:45+00:00",
+      "fetched_at": "2026-10-19T08:56:47+00:00",
       "fingerprint": "11a346ec6e477a97357df666f65cbb9683a7672645eb562c9e7262389e9c9888",
       "title": "Explore text properties – Figma Learn - Help Center",
       "items": [],
@@ -264,7 +264,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://help.figma.com/hc/en-us/articles/13402894554519-Export-formats-and-settings",
-      "fetched_at": "2026-10-18T08:04:45+00:00",
+      "fetched_at": "2026-10-19T08:56:48+00:00",
       "fingerprint": "755ecf3b4213c87c4d710c86df15b92e995a84d93bf92f897e28aa250ab673f9",
       "title": "Export formats and settings for static designs – Figma Learn - Help Center",
       "items": [],
@@ -314,7 +314,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://help.figma.com/hc/en-us/articles/360040675194-Crop-an-image",
-      "fetched_at": "2026-10-18T08:04:45+00:00",
+      "fetched_at": "2026-10-19T08:56:48+00:00",
       "fingerprint": "4fb9ebee824365b96efbaa960ea33659810f61ff7cca3da2d0465597599f4632",
       "title": "Crop an image – Figma Learn - Help Center",
       "items": [],
@@ -358,7 +358,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://help.figma.com/hc/en-us/articles/27882809912471-Variables-in-Dev-Mode",
-      "fetched_at": "2026-10-18T08:04:46+00:00",
+      "fetched_at": "2026-10-19T08:56:48+00:00",
       "fingerprint": "34233ed673437c4cdeb4c81ec6d91ed46c6f46d0c676fa362a86d921cdfe2c12",
       "title": "Variables in Dev Mode – Figma Learn - Help Center",
       "items": [],
@@ -401,7 +401,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://developers.figma.com/docs/figma-mcp-server/",
-      "fetched_at": "2026-10-18T08:04:46+00:00",
+      "fetched_at": "2026-10-19T08:56:48+00:00",
       "fingerprint": "20c7a7dbcc3a08a55bb7f2132d2723409a93987d763c603f3da2d9f29e224a40",
       "title": "Introduction | Developer Docs",
       "items": [],
@@ -442,7 +442,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://developers.figma.com/docs/figma-mcp-server/tools-and-prompts/",
-      "fetched_at": "2026-10-18T08:04:46+00:00",
+      "fetched_at": "2026-10-19T08:56:49+00:00",
       "fingerprint": "50669fbb3494da38ff765a6054cd3fafcace26934cd777fac7820684bd833819",
       "title": "Tools and prompts | Developer Docs",
       "items": [],
@@ -491,7 +491,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/figma/code-connect/releases?per_page=12",
-      "fetched_at": "2026-10-18T08:04:47+00:00",
+      "fetched_at": "2026-10-19T08:56:49+00:00",
       "fingerprint": "99f008665a63c30595068492752b14a895ead15e1c27ea3a6ce3a9a2de2cabe1",
       "title": "Code Connect 2.0.2",
       "items": [
@@ -650,7 +650,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/modelcontextprotocol/modelcontextprotocol/releases?per_page=12",
-      "fetched_at": "2026-10-18T08:04:47+00:00",
+      "fetched_at": "2026-10-19T08:56:50+00:00",
       "fingerprint": "98a021f7b460f9a3980efeb31c5af68395d6c2beaa5c809f0bd640ab3c83d210",
       "title": "2026-07-28",
       "items": [
@@ -770,7 +770,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://modelcontextprotocol.io/specification/latest",
-      "fetched_at": "2026-10-18T08:04:47+00:00",
+      "fetched_at": "2026-10-19T08:56:50+00:00",
       "fingerprint": "cd9f9559ca7036c6cfd70de8280393d15f885191ca4002067eb2d3d462207d98",
       "title": "Specification - Model Context Protocol",
       "items": [],
@@ -804,7 +804,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://openai.com/products/release-notes/",
-      "fetched_at": "2026-10-18T08:04:48+00:00",
+      "fetched_at": "2026-10-19T08:56:54+00:00",
       "fingerprint": "",
       "title": "",
       "items": [],
@@ -837,7 +837,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://help.openai.com/en/articles/11428266-codex-changelog/",
-      "fetched_at": "2026-10-18T08:04:48+00:00",
+      "fetched_at": "2026-10-19T08:56:54+00:00",
       "fingerprint": "",
       "title": "",
       "items": [],
@@ -866,10 +866,19 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/anthropics/claude-code/releases?per_page=12",
-      "fetched_at": "2026-10-18T08:04:48+00:00",
-      "fingerprint": "5f7a499267b48a800f6563a1846dd6fa9c60257e92f6ff433a92a50ee793a317",
-      "title": "v2.1.302",
+      "fetched_at": "2026-10-19T08:56:54+00:00",
+      "fingerprint": "91403a14cb4ccd5538c0b595215da1bc063491b6c722fb732dd97c457d6ac94f",
+      "title": "v2.1.303",
       "items": [
+        {
+          "id": "416715237",
+          "name": "v2.1.303",
+          "tag": "v2.1.303",
+          "published_at": "2026-10-18T22:26:54Z",
+          "prerelease": false,
+          "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.303",
+          "summary": "## What's changed - Bug fixes and reliability improvements"
+        },
         {
           "id": "415177347",
           "name": "v2.1.302",
@@ -968,18 +977,9 @@
           "prerelease": false,
           "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.290",
           "summary": "## What's changed - Added `serverToolUses` to the result of a mod's `turn.step` hook: the tool calls the API ran itself (the advisor), each with its id, name, input, start and end - Added `agentId` to the `tool.check` event of plugin hooks, so a hook can tell a subagent's permission check from the main session's - Added `ceiling` to the question and verdict a mod's `tool.check` hook reads, naming the approval an organization requires for a tool - Added `ThemeKey` and `Color` types to the plugin hooks typings, so an editor lists the theme colors a mod's drawing can name - Added to `claude plugin validate`: each hook a mod registers at a gating site is listed with whether it has a `.catch` (`gatingHooks` under `--json`) - Added a Deny button to the Claude apps gateway's sign-in approval page: it ends the pending sign-in, so the waiting terminal stops within seconds - Added `claude attach <name>` and `claude logs <name>`: part of a session name works in place of the id - Added `/claude-api managed-agents-onboard <url>` to set up the Managed Agents pattern a page describes as `ant apply` files - Added `/claude-api managed-agents-onboard <quickstart-name>` to build a Console quickstart template, such as `deep-researcher`, with the `ant` CLI - Added a warning when a managed settings file is a link to a file outside the managed settings folder - Added a /status and doctor warning when managed settings ignore user-configured sandbox allowRead paths or allowed domains - Fixed requests failing behind proxies and gateways that reject one of Claude Code's beta headers with a status other than 400, or together with a second beta - Fixed long sessions with hundreds of images getting stuck on \"Request rejected as unprocessable by the model\" errors - Fixed a turn ending at once when the API's output content filter stopped a reply while Claude was still thinking; the request is now retried once before the error is shown - Fixed resumed subagents and teammates losing their earlier thinking and prompt cache after receiving a message mid-run - Fixed WebFetch silently dropping page text past 100,000 characters; it now says how much was unread and takes an `offset` to read on - Fixed a crash (\"Maximum call stack size exceeded\") when a response nested lists or quotes thousands of levels deep - Fixed `/rewind` not listing a prompt sent while Claude was still working - Fixed scheduled tasks (`/loop` with an interval, reminders) silently not coming back on resume once the conversation was compacted; covers compactions made from this version on - Fixed scheduled tasks set in the foreground never firing after a ← or `/background` hand-off, and recurring ones firing an extra run on every resume, respawn or fork - Fixed headless `--json-schema` runs exiting non-zero with `is_error: true` on a `success` result when the connection dropped after the structured output was already delivered - Fixed plan mode letting the auto mode classifier approve non-read-only connector tools that carry a server-pushed ask policy - Fixed a project `CLAUDE.md`, rule or `AGENTS.md` symlinked outside the working directories loading under `permissions.blockReadsOutsideWorkingDirectories` or a `Read` deny rule - Fixed URL allow and deny patterns with a wildcard inside an `xn--` host label matching differently from one process to the next - Fixed an MCP server provided by your organization being relisted as your own after signing in or reconnecting, including from a late result in headless and SDK sessions - Fixed `/ultrareview` dropping uncommitted changes without a warning on Windows when `git stash create` failed, and refusing them after a `git add -N` file was deleted or moved - Fixed the `plansDirectory` setting's project-root check for paths that contain a backslash on macOS and Linux - Fixed replies in very long Remote Control and cloud sessions that could appear a block at a time instead of streaming in - Fixed the background daemon's log passing terminal control characters"
-        },
-        {
-          "id": "402671979",
-          "name": "v2.1.289",
-          "tag": "v2.1.289",
-          "published_at": "2026-10-03T23:07:17Z",
-          "prerelease": false,
-          "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.289",
-          "summary": "## What's changed - Fixed a deny or ask rule on a nested part of a compound shell command not holding over a user-installed mod's approval on managed machines - Fixed the terminal freezing on short code blocks with many unclosed `<script>` tags or deeply nested `${` substitutions - Fixed `Read` deny rules not applying to files @-mentioned, changed, or selected in the IDE through a symlink - [VSCode] Reverted a 2.1.288 change to `claude auth status` that may have made sign-outs more frequent - Improved how quickly large files open in a plugin code pane by laying the highlighted view out once at its final width - Fixed `plugin list`, `plugin eval` and `plugin update` showing a stale copy of a plugin installed from a local folder marketplace, and hot reload for a symlinked `--plugin-dir` - Fixed installed mods not loading in the first session after an upgrade - Fixed a plugin's rows above the prompt showing a stale row while the Background tasks dialog was open in fullscreen - Fixed plugin panes drawing nothing when a link used a localhost address, an `@` in its path, an uppercase host or a `file:` path - Fixed a user-installed plugin being able to rewrite the descriptions of an organization-managed MCP server's sign-in tools - Fixed a freeze or forced quit at launch when a plugin drew a Box with a border style the terminal does not know - Fixed supervised and background sessions ending when a plugin's on-screen handler threw asynchronously - Fixed sessions ending with an interface error when a plugin region with no height kept growing - Fixed Bash deny and ask rules missing a command behind an environment variable prefix with an expanded value (e.g. `TZ=\"$HOME\" rm -rf build`) when the sandbox auto-allows commands - Fixed a Bash deny or ask rule being skipped under sandbox auto-allow when a bare variable assignment came before the command - Fixed `claude plugin validate` skipping the plugin when the folder also holds a marketplace manifest - Added `agent.spawn` for teammates, one agent id across plugin hook events, and idle and waiting states in `$.agent.list()` - Fixed sessions ending with \"unrecoverable interface error\" when a value a mod's `ui.render` hook wrote made a row throw while drawn; the engine now draws its own row instead - Fixed text with a tab, a stray escape and a C1 control, or a short text with a tab and CRLF line endings, drawing over the rows below it - Fixed right-aligned content in a mod's pane or band drawing under the close mark or `[-]`, which now also keep one column in from the terminal's edge - Fixed a mod's `Client` that fails while drawn taking down everything the mod drew around it; it now fails alone and raises `ui.fault` - Fixed `claude plugin validate` failing an Anthropic marketplace's own plugin and listing a clean `plugin.json` in `--json` - Fixed a mod's band that fails to draw briefly telling the cards under it to step aside - Fixed a failed plugin component showing `Error` or nothing as its reason when the failure carried no message - Improved the line a mod's author sees when its band or pane fails to draw: it names the mod and says nothing was drawn - Fixed published artifact pages freezing or crashing the reader's browser tab on short code blocks with many unclosed `<script>` tags - Fixed a mod's Client region staying failed for the whole session after the terminal threw while drawing it"
         }
       ],
-      "excerpt": "v2.1.302 ## What's changed - Added `CLAUDE_CODE_AUTO_MODE_MODEL` to choose the model the client-side auto mode classifier uses; it does not change the model for server-side auto mode - Added an `Idle compaction` row to `/config` for turning idle compaction off or back on; the notices shown after an idle compaction now say how to turn it off - Added a notice to `/design-sync` and `/design-login` that standalone Claude Design (claude.ai/design) closes by December 14, 2026 - Fixed a \"Prompt is too long\" error when stopping a turn while the conversation was being compacted - Fixed requests failing with \"diagnostics: Extra inputs are not permitted\" after switching to Vertex or Bedrock mid-session - Fixed the Read tool loading an image file of any size, or a pipe or device named like an image, entirely into memory; image sources over 128 MB are now refused - Fixed `/autocompact` and `/effort` saving to the wrong model when a gateway names Opus 4 or 4.1 with a prefix, such as `anthropic/claude-opus-4-1` - Fixed a prompt cache miss when a tool added mid-session was loaded again through ToolSearch or after compaction - Fixed `claude plugin` and other subcommands sometimes exiting before a queued settings or config write finished, which could lose the change or leave a `.tmp` file behind - Fixed plugin marketplaces re-cloning on every refresh, and newly installed git plugins showing version \"unknown\", when git defaults to the reftable ref format - Fixed the PowerShell tool not finding commands in a plugin's `bin/` folder, and reporting an error when a search that finds nothing (rg, grep, findstr, git grep) is piped into `Select-Object` or another formatting cmdlet - Fixed Claude in the desktop app pointing you to claude.ai settings or `/mcp` to authorize or reconnect an MCP server where that option isn't available - Fixed artifact publishes sometimes failing when Claude sent an empty list of edits, and Claude retrying an artifact update the wrong way after a newer version of the artifact turned it away - Fixed `classifier_category` missing from OpenTelemetry `tool_decision` events for most auto mode classifier blocks, and new `tool_decision` attributes pushing out `tool_use_id`, `tool_source` and `tool_parameters` when `OTEL_LOGRECORD_ATTRIBUTE_COUNT_LIMIT` is low - Fixed rows in the agents view staying blank after moving down a long list or folding a section - Fixed `claude remote-control --help` not printing its usage and exiting when not signed in - Fixed `/design consent` and `/design revoke` suggesting `/design-login` when they fail in a cloud session, where it isn't available; the message now points to claude.ai/design/settings - Fixed MCP servers showing no tools, or every tool call failing, when the server negotiates protocol version 2026-07-28 but omits `resultType`, `ttlMs` or `cacheScope` - Fixed prompt suggestions spending usage credits on models your plan pays for only with credits: they are now skipped after a reply billed to credits - Fixed URLs written in backticks being clickable only on their first row when they wrap; the whole URL is now one link in terminals that support hyperlinks - Fixed `claude plugin details <name>@builtin` suggesting `claude plugin list`, which never shows built-in plugins, when the plugin isn't found; it now points to `/plugin` - Fixed an emoji that a link starts inside wrapping one column too wide, which hid it in question previews and turned tables into lists - Fixed worktree isolation refusing to create or resume worktrees under git 2.56 or later when a stray `.git` file points at a directory that doesn't exist - Fixed a cloud session's cost and usage restarting from zero after the session resumed in a new process - Self-hosted runner: Fixed git fetches failing with \"bad object refs/heads\" in sessions that reuse a checkout stored in git's reftable format - Windows: Fixed every file write being refused or asked about for projects on exFAT or FAT32 drives, including in sessions started with `--plugin-d v2.1.301 ## What's changed - Added `CLAUDE_CODE_RETRY_WATCHDOG_MAX_USAGE_LIMIT_WAIT_MS` so unattended retry mode (`CLAUDE_CODE_RETRY_WATCHDOG`) ends a request at a usage limit that resets too far away instead of waiting - Added OpenTelemetry tracing guidance to the `claude-api` skill, including setting up trace destinations with the `ant` CLI - Added the `%` motion to vim mode: jump to the matching bracket, alone or with d/c/y - Added `rows` to a mod's `Input`: a text field of several lines in the terminal, where Enter submits and Shift+Enter or a backslash before Enter starts a new line - Added `classifier_verdict` and `permission_mode` to OpenTelemetry `tool_decision` events, so auto mode classifier decisions can be told apart from permission rules - Added `classifier_category` to OpenTelemetry `tool_decision` events, naming the built-in rule a classifier block matched, when `OTEL_LOG_TOOL_DETAILS=1` - Fixed quitting removing a worktree made by a `WorktreeCreate` hook without asking when it may hold unpushed commits - Fixed the `fable` (and `best`) model alias erroring on the Anthropic API when the newest Fable model is not available to your organization: Claude Code now retries once on the previous Fable model - Fixed a misleading \"Please run /login\" error when a full disk keeps the login from being refreshed; the error now names the disk and says to delete files - Fixed Grep and Glob reporting no matches when the search program failed unexpectedly before returning any results; they now return an error saying the search failed - Fixed workflow agents sometimes skipping their step, and the run still reporting success, after reading the harness note that their task text carries no user authority - Fixed artifact updates being refused where a PreToolUse hook covers Edit or Write; Claude now edits the file and then republishes instead of changing it in the publish call - Fixed skills and commands with very many or very long argument names stalling for seconds when invoked; only the first 64 names, each up to 64 characters, are now filled in - Fixed skills, commands and hooks using very large amounts of memory when their arguments fill many placeholders - Fixed stray characters such as `>0q` covering the folder trust prompt, and `>4m` before the shell prompt at exit, in terminals built on VTE older than 0.53 such as MATE Terminal on RHEL 8 - Fixed stray `GOK` text appearing in the prompt at startup in some versions of iTerm2 - Fixed switching to a model whose name contains `application-inference-profile` running your `awsAuthRefresh` command and delaying model-switch hooks when the provider is not Bedrock - Fixed sign-in refresh timeouts and unexpected sign-outs after a short command such as `claude auth status` or `claude plugin list` exited in the middle of a token refresh - Fixed a tool call cut off by a message sent mid-turn during its permission check being reported to the model as rejected by the user - Fixed a case where switching to a model with a smaller context window could spend usage credits on a summary by the previous model without asking first - Fixed conversations being compacted over and over, on a model you didn't pick, behind an LLM gateway whose responses name a different model than the one requested - Fixed vim mode sometimes staying in INSERT after Escape on a slow or busy machine - Fixed Esc discarding a typed AskUserQuestion answer in vim mode: the free-text field now supports vim NORMAL mode, and Esc cancels only from NORMAL - Fixed the Read tool reading binary files such as .xlsm, .parquet, .epub and .heic as text - Fixed a Markdown table with only a header row drawing nothing when too wide for the terminal, including in plans on the plan approval card - Fixed the /claude-api skill saying CMEK external-key endpoints aren't available on Claude Platform on AWS - Fixed skills no longer being listed to the model after using `/rewind` - Fixed the compaction row in a resumed session offering ctrl+o for history that is v2.1.300 ## What's changed - Added `virtualText` to a mod's prompt decorations: text drawn in the prompt box that never enters the draft or the submitted prompt - Added `cache_creation_5m_tokens` and `cache_creation_1h_tokens` to the OpenTelemetry `api_request` event, splitting cache writes by lifetime - Added `$.ui.view({ agentId })` for mods: shows an agent's transcript in the main view when you ask, and `$.ui.view({})` goes back - Added a `dir` prop on a mod's `Text` for right-to-left text: on Windows and in VS Code's terminal its rows read in that direction and sit flush right - Added `/advisor` on Claude Platform on AWS; no advisor runs until you pick one with `/advisor`, `advisorModel` or `--advisor`, and `CLAUDE_CODE_DISABLE_ADVISOR_TOOL=1` turns it off - Added OpenTelemetry GenAI semantic-convention attributes to trace spans, such as `gen_ai.provider.name`, `gen_ai.conversation.id`, `gen_ai.tool.name` and `error.type` - Added support for rewriting a workflow agent's `prompt` and `model` in the `agent.spawn` mod hook, which could only refuse workflow agents before - Added the `prompt.change` mod hook, raised when the prompt box's text changes without a typed edit: a recalled history entry, a clear, an undo, or a plugin's fill - Fixed cloud sessions telling Claude that an organization policy blocked a host when the session's own network settings did - Fixed `/autocompact` warning about high token usage when you choose a smaller auto-compact window - Fixed SessionEnd hooks sometimes not running when you exit while a background command is still running - Fixed `claude --help` naming a removed tool in its description of `--restricted` - Fixed `claude agents` not refreshing any pull request's status when the data for one of them came back incomplete - Fixed Claude being told a background agent was lost, not resumable, after a cloud session's container was replaced, when the agent had already been resumed once - Fixed subagents you had typed messages to disappearing from `/tasks` shortly after finishing, leaving no way back to the conversation - Fixed a completed parent agent dropping off the breadcrumb (its child shown re-rooted at top level) while you were viewing the child - Fixed the agents view taking a typed word such as \"up\", \"down\" or \"escape\" for that key when input arrived in a burst, which could move the peek mid-reply or clear a draft - Fixed automatic tool search (`ENABLE_TOOL_SEARCH=auto`) turning off part-way through a conversation, for example while MCP servers reconnect after a resume - Fixed a login refused by `forceLoginOrgUUID` leaving the refused organization's token stored, or live after `/login` - Fixed the diff view in Claude Desktop and Remote Control sessions not noticing a conflicted cherry-pick or revert in reftable repositories - Fixed the Artifact tool's verbose and ctrl+o line reading `Artifact(\"(unprintable path)\")` while a call's input arrives; its row now shows \"Waiting…\" and \"Running…\" as Bash's does - Fixed the first transcript entry written after resuming a session being lost when a crash had cut the transcript's last line short - Fixed `/branch` dropping messages, and `claude purge` skipping subfolder projects, when they contain a Unicode line or paragraph separator (U+2028, U+2029) - Fixed plugin `WorktreeCreate` and `WorktreeRemove` hooks not running when Claude Code starts with `--worktree` (not yet with `--tmux`) - Fixed OpenTelemetry `tool_result` events missing `git_commit_id` after `git commit -q` in repositories using reftable ref storage - Fixed a prompt that a mod's `prompt.submit` hook rewrote or dropped still being recorded as typed in the OpenTelemetry `user_prompt` event and interaction span, and in session title requests - Fixed a note meant for Claude about mod hot-reloading appearing in the transcript as if you had typed it - Fixed agent hooks ignoring their `model`: aliases like `haiku` now resolve, a subagent's model no longer overrides it, and an un",
+      "excerpt": "v2.1.303 ## What's changed - Bug fixes and reliability improvements v2.1.302 ## What's changed - Added `CLAUDE_CODE_AUTO_MODE_MODEL` to choose the model the client-side auto mode classifier uses; it does not change the model for server-side auto mode - Added an `Idle compaction` row to `/config` for turning idle compaction off or back on; the notices shown after an idle compaction now say how to turn it off - Added a notice to `/design-sync` and `/design-login` that standalone Claude Design (claude.ai/design) closes by December 14, 2026 - Fixed a \"Prompt is too long\" error when stopping a turn while the conversation was being compacted - Fixed requests failing with \"diagnostics: Extra inputs are not permitted\" after switching to Vertex or Bedrock mid-session - Fixed the Read tool loading an image file of any size, or a pipe or device named like an image, entirely into memory; image sources over 128 MB are now refused - Fixed `/autocompact` and `/effort` saving to the wrong model when a gateway names Opus 4 or 4.1 with a prefix, such as `anthropic/claude-opus-4-1` - Fixed a prompt cache miss when a tool added mid-session was loaded again through ToolSearch or after compaction - Fixed `claude plugin` and other subcommands sometimes exiting before a queued settings or config write finished, which could lose the change or leave a `.tmp` file behind - Fixed plugin marketplaces re-cloning on every refresh, and newly installed git plugins showing version \"unknown\", when git defaults to the reftable ref format - Fixed the PowerShell tool not finding commands in a plugin's `bin/` folder, and reporting an error when a search that finds nothing (rg, grep, findstr, git grep) is piped into `Select-Object` or another formatting cmdlet - Fixed Claude in the desktop app pointing you to claude.ai settings or `/mcp` to authorize or reconnect an MCP server where that option isn't available - Fixed artifact publishes sometimes failing when Claude sent an empty list of edits, and Claude retrying an artifact update the wrong way after a newer version of the artifact turned it away - Fixed `classifier_category` missing from OpenTelemetry `tool_decision` events for most auto mode classifier blocks, and new `tool_decision` attributes pushing out `tool_use_id`, `tool_source` and `tool_parameters` when `OTEL_LOGRECORD_ATTRIBUTE_COUNT_LIMIT` is low - Fixed rows in the agents view staying blank after moving down a long list or folding a section - Fixed `claude remote-control --help` not printing its usage and exiting when not signed in - Fixed `/design consent` and `/design revoke` suggesting `/design-login` when they fail in a cloud session, where it isn't available; the message now points to claude.ai/design/settings - Fixed MCP servers showing no tools, or every tool call failing, when the server negotiates protocol version 2026-07-28 but omits `resultType`, `ttlMs` or `cacheScope` - Fixed prompt suggestions spending usage credits on models your plan pays for only with credits: they are now skipped after a reply billed to credits - Fixed URLs written in backticks being clickable only on their first row when they wrap; the whole URL is now one link in terminals that support hyperlinks - Fixed `claude plugin details <name>@builtin` suggesting `claude plugin list`, which never shows built-in plugins, when the plugin isn't found; it now points to `/plugin` - Fixed an emoji that a link starts inside wrapping one column too wide, which hid it in question previews and turned tables into lists - Fixed worktree isolation refusing to create or resume worktrees under git 2.56 or later when a stray `.git` file points at a directory that doesn't exist - Fixed a cloud session's cost and usage restarting from zero after the session resumed in a new process - Self-hosted runner: Fixed git fetches failing with \"bad object refs/heads\" in sessions that reuse a checkout stored in git's reftable format - Windows: Fixed every file write being refused or asked about for projects on exFAT or FAT32 drives, including in sessions started with `--plugin-d v2.1.301 ## What's changed - Added `CLAUDE_CODE_RETRY_WATCHDOG_MAX_USAGE_LIMIT_WAIT_MS` so unattended retry mode (`CLAUDE_CODE_RETRY_WATCHDOG`) ends a request at a usage limit that resets too far away instead of waiting - Added OpenTelemetry tracing guidance to the `claude-api` skill, including setting up trace destinations with the `ant` CLI - Added the `%` motion to vim mode: jump to the matching bracket, alone or with d/c/y - Added `rows` to a mod's `Input`: a text field of several lines in the terminal, where Enter submits and Shift+Enter or a backslash before Enter starts a new line - Added `classifier_verdict` and `permission_mode` to OpenTelemetry `tool_decision` events, so auto mode classifier decisions can be told apart from permission rules - Added `classifier_category` to OpenTelemetry `tool_decision` events, naming the built-in rule a classifier block matched, when `OTEL_LOG_TOOL_DETAILS=1` - Fixed quitting removing a worktree made by a `WorktreeCreate` hook without asking when it may hold unpushed commits - Fixed the `fable` (and `best`) model alias erroring on the Anthropic API when the newest Fable model is not available to your organization: Claude Code now retries once on the previous Fable model - Fixed a misleading \"Please run /login\" error when a full disk keeps the login from being refreshed; the error now names the disk and says to delete files - Fixed Grep and Glob reporting no matches when the search program failed unexpectedly before returning any results; they now return an error saying the search failed - Fixed workflow agents sometimes skipping their step, and the run still reporting success, after reading the harness note that their task text carries no user authority - Fixed artifact updates being refused where a PreToolUse hook covers Edit or Write; Claude now edits the file and then republishes instead of changing it in the publish call - Fixed skills and commands with very many or very long argument names stalling for seconds when invoked; only the first 64 names, each up to 64 characters, are now filled in - Fixed skills, commands and hooks using very large amounts of memory when their arguments fill many placeholders - Fixed stray characters such as `>0q` covering the folder trust prompt, and `>4m` before the shell prompt at exit, in terminals built on VTE older than 0.53 such as MATE Terminal on RHEL 8 - Fixed stray `GOK` text appearing in the prompt at startup in some versions of iTerm2 - Fixed switching to a model whose name contains `application-inference-profile` running your `awsAuthRefresh` command and delaying model-switch hooks when the provider is not Bedrock - Fixed sign-in refresh timeouts and unexpected sign-outs after a short command such as `claude auth status` or `claude plugin list` exited in the middle of a token refresh - Fixed a tool call cut off by a message sent mid-turn during its permission check being reported to the model as rejected by the user - Fixed a case where switching to a model with a smaller context window could spend usage credits on a summary by the previous model without asking first - Fixed conversations being compacted over and over, on a model you didn't pick, behind an LLM gateway whose responses name a different model than the one requested - Fixed vim mode sometimes staying in INSERT after Escape on a slow or busy machine - Fixed Esc discarding a typed AskUserQuestion answer in vim mode: the free-text field now supports vim NORMAL mode, and Esc cancels only from NORMAL - Fixed the Read tool reading binary files such as .xlsm, .parquet, .epub and .heic as text - Fixed a Markdown table with only a header row drawing nothing when too wide for the terminal, including in plans on the plan approval card - Fixed the /claude-api skill saying CMEK external-key endpoints aren't available on Claude Platform on AWS - Fixed skills no longer being listed to the model after using `/rewind` - Fixed the compaction row in a resumed session offering ctrl+o for history that is v2.1.300 ## What's changed - Added `virtualText` to a mod's prompt decorations: text drawn in the prompt box that never enters the draft or the submitted prompt - Added `cache_creation_5m_tokens` and `cache_creation_1h_tokens` to the OpenTelemetry `api_request` event, splitting cache writes by lifetime - Added `$.ui.view({ agentId })` for mods: shows an agent's transcript in the main view when you ask, and `$.ui.view({})` goes back - Added a `dir` prop on a mod's `Text` for right-to-left text: on Windows and in VS Code's terminal its rows read in that direction and sit flush right - Added `/advisor` on Claude Platform on AWS; no advisor runs until you pick one with `/advisor`, `advisorModel` or `--advisor`, and `CLAUDE_CODE_DISABLE_ADVISOR_TOOL=1` turns it off - Added OpenTelemetry GenAI semantic-convention attributes to trace spans, such as `gen_ai.provider.name`, `gen_ai.conversation.id`, `gen_ai.tool.name` and `error.type` - Added support for rewriting a workflow agent's `prompt` and `model` in the `agent.spawn` mod hook, which could only refuse workflow agents before - Added the `prompt.change` mod hook, raised when the prompt box's text changes without a typed edit: a recalled history entry, a clear, an undo, or a plugin's fill - Fixed cloud sessions telling Claude that an organization policy blocked a host when the session's own network settings did - Fixed `/autocompact` warning about high token usage when you choose a smaller auto-compact window - Fixed SessionEnd hooks sometimes not running when you exit while a background command is still running - Fixed `claude --help` naming a removed tool in its description of `--restricted` - Fixed `claude agents` not refreshing any pull request's status when the data for one of them came back incomplete - Fixed Claude being told a background agent was lost, not resumable, after a cloud session's container was replaced, when the agent had already been resumed once - Fixed subagents you had typed messages to disappearing from `/tasks` shortly after finishing, leaving no way back to the conversation - Fixed a completed parent agent dropping off the breadcrumb (its child shown re-rooted at top level) while you were viewing the child - Fixed the agents view taking a typed word such as \"up\", \"down\" or \"escape\" for that key when input arrived in a burst, which could move the peek mid-reply or clear a draft - Fixed automatic tool search (`ENABLE_TOOL_SEARCH=auto`) turning off part-way through a conversation, for example while MCP servers reconnect after a resume - Fixed a login refused by `forceLoginOrgUUID` leaving the refused organization's token stored, or live after `/login` - Fixed the diff view in Claude Desktop and Remote Control sessions not noticing a conflicted cherry-pick or revert in reftable repositories - Fixed the Artifact tool's verbose and ctrl+o line reading `Artifact(\"(unprintable path)\")` while a call's input arrives; its row now shows \"Waiting…\" and \"Running…\" as Bash's does - Fixed the first transcript entry written after resuming a session being lost when a crash had cut the transcript's last line short - Fixed `/branch` dropping messages, and `claude purge` skipping subfolder projects, when they contain a Unicode line or paragraph separator (U+2028, U+2029) - Fixed plugin `WorktreeCreate` and `WorktreeRemove` hooks not running when Claude Code starts with `--worktree` (not yet with `--tmux`) - Fixed OpenTelemetry `tool_result` events missing `git_commit_id` after `git commit -q` in repositories using reftable ref storage - Fixed a prompt that a mod's `prompt.submit` hook rewrote or dropped still being recorded as typed in the OpenTelemetry `user_prompt` event and interaction span, and in session title requests - Fixed a note meant for Claude about mod hot-reloading appearing in the transcript as if you had typed it - Fixed agent hooks ignoring their `model`: aliases like `haik",
       "matched_keywords": [
         "mcp",
         "skills",
@@ -1014,7 +1014,7 @@
       ],
       "error": "",
       "previous_fingerprint": "5f7a499267b48a800f6563a1846dd6fa9c60257e92f6ff433a92a50ee793a317",
-      "changed": false,
+      "changed": true,
       "first_observation": false
     },
     {
@@ -1023,10 +1023,16 @@
       "authority": "OFFICIAL",
       "kind": "XML_FEED",
       "url": "https://raw.githubusercontent.com/anthropics/claude-code/main/feed.xml",
-      "fetched_at": "2026-10-18T08:04:49+00:00",
-      "fingerprint": "d4df7412f44276211cbce4eda0f88d09c943827c1c9941ae3ad8ef2291d940d0",
-      "title": "Claude Code v2.1.302",
+      "fetched_at": "2026-10-19T08:56:55+00:00",
+      "fingerprint": "a4e91dbb82911f4387b61e6f90ce8eaf0090afe873b843317acf786de4c65789",
+      "title": "Claude Code v2.1.303",
       "items": [
+        {
+          "name": "Claude Code v2.1.303",
+          "published_at": "2026-10-18T22:26:35Z",
+          "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.303",
+          "summary": "<p>• Bug fixes and reliability improvements</p>"
+        },
         {
           "name": "Claude Code v2.1.302",
           "published_at": "2026-10-16T20:52:44Z",
@@ -1092,15 +1098,9 @@
           "published_at": "2026-10-05T23:32:55Z",
           "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.290",
           "summary": "<p>• Added serverToolUses to the result of a mod's turn.step hook: the tool calls the API ran itself (the advisor), each with its id, name, input, start and end</p> <p>• Added agentId to the tool.check event of plugin hooks, so a hook can tell a subagent's permission check from the main session's</p> <p>• Added ceiling to the question and verdict a mod's tool.check hook reads, naming the approval an organization requires for a tool</p> <p>• Added ThemeKey and Color types to the plugin hooks typings, so an editor lists the theme colors a mod's drawing can name</p> <p>• Added to claude plugin validate: each hook a mod registers at a gating site is listed with whether it has a .catch (gatingHooks under --json)</p> <p>• Added a Deny button to the Claude apps gateway's sign-in approval page: it ends the pending sign-in, so the waiting terminal stops within seconds</p> <p>• Added claude attach <name> and claude logs <name>: part of a session name works in place of the id</p> <p>• Added /claude-api managed-agents-onboard <url> to set up the Managed Agents pattern a page describes as ant apply files</p> <p>• Added /claude-api managed-agents-onboard <quickstart-name> to build a Console quickstart template, such as deep-researcher, with the ant CLI</p> <p>• Added a warning when a managed settings file is a link to a file outside the managed settings folder</p> <p>• Added a /status and doctor warning when managed settings ignore user-configured sandbox allowRead paths or allowed domains</p> <p>• Fixed requests failing behind proxies and gateways that reject one of Claude Code's beta headers with a status other than 400, or together with a second beta</p> <p>• Fixed long sessions with hundreds of images getting stuck on \"Request rejected as unprocessable by the model\" errors</p> <p>• Fixed a turn ending at once when the API's output content filter stopped a reply while Claude was still thinking; the request is now retried once before the error is shown</p> <p>• Fixed resumed subagents and teammates losing their earlier thinking and prompt cache after receiving a message mid-run</p> <p>• Fixed WebFetch silently dropping page text past 100,000 characters; it now says how much was unread and takes an offset to read on</p> <p>• Fixed a crash (\"Maximum call stack size exceeded\") when a response nested lists or quotes thousands of levels deep</p> <p>• Fixed /rewind not listing a prompt sent while Claude was still working</p> <p>• Fixed scheduled tasks (/loop with an interval, reminders) silently not coming back on resume once the conversation was compacted; covers compactions made from this version on</p> <p>• Fixed scheduled tasks set in the foreground never firing after a ← or /background hand-off, and recurring ones firing an extra run on every resume, respawn or fork</p> <p>• Fixed headless --json-schema runs exiting non-zero with is_error: true on a success result when the connection dropped after the structured output was already delivered</p> <p>• Fixed plan mode letting the auto mode classifier approve non-read-only connector tools that carry a server-pushed ask policy</p> <p>• Fixed a project CLAUDE.md, rule or AGENTS.md symlinked outside the working directories loading under permissions.blockReadsOutsideWorkingDirectories or a Read deny rule</p> <p>• Fixed URL allow and deny patterns with a wildcard inside an xn-- host label matching differently from one process to the next</p> <p>• Fixed an MCP server provided by your organization being relisted as your own after signing in or reconnecting, including from a late result in headless and SDK sessions</p> <p>• Fixed /ultrareview dropping uncommitted changes without a warning on Windows when git stash create failed, and refusing them after a git add -N file was deleted or moved</p> <p>• Fixed the plansDirectory setting's project-root check for paths that contain a backslash on macOS and Linux</p> <p>• Fixed replies in very long Remote Control and cloud sessions that could appear a block a"
-        },
-        {
-          "name": "Claude Code v2.1.289",
-          "published_at": "2026-10-03T23:06:56Z",
-          "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.289",
-          "summary": "<p>• Fixed a deny or ask rule on a nested part of a compound shell command not holding over a user-installed mod's approval on managed machines</p> <p>• Fixed the terminal freezing on short code blocks with many unclosed <script> tags or deeply nested ${ substitutions</p> <p>• Fixed Read deny rules not applying to files @-mentioned, changed, or selected in the IDE through a symlink</p> <p>• [VSCode] Reverted a 2.1.288 change to claude auth status that may have made sign-outs more frequent</p> <p>• Improved how quickly large files open in a plugin code pane by laying the highlighted view out once at its final width</p> <p>• Fixed plugin list, plugin eval and plugin update showing a stale copy of a plugin installed from a local folder marketplace, and hot reload for a symlinked --plugin-dir</p> <p>• Fixed installed mods not loading in the first session after an upgrade</p> <p>• Fixed a plugin's rows above the prompt showing a stale row while the Background tasks dialog was open in fullscreen</p> <p>• Fixed plugin panes drawing nothing when a link used a localhost address, an @ in its path, an uppercase host or a file: path</p> <p>• Fixed a user-installed plugin being able to rewrite the descriptions of an organization-managed MCP server's sign-in tools</p> <p>• Fixed a freeze or forced quit at launch when a plugin drew a Box with a border style the terminal does not know</p> <p>• Fixed supervised and background sessions ending when a plugin's on-screen handler threw asynchronously</p> <p>• Fixed sessions ending with an interface error when a plugin region with no height kept growing</p> <p>• Fixed Bash deny and ask rules missing a command behind an environment variable prefix with an expanded value (e.g. TZ=\"$HOME\" rm -rf build) when the sandbox auto-allows commands</p> <p>• Fixed a Bash deny or ask rule being skipped under sandbox auto-allow when a bare variable assignment came before the command</p> <p>• Fixed claude plugin validate skipping the plugin when the folder also holds a marketplace manifest</p> <p>• Added agent.spawn for teammates, one agent id across plugin hook events, and idle and waiting states in $.agent.list()</p> <p>• Fixed sessions ending with \"unrecoverable interface error\" when a value a mod's ui.render hook wrote made a row throw while drawn; the engine now draws its own row instead</p> <p>• Fixed text with a tab, a stray escape and a C1 control, or a short text with a tab and CRLF line endings, drawing over the rows below it</p> <p>• Fixed right-aligned content in a mod's pane or band drawing under the close mark or [-], which now also keep one column in from the terminal's edge</p> <p>• Fixed a mod's Client that fails while drawn taking down everything the mod drew around it; it now fails alone and raises ui.fault</p> <p>• Fixed claude plugin validate failing an Anthropic marketplace's own plugin and listing a clean plugin.json in --json</p> <p>• Fixed a mod's band that fails to draw briefly telling the cards under it to step aside</p> <p>• Fixed a failed plugin component showing Error or nothing as its reason when the failure carried no message</p> <p>• Improved the line a mod's author sees when its band or pane fails to draw: it names the mod and says nothing was drawn</p> <p>• Fixed published artifact pages freezing or crashing the reader's browser tab on short code blocks with many unclosed <script> tags</p> <p>• Fixed a mod's Client region staying failed for the whole session after the terminal threw while drawing it</p>"
         }
       ],
-      "excerpt": "Claude Code v2.1.302 <p>• Added CLAUDE_CODE_AUTO_MODE_MODEL to choose the model the client-side auto mode classifier uses; it does not change the model for server-side auto mode</p> <p>• Added an Idle compaction row to /config for turning idle compaction off or back on; the notices shown after an idle compaction now say how to turn it off</p> <p>• Added a notice to /design-sync and /design-login that standalone Claude Design (claude.ai/design) closes by December 14, 2026</p> <p>• Fixed a \"Prompt is too long\" error when stopping a turn while the conversation was being compacted</p> <p>• Fixed requests failing with \"diagnostics: Extra inputs are not permitted\" after switching to Vertex or Bedrock mid-session</p> <p>• Fixed the Read tool loading an image file of any size, or a pipe or device named like an image, entirely into memory; image sources over 128 MB are now refused</p> <p>• Fixed /autocompact and /effort saving to the wrong model when a gateway names Opus 4 or 4.1 with a prefix, such as anthropic/claude-opus-4-1</p> <p>• Fixed a prompt cache miss when a tool added mid-session was loaded again through ToolSearch or after compaction</p> <p>• Fixed claude plugin and other subcommands sometimes exiting before a queued settings or config write finished, which could lose the change or leave a .tmp file behind</p> <p>• Fixed plugin marketplaces re-cloning on every refresh, and newly installed git plugins showing version \"unknown\", when git defaults to the reftable ref format</p> <p>• Fixed the PowerShell tool not finding commands in a plugin's bin/ folder, and reporting an error when a search that finds nothing (rg, grep, findstr, git grep) is piped into Select-Object or another formatting cmdlet</p> <p>• Fixed Claude in the desktop app pointing you to claude.ai settings or /mcp to authorize or reconnect an MCP server where that option isn't available</p> <p>• Fixed artifact publishes sometimes failing when Claude sent an empty list of edits, and Claude retrying an artifact update the wrong way after a newer version of the artifact turned it away</p> <p>• Fixed classifier_category missing from OpenTelemetry tool_decision events for most auto mode classifier blocks, and new tool_decision attributes pushing out tool_use_id, tool_source and tool_parameters when OTEL_LOGRECORD_ATTRIBUTE_COUNT_LIMIT is low</p> <p>• Fixed rows in the agents view staying blank after moving down a long list or folding a section</p> <p>• Fixed claude remote-control --help not printing its usage and exiting when not signed in</p> <p>• Fixed /design consent and /design revoke suggesting /design-login when they fail in a cloud session, where it isn't available; the message now points to claude.ai/design/settings</p> <p>• Fixed MCP servers showing no tools, or every tool call failing, when the server negotiates protocol version 2026-07-28 but omits resultType, ttlMs or cacheScope</p> <p>• Fixed prompt suggestions spending usage credits on models your plan pays for only with credits: they are now skipped after a reply billed to credits</p> <p>• Fixed URLs written in backticks being clickable only on their first row when they wrap; the whole URL is now one link in terminals that support hyperlinks</p> <p>• Fixed claude plugin details <name>@builtin suggesting claude plugin list, which never shows built-in plugins, when the plugin isn't found; it now points to /plugin</p> <p>• Fixed an emoji that a link starts inside wrapping one column too wide, which hid it in question previews and turned tables into lists</p> <p>• Fixed worktree isolation refusing to create or resume worktrees under git 2.56 or later when a stray .git file points at a directory that doesn't exist</p> <p>• Fixed a cloud session's cost and usage restarting from zero after the session resumed in a new process</p> <p>• Self-hosted runner: Fixed git fetches failing with \"bad object refs/heads\" in sessions that reuse a checkout stored in git's reftable format</p> <p>• Windows: Fixed every file write being refused or Claude Code v2.1.301 <p>• Added CLAUDE_CODE_RETRY_WATCHDOG_MAX_USAGE_LIMIT_WAIT_MS so unattended retry mode (CLAUDE_CODE_RETRY_WATCHDOG) ends a request at a usage limit that resets too far away instead of waiting</p> <p>• Added OpenTelemetry tracing guidance to the claude-api skill, including setting up trace destinations with the ant CLI</p> <p>• Added the % motion to vim mode: jump to the matching bracket, alone or with d/c/y</p> <p>• Added rows to a mod's Input: a text field of several lines in the terminal, where Enter submits and Shift+Enter or a backslash before Enter starts a new line</p> <p>• Added classifier_verdict and permission_mode to OpenTelemetry tool_decision events, so auto mode classifier decisions can be told apart from permission rules</p> <p>• Added classifier_category to OpenTelemetry tool_decision events, naming the built-in rule a classifier block matched, when OTEL_LOG_TOOL_DETAILS=1</p> <p>• Fixed quitting removing a worktree made by a WorktreeCreate hook without asking when it may hold unpushed commits</p> <p>• Fixed the fable (and best) model alias erroring on the Anthropic API when the newest Fable model is not available to your organization: Claude Code now retries once on the previous Fable model</p> <p>• Fixed a misleading \"Please run /login\" error when a full disk keeps the login from being refreshed; the error now names the disk and says to delete files</p> <p>• Fixed Grep and Glob reporting no matches when the search program failed unexpectedly before returning any results; they now return an error saying the search failed</p> <p>• Fixed workflow agents sometimes skipping their step, and the run still reporting success, after reading the harness note that their task text carries no user authority</p> <p>• Fixed artifact updates being refused where a PreToolUse hook covers Edit or Write; Claude now edits the file and then republishes instead of changing it in the publish call</p> <p>• Fixed skills and commands with very many or very long argument names stalling for seconds when invoked; only the first 64 names, each up to 64 characters, are now filled in</p> <p>• Fixed skills, commands and hooks using very large amounts of memory when their arguments fill many placeholders</p> <p>• Fixed stray characters such as >0q covering the folder trust prompt, and >4m before the shell prompt at exit, in terminals built on VTE older than 0.53 such as MATE Terminal on RHEL 8</p> <p>• Fixed stray GOK text appearing in the prompt at startup in some versions of iTerm2</p> <p>• Fixed switching to a model whose name contains application-inference-profile running your awsAuthRefresh command and delaying model-switch hooks when the provider is not Bedrock</p> <p>• Fixed sign-in refresh timeouts and unexpected sign-outs after a short command such as claude auth status or claude plugin list exited in the middle of a token refresh</p> <p>• Fixed a tool call cut off by a message sent mid-turn during its permission check being reported to the model as rejected by the user</p> <p>• Fixed a case where switching to a model with a smaller context window could spend usage credits on a summary by the previous model without asking first</p> <p>• Fixed conversations being compacted over and over, on a model you didn't pick, behind an LLM gateway whose responses name a different model than the one requested</p> <p>• Fixed vim mode sometimes staying in INSERT after Escape on a slow or busy machine</p> <p>• Fixed Esc discarding a typed AskUserQuestion answer in vim mode: the free-text field now supports vim NORMAL mode, and Esc cancels only from NORMAL</p> <p>• Fixed the Read tool reading binary files such as .xlsm, .parquet, .epub and .heic as text</p> <p>• Fixed a Markdown table with only a header row drawing nothing when too wide for the terminal, including in plans on the plan approval card</p> <p>• Fixed the /claude-api skill saying CMEK external-key endpoints aren't available on Claude Platform on AWS</p> <p>• Fixed skills no longer being list Claude Code v2.1.300 <p>• Added virtualText to a mod's prompt decorations: text drawn in the prompt box that never enters the draft or the submitted prompt</p> <p>• Added cache_creation_5m_tokens and cache_creation_1h_tokens to the OpenTelemetry api_request event, splitting cache writes by lifetime</p> <p>• Added $.ui.view({ agentId }) for mods: shows an agent's transcript in the main view when you ask, and $.ui.view({}) goes back</p> <p>• Added a dir prop on a mod's Text for right-to-left text: on Windows and in VS Code's terminal its rows read in that direction and sit flush right</p> <p>• Added /advisor on Claude Platform on AWS; no advisor runs until you pick one with /advisor, advisorModel or --advisor, and CLAUDE_CODE_DISABLE_ADVISOR_TOOL=1 turns it off</p> <p>• Added OpenTelemetry GenAI semantic-convention attributes to trace spans, such as gen_ai.provider.name, gen_ai.conversation.id, gen_ai.tool.name and error.type</p> <p>• Added support for rewriting a workflow agent's prompt and model in the agent.spawn mod hook, which could only refuse workflow agents before</p> <p>• Added the prompt.change mod hook, raised when the prompt box's text changes without a typed edit: a recalled history entry, a clear, an undo, or a plugin's fill</p> <p>• Fixed cloud sessions telling Claude that an organization policy blocked a host when the session's own network settings did</p> <p>• Fixed /autocompact warning about high token usage when you choose a smaller auto-compact window</p> <p>• Fixed SessionEnd hooks sometimes not running when you exit while a background command is still running</p> <p>• Fixed claude --help naming a removed tool in its description of --restricted</p> <p>• Fixed claude agents not refreshing any pull request's status when the data for one of them came back incomplete</p> <p>• Fixed Claude being told a background agent was lost, not resumable, after a cloud session's container was replaced, when the agent had already been resumed once</p> <p>• Fixed subagents you had typed messages to disappearing from /tasks shortly after finishing, leaving no way back to the conversation</p> <p>• Fixed a completed parent agent dropping off the breadcrumb (its child shown re-rooted at top level) while you were viewing the child</p> <p>• Fixed the agents view taking a typed word such as \"up\", \"down\" or \"escape\" for that key when input arrived in a burst, which could move the peek mid-reply or clear a draft</p> <p>• Fixed automatic tool search (ENABLE_TOOL_SEARCH=auto) turning off part-way through a conversation, for example while MCP servers reconnect after a resume</p> <p>• Fixed a login refused by forceLoginOrgUUID leaving the refused organization's token stored, or live after /login</p> <p>• Fixed the diff view in Claude Desktop and Remote Control sessions not noticing a conflicted cherry-pick or revert in reftable repositories</p> <p>• Fixed the Artifact tool's verbose and ctrl+o line reading Artifact(\"(unprintable path)\") while a call's input arrives; its row now shows \"Waiting…\" and \"Running…\" as Bash's does</p> <p>• Fixed the first transcript entry written after resuming a session being lost when a crash had cut the transcript's last line short</p> <p>• Fixed /branch dropping messages, and claude purge skipping subfolder projects, when they contain a Unicode line or paragraph separator (U+2028, U+2029)</p> <p>• Fixed plugin WorktreeCreate and WorktreeRemove hooks not running when Claude Code starts with --worktree (not yet with --tmux)</p> <p>• Fixed OpenTelemetry tool_result events missing git_commit_id after git commit -q in repositories using reftable ref storage</p> <p>• Fixed a prompt that a mod's prompt.submit hook rewrote or dropped still being recorded as typed in the OpenTelemetry user_prompt event and interaction span, and in session title requests</p> <p>• Fixed a note meant for Claude about mod hot-reloading appearing in the transcript as if you had typed it</p> <p>• ",
+      "excerpt": "Claude Code v2.1.303 <p>• Bug fixes and reliability improvements</p> Claude Code v2.1.302 <p>• Added CLAUDE_CODE_AUTO_MODE_MODEL to choose the model the client-side auto mode classifier uses; it does not change the model for server-side auto mode</p> <p>• Added an Idle compaction row to /config for turning idle compaction off or back on; the notices shown after an idle compaction now say how to turn it off</p> <p>• Added a notice to /design-sync and /design-login that standalone Claude Design (claude.ai/design) closes by December 14, 2026</p> <p>• Fixed a \"Prompt is too long\" error when stopping a turn while the conversation was being compacted</p> <p>• Fixed requests failing with \"diagnostics: Extra inputs are not permitted\" after switching to Vertex or Bedrock mid-session</p> <p>• Fixed the Read tool loading an image file of any size, or a pipe or device named like an image, entirely into memory; image sources over 128 MB are now refused</p> <p>• Fixed /autocompact and /effort saving to the wrong model when a gateway names Opus 4 or 4.1 with a prefix, such as anthropic/claude-opus-4-1</p> <p>• Fixed a prompt cache miss when a tool added mid-session was loaded again through ToolSearch or after compaction</p> <p>• Fixed claude plugin and other subcommands sometimes exiting before a queued settings or config write finished, which could lose the change or leave a .tmp file behind</p> <p>• Fixed plugin marketplaces re-cloning on every refresh, and newly installed git plugins showing version \"unknown\", when git defaults to the reftable ref format</p> <p>• Fixed the PowerShell tool not finding commands in a plugin's bin/ folder, and reporting an error when a search that finds nothing (rg, grep, findstr, git grep) is piped into Select-Object or another formatting cmdlet</p> <p>• Fixed Claude in the desktop app pointing you to claude.ai settings or /mcp to authorize or reconnect an MCP server where that option isn't available</p> <p>• Fixed artifact publishes sometimes failing when Claude sent an empty list of edits, and Claude retrying an artifact update the wrong way after a newer version of the artifact turned it away</p> <p>• Fixed classifier_category missing from OpenTelemetry tool_decision events for most auto mode classifier blocks, and new tool_decision attributes pushing out tool_use_id, tool_source and tool_parameters when OTEL_LOGRECORD_ATTRIBUTE_COUNT_LIMIT is low</p> <p>• Fixed rows in the agents view staying blank after moving down a long list or folding a section</p> <p>• Fixed claude remote-control --help not printing its usage and exiting when not signed in</p> <p>• Fixed /design consent and /design revoke suggesting /design-login when they fail in a cloud session, where it isn't available; the message now points to claude.ai/design/settings</p> <p>• Fixed MCP servers showing no tools, or every tool call failing, when the server negotiates protocol version 2026-07-28 but omits resultType, ttlMs or cacheScope</p> <p>• Fixed prompt suggestions spending usage credits on models your plan pays for only with credits: they are now skipped after a reply billed to credits</p> <p>• Fixed URLs written in backticks being clickable only on their first row when they wrap; the whole URL is now one link in terminals that support hyperlinks</p> <p>• Fixed claude plugin details <name>@builtin suggesting claude plugin list, which never shows built-in plugins, when the plugin isn't found; it now points to /plugin</p> <p>• Fixed an emoji that a link starts inside wrapping one column too wide, which hid it in question previews and turned tables into lists</p> <p>• Fixed worktree isolation refusing to create or resume worktrees under git 2.56 or later when a stray .git file points at a directory that doesn't exist</p> <p>• Fixed a cloud session's cost and usage restarting from zero after the session resumed in a new process</p> <p>• Self-hosted runner: Fixed git fetches failing with \"bad object refs/heads\" in sessions that reuse a checkout stored in git's reftable format</p> <p>• Windows: Fixed every file write being refused or Claude Code v2.1.301 <p>• Added CLAUDE_CODE_RETRY_WATCHDOG_MAX_USAGE_LIMIT_WAIT_MS so unattended retry mode (CLAUDE_CODE_RETRY_WATCHDOG) ends a request at a usage limit that resets too far away instead of waiting</p> <p>• Added OpenTelemetry tracing guidance to the claude-api skill, including setting up trace destinations with the ant CLI</p> <p>• Added the % motion to vim mode: jump to the matching bracket, alone or with d/c/y</p> <p>• Added rows to a mod's Input: a text field of several lines in the terminal, where Enter submits and Shift+Enter or a backslash before Enter starts a new line</p> <p>• Added classifier_verdict and permission_mode to OpenTelemetry tool_decision events, so auto mode classifier decisions can be told apart from permission rules</p> <p>• Added classifier_category to OpenTelemetry tool_decision events, naming the built-in rule a classifier block matched, when OTEL_LOG_TOOL_DETAILS=1</p> <p>• Fixed quitting removing a worktree made by a WorktreeCreate hook without asking when it may hold unpushed commits</p> <p>• Fixed the fable (and best) model alias erroring on the Anthropic API when the newest Fable model is not available to your organization: Claude Code now retries once on the previous Fable model</p> <p>• Fixed a misleading \"Please run /login\" error when a full disk keeps the login from being refreshed; the error now names the disk and says to delete files</p> <p>• Fixed Grep and Glob reporting no matches when the search program failed unexpectedly before returning any results; they now return an error saying the search failed</p> <p>• Fixed workflow agents sometimes skipping their step, and the run still reporting success, after reading the harness note that their task text carries no user authority</p> <p>• Fixed artifact updates being refused where a PreToolUse hook covers Edit or Write; Claude now edits the file and then republishes instead of changing it in the publish call</p> <p>• Fixed skills and commands with very many or very long argument names stalling for seconds when invoked; only the first 64 names, each up to 64 characters, are now filled in</p> <p>• Fixed skills, commands and hooks using very large amounts of memory when their arguments fill many placeholders</p> <p>• Fixed stray characters such as >0q covering the folder trust prompt, and >4m before the shell prompt at exit, in terminals built on VTE older than 0.53 such as MATE Terminal on RHEL 8</p> <p>• Fixed stray GOK text appearing in the prompt at startup in some versions of iTerm2</p> <p>• Fixed switching to a model whose name contains application-inference-profile running your awsAuthRefresh command and delaying model-switch hooks when the provider is not Bedrock</p> <p>• Fixed sign-in refresh timeouts and unexpected sign-outs after a short command such as claude auth status or claude plugin list exited in the middle of a token refresh</p> <p>• Fixed a tool call cut off by a message sent mid-turn during its permission check being reported to the model as rejected by the user</p> <p>• Fixed a case where switching to a model with a smaller context window could spend usage credits on a summary by the previous model without asking first</p> <p>• Fixed conversations being compacted over and over, on a model you didn't pick, behind an LLM gateway whose responses name a different model than the one requested</p> <p>• Fixed vim mode sometimes staying in INSERT after Escape on a slow or busy machine</p> <p>• Fixed Esc discarding a typed AskUserQuestion answer in vim mode: the free-text field now supports vim NORMAL mode, and Esc cancels only from NORMAL</p> <p>• Fixed the Read tool reading binary files such as .xlsm, .parquet, .epub and .heic as text</p> <p>• Fixed a Markdown table with only a header row drawing nothing when too wide for the terminal, including in plans on the plan approval card</p> <p>• Fixed the /claude-api skill saying CMEK external-key endpoints aren't available on Claude Platform on AWS</p> <p>• Fixed skills no longer being list Claude Code v2.1.300 <p>• Added virtualText to a mod's prompt decorations: text drawn in the prompt box that never enters the draft or the submitted prompt</p> <p>• Added cache_creation_5m_tokens and cache_creation_1h_tokens to the OpenTelemetry api_request event, splitting cache writes by lifetime</p> <p>• Added $.ui.view({ agentId }) for mods: shows an agent's transcript in the main view when you ask, and $.ui.view({}) goes back</p> <p>• Added a dir prop on a mod's Text for right-to-left text: on Windows and in VS Code's terminal its rows read in that direction and sit flush right</p> <p>• Added /advisor on Claude Platform on AWS; no advisor runs until you pick one with /advisor, advisorModel or --advisor, and CLAUDE_CODE_DISABLE_ADVISOR_TOOL=1 turns it off</p> <p>• Added OpenTelemetry GenAI semantic-convention attributes to trace spans, such as gen_ai.provider.name, gen_ai.conversation.id, gen_ai.tool.name and error.type</p> <p>• Added support for rewriting a workflow agent's prompt and model in the agent.spawn mod hook, which could only refuse workflow agents before</p> <p>• Added the prompt.change mod hook, raised when the prompt box's text changes without a typed edit: a recalled history entry, a clear, an undo, or a plugin's fill</p> <p>• Fixed cloud sessions telling Claude that an organization policy blocked a host when the session's own network settings did</p> <p>• Fixed /autocompact warning about high token usage when you choose a smaller auto-compact window</p> <p>• Fixed SessionEnd hooks sometimes not running when you exit while a background command is still running</p> <p>• Fixed claude --help naming a removed tool in its description of --restricted</p> <p>• Fixed claude agents not refreshing any pull request's status when the data for one of them came back incomplete</p> <p>• Fixed Claude being told a background agent was lost, not resumable, after a cloud session's container was replaced, when the agent had already been resumed once</p> <p>• Fixed subagents you had typed messages to disappearing from /tasks shortly after finishing, leaving no way back to the conversation</p> <p>• Fixed a completed parent agent dropping off the breadcrumb (its child shown re-rooted at top level) while you were viewing the child</p> <p>• Fixed the agents view taking a typed word such as \"up\", \"down\" or \"escape\" for that key when input arrived in a burst, which could move the peek mid-reply or clear a draft</p> <p>• Fixed automatic tool search (ENABLE_TOOL_SEARCH=auto) turning off part-way through a conversation, for example while MCP servers reconnect after a resume</p> <p>• Fixed a login refused by forceLoginOrgUUID leaving the refused organization's token stored, or live after /login</p> <p>• Fixed the diff view in Claude Desktop and Remote Control sessions not noticing a conflicted cherry-pick or revert in reftable repositories</p> <p>• Fixed the Artifact tool's verbose and ctrl+o line reading Artifact(\"(unprintable path)\") while a call's input arrives; its row now shows \"Waiting…\" and \"Running…\" as Bash's does</p> <p>• Fixed the first transcript entry written after resuming a session being lost when a crash had cut the transcript's last line short</p> <p>• Fixed /branch dropping messages, and claude purge skipping subfolder projects, when they contain a Unicode line or paragraph separator (U+2028, U+2029)</p> <p>• Fixed plugin WorktreeCreate and WorktreeRemove hooks not running when Claude Code starts with --worktree (not yet with --tmux)</p> <p>• Fixed OpenTelemetry tool_result events missing git_commit_id after git commit -q in repositories using reftable ref storage</p> <p>• Fixed a prompt that a mod's prompt.submit hook rewrote or dropped still being recorded as typed in the OpenTelemetry user_prompt event and interaction span, and in session title requests</p> <p>• Fixed a note meant for Claude about mod hot-r",
       "matched_keywords": [],
       "retest_categories": [
         "CSS_RESET",
@@ -1123,7 +1123,7 @@
       ],
       "error": "",
       "previous_fingerprint": "d4df7412f44276211cbce4eda0f88d09c943827c1c9941ae3ad8ef2291d940d0",
-      "changed": false,
+      "changed": true,
       "first_observation": false
     },
     {
@@ -1132,7 +1132,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://cursor.com/changelog",
-      "fetched_at": "2026-10-18T08:04:49+00:00",
+      "fetched_at": "2026-10-19T08:56:55+00:00",
       "fingerprint": "814f7152c79df294b3f42dab2074cd429e51c534cc5734f22f35d630d7e46fe9",
       "title": "What's New in Cursor — Latest Updates & Release Notes",
       "items": [],
@@ -1176,7 +1176,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/microsoft/playwright/releases?per_page=12",
-      "fetched_at": "2026-10-18T08:04:49+00:00",
+      "fetched_at": "2026-10-19T08:56:56+00:00",
       "fingerprint": "4240f0aa21f0625224344e5326c4102e92f8bcc95d5d3d57cbeebf101c4e18e7",
       "title": "v1.64.1",
       "items": [
@@ -1336,7 +1336,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/storybookjs/storybook/releases?per_page=12",
-      "fetched_at": "2026-10-18T08:04:50+00:00",
+      "fetched_at": "2026-10-19T08:56:56+00:00",
       "fingerprint": "25651b56ce42464c50b0f7063f8386650bba03737bc64aceffb38aca6598d6be",
       "title": "v11.0.0-alpha.6",
       "items": [
@@ -1490,7 +1490,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/browserslist/browserslist/releases?per_page=12",
-      "fetched_at": "2026-10-18T08:04:50+00:00",
+      "fetched_at": "2026-10-19T08:56:57+00:00",
       "fingerprint": "0267a45330aec86b30a874488e1e64fea96a068b821a0f06961a12f392cc8394",
       "title": "4.29.3",
       "items": [
@@ -1634,7 +1634,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/stylelint/stylelint/releases?per_page=12",
-      "fetched_at": "2026-10-18T08:04:50+00:00",
+      "fetched_at": "2026-10-19T08:56:57+00:00",
       "fingerprint": "74ecc0a3e7bf21a991bff89313f35a50d42e2781959d858d696271915b60b5a3",
       "title": "17.16.0",
       "items": [
@@ -1787,7 +1787,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/dequelabs/axe-core/releases?per_page=12",
-      "fetched_at": "2026-10-18T08:04:51+00:00",
+      "fetched_at": "2026-10-19T08:56:57+00:00",
       "fingerprint": "ee7485148047a95e830154aa39c5dee8ab309b0521c6e4d1139d53f5888c54c1",
       "title": "Release 4.14.0",
       "items": [
@@ -1937,7 +1937,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/GoogleChrome/lighthouse-ci/releases?per_page=12",
-      "fetched_at": "2026-10-18T08:04:51+00:00",
+      "fetched_at": "2026-10-19T08:56:58+00:00",
       "fingerprint": "5cd178cff75b4eea6878530d6e489104ed1348fc6c5466d464a982eb767a03dc",
       "title": "v0.15.1",
       "items": [
@@ -2086,7 +2086,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/svg/svgo/releases?per_page=12",
-      "fetched_at": "2026-10-18T08:04:52+00:00",
+      "fetched_at": "2026-10-19T08:56:58+00:00",
       "fingerprint": "84d12299ec1df40268307327551bbaff33fb8dd51151020ed55ab3515d82ec86",
       "title": "v4.1.0",
       "items": [
@@ -2231,7 +2231,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/web-platform-dx/web-features/releases?per_page=12",
-      "fetched_at": "2026-10-18T08:04:52+00:00",
+      "fetched_at": "2026-10-19T08:56:59+00:00",
       "fingerprint": "6230f42d283c48e93e92b8f92204355174f67e4dfc4e8685073e155b41babf42",
       "title": "web-features@next",
       "items": [
@@ -2386,15 +2386,15 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/mdn/browser-compat-data/releases?per_page=12",
-      "fetched_at": "2026-10-18T08:04:52+00:00",
-      "fingerprint": "1f288badfd0f8cb460c61f814922cf1c9186ea20b99f9e1d4283c54446f42017",
+      "fetched_at": "2026-10-19T08:57:00+00:00",
+      "fingerprint": "0fcd3a58c81eaaabd9f4bd223d9a47bccbae421508660f3078c1762da1d40112",
       "title": "@mdn/browser-compat-data@next",
       "items": [
         {
           "id": "327303933",
           "name": "@mdn/browser-compat-data@next",
           "tag": "next",
-          "published_at": "2026-10-18T00:01:50Z",
+          "published_at": "2026-10-19T00:01:53Z",
           "prerelease": true,
           "url": "https://github.com/mdn/browser-compat-data/releases/tag/next",
           "summary": "Experimental nightly prerelease generated from the [`main`](https://github.com/mdn/browser-compat-data/tree/main) branch (currently at [`0416078`](https://github.com/mdn/browser-compat-data/commit/0416078da7a1eafd7b308b37366eeac492bc1e46))."
@@ -2520,7 +2520,7 @@
         "web-api"
       ],
       "error": "",
-      "previous_fingerprint": "74281b644228a0af6eb2441006ee1f11963a780769af59042e997ed747bb76e7",
+      "previous_fingerprint": "1f288badfd0f8cb460c61f814922cf1c9186ea20b99f9e1d4283c54446f42017",
       "changed": true,
       "first_observation": false
     },
@@ -2530,7 +2530,7 @@
       "authority": "OFFICIAL",
       "kind": "JSON_DIGEST",
       "url": "https://chromestatus.com/features.json",
-      "fetched_at": "2026-10-18T08:04:53+00:00",
+      "fetched_at": "2026-10-19T08:57:00+00:00",
       "fingerprint": "",
       "title": "",
       "items": [],
@@ -2559,7 +2559,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://www.w3.org/WAI/news/",
-      "fetched_at": "2026-10-18T08:04:54+00:00",
+      "fetched_at": "2026-10-19T08:57:01+00:00",
       "fingerprint": "1b6c3e0569321eaab8a2eb2b67bdac7c893316cec1ab742511f9abb59c262d28",
       "title": "News | Web Accessibility Initiative (WAI) | W3C",
       "items": [],
@@ -2597,7 +2597,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/design-tokens/community-group/releases?per_page=12",
-      "fetched_at": "2026-10-18T08:04:54+00:00",
+      "fetched_at": "2026-10-19T08:57:01+00:00",
       "fingerprint": "e7526f9a4360fd590555d5b3a1107042f18a6ace66a09cbbfd266f86621266fb",
       "title": "",
       "items": [],
@@ -2625,7 +2625,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/style-dictionary/style-dictionary/releases?per_page=12",
-      "fetched_at": "2026-10-18T08:04:54+00:00",
+      "fetched_at": "2026-10-19T08:57:02+00:00",
       "fingerprint": "a11d9ce28d3461b2443a6e02575f8f56c700bdc1c4d7249aa5861ddd01b25e87",
       "title": "v5.7.0",
       "items": [
@@ -2771,7 +2771,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://wordpress.org/news/category/releases/",
-      "fetched_at": "2026-10-18T08:04:55+00:00",
+      "fetched_at": "2026-10-19T08:57:02+00:00",
       "fingerprint": "b28ec1e81c4997cc83040d53fcbd67873f7333db66a0b5399994d9dea6a52085",
       "title": "Releases – WordPress News",
       "items": [],
@@ -2816,7 +2816,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://developer.wordpress.org/news/",
-      "fetched_at": "2026-10-18T08:04:56+00:00",
+      "fetched_at": "2026-10-19T08:57:03+00:00",
       "fingerprint": "8c76a80f114306215636a60f430dd77d5005c48865cac13f62a64ec3a03ba5d6",
       "title": "WordPress Developer Blog – A site for plugin and theme developers, freelancers, and agency developers",
       "items": [],
@@ -2856,7 +2856,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://developer.wordpress.org/block-editor/getting-started/devenv/get-started-with-wp-env/",
-      "fetched_at": "2026-10-18T08:04:57+00:00",
+      "fetched_at": "2026-10-19T08:57:04+00:00",
       "fingerprint": "ec25248b25ac0dcac40f8d890a6922a28dacd279ec48d3c5f4412146dc530634",
       "title": "Get started with wp-env – Block Editor Handbook | Developer.WordPress.org",
       "items": [],
@@ -2898,7 +2898,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/AdvancedCustomFields/acf/releases?per_page=12",
-      "fetched_at": "2026-10-18T08:04:57+00:00",
+      "fetched_at": "2026-10-19T08:57:05+00:00",
       "fingerprint": "4bb858d58bd64f96180623bc4681c1a13b7276608894435d6c7af0905e1e4c37",
       "title": "Advanced Custom Fields v6.8.10",
       "items": [
@@ -3055,7 +3055,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://www.advancedcustomfields.com/changelog/",
-      "fetched_at": "2026-10-18T08:04:58+00:00",
+      "fetched_at": "2026-10-19T08:57:05+00:00",
       "fingerprint": "82b6e6746f1e79fb3ea0f3277499de8b29835c8bea2a5aa35a3bb5ab9a3d3a23",
       "title": "ACF | Changelog",
       "items": [],
@@ -3103,7 +3103,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://www.advancedcustomfields.com/resources/wp-acf-json/",
-      "fetched_at": "2026-10-18T08:04:58+00:00",
+      "fetched_at": "2026-10-19T08:57:05+00:00",
       "fingerprint": "84a646f3552f8ca68ed09f62634ddb137c96cb473c2acee828c52fcefd92bef7",
       "title": "ACF | wp acf json",
       "items": [],
@@ -3144,6 +3144,49 @@
   ],
   "changes": [
     {
+      "source_id": "claude-code-releases",
+      "lane": "CLAUDE_CODE",
+      "title": "v2.1.303",
+      "retest_categories": [
+        "CSS_RESET",
+        "ANIMATION",
+        "FIGMA_LAYOUT_GENERATION",
+        "VARIABLE_MODE_RUNTIME",
+        "FIGMA_MCP",
+        "VISUAL_QA_TOOLING",
+        "AGENT_CONTEXT",
+        "PARALLEL_EXECUTION"
+      ],
+      "impacts": [
+        "AGENT_CAPABILITY",
+        "MCP",
+        "PARALLEL_EXECUTION",
+        "CONTEXT_HANDLING"
+      ],
+      "url": "https://api.github.com/repos/anthropics/claude-code/releases?per_page=12"
+    },
+    {
+      "source_id": "claude-code-feed",
+      "lane": "CLAUDE_CODE",
+      "title": "Claude Code v2.1.303",
+      "retest_categories": [
+        "CSS_RESET",
+        "ANIMATION",
+        "FIGMA_LAYOUT_GENERATION",
+        "VARIABLE_MODE_RUNTIME",
+        "FIGMA_MCP",
+        "VISUAL_QA_TOOLING",
+        "AGENT_CONTEXT",
+        "PARALLEL_EXECUTION"
+      ],
+      "impacts": [
+        "AGENT_CAPABILITY",
+        "MCP",
+        "CONTEXT_HANDLING"
+      ],
+      "url": "https://raw.githubusercontent.com/anthropics/claude-code/main/feed.xml"
+    },
+    {
       "source_id": "mdn-browser-compat-data-releases",
       "lane": "WEB_PLATFORM",
       "title": "@mdn/browser-compat-data@next",
@@ -3176,13 +3219,19 @@
   ],
   "summary": {
     "source_count": 37,
-    "changed_count": 1,
+    "changed_count": 3,
     "error_count": 3,
     "first_observation_count": 0,
     "retest_categories": [
       "AGENT_CONTEXT",
+      "ANIMATION",
+      "CSS_RESET",
       "FIGMA_LAYOUT_GENERATION",
-      "LAYOUT"
+      "FIGMA_MCP",
+      "LAYOUT",
+      "PARALLEL_EXECUTION",
+      "VARIABLE_MODE_RUNTIME",
+      "VISUAL_QA_TOOLING"
     ]
   }
 }

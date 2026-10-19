@@ -1,18 +1,34 @@
 # Update Radar — Latest Official Source Scan
 
-Generated: `2026-10-18T08:04:58+00:00`
+Generated: `2026-10-19T08:57:06+00:00`
 
 Active lanes: ACCESSIBILITY, CLAUDE_CODE, CODEX, CURSOR, DESIGN_SYSTEMS, FIGMA, FRONTEND_TOOLING, MCP, WEB_PLATFORM, WORDPRESS_ACF
 
 ## Summary
 
 - Sources checked: 37
-- Changed since previous snapshot: 1
+- Changed since previous snapshot: 3
 - First observations: 0
 - Fetch errors: 3
-- RETEST candidates: AGENT_CONTEXT, FIGMA_LAYOUT_GENERATION, LAYOUT
+- RETEST candidates: AGENT_CONTEXT, ANIMATION, CSS_RESET, FIGMA_LAYOUT_GENERATION, FIGMA_MCP, LAYOUT, PARALLEL_EXECUTION, VARIABLE_MODE_RUNTIME, VISUAL_QA_TOOLING
 
 ## Changed sources
+
+### claude-code-releases
+
+- Lane: `CLAUDE_CODE`
+- Latest title: v2.1.303
+- Impacts: AGENT_CAPABILITY, MCP, PARALLEL_EXECUTION, CONTEXT_HANDLING
+- RETEST: CSS_RESET, ANIMATION, FIGMA_LAYOUT_GENERATION, VARIABLE_MODE_RUNTIME, FIGMA_MCP, VISUAL_QA_TOOLING, AGENT_CONTEXT, PARALLEL_EXECUTION
+- Source: https://api.github.com/repos/anthropics/claude-code/releases?per_page=12
+
+### claude-code-feed
+
+- Lane: `CLAUDE_CODE`
+- Latest title: Claude Code v2.1.303
+- Impacts: AGENT_CAPABILITY, MCP, CONTEXT_HANDLING
+- RETEST: CSS_RESET, ANIMATION, FIGMA_LAYOUT_GENERATION, VARIABLE_MODE_RUNTIME, FIGMA_MCP, VISUAL_QA_TOOLING, AGENT_CONTEXT, PARALLEL_EXECUTION
+- Source: https://raw.githubusercontent.com/anthropics/claude-code/main/feed.xml
 
 ### mdn-browser-compat-data-releases
 
