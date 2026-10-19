@@ -68,6 +68,165 @@ function nipponbudokan_get_page_local_nav_menu_id($post_id = 0)
     return absint(get_field('page_local_nav', $post_id));
 }
 
+/**
+ * Detail screens that can share one local menu.
+ * The menu keeps its Japanese name. Editors check one or more post types
+ * on the menu edit screen (Human 2026-10-19).
+ */
+function nipponbudokan_local_nav_detail_post_types()
+{
+    return array(
+        'budo-book' => '月刊「武道」',
+        'shodou-book' => '月刊「書写書道」',
+        'tankoubon' => '単行本',
+    );
+}
+
+function nipponbudokan_local_nav_detail_meta_key()
+{
+    return 'nbk_local_nav_post_type';
+}
+
+function nipponbudokan_local_nav_detail_post_types_for_menu($menu_id)
+{
+    $stored = get_term_meta((int) $menu_id, nipponbudokan_local_nav_detail_meta_key(), true);
+    if (is_array($stored)) {
+        $values = $stored;
+    } elseif (is_string($stored) && $stored !== '') {
+        $values = array($stored);
+    } else {
+        $values = array();
+    }
+
+    $choices = nipponbudokan_local_nav_detail_post_types();
+    $values = array_values(array_filter($values, function ($value) use ($choices) {
+        return isset($choices[(string) $value]);
+    }));
+
+    return array_values(array_unique(array_map('strval', $values)));
+}
+
+function nipponbudokan_get_local_nav_menu_id_for_post_type($post_type)
+{
+    $post_type = (string) $post_type;
+    if (!isset(nipponbudokan_local_nav_detail_post_types()[$post_type])) {
+        return 0;
+    }
+    foreach (wp_get_nav_menus() as $menu) {
+        if (!nipponbudokan_is_local_nav_menu($menu)) {
+            continue;
+        }
+        $assigned = nipponbudokan_local_nav_detail_post_types_for_menu($menu->term_id);
+        if (in_array($post_type, $assigned, true)) {
+            return (int) $menu->term_id;
+        }
+    }
+    return 0;
+}
+
+function nipponbudokan_get_rendered_local_nav_menu_id($post_id = 0)
+{
+    if (is_singular(array_keys(nipponbudokan_local_nav_detail_post_types()))) {
+        return nipponbudokan_get_local_nav_menu_id_for_post_type(get_post_type());
+    }
+    return nipponbudokan_get_page_local_nav_menu_id($post_id);
+}
+
+function nipponbudokan_save_local_nav_detail_post_type($menu_id)
+{
+    if (!isset($_POST['save_menu'], $_POST['nbk_local_nav_post_type_present'])) {
+        return;
+    }
+    if (!current_user_can('edit_theme_options')) {
+        return;
+    }
+    $menu_id = (int) $menu_id;
+    $menu = wp_get_nav_menu_object($menu_id);
+    if (!$menu || !nipponbudokan_is_local_nav_menu($menu)) {
+        return;
+    }
+
+    $choices = nipponbudokan_local_nav_detail_post_types();
+    $posted = isset($_POST['nbk_local_nav_post_type']) ? (array) wp_unslash($_POST['nbk_local_nav_post_type']) : array();
+    $values = array();
+    foreach ($posted as $value) {
+        $value = sanitize_key($value);
+        if (isset($choices[$value])) {
+            $values[] = $value;
+        }
+    }
+    $values = array_values(array_unique($values));
+
+    $meta_key = nipponbudokan_local_nav_detail_meta_key();
+    if ($values === array()) {
+        delete_term_meta($menu_id, $meta_key);
+        return;
+    }
+
+    foreach (wp_get_nav_menus() as $other) {
+        if ((int) $other->term_id === $menu_id) {
+            continue;
+        }
+        $other_values = nipponbudokan_local_nav_detail_post_types_for_menu($other->term_id);
+        $remaining = array_values(array_diff($other_values, $values));
+        if ($remaining === $other_values) {
+            continue;
+        }
+        if ($remaining === array()) {
+            delete_term_meta($other->term_id, $meta_key);
+            continue;
+        }
+        update_term_meta($other->term_id, $meta_key, $remaining);
+    }
+    update_term_meta($menu_id, $meta_key, $values);
+}
+add_action('wp_update_nav_menu', 'nipponbudokan_save_local_nav_detail_post_type', 20);
+
+function nipponbudokan_local_nav_detail_menu_field()
+{
+    $menu_id = isset($_GET['menu']) ? absint(wp_unslash($_GET['menu'])) : 0;
+    if ($menu_id < 1) {
+        return;
+    }
+    $menu = wp_get_nav_menu_object($menu_id);
+    if (!$menu || !nipponbudokan_is_local_nav_menu($menu)) {
+        return;
+    }
+
+    $current = nipponbudokan_local_nav_detail_post_types_for_menu($menu_id);
+    $choices = nipponbudokan_local_nav_detail_post_types();
+    ?>
+    <div id="nbk-local-nav-detail-setting" hidden>
+        <fieldset class="menu-settings-group">
+            <legend class="menu-settings-group-name howto">詳細ページ</legend>
+            <input type="hidden" name="nbk_local_nav_post_type_present" value="1">
+            <?php foreach ($choices as $post_type => $label) : ?>
+                <?php
+                // WordPress rebuilds this form from nav-menu-data. A bare name[]
+                // keeps only the last checkbox, so each choice needs its own key.
+                ?>
+                <div class="menu-settings-input checkbox-input">
+                    <input type="checkbox" name="nbk_local_nav_post_type[<?php echo esc_attr($post_type); ?>]" id="nbk-local-nav-post-type-<?php echo esc_attr($post_type); ?>" value="<?php echo esc_attr($post_type); ?>" <?php checked(in_array($post_type, $current, true)); ?>>
+                    <label for="nbk-local-nav-post-type-<?php echo esc_attr($post_type); ?>"><?php echo esc_html($label); ?></label>
+                </div>
+            <?php endforeach; ?>
+        </fieldset>
+    </div>
+    <script>
+        (function () {
+            var box = document.querySelector('#update-nav-menu .menu-settings');
+            var source = document.getElementById('nbk-local-nav-detail-setting');
+            if (!box || !source) {
+                return;
+            }
+            box.appendChild(source);
+            source.hidden = false;
+        }());
+    </script>
+    <?php
+}
+add_action('admin_footer-nav-menus.php', 'nipponbudokan_local_nav_detail_menu_field');
+
 function nipponbudokan_sync_local_nav_menu_slug($menu_id)
 {
     static $syncing = false;

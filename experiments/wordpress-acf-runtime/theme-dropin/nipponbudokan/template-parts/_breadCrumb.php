@@ -134,28 +134,37 @@ function get_breadcrumb_trail()
     $post_top_id = get_option('page_for_posts');
     $trail->addItem(get_the_title($post_top_id), get_permalink($post_top_id));
 
-    // カテゴリがある場合は最初のカテゴリを表示
-    // $categories = get_the_category();
-    // if (!empty($categories)) {
-    //   $category = $categories[0];
+    $categories = get_the_category();
+    if (!empty($categories) && !is_wp_error($categories)) {
+      $categories = array_values(array_filter($categories, function ($category) {
+        return $category->slug !== 'uncategorized';
+      }));
+    }
 
-    //   // 親カテゴリがある場合
-    //   $parents = get_category_parents($category->term_id, false, '|', true);
-    //   if ($parents && !is_wp_error($parents)) {
-    //     $parent_categories = explode('|', $parents);
-    //     $parent_categories = array_filter($parent_categories);
+    if (!empty($categories)) {
+      usort($categories, function ($a, $b) {
+        $depth_a = count(get_ancestors($a->term_id, 'category'));
+        $depth_b = count(get_ancestors($b->term_id, 'category'));
+        return $depth_b <=> $depth_a;
+      });
+      $category = $categories[0];
+      $ancestor_ids = array_reverse(get_ancestors($category->term_id, 'category'));
 
-    //     foreach ($parent_categories as $parent_category) {
-    //       $cat_obj = get_term_by('name', $parent_category, 'category');
-    //       if ($cat_obj) {
-    //         $trail->addItem($cat_obj->name, get_term_link($cat_obj));
-    //       }
-    //     }
-    //   } else {
-    //     // 親カテゴリがない場合
-    //     $trail->addItem($category->name, get_term_link($category));
-    //   }
-    // }
+      foreach ($ancestor_ids as $ancestor_id) {
+        $ancestor = get_term($ancestor_id, 'category');
+        if ($ancestor && !is_wp_error($ancestor)) {
+          $link = get_term_link($ancestor);
+          if (!is_wp_error($link)) {
+            $trail->addItem($ancestor->name, $link);
+          }
+        }
+      }
+
+      $link = get_term_link($category);
+      if (!is_wp_error($link)) {
+        $trail->addItem($category->name, $link);
+      }
+    }
 
     $trail->addItem(get_the_title());
     return $trail;
@@ -167,15 +176,17 @@ function get_breadcrumb_trail()
     $post_type_obj = get_post_type_object($post_type);
     $trail->addItem($post_type_obj->label, get_post_type_archive_link($post_type));
 
-    // タクソノミーがあれば表示
-    $taxonomies = get_object_taxonomies($post_type, 'objects');
-    if (!empty($taxonomies)) {
-      $taxonomy = reset($taxonomies);
-      $terms = get_the_terms(get_the_ID(), $taxonomy->name);
+    // 単行本の詳細はカテゴリ一覧へ繋がない
+    if ($post_type !== 'tankoubon') {
+      $taxonomies = get_object_taxonomies($post_type, 'objects');
+      if (!empty($taxonomies)) {
+        $taxonomy = reset($taxonomies);
+        $terms = get_the_terms(get_the_ID(), $taxonomy->name);
 
-      if (!empty($terms)) {
-        $term = reset($terms);
-        $trail->addItem($term->name, get_term_link($term));
+        if (!empty($terms) && !is_wp_error($terms)) {
+          $term = reset($terms);
+          $trail->addItem($term->name, get_term_link($term));
+        }
       }
     }
 

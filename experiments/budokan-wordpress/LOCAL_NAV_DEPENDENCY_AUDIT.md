@@ -28,6 +28,7 @@ Local Nav は固定ページの全テンプレートで出す。Human 2026-10-16
 | デフォルト `page.php` | する |
 | `templates/template-form.php` | する |
 | 刊行物 `page-publications-*.php` | する |
+| `single-budo-book.php` / `single-shodou-book.php` / `single-tankoubon.php` | する。メニュー編集画面でその投稿タイプをチェックした `ローカル：` メニュー。1つのメニューを複数の詳細へ出せる。未チェックなら出さない（Human 2026-10-19） |
 
 ## Current Figma authority（PC）
 

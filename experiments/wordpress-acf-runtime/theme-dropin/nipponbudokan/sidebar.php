@@ -2,10 +2,12 @@
 
 /**
  * ローカルナビ
- * 固定ページ ACF `page_local_nav` が指すメニューだけ出す。位置割り当ては見ない。
+ * 固定ページは ACF `page_local_nav`。
+ * 武道・書道・単行本の詳細は、メニュー編集画面でその投稿タイプを選んだメニュー。
+ * 位置割り当ては見ない。
  */
-$menu_id = function_exists('nipponbudokan_get_page_local_nav_menu_id')
-    ? nipponbudokan_get_page_local_nav_menu_id()
+$menu_id = function_exists('nipponbudokan_get_rendered_local_nav_menu_id')
+    ? nipponbudokan_get_rendered_local_nav_menu_id()
     : 0;
 if ($menu_id < 1) {
     return;
