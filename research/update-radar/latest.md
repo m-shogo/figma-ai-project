@@ -1,58 +1,18 @@
 # Update Radar — Latest Official Source Scan
 
-Generated: `2026-10-24T08:10:36+00:00`
+Generated: `2026-10-25T08:28:27+00:00`
 
 Active lanes: ACCESSIBILITY, CLAUDE_CODE, CODEX, CURSOR, DESIGN_SYSTEMS, FIGMA, FRONTEND_TOOLING, MCP, WEB_PLATFORM, WORDPRESS_ACF
 
 ## Summary
 
 - Sources checked: 37
-- Changed since previous snapshot: 6
+- Changed since previous snapshot: 2
 - First observations: 0
 - Fetch errors: 3
-- RETEST candidates: ACCESSIBILITY, AGENT_CONTEXT, ANIMATION, ASSET_FIDELITY, COLOR_GRADIENT, CSS_RESET, FIGMA_LAYOUT_GENERATION, FIGMA_MCP, INPUT_CAPABILITY, LAYOUT, PARALLEL_EXECUTION, SCROLL, VARIABLE_MODE_RUNTIME, VISUAL_QA_TOOLING
+- RETEST candidates: AGENT_CONTEXT, ANIMATION, ASSET_FIDELITY, COLOR_GRADIENT, CSS_RESET, FIGMA_LAYOUT_GENERATION, LAYOUT
 
 ## Changed sources
-
-### figma-release-notes
-
-- Lane: `FIGMA`
-- Latest title: Figma product news and release notes
-- Impacts: FIGMA_STRUCTURE, FIGMA_TO_CODE, CODE_TO_FIGMA, DESIGN_HANDOFF, VISUAL_FIDELITY
-- RETEST: CSS_RESET, INPUT_CAPABILITY, SCROLL, ANIMATION, ASSET_FIDELITY, COLOR_GRADIENT, ACCESSIBILITY, FIGMA_MCP, AGENT_CONTEXT
-- Source: https://www.figma.com/release-notes/
-
-### figma-image-crop-current
-
-- Lane: `FIGMA`
-- Latest title: Crop an image – Figma Learn - Help Center
-- Impacts: FIGMA_TO_CODE, IMAGES, ASSET_FIDELITY, VISUAL_FIDELITY
-- RETEST: ANIMATION, LAYOUT, FIGMA_LAYOUT_GENERATION, ASSET_FIDELITY, COLOR_GRADIENT
-- Source: https://help.figma.com/hc/en-us/articles/360040675194-Crop-an-image
-
-### claude-code-releases
-
-- Lane: `CLAUDE_CODE`
-- Latest title: v2.1.310
-- Impacts: AGENT_CAPABILITY, MCP, PARALLEL_EXECUTION, CONTEXT_HANDLING
-- RETEST: CSS_RESET, SCROLL, FIGMA_LAYOUT_GENERATION, ASSET_FIDELITY, VARIABLE_MODE_RUNTIME, ACCESSIBILITY, FIGMA_MCP, VISUAL_QA_TOOLING, AGENT_CONTEXT, PARALLEL_EXECUTION
-- Source: https://api.github.com/repos/anthropics/claude-code/releases?per_page=12
-
-### claude-code-feed
-
-- Lane: `CLAUDE_CODE`
-- Latest title: Claude Code v2.1.310
-- Impacts: AGENT_CAPABILITY, MCP, CONTEXT_HANDLING
-- RETEST: CSS_RESET, SCROLL, FIGMA_LAYOUT_GENERATION, ASSET_FIDELITY, VARIABLE_MODE_RUNTIME, ACCESSIBILITY, FIGMA_MCP, VISUAL_QA_TOOLING, AGENT_CONTEXT, PARALLEL_EXECUTION
-- Source: https://raw.githubusercontent.com/anthropics/claude-code/main/feed.xml
-
-### storybook-releases
-
-- Lane: `FRONTEND_TOOLING`
-- Latest title: v11.0.0-alpha.8
-- Impacts: DESIGN_SYSTEM, COMPONENT_REUSE, VISUAL_FIDELITY, ACCESSIBILITY, QA
-- RETEST: CSS_RESET, ANIMATION, FIGMA_LAYOUT_GENERATION, ASSET_FIDELITY, VARIABLE_MODE_RUNTIME, COLOR_GRADIENT, FIGMA_MCP, VISUAL_QA_TOOLING, AGENT_CONTEXT, PARALLEL_EXECUTION
-- Source: https://api.github.com/repos/storybookjs/storybook/releases?per_page=12
 
 ### mdn-browser-compat-data-releases
 
@@ -61,6 +21,14 @@ Active lanes: ACCESSIBILITY, CLAUDE_CODE, CODEX, CURSOR, DESIGN_SYSTEMS, FIGMA, 
 - Impacts: CSS, BROWSER_SUPPORT, FEATURE_DETECTION
 - RETEST: CSS_RESET, LAYOUT, FIGMA_LAYOUT_GENERATION, AGENT_CONTEXT
 - Source: https://api.github.com/repos/mdn/browser-compat-data/releases?per_page=12
+
+### style-dictionary-releases
+
+- Lane: `DESIGN_SYSTEMS`
+- Latest title: v5.7.1
+- Impacts: TOKENS, DESIGN_SYSTEM, FIGMA_VARIABLES, BUILD_TOOLING
+- RETEST: ANIMATION, ASSET_FIDELITY, COLOR_GRADIENT
+- Source: https://api.github.com/repos/style-dictionary/style-dictionary/releases?per_page=12
 
 ## Fetch errors
 
