@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-25T08:28:27+00:00",
+  "generated_at": "2026-10-26T08:59:57+00:00",
   "company_policy": {
     "path": "",
     "policy_id": "",
@@ -25,7 +25,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://www.figma.com/release-notes/",
-      "fetched_at": "2026-10-25T08:28:11+00:00",
+      "fetched_at": "2026-10-26T08:59:39+00:00",
       "fingerprint": "ca0430574e38124bb2b933bb297c39345d44940a542607e1585e5b912c713a03",
       "title": "Figma product news and release notes",
       "items": [],
@@ -80,7 +80,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://help.figma.com/hc/en-us/articles/360040451373-Guide-to-auto-layout",
-      "fetched_at": "2026-10-25T08:28:12+00:00",
+      "fetched_at": "2026-10-26T08:59:40+00:00",
       "fingerprint": "6aa0c637a9f86321a1db061e49edaf386a18cde066f037caaf1dabcf5482eb6e",
       "title": "Guide to auto layout in Figma – Figma Learn - Help Center",
       "items": [],
@@ -127,7 +127,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://help.figma.com/hc/en-us/articles/42031586813719-Use-auto-layout-with-CSS-Flexbox-in-mind",
-      "fetched_at": "2026-10-25T08:28:12+00:00",
+      "fetched_at": "2026-10-26T08:59:40+00:00",
       "fingerprint": "473a484f3c46731f98dfceb968be50a240ccaf3fe10d421049a01b3f92801654",
       "title": "Use auto layout with CSS Flexbox in mind – Figma Learn - Help Center",
       "items": [],
@@ -171,7 +171,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://help.figma.com/hc/en-us/articles/31289469907863-Use-the-grid-auto-layout-flow",
-      "fetched_at": "2026-10-25T08:28:12+00:00",
+      "fetched_at": "2026-10-26T08:59:40+00:00",
       "fingerprint": "70fbc66f4444be005c5203f77549ff2a65c2e01d05ae911ec15773a5e6bfb201",
       "title": "Use the grid auto layout flow – Figma Learn - Help Center",
       "items": [],
@@ -217,7 +217,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://help.figma.com/hc/en-us/articles/360039956634-Explore-text-properties",
-      "fetched_at": "2026-10-25T08:28:12+00:00",
+      "fetched_at": "2026-10-26T08:59:41+00:00",
       "fingerprint": "11a346ec6e477a97357df666f65cbb9683a7672645eb562c9e7262389e9c9888",
       "title": "Explore text properties – Figma Learn - Help Center",
       "items": [],
@@ -263,7 +263,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://help.figma.com/hc/en-us/articles/13402894554519-Export-formats-and-settings",
-      "fetched_at": "2026-10-25T08:28:12+00:00",
+      "fetched_at": "2026-10-26T08:59:41+00:00",
       "fingerprint": "755ecf3b4213c87c4d710c86df15b92e995a84d93bf92f897e28aa250ab673f9",
       "title": "Export formats and settings for static designs – Figma Learn - Help Center",
       "items": [],
@@ -313,7 +313,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://help.figma.com/hc/en-us/articles/360040675194-Crop-an-image",
-      "fetched_at": "2026-10-25T08:28:13+00:00",
+      "fetched_at": "2026-10-26T08:59:42+00:00",
       "fingerprint": "da5efa194e2bfb525805ee51b3c82bbe6a5a2577ff6021da8c851a2637d5a36e",
       "title": "Crop an image – Figma Learn - Help Center",
       "items": [],
@@ -357,7 +357,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://help.figma.com/hc/en-us/articles/27882809912471-Variables-in-Dev-Mode",
-      "fetched_at": "2026-10-25T08:28:13+00:00",
+      "fetched_at": "2026-10-26T08:59:42+00:00",
       "fingerprint": "34233ed673437c4cdeb4c81ec6d91ed46c6f46d0c676fa362a86d921cdfe2c12",
       "title": "Variables in Dev Mode – Figma Learn - Help Center",
       "items": [],
@@ -400,7 +400,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://developers.figma.com/docs/figma-mcp-server/",
-      "fetched_at": "2026-10-25T08:28:13+00:00",
+      "fetched_at": "2026-10-26T08:59:42+00:00",
       "fingerprint": "20c7a7dbcc3a08a55bb7f2132d2723409a93987d763c603f3da2d9f29e224a40",
       "title": "Introduction | Developer Docs",
       "items": [],
@@ -441,7 +441,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://developers.figma.com/docs/figma-mcp-server/tools-and-prompts/",
-      "fetched_at": "2026-10-25T08:28:13+00:00",
+      "fetched_at": "2026-10-26T08:59:42+00:00",
       "fingerprint": "b2d509474cab150a3eee7dc0e46d311a88f651cab9f586bfdea29d12d7e99eb4",
       "title": "Tools and prompts | Developer Docs",
       "items": [],
@@ -490,7 +490,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/figma/code-connect/releases?per_page=12",
-      "fetched_at": "2026-10-25T08:28:14+00:00",
+      "fetched_at": "2026-10-26T08:59:42+00:00",
       "fingerprint": "99f008665a63c30595068492752b14a895ead15e1c27ea3a6ce3a9a2de2cabe1",
       "title": "Code Connect 2.0.2",
       "items": [
@@ -649,7 +649,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/modelcontextprotocol/modelcontextprotocol/releases?per_page=12",
-      "fetched_at": "2026-10-25T08:28:14+00:00",
+      "fetched_at": "2026-10-26T08:59:43+00:00",
       "fingerprint": "98a021f7b460f9a3980efeb31c5af68395d6c2beaa5c809f0bd640ab3c83d210",
       "title": "2026-07-28",
       "items": [
@@ -769,11 +769,11 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://modelcontextprotocol.io/specification/latest",
-      "fetched_at": "2026-10-25T08:28:15+00:00",
-      "fingerprint": "cd9f9559ca7036c6cfd70de8280393d15f885191ca4002067eb2d3d462207d98",
+      "fetched_at": "2026-10-26T08:59:43+00:00",
+      "fingerprint": "4522f8eaa8026f394e740162ef4afa38de129f4bb431c14446024c14b3056b49",
       "title": "Specification - Model Context Protocol",
       "items": [],
-      "excerpt": "Specification - Model Context Protocol Documentation Index Fetch the complete documentation index at: /llms.txt Use this file to discover all available pages before exploring further. Skip to main content Model Context Protocol home page Version 2026-07-28 (latest) Search... ⌘ K Ask Assistant ⌘ I Blog GitHub Discord Search... Navigation Specification Documentation Specification Extensions Registry SEPs Community Specification Key Changes Deprecated Features Architecture Base Protocol Overview Versioning and Compatibility Message Patterns Transports Authorization Client Features Roots Sampling Elicitation Server Features Overview Discovery Prompts Resources Tools Utilities Schema Reference On this page Overview Key Details Base Protocol Features Additional Utilities Extensions Security and Trust & Safety Key Principles Implementation Guidelines Learn More Specification Copy page Copy page Copy page Copy page Model Context Protocol (MCP) is an open protocol that enables seamless integration between LLM applications and external data sources and tools. Whether you’re building an AI-powered IDE, enhancing a chat interface, or creating custom AI workflows, MCP provides a standardized way to connect LLMs with the context they need. This specification defines the authoritative protocol requirements, based on the TypeScript schema in schema.ts . For implementation guides and examples, visit modelcontextprotocol.io . The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL NOT”, “SHOULD”, “SHOULD NOT”, “RECOMMENDED”, “NOT RECOMMENDED”, “MAY”, and “OPTIONAL” in this document are to be interpreted as described in BCP 14 [ RFC2119 ] [ RFC8174 ] when, and only when, they appear in all capitals, as shown here. ​ Overview MCP provides a standardized way for applications to: Share contextual information with language models Expose tools and capabilities to AI systems Build composable integrations and workflows The protocol uses JSON-RPC 2.0 messages to establish communication between: Hosts : LLM applications that initiate connections Clients : Connectors within the host application Servers : Services that provide context and capabilities MCP takes some inspiration from the Language Server Protocol , which standardizes how to add support for programming languages across a whole ecosystem of development tools. In a similar way, MCP standardizes how to integrate additional context and tools into the ecosystem of AI applications. ​ Key Details ​ Base Protocol JSON-RPC message format Stateless, self-contained requests Per-request capability negotiation ​ Features Servers offer any of the following features to clients: Resources : Context and data, for the user or the AI model to use Prompts : Templated messages and workflows for users Tools : Functions for the AI model to execute Clients may offer the following features to servers: Elicitation : Server-initiated requests for additional information from users ​ Additional Utilities Configuration Progress tracking Cancellation Error reporting ​ Extensions Beyond the core protocol, MCP defines optional extensions that add modular, specialized, or experimental functionality. Extensions are always opt-in and require explicit support from both client and server, negotiated during initialization. Notable extensions include: Tasks : Asynchronous execution of long-running operations, with polling, mid-flight input, and durable handles Skills over MCP : Rich, structured instructions for agent workflows, discovered and consumed through MCP MCP Apps : Interactive UI elements (charts, forms, video players) rendered inline within conversations ​ Security and Trust & Safety The Model Context Protocol enables powerful capabilities through arbitrary data access and code execution paths. With this power comes important security and trust considerations that all implementors must carefully address. ​ Key Principles User Consent and Control Users must explicitly consent to and understand all data access and operations Users must retain control over what data is shared and what actions are taken Implementors should provide clear UIs for reviewing and authorizing activities Data Privacy Hosts must obtain explicit user consent before exposing user data to servers Hosts must not transmit resource data elsewhere without user consent User data should be protected with appropriate access controls Tool Safety Tools represent arbitrary code execution and must be treated with appropriate caution. In particular, descriptions of tool behavior such as annotations should be considered untrusted, unless obtained from a trusted server. Hosts must obtain explicit user consent before invoking any tool Users should understand what each tool does before authorizing its use ​ Implementation Guidelines While MCP itself cannot enforce these security principles at the protocol level, implementors SHOULD : Build robust consent and authorization flows into their applications Provide clear documentation of security implications Implement appropriate access controls and data protections Follow security best practices in their integrations Consider privacy implications in their feature designs ​ Learn More Explore the detailed specification for each protocol component: Architecture Base Protocol Server Features Client Features Contributing Was this page helpful? Yes No Key Changes github discord Assistant Responses are generated using AI and may contain mistakes.",
+      "excerpt": "Specification - Model Context Protocol Documentation Index Fetch the complete documentation index at: /llms.txt Use this file to discover all available pages before exploring further. Skip to main content Model Context Protocol home page Version 2026-07-28 (latest) Search... ⌘ K Ask Assistant ⌘ I Blog GitHub Discord Search... Navigation Specification Documentation Specification Extensions Registry SEPs Community Specification Key Changes Deprecated Features Architecture Base Protocol Overview Versioning and Compatibility Message Patterns Transports Authorization Client Features Roots Sampling Elicitation Server Features Overview Discovery Prompts Resources Tools Utilities Schema Reference On this page Back to top Overview Key Details Base Protocol Features Additional Utilities Extensions Security and Trust & Safety Key Principles Implementation Guidelines Learn More Specification Copy page Copy page Copy page Copy page Model Context Protocol (MCP) is an open protocol that enables seamless integration between LLM applications and external data sources and tools. Whether you’re building an AI-powered IDE, enhancing a chat interface, or creating custom AI workflows, MCP provides a standardized way to connect LLMs with the context they need. This specification defines the authoritative protocol requirements, based on the TypeScript schema in schema.ts . For implementation guides and examples, visit modelcontextprotocol.io . The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL NOT”, “SHOULD”, “SHOULD NOT”, “RECOMMENDED”, “NOT RECOMMENDED”, “MAY”, and “OPTIONAL” in this document are to be interpreted as described in BCP 14 [ RFC2119 ] [ RFC8174 ] when, and only when, they appear in all capitals, as shown here. ​ Overview MCP provides a standardized way for applications to: Share contextual information with language models Expose tools and capabilities to AI systems Build composable integrations and workflows The protocol uses JSON-RPC 2.0 messages to establish communication between: Hosts : LLM applications that initiate connections Clients : Connectors within the host application Servers : Services that provide context and capabilities MCP takes some inspiration from the Language Server Protocol , which standardizes how to add support for programming languages across a whole ecosystem of development tools. In a similar way, MCP standardizes how to integrate additional context and tools into the ecosystem of AI applications. ​ Key Details ​ Base Protocol JSON-RPC message format Stateless, self-contained requests Per-request capability negotiation ​ Features Servers offer any of the following features to clients: Resources : Context and data, for the user or the AI model to use Prompts : Templated messages and workflows for users Tools : Functions for the AI model to execute Clients may offer the following features to servers: Elicitation : Server-initiated requests for additional information from users ​ Additional Utilities Configuration Progress tracking Cancellation Error reporting ​ Extensions Beyond the core protocol, MCP defines optional extensions that add modular, specialized, or experimental functionality. Extensions are always opt-in and require explicit support from both client and server, negotiated during initialization. Notable extensions include: Tasks : Asynchronous execution of long-running operations, with polling, mid-flight input, and durable handles Skills over MCP : Rich, structured instructions for agent workflows, discovered and consumed through MCP MCP Apps : Interactive UI elements (charts, forms, video players) rendered inline within conversations ​ Security and Trust & Safety The Model Context Protocol enables powerful capabilities through arbitrary data access and code execution paths. With this power comes important security and trust considerations that all implementors must carefully address. ​ Key Principles User Consent and Control Users must explicitly consent to and understand all data access and operations Users must retain control over what data is shared and what actions are taken Implementors should provide clear UIs for reviewing and authorizing activities Data Privacy Hosts must obtain explicit user consent before exposing user data to servers Hosts must not transmit resource data elsewhere without user consent User data should be protected with appropriate access controls Tool Safety Tools represent arbitrary code execution and must be treated with appropriate caution. In particular, descriptions of tool behavior such as annotations should be considered untrusted, unless obtained from a trusted server. Hosts must obtain explicit user consent before invoking any tool Users should understand what each tool does before authorizing its use ​ Implementation Guidelines While MCP itself cannot enforce these security principles at the protocol level, implementors SHOULD : Build robust consent and authorization flows into their applications Provide clear documentation of security implications Implement appropriate access controls and data protections Follow security best practices in their integrations Consider privacy implications in their feature designs ​ Learn More Explore the detailed specification for each protocol component: Architecture Base Protocol Server Features Client Features Contributing Was this page helpful? Yes No Key Changes github discord Assistant Responses are generated using AI and may contain mistakes.",
       "matched_keywords": [
         "mcp",
         "specification"
@@ -794,7 +794,7 @@
       ],
       "error": "",
       "previous_fingerprint": "cd9f9559ca7036c6cfd70de8280393d15f885191ca4002067eb2d3d462207d98",
-      "changed": false,
+      "changed": true,
       "first_observation": false
     },
     {
@@ -803,7 +803,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://openai.com/products/release-notes/",
-      "fetched_at": "2026-10-25T08:28:15+00:00",
+      "fetched_at": "2026-10-26T08:59:44+00:00",
       "fingerprint": "",
       "title": "",
       "items": [],
@@ -836,7 +836,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://help.openai.com/en/articles/11428266-codex-changelog/",
-      "fetched_at": "2026-10-25T08:28:15+00:00",
+      "fetched_at": "2026-10-26T08:59:44+00:00",
       "fingerprint": "",
       "title": "",
       "items": [],
@@ -865,7 +865,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/anthropics/claude-code/releases?per_page=12",
-      "fetched_at": "2026-10-25T08:28:15+00:00",
+      "fetched_at": "2026-10-26T08:59:44+00:00",
       "fingerprint": "1a7985934c11982bc3730f7ce506452296bed18e10d85f31813e50da749a78b6",
       "title": "v2.1.310",
       "items": [
@@ -1025,7 +1025,7 @@
       "authority": "OFFICIAL",
       "kind": "XML_FEED",
       "url": "https://raw.githubusercontent.com/anthropics/claude-code/main/feed.xml",
-      "fetched_at": "2026-10-25T08:28:16+00:00",
+      "fetched_at": "2026-10-26T08:59:45+00:00",
       "fingerprint": "87efb84e02b40959b153d1a2b786d1de7040fb527204249cd4b8f40bd3d6e1e0",
       "title": "Claude Code v2.1.310",
       "items": [
@@ -1136,7 +1136,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://cursor.com/changelog",
-      "fetched_at": "2026-10-25T08:28:16+00:00",
+      "fetched_at": "2026-10-26T08:59:45+00:00",
       "fingerprint": "814f7152c79df294b3f42dab2074cd429e51c534cc5734f22f35d630d7e46fe9",
       "title": "What's New in Cursor — Latest Updates & Release Notes",
       "items": [],
@@ -1180,7 +1180,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/microsoft/playwright/releases?per_page=12",
-      "fetched_at": "2026-10-25T08:28:16+00:00",
+      "fetched_at": "2026-10-26T08:59:45+00:00",
       "fingerprint": "4240f0aa21f0625224344e5326c4102e92f8bcc95d5d3d57cbeebf101c4e18e7",
       "title": "v1.64.1",
       "items": [
@@ -1340,7 +1340,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/storybookjs/storybook/releases?per_page=12",
-      "fetched_at": "2026-10-25T08:28:17+00:00",
+      "fetched_at": "2026-10-26T08:59:46+00:00",
       "fingerprint": "448762198c44a0c4363f2b8bce1806d691348c2bd800aa6452e78ad3cf8ac279",
       "title": "v11.0.0-alpha.8",
       "items": [
@@ -1495,7 +1495,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/browserslist/browserslist/releases?per_page=12",
-      "fetched_at": "2026-10-25T08:28:17+00:00",
+      "fetched_at": "2026-10-26T08:59:46+00:00",
       "fingerprint": "de8b3320f6b13f217fcb65312507179f12535331bc9574cde22ca4029ae5cdab",
       "title": "4.29.4",
       "items": [
@@ -1639,7 +1639,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/stylelint/stylelint/releases?per_page=12",
-      "fetched_at": "2026-10-25T08:28:17+00:00",
+      "fetched_at": "2026-10-26T08:59:47+00:00",
       "fingerprint": "1244fdb02abef821e43acc6aac7359690e425855c736640d996cd9a6462a2ea8",
       "title": "18.0.0-next.0",
       "items": [
@@ -1793,7 +1793,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/dequelabs/axe-core/releases?per_page=12",
-      "fetched_at": "2026-10-25T08:28:18+00:00",
+      "fetched_at": "2026-10-26T08:59:47+00:00",
       "fingerprint": "ee7485148047a95e830154aa39c5dee8ab309b0521c6e4d1139d53f5888c54c1",
       "title": "Release 4.14.0",
       "items": [
@@ -1943,7 +1943,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/GoogleChrome/lighthouse-ci/releases?per_page=12",
-      "fetched_at": "2026-10-25T08:28:18+00:00",
+      "fetched_at": "2026-10-26T08:59:48+00:00",
       "fingerprint": "5cd178cff75b4eea6878530d6e489104ed1348fc6c5466d464a982eb767a03dc",
       "title": "v0.15.1",
       "items": [
@@ -2092,7 +2092,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/svg/svgo/releases?per_page=12",
-      "fetched_at": "2026-10-25T08:28:19+00:00",
+      "fetched_at": "2026-10-26T08:59:48+00:00",
       "fingerprint": "84d12299ec1df40268307327551bbaff33fb8dd51151020ed55ab3515d82ec86",
       "title": "v4.1.0",
       "items": [
@@ -2237,7 +2237,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/web-platform-dx/web-features/releases?per_page=12",
-      "fetched_at": "2026-10-25T08:28:19+00:00",
+      "fetched_at": "2026-10-26T08:59:49+00:00",
       "fingerprint": "cb369e23006a05866d4515887b18b15eaad990e02ed772882809b3c8c34bc437",
       "title": "v3.44.0",
       "items": [
@@ -2392,15 +2392,15 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/mdn/browser-compat-data/releases?per_page=12",
-      "fetched_at": "2026-10-25T08:28:20+00:00",
-      "fingerprint": "34d77e16f899e1bbf9a12d7ea3619e622ee27b849b129fa4c68d7dddc75da48f",
+      "fetched_at": "2026-10-26T08:59:50+00:00",
+      "fingerprint": "49dfd46b430adb8cb1c75b6b50efb345addcce14088eb106e808cc20fef6f7bb",
       "title": "@mdn/browser-compat-data@next",
       "items": [
         {
           "id": "327303933",
           "name": "@mdn/browser-compat-data@next",
           "tag": "next",
-          "published_at": "2026-10-25T00:01:57Z",
+          "published_at": "2026-10-26T00:02:13Z",
           "prerelease": true,
           "url": "https://github.com/mdn/browser-compat-data/releases/tag/next",
           "summary": "Experimental nightly prerelease generated from the [`main`](https://github.com/mdn/browser-compat-data/tree/main) branch (currently at [`56e6f12`](https://github.com/mdn/browser-compat-data/commit/56e6f1217a54dfe0d25df29d0f67c6a26cdc3901))."
@@ -2527,7 +2527,7 @@
         "web-api"
       ],
       "error": "",
-      "previous_fingerprint": "5fa64089acec074a3260d0e78346ba3c427e6b1c85c989677860d674cbbf47ae",
+      "previous_fingerprint": "34d77e16f899e1bbf9a12d7ea3619e622ee27b849b129fa4c68d7dddc75da48f",
       "changed": true,
       "first_observation": false
     },
@@ -2537,7 +2537,7 @@
       "authority": "OFFICIAL",
       "kind": "JSON_DIGEST",
       "url": "https://chromestatus.com/features.json",
-      "fetched_at": "2026-10-25T08:28:20+00:00",
+      "fetched_at": "2026-10-26T08:59:50+00:00",
       "fingerprint": "",
       "title": "",
       "items": [],
@@ -2566,7 +2566,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://www.w3.org/WAI/news/",
-      "fetched_at": "2026-10-25T08:28:22+00:00",
+      "fetched_at": "2026-10-26T08:59:51+00:00",
       "fingerprint": "1b6c3e0569321eaab8a2eb2b67bdac7c893316cec1ab742511f9abb59c262d28",
       "title": "News | Web Accessibility Initiative (WAI) | W3C",
       "items": [],
@@ -2604,7 +2604,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/design-tokens/community-group/releases?per_page=12",
-      "fetched_at": "2026-10-25T08:28:22+00:00",
+      "fetched_at": "2026-10-26T08:59:51+00:00",
       "fingerprint": "e7526f9a4360fd590555d5b3a1107042f18a6ace66a09cbbfd266f86621266fb",
       "title": "",
       "items": [],
@@ -2632,7 +2632,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/style-dictionary/style-dictionary/releases?per_page=12",
-      "fetched_at": "2026-10-25T08:28:23+00:00",
+      "fetched_at": "2026-10-26T08:59:52+00:00",
       "fingerprint": "df294978b78634b2f1e53acd0a54f705899b17832cbc2f5a5c5eef594d860e53",
       "title": "v5.7.1",
       "items": [
@@ -2768,8 +2768,8 @@
         "build"
       ],
       "error": "",
-      "previous_fingerprint": "a11d9ce28d3461b2443a6e02575f8f56c700bdc1c4d7249aa5861ddd01b25e87",
-      "changed": true,
+      "previous_fingerprint": "df294978b78634b2f1e53acd0a54f705899b17832cbc2f5a5c5eef594d860e53",
+      "changed": false,
       "first_observation": false
     },
     {
@@ -2778,7 +2778,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://wordpress.org/news/category/releases/",
-      "fetched_at": "2026-10-25T08:28:23+00:00",
+      "fetched_at": "2026-10-26T08:59:52+00:00",
       "fingerprint": "9bff67c598fbca1de710d4d4a9befe274566ab3fe290c38a3178a72135905fed",
       "title": "Releases – WordPress News",
       "items": [],
@@ -2823,7 +2823,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://developer.wordpress.org/news/",
-      "fetched_at": "2026-10-25T08:28:25+00:00",
+      "fetched_at": "2026-10-26T08:59:54+00:00",
       "fingerprint": "8c76a80f114306215636a60f430dd77d5005c48865cac13f62a64ec3a03ba5d6",
       "title": "WordPress Developer Blog – A site for plugin and theme developers, freelancers, and agency developers",
       "items": [],
@@ -2863,7 +2863,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://developer.wordpress.org/block-editor/getting-started/devenv/get-started-with-wp-env/",
-      "fetched_at": "2026-10-25T08:28:25+00:00",
+      "fetched_at": "2026-10-26T08:59:55+00:00",
       "fingerprint": "ec25248b25ac0dcac40f8d890a6922a28dacd279ec48d3c5f4412146dc530634",
       "title": "Get started with wp-env – Block Editor Handbook | Developer.WordPress.org",
       "items": [],
@@ -2905,7 +2905,7 @@
       "authority": "OFFICIAL",
       "kind": "GITHUB_RELEASES",
       "url": "https://api.github.com/repos/AdvancedCustomFields/acf/releases?per_page=12",
-      "fetched_at": "2026-10-25T08:28:26+00:00",
+      "fetched_at": "2026-10-26T08:59:56+00:00",
       "fingerprint": "4bb858d58bd64f96180623bc4681c1a13b7276608894435d6c7af0905e1e4c37",
       "title": "Advanced Custom Fields v6.8.10",
       "items": [
@@ -3062,7 +3062,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://www.advancedcustomfields.com/changelog/",
-      "fetched_at": "2026-10-25T08:28:26+00:00",
+      "fetched_at": "2026-10-26T08:59:56+00:00",
       "fingerprint": "82b6e6746f1e79fb3ea0f3277499de8b29835c8bea2a5aa35a3bb5ab9a3d3a23",
       "title": "ACF | Changelog",
       "items": [],
@@ -3110,7 +3110,7 @@
       "authority": "OFFICIAL",
       "kind": "HTML_DIGEST",
       "url": "https://www.advancedcustomfields.com/resources/wp-acf-json/",
-      "fetched_at": "2026-10-25T08:28:27+00:00",
+      "fetched_at": "2026-10-26T08:59:57+00:00",
       "fingerprint": "84a646f3552f8ca68ed09f62634ddb137c96cb473c2acee828c52fcefd92bef7",
       "title": "ACF | wp acf json",
       "items": [],
@@ -3151,6 +3151,22 @@
   ],
   "changes": [
     {
+      "source_id": "mcp-spec-latest",
+      "lane": "MCP",
+      "title": "Specification - Model Context Protocol",
+      "retest_categories": [
+        "FIGMA_MCP",
+        "CSS_TOOLING",
+        "AGENT_CONTEXT"
+      ],
+      "impacts": [
+        "MCP",
+        "CLIENT_SERVER_COMPAT",
+        "TOOL_SEMANTICS"
+      ],
+      "url": "https://modelcontextprotocol.io/specification/latest"
+    },
+    {
       "source_id": "mdn-browser-compat-data-releases",
       "lane": "WEB_PLATFORM",
       "title": "@mdn/browser-compat-data@next",
@@ -3166,23 +3182,6 @@
         "FEATURE_DETECTION"
       ],
       "url": "https://api.github.com/repos/mdn/browser-compat-data/releases?per_page=12"
-    },
-    {
-      "source_id": "style-dictionary-releases",
-      "lane": "DESIGN_SYSTEMS",
-      "title": "v5.7.1",
-      "retest_categories": [
-        "ANIMATION",
-        "ASSET_FIDELITY",
-        "COLOR_GRADIENT"
-      ],
-      "impacts": [
-        "TOKENS",
-        "DESIGN_SYSTEM",
-        "FIGMA_VARIABLES",
-        "BUILD_TOOLING"
-      ],
-      "url": "https://api.github.com/repos/style-dictionary/style-dictionary/releases?per_page=12"
     }
   ],
   "fetch_errors": [
@@ -3206,11 +3205,10 @@
     "first_observation_count": 0,
     "retest_categories": [
       "AGENT_CONTEXT",
-      "ANIMATION",
-      "ASSET_FIDELITY",
-      "COLOR_GRADIENT",
       "CSS_RESET",
+      "CSS_TOOLING",
       "FIGMA_LAYOUT_GENERATION",
+      "FIGMA_MCP",
       "LAYOUT"
     ]
   }
