@@ -1,26 +1,18 @@
 # Update Radar — Latest Official Source Scan
 
-Generated: `2026-11-01T10:30:56+00:00`
+Generated: `2026-11-02T11:14:24+00:00`
 
 Active lanes: ACCESSIBILITY, CLAUDE_CODE, CODEX, CURSOR, DESIGN_SYSTEMS, FIGMA, FRONTEND_TOOLING, MCP, WEB_PLATFORM, WORDPRESS_ACF
 
 ## Summary
 
 - Sources checked: 37
-- Changed since previous snapshot: 2
+- Changed since previous snapshot: 1
 - First observations: 0
 - Fetch errors: 3
-- RETEST candidates: ACCESSIBILITY, AGENT_CONTEXT, ASSET_FIDELITY, COLOR_GRADIENT, CSS_RESET, CSS_TOOLING, FIGMA_LAYOUT_GENERATION, FIGMA_MCP, LAYOUT, VISUAL_QA_TOOLING
+- RETEST candidates: AGENT_CONTEXT, CSS_RESET, FIGMA_LAYOUT_GENERATION, LAYOUT
 
 ## Changed sources
-
-### mcp-spec-latest
-
-- Lane: `MCP`
-- Latest title: Specification - Model Context Protocol
-- Impacts: MCP, CLIENT_SERVER_COMPAT, TOOL_SEMANTICS
-- RETEST: ASSET_FIDELITY, COLOR_GRADIENT, ACCESSIBILITY, FIGMA_MCP, VISUAL_QA_TOOLING, CSS_TOOLING, AGENT_CONTEXT
-- Source: https://modelcontextprotocol.io/specification/latest
 
 ### mdn-browser-compat-data-releases
 
