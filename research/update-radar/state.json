@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-07T10:16:10+00:00",
+  "updated_at": "2026-11-08T10:27:09+00:00",
   "fingerprints": {
     "figma-release-notes": "44fdd3ef56a808acbd2677115640a9f10707ad7bfac1e64b0bd86fe433acb30e",
     "figma-auto-layout-current": "6aa0c637a9f86321a1db061e49edaf386a18cde066f037caaf1dabcf5482eb6e",
@@ -14,7 +14,7 @@
     "figma-mcp-tools": "b2d509474cab150a3eee7dc0e46d311a88f651cab9f586bfdea29d12d7e99eb4",
     "figma-code-connect-releases": "6dff8ba0263a9f090e59b41398aa488c6fee1238e1950480e0db0a89185b3753",
     "mcp-spec-releases": "98a021f7b460f9a3980efeb31c5af68395d6c2beaa5c809f0bd640ab3c83d210",
-    "mcp-spec-latest": "a8ea02b57609a3fc7afd4ef7b4c6a8dfad7b79d554bc5e8ee74f332fbe086a97",
+    "mcp-spec-latest": "a3119114db02dc4d3a548db852885f7a21b0b5de94f901ead44dd9eb2b82c53b",
     "claude-code-releases": "2829c23e906fc820fd614acfb24a9c1a2c05f975c0cedb071bcad33a914633c4",
     "claude-code-feed": "532c24f59573a71bff3e1c3e6fdb9a17cb53af5e33bda5c1cad890ee9c5b0b46",
     "cursor-changelog": "af27b9ba2984fdf97304169750ea1c18e9a095ebf33f5fdc16d265f566b25811",
@@ -26,7 +26,7 @@
     "lighthouse-ci-releases": "44bd5a1e421d934355879df49586206806a3083bfba8a14362668fdd2bd03e42",
     "svgo-releases": "84d12299ec1df40268307327551bbaff33fb8dd51151020ed55ab3515d82ec86",
     "web-features-releases": "be21ccd56e2af946d5c6c2c68a268ac30ea20d393426f0001f0d4d173202cb7a",
-    "mdn-browser-compat-data-releases": "993bbcd9c8495d62e8d36cbb1ac652bd5c2f4696ff7c1e1f1fb5eda7a6b11442",
+    "mdn-browser-compat-data-releases": "eaa6ab9e9753106fff9d6a03d88aee4618350dd005e5f8ed6aea19d56e10e1a8",
     "w3c-wai-news": "1b6c3e0569321eaab8a2eb2b67bdac7c893316cec1ab742511f9abb59c262d28",
     "design-tokens-spec": "e7526f9a4360fd590555d5b3a1107042f18a6ace66a09cbbfd266f86621266fb",
     "style-dictionary-releases": "09ebef4613ffb4bb887a5d6c2959e0bde56b986932f7ad5c5e859737dbfa601b",
