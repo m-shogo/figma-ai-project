@@ -1,18 +1,26 @@
 # Update Radar — Latest Official Source Scan
 
-Generated: `2026-11-09T11:38:12+00:00`
+Generated: `2026-11-10T11:16:27+00:00`
 
 Active lanes: ACCESSIBILITY, CLAUDE_CODE, CODEX, CURSOR, DESIGN_SYSTEMS, FIGMA, FRONTEND_TOOLING, MCP, WEB_PLATFORM, WORDPRESS_ACF
 
 ## Summary
 
 - Sources checked: 37
-- Changed since previous snapshot: 2
+- Changed since previous snapshot: 7
 - First observations: 0
 - Fetch errors: 3
-- RETEST candidates: ACCESSIBILITY, AGENT_CONTEXT, ANIMATION, ASSET_FIDELITY, COLOR_GRADIENT, CSS_RESET, CSS_TOOLING, FIGMA_LAYOUT_GENERATION, FIGMA_MCP, LAYOUT, VISUAL_QA_TOOLING
+- RETEST candidates: ACCESSIBILITY, AGENT_CONTEXT, ANIMATION, ASSET_FIDELITY, COLOR_GRADIENT, CSS_RESET, CSS_TOOLING, FIGMA_LAYOUT_GENERATION, FIGMA_MCP, INPUT_CAPABILITY, LAYOUT, PARALLEL_EXECUTION, SCROLL, VARIABLE_MODE_RUNTIME, VIEWPORT_SAFE_AREA, VISUAL_QA_TOOLING
 
 ## Changed sources
+
+### figma-release-notes
+
+- Lane: `FIGMA`
+- Latest title: Figma product news and release notes
+- Impacts: FIGMA_STRUCTURE, FIGMA_TO_CODE, CODE_TO_FIGMA, DESIGN_HANDOFF, VISUAL_FIDELITY
+- RETEST: CSS_RESET, INPUT_CAPABILITY, ANIMATION, FIGMA_LAYOUT_GENERATION, ASSET_FIDELITY, COLOR_GRADIENT, FIGMA_MCP, VISUAL_QA_TOOLING, AGENT_CONTEXT
+- Source: https://www.figma.com/release-notes/
 
 ### mcp-spec-latest
 
@@ -21,6 +29,38 @@ Active lanes: ACCESSIBILITY, CLAUDE_CODE, CODEX, CURSOR, DESIGN_SYSTEMS, FIGMA, 
 - Impacts: MCP, CLIENT_SERVER_COMPAT, TOOL_SEMANTICS
 - RETEST: ASSET_FIDELITY, COLOR_GRADIENT, ACCESSIBILITY, FIGMA_MCP, VISUAL_QA_TOOLING, CSS_TOOLING, AGENT_CONTEXT
 - Source: https://modelcontextprotocol.io/specification/latest
+
+### claude-code-releases
+
+- Lane: `CLAUDE_CODE`
+- Latest title: v2.1.322
+- Impacts: AGENT_CAPABILITY, MCP, PARALLEL_EXECUTION, CONTEXT_HANDLING
+- RETEST: ACCESSIBILITY, FIGMA_MCP, AGENT_CONTEXT, PARALLEL_EXECUTION
+- Source: https://api.github.com/repos/anthropics/claude-code/releases?per_page=12
+
+### claude-code-feed
+
+- Lane: `CLAUDE_CODE`
+- Latest title: Claude Code v2.1.322
+- Impacts: AGENT_CAPABILITY, MCP, CONTEXT_HANDLING
+- RETEST: ACCESSIBILITY, FIGMA_MCP, AGENT_CONTEXT, PARALLEL_EXECUTION
+- Source: https://raw.githubusercontent.com/anthropics/claude-code/main/feed.xml
+
+### playwright-releases
+
+- Lane: `FRONTEND_TOOLING`
+- Latest title: v1.65.0
+- Impacts: VISUAL_BROWSER_TOOLING, VISUAL_FIDELITY, RUNTIME_QA, ACCESSIBILITY, DEBUGGING
+- RETEST: INPUT_CAPABILITY, ASSET_FIDELITY, ACCESSIBILITY, VISUAL_QA_TOOLING, AGENT_CONTEXT, PARALLEL_EXECUTION
+- Source: https://api.github.com/repos/microsoft/playwright/releases?per_page=12
+
+### storybook-releases
+
+- Lane: `FRONTEND_TOOLING`
+- Latest title: v11.0.0-beta.1
+- Impacts: DESIGN_SYSTEM, COMPONENT_REUSE, VISUAL_FIDELITY, ACCESSIBILITY, QA
+- RETEST: CSS_RESET, VIEWPORT_SAFE_AREA, SCROLL, ANIMATION, FIGMA_LAYOUT_GENERATION, ASSET_FIDELITY, VARIABLE_MODE_RUNTIME, COLOR_GRADIENT, ACCESSIBILITY, FIGMA_MCP, VISUAL_QA_TOOLING, AGENT_CONTEXT, PARALLEL_EXECUTION
+- Source: https://api.github.com/repos/storybookjs/storybook/releases?per_page=12
 
 ### mdn-browser-compat-data-releases
 
