@@ -1,13 +1,13 @@
 # Update Radar — Latest Official Source Scan
 
-Generated: `2026-11-18T11:47:39+00:00`
+Generated: `2026-11-19T11:44:42+00:00`
 
 Active lanes: ACCESSIBILITY, CLAUDE_CODE, CODEX, CURSOR, DESIGN_SYSTEMS, FIGMA, FRONTEND_TOOLING, MCP, WEB_PLATFORM, WORDPRESS_ACF
 
 ## Summary
 
 - Sources checked: 37
-- Changed since previous snapshot: 8
+- Changed since previous snapshot: 10
 - First observations: 0
 - Fetch errors: 3
 - RETEST candidates: ACCESSIBILITY, AGENT_CONTEXT, ANIMATION, ASSET_FIDELITY, COLOR_GRADIENT, CSS_RESET, CSS_TOOLING, FIGMA_LAYOUT_GENERATION, FIGMA_MCP, INPUT_CAPABILITY, LAYOUT, PARALLEL_EXECUTION, SCROLL, VISUAL_QA_TOOLING, WORDPRESS_ACF
@@ -22,6 +22,22 @@ Active lanes: ACCESSIBILITY, CLAUDE_CODE, CODEX, CURSOR, DESIGN_SYSTEMS, FIGMA, 
 - RETEST: CSS_RESET, INPUT_CAPABILITY, ANIMATION, FIGMA_LAYOUT_GENERATION, ASSET_FIDELITY, COLOR_GRADIENT, ACCESSIBILITY, FIGMA_MCP, VISUAL_QA_TOOLING, AGENT_CONTEXT
 - Source: https://www.figma.com/release-notes/
 
+### figma-mcp-docs
+
+- Lane: `FIGMA`
+- Latest title: Introduction | Developer Docs
+- Impacts: MCP, FIGMA_TO_CODE, CODE_TO_FIGMA, CONTEXT_RETRIEVAL
+- RETEST: LAYOUT, ACCESSIBILITY, FIGMA_MCP, AGENT_CONTEXT
+- Source: https://developers.figma.com/docs/figma-mcp-server/
+
+### figma-mcp-tools
+
+- Lane: `FIGMA`
+- Latest title: Tools and prompts | Developer Docs
+- Impacts: MCP, FIGMA_TO_CODE, CODE_TO_FIGMA, CONTEXT_RETRIEVAL, ASSET_FIDELITY, COMPONENT_REUSE
+- RETEST: ANIMATION, ASSET_FIDELITY, ACCESSIBILITY, FIGMA_MCP, VISUAL_QA_TOOLING, AGENT_CONTEXT
+- Source: https://developers.figma.com/docs/figma-mcp-server/tools-and-prompts/
+
 ### mcp-spec-latest
 
 - Lane: `MCP`
@@ -33,17 +49,17 @@ Active lanes: ACCESSIBILITY, CLAUDE_CODE, CODEX, CURSOR, DESIGN_SYSTEMS, FIGMA, 
 ### claude-code-releases
 
 - Lane: `CLAUDE_CODE`
-- Latest title: v2.1.327
+- Latest title: v2.1.328
 - Impacts: AGENT_CAPABILITY, MCP, PARALLEL_EXECUTION, CONTEXT_HANDLING
-- RETEST: SCROLL, LAYOUT, FIGMA_LAYOUT_GENERATION, ASSET_FIDELITY, ACCESSIBILITY, FIGMA_MCP, AGENT_CONTEXT, PARALLEL_EXECUTION
+- RETEST: SCROLL, FIGMA_LAYOUT_GENERATION, ASSET_FIDELITY, ACCESSIBILITY, FIGMA_MCP, AGENT_CONTEXT, PARALLEL_EXECUTION
 - Source: https://api.github.com/repos/anthropics/claude-code/releases?per_page=12
 
 ### claude-code-feed
 
 - Lane: `CLAUDE_CODE`
-- Latest title: Claude Code v2.1.327
+- Latest title: Claude Code v2.1.328
 - Impacts: AGENT_CAPABILITY, MCP, CONTEXT_HANDLING
-- RETEST: SCROLL, LAYOUT, FIGMA_LAYOUT_GENERATION, ASSET_FIDELITY, ACCESSIBILITY, FIGMA_MCP, AGENT_CONTEXT, PARALLEL_EXECUTION
+- RETEST: SCROLL, FIGMA_LAYOUT_GENERATION, ASSET_FIDELITY, ACCESSIBILITY, FIGMA_MCP, AGENT_CONTEXT, PARALLEL_EXECUTION
 - Source: https://raw.githubusercontent.com/anthropics/claude-code/main/feed.xml
 
 ### web-features-releases
@@ -75,7 +91,7 @@ Active lanes: ACCESSIBILITY, CLAUDE_CODE, CODEX, CURSOR, DESIGN_SYSTEMS, FIGMA, 
 - Lane: `WORDPRESS_ACF`
 - Latest title: WordPress Developer Blog | A site for plugin and theme developers, freelancers, and agency developers
 - Impacts: WORDPRESS, CMS, BLOCKS, FRONTEND_ARCHITECTURE
-- RETEST: AGENT_CONTEXT, WORDPRESS_ACF
+- RETEST: ASSET_FIDELITY, WORDPRESS_ACF
 - Source: https://developer.wordpress.org/news/
 
 ## Fetch errors
