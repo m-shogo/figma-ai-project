@@ -5,6 +5,8 @@ function initModuleSliders() {
     return;
   }
 
+  var reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   document.querySelectorAll('.module_slider-01').forEach(function (root) {
     var stage = root.querySelector('.slider-stage');
     if (!stage || stage.swiper) {
@@ -17,7 +19,7 @@ function initModuleSliders() {
     }
     new Swiper(stage, {
       slidesPerView: 1,
-      speed: 400,
+      speed: reducedMotion ? 0 : 400,
       loop: slideCount > 1,
       watchOverflow: true,
       navigation: {
