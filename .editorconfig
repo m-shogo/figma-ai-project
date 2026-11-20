@@ -1,0 +1,15 @@
+root = true
+
+# Matches what is already committed, so saving a file does not reformat it.
+# trim_trailing_whitespace / insert_final_newline stay unset: they would rewrite untouched lines.
+[*]
+charset = utf-8
+end_of_line = lf
+indent_style = space
+indent_size = 2
+
+[*.py]
+indent_size = 4
+
+[projects/*/theme/**.{css,php,js}]
+indent_size = 4
