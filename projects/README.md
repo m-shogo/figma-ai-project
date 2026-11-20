@@ -46,6 +46,25 @@ bash / CI は `PROJECT=<slug>` を付けて `runtime/wordpress/scripts/runtime-e
 - 整形だけの変更は `style(<slug>): …` で別コミット。修正に混ぜない
 - 一時ファイルは `.local/` へ。Theme の中にプレビュー HTML を置かない
 
+## 自動で止める仕組み（project guard）
+
+`scripts/project-guard.mjs` が、AI が読み忘れても次を機械的に止める。
+
+| どこで | 何をする |
+|---|---|
+| `git commit`（全 AI 共通。`.githooks/commit-msg`、`wp.ps1` が初回に有効化） | 止める: 整形と修正の混在 / Theme 内の一時ファイル・プレビュー / ACF JSON の無断変更と未来の `modified` / `guard.json` の凍結ファイル。警告: 固定寸法・`nowrap`・`body.*`・`!important`・`nth-child(数字)` |
+| Cursor / Claude の作業終了時（`.cursor/hooks.json`、`.claude/settings.json`） | Theme が未 push で変わっていたら、完了前チェックを AI に突きつけて続けさせる（同じ変更には 1 回だけ） |
+| GitHub CI（`project-guard.yml`） | hook を飛ばしたコミットも同じ基準で落とす |
+
+Human が指示した例外は、コミットメッセージの末尾に書く:
+
+```text
+Human-Approved: acf-json
+Human-Approved: frozen
+```
+
+凍結ファイルは `projects/<slug>/guard.json` の `frozen`（Theme からの相対 glob）。Human が「触らない」と言ったらここへ足す。
+
 ## 経験値の貯め方
 
 ```text
@@ -56,3 +75,10 @@ bash / CI は `PROJECT=<slug>` を付けて `runtime/wordpress/scripts/runtime-e
 ```
 
 分類は `docs/agent-human-fb-weak-spots.md` の W1–W10 に固定する。案件ごとに分類を作らないので、案件どうしで件数を比べられる。
+
+## 案件を閉じるとき（AI がやる）
+
+1. コミット履歴とチャットの Human FB を W1–W10 で数え、前の案件の `LEARNINGS.md` と件数を比べる
+2. 減らなかった種類は、チェックの書き方か guard が弱い。`docs/agent-human-fb-weak-spots.md` の文言を直し、機械で拾えるものは `scripts/project-guard.mjs` の検査に足す
+3. guard の警告が多すぎて無視されたものは、条件を絞るか消す
+4. 次の案件の着手前に読むことを `LEARNINGS.md` の最後に 3 つまで書く

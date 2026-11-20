@@ -25,7 +25,7 @@ portable な Human-approved contract の置き場所:
 
 Human が「これが正本」と決めた契約は、その scope の Git へすぐ書く。案件固有なら `projects/<slug>/docs/`（研究 run は `experiments/<case>/`）。全案件共通なら `AGENTS.md` の短い routing と canonical doc。client adapter へ複製しない。
 
-案件（納品物）は 1 案件 1 フォルダ `projects/<slug>/`（`theme/` `qa/` `docs/` `runtime.env` `LEARNINGS.md`）。共通の Docker 実行環境は `runtime/wordpress/` で、案件ファイルを置かない。起動は `.\wp.ps1 up <slug>`。構成と案件の閉じ方は `projects/README.md`。
+案件（納品物）は 1 案件 1 フォルダ `projects/<slug>/`（`theme/` `qa/` `docs/` `runtime.env` `LEARNINGS.md`）。共通の Docker 実行環境は `runtime/wordpress/` で、案件ファイルを置かない。起動は `.\wp.ps1 up <slug>`。構成と案件の閉じ方は `projects/README.md`。`projects/` の変更は `scripts/project-guard.mjs`（commit-msg hook / 作業終了 hook / CI）が機械的に検査する。Human の例外はコミットの `Human-Approved:` で明示し、guard を `--no-verify` で飛ばさない。
 
 Agent の観察・1回の成功/失敗は、いきなり `AGENTS.md` / Company Policy へ上げない。
 

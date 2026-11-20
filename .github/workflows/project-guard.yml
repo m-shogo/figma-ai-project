@@ -1,0 +1,34 @@
+name: Project Guard
+
+on:
+  pull_request:
+    paths:
+      - 'projects/**'
+      - 'scripts/project-guard.mjs'
+      - '.github/workflows/project-guard.yml'
+  push:
+    paths:
+      - 'projects/**'
+      - 'scripts/project-guard.mjs'
+      - '.github/workflows/project-guard.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check every new commit under projects/
+        env:
+          BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          if [[ -z "$BASE" || "$BASE" =~ ^0+$ ]]; then
+            BASE="$(git rev-parse HEAD^)"
+          fi
+          node scripts/project-guard.mjs --range "${BASE}..${GITHUB_SHA}"

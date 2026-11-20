@@ -1,0 +1,11 @@
+{
+  "frozen": [
+    "theme/parts.php",
+    "theme/css/module/module_publicationBook.css",
+    "theme/template-parts/publications/_book-detail.php",
+    "theme/template-parts/publications/_book-list-card.php",
+    "theme/template-parts/publications/_budo-body.php",
+    "theme/template-parts/publications/_budo-detail.php",
+    "theme/template-parts/publications/_budo-related.php"
+  ]
+}

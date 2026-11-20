@@ -85,6 +85,10 @@ foreach ($name in 'PROJECT', 'PROJECT_DIR', 'COMPOSE_PROJECT_NAME', 'WP_PORT', '
 $envFileKeys = @((Read-KeyValueFile (Join-Path $Runtime '.env')).Keys)
 foreach ($name in $envFileKeys) { $savedEnv[$name] = [Environment]::GetEnvironmentVariable($name, 'Process') }
 
+if (-not (& git -C $RepoRoot config --get core.hooksPath)) {
+    & git -C $RepoRoot config core.hooksPath .githooks
+}
+
 try {
 switch ($Command) {
     'list' {
