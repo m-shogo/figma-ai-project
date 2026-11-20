@@ -121,8 +121,9 @@ function inspect(diffArgs, message) {
   }
 
   const themeFiles = projectFiles.filter(({ file }) => /^projects\/[^/]+\/theme\/.+\.(css|scss|php|js)$/.test(file));
-  if (themeFiles.length) {
-    const patch = git('diff', ...diffArgs, '-U0', '-w', '--no-renames', '--', ...themeFiles.map(({ file }) => file));
+  const authoredFiles = themeFiles.filter(({ file }) => !/\.min\.(css|js)$/.test(file));
+  if (authoredFiles.length) {
+    const patch = git('diff', ...diffArgs, '-U0', '-w', '--no-renames', '--', ...authoredFiles.map(({ file }) => file));
     const hits = new Map();
     let current = '';
     for (const line of patch.split('\n')) {
@@ -131,7 +132,8 @@ function inspect(diffArgs, message) {
       for (const [pattern, note] of WARN_PATTERNS) {
         if (!pattern.test(line)) continue;
         if (!hits.has(note)) hits.set(note, []);
-        hits.get(note).push(`${current}: ${line.slice(1).trim()}`);
+        const code = line.slice(1).trim();
+        hits.get(note).push(`${current}: ${code.length > 120 ? `${code.slice(0, 120)}…` : code}`);
       }
     }
     for (const [note, lines] of hits) {
