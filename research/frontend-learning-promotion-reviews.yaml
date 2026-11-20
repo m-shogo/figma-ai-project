@@ -85,3 +85,48 @@ reviews:
     rationale: >-
       Fixed parent height 34px clipped Local Nav link padding/border and collapsed perceived row
       gap from 20px to ~13px. Also rejects screenshot nowrap. One reference. Revisit by 2026-09-25.
+
+  OBS-BUDOKAN-DETAIL-MEDIA-ROLE:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed the Budokan event/news media evidence: the archive thumbnail and detail lead image differ even when sourced from the same Featured Image field (EVENT_DETAIL_MEDIA_OWNERSHIP_AUDIT and single.php commit 34750ddd). This demonstrates a valid scoped CMS ownership boundary in one project; no independent second reference or contrary evidence is in the recorded index. KEEP_PROJECT_ONLY, do not promote a global rule forbidding detail images. Revisit if another WordPress project validates the same case.
+
+  OBS-BUDOKAN-TOP-FV-SP-IMAGE-CROP-OBJECT-POSITION:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed the recorded Budokan Figma PC/SP MV crop and local top_mainVisual.css evidence. The 64.4%/59.8% SP focal correction versus centered PC crop is a historical design-specific value, not a portable default; both support items share REF-002-BUDOKAN. KEEP_PROJECT_ONLY, without assuming that historic Figma nodes remain current or reusing their coordinates in another project. Revalidate the actual current Figma before applying it again.
+
+  OBS-BUDOKAN-NAV-THEME-LOCATION-OWNERSHIP:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed Budokan registered menu-location and theme template evidence including dropdown-navigation.php commit 0af42e81 and sidebar.php commit 00407607. Multiple templates in the same project strengthen the CMS ownership finding but are not independent references. KEEP_PROJECT_ONLY; do not globally override a project's explicit menu-location contract or infer that every theme forbids named menus.
+
+  BUDOKAN-WP-ARCHIVE-ROUTE-OWNER:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed the Budokan WordPress archive-route note and custom.php evidence. The display-label-derived return-link failure is grounded in one project/reference and no independent WordPress project is indexed for this record. KEEP_PROJECT_ONLY: respect actual posts-page/CPT archive routing and any explicit project destination instead of upgrading this one instance into a universal routing contract.
+
+  OBS-BUDOKAN-TOP-EVENTS-CURRENT-FIGMA-SPACING:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed recorded Budokan TOP Events Figma spacing and top_events.css evidence (single REF-002-BUDOKAN). The 8px semantic-group correction and SP/PC gaps were authored for historical Budokan frames, including a separate CMS/calendar ownership boundary. KEEP_PROJECT_ONLY; do not export those pixel values or old Figma authority to other sites. Future validation must check the newer/current project authority first.
