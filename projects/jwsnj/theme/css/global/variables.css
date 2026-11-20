@@ -24,6 +24,7 @@
 //============================*/
 @font-face {
     font-family: 'local Noto Sans JP';
+    font-display: swap;
     font-weight: 400;
     font-style: normal;
     src: local('NotoSansJP-Regular'),
@@ -31,6 +32,7 @@
 }
 @font-face {
     font-family: 'local Noto Sans JP';
+    font-display: swap;
     font-weight: 500;
     font-style: normal;
     src: local('NotoSansJP-Medium'),
@@ -38,6 +40,7 @@
 }
 @font-face {
     font-family: 'local Noto Sans JP';
+    font-display: swap;
     font-weight: 600;
     font-style: normal;
     src: local('NotoSansJP-SemiBold'),
@@ -45,6 +48,7 @@
 }
 @font-face {
     font-family: 'local Noto Sans JP';
+    font-display: swap;
     font-weight: 700;
     font-style: normal;
     src: local('NotoSansJP-Bold'),
@@ -53,6 +57,7 @@
 
 @font-face {
     font-family: 'local Noto Serif JP';
+    font-display: swap;
     font-weight: 400;
     font-style: normal;
     src: local('NotoSerifJP-Regular'),
@@ -60,6 +65,7 @@
 }
 @font-face {
     font-family: 'local Noto Serif JP';
+    font-display: swap;
     font-weight: 500;
     font-style: normal;
     src: local('NotoSerifJP-Medium'),
@@ -67,6 +73,7 @@
 }
 @font-face {
     font-family: 'local Noto Serif JP';
+    font-display: swap;
     font-weight: 600;
     font-style: normal;
     src: local('NotoSerifJP-SemiBold'),
@@ -74,6 +81,7 @@
 }
 @font-face {
     font-family: 'local Noto Serif JP';
+    font-display: swap;
     font-weight: 700;
     font-style: normal;
     src: local('NotoSerifJP-Bold'),
@@ -82,6 +90,7 @@
 
 @font-face {
     font-family: 'local Roboto';
+    font-display: swap;
     font-weight: 400;
     font-style: normal;
     src: local('Roboto-Regular'),
@@ -89,6 +98,7 @@
 }
 @font-face {
     font-family: 'local Roboto';
+    font-display: swap;
     font-weight: 500;
     font-style: normal;
     src: local('Roboto-Medium'),
@@ -96,6 +106,7 @@
 }
 @font-face {
     font-family: 'local Roboto';
+    font-display: swap;
     font-weight: 600;
     font-style: normal;
     src: local('Roboto-SemiBold'),
@@ -103,6 +114,7 @@
 }
 @font-face {
     font-family: 'local Roboto';
+    font-display: swap;
     font-weight: 700;
     font-style: normal;
     src: local('Roboto-Bold'),
