@@ -127,8 +127,8 @@
 :where(:root) {
     /*
      * jwsnj Figma color variables (PC TOP node 114:28).
-     * Keep the CODIA sample tokens below unchanged until their consumers are
-     * replaced with Figma-verified components. This is a non-visual first step.
+     * Reuse the existing shared tokens for Figma-verified values; remove
+     * redundant sample aliases only after checking all consumers.
      */
     --jwsnj-color-main: #28ac5f;
     --jwsnj-color-sec: #6bd2ce;
