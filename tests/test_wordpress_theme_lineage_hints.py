@@ -221,8 +221,10 @@ class ThemeLineageHintsTests(unittest.TestCase):
             root = Path(tmp)
             school = make_project(root, "school", author="Codia Inc.", vite=True)
             budokan = make_project(root, "budokan", author="Codia Inc.")
-            with patch.object(target_scan, "scan_acf", side_effect=AssertionError("should not rescan ACF")), \\
-                patch.object(target_scan, "scan_page_templates", side_effect=AssertionError("should not rescan templates")):
+            with (
+                patch.object(target_scan, "scan_acf", side_effect=AssertionError("should not rescan ACF")),
+                patch.object(target_scan, "scan_page_templates", side_effect=AssertionError("should not rescan templates")),
+            ):
                 summary = target_scan.scan_lineage_only(budokan)
                 self.assertEqual(summary["selection_state"], "UNAMBIGUOUS")
                 self.assertEqual(summary["themes"][0]["lineage_hints"]["author_hint"], "Codia Inc.")
