@@ -17,7 +17,7 @@
 | 記事一覧（アーカイブ / カテゴリー一覧） | `390:666` archive | `478:2615` archive_sp | Human から届いた PC リンクは `339-23`（パーツ集）だった。要確認 |
 | 記事詳細 | `392:1279` single | `480:3566` single_sp | |
 | 固定ページ | `384:1046` page | `445:3245` page_sp | PC だけ SideNavigation `476:1741` あり |
-| コース紹介（下層） | `534:1282` course | なし | Human からの指示には無いページ。SP は Figma に無い |
+| コース紹介（下層） | `534:1282` course | なし | まだ作らない（Human 2026-11-20） |
 | OGP | `294:1629` ogp | — | |
 
 TOP の主なパーツ（PC）:
@@ -31,7 +31,7 @@ TOP の主なパーツ（PC）:
 
 ### Figma で読めなかったもの
 
-- コメント: API が 0 件を返した。Human が言う「director.all のメインビジュアルのコメント」は読めていない（UNDETERMINED）。内容は Human から聞く。
+- コメント: API が 0 件を返す（UNDETERMINED）。メインビジュアルのコメント（director.all）は Human が転記した（`docs/SPEC.md`）。ほかのコメントがあれば Human から聞く。
 
 ## Theme
 
@@ -55,4 +55,7 @@ TOP の主なパーツ（PC）:
 - 2026-11-20 slug `jwsnj`、案件名 ニュージャージー
 - 2026-11-20 文字サイズは rem。ベース Theme の書き方に倣う
 - 2026-11-20 プラグイン一覧は `docs/SPEC.md`（Autoptimize は入れるが無効）
+- 2026-11-20 コース紹介はまだ作らない
+- 2026-11-20 サイトの時刻は日本時間（`timezone_string = Asia/Tokyo`）
+- 2026-11-20 ディレクトリーマップを `docs/DIRECTORY_MAP.md` に確定
 - 2026-11-20 ベース Theme は `f-codiaTheme-block-in-vite`。theme 名は `jwsnj`。Git に残す（ACF JSON 含む）
