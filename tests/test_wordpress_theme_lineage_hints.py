@@ -101,8 +101,8 @@ class ThemeLineageHintsTests(unittest.TestCase):
             sibling = make_project(root, "budokan", author="Codia Inc.")
             (current / "docs").mkdir()
             (sibling / "docs").mkdir()
-            (current / "docs" / "CURRENT_AUTHORITY.md").write_text("# Current authority\\n", encoding="utf-8")
-            (sibling / "docs" / "THEME_RULES.md").write_text("# Budokan-specific rules\\n", encoding="utf-8")
+            (current / "docs" / "CURRENT_AUTHORITY.md").write_text("# Current authority\n", encoding="utf-8")
+            (sibling / "docs" / "THEME_RULES.md").write_text("# Budokan-specific rules\n", encoding="utf-8")
             output = io.StringIO()
             with patch.object(sys, "argv", ["scan", str(current), "--compare-projects-dir", str(root)]), redirect_stdout(output):
                 self.assertEqual(target_scan.main(), 0)
@@ -121,7 +121,7 @@ class ThemeLineageHintsTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             current = make_project(Path(tmp), "budokan", author="Codia Inc.")
             (current / "docs").mkdir()
-            (current / "docs" / "THEME_RULES.md").write_text("# Theme rule\\n", encoding="utf-8")
+            (current / "docs" / "THEME_RULES.md").write_text("# Theme rule\n", encoding="utf-8")
             routes = target_scan.scope_rule_routes(current, target_scan.scan(current))
             self.assertEqual(routes["theme"]["local_rule_file"], "docs/THEME_RULES.md")
             self.assertEqual(routes["theme"]["local_selection"], "PROJECT_OWNED_ONLY")
@@ -130,12 +130,12 @@ class ThemeLineageHintsTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             project = make_project(Path(tmp), "school", author="Codia Inc.")
             (project / "docs").mkdir()
-            (project / "docs" / "THEME_RULES.md").write_text("# Local theme rules\\n", encoding="utf-8")
-            (project / "docs" / "CURRENT_AUTHORITY.md").write_text("# Project authority\\n", encoding="utf-8")
+            (project / "docs" / "THEME_RULES.md").write_text("# Local theme rules\n", encoding="utf-8")
+            (project / "docs" / "CURRENT_AUTHORITY.md").write_text("# Project authority\n", encoding="utf-8")
             # Second plausible Theme exists in a reference folder: never select by author or path alone.
             other = project / "reference" / "candidate"
             other.mkdir(parents=True)
-            (other / "style.css").write_text("/*\\nTheme Name: Another Theme\\nAuthor: Codia Inc.\\n*/\\n", encoding="utf-8")
+            (other / "style.css").write_text("/*\nTheme Name: Another Theme\nAuthor: Codia Inc.\n*/\n", encoding="utf-8")
             scanned = target_scan.scan(project)
             self.assertEqual(scanned["selection_state"], "MULTIPLE_CANDIDATES")
             routes = target_scan.scope_rule_routes(project, scanned)
