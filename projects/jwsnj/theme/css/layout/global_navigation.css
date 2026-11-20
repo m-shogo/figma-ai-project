@@ -430,35 +430,35 @@
                 &.current-menu-ancestor,
                 &.current-menu-item {
                     .gnl_link-02 {
-                        color: var(--color-primary);
+                        color: var(--jwsnj-color-main);
                     }
                 }
             }
             .gnl_item-03 {
                 &.current-menu-item {
                     .gnl_link-03 {
-                        color: var(--color-primary);
+                        color: var(--jwsnj-color-main);
                     }
                 }
             }
             .gnl_item-04 {
                 &.current-menu-item {
                     .gnl_link-04 {
-                        color: var(--color-primary);
+                        color: var(--jwsnj-color-main);
                     }
                 }
             }
             .gnl_item-05 {
                 &.current-menu-item {
                     .gnl_link-05 {
-                        color: var(--color-primary);
+                        color: var(--jwsnj-color-main);
                     }
                 }
             }
             .gnl_item-06 {
                 &.current-menu-item {
                     .gnl_link-06 {
-                        color: var(--color-primary);
+                        color: var(--jwsnj-color-main);
                     }
                 }
             }
@@ -641,11 +641,11 @@
         }
     }
 
-    /* MARK: hover */
+    /* MARK: hover — jwsnj Figma TOP navigation main color */
     @media (any-hover: hover) {
         a {
             &:hover {
-                color: var(--color-link);
+                color: var(--jwsnj-color-main);
             }
         }
     }
