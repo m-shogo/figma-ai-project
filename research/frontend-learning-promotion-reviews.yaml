@@ -175,3 +175,75 @@ reviews:
     disposition: KEEP_PROJECT_ONLY
     rationale: >-
       Reviewed Budokan publication/shared-primitive evidence. Current site reusable blocks may avoid page-specific derivatives, yet this record explicitly has unresolved variant authority and a real-runtime diff gate. All evidence is REF-002-BUDOKAN; KEEP_PROJECT_ONLY with these blockers intact, and do not assert visual/runtime PASS or generalize the local token design.
+
+  OBS-BUDOKAN-OVERLAP-SECTION-END-GEOMETRY:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed the Budokan overlap section-end geometry record. Negative overlap/child placement may match while final section rhythm drifts. The observed section and correction are from REF-002-BUDOKAN only; Figma geometry is project-specific, no independent evidence. KEEP_PROJECT_ONLY until a separate reference confirms the geometry QA boundary.
+
+  OBS-BUDOKAN-PUBLICATIONS-SHELL-OWNERSHIP-CONFLICT:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed Budokan Publications runtime page-template versus Figma one-column shell conflict. The evidence proves a project-specific ownership mismatch where neither switching the WordPress template nor route-CSS patch is automatically authorized. One REF-002-BUDOKAN, no independent project record. KEEP_PROJECT_ONLY; do not silently override either source of authority.
+
+  OBS-BUDOKAN-RENDERED-TEXT-QA-MARKER:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed Budokan annotated rendered-text QA marker record. Raw source string matching is not equivalent to textContent when a phrase is wrapped by markup; that is evidenced locally in REF-002-BUDOKAN only. KEEP_PROJECT_ONLY until an independently measured test failure/repair confirms this as a portable check, without changing unrelated test infrastructure.
+
+  OBS-BUDOKAN-MOBILE-STACK-DOES-NOT-IMPLY-FULL-WIDTH-BUTTON:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed Budokan mobile responsive-button width evidence. Figma-authored intrinsic/minimum width of a control differs from generic flex container stack behavior; forcing 100% is not supported by this project's current design. Only REF-002-BUDOKAN indexed, no separate project; KEEP_PROJECT_ONLY. Do not globalize the specific width or forbid full-width controls when new Figma explicitly requires them.
+
+  OBS-BUDOKAN-RESPONSIVE-NOTICE-ICON-AUTHORITY:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed Budokan PC/SP notice icon presentation under one ACF content owner. The authored icon treatment differs by breakpoint but no extra CMS field is justified. Recorded supports remain BUDOKAN-WORDPRESS only; KEEP_PROJECT_ONLY. Independently confirm responsive visual/source separation before expanding beyond this site.
+
+  OBS-BUDOKAN-TOP-ABOUT-CURRENT-FIGMA-GEOMETRY:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed Budokan TOP About PC rail/card geometry observation. Old proportional-card assumptions conflicted with the then-current authored desktop composition, but the node geometry and exact spacing are site-specific historical evidence. One REF-002-BUDOKAN; KEEP_PROJECT_ONLY; recheck actual Figma authority prior to any future code reuse.
+
+  OBS-BUDOKAN-TOP-ABOUT-SP-CURRENT-AUTHORITY:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed Budokan TOP About SP authority drift evidence. A PC-correct card family can still use obsolete SP proportions if historical mobile assumptions are not re-read. One REF-002-BUDOKAN, no independently measured second site; KEEP_PROJECT_ONLY, with a new-project design/source comparison required before generalization.
+
+  OBS-BUDOKAN-TOP-FOOTER-CURRENT-FIGMA-RHYTHM:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed Budokan TOP Footer nested gap evidence: a flattened display:contents grid can erase authored sub-gap distinctions if one uniform row gap is applied. Source and footer geometry belong only to REF-002-BUDOKAN, not a portable CSS value. KEEP_PROJECT_ONLY; require independent consumer evidence before expanding scope.
