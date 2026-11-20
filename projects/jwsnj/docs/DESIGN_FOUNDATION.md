@@ -24,6 +24,7 @@
 | `color/white` | `#FFFFFF` |
 | `color/text` | `#333333` |
 | `color/separator` | `#D7D4D4` |
+| `color/separator_light` (PC menu `599:2726`) | `#F2F2F2` |
 | `color/accent` | `#EC6B61` |
 | `color/base--lightgreen` | `#F5FDEB` |
 | `color/base--lightgreen02` | `#EAFFD9` |
@@ -34,7 +35,7 @@
 
 ## Color tokens の導入状況（2026-11-20）
 
-**導入済み（静的）:** `theme/css/global/variables.css` の `:where(:root)` にFigma確認済み10色を `--jwsnj-color-*` として追加。既存 `css/style.css` はこの変数ファイルを既に `@import` している。既存CODIAサンプルの `--color-primary` 等はまだ置き換えていないため、**新しい色を使った画面完成・視覚一致を意味しない**。先に実装する共通部品から新tokenを利用する。
+**導入済み（静的）:** `theme/css/global/variables.css` の `:where(:root)` にTOP確認済み10色とPCメニュー確認済み1色を `--jwsnj-color-*` として追加。既存 `css/style.css` はこの変数ファイルを既に `@import` している。既存CODIAサンプルの `--color-primary` 等はまだ置き換えていないため、**新しい色を使った画面完成・視覚一致を意味しない**。先に実装する共通部品から新tokenを利用する。
 
 | Figma | CSS custom property |
 |---|---|
@@ -43,6 +44,7 @@
 | `color/white` | `--jwsnj-color-white` |
 | `color/text` | `--jwsnj-color-text` |
 | `color/separator` | `--jwsnj-color-separator` |
+| `color/separator_light` (PC menu) | `--jwsnj-color-separator-light` |
 | `color/accent` | `--jwsnj-color-accent` |
 | `color/base--lightgreen` | `--jwsnj-color-base-lightgreen` |
 | `color/base--lightgreen02` | `--jwsnj-color-base-lightgreen-02` |
@@ -65,13 +67,15 @@
 | Font Awesome | `theme/webfonts/` に素材あり、`inc/front.php` の `fontawesome-style` enqueue はコメントアウト | 実際のCSS経由で読み込まれているか／使用権限を検証し、必要な導入のみ行う |
 | CSSの入口 | `css/style.css` → `global/variables.css` をimport | ベース構造に沿って共通値を管理。末尾の場当たり的overrideを積まない |
 
-**重要:** 既存のフォントファイルの存在は配信・ライセンスの確認完了を意味しない。Figmaの10色は `--jwsnj-color-*` としてCSSに**定義済み**だが、既存CODIAサンプルの色トークン利用箇所は未置換。画面への適用・視覚一致は未検証。
+**重要:** 既存のフォントファイルの存在は配信・ライセンスの確認完了を意味しない。FigmaのTOP 10色とPCメニュー1色は `--jwsnj-color-*` としてCSSに**定義済み**だが、既存CODIAサンプルの色トークン利用箇所は未置換。画面への適用・視覚一致は未検証。
 
 ## フォント読み込みの小改善（2026-11-20）
 
 `theme/css/global/variables.css` の既存12件の `@font-face`（Noto Sans JP / Noto Serif JP / Roboto 各4 weight）に `font-display: swap` を明示。既存ファイルやfont-family/weight/srcは変更せず、フォント取得中のテキスト不可視を避けるCSS設定を追加した。**Figmaの `Zen Kaku Gothic New`、`Roboto Condensed`、Font Awesome Pro/Brandsの正規アセット導入は未実施**。追加フォントのライセンス・実際のweight・適用nodeを先に確認し、未承認の有料ファイルは追加しない。
 
 静的確認: 既存12件に `font-display: swap` が各1回追加されたことをコード差分で確認。WordPressでの配信・フォールバックのレイアウトシフト、PC/SP視覚一致は**DEFERRED_ENV**（`DEFERRED_RUNTIME_QA.md` の FOUND-02 / FOUND-05）。
+
+PCメニュー `599:2726` の `get_variable_defs` で `color/separator_light = #F2F2F2` を追加確認（2026-11-20）。既存 `color/separator = #D7D4D4` と用途が異なるため、置換せず独立トークンで保持。Figma PC/SPスクリーンショットとasset inventoryは取得済みだが、SVG/画像の各node・権限・配置先の対応が未確定なのでURLや仮画像を本番Themeに投入しない。**色の利用箇所・ブラウザ表示は未検証**。
 
 ## 画像・部品・挙動
 
