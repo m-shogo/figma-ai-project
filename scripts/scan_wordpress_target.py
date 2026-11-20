@@ -355,9 +355,12 @@ def scope_rule_routes(root: Path, scanned: dict, *, related: list[dict] | None =
         for name in ("CURRENT_AUTHORITY.md", "THEME_RULES.md", "DESIGN_FOUNDATION.md", "IMPLEMENTATION_CHECKLIST.md")
         if docs is not None and (docs / name).is_file()
     ]
-    local_theme_rules = "docs/THEME_RULES.md" if "docs/THEME_RULES.md" in project_docs else ""
+    # A project directory may include multiple style.css Theme candidates or none.
+    # In that case do not activate local Theme rules solely from file presence.
+    theme_selected = scanned.get("selection_state") == "UNAMBIGUOUS" and len(scanned.get("themes", [])) == 1
+    local_theme_rules = "docs/THEME_RULES.md" if theme_selected and "docs/THEME_RULES.md" in project_docs else ""
     candidates: list[dict] = []
-    for item in related or []:
+    for item in (related or []) if theme_selected else []:
         if not item.get("same_theme_author_hint"):
             continue
         candidate_doc = Path(item["evidence_path"]).parent / "docs" / "THEME_RULES.md"
@@ -376,7 +379,11 @@ def scope_rule_routes(root: Path, scanned: dict, *, related: list[dict] | None =
         },
         "theme": {
             "local_rule_file": local_theme_rules,
-            "local_selection": "PROJECT_OWNED_ONLY" if local_theme_rules else "NO_SEPARATE_LOCAL_THEME_RULES",
+            "local_selection": (
+                "UNDETERMINED_THEME_SELECTION" if not theme_selected else
+                "PROJECT_OWNED_ONLY" if local_theme_rules else
+                "NO_SEPARATE_LOCAL_THEME_RULES"
+            ),
             "reusable_from_other_project": False,
             "related_theme_rule_candidates": candidates,
             "reuse_gate": "VERIFY_EXACT_UPSTREAM_BASELINE_AND_VERSION_THEN_REVIEW_RULE_SCOPE",
