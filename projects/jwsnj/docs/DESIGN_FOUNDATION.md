@@ -32,6 +32,25 @@
 
 確認済み Figma Font Variables: `Roboto`、`Zen Kaku Gothic New`、`Font Awesome 6 Pro`、`Font Awesome 6 Brands`。PCメニュー `599:2726` の実レイヤーには `Noto Serif JP`・`Roboto Condensed` の使用も見える。**使用箇所・weight/style・提供ファイル・読み込み方式・利用ライセンスはこれから検証**。Font Awesome Pro の有償ファイルを公開リポジトリに追加しない。使用できる正規のアセット・ライセンスを確認する。
 
+## Color tokens の導入状況（2026-11-20）
+
+**導入済み（静的）:** `theme/css/global/variables.css` の `:where(:root)` にFigma確認済み10色を `--jwsnj-color-*` として追加。既存 `css/style.css` はこの変数ファイルを既に `@import` している。既存CODIAサンプルの `--color-primary` 等はまだ置き換えていないため、**新しい色を使った画面完成・視覚一致を意味しない**。先に実装する共通部品から新tokenを利用する。
+
+| Figma | CSS custom property |
+|---|---|
+| `color/main` | `--jwsnj-color-main` |
+| `color/sec` | `--jwsnj-color-sec` |
+| `color/white` | `--jwsnj-color-white` |
+| `color/text` | `--jwsnj-color-text` |
+| `color/separator` | `--jwsnj-color-separator` |
+| `color/accent` | `--jwsnj-color-accent` |
+| `color/base--lightgreen` | `--jwsnj-color-base-lightgreen` |
+| `color/base--lightgreen02` | `--jwsnj-color-base-lightgreen-02` |
+| `color/base--lightblue` | `--jwsnj-color-base-lightblue` |
+| `color/foreground/text--gray-700` | `--jwsnj-color-text-gray-700` |
+
+**検証境界:** Figmaのvariable definitions `114:28` を再取得し一致を照合。PC `114:28` / SP `279:2136` のスクリーンショットURLを取得。実機WP、computed styles、ブラウザ表示比較、フォント配信は**未検証**。変更は変数の定義だけで既存表示への意図的な変更はない。
+
 ## CODIAテーマとの一次照合（ファイル確認済み、まだ未改修）
 
 対象: `theme/css/global/variables.css`、`theme/css/style.css`、`theme/css/base/reset.css`、`theme/inc/front.php`、`theme/fonts/` と `theme/webfonts/`（2026-11-20）。
