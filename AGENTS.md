@@ -23,7 +23,7 @@ portable な Human-approved contract の置き場所:
 機械可読 invariant → config/*.yaml + tests
 ```
 
-Human が「これが正本」と決めた契約は、その scope の Git へすぐ書く。案件固有なら `projects/<slug>/docs/`（研究 run は `experiments/<case>/`）。全案件共通なら `AGENTS.md` の短い routing と canonical doc。client adapter へ複製しない。
+Human が「これが正本」と決めた**確定仕様・運用契約**は、その scope の Git へすぐ書く。案件固有なら `projects/<slug>/docs/`（研究 run は `experiments/<case>/`）。全案件に直ちに適用することを明示した確定契約なら `AGENTS.md` の短い routing と canonical doc。**「次案件にも活かしたい」という改善仮説は確定した全案件ルールではない**ため、まず証拠と検証候補として案件側へ記録し、知識昇格手順を経る。client adapter へ複製しない。
 
 案件（納品物）は 1 案件 1 フォルダ `projects/<slug>/`（`theme/` `qa/` `docs/` `runtime.env` `LEARNINGS.md`）。共通の Docker 実行環境は `runtime/wordpress/` で、案件ファイルを置かない。起動は `.\wp.ps1 up <slug>`。構成と案件の閉じ方は `projects/README.md`。`projects/` の変更は `scripts/project-guard.mjs`（commit-msg hook / 作業終了 hook / CI）が機械的に検査する。Human の例外はコミットの `Human-Approved:` で明示し、guard を `--no-verify` で飛ばさない。
 
@@ -45,7 +45,7 @@ Canonical: `docs/agent-adapters.md`
 
 - **共通 `docs/`**: 案件が変わっても有効な「調査→設計→実装→検証」「毎時の起動と稼働時間の区別」「複数の小さな変更を継続」などの**手順と判断基準**。移植可能な範囲・例外・初回チェックを明記する。
 - **案件 `projects/<slug>/docs/` / `LEARNINGS.md`**: Figma fileKey/node、具体的なカラー・フォント/素材、Theme/ACF/URL、Humanの個別指示、実行時刻/問題の再現・コミット・PR。別案件へ値や禁止事項を自動コピーしない。
-- 新しい失敗はまず案件で「原因→対策→QA証拠」を蓄積する。明示的なHumanの横断適用指定、または既存の`docs/knowledge-promotion.md`に基づく根拠とレビューがあるときだけ、適用範囲を記して共通化する。共通ルールの正当性は案件ごとに確認する。
+- 新しい失敗はまず案件で「原因→対策→QA証拠」を蓄積する。「次案件でも使えそう」「次に活かして」というHumanの意向は**横断検証の優先希望**であって、それだけで実証済み共通ルールにはならない。複数run・別画面・別案件での再現性、例外、既存ルールとの重複、運用上の効果を調べ、`docs/knowledge-promotion.md` の根拠とレビューを満たしたものだけ適用範囲付きで昇格する。Humanが今すぐの全案件適用を**明確に確定した運用契約**はこの経験則の昇格とは区別する。
 
 Canonical: `docs/agent-recurring-work-preflight.md` / `docs/frontend-foundation-preflight.md`
 
