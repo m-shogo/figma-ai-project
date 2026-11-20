@@ -36,7 +36,7 @@ records:
           kind: LOCAL_RESEARCH
           reference_id: REF-002-BUDOKAN
           run_id: ''
-          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/layout/global_footer.css
+          path: projects/nipponbudokan/theme/css/layout/global_footer.css
           commit: ''
           note: >-
             LIVE PC footer node 1901:13409 has logo height 50.485px, then a 24px internal gap to the address row; the outer left-column groups use 32px. The Theme _hasMap grid intentionally uses display: contents, so margin-top:-8px on the mapped address row restores the authored first sub-gap while leaving links/SNS spacing unchanged.

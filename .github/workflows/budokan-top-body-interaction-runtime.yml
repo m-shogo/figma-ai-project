@@ -3,28 +3,33 @@ name: Budokan TOP Body Interaction Runtime
 on:
   pull_request:
     paths:
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/front-page.php'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/footer.php'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/project/top_mainVisual.css'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/project/top_news.css'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/project/top_partner.css'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/project/top_instagram.css'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/project/top_banner.css'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_top-sns.php'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_top-instagram.php'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_top-partner.php'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_top-banner.php'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/images/top/sns-octagon-sp.svg'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/images/top/banner-octagon-sp.svg'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/project/top_guide.css'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/common.js'
-      - 'experiments/wordpress-acf-runtime/scripts/budokan-top-fv-runtime-qa.sh'
-      - 'experiments/wordpress-acf-runtime/scripts/budokan-top-body-interaction-browser-qa.mjs'
+      - 'projects/nipponbudokan/theme/front-page.php'
+      - 'projects/nipponbudokan/theme/footer.php'
+      - 'projects/nipponbudokan/theme/css/project/top_mainVisual.css'
+      - 'projects/nipponbudokan/theme/css/project/top_news.css'
+      - 'projects/nipponbudokan/theme/css/project/top_partner.css'
+      - 'projects/nipponbudokan/theme/css/project/top_instagram.css'
+      - 'projects/nipponbudokan/theme/css/project/top_banner.css'
+      - 'projects/nipponbudokan/theme/template-parts/_top-sns.php'
+      - 'projects/nipponbudokan/theme/template-parts/_top-instagram.php'
+      - 'projects/nipponbudokan/theme/template-parts/_top-partner.php'
+      - 'projects/nipponbudokan/theme/template-parts/_top-banner.php'
+      - 'projects/nipponbudokan/theme/images/top/sns-octagon-sp.svg'
+      - 'projects/nipponbudokan/theme/images/top/banner-octagon-sp.svg'
+      - 'projects/nipponbudokan/theme/css/project/top_guide.css'
+      - 'projects/nipponbudokan/theme/js/common.js'
+      - 'projects/nipponbudokan/qa/budokan-top-fv-runtime-qa.sh'
+      - 'projects/nipponbudokan/qa/budokan-top-body-interaction-browser-qa.mjs'
       - '.github/workflows/budokan-top-body-interaction-runtime.yml'
   workflow_dispatch:
 
 permissions:
   contents: read
+
+env:
+  PROJECT: nipponbudokan
+  COMPOSE_PROJECT_NAME: nipponbudokan-qa
+  WP_PORT: '27248'
 
 jobs:
   runtime:
@@ -36,7 +41,7 @@ jobs:
       - name: Run disposable WordPress TOP runtime QA
         env:
           BUDOKAN_TOP_FV_KEEP_RUNTIME: '1'
-        run: bash experiments/wordpress-acf-runtime/scripts/budokan-top-fv-runtime-qa.sh
+        run: bash projects/nipponbudokan/qa/budokan-top-fv-runtime-qa.sh
 
       - name: Install Playwright Chromium
         run: |
@@ -45,15 +50,15 @@ jobs:
 
       - name: Run TOP body interaction stability QA
         run: |
-          cd experiments/wordpress-acf-runtime
+          cd runtime/wordpress
           source scripts/runtime-env.sh
           qa_url="${WP_URL}/"
           cd ../..
-          node experiments/wordpress-acf-runtime/scripts/budokan-top-body-interaction-browser-qa.mjs "$qa_url"
+          node projects/nipponbudokan/qa/budokan-top-body-interaction-browser-qa.mjs "$qa_url"
 
       - name: Cleanup disposable WordPress runtime
         if: always()
         run: |
-          cd experiments/wordpress-acf-runtime
+          cd runtime/wordpress
           source scripts/runtime-env.sh
           docker compose down -v --remove-orphans

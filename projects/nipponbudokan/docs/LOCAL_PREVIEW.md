@@ -12,7 +12,7 @@
 止める:
 
 ```bash
-cd experiments/wordpress-acf-runtime
+cd runtime/wordpress
 source scripts/runtime-env.sh
 docker compose down
 ```

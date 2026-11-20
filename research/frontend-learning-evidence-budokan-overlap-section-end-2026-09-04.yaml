@@ -33,7 +33,7 @@ records:
           kind: LOCAL_RESEARCH
           reference_id: REF-002-BUDOKAN
           run_id: '33860332062'
-          path: experiments/wordpress-acf-runtime/scripts/budokan-top-guide-browser-qa.mjs
+          path: projects/nipponbudokan/qa/budokan-top-guide-browser-qa.mjs
           commit: ''
           note: >-
             Fresh current-file Figma reads measured the SP User Guide as 375 by 1668 with the first card at y 401, three contiguous cards ending at y 1604, and a 64px final gap. Existing runtime checks covered the first-card position and card geometry but not the section end, allowing a stale 131px body bottom padding to survive. After correcting the padding, browser QA exposed a second exact mismatch: runtime height was 1671px because each authored Figma separator has zero layout height with a visible 1px stroke, while Theme separators consumed 1px of flex layout height. The bounded correction keeps the visible 1px rule in an absolutely positioned pseudo-element on a zero-height flex item. The runtime contract now asserts the full SP section height and final bottom gap; PC remains 689px high with a zero final gap.

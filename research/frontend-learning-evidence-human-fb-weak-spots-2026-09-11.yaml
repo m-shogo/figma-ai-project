@@ -45,7 +45,7 @@ records:
           kind: LOCAL_RESEARCH
           reference_id: BUDOKAN-WORDPRESS
           run_id: ''
-          path: experiments/budokan-wordpress/learning-notes/2026-09-11-human-fb-ai-weak-spots.md
+          path: projects/nipponbudokan/docs/learning-notes/2026-09-11-human-fb-ai-weak-spots.md
           commit: ''
           note: Maps this week's Budokan Human FB lines onto the eight types.
         - evidence_id: EV-HUMAN-FB-WEAK-SPOTS-AGENTS-20260911

@@ -31,14 +31,14 @@ records:
           kind: LOCAL_RESEARCH
           reference_id: REF-002-BUDOKAN
           run_id: ''
-          path: experiments/budokan-wordpress/EVENT_DETAIL_MEDIA_OWNERSHIP_AUDIT.md
+          path: projects/nipponbudokan/docs/EVENT_DETAIL_MEDIA_OWNERSHIP_AUDIT.md
           commit: ''
           note: Live current-Figma comparison records News detail lead-image ownership, Event archive thumbnail ownership, and the absence of automatic Event detail lead media.
         - evidence_id: EV-BUDOKAN-DETAIL-MEDIA-SINGLE-20260902
           kind: COMMIT
           reference_id: REF-002-BUDOKAN
           run_id: ''
-          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/single.php
+          path: projects/nipponbudokan/theme/single.php
           commit: 34750dddc5e146ff4ef12aedfd454d292d459909
           note: Shared single template now limits automatic Featured Image detail rendering to the current News/normal-post family while preserving Event thumbnail source data for archive cards.
       contradicts: []

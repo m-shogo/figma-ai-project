@@ -8,9 +8,9 @@ ROOT = Path(__file__).resolve().parents[1]
 AGENTS = ROOT / "AGENTS.md"
 ADAPTERS = ROOT / "docs" / "agent-adapters.md"
 WP_POLICY = ROOT / "docs" / "wordpress-acf-policy.md"
-RUNTIME_README = ROOT / "experiments" / "wordpress-acf-runtime" / "README.md"
-THEME_RULES = ROOT / "experiments" / "budokan-wordpress" / "THEME_RULES.md"
-CURRENT_AUTHORITY = ROOT / "experiments" / "budokan-wordpress" / "CURRENT_AUTHORITY.md"
+RUNTIME_README = ROOT / "runtime" / "wordpress" / "README.md"
+THEME_RULES = ROOT / "projects" / "nipponbudokan" / "docs" / "THEME_RULES.md"
+CURRENT_AUTHORITY = ROOT / "projects" / "nipponbudokan" / "docs" / "CURRENT_AUTHORITY.md"
 CURSOR_RULES = ROOT / ".cursor" / "rules"
 
 
@@ -18,7 +18,7 @@ class PortableKnowledgeLivesInGitTests(unittest.TestCase):
     def test_root_agents_declares_git_as_standing_memory(self) -> None:
         agents = AGENTS.read_text(encoding="utf-8")
         self.assertIn("この Git repository が全 AI の standing memory", agents)
-        self.assertIn("experiments/budokan-wordpress/CURRENT_AUTHORITY.md", agents)
+        self.assertIn("projects/nipponbudokan/docs/CURRENT_AUTHORITY.md", agents)
         self.assertIn("99-local-limits.ini", agents)
         self.assertIn("body.home", agents)
         self.assertIn("portable な Human-approved contract を `.cursor/rules` / chat memory だけに置く", agents)

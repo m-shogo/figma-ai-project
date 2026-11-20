@@ -23,17 +23,16 @@
 - 案件名は `budokan`（Theme slug 実体は `nipponbudokan`）
 - 旧 `experiments/ref002-*` / `experiments/wordpress-acf-pro-standalone-lp` は **残置**（リネームしない）
 - 新規進行先:
-  - `experiments/budokan-wordpress/` … 案件 intake / 本メモ
-  - `experiments/wordpress-acf-runtime/` … WP+ACF 実行環境
+  - `projects/nipponbudokan/docs/` … 案件 intake / 本メモ
+  - `runtime/wordpress/` … WP+ACF 実行環境
 
 ---
 
 ## Theme
 
-- 正本 Theme: `experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/`
+- 正本 Theme: `projects/nipponbudokan/theme/`
 - 出所: **オリジナル**（外部 git repo / commit なし。手元 Theme が正本）
-- **この案件のみ Theme を git 追跡する**（Human Authority A）。他案件の drop-in Theme は引き続き ignore
-- 差し込みは `theme-dropin/` に **1 Theme のみ**（倉庫として溜めない）
+- Theme は Git 追跡する（Human Authority A）。提供された参照 Theme `現行サンプルbudokan` は `projects/nipponbudokan/reference/`（Git 外・編集禁止）
 - 本番 Theme 構造を `theme/sample-theme` から継承しない
 - 専用ルール: [`THEME_RULES.md`](THEME_RULES.md)
 - 当面4 family（イベント / 書写書道 / 武道 / 単行本）の一覧＋詳細表: [`FOUR_FAMILIES.md`](FOUR_FAMILIES.md)
@@ -41,7 +40,7 @@
 
 付属:
 
-- Block Patterns: `theme-dropin/nipponbudokan/patterns.json`
+- Block Patterns: `projects/nipponbudokan/theme/patterns.json`
 - ACF フィールド契約: 本ファイル「ACF」節（`acf-export.json` は退役。`acf/` を再読しない）
 
 ---
@@ -51,7 +50,7 @@
 - 固定ページ「●●パーツ集●●」の本文は次を正本とする:
 
 ```text
-experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/parts.php
+projects/nipponbudokan/theme/parts.php
 ```
 
 - **タグを追加しない**
@@ -139,7 +138,7 @@ Theme 専用の enqueue・命名は `THEME_RULES.md`。Frontend Standard は Com
 
 ## ACF（Human Authority 2026-09-03）
 
-フィールド名・用途はこの節が正本。WordPress 実行時の Local JSON / block PHP は Theme 内に残るが、**Agent は `theme-dropin/nipponbudokan/acf/` を再読してフィールドを増やしたり推測したりしない。** `acf-export.json` は退役（旧 portable dump。メニュー ACF グループを含むため使わない）。
+フィールド名・用途はこの節が正本。WordPress 実行時の Local JSON / block PHP は Theme 内に残るが、**Agent は `projects/nipponbudokan/theme/acf/` を再読してフィールドを増やしたり推測したりしない。** `acf-export.json` は退役（旧 portable dump。メニュー ACF グループを含むため使わない）。
 
 フィールドグループ JSON は編集しない。ブロック見た目の markup 修正が必要なときだけ既存 block PHP を触る。
 
@@ -288,7 +287,7 @@ Form は Human 担当のためこの順に含めない。
 
 - TOP: `css/project/top_*` / `template-parts/_top-*` / `front-page.php`
 - パーツ集の見た目: `css/blocks/` と `css/module/`（`parts.php` は読めるが編集しない）
-- runtime ホットリロード / PHP limits など `experiments/wordpress-acf-runtime/` 基盤
+- runtime ホットリロード / PHP limits など `runtime/wordpress/` 基盤
 
 **両方触らない**
 

@@ -39,7 +39,7 @@ records:
           kind: COMMIT
           reference_id: REF-002-BUDOKAN
           run_id: ''
-          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/blocks/wp-block-heading-style.css
+          path: projects/nipponbudokan/theme/css/blocks/wp-block-heading-style.css
           commit: 1a64aa04ade2c2dea7112c586649f0ea4dd9030a
           note: >-
             Current Figma PC 1157:8189 and SP 1468:7466 both use a 2px block inset around the 18px/1.4

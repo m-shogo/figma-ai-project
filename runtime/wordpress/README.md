@@ -5,28 +5,28 @@
 
 旧 `experiments/wordpress-acf-pro-standalone-lp` は残置。こちらが新規の共通 runtime。
 
-## Theme の置き方（編集対象）
+## 案件の載せ方
 
-正本 Theme は外パスまたは別 repo が基本。この runtime では次のどちらかで載せる。
+案件は `projects/<slug>/` に置く（`theme/` `qa/` `runtime.env`）。この runtime は案件ファイルを持たない。案件専用の QA / seed をこの `scripts/` へ置かない。
 
-```bash
-# A. 差し込み（1 Theme だけ）
-cp -R /path/to/your-theme theme-dropin/budokan
-make smoke
+```powershell
+.\wp.ps1 up nipponbudokan        # repo 直下から。runtime.env の compose 名・ポートで起動
+.\wp.ps1 snapshot nipponbudokan  # DB + uploads を projects/<slug>/.local/ へ（Git 外）
 ```
 
 ```bash
-# B. 外パスを指す（おすすめ）
-THEME_SOURCE_DIR=/absolute/path/to/your-theme make smoke
+PROJECT=nipponbudokan make smoke   # bash / CI
 ```
 
 解決順:
 
 1. `THEME_SOURCE_DIR`
-2. `theme-dropin/` 内の単一ディレクトリ
+2. `PROJECT=<slug>` → `projects/<slug>/theme`
 3. なければ `theme/sample-theme`（smoke 用サンプルのみ）
 
-`theme-dropin/` は gitignore。client Theme をこの repository へ commit しない。
+コンテナ内では runtime が `/fixture`、案件フォルダが `/project`（どちらも read-only）。案件の seed は `wp eval-file /project/qa/<seed>.php`。
+
+QA スクリプトは片付けで `down -v` するので、開発 DB とは別の compose 名（例 `nipponbudokan-qa`）で動かす。
 
 ## 境界
 
@@ -48,7 +48,7 @@ make reset
 
 ## ローカル隔離
 
-HTTP は `127.0.0.1` のみ。`blog_public=0`。worktree ごとに Compose project / port を自動分離。
+HTTP は `127.0.0.1` のみ。`blog_public=0`。案件は `projects/<slug>/runtime.env` の Compose project / port で分離する。`PROJECT` 未指定なら worktree ごとに自動分離。
 
 ## ローカル ホットリロード
 

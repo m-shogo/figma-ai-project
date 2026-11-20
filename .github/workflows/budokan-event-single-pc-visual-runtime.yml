@@ -3,16 +3,21 @@ name: Budokan Event Single PC Visual Runtime
 on:
   pull_request:
     paths:
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/single.php'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_visual.php'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/module/module_titleSingle.css'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/layout/global_inner.css'
-      - 'experiments/wordpress-acf-runtime/scripts/budokan-event-single-pc-visual-browser-qa.mjs'
+      - 'projects/nipponbudokan/theme/single.php'
+      - 'projects/nipponbudokan/theme/template-parts/_visual.php'
+      - 'projects/nipponbudokan/theme/css/module/module_titleSingle.css'
+      - 'projects/nipponbudokan/theme/css/layout/global_inner.css'
+      - 'projects/nipponbudokan/qa/budokan-event-single-pc-visual-browser-qa.mjs'
       - '.github/workflows/budokan-event-single-pc-visual-runtime.yml'
   workflow_dispatch:
 
 permissions:
   contents: read
+
+env:
+  PROJECT: nipponbudokan
+  COMPOSE_PROJECT_NAME: nipponbudokan-qa
+  WP_PORT: '27248'
 
 jobs:
   runtime:
@@ -24,11 +29,11 @@ jobs:
       - name: Start disposable WordPress runtime using existing News archive fixture
         env:
           BUDOKAN_NEWS_ARCHIVE_KEEP_RUNTIME: '1'
-        run: bash experiments/wordpress-acf-runtime/scripts/budokan-news-archive-runtime-qa.sh
+        run: bash projects/nipponbudokan/qa/budokan-news-archive-runtime-qa.sh
 
       - name: Seed real Event detail through existing CPT and taxonomy ownership
         run: |
-          cd experiments/wordpress-acf-runtime
+          cd runtime/wordpress
           source scripts/runtime-env.sh
           term_id="$(docker compose run --rm cli term create event_cat '武道' --porcelain)"
           event_id="$(docker compose run --rm cli post create \
@@ -53,11 +58,11 @@ jobs:
         run: |
           npm install --no-save --package-lock=false playwright@1.54.2
           npx playwright install --with-deps chromium
-          node experiments/wordpress-acf-runtime/scripts/budokan-event-single-pc-visual-browser-qa.mjs "$BUDOKAN_EVENT_SINGLE_URL"
+          node projects/nipponbudokan/qa/budokan-event-single-pc-visual-browser-qa.mjs "$BUDOKAN_EVENT_SINGLE_URL"
 
       - name: Cleanup disposable WordPress runtime
         if: always()
         run: |
-          cd experiments/wordpress-acf-runtime
+          cd runtime/wordpress
           source scripts/runtime-env.sh
           docker compose down -v --remove-orphans

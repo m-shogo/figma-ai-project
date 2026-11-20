@@ -207,7 +207,7 @@ resolverが決めるのは**同じsemantic surfaceの候補**であり、respons
 
 REF-002のraw/reduced observation fixture:
 
-`experiments/ref002-budokan-wordpress/responsive-counterpart-fixture.yaml`
+`projects/nipponbudokan/ref002/responsive-counterpart-fixture.yaml`
 
 テスト用enriched fixture:
 

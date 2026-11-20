@@ -3,18 +3,23 @@ name: Budokan Slider Runtime
 on:
   pull_request:
     paths:
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/acf/blocks/slider.php'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/inc/field.php'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/module_slider.js'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/swiper-bundle.min.css'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/swiper-bundle.min.js'
-      - 'experiments/wordpress-acf-runtime/scripts/seed-budokan-slider-qa.php'
-      - 'experiments/wordpress-acf-runtime/scripts/budokan-slider-interaction-browser-qa.mjs'
+      - 'projects/nipponbudokan/theme/acf/blocks/slider.php'
+      - 'projects/nipponbudokan/theme/inc/field.php'
+      - 'projects/nipponbudokan/theme/js/module_slider.js'
+      - 'projects/nipponbudokan/theme/css/swiper-bundle.min.css'
+      - 'projects/nipponbudokan/theme/js/swiper-bundle.min.js'
+      - 'projects/nipponbudokan/qa/seed-budokan-slider-qa.php'
+      - 'projects/nipponbudokan/qa/budokan-slider-interaction-browser-qa.mjs'
       - '.github/workflows/budokan-slider-runtime.yml'
   workflow_dispatch:
 
 permissions:
   contents: read
+
+env:
+  PROJECT: nipponbudokan
+  COMPOSE_PROJECT_NAME: nipponbudokan-qa
+  WP_PORT: '27248'
 
 jobs:
   runtime:
@@ -25,8 +30,8 @@ jobs:
 
       - name: Verify production ACF Slider owns its runtime assets
         run: |
-          php -l experiments/wordpress-acf-runtime/scripts/seed-budokan-slider-qa.php
-          field_php='experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/inc/field.php'
+          php -l projects/nipponbudokan/qa/seed-budokan-slider-qa.php
+          field_php='projects/nipponbudokan/theme/inc/field.php'
           grep -Fq "'name'              => 'slider'" "$field_php"
           grep -Fq "'enqueue_assets'" "$field_php"
           grep -Fq "'module-slider'" "$field_php"
@@ -36,13 +41,13 @@ jobs:
       - name: Start disposable WordPress runtime
         env:
           BUDOKAN_LOCAL_NAV_KEEP_RUNTIME: '1'
-        run: bash experiments/wordpress-acf-runtime/scripts/budokan-local-nav-runtime-qa.sh
+        run: bash projects/nipponbudokan/qa/budokan-local-nav-runtime-qa.sh
 
       - name: Seed slider QA and load the production-owned assets on the QA page
         run: |
-          cd experiments/wordpress-acf-runtime
+          cd runtime/wordpress
           source scripts/runtime-env.sh
-          docker compose run --rm -e WP_ENVIRONMENT_TYPE=local cli eval-file /fixture/scripts/seed-budokan-slider-qa.php
+          docker compose run --rm -e WP_ENVIRONMENT_TYPE=local cli eval-file /project/qa/seed-budokan-slider-qa.php
           slider_page_id="$(docker compose run --rm cli option get budokan_slider_qa_page_id)"
           slider_template="$(docker compose run --rm cli post meta get "$slider_page_id" _wp_page_template)"
           if [[ "$slider_template" != "templates/template-oneColumn.php" ]]; then
@@ -70,16 +75,16 @@ jobs:
 
       - name: Run slider interaction browser QA
         run: |
-          cd experiments/wordpress-acf-runtime
+          cd runtime/wordpress
           source scripts/runtime-env.sh
           slider_page_id="$(docker compose run --rm cli option get budokan_slider_qa_page_id)"
           slider_qa_url="${WP_URL}/?page_id=${slider_page_id}"
           cd ../..
-          node experiments/wordpress-acf-runtime/scripts/budokan-slider-interaction-browser-qa.mjs "$slider_qa_url"
+          node projects/nipponbudokan/qa/budokan-slider-interaction-browser-qa.mjs "$slider_qa_url"
 
       - name: Cleanup disposable WordPress runtime
         if: always()
         run: |
-          cd experiments/wordpress-acf-runtime
+          cd runtime/wordpress
           source scripts/runtime-env.sh
           docker compose down -v --remove-orphans

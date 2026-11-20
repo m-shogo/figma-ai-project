@@ -41,7 +41,7 @@ records:
           kind: LOCAL_RESEARCH
           reference_id: REF-002-BUDOKAN
           run_id: ''
-          path: experiments/budokan-wordpress/TOURNAMENT_CARD_COMPOSITION_AUDIT_2026-09-03.md
+          path: projects/nipponbudokan/docs/TOURNAMENT_CARD_COMPOSITION_AUDIT_2026-09-03.md
           commit: ''
           note: >-
             LIVE current Figma file fKYDn9ikpJk1nW7IWFtaUx was inspected at tournament page 2108:10725. The

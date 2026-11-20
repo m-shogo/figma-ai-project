@@ -19,7 +19,7 @@ if (!function_exists('update_field')) {
     WP_CLI::error('ACF PRO is required; refusing to fake repeater values in templates.');
 }
 
-require_once __DIR__ . '/fixture-image.php';
+require_once '/fixture/scripts/fixture-image.php';
 
 function nbk_shodou_qa_image_id(string $seed): int
 {

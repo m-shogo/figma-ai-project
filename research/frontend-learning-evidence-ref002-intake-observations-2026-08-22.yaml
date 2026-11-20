@@ -31,14 +31,14 @@ records:
           kind: LOCAL_RESEARCH
           reference_id: REF-002-BUDOKAN
           run_id: ''
-          path: experiments/ref002-budokan-wordpress/theme-intake.yaml
+          path: projects/nipponbudokan/ref002/theme-intake.yaml
           commit: ''
           note: The intake intentionally keeps Theme family, paths, header/footer ownership, style/JS architecture, breakpoints, ACF evidence, forms, CPT, and image pipeline UNKNOWN until the supplied Theme is observed.
         - evidence_id: EV-REF002-THEME-OBSERVE-README
           kind: LOCAL_RESEARCH
           reference_id: REF-002-BUDOKAN
           run_id: ''
-          path: experiments/ref002-budokan-wordpress/README.md
+          path: projects/nipponbudokan/ref002/README.md
           commit: ''
           note: The merged REF-002 intake explicitly blocks target paths and implementation units before Theme observation and reuses the existing runtime only as a disposable runtime rather than a production Theme template.
       contradicts: []
@@ -67,14 +67,14 @@ records:
           kind: LOCAL_RESEARCH
           reference_id: REF-002-BUDOKAN
           run_id: ''
-          path: experiments/ref002-budokan-wordpress/theme-intake.yaml
+          path: projects/nipponbudokan/ref002/theme-intake.yaml
           commit: ''
           note: qa_reuse explicitly reuses/adapts WordPress runtime, ACF secret handling, CMS mutation QA, visual diff, typography metrics, asset lineage, and readiness while stating that the sample Theme is not the production inheritance source.
         - evidence_id: EV-REF002-QA-REUSE-README
           kind: LOCAL_RESEARCH
           reference_id: REF-002-BUDOKAN
           run_id: ''
-          path: experiments/ref002-budokan-wordpress/README.md
+          path: projects/nipponbudokan/ref002/README.md
           commit: ''
           note: The merged intake instructs mounting the supplied Theme into the existing disposable runtime while preventing client Theme bytes or sample-Theme architecture from becoming repository canon.
       contradicts: []
@@ -104,7 +104,7 @@ records:
           kind: LOCAL_RESEARCH
           reference_id: REF-002-BUDOKAN
           run_id: ''
-          path: experiments/ref002-budokan-wordpress/theme-intake.yaml
+          path: projects/nipponbudokan/ref002/theme-intake.yaml
           commit: ''
           note: REF-002 records SNS placement differences, About 6-card PC vs 3-card SP horizontal scroller, Instagram 5 vs 4 thumbnails, and other PC/SP composition differences while warning against forcing parity through content duplication/deletion.
       contradicts: []

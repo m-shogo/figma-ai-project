@@ -3,18 +3,23 @@ name: Budokan Page Content Rhythm Runtime
 on:
   pull_request:
     paths:
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/layout/global_contents.css'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/layout/global_inner.css'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/blocks/wp-block-text-style.css'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/templates/template-oneColumnLocalNav.php'
-      - 'experiments/wordpress-acf-runtime/scripts/budokan-page-content-rhythm-browser-qa.mjs'
-      - 'experiments/wordpress-acf-runtime/scripts/budokan-local-nav-runtime-qa.sh'
-      - 'experiments/wordpress-acf-runtime/scripts/seed-budokan-local-nav-qa.php'
+      - 'projects/nipponbudokan/theme/css/layout/global_contents.css'
+      - 'projects/nipponbudokan/theme/css/layout/global_inner.css'
+      - 'projects/nipponbudokan/theme/css/blocks/wp-block-text-style.css'
+      - 'projects/nipponbudokan/theme/templates/template-oneColumnLocalNav.php'
+      - 'projects/nipponbudokan/qa/budokan-page-content-rhythm-browser-qa.mjs'
+      - 'projects/nipponbudokan/qa/budokan-local-nav-runtime-qa.sh'
+      - 'projects/nipponbudokan/qa/seed-budokan-local-nav-qa.php'
       - '.github/workflows/budokan-page-content-rhythm-runtime.yml'
   workflow_dispatch:
 
 permissions:
   contents: read
+
+env:
+  PROJECT: nipponbudokan
+  COMPOSE_PROJECT_NAME: nipponbudokan-qa
+  WP_PORT: '27248'
 
 jobs:
   runtime:
@@ -26,7 +31,7 @@ jobs:
       - name: Run disposable WordPress Local Navigation hierarchy QA
         env:
           BUDOKAN_LOCAL_NAV_KEEP_RUNTIME: '1'
-        run: bash experiments/wordpress-acf-runtime/scripts/budokan-local-nav-runtime-qa.sh
+        run: bash projects/nipponbudokan/qa/budokan-local-nav-runtime-qa.sh
 
       - name: Install browser runtime
         run: |
@@ -35,16 +40,16 @@ jobs:
 
       - name: Run normal-page authored content rhythm QA
         run: |
-          cd experiments/wordpress-acf-runtime
+          cd runtime/wordpress
           source scripts/runtime-env.sh
           page_id="$(docker compose run --rm cli option get budokan_local_nav_qa_page_id)"
           qa_url="${WP_URL}/?page_id=${page_id}"
           cd ../..
-          node experiments/wordpress-acf-runtime/scripts/budokan-page-content-rhythm-browser-qa.mjs "$qa_url"
+          node projects/nipponbudokan/qa/budokan-page-content-rhythm-browser-qa.mjs "$qa_url"
 
       - name: Cleanup disposable WordPress runtime
         if: always()
         run: |
-          cd experiments/wordpress-acf-runtime
+          cd runtime/wordpress
           source scripts/runtime-env.sh
           docker compose down -v --remove-orphans

@@ -339,7 +339,7 @@ def validate_record(path: Path, schema: dict[str, Any]) -> list[str]:
 
 def candidate_paths() -> list[Path]:
     found: list[Path] = []
-    for base in (ROOT / "experiments", ROOT / "references", ROOT / "contracts"):
+    for base in (ROOT / "projects", ROOT / "experiments", ROOT / "references", ROOT / "contracts"):
         if not base.exists():
             continue
         found.extend(sorted(base.rglob(RECORD_NAME)))

@@ -29,7 +29,7 @@ Themeそのものは作らない。ここにあるのは、Themeが届いた瞬�
 
 - [`figma-parts-resolution.yaml`](figma-parts-resolution.yaml): current Figma Parts authority と shared owner / fail-closed boundary
 - [`page-family-map.yaml`](page-family-map.yaml): current page-family mapping と residual blocker
-- `experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/`: 現在観測・検証しているTheme runtime fixture
+- `projects/nipponbudokan/theme/`: 現在観測・検証しているTheme runtime fixture
 - current Figma file `fKYDn9ikpJk1nW7IWFtaUx`: saved historical node/file identityより優先
 
 `theme-intake.yaml` 自体は validator contract のhistorical intake evidenceとして保持する。Theme source repository / starting commit の

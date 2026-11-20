@@ -2,7 +2,7 @@
 
 更新: 2026-09-19  
 参照 Theme（現行サイト）: `C:\htdocs\f-nipponbudokan\wp\wp-content\themes\budokan`  
-実装 Theme: `experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/`  
+実装 Theme: `projects/nipponbudokan/theme/`  
 公開 IA: `DIRECTORY_MAP.md`  
 Visual: `FIGMA_MAP.md` / `CURRENT_AUTHORITY.md` の file key のみ
 

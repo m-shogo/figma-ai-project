@@ -21,7 +21,7 @@ if (!function_exists('update_field')) {
     WP_CLI::error('ACF PRO is required; refusing to fake ACF values with hard-coded template data.');
 }
 
-require_once __DIR__ . '/fixture-image.php';
+require_once '/fixture/scripts/fixture-image.php';
 
 function nbk_budo_qa_image_id(string $seed): int
 {

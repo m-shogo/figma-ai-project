@@ -6,7 +6,7 @@
  * This is intentionally independent of ACF Pro runtime availability in CI.
  */
 
-$theme_dir = dirname(__DIR__) . '/theme-dropin/nipponbudokan';
+$theme_dir = dirname(__DIR__) . '/theme';
 $GLOBALS['qa_have_rows_calls'] = array();
 $GLOBALS['qa_sub_fields'] = array();
 

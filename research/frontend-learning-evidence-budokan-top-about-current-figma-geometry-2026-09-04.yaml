@@ -39,7 +39,7 @@ records:
           kind: LOCAL_RESEARCH
           reference_id: REF-002-BUDOKAN
           run_id: ''
-          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/project/top_about.css
+          path: projects/nipponbudokan/theme/css/project/top_about.css
           commit: ''
           note: >-
             LIVE node 1603:7273 is 1380x1063. Its content inner is x=110, width=1160; the left rail is 240px,
@@ -51,7 +51,7 @@ records:
           kind: LOCAL_RESEARCH
           reference_id: REF-002-BUDOKAN
           run_id: ''
-          path: experiments/wordpress-acf-runtime/scripts/budokan-top-about-browser-qa.mjs
+          path: projects/nipponbudokan/qa/budokan-top-about-browser-qa.mjs
           commit: ''
           note: >-
             The first real WordPress browser run failed at `PC section width 1365` when the Playwright outer viewport was set to

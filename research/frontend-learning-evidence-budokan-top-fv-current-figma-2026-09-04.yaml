@@ -43,7 +43,7 @@ records:
           kind: LOCAL_RESEARCH
           reference_id: REF-002-BUDOKAN
           run_id: ''
-          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/project/top_mainVisual.css
+          path: projects/nipponbudokan/theme/css/project/top_mainVisual.css
           commit: ''
           note: >-
             LIVE current Figma file FKQaJDu5TZXHoCzPsfP92E was re-resolved from PC page 0:1. TOP is current frame 1603:7062.
@@ -59,7 +59,7 @@ records:
           kind: LOCAL_RESEARCH
           reference_id: REF-002-BUDOKAN
           run_id: ''
-          path: experiments/wordpress-acf-runtime/scripts/budokan-top-fv-runtime-qa.sh
+          path: projects/nipponbudokan/qa/budokan-top-fv-runtime-qa.sh
           commit: ''
           note: >-
             The first disposable WordPress run had the public ACF plugin active, so get_field()/have_rows() existed while the
@@ -74,7 +74,7 @@ records:
           kind: LOCAL_RESEARCH
           reference_id: REF-002-BUDOKAN
           run_id: ''
-          path: experiments/wordpress-acf-runtime/scripts/budokan-top-fv-browser-qa.mjs
+          path: projects/nipponbudokan/qa/budokan-top-fv-browser-qa.mjs
           commit: ''
           note: >-
             Playwright at a nominal 1380px browser viewport renders the TOP root/stage at 1365px because the existing shared

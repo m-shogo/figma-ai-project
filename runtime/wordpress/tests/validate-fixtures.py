@@ -84,11 +84,15 @@ if 'theme activate sample-theme' in setup_text:
 if 'THEME_IS_SAMPLE' not in setup_text:
     fail('setup must skip sample-only ACF/fixture steps for a supplied theme')
 
-gitignore_text = (ROOT / '.gitignore').read_text(encoding='utf-8')
-if 'theme-dropin/*' not in gitignore_text or '!theme-dropin/.gitkeep' not in gitignore_text:
-    fail('a supplied client theme must never be committable through theme-dropin/')
-if not (ROOT / 'theme-dropin' / '.gitkeep').is_file():
-    fail('theme-dropin/ drop-in path must exist in a fresh checkout')
+if 'PROJECT_DIR' not in runtime_env_text or '/projects/$PROJECT' not in runtime_env_text:
+    fail('runtime-env.sh must resolve PROJECT=<slug> to projects/<slug>/')
+if compose_text.count('${PROJECT_DIR:-.}:/project:ro') != 2:
+    fail('both WordPress and CLI services must mount the project directory read-only at /project')
+
+projects_gitignore = (ROOT.parent.parent / 'projects' / '.gitignore').read_text(encoding='utf-8')
+for required in ('*/reference/', '*/.local/', '*.sql', 'advanced-custom-fields-pro/'):
+    if required not in projects_gitignore:
+        fail(f'projects/.gitignore must keep reference themes, DB dumps and licensed plugins out of Git: {required}')
 
 export = load_json(ROOT / 'acf-export.json')
 local = load_json(THEME / 'acf-json' / 'group_standalone_lp_sample.json')

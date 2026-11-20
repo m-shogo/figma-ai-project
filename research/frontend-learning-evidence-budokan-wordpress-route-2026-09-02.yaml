@@ -31,14 +31,14 @@ records:
           kind: LOCAL_RESEARCH
           reference_id: REF-002-BUDOKAN
           run_id: ''
-          path: experiments/budokan-wordpress/learning-notes/2026-09-02-detail-archive-route-owner.md
+          path: projects/nipponbudokan/docs/learning-notes/2026-09-02-detail-archive-route-owner.md
           commit: ''
           note: Records the display-label versus route-owner bug, root cause, WordPress-core fix, runtime proof, and project-level generalization boundary.
         - evidence_id: EV-BUDOKAN-WP-ARCHIVE-ROUTE-THEME
           kind: LOCAL_RESEARCH
           reference_id: REF-002-BUDOKAN
           run_id: ''
-          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/inc/custom.php
+          path: projects/nipponbudokan/theme/inc/custom.php
           commit: ''
           note: The Event post type is registered under key event with display label イベント and has_archive enabled, demonstrating that display identity and archive-route ownership are separate concepts.
       contradicts: []

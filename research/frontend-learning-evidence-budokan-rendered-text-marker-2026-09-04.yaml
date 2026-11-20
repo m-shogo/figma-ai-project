@@ -33,7 +33,7 @@ records:
           kind: LOCAL_RESEARCH
           reference_id: REF-002-BUDOKAN
           run_id: '33859983543'
-          path: experiments/wordpress-acf-runtime/scripts/budokan-top-guide-runtime-qa.sh
+          path: projects/nipponbudokan/qa/budokan-top-guide-runtime-qa.sh
           commit: ''
           note: >-
             PR 388 runtime attempt 1 failed before browser QA because the smoke script grepped for the contiguous raw string User guide. Production markup intentionally renders the initial U in a nested span, so the raw source does not contain that contiguous sequence even though the DOM text is correct. The correction checks the structural English-heading class in the raw response and moves exact User guide text validation into Playwright via textContent for both SP and PC.

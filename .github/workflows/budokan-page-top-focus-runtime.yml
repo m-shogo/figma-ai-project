@@ -3,18 +3,23 @@ name: Budokan Page Top Focus Runtime
 on:
   pull_request:
     paths:
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/functions.php'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/common.js'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/page-top-focus-stability.js'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_footer.php'
-      - 'experiments/wordpress-acf-runtime/scripts/seed-budokan-content-interaction-qa.php'
-      - 'experiments/wordpress-acf-runtime/scripts/budokan-content-interaction-runtime-qa.sh'
-      - 'experiments/wordpress-acf-runtime/scripts/budokan-page-top-focus-browser-qa.mjs'
+      - 'projects/nipponbudokan/theme/functions.php'
+      - 'projects/nipponbudokan/theme/js/common.js'
+      - 'projects/nipponbudokan/theme/js/page-top-focus-stability.js'
+      - 'projects/nipponbudokan/theme/template-parts/_footer.php'
+      - 'projects/nipponbudokan/qa/seed-budokan-content-interaction-qa.php'
+      - 'projects/nipponbudokan/qa/budokan-content-interaction-runtime-qa.sh'
+      - 'projects/nipponbudokan/qa/budokan-page-top-focus-browser-qa.mjs'
       - '.github/workflows/budokan-page-top-focus-runtime.yml'
   workflow_dispatch:
 
 permissions:
   contents: read
+
+env:
+  PROJECT: nipponbudokan
+  COMPOSE_PROJECT_NAME: nipponbudokan-qa
+  WP_PORT: '27248'
 
 jobs:
   runtime:
@@ -26,7 +31,7 @@ jobs:
       - name: Start disposable WordPress normal-page runtime
         env:
           BUDOKAN_CONTENT_INTERACTION_KEEP_RUNTIME: '1'
-        run: bash experiments/wordpress-acf-runtime/scripts/budokan-content-interaction-runtime-qa.sh
+        run: bash projects/nipponbudokan/qa/budokan-content-interaction-runtime-qa.sh
 
       - name: Install Playwright Chromium
         run: |
@@ -35,17 +40,17 @@ jobs:
 
       - name: Resolve Page Top QA URL
         run: |
-          cd experiments/wordpress-acf-runtime
+          cd runtime/wordpress
           source scripts/runtime-env.sh
           page_id="$(docker compose run --rm cli option get budokan_content_interaction_qa_page_id)"
           echo "BUDOKAN_PAGE_TOP_QA_URL=${WP_URL}/?page_id=${page_id}" >> "$GITHUB_ENV"
 
       - name: Audit Page Top keyboard focus continuity and pointer scroll
-        run: node experiments/wordpress-acf-runtime/scripts/budokan-page-top-focus-browser-qa.mjs "$BUDOKAN_PAGE_TOP_QA_URL"
+        run: node projects/nipponbudokan/qa/budokan-page-top-focus-browser-qa.mjs "$BUDOKAN_PAGE_TOP_QA_URL"
 
       - name: Cleanup disposable WordPress runtime
         if: always()
         run: |
-          cd experiments/wordpress-acf-runtime
+          cd runtime/wordpress
           source scripts/runtime-env.sh
           docker compose down -v --remove-orphans

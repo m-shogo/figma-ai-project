@@ -42,7 +42,7 @@ records:
           kind: LOCAL_RESEARCH
           reference_id: REF-002-BUDOKAN
           run_id: ''
-          path: experiments/budokan-wordpress/TOURNAMENT_LOCAL_NAV_TYPOGRAPHY_AUDIT_2026-09-03.md
+          path: projects/nipponbudokan/docs/TOURNAMENT_LOCAL_NAV_TYPOGRAPHY_AUDIT_2026-09-03.md
           commit: ''
           note: >-
             LIVE current Figma inspection compared Tournament Local Navigation 2108:10846 against Training Center

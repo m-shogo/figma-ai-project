@@ -37,7 +37,7 @@ records:
           kind: LOCAL_RESEARCH
           reference_id: REF-002-BUDOKAN
           run_id: ''
-          path: experiments/budokan-wordpress/NAVIGATION_LARGE_DEPENDENCY_AUDIT.md
+          path: projects/nipponbudokan/docs/NAVIGATION_LARGE_DEPENDENCY_AUDIT.md
           commit: ''
           note: >-
             Current PC/SP Figma masters place the optional external-link glyph at the far edge while the Theme
@@ -77,7 +77,7 @@ records:
           kind: COMMIT
           reference_id: REF-002-BUDOKAN
           run_id: ''
-          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_dropdown-navigation.php
+          path: projects/nipponbudokan/theme/template-parts/_dropdown-navigation.php
           commit: 0af42e815a334a20049dc7bc7d7eca711c83d589
           note: >-
             The template now checks has_nav_menu('dropdown-nav'), removes the hard-coded menu name, and lets
@@ -87,7 +87,7 @@ records:
           kind: COMMIT
           reference_id: REF-002-BUDOKAN
           run_id: ''
-          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/sidebar.php
+          path: projects/nipponbudokan/theme/sidebar.php
           commit: 004076078b3dd99c191e4015a1e398e6f87afd96
           note: >-
             The sidebar template now follows the same registered-location contract: it removes the fixed
@@ -97,7 +97,7 @@ records:
           kind: COMMIT
           reference_id: REF-002-BUDOKAN
           run_id: ''
-          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_header.php
+          path: projects/nipponbudokan/theme/template-parts/_header.php
           commit: 9d7d14ff0a5e05a77ae13c31092fc289a46277e3
           note: >-
             Header global-nav and sub-nav now resolve the Human-assigned menus through their already-registered

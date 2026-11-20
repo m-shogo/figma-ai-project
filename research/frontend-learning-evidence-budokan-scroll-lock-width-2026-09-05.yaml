@@ -41,7 +41,7 @@ records:
           kind: COMMIT
           reference_id: BUDOKAN-WORDPRESS
           run_id: '33903197572'
-          path: experiments/wordpress-acf-runtime/scripts/budokan-overlay-stability-browser-qa.mjs
+          path: projects/nipponbudokan/qa/budokan-overlay-stability-browser-qa.mjs
           commit: 4b2bd87d87e831f7baca6ba2e070697333f56c8a
           note: >-
             Disposable WordPress + Playwright reproduced the defect at PC minimum 1280px:
@@ -51,7 +51,7 @@ records:
           kind: COMMIT
           reference_id: BUDOKAN-WORDPRESS
           run_id: '33903686451'
-          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/layout/global_header.css
+          path: projects/nipponbudokan/theme/css/layout/global_header.css
           commit: c0fad2d802995147514d2597ffa405e1c32a8b41
           note: >-
             Preserves the Theme's existing 1280px PC minimum for the fixed header during overlay
@@ -61,7 +61,7 @@ records:
           kind: CANONICAL_DOC
           reference_id: BUDOKAN-WORDPRESS
           run_id: ''
-          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/base/normalize.css
+          path: projects/nipponbudokan/theme/css/base/normalize.css
           commit: c0fad2d802995147514d2597ffa405e1c32a8b41
           note: >-
             Theme contract combines root scrollbar-gutter: stable with desktop body min-width:1280px,

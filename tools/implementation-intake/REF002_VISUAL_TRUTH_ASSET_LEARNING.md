@@ -87,7 +87,7 @@ The production WordPress replay does **not** inherit PR #142 HTML/CSS/JS archite
 
 Canonical production-reuse evidence:
 
-`experiments/ref002-budokan-wordpress/baseline-asset-source.yaml`
+`projects/nipponbudokan/ref002/baseline-asset-source.yaml`
 
 This separates two facts that must not be conflated:
 

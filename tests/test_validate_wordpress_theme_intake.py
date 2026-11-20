@@ -14,7 +14,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 
 import validate_wordpress_theme_intake as validator  # noqa: E402
 
-CANONICAL_RECORD = ROOT / "experiments" / "ref002-budokan-wordpress" / "theme-intake.yaml"
+CANONICAL_RECORD = ROOT / "projects" / "nipponbudokan" / "ref002" / "theme-intake.yaml"
 SCHEMA = json.loads(validator.SCHEMA_PATH.read_text(encoding="utf-8"))
 
 

@@ -9,7 +9,7 @@ Current Nippon Budokan Figma authority and the supplied WordPress Theme were com
 - Current Figma file: `fKYDn9ikpJk1nW7IWFtaUx`
 - Shared body typography: SP `1399:18729`, PC `1157:8182`
 - Background paragraph/text box: PC `1157:8201` (same 17px / 1.6 body typography inside the bordered background surface)
-- Theme owner: `experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/blocks/wp-block-text-style.css`
+- Theme owner: `projects/nipponbudokan/theme/css/blocks/wp-block-text-style.css`
 
 No page-specific component, ACF field, CPT, JavaScript, or PHP wrapper is required.
 

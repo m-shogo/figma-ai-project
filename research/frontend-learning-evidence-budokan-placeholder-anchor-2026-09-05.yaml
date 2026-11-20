@@ -44,7 +44,7 @@ records:
           kind: COMMIT
           reference_id: BUDOKAN-WORDPRESS
           run_id: ''
-          path: experiments/wordpress-acf-runtime/scripts/budokan-top-body-interaction-browser-qa.mjs
+          path: projects/nipponbudokan/qa/budokan-top-body-interaction-browser-qa.mjs
           commit: 85efba5e69ffb7a1afb3efc7806c8f2c0a7eeebe
           note: >-
             Disposable WordPress + Playwright coverage was added before the production correction to
@@ -54,7 +54,7 @@ records:
           kind: COMMIT
           reference_id: BUDOKAN-WORDPRESS
           run_id: '33919570599'
-          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/front-page.php
+          path: projects/nipponbudokan/theme/front-page.php
           commit: 6784cbae3c2494a8d1abf5145a3419f1e2ad8007
           note: >-
             The verified merged correction renders all eight unresolved TOP FV guide rows and the
@@ -65,7 +65,7 @@ records:
           kind: CANONICAL_DOC
           reference_id: BUDOKAN-WORDPRESS
           run_id: ''
-          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/common.js
+          path: projects/nipponbudokan/theme/js/common.js
           commit: 6784cbae3c2494a8d1abf5145a3419f1e2ad8007
           note: >-
             Existing Theme pageScroll ownership handles same-page fragment navigation globally, so

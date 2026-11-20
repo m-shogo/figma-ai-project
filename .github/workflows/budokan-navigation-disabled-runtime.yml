@@ -3,20 +3,25 @@ name: Budokan Navigation Disabled Runtime
 on:
   pull_request:
     paths:
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/acf/blocks/navigationLarge.php'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/acf/blocks/navigationSmall.php'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/blocks/wp-block-navigation-style.css'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/acf/json/group_custom_block_navigation_large.json'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/acf/json/group_custom_block_navigation_small.json'
-      - 'experiments/wordpress-acf-runtime/scripts/budokan-navigation-disabled-template-qa.php'
-      - 'experiments/wordpress-acf-runtime/scripts/seed-budokan-navigation-disabled-qa.php'
-      - 'experiments/wordpress-acf-runtime/scripts/budokan-navigation-disabled-runtime-qa.sh'
-      - 'experiments/wordpress-acf-runtime/scripts/budokan-navigation-disabled-browser-qa.mjs'
+      - 'projects/nipponbudokan/theme/acf/blocks/navigationLarge.php'
+      - 'projects/nipponbudokan/theme/acf/blocks/navigationSmall.php'
+      - 'projects/nipponbudokan/theme/css/blocks/wp-block-navigation-style.css'
+      - 'projects/nipponbudokan/theme/acf/json/group_custom_block_navigation_large.json'
+      - 'projects/nipponbudokan/theme/acf/json/group_custom_block_navigation_small.json'
+      - 'projects/nipponbudokan/qa/budokan-navigation-disabled-template-qa.php'
+      - 'projects/nipponbudokan/qa/seed-budokan-navigation-disabled-qa.php'
+      - 'projects/nipponbudokan/qa/budokan-navigation-disabled-runtime-qa.sh'
+      - 'projects/nipponbudokan/qa/budokan-navigation-disabled-browser-qa.mjs'
       - '.github/workflows/budokan-navigation-disabled-runtime.yml'
   workflow_dispatch:
 
 permissions:
   contents: read
+
+env:
+  PROJECT: nipponbudokan
+  COMPOSE_PROJECT_NAME: nipponbudokan-qa
+  WP_PORT: '27248'
 
 jobs:
   runtime:
@@ -28,7 +33,7 @@ jobs:
       - name: Verify production ACF Navigation template semantics and start disposable WordPress
         env:
           BUDOKAN_NAVIGATION_DISABLED_KEEP_RUNTIME: '1'
-        run: bash experiments/wordpress-acf-runtime/scripts/budokan-navigation-disabled-runtime-qa.sh
+        run: bash projects/nipponbudokan/qa/budokan-navigation-disabled-runtime-qa.sh
 
       - name: Install Playwright Chromium
         run: |
@@ -37,16 +42,16 @@ jobs:
 
       - name: Audit pointer and keyboard fail-closed behavior
         run: |
-          cd experiments/wordpress-acf-runtime
+          cd runtime/wordpress
           source scripts/runtime-env.sh
           page_id="$(docker compose run --rm cli option get budokan_navigation_disabled_qa_page_id)"
           qa_url="${WP_URL}/?page_id=${page_id}"
           cd ../..
-          node experiments/wordpress-acf-runtime/scripts/budokan-navigation-disabled-browser-qa.mjs "$qa_url"
+          node projects/nipponbudokan/qa/budokan-navigation-disabled-browser-qa.mjs "$qa_url"
 
       - name: Cleanup disposable WordPress runtime
         if: always()
         run: |
-          cd experiments/wordpress-acf-runtime
+          cd runtime/wordpress
           source scripts/runtime-env.sh
           docker compose down -v --remove-orphans

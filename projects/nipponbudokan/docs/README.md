@@ -17,10 +17,8 @@ intake: **THEME_OBSERVED**
 
 ## Theme / 起動
 
-```bash
-cd experiments/wordpress-acf-runtime
-# Theme: theme-dropin/nipponbudokan/
-make smoke
+```powershell
+.\wp.ps1 up nipponbudokan   # http://127.0.0.1:27247
 ```
 
 ## Record / 検証
@@ -28,5 +26,5 @@ make smoke
 [`theme-intake.yaml`](theme-intake.yaml)
 
 ```bash
-python scripts/validate_wordpress_theme_intake.py experiments/budokan-wordpress/theme-intake.yaml
+python scripts/validate_wordpress_theme_intake.py projects/nipponbudokan/docs/theme-intake.yaml
 ```

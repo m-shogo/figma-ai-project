@@ -3,31 +3,36 @@ name: Budokan TOP FV Runtime
 on:
   pull_request:
     paths:
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/functions.php'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/front-page.php'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_header.php'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_footer.php'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/inc/menu.php'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/project/top_mainVisual.css'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/layout/global_header.css'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/layout/global_wrapper.css'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/common.js'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/header-focus-stability.js'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/home.js'
-      - 'experiments/wordpress-acf-runtime/scripts/budokan-top-fv-runtime-qa.sh'
-      - 'experiments/wordpress-acf-runtime/scripts/budokan-top-fv-browser-qa.mjs'
-      - 'experiments/wordpress-acf-runtime/scripts/budokan-top-slider-motion-browser-qa.mjs'
-      - 'experiments/wordpress-acf-runtime/scripts/budokan-overlay-stability-browser-qa.mjs'
-      - 'experiments/wordpress-acf-runtime/scripts/budokan-search-backdrop-close-browser-qa.mjs'
-      - 'experiments/wordpress-acf-runtime/scripts/budokan-header-state-stability-browser-qa.mjs'
-      - 'experiments/wordpress-acf-runtime/scripts/budokan-footer-browser-qa.mjs'
-      - 'experiments/wordpress-acf-runtime/scripts/budokan-fallback-navigation-browser-qa.mjs'
-      - 'experiments/budokan-wordpress/TOP_FV_VISUAL_ALIGNMENT_2026-08-31.md'
+      - 'projects/nipponbudokan/theme/functions.php'
+      - 'projects/nipponbudokan/theme/front-page.php'
+      - 'projects/nipponbudokan/theme/template-parts/_header.php'
+      - 'projects/nipponbudokan/theme/template-parts/_footer.php'
+      - 'projects/nipponbudokan/theme/inc/menu.php'
+      - 'projects/nipponbudokan/theme/css/project/top_mainVisual.css'
+      - 'projects/nipponbudokan/theme/css/layout/global_header.css'
+      - 'projects/nipponbudokan/theme/css/layout/global_wrapper.css'
+      - 'projects/nipponbudokan/theme/js/common.js'
+      - 'projects/nipponbudokan/theme/js/header-focus-stability.js'
+      - 'projects/nipponbudokan/theme/js/home.js'
+      - 'projects/nipponbudokan/qa/budokan-top-fv-runtime-qa.sh'
+      - 'projects/nipponbudokan/qa/budokan-top-fv-browser-qa.mjs'
+      - 'projects/nipponbudokan/qa/budokan-top-slider-motion-browser-qa.mjs'
+      - 'projects/nipponbudokan/qa/budokan-overlay-stability-browser-qa.mjs'
+      - 'projects/nipponbudokan/qa/budokan-search-backdrop-close-browser-qa.mjs'
+      - 'projects/nipponbudokan/qa/budokan-header-state-stability-browser-qa.mjs'
+      - 'projects/nipponbudokan/qa/budokan-footer-browser-qa.mjs'
+      - 'projects/nipponbudokan/qa/budokan-fallback-navigation-browser-qa.mjs'
+      - 'projects/nipponbudokan/docs/TOP_FV_VISUAL_ALIGNMENT_2026-08-31.md'
       - '.github/workflows/budokan-top-fv-runtime.yml'
   workflow_dispatch:
 
 permissions:
   contents: read
+
+env:
+  PROJECT: nipponbudokan
+  COMPOSE_PROJECT_NAME: nipponbudokan-qa
+  WP_PORT: '27248'
 
 jobs:
   runtime:
@@ -39,7 +44,7 @@ jobs:
       - name: Run disposable WordPress TOP FV runtime QA
         env:
           BUDOKAN_TOP_FV_KEEP_RUNTIME: '1'
-        run: bash experiments/wordpress-acf-runtime/scripts/budokan-top-fv-runtime-qa.sh
+        run: bash projects/nipponbudokan/qa/budokan-top-fv-runtime-qa.sh
 
       - name: Install Playwright Chromium for TOP browser QA
         run: |
@@ -48,63 +53,63 @@ jobs:
 
       - name: Run SP and PC TOP FV browser geometry QA
         run: |
-          cd experiments/wordpress-acf-runtime
+          cd runtime/wordpress
           source scripts/runtime-env.sh
           qa_url="${WP_URL}/"
           cd ../..
-          node experiments/wordpress-acf-runtime/scripts/budokan-top-fv-browser-qa.mjs "$qa_url"
+          node projects/nipponbudokan/qa/budokan-top-fv-browser-qa.mjs "$qa_url"
 
       - name: Run TOP slider reduced-motion browser QA
         run: |
-          cd experiments/wordpress-acf-runtime
+          cd runtime/wordpress
           source scripts/runtime-env.sh
           qa_url="${WP_URL}/"
           cd ../..
-          node experiments/wordpress-acf-runtime/scripts/budokan-top-slider-motion-browser-qa.mjs "$qa_url"
+          node projects/nipponbudokan/qa/budokan-top-slider-motion-browser-qa.mjs "$qa_url"
 
       - name: Run SP and PC overlay background stability QA
         run: |
-          cd experiments/wordpress-acf-runtime
+          cd runtime/wordpress
           source scripts/runtime-env.sh
           qa_url="${WP_URL}/"
           cd ../..
-          node experiments/wordpress-acf-runtime/scripts/budokan-overlay-stability-browser-qa.mjs "$qa_url"
+          node projects/nipponbudokan/qa/budokan-overlay-stability-browser-qa.mjs "$qa_url"
 
       - name: Run SP and PC search backdrop close pointer QA
         run: |
-          cd experiments/wordpress-acf-runtime
+          cd runtime/wordpress
           source scripts/runtime-env.sh
           qa_url="${WP_URL}/"
           cd ../..
-          node experiments/wordpress-acf-runtime/scripts/budokan-search-backdrop-close-browser-qa.mjs "$qa_url"
+          node projects/nipponbudokan/qa/budokan-search-backdrop-close-browser-qa.mjs "$qa_url"
 
       - name: Run SP and PC header interaction state stability QA
         run: |
-          cd experiments/wordpress-acf-runtime
+          cd runtime/wordpress
           source scripts/runtime-env.sh
           qa_url="${WP_URL}/"
           cd ../..
-          node experiments/wordpress-acf-runtime/scripts/budokan-header-state-stability-browser-qa.mjs "$qa_url"
+          node projects/nipponbudokan/qa/budokan-header-state-stability-browser-qa.mjs "$qa_url"
 
       - name: Run SP and PC footer geometry and placeholder QA
         run: |
-          cd experiments/wordpress-acf-runtime
+          cd runtime/wordpress
           source scripts/runtime-env.sh
           qa_url="${WP_URL}/"
           cd ../..
-          node experiments/wordpress-acf-runtime/scripts/budokan-footer-browser-qa.mjs "$qa_url"
+          node projects/nipponbudokan/qa/budokan-footer-browser-qa.mjs "$qa_url"
 
       - name: Run unassigned menu fallback interaction QA
         run: |
-          cd experiments/wordpress-acf-runtime
+          cd runtime/wordpress
           source scripts/runtime-env.sh
           qa_url="${WP_URL}/"
           cd ../..
-          node experiments/wordpress-acf-runtime/scripts/budokan-fallback-navigation-browser-qa.mjs "$qa_url"
+          node projects/nipponbudokan/qa/budokan-fallback-navigation-browser-qa.mjs "$qa_url"
 
       - name: Cleanup disposable WordPress runtime
         if: always()
         run: |
-          cd experiments/wordpress-acf-runtime
+          cd runtime/wordpress
           source scripts/runtime-env.sh
           docker compose down -v --remove-orphans

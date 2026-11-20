@@ -46,7 +46,7 @@ records:
           kind: LOCAL_RESEARCH
           reference_id: REF-002-BUDOKAN
           run_id: ''
-          path: experiments/budokan-wordpress/HARDCOVER_DEPENDENCY_AUDIT.md
+          path: projects/nipponbudokan/docs/HARDCOVER_DEPENDENCY_AUDIT.md
           commit: ''
           note: >-
             LIVE current Figma inspection verified Hardcover purchase buttons as 270x60 button_L instances with 15px

@@ -49,7 +49,7 @@ records:
           kind: LOCAL_RESEARCH
           reference_id: REF-002-BUDOKAN
           run_id: ''
-          path: experiments/ref002-budokan-wordpress/page-family-map.yaml
+          path: projects/nipponbudokan/ref002/page-family-map.yaml
           commit: ''
           note: >-
             Current Figma file fKYDn9ikpJk1nW7IWFtaUx was inspected through the canonical SP root 114:5409;
@@ -59,7 +59,7 @@ records:
           kind: LOCAL_RESEARCH
           reference_id: REF-002-BUDOKAN
           run_id: ''
-          path: experiments/ref002-budokan-wordpress/page-family-map.yaml
+          path: projects/nipponbudokan/ref002/page-family-map.yaml
           commit: ''
           note: >-
             Current Figma file fKYDn9ikpJk1nW7IWFtaUx was inspected through the canonical SP root 114:5409.
@@ -70,7 +70,7 @@ records:
           kind: LOCAL_RESEARCH
           reference_id: REF-002-BUDOKAN
           run_id: ''
-          path: experiments/ref002-budokan-wordpress/page-family-map.yaml
+          path: projects/nipponbudokan/ref002/page-family-map.yaml
           commit: ''
           note: >-
             Current Figma file fKYDn9ikpJk1nW7IWFtaUx was inspected under the canonical SP root 114:5409.
@@ -81,7 +81,7 @@ records:
           kind: LOCAL_RESEARCH
           reference_id: REF-002-BUDOKAN
           run_id: ''
-          path: experiments/ref002-budokan-wordpress/page-family-map.yaml
+          path: projects/nipponbudokan/ref002/page-family-map.yaml
           commit: ''
           note: >-
             A read-only audit enumerated full-height frames under the canonical SP root 114:5409 and inspected
@@ -93,7 +93,7 @@ records:
           kind: LOCAL_RESEARCH
           reference_id: REF-002-BUDOKAN
           run_id: ''
-          path: experiments/ref002-budokan-wordpress/page-family-map.yaml
+          path: projects/nipponbudokan/ref002/page-family-map.yaml
           commit: ''
           note: >-
             Current Figma frame navigation 2197:5391 was retrieved directly and verified as the complete
@@ -104,7 +104,7 @@ records:
           kind: LOCAL_RESEARCH
           reference_id: REF-002-BUDOKAN
           run_id: ''
-          path: experiments/budokan-wordpress/FIGMA_MAP.md
+          path: projects/nipponbudokan/docs/FIGMA_MAP.md
           commit: ''
           note: >-
             A fresh LIVE get_design_context on current PC frame navigation 2197:5391 again verified the complete
@@ -116,7 +116,7 @@ records:
           kind: LOCAL_RESEARCH
           reference_id: REF-002-BUDOKAN
           run_id: ''
-          path: experiments/budokan-wordpress/BACKNUMBER_DEPENDENCY_AUDIT.md
+          path: projects/nipponbudokan/docs/BACKNUMBER_DEPENDENCY_AUDIT.md
           commit: ''
           note: >-
             A 2026-09-03 live read of canonical PC canvas 0:1 and a direct get_design_context of Publications

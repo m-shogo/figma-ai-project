@@ -17,8 +17,8 @@
 
 ## Existing implementation owners
 
-- markup / data projection: `experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/acf/blocks/navigationLarge.php`
-- shared visual owner: `experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/blocks/wp-block-navigation-style.css`
+- markup / data projection: `projects/nipponbudokan/theme/acf/blocks/navigationLarge.php`
+- shared visual owner: `projects/nipponbudokan/theme/css/blocks/wp-block-navigation-style.css`
 
 既存 ACF field contract の `target` は `<a target="_blank">` へ投影されている。外部リンク表示のために field / PHP / data model を増やす必要はない。
 

@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+QA_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT="$(cd "$QA_DIR/../../../runtime/wordpress" && pwd)"
+export PROJECT="${PROJECT:-nipponbudokan}"
 cd "$ROOT"
 
 if [[ -f .env ]]; then
@@ -11,6 +13,10 @@ if [[ -f .env ]]; then
   set +a
 fi
 # shellcheck disable=SC1091
+# Disposable QA runtime: cleanup runs `down -v`, so never share the development database.
+export COMPOSE_PROJECT_NAME="${QA_COMPOSE_PROJECT_NAME:-nipponbudokan-qa}"
+export WP_PORT="${QA_WP_PORT:-27248}"
+export WP_URL=""
 source "$ROOT/scripts/runtime-env.sh"
 
 if [[ "$THEME_SLUG" != "nipponbudokan" ]]; then
@@ -56,7 +62,7 @@ docker compose run --rm cli theme activate "$THEME_SLUG" >/dev/null
 # Keep the fixture's local-only guard intact. The Apache service receives
 # WP_ENVIRONMENT_TYPE through WORDPRESS_CONFIG_EXTRA, while this separate
 # WP-CLI service needs it explicitly. The repository is mounted at /fixture.
-docker compose run --rm -e WP_ENVIRONMENT_TYPE=local cli eval-file /fixture/scripts/seed-budokan-core-details-qa.php >/dev/null
+docker compose run --rm -e WP_ENVIRONMENT_TYPE=local cli eval-file /project/qa/seed-budokan-core-details-qa.php >/dev/null
 
 page_id="$(docker compose run --rm cli option get budokan_core_details_qa_page_id)"
 [[ "$page_id" =~ ^[0-9]+$ ]] || {

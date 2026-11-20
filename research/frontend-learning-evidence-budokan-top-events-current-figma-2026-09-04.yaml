@@ -38,7 +38,7 @@ records:
           kind: LOCAL_RESEARCH
           reference_id: REF-002-BUDOKAN
           run_id: ''
-          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/project/top_events.css
+          path: projects/nipponbudokan/theme/css/project/top_events.css
           commit: ''
           note: >-
             LIVE PC node 1603:7488 has label-to-date separation 24px and date-to-title 16px; LIVE SP node 1455:5487 has 20px and

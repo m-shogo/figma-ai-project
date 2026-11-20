@@ -1,7 +1,7 @@
 # nipponbudokan — Theme 専用ルール
 
 観測日: 2026-08-28  
-正本 Theme: `experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/`  
+正本 Theme: `projects/nipponbudokan/theme/`  
 Human Authority: `CURRENT_AUTHORITY.md`（768/1280・パーツ集・form 担当など）
 
 ---
@@ -173,6 +173,4 @@ logo / icon（ベクター） → 文字・stroke を path にした SVG
 
 ## 14. Git 注意
 
-Theme 実体は `theme-dropin/*` で **gitignore**。  
-この research repo に乗るのは intake / 本ルール / runtime 基盤。  
-Theme 差分の version 方針は Human に確認（必要なら別途）。
+Theme 実体は `projects/nipponbudokan/theme/` で Git 追跡する。参照 Theme（`reference/`）と DB スナップショット（`.local/`）は Git に入れない。

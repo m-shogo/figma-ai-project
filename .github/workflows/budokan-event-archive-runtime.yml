@@ -3,22 +3,27 @@ name: Budokan Event Archive Runtime
 on:
   pull_request:
     paths:
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/archive.php'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/inc/event.php'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/acf/json/group_event.json'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_event-archive.php'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_event-card.php'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_event-month-nav.php'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_news-tabs.php'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_label-category.php'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/module/module_eventArchive.css'
-      - 'experiments/wordpress-acf-runtime/scripts/seed-event-archive-qa.php'
-      - 'experiments/wordpress-acf-runtime/scripts/budokan-event-archive-rhythm-browser-qa.mjs'
+      - 'projects/nipponbudokan/theme/archive.php'
+      - 'projects/nipponbudokan/theme/inc/event.php'
+      - 'projects/nipponbudokan/theme/acf/json/group_event.json'
+      - 'projects/nipponbudokan/theme/template-parts/_event-archive.php'
+      - 'projects/nipponbudokan/theme/template-parts/_event-card.php'
+      - 'projects/nipponbudokan/theme/template-parts/_event-month-nav.php'
+      - 'projects/nipponbudokan/theme/template-parts/_news-tabs.php'
+      - 'projects/nipponbudokan/theme/template-parts/_label-category.php'
+      - 'projects/nipponbudokan/theme/css/module/module_eventArchive.css'
+      - 'projects/nipponbudokan/qa/seed-event-archive-qa.php'
+      - 'projects/nipponbudokan/qa/budokan-event-archive-rhythm-browser-qa.mjs'
       - '.github/workflows/budokan-event-archive-runtime.yml'
   workflow_dispatch:
 
 permissions:
   contents: read
+
+env:
+  PROJECT: nipponbudokan
+  COMPOSE_PROJECT_NAME: nipponbudokan-qa
+  WP_PORT: '27248'
 
 jobs:
   runtime:
@@ -30,13 +35,13 @@ jobs:
       - name: Start disposable WordPress runtime
         env:
           BUDOKAN_NEWS_ARCHIVE_KEEP_RUNTIME: '1'
-        run: bash experiments/wordpress-acf-runtime/scripts/budokan-news-archive-runtime-qa.sh
+        run: bash projects/nipponbudokan/qa/budokan-news-archive-runtime-qa.sh
 
       - name: Seed current-month Event archive fixture
         run: |
-          cd experiments/wordpress-acf-runtime
+          cd runtime/wordpress
           source scripts/runtime-env.sh
-          docker compose run --rm cli eval-file /fixture/scripts/seed-event-archive-qa.php
+          docker compose run --rm cli eval-file /project/qa/seed-event-archive-qa.php
 
           html="$(mktemp)"
           http_code="$(curl --silent --show-error --location --max-redirs 3 --output "$html" --write-out '%{http_code}' "${WP_URL}/event/")"
@@ -53,17 +58,17 @@ jobs:
 
       - name: Run PC and SP Event archive browser QA
         run: |
-          cd experiments/wordpress-acf-runtime
+          cd runtime/wordpress
           source scripts/runtime-env.sh
           qa_url="${WP_URL}/event/"
           cd ../..
           npm install --no-save --package-lock=false playwright@1.54.2
           npx playwright install --with-deps chromium
-          node experiments/wordpress-acf-runtime/scripts/budokan-event-archive-rhythm-browser-qa.mjs "$qa_url"
+          node projects/nipponbudokan/qa/budokan-event-archive-rhythm-browser-qa.mjs "$qa_url"
 
       - name: Cleanup disposable WordPress runtime
         if: always()
         run: |
-          cd experiments/wordpress-acf-runtime
+          cd runtime/wordpress
           source scripts/runtime-env.sh
           docker compose down -v --remove-orphans

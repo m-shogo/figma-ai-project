@@ -3,19 +3,24 @@ name: Budokan Global Footer Disclosure Runtime
 on:
   pull_request:
     paths:
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/common.js'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/inc/menu.php'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_header.php'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_footer.php'
-      - 'experiments/wordpress-acf-runtime/scripts/budokan-global-footer-disclosure-browser-qa.mjs'
-      - 'experiments/wordpress-acf-runtime/scripts/budokan-global-footer-disclosure-semantic-probe.mjs'
-      - 'experiments/wordpress-acf-runtime/scripts/seed-budokan-global-footer-disclosure-qa.php'
-      - 'experiments/wordpress-acf-runtime/scripts/budokan-local-nav-runtime-qa.sh'
+      - 'projects/nipponbudokan/theme/js/common.js'
+      - 'projects/nipponbudokan/theme/inc/menu.php'
+      - 'projects/nipponbudokan/theme/template-parts/_header.php'
+      - 'projects/nipponbudokan/theme/template-parts/_footer.php'
+      - 'projects/nipponbudokan/qa/budokan-global-footer-disclosure-browser-qa.mjs'
+      - 'projects/nipponbudokan/qa/budokan-global-footer-disclosure-semantic-probe.mjs'
+      - 'projects/nipponbudokan/qa/seed-budokan-global-footer-disclosure-qa.php'
+      - 'projects/nipponbudokan/qa/budokan-local-nav-runtime-qa.sh'
       - '.github/workflows/budokan-global-footer-disclosure-runtime.yml'
   workflow_dispatch:
 
 permissions:
   contents: read
+
+env:
+  PROJECT: nipponbudokan
+  COMPOSE_PROJECT_NAME: nipponbudokan-qa
+  WP_PORT: '27248'
 
 jobs:
   runtime:
@@ -26,19 +31,19 @@ jobs:
 
       - name: PHP syntax for Global/Footer disclosure fixture
         run: |
-          php -l experiments/wordpress-acf-runtime/scripts/seed-budokan-global-footer-disclosure-qa.php
-          php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/inc/menu.php
+          php -l projects/nipponbudokan/qa/seed-budokan-global-footer-disclosure-qa.php
+          php -l projects/nipponbudokan/theme/inc/menu.php
 
       - name: Start disposable WordPress runtime
         env:
           BUDOKAN_LOCAL_NAV_KEEP_RUNTIME: '1'
-        run: bash experiments/wordpress-acf-runtime/scripts/budokan-local-nav-runtime-qa.sh
+        run: bash projects/nipponbudokan/qa/budokan-local-nav-runtime-qa.sh
 
       - name: Seed real WordPress Global/Footer menus and install browser runtime
         run: |
-          cd experiments/wordpress-acf-runtime
+          cd runtime/wordpress
           source scripts/runtime-env.sh
-          docker compose run --rm -e WP_ENVIRONMENT_TYPE=local cli eval-file /fixture/scripts/seed-budokan-global-footer-disclosure-qa.php
+          docker compose run --rm -e WP_ENVIRONMENT_TYPE=local cli eval-file /project/qa/seed-budokan-global-footer-disclosure-qa.php
           qa_page_id="$(docker compose run --rm cli option get budokan_global_footer_disclosure_qa_page_id)"
           qa_template="$(docker compose run --rm cli post meta get "$qa_page_id" _wp_page_template)"
           if [[ "$qa_template" != "templates/template-oneColumn.php" ]]; then
@@ -51,25 +56,25 @@ jobs:
 
       - name: Probe Global/Footer disclosure semantic baselines
         run: |
-          cd experiments/wordpress-acf-runtime
+          cd runtime/wordpress
           source scripts/runtime-env.sh
           qa_page_id="$(docker compose run --rm cli option get budokan_global_footer_disclosure_qa_page_id)"
           qa_url="${WP_URL}/?page_id=${qa_page_id}"
           cd ../..
-          node experiments/wordpress-acf-runtime/scripts/budokan-global-footer-disclosure-semantic-probe.mjs "$qa_url"
+          node projects/nipponbudokan/qa/budokan-global-footer-disclosure-semantic-probe.mjs "$qa_url"
 
       - name: Run Global/Footer disclosure browser QA
         run: |
-          cd experiments/wordpress-acf-runtime
+          cd runtime/wordpress
           source scripts/runtime-env.sh
           qa_page_id="$(docker compose run --rm cli option get budokan_global_footer_disclosure_qa_page_id)"
           qa_url="${WP_URL}/?page_id=${qa_page_id}"
           cd ../..
-          node experiments/wordpress-acf-runtime/scripts/budokan-global-footer-disclosure-browser-qa.mjs "$qa_url"
+          node projects/nipponbudokan/qa/budokan-global-footer-disclosure-browser-qa.mjs "$qa_url"
 
       - name: Cleanup disposable WordPress runtime
         if: always()
         run: |
-          cd experiments/wordpress-acf-runtime
+          cd runtime/wordpress
           source scripts/runtime-env.sh
           docker compose down -v --remove-orphans

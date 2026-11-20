@@ -129,7 +129,7 @@ records:
           kind: CANONICAL_DOC
           reference_id: BUDOKAN-WORDPRESS
           run_id: ''
-          path: experiments/budokan-wordpress/PARTS_REMAINING_DEPENDENCY_AUDIT.md
+          path: projects/nipponbudokan/docs/PARTS_REMAINING_DEPENDENCY_AUDIT.md
           commit: ''
           note: >-
             Budokan independently exposed stale provenance: the audit still named the superseded w7SG Figma
@@ -140,7 +140,7 @@ records:
           kind: LOCAL_RESEARCH
           reference_id: BUDOKAN-WORDPRESS
           run_id: ''
-          path: experiments/ref002-budokan-wordpress/figma-parts-resolution.yaml
+          path: projects/nipponbudokan/ref002/figma-parts-resolution.yaml
           commit: ''
           note: >-
             A second stale authority surface was found after the canonical audit had already been corrected:

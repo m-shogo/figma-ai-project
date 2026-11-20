@@ -42,7 +42,7 @@ records:
           kind: LOCAL_RESEARCH
           reference_id: BUDOKAN-WORDPRESS
           run_id: ''
-          path: experiments/budokan-wordpress/learning-notes/2026-09-11-overlay-drawer-human-fb.md
+          path: projects/nipponbudokan/docs/learning-notes/2026-09-11-overlay-drawer-human-fb.md
           commit: ''
           note: >-
             Distills Human orders from 2026-09-11: full-width dim, cover header, close intact to
@@ -51,7 +51,7 @@ records:
           kind: CANONICAL_DOC
           reference_id: BUDOKAN-WORDPRESS
           run_id: ''
-          path: experiments/budokan-wordpress/CURRENT_AUTHORITY.md
+          path: projects/nipponbudokan/docs/CURRENT_AUTHORITY.md
           commit: ''
           note: >-
             Project contract for 2096:6235 / 2182:8277: width 100% dim, 888px panel from viewport
@@ -69,7 +69,7 @@ records:
           kind: LOCAL_RESEARCH
           reference_id: BUDOKAN-WORDPRESS
           run_id: ''
-          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/layout/global_navigation.css
+          path: projects/nipponbudokan/theme/css/layout/global_navigation.css
           commit: ''
           note: >-
             PC open dim is header::before inset 0 / width 100% with no clip-path hole; white panel
@@ -79,7 +79,7 @@ records:
           kind: LOCAL_RESEARCH
           reference_id: BUDOKAN-WORDPRESS
           run_id: ''
-          path: experiments/budokan-wordpress/learning-notes/2026-09-01-pc-hamburger-overlay-current-figma-resync.md
+          path: projects/nipponbudokan/docs/learning-notes/2026-09-01-pc-hamburger-overlay-current-figma-resync.md
           commit: ''
           note: >-
             Earlier note placed the PC two-column panel under the 100px header. Marked SUPERSEDED
@@ -117,7 +117,7 @@ records:
           kind: LOCAL_RESEARCH
           reference_id: BUDOKAN-WORDPRESS
           run_id: ''
-          path: experiments/budokan-wordpress/learning-notes/2026-09-11-overlay-drawer-human-fb.md
+          path: projects/nipponbudokan/docs/learning-notes/2026-09-11-overlay-drawer-human-fb.md
           commit: ''
           note: >-
             Human FB: pager disabled hover square, text-link hover should be text width, invert

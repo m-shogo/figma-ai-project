@@ -7,4 +7,4 @@ Root `AGENTS.md` の下で、この directory の runtime 正本を読む。Curs
 - Fatal guard: `wp-dropins/fatal-error-handler.php` / `mu-plugins/00-local-runtime-guard.php`
 - Local hot reload: `mu-plugins/10-local-hot-reload.php`（`WP_ENVIRONMENT_TYPE=local` のみ。compose 再作成が必要）
 
-案件固有の ACF / Theme ルールは `experiments/budokan-wordpress/` 側の Current Authority。
+案件ファイル（Theme / QA / seed / 案件 docs）は `projects/<slug>/` に置き、この runtime へ置かない。案件固有の ACF / Theme ルールは `projects/<slug>/docs/` の Current Authority。

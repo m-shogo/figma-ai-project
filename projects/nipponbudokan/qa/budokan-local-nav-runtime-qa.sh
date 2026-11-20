@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+QA_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT="$(cd "$QA_DIR/../../../runtime/wordpress" && pwd)"
+export PROJECT="${PROJECT:-nipponbudokan}"
 cd "$ROOT"
 
 if [[ -f .env ]]; then
@@ -10,6 +12,10 @@ if [[ -f .env ]]; then
   source .env
   set +a
 fi
+# Disposable QA runtime: cleanup runs `down -v`, so never share the development database.
+export COMPOSE_PROJECT_NAME="${QA_COMPOSE_PROJECT_NAME:-nipponbudokan-qa}"
+export WP_PORT="${QA_WP_PORT:-27248}"
+export WP_URL=""
 # shellcheck disable=SC1091
 source "$ROOT/scripts/runtime-env.sh"
 
@@ -53,7 +59,7 @@ docker compose run --rm cli option update blog_public 0 >/dev/null
 docker compose run --rm cli option update permalink_structure '/%postname%/' >/dev/null
 docker compose run --rm cli plugin install advanced-custom-fields --activate >/dev/null
 docker compose run --rm cli theme activate "$THEME_SLUG" >/dev/null
-docker compose run --rm -e WP_ENVIRONMENT_TYPE=local cli eval-file /fixture/scripts/seed-budokan-local-nav-qa.php >/dev/null
+docker compose run --rm -e WP_ENVIRONMENT_TYPE=local cli eval-file /project/qa/seed-budokan-local-nav-qa.php >/dev/null
 
 page_id="$(docker compose run --rm cli option get budokan_local_nav_qa_page_id)"
 [[ "$page_id" =~ ^[0-9]+$ ]] || {

@@ -3,7 +3,7 @@
 /**
  * Disposable Budokan Local Navigation fixture (ACF page_local_nav).
  *
- *   wp eval-file /fixture/scripts/seed-budokan-local-nav-qa.php
+ *   wp eval-file /project/qa/seed-budokan-local-nav-qa.php
  *
  * Menu 「ローカル：大会・イベント」(NOT a theme location), 2 levels:
  *   1) 大会・イベント（リンク見出し）

@@ -9,12 +9,12 @@ project:
   figma_file_key: jqYoPtusYfTeDqRegMCsx3
   section_evidence_path: tools/implementation-intake/REAL_WEB_VALIDATION.md
   evidence_paths:
-    - experiments/budokan-wordpress/CURRENT_AUTHORITY.md
-    - experiments/budokan-wordpress/THEME_RULES.md
+    - projects/nipponbudokan/docs/CURRENT_AUTHORITY.md
+    - projects/nipponbudokan/docs/THEME_RULES.md
     - tools/implementation-intake/REAL_WEB_VALIDATION.md
     - tools/implementation-intake/REF002_VISUAL_TRUTH_ASSET_LEARNING.md
-    - experiments/ref002-budokan-wordpress/baseline-asset-source.yaml
-    - experiments/wordpress-acf-runtime/README.md
+    - projects/nipponbudokan/ref002/baseline-asset-source.yaml
+    - runtime/wordpress/README.md
     - docs/wordpress-theme-intake.md
     - docs/wordpress-acf-policy.md
     - docs/wordpress-target-reconnaissance.md
@@ -28,12 +28,12 @@ project:
 theme_delivery:
   state: OBSERVED
   supplied_by: "Human (original theme drop-in)"
-  repository: "local:experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan"
+  repository: "local:projects/nipponbudokan/theme"
   starting_commit: "local-original"
   theme_slug: "nipponbudokan"
   theme_family: CLASSIC_THEME
   family_is_inference: true
-  scan_report_path: "experiments/budokan-wordpress/THEME_RULES.md"
+  scan_report_path: "projects/nipponbudokan/docs/THEME_RULES.md"
   observation:
     - id: theme_family
       status: OBSERVED
@@ -441,26 +441,26 @@ forms:
 qa_reuse:
   layers:
     - id: wordpress_runtime
-      existing_asset: experiments/wordpress-acf-runtime
+      existing_asset: runtime/wordpress
       reuse_mode: REUSE
       notes:
         - "案件共通の disposable runtime。theme mount のみ差し替える"
-        - "提供Themeは experiments/wordpress-acf-runtime/theme-dropin/ へ置くか THEME_SOURCE_DIR で指す"
+        - "提供Themeは runtime/wordpress/theme-dropin/ へ置くか THEME_SOURCE_DIR で指す"
         - "production Theme構造を sample-theme から継承しない"
         - "旧 experiments/wordpress-acf-pro-standalone-lp は残置。新規はこちらを使う"
     - id: acf_pro_resolution
-      existing_asset: experiments/wordpress-acf-runtime/scripts/setup.sh
+      existing_asset: runtime/wordpress/scripts/setup.sh
       reuse_mode: REUSE
       notes:
         - "ACF_PRO_LICENSE_KEY の secret 境界をそのまま使う"
     - id: cms_mutation_qa
-      existing_asset: experiments/wordpress-acf-runtime/tests/runtime.mjs
+      existing_asset: runtime/wordpress/tests/runtime.mjs
       reuse_mode: ADAPT
       notes:
         - "0/1/8/多数・長文・改行・空・画像なし・並び替え の形を budokan field へ写す"
         - "fixture 内容は ACF field 構造が決まってから作る"
     - id: visual_diff
-      existing_asset: experiments/wordpress-acf-runtime/tests/visual-diff.mjs
+      existing_asset: runtime/wordpress/tests/visual-diff.mjs
       reuse_mode: REUSE
       notes:
         - "VISUAL_DIFF_MAX_RATIO 未設定時は MEASURE_ONLY。universal tolerance を入れない"

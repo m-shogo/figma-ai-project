@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+QA_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT="$(cd "$QA_DIR/../../../runtime/wordpress" && pwd)"
+export PROJECT="${PROJECT:-nipponbudokan}"
 cd "$ROOT"
 
 if [[ -f .env ]]; then
@@ -11,6 +13,10 @@ if [[ -f .env ]]; then
   set +a
 fi
 # shellcheck disable=SC1091
+# Disposable QA runtime: cleanup runs `down -v`, so never share the development database.
+export COMPOSE_PROJECT_NAME="${QA_COMPOSE_PROJECT_NAME:-nipponbudokan-qa}"
+export WP_PORT="${QA_WP_PORT:-27248}"
+export WP_URL=""
 source "$ROOT/scripts/runtime-env.sh"
 
 if [[ "$THEME_SLUG" != "nipponbudokan" ]]; then
@@ -21,7 +27,8 @@ fi
 python3 - <<'PY'
 import json
 from pathlib import Path
-path = Path('theme-dropin/nipponbudokan/acf/json/group_top_slider.json')
+import os
+path = Path(os.environ['THEME_SOURCE_DIR']) / 'acf/json/group_top_slider.json'
 data = json.loads(path.read_text(encoding='utf-8'))
 repeater = next((f for f in data.get('fields', []) if f.get('name') == 'top_slider-01'), None)
 if not repeater:

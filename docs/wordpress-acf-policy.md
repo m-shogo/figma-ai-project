@@ -42,7 +42,7 @@ Hybrid
 - フィールドグループ JSON は、案件が禁止していれば編集しない。ブロック見た目の markup だけ必要なとき既存 PHP を触る
 - Form / Formidable は Human 担当と書かれている案件では触らない
 
-Budokan WordPress のフィールド正本は `experiments/budokan-wordpress/CURRENT_AUTHORITY.md`。
+Budokan WordPress のフィールド正本は `projects/nipponbudokan/docs/CURRENT_AUTHORITY.md`。
 
 ---
 

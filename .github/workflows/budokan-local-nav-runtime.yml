@@ -3,27 +3,32 @@ name: Budokan Local Navigation Runtime
 on:
   pull_request:
     paths:
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/module/local_navigation.css'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/module/module_dropdown.css'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/module/module_menu.css'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/inc/menu.php'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/sidebar.php'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/templates/template-oneColumnLocalNav.php'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/common.js'
-      - 'experiments/wordpress-acf-runtime/scripts/budokan-local-nav-runtime-qa.sh'
-      - 'experiments/wordpress-acf-runtime/scripts/budokan-local-nav-browser-qa.mjs'
-      - 'experiments/wordpress-acf-runtime/scripts/budokan-page-master-browser-qa.mjs'
-      - 'experiments/wordpress-acf-runtime/scripts/budokan-local-nav-interaction-browser-qa.mjs'
-      - 'experiments/wordpress-acf-runtime/scripts/budokan-local-nav-pointer-browser-qa.mjs'
-      - 'experiments/wordpress-acf-runtime/scripts/budokan-anchor-interaction-browser-qa.mjs'
-      - 'experiments/wordpress-acf-runtime/scripts/budokan-disclosure-interaction-browser-qa.mjs'
-      - 'experiments/wordpress-acf-runtime/scripts/seed-budokan-local-nav-qa.php'
-      - 'experiments/wordpress-acf-runtime/scripts/seed-budokan-disclosure-qa.php'
+      - 'projects/nipponbudokan/theme/css/module/local_navigation.css'
+      - 'projects/nipponbudokan/theme/css/module/module_dropdown.css'
+      - 'projects/nipponbudokan/theme/css/module/module_menu.css'
+      - 'projects/nipponbudokan/theme/inc/menu.php'
+      - 'projects/nipponbudokan/theme/sidebar.php'
+      - 'projects/nipponbudokan/theme/templates/template-oneColumnLocalNav.php'
+      - 'projects/nipponbudokan/theme/js/common.js'
+      - 'projects/nipponbudokan/qa/budokan-local-nav-runtime-qa.sh'
+      - 'projects/nipponbudokan/qa/budokan-local-nav-browser-qa.mjs'
+      - 'projects/nipponbudokan/qa/budokan-page-master-browser-qa.mjs'
+      - 'projects/nipponbudokan/qa/budokan-local-nav-interaction-browser-qa.mjs'
+      - 'projects/nipponbudokan/qa/budokan-local-nav-pointer-browser-qa.mjs'
+      - 'projects/nipponbudokan/qa/budokan-anchor-interaction-browser-qa.mjs'
+      - 'projects/nipponbudokan/qa/budokan-disclosure-interaction-browser-qa.mjs'
+      - 'projects/nipponbudokan/qa/seed-budokan-local-nav-qa.php'
+      - 'projects/nipponbudokan/qa/seed-budokan-disclosure-qa.php'
       - '.github/workflows/budokan-local-nav-runtime.yml'
   workflow_dispatch:
 
 permissions:
   contents: read
+
+env:
+  PROJECT: nipponbudokan
+  COMPOSE_PROJECT_NAME: nipponbudokan-qa
+  WP_PORT: '27248'
 
 jobs:
   runtime:
@@ -34,21 +39,21 @@ jobs:
 
       - name: PHP syntax for Budokan runtime fixture
         run: |
-          php -l experiments/wordpress-acf-runtime/scripts/seed-budokan-local-nav-qa.php
-          php -l experiments/wordpress-acf-runtime/scripts/seed-budokan-disclosure-qa.php
-          php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/templates/template-oneColumnLocalNav.php
-          php -l experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/inc/menu.php
+          php -l projects/nipponbudokan/qa/seed-budokan-local-nav-qa.php
+          php -l projects/nipponbudokan/qa/seed-budokan-disclosure-qa.php
+          php -l projects/nipponbudokan/theme/templates/template-oneColumnLocalNav.php
+          php -l projects/nipponbudokan/theme/inc/menu.php
 
       - name: Run disposable WordPress Local Navigation hierarchy QA
         env:
           BUDOKAN_LOCAL_NAV_KEEP_RUNTIME: '1'
-        run: bash experiments/wordpress-acf-runtime/scripts/budokan-local-nav-runtime-qa.sh
+        run: bash projects/nipponbudokan/qa/budokan-local-nav-runtime-qa.sh
 
       - name: Seed disclosure QA and install browser runtime
         run: |
-          cd experiments/wordpress-acf-runtime
+          cd runtime/wordpress
           source scripts/runtime-env.sh
-          docker compose run --rm -e WP_ENVIRONMENT_TYPE=local cli eval-file /fixture/scripts/seed-budokan-disclosure-qa.php
+          docker compose run --rm -e WP_ENVIRONMENT_TYPE=local cli eval-file /project/qa/seed-budokan-disclosure-qa.php
           disclosure_page_id="$(docker compose run --rm cli option get budokan_disclosure_qa_page_id)"
           disclosure_template="$(docker compose run --rm cli post meta get "$disclosure_page_id" _wp_page_template)"
           if [[ "$disclosure_template" != "templates/template-oneColumn.php" ]]; then
@@ -61,29 +66,29 @@ jobs:
 
       - name: Run existing Local Navigation browser QA
         run: |
-          cd experiments/wordpress-acf-runtime
+          cd runtime/wordpress
           source scripts/runtime-env.sh
           page_id="$(docker compose run --rm cli option get budokan_local_nav_qa_page_id)"
           qa_url="${WP_URL}/?page_id=${page_id}"
           cd ../..
-          node experiments/wordpress-acf-runtime/scripts/budokan-local-nav-browser-qa.mjs "$qa_url"
-          node experiments/wordpress-acf-runtime/scripts/budokan-page-master-browser-qa.mjs "$qa_url"
-          node experiments/wordpress-acf-runtime/scripts/budokan-local-nav-interaction-browser-qa.mjs "$qa_url"
-          node experiments/wordpress-acf-runtime/scripts/budokan-local-nav-pointer-browser-qa.mjs "$qa_url"
-          node experiments/wordpress-acf-runtime/scripts/budokan-anchor-interaction-browser-qa.mjs "$qa_url"
+          node projects/nipponbudokan/qa/budokan-local-nav-browser-qa.mjs "$qa_url"
+          node projects/nipponbudokan/qa/budokan-page-master-browser-qa.mjs "$qa_url"
+          node projects/nipponbudokan/qa/budokan-local-nav-interaction-browser-qa.mjs "$qa_url"
+          node projects/nipponbudokan/qa/budokan-local-nav-pointer-browser-qa.mjs "$qa_url"
+          node projects/nipponbudokan/qa/budokan-anchor-interaction-browser-qa.mjs "$qa_url"
 
       - name: Run disclosure interaction browser QA
         run: |
-          cd experiments/wordpress-acf-runtime
+          cd runtime/wordpress
           source scripts/runtime-env.sh
           disclosure_page_id="$(docker compose run --rm cli option get budokan_disclosure_qa_page_id)"
           disclosure_qa_url="${WP_URL}/?page_id=${disclosure_page_id}"
           cd ../..
-          node experiments/wordpress-acf-runtime/scripts/budokan-disclosure-interaction-browser-qa.mjs "$disclosure_qa_url"
+          node projects/nipponbudokan/qa/budokan-disclosure-interaction-browser-qa.mjs "$disclosure_qa_url"
 
       - name: Cleanup disposable WordPress runtime
         if: always()
         run: |
-          cd experiments/wordpress-acf-runtime
+          cd runtime/wordpress
           source scripts/runtime-env.sh
           docker compose down -v --remove-orphans

@@ -44,7 +44,7 @@ records:
           kind: CANONICAL_DOC
           reference_id: BUDOKAN-WORDPRESS
           run_id: ''
-          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/acf/json/group_top_notice.json
+          path: projects/nipponbudokan/theme/acf/json/group_top_notice.json
           commit: 699125a5b58ea0334870a3551b8bc6619e343b15
           note: >-
             Existing ACF Pro ownership is one front-page top_notice_select plus top_notice-01 repeater
@@ -53,7 +53,7 @@ records:
           kind: COMMIT
           reference_id: BUDOKAN-WORDPRESS
           run_id: '33927452139'
-          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/project/top_mainVisual.css
+          path: projects/nipponbudokan/theme/css/project/top_mainVisual.css
           commit: 699125a5b58ea0334870a3551b8bc6619e343b15
           note: >-
             PR #405 merged the exact current PC Figma SVG, switches SP to the authored existing
@@ -64,7 +64,7 @@ records:
           kind: COMMIT
           reference_id: BUDOKAN-WORDPRESS
           run_id: ''
-          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/images/top/ico-attention.svg
+          path: projects/nipponbudokan/theme/images/top/ico-attention.svg
           commit: 699125a5b58ea0334870a3551b8bc6619e343b15
           note: >-
             The tracked 24x24 notice SVG is now the exact current PC Figma export: an octagon
@@ -74,7 +74,7 @@ records:
           kind: COMMIT
           reference_id: BUDOKAN-WORDPRESS
           run_id: '33927452073'
-          path: experiments/wordpress-acf-runtime/scripts/budokan-top-body-interaction-browser-qa.mjs
+          path: projects/nipponbudokan/qa/budokan-top-body-interaction-browser-qa.mjs
           commit: 699125a5b58ea0334870a3551b8bc6619e343b15
           note: >-
             TOP Body Interaction Runtime remained green after the bounded notice visual correction,

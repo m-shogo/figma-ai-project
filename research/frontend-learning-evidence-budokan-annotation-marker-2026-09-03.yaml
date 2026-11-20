@@ -42,7 +42,7 @@ records:
           kind: LOCAL_RESEARCH
           reference_id: REF-002-BUDOKAN
           run_id: ''
-          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/blocks/wp-block-list-style.css
+          path: projects/nipponbudokan/theme/css/blocks/wp-block-list-style.css
           commit: ''
           note: >-
             LIVE current Figma file fKYDn9ikpJk1nW7IWFtaUx was inspected on PC page 0:1. Standalone List marker nodes are

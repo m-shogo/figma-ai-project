@@ -41,7 +41,7 @@ records:
           kind: LOCAL_RESEARCH
           reference_id: REF-002-BUDOKAN
           run_id: ''
-          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/project/top_mainVisual.css
+          path: projects/nipponbudokan/theme/css/project/top_mainVisual.css
           commit: ''
           note: >-
             LIVE current Figma file FKQaJDu5TZXHoCzPsfP92E was read directly. SP MV 1455:5811 is 375x483 and its
@@ -54,7 +54,7 @@ records:
           kind: LOCAL_RESEARCH
           reference_id: REF-002-BUDOKAN
           run_id: ''
-          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/project/top_mainVisual.css
+          path: projects/nipponbudokan/theme/css/project/top_mainVisual.css
           commit: ''
           note: >-
             Current PC FV 1603:7662 keeps the 1030x600 hero effectively centered. The bounded correction sets the SP

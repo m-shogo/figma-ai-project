@@ -11,7 +11,7 @@ project:
   evidence_paths:
     - tools/implementation-intake/REAL_WEB_VALIDATION.md
     - tools/implementation-intake/REF002_VISUAL_TRUTH_ASSET_LEARNING.md
-    - experiments/ref002-budokan-wordpress/baseline-asset-source.yaml
+    - projects/nipponbudokan/ref002/baseline-asset-source.yaml
     - docs/wordpress-theme-intake.md
     - docs/wordpress-acf-policy.md
     - docs/wordpress-target-reconnaissance.md

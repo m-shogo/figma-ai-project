@@ -36,7 +36,7 @@ records:
           kind: LOCAL_RESEARCH
           reference_id: REF-002-BUDOKAN
           run_id: ''
-          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/project/top_news.css
+          path: projects/nipponbudokan/theme/css/project/top_news.css
           commit: ''
           note: >-
             LIVE SP node 446:11772 renders each category label with 13px text and 5px vertical padding, yielding an authored 23px control. The shared News master already defines width 80px and height/min-height 23px.
@@ -44,7 +44,7 @@ records:
           kind: LOCAL_RESEARCH
           reference_id: REF-002-BUDOKAN
           run_id: ''
-          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/project/top_news.css
+          path: projects/nipponbudokan/theme/css/project/top_news.css
           commit: ''
           note: >-
             LIVE PC node 1603:7236 uses the same 80px label with 13px text and 5px vertical padding. The previous TOP-only min-height:25px was therefore a proven two-pixel visual drift in both responsive authorities.

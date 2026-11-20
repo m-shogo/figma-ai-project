@@ -40,7 +40,7 @@ records:
           kind: COMMIT
           reference_id: REF-002-BUDOKAN
           run_id: ''
-          path: experiments/budokan-wordpress/HARDCOVER_DEPENDENCY_AUDIT.md
+          path: projects/nipponbudokan/docs/HARDCOVER_DEPENDENCY_AUDIT.md
           commit: b910659a64b1cbc109db85820eecc5a12efa70db
           note: >-
             PR #452 squash-merged the authority correction after REF001 passed. The same commit also updates BACKNUMBER_DEPENDENCY_AUDIT.md to make

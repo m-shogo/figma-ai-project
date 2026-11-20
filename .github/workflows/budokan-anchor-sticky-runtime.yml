@@ -3,17 +3,22 @@ name: Budokan Anchor Sticky Runtime
 on:
   pull_request:
     paths:
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/common.js'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/style.css'
-      - 'experiments/wordpress-acf-runtime/scripts/seed-budokan-content-interaction-qa.php'
-      - 'experiments/wordpress-acf-runtime/scripts/budokan-content-interaction-runtime-qa.sh'
-      - 'experiments/wordpress-acf-runtime/scripts/budokan-content-interaction-browser-qa.mjs'
-      - 'experiments/wordpress-acf-runtime/scripts/budokan-anchor-sticky-browser-qa.mjs'
+      - 'projects/nipponbudokan/theme/js/common.js'
+      - 'projects/nipponbudokan/theme/css/style.css'
+      - 'projects/nipponbudokan/qa/seed-budokan-content-interaction-qa.php'
+      - 'projects/nipponbudokan/qa/budokan-content-interaction-runtime-qa.sh'
+      - 'projects/nipponbudokan/qa/budokan-content-interaction-browser-qa.mjs'
+      - 'projects/nipponbudokan/qa/budokan-anchor-sticky-browser-qa.mjs'
       - '.github/workflows/budokan-anchor-sticky-runtime.yml'
   workflow_dispatch:
 
 permissions:
   contents: read
+
+env:
+  PROJECT: nipponbudokan
+  COMPOSE_PROJECT_NAME: nipponbudokan-qa
+  WP_PORT: '27248'
 
 jobs:
   runtime:
@@ -25,7 +30,7 @@ jobs:
       - name: Run disposable WordPress normal-page content runtime QA
         env:
           BUDOKAN_CONTENT_INTERACTION_KEEP_RUNTIME: '1'
-        run: bash experiments/wordpress-acf-runtime/scripts/budokan-content-interaction-runtime-qa.sh
+        run: bash projects/nipponbudokan/qa/budokan-content-interaction-runtime-qa.sh
 
       - name: Install Playwright Chromium
         run: |
@@ -34,7 +39,7 @@ jobs:
 
       - name: Resolve anchor interaction QA URL
         run: |
-          cd experiments/wordpress-acf-runtime
+          cd runtime/wordpress
           source scripts/runtime-env.sh
           page_id="$(docker compose run --rm cli option get budokan_content_interaction_qa_page_id)"
           echo "BUDOKAN_ANCHOR_QA_URL=${WP_URL}/?page_id=${page_id}" >> "$GITHUB_ENV"
@@ -42,32 +47,32 @@ jobs:
       - id: pc_initial_clearance
         name: Audit PC initial hash settled clearance
         continue-on-error: true
-        run: node experiments/wordpress-acf-runtime/scripts/budokan-anchor-sticky-browser-qa.mjs "$BUDOKAN_ANCHOR_QA_URL" initial-clearance pc
+        run: node projects/nipponbudokan/qa/budokan-anchor-sticky-browser-qa.mjs "$BUDOKAN_ANCHOR_QA_URL" initial-clearance pc
 
       - id: pc_initial_motion
         name: Audit PC initial hash second-movement
         continue-on-error: true
-        run: node experiments/wordpress-acf-runtime/scripts/budokan-anchor-sticky-browser-qa.mjs "$BUDOKAN_ANCHOR_QA_URL" initial-motion pc
+        run: node projects/nipponbudokan/qa/budokan-anchor-sticky-browser-qa.mjs "$BUDOKAN_ANCHOR_QA_URL" initial-motion pc
 
       - id: sp_initial_clearance
         name: Audit SP initial hash settled clearance
         continue-on-error: true
-        run: node experiments/wordpress-acf-runtime/scripts/budokan-anchor-sticky-browser-qa.mjs "$BUDOKAN_ANCHOR_QA_URL" initial-clearance sp
+        run: node projects/nipponbudokan/qa/budokan-anchor-sticky-browser-qa.mjs "$BUDOKAN_ANCHOR_QA_URL" initial-clearance sp
 
       - id: sp_initial_motion
         name: Audit SP initial hash second-movement
         continue-on-error: true
-        run: node experiments/wordpress-acf-runtime/scripts/budokan-anchor-sticky-browser-qa.mjs "$BUDOKAN_ANCHOR_QA_URL" initial-motion sp
+        run: node projects/nipponbudokan/qa/budokan-anchor-sticky-browser-qa.mjs "$BUDOKAN_ANCHOR_QA_URL" initial-motion sp
 
       - id: pc_repeat
         name: Audit PC repeated anchor stability
         continue-on-error: true
-        run: node experiments/wordpress-acf-runtime/scripts/budokan-anchor-sticky-browser-qa.mjs "$BUDOKAN_ANCHOR_QA_URL" repeat pc
+        run: node projects/nipponbudokan/qa/budokan-anchor-sticky-browser-qa.mjs "$BUDOKAN_ANCHOR_QA_URL" repeat pc
 
       - id: sp_repeat
         name: Audit SP repeated anchor stability
         continue-on-error: true
-        run: node experiments/wordpress-acf-runtime/scripts/budokan-anchor-sticky-browser-qa.mjs "$BUDOKAN_ANCHOR_QA_URL" repeat sp
+        run: node projects/nipponbudokan/qa/budokan-anchor-sticky-browser-qa.mjs "$BUDOKAN_ANCHOR_QA_URL" repeat sp
 
       - name: DIAG FAIL PC initial clearance
         if: always() && steps.pc_initial_clearance.outcome != 'success'
@@ -111,20 +116,20 @@ jobs:
           test "$SP_REPEAT" = success
 
       - name: Regression audit pointer hover and focus geometry
-        run: node experiments/wordpress-acf-runtime/scripts/budokan-content-interaction-browser-qa.mjs "$BUDOKAN_ANCHOR_QA_URL" controls
+        run: node projects/nipponbudokan/qa/budokan-content-interaction-browser-qa.mjs "$BUDOKAN_ANCHOR_QA_URL" controls
 
       - name: Regression audit keyboard Tab traversal
-        run: node experiments/wordpress-acf-runtime/scripts/budokan-content-interaction-browser-qa.mjs "$BUDOKAN_ANCHOR_QA_URL" tab
+        run: node projects/nipponbudokan/qa/budokan-content-interaction-browser-qa.mjs "$BUDOKAN_ANCHOR_QA_URL" tab
 
       - name: Regression audit same-page anchor navigation
-        run: node experiments/wordpress-acf-runtime/scripts/budokan-content-interaction-browser-qa.mjs "$BUDOKAN_ANCHOR_QA_URL" anchor
+        run: node projects/nipponbudokan/qa/budokan-content-interaction-browser-qa.mjs "$BUDOKAN_ANCHOR_QA_URL" anchor
 
       - name: Regression audit SP sticky focus clearance
-        run: node experiments/wordpress-acf-runtime/scripts/budokan-content-interaction-browser-qa.mjs "$BUDOKAN_ANCHOR_QA_URL" sticky
+        run: node projects/nipponbudokan/qa/budokan-content-interaction-browser-qa.mjs "$BUDOKAN_ANCHOR_QA_URL" sticky
 
       - name: Cleanup disposable WordPress runtime
         if: always()
         run: |
-          cd experiments/wordpress-acf-runtime
+          cd runtime/wordpress
           source scripts/runtime-env.sh
           docker compose down -v --remove-orphans

@@ -58,7 +58,7 @@ jobs:
           sys.path.insert(0, 'scripts')
           import validate_wordpress_theme_intake as v
 
-          record = Path('experiments/ref002-budokan-wordpress/theme-intake.yaml')
+          record = Path('projects/nipponbudokan/ref002/theme-intake.yaml')
           schema = json.loads(v.SCHEMA_PATH.read_text(encoding='utf-8'))
           assert v.validate_record(record, schema) == [], 'canonical record must pass'
 
@@ -81,7 +81,7 @@ jobs:
         run: |
           if grep -R -n -E 'ACF_PRO_LICENSE_KEY[[:space:]]*[:=][[:space:]]*[^[:space:]"'"'"']' \
             --include='*.yaml' --include='*.yml' --include='*.json' --include='*.md' \
-            experiments/ref002-budokan-wordpress docs/wordpress-theme-intake.md; then
+            projects/nipponbudokan/ref002 docs/wordpress-theme-intake.md; then
             echo 'ACF_PRO_LICENSE_KEY value must not be committed.'
             exit 1
           fi

@@ -11,7 +11,7 @@ This audit re-checks the current Human-selected Figma, tracked `nipponbudokan` T
 - SP page: `114:5409`
 - Parts PC frame: `1163:4245` (`parts`)
 - Parts SP frame: `1399:19144` (`SP_parts`)
-- Theme owner: `experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/`
+- Theme owner: `projects/nipponbudokan/theme/`
 - Responsive contract: SP base, PC extension from `min-width: 768px`
 - `parts.php`: read-only reference; unchanged
 - Forms / Formidable: Human-owned; out of scope

@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+QA_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT="$(cd "$QA_DIR/../../../runtime/wordpress" && pwd)"
+export PROJECT="${PROJECT:-nipponbudokan}"
 cd "$ROOT"
 
 if [[ -f .env ]]; then
@@ -11,6 +13,10 @@ if [[ -f .env ]]; then
   set +a
 fi
 # shellcheck disable=SC1091
+# Disposable QA runtime: cleanup runs `down -v`, so never share the development database.
+export COMPOSE_PROJECT_NAME="${QA_COMPOSE_PROJECT_NAME:-nipponbudokan-qa}"
+export WP_PORT="${QA_WP_PORT:-27248}"
+export WP_URL=""
 source "$ROOT/scripts/runtime-env.sh"
 
 if [[ "$THEME_SLUG" != "nipponbudokan" ]]; then
@@ -18,9 +24,9 @@ if [[ "$THEME_SLUG" != "nipponbudokan" ]]; then
   exit 2
 fi
 
-php "$ROOT/scripts/budokan-navigation-disabled-template-qa.php"
-php -l "$ROOT/theme-dropin/nipponbudokan/acf/blocks/navigationLarge.php" >/dev/null
-php -l "$ROOT/theme-dropin/nipponbudokan/acf/blocks/navigationSmall.php" >/dev/null
+php "$QA_DIR/budokan-navigation-disabled-template-qa.php"
+php -l "$THEME_SOURCE_DIR/acf/blocks/navigationLarge.php" >/dev/null
+php -l "$THEME_SOURCE_DIR/acf/blocks/navigationSmall.php" >/dev/null
 
 cleanup() {
   docker compose down -v --remove-orphans >/dev/null 2>&1 || true
@@ -59,7 +65,7 @@ docker compose run --rm cli plugin install advanced-custom-fields --activate >/d
 docker compose run --rm cli theme activate "$THEME_SLUG" >/dev/null
 # Apache receives WP_ENVIRONMENT_TYPE through WORDPRESS_CONFIG_EXTRA; WP-CLI
 # needs the local-only fixture guard passed explicitly.
-docker compose run --rm -e WP_ENVIRONMENT_TYPE=local cli eval-file /fixture/scripts/seed-budokan-navigation-disabled-qa.php >/dev/null
+docker compose run --rm -e WP_ENVIRONMENT_TYPE=local cli eval-file /project/qa/seed-budokan-navigation-disabled-qa.php >/dev/null
 
 page_id="$(docker compose run --rm cli option get budokan_navigation_disabled_qa_page_id)"
 [[ "$page_id" =~ ^[0-9]+$ ]] || {

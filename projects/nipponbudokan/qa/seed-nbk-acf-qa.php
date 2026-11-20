@@ -3,7 +3,7 @@
 /**
  * Local-only seed: one published test post per ACF group / CPT pairing.
  *
- *   wp eval-file /fixture/scripts/seed-nbk-acf-qa.php
+ *   wp eval-file /project/qa/seed-nbk-acf-qa.php
  */
 
 if (!defined('WP_CLI') || !WP_CLI) {

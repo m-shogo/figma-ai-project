@@ -40,7 +40,7 @@ records:
           kind: CANONICAL_DOC
           reference_id: BUDOKAN-WORDPRESS
           run_id: ''
-          path: experiments/budokan-wordpress/BACKNUMBER_DEPENDENCY_AUDIT.md
+          path: projects/nipponbudokan/docs/BACKNUMBER_DEPENDENCY_AUDIT.md
           commit: ''
           note: >-
             Records the current Figma distinction between shared SP ordered-list master 1399:18770
@@ -49,7 +49,7 @@ records:
           kind: COMMIT
           reference_id: BUDOKAN-WORDPRESS
           run_id: ''
-          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/blocks/wp-block-list-style.css
+          path: projects/nipponbudokan/theme/css/blocks/wp-block-list-style.css
           commit: a4fe30977a6808c634e415474e86c063bc3f1226
           note: Restores the global ordered-list selector to the shared Figma master instead of the Publications-local variant.
       contradicts: []

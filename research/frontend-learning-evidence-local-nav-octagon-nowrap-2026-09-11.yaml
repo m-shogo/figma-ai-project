@@ -39,21 +39,21 @@ records:
           kind: LOCAL_RESEARCH
           reference_id: BUDOKAN-WORDPRESS
           run_id: ''
-          path: experiments/budokan-wordpress/learning-notes/2026-09-11-local-nav-acf-hover-spacing.md
+          path: projects/nipponbudokan/docs/learning-notes/2026-09-11-local-nav-acf-hover-spacing.md
           commit: ''
           note: Local Nav heading hover reintroduced clip+inset; Human called out missing octagon edge; switched to SVG chip.
         - evidence_id: EV-LN-OCTAGON-CSS-20260911
           kind: IMPLEMENTATION
           reference_id: BUDOKAN-WORDPRESS
           run_id: ''
-          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/module/local_navigation.css
+          path: projects/nipponbudokan/theme/css/module/local_navigation.css
           commit: ''
           note: --_ln-octagon-rest / --_ln-octagon-hover SVG chips; clip-path none on heading ::before.
         - evidence_id: EV-BTN-OCTAGON-CHIP-PRIOR
           kind: IMPLEMENTATION
           reference_id: BUDOKAN-WORDPRESS
           run_id: ''
-          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/blocks/wp-block-buttonLink-style.css
+          path: projects/nipponbudokan/theme/css/blocks/wp-block-buttonLink-style.css
           commit: ''
           note: Same Theme already documented clip-path eats stroke; SVG chip is the proven owner pattern.
       contradicts: []
@@ -90,7 +90,7 @@ records:
           kind: LOCAL_RESEARCH
           reference_id: BUDOKAN-WORDPRESS
           run_id: ''
-          path: experiments/budokan-wordpress/learning-notes/2026-09-11-local-nav-acf-hover-spacing.md
+          path: projects/nipponbudokan/docs/learning-notes/2026-09-11-local-nav-acf-hover-spacing.md
           commit: ''
           note: Runtime measure gap 13px with height 34px parent; 20px after height auto.
         - evidence_id: EV-LN-NOWRAP-CONTRACT

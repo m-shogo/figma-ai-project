@@ -6,7 +6,7 @@
  * PC: D4c05PxMEw6oZxgRggfcks / 1619:9554
  * SP: D4c05PxMEw6oZxgRggfcks / 2991:11982
  *
- *   wp eval-file /fixture/scripts/seed-event-archive-qa.php
+ *   wp eval-file /project/qa/seed-event-archive-qa.php
  */
 
 if (!defined('WP_CLI') || !WP_CLI) {

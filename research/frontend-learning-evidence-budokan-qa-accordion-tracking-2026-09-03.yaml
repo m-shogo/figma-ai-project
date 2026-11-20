@@ -39,7 +39,7 @@ records:
           kind: LOCAL_RESEARCH
           reference_id: REF-002-BUDOKAN
           run_id: ''
-          path: experiments/budokan-wordpress/QA_ACCORDION_TRACKING_AUDIT_2026-09-03.md
+          path: projects/nipponbudokan/docs/QA_ACCORDION_TRACKING_AUDIT_2026-09-03.md
           commit: ''
           note: >-
             LIVE current Figma file fKYDn9ikpJk1nW7IWFtaUx was inspected at SP standard 1399:18837, SP QA 1399:18857,

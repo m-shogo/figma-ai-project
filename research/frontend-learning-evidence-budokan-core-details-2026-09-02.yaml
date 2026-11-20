@@ -33,28 +33,28 @@ records:
           kind: LOCAL_RESEARCH
           reference_id: REF-002-BUDOKAN
           run_id: ''
-          path: experiments/budokan-wordpress/CORE_DETAILS_NATIVE_MARKUP_AUDIT.md
+          path: projects/nipponbudokan/docs/CORE_DETAILS_NATIVE_MARKUP_AUDIT.md
           commit: ''
           note: Current Figma, immutable parts.php markup, and Theme CSS were reconciled; synthetic Details descendants were not emitted by the authorized Core markup.
         - evidence_id: EV-BUDOKAN-CORE-DETAILS-CSS-20260902
           kind: COMMIT
           reference_id: REF-002-BUDOKAN
           run_id: ''
-          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/blocks/wp-block-details-style.css
+          path: projects/nipponbudokan/theme/css/blocks/wp-block-details-style.css
           commit: 9ef8de4b456602f31adb311b277ed7cead65cf51
           note: Shared CSS was changed to style native details > summary and direct editor-owned content without adding markup or page-specific overrides.
         - evidence_id: EV-BUDOKAN-BACKGROUND-PARAGRAPH-AUDIT-20260902
           kind: LOCAL_RESEARCH
           reference_id: REF-002-BUDOKAN
           run_id: ''
-          path: experiments/budokan-wordpress/BACKGROUND_PARAGRAPH_SELECTOR_AUDIT.md
+          path: projects/nipponbudokan/docs/BACKGROUND_PARAGRAPH_SELECTOR_AUDIT.md
           commit: ''
           note: Current Figma background text-box evidence was reconciled with Gutenberg paragraph output; `p.has-background` had surface styling but was excluded from the shared body typography selector by class-presence filtering.
         - evidence_id: EV-BUDOKAN-BACKGROUND-PARAGRAPH-CSS-20260902
           kind: COMMIT
           reference_id: REF-002-BUDOKAN
           run_id: ''
-          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/blocks/wp-block-text-style.css
+          path: projects/nipponbudokan/theme/css/blocks/wp-block-text-style.css
           commit: dc78d461c5f497bb405fe3e4dde33dfaed3bd4ef
           note: Shared Paragraph typography now includes the authorized `.has-background` modifier instead of duplicating typography in a page-specific or surface-only rule.
       contradicts: []

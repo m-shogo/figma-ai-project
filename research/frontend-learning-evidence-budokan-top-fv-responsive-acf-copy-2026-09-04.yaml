@@ -43,7 +43,7 @@ records:
           kind: LOCAL_RESEARCH
           reference_id: REF-002-BUDOKAN
           run_id: ''
-          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/front-page.php
+          path: projects/nipponbudokan/theme/front-page.php
           commit: ''
           note: >-
             LIVE current Figma file FKQaJDu5TZXHoCzPsfP92E was read directly. PC FV 1603:7662 uses title
@@ -56,7 +56,7 @@ records:
           kind: LOCAL_RESEARCH
           reference_id: REF-002-BUDOKAN
           run_id: ''
-          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/acf/json/group_top_slider.json
+          path: projects/nipponbudokan/theme/acf/json/group_top_slider.json
           commit: ''
           note: >-
             Existing ACF Local JSON already owns top_slider-01 with img_pc, img_sp, and legacy `text` key field_5d677f3972f71.
@@ -66,7 +66,7 @@ records:
           kind: LOCAL_RESEARCH
           reference_id: REF-002-BUDOKAN
           run_id: ''
-          path: experiments/wordpress-acf-runtime/scripts/budokan-top-fv-browser-qa.mjs
+          path: projects/nipponbudokan/qa/budokan-top-fv-browser-qa.mjs
           commit: ''
           note: >-
             Browser QA now gates both visual geometry and viewport-specific copy: SP must expose only tm_copy_sp with the current

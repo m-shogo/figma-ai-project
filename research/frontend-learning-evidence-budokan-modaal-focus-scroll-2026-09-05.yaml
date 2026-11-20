@@ -43,7 +43,7 @@ records:
           kind: COMMIT
           reference_id: BUDOKAN-WORDPRESS
           run_id: '33908734193'
-          path: experiments/wordpress-acf-runtime/scripts/budokan-modal-interaction-browser-qa.mjs
+          path: projects/nipponbudokan/qa/budokan-modal-interaction-browser-qa.mjs
           commit: bfa349d186daa7af0d77b557e19b77bf1a550601
           note: >-
             Disposable WordPress + Playwright passed SP 375 but reproduced a real PC 1280 regression:
@@ -52,7 +52,7 @@ records:
           kind: COMMIT
           reference_id: BUDOKAN-WORDPRESS
           run_id: '33909531433'
-          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/modaal-scroll-stability.js
+          path: projects/nipponbudokan/theme/js/modaal-scroll-stability.js
           commit: c53ed0eba10ec93b9d00a3b54ddabc8ae34396c2
           note: >-
             The Theme keeps existing Modaal/common.js ownership and changes only focus restoration
@@ -63,7 +63,7 @@ records:
           kind: CANONICAL_DOC
           reference_id: BUDOKAN-WORDPRESS
           run_id: ''
-          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/modaal.min.js
+          path: projects/nipponbudokan/theme/js/modaal.min.js
           commit: c53ed0eba10ec93b9d00a3b54ddabc8ae34396c2
           note: >-
             Existing Modaal 0.4.4 close logic invokes before_close, starts asynchronous overlay/scroll-lock cleanup,

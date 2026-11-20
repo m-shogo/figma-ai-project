@@ -3,19 +3,24 @@ name: Budokan TOP Guide Runtime
 on:
   pull_request:
     paths:
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/footer.php'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_footer.php'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_top-guide.php'
-      - 'experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/project/top_guide.css'
-      - 'experiments/wordpress-acf-runtime/scripts/budokan-top-guide-runtime-qa.sh'
-      - 'experiments/wordpress-acf-runtime/scripts/budokan-top-guide-browser-qa.mjs'
-      - 'experiments/wordpress-acf-runtime/scripts/budokan-top-purpose-terminal-browser-qa.mjs'
-      - 'experiments/budokan-wordpress/TOP_PURPOSE_TERMINAL_ALIGNMENT_2026-08-31.md'
+      - 'projects/nipponbudokan/theme/footer.php'
+      - 'projects/nipponbudokan/theme/template-parts/_footer.php'
+      - 'projects/nipponbudokan/theme/template-parts/_top-guide.php'
+      - 'projects/nipponbudokan/theme/css/project/top_guide.css'
+      - 'projects/nipponbudokan/qa/budokan-top-guide-runtime-qa.sh'
+      - 'projects/nipponbudokan/qa/budokan-top-guide-browser-qa.mjs'
+      - 'projects/nipponbudokan/qa/budokan-top-purpose-terminal-browser-qa.mjs'
+      - 'projects/nipponbudokan/docs/TOP_PURPOSE_TERMINAL_ALIGNMENT_2026-08-31.md'
       - '.github/workflows/budokan-top-guide-runtime.yml'
   workflow_dispatch:
 
 permissions:
   contents: read
+
+env:
+  PROJECT: nipponbudokan
+  COMPOSE_PROJECT_NAME: nipponbudokan-qa
+  WP_PORT: '27248'
 
 jobs:
   runtime:
@@ -27,7 +32,7 @@ jobs:
       - name: Run disposable WordPress TOP Guide runtime QA
         env:
           BUDOKAN_TOP_GUIDE_KEEP_RUNTIME: '1'
-        run: bash experiments/wordpress-acf-runtime/scripts/budokan-top-guide-runtime-qa.sh
+        run: bash projects/nipponbudokan/qa/budokan-top-guide-runtime-qa.sh
 
       - name: Install Playwright Chromium for TOP Guide browser QA
         run: |
@@ -36,23 +41,23 @@ jobs:
 
       - name: Run SP and PC TOP Guide browser geometry QA
         run: |
-          cd experiments/wordpress-acf-runtime
+          cd runtime/wordpress
           source scripts/runtime-env.sh
           qa_url="${WP_URL}/"
           cd ../..
-          node experiments/wordpress-acf-runtime/scripts/budokan-top-guide-browser-qa.mjs "$qa_url"
+          node projects/nipponbudokan/qa/budokan-top-guide-browser-qa.mjs "$qa_url"
 
       - name: Run TOP purpose terminal browser interaction QA
         run: |
-          cd experiments/wordpress-acf-runtime
+          cd runtime/wordpress
           source scripts/runtime-env.sh
           qa_url="${WP_URL}/"
           cd ../..
-          node experiments/wordpress-acf-runtime/scripts/budokan-top-purpose-terminal-browser-qa.mjs "$qa_url"
+          node projects/nipponbudokan/qa/budokan-top-purpose-terminal-browser-qa.mjs "$qa_url"
 
       - name: Cleanup disposable WordPress runtime
         if: always()
         run: |
-          cd experiments/wordpress-acf-runtime
+          cd runtime/wordpress
           source scripts/runtime-env.sh
           docker compose down -v --remove-orphans

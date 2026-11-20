@@ -7,7 +7,7 @@
  * images so browser QA can verify real output geometry and object-fit behavior.
  *
  * Run:
- *   wp eval-file /fixture/scripts/seed-tankoubon-detail-qa.php
+ *   wp eval-file /project/qa/seed-tankoubon-detail-qa.php
  */
 
 if (!defined('WP_CLI') || !WP_CLI) {

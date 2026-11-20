@@ -183,9 +183,9 @@ Status: ACTIVE audit map
 | ACF 6.8+ official `wp acf json` before custom import/export | `acf-json-delivery.md` + external integration matrix |
 | official `@wordpress/env` before new generic WP Docker fixture | reuse-before-build + external integration matrix |
 | native attachment responsive image pipeline first | reuse-before-build + WP policy |
-| Local WP PHP upload/memory limits + fatal guard | `experiments/wordpress-acf-runtime/README.md` + `php/conf.d/99-local-limits.ini` |
+| Local WP PHP upload/memory limits + fatal guard | `runtime/wordpress/README.md` + `php/conf.d/99-local-limits.ini` |
 | Reusable template parts take explicit feature args | `wordpress-acf-policy.md` |
-| Budokan ACF / CPT / directory map / menu gate | `experiments/budokan-wordpress/CURRENT_AUTHORITY.md` |
+| Budokan ACF / CPT / directory map / menu gate | `projects/nipponbudokan/docs/CURRENT_AUTHORITY.md` |
 
 ## Accessibility / i18n
 

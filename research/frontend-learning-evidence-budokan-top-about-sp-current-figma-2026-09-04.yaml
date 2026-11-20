@@ -39,7 +39,7 @@ records:
           kind: LOCAL_RESEARCH
           reference_id: REF-002-BUDOKAN
           run_id: ''
-          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/project/top_about.css
+          path: projects/nipponbudokan/theme/css/project/top_about.css
           commit: ''
           note: >-
             LIVE current Figma file FKQaJDu5TZXHoCzPsfP92E, SP page 114:5409, TOP root 446:10020 exposes About node 1392:11708.
@@ -51,7 +51,7 @@ records:
           kind: LOCAL_RESEARCH
           reference_id: REF-002-BUDOKAN
           run_id: ''
-          path: experiments/wordpress-acf-runtime/scripts/budokan-top-about-browser-qa.mjs
+          path: projects/nipponbudokan/qa/budokan-top-about-browser-qa.mjs
           commit: ''
           note: >-
             The existing real-WordPress/Playwright About gate was updated from the obsolete SP 240x320 portrait-card expectation to

@@ -3,7 +3,7 @@
 /**
  * Stub pages from DIRECTORY_MAP + the 4 Human-requested menus.
  *
- *   wp eval-file /fixture/scripts/seed-budokan-stub-pages-and-menus.php
+ *   wp eval-file /project/qa/seed-budokan-stub-pages-and-menus.php
  *
  * Pages: empty body. Navigation kind → oneColumn + page_img.
  * Default pages stay on page.php without page_img (gold bar).

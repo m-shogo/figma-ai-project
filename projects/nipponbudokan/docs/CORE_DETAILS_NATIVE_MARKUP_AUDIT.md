@@ -12,7 +12,7 @@ Updated: 2026-09-02
 - PC FAQ Details: `1157:8324`
 - SP collapsed Details family: `1399:18837`
 - SP FAQ Details: `1399:18857`
-- Immutable editor reference: `experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/parts.php`
+- Immutable editor reference: `projects/nipponbudokan/theme/parts.php`
 - Shared CSS owner: `css/blocks/wp-block-details-style.css`
 
 `parts.php` was read only. It was not modified.
