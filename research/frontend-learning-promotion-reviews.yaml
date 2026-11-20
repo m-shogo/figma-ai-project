@@ -247,3 +247,75 @@ reviews:
     disposition: KEEP_PROJECT_ONLY
     rationale: >-
       Reviewed Budokan TOP Footer nested gap evidence: a flattened display:contents grid can erase authored sub-gap distinctions if one uniform row gap is applied. Source and footer geometry belong only to REF-002-BUDOKAN, not a portable CSS value. KEEP_PROJECT_ONLY; require independent consumer evidence before expanding scope.
+
+  OBS-BUDOKAN-COMPONENT-INTERNAL-VS-PAGE-COMPOSITION-SPACING:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed Budokan tournament/card composition evidence: differences in outer page grid cannot automatically redefine shared component-internal spacing. It is a valid one-project design ownership boundary, but only REF-002-BUDOKAN supports it. KEEP_PROJECT_ONLY; require independent visual/runtime evidence before promoting a shared-spacing rule.
+
+  OBS-BUDOKAN-SHARED-COMPONENT-CONSUMER-TYPOGRAPHY-VARIANT:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed Budokan tournament/local-nav shared-component consumer typography evidence. A single consumer's type treatment differs without proving the shared CSS owner is wrong; semantic variant ownership remains unresolved. One REF-002-BUDOKAN, no independent reference. KEEP_PROJECT_ONLY and preserve the existing variant authority blocker.
+
+  OBS-BUDOKAN-SHARED-MASTER-INSTANCE-VARIANT-GATE:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed the Budokan Tournament row-header typography versus canonical Headercell (Medium 500 versus Regular 400) and its local audit. Widening the shared master rule is not authorized by the one page instance. The only indexed reference is REF-002-BUDOKAN; KEEP_PROJECT_ONLY without inventing an ACF field or style marker.
+
+  OBS-BUDOKAN-TOP-FV-CURRENT-AUTHORITY-BOUNDARY:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed Budokan full-page Figma authority/contained sub-frame inspection evidence. Bounded subcomposition context can be useful when full-page Figma retrieval is limited, but old frame IDs are historical and not applicable to other designs. One REF-002-BUDOKAN only; KEEP_PROJECT_ONLY, and verify current root before reuse.
+
+  OBS-BUDOKAN-TOP-FV-RESPONSIVE-COPY-ACF-OWNER:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed the Budokan TOP FV responsive copy and existing ACF repeater owner. Existing owner expansion must respect both PC/SP authored copy, but the ACF fields and state are Budokan-specific and the index has only REF-002-BUDOKAN. KEEP_PROJECT_ONLY; do not infer other projects need new responsive content fields.
+
+  OBS-BUDOKAN-TOP-GUIDE-LOWER-EDGE-CURRENT-FIGMA:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed Budokan TOP Guide authored overlap rail ending at a section boundary. Removing historical desktop bottom padding is a project-Figma geometry correction rather than a default rule against padding. One REF-002-BUDOKAN, no external independent case. KEEP_PROJECT_ONLY; current Figma must be rechecked.
+
+  OBS-BUDOKAN-TOP-NEWS-CURRENT-FIGMA-LABEL-HEIGHT:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed Budokan TOP News label sizing versus shared News item master. The local min-height override is not authorized when current master and Figma agree; this is confined to one TOP derivative. Only REF-002-BUDOKAN indexed; KEEP_PROJECT_ONLY. Do not globalize the label height or assume a future master is identical.
+
+  OBS-BUDOKAN-RESPONSIVE-VARIANT-TYPOGRAPHY-SCOPE:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed Budokan Core Details QA tracking: Figma SP standard 5%, SP QA 10%, PC standard 10%, PC QA 5%, with an existing ._qa marker and bounded PC override. This supports a project variant-scope fix, not a global token across projects; only REF-002-BUDOKAN. KEEP_PROJECT_ONLY and preserve the responsive variant mechanism.
