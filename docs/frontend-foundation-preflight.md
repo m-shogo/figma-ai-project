@@ -1,7 +1,7 @@
 # Frontend Foundation Preflight — 案件を始める最初の共通確認
 
 Status: **HUMAN-APPROVED WORKFLOW**（2026-11-20）
-Scope: 新しい Figma → Web / WordPress / LP / React 等の**フロントエンド実装案件**。新チャットで案件を引き継ぐ場合も、最初に成果/未実施を確認する。
+Scope: **CROSS-PROJECT / REUSABLE METHOD** — 新しい Figma → Web / WordPress / LP / React 等の**フロントエンド実装案件**。新チャットで案件を引き継ぐ場合も、最初に成果/未実施を確認する。
 
 Canonical details: `docs/section-execution.md`（shared contract → shared foundation → verification → section implementation）、`docs/frontend-quick-contract.md`、`docs/css-strategy.md`、`docs/frontend-font-loading-policy.md`。本書は既存正本の**開始時チェックへのルーティング**であり、新たなCSS/フレームワーク統一を強制しない。
 
@@ -52,6 +52,9 @@ Canonical details: `docs/section-execution.md`（shared contract → shared foun
 - [ ] 問題があれば小さく安全に実装し、関連する次の作業へ継続する
 - [ ] Foundation未完了のままパーツに着手する場合、依存がない理由と未検証範囲を記録した
 
-## 由来
+## 事例と共通ルールを混同しない
 
-Human FB（2026-11-20）: 「実装前に確認やまとめ、カラーコード、フォントなど確認導入を先にしよう変更しといて手順」「今言った指示もカラーとかから設計先やるのも次の案件に活かせるように」。案件固有の実行は `projects/jwsnj/docs/DESIGN_FOUNDATION.md` に保持。本書は同じ指摘を次案件で言わせないための **portable workflow**。
+- このファイルは「**何を確認してから、どう設計・導入・検証するか**」という一般的な手順を規定する。各案件の色番号・フォント名・Figma node・素材の取得状況・導入完了条件は必ず案件のCurrent Authorityへ置く。
+- **新しい失敗を見つけたらまず案件のLEARNINGSとチェックシートに記録**し、次の案件でそのルールが妥当か検証。案件特有の対応をそのまま全案件の禁止事項にしない。
+- Humanが明示的に「この方法を次案件にも活かして」と決定した再利用可能な手順は、範囲を明記して本書に反映する。それ以外の経験則は `docs/knowledge-promotion.md` に従い、横断的な根拠・レビューなしに共通規則へ自動昇格しない。
+- 元になった案件の実際の導入状況や変更履歴は `projects/jwsnj/docs/DESIGN_FOUNDATION.md` と `projects/jwsnj/docs/WORKFLOW_LEARNING.md` を参照する。**本書の内容だけでその案件の実装が完了したとは扱わない**。
