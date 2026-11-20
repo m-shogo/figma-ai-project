@@ -33,9 +33,9 @@
 
 確認済み Figma Font Variables: `Roboto`、`Zen Kaku Gothic New`、`Font Awesome 6 Pro`、`Font Awesome 6 Brands`。PCメニュー `599:2726` の実レイヤーには `Noto Serif JP`・`Roboto Condensed` の使用も見える。**使用箇所・weight/style・提供ファイル・読み込み方式・利用ライセンスはこれから検証**。Font Awesome Pro の有償ファイルを公開リポジトリに追加しない。使用できる正規のアセット・ライセンスを確認する。
 
-## Color tokens の導入状況（2026-11-20）
+## Color tokens の導入状況（2026-11-21更新）
 
-**導入済み（静的）:** `theme/css/global/variables.css` の `:where(:root)` にTOP確認済み10色とPCメニュー確認済み1色を `--jwsnj-color-*` として追加。既存 `css/style.css` はこの変数ファイルを既に `@import` している。既存CODIAサンプルの `--color-primary` 等はまだ置き換えていないため、**新しい色を使った画面完成・視覚一致を意味しない**。先に実装する共通部品から新tokenを利用する。
+**導入済み（静的）:** `theme/css/global/variables.css` の `:where(:root)` にTOP確認済み10色とPCメニュー確認済み1色を `--jwsnj-color-*` として追加。既存 `css/style.css` はこの変数ファイルを既に `@import` している。PR #506で既存共通 `--color-primary` を `#28AC5F`、`--color-accent` を `#EC6B61` に直接変更済み。PR #507でヘッダーナビの6参照を `--jwsnj-color-main` から `--color-primary` に統合済み。`--jwsnj-*` の残存定義・他参照は全件確認前なので削除しない。**画面完成・視覚一致を意味しない**。
 
 | Figma | CSS custom property |
 |---|---|
@@ -53,21 +53,21 @@
 
 **検証境界:** Figmaのvariable definitions `114:28` を再取得し一致を照合。PC `114:28` / SP `279:2136` のスクリーンショットURLを取得。実機WP、computed styles、ブラウザ表示比較、フォント配信は**未検証**。変更は変数の定義だけで既存表示への意図的な変更はない。
 
-## CODIAテーマとの一次照合（ファイル確認済み、まだ未改修）
+## CODIAテーマとの一次照合（カラー共通値は改修済み、表示未検証）
 
 対象: `theme/css/global/variables.css`、`theme/css/style.css`、`theme/css/base/reset.css`、`theme/inc/front.php`、`theme/fonts/` と `theme/webfonts/`（2026-11-20）。
 
 | 対象 | ベースThemeの現状 | 導入前に確認する差 |
 |---|---|---|
-| メインカラー | `--color-primary: #00B7F1` | Figma `#28AC5F`。既存の依存箇所を洗い、案件専用値に対応させる |
-| アクセントカラー | `--color-accent: #DD7C23` | Figma `#EC6B61`。一括置換せず使用目的を確認 |
+| メインカラー | `--color-primary: #28AC5F`（PR #506） | 既存利用箇所の回帰QAと重複 `--jwsnj-color-main` の参照調査が残る |
+| アクセントカラー | `--color-accent: #EC6B61`（PR #506） | 利用箇所の回帰QAと `--jwsnj-color-accent` の参照調査が残る |
 | テキスト | `--color-text: #333` | Figma `#333333` で同値 |
 | 行間 | `base/reset.css` の `body { line-height: 1; }` だった | **このPRで `1.3` に変更済み**。個別セレクタに残る `1` と上書き・長文表示は後続で検証 |
 | フォント | `NotoSansJP`、`NotoSerifJP`、`Roboto` のwoff2と`@font-face`あり | Figmaの `Zen Kaku Gothic New` は現時点でテーマ定義に見当たらず、正規の読み込み方法を確定する |
 | Font Awesome | `theme/webfonts/` に素材あり、`inc/front.php` の `fontawesome-style` enqueue はコメントアウト | 実際のCSS経由で読み込まれているか／使用権限を検証し、必要な導入のみ行う |
 | CSSの入口 | `css/style.css` → `global/variables.css` をimport | ベース構造に沿って共通値を管理。末尾の場当たり的overrideを積まない |
 
-**重要:** 既存のフォントファイルの存在は配信・ライセンスの確認完了を意味しない。FigmaのTOP 10色とPCメニュー1色は `--jwsnj-color-*` としてCSSに**定義済み**だが、既存CODIAサンプルの色トークン利用箇所は未置換。画面への適用・視覚一致は未検証。
+**重要:** 既存のフォントファイルの存在は配信・ライセンスの確認完了を意味しない。FigmaのTOP 10色とPCメニュー1色は `--jwsnj-color-*` としてCSSに**定義済み**だが、既存の `--color-primary` と `--color-accent` はFigma確認値に変更済み（PR #506）。ヘッダーナビ6箇所のprimary参照も統合済み（PR #507）。その他の利用箇所・視覚一致は未検証。
 
 ## フォント読み込みの小改善（2026-11-20）
 
@@ -76,6 +76,13 @@
 静的確認: 既存12件に `font-display: swap` が各1回追加されたことをコード差分で確認。WordPressでの配信・フォールバックのレイアウトシフト、PC/SP視覚一致は**DEFERRED_ENV**（`DEFERRED_RUNTIME_QA.md` の FOUND-02 / FOUND-05）。
 
 PCメニュー `599:2726` の `get_variable_defs` で `color/separator_light = #F2F2F2` を追加確認（2026-11-20）。既存 `color/separator = #D7D4D4` と用途が異なるため、置換せず独立トークンで保持。Figma PC/SPスクリーンショットとasset inventoryは取得済みだが、SVG/画像の各node・権限・配置先の対応が未確定なのでURLや仮画像を本番Themeに投入しない。**色の利用箇所・ブラウザ表示は未検証**。
+
+## 2026-11-21 04:35 JST 引き継ぎ確認
+
+- 基準 `so`: `bf935370efc221f6ce3d11f8a0ef08bb9fc5af89`。jwsnjのopen PRなし。PR #505/#506/#507は統合済み。
+- Figma PC page `0:1`、SP page `263:12` のスクリーンショットURLを再取得。全ページ縮小画像だけでは個別font/weightやhover動作を証明できない。
+- Figma design contextの必須ガイダンスが現接続で発見できず、今回の詳細context取得は未実施。推測による新規フォント追加・アセット代用はしない。
+- READY: (1) CSS変数の全参照確認後の重複削除、(2) Figma文字nodeとThemeのfont/weight・ライセンス照合、(3) PC/SP headerの詳細比較。WordPress/browser QAは `DEFERRED_RUNTIME_QA.md` に保留。
 
 ## 画像・部品・挙動
 
