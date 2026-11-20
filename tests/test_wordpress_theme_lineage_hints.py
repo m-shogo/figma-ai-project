@@ -126,6 +126,53 @@ class ThemeLineageHintsTests(unittest.TestCase):
             self.assertEqual(routes["theme"]["local_rule_file"], "docs/THEME_RULES.md")
             self.assertEqual(routes["theme"]["local_selection"], "PROJECT_OWNED_ONLY")
 
+    def test_unresolved_theme_does_not_activate_local_rules(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            project = make_project(Path(tmp), "school", author="Codia Inc.")
+            (project / "docs").mkdir()
+            (project / "docs" / "THEME_RULES.md").write_text("# Local theme rules\\n", encoding="utf-8")
+            (project / "docs" / "CURRENT_AUTHORITY.md").write_text("# Project authority\\n", encoding="utf-8")
+            # Second plausible Theme exists in a reference folder: never select by author or path alone.
+            other = project / "reference" / "candidate"
+            other.mkdir(parents=True)
+            (other / "style.css").write_text("/*\\nTheme Name: Another Theme\\nAuthor: Codia Inc.\\n*/\\n", encoding="utf-8")
+            scanned = target_scan.scan(project)
+            self.assertEqual(scanned["selection_state"], "MULTIPLE_CANDIDATES")
+            routes = target_scan.scope_rule_routes(project, scanned)
+            self.assertEqual(routes["theme"]["local_rule_file"], "")
+            self.assertEqual(routes["theme"]["local_selection"], "UNDETERMINED_THEME_SELECTION")
+            self.assertEqual(routes["theme"]["related_theme_rule_candidates"], [])
+            self.assertIn("docs/CURRENT_AUTHORITY.md", routes["project"]["project_docs"])
+            self.assertNotIn("docs/THEME_RULES.md", routes["project"]["project_docs"])
+
+    def test_real_projects_keep_theme_and_project_knowledge_isolated(self) -> None:
+        budokan = ROOT / "projects" / "nipponbudokan"
+        jwsnj = ROOT / "projects" / "jwsnj"
+        for project in (budokan, jwsnj):
+            self.assertTrue((project / "theme" / "style.css").is_file())
+        budokan_scan = target_scan.scan(budokan)
+        jwsnj_scan = target_scan.scan(jwsnj)
+        self.assertEqual(budokan_scan["selection_state"], "UNAMBIGUOUS")
+        self.assertEqual(jwsnj_scan["selection_state"], "UNAMBIGUOUS")
+        self.assertEqual(budokan_scan["themes"][0]["lineage_hints"]["author_hint"], "Codia Inc.")
+        self.assertEqual(jwsnj_scan["themes"][0]["lineage_hints"]["author_hint"], "Codia Inc.")
+        compared = target_scan.compare_theme_lineages(jwsnj_scan, budokan_scan)
+        self.assertTrue(compared["same_theme_author_hint"])
+        self.assertEqual(compared["theme_baseline_binding"], "UNDETERMINED")
+        self.assertIn("vite.config.mjs", jwsnj_scan["themes"][0]["lineage_hints"]["project_build_hints"])
+        self.assertNotIn("vite.config.mjs", budokan_scan["themes"][0]["lineage_hints"]["project_build_hints"])
+        b_routes = target_scan.scope_rule_routes(budokan, budokan_scan)
+        j_routes = target_scan.scope_rule_routes(jwsnj, jwsnj_scan, related=[{
+            "project": "nipponbudokan",
+            "evidence_path": str(budokan / "theme"),
+            **compared,
+        }])
+        self.assertEqual(b_routes["theme"]["local_rule_file"], "docs/THEME_RULES.md")
+        self.assertNotIn("docs/THEME_RULES.md", b_routes["project"]["project_docs"])
+        self.assertEqual(j_routes["theme"]["local_rule_file"], "")
+        self.assertTrue(j_routes["theme"]["related_theme_rule_candidates"])
+        self.assertEqual(j_routes["theme"]["related_theme_rule_candidates"][0]["selection"], "REVIEW_ONLY_NOT_APPLIED")
+
     def test_multiple_themes_are_not_silently_selected(self) -> None:
         r = {"themes": [{}, {}]}
         self.assertEqual(target_scan.compare_theme_lineages(r, r)["state"], "UNDETERMINED")
