@@ -88,6 +88,25 @@ python scripts/scan_wordpress_target.py projects/<slug> --compare-projects-dir p
 
 この分類機能は**証拠の提示**であり、自動的な学習ルール昇格や会社ポリシーの新規発行ではない。毎回のスキャン出力を恒久ドキュメントとして大量生成しない。必要な証拠だけ案件の正本に残す。
 
+## 知識の3つの適用範囲と自動ルーティング
+
+Themeスキャン結果の `rule_scope_routes` は、次に読む知識の**適用先**を3階層に分ける。新しいファイルを案件ごとに大量生成しない。
+
+| scope | 読み込む場所 | 適用境界 |
+| --- | --- | --- |
+| `COMMON` | `AGENTS.md`・共通 `docs/` | 再現性/複数案件で妥当性が確認された一般手順。会社・Theme・案件の確定制約より優先しない |
+| `THEME` | **現在の案件の** `docs/THEME_RULES.md`（あれば）。同一系統の実績は候補として参照 | そのThemeの由来・バージョン・設定と適用条件が一致すると確認できた範囲に限定。他案件の同名ファイルを自動継承しない |
+| `PROJECT` | `projects/<slug>/docs/CURRENT_AUTHORITY.md` 等 | Figmaの正本、配色・フォント、ページ/URL、ACF、ユーザー決定や個別QA。絶対に他案件へ自動転用しない |
+
+**会社の必須規約（Company Policy）は4番目の経験則階層ではなく、3階層すべてを拘束する別の技術条件**。会社とThemeの候補は `style.css` の作者欄やファイル構造から提示できるが、正式なポリシー・採用すべきThemeルールの承認を意味しない。
+
+- `rule_scope_routes.theme.local_rule_file`: 現案件で**すでに確定した**Theme規則の所在。存在しなければ無理に新規ファイルを作らず `CURRENT_AUTHORITY.md` のTheme節と実コードを読む。
+- `related_theme_rule_candidates[].selection=REVIEW_ONLY_NOT_APPLIED`: 他案件で似たTheme規則が見つかっても**自動適用は禁止**。実際の上流Themeのrepo/commit・バージョン・改修差分・適用例外を照合して初めて限定利用する。似たThemeの `THEME_RULES.md` には案件固有の指示が混在し得るため**ファイル全体を丸ごと引き継がない**。
+- 同じThemeで繰り返し必要になった**実装上の不変条件**はTheme専用の検証候補になる。同じベースThemeでも変更された部分は再確認し、他の会社Themeや無関係な独立LPに広げない。
+- Theme特有の学びを `COMMON` へ上げるのは、別系統の実績・反例・改善効果を `docs/knowledge-promotion.md` に沿って評価した後だけ。Humanが案件固有の仕様を確定したときはその案件へ即保存する。
+
+**重要**: 現在の自動化は、実際のThemeから「どの知識ファイルを読むか」と「他案件のどれを照合候補にするか」を振り分ける段階。**類似度だけで会社規則・Theme専用ルールの適用を完全自動確定する機能ではない**。厳格な同一ベース照合が実績として必要になった場合のみ強化し、先に独自の分類管理画面や全社ルールファイルを増やさない。
+
 ## Theme observation checklist
 
 Theme受領後、bindの前に観測する項目。

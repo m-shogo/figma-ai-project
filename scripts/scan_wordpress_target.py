@@ -345,6 +345,58 @@ def scan(root: Path) -> dict:
     }
 
 
+def scope_rule_routes(root: Path, scanned: dict, *, related: list[dict] | None = None) -> dict:
+    """Select *local* knowledge owners. Similar themes are suggestions, never implicit rule inheritance."""
+    root = root.resolve()
+    project = root if (root / "theme").is_dir() else None
+    docs = project / "docs" if project else None
+    project_docs = [
+        str(Path("docs") / name)
+        for name in ("CURRENT_AUTHORITY.md", "THEME_RULES.md", "DESIGN_FOUNDATION.md", "IMPLEMENTATION_CHECKLIST.md")
+        if docs is not None and (docs / name).is_file()
+    ]
+    local_theme_rules = "docs/THEME_RULES.md" if "docs/THEME_RULES.md" in project_docs else ""
+    candidates: list[dict] = []
+    for item in related or []:
+        if not item.get("same_theme_author_hint"):
+            continue
+        candidate_doc = Path(item["evidence_path"]).parent / "docs" / "THEME_RULES.md"
+        candidates.append({
+            "project": item["project"],
+            "theme_rules": str(candidate_doc) if candidate_doc.is_file() else "",
+            "similarity": item.get("structural_jaccard"),
+            "selection": "REVIEW_ONLY_NOT_APPLIED",
+            "reason": "Matching author/structure does not prove same source Theme baseline, version or policy.",
+        })
+    return {
+        "scope_levels": ["COMMON", "THEME", "PROJECT"],
+        "common": {
+            "canonical_files": ["AGENTS.md", "docs/wordpress-theme-intake.md", "docs/knowledge-promotion.md"],
+            "selection": "REPO_DEFAULT_SUBJECT_TO_CONTRACTS",
+        },
+        "theme": {
+            "local_rule_file": local_theme_rules,
+            "local_selection": "PROJECT_OWNED_ONLY" if local_theme_rules else "NO_SEPARATE_LOCAL_THEME_RULES",
+            "reusable_from_other_project": False,
+            "related_theme_rule_candidates": candidates,
+            "reuse_gate": "VERIFY_EXACT_UPSTREAM_BASELINE_AND_VERSION_THEN_REVIEW_RULE_SCOPE",
+        },
+        "project": {
+            "project_docs": project_docs,
+            "selection": "LOCAL_PROJECT_AUTHORITY_ONLY" if project_docs else "NOT_OBSERVED",
+        },
+        "company_policy": {
+            "role": "INDEPENDENT_HARD_CONSTRAINT_NOT_FOURTH_LEARNING_SCOPE",
+            "selection": "REQUIRES_AUTHORIZED_COMPANY_POLICY",
+        },
+        "claim_boundary": (
+            "Rules written for one project stay there even when the same Theme author is observed. "
+            "Only explicitly verified Theme-family rules may be reused at a matching source/version; "
+            "Figma values, ACF field names, URLs and project-specific fixes never inherit automatically."
+        ),
+    }
+
+
 def parser() -> argparse.ArgumentParser:
     value = argparse.ArgumentParser(description="Read-only reconnaissance for a connected WordPress target repository.")
     value.add_argument("target", type=Path)
@@ -394,6 +446,9 @@ def main() -> int:
                 item["project"],
             ),
         )
+    result["rule_scope_routes"] = scope_rule_routes(
+        args.target, result, related=result.get("known_theme_comparisons", [])
+    )
     serialized = json.dumps(result, ensure_ascii=False, indent=2) + "\n"
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)
