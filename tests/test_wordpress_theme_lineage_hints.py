@@ -94,6 +94,38 @@ class ThemeLineageHintsTests(unittest.TestCase):
             self.assertEqual(comparisons[1]["project"], "unrelated")
             self.assertFalse(comparisons[1]["same_theme_author_hint"])
 
+    def test_three_scope_routes_do_not_apply_sibling_theme_rules(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            current = make_project(root, "school", author="Codia Inc.", vite=True)
+            sibling = make_project(root, "budokan", author="Codia Inc.")
+            (current / "docs").mkdir()
+            (sibling / "docs").mkdir()
+            (current / "docs" / "CURRENT_AUTHORITY.md").write_text("# Current authority\\n", encoding="utf-8")
+            (sibling / "docs" / "THEME_RULES.md").write_text("# Budokan-specific rules\\n", encoding="utf-8")
+            output = io.StringIO()
+            with patch.object(sys, "argv", ["scan", str(current), "--compare-projects-dir", str(root)]), redirect_stdout(output):
+                self.assertEqual(target_scan.main(), 0)
+            data = json.loads(output.getvalue())
+            routes = data["rule_scope_routes"]
+            self.assertEqual(routes["scope_levels"], ["COMMON", "THEME", "PROJECT"])
+            self.assertIn("docs/CURRENT_AUTHORITY.md", routes["project"]["project_docs"])
+            self.assertEqual(routes["theme"]["local_rule_file"], "")
+            self.assertEqual(routes["theme"]["local_selection"], "NO_SEPARATE_LOCAL_THEME_RULES")
+            self.assertFalse(routes["theme"]["reusable_from_other_project"])
+            self.assertEqual(len(routes["theme"]["related_theme_rule_candidates"]), 1)
+            self.assertEqual(routes["theme"]["related_theme_rule_candidates"][0]["selection"], "REVIEW_ONLY_NOT_APPLIED")
+            self.assertEqual(routes["company_policy"]["selection"], "REQUIRES_AUTHORIZED_COMPANY_POLICY")
+
+    def test_local_theme_rules_are_local_not_universal(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            current = make_project(Path(tmp), "budokan", author="Codia Inc.")
+            (current / "docs").mkdir()
+            (current / "docs" / "THEME_RULES.md").write_text("# Theme rule\\n", encoding="utf-8")
+            routes = target_scan.scope_rule_routes(current, target_scan.scan(current))
+            self.assertEqual(routes["theme"]["local_rule_file"], "docs/THEME_RULES.md")
+            self.assertEqual(routes["theme"]["local_selection"], "PROJECT_OWNED_ONLY")
+
     def test_multiple_themes_are_not_silently_selected(self) -> None:
         r = {"themes": [{}, {}]}
         self.assertEqual(target_scan.compare_theme_lineages(r, r)["state"], "UNDETERMINED")
