@@ -216,6 +216,20 @@ class ThemeLineageHintsTests(unittest.TestCase):
             self.assertEqual(brief["execution_state"], "RECONNAISSANCE_ONLY")
             self.assertNotIn("acf", brief)
 
+    def test_compare_only_scans_lineage_not_sibling_acf_or_templates(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            school = make_project(root, "school", author="Codia Inc.", vite=True)
+            budokan = make_project(root, "budokan", author="Codia Inc.")
+            with (
+                patch.object(target_scan, "scan_acf", side_effect=AssertionError("should not rescan ACF")),
+                patch.object(target_scan, "scan_page_templates", side_effect=AssertionError("should not rescan templates")),
+            ):
+                summary = target_scan.scan_lineage_only(budokan)
+                self.assertEqual(summary["selection_state"], "UNAMBIGUOUS")
+                self.assertEqual(summary["themes"][0]["lineage_hints"]["author_hint"], "Codia Inc.")
+                self.assertTrue(target_scan.compare_theme_lineages(target_scan.scan_lineage_only(school), summary)["same_theme_author_hint"])
+
     def test_multiple_themes_are_not_silently_selected(self) -> None:
         r = {"themes": [{}, {}]}
         self.assertEqual(target_scan.compare_theme_lineages(r, r)["state"], "UNDETERMINED")
