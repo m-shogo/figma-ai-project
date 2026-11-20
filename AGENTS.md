@@ -41,6 +41,14 @@ project learning log
 
 Canonical: `docs/agent-adapters.md`
 
+### Common vs project-specific learnings（開始時とFB発生時）
+
+- **共通 `docs/`**: 案件が変わっても有効な「調査→設計→実装→検証」「毎時の起動と稼働時間の区別」「複数の小さな変更を継続」などの**手順と判断基準**。移植可能な範囲・例外・初回チェックを明記する。
+- **案件 `projects/<slug>/docs/` / `LEARNINGS.md`**: Figma fileKey/node、具体的なカラー・フォント/素材、Theme/ACF/URL、Humanの個別指示、実行時刻/問題の再現・コミット・PR。別案件へ値や禁止事項を自動コピーしない。
+- 新しい失敗はまず案件で「原因→対策→QA証拠」を蓄積する。明示的なHumanの横断適用指定、または既存の`docs/knowledge-promotion.md`に基づく根拠とレビューがあるときだけ、適用範囲を記して共通化する。共通ルールの正当性は案件ごとに確認する。
+
+Canonical: `docs/agent-recurring-work-preflight.md` / `docs/frontend-foundation-preflight.md`
+
 ## Scheduled / recurring implementation — 新チャット・新案件の開始時チェック
 
 毎時/定期的な実装を依頼・引き継ぐ場合、**作業を始める前に** `docs/agent-recurring-work-preflight.md` を読み、Userの期待と実行環境・直近の実績が一致するか確認する。「毎時」=起動頻度であり50分稼働の保証ではない。「1単位」=小さな安全な変更/コミットの粒度であり、1時間の上限ではない。**1回に複数単位進めてよい**。誤解や実行時間と成果の乖離があればHumanが指摘する前、初回preflight時にこちらから説明・改善する。GitHubの正本/前回の成果・open PR・並行ownerを確認し、検証済み作業を繰り返さない。案件固有の仕様・予定は再確認してから扱う。
