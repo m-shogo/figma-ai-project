@@ -130,3 +130,48 @@ reviews:
     disposition: KEEP_PROJECT_ONLY
     rationale: >-
       Reviewed recorded Budokan TOP Events Figma spacing and top_events.css evidence (single REF-002-BUDOKAN). The 8px semantic-group correction and SP/PC gaps were authored for historical Budokan frames, including a separate CMS/calendar ownership boundary. KEEP_PROJECT_ONLY; do not export those pixel values or old Figma authority to other sites. Future validation must check the newer/current project authority first.
+
+  OBS-BUDOKAN-ANNOTATION-MARKER-CONSUMER-AUDIT:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed the Budokan annotation-marker/consumer Figma audit. A glyph that appears identical can belong to several text composition owners, so a global pseudo-element typography patch requires a known consumer map. All indexed support remains REF-002-BUDOKAN, with no independent reference or contradictory record. KEEP_PROJECT_ONLY until a second codebase demonstrates consumer-scoped ownership.
+
+  OBS-BUDOKAN-CMS-NATIVE-MARKUP-SELECTOR-CONTRACT:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed Budokan Core Details CMS markup and stylesheet selector evidence. Selector-to-rendered-DOM mismatch is supported within REF-002-BUDOKAN only; this does not authorize modifying global CMS selectors for other projects. KEEP_PROJECT_ONLY, retest when independent block markup/visual QA evidence becomes available.
+
+  OBS-BUDOKAN-FIGMA-SP-AUTHORITY-DISCOVERY:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed Budokan Figma authority discovery: stale node lineage can wrongly imply an SP variant is absent, while a newer canonical root contains it. Evidence is from REF-002-BUDOKAN only and historic Figma nodes may change. KEEP_PROJECT_ONLY; always re-read the actual current Figma before carrying this finding into a new project.
+
+  OBS-BUDOKAN-FIGMA-TYPOGRAPHY-EXACT-PROPERTY-CHECK:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed Budokan typography exact TEXT-node evidence: generated design context may normalize a line-height unlike the authored node. The recorded observation is grounded in one REF-002-BUDOKAN, no independent measured cross-reference outcome. KEEP_PROJECT_ONLY; do not universally override generated metrics without checking authoritative node properties.
+
+  OBS-BUDOKAN-VERIFY-SHARED-PRIMITIVES-BEFORE-PAGE-DERIVATIVE:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed Budokan publication/shared-primitive evidence. Current site reusable blocks may avoid page-specific derivatives, yet this record explicitly has unresolved variant authority and a real-runtime diff gate. All evidence is REF-002-BUDOKAN; KEEP_PROJECT_ONLY with these blockers intact, and do not assert visual/runtime PASS or generalize the local token design.
