@@ -13,6 +13,9 @@ from typing import Iterable
 SKIP_DIRS = {".git", "node_modules", "vendor", ".next", "dist", "build", "coverage"}
 MAX_TEXT_BYTES = 2_000_000
 THEME_NAME_RE = re.compile(r"(?mi)^\s*Theme Name\s*:\s*(.+?)\s*$")
+THEME_AUTHOR_RE = re.compile(r"(?mi)^\\s*Author\\s*:\\s*(.+?)\\s*$")
+THEME_PARENT_RE = re.compile(r"(?mi)^\\s*Template\\s*:\\s*(.+?)\\s*$")
+CSS_IMPORT_RE = re.compile(r"""@import\\s+['"]\\./([^'"]+)['"]""")
 TEMPLATE_NAME_RE = re.compile(r"(?mi)Template Name\s*:\s*(.+?)\s*(?:\*/|\r?$)")
 ACF_PATTERNS = {
     "save_json_filter": re.compile(r"acf/settings/save_json"),
@@ -56,6 +59,75 @@ def has_theme_header(style_css: Path) -> tuple[bool, str]:
         return False, ""
     match = THEME_NAME_RE.search(read_text(style_css))
     return (bool(match), match.group(1).strip() if match else "")
+
+
+def inspect_theme_lineage(theme: Path, root: Path) -> dict:
+    """Collect source hints only: neither author metadata nor CSS shape grants company policy."""
+    header = read_text(theme / "style.css")
+    author_match = THEME_AUTHOR_RE.search(header)
+    parent_match = THEME_PARENT_RE.search(header)
+    author = author_match.group(1).strip() if author_match else ""
+    parent_theme = parent_match.group(1).strip() if parent_match else ""
+    imports: set[str] = set()
+    css_entry = theme / "css" / "style.css"
+    if css_entry.is_file():
+        for match in CSS_IMPORT_RE.finditer(read_text(css_entry)):
+            imports.add(match.group(1).split("?", 1)[0])
+    modules = sorted(path.name for path in (theme / "inc").glob("*.php")) if (theme / "inc").is_dir() else []
+    # The build owner can be the project folder outside the WordPress theme.
+    project = theme.parent if theme.name == "theme" else root
+    build_hints = sorted(
+        file for file in ("vite.config.mjs", "vite.config.js", "vite.config.ts")
+        if (project / file).is_file()
+    )
+    return {
+        "author_hint": author,
+        "parent_theme_hint": parent_theme,
+        "author_evidence": rel(theme / "style.css", root),
+        "inc_php_modules": modules,
+        "css_import_paths": sorted(imports),
+        "project_build_hints": build_hints,
+        "company_policy_binding": "UNDETERMINED",
+        "theme_baseline_binding": "UNDETERMINED",
+        "note": "Style.css Author/Template and structure are hints, not approval to apply a company policy or reuse another theme implementation.",
+    }
+
+
+def compare_theme_lineages(left: dict, right: dict) -> dict:
+    """Suggest family likeness without treating an author's name as verified corporate identity."""
+    if len(left.get("themes", [])) != 1 or len(right.get("themes", [])) != 1:
+        return {"state": "UNDETERMINED", "reason": "Comparison requires exactly one theme on each side."}
+    a = left["themes"][0]["lineage_hints"]
+    b = right["themes"][0]["lineage_hints"]
+    author_a = str(a.get("author_hint", "")).strip().casefold()
+    author_b = str(b.get("author_hint", "")).strip().casefold()
+    same_author = bool(author_a and author_b and author_a == author_b)
+    features_a = set(f"php:{n}" for n in a.get("inc_php_modules", [])) | set(
+        f"css:{n}" for n in a.get("css_import_paths", [])
+    )
+    features_b = set(f"php:{n}" for n in b.get("inc_php_modules", [])) | set(
+        f"css:{n}" for n in b.get("css_import_paths", [])
+    )
+    shared = features_a & features_b
+    union = features_a | features_b
+    similarity = round(len(shared) / len(union), 3) if union else None
+    return {
+        "state": "EVIDENCE_HINTS_ONLY",
+        "same_theme_author_hint": same_author,
+        "structural_jaccard": similarity,
+        "shared_structure_count": len(shared),
+        "left_structure_count": len(features_a),
+        "right_structure_count": len(features_b),
+        "left_build_hints": a.get("project_build_hints", []),
+        "right_build_hints": b.get("project_build_hints", []),
+        "company_policy_binding": "UNDETERMINED",
+        "theme_baseline_binding": "UNDETERMINED",
+        "decision": (
+            "Possible shared author/structure: compare project authorities and actual baseline before reuse."
+            if same_author else
+            "Author metadata does not match or is absent: keep company/template inference unbound."
+        ),
+    }
 
 
 def candidate_theme_roots(root: Path) -> list[Path]:
@@ -252,6 +324,7 @@ def scan(root: Path) -> dict:
     theme_records = []
     for theme in themes:
         record = classify_theme(theme, root)
+        record["lineage_hints"] = inspect_theme_lineage(theme, root)
         record["page_templates"] = scan_page_templates(theme, root)
         record["acf"] = scan_acf(theme, root)
         record["global_ownership"] = scan_global_ownership(theme, root)
@@ -277,6 +350,7 @@ def parser() -> argparse.ArgumentParser:
     value.add_argument("target", type=Path)
     value.add_argument("--output", type=Path)
     value.add_argument("--require-single-theme", action="store_true")
+    value.add_argument("--compare-to", type=Path, help="Read-only comparison with another theme/project directory.")
     return value
 
 
@@ -287,6 +361,14 @@ def main() -> int:
     except (OSError, ValueError) as exc:
         print(f"FAIL WordPress target reconnaissance: {exc}", file=sys.stderr)
         return 1
+    if args.compare_to is not None:
+        try:
+            reference = scan(args.compare_to)
+        except (OSError, ValueError) as exc:
+            print(f"FAIL theme reference scan: {exc}", file=sys.stderr)
+            return 1
+        result["theme_lineage_comparison"] = compare_theme_lineages(result, reference)
+        result["comparison_target"] = str(args.compare_to)
     serialized = json.dumps(result, ensure_ascii=False, indent=2) + "\n"
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)
