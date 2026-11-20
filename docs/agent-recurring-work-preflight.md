@@ -15,6 +15,10 @@ Owner: Human が明示指定。詳細な実行方針は `docs/agent-execution-po
 5. 初回に Human の期待と仕組みが食い違っている場合は、**作業開始時にこちらから短く指摘**する。Human に「どうして一つしか進めないの？」と言わせるまで待たない。たとえば「毎時は起動頻度で50分稼働の保証ではありません。1回に複数単位を進め、実際の稼働と成果を確認します」。
 6. このルールは**案件固有の設定をコピーする指示ではない**。技術実装順・Figma URL/branch/ACF契約・スケジュール自体は新案件で再確認し、新案件に勝手に流用しない。
 
+## Frontend案件の開始時はデザインFoundationも先行確認
+
+FigmaからWeb/WordPress/React/LPを実装する新しい案件では `docs/frontend-foundation-preflight.md` も開始時に読む。**色コード、font/weight、asset/SVG、icon、spacing、breakpoint、共通部品を既存Theme/Design Systemへマッピングし、必要なものを導入・検証してから各パーツに着手**する。カラー表やCSS変数だけ書いて完了としない。既に検証済みのFoundationは再実装しない。テーマはサンプルか案件の正本かを必ず区別する。jwsnjの具体的な値・`nowrap`禁止等を他案件へ自動コピーしない。毎時内にこの基盤作業を複数単位続けてもよい。
+
 ## 1. 毎回の実行ループ
 
 ```text
