@@ -15,6 +15,7 @@ MAX_TEXT_BYTES = 2_000_000
 THEME_NAME_RE = re.compile(r"(?mi)^\s*Theme Name\s*:\s*(.+?)\s*$")
 THEME_AUTHOR_RE = re.compile(r"(?mi)^\s*Author\s*:\s*(.+?)\s*$")
 THEME_PARENT_RE = re.compile(r"(?mi)^\s*Template\s*:\s*(.+?)\s*$")
+THEME_VERSION_RE = re.compile(r"(?mi)^\s*Version\s*:\s*(.+?)\s*$")
 CSS_IMPORT_RE = re.compile(r"""@import\s+['"]\./([^'"]+)['"]""")
 TEMPLATE_NAME_RE = re.compile(r"(?mi)Template Name\s*:\s*(.+?)\s*(?:\*/|\r?$)")
 ACF_PATTERNS = {
@@ -66,6 +67,7 @@ def inspect_theme_lineage(theme: Path, root: Path) -> dict:
     header = read_text(theme / "style.css")
     author_match = THEME_AUTHOR_RE.search(header)
     parent_match = THEME_PARENT_RE.search(header)
+    version_match = THEME_VERSION_RE.search(header)
     author = author_match.group(1).strip() if author_match else ""
     parent_theme = parent_match.group(1).strip() if parent_match else ""
     imports: set[str] = set()
@@ -83,6 +85,7 @@ def inspect_theme_lineage(theme: Path, root: Path) -> dict:
     return {
         "author_hint": author,
         "parent_theme_hint": parent_theme,
+        "version_hint": version_match.group(1).strip() if version_match else "",
         "author_evidence": rel(theme / "style.css", root),
         "inc_php_modules": modules,
         "css_import_paths": sorted(imports),
@@ -131,6 +134,11 @@ def compare_theme_lineages(left: dict, right: dict) -> dict:
 
 
 def candidate_theme_roots(root: Path) -> list[Path]:
+    # projects/<slug>/theme is the explicitly owned editable Theme.
+    # Its sibling reference/ contains read-only upstream material, not another active Theme.
+    # An actual wp-content/themes install may still contain multiple candidates.
+    if (root / "theme").is_dir() and has_theme_header(root / "theme" / "style.css")[0]:
+        return [root / "theme"]
     candidates: list[Path] = []
     direct, _ = has_theme_header(root / "style.css")
     if direct:
@@ -404,11 +412,54 @@ def scope_rule_routes(root: Path, scanned: dict, *, related: list[dict] | None =
     }
 
 
+def build_scope_brief(result: dict) -> dict:
+    """Small, human/agent-readable handoff; cannot claim applied or runtime-verified rules."""
+    routes = result.get("rule_scope_routes", {})
+    return {
+        "selection_state": result.get("selection_state", "UNDETERMINED"),
+        "selected_themes": [
+            {
+                "path": theme.get("path", ""),
+                "name": theme.get("theme_name", ""),
+                "family": theme.get("family", "UNDETERMINED"),
+                "author_hint": theme.get("lineage_hints", {}).get("author_hint", ""),
+                "version_hint": theme.get("lineage_hints", {}).get("version_hint", ""),
+                "parent_theme_hint": theme.get("lineage_hints", {}).get("parent_theme_hint", ""),
+                "build_hints": theme.get("lineage_hints", {}).get("project_build_hints", []),
+            }
+            for theme in result.get("themes", [])
+        ],
+        "read_first": {
+            "common": routes.get("common", {}).get("canonical_files", []),
+            "theme_local": routes.get("theme", {}).get("local_rule_file", ""),
+            "project_local": routes.get("project", {}).get("project_docs", []),
+        },
+        "theme_rule_selection": routes.get("theme", {}).get("local_selection", "UNDETERMINED"),
+        "other_project_theme_suggestions": [
+            {
+                "project": x.get("project"),
+                "similarity": x.get("similarity"),
+                "selection": x.get("selection"),
+                "theme_rules": x.get("theme_rules"),
+            }
+            for x in routes.get("theme", {}).get("related_theme_rule_candidates", [])
+        ],
+        "company_policy_selection": routes.get("company_policy", {}).get("selection", "UNDETERMINED"),
+        "execution_state": "RECONNAISSANCE_ONLY",
+        "note": (
+            "No inferred author/company or similar Theme rules are auto-applied. "
+            "Check current project contract and actual Theme code before implementation. "
+            "WordPress runtime/visual QA is not performed by this scan."
+        ),
+    }
+
+
 def parser() -> argparse.ArgumentParser:
     value = argparse.ArgumentParser(description="Read-only reconnaissance for a connected WordPress target repository.")
     value.add_argument("target", type=Path)
     value.add_argument("--output", type=Path)
     value.add_argument("--require-single-theme", action="store_true")
+    value.add_argument("--scope-brief", action="store_true", help="Output only actionable common/Theme/project reading routes as JSON.")
     value.add_argument("--compare-to", type=Path, help="Read-only comparison with another theme/project directory.")
     value.add_argument("--compare-projects-dir", type=Path, help="Discover and compare sibling project Theme folders read-only.")
     return value
@@ -456,7 +507,7 @@ def main() -> int:
     result["rule_scope_routes"] = scope_rule_routes(
         args.target, result, related=result.get("known_theme_comparisons", [])
     )
-    serialized = json.dumps(result, ensure_ascii=False, indent=2) + "\n"
+    serialized = json.dumps(build_scope_brief(result) if args.scope_brief else result, ensure_ascii=False, indent=2) + "\n"
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_text(serialized, encoding="utf-8")

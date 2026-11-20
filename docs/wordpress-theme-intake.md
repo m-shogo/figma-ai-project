@@ -76,10 +76,12 @@ repository共通ruleに従う。
 新案件のThemeを受領したら**最初に**、次の既存スキャナで作者欄・PHP include・CSS import・ビルド情報・ほかの案件との構造一致度を読み取る。会社ルールや納品Themeを新規に推測して上書きするものではない。
 
 ```bash
+python scripts/scan_wordpress_target.py projects/<slug> --compare-projects-dir projects --scope-brief
+# 詳細調査が必要な場合のみ:
 python scripts/scan_wordpress_target.py projects/<slug> --compare-projects-dir projects --output .local/theme-recon.json
 ```
 
-- `themes[].lineage_hints.author_hint`: `style.css` の `Author:` から得る**制作元の候補**。実際の発注会社/制作会社/適用すべき Company Policy の確定情報ではない。
+- `--scope-brief` は `rule_scope_routes` の**読むべき共通/Theme/案件資料と比較候補のみ**を小さなJSONで出す。`execution_state=RECONNAISSANCE_ONLY` は**適用・ブラウザ/WordPress検証完了を意味しない**。テーマ受領・上流テーマ変更時に利用し、毎時同じ確認を繰り返さない。`style.css` の `Version` は候補情報であり、上流ソースのコミット一致を証明しない。\n- `themes[].lineage_hints.author_hint`: `style.css` の `Author:` から得る**制作元の候補**。実際の発注会社/制作会社/適用すべき Company Policy の確定情報ではない。
 - `themes[].lineage_hints.inc_php_modules/css_import_paths/project_build_hints`: 当該Themeの構造証拠。会社名ではなく **Themeの技術系統・実装責務** を識別するために使う。
 - `known_theme_comparisons[]`: 他の `projects/*/theme/` の作者欄一致とPHP/CSS構造類似度（Jaccard）。**同じ制作元の名前でも、別のベースTheme・別バージョン・大幅改修はあり得る**。類似度は再利用候補の優先順位に使うだけで、コードの丸ごと移植や会社Policyの自動適用には使わない。
 - `company_policy_binding` と `theme_baseline_binding` は常に `UNDETERMINED` のまま。別途 `CURRENT_AUTHORITY.md` / Human決定 / source commit / 会社の正式な規約を確認してから、案件の有効契約に反映する。

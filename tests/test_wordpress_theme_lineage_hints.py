@@ -132,12 +132,9 @@ class ThemeLineageHintsTests(unittest.TestCase):
             (project / "docs").mkdir()
             (project / "docs" / "THEME_RULES.md").write_text("# Local theme rules\n", encoding="utf-8")
             (project / "docs" / "CURRENT_AUTHORITY.md").write_text("# Project authority\n", encoding="utf-8")
-            # Second plausible Theme exists in a reference folder: never select by author or path alone.
-            other = project / "reference" / "candidate"
-            other.mkdir(parents=True)
-            (other / "style.css").write_text("/*\nTheme Name: Another Theme\nAuthor: Codia Inc.\n*/\n", encoding="utf-8")
-            scanned = target_scan.scan(project)
-            self.assertEqual(scanned["selection_state"], "MULTIPLE_CANDIDATES")
+            # Construct a genuinely unresolved target with two discovered candidates.
+            # The read-only reference/ case is tested separately below.
+            scanned = {"selection_state": "MULTIPLE_CANDIDATES", "themes": [{}, {}]}
             routes = target_scan.scope_rule_routes(project, scanned)
             self.assertEqual(routes["theme"]["local_rule_file"], "")
             self.assertEqual(routes["theme"]["local_selection"], "UNDETERMINED_THEME_SELECTION")
@@ -172,6 +169,52 @@ class ThemeLineageHintsTests(unittest.TestCase):
         self.assertEqual(j_routes["theme"]["local_rule_file"], "")
         self.assertTrue(j_routes["theme"]["related_theme_rule_candidates"])
         self.assertEqual(j_routes["theme"]["related_theme_rule_candidates"][0]["selection"], "REVIEW_ONLY_NOT_APPLIED")
+
+    def test_project_theme_wins_over_read_only_reference_theme(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            project = make_project(Path(tmp), "school", author="Codia Inc.")
+            ref = project / "reference" / "upstream"
+            ref.mkdir(parents=True)
+            (ref / "style.css").write_text("/*\nTheme Name: Reference\nAuthor: Codia Inc.\n*/\n", encoding="utf-8")
+            result = target_scan.scan(project)
+            self.assertEqual(result["selection_state"], "UNAMBIGUOUS")
+            self.assertEqual(result["themes"][0]["path"], "theme")
+
+    def test_wordpress_install_with_two_themes_remains_ambiguous(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            for name in ("first", "second"):
+                theme = root / "wp-content" / "themes" / name
+                theme.mkdir(parents=True)
+                (theme / "style.css").write_text(f"/*\nTheme Name: {name}\n*/\n", encoding="utf-8")
+            result = target_scan.scan(root)
+            self.assertEqual(result["selection_state"], "MULTIPLE_CANDIDATES")
+            self.assertEqual(target_scan.scope_rule_routes(root, result)["theme"]["local_selection"], "UNDETERMINED_THEME_SELECTION")
+
+    def test_brief_only_routes_local_rules_and_keeps_external_review_only(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            school = make_project(root, "school", author="Codia Inc.", vite=True)
+            budokan = make_project(root, "budokan", author="Codia Inc.")
+            for project in (school, budokan):
+                (project / "docs").mkdir()
+            (school / "docs" / "CURRENT_AUTHORITY.md").write_text("# Authority\n", encoding="utf-8")
+            (budokan / "docs" / "THEME_RULES.md").write_text("# Budokan only\n", encoding="utf-8")
+            output = io.StringIO()
+            with patch.object(
+                sys, "argv", ["scan", str(school), "--compare-projects-dir", str(root), "--scope-brief"]
+            ), redirect_stdout(output):
+                self.assertEqual(target_scan.main(), 0)
+            brief = json.loads(output.getvalue())
+            self.assertEqual(brief["selection_state"], "UNAMBIGUOUS")
+            self.assertEqual(brief["selected_themes"][0]["version_hint"], "2.0")
+            self.assertEqual(brief["selected_themes"][0]["build_hints"], ["vite.config.mjs"])
+            self.assertEqual(brief["read_first"]["theme_local"], "")
+            self.assertIn("docs/CURRENT_AUTHORITY.md", brief["read_first"]["project_local"])
+            self.assertEqual(brief["other_project_theme_suggestions"][0]["selection"], "REVIEW_ONLY_NOT_APPLIED")
+            self.assertEqual(brief["company_policy_selection"], "REQUIRES_AUTHORIZED_COMPANY_POLICY")
+            self.assertEqual(brief["execution_state"], "RECONNAISSANCE_ONLY")
+            self.assertNotIn("acf", brief)
 
     def test_multiple_themes_are_not_silently_selected(self) -> None:
         r = {"themes": [{}, {}]}
