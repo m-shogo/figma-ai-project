@@ -32,6 +32,22 @@ Canonical details: `docs/section-execution.md`（shared contract → shared foun
 - WordPress/ブラウザ実機にアクセスできなければ **未検証** と明記。静的コードレビュー・build successをvisual/runtime PASSと混同しない。
 - 根拠、マッピング、導入ファイル/commit、PASS/FAIL/未検証、残る課題を案件の `docs/` に記録し、次回の作業開始時に差分だけ再確認できる状態にする。
 
+## Foundation完了判定の早見表（新しい案件で最初に使う）
+
+色やフォントの一覧を作ることと、実際に動作するFoundationを実装することは別。既存のプロジェクト文書に**対象 / Figma根拠 / 現行コード / 導入差分 / runtime証拠 / 判定**を対応付ける。足りない情報は `UNKNOWN` または `未検証` とする。**新しい一覧表ファイルやCIを機械的に作らず、既存の文書を利用する。**
+
+| 対象 | 調査で確定すること | 完了扱いするために見ること |
+|---|---|---|
+| 色・CSS変数 | Figma semantic role・既存 token owner・使用箇所 | 参照先 CSS が実際にロードされ、必要なコンポーネントの色に反映された |
+| Font | family/weight/style・実ファイル/配信方式・権限・fallback | 対象ブラウザで正しいfontとweightが適用され、意図しない文字幅差がない |
+| 画像・SVG・アイコン | node・export・寸法・ライセンス・crop・role | 本物のアセットが配置され、PC/SPでサイズ・位置・見え方が一致する |
+| Layout | container/gap/spacing・responsive rules・Existing CSS | 画面幅の変化や2〜3行の可変テキストで通常フローが破綻しない |
+| 共通UI | owner・states・hover/tap・連動パーツ | 実際に開閉/クリック等が機能し、関連ページに不具合を生まない |
+
+**判定の段階は混同しない:** `SOURCE_CONFIRMED`（Figma・既存の根拠を取得）→ `IMPLEMENTED`（コードとアセット配置）→ `STATIC_VERIFIED`（構文/build/CI等）→ `RUNTIME_VISUAL_VERIFIED`（必要な環境で描画・操作確認）。最後ができない実行環境なら `UNVERIFIED_RUNTIME` のまま保持し、レビュー可能な証拠と次の確認手順を残す。案件・会社の既存status taxonomyがあればそれを優先する。
+
+**重要:** Foundation全体が未検証でも、依存がない次の単位（正確なAsset整理、メニュー構造設計、独立した部品）を進めてよい。ただし未検証の基盤を完成扱いして展開しない。1つの作業単位で複数領域を安全に進めることも可能。
+
 ## 次の案件に引き継ぐもの / 引き継がないもの
 
 | 次案件へ持ち込む | 案件ごとに再確認する（勝手に持ち込まない） |
