@@ -8,6 +8,7 @@ Japanese Weekend School of NJ（ニュージャージー補習授業校）の Wo
 - ページとメニュー: `docs/DIRECTORY_MAP.md`
 - 実装前の色・フォント・画像・導入状況: `docs/DESIGN_FOUNDATION.md`
 - 毎回の品質チェック: `docs/IMPLEMENTATION_CHECKLIST.md`
+- **後日、ローカルWP環境が利用可能になったら最初に検証**: `docs/DEFERRED_RUNTIME_QA.md`（P0から開始。現段階はDEFERRED_ENV、GitHub/Figmaでできる実装は止めない）
 - 仕様（管理画面で編集する項目・hover・プラグイン）: `docs/SPEC.md`
 - 案件内の不具合/FB: `LEARNINGS.md`
 - **jwsnj固有の毎時実行の事例と原因分析**: `docs/WORKFLOW_LEARNING.md`（他案件への共通化はルート `docs/agent-recurring-work-preflight.md` / `docs/frontend-foundation-preflight.md`）
