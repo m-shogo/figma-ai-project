@@ -43,14 +43,14 @@ records:
           commit: ''
           note: Local Nav heading hover reintroduced clip+inset; Human called out missing octagon edge; switched to SVG chip.
         - evidence_id: EV-LN-OCTAGON-CSS-20260911
-          kind: IMPLEMENTATION
+          kind: LOCAL_RESEARCH
           reference_id: BUDOKAN-WORDPRESS
           run_id: ''
           path: projects/nipponbudokan/theme/css/module/local_navigation.css
           commit: ''
           note: --_ln-octagon-rest / --_ln-octagon-hover SVG chips; clip-path none on heading ::before.
         - evidence_id: EV-BTN-OCTAGON-CHIP-PRIOR
-          kind: IMPLEMENTATION
+          kind: LOCAL_RESEARCH
           reference_id: BUDOKAN-WORDPRESS
           run_id: ''
           path: projects/nipponbudokan/theme/css/blocks/wp-block-buttonLink-style.css
