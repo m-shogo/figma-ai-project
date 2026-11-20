@@ -41,6 +41,12 @@ project learning log
 
 Canonical: `docs/agent-adapters.md`
 
+## Scheduled / recurring implementation — 新チャット・新案件の開始時チェック
+
+毎時/定期的な実装を依頼・引き継ぐ場合、**作業を始める前に** `docs/agent-recurring-work-preflight.md` を読み、Userの期待と実行環境・直近の実績が一致するか確認する。「毎時」=起動頻度であり50分稼働の保証ではない。「1単位」=小さな安全な変更/コミットの粒度であり、1時間の上限ではない。**1回に複数単位進めてよい**。誤解や実行時間と成果の乖離があればHumanが指摘する前、初回preflight時にこちらから説明・改善する。GitHubの正本/前回の成果・open PR・並行ownerを確認し、検証済み作業を繰り返さない。案件固有の仕様・予定は再確認してから扱う。
+
+Canonical: `docs/agent-recurring-work-preflight.md`
+
 ## Execution speed / agent ownership
 
 複数Agent運用では、同じwrite scopeを二重実装・二重調査しない。
