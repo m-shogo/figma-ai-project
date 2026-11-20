@@ -85,3 +85,246 @@ reviews:
     rationale: >-
       Fixed parent height 34px clipped Local Nav link padding/border and collapsed perceived row
       gap from 20px to ~13px. Also rejects screenshot nowrap. One reference. Revisit by 2026-09-25.
+
+  OBS-BUDOKAN-DETAIL-MEDIA-ROLE:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed the Budokan event/news media evidence: the archive thumbnail and detail lead image differ even when sourced from the same Featured Image field (EVENT_DETAIL_MEDIA_OWNERSHIP_AUDIT and single.php commit 34750ddd). This demonstrates a valid scoped CMS ownership boundary in one project; no independent second reference or contrary evidence is in the recorded index. KEEP_PROJECT_ONLY, do not promote a global rule forbidding detail images. Revisit if another WordPress project validates the same case.
+
+  OBS-BUDOKAN-TOP-FV-SP-IMAGE-CROP-OBJECT-POSITION:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed the recorded Budokan Figma PC/SP MV crop and local top_mainVisual.css evidence. The 64.4%/59.8% SP focal correction versus centered PC crop is a historical design-specific value, not a portable default; both support items share REF-002-BUDOKAN. KEEP_PROJECT_ONLY, without assuming that historic Figma nodes remain current or reusing their coordinates in another project. Revalidate the actual current Figma before applying it again.
+
+  OBS-BUDOKAN-NAV-THEME-LOCATION-OWNERSHIP:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed Budokan registered menu-location and theme template evidence including dropdown-navigation.php commit 0af42e81 and sidebar.php commit 00407607. Multiple templates in the same project strengthen the CMS ownership finding but are not independent references. KEEP_PROJECT_ONLY; do not globally override a project's explicit menu-location contract or infer that every theme forbids named menus.
+
+  BUDOKAN-WP-ARCHIVE-ROUTE-OWNER:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed the Budokan WordPress archive-route note and custom.php evidence. The display-label-derived return-link failure is grounded in one project/reference and no independent WordPress project is indexed for this record. KEEP_PROJECT_ONLY: respect actual posts-page/CPT archive routing and any explicit project destination instead of upgrading this one instance into a universal routing contract.
+
+  OBS-BUDOKAN-TOP-EVENTS-CURRENT-FIGMA-SPACING:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed recorded Budokan TOP Events Figma spacing and top_events.css evidence (single REF-002-BUDOKAN). The 8px semantic-group correction and SP/PC gaps were authored for historical Budokan frames, including a separate CMS/calendar ownership boundary. KEEP_PROJECT_ONLY; do not export those pixel values or old Figma authority to other sites. Future validation must check the newer/current project authority first.
+
+  OBS-BUDOKAN-ANNOTATION-MARKER-CONSUMER-AUDIT:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed the Budokan annotation-marker/consumer Figma audit. A glyph that appears identical can belong to several text composition owners, so a global pseudo-element typography patch requires a known consumer map. All indexed support remains REF-002-BUDOKAN, with no independent reference or contradictory record. KEEP_PROJECT_ONLY until a second codebase demonstrates consumer-scoped ownership.
+
+  OBS-BUDOKAN-CMS-NATIVE-MARKUP-SELECTOR-CONTRACT:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed Budokan Core Details CMS markup and stylesheet selector evidence. Selector-to-rendered-DOM mismatch is supported within REF-002-BUDOKAN only; this does not authorize modifying global CMS selectors for other projects. KEEP_PROJECT_ONLY, retest when independent block markup/visual QA evidence becomes available.
+
+  OBS-BUDOKAN-FIGMA-SP-AUTHORITY-DISCOVERY:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed Budokan Figma authority discovery: stale node lineage can wrongly imply an SP variant is absent, while a newer canonical root contains it. Evidence is from REF-002-BUDOKAN only and historic Figma nodes may change. KEEP_PROJECT_ONLY; always re-read the actual current Figma before carrying this finding into a new project.
+
+  OBS-BUDOKAN-FIGMA-TYPOGRAPHY-EXACT-PROPERTY-CHECK:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed Budokan typography exact TEXT-node evidence: generated design context may normalize a line-height unlike the authored node. The recorded observation is grounded in one REF-002-BUDOKAN, no independent measured cross-reference outcome. KEEP_PROJECT_ONLY; do not universally override generated metrics without checking authoritative node properties.
+
+  OBS-BUDOKAN-VERIFY-SHARED-PRIMITIVES-BEFORE-PAGE-DERIVATIVE:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed Budokan publication/shared-primitive evidence. Current site reusable blocks may avoid page-specific derivatives, yet this record explicitly has unresolved variant authority and a real-runtime diff gate. All evidence is REF-002-BUDOKAN; KEEP_PROJECT_ONLY with these blockers intact, and do not assert visual/runtime PASS or generalize the local token design.
+
+  OBS-BUDOKAN-OVERLAP-SECTION-END-GEOMETRY:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed the Budokan overlap section-end geometry record. Negative overlap/child placement may match while final section rhythm drifts. The observed section and correction are from REF-002-BUDOKAN only; Figma geometry is project-specific, no independent evidence. KEEP_PROJECT_ONLY until a separate reference confirms the geometry QA boundary.
+
+  OBS-BUDOKAN-PUBLICATIONS-SHELL-OWNERSHIP-CONFLICT:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed Budokan Publications runtime page-template versus Figma one-column shell conflict. The evidence proves a project-specific ownership mismatch where neither switching the WordPress template nor route-CSS patch is automatically authorized. One REF-002-BUDOKAN, no independent project record. KEEP_PROJECT_ONLY; do not silently override either source of authority.
+
+  OBS-BUDOKAN-RENDERED-TEXT-QA-MARKER:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed Budokan annotated rendered-text QA marker record. Raw source string matching is not equivalent to textContent when a phrase is wrapped by markup; that is evidenced locally in REF-002-BUDOKAN only. KEEP_PROJECT_ONLY until an independently measured test failure/repair confirms this as a portable check, without changing unrelated test infrastructure.
+
+  OBS-BUDOKAN-MOBILE-STACK-DOES-NOT-IMPLY-FULL-WIDTH-BUTTON:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed Budokan mobile responsive-button width evidence. Figma-authored intrinsic/minimum width of a control differs from generic flex container stack behavior; forcing 100% is not supported by this project's current design. Only REF-002-BUDOKAN indexed, no separate project; KEEP_PROJECT_ONLY. Do not globalize the specific width or forbid full-width controls when new Figma explicitly requires them.
+
+  OBS-BUDOKAN-RESPONSIVE-NOTICE-ICON-AUTHORITY:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed Budokan PC/SP notice icon presentation under one ACF content owner. The authored icon treatment differs by breakpoint but no extra CMS field is justified. Recorded supports remain BUDOKAN-WORDPRESS only; KEEP_PROJECT_ONLY. Independently confirm responsive visual/source separation before expanding beyond this site.
+
+  OBS-BUDOKAN-TOP-ABOUT-CURRENT-FIGMA-GEOMETRY:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed Budokan TOP About PC rail/card geometry observation. Old proportional-card assumptions conflicted with the then-current authored desktop composition, but the node geometry and exact spacing are site-specific historical evidence. One REF-002-BUDOKAN; KEEP_PROJECT_ONLY; recheck actual Figma authority prior to any future code reuse.
+
+  OBS-BUDOKAN-TOP-ABOUT-SP-CURRENT-AUTHORITY:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed Budokan TOP About SP authority drift evidence. A PC-correct card family can still use obsolete SP proportions if historical mobile assumptions are not re-read. One REF-002-BUDOKAN, no independently measured second site; KEEP_PROJECT_ONLY, with a new-project design/source comparison required before generalization.
+
+  OBS-BUDOKAN-TOP-FOOTER-CURRENT-FIGMA-RHYTHM:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed Budokan TOP Footer nested gap evidence: a flattened display:contents grid can erase authored sub-gap distinctions if one uniform row gap is applied. Source and footer geometry belong only to REF-002-BUDOKAN, not a portable CSS value. KEEP_PROJECT_ONLY; require independent consumer evidence before expanding scope.
+
+  OBS-BUDOKAN-COMPONENT-INTERNAL-VS-PAGE-COMPOSITION-SPACING:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed Budokan tournament/card composition evidence: differences in outer page grid cannot automatically redefine shared component-internal spacing. It is a valid one-project design ownership boundary, but only REF-002-BUDOKAN supports it. KEEP_PROJECT_ONLY; require independent visual/runtime evidence before promoting a shared-spacing rule.
+
+  OBS-BUDOKAN-SHARED-COMPONENT-CONSUMER-TYPOGRAPHY-VARIANT:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed Budokan tournament/local-nav shared-component consumer typography evidence. A single consumer's type treatment differs without proving the shared CSS owner is wrong; semantic variant ownership remains unresolved. One REF-002-BUDOKAN, no independent reference. KEEP_PROJECT_ONLY and preserve the existing variant authority blocker.
+
+  OBS-BUDOKAN-SHARED-MASTER-INSTANCE-VARIANT-GATE:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed the Budokan Tournament row-header typography versus canonical Headercell (Medium 500 versus Regular 400) and its local audit. Widening the shared master rule is not authorized by the one page instance. The only indexed reference is REF-002-BUDOKAN; KEEP_PROJECT_ONLY without inventing an ACF field or style marker.
+
+  OBS-BUDOKAN-TOP-FV-CURRENT-AUTHORITY-BOUNDARY:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed Budokan full-page Figma authority/contained sub-frame inspection evidence. Bounded subcomposition context can be useful when full-page Figma retrieval is limited, but old frame IDs are historical and not applicable to other designs. One REF-002-BUDOKAN only; KEEP_PROJECT_ONLY, and verify current root before reuse.
+
+  OBS-BUDOKAN-TOP-FV-RESPONSIVE-COPY-ACF-OWNER:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed the Budokan TOP FV responsive copy and existing ACF repeater owner. Existing owner expansion must respect both PC/SP authored copy, but the ACF fields and state are Budokan-specific and the index has only REF-002-BUDOKAN. KEEP_PROJECT_ONLY; do not infer other projects need new responsive content fields.
+
+  OBS-BUDOKAN-TOP-GUIDE-LOWER-EDGE-CURRENT-FIGMA:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed Budokan TOP Guide authored overlap rail ending at a section boundary. Removing historical desktop bottom padding is a project-Figma geometry correction rather than a default rule against padding. One REF-002-BUDOKAN, no external independent case. KEEP_PROJECT_ONLY; current Figma must be rechecked.
+
+  OBS-BUDOKAN-TOP-NEWS-CURRENT-FIGMA-LABEL-HEIGHT:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed Budokan TOP News label sizing versus shared News item master. The local min-height override is not authorized when current master and Figma agree; this is confined to one TOP derivative. Only REF-002-BUDOKAN indexed; KEEP_PROJECT_ONLY. Do not globalize the label height or assume a future master is identical.
+
+  OBS-BUDOKAN-RESPONSIVE-VARIANT-TYPOGRAPHY-SCOPE:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 1
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed Budokan Core Details QA tracking: Figma SP standard 5%, SP QA 10%, PC standard 10%, PC QA 5%, with an existing ._qa marker and bounded PC override. This supports a project variant-scope fix, not a global token across projects; only REF-002-BUDOKAN. KEEP_PROJECT_ONLY and preserve the responsive variant mechanism.
+
+  OBS-PROJECT-RUN-TEMPLATE-AUTHORITY:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 0
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed explicit repo-local tooling evidence: scripts/create_section_run.py commit b57a6c089c359d02fca5ce3a00e5fd384b1e3472 replaced a stale hard-coded schema-10 constructor with the checked-in templates/run-record.yaml owner (PR #206). The two sources are valid project-internal implementation/canonical-template evidence but have no independent reference_id, so distinct supporting reference count remains 0, not a fabricated cross-project reference. This is a repository-internal generator design constraint, not a universal Figma/frontend rule; KEEP_PROJECT_ONLY and revisit only on independent, applicable evidence or tool architecture changes.
