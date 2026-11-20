@@ -19,11 +19,13 @@ portable な Human-approved contract の置き場所:
 ```text
 共通の短い契約 → AGENTS.md
 詳細 → canonical docs
-案件固有 Current Authority → experiments/<case>/
+案件固有 Current Authority → projects/<slug>/docs/（研究 run は experiments/<case>/）
 機械可読 invariant → config/*.yaml + tests
 ```
 
-Human が「これが正本」と決めた契約は、その scope の Git へすぐ書く。案件固有なら `experiments/<case>/`。全案件共通なら `AGENTS.md` の短い routing と canonical doc。client adapter へ複製しない。
+Human が「これが正本」と決めた契約は、その scope の Git へすぐ書く。案件固有なら `projects/<slug>/docs/`（研究 run は `experiments/<case>/`）。全案件共通なら `AGENTS.md` の短い routing と canonical doc。client adapter へ複製しない。
+
+案件（納品物）は 1 案件 1 フォルダ `projects/<slug>/`（`theme/` `qa/` `docs/` `runtime.env` `LEARNINGS.md`）。共通の Docker 実行環境は `runtime/wordpress/` で、案件ファイルを置かない。起動は `.\wp.ps1 up <slug>`。構成と案件の閉じ方は `projects/README.md`。
 
 Agent の観察・1回の成功/失敗は、いきなり `AGENTS.md` / Company Policy へ上げない。
 
@@ -332,13 +334,13 @@ Section Implementation Unitはstackへ合わせる:
 
 提供Themeがある案件では、Themeを観測するまでtheme-relativeな構造を確定しない。
 
-案件の Current Authority / Theme rules / Directory map は experiment 配下の Git 正本を読む。Budokan WordPress なら:
+案件の Current Authority / Theme rules / Directory map は `projects/<slug>/docs/` の Git 正本を読む。Budokan WordPress なら:
 
-- `experiments/budokan-wordpress/CURRENT_AUTHORITY.md`
-- `experiments/budokan-wordpress/THEME_RULES.md`
-- `experiments/budokan-wordpress/DIRECTORY_MAP.md`
+- `projects/nipponbudokan/docs/CURRENT_AUTHORITY.md`
+- `projects/nipponbudokan/docs/THEME_RULES.md`
+- `projects/nipponbudokan/docs/DIRECTORY_MAP.md`
 
-Local WP runtime は php.ini デフォルト 2M のまま起動しない。正本は `experiments/wordpress-acf-runtime/README.md` と `php/conf.d/99-local-limits.ini`。
+Local WP runtime は php.ini デフォルト 2M のまま起動しない。正本は `runtime/wordpress/README.md` と `php/conf.d/99-local-limits.ini`。
 
 既存フィールド契約に無い ACF / CPT / スラッグを発明しない。契約に無い開催日・募集ステータス等は fail-closed。
 
@@ -348,7 +350,7 @@ Canonical:
 
 - `docs/wordpress-acf-policy.md`
 - `docs/wordpress-theme-intake.md`
-- `experiments/wordpress-acf-runtime/README.md`
+- `runtime/wordpress/README.md`
 
 ## Images / gradients / visual tolerance
 
