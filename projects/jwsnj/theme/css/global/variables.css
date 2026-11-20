@@ -113,6 +113,24 @@
  * 変数
  * ========================================================================== */
 :where(:root) {
+    /*
+     * jwsnj Figma color variables (PC TOP node 114:28).
+     * Keep the CODIA sample tokens below unchanged until their consumers are
+     * replaced with Figma-verified components. This is a non-visual first step.
+     */
+    --jwsnj-color-main: #28ac5f;
+    --jwsnj-color-sec: #6bd2ce;
+    --jwsnj-color-white: #ffffff;
+    --jwsnj-color-text: #333333;
+    --jwsnj-color-separator: #d7d4d4;
+    --jwsnj-color-accent: #ec6b61;
+    --jwsnj-color-base-lightgreen: #f5fdeb;
+    --jwsnj-color-base-lightgreen-02: #eaffd9;
+    --jwsnj-color-base-lightblue: #d7f2f1;
+    --jwsnj-color-text-gray-700: #484848;
+}
+
+:where(:root) {
     /* プライマリーカラー */
     --color-primary: #00b7f1;
     /* セカンダリーカラー */
