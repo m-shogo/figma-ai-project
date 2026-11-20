@@ -50,6 +50,23 @@ class BreadcrumbTrail
   }
 }
 
+/**
+ * ページ自体がない親は、パンくずに名前だけ出す。
+ * /activities/ と /publications/ は固定ページの親子用で、行き先のページはない。
+ */
+function nbk_breadcrumb_page_url($post_id)
+{
+  $permalink = get_permalink($post_id);
+  if (!$permalink) {
+    return null;
+  }
+  $path = trim((string) parse_url($permalink, PHP_URL_PATH), '/');
+  if ($path === 'activities' || $path === 'publications') {
+    return null;
+  }
+  return $permalink;
+}
+
 // パンくず作成用関数
 function get_breadcrumb_trail()
 {
@@ -123,7 +140,7 @@ function get_breadcrumb_trail()
     // 親ありの固定ページ - 親階層も表示
     $ancestors = array_reverse(get_post_ancestors(get_the_ID()));
     foreach ($ancestors as $ancestor) {
-      $trail->addItem(get_the_title($ancestor), get_permalink($ancestor));
+      $trail->addItem(get_the_title($ancestor), nbk_breadcrumb_page_url($ancestor));
     }
     $trail->addItem(get_the_title());
     return $trail;
@@ -134,37 +151,28 @@ function get_breadcrumb_trail()
     $post_top_id = get_option('page_for_posts');
     $trail->addItem(get_the_title($post_top_id), get_permalink($post_top_id));
 
-    $categories = get_the_category();
-    if (!empty($categories) && !is_wp_error($categories)) {
-      $categories = array_values(array_filter($categories, function ($category) {
-        return $category->slug !== 'uncategorized';
-      }));
-    }
+    // カテゴリがある場合は最初のカテゴリを表示
+    // $categories = get_the_category();
+    // if (!empty($categories)) {
+    //   $category = $categories[0];
 
-    if (!empty($categories)) {
-      usort($categories, function ($a, $b) {
-        $depth_a = count(get_ancestors($a->term_id, 'category'));
-        $depth_b = count(get_ancestors($b->term_id, 'category'));
-        return $depth_b <=> $depth_a;
-      });
-      $category = $categories[0];
-      $ancestor_ids = array_reverse(get_ancestors($category->term_id, 'category'));
+    //   // 親カテゴリがある場合
+    //   $parents = get_category_parents($category->term_id, false, '|', true);
+    //   if ($parents && !is_wp_error($parents)) {
+    //     $parent_categories = explode('|', $parents);
+    //     $parent_categories = array_filter($parent_categories);
 
-      foreach ($ancestor_ids as $ancestor_id) {
-        $ancestor = get_term($ancestor_id, 'category');
-        if ($ancestor && !is_wp_error($ancestor)) {
-          $link = get_term_link($ancestor);
-          if (!is_wp_error($link)) {
-            $trail->addItem($ancestor->name, $link);
-          }
-        }
-      }
-
-      $link = get_term_link($category);
-      if (!is_wp_error($link)) {
-        $trail->addItem($category->name, $link);
-      }
-    }
+    //     foreach ($parent_categories as $parent_category) {
+    //       $cat_obj = get_term_by('name', $parent_category, 'category');
+    //       if ($cat_obj) {
+    //         $trail->addItem($cat_obj->name, get_term_link($cat_obj));
+    //       }
+    //     }
+    //   } else {
+    //     // 親カテゴリがない場合
+    //     $trail->addItem($category->name, get_term_link($category));
+    //   }
+    // }
 
     $trail->addItem(get_the_title());
     return $trail;
@@ -174,19 +182,26 @@ function get_breadcrumb_trail()
     // その他の投稿タイプ
     $post_type = get_post_type();
     $post_type_obj = get_post_type_object($post_type);
-    $trail->addItem($post_type_obj->label, get_post_type_archive_link($post_type));
+    if ($post_type === 'tankoubon' && function_exists('nipponbudokan_books_listing_page')) {
+      $books_page = nipponbudokan_books_listing_page();
+      if ($books_page) {
+        $trail->addItem(get_the_title($books_page), get_permalink($books_page));
+      } else {
+        $trail->addItem($post_type_obj->label, nipponbudokan_books_listing_url());
+      }
+    } else {
+      $trail->addItem($post_type_obj->label, get_post_type_archive_link($post_type));
+    }
 
-    // 単行本の詳細はカテゴリ一覧へ繋がない
-    if ($post_type !== 'tankoubon') {
-      $taxonomies = get_object_taxonomies($post_type, 'objects');
-      if (!empty($taxonomies)) {
-        $taxonomy = reset($taxonomies);
-        $terms = get_the_terms(get_the_ID(), $taxonomy->name);
+    // タクソノミーがあれば表示
+    $taxonomies = get_object_taxonomies($post_type, 'objects');
+    if (!empty($taxonomies)) {
+      $taxonomy = reset($taxonomies);
+      $terms = get_the_terms(get_the_ID(), $taxonomy->name);
 
-        if (!empty($terms) && !is_wp_error($terms)) {
-          $term = reset($terms);
-          $trail->addItem($term->name, get_term_link($term));
-        }
+      if (!empty($terms)) {
+        $term = reset($terms);
+        $trail->addItem($term->name, get_term_link($term));
       }
     }
 
@@ -229,7 +244,16 @@ function get_breadcrumb_trail()
     $post_type = $taxonomy->object_type[0];
     $post_type_obj = get_post_type_object($post_type);
 
-    $trail->addItem($post_type_obj->label, get_post_type_archive_link($post_type));
+    if ($term->taxonomy === 'book' && function_exists('nipponbudokan_books_listing_page')) {
+      $books_page = nipponbudokan_books_listing_page();
+      if ($books_page) {
+        $trail->addItem(get_the_title($books_page), get_permalink($books_page));
+      } else {
+        $trail->addItem($post_type_obj->label, nipponbudokan_books_listing_url());
+      }
+    } else {
+      $trail->addItem($post_type_obj->label, get_post_type_archive_link($post_type));
+    }
 
     // 親タームがある場合
     if ($term->parent) {

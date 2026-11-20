@@ -30,7 +30,7 @@ $text_sections = array(
 );
 ?>
 <?php if (nbk_acf_value_present($pickup)) : ?>
-    <h3 class="wp-block-heading">今月のおすすめ</h3>
+    <h3 class="wp-block-heading">今月のピックアップ</h3>
     <?php foreach ($pickup as $row) : ?>
         <?php
         $row_title = isset($row['budo_pickup_ttl']) ? $row['budo_pickup_ttl'] : '';
@@ -55,7 +55,7 @@ $text_sections = array(
 <?php endif; ?>
 
 <?php if (nbk_acf_value_present($recommends)) : ?>
-    <h3 class="wp-block-heading">今月のピックアップ</h3>
+    <h3 class="wp-block-heading">今月のおすすめ</h3>
     <div class="publication_budo-pickups">
         <?php foreach ($recommends as $row) : ?>
             <?php

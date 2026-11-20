@@ -5,8 +5,8 @@ $requested_year = nipponbudokan_event_requested_year();
 $requested_month = nipponbudokan_event_requested_month();
 $term = is_tax('event_cat') ? get_queried_object() : null;
 
-$prev_year_url = nipponbudokan_event_archive_url($year - 1, $month, $term);
-$next_year_url = nipponbudokan_event_archive_url($year + 1, $month, $term);
+$prev_year_url = nipponbudokan_event_archive_url($year - 1, 12, $term);
+$next_year_url = nipponbudokan_event_archive_url($year + 1, 1, $term);
 
 $adjacent_months = array();
 for ($offset = -1; $offset <= 1; $offset++) {

@@ -5,7 +5,7 @@
  * PUBLICATIONS_CPT_ARCHITECTURE.md の共通契約:
  * ① テンプレ頭 = 既存 ACF + タイトル + アイキャッチ + 固定CTA（空は出さない）
  * ② 本文 = ACF のみ。投稿本文は出さない。
- * ③ バックナンバー = 表示中の号を除く最新5件
+ * ③ バックナンバー = 表示中の号と最新号を除く5件
  */
 get_template_part('template-parts/publications/_acf-has-value');
 get_header();
@@ -23,7 +23,6 @@ get_header();
             </div>
         </div>
 
-        <?php get_template_part('template-parts/_local-navigation'); ?>
         <?php get_template_part('template-parts/_breadCrumb'); ?>
     </section>
 </main>

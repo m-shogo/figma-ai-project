@@ -256,11 +256,130 @@ function add_custom_taxonomy()
       'label' => '単行本のカテゴリー',
       'singular_label' => '単行本のカテゴリー',
       'public' => true,
-      'show_ui' => true
+      'show_ui' => true,
+      // 行事予定 /event/event_cat/{term}/ と同じ形。/news/ は付けない。
+      'rewrite' => array(
+        'slug' => 'books/books_cat',
+        'with_front' => false,
+        'hierarchical' => true,
+      ),
     )
   );
+
+  if (get_option('nb_book_rewrite_version') !== 'books/books_cat') {
+    flush_rewrite_rules(false);
+    update_option('nb_book_rewrite_version', 'books/books_cat', false);
+  }
 }
 add_action('init', 'add_custom_taxonomy');
+
+/**
+ * 単行本一覧（固定ページ）。
+ */
+function nipponbudokan_books_listing_page()
+{
+  static $page = false;
+  if ($page !== false) {
+    return $page;
+  }
+
+  $pages = get_pages(array(
+    'meta_key' => '_wp_page_template',
+    'meta_value' => 'page-publications-budo-books.php',
+    'number' => 1,
+    'post_status' => 'publish',
+  ));
+  if (!empty($pages)) {
+    $page = $pages[0];
+    return $page;
+  }
+
+  foreach (array('books', 'publications/budo/books') as $path) {
+    $found = get_page_by_path($path);
+    if ($found) {
+      $page = $found;
+      return $page;
+    }
+  }
+
+  $page = null;
+  return $page;
+}
+
+function nipponbudokan_books_listing_url()
+{
+  $page = nipponbudokan_books_listing_page();
+  return $page ? get_permalink($page) : home_url('/books/');
+}
+
+add_filter('wp_robots', function ($robots) {
+  if (is_tax('book')) {
+    $robots['noindex'] = true;
+  }
+
+  // /activities/ と /publications/ は親子用の固定ページだけで、中身のページではない。
+  if (is_page(array('activities', 'publications'))) {
+    $path = trim((string) parse_url((string) get_permalink(), PHP_URL_PATH), '/');
+    $home_path = trim((string) parse_url(home_url('/'), PHP_URL_PATH), '/');
+    if ($home_path !== '' && ($path === $home_path || str_starts_with($path, $home_path . '/'))) {
+      $path = trim(substr($path, strlen($home_path)), '/');
+    }
+    if ($path === 'activities' || $path === 'publications') {
+      $robots['noindex'] = true;
+    }
+  }
+
+  return $robots;
+});
+
+add_action('pre_get_posts', function ($query) {
+  if (is_admin() || !$query->is_main_query() || !$query->is_tax('book')) {
+    return;
+  }
+  $query->set('post_type', 'tankoubon');
+  $query->set('posts_per_page', -1);
+  $query->set('orderby', 'date');
+  $query->set('order', 'DESC');
+});
+
+add_action('template_redirect', function () {
+  if (is_admin()) {
+    return;
+  }
+
+  $path = wp_parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH);
+  $relative = trim((string) $path, '/');
+  $home_path = trim((string) wp_parse_url(home_url('/'), PHP_URL_PATH), '/');
+  if ($home_path !== '' && ($relative === $home_path || str_starts_with($relative, $home_path . '/'))) {
+    $relative = trim(substr($relative, strlen($home_path)), '/');
+  }
+
+  if ($relative === '' || str_starts_with($relative, 'books/books_cat/')) {
+    return;
+  }
+
+  if (!preg_match('#^(?:news/book|book|books/category|news/books_cat)/([^/]+)/?$#', $relative, $matches)) {
+    return;
+  }
+
+  $term = get_term_by('slug', $matches[1], 'book');
+  if (!$term || is_wp_error($term)) {
+    return;
+  }
+
+  $target = get_term_link($term);
+  if (!$target || is_wp_error($target)) {
+    return;
+  }
+
+  $query = wp_parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_QUERY);
+  if (is_string($query) && $query !== '') {
+    $target .= (str_contains($target, '?') ? '&' : '?') . $query;
+  }
+
+  wp_safe_redirect($target, 301);
+  exit;
+});
 
 // ==========================================================================
 // 特定の投稿タイプのエディターを非表示にする

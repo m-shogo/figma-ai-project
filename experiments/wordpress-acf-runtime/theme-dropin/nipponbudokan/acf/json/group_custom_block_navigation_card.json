@@ -1,0 +1,165 @@
+{
+    "key": "group_custom_block_navigation_card",
+    "title": "カスタムブロック - ナビゲーションカード",
+    "fields": [
+        {
+            "key": "field_nbk_navcard_cards",
+            "label": "ナビゲーションカード",
+            "name": "navigation-card",
+            "aria-label": "",
+            "type": "repeater",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "layout": "block",
+            "pagination": 0,
+            "min": 0,
+            "max": 0,
+            "collapsed": "field_nbk_navcard_name",
+            "button_label": "カードを追加",
+            "rows_per_page": 20,
+            "sub_fields": [
+                {
+                    "key": "field_nbk_navcard_image",
+                    "label": "画像",
+                    "name": "image",
+                    "aria-label": "",
+                    "type": "image",
+                    "instructions": "横530px・縦704px以上。1枚。",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "return_format": "id",
+                    "library": "all",
+                    "min_width": "",
+                    "min_height": "",
+                    "min_size": "",
+                    "max_width": "",
+                    "max_height": "",
+                    "max_size": "",
+                    "mime_types": "",
+                    "allow_in_bindings": 0,
+                    "preview_size": "thumbnail",
+                    "parent_repeater": "field_nbk_navcard_cards"
+                },
+                {
+                    "key": "field_nbk_navcard_name",
+                    "label": "ページ名",
+                    "name": "name",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": "",
+                    "allow_in_bindings": 0,
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_nbk_navcard_cards"
+                },
+                {
+                    "key": "field_nbk_navcard_text",
+                    "label": "紹介文",
+                    "name": "text",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "全角50文字まで。マウスを乗せるか、スマホではタップすると表示します。",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": 50,
+                    "allow_in_bindings": 0,
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_nbk_navcard_cards"
+                },
+                {
+                    "key": "field_nbk_navcard_url",
+                    "label": "リンク先",
+                    "name": "url",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "https:// または /budo-events/ 。空ならリンクになりません。",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "80",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": "",
+                    "allow_in_bindings": 0,
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_nbk_navcard_cards"
+                },
+                {
+                    "key": "field_nbk_navcard_external",
+                    "label": "外部リンク",
+                    "name": "external",
+                    "aria-label": "",
+                    "type": "true_false",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "20",
+                        "class": "",
+                        "id": ""
+                    },
+                    "message": "別タブで開く",
+                    "default_value": 0,
+                    "ui": 1,
+                    "ui_on_text": "別タブ",
+                    "ui_off_text": "同じタブ",
+                    "allow_in_bindings": 0,
+                    "parent_repeater": "field_nbk_navcard_cards"
+                }
+            ]
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "block",
+                "operator": "==",
+                "value": "acf/navigation-card"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "display_title": "",
+    "modified": 1794532000
+}

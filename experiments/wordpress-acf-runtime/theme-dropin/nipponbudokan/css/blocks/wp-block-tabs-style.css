@@ -75,6 +75,22 @@
     border-right: 0;
 }
 
+.wp-block-tabs .wp-block-tab-list > .is-tab-filler,
+.block-editor_wrap .wp-block-tabs .wp-block-tab-list > .is-tab-filler,
+.editor-styles-wrapper .wp-block-tabs .wp-block-tab-list > .is-tab-filler {
+    box-sizing: border-box;
+    min-height: 34px;
+    background-color: var(--color-secondary);
+    border-right: 1px solid var(--color-text);
+    pointer-events: none;
+}
+
+.wp-block-tabs .wp-block-tab-list > .is-tab-filler:nth-child(3n),
+.block-editor_wrap .wp-block-tabs .wp-block-tab-list > .is-tab-filler:nth-child(3n),
+.editor-styles-wrapper .wp-block-tabs .wp-block-tab-list > .is-tab-filler:nth-child(3n) {
+    border-right: 0;
+}
+
 .wp-block-tabs .wp-block-tab-list:has([role='tab']:nth-child(2)):not(:has([role='tab']:nth-child(3))) [role='tab']:last-child,
 .block-editor_wrap .wp-block-tabs .wp-block-tab-list:has([role='tab']:nth-child(2)):not(:has([role='tab']:nth-child(3))) [role='tab']:last-child,
 .editor-styles-wrapper .wp-block-tabs .wp-block-tab-list:has([role='tab']:nth-child(2)):not(:has([role='tab']:nth-child(3))) [role='tab']:last-child {
@@ -132,6 +148,12 @@
         height: auto;
         border: 0;
         box-shadow: none;
+    }
+
+    .wp-block-tabs .wp-block-tab-list > .is-tab-filler,
+    .block-editor_wrap .wp-block-tabs .wp-block-tab-list > .is-tab-filler,
+    .editor-styles-wrapper .wp-block-tabs .wp-block-tab-list > .is-tab-filler {
+        display: none;
     }
 
     .wp-block-tabs .wp-block-tab-list [role='tab'],

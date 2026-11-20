@@ -3,11 +3,21 @@
  * Template Name: 月刊「武道」バックナンバー
  *
  * /publications/budo/back/ の固定ページ用。
- * 公開済み budo-book を新しい順に、最新号を含めて表示する。
+ * 公開済み budo-book を新しい順に出す。最新号は除く。
  * 先頭は総索引アコーディオン。ファイル URL はこの固定ページの sousakuin。無いときはボタンを出さない。
  */
 get_template_part('template-parts/publications/_acf-has-value');
 get_header();
+
+$latest_budo = get_posts(array(
+    'post_type'           => 'budo-book',
+    'post_status'         => 'publish',
+    'posts_per_page'      => 1,
+    'orderby'             => 'date',
+    'order'               => 'DESC',
+    'fields'              => 'ids',
+    'ignore_sticky_posts' => true,
+));
 
 $budo_backnumbers = new WP_Query(array(
     'post_type'           => 'budo-book',
@@ -17,6 +27,7 @@ $budo_backnumbers = new WP_Query(array(
     'order'               => 'DESC',
     'ignore_sticky_posts' => true,
     'no_found_rows'       => true,
+    'post__not_in'        => $latest_budo ? array((int) $latest_budo[0]) : array(),
 ));
 ?>
 <main id="global_contents" class="global_contents" itemscope itemprop="mainContentOfPage">

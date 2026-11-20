@@ -1,5 +1,6 @@
 <?php
 $theme_uri = get_template_directory_uri();
+$purpose_groups = function_exists('nipponbudokan_purpose_menu_groups') ? nipponbudokan_purpose_menu_groups() : array();
 $cards = array(
     array(
         'icon' => 'ico-budo.svg',
@@ -37,7 +38,7 @@ $cards = array(
     <div class="tg_body">
         <div class="global_inner">
             <div class="tg_cards">
-                <?php foreach ($cards as $card): ?>
+                <?php foreach ($cards as $index => $card): ?>
                     <article class="tg_card">
                         <p class="tg_card_image"><img src="<?php echo esc_url($theme_uri . '/images/top/' . $card['image']); ?>" alt="" width="360" height="220" loading="lazy"></p>
                         <div class="tg_card_body">
@@ -47,6 +48,16 @@ $cards = array(
                             </p>
                             <p class="tg_card_line" aria-hidden="true"></p>
                             <p class="tg_card_text"><?php echo esc_html($card['text']); ?></p>
+                        </div>
+                        <div class="tg_card_foot">
+                            <ul class="tm_guide_list">
+                                <?php
+                                $purpose_links = $purpose_groups[$index]['links'] ?? array();
+                                foreach ($purpose_links as $link):
+                                    ?>
+                                    <li><?php echo function_exists('nipponbudokan_purpose_menu_link_html') ? nipponbudokan_purpose_menu_link_html($link) : ''; ?></li>
+                                <?php endforeach; ?>
+                            </ul>
                         </div>
                     </article>
                 <?php endforeach; ?>

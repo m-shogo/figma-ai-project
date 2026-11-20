@@ -126,6 +126,11 @@
             border-top: 1px solid var(--color-text);
         }
 
+        &.news_tabs_item-filler {
+            background-color: var(--color-secondary);
+            pointer-events: none;
+        }
+
         &.is-active {
             background-color: var(--color-text);
             color: var(--color-secondary);
@@ -278,6 +283,10 @@
             flex-direction: column;
             gap: 16px;
             border: 0;
+        }
+
+        .top_news_tabs .news_tabs_item-filler {
+            display: none;
         }
 
         .top_news_tabs .news_tabs_item {

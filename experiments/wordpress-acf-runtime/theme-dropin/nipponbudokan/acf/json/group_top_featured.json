@@ -75,7 +75,7 @@
                     "label": "開催日付",
                     "name": "date",
                     "aria-label": "",
-                    "type": "date_picker",
+                    "type": "text",
                     "instructions": "",
                     "required": 0,
                     "conditional_logic": 0,
@@ -84,10 +84,11 @@
                         "class": "",
                         "id": ""
                     },
-                    "display_format": "Y/m/d",
-                    "return_format": "Y-m-d",
-                    "first_day": 1,
-                    "default_to_current_date": 0,
+                    "default_value": "",
+                    "maxlength": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
                     "parent_repeater": "field_top_featured"
                 },
                 {
@@ -170,6 +171,7 @@
                     "choices": {
                         "none": "なし",
                         "recruiting": "募集中",
+                        "visitor": "観覧案内",
                         "ongoing": "開催中",
                         "closed": "受付終了"
                     },
@@ -203,5 +205,5 @@
     "description": "注目の主催事業。最大4件。",
     "show_in_rest": false,
     "display_title": "",
-    "modified": 1759300000
+    "modified": 1793774318
 }

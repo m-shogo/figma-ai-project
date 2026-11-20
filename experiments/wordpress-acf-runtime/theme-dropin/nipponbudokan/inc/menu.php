@@ -59,173 +59,38 @@ function nipponbudokan_get_local_nav_menu_choices()
     return $choices;
 }
 
-function nipponbudokan_get_page_local_nav_menu_id($post_id = 0)
+function nipponbudokan_get_page_local_nav_menu_ids($post_id = 0)
 {
     $post_id = $post_id ? (int) $post_id : (int) get_queried_object_id();
     if ($post_id < 1 || !function_exists('get_field')) {
-        return 0;
+        return array();
     }
-    return absint(get_field('page_local_nav', $post_id));
-}
-
-/**
- * Detail screens that can share one local menu.
- * The menu keeps its Japanese name. Editors check one or more post types
- * on the menu edit screen (Human 2026-10-19).
- */
-function nipponbudokan_local_nav_detail_post_types()
-{
-    return array(
-        'budo-book' => '月刊「武道」',
-        'shodou-book' => '月刊「書写書道」',
-        'tankoubon' => '単行本',
-    );
-}
-
-function nipponbudokan_local_nav_detail_meta_key()
-{
-    return 'nbk_local_nav_post_type';
-}
-
-function nipponbudokan_local_nav_detail_post_types_for_menu($menu_id)
-{
-    $stored = get_term_meta((int) $menu_id, nipponbudokan_local_nav_detail_meta_key(), true);
-    if (is_array($stored)) {
-        $values = $stored;
-    } elseif (is_string($stored) && $stored !== '') {
-        $values = array($stored);
-    } else {
-        $values = array();
+    $raw = get_field('page_local_nav', $post_id);
+    if ($raw === null || $raw === false || $raw === '') {
+        return array();
     }
-
-    $choices = nipponbudokan_local_nav_detail_post_types();
-    $values = array_values(array_filter($values, function ($value) use ($choices) {
-        return isset($choices[(string) $value]);
-    }));
-
-    return array_values(array_unique(array_map('strval', $values)));
-}
-
-function nipponbudokan_get_local_nav_menu_id_for_post_type($post_type)
-{
-    $post_type = (string) $post_type;
-    if (!isset(nipponbudokan_local_nav_detail_post_types()[$post_type])) {
-        return 0;
+    if (!is_array($raw)) {
+        $raw = array($raw);
     }
-    foreach (wp_get_nav_menus() as $menu) {
-        if (!nipponbudokan_is_local_nav_menu($menu)) {
+    $ids = array();
+    foreach ($raw as $value) {
+        if (is_array($value)) {
+            $value = $value['value'] ?? ($value['ID'] ?? '');
+        }
+        $id = absint($value);
+        if ($id < 1 || isset($ids[$id])) {
             continue;
         }
-        $assigned = nipponbudokan_local_nav_detail_post_types_for_menu($menu->term_id);
-        if (in_array($post_type, $assigned, true)) {
-            return (int) $menu->term_id;
-        }
+        $ids[$id] = $id;
     }
-    return 0;
+    return array_values($ids);
 }
 
-function nipponbudokan_get_rendered_local_nav_menu_id($post_id = 0)
+function nipponbudokan_get_page_local_nav_menu_id($post_id = 0)
 {
-    if (is_singular(array_keys(nipponbudokan_local_nav_detail_post_types()))) {
-        return nipponbudokan_get_local_nav_menu_id_for_post_type(get_post_type());
-    }
-    return nipponbudokan_get_page_local_nav_menu_id($post_id);
+    $ids = nipponbudokan_get_page_local_nav_menu_ids($post_id);
+    return $ids ? (int) $ids[0] : 0;
 }
-
-function nipponbudokan_save_local_nav_detail_post_type($menu_id)
-{
-    if (!isset($_POST['save_menu'], $_POST['nbk_local_nav_post_type_present'])) {
-        return;
-    }
-    if (!current_user_can('edit_theme_options')) {
-        return;
-    }
-    $menu_id = (int) $menu_id;
-    $menu = wp_get_nav_menu_object($menu_id);
-    if (!$menu || !nipponbudokan_is_local_nav_menu($menu)) {
-        return;
-    }
-
-    $choices = nipponbudokan_local_nav_detail_post_types();
-    $posted = isset($_POST['nbk_local_nav_post_type']) ? (array) wp_unslash($_POST['nbk_local_nav_post_type']) : array();
-    $values = array();
-    foreach ($posted as $value) {
-        $value = sanitize_key($value);
-        if (isset($choices[$value])) {
-            $values[] = $value;
-        }
-    }
-    $values = array_values(array_unique($values));
-
-    $meta_key = nipponbudokan_local_nav_detail_meta_key();
-    if ($values === array()) {
-        delete_term_meta($menu_id, $meta_key);
-        return;
-    }
-
-    foreach (wp_get_nav_menus() as $other) {
-        if ((int) $other->term_id === $menu_id) {
-            continue;
-        }
-        $other_values = nipponbudokan_local_nav_detail_post_types_for_menu($other->term_id);
-        $remaining = array_values(array_diff($other_values, $values));
-        if ($remaining === $other_values) {
-            continue;
-        }
-        if ($remaining === array()) {
-            delete_term_meta($other->term_id, $meta_key);
-            continue;
-        }
-        update_term_meta($other->term_id, $meta_key, $remaining);
-    }
-    update_term_meta($menu_id, $meta_key, $values);
-}
-add_action('wp_update_nav_menu', 'nipponbudokan_save_local_nav_detail_post_type', 20);
-
-function nipponbudokan_local_nav_detail_menu_field()
-{
-    $menu_id = isset($_GET['menu']) ? absint(wp_unslash($_GET['menu'])) : 0;
-    if ($menu_id < 1) {
-        return;
-    }
-    $menu = wp_get_nav_menu_object($menu_id);
-    if (!$menu || !nipponbudokan_is_local_nav_menu($menu)) {
-        return;
-    }
-
-    $current = nipponbudokan_local_nav_detail_post_types_for_menu($menu_id);
-    $choices = nipponbudokan_local_nav_detail_post_types();
-    ?>
-    <div id="nbk-local-nav-detail-setting" hidden>
-        <fieldset class="menu-settings-group">
-            <legend class="menu-settings-group-name howto">詳細ページ</legend>
-            <input type="hidden" name="nbk_local_nav_post_type_present" value="1">
-            <?php foreach ($choices as $post_type => $label) : ?>
-                <?php
-                // WordPress rebuilds this form from nav-menu-data. A bare name[]
-                // keeps only the last checkbox, so each choice needs its own key.
-                ?>
-                <div class="menu-settings-input checkbox-input">
-                    <input type="checkbox" name="nbk_local_nav_post_type[<?php echo esc_attr($post_type); ?>]" id="nbk-local-nav-post-type-<?php echo esc_attr($post_type); ?>" value="<?php echo esc_attr($post_type); ?>" <?php checked(in_array($post_type, $current, true)); ?>>
-                    <label for="nbk-local-nav-post-type-<?php echo esc_attr($post_type); ?>"><?php echo esc_html($label); ?></label>
-                </div>
-            <?php endforeach; ?>
-        </fieldset>
-    </div>
-    <script>
-        (function () {
-            var box = document.querySelector('#update-nav-menu .menu-settings');
-            var source = document.getElementById('nbk-local-nav-detail-setting');
-            if (!box || !source) {
-                return;
-            }
-            box.appendChild(source);
-            source.hidden = false;
-        }());
-    </script>
-    <?php
-}
-add_action('admin_footer-nav-menus.php', 'nipponbudokan_local_nav_detail_menu_field');
 
 function nipponbudokan_sync_local_nav_menu_slug($menu_id)
 {
@@ -260,10 +125,29 @@ add_action('wp_update_nav_menu', 'nipponbudokan_sync_local_nav_menu_slug', 20);
 add_filter('acf/load_field/name=page_local_nav', function ($field) {
     $field['choices'] = nipponbudokan_get_local_nav_menu_choices();
     $field['allow_null'] = 1;
+    $field['multiple'] = 1;
+    $field['ui'] = 1;
     if (!isset($field['placeholder']) || $field['placeholder'] === '') {
         $field['placeholder'] = 'なし';
     }
     return $field;
+});
+
+add_filter('acf/load_value/name=page_local_nav', function ($value) {
+    if ($value === null || $value === false || $value === '' || $value === array()) {
+        return $value;
+    }
+    if (!is_array($value)) {
+        $value = array($value);
+    }
+    $ids = array();
+    foreach ($value as $item) {
+        $id = absint(is_array($item) ? ($item['value'] ?? 0) : $item);
+        if ($id > 0 && !isset($ids[$id])) {
+            $ids[$id] = (string) $id;
+        }
+    }
+    return array_values($ids);
 });
 
 /**
@@ -305,11 +189,33 @@ function should_open_menu_link_in_new_tab($item)
 }
 
 /**
+ * メニュー項目に実体のある URL があるか。空・#・javascript はリンクなし。
+ */
+function nipponbudokan_nav_menu_item_url($item)
+{
+    $url = isset($item->url) ? trim((string) $item->url) : '';
+    if ($url === '' || $url === '#') {
+        return '';
+    }
+    if (stripos($url, 'javascript:') === 0) {
+        return '';
+    }
+    if (preg_match('#^https?://$#i', $url)) {
+        return '';
+    }
+    $path = trim((string) parse_url($url, PHP_URL_PATH), '/');
+    if ($path === 'activities' || $path === 'publications') {
+        return '';
+    }
+    return $url;
+}
+
+/**
  * グローバルナビゲーション用カスタムWalker
  *
  * 出力構造:
- * - 子あり : li._hasChild > div.gnl_title > {a.gnl_link + button.gnl_button} + div.gnl_wrapper > div.gnl_inner > ul.gnl_list
- * - 子なし : li._noChild > div.gnl_title > {a.gnl_link}
+ * - 子あり : li._hasChild > div.gnl_title > {a/div.gnl_link + button.gnl_button} + div.gnl_wrapper > div.gnl_inner > ul.gnl_list
+ * - 子なし : li._noChild > div.gnl_title > {a/div.gnl_link}
  */
 class Custom_Global_Walker_Nav_Menu extends Walker_Nav_Menu
 {
@@ -367,7 +273,8 @@ class Custom_Global_Walker_Nav_Menu extends Walker_Nav_Menu
         $target_attribute = ( $item_target === '_blank' ) ? ' target="_blank" rel="noopener noreferrer"' : '';
         // メニュータイトル
         $title = isset( $item->title ) ? $item->title : '';
-        $item_url = isset( $item->url ) ? $item->url : '';
+        $item_url = nipponbudokan_nav_menu_item_url($item);
+        $label_html = '<span>' . esc_html($title) . '</span>';
         // タイトル属性
         // $excerpt = $item->post_excerpt; // タイトル属性に入力した値を取得
         // 説明
@@ -389,7 +296,10 @@ class Custom_Global_Walker_Nav_Menu extends Walker_Nav_Menu
         $is_mega_l3_row = $is_mega_nav && (int) $depth === 1;
         /* Mega L4 group heading (実装指示 2377:4054): gray band is not a link. */
         $is_mega_group_heading = $is_mega_nav && $has_children && (int) $depth === 2;
-        $link_class = 'gnl_link-' . $depth_number . (($is_mega_top || $is_mega_l3_row || $is_mega_group_heading) ? '' : ' module_textLink');
+        $link_class = 'gnl_link-' . $depth_number;
+        if ($item_url !== '' && !$is_mega_top && !$is_mega_l3_row && !$is_mega_group_heading) {
+            $link_class .= ' module_textLink';
+        }
         $button_class = 'gnl_button-' . $depth_number;
         $wrapper_class = 'gnl_wrapper-' . $depth_number;
         $inner_class = 'gnl_inner-' . $depth_number;
@@ -401,30 +311,45 @@ class Custom_Global_Walker_Nav_Menu extends Walker_Nav_Menu
             $output .=   '<div class="' . esc_attr($title_class) . '">';
             if ($is_mega_top || $is_mega_group_heading) {
                 $output .=     '<span class="' . esc_attr($link_class) . '">';
-                $output .=       '<span>' . esc_html($title) . '</span>';
+                $output .=       $label_html;
                 $output .=     '</span>';
-            } else {
+            } elseif ($item_url !== '') {
                 $output .=     '<a class="' . esc_attr($link_class) . '" href="' . esc_url($item_url) . '"' . $target_attribute . '>';
-                $output .=       '<span>' . esc_html($title) . '</span>';
+                $output .=       $label_html;
                 $output .=     '</a>';
+            } else {
+                $output .=     '<div class="' . esc_attr($link_class) . '">';
+                $output .=       $label_html;
+                $output .=     '</div>';
             }
             $output .=     '<button class="' . esc_attr($button_class) . '" type="button"><span>開閉</span></button>';
             $output .=   '</div>';
             $output .=     '<div class="' . esc_attr($wrapper_class) . '">';
             $output .=       '<div class="' . esc_attr($inner_class) . '">';
             if ((int) $depth === 0) {
-                $output .=         '<a class="gnl_panelTitle" href="' . esc_url($item_url) . '"' . $target_attribute . '>';
-                $output .=           '<span>' . esc_html($title) . '</span>';
-                $output .=         '</a>';
+                if ($item_url !== '') {
+                    $output .=         '<a class="gnl_panelTitle" href="' . esc_url($item_url) . '"' . $target_attribute . '>';
+                    $output .=           $label_html;
+                    $output .=         '</a>';
+                } else {
+                    $output .=         '<div class="gnl_panelTitle">';
+                    $output .=           $label_html;
+                    $output .=         '</div>';
+                }
             }
         } else {
             $li_classes = trim(implode(' ', $item->classes)) . ' ' . $li_class . ' _noChild';
             $output .=  '<li class="' . esc_attr($li_classes) . '">';
             $output .=   '<div class="' . esc_attr($title_class) . '">';
-            $output .=     '<a class="' . esc_attr($link_class) . '" href="' . esc_url($item_url) . '"' . $target_attribute . '>';
-            $output .=       '<span>' . esc_html($title) . '</span>';
-            // $output .=       '<span>' . esc_html($slug) . '</span>'; // スラッグを表示する場合はコメントアウトを解除
-            $output .=     '</a>';
+            if ($item_url !== '') {
+                $output .=     '<a class="' . esc_attr($link_class) . '" href="' . esc_url($item_url) . '"' . $target_attribute . '>';
+                $output .=       $label_html;
+                $output .=     '</a>';
+            } else {
+                $output .=     '<div class="' . esc_attr($link_class) . '">';
+                $output .=       $label_html;
+                $output .=     '</div>';
+            }
             $output .=   '</div>';
         }
     }
@@ -727,28 +652,32 @@ class Custom_Sidebar_Walker_Nav_Menu extends Walker_Nav_Menu
         $target_attribute = ( $item_target === '_blank' ) ? ' target="_blank" rel="noopener noreferrer"' : '';
         // メニュータイトル
         $title = isset( $item->title ) ? $item->title : '';
-        $item_url = isset( $item->url ) ? $item->url : '';
-        // URL末尾のパスセグメント（英単語スラッグ）のみを取得
-        $path = parse_url($item_url, PHP_URL_PATH);
-        $slug = $path ? basename(rtrim($path, '/')) : '';
+        $item_url = nipponbudokan_nav_menu_item_url($item);
+        $label_html = '<span>' . esc_html($title) . '</span>';
         // 深度に応じた数字（depth 0 → 02 見出し, depth 1 → 03 子）。start_el / start_lvl で共通利用
         $depth_number = isset($args->depth_number) ? $args->depth_number : str_pad((string) $depth + 2, 2, '0', STR_PAD_LEFT);
 
         $li_class = 'lnl_item-' . $depth_number . ' mm_item-' . $depth_number;
         $title_class = 'lnl_title-' . $depth_number . ' mm_title-' . $depth_number;
-        $link_class = 'lnl_link-' . $depth_number . ' mm_link-' . $depth_number . ' module_textLink';
+        $link_class = 'lnl_link-' . $depth_number . ' mm_link-' . $depth_number;
+        if ($item_url !== '') {
+            $link_class .= ' module_textLink';
+        }
         $button_class = 'lnl_button-' . $depth_number . ' mm_button-' . $depth_number;
         $wrapper_class = 'lnl_wrapper-' . $depth_number . ' mm_wrapper-' . $depth_number;
         $inner_class = 'lnl_inner-' . $depth_number . ' mm_inner-' . $depth_number;
+
+        if ($item_url !== '') {
+            $link_html = '<a class="' . esc_attr($link_class) . '" href="' . esc_url($item_url) . '"' . $target_attribute . '>' . $label_html . '</a>';
+        } else {
+            $link_html = '<div class="' . esc_attr($link_class) . '">' . $label_html . '</div>';
+        }
 
         if ($has_children) {
             $li_classes = trim(implode(' ', $item->classes)) . ' ' . $li_class . ' _hasChild';
             $output .= '<li class="' . esc_attr($li_classes) . '">';
             $output .=   '<div class="' . esc_attr($title_class) . '">';
-            $output .=     '<a class="' . esc_attr($link_class) . '" href="' . esc_url($item_url) . '"' . $target_attribute . '>';
-            $output .=       '<span>' . esc_html($title) . '</span>';
-            // $output .=       '<span>' . esc_html($slug) . '</span>'; // スラッグを表示する場合はコメントアウトを解除
-            $output .=     '</a>';
+            $output .=     $link_html;
             $output .=     '<button class="' . esc_attr($button_class) . '" type="button"><span>開閉</span></button>';
             $output .=   '</div>';
             $output .=     '<div class="' . esc_attr($wrapper_class) . '">';
@@ -757,10 +686,7 @@ class Custom_Sidebar_Walker_Nav_Menu extends Walker_Nav_Menu
             $li_classes = trim(implode(' ', $item->classes)) . ' ' . $li_class . ' _noChild';
             $output .= '<li class="' . esc_attr($li_classes) . '">';
             $output .=   '<div class="' . esc_attr($title_class) . '">';
-            $output .=     '<a class="' . esc_attr($link_class) . '" href="' . esc_url($item_url) . '"' . $target_attribute . '>';
-            $output .=       '<span>' . esc_html($title) . '</span>';
-            // $output .=       '<span>' . esc_html($slug) . '</span>'; // スラッグを表示する場合はコメントアウトを解除
-            $output .=     '</a>';
+            $output .=     $link_html;
             $output .=   '</div>';
         }
     }
@@ -972,4 +898,87 @@ class Custom_Dropdown_Walker_Nav_Menu extends Walker_Nav_Menu
         }
         $output .= '</li>';
     }
+}
+
+/**
+ * 目的から探す。FV・下部バナー・目的別テンプレートのサイドバーで同じ項目を使う。
+ *
+ * @return array<int, array{icon: string, label: string, links: array<int, array{path: string, label: string}>}>
+ */
+function nipponbudokan_purpose_menu_groups()
+{
+    return array(
+        array(
+            'icon' => 'ico-budo.svg',
+            'label' => '武道',
+            'links' => array(
+                array('path' => '/about-budo/', 'label' => '武道を知りたい'),
+                array('path' => '/budo-events/', 'label' => '大会や行事に参加、観覧をしたい'),
+                array('path' => '/budo-instruction/', 'label' => '指導について知りたい'),
+            ),
+        ),
+        array(
+            'icon' => 'ico-calligraphy.svg',
+            'label' => '書道',
+            'links' => array(
+                array('path' => '/learn-shodo/', 'label' => '書道を学びたい'),
+                array('path' => '/shodo-exhibitions/', 'label' => '展覧会に参加したい'),
+            ),
+        ),
+        array(
+            'icon' => 'ico-budokan.svg',
+            'label' => '日本武道館',
+            'links' => array(
+                array('path' => '/about-budokan/', 'label' => '武道館について知りたい'),
+                array('path' => '/concerts/', 'label' => '武道館に行きたい'),
+                array('path' => '/training-center/', 'label' => '研修施設を利用したい'),
+                array('path' => '/recruit/', 'label' => '採用情報'),
+            ),
+        ),
+    );
+}
+
+function nipponbudokan_purpose_menu_request_path()
+{
+    $current = trim((string) wp_parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH), '/');
+    $home = trim((string) wp_parse_url(home_url('/'), PHP_URL_PATH), '/');
+    if ($home !== '' && ($current === $home || str_starts_with($current, $home . '/'))) {
+        $current = trim(substr($current, strlen($home)), '/');
+    }
+    return $current;
+}
+
+function nipponbudokan_purpose_menu_is_current($path)
+{
+    $target = trim((string) $path, '/');
+    if ($target === '') {
+        return false;
+    }
+    if (is_page($target)) {
+        return true;
+    }
+    $current = nipponbudokan_purpose_menu_request_path();
+    if ($current === $target || str_starts_with($current, $target . '/')) {
+        return true;
+    }
+    if (!is_page()) {
+        return false;
+    }
+    $page = get_page_by_path($target);
+    if (!$page instanceof WP_Post) {
+        return false;
+    }
+    $ancestors = array_map('intval', get_post_ancestors(get_queried_object_id()));
+    return in_array((int) $page->ID, $ancestors, true);
+}
+
+function nipponbudokan_purpose_menu_link_html($link)
+{
+    $path = isset($link['path']) ? (string) $link['path'] : '';
+    $label = isset($link['label']) ? (string) $link['label'] : '';
+    if ($path === '' || $label === '') {
+        return '';
+    }
+    $current = nipponbudokan_purpose_menu_is_current($path) ? ' aria-current="page"' : '';
+    return '<a href="' . esc_url(home_url($path)) . '" class="tm_guide_link"' . $current . '>' . esc_html($label) . '</a>';
 }

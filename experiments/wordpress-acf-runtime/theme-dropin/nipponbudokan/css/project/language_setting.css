@@ -9,7 +9,12 @@ html.nb-lang-en .display-non-ja-en,
 html:not([class*="nb-lang-"]) .display-non-ja-en,
 html.nb-lang-zh-cn .display-ja-en,
 html.nb-lang-zh-tw .display-ja-en,
-html.nb-lang-ko .display-ja-en {
+html.nb-lang-ko .display-ja-en,
+html[class*="nb-lang-"]:not(.nb-lang-ja) .display-ja,
+html:not(.nb-lang-en) .display-en,
+html.nb-lang-ja .display-other,
+html.nb-lang-en .display-other,
+html:not([class*="nb-lang-"]) .display-other {
     display: none !important;
 }
 

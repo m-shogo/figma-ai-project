@@ -385,10 +385,32 @@
     background-image: linear-gradient(currentColor, currentColor);
     background-repeat: no-repeat;
     background-position: left bottom;
-    background-size: 0 1px;
+    background-size: 100% 1px;
     box-decoration-break: clone;
     -webkit-box-decoration-break: clone;
     transition: background-size var(--transition-duration);
+  }
+
+  .ea_title a,
+  .ea_contact a {
+    &[target="_blank"]::after {
+      content: var(--icon-blank);
+    }
+    &[href$=".pdf"]::after,
+    &[href*=".pdf?"]::after {
+      content: var(--icon-pdf);
+    }
+    &[target="_blank"]::after,
+    &[href$=".pdf"]::after,
+    &[href*=".pdf?"]::after {
+      display: inline-block;
+      margin-left: 0.25em;
+      font-family: var(--font-awesome);
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 1;
+      text-decoration: none;
+    }
   }
 
   .ea_meta {
@@ -581,7 +603,9 @@
       color: var(--color-secondary);
     }
 
-    .ea_title a:hover,
+    .ea_title a:hover {
+      background-size: 0 1px;
+    }
     .ea_title a:focus-visible {
       background-size: 100% 1px;
     }

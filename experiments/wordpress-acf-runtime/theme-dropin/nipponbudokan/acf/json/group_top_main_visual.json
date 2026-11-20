@@ -3,6 +3,36 @@
     "title": "トップ_メインビジュアル",
     "fields": [
         {
+            "key": "field_top_mv_preview",
+            "label": "表示確認（後で削除）",
+            "name": "top_mv_preview",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "確認用です。公開前にこの項目を削除してください。なしは日本時間で切り替えます。朝・昼・晩を選ぶと、時間に関係なくその画像を表示します。",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "none": "なし",
+                "morning": "朝",
+                "day": "昼",
+                "night": "晩"
+            },
+            "default_value": "none",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
             "key": "field_top_mv_copy",
             "label": "キャッチコピー",
             "name": "",
@@ -256,5 +286,5 @@
     "description": "日本時間で 6:00-12:00／12:00-18:00／18:00-6:00 の固定画像を切り替える。スライドショーはない。キャッチコピーは編集しない。",
     "show_in_rest": false,
     "display_title": "",
-    "modified": 1759290000
+    "modified": 1793268620
 }

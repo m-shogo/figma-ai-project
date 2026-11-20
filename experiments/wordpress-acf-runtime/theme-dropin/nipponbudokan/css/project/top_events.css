@@ -6,7 +6,6 @@
 // ========================================================================== */
 .top_events-01 {
   position: relative;
-  background-color: var(--color-secondary);
   > .global_inner {
     padding-top: 64px;
     padding-inline: 24px;
@@ -173,8 +172,7 @@
     line-height: 1;
     letter-spacing: 0.05em;
   }
-  .te_status-recruiting,
-  .te_status-ongoing {
+  .te_status {
     border-color: var(--color-primary);
     color: var(--color-primary);
   }
@@ -307,20 +305,51 @@
     font-family: var(--font-zen-kaku-gothic);
   }
   .te_upcoming_day {
+    display: flex;
+    align-items: flex-start;
     flex-shrink: 0;
+    gap: 8px;
+    min-width: 0;
     font-size: 20px;
     font-weight: 500;
     line-height: 1;
     letter-spacing: 0.05em;
     color: var(--color-text);
-    span {
+    time span {
       font-size: 13px;
     }
-    &.is-sat {
+    &.is-sat time {
       color: #3779ab;
     }
-    &.is-sun {
+    &.is-sun time {
       color: var(--color-primary);
+    }
+  }
+  .te_upcoming_labels {
+    min-width: 0;
+    .category {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 4px;
+      margin: 0;
+    }
+    .label {
+      box-sizing: border-box;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 24px;
+      padding: 5px 10px;
+      border: 1px solid var(--color-line);
+      border-radius: 2px;
+      background-color: var(--color-secondary);
+      color: var(--color-text);
+      font-family: var(--font-zen-kaku-gothic);
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 1;
+      letter-spacing: 0.05em;
     }
   }
   .te_upcoming_time {
@@ -329,7 +358,14 @@
     line-height: 1.4;
     letter-spacing: 0.05em;
     white-space: normal;
-    text-align: right;
+    text-align: left;
+    display: grid;
+  }
+  .te_upcoming_time-pc {
+    display: none;
+  }
+  .te_upcoming_time_sep {
+    display: none;
   }
   .te_upcoming_body {
     display: flex;
@@ -358,7 +394,7 @@
     background-image: linear-gradient(currentColor, currentColor);
     background-repeat: no-repeat;
     background-position: left bottom;
-    background-size: 0 1px;
+    background-size: 100% 1px;
     box-decoration-break: clone;
     -webkit-box-decoration-break: clone;
     transition: background-size var(--transition-duration);
@@ -372,34 +408,32 @@
     text-decoration-skip-ink: none;
     text-underline-position: from-font;
   }
-  .te_upcoming_host,
-  .te_upcoming_url {
+  .te_upcoming_title a,
+  .te_upcoming_host a {
+    &[target="_blank"]::after {
+      content: var(--icon-blank);
+    }
+    &[href$=".pdf"]::after,
+    &[href*=".pdf?"]::after {
+      content: var(--icon-pdf);
+    }
+    &[target="_blank"]::after,
+    &[href$=".pdf"]::after,
+    &[href*=".pdf?"]::after {
+      display: inline-block;
+      margin-left: 0.25em;
+      font-family: var(--font-awesome);
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 1;
+      text-decoration: none;
+    }
+  }
+  .te_upcoming_host {
     font-size: 13px;
     font-weight: 400;
     line-height: 1.6;
     letter-spacing: 0.05em;
-  }
-  .te_upcoming_url {
-    overflow: hidden;
-    span {
-      display: inline-flex;
-      max-width: 100%;
-      align-items: center;
-      gap: 10px;
-      color: inherit;
-      text-decoration: underline;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      &::after {
-        content: "\f2d2";
-        flex-shrink: 0;
-        font-family: var(--font-awesome);
-        font-size: 12px;
-        font-weight: 400;
-        text-decoration: none;
-      }
-    }
   }
 
   .te_more {
@@ -506,10 +540,22 @@
       border-bottom: 0;
     }
     .te_upcoming_day {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
       font-size: 24px;
-      span {
+      time span {
         font-size: 16px;
       }
+    }
+    .te_upcoming_time-sp {
+      display: none;
+    }
+    .te_upcoming_time-pc {
+      display: block;
+    }
+    .te_upcoming_time-pc .te_upcoming_time_sep {
+      display: inline;
     }
     .te_upcoming_time {
       line-height: 1.6;
@@ -543,9 +589,12 @@
       transform: scale(1.17);
     }
 
-    a.te_card_link:hover .te_card_title_line,
-    .te_upcoming_title a:hover {
+    a.te_card_link:hover .te_card_title_line {
       background-size: 100% 1px;
+    }
+
+    .te_upcoming_title a:hover {
+      background-size: 0 1px;
     }
   }
 }

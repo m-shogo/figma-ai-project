@@ -12,6 +12,7 @@
 @import './blocks/wp-block-list-style.css';
 @import './blocks/wp-block-media-text-style.css';
 @import './blocks/wp-block-navigation-style.css';
+@import './project/purpose.css?v=20261119-hero-pad';
 @import './blocks/wp-block-quote-style.css';
 @import './blocks/wp-block-separator-style.css';
 @import './blocks/wp-block-slider-style.css';

@@ -169,50 +169,6 @@ html:has(.top_mainVisual) { scrollbar-gutter: auto; }
     .tm_guide_group:last-child .tm_guide_title {
         letter-spacing: 0.1em;
     }
-    .tm_guide_list {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-        margin: 0;
-        padding: 0;
-        list-style: none;
-        li {
-            display: flex;
-        }
-        a {
-            --_octagon-chip: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpolygon fill='%23fff' stroke='%23d7d4d4' stroke-width='1' stroke-linejoin='round' points='8,0.5 13.4,2.7 15.5,8 13.4,13.3 8,15.5 2.6,13.3 0.5,8 2.6,2.7'/%3E%3C/svg%3E");
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            color: var(--color-text);
-            font-family: var(--font-zen-kaku-gothic);
-            font-size: 14px;
-            font-weight: 500;
-            letter-spacing: 0.05em;
-            line-height: 1.2;
-            text-decoration: none;
-            transition: color var(--transition-duration);
-            &::before {
-                content: var(--icon-arrow-right);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                flex-shrink: 0;
-                width: 16px;
-                height: 16px;
-                font-family: var(--font-awesome);
-                font-weight: 900;
-                font-size: 6px;
-                line-height: 1;
-                color: var(--color-primary);
-                background-color: transparent;
-                background-image: var(--_octagon-chip);
-                background-repeat: no-repeat;
-                background-position: center;
-                background-size: 16px 16px;
-            }
-        }
-    }
 
     .top_notice-01 {
         .tn_inner {
@@ -249,21 +205,6 @@ html:has(.top_mainVisual) { scrollbar-gutter: auto; }
             min-width: 0;
             flex: 1 1 auto;
         }
-        .tn_swiper {
-            width: 100%;
-            min-width: 0;
-            overflow: hidden;
-            .swiper-wrapper {
-                align-items: flex-start;
-                transition-property: transform;
-            }
-            .swiper-slide {
-                display: flex;
-                align-items: flex-start;
-                width: 100%;
-                height: auto;
-            }
-        }
         .tn_text,
         .tn_item,
         .tn_placeholder {
@@ -279,63 +220,6 @@ html:has(.top_mainVisual) { scrollbar-gutter: auto; }
         a.tn_text {
             color: inherit;
             text-decoration: underline;
-        }
-        .tn_inner:has(.tn_nav) {
-            padding-right: 72px;
-        }
-        .tn_nav {
-            position: absolute;
-            top: 50%;
-            right: 16px;
-            z-index: 1;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transform: translateY(-50%);
-        }
-        .tn_nav .swiper-button-prev,
-        .tn_nav .swiper-button-next {
-            position: static;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 20px;
-            height: 20px;
-            margin: 0;
-            padding: 0;
-            border: 0;
-            color: var(--color-primary);
-            background: none;
-            cursor: pointer;
-            transition: opacity var(--transition-duration);
-            .swiper-navigation-icon {
-                display: none;
-            }
-            &::after {
-                content: none;
-            }
-            &::before {
-                font-family: var(--font-awesome);
-                font-weight: 900;
-                font-size: 12px;
-                line-height: 1;
-                color: currentColor;
-            }
-        }
-        .tn_nav .swiper-button-prev::before {
-            content: var(--icon-arrow-left);
-        }
-        .tn_nav .swiper-button-next::before {
-            content: var(--icon-arrow-right);
-        }
-        .tn_nav .swiper-button-disabled {
-            color: var(--color-gray-text);
-            opacity: 1;
-            pointer-events: none;
-            cursor: default;
-        }
-        .tn_nav .swiper-button-lock {
-            display: none;
         }
     }
 
@@ -473,19 +357,7 @@ html:has(.top_mainVisual) { scrollbar-gutter: auto; }
                 line-height: 1;
                 text-decoration: none;
             }
-            .tn_inner:has(.tn_nav) {
-                padding-right: 80px;
-            }
         }
-    }
-
-    .tm_guide_list a:focus-visible {
-        color: var(--color-link);
-    }
-
-    .top_notice-01 .tn_nav .swiper-button-prev:not(.swiper-button-disabled):focus-visible,
-    .top_notice-01 .tn_nav .swiper-button-next:not(.swiper-button-disabled):focus-visible {
-        opacity: var(--opacity-hover);
     }
 
     .top_notice-01 a.tn_text:focus-visible {
@@ -494,23 +366,74 @@ html:has(.top_mainVisual) { scrollbar-gutter: auto; }
 
     /* MARK: hover */
     @media (any-hover: hover) {
-        .tm_guide_list {
-            a {
-                &:hover {
-                    color: var(--color-link);
-                }
-            }
-        }
         .top_notice-01 {
             a.tn_text {
                 &:hover {
                     text-decoration: none;
                 }
             }
-            .tn_nav .swiper-button-prev:not(.swiper-button-disabled):hover,
-            .tn_nav .swiper-button-next:not(.swiper-button-disabled):hover {
-                opacity: var(--opacity-hover);
+        }
+    }
+}
+
+/* FV / 目的バナー / TOP 目的から探すカード / 目的別サイドバーで共用 */
+:is(.top_mainVisual, .purposeBanner, .top_guide-01, .purposeSidebar) {
+    .tm_guide_list {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        li {
+            display: flex;
+        }
+        a {
+            --_octagon-chip: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpolygon fill='%23fff' stroke='%23d7d4d4' stroke-width='1' stroke-linejoin='round' points='8,0.5 13.4,2.7 15.5,8 13.4,13.3 8,15.5 2.6,13.3 0.5,8 2.6,2.7'/%3E%3C/svg%3E");
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--color-text);
+            font-family: var(--font-zen-kaku-gothic);
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            line-height: 1.2;
+            text-decoration: none;
+            transition: color var(--transition-duration);
+            &::before {
+                content: var(--icon-arrow-right);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+                width: 16px;
+                height: 16px;
+                font-family: var(--font-awesome);
+                font-weight: 900;
+                font-size: 6px;
+                line-height: 1;
+                color: var(--color-primary);
+                background-color: transparent;
+                background-image: var(--_octagon-chip);
+                background-repeat: no-repeat;
+                background-position: center;
+                background-size: 16px 16px;
             }
         }
+    }
+
+    .tm_guide_list a[aria-current="page"] {
+        color: var(--color-primary);
+    }
+
+    .tm_guide_list a:focus-visible {
+        color: var(--color-link);
+    }
+}
+
+@media (any-hover: hover) {
+    :is(.top_mainVisual, .purposeBanner, .top_guide-01, .purposeSidebar) .tm_guide_list a:hover {
+        color: var(--color-link);
     }
 }

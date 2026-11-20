@@ -242,3 +242,13 @@ add_action('admin_print_styles', function () {
   }
   echoThemeEditorPaletteStyleTag('themeEditorPaletteBlockEditor');
 }, 20);
+
+// ==========================================================================
+// 非同期パターンの「コンテンツのみ編集」を無効化
+// @reference https://make.wordpress.org/core/2026/03/15/pattern-editing-in-wordpress-7-0/?utm_source=chatgpt.com
+// @reference https://wordpress.com/ja/support/wordpress-editor/block-pattern/
+// ==========================================================================
+add_filter( 'block_editor_settings_all', function( $settings ) {
+    $settings['disableContentOnlyForUnsyncedPatterns'] = true;
+    return $settings;
+} );

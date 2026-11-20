@@ -29,8 +29,8 @@
                 <span>【Nippon Budokan Official】</span>
             </p>
             <div class="ts_icons">
-                <a class="ts_icon ts_icon_youtube" href="<?php echo esc_url(nipponbudokan_official_sns_url('youtube')); ?>" target="_blank" rel="noopener noreferrer" aria-label="YouTube"></a>
-                <a class="ts_icon ts_icon_instagram" href="<?php echo esc_url(nipponbudokan_official_sns_url('instagram')); ?>" target="_blank" rel="noopener noreferrer" aria-label="Instagram"></a>
+                <a class="ts_icon ts_icon_youtube" href="https://www.youtube.com/@NipponBudokanChannel" target="_blank" rel="noopener noreferrer" aria-label="YouTube"></a>
+                <a class="ts_icon ts_icon_instagram" href="https://www.instagram.com/nipponbudokan.channel" target="_blank" rel="noopener noreferrer" aria-label="Instagram"></a>
             </div>
         </div>
     </div>

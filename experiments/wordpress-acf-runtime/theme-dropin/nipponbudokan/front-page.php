@@ -2,17 +2,28 @@
 <?php
 $theme_uri = get_template_directory_uri();
 $has_acf_pro_repeater = class_exists('acf_field_repeater');
-$default_title_pc = '伝統を未来へつなぐ、<br>武道文化の中心地';
+$default_title_pc = '伝統を未来へつなぐ、<br>武道の大殿堂';
 $default_title_sp = $default_title_pc;
-$default_lead_pc = '武道、書道の普及・振興、公益目的事業の拠点として活動しています。';
+$default_lead_pc = '武道、書道の普及・振興を公益目的事業として活動しています。';
 $default_lead_sp = $default_lead_pc;
-$mv_hour = (int) (new DateTimeImmutable('now', new DateTimeZone('Asia/Tokyo')))->format('G');
-if ($mv_hour >= 6 && $mv_hour < 12) {
-    $mv_field = 'top_mv_morning';
-} elseif ($mv_hour >= 12 && $mv_hour < 18) {
-    $mv_field = 'top_mv_day';
+// 確認用。後で top_mv_preview（表示確認）ごと削除する。なし以外は時間より優先。
+$mv_preview_fields = array(
+    'morning' => 'top_mv_morning',
+    'day' => 'top_mv_day',
+    'night' => 'top_mv_night',
+);
+$mv_preview = function_exists('get_field') ? get_field('top_mv_preview', get_queried_object_id()) : '';
+if (is_string($mv_preview) && isset($mv_preview_fields[$mv_preview])) {
+    $mv_field = $mv_preview_fields[$mv_preview];
 } else {
-    $mv_field = 'top_mv_night';
+    $mv_hour = (int) (new DateTimeImmutable('now', new DateTimeZone('Asia/Tokyo')))->format('G');
+    if ($mv_hour >= 6 && $mv_hour < 12) {
+        $mv_field = 'top_mv_morning';
+    } elseif ($mv_hour >= 12 && $mv_hour < 18) {
+        $mv_field = 'top_mv_day';
+    } else {
+        $mv_field = 'top_mv_night';
+    }
 }
 $mv_group = function_exists('get_field') ? get_field($mv_field, get_queried_object_id()) : null;
 $mv_pc_id = is_array($mv_group) ? (int) ($mv_group['img_pc'] ?? 0) : 0;
@@ -54,45 +65,19 @@ $mv_alt = $mv_alt_sp !== '' ? $mv_alt_sp : $mv_alt_pc;
         <aside class="tm_guide" aria-label="目的から探す">
             <p class="tm_guide_head"><span class="tm_guide_head_icon" aria-hidden="true"></span><span class="tm_guide_head_text">目的から探す</span></p>
             <div class="tm_guide_body">
-                <div class="tm_guide_group">
-                    <p class="tm_guide_title"><img src="<?php echo esc_url($theme_uri . '/images/top/ico-budo.svg'); ?>" alt="" width="36" height="36" loading="lazy"><span>武道</span></p>
-                    <ul class="tm_guide_list">
-                        <li><a class="tm_guide_link" aria-disabled="true">武道を知りたい</a></li>
-                        <li><a class="tm_guide_link" aria-disabled="true">大会・行事に参加したい</a></li>
-                        <li><a class="tm_guide_link" aria-disabled="true">指導について知りたい</a></li>
-                    </ul>
-                </div>
-                <div class="tm_guide_group">
-                    <p class="tm_guide_title"><img src="<?php echo esc_url($theme_uri . '/images/top/ico-calligraphy.svg'); ?>" alt="" width="36" height="36" loading="lazy"><span>書道</span></p>
-                    <ul class="tm_guide_list">
-                        <li><a class="tm_guide_link" aria-disabled="true">書道を学びたい</a></li>
-                        <li><a class="tm_guide_link" aria-disabled="true">展覧会に参加したい</a></li>
-                    </ul>
-                </div>
-                <div class="tm_guide_group">
-                    <p class="tm_guide_title"><img src="<?php echo esc_url($theme_uri . '/images/top/ico-budokan.svg'); ?>" alt="" width="36" height="36" loading="lazy"><span>日本武道館</span></p>
-                    <ul class="tm_guide_list">
-                        <li><a class="tm_guide_link" aria-disabled="true">武道館について知りたい</a></li>
-                        <li><a class="tm_guide_link" aria-disabled="true">研修施設を利用したい</a></li>
-                        <li><a class="tm_guide_link" aria-disabled="true">コンサートに行きたい</a></li>
-                    </ul>
-                </div>
+                <?php get_template_part('template-parts/_purpose-menu'); ?>
             </div>
         </aside>
     </div>
 
     <?php
-    $notice_items = array();
+    $notice = null;
     $show_notice = true;
     if ($has_acf_pro_repeater && function_exists('get_field') && function_exists('have_rows')) {
         $show_notice = (bool) get_field('top_notice_select');
         if ($show_notice && have_rows('top_notice-01')) {
             while (have_rows('top_notice-01')) {
                 the_row();
-                $none = get_sub_field('none');
-                if ($none) {
-                    continue;
-                }
                 $title = get_sub_field('title');
                 $title = is_string($title) ? trim(wp_strip_all_tags($title)) : '';
                 if ($title === '') {
@@ -107,14 +92,15 @@ $mv_alt = $mv_alt_sp !== '' ? $mv_alt_sp : $mv_alt_pc;
                 }
                 $url = get_sub_field('url');
                 $url = is_string($url) ? trim(str_replace(array("\r", "\n"), '', $url)) : '';
-                $notice_items[] = array(
+                $notice = array(
                     'title' => $title,
                     'url' => $url,
                     'external' => $url !== '' && (bool) get_sub_field('external'),
                 );
+                break;
             }
         }
-        $show_notice = $show_notice && $notice_items !== array();
+        $show_notice = $show_notice && $notice !== null;
     }
     ?>
     <?php if ($show_notice): ?>
@@ -122,30 +108,16 @@ $mv_alt = $mv_alt_sp !== '' ? $mv_alt_sp : $mv_alt_pc;
             <div class="tn_inner">
                 <p class="tn_icon" aria-hidden="true"><img src="<?php echo esc_url($theme_uri . '/images/top/ico-attention.svg'); ?>" alt="" width="24" height="24" loading="lazy"></p>
                 <div class="tn_body">
-                    <?php if ($notice_items): ?>
-                        <div class="swiper tn_swiper">
-                            <div class="swiper-wrapper">
-                                <?php foreach ($notice_items as $notice): ?>
-                                    <div class="swiper-slide">
-                                        <?php if ($notice['url'] !== ''): ?>
-                                            <a class="tn_text" href="<?php echo esc_url($notice['url']); ?>"<?php echo $notice['external'] ? ' target="_blank" rel="noopener noreferrer"' : ''; ?>><?php echo esc_html($notice['title']); ?></a>
-                                        <?php else: ?>
-                                            <p class="tn_text"><?php echo esc_html($notice['title']); ?></p>
-                                        <?php endif; ?>
-                                    </div>
-                                <?php endforeach; ?>
-                            </div>
-                        </div>
+                    <?php if ($notice): ?>
+                        <?php if ($notice['url'] !== ''): ?>
+                            <a class="tn_text" href="<?php echo esc_url($notice['url']); ?>"<?php echo $notice['external'] ? ' target="_blank" rel="noopener noreferrer"' : ''; ?>><?php echo esc_html($notice['title']); ?></a>
+                        <?php else: ?>
+                            <p class="tn_text"><?php echo esc_html($notice['title']); ?></p>
+                        <?php endif; ?>
                     <?php else: ?>
                         <span class="tn_placeholder" aria-disabled="true">重要なお知らせ</span>
                     <?php endif; ?>
                 </div>
-                <?php if (count($notice_items) > 1): ?>
-                    <div class="tn_nav">
-                        <button type="button" class="tn_prev swiper-button-prev" aria-label="前のお知らせ"></button>
-                        <button type="button" class="tn_next swiper-button-next" aria-label="次のお知らせ"></button>
-                    </div>
-                <?php endif; ?>
             </div>
         </section>
     <?php endif; ?>

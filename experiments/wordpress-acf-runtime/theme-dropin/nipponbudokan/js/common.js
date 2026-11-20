@@ -716,7 +716,7 @@ window.addEventListener('resize', setVw);
   const addCss = function () {
     // .global_contents内の新窓リンクにclass追加
     const notIcon = $(
-      '[class*="module_card-"] a, .global_contents p a.icon-none, .top_banner-01 a',
+      '[class*="module_card-"] a, .global_contents p a.icon-none, .top_banner-01 a, .publication_shodou-rensaiList a',
     );
     $('.global_contents a:not([class])[target="_blank"]')
       .not(notIcon)
@@ -933,6 +933,17 @@ window.addEventListener('resize', setVw);
 
             buttonsContainer.appendChild(button);
           });
+
+          const tabCount = buttonsContainer.querySelectorAll(':scope > .tab-button').length;
+          if (tabCount > 0 && tabCount !== 2 && tabCount % 3 !== 0) {
+            const fillerCount = 3 - (tabCount % 3);
+            for (let fillerIndex = 0; fillerIndex < fillerCount; fillerIndex += 1) {
+              const filler = document.createElement('span');
+              filler.className = 'is-tab-filler';
+              filler.setAttribute('aria-hidden', 'true');
+              buttonsContainer.appendChild(filler);
+            }
+          }
 
           // 初期状態：最初のパネルを表示
           if (panels.length > 0) {

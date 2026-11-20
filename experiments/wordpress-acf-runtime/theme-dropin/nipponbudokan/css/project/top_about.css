@@ -5,701 +5,723 @@
 // Existing PHP remains the content owner. Production media/links are authority-gated.
 // ========================================================================== */
 .top_about-01 {
-    position: relative;
-    isolation: isolate;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background-color: #dbebf8;
+
+  .ta_stage_bg {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: -1;
     overflow: hidden;
+    height: 1800px;
     background-color: #dbebf8;
 
+    img {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      display: block;
+      width: 100%;
+      object-fit: cover;
+      object-position: 50% 50%;
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: 1346px;
+      left: 0;
+      width: 100%;
+      height: 190px;
+      background-color: rgba(255, 255, 255, 0.9);
+      filter: blur(50px);
+    }
+  }
+
+  .ta_stage {
+    padding-block: 64px 0;
+    color: var(--color-text);
+  }
+
+  .ta_top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+  }
+
+  .ta_side,
+  .ta_copy {
+    display: contents;
+  }
+
+  .ta_heading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    order: 1;
+    margin: 0;
+    text-align: center;
+  }
+
+  .ta_heading_ja {
+    font-family: var(--font-zen-old-mincho);
+    font-size: 28px;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: 0.05em;
+    color: var(--color-text);
+  }
+
+  .ta_heading_en {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    gap: 0;
+    min-height: 36px;
+    font-family: var(--font-zen-old-mincho);
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: 0.05em;
+    color: #b4c5d9;
+    white-space: nowrap;
+
+    &::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
+      transform: translateY(-50%);
+      background-color: #b4c5d9;
+      clip-path: var(--clip-octagon);
+    }
+  }
+
+  .ta_heading_en_text {
+    font: inherit;
+    color: inherit;
+  }
+
+  .ta_heading_en_initial {
+    position: relative;
+    z-index: 1;
+    display: inline-grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    font: inherit;
+    line-height: 1;
+    color: var(--color-secondary);
+  }
+
+  .ta_lead_break {
+    display: none;
+  }
+
+  .ta_lead {
+    order: 2;
+    margin: 0;
+    font-family: var(--font-zen-kaku-gothic);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.8;
+    letter-spacing: 0.05em;
+    text-align: left;
+    color: var(--color-text);
+  }
+
+  .ta_actions {
+    order: 3;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 300px;
+    max-width: 100%;
+    margin-inline: auto;
+  }
+
+  .ta_btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 50px;
+    height: 50px;
+    padding: 10px 16px;
+    border: 1px solid var(--color-line);
+    border-radius: 3px;
+    background-color: var(--color-secondary);
+    color: var(--color-text);
+    font-family: var(--font-zen-kaku-gothic);
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    line-height: 1;
+    text-decoration: none;
+
+    &::before {
+      font-family: var(--font-awesome);
+      font-weight: 900;
+      font-size: 14px;
+      line-height: 1;
+      color: var(--color-primary);
+    }
+
+    &.ta_btn_pdf::before {
+      content: var(--icon-pdf);
+    }
+
+    &.ta_btn_video::before {
+      font-family: var(--font-awesomeBrands);
+      font-weight: 400;
+      content: "\f167";
+    }
+  }
+
+  .ta_cards_wrap {
+    position: relative;
+    order: 4;
+    width: 100%;
+    padding: 0 0 308px;
+    background-color: transparent;
+  }
+
+  .ta_cards {
+    width: 300px;
+    max-width: 100%;
+    margin-inline: auto;
+  }
+
+  .ta_cards_swiper {
+    overflow: visible;
+  }
+
+  .ta_cards_swiper .swiper-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .ta_cards_swiper .swiper-slide,
+  .ta_card {
+    width: 300px;
+    max-width: 100%;
+    height: auto;
+    flex: none;
+  }
+
+  .ta_card_link {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    color: var(--color-text);
+    text-decoration: none;
+  }
+
+  .ta_card_image {
+    position: relative;
+    margin: 0;
+    overflow: hidden;
+    border-radius: 3px;
+
+    img {
+      display: block;
+      width: 300px;
+      max-width: 100%;
+      height: 183px;
+      object-fit: cover;
+      transition: transform var(--transition-duration);
+    }
+  }
+
+  .ta_card:nth-child(1) .ta_card_image img {
+    object-position: 89% 54%;
+  }
+
+  .ta_card:nth-child(2) .ta_card_image img {
+    object-position: 68% 95%;
+  }
+
+  .ta_card:nth-child(3) .ta_card_image img {
+    object-position: 44% 50%;
+  }
+
+  .ta_card:nth-child(4) .ta_card_image img {
+    object-position: 99% 50%;
+  }
+
+  .ta_card_overlay {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: flex-end;
+    gap: 3px;
+    color: var(--color-secondary);
+    font-family: var(--font-zen-kaku-gothic);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: 0.05em;
+
+    span {
+      box-sizing: border-box;
+      display: block;
+      width: auto;
+      padding: 8px;
+      background-color: var(--color-text);
+      writing-mode: horizontal-tb;
+      white-space: nowrap;
+      text-align: center;
+    }
+  }
+
+  .ta_card_label {
+    --_octagon-chip: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'%3E%3Cpolygon fill='%23fff' stroke='%23d7d4d4' stroke-width='1' stroke-linejoin='round' points='13,0.6 21.78,4.22 25.4,13 21.78,21.78 13,25.4 4.22,21.78 0.6,13 4.22,4.22'/%3E%3C/svg%3E");
+    --_octagon-chip-hover: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'%3E%3Cpolygon fill='%23bf3e2b' stroke='%23bf3e2b' stroke-width='1' stroke-linejoin='round' points='13,0.6 21.78,4.22 25.4,13 21.78,21.78 13,25.4 4.22,21.78 0.6,13 4.22,4.22'/%3E%3C/svg%3E");
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    background-color: transparent;
+    font-family: var(--font-zen-old-mincho);
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: 0.05em;
+    color: var(--color-text);
+
+    &::before {
+      content: var(--icon-arrow-right);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 26px;
+      height: 26px;
+      flex-shrink: 0;
+      background-image: var(--_octagon-chip);
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 26px 26px;
+      color: var(--color-primary);
+      transition:
+        background-image var(--transition-duration),
+        color var(--transition-duration);
+      font-family: var(--font-awesome);
+      font-weight: 900;
+      font-size: 8px;
+      line-height: 1;
+    }
+  }
+
+  .ta_scroll,
+  .ta_btn_video {
+    display: none;
+  }
+
+  @media screen and (min-width: 768px) {
+    min-height: 1040px;
+    background-color: transparent;
+
     .ta_stage_bg {
-        position: absolute;
-        top: 0;
-        right: 0;
-        left: 0;
-        z-index: -1;
-        overflow: hidden;
-        height: 1800px;
-        background-color: #dbebf8;
+      height: 100%;
+      bottom: 0;
+      background-color: transparent;
+      /* max-width: 1380px; */
+      margin: 0 auto;
+    }
 
-        img {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            display: block;
-            width: 100%;
-            object-fit: cover;
-            object-position: 50% 50%;
-        }
+    .ta_stage_bg img {
+      position: absolute;
+      top: 0;
+      bottom: auto;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 50% 55.6%;
+    }
 
-        &::after {
-            content: '';
-            position: absolute;
-            top: 1346px;
-            left: 0;
-            width: 100%;
-            height: 190px;
-            background-color: rgba(255, 255, 255, 0.9);
-            filter: blur(50px);
-        }
+    .ta_stage_bg::after,
+    .ta_stage_bg::before {
+      content: none;
+    }
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 552px;
+      left: 50%;
+      z-index: 0;
+      width: 1380px;
+      height: 150px;
+      transform: translateX(-50%);
+      background-color: rgb(255 255 255 / 0.9);
+      filter: blur(50px);
+      pointer-events: none;
+    }
+
+    /* &::after {
+      background-image: url("/wp/wp-content/themes/nipponbudokan/images/top/about-bg-pc.webp");
+      background-size: cover;
+      background-position: center;
+      filter: blur(10px);
+      content: "";
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: -2;
+    } */
+
+    .ta_stage,
+    .ta_cards_wrap {
+      position: relative;
+      z-index: 1;
     }
 
     .ta_stage {
-        padding-block: 64px 0;
-        color: var(--color-text);
+      padding-block: 100px 0;
+      color: var(--color-text);
     }
 
     .ta_top {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 32px;
+      display: grid;
+      grid-template-columns: 240px minmax(0, 840px);
+      align-items: start;
+      justify-items: start;
+      column-gap: 80px;
+      text-align: left;
     }
 
     .ta_side,
     .ta_copy {
-        display: contents;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      min-width: 0;
+    }
+
+    .ta_side {
+      gap: 48px;
+      width: 240px;
+    }
+
+    .ta_copy {
+      gap: 49px;
+      width: 100%;
     }
 
     .ta_heading {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 14px;
-        order: 1;
-        margin: 0;
-        text-align: center;
+      position: relative;
+      display: block;
+      order: 0;
+      width: 166px;
+      height: 317px;
+      margin-inline: auto;
+      text-align: left;
+
+      &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: -1;
+        width: 72px;
+        height: 72px;
+        background-color: #b4c5d9;
+        clip-path: var(--clip-octagon);
+      }
     }
 
     .ta_heading_ja {
-        font-family: var(--font-zen-old-mincho);
-        font-size: 28px;
-        font-weight: 500;
-        line-height: 1;
-        letter-spacing: 0.05em;
-        color: var(--color-text);
+      position: absolute;
+      top: 37px;
+      left: 72px;
+      width: 36px;
+      writing-mode: vertical-rl;
+      font-family: var(--font-zen-old-mincho);
+      font-size: 36px;
+      font-weight: 500;
+      line-height: 1.1;
+      letter-spacing: 0;
+      color: var(--color-text);
     }
 
     .ta_heading_en {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-        gap: 0;
-        min-height: 36px;
-        font-family: var(--font-zen-old-mincho);
-        font-size: 22px;
-        font-weight: 500;
-        line-height: 1;
-        letter-spacing: 0.05em;
-        color: #b4c5d9;
-        white-space: nowrap;
+      position: absolute;
+      top: 45px;
+      left: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 130px;
+      writing-mode: horizontal-tb;
+      text-orientation: mixed;
+      white-space: nowrap;
+      font-family: var(--font-zen-old-mincho);
+      font-size: 30px;
+      font-weight: 500;
+      line-height: 1;
+      letter-spacing: 0.05em;
+      word-spacing: 0.15em;
+      color: #b4c5d9;
 
-        &::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 50%;
-            width: 36px;
-            height: 36px;
-            flex-shrink: 0;
-            transform: translateY(-50%);
-            background-color: #b4c5d9;
-            clip-path: var(--clip-octagon);
-        }
+      &::before {
+        content: none;
+      }
     }
 
     .ta_heading_en_text {
-        font: inherit;
-        color: inherit;
+      display: inline-flex;
+      align-items: baseline;
+      white-space: nowrap;
+      transform: rotate(90deg);
     }
 
     .ta_heading_en_initial {
-        position: relative;
-        z-index: 1;
-        display: inline-grid;
-        place-items: center;
-        width: 36px;
-        height: 36px;
-        font: inherit;
-        line-height: 1;
-        color: var(--color-secondary);
-    }
-
-    .ta_lead_break {
-        display: none;
+      color: #fff;
     }
 
     .ta_lead {
-        order: 2;
-        margin: 0;
-        font-family: var(--font-zen-kaku-gothic);
-        font-size: 16px;
-        font-weight: 400;
-        line-height: 1.8;
-        letter-spacing: 0.05em;
-        text-align: left;
-        color: var(--color-text);
+      order: 0;
+      width: 100%;
+      margin: 0;
+      max-width: none;
+      font-size: 16px;
+      line-height: 1.8;
+      text-align: left;
     }
 
     .ta_actions {
-        order: 3;
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-        width: 300px;
-        max-width: 100%;
-        margin-inline: auto;
+      order: 0;
+      width: 240px;
+      height: 50px;
+      margin-inline: 0;
+      gap: 20px;
     }
 
     .ta_btn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        min-height: 50px;
-        height: 50px;
-        padding: 10px 16px;
-        border: 1px solid var(--color-line);
-        border-radius: 3px;
-        background-color: var(--color-secondary);
-        color: var(--color-text);
-        font-family: var(--font-zen-kaku-gothic);
-        font-size: 16px;
-        font-weight: 500;
-        letter-spacing: 0.05em;
-        line-height: 1;
-        text-decoration: none;
-
-        &::before {
-            font-family: var(--font-awesome);
-            font-weight: 900;
-            font-size: 14px;
-            line-height: 1;
-            color: var(--color-primary);
-        }
-
-        &.ta_btn_pdf::before {
-            content: var(--icon-pdf);
-        }
-
-        &.ta_btn_video::before {
-            font-family: var(--font-awesomeBrands);
-            font-weight: 400;
-            content: '\f167';
-        }
+      min-height: 50px;
+      height: 50px;
+      gap: 8px;
+      padding: 10px 16px;
+      border-radius: 3px;
     }
 
     .ta_cards_wrap {
-        position: relative;
-        order: 4;
-        width: 100%;
-        padding: 0 0 308px;
-        background-color: transparent;
+      order: 0;
+      width: 100%;
+      margin-top: 0;
+      padding: 0;
+      background-color: transparent;
     }
 
     .ta_cards {
-        width: 300px;
-        max-width: 100%;
-        margin-inline: auto;
+      display: block;
+      width: 100%;
+      margin-inline: 0;
+      padding-inline: 0;
+      overflow: visible;
     }
 
     .ta_cards_swiper {
-        overflow: visible;
+      display: block;
+      width: 100%;
+      overflow: visible;
     }
 
     .ta_cards_swiper .swiper-wrapper {
-        display: flex;
-        flex-direction: column;
-        gap: 24px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 20px;
+      width: 100%;
     }
 
     .ta_cards_swiper .swiper-slide,
     .ta_card {
-        width: 300px;
-        max-width: 100%;
-        height: auto;
-        flex: none;
-    }
-
-    .ta_card_link {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-        color: var(--color-text);
-        text-decoration: none;
-    }
-
-    .ta_card_image {
-        position: relative;
-        margin: 0;
-        overflow: hidden;
-        border-radius: 3px;
-
-        img {
-            display: block;
-            width: 300px;
-            max-width: 100%;
-            height: 183px;
-            object-fit: cover;
-            transition: transform var(--transition-duration);
-        }
+      flex: none;
+      display: block;
+      width: auto;
+      min-width: 0;
     }
 
     .ta_card:nth-child(1) .ta_card_image img {
-        object-position: 89% 54%;
+      object-position: 38% 50%;
     }
 
     .ta_card:nth-child(2) .ta_card_image img {
-        object-position: 68% 95%;
+      object-position: 31% 99%;
     }
 
     .ta_card:nth-child(3) .ta_card_image img {
-        object-position: 44% 50%;
+      object-position: 44% 50%;
     }
 
     .ta_card:nth-child(4) .ta_card_image img {
-        object-position: 99% 50%;
+      object-position: 15% 100%;
     }
 
-    .ta_card_overlay {
-        position: absolute;
-        top: 0;
-        right: 0;
-        display: flex;
-        flex-direction: column-reverse;
-        align-items: flex-end;
-        gap: 3px;
-        color: var(--color-secondary);
-        font-family: var(--font-zen-kaku-gothic);
-        font-size: 16px;
-        font-weight: 400;
-        line-height: 1.1;
-        letter-spacing: 0.05em;
+    .ta_scroll {
+      display: none;
+    }
 
-        span {
-            box-sizing: border-box;
-            display: block;
-            width: auto;
-            padding: 8px;
-            background-color: var(--color-text);
-            writing-mode: horizontal-tb;
-            white-space: nowrap;
-            text-align: center;
-        }
+    .ta_card_link {
+      gap: 20px;
     }
 
     .ta_card_label {
-        --_octagon-chip: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'%3E%3Cpolygon fill='%23fff' stroke='%23d7d4d4' stroke-width='1' stroke-linejoin='round' points='13,0.6 21.78,4.22 25.4,13 21.78,21.78 13,25.4 4.22,21.78 0.6,13 4.22,4.22'/%3E%3C/svg%3E");
-        --_octagon-chip-hover: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'%3E%3Cpolygon fill='%23bf3e2b' stroke='%23bf3e2b' stroke-width='1' stroke-linejoin='round' points='13,0.6 21.78,4.22 25.4,13 21.78,21.78 13,25.4 4.22,21.78 0.6,13 4.22,4.22'/%3E%3C/svg%3E");
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin: 0;
-        padding: 0;
-        background-color: transparent;
-        font-family: var(--font-zen-old-mincho);
-        font-size: 16px;
-        font-weight: 600;
-        line-height: 1;
-        letter-spacing: 0.05em;
-        color: var(--color-text);
-
-        &::before {
-            content: var(--icon-arrow-right);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 26px;
-            height: 26px;
-            flex-shrink: 0;
-            background-image: var(--_octagon-chip);
-            background-repeat: no-repeat;
-            background-position: center;
-            background-size: 26px 26px;
-            color: var(--color-primary);
-            transition:
-                background-image var(--transition-duration),
-                color var(--transition-duration);
-            font-family: var(--font-awesome);
-            font-weight: 900;
-            font-size: 8px;
-            line-height: 1;
-        }
+      padding: 0;
+      background-color: transparent;
     }
 
-    .ta_scroll,
-    .ta_btn_video {
-        display: none;
+    .ta_card_image img {
+      width: 100%;
+      height: 360px;
+      aspect-ratio: auto;
+      object-fit: cover;
     }
 
-    @media screen and (min-width: 768px) {
-        min-height: 1040px;
-        background-color: transparent;
+    .ta_card_overlay {
+      flex-direction: row;
+      align-items: flex-start;
+      font-size: 16px;
+      line-height: 1.1;
+      bottom: auto;
+      top: 0;
 
-        .ta_stage_bg {
-            height: 100%;
-            bottom: 0;
-            background-color: #dbebf8;
-        }
-
-        .ta_stage_bg img {
-            position: absolute;
-            top: 0;
-            bottom: auto;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: 50% 55.6%;
-        }
-
-        .ta_stage_bg::after,
-        .ta_stage_bg::before {
-            content: none;
-        }
-
-        &::before {
-            content: '';
-            position: absolute;
-            top: 552px;
-            left: 50%;
-            z-index: 0;
-            width: 1380px;
-            height: 150px;
-            transform: translateX(-50%);
-            background-color: rgb(255 255 255 / 0.9);
-            filter: blur(50px);
-            pointer-events: none;
-        }
-
-        .ta_stage,
-        .ta_cards_wrap {
-            position: relative;
-            z-index: 1;
-        }
-
-        .ta_stage {
-            padding-block: 100px 0;
-            color: var(--color-text);
-        }
-
-        .ta_top {
-            display: grid;
-            grid-template-columns: 240px minmax(0, 840px);
-            align-items: start;
-            justify-items: start;
-            column-gap: 80px;
-            text-align: left;
-        }
-
-        .ta_side,
-        .ta_copy {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            min-width: 0;
-        }
-
-        .ta_side {
-            gap: 48px;
-            width: 240px;
-        }
-
-        .ta_copy {
-            gap: 49px;
-            width: 100%;
-        }
-
-        .ta_heading {
-            position: relative;
-            display: block;
-            order: 0;
-            width: 166px;
-            height: 317px;
-            margin-inline: auto;
-            text-align: left;
-
-            &::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                z-index: -1;
-                width: 72px;
-                height: 72px;
-                background-color: #b4c5d9;
-                clip-path: var(--clip-octagon);
-            }
-        }
-
-        .ta_heading_ja {
-            position: absolute;
-            top: 37px;
-            left: 72px;
-            width: 36px;
-            writing-mode: vertical-rl;
-            font-family: var(--font-zen-old-mincho);
-            font-size: 36px;
-            font-weight: 500;
-            line-height: 1.1;
-            letter-spacing: 0;
-            color: var(--color-text);
-        }
-
-        .ta_heading_en {
-            position: absolute;
-            top: 45px;
-            left: 38px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 30px;
-            height: 130px;
-            writing-mode: horizontal-tb;
-            text-orientation: mixed;
-            white-space: nowrap;
-            font-family: var(--font-zen-old-mincho);
-            font-size: 30px;
-            font-weight: 500;
-            line-height: 1;
-            letter-spacing: 0.05em;
-            word-spacing: 0.15em;
-            color: #b4c5d9;
-
-            &::before {
-                content: none;
-            }
-        }
-
-        .ta_heading_en_text {
-            display: inline-flex;
-            align-items: baseline;
-            white-space: nowrap;
-            transform: rotate(90deg);
-        }
-
-        .ta_heading_en_initial {
-            color: #fff;
-        }
-
-        .ta_lead {
-            order: 0;
-            width: 100%;
-            margin: 0;
-            max-width: none;
-            font-size: 16px;
-            line-height: 1.8;
-            text-align: left;
-        }
-
-        .ta_actions {
-            order: 0;
-            width: 240px;
-            height: 50px;
-            margin-inline: 0;
-            gap: 20px;
-        }
-
-        .ta_btn {
-            min-height: 50px;
-            height: 50px;
-            gap: 8px;
-            padding: 10px 16px;
-            border-radius: 3px;
-        }
-
-        .ta_cards_wrap {
-            order: 0;
-            width: 100%;
-            margin-top: 0;
-            padding: 0;
-            background-color: transparent;
-        }
-
-        .ta_cards {
-            display: block;
-            width: 100%;
-            margin-inline: 0;
-            padding-inline: 0;
-            overflow: visible;
-        }
-
-        .ta_cards_swiper {
-            display: block;
-            width: 100%;
-            overflow: visible;
-        }
-
-        .ta_cards_swiper .swiper-wrapper {
-            display: grid;
-            grid-template-columns: repeat(4, minmax(0, 1fr));
-            gap: 20px;
-            width: 100%;
-        }
-
-        .ta_cards_swiper .swiper-slide,
-        .ta_card {
-            flex: none;
-            display: block;
-            width: auto;
-            min-width: 0;
-        }
-
-        .ta_card:nth-child(1) .ta_card_image img {
-            object-position: 38% 50%;
-        }
-
-        .ta_card:nth-child(2) .ta_card_image img {
-            object-position: 31% 99%;
-        }
-
-        .ta_card:nth-child(3) .ta_card_image img {
-            object-position: 44% 50%;
-        }
-
-        .ta_card:nth-child(4) .ta_card_image img {
-            object-position: 15% 100%;
-        }
-
-        .ta_scroll {
-            display: none;
-        }
-
-        .ta_card_link {
-            gap: 20px;
-        }
-
-        .ta_card_label {
-            padding: 0;
-            background-color: transparent;
-        }
-
-        .ta_card_image img {
-            width: 100%;
-            height: 360px;
-            aspect-ratio: auto;
-            object-fit: cover;
-        }
-
-        .ta_card_overlay {
-            flex-direction: row;
-            align-items: flex-start;
-            font-size: 16px;
-            line-height: 1.1;
-
-            span {
-                width: 35px;
-                padding: 8px;
-                white-space: normal;
-                line-break: anywhere;
-                overflow-wrap: anywhere;
-                word-break: break-all;
-                text-align: center;
-            }
-        }
-
-        html:is(.nb-lang-en, .nb-lang-zh-cn, .nb-lang-zh-tw, .nb-lang-ko) & .ta_card_overlay {
-            top: 8px;
-            left: 8px;
-            right: auto;
-            width: calc(100% - 16px);
-            flex-direction: column;
-            align-items: stretch;
-
-            span {
-                width: 100%;
-                max-width: none;
-                line-break: auto;
-                word-break: normal;
-                overflow-wrap: break-word;
-                text-align: left;
-            }
-        }
-
-        .ta_card_label {
-            gap: 8px;
-            font-family: var(--font-zen-old-mincho);
-            font-size: 18px;
-            font-weight: 600;
-
-            &::before {
-                width: 26px;
-                height: 26px;
-            }
-        }
+      span {
+        width: 35px;
+        padding: 8px;
+        white-space: normal;
+        line-break: anywhere;
+        overflow-wrap: anywhere;
+        word-break: break-all;
+        text-align: center;
+      }
     }
 
-    /* Tablet bridge: preserve the 1380px Figma contract at >=1280px while
-       preventing the fixed 1160px desktop composition from overflowing at 768-1279px. */
-    @media screen and (min-width: 768px) and (max-width: 1279px) {
-        .ta_top {
-            grid-template-columns: 240px minmax(0, 1fr);
-            column-gap: 40px;
-        }
+    html:is(.nb-lang-en, .nb-lang-zh-cn, .nb-lang-zh-tw, .nb-lang-ko)
+      &
+      .ta_card_overlay {
+      top: 8px;
+      left: 8px;
+      right: auto;
+      width: calc(100% - 16px);
+      flex-direction: column;
+      align-items: stretch;
 
-        .ta_lead {
-            width: 100%;
-            min-width: 0;
-        }
-
-        .ta_cards_swiper .swiper-slide,
-        .ta_card {
-            width: 100%;
-            min-width: 0;
-        }
-
-        .ta_card_image img {
-            width: 100%;
-        }
-    }
-
-    .ta_btn[href]:focus-visible {
-        border-color: var(--color-text);
-    }
-
-    .ta_card_link:focus-visible .ta_card_image img {
-        transform: scale(1.17);
-    }
-
-    .ta_card_link:focus-visible .ta_card_label::before {
-        background-image: var(--_octagon-chip-hover);
-        color: var(--color-secondary);
-    }
-
-    @media (any-hover: hover) {
-        .ta_btn[href]:hover {
-            border-color: var(--color-text);
-        }
-
-        .ta_card_link:hover .ta_card_image img {
-            transform: scale(1.17);
-        }
-
-        .ta_card_link:hover .ta_card_label::before {
-            background-image: var(--_octagon-chip-hover);
-            color: var(--color-secondary);
-        }
-    }
-}
-
-.global_contents > .top_about-01 {
-    padding-bottom: 0;
-}
-
-/* Japanese stays the vertical caption. Translated copy is too long for the 35px columns. */
-html:is(.nb-lang-en, .nb-lang-zh-cn, .nb-lang-zh-tw, .nb-lang-ko) .top_about-01 .ta_card_overlay {
-    top: 8px;
-    left: 8px;
-    right: auto;
-    width: calc(100% - 16px);
-    align-items: stretch;
-
-    span {
+      span {
         width: 100%;
         max-width: none;
-        white-space: normal;
         line-break: auto;
         word-break: normal;
         overflow-wrap: break-word;
         text-align: left;
+      }
     }
+
+    .ta_card_label {
+      gap: 8px;
+      font-family: var(--font-zen-old-mincho);
+      font-size: 18px;
+      font-weight: 600;
+
+      &::before {
+        width: 26px;
+        height: 26px;
+      }
+    }
+  }
+
+  /* Tablet bridge: preserve the 1380px Figma contract at >=1280px while
+       preventing the fixed 1160px desktop composition from overflowing at 768-1279px. */
+  @media screen and (min-width: 768px) and (max-width: 1279px) {
+    .ta_top {
+      grid-template-columns: 240px minmax(0, 1fr);
+      column-gap: 40px;
+    }
+
+    .ta_lead {
+      width: 100%;
+      min-width: 0;
+    }
+
+    .ta_cards_swiper .swiper-slide,
+    .ta_card {
+      width: 100%;
+      min-width: 0;
+    }
+
+    .ta_card_image img {
+      width: 100%;
+    }
+  }
+
+  .ta_btn[href]:focus-visible {
+    border-color: var(--color-text);
+  }
+
+  .ta_card_link:focus-visible .ta_card_image img {
+    transform: scale(1.17);
+  }
+
+  .ta_card_link:focus-visible .ta_card_label::before {
+    background-image: var(--_octagon-chip-hover);
+    color: var(--color-secondary);
+  }
+
+  @media (any-hover: hover) {
+    .ta_btn[href]:hover {
+      border-color: var(--color-text);
+    }
+
+    .ta_card_link:hover .ta_card_image img {
+      transform: scale(1.17);
+    }
+
+    .ta_card_link:hover .ta_card_label::before {
+      background-image: var(--_octagon-chip-hover);
+      color: var(--color-secondary);
+    }
+  }
+}
+
+.global_contents > .top_about-01 {
+  padding-bottom: 0;
+}
+
+/* Japanese stays the vertical caption. Translated copy is too long for the 35px columns. */
+html:is(.nb-lang-en, .nb-lang-zh-cn, .nb-lang-zh-tw, .nb-lang-ko)
+  .top_about-01
+  .ta_card_overlay {
+  top: 8px;
+  left: 8px;
+  right: auto;
+  width: calc(100% - 16px);
+  align-items: stretch;
+
+  span {
+    width: 100%;
+    max-width: none;
+    white-space: normal;
+    line-break: auto;
+    word-break: normal;
+    overflow-wrap: break-word;
+    text-align: left;
+  }
 }

@@ -8,7 +8,7 @@
             "name": "page_local_nav",
             "aria-label": "",
             "type": "select",
-            "instructions": "外観 → メニューで、名前を「ローカル：」で始めたメニューだけ選べます。グローバル／メガ／フッターは出ません。メニューを増やすとこの一覧に自動で入ります。なし＝このページでは非表示。",
+            "instructions": "外観 → メニューで、名前を「ローカル：」で始めたメニューだけ選べます。グローバル／メガ／フッターは出ません。メニューを増やすとこの一覧に自動で入ります。複数選べます。選んだ順に、同じ見た目で縦に並びます。未選択＝このページでは非表示。",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -19,7 +19,7 @@
             "choices": {},
             "default_value": "",
             "allow_null": 1,
-            "multiple": 0,
+            "multiple": 1,
             "ui": 1,
             "ajax": 0,
             "return_format": "value",
@@ -49,5 +49,6 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "display_title": ""
+    "display_title": "",
+    "modified": 1794406800
 }

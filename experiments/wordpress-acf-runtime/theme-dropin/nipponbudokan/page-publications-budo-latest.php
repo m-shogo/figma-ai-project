@@ -4,7 +4,7 @@
  *
  * /publications/budo/latest/ の固定ページ用。
  * 最新の budo-book 1件を取得し、CPT single と同じ ACF 詳細を描画する。
- * 投稿本文は出さない。バックナンバーは表示中の号を除く最新5件。
+ * 投稿本文は出さない。バックナンバーは表示中の号と最新号を除く5件。
  */
 get_template_part('template-parts/publications/_acf-has-value');
 get_header();

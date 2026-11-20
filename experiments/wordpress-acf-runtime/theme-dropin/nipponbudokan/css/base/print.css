@@ -1,0 +1,21 @@
+/*
+ * 印刷に出したくない要素。
+ * テンプレートの要素に data-print-hide を付けると、画面はそのままで印刷時だけ出なくなる。
+ * 例: <div class="purposeBannerRoot" data-print-hide>
+ */
+@media print {
+  [data-print-hide] {
+    display: none !important;
+  }
+
+  /* sticky のまま印刷すると、ヘッダーがページ途中に残る。通常の並びに戻して先頭へ置く。 */
+  .global_header {
+    position: static !important;
+    top: auto !important;
+    left: auto !important;
+  }
+
+  .global_navigation {
+    display: none !important;
+  }
+}

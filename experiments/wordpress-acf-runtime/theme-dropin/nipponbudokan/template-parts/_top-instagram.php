@@ -1,31 +1,3 @@
-<?php
-$theme_uri = get_template_directory_uri();
-
-$items = array(
-    array('src' => $theme_uri . '/images/top/instagram-01.webp', 'alt' => ''),
-    array('src' => $theme_uri . '/images/top/instagram-02.webp', 'alt' => ''),
-    array('src' => $theme_uri . '/images/top/instagram-03.webp', 'alt' => ''),
-    array('src' => $theme_uri . '/images/top/instagram-04.webp', 'alt' => ''),
-    array('src' => $theme_uri . '/images/top/instagram-05.webp', 'alt' => ''),
-);
-
-/**
- * TOP Instagram editorial feed.
- *
- * No production Instagram API / ACF contract is authoritative yet. Consumers may
- * replace the visual fallback items without changing this template's structure.
- */
-$items = apply_filters('nipponbudokan_top_instagram_items', $items);
-if (!is_array($items)) {
-    $items = array();
-}
-$items = array_values(array_filter($items, static function ($item) {
-    return is_array($item) && !empty($item['src']);
-}));
-if ($items === array()) {
-    return;
-}
-?>
 <section id="top_instagram-01" class="top_instagram-01" aria-labelledby="ti_title">
     <div class="ti_inner">
         <div class="ti_head">
@@ -35,22 +7,6 @@ if ($items === array()) {
             </div>
             <p class="ti_lead">日本武道館が主催する武道・書道に関する事業や大会などの情報を発信します</p>
         </div>
-        <ul class="ti_thumbnails" aria-label="Instagram投稿イメージ">
-            <?php foreach ($items as $item): ?>
-                <?php
-                $src = isset($item['src']) ? $item['src'] : '';
-                $alt = isset($item['alt']) ? $item['alt'] : '';
-                $url = isset($item['url']) ? $item['url'] : '';
-                if (!$src) {
-                    continue;
-                }
-                ?>
-                <li class="ti_thumbnail">
-                    <?php if ($url): ?><a class="ti_link" href="<?php echo esc_url($url); ?>"><?php endif; ?>
-                        <img src="<?php echo esc_url($src); ?>" alt="<?php echo esc_attr($alt); ?>" width="231" height="289" loading="lazy">
-                    <?php if ($url): ?></a><?php endif; ?>
-                </li>
-            <?php endforeach; ?>
-        </ul>
+        <?php echo do_shortcode('[instagram-feed feed=1]'); ?>
     </div>
 </section>

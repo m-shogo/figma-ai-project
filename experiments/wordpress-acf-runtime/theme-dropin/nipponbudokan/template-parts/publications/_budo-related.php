@@ -1,17 +1,31 @@
 <?php
 /**
- * 詳細末尾のバックナンバー5件。表示中の号を除く最新5。
+ * 詳細末尾のバックナンバー5件。表示中の号と最新号を除く。
  */
 $post_id = isset($args['post_id']) ? (int) $args['post_id'] : get_the_ID();
 if (!$post_id) {
     return;
 }
 
+$exclude_ids = array($post_id);
+$latest_budo = get_posts(array(
+    'post_type'           => 'budo-book',
+    'post_status'         => 'publish',
+    'posts_per_page'      => 1,
+    'orderby'             => 'date',
+    'order'               => 'DESC',
+    'fields'              => 'ids',
+    'ignore_sticky_posts' => true,
+));
+if (!empty($latest_budo[0])) {
+    $exclude_ids[] = (int) $latest_budo[0];
+}
+
 $related = new WP_Query(array(
     'post_type'           => 'budo-book',
     'post_status'         => 'publish',
     'posts_per_page'      => 5,
-    'post__not_in'        => array($post_id),
+    'post__not_in'        => array_values(array_unique($exclude_ids)),
     'orderby'             => 'date',
     'order'               => 'DESC',
     'ignore_sticky_posts' => true,

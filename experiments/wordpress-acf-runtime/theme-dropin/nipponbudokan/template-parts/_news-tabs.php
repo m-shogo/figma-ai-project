@@ -140,11 +140,9 @@ if ($context === 'top') {
             </li>
         <?php endforeach; ?>
 
-        <?php if ($taxonomy === 'event_cat' && $context === 'archive'): ?>
-            <?php $event_tab_fillers = (3 - (count($tabs) % 3)) % 3; ?>
-            <?php for ($i = 0; $i < $event_tab_fillers; $i++): ?>
-                <li class="news_tabs_item news_tabs_item-filler" aria-hidden="true"></li>
-            <?php endfor; ?>
-        <?php endif; ?>
+        <?php $tab_fillers = (3 - (count($tabs) % 3)) % 3; ?>
+        <?php for ($i = 0; $i < $tab_fillers; $i++): ?>
+            <li class="news_tabs_item news_tabs_item-filler" aria-hidden="true"></li>
+        <?php endfor; ?>
     </ul>
 </nav>

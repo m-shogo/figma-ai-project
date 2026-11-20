@@ -49,6 +49,76 @@ function nipponbudokan_event_contact_html($contact)
     return wp_kses_post($contact);
 }
 
+/**
+ * トップの近日開催だけ。問合せ先の外部リンクに別窓アイコン用の印を付ける。
+ */
+function nipponbudokan_top_event_contact_html($contact)
+{
+    $html = nipponbudokan_event_contact_html($contact);
+    if ($html === '') {
+        return '';
+    }
+    $home_host = strtolower((string) wp_parse_url(home_url(), PHP_URL_HOST));
+    $document = new DOMDocument();
+    $previous = libxml_use_internal_errors(true);
+    $document->loadHTML('<?xml encoding="utf-8" ?>' . '<div id="nbk-contact">' . $html . '</div>', LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+    libxml_clear_errors();
+    libxml_use_internal_errors($previous);
+
+    $links = $document->getElementsByTagName('a');
+    foreach ($links as $link) {
+        $host = strtolower((string) wp_parse_url($link->getAttribute('href'), PHP_URL_HOST));
+        if ($host === '' || $host === $home_host) {
+            continue;
+        }
+        $classes = preg_split('/\s+/', trim($link->getAttribute('class'))) ?: array();
+        if (!in_array('is-external', $classes, true)) {
+            $classes[] = 'is-external';
+        }
+        $link->setAttribute('class', trim(implode(' ', array_filter($classes))));
+        if (!$link->hasAttribute('target')) {
+            $link->setAttribute('target', '_blank');
+        }
+        $rel = preg_split('/\s+/', trim($link->getAttribute('rel'))) ?: array();
+        foreach (array('noopener', 'noreferrer') as $token) {
+            if (!in_array($token, $rel, true)) {
+                $rel[] = $token;
+            }
+        }
+        $link->setAttribute('rel', trim(implode(' ', array_filter($rel))));
+    }
+
+    $root = $document->getElementById('nbk-contact');
+    if (!$root) {
+        return $html;
+    }
+    $result = '';
+    foreach ($root->childNodes as $child) {
+        $result .= $document->saveHTML($child);
+    }
+    return $result;
+}
+
+function nipponbudokan_event_today_ymd()
+{
+    return wp_date('Ymd');
+}
+
+/**
+ * 当日以降の開催日。TOP・行事予定のすべて／カテゴリで共用。
+ */
+function nipponbudokan_event_upcoming_meta_query()
+{
+    return array(
+        array(
+            'key' => 'event_date',
+            'value' => nipponbudokan_event_today_ymd(),
+            'compare' => '>=',
+            'type' => 'CHAR',
+        ),
+    );
+}
+
 function nipponbudokan_event_datetime($post_id = 0)
 {
     $post_id = $post_id ?: get_the_ID();
@@ -159,10 +229,11 @@ add_action('pre_get_posts', function ($query) {
     $query->set('orderby', 'meta_value');
     $query->set('order', 'ASC');
 
-    // /event/ は全件。月の絞り込みは event_y / event_m があるときだけ。
+    // すべて／カテゴリは当日以降。年月アーカイブは過去も含めてその月の全件。
     $month = (int) $query->get('event_m');
     $year = (int) $query->get('event_y');
     if (($month < 1 || $month > 12) && $year < 1970) {
+        $query->set('meta_query', nipponbudokan_event_upcoming_meta_query());
         return;
     }
     if ($month < 1 || $month > 12) {

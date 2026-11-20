@@ -28,7 +28,7 @@
             "name": "top_notice-01",
             "aria-label": "",
             "type": "repeater",
-            "instructions": "",
+            "instructions": "最大5件。トップページには先頭の1件だけ表示します。",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -38,7 +38,7 @@
             },
             "collapsed": "",
             "min": 0,
-            "max": 0,
+            "max": 5,
             "layout": "row",
             "button_label": "+ 重要なお知らせを追加",
             "rows_per_page": 20,
@@ -107,32 +107,6 @@
                     "ui_on_text": "別タブ",
                     "ui_off_text": "同じタブ",
                     "parent_repeater": "field_5d5cb6ecb6e82"
-                },
-                {
-                    "key": "field_5d5de31a66870",
-                    "label": "表示設定",
-                    "name": "none",
-                    "aria-label": "",
-                    "type": "checkbox",
-                    "instructions": "",
-                    "required": 0,
-                    "conditional_logic": 0,
-                    "wrapper": {
-                        "width": "",
-                        "class": "",
-                        "id": ""
-                    },
-                    "choices": {
-                        "_hide": "このお知らせを非表示にする"
-                    },
-                    "allow_custom": 0,
-                    "default_value": [],
-                    "layout": "vertical",
-                    "toggle": 0,
-                    "return_format": "value",
-                    "save_custom": 0,
-                    "custom_choice_button_text": "新規選択肢を追加",
-                    "parent_repeater": "field_5d5cb6ecb6e82"
                 }
             ]
         }
@@ -153,7 +127,8 @@
     "instruction_placement": "label",
     "hide_on_screen": "",
     "active": true,
-    "description": "",
+    "description": "重要なお知らせ。最大5件。トップには先頭の1件だけ表示する。",
     "show_in_rest": 0,
-    "display_title": ""
+    "display_title": "",
+    "modified": 1792562552
 }

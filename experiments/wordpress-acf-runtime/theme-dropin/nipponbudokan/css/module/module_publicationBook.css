@@ -151,10 +151,6 @@ body:not(.home) .global_contents > section:has(.publication_book-listShell) > .m
     margin-top: 24px;
 }
 
-.block-editor_wrap.publication_book-content > .wp-block-list {
-    gap: 20px;
-}
-
 /* 単行本一覧 / Figma hardcover 1656:5309, SP_hardcover 2627:6075 */
 .publication_book-listShell .gc_main {
     display: flex;

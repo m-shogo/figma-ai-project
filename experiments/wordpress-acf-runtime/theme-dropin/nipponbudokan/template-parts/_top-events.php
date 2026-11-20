@@ -8,9 +8,49 @@ if (!is_array($featured_rows)) {
 $featured_rows = array_slice($featured_rows, 0, 4);
 $featured_status_labels = array(
     'recruiting' => '募集中',
+    'visitor' => '観覧案内',
     'ongoing' => '開催中',
     'closed' => '受付終了',
 );
+if (function_exists('acf_get_field')) {
+    $status_field = acf_get_field('field_top_featured_status');
+    if (is_array($status_field) && isset($status_field['choices']) && is_array($status_field['choices'])) {
+        foreach ($status_field['choices'] as $choice_value => $choice_label) {
+            $choice_value = trim((string) $choice_value);
+            $choice_label = trim(wp_strip_all_tags((string) $choice_label));
+            if ($choice_value === '' || $choice_value === 'none' || $choice_label === '' || $choice_label === 'なし') {
+                continue;
+            }
+            $featured_status_labels[$choice_value] = $choice_label;
+        }
+    }
+}
+$featured_status_hidden = static function ($text) {
+    return $text === '' || $text === 'none' || $text === 'なし';
+};
+$featured_status_from = static function ($status) use ($featured_status_labels, $featured_status_hidden) {
+    $value = '';
+    $label = '';
+    if (is_array($status)) {
+        $value = isset($status['value']) ? trim((string) $status['value']) : '';
+        $label = isset($status['label']) ? trim(wp_strip_all_tags((string) $status['label'])) : '';
+    } else {
+        $value = trim(wp_strip_all_tags((string) $status));
+    }
+    if (!$featured_status_hidden($value) && isset($featured_status_labels[$value])) {
+        return array(sanitize_html_class($value), $featured_status_labels[$value]);
+    }
+    $from_label = !$featured_status_hidden($label) ? $label : $value;
+    if ($featured_status_hidden($from_label)) {
+        return array('', '');
+    }
+    $matched = array_search($from_label, $featured_status_labels, true);
+    if ($matched !== false) {
+        return array(sanitize_html_class((string) $matched), $from_label);
+    }
+    $class = sanitize_html_class(!$featured_status_hidden($value) ? $value : $from_label);
+    return array($class !== '' ? $class : 'custom', $from_label);
+};
 
 $event_terms = get_terms(nipponbudokan_event_cat_query(array(
     'hide_empty' => true,
@@ -28,14 +68,16 @@ $upcoming_args = array(
     'meta_type' => 'CHAR',
     'orderby' => 'meta_value',
     'order' => 'ASC',
-    'meta_query' => array(
-        array(
-            'key' => 'event_date',
-            'value' => wp_date('Ymd'),
-            'compare' => '>=',
-            'type' => 'CHAR',
+    'meta_query' => function_exists('nipponbudokan_event_upcoming_meta_query')
+        ? nipponbudokan_event_upcoming_meta_query()
+        : array(
+            array(
+                'key' => 'event_date',
+                'value' => wp_date('Ymd'),
+                'compare' => '>=',
+                'type' => 'CHAR',
+            ),
         ),
-    ),
 );
 
 $event_archive = get_post_type_archive_link('event') ?: '';
@@ -82,37 +124,54 @@ $render_upcoming_items = static function ($query) {
         $contact = function_exists('get_field') ? get_field('event_contact') : '';
         $link_attrs = get_post_link_attributes();
         $href = !empty($link_attrs['url']) ? $link_attrs['url'] : '';
-        $link_type = function_exists('get_field') ? get_field('post_type') : '';
-        $external_url = ($link_type === 'url' && $href !== '') ? $href : '';
         $weekday_index = $timestamp ? (int) wp_date('w', $timestamp) : 0;
         $weekday_labels = array('日', '月', '火', '水', '木', '金', '土');
         $weekday_class = $weekday_index === 0 ? ' is-sun' : ($weekday_index === 6 ? ' is-sat' : '');
+        $has_category = has_term('', 'event_cat', get_the_ID());
+        $time_inner = '';
+        if (function_exists('nipponbudokan_event_value_present') && (nipponbudokan_event_value_present($open_time) || nipponbudokan_event_value_present($start_time))) {
+            if (nipponbudokan_event_value_present($open_time)) {
+                $time_inner .= '<span>開場：' . esc_html($open_time) . '</span>';
+            }
+            if (nipponbudokan_event_value_present($open_time) && nipponbudokan_event_value_present($start_time)) {
+                $time_inner .= '<span class="te_upcoming_time_sep" aria-hidden="true"> / </span>';
+            }
+            if (nipponbudokan_event_value_present($start_time)) {
+                $time_inner .= '<span>開会・開演：' . esc_html($start_time) . '</span>';
+            }
+        }
+        $contact_html = '';
+        if (function_exists('nipponbudokan_top_event_contact_html')) {
+            $contact_html = nipponbudokan_top_event_contact_html($contact);
+        } elseif (function_exists('nipponbudokan_event_contact_html')) {
+            $contact_html = nipponbudokan_event_contact_html($contact);
+        }
         ?>
         <article class="te_upcoming_item">
             <div class="te_upcoming_when">
-                <?php if ($timestamp): ?>
-                    <p class="te_upcoming_day<?php echo esc_attr($weekday_class); ?>">
-                        <time datetime="<?php echo esc_attr(wp_date('Y-m-d', $timestamp)); ?>"><?php echo esc_html(wp_date('n/j', $timestamp)); ?> <span>(<?php echo esc_html($weekday_labels[$weekday_index]); ?>)</span></time>
-                    </p>
+                <?php if ($timestamp || $has_category): ?>
+                    <div class="te_upcoming_day<?php echo esc_attr($weekday_class); ?>">
+                        <?php if ($timestamp): ?>
+                            <time datetime="<?php echo esc_attr(wp_date('Y-m-d', $timestamp)); ?>"><?php echo esc_html(wp_date('n/j', $timestamp)); ?> <span>(<?php echo esc_html($weekday_labels[$weekday_index]); ?>)</span></time>
+                        <?php endif; ?>
+                        <?php if ($has_category): ?>
+                            <div class="te_upcoming_labels">
+                                <?php get_template_part('template-parts/_label-category', null, array('taxonomy' => '_cat')); ?>
+                            </div>
+                        <?php endif; ?>
+                    </div>
                 <?php endif; ?>
-                <?php if (function_exists('nipponbudokan_event_value_present') && (nipponbudokan_event_value_present($open_time) || nipponbudokan_event_value_present($start_time))): ?>
-                    <p class="te_upcoming_time">
-                        <?php if (nipponbudokan_event_value_present($open_time)): ?><span>開場：<?php echo esc_html($open_time); ?></span><?php endif; ?>
-                        <?php if (nipponbudokan_event_value_present($open_time) && nipponbudokan_event_value_present($start_time)): ?><span aria-hidden="true"> / </span><?php endif; ?>
-                        <?php if (nipponbudokan_event_value_present($start_time)): ?><span>開会：<?php echo esc_html($start_time); ?></span><?php endif; ?>
-                    </p>
+                <?php if ($time_inner !== ''): ?>
+                    <p class="te_upcoming_time te_upcoming_time-sp"><?php echo $time_inner; ?></p>
                 <?php endif; ?>
             </div>
             <div class="te_upcoming_body">
                 <h4 class="te_upcoming_title"><?php if ($href !== '') : ?><a href="<?php echo esc_url($href); ?>"<?php echo !empty($link_attrs['targetAttr']) ? $link_attrs['targetAttr'] : ''; ?>><?php the_title(); ?></a><?php else : ?><?php the_title(); ?><?php endif; ?></h4>
-                <?php if (function_exists('nipponbudokan_event_contact_html')) : ?>
-                    <?php $contact_html = nipponbudokan_event_contact_html($contact); ?>
-                    <?php if ($contact_html !== '') : ?>
-                        <div class="te_upcoming_host"><?php echo $contact_html; ?></div>
-                    <?php endif; ?>
+                <?php if ($time_inner !== ''): ?>
+                    <p class="te_upcoming_time te_upcoming_time-pc"><?php echo $time_inner; ?></p>
                 <?php endif; ?>
-                <?php if ($external_url !== ''): ?>
-                    <p class="te_upcoming_url"><span><?php echo esc_html($external_url); ?></span></p>
+                <?php if ($contact_html !== '') : ?>
+                    <div class="te_upcoming_host"><?php echo $contact_html; ?></div>
                 <?php endif; ?>
             </div>
         </article>
@@ -137,7 +196,7 @@ $render_upcoming_items = static function ($query) {
             $featured_title = isset($featured_row['title']) ? trim((string) $featured_row['title']) : '';
             $featured_category = isset($featured_row['category']) ? trim((string) $featured_row['category']) : '';
             $featured_url = isset($featured_row['url']) ? trim((string) $featured_row['url']) : '';
-            $featured_status = $featured_status_labels[(string) ($featured_row['status'] ?? '')] ?? '';
+            $featured_status = $featured_status_from($featured_row['status'] ?? '')[1];
             $featured_thumb = !empty($featured_row['thumb']);
             $featured_date = isset($featured_row['date']) ? trim((string) $featured_row['date']) : '';
             if ($featured_title === '' && $featured_category === '' && $featured_url === '' && $featured_date === '' && !$featured_thumb && $featured_status === '') {
@@ -164,27 +223,12 @@ $render_upcoming_items = static function ($query) {
                         $category = isset($row['category']) ? trim((string) $row['category']) : '';
                         $url = isset($row['url']) ? trim(str_replace(array("\r", "\n"), '', (string) $row['url'])) : '';
                         $external = !empty($row['external']);
-                        $status_value = isset($row['status']) ? (string) $row['status'] : '';
-                        $status_label = $featured_status_labels[$status_value] ?? '';
+                        list($status_value, $status_label) = $featured_status_from($row['status'] ?? '');
                         $thumb_id = isset($row['thumb']) ? (int) $row['thumb'] : 0;
                         $thumb = $thumb_id ? wp_get_attachment_image_src($thumb_id, 'medium') : null;
                         $img = !empty($thumb[0]) ? $thumb[0] : $theme_uri . '/images/common/noimage.webp';
-                        $date_html = '';
-                        $date_raw = isset($row['date']) ? (string) $row['date'] : '';
-                        if (preg_match('/^\d{8}$/', $date_raw)) {
-                            $date_raw = substr($date_raw, 0, 4) . '-' . substr($date_raw, 4, 2) . '-' . substr($date_raw, 6, 2);
-                        }
-                        if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $date_raw)) {
-                            $parsed = date_create_from_format('!Y-m-d', $date_raw, wp_timezone());
-                            if ($parsed instanceof DateTimeInterface) {
-                                $timestamp = $parsed->getTimestamp();
-                                $weekday_index = (int) wp_date('w', $timestamp);
-                                $weekday_labels = array('日', '月', '火', '水', '木', '金', '土');
-                                $weekday_class = $weekday_index === 0 ? ' is-sun' : ($weekday_index === 6 ? ' is-sat' : '');
-                                $date_html = '<time datetime="' . esc_attr(wp_date('Y-m-d', $timestamp)) . '">' . esc_html(wp_date('Y年n月j日', $timestamp)) . '(<span class="ea_wday' . esc_attr($weekday_class) . '">' . esc_html($weekday_labels[$weekday_index]) . '</span>)</time>';
-                            }
-                        }
-                        if ($title === '' && $category === '' && $url === '' && $date_html === '' && !$thumb_id && $status_label === '') {
+                        $date_text = isset($row['date']) ? trim((string) $row['date']) : '';
+                        if ($title === '' && $category === '' && $url === '' && $date_text === '' && !$thumb_id && $status_label === '') {
                             continue;
                         }
                         ?>
@@ -211,8 +255,8 @@ $render_upcoming_items = static function ($query) {
                                     <?php if ($title !== ''): ?>
                                         <h3 class="te_card_title"><span class="te_card_title_line"><?php echo nbk_title_html($title); ?></span></h3>
                                     <?php endif; ?>
-                                    <?php if ($date_html !== ''): ?>
-                                        <p class="te_card_date"><span class="te_card_date_label">開催日</span><?php echo $date_html; ?></p>
+                                    <?php if ($date_text !== ''): ?>
+                                        <p class="te_card_date"><span class="te_card_date_label">開催日</span><?php echo esc_html($date_text); ?></p>
                                     <?php endif; ?>
                                 </div>
                             <?php if ($url !== ''): ?>

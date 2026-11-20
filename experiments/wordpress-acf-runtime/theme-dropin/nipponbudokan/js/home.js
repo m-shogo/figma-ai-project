@@ -157,31 +157,6 @@
     sync();
   };
 
-  const noticeSlider = function () {
-    const root = document.querySelector('.top_notice-01');
-    const el = root ? root.querySelector('.tn_swiper') : null;
-    if (!root || !el || typeof Swiper === 'undefined') {
-      return;
-    }
-    const slideCount = el.querySelectorAll('.swiper-slide').length;
-    if (slideCount < 2) {
-      return;
-    }
-    const prefersReducedMotion = window.matchMedia
-      && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    new Swiper(el, {
-      slidesPerView: 1,
-      spaceBetween: 0,
-      speed: prefersReducedMotion ? 0 : 300,
-      autoHeight: false,
-      watchOverflow: true,
-      navigation: {
-        nextEl: root.querySelector('.tn_next'),
-        prevEl: root.querySelector('.tn_prev')
-      }
-    });
-  };
-
   const topNewsTabs = function () {
     const root = document.querySelector('.top_news-01');
     if (!root) {
@@ -247,7 +222,6 @@
   //newsSlider();
   $(topCalendar);
   $(aboutCardsSlider);
-  noticeSlider();
   topNewsTabs();
   topEventFilter();
 

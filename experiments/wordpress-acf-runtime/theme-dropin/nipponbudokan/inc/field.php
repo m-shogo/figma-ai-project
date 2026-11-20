@@ -136,16 +136,54 @@ add_filter('acf/load_field/key=field_5d5cb6ecb6e82', function ($field) {
     if (empty($field['sub_fields']) || !is_array($field['sub_fields'])) {
         $field['sub_fields'] = array();
     }
-    $field['max'] = 0;
-    $keep = array();
+    $field['max'] = 5;
+    $field['instructions'] = '最大5件。トップページには先頭の1件だけ表示します。';
+
+    $existing = array();
     foreach ($field['sub_fields'] as $sub) {
-        $name = $sub['name'] ?? '';
-        if (in_array($name, array('date', 'textarea', 'title', 'url', 'external'), true)) {
+        if (!is_array($sub)) {
             continue;
         }
-        $keep[] = $sub;
+        $name = $sub['name'] ?? '';
+        if ($name !== '' && !isset($existing[$name])) {
+            $existing[$name] = $sub;
+        }
     }
-    $field['sub_fields'] = array_merge(nipponbudokan_notice_content_fields(), $keep);
+
+    $parent = $field['ID'] ?? ($field['key'] ?? 0);
+    $sub_fields = array();
+    foreach (nipponbudokan_notice_content_fields() as $sub) {
+        $name = $sub['name'] ?? '';
+        if ($name !== '' && isset($existing[$name]) && is_array($existing[$name])) {
+            foreach (array('ID', 'parent', 'menu_order', 'prefix') as $key) {
+                if (array_key_exists($key, $existing[$name])) {
+                    $sub[$key] = $existing[$name][$key];
+                }
+            }
+            unset($existing[$name]);
+        }
+        if (!isset($sub['ID'])) {
+            $sub['ID'] = 0;
+        }
+        if (!isset($sub['parent'])) {
+            $sub['parent'] = $parent;
+        }
+        if (function_exists('acf_validate_field')) {
+            $sub = acf_validate_field($sub);
+        }
+        $sub_fields[] = $sub;
+    }
+    foreach ($existing as $sub) {
+        $name = $sub['name'] ?? '';
+        if (in_array($name, array('date', 'textarea', 'none'), true)) {
+            continue;
+        }
+        if (!isset($sub['ID'])) {
+            $sub['ID'] = 0;
+        }
+        $sub_fields[] = $sub;
+    }
+    $field['sub_fields'] = $sub_fields;
     return $field;
 });
 
@@ -182,6 +220,29 @@ add_filter('acf/load_field_group', function ($group) {
             ),
         ),
     );
+    return $group;
+});
+
+// 目的別テンプレートは専用の画像・概要・カードを使う。共通ビジュアルとローカルナビは出さない。
+add_filter('acf/load_field_group', function ($group) {
+    $key = $group['key'] ?? '';
+    if (!in_array($key, array('group_visual_setting', 'group_page_local_nav'), true)) {
+        return $group;
+    }
+    if (empty($group['location']) || !is_array($group['location'])) {
+        return $group;
+    }
+    $rule = array(
+        'param' => 'page_template',
+        'operator' => '!=',
+        'value' => 'templates/template-purpose.php',
+    );
+    foreach ($group['location'] as $index => $rules) {
+        if (!is_array($rules)) {
+            continue;
+        }
+        $group['location'][$index][] = $rule;
+    }
     return $group;
 });
 
@@ -316,6 +377,34 @@ add_action('acf/init', function () {
       'category'          => 'layout',
       'icon'              => 'admin-links',
       'keywords'          => array('link', 'ナビゲーション', 'リンク'),
+    ));
+
+    acf_register_block_type(array(
+      'name'              => 'navigation-card',
+      'title'             => 'ナビゲーションカード',
+      'description'       => '画像の上にページ名を載せ、ホバーで紹介文を出すカード',
+      'render_template'   => get_template_directory() . '/acf/blocks/navigationCard.php',
+      'category'          => 'layout',
+      'icon'              => 'grid-view',
+      'keywords'          => array('card', 'ナビゲーション', 'カード'),
+      'mode'              => 'preview',
+      'supports'          => array(
+        'align' => false,
+        'jsx' => false,
+      ),
+      'enqueue_assets'    => function () {
+        if (is_admin()) {
+          return;
+        }
+        $path = get_theme_file_path('/js/purpose-card.js');
+        wp_enqueue_script(
+          'purpose-card',
+          get_theme_file_uri('/js/purpose-card.js'),
+          array(),
+          file_exists($path) ? filemtime($path) : null,
+          array('strategy' => 'defer', 'in_footer' => false)
+        );
+      },
     ));
 
     acf_register_block_type([
@@ -604,6 +693,7 @@ function custom_allowed_block_types_all($allowed_block_types, $block_editor_cont
     'acf/in-page-link',           // ACF ページ内リンク
     'acf/navigation-large',       // ACF ナビゲーション（大）
     'acf/navigation-small',       // ACF ナビゲーション（小）
+    'acf/navigation-card',        // ACF ナビゲーションカード
     'acf/custom-post-list',       // ACF 投稿の出力
     'acf/tab-container',          // ACF タブコンテナ（親）
     'acf/tab-panel',            // ACF タブコンテンツ（子）
@@ -686,3 +776,21 @@ function custom_render_details_block($block_content, $block)
     return $block_content;
 }
 add_filter('render_block', 'custom_render_details_block', 10, 2);
+
+function nipponbudokan_fill_tab_list($block_content, $block)
+{
+    if (!isset($block['blockName']) || $block['blockName'] !== 'core/tab-list') {
+        return $block_content;
+    }
+    $count = preg_match_all('/\brole=(["\'])tab\1/', $block_content);
+    if ($count < 1 || $count === 2 || $count % 3 === 0) {
+        return $block_content;
+    }
+    $fillers = str_repeat('<span class="is-tab-filler" aria-hidden="true"></span>', 3 - ($count % 3));
+    $position = strrpos($block_content, '</div>');
+    if ($position === false) {
+        return $block_content;
+    }
+    return substr($block_content, 0, $position) . $fillers . substr($block_content, $position);
+}
+add_filter('render_block', 'nipponbudokan_fill_tab_list', 10, 2);

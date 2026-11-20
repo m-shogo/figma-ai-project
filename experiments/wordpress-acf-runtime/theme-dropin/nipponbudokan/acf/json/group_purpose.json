@@ -1,0 +1,135 @@
+{
+    "key": "group_nbk_purpose",
+    "title": "目的別",
+    "fields": [
+        {
+            "key": "field_nbk_purpose_tab_hero",
+            "label": "タイトル",
+            "name": "",
+            "aria-label": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "top",
+            "endpoint": 0,
+            "selected": 0
+        },
+        {
+            "key": "field_nbk_purpose_title_note",
+            "label": "ページ名",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "タイトル（「大会・行事に参加したい」など）は、この固定ページのタイトルを自動で表示します。ナビゲーションカードは、本文のブロック「ナビゲーションカード」で追加します。",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_nbk_purpose_image",
+            "label": "画像",
+            "name": "purpose_image",
+            "aria-label": "",
+            "type": "image",
+            "instructions": "横1560px・縦720px以上。1枚。",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "id",
+            "library": "all",
+            "min_width": "",
+            "min_height": "",
+            "min_size": "",
+            "max_width": "",
+            "max_height": "",
+            "max_size": "",
+            "mime_types": "",
+            "allow_in_bindings": 0,
+            "preview_size": "medium"
+        },
+        {
+            "key": "field_nbk_purpose_lead",
+            "label": "概要",
+            "name": "purpose_lead",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "見出しの下に1件表示します。",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "allow_in_bindings": 0,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_nbk_purpose_icon",
+            "label": "アイコン画像",
+            "name": "purpose_icon",
+            "aria-label": "",
+            "type": "image",
+            "instructions": "タイトル左の白いアイコン。1枚。",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "id",
+            "library": "all",
+            "min_width": "",
+            "min_height": "",
+            "min_size": "",
+            "max_width": "",
+            "max_height": "",
+            "max_size": "",
+            "mime_types": "",
+            "allow_in_bindings": 0,
+            "preview_size": "thumbnail"
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "page_template",
+                "operator": "==",
+                "value": "templates/template-purpose.php"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "display_title": "",
+    "modified": 1794532000
+}

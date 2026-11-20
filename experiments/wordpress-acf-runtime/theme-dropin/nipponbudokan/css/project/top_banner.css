@@ -5,105 +5,108 @@
 // 画像とリンクは固定。ACF は使わない。
 // ========================================================================== */
 .global_contents > .top_banner-01 {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 312px;
+  padding: 64px 0;
+
+  &::before {
+    content: "";
+    position: absolute;
+    z-index: 0;
+    top: 0;
+    right: 0;
+    width: 294px;
+    height: 312px;
+    background: url("../../images/top/banner-octagon-sp.svg") center / 100% 100%
+      no-repeat;
+    pointer-events: none;
+  }
+
+  .tb_inner {
     position: relative;
-    isolation: isolate;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .tb_list {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    align-items: center;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .tb_item {
+    width: fit-content;
+    max-width: calc(100% - 48px);
+    margin: 0;
+    padding: 0;
+  }
+
+  .tb_link {
+    display: flex;
+    box-sizing: border-box;
+    border: 1px solid var(--color-line);
+    color: inherit;
+    text-decoration: none;
     overflow: hidden;
-    min-height: 312px;
-    padding: 64px 0;
+  }
 
-    &::before {
-        content: '';
-        position: absolute;
-        z-index: 0;
-        top: 0;
-        right: 0;
-        width: 294px;
-        height: 312px;
-        background: url('../../images/top/banner-octagon-sp.svg') center / 100% 100% no-repeat;
-        pointer-events: none;
+  .tb_image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  a.tb_link {
+    transition: opacity 0.3s;
+  }
+
+  a.tb_link:focus-visible {
+    opacity: 0.7;
+  }
+
+  @media (any-hover: hover) {
+    a.tb_link:hover {
+      opacity: 0.7;
     }
+  }
 
-    .tb_inner {
-        position: relative;
-        z-index: 1;
-        display: flex;
-        justify-content: center;
-        width: 100%;
+  @media screen and (min-width: 768px) {
+    overflow: visible;
+    min-height: 0;
+    padding: 0 0 80px;
+
+    /* PC 1603:7169. 下端はバナー下端、右端はバナー右端。325px はバナーより上へ出る。 */
+    &::before {
+      top: auto;
+      bottom: 0;
+      z-index: 2;
+      width: 307px;
+      height: 325px;
+      background-image: url("../../images/top/banner-octagon-pc.svg");
     }
 
     .tb_list {
-        display: flex;
-        flex-direction: column;
-        gap: 24px;
-        align-items: center;
-        width: 100%;
-        margin: 0;
-        padding: 0;
-        list-style: none;
+      flex-direction: row;
+      gap: 48px;
+      justify-content: center;
+    }
+    .tb_link {
+      height: 80px;
+      max-width: 100%;
     }
 
     .tb_item {
-        width: fit-content;
-        max-width: calc(100% - 48px);
-        margin: 0;
-        padding: 0;
+      max-width: none;
     }
-
-    .tb_link {
-        display: block;
-        box-sizing: border-box;
-        height: 80px;
-        max-width: 100%;
-        border: 1px solid var(--color-line);
-        color: inherit;
-        text-decoration: none;
-        overflow: hidden;
-    }
-
-    .tb_image {
-        display: block;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    a.tb_link {
-        transition: opacity 0.3s;
-    }
-
-    a.tb_link:focus-visible {
-        opacity: 0.7;
-    }
-
-    @media (any-hover: hover) {
-        a.tb_link:hover {
-            opacity: 0.7;
-        }
-    }
-
-    @media screen and (min-width: 768px) {
-        overflow: visible;
-        min-height: 0;
-        padding: 0 0 80px;
-
-        /* PC 1603:7169. 下端はバナー下端、右端はバナー右端。325px はバナーより上へ出る。 */
-        &::before {
-            top: auto;
-            bottom: 0;
-            z-index: 2;
-            width: 307px;
-            height: 325px;
-            background-image: url('../../images/top/banner-octagon-pc.svg');
-        }
-
-        .tb_list {
-            flex-direction: row;
-            gap: 48px;
-            justify-content: center;
-        }
-
-        .tb_item {
-            max-width: none;
-        }
-    }
+  }
 }

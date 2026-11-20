@@ -17,7 +17,7 @@ $show_map = !empty(($args ?? array())['map']);
             <address>
                 <p class="gf_address">〒102-8321 東京都千代田区北の丸公園2番3号</p>
                 <p class="gf_access">
-                    <a href="<?php echo esc_url(home_url('/access/')); ?>">
+                    <a href="<?php echo esc_url(home_url('/about/access/')); ?>">
                         <img class="gf_access_icon" src="<?php echo esc_url($theme_uri . '/images/common/icon-access.svg'); ?>" alt="" width="18" height="16" decoding="async" loading="lazy">
                         <span>アクセスについて</span>
                     </a>

@@ -10,14 +10,23 @@ if (!$post_id) {
 }
 
 $title = get_the_title($post_id);
+$book_post = get_post($post_id);
+$wp_title = $book_post instanceof WP_Post ? $book_post->post_title : '';
+$wp_title = html_entity_decode(wp_strip_all_tags(str_ireplace(array('<br>', '<br/>', '<br />'), '', $wp_title)), ENT_QUOTES, 'UTF-8');
+$wp_title = str_replace(array('･', '·', '•', '‧', '　', ' '), array('・', '・', '・', '・', '', ''), $wp_title);
+$show_order = mb_strpos($wp_title, 'POD版・電子書籍版') === false && mb_strpos($wp_title, 'POD・電子書籍版') === false;
 $thumbnail_id = get_post_thumbnail_id($post_id);
 $author = get_field('book_author', $post_id);
 $description = get_field('book_desc', $post_id);
 $book_info = get_field('book_info', $post_id);
 $price = get_field('book_price', $post_id);
+$order = get_field('book_order', $post_id);
+// 未保存は null。false / 0 のときだけオフ。既存投稿はボタンを残す。
+$order_enabled = $order !== false && $order !== 0 && $order !== '0';
 $reading_label = get_field('readingttl', $post_id);
 $reading_url = get_field('readingtest', $post_id);
 $amazon_url = get_field('amazon', $post_id);
+$order_url = home_url('/publications/budo/books/form-order/');
 ?>
 <div class="publication_book-head">
     <div class="block-editor_wrap">
@@ -59,7 +68,7 @@ $amazon_url = get_field('amazon', $post_id);
         </div>
     <?php endif; ?>
 
-    <?php if ((nbk_acf_value_present($reading_url) && nbk_acf_value_present($reading_label)) || nbk_acf_value_present($amazon_url) || have_rows('book_addbtn', $post_id)) : ?>
+    <?php if ((nbk_acf_value_present($reading_url) && nbk_acf_value_present($reading_label)) || nbk_acf_value_present($amazon_url) || ($show_order && $order_enabled) || have_rows('book_addbtn', $post_id)) : ?>
         <div class="block-editor_wrap publication_book-actions">
             <div class="wp-block-buttons">
                 <?php if (nbk_acf_value_present($reading_url) && nbk_acf_value_present($reading_label)) : ?>
@@ -67,6 +76,9 @@ $amazon_url = get_field('amazon', $post_id);
                 <?php endif; ?>
                 <?php if (nbk_acf_value_present($amazon_url)) : ?>
                     <div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="<?php echo esc_url($amazon_url); ?>" target="_blank" rel="noopener noreferrer">Amazonで購入</a></div>
+                <?php endif; ?>
+                <?php if ($show_order && $order_enabled) : ?>
+                    <div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="<?php echo esc_url($order_url); ?>" rel="noopener noreferrer">ご注文</a></div>
                 <?php endif; ?>
                 <?php if (have_rows('book_addbtn', $post_id)) : ?>
                     <?php while (have_rows('book_addbtn', $post_id)) : the_row(); ?>

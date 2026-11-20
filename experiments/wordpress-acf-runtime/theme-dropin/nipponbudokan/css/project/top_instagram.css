@@ -111,6 +111,20 @@
   .ti_thumbnail img {
     object-fit: cover;
   }
+  #sb_instagram {
+    padding: 0;
+    #sbi_images {
+      padding: 0;
+      .sbi_item {
+        &:nth-child(5) {
+          display: none;
+          @media screen and (min-width: 768px) {
+            display: block;
+          }
+        }
+      }
+    }
+  }
 }
 
 /* MARK: instagram_pc */
@@ -206,7 +220,6 @@
   overflow: hidden;
   min-height: 328px;
   padding: 64px 0;
-  background-color: var(--color-secondary);
 
   &::before {
     content: "";
@@ -335,10 +348,13 @@
     .ts_inner {
       flex-direction: row;
       gap: 48px;
-      align-items: stretch;
-      width: 954px;
+      /* align-items: center; */
+      width: 100%;
       height: auto;
       min-height: 80px;
+      max-width: 1160px;
+      margin: 0 auto;
+      justify-content: center;
     }
 
     .ts_group {

@@ -15,11 +15,14 @@ $contact = function_exists('get_field') ? get_field('event_contact') : '';
 $has_schedule = nipponbudokan_event_value_present($open_time) || nipponbudokan_event_value_present($start_time);
 $has_meta = $has_schedule || nipponbudokan_event_value_present($contact);
 $has_category = has_term('', 'event_cat', get_the_ID());
-$contact_html = nipponbudokan_event_contact_html($contact);
+$show_category = $has_category && !is_tax('event_cat');
+$contact_html = function_exists('nipponbudokan_top_event_contact_html')
+    ? nipponbudokan_top_event_contact_html($contact)
+    : nipponbudokan_event_contact_html($contact);
 ?>
 <article class="ea_card">
     <div class="ea_card_link">
-        <?php if ($timestamp || $has_category) : ?>
+        <?php if ($timestamp || $show_category) : ?>
             <div class="ea_day">
                 <?php if ($timestamp) : ?>
                     <p class="ea_date<?php echo esc_attr($weekday_class); ?>">
@@ -30,7 +33,7 @@ $contact_html = nipponbudokan_event_contact_html($contact);
                     </p>
                 <?php endif; ?>
 
-                <?php if ($has_category) : ?>
+                <?php if ($show_category) : ?>
                     <div class="ea_labels ea_labels-sp">
                         <?php get_template_part('template-parts/_label-category', null, array('taxonomy' => '_cat')); ?>
                     </div>
@@ -40,7 +43,7 @@ $contact_html = nipponbudokan_event_contact_html($contact);
 
         <div class="ea_body">
             <div class="ea_titleRow">
-                <?php if ($has_category) : ?>
+                <?php if ($show_category) : ?>
                     <div class="ea_labels ea_labels-pc">
                         <?php get_template_part('template-parts/_label-category', null, array('taxonomy' => '_cat')); ?>
                     </div>
@@ -60,7 +63,7 @@ $contact_html = nipponbudokan_event_contact_html($contact);
                                 <span aria-hidden="true"> / </span>
                             <?php endif; ?>
                             <?php if (nipponbudokan_event_value_present($start_time)) : ?>
-                                <span>開会：<?php echo esc_html($start_time); ?></span>
+                                <span>開会・開演：<?php echo esc_html($start_time); ?></span>
                             <?php endif; ?>
                         </p>
                     <?php endif; ?>

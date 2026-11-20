@@ -2,9 +2,10 @@
 
 /**
  * GTranslate 言語切り替え。
- * クリック先は注釈ページ。翻訳そのものは注釈のボタン後に localStorage へ載せる。
- * 有料版では X-GT-Lang を見て、display-ja-en / display-non-ja-en のブロックを出し分ける。
- * 武道憲章は日本語・英語のみ。
+ * クリック先は注釈の固定ページ。OK で翻訳言語を保存し、元のURLへ戻す。
+ * 有料版では X-GT-Lang を見て、display-ja / display-en / display-other と
+ * display-ja-en / display-non-ja-en のブロックを出し分ける。
+ * 武道憲章は、通常の回遊では日本語・英語のみ。言語切替の OK で戻ったときだけ、簡体字・繁體字・韓国語も機械翻訳する。
  */
 
 function nipponbudokan_languages() {
@@ -150,26 +151,54 @@ function nipponbudokan_language_page_code($post = null) {
     return '';
 }
 
+function nipponbudokan_language_is_prefix_path($path) {
+    if (!is_string($path) || $path === '') {
+        return false;
+    }
+    $only = wp_parse_url($path, PHP_URL_PATH);
+    if (!is_string($only)) {
+        return false;
+    }
+    return in_array(trim($only, '/'), nipponbudokan_language_prefix_codes(), true);
+}
+
 function nipponbudokan_language_return_path() {
     if (nipponbudokan_language_page_code() !== '') {
-        $from = isset($_GET['from']) ? nipponbudokan_language_safe_path(wp_unslash($_GET['from'])) : null;
-        return $from ?: '/';
+        $path = isset($_GET['from']) ? nipponbudokan_language_safe_path(wp_unslash($_GET['from'])) : null;
+        $path = $path ?: '/';
+    } else {
+        $request = isset($_SERVER['REQUEST_URI']) ? wp_unslash($_SERVER['REQUEST_URI']) : '/';
+        $path = nipponbudokan_language_safe_path($request) ?: '/';
     }
-    $request = isset($_SERVER['REQUEST_URI']) ? wp_unslash($_SERVER['REQUEST_URI']) : '/';
-    $safe = nipponbudokan_language_safe_path($request);
-    return $safe ?: '/';
+    if (nipponbudokan_language_is_prefix_path($path)) {
+        return '/';
+    }
+    return $path;
 }
 
 function nipponbudokan_language_choice_url($code) {
+    $return = nipponbudokan_language_return_path();
     if ($code === 'ja') {
-        return add_query_arg('nb_lang', 'ja', nipponbudokan_language_url(nipponbudokan_language_return_path()));
+        return add_query_arg('nb_lang', 'ja', nipponbudokan_language_url($return));
     }
     $page = get_page_by_path(nipponbudokan_language_page_slug($code));
-    if ($page instanceof WP_Post) {
-        return get_permalink($page);
-    }
-    return home_url('/' . nipponbudokan_language_page_slug($code) . '/');
+    $url = $page instanceof WP_Post
+        ? get_permalink($page)
+        : home_url('/' . nipponbudokan_language_page_slug($code) . '/');
+    return add_query_arg('from', $return, $url);
 }
+
+function nipponbudokan_language_preserve_from_arg($redirect) {
+    if (!is_string($redirect) || $redirect === '' || nipponbudokan_language_page_code() === '' || !isset($_GET['from'])) {
+        return $redirect;
+    }
+    $from = nipponbudokan_language_safe_path(wp_unslash($_GET['from']));
+    if ($from === null) {
+        return $redirect;
+    }
+    return add_query_arg('from', $from, $redirect);
+}
+add_filter('redirect_canonical', 'nipponbudokan_language_preserve_from_arg', 20);
 
 function nipponbudokan_language_switch_list($list_class) {
     $languages = nipponbudokan_languages();
@@ -327,8 +356,15 @@ function nipponbudokan_language_head_bootstrap() {
     $config['prefixes'] = nipponbudokan_language_prefix_codes();
     $config['homePath'] = (string) wp_parse_url(home_url('/'), PHP_URL_PATH);
     $config['serverLang'] = nipponbudokan_gtranslate_is_paid() ? nipponbudokan_gtranslate_language() : '';
+    $setting = nipponbudokan_language_page_code();
+    if ($setting !== '') {
+        $config['settingLang'] = $setting;
+        $config['returnPath'] = nipponbudokan_language_return_path();
+    }
     echo '<script>window.nbLanguage=' . wp_json_encode($config) . ';</script>';
-    echo '<script>(function(){var key="__GT_TRANSLATE_LANGS";var config=window.nbLanguage||{};var params=new URLSearchParams(location.search);if(params.get("nb_lang")==="ja"){try{localStorage.removeItem(key);}catch(e){}params.delete("nb_lang");history.replaceState(null,"",location.pathname+(params.toString()?"?"+params.toString():"")+location.hash);}var home=String(config.homePath||"/").replace(/\/+$/,"");var rest=location.pathname.slice(home.length).replace(/^\/|\/$/g,"");if(config.prefixes&&config.prefixes.indexOf(rest)!==-1){try{localStorage.setItem(key,JSON.stringify({srcLang:"ja",tgtLang:rest}));}catch(e){}}var lang=config.serverLang||"ja";if(!config.serverLang){try{var stored=JSON.parse(localStorage.getItem(key)||"null");if(stored&&typeof stored.tgtLang==="string"&&stored.tgtLang)lang=stored.tgtLang;}catch(e){}}if(config.charter&&config.limited&&config.limited.indexOf(lang)!==-1){try{config.hold=JSON.parse(localStorage.getItem(key)||"null");localStorage.removeItem(key);}catch(e){}document.documentElement.classList.add("nb-charter-limited","notranslate");if(!config.serverLang)lang="ja";}document.documentElement.classList.add("nb-lang-"+String(lang).toLowerCase());})();</script>';
+    echo <<<'HTML'
+<script>(function(){var key="__GT_TRANSLATE_LANGS";var previewKey="nb_charter_preview";var config=window.nbLanguage||{};var params=new URLSearchParams(location.search);if(params.get("nb_lang")==="ja"){try{localStorage.removeItem(key);}catch(e){}try{sessionStorage.removeItem(previewKey);}catch(e){}params.delete("nb_lang");history.replaceState(null,"",location.pathname+(params.toString()?"?"+params.toString():"")+location.hash);}var home=String(config.homePath||"/").replace(/\/+$/,"");var rest=location.pathname.slice(home.length).replace(/^\/|\/$/g,"");if(config.prefixes&&config.prefixes.indexOf(rest)!==-1){try{localStorage.setItem(key,JSON.stringify({srcLang:"ja",tgtLang:rest}));}catch(e){}}var lang=config.serverLang||"ja";if(!config.serverLang){try{var stored=JSON.parse(localStorage.getItem(key)||"null");if(stored&&typeof stored.tgtLang==="string"&&stored.tgtLang)lang=stored.tgtLang;}catch(e){}}var preview=false;try{preview=sessionStorage.getItem(previewKey)===lang;}catch(e){}if(!config.charter){try{sessionStorage.removeItem(previewKey);}catch(e){}}var limited=config.charter&&config.limited&&config.limited.indexOf(lang)!==-1;if(limited&&!preview){try{config.hold=JSON.parse(localStorage.getItem(key)||"null");localStorage.removeItem(key);}catch(e){}document.documentElement.classList.add("nb-charter-limited","notranslate");if(!config.serverLang)lang="ja";}document.documentElement.classList.add("nb-lang-"+String(lang).toLowerCase());})();</script>
+HTML;
 }
 add_action('wp_head', 'nipponbudokan_language_head_bootstrap', 1);
 
@@ -374,7 +410,17 @@ function nipponbudokan_language_block_visible($class_name) {
         return true;
     }
     $classes = preg_split('/\s+/', $class_name, -1, PREG_SPLIT_NO_EMPTY);
-    $ja_en = in_array(nipponbudokan_gtranslate_language(), array('ja', 'en'), true);
+    $lang = nipponbudokan_gtranslate_language();
+    $ja_en = in_array($lang, array('ja', 'en'), true);
+    if (in_array('display-ja', $classes, true) && $lang !== 'ja') {
+        return false;
+    }
+    if (in_array('display-en', $classes, true) && $lang !== 'en') {
+        return false;
+    }
+    if (in_array('display-other', $classes, true) && $ja_en) {
+        return false;
+    }
     if (in_array('display-ja-en', $classes, true) && !$ja_en) {
         return false;
     }
@@ -428,6 +474,59 @@ function nipponbudokan_sync_gtranslate_contract() {
     update_option('nb_gtranslate_contract', '1');
 }
 add_action('init', 'nipponbudokan_sync_gtranslate_contract', 20);
+
+/**
+ * GTranslate 設定を編集者相当でも Settings > GTranslate から開ける。
+ * プラグインは administrator 固定のため、本体は触らずメニューだけ差し替える。
+ */
+function nipponbudokan_gtranslate_unhook_native_menu() {
+    if (!class_exists('GTranslate')) {
+        return;
+    }
+    remove_action('admin_menu', array('GTranslate', 'admin_menu'));
+}
+add_action('admin_menu', 'nipponbudokan_gtranslate_unhook_native_menu', 9);
+
+function nipponbudokan_gtranslate_register_editor_menu() {
+    if (!class_exists('GTranslate') || !method_exists('GTranslate', 'options')) {
+        return;
+    }
+    remove_submenu_page('options-general.php', 'gtranslate_options');
+    add_options_page(
+        __('GTranslate Options', 'gtranslate'),
+        'GTranslate',
+        'edit_others_posts',
+        'gtranslate_options',
+        array('GTranslate', 'options')
+    );
+}
+add_action('admin_menu', 'nipponbudokan_gtranslate_register_editor_menu', 11);
+
+function nipponbudokan_gtranslate_show_settings_menu_for_editors() {
+    global $menu, $submenu;
+    if (current_user_can('manage_options') || !current_user_can('edit_others_posts')) {
+        return;
+    }
+
+    foreach ($menu as $position => $item) {
+        if (isset($item[2]) && $item[2] === 'options-general.php') {
+            $menu[$position][1] = 'edit_others_posts';
+            break;
+        }
+    }
+
+    if (empty($submenu['options-general.php']) || !is_array($submenu['options-general.php'])) {
+        return;
+    }
+
+    foreach ($submenu['options-general.php'] as $index => $item) {
+        $slug = isset($item[2]) ? $item[2] : '';
+        if ($slug !== 'gtranslate_options') {
+            unset($submenu['options-general.php'][$index]);
+        }
+    }
+}
+add_action('admin_menu', 'nipponbudokan_gtranslate_show_settings_menu_for_editors', 999);
 
 function nipponbudokan_enqueue_language_switcher() {
     $path = get_theme_file_path('/js/language-switcher.js');

@@ -30,6 +30,10 @@
             list-style: none;
         }
 
+        .ln_container-01 + .ln_container-01 {
+            margin-top: 56px;
+        }
+
         .lnl_button-02 {
             display: none;
         }
@@ -101,6 +105,14 @@
                 content: none;
                 display: none;
             }
+        }
+
+        /* リンクなしの見出しは八角形だけ。矢印もホバー反転も付けない。 */
+        .lnl_item-02 > .lnl_title-02 > div.lnl_link-02::before {
+            content: '';
+            color: transparent;
+            font-size: 0;
+            transform: none;
         }
 
         .lnl_item-02.current-menu-item > .lnl_title-02 > .lnl_link-02,
@@ -206,8 +218,8 @@
         }
     }
 
-    /* MARK: hover — 見出しはアイコンのみネガ反転（白塗り + プライマリ枠/矢印）。
-       SVG chip で枠を残す。clip-path + inset shadow は使わない。
+    /* MARK: hover — リンクありの見出しだけアイコンをネガ反転。
+       リンクなし（div）は反転しない。
        module_menu の mm_title-03:has(...): #ccc 背景は出さない。文字色は据え置き。 */
     @media (any-hover: hover) {
         @media screen and (min-width: 768px) {
@@ -216,12 +228,12 @@
                 background-color: transparent;
             }
 
-            .lnl_item-02 > .lnl_title-02 > .lnl_link-02:hover,
-            .lnl_item-02 > .lnl_title-02 > .lnl_link-02:focus-visible,
-            .lnl_item-02.current-menu-ancestor > .lnl_title-02 > .lnl_link-02:hover,
-            .lnl_item-02.current-menu-ancestor > .lnl_title-02 > .lnl_link-02:focus-visible,
-            .lnl_item-02.current_page_parent > .lnl_title-02 > .lnl_link-02:hover,
-            .lnl_item-02.current_page_parent > .lnl_title-02 > .lnl_link-02:focus-visible {
+            .lnl_item-02 > .lnl_title-02 > a.lnl_link-02:hover,
+            .lnl_item-02 > .lnl_title-02 > a.lnl_link-02:focus-visible,
+            .lnl_item-02.current-menu-ancestor > .lnl_title-02 > a.lnl_link-02:hover,
+            .lnl_item-02.current-menu-ancestor > .lnl_title-02 > a.lnl_link-02:focus-visible,
+            .lnl_item-02.current_page_parent > .lnl_title-02 > a.lnl_link-02:hover,
+            .lnl_item-02.current_page_parent > .lnl_title-02 > a.lnl_link-02:focus-visible {
                 color: var(--color-text);
                 background-color: transparent;
 

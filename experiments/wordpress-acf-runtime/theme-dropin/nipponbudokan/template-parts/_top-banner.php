@@ -4,7 +4,7 @@ $banners = array(
     array(
         'src' => $theme_uri . '/images/top/bnr-sports.webp',
         'alt' => 'スポーツくじ',
-        'url' => 'https://www.toto-dream.com/',
+        'url' => 'https://www.toto-growing.com/',
         'width' => 204,
         'height' => 80,
     ),
