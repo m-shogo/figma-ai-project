@@ -145,12 +145,12 @@
 
 :where(:root) {
     /* プライマリーカラー */
-    --color-primary: #00b7f1;
+    --color-primary: #28ac5f;
     /* セカンダリーカラー */
     --color-secondary: #fff;
     --color-tertiary: #e3f2fd;
     /* アクセントカラー */
-    --color-accent: #dd7c23;
+    --color-accent: #ec6b61;
     /* --color-accent-yellow: #bd9620; */
     /* --color-accent-purple: #a73073; */
     /* グレー */
