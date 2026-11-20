@@ -6,6 +6,8 @@ on:
       - "schemas/wordpress-theme-intake.schema.json"
       - "scripts/validate_wordpress_theme_intake.py"
       - "tests/test_validate_wordpress_theme_intake.py"
+      - "tests/test_wordpress_theme_lineage_hints.py"
+      - "scripts/scan_wordpress_target.py"
       - "experiments/**/theme-intake.yaml"
       - "docs/wordpress-theme-intake.md"
       - ".github/workflows/wordpress-theme-intake.yml"
@@ -14,6 +16,8 @@ on:
       - "schemas/wordpress-theme-intake.schema.json"
       - "scripts/validate_wordpress_theme_intake.py"
       - "tests/test_validate_wordpress_theme_intake.py"
+      - "tests/test_wordpress_theme_lineage_hints.py"
+      - "scripts/scan_wordpress_target.py"
       - "experiments/**/theme-intake.yaml"
       - "docs/wordpress-theme-intake.md"
       - ".github/workflows/wordpress-theme-intake.yml"
@@ -42,6 +46,9 @@ jobs:
 
       - name: Test intake contract guards
         run: python -m unittest -v tests.test_validate_wordpress_theme_intake
+
+      - name: Test read-only Theme lineage and company-policy inference boundary
+        run: python -m unittest -v tests.test_wordpress_theme_lineage_hints
 
       - name: Reject persisted Figma MCP asset URLs
         run: python scripts/validate_no_figma_mcp_asset_urls.py
