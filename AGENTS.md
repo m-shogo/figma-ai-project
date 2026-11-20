@@ -47,6 +47,8 @@ Canonical: `docs/agent-adapters.md`
 
 Canonical: `docs/agent-recurring-work-preflight.md`
 
+**FigmaからWebの新案件を始めるとき**は、個別パーツの実装前にカラー・フォント・画像・SVG・アイコン・余白・breakpoint・共通部品を既存コードと照合し、不足するFoundationを先に導入・検証する（既存FoundationがVERIFIEDなら再作成しない）。案件ごとのデザイン値を他案件に流用しない。詳細: `docs/frontend-foundation-preflight.md`。
+
 ## Execution speed / agent ownership
 
 複数Agent運用では、同じwrite scopeを二重実装・二重調査しない。
