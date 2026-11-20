@@ -319,3 +319,12 @@ reviews:
     disposition: KEEP_PROJECT_ONLY
     rationale: >-
       Reviewed Budokan Core Details QA tracking: Figma SP standard 5%, SP QA 10%, PC standard 10%, PC QA 5%, with an existing ._qa marker and bounded PC override. This supports a project variant-scope fix, not a global token across projects; only REF-002-BUDOKAN. KEEP_PROJECT_ONLY and preserve the responsive variant mechanism.
+
+  OBS-PROJECT-RUN-TEMPLATE-AUTHORITY:
+    last_reviewed_at: '2026-11-20'
+    next_review_due: '2026-12-20'
+    reviewed_supporting_references: 0
+    reviewed_contradictions: 0
+    disposition: KEEP_PROJECT_ONLY
+    rationale: >-
+      Reviewed explicit repo-local tooling evidence: scripts/create_section_run.py commit b57a6c089c359d02fca5ce3a00e5fd384b1e3472 replaced a stale hard-coded schema-10 constructor with the checked-in templates/run-record.yaml owner (PR #206). The two sources are valid project-internal implementation/canonical-template evidence but have no independent reference_id, so distinct supporting reference count remains 0, not a fabricated cross-project reference. This is a repository-internal generator design constraint, not a universal Figma/frontend rule; KEEP_PROJECT_ONLY and revisit only on independent, applicable evidence or tool architecture changes.
