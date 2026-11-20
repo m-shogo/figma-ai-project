@@ -8,7 +8,14 @@ Human が何度も同じ種類の指摘をするのは、仕様不足より **AI
 
 UI / layout / hover / overlay / 開閉を触ったら、Human が「確認して」「デザイン見て」と言う前にこのリストを回す。正本の詳細判断は `docs/frontend-quick-contract.md` 節4。
 
-新しい失敗を見つけるたびに分類を増やさない。新しい Human FB はまず下の8へ割り当てる。
+新しい失敗を見つけるたびに分類を増やさない。新しい Human FB はまず下の W1–W10 へ割り当てる。案件を閉じるときは、この分類で FB を数えて `projects/<slug>/LEARNINGS.md` に残す（`projects/README.md`）。
+
+## 作る前（必須）
+
+1. `projects/<slug>/docs/` の Current Authority と現行 Figma fileKey を読む。前の案件・前の file の数値を持ち込まない
+2. 新しい class / CSS ファイル / ACF group / CPT / 共通余白を足す前に、同じ役割の owner を検索する。あれば足さずにそこを直す
+3. Figma の描画寸法を `height` / `width` / `nowrap` / `min-width` に写す前に、内容が増えたらどうなるかを決める（W10）
+4. 1 つの FB は 1 コミット。整形（インデント・改行）を修正と同じコミットに混ぜない
 
 ## 完了と言う前（必須）
 
@@ -91,6 +98,22 @@ pager だけ、標準ボタンだけ直して輪郭・ナビ大・EN・検索を
 
 **自動:** 今回の family は自分で洗い、その範囲は言い淀まず直す。scope 外は触らない。
 
+### W9 CMS / ACF を作り足す・壊す
+
+**FB の出方:** 「なんで新しいの作った」「説明いらない」「並び順が変わった」「同期が出てる」
+
+既存 CPT / field group を探さずに新設する。頼まれていない instructions や field を足す。JSON の `modified` / key / 順序を崩す。
+
+**自動:** 作る前に既存の CPT・group・field 名を Current Authority と Theme の `acf/json` で探す。頼まれた field だけ触る。`modified` を未来にしない。field group JSON は Human の明示なしに編集しない。
+
+### W10 Figma の寸法を制約にする
+
+**FB の出方:** 「ルールあるでしょ」「文字が増えたら？」「1個だと全幅に伸びる」「カテゴリ増えても」
+
+見本でちょうど合う `height: 66px` / `width: 301px` / `nowrap` / `min-width` を、内容が変わる箱に書く。見本の個数で `nth-child` を書く。
+
+**自動:** 中身で伸びる箱は flow / grid で組み、固定するのは素材寸法と意図された art direction だけ。完了前チェック 8–10 を回す。
+
 ## Human がまた同じ種類を言ったら
 
-単発バグで閉じない。この8のどれかを更新し、`research/frontend-learning-evidence*.yaml` へ戻す。同じ種類を2回言わせたら、detection（完了前チェック）が弱い。
+単発バグで閉じない。W1–W10 のどれかを更新し、`research/frontend-learning-evidence*.yaml` へ戻す。同じ種類を2回言わせたら、detection（完了前チェック）が弱い。
