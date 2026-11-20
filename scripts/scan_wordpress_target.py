@@ -352,13 +352,13 @@ def scope_rule_routes(root: Path, scanned: dict, *, related: list[dict] | None =
     docs = project / "docs" if project else None
     project_docs = [
         str(Path("docs") / name)
-        for name in ("CURRENT_AUTHORITY.md", "THEME_RULES.md", "DESIGN_FOUNDATION.md", "IMPLEMENTATION_CHECKLIST.md")
+        for name in ("CURRENT_AUTHORITY.md", "DESIGN_FOUNDATION.md", "IMPLEMENTATION_CHECKLIST.md")
         if docs is not None and (docs / name).is_file()
     ]
     # A project directory may include multiple style.css Theme candidates or none.
     # In that case do not activate local Theme rules solely from file presence.
     theme_selected = scanned.get("selection_state") == "UNAMBIGUOUS" and len(scanned.get("themes", [])) == 1
-    local_theme_rules = "docs/THEME_RULES.md" if theme_selected and "docs/THEME_RULES.md" in project_docs else ""
+    local_theme_rules = "docs/THEME_RULES.md" if theme_selected and docs is not None and (docs / "THEME_RULES.md").is_file() else ""
     candidates: list[dict] = []
     for item in (related or []) if theme_selected else []:
         if not item.get("same_theme_author_hint"):
