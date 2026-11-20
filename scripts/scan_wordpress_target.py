@@ -13,9 +13,9 @@ from typing import Iterable
 SKIP_DIRS = {".git", "node_modules", "vendor", ".next", "dist", "build", "coverage"}
 MAX_TEXT_BYTES = 2_000_000
 THEME_NAME_RE = re.compile(r"(?mi)^\s*Theme Name\s*:\s*(.+?)\s*$")
-THEME_AUTHOR_RE = re.compile(r"(?mi)^\\s*Author\\s*:\\s*(.+?)\\s*$")
-THEME_PARENT_RE = re.compile(r"(?mi)^\\s*Template\\s*:\\s*(.+?)\\s*$")
-CSS_IMPORT_RE = re.compile(r"""@import\\s+['"]\\./([^'"]+)['"]""")
+THEME_AUTHOR_RE = re.compile(r"(?mi)^\s*Author\s*:\s*(.+?)\s*$")
+THEME_PARENT_RE = re.compile(r"(?mi)^\s*Template\s*:\s*(.+?)\s*$")
+CSS_IMPORT_RE = re.compile(r"""@import\s+['"]\./([^'"]+)['"]""")
 TEMPLATE_NAME_RE = re.compile(r"(?mi)Template Name\s*:\s*(.+?)\s*(?:\*/|\r?$)")
 ACF_PATTERNS = {
     "save_json_filter": re.compile(r"acf/settings/save_json"),
