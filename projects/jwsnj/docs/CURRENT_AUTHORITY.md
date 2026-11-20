@@ -40,6 +40,7 @@ TOP の主なパーツ（PC）:
 - 書き方はベースに倣う（Human 2026-11-20）。ベースの README の CSS 規則（変数 `--` / 個別 `--_`、HTML タグに直接スタイルを当てない、入れ子は擬似要素・状態・メディアクエリ等だけ、ファイル名 = ブロック名、PHP と HTML を分ける）
 - Vite（画像の WebP/AVIF 変換と自動リロード）は案件直下: `package.json` / `vite.config.mjs` / `vite-plugins/` / `src/images/`。`src/images/` の画像が `theme/images/` へ変換される
 - 取り込んでいないもの: ベースの `docker/`（この repo の `runtime/wordpress/` を使う）、FTP デプロイ workflow（CODIA 開発サーバー向け）、サンプル記事 XML、`wp/php/php.ini`
+- ベース Theme は学習・再利用のための **サンプル**。納品の正本は今回のFigma。Figmaに合うように既存を再利用・改修し、足りなければ追加する。サンプル文言・画像・URLは本番表示しない
 - 参照 Theme: `reference/`（編集禁止）
 - 触ってはいけないファイル: まだなし（`guard.json`）
 
@@ -49,15 +50,19 @@ TOP の主なパーツ（PC）:
 - 既存 ACF ブロック: `theme/acf/blocks/`（customPostList / inPageLink / navigationLarge / navigationSmall / tabContainer / tabPanel）
 - `docs/SPEC.md` に書いた TOP の編集項目は Human の指示（2026-11-20）。field 名・置き場所はベース Theme に合わせる
 - 管理画面で作るもの: メニュー 3 つ（PC ヘッダー / SP ハンバーガー / フッター）、固定ページ
+- 投稿タイプは通常投稿・固定ページで進め、**新しいカスタム投稿タイプを追加しない**（Human 2026-11-20）。CODIAのサンプル「イベント」投稿タイプと `event_cat` は `theme/inc/custom.php` で登録をコメントアウト。サンプルの関数は学習用に保持
 
 ## Human が決めたこと
 
 - 2026-11-20 slug `jwsnj`、案件名 ニュージャージー
 - 2026-11-20 文字サイズは rem。ベース Theme の書き方に倣う
 - 2026-11-20 プラグイン一覧は `docs/SPEC.md`（Autoptimize は入れるが無効）
-- 2026-11-20 実装順: ヘッダー → フッター → 一覧ページ → パーツ集 → 詳細ページ → 固定ページ（サイドバー） → TOP（セクションごと）。コース紹介はまだ
+- 2026-11-20 **改訂実装順**: **Figma／既存テーマの全体調査 → カラー・フォント・画像/SVG・CSS変数・共通レイアウトの整理と導入・確認 → ヘッダー → フッター → 一覧ページ → パーツ集 → 詳細ページ → 固定ページ（サイドバー） → TOP（セクションごと）**。コース紹介はまだ。Foundationの確認正本は `docs/DESIGN_FOUNDATION.md`
 - 2026-11-20 進め方: まとめてやらない。1 パーツ（TOP は 1 セクション）ごとに作業ブランチ → コミット → push → `so` へマージ
 - 2026-11-20 コース紹介はまだ作らない
 - 2026-11-20 サイトの時刻は日本時間（`timezone_string = Asia/Tokyo`）
 - 2026-11-20 ディレクトリーマップを `docs/DIRECTORY_MAP.md` に確定
 - 2026-11-20 ベース Theme は `f-codiaTheme-block-in-vite`。theme 名は `jwsnj`。Git に残す（ACF JSON 含む）
+- 2026-11-20 PCのメニューは hover、SPのメニューはクリック/タップで開閉。高度な追加操作は現段階で過剰に作り込まないが、既存の操作性を壊さない
+- 2026-11-20 `white-space: nowrap` はjwsnj実装では禁止。テキストは2〜3行への自然な折り返しを優先。文字拡大150〜200%の専用テストは不要（PC/SP/中間幅と長文は確認）
+- 2026-11-20 URL等の未決事項は後日Human指示。勝手にslugや新しい投稿タイプを創作しない。影響しないところから先に進める
