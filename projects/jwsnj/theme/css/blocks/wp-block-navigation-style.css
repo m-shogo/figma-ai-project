@@ -1,0 +1,196 @@
+@charset "utf-8";
+/* // ------------------------------
+// ナビゲーション
+// ------------------------------ */
+.block-editor_wrap,
+.editor-styles-wrapper {
+    /* エディタ画面のみ start */
+    .wp-block-acf-navigation-small + .wp-block-acf-navigation-large {
+        margin-top: var(--wp-block-margin-xxlarge);
+        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+            margin-top: var(--wp-block-margin-large);
+        }
+    }
+    .wp-block-acf-navigation-large + .wp-block-acf-navigation-small {
+        margin-top: var(--wp-block-margin-xxlarge);
+        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+            margin-top: var(--wp-block-margin-large);
+        }
+    }
+    /* エディタ画面のみ end */
+    .module_navigation {
+        display: grid;
+        grid-template-columns: 1fr;
+        margin-top: var(--wp-block-margin);
+        & + & {
+            margin-top: var(--wp-block-margin-large);
+        }
+        /* MARK: 共通 */
+        .navigation {
+            a {
+                text-decoration: none;
+                color: var(--color-text);
+                display: flex;
+                &::after {
+                    content: unset;
+                }
+                &[target='_blank'] {
+                    .content {
+                        .title {
+                            &::after {
+                                font-family: var(--font-awesome);
+                                content: var(--icon-blank);
+                                margin-left: calc(10 * var(--to-rem-func));
+                            }
+                        }
+                    }
+                }
+                &.is-disabled {
+                    pointer-events: none;
+                }
+                .image {
+                    overflow: hidden;
+                    flex-shrink: 0;
+                    aspect-ratio: 335 / 219;
+                    img {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                        transition: var(--transition-duration);
+                    }
+                }
+                .content {
+                    transition: var(--transition-duration);
+                    .title {
+                        font-weight: 500;
+                        color: var(--color-primary);
+                        line-height: 1.6;
+                        letter-spacing: 0.1em;
+                        text-decoration: underline;
+                        text-decoration-thickness: calc(1 * var(--to-rem-func));
+                        overflow-wrap: anywhere;
+                        word-break: normal;
+                        line-break: strict;
+                    }
+                    .text {
+                        line-height: 1.8;
+                        letter-spacing: 0.08em;
+                        color: var(--color-text);
+                    }
+                }
+            }
+        }
+        /* MARK: 大 */
+        &.--large {
+            gap: calc(40 * var(--to-rem-func));
+            .navigation {
+                a {
+                    flex-direction: column;
+                    gap: calc(20 * var(--to-rem-func));
+                    .image {
+                        border-radius: calc(8 * var(--to-rem-func));
+                        aspect-ratio: 335 / 219;
+                    }
+                    .content {
+                        .title {
+                            font-size: calc(24 * var(--to-rem-func));
+                            text-underline-offset: calc(6 * var(--to-rem-func));
+                        }
+                        .text {
+                            margin-top: calc(20 * var(--to-rem-func));
+                            font-size: calc(16 * var(--to-rem-func));
+                        }
+                    }
+                }
+            }
+        }
+        /* MARK: 小 */
+        &.--small {
+            gap: calc(30 * var(--to-rem-func));
+            .navigation {
+                a {
+                    align-items: flex-start;
+                    gap: calc(15 * var(--to-rem-func));
+                    .image {
+                        border-radius: calc(4 * var(--to-rem-func));
+                        width: calc(120 * var(--to-rem-func));
+                        aspect-ratio: 1 / 1;
+                        border: calc(1 * var(--to-rem-func)) solid var(--color-gray-border);
+                    }
+                    .content {
+                        .title {
+                            font-size: calc(16 * var(--to-rem-func));
+                            text-underline-offset: calc(4 * var(--to-rem-func));
+                        }
+                        .text {
+                            margin-top: calc(10 * var(--to-rem-func));
+                            font-size: calc(12 * var(--to-rem-func));
+                        }
+                    }
+                }
+            }
+        }
+
+        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+            flex-direction: row;
+            flex-wrap: wrap;
+            & + .module_navigation {
+                /* margin-top: calc(48 * var(--to-rem-func)); */
+            }
+            &.--large {
+                gap: calc(60 * var(--to-rem-func));
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                .navigation {
+                    a {
+                        .content {
+                            .title {
+                            }
+                        }
+                    }
+                }
+            }
+            &.--small {
+                grid-template-columns: repeat(2, 1fr);
+                gap: calc(40 * var(--to-rem-func));
+                .navigation {
+                    a {
+                        gap: calc(25 * var(--to-rem-func));
+                        .image {
+                            border: unset;
+                            width: calc(180 * var(--to-rem-func));
+                            aspect-ratio: 18 / 15;
+                        }
+                        .content {
+                            .title {
+                                font-size: calc(20 * var(--to-rem-func));
+                            }
+                            .text {
+                                margin-top: calc(15 * var(--to-rem-func));
+                                font-size: calc(14 * var(--to-rem-func));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        /* MARK: hover */
+        @media (any-hover: hover) {
+            .navigation {
+                a {
+                    &:hover {
+                        .content {
+                            opacity: 0.7;
+                        }
+                        .image {
+                            img {
+                                transform: scale(1.05);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,118 @@
+@charset "utf-8";
+/* // ==========================================================================
+// 検索
+// ========================================================================== */
+.module_search-01 {
+    --_search-height-SP: calc(40 * var(--to-rem-func));
+    --_search-height-PC: calc(40 * var(--to-rem-func));
+    --_button-width-SP: calc(86 * var(--to-rem-func));
+    --_button-width-PC: calc(86 * var(--to-rem-func));
+    .ms_from {
+        background-color: var(--color-primary);
+        display: grid;
+        grid-template-columns: 1fr var(--_button-width-SP);
+        align-items: center;
+        .ms_label {
+        }
+        .ms_input {
+            border: calc(1 * var(--to-rem-func)) solid var(--color-primary);
+            width: 100%;
+            height: var(--_search-height-SP);
+            background-color: var(--color-secondary);
+            color: var(--color-text);
+            font-size: calc(16 * var(--to-rem-func));
+            transition: border-color var(--transition-duration), background-color var(--transition-duration);
+            &:hover {
+                border-color: var(--color-primary);
+            }
+            &:focus {
+                border-color: var(--color-primary);
+                background-color: var(--color-secondary);
+            }
+            &:-webkit-autofill {
+                -webkit-box-shadow: 0 0 0 1000px var(--color-secondary) inset;
+            }
+            &[readonly='readonly'],
+            &[readonly] {
+                background-color: var(--color-secondary);
+            }
+        }
+        .ms_button {
+            height: var(--_search-height-SP);
+            width: 100%;
+            border: calc(1 * var(--to-rem-func)) solid var(--color-primary);
+            border-left: none;
+            background-color: var(--color-primary);
+            text-align: center;
+            transition: var(--transition-duration);
+            &:hover,
+            &:focus {
+                background-color: var(--color-secondary);
+                span {
+                    color: var(--color-primary);
+                    &::after {
+                        color: var(--color-primary);
+                    }
+                }
+            }
+            span {
+                position: relative;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: calc(16 * var(--to-rem-func));
+                color: var(--color-secondary);
+                transition: var(--transition-duration);
+                &::after {
+                    content: '\f002';
+                    display: block;
+                    margin-left: calc(7 * var(--to-rem-func));
+                    font-family: var(--font-awesome);
+                    font-weight: 500;
+                    color: var(--color-secondary);
+                    transition: var(--transition-duration);
+                }
+            }
+        }
+    }
+}
+
+@media (calc(768 * (1 / 16 * 1rem)) <= width) {
+    .module_search-01 {
+        .ms_from {
+            .ms_input {
+                width: 100%;
+            }
+        }
+    }
+    body.search .gc_main,
+    body.error404 .gc_main {
+        .module_search-01 {
+            max-width: calc(350 * var(--to-rem-func));
+            margin-block: calc(50 * var(--to-rem-func)) 0;
+            margin-inline: auto;
+        }
+    }
+}
+
+html._browser-ie & {
+    .module_search-01 {
+        .ms_from {
+            .ms_input {
+                line-height: 0;
+            }
+        }
+    }
+}
+
+/* ==========================================================================
+ * インプットコンポーネント
+ * サポートの終了したプラグインのCSSのため、コメントアウト
+ * ========================================================================== */
+/* form.custom-wpcf7c-confirmed:not([novalidate='novalidate']) {
+    .ms_input {
+        border-color: transparent !important;
+        background-color: transparent !important;
+        color: #000;
+    }
+} */

@@ -1,0 +1,16 @@
+@charset "utf-8";
+/* // ==========================================================================
+//  ブロックエディタ用モーダル
+// ========================================================================== */
+.wp-lightbox-overlay {
+    .lightbox-image-container {
+        height: auto;
+        max-height: 90vh;
+    }
+    img {
+        width: 100% !important;
+        height: auto !important;
+        max-height: 90vh !important;
+        object-fit: contain !important; /* 必要に応じて cover → contain に変更 */
+    }
+}

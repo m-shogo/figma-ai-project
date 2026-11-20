@@ -1,0 +1,136 @@
+@charset "utf-8";
+/* // ------------------------------
+// ニュースリスト
+// ------------------------------ */
+.block-editor_wrap,
+.editor-styles-wrapper {
+    .module_newsList-01 {
+        margin-top: var(--wp-block-margin);
+        & + & {
+            margin-top: var(--wp-block-margin-large);
+        }
+    }
+}
+.module_newsList-01 {
+    /* ニュースリスト + ニュースカードと続く場合の上部余白 */
+    & + .module_newsCard-01 {
+        margin-top: var(--wp-block-margin-large);
+    }
+    .mnl-01_article {
+        border-top: calc(1 * var(--to-rem-func)) solid var(--color-gray-border);
+        &:last-child {
+            border-bottom: calc(1 * var(--to-rem-func)) solid var(--color-gray-border);
+        }
+        .link,
+        .no-link {
+            display: block;
+            padding-block: calc(20 * var(--to-rem-func));
+            padding-inline: 0;
+            color: var(--color-text);
+            text-decoration: none;
+            transition: var(--transition-duration);
+        }
+        .link {
+            &[target='_blank'] {
+                .title {
+                    &::after {
+                        content: var(--icon-blank);
+                        font-family: var(--font-awesome);
+                        font-weight: 400;
+                        margin-left: 0.25em;
+                    }
+                }
+            }
+            &[href$='.doc'],
+            &[href$='.docx'],
+            &[href$='.docm'],
+            &[href$='.xls'],
+            &[href$='.xlsx'],
+            &[href$='.xlsm'],
+            &[href$='.png'],
+            &[href$='.jpg'],
+            &[href$='.jpeg'],
+            &[href$='.gif'],
+            &[href$='.webp'] {
+                .title {
+                    &::after {
+                        content: var(--icon-file);
+                        font-family: var(--font-awesome);
+                        font-weight: 400;
+                        margin-left: 0.25em;
+                    }
+                }
+            }
+            &[href$='.pdf'] {
+                .title {
+                    &::after {
+                        content: var(--icon-pdf);
+                        font-family: var(--font-awesome);
+                        font-weight: 400;
+                        margin-left: 0.25em;
+                    }
+                }
+            }
+        }
+        .head {
+            display: flex;
+            .date {
+                margin: 0; /* エディタでの余白を削除 */
+                width: calc(100 * var(--to-rem-func));
+            }
+            .category {
+                margin: 0; /* エディタでの余白を削除 */
+                display: flex;
+                align-items: center;
+                flex-wrap: wrap;
+                gap: calc(4 * var(--to-rem-func)) calc(10 * var(--to-rem-func));
+                .label {
+                    display: inline-block;
+                    border: calc(1 * var(--to-rem-func)) solid var(--color-primary);
+                    padding: 0 0.5em;
+                    color: var(--color-primary);
+                }
+            }
+        }
+        .body {
+            margin-top: calc(10 * var(--to-rem-func));
+            .title {
+                margin: 0; /* エディタでの余白を削除 */
+                font-weight: 700;
+                font-size: calc(18 * var(--to-rem-func));
+                line-height: 1.5;
+                letter-spacing: 0.05em;
+                transition: color var(--transition-duration);
+                overflow-wrap: anywhere;
+                word-break: normal;
+                line-break: strict;
+            }
+        }
+    }
+
+    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+        .mnl-01_article {
+            .link,
+            .no-link {
+                padding-block: calc(20 * var(--to-rem-func));
+                padding-inline: calc(20 * var(--to-rem-func));
+            }
+        }
+    }
+
+    /* MARK: hover */
+    @media (any-hover: hover) {
+        .mnl-01_article {
+            .link,
+            .no-link {
+                &:hover {
+                    .body {
+                        .title {
+                            color: var(--color-link);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

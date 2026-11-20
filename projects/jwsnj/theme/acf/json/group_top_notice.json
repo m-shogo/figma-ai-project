@@ -1,0 +1,136 @@
+{
+    "key": "group_top_notice",
+    "title": "トップ_重要なお知らせ",
+    "fields": [
+        {
+            "key": "field_5d6776189bd4d",
+            "label": "表示設定",
+            "name": "top_notice_select",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "ui": 1,
+            "ui_on_text": "表示する",
+            "ui_off_text": "表示しない"
+        },
+        {
+            "key": "field_5d5cb6ecb6e82",
+            "label": "重要なお知らせ",
+            "name": "top_notice-01",
+            "aria-label": "",
+            "type": "repeater",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "collapsed": "",
+            "min": 0,
+            "max": 0,
+            "layout": "row",
+            "button_label": "+ 重要なお知らせを追加",
+            "rows_per_page": 20,
+            "sub_fields": [
+                {
+                    "key": "field_5d5cb73db6e83",
+                    "label": "日付",
+                    "name": "date",
+                    "aria-label": "",
+                    "type": "date_picker",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "display_format": "Y/n/j",
+                    "return_format": "Y/n/j",
+                    "first_day": 1,
+                    "parent_repeater": "field_5d5cb6ecb6e82",
+                    "default_to_current_date": 0
+                },
+                {
+                    "key": "field_5d5cb752b6e84",
+                    "label": "テキストエリア",
+                    "name": "textarea",
+                    "aria-label": "",
+                    "type": "textarea",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": "",
+                    "allow_in_bindings": 0,
+                    "rows": "",
+                    "placeholder": "",
+                    "new_lines": "br",
+                    "parent_repeater": "field_5d5cb6ecb6e82"
+                },
+                {
+                    "key": "field_5d5de31a66870",
+                    "label": "表示設定",
+                    "name": "none",
+                    "aria-label": "",
+                    "type": "checkbox",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "choices": {
+                        "_hide": "このお知らせを非表示にする"
+                    },
+                    "allow_custom": 0,
+                    "default_value": [],
+                    "layout": "vertical",
+                    "toggle": 0,
+                    "return_format": "value",
+                    "save_custom": 0,
+                    "custom_choice_button_text": "新規選択肢を追加",
+                    "parent_repeater": "field_5d5cb6ecb6e82"
+                }
+            ]
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "page_type",
+                "operator": "==",
+                "value": "front_page"
+            }
+        ]
+    ],
+    "menu_order": 2,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "display_title": ""
+}

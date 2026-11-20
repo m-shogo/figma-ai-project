@@ -1,0 +1,143 @@
+@charset "utf-8";
+/*　// ------------------------------
+// ボタンリンク
+// ------------------------------　*/
+/* ///////// デフォルト設定 ///////// */
+.block-editor_wrap,
+.editor-styles-wrapper {
+    .wp-block-buttons {
+        margin-top: var(--wp-block-margin);
+        display: flex;
+        flex-wrap: wrap;
+        gap: calc(16 * var(--to-rem-func));
+        & + & {
+            margin-top: var(--wp-block-margin-large);
+        }
+        .wp-block-button {
+            display: block;
+            &:not(.has-custom-width) {
+                /* デフォルトサイズ */
+                width: 100%;
+            }
+            .wp-block-button__link {
+                position: relative;
+                text-decoration: none;
+                font-size: calc(15 * var(--to-rem-func));
+                min-height: calc(48 * var(--to-rem-func));
+                font-weight: 500;
+                line-height: normal;
+                display: flex;
+                align-items: center;
+                text-align: left;
+                border: calc(2 * var(--to-rem-func)) solid var(--color-primary);
+                border-radius: 3em;
+                background-color: var(--color-primary);
+                color: var(--color-secondary);
+                padding-block: calc(12 * var(--to-rem-func));
+                padding-inline: calc(35 * var(--to-rem-func)) calc(70 * var(--to-rem-func));
+                letter-spacing: 0.08em;
+                transition: var(--transition-duration);
+                max-width: 100%;
+                &.has-text-align-center {
+                    justify-content: center;
+                    padding-block: calc(12 * var(--to-rem-func));
+                    padding-inline: calc(35 * var(--to-rem-func));
+                }
+                &.has-text-align-right {
+                    justify-content: flex-end;
+                }
+                &::after {
+                    content: '';
+                    position: absolute;
+                    right: calc(24 * var(--to-rem-func));
+                    top: 50%;
+                    transform: translateY(-50%);
+                    transition: var(--transition-duration);
+                    font-size: calc(18 * var(--to-rem-func));
+                    color: currentColor;
+                }
+                &[target='_blank'] {
+                    &::after {
+                        content: var(--icon-blank);
+                        font-family: var(--font-awesome);
+                        font-weight: 400;
+                    }
+                }
+                &[href$='.pdf'] {
+                    &::after {
+                        content: var(--icon-pdf);
+                        font-family: var(--font-awesome);
+                        font-weight: 400;
+                    }
+                }
+                &[href$='.doc'],
+                &[href$='.docx'],
+                &[href$='.docm'],
+                &[href$='.xls'],
+                &[href$='.xlsx'],
+                &[href$='.xlsm'],
+                &[href$='.png'],
+                &[href$='.jpg'],
+                &[href$='.jpeg'],
+                &[href$='.gif'],
+                &[href$='.webp'] {
+                    &::after {
+                        content: var(--icon-file);
+                        font-family: var(--font-awesome);
+                        font-weight: 400;
+                    }
+                }
+            }
+            &.is-style-outline {
+                .wp-block-button__link {
+                    background-color: transparent;
+                    color: var(--color-primary);
+                }
+            }
+        }
+        /* ///////// 個別設定 /////////　*/
+        /* ボタン小 */
+        &.small {
+        }
+
+        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+            gap: calc(20 * var(--to-rem-func));
+            .wp-block-button {
+                &.has-custom-width {
+                    width: 100%;
+                }
+                &:not(.has-custom-width) {
+                    width: auto;
+                    min-width: calc(270 * var(--to-rem-func));
+                }
+                .wp-block-button__link {
+                    padding-block: calc(16 * var(--to-rem-func));
+                    padding-inline: calc(40 * var(--to-rem-func)) calc(64 * var(--to-rem-func));
+                    min-height: calc(64 * var(--to-rem-func));
+                    font-size: calc(16 * var(--to-rem-func));
+                }
+            }
+        }
+    }
+}
+
+.block-editor_wrap {
+    /* ホバー時のスタイル */
+    /* MARK: hover */
+    @media (any-hover: hover) {
+        .wp-block-button {
+            &:has(.wp-block-button__link:hover) {
+                .wp-block-button__link {
+                    background-color: var(--color-secondary);
+                    color: var(--color-primary);
+                }
+                &.is-style-outline {
+                    .wp-block-button__link {
+                        background-color: var(--color-primary);
+                        color: var(--color-secondary);
+                    }
+                }
+            }
+        }
+    }
+}

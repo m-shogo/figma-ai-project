@@ -1,0 +1,122 @@
+@charset "utf-8";
+/* // ------------------------------
+// リスト
+// ------------------------------ */
+/* //---------- 共通設定 ---------- */
+.block-editor_wrap,
+.editor-styles-wrapper {
+    .wp-block-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+        gap: calc(16 * var(--to-rem-func));
+        margin-top: var(--wp-block-margin);
+        & + & {
+            margin-top: var(--wp-block-margin-large);
+        }
+        .wp-block-list {
+            margin-top: var(--wp-block-margin-small); /* 入れ子のリストの上部余白 */
+        }
+        li {
+            margin: 0;
+            color: var(--color-text);
+            padding-left: calc(30 * var(--to-rem-func));
+            position: relative;
+            font-size: calc(16 * var(--to-rem-func));
+            line-height: 1.5;
+            letter-spacing: 0.08em;
+            &:empty {
+                display: none;
+            }
+            &::before {
+                position: absolute;
+                left: 0;
+                top: 0;
+                display: inline-block;
+            }
+        }
+    }
+    /* //---------- ulのみ ---------- */
+    ul.wp-block-list:not(.annotation-list) {
+        > li {
+            padding-left: calc(20 * var(--to-rem-func));
+            &::before {
+                content: '';
+                width: calc(6 * var(--to-rem-func));
+                height: calc(6 * var(--to-rem-func));
+                background: var(--color-primary);
+                border-radius: 50%;
+                transform: translateY(0.6em);
+            }
+        }
+    }
+    /* //---------- olのみ ---------- */
+    ol.wp-block-list:not(.annotation-list) {
+        counter-reset: li;
+        gap: calc(20 * var(--to-rem-func));
+        > li {
+            padding-left: calc(32 * var(--to-rem-func));
+            &::before {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                counter-increment: li;
+                content: counter(li) '.';
+                color: var(--color-primary);
+                line-height: 1;
+                translate: 0 calc(6 * var(--to-rem-func));
+                letter-spacing: 0;
+                font-family: var(--font-sansSerif-en);
+                font-weight: 500;
+            }
+        }
+    }
+    /* //---------- 注釈リスト ---------- */
+    ul.annotation-list {
+        gap: calc(10 * var(--to-rem-func));
+        li {
+            font-size: calc(14 * var(--to-rem-func));
+            font-weight: 500;
+            line-height: 1.5;
+            letter-spacing: 0.05em;
+            &::before {
+                content: '※';
+                font-size: calc(16 * var(--to-rem-func));
+                transform: translateY(-0.1em);
+                color: var(--color-primary);
+            }
+            ul.wp-block-list,
+            ol.wp-block-list {
+                margin-top: var(--wp-block-margin-small);
+                gap: calc(10 * var(--to-rem-func));
+                li {
+                    font-size: calc(14 * var(--to-rem-func));
+                    font-weight: 500;
+                    line-height: 1.5;
+                    letter-spacing: 0.05em;
+                    padding-left: calc(30 * var(--to-rem-func));
+                    &::before {
+                        content: '※';
+                        font-size: calc(16 * var(--to-rem-func));
+                        transform: translateY(-0.1em);
+                        color: var(--color-primary);
+                        width: auto;
+                        height: auto;
+                        background: transparent;
+                        border-radius: 0;
+                        display: inline-block;
+                        line-height: 1.5;
+                        font-family: var(--font-sansSerif-ja);
+                        font-weight: 500;
+                    }
+                }
+            }
+        }
+    }
+    /* //---------- anchor-box, border-list ---------- */
+    /* .anchor-box,
+    .border-list {
+        padding: 0;
+    } */
+}

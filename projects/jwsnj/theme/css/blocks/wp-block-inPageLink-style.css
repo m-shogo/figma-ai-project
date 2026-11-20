@@ -1,0 +1,104 @@
+@charset "utf-8";
+/* // ------------------------------
+// ページ内リンク
+// ------------------------------ */
+.block-editor_wrap,
+.editor-styles-wrapper {
+    .module_inPageLink-01 {
+        display: flex;
+        flex-direction: column;
+        list-style: none;
+        padding: 0;
+        margin-top: var(--wp-block-margin);
+        & + & {
+            margin-top: var(--wp-block-margin-large);
+        }
+        .inPageLink {
+            width: 100%;
+            a {
+                color: var(--color-text);
+                text-decoration: none;
+                font-size: calc(14 * var(--to-rem-func));
+                letter-spacing: 0.1em;
+                line-height: 1.2;
+                padding-block: calc(20 * var(--to-rem-func));
+                padding-inline: calc(10 * var(--to-rem-func));
+                border-bottom: calc(2 * var(--to-rem-func)) solid var(--color-primary);
+                display: flex;
+                align-items: center;
+                width: 100%;
+                transition: var(--transition-duration);
+                @include hover {
+                    border-color: var(--color-primary);
+                    .title {
+                        &::before {
+                            background-color: var(--color-primary);
+                        }
+                    }
+                }
+                .title {
+                    padding-right: calc(24 * var(--to-rem-func));
+                    position: relative;
+                    width: 100%;
+                    overflow-wrap: anywhere;
+                    word-break: normal;
+                    line-break: strict;
+                    &::after {
+                        content: '';
+                        display: block;
+                        color: var(--color-primary);
+                        font-size: calc(22 * var(--to-rem-func));
+                        position: absolute;
+                        right: 0;
+                        top: 50%;
+                        line-height: 1;
+                        transform: translateY(-50%);
+                        font-family: var(--font-awesome);
+                        content: var(--icon-chevron-down);
+                    }
+                }
+            }
+        }
+
+        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+            gap: calc(0 * var(--to-rem-func)) calc(20 * var(--to-rem-func));
+            display: grid;
+            &[data-column='4'] {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            &[data-column='3'] {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            &[data-column='2'] {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            &[data-column='1'] {
+                grid-template-columns: repeat(1, 1fr);
+            }
+            .inPageLink {
+                a {
+                    font-size: calc(16 * var(--to-rem-func));
+                    border-color: color-mix(in oklch, var(--color-primary) 40%, transparent);
+                    padding-block: calc(24 * var(--to-rem-func));
+                    padding-inline: calc(16 * var(--to-rem-func));
+                }
+            }
+        }
+
+        /* MARK: hover */
+        @media (any-hover: hover) {
+            .inPageLink {
+                a {
+                    &:hover {
+                        border-color: var(--color-primary);
+                        .title {
+                            &::before {
+                                background-color: var(--color-primary);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

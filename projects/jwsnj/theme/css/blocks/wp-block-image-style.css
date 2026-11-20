@@ -1,0 +1,97 @@
+@charset "utf-8";
+/* // ------------------------------
+// 画像
+// ------------------------------ */
+/* // 変数（画像テキスト回り込み時の余白設定用） */
+/* //////////////////////////////////////// */
+.block-editor_wrap,
+.editor-styles-wrapper {
+    .wp-block-image {
+        --_alignWP_paddingSP-X: calc(20 * var(--to-rem-func));
+        --_alignWP_paddingSP-Y: 1em;
+        --_alignWP_paddingPC-X: calc(30 * var(--to-rem-func));
+        --_alignWP_paddingPC-Y: 1em;
+        margin-top: var(--wp-block-margin);
+        & + & {
+            margin-top: var(--wp-block-margin-large);
+        }
+        &:not(:has(.alignleft)):not(:has(.alignright)):not(:has(.aligncenter)) {
+            width: fit-content;
+            margin-inline: auto;
+        }
+        .alignleft,
+        .alignright {
+            margin-bottom: var(--_alignWP_paddingSP-Y);
+            margin-inline: auto;
+            max-width: calc(50% - var(--_alignWP_paddingSP-X) / 2);
+            height: auto;
+            @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+                margin-bottom: var(--_alignWP_paddingPC-Y);
+                max-width: calc(50% - var(--_alignWP_paddingPC-X) / 2);
+            }
+        }
+        .alignleft {
+            margin-inline: 0 var(--_alignWP_paddingSP-X);
+            margin-bottom: var(--_alignWP_paddingSP-Y);
+            display: table;
+            float: left;
+            @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+                margin-right: var(--_alignWP_paddingPC-X);
+            }
+        }
+        .alignright {
+            margin-inline: var(--_alignWP_paddingSP-X) 0;
+            margin-bottom: var(--_alignWP_paddingSP-Y);
+            display: table;
+            float: right;
+            @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+                margin-left: var(--_alignWP_paddingPC-X);
+            }
+        }
+        .aligncenter {
+            display: table;
+            margin-inline: auto;
+            text-align: center;
+        }
+        /* &.border-none {
+        img {
+            border: none;
+        }
+    } */
+        .wp-element-caption.wp-element-caption {
+            /* キャプションのスタイルの詳細度がギャラリーブロックには負けるので重ねがけ */
+            background: none;
+            text-shadow: unset;
+            position: initial;
+            margin-top: var(--wp-block-margin-small);
+            margin-bottom: 0;
+            padding: 0;
+            flex-basis: unset;
+            flex-grow: unset;
+            text-align: center;
+            font-size: calc(14 * var(--to-rem-func));
+            line-height: 1.5;
+            color: var(--color-primary);
+        }
+        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+            .alignleft {
+                /* margin-bottom: 0; */
+                /* margin-right: calc(40 * var(--to-rem-func)); */
+            }
+            .alignright {
+                /* margin-bottom: 0; */
+                /* margin-left: calc(40 * var(--to-rem-func)); */
+            }
+        }
+    }
+    .wp-block[data-align='left'] > .wp-block-image {
+        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+            /* margin-right: calc(32 * var(--to-rem-func)); */
+        }
+    }
+    .wp-block[data-align='right'] > .wp-block-image {
+        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+            /* margin-right: calc(32 * var(--to-rem-func)); */
+        }
+    }
+}

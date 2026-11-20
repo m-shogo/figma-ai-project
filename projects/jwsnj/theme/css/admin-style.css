@@ -1,0 +1,29 @@
+@charset "utf-8";
+.admin_pageTop {
+    position: fixed;
+    right: calc(20 * var(--to-rem-func));
+    bottom: calc(30 * var(--to-rem-func));
+    z-index: 100;
+    margin: 0;
+    width: calc(50 * var(--to-rem-func));
+    height: calc(50 * var(--to-rem-func));
+}
+.admin_pageTop a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.2;
+    border-radius: 50%;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    font-size: calc(13 * var(--to-rem-func));
+    color: #fff;
+    text-decoration: none;
+    outline: none;
+    box-shadow: none;
+    transition: opacity 0.5s;
+}
+.admin_pageTop a:hover {
+    opacity: 0.3;
+} /*# sourceMappingURL=admin-style.css.map */

@@ -1,0 +1,25 @@
+@charset "utf-8";
+/* // ------------------------------
+// 非表示設定
+// ------------------------------ */
+.block-editor_wrap,
+.editor-styles-wrapper {
+    /* デスクトップで非表示 */
+    @media (calc(1024 * (1 / 16 * 1rem)) <= width) {
+        .wp-block-hidden-desktop {
+            display: none !important;
+        }
+    }
+    /* タブレットで非表示 */
+    @media (calc(768 * (1 / 16 * 1rem)) <= width < calc(1024 * (1 / 16 * 1rem))) {
+        .wp-block-hidden-tablet {
+            display: none !important;
+        }
+    }
+    /* モバイルで非表示 */
+    @media (width < calc(768 * (1 / 16 * 1rem))) {
+        .wp-block-hidden-mobile {
+            display: none !important;
+        }
+    }
+}
