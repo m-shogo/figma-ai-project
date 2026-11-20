@@ -353,6 +353,21 @@ def scan(root: Path) -> dict:
     }
 
 
+def scan_lineage_only(root: Path) -> dict:
+    """Compare candidates cheaply; do not rescan every other project's ACF and template source."""
+    root = root.resolve()
+    if not root.is_dir():
+        raise ValueError(f"target path is not a directory: {root}")
+    roots = candidate_theme_roots(root)
+    return {
+        "themes": [{"lineage_hints": inspect_theme_lineage(theme, root)} for theme in roots],
+        "selection_state": (
+            "UNAMBIGUOUS" if len(roots) == 1 else
+            "NONE_OBSERVED" if not roots else "MULTIPLE_CANDIDATES"
+        ),
+    }
+
+
 def scope_rule_routes(root: Path, scanned: dict, *, related: list[dict] | None = None) -> dict:
     """Select *local* knowledge owners. Similar themes are suggestions, never implicit rule inheritance."""
     root = root.resolve()
@@ -474,7 +489,7 @@ def main() -> int:
         return 1
     if args.compare_to is not None:
         try:
-            reference = scan(args.compare_to)
+            reference = scan_lineage_only(args.compare_to)
         except (OSError, ValueError) as exc:
             print(f"FAIL theme reference scan: {exc}", file=sys.stderr)
             return 1
@@ -493,7 +508,7 @@ def main() -> int:
             sibling_theme = project / "theme"
             if str(sibling_theme.resolve()) in current_paths or not (sibling_theme / "style.css").is_file():
                 continue
-            candidate = scan(sibling_theme)
+            candidate = scan_lineage_only(sibling_theme)
             comparison = compare_theme_lineages(result, candidate)
             comparisons.append({"project": project.name, "evidence_path": str(sibling_theme), **comparison})
         result["known_theme_comparisons"] = sorted(
