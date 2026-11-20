@@ -1,6 +1,10 @@
 from __future__ import annotations
 
+import io
+import json
 import sys
+from contextlib import redirect_stdout
+from unittest.mock import patch
 import tempfile
 import unittest
 from pathlib import Path
@@ -71,6 +75,24 @@ class ThemeLineageHintsTests(unittest.TestCase):
             b = target_scan.scan(make_project(root, "also-no-author"))
             self.assertEqual(a["themes"][0]["lineage_hints"]["author_hint"], "")
             self.assertFalse(target_scan.compare_theme_lineages(a, b)["same_theme_author_hint"])
+
+    def test_auto_discovers_other_project_themes_from_project_directory(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            current = make_project(root, "school", author="Codia Inc.", vite=True)
+            make_project(root, "budokan", author="Codia Inc.")
+            make_project(root, "unrelated", author="Other Vendor", css="layout/other.css")
+            output = io.StringIO()
+            with patch.object(sys, "argv", ["scan", str(current), "--compare-projects-dir", str(root)]), redirect_stdout(output):
+                code = target_scan.main()
+            self.assertEqual(code, 0)
+            comparisons = json.loads(output.getvalue())["known_theme_comparisons"]
+            self.assertEqual(len(comparisons), 2)
+            self.assertEqual(comparisons[0]["project"], "budokan")
+            self.assertTrue(comparisons[0]["same_theme_author_hint"])
+            self.assertEqual(comparisons[0]["company_policy_binding"], "UNDETERMINED")
+            self.assertEqual(comparisons[1]["project"], "unrelated")
+            self.assertFalse(comparisons[1]["same_theme_author_hint"])
 
     def test_multiple_themes_are_not_silently_selected(self) -> None:
         r = {"themes": [{}, {}]}
