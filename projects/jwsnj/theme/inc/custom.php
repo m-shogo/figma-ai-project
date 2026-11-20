@@ -34,7 +34,8 @@ function add_custom_post()
   );
   register_post_type('event', $args);
 }
-add_action('init', 'add_custom_post');
+// jwsnj ではイベント投稿タイプを使わない。CODIAのサンプル実装は参考として残す。
+// add_action('init', 'add_custom_post');
 
 // ==========================================================================
 // カスタムタクソノミーの設定
@@ -54,7 +55,8 @@ function add_custom_taxonomy()
     )
   );
 }
-add_action('init', 'add_custom_taxonomy');
+// jwsnj では event_cat も使用しない（event CPT とセットで無効化）。
+// add_action('init', 'add_custom_taxonomy');
 
 // ==========================================================================
 // 特定の投稿タイプのエディターを非表示にする
