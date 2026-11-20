@@ -42,7 +42,7 @@ FigmaからWeb/WordPress/LPを新規実装する際は、**`docs/frontend-founda
 ```
 
 1. 提供 Theme があれば `reference/` へ置く（編集しない）。作る Theme は `theme/`
-   - **Theme受領後は自動候補判定**: `python scripts/scan_wordpress_target.py projects/<slug> --compare-projects-dir projects --output .local/theme-recon.json`。制作元 `Author:`・PHP/CSS構造・Vite有無から過去案件の似たThemeを提示する。**Company Policy・ベースTheme・会社Cの実際の適用範囲は候補のみで、自動確定しない**。正本は `docs/wordpress-theme-intake.md` と案件 `CURRENT_AUTHORITY.md`。
+   - **Theme受領・ベースThemeの変更時に一度、ルールの適用先を確認**: `python scripts/scan_wordpress_target.py projects/<slug> --compare-projects-dir projects --scope-brief`。出力された **共通 / 現Theme / 現案件** の読み先を確認してから実装。`reference/` は比較用であり稼働する `theme/` と混同しない。コードやThemeを変更していない毎時実行では再実行不要。CLIが使えないAgentはGitHub上の `theme/style.css`・`inc/`・`css/style.css` と案件 `CURRENT_AUTHORITY.md` を照合し、**未実行のスキャンをPASSと記録しない**。詳細が必要なときだけ `--output .local/theme-recon.json`（Git外）で記録する。作者欄・構造の一致は参考候補で、**Company Policyや他案件のTheme固有ルールを自動適用しない**。正本: `docs/wordpress-theme-intake.md`。
    - **会社C/CODIA制作Themeの参考**: 日本武道館とニュージャージーの `style.css` はともに `Author: Codia Inc.` だが、前者はオリジナル改修Theme、後者はViteサンプル取込の別系統。会社が同じ候補でも、CSS/JS/PHP/ACF・breakpoint・Figmaは**その案件のThemeから再確認**。
 2. `docs/CURRENT_AUTHORITY.md` に Figma fileKey・PC/SP の正本 node・CMS の既存契約を書く。変わったらここを直し、古い値は SUPERSEDED にする
 3. 初回だけ WordPress を入れる（Git Bash。ACF PRO はローカルのコピーを Windows 形式のパスで渡す）:
