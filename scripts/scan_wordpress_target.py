@@ -351,6 +351,7 @@ def parser() -> argparse.ArgumentParser:
     value.add_argument("--output", type=Path)
     value.add_argument("--require-single-theme", action="store_true")
     value.add_argument("--compare-to", type=Path, help="Read-only comparison with another theme/project directory.")
+    value.add_argument("--compare-projects-dir", type=Path, help="Discover and compare sibling project Theme folders read-only.")
     return value
 
 
@@ -369,6 +370,30 @@ def main() -> int:
             return 1
         result["theme_lineage_comparison"] = compare_theme_lineages(result, reference)
         result["comparison_target"] = str(args.compare_to)
+    if args.compare_projects_dir is not None:
+        candidates_root = args.compare_projects_dir
+        if not candidates_root.is_dir():
+            print(f"FAIL projects directory not found: {candidates_root}", file=sys.stderr)
+            return 1
+        comparisons = []
+        current_paths = {str(path.resolve()) for path in candidate_theme_roots(args.target)}
+        for project in sorted(candidates_root.iterdir()):
+            if not project.is_dir() or project.is_symlink():
+                continue
+            sibling_theme = project / "theme"
+            if str(sibling_theme.resolve()) in current_paths or not (sibling_theme / "style.css").is_file():
+                continue
+            candidate = scan(sibling_theme)
+            comparison = compare_theme_lineages(result, candidate)
+            comparisons.append({"project": project.name, "evidence_path": str(sibling_theme), **comparison})
+        result["known_theme_comparisons"] = sorted(
+            comparisons,
+            key=lambda item: (
+                not item.get("same_theme_author_hint", False),
+                -(item.get("structural_jaccard") or 0),
+                item["project"],
+            ),
+        )
     serialized = json.dumps(result, ensure_ascii=False, indent=2) + "\n"
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)
