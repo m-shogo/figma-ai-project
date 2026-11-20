@@ -41,6 +41,7 @@ TOP の主なパーツ（PC）:
 - Vite（画像の WebP/AVIF 変換と自動リロード）は案件直下: `package.json` / `vite.config.mjs` / `vite-plugins/` / `src/images/`。`src/images/` の画像が `theme/images/` へ変換される
 - 取り込んでいないもの: ベースの `docker/`（この repo の `runtime/wordpress/` を使う）、FTP デプロイ workflow（CODIA 開発サーバー向け）、サンプル記事 XML、`wp/php/php.ini`
 - ベース Theme は学習・再利用のための **サンプル**。納品の正本は今回のFigma。Figmaに合うように既存を再利用・改修し、足りなければ追加する。サンプル文言・画像・URLは本番表示しない
+- Human確定（2026-11-21）: CODIAのサンプル変数・CSS・コード・画像・文言・設定を保護する必要はない。Figma正本に合わせて**既存の共通定義・実装を直接修正**し、不要になったサンプル痕跡・重複token・互換overrideを参照関係の検証後に削除する。機能を壊さず、案件に必要な設計とWordPress契約は維持する。新規の`--jwsnj-*`を無条件に増やさず、既存tokenを適切に置換・統合する。
 - 参照 Theme: `reference/`（編集禁止）
 - 触ってはいけないファイル: まだなし（`guard.json`）
 
