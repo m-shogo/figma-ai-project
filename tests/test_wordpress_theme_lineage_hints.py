@@ -180,6 +180,25 @@ class ThemeLineageHintsTests(unittest.TestCase):
             self.assertEqual(result["selection_state"], "UNAMBIGUOUS")
             self.assertEqual(result["themes"][0]["path"], "theme")
 
+    def test_missing_owned_theme_cannot_activate_reference_snapshot(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            project = make_project(Path(tmp), "school", author="Codia Inc.")
+            (project / "theme" / "style.css").unlink()
+            ref = project / "reference" / "upstream"
+            ref.mkdir(parents=True)
+            (ref / "style.css").write_text("/*\nTheme Name: Reference Only\n*/\n", encoding="utf-8")
+            self.assertEqual(target_scan.scan(project)["selection_state"], "NONE_OBSERVED")
+            # The reference may be explicitly inspected, but must never silently bind to the project.
+            self.assertEqual(target_scan.scan(ref)["selection_state"], "UNAMBIGUOUS")
+
+    def test_fallback_without_owned_theme_skips_readonly_reference(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            project = Path(tmp)
+            ref = project / "reference" / "upstream"
+            ref.mkdir(parents=True)
+            (ref / "style.css").write_text("/*\nTheme Name: Reference Only\n*/\n", encoding="utf-8")
+            self.assertEqual(target_scan.scan(project)["selection_state"], "NONE_OBSERVED")
+
     def test_wordpress_install_with_two_themes_remains_ambiguous(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

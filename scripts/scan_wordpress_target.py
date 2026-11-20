@@ -137,8 +137,10 @@ def candidate_theme_roots(root: Path) -> list[Path]:
     # projects/<slug>/theme is the explicitly owned editable Theme.
     # Its sibling reference/ contains read-only upstream material, not another active Theme.
     # An actual wp-content/themes install may still contain multiple candidates.
-    if (root / "theme").is_dir() and has_theme_header(root / "theme" / "style.css")[0]:
-        return [root / "theme"]
+    if (root / "theme").is_dir():
+        # The delivery path is explicitly owned, even if style.css is missing/invalid.
+        # Never promote the sibling reference/ snapshot to an active Theme instead.
+        return [root / "theme"] if has_theme_header(root / "theme" / "style.css")[0] else []
     candidates: list[Path] = []
     direct, _ = has_theme_header(root / "style.css")
     if direct:
@@ -153,6 +155,10 @@ def candidate_theme_roots(root: Path) -> list[Path]:
     if not candidates:
         for style in iter_files(root, {".css"}):
             if style.name != "style.css":
+                continue
+            # In project-level fallback discovery, reference/ and .local/ are not
+            # active Theme roots. A caller can explicitly scan a reference path.
+            if any(part in {"reference", ".local"} for part in style.relative_to(root).parts[:-1]):
                 continue
             if has_theme_header(style)[0]:
                 candidates.append(style.parent)
