@@ -4,10 +4,14 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
 
 if [[ -f .env ]]; then
+  # Empty .env entries (e.g. ACF_PRO_PLUGIN_DIR="") must not erase values the caller exported.
+  explicit_env="$(export -p)"
   set -a
   # shellcheck disable=SC1091
   source .env
   set +a
+  eval "$explicit_env"
+  unset explicit_env
 fi
 # shellcheck disable=SC1091
 source "$ROOT/scripts/runtime-env.sh"

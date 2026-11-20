@@ -37,7 +37,9 @@ bash / CI は `PROJECT=<slug>` を付けて `runtime/wordpress/scripts/runtime-e
 
 1. 提供 Theme があれば `reference/` へ置く（編集しない）。作る Theme は `theme/`
 2. `docs/CURRENT_AUTHORITY.md` に Figma fileKey・PC/SP の正本 node・CMS の既存契約を書く。変わったらここを直し、古い値は SUPERSEDED にする
-3. 初回だけ WordPress を入れる: `PROJECT=<slug> bash runtime/wordpress/scripts/setup.sh`
+3. 初回だけ WordPress を入れる（Git Bash。ACF PRO はローカルのコピーを Windows 形式のパスで渡す）:
+   `PROJECT=<slug> MSYS_NO_PATHCONV=1 ACF_PRO_PLUGIN_DIR=C:/htdocs/figma-ai-project/runtime/wordpress/.runtime/acf-pro-composer/wp-content/plugins/advanced-custom-fields-pro bash runtime/wordpress/scripts/setup.sh`
+   その後、案件のプラグインを入れて `.\wp.ps1 snapshot <slug>`。wordpress.org の最新版が runtime の WordPress より新しい版を要求するときは `--version=` で対応版を入れる
 4. 着手前と完了前に `docs/agent-human-fb-weak-spots.md` を回す
 
 ## コミット
