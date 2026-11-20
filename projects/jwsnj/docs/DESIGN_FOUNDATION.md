@@ -32,6 +32,22 @@
 
 確認済み Figma Font Variables: `Roboto`、`Zen Kaku Gothic New`、`Font Awesome 6 Pro`、`Font Awesome 6 Brands`。PCメニュー `599:2726` の実レイヤーには `Noto Serif JP`・`Roboto Condensed` の使用も見える。**使用箇所・weight/style・提供ファイル・読み込み方式・利用ライセンスはこれから検証**。Font Awesome Pro の有償ファイルを公開リポジトリに追加しない。使用できる正規のアセット・ライセンスを確認する。
 
+## CODIAテーマとの一次照合（ファイル確認済み、まだ未改修）
+
+対象: `theme/css/global/variables.css`、`theme/css/style.css`、`theme/css/base/reset.css`、`theme/inc/front.php`、`theme/fonts/` と `theme/webfonts/`（2026-11-20）。
+
+| 対象 | ベースThemeの現状 | 導入前に確認する差 |
+|---|---|---|
+| メインカラー | `--color-primary: #00B7F1` | Figma `#28AC5F`。既存の依存箇所を洗い、案件専用値に対応させる |
+| アクセントカラー | `--color-accent: #DD7C23` | Figma `#EC6B61`。一括置換せず使用目的を確認 |
+| テキスト | `--color-text: #333` | Figma `#333333` で同値 |
+| 行間 | `base/reset.css` の `body { line-height: 1; }` | 通常文字の基準を1.3にする方針。上書きとの関係を点検 |
+| フォント | `NotoSansJP`、`NotoSerifJP`、`Roboto` のwoff2と`@font-face`あり | Figmaの `Zen Kaku Gothic New` は現時点でテーマ定義に見当たらず、正規の読み込み方法を確定する |
+| Font Awesome | `theme/webfonts/` に素材あり、`inc/front.php` の `fontawesome-style` enqueue はコメントアウト | 実際のCSS経由で読み込まれているか／使用権限を検証し、必要な導入のみ行う |
+| CSSの入口 | `css/style.css` → `global/variables.css` をimport | ベース構造に沿って共通値を管理。末尾の場当たり的overrideを積まない |
+
+**重要:** 既存のフォントファイルの存在は配信・ライセンスの確認完了を意味しない。Figmaのカラーもまだ案件CSSへ反映していない。これらは次回以降のFoundation作業として検証・実装する。
+
 ## 画像・部品・挙動
 
 - PCメニュー展開: `599:2726`、SP開閉状態: `480:3954`
