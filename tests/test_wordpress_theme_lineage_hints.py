@@ -249,6 +249,26 @@ class ThemeLineageHintsTests(unittest.TestCase):
                 self.assertEqual(summary["themes"][0]["lineage_hints"]["author_hint"], "Codia Inc.")
                 self.assertTrue(target_scan.compare_theme_lineages(target_scan.scan_lineage_only(school), summary)["same_theme_author_hint"])
 
+    def test_all_checked_in_editable_project_themes_route_without_policy_inference(self) -> None:
+        projects = ROOT / "projects"
+        inspected = 0
+        for project in sorted(projects.iterdir()):
+            active = project / "theme"
+            if not project.is_dir() or not active.is_dir() or active.is_symlink():
+                continue
+            if not (active / "style.css").is_file():
+                continue
+            inspected += 1
+            with self.subTest(project=project.name):
+                candidate = target_scan.scan_lineage_only(project)
+                self.assertEqual(candidate["selection_state"], "UNAMBIGUOUS")
+                routes = target_scan.scope_rule_routes(project, candidate)
+                self.assertEqual(routes["company_policy"]["selection"], "REQUIRES_AUTHORIZED_COMPANY_POLICY")
+                self.assertFalse(routes["theme"]["reusable_from_other_project"])
+                self.assertEqual(routes["theme"]["related_theme_rule_candidates"], [])
+                self.assertEqual(routes["project"]["selection"], "LOCAL_PROJECT_AUTHORITY_ONLY")
+        self.assertGreaterEqual(inspected, 2, "Budokan and jwsnj must remain live Theme intake fixtures")
+
     def test_multiple_themes_are_not_silently_selected(self) -> None:
         r = {"themes": [{}, {}]}
         self.assertEqual(target_scan.compare_theme_lineages(r, r)["state"], "UNDETERMINED")
