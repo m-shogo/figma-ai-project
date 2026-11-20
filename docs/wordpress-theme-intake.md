@@ -71,6 +71,23 @@ repository共通ruleに従う。
 
 ---
 
+## Themeから会社・テンプレート系統を候補判定（既存のread-only調査を利用）
+
+新案件のThemeを受領したら**最初に**、次の既存スキャナで作者欄・PHP include・CSS import・ビルド情報・ほかの案件との構造一致度を読み取る。会社ルールや納品Themeを新規に推測して上書きするものではない。
+
+```bash
+python scripts/scan_wordpress_target.py projects/<slug> --compare-projects-dir projects --output .local/theme-recon.json
+```
+
+- `themes[].lineage_hints.author_hint`: `style.css` の `Author:` から得る**制作元の候補**。実際の発注会社/制作会社/適用すべき Company Policy の確定情報ではない。
+- `themes[].lineage_hints.inc_php_modules/css_import_paths/project_build_hints`: 当該Themeの構造証拠。会社名ではなく **Themeの技術系統・実装責務** を識別するために使う。
+- `known_theme_comparisons[]`: 他の `projects/*/theme/` の作者欄一致とPHP/CSS構造類似度（Jaccard）。**同じ制作元の名前でも、別のベースTheme・別バージョン・大幅改修はあり得る**。類似度は再利用候補の優先順位に使うだけで、コードの丸ごと移植や会社Policyの自動適用には使わない。
+- `company_policy_binding` と `theme_baseline_binding` は常に `UNDETERMINED` のまま。別途 `CURRENT_AUTHORITY.md` / Human決定 / source commit / 会社の正式な規約を確認してから、案件の有効契約に反映する。
+- 既存に同じ会社・Themeバリアントの確定した規約があれば適用条件を照合し、**同系統でも別バリアントなら既存の命名/ACF/CSSを無条件に流用しない**。分類不明ならUNKNOWNのまま進め、Theme観測で確定できる実装箇所のみ進める。
+- 実例: 日本武道館とニュージャージーの両 `style.css` は `Author: Codia Inc.`。**会社C/CODIA制作物の候補として比較**できる。ただし日本武道館は改修されたオリジナルTheme、ニュージャージーは `f-codiaTheme-block-in-vite` を取り込んだサンプル起点なので、**同一のベースThemeとみなさない**。各案件の `CURRENT_AUTHORITY.md` が正本。
+
+この分類機能は**証拠の提示**であり、自動的な学習ルール昇格や会社ポリシーの新規発行ではない。毎回のスキャン出力を恒久ドキュメントとして大量生成しない。必要な証拠だけ案件の正本に残す。
+
 ## Theme observation checklist
 
 Theme受領後、bindの前に観測する項目。
