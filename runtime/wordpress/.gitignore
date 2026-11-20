@@ -1,0 +1,5 @@
+.env
+.runtime/
+*.zip
+!plugins/menu-only-import-export.zip
+advanced-custom-fields-pro/

@@ -1,0 +1,9 @@
+# Client-supplied reference themes: read-only, never committed.
+*/reference/
+# Local-only data per project: DB dumps, captures, scratch files.
+*/.local/
+.env
+*.zip
+*.sql
+*.sql.gz
+advanced-custom-fields-pro/

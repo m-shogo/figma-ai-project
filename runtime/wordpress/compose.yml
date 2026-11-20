@@ -38,6 +38,7 @@ services:
       - wp_data:/var/www/html
       - ${THEME_SOURCE_DIR:-./theme/sample-theme}:/var/www/html/wp-content/themes/${THEME_SLUG:-sample-theme}:ro
       - ./:/fixture:ro
+      - ${PROJECT_DIR:-.}:/project:ro
       - ./php/conf.d/99-local-limits.ini:/usr/local/etc/php/conf.d/99-local-limits.ini:ro
       - ./wp-dropins/fatal-error-handler.php:/var/www/html/wp-content/fatal-error-handler.php:ro
       - ./wp-dropins/local-runtime-recover.php:/var/www/html/wp-content/local-runtime-recover.php:ro
@@ -60,6 +61,7 @@ services:
       - wp_data:/var/www/html
       - ${THEME_SOURCE_DIR:-./theme/sample-theme}:/var/www/html/wp-content/themes/${THEME_SLUG:-sample-theme}:ro
       - ./:/fixture:ro
+      - ${PROJECT_DIR:-.}:/project:ro
       - ./php/conf.d/99-local-limits.ini:/usr/local/etc/php/conf.d/99-local-limits.ini:ro
       - ./wp-dropins/fatal-error-handler.php:/var/www/html/wp-content/fatal-error-handler.php:ro
       - ./wp-dropins/local-runtime-recover.php:/var/www/html/wp-content/local-runtime-recover.php:ro

@@ -2,6 +2,48 @@
 set -euo pipefail
 
 FIXTURE_ROOT="${FIXTURE_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
+# Anchored to this script, not to FIXTURE_ROOT: FIXTURE_ROOT is a runtime-identity
+# seed that callers may point at a synthetic path to prove per-worktree isolation.
+FIXTURE_SOURCE_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+REPO_ROOT="$(cd "$FIXTURE_SOURCE_ROOT/../.." && pwd)"
+
+# --- Project under test -----------------------------------------------------
+# PROJECT=<slug> selects projects/<slug>/ (theme/, qa/, runtime.env).
+# runtime.env is plain KEY=VALUE and only fills values that are still empty,
+# so explicit environment and .env values always win.
+if [[ -n "${PROJECT:-}" ]]; then
+  if [[ ! "$PROJECT" =~ ^[a-z0-9][a-z0-9-]*$ ]]; then
+    echo "FAIL PROJECT must be a lowercase project slug: ${PROJECT}" >&2
+    return 2 2>/dev/null || exit 2
+  fi
+  PROJECT_DIR="$REPO_ROOT/projects/$PROJECT"
+  if [[ ! -d "$PROJECT_DIR" ]]; then
+    echo "FAIL project directory does not exist: projects/${PROJECT}" >&2
+    return 2 2>/dev/null || exit 2
+  fi
+  if [[ -f "$PROJECT_DIR/runtime.env" ]]; then
+    while IFS= read -r line || [[ -n "$line" ]]; do
+      line="${line%$'\r'}"
+      [[ -z "$line" || "$line" == \#* ]] && continue
+      key="${line%%=*}"
+      value="${line#*=}"
+      if [[ ! "$key" =~ ^[A-Z][A-Z0-9_]*$ ]]; then
+        echo "FAIL invalid key in projects/${PROJECT}/runtime.env: ${key}" >&2
+        return 2 2>/dev/null || exit 2
+      fi
+      if [[ -z "${!key:-}" ]]; then
+        export "$key=$value"
+      fi
+    done < "$PROJECT_DIR/runtime.env"
+  fi
+  if [[ -z "${THEME_SOURCE_DIR:-}" && -d "$PROJECT_DIR/theme" ]]; then
+    THEME_SOURCE_DIR="$PROJECT_DIR/theme"
+    THEME_SLUG="${THEME_SLUG:-$PROJECT}"
+  fi
+else
+  PROJECT_DIR="$FIXTURE_SOURCE_ROOT"
+fi
+export PROJECT_DIR REPO_ROOT
 
 fixture_digest() {
   if command -v shasum >/dev/null 2>&1; then
@@ -41,13 +83,10 @@ fi
 
 # --- Theme under test -------------------------------------------------------
 # The runtime is reusable infrastructure: it can host the disposable sample
-# theme or a supplied production theme. Resolution order:
+# theme or a project theme. Resolution order:
 #   1. explicit THEME_SOURCE_DIR
-#   2. the single directory dropped into theme-dropin/ (git-ignored)
+#   2. projects/<PROJECT>/theme (resolved above)
 #   3. the disposable sample theme
-# Anchored to this script, not to FIXTURE_ROOT: FIXTURE_ROOT is a runtime-identity
-# seed that callers may point at a synthetic path to prove per-worktree isolation.
-FIXTURE_SOURCE_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SAMPLE_THEME_DIR="$FIXTURE_SOURCE_ROOT/theme/sample-theme"
 SAMPLE_THEME_SLUG="sample-theme"
 
@@ -56,27 +95,6 @@ resolve_theme_source() {
     printf '%s' "$THEME_SOURCE_DIR"
     return 0
   fi
-
-  local dropin="$FIXTURE_SOURCE_ROOT/theme-dropin"
-  local -a found=()
-  if [[ -d "$dropin" ]]; then
-    local previous_nullglob
-    previous_nullglob="$(shopt -p nullglob)"
-    shopt -s nullglob
-    found=("$dropin"/*/)
-    eval "$previous_nullglob"
-  fi
-
-  if (( ${#found[@]} == 1 )); then
-    printf '%s' "${found[0]%/}"
-    return 0
-  fi
-  if (( ${#found[@]} > 1 )); then
-    echo "FAIL theme-dropin/ holds more than one theme; set THEME_SOURCE_DIR explicitly:" >&2
-    printf '  - %s\n' "${found[@]}" >&2
-    return 2
-  fi
-
   printf '%s' "$SAMPLE_THEME_DIR"
 }
 
@@ -101,6 +119,10 @@ fi
 
 if [[ -z "${THEME_SLUG:-}" ]]; then
   THEME_SLUG="$(basename "$THEME_SOURCE_DIR")"
+  # projects/<slug>/theme is named by its project, not by the directory.
+  if [[ "$THEME_SLUG" == "theme" ]]; then
+    THEME_SLUG="$(basename "$(dirname "$THEME_SOURCE_DIR")")"
+  fi
 fi
 if [[ ! "$THEME_SLUG" =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]]; then
   echo "FAIL THEME_SLUG must be a safe theme directory name: ${THEME_SLUG}" >&2
@@ -115,5 +137,6 @@ else
   THEME_IS_SAMPLE=0
 fi
 
+export PROJECT="${PROJECT:-}"
 export THEME_SOURCE_DIR THEME_SLUG THEME_IS_SAMPLE FIXTURE_SOURCE_ROOT
 export FIXTURE_ROOT FIXTURE_RUNTIME_ID
