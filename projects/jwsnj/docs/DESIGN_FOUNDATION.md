@@ -41,7 +41,7 @@
 | メインカラー | `--color-primary: #00B7F1` | Figma `#28AC5F`。既存の依存箇所を洗い、案件専用値に対応させる |
 | アクセントカラー | `--color-accent: #DD7C23` | Figma `#EC6B61`。一括置換せず使用目的を確認 |
 | テキスト | `--color-text: #333` | Figma `#333333` で同値 |
-| 行間 | `base/reset.css` の `body { line-height: 1; }` | 通常文字の基準を1.3にする方針。上書きとの関係を点検 |
+| 行間 | `base/reset.css` の `body { line-height: 1; }` だった | **このPRで `1.3` に変更済み**。個別セレクタに残る `1` と上書き・長文表示は後続で検証 |
 | フォント | `NotoSansJP`、`NotoSerifJP`、`Roboto` のwoff2と`@font-face`あり | Figmaの `Zen Kaku Gothic New` は現時点でテーマ定義に見当たらず、正規の読み込み方法を確定する |
 | Font Awesome | `theme/webfonts/` に素材あり、`inc/front.php` の `fontawesome-style` enqueue はコメントアウト | 実際のCSS経由で読み込まれているか／使用権限を検証し、必要な導入のみ行う |
 | CSSの入口 | `css/style.css` → `global/variables.css` をimport | ベース構造に沿って共通値を管理。末尾の場当たり的overrideを積まない |
