@@ -5,6 +5,28 @@ Scope: **CROSS-PROJECT / REUSABLE METHOD** — 新しい Figma → Web / WordPre
 
 Canonical details: `docs/section-execution.md`（shared contract → shared foundation → verification → section implementation）、`docs/frontend-quick-contract.md`、`docs/css-strategy.md`、`docs/frontend-font-loading-policy.md`。本書は既存正本の**開始時チェックへのルーティング**であり、新たなCSS/フレームワーク統一を強制しない。
 
+## Pre-Implementation Baseline Gate（Human-approved cross-project rule）
+
+Human確定（2026-11-21）: **実装を始めてからFoundation不足を直す進め方をdefaultにしない。戻りが増えるため、対象PHASEの実装前に必要なベースを先に固める。**
+
+新規案件・新規PHASEでは、画面/コンポーネント実装へ入る前に、少なくとも次を対象scopeについて確認する。
+
+1. Figma/仕様の正本、PC/SP、必要なstate/node
+2. Existing Theme / Design System / WordPress構造、責務、読み込み順、命名
+3. color/token、font family/weight/source/license/fallback
+4. logo/image/SVG/iconの正規asset、export形式、保存・参照経路
+5. container/gutter/spacing/breakpoint/responsiveの基準
+6. 共通component/patternと案件固有部分の境界
+7. hover/tap/focus/open-close等のinteraction contract
+8. CMS/ACF/CPT/固定文言のownershipと未承認値の境界
+9. static/CI/runtime/visual QAの実行経路と、実行不能時の未検証管理
+
+このBaseline Gateは **fail-closed**。対象実装が依存する項目に未確定・重大な未検証・ライセンス不明がある場合、その依存を推測で埋めて画面実装へ進まない。まずFoundation/依存解除を行う。既にVERIFIEDな項目は再調査しない。
+
+調査・Foundation導入・asset整理など、Gateを閉じるための作業は進めてよい。**Gateが閉じていることを理由に下流画面へ逃げない。** 新しいPHASEへ移る時も、そのPHASEに追加で必要なFoundation差分を先に確認してから実装する。
+
+目的はFoundation文書を増やすことではなく、**後続のHTML/PHP/CSS/JSを一度で正しい前提に乗せ、共通基盤のやり直しによる大規模手戻りを減らすこと**。
+
 ## 初回にAgentから先回りして行う判断
 
 **個別のHeader/TOP/Sectionの見た目合わせを始める前に**、デザインの共通Foundationが「既に確立・検証済みか」「不明か」「不足しているか」を判定する。既に確立済みならやり直さず利用する。未確認や不足なら、**カラー・フォント・画像・SVG・アイコン・基本余白・breakpoint・共通部品の確認と導入を先に進める**。これがニュージャージー案件（2026-11-20）でHumanが追加した実装順の一般化された教訓。
@@ -46,7 +68,7 @@ Canonical details: `docs/section-execution.md`（shared contract → shared foun
 
 **判定の段階は混同しない:** `SOURCE_CONFIRMED`（Figma・既存の根拠を取得）→ `IMPLEMENTED`（コードとアセット配置）→ `STATIC_VERIFIED`（構文/build/CI等）→ `RUNTIME_VISUAL_VERIFIED`（必要な環境で描画・操作確認）。最後ができない実行環境なら `UNVERIFIED_RUNTIME` のまま保持し、レビュー可能な証拠と次の確認手順を残す。案件・会社の既存status taxonomyがあればそれを優先する。
 
-**重要:** Foundation全体が未検証でも、依存がない次の単位（正確なAsset整理、メニュー構造設計、独立した部品）を進めてよい。ただし未検証の基盤を完成扱いして展開しない。1つの作業単位で複数領域を安全に進めることも可能。
+**重要:** Foundation Gateが未達の間に進めてよいのは、Gateを閉じるための調査・asset整理・Foundation導入・検証・依存解除。対象PHASEの画面/コンポーネント実装は、依存するBaselineがPASSするまで開始しない。独立して見える下流実装へ先行すると後で共通基盤変更の影響を受けやすいため、工程順を守る。
 
 ## 次の案件に引き継ぐもの / 引き継がないもの
 
@@ -66,7 +88,7 @@ Canonical details: `docs/section-execution.md`（shared contract → shared foun
 - [ ] 既存Foundationの再利用と不足分の導入方針を決めた
 - [ ] CSS変数/フォント/アセットの**実際の導入とQA状況**を PASS/FAIL/未検証 で区別した
 - [ ] 問題があれば小さく安全に実装し、関連する次の作業へ継続する
-- [ ] Foundation未完了のままパーツに着手する場合、依存がない理由と未検証範囲を記録した
+- [ ] 対象PHASEに必要なBaseline GateがPASSしてから画面/パーツ実装へ進む。未達ならFoundation/依存解除をREADYにした
 
 ## 事例と共通ルールを混同しない
 
