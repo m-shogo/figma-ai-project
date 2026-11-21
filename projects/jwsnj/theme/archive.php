@@ -4,7 +4,7 @@
         <?php get_template_part('template-parts/_visual'); ?>
         <?php if (is_home() || is_category()) : ?>
             <div class="global_inner jwsnj_newsArchive">
-                <form class="jwsnj_newsArchive_filter" action="<?php echo esc_url(home_url('/')); ?>" method="get">
+                <form class="jwsnj_newsArchive_filter" action="<?php echo esc_url(get_permalink(get_option('page_for_posts')) ?: home_url('/')); ?>" method="get">
                     <label for="jwsnj-news-category">カテゴリー</label>
                     <select id="jwsnj-news-category" name="cat">
                         <option value="0" <?php selected(!is_category()); ?>>選択してください</option>
