@@ -3,7 +3,7 @@
         <?php if (is_front_page()) : ?>
             <h1 class="gh_logo">
                 <a href="<?php echo esc_url(home_url('/')); ?>">
-                    <img src="<?php echo get_template_directory_uri(); ?>/images/common/logo.svg" alt="<?php bloginfo('name'); ?>" width="140" height="36" loading="lazy">
+                    <img src="<?php echo get_template_directory_uri(); ?>/images/common/logo.svg" alt="<?php bloginfo('name'); ?>" width="140" height="36" loading="eager" decoding="async">
                 </a>
             </h1>
         <?php else: ?>
@@ -13,11 +13,11 @@
                 </a>
             </p>
         <?php endif; ?>
-        <button type="button" class="gh_menu" id="gh_menu">
+        <button type="button" class="gh_menu" id="gh_menu" aria-controls="global_navigation" aria-expanded="false" aria-label="メニューを開く">
             <span class="icon"></span>
             <span class="text">menu</span>
         </button>
-        <nav id="global_navigation" class="global_navigation" itemscope itemtype="https://schema.org/SiteNavigationElement">
+        <nav id="global_navigation" class="global_navigation" aria-label="グローバルナビゲーション" itemscope itemtype="https://schema.org/SiteNavigationElement">
             <div class="gn_menu">
                 <?php
                 wp_nav_menu(array(
@@ -68,8 +68,8 @@
             </div>
             <div class="gn_search">
                 <div class="gns_form module_search-01">
-                    <form class="ms_from" role="search" method="get" action="/">
-                        <input class="ms_input" type="search" value="" name="s" id="s" placeholder="キーワード">
+                    <form class="ms_from" role="search" method="get" action="<?php echo esc_url(home_url('/')); ?>">
+                        <input class="ms_input" type="search" value="<?php echo esc_attr(get_search_query()); ?>" name="s" id="s" placeholder="キーワード" aria-label="サイト内検索">
                         <button class="ms_button" type="submit"><span>検索</span></button>
                     </form>
                 </div>
