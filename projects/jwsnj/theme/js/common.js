@@ -324,12 +324,34 @@ window.addEventListener('resize', setVw);
   const toggleMenu = function () {
     const $body = $('body');
     // グローバルナビゲーション
-    $('#gh_menu').on('click', function () {
+    const $menuButton = $('#gh_menu');
+    const $globalNavigation = $('#global_navigation');
+    const syncMobileMenu = () => {
+      const isOpen = $body.hasClass('_open-menu');
+      $menuButton.attr('aria-expanded', String(isOpen));
+      $menuButton.attr('aria-label', isOpen ? 'メニューを閉じる' : 'メニューを開く');
+      // The desktop navigation remains available even when the mobile disclosure is closed.
+      $globalNavigation.attr('inert', !isOpen && window.innerWidth <= 1080 ? '' : null);
+    };
+    const closeMobileMenu = (restoreFocus = false) => {
+      const wasOpen = $body.hasClass('_open-menu');
+      $body.removeClass('_open-menu _open-bg');
+      syncMobileMenu();
+      if (restoreFocus && wasOpen) $menuButton.trigger('focus');
+    };
+    $menuButton.on('click', function () {
       $body.toggleClass('_open-menu _open-bg');
+      syncMobileMenu();
     });
     $('#gn_close').on('click', function () {
-      $body.removeClass('_open-menu _open-bg');
+      closeMobileMenu(true);
     });
+    $(document).on('keydown', function (event) {
+      if (event.key === 'Escape' && $body.hasClass('_open-menu')) {
+        closeMobileMenu(true);
+      }
+    });
+    syncMobileMenu();
     const globalNavItems = document.querySelectorAll('[class*="gnl_item"]._hasChild');
     globalNavItems.forEach(item => {
         const itemButton = item.querySelector('[class*="gnl_button"]');
@@ -438,6 +460,7 @@ window.addEventListener('resize', setVw);
       if (lastWidthForBreakpoint !== null && wasPcOrOver !== isPcOrOver) {
         closeAllTouchMenus();
         $body.removeClass('_open-menu _open-bg _contentFixed');
+        syncMobileMenu();
       }
       lastWidthForBreakpoint = currentWidth;
     });
@@ -490,10 +513,8 @@ window.addEventListener('resize', setVw);
     });
 
     $('#gns_close, #overlay').on('click', function () {
-      $body
-        .removeClass('_open-search')
-        .removeClass('_open-menu')
-        .removeClass('_open-bg');
+      $body.removeClass('_open-search');
+      closeMobileMenu();
     });
 
     // アーカイブ用のローカルナビゲーションを開閉式にする
