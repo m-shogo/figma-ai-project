@@ -1,0 +1,57 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: OBS-BUDOKAN-TOP-EVENTS-FIGMA-GEOMETRY-QA
+    summary: >-
+      A visually vertical Figma composition does not by itself prove that the corresponding CSS container should use
+      vertical writing-mode. Inspect the authored parent/child geometry before converting a visual arrangement into a
+      computed-style contract; for the Budokan TOP Events featured rail, the authoritative structure is a physical
+      vertical stack containing a narrow text box, not evidence for vertical writing-mode on the container.
+    category: TOOLING
+    applicability:
+      scope: PROJECT
+      conditions:
+        - Browser QA translates current Figma geometry into a WordPress runtime contract.
+        - A narrow text node visually reads vertically because its authored width causes one-character wrapping.
+        - The Figma parent layout and child geometry can be inspected directly before changing production CSS.
+      exclusions:
+        - Do not weaken real visual or pointer behavior checks merely to make CI pass.
+        - Do not infer CSS implementation details from appearance when Figma only proves geometry.
+        - Do not keep a speculative production change after deeper authority inspection contradicts the assumption.
+        - Same-project confirmation is not independent cross-project evidence.
+    promotion_state: PROJECT_ONLY
+    promotion:
+      candidate: false
+      rationale: >-
+        PR #478 initially tested a one-line vertical writing-mode production change after an existing QA assertion failed.
+        Deeper live Figma inspection showed the actual PC authority: frame 1603:7497 is 44x267 with vertical physical layout,
+        20/30/8/8 padding and 12px gap, containing a 28x21 icon and a 20x184 text node. The Theme already models that
+        geometry with a column flex container and constrained text width. The speculative production change was reverted
+        without history rewrite, and QA was corrected to measure the Figma-owned geometry directly. The dedicated real
+        WordPress plus Playwright TOP Events Runtime then passed on run 34157503267. This is Budokan-only evidence.
+      blocked_by:
+        - NEEDS_INDEPENDENT_REFERENCE_EVIDENCE_BEFORE_CROSS_PROJECT_PROMOTION
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-TOP-EVENTS-FIGMA-GEOMETRY-20260908
+          kind: COMMIT
+          reference_id: REF-002-BUDOKAN
+          run_id: '34157503267'
+          path: .github/workflows/budokan-top-events-runtime.yml
+          commit: d9c898391fb75693024f3d43bcd667600d9023bf
+          note: >-
+            PR #478's net diff is QA-only after reverting the speculative production writing-mode change. Current Figma
+            was inspected live down to frame 1603:7497 and its child geometry. The dedicated TOP Events runtime passed
+            with the corrected geometry contract. REF001 generated, validated and verified evidence successfully but its
+            final artifact upload remained blocked by repository Actions storage. No production Theme, FullCalendar logic,
+            WordPress Menu ownership, Form/Formidable, parts.php or ACF schema/data model remains changed by PR #478.
+      contradicts: []
+    notes:
+      - "Promotion review disposition 2026-09-08: KEEP_PROJECT_ONLY; Budokan-only evidence, no auto-promotion."
