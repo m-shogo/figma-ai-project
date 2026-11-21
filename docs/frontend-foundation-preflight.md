@@ -27,6 +27,24 @@ Human確定（2026-11-21）: **実装を始めてからFoundation不足を直す
 
 目的はFoundation文書を増やすことではなく、**後続のHTML/PHP/CSS/JSを一度で正しい前提に乗せ、共通基盤のやり直しによる大規模手戻りを減らすこと**。
 
+
+## Pre-Implementation 10-point Risk Review
+
+Human-approved operating intent（2026-11-21）: **後から気づいて大きく戻す項目を、実装前にAgent側で先回りして確認する。** これは案件固有値ではなく、Frontend案件のpreflight観点。
+
+1. **Authority / Version** — Figma正本node・対象state、repo/base SHA、Theme/Design Systemの正本、owner、open PRを確定。古い画面・古いbranchを混ぜない。
+2. **Theme / CMS Ownership** — Header/Footer/共通UI/各fieldについて、Theme固定・WordPress管理・Menu・ACF/CPT・外部データの責務を先に決める。未承認schema/slugを作らない。
+3. **Typography Contract** — family/weight/source/license/fallback/line-height/letter-spacingを確認。Google Fonts等の正規Web fontか、固定表示ならoutline SVGかを実装前に決める。
+4. **Asset Contract** — Figma node → 正規asset → 保存先 → format（SVG/WebP等）→ crop/ratio → license → 使用箇所を対応付け、仮素材や短命URLを本番へ持ち込まない。
+5. **Layout / Responsive / Environment** — container/gutter/spacing/breakpointだけでなく、中間幅、長文、入力能力、対象browser/device、safe-area等の必要条件を確認する。
+6. **Interaction State Matrix** — default / hover / focus-visible / active / current / open-close / disabled 等、対象部品に必要なstateをPC/SPで先に列挙。静止画1枚だけで完成判定しない。
+7. **Accessibility / Semantics** — heading階層、landmark、button/linkの役割、alt/accessible name、keyboard/focus order、menu disclosure等を実装前に決める。SVG文字も内容用途なら代替テキストを設計する。
+8. **Performance / Loading / External Dependency** — above-the-fold画像、lazy load、font weight数、外部CDN/Google Fonts、CSP/privacy、fallback、画像formatを確認。Figma一致のために無制限に重いasset/fontを増やさない。
+9. **Regression / Blast Radius** — 共通token/font/header/footer/componentを変える場合、依存ページと代表画面を先に列挙し、merge前QA対象を決める。parallel laneのwrite scope重複も確認する。
+10. **Phase Exit Evidence** — 次工程へ進む直前に、Figma参照、対象code SHA、実装差分、static/CI、runtime/visual、未検証/BLOCKED、Reviewer/Auditor判定を揃える。証拠が無いPASSでGateを開けない。
+
+この10項目のうち対象scopeにmaterialなものが未確認なら、実装を急がず先に解消する。N/Aにする場合も理由を持つ。チェック項目を増やすこと自体が目的ではなく、**高コストな手戻りを実装前に潰すための最小リスクレビュー**として使う。
+
 ## 初回にAgentから先回りして行う判断
 
 **個別のHeader/TOP/Sectionの見た目合わせを始める前に**、デザインの共通Foundationが「既に確立・検証済みか」「不明か」「不足しているか」を判定する。既に確立済みならやり直さず利用する。未確認や不足なら、**カラー・フォント・画像・SVG・アイコン・基本余白・breakpoint・共通部品の確認と導入を先に進める**。これがニュージャージー案件（2026-11-20）でHumanが追加した実装順の一般化された教訓。
