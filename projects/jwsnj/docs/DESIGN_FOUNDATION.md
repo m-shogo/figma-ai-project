@@ -84,6 +84,15 @@ PCメニュー `599:2726` の `get_variable_defs` で `color/separator_light = #
 - Figma design contextの必須ガイダンスが現接続で発見できず、今回の詳細context取得は未実施。推測による新規フォント追加・アセット代用はしない。
 - READY: (1) CSS変数の全参照確認後の重複削除、(2) Figma文字nodeとThemeのfont/weight・ライセンス照合、(3) PC/SP headerの詳細比較。WordPress/browser QAは `DEFERRED_RUNTIME_QA.md` に保留。
 
+## Google Fonts導入（2026-11-21）
+
+- Figmaで使用確認済みの **Zen Kaku Gothic New** と **Roboto Condensed** はGoogle Fonts公式配布を使用する方針に確定。
+- Google Fonts公式リポジトリで両familyの **SIL Open Font License 1.1** を確認。Zen Kaku Gothic Newは300/400/500/700/900、Roboto Condensedは100〜900を提供。
+- Header/Footerで確認済みのweightに合わせ、frontendでは **400 / 500 / 700** のみを `inc/front.php` からGoogle Fonts CSS APIでenqueueする。
+- `theme/css/global/variables.css` に `--font-jwsnj-ja` と `--font-jwsnj-en-condensed` を追加し、既存Noto Sans JP / Robotoをfallbackとして保持。既存のTheme全体font tokenはこのFoundation変更では置換しない。
+- 現実行環境ではGoogle Fonts/GitHubのfont binaryをDNS経由で取得できないため、今回の実装は公式Google Fonts配信を利用する。WordPress実機での外部CSS取得、CSP、最終render/CLS、Figmaとのvisual一致は **DEFERRED_ENV**。
+- **Font Awesome Pro / Brandsの利用許諾は別問題であり未解決**。Google Fonts導入によってFont Awesomeの権利確認が完了したとは扱わない。
+
 ## 画像・部品・挙動
 
 - PCメニュー展開: `599:2726`、SP開閉状態: `480:3954`
