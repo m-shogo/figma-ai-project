@@ -166,9 +166,17 @@ function my_enqueue_scripts() {
     wp_enqueue_style('css-style', get_stylesheet_uri(), array(), null);
     wp_enqueue_style('swiper-style', get_theme_file_uri('/css/swiper-bundle.min.css'), array(), '14.0.1', 'all');
     wp_enqueue_style('modaal-style', get_theme_file_uri('/css/modaal.min.css'), array(), '0.4.4', 'all');
+    // Figmaで使用しているGoogle Fonts。必要weightだけを読み込み、既存ローカルfontをfallbackとして保持する。
+    wp_enqueue_style(
+        'jwsnj-google-fonts',
+        'https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap',
+        array(),
+        null,
+        'all'
+    );
     // wp_enqueue_style('fontawesome-style', get_theme_file_uri('/css/all.min.css'), array(), '6.7.2', 'all');
     wp_enqueue_style('flexible-table-block'); // プラグインで登録済みのスタイルをenqueue（テンプレートでテーブルクラスを直接使用しているため必要）
-    wp_enqueue_style('common-style', get_theme_file_uri('/css/style.css'), array(), filemtime(get_theme_file_path('/css/style.css')), 'all');
+    wp_enqueue_style('common-style', get_theme_file_uri('/css/style.css'), array('jwsnj-google-fonts'), filemtime(get_theme_file_path('/css/style.css')), 'all');
     // new EnqueueStyle('css-style', get_stylesheet_uri(), array(), null);
     // new EnqueueStyle('swiper-style', get_theme_file_uri('/css/swiper-bundle.min.css'), array(), null, 'all');
     // new EnqueueStyle('modaal-style', get_theme_file_uri('/css/modaal.min.css'), array(), '0.4.4', 'all');
