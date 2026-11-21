@@ -3,13 +3,13 @@
         <?php if (is_front_page()) : ?>
             <h1 class="gh_logo">
                 <a href="<?php echo esc_url(home_url('/')); ?>">
-                    <img src="<?php echo get_template_directory_uri(); ?>/images/common/logo.svg" alt="<?php bloginfo('name'); ?>" width="140" height="36" loading="eager" decoding="async">
+                    <img src="<?php echo esc_url(get_template_directory_uri() . '/images/common/logo.svg'); ?>" alt="<?php echo esc_attr(get_bloginfo('name')); ?>" width="140" height="36" loading="eager" decoding="async">
                 </a>
             </h1>
         <?php else: ?>
             <p class="gh_logo">
                 <a href="<?php echo esc_url(home_url('/')); ?>">
-                    <img src="<?php echo get_template_directory_uri(); ?>/images/common/logo.svg" alt="<?php bloginfo('name'); ?>" width="140" height="36" loading="lazy">
+                    <img src="<?php echo esc_url(get_template_directory_uri() . '/images/common/logo.svg'); ?>" alt="<?php echo esc_attr(get_bloginfo('name')); ?>" width="140" height="36" loading="eager" decoding="async">
                 </a>
             </p>
         <?php endif; ?>
