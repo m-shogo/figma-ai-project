@@ -331,7 +331,7 @@ window.addEventListener('resize', setVw);
       $menuButton.attr('aria-expanded', String(isOpen));
       $menuButton.attr('aria-label', isOpen ? 'メニューを閉じる' : 'メニューを開く');
       // The desktop navigation remains available even when the mobile disclosure is closed.
-      $globalNavigation.attr('inert', !isOpen && window.innerWidth < 1080 ? '' : null);
+      $globalNavigation.attr('inert', !isOpen && window.innerWidth <= 1080 ? '' : null);
     };
     const closeMobileMenu = (restoreFocus = false) => {
       const wasOpen = $body.hasClass('_open-menu');
