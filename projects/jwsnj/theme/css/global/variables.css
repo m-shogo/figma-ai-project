@@ -130,13 +130,13 @@
      * Reuse the existing shared tokens for Figma-verified values; remove
      * redundant sample aliases only after checking all consumers.
      */
-    --jwsnj-color-main: #28ac5f;
+    --jwsnj-color-main: var(--color-primary);
     --jwsnj-color-sec: #6bd2ce;
     --jwsnj-color-white: #ffffff;
     --jwsnj-color-text: #333333;
     --jwsnj-color-separator: #d7d4d4;
     --jwsnj-color-separator-light: #f2f2f2;
-    --jwsnj-color-accent: #ec6b61;
+    --jwsnj-color-accent: var(--color-accent);
     --jwsnj-color-base-lightgreen: #f5fdeb;
     --jwsnj-color-base-lightgreen-02: #eaffd9;
     --jwsnj-color-base-lightblue: #d7f2f1;
