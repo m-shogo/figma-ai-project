@@ -150,3 +150,12 @@ PCメニュー `599:2726` の `get_variable_defs` で `color/separator_light = #
 - ページ担当への引き渡し: Footer装飾SVG群、PC menu写真14点とSVG14点、SP menu CTA/accordion icons、Zen Kaku Gothic New medium/bold、Roboto Condensed mediumの依存を確認。Figma識別名を使い、未確定の写真/アイコン/ライセンスは本番で代用しない。
 - 次のCURRENT PHASE内READY: (1) Figma SVG/画像実体を取得できる経路で保存し、各識別名とhash/ライセンス/保存先を照合、(2) Header/Footer使用フォントのweight/合法な配信元とTheme読み込みを確定、(3) 既存logo.svgとFigmaロゴの実体差分確認、(4) Header/Footerアセット読み込み静的QA。BLOCKED: assetバイナリの取得経路、Font Awesome Pro利用許諾、WP/ブラウザ実機QA。
 - Reviewer/Auditor: downstream変更ゼロ、ページ担当PHP/CSS変更ゼロ、未取得素材の偽装導入ゼロ。文書の照合結果のみでHeader/Footer完了扱いはしない。ゲートはCLOSED。
+
+
+## Human typography policy（2026-11-21）
+
+- 基本フォントはGoogle Fontsを第一候補とする。
+- メインビジュアルや装飾キャッチなど、ほぼ変更されない表示文字は、Figma忠実性を優先してアウトラインSVGを使用してよい。
+- 更新される本文・ナビ・CMS文言・SEO/アクセシビリティ上テキストとして必要な箇所はHTMLテキストを維持する。
+- SVG化は固定度と役割を確認して選び、必要な代替テキスト/accessible nameとライセンス条件を確認する。
+- 個別のHuman指示がある場合はそちらを優先する。
