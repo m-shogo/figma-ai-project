@@ -74,3 +74,14 @@ Canonical details: `docs/section-execution.md`（shared contract → shared foun
 - **新しい失敗を見つけたらまず案件のLEARNINGSとチェックシートに記録**し、次の案件でそのルールが妥当か検証。案件特有の対応をそのまま全案件の禁止事項にしない。
 - Humanが「この方法を次案件にも活かして」と希望しても、**一件の実績だけで共通の標準手順には昇格しない**。まず案件の実例と次案件での検証候補を記録し、複数run・異なる画面/案件での有効性、例外、手戻り削減効果、既存規約との重複を `docs/knowledge-promotion.md` に従いレビューする。既存の確定した共通契約を勝手に覆さず、証拠が不足する間は案件限定/候補のままにする。
 - 元になった案件の実際の導入状況や変更履歴は `projects/jwsnj/docs/DESIGN_FOUNDATION.md` と `projects/jwsnj/docs/WORKFLOW_LEARNING.md` を参照する。**本書の内容だけでその案件の実装が完了したとは扱わない**。
+
+
+## Human default: Fonts / fixed display typography
+
+Human-approved default（2026-11-21）。個別案件のFigma・仕様・Theme・Company Policyに別指定があればそちらを優先する。
+
+- Webフォントは **Google Fontsを第一候補**にする。利用可能なfamily/weightとライセンス、既存Themeとの読み込み方式を確認して採用する。
+- メインビジュアル、装飾キャッチ、ロゴ的見出しなど、**内容がほぼ固定される表示文字**はFigma忠実性を優先し、必要に応じてアウトライン化したSVGを採用できる。
+- 本文、ナビゲーション、CMS管理文言、更新される見出し、検索・SEO・アクセシビリティ上テキストとして扱うべき内容はHTMLテキストを維持し、Webフォントで再現する。
+- アウトラインSVGは万能化しない。内容を伝える要素なら適切な代替テキスト/accessible nameを設計し、フォントのライセンス条件も確認する。
+- 「Google FontsかSVGか」は固定度・運用責任・アクセシビリティ・SEO・Figma fidelityで判断し、Humanの案件別指示があれば上書きする。
