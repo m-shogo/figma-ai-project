@@ -84,6 +84,15 @@ PCメニュー `599:2726` の `get_variable_defs` で `color/separator_light = #
 - Figma design contextの必須ガイダンスが現接続で発見できず、今回の詳細context取得は未実施。推測による新規フォント追加・アセット代用はしない。
 - READY: (1) CSS変数の全参照確認後の重複削除、(2) Figma文字nodeとThemeのfont/weight・ライセンス照合、(3) PC/SP headerの詳細比較。WordPress/browser QAは `DEFERRED_RUNTIME_QA.md` に保留。
 
+## Google Fonts導入（2026-11-21）
+
+- Figmaで使用確認済みの **Zen Kaku Gothic New** と **Roboto Condensed** はGoogle Fonts公式配布を使用する方針に確定。
+- Google Fonts公式リポジトリで両familyの **SIL Open Font License 1.1** を確認。Zen Kaku Gothic Newは300/400/500/700/900、Roboto Condensedは100〜900を提供。
+- Header/Footerで確認済みのweightに合わせ、frontendでは **400 / 500 / 700** のみを `inc/front.php` からGoogle Fonts CSS APIでenqueueする。
+- `theme/css/global/variables.css` に `--font-jwsnj-ja` と `--font-jwsnj-en-condensed` を追加し、既存Noto Sans JP / Robotoをfallbackとして保持。既存のTheme全体font tokenはこのFoundation変更では置換しない。
+- 現実行環境ではGoogle Fonts/GitHubのfont binaryをDNS経由で取得できないため、今回の実装は公式Google Fonts配信を利用する。WordPress実機での外部CSS取得、CSP、最終render/CLS、Figmaとのvisual一致は **DEFERRED_ENV**。
+- **Font Awesome Pro / Brandsの利用許諾は別問題であり未解決**。Google Fonts導入によってFont Awesomeの権利確認が完了したとは扱わない。
+
 ## 画像・部品・挙動
 
 - PCメニュー展開: `599:2726`、SP開閉状態: `480:3954`
@@ -127,3 +136,26 @@ PCメニュー `599:2726` の `get_variable_defs` で `color/separator_light = #
 - READY（Foundation担当）: (1) 合法なfont入手方法と使用node/weightを確認して実コード反映、(2) Figma asset nodeと実ファイルを限定して1件ずつ対応、(3) GitHub検索/cloneが使える環境でCSS token参照を一括検索し重複削除。BLOCKED: Pro系アイコンの許諾、Figma詳細context、実機WP/browser。ページ・Header/Footerの構造は他担当の所有範囲。
 
 **判定:** Asset inventory = **調査済・静的確認済**。追加アセット導入・フォントのデザイン一致・WP表示 = **未検証**。ドキュメントだけの更新を画面実装の完了と扱わない。
+
+
+## 2026-11-21 Header/Footer限定・Figma実アセット照合（工程ゲート継続）
+
+- 開始 `so`: `49df7a1f3a63d4bc688d428bda0b129025da2a43`。open PR #515 は一覧のDraftで下流工程として保留、#516 は全案件共通ゲート規約の未統合PR。Header/Footerのページ担当ファイルは編集しない。
+- Figma PC `0:1` / SP `263:12` のスクリーンショット取得、footer `221:335`、PC open menu `599:2726`、SP menu `480:3954` の design context を実際に取得。前回の「context未取得」は今回解消。skill一覧は空で必須skillの本文は取得不能、従ってskill遵守までPASSとはしない。
+- Footer `221:335` は **SVG 6点 / raw image 0点**、PC menu `599:2726` は **SVG 14点 / raw image 14点** とFigmaのasset inventoryで確認。これはエクスポートURL取得の成功であり、リポジトリへの素材配置完了ではない。URLは短命なので正本へ記載しない。
+- Figma footer context の識別名: `img_footer-left`、`img_student-01`、`img_njws_logo` 等。PC menu context の識別名: `pic01`〜`pic06`、`ico_school`、`ico_admission`、`ico_parents`、`ico_recruit`、`njws_logo` 等。SP menu context には入学案内・保護者専用・採用情報のCTAアイコン、ロゴ、アコーディオン矢印がある。実ファイル名と一対一対応・SVG内容検査はまだ必要。
+- Footer Figma context は `Roboto Condensed` medium と `Zen Kaku Gothic New` bold、SP menu は `Zen Kaku Gothic New` medium を明示。現Themeの12件 `@font-face` は Noto Sans JP / Noto Serif JP / Roboto のみ。**未導入フォントを勝手にNoto/Robotoへ代替しない**。Font Awesome Pro系は既存バイナリがあってもライセンス未確認。
+- Footerのvariable defsで `main #28ac5f` / `sec #6bd2ce` / `white #fff` / `text #333333` を再確認。現 `variables.css` の値と静的に整合。CSS変数の大規模整理は今は不要。
+- アセットの取得経路検証: Figma `download_assets` でURL発行は成功したが、この実行環境の外部DNS解決失敗により `curl` でSVG実体取得不可。**ファイルを取得・検査していないため実アセットのcommitを行わない**。既存 `logo.svg` をFigmaのロゴと同一と推測しない。
+- ページ担当への引き渡し: Footer装飾SVG群、PC menu写真14点とSVG14点、SP menu CTA/accordion icons、Zen Kaku Gothic New medium/bold、Roboto Condensed mediumの依存を確認。Figma識別名を使い、未確定の写真/アイコン/ライセンスは本番で代用しない。
+- 次のCURRENT PHASE内READY: (1) Figma SVG/画像実体を取得できる経路で保存し、各識別名とhash/ライセンス/保存先を照合、(2) Header/Footer使用フォントのweight/合法な配信元とTheme読み込みを確定、(3) 既存logo.svgとFigmaロゴの実体差分確認、(4) Header/Footerアセット読み込み静的QA。BLOCKED: assetバイナリの取得経路、Font Awesome Pro利用許諾、WP/ブラウザ実機QA。
+- Reviewer/Auditor: downstream変更ゼロ、ページ担当PHP/CSS変更ゼロ、未取得素材の偽装導入ゼロ。文書の照合結果のみでHeader/Footer完了扱いはしない。ゲートはCLOSED。
+
+
+## Human typography policy（2026-11-21）
+
+- 基本フォントはGoogle Fontsを第一候補とする。
+- メインビジュアルや装飾キャッチなど、ほぼ変更されない表示文字は、Figma忠実性を優先してアウトラインSVGを使用してよい。
+- 更新される本文・ナビ・CMS文言・SEO/アクセシビリティ上テキストとして必要な箇所はHTMLテキストを維持する。
+- SVG化は固定度と役割を確認して選び、必要な代替テキスト/accessible nameとライセンス条件を確認する。
+- 個別のHuman指示がある場合はそちらを優先する。
