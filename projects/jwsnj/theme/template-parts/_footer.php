@@ -53,17 +53,13 @@
         <div class="global_inner">
             <p class="gf_logo">
                 <a href="<?php echo esc_url(home_url('/')); ?>">
-                    <img src="<?php echo get_template_directory_uri(); ?>/images/common/logo.svg" alt="<?php bloginfo('name'); ?>" width="140" height="36" loading="lazy">
+                    <?php echo esc_html(get_bloginfo('name')); ?>
                 </a>
             </p>
-            <address>
-                <p class="gf_address">〒000-0000<br>東京都テスト区テスト町1-1-1</p>
-                <p class="gf_tel">TEL:<a href="tel:00-0000-0000">00-0000-0000</a></p>
-            </address>
         </div>
     </div>
     <p id="js_gf_pageTop" class="gf_pageTop">
         <a href="#"><span>ページトップへ戻る</span></a>
     </p>
-    <p class="gf_copyright"><span>&copy; 2025 Codia Corporation.</span></p>
+    <p class="gf_copyright"><span>&copy; <?php echo esc_html(wp_date('Y')); ?> <?php echo esc_html(get_bloginfo('name')); ?></span></p>
 </footer>
