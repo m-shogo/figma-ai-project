@@ -38,6 +38,11 @@
         background-color: transparent;
         color: var(--color-primary);
         touch-action: manipulation;
+        /* Keep keyboard focus visible on the mobile menu control. */
+        &:focus-visible {
+            outline: 2px solid var(--color-primary);
+            outline-offset: -4px;
+        }
         .icon {
             display: block;
             position: relative;
