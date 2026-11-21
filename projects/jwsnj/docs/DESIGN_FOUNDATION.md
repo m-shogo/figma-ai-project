@@ -116,3 +116,14 @@ PCメニュー `599:2726` の `get_variable_defs` で `color/separator_light = #
 - [ ] 前後の差分、PC/SP Visual QA、PR/CI確認
 
 ログ: この文書は「初期調査」。今後の各作業回は実装結果と未確認点を更新する。
+
+## 2026-11-21 Foundation asset inventory（GitHub tree 検証）
+
+- 基準 `so` SHA: `42aae717cfd23b19b543062ba9990b7d3ec01660`（PR #509 マージ済み）。Figma PC page `0:1`、SP page `263:12`、TOP PC `114:28`、TOP SP `279:2136` のスクリーンショット取得を確認。ページ全体の縮小表示では文字nodeのweight・画像の原本・使用許諾は判断できない。
+- GitHub tree のファイル名一覧で `theme/fonts/` に **12 woff2**（NotoSansJP / NotoSerifJP / Roboto 各 Regular・Medium・SemiBold・Bold）を確認。`theme/css/global/variables.css` の **12 @font-face** の相対パス・weight 400/500/600/700 とファイル名は対応。これは**静的なファイル存在・参照の照合**であり、実際の配信・ライセンス・Figma一致を保証しない。
+- `theme/webfonts/` に **Font Awesome 系の ttf/woff2 各11組＝22ファイル**が存在。Pro系と思われる `fa-light`、`fa-duotone`、`fa-sharp-*` 等を含む。既存ファイルであっても利用許諾が確認されるまで新規使用・外部配布・追加導入を正当化しない。**ライセンス確認がBLOCKED**。
+- Figmaに現れる `Zen Kaku Gothic New` / `Roboto Condensed` に対応する名前のローカルwoff2は上記 `theme/fonts/` にはない。**Figmaでの具体的な使用node/weight、合法な提供経路を確認するまで追加・代替しない**。
+- 今回の環境は `git` と `rg` を備えるが GitHubホストのDNS解決に失敗し、clone不可。116ファイルの個別取得は再試行しない。Figmaのdesign-to-code skillも installed skills が空のため未取得で、`get_design_context`は規約により呼ばない。`get_variable_defs` は「layer未選択」で失敗したため値の新規検証なし（以前の取得値を未検証のまま変更しない）。
+- READY（Foundation担当）: (1) 合法なfont入手方法と使用node/weightを確認して実コード反映、(2) Figma asset nodeと実ファイルを限定して1件ずつ対応、(3) GitHub検索/cloneが使える環境でCSS token参照を一括検索し重複削除。BLOCKED: Pro系アイコンの許諾、Figma詳細context、実機WP/browser。ページ・Header/Footerの構造は他担当の所有範囲。
+
+**判定:** Asset inventory = **調査済・静的確認済**。追加アセット導入・フォントのデザイン一致・WP表示 = **未検証**。ドキュメントだけの更新を画面実装の完了と扱わない。
