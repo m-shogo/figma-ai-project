@@ -39,6 +39,22 @@ Current authority / owner / previous run result / open PR を読む（差分優�
 - 検証不能な状態で無理にmergeしない。静的チェックとWordPress/ブラウザ実機のQAを混同しない。
 - 先にプロジェクトの既存規約・チェックシートを活用。毎回全文を再取得するより、変更履歴・前回からの差分を重視する。調査・文書作成だけで終わらず、実行可能な実装とQAを進める。
 
+
+## 1.5. Sequential Phase Gate（Human-approved cross-project rule）
+
+このルールは Human が 2026-11-21 に **次案件にも即時適用**を明示した共通運用契約。案件固有値の昇格ではなく、工程管理の一般ルールとして扱う。
+
+- 実装工程に依存順序がある場合、各工程を **PHASE** として明示し、次工程へ進む条件を **Definition of Done / Gate** で管理する。
+- Gate は **fail-closed**。現在PHASEに未完了・FAIL・重大な未検証が1つでもあれば、下流PHASEを READY に入れない・新規実装しない・先行mergeしない。
+- 「現在PHASEがBLOCKEDした」「CI待ち」「design context不足」は、下流工程へ飛ばす許可ではない。まず現在PHASE内の別READY、代替検証、依存解除へ切り替える。現在PHASE内の全READYが真正にBLOCKEDなら、その回はBLOCKEDとして終了する。
+- 自律改善で変更してよいのは、**現在PHASE内の作業順・粒度・検索方法・検証方法・PR方針**。Humanまたは正本で明示されたPHASE境界を、Agentが効率化目的で勝手に解除しない。
+- Gate解除前に下流成果を作ってしまった場合、その事実を進捗として正当化せず、まず「なぜGateを越えたか」を工程設計の不具合として修正する。必要なら下流PRは保留し、上流PHASE完成を優先する。
+- 各PHASEの完了判定は「コードがある」ではなく、対象に必要な **Figma/仕様/Theme適合、レスポンシブ/interaction、静的/CI、runtime/visual QA、保守性、未承認値なし** を案件ごとのDoDで定義する。実行環境不足で実機QAできない場合は未検証を明示し、案件の契約が「完了には実機PASS必須」ならGateを閉じたままにする。
+- 新案件のpreflightでは、実装開始前に **CURRENT PHASE / DOWNSTREAM / Gate条件 / Gate解除権限** を短く確定する。これが未定義なら、Agentは勝手に「次へ進める」前提を置かない。
+- Process Auditorは毎回、**DOWNSTREAMへ越境していないか**を最優先監査項目に含める。越境が見つかった時点で工程監査FAILとして、その場で進行ルールを修正する。
+
+目的は作業を遅くすることではなく、**未完成の共通基盤を残して下流を作り、後でまとめて作り直す手戻りを防ぐこと**。速度より、完成度・整合性・保守性・再作業削減を優先する。
+
 ## 2. 実行効率を上げる4つの仕組み（Agent提案 2026-11-20）
 
 ### A. 次に進める作業を常に用意する — READY / BLOCKED / NEXT
