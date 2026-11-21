@@ -1,0 +1,46 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: OBS-BUDOKAN-MODAL-STICKY-SCROLL-LOCK
+    summary: >-
+      An overlay scroll lock implemented with body overflow hidden can change desktop sticky-element behavior even when window scrollY does not move. When the design requires a visually frozen background, verify sticky geometry at a real deep-scroll baseline and, only on the affected breakpoint, reuse an established sticky-to-fixed overlay geometry path while preserving the removed normal-flow footprint with the same header-height token.
+    category: RUNTIME
+    applicability:
+      scope: PROJECT
+      conditions:
+        - Budokan Modaal image overlays apply body.modaal-noscroll with overflow hidden.
+        - The desktop global header is position sticky and must remain visually fixed at the viewport top while an overlay is open.
+        - Real WordPress plus Playwright can compare header/trigger geometry, scroll position, document width, overflow and focus across overlay state changes.
+      exclusions:
+        - Do not generalize that every overflow hidden scroll lock breaks every sticky element; prove the affected browser/layout/breakpoint first.
+        - Do not patch the symptom with arbitrary top offsets or z-index increases.
+        - Do not alter vendor Modaal ownership when an existing Theme overlay-lock geometry path can be safely reused.
+        - Do not apply the desktop fix to SP when real SP runtime is already stable.
+        - Do not promote this project-only finding without independent reference evidence.
+    promotion_state: PROJECT_ONLY
+    promotion:
+      candidate: false
+      rationale: >-
+        PR #466 hardened the existing Modaal runtime to require a deep-scroll baseline and re-measure the frozen background across open, Escape close, reopen and pointer close. That QA reproduced a real desktop defect on current Budokan runtime: PC 1280 moved #global_header top from 0px to -810px when Modaal opened, while SP 375 remained stable. Current vendor CSS applies body.modaal-noscroll { overflow:hidden }, which changed the desktop sticky header behavior. The bounded fix reused the Theme's established overlay-lock geometry pattern on PC only: the header is promoted to fixed while Modaal scroll lock is active and global_wrapper preserves the normal-flow header footprint using the existing PC header-height token. Budokan Modal Runtime run 34074763883 then passed SP 375, PC 1280 and PC 1380 open/Escape/reopen/pointer-close geometry, scroll, width, overflow, pointer and focus checks. Shared Budokan TOP FV Runtime run 34074763887 also passed its full geometry, overlay, header-state, footer and fallback interaction suite. This remains one-project evidence, so promotion stays PROJECT_ONLY.
+      blocked_by:
+        - NEEDS_INDEPENDENT_REFERENCE_EVIDENCE_BEFORE_CROSS_PROJECT_PROMOTION
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-MODAL-STICKY-SCROLL-LOCK-20260907
+          kind: COMMIT
+          reference_id: REF-002-BUDOKAN
+          run_id: '34074763883'
+          path: experiments/wordpress-acf-runtime/scripts/budokan-modal-interaction-browser-qa.mjs
+          commit: 096655f3bcdc92f9fd4ca6ff49f5b5cdc86e53ab
+          note: >-
+            PR #466 proves the desktop deep-scroll header jump and the bounded PC-only correction. Production changes are limited to global_header.css and global_wrapper.css; Modaal vendor code, WordPress Menu ownership and ACF schema remain unchanged. The real WordPress Chromium runtime passes SP 375, PC 1280 and PC 1380 after the fix.
+      contradicts: []
+    notes:
+      - "Promotion review disposition requested: KEEP_PROJECT_ONLY; evidence is still limited to the Budokan project and does not justify cross-project auto-promotion."
