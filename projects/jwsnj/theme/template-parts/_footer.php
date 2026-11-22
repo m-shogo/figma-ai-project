@@ -9,14 +9,7 @@
                 'container' => 'div',
                 'container_class' => 'gf_container-01',
                 'container_id' => 'gf_container-01',
-                // 'container_aria_label' => '',
                 'fallback_cb' => false,
-                // 'before' => '',
-                // 'after' => '',
-                // 'link_before' => '',
-                // 'link_after' => '',
-                // 'echo' => true,
-                // 'depth' => 0,
                 'theme_location' => 'footer-nav',
                 // 'item_spacing' => 'preserve'
                 // 'items_wrap' => '<ul id="%1$s" class="%2$s">%3$s</ul
