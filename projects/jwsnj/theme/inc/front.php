@@ -174,7 +174,8 @@ function my_enqueue_scripts() {
         null,
         'all'
     );
-    // wp_enqueue_style('fontawesome-style', get_theme_file_uri('/css/all.min.css'), array(), '6.7.2', 'all');
+    // Figmaの共通アイコン用。Themeに同梱済みの正規Font Awesome Pro 6.7.2を再利用する。
+    wp_enqueue_style('fontawesome-style', get_theme_file_uri('/css/all.min.css'), array(), '6.7.2', 'all');
     wp_enqueue_style('flexible-table-block'); // プラグインで登録済みのスタイルをenqueue（テンプレートでテーブルクラスを直接使用しているため必要）
     wp_enqueue_style('common-style', get_theme_file_uri('/css/style.css'), array('jwsnj-google-fonts'), filemtime(get_theme_file_path('/css/style.css')), 'all');
     // new EnqueueStyle('css-style', get_stylesheet_uri(), array(), null);
