@@ -10,7 +10,7 @@ const menu = readFileSync(new URL('../theme/inc/menu.php', import.meta.url), 'ut
 test('footer has one accessible sitemap landmark using footer-nav', () => {
   assert.equal((footer.match(/wp_nav_menu\s*\(/g) || []).length, 1);
   assert.match(footer, /<nav\s+class="gf_menu"\s+aria-label="フッターナビゲーション">/);
-  assert.match(footer, /'menu'\s*=>\s*'footer-nav'/);
+  assert.doesNotMatch(footer, /'menu'\s*=>/); // WordPress admin location mapping owns selection.
   assert.match(footer, /'theme_location'\s*=>\s*'footer-nav'/);
   assert.match(footer, /'fallback_cb'\s*=>\s*false/);
   assert.match(footer, /'walker'\s*=>\s*new Custom_Footer_Walker_Nav_Menu\(\)/);
