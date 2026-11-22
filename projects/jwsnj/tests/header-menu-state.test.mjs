@@ -89,13 +89,13 @@ test('closing the mobile menu releases the scroll lock on all close paths', () =
 test('Header menus use registered WordPress locations without hard-coded menu names', () => {
   const header = readFileSync(new URL('../theme/template-parts/_header.php', import.meta.url), 'utf8');
   const registrations = readFileSync(new URL('../theme/inc/menu.php', import.meta.url), 'utf8');
-  assert.equal((header.match(/wp_nav_menu\\s*\\(/g) || []).length, 2);
+  assert.equal(header.split('wp_nav_menu(').length - 1, 2);
   for (const location of ['global-nav', 'sub-nav']) {
-    assert.match(header, new RegExp("'theme_location'\\\\s*=>\\\\s*'" + location + "'"));
-    assert.match(registrations, new RegExp("'" + location + "'\\\\s*=>"));
+    assert.ok(header.includes("'theme_location' => '" + location + "'"));
+    assert.ok(registrations.includes("'" + location + "' =>"));
   }
-  assert.doesNotMatch(header, /'menu'\\s*=>/);
-  assert.equal((header.match(/'fallback_cb'\\s*=>\\s*false/g) || []).length, 2);
-  assert.match(header, /Custom_Global_Walker_Nav_Menu/);
-  assert.match(header, /Custom_Header_Sub_Walker_Nav_Menu/);
+  assert.equal(header.includes("'menu' =>"), false);
+  assert.equal(header.split("'fallback_cb' => false").length - 1, 2);
+  assert.ok(header.includes('Custom_Global_Walker_Nav_Menu'));
+  assert.ok(header.includes('Custom_Header_Sub_Walker_Nav_Menu'));
 });
