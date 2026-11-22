@@ -1,0 +1,39 @@
+name: JWSNJ Header Static QA
+
+on:
+  pull_request:
+    branches: [so]
+    paths:
+      - 'projects/jwsnj/theme/js/common.js'
+      - 'projects/jwsnj/theme/template-parts/_header.php'
+      - 'projects/jwsnj/theme/css/layout/global_header.css'
+      - 'projects/jwsnj/theme/css/layout/global_navigation.css'
+      - 'projects/jwsnj/tests/header-menu-state.test.mjs'
+      - '.github/workflows/jwsnj-header-static.yml'
+  push:
+    branches: [so]
+    paths:
+      - 'projects/jwsnj/theme/js/common.js'
+      - 'projects/jwsnj/theme/template-parts/_header.php'
+      - 'projects/jwsnj/theme/css/layout/global_header.css'
+      - 'projects/jwsnj/theme/css/layout/global_navigation.css'
+      - 'projects/jwsnj/tests/header-menu-state.test.mjs'
+      - '.github/workflows/jwsnj-header-static.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  header-static:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test header breakpoint and menu close regressions
+        run: node --test projects/jwsnj/tests/header-menu-state.test.mjs
+      - name: Check WordPress header PHP syntax
+        run: php -l projects/jwsnj/theme/template-parts/_header.php
