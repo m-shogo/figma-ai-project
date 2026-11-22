@@ -1,6 +1,6 @@
 <footer id="global_footer" class="global_footer" itemscope itemtype="https://schema.org/WPFooter">
     <div class="gf_links-wrap">
-        <div class="gf_menu">
+        <nav class="gf_menu" aria-label="フッターナビゲーション">
             <?php
             wp_nav_menu(array(
                 'menu' => 'footer-nav',
@@ -23,8 +23,7 @@
                 'walker' => new Custom_Footer_Walker_Nav_Menu(),
             ));
             ?>
-        </div>
-
+        </nav>
     </div>
     <div class="gf_information">
         <div class="global_inner">
