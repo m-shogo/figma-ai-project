@@ -1,9 +1,9 @@
 <footer id="global_footer" class="global_footer" itemscope itemtype="https://schema.org/WPFooter">
     <div class="gf_links-wrap">
-        <div class="gf_menu">
+        <nav class="gf_menu" aria-label="フッターナビゲーション">
             <?php
             wp_nav_menu(array(
-                'menu' => 'footer-nav',
+                // Use the menu assigned to this location in WordPress, not a hard-coded menu name.
                 'menu_class' => 'menu gf_links-01',
                 'menu_id' => 'gf_links-01',
                 'container' => 'div',
@@ -23,31 +23,7 @@
                 'walker' => new Custom_Footer_Walker_Nav_Menu(),
             ));
             ?>
-        </div>
-        <div class="gf_subMenu">
-            <?php
-            wp_nav_menu(array(
-                'menu' => 'footer-nav',
-                'menu_class' => 'menu gf_links-02',
-                'menu_id' => 'gf_links-02',
-                'container' => 'div',
-                'container_class' => 'gf_container-02',
-                'container_id' => 'gf_container-02',
-                // 'container_aria_label' => '',
-                'fallback_cb' => false,
-                // 'before' => '',
-                // 'after' => '',
-                // 'link_before' => '',
-                // 'link_after' => '',
-                // 'echo' => true,
-                // 'depth' => 0,
-                'theme_location' => 'sub-nav',
-                // 'items_wrap' => '<ul id="%1$s" class="%2$s">%3$s</ul>',
-                // 'item_spacing' => 'preserve'
-                'walker' => new Custom_Footer_Sub_Walker_Nav_Menu(),
-            ));
-            ?>
-        </div>
+        </nav>
     </div>
     <div class="gf_information">
         <div class="global_inner">

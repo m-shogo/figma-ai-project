@@ -268,26 +268,7 @@
         }
         /* ステータス end */
     }
-    .gf_subMenu {
-    }
-    .gf_links-02 {
-        &.menu {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-        }
-        .menu-item {
-            border-bottom: calc(1 * var(--to-rem-func)) solid var(--color-gray-border);
-            a {
-                display: block;
-                padding-block: calc(20 * var(--to-rem-func));
-                padding-inline: calc(20 * var(--to-rem-func));
-            }
-            &:nth-child(odd) {
-                border-right: calc(1 * var(--to-rem-func)) solid var(--color-gray-border);
-            }
-        }
-    }
-    .gf_information {
+.gf_information {
         padding: calc(50 * var(--to-rem-func)) 0;
         address {
             margin-top: calc(30 * var(--to-rem-func));
@@ -562,27 +543,7 @@
         }
         .gf_menu {
         }
-        .gf_subMenu {
-            flex-shrink: 0;
-            min-width: calc(240 * var(--to-rem-func));
-        }
-        .gf_links-02 {
-            &.menu {
-                grid-template-columns: 1fr;
-                gap: calc(8 * var(--to-rem-func));
-            }
-            .menu-item {
-                border-bottom: none;
-                a {
-                    padding-block: 0;
-                    padding-inline: 0;
-                }
-                &:nth-child(odd) {
-                    border-right: none;
-                }
-            }
-        }
-    }
+}
 
     /* MARK: hover */
     @media (any-hover: hover) {
