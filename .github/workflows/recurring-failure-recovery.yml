@@ -1,0 +1,25 @@
+name: Recurring Failure Recovery Tests
+on:
+  pull_request:
+    paths:
+      - 'scripts/ops/failure-recovery.mjs'
+      - 'scripts/ops/failure-recovery.test.mjs'
+      - '.github/workflows/recurring-failure-recovery.yml'
+  push:
+    branches: [so]
+    paths:
+      - 'scripts/ops/failure-recovery.mjs'
+      - 'scripts/ops/failure-recovery.test.mjs'
+      - '.github/workflows/recurring-failure-recovery.yml'
+permissions:
+  contents: read
+jobs:
+  recovery-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test scripts/ops/failure-recovery.test.mjs
