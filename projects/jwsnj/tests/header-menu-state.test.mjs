@@ -99,3 +99,17 @@ test('Header menus use registered WordPress locations without hard-coded menu na
   assert.ok(header.includes('Custom_Global_Walker_Nav_Menu'));
   assert.ok(header.includes('Custom_Header_Sub_Walker_Nav_Menu'));
 });
+
+
+test('mobile disclosure keeps accessibility state, focus restoration, and desktop navigation available', () => {
+  const header = readFileSync(new URL('../theme/template-parts/_header.php', import.meta.url), 'utf8');
+  assert.match(header, /<button[^>]*id="gh_menu"[^>]*aria-controls="global_navigation"[^>]*aria-expanded="false"/);
+  assert.match(header, /<nav[^>]*id="global_navigation"[^>]*aria-label="グローバルナビゲーション"/);
+  assert.match(header, /id="overlay"[^>]*aria-hidden="true"/);
+  assert.match(source, /\$menuButton\.attr\('aria-expanded', String\(isOpen\)\)/);
+  assert.match(source, /\$menuButton\.attr\('aria-label', isOpen \? 'メニューを閉じる' : 'メニューを開く'\)/);
+  assert.match(source, /\$globalNavigation\.attr\('inert', !isOpen && window\.innerWidth < headerBreakpointMin \? '' : null\)/);
+  assert.match(source, /if \(restoreFocus && wasOpen\) \$menuButton\.trigger\('focus'\)/);
+  assert.match(source, /event\.key === 'Escape' && \$body\.hasClass\('_open-menu'\)/);
+  assert.match(source, /closeMobileMenu\(true\)/);
+});
