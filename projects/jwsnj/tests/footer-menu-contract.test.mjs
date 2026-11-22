@@ -6,6 +6,7 @@ import { readFileSync } from 'node:fs';
 
 const footer = readFileSync(new URL('../theme/template-parts/_footer.php', import.meta.url), 'utf8');
 const menu = readFileSync(new URL('../theme/inc/menu.php', import.meta.url), 'utf8');
+const css = readFileSync(new URL('../theme/css/layout/global_footer.css', import.meta.url), 'utf8');
 
 test('footer has one accessible sitemap landmark using footer-nav', () => {
   assert.equal((footer.match(/wp_nav_menu\s*\(/g) || []).length, 1);
@@ -21,6 +22,7 @@ test('footer has one accessible sitemap landmark using footer-nav', () => {
 test('footer does not duplicate header-specific sub-navigation', () => {
   assert.doesNotMatch(footer, /gf_subMenu|gf_links-02|Custom_Footer_Sub_Walker_Nav_Menu/);
   assert.doesNotMatch(footer, /'theme_location'\s*=>\s*'sub-nav'/);
+  assert.doesNotMatch(css, /\.gf_subMenu|\.gf_links-02/);
 });
 
 test('footer preserves safe WordPress site identity and page top', () => {
