@@ -324,12 +324,35 @@ window.addEventListener('resize', setVw);
   const toggleMenu = function () {
     const $body = $('body');
     // グローバルナビゲーション
-    $('#gh_menu').on('click', function () {
+    const $menuButton = $('#gh_menu');
+    const $globalNavigation = $('#global_navigation');
+    const headerBreakpointMin = 1080; // CSS desktop media query starts at 1080px.
+    const syncMobileMenu = () => {
+      const isOpen = $body.hasClass('_open-menu');
+      $menuButton.attr('aria-expanded', String(isOpen));
+      $menuButton.attr('aria-label', isOpen ? 'メニューを閉じる' : 'メニューを開く');
+      // The desktop navigation remains available even when the mobile disclosure is closed.
+      $globalNavigation.attr('inert', !isOpen && window.innerWidth < headerBreakpointMin ? '' : null);
+    };
+    const closeMobileMenu = (restoreFocus = false) => {
+      const wasOpen = $body.hasClass('_open-menu');
+      $body.removeClass('_open-menu _open-bg');
+      syncMobileMenu();
+      if (restoreFocus && wasOpen) $menuButton.trigger('focus');
+    };
+    $menuButton.on('click', function () {
       $body.toggleClass('_open-menu _open-bg');
+      syncMobileMenu();
     });
     $('#gn_close').on('click', function () {
-      $body.removeClass('_open-menu _open-bg');
+      closeMobileMenu(true);
     });
+    $(document).on('keydown', function (event) {
+      if (event.key === 'Escape' && $body.hasClass('_open-menu')) {
+        closeMobileMenu(true);
+      }
+    });
+    syncMobileMenu();
     const globalNavItems = document.querySelectorAll('[class*="gnl_item"]._hasChild');
     globalNavItems.forEach(item => {
         const itemButton = item.querySelector('[class*="gnl_button"]');
@@ -363,7 +386,6 @@ window.addEventListener('resize', setVw);
     // ==========================================================================
     // PCレイアウトとみなす最小幅（toggleMenu / contentFixed のブレークポイント跨ぎで共通）
     // MARK: header_breakpoint
-    const headerBreakpointMin = 1080;
     // メガメニューのタッチ展開状態クラス（touchMegaMenuSupport とブレークポイント跨ぎ処理の両方から参照）
     const touchOpenClass = '_touchOpen';
     // すべてのタッチ用メガメニューを閉じる（resize 時は toggleMenu スコープからも呼ぶ）
@@ -379,7 +401,7 @@ window.addEventListener('resize', setVw);
         document.documentElement.classList.add('_device-touch');
       }
 
-      const isPcLayout = () => window.innerWidth > headerBreakpointMin; // PCレイアウトかどうかを判定
+      const isPcLayout = () => window.innerWidth >= headerBreakpointMin; // PCレイアウトかどうかを判定
 
       if (!hasTouch) return; // タッチデバイスでない場合は処理しない
 
@@ -432,12 +454,13 @@ window.addEventListener('resize', setVw);
     // ブレークポイントを跨いだときに不要なクラスを削除
     let lastWidthForBreakpoint = null;
     $(window).on('load resize', function () {
-      const currentWidth = $(window).width();
-      const wasPcOrOver = lastWidthForBreakpoint !== null && lastWidthForBreakpoint > headerBreakpointMin;
-      const isPcOrOver = currentWidth > headerBreakpointMin;
+      const currentWidth = window.innerWidth;
+      const wasPcOrOver = lastWidthForBreakpoint !== null && lastWidthForBreakpoint >= headerBreakpointMin;
+      const isPcOrOver = currentWidth >= headerBreakpointMin;
       if (lastWidthForBreakpoint !== null && wasPcOrOver !== isPcOrOver) {
         closeAllTouchMenus();
         $body.removeClass('_open-menu _open-bg _contentFixed');
+        syncMobileMenu();
       }
       lastWidthForBreakpoint = currentWidth;
     });
@@ -490,10 +513,8 @@ window.addEventListener('resize', setVw);
     });
 
     $('#gns_close, #overlay').on('click', function () {
-      $body
-        .removeClass('_open-search')
-        .removeClass('_open-menu')
-        .removeClass('_open-bg');
+      $body.removeClass('_open-search');
+      closeMobileMenu();
     });
 
     // アーカイブ用のローカルナビゲーションを開閉式にする
@@ -644,36 +665,36 @@ window.addEventListener('resize', setVw);
     let state = false;
     // メニューオープン直前のスクロール位置（閉じる・ブレークポイント跨ぎで復元）
     let scrollpos;
+    // Every path that closes the menu must release the same scroll lock.
+    const releaseScrollLock = () => {
+      if (!state) return;
+      $('body').removeClass('_contentFixed').css({ top: 0 });
+      window.scrollTo(0, scrollpos);
+      state = false;
+    };
     $('#gh_menu').on('click', function () {
-      if (state == false) {
+      if (!state) {
         scrollpos = $(window).scrollTop();
         $('body').addClass('_contentFixed').css({ top: -scrollpos });
         state = true;
       } else {
-        $('body').removeClass('_contentFixed').css({ top: 0 });
-        window.scrollTo(0, scrollpos);
-        state = false;
+        releaseScrollLock();
       }
     });
-    $('#gn_close').on('click', function () {
-      $('body').removeClass('_contentFixed').css({ top: 0 });
-      window.scrollTo(0, scrollpos);
-      state = false;
+    $('#gn_close, #gns_close, #overlay').on('click', releaseScrollLock);
+    $(document).on('keydown', function (event) {
+      if (event.key === 'Escape') releaseScrollLock();
     });
     // 幅のブレークポイントを跨いだとき state を false にし、固定中ならスクロール位置を戻す（toggleMenu 側のクラス削除と整合）
     // MARK: header_breakpoint
     const headerBreakpointMin = 1080;
     let lastWidthForContentFixedBreakpoint = null;
     $(window).on('load resize', function () {
-      const currentWidth = $(window).width();
-      const wasPcOrOver = lastWidthForContentFixedBreakpoint !== null && lastWidthForContentFixedBreakpoint > headerBreakpointMin;
-      const isPcOrOver = currentWidth > headerBreakpointMin;
+      const currentWidth = window.innerWidth;
+      const wasPcOrOver = lastWidthForContentFixedBreakpoint !== null && lastWidthForContentFixedBreakpoint >= headerBreakpointMin;
+      const isPcOrOver = currentWidth >= headerBreakpointMin;
       if (lastWidthForContentFixedBreakpoint !== null && wasPcOrOver !== isPcOrOver) {
-        if (state) {
-          $('body').removeClass('_contentFixed').css({ top: 0 });
-          window.scrollTo(0, scrollpos);
-        }
-        state = false;
+        releaseScrollLock();
       }
       lastWidthForContentFixedBreakpoint = currentWidth;
     });
