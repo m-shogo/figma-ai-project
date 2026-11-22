@@ -24,3 +24,12 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 - Recovery: **do not repeat 116 individual reads or delete tokens based on empty search results**. Prefer a local clone plus one `rg -n -- 'jwsnj-color-' projects/jwsnj/theme`, if repository access is available. Otherwise inspect only files affected by the next concrete change and record coverage. Proceed with independent header accessibility work while the token audit is blocked.
 - Figma PC `0:1` and SP `263:12` screenshots were retrieved. Required design-to-code skill was absent from the installed skills listing, so detailed design context was **not** obtained; no font or visual-parity claims.
 - Verification: the header `:focus-visible` CSS rule was checked in the PR branch. Browser keyboard navigation and WordPress runtime remain deferred; PR CI must pass before merging.
+
+## 2026-11-22: @Figma design context is operational — use it every run
+
+- Human reiterated **`@Figma` is mandatory** for this project. Do not substitute an old screenshot, search snippet, or generic Figma mention for a fresh connected-tool read.
+- Load `figma-design-to-code` skill first, create a file session, and fetch BOTH design context and screenshots for the relevant PC/SP/open nodes. Current relevant nodes: PC page `0:1`, SP page `263:12`, PC menu-open `599:2726`, SP menu `480:3954`, footer `221:335`. Whole-page design context may require selecting a child node; the three component nodes returned actual high-fidelity context on 2026-11-22.
+- **Do not keep reporting `get_design_context` as unavailable based on earlier runs:** this run successfully retrieved content for `599:2726`, `480:3954`, and `221:335`. Re-verify on new sessions rather than assuming availability or failure forever.
+- Figma footer `221:335` confirms distinct decorative SVGs, a slogan, a logo, sitemap, contact and SNS presentation, green copyright strip, and page-top control. These are design evidence, not approval of phone number, SNS URL, external donation link, or Font Awesome Pro license.
+- Reviewer must distinguish Figma SOURCE_CONFIRMED from actual assets downloaded, WordPress markup/CSS/JS implemented, static checks, and browser visual/runtime QA. No downstream phase until the Header/Footer gate is fully passed.
+- Found a concrete regression: CSS uses desktop `min-width: 1080px` while JavaScript previously treated 1080px as mobile; align all related conditions and verify 1079/1080/1081px. Also ensure every mobile menu close path releases the scroll lock, including overlay and Escape.
