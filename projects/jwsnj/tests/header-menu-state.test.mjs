@@ -85,3 +85,17 @@ test('closing the mobile menu releases the scroll lock on all close paths', () =
   fire('#gn_close, #gns_close, #overlay:click');
   assert.equal(classes.has('_contentFixed'), false);
 });
+
+test('Header menus use registered WordPress locations without hard-coded menu names', () => {
+  const header = readFileSync(new URL('../theme/template-parts/_header.php', import.meta.url), 'utf8');
+  const registrations = readFileSync(new URL('../theme/inc/menu.php', import.meta.url), 'utf8');
+  assert.equal(header.split('wp_nav_menu(').length - 1, 2);
+  for (const location of ['global-nav', 'sub-nav']) {
+    assert.ok(header.includes("'theme_location' => '" + location + "'"));
+    assert.ok(registrations.includes("'" + location + "' =>"));
+  }
+  assert.equal(header.includes("'menu' =>"), false);
+  assert.equal(header.split("'fallback_cb' => false").length - 1, 2);
+  assert.ok(header.includes('Custom_Global_Walker_Nav_Menu'));
+  assert.ok(header.includes('Custom_Header_Sub_Walker_Nav_Menu'));
+});
