@@ -514,7 +514,8 @@ window.addEventListener('resize', setVw);
 
     $('#gns_close, #overlay').on('click', function () {
       $body.removeClass('_open-search');
-      closeMobileMenu();
+      // Restore keyboard focus to the trigger when the mobile menu is dismissed externally.
+      closeMobileMenu(true);
     });
 
     // アーカイブ用のローカルナビゲーションを開閉式にする
