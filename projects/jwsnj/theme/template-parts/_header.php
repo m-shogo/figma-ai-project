@@ -53,9 +53,9 @@
                         <button class="ms_button" type="submit"><span>検索</span></button>
                     </form>
                 </div>
-                <button type="button" class="gn_close" id="gn_close"><span>閉じる</span></button>
+                <button type="button" class="gn_close" id="gn_close" aria-label="メニューを閉じる"><span>閉じる</span></button>
             </div>
         </nav>
     </div>
 </header>
-<div class="overlay" id="overlay"></div>
+<div class="overlay" id="overlay" aria-hidden="true"></div>
