@@ -326,12 +326,13 @@ window.addEventListener('resize', setVw);
     // グローバルナビゲーション
     const $menuButton = $('#gh_menu');
     const $globalNavigation = $('#global_navigation');
+    const headerBreakpointMin = 1080; // CSS desktop media query starts at 1080px.
     const syncMobileMenu = () => {
       const isOpen = $body.hasClass('_open-menu');
       $menuButton.attr('aria-expanded', String(isOpen));
       $menuButton.attr('aria-label', isOpen ? 'メニューを閉じる' : 'メニューを開く');
       // The desktop navigation remains available even when the mobile disclosure is closed.
-      $globalNavigation.attr('inert', !isOpen && window.innerWidth <= 1080 ? '' : null);
+      $globalNavigation.attr('inert', !isOpen && window.innerWidth < headerBreakpointMin ? '' : null);
     };
     const closeMobileMenu = (restoreFocus = false) => {
       const wasOpen = $body.hasClass('_open-menu');
@@ -385,7 +386,6 @@ window.addEventListener('resize', setVw);
     // ==========================================================================
     // PCレイアウトとみなす最小幅（toggleMenu / contentFixed のブレークポイント跨ぎで共通）
     // MARK: header_breakpoint
-    const headerBreakpointMin = 1080;
     // メガメニューのタッチ展開状態クラス（touchMegaMenuSupport とブレークポイント跨ぎ処理の両方から参照）
     const touchOpenClass = '_touchOpen';
     // すべてのタッチ用メガメニューを閉じる（resize 時は toggleMenu スコープからも呼ぶ）
@@ -401,7 +401,7 @@ window.addEventListener('resize', setVw);
         document.documentElement.classList.add('_device-touch');
       }
 
-      const isPcLayout = () => window.innerWidth > headerBreakpointMin; // PCレイアウトかどうかを判定
+      const isPcLayout = () => window.innerWidth >= headerBreakpointMin; // PCレイアウトかどうかを判定
 
       if (!hasTouch) return; // タッチデバイスでない場合は処理しない
 
@@ -454,9 +454,9 @@ window.addEventListener('resize', setVw);
     // ブレークポイントを跨いだときに不要なクラスを削除
     let lastWidthForBreakpoint = null;
     $(window).on('load resize', function () {
-      const currentWidth = $(window).width();
-      const wasPcOrOver = lastWidthForBreakpoint !== null && lastWidthForBreakpoint > headerBreakpointMin;
-      const isPcOrOver = currentWidth > headerBreakpointMin;
+      const currentWidth = window.innerWidth;
+      const wasPcOrOver = lastWidthForBreakpoint !== null && lastWidthForBreakpoint >= headerBreakpointMin;
+      const isPcOrOver = currentWidth >= headerBreakpointMin;
       if (lastWidthForBreakpoint !== null && wasPcOrOver !== isPcOrOver) {
         closeAllTouchMenus();
         $body.removeClass('_open-menu _open-bg _contentFixed');
@@ -686,9 +686,9 @@ window.addEventListener('resize', setVw);
     const headerBreakpointMin = 1080;
     let lastWidthForContentFixedBreakpoint = null;
     $(window).on('load resize', function () {
-      const currentWidth = $(window).width();
-      const wasPcOrOver = lastWidthForContentFixedBreakpoint !== null && lastWidthForContentFixedBreakpoint > headerBreakpointMin;
-      const isPcOrOver = currentWidth > headerBreakpointMin;
+      const currentWidth = window.innerWidth;
+      const wasPcOrOver = lastWidthForContentFixedBreakpoint !== null && lastWidthForContentFixedBreakpoint >= headerBreakpointMin;
+      const isPcOrOver = currentWidth >= headerBreakpointMin;
       if (lastWidthForContentFixedBreakpoint !== null && wasPcOrOver !== isPcOrOver) {
         if (state) {
           $('body').removeClass('_contentFixed').css({ top: 0 });
