@@ -21,23 +21,13 @@
             <div class="gn_menu">
                 <?php
                 wp_nav_menu(array(
-                    'menu' => 'global-nav',
                     'menu_class' => 'menu gn_links-01',
                     'menu_id' => 'gn_links-01',
                     'container' => 'div',
                     'container_class' => 'gn_container-01',
                     'container_id' => 'gn_container-01',
-                    // 'container_aria_label' => '',
                     'fallback_cb' => false,
-                    // 'before' => '',
-                    // 'after' => '',
-                    // 'link_before' => '',
-                    // 'link_after' => '',
-                    // 'echo' => true,
-                    // 'depth' => 0,
                     'theme_location' => 'global-nav',
-                    // 'item_spacing' => 'preserve'
-                    // 'items_wrap' => '<ul id="%1$s" class="%2$s">%3$s</ul
                     'walker' => new Custom_Global_Walker_Nav_Menu(),
                 ));
                 ?>
@@ -45,23 +35,13 @@
             <div class="gn_subMenu">
                 <?php
                 wp_nav_menu(array(
-                    'menu' => 'sub-nav',
                     'menu_class' => 'menu gn_links-02',
                     'menu_id' => 'gn_links-02',
                     'container' => 'div',
                     'container_class' => 'gn_container-02',
                     'container_id' => 'gn_container-02',
-                    // 'container_aria_label' => '',
                     'fallback_cb' => false,
-                    // 'before' => '',
-                    // 'after' => '',
-                    // 'link_before' => '',
-                    // 'link_after' => '',
-                    // 'echo' => true,
-                    // 'depth' => 0,
                     'theme_location' => 'sub-nav',
-                    // 'items_wrap' => '<ul id="%1$s" class="%2$s">%3$s</ul>',
-                    // 'item_spacing' => 'preserve'
                     'walker' => new Custom_Header_Sub_Walker_Nav_Menu(),
                 ));
                 ?>
