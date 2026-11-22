@@ -665,21 +665,25 @@ window.addEventListener('resize', setVw);
     let state = false;
     // メニューオープン直前のスクロール位置（閉じる・ブレークポイント跨ぎで復元）
     let scrollpos;
+    // Every path that closes the menu must release the same scroll lock.
+    const releaseScrollLock = () => {
+      if (!state) return;
+      $('body').removeClass('_contentFixed').css({ top: 0 });
+      window.scrollTo(0, scrollpos);
+      state = false;
+    };
     $('#gh_menu').on('click', function () {
-      if (state == false) {
+      if (!state) {
         scrollpos = $(window).scrollTop();
         $('body').addClass('_contentFixed').css({ top: -scrollpos });
         state = true;
       } else {
-        $('body').removeClass('_contentFixed').css({ top: 0 });
-        window.scrollTo(0, scrollpos);
-        state = false;
+        releaseScrollLock();
       }
     });
-    $('#gn_close').on('click', function () {
-      $('body').removeClass('_contentFixed').css({ top: 0 });
-      window.scrollTo(0, scrollpos);
-      state = false;
+    $('#gn_close, #gns_close, #overlay').on('click', releaseScrollLock);
+    $(document).on('keydown', function (event) {
+      if (event.key === 'Escape') releaseScrollLock();
     });
     // 幅のブレークポイントを跨いだとき state を false にし、固定中ならスクロール位置を戻す（toggleMenu 側のクラス削除と整合）
     // MARK: header_breakpoint
@@ -690,11 +694,7 @@ window.addEventListener('resize', setVw);
       const wasPcOrOver = lastWidthForContentFixedBreakpoint !== null && lastWidthForContentFixedBreakpoint >= headerBreakpointMin;
       const isPcOrOver = currentWidth >= headerBreakpointMin;
       if (lastWidthForContentFixedBreakpoint !== null && wasPcOrOver !== isPcOrOver) {
-        if (state) {
-          $('body').removeClass('_contentFixed').css({ top: 0 });
-          window.scrollTo(0, scrollpos);
-        }
-        state = false;
+        releaseScrollLock();
       }
       lastWidthForContentFixedBreakpoint = currentWidth;
     });
