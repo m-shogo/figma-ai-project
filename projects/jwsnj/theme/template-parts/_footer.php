@@ -3,7 +3,7 @@
         <nav class="gf_menu" aria-label="フッターナビゲーション">
             <?php
             wp_nav_menu(array(
-                'menu' => 'footer-nav',
+                // Use the menu assigned to this location in WordPress, not a hard-coded menu name.
                 'menu_class' => 'menu gf_links-01',
                 'menu_id' => 'gf_links-01',
                 'container' => 'div',
