@@ -208,11 +208,13 @@ test('collapsed Header/Footer accordion links are inert only below their own des
   const match = source.match(/    const syncSubmenuFocusability = \(item, prefix, desktopMin\) => \{[\s\S]*?\n    \};/);
   assert.ok(match, 'focusability helper must exist');
   const win = { innerWidth: 375 };
-  const sync = new Function('window', match[0] + '\nreturn syncSubmenuFocusability;')(win);
+  const doc = { activeElement: null };
+  const sync = new Function('window', 'document', match[0] + '\nreturn syncSubmenuFocusability;')(win, doc);
   const wrapper = { inert: false };
   let state = null;
   const item = {
-    children: [{ matches: selector => { assert.match(selector, /_wrapper/); return true; }, set inert(value) { wrapper.inert = value; }, get inert() { return wrapper.inert; } }],
+    children: [{ matches: selector => { assert.match(selector, /_wrapper/); return true; }, contains: target => target === wrapper, set inert(value) { wrapper.inert = value; }, get inert() { return wrapper.inert; } }],
+    querySelector: () => ({ focus: () => {} }),
     getAttribute: () => state,
   };
   sync(item, 'gnl', 1080);
@@ -241,4 +243,22 @@ test('accordion focusability is scoped to the direct submenu wrapper, never a ne
   assert.match(helper[0], /Array\.from\(item\.children\)\.find/);
   assert.match(helper[0], /child\.matches/);
   assert.doesNotMatch(helper[0], /item\.querySelector\(/);
+});
+
+
+test('collapsing a focused submenu moves keyboard focus to its disclosure before inert', () => {
+  const match = source.match(/    const syncSubmenuFocusability = \(item, prefix, desktopMin\) => \{[\s\S]*?\n    \};/);
+  assert.ok(match);
+  const win = { innerWidth: 375 };
+  let focusedTrigger = false;
+  const wrapper = { inert: false };
+  const doc = { activeElement: wrapper };
+  const item = {
+    children: [{ matches: () => true, contains: target => target === wrapper, set inert(value) { assert.equal(focusedTrigger, true); wrapper.inert = value; } }],
+    getAttribute: () => 'false',
+    querySelector: () => ({ focus() { focusedTrigger = true; doc.activeElement = this; } }),
+  };
+  new Function('window', 'document', match[0] + '\nreturn syncSubmenuFocusability;')(win, doc)(item, 'gnl', 1080);
+  assert.equal(focusedTrigger, true);
+  assert.equal(wrapper.inert, true);
 });
