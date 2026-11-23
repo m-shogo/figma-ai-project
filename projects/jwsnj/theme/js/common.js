@@ -363,6 +363,18 @@ window.addEventListener('resize', setVw);
             item.setAttribute('data-open', String(isOpen));
             itemButton.setAttribute('aria-expanded', String(isOpen));
         });
+        // The desktop top-level submenu also opens on hover via CSS.
+        if (item.classList.contains('gnl_item-02')) {
+          item.addEventListener('mouseenter', () => {
+            if (window.innerWidth >= headerBreakpointMin) itemButton.setAttribute('aria-expanded', 'true');
+          });
+          item.addEventListener('mouseleave', () => {
+            if (window.innerWidth >= headerBreakpointMin) {
+              const isOpen = item.getAttribute('data-open') === 'true' || item.classList.contains('_touchOpen');
+              itemButton.setAttribute('aria-expanded', String(isOpen));
+            }
+          });
+        }
     });
 
     const footerNavItems = document.querySelectorAll('[class*="gfl_item"]._hasChild');
@@ -389,7 +401,11 @@ window.addEventListener('resize', setVw);
     // すべてのタッチ用メガメニューを閉じる（resize 時は toggleMenu スコープからも呼ぶ）
     const closeAllTouchMenus = () => {
       const touchOpenItems = document.querySelectorAll(`.global_navigation [class*="gnl_item"].${touchOpenClass}`);
-      touchOpenItems.forEach((el) => el.classList.remove(touchOpenClass));
+      touchOpenItems.forEach((el) => {
+        el.classList.remove(touchOpenClass);
+        const button = el.querySelector('[class*="gnl_button"]');
+        if (button) button.setAttribute('aria-expanded', String(el.getAttribute('data-open') === 'true'));
+      });
       $body.removeClass('_open-bg');
     };
 
@@ -430,6 +446,8 @@ window.addEventListener('resize', setVw);
             // 1回目タップ：遷移を防ぎ、メニューを開く（オーバーレイも表示）
             e.preventDefault();
             li.classList.add(touchOpenClass);
+            const disclosure = li.querySelector('[class*="gnl_button"]');
+            if (disclosure) disclosure.setAttribute('aria-expanded', 'true');
             $body.addClass('_open-bg');
           },
           { passive: false }
