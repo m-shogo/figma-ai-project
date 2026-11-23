@@ -1,40 +1,60 @@
 @charset "utf-8";
 /* // ------------------------------
-// ギャラリー
+// ギャラリー — Figma parts PC 344:1079 / SP 442:2973
 // ------------------------------ */
 .block-editor_wrap,
 .editor-styles-wrapper {
     .wp-block-gallery {
-        /* id="core-block-supports-inline-css" で吐き出しているため、不要 */
-        /* gap: var(--wp--style--unstable-gallery-gap) !important; */
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: calc(16 * var(--to-rem-func));
+        grid-template-columns: minmax(0, 1fr);
+        gap: calc(40 * var(--to-rem-func));
         margin-top: var(--wp-block-margin);
         & + & {
             margin-top: var(--wp-block-margin-large);
         }
         &.has-nested-images {
             figure.wp-block-image {
+                min-width: 0;
                 width: 100% !important;
-                display: block grid;
-                grid-template-rows: subgrid;
-                grid-row: span 2;
-                gap: 0;
+                margin: 0;
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
+                gap: calc(20 * var(--to-rem-func));
                 img {
+                    display: block;
+                    width: 100%;
+                    height: auto;
                     aspect-ratio: 3 / 2;
+                    object-fit: cover;
+                    border-radius: calc(5 * var(--to-rem-func));
                 }
-                &:has(figcaption) {
-                    &::before {
-                        content: none; /* デフォルトのブラー効果を削除 */
-                    }
+                figcaption {
+                    position: static;
+                    margin: 0;
+                    padding: 0;
+                    background: none;
+                    text-align: center;
+                    font-family: var(--font-jwsnj-ja);
+                    font-size: calc(14 * var(--to-rem-func));
+                    font-weight: 500;
+                    line-height: 1.5;
+                    letter-spacing: 0.05em;
+                    color: var(--color-text);
+                    overflow-wrap: anywhere;
+                    word-break: normal;
+                }
+                &:has(figcaption)::before {
+                    content: none;
                 }
             }
         }
 
         @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-            grid-template-columns: repeat(3, 1fr);
-            gap: calc(40 * var(--to-rem-func));
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            &.columns-3 {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
         }
     }
 }
