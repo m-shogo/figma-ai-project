@@ -147,3 +147,13 @@ test('Header breakpoint transitions clear stale top-level hover disclosure state
   assert.match(region, /globalNavItems\.forEach\(\(item\) => \{/);
   assert.match(region, /button\.setAttribute\('aria-expanded', String\(item\.getAttribute\('data-open'\) === 'true'\)\)/);
 });
+
+
+test('desktop touch-open mega-menu closes on Escape and restores parent-link focus', () => {
+  const region = source.slice(source.indexOf('touchMegaMenuSupport();'), source.indexOf('let lastWidthForBreakpoint = null'));
+  assert.match(region, /event\.key !== 'Escape' \|\| window\.innerWidth < headerBreakpointMin/);
+  assert.match(region, /document\.querySelector\(`.global_navigation/);
+  assert.match(region, /const trigger = expanded\.querySelector\('\[class\*="gnl_title"\] \[class\*="gnl_link"\]'\)/);
+  assert.match(region, /closeAllTouchMenus\(\)/);
+  assert.match(region, /if \(trigger\) trigger\.focus\(\)/);
+});
