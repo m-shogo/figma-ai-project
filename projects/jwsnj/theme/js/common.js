@@ -467,6 +467,16 @@ window.addEventListener('resize', setVw);
     };
     touchMegaMenuSupport();
 
+    // PCタッチ操作で展開したメガメニューもEscapeで閉じ、親リンクへフォーカスを戻す。
+    $(document).on('keydown', function (event) {
+      if (event.key !== 'Escape' || window.innerWidth < headerBreakpointMin) return;
+      const expanded = document.querySelector(`.global_navigation [class*="gnl_item"].${touchOpenClass}`);
+      if (!expanded) return;
+      const trigger = expanded.querySelector('[class*="gnl_title"] [class*="gnl_link"]');
+      closeAllTouchMenus();
+      if (trigger) trigger.focus();
+    });
+
     // ブレークポイントを跨いだときに不要なクラスを削除
     let lastWidthForBreakpoint = null;
     $(window).on('load resize', function () {
