@@ -279,3 +279,14 @@ test('Header search toggles independently and preserves the backdrop for other o
   assert.match(region, /const touchOpen = document\.querySelector/);
   assert.match(region, /\$body\.toggleClass\('_open-bg', isOpen \|\| \$body\.hasClass\('_open-menu'\) \|\| !!touchOpen\)/);
 });
+
+
+test('reduced-motion backdrop override survives the open-state transition cascade', () => {
+  const open = navigationCss.indexOf('body._open-bg {');
+  const reduced = navigationCss.indexOf('/* Keep the reduced-motion override after');
+  assert.ok(reduced > open, 'reduced-motion cascade must follow open-state shorthand');
+  const block = navigationCss.slice(reduced);
+  assert.match(block, /@media \(prefers-reduced-motion: reduce\)/);
+  assert.match(block, /body\._open-bg #overlay/);
+  assert.match(block, /transition-duration: 0s/);
+});
