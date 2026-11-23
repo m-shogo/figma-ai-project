@@ -18,8 +18,6 @@
             transition: opacity var(--transition-duration);
         }
     }
-    .gf_menu {
-    }
     .gf_links-01 {
         display: grid;
         pointer-events: auto;
@@ -124,44 +122,28 @@
         .gfl_list-03,
         .gfl_list-04,
         .gfl_list-05,
-        .gfl_list-06 {
-        }
         /* MARK: 共通 3階層以降に影響あり start */
         .gfl_item-03,
         .gfl_item-04,
         .gfl_item-05,
-        .gfl_item-06 {
-        }
         .gfl_title-03,
         .gfl_title-04,
         .gfl_title-05,
-        .gfl_title-06 {
-        }
         .gfl_link-03,
         .gfl_link-04,
         .gfl_link-05,
-        .gfl_link-06 {
-        }
         .gfl_button-03,
         .gfl_button-04,
         .gfl_button-05,
-        .gfl_button-06 {
-        }
         .gfl_wrapper-03,
         .gfl_wrapper-04,
         .gfl_wrapper-05,
-        .gfl_wrapper-06 {
-        }
         .gfl_inner-03,
         .gfl_inner-04,
         .gfl_inner-05,
-        .gfl_inner-06 {
-        }
         .gfl_list-03,
         .gfl_list-04,
         .gfl_list-05,
-        .gfl_list-06 {
-        }
         /* 3階層以降に影響あり end */
         /* MARK: ステータス start */
         .gfl_item-02 {
@@ -205,37 +187,9 @@
         /* 共通 end */
 
         /* MARK: 階層別 3階層 start */
-        .gfl_item-03 {
-        }
-        .gfl_title-03 {
-        }
-        .gfl_link-03 {
-        }
-        .gfl_button-03 {
-        }
-        .gfl_wrapper-03 {
-        }
-        .gfl_inner-03 {
-        }
-        .gfl_list-03 {
-        }
         /* 3階層 end */
 
         /* MARK: 階層別 4階層 start */
-        .gfl_item-04 {
-        }
-        .gfl_title-04 {
-        }
-        .gfl_link-04 {
-        }
-        .gfl_button-04 {
-        }
-        .gfl_wrapper-04 {
-        }
-        .gfl_inner-04 {
-        }
-        .gfl_list-04 {
-        }
         /* 4階層 end */
 
         /* MARK: 階層別 5階層 start */
@@ -388,44 +342,28 @@
             .gfl_inner-03,
             .gfl_inner-04,
             .gfl_inner-05,
-            .gfl_inner-06 {
-            }
             /* MARK: 共通 3階層以降に影響あり start */
             .gfl_list-03,
             .gfl_list-04,
             .gfl_list-05,
-            .gfl_list-06 {
-            }
             .gfl_item-03,
             .gfl_item-04,
             .gfl_item-05,
-            .gfl_item-06 {
-            }
             .gfl_title-03,
             .gfl_title-04,
             .gfl_title-05,
-            .gfl_title-06 {
-            }
             .gfl_link-03,
             .gfl_link-04,
             .gfl_link-05,
-            .gfl_link-06 {
-            }
             .gfl_button-03,
             .gfl_button-04,
             .gfl_button-05,
-            .gfl_button-06 {
-            }
             .gfl_wrapper-03,
             .gfl_wrapper-04,
             .gfl_wrapper-05,
-            .gfl_wrapper-06 {
-            }
             .gfl_inner-03,
             .gfl_inner-04,
             .gfl_inner-05,
-            .gfl_inner-06 {
-            }
             /* 3階層以降に影響あり end */
             /* 共通 end */
 
@@ -434,19 +372,11 @@
                 display: grid;
                 gap: calc(8 * var(--to-rem-func));
             }
-            .gfl_item-02 {
-            }
-            .gfl_title-02 {
-            }
             .gfl_link-02 {
                 font-weight: 700;
             }
-            .gfl_button-02 {
-            }
             .gfl_wrapper-02 {
                 margin-top: calc(10 * var(--to-rem-func));
-            }
-            .gfl_inner-02 {
             }
             /* 3階層 end */
 
@@ -454,8 +384,6 @@
             .gfl_list-03 {
                 display: grid;
                 gap: calc(10 * var(--to-rem-func));
-            }
-            .gfl_item-03 {
             }
             .gfl_title-03 {
                 gap: calc(8 * var(--to-rem-func));
@@ -467,14 +395,8 @@
                     font-size: calc(12 * var(--to-rem-func));
                 }
             }
-            .gfl_link-03 {
-            }
-            .gfl_button-03 {
-            }
             .gfl_wrapper-03 {
                 margin-top: calc(10 * var(--to-rem-func));
-            }
-            .gfl_inner-03 {
             }
             /* 3階層 end */
 
@@ -482,8 +404,6 @@
             .gfl_list-04 {
                 display: grid;
                 gap: calc(10 * var(--to-rem-func));
-            }
-            .gfl_item-04 {
             }
             .gfl_title-04 {
                 padding-left: calc(24 * var(--to-rem-func));
@@ -499,22 +419,12 @@
                     font-size: calc(10 * var(--to-rem-func));
                 }
             }
-            .gfl_link-04 {
-            }
-            .gfl_button-04 {
-            }
             .gfl_wrapper-04 {
                 margin-top: calc(10 * var(--to-rem-func));
-            }
-            .gfl_inner-04 {
             }
             /* 4階層 end */
 
             /* MARK: 階層別 5階層 start */
-            .gfl_list-05 {
-            }
-            .gfl_item-05 {
-            }
             .gfl_title-05 {
                 padding-left: calc(36 * var(--to-rem-func));
                 font-size: calc(14 * var(--to-rem-func));
@@ -530,14 +440,6 @@
                     font-size: calc(10 * var(--to-rem-func));
                 }
             }
-            .gfl_link-05 {
-            }
-            .gfl_button-05 {
-            }
-            .gfl_wrapper-05 {
-            }
-            .gfl_inner-05 {
-            }
             /* 5階層 end */
 
             /* MARK: 階層別 6階層 start */
@@ -546,8 +448,6 @@
 
             /* MARK: ステータス start */
             /* ステータス end */
-        }
-        .gf_menu {
         }
 }
 
