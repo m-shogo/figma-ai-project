@@ -138,3 +138,12 @@ test('Header and Footer WordPress disclosure buttons expose descriptive accessib
 test('desktop mega-menu remains visible while keyboard focus is within a top-level nav item', () => {
   assert.match(navigationCss, /&:hover,\s*&:focus-within\s*\{\s*\.gnl_wrapper-02\s*\{/);
 });
+
+
+test('Header breakpoint transitions clear stale top-level hover disclosure state', () => {
+  const region = source.slice(source.indexOf('let lastWidthForBreakpoint = null'), source.indexOf('// // グローバルメニューの動き'));
+  assert.match(region, /closeAllTouchMenus\(\)/);
+  assert.match(region, /syncMobileMenu\(\)/);
+  assert.match(region, /globalNavItems\.forEach\(\(item\) => \{/);
+  assert.match(region, /button\.setAttribute\('aria-expanded', String\(item\.getAttribute\('data-open'\) === 'true'\)\)/);
+});
