@@ -86,6 +86,17 @@
         }
     }
 
+    /* Header height and hamburger icon transitions also honor the OS motion preference. */
+    @media (prefers-reduced-motion: reduce) {
+        &,
+        .gh_logo a,
+        .gh_menu .icon,
+        .gh_menu .icon::before,
+        .gh_menu .icon::after {
+            transition-duration: 0s;
+        }
+    }
+
     /* MARK: hover */
     @media (any-hover: hover) {
         .gh_logo {
