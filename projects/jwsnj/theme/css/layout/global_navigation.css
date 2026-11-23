@@ -653,7 +653,8 @@
     .gn_links-01 {
         .gnl_item-02 {
             &._hasChild {
-                &:hover {
+                &:hover,
+                &:focus-within {
                     .gnl_wrapper-02 {
                         clip-path: inset(calc(-30 * var(--to-rem-func)) 0 0% 0);
                     }
