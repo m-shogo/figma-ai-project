@@ -4,14 +4,30 @@
 // ------------------------------ */
 .block-editor_wrap,
 .editor-styles-wrapper {
+    /* Figma parts: PC img+text 344:929 / SP 442:2788.
+       Keep WordPress media dynamic. Never substitute a design screenshot. */
     .wp-block-media-text {
         margin-top: var(--wp-block-margin);
-        gap: calc(32 * var(--to-rem-func)) calc(16 * var(--to-rem-func));
+        gap: calc(40 * var(--to-rem-func));
+        min-width: 0;
+        grid-template-columns: minmax(0, 1fr);
         @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-            gap: calc(40 * var(--to-rem-func));
+            grid-template-columns: minmax(0, 410fr) minmax(0, 510fr);
+        }
+        .wp-block-media-text__media {
+            min-width: 0;
+            img {
+                width: 100%;
+                height: auto;
+                aspect-ratio: 410 / 273;
+                object-fit: cover;
+                border-radius: calc(5 * var(--to-rem-func));
+            }
         }
         .wp-block-media-text__content {
             padding: 0;
+            min-width: 0;
+            overflow-wrap: anywhere;
             > *:first-child {
                 margin-top: 0;
             }
