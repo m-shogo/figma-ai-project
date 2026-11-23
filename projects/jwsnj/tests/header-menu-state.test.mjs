@@ -120,7 +120,8 @@ test('Header and Footer WordPress disclosure buttons expose descriptive accessib
   const global = menu.split('class Custom_Global_Walker_Nav_Menu')[1].split('class Custom_Header_Sub_Walker_Nav_Menu')[0];
   const footer = menu.split('class Custom_Footer_Walker_Nav_Menu')[1].split('class Custom_')[0];
   for (const walker of [global, footer]) {
-    assert.match(walker, /type="button" aria-expanded="false" aria-label="/);
+    assert.match(walker, /type="button" aria-expanded="false" aria-controls="/);
+    assert.match(walker, /aria-label="/);
     assert.match(walker, /esc_attr\(\$title \. 'のサブメニューを開閉'\)/);
   }
   const disclosures = source.slice(source.indexOf('const globalNavItems ='), source.indexOf('const touchMegaMenuSupport ='));
