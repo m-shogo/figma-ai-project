@@ -645,24 +645,23 @@
         }
     }
 
-    /* Reduced motion keeps the same disclosure and flyout state without animation. */
-    @media (prefers-reduced-motion: reduce) {
-        &, a, .gnl_wrapper-02, .gnl_wrapper-03, .gnl_wrapper-04,
-        .gnl_wrapper-05, .gnl_wrapper-06, #overlay {
-            transition-duration: 0s;
-        }
-        [class*='gnl_button']::before,
-        [class*='gnl_button']::after {
-            transition-duration: 0s;
-        }
-    }
-
     /* MARK: hover */
     @media (any-hover: hover) {
         a {
             &:hover {
                 color: var(--color-primary);
             }
+        }
+    }
+    /* Reduced motion keeps the same disclosure and flyout state without animation. */
+    @media (prefers-reduced-motion: reduce) {
+        &, a, .gnl_wrapper-02, .gnl_wrapper-03, .gnl_wrapper-04,
+        .gnl_wrapper-05, .gnl_wrapper-06 {
+            transition-duration: 0s;
+        }
+        [class*='gnl_button']::before,
+        [class*='gnl_button']::after {
+            transition-duration: 0s;
         }
     }
     /* Desktop mega-menu states: avoid applying its fixed flyout to the SP accordion. */
@@ -694,6 +693,13 @@
     background-color: transparent;
     visibility: hidden;
     transition: var(--transition-duration);
+}
+
+/* Honor reduced motion also for the separately scoped backdrop. */
+@media (prefers-reduced-motion: reduce) {
+    #overlay {
+        transition-duration: 0s;
+    }
 }
 
 /* modifier */
