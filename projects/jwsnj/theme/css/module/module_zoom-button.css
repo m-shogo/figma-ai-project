@@ -16,20 +16,26 @@
         position: absolute;
         right: 0;
         bottom: 0;
-        width: calc(50 * var(--to-rem-func));
-        height: calc(50 * var(--to-rem-func));
+        width: calc(44 * var(--to-rem-func));
+        height: calc(44 * var(--to-rem-func));
         display: inline-flex;
         align-items: center;
         justify-content: center;
         background-color: var(--color-primary);
         border: calc(1 * var(--to-rem-func)) solid var(--color-primary);
         color: var(--color-secondary);
-        font-size: calc(18 * var(--to-rem-func));
+        font-size: calc(20 * var(--to-rem-func));
         transition: var(--transition-duration);
         font-family: var(--font-awesome);
         font-weight: 400;
         line-height: 1;
         content: var(--icon-zoom);
+        border-radius: 50%;
+        pointer-events: none;
+    }
+    &:focus-visible {
+        outline: calc(2 * var(--to-rem-func)) solid var(--color-accent);
+        outline-offset: calc(3 * var(--to-rem-func));
     }
     /* blank */
     &[target='_blank'] {
@@ -53,14 +59,3 @@
     }
 }
 
-@media (width < calc(768 * (1 / 16 * 1rem))) {
-    .wp-block-columns.is-not-stacked-on-mobile {
-        .lightbox_wrap {
-            &::after {
-                width: 2em;
-                height: 2em;
-                font-size: calc(16 * var(--to-rem-func));
-            }
-        }
-    }
-}
