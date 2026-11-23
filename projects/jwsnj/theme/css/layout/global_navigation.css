@@ -155,79 +155,35 @@
         .gnl_list-03,
         .gnl_list-04,
         .gnl_list-05,
-        .gnl_list-06 {
-        }
         /* MARK: 共通 3階層以降に影響あり start */
         .gnl_item-03,
         .gnl_item-04,
         .gnl_item-05,
-        .gnl_item-06 {
-        }
         .gnl_title-03,
         .gnl_title-04,
         .gnl_title-05,
-        .gnl_title-06 {
-        }
         .gnl_link-03,
         .gnl_link-04,
         .gnl_link-05,
-        .gnl_link-06 {
-        }
         .gnl_button-03,
         .gnl_button-04,
         .gnl_button-05,
-        .gnl_button-06 {
-        }
         .gnl_wrapper-03,
         .gnl_wrapper-04,
         .gnl_wrapper-05,
-        .gnl_wrapper-06 {
-        }
         .gnl_inner-03,
         .gnl_inner-04,
         .gnl_inner-05,
-        .gnl_inner-06 {
-        }
         .gnl_list-03,
         .gnl_list-04,
         .gnl_list-05,
-        .gnl_list-06 {
-        }
         /* 3階層以降に影響あり end */
         /* 共通 end */
 
         /* MARK: 階層別 3階層 start */
-        .gnl_item-03 {
-        }
-        .gnl_title-03 {
-        }
-        .gnl_link-03 {
-        }
-        .gnl_button-03 {
-        }
-        .gnl_wrapper-03 {
-        }
-        .gnl_inner-03 {
-        }
-        .gnl_list-03 {
-        }
         /* 3階層 end */
 
         /* MARK: 階層別 4階層 start */
-        .gnl_item-04 {
-        }
-        .gnl_title-04 {
-        }
-        .gnl_link-04 {
-        }
-        .gnl_button-04 {
-        }
-        .gnl_wrapper-04 {
-        }
-        .gnl_inner-04 {
-        }
-        .gnl_list-04 {
-        }
         /* 4階層 end */
 
         /* MARK: 階層別 5階層 start */
@@ -383,50 +339,32 @@
             .gnl_inner-03,
             .gnl_inner-04,
             .gnl_inner-05,
-            .gnl_inner-06 {
-            }
             .gnl_list-02,
             .gnl_list-03,
             .gnl_list-04,
             .gnl_list-05,
-            .gnl_list-06 {
-            }
             /* MARK: 共通 3階層以降に影響あり start */
             .gnl_item-03,
             .gnl_item-04,
             .gnl_item-05,
-            .gnl_item-06 {
-            }
             .gnl_title-03,
             .gnl_title-04,
             .gnl_title-05,
-            .gnl_title-06 {
-            }
             .gnl_link-03,
             .gnl_link-04,
             .gnl_link-05,
-            .gnl_link-06 {
-            }
             .gnl_button-03,
             .gnl_button-04,
             .gnl_button-05,
-            .gnl_button-06 {
-            }
             .gnl_wrapper-03,
             .gnl_wrapper-04,
             .gnl_wrapper-05,
-            .gnl_wrapper-06 {
-            }
             .gnl_inner-03,
             .gnl_inner-04,
             .gnl_inner-05,
-            .gnl_inner-06 {
-            }
             .gnl_list-03,
             .gnl_list-04,
             .gnl_list-05,
-            .gnl_list-06 {
-            }
             /* 3階層以降に影響あり end */
             /* MARK: ステータス start */
             .gnl_item-02 {
@@ -470,14 +408,8 @@
             /* 共通 end */
 
             /* MARK: 階層別 2階層 start */
-            .gnl_item-02 {
-            }
-            .gnl_title-02 {
-            }
             .gnl_link-02 {
                 padding-block: calc(16 * var(--to-rem-func));
-            }
-            .gnl_button-02 {
             }
             .gnl_wrapper-02 {
                 position: fixed;
@@ -503,8 +435,6 @@
             /* 3階層 end */
 
             /* MARK: 階層別 3階層 start */
-            .gnl_item-03 {
-            }
             .gnl_title-03 {
                 border-bottom: calc(1 * var(--to-rem-func)) solid var(--color-primary);
                 &::after {
@@ -518,12 +448,8 @@
                 font-weight: 700;
                 padding-block: calc(16 * var(--to-rem-func));
             }
-            .gnl_button-03 {
-            }
             .gnl_wrapper-03 {
                 margin-top: calc(16 * var(--to-rem-func));
-            }
-            .gnl_inner-03 {
             }
             .gnl_list-03 {
                 display: grid;
@@ -533,8 +459,6 @@
             /* 3階層 end */
 
             /* MARK: 階層別 4階層 start */
-            .gnl_item-04 {
-            }
             .gnl_title-04 {
                 padding-left: calc(24 * var(--to-rem-func));
                 position: relative;
@@ -548,14 +472,8 @@
                     transform: translateY(-50%);
                 }
             }
-            .gnl_link-04 {
-            }
-            .gnl_button-04 {
-            }
             .gnl_wrapper-04 {
                 margin-top: calc(10 * var(--to-rem-func));
-            }
-            .gnl_inner-04 {
             }
             .gnl_list-04 {
                 padding-left: calc(24 * var(--to-rem-func));
@@ -565,8 +483,6 @@
             /* 4階層 end */
 
             /* MARK: 階層別 5階層 start */
-            .gnl_item-05 {
-            }
             .gnl_title-05 {
                 padding-left: calc(24 * var(--to-rem-func));
                 font-size: calc(14 * var(--to-rem-func));
@@ -580,16 +496,6 @@
                     top: 50%;
                     transform: translateY(-50%);
                 }
-            }
-            .gnl_link-05 {
-            }
-            .gnl_button-05 {
-            }
-            .gnl_wrapper-05 {
-            }
-            .gnl_inner-05 {
-            }
-            .gnl_list-05 {
             }
             /* 5階層 end */
 
