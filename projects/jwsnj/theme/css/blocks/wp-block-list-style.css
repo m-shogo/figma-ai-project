@@ -37,17 +37,37 @@
             }
         }
     }
-    /* //---------- ulのみ ---------- */
+    /* Unordered lists — Figma parts PC 357:1004, SP 442:2816.
+       Text remains in normal flow; nested bullets are outlined, not filled. */
     ul.wp-block-list:not(.annotation-list) {
         > li {
-            padding-left: calc(20 * var(--to-rem-func));
+            font-family: var(--font-jwsnj-ja);
+            font-size: calc(15 * var(--to-rem-func));
+            font-weight: 400;
+            line-height: 1.6;
+            letter-spacing: 0.05em;
+            padding-left: calc(18 * var(--to-rem-func));
+            overflow-wrap: anywhere;
+            word-break: normal;
             &::before {
                 content: '';
+                left: 0;
+                top: calc(9 * var(--to-rem-func));
                 width: calc(6 * var(--to-rem-func));
                 height: calc(6 * var(--to-rem-func));
-                background: var(--color-primary);
-                border-radius: 50%;
-                transform: translateY(0.6em);
+                background-color: var(--color-accent);
+                border-radius: calc(3 * var(--to-rem-func));
+                transform: none;
+            }
+            > ul.wp-block-list {
+                margin-top: calc(12 * var(--to-rem-func));
+                padding-left: calc(24 * var(--to-rem-func));
+                gap: calc(8 * var(--to-rem-func));
+                > li::before {
+                    background-color: transparent;
+                    border: calc(1 * var(--to-rem-func)) solid var(--color-accent);
+                    box-sizing: border-box;
+                }
             }
         }
     }
