@@ -185,3 +185,11 @@ test('desktop Header disclosure state tracks mouse hover and keyboard focus-with
   assert.match(header, /item\.addEventListener\('focusout'/);
   assert.match(header, /queueMicrotask\(syncDesktopHoverState\)/);
 });
+
+
+test('mobile menu open-state clip-path follows exactly the 1080px desktop breakpoint', () => {
+  const openRule = navigationCss.slice(navigationCss.indexOf('body._open-menu {'), navigationCss.indexOf('body._open-bg {'));
+  assert.match(openRule, /@media \(calc\(1080 \* \(1 \/ 16 \* 1rem\)\) <= width\)/);
+  assert.doesNotMatch(openRule, /@media \(calc\(768 \*/);
+  assert.match(openRule, /clip-path: unset;/);
+});
