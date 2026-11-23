@@ -133,3 +133,18 @@ test('Footer uses Figma-approved PC/SP bilingual brand statement without substit
   assert.match(css, /font-size: calc\(46 \* var\(--to-rem-func\)\)/);
   assert.match(css, /font-size: calc\(15 \* var\(--to-rem-func\)\)/);
 });
+
+test('Footer brand copy and WordPress sitemap labels remain wrappable at narrow widths', () => {
+  for (const selector of ['.gf_brandStatement-en', '.gf_brandStatement-ja']) {
+    const start = css.indexOf(selector + ' {');
+    assert.ok(start >= 0, selector + ' must exist');
+    const rule = css.slice(start, css.indexOf('}', start));
+    assert.match(rule, /min-width:\\s*0;/);
+    assert.match(rule, /max-width:\\s*100%;/);
+    assert.match(rule, /overflow-wrap:\\s*anywhere;/);
+  }
+  const links = css.slice(css.indexOf('.gfl_link-02,'), css.indexOf('.gfl_button-02,'));
+  assert.match(links, /min-width:\\s*0;/);
+  assert.match(links, /overflow-wrap:\\s*anywhere;/);
+  assert.doesNotMatch(links, /white-space:\\s*nowrap/);
+});
