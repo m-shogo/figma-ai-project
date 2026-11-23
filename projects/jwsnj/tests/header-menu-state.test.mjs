@@ -120,7 +120,8 @@ test('Header and Footer WordPress disclosure buttons expose descriptive accessib
   const global = menu.split('class Custom_Global_Walker_Nav_Menu')[1].split('class Custom_Header_Sub_Walker_Nav_Menu')[0];
   const footer = menu.split('class Custom_Footer_Walker_Nav_Menu')[1].split('class Custom_')[0];
   for (const walker of [global, footer]) {
-    assert.match(walker, /type="button" aria-expanded="false" aria-label="/);
+    assert.match(walker, /type="button" aria-expanded="false" aria-controls="/);
+    assert.match(walker, /aria-label="/);
     assert.match(walker, /esc_attr\(\$title \. 'のサブメニューを開閉'\)/);
   }
   const disclosures = source.slice(source.indexOf('const globalNavItems ='), source.indexOf('const touchMegaMenuSupport ='));
@@ -289,4 +290,13 @@ test('reduced-motion backdrop override survives the open-state transition cascad
   assert.match(block, /@media \(prefers-reduced-motion: reduce\)/);
   assert.match(block, /body\._open-bg #overlay/);
   assert.match(block, /transition-duration: 0s/);
+});
+
+
+test('Header WordPress disclosure controls point to a unique direct submenu wrapper', () => {
+  const menu = readFileSync(new URL('../theme/inc/menu.php', import.meta.url), 'utf8');
+  const walker = menu.slice(menu.indexOf('class Custom_Global_Walker_Nav_Menu'), menu.indexOf('class Custom_Header_Sub_Walker_Nav_Menu'));
+  assert.match(walker, /\$submenu_id = 'gnl-submenu-' \. absint\(\$item->ID\)/);
+  assert.match(walker, /aria-controls="' \. esc_attr\(\$submenu_id\)/);
+  assert.match(walker, /<div id="' \. esc_attr\(\$submenu_id\)/);
 });

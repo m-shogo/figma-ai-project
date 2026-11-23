@@ -127,6 +127,7 @@ class Custom_Global_Walker_Nav_Menu extends Walker_Nav_Menu
         $inner_class = 'gnl_inner-' . $depth_number;
 
         if ($has_children) {
+            $submenu_id = 'gnl-submenu-' . absint($item->ID);
             // 子要素あり: li._hasChild + button + a + ラッパー開始（start_lvlで続く）
             $li_classes = trim(implode(' ', $item->classes)) . ' ' . $li_class . ' _hasChild';
             $output .= '<li class="' . esc_attr($li_classes) . '">';
@@ -135,9 +136,9 @@ class Custom_Global_Walker_Nav_Menu extends Walker_Nav_Menu
             $output .=       '<span>' . esc_html($title) . '</span>';
             // $output .=       '<span>' . esc_html($slug) . '</span>'; // スラッグを表示する場合はコメントアウトを解除
             $output .=     '</a>';
-            $output .=     '<button class="' . esc_attr($button_class) . '" type="button" aria-expanded="false" aria-label="' . esc_attr($title . 'のサブメニューを開閉') . '"><span>開閉</span></button>';
+            $output .=     '<button class="' . esc_attr($button_class) . '" type="button" aria-expanded="false" aria-controls="' . esc_attr($submenu_id) . '" aria-label="' . esc_attr($title . 'のサブメニューを開閉') . '"><span>開閉</span></button>';
             $output .=   '</div>';
-            $output .=     '<div class="' . esc_attr($wrapper_class) . '">';
+            $output .=     '<div id="' . esc_attr($submenu_id) . '" class="' . esc_attr($wrapper_class) . '">';
             $output .=       '<div class="' . esc_attr($inner_class) . '">';
         } else {
             $li_classes = trim(implode(' ', $item->classes)) . ' ' . $li_class . ' _noChild';
@@ -293,6 +294,7 @@ class Custom_Footer_Walker_Nav_Menu extends Walker_Nav_Menu
         $inner_class = 'gfl_inner-' . $depth_number;
 
         if ($has_children) {
+            $submenu_id = 'gfl-submenu-' . absint($item->ID);
             // 子要素あり: li._hasChild + button + a + ラッパー開始（start_lvlで続く）
             $li_classes = trim(implode(' ', $item->classes)) . ' ' . $li_class . ' _hasChild';
             $output .= '<li class="' . esc_attr($li_classes) . '">';
@@ -301,9 +303,9 @@ class Custom_Footer_Walker_Nav_Menu extends Walker_Nav_Menu
             $output .=       '<span>' . esc_html($title) . '</span>';
             // $output .=       '<span>' . esc_html($slug) . '</span>'; // スラッグを表示する場合はコメントアウトを解除
             $output .=     '</a>';
-            $output .=     '<button class="' . esc_attr($button_class) . '" type="button" aria-expanded="false" aria-label="' . esc_attr($title . 'のサブメニューを開閉') . '"><span>開閉</span></button>';
+            $output .=     '<button class="' . esc_attr($button_class) . '" type="button" aria-expanded="false" aria-controls="' . esc_attr($submenu_id) . '" aria-label="' . esc_attr($title . 'のサブメニューを開閉') . '"><span>開閉</span></button>';
             $output .=   '</div>';
-            $output .=     '<div class="' . esc_attr($wrapper_class) . '">';
+            $output .=     '<div id="' . esc_attr($submenu_id) . '" class="' . esc_attr($wrapper_class) . '">';
             $output .=       '<div class="' . esc_attr($inner_class) . '">';
         } else {
             $li_classes = trim(implode(' ', $item->classes)) . ' ' . $li_class . ' _noChild';
