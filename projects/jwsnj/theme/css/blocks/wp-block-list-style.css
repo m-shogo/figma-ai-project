@@ -71,24 +71,35 @@
             }
         }
     }
-    /* //---------- olのみ ---------- */
+    /* Numbered lists — Figma PC 344:947 / SP 442:2806.
+       Native ol remains semantic; CSS counters align 1- and 2-digit labels. */
     ol.wp-block-list:not(.annotation-list) {
         counter-reset: li;
-        gap: calc(20 * var(--to-rem-func));
+        gap: calc(15 * var(--to-rem-func));
         > li {
-            padding-left: calc(32 * var(--to-rem-func));
+            font-family: var(--font-jwsnj-ja);
+            font-weight: 400;
+            font-size: calc(15 * var(--to-rem-func));
+            line-height: 1.5;
+            letter-spacing: 0.08em;
+            padding-left: calc(34 * var(--to-rem-func));
+            overflow-wrap: anywhere;
+            word-break: normal;
             &::before {
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
                 counter-increment: li;
                 content: counter(li) '.';
-                color: var(--color-primary);
-                line-height: 1;
-                translate: 0 calc(6 * var(--to-rem-func));
-                letter-spacing: 0;
-                font-family: var(--font-sansSerif-en);
+                display: block;
+                width: calc(24 * var(--to-rem-func));
+                text-align: right;
+                left: 0;
+                top: 0;
+                color: var(--color-text);
+                font-family: var(--font-jwsnj-ja);
+                font-size: calc(16 * var(--to-rem-func));
                 font-weight: 500;
+                line-height: 1.5;
+                letter-spacing: 0.1em;
+                translate: none;
             }
         }
     }
