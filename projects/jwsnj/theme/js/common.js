@@ -729,10 +729,13 @@ window.addEventListener('resize', setVw);
   // ==========================================================================
   const pageTop = function () {
     const gf_pageTop = $('#js_gf_pageTop');
-    const windowWidth = $(window).width();
-    gf_pageTop.hide();
-    $(window).on('scroll', function () {
-      if ($(this).scrollTop() > 0) {
+    const $window = $(window);
+    // Restore the right visibility before the first scroll event (e.g. browser back navigation).
+    gf_pageTop.toggle($window.scrollTop() > 0);
+    $window.on('scroll', function () {
+      // Avoid queuing one animation per scroll event.
+      gf_pageTop.stop(true, true);
+      if ($window.scrollTop() > 0) {
         gf_pageTop.fadeIn();
       } else {
         gf_pageTop.fadeOut();
