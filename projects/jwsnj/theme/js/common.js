@@ -311,9 +311,16 @@ window.addEventListener('resize', setVw);
       // 指定したアンカー(#ID)へアニメーションでスクロール
       function scrollToAnker(hash) {
         const target = $(hash);
+        // A missing/deleted CMS anchor must not throw or move the viewport.
+        if (!target.length) return;
         const header = $('#global_header').innerHeight() + 30;
         const position = target.offset().top - header;
-        $('body,html').stop().animate({ scrollTop: position }, 300);
+        const scroller = $('body,html').stop();
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          scroller.scrollTop(position);
+        } else {
+          scroller.animate({ scrollTop: position }, 300);
+        }
       }
     });
   };
