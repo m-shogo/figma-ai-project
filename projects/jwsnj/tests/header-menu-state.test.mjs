@@ -125,11 +125,11 @@ test('Header and Footer WordPress disclosure buttons expose descriptive accessib
   }
   const disclosures = source.slice(source.indexOf('const globalNavItems ='), source.indexOf('const touchMegaMenuSupport ='));
   assert.equal(disclosures.split("itemButton.setAttribute('aria-expanded', String(item.getAttribute('data-open') === 'true'))").length - 1, 2);
-  // Two click paths plus the PC hover-leave state reconciliation.
+  // Header click, Footer click, and shared PC hover/focus state reconciliation.
   assert.equal(disclosures.split("itemButton.setAttribute('aria-expanded', String(isOpen))").length - 1, 3);
   assert.equal(disclosures.split("item.setAttribute('data-open', String(isOpen))").length - 1, 2);
-  assert.match(disclosures, /item\.addEventListener\('mouseenter'/);
-  assert.match(disclosures, /item\.addEventListener\('mouseleave'/);
+  assert.match(disclosures, /item\.addEventListener\('mouseenter', syncDesktopHoverState\)/);
+  assert.match(disclosures, /item\.addEventListener\('mouseleave', syncDesktopHoverState\)/);
   assert.match(source, /if \(disclosure\) disclosure\.setAttribute\('aria-expanded', 'true'\)/);
   assert.match(source, /if \(button\) button\.setAttribute\('aria-expanded', String\(el\.getAttribute\('data-open'\) === 'true'\)\)/);
 });
@@ -174,4 +174,14 @@ test('Header accordion buttons have visible focus without affecting text wrappin
   const block = navigationCss.slice(navigationCss.indexOf('.gnl_button-02,'), navigationCss.indexOf('.gnl_wrapper-02,'));
   assert.match(block, /&:focus-visible\s*\{\s*outline: 2px solid var\(--color-primary\)/);
   assert.doesNotMatch(block, /white-space:\s*nowrap/);
+});
+
+
+test('desktop Header disclosure state tracks mouse hover and keyboard focus-within', () => {
+  const header = source.slice(source.indexOf('const globalNavItems ='), source.indexOf('const footerNavItems ='));
+  assert.match(header, /item\.matches\(':hover'\)/);
+  assert.match(header, /item\.matches\(':focus-within'\)/);
+  assert.match(header, /item\.addEventListener\('focusin', syncDesktopHoverState\)/);
+  assert.match(header, /item\.addEventListener\('focusout'/);
+  assert.match(header, /queueMicrotask\(syncDesktopHoverState\)/);
 });

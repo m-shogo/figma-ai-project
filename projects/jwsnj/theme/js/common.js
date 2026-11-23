@@ -365,14 +365,18 @@ window.addEventListener('resize', setVw);
         });
         // The desktop top-level submenu also opens on hover via CSS.
         if (item.classList.contains('gnl_item-02')) {
-          item.addEventListener('mouseenter', () => {
-            if (window.innerWidth >= headerBreakpointMin) itemButton.setAttribute('aria-expanded', 'true');
-          });
-          item.addEventListener('mouseleave', () => {
-            if (window.innerWidth >= headerBreakpointMin) {
-              const isOpen = item.getAttribute('data-open') === 'true' || item.classList.contains('_touchOpen');
-              itemButton.setAttribute('aria-expanded', String(isOpen));
-            }
+          const syncDesktopHoverState = () => {
+            if (window.innerWidth < headerBreakpointMin) return;
+            const isOpen = item.matches(':hover') || item.matches(':focus-within') ||
+              item.getAttribute('data-open') === 'true' || item.classList.contains('_touchOpen');
+            itemButton.setAttribute('aria-expanded', String(isOpen));
+          };
+          item.addEventListener('mouseenter', syncDesktopHoverState);
+          item.addEventListener('mouseleave', syncDesktopHoverState);
+          item.addEventListener('focusin', syncDesktopHoverState);
+          item.addEventListener('focusout', () => {
+            // focusout fires before focus settles on the next item; defer only the state read.
+            queueMicrotask(syncDesktopHoverState);
           });
         }
     });
