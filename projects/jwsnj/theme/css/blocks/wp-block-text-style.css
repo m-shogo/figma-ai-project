@@ -38,11 +38,15 @@
         font-size: 1.5rem !important;
     }
     p:is(:not([class]), .wp-block-paragraph, .block-editor-rich-text__editable, .has-text-align-left, .has-text-align-right, .has-text-align-center) {
+        font-family: var(--font-jwsnj-ja);
         font-size: 1rem;
         font-weight: 400;
         letter-spacing: 0.05em;
-        line-height: 180%;
+        line-height: 1.6;
         color: var(--color-text);
+        overflow-wrap: anywhere;
+        word-break: normal;
+        line-break: strict;
         margin-top: var(--wp-block-margin);
         & + p:is(:not([class]), .has-text-align-left, .has-text-align-right, .has-text-align-center) {
             margin-top: var(--wp-block-margin);
