@@ -23,6 +23,7 @@ test('Figma caution mark is red and content maintains the approved line rhythm',
 
 test('annotation blocks keep 10px internal gap and 20px external clearance', () => {
   assert.match(annotation, /gap:\s*calc\(10 \* var\(--to-rem-func\)\)/);
+  assert.match(annotation, /margin-top:\s*calc\(20 \* var\(--to-rem-func\)\)/);
   assert.match(annotation, /margin-bottom:\s*calc\(20 \* var\(--to-rem-func\)\)/);
   assert.match(annotation, /padding-left:\s*calc\(31 \* var\(--to-rem-func\)\)/);
   assert.doesNotMatch(annotation, /figma\.com\/api\/mcp\/asset|white-space:\s*nowrap/);
