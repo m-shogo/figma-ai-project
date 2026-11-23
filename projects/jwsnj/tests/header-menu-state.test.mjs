@@ -202,3 +202,34 @@ test('Header mobile close and hamburger toggle retain backdrop ownership for sea
   assert.match(section, /\$body\.toggleClass\('_open-menu'\)/);
   assert.match(section, /if \(\$body\.hasClass\('_open-menu'\) \|\| \$body\.hasClass\('_open-search'\)\) \$body\.addClass\('_open-bg'\)/);
 });
+
+
+test('collapsed Header/Footer accordion links are inert only below their own desktop breakpoints', () => {
+  const match = source.match(/    const syncSubmenuFocusability = \(item, prefix, desktopMin\) => \{[\s\S]*?\n    \};/);
+  assert.ok(match, 'focusability helper must exist');
+  const win = { innerWidth: 375 };
+  const sync = new Function('window', match[0] + '\nreturn syncSubmenuFocusability;')(win);
+  const wrapper = { inert: false };
+  let state = null;
+  const item = {
+    querySelector: (selector) => { assert.match(selector, /_wrapper/); return wrapper; },
+    getAttribute: () => state,
+  };
+  sync(item, 'gnl', 1080);
+  assert.equal(wrapper.inert, true, 'closed Header SP menu must block invisible links');
+  state = 'true';
+  sync(item, 'gnl', 1080);
+  assert.equal(wrapper.inert, false, 'opened Header SP menu links stay usable');
+  state = null;
+  win.innerWidth = 1080;
+  sync(item, 'gnl', 1080);
+  assert.equal(wrapper.inert, false, 'Header PC flyout allows keyboard focus');
+  win.innerWidth = 767;
+  sync(item, 'gfl', 768);
+  assert.equal(wrapper.inert, true, 'Footer collapsed mobile links stay inert');
+  win.innerWidth = 768;
+  sync(item, 'gfl', 768);
+  assert.equal(wrapper.inert, false, 'Footer desktop sitemap links are always available');
+  assert.match(source, /globalNavItems\.forEach\(item => syncSubmenuFocusability/);
+  assert.match(source, /footerNavItems\.forEach\(item => syncSubmenuFocusability/);
+});
