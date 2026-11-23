@@ -29,3 +29,10 @@ test('individual image captions reuse established Zen typography and 20px captio
   assert.match(image,/color:\s*var\(--color-text\)/);
   assert.doesNotMatch(image,/figma\.com\/api\/mcp\/asset/);
 });
+
+test('three-column gallery variant pairs two tiles on SP and uses three tiles on PC',()=>{
+  assert.match(gallery,/&\.columns-3\s*\{\s*grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\);\s*column-gap:\s*calc\(15 \* var\(--to-rem-func\)\)/);
+  assert.match(gallery,/@media \(calc\(768 \* \(1 \/ 16 \* 1rem\)\) <= width\)/);
+  assert.match(gallery,/&\.columns-3\s*\{\s*grid-template-columns:\s*repeat\(3,\s*minmax\(0,\s*1fr\)\)/);
+  assert.match(gallery,/grid-template-columns:\s*minmax\(0,\s*1fr\)/);
+});
