@@ -572,15 +572,11 @@ window.addEventListener('resize', setVw);
 
     // 検索
     $('#search').on('click', function () {
-      if ($body.hasClass('_open-bg')) {
-        $body.addClass('_open-search');
-      } else {
-        if ($body.hasClass('_open-search')) {
-          $body.removeClass('_open-search').removeClass('_open-bg');
-        } else {
-          $body.addClass('_open-search').addClass('_open-bg');
-        }
-      }
+      const isOpen = !$body.hasClass('_open-search');
+      $body.toggleClass('_open-search', isOpen);
+      // Backdrop ownership is shared with the mobile menu and PC touch flyouts.
+      const touchOpen = document.querySelector('.global_navigation [class*="gnl_item"]._touchOpen');
+      $body.toggleClass('_open-bg', isOpen || $body.hasClass('_open-menu') || !!touchOpen);
     });
 
     $('#gns_close, #overlay').on('click', function () {
