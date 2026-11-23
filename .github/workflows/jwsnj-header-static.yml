@@ -32,6 +32,8 @@ on:
       - 'projects/jwsnj/tests/parts-text-link-contract.test.mjs'
       - 'projects/jwsnj/theme/css/blocks/wp-block-table-style.css'
       - 'projects/jwsnj/tests/parts-table-contract.test.mjs'
+      - 'projects/jwsnj/theme/css/blocks/wp-block-details-style.css'
+      - 'projects/jwsnj/tests/parts-accordion-contract.test.mjs'
       - '.github/workflows/jwsnj-header-static.yml'
   push:
     branches: [so]
@@ -64,6 +66,8 @@ on:
       - 'projects/jwsnj/tests/parts-text-link-contract.test.mjs'
       - 'projects/jwsnj/theme/css/blocks/wp-block-table-style.css'
       - 'projects/jwsnj/tests/parts-table-contract.test.mjs'
+      - 'projects/jwsnj/theme/css/blocks/wp-block-details-style.css'
+      - 'projects/jwsnj/tests/parts-accordion-contract.test.mjs'
       - '.github/workflows/jwsnj-header-static.yml'
   workflow_dispatch:
 
