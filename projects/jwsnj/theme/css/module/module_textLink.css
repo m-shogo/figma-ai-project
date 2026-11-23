@@ -3,9 +3,11 @@
 // テキストリンク
 // ========================================================================== */
 .module_textLink {
-    color: var(--color-link);
-    text-decoration-line: underline;
-    text-decoration-color: color-mix(in oklch, var(--color-link) 100%, transparent);
+    color: var(--color-accent);
+    overflow-wrap: anywhere;
+    word-break: normal;
+    text-decoration-line: none;
+    text-decoration-color: currentColor;
     text-decoration-thickness: calc(1 * var(--to-rem-func));
     text-underline-offset: calc(2 * var(--to-rem-func));
     text-decoration-skip-ink: none;
@@ -43,10 +45,15 @@
             margin-left: 0.25em;
         }
     }
+    &:focus-visible {
+        text-decoration-line: underline;
+        outline: calc(2 * var(--to-rem-func)) solid var(--color-accent);
+        outline-offset: calc(2 * var(--to-rem-func));
+    }
     /* MARK: hover */
     @media (any-hover: hover) {
         &:hover {
-            text-decoration-color: color-mix(in oklch, var(--color-link) 0%, transparent 100%);
+            text-decoration-line: underline;
         }
     }
 }
