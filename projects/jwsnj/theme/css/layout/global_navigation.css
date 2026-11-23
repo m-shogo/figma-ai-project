@@ -689,7 +689,8 @@ body._open-menu {
     .global_navigation {
         clip-path: inset(0 0 0% 0);
     }
-    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+    /* Menu overlay must not override the desktop layout boundary at 768–1079px. */
+    @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
         .global_navigation {
             clip-path: unset;
         }
