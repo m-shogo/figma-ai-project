@@ -87,3 +87,11 @@ test('Footer accordion buttons have visible focus without affecting layout', () 
   assert.match(block, /&:focus-visible\s*\{\s*outline: 2px solid var\(--color-primary\)/);
   assert.doesNotMatch(block, /white-space:\s*nowrap/);
 });
+
+
+test('Footer accordion transitions respect reduced-motion preference', () => {
+  const block = css.slice(css.indexOf('/* Accessibility: do not animate accordion'), css.indexOf('/* MARK: hover */'));
+  assert.match(block, /@media \(prefers-reduced-motion: reduce\)/);
+  assert.match(block, /\.gfl_wrapper-02/);
+  assert.match(block, /transition-duration: 0s/);
+});
