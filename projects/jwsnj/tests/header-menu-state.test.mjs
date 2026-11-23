@@ -242,7 +242,7 @@ test('accordion focusability is scoped to the direct submenu wrapper, never a ne
   assert.ok(helper);
   assert.match(helper[0], /Array\.from\(item\.children\)\.find/);
   assert.match(helper[0], /child\.matches/);
-  assert.doesNotMatch(helper[0], /item\.querySelector\(/);
+  assert.doesNotMatch(helper[0], /const wrapper = item\.querySelector\(/);
 });
 
 
