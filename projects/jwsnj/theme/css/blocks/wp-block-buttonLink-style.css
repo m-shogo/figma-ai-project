@@ -133,7 +133,7 @@
                 overflow-wrap: anywhere;
                 word-break: normal;
                 &::before {
-                    content: '\\f061';
+                    content: '\f061';
                     display: inline-flex;
                     align-items: center;
                     justify-content: center;
