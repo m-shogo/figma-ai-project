@@ -125,7 +125,8 @@ test('Header and Footer WordPress disclosure buttons expose descriptive accessib
   }
   const disclosures = source.slice(source.indexOf('const globalNavItems ='), source.indexOf('const touchMegaMenuSupport ='));
   assert.equal(disclosures.split("itemButton.setAttribute('aria-expanded', String(item.getAttribute('data-open') === 'true'))").length - 1, 2);
-  assert.equal(disclosures.split("itemButton.setAttribute('aria-expanded', String(isOpen))").length - 1, 2);
+  // Two click paths plus the PC hover-leave state reconciliation.
+  assert.equal(disclosures.split("itemButton.setAttribute('aria-expanded', String(isOpen))").length - 1, 3);
   assert.equal(disclosures.split("item.setAttribute('data-open', String(isOpen))").length - 1, 2);
   assert.match(disclosures, /item\.addEventListener\('mouseenter'/);
   assert.match(disclosures, /item\.addEventListener\('mouseleave'/);
