@@ -168,3 +168,10 @@ test('PC touch mega-menu cleanup preserves backdrop while mobile navigation or s
   assert.match(closeBlock, /if \(!\$body\.hasClass\('_open-search'\) && !\$body\.hasClass\('_open-menu'\)\) \$body\.removeClass\('_open-bg'\)/);
   assert.match(source, /\$\('#gns_close, #overlay'\)\.on\('click'/);
 });
+
+
+test('Header accordion buttons have visible focus without affecting text wrapping', () => {
+  const block = navigationCss.slice(navigationCss.indexOf('.gnl_button-02,'), navigationCss.indexOf('.gnl_wrapper-02,'));
+  assert.match(block, /&:focus-visible\s*\{\s*outline: 2px solid var\(--color-primary\)/);
+  assert.doesNotMatch(block, /white-space:\s*nowrap/);
+});
