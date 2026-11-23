@@ -649,20 +649,17 @@
             }
         }
     }
-    /* タブレット端末でも反応させたいのでany-hoverから外す */
-    .gn_links-01 {
-        .gnl_item-02 {
-            &._hasChild {
-                &:hover,
-                &:focus-within {
-                    .gnl_wrapper-02 {
-                        clip-path: inset(calc(-30 * var(--to-rem-func)) 0 0% 0);
-                    }
-                }
-                /* タッチで開いたメニュー（touchstartで付与した _touchOpen 用） */
-                &._touchOpen {
-                    .gnl_wrapper-02 {
-                        clip-path: inset(calc(-30 * var(--to-rem-func)) 0 0% 0);
+    /* Desktop mega-menu states: avoid applying its fixed flyout to the SP accordion. */
+    @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+        .gn_links-01 {
+            .gnl_item-02 {
+                &._hasChild {
+                    &:hover,
+                    &:focus-within,
+                    &._touchOpen {
+                        .gnl_wrapper-02 {
+                            clip-path: inset(calc(-30 * var(--to-rem-func)) 0 0% 0);
+                        }
                     }
                 }
             }
