@@ -113,3 +113,18 @@ test('mobile disclosure keeps accessibility state, focus restoration, and deskto
   assert.match(source, /event\.key === 'Escape' && \$body\.hasClass\('_open-menu'\)/);
   assert.match(source, /closeMobileMenu\(true\)/);
 });
+
+
+test('Header and Footer WordPress disclosure buttons expose descriptive accessibility state', () => {
+  const menu = readFileSync(new URL('../theme/inc/menu.php', import.meta.url), 'utf8');
+  const global = menu.split('class Custom_Global_Walker_Nav_Menu')[1].split('class Custom_Header_Sub_Walker_Nav_Menu')[0];
+  const footer = menu.split('class Custom_Footer_Walker_Nav_Menu')[1].split('class Custom_')[0];
+  for (const walker of [global, footer]) {
+    assert.match(walker, /type="button" aria-expanded="false" aria-label="/);
+    assert.match(walker, /esc_attr\(\$title \. 'のサブメニューを開閉'\)/);
+  }
+  const disclosures = source.slice(source.indexOf('const globalNavItems ='), source.indexOf('const touchMegaMenuSupport ='));
+  assert.equal(disclosures.split("itemButton.setAttribute('aria-expanded', String(item.getAttribute('data-open') === 'true'))").length - 1, 2);
+  assert.equal(disclosures.split("itemButton.setAttribute('aria-expanded', String(isOpen))").length - 1, 2);
+  assert.equal(disclosures.split("item.setAttribute('data-open', String(isOpen))").length - 1, 2);
+});
