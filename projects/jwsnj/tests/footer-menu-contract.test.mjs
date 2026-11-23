@@ -139,12 +139,12 @@ test('Footer brand copy and WordPress sitemap labels remain wrappable at narrow 
     const start = css.indexOf(selector + ' {');
     assert.ok(start >= 0, selector + ' must exist');
     const rule = css.slice(start, css.indexOf('}', start));
-    assert.match(rule, /min-width:\\s*0;/);
-    assert.match(rule, /max-width:\\s*100%;/);
-    assert.match(rule, /overflow-wrap:\\s*anywhere;/);
+    assert.match(rule, /min-width:\s*0;/);
+    assert.match(rule, /max-width:\s*100%;/);
+    assert.match(rule, /overflow-wrap:\s*anywhere;/);
   }
   const links = css.slice(css.indexOf('.gfl_link-02,'), css.indexOf('.gfl_button-02,'));
-  assert.match(links, /min-width:\\s*0;/);
-  assert.match(links, /overflow-wrap:\\s*anywhere;/);
-  assert.doesNotMatch(links, /white-space:\\s*nowrap/);
+  assert.match(links, /min-width:\s*0;/);
+  assert.match(links, /overflow-wrap:\s*anywhere;/);
+  assert.doesNotMatch(links, /white-space:\s*nowrap/);
 });
