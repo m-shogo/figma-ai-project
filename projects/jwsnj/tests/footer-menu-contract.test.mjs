@@ -108,3 +108,11 @@ test('common anchor navigation tolerates missing CMS anchors and reduced motion'
   assert.match(section, /if \(!offset \|\| !Number\.isFinite\(offset\.top\)\) return;/);
   assert.match(section, /scroller\.animate\(\{ scrollTop: position \}, 300\)/);
 });
+
+
+test('Footer WordPress disclosure controls point to a unique direct submenu wrapper', () => {
+  const walker = menu.slice(menu.indexOf('class Custom_Footer_Walker_Nav_Menu'), menu.indexOf('class Custom_Footer_Sub_Walker_Nav_Menu'));
+  assert.match(walker, /\$submenu_id = 'gfl-submenu-' \. absint\(\$item->ID\)/);
+  assert.match(walker, /aria-controls="' \. esc_attr\(\$submenu_id\)/);
+  assert.match(walker, /<div id="' \. esc_attr\(\$submenu_id\)/);
+});
