@@ -1,14 +1,16 @@
 @charset "utf-8";
 /* // ------------------------------
-// 区切り線
-// ------------------------------ */
+// 区切り線 — Figma parts PC 344:1134 / SP 442:2940
+// Approved green hairline; blossom SVG remains a separate verified asset.
+ // ------------------------------ */
 .block-editor_wrap,
 .editor-styles-wrapper {
     .wp-block-separator {
         margin-top: var(--wp-block-margin-large);
         margin-bottom: var(--wp-block-margin-large);
-        border-width: calc(1 * var(--to-rem-func)) 0 0 0;
-        border-style: dashed;
-        border-color: var(--color-separator);
+        border: 0;
+        border-top: calc(1 * var(--to-rem-func)) solid color-mix(in srgb, var(--color-primary) 50%, transparent);
+        width: 100%;
+        max-width: 100%;
     }
 }
