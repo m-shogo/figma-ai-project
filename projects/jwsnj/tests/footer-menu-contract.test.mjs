@@ -80,3 +80,10 @@ test('footer page-top initializes visibility on restored scroll and avoids anima
   top.restoreTo(420);
   assert.deepEqual(top.calls.at(-1), ['toggle', true]);
 });
+
+
+test('Footer accordion buttons have visible focus without affecting layout', () => {
+  const block = css.slice(css.indexOf('.gfl_button-02,'), css.indexOf('.gfl_wrapper-02,'));
+  assert.match(block, /&:focus-visible\s*\{\s*outline: 2px solid var\(--color-primary\)/);
+  assert.doesNotMatch(block, /white-space:\s*nowrap/);
+});

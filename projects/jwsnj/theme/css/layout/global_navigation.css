@@ -110,6 +110,10 @@
             background-color: transparent;
             pointer-events: all;
             touch-action: manipulation;
+            &:focus-visible {
+                outline: 2px solid var(--color-primary);
+                outline-offset: -3px;
+            }
             &::before,
             &::after {
                 content: '';
