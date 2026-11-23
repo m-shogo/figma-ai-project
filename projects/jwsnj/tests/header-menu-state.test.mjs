@@ -135,8 +135,12 @@ test('Header and Footer WordPress disclosure buttons expose descriptive accessib
 });
 
 
-test('desktop mega-menu remains visible while keyboard focus is within a top-level nav item', () => {
-  assert.match(navigationCss, /&:hover,\s*&:focus-within\s*\{\s*\.gnl_wrapper-02\s*\{/);
+test('desktop mega-menu hover, focus and touch states do not leak into SP accordion', () => {
+  const desktopFlyout = navigationCss.slice(navigationCss.indexOf('/* Desktop mega-menu states:'), navigationCss.indexOf('#overlay {'));
+  assert.match(desktopFlyout, /@media \(calc\(1080 \* \(1 \/ 16 \* 1rem\)\) <= width\)/);
+  assert.match(desktopFlyout, /&:hover,\s*&:focus-within,\s*&\._touchOpen\s*\{/);
+  assert.match(desktopFlyout, /\.gnl_wrapper-02\s*\{\s*clip-path: inset/);
+  assert.doesNotMatch(navigationCss.slice(0, navigationCss.indexOf('/* Desktop mega-menu states:')), /&:focus-within\s*\{\s*\.gnl_wrapper-02/);
 });
 
 
