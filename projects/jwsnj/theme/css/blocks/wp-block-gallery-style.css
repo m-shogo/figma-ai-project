@@ -36,9 +36,9 @@
                     background: none;
                     text-align: center;
                     font-family: var(--font-jwsnj-ja);
-                    font-size: calc(14 * var(--to-rem-func));
+                    font-size: calc(12 * var(--to-rem-func));
+                    line-height: 1.6;
                     font-weight: 500;
-                    line-height: 1.5;
                     letter-spacing: 0.05em;
                     color: var(--color-text);
                     overflow-wrap: anywhere;
@@ -51,6 +51,10 @@
         }
 
         @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+            &.has-nested-images figure.wp-block-image figcaption {
+                font-size: calc(14 * var(--to-rem-func));
+                line-height: 1.5;
+            }
             grid-template-columns: repeat(2, minmax(0, 1fr));
             &.columns-3 {
                 grid-template-columns: repeat(3, minmax(0, 1fr));

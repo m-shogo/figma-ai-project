@@ -13,7 +13,9 @@ test('gallery uses responsive one/two/three columns, natural captions and 3:2 cr
   assert.match(gallery,/aspect-ratio:\s*3\s*\/\s*2/);
   assert.match(gallery,/object-fit:\s*cover/);
   assert.match(gallery,/gap:\s*calc\(20 \* var\(--to-rem-func\)\)/);
-  assert.match(gallery,/font-size:\s*calc\(14 \* var\(--to-rem-func\)\)/);
+  assert.match(gallery,/font-size:\s*calc\(12 \* var\(--to-rem-func\)\)/);
+  assert.match(gallery,/line-height:\s*1\.6/);
+  assert.match(gallery,/@media \(calc\(768 \* \(1 \/ 16 \* 1rem\)\) <= width\)\s*\{\s*&\.has-nested-images figure\.wp-block-image figcaption\s*\{\s*font-size:\s*calc\(14 \* var\(--to-rem-func\)\)/);
   assert.match(gallery,/line-height:\s*1\.5/);
   assert.match(gallery,/overflow-wrap:\s*anywhere/);
   assert.doesNotMatch(gallery,/white-space:\s*nowrap|figma\.com\/api\/mcp\/asset/);
