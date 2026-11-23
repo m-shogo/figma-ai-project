@@ -300,3 +300,12 @@ test('Header WordPress disclosure controls point to a unique direct submenu wrap
   assert.match(walker, /aria-controls="' \. esc_attr\(\$submenu_id\)/);
   assert.match(walker, /<div id="' \. esc_attr\(\$submenu_id\)/);
 });
+
+
+test('Header chrome respects reduced-motion preference at hamburger and desktop widths', () => {
+  const block = headerCss.slice(headerCss.indexOf('/* Header height and hamburger icon'), headerCss.indexOf('/* MARK: hover */'));
+  assert.match(block, /@media \(prefers-reduced-motion: reduce\)/);
+  assert.match(block, /\.gh_menu \.icon::before/);
+  assert.match(block, /\.gh_menu \.icon::after/);
+  assert.match(block, /transition-duration: 0s/);
+});
