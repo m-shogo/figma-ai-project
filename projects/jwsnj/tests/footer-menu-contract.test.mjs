@@ -7,6 +7,7 @@ import { readFileSync } from 'node:fs';
 const footer = readFileSync(new URL('../theme/template-parts/_footer.php', import.meta.url), 'utf8');
 const menu = readFileSync(new URL('../theme/inc/menu.php', import.meta.url), 'utf8');
 const css = readFileSync(new URL('../theme/css/layout/global_footer.css', import.meta.url), 'utf8');
+const source = readFileSync(new URL('../theme/js/common.js', import.meta.url), 'utf8');
 
 test('footer has one accessible sitemap landmark using footer-nav', () => {
   assert.equal((footer.match(/wp_nav_menu\s*\(/g) || []).length, 1);
@@ -40,4 +41,35 @@ test('footer page-top link retains a readable name and visible keyboard focus', 
   assert.match(pageTop, /&:focus-visible\s*\{/);
   assert.match(pageTop, /outline:\s*2px solid var\(--color-text\)/);
   assert.match(pageTop, /span\s*\{\s*display:\s*none;/);
+});
+
+
+test('footer page-top initializes visibility on restored scroll and avoids animation queues', () => {
+  const match = source.match(/  const pageTop = function \(\) \{[\s\S]*?\n  \};/);
+  assert.ok(match, 'pageTop implementation must exist');
+  const simulate = (initialScrollY) => {
+    const win = {};
+    let currentScrollY = initialScrollY;
+    let onScroll;
+    const calls = [];
+    const control = {
+      toggle(value) { calls.push(['toggle', value]); return this; },
+      stop(clearQueue, jumpToEnd) { calls.push(['stop', clearQueue, jumpToEnd]); return this; },
+      fadeIn() { calls.push(['fadeIn']); return this; },
+      fadeOut() { calls.push(['fadeOut']); return this; },
+    };
+    const $ = (selector) => selector === win
+      ? { scrollTop: () => currentScrollY, on(name, callback) { assert.equal(name, 'scroll'); onScroll = callback; } }
+      : control;
+    new Function('$', 'window', match[0] + '\npageTop();')($, win);
+    return { calls, scrollTo(y) { currentScrollY = y; onScroll(); } };
+  };
+  const top = simulate(0);
+  assert.deepEqual(top.calls, [['toggle', false]]);
+  top.scrollTo(100);
+  assert.deepEqual(top.calls.slice(-2), [['stop', true, true], ['fadeIn']]);
+  top.scrollTo(0);
+  assert.deepEqual(top.calls.slice(-2), [['stop', true, true], ['fadeOut']]);
+  const restored = simulate(420);
+  assert.deepEqual(restored.calls, [['toggle', true]]);
 });
