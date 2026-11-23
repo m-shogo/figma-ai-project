@@ -26,6 +26,10 @@
         }
         /* Figma SP img+caption: 442:2787 / PC: 344:927.
            Scope captions to media-text; leave standalone images and galleries intact. */
+        .wp-block-media-text__media {
+            width: 100%;
+            min-width: 0;
+        }
         .wp-block-media-text__media .wp-element-caption,
         .wp-block-media-text__media figcaption {
             margin-top: calc(20 * var(--to-rem-func));
@@ -48,6 +52,12 @@
             }
         }
         .wp-block-media-text__content {
+            font-family: var(--font-jwsnj-ja);
+            font-size: calc(16 * var(--to-rem-func));
+            font-weight: 400;
+            line-height: 1.6;
+            letter-spacing: 0.05em;
+            color: var(--color-text);
             padding: 0;
             min-width: 0;
             overflow-wrap: anywhere;

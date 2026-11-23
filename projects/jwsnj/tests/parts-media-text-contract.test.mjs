@@ -30,3 +30,13 @@ test('media-text figure caption matches Figma 12px SP and 14px PC', () => {
   assert.match(css, /font-weight:\s*500/);
   assert.match(css, /margin-top:\s*calc\(20 \* var\(--to-rem-func\)\)/);
 });
+
+test('media text body follows 16px regular Zen Kaku typography on both viewports',()=>{
+  assert.match(css,/\.wp-block-media-text__content\s*\{\s*font-family:\s*var\(--font-jwsnj-ja\)/);
+  assert.match(css,/font-size:\s*calc\(16 \* var\(--to-rem-func\)\)/);
+  assert.match(css,/font-weight:\s*400/);
+  assert.match(css,/line-height:\s*1\.6/);
+  assert.match(css,/letter-spacing:\s*0\.05em/);
+  assert.match(css,/color:\s*var\(--color-text\)/);
+  assert.match(css,/\.wp-block-media-text__media\s*\{\s*width:\s*100%;\s*min-width:\s*0/);
+});
