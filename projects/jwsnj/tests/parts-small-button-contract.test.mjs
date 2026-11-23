@@ -25,3 +25,11 @@ test('small icons distinguish file kinds and preserve focus handling in shared l
   assert.match(css,/&:focus-visible/);
   assert.doesNotMatch(small,/white-space:\s*nowrap|figma\.com\/api\/mcp\/asset/);
 });
+
+test('small button hover retains dark label on transparent background after generic hover rules',()=>{
+  const hover=css.slice(css.indexOf('    /* ホバー時のスタイル */'));
+  assert.match(hover,/\.wp-block-buttons\.small \.wp-block-button/);
+  assert.match(hover,/\.wp-block-button__link:hover\s*\{\s*background:\s*none;\s*color:\s*var\(--color-text\)/);
+  assert.match(hover,/&\.is-style-outline \.wp-block-button__link:hover\s*\{\s*background:\s*none;\s*color:\s*var\(--color-text\)/);
+  assert.ok(hover.lastIndexOf('.wp-block-buttons.small')>hover.indexOf('&:has(.wp-block-button__link:hover)'), 'specific small hover rule follows generic hover rule');
+});
