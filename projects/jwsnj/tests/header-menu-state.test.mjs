@@ -108,7 +108,8 @@ test('mobile disclosure keeps accessibility state, focus restoration, and deskto
   assert.match(header, /id="overlay"[^>]*aria-hidden="true"/);
   assert.match(source, /\$menuButton\.attr\('aria-expanded', String\(isOpen\)\)/);
   assert.match(source, /\$menuButton\.attr\('aria-label', isOpen \? 'メニューを閉じる' : 'メニューを開く'\)/);
-  assert.match(source, /\$globalNavigation\.attr\('inert', !isOpen && window\.innerWidth < headerBreakpointMin \? '' : null\)/);
+  assert.match(source, /const hiddenForMobile = !isOpen && window\.innerWidth < headerBreakpointMin/);
+  assert.match(source, /\$globalNavigation\.attr\('inert', hiddenForMobile \? '' : null\)/);
   assert.match(source, /if \(restoreFocus && wasOpen\) \$menuButton\.trigger\('focus'\)/);
   assert.match(source, /event\.key === 'Escape' && \$body\.hasClass\('_open-menu'\)/);
   assert.match(source, /closeMobileMenu\(true\)/);
@@ -308,4 +309,32 @@ test('Header chrome respects reduced-motion preference at hamburger and desktop 
   assert.match(block, /\.gh_menu \.icon::before/);
   assert.match(block, /\.gh_menu \.icon::after/);
   assert.match(block, /transition-duration: 0s/);
+});
+
+
+test('Header navigation focus exits before inert is applied on mobile close or resize', () => {
+  const match = source.match(/    const syncMobileMenu = \(\) => \{[\s\S]*?\n    \};/);
+  assert.ok(match);
+  const win = { innerWidth: 1080 };
+  const focusedLink = {};
+  const doc = { activeElement: focusedLink, getElementById: () => ({ contains: node => node === focusedLink }) };
+  const classes = new Set();
+  const attrs = [];
+  const menuButton = { attr(name, value) { attrs.push(['menu', name, value]); }, trigger(name) { attrs.push(['focus', name]); doc.activeElement = this; } };
+  const navigation = { attr(name, value) { attrs.push(['navigation', name, value]); } };
+  const body = { hasClass: name => classes.has(name) };
+  const sync = new Function('$body', '$menuButton', '$globalNavigation', 'window', 'document', 'headerBreakpointMin', match[0] + '\nreturn syncMobileMenu;')(body, menuButton, navigation, win, doc, 1080);
+  sync();
+  assert.equal(attrs.some(x => x[0] === 'focus'), false, 'desktop nav remains focusable');
+  attrs.length = 0;
+  win.innerWidth = 1079;
+  sync();
+  const focusIndex = attrs.findIndex(x => x[0] === 'focus');
+  const inertIndex = attrs.findIndex(x => x[0] === 'navigation' && x[1] === 'inert');
+  assert.ok(focusIndex >= 0 && inertIndex > focusIndex, 'move focus before applying inert');
+  assert.equal(attrs[inertIndex][2], '');
+  attrs.length = 0;
+  classes.add('_open-menu');
+  sync();
+  assert.deepEqual(attrs.at(-1), ['navigation', 'inert', null], 'open SP menu must not be inert');
 });
