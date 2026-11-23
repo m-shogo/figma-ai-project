@@ -780,17 +780,26 @@ window.addEventListener('resize', setVw);
   const pageTop = function () {
     const gf_pageTop = $('#js_gf_pageTop');
     const $window = $(window);
+    let visible = false;
     // Restore visibility immediately and after back/forward-cache page restoration.
-    const syncPageTop = () => gf_pageTop.toggle($window.scrollTop() > 0);
+    const syncPageTop = () => {
+      visible = $window.scrollTop() > 0;
+      gf_pageTop.stop(true, true).toggle(visible);
+    };
     syncPageTop();
     $window.on('pageshow', syncPageTop);
     $window.on('scroll', function () {
-      // Avoid queuing one animation per scroll event.
-      gf_pageTop.stop(true, true);
-      if ($window.scrollTop() > 0) {
-        gf_pageTop.fadeIn();
+      const nextVisible = $window.scrollTop() > 0;
+      // Only animate visibility changes, not every high-frequency scroll event.
+      if (nextVisible === visible) return;
+      visible = nextVisible;
+      const element = gf_pageTop.stop(true, true);
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        element.toggle(visible);
+      } else if (visible) {
+        element.fadeIn();
       } else {
-        gf_pageTop.fadeOut();
+        element.fadeOut();
       }
     });
   };
