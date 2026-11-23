@@ -42,6 +42,8 @@ on:
       - 'projects/jwsnj/tests/parts-small-button-contract.test.mjs'
       - 'projects/jwsnj/theme/css/module/module_zoom-button.css'
       - 'projects/jwsnj/tests/parts-zoom-control-contract.test.mjs'
+      - 'projects/jwsnj/theme/css/module/module_textLink.css'
+      - 'projects/jwsnj/tests/parts-module-textlink-contract.test.mjs'
       - '.github/workflows/jwsnj-header-static.yml'
   push:
     branches: [so]
@@ -84,6 +86,8 @@ on:
       - 'projects/jwsnj/tests/parts-small-button-contract.test.mjs'
       - 'projects/jwsnj/theme/css/module/module_zoom-button.css'
       - 'projects/jwsnj/tests/parts-zoom-control-contract.test.mjs'
+      - 'projects/jwsnj/theme/css/module/module_textLink.css'
+      - 'projects/jwsnj/tests/parts-module-textlink-contract.test.mjs'
       - '.github/workflows/jwsnj-header-static.yml'
   workflow_dispatch:
 
