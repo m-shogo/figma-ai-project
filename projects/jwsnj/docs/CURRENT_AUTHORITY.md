@@ -68,3 +68,12 @@ TOP の主なパーツ（PC）:
 - 2026-11-20 `white-space: nowrap` はjwsnj実装では禁止。テキストは2〜3行への自然な折り返しを優先。文字拡大150〜200%の専用テストは不要（PC/SP/中間幅と長文は確認）
 - 2026-11-20 URL等の未決事項は後日Human指示。勝手にslugや新しい投稿タイプを創作しない。影響しないところから先に進める
 - 2026-11-20 **ローカルWordPressとブラウザの実機検証は現在利用できない（Human明示）**。`docs/DEFERRED_RUNTIME_QA.md` に `DEFERRED_ENV` として全件登録し、利用可能になった初回の作業でP0から優先実施。**現段階ではそれを理由にFigma/GitHubで進められるコード・静的QA・CI・PRを止めない**。環境が使えるまで毎時ローカル起動を繰り返さない
+
+## 2026-11-23 Human-approved implementation unblocking (supersedes SVG-only hard stop)
+
+- Human explicitly authorized proceeding with implementation while official Header/Footer SVGs are unavailable, using **development-only, clearly labeled, replaceable placeholders** where needed. This is **not** approval to invent production imagery, URLs, phone numbers, SNS, slugs, ACF or CPT values.
+- Official SVG/logo export remains a separately tracked deliverable in Issue #524. Preserve source node, exact binary bytes, dimensions, SHA-256, rights, callsite and CI evidence before declaring final visual parity. Never commit temporary Figma asset URLs or overwrite Foundation-owned files concurrently.
+- WordPress/browser/keyboard runtime QA remains **DEFERRED_RUNTIME_QA** in Issue #523. Static/CI checks do not imply runtime PASS. The Human permits independent source implementation to continue despite that deferral.
+- Header/Footer source functionality, responsive/keyboard static checks, WordPress ownership and relevant CI must still be reviewed; any serious defect blocks dependent work. **Missing SVG bytes or deferred runtime QA alone must not halt unrelated, verifiable work.**
+- The Human explicitly authorized moving toward the **parts catalog** after source-level Header/Footer quality review and phase transition documentation. This is a narrow exception to the older all-PASS phase gate, **not** permission to bypass unresolved functional or CMS blockers, or to start TOP/course/detail pages. Before implementing parts, read Figma parts PC `339:23` / SP `433:2015`, inspect Theme components and 10-point preflight, then make small CI-reviewed PRs. Track provisional vs final acceptance separately.
+- If a scheduled prompt still says that every phase gate must PASS before any parts work, reconcile that stale launcher with this newer Human decision; do not silently claim full Header/Footer acceptance.
