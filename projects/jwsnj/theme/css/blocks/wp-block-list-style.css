@@ -95,7 +95,11 @@
     /* //---------- 注釈リスト ---------- */
     ul.annotation-list {
         gap: calc(10 * var(--to-rem-func));
+        margin-bottom: calc(20 * var(--to-rem-func));
         li {
+            font-family: var(--font-jwsnj-ja);
+            overflow-wrap: anywhere;
+            padding-left: calc(31 * var(--to-rem-func));
             font-size: calc(14 * var(--to-rem-func));
             font-weight: 500;
             line-height: 1.5;
@@ -104,7 +108,9 @@
                 content: '※';
                 font-size: calc(16 * var(--to-rem-func));
                 transform: translateY(-0.1em);
-                color: var(--color-primary);
+                color: #d50b0b;
+                line-height: 1.75;
+                letter-spacing: 0.1em;
             }
             ul.wp-block-list,
             ol.wp-block-list {
@@ -112,6 +118,8 @@
                 gap: calc(10 * var(--to-rem-func));
                 li {
                     font-size: calc(14 * var(--to-rem-func));
+                    font-family: var(--font-jwsnj-ja);
+                    overflow-wrap: anywhere;
                     font-weight: 500;
                     line-height: 1.5;
                     letter-spacing: 0.05em;
@@ -120,7 +128,7 @@
                         content: '※';
                         font-size: calc(16 * var(--to-rem-func));
                         transform: translateY(-0.1em);
-                        color: var(--color-primary);
+                        color: #d50b0b;
                         width: auto;
                         height: auto;
                         background: transparent;
