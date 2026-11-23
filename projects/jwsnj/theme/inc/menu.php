@@ -135,7 +135,7 @@ class Custom_Global_Walker_Nav_Menu extends Walker_Nav_Menu
             $output .=       '<span>' . esc_html($title) . '</span>';
             // $output .=       '<span>' . esc_html($slug) . '</span>'; // スラッグを表示する場合はコメントアウトを解除
             $output .=     '</a>';
-            $output .=     '<button class="' . esc_attr($button_class) . '" type="button"><span>開閉</span></button>';
+            $output .=     '<button class="' . esc_attr($button_class) . '" type="button" aria-expanded="false" aria-label="' . esc_attr($title . 'のサブメニューを開閉') . '"><span>開閉</span></button>';
             $output .=   '</div>';
             $output .=     '<div class="' . esc_attr($wrapper_class) . '">';
             $output .=       '<div class="' . esc_attr($inner_class) . '">';
@@ -301,7 +301,7 @@ class Custom_Footer_Walker_Nav_Menu extends Walker_Nav_Menu
             $output .=       '<span>' . esc_html($title) . '</span>';
             // $output .=       '<span>' . esc_html($slug) . '</span>'; // スラッグを表示する場合はコメントアウトを解除
             $output .=     '</a>';
-            $output .=     '<button class="' . esc_attr($button_class) . '" type="button"><span>開閉</span></button>';
+            $output .=     '<button class="' . esc_attr($button_class) . '" type="button" aria-expanded="false" aria-label="' . esc_attr($title . 'のサブメニューを開閉') . '"><span>開閉</span></button>';
             $output .=   '</div>';
             $output .=     '<div class="' . esc_attr($wrapper_class) . '">';
             $output .=       '<div class="' . esc_attr($inner_class) . '">';
