@@ -17,31 +17,36 @@
             display: block;
             &:not(.has-custom-width) {
                 /* デフォルトサイズ */
-                width: 100%;
+                width: fit-content;
+                min-width: min(100%, calc(260 * var(--to-rem-func)));
+                max-width: 100%;
             }
             .wp-block-button__link {
                 position: relative;
                 text-decoration: none;
-                font-size: calc(15 * var(--to-rem-func));
-                min-height: calc(48 * var(--to-rem-func));
+                font-family: var(--font-jwsnj-ja);
+                font-size: calc(16 * var(--to-rem-func));
+                min-height: calc(50 * var(--to-rem-func));
                 font-weight: 500;
-                line-height: normal;
+                line-height: 1.5;
+                overflow-wrap: anywhere;
+                word-break: normal;
                 display: flex;
                 align-items: center;
                 text-align: left;
-                border: calc(2 * var(--to-rem-func)) solid var(--color-primary);
+                border: calc(1 * var(--to-rem-func)) solid var(--color-primary);
                 border-radius: 3em;
                 background-color: var(--color-primary);
                 color: var(--color-secondary);
                 padding-block: calc(12 * var(--to-rem-func));
-                padding-inline: calc(35 * var(--to-rem-func)) calc(70 * var(--to-rem-func));
-                letter-spacing: 0.08em;
+                padding-inline: calc(24 * var(--to-rem-func)) calc(52 * var(--to-rem-func));
+                letter-spacing: 0.05em;
                 transition: var(--transition-duration);
                 max-width: 100%;
                 &.has-text-align-center {
                     justify-content: center;
                     padding-block: calc(12 * var(--to-rem-func));
-                    padding-inline: calc(35 * var(--to-rem-func));
+                    padding-inline: calc(24 * var(--to-rem-func)) calc(52 * var(--to-rem-func));
                 }
                 &.has-text-align-right {
                     justify-content: flex-end;
@@ -49,11 +54,15 @@
                 &::after {
                     content: '';
                     position: absolute;
-                    right: calc(24 * var(--to-rem-func));
+                    right: calc(20 * var(--to-rem-func));
                     top: 50%;
                     transform: translateY(-50%);
                     transition: var(--transition-duration);
-                    font-size: calc(18 * var(--to-rem-func));
+                    font-size: calc(14 * var(--to-rem-func));
+                    line-height: 1;
+                    font-family: var(--font-awesome);
+                    font-weight: 400;
+                    content: '\\f061';
                     color: currentColor;
                 }
                 &[target='_blank'] {
@@ -103,18 +112,8 @@
         @media (calc(768 * (1 / 16 * 1rem)) <= width) {
             gap: calc(20 * var(--to-rem-func));
             .wp-block-button {
-                &.has-custom-width {
-                    width: 100%;
-                }
                 &:not(.has-custom-width) {
-                    width: auto;
-                    min-width: calc(270 * var(--to-rem-func));
-                }
-                .wp-block-button__link {
-                    padding-block: calc(16 * var(--to-rem-func));
-                    padding-inline: calc(40 * var(--to-rem-func)) calc(64 * var(--to-rem-func));
-                    min-height: calc(64 * var(--to-rem-func));
-                    font-size: calc(16 * var(--to-rem-func));
+                    min-width: min(100%, calc(260 * var(--to-rem-func)));
                 }
             }
         }
