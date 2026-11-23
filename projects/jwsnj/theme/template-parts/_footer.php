@@ -1,4 +1,9 @@
 <footer id="global_footer" class="global_footer" itemscope itemtype="https://schema.org/WPFooter">
+    <!-- Figma footer copy 221:335 / 506:1632. Decorative SVGs remain a separate verified-asset dependency (#524). -->
+    <div class="gf_brandStatement">
+        <p class="gf_brandStatement-en">LEARN IN JAPANESE.<br>CONNECT WITH JAPAN.</p>
+        <p class="gf_brandStatement-ja">土曜日、日本とつながる学びの時間</p>
+    </div>
     <div class="gf_links-wrap">
         <nav class="gf_menu" aria-label="フッターナビゲーション">
             <?php

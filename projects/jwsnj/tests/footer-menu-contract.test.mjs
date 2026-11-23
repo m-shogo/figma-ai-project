@@ -121,3 +121,15 @@ test('Footer WordPress disclosure controls point to a unique direct submenu wrap
 test('Footer does not retain empty CODIA class rules', () => {
   assert.doesNotMatch(css, /^[ \t]*\.[A-Za-z][\w-]*\s*\{\s*\}[ \t]*$/m);
 });
+
+
+test('Footer uses Figma-approved PC/SP bilingual brand statement without substituted imagery', () => {
+  assert.match(footer, /class="gf_brandStatement"/);
+  assert.match(footer, /LEARN IN JAPANESE\.<br>CONNECT WITH JAPAN\./);
+  assert.match(footer, /土曜日、日本とつながる学びの時間/);
+  assert.doesNotMatch(footer, /figma\.com\/api\/mcp\/asset/);
+  assert.match(css, /\.gf_brandStatement-en\s*\{[\s\S]*?font-family: 'Roboto Condensed'/);
+  assert.match(css, /\.gf_brandStatement-ja\s*\{[\s\S]*?font-family: 'Zen Kaku Gothic New'/);
+  assert.match(css, /font-size: calc\(46 \* var\(--to-rem-func\)\)/);
+  assert.match(css, /font-size: calc\(15 \* var\(--to-rem-func\)\)/);
+});
