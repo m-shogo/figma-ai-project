@@ -65,6 +65,13 @@
                 }
             }
         }
+        /* Figma SP page link 442:2948 uses a 304px minimum where
+           viewport space permits; keep 100% width on narrow devices. */
+        @media (width < calc(768 * (1 / 16 * 1rem))) {
+            .inPageLink {
+                min-width: min(100%, calc(304 * var(--to-rem-func)));
+            }
+        }
         @media (calc(768 * (1 / 16 * 1rem)) <= width) {
             flex-direction: row;
             justify-content: center;

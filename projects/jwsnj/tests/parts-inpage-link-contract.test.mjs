@@ -33,3 +33,8 @@ test('page links flow and wrap across SP and PC while keeping ACF destinations',
   assert.match(php, /esc_attr\(\$id\)/);
   assert.match(php, /esc_html\(\$title\)/);
 });
+
+test('Figma mobile page links honor 304px minimum without exceeding narrower screens',()=>{
+  assert.match(css,/@media \(width < calc\(768 \* \(1 \/ 16 \* 1rem\)\)\)/);
+  assert.match(css,/\.inPageLink\s*\{\s*min-width:\s*min\(100%,\s*calc\(304 \* var\(--to-rem-func\)\)\)/);
+});
