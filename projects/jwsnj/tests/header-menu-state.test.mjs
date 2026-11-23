@@ -270,3 +270,12 @@ test('Header accordion and mega-menu transitions respect reduced-motion preferen
   assert.match(block, /\.gnl_wrapper-02/);
   assert.match(block, /transition-duration: 0s/);
 });
+
+
+test('Header search toggles independently and preserves the backdrop for other open menus', () => {
+  const region = source.slice(source.indexOf("$('#search').on('click'"), source.indexOf("$('#gns_close, #overlay').on('click'"));
+  assert.match(region, /const isOpen = !\$body\.hasClass\('_open-search'\)/);
+  assert.match(region, /\$body\.toggleClass\('_open-search', isOpen\)/);
+  assert.match(region, /const touchOpen = document\.querySelector/);
+  assert.match(region, /\$body\.toggleClass\('_open-bg', isOpen \|\| \$body\.hasClass\('_open-menu'\) \|\| !!touchOpen\)/);
+});
