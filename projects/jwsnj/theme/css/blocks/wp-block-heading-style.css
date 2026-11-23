@@ -24,62 +24,52 @@
             }
         }
     }
+    /* Figma parts PC 344:906/344:903, SP 445:3209/445:3236.
+       Gutenberg headings share the Theme's existing editor/front-end scope. */
     h2:is(:not([class]), .wp-block-heading) {
-        font-weight: 700;
+        font-family: var(--font-jwsnj-ja);
+        font-weight: 500;
         font-size: calc(24 * var(--to-rem-func));
-        line-height: 1.5;
-        letter-spacing: 0.1em;
-        border-bottom: calc(4 * var(--to-rem-func)) solid var(--color-primary);
-        padding-bottom: calc(24 * var(--to-rem-func));
+        line-height: 1.4;
+        letter-spacing: 0.05em;
         color: var(--color-text);
-        margin-bottom: var(--wp-block-margin-medium);
+        border-bottom: calc(3 * var(--to-rem-func)) solid var(--color-primary);
+        padding-bottom: calc(24 * var(--to-rem-func));
+        margin-bottom: calc(32 * var(--to-rem-func));
         overflow-wrap: anywhere;
         word-break: normal;
         line-break: strict;
-        display: flex;
         @media (calc(768 * (1 / 16 * 1rem)) <= width) {
             font-size: calc(30 * var(--to-rem-func));
-            margin-bottom: var(--wp-block-margin-large);
+            padding-bottom: calc(28 * var(--to-rem-func));
+            margin-bottom: calc(40 * var(--to-rem-func));
         }
         & + :is(h1, h2, h3, h4, h5, h6):is(:not([class]), .wp-block-heading) {
             margin-top: var(--wp-block-margin-small);
-            @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-                margin-top: var(--wp-block-margin-small);
-            }
         }
     }
     h3:is(:not([class]), .wp-block-heading) {
-        font-weight: 700;
+        font-family: var(--font-jwsnj-ja);
+        font-weight: 500;
         font-size: calc(22 * var(--to-rem-func));
-        line-height: 1.5;
-        letter-spacing: 0.1em;
-        margin-bottom: var(--wp-block-margin-medium);
-        color: var(--color-text);
-        padding-bottom: calc(24 * var(--to-rem-func));
-        position: relative;
+        line-height: 1.4;
+        letter-spacing: 0.05em;
+        color: var(--jwsnj-color-white);
+        background-color: var(--jwsnj-color-sec);
+        border-radius: calc(3 * var(--to-rem-func));
+        padding: calc(10 * var(--to-rem-func)) calc(20 * var(--to-rem-func));
+        margin-bottom: calc(24 * var(--to-rem-func));
+        min-width: 0;
+        max-width: 100%;
         overflow-wrap: anywhere;
         word-break: normal;
         line-break: strict;
-        display: flex;
         @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-            font-size: calc(32 * var(--to-rem-func));
-            margin-bottom: var(--wp-block-margin-large);
+            font-size: calc(24 * var(--to-rem-func));
+            margin-bottom: calc(30 * var(--to-rem-func));
         }
         & + :is(h1, h2, h3, h4, h5, h6):is(:not([class]), .wp-block-heading) {
             margin-top: var(--wp-block-margin-small);
-            @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-                margin-top: var(--wp-block-margin-small);
-            }
-        }
-        &::after {
-            content: '';
-            width: calc(64 * var(--to-rem-func));
-            height: calc(1 * var(--to-rem-func));
-            background-color: var(--color-primary);
-            display: block;
-            position: absolute;
-            left: 0;
-            bottom: 0;
         }
     }
     h4:is(:not([class]), .wp-block-heading) {
