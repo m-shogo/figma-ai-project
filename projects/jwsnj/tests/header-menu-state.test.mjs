@@ -212,7 +212,7 @@ test('collapsed Header/Footer accordion links are inert only below their own des
   const wrapper = { inert: false };
   let state = null;
   const item = {
-    querySelector: (selector) => { assert.match(selector, /_wrapper/); return wrapper; },
+    children: [{ matches: selector => { assert.match(selector, /_wrapper/); return true; }, set inert(value) { wrapper.inert = value; }, get inert() { return wrapper.inert; } }],
     getAttribute: () => state,
   };
   sync(item, 'gnl', 1080);
@@ -232,4 +232,13 @@ test('collapsed Header/Footer accordion links are inert only below their own des
   assert.equal(wrapper.inert, false, 'Footer desktop sitemap links are always available');
   assert.match(source, /globalNavItems\.forEach\(item => syncSubmenuFocusability/);
   assert.match(source, /footerNavItems\.forEach\(item => syncSubmenuFocusability/);
+});
+
+
+test('accordion focusability is scoped to the direct submenu wrapper, never a nested descendant', () => {
+  const helper = source.match(/    const syncSubmenuFocusability = \(item, prefix, desktopMin\) => \{[\s\S]*?\n    \};/);
+  assert.ok(helper);
+  assert.match(helper[0], /Array\.from\(item\.children\)\.find/);
+  assert.match(helper[0], /child\.matches/);
+  assert.doesNotMatch(helper[0], /item\.querySelector\(/);
 });
