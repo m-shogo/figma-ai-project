@@ -6,7 +6,7 @@ import { readFileSync } from 'node:fs';
 
 const css = readFileSync(new URL('../theme/css/blocks/wp-block-list-style.css', import.meta.url), 'utf8');
 const start = css.indexOf('ol.wp-block-list:not(.annotation-list) {');
-const end = css.indexOf('/* //---------- 注釈リスト ---------- */', start);
+const end = css.indexOf('    ul.annotation-list {', start);
 assert.ok(start >= 0 && end > start, 'numbered list rule exists before annotations');
 const list = css.slice(start, end);
 
