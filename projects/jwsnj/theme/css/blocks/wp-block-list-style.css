@@ -107,9 +107,11 @@
     ul.annotation-list {
         gap: calc(10 * var(--to-rem-func));
         margin-bottom: calc(20 * var(--to-rem-func));
+        margin-top: calc(20 * var(--to-rem-func));
         li {
             font-family: var(--font-jwsnj-ja);
             overflow-wrap: anywhere;
+            word-break: normal;
             padding-left: calc(31 * var(--to-rem-func));
             font-size: calc(14 * var(--to-rem-func));
             font-weight: 500;
@@ -118,6 +120,8 @@
             &::before {
                 content: '※';
                 font-size: calc(16 * var(--to-rem-func));
+                font-family: var(--font-jwsnj-ja);
+                font-weight: 500;
                 transform: translateY(-0.1em);
                 color: #d50b0b;
                 line-height: 1.75;
