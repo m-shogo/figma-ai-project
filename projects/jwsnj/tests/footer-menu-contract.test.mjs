@@ -44,14 +44,13 @@ test('footer page-top link retains a readable name and visible keyboard focus', 
 });
 
 
-test('footer page-top initializes visibility on restored scroll and avoids animation queues', () => {
+test('footer page-top initializes visibility, animates only transitions, and respects reduced motion', () => {
   const match = source.match(/  const pageTop = function \(\) \{[\s\S]*?\n  \};/);
   assert.ok(match, 'pageTop implementation must exist');
-  const simulate = (initialScrollY) => {
-    const win = {};
+  const simulate = (initialScrollY, reduced = false) => {
+    const win = { matchMedia: () => ({ matches: reduced }) };
     let currentScrollY = initialScrollY;
-    let onScroll;
-    let onPageShow;
+    const listeners = {};
     const calls = [];
     const control = {
       toggle(value) { calls.push(['toggle', value]); return this; },
@@ -60,27 +59,30 @@ test('footer page-top initializes visibility on restored scroll and avoids anima
       fadeOut() { calls.push(['fadeOut']); return this; },
     };
     const $ = (selector) => selector === win
-      ? { scrollTop: () => currentScrollY, on(name, callback) {
-        if (name === 'scroll') onScroll = callback;
-        else if (name === 'pageshow') onPageShow = callback;
-        else assert.fail('unexpected event: ' + name);
-      } }
+      ? { scrollTop: () => currentScrollY, on(name, callback) { listeners[name] = callback; } }
       : control;
     new Function('$', 'window', match[0] + '\npageTop();')($, win);
-    return { calls, scrollTo(y) { currentScrollY = y; onScroll(); }, restoreTo(y) { currentScrollY = y; onPageShow(); } };
+    return { calls, scrollTo(y) { currentScrollY = y; listeners.scroll(); }, restoreTo(y) { currentScrollY = y; listeners.pageshow(); } };
   };
   const top = simulate(0);
-  assert.deepEqual(top.calls, [['toggle', false]]);
+  assert.deepEqual(top.calls, [['stop', true, true], ['toggle', false]]);
+  top.scrollTo(0);
+  assert.equal(top.calls.length, 2, 'scrolling at top must not queue work');
   top.scrollTo(100);
   assert.deepEqual(top.calls.slice(-2), [['stop', true, true], ['fadeIn']]);
+  top.scrollTo(200);
+  assert.equal(top.calls.length, 4, 'scrolling while already visible must not animate again');
   top.scrollTo(0);
   assert.deepEqual(top.calls.slice(-2), [['stop', true, true], ['fadeOut']]);
   const restored = simulate(420);
-  assert.deepEqual(restored.calls, [['toggle', true]]);
+  assert.deepEqual(restored.calls, [['stop', true, true], ['toggle', true]]);
   top.restoreTo(420);
-  assert.deepEqual(top.calls.at(-1), ['toggle', true]);
+  assert.deepEqual(top.calls.slice(-2), [['stop', true, true], ['toggle', true]]);
+  const reduced = simulate(0, true);
+  reduced.scrollTo(100);
+  assert.deepEqual(reduced.calls.slice(-2), [['stop', true, true], ['toggle', true]]);
+  assert.equal(reduced.calls.some(x => x[0] === 'fadeIn'), false);
 });
-
 
 test('Footer accordion buttons have visible focus without affecting layout', () => {
   const block = css.slice(css.indexOf('.gfl_button-02,'), css.indexOf('.gfl_wrapper-02,'));
