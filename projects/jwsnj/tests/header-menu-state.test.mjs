@@ -193,3 +193,12 @@ test('mobile menu open-state clip-path follows exactly the 1080px desktop breakp
   assert.doesNotMatch(openRule, /@media \(calc\(768 \*/);
   assert.match(openRule, /clip-path: unset;/);
 });
+
+
+test('Header mobile close and hamburger toggle retain backdrop ownership for search and PC touch menus', () => {
+  const section = source.slice(source.indexOf('const toggleMenu = function'), source.indexOf('const globalNavItems ='));
+  assert.match(section, /const touchOpen = document\.querySelector\('\.global_navigation \[class\*="gnl_item"\]\._touchOpen'\)/);
+  assert.match(section, /if \(!\$body\.hasClass\('_open-search'\) && !touchOpen\) \$body\.removeClass\('_open-bg'\)/);
+  assert.match(section, /\$body\.toggleClass\('_open-menu'\)/);
+  assert.match(section, /if \(\$body\.hasClass\('_open-menu'\) \|\| \$body\.hasClass\('_open-search'\)\) \$body\.addClass\('_open-bg'\)/);
+});
