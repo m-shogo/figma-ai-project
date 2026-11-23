@@ -127,4 +127,8 @@ test('Header and Footer WordPress disclosure buttons expose descriptive accessib
   assert.equal(disclosures.split("itemButton.setAttribute('aria-expanded', String(item.getAttribute('data-open') === 'true'))").length - 1, 2);
   assert.equal(disclosures.split("itemButton.setAttribute('aria-expanded', String(isOpen))").length - 1, 2);
   assert.equal(disclosures.split("item.setAttribute('data-open', String(isOpen))").length - 1, 2);
+  assert.match(disclosures, /item\.addEventListener\('mouseenter'/);
+  assert.match(disclosures, /item\.addEventListener\('mouseleave'/);
+  assert.match(source, /if \(disclosure\) disclosure\.setAttribute\('aria-expanded', 'true'\)/);
+  assert.match(source, /if \(button\) button\.setAttribute\('aria-expanded', String\(el\.getAttribute\('data-open'\) === 'true'\)\)/);
 });
