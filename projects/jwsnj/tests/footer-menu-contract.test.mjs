@@ -95,3 +95,12 @@ test('Footer accordion transitions respect reduced-motion preference', () => {
   assert.match(block, /\.gfl_wrapper-02/);
   assert.match(block, /transition-duration: 0s/);
 });
+
+
+test('common anchor navigation tolerates missing CMS anchors and reduced motion', () => {
+  const section = source.slice(source.indexOf('function scrollToAnker(hash) {'), source.indexOf('  // SP用メニュー＆PCメガメニュー設定'));
+  assert.match(section, /if \(!target\.length\) return;/);
+  assert.match(section, /window\.matchMedia\('\(prefers-reduced-motion: reduce\)'\)\.matches/);
+  assert.match(section, /scroller\.scrollTop\(position\)/);
+  assert.match(section, /scroller\.animate\(\{ scrollTop: position \}, 300\)/);
+});
