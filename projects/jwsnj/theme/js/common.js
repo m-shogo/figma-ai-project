@@ -406,7 +406,8 @@ window.addEventListener('resize', setVw);
         const button = el.querySelector('[class*="gnl_button"]');
         if (button) button.setAttribute('aria-expanded', String(el.getAttribute('data-open') === 'true'));
       });
-      $body.removeClass('_open-bg');
+      // The backdrop can also be owned by an open search or mobile navigation.
+      if (!$body.hasClass('_open-search') && !$body.hasClass('_open-menu')) $body.removeClass('_open-bg');
     };
 
     const touchMegaMenuSupport = function () {
