@@ -22,6 +22,8 @@ on:
       - 'projects/jwsnj/theme/css/blocks/wp-block-group-style.css'
       - 'projects/jwsnj/theme/inc/editor.php'
       - 'projects/jwsnj/tests/parts-bordered-group-contract.test.mjs'
+      - 'projects/jwsnj/theme/css/blocks/wp-block-media-text-style.css'
+      - 'projects/jwsnj/tests/parts-media-text-contract.test.mjs'
       - '.github/workflows/jwsnj-header-static.yml'
   push:
     branches: [so]
@@ -44,6 +46,8 @@ on:
       - 'projects/jwsnj/theme/css/blocks/wp-block-group-style.css'
       - 'projects/jwsnj/theme/inc/editor.php'
       - 'projects/jwsnj/tests/parts-bordered-group-contract.test.mjs'
+      - 'projects/jwsnj/theme/css/blocks/wp-block-media-text-style.css'
+      - 'projects/jwsnj/tests/parts-media-text-contract.test.mjs'
       - '.github/workflows/jwsnj-header-static.yml'
   workflow_dispatch:
 
