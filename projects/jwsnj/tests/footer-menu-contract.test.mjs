@@ -51,6 +51,7 @@ test('footer page-top initializes visibility on restored scroll and avoids anima
     const win = {};
     let currentScrollY = initialScrollY;
     let onScroll;
+    let onPageShow;
     const calls = [];
     const control = {
       toggle(value) { calls.push(['toggle', value]); return this; },
@@ -59,10 +60,14 @@ test('footer page-top initializes visibility on restored scroll and avoids anima
       fadeOut() { calls.push(['fadeOut']); return this; },
     };
     const $ = (selector) => selector === win
-      ? { scrollTop: () => currentScrollY, on(name, callback) { assert.equal(name, 'scroll'); onScroll = callback; } }
+      ? { scrollTop: () => currentScrollY, on(name, callback) {
+        if (name === 'scroll') onScroll = callback;
+        else if (name === 'pageshow') onPageShow = callback;
+        else assert.fail('unexpected event: ' + name);
+      } }
       : control;
     new Function('$', 'window', match[0] + '\npageTop();')($, win);
-    return { calls, scrollTo(y) { currentScrollY = y; onScroll(); } };
+    return { calls, scrollTo(y) { currentScrollY = y; onScroll(); }, restoreTo(y) { currentScrollY = y; onPageShow(); } };
   };
   const top = simulate(0);
   assert.deepEqual(top.calls, [['toggle', false]]);
@@ -72,4 +77,6 @@ test('footer page-top initializes visibility on restored scroll and avoids anima
   assert.deepEqual(top.calls.slice(-2), [['stop', true, true], ['fadeOut']]);
   const restored = simulate(420);
   assert.deepEqual(restored.calls, [['toggle', true]]);
+  top.restoreTo(420);
+  assert.deepEqual(top.calls.at(-1), ['toggle', true]);
 });
