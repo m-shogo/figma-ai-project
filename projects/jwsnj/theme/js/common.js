@@ -477,6 +477,11 @@ window.addEventListener('resize', setVw);
         closeAllTouchMenus();
         $body.removeClass('_open-menu _open-bg _contentFixed');
         syncMobileMenu();
+        // PC hover state may outlive its media query when switching to the SP layout.
+        globalNavItems.forEach((item) => {
+          const button = item.querySelector('[class*="gnl_button"]');
+          if (button) button.setAttribute('aria-expanded', String(item.getAttribute('data-open') === 'true'));
+        });
       }
       lastWidthForBreakpoint = currentWidth;
     });
