@@ -196,6 +196,17 @@
 }
 
 .block-editor_wrap {
+    .wp-block-buttons.small .wp-block-button {
+        .wp-block-button__link:hover {
+            background: none;
+            color: var(--color-text);
+        }
+        &.is-style-outline .wp-block-button__link:hover {
+            background: none;
+            color: var(--color-text);
+        }
+    }
+
     /* ホバー時のスタイル */
     /* MARK: hover */
     @media (any-hover: hover) {
