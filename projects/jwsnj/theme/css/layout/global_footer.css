@@ -12,6 +12,43 @@
         transition: color var(--transition-duration);
     }
 
+    /* Approved Figma footer message typography. Decorative SVG source bytes are pending #524. */
+    .gf_brandStatement {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: calc(16 * var(--to-rem-func));
+        padding: calc(40 * var(--to-rem-func)) var(--padding-SP) calc(20 * var(--to-rem-func));
+        text-align: center;
+    }
+    .gf_brandStatement-en {
+        font-family: 'Roboto Condensed', sans-serif;
+        font-size: clamp(calc(22 * var(--to-rem-func)), 7.46vw, calc(28 * var(--to-rem-func)));
+        font-weight: 500;
+        line-height: 1.4;
+        letter-spacing: 0.05em;
+        color: var(--color-text);
+    }
+    .gf_brandStatement-ja {
+        font-family: 'Zen Kaku Gothic New', sans-serif;
+        font-size: calc(13 * var(--to-rem-func));
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        color: var(--color-primary);
+    }
+    @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+        .gf_brandStatement {
+            gap: calc(20 * var(--to-rem-func));
+            padding-block: calc(56 * var(--to-rem-func)) calc(48 * var(--to-rem-func));
+        }
+        .gf_brandStatement-en {
+            font-size: calc(46 * var(--to-rem-func));
+        }
+        .gf_brandStatement-ja {
+            font-size: calc(15 * var(--to-rem-func));
+        }
+    }
+
     .gf_logo {
         width: calc(140 * var(--to-rem-func));
         a {
