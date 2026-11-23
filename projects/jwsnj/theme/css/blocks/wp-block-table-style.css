@@ -11,60 +11,51 @@
         display: flex;
         flex-direction: column;
         gap: calc(16 * var(--to-rem-func));
-        font-size: calc(16 * var(--to-rem-func));
         & + & {
             margin-top: var(--wp-block-margin-large);
         }
+        font-family: var(--font-jwsnj-ja);
+        font-size: calc(15 * var(--to-rem-func));
+        font-weight: 400;
+        line-height: 1.6;
+        letter-spacing: 0.05em;
+        color: var(--color-text);
         /* MARK: ボーダー */
-        --_border-color: var(--color-separator);
-        --_border-color-thead: var(--color-secondary);
+        --_border-color: var(--jwsnj-color-separator);
+        --_border-color-thead: var(--jwsnj-color-separator);
         --_border-width: calc(1 * var(--to-rem-func));
         --_border-style: solid;
         table {
-            border-collapse: separate;
+            width: 100%;
+            border-collapse: collapse;
             border-spacing: 0;
             th,
             td {
-                border: none !important;
-                border-top: var(--_border-width, calc(1 * var(--to-rem-func))) var(--_border-style, solid) var(--_border-color, var(--color-separator)) !important;
-                border-left: var(--_border-width, calc(1 * var(--to-rem-func))) var(--_border-style, solid) var(--_border-color, var(--color-separator)) !important;
+                border: calc(1 * var(--to-rem-func)) solid var(--jwsnj-color-separator) !important;
+                padding-block: calc(15 * var(--to-rem-func));
+                padding-inline: calc(30 * var(--to-rem-func));
+                text-align: center;
+                font-weight: 400;
+                color: var(--color-text);
+                overflow-wrap: anywhere;
+                word-break: normal;
             }
-            th {
-                border-color: var(--_border-color-thead, var(--color-secondary));
-            }
-            &::before {
-                content: '';
-                position: absolute;
-                z-index: 1;
-                inset: 0;
-                pointer-events: none;
-                border: var(--_border-width, calc(1 * var(--to-rem-func))) var(--_border-style, solid) var(--_border-color, var(--color-separator));
-                outline: calc(var(--_border-width, calc(1 * var(--to-rem-func))) + calc(1 * var(--to-rem-func))) var(--_border-style, solid) var(--_border-color, var(--color-separator));
-                outline-offset: calc(var(--_border-width, calc(1 * var(--to-rem-func))) * -1);
+            thead th {
+                background-color: var(--jwsnj-color-separator-light);
             }
         }
-        /* MARK: 角丸 */
-        table {
-            --_border-radius: calc(0 * var(--to-rem-func));
-            border-radius: var(--_border-radius, calc(0 * var(--to-rem-func)));
-            position: relative;
-            z-index: 0;
-            &::before {
-                border-radius: var(--_border-radius, calc(0 * var(--to-rem-func)));
+        @media (width < calc(768 * (1 / 16 * 1rem))) {
+            table th,
+            table td {
+                padding-block: calc(12 * var(--to-rem-func));
+                padding-inline: calc(20 * var(--to-rem-func));
             }
-        }
-        table {
-            overflow: hidden;
-            tr {
-                th,
-                td {
-                    padding-block: calc(16 * var(--to-rem-func));
-                    padding-inline: calc(20 * var(--to-rem-func));
-                }
-                th {
-                    background-color: var(--color-primary) !important;
-                    color: var(--color-secondary) !important;
-                    font-weight: 700;
+            &.is-scroll-on-mobile {
+                overflow-x: auto;
+                overscroll-behavior-x: contain;
+                table {
+                    width: max-content;
+                    min-width: calc(960 * var(--to-rem-func));
                 }
             }
         }
@@ -113,27 +104,9 @@
                 }
             }
         }
-        /* MARK: モバイルでスクロール スタイル */
         &.is-scroll-on-mobile {
-            @media (width < calc(768 * (1 / 16 * 1rem))) {
-                padding-bottom: calc(10 * var(--to-rem-func));
-                > table {
-                    width: var(--width-main);
-                }
-            }
-            /* スクロールバー色変更（webkit用） */
-            &::-webkit-scrollbar {
-                width: calc(4 * var(--to-rem-func));
-                height: calc(4 * var(--to-rem-func));
-            }
-            &::-webkit-scrollbar-track {
-                border-radius: calc(2 * var(--to-rem-func));
-                background: var(--color-gray-background);
-            }
-            &::-webkit-scrollbar-thumb {
-                border-radius: calc(2 * var(--to-rem-func));
-                background: var(--color-primary);
-            }
+            scrollbar-color: var(--jwsnj-color-sec) var(--jwsnj-color-separator-light);
+            scrollbar-width: thin;
         }
     }
 }
