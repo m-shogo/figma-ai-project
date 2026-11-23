@@ -23,6 +23,8 @@ test('long button text wraps and icon variants keep working', () => {
   assert.match(button, /max-width:\s*100%/);
   assert.match(button, /overflow-wrap:\s*anywhere/);
   assert.match(button, /word-break:\s*normal/);
+  assert.match(button, /&:focus-visible\s*\{/);
+  assert.match(button, /outline-offset:\s*calc\(3 \* var\(--to-rem-func\)\)/);
   assert.match(button, /content:\s*'\\f061'/);
   assert.match(button, /target='_blank'/);
   assert.match(button, /href\$='\.pdf'/);
