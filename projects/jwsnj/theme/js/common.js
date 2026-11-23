@@ -359,15 +359,23 @@ window.addEventListener('resize', setVw);
       }
     });
     syncMobileMenu();
+    // Collapsed accordion submenus must not remain keyboard-focusable on SP.
+    // Desktop layouts display these links directly, so remove inert at the CSS breakpoint.
+    const syncSubmenuFocusability = (item, prefix, desktopMin) => {
+      const wrapper = item.querySelector(`[class*="${prefix}_wrapper"]`);
+      if (wrapper) wrapper.inert = window.innerWidth < desktopMin && item.getAttribute('data-open') !== 'true';
+    };
     const globalNavItems = document.querySelectorAll('[class*="gnl_item"]._hasChild');
     globalNavItems.forEach(item => {
         const itemButton = item.querySelector('[class*="gnl_button"]');
         if (!itemButton) return;
         itemButton.setAttribute('aria-expanded', String(item.getAttribute('data-open') === 'true'));
+        syncSubmenuFocusability(item, 'gnl', headerBreakpointMin);
         itemButton.addEventListener('click', function () {
             const isOpen = item.getAttribute('data-open') !== 'true';
             item.setAttribute('data-open', String(isOpen));
             itemButton.setAttribute('aria-expanded', String(isOpen));
+            syncSubmenuFocusability(item, 'gnl', headerBreakpointMin);
         });
         // The desktop top-level submenu also opens on hover via CSS.
         if (item.classList.contains('gnl_item-02')) {
@@ -392,10 +400,12 @@ window.addEventListener('resize', setVw);
         const itemButton = item.querySelector('[class*="gfl_button"]');
         if (!itemButton) return;
         itemButton.setAttribute('aria-expanded', String(item.getAttribute('data-open') === 'true'));
+        syncSubmenuFocusability(item, 'gfl', 768);
         itemButton.addEventListener('click', function () {
             const isOpen = item.getAttribute('data-open') !== 'true';
             item.setAttribute('data-open', String(isOpen));
             itemButton.setAttribute('aria-expanded', String(isOpen));
+            syncSubmenuFocusability(item, 'gfl', 768);
         });
     });
 
@@ -504,6 +514,9 @@ window.addEventListener('resize', setVw);
           if (button) button.setAttribute('aria-expanded', String(item.getAttribute('data-open') === 'true'));
         });
       }
+      // Reconcile closed accordion focusability even on resizes within a layout.
+      globalNavItems.forEach(item => syncSubmenuFocusability(item, 'gnl', headerBreakpointMin));
+      footerNavItems.forEach(item => syncSubmenuFocusability(item, 'gfl', 768));
       lastWidthForBreakpoint = currentWidth;
     });
 
