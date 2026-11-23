@@ -551,6 +551,18 @@
         }
 }
 
+    /* Accessibility: do not animate accordion changes when reduced motion is requested. */
+    @media (prefers-reduced-motion: reduce) {
+        a, .gfl_wrapper-02, .gfl_wrapper-03, .gfl_wrapper-04,
+        .gfl_wrapper-05, .gfl_wrapper-06, .gf_logo a {
+            transition-duration: 0s;
+        }
+        [class*='gfl_button']::before,
+        [class*='gfl_button']::after {
+            transition-duration: 0s;
+        }
+    }
+
     /* MARK: hover */
     @media (any-hover: hover) {
         .gf_logo {

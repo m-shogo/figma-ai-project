@@ -262,3 +262,11 @@ test('collapsing a focused submenu moves keyboard focus to its disclosure before
   assert.equal(focusedTrigger, true);
   assert.equal(wrapper.inert, true);
 });
+
+
+test('Header accordion and mega-menu transitions respect reduced-motion preference', () => {
+  const block = navigationCss.slice(navigationCss.indexOf('/* Reduced motion keeps'), navigationCss.indexOf('/* Desktop mega-menu states:'));
+  assert.match(block, /@media \(prefers-reduced-motion: reduce\)/);
+  assert.match(block, /\.gnl_wrapper-02/);
+  assert.match(block, /transition-duration: 0s/);
+});
