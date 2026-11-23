@@ -48,7 +48,7 @@ test('h3 uses Figma cyan band and responsive text without fixed heights', () => 
   assert.match(h3, /margin-bottom:\s*calc\(24 \* var\(--to-rem-func\)\)/);
   assert.match(h3, /margin-bottom:\s*calc\(30 \* var\(--to-rem-func\)\)/);
   assert.match(h3, /overflow-wrap:\s*anywhere/);
-  assert.doesNotMatch(h3, /&::after|height:\s*\d|white-space:\s*nowrap/);
+  assert.doesNotMatch(h3, /&::after|(?:^|[;{}\n])\s*(?:min-height|max-height|height)\s*:|white-space:\s*nowrap/);
 });
 
 test('scope remains existing WordPress/editor headings and leaves SVG-dependent h4 unresolved', () => {
