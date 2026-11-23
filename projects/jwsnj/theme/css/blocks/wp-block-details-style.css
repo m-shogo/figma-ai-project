@@ -147,7 +147,7 @@
             summary.wp-block-details__summary {
                 &::before {
                     content: 'Q';
-                    color: var(--color-primary);
+                    color: var(--color-accent);
                 }
             }
             .wp-block-details__content {
