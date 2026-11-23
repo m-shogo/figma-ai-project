@@ -21,7 +21,7 @@
 </head>
 
 <body itemscope itemtype="https://schema.org/WebPage"
-    <?php echo (body_class()) ? body_class() : ''; ?>
+    <?php body_class(); ?>
     id="<?php echo isset($post) && $post ? esc_attr($post->post_name) : ''; ?>">
     <?php
     $bodyTag_after = get_field('bodyTag_after', 'option');
