@@ -102,5 +102,7 @@ test('common anchor navigation tolerates missing CMS anchors and reduced motion'
   assert.match(section, /if \(!target\.length\) return;/);
   assert.match(section, /window\.matchMedia\('\(prefers-reduced-motion: reduce\)'\)\.matches/);
   assert.match(section, /scroller\.scrollTop\(position\)/);
+  assert.match(section, /Math\.max\(0, offset\.top - header\)/);
+  assert.match(section, /if \(!offset \|\| !Number\.isFinite\(offset\.top\)\) return;/);
   assert.match(section, /scroller\.animate\(\{ scrollTop: position \}, 300\)/);
 });
