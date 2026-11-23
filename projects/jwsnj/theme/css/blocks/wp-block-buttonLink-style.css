@@ -110,6 +110,78 @@
         /* ///////// 個別設定 /////////　*/
         /* ボタン小 */
         &.small {
+            gap: calc(20 * var(--to-rem-func));
+            .wp-block-button {
+                width: fit-content;
+                min-width: 0;
+                max-width: 100%;
+            }
+            .wp-block-button__link {
+                display: inline-flex;
+                align-items: center;
+                justify-content: flex-start;
+                gap: calc(8 * var(--to-rem-func));
+                min-height: calc(30 * var(--to-rem-func));
+                padding: 0;
+                border: 0;
+                border-radius: 0;
+                background: none;
+                color: var(--color-text);
+                font-size: calc(16 * var(--to-rem-func));
+                line-height: 1.5;
+                letter-spacing: 0.05em;
+                overflow-wrap: anywhere;
+                word-break: normal;
+                &::before {
+                    content: '\f061';
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    flex: 0 0 calc(30 * var(--to-rem-func));
+                    width: calc(30 * var(--to-rem-func));
+                    height: calc(30 * var(--to-rem-func));
+                    border: calc(1 * var(--to-rem-func)) solid var(--jwsnj-color-sec);
+                    border-radius: 50%;
+                    background-color: var(--jwsnj-color-sec);
+                    color: var(--color-secondary);
+                    font-family: var(--font-awesome);
+                    font-weight: 400;
+                    font-size: calc(12 * var(--to-rem-func));
+                    line-height: 1;
+                }
+                &::after {
+                    content: none;
+                }
+                &[target='_blank']::before {
+                    content: var(--icon-blank);
+                }
+                &[href$='.pdf']::before {
+                    content: var(--icon-pdf);
+                }
+                &[href$='.doc']::before,
+                &[href$='.docx']::before,
+                &[href$='.docm']::before,
+                &[href$='.xls']::before,
+                &[href$='.xlsx']::before,
+                &[href$='.xlsm']::before,
+                &[href$='.png']::before,
+                &[href$='.jpg']::before,
+                &[href$='.jpeg']::before,
+                &[href$='.gif']::before,
+                &[href$='.webp']::before {
+                    content: var(--icon-file);
+                }
+            }
+            .wp-block-button.is-style-outline .wp-block-button__link {
+                color: var(--color-text);
+                background: none;
+            }
+            @media (any-hover: hover) {
+                .wp-block-button__link:hover::before {
+                    background-color: var(--color-secondary);
+                    color: var(--jwsnj-color-sec);
+                }
+            }
         }
 
         @media (calc(768 * (1 / 16 * 1rem)) <= width) {
