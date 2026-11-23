@@ -290,3 +290,12 @@ test('reduced-motion backdrop override survives the open-state transition cascad
   assert.match(block, /body\._open-bg #overlay/);
   assert.match(block, /transition-duration: 0s/);
 });
+
+
+test('Header WordPress disclosure controls point to a unique direct submenu wrapper', () => {
+  const menu = readFileSync(new URL('../theme/inc/menu.php', import.meta.url), 'utf8');
+  const walker = menu.slice(menu.indexOf('class Custom_Global_Walker_Nav_Menu'), menu.indexOf('class Custom_Header_Sub_Walker_Nav_Menu'));
+  assert.match(walker, /\$submenu_id = 'gnl-submenu-' \. absint\(\$item->ID\)/);
+  assert.match(walker, /aria-controls="' \. esc_attr\(\$submenu_id\)/);
+  assert.match(walker, /<div id="' \. esc_attr\(\$submenu_id\)/);
+});
