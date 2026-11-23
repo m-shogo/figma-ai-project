@@ -133,3 +133,8 @@ test('Header and Footer WordPress disclosure buttons expose descriptive accessib
   assert.match(source, /if \(disclosure\) disclosure\.setAttribute\('aria-expanded', 'true'\)/);
   assert.match(source, /if \(button\) button\.setAttribute\('aria-expanded', String\(el\.getAttribute\('data-open'\) === 'true'\)\)/);
 });
+
+
+test('desktop mega-menu remains visible while keyboard focus is within a top-level nav item', () => {
+  assert.match(navigationCss, /&:hover,\s*&:focus-within\s*\{\s*\.gnl_wrapper-02\s*\{/);
+});
