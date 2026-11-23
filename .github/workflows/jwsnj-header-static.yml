@@ -13,6 +13,12 @@ on:
       - 'projects/jwsnj/theme/inc/menu.php'
       - 'projects/jwsnj/theme/css/layout/global_footer.css'
       - 'projects/jwsnj/tests/footer-menu-contract.test.mjs'
+      - 'projects/jwsnj/theme/css/blocks/wp-block-heading-style.css'
+      - 'projects/jwsnj/theme/css/blocks/wp-block-text-style.css'
+      - 'projects/jwsnj/theme/css/blocks/wp-block-list-style.css'
+      - 'projects/jwsnj/tests/parts-heading-contract.test.mjs'
+      - 'projects/jwsnj/tests/parts-paragraph-contract.test.mjs'
+      - 'projects/jwsnj/tests/parts-bullet-list-contract.test.mjs'
       - '.github/workflows/jwsnj-header-static.yml'
   push:
     branches: [so]
@@ -26,6 +32,12 @@ on:
       - 'projects/jwsnj/theme/inc/menu.php'
       - 'projects/jwsnj/theme/css/layout/global_footer.css'
       - 'projects/jwsnj/tests/footer-menu-contract.test.mjs'
+      - 'projects/jwsnj/theme/css/blocks/wp-block-heading-style.css'
+      - 'projects/jwsnj/theme/css/blocks/wp-block-text-style.css'
+      - 'projects/jwsnj/theme/css/blocks/wp-block-list-style.css'
+      - 'projects/jwsnj/tests/parts-heading-contract.test.mjs'
+      - 'projects/jwsnj/tests/parts-paragraph-contract.test.mjs'
+      - 'projects/jwsnj/tests/parts-bullet-list-contract.test.mjs'
       - '.github/workflows/jwsnj-header-static.yml'
   workflow_dispatch:
 
@@ -45,6 +57,8 @@ jobs:
         run: node --test projects/jwsnj/tests/header-menu-state.test.mjs
       - name: Test Footer WordPress menu contract
         run: node --test projects/jwsnj/tests/footer-menu-contract.test.mjs
+      - name: Test Figma-approved parts heading, copy and list contracts
+        run: node --test projects/jwsnj/tests/parts-*.test.mjs
       - name: Check WordPress Header and Footer PHP syntax
         run: |
           php -l projects/jwsnj/theme/template-parts/_header.php
