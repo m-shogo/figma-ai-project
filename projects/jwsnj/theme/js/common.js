@@ -359,10 +359,13 @@ window.addEventListener('resize', setVw);
       }
     });
     syncMobileMenu();
-    // Collapsed accordion submenus must not remain keyboard-focusable on SP.
-    // Desktop layouts display these links directly, so remove inert at the CSS breakpoint.
+    // Collapsed accordion submenus must not be keyboard-focusable on SP.
+    // Only the direct child wrapper belongs to this disclosure: a nested wrapper
+    // may be present, but must remain controlled by its own menu item.
     const syncSubmenuFocusability = (item, prefix, desktopMin) => {
-      const wrapper = item.querySelector(`[class*="${prefix}_wrapper"]`);
+      const wrapper = Array.from(item.children).find(child =>
+        child.matches(`[class*="${prefix}_wrapper"]`)
+      );
       if (wrapper) wrapper.inert = window.innerWidth < desktopMin && item.getAttribute('data-open') !== 'true';
     };
     const globalNavItems = document.querySelectorAll('[class*="gnl_item"]._hasChild');
