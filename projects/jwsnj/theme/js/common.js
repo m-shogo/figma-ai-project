@@ -357,12 +357,11 @@ window.addEventListener('resize', setVw);
     globalNavItems.forEach(item => {
         const itemButton = item.querySelector('[class*="gnl_button"]');
         if (!itemButton) return;
+        itemButton.setAttribute('aria-expanded', String(item.getAttribute('data-open') === 'true'));
         itemButton.addEventListener('click', function () {
-            if (item.getAttribute('data-open') === 'true') {
-                item.setAttribute('data-open', 'false');
-            } else {
-                item.setAttribute('data-open', 'true');
-            }
+            const isOpen = item.getAttribute('data-open') !== 'true';
+            item.setAttribute('data-open', String(isOpen));
+            itemButton.setAttribute('aria-expanded', String(isOpen));
         });
     });
 
@@ -370,12 +369,11 @@ window.addEventListener('resize', setVw);
     footerNavItems.forEach(item => {
         const itemButton = item.querySelector('[class*="gfl_button"]');
         if (!itemButton) return;
+        itemButton.setAttribute('aria-expanded', String(item.getAttribute('data-open') === 'true'));
         itemButton.addEventListener('click', function () {
-            if (item.getAttribute('data-open') === 'true') {
-                item.setAttribute('data-open', 'false');
-            } else {
-                item.setAttribute('data-open', 'true');
-            }
+            const isOpen = item.getAttribute('data-open') !== 'true';
+            item.setAttribute('data-open', String(isOpen));
+            itemButton.setAttribute('aria-expanded', String(isOpen));
         });
     });
 
