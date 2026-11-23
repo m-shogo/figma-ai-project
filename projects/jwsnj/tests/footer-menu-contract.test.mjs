@@ -31,3 +31,13 @@ test('footer preserves safe WordPress site identity and page top', () => {
   assert.match(footer, /id="js_gf_pageTop"/);
   assert.match(footer, /esc_html\(wp_date\('Y'\)\)/);
 });
+
+
+test('footer page-top link retains a readable name and visible keyboard focus', () => {
+  // CSS hides the inner span, so the anchor itself must supply the accessible name.
+  assert.match(footer, /<a href="#" aria-label="ページトップへ戻る"><span>ページトップへ戻る<\/span><\/a>/);
+  const pageTop = css.slice(css.indexOf('.gf_pageTop {'), css.indexOf('@media (calc(768'));
+  assert.match(pageTop, /&:focus-visible\s*\{/);
+  assert.match(pageTop, /outline:\s*2px solid var\(--color-text\)/);
+  assert.match(pageTop, /span\s*\{\s*display:\s*none;/);
+});
