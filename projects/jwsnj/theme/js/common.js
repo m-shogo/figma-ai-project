@@ -336,12 +336,18 @@ window.addEventListener('resize', setVw);
     };
     const closeMobileMenu = (restoreFocus = false) => {
       const wasOpen = $body.hasClass('_open-menu');
-      $body.removeClass('_open-menu _open-bg');
+      $body.removeClass('_open-menu');
+      // Search and the PC touch mega-menu can independently own the backdrop.
+      const touchOpen = document.querySelector('.global_navigation [class*="gnl_item"]._touchOpen');
+      if (!$body.hasClass('_open-search') && !touchOpen) $body.removeClass('_open-bg');
       syncMobileMenu();
       if (restoreFocus && wasOpen) $menuButton.trigger('focus');
     };
     $menuButton.on('click', function () {
-      $body.toggleClass('_open-menu _open-bg');
+      $body.toggleClass('_open-menu');
+      // Closing the hamburger must not conceal a separately opened search backdrop.
+      if ($body.hasClass('_open-menu') || $body.hasClass('_open-search')) $body.addClass('_open-bg');
+      else $body.removeClass('_open-bg');
       syncMobileMenu();
     });
     $('#gn_close').on('click', function () {
