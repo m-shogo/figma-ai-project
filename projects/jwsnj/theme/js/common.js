@@ -730,8 +730,10 @@ window.addEventListener('resize', setVw);
   const pageTop = function () {
     const gf_pageTop = $('#js_gf_pageTop');
     const $window = $(window);
-    // Restore the right visibility before the first scroll event (e.g. browser back navigation).
-    gf_pageTop.toggle($window.scrollTop() > 0);
+    // Restore visibility immediately and after back/forward-cache page restoration.
+    const syncPageTop = () => gf_pageTop.toggle($window.scrollTop() > 0);
+    syncPageTop();
+    $window.on('pageshow', syncPageTop);
     $window.on('scroll', function () {
       // Avoid queuing one animation per scroll event.
       gf_pageTop.stop(true, true);
