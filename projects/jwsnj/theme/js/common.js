@@ -366,7 +366,13 @@ window.addEventListener('resize', setVw);
       const wrapper = Array.from(item.children).find(child =>
         child.matches(`[class*="${prefix}_wrapper"]`)
       );
-      if (wrapper) wrapper.inert = window.innerWidth < desktopMin && item.getAttribute('data-open') !== 'true';
+      if (!wrapper) return;
+      const collapsed = window.innerWidth < desktopMin && item.getAttribute('data-open') !== 'true';
+      if (collapsed && wrapper.contains(document.activeElement)) {
+        const trigger = item.querySelector(`[class*="${prefix}_button"]`);
+        if (trigger) trigger.focus();
+      }
+      wrapper.inert = collapsed;
     };
     const globalNavItems = document.querySelectorAll('[class*="gnl_item"]._hasChild');
     globalNavItems.forEach(item => {
