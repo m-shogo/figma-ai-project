@@ -161,3 +161,10 @@ test('desktop touch-open mega-menu closes on Escape and restores parent-link foc
   assert.match(region, /closeAllTouchMenus\(\)/);
   assert.match(region, /if \(trigger\) trigger\.focus\(\)/);
 });
+
+
+test('PC touch mega-menu cleanup preserves backdrop while mobile navigation or search owns it', () => {
+  const closeBlock = source.slice(source.indexOf('const closeAllTouchMenus ='), source.indexOf('const touchMegaMenuSupport ='));
+  assert.match(closeBlock, /if \(!\$body\.hasClass\('_open-search'\) && !\$body\.hasClass\('_open-menu'\)\) \$body\.removeClass\('_open-bg'\)/);
+  assert.match(source, /\$\('#gns_close, #overlay'\)\.on\('click'/);
+});
