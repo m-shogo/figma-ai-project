@@ -28,7 +28,7 @@
         </div>
     </div>
     <p id="js_gf_pageTop" class="gf_pageTop">
-        <a href="#"><span>ページトップへ戻る</span></a>
+        <a href="#" aria-label="ページトップへ戻る"><span>ページトップへ戻る</span></a>
     </p>
     <p class="gf_copyright"><span>&copy; <?php echo esc_html(wp_date('Y')); ?> <?php echo esc_html(get_bloginfo('name')); ?></span></p>
 </footer>
