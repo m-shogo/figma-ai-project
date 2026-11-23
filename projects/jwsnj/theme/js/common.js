@@ -342,8 +342,14 @@ window.addEventListener('resize', setVw);
       const isOpen = $body.hasClass('_open-menu');
       $menuButton.attr('aria-expanded', String(isOpen));
       $menuButton.attr('aria-label', isOpen ? 'メニューを閉じる' : 'メニューを開く');
+      // Move focus out before hiding the navigation on close or a desktop-to-SP resize.
+      const hiddenForMobile = !isOpen && window.innerWidth < headerBreakpointMin;
+      const navigation = document.getElementById('global_navigation');
+      if (hiddenForMobile && navigation && navigation.contains(document.activeElement)) {
+        $menuButton.trigger('focus');
+      }
       // The desktop navigation remains available even when the mobile disclosure is closed.
-      $globalNavigation.attr('inert', !isOpen && window.innerWidth < headerBreakpointMin ? '' : null);
+      $globalNavigation.attr('inert', hiddenForMobile ? '' : null);
     };
     const closeMobileMenu = (restoreFocus = false) => {
       const wasOpen = $body.hasClass('_open-menu');
