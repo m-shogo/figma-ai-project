@@ -338,3 +338,8 @@ test('Header navigation focus exits before inert is applied on mobile close or r
   sync();
   assert.deepEqual(attrs.at(-1), ['navigation', 'inert', null], 'open SP menu must not be inert');
 });
+
+
+test('Header navigation does not retain empty CODIA class rules', () => {
+  assert.doesNotMatch(navigationCss, /^[ \t]*\.[A-Za-z][\w-]*\s*\{\s*\}[ \t]*$/m);
+});

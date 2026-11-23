@@ -116,3 +116,8 @@ test('Footer WordPress disclosure controls point to a unique direct submenu wrap
   assert.match(walker, /aria-controls="' \. esc_attr\(\$submenu_id\)/);
   assert.match(walker, /<div id="' \. esc_attr\(\$submenu_id\)/);
 });
+
+
+test('Footer does not retain empty CODIA class rules', () => {
+  assert.doesNotMatch(css, /^[ \t]*\.[A-Za-z][\w-]*\s*\{\s*\}[ \t]*$/m);
+});
