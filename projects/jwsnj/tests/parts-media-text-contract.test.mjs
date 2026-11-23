@@ -20,3 +20,13 @@ test('media assets remain CMS-driven and use proportional Figma crop', () => {
   assert.match(css, /overflow-wrap:\s*anywhere/);
   assert.doesNotMatch(css, /figma\.com\/api\/mcp\/asset|white-space:\s*nowrap|position:\s*absolute/);
 });
+
+test('media-text figure caption matches Figma 12px SP and 14px PC', () => {
+  assert.match(css, /\.wp-block-media-text__media \.wp-element-caption/);
+  assert.match(css, /font-size:\s*calc\(12 \* var\(--to-rem-func\)\)/);
+  assert.match(css, /line-height:\s*1\.6/);
+  assert.match(css, /font-size:\s*calc\(14 \* var\(--to-rem-func\)\)/);
+  assert.match(css, /line-height:\s*1\.5/);
+  assert.match(css, /font-weight:\s*500/);
+  assert.match(css, /margin-top:\s*calc\(20 \* var\(--to-rem-func\)\)/);
+});
