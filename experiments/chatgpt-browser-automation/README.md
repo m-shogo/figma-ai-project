@@ -51,3 +51,22 @@ BLOCKED: 無人送信の実機・許容条件の確認。
 ## 2026-11-24 追補
 
 方式比較と根拠は [RESEARCH.md](RESEARCH.md)。MCP Appのui/messageを外部から任意チャットに送信するAPIと誤認しない。共通の模擬状態判定 common/mock-gate.mjs と再現テスト tests/mock-gate.test.mjs を追加。JSによる74ケース成功、Node/CI/実機は未検証。現時点のstatusは MOCK_GATE_VERIFIED、LIVE_SEND_NOT_VERIFIED。無人送信は引き続き無効。
+
+## ローカル基盤の更新
+
+common/local-runner.mjs と mac/launchagent.mjs を追加。模擬実行の状態を実ファイルへ保存し、毎時起動用のplistを生成できる。Linux Nodeで9テストとplist解析成功。実サービス送信は0回、Macのlaunchd起動は未検証。
+
+### Macでのオフライン再現（送信なし）
+
+Nodeが実機で動くことを確認後、本フォルダから以下を実行する。既存のv0.2通知やChatGPTタスクを自動で変更しない。
+
+```sh
+node --test tests/*.test.mjs
+STATE="$HOME/Library/Application Support/JWSNJ-Browser-Mock"
+node common/local-runner.mjs init-mock "$STATE"
+node common/local-runner.mjs tick-mock "$STATE"
+node mac/launchagent.mjs "$STATE" 5 > "$STATE/mock.plist"
+plutil -lint "$STATE/mock.plist"
+```
+
+plistの生成までがこの手順の範囲。Mac実機での定期起動は別途確認。すべてmock専用であり、本物のFigmaやChatGPTへの接続・送信を行わない。完成判定はACCEPTANCE.mdの実送信・反復・実装成果の確認まで保留。
