@@ -47,3 +47,11 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 - PC `384:817` / SP `442:3079` を高精細contextで取得。既存ACF `navigation-large` のfield/PHPは維持し、Large専用CSS ownerを更新。PCは3列40px gap、SPは1列40px gap。画像比率3:2、radius5px、画像→本文24px、title18px/本文16px、本文内部20pxを照合。Smallナビは別仕様として変更しない。
 - 長文のgrid/flex shrinkと折返し、focus-visible、reduced-motionを追加。画像・矢印装飾の完全一致は今回未実装。既存CMS画像/placeholderをFigma素材と同一とは認定しない。#524の素材作業と競合しないCSS変更のみ。
 - 既存JWSNJ workflowのpathsへLargeナビCSSとテストを追加し、既存partsテストstepを利用する。実機PC/SP/中間幅、長文、keyboard、画像と矢印はPAGE-PARTSのDEFERRED_RUNTIME_QA。
+||||||| 78ad2ce
+## 2026-11-24: Codex desktop 接続とアコーディオン照合
+
+- 実行環境はMacのCodex desktop local。Figmaプラグインのローカルcatalog掲載 `figma-design-to-code/SKILL.md` を直接読み、create_sessionとFooter高精細context/screenshotに成功。PC/SPパーツ集はsparseのためアコーディオン `344:1116` / `442:2906` とナビ `384:817` / `442:3079` を直接取得した。過去のskill取得失敗はこの手動環境の現在の状態ではない。
+- 案件: 閉じた通常アコーディオンの左余白はPC/SPとも24px、右アイコン領域68px。既存desktopの32px上書きと余分な8px予約を除去。Q/A本文のflex子にmin-width:0を追加して長い非改行文字列による押し出しを抑える。
+- Theme: iconのrotate状態は既存native detailsを維持し、reduced-motionでtransitionを停止。静的契約テストは実際のWordPress表示やkeyboard動作を証明しない。後者は#523の既存アコーディオンQAで再確認。
+- 共通化候補（未昇格）: `git fetch origin so` はFETCH_HEADを更新したが、このcheckoutのorigin/soは別SHAだった。最新branch APIとFETCH_HEADの一致を確認してから分離worktreeを作った。`gh`の認証は無効でもGitHubプラグインとSSH fetchは成功した。秘密情報の取得やGit認証設定変更は行わない。
+- scheduler: 同一chat heartbeat診断を登録。COUNT=1は「future runsなし」で拒否されたため、繰返しruleと診断後PAUSED指示を使用。自動呼出結果はまだ未観測。手動成功を自動成功として報告しない。旧ChatGPT毎時タスクは変更していない。
