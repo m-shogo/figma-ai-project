@@ -25,9 +25,13 @@ export function describe(data={}){
  let code=r?.reason||r?.event||s.reason||'NOT_STARTED';
  if(s.pending)code=s.reason==='ATTEMPTING'?'RESULT_UNKNOWN':'RECONCILE_REQUIRED';
  const [title,help]=code==='UI_ERROR'?['実行できませんでした',r.message]:messages[code]??['安全のため停止しました','画面や選択状態を確認できません。「結果をコピー」で診断結果を共有してください。'];
+ if(data.versionMismatch)return {code:'VERSION_MISMATCH',title:'拡張の再読み込みが必要です',help:'設定画面と内部処理の版が一致していません。Chromeの拡張機能管理で本拡張を再読み込みし、その後に設定画面を再読み込みしてください。未確定の送信は解除されません。',tone:'warning',schedule:s.enabled?'定期送信オン':'定期送信オフ',sent:s.sent??0,skipped:s.skipped??0,next:'確認できません',cooldown:time(s.nextDue),lastSent:data.lastSent??null,unknown:!!s.pending};
  return {code,title,help,tone:s.pending?'warning':code==='CONFIRMED'?'success':code==='IDLE_EMPTY'?'ready':'neutral',schedule:s.enabled?'定期送信オン':'定期送信オフ',sent:s.sent??0,skipped:s.skipped??0,next:s.enabled?time(data.alarm?.scheduledTime??s.nextDue):'予定なし',cooldown:time(s.nextDue),lastSent:data.lastSent??null,unknown:!!s.pending};
 }
 export function report(data={}){
  const v=describe(data),c=data.config??{},last=v.lastSent;
- return ['Figma継続送信の結果',`状態: ${v.title}`,`理由: ${v.help}`,`診断コード: ${v.code}`,`定期実行: ${v.schedule}`,`送信確認済み: ${v.sent}件 / 見送り: ${v.skipped}件`,`次回予定: ${v.next}`,`次に送信できる時刻: ${v.cooldown}`,`対象（設定）: ${c.url??'未設定'}`,`送信予定: Figma +「${c.prompt??'慎重に進んで'}」`,last?`最後に確認できた送信: ${time(last.confirmedAt)}\n送信先: ${last.url}\nアプリ: Figma\n本文: ${last.prompt}`:'最後に確認できた送信: 記録なし（更新前の投稿は復元しません）',data.state?.pending?`結果未確定の試行: ${time(data.attemptDetails?.at)} / ${data.attemptDetails?.prompt??'記録なし'}`:'結果未確定の送信: なし','※投稿の確認と、Figma取得・案件実装の成功は別です。'].join('\n');
+ const attempt=data.attemptDetails,failed=data.lastFailure??data.lastResult;
+ const attemptText=data.state?.pending?`結果未確定の試行: ${time(attempt?.at??data.state.lastAttempt)} / ${attempt?.prompt??'詳細未記録（投稿の有無は不明）'}`:'結果未確定の送信: なし';
+ const diagnostic=`設定画面の版: ${data.uiBuild??'未記録'} / 内部処理の版: ${data.workerBuild??'未記録'}\n元の停止原因: ${failed?.reason??failed?.event??data.state?.reason??'未記録'}\n処理段階: ${attempt?.outcome?.phase??'未記録'}\n送信ボタン操作: ${attempt?.outcome?.clickAttempted===true?'試行あり（投稿確認とは別）':attempt?.outcome?.clickAttempted===false?'操作前に停止':'不明'}`;
+ return ['Figma継続送信の結果',`状態: ${v.title}`,`理由: ${v.help}`,`診断コード: ${v.code}`,diagnostic,`定期実行: ${v.schedule}`,`送信確認済み: ${v.sent}件 / 見送り: ${v.skipped}件`,`次回予定: ${v.next}`,`次に送信できる時刻: ${v.cooldown}`,`対象（設定）: ${c.url??'未設定'}`,`送信予定: Figma +「${c.prompt??'慎重に進んで'}」`,last?`最後に確認できた送信: ${time(last.confirmedAt)}\n送信先: ${last.url}\nアプリ: Figma\n本文: ${last.prompt}`:'最後に確認できた送信: 記録なし（更新前の投稿は復元しません）',attemptText,'※投稿の確認と、Figma取得・案件実装の成功は別です。'].join('\n');
 }

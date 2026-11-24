@@ -92,3 +92,11 @@ Humanが設定画面を転記: event=IDLE_EMPTY、enabled=false、owner未確認
 - 改善: 日本語の結果カード、送信内容preview、実送信確認履歴、予定、未保存表示、確認前の送信無効化、「保存して送信」、日本語結果の一括コピー、折りたたみJSONへ変更。lastResultを保存し、receipt確認後のlastSentに実際の送信内容snapshotを保存。後の設定変更から履歴を独立させる。
 - 検証: Nodeで20 tests PASS。HumanのOWNER_UNCONFIRMED状態、pending優先、成功とprobe/configureの区別、送信記録の設定変更耐性、結果不明時に成功履歴を作らないことを検証。全mjs構文チェック成功。実Chromeでは127.0.0.1上の架空データだけのUIを用い、未確認時disabled、確認後enabled、保存してprobe、コピー完了表示、未知コードでの停止表示を観測。実送信機能のない表示検証であり、拡張のDOM adapter成功ではない。検証タブとローカルserverは終了。
 - 実拡張ページのポリシー拒否は回避していない。0.2.0はローカルソース更新済みで、Chrome側の拡張と設定画面の再読み込みはHuman対応が必要。実チャットへの追加送信・既存タスク変更・定期開始は行っていない。
+
+## 2026-11-24 — UI_TIMEOUTとpending記録の不足
+
+- Humanの実機結果: owner=true、enabled=false、pendingあり、state.reason=UI_TIMEOUT、sent=0。共有用テキストではpendingにより診断コードがRECONCILE_REQUIREDとなり、原因を隠した。attemptDetailsが欠けているのに「結果未確定の試行: なし / 記録なし」と表示し、未試行と誤認しうる。
+- 観測と推測を分ける: UI要素待機のタイムアウトはstateから確認。Figma候補待ちか送信後receipt待ちかは旧記録では確定不能。新workerはpending保存前にattemptDetailsを保存しstatusでlastResult等も返すが、提示データにないため旧worker残存の可能性がある。部分的な転記の可能性もあり、版不整合と断定しない。
+- 0.2.1修正: adapterの各段階・clickAttemptedを結果へ付加、workerでoutcomeと元のlastFailureを保存。再読込/reconcileでUI_TIMEOUT等を消さない。pendingの保護表示を維持しつつ共有結果には元の理由を追加。詳細が欠ける旧記録はlastAttemptを参照し「詳細未記録（投稿の有無は不明）」と表示する。画面/workerのbuildを照合し、不一致では送信を無効化して明示する。
+- Nodeの全24 tests成功。旧pendingの原因保全・版不一致表示・詳細欠落を未試行にしないことを追加検証。構文とdiff確認も実施。実拡張0.2.1の再読み込みと実送信は未検証。adapterの操作方法は変更しておらず、タイムアウト修正済みとは主張しない。
+- Humanに対象チャットの新規投稿と下書き状態を依頼中。未確定pendingを自動解除・削除せず、再送しない。初回からの拡張送信確認数は提示記録では0のまま。認証・利用上限回避、既存タスク変更、Codex代替送信は行わない。

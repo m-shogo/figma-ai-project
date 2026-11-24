@@ -21,3 +21,19 @@ test('state checks and configuration are never presented as a successful send',(
  const data={lastResult:{event:'UI_ERROR',message:'入力を確認してください'}};
  assert.match(report(data),/入力を確認してください/);
 });
+test('legacy pending records report missing details as unknown rather than no attempt',()=>{
+ const text=report({state:{pending:'old',reason:'RECONCILE_REQUIRED',lastAttempt:0}});
+ assert.match(text,/詳細未記録（投稿の有無は不明）/);
+ assert.match(text,/送信ボタン操作: 不明/);
+ assert.doesNotMatch(text,/結果未確定の試行: なし/);
+});
+test('original failure and pre-click stage survive a reconciliation message',()=>{
+ const text=report({state:{pending:'x',reason:'RECONCILE_REQUIRED'},lastResult:{reason:'RECONCILE_REQUIRED'},lastFailure:{reason:'UI_TIMEOUT'},attemptDetails:{outcome:{phase:'SELECT_FIGMA',clickAttempted:false}}});
+ assert.match(text,/元の停止原因: UI_TIMEOUT/);assert.match(text,/処理段階: SELECT_FIGMA/);assert.match(text,/操作前に停止/);
+});
+test('old worker paired with new settings is explicitly blocked',()=>{
+ const data={versionMismatch:true,uiBuild:'0.2.1',state:{pending:'old',reason:'UI_TIMEOUT'}};
+ assert.equal(describe(data).code,'VERSION_MISMATCH');
+ assert.match(report(data),/内部処理の版: 未記録/);
+ assert.match(describe(data).help,/未確定の送信は解除されません/);
+});

@@ -1,13 +1,20 @@
 import {validateConfig,initialState,validState,gate} from './policy.mjs';
 import {operate} from './adapter.mjs';
 const ALARM='figma-continuation';
+const WORKER_BUILD='0.2.1';
 // Single writer in this extension. Persist pending BEFORE invoking the adapter.
 let queue=Promise.resolve();
 let cancellation=0;
 let halted=false;
 function serial(fn) { const next=queue.then(fn); queue=next.catch(()=>{}); return next; }
-const read=()=>chrome.storage.local.get(['config','state','lastResult','lastSent','attemptDetails']);
-const record=event=>chrome.storage.local.set({lastResult:{...event,at:Date.now()}});
+const read=()=>chrome.storage.local.get(['config','state','lastResult','lastSent','attemptDetails','lastFailure']);
+const record=async event=>{
+  const result={...event,at:Date.now()};
+  const fields={lastResult:result};
+  // Reconciliation and reload messages must not erase the original failure.
+  if(event.event==='STOPPED'&&!['RECONCILE_REQUIRED','RESULT_UNKNOWN','USER_STOP'].includes(event.reason))fields.lastFailure=result;
+  await chrome.storage.local.set(fields);
+};
 async function save(state) {
   await chrome.storage.local.set({state});
   await chrome.action.setBadgeText({text:state.enabled?'ON':'OFF'});
@@ -51,6 +58,8 @@ async function run(manual=false) {
   await save(pending);
   if(generation!==cancellation||halted) throw Error('CANCELLED');
   const outcome=await invoke(c,t,'send',pending.pending);
+  await chrome.storage.local.set({attemptDetails:{...details,outcome}});
+  if(outcome.event==='RESULT_UNKNOWN')await chrome.storage.local.set({lastFailure:{...outcome,at:Date.now()}});
   if(outcome.event!=='CONFIRMED') throw Error(outcome.event);
   const current=(await read()).state;
   const stopped=current.reason!=='ATTEMPTING';
@@ -65,12 +74,14 @@ async function stop(reason='USER_STOP') {
   cancellation++;
   halted=true;
   await chrome.alarms.clear(ALARM);
-  const {state}=await read();
+  const {state,lastFailure}=await read();
+  if(state?.pending&&!lastFailure&&!['ATTEMPTING','RECONCILE_REQUIRED','INSTALLED_OR_UPDATED','USER_STOP'].includes(state.reason))
+    await chrome.storage.local.set({lastFailure:{event:'STOPPED',reason:state.reason,at:state.lastOutputAt}});
   await chrome.storage.local.set({cancelledAttempt:state?.pending??null});
   if(validState(state)) await save({...state,enabled:false,reason,lastOutputAt:Date.now()});
 }
 async function dispatch(msg) {
-  if(msg.action==='status') return {...await read(),alarm:await chrome.alarms.get(ALARM)};
+  if(msg.action==='status') return {...await read(),workerBuild:WORKER_BUILD,alarm:await chrome.alarms.get(ALARM)};
   if(msg.action==='stop') {await stop();return {event:'STOPPED'};}
   if(msg.action==='configure') {
     const c=validateConfig(msg.config); const {state}=await read();

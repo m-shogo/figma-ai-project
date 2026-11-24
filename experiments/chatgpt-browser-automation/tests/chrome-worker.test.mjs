@@ -66,3 +66,11 @@ test('only the extension settings page may invoke worker actions',async()=>{
   assert.ok(h.rejects({id:'test',url:'chrome-extension://test/unexpected.html'}));
   assert.equal(h.calls,0);
 });
+test('legacy pending failure is preserved when startup requires reconciliation',async()=>{
+ const h=await harness({state:{...initialState(),pending:'old-attempt',reason:'UI_TIMEOUT',lastAttempt:0}});
+ assert.equal(h.db.lastFailure.reason,'UI_TIMEOUT');
+ assert.equal(h.db.state.reason,'RECONCILE_REQUIRED');
+ const result=await h.message({action:'status'});
+ assert.equal(result.workerBuild,'0.2.1');
+ assert.equal(h.calls,0);
+});

@@ -1,7 +1,7 @@
 // Runs in an isolated extension world. Reads only controls and user-turn receipts.
 // No fetch, cookies, tokens, private API, response-body collection or remote code.
 export async function operate({url,connector,prompt,mode,attempt}) {
-  const fail = reason => ({event:reason});
+  const fail = reason => ({event:reason,phase:'PREFLIGHT',clickAttempted:false});
   const visible = el => !!el && el.getClientRects().length > 0;
   const controls = () => [...document.querySelectorAll('button')].filter(visible);
   const name = el => (el.getAttribute('aria-label') || el.textContent || '').replace(/\s+/g,' ').trim();
@@ -54,32 +54,38 @@ export async function operate({url,connector,prompt,mode,attempt}) {
     [...el.querySelectorAll('a')].some(a => a.getAttribute('href') === '/plugins/plugin_'+connector.slice(6))).length;
   const before = receiptCount();
   let clicked = false;
+  let phase = 'PREPARE_INPUT';
   try {
     input.focus();
     if (!document.execCommand('insertText',false,'@Figma')) throw Error('INPUT_UNSUPPORTED');
     if (input.textContent !== '@Figma') throw Error('INPUT_CHANGED');
+    phase = 'SELECT_FIGMA';
     const candidate = await wait(() => button('Figma Create designs, ship to code'));
     candidate.click();
     await wait(() => input.querySelector('[app-mention-path]'));
     const mentions = input.querySelectorAll('[app-mention-path]');
     if (mentions.length !== 1 || mentions[0].getAttribute('app-mention-path') !== connector || mentions[0].getAttribute('contenteditable') !== 'false') throw Error('MENTION_UNVERIFIED');
+    phase = 'ADD_PROMPT';
     input.focus();
     const selection = getSelection();
     const range = document.createRange(); range.selectNodeContents(input); range.collapse(false);
     selection.removeAllRanges(); selection.addRange(range);
     if (!document.execCommand('insertText',false,prompt)) throw Error('INPUT_UNSUPPORTED');
     if (input.textContent.replace(/\s+/g,' ').trim() !== `Figma ${prompt}`) throw Error('INPUT_CHANGED');
+    phase = 'FIND_SEND';
     const send = await wait(() => { const b=button('Send'); return b && !b.disabled && b; });
     if (interrupted || check() || composer() !== input || mentions[0].getAttribute('app-mention-path') !== connector) throw Error('PRE_SEND_CHANGED');
     const {state,cancelledAttempt} = await chrome.storage.local.get(['state','cancelledAttempt']);
     if (!attempt || cancelledAttempt===attempt || state?.pending !== attempt || state.reason !== 'ATTEMPTING') throw Error('CANCELLED');
     if (interrupted || check()) throw Error('PRE_SEND_CHANGED');
+    phase = 'CLICK_SEND';
     clicked = true; send.click();
+    phase = 'VERIFY_RECEIPT';
     await wait(() => receiptCount() === before+1 && composer()?.textContent.trim() === '');
-    return {event:'CONFIRMED',figmaSelected:true};
+    return {event:'CONFIRMED',figmaSelected:true,phase:'VERIFY_RECEIPT',clickAttempted:true};
   } catch(e) {
     // Keep partial draft for inspection. Never automatically clear/retry it.
-    return fail(clicked ? 'RESULT_UNKNOWN' : String(e.message));
+    return {event:clicked ? 'RESULT_UNKNOWN' : String(e.message),phase,clickAttempted:clicked};
   } finally {
     document.removeEventListener('keydown',intervene,true);
     document.removeEventListener('pointerdown',intervene,true);
