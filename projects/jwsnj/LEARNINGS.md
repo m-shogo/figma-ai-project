@@ -42,6 +42,12 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 - PR #563 initially failed live CI despite correct numbered-list assertions: the older unordered-list test extracted CSS by searching a *comment* marking the next section. Changing the comment broke that brittle boundary. The recovery changed selectors to structural anchors in both unordered and ordered tests; rerun 3 GitHub checks SUCCESS before merge. Avoid coupling contract tests to comments or incidental formatting; assert semantically meaningful CSS declarations and existing selector ownership.
 - A CSS change to shared Gutenberg selectors impacts fixed pages outside the parts catalog. Static/CI evidence only; record cross-page PC/SP, long text, viewport transitions, editor-side controls and WordPress runtime in #523 DEFERRED_RUNTIME_QA. Assets remain #524 BLOCKED until real bytes, SHA-256, rights, callsites and visual QA are verified.
 
+## 2026-11-24: パーツ集Largeナビのsource差分
+
+- PC `384:817` / SP `442:3079` を高精細contextで取得。既存ACF `navigation-large` のfield/PHPは維持し、Large専用CSS ownerを更新。PCは3列40px gap、SPは1列40px gap。画像比率3:2、radius5px、画像→本文24px、title18px/本文16px、本文内部20pxを照合。Smallナビは別仕様として変更しない。
+- 長文のgrid/flex shrinkと折返し、focus-visible、reduced-motionを追加。画像・矢印装飾の完全一致は今回未実装。既存CMS画像/placeholderをFigma素材と同一とは認定しない。#524の素材作業と競合しないCSS変更のみ。
+- 既存JWSNJ workflowのpathsへLargeナビCSSとテストを追加し、既存partsテストstepを利用する。実機PC/SP/中間幅、長文、keyboard、画像と矢印はPAGE-PARTSのDEFERRED_RUNTIME_QA。
+
 ## 2026-11-24: Codex desktop 接続とアコーディオン照合
 
 - 実行環境はMacのCodex desktop local。Figmaプラグインのローカルcatalog掲載 `figma-design-to-code/SKILL.md` を直接読み、create_sessionとFooter高精細context/screenshotに成功。PC/SPパーツ集はsparseのためアコーディオン `344:1116` / `442:2906` とナビ `384:817` / `442:3079` を直接取得した。過去のskill取得失敗はこの手動環境の現在の状態ではない。

@@ -80,27 +80,49 @@
                 }
             }
         }
-        /* MARK: 大 */
+        /* MARK: 大 — Figma PC 384:817 / SP 442:3079 */
         &.--large {
             gap: calc(40 * var(--to-rem-func));
+            grid-template-columns: minmax(0, 1fr);
             .navigation {
+                min-width: 0;
                 a {
                     flex-direction: column;
-                    gap: calc(20 * var(--to-rem-func));
+                    gap: calc(24 * var(--to-rem-func));
+                    &:focus-visible {
+                        outline: calc(2 * var(--to-rem-func)) solid var(--color-accent);
+                        outline-offset: calc(4 * var(--to-rem-func));
+                    }
                     .image {
-                        border-radius: calc(8 * var(--to-rem-func));
-                        aspect-ratio: 335 / 219;
+                        width: 100%;
+                        border-radius: calc(5 * var(--to-rem-func));
+                        aspect-ratio: 3 / 2;
                     }
                     .content {
+                        min-width: 0;
+                        width: 100%;
+                        font-family: var(--font-jwsnj-ja);
                         .title {
-                            font-size: calc(24 * var(--to-rem-func));
-                            text-underline-offset: calc(6 * var(--to-rem-func));
+                            font-size: calc(18 * var(--to-rem-func));
+                            line-height: 1.5;
+                            letter-spacing: 0.05em;
+                            color: var(--color-text);
+                            text-decoration: none;
                         }
                         .text {
                             margin-top: calc(20 * var(--to-rem-func));
                             font-size: calc(16 * var(--to-rem-func));
+                            line-height: 1.4;
+                            letter-spacing: 0.05em;
+                            overflow-wrap: anywhere;
                         }
                     }
+                }
+            }
+            @media (prefers-reduced-motion: reduce) {
+                .navigation a .image img,
+                .navigation a .content {
+                    transition: none;
                 }
             }
         }
@@ -138,17 +160,7 @@
                 /* margin-top: calc(48 * var(--to-rem-func)); */
             }
             &.--large {
-                gap: calc(60 * var(--to-rem-func));
-                display: grid;
-                grid-template-columns: repeat(2, 1fr);
-                .navigation {
-                    a {
-                        .content {
-                            .title {
-                            }
-                        }
-                    }
-                }
+                grid-template-columns: repeat(3, minmax(0, 1fr));
             }
             &.--small {
                 grid-template-columns: repeat(2, 1fr);
