@@ -1,15 +1,15 @@
 # ChatGPT ブラウザ操作による継続実装 — 研究正本
 
-Status: HUMAN-APPROVED GOAL / IMPLEMENTATION NOT VERIFIED
+Status: FIGMA_SELECTION_OBSERVED / LIVE_SEND_BLOCKED
 Updated: 2026-11-24 JST
 Scope: ブラウザ起動・ChatGPTへの入力・実行状態管理。WordPress案件コード自体とは独立。
 Authority: ../../AGENTS.md、../../docs/agent-recurring-work-preflight.md、../../docs/recurring-failure-recovery.md、../../docs/scheduled-agent-handoff.md
 
 ## 最終ゴール（Human指定）
 
-既存のChatGPT実装チャットで真正なFigmaプラグインを選択し、「慎重に進めて」を自動送信する。毎時起動を初期値とし、前回の生成・ツール実行中なら送信しない。追加のAPI料金やAIサブスクリプションを発生させず、既存の高性能ChatGPTモデルを使い、正常時は人の操作なしで継続する。
+既存のChatGPT実装チャットで真正なFigmaプラグインを選択し、「慎重に進んで」を自動送信する。毎時起動を初期値とし、前回の生成・ツール実行中なら送信しない。追加のAPI料金やAIサブスクリプションを発生させず、既存の高性能ChatGPTモデルを使い、正常時は人の操作なしで継続する。
 単なるリマインダー・チャットを開く・コピー・手動送信は中間成果であり、最終ゴールではない。
-ブラウザUIでの無人入力が許容されるか、真正なプラグイン選択が可能かは未確定。公式の利用条件・対応手段を確認する。制限回避、非公開API、CAPTCHAや認証の回避、無許可の出力自動抽出は行わない。許容条件を確認できなければ無人送信を有効化せず、BLOCKEDと明示する。
+ブラウザUIでの無人入力が許容されるか、真正なプラグイン選択はM5の接続済みChromeで観測済みだが、反復再現は未検証。公式の利用条件・対応手段を確認する。制限回避、非公開API、CAPTCHAや認証の回避、無許可の出力自動抽出は行わない。許容条件を確認できなければ無人送信を有効化せず、BLOCKEDと明示する。
 
 ## 研究対象
 
@@ -27,7 +27,7 @@ Authority: ../../AGENTS.md、../../docs/agent-recurring-work-preflight.md、../.
 | | 旧Mac | 新Mac |
 |---|---|---|
 | Hardware | MacBook Pro Retina 15-inch Mid 2015 / Intel i7 2.2GHz 4-core / 16GB | MacBook Pro M5 Pro / 24GB |
-| OS | Monterey 12.7.6（確認済み） | 実機で確認 |
+| OS | Monterey 12.7.6（既存記録、今回未検証） | macOS 26.4.1 / arm64（今回実測） |
 | 優先 | 長時間安定・対応ブラウザ・少ない依存・低消費電力 | DOM/アクセシビリティベースの高精度判定・テスト |
 | 候補 | セキュリティ更新のある対応ブラウザ、OS標準の定期起動、必要なら対応版Hammerspoon | 現行Playwright等のUIテスト技術、専用ブラウザプロファイル、OS標準の定期起動 |
 | 自動送信 | 未検証・無効 | 未検証・無効 |
@@ -43,14 +43,16 @@ Authority: ../../AGENTS.md、../../docs/agent-recurring-work-preflight.md、../.
 
 ## 現状
 
-このコミットはDOCUMENTATION_ONLY。Mac用補助ZIP v0.1/v0.2は過去の会話で提供されたが、本研究のGit上のコードとしては未取り込み。現時点で実ファイル・実機テスト・無人送信は未確認。以前の補助版は最終ゴールを満たさない。今回もスケジュールや案件コードは変更しない。
+実装済み: common/ の模擬状態判定・永続化・同一端末内排他と mac/ のmock専用plist生成。実サービス送信アダプターと無人送信は未実装・無効。
 
-READY: (1) 公式利用条件と正式な操作経路を確認 (2) 各Macで本人操作による選択・送信の再現と状態判定を検証 (3) 許容される範囲の操作をモックUIで再現し、誤送信・重複防止をテスト。
-BLOCKED: 無人送信の実機・許容条件の確認。
+実機確認済み: M5 Pro / macOS 26.4.1 / Chrome 158.0.8127.37で対象チャットを識別し、空の入力欄から `@Figma` 候補を選択。指定connectorに一致する非編集メンションが生成された。未送信の検証入力は消去済み。Node v24.15.0で既存テスト全件PASS。詳細・限界は [LEARNINGS.md](LEARNINGS.md)。
+
+BLOCKED: 外部ツールからの無人反復送信が正式に許容される条件を確認できていない。禁止と断定する根拠とも区別する。実送信・定期起動は実施せず、既存タスクと案件コードは変更していない。
+NEXT: 公式の対応経路またはOpenAIの回答で当該条件を確認し、既存タスクとownerを照合してから単発送信を検証する。許容条件が変わらない限り、模擬試験だけの追加や別の入力技術への置換でゲートを回避しない。
 
 ## 2026-11-24 追補
 
-方式比較と根拠は [RESEARCH.md](RESEARCH.md)。MCP Appのui/messageを外部から任意チャットに送信するAPIと誤認しない。共通の模擬状態判定 common/mock-gate.mjs と再現テスト tests/mock-gate.test.mjs を追加。JSによる74ケース成功、Node/CI/実機は未検証。現時点のstatusは MOCK_GATE_VERIFIED、LIVE_SEND_NOT_VERIFIED。無人送信は引き続き無効。
+方式比較と根拠は [RESEARCH.md](RESEARCH.md)。MCP Appのui/messageを外部から任意チャットに送信するAPIと誤認しない。共通の模擬状態判定 common/mock-gate.mjs と再現テスト tests/mock-gate.test.mjs を追加。当初はJSによる74ケース成功のみ。今回MacのNodeでも既存テストを実行済み。CI・実送信は別判定。現時点のstatusは MOCK_GATE_VERIFIED、LIVE_SEND_NOT_VERIFIED。無人送信は引き続き無効。
 
 ## ローカル基盤の更新
 

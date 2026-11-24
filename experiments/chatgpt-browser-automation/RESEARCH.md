@@ -38,3 +38,11 @@ tests/mock-gate.test.mjs は再現用Nodeテスト。実Nodeランナー/CIは�
 - 正式な利用条件と対応するPlus/端末での機能を確認する。
 - ローカル模擬UIでIDLE/BUSY/UNKNOWNと遷移、単一owner、永続化、タイマーをテストする。
 - 各Macの実機で真正なFigma選択と本人送信を確認。正式な手段が確認できたら管理下の単発送信、次いで反復送信の受入試験へ。
+
+## 2026-11-24 — Macでの操作経路と公式資料の再確認
+
+- 接続済みChromeから対象チャットを開き、通常の入力欄で `@Figma` → `Figma Create designs, ship to code` 候補選択が成立した。非編集メンションの `app-mention-path` / `data-prompt-link-href` がHuman指定connectorと一致。リンク文字列を貼っただけではない。実送信は行っていない。
+- [日本等EEA外向け利用規約](https://openai.com/policies/row-terms-of-use/)（ページ表示の発効日2026-01-01）を確認。自動データ/出力抽出、制限・保護措置回避の禁止を確認した。これをUI入力すべての禁止とも、本件の無人反復入力の明示的許可とも読み替えない。本件の正式許容条件はUNDETERMINED。
+- [Extensions公式ガイド](https://developers.openai.com/plugins/build/extensions) とそこからリンクされる [spec](https://github.com/openai/mcp-extensions/blob/main/docs/spec.md#prompt-target-and-send-behavior) を再確認。`ui/message` のtargetはactive/newであり、任意の既存会話ID指定の経路は確認できない。現在のChromeでplugin自体を選択できた観測と、プラグインの検索アイテムを返すComposer At-Mentions拡張の対応表は区別する。
+- [定期タスク公式ヘルプ](https://help.openai.com/en/articles/10291617-scheduled-tasks-in-chatgpt) は公式の定期実行を説明するが、外部ブラウザ送信の許容条件や本件Figma継承の実証にはならない。既存タスクを変更せず、Work移行も行わない。
+- 判断: 正式許容条件が確認できないまま送信・無人運用を有効化しない。解除には、対象ChatGPT surfaceにおける外部UIの無人反復送信について公式文書またはOpenAIの回答が必要。新しい根拠が得られたら再評価する。

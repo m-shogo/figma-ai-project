@@ -45,3 +45,17 @@ Humanの明示受入条件: 既存JWSNJチャットへ真正なFigma選択付き
 - mac/launchagent.mjs は毎時指定分のmock-only LaunchAgent plistを生成。インストールや起動はしない。対象の旧Mac/新Macの実機、Nodeの対応バージョン、launchctlによる起動は未検証。
 - Linux / Node v22.16.0 で tests/local-runner.test.mjs と tests/launchagent.test.mjs を実行、9テスト成功・0失敗。実プロセス・ディスク、仮想24時間のslot、壊れた状態、ロック、停止を検証。Python plistlibで生成plistの引数・時刻・RunAtLoadを解析しPASS。保存した4ファイルのGit blob SHAは実際にテストしたファイルと一致。
 - 次の最優先は真正なFigma選択・既存チャットへの送信ができる許容経路の実機検証。ローカル基盤の追加テストだけを増やして無人運用の成功と主張しない。既存タスク・案件Themeは変更しない。
+
+## 2026-11-24 — M5実機でFigma選択を観測、送信ゲートは未解除
+
+- 基準: GitHubから明示fetchしたso `08516fa26e518c022444098f540cbd40ef525aeb`、既存PR #592はopen/未merge、head `e068b413bac490c11bde3811a058693e0c8f7953`。PRコメント一覧は空。研究ブランチを引き継ぎ、変更は本フォルダのみ。
+- 実測環境: Apple M5 Pro、メモリ25769803776 bytes、macOS 26.4.1 build 25E253、arm64、Chrome 158.0.8127.37、Node v24.15.0。旧Macは今回アクセスしていない。
+- 実操作: Codexのcua_replで接続済みChromeからHuman指定URLを開いた。タイトル「ニュージャージー毎時実装」とURL一致。入力欄は空。Add files and moreにFigmaが初期表示されなかったため、入力欄へ `@Figma` と入力して候補を表示し、`Figma Create designs, ship to code` をクリック。通常文字列からFigmaアイコン付き非編集メンションへ変化した。
+- 選択根拠: 入力欄のDOMに `app-mention-name="figma"`、`app-mention-path` と `data-prompt-link-href` がHuman指定connectorと一致するspan、`contenteditable="false"` を観測。これは選択成立の単発観測であり、Figmaツール呼出・取得成功の証拠ではない。DOM全文・画像の署名URL・会話全文はrepoへ保存しない。以後のprobeでは必要な属性のみのallowlistで取得する。
+- 安全な終了: Sendは押さず、本文「慎重に進んで」も送信せず、自分が作った検証入力を空へ戻したことをAX stateで確認。ユーザーの既存下書きの上書きなし。既存スケジュール変更なし、launchd未導入、ソフト追加インストールなし。
+- 以前の `Browser access requires the originating browser context` は今回発生しなかった。接続不可を現在のブロッカーとして持ち越さない。ただしCodexの接続済みUI操作が可能なことと、独立した毎時サービスとして使えることは別。
+- Git取得の注意: このcheckoutのremote.origin.fetchは別の単一branchに限定されていた。通常fetchだけではsoを更新できず、明示refspecでsoと研究branchを取得した。`git switch --track origin/...` は追跡対象判定で失敗しindex/worktreeのみ切り替わったため、同じrefへ `git switch --no-track -c` でbranch/HEADを整合させた。最終的に既存の未追跡 .DS_Store / cku.zip以外はclean。Git/SSH設定・元ファイルを変更していない。
+- GitHub CLI: `gh pr view` はHTTP 401 / AUTH_PERMISSION。認証設定を変えずGitHubコネクタのget_pr_infoでPR状態取得に成功。fetch_pr_commentsは引数名をrepo_full_nameへ訂正して成功。
+- 実行検証: `node --test experiments/chatgpt-browser-automation/tests/*.test.mjs` がMacで11 tests / 11 pass / 0 fail。内訳は既存9テストと74ケース・121 assertionsのスクリプト。模擬基盤の再検証であり新しいモックは追加していない。証拠は本Codex実行のコマンド出力（2026-11-24 14:13 JST）。
+- BLOCKED / UNDETERMINED: RESEARCH.md記載の一次資料を再確認したが、外部UIからの無人反復入力の正式許容条件は確認できない。入力が全面禁止という結論ではない。Humanが指定したGate 0により実送信アダプター・定期起動へは進めない。解除条件は公式根拠またはOpenAI回答。問い合わせは送信していない。
+- 今回の実サービス送信成功0回、実定期起動0回、Figma取得・JWSNJ実装成果は未検証。選択UIの到達点と安全な停止を記録し、完成宣言しない。
