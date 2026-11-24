@@ -54,7 +54,8 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 - 既存 `logo.svg` は公式の桜マークとバイトが違う。上書きせず、Header/Footer の呼び出しだけ公式ファイルへ切り替えた。CTA アイコンと箇条書きドット、blossom はバイトだけ保存し、未承認 URL や未解決の h4 には接続していない。
 - 静的契約は `tests/official-svg-asset-contract.test.mjs`。表示・キーボードの実機確認は引き続き #523。
 - パーツ集 `339:23` の未取得 SVG は外部リンク `ico-blank` だけだった。h4 と区切り線の花は `ico_blossom` と同一バイト。矢印・ページ内リンク・アコーディオンは Font Awesome で、SVG 化しない。
-- TOP の残りベクターと写真は `src/images/top/` と `theme/images/top/` に保存した。写真は WebP。キャッチコピーの SP は PC と並びが違うので別 SVG。管理画面が持つ写真と未承認リンクは `front-page.php` へ直書きしていない。未接続の一覧は `docs/DESIGN_FOUNDATION.md` の「残作業」。
+- TOP の残りベクターと写真は `src/images/top/` と `theme/images/top/` に保存した。写真は WebP。キャッチコピーの SP は PC と並びが違うので別 SVG。管理画面が持つ写真と未承認リンクは `front-page.php` へ直書きしていない。
+- 他環境への引き継ぎは `docs/CURRENT_AUTHORITY.md` の「2026-11-24 公式素材は Git にある」と、`docs/DESIGN_FOUNDATION.md` の「残作業」。Cursor へ頼むのは未保存の Figma バイトだけ。保存済みの接続はどの環境でもできる。
 
 ## 2026-11-24: Codex desktop 接続とアコーディオン照合
 
