@@ -140,6 +140,8 @@ PCメニュー `599:2726` の `get_variable_defs` で `color/separator_light = #
 
 ## 2026-11-21 Header/Footer限定・Figma実アセット照合（工程ゲート継続）
 
+2026-11-24 追記: この節の「実体を保存していない」「curl できない」は当時の記録。Header/Footer と TOP の公式バイトは #599 / #600 で Git にある。今の分け方は下の「残作業」。
+
 - 開始 `so`: `49df7a1f3a63d4bc688d428bda0b129025da2a43`。open PR #515 は一覧のDraftで下流工程として保留、#516 は全案件共通ゲート規約の未統合PR。Header/Footerのページ担当ファイルは編集しない。
 - Figma PC `0:1` / SP `263:12` のスクリーンショット取得、footer `221:335`、PC open menu `599:2726`、SP menu `480:3954` の design context を実際に取得。前回の「context未取得」は今回解消。skill一覧は空で必須skillの本文は取得不能、従ってskill遵守までPASSとはしない。
 - Footer `221:335` は **SVG 6点 / raw image 0点**、PC menu `599:2726` は **SVG 14点 / raw image 14点** とFigmaのasset inventoryで確認。これはエクスポートURL取得の成功であり、リポジトリへの素材配置完了ではない。URLは短命なので正本へ記載しない。
@@ -196,29 +198,34 @@ TOP PC `114:28` / SP `279:2136` から、ベクターは SVG、写真は元画�
 
 `front-page.php` にはまだ置いていない。メインビジュアル・各部紹介・バナー・About の写真は管理画面の画像で、コースと CTA のリンク先は未承認のため。ブラウザ表示は #523 のまま。
 
-## 残作業（2026-11-24、`so` #599 / #600 時点）
+## 残作業（2026-11-24、`so` #599 / #600 / #601）
 
-素材の再取得は不要。次は接続と、ローカル WordPress が使えるようになってからの表示確認。
+正本はこの Git。Cursor / Claude / Codex / Copilot のどれでも、`so` のこの節を読む。チャットだけの記録は使わない。
 
-保存済みで、テーマの表示にはまだ繋いでいないもの:
+### Cursor に依頼すること
 
-- フッターの箇条書きドット。サイトマップは WordPress メニューのまま
-- `ico_admission.svg` / `ico_parents.svg` / `ico_recruit.svg`。遷移先 URL が未承認
-- `ico_blossom.svg`。見出し h4 と区切り線は同じ花
-- `ico-blank.svg`。ボタンは Font Awesome のまま
-- `ico_school.svg`。メインビジュアルの CTA
-- `images/top/` のキャッチコピー、地図とピン、各部紹介の装飾、`ico_flow` / `ico_fee` / `ico_visit`、Instagram イラスト、見出し下線
-- `images/top/` の WebP。メインビジュアル、About、コース、バナー、入学検討、背景。交通アクセスは `img_mv-06.webp`、教育環境は `img_mv-05.webp` を再利用する
+リポジトリにまだ無い Figma 公式バイトの取得だけ。2026-11-21 の別環境は `www.figma.com` の DNS が解けず、短命 URL を保存できなかった。
 
-意図的に残しているもの:
+- メニュー展開の写真。PC `599:2726` と Large ナビ `384:817` の JPEG は意図的に未保存。必要なら公式バイトを WebP で `src/images/` と `theme/images/` の両方へ置く
+- 上の一覧と `tests/official-svg-asset-contract.test.mjs` に無い、新しい公式 SVG / 写真が出たとき
 
-- Font Awesome は SVG にしない
-- メニュー写真の JPEG は未保存
-- コース紹介の下層は作らない
-- 電話、住所、SNS、寄付の URL は追加しない
-- ブラウザの hover / open / SP・PC 確認は #523。`DEFERRED_RUNTIME_QA.md` の PAGE-TOP と FOUND-03
+依頼しないこと: Font Awesome の SVG 化。保存済みファイルの再ダウンロード。電話・住所・SNS・寄付 URL の創作。コース紹介の下層。
 
-次の実装単位は TOP を 1 セクションずつ。装飾 SVG はテーマの静的ファイル、写真は既存 ACF（`top_slider`、コース、バナー、お知らせ）へ。リンク先が未承認のボタンに href を作らない。
+### Cursor が Git に入れたこと
+
+- #599: Header/Footer の公式 SVG。ヘッダーとフッターの桜マーク、フッターの左右・線・生徒・パズルはテーマから参照している。サンプル `logo.svg` は上書きしていない
+- #599: 保存のみ。フッターのドット、`ico_admission` / `ico_parents` / `ico_recruit`、`ico_blossom`、`ico-blank`、`ico_school`
+- #599: パーツ集 `339:23` の新しい SVG は `ico-blank` だけ。h4 と区切り線の花は `ico_blossom` と同じ。矢印・ページ内リンク・アコーディオンは Font Awesome
+- #600: TOP の SVG と WebP を `src/images/top/` と `theme/images/top/` に同じバイトで保存。`front-page.php` には未接続
+- ハッシュは `tests/official-svg-asset-contract.test.mjs`。短命の Figma URL はコードに無い
+
+### 残っていること（ファイルは Git にあるので、どの環境でも実装できる）
+
+- 未接続の SVG をテーマへつなぐ。フッターのドット、花、`ico-blank`、`ico_school`、TOP のキャッチコピー、地図、各部紹介の装飾、手続きアイコン、Instagram イラスト、見出し下線
+- `ico_admission` / `ico_parents` / `ico_recruit` と CTA は、遷移先 URL が承認されるまでボタンを作らない
+- TOP の WebP は既存 ACF（`top_slider`、コース、バナー、お知らせ）へ。`front-page.php` へ写真を直書きしない。交通アクセスは `img_mv-06.webp`、教育環境は `img_mv-05.webp`
+- TOP は 1 セクションずつ。コース紹介の下層は作らない
+- ブラウザの hover / open / SP・PC は #523。`DEFERRED_RUNTIME_QA.md` の PAGE-TOP と FOUND-03。静的テストの成功を表示確認と書かない
 
 
 ## Human typography policy（2026-11-21）

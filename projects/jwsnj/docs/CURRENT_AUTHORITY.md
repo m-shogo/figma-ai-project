@@ -77,3 +77,13 @@ TOP の主なパーツ（PC）:
 - Header/Footer source functionality, responsive/keyboard static checks, WordPress ownership and relevant CI must still be reviewed; any serious defect blocks dependent work. **Missing SVG bytes or deferred runtime QA alone must not halt unrelated, verifiable work.**
 - The Human explicitly authorized moving toward the **parts catalog** after source-level Header/Footer quality review and phase transition documentation. This is a narrow exception to the older all-PASS phase gate, **not** permission to bypass unresolved functional or CMS blockers, or to start TOP/course/detail pages. Before implementing parts, read Figma parts PC `339:23` / SP `433:2015`, inspect Theme components and 10-point preflight, then make small CI-reviewed PRs. Track provisional vs final acceptance separately.
 - If a scheduled prompt still says that every phase gate must PASS before any parts work, reconcile that stale launcher with this newer Human decision; do not silently claim full Header/Footer acceptance.
+
+## 2026-11-24 公式素材は Git にある（全環境共通）
+
+Header/Footer と TOP の公式 SVG / WebP は #599 / #600 でこのリポジトリに入った。上の「SVG が無いので仮置きしてよい」は、**まだ Git に無い素材**に限る。保存済みファイルを仮画像で置き換えない。
+
+どの Agent でも `docs/DESIGN_FOUNDATION.md` の「残作業」を読む。チャットや Cursor 専用の記録は正本にしない。
+
+- Cursor に依頼するのは、リポジトリにまだ無い Figma 公式バイトの取得だけ
+- 保存済みファイルのテーマ接続と、未承認 URL を作らない実装は、どの環境でもできる
+- ブラウザ確認は #523。表示できたと書かない
