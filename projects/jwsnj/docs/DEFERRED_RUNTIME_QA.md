@@ -53,7 +53,7 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 | PAGE-PARTS | P1 | NOT_READY_IMPLEMENTATION | パーツ集 `339:23` / `433:2015`。共通部品のPC/SP geometry、状態、画像・hover動作と他テンプレートへの適用 |
 | PAGE-SINGLE | P1 | NOT_READY_IMPLEMENTATION | 記事詳細 `392:1279` / `480:3566`。本文・画像・見出し・空欄・関連記事等の構造をFigmaと実データで確認（URL未確定部分は別途保留） |
 | PAGE-STATIC | P1 | NOT_READY_IMPLEMENTATION | 固定ページ `384:1046` / `445:3245`。PC SideNavigation `476:1741`、長文/画像、管理画面の編集のしやすさ |
-| PAGE-TOP | P1 | NOT_READY_IMPLEMENTATION | TOP `114:28` / `279:2136`、実装指示 `294:852`。MV、CTA、Notice、Course、各hover、空欄/非表示、ACF編集、画像比率・動き。コース紹介**下層**はHuman指示まで実装しない |
+| PAGE-TOP | P1 | NOT_READY_IMPLEMENTATION | TOP `114:28` / `279:2136`、実装指示 `294:852`。MV、CTA、Notice、Course、各hover、空欄/非表示、ACF編集、画像比率・動き。コース紹介**下層**はHuman指示まで実装しない。公式 SVG / WebP は #600 で `images/top/` に保存済みだが `front-page.php` 未接続。接続と表示確認が残作業。詳細は `DESIGN_FOUNDATION.md` の「残作業」 |
 | PAGE-SHARED | P1 | NOT_READY_IMPLEMENTATION | 共有Header/Footer変更後の全実装済み画面（PC/SP）でレイアウト・動作回帰。固定要素・オーバーレイ・スクロールロック、横幅境界 |
 
 ## 3. 実行結果を残すときの形式
