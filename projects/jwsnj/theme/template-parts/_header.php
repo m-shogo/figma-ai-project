@@ -3,13 +3,15 @@
         <?php if (is_front_page()) : ?>
             <h1 class="gh_logo">
                 <a href="<?php echo esc_url(home_url('/')); ?>">
-                    <img src="<?php echo esc_url(get_template_directory_uri() . '/images/common/logo.svg'); ?>" alt="<?php echo esc_attr(get_bloginfo('name')); ?>" width="140" height="36" loading="eager" decoding="async">
+                    <img src="<?php echo esc_url(get_template_directory_uri() . '/images/common/img_njws-logo-header.svg'); ?>" alt="" width="60" height="57" loading="eager" decoding="async">
+                    <span class="gh_logo-name"><?php echo esc_html(get_bloginfo('name')); ?></span>
                 </a>
             </h1>
         <?php else: ?>
             <p class="gh_logo">
                 <a href="<?php echo esc_url(home_url('/')); ?>">
-                    <img src="<?php echo esc_url(get_template_directory_uri() . '/images/common/logo.svg'); ?>" alt="<?php echo esc_attr(get_bloginfo('name')); ?>" width="140" height="36" loading="eager" decoding="async">
+                    <img src="<?php echo esc_url(get_template_directory_uri() . '/images/common/img_njws-logo-header.svg'); ?>" alt="" width="60" height="57" loading="eager" decoding="async">
+                    <span class="gh_logo-name"><?php echo esc_html(get_bloginfo('name')); ?></span>
                 </a>
             </p>
         <?php endif; ?>

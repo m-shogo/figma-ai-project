@@ -48,6 +48,13 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 - 長文のgrid/flex shrinkと折返し、focus-visible、reduced-motionを追加。画像・矢印装飾の完全一致は今回未実装。既存CMS画像/placeholderをFigma素材と同一とは認定しない。#524の素材作業と競合しないCSS変更のみ。
 - 既存JWSNJ workflowのpathsへLargeナビCSSとテストを追加し、既存partsテストstepを利用する。実機PC/SP/中間幅、長文、keyboard、画像と矢印はPAGE-PARTSのDEFERRED_RUNTIME_QA。
 
+## 2026-11-24: 公式 SVG は Cursor の Figma 取得で実体保存
+
+- 以前の実行環境は `www.figma.com` の DNS が解けず、Issue #524 の SVG バイトを保存できなかった。この Cursor セッションでは同じ file から Footer `221:335`、SP 装飾 `279:2637` / `279:2687`、Header `221:334`、blossom `506:2533` の SVG を取得できた。
+- 既存 `logo.svg` は公式の桜マークとバイトが違う。上書きせず、Header/Footer の呼び出しだけ公式ファイルへ切り替えた。CTA アイコンと箇条書きドット、blossom はバイトだけ保存し、未承認 URL や未解決の h4 には接続していない。
+- 静的契約は `tests/official-svg-asset-contract.test.mjs`。表示・キーボードの実機確認は引き続き #523。
+- パーツ集 `339:23` の未取得 SVG は外部リンク `ico-blank` だけだった。h4 と区切り線の花は `ico_blossom` と同一バイト。矢印・ページ内リンク・アコーディオンは Font Awesome で、SVG 化しない。
+
 ## 2026-11-24: Codex desktop 接続とアコーディオン照合
 
 - 実行環境はMacのCodex desktop local。Figmaプラグインのローカルcatalog掲載 `figma-design-to-code/SKILL.md` を直接読み、create_sessionとFooter高精細context/screenshotに成功。PC/SPパーツ集はsparseのためアコーディオン `344:1116` / `442:2906` とナビ `384:817` / `442:3079` を直接取得した。過去のskill取得失敗はこの手動環境の現在の状態ではない。
