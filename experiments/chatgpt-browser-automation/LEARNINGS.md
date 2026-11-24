@@ -120,3 +120,11 @@ Human明示確認によるnot-posted保留解除を追加。expectedAttemptとco
 - 修正: 名前をaria-label/innerTextから取り、空白を正規化。唯一の候補のみ選択する。文字列リンクやサイドバーのfigma-ai-projectを選択成功にしない。真正な非編集spanのapp-mention-path一致は維持。
 - 実adapterを実行するローカルHTML fixtureを追加。観測した候補の兄弟span構造を再現。初回は候補選択を通過したが、本文入力時に末尾空白がブラウザに消されFigma慎重に進んでとなりINPUT_CHANGED / ADD_PROMPTで停止。本文の先頭空白を明示して再実行し、pass=true、CONFIRMED、figmaSelected=true、VERIFY_RECEIPTを観測。これはローカルDOMであり実ChatGPT送信の証明ではない。fixtureタブとserverは終了。
 - 同じattemptのoutcome.clickAttempted=falseがある場合だけpending/待機を解除して停止する処理を追加。記録不足や別attempt、操作後の不明結果は解除しない。自動再送や下書き削除は行わない。Node全29 tests成功、構文・diff確認成功。実拡張0.2.3の再読込・再送はHuman対応が必要で未検証。
+
+## 2026-11-24 — Chrome拡張0.2.3からの初回送信を確認
+
+- Human提示の実機結果: 画面/worker=0.2.3、CONFIRMED、VERIFY_RECEIPT、clickAttempted=true、sent=1、pendingなし、enabled=false。記録された送信確認時刻17:16:20 JST。元の停止原因欄DRAFT_EXISTSは履歴であり、現在の送信失敗ではない。
+- 独立照合: 公式read_threadで同じ対象チャットの新規ユーザーメッセージが指定Figma connectorをメンションし、本文「慎重に進んで」を含むことを確認。固定のconnector文字列をplain textで送っただけではない。取得時のturnはcompleted、status idle。
+- 対象チャットの応答は「17:16｜復旧」という見出しのみ。Figma取得・案件実装の進行を示すツール結果やGitHub成果はこの記録から確認できない。これをPhase B全体PASSや最終完成にはしない。実装担当をCodexへ移すこともしない。
+- 拡張自身の実送信成功1件。以前のCUAによる投稿1件とは区別する。実定期起動0回、skipの実機検証・長期運用・旧Macは未検証。追加送信・既存タスク停止/変更・定期開始は実施せず、切替承認も未取得。
+- 今回は成果の記録のみ。ランタイムコードを変更せず、テストの再実行は不要として省略。git diff --checkのみ確認する。

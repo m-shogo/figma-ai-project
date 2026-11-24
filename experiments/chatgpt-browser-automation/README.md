@@ -1,6 +1,6 @@
 # ChatGPT ブラウザ操作による継続実装 — 研究正本
 
-Status: SINGLE_SEND_OBSERVED / EXTENSION_INSTALLED_SEND_UNVERIFIED / RECURRING_DISABLED
+Status: EXTENSION_SINGLE_SEND_CONFIRMED / FIGMA_RESULT_UNVERIFIED / RECURRING_DISABLED
 Updated: 2026-11-24 JST
 Scope: ブラウザ起動・ChatGPTへの入力・実行状態管理。WordPress案件コード自体とは独立。
 Authority: ../../AGENTS.md、../../docs/agent-recurring-work-preflight.md、../../docs/recurring-failure-recovery.md、../../docs/scheduled-agent-handoff.md
@@ -128,3 +128,11 @@ Humanの実機結果ではpendingが残り、state.reason=UI_TIMEOUT、送信確
 実adapterを使うローカル回帰fixture: `tests/figma-selection-fixture.html`。本フォルダをPython等でlocalhostへ配信し、このHTMLの実行ボタンで確認する。fixtureは実ChatGPTへ接続せず、ローカルのDOMとstorageスタブのみ。Chromeでpass=trueとconnector/receipt照合を観測済みだが、実拡張0.2.3による送信は未検証。
 
 送信ボタン操作前であることが同じattemptのadapter結果で証明される場合は、「送信前に停止（投稿なし）」としてpendingと待機を解除する。既存の0.2.2記録にもstatus確認時に同じ照合を適用。自動再送はせず定期送信オフを維持し、残った下書きは変更しない。送信ボタン操作後・結果不明・記録不足・別attemptでは従来どおり保留する。修正版の初回再試験前には残っている `@Figma` を本人が削除して空にする。
+
+## 拡張0.2.3の初回実送信成功（最新）
+
+Humanが0.2.3で単発送信を実施し、共有結果はCONFIRMED / VERIFY_RECEIPT、送信確認1件、pendingなし、定期送信オフ。記録された投稿時刻は2026-11-24 17:16:20 JST。送信先・Figma connector・本文は設定と一致。公式read_threadでも同じ対象会話の新しいユーザーメッセージに真正なFigma connectorメンションと「慎重に進んで」があることを独立確認した。以前のCUA代替送信と別に、Chrome拡張自身の送信成功が確認できた。
+
+取得できた対象チャットの応答は見出し「17:16｜復旧」のみ。この記録からFigmaツール呼出・デザイン取得・GitHub案件実装の進行は確認できない。送信成功と案件の進行は別判定。実際の定期起動はまだ0回で、既存タスクも変更していない。本運用への切替には既存タスクとの排他とHumanの切替承認が必要。
+
+結果内の「元の停止原因」は最後のエラー履歴であり、CONFIRMEDの現在結果とは別。Human提示のDRAFT_EXISTSを今回の失敗と解釈しない。
