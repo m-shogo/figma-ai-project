@@ -7,7 +7,7 @@ let queue=Promise.resolve();
 let cancellation=0;
 let halted=false;
 function serial(fn) { const next=queue.then(fn); queue=next.catch(()=>{}); return next; }
-const read=()=>chrome.storage.local.get(['config','state','lastResult','lastSent','attemptDetails','lastFailure']);
+const read=()=>chrome.storage.local.get(['config','state','lastResult','lastSent','attemptDetails','lastFailure','lastResolution']);
 const record=async event=>{
   const result={...event,at:Date.now()};
   const fields={lastResult:result};
@@ -82,6 +82,15 @@ async function stop(reason='USER_STOP') {
 }
 async function dispatch(msg) {
   if(msg.action==='status') return {...await read(),workerBuild:WORKER_BUILD,alarm:await chrome.alarms.get(ALARM)};
+  if(msg.action==='reconcile-not-posted') {
+    const {config:c,state:s,attemptDetails}=await read();validateConfig(c);
+    if(!validState(s)||s.enabled||!s.pending||msg.expectedAttempt!==s.pending||msg.confirmed!==true)throw Error('RECONCILE_REQUIRED');
+    const probe=await invoke(c,await tabFor(c),'probe');
+    if(probe.event!=='IDLE_EMPTY')throw Error(probe.event);
+    await chrome.storage.local.set({lastResolution:{at:Date.now(),attempt:s.pending,outcome:'HUMAN_CONFIRMED_NOT_POSTED',attemptDetails:attemptDetails??null}});
+    await save({...s,pending:null,enabled:false,reason:'HUMAN_CONFIRMED_NOT_POSTED',lastOutputAt:Date.now()});
+    return {event:'HUMAN_CONFIRMED_NOT_POSTED'};
+  }
   if(msg.action==='stop') {await stop();return {event:'STOPPED'};}
   if(msg.action==='configure') {
     const c=validateConfig(msg.config); const {state}=await read();

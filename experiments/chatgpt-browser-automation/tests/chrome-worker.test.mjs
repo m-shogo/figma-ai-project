@@ -74,3 +74,13 @@ test('legacy pending failure is preserved when startup requires reconciliation',
  assert.equal(result.workerBuild,'0.2.1');
  assert.equal(h.calls,0);
 });
+test('human reconciliation matches the attempt and never sends or resets cooldown',async()=>{
+ const s={...initialState(),pending:'old',reason:'UI_TIMEOUT',lastAttempt:1,nextDue:999999};
+ const h=await harness({state:s});
+ const bad=await h.message({action:'reconcile-not-posted',expectedAttempt:'wrong',confirmed:true});
+ assert.equal(bad.reason,'RECONCILE_REQUIRED');assert.equal(h.db.state.pending,'old');
+ const ok=await h.message({action:'reconcile-not-posted',expectedAttempt:'old',confirmed:true});
+ assert.equal(ok.event,'HUMAN_CONFIRMED_NOT_POSTED');assert.equal(h.db.state.pending,null);
+ assert.equal(h.db.state.nextDue,s.nextDue);assert.equal(h.db.state.enabled,false);assert.equal(h.calls,0);
+ assert.equal(h.db.lastResolution.attempt,'old');assert.equal(h.db.lastFailure.reason,'UI_TIMEOUT');
+});
