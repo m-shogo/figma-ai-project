@@ -4,6 +4,7 @@ export function decide(s) {
   if (s.offline === true) return "OFFLINE";
   if (s.authRequired === true) return "AUTH_REQUIRED";
   if (s.limit === true) return "LIMIT";
+  if (s.offline !== false || s.authRequired !== false || s.limit !== false) return "UNKNOWN";
   if (s.owner !== true || s.otherExecutorActive !== false) return "OWNER_UNCONFIRMED";
   if (s.targetVerified !== true || s.figmaVerified !== true) return "TARGET_UNCONFIRMED";
   if (s.unknownPreviousSend !== false) return "RECONCILE_REQUIRED";
