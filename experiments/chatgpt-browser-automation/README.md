@@ -47,3 +47,7 @@ Authority: ../../AGENTS.md、../../docs/agent-recurring-work-preflight.md、../.
 
 READY: (1) 公式利用条件と正式な操作経路を確認 (2) 各Macで本人操作による選択・送信の再現と状態判定を検証 (3) 許容される範囲の操作をモックUIで再現し、誤送信・重複防止をテスト。
 BLOCKED: 無人送信の実機・許容条件の確認。
+
+## 2026-11-24 追補
+
+方式比較と根拠は [RESEARCH.md](RESEARCH.md)。MCP Appのui/messageを外部から任意チャットに送信するAPIと誤認しない。共通の模擬状態判定 common/mock-gate.mjs と再現テスト tests/mock-gate.test.mjs を追加。JSによる74ケース成功、Node/CI/実機は未検証。現時点のstatusは MOCK_GATE_VERIFIED、LIVE_SEND_NOT_VERIFIED。無人送信は引き続き無効。
