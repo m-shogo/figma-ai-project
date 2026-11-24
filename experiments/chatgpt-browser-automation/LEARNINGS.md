@@ -35,3 +35,13 @@ Humanの明示受入条件: 既存JWSNJチャットへ真正なFigma選択付き
 - common/mock-recurring.mjs / tests/mock-recurring.test.mjs を追加。仮想24時間（24回の時刻入力、確認済みreceipt、各回のJSON再読込、同一slot再入力）およびBUSY、スリープ相当の時刻ジャンプ、clock rollback、結果不明、権限/制限/通信等の停止をJS内で評価し121 assertions PASS。実時間24時間の試験ではない。Gitの保存と再取得一致を確認。
 - 保存した状態を入力に使う純粋な模擬ロジックのみ。OSタイマー、実ディスクへのatomic保存、端末間排他、実ブラウザadapter、真正なFigma選択、実際の自動送信は未実装。Node runner/実機未検証。現在のChat環境に別会話へ送信する正式操作がないため、実サービス送信0回。モック成功を送信成功として扱わない。
 - 次の実証条件: 実行可能な正式経路・Mac実機での送信を1回確認→複数の定期起動で実送信/skip/停止を確認→GitHub成果とFigma実測を別々に照合する。既存タスクとの二重writer禁止。
+
+## 2026-11-24 — ローカル実行基盤（送信は未実装）
+
+- v0.2 ZIP実ファイルを確認。common/runner.shは毎時通知とコピー、modern/prepare.mjsは校正済みselectorを用いるFigma選択・入力補助（送信は本人操作）、legacy/check.commandはFirefox確認・起動補助。どれも自動送信の実装ではない。
+- 現在のChatからブラウザ接続確認を実際に試みた結果、UNKNOWN: Browser access requires the originating browser context. Open ChatGPT in the browser with the connected extension and try again. 既存チャットへの実送信は今回も0回。Work移行はHumanが以前拒否済み。無断で移行しない。
+- OpenAI公式利用規約 https://openai.com/policies/terms-of-use/ および https://help.openai.com/en/articles/10291617-scheduled-tasks-in-chatgpt を確認。出力等の自動抽出・利用制限回避は禁止。一般Chatへの無人反復入力と真正なFigma選択の正式な経路はまだ確定していない。
+- common/local-runner.mjs は実ディスクへの一時ファイルfsync/rename、同一ディレクトリのmkdirロック、初期化・時間帯の重複防止、結果不明時の停止を実装。永続化はローカル模擬実行に限る。電源断耐性・端末間排他・実送信receiptは未検証。残留ロックは自動解除しない。
+- mac/launchagent.mjs は毎時指定分のmock-only LaunchAgent plistを生成。インストールや起動はしない。対象の旧Mac/新Macの実機、Nodeの対応バージョン、launchctlによる起動は未検証。
+- Linux / Node v22.16.0 で tests/local-runner.test.mjs と tests/launchagent.test.mjs を実行、9テスト成功・0失敗。実プロセス・ディスク、仮想24時間のslot、壊れた状態、ロック、停止を検証。Python plistlibで生成plistの引数・時刻・RunAtLoadを解析しPASS。保存した4ファイルのGit blob SHAは実際にテストしたファイルと一致。
+- 次の最優先は真正なFigma選択・既存チャットへの送信ができる許容経路の実機検証。ローカル基盤の追加テストだけを増やして無人運用の成功と主張しない。既存タスク・案件Themeは変更しない。
