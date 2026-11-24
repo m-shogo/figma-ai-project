@@ -110,7 +110,7 @@ PCメニュー `599:2726` の `get_variable_defs` で `color/separator_light = #
 | 種類 | 次の単位（実機なしで進められるもの） | できたと判断する最低条件 |
 |---|---|---|
 | READY-1 | Figmaのfont family/weightの実利用nodeと、Theme内`@font-face`/CSS・enqueueの差分を調査。ライセンスと代替禁止範囲を整理して必要な実装修正へ | 使用文字のfont/weightの対応・導入変更・静的チェックを具体的ファイル/PRで説明できる |
-| READY-2 | Figma画像・SVG・アイコンとCODIAのAsset経路を照合。サンプル画像の流用を避け、本物の素材取得/配置と使用箇所の検証に進む | asset node・保存先・参照箇所・不足分とライセンスが確認できる |
+| READY-2 | 公式 SVG / WebP は #599 と #600 で保存済み。次は未接続の装飾を、未承認 URL を作らずにセクション単位でテーマへつなぐ。写真は ACF の既存項目へ置き、`front-page.php` へ直書きしない | 保存先・node・未接続一覧は下記「残作業」と一致し、接続した callsite を PR で説明できる |
 | READY-3 | PC `599:2726` / SP `480:3954` のHeader open/close状態のdesign context + スクリーンショット、既存Theme menuテンプレートの関係を確認し安全な1パーツの実装に進む | Figma/実コードの根拠・変更範囲と静的QA・残るローカル検証がPRに記録される |
 | DEFERRED_ENV | WordPress・ブラウザ実機での描画/操作の確認 | **現在は実施しない**。利用可能になった初回に `DEFERRED_RUNTIME_QA.md` のP0から優先的に実行 |
 
@@ -195,6 +195,30 @@ TOP PC `114:28` / SP `279:2136` から、ベクターは SVG、写真は元画�
 | `img_applicants.webp` | 入学検討の写真 `158:2647` |
 
 `front-page.php` にはまだ置いていない。メインビジュアル・各部紹介・バナー・About の写真は管理画面の画像で、コースと CTA のリンク先は未承認のため。ブラウザ表示は #523 のまま。
+
+## 残作業（2026-11-24、`so` #599 / #600 時点）
+
+素材の再取得は不要。次は接続と、ローカル WordPress が使えるようになってからの表示確認。
+
+保存済みで、テーマの表示にはまだ繋いでいないもの:
+
+- フッターの箇条書きドット。サイトマップは WordPress メニューのまま
+- `ico_admission.svg` / `ico_parents.svg` / `ico_recruit.svg`。遷移先 URL が未承認
+- `ico_blossom.svg`。見出し h4 と区切り線は同じ花
+- `ico-blank.svg`。ボタンは Font Awesome のまま
+- `ico_school.svg`。メインビジュアルの CTA
+- `images/top/` のキャッチコピー、地図とピン、各部紹介の装飾、`ico_flow` / `ico_fee` / `ico_visit`、Instagram イラスト、見出し下線
+- `images/top/` の WebP。メインビジュアル、About、コース、バナー、入学検討、背景。交通アクセスは `img_mv-06.webp`、教育環境は `img_mv-05.webp` を再利用する
+
+意図的に残しているもの:
+
+- Font Awesome は SVG にしない
+- メニュー写真の JPEG は未保存
+- コース紹介の下層は作らない
+- 電話、住所、SNS、寄付の URL は追加しない
+- ブラウザの hover / open / SP・PC 確認は #523。`DEFERRED_RUNTIME_QA.md` の PAGE-TOP と FOUND-03
+
+次の実装単位は TOP を 1 セクションずつ。装飾 SVG はテーマの静的ファイル、写真は既存 ACF（`top_slider`、コース、バナー、お知らせ）へ。リンク先が未承認のボタンに href を作らない。
 
 
 ## Human typography policy（2026-11-21）
