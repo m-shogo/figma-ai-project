@@ -172,7 +172,29 @@ PCメニュー `599:2726` の `get_variable_defs` で `color/separator_light = #
 
 既存 `logo.svg` は別物（サンプルのワードマーク）で、公式マークでは上書きしていない。Header/Footer の電話・住所・SNS・寄付 URL は追加していない。ブラウザ表示は #523 のまま未検証。
 
-パーツ集 `339:23` を層ごとに確認した。SVG として新規だったのは外部リンク `ico-blank` だけ。見出し h4 と区切り線の花は保存済みの `ico_blossom` と同一。大ボタン・ページ内リンク・アコーディオン・リストの印、ナビの矢印は Font Awesome の文字で、SVG ファイルは無い。ナビ写真は JPEG なので今回は保存していない。PC メニュー展開に見えていた SVG 14 点は、メインビジュアルのアウトライン文字と既に保存したロゴ／アイコンの再掲。キャッチコピーのアウトラインは TOP 側の未取得として残している。
+パーツ集 `339:23` を層ごとに確認した。SVG として新規だったのは外部リンク `ico-blank` だけ。見出し h4 と区切り線の花は保存済みの `ico_blossom` と同一。大ボタン・ページ内リンク・アコーディオン・リストの印、ナビの矢印は Font Awesome の文字で、SVG ファイルは無い。ナビ写真は JPEG なので今回は保存していない。PC メニュー展開に見えていた SVG 14 点は、メインビジュアルのアウトライン文字と既に保存したロゴ／アイコンの再掲。
+
+## 2026-11-24 TOP の公式 SVG と写真
+
+TOP PC `114:28` / SP `279:2136` から、ベクターは SVG、写真は元画像を WebP（quality 90）にして `src/images/top/` と `theme/images/top/` に同じバイトで置いた。Figma が同時に返す 1/4 縮小プレビュー、ほぼ白のマスク、ぼかし用の楕円、SP 枠最上段のステータスバー画像は納品していない。Font Awesome の矢印・Instagram 印は SVG にしていない。
+
+| ファイル | 役割 |
+|---|---|
+| `img_catch-480.svg` / `482` / `481` / `483` / `img_catch-493.svg` | PC キャッチコピーのアウトライン。`220:12` `220:16` `220:20` `220:25` `220:30` |
+| `img_catchphrase-sp.svg` | SP キャッチコピー。文字の並びが PC と違う `279:2149` |
+| `img_map.svg` / `img_map-pin-01.svg` / `img_map-pin-02.svg` | 地図 `123:643` とピン `123:717` `123:736`。SP は同じベクターの縮小 |
+| `img_course-layer.svg` / `img_course-mark.svg` / `img_course-math.svg` | 各部紹介の装飾 `142:1731` `142:1766` `148:1841` |
+| `ico_flow.svg` / `ico_fee.svg` / `ico_visit.svg` | 入学手続き・学費・学校見学。ページ全体の書き出しではなくアイコン本体 |
+| `img_instagram.svg` | `166:233` |
+| `img_about-underline.svg` | 「すべての生徒が」の下線 `162:36` |
+| `img_mv-01.webp` から `img_mv-06.webp` | メインビジュアル `114:31` `114:30` `114:32` `114:33` `114:34` `114:35`。`114:32` は枠比率の `img_mv-03.webp` と別フィルの `img_mv-03-fill.webp` |
+| `img_about-overview.webp` / `img_about-education.webp` | 学校概要 `114:598`、教育内容 `114:603`。交通アクセスは `img_mv-06`、教育環境は `img_mv-05` と同じ写真 |
+| `img_about-bg.webp` / `img_about-bg-02.webp` / `img_about-bg-03.webp` | 背景 `114:38` の大きい画像フィル 3 点。上下の波 `114:39` `114:40` は写真ではなく、元画像は無かった |
+| `img_course-preschool.webp` ほか 4 点 | 幼児部 `294:1442`、初等部 `294:1435`、中等部 `114:139`、高等部 `114:150`、国際学級 `114:160` |
+| `img_banner.webp` / `img_banner-02.webp` / `img_banner-03.webp` | バナー `114:419` の別フィル |
+| `img_applicants.webp` | 入学検討の写真 `158:2647` |
+
+`front-page.php` にはまだ置いていない。メインビジュアル・各部紹介・バナー・About の写真は管理画面の画像で、コースと CTA のリンク先は未承認のため。ブラウザ表示は #523 のまま。
 
 
 ## Human typography policy（2026-11-21）
