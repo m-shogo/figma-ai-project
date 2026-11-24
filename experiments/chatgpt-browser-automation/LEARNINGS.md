@@ -112,3 +112,11 @@ Human明示確認によるnot-posted保留解除を追加。expectedAttemptとco
 - Humanは「15:58:44以降」の意味を質問。これはサービスの利用制限ではなく、拡張が失敗試行の時点で1時間後をnextDueに設定し、未投稿確認後にも残していたため。Humanが未投稿を確認し保留解除した状況で、再試験を待たせる理由を説明せず案内したのは不適切だった。
 - 0.2.2ではnot-posted保留解除時に当該待機を解除。すでに解除済みの0.2.1記録についてもlastResolution・lastAttempt・現在のattemptDetails・成功receiptを照合し、最新の未投稿確認に対応するときだけnextDueをnullへ更新。旧期限はlastResolutionへ保全する。pendingと新しい試行・成功receiptには適用しない。定期起動や送信は自動開始しない。
 - Node全27 tests成功。すでに未投稿確認済みの試行は再試験でき、その後の新しい成功には元の確認が流用されず連投拒否になることを検証。未確認・古い確認・別の試行・成功receiptでは待機保持を検証。構文・diff確認も実行。実機0.2.2は未検証、元の送信タイムアウト自体を解決したとは扱わない。
+
+## 2026-11-24 — SELECT_FIGMA停止の実DOM原因と修正
+
+- Humanの実機0.2.2: UI_TIMEOUT / SELECT_FIGMA / clickAttempted=false。入力欄に文字列@Figmaのみ、真正メンションなし。送信確認0件。これまでの段階不明とは区別し、今回は送信前停止の実証が得られた。
+- 通常のChatGPTページを読み取り、draft=@Figma、メンション0、候補未表示を観測。追加メニューを開きf入力で候補を表示して、候補DOMを取得: textContent='FigmaCreate designs, ship to code'、innerText='Figma\nCreate designs, ship to code'、aria-labelなし。旧adapterはtextContentを空白入り名前へ完全一致比較しており、表示されても候補を認識できない実装だった。候補を開くために加えたfは戻し、メニューを閉じた。元の@Figmaは保持し、送信は一切していない。
+- 修正: 名前をaria-label/innerTextから取り、空白を正規化。唯一の候補のみ選択する。文字列リンクやサイドバーのfigma-ai-projectを選択成功にしない。真正な非編集spanのapp-mention-path一致は維持。
+- 実adapterを実行するローカルHTML fixtureを追加。観測した候補の兄弟span構造を再現。初回は候補選択を通過したが、本文入力時に末尾空白がブラウザに消されFigma慎重に進んでとなりINPUT_CHANGED / ADD_PROMPTで停止。本文の先頭空白を明示して再実行し、pass=true、CONFIRMED、figmaSelected=true、VERIFY_RECEIPTを観測。これはローカルDOMであり実ChatGPT送信の証明ではない。fixtureタブとserverは終了。
+- 同じattemptのoutcome.clickAttempted=falseがある場合だけpending/待機を解除して停止する処理を追加。記録不足や別attempt、操作後の不明結果は解除しない。自動再送や下書き削除は行わない。Node全29 tests成功、構文・diff確認成功。実拡張0.2.3の再読込・再送はHuman対応が必要で未検証。

@@ -1,0 +1,37 @@
+<!doctype html><html lang="ja"><meta charset="utf-8"><title>Figma候補識別の回帰テスト（ローカル専用）</title>
+<h1>ローカル回帰テスト・実送信なし</h1><p>実際に観測した候補の子要素構成を再現し、実adapterを実行します。ChatGPTには接続しません。</p>
+<fieldset><button aria-label="Add files and more">+</button><div role="textbox" aria-label="Ask ChatGPT" contenteditable="true"></div></fieldset>
+<div id="candidates"></div><div id="sent"></div><button id="run">回帰テストを実行</button><pre id="result" role="status">未実行</pre>
+<script type="module">
+import {operate} from '../modern/chrome/adapter.mjs';
+const input=document.querySelector('[contenteditable]'),candidates=document.getElementById('candidates');
+const connector='app://connector_68df038e0ba48191908c8434991bbac2';
+window.chrome={storage:{local:{get:async()=>({state:{pending:'local-fixture',reason:'ATTEMPTING'}})}}};
+let candidateText;
+input.addEventListener('input',()=>{
+ if(input.textContent==='@Figma'&&!candidates.firstChild){
+  const button=document.createElement('button');
+  button.innerHTML='<span style="display:block">Figma</span><span style="display:block">Create designs, ship to code</span>';
+  candidates.append(button);
+  candidateText={textContent:button.textContent,innerText:button.innerText};
+  button.onclick=()=>{
+   input.replaceChildren();const mention=document.createElement('span');
+   mention.setAttribute('app-mention-path',connector);mention.contentEditable='false';mention.textContent='Figma';
+   input.append(mention,document.createTextNode(' '));candidates.replaceChildren();
+   const send=document.createElement('button');send.setAttribute('aria-label','Send');send.textContent='Send';
+   send.onclick=()=>{
+    const posted=document.createElement('div');posted.className='rich-text-user-turn';
+    const a=document.createElement('a');a.setAttribute('href','/plugins/plugin_connector_68df038e0ba48191908c8434991bbac2');a.textContent='Figma';
+    posted.append(a,document.createTextNode(' 慎重に進んで'));document.getElementById('sent').append(posted);input.replaceChildren();send.remove();
+   };
+   document.body.append(send);
+  };
+ }
+});
+document.getElementById('run').onclick=async()=>{
+ document.getElementById('run').disabled=true;
+ const outcome=await operate({url:location.href,connector,prompt:'慎重に進んで',mode:'send',attempt:'local-fixture'});
+ const pass=outcome.event==='CONFIRMED'&&candidateText.textContent==='FigmaCreate designs, ship to code';
+ document.getElementById('result').textContent=JSON.stringify({pass,outcome,candidateText},null,2);
+};
+</script></html>

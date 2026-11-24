@@ -18,7 +18,7 @@ async function harness({outcome='CONFIRMED',state=initialState(),probe='IDLE_EMP
       if(args[0].mode==='probe')return [{result:{event:probe}}];
       calls++;assert.ok(db.state.pending,'intent must be persisted before any UI send');
       if(outcome==='HOLD'){ready();await hold;return [{result:{event:db.state.reason==='ATTEMPTING'?'CONFIRMED':'CANCELLED'}}];}
-      return [{result:{event:outcome}}];
+      return [{result:typeof outcome==='string'?{event:outcome}:outcome}];
     }},
     runtime:{id:'test',getURL:p=>'chrome-extension://test/'+p,onMessage:{addListener(fn){listener=fn;}},onStartup:{addListener(){}},onInstalled:{addListener(){}}}
   };
@@ -71,7 +71,7 @@ test('legacy pending failure is preserved when startup requires reconciliation',
  assert.equal(h.db.lastFailure.reason,'UI_TIMEOUT');
  assert.equal(h.db.state.reason,'RECONCILE_REQUIRED');
  const result=await h.message({action:'status'});
- assert.equal(result.workerBuild,'0.2.2');
+ assert.equal(result.workerBuild,'0.2.3');
  assert.equal(h.calls,0);
 });
 test('human reconciliation matches the attempt and releases only its unsent cooldown without sending',async()=>{
@@ -98,4 +98,19 @@ test('unresolved, stale resolution and confirmed sends retain cooldown',async()=
   const h=await harness({state:{...initialState(),lastAttempt:at,nextDue},stored});
   assert.equal(h.db.state.nextDue,nextDue);assert.equal((await h.message({action:'once'})).event,'NOT_DUE');assert.equal(h.calls,0);
  }
+});
+test('adapter proof of a pre-click failure clears pending without retry or draft mutation',async()=>{
+ const h=await harness({outcome:{event:'UI_TIMEOUT',phase:'SELECT_FIGMA',clickAttempted:false}});
+ assert.equal((await h.message({action:'once'})).event,'PRE_SEND_STOP');
+ assert.equal(h.db.state.pending,null);assert.equal(h.db.state.nextDue,null);assert.equal(h.db.state.enabled,false);
+ assert.equal(h.db.state.sent,0);assert.equal(h.calls,1);assert.equal(h.db.lastFailure.phase,'SELECT_FIGMA');
+ assert.equal(h.db.lastResolution.outcome,'ADAPTER_CONFIRMED_NOT_CLICKED');
+});
+test('old pre-click outcome is only reconciled when it matches the pending attempt',async()=>{
+ const s={...initialState(),pending:'old',reason:'UI_TIMEOUT',lastAttempt:1,nextDue:99999};
+ const d={attempt:'old',outcome:{event:'UI_TIMEOUT',phase:'SELECT_FIGMA',clickAttempted:false}};
+ const h=await harness({state:s,stored:{attemptDetails:d}});
+ assert.equal(h.db.state.pending,null);assert.equal(h.calls,0);
+ const other=await harness({state:s,stored:{attemptDetails:{...d,attempt:'different'}}});
+ assert.equal(other.db.state.pending,'old');assert.equal(other.calls,0);
 });
