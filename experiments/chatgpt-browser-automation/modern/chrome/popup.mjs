@@ -1,8 +1,9 @@
 import {CONNECTOR} from './policy.mjs';
 const el=id=>document.getElementById(id);
 const send=msg=>chrome.runtime.sendMessage(msg);
-const status=async()=>{const data=await send({action:'status'});el('status').textContent=JSON.stringify(data,null,2);return data;};
-const data=await status();
+const status=async()=>{const data=await send({action:'status'});if(!data)throw Error('拡張の内部処理から応答がありません。拡張を再読み込みしてください。');el('status').textContent=JSON.stringify(data,null,2);return data;};
+let data={};
+try{data=await status();}catch(e){el('status').textContent=e.message;}
 if(data.config){el('url').value=data.config.url;el('interval').value=data.config.intervalMinutes;el('owner').checked=data.config.exclusiveOwnerConfirmed;}
 for(const id of ['save','probe','once','start','stop']) el(id).onclick=async()=>{
   const buttons=[...document.querySelectorAll('button')];

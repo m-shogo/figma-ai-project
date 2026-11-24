@@ -55,3 +55,10 @@ UI選択の観測はGate 2全体のPASSではない。今回の送信成功回�
 - 対象チャットの実行履歴はFigma診断、応答はskill/session/context/screenshot成功を報告。payloadと画像自体の独立照合は未実施。案件実装成果なし。
 - Chrome拡張は作成済み・Nodeによるworker制御テストPASS。実機への読み込み・権限付与・probe・拡張の単発送信・実alarm・異常UIの判別は未検証。
 - 直前の「送信0回」「Gate 0確認待ち」は過去時点の記録。最新Human指示と本節を現在の状態として使う。
+
+## M5導入後の更新
+
+- 拡張読み込み、設定ページの通信修正・再読み込み、chatgpt.com権限付与、ローカル設定保存を実機で確認。
+- Codexを実行時依存にしない。定期送信はChrome service worker/alarmで行う設計。Codexの自動化タスクは作成していない。
+- probeはクリック済み、結果末尾はツール側のURLアクセス制限により未確認。Humanのevent/reason確認待ち。
+- 拡張送信0回・拡張定期起動0回。enabledとowner確認はfalse。既存タスク変更なし。定期切替承認は未取得。
