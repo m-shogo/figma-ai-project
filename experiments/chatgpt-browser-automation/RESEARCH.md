@@ -46,3 +46,9 @@ tests/mock-gate.test.mjs は再現用Nodeテスト。実Nodeランナー/CIは�
 - [Extensions公式ガイド](https://developers.openai.com/plugins/build/extensions) とそこからリンクされる [spec](https://github.com/openai/mcp-extensions/blob/main/docs/spec.md#prompt-target-and-send-behavior) を再確認。`ui/message` のtargetはactive/newであり、任意の既存会話ID指定の経路は確認できない。現在のChromeでplugin自体を選択できた観測と、プラグインの検索アイテムを返すComposer At-Mentions拡張の対応表は区別する。
 - [定期タスク公式ヘルプ](https://help.openai.com/en/articles/10291617-scheduled-tasks-in-chatgpt) は公式の定期実行を説明するが、外部ブラウザ送信の許容条件や本件Figma継承の実証にはならない。既存タスクを変更せず、Work移行も行わない。
 - 判断: 正式許容条件が確認できないまま送信・無人運用を有効化しない。解除には、対象ChatGPT surfaceにおける外部UIの無人反復送信について公式文書またはOpenAIの回答が必要。新しい根拠が得られたら再評価する。
+
+## 最新判断 — Human指示による作業再開
+
+Humanは追加問い合わせを不要とし、禁止と確認されていない範囲で進めるよう明示した。以前の「公式の明示的許容の確認待ち」は作業停止条件から外す。正式許諾取得済みとは言わず、非公開API・抽出・認証/利用制限回避を行わない。単発送信はCodexの接続済みChromeから実行し、Figmaリンクの付いた投稿と生成開始・完了を観測した。
+
+Chromeの公式 [alarms](https://developer.chrome.com/docs/extensions/reference/api/alarms)、[permissions](https://developer.chrome.com/docs/extensions/reference/api/permissions)、[scripting](https://developer.chrome.com/docs/extensions/reference/api/scripting) を参照してMV3拡張を実装。追加依存や外部サービスなし。アラームの遅延や欠落を考慮し、再起動後は間隔を空け、pendingは再送しない。Chromeの任意host権限はorigin単位であるため、コード内のURL制限と権限の範囲を区別する。実機導入は未実施。

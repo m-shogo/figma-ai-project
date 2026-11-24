@@ -59,3 +59,14 @@ Humanの明示受入条件: 既存JWSNJチャットへ真正なFigma選択付き
 - 実行検証: `node --test experiments/chatgpt-browser-automation/tests/*.test.mjs` がMacで11 tests / 11 pass / 0 fail。内訳は既存9テストと74ケース・121 assertionsのスクリプト。模擬基盤の再検証であり新しいモックは追加していない。証拠は本Codex実行のコマンド出力（2026-11-24 14:13 JST）。
 - BLOCKED / UNDETERMINED: RESEARCH.md記載の一次資料を再確認したが、外部UIからの無人反復入力の正式許容条件は確認できない。入力が全面禁止という結論ではない。Humanが指定したGate 0により実送信アダプター・定期起動へは進めない。解除条件は公式根拠またはOpenAI回答。問い合わせは送信していない。
 - 今回の実サービス送信成功0回、実定期起動0回、Figma取得・JWSNJ実装成果は未検証。選択UIの到達点と安全な停止を記録し、完成宣言しない。
+
+## 2026-11-24 — Human指示を受け単発送信を実測、拡張を実装
+
+- 最新Human authority: 問い合わせ不要、禁止と確認されていない範囲で進める。以前の明示的許容待ちを恒久的blockにしない。過去の問い合わせは追加しない。公開規約の禁止事項を回避する許可ではない。
+- 既存タスクをUIでread-only確認。毎時35分、フェーズAの読み取り診断を維持。変更・停止・新規タスク作成なし。対象チャットはidle。GitHub open PR検索では#515（news archive）と研究#592が返った。実装ownerを自分が引き取らず、指定チャットの既存診断を継続する単発テストに限定した。
+- CUA実機操作: 空の入力欄→@Figma→候補選択→本文「慎重に進んで」。送信直前にメンションのname/path/contenteditableのみをallowlistで確認し、Human指定connector一致。Sendクリック後、Figmaプラグインへのリンク付きユーザーメッセージ、空のcomposer、Working/Thinking/Stopを確認。送信成功1回。送信結果不明ではなかったため再送なし。
+- 生成完了後、応答は14:23の接続診断としてskill・認証・session・context・screenshot成功を報告。Worked詳細にもFigma診断の実行記録が表示された。ただし生のツール返却payload・画像はこのCodex側で独立照合していない。ChatGPTは診断フェーズAを維持し、案件実装は進まなかった。単発送信の成功を実装進行や定期実行成功へ読み替えない。
+- 実装: modern/chrome/。サイト権限は任意許可のchatgpt.comのみ、外部通信なし。送信前にpendingをstorage.localへ保存し、ユーザーメッセージ内のFigmaリンクと本文が増えたことをreceiptにする。回答本文・DOM全文・Cookie・認証情報は保存しない。1枚の対象タブ、英語UI、空のcomposerと既知のcontrolsのみを扱い、未知UIは停止。実ChatGPTでexecCommandの入力が通るかは未検証。
+- 停止設計: service workerの単一queue、別経路の緊急停止signal、送信直前の永続pending/cancelledAttempt照合、結果不明の自動再送禁止、起動時のalarm回復。端末間ロックは未実装で、exclusive ownerのHuman確認が必要。既存タスクの自動停止は行わない。
+- 検証: Nodeの実workerをChrome APIスタブで実行し、receipt後の連投拒否、結果不明状態のworker再起動・設定保存での保全、送信待ち中の緊急停止、BUSY/owner未確認を検証。初回はテストのstartup alarm回復により送信が延期され待機したため中断。実装エラーとは断定せず、テストの既存alarm前提を修正後に全15 tests PASS。構文check・diff check成功。adapterの実機・alarm起動・Chrome再起動は未検証。
+- Chrome拡張の読み込み・chatgpt.comの画面読み書き権限は実行直前のHuman確認を依頼中。未許可のままインストールしない。定期送信の開始や既存タスクとの切替は別承認。実定期起動0回、旧Mac未検証。次は承認後にprobeから実機で確認する。
