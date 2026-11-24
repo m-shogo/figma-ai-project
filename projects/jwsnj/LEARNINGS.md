@@ -41,3 +41,11 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 - PRs #559–#561 added focused component source changes and Node tests. However the existing CI workflow did not trigger for parts CSS or run their tests. PR #562 added paths and a parts Node test step to the **existing** JWSNJ Common UI Static QA workflow. Future component changes must confirm actual test-step success in job logs, not infer test coverage from an unrelated Project Guard PASS.
 - PR #563 initially failed live CI despite correct numbered-list assertions: the older unordered-list test extracted CSS by searching a *comment* marking the next section. Changing the comment broke that brittle boundary. The recovery changed selectors to structural anchors in both unordered and ordered tests; rerun 3 GitHub checks SUCCESS before merge. Avoid coupling contract tests to comments or incidental formatting; assert semantically meaningful CSS declarations and existing selector ownership.
 - A CSS change to shared Gutenberg selectors impacts fixed pages outside the parts catalog. Static/CI evidence only; record cross-page PC/SP, long text, viewport transitions, editor-side controls and WordPress runtime in #523 DEFERRED_RUNTIME_QA. Assets remain #524 BLOCKED until real bytes, SHA-256, rights, callsites and visual QA are verified.
+
+## 2026-11-24: Codex desktop 接続とアコーディオン照合
+
+- 実行環境はMacのCodex desktop local。Figmaプラグインのローカルcatalog掲載 `figma-design-to-code/SKILL.md` を直接読み、create_sessionとFooter高精細context/screenshotに成功。PC/SPパーツ集はsparseのためアコーディオン `344:1116` / `442:2906` とナビ `384:817` / `442:3079` を直接取得した。過去のskill取得失敗はこの手動環境の現在の状態ではない。
+- 案件: 閉じた通常アコーディオンの左余白はPC/SPとも24px、右アイコン領域68px。既存desktopの32px上書きと余分な8px予約を除去。Q/A本文のflex子にmin-width:0を追加して長い非改行文字列による押し出しを抑える。
+- Theme: iconのrotate状態は既存native detailsを維持し、reduced-motionでtransitionを停止。静的契約テストは実際のWordPress表示やkeyboard動作を証明しない。後者は#523の既存アコーディオンQAで再確認。
+- 共通化候補（未昇格）: `git fetch origin so` はFETCH_HEADを更新したが、このcheckoutのorigin/soは別SHAだった。最新branch APIとFETCH_HEADの一致を確認してから分離worktreeを作った。`gh`の認証は無効でもGitHubプラグインとSSH fetchは成功した。秘密情報の取得やGit認証設定変更は行わない。
+- scheduler: 同一chat heartbeat診断を登録。COUNT=1は「future runsなし」で拒否されたため、繰返しruleと診断後PAUSED指示を使用。自動呼出結果はまだ未観測。手動成功を自動成功として報告しない。旧ChatGPT毎時タスクは変更していない。
