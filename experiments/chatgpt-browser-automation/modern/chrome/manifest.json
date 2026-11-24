@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Figma Chat Continuation — Experimental",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "指定した既存チャットへFigma選択付き指示を送信。既定は停止。外部通信・回答本文の収集なし。",
   "minimum_chrome_version": "120",
   "permissions": [

@@ -3,7 +3,7 @@ import {describe,report,time} from './presentation.mjs';
 const el=id=>document.getElementById(id);
 const send=msg=>chrome.runtime.sendMessage(msg);
 let data={},busy=false;
-const UI_BUILD='0.2.1';
+const UI_BUILD='0.2.2';
 const draft=()=>({version:1,url:el('url').value.trim(),connector:CONNECTOR,prompt:'慎重に進んで',intervalMinutes:Number(el('interval').value),owner:'this-mac',exclusiveOwnerConfirmed:el('owner').checked});
 function controls(){
  const pending=!!data.state?.pending,enabled=!!data.state?.enabled,owner=el('owner').checked;

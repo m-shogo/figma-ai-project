@@ -1,7 +1,7 @@
 import {validateConfig,initialState,validState,gate} from './policy.mjs';
 import {operate} from './adapter.mjs';
 const ALARM='figma-continuation';
-const WORKER_BUILD='0.2.1';
+const WORKER_BUILD='0.2.2';
 // Single writer in this extension. Persist pending BEFORE invoking the adapter.
 let queue=Promise.resolve();
 let cancellation=0;
@@ -15,6 +15,17 @@ const record=async event=>{
   if(event.event==='STOPPED'&&!['RECONCILE_REQUIRED','RESULT_UNKNOWN','USER_STOP'].includes(event.reason))fields.lastFailure=result;
   await chrome.storage.local.set(fields);
 };
+async function releaseVerifiedUnsentCooldown(){
+  const {state:s,lastResolution:r,lastSent,attemptDetails}=await read();
+  if(!validState(s)||s.enabled||s.pending||s.nextDue===null||s.lastAttempt===null||
+    r?.outcome!=='HUMAN_CONFIRMED_NOT_POSTED'||!Number.isSafeInteger(r.at)||r.at<s.lastAttempt||
+    (attemptDetails?.attempt&&attemptDetails.attempt!==r.attempt)||
+    (lastSent?.confirmedAt>=s.lastAttempt))return;
+  // Only an explicit resolution of the latest unposted attempt permits this.
+  // No alarm or send is started; retain the prior deadline in the audit record.
+  await chrome.storage.local.set({lastResolution:{...r,clearedCooldown:s.nextDue}});
+  await save({...s,nextDue:null});
+}
 async function save(state) {
   await chrome.storage.local.set({state});
   await chrome.action.setBadgeText({text:state.enabled?'ON':'OFF'});
@@ -39,6 +50,7 @@ async function invoke(c,tab,mode,attempt) {
 }
 async function run(manual=false) {
   const generation=cancellation;
+  await releaseVerifiedUnsentCooldown();
   const {config:c,state:s}=await read(); const now=Date.now();
   const decision=gate(c,s,now,manual);
   if(decision==='NOT_DUE'||decision==='DISABLED') return {event:decision};
@@ -81,14 +93,14 @@ async function stop(reason='USER_STOP') {
   if(validState(state)) await save({...state,enabled:false,reason,lastOutputAt:Date.now()});
 }
 async function dispatch(msg) {
-  if(msg.action==='status') return {...await read(),workerBuild:WORKER_BUILD,alarm:await chrome.alarms.get(ALARM)};
+  if(msg.action==='status') {await releaseVerifiedUnsentCooldown();return {...await read(),workerBuild:WORKER_BUILD,alarm:await chrome.alarms.get(ALARM)};}
   if(msg.action==='reconcile-not-posted') {
     const {config:c,state:s,attemptDetails}=await read();validateConfig(c);
     if(!validState(s)||s.enabled||!s.pending||msg.expectedAttempt!==s.pending||msg.confirmed!==true)throw Error('RECONCILE_REQUIRED');
     const probe=await invoke(c,await tabFor(c),'probe');
     if(probe.event!=='IDLE_EMPTY')throw Error(probe.event);
-    await chrome.storage.local.set({lastResolution:{at:Date.now(),attempt:s.pending,outcome:'HUMAN_CONFIRMED_NOT_POSTED',attemptDetails:attemptDetails??null}});
-    await save({...s,pending:null,enabled:false,reason:'HUMAN_CONFIRMED_NOT_POSTED',lastOutputAt:Date.now()});
+    await chrome.storage.local.set({lastResolution:{at:Date.now(),attempt:s.pending,outcome:'HUMAN_CONFIRMED_NOT_POSTED',attemptDetails:attemptDetails??null,clearedCooldown:s.nextDue}});
+    await save({...s,pending:null,nextDue:null,enabled:false,reason:'HUMAN_CONFIRMED_NOT_POSTED',lastOutputAt:Date.now()});
     return {event:'HUMAN_CONFIRMED_NOT_POSTED'};
   }
   if(msg.action==='stop') {await stop();return {event:'STOPPED'};}
