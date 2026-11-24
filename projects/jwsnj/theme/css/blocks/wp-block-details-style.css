@@ -19,13 +19,12 @@
         --_padding-block: calc(24 * var(--to-rem-func));
         --_padding-inline: calc(24 * var(--to-rem-func));
         --_button-width: calc(68 * var(--to-rem-func));
-        --_summary-gap: calc(8 * var(--to-rem-func));
         summary.wp-block-details__summary {
             display: block;
             list-style-type: '';
             position: relative;
             padding-block: var(--_padding-block);
-            padding-inline: var(--_padding-inline) calc(var(--_button-width) + var(--_summary-gap));
+            padding-inline: var(--_padding-inline) var(--_button-width);
             cursor: pointer;
             touch-action: manipulation;
             min-height: calc(75 * var(--to-rem-func));
@@ -115,6 +114,7 @@
         }
         .wp-block-details__inner {
             flex-grow: 1;
+            min-width: 0;
             display: block grid;
             > * {
                 &:last-child {
@@ -158,6 +158,14 @@
             }
         }
 
+        @media (prefers-reduced-motion: reduce) {
+            .wp-block-details__button,
+            .wp-block-details__button-icon::before,
+            .wp-block-details__button-icon::after {
+                transition: none;
+            }
+        }
+
         /* 開いたときのスタイル */
         &[open] {
             .wp-block-details__button {
@@ -170,7 +178,6 @@
         }
 
         @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-            --_padding-inline: calc(32 * var(--to-rem-func));
             &._qa {
                 summary.wp-block-details__summary,
                 .wp-block-details__content {
