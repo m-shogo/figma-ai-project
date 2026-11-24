@@ -1,7 +1,7 @@
 import {validateConfig,initialState,validState,gate} from './policy.mjs';
 import {operate} from './adapter.mjs';
 const ALARM='figma-continuation';
-const WORKER_BUILD='0.2.2';
+const WORKER_BUILD='0.2.3';
 // Single writer in this extension. Persist pending BEFORE invoking the adapter.
 let queue=Promise.resolve();
 let cancellation=0;
@@ -15,6 +15,16 @@ const record=async event=>{
   if(event.event==='STOPPED'&&!['RECONCILE_REQUIRED','RESULT_UNKNOWN','USER_STOP'].includes(event.reason))fields.lastFailure=result;
   await chrome.storage.local.set(fields);
 };
+async function settleKnownPreSendStop(){
+  const {state:s,attemptDetails:d}=await read();
+  if(!validState(s)||!s.pending||d?.attempt!==s.pending||d.outcome?.clickAttempted!==false||
+    !d.outcome.event||['CONFIRMED','RESULT_UNKNOWN'].includes(d.outcome.event))return false;
+  await chrome.alarms.clear(ALARM);
+  await chrome.storage.local.set({lastResolution:{at:Date.now(),attempt:s.pending,outcome:'ADAPTER_CONFIRMED_NOT_CLICKED',attemptDetails:d,clearedCooldown:s.nextDue},lastFailure:{...d.outcome,at:Date.now()}});
+  await save({...s,pending:null,nextDue:null,enabled:false,reason:'PRE_SEND_STOP',lastOutputAt:Date.now()});
+  await record({event:'PRE_SEND_STOP'});
+  return true;
+}
 async function releaseVerifiedUnsentCooldown(){
   const {state:s,lastResolution:r,lastSent,attemptDetails}=await read();
   if(!validState(s)||s.enabled||s.pending||s.nextDue===null||s.lastAttempt===null||
@@ -50,6 +60,7 @@ async function invoke(c,tab,mode,attempt) {
 }
 async function run(manual=false) {
   const generation=cancellation;
+  await settleKnownPreSendStop();
   await releaseVerifiedUnsentCooldown();
   const {config:c,state:s}=await read(); const now=Date.now();
   const decision=gate(c,s,now,manual);
@@ -71,6 +82,7 @@ async function run(manual=false) {
   if(generation!==cancellation||halted) throw Error('CANCELLED');
   const outcome=await invoke(c,t,'send',pending.pending);
   await chrome.storage.local.set({attemptDetails:{...details,outcome}});
+  if(outcome.clickAttempted===false&&await settleKnownPreSendStop())return {event:'PRE_SEND_STOP'};
   if(outcome.event==='RESULT_UNKNOWN')await chrome.storage.local.set({lastFailure:{...outcome,at:Date.now()}});
   if(outcome.event!=='CONFIRMED') throw Error(outcome.event);
   const current=(await read()).state;
@@ -93,7 +105,7 @@ async function stop(reason='USER_STOP') {
   if(validState(state)) await save({...state,enabled:false,reason,lastOutputAt:Date.now()});
 }
 async function dispatch(msg) {
-  if(msg.action==='status') {await releaseVerifiedUnsentCooldown();return {...await read(),workerBuild:WORKER_BUILD,alarm:await chrome.alarms.get(ALARM)};}
+  if(msg.action==='status') {await settleKnownPreSendStop();await releaseVerifiedUnsentCooldown();return {...await read(),workerBuild:WORKER_BUILD,alarm:await chrome.alarms.get(ALARM)};}
   if(msg.action==='reconcile-not-posted') {
     const {config:c,state:s,attemptDetails}=await read();validateConfig(c);
     if(!validState(s)||s.enabled||!s.pending||msg.expectedAttempt!==s.pending||msg.confirmed!==true)throw Error('RECONCILE_REQUIRED');

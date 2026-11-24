@@ -4,7 +4,9 @@ export async function operate({url,connector,prompt,mode,attempt}) {
   const fail = reason => ({event:reason,phase:'PREFLIGHT',clickAttempted:false});
   const visible = el => !!el && el.getClientRects().length > 0;
   const controls = () => [...document.querySelectorAll('button')].filter(visible);
-  const name = el => (el.getAttribute('aria-label') || el.textContent || '').replace(/\s+/g,' ').trim();
+  // textContent concatenates sibling labels ("FigmaCreate..."). The visible
+  // button has a line break between the name and description; use rendered text.
+  const name = el => (el.getAttribute('aria-label') || el.innerText || el.textContent || '').replace(/\s+/g,' ').trim();
   const button = label => {
     const matches = controls().filter(el => name(el) === label);
     return matches.length === 1 ? matches[0] : null;
@@ -70,7 +72,7 @@ export async function operate({url,connector,prompt,mode,attempt}) {
     const selection = getSelection();
     const range = document.createRange(); range.selectNodeContents(input); range.collapse(false);
     selection.removeAllRanges(); selection.addRange(range);
-    if (!document.execCommand('insertText',false,prompt)) throw Error('INPUT_UNSUPPORTED');
+    if (!document.execCommand('insertText',false,' '+prompt)) throw Error('INPUT_UNSUPPORTED');
     if (input.textContent.replace(/\s+/g,' ').trim() !== `Figma ${prompt}`) throw Error('INPUT_CHANGED');
     phase = 'FIND_SEND';
     const send = await wait(() => { const b=button('Send'); return b && !b.disabled && b; });
