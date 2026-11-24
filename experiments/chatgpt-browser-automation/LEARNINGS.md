@@ -26,3 +26,12 @@
 - APM作者は最新版の実ChatGPT確認を未実施と明記。公開CIのみで採用しない。詳細は RESEARCH.md。
 - 13:35の既存自動タスクの保存レポートでは操作の存在確認のみ、skill・Figma・GitHubの実呼出は未実行。原因の進展なし。この研究からタスク変更しない。
 - 模擬ゲート初版17件成功後、offline/authRequired/limit欠落が許可されうることをレビューで発見。全入力フラグの欠落・不正値を拒否して74件成功、Git readback一致。Nodeランナーと実機は未検証。自動送信成功ではない。
+
+## 2026-11-24 14:03 — 定期送信の再現性（第2段階）
+
+Humanの明示受入条件: 既存JWSNJチャットへ真正なFigma選択付き「慎重に進んで」を、手動介入なく定期送信し、実際に案件実装が進むこと。以前の「慎重に進めて」も意味は同じだが送信本文はローカル設定の最新Human指定を優先。案件名はニュージャージー/JWSNJ。
+- 13:35の既存タスク結果は実操作未実行でBLOCKED、次回14:35。今回はタスクを変更していない。
+- 今回の手動Figma陽性対照: skill読込、create_session、whoamiは成功。Footer 221:335のget_design_contextは INVALID_ARGUMENT / An unexpected error occurred. / Figma Debug UUID dae14f1e-a317-4557-ab0d-08033b350cc5、get_screenshotも同エラー（UUID b3f1f1a2-5a3c-44b2-a1fe-5b0bef78b3dd）。GitHub so HEADは08516fa26e518c022444098f540cbd40ef525aeb。認証成功とデザイン取得成功を分ける。原因未確定。以前の手動成功を今回の成功としない。
+- common/mock-recurring.mjs / tests/mock-recurring.test.mjs を追加。仮想24時間（24回の時刻入力、確認済みreceipt、各回のJSON再読込、同一slot再入力）およびBUSY、スリープ相当の時刻ジャンプ、clock rollback、結果不明、権限/制限/通信等の停止をJS内で評価し121 assertions PASS。実時間24時間の試験ではない。Gitの保存と再取得一致を確認。
+- 保存した状態を入力に使う純粋な模擬ロジックのみ。OSタイマー、実ディスクへのatomic保存、端末間排他、実ブラウザadapter、真正なFigma選択、実際の自動送信は未実装。Node runner/実機未検証。現在のChat環境に別会話へ送信する正式操作がないため、実サービス送信0回。モック成功を送信成功として扱わない。
+- 次の実証条件: 実行可能な正式経路・Mac実機での送信を1回確認→複数の定期起動で実送信/skip/停止を確認→GitHub成果とFigma実測を別々に照合する。既存タスクとの二重writer禁止。
