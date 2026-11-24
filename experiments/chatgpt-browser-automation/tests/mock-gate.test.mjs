@@ -59,20 +59,10 @@ const cases = [
     "OWNER_UNCONFIRMED"
   ],
   [
-    "owner unknown",
-    {},
-    "OWNER_UNCONFIRMED"
-  ],
-  [
     "wrong chat",
     {
       "targetVerified": false
     },
-    "TARGET_UNCONFIRMED"
-  ],
-  [
-    "figma unknown",
-    {},
     "TARGET_UNCONFIRMED"
   ],
   [
@@ -88,11 +78,6 @@ const cases = [
       "busy": true
     },
     "BUSY"
-  ],
-  [
-    "busy unknown",
-    {},
-    "UNKNOWN"
   ],
   [
     "human draft",
@@ -130,11 +115,15 @@ const cases = [
     "PATH_UNVERIFIED"
   ]
 ];
+let count=0;
 for (const [name, patch, expected] of cases) {
-  // JSON serialisation omits undefined; explicitly reproduce the unknown states.
-  if (name === 'owner unknown') patch.owner = undefined;
-  if (name === 'figma unknown') patch.figmaVerified = undefined;
-  if (name === 'busy unknown') patch.busy = undefined;
-  assert.equal(decide({...base,...patch}),expected,name);
+  assert.equal(decide({...base,...patch}),expected,name);count++;
 }
-console.log(cases.length + ' mock decision cases passed');
+for (const key of Object.keys(base)) {
+  for (const value of [null,'unknown',42]) {
+    assert.notEqual(decide({...base,[key]:value}),'MOCK_READY',key);count++;
+  }
+  const copy={...base};delete copy[key];
+  assert.notEqual(decide(copy),'MOCK_READY',key+' missing');count++;
+}
+console.log(count + ' mock decision cases passed');
