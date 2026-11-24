@@ -157,3 +157,68 @@ test('header and footer call the official mark and footer art, not temporary Fig
   assert.doesNotMatch(header, /ico_admission\.svg|ico_parents\.svg|ico_recruit\.svg/);
   assert.match(footer, /esc_html\(get_bloginfo\('name'\)\)/);
 });
+
+const topSvgs = {
+  'src/images/top/img_catch-480.svg': ['bf3238d9f431cf1e7adc6d3e8d10052651983ca3daf249921347bba8072520b1', '57.9853', '57.1783'],
+  'src/images/top/img_catch-482.svg': ['022fc6328adb2454e9285602e85ab4763d27767f418a5250e7cb0d1e8bfd6f49', '57.9804', '57.183'],
+  'src/images/top/img_catch-481.svg': ['ce53aa28a31515b6a0f77f326307b1feee70fe8310bf05a4af4f682c5af967c6', '58.4796', '65.4783'],
+  'src/images/top/img_catch-483.svg': ['8bd458a97a67a9b253f77e451f2450623568406b9ae50ca66759681bfddf1658', '58.4844', '65.4796'],
+  'src/images/top/img_catch-493.svg': ['94fc2a8953af96d4c7628022cae915fa6994dcaddf1a7b75b1344f5718c116dd', '28.9204', '21'],
+  'src/images/top/img_catchphrase-sp.svg': ['3693b602a5b7208e870e824cf51912bbe26171751961e284e2d576d83bdad1d2', '192', '64'],
+  'src/images/top/img_map.svg': ['b51eff2d9c92763a4416cdb5ca849c0b246e075eff582971af0d01a1d2faf699', '280', '534'],
+  'src/images/top/img_map-pin-01.svg': ['71e289e929c102308786d4773d04f71ab450a4394844feead2bf517dbcedfc3c', '78.0012', '95.0011'],
+  'src/images/top/img_map-pin-02.svg': ['905000a94fe77e5d83a4b0295b482c83c76601341e88f0501a0269be0c9e6408', '77.0049', '101.993'],
+  'src/images/top/img_course-layer.svg': ['3ee87ec1517c11ac1091a3b3b95025ece8f8dd94231c120c8b53ced846aa4762', '145.204', '174.952'],
+  'src/images/top/img_course-mark.svg': ['86c2ec900f449bfefdaef7659885aef8664b6b447796aff93e4fcbf97c5d3a2e', '34.8555', '40.6094'],
+  'src/images/top/img_course-math.svg': ['1144425de1cdeff3e2b8cbc5ce48d3a3c153653d56b78cc2ece6b6fe944e66f7', '93.569', '128.117'],
+  'src/images/top/ico_flow.svg': ['d109da664568d8f5c6b8579a412e770dfe5fca6c48e1d9350d654f00429f17ff', '56', '56'],
+  'src/images/top/ico_fee.svg': ['cd9b5e4831b8b87b6b8f05047ab1ebba6f3cbfeb8567519669bb41834692de09', '56.0005', '50.9999'],
+  'src/images/top/ico_visit.svg': ['6532d82e92971cf28da8358fa450478e6436d325769ea3332cfd8b6f02fe770b', '56', '52'],
+  'src/images/top/img_instagram.svg': ['103e7e62611da78f0fec53ab8679b9b37fc02470592498285853eedfcf4e5122', '66', '155.005'],
+  'src/images/top/img_about-underline.svg': ['8b60ba56e07726218d6c072a837a4ca353e155f2ac16d8065bc8dc78480526ad', '142', '6'],
+};
+
+const topPhotos = {
+  'src/images/top/img_mv-01.webp': '0161bb2678b77b87de1976cdccf54d7403ef52ec0673e61c98d1c9da149b8d9b',
+  'src/images/top/img_mv-02.webp': '234f8bd074104ff646d54b761a36fdfbc0cec48a9a18668e04cb8e182be96098',
+  'src/images/top/img_mv-03.webp': 'b00b046165f1574978c0f4fb0ba4468a2f8c7e3c5d17ce3b7a050a5c06eebe49',
+  'src/images/top/img_mv-03-fill.webp': 'eba27ad323a730260dad0149b3a62a25df6bd4c806fa229f826196ddc8eb0edd',
+  'src/images/top/img_mv-04.webp': '2b55acb91d94f40a6cd1d95b2de60d06e8024a1c1b0173f3df8530c4e208962b',
+  'src/images/top/img_mv-05.webp': 'fa8b4d303f04ba40544d30ab0922a0b5bd1dfab7fa6b9a57bab46a46c618d55d',
+  'src/images/top/img_mv-06.webp': '5ffc1aa303d7b81158f4c659787b37ade2ba858bbbdd63b45d00399dd0912c1d',
+  'src/images/top/img_about-overview.webp': 'ff4c1a711e8c7e64b127ed7105ce5e23c695bdbda52d4acccf1ff803859bb072',
+  'src/images/top/img_about-education.webp': 'b6a90e9f3b08a72c560f7355aab0a6a8c1a6d2592c174cfb951ef35b453906d8',
+  'src/images/top/img_about-bg.webp': 'bd1efe6e92d21ec8c62aaf23df04bfecf2303582205e20c53c3bd312a02fdc87',
+  'src/images/top/img_about-bg-02.webp': '5880cf99166e22456a65a383b8a80ce1ed218f519d538a57e51d8b808245fdd4',
+  'src/images/top/img_about-bg-03.webp': '4a52fb9293f429ab6107a4eddd44abeb1b0d44255eb4d0e50b82d2650bc73738',
+  'src/images/top/img_course-preschool.webp': 'bc5bd237a804c84b6cfa7d342d90f0d1b7ac837177c9fae2c36cb21bd6cb0024',
+  'src/images/top/img_course-elementary.webp': '44d3041a294766cdb2f80fc96dd0a1dcc851485cd7082faf38f88b6c744c1467',
+  'src/images/top/img_course-junior.webp': 'cbb0e9e19f5f3157a8ad9518c525595a4ab39152c660043ef3575e9716559aea',
+  'src/images/top/img_course-high.webp': '99a800cb526ddef89ece6747aa6f7e531d0ef45bc4c43d3ee7edd5fd5727d88d',
+  'src/images/top/img_course-international.webp': 'd0aa6dc0f5d35e9bdb911555f2cccc18ee4b2a98aea20e52e17ba4c9ab2f7287',
+  'src/images/top/img_banner.webp': '640d9527b85cdb5cd8d8d918840f864ef42bbaa81624b9de7d7ebc9467d0aac1',
+  'src/images/top/img_banner-02.webp': 'e5975385dd17e6629e78f919d3cf63ee9be9647392ecf7a96657148d3cb78cf6',
+  'src/images/top/img_banner-03.webp': 'a6ce5c27cdf574768a8e75275cffe6b2471d58a6fdf364b68a60a1f46f93e5dc',
+  'src/images/top/img_applicants.webp': 'e58b16406c4158556b123f80981465b370949d5bd1e741f1b38358209cc91e9f',
+};
+
+test('TOP official SVG and WebP bytes match between src and theme', () => {
+  for (const [relativePath, expected] of Object.entries(topSvgs)) {
+    const source = read(relativePath);
+    const theme = read(relativePath.replace('src/images/', 'theme/images/'));
+    assert.equal(sha256(source), expected[0], relativePath);
+    assert.equal(sha256(theme), expected[0], relativePath);
+    const rootTag = source.toString('utf8').slice(0, 280);
+    assert.match(rootTag, new RegExp(`width="${expected[1]}"`));
+    assert.match(rootTag, new RegExp(`height="${expected[2]}"`));
+    assert.equal(source.includes('figma.com'), false, relativePath);
+  }
+  for (const [relativePath, expectedHash] of Object.entries(topPhotos)) {
+    const source = read(relativePath);
+    const theme = read(relativePath.replace('src/images/', 'theme/images/'));
+    assert.equal(sha256(source), expectedHash, relativePath);
+    assert.equal(sha256(theme), expectedHash, relativePath);
+    assert.equal(source.subarray(0, 4).toString('ascii'), 'RIFF', relativePath);
+    assert.equal(source.subarray(8, 12).toString('ascii'), 'WEBP', relativePath);
+  }
+});
