@@ -151,6 +151,29 @@ PCメニュー `599:2726` の `get_variable_defs` で `color/separator_light = #
 - 次のCURRENT PHASE内READY: (1) Figma SVG/画像実体を取得できる経路で保存し、各識別名とhash/ライセンス/保存先を照合、(2) Header/Footer使用フォントのweight/合法な配信元とTheme読み込みを確定、(3) 既存logo.svgとFigmaロゴの実体差分確認、(4) Header/Footerアセット読み込み静的QA。BLOCKED: assetバイナリの取得経路、Font Awesome Pro利用許諾、WP/ブラウザ実機QA。
 - Reviewer/Auditor: downstream変更ゼロ、ページ担当PHP/CSS変更ゼロ、未取得素材の偽装導入ゼロ。文書の照合結果のみでHeader/Footer完了扱いはしない。ゲートはCLOSED。
 
+## 2026-11-24 Cursor で公式 SVG 実体を保存
+
+前回の DNS 失敗は、この作業環境では再現しなかった。Figma file `K3SANPVHIEerfYBQtM4lXF` から SVG 実体を取得し、`src/images/common/` と `theme/images/common/` の両方へ同じバイトで置いた。SHA-256 と root の width/height は `tests/official-svg-asset-contract.test.mjs` が固定する。短命 URL はコードへ置いていない。
+
+| ファイル | Figma | root |
+|---|---|---|
+| `footer/img_footer-left.svg` | `221:335` img_footer-left | 408×99.9255 |
+| `footer/img_footer-left-sp.svg` | `279:2637` | 155×81.8729 |
+| `footer/img_footer-line.svg` / `-sp` | `221:335` / `279:2687` | 309×1 / 117.461×1 |
+| `footer/img_student-01.svg` / `-sp` | 同上 | 49×75.6629 / 37.8264×59.7736 |
+| `footer/img_puzzle-02.svg` / `-sp` | 同上 | 100×75.6627 / 79.6345×59.7732 |
+| `footer/img_footer-bullet.svg` | `221:335` ellipse | 5.41839。保存のみ。サイトマップは WordPress メニューのまま |
+| `img_njws-logo.svg` | `114:489` | 51×48。フッター |
+| `img_njws-logo-header.svg` | `221:334` / `114:46` | 60×57。ヘッダー |
+| `ico_admission.svg` / `ico_parents.svg` / `ico_recruit.svg` | `221:334` | 保存のみ。遷移先 URL が未承認のためボタンは未接続 |
+| `ico_blossom.svg` | `506:2533` | 12×12。区切り線 `344:1134` と見出し h4 `344:901` は同じ花。18×17 の書き出しは root 寸法が違うだけで、別デザインではない |
+| `ico-blank.svg` | `344:985` | 13×12。外部リンク用。既存サンプル `icon-external.svg` とは別バイト。ボタン CSS は Font Awesome のまま |
+| `ico_school.svg` | `599:3205` | 40×37。メインビジュアルの学校アイコン。保存のみ |
+
+既存 `logo.svg` は別物（サンプルのワードマーク）で、公式マークでは上書きしていない。Header/Footer の電話・住所・SNS・寄付 URL は追加していない。ブラウザ表示は #523 のまま未検証。
+
+パーツ集 `339:23` を層ごとに確認した。SVG として新規だったのは外部リンク `ico-blank` だけ。見出し h4 と区切り線の花は保存済みの `ico_blossom` と同一。大ボタン・ページ内リンク・アコーディオン・リストの印、ナビの矢印は Font Awesome の文字で、SVG ファイルは無い。ナビ写真は JPEG なので今回は保存していない。PC メニュー展開に見えていた SVG 14 点は、メインビジュアルのアウトライン文字と既に保存したロゴ／アイコンの再掲。キャッチコピーのアウトラインは TOP 側の未取得として残している。
+
 
 ## Human typography policy（2026-11-21）
 

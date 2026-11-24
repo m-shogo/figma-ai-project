@@ -13,6 +13,9 @@ on:
       - 'projects/jwsnj/theme/inc/menu.php'
       - 'projects/jwsnj/theme/css/layout/global_footer.css'
       - 'projects/jwsnj/tests/footer-menu-contract.test.mjs'
+      - 'projects/jwsnj/tests/official-svg-asset-contract.test.mjs'
+      - 'projects/jwsnj/src/images/common/**'
+      - 'projects/jwsnj/theme/images/common/**'
       - 'projects/jwsnj/theme/css/blocks/wp-block-heading-style.css'
       - 'projects/jwsnj/theme/css/blocks/wp-block-text-style.css'
       - 'projects/jwsnj/theme/css/blocks/wp-block-list-style.css'
@@ -62,6 +65,9 @@ on:
       - 'projects/jwsnj/theme/inc/menu.php'
       - 'projects/jwsnj/theme/css/layout/global_footer.css'
       - 'projects/jwsnj/tests/footer-menu-contract.test.mjs'
+      - 'projects/jwsnj/tests/official-svg-asset-contract.test.mjs'
+      - 'projects/jwsnj/src/images/common/**'
+      - 'projects/jwsnj/theme/images/common/**'
       - 'projects/jwsnj/theme/css/blocks/wp-block-heading-style.css'
       - 'projects/jwsnj/theme/css/blocks/wp-block-text-style.css'
       - 'projects/jwsnj/theme/css/blocks/wp-block-list-style.css'
@@ -117,6 +123,8 @@ jobs:
         run: node --test projects/jwsnj/tests/header-menu-state.test.mjs
       - name: Test Footer WordPress menu contract
         run: node --test projects/jwsnj/tests/footer-menu-contract.test.mjs
+      - name: Test official Header and Footer SVG bytes
+        run: node --test projects/jwsnj/tests/official-svg-asset-contract.test.mjs
       - name: Test Figma-approved parts heading, copy and list contracts
         run: node --test projects/jwsnj/tests/parts-*.test.mjs
       - name: Check WordPress Header and Footer PHP syntax
