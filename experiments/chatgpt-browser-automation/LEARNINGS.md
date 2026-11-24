@@ -80,3 +80,7 @@ Humanの明示受入条件: 既存JWSNJチャットへ真正なFigma選択付き
 - 送信なしprobeをクリック後、ネイティブAXではstatusの末尾が省略された。詳細を読もうとcua.getTabで観測済みchrome-extension://の設定ページを指定したところ、URL policyがhttp/https以外を拒否し、alternate browser surfaces等の回避も禁止する旨を返した。この拒否後は別経路で詳細を取得せず、Humanにevent/reasonの文字列を依頼。probe成功と報告しない。
 - 指紋: CUA/getTab/chrome-extension-settings/URL_PROTOCOL_BLOCKED。解除には本人による結果の確認、または正式な対応操作面が必要。認証エラーや拡張自体の実行失敗と混同しない。
 - 現在のコード検証: 設定タブからのworker受付とcontent script/別拡張/別ページからの拒否を既存workerテストへ追加。送信の実機試験は未実施。旧Mac・実alarm・再起動・長期運用も未検証。
+
+### Human転記によるprobe結果確認
+
+Humanが設定画面を転記: event=IDLE_EMPTY、enabled=false、owner未確認、pending=null、sent=0。拡張自身のprobeが実ChatGPTの対象チャットと空のcomposerを認識したことを確認。CUAの拡張URL制限は回避していない。続いて公式read_threadで対象チャットの14:35レポートとidleを確認。既存タスクは読み取り診断フェーズAを維持し、実装・commit・PRは発生していない。次はHumanが設定画面から単発送信を起動する初回試験が必要。AIによる毎時操作にはせず、以後は拡張のalarmで動く設計を維持する。

@@ -60,5 +60,5 @@ UI選択の観測はGate 2全体のPASSではない。今回の送信成功回�
 
 - 拡張読み込み、設定ページの通信修正・再読み込み、chatgpt.com権限付与、ローカル設定保存を実機で確認。
 - Codexを実行時依存にしない。定期送信はChrome service worker/alarmで行う設計。Codexの自動化タスクは作成していない。
-- probeはクリック済み、結果末尾はツール側のURLアクセス制限により未確認。Humanのevent/reason確認待ち。
+- probeはクリック済み。Humanの画面転記で `IDLE_EMPTY` を確認。拡張による対象識別と空の入力欄の判定は観測済み、送信・BUSY等の異常状態判別は未検証。
 - 拡張送信0回・拡張定期起動0回。enabledとowner確認はfalse。既存タスク変更なし。定期切替承認は未取得。
