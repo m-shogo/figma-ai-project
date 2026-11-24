@@ -4,7 +4,7 @@
 <main>
 <header><div><span class="eyebrow">CHROMEだけで実行</span><h1>Figma継続送信</h1></div><span id="schedule" class="pill">定期送信オフ</span></header>
 <section id="outcome" class="card outcome" aria-live="polite" aria-atomic="true"><span class="eyebrow">現在の状態</span><h2 id="headline">状態を確認しています…</h2><p id="guidance"></p></section>
-<section id="recovery" class="card" hidden><h2>未確定の送信を確認する</h2><p class="hint">今回の試行より後の投稿と下書きを、対象チャットで確認してください。以前の同じ本文の投稿とは区別してください。</p><label class="confirmation"><input id="not-posted" type="checkbox"><span>今回の投稿がなく、入力欄が空であることを確認しました</span></label><button id="resolve" type="button" disabled>保留を解除する（送信しない）</button><p class="hint">試行記録と待機時刻は残ります。投稿がある場合や不明な場合は解除しないでください。</p></section>
+<section id="recovery" class="card" hidden><h2>未確定の送信を確認する</h2><p class="hint">今回の試行より後の投稿と下書きを、対象チャットで確認してください。以前の同じ本文の投稿とは区別してください。</p><label class="confirmation"><input id="not-posted" type="checkbox"><span>今回の投稿がなく、入力欄が空であることを確認しました</span></label><button id="resolve" type="button" disabled>保留を解除する（送信しない）</button><p class="hint">試行記録を残し、未投稿を確認した試行の待機は解除します。投稿がある場合や不明な場合は解除しないでください。</p></section>
 <section class="card"><h2>送信する内容</h2><div class="prompt"><span class="app">Figma</span><span>慎重に進んで</span><button id="copy-prompt" class="text-button" type="button">本文をコピー</button></div>
 <label for="url">送信先チャット</label><input id="url" type="url" placeholder="https://chatgpt.com/c/…" autocomplete="off"><p class="hint">このURLのチャットだけに送ります。対象タブをChromeで開いておいてください。</p>
 <label for="interval">送信間隔（分）</label><input id="interval" type="number" min="60" max="10080" value="60">

@@ -4,8 +4,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {CONNECTOR,initialState} from '../modern/chrome/policy.mjs';
 const config={version:1,url:'https://chatgpt.com/c/00000000-0000-0000-0000-000000000000',connector:CONNECTOR,prompt:'慎重に進んで',intervalMinutes:60,owner:'this-mac',exclusiveOwnerConfirmed:true};
-async function harness({outcome='CONFIRMED',state=initialState(),probe='IDLE_EMPTY'}={}){
-  const db={config:structuredClone(config),state:structuredClone(state)};
+async function harness({outcome='CONFIRMED',state=initialState(),probe='IDLE_EMPTY',stored={}}={}){
+  const db={config:structuredClone(config),state:structuredClone(state),...structuredClone(stored)};
   let listener,alarm=state.enabled?{when:Date.now()+3600000}:null,calls=0,ready,release;
   const entered=new Promise(resolve=>ready=resolve);
   const hold=new Promise(resolve=>release=resolve);
@@ -71,16 +71,31 @@ test('legacy pending failure is preserved when startup requires reconciliation',
  assert.equal(h.db.lastFailure.reason,'UI_TIMEOUT');
  assert.equal(h.db.state.reason,'RECONCILE_REQUIRED');
  const result=await h.message({action:'status'});
- assert.equal(result.workerBuild,'0.2.1');
+ assert.equal(result.workerBuild,'0.2.2');
  assert.equal(h.calls,0);
 });
-test('human reconciliation matches the attempt and never sends or resets cooldown',async()=>{
+test('human reconciliation matches the attempt and releases only its unsent cooldown without sending',async()=>{
  const s={...initialState(),pending:'old',reason:'UI_TIMEOUT',lastAttempt:1,nextDue:999999};
  const h=await harness({state:s});
  const bad=await h.message({action:'reconcile-not-posted',expectedAttempt:'wrong',confirmed:true});
  assert.equal(bad.reason,'RECONCILE_REQUIRED');assert.equal(h.db.state.pending,'old');
  const ok=await h.message({action:'reconcile-not-posted',expectedAttempt:'old',confirmed:true});
  assert.equal(ok.event,'HUMAN_CONFIRMED_NOT_POSTED');assert.equal(h.db.state.pending,null);
- assert.equal(h.db.state.nextDue,s.nextDue);assert.equal(h.db.state.enabled,false);assert.equal(h.calls,0);
+ assert.equal(h.db.state.nextDue,null);assert.equal(h.db.lastResolution.clearedCooldown,s.nextDue);assert.equal(h.db.state.enabled,false);assert.equal(h.calls,0);
  assert.equal(h.db.lastResolution.attempt,'old');assert.equal(h.db.lastFailure.reason,'UI_TIMEOUT');
+});
+test('already resolved unposted attempt can be retried without waiting for a failed-send cooldown',async()=>{
+ const at=Date.now()-1000;
+ const h=await harness({state:{...initialState(),lastAttempt:at,nextDue:Date.now()+3600000},stored:{lastResolution:{at:at+100,attempt:'old',outcome:'HUMAN_CONFIRMED_NOT_POSTED'}}});
+ assert.equal(h.db.state.nextDue,null);assert.equal(h.calls,0);
+ assert.equal((await h.message({action:'once'})).event,'CONFIRMED');
+ assert.equal((await h.message({action:'once'})).event,'NOT_DUE','old resolution cannot bypass a new successful send');
+ assert.equal(h.calls,1);
+});
+test('unresolved, stale resolution and confirmed sends retain cooldown',async()=>{
+ const at=Date.now()-1000,nextDue=Date.now()+3600000;
+ for(const stored of [{},{lastResolution:{at:at-1,attempt:'old',outcome:'HUMAN_CONFIRMED_NOT_POSTED'}},{lastResolution:{at:at+100,attempt:'old',outcome:'HUMAN_CONFIRMED_NOT_POSTED'},attemptDetails:{attempt:'new'}},{lastResolution:{at:at+100,attempt:'old',outcome:'HUMAN_CONFIRMED_NOT_POSTED'},lastSent:{confirmedAt:at+10}}]){
+  const h=await harness({state:{...initialState(),lastAttempt:at,nextDue},stored});
+  assert.equal(h.db.state.nextDue,nextDue);assert.equal((await h.message({action:'once'})).event,'NOT_DUE');assert.equal(h.calls,0);
+ }
 });
