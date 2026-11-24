@@ -1,6 +1,6 @@
 # ChatGPT ブラウザ操作による継続実装 — 研究正本
 
-Status: SINGLE_SEND_OBSERVED / EXTENSION_IMPLEMENTED_UNVERIFIED / RECURRING_DISABLED
+Status: SINGLE_SEND_OBSERVED / EXTENSION_INSTALLED_SEND_UNVERIFIED / RECURRING_DISABLED
 Updated: 2026-11-24 JST
 Scope: ブラウザ起動・ChatGPTへの入力・実行状態管理。WordPress案件コード自体とは独立。
 Authority: ../../AGENTS.md、../../docs/agent-recurring-work-preflight.md、../../docs/recurring-failure-recovery.md、../../docs/scheduled-agent-handoff.md
@@ -43,11 +43,11 @@ Authority: ../../AGENTS.md、../../docs/agent-recurring-work-preflight.md、../.
 
 ## 現状
 
-実装済み: common/ の模擬基盤、mac/ のmock専用plist生成に加え、[modern/chrome/](modern/chrome/) にManifest V3拡張を追加。真正なFigma候補選択、限定したDOM識別、送信前intent永続化、receipt照合、結果不明時停止、単一writer、BUSYスキップ、毎時alarm、緊急停止を実装した。拡張経由の実機動作は未検証。インストール・権限付与・定期送信は未実施。
+実装済み: common/ の模擬基盤、mac/ のmock専用plist生成に加え、[modern/chrome/](modern/chrome/) にManifest V3拡張を追加。真正なFigma候補選択、限定したDOM識別、送信前intent永続化、receipt照合、結果不明時停止、単一writer、BUSYスキップ、毎時alarm、緊急停止を実装した。M5のChromeへ読み込みとchatgpt.comの任意権限付与、対象設定の保存を実施。拡張経由の送信・定期起動は未実施。
 
 実機確認済み: M5 Pro / macOS 26.4.1 / Chrome 158.0.8127.37で、Codex接続済みChrome操作から真正なFigma選択付き「慎重に進んで」を指定チャットへ送信。送信後のFigmaリンク・本文・生成開始を確認した。これは拡張経由の成功ではない。対象チャットはFigma取得成功を報告し、実行履歴にFigma診断の記録を表示したが、取得payload自体は独立検証していない。診断フェーズAのため、案件実装は進んでいない。
 
-NEXT: Chrome拡張の読み込みとchatgpt.com画面の読み書き権限について、実行直前のHuman確認を求めている。許可後、まず送信なしprobeを実機検証する。定期送信の有効化は既存タスク・別端末との排他と切替承認後。実送信成功1回、実定期起動0回。根拠と限界は [LEARNINGS.md](LEARNINGS.md)。
+NEXT: Humanの「進めて」を受け拡張を読み込み、サイト権限付与・設定保存後、送信なしprobeをクリックした。結果詳細の取得がブラウザ操作ツールのURLポリシーで拒否されたため、Humanの画面転記により `IDLE_EMPTY` を確認済み。定期送信の有効化は既存タスク・別端末との排他と切替承認後。実送信成功1回、実定期起動0回。根拠と限界は [LEARNINGS.md](LEARNINGS.md)。
 
 ## 2026-11-24 追補
 
@@ -74,9 +74,11 @@ plistの生成までがこの手順の範囲。Mac実機での定期起動は別
 
 ## Chrome拡張の導入と停止
 
+実行時にCodex/ChatGPT APIやAIモデルを呼ぶ構成はない。Chromeのservice workerとalarmだけで送信を行う。Codexは開発・修正用途のみで、定期実行へ組み込まない。
+
 ソース: `modern/chrome/`。追加パッケージ、APIキー、Node常駐プロセスは不要。Chrome自体が終了している間は動作しない。旧Mac/Firefoxには転用・導入していない。
 
-1. Humanが読み込み・サイト権限を承認した後、Chromeの拡張機能ページで「パッケージ化されていない拡張機能を読み込む」から `modern/chrome/` を選択する。まだ導入していない。
+1. Humanが読み込み・サイト権限を承認した後、Chromeの拡張機能ページで「パッケージ化されていない拡張機能を読み込む」から `modern/chrome/` を選択する。M5への読み込みは実施済み。
 2. 拡張のpopupに対象URLをローカル入力。固定のFigma connectorと本文、初期値60分を確認する。サイト権限はchatgpt.comだけを要求する。設定はstorage.localのみ、storage.syncや外部サーバーを使わない。
 3. 送信なしprobeはowner未確認でも実施できる。単発・定期送信前には既存タスクと他端末の並行実装を解消してowner確認を入れる。確認checkboxは機械的な端末間ロックではなくHumanによる運用上の排他である。
 4. 対象タブは既に開いたものが正確に1枚必要。未発見・複数・別チャット・人の下書き・添付/未知UI・認証要求・上限・通信障害では停止。UI言語は今回校正した英語ラベルのみ。UI変更や日本語UIを推測で操作しない。
@@ -86,3 +88,9 @@ plistの生成までがこの手順の範囲。Mac実機での定期起動は別
 権限: storage / alarms / scripting と、任意許可の `https://chatgpt.com/*`。cookie、履歴、全サイト、webRequest、debugger、外部送信の権限は要求しない。ただしChromeのサイト権限自体は当該origin全体に及ぶ。コードが対象URLへ限定してもブラウザの権限が1チャットだけになるわけではない。
 
 限界: 拡張の入力イベントを実ChatGPTが受理するか、添付検出、receipt照合、利用制限/認証判別、スリープ・再起動・alarm復旧は実機未検証。現時点で常用可能とは判定しない。依存なしのNodeテストはservice workerの制御・永続化をChrome APIスタブで検証し、DOM adapterの実機成功を意味しない。
+
+## M5導入の最新到達点
+
+設定画面を通常タブで開いた場合のsender判定を修正。自拡張のpopup.html URLからだけ内部操作を受け付け、同じ拡張IDでもChatGPTのcontent scriptや他のページからは拒否する。内部処理が無応答でも設定画面が無言で止まらず、エラーを表示する。
+
+実機で設定保存を確認: 間隔60分、enabled=false、exclusiveOwnerConfirmed=false、pending=null、sent=0。これは拡張自身の状態であり、以前のCUA単発送信1回とは別。既存タスクは変更していない。権限付与後の送信なしprobeはクリック済みだが、AX表示が結果末尾を省略し、拡張URLの詳細取得はツールポリシーで拒否された。別経路での回避は行わず、結果確認をHumanへ依頼し、`IDLE_EMPTY` の画面転記を受領した。これは拡張自身の送信なし状態確認が成立した観測であり、送信成功ではない。単発・定期送信は押していない。

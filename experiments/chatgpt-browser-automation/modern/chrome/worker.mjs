@@ -88,7 +88,7 @@ async function dispatch(msg) {
   throw Error('ACTION_INVALID');
 }
 chrome.runtime.onMessage.addListener((msg,sender,reply)=>{
-  if(sender.id!==chrome.runtime.id || sender.tab) return false;
+  if(sender.id!==chrome.runtime.id || sender.url!==chrome.runtime.getURL('popup.html')) return false;
   // Emergency stop must not queue behind a slow adapter.
   if(msg.action==='stop'){stop().then(()=>reply({event:'STOPPED'}),()=>reply({event:'STOP_FAILED'}));return true;}
   serial(()=>dispatch(msg)).then(reply,async e=>{await stop(e.message);reply({event:'STOPPED',reason:e.message});});

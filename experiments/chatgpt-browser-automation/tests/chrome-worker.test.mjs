@@ -20,12 +20,12 @@ async function harness({outcome='CONFIRMED',state=initialState(),probe='IDLE_EMP
       if(outcome==='HOLD'){ready();await hold;return [{result:{event:db.state.reason==='ATTEMPTING'?'CONFIRMED':'CANCELLED'}}];}
       return [{result:{event:outcome}}];
     }},
-    runtime:{id:'test',onMessage:{addListener(fn){listener=fn;}},onStartup:{addListener(){}},onInstalled:{addListener(){}}}
+    runtime:{id:'test',getURL:p=>'chrome-extension://test/'+p,onMessage:{addListener(fn){listener=fn;}},onStartup:{addListener(){}},onInstalled:{addListener(){}}}
   };
   await import('../modern/chrome/worker.mjs?run='+crypto.randomUUID());
-  const message=msg=>new Promise(resolve=>listener(msg,{id:'test'},resolve));
+  const message=msg=>new Promise(resolve=>listener(msg,{id:'test',url:'chrome-extension://test/popup.html',tab:{id:2}},resolve));
   await message({action:'status'}); // Wait for startup recovery.
-  return {db,message,get calls(){return calls;},entered,release};
+  return {db,message,get calls(){return calls;},entered,release,rejects:sender=>listener({action:'once'},sender,()=>{throw Error('Unexpected reply');})===false};
 }
 test('confirmed receipt persists and immediate/manual duplicate cannot send',async()=>{
   const h=await harness();assert.equal((await h.message({action:'once'})).event,'CONFIRMED');
@@ -51,4 +51,11 @@ test('busy skips and schedules future time; unconfirmed owner never reaches UI',
   assert.equal((await h.message({action:'once'})).event,'BUSY');assert.equal(h.db.state.skipped,1);assert.equal(h.calls,0);
   const other=await harness();other.db.config.exclusiveOwnerConfirmed=false;
   assert.equal((await other.message({action:'once'})).reason,'OWNER_UNCONFIRMED');assert.equal(other.calls,0);
+});
+test('only the extension settings page may invoke worker actions',async()=>{
+  const h=await harness();
+  assert.ok(h.rejects({id:'test',url:config.url,tab:{id:1}}));
+  assert.ok(h.rejects({id:'another-extension',url:'chrome-extension://test/popup.html'}));
+  assert.ok(h.rejects({id:'test',url:'chrome-extension://test/unexpected.html'}));
+  assert.equal(h.calls,0);
 });

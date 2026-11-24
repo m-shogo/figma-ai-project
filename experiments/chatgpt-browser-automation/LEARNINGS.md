@@ -70,3 +70,17 @@ Humanの明示受入条件: 既存JWSNJチャットへ真正なFigma選択付き
 - 停止設計: service workerの単一queue、別経路の緊急停止signal、送信直前の永続pending/cancelledAttempt照合、結果不明の自動再送禁止、起動時のalarm回復。端末間ロックは未実装で、exclusive ownerのHuman確認が必要。既存タスクの自動停止は行わない。
 - 検証: Nodeの実workerをChrome APIスタブで実行し、receipt後の連投拒否、結果不明状態のworker再起動・設定保存での保全、送信待ち中の緊急停止、BUSY/owner未確認を検証。初回はテストのstartup alarm回復により送信が延期され待機したため中断。実装エラーとは断定せず、テストの既存alarm前提を修正後に全15 tests PASS。構文check・diff check成功。adapterの実機・alarm起動・Chrome再起動は未検証。
 - Chrome拡張の読み込み・chatgpt.comの画面読み書き権限は実行直前のHuman確認を依頼中。未許可のままインストールしない。定期送信の開始や既存タスクとの切替は別承認。実定期起動0回、旧Mac未検証。次は承認後にprobeから実機で確認する。
+
+## 2026-11-24 — Codexを実行経路から除外、Chrome拡張の実機導入
+
+- Human修正: 送信の本運用にはCodexを使わない（コンテキスト消費を避ける）。既存のChrome拡張はCodex/APIを呼ばない実装なので、定期alarm・DOM操作はChromeだけで行う。Codexのheartbeat/automationを作らない。開発・修正用途とは区別する。
+- Humanの「進めて」を受け、Chromeのデベロッパーモードをオンにして本repoのmodern/chromeを読み込み。設定画面からchatgpt.comの「自分のデータの読み取りと変更」任意権限を付与し、対象チャットURLをローカル保存。対象タスクの停止・設定変更はしていない。
+- 初回の実機不具合: 設定画面をタブで開くとstatus応答がundefined、popup.mjsのdata.configでUncaught TypeError。Chromeのエラー画面で実エラーを確認。sender.tabを一律拒否したため自拡張の設定タブも拒否していた。sender.idとsender.url（自拡張popup.htmlの完全一致）へ変更し、無応答時の明示エラーも追加。拡張を再読込して設定画面が{}を表示し、イベント処理と設定保存が成立したことを確認。
+- 設定保存後の実機状態: enabled=false、exclusiveOwnerConfirmed=false、pending=null、sent=0、skipped=0、intervalMinutes=60。拡張の単発送信・定期開始は未実行。CUAによる以前の送信1回を拡張の送信成功へ転記しない。
+- 送信なしprobeをクリック後、ネイティブAXではstatusの末尾が省略された。詳細を読もうとcua.getTabで観測済みchrome-extension://の設定ページを指定したところ、URL policyがhttp/https以外を拒否し、alternate browser surfaces等の回避も禁止する旨を返した。この拒否後は別経路で詳細を取得せず、Humanにevent/reasonの文字列を依頼。probe成功と報告しない。
+- 指紋: CUA/getTab/chrome-extension-settings/URL_PROTOCOL_BLOCKED。解除には本人による結果の確認、または正式な対応操作面が必要。認証エラーや拡張自体の実行失敗と混同しない。
+- 現在のコード検証: 設定タブからのworker受付とcontent script/別拡張/別ページからの拒否を既存workerテストへ追加。送信の実機試験は未実施。旧Mac・実alarm・再起動・長期運用も未検証。
+
+### Human転記によるprobe結果確認
+
+Humanが設定画面を転記: event=IDLE_EMPTY、enabled=false、owner未確認、pending=null、sent=0。拡張自身のprobeが実ChatGPTの対象チャットと空のcomposerを認識したことを確認。CUAの拡張URL制限は回避していない。続いて公式read_threadで対象チャットの14:35レポートとidleを確認。既存タスクは読み取り診断フェーズAを維持し、実装・commit・PRは発生していない。次はHumanが設定画面から単発送信を起動する初回試験が必要。AIによる毎時操作にはせず、以後は拡張のalarmで動く設計を維持する。
