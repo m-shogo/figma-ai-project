@@ -84,3 +84,11 @@ Humanの明示受入条件: 既存JWSNJチャットへ真正なFigma選択付き
 ### Human転記によるprobe結果確認
 
 Humanが設定画面を転記: event=IDLE_EMPTY、enabled=false、owner未確認、pending=null、sent=0。拡張自身のprobeが実ChatGPTの対象チャットと空のcomposerを認識したことを確認。CUAの拡張URL制限は回避していない。続いて公式read_threadで対象チャットの14:35レポートとidleを確認。既存タスクは読み取り診断フェーズAを維持し、実装・commit・PRは発生していない。次はHumanが設定画面から単発送信を起動する初回試験が必要。AIによる毎時操作にはせず、以後は拡張のalarmで動く設計を維持する。
+
+## 2026-11-24 — 送信結果が分からないUIと保存忘れの改善
+
+- Humanの提示結果: exclusiveOwnerConfirmed=false、enabled=false、reason=OWNER_UNCONFIRMED、sent=0。これは送信前の停止であり、送信成功ではない。HumanはUI/UXとコピーの難しさ、何を送ったか・成功したか不明と指摘。
+- 原因: 主要画面を生JSONにし、確認checkboxの保存を別操作にしていた。画面でチェックしても未保存ならworkerはfalseを見るため、送信操作時の期待と保存状態がずれる。前回結果もpopup内の一時的な追記だけで、再表示すると詳細が消えた。
+- 改善: 日本語の結果カード、送信内容preview、実送信確認履歴、予定、未保存表示、確認前の送信無効化、「保存して送信」、日本語結果の一括コピー、折りたたみJSONへ変更。lastResultを保存し、receipt確認後のlastSentに実際の送信内容snapshotを保存。後の設定変更から履歴を独立させる。
+- 検証: Nodeで20 tests PASS。HumanのOWNER_UNCONFIRMED状態、pending優先、成功とprobe/configureの区別、送信記録の設定変更耐性、結果不明時に成功履歴を作らないことを検証。全mjs構文チェック成功。実Chromeでは127.0.0.1上の架空データだけのUIを用い、未確認時disabled、確認後enabled、保存してprobe、コピー完了表示、未知コードでの停止表示を観測。実送信機能のない表示検証であり、拡張のDOM adapter成功ではない。検証タブとローカルserverは終了。
+- 実拡張ページのポリシー拒否は回避していない。0.2.0はローカルソース更新済みで、Chrome側の拡張と設定画面の再読み込みはHuman対応が必要。実チャットへの追加送信・既存タスク変更・定期開始は行っていない。
