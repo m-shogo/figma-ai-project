@@ -31,9 +31,16 @@ test('confirmed receipt persists and immediate/manual duplicate cannot send',asy
   const h=await harness();assert.equal((await h.message({action:'once'})).event,'CONFIRMED');
   assert.equal(h.db.state.sent,1);assert.equal(h.db.state.pending,null);
   assert.equal((await h.message({action:'once'})).event,'NOT_DUE');assert.equal(h.calls,1);
+  assert.equal(h.db.lastSent.prompt,config.prompt);
+  assert.equal(h.db.lastSent.url,config.url);
+  assert.equal(h.db.lastSent.receipt,'USER_MESSAGE_CONFIRMED');
+  await h.message({action:'configure',config:{...config,url:config.url.replace('00000000-','11111111-')}});
+  assert.equal(h.db.lastSent.url,config.url,'changing settings must not rewrite the sent record');
 });
 test('uncertain receipt survives worker restart and config cannot erase it',async()=>{
   const h=await harness({outcome:'RESULT_UNKNOWN'});await h.message({action:'once'});
+  assert.equal(h.db.lastSent,undefined,'uncertain send must never create a confirmed receipt');
+  assert.equal(h.db.lastResult.reason,'RESULT_UNKNOWN');
   assert.equal(h.db.state.enabled,false);assert.ok(h.db.state.pending);
   const next=await harness({state:h.db.state});
   await next.message({action:'once'});await next.message({action:'configure',config});

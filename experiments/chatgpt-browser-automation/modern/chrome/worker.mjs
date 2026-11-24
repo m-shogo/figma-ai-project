@@ -6,7 +6,8 @@ let queue=Promise.resolve();
 let cancellation=0;
 let halted=false;
 function serial(fn) { const next=queue.then(fn); queue=next.catch(()=>{}); return next; }
-const read=()=>chrome.storage.local.get(['config','state']);
+const read=()=>chrome.storage.local.get(['config','state','lastResult','lastSent','attemptDetails']);
+const record=event=>chrome.storage.local.set({lastResult:{...event,at:Date.now()}});
 async function save(state) {
   await chrome.storage.local.set({state});
   await chrome.action.setBadgeText({text:state.enabled?'ON':'OFF'});
@@ -45,6 +46,8 @@ async function run(manual=false) {
   if(probe.event!=='IDLE_EMPTY') throw Error(probe.event);
   if(generation!==cancellation) throw Error('CANCELLED');
   const pending={...s,pending:crypto.randomUUID(),lastAttempt:now,lastOutputAt:now,nextDue:now+c.intervalMinutes*60000,reason:'ATTEMPTING'};
+  const details={at:now,url:c.url,connector:c.connector,prompt:c.prompt,attempt:pending.pending};
+  await chrome.storage.local.set({attemptDetails:details});
   await save(pending);
   if(generation!==cancellation||halted) throw Error('CANCELLED');
   const outcome=await invoke(c,t,'send',pending.pending);
@@ -52,6 +55,7 @@ async function run(manual=false) {
   const current=(await read()).state;
   const stopped=current.reason!=='ATTEMPTING';
   const next={...pending,enabled:current.enabled&&!halted,pending:null,sent:s.sent+1,lastOutputAt:Date.now(),reason:stopped?'CONFIRMED_AFTER_STOP':'CONFIRMED'};
+  await chrome.storage.local.set({lastSent:{...details,confirmedAt:Date.now(),receipt:'USER_MESSAGE_CONFIRMED'}});
   await save(next);
   if(halted)await stop('CONFIRMED_AFTER_STOP');
   else await schedule(c,next);
@@ -90,11 +94,12 @@ async function dispatch(msg) {
 chrome.runtime.onMessage.addListener((msg,sender,reply)=>{
   if(sender.id!==chrome.runtime.id || sender.url!==chrome.runtime.getURL('popup.html')) return false;
   // Emergency stop must not queue behind a slow adapter.
-  if(msg.action==='stop'){stop().then(()=>reply({event:'STOPPED'}),()=>reply({event:'STOP_FAILED'}));return true;}
-  serial(()=>dispatch(msg)).then(reply,async e=>{await stop(e.message);reply({event:'STOPPED',reason:e.message});});
+  if(msg.action==='stop'){stop().then(async()=>{const r={event:'STOPPED',reason:'USER_STOP'};await record(r);reply(r);},()=>reply({event:'STOP_FAILED'}));return true;}
+  serial(async()=>{const result=await dispatch(msg);if(msg.action!=='status')await record({...result,action:msg.action});return result;})
+    .then(reply,async e=>{await stop(e.message);const result={event:'STOPPED',reason:e.message};await record({...result,action:msg.action});reply(result);});
   return true;
 });
-chrome.alarms.onAlarm.addListener(a=>{if(a.name===ALARM)serial(()=>run()).catch(e=>stop(e.message));});
+chrome.alarms.onAlarm.addListener(a=>{if(a.name===ALARM)serial(async()=>{const r=await run();await record({...r,action:'alarm'});}).catch(async e=>{await stop(e.message);await record({event:'STOPPED',reason:e.message,action:'alarm'});});});
 chrome.runtime.onStartup.addListener(()=>{serial(async()=>{
   const {config:c,state:s}=await read();
   if(!c||!s)return;
