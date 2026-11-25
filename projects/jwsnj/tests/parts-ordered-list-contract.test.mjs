@@ -11,11 +11,10 @@ assert.ok(start >= 0 && end > start, 'numbered list rule exists before annotatio
 const list = css.slice(start, end);
 
 test('native ordered-list counters allow one- and two-digit numbers', () => {
-  assert.match(list, /counter-reset:\s*li/);
-  assert.match(list, /counter-increment:\s*li/);
-  assert.match(list, /content:\s*counter\(li\) '\.'/);
+  assert.doesNotMatch(list, /counter-reset:|counter-increment:/);
+  assert.match(list, /content:\s*counter\(list-item\) '\.'/);
   assert.match(list, /width:\s*calc\(24 \* var\(--to-rem-func\)\)/);
-  assert.match(list, /text-align:\s*right/);
+  assert.match(list, /text-align:\s*left/);
   assert.match(list, /padding-left:\s*calc\(34 \* var\(--to-rem-func\)\)/);
 });
 

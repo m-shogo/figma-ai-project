@@ -28,3 +28,7 @@ test('annotation blocks keep 10px internal gap and 20px external clearance', () 
   assert.match(annotation, /padding-left:\s*calc\(31 \* var\(--to-rem-func\)\)/);
   assert.doesNotMatch(annotation, /figma\.com\/api\/mcp\/asset|white-space:\s*nowrap/);
 });
+
+test('annotation clearance wins against the generic adjacent list selector in either order', () => {
+  assert.match(annotation, /\.wp-block-list \+ ul\.wp-block-list\.annotation-list,\s*ul\.wp-block-list\.annotation-list \+ \.wp-block-list\s*\{\s*margin-top:\s*calc\(20 \* var\(--to-rem-func\)\)/);
+});

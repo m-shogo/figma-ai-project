@@ -90,3 +90,8 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 ## 2026-11-25: Largeナビの右下装飾（通常Chat、PROJECT_ONLY）
 - 新規sessionでPC `384:914` / SP `442:3081` の高精細context・画像と親metadataを確認。白い48px四角（左上radius20）と右下32px緑丸、FA Regular f061 10pxが未実装。既存画像のoverflowと3:2は維持し、Large専用CSSの装飾だけを追加。画像とCMSリンク、ACF、Small、実際のhover動作は変更しない。既存is-disabledのカードには矢印を付けない。
 - PC/SP両パーツ索引のナビはLargeの3columnのみ。Smallナビの独立デザインは未確認。スライダーは単一画像＋キャプションで操作/管理仕様未確認。既存Smallや新規slider/CMSは推測実装しない。#523で画像拡大中の重なり、キーボード、長文、リンク無し、PC/SP/中間幅を確認。
+
+## 2026-11-25: リストの累積余白と native numbering（通常Chat、PROJECT_ONLY）
+- PC `344:936` / SP `442:2795` の高精細context・画像を取得。子bulletは親左端から24px、子本文42px。既存親liの18pxにさらに24pxを加えていたため、子ulのpaddingは6pxに修正。12/8px間隔と色、文字は維持。
+- 番号リストは既存独自counterがHTML start/reversed/valueを無視するため、暗黙のlist-item counterへ変更。番号の左揃えは実画像（1./10.とも左端）に従う。注釈と通常リストの隣接marginは既存48pxの高詳細度ルールより優先して20pxへ。注釈と他種類ブロックの余白は別実機確認。
+- 既存WordPress構造・ACF・Foundation変更なし。#523で実ブラウザの番号属性、混在入れ子、長文、隣接余白、editor/frontendを確認する。静的CIは実描画保証ではない。

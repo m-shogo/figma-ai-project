@@ -90,3 +90,6 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 
 ### PAGE-PARTS — Large navigation arrow corner (2026-11-25)
 - DEFERRED_RUNTIME_QA (#523): PC 384:914 / SP 442:3081. Verify 48px white corner, 20px top-left radius, 32px green circle and Font Awesome 10px arrow, actual image clipping/zoom, focus, no arrow on disabled cards, long text and narrow width, editor/frontend. Existing CMS image fallback and disabled-anchor semantics are separate review; no browser PASS claimed.
+
+### PAGE-PARTS — list nesting and native numbering (2026-11-25)
+- DEFERRED_RUNTIME_QA (#523): PC 344:936 / SP 442:2795. Check child bullet marker 24px / text 42px relative to parent left, 12/8px gaps, native ol start=10/reversed/li value and nested lists, 1/2/3-digit labels, adjacent annotation clearance 20px in both orders and with other blocks, long text and editor/frontend at PC/SP/intermediate widths. No actual browser PASS claimed.
