@@ -1,7 +1,17 @@
 <?php
 // Standard posts index/category only. Category URLs come from WordPress.
-$posts_page_id = (int) get_option('page_for_posts');
-$all_url = $posts_page_id ? get_permalink($posts_page_id) : home_url('/');
+// Only link to a real posts index. A static front page without an assigned
+// posts page is not an all-posts destination.
+$posts_on_front = get_option('show_on_front') === 'posts';
+$posts_page_id = $posts_on_front ? 0 : (int) get_option('page_for_posts');
+$all_url = $posts_on_front ? home_url('/') : '';
+if ($posts_page_id && $posts_page_id !== (int) get_option('page_on_front')
+    && get_post_type($posts_page_id) === 'page' && get_post_status($posts_page_id) === 'publish') {
+    $all_url = get_permalink($posts_page_id);
+}
+if (!$all_url) {
+    $posts_page_id = 0;
+}
 $current_category = is_category() ? get_queried_object() : null;
 $selected_id = $current_category instanceof WP_Term ? (int) $current_category->term_id : 0;
 $categories = get_categories(['hide_empty' => false]);
@@ -35,5 +45,5 @@ $categories = get_categories(['hide_empty' => false]);
         <?php endif; ?>
         <?php get_template_part('template-parts/_list-news', null, ['props' => 'newsArchive']); ?>
     </div>
-    <?php get_template_part('template-parts/_breadCrumb', null, ['news_archive' => true]); ?>
+    <?php get_template_part('template-parts/_breadCrumb', null, ['news_archive' => true, 'posts_page_id' => $posts_page_id, 'posts_page_url' => $all_url]); ?>
 </section>
