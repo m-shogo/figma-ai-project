@@ -226,3 +226,5 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 - Human承認後、PC/SP詳細context+画像と旧#515を照合。WordPressのhomeがindex.phpにfallbackする経路とGET cat=0の不確実性を解消するため、共通一覧partと実category URLのnative disclosureを採用。固定高を避け、長いカテゴリ・複数タグ・長いタイトルを自然に折返す。SP/PC paginationは同じWP queryとリンクを使用。hero・下部バナーは別scopeで素材/管理owner確認。#523実機未検証。
 
 - 記事一覧heroでは旧共通visualを流用するとsample fallback・中央overlay・パンくず位置が異なるため、承認ページ限定partを用意し既存ACF optionを利用。PC/SP画像は同一attachmentのcrop。未保存人物SVG/バナーは描き直さず受入待ち。旧1280px body最小幅は一覧body classに限定して解除し、共通化は他ページ承認時に判断。
+
+- 一覧のパンくずは既存ownerをoptionで拡張。Figmaのホーム表記とLight glyphは一覧に限定し、既存TOP表記や他ページを変更しない。固定幅・高さで長いカテゴリを切らず、現在頁/カテゴリ祖先/WordPressリンクは実値のみ。PHP stubで設定済み/未設定・階層・escape・既存表示の回帰を検証。
