@@ -179,3 +179,13 @@ test('TOP news uses standard posts and a real assigned posts-page link',()=>{
   assert.doesNotMatch(css, /white-space:\s*nowrap/);
   execFileSync('php',['-l',new URL('../theme/template-parts/_top-news.php',import.meta.url).pathname]);
 });
+
+test('TOP does not render disabled CODIA event sample or its fake archive action',()=>{
+  const front=read('front-page.php');
+  assert.doesNotMatch(front,/top_news-02|['"]post_type['"]\s*=>\s*['"]event['"]|get_post_type_archive_link\(['"]event['"]\)|Sub title/);
+  assert.doesNotMatch(read('css/project/top_news.css'),/\.top_news-02/);
+  assert.match(front,/_top-news/);
+  assert.match(front,/_top-notice/);
+  assert.match(front,/top_banner-01/);
+  execFileSync('php',['-l',new URL('../theme/front-page.php',import.meta.url).pathname]);
+});
