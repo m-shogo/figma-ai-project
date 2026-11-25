@@ -76,3 +76,13 @@ test('literal and encoded anchors scroll safely; missing or malformed fragments 
   const pageScroll = js.slice(js.indexOf('const pageScroll ='), js.indexOf('function scrollToAnker(hash)'));
   assert.doesNotMatch(pageScroll,/scrollTop\(1\)/);
 });
+
+test('page-link icon isolates the FA glyph from inherited text tracking', () => {
+  const icon = css.match(/&::after\s*\{([^}]+)\}/)?.[1];
+  assert.ok(icon);
+  assert.match(icon,/box-sizing:\s*border-box/);
+  assert.match(icon,/letter-spacing:\s*0/);
+  assert.match(icon,/font-style:\s*normal/);
+  assert.match(icon,/text-box-trim:\s*none/);
+  assert.match(icon,/line-height:\s*1;/);
+});

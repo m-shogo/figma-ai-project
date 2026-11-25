@@ -123,6 +123,7 @@
                             z-index: 2;
                             display: grid;
                             place-items: center;
+                            box-sizing: border-box;
                             width: calc(32 * var(--to-rem-func));
                             height: calc(32 * var(--to-rem-func));
                             border-radius: 50%;
@@ -130,8 +131,12 @@
                             color: var(--color-secondary);
                             font-family: var(--font-awesome);
                             font-weight: 400;
+                            font-style: normal;
                             font-size: calc(10 * var(--to-rem-func));
+                            /* FA Regular F061 has centered ink in its untrimmed line box. */
                             line-height: 1;
+                            letter-spacing: 0;
+                            text-box-trim: none;
                         }
                     }
                     .content {
