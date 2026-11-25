@@ -94,6 +94,8 @@ CSS行数、absolute件数、media query件数、固定値件数を品質KPIに�
 
 **ACTIVE / CROSS-PROJECT / required relevant checks**。Humanが「常識的なものはすべて入れて欲しい」と明示した共通の確認手順。単発の小ボタンの補正値を全案件へ昇格させるのではなく、Figmaのデザイン意図を自律的に理解し、実装へ翻訳・検証する基礎能力を標準化する。具体的なデザインはFigma/Effective Project Contractが正本。好みでリデザインしない。
 
+ここにある確立済みのデザイン基礎とWeb実装の一般原則は最低限の共通defaultとして初回から使用する。独自replayによる再証明を採用条件としない（Human 2026-11-25）。案件の具体的な補正値・ブラウザ別workaround・新手法の有効性は別途検証し、実装の視覚/操作QAは省略しない。詳細な区別は `docs/knowledge-promotion.md`。
+
 | 基礎原則 | 実装で先回りする判断・確認 |
 |---|---|
 | Optical alignment / optical weight | 幾何学的中心と実描画の中心・重心は別。円内の矢印・三角形・ロゴ・×・＋・chevronを実際に見て均衡を確認。font glyphのside bearing/baseline/letter-spacing、SVG viewBox/透明余白、strokeを疑う。必要な補正は根拠のあるshape/glyphのみに限定し、背景・クリック領域・他の文字を動かさない。 |
