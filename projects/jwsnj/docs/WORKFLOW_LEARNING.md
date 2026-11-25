@@ -73,3 +73,7 @@ Status: PROJECT-ONLY EVIDENCE / Human feedback: 2026-11-20
 
 ## 2026-11-25 全ページ包括承認
 - Human「全部承認するから待たないでいい」をCURRENT_AUTHORITYへ記録。以降はページ単位の承認待ちをしない。実装・CI・競合確認と未確定素材/CMSの分離は維持。記事詳細→固定/サイドバー→TOP section→コース/オリジナルを優先順とし、安全な独立作業を連続する。
+
+
+## 2026-11-26 ブラウザ引継ぎ実行
+- 開始so 1727105、正式skill取得・新規session成功。#649 TOP Newsを静的CI3/3実ログ確認後にdf29806へmerge。MVの公式素材・PC/SP根拠を並行で確認しキャッチコピーの独立実装へ継続。実WordPress QA#523、素材受入#524はOPEN。スケジュール変更なし。

@@ -36,3 +36,24 @@ test('TOP notice preserves actual links and plain text without invented URLs',()
     execFileSync('php',['-l',new URL('../theme/'+file,import.meta.url).pathname]);
   }
 });
+
+test('TOP fixed catchphrase uses official PC glyphs and distinct SP art',()=>{
+  const part=read('template-parts/_top-catchphrase.php');
+  for (const file of ['img_catch-493.svg','img_catch-482.svg','img_catch-483.svg','img_catch-480.svg','img_catch-481.svg','img_catchphrase-sp.svg']) {
+    assert.ok(part.includes('images/top/'+file));
+    const svg=read('images/top/'+file);
+    assert.match(svg, /<svg/);
+    assert.ok(svg.length>100);
+  }
+  assert.match(part,/aria-label="ワクワク"/);
+  assert.match(part,/alt="ワクワク"/);
+  assert.match(part,/最高の土曜日を/);
+  assert.match(read('front-page.php'), /_top-catchphrase/);
+  assert.match(read('css/style.css'), /^@import '\.\/project\/top_catchphrase\.css';/m);
+  const css=read('css/project/top_catchphrase.css');
+  assert.match(css,/body\.home \{ min-width: 0; \}/);
+  assert.match(css,/flex-wrap: wrap/);
+  assert.match(css,/1080/);
+  assert.doesNotMatch(css,/white-space:\s*nowrap/);
+  execFileSync('php',['-l',new URL('../theme/template-parts/_top-catchphrase.php',import.meta.url).pathname]);
+});

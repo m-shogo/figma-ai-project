@@ -321,3 +321,7 @@ TOP PC `114:28` / SP `279:2136` から、ベクターは SVG、写真は元画�
 
 ## 2026-11-26 TOP News source implementation
 - PC 114:542 / SP 279:2524 high-fidelity context and images: 5 standard posts, heading 46/36px, 560/295px panel, 32px heading gap, 24/20px row padding, PC 40px row gap, shared date/category and official flower. Existing post URL owner and actual published configured posts-page only; no fake URL or CMS fields. TOP marker uses existing light-green token; exact marker color not specified in the hover instruction, review against actual hover reference. Instagram sibling, remaining TOP sections, TOP body min-width and complete layout remain separate. Runtime QA #523.
+
+
+## 2026-11-26 TOP MV固定キャッチコピー
+- PC 114:29/220:7、SP 279:2142/279:2144の高精細contextと画像を取得。既存公式PC glyph 5点とSP専用SVGを接続し、後続コピーはHTML（Zen Kaku Gothic New 48/28px）。装飾だけ位置指定、可変テキストはflexで自然に折り返す。既存TOPの1280px body最小幅をhome限定で解除。PC切替1080pxは785pxコピーと既存headerの境界を踏まえた実装判断で、Figma中間幅仕様なし。画像グリッド・CTA管理・motionは既存ACFと実装指示の確認後の別READY。実機#523。
