@@ -143,3 +143,7 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 ## 2026-11-25: 背景付きテキストボックス（通常Chat、PROJECT_ONLY）
 - Figma PC 344:916/918/920 / SP 442:2774/2776/2779 の新規高精細context・画像を確認。薄緑 #f5fdeb、角5px、PC40/SP32px内側、H4と本文20px、PC2列40px/SP縦24px間隔。既存枠付きstyleと通常Columnsは維持。Gutenberg core/group と core/columns に明示選択styleを追加し、既存token・H4の公式blossom SVGを再利用。既存ACF、保存済み画像、Foundationは変更なし。coreの幅/stack設定を強制しない。1カラムに背景groupのみの場合はflexで高さ追従。
 - ブロックstyleによるCMS表現は実装判断（新ACFなし）。#523でstyle選択、実エディターのwrapper/余白、heading+paragraph間隔、画像の有効geometry、長文、同高、PC/SP/中間幅、coreのstack設定を確認。#619マージ済み。静的CIのみ。
+
+## 2026-11-25: 本文の太字とマーカー（通常Chat、PROJECT_ONLY）
+- 今回開始時3e96c1c。並行runの#619/#620を検出し、アコーディオンPHPと背景boxの重複書込みを中止、最新c22af79へ切替。Figma PC 344:916/SP 442:2774 高精細context・画像とmarker 442:2784 の変数を取得。本文のstrongはZen Kaku Gothic New Medium 500、下線例は5px #ffebb3のマーカー。既存の段落外strongと通常underline、編集者が背景を明示したspanを維持し、段落だけにmarkerを適用。box-decoration-break:cloneで複数行に対応する。単一callsiteの色のためFoundation tokenは追加しない。既存インラインのunderline指定を上書きするためtext-decoration-lineに限り!important。
+- #523で実機の太字weight、長文・複数行のマーカーの位置と色、既存リンク下線、明示背景、editor/frontend、PC/SP/中間幅を確認。CSSの書式対応は実描画PASSではない。

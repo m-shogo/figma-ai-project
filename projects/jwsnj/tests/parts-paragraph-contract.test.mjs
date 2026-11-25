@@ -29,3 +29,17 @@ test('WordPress paragraph font presets and authored markup remain intact', () =>
   assert.match(source, /p\.has-x-large-font-size/);
   assert.match(source, /span\[style\*='text-decoration: underline'\]/);
 });
+
+test('paragraph marker uses Figma 5px yellow paint and preserves multiline inline flow', () => {
+  const marker = source.slice(source.indexOf("p span[style*='text-decoration: underline']:not([style*='background'])"), source.indexOf('    p.has-small-font-size'));
+  assert.ok(marker.startsWith("p span[style*='text-decoration: underline']:not([style*='background'])"));
+  assert.match(marker, /text-decoration-line:\s*none !important/);
+  assert.match(marker, /background-image:\s*linear-gradient\(#ffebb3, #ffebb3\)/);
+  assert.match(marker, /background-position:\s*left bottom/);
+  assert.match(marker, /background-size:\s*100% calc\(5 \* var\(--to-rem-func\)\)/);
+  assert.match(marker, /-webkit-box-decoration-break:\s*clone/);
+  assert.match(marker, /\n\s*box-decoration-break:\s*clone/);
+  assert.doesNotMatch(marker, /display:\s*inline-block|white-space:\s*nowrap|position:\s*absolute/);
+  assert.match(source, /p strong\s*\{\s*font-weight:\s*500/);
+  assert.match(source, /span\[style\*='text-decoration: underline'\]\s*\{\s*text-decoration-line:\s*underline !important/);
+});
