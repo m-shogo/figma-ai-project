@@ -105,3 +105,6 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 
 ### PAGE-PARTS — mobile table scroll hint (2026-11-25)
 - DEFERRED_RUNTIME_QA (#523): PC 357:970 / SP 445:3237; confirm existing Flexible Table Block 3.9.0 markup, core tables, multiple tables, 767/768px resize, explicit stack/PC scroll settings, actual overflow only, native keyboard/touch scroll, caption and labels, one hint per table, hint disappears on scroll/focus, reduced motion, actual glyph/overlay/scrollbar visual parity. No real browser PASS claimed.
+
+### FOOTER — in-flow copyright / page-top bar (2026-11-25)
+- DEFERRED_RUNTIME_QA (#523): PC 114:536 / SP 279:2805, 60px right square and left-aligned 12px copyright, native anchor click/keyboard with existing pageScroll, reduced motion, long site names and short pages, hover/focus, no fixed overlay. PC privacy link pending approved destination. No browser PASS claimed.

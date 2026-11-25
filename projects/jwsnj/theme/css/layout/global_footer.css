@@ -405,38 +405,57 @@
             }
         }
     }
-    .gf_copyright {
-        padding: calc(15 * var(--to-rem-func)) calc(20 * var(--to-rem-func));
+    /* Figma PC 114:536 / SP 279:2805: in-flow copyright and page-top row. */
+    .gf_bottom {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) calc(60 * var(--to-rem-func));
         background-color: var(--color-primary);
+        min-height: calc(60 * var(--to-rem-func));
+    }
+    .gf_copyright {
+        display: flex;
+        align-items: center;
+        min-width: 0;
+        margin: 0;
+        padding: calc(12 * var(--to-rem-func)) calc(20 * var(--to-rem-func));
+        font-family: var(--font-jwsnj-en-condensed);
         font-size: calc(12 * var(--to-rem-func));
+        font-weight: 400;
+        letter-spacing: 0.05em;
         color: var(--color-secondary);
         line-height: 1.5;
-        text-align: center;
+        overflow-wrap: anywhere;
+        text-align: left;
+        @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+            padding-inline-start: calc(80 * var(--to-rem-func));
+        }
     }
     .gf_pageTop {
-        position: fixed;
-        right: calc(20 * var(--to-rem-func));
-        bottom: calc(20 * var(--to-rem-func));
-        z-index: 50;
+        display: flex;
+        margin: 0;
         a {
-            display: block;
-            border-radius: 50%;
-            width: calc(40 * var(--to-rem-func));
-            height: calc(40 * var(--to-rem-func));
-            background-color: var(--color-primary);
+            display: grid;
+            place-items: center;
+            width: 100%;
+            min-height: calc(60 * var(--to-rem-func));
+            background-color: #4dce83;
+            transition: background-color var(--transition-duration);
             &::before {
-                content: '\f106';
-                display: block;
-                position: absolute;
-                top: 50%;
-                left: 50%;
+                content: '\f341';
                 font-family: var(--font-awesome);
+                font-weight: 400;
+                font-size: calc(16 * var(--to-rem-func));
+                line-height: 1;
                 color: var(--color-secondary);
-                transform: translate(-50%, -50%);
             }
             &:focus-visible {
                 outline: 2px solid var(--color-text);
-                outline-offset: 3px;
+                outline-offset: -3px;
+            }
+            @media (any-hover: hover) {
+                &:hover {
+                    background-color: var(--color-primary);
+                }
             }
             span {
                 display: none;

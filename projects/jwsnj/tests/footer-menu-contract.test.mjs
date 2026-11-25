@@ -44,44 +44,21 @@ test('footer page-top link retains a readable name and visible keyboard focus', 
 });
 
 
-test('footer page-top initializes visibility, animates only transitions, and respects reduced motion', () => {
-  const match = source.match(/  const pageTop = function \(\) \{[\s\S]*?\n  \};/);
-  assert.ok(match, 'pageTop implementation must exist');
-  const simulate = (initialScrollY, reduced = false) => {
-    const win = { matchMedia: () => ({ matches: reduced }) };
-    let currentScrollY = initialScrollY;
-    const listeners = {};
-    const calls = [];
-    const control = {
-      toggle(value) { calls.push(['toggle', value]); return this; },
-      stop(clearQueue, jumpToEnd) { calls.push(['stop', clearQueue, jumpToEnd]); return this; },
-      fadeIn() { calls.push(['fadeIn']); return this; },
-      fadeOut() { calls.push(['fadeOut']); return this; },
-    };
-    const $ = (selector) => selector === win
-      ? { scrollTop: () => currentScrollY, on(name, callback) { listeners[name] = callback; } }
-      : control;
-    new Function('$', 'window', match[0] + '\npageTop();')($, win);
-    return { calls, scrollTo(y) { currentScrollY = y; listeners.scroll(); }, restoreTo(y) { currentScrollY = y; listeners.pageshow(); } };
-  };
-  const top = simulate(0);
-  assert.deepEqual(top.calls, [['stop', true, true], ['toggle', false]]);
-  top.scrollTo(0);
-  assert.equal(top.calls.length, 2, 'scrolling at top must not queue work');
-  top.scrollTo(100);
-  assert.deepEqual(top.calls.slice(-2), [['stop', true, true], ['fadeIn']]);
-  top.scrollTo(200);
-  assert.equal(top.calls.length, 4, 'scrolling while already visible must not animate again');
-  top.scrollTo(0);
-  assert.deepEqual(top.calls.slice(-2), [['stop', true, true], ['fadeOut']]);
-  const restored = simulate(420);
-  assert.deepEqual(restored.calls, [['stop', true, true], ['toggle', true]]);
-  top.restoreTo(420);
-  assert.deepEqual(top.calls.slice(-2), [['stop', true, true], ['toggle', true]]);
-  const reduced = simulate(0, true);
-  reduced.scrollTo(100);
-  assert.deepEqual(reduced.calls.slice(-2), [['stop', true, true], ['toggle', true]]);
-  assert.equal(reduced.calls.some(x => x[0] === 'fadeIn'), false);
+test('footer copyright and page-top use one in-flow row and native anchor scrolling', () => {
+  assert.match(footer, /<div class="gf_bottom">\s*<p class="gf_copyright">[\s\S]*?<\/p>\s*<p id="js_gf_pageTop"/);
+  assert.match(css, /\.gf_bottom\s*\{\s*display:\s*grid;\s*grid-template-columns:\s*minmax\(0, 1fr\) calc\(60 \* var\(--to-rem-func\)\)/);
+  const control = css.slice(css.indexOf('.gf_pageTop {'), css.indexOf('@media (calc(768'));
+  assert.match(control, /min-height:\s*calc\(60 \* var\(--to-rem-func\)\)/);
+  assert.match(control, /background-color:\s*#4dce83/);
+  assert.match(control, /content:\s*'\\f341'/);
+  assert.match(control, /&:hover\s*\{\s*background-color:\s*var\(--color-primary\)/);
+  assert.doesNotMatch(control, /position:\s*fixed|border-radius:\s*50%/);
+  assert.doesNotMatch(source, /const pageTop =|pageTop\(\);|#js_gf_pageTop/);
+  assert.match(source, /href === '#' \|\| href === '' \? 'html' : href/);
+  const copyright = css.slice(css.indexOf('.gf_copyright {'), css.indexOf('.gf_pageTop {'));
+  assert.match(copyright, /font-family:\s*var\(--font-jwsnj-en-condensed\)/);
+  assert.match(copyright, /overflow-wrap:\s*anywhere/);
+  assert.match(copyright, /text-align:\s*left/);
 });
 
 test('Footer accordion buttons have visible focus without affecting layout', () => {

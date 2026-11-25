@@ -113,3 +113,7 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 - 新規sessionでPC 357:970 / SP 445:3237 の高精細context・画像を取得。SPの既存表は幅960px/横scrollだが案内表示なし。Figma内の案内はライブラリUIの画像参照でありスクリーンショット自体を本番素材には使わない。同梱MIT ScrollHint 1.2.8のCSS/JS・constructorのinline overflow/position変更を確認し、既存の手・矢印・案内表示を再利用。公式Flexible Table Blockの公開save.tsxでfigureのis-scroll-on-mobile、tableのis-stacked-on-mobileを照合（main、案件の3.9.0実機は未確認）。
 - 既存の横scroll選択かつ実overflowがあるSPだけ初期化。ライブラリのinline変更を直後に復元し、PC設定やstack/既存ヒントを上書きしない。DOM追加の案内はaria-hidden、必要なtabindexとラベルは自分で付けた場合だけ解除。既存caption/ariaを尊重。フォーカス時に案内を隠し、reduced-motionを追加。HTML/ACF/表データ/ライブラリ本体は変更しない。
 - #523で実機のプラグイン版、PC/SP/中間幅、複数表、scroll/stack設定、caption、長文・横overflow、touch/keyboard、案内位置と実描画を確認。Figmaのラスタ案内と同梱UIの完全一致は未検証。
+
+## 2026-11-25: Footer最下段とページトップ（通常Chat、PROJECT_ONLY）
+- 新規Figma sessionでPC 114:536 / SP 279:2805 の高精細context・画像を取得。copyrightの高さ60px、左余白PC80/SP20、Roboto Condensed 12px/5%、右60pxの四角ボタン #4dce83、FA Regular f341 16px。旧CODIAの固定丸ボタン40pxとスクロール量による表示切替を撤去し、通常フローのgridへ。既存WPサイト名/年とhref="#"、pageScrollのreduced-motion分岐は維持。hoverはSPECのmain color。長文で行高を伸ばせる。
+- プライバシーポリシーはPCデザインにあるがURL/ページ管理が未承認のため追加しない。ロゴ/住所/電話/SNS/メニューは今回変更しない。#523で実機のクリック/Enter・スクロール・focus・長いサイト名・短いページを確認。別案件publication-runtime失敗（tankoubon detail the_content owner missing）は開始soで確認し対象外。
