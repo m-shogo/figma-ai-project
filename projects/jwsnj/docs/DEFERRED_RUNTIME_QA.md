@@ -129,3 +129,6 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 
 ### PAGE-PARTS — paragraph marker and medium emphasis (2026-11-25)
 - DEFERRED_RUNTIME_QA (#523): PC 344:916 / SP 442:2774 and marker 442:2784. Check strong weight 500, yellow #ffebb3 5px marker on editor underline, multiline fragmented inline, explicit background and non-paragraph underline preservation, links/long Japanese and English/editor/frontend at PC/SP/intermediate widths. No browser PASS claimed.
+
+### PAGE-PARTS — gallery caption flow (2026-11-25)
+- DEFERRED_RUNTIME_QA (#523): PC 344:1079/SP 442:2973. Verify consecutive gallery gap 40px, card top alignment with unequal captions, natural long-caption height, exact image 3:2 and 20px caption gap, core CSS cascade, PC/SP/intermediate, native lightbox keyboard/focus and optional captions. No new fallback images or runtime PASS claimed.

@@ -41,3 +41,11 @@ test('desktop three-column gallery restores Figma 40px track gap',()=>{
  const media=gallery.slice(gallery.indexOf('        @media (calc(768'));
  assert.match(media,/&\.columns-3\s*\{\s*grid-template-columns:\s*repeat\(3,\s*minmax\(0,\s*1fr\)\);\s*column-gap:\s*calc\(40 \* var\(--to-rem-func\)\)/);
 });
+
+test('gallery rows retain Figma 40px separation and captions grow independently of the 3:2 crop', () => {
+  assert.match(gallery, /grid-template-columns:\s*minmax\(0, 1fr\);\s*align-items:\s*start;\s*gap:\s*calc\(40 \* var\(--to-rem-func\)\)/);
+  assert.match(gallery, /& \+ &\s*\{[\s\S]*?margin-top:\s*calc\(40 \* var\(--to-rem-func\)\)/);
+  assert.match(gallery, /aspect-ratio:\s*3 \/ 2;\s*flex:\s*0 0 auto;\s*object-fit:\s*cover/);
+  assert.match(gallery, /figcaption\s*\{\s*position:\s*static;\s*flex:\s*0 0 auto;\s*max-height:\s*none;\s*overflow:\s*visible;\s*margin:\s*0;\s*padding:\s*0;/);
+  assert.match(gallery, /text-shadow:\s*none/);
+});
