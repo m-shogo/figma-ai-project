@@ -135,3 +135,7 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 ## 2026-11-25: アコーディオンのopen余白・Q/A位置（通常Chat、PROJECT_ONLY）
 - 新規Figma sessionでPC 357:938 / SP 442:2908 の高精細contextと実画像を確認。閉じた通常タイトル24px、開いたタイトル32px、Q/Aは通常幅Roboto Medium 24px・本文と中央揃え・16px間隔。既存CSSのQ/A 32px枠と上揃えを16px枠・中央揃えへ修正、既存通常Roboto tokenを再利用。開いた直接summaryだけ左32pxにする。開閉minusとQ/A装飾のselectorを直接所有要素に限定し、親open/_qaが子detailsの状態を巻き込まないようにした。
 - 既存field.phpのrender_blockがsummary/title/button/content/innerを付ける契約を確認。PHP/HTML/ACF/画像/JSは変更なし。ネストされたdetailsの旧regex変換は別の潜在問題であり、本PRでは未修正・実機未検証。#523で通常/QA、open/closed、長文、nested、keyboard/focus、PC/SP/中間幅、editor/frontと実Robotoを確認。#617はマージ済み。
+
+## 2026-11-25: details render_blockの所有境界（通常Chat、PROJECT_ONLY）
+- Figma PC 357:938 / SP 442:2908 を新規sessionの高精細context・画像で再確認。#618は全CI成功でマージ済み。既存field.phpは子のcustom summaryを検出すると親の変換をskipし、逆に全summary/全details終端を置換すると子HTMLまで壊す。coreの内側blockが先にrenderされる契約に合わせ、先頭のouter details/素のsummaryと末尾のouter closingだけを変換。本文の子HTMLはbyte-for-byte保持し、既存custom/未知のsummary属性付き構造は変更しない。装飾iconのみaria-hidden。CSS/ACF/保存形式は維持。
+- NodeテストからPHP CLIで実際のcallbackを隔離実行し、子render済み/生HTML、親のopen/name/id、inline rich text、再変換、未知形式を検証する。WP実機ではない。#523でエディター出力形式とnested/keyboard/focusを確認。
