@@ -228,3 +228,6 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 - 記事一覧heroでは旧共通visualを流用するとsample fallback・中央overlay・パンくず位置が異なるため、承認ページ限定partを用意し既存ACF optionを利用。PC/SP画像は同一attachmentのcrop。未保存人物SVG/バナーは描き直さず受入待ち。旧1280px body最小幅は一覧body classに限定して解除し、共通化は他ページ承認時に判断。
 
 - 一覧のパンくずは既存ownerをoptionで拡張。Figmaのホーム表記とLight glyphは一覧に限定し、既存TOP表記や他ページを変更しない。固定幅・高さで長いカテゴリを切らず、現在頁/カテゴリ祖先/WordPressリンクは実値のみ。PHP stubで設定済み/未設定・階層・escape・既存表示の回帰を検証。
+
+
+- 記事一覧のPC 390:669 / SP 478:3027 とpager 392:1244 / 478:3089を新規sessionの高精細context・画像で照合。PC末尾は線なし、SP末尾は線ありのため最終行のborder解除をPC限定へ移動。PCのデザイン例は5件ずつの反復で中間にも線なしだが、CMSの5件グループ仕様は未承認のため作らない。pagerの文字tracking 5%を再現（glyphは0を維持）。既存共有newsListの非リンクhover色を一覧限定で無効化。静的契約のみ、実描画#523。
