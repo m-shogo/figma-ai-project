@@ -61,7 +61,8 @@
             }
             > ul.wp-block-list {
                 margin-top: calc(12 * var(--to-rem-func));
-                padding-left: calc(24 * var(--to-rem-func));
+                /* Parent li already contributes 18px; total marker offset is 24px. */
+                padding-left: calc(6 * var(--to-rem-func));
                 gap: calc(8 * var(--to-rem-func));
                 > li::before {
                     background-color: transparent;
@@ -72,9 +73,8 @@
         }
     }
     /* Numbered lists — Figma PC 344:947 / SP 442:2806.
-       Native ol remains semantic; CSS counters align 1- and 2-digit labels. */
+       Native list-item counter preserves editor start/reversed/value attributes. */
     ol.wp-block-list:not(.annotation-list) {
-        counter-reset: li;
         gap: calc(15 * var(--to-rem-func));
         > li {
             font-family: var(--font-jwsnj-ja);
@@ -86,11 +86,10 @@
             overflow-wrap: anywhere;
             word-break: normal;
             &::before {
-                counter-increment: li;
-                content: counter(li) '.';
+                content: counter(list-item) '.';
                 display: block;
                 width: calc(24 * var(--to-rem-func));
-                text-align: right;
+                text-align: left;
                 left: 0;
                 top: 0;
                 color: var(--color-text);
@@ -156,6 +155,11 @@
                 }
             }
         }
+    }
+    /* The generic adjacent-list rule must not override annotation clearance. */
+    .wp-block-list + ul.wp-block-list.annotation-list,
+    ul.wp-block-list.annotation-list + .wp-block-list {
+        margin-top: calc(20 * var(--to-rem-func));
     }
     /* //---------- anchor-box, border-list ---------- */
     /* .anchor-box,

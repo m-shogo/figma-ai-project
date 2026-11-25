@@ -25,7 +25,9 @@ test('Figma bullet color, size and text rhythm are present', () => {
 test('nested Gutenberg bullets are outlined and use Figma 12/8px spacing', () => {
   assert.match(block, /> ul\.wp-block-list\s*\{/);
   assert.match(block, /margin-top:\s*calc\(12 \* var\(--to-rem-func\)\)/);
-  assert.match(block, /padding-left:\s*calc\(24 \* var\(--to-rem-func\)\)/);
+  const nested = block.slice(block.indexOf('> ul.wp-block-list {'));
+  assert.match(nested, /padding-left:\s*calc\(6 \* var\(--to-rem-func\)\)/);
+  assert.doesNotMatch(nested, /padding-left:\s*calc\(24 \* var\(--to-rem-func\)\)/);
   assert.match(block, /gap:\s*calc\(8 \* var\(--to-rem-func\)\)/);
   assert.match(block, /> li::before\s*\{[\s\S]*?background-color:\s*transparent/);
   assert.match(block, /border:\s*calc\(1 \* var\(--to-rem-func\)\) solid var\(--color-accent\)/);
