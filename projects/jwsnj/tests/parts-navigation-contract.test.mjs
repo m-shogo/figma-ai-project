@@ -77,3 +77,8 @@ test('small navigation handles absent URLs, images and empty rows without sample
   assert.doesNotMatch(smallTemplate, /noimage\.webp|href=""/);
   assert.match(smallTemplate, /alt=""/);
 });
+
+
+test('small navigation grid tracks do not inherit min-content label width at desktop', () => {
+  assert.match(css, /&\.--small\s*\{\s*grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/);
+});

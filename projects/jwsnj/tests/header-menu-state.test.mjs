@@ -350,3 +350,8 @@ test('mobile navigation uses visible viewport height with legacy fallback and pe
   assert.match(links,/min-width:\s*0/);
   assert.match(links,/overflow-wrap:\s*anywhere/);
 });
+
+
+test('desktop mega-menu tracks use shrinkable minmax to contain long CMS labels', () => {
+  assert.match(navigationCss, /\.gnl_list-02\s*\{\s*display:\s*grid;\s*grid-template-columns:\s*repeat\(3, minmax\(0, 1fr\)\)/);
+});
