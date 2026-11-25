@@ -35,6 +35,9 @@ test('isolated PHP pager handles bounds, current page and valid generated links'
     const stub = '$wp_query=(object)["max_num_pages"=>'+total+']; function get_query_var($n){return '+current+';} function get_pagenum_link($n){return "/news/page/".$n."/?cat=7";} function esc_url($s){return htmlspecialchars($s,ENT_QUOTES);} function esc_attr($s){return htmlspecialchars($s,ENT_QUOTES);} function esc_html($s){return htmlspecialchars($s,ENT_QUOTES);} ?>';
     const html=execFileSync('php',['-r',stub+part],{encoding:'utf8'});
     if(!total){assert.equal(html,'');continue;}
+    assert.equal((html.match(/class="jwsnj_newsArchive_pagerArrow" aria-hidden="true"/g)||[]).length,2);
+    assert.match(html,/<span class="jwsnj_newsArchive_pagerArrow" aria-hidden="true"><\/span>前へ/);
+    assert.match(html,/次へ<span class="jwsnj_newsArchive_pagerArrow" aria-hidden="true"><\/span>/);
     assert.equal((html.match(/aria-current="page"/g)||[]).length,1);
     assert.equal((html.match(/class="page-numbers/g)||[]).length,Math.min(5,total));
     assert.equal((html.match(/is-desktop-only/g)||[]).length,Math.max(0,Math.min(5,total)-3));
@@ -145,7 +148,7 @@ test('news row only renders a link when the escaped URL is usable',()=>{
   assert.match(valid,/target="_blank"/);
   for(const url of ['', 'javascript:alert(1)']){
     const invalid=render(url);
-    assert.match(invalid,/<span\s+class="no-link"/);
+    assert.match(invalid,/<div\s+class="no-link"[^>]*>[\s\S]*<h2 class="title">Example<\/h2>[\s\S]*<\/div>\s*<\/article>/);
     assert.doesNotMatch(invalid,/href=|target=|<a\s/);
   }
 });

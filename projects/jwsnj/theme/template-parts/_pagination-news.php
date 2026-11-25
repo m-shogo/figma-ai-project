@@ -13,9 +13,9 @@ $mobile_end = min($total, $mobile_start + 2);
 ?>
 <nav class="jwsnj_newsArchive_pager" aria-label="ページナビゲーション">
     <?php if ($current > 1) : ?>
-        <a class="prev" href="<?php echo esc_url(get_pagenum_link($current - 1)); ?>">前へ</a>
+        <a class="prev" href="<?php echo esc_url(get_pagenum_link($current - 1)); ?>"><span class="jwsnj_newsArchive_pagerArrow" aria-hidden="true"></span>前へ</a>
     <?php else : ?>
-        <span class="prev" aria-disabled="true">前へ</span>
+        <span class="prev" aria-disabled="true"><span class="jwsnj_newsArchive_pagerArrow" aria-hidden="true"></span>前へ</span>
     <?php endif; ?>
     <div class="jwsnj_newsArchive_pageNumbers">
         <?php for ($page = $start; $page <= $end; $page++) : ?>
@@ -28,8 +28,8 @@ $mobile_end = min($total, $mobile_start + 2);
         <?php endfor; ?>
     </div>
     <?php if ($current < $total) : ?>
-        <a class="next" href="<?php echo esc_url(get_pagenum_link($current + 1)); ?>">次へ</a>
+        <a class="next" href="<?php echo esc_url(get_pagenum_link($current + 1)); ?>">次へ<span class="jwsnj_newsArchive_pagerArrow" aria-hidden="true"></span></a>
     <?php else : ?>
-        <span class="next" aria-disabled="true">次へ</span>
+        <span class="next" aria-disabled="true">次へ<span class="jwsnj_newsArchive_pagerArrow" aria-hidden="true"></span></span>
     <?php endif; ?>
 </nav>

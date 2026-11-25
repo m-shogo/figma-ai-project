@@ -259,17 +259,22 @@ body.category {
         .prev {
             grid-row: 2;
             justify-self: start;
-            &::before { content: '\f060'; }
+            .jwsnj_newsArchive_pagerArrow::before { content: '\f060'; }
         }
         .next {
             grid-row: 2;
             justify-self: end;
-            &::after { content: '\f061'; }
+            .jwsnj_newsArchive_pagerArrow::before { content: '\f061'; }
         }
-        .prev::before, .next::after {
-            font: 400 calc(15 * var(--to-rem-func))/1 var(--font-awesome);
-            letter-spacing: 0;
-            text-box-trim: none;
+        .jwsnj_newsArchive_pagerArrow {
+            display: grid;
+            place-items: center;
+            flex: none;
+            &::before {
+                font: 400 calc(15 * var(--to-rem-func))/1 var(--font-awesome);
+                letter-spacing: 0;
+                text-box-trim: none;
+            }
         }
     }
     :is(a, summary):focus-visible {

@@ -3,7 +3,8 @@
     // post_typeによるリンクや属性を取得
     $link_attrs = get_post_link_attributes();
     $link_url = esc_url((string) ($link_attrs['url'] ?? ''));
-    $html_tag = $link_url !== '' ? 'a' : 'span';
+    // The non-link wrapper contains divs and headings, so it must allow flow content.
+    $html_tag = $link_url !== '' ? 'a' : 'div';
     $html_classes = $link_url !== '' ? ' class="link"' : ' class="no-link"';
     $html_attrs = $link_url !== '' ? 'href="' . $link_url . '" ' . $link_attrs['targetAttr'] : '';
     ?>
