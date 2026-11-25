@@ -19,9 +19,9 @@ test('small variant uses 30px mint leading icon, 8px gap, 16px labels',()=>{
 });
 test('small icons distinguish file kinds and preserve focus handling in shared link',()=>{
   assert.match(small,/&\[target='_blank'\]:where\(:not\(/);
-  assert.match(small,/&\[href\$='\.pdf'\]::before/);
-  assert.match(small,/content:\s*var\(--icon-file\)/);
-  assert.match(small,/&::after\s*\{\s*content:\s*none/);
+  assert.match(small,/&\[href\$='\.pdf'\]::after/);
+  assert.match(small,/content:\s*'\\f15b'/);
+  assert.match(small,/&::before\s*\{\s*content:\s*''/);
   assert.match(css,/&:focus-visible/);
   assert.doesNotMatch(small,/white-space:\s*nowrap|figma\.com\/api\/mcp\/asset/);
 });
@@ -34,18 +34,35 @@ test('small button hover retains dark label on transparent background after gene
   assert.ok(hover.lastIndexOf('.wp-block-buttons.small')>hover.indexOf('&:has(.wp-block-button__link:hover)'), 'specific small hover rule follows generic hover rule');
 });
 
-test('small external link retains the circle and recolors only the official SVG on hover', () => {
-  const external = small.slice(small.indexOf("&[target='_blank']"), small.indexOf("&[href$='.pdf']::before"));
+test('small circle and glyph are independently centered for every icon and wrap state', () => {
+  const before = small.match(/&::before\s*\{([^}]+)\}/)?.[1];
+  const after = small.match(/&::after\s*\{([^}]+)\}/)?.[1];
+  assert.ok(before && after);
+  assert.match(before, /content:\s*''/);
+  assert.match(before, /box-sizing:\s*border-box/);
+  assert.match(before, /width:\s*calc\(30 \* var\(--to-rem-func\)\)/);
+  assert.match(after, /content:\s*'\\f061'/);
+  assert.match(after, /left:\s*calc\(15 \* var\(--to-rem-func\)\)/);
+  assert.match(after, /top:\s*50%/);
+  assert.match(after, /transform:\s*translate\(-50%, -50%\)/);
+  assert.match(after, /letter-spacing:\s*0/);
+  assert.match(after, /text-box-trim:\s*trim-both/);
+  assert.match(after, /text-box-edge:\s*cap alphabetic/);
+  assert.match(small, /\.wp-block-button \.wp-block-button__link\s*\{/);
+  assert.match(small, /--_small-icon-color:\s*var\(--jwsnj-color-sec\)/);
+});
+test('small external link retains the circle and uses the same glyph center and hover color', () => {
+  const external = small.slice(small.indexOf("&[target='_blank']"), small.indexOf("&[href$='.pdf']::after"));
   for (const ext of ['pdf','doc','docx','docm','xls','xlsx','xlsm','png','jpg','jpeg','gif','webp']) {
     assert.ok(external.includes("[href$='." + ext + "']"), ext + ' retains its file icon');
   }
-  assert.match(external, /&::before\s*\{\s*content:\s*''/);
-  assert.match(external, /left:\s*calc\(15 \* var\(--to-rem-func\)\)/);
+  assert.match(external, /&::after\s*\{\s*content:\s*''/);
   assert.match(external, /width:\s*calc\(13 \* var\(--to-rem-func\)\)/);
   assert.match(external, /height:\s*calc\(12 \* var\(--to-rem-func\)\)/);
   assert.match(external, /mask:\s*url\('\.\.\/\.\.\/images\/common\/ico-blank\.svg'\) center \/ contain no-repeat/);
-  assert.match(external, /background-color:\s*var\(--color-secondary\)/);
-  assert.match(external, /&:hover::after\s*\{\s*background-color:\s*var\(--jwsnj-color-sec\)/);
+  assert.match(external, /background-color:\s*currentColor/);
+  assert.doesNotMatch(external, /left:|right:|transform:|&::before/);
+  assert.match(small, /color:\s*var\(--_small-icon-color\)/);
 });
 test('desktop gap media rule does not reapply large button minimum width to small buttons', () => {
   assert.match(small, /min-width:\s*0/);
