@@ -78,3 +78,6 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 
 ### FOOTER — PC sitemap official bullet (2026-11-25)
 - DEFERRED_RUNTIME_QA (#523): PC top-level menu links display 5.41839px official dot with 12px gap, correct type, multiline and focus, unchanged link/child disclosure behavior. Compare PC 114:523 and SP 506:1632; PC column grouping and SP sitemap visibility remain separate review. No real browser PASS claimed.
+
+### PAGE-PARTS — H2 two-color bottom stroke (2026-11-25)
+- DEFERRED_RUNTIME_QA (#523): PC 344:907 / SP 445:3207; compare 3px bottom-only border, horizontal sharp 16% main/84% lightgreen stroke, natural multiline wrapping and unchanged surrounding spacing in editor/frontend at PC/SP/intermediate widths. No actual browser PASS claimed.

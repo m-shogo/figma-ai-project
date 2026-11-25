@@ -32,6 +32,7 @@ test('h2 follows Figma PC 30px and SP 24px with natural multiline flow', () => {
   assert.match(h2, /line-height:\s*1\.4/);
   assert.match(h2, /letter-spacing:\s*0\.05em/);
   assert.match(h2, /border-bottom:\s*calc\(3 \* var\(--to-rem-func\)\) solid var\(--color-primary\)/);
+  assert.match(h2, /border-image:\s*linear-gradient\(to right, var\(--color-primary\) 16%, var\(--jwsnj-color-base-lightgreen-02\) 16%\) 1/);
   assert.match(h2, /padding-bottom:\s*calc\(24 \* var\(--to-rem-func\)\)/);
   assert.match(h2, /padding-bottom:\s*calc\(28 \* var\(--to-rem-func\)\)/);
   assert.match(h2, /overflow-wrap:\s*anywhere/);
