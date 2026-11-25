@@ -261,3 +261,7 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 
 ## 2026-11-26 TOP旧イベントサンプルの除去
 - PC 114:541/SP 279:2523 News親ノードの高精細contextと画像を照合。現行はNewsとInstagramの並びであり、CODIAのイベント一覧は存在しない。CURRENT_AUTHORITYのevent/event_cat登録停止に合わせ、front-pageのサンプルイベントsectionと専用CSSのみ除去。学習用関数や投稿データ、既存ACF、バナー・MV・Newsは変更しない。InstagramのURLは未確定のため捏造しない。次のREADY: TOP Aboutの固定テキスト/公式素材の接続、CMS依存部の切り分け。実機#523。
+
+
+## 2026-11-26 TOP About固定紹介文・地図装飾
+- PC 220:57/114:180、SP 279:2241/279:2318 の高精細context/画像で確認。SPECのTOP管理対象にない固定テキストをHTML化し、既存公式map/pin2点/強調点/花SVGを接続。PCは文と地図の自然なgrid、SPは装飾のみ背面配置。1080切替は既存headerに合わせた暫定中間幅判断。カード・共通背景・リンク・重なりの完成配置は別作業（CMS/リンク/素材受入を照合）。新規ACF・URLなし。実機#523。

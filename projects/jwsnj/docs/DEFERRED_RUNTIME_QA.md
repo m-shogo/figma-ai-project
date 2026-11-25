@@ -191,3 +191,5 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 - TOP MV catchphrase: official PC/SP assets, accessible text once per viewport, 320/375/768/1079/1080/1380 widths, actual font and asset alignment/spacing, home width override and no horizontal overflow. DEFERRED_ENV; photos/CTA/motion remain separate.
 
 - TOP: confirm no CODIA event sample/empty event message or archive link; adjacent News and banner remain functional. Actual Instagram section/URL separately pending. #523 DEFERRED_ENV.
+
+- TOP About intro: actual 320/375/768/1079/1080/1380 render, long/zoom text, map behind SP copy, dot alignment, future card overlap and shared background. #523 DEFERRED_ENV.

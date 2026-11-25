@@ -57,3 +57,24 @@ test('TOP fixed catchphrase uses official PC glyphs and distinct SP art',()=>{
   assert.doesNotMatch(css,/white-space:\s*nowrap/);
   execFileSync('php',['-l',new URL('../theme/template-parts/_top-catchphrase.php',import.meta.url).pathname]);
 });
+
+test('TOP About fixed copy and official map are connected without CMS or dummy links',()=>{
+  const part=read('template-parts/_top-about-intro.php');
+  for(const name of ['img_map.svg','img_map-pin-01.svg','img_map-pin-02.svg']){
+    assert.ok(part.includes('images/top/'+name));
+    assert.match(read('images/top/'+name),/<svg/);
+  }
+  assert.match(read('images/top/img_about-underline.svg'),/<svg/);
+  assert.match(part,/ニュージャージー補習授業校とは/);
+  assert.match(part,/すべての生徒が、/);
+  assert.match(part,/自分らしく/);
+  assert.match(part,/もうひとつの学びの場を提供しています/);
+  assert.doesNotMatch(part,/<a\s|have_rows|get_field|figma\.com/);
+  assert.match(read('front-page.php'),/_top-about-intro[\s\S]*_top-news/);
+  assert.match(read('css/style.css'),/^@import '\.\/project\/top_about\.css';/m);
+  const css=read('css/project/top_about.css');
+  assert.match(css,/img_about-underline\.svg/);
+  assert.match(css,/overflow-wrap: anywhere/);
+  assert.doesNotMatch(css,/white-space:\s*nowrap/);
+  execFileSync('php',['-l',new URL('../theme/template-parts/_top-about-intro.php',import.meta.url).pathname]);
+});

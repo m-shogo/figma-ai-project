@@ -1,0 +1,98 @@
+@charset "utf-8";
+/* TOP About introduction PC 114:180 / SP 279:2318.
+   Card stack, shared background and navigation destinations remain independent. */
+.jwsnj_topAbout {
+    padding-block: calc(34 * var(--to-rem-func)) calc(60 * var(--to-rem-func));
+    font-family: var(--font-jwsnj-ja);
+    color: var(--color-text);
+    .jwsnj_topAbout_inner {
+        isolation: isolate;
+        position: relative;
+        max-width: calc(1380 * var(--to-rem-func));
+    }
+    .jwsnj_topAbout_copy {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        gap: calc(24 * var(--to-rem-func));
+        min-width: 0;
+        overflow-wrap: anywhere;
+        letter-spacing: 0.05em;
+    }
+    .jwsnj_topAbout_title {
+        display: grid;
+        gap: calc(8 * var(--to-rem-func));
+        margin: 0;
+        font-weight: 500;
+    }
+    .jwsnj_topAbout_en {
+        font: 500 calc(36 * var(--to-rem-func))/1.2 var(--font-jwsnj-en-condensed);
+    }
+    .jwsnj_topAbout_ja {
+        display: flex;
+        align-items: center;
+        gap: calc(8 * var(--to-rem-func));
+        color: var(--color-primary);
+        font-size: calc(13 * var(--to-rem-func));
+        line-height: 1.4;
+        img { flex: none; }
+    }
+    .jwsnj_topAbout_lead {
+        margin: 0;
+        font-size: calc(28 * var(--to-rem-func));
+        font-weight: 700;
+        line-height: 1.8;
+    }
+    .jwsnj_topAbout_first { display: block; }
+    .jwsnj_topAbout_accent {
+        display: inline-block;
+        max-width: 100%;
+        background: url('../../images/top/img_about-underline.svg') center top / 88% auto no-repeat;
+        padding-top: 0.16em;
+        line-height: 1.5;
+    }
+    .jwsnj_topAbout_description {
+        margin: 0;
+        font-size: calc(14 * var(--to-rem-func));
+        line-height: 2;
+    }
+    .jwsnj_topAbout_map {
+        position: absolute;
+        z-index: 0;
+        inset-block-start: calc(-34 * var(--to-rem-func));
+        inset-inline-end: var(--padding-SP);
+        width: min(36%, calc(134 * var(--to-rem-func)));
+        pointer-events: none;
+        img { display: block; height: auto; }
+    }
+    .jwsnj_topAbout_shape { width: 100%; }
+    .jwsnj_topAbout_pin01, .jwsnj_topAbout_pin02 { position: absolute; width: 35%; }
+    .jwsnj_topAbout_pin01 { left: 45%; top: 39%; }
+    .jwsnj_topAbout_pin02 { left: 67%; top: 20%; }
+    @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+        padding-block: calc(100 * var(--to-rem-func));
+        .jwsnj_topAbout_inner {
+            display: grid;
+            grid-template-columns: minmax(0, 688fr) minmax(0, 280fr);
+            align-items: start;
+            gap: calc(70 * var(--to-rem-func));
+            max-width: calc(1280 * var(--to-rem-func));
+            padding-inline: calc(120 * var(--to-rem-func));
+        }
+        .jwsnj_topAbout_copy { gap: calc(24 * var(--to-rem-func)); }
+        .jwsnj_topAbout_title { gap: calc(16 * var(--to-rem-func)); margin-bottom: calc(8 * var(--to-rem-func)); }
+        .jwsnj_topAbout_en { font-size: calc(46 * var(--to-rem-func)); line-height: 1.5; }
+        .jwsnj_topAbout_ja { font-size: calc(15 * var(--to-rem-func)); }
+        .jwsnj_topAbout_lead { font-size: calc(32 * var(--to-rem-func)); line-height: 1.5; }
+        .jwsnj_topAbout_first { display: inline; }
+        .jwsnj_topAbout_description { font-size: calc(16 * var(--to-rem-func)); line-height: 2.4; }
+        .jwsnj_topAbout_map {
+            position: relative;
+            inset: auto;
+            width: 100%;
+            max-width: calc(280 * var(--to-rem-func));
+        }
+        .jwsnj_topAbout_pin01 { width: 27.86%; left: 50%; top: 51.75%; }
+        .jwsnj_topAbout_pin02 { width: 27.5%; left: 71.79%; top: 38.64%; }
+    }
+}
