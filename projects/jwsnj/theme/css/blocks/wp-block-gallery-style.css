@@ -7,10 +7,12 @@
     .wp-block-gallery {
         display: grid;
         grid-template-columns: minmax(0, 1fr);
+        align-items: start;
         gap: calc(40 * var(--to-rem-func));
         margin-top: var(--wp-block-margin);
         & + & {
-            margin-top: var(--wp-block-margin-large);
+            /* Figma 344:1080 / 442:2974: consecutive galleries share the 40px gap. */
+            margin-top: calc(40 * var(--to-rem-func));
         }
         &.has-nested-images {
             figure.wp-block-image {
@@ -26,14 +28,19 @@
                     width: 100%;
                     height: auto;
                     aspect-ratio: 3 / 2;
+                    flex: 0 0 auto;
                     object-fit: cover;
                     border-radius: calc(5 * var(--to-rem-func));
                 }
                 figcaption {
                     position: static;
+                    flex: 0 0 auto;
+                    max-height: none;
+                    overflow: visible;
                     margin: 0;
                     padding: 0;
                     background: none;
+                    text-shadow: none;
                     text-align: center;
                     font-family: var(--font-jwsnj-ja);
                     font-size: calc(12 * var(--to-rem-func));

@@ -147,3 +147,7 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 ## 2026-11-25: 本文の太字とマーカー（通常Chat、PROJECT_ONLY）
 - 今回開始時3e96c1c。並行runの#619/#620を検出し、アコーディオンPHPと背景boxの重複書込みを中止、最新c22af79へ切替。Figma PC 344:916/SP 442:2774 高精細context・画像とmarker 442:2784 の変数を取得。本文のstrongはZen Kaku Gothic New Medium 500、下線例は5px #ffebb3のマーカー。既存の段落外strongと通常underline、編集者が背景を明示したspanを維持し、段落だけにmarkerを適用。box-decoration-break:cloneで複数行に対応する。単一callsiteの色のためFoundation tokenは追加しない。既存インラインのunderline指定を上書きするためtext-decoration-lineに限り!important。
 - #523で実機の太字weight、長文・複数行のマーカーの位置と色、既存リンク下線、明示背景、editor/frontend、PC/SP/中間幅を確認。CSSの書式対応は実描画PASSではない。
+
+## 2026-11-25: ギャラリーの連続余白と可変キャプション（通常Chat、PROJECT_ONLY）
+- 新規sessionでFigma PC 344:1079 / SP 442:2973 の高精細contextと画像を取得。連続ギャラリー間40px、画像3:2、画像-caption間20px、PC14/SP12px、カード上揃え。既存margin-large 48pxを連続galleryに限り40pxに修正。gridの上揃え、img/captionのflex伸縮抑制、captionのmax-height/overflow/text-shadowを明示して長文の自然な伸長を優先。既存CMSの画像・caption・lightbox、全カラム設定と公式素材を維持。新規サンプル写真やNoimageの固定出力は作らない。
+- #523で実際のcore/gallery CSS詳細度、1〜3行以上のcaption、画像の実寸、隣接gallery40px、PC/SP/中間幅とlightbox keyboardを確認。静的テストは実機PASSではない。

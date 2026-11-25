@@ -255,3 +255,4 @@ TOP PC `114:28` / SP `279:2136` から、ベクターは SVG、写真は元画�
 - #618 マージ済み。アコーディオンの既存render_blockを親自身のsummary/終端だけに限定し、子のrender済みHTMLを維持する。PHP CLI callback検証とWordPress実機QAを区別。残りはパーツ集の差分整理、Smallナビ/スライダーの仕様確認、#523/#524。未承認ページは開始しない。
 - #619 マージ済み。テキストBoxの薄緑背景/カラムを既存Gutenberg opt-in styleで補完。次はパーツ集の全項目と既存PRの対応表整理、未確定Smallナビ/スライダー/実機に分離。#523でeditor/frontendを確認。
 - #619/#620は並行runのmergeを確認済み。本文 PC 344:916/SP 442:2774 の太字500・5px黄色markerを段落限定で修正。パーツ集の主要なsource実装は進んだが、#523の実機・#524のasset受入・Smallナビ/スライダーとFooter未承認事項は残る。今後は同時runのwrite scopeを毎回直前にも確認し、重複PRを作らない。
+- #621はマージ済み。ギャラリーPC 344:1079/SP 442:2973の連続40px gapと長文captionフローを修正。既存画像/キャプション/列設定を維持し、未承認のfallbackは追加しない。#523でcore CSSの実際のcascadeとlightboxを確認。次はパーツ集の残差と受入条件整理。
