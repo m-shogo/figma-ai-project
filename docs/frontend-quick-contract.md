@@ -64,6 +64,8 @@ Flow / Flex / Grid / relational overlap / intentional absolute・fixed・sticky 
 - 実装前にFigma画像と詳細contextから対象の意図・比較対象・変えてはいけない関係を特定。実装後は原寸の部品と周囲を見て、必要な拡大・computed evidence・兄弟比較で原因を調べる。CSSの指定値、静的CI、pixel diff scoreだけで視覚合格にしない。
 - 実装画像がない場合、SOURCE/STATICの合格とVISUAL未検証を区別。Humanが指摘した既知の見た目の欠陥は修正後の実描画を確認するまでOPEN。根拠のない調整値を入れず、安全な独立作業は既存phase/authorityの範囲で続ける。
 
+**実務手順の参照:** browser差は `docs/device-environment-policy.md` のCross-engine practical verification、文字仕上げは `docs/frontend-font-loading-policy.md` §7.1、UIの作り込みは `docs/frontend-maintainability-qa.md` §3.1、AIの視覚self-reviewは `docs/frontend-visual-repair-learning-loop.md` §8を関連scopeで着手・受入時に使う。対応環境を確定し、見た目・操作・コード品質を別々に検証する。Figma/案件の具体値を勝手に上書きしない。
+
 ## 4. 状態変化で箱をずらさない
 
 Figmaに「hoverで枠が付く」と書いてあっても、Webでは rest から同じ太さの枠を確保する。Company / Existing / 明示Projectが別契約ならそちらが勝つ。**Human が言わなくても** 適用する。詳細な欠落種類は `docs/agent-human-fb-weak-spots.md`。
