@@ -37,3 +37,15 @@ test('gallery zoom affordance is inset 16px SP / 20px PC and reverses colors on 
  assert.match(gallery,/transition:\s*none/);
  assert.doesNotMatch(gallery,/pointer-events:\s*auto|figma\.com\/api\/mcp\/asset/);
 });
+
+
+test('gallery magnifier isolates its glyph from inherited typography and keeps the 44px outer circle', () => {
+  const gallery=css.slice(css.indexOf('/* Figma gallery PC 344:1079'));
+  const icon=gallery.match(/&::after\s*\{([^}]+)\}/)?.[1];
+  assert.ok(icon);
+  assert.match(icon,/box-sizing:\s*border-box/);
+  assert.match(icon,/font-style:\s*normal/);
+  assert.match(icon,/letter-spacing:\s*0/);
+  assert.match(icon,/text-box-trim:\s*none/);
+  assert.doesNotMatch(icon,/transform:|translate:/);
+});

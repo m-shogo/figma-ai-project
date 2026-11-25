@@ -109,7 +109,7 @@ test('bundled FA Regular outlines retain authored arrow, PDF and plain file glyp
     return 0;
   };
   const locate=id=>i16(head+50)===0?2*u16(loca+2*id):u32(loca+4*id);
-  const glyphs=[0xf061,0xf1c1,0xf15b].map(cp=>{
+  const glyphs=[0xf061,0xf1c1,0xf15b,0xf002].map(cp=>{
     const id=glyphId(cp);
     assert.ok(id>0,'missing FA glyph '+cp.toString(16));
     assert.ok(locate(id+1)>locate(id),'empty FA glyph '+cp.toString(16));
@@ -118,7 +118,9 @@ test('bundled FA Regular outlines retain authored arrow, PDF and plain file glyp
     assert.ok(bounds[2]>bounds[0]&&bounds[3]>bounds[1]);
     // Current bundled FA metrics: these glyphs' vertical ink midpoints equal
     // the hhea line-box midpoint. A new font version needs alignment review.
-    assert.equal(bounds[1]+bounds[3],i16(hhea+4)+i16(hhea+6),'review icon alignment after font change');
+    // The magnifier is asymmetric; report its outline for review without assuming
+    // an optical offset or imposing the other glyphs' metric invariant.
+    if(cp!==0xf002) assert.equal(bounds[1]+bounds[3],i16(hhea+4)+i16(hhea+6),'review icon alignment after font change');
     return {code:cp.toString(16),advance:u16(hmtx+4*Math.min(id,u16(hhea+34)-1)),bounds};
   });
   const os=tables['OS/2'];
