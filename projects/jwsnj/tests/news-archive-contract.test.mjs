@@ -17,7 +17,7 @@ test('home fallback and category share archive owner, other queries retain origi
   assert.match(archive,/get_option\('page_for_posts'\)/);
   assert.match(archive,/<details/);
   assert.match(archive,/aria-current="page"/);
-  assert.match(read('template-parts/_list-news_article.php'),/newsArchive' \? 'm\.d\.Y' : 'Y\/m\/d'/);
+  assert.match(read('template-parts/_list-news_article.php'),/\['newsArchive', 'topNews'\], true\) \? 'm\.d\.Y' : 'Y\/m\/d'/);
 });
 test('Figma layout uses natural wrap and scoped responsive rows',()=>{
   assert.match(css,/width:\s*calc\(240 \* var\(--to-rem-func\)\)/);
@@ -158,4 +158,24 @@ test('standard post category labels isolate missing parent classes and escape at
   const html=execFileSync('php',['-r',stub+part],{encoding:'utf8'});
   assert.match(html,/class="label first _parent&quot;quote">First &amp; one</);
   for(const slug of ['orphan','missing','root']) assert.match(html,new RegExp('class="label '+slug+'">'));
+});
+
+test('TOP news uses standard posts and a real assigned posts-page link',()=>{
+  const part=read('template-parts/_top-news.php');
+  assert.match(part, /'post_type' => 'post'/);
+  assert.match(part, /'posts_per_page' => 5/);
+  assert.match(part, /'post_status' => 'publish'/);
+  assert.match(part, /get_option\('page_for_posts'\)/);
+  assert.match(part, /get_post_status\(\$posts_page_id\) === 'publish'/);
+  assert.match(part, /if \(\$news_url !== ''\)/);
+  assert.match(part, /wp_reset_postdata\(\)/);
+  assert.match(part, /'props' => 'topNews'/);
+  assert.match(part, /images\/common\/ico_blossom\.svg/);
+  assert.match(read('front-page.php'), /_top-news/);
+  const css=read('css/project/top_news.css');
+  assert.match(css, /max-width: calc\(560/);
+  assert.match(css, /minmax\(0, calc\(170/);
+  assert.match(css, /focus-visible/);
+  assert.doesNotMatch(css, /white-space:\s*nowrap/);
+  execFileSync('php',['-l',new URL('../theme/template-parts/_top-news.php',import.meta.url).pathname]);
 });

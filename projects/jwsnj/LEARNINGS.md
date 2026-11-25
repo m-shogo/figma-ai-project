@@ -249,3 +249,7 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 
 
 - TOP重要なお知らせ PC 114:349/SP 279:2233の高精細context・画像で照合。既存ACF top_notice_select/top_notice-01/date/textarea/noneのみを使用。空/非表示行は出力せず、raw Ymdが不正なら日付を省略、HTMLはwp_kses_post。PC60min/横並び、SP20inset/縦並び、FA Solid F0F3の装飾。CMSに実リンクがある時だけ下線と操作状態を付ける。長文・複数件の伸縮を維持。静的/PHP stubと実機#523を区別。TOPの他sectionは未実装。
+
+
+## 2026-11-26 TOP News source implementation
+- PC 114:542 / SP 279:2524 high-fidelity context and images: 5 standard posts, heading 46/36px, 560/295px panel, 32px heading gap, 24/20px row padding, PC 40px row gap, shared date/category and official flower. Existing post URL owner and actual published configured posts-page only; no fake URL or CMS fields. TOP marker uses existing light-green token; exact marker color not specified in the hover instruction, review against actual hover reference. Instagram sibling, remaining TOP sections, TOP body min-width and complete layout remain separate. Runtime QA #523.
