@@ -317,3 +317,7 @@ TOP PC `114:28` / SP `279:2136` から、ベクターは SVG、写真は元画�
 
 ## TOP 重要なお知らせ
 - PC 114:349/SP 279:2233で既存ACFの表示・繰返し・日付・本文・非表示を再利用。空行/無効日付、実リンクのみ、60pxはmin-height、PC/SPの配置とFA Solidベル。既存MVの直後。TOP他section・素材・ルーティングは別READY。#523実機未検証。
+
+
+## 2026-11-26 TOP News source implementation
+- PC 114:542 / SP 279:2524 high-fidelity context and images: 5 standard posts, heading 46/36px, 560/295px panel, 32px heading gap, 24/20px row padding, PC 40px row gap, shared date/category and official flower. Existing post URL owner and actual published configured posts-page only; no fake URL or CMS fields. TOP marker uses existing light-green token; exact marker color not specified in the hover instruction, review against actual hover reference. Instagram sibling, remaining TOP sections, TOP body min-width and complete layout remain separate. Runtime QA #523.

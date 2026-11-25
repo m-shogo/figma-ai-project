@@ -11,7 +11,7 @@
     <<?php echo $html_tag; ?> <?php echo $html_classes; ?> <?php echo $html_attrs; ?>>
         <div class="head">
             <p class="date">
-                <time datetime="<?php the_time('Y-m-d'); ?>"><?php the_time(($args['props'] ?? '') === 'newsArchive' ? 'm.d.Y' : 'Y/m/d'); ?></time>
+                <time datetime="<?php the_time('Y-m-d'); ?>"><?php the_time(in_array($args['props'] ?? '', ['newsArchive', 'topNews'], true) ? 'm.d.Y' : 'Y/m/d'); ?></time>
             </p>
             <?php
             get_template_part('template-parts/_label-category', null, [
