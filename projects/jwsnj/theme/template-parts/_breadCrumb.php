@@ -9,11 +9,13 @@ class BreadcrumbTrail
 {
   private $items = [];
   private $position = 1;
+  private $news_archive;
 
-  public function __construct()
+  public function __construct($news_archive = false)
   {
-    // トップページへのリンクを常に最初に追加
-    $this->addItem('TOP', home_url('/'));
+    $this->news_archive = $news_archive;
+    // 記事一覧だけはFigma指定のホーム表記。他のページは既存表示を保持。
+    $this->addItem($news_archive ? 'ホーム' : 'TOP', home_url('/'));
   }
 
   public function addItem($name, $url = null)
@@ -35,10 +37,14 @@ class BreadcrumbTrail
 
       if ($item['url']) {
         $html .= '<a itemscope itemtype="https://schema.org/Thing" itemprop="item" itemid="' . esc_url($item['url']) . '" href="' . esc_url($item['url']) . '">';
+        if ($this->news_archive && $item['position'] === 1) {
+          $html .= '<span class="jwsnj_breadCrumb_homeIcon" aria-hidden="true"></span>';
+        }
         $html .= '<span itemprop="name">' . esc_html($item['name']) . '</span>';
         $html .= '</a>';
       } else {
-        $html .= '<span itemprop="name">' . esc_html($item['name']) . '</span>';
+        $current_attr = $this->news_archive && $item['position'] === count($this->items) ? ' aria-current="page"' : '';
+        $html .= '<span itemprop="name"' . $current_attr . '>' . esc_html($item['name']) . '</span>';
       }
 
       $html .= '<meta itemprop="position" content="' . $item['position'] . '" />';
@@ -51,9 +57,36 @@ class BreadcrumbTrail
 }
 
 // パンくず作成用関数
-function get_breadcrumb_trail()
+function get_breadcrumb_trail($news_archive = false)
 {
-  $trail = new BreadcrumbTrail();
+  $trail = new BreadcrumbTrail($news_archive);
+
+  if ($news_archive) {
+    $posts_id = (int) get_option('page_for_posts');
+    $title = $posts_id ? get_the_title($posts_id) : '';
+    $title = trim((string) $title) !== '' ? $title : 'お知らせ';
+    if (is_category()) {
+      $term = get_queried_object();
+      if ($term instanceof WP_Term) {
+        if ($posts_id && ($posts_url = get_permalink($posts_id))) {
+          $trail->addItem($title, $posts_url);
+        }
+        foreach (array_reverse(get_ancestors($term->term_id, 'category', 'taxonomy')) as $ancestor_id) {
+          $ancestor = get_term($ancestor_id, 'category');
+          if ($ancestor instanceof WP_Term) {
+            $url = get_category_link($ancestor->term_id);
+            if (!is_wp_error($url) && $url) {
+              $trail->addItem($ancestor->name, $url);
+            }
+          }
+        }
+        $trail->addItem($term->name);
+        return $trail;
+      }
+    }
+    $trail->addItem($title);
+    return $trail;
+  }
 
   if (is_front_page()) {
     // フロントページの場合はTOPのみ
@@ -312,5 +345,6 @@ function get_breadcrumb_trail()
 }
 
 // 実行
-$breadcrumb = get_breadcrumb_trail();
-echo '<nav class="module_breadCrumb"><div class="mb_inner global_inner">' . $breadcrumb->render() . '</div></nav>';
+$news_archive = !empty($args['news_archive']);
+$breadcrumb = get_breadcrumb_trail($news_archive);
+echo '<nav class="module_breadCrumb"' . ($news_archive ? ' aria-label="パンくずリスト"' : '') . '><div class="mb_inner global_inner">' . $breadcrumb->render() . '</div></nav>';

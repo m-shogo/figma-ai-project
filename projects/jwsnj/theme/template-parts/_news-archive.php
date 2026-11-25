@@ -35,5 +35,5 @@ $categories = get_categories(['hide_empty' => false]);
         <?php endif; ?>
         <?php get_template_part('template-parts/_list-news', null, ['props' => 'newsArchive']); ?>
     </div>
-    <?php get_template_part('template-parts/_breadCrumb'); ?>
+    <?php get_template_part('template-parts/_breadCrumb', null, ['news_archive' => true]); ?>
 </section>

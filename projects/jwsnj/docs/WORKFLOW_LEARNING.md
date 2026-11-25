@@ -67,3 +67,5 @@ Status: PROJECT-ONLY EVIDENCE / Human feedback: 2026-11-20
 
 - Human承認を #515 の CURRENT_AUTHORITY に保存。旧Draftは最新soを第二親として安全に統合し、force pushなし。記事一覧・カテゴリ・pager・パンくずを先行、heroは別PR。#515のCI 3/3、一覧テスト4/4（PHP CLI stub含む）、既存parts87/87成功。実WordPress QA #523未検証。
 - 次のREADYは同ページ内の公式装飾/下部バナー受入（#524）と実WP QA（#523）。バナーはFigma上に透かしあり、使用権確認済み原本が必要。記事詳細/固定/TOP/コースは未承認のまま。
+
+- #640 hero（CI 3/3、一覧5/5）に続き、パンくずの一覧限定実装。静的CI/PHP stubと実WPを区別。以降の独立READYは公式バイトが必要な装飾/下部画像（#524）と実機QA（#523）で、他ページ承認がない間は新規ページへ進まない。

@@ -294,3 +294,5 @@ TOP PC `114:28` / SP `279:2136` から、ベクターは SVG、写真は元画�
 - 次のREADY: 一覧固有hero 390:799/SP対応node、既存ACF visual設定・公式素材の確認。下部バナーは公式素材と管理ownerの確認後。共通他ページは変更しない。実WP #523未検証。
 
 - 記事一覧hero PC 390:799/SP 507:2741 を高精細context・画像で照合。既存ACF page_img-post (attachment ID) を保持し、PC 1:2 grid / min400px、SP padding32/24・335:146、h1 32/24px、News pill を一覧限定partで実装。写真未登録は画像非表示でsampleなし。Figma画像のcrop比率から PC70%/SP76%を初期値にしたが実画像未設定のため#523で検証。PC装飾の人物390:803/390:832・吹き出し390:856は公式bytes未保存。下部バナー390:668/478:2756は透かし入り画像がFigma上にあり、権利確認済み画像と正しいPC/SPファイル待ち。代替素材なし。#524受入。旧body min-width1280は一覧のみ解除、他ページの幅規則は未承認につき保持。
+
+- 記事一覧パンくず PC 390:792/SP 507:2818 を高精細context・画像で確認。既存BreadcrumbTrailの一覧限定optionで「ホーム」・FA Light F80B/F054・13/12px・PC64/SP20px inset、min-height50/48、自然折返しとfocusを追加。WordPressカテゴリ祖先とURLを維持し、page_for_posts未設定は誤リンクを出さない。#523実機受入待ち。次は#524の未取得公式hero装飾/権利確認済みバナーと#523。新規ページはHuman承認後。

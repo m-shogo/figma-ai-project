@@ -10,8 +10,73 @@ body.category {
     padding-bottom: 0;
     > .module_breadCrumb {
         margin: 0;
-        padding-block: calc(16 * var(--to-rem-func));
+        min-height: calc(48 * var(--to-rem-func));
+        display: flex;
+        align-items: center;
+        padding-block: calc(14 * var(--to-rem-func));
         border-top: calc(1 * var(--to-rem-func)) solid var(--jwsnj-color-separator-light);
+        font-family: var(--font-jwsnj-ja);
+        font-size: calc(12 * var(--to-rem-func));
+        line-height: 1.3;
+        letter-spacing: 0.05em;
+        .mb_inner.global_inner {
+            max-width: none;
+            padding-inline: var(--padding-SP);
+        }
+        .module_breadCrumb-01 {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: calc(8 * var(--to-rem-func));
+            li {
+                display: inline-flex;
+                align-items: center;
+                min-width: 0;
+                gap: calc(8 * var(--to-rem-func));
+                overflow-wrap: anywhere;
+                &:not(:last-child)::after {
+                    content: '\f054' / '';
+                    flex: none;
+                    margin: 0;
+                    font: 300 calc(10 * var(--to-rem-func))/1 var(--font-awesome);
+                    letter-spacing: 0;
+                    text-box-trim: none;
+                }
+            }
+            a {
+                display: inline-flex;
+                align-items: center;
+                min-width: 0;
+                gap: calc(4 * var(--to-rem-func));
+                color: var(--color-primary);
+                text-decoration: underline;
+                &:focus-visible {
+                    outline: calc(2 * var(--to-rem-func)) solid var(--color-primary);
+                    outline-offset: calc(3 * var(--to-rem-func));
+                }
+            }
+            .jwsnj_breadCrumb_homeIcon {
+                display: inline-block;
+                flex: none;
+                &::before {
+                    content: '\f80b';
+                    font: 300 calc(10 * var(--to-rem-func))/1 var(--font-awesome);
+                    letter-spacing: 0;
+                    text-box-trim: none;
+                }
+            }
+        }
+        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+            min-height: calc(50 * var(--to-rem-func));
+            font-size: calc(13 * var(--to-rem-func));
+            .mb_inner.global_inner { padding-inline: calc(64 * var(--to-rem-func)); }
+            .module_breadCrumb-01 {
+                a { gap: calc(8 * var(--to-rem-func)); }
+                .jwsnj_breadCrumb_homeIcon::before {
+                    font-size: calc(12 * var(--to-rem-func));
+                }
+            }
+        }
     }
 }
 .jwsnj_newsArchive_inner {

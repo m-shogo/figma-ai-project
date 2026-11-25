@@ -45,7 +45,7 @@ test('isolated PHP pager handles bounds, current page and valid generated links'
   }
 });
 test('archive templates parse in PHP CLI',()=>{
-  for(const p of ['archive.php','index.php','template-parts/_news-archive.php','template-parts/_list-news.php','template-parts/_list-news_article.php','template-parts/_visual.php','template-parts/_news-archive-visual.php','template-parts/_pagination-news.php']){
+  for(const p of ['archive.php','index.php','template-parts/_news-archive.php','template-parts/_list-news.php','template-parts/_list-news_article.php','template-parts/_visual.php','template-parts/_news-archive-visual.php','template-parts/_pagination-news.php','template-parts/_breadCrumb.php']){
     execFileSync('php',['-l',new URL('../theme/'+p,import.meta.url).pathname]);
   }
 });
@@ -72,4 +72,31 @@ test('archive hero preserves CMS image ownership and no sample fallback',()=>{
   assert.match(empty,/<h1>お知らせ<\/h1>/);
   assert.doesNotMatch(empty,/has-image|<img|heroImage/);
   assert.doesNotMatch(render(99,'Title'),/has-image|<img|heroImage/);
+});
+
+
+test('archive breadcrumb uses existing renderer with scoped Home label and safe category path',()=>{
+  const part=read('template-parts/_breadCrumb.php');
+  const render=(category,postsId,title,news=true)=>{
+    const stub='class WP_Term {public $term_id;public $name;function __construct($id,$name){$this->term_id=$id;$this->name=$name;}} function home_url($s){return "/";} function get_option($n){return '+postsId+';} function get_the_title($n){return '+JSON.stringify(title)+';} function get_permalink($n){return "/news/";} function is_category(){return '+(category?'true':'false')+';} function get_queried_object(){return new WP_Term(9,"Current & category");} function get_ancestors($id,$t,$r){return [3,2];} function get_term($id,$t){return new WP_Term($id,"Parent ".$id);} function get_category_link($id){return "/category/".$id."/";} function is_wp_error($x){return false;} function is_front_page(){return true;} function esc_url($s){return htmlspecialchars($s,ENT_QUOTES);} function esc_html($s){return htmlspecialchars($s,ENT_QUOTES);} $args=["news_archive"=>'+(news?'true':'false')+']; ?>';
+    return execFileSync('php',['-r',stub+part],{encoding:'utf8'});
+  };
+  const home=render(false,5,'お知らせ');
+  assert.match(home,/aria-label="パンくずリスト"/);
+  assert.match(home,/jwsnj_breadCrumb_homeIcon/);
+  assert.match(home,/>ホーム</);
+  assert.match(home,/aria-current="page">お知らせ</);
+  const cat=render(true,5,'News & updates');
+  assert.match(cat,/href="\/news\/"[\s\S]*News &amp; updates/);
+  assert.ok(cat.indexOf('Parent 2')<cat.indexOf('Parent 3'));
+  assert.match(cat,/aria-current="page">Current &amp; category</);
+  assert.doesNotMatch(render(true,0,''),/href="\/news\/"/);
+  assert.match(render(false,0,''),/aria-current="page">お知らせ</);
+  const old=render(false,5,'',false);
+  assert.match(old,/>TOP</);
+  assert.doesNotMatch(old,/jwsnj_breadCrumb_homeIcon|aria-label="パンくずリスト"/);
+  assert.match(css,/padding-inline:\s*calc\(64 \* var\(--to-rem-func\)\)/);
+  assert.match(css,/content:\s*'\\f80b'/);
+  assert.match(css,/font:\s*300 calc\(10 \* var\(--to-rem-func\)\)\/1 var\(--font-awesome\)/);
+  assert.ok(readFileSync(new URL('../theme/webfonts/fa-light-300.woff2',import.meta.url)).length>0);
 });
