@@ -46,6 +46,7 @@
                 &::after {
                     content: '\f063';
                     display: flex;
+                    box-sizing: border-box;
                     flex: 0 0 calc(24 * var(--to-rem-func));
                     align-items: center;
                     justify-content: center;
@@ -56,8 +57,12 @@
                     color: var(--color-secondary);
                     font-family: var(--font-awesome);
                     font-weight: 900;
+                    font-style: normal;
                     font-size: calc(10 * var(--to-rem-func));
+                    /* The shipped FA Solid F063 ink and line-box centers coincide. */
                     line-height: 1;
+                    letter-spacing: 0;
+                    text-box-trim: none;
                 }
                 &:focus-visible {
                     outline: calc(2 * var(--to-rem-func)) solid var(--color-primary);

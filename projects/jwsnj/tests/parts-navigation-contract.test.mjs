@@ -48,3 +48,13 @@ test('large navigation skips empty rows and does not substitute sample images', 
   assert.match(template, /if \(\$has_text\) : \?>\s*<div class="content">/);
   assert.doesNotMatch(template, /noimage\.webp|href="#"/);
 });
+
+test('large navigation corner glyph retains its centered 10px FA Regular ink', () => {
+  const icon = large.match(/&::after\s*\{\s*content:\s*'\\f061';([^}]+)\}/)?.[1];
+  assert.ok(icon);
+  assert.match(icon,/box-sizing:\s*border-box/);
+  assert.match(icon,/letter-spacing:\s*0/);
+  assert.match(icon,/font-style:\s*normal/);
+  assert.match(icon,/text-box-trim:\s*none/);
+  assert.match(icon,/line-height:\s*1;/);
+});
