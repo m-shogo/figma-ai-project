@@ -246,3 +246,6 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 
 
 - 固定ページ PC 384:1046/SP 445:3245、hero 384:1400/507:2729、sidebar 476:1741、bread 384:1395/507:2812を新規session画像と高精細contextで照合。既存page_img ID・タイトル・the_content・password gate・sidebar-nav walkerを維持。共通news heroの形を再利用し画像焦点はbottom。英語副題は既存ACFにないため未設定、人物SVGとバナーは#524。PC本文840/rail256/gap75、上80下100、SP 20inset上56下64。中間幅1024未満は本文一列（SP意図を保つ実装判断）。Figma例にない旧dropdownは既定page.phpから除外、既存owner自体は保持し、必要な別ページでの接続はデザインに従う。#523実機未検証。
+
+
+- TOP重要なお知らせ PC 114:349/SP 279:2233の高精細context・画像で照合。既存ACF top_notice_select/top_notice-01/date/textarea/noneのみを使用。空/非表示行は出力せず、raw Ymdが不正なら日付を省略、HTMLはwp_kses_post。PC60min/横並び、SP20inset/縦並び、FA Solid F0F3の装飾。CMSに実リンクがある時だけ下線と操作状態を付ける。長文・複数件の伸縮を維持。静的/PHP stubと実機#523を区別。TOPの他sectionは未実装。

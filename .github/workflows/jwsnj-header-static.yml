@@ -66,6 +66,10 @@ on:
       - 'projects/jwsnj/tests/news-archive-contract.test.mjs'
       - 'projects/jwsnj/tests/news-single-contract.test.mjs'
       - 'projects/jwsnj/tests/fixed-page-contract.test.mjs'
+      - 'projects/jwsnj/tests/top-notice-contract.test.mjs'
+      - 'projects/jwsnj/theme/front-page.php'
+      - 'projects/jwsnj/theme/template-parts/_top-notice.php'
+      - 'projects/jwsnj/theme/css/project/top_notice.css'
       - 'projects/jwsnj/theme/page.php'
       - 'projects/jwsnj/theme/sidebar.php'
       - 'projects/jwsnj/theme/template-parts/_fixed-page-visual.php'
@@ -139,6 +143,10 @@ on:
       - 'projects/jwsnj/tests/news-archive-contract.test.mjs'
       - 'projects/jwsnj/tests/news-single-contract.test.mjs'
       - 'projects/jwsnj/tests/fixed-page-contract.test.mjs'
+      - 'projects/jwsnj/tests/top-notice-contract.test.mjs'
+      - 'projects/jwsnj/theme/front-page.php'
+      - 'projects/jwsnj/theme/template-parts/_top-notice.php'
+      - 'projects/jwsnj/theme/css/project/top_notice.css'
       - 'projects/jwsnj/theme/page.php'
       - 'projects/jwsnj/theme/sidebar.php'
       - 'projects/jwsnj/theme/template-parts/_fixed-page-visual.php'
@@ -170,7 +178,7 @@ jobs:
       - name: Test Figma-approved parts heading, copy and list contracts
         run: node --test projects/jwsnj/tests/parts-*.test.mjs
       - name: Test approved news archive and isolated pagination
-        run: node --test projects/jwsnj/tests/news-archive-contract.test.mjs projects/jwsnj/tests/news-single-contract.test.mjs projects/jwsnj/tests/fixed-page-contract.test.mjs
+        run: node --test projects/jwsnj/tests/news-archive-contract.test.mjs projects/jwsnj/tests/news-single-contract.test.mjs projects/jwsnj/tests/fixed-page-contract.test.mjs projects/jwsnj/tests/top-notice-contract.test.mjs
       - name: Check WordPress Header and Footer PHP syntax
         run: |
           php -l projects/jwsnj/theme/template-parts/_header.php
