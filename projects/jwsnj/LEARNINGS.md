@@ -205,3 +205,8 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 
 - PCメガメニュー `.gnl_list-02` と小型ナビPC2列は `repeat(n, 1fr)` だと最小コンテンツ幅が広い場合に横溢の原因となる。固定列数はFigma通り維持し、トラック最小値だけ `minmax(0, 1fr)` に変更。リンクの`overflow-wrap:anywhere`と小型ナビのflex shrink対策を合わせて適用。
 - フレームの色・列数・gap・Font Awesome・URL/ACFは変更しない。ブラウザ/WordPress実描画は #523で確認。
+
+## 2026-11-25 — アコーディオンの死んだ装飾コード整理
+
+- Figma PC `357:938` / SP `442:2908` 高精細contextとスクリーンショットを再取得。既存 summary の75pxは`min-height`で可変、タイトル複数行に対応し、今回変えない。
+- 未使用のコメントアウトされた旧背景擬似要素と空の擬似要素宣言だけを除去。開閉・Q/A・表示スタイル・CMS・キーボード挙動は変更しない。静的契約テストで不要痕跡と可変高さを確認。WordPressブラウザ視覚QAは #523 `DEFERRED_ENV`。

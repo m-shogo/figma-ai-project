@@ -87,3 +87,13 @@ test('PHP details callback preserves other blocks and unsupported outer markup',
   assert.ok(renderDetails(spaced).startsWith(' \n<details data-note="a > b"><summary class="wp-block-details__summary">'));
   assert.ok(renderDetails(spaced).endsWith('</details>\n'));
 });
+
+
+test('accordion has no dead sample pseudo-elements and remains content-height driven', () => {
+  const icon = css.slice(css.indexOf('.wp-block-details__button-icon {'), css.indexOf('.wp-block-details__content {'));
+  assert.doesNotMatch(icon, /&::before\s*\{\s*\}/);
+  assert.doesNotMatch(css, /\/\*\s*&::before\s*\{/);
+  const summary = css.slice(css.indexOf('summary.wp-block-details__summary {'), css.indexOf('.wp-block-details__title {'));
+  assert.match(summary, /min-height:\s*calc\(75 \* var\(--to-rem-func\)\)/);
+  assert.doesNotMatch(summary, /(?<!min-)height:\s*calc\(/);
+});
