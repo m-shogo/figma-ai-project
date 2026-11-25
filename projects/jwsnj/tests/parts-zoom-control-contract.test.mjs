@@ -21,3 +21,19 @@ test('existing download, external, and hover variants remain',()=>{
  assert.match(css,/\&\[href\$='\.pdf'\]/);
  assert.match(css,/@media \(any-hover: hover\)/);
 });
+
+test('gallery zoom affordance is inset 16px SP / 20px PC and reverses colors on hover or focus',()=>{
+ const gallery=css.slice(css.indexOf('/* Figma gallery PC 344:1079'));
+ assert.ok(gallery.length>0);
+ assert.match(gallery,/\.wp-block-image > a:not\(\[target='_blank'\]\):not\(\[href\$='\.pdf'\]\)/);
+ assert.match(gallery,/\.wp-lightbox-container \.lightbox_wrap/);
+ assert.match(gallery,/width:\s*100%/);
+ assert.match(gallery,/right:\s*calc\(16 \* var\(--to-rem-func\)\);\s*bottom:\s*calc\(16 \* var\(--to-rem-func\)\)/);
+ assert.match(gallery,/@media \(calc\(768 \* \(1 \/ 16 \* 1rem\)\) <= width\)\s*\{\s*&::after\s*\{\s*right:\s*calc\(20 \* var\(--to-rem-func\)\);\s*bottom:\s*calc\(20 \* var\(--to-rem-func\)\)/);
+ assert.match(gallery,/&:hover::after\s*\{\s*opacity:\s*1;\s*background-color:\s*var\(--color-secondary\);\s*color:\s*var\(--color-primary\)/);
+ assert.match(gallery,/&:focus-visible::after/);
+ assert.match(gallery,/\.wp-lightbox-container:focus-within \.lightbox_wrap::after/);
+ assert.match(gallery,/prefers-reduced-motion:\s*reduce/);
+ assert.match(gallery,/transition:\s*none/);
+ assert.doesNotMatch(gallery,/pointer-events:\s*auto|figma\.com\/api\/mcp\/asset/);
+});
