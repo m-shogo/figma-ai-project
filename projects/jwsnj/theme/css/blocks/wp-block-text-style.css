@@ -10,20 +10,28 @@
     strong {
         font-weight: bold;
     }
-    /* MARK: 下線 */
-    /* 下線が太い場合 */
-    /* span[style*='underline'] {
-        background: linear-gradient(to bottom, transparent, transparent 65%, color-mix(in oklch, var(--color-primary) 40%, transparent) 66%, color-mix(in oklch, var(--color-primary) 40%, transparent) 100%);
-        text-decoration: none !important;
-    } */
-    /* 下線が細い場合 */
+    /* Figma PC 344:916 / SP 442:2774 — paragraph emphasis and marker.
+       Preserve the existing underline outside paragraphs, or when the editor
+       explicitly authored a background on the underlined span. */
+    p strong {
+        font-weight: 500;
+    }
     span[style*='text-decoration: underline'] {
-        /* ブロックにstyle属性で吐き出されるため、!importantを使用して上書き */
         text-decoration-line: underline !important;
         text-decoration-color: currentColor !important;
         text-decoration-thickness: calc(1 * var(--to-rem-func)) !important;
         text-underline-offset: calc(2 * var(--to-rem-func)) !important;
         text-decoration-skip-ink: none !important;
+    }
+    p span[style*='text-decoration: underline']:not([style*='background']) {
+        /* WordPress emits inline underline; the approved paragraph treatment is a marker. */
+        text-decoration-line: none !important;
+        background-image: linear-gradient(#ffebb3, #ffebb3);
+        background-repeat: no-repeat;
+        background-position: left bottom;
+        background-size: 100% calc(5 * var(--to-rem-func));
+        -webkit-box-decoration-break: clone;
+        box-decoration-break: clone;
     }
     p.has-small-font-size {
         font-size: 0.75rem !important;
