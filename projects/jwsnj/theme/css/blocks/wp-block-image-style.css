@@ -53,11 +53,6 @@
             margin-inline: auto;
             text-align: center;
         }
-        /* &.border-none {
-        img {
-            border: none;
-        }
-    } */
         .wp-element-caption.wp-element-caption {
             /* キャプションのスタイルの詳細度がギャラリーブロックには負けるので重ねがけ */
             background: none;
@@ -78,25 +73,6 @@
             overflow-wrap: anywhere;
             word-break: normal;
         }
-        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-            .alignleft {
-                /* margin-bottom: 0; */
-                /* margin-right: calc(40 * var(--to-rem-func)); */
-            }
-            .alignright {
-                /* margin-bottom: 0; */
-                /* margin-left: calc(40 * var(--to-rem-func)); */
-            }
-        }
-    }
-    .wp-block[data-align='left'] > .wp-block-image {
-        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-            /* margin-right: calc(32 * var(--to-rem-func)); */
-        }
-    }
-    .wp-block[data-align='right'] > .wp-block-image {
-        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-            /* margin-right: calc(32 * var(--to-rem-func)); */
-        }
+
     }
 }
