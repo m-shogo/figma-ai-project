@@ -67,6 +67,12 @@
     .wp-lightbox-container .lightbox_wrap {
         width: 100%;
         &::after {
+            /* The 44px circle includes its border; isolate the single FA glyph
+               from inherited text tracking/italic/trim. No optical offset guessed. */
+            box-sizing: border-box;
+            font-style: normal;
+            letter-spacing: 0;
+            text-box-trim: none;
             right: calc(16 * var(--to-rem-func));
             bottom: calc(16 * var(--to-rem-func));
         }

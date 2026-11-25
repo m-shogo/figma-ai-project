@@ -177,3 +177,8 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 ## 2026-11-25: 同系統の丸矢印レビュー — ページ内リンク・画像付きナビ
 - 新規sessionでFigma 357:1022/442:2948（ページ内リンク）・384:1005/442:3085（大ナビ矢印）の高精細contextと画像を確認。24px mint円/10px FA Solid F063、32px green円/10px FA Regular F061・48px white corner。既存配置/寸法/色/ACFを維持し、ラベル/親のtracking・font-styleの継承をglyphだけ隔離、border-boxとuntrimmed line-height:1を明示。小ナビ未承認scopeは変更なし。
 - FA Solid 900 TTF（Git blob e19253e7b2e409279f58b3da9ecd7ac0f064a59a）を直接読み取り、unitsPerEm512 / asc459 / desc-75 / F063 advance384, bounds[0,-32,384,416]を確認。Regular F061は#629のCIでadvance448/bounds[0,-7,448,391]。いずれもx中心=advance/2、縦ink中心192=hhea中心192。推測offsetやFigma trimの機械移植は不要と判断。実WP/browser描画でのvisual合否は#523のまま。
+
+
+## 2026-11-25: ギャラリーの丸ズームアイコン（通常Chat、PROJECT_ONLY）
+- 新規Figma session PC 344:1079/SP 442:2973の詳細contextと画像を確認。通常/反転は44px円、1px border、FA Regular F002 20px、PC20/SP16px inset。既存gallery限定ownerにbox-sizingとglyphのstyle/tracking/trim隔離を明示。単一glyphのため本文字間は継承しない。非gallery・外部/PDFのvariant、native lightbox、画像・CMSはそのまま。非対称な虫眼鏡の視覚重心は実描画なしで補正量を決めない。既存TTFテストでF002 outlineを記録するが視覚PASSではない。
+- H3 PC 344:903/SP 445:3236の白文字/水色背景は正本と現行CSSが一致するが、WCAG contrast不足の可能性ではなく色値上の不足を確認。承認済み色を無断変更せずHuman/デザイナー判断待ち。次の候補: galleryのCMS列数（columns-1等）の既存仕様とscopeを確認。#523の実描画は未完。

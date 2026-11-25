@@ -267,3 +267,5 @@ TOP PC `114:28` / SP `279:2136` から、ベクターは SVG、写真は元画�
 - 2026-11-25 ボタン視覚整列のsource修正: Figma PC 344:971/344:969・SP 442:2835/442:2842。大小添付F15Bと本文F15Cの使い分け、30px円とglyph独立、各variant共通中心、tracking隔離、実FA outline測定に基づきline-height:1/trimなし。#523で実font・実機視覚受入未完。
 
 - 2026-11-25 丸矢印の同系改善: ページ内リンク 357:1022/442:2948 と大ナビ 384:1005/442:3085 のFigma現物・実FA TTF metricsを照合。円寸法/色/既存CMSを維持しglyph tracking/line boxのみ修正。視覚受入は#523。
+
+- 2026-11-25: galleryズーム PC 344:1079/SP 442:2973 の44px円、20px F002、PC20/SP16px insetと反転を再確認。gallery限定でborder-boxとglyphのstyle/tracking/trim隔離。光学的補正は実描画待ち。H3白文字 #fff / 水色 #6bd2ce のコントラスト不足はHuman/デザイナー判断待ち（色変更なし）。次の独立候補はgalleryの既存CMS列数の確認。#523実機未検証。
