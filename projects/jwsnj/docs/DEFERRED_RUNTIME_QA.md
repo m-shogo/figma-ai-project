@@ -177,3 +177,5 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 - NEWS ARCHIVE routing: show_on_front=posts（旧page_for_posts残存含む）、page+公開投稿ページ、page+未設定/非公開/削除/異種post/同じfront ID、categoryからの全件復帰とhero/breadcrumbの整合。実WPの設定切替とquery、keyboard disclosureを確認。PHP stubは実WPではない。
 
 - NEWS ARCHIVE row data safety: 不正URL・空URL・正常内部/外部/添付リンク、親カテゴリ削除/取得失敗・複数カテゴリ、HTML属性・長文・keyboard focus対象を実WPで確認。隔離PHP stubと実機を区別。#523 DEFERRED_ENV。
+
+- NEWS ARCHIVE semantics: 非リンク行のHTML flow content、pager 前へ/次へ のaccessible nameに装飾FA glyphが混入しないこと、先頭/末尾のdisabled幅、PC/SP/中間幅と長文・Tab/Shift+Tab。show_on_front=posts時に既存front-page.phpが優先される実経路（#643の全件リンク）を検証し、TOP変更が必要ならHuman承認待ち。#523実WP/AT未検証。

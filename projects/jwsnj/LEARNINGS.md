@@ -237,3 +237,6 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 
 
 - 記事行 PC 390:1178/SP 478:3039 の詳細contextと画像を新規sessionで照合。既存news行・通常投稿カテゴリownerを維持し、esc_url後に空となる記事リンクを非リンクにする。親カテゴリ欠損時に前項目のslugが漏れる/未定義になる問題を解消し、属性をescape。正常URL・既存CMS/slug・CPT分岐は維持。共有部品の異常系のみ修正し他ページのデザインに着手しない。隔離PHP契約、実WP #523。
+
+
+- 一覧行 PC 390:1178/SP 478:3039 とpager PC 392:1244/SP 478:3089を新規sessionの高精細context・画像で再照合。非リンクの記事行はdiv/h2等のflow contentを含むためspanからdivへ変更（CSS class/外観/リンク挙動維持）。pagerのFA矢印はaria-hiddenの装飾spanへ分離。通常/無効の幅確保と既存のPC/SP順・gap・fontを維持。PHP stubで検証、読み上げ・実描画は#523。別の確認事項: 既存front-page.phpがshow_on_front=postsでも優先される可能性があり、#643のhome_url('/')全件リンクの実ルーティングは#523で検証する。TOPは未承認につき編集しない。
