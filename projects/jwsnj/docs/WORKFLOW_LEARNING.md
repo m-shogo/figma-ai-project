@@ -61,3 +61,9 @@ Status: PROJECT-ONLY EVIDENCE / Human feedback: 2026-11-20
 
 - Figma skill→fresh session→PC/SPの個別高精細context/スクリーンショットを使い、問題の根拠があるsource修正だけ小PR/CI/merge。今回 #633〜#638 は独立修正として `so` に着地。新規サンプル文字やURLを発明せず、Figma外のCMS規則を追加しない。
 - WP/ブラウザ不可は#523、未保存の一部公式assetは#524、未承認のサイト情報/スライダー/ページは別項目。静的QA完了→最終視覚受入PASSにしない。次のページは自動で始めず、最新Humanスコープ承認と既存PR #515のownerを確認する。
+
+
+## 2026-11-25 記事一覧フェーズの開始
+
+- Human承認を #515 の CURRENT_AUTHORITY に保存。旧Draftは最新soを第二親として安全に統合し、force pushなし。記事一覧・カテゴリ・pager・パンくずを先行、heroは別PR。#515のCI 3/3、一覧テスト4/4（PHP CLI stub含む）、既存parts87/87成功。実WordPress QA #523未検証。
+- 次のREADYは同ページ内の公式装飾/下部バナー受入（#524）と実WP QA（#523）。バナーはFigma上に透かしあり、使用権確認済み原本が必要。記事詳細/固定/TOP/コースは未承認のまま。

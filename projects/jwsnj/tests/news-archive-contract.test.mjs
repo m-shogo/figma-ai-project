@@ -45,7 +45,31 @@ test('isolated PHP pager handles bounds, current page and valid generated links'
   }
 });
 test('archive templates parse in PHP CLI',()=>{
-  for(const p of ['archive.php','index.php','template-parts/_news-archive.php','template-parts/_list-news.php','template-parts/_list-news_article.php','template-parts/_visual.php','template-parts/_pagination-news.php']){
+  for(const p of ['archive.php','index.php','template-parts/_news-archive.php','template-parts/_list-news.php','template-parts/_list-news_article.php','template-parts/_visual.php','template-parts/_news-archive-visual.php','template-parts/_pagination-news.php']){
     execFileSync('php',['-l',new URL('../theme/'+p,import.meta.url).pathname]);
   }
+});
+
+
+test('archive hero preserves CMS image ownership and no sample fallback',()=>{
+  const hero=read('template-parts/_news-archive-visual.php');
+  assert.match(archive,/_news-archive-visual/);
+  assert.match(hero,/get_field\('page_img-post', 'option'\)/);
+  assert.match(hero,/wp_get_attachment_image\(\$image_id, 'full'/);
+  assert.match(hero,/<h1>/);
+  assert.doesNotMatch(hero,/noimage|figma\.com\/api\/mcp\/asset/);
+  assert.match(css,/body\.blog,\s*body\.category\s*\{\s*min-width:\s*0/);
+  assert.match(css,/aspect-ratio:\s*335 \/ 146/);
+  assert.match(css,/grid-template-columns:\s*minmax\(0, 1fr\) minmax\(0, 2fr\)/);
+  assert.match(css,/min-height:\s*calc\(400 \* var\(--to-rem-func\)\)/);
+  assert.match(css,/object-fit:\s*cover/);
+  const render=(imageId,title)=>{
+    const stub='function get_the_title($id){return '+JSON.stringify(title)+';} function get_field($n,$scope){return '+imageId+';} function esc_html($s){return htmlspecialchars($s,ENT_QUOTES);} function wp_get_attachment_image($id,$size,$icon,$attrs){return $id===9?"<img src=\\"/wp-media/approved.webp\\" class=\\"".$attrs["class"]."\\">":"";} $args=["posts_page_id"=>5]; ?>';
+    return execFileSync('php',['-r',stub+hero],{encoding:'utf8'});
+  };
+  assert.match(render(9,'News <title>'),/has-image[\s\S]*News &lt;title&gt;[\s\S]*approved\.webp/);
+  const empty=render(0,'');
+  assert.match(empty,/<h1>お知らせ<\/h1>/);
+  assert.doesNotMatch(empty,/has-image|<img|heroImage/);
+  assert.doesNotMatch(render(99,'Title'),/has-image|<img|heroImage/);
 });

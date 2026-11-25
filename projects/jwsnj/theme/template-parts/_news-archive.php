@@ -7,7 +7,7 @@ $selected_id = $current_category instanceof WP_Term ? (int) $current_category->t
 $categories = get_categories(['hide_empty' => false]);
 ?>
 <section class="jwsnj_newsArchive">
-    <?php get_template_part('template-parts/_visual', null, ['defer_breadcrumb' => true]); ?>
+    <?php get_template_part('template-parts/_news-archive-visual', null, ['posts_page_id' => $posts_page_id]); ?>
     <div class="global_inner jwsnj_newsArchive_inner">
         <?php if ($categories && !is_wp_error($categories)) : ?>
             <div class="jwsnj_newsArchive_filter">

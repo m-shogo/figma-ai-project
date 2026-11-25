@@ -292,3 +292,5 @@ TOP PC `114:28` / SP `279:2136` から、ベクターは SVG、写真は元画�
 - PC 390:669 / 392:1265 / 390:1178 / 392:1244、SP 478:3027 / 478:3039 / 478:3089。高精細context・画像を確認。960px内幅、PCカテゴリ240×50・20px gap、SP全幅、行PC24px/SP20px 16px inset、日付14px Roboto Condensed、pill 80px/11px、タイトル16px、pager 40px/20px gap。既存通常投稿・カテゴリとURL、記事リンク、公式花SVGを再利用。
 - #515の既存一覧構造を継続し、index.phpにも同じownerを接続。カテゴリはGETのcat=0/固定ページルーティング問題を避け、native detailsと実カテゴリURLを使用（openのデザインは未提示）。pagerはWP query/get_pagenum_link、PC最大5/SP最大3を現在頁周辺に出す。日付形式は一覧限定。パンくずは一覧下に移動。
 - 次のREADY: 一覧固有hero 390:799/SP対応node、既存ACF visual設定・公式素材の確認。下部バナーは公式素材と管理ownerの確認後。共通他ページは変更しない。実WP #523未検証。
+
+- 記事一覧hero PC 390:799/SP 507:2741 を高精細context・画像で照合。既存ACF page_img-post (attachment ID) を保持し、PC 1:2 grid / min400px、SP padding32/24・335:146、h1 32/24px、News pill を一覧限定partで実装。写真未登録は画像非表示でsampleなし。Figma画像のcrop比率から PC70%/SP76%を初期値にしたが実画像未設定のため#523で検証。PC装飾の人物390:803/390:832・吹き出し390:856は公式bytes未保存。下部バナー390:668/478:2756は透かし入り画像がFigma上にあり、権利確認済み画像と正しいPC/SPファイル待ち。代替素材なし。#524受入。旧body min-width1280は一覧のみ解除、他ページの幅規則は未承認につき保持。
