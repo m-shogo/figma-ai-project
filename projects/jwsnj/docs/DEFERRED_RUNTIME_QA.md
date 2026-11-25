@@ -140,3 +140,6 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 
 ### PAGE-PARTS — inline file/PDF icon geometry (2026-11-25)
 - DEFERRED_RUNTIME_QA (#523): PC 344:1027/344:1028/357:924 and SP 442:3202. Check FA Regular 13px PDF F1C1 orange #f0813b / attachment F15C coral #ec6b61, existing external SVG, normal links and long wrapping text, hover/focus/keyboard, PC/SP/intermediate widths, actual editor/frontend. No runtime PASS claimed.
+
+### PAGE-PARTS — 小ボタンの矢印 optical alignment（Human FB 2026-11-25、優先修正）
+- OPEN_VISUAL_DEFECT / #523: PC 344:971 / SP 442:2835。Humanが矢印の見た目の中央ずれを指摘。Figmaの原寸30px円/12px glyphと実装スクリーンショットを比較し、実FA6 Proの描画範囲、継承letter-spacing、baseline、左右上下余白、視覚重心を測る。必要ならglyphだけ補正し円/ラベル/クリック領域を維持。通常/外部/PDF/添付、hover/focus、長文、PC/SP/中間幅。原因・補正値・修正後描画は未検証。静的PASSでcloseしない。
