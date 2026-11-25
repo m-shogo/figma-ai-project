@@ -54,6 +54,7 @@
 @import './project/top_news.css';
 @import './project/news_archive.css';
 @import './project/news_single.css';
+@import './project/fixed_page.css';
 @import './project/top_banner.css';
 
 @import './wordpress/form.css';

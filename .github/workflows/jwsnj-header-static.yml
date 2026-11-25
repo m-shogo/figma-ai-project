@@ -65,6 +65,11 @@ on:
       - 'projects/jwsnj/theme/css/style.css'
       - 'projects/jwsnj/tests/news-archive-contract.test.mjs'
       - 'projects/jwsnj/tests/news-single-contract.test.mjs'
+      - 'projects/jwsnj/tests/fixed-page-contract.test.mjs'
+      - 'projects/jwsnj/theme/page.php'
+      - 'projects/jwsnj/theme/sidebar.php'
+      - 'projects/jwsnj/theme/template-parts/_fixed-page-visual.php'
+      - 'projects/jwsnj/theme/css/project/fixed_page.css'
       - 'projects/jwsnj/theme/single.php'
       - 'projects/jwsnj/theme/template-parts/_news-single*.php'
       - 'projects/jwsnj/theme/css/project/news_single.css'
@@ -133,6 +138,11 @@ on:
       - 'projects/jwsnj/theme/css/style.css'
       - 'projects/jwsnj/tests/news-archive-contract.test.mjs'
       - 'projects/jwsnj/tests/news-single-contract.test.mjs'
+      - 'projects/jwsnj/tests/fixed-page-contract.test.mjs'
+      - 'projects/jwsnj/theme/page.php'
+      - 'projects/jwsnj/theme/sidebar.php'
+      - 'projects/jwsnj/theme/template-parts/_fixed-page-visual.php'
+      - 'projects/jwsnj/theme/css/project/fixed_page.css'
       - 'projects/jwsnj/theme/single.php'
       - 'projects/jwsnj/theme/template-parts/_news-single*.php'
       - 'projects/jwsnj/theme/css/project/news_single.css'
@@ -160,7 +170,7 @@ jobs:
       - name: Test Figma-approved parts heading, copy and list contracts
         run: node --test projects/jwsnj/tests/parts-*.test.mjs
       - name: Test approved news archive and isolated pagination
-        run: node --test projects/jwsnj/tests/news-archive-contract.test.mjs projects/jwsnj/tests/news-single-contract.test.mjs
+        run: node --test projects/jwsnj/tests/news-archive-contract.test.mjs projects/jwsnj/tests/news-single-contract.test.mjs projects/jwsnj/tests/fixed-page-contract.test.mjs
       - name: Check WordPress Header and Footer PHP syntax
         run: |
           php -l projects/jwsnj/theme/template-parts/_header.php

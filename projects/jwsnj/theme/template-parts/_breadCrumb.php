@@ -59,7 +59,7 @@ class BreadcrumbTrail
 // パンくず作成用関数
 function get_breadcrumb_trail($news_archive = false, $archive_context = [])
 {
-  $trail = new BreadcrumbTrail($news_archive);
+  $trail = new BreadcrumbTrail($news_archive || !empty($archive_context['jwsnj_page']));
 
   if ($news_archive) {
     $posts_id = (int) ($archive_context['posts_page_id'] ?? 0);
@@ -353,5 +353,6 @@ function get_breadcrumb_trail($news_archive = false, $archive_context = [])
 
 // 実行
 $news_archive = !empty($args['news_archive']);
-$breadcrumb = get_breadcrumb_trail($news_archive, $news_archive ? $args : []);
-echo '<nav class="module_breadCrumb"' . ($news_archive ? ' aria-label="パンくずリスト"' : '') . '><div class="mb_inner global_inner">' . $breadcrumb->render() . '</div></nav>';
+$jwsnj_page = !empty($args['jwsnj_page']);
+$breadcrumb = get_breadcrumb_trail($news_archive, ($news_archive || $jwsnj_page) ? $args : []);
+echo '<nav class="module_breadCrumb"' . (($news_archive || $jwsnj_page) ? ' aria-label="パンくずリスト"' : '') . '><div class="mb_inner global_inner">' . $breadcrumb->render() . '</div></nav>';

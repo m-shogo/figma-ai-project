@@ -7,7 +7,8 @@ body.category {
     min-width: 0;
 }
 .global_contents > section.jwsnj_newsArchive,
-.global_contents > section.jwsnj_newsSingle {
+.global_contents > section.jwsnj_newsSingle,
+.global_contents > section.jwsnj_fixedPage {
     padding-bottom: 0;
     > .module_breadCrumb {
         margin: 0;
