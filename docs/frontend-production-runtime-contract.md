@@ -77,6 +77,18 @@ CMSでは:
 
 ---
 
+### 2.1 Usability and interaction continuity
+
+確立されたUXの基本（状態の可視化・一貫性・操作の予測可能性・エラー防止と復帰・ユーザーの制御）を既存Figma/要求の範囲で使う。見た目を勝手に変更したり、新しい機能/文言を承認なしに作る根拠ではない。必要なstateのデザインが未確定なら明示する。
+
+- 非同期検索/絞り込み等では古いresponseが新しい結果を上書きしないこと。既存のrequest cancel/identity/cleanupを利用し、fetchの場合はHTTP errorとnetwork error、abortを区別する。連打・unmount・再試行で重複処理/不要なlistenerを残さない。
+- ページネーション、絞り込み、タブ、検索、SPA navigation等は、shareable URL/履歴が要求される範囲でdeep link・reload・back/forward・scroll/focus復帰を確認。全UI stateをURLに入れない。bfcache復帰は初回loadと別経路になり得るため、状態やscroll lockが残らないか必要時に見る。
+- 同種操作は同種の意味/状態、処理中は必要なfeedback、失敗時は復帰手段。ユーザーが元の画面や入力を失う不可逆操作は意図と既存仕様を確認。Figma静止画から動作を発明しない。
+
+参照: [Nielsen Norman Group: usability heuristics](https://www.nngroup.com/articles/ten-usability-heuristics/), [MDN Fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch), [MDN History API](https://developer.mozilla.org/en-US/docs/Web/API/History_API/Working_with_the_History_API), [web.dev bfcache](https://web.dev/articles/bfcache).
+
+---
+
 ## 3. Form / Input Contract
 
 Formは見た目だけで完成扱いしない。
@@ -149,6 +161,14 @@ Errorは色だけで伝えない。
 Server error / validation error / network errorを同一messageへ潰す必要はない。
 
 成功後に画面遷移しない場合、focus/announcement ownershipを明確にする。
+
+---
+
+### 3.1 Recoverable form errors
+
+検証失敗時は安全に保持可能な入力を消さない。エラーの原因と直し方、該当fieldとの関連を伝え、長いformでは既存仕様に応じerror summary/focus/該当fieldへの移動を使う。送信中の二重操作、失敗から再送、サーバー側エラー、入力の途中状態を検証する。パスワード等の機密情報を不用意に保存/復元しない。UIの無効化だけを二重送信・security対策としない。既存の文言/製品仕様とserver ownerを尊重。
+
+参照: [GOV.UK Error message](https://design-system.service.gov.uk/components/error-message/), [Error summary](https://design-system.service.gov.uk/components/error-summary/).
 
 ---
 

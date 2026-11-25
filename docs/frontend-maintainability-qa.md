@@ -123,6 +123,16 @@ FAST PR GATEで対象の構成に応じて下記の欠陥を先回りする。�
 
 ---
  
+### 3.2 Behavior-based test design
+
+既存のtest runner/Playwright等を優先。ユーザーが見る/操作する結果をassertし、CSSの指定値・classの有無・スクリーンショットだけで機能PASSにしない。role/name/text等の安定したlocatorと必要なtest id、web-first assertionを用いる。固定sleep、偶然のDOM index、force click、無条件retryで失敗を隠さない。data・viewport・font・stateを必要に応じ固定し、テスト間の状態汚染を防ぐ。
+
+変更の正常経路と意味のある失敗経路（空欄、長文、通信失敗、連打、戻る等）をscopeに応じ選ぶ。console/network error、expected result、再現条件を確認し、testが本当に動作不良を検出できるassertになっているかを見る。既存runtimeにアクセスできないなら静的QAと明確に区別。全項目へ新規E2Eを義務化しない。
+
+参照: [Playwright Best Practices](https://playwright.dev/docs/best-practices).
+
+---
+
 ## 4. Findability
 
 画面上のSection名/owner classからrepo内ownerへ短い検索で辿れるか。
@@ -325,6 +335,16 @@ Relevant WCAG target/interactionsで:
 - visual overlayがDOM focus orderを不自然にしない
 
 を確認する。
+
+---
+
+### 11.1 Practical accessibility acceptance
+
+Relevant scopeで、native element/role、accessible name、状態と関係（expanded/current/selected等）、唯一のID、label/descriptionの解決、decorativeとinformative imageの区別を実DOMで見る。icon-only controlには目的の名前、tableにはdata header関係。リンク先・button動作の意味と表示が一致すること。
+
+- Tab/Shift+Tab、Enter/Space、必要なEscape/矢印キーを部品のpatternに合わせ実操作。focusの可視性、順序、trapの適用範囲、閉じた後の復帰、非表示の操作対象を確認。
+- 色とcontrast、hit area/target、hover/focus content、status announcementは適用WCAGの条件に従って確認（standard §15）。数値だけで押しやすさや可読性を保証しない。
+- 既存axe等で自動検出できる項目を確認し、手動で名前の妥当性、読み順、操作、視覚・意味を補う。重要なカスタムwidgetは必要なAT（例: VoiceOver/NVDA）と対象browserで検証。自動PASSを全件適合・実機PASSにしない。
 
 ---
 
