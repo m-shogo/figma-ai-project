@@ -9,20 +9,24 @@
             }
             $title = get_sub_field('title');
             $text = get_sub_field('text');
-            $url = get_sub_field('url');
+            $url = esc_url((string) get_sub_field('url'));
             $target = get_sub_field('target');
+            $image_alt = $image_thumb ? trim((string) get_post_meta($image, '_wp_attachment_image_alt', true)) : '';
+            $has_text = trim((string) $title) !== '' || trim((string) $text) !== '';
+            if (!$image_thumb && !$has_text) {
+                continue;
+            }
+            // No destination or accessible name: render a non-interactive placeholder anchor.
+            $has_link = $url !== '' && ($has_text || $image_alt !== '');
             ?>
             <li class="navigation">
-                <a href="<?php echo $url ? esc_url($url) : ''; ?>" <?php echo $target ? 'target="_blank"' : ''; ?> class="<?php echo $url ? '' : 'is-disabled'; ?>">
+                <a<?php if ($has_link) : ?> href="<?php echo $url; ?>"<?php if ($target) : ?> target="_blank" rel="noopener"<?php endif; ?><?php else : ?> class="is-disabled"<?php endif; ?>>
                     <?php if ($image_thumb) : ?>
                         <div class="image">
-                            <img src="<?php echo esc_url($image_thumb); ?>" alt="<?php echo $title ? esc_attr($title) : ''; ?>" width="335" height="219">
-                        </div>
-                    <?php else : ?>
-                        <div class="image">
-                            <img src="<?php echo get_template_directory_uri(); ?>/images/common/noimage.webp" alt="<?php echo $title ? esc_attr($title) : ''; ?>" width="335" height="219">
+                            <img src="<?php echo esc_url($image_thumb); ?>" alt="<?php echo esc_attr($image_alt); ?>" width="335" height="219">
                         </div>
                     <?php endif; ?>
+                    <?php if ($has_text) : ?>
                     <div class="content">
                         <?php if ($title) : ?>
                             <h2 class="title"><?php echo nl2br(esc_html($title)); ?></h2>
@@ -31,6 +35,7 @@
                             <div class="text"><?php echo nl2br(esc_html($text)); ?></div>
                         <?php endif; ?>
                     </div>
+                    <?php endif; ?>
                 </a>
             </li>
         <?php endwhile; ?>

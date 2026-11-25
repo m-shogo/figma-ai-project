@@ -104,3 +104,7 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 - Figma PC `344:929` / SP `442:2788` 高精細context・画像でPC左410/右510、上揃え、SP画像→本文の縦積み、40px gapを確認。WordPress公式Gutenberg media-text style.scss と公式ブロック説明を参照し、coreが子にgrid-column/rowを指定し、通常のstackは600px、inline幅の上書きはstack時のみ、画像左右・縦位置・stackの選択が編集者設定であることを照合。参考: https://github.com/WordPress/gutenberg/blob/trunk/packages/block-library/src/media-text/style.scss / https://wordpress.org/documentation/article/media-text-block/ 。案件の実機core版は未確認。
 - 既存の無条件1列では中間幅に暗黙の2列が発生し得るため、既定410:510、右画像は510:410、768px未満かつis-stacked-on-mobileでのみ1列＋明示行にする。core同様、stack時だけ!importantでinline幅を上書きする。stack無効は横並び、既定は上揃え（center/bottom明示選択を維持）。既存画像/キャプション、HTML、ACF、Foundationは変更なし。
 - #523で実機の600/601/767/768px、右画像、stackオン/オフ、カスタム幅、垂直配置・crop・長文、editor/frontendを確認する。静的QAは実描画保証ではない。
+
+## 2026-11-25: Largeナビの未設定フィールドとリンク意味（通常Chat、PROJECT_ONLY）
+- 新規sessionのPC 384:914 / SP 442:3081 高精細context・画像とACF group/既存CSSを照合。既存 href="" は pointer-events:none でもkeyboardに残り得る。URLはesc_url後に判定し、URLなし/有効な名前なしはhref/targetなしのplaceholder anchorとする。既存is-disabledのCSS/矢印非表示を再利用。外部targetは有効リンクのみ、rel=noopenerを付ける。
+- 画像未設定時は公式代替画像の根拠がLargeナビのFigmaにないため、既存サンプルnoimage.webpを出力せず本文を保持。空rowはskip、画像のみでaltなしならリンクにしない。画像altは編集済みattachment altを利用し創作しない。ACF定義/Small/URL/画像素材は変更なし。#523で空/不正URL、画像なし、長文、tab/focus、editor/frontを確認する。

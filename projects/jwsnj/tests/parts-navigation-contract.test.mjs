@@ -33,3 +33,18 @@ test('large navigation renders the approved decorative corner and arrow only for
   assert.match(arrow, /place-items:\s*center/);
   assert.doesNotMatch(css.slice(css.indexOf('/* MARK: 小')), /Figma PC 384:1005/);
 });
+
+const template = readFileSync(new URL('../theme/acf/blocks/navigationLarge.php', import.meta.url), 'utf8');
+test('large navigation emits href and external target only for a safe named link', () => {
+  assert.match(template, /\$url = esc_url\(\(string\) get_sub_field\('url'\)\)/);
+  assert.match(template, /\$has_link = \$url !== '' && \(\$has_text \|\| \$image_alt !== ''\)/);
+  assert.match(template, /<a<\?php if \(\$has_link\) : \?> href="<\?php echo \$url; \?>".*target="_blank" rel="noopener".*class="is-disabled"/);
+  assert.doesNotMatch(template, /href="<\?php echo \$url \?/);
+});
+test('large navigation skips empty rows and does not substitute sample images', () => {
+  assert.match(template, /if \(!\$image_thumb && !\$has_text\) \{\s*continue;/);
+  assert.match(template, /get_post_meta\(\$image, '_wp_attachment_image_alt', true\)/);
+  assert.match(template, /alt="<\?php echo esc_attr\(\$image_alt\); \?>"/);
+  assert.match(template, /if \(\$has_text\) : \?>\s*<div class="content">/);
+  assert.doesNotMatch(template, /noimage\.webp|href="#"/);
+});
