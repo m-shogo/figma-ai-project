@@ -173,3 +173,5 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 - NEWS ARCHIVE breadcrumb: PC 390:792/SP 507:2818。ホーム文字/アイコン、深いカテゴリ・長文・ページ未設定、1回表示、focus、FA Light読み込み、PC/SP/中間幅を確認。PHP CLI stubはWordPress実機ではない。
 
 - NEWS ARCHIVE row rhythm: PC末尾線なし/SP末尾線あり、0/1/10+件、PC/SP/中間幅・長いタイトル/カテゴリ、pager文字trackingとFA glyph、非リンクhoverで色が変わらないこと・リンクhover/focus維持。実WP/browser #523 DEFERRED_ENV。
+
+- NEWS ARCHIVE routing: show_on_front=posts（旧page_for_posts残存含む）、page+公開投稿ページ、page+未設定/非公開/削除/異種post/同じfront ID、categoryからの全件復帰とhero/breadcrumbの整合。実WPの設定切替とquery、keyboard disclosureを確認。PHP stubは実WPではない。

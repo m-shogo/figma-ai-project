@@ -78,7 +78,7 @@ test('archive hero preserves CMS image ownership and no sample fallback',()=>{
 test('archive breadcrumb uses existing renderer with scoped Home label and safe category path',()=>{
   const part=read('template-parts/_breadCrumb.php');
   const render=(category,postsId,title,news=true)=>{
-    const stub='class WP_Term {public $term_id;public $name;function __construct($id,$name){$this->term_id=$id;$this->name=$name;}} function home_url($s){return "/";} function get_option($n){return '+postsId+';} function get_the_title($n){return '+JSON.stringify(title)+';} function get_permalink($n){return "/news/";} function is_category(){return '+(category?'true':'false')+';} function get_queried_object(){return new WP_Term(9,"Current & category");} function get_ancestors($id,$t,$r){return [3,2];} function get_term($id,$t){return new WP_Term($id,"Parent ".$id);} function get_category_link($id){return "/category/".$id."/";} function is_wp_error($x){return false;} function is_front_page(){return true;} function esc_url($s){return htmlspecialchars($s,ENT_QUOTES);} function esc_html($s){return htmlspecialchars($s,ENT_QUOTES);} $args=["news_archive"=>'+(news?'true':'false')+']; ?>';
+    const stub='class WP_Term {public $term_id;public $name;function __construct($id,$name){$this->term_id=$id;$this->name=$name;}} function home_url($s){return "/";} function get_option($n){return '+postsId+';} function get_the_title($n){return '+JSON.stringify(title)+';} function get_permalink($n){return "/news/";} function is_category(){return '+(category?'true':'false')+';} function get_queried_object(){return new WP_Term(9,"Current & category");} function get_ancestors($id,$t,$r){return [3,2];} function get_term($id,$t){return new WP_Term($id,"Parent ".$id);} function get_category_link($id){return "/category/".$id."/";} function is_wp_error($x){return false;} function is_front_page(){return true;} function esc_url($s){return htmlspecialchars($s,ENT_QUOTES);} function esc_html($s){return htmlspecialchars($s,ENT_QUOTES);} $args=["news_archive"=>'+(news?'true':'false')+',"posts_page_id"=>'+postsId+',"posts_page_url"=>'+(postsId?'"/news/"':'""')+']; ?>';
     return execFileSync('php',['-r',stub+part],{encoding:'utf8'});
   };
   const home=render(false,5,'お知らせ');
@@ -111,4 +111,24 @@ test('archive row endings follow PC/SP Figma and non-links do not mimic hoverabl
   const pager=css.slice(css.indexOf('    .jwsnj_newsArchive_pager {'),css.indexOf('    :is(a, summary):focus-visible'));
   assert.equal((pager.match(/letter-spacing:\s*0\.05em/g)||[]).length,2);
   assert.match(pager,/letter-spacing:\s*0;\s*text-box-trim:\s*none/);
+});
+
+
+test('archive filter, hero and breadcrumb share only a real published posts index',()=>{
+  const render=(mode,id,status='publish',type='page',front=1,url='/news/')=>{
+    const stub='class WP_Term {public $term_id=7; public $name="News";} function get_option($k){return ["show_on_front"=>'+JSON.stringify(mode)+',"page_for_posts"=>'+id+',"page_on_front"=>'+front+'][$k]??0;} function get_post_type($id){return '+JSON.stringify(type)+';} function get_post_status($id){return '+JSON.stringify(status)+';} function get_permalink($id){return '+JSON.stringify(url)+';} function home_url($p){return "/";} function is_category(){return true;} function get_queried_object(){return new WP_Term;} function get_categories($a){return [new WP_Term];} function get_category_link($id){return "/category/news/";} function is_wp_error($v){return false;} function esc_html($s){return htmlspecialchars($s,ENT_QUOTES);} function esc_url($s){return htmlspecialchars($s,ENT_QUOTES);} function get_template_part($p,$n=null,$a=[]){echo "<!--".$p." ".json_encode($a,JSON_UNESCAPED_SLASHES)."-->";} ?>';
+    return execFileSync('php',['-r',stub+archive],{encoding:'utf8'});
+  };
+  const configured=render('page',5);
+  assert.match(configured, /href="\/news\/">すべて/);
+  assert.match(configured, /"posts_page_id":5/);
+  assert.match(configured, /"posts_page_url":"\/news\/"/);
+  const latest=render('posts',5);
+  assert.match(latest, /href="\/">すべて/);
+  assert.match(latest, /"posts_page_id":0/);
+  for(const invalid of [render('page',0),render('page',5,'draft'),render('page',5,'trash'),render('page',5,'publish','post'),render('page',1),render('page',5,'publish','page',1,'')]){
+    assert.doesNotMatch(invalid, />すべて</);
+    assert.match(invalid, /"posts_page_id":0/);
+    assert.match(invalid, /href="\/category\/news\/" aria-current="page"/);
+  }
 });

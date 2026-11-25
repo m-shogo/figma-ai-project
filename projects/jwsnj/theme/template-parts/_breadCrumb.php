@@ -57,18 +57,18 @@ class BreadcrumbTrail
 }
 
 // パンくず作成用関数
-function get_breadcrumb_trail($news_archive = false)
+function get_breadcrumb_trail($news_archive = false, $archive_context = [])
 {
   $trail = new BreadcrumbTrail($news_archive);
 
   if ($news_archive) {
-    $posts_id = (int) get_option('page_for_posts');
+    $posts_id = (int) ($archive_context['posts_page_id'] ?? 0);
     $title = $posts_id ? get_the_title($posts_id) : '';
     $title = trim((string) $title) !== '' ? $title : 'お知らせ';
     if (is_category()) {
       $term = get_queried_object();
       if ($term instanceof WP_Term) {
-        if ($posts_id && ($posts_url = get_permalink($posts_id))) {
+        if ($posts_id && ($posts_url = $archive_context['posts_page_url'] ?? '')) {
           $trail->addItem($title, $posts_url);
         }
         foreach (array_reverse(get_ancestors($term->term_id, 'category', 'taxonomy')) as $ancestor_id) {
@@ -346,5 +346,5 @@ function get_breadcrumb_trail($news_archive = false)
 
 // 実行
 $news_archive = !empty($args['news_archive']);
-$breadcrumb = get_breadcrumb_trail($news_archive);
+$breadcrumb = get_breadcrumb_trail($news_archive, $news_archive ? $args : []);
 echo '<nav class="module_breadCrumb"' . ($news_archive ? ' aria-label="パンくずリスト"' : '') . '><div class="mb_inner global_inner">' . $breadcrumb->render() . '</div></nav>';
