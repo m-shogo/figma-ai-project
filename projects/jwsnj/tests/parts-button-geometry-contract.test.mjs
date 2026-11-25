@@ -30,3 +30,18 @@ test('long button text wraps and icon variants keep working', () => {
   assert.match(button, /href\$='\.pdf'/);
   assert.doesNotMatch(button, /white-space:\s*nowrap|figma\.com\/api\/mcp\/asset/);
 });
+
+test('external large button uses official SVG and excludes PDF/file glyph variants', () => {
+  const large = button.slice(0, button.indexOf('        &.small {'));
+  const external = large.match(/&\[target='_blank'\]:where\(:not\(([^)]+)\)\)\s*\{\s*&::after\s*\{([^}]+)\}/);
+  assert.ok(external);
+  for (const ext of ['pdf','doc','docx','docm','xls','xlsx','xlsm','png','jpg','jpeg','gif','webp']) {
+    assert.ok(external[1].includes("[href$='." + ext + "']"), ext + ' retains its file icon');
+  }
+  assert.match(external[2], /content:\s*''/);
+  assert.match(external[2], /background-color:\s*currentColor/);
+  assert.match(external[2], /width:\s*calc\(14 \* var\(--to-rem-func\)\)/);
+  assert.match(external[2], /height:\s*calc\(13 \* var\(--to-rem-func\)\)/);
+  assert.match(external[2], /mask:\s*url\('\.\.\/\.\.\/images\/common\/ico-blank\.svg'\) center \/ contain no-repeat/);
+  assert.ok(readFileSync(new URL('../theme/images/common/ico-blank.svg', import.meta.url)).length > 0);
+});
