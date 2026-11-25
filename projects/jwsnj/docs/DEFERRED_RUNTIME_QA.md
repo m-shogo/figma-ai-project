@@ -187,3 +187,5 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 - TOP notice PC114:349/SP279:2233: ACF表示/非表示、0/1/複数行、空本文/日付/不正日付、既存リンク/長文/改行、PC/SP/中間幅、keyboard/focus/hover、実FA glyphと円の重心、MVとの間隔。#523実WP未検証。
 
 - TOP News PC 114:542 / SP 279:2524: verify 0/1/5 posts, actual posts page URL, no self-link, long title/multiple categories, pointer/keyboard focus, marker and arrow, desktop/tablet/mobile dimensions and official flower. DEFERRED_ENV; not visual PASS.
+
+- TOP MV catchphrase: official PC/SP assets, accessible text once per viewport, 320/375/768/1079/1080/1380 widths, actual font and asset alignment/spacing, home width override and no horizontal overflow. DEFERRED_ENV; photos/CTA/motion remain separate.

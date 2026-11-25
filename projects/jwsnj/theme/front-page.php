@@ -1,5 +1,6 @@
 <?php get_header(); ?>
 <div class="top_mainVisual">
+    <?php get_template_part('template-parts/_top-catchphrase'); ?>
     <div class="swiper tm_swiper-container">
         <ul class="swiper-wrapper">
             <?php if (have_rows('top_slider-01')): ?>

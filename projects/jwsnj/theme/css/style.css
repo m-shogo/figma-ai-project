@@ -51,6 +51,7 @@
 
 /* @import './project/top_module.css'; */
 /* @import './project/top_mainVisual.css'; */
+@import './project/top_catchphrase.css';
 @import './project/top_news.css';
 @import './project/top_notice.css';
 @import './project/news_archive.css';
