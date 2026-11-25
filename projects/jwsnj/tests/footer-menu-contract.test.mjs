@@ -147,3 +147,22 @@ test('desktop sitemap top-level links use the official Figma bullet without chan
   assert.ok(readFileSync(new URL('../theme/images/common/footer/img_footer-bullet.svg', import.meta.url)).length > 0);
 });
 
+test('desktop footer aligns site identity and one adaptive three-column sitemap without changing menu order or depth', () => {
+  assert.match(footer, /<div class="gf_details global_inner">\s*<div class="gf_information">[\s\S]*?<div class="gf_links-wrap">/);
+  const pc = css.slice(css.indexOf('@media (calc(768 * (1 / 16 * 1rem)) <= width)'));
+  assert.match(pc, /\.gf_links-01\s*\{\s*display:\s*block;\s*columns:\s*3;/);
+  assert.match(pc, /column-gap:\s*clamp\(calc\(24 \* var\(--to-rem-func\)\), 5\.8vw, calc\(80 \* var\(--to-rem-func\)\)\)/);
+  assert.match(pc, /> \.gfl_item-02\s*\{\s*break-inside:\s*avoid;\s*margin-block-end:\s*calc\(16 \* var\(--to-rem-func\)\)/);
+  assert.doesNotMatch(pc, /min-width:\s*calc\(240 \* var\(--to-rem-func\)\)/);
+  assert.match(pc, /\.gf_information\s*\{\s*flex:\s*0 1 calc\(308 \* var\(--to-rem-func\)\)/);
+  assert.match(pc, /\.gf_links-wrap\s*\{\s*flex:\s*0 1 calc\(541 \* var\(--to-rem-func\)\)/);
+  assert.match(css, /\.gf_details\s*\{\s*display:\s*grid/);
+  assert.doesNotMatch(css, /white-space:\s*nowrap/);
+});
+test('footer top-level external links use the Figma window-restore glyph and existing primary hover color', () => {
+  const pc = css.slice(css.indexOf('/* Figma PC sitemap 114:523'));
+  assert.match(pc, /&\[target='_blank'\]:where\(:not\([^)]+\)\)::after\s*\{\s*content:\s*var\(--icon-blank\)/);
+  assert.match(pc, /font-size:\s*calc\(12 \* var\(--to-rem-func\)\)/);
+  assert.match(pc, /margin-inline-start:\s*calc\(4 \* var\(--to-rem-func\)\)/);
+  assert.match(css.slice(css.indexOf('/* MARK: hover */')), /color:\s*var\(--color-primary\)/);
+});
