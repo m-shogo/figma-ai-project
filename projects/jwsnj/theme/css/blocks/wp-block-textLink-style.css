@@ -22,11 +22,16 @@
                 outline: calc(2 * var(--to-rem-func)) solid var(--color-accent);
                 outline-offset: calc(2 * var(--to-rem-func));
             }
-            &[target='_blank'] {
+            /* Figma PC 344:1029 / SP 442:2882: orange icon, distinct from coral text. */
+            &[target='_blank']:where(:not([href$='.pdf'], [href$='.doc'], [href$='.docx'], [href$='.docm'], [href$='.xls'], [href$='.xlsx'], [href$='.xlsm'], [href$='.png'], [href$='.jpg'], [href$='.jpeg'], [href$='.gif'], [href$='.webp'])) {
                 &::after {
-                    content: var(--icon-blank);
-                    font-family: var(--font-awesome);
-                    font-weight: 400;
+                    content: '';
+                    display: inline-block;
+                    width: calc(14 * var(--to-rem-func));
+                    height: calc(13 * var(--to-rem-func));
+                    vertical-align: -0.05em;
+                    background-color: #f0813b;
+                    mask: url('../../images/common/ico-blank.svg') center / contain no-repeat;
                     margin-left: 0.25em;
                 }
             }

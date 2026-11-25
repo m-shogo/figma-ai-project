@@ -21,6 +21,22 @@ test('keyboard and hover keep link distinction and existing file icon variants',
   assert.match(css, /outline-offset:\s*calc\(2 \* var\(--to-rem-func\)\)/);
   assert.match(css, /&\[target='_blank'\]/);
   assert.match(css, /&\[href\$='\.pdf'\]/);
-  assert.match(css, /content:\s*var\(--icon-blank\)/);
+  assert.match(css, /mask:\s*url\('\.\.\/\.\.\/images\/common\/ico-blank\.svg'\) center \/ contain no-repeat/);
   assert.match(css, /content:\s*var\(--icon-pdf\)/);
+});
+
+test('inline external link preserves orange Figma icon and excludes existing file types', () => {
+  const external = css.match(/&\[target='_blank'\]:where\(:not\(([^)]+)\)\)\s*\{\s*&::after\s*\{([^}]+)\}/);
+  assert.ok(external);
+  for (const ext of ['pdf','doc','docx','docm','xls','xlsx','xlsm','png','jpg','jpeg','gif','webp']) {
+    assert.ok(external[1].includes("[href$='." + ext + "']"));
+  }
+  const icon = external[2];
+  assert.match(icon, /content:\s*''/);
+  assert.match(icon, /display:\s*inline-block/);
+  assert.match(icon, /width:\s*calc\(14 \* var\(--to-rem-func\)\)/);
+  assert.match(icon, /height:\s*calc\(13 \* var\(--to-rem-func\)\)/);
+  assert.match(icon, /background-color:\s*#f0813b/);
+  assert.match(icon, /margin-left:\s*0\.25em/);
+  assert.ok(readFileSync(new URL('../theme/images/common/ico-blank.svg', import.meta.url)).length > 0);
 });
