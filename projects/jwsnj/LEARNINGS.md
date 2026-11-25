@@ -240,3 +240,6 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 
 
 - 一覧行 PC 390:1178/SP 478:3039 とpager PC 392:1244/SP 478:3089を新規sessionの高精細context・画像で再照合。非リンクの記事行はdiv/h2等のflow contentを含むためspanからdivへ変更（CSS class/外観/リンク挙動維持）。pagerのFA矢印はaria-hiddenの装飾spanへ分離。通常/無効の幅確保と既存のPC/SP順・gap・fontを維持。PHP stubで検証、読み上げ・実描画は#523。別の確認事項: 既存front-page.phpがshow_on_front=postsでも優先される可能性があり、#643のhome_url('/')全件リンクの実ルーティングは#523で検証する。TOPは未承認につき編集しない。
+
+
+- Human包括承認でページごとのgate解除。記事詳細は通常投稿のみ新partへ分岐し既存singleのredirect・非対象経路を維持。Figma PC/SPのタイトルとpagerを根拠に、既存news hero/breadcrumbとGutenbergを再利用。CMS本文を写経せず、未保存素材は#524。#523実機検証と区別。
