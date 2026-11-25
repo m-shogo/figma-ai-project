@@ -56,3 +56,8 @@ Status: PROJECT-ONLY EVIDENCE / Human feedback: 2026-11-20
 - [ニュージャージー案件のデザイン基盤（色・フォント・assetの実値）](DESIGN_FOUNDATION.md)
 - [ニュージャージー案件の実装チェック](IMPLEMENTATION_CHECKLIST.md)
 - [jwsnj PR #487（カラー変数の初期実装）](https://github.com/m-shogo/figma-ai-project/pull/487)
+
+## 2026-11-25 共通UI点検を一巡した時の引継ぎ判断
+
+- Figma skill→fresh session→PC/SPの個別高精細context/スクリーンショットを使い、問題の根拠があるsource修正だけ小PR/CI/merge。今回 #633〜#638 は独立修正として `so` に着地。新規サンプル文字やURLを発明せず、Figma外のCMS規則を追加しない。
+- WP/ブラウザ不可は#523、未保存の一部公式assetは#524、未承認のサイト情報/スライダー/ページは別項目。静的QA完了→最終視覚受入PASSにしない。次のページは自動で始めず、最新Humanスコープ承認と既存PR #515のownerを確認する。

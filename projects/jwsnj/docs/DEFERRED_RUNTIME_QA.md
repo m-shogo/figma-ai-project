@@ -157,3 +157,9 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 - tabs: 長文・複数行・横スクロール・focus・editor/public。lightbox: mobile browser chrome表示時の画像と閉じる操作、縦横画像。静的修正のみ、#523で実機確認。
 
 - 小型ACFナビ: PC/SP中間幅・長い日本語/英数字・画像有無・空行・リンク有無・外部リンク・キーボードをWordPress実データで確認。ソース健全性対策は実機PASSではない。
+
+## 2026-11-25 共通UIソース一巡後の #523 優先QA
+
+- P0: Header PC/SP 320/375/767/768/1079/1080/1380pxの長文・日本語英数混在、menu open/close、PC hover/touch/focus、モバイル可視viewport、footer実SVG/lineとメニュー、アイコン実font/optical alignment。最新 `so` を用いる。
+- P1: parts PC/SPのgallery/zoom/lightbox、メディア＋テキスト、accordion通常/Q&A、core tabs +旧ACFタブの利用状況、表960px横スクロール/ScrollHint、見出し・本文・注釈・大/小ナビの折返し、Core/Editor cascade。
+- P2: プライバシー/住所/電話/SNSなど未承認管理値、スライダー挙動/ACF項目、Smallナビ専用デザインは**推測実装の対象外**。確認可能となった段階でHuman契約に合わせて別の小scopeで着手。配色変更なし。
