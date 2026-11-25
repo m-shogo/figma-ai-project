@@ -50,6 +50,14 @@ if (get_field('post_type') === 'file') {
     }
 }
 ?>
+<?php
+if (get_post_type() === 'post') {
+    get_header();
+    get_template_part('template-parts/_news-single');
+    get_footer();
+    return;
+}
+?>
 <?php get_header(); ?>
 <main id="global_contents" class="global_contents" itemscope itemprop="mainContentOfPage">
     <?php if (!post_password_required($post->ID)) : ?>

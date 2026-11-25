@@ -64,6 +64,10 @@ on:
       - 'projects/jwsnj/theme/css/project/news_archive.css'
       - 'projects/jwsnj/theme/css/style.css'
       - 'projects/jwsnj/tests/news-archive-contract.test.mjs'
+      - 'projects/jwsnj/tests/news-single-contract.test.mjs'
+      - 'projects/jwsnj/theme/single.php'
+      - 'projects/jwsnj/theme/template-parts/_news-single*.php'
+      - 'projects/jwsnj/theme/css/project/news_single.css'
       - '.github/workflows/jwsnj-header-static.yml'
   push:
     branches: [so]
@@ -128,6 +132,10 @@ on:
       - 'projects/jwsnj/theme/css/project/news_archive.css'
       - 'projects/jwsnj/theme/css/style.css'
       - 'projects/jwsnj/tests/news-archive-contract.test.mjs'
+      - 'projects/jwsnj/tests/news-single-contract.test.mjs'
+      - 'projects/jwsnj/theme/single.php'
+      - 'projects/jwsnj/theme/template-parts/_news-single*.php'
+      - 'projects/jwsnj/theme/css/project/news_single.css'
       - '.github/workflows/jwsnj-header-static.yml'
   workflow_dispatch:
 
@@ -152,7 +160,7 @@ jobs:
       - name: Test Figma-approved parts heading, copy and list contracts
         run: node --test projects/jwsnj/tests/parts-*.test.mjs
       - name: Test approved news archive and isolated pagination
-        run: node --test projects/jwsnj/tests/news-archive-contract.test.mjs
+        run: node --test projects/jwsnj/tests/news-archive-contract.test.mjs projects/jwsnj/tests/news-single-contract.test.mjs
       - name: Check WordPress Header and Footer PHP syntax
         run: |
           php -l projects/jwsnj/theme/template-parts/_header.php

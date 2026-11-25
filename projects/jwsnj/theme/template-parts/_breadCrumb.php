@@ -65,6 +65,13 @@ function get_breadcrumb_trail($news_archive = false, $archive_context = [])
     $posts_id = (int) ($archive_context['posts_page_id'] ?? 0);
     $title = $posts_id ? get_the_title($posts_id) : '';
     $title = trim((string) $title) !== '' ? $title : 'お知らせ';
+    if (!empty($archive_context['news_single'])) {
+      if ($posts_id && ($posts_url = $archive_context['posts_page_url'] ?? '')) {
+        $trail->addItem($title, $posts_url);
+      }
+      $trail->addItem(get_the_title());
+      return $trail;
+    }
     if (is_category()) {
       $term = get_queried_object();
       if ($term instanceof WP_Term) {

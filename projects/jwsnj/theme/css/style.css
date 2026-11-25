@@ -53,6 +53,7 @@
 /* @import './project/top_mainVisual.css'; */
 @import './project/top_news.css';
 @import './project/news_archive.css';
+@import './project/news_single.css';
 @import './project/top_banner.css';
 
 @import './wordpress/form.css';
