@@ -159,7 +159,6 @@ body.category {
         .mnl-01_article {
             border-top: 0;
             border-bottom: calc(1 * var(--to-rem-func)) solid var(--jwsnj-color-separator);
-            &:last-child { border-bottom: 0; }
             .link, .no-link {
                 display: flex;
                 flex-direction: column;
@@ -240,6 +239,7 @@ body.category {
             font-size: calc(16 * var(--to-rem-func));
             font-weight: 500;
             line-height: 1.5;
+            letter-spacing: 0.05em;
             text-decoration: none;
             &.current { color: var(--color-secondary); background: var(--color-primary); }
             &.is-desktop-only { display: none; }
@@ -251,6 +251,7 @@ body.category {
             font-size: calc(15 * var(--to-rem-func));
             font-weight: 500;
             line-height: 1.5;
+            letter-spacing: 0.05em;
             color: var(--color-text);
             text-decoration: none;
             &[aria-disabled='true'] { visibility: hidden; }
@@ -277,6 +278,10 @@ body.category {
     }
     @media (any-hover: hover) {
         .jwsnj_newsArchive_filterMenu a:hover { background: var(--jwsnj-color-base-lightgreen); }
+        /* The inherited news module also colors non-link titles on hover. */
+        .module_newsList-01 .mnl-01_article .no-link:hover .body .title {
+            color: var(--color-text);
+        }
         .jwsnj_newsArchive_pager a:hover {
             &.page-numbers { color: var(--color-secondary); background: var(--color-primary); }
             &:is(.prev, .next) { text-decoration: underline; }
@@ -294,6 +299,8 @@ body.category {
         .jwsnj_newsArchive_filterLabel { padding-block: calc(12 * var(--to-rem-func)); }
         .jwsnj_newsArchive_filterMenu { width: calc(240 * var(--to-rem-func)); }
         .module_newsList-01 .mnl-01_article {
+            /* PC ends without a separator; SP retains the final row rule. */
+            &:last-child { border-bottom: 0; }
             .link, .no-link {
                 display: grid;
                 grid-template-columns: minmax(0, calc(170 * var(--to-rem-func))) minmax(0, 1fr);

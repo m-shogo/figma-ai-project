@@ -171,3 +171,5 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 - NEWS ARCHIVE hero: PC 390:799/SP 507:2741。ACF page_img-post 設定/未設定/不正ID、長いページ名、PC/SP/768/1080境界とheader/footerのoverflow、実image srcset/crop、パンくず1回を検証。隔離PHPの条件分岐と静的CIは実WP表示ではない。PC装飾/下部バナーは#524（バナー透かし・権利未確定）。
 
 - NEWS ARCHIVE breadcrumb: PC 390:792/SP 507:2818。ホーム文字/アイコン、深いカテゴリ・長文・ページ未設定、1回表示、focus、FA Light読み込み、PC/SP/中間幅を確認。PHP CLI stubはWordPress実機ではない。
+
+- NEWS ARCHIVE row rhythm: PC末尾線なし/SP末尾線あり、0/1/10+件、PC/SP/中間幅・長いタイトル/カテゴリ、pager文字trackingとFA glyph、非リンクhoverで色が変わらないこと・リンクhover/focus維持。実WP/browser #523 DEFERRED_ENV。

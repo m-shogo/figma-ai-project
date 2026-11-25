@@ -100,3 +100,15 @@ test('archive breadcrumb uses existing renderer with scoped Home label and safe 
   assert.match(css,/font:\s*300 calc\(10 \* var\(--to-rem-func\)\)\/1 var\(--font-awesome\)/);
   assert.ok(readFileSync(new URL('../theme/webfonts/fa-light-300.woff2',import.meta.url)).length>0);
 });
+
+
+test('archive row endings follow PC/SP Figma and non-links do not mimic hoverable links',()=>{
+  const rows=css.slice(css.indexOf('    .module_newsList-01 {'),css.indexOf('    .jwsnj_newsArchive_pager {'));
+  assert.match(rows,/border-bottom:\s*calc\(1 \* var\(--to-rem-func\)\) solid var\(--jwsnj-color-separator\)/);
+  assert.doesNotMatch(rows,/last-child/);
+  assert.match(css,/\.module_newsList-01 \.mnl-01_article\s*\{\s*\/\* PC ends[^*]*\*\/\s*&:last-child\s*\{\s*border-bottom:\s*0/);
+  assert.match(css,/\.module_newsList-01 \.mnl-01_article \.no-link:hover \.body \.title\s*\{\s*color:\s*var\(--color-text\)/);
+  const pager=css.slice(css.indexOf('    .jwsnj_newsArchive_pager {'),css.indexOf('    :is(a, summary):focus-visible'));
+  assert.equal((pager.match(/letter-spacing:\s*0\.05em/g)||[]).length,2);
+  assert.match(pager,/letter-spacing:\s*0;\s*text-box-trim:\s*none/);
+});
