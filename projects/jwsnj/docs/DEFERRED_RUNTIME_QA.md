@@ -123,3 +123,6 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 
 ### PAGE-PARTS — details render ownership (2026-11-25)
 - DEFERRED_RUNTIME_QA (#523): verify core/details nested rendering order, editor markup, native open/name/keyboard/focus, rich-text summary and body, predecorated and unfamiliar summary attributes; PHP CLI isolated callback tests are not full WordPress runtime. Unsupported outer summary markup is intentionally preserved. No browser PASS claimed.
+
+### PAGE-PARTS — background text boxes (2026-11-25)
+- DEFERRED_RUNTIME_QA (#523): PC 344:918/920 / SP 442:2776/2779. Choose background group and columns styles in editor; verify #f5fdeb/5px radius/PC40 SP32 padding, 20px H4-body gap, official blossom geometry, PC40/SP24 column gap, long/unequal text, single and pair, default/custom widths and mobile stack, editor/frontend. No browser PASS claimed.

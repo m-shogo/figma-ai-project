@@ -241,4 +241,12 @@ add_action('init', function () {
     'name' => 'jwsnj-bordered-box',
     'label' => '枠付きボックス',
   ));
+  register_block_style('core/group', array(
+    'name' => 'jwsnj-background-box',
+    'label' => '背景付きテキストボックス',
+  ));
+  register_block_style('core/columns', array(
+    'name' => 'jwsnj-background-boxes',
+    'label' => '背景付きボックスのカラム',
+  ));
 });

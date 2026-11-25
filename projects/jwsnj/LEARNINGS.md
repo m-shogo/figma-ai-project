@@ -139,3 +139,7 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 ## 2026-11-25: details render_blockの所有境界（通常Chat、PROJECT_ONLY）
 - Figma PC 357:938 / SP 442:2908 を新規sessionの高精細context・画像で再確認。#618は全CI成功でマージ済み。既存field.phpは子のcustom summaryを検出すると親の変換をskipし、逆に全summary/全details終端を置換すると子HTMLまで壊す。coreの内側blockが先にrenderされる契約に合わせ、先頭のouter details/素のsummaryと末尾のouter closingだけを変換。本文の子HTMLはbyte-for-byte保持し、既存custom/未知のsummary属性付き構造は変更しない。装飾iconのみaria-hidden。CSS/ACF/保存形式は維持。
 - NodeテストからPHP CLIで実際のcallbackを隔離実行し、子render済み/生HTML、親のopen/name/id、inline rich text、再変換、未知形式を検証する。WP実機ではない。#523でエディター出力形式とnested/keyboard/focusを確認。
+
+## 2026-11-25: 背景付きテキストボックス（通常Chat、PROJECT_ONLY）
+- Figma PC 344:916/918/920 / SP 442:2774/2776/2779 の新規高精細context・画像を確認。薄緑 #f5fdeb、角5px、PC40/SP32px内側、H4と本文20px、PC2列40px/SP縦24px間隔。既存枠付きstyleと通常Columnsは維持。Gutenberg core/group と core/columns に明示選択styleを追加し、既存token・H4の公式blossom SVGを再利用。既存ACF、保存済み画像、Foundationは変更なし。coreの幅/stack設定を強制しない。1カラムに背景groupのみの場合はflexで高さ追従。
+- ブロックstyleによるCMS表現は実装判断（新ACFなし）。#523でstyle選択、実エディターのwrapper/余白、heading+paragraph間隔、画像の有効geometry、長文、同高、PC/SP/中間幅、coreのstack設定を確認。#619マージ済み。静的CIのみ。
