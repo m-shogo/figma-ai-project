@@ -343,3 +343,10 @@ test('Header navigation focus exits before inert is applied on mobile close or r
 test('Header navigation does not retain empty CODIA class rules', () => {
   assert.doesNotMatch(navigationCss, /^[ \t]*\.[A-Za-z][\w-]*\s*\{\s*\}[ \t]*$/m);
 });
+
+test('mobile navigation uses visible viewport height with legacy fallback and permits long labels to shrink', () => {
+  assert.match(navigationCss,/height: calc\(100vh - var\(--header-height-SP\)\);\s*height: calc\(100dvh - var\(--header-height-SP\)\);/);
+  const links=navigationCss.slice(navigationCss.indexOf('.gnl_link-02,'),navigationCss.indexOf('.gnl_button-02,'));
+  assert.match(links,/min-width:\s*0/);
+  assert.match(links,/overflow-wrap:\s*anywhere/);
+});

@@ -187,3 +187,8 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 ## 2026-11-25: H2の内側strokeをCSS外寸へ翻訳（通常Chat、PROJECT_ONLY）
 - 同sessionでFigma PC 344:906/344:907/344:908 とSP 445:3209/445:3207/445:3208を詳細context・画像・metadataで再照合。PC heading frame 70px = text42 + bottom28、SP 126px = text102 + bottom24。画像の3px線はその枠内。CSSは従来padding28/24にborder3を加算。stroke幅を局所変数にしpaddingから一度引くことで線込み28/24を再現する。色、16%分割、typography、後続40/32 marginと自然な複数行は維持。
 - 隔離Chromium（system font、実際のWP cascade/Zen描画ではない）で320/375/767/768/960/1380幅の長文を旧・新宣言で比較。各幅で高さ差3px、線3px、padding21/25px、水平overflowなし。#523でeditor/frontendの実font・複数行・block gapを測定して視覚受入。H3配色は変更せず、gallery未指定の列数は元CODIAも固定gridだったため新しい列数仕様を発明しない。
+
+## 2026-11-25: 共通UI総点検 第1回
+- Fresh Figma PC menu 599:2726, SP menu 480:3954, footer 221:335 context + images; parts 339:23/433:2015 の全体contextは今回有効な出力なし。既存19 block CSSのうち15種の寸法/overflow/typography/focus関連宣言を抽出確認、残りの個別精査は未完。#629/#630の修正は再実装しない。
+- SP navの100lvhはbrowser chrome表示中の可視高さを超えるため100vh fallback + 100dvhへ変更。既存PC height:auto維持。可変ラベルのflex itemにmin-width:0を追加（既存footerと同じ）。実機のaddress bar変化、末尾到達、長文は#523で未検証。
+- Header/FooterのFigmaと現行templateに構造差あり（header CTA/英字名、footer contact/SNS/privacy/copyright）。未確定CMS・URL・素材#524と既存承認を先に照合する。勝手に追加しない。配色はHuman指示で変更対象外。
