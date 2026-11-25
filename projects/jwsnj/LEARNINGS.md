@@ -86,3 +86,7 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 ## 2026-11-25: Gutenberg本文リンクの公式外部アイコン（通常Chat、PROJECT_ONLY）
 - PC `344:968` / SP `442:2832` と外部アイコン `344:1029` / `442:2882` の高精細context・実画像、variableを取得。両アイコンは14×13枠、foreground main-orange #f0813b。本文のコーラル #ec6b61 とは別。保存済み白SVGの形をmaskで利用し、該当ownerだけの色として指定する（Foundation token追加なし）。
 - 既存Gutenberg本文、リスト、表のリンク選択を維持し、ファイル種類の判定・フォーカス・hover・リンク属性は変更しない。共有 `.module_textLink` はヘッダー/フッター等への波及があるため今回変更しない。#523で折返しとアイコンのベースライン、色、PDF/file優先、editor/frontendを確認する。
+
+## 2026-11-25: Largeナビの右下装飾（通常Chat、PROJECT_ONLY）
+- 新規sessionでPC `384:914` / SP `442:3081` の高精細context・画像と親metadataを確認。白い48px四角（左上radius20）と右下32px緑丸、FA Regular f061 10pxが未実装。既存画像のoverflowと3:2は維持し、Large専用CSSの装飾だけを追加。画像とCMSリンク、ACF、Small、実際のhover動作は変更しない。既存is-disabledのカードには矢印を付けない。
+- PC/SP両パーツ索引のナビはLargeの3columnのみ。Smallナビの独立デザインは未確認。スライダーは単一画像＋キャプションで操作/管理仕様未確認。既存Smallや新規slider/CMSは推測実装しない。#523で画像拡大中の重なり、キーボード、長文、リンク無し、PC/SP/中間幅を確認。

@@ -87,3 +87,6 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 
 ### PAGE-PARTS — inline external link official SVG (2026-11-25)
 - DEFERRED_RUNTIME_QA (#523): PC 344:1029 / SP 442:2882, coral link and separate orange 14×13 icon, multiline paragraph/list/table at narrow width, baseline, hover/focus and file-icon precedence including external PDFs, editor/frontend. No actual browser PASS claimed.
+
+### PAGE-PARTS — Large navigation arrow corner (2026-11-25)
+- DEFERRED_RUNTIME_QA (#523): PC 384:914 / SP 442:3081. Verify 48px white corner, 20px top-left radius, 32px green circle and Font Awesome 10px arrow, actual image clipping/zoom, focus, no arrow on disabled cards, long text and narrow width, editor/frontend. Existing CMS image fallback and disabled-anchor semantics are separate review; no browser PASS claimed.
