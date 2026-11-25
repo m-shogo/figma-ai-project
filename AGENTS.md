@@ -107,6 +107,8 @@ Company PolicyまたはEffective Project ContractとFigma visual/behaviorが衝�
 
 Reference未提示ならdesignを発明しない。
 
+**デザイン実装の基礎原則は全案件でHumanの指摘を待たず適用する（Human 2026-11-25）。** 視覚的整列、タイポグラフィ、階層、余白、色、形、素材、操作状態等の意図をFigmaから読み、実描画で照合する。`docs/frontend-quick-contract.md` §3.1 と `docs/frontend-implementation-standard.md` §3.1 を着手・受入時に読む。具体値・補正量は案件ごとに決め、Figmaを勝手にredesignしない。静的PASSだけでは視覚PASSではない。
+
 Frontendの保守性・layout decisionについてEffective Project Contract/Figma evidenceで未確定な部分は、`docs/frontend-quick-contract.md`を短い共通defaultとして読む。詳細は`docs/frontend-implementation-standard.md`へ進む。Frontend StandardはCompany hard constraint、Effective Project Contract、Figma visual truthを上書きしない。
 
 Canonical:

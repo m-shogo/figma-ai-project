@@ -90,6 +90,38 @@ CSS行数、absolute件数、media query件数、固定値件数を品質KPIに�
 
 ---
 
+## 3.1 デザイン基礎原則と実装への翻訳（Human承認 2026-11-25）
+
+**ACTIVE / CROSS-PROJECT / required relevant checks**。Humanが「常識的なものはすべて入れて欲しい」と明示した共通の確認手順。単発の小ボタンの補正値を全案件へ昇格させるのではなく、Figmaのデザイン意図を自律的に理解し、実装へ翻訳・検証する基礎能力を標準化する。具体的なデザインはFigma/Effective Project Contractが正本。好みでリデザインしない。
+
+| 基礎原則 | 実装で先回りする判断・確認 |
+|---|---|
+| Optical alignment / optical weight | 幾何学的中心と実描画の中心・重心は別。円内の矢印・三角形・ロゴ・×・＋・chevronを実際に見て均衡を確認。font glyphのside bearing/baseline/letter-spacing、SVG viewBox/透明余白、strokeを疑う。必要な補正は根拠のあるshape/glyphのみに限定し、背景・クリック領域・他の文字を動かさない。 |
+| Alignment / grid / baseline | container端、見出し、本文、画像、カード列、ボタンの視覚軸を追う。行ボックス上の中心やflexのcenterが文字のbaselineと同じとは限らない。意図された非対称・ずらしを均等化しない。 |
+| Hierarchy / focal point | 主役、見出し階層、補足、主要/副次CTAのサイズ・weight・色・配置・余白の役割を保持。全要素を同じ強調度にしない。 |
+| Gestalt / proximity / similarity / enclosure | 同じ情報群の内部間隔と別群との外部間隔を区別し、同じ意味・状態には一貫した見た目を使う。枠/背景のまとまりや図と地を壊さない。 |
+| Negative space / spacing rhythm | 上下左右の見た目の空白、group内外、先頭末尾、セクション間隔、内外余白のownerを確認。line boxや画像透明部分・margin collapse・block gapの二重計上を含めて実測する。 |
+| Proportion / balance / consistency | 画面や兄弟部品で大きさ・密度・比率・整列を比較。反復するUIで不自然な1個だけの差を検出し、意図されたvariantは維持する。数値の共通化自体は目的にしない。 |
+| Typography metrics / legibility | family/weight/style・実ロード・fallback・line-height・letter-spacing・baseline・font metricsを確認。日本語/欧文/数字の混植、全半角、句読点、禁則、リンク下線や複数行を意味に応じ確認。単行Figma座標の写経でwrapや読みやすさを壊さない。 |
+| Iconography | glyph/library/weight/style・stroke端・見かけの大きさ・間隔・方向・色・通常/hoverの位置を兄弟で照合。公式assetがあれば優先、絵文字/別glyphへの勝手な置換なし。decorative iconとaccessible nameの責務を分ける。 |
+| Imagery / art direction | 正しいasset・aspect ratio・crop・object-position/焦点・透明余白・色・解像度・clip/radiusを確認。PC/SPの意図されたcrop差、顔・文字・重要部分の欠け、画像差し替え耐性も見る。 |
+| Color / contrast / figure-ground | semantic role、背景とのcontrast、リンク/disabled/hover/focus、gradientの方向/stop、opacityの重なりを確認。色だけに意味を依存させない。Figmaと必要なA11yが衝突するなら明示して判断を仰ぐ。 |
+| Shape / edges / stroke / depth | borderの太さ・位置、radius、入れ子の角、線の接合、shadowの向き・ぼけ、stacking/clipを確認。状態切替で輪郭や線が消えないこと。Figmaと実ブラウザのstroke alignment差を考慮。 |
+| Affordance / feedback / target | ボタン・リンク・操作アイコンが操作と分かる見た目、実際のhit area、pointer/touch/keyboard、focus、disabled、成功/失敗を確認。クリック可能な面と装飾を混同せず、視覚アイコン寸法と操作領域を区別する。 |
+| Motion / state continuity | rest→hover/focus/open→closed、必要なloading/empty/error等で見た目・位置・読みやすさ・操作性を維持。関連transition、reduced motion、状態変化で不要なlayout shiftを起こさない。 |
+| Responsive composition / reading order | 画面ごとに優先順位、並び・列数・wrap・余白・画像比率・中間幅・端のはみ出しを確認。既存§8–12を適用し、Figmaにない幅は意図から自然に補間。reading/focus orderを守る。 |
+| Content / localization / resilience | 長文、短文、空欄、可変件数、途中行、画像未設定、多言語など実際の編集・データ範囲で階層と整列を保つ。見本1パターンに固定しない。 |
+| Accessibility / inclusive use | 文字の可読性・contrast・semantic HTML・keyboard/focus・必要なtarget size・拡大/reflow・動き・色に依存しない意味を対象scopeに応じ確認。具体的基準はProject/Company/該当A11y contractから解決。 |
+| Maintainability / component family | 見た目を直す前に既存ownerと同系部品を調査。token/asset/variantの正しい再利用、影響範囲、編集者が変更できる構造を維持。全件の一括修正や共通offsetの自動適用はしない。 |
+
+**着手時の短いdesign intent review:** 現行FigmaのPC/SPと必要な状態・周辺を見て、(1)何を強調するか (2)何を揃えるか (3)何をグループ化するか (4)何が変化しても維持されるか (5)何が意図的な例外か、を対象部品の根拠として整理する。レイヤー/変数/annotation/画像を照合し、デザイナーの内心を推測で断定しない。明確な根拠がない再設計・変更はしない。
+
+**受入:** `docs/frontend-maintainability-qa.md` §3 と `docs/frontend-visual-repair-learning-loop.md` §4/8 に従い、原寸の部品と文脈の両方の実描画をFigmaと照合。必要に応じ拡大・overlay・computed geometryで原因を分離。pixel diffが小さい、Flexがcenter、CIがGREEN等だけで判断しない。視覚の修正後は再描画し、関連family/状態/幅で確認する。環境差・フォント差を考慮し、全案件一律のピクセル補正や合格閾値は設けない。
+
+**欠陥が残る場合:** source/静的/実機の証拠を分ける。実描画が得られなければ視覚未検証とし、既知の視覚欠陥はOPENのまま再開条件を残す。独立したsource実装の継続可否は既存authority/phase gateによる。改善手法の効果は別途replayで検証し、普遍的な確認義務と未実証の個別技法・数値を混同しない。
+
+---
+
 ## 4. Layout / sizing / positioning
 
 ### CORE-003 — Property-banではなくintent

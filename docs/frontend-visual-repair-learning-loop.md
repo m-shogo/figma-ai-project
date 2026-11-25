@@ -87,6 +87,8 @@ Decoration
 - repeated grid/card alignment
 - section boundaries
 
+**Human 2026-11-25 — optical alignment / design intent:** 大きなlayout差が無くても、円内矢印、ロゴ、文字のbaseline、形の重心、groupの余白、視覚階層の違和感は個別に検出する。現行Figma画像と実装の原寸を見てから必要な拡大で診断する。box boundsとglyph ink bounds/視覚重心、SVG viewBox/透明余白、font load/metrics/letter-spacing、strokeを区別する。修正は原因ownerに局所化し、クリック領域・ラベル・背景・意図された非対称を壊さない。正確な補正値は実描画から決める。原則一覧は `docs/frontend-implementation-standard.md` §3.1。
+
 ## 5. Root-cause taxonomy
 
 修正前に主原因を最低1つ選ぶ。必要ならsecondaryを複数持つ。
@@ -174,6 +176,8 @@ Screenshot comparisonは環境差を受ける。Baseline生成とcomparison envi
 を使う。
 
 Figma parity thresholdを全案件共通の1px/scoreで固定しない。Project riskと差分原因で判断する。
+
+**比較の完了判定:** pixel diffの集計値やcomputed styleの一致を単独の受入根拠にしない。部品の原寸と周囲の文脈を目視比較し、意図した優先順位・整列・余白・状態を確認。変更したglyph/shapeの見た目の差、ブラウザのrasterization差、正当なresponsive差を分ける。実際のrenderが取れない間はvisual未検証。既知のHuman視覚指摘は再描画確認までOPEN（安全な独立source作業は既存ゲートに従う）。
 
 ## 9. Semantic evidence is separate
 

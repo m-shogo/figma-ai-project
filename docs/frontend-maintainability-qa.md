@@ -63,14 +63,19 @@ Changed scope中心に:
 - syntax/static contract
 - runtime errors
 - canonical visual
+- `docs/frontend-implementation-standard.md` §3.1 のデザイン基礎原則：原寸の部品＋周辺の実描画を現行Figmaと照合（optical center/baseline、階層、group内外余白、glyph/asset、形、状態のうち関連するもの）
 - horizontal overflow
 - relevant interaction smoke
 - obvious owner/override smell
+
+**Visual evidence rule (Human 2026-11-25):** 実描画のない静的PASSをvisual PASSにしない。比較したFigma node、対象実装SHA/viewport/state、expected/actual画像（既存artifactの保存先で可）、差分と判定を必要なscopeで記録。人間の指摘した視覚欠陥は修正後の描画証拠が得られるまでOPEN。全ての原則に個別テストを新設する必要はない。
 
 ### TARGETED MUTATION
 
 Riskに応じて:
 
+- optical alignment / icon family：描画されたglyph/shapeの上下左右余白・baseline・重心・状態間の位置を原寸比較、必要なら拡大・pixel/geometryで診断。font load、side bearing、viewBox、letter-spacingも確認。box中央だけのassertでは不足
+- hierarchy / rhythm / composition：兄弟・隣接section、可変文字・件数とPC/SP/境界幅で優先順位・余白・見た目の均衡を確認
 - text mutation
 - cardinality/incomplete-row mutation
 - optional field missing
