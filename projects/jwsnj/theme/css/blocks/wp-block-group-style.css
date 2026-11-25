@@ -11,6 +11,36 @@
                 margin-top: 0;
             }
         }
+        /* Figma parts PC 344:922 and SP 442:2782.
+           Opt-in Gutenberg group style; other groups remain unchanged. */
+        &.is-style-jwsnj-bordered-box {
+            border: calc(1 * var(--to-rem-func)) solid var(--color-primary);
+            border-radius: calc(5 * var(--to-rem-func));
+            background-color: var(--jwsnj-color-white);
+            padding: calc(32 * var(--to-rem-func));
+            min-width: 0;
+            overflow-wrap: anywhere;
+            @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+                padding: calc(40 * var(--to-rem-func));
+            }
+        }
+        /* Figma PC 344:918/920, SP 442:2776/2779. Opt-in only. */
+        &.is-style-jwsnj-background-box {
+            background-color: var(--jwsnj-color-base-lightgreen);
+            border-radius: calc(5 * var(--to-rem-func));
+            padding: calc(32 * var(--to-rem-func));
+            min-width: 0;
+            overflow-wrap: anywhere;
+            @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+                padding: calc(40 * var(--to-rem-func));
+            }
+            /* The shared H4 owner supplies blossom, typography and 20px bottom
+               margin. Avoid adding the generic paragraph top margin to it. */
+            > h4 + p,
+            > .wp-block-group__inner-container > h4 + p {
+                margin-top: 0;
+            }
+        }
         /* // ==========================================================================
         // 画像とテキストが回り込み時のブロックグループのフロート解除
         // ========================================================================== */

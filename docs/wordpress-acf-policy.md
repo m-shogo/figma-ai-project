@@ -413,6 +413,18 @@ Section単体QAはPHP fragmentだけを裸でrenderするのではなく、原�
 
 ---
 
+## Editorial acceptance — edit to publish
+
+WordPressの完成画面は実データと実editor操作から成立させる。editorが操作する既存block/ACF/templateの変更では、実際の選択・入力・画像差替え・項目増減（許可されるものだけ）→保存→再読込→preview/published frontendを確認する。旧記事・既存block属性/保存値・optional fieldを不用意に壊さない。ACF Blockのpreviewだけで公開HTMLを証明しない。
+
+Core/theme/plugin/user styles、theme.json（既存採用時）、editor iframe/stylesheetのscope、block supports（margin/padding/alignment/color等）、rendered wrapper、editor-only / shared / frontend-only styleの責務を確認。core markupを想像で決めず、実DOMとwinning stylesを見て、editor指定と案件の許可範囲を尊重する。Classic themeを無条件にblock themeへ移行せず、Gutenberg非使用案件へ強制しない。
+
+公開画面とeditorで同一pixelを機械要求しないが、編集者が選択するstyle/コンテンツの意味とプレビューが食い違わず、公開結果の意図を保つこと。既存field/menu/slug/管理値を発明せず、実機を操作できない場合は手順と未検証項目を既存台帳へ残す。静的PHP/JSテストとeditor実操作を区別。
+
+参照: [WordPress Theme Support](https://developer.wordpress.org/block-editor/how-to-guides/themes/theme-support/), [Styles in the Editor](https://developer.wordpress.org/block-editor/explanations/architecture/styles/).
+
+---
+
 ## CMS evidence in Section Manifest
 
 将来Section entryへ:

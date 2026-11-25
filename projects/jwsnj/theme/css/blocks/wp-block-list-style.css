@@ -37,45 +37,81 @@
             }
         }
     }
-    /* //---------- ulのみ ---------- */
+    /* Unordered lists — Figma parts PC 357:1004, SP 442:2816.
+       Text remains in normal flow; nested bullets are outlined, not filled. */
     ul.wp-block-list:not(.annotation-list) {
         > li {
-            padding-left: calc(20 * var(--to-rem-func));
+            font-family: var(--font-jwsnj-ja);
+            font-size: calc(15 * var(--to-rem-func));
+            font-weight: 400;
+            line-height: 1.6;
+            letter-spacing: 0.05em;
+            padding-left: calc(18 * var(--to-rem-func));
+            overflow-wrap: anywhere;
+            word-break: normal;
             &::before {
                 content: '';
+                left: 0;
+                top: calc(9 * var(--to-rem-func));
                 width: calc(6 * var(--to-rem-func));
                 height: calc(6 * var(--to-rem-func));
-                background: var(--color-primary);
-                border-radius: 50%;
-                transform: translateY(0.6em);
+                background-color: var(--color-accent);
+                border-radius: calc(3 * var(--to-rem-func));
+                transform: none;
+            }
+            > ul.wp-block-list {
+                margin-top: calc(12 * var(--to-rem-func));
+                /* Parent li already contributes 18px; total marker offset is 24px. */
+                padding-left: calc(6 * var(--to-rem-func));
+                gap: calc(8 * var(--to-rem-func));
+                > li::before {
+                    background-color: transparent;
+                    border: calc(1 * var(--to-rem-func)) solid var(--color-accent);
+                    box-sizing: border-box;
+                }
             }
         }
     }
-    /* //---------- olのみ ---------- */
+    /* Numbered lists — Figma PC 344:947 / SP 442:2806.
+       Native list-item counter preserves editor start/reversed/value attributes. */
     ol.wp-block-list:not(.annotation-list) {
-        counter-reset: li;
-        gap: calc(20 * var(--to-rem-func));
+        gap: calc(15 * var(--to-rem-func));
         > li {
-            padding-left: calc(32 * var(--to-rem-func));
+            font-family: var(--font-jwsnj-ja);
+            font-weight: 400;
+            font-size: calc(15 * var(--to-rem-func));
+            line-height: 1.5;
+            letter-spacing: 0.08em;
+            padding-left: calc(34 * var(--to-rem-func));
+            overflow-wrap: anywhere;
+            word-break: normal;
             &::before {
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                counter-increment: li;
-                content: counter(li) '.';
-                color: var(--color-primary);
-                line-height: 1;
-                translate: 0 calc(6 * var(--to-rem-func));
-                letter-spacing: 0;
-                font-family: var(--font-sansSerif-en);
+                content: counter(list-item) '.';
+                display: block;
+                width: calc(24 * var(--to-rem-func));
+                text-align: left;
+                left: 0;
+                top: 0;
+                color: var(--color-text);
+                font-family: var(--font-jwsnj-ja);
+                font-size: calc(16 * var(--to-rem-func));
                 font-weight: 500;
+                line-height: 1.5;
+                letter-spacing: 0.1em;
+                translate: none;
             }
         }
     }
     /* //---------- 注釈リスト ---------- */
     ul.annotation-list {
         gap: calc(10 * var(--to-rem-func));
+        margin-bottom: calc(20 * var(--to-rem-func));
+        margin-top: calc(20 * var(--to-rem-func));
         li {
+            font-family: var(--font-jwsnj-ja);
+            overflow-wrap: anywhere;
+            word-break: normal;
+            padding-left: calc(31 * var(--to-rem-func));
             font-size: calc(14 * var(--to-rem-func));
             font-weight: 500;
             line-height: 1.5;
@@ -83,8 +119,12 @@
             &::before {
                 content: '※';
                 font-size: calc(16 * var(--to-rem-func));
+                font-family: var(--font-jwsnj-ja);
+                font-weight: 500;
                 transform: translateY(-0.1em);
-                color: var(--color-primary);
+                color: #d50b0b;
+                line-height: 1.75;
+                letter-spacing: 0.1em;
             }
             ul.wp-block-list,
             ol.wp-block-list {
@@ -92,6 +132,8 @@
                 gap: calc(10 * var(--to-rem-func));
                 li {
                     font-size: calc(14 * var(--to-rem-func));
+                    font-family: var(--font-jwsnj-ja);
+                    overflow-wrap: anywhere;
                     font-weight: 500;
                     line-height: 1.5;
                     letter-spacing: 0.05em;
@@ -100,7 +142,7 @@
                         content: '※';
                         font-size: calc(16 * var(--to-rem-func));
                         transform: translateY(-0.1em);
-                        color: var(--color-primary);
+                        color: #d50b0b;
                         width: auto;
                         height: auto;
                         background: transparent;
@@ -113,6 +155,33 @@
                 }
             }
         }
+    }
+    /* The generic adjacent-list rule must not override annotation clearance. */
+    .wp-block-list + ul.wp-block-list.annotation-list,
+    ul.wp-block-list.annotation-list + .wp-block-list {
+        margin-top: calc(20 * var(--to-rem-func));
+    }
+    /* PC 344:937 / SP 442:2796: annotation clearance is 20px next to
+       ordinary content. Give the following block the single margin owner,
+       including inside non-collapsing editor layouts. Heading and separator
+       section rhythm is intentionally left to its existing owner. */
+    :is(p, .wp-block-list, .wp-block-image, .wp-block-gallery, .wp-block-group,
+        .wp-block-columns, .wp-block-media-text, .wp-block-buttons, .wp-block-details,
+        .wp-block-table, .wp-block-flexible-table-block-table, .wp-block-acf-in-page-link,
+        .wp-block-acf-navigation-large) {
+        &:has(+ ul.wp-block-list.annotation-list) {
+            margin-bottom: 0;
+        }
+        & + ul.wp-block-list.annotation-list,
+        ul.wp-block-list.annotation-list + & {
+            margin-top: calc(20 * var(--to-rem-func));
+        }
+    }
+    ul.wp-block-list.annotation-list:has(+ :is(p, .wp-block-list, .wp-block-image, .wp-block-gallery, .wp-block-group,
+        .wp-block-columns, .wp-block-media-text, .wp-block-buttons, .wp-block-details,
+        .wp-block-table, .wp-block-flexible-table-block-table, .wp-block-acf-in-page-link,
+        .wp-block-acf-navigation-large)) {
+        margin-bottom: 0;
     }
     /* //---------- anchor-box, border-list ---------- */
     /* .anchor-box,

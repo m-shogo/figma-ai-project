@@ -4,14 +4,85 @@
 // ------------------------------ */
 .block-editor_wrap,
 .editor-styles-wrapper {
+    /* Figma parts: PC img+text 344:929 / SP 442:2788.
+       Keep WordPress media dynamic. Never substitute a design screenshot. */
     .wp-block-media-text {
         margin-top: var(--wp-block-margin);
-        gap: calc(32 * var(--to-rem-func)) calc(16 * var(--to-rem-func));
+        gap: calc(40 * var(--to-rem-func));
+        min-width: 0;
+        grid-template-columns: minmax(0, 410fr) minmax(0, 510fr);
+        &.has-media-on-the-right {
+            grid-template-columns: minmax(0, 510fr) minmax(0, 410fr);
+        }
+        /* Preserve explicit editor alignment choices; Figma default is top-aligned. */
+        &:not(.is-vertically-aligned-center, .is-vertically-aligned-bottom) {
+            > .wp-block-media-text__media,
+            > .wp-block-media-text__content {
+                align-self: start;
+            }
+        }
+        /* Match the theme breakpoint without overriding the editor's opt-out.
+           As in core, a stacked block must override inline custom column widths. */
+        @media (width < calc(768 * (1 / 16 * 1rem))) {
+            &.is-stacked-on-mobile {
+                grid-template-columns: minmax(0, 1fr) !important;
+                > .wp-block-media-text__media {
+                    grid-column: 1;
+                    grid-row: 1;
+                }
+                > .wp-block-media-text__content {
+                    grid-column: 1;
+                    grid-row: 2;
+                }
+            }
+        }
+        .wp-block-media-text__media {
+            min-width: 0;
+            img {
+                width: 100%;
+                height: auto;
+                aspect-ratio: 410 / 273;
+                object-fit: cover;
+                border-radius: calc(5 * var(--to-rem-func));
+            }
+        }
+        /* Figma SP img+caption: 442:2787 / PC: 344:927.
+           Scope captions to media-text; leave standalone images and galleries intact. */
+        .wp-block-media-text__media {
+            width: 100%;
+            min-width: 0;
+        }
+        .wp-block-media-text__media .wp-element-caption,
+        .wp-block-media-text__media figcaption {
+            margin-top: calc(20 * var(--to-rem-func));
+            margin-bottom: 0;
+            text-align: center;
+            font-family: var(--font-jwsnj-ja);
+            font-size: calc(12 * var(--to-rem-func));
+            font-weight: 500;
+            line-height: 1.6;
+            letter-spacing: 0.05em;
+            color: var(--color-text);
+            overflow-wrap: anywhere;
+            word-break: normal;
+        }
         @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-            gap: calc(40 * var(--to-rem-func));
+            .wp-block-media-text__media .wp-element-caption,
+            .wp-block-media-text__media figcaption {
+                font-size: calc(14 * var(--to-rem-func));
+                line-height: 1.5;
+            }
         }
         .wp-block-media-text__content {
+            font-family: var(--font-jwsnj-ja);
+            font-size: calc(16 * var(--to-rem-func));
+            font-weight: 400;
+            line-height: 1.6;
+            letter-spacing: 0.05em;
+            color: var(--color-text);
             padding: 0;
+            min-width: 0;
+            overflow-wrap: anywhere;
             > *:first-child {
                 margin-top: 0;
             }

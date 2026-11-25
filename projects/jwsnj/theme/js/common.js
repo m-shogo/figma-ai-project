@@ -283,8 +283,7 @@ window.addEventListener('resize', setVw);
       const urlHash = location.hash;
       //ハッシュ値があればページ内スクロール
       if ('' !== urlHash) {
-        //スクロールを0に戻しておく
-        $('body,html').stop().scrollTop(1);
+        // Do not move the page before validating the CMS fragment.
         setTimeout(function () {
           //ロード時の処理を待ち、時間差でスクロール実行
           scrollToAnker(urlHash);
@@ -310,10 +309,31 @@ window.addEventListener('resize', setVw);
       // 関数：スムーススクロール
       // 指定したアンカー(#ID)へアニメーションでスクロール
       function scrollToAnker(hash) {
-        const target = $(hash);
-        const header = $('#global_header').innerHeight() + 30;
-        const position = target.offset().top - header;
-        $('body,html').stop().animate({ scrollTop: position }, 300);
+        // Resolve literal HTML IDs, not jQuery/CSS selectors.
+        // Percent-encoded Japanese or punctuation-bearing IDs remain valid.
+        let element = document.documentElement;
+        if (hash !== 'html') {
+          try {
+            element = document.getElementById(decodeURIComponent(hash.slice(1)));
+          } catch {
+            return;
+          }
+        }
+        const target = $(element);
+        // A missing/deleted CMS anchor must not throw or move the viewport.
+        if (!target.length) return;
+        const $header = $('#global_header');
+        const header = ($header.length ? $header.innerHeight() : 0) + 30;
+        // The offset may be unavailable for detached/unrendered CMS content.
+        const offset = target.offset();
+        if (!offset || !Number.isFinite(offset.top)) return;
+        const position = Math.max(0, offset.top - header);
+        const scroller = $('body,html').stop();
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          scroller.scrollTop(position);
+        } else {
+          scroller.animate({ scrollTop: position }, 300);
+        }
       }
     });
   };
@@ -324,35 +344,103 @@ window.addEventListener('resize', setVw);
   const toggleMenu = function () {
     const $body = $('body');
     // グローバルナビゲーション
-    $('#gh_menu').on('click', function () {
-      $body.toggleClass('_open-menu _open-bg');
+    const $menuButton = $('#gh_menu');
+    const $globalNavigation = $('#global_navigation');
+    const headerBreakpointMin = 1080; // CSS desktop media query starts at 1080px.
+    const syncMobileMenu = () => {
+      const isOpen = $body.hasClass('_open-menu');
+      $menuButton.attr('aria-expanded', String(isOpen));
+      $menuButton.attr('aria-label', isOpen ? 'メニューを閉じる' : 'メニューを開く');
+      // Move focus out before hiding the navigation on close or a desktop-to-SP resize.
+      const hiddenForMobile = !isOpen && window.innerWidth < headerBreakpointMin;
+      const navigation = document.getElementById('global_navigation');
+      if (hiddenForMobile && navigation && navigation.contains(document.activeElement)) {
+        $menuButton.trigger('focus');
+      }
+      // The desktop navigation remains available even when the mobile disclosure is closed.
+      $globalNavigation.attr('inert', hiddenForMobile ? '' : null);
+    };
+    const closeMobileMenu = (restoreFocus = false) => {
+      const wasOpen = $body.hasClass('_open-menu');
+      $body.removeClass('_open-menu');
+      // Search and the PC touch mega-menu can independently own the backdrop.
+      const touchOpen = document.querySelector('.global_navigation [class*="gnl_item"]._touchOpen');
+      if (!$body.hasClass('_open-search') && !touchOpen) $body.removeClass('_open-bg');
+      syncMobileMenu();
+      if (restoreFocus && wasOpen) $menuButton.trigger('focus');
+    };
+    $menuButton.on('click', function () {
+      $body.toggleClass('_open-menu');
+      // Closing the hamburger must not conceal a separately opened search backdrop.
+      if ($body.hasClass('_open-menu') || $body.hasClass('_open-search')) $body.addClass('_open-bg');
+      else $body.removeClass('_open-bg');
+      syncMobileMenu();
     });
     $('#gn_close').on('click', function () {
-      $body.removeClass('_open-menu _open-bg');
+      closeMobileMenu(true);
     });
+    $(document).on('keydown', function (event) {
+      if (event.key === 'Escape' && $body.hasClass('_open-menu')) {
+        closeMobileMenu(true);
+      }
+    });
+    syncMobileMenu();
+    // Collapsed accordion submenus must not be keyboard-focusable on SP.
+    // Only the direct child wrapper belongs to this disclosure: a nested wrapper
+    // may be present, but must remain controlled by its own menu item.
+    const syncSubmenuFocusability = (item, prefix, desktopMin) => {
+      const wrapper = Array.from(item.children).find(child =>
+        child.matches(`[class*="${prefix}_wrapper"]`)
+      );
+      if (!wrapper) return;
+      const collapsed = window.innerWidth < desktopMin && item.getAttribute('data-open') !== 'true';
+      if (collapsed && wrapper.contains(document.activeElement)) {
+        const trigger = item.querySelector(`[class*="${prefix}_button"]`);
+        if (trigger) trigger.focus();
+      }
+      wrapper.inert = collapsed;
+    };
     const globalNavItems = document.querySelectorAll('[class*="gnl_item"]._hasChild');
     globalNavItems.forEach(item => {
         const itemButton = item.querySelector('[class*="gnl_button"]');
         if (!itemButton) return;
+        itemButton.setAttribute('aria-expanded', String(item.getAttribute('data-open') === 'true'));
+        syncSubmenuFocusability(item, 'gnl', headerBreakpointMin);
         itemButton.addEventListener('click', function () {
-            if (item.getAttribute('data-open') === 'true') {
-                item.setAttribute('data-open', 'false');
-            } else {
-                item.setAttribute('data-open', 'true');
-            }
+            const isOpen = item.getAttribute('data-open') !== 'true';
+            item.setAttribute('data-open', String(isOpen));
+            itemButton.setAttribute('aria-expanded', String(isOpen));
+            syncSubmenuFocusability(item, 'gnl', headerBreakpointMin);
         });
+        // The desktop top-level submenu also opens on hover via CSS.
+        if (item.classList.contains('gnl_item-02')) {
+          const syncDesktopHoverState = () => {
+            if (window.innerWidth < headerBreakpointMin) return;
+            const isOpen = item.matches(':hover') || item.matches(':focus-within') ||
+              item.getAttribute('data-open') === 'true' || item.classList.contains('_touchOpen');
+            itemButton.setAttribute('aria-expanded', String(isOpen));
+          };
+          item.addEventListener('mouseenter', syncDesktopHoverState);
+          item.addEventListener('mouseleave', syncDesktopHoverState);
+          item.addEventListener('focusin', syncDesktopHoverState);
+          item.addEventListener('focusout', () => {
+            // focusout fires before focus settles on the next item; defer only the state read.
+            queueMicrotask(syncDesktopHoverState);
+          });
+        }
     });
 
     const footerNavItems = document.querySelectorAll('[class*="gfl_item"]._hasChild');
     footerNavItems.forEach(item => {
         const itemButton = item.querySelector('[class*="gfl_button"]');
         if (!itemButton) return;
+        itemButton.setAttribute('aria-expanded', String(item.getAttribute('data-open') === 'true'));
+        syncSubmenuFocusability(item, 'gfl', 768);
         itemButton.addEventListener('click', function () {
-            if (item.getAttribute('data-open') === 'true') {
-                item.setAttribute('data-open', 'false');
-            } else {
-                item.setAttribute('data-open', 'true');
-            }
+            const isOpen = item.getAttribute('data-open') !== 'true';
+            item.setAttribute('data-open', String(isOpen));
+            itemButton.setAttribute('aria-expanded', String(isOpen));
+            syncSubmenuFocusability(item, 'gfl', 768);
         });
     });
 
@@ -363,14 +451,18 @@ window.addEventListener('resize', setVw);
     // ==========================================================================
     // PCレイアウトとみなす最小幅（toggleMenu / contentFixed のブレークポイント跨ぎで共通）
     // MARK: header_breakpoint
-    const headerBreakpointMin = 1080;
     // メガメニューのタッチ展開状態クラス（touchMegaMenuSupport とブレークポイント跨ぎ処理の両方から参照）
     const touchOpenClass = '_touchOpen';
     // すべてのタッチ用メガメニューを閉じる（resize 時は toggleMenu スコープからも呼ぶ）
     const closeAllTouchMenus = () => {
       const touchOpenItems = document.querySelectorAll(`.global_navigation [class*="gnl_item"].${touchOpenClass}`);
-      touchOpenItems.forEach((el) => el.classList.remove(touchOpenClass));
-      $body.removeClass('_open-bg');
+      touchOpenItems.forEach((el) => {
+        el.classList.remove(touchOpenClass);
+        const button = el.querySelector('[class*="gnl_button"]');
+        if (button) button.setAttribute('aria-expanded', String(el.getAttribute('data-open') === 'true'));
+      });
+      // The backdrop can also be owned by an open search or mobile navigation.
+      if (!$body.hasClass('_open-search') && !$body.hasClass('_open-menu')) $body.removeClass('_open-bg');
     };
 
     const touchMegaMenuSupport = function () {
@@ -379,7 +471,7 @@ window.addEventListener('resize', setVw);
         document.documentElement.classList.add('_device-touch');
       }
 
-      const isPcLayout = () => window.innerWidth > headerBreakpointMin; // PCレイアウトかどうかを判定
+      const isPcLayout = () => window.innerWidth >= headerBreakpointMin; // PCレイアウトかどうかを判定
 
       if (!hasTouch) return; // タッチデバイスでない場合は処理しない
 
@@ -410,6 +502,8 @@ window.addEventListener('resize', setVw);
             // 1回目タップ：遷移を防ぎ、メニューを開く（オーバーレイも表示）
             e.preventDefault();
             li.classList.add(touchOpenClass);
+            const disclosure = li.querySelector('[class*="gnl_button"]');
+            if (disclosure) disclosure.setAttribute('aria-expanded', 'true');
             $body.addClass('_open-bg');
           },
           { passive: false }
@@ -429,16 +523,35 @@ window.addEventListener('resize', setVw);
     };
     touchMegaMenuSupport();
 
+    // PCタッチ操作で展開したメガメニューもEscapeで閉じ、親リンクへフォーカスを戻す。
+    $(document).on('keydown', function (event) {
+      if (event.key !== 'Escape' || window.innerWidth < headerBreakpointMin) return;
+      const expanded = document.querySelector(`.global_navigation [class*="gnl_item"].${touchOpenClass}`);
+      if (!expanded) return;
+      const trigger = expanded.querySelector('[class*="gnl_title"] [class*="gnl_link"]');
+      closeAllTouchMenus();
+      if (trigger) trigger.focus();
+    });
+
     // ブレークポイントを跨いだときに不要なクラスを削除
     let lastWidthForBreakpoint = null;
     $(window).on('load resize', function () {
-      const currentWidth = $(window).width();
-      const wasPcOrOver = lastWidthForBreakpoint !== null && lastWidthForBreakpoint > headerBreakpointMin;
-      const isPcOrOver = currentWidth > headerBreakpointMin;
+      const currentWidth = window.innerWidth;
+      const wasPcOrOver = lastWidthForBreakpoint !== null && lastWidthForBreakpoint >= headerBreakpointMin;
+      const isPcOrOver = currentWidth >= headerBreakpointMin;
       if (lastWidthForBreakpoint !== null && wasPcOrOver !== isPcOrOver) {
         closeAllTouchMenus();
         $body.removeClass('_open-menu _open-bg _contentFixed');
+        syncMobileMenu();
+        // PC hover state may outlive its media query when switching to the SP layout.
+        globalNavItems.forEach((item) => {
+          const button = item.querySelector('[class*="gnl_button"]');
+          if (button) button.setAttribute('aria-expanded', String(item.getAttribute('data-open') === 'true'));
+        });
       }
+      // Reconcile closed accordion focusability even on resizes within a layout.
+      globalNavItems.forEach(item => syncSubmenuFocusability(item, 'gnl', headerBreakpointMin));
+      footerNavItems.forEach(item => syncSubmenuFocusability(item, 'gfl', 768));
       lastWidthForBreakpoint = currentWidth;
     });
 
@@ -478,22 +591,19 @@ window.addEventListener('resize', setVw);
 
     // 検索
     $('#search').on('click', function () {
-      if ($body.hasClass('_open-bg')) {
-        $body.addClass('_open-search');
-      } else {
-        if ($body.hasClass('_open-search')) {
-          $body.removeClass('_open-search').removeClass('_open-bg');
-        } else {
-          $body.addClass('_open-search').addClass('_open-bg');
-        }
-      }
+      const isOpen = !$body.hasClass('_open-search');
+      $body.toggleClass('_open-search', isOpen);
+      // Backdrop ownership is shared with the mobile menu and PC touch flyouts.
+      const touchOpen = document.querySelector('.global_navigation [class*="gnl_item"]._touchOpen');
+      $body.toggleClass('_open-bg', isOpen || $body.hasClass('_open-menu') || !!touchOpen);
     });
 
     $('#gns_close, #overlay').on('click', function () {
-      $body
-        .removeClass('_open-search')
-        .removeClass('_open-menu')
-        .removeClass('_open-bg');
+      $body.removeClass('_open-search');
+      // Also dismiss touch-open PC mega menus when the backdrop is clicked.
+      closeAllTouchMenus();
+      // Restore keyboard focus to the trigger when the mobile menu is dismissed externally.
+      closeMobileMenu(true);
     });
 
     // アーカイブ用のローカルナビゲーションを開閉式にする
@@ -644,36 +754,36 @@ window.addEventListener('resize', setVw);
     let state = false;
     // メニューオープン直前のスクロール位置（閉じる・ブレークポイント跨ぎで復元）
     let scrollpos;
+    // Every path that closes the menu must release the same scroll lock.
+    const releaseScrollLock = () => {
+      if (!state) return;
+      $('body').removeClass('_contentFixed').css({ top: 0 });
+      window.scrollTo(0, scrollpos);
+      state = false;
+    };
     $('#gh_menu').on('click', function () {
-      if (state == false) {
+      if (!state) {
         scrollpos = $(window).scrollTop();
         $('body').addClass('_contentFixed').css({ top: -scrollpos });
         state = true;
       } else {
-        $('body').removeClass('_contentFixed').css({ top: 0 });
-        window.scrollTo(0, scrollpos);
-        state = false;
+        releaseScrollLock();
       }
     });
-    $('#gn_close').on('click', function () {
-      $('body').removeClass('_contentFixed').css({ top: 0 });
-      window.scrollTo(0, scrollpos);
-      state = false;
+    $('#gn_close, #gns_close, #overlay').on('click', releaseScrollLock);
+    $(document).on('keydown', function (event) {
+      if (event.key === 'Escape') releaseScrollLock();
     });
     // 幅のブレークポイントを跨いだとき state を false にし、固定中ならスクロール位置を戻す（toggleMenu 側のクラス削除と整合）
     // MARK: header_breakpoint
     const headerBreakpointMin = 1080;
     let lastWidthForContentFixedBreakpoint = null;
     $(window).on('load resize', function () {
-      const currentWidth = $(window).width();
-      const wasPcOrOver = lastWidthForContentFixedBreakpoint !== null && lastWidthForContentFixedBreakpoint > headerBreakpointMin;
-      const isPcOrOver = currentWidth > headerBreakpointMin;
+      const currentWidth = window.innerWidth;
+      const wasPcOrOver = lastWidthForContentFixedBreakpoint !== null && lastWidthForContentFixedBreakpoint >= headerBreakpointMin;
+      const isPcOrOver = currentWidth >= headerBreakpointMin;
       if (lastWidthForContentFixedBreakpoint !== null && wasPcOrOver !== isPcOrOver) {
-        if (state) {
-          $('body').removeClass('_contentFixed').css({ top: 0 });
-          window.scrollTo(0, scrollpos);
-        }
-        state = false;
+        releaseScrollLock();
       }
       lastWidthForContentFixedBreakpoint = currentWidth;
     });
@@ -682,18 +792,7 @@ window.addEventListener('resize', setVw);
   // ==========================================================================
   // pageTop
   // ==========================================================================
-  const pageTop = function () {
-    const gf_pageTop = $('#js_gf_pageTop');
-    const windowWidth = $(window).width();
-    gf_pageTop.hide();
-    $(window).on('scroll', function () {
-      if ($(this).scrollTop() > 0) {
-        gf_pageTop.fadeIn();
-      } else {
-        gf_pageTop.fadeOut();
-      }
-    });
-  };
+
 
   // ==========================================================================
   // メニューオープン時文言変更
@@ -804,7 +903,6 @@ window.addEventListener('resize', setVw);
   moduleModal();
 //   moduleAccordion();
   contentFixed();
-  pageTop();
   // menuTextChange();
   lightboxWrap();
   // tab();

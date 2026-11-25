@@ -47,13 +47,13 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 
 | ID | 優先 | 初期状態 | 参照Figma・完了条件 |
 |---|---|---|---|
-| PAGE-HEADER | P0 | NOT_READY_IMPLEMENTATION | PCメニュー `599:2726`、SP `480:3954`。PC hover 展開・SP click/tap 開閉、focus/keyboard・close状態、重なりとレイアウト、ナビ管理画面の編集/反映、横スクロール |
-| PAGE-FOOTER | P1 | NOT_READY_IMPLEMENTATION | TOP `114:28` / `279:2136` 等の共通フッター。リンク、Instagram、ページトップ、hover、PC/SPで構造・余白・視認性と編集を確認 |
+| PAGE-HEADER | P0 | NOT_READY_IMPLEMENTATION | PCメニュー `599:2726`、SP `480:3954`。PC hover 展開・SP click/tap 開閉、focus/keyboard・close状態、重なりとレイアウト、ナビ管理画面の編集/反映、横スクロール。**1079/1080/1081px** でPC/SP状態・`inert`・操作対象がCSSと一致すること、SPでボタン・閉じる・overlay・Escape・幅跨ぎの全閉鎖経路で `_contentFixed` が解除され元のスクロール位置に戻ることを確認。PR #518 のNode静的テスト成功は実機PASSではない |
+| PAGE-FOOTER | P1 | NOT_READY_IMPLEMENTATION | Figma Footer `221:335` とPC/SP全体 `0:1` / `263:12`。WordPress管理画面で**フッターメニュー位置 `footer-nav` に設定したメニューだけが、1回だけ**出力されること（Header用 `sub-nav` が重複しないこと）。メニュー未割当時にCODIAサンプルや別メニューが表示されないこと、長いメニュー名・日本語英語混在・リンクキーボードフォーカス・nav landmark・PC/SP/中間幅を確認。ロゴ、SVG装飾、Instagram、ページトップ、hover、住所等の許諾済み情報、フッター下帯の視覚一致も確認。PR #519 の静的テスト/CIはブラウザ・WordPress実機PASSの代替にならない |
 | PAGE-ARCHIVE | P1 | NOT_READY_IMPLEMENTATION | 記事一覧 `390:666` / `478:2615`。投稿0/複数件、カテゴリ表示、長いタイトル、日付、ページ送り、正しいリンク（URL確定後） |
 | PAGE-PARTS | P1 | NOT_READY_IMPLEMENTATION | パーツ集 `339:23` / `433:2015`。共通部品のPC/SP geometry、状態、画像・hover動作と他テンプレートへの適用 |
 | PAGE-SINGLE | P1 | NOT_READY_IMPLEMENTATION | 記事詳細 `392:1279` / `480:3566`。本文・画像・見出し・空欄・関連記事等の構造をFigmaと実データで確認（URL未確定部分は別途保留） |
 | PAGE-STATIC | P1 | NOT_READY_IMPLEMENTATION | 固定ページ `384:1046` / `445:3245`。PC SideNavigation `476:1741`、長文/画像、管理画面の編集のしやすさ |
-| PAGE-TOP | P1 | NOT_READY_IMPLEMENTATION | TOP `114:28` / `279:2136`、実装指示 `294:852`。MV、CTA、Notice、Course、各hover、空欄/非表示、ACF編集、画像比率・動き。コース紹介**下層**はHuman指示まで実装しない |
+| PAGE-TOP | P1 | NOT_READY_IMPLEMENTATION | TOP `114:28` / `279:2136`、実装指示 `294:852`。MV、CTA、Notice、Course、各hover、空欄/非表示、ACF編集、画像比率・動き。コース紹介**下層**はHuman指示まで実装しない。公式 SVG / WebP は #600 で `images/top/` に保存済みだが `front-page.php` 未接続。接続と表示確認が残作業。詳細は `DESIGN_FOUNDATION.md` の「残作業」 |
 | PAGE-SHARED | P1 | NOT_READY_IMPLEMENTATION | 共有Header/Footer変更後の全実装済み画面（PC/SP）でレイアウト・動作回帰。固定要素・オーバーレイ・スクロールロック、横幅境界 |
 
 ## 3. 実行結果を残すときの形式
@@ -72,3 +72,98 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 - GitHubで可能な差分レビュー・lint・CI結果の確認、PHP/JSの静的な安全性・ACF既存構造・テンプレートの保守性を検証。
 - PC/SPのFigmaデザイン情報を取得し、Header/Footerなど個別パーツを作業ブランチで実装。画面表示未検証の範囲はこの台帳へ登録。
 - 既存PRを安全にマージし、`READY`の次の作業へ進む。ローカルWP実機がないこと自体をGitHub/Figma作業の全面停止理由にしない。
+
+### PAGE-PARTS — H4 / separator blossom (2026-11-25)
+- DEFERRED_RUNTIME_QA (#523): PC/SP/intermediate widths, long Japanese/English and linked H4, editor/frontend parity, adjacent block margin collapse, official blossom loaded and centered with native SVG aspect ratio, native hr semantics and no horizontal overflow. Compare Figma PC 344:901 / 344:1135 and SP 442:2766 / 442:3204. No actual browser PASS claimed.
+
+### FOOTER — PC sitemap official bullet (2026-11-25)
+- DEFERRED_RUNTIME_QA (#523): PC top-level menu links display 5.41839px official dot with 12px gap, correct type, multiline and focus, unchanged link/child disclosure behavior. Compare PC 114:523 and SP 506:1632; PC column grouping and SP sitemap visibility remain separate review. No real browser PASS claimed.
+
+### PAGE-PARTS — H2 two-color bottom stroke (2026-11-25)
+- DEFERRED_RUNTIME_QA (#523): PC 344:907 / SP 445:3207; compare 3px bottom-only border, horizontal sharp 16% main/84% lightgreen stroke, natural multiline wrapping and unchanged surrounding spacing in editor/frontend at PC/SP/intermediate widths. No actual browser PASS claimed.
+
+### PAGE-PARTS — official external icon, large/small buttons (2026-11-25)
+- DEFERRED_RUNTIME_QA (#523): PC 344:968 / SP 442:2832. Compare large 14×13 right and small 13×12 centered in 30px circle, default/outline/hover/focus, PDF/file precedence for target=_blank, small fit-content desktop, long labels and narrow widths, frontend/editor. Confirm masks and colors render correctly. No real browser PASS claimed.
+
+### PAGE-PARTS — inline external link official SVG (2026-11-25)
+- DEFERRED_RUNTIME_QA (#523): PC 344:1029 / SP 442:2882, coral link and separate orange 14×13 icon, multiline paragraph/list/table at narrow width, baseline, hover/focus and file-icon precedence including external PDFs, editor/frontend. No actual browser PASS claimed.
+
+### PAGE-PARTS — Large navigation arrow corner (2026-11-25)
+- DEFERRED_RUNTIME_QA (#523): PC 384:914 / SP 442:3081. Verify 48px white corner, 20px top-left radius, 32px green circle and Font Awesome 10px arrow, actual image clipping/zoom, focus, no arrow on disabled cards, long text and narrow width, editor/frontend. Existing CMS image fallback and disabled-anchor semantics are separate review; no browser PASS claimed.
+
+### PAGE-PARTS — list nesting and native numbering (2026-11-25)
+- DEFERRED_RUNTIME_QA (#523): PC 344:936 / SP 442:2795. Check child bullet marker 24px / text 42px relative to parent left, 12/8px gaps, native ol start=10/reversed/li value and nested lists, 1/2/3-digit labels, adjacent annotation clearance 20px in both orders and with other blocks, long text and editor/frontend at PC/SP/intermediate widths. No actual browser PASS claimed.
+
+### PAGE-PARTS — gallery zoom affordance (2026-11-25)
+- DEFERRED_RUNTIME_QA (#523): PC 344:1079 / SP 442:2973. Verify existing 44px icon and 20px glyph, inset PC20/SP16, green/white reverse, actual WP lightbox button visibility (no duplicate control), mouse/tap/keyboard open-close and focus return, reduced motion, captions and external/PDF link preservation. No browser PASS claimed.
+
+### PAGE-PARTS — media/text grid and editor settings (2026-11-25)
+- DEFERRED_RUNTIME_QA (#523): PC 344:929 / SP 442:2788, compare default 410:510 top-aligned grid and 40px gap, 600/601/767/768px stacked left/right and nonstacked, editor custom widths, explicit center/bottom alignment, image-fill/link/caption and long text. Validate against installed WP version and editor/frontend. No actual browser PASS claimed.
+
+### PAGE-PARTS — Large navigation empty fields and link semantics (2026-11-25)
+- DEFERRED_RUNTIME_QA (#523): PC 384:914 / SP 442:3081. Verify empty/invalid URL is not focusable or navigable, valid external URL gets noopener, empty rows omitted, missing image has no sample placeholder or broken img, image-only named/unnamed card, title/body-only card, keyboard, editor/front parity and long text. Missing-image layout is a conservative fallback, not a Figma visual acceptance claim.
+
+### PAGE-PARTS — mobile table scroll hint (2026-11-25)
+- DEFERRED_RUNTIME_QA (#523): PC 357:970 / SP 445:3237; confirm existing Flexible Table Block 3.9.0 markup, core tables, multiple tables, 767/768px resize, explicit stack/PC scroll settings, actual overflow only, native keyboard/touch scroll, caption and labels, one hint per table, hint disappears on scroll/focus, reduced motion, actual glyph/overlay/scrollbar visual parity. No real browser PASS claimed.
+
+### FOOTER — in-flow copyright / page-top bar (2026-11-25)
+- DEFERRED_RUNTIME_QA (#523): PC 114:536 / SP 279:2805, 60px right square and left-aligned 12px copyright, native anchor click/keyboard with existing pageScroll, reduced motion, long site names and short pages, hover/focus, no fixed overlay. PC privacy link pending approved destination. No browser PASS claimed.
+
+### FOOTER — adaptive PC sitemap and site identity row (2026-11-25)
+- DEFERRED_RUNTIME_QA (#523): PC 114:484 / 114:523 / 154:2619; verify 308/541 layout, 3 balanced columns, 80/16px gaps at reference width, 8/variable item counts and nested submenus, long labels, keyboard tab order, external f2d2 and hover/focus, SP existing disclosure retained (visibility needs Human confirmation), intermediate widths. No browser PASS claimed.
+
+### FOOTER — brand flow and wide viewport line extension (2026-11-25)
+- DEFERRED_RUNTIME_QA (#523): PC 114:422/SP 279:2632 and line variables 279:1516/279:1567. Check SP copy above two edge-aligned artworks, PC 484px center / 40px gaps / 408px art, 320/375/767/768/1079/1080/1380/1920 widths, long copy, no extra 50px top gap, 1px extension joins on wide PC, actual SVG geometry and line alignment. No browser PASS claimed.
+
+### PAGE-PARTS — in-page links and literal IDs (2026-11-25)
+- DEFERRED_RUNTIME_QA (#523): PC 357:1022 / SP 442:2948. Verify empty/partial/all-empty ACF rows, pasted #, Japanese/punctuation IDs, missing/malformed fragments, deep-link load, page-top, actual header offset, keyboard and long labels at PC/SP/intermediate widths. No browser PASS claimed.
+
+### PAGE-PARTS — accordion open geometry and Q/A markers (2026-11-25)
+- DEFERRED_RUNTIME_QA (#523): PC 357:938 / SP 442:2908; verify closed 24px / open 32px title inset, Q/A regular-width Roboto Medium 24px in 16px rail with 16px gap and centered on wrapped content, native summary click/Enter/Space, focus/reduced-motion, nested open/closed and _qa isolation, actual legacy render_block and editor/frontend markup. Existing nested regex rendering is a separate potential issue, not fixed or verified. No browser PASS claimed.
+
+### PAGE-PARTS — details render ownership (2026-11-25)
+- DEFERRED_RUNTIME_QA (#523): verify core/details nested rendering order, editor markup, native open/name/keyboard/focus, rich-text summary and body, predecorated and unfamiliar summary attributes; PHP CLI isolated callback tests are not full WordPress runtime. Unsupported outer summary markup is intentionally preserved. No browser PASS claimed.
+
+### PAGE-PARTS — background text boxes (2026-11-25)
+- DEFERRED_RUNTIME_QA (#523): PC 344:918/920 / SP 442:2776/2779. Choose background group and columns styles in editor; verify #f5fdeb/5px radius/PC40 SP32 padding, 20px H4-body gap, official blossom geometry, PC40/SP24 column gap, long/unequal text, single and pair, default/custom widths and mobile stack, editor/frontend. No browser PASS claimed.
+
+### PAGE-PARTS — paragraph marker and medium emphasis (2026-11-25)
+- DEFERRED_RUNTIME_QA (#523): PC 344:916 / SP 442:2774 and marker 442:2784. Check strong weight 500, yellow #ffebb3 5px marker on editor underline, multiline fragmented inline, explicit background and non-paragraph underline preservation, links/long Japanese and English/editor/frontend at PC/SP/intermediate widths. No browser PASS claimed.
+
+### PAGE-PARTS — gallery caption flow (2026-11-25)
+- DEFERRED_RUNTIME_QA (#523): PC 344:1079/SP 442:2973. Verify consecutive gallery gap 40px, card top alignment with unequal captions, natural long-caption height, exact image 3:2 and 20px caption gap, core CSS cascade, PC/SP/intermediate, native lightbox keyboard/focus and optional captions. No new fallback images or runtime PASS claimed.
+
+### PAGE-PARTS — button group spacing (2026-11-25)
+- DEFERRED_RUNTIME_QA (#523): PC 344:968/969 SP 442:2832/2833/2842; verify large gap20, adjacent large/small40, small PC 20/30 row/column and SP vertical flow, long labels/custom widths/alignment, icons/focus/hover. Mixed 30/20 SP small group gaps require author grouping confirmation; current uniform 20px. No runtime PASS claimed.
+
+- DEFERRED_RUNTIME_QA (#523): 注釈 PC 344:937/SP 442:2796。段落・画像・gallery・group/columns・media-text・buttons・details・表・既存ページ内リンク/Largeナビとの前後20px、連続注釈、margin相殺/非相殺、core/editorのblock-gap・編集者指定・先頭末尾・長文、PC/SP/中間幅。見出し/区切り線の独立余白は維持を確認。実機未検証。
+
+### PAGE-PARTS — inline file/PDF icon geometry (2026-11-25)
+- DEFERRED_RUNTIME_QA (#523): PC 344:1027/344:1028/357:924 and SP 442:3202. Check FA Regular 13px PDF F1C1 orange #f0813b / attachment F15C coral #ec6b61, existing external SVG, normal links and long wrapping text, hover/focus/keyboard, PC/SP/intermediate widths, actual editor/frontend. No runtime PASS claimed.
+
+### PAGE-PARTS — 小ボタンの矢印 optical alignment（Human FB 2026-11-25、優先修正）
+- OPEN_VISUAL_DEFECT / #523: PC 344:971 / SP 442:2835。Humanが矢印の見た目の中央ずれを指摘。Figmaの原寸30px円/12px glyphと実装スクリーンショットを比較し、実FA6 Proの描画範囲、継承letter-spacing、baseline、左右上下余白、視覚重心を測る。必要ならglyphだけ補正し円/ラベル/クリック領域を維持。通常/外部/PDF/添付、hover/focus、長文、PC/SP/中間幅。原因・補正値・修正後描画は未検証。静的PASSでcloseしない。
+
+- 2026-11-25 optical alignment source repair: circle/glyph分離、共通center、tracking隔離、実FAのhheaとink中心が一致するためtrimなし、alignment classの競合対策、大小F15B。#523 OPEN_VISUAL_DEFECT継続。実FA6 Pro/font loadと対応browserでPC/SP・中間幅、normal/external/PDF/file、hover/focus、長文、WP editorのalignment classを再描画。補正値を推測追加しない。本文F15Cは別ownerのまま。
+
+- 2026-11-25 同系丸矢印: ページ内リンク F063 Solid（24px円/10px）、大ナビ F061 Regular（32px円/10px）は実TTFのinkとhhea中心一致を確認しtrackingを隔離。PC/SP・中間幅、2〜3行、focus/hover、画像cropとcornerの位置、WP editor/publicで実fontの原寸描画を確認（#523 DEFERRED_ENV）。
+
+- 2026-11-25 galleryズーム: 44px外径（border込み）、20px F002 Regular、PC20/SP16px inset、通常/hover/focus、実fontの原寸重心、長いcaption、320/375/768/中間/PC幅、native lightbox keyboard、外部/PDF非対象の回帰。#523 DEFERRED_ENV。H3白/水色のcontrastはデザイン判断待ち、現行色変更なし。
+
+- 2026-11-25 H2 stroke inset: PC 344:906/SP 445:3209、3px線を下余白28/24pxに含める。隔離Chromium 320/375/767/768/960/1380で旧新差3px、水平overflowなし（system font、WPではない）。#523でPC/SP/中間幅の実font・複数行・editor/frontend block gap・二色線を検証。視覚PASS未宣言。
+
+- 総点検第1回: SP nav 100dvh + 100vh fallback、長文flex shrink。iOS Safari/Android Chromeでアドレスバー表示・非表示、最下部へのscroll、1079/1080/1081px、長文・開閉・focusを確認。Header/Footerの構造差は承認済みCMS/assetと照合。parts全体の視覚・操作QAは未完。配色は変更しない。
+
+- tabs: 長文・複数行・横スクロール・focus・editor/public。lightbox: mobile browser chrome表示時の画像と閉じる操作、縦横画像。静的修正のみ、#523で実機確認。
+
+- 小型ACFナビ: PC/SP中間幅・長い日本語/英数字・画像有無・空行・リンク有無・外部リンク・キーボードをWordPress実データで確認。ソース健全性対策は実機PASSではない。
+
+## 2026-11-25 共通UIソース一巡後の #523 優先QA
+
+- P0: Header PC/SP 320/375/767/768/1079/1080/1380pxの長文・日本語英数混在、menu open/close、PC hover/touch/focus、モバイル可視viewport、footer実SVG/lineとメニュー、アイコン実font/optical alignment。最新 `so` を用いる。
+- P1: parts PC/SPのgallery/zoom/lightbox、メディア＋テキスト、accordion通常/Q&A、core tabs +旧ACFタブの利用状況、表960px横スクロール/ScrollHint、見出し・本文・注釈・大/小ナビの折返し、Core/Editor cascade。
+- P2: プライバシー/住所/電話/SNSなど未承認管理値、スライダー挙動/ACF項目、Smallナビ専用デザインは**推測実装の対象外**。確認可能となった段階でHuman契約に合わせて別の小scopeで着手。配色変更なし。
+
+
+### NEWS ARCHIVE — #515（Human承認 2026-11-25）
+- PC 390:666 / SP 478:2615: 0/1/10+ posts、投稿一覧/index fallback、category URL・全件復帰・ページ送りとquery string、カテゴリ0/多数/長文、日付、no-link/external/file、keyboard details開閉/Tab順・focus、現在頁、PC/SP/中間幅、パンくず位置。既存共通heroは別READY。静的/isolated PHP とWP runtimeを分離。#523 DEFERRED_ENV。

@@ -1,0 +1,154 @@
+name: JWSNJ Common UI Static QA
+
+on:
+  pull_request:
+    branches: [so]
+    paths:
+      - 'projects/jwsnj/theme/js/common.js'
+      - 'projects/jwsnj/theme/template-parts/_header.php'
+      - 'projects/jwsnj/theme/css/layout/global_header.css'
+      - 'projects/jwsnj/theme/css/layout/global_navigation.css'
+      - 'projects/jwsnj/tests/header-menu-state.test.mjs'
+      - 'projects/jwsnj/theme/template-parts/_footer.php'
+      - 'projects/jwsnj/theme/inc/menu.php'
+      - 'projects/jwsnj/theme/css/layout/global_footer.css'
+      - 'projects/jwsnj/tests/footer-menu-contract.test.mjs'
+      - 'projects/jwsnj/tests/official-svg-asset-contract.test.mjs'
+      - 'projects/jwsnj/src/images/common/**'
+      - 'projects/jwsnj/theme/images/common/**'
+      - 'projects/jwsnj/theme/css/blocks/wp-block-heading-style.css'
+      - 'projects/jwsnj/theme/css/blocks/wp-block-text-style.css'
+      - 'projects/jwsnj/theme/css/blocks/wp-block-list-style.css'
+      - 'projects/jwsnj/tests/parts-heading-contract.test.mjs'
+      - 'projects/jwsnj/tests/parts-paragraph-contract.test.mjs'
+      - 'projects/jwsnj/tests/parts-bullet-list-contract.test.mjs'
+      - 'projects/jwsnj/theme/css/blocks/wp-block-group-style.css'
+      - 'projects/jwsnj/theme/inc/editor.php'
+      - 'projects/jwsnj/tests/parts-bordered-group-contract.test.mjs'
+      - 'projects/jwsnj/theme/css/blocks/wp-block-media-text-style.css'
+      - 'projects/jwsnj/tests/parts-media-text-contract.test.mjs'
+      - 'projects/jwsnj/theme/css/blocks/wp-block-buttonLink-style.css'
+      - 'projects/jwsnj/tests/parts-button-geometry-contract.test.mjs'
+      - 'projects/jwsnj/theme/css/blocks/wp-block-inPageLink-style.css'
+      - 'projects/jwsnj/tests/parts-inpage-link-contract.test.mjs'
+      - 'projects/jwsnj/theme/css/blocks/wp-block-textLink-style.css'
+      - 'projects/jwsnj/tests/parts-text-link-contract.test.mjs'
+      - 'projects/jwsnj/theme/css/blocks/wp-block-table-style.css'
+      - 'projects/jwsnj/tests/parts-table-contract.test.mjs'
+      - 'projects/jwsnj/theme/css/blocks/wp-block-navigation-style.css'
+      - 'projects/jwsnj/tests/parts-navigation-contract.test.mjs'
+      - 'projects/jwsnj/theme/css/blocks/wp-block-details-style.css'
+      - 'projects/jwsnj/tests/parts-accordion-contract.test.mjs'
+      - 'projects/jwsnj/theme/css/blocks/wp-block-gallery-style.css'
+      - 'projects/jwsnj/theme/css/blocks/wp-block-image-style.css'
+      - 'projects/jwsnj/tests/parts-gallery-contract.test.mjs'
+      - 'projects/jwsnj/theme/css/blocks/wp-block-separator-style.css'
+      - 'projects/jwsnj/tests/parts-separator-contract.test.mjs'
+      - 'projects/jwsnj/tests/parts-small-button-contract.test.mjs'
+      - 'projects/jwsnj/theme/css/module/module_zoom-button.css'
+      - 'projects/jwsnj/tests/parts-zoom-control-contract.test.mjs'
+      - 'projects/jwsnj/theme/css/module/module_textLink.css'
+      - 'projects/jwsnj/tests/parts-module-textlink-contract.test.mjs'
+      - 'projects/jwsnj/theme/css/module/module_line-01.css'
+      - 'projects/jwsnj/tests/parts-module-line-contract.test.mjs'
+      - 'projects/jwsnj/tests/parts-annotation-list-contract.test.mjs'
+      - 'projects/jwsnj/theme/archive.php'
+      - 'projects/jwsnj/theme/index.php'
+      - 'projects/jwsnj/theme/template-parts/_news-archive.php'
+      - 'projects/jwsnj/theme/template-parts/_pagination-news.php'
+      - 'projects/jwsnj/theme/template-parts/_list-news*.php'
+      - 'projects/jwsnj/theme/template-parts/_visual.php'
+      - 'projects/jwsnj/theme/css/project/news_archive.css'
+      - 'projects/jwsnj/theme/css/style.css'
+      - 'projects/jwsnj/tests/news-archive-contract.test.mjs'
+      - '.github/workflows/jwsnj-header-static.yml'
+  push:
+    branches: [so]
+    paths:
+      - 'projects/jwsnj/theme/js/common.js'
+      - 'projects/jwsnj/theme/template-parts/_header.php'
+      - 'projects/jwsnj/theme/css/layout/global_header.css'
+      - 'projects/jwsnj/theme/css/layout/global_navigation.css'
+      - 'projects/jwsnj/tests/header-menu-state.test.mjs'
+      - 'projects/jwsnj/theme/template-parts/_footer.php'
+      - 'projects/jwsnj/theme/inc/menu.php'
+      - 'projects/jwsnj/theme/css/layout/global_footer.css'
+      - 'projects/jwsnj/tests/footer-menu-contract.test.mjs'
+      - 'projects/jwsnj/tests/official-svg-asset-contract.test.mjs'
+      - 'projects/jwsnj/src/images/common/**'
+      - 'projects/jwsnj/theme/images/common/**'
+      - 'projects/jwsnj/theme/css/blocks/wp-block-heading-style.css'
+      - 'projects/jwsnj/theme/css/blocks/wp-block-text-style.css'
+      - 'projects/jwsnj/theme/css/blocks/wp-block-list-style.css'
+      - 'projects/jwsnj/tests/parts-heading-contract.test.mjs'
+      - 'projects/jwsnj/tests/parts-paragraph-contract.test.mjs'
+      - 'projects/jwsnj/tests/parts-bullet-list-contract.test.mjs'
+      - 'projects/jwsnj/theme/css/blocks/wp-block-group-style.css'
+      - 'projects/jwsnj/theme/inc/editor.php'
+      - 'projects/jwsnj/tests/parts-bordered-group-contract.test.mjs'
+      - 'projects/jwsnj/theme/css/blocks/wp-block-media-text-style.css'
+      - 'projects/jwsnj/tests/parts-media-text-contract.test.mjs'
+      - 'projects/jwsnj/theme/css/blocks/wp-block-buttonLink-style.css'
+      - 'projects/jwsnj/tests/parts-button-geometry-contract.test.mjs'
+      - 'projects/jwsnj/theme/css/blocks/wp-block-inPageLink-style.css'
+      - 'projects/jwsnj/tests/parts-inpage-link-contract.test.mjs'
+      - 'projects/jwsnj/theme/css/blocks/wp-block-textLink-style.css'
+      - 'projects/jwsnj/tests/parts-text-link-contract.test.mjs'
+      - 'projects/jwsnj/theme/css/blocks/wp-block-table-style.css'
+      - 'projects/jwsnj/tests/parts-table-contract.test.mjs'
+      - 'projects/jwsnj/theme/css/blocks/wp-block-navigation-style.css'
+      - 'projects/jwsnj/tests/parts-navigation-contract.test.mjs'
+      - 'projects/jwsnj/theme/css/blocks/wp-block-details-style.css'
+      - 'projects/jwsnj/tests/parts-accordion-contract.test.mjs'
+      - 'projects/jwsnj/theme/css/blocks/wp-block-gallery-style.css'
+      - 'projects/jwsnj/theme/css/blocks/wp-block-image-style.css'
+      - 'projects/jwsnj/tests/parts-gallery-contract.test.mjs'
+      - 'projects/jwsnj/theme/css/blocks/wp-block-separator-style.css'
+      - 'projects/jwsnj/tests/parts-separator-contract.test.mjs'
+      - 'projects/jwsnj/tests/parts-small-button-contract.test.mjs'
+      - 'projects/jwsnj/theme/css/module/module_zoom-button.css'
+      - 'projects/jwsnj/tests/parts-zoom-control-contract.test.mjs'
+      - 'projects/jwsnj/theme/css/module/module_textLink.css'
+      - 'projects/jwsnj/tests/parts-module-textlink-contract.test.mjs'
+      - 'projects/jwsnj/theme/css/module/module_line-01.css'
+      - 'projects/jwsnj/tests/parts-module-line-contract.test.mjs'
+      - 'projects/jwsnj/tests/parts-annotation-list-contract.test.mjs'
+      - 'projects/jwsnj/theme/archive.php'
+      - 'projects/jwsnj/theme/index.php'
+      - 'projects/jwsnj/theme/template-parts/_news-archive.php'
+      - 'projects/jwsnj/theme/template-parts/_pagination-news.php'
+      - 'projects/jwsnj/theme/template-parts/_list-news*.php'
+      - 'projects/jwsnj/theme/template-parts/_visual.php'
+      - 'projects/jwsnj/theme/css/project/news_archive.css'
+      - 'projects/jwsnj/theme/css/style.css'
+      - 'projects/jwsnj/tests/news-archive-contract.test.mjs'
+      - '.github/workflows/jwsnj-header-static.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  header-static:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test header breakpoint and menu close regressions
+        run: node --test projects/jwsnj/tests/header-menu-state.test.mjs
+      - name: Test Footer WordPress menu contract
+        run: node --test projects/jwsnj/tests/footer-menu-contract.test.mjs
+      - name: Test official Header and Footer SVG bytes
+        run: node --test projects/jwsnj/tests/official-svg-asset-contract.test.mjs
+      - name: Test Figma-approved parts heading, copy and list contracts
+        run: node --test projects/jwsnj/tests/parts-*.test.mjs
+      - name: Test approved news archive and isolated pagination
+        run: node --test projects/jwsnj/tests/news-archive-contract.test.mjs
+      - name: Check WordPress Header and Footer PHP syntax
+        run: |
+          php -l projects/jwsnj/theme/template-parts/_header.php
+          php -l projects/jwsnj/theme/template-parts/_footer.php
+          php -l projects/jwsnj/theme/inc/editor.php

@@ -68,3 +68,37 @@ TOP の主なパーツ（PC）:
 - 2026-11-20 `white-space: nowrap` はjwsnj実装では禁止。テキストは2〜3行への自然な折り返しを優先。文字拡大150〜200%の専用テストは不要（PC/SP/中間幅と長文は確認）
 - 2026-11-20 URL等の未決事項は後日Human指示。勝手にslugや新しい投稿タイプを創作しない。影響しないところから先に進める
 - 2026-11-20 **ローカルWordPressとブラウザの実機検証は現在利用できない（Human明示）**。`docs/DEFERRED_RUNTIME_QA.md` に `DEFERRED_ENV` として全件登録し、利用可能になった初回の作業でP0から優先実施。**現段階ではそれを理由にFigma/GitHubで進められるコード・静的QA・CI・PRを止めない**。環境が使えるまで毎時ローカル起動を繰り返さない
+
+## 2026-11-23 Human-approved implementation unblocking (supersedes SVG-only hard stop)
+
+- Human explicitly authorized proceeding with implementation while official Header/Footer SVGs are unavailable, using **development-only, clearly labeled, replaceable placeholders** where needed. This is **not** approval to invent production imagery, URLs, phone numbers, SNS, slugs, ACF or CPT values.
+- Official SVG/logo export remains a separately tracked deliverable in Issue #524. Preserve source node, exact binary bytes, dimensions, SHA-256, rights, callsite and CI evidence before declaring final visual parity. Never commit temporary Figma asset URLs or overwrite Foundation-owned files concurrently.
+- WordPress/browser/keyboard runtime QA remains **DEFERRED_RUNTIME_QA** in Issue #523. Static/CI checks do not imply runtime PASS. The Human permits independent source implementation to continue despite that deferral.
+- Header/Footer source functionality, responsive/keyboard static checks, WordPress ownership and relevant CI must still be reviewed; any serious defect blocks dependent work. **Missing SVG bytes or deferred runtime QA alone must not halt unrelated, verifiable work.**
+- The Human explicitly authorized moving toward the **parts catalog** after source-level Header/Footer quality review and phase transition documentation. This is a narrow exception to the older all-PASS phase gate, **not** permission to bypass unresolved functional or CMS blockers, or to start TOP/course/detail pages. Before implementing parts, read Figma parts PC `339:23` / SP `433:2015`, inspect Theme components and 10-point preflight, then make small CI-reviewed PRs. Track provisional vs final acceptance separately.
+- If a scheduled prompt still says that every phase gate must PASS before any parts work, reconcile that stale launcher with this newer Human decision; do not silently claim full Header/Footer acceptance.
+
+## 2026-11-24 公式素材は Git にある（全環境共通）
+
+Header/Footer と TOP の公式 SVG / WebP は #599 / #600 でこのリポジトリに入った。上の「SVG が無いので仮置きしてよい」は、**まだ Git に無い素材**に限る。保存済みファイルを仮画像で置き換えない。
+
+どの Agent でも `docs/DESIGN_FOUNDATION.md` の「残作業」を読む。チャットや Cursor 専用の記録は正本にしない。
+
+- Cursor に依頼するのは、リポジトリにまだ無い Figma 公式バイトの取得だけ
+- 保存済みファイルのテーマ接続と、未承認 URL を作らない実装は、どの環境でもできる
+- ブラウザ確認は #523。表示できたと書かない
+
+- Human 2026-11-25: Figma指定の配色・コントラストはデザイン判断として保持。今回の実装総点検では変更せず、配色の再指摘を繰り返さない。新規実装より既存Header/Footer/partsの品質監査を優先。
+
+- Human 2026-11-25: テキストを含むボタン・タブ・カード等は固定heightで行数を制限しない。min-heightと自然な伸縮を基本とする。装飾、画像比率、可視viewport等の寸法とは区別する。
+
+## 2026-11-25 共通UI 静的点検の一巡終了 / 次フェーズの境界
+
+- 既存Header/Footer/パーツ集の静的コードとFigma個別ノードの残差監査を一巡した。修正PR #633 / #634 / #635 / #636 / #637 / #638 は `so` にマージ済み。文字を含むUIの固定高さ、長い文言と中間幅、不要サンプルCSS、画像・リンク未設定、hover/focus、画像比率、テーブルのスクロール対策を点検した。**これは静的の一巡であり、実機・画面一致の最終PASSではない。**
+- #523 実WordPress・ブラウザ表示/フォーカス・端末差、#524 未取得の一部公式素材、未承認のFooter管理値・CTAリンク・Smallナビ固有デザイン・スライダー操作とCMS仕様をそれぞれ別の未完了として維持。カラーはFigma決定を尊重し変更しない。
+- **新規実装の許可範囲は従来通り**。パーツ集・既承認の独立ソース修正までは可。記事一覧PR #515は開いているが、Human承認済みの実装開始・マージとは見なさない。記事詳細・固定ページ・TOP・コース紹介に自動で進まない。次ページを進めるにはHumanによる対象スコープの承認と最新Git/Figma/owner照合が必要。
+
+## 2026-11-25 Human承認 — 記事一覧
+
+- Human「承認するよ、どんどん実装進めて」により、直前に提示した**通常投稿一覧・カテゴリ一覧**（PC 390:666 / SP 478:2615）の実装を承認。既存Draft #515を継続し、最新soへ統合。#523/#524は実機・素材の最終受入として別途維持。
+- 記事詳細・固定ページ・TOP・コース詳細はこの承認の範囲外。URL・ACF/CPT/未確定のサイト情報を追加しない。

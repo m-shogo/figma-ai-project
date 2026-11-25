@@ -16,20 +16,26 @@
         position: absolute;
         right: 0;
         bottom: 0;
-        width: calc(50 * var(--to-rem-func));
-        height: calc(50 * var(--to-rem-func));
+        width: calc(44 * var(--to-rem-func));
+        height: calc(44 * var(--to-rem-func));
         display: inline-flex;
         align-items: center;
         justify-content: center;
         background-color: var(--color-primary);
         border: calc(1 * var(--to-rem-func)) solid var(--color-primary);
         color: var(--color-secondary);
-        font-size: calc(18 * var(--to-rem-func));
+        font-size: calc(20 * var(--to-rem-func));
         transition: var(--transition-duration);
         font-family: var(--font-awesome);
         font-weight: 400;
         line-height: 1;
         content: var(--icon-zoom);
+        border-radius: 50%;
+        pointer-events: none;
+    }
+    &:focus-visible {
+        outline: calc(2 * var(--to-rem-func)) solid var(--color-accent);
+        outline-offset: calc(3 * var(--to-rem-func));
     }
     /* blank */
     &[target='_blank'] {
@@ -53,14 +59,48 @@
     }
 }
 
-@media (width < calc(768 * (1 / 16 * 1rem))) {
-    .wp-block-columns.is-not-stacked-on-mobile {
-        .lightbox_wrap {
+/* Figma gallery PC 344:1079 / SP 442:2973.
+   Scope to existing gallery zoom affordances; do not change external/file link variants
+   or replace WordPress's native lightbox control. */
+.wp-block-gallery {
+    .wp-block-image > a:not([target='_blank']):not([href$='.pdf']),
+    .wp-lightbox-container .lightbox_wrap {
+        width: 100%;
+        &::after {
+            /* The 44px circle includes its border; isolate the single FA glyph
+               from inherited text tracking/italic/trim. No optical offset guessed. */
+            box-sizing: border-box;
+            font-style: normal;
+            letter-spacing: 0;
+            text-box-trim: none;
+            right: calc(16 * var(--to-rem-func));
+            bottom: calc(16 * var(--to-rem-func));
+        }
+        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
             &::after {
-                width: 2em;
-                height: 2em;
-                font-size: calc(16 * var(--to-rem-func));
+                right: calc(20 * var(--to-rem-func));
+                bottom: calc(20 * var(--to-rem-func));
             }
         }
+        @media (any-hover: hover) {
+            &:hover::after {
+                opacity: 1;
+                background-color: var(--color-secondary);
+                color: var(--color-primary);
+            }
+        }
+        &:focus-visible::after {
+            background-color: var(--color-secondary);
+            color: var(--color-primary);
+        }
+        @media (prefers-reduced-motion: reduce) {
+            &::after {
+                transition: none;
+            }
+        }
+    }
+    .wp-lightbox-container:focus-within .lightbox_wrap::after {
+        background-color: var(--color-secondary);
+        color: var(--color-primary);
     }
 }

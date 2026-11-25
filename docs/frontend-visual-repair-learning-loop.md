@@ -87,6 +87,8 @@ Decoration
 - repeated grid/card alignment
 - section boundaries
 
+**Human 2026-11-25 — optical alignment / design intent:** 大きなlayout差が無くても、円内矢印、ロゴ、文字のbaseline、形の重心、groupの余白、視覚階層の違和感は個別に検出する。現行Figma画像と実装の原寸を見てから必要な拡大で診断する。box boundsとglyph ink bounds/視覚重心、SVG viewBox/透明余白、font load/metrics/letter-spacing、strokeを区別する。修正は原因ownerに局所化し、クリック領域・ラベル・背景・意図された非対称を壊さない。正確な補正値は実描画から決める。原則一覧は `docs/frontend-implementation-standard.md` §3.1。
+
 ## 5. Root-cause taxonomy
 
 修正前に主原因を最低1つ選ぶ。必要ならsecondaryを複数持つ。
@@ -174,6 +176,20 @@ Screenshot comparisonは環境差を受ける。Baseline生成とcomparison envi
 を使う。
 
 Figma parity thresholdを全案件共通の1px/scoreで固定しない。Project riskと差分原因で判断する。
+
+**比較の完了判定:** pixel diffの集計値やcomputed styleの一致を単独の受入根拠にしない。部品の原寸と周囲の文脈を目視比較し、意図した優先順位・整列・余白・状態を確認。変更したglyph/shapeの見た目の差、ブラウザのrasterization差、正当なresponsive差を分ける。実際のrenderが取れない間はvisual未検証。既知のHuman視覚指摘は再描画確認までOPEN（安全な独立source作業は既存ゲートに従う）。
+
+### Self-review: AI自身が違和感を検出する順番（2026-11-25）
+
+Humanの指摘を受けてから比較するのではなく、実装者が受入前に以下を実行する。既存のFigma/Playwright/Storybook/撮影artifactを使い、別のvisual engineは作らない。
+
+1. 現行Figmaと実装を同じ対象・幅・状態・dataで並べ、まずページ/周辺の主役・視線・情報階層・グループ間隔・全体の軸を見る。
+2. 原寸の部品を比較して、数値が合っていても「違和感がないか」を判定。繰り返し要素と兄弟variantを横に比べ、icon ink/重心、baseline、上下左右の余白、見た目の大きさ、枠/影/色/状態の連続性を見る。
+3. 疑わしい箇所だけ拡大/overlay/diff/computed geometryで原因を切り分ける。小さな重要UIの欠陥が全画面pixel scoreに埋もれないようにする。見ていない箇所はPASSにしない。
+4. 原因をownerへ戻して修正。再撮影で元の不一致が消え、隣接部品・関連state/width/browserで別の欠陥を増やしていないことを確認。意図的な差と環境差は根拠を示す。
+5. 既存PR/QAへ対象Figma node、actual SHA、環境、状態、expected/actual artifact、具体的な差分、PASS/FAIL/UNVERIFIEDを記録。実機なしでもsource確認は進めてよいが、視覚不良の修正完了とは言わない。
+
+デザイナー視点のself-reviewはコードreviewとは別の受入作業。別Agent reviewerは既存運用に沿って利用可能だが、全案件に追加Agentを必須化しない。次の実案件で既知の矢印ずれ・baseline・長文・hover・browser差を見つけられるか、Human FB再発数を既存学習記録で追う。効果は実測前に証明済みとしない。
 
 ## 9. Semantic evidence is separate
 

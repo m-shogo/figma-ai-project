@@ -12,32 +12,14 @@
         }
         position: relative;
         z-index: 0;
-        /* &::before {
-            content: '';
-            pointer-events: none;
-            position: absolute;
-            z-index: 1;
-            display: block;
-            top: 0;
-            right: 0;
-            height: calc(57 * var(--to-rem-func));
-            width: calc(50 * var(--to-rem-func));
-            background: linear-gradient(to right, transparent, color-mix(in oklch, var(--color-primary) 10%, transparent 0%));
-        } */
         .wp-block-tab-list {
             --_gap: calc(16 * var(--to-rem-func));
             display: flex;
             gap: var(--_gap);
-            /* margin-bottom: calc(20 * var(--to-rem-func)); */
             position: relative;
             z-index: 0;
             overflow: auto;
             padding-bottom: calc(10 * var(--to-rem-func));
-            /* -ms-overflow-style: none;
-          scrollbar-width: none;
-          &::-webkit-scrollbar {
-              display: none;
-           } */
             /* スクロールバー色変更（webkit用） */
             &::-webkit-scrollbar {
                 width: calc(4 * var(--to-rem-func));
@@ -66,6 +48,10 @@
             > button {
                 --_border-width: calc(1 * var(--to-rem-func));
                 flex-shrink: 0;
+                max-inline-size: 100%;
+                box-sizing: border-box;
+                overflow-wrap: anywhere;
+                white-space: normal;
                 border: calc(1 * var(--to-rem-func)) solid var(--color-primary);
                 border-width: var(--_border-width) var(--_border-width) 0 var(--_border-width);
                 background-color: color-mix(in oklch, var(--color-secondary), transparent 0%);
@@ -102,7 +88,6 @@
         .wp-block-tab-panels {
             .wp-block-tab-panel {
                 padding-block: calc(20 * var(--to-rem-func));
-                /* padding-inline: calc(20 * var(--to-rem-func)); */
                 > *:first-child {
                     margin-top: 0;
                 }

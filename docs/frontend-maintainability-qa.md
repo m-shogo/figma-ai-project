@@ -63,14 +63,19 @@ Changed scope中心に:
 - syntax/static contract
 - runtime errors
 - canonical visual
+- `docs/frontend-implementation-standard.md` §3.1 のデザイン基礎原則：原寸の部品＋周辺の実描画を現行Figmaと照合（optical center/baseline、階層、group内外余白、glyph/asset、形、状態のうち関連するもの）
 - horizontal overflow
 - relevant interaction smoke
 - obvious owner/override smell
+
+**Visual evidence rule (Human 2026-11-25):** 実描画のない静的PASSをvisual PASSにしない。比較したFigma node、対象実装SHA/viewport/state、expected/actual画像（既存artifactの保存先で可）、差分と判定を必要なscopeで記録。人間の指摘した視覚欠陥は修正後の描画証拠が得られるまでOPEN。全ての原則に個別テストを新設する必要はない。
 
 ### TARGETED MUTATION
 
 Riskに応じて:
 
+- optical alignment / icon family：描画されたglyph/shapeの上下左右余白・baseline・重心・状態間の位置を原寸比較、必要なら拡大・pixel/geometryで診断。font load、side bearing、viewBox、letter-spacingも確認。box中央だけのassertでは不足
+- hierarchy / rhythm / composition：兄弟・隣接section、可変文字・件数とPC/SP/境界幅で優先順位・余白・見た目の均衡を確認
 - text mutation
 - cardinality/incomplete-row mutation
 - optional field missing
@@ -99,6 +104,32 @@ Release/benchmark/research/high-risk changeで:
 - full-page integration
 
 全mutation dimensionのCartesian productを毎PR実行しない。
+
+---
+
+### 3.1 UI polish — component family acceptance
+
+FAST PR GATEで対象の構成に応じて下記の欠陥を先回りする。全項目の独立テストや全画面の再撮影を毎PRに要求しない。
+
+| 対象 | 視覚・実操作の受入 |
+|---|---|
+| ボタン・リンク | glyphと文字の見た目の中心・余白、矢印の向き/サイズ、状態切替で輪郭/位置が動かない、複数行/クリック範囲/keyboard focus |
+| ナビ・accordion・tabs | 階層の視覚的区別、開閉記号の重心、active/current/disabled/hover/focus、開閉の安定、ラベルが増えても押し出しが自然 |
+| カード・繰り返し・表 | 画像crop、視覚軸、CTA位置、罫線の交点、同一familyの統一、件数/高さ/空欄/中間幅、表の横スクロールがページ全体へ漏れない |
+| Form・modal・overlay | label/help/error、native入力/IME/autofill、focus ring/scroll lock復帰、境界やshadow、viewportとkeyboard、実際の操作範囲 |
+| 共通装飾 | 角丸・border/stroke・線の接合、SVG viewBoxと透明余白、色/反転、DPRでの欠け、装飾とsemantic contentの責務 |
+
+目視とcomputed evidenceを併用。Figmaに意図的な例外があれば維持。関連操作は実際に行い、スクリーンショット1枚やCSS property presenceだけで完了にしない。既知の不合格は再描画で閉じる。
+
+---
+ 
+### 3.2 Behavior-based test design
+
+既存のtest runner/Playwright等を優先。ユーザーが見る/操作する結果をassertし、CSSの指定値・classの有無・スクリーンショットだけで機能PASSにしない。role/name/text等の安定したlocatorと必要なtest id、web-first assertionを用いる。固定sleep、偶然のDOM index、force click、無条件retryで失敗を隠さない。data・viewport・font・stateを必要に応じ固定し、テスト間の状態汚染を防ぐ。
+
+変更の正常経路と意味のある失敗経路（空欄、長文、通信失敗、連打、戻る等）をscopeに応じ選ぶ。console/network error、expected result、再現条件を確認し、testが本当に動作不良を検出できるassertになっているかを見る。既存runtimeにアクセスできないなら静的QAと明確に区別。全項目へ新規E2Eを義務化しない。
+
+参照: [Playwright Best Practices](https://playwright.dev/docs/best-practices).
 
 ---
 
@@ -304,6 +335,16 @@ Relevant WCAG target/interactionsで:
 - visual overlayがDOM focus orderを不自然にしない
 
 を確認する。
+
+---
+
+### 11.1 Practical accessibility acceptance
+
+Relevant scopeで、native element/role、accessible name、状態と関係（expanded/current/selected等）、唯一のID、label/descriptionの解決、decorativeとinformative imageの区別を実DOMで見る。icon-only controlには目的の名前、tableにはdata header関係。リンク先・button動作の意味と表示が一致すること。
+
+- Tab/Shift+Tab、Enter/Space、必要なEscape/矢印キーを部品のpatternに合わせ実操作。focusの可視性、順序、trapの適用範囲、閉じた後の復帰、非表示の操作対象を確認。
+- 色とcontrast、hit area/target、hover/focus content、status announcementは適用WCAGの条件に従って確認（standard §15）。数値だけで押しやすさや可読性を保証しない。
+- 既存axe等で自動検出できる項目を確認し、手動で名前の妥当性、読み順、操作、視覚・意味を補う。重要なカスタムwidgetは必要なAT（例: VoiceOver/NVDA）と対象browserで検証。自動PASSを全件適合・実機PASSにしない。
 
 ---
 

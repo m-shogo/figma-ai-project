@@ -445,28 +445,28 @@ add_action('init', function () {
 // ==========================================================================
 function custom_render_details_block($block_content, $block)
 {
-    if (isset($block['blockName']) && $block['blockName'] === 'core/details') {
-        // エディター側で既にカスタム構造が適用済みの場合はスキップ
-        if (strpos($block_content, 'wp-block-details__summary') !== false) {
-            return $block_content;
-        }
-        // 旧フォーマット（エディターJS適用前に保存された記事）への変換
-        $block_content = preg_replace(
-            '/<summary>/i',
-            '<summary class="wp-block-details__summary"><span class="wp-block-details__title">',
-            $block_content
-        );
-        $block_content = preg_replace(
-            '/<\/summary>/i',
-            '</span><span class="wp-block-details__button"><span class="wp-block-details__button-icon"></span></span></summary><div class="wp-block-details__content"><div class="wp-block-details__inner">',
-            $block_content
-        );
-        $block_content = preg_replace(
-            '/<\/details>/i',
-            '</div></div></details>',
-            $block_content
-        );
+    if (($block['blockName'] ?? '') !== 'core/details') {
+        return $block_content;
     }
-    return $block_content;
+
+    // Core renders inner blocks first. Only decorate this block's own plain
+    // summary and outer closing tag; leave rendered children byte-for-byte.
+    // Already customized or unfamiliar outer markup is intentionally unchanged.
+    $pattern = <<<'REGEX'
+~\A(?<opening>\s*<details\b(?:[^>"']|"[^"]*"|'[^']*')*>\s*)<summary\s*>(?<title>.*?)</summary\s*>(?<body>.*)(?<closing></details\s*>\s*)\z~is
+REGEX;
+    if (!preg_match($pattern, $block_content, $parts)) {
+        return $block_content;
+    }
+
+    return $parts['opening']
+        . '<summary class="wp-block-details__summary"><span class="wp-block-details__title">'
+        . $parts['title']
+        . '</span><span class="wp-block-details__button" aria-hidden="true"><span class="wp-block-details__button-icon"></span></span></summary>'
+        . '<div class="wp-block-details__content"><div class="wp-block-details__inner">'
+        . $parts['body']
+        . '</div></div>'
+        . $parts['closing'];
 }
+
 add_filter('render_block', 'custom_render_details_block', 10, 2);

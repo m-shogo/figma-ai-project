@@ -232,3 +232,21 @@ add_filter('block_editor_settings_all', function ($settings) {
   $settings['disableContentOnlyForUnsyncedPatterns'] = true;
   return $settings;
 });
+
+// ==========================================================================
+// Figma parts catalog — optional bordered group block (PC 344:922 / SP 442:2782)
+// ==========================================================================
+add_action('init', function () {
+  register_block_style('core/group', array(
+    'name' => 'jwsnj-bordered-box',
+    'label' => '枠付きボックス',
+  ));
+  register_block_style('core/group', array(
+    'name' => 'jwsnj-background-box',
+    'label' => '背景付きテキストボックス',
+  ));
+  register_block_style('core/columns', array(
+    'name' => 'jwsnj-background-boxes',
+    'label' => '背景付きボックスのカラム',
+  ));
+});

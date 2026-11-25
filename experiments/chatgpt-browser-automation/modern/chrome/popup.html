@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="ja"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Figma継続送信</title>
+<link rel="stylesheet" href="popup.css">
+<main>
+<header><div><span class="eyebrow">CHROMEだけで実行</span><h1>Figma継続送信</h1></div><span id="schedule" class="pill">定期送信オフ</span></header>
+<section id="outcome" class="card outcome" aria-live="polite" aria-atomic="true"><span class="eyebrow">現在の状態</span><h2 id="headline">状態を確認しています…</h2><p id="guidance"></p></section>
+<section id="recovery" class="card" hidden><h2>未確定の送信を確認する</h2><p class="hint">今回の試行より後の投稿と下書きを、対象チャットで確認してください。以前の同じ本文の投稿とは区別してください。</p><label class="confirmation"><input id="not-posted" type="checkbox"><span>今回の投稿がなく、入力欄が空であることを確認しました</span></label><button id="resolve" type="button" disabled>保留を解除する（送信しない）</button><p class="hint">試行記録を残し、未投稿を確認した試行の待機は解除します。投稿がある場合や不明な場合は解除しないでください。</p></section>
+<section class="card"><h2>送信する内容</h2><div class="prompt"><span class="app">Figma</span><span>慎重に進んで</span><button id="copy-prompt" class="text-button" type="button">本文をコピー</button></div>
+<label for="url">送信先チャット</label><input id="url" type="url" placeholder="https://chatgpt.com/c/…" autocomplete="off"><p class="hint">このURLのチャットだけに送ります。対象タブをChromeで開いておいてください。</p>
+<label for="interval">送信間隔（分）</label><input id="interval" type="number" min="60" max="10080" value="60">
+<label class="confirmation"><input id="owner" type="checkbox"><span>別端末や既存タスクで、同じ案件の実装を並行していないことを確認しました</span></label>
+<p id="unsaved" class="hint"></p><p id="send-help" class="hint">送信には上の確認が必要です。</p>
+<div class="actions"><button id="once" class="primary" type="button" disabled>この内容を保存して送信</button><button id="probe" type="button">保存して状態確認</button><button id="save" class="text-button" type="button">設定だけ保存</button></div></section>
+<section class="card"><div class="section-heading"><h2>送信履歴と実行予定</h2><button id="refresh" class="text-button" type="button">更新</button></div>
+<dl class="metrics"><div><dt>送信確認済み</dt><dd id="sent">0件</dd></div><div><dt>生成中の見送り</dt><dd id="skipped">0件</dd></div></dl>
+<dl class="facts"><dt>次回の定期送信</dt><dd id="next">予定なし</dd><dt>次に送信できる時刻</dt><dd id="cooldown">なし</dd></dl>
+<div id="last-sent" class="history">拡張からの送信記録はありません。</div>
+<p class="hint">「送信確認済み」は投稿できたことの確認です。Figma取得や案件実装の成功は含みません。</p>
+<div class="actions"><button id="start" type="button" disabled>保存して定期送信を開始</button><button id="stop" class="danger" type="button">定期送信を停止</button></div>
+<p class="hint">開始時の即送信はありません。Chromeが終了している間は動作しません。</p></section>
+<section class="card"><div class="section-heading"><h2>結果を共有</h2><button id="copy-result" type="button">結果をコピー</button></div><p id="copy-feedback" role="status"></p><textarea id="report" readonly aria-label="コピー用の結果" rows="6"></textarea><details><summary>技術情報（診断用）</summary><pre id="technical"></pre></details></section>
+<footer>結果不明では自動再送しません。下書きや認証要求がある場合は停止します。設定と実行結果はこの端末内に保存し、回答本文・Cookieは収集しません。</footer>
+</main><script type="module" src="popup.mjs"></script></html>

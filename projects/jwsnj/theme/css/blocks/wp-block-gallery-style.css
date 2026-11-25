@@ -1,40 +1,79 @@
 @charset "utf-8";
 /* // ------------------------------
-// ギャラリー
+// ギャラリー — Figma parts PC 344:1079 / SP 442:2973
 // ------------------------------ */
 .block-editor_wrap,
 .editor-styles-wrapper {
     .wp-block-gallery {
-        /* id="core-block-supports-inline-css" で吐き出しているため、不要 */
-        /* gap: var(--wp--style--unstable-gallery-gap) !important; */
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: calc(16 * var(--to-rem-func));
+        grid-template-columns: minmax(0, 1fr);
+        align-items: start;
+        gap: calc(40 * var(--to-rem-func));
         margin-top: var(--wp-block-margin);
         & + & {
-            margin-top: var(--wp-block-margin-large);
+            /* Figma 344:1080 / 442:2974: consecutive galleries share the 40px gap. */
+            margin-top: calc(40 * var(--to-rem-func));
         }
         &.has-nested-images {
             figure.wp-block-image {
+                min-width: 0;
                 width: 100% !important;
-                display: block grid;
-                grid-template-rows: subgrid;
-                grid-row: span 2;
-                gap: 0;
+                margin: 0;
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
+                gap: calc(20 * var(--to-rem-func));
                 img {
+                    display: block;
+                    width: 100%;
+                    height: auto;
                     aspect-ratio: 3 / 2;
+                    flex: 0 0 auto;
+                    object-fit: cover;
+                    border-radius: calc(5 * var(--to-rem-func));
                 }
-                &:has(figcaption) {
-                    &::before {
-                        content: none; /* デフォルトのブラー効果を削除 */
-                    }
+                figcaption {
+                    position: static;
+                    flex: 0 0 auto;
+                    max-height: none;
+                    overflow: visible;
+                    margin: 0;
+                    padding: 0;
+                    background: none;
+                    text-shadow: none;
+                    text-align: center;
+                    font-family: var(--font-jwsnj-ja);
+                    font-size: calc(12 * var(--to-rem-func));
+                    line-height: 1.6;
+                    font-weight: 500;
+                    letter-spacing: 0.05em;
+                    color: var(--color-text);
+                    overflow-wrap: anywhere;
+                    word-break: normal;
+                }
+                &:has(figcaption)::before {
+                    content: none;
                 }
             }
         }
 
+        /* Figma SP 442:2974 uses two 160px cards with 15px gap for its
+           three-column gallery variant at a 335px content width. */
+        &.columns-3 {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            column-gap: calc(15 * var(--to-rem-func));
+        }
+
         @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-            grid-template-columns: repeat(3, 1fr);
-            gap: calc(40 * var(--to-rem-func));
+            &.has-nested-images figure.wp-block-image figcaption {
+                font-size: calc(14 * var(--to-rem-func));
+                line-height: 1.5;
+            }
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            &.columns-3 {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                column-gap: calc(40 * var(--to-rem-func));
+            }
         }
     }
 }

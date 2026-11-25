@@ -1,12 +1,14 @@
 @charset "utf-8";
 /* // ------------------------------
-// ページ内リンク
+// ページ内リンク — Figma PC 357:1022 / SP 442:2948
 // ------------------------------ */
 .block-editor_wrap,
 .editor-styles-wrapper {
     .module_inPageLink-01 {
         display: flex;
         flex-direction: column;
+        align-items: stretch;
+        gap: calc(20 * var(--to-rem-func));
         list-style: none;
         padding: 0;
         margin-top: var(--wp-block-margin);
@@ -15,89 +17,81 @@
         }
         .inPageLink {
             width: 100%;
+            min-width: 0;
             a {
-                color: var(--color-text);
-                text-decoration: none;
-                font-size: calc(14 * var(--to-rem-func));
-                letter-spacing: 0.1em;
-                line-height: 1.2;
-                padding-block: calc(20 * var(--to-rem-func));
-                padding-inline: calc(10 * var(--to-rem-func));
-                border-bottom: calc(2 * var(--to-rem-func)) solid var(--color-primary);
                 display: flex;
                 align-items: center;
+                justify-content: space-between;
+                gap: calc(24 * var(--to-rem-func));
                 width: 100%;
-                transition: var(--transition-duration);
-                @include hover {
-                    border-color: var(--color-primary);
-                    .title {
-                        &::before {
-                            background-color: var(--color-primary);
-                        }
-                    }
-                }
+                min-height: calc(48 * var(--to-rem-func));
+                padding: calc(12 * var(--to-rem-func)) calc(16 * var(--to-rem-func));
+                background-color: var(--jwsnj-color-base-lightblue);
+                border-radius: calc(3 * var(--to-rem-func));
+                color: var(--color-text);
+                text-decoration: none;
+                font-family: var(--font-jwsnj-ja);
+                font-size: calc(15 * var(--to-rem-func));
+                font-weight: 500;
+                letter-spacing: 0.05em;
+                line-height: 1.4;
+                transition: background-color var(--transition-duration);
                 .title {
-                    padding-right: calc(24 * var(--to-rem-func));
-                    position: relative;
-                    width: 100%;
+                    flex: 1 1 auto;
+                    min-width: 0;
                     overflow-wrap: anywhere;
                     word-break: normal;
                     line-break: strict;
-                    &::after {
-                        content: '';
-                        display: block;
-                        color: var(--color-primary);
-                        font-size: calc(22 * var(--to-rem-func));
-                        position: absolute;
-                        right: 0;
-                        top: 50%;
-                        line-height: 1;
-                        transform: translateY(-50%);
-                        font-family: var(--font-awesome);
-                        content: var(--icon-chevron-down);
-                    }
+                }
+                &::after {
+                    content: '\f063';
+                    display: flex;
+                    box-sizing: border-box;
+                    flex: 0 0 calc(24 * var(--to-rem-func));
+                    align-items: center;
+                    justify-content: center;
+                    width: calc(24 * var(--to-rem-func));
+                    height: calc(24 * var(--to-rem-func));
+                    background-color: var(--jwsnj-color-sec);
+                    border-radius: 50%;
+                    color: var(--color-secondary);
+                    font-family: var(--font-awesome);
+                    font-weight: 900;
+                    font-style: normal;
+                    font-size: calc(10 * var(--to-rem-func));
+                    /* The shipped FA Solid F063 ink and line-box centers coincide. */
+                    line-height: 1;
+                    letter-spacing: 0;
+                    text-box-trim: none;
+                }
+                &:focus-visible {
+                    outline: calc(2 * var(--to-rem-func)) solid var(--color-primary);
+                    outline-offset: calc(3 * var(--to-rem-func));
                 }
             }
         }
-
+        /* Figma SP page link 442:2948 uses a 304px minimum where
+           viewport space permits; keep 100% width on narrow devices. */
+        @media (width < calc(768 * (1 / 16 * 1rem))) {
+            .inPageLink {
+                min-width: min(100%, calc(304 * var(--to-rem-func)));
+            }
+        }
         @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-            gap: calc(0 * var(--to-rem-func)) calc(20 * var(--to-rem-func));
-            display: grid;
-            &[data-column='4'] {
-                grid-template-columns: repeat(4, 1fr);
-            }
-            &[data-column='3'] {
-                grid-template-columns: repeat(3, 1fr);
-            }
-            &[data-column='2'] {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            &[data-column='1'] {
-                grid-template-columns: repeat(1, 1fr);
-            }
+            flex-direction: row;
+            justify-content: center;
+            align-items: stretch;
+            flex-wrap: wrap;
+            gap: calc(24 * var(--to-rem-func));
             .inPageLink {
-                a {
-                    font-size: calc(16 * var(--to-rem-func));
-                    border-color: color-mix(in oklch, var(--color-primary) 40%, transparent);
-                    padding-block: calc(24 * var(--to-rem-func));
-                    padding-inline: calc(16 * var(--to-rem-func));
-                }
+                width: fit-content;
+                min-width: min(100%, calc(304 * var(--to-rem-func)));
+                max-width: 100%;
             }
         }
-
-        /* MARK: hover */
         @media (any-hover: hover) {
-            .inPageLink {
-                a {
-                    &:hover {
-                        border-color: var(--color-primary);
-                        .title {
-                            &::before {
-                                background-color: var(--color-primary);
-                            }
-                        }
-                    }
-                }
+            .inPageLink a:hover {
+                background-color: color-mix(in srgb, var(--jwsnj-color-base-lightblue) 85%, var(--color-secondary));
             }
         }
     }

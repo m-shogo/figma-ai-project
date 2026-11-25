@@ -9,18 +9,29 @@
         border: calc(1 * var(--to-rem-func)) solid var(--color-primary);
         margin-top: var(--wp-block-margin);
         background-color: var(--color-secondary);
+        border-radius: calc(3 * var(--to-rem-func));
+        overflow: hidden;
+        font-family: var(--font-jwsnj-ja);
+        color: var(--color-text);
+        & + .wp-block-details {
+            margin-top: calc(24 * var(--to-rem-func));
+        }
         --_padding-block: calc(24 * var(--to-rem-func));
-        --_padding-inline: calc(20 * var(--to-rem-func));
-        --_button-width: calc(52 * var(--to-rem-func));
-        --_summary-gap: calc(8 * var(--to-rem-func));
+        --_padding-inline: calc(24 * var(--to-rem-func));
+        --_button-width: calc(68 * var(--to-rem-func));
         summary.wp-block-details__summary {
             display: block;
             list-style-type: '';
             position: relative;
             padding-block: var(--_padding-block);
-            padding-inline: var(--_padding-inline) calc(var(--_button-width) + var(--_summary-gap));
+            padding-inline: var(--_padding-inline) var(--_button-width);
             cursor: pointer;
             touch-action: manipulation;
+            min-height: calc(75 * var(--to-rem-func));
+            &:focus-visible {
+                outline: calc(2 * var(--to-rem-func)) solid var(--color-accent);
+                outline-offset: calc(-4 * var(--to-rem-func));
+            }
             &::-webkit-details-marker {
                 display: none;
             }
@@ -28,9 +39,10 @@
 
         .wp-block-details__title {
             display: block;
-            font-weight: 700;
+            font-family: var(--font-jwsnj-ja);
+            font-weight: 500;
             font-size: calc(18 * var(--to-rem-func));
-            letter-spacing: 0.1em;
+            letter-spacing: 0.05em;
             line-height: 1.5;
             color: var(--color-text);
             overflow-wrap: anywhere;
@@ -52,16 +64,6 @@
             background-color: transparent;
             transition: var(--transition-duration);
             overflow: hidden;
-            /* &::before {
-                content: '';
-                position: absolute;
-                z-index: -1;
-                inset: 0;
-                background: var(--color-primary);
-                opacity: 0;
-                visibility: hidden;
-                transition: var(--transition-duration);
-            } */
         }
 
         .wp-block-details__button-icon {
@@ -78,8 +80,6 @@
                 background-color: var(--color-primary);
                 transition: var(--transition-duration);
             }
-            &::before {
-            }
             &::after {
                 rotate: 90deg;
             }
@@ -88,24 +88,21 @@
         .wp-block-details__content {
             position: relative;
             z-index: 0;
-            padding-block: var(--_padding-block);
-            padding-inline: var(--_padding-inline);
+            border-top: calc(1 * var(--to-rem-func)) solid var(--jwsnj-color-separator);
+            padding: calc(32 * var(--to-rem-func));
+            font-family: var(--font-jwsnj-ja);
+            font-size: calc(16 * var(--to-rem-func));
+            font-weight: 400;
+            line-height: 1.6;
+            letter-spacing: 0.05em;
+            color: var(--color-text);
             overflow-wrap: anywhere;
             word-break: normal;
             line-break: strict;
-            &::after {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: var(--_padding-inline);
-                height: calc(1 * var(--to-rem-func));
-                width: calc(100% - var(--_padding-inline) * 2);
-                background-color: var(--color-primary);
-                z-index: 1;
-            }
         }
         .wp-block-details__inner {
             flex-grow: 1;
+            min-width: 0;
             display: block grid;
             > * {
                 &:last-child {
@@ -116,31 +113,33 @@
 
         /* FAQタイプのスタイル */
         &._qa {
-            summary.wp-block-details__summary,
-            .wp-block-details__content {
+            > summary.wp-block-details__summary,
+            > .wp-block-details__content {
                 display: flex;
                 gap: calc(16 * var(--to-rem-func));
-                align-items: flex-start;
+                align-items: center;
                 &::before {
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    width: calc(32 * var(--to-rem-func));
-                    font-size: calc(32 * var(--to-rem-func));
+                    width: calc(16 * var(--to-rem-func));
+                    font-family: var(--font-sansSerif-en);
+                    font-size: calc(24 * var(--to-rem-func));
                     font-weight: 500;
+                    letter-spacing: 0.05em;
                     line-height: 1;
                     flex-shrink: 0;
-                    margin-top: calc(-2 * var(--to-rem-func));
+                    margin-top: 0;
                 }
             }
 
-            summary.wp-block-details__summary {
+            > summary.wp-block-details__summary {
                 &::before {
                     content: 'Q';
-                    color: var(--color-primary);
+                    color: var(--color-accent);
                 }
             }
-            .wp-block-details__content {
+            > .wp-block-details__content {
                 &::before {
                     content: 'A';
                     color: var(--color-accent);
@@ -148,41 +147,20 @@
             }
         }
 
-        /* hover */
-        @media (any-hover: hover) {
-            &:hover {
-                .wp-block-details__button {
-                    &::before {
-                        opacity: 1;
-                        visibility: visible;
-                    }
-                }
+        @media (prefers-reduced-motion: reduce) {
+            .wp-block-details__button,
+            .wp-block-details__button-icon::before,
+            .wp-block-details__button-icon::after {
+                transition: none;
             }
         }
 
         /* 開いたときのスタイル */
         &[open] {
-            .wp-block-details__button {
-                > span {
-                    &::after {
-                        rotate: 0deg;
-                    }
-                }
-            }
-        }
-
-        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-            --_padding-inline: calc(24 * var(--to-rem-func));
-            --_button-width: calc(68 * var(--to-rem-func));
-            .wp-block-details__title {
-                font-size: calc(20 * var(--to-rem-func));
-            }
-            &._qa {
-                summary.wp-block-details__summary,
-                .wp-block-details__content {
-                    &::before {
-                        width: calc(32 * var(--to-rem-func));
-                    }
+            > summary.wp-block-details__summary {
+                padding-inline-start: calc(32 * var(--to-rem-func));
+                > .wp-block-details__button > .wp-block-details__button-icon::after {
+                    rotate: 0deg;
                 }
             }
         }

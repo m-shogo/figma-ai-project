@@ -16,13 +16,35 @@
         gap: calc(40 * var(--to-rem-func));
     }
     .gh_logo {
-        flex-shrink: 0;
-        width: calc(140 * var(--to-rem-func));
+        flex-shrink: 1;
+        min-width: 0;
+        width: auto;
+        max-width: calc(100% - var(--header-height-SP));
         a {
-            display: block;
+            display: flex;
+            align-items: center;
+            gap: calc(8 * var(--to-rem-func));
+            min-width: 0;
             color: var(--color-text);
             text-decoration: none;
-            transition: var(--transition-duration);
+            transition: opacity var(--transition-duration);
+            &:focus-visible {
+                outline: 2px solid var(--color-primary);
+                outline-offset: 3px;
+            }
+        }
+        img {
+            flex-shrink: 0;
+            width: calc(38 * var(--to-rem-func));
+            height: calc(36 * var(--to-rem-func));
+        }
+        .gh_logo-name {
+            min-width: 0;
+            overflow-wrap: anywhere;
+            font-size: calc(13 * var(--to-rem-func));
+            font-weight: 500;
+            line-height: 1.3;
+            letter-spacing: 0.05em;
         }
     }
     .gh_menu {
@@ -81,8 +103,29 @@
         .gh_inner {
             padding-inline: calc(40 * var(--to-rem-func)) calc(20 * var(--to-rem-func));
         }
+        .gh_logo {
+            max-width: calc(420 * var(--to-rem-func));
+            img {
+                width: calc(60 * var(--to-rem-func));
+                height: calc(57 * var(--to-rem-func));
+            }
+            .gh_logo-name {
+                font-size: calc(20 * var(--to-rem-func));
+            }
+        }
         .gh_menu {
             display: none;
+        }
+    }
+
+    /* Header height and hamburger icon transitions also honor the OS motion preference. */
+    @media (prefers-reduced-motion: reduce) {
+        &,
+        .gh_logo a,
+        .gh_menu .icon,
+        .gh_menu .icon::before,
+        .gh_menu .icon::after {
+            transition-duration: 0s;
         }
     }
 

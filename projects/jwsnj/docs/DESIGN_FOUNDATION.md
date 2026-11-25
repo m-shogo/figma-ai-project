@@ -84,6 +84,15 @@ PCメニュー `599:2726` の `get_variable_defs` で `color/separator_light = #
 - Figma design contextの必須ガイダンスが現接続で発見できず、今回の詳細context取得は未実施。推測による新規フォント追加・アセット代用はしない。
 - READY: (1) CSS変数の全参照確認後の重複削除、(2) Figma文字nodeとThemeのfont/weight・ライセンス照合、(3) PC/SP headerの詳細比較。WordPress/browser QAは `DEFERRED_RUNTIME_QA.md` に保留。
 
+## Google Fonts導入（2026-11-21）
+
+- Figmaで使用確認済みの **Zen Kaku Gothic New** と **Roboto Condensed** はGoogle Fonts公式配布を使用する方針に確定。
+- Google Fonts公式リポジトリで両familyの **SIL Open Font License 1.1** を確認。Zen Kaku Gothic Newは300/400/500/700/900、Roboto Condensedは100〜900を提供。
+- Header/Footerで確認済みのweightに合わせ、frontendでは **400 / 500 / 700** のみを `inc/front.php` からGoogle Fonts CSS APIでenqueueする。
+- `theme/css/global/variables.css` に `--font-jwsnj-ja` と `--font-jwsnj-en-condensed` を追加し、既存Noto Sans JP / Robotoをfallbackとして保持。既存のTheme全体font tokenはこのFoundation変更では置換しない。
+- 現実行環境ではGoogle Fonts/GitHubのfont binaryをDNS経由で取得できないため、今回の実装は公式Google Fonts配信を利用する。WordPress実機での外部CSS取得、CSP、最終render/CLS、Figmaとのvisual一致は **DEFERRED_ENV**。
+- **Font Awesome Pro / Brandsの利用許諾は別問題であり未解決**。Google Fonts導入によってFont Awesomeの権利確認が完了したとは扱わない。
+
 ## 画像・部品・挙動
 
 - PCメニュー展開: `599:2726`、SP開閉状態: `480:3954`
@@ -101,7 +110,7 @@ PCメニュー `599:2726` の `get_variable_defs` で `color/separator_light = #
 | 種類 | 次の単位（実機なしで進められるもの） | できたと判断する最低条件 |
 |---|---|---|
 | READY-1 | Figmaのfont family/weightの実利用nodeと、Theme内`@font-face`/CSS・enqueueの差分を調査。ライセンスと代替禁止範囲を整理して必要な実装修正へ | 使用文字のfont/weightの対応・導入変更・静的チェックを具体的ファイル/PRで説明できる |
-| READY-2 | Figma画像・SVG・アイコンとCODIAのAsset経路を照合。サンプル画像の流用を避け、本物の素材取得/配置と使用箇所の検証に進む | asset node・保存先・参照箇所・不足分とライセンスが確認できる |
+| READY-2 | 公式 SVG / WebP は #599 と #600 で保存済み。次は未接続の装飾を、未承認 URL を作らずにセクション単位でテーマへつなぐ。写真は ACF の既存項目へ置き、`front-page.php` へ直書きしない | 保存先・node・未接続一覧は下記「残作業」と一致し、接続した callsite を PR で説明できる |
 | READY-3 | PC `599:2726` / SP `480:3954` のHeader open/close状態のdesign context + スクリーンショット、既存Theme menuテンプレートの関係を確認し安全な1パーツの実装に進む | Figma/実コードの根拠・変更範囲と静的QA・残るローカル検証がPRに記録される |
 | DEFERRED_ENV | WordPress・ブラウザ実機での描画/操作の確認 | **現在は実施しない**。利用可能になった初回に `DEFERRED_RUNTIME_QA.md` のP0から優先的に実行 |
 
@@ -127,3 +136,159 @@ PCメニュー `599:2726` の `get_variable_defs` で `color/separator_light = #
 - READY（Foundation担当）: (1) 合法なfont入手方法と使用node/weightを確認して実コード反映、(2) Figma asset nodeと実ファイルを限定して1件ずつ対応、(3) GitHub検索/cloneが使える環境でCSS token参照を一括検索し重複削除。BLOCKED: Pro系アイコンの許諾、Figma詳細context、実機WP/browser。ページ・Header/Footerの構造は他担当の所有範囲。
 
 **判定:** Asset inventory = **調査済・静的確認済**。追加アセット導入・フォントのデザイン一致・WP表示 = **未検証**。ドキュメントだけの更新を画面実装の完了と扱わない。
+
+
+## 2026-11-21 Header/Footer限定・Figma実アセット照合（工程ゲート継続）
+
+2026-11-24 追記: この節の「実体を保存していない」「curl できない」は当時の記録。Header/Footer と TOP の公式バイトは #599 / #600 で Git にある。今の分け方は下の「残作業」。
+
+- 開始 `so`: `49df7a1f3a63d4bc688d428bda0b129025da2a43`。open PR #515 は一覧のDraftで下流工程として保留、#516 は全案件共通ゲート規約の未統合PR。Header/Footerのページ担当ファイルは編集しない。
+- Figma PC `0:1` / SP `263:12` のスクリーンショット取得、footer `221:335`、PC open menu `599:2726`、SP menu `480:3954` の design context を実際に取得。前回の「context未取得」は今回解消。skill一覧は空で必須skillの本文は取得不能、従ってskill遵守までPASSとはしない。
+- Footer `221:335` は **SVG 6点 / raw image 0点**、PC menu `599:2726` は **SVG 14点 / raw image 14点** とFigmaのasset inventoryで確認。これはエクスポートURL取得の成功であり、リポジトリへの素材配置完了ではない。URLは短命なので正本へ記載しない。
+- Figma footer context の識別名: `img_footer-left`、`img_student-01`、`img_njws_logo` 等。PC menu context の識別名: `pic01`〜`pic06`、`ico_school`、`ico_admission`、`ico_parents`、`ico_recruit`、`njws_logo` 等。SP menu context には入学案内・保護者専用・採用情報のCTAアイコン、ロゴ、アコーディオン矢印がある。実ファイル名と一対一対応・SVG内容検査はまだ必要。
+- Footer Figma context は `Roboto Condensed` medium と `Zen Kaku Gothic New` bold、SP menu は `Zen Kaku Gothic New` medium を明示。現Themeの12件 `@font-face` は Noto Sans JP / Noto Serif JP / Roboto のみ。**未導入フォントを勝手にNoto/Robotoへ代替しない**。Font Awesome Pro系は既存バイナリがあってもライセンス未確認。
+- Footerのvariable defsで `main #28ac5f` / `sec #6bd2ce` / `white #fff` / `text #333333` を再確認。現 `variables.css` の値と静的に整合。CSS変数の大規模整理は今は不要。
+- アセットの取得経路検証: Figma `download_assets` でURL発行は成功したが、この実行環境の外部DNS解決失敗により `curl` でSVG実体取得不可。**ファイルを取得・検査していないため実アセットのcommitを行わない**。既存 `logo.svg` をFigmaのロゴと同一と推測しない。
+- ページ担当への引き渡し: Footer装飾SVG群、PC menu写真14点とSVG14点、SP menu CTA/accordion icons、Zen Kaku Gothic New medium/bold、Roboto Condensed mediumの依存を確認。Figma識別名を使い、未確定の写真/アイコン/ライセンスは本番で代用しない。
+- 次のCURRENT PHASE内READY: (1) Figma SVG/画像実体を取得できる経路で保存し、各識別名とhash/ライセンス/保存先を照合、(2) Header/Footer使用フォントのweight/合法な配信元とTheme読み込みを確定、(3) 既存logo.svgとFigmaロゴの実体差分確認、(4) Header/Footerアセット読み込み静的QA。BLOCKED: assetバイナリの取得経路、Font Awesome Pro利用許諾、WP/ブラウザ実機QA。
+- Reviewer/Auditor: downstream変更ゼロ、ページ担当PHP/CSS変更ゼロ、未取得素材の偽装導入ゼロ。文書の照合結果のみでHeader/Footer完了扱いはしない。ゲートはCLOSED。
+
+## 2026-11-24 Cursor で公式 SVG 実体を保存
+
+前回の DNS 失敗は、この作業環境では再現しなかった。Figma file `K3SANPVHIEerfYBQtM4lXF` から SVG 実体を取得し、`src/images/common/` と `theme/images/common/` の両方へ同じバイトで置いた。SHA-256 と root の width/height は `tests/official-svg-asset-contract.test.mjs` が固定する。短命 URL はコードへ置いていない。
+
+| ファイル | Figma | root |
+|---|---|---|
+| `footer/img_footer-left.svg` | `221:335` img_footer-left | 408×99.9255 |
+| `footer/img_footer-left-sp.svg` | `279:2637` | 155×81.8729 |
+| `footer/img_footer-line.svg` / `-sp` | `221:335` / `279:2687` | 309×1 / 117.461×1 |
+| `footer/img_student-01.svg` / `-sp` | 同上 | 49×75.6629 / 37.8264×59.7736 |
+| `footer/img_puzzle-02.svg` / `-sp` | 同上 | 100×75.6627 / 79.6345×59.7732 |
+| `footer/img_footer-bullet.svg` | `221:335` ellipse | 5.41839。保存のみ。サイトマップは WordPress メニューのまま |
+| `img_njws-logo.svg` | `114:489` | 51×48。フッター |
+| `img_njws-logo-header.svg` | `221:334` / `114:46` | 60×57。ヘッダー |
+| `ico_admission.svg` / `ico_parents.svg` / `ico_recruit.svg` | `221:334` | 保存のみ。遷移先 URL が未承認のためボタンは未接続 |
+| `ico_blossom.svg` | `506:2533` | 12×12。区切り線 `344:1134` と見出し h4 `344:901` は同じ花。18×17 の書き出しは root 寸法が違うだけで、別デザインではない |
+| `ico-blank.svg` | `344:985` | 13×12。外部リンク用。既存サンプル `icon-external.svg` とは別バイト。ボタン CSS は Font Awesome のまま |
+| `ico_school.svg` | `599:3205` | 40×37。メインビジュアルの学校アイコン。保存のみ |
+
+既存 `logo.svg` は別物（サンプルのワードマーク）で、公式マークでは上書きしていない。Header/Footer の電話・住所・SNS・寄付 URL は追加していない。ブラウザ表示は #523 のまま未検証。
+
+パーツ集 `339:23` を層ごとに確認した。SVG として新規だったのは外部リンク `ico-blank` だけ。見出し h4 と区切り線の花は保存済みの `ico_blossom` と同一。大ボタン・ページ内リンク・アコーディオン・リストの印、ナビの矢印は Font Awesome の文字で、SVG ファイルは無い。ナビ写真は JPEG なので今回は保存していない。PC メニュー展開に見えていた SVG 14 点は、メインビジュアルのアウトライン文字と既に保存したロゴ／アイコンの再掲。
+
+## 2026-11-24 TOP の公式 SVG と写真
+
+TOP PC `114:28` / SP `279:2136` から、ベクターは SVG、写真は元画像を WebP（quality 90）にして `src/images/top/` と `theme/images/top/` に同じバイトで置いた。Figma が同時に返す 1/4 縮小プレビュー、ほぼ白のマスク、ぼかし用の楕円、SP 枠最上段のステータスバー画像は納品していない。Font Awesome の矢印・Instagram 印は SVG にしていない。
+
+| ファイル | 役割 |
+|---|---|
+| `img_catch-480.svg` / `482` / `481` / `483` / `img_catch-493.svg` | PC キャッチコピーのアウトライン。`220:12` `220:16` `220:20` `220:25` `220:30` |
+| `img_catchphrase-sp.svg` | SP キャッチコピー。文字の並びが PC と違う `279:2149` |
+| `img_map.svg` / `img_map-pin-01.svg` / `img_map-pin-02.svg` | 地図 `123:643` とピン `123:717` `123:736`。SP は同じベクターの縮小 |
+| `img_course-layer.svg` / `img_course-mark.svg` / `img_course-math.svg` | 各部紹介の装飾 `142:1731` `142:1766` `148:1841` |
+| `ico_flow.svg` / `ico_fee.svg` / `ico_visit.svg` | 入学手続き・学費・学校見学。ページ全体の書き出しではなくアイコン本体 |
+| `img_instagram.svg` | `166:233` |
+| `img_about-underline.svg` | 「すべての生徒が」の下線 `162:36` |
+| `img_mv-01.webp` から `img_mv-06.webp` | メインビジュアル `114:31` `114:30` `114:32` `114:33` `114:34` `114:35`。`114:32` は枠比率の `img_mv-03.webp` と別フィルの `img_mv-03-fill.webp` |
+| `img_about-overview.webp` / `img_about-education.webp` | 学校概要 `114:598`、教育内容 `114:603`。交通アクセスは `img_mv-06`、教育環境は `img_mv-05` と同じ写真 |
+| `img_about-bg.webp` / `img_about-bg-02.webp` / `img_about-bg-03.webp` | 背景 `114:38` の大きい画像フィル 3 点。上下の波 `114:39` `114:40` は写真ではなく、元画像は無かった |
+| `img_course-preschool.webp` ほか 4 点 | 幼児部 `294:1442`、初等部 `294:1435`、中等部 `114:139`、高等部 `114:150`、国際学級 `114:160` |
+| `img_banner.webp` / `img_banner-02.webp` / `img_banner-03.webp` | バナー `114:419` の別フィル |
+| `img_applicants.webp` | 入学検討の写真 `158:2647` |
+
+`front-page.php` にはまだ置いていない。メインビジュアル・各部紹介・バナー・About の写真は管理画面の画像で、コースと CTA のリンク先は未承認のため。ブラウザ表示は #523 のまま。
+
+## 残作業（2026-11-24、`so` #599 / #600 / #601）
+
+正本はこの Git。Cursor / Claude / Codex / Copilot のどれでも、`so` のこの節を読む。チャットだけの記録は使わない。
+
+### Cursor に依頼すること
+
+リポジトリにまだ無い Figma 公式バイトの取得だけ。2026-11-21 の別環境は `www.figma.com` の DNS が解けず、短命 URL を保存できなかった。
+
+- メニュー展開の写真。PC `599:2726` と Large ナビ `384:817` の JPEG は意図的に未保存。必要なら公式バイトを WebP で `src/images/` と `theme/images/` の両方へ置く
+- 上の一覧と `tests/official-svg-asset-contract.test.mjs` に無い、新しい公式 SVG / 写真が出たとき
+
+依頼しないこと: Font Awesome の SVG 化。保存済みファイルの再ダウンロード。電話・住所・SNS・寄付 URL の創作。コース紹介の下層。
+
+### Cursor が Git に入れたこと
+
+- #599: Header/Footer の公式 SVG。ヘッダーとフッターの桜マーク、フッターの左右・線・生徒・パズルはテーマから参照している。サンプル `logo.svg` は上書きしていない
+- #599: 保存のみ。フッターのドット、`ico_admission` / `ico_parents` / `ico_recruit`、`ico_blossom`、`ico-blank`、`ico_school`
+- #599: パーツ集 `339:23` の新しい SVG は `ico-blank` だけ。h4 と区切り線の花は `ico_blossom` と同じ。矢印・ページ内リンク・アコーディオンは Font Awesome
+- #600: TOP の SVG と WebP を `src/images/top/` と `theme/images/top/` に同じバイトで保存。`front-page.php` には未接続
+- ハッシュは `tests/official-svg-asset-contract.test.mjs`。短命の Figma URL はコードに無い
+
+### 残っていること（ファイルは Git にあるので、どの環境でも実装できる）
+
+- 未接続の SVG をテーマへつなぐ。`ico_school`、TOP のキャッチコピー、地図、各部紹介の装飾、手続きアイコン、Instagram イラスト、見出し下線（TOPの装飾）
+- 2026-11-25: 大・小ボタンは #606 で公式 `ico-blank` 接続済み。Gutenberg本文外部リンクも公式SVGのmaskに変更。共有 `.module_textLink` の他画面callsiteは別レビュー。#605 でパーツ集H2の二色下線を修正済み。実機は #523。
+- 2026-11-25: パーツ集のLargeナビ `384:914` / `442:3081` に既存画像・ACFを維持した右下矢印装飾を追加。Smallナビの独立デザインはPC/SP索引に見当たらず未確認。スライダー `344:1139` / `442:3073` は画像とキャプションのみで操作状態が示されておらず、専用CMS項目も未承認。新規ACF/スライダーを作らない。
+- 次の候補: Largeナビの既存画像未設定・URL未設定時の意味と表示を確認（HumanのCMS方針と照合、仮画像やリンクは作らない）、パーツ集の既存画像/表/リストのPC/SP差分をレビュー、共有 `.module_textLink` の外部アイコンcallsiteを確認して安全なscopeを選ぶ。
+- 2026-11-25: H4と区切り線の花は #603 で接続済み。PC Footer のドットも既存WordPressメニューの第1階層リンクへ接続。いずれも実描画は #523 で未検証。
+- `ico_admission` / `ico_parents` / `ico_recruit` と CTA は、遷移先 URL が承認されるまでボタンを作らない
+- TOP の WebP は既存 ACF（`top_slider`、コース、バナー、お知らせ）へ。`front-page.php` へ写真を直書きしない。交通アクセスは `img_mv-06.webp`、教育環境は `img_mv-05.webp`
+- TOP は 1 セクションずつ。コース紹介の下層は作らない
+- ブラウザの hover / open / SP・PC は #523。`DEFERRED_RUNTIME_QA.md` の PAGE-TOP と FOUND-03。静的テストの成功を表示確認と書かない
+
+
+## Human typography policy（2026-11-21）
+
+- 基本フォントはGoogle Fontsを第一候補とする。
+- メインビジュアルや装飾キャッチなど、ほぼ変更されない表示文字は、Figma忠実性を優先してアウトラインSVGを使用してよい。
+- 更新される本文・ナビ・CMS文言・SEO/アクセシビリティ上テキストとして必要な箇所はHTMLテキストを維持する。
+- SVG化は固定度と役割を確認して選び、必要な代替テキスト/accessible nameとライセンス条件を確認する。
+- 個別のHuman指示がある場合はそちらを優先する。
+
+## 2026-11-25 パーツ集の継続レビュー
+- #608 Largeナビの装飾をマージ後、#609 リストの累積字下げ・番号・注釈間隔を修正。ギャラリーの既存zoom装飾もPC/SPの配置と色反転を修正（実機は #523）。
+- 次のレビュー候補: SP表 `442:2890` / `445:3237` の横スクロールヒント。基本の960px表/セル/スクロールCSSは既存。scroll-hint.css と scroll-hint.min.js は保存済みだが現行enqueue/initに接続なし。既存表プラグインとの重複・適用対象・keyboard/ariaを確認してから変更する。独自の表構造/CMSは追加しない。
+- Largeナビ既存画像/URL未設定、共有リンクcallsite、media-textの画像左右指定とSP積み重ねも独立レビュー候補。Smallナビ/スライダーは仕様未確定のまま。TOP・下層ページに着手しない。
+- 画像＋テキスト `344:929` / `442:2788` の既存gridをcoreの編集選択と照合し、768px境界のstackと左右幅を修正。画像・キャプション寸法は既存を維持。表スクロールヒント、共有リンク、Largeナビ未設定時、Smallナビ/スライダー仕様は引き続き残る。実機 #523。
+- LargeナビのURL/画像未設定時は既存ACFを変えず、無効hrefと未承認サンプル画像出力を除去する。代替画像の表示仕様はHuman確認事項。#523で未設定組合せを検証。#611は全CI成功後にmerge済み。
+- #612 Largeナビの未設定フィールド修正はマージ済み。SP表の横スクロール案内を同梱ScrollHintと既存CMS設定に接続（実機 #523）。次の独立候補は共有テキストリンクのcallsiteとFigma、Header/Footerの既存範囲に限る。Smallナビ/スライダー、未承認下層/TOPは保留。
+- Footer最下段はPC 114:536/SP 279:2805に合わせて通常フローのcopyright＋60px page-topに修正。プライバシーポリシーのURLは未承認につき保留。次はPC sitemapの列構成/外部アイコンと既存WPメニューの照合。実機 #523。
+- #614 Footer最下段はマージ済み。PCサイト情報＋サイトマップの配置、3列、外部FA glyphを修正。既存SP sitemapの非表示は未決、メニュー編集構造維持。共有リンク全体は別画面へ波及するため保留。残る独立候補: Footer brandStatementのPC/SP外側余白・並び、パーツ集の残差確認。実機 #523、未承認URLは作らない。
+- #615 PCサイトマップはマージ済み。Footer brandStatement PC 114:422/SP 279:2632 のコピー順・余白と拡幅注記を反映。保存済みSVGはそのまま、広幅の線のみCSSで延長。実機#523で線の接合を確認。残るFooter要確認: SPサイトマップの表示、住所/電話/SNS/プライバシー/英語サイト名の管理と承認。共有リンクは個別デザインの根拠がある場合のみ変更。
+- #616 Footer brand flowはマージ済み。ページ内リンクは既存ACFの空欄除外とliteral fragment解決を修正。既存Figmaサイズを維持。次の独立候補はQAアコーディオンのopen時タイトル余白・Q/A配置、既存render_blockとの整合。#523実機検証、未承認ページは保留。
+- #617 ページ内リンクは全CI成功でマージ済み。PC 357:938/SP 442:2908 のアコーディオンopen余白とQ/A中央揃えを修正。旧render_blockのnested details変換は別レビュー、#523で実機確認。次の候補は既存承認済みパーツの余白/操作の残差確認と、未確定事項を整理すること。未承認ページは開始しない。
+- #618 マージ済み。アコーディオンの既存render_blockを親自身のsummary/終端だけに限定し、子のrender済みHTMLを維持する。PHP CLI callback検証とWordPress実機QAを区別。残りはパーツ集の差分整理、Smallナビ/スライダーの仕様確認、#523/#524。未承認ページは開始しない。
+- #619 マージ済み。テキストBoxの薄緑背景/カラムを既存Gutenberg opt-in styleで補完。次はパーツ集の全項目と既存PRの対応表整理、未確定Smallナビ/スライダー/実機に分離。#523でeditor/frontendを確認。
+- #619/#620は並行runのmergeを確認済み。本文 PC 344:916/SP 442:2774 の太字500・5px黄色markerを段落限定で修正。パーツ集の主要なsource実装は進んだが、#523の実機・#524のasset受入・Smallナビ/スライダーとFooter未承認事項は残る。今後は同時runのwrite scopeを毎回直前にも確認し、重複PRを作らない。
+- #621はマージ済み。ギャラリーPC 344:1079/SP 442:2973の連続40px gapと長文captionフローを修正。既存画像/キャプション/列設定を維持し、未承認のfallbackは追加しない。#523でcore CSSの実際のcascadeとlightboxを確認。次はパーツ集の残差と受入条件整理。
+- #622 ギャラリー間隔とcaption修正はmerge済み。大小ボタンのグループ間隔（PC 344:968/969・SP 442:2832/2833/2842）を修正。SPの小ボタン混在gapは既存CMSの区別がないため20pxに統一し実機#523に記録。次は部品一覧と未決事項の照合。
+
+- 2026-11-25: 注釈リストの通常本文ブロックとの隣接余白を20pxに限定するsource修正。見出し/区切り線の独立余白は維持。次の候補はパーツ集の全項目対PR対応の照合、共有テキストリンクの既存callsite限定レビュー。Smallナビ/スライダー仕様、Footer管理値、実機#523/素材受入#524は引き続き未決。#515はdraftのまま、未承認ページには着手しない。
+
+- 2026-11-25: 本文リンクのPDF/添付glyphをPC/SP共通13px、PDF橙・添付coralに補正。既存FA token・公式外部SVG・リンク状態を維持。共有 `.module_textLink` の包括変更は見送り。次のREADY候補はパーツ集の残差（既存sourceと高精細contextで確定できるもの）の照合。Smallナビ/スライダーの管理・操作仕様とFooter未承認事項は確認待ち、実機#523/素材受入#524は未完了。
+
+- Human FB 2026-11-25: 小ボタン矢印の見た目の中央ずれを優先修正項目として追加。PC 344:971/SP 442:2835の高精細context・画像確認済み。実装のglyph描画確認と補正は#523でOPEN。次回はoptical alignmentを受入基準にし、ボタン・丸アイコン等の同種の違和感も確認する。実機未確認のため補正値は未確定。
+
+- 2026-11-25 ボタン視覚整列のsource修正: Figma PC 344:971/344:969・SP 442:2835/442:2842。大小添付F15Bと本文F15Cの使い分け、30px円とglyph独立、各variant共通中心、tracking隔離、実FA outline測定に基づきline-height:1/trimなし。#523で実font・実機視覚受入未完。
+
+- 2026-11-25 丸矢印の同系改善: ページ内リンク 357:1022/442:2948 と大ナビ 384:1005/442:3085 のFigma現物・実FA TTF metricsを照合。円寸法/色/既存CMSを維持しglyph tracking/line boxのみ修正。視覚受入は#523。
+
+- 2026-11-25: galleryズーム PC 344:1079/SP 442:2973 の44px円、20px F002、PC20/SP16px insetと反転を再確認。gallery限定でborder-boxとglyphのstyle/tracking/trim隔離。光学的補正は実描画待ち。H3白文字 #fff / 水色 #6bd2ce のコントラスト不足はHuman/デザイナー判断待ち（色変更なし）。次の独立候補はgalleryの既存CMS列数の確認。#523実機未検証。
+
+- 2026-11-25: H2のFigma内側stroke3pxをpadding28/24に含める。PC 344:906 frame70 = text42+28、SP 445:3209 frame126 = text102+24。CSS局所stroke変数を差し引き、既存二色線・余白・wrapを維持。隔離Chromium geometry PASS、実機#523は未検証。gallery F002のCI outline bounds [0,-71,519,448] / advance512、units512。光学重心補正は実機待ち。galleryの未指定列数は既存ベースも固定gridでありHumanの意図確認待ち。次は承認済み範囲で実描画・残差を確認。
+
+## 2026-11-25 共通UIソース総点検 一巡結果
+
+| 範囲 | 静的結果 | 残る最終受入 |
+|---|---|---|
+| ヘッダーPC/SPとメガメニュー | #633 viewport・長文、#636 Gridトラック。PC hover / SP tap / focusの既存JS契約を維持 | #523 実機の開閉、フォント、狭幅、ブラウザ差 |
+| フッターPC/SP | #599公式画像と既存WP sitemap接続を確認。既存可変copy・footer bottom、独立のデザイン根拠なしに構造を変更しない | #523。未承認の住所・電話・SNS・privacy・CTAとSP sitemapは未決 |
+| 見出し・本文・リスト・注釈 | typography・自然折返し、H2 stroke、Figma注釈PC 344:937/SP 442:2796を再照合 | #523 editor/front 実測 |
+| 大小ボタン・矢印・テキストリンク・ページ内リンク | #629/#630 glyph精度に基づく隔離、#625添付PDF、#634 tabs長文を確認 | #523 optical alignment/hover/focus |
+| 画像・ギャラリー・media-text | Figma PC 344:1079/344:929、SP 442:2973/442:2788を再照合。3:2 crop、動的画像、caption flow、editor選択の維持を確認 | #523 実ブラウザ・Core/lightbox CSS cascade |
+| アコーディオン | Figma PC 357:938/SP 442:2908を再照合、75px `min-height`、既存PHP nested block契約、#637不活性CSS整理 | #523 native details keyboard/open |
+| タブ | #634 ラベル折返し・横scroll。#638無効コード整理。旧ACFタブJSはコメントアウトされており、core/tabsと混在している。安易に有効化しない | #523 core/edit selection、旧ACF使用の有無・所有確認 |
+| 表 | Figma SP 442:2890 / 445:3237の横スクロール、960pxテーブル、ScrollHintのオプトイン、既存focus/aria対策とテストを確認 | #523 実表のoverflow/keyboard/ScrollHint |
+| CSS/保守性・性能 | 既存import/依存・明らかな空CSSを小scopeで整理 (#637/#638)。画像のlazy/本番font/JS実行は未計測 | #523 / Vite build/lighthouse が可能な環境 |
+
+**検証境界**: Figmaから取得した現物高精細context+スクリーンショットはデザイン根拠で、WordPress表示のスクリーンショットではない。旧サンプルと未接続公式素材を無断削除・置換しない。点検可能な独立source修正の探索を無限に延ばさず、以降は承認済み新規スコープを優先する。
+
+## 記事一覧（Human承認 2026-11-25）
+- PC 390:669 / 392:1265 / 390:1178 / 392:1244、SP 478:3027 / 478:3039 / 478:3089。高精細context・画像を確認。960px内幅、PCカテゴリ240×50・20px gap、SP全幅、行PC24px/SP20px 16px inset、日付14px Roboto Condensed、pill 80px/11px、タイトル16px、pager 40px/20px gap。既存通常投稿・カテゴリとURL、記事リンク、公式花SVGを再利用。
+- #515の既存一覧構造を継続し、index.phpにも同じownerを接続。カテゴリはGETのcat=0/固定ページルーティング問題を避け、native detailsと実カテゴリURLを使用（openのデザインは未提示）。pagerはWP query/get_pagenum_link、PC最大5/SP最大3を現在頁周辺に出す。日付形式は一覧限定。パンくずは一覧下に移動。
+- 次のREADY: 一覧固有hero 390:799/SP対応node、既存ACF visual設定・公式素材の確認。下部バナーは公式素材と管理ownerの確認後。共通他ページは変更しない。実WP #523未検証。

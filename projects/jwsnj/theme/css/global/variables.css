@@ -200,6 +200,9 @@
     /* ==========================================================================
    * フォント
    * ========================================================================== */
+    /* Figma案件フォント（Google Fonts配信、既存ローカルfontをfallbackに使用） */
+    --font-jwsnj-ja: 'Zen Kaku Gothic New', 'local Noto Sans JP', 'Noto Sans JP', sans-serif;
+    --font-jwsnj-en-condensed: 'Roboto Condensed', 'local Roboto', 'Roboto', sans-serif;
     /* 日本語サンセリフ体 */
     --font-sansSerif-ja: 'local Noto Sans JP', 'Noto Sans JP', sans-serif;
     /* 日本語セリフ体 */
