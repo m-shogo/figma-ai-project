@@ -153,3 +153,5 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 - 2026-11-25 H2 stroke inset: PC 344:906/SP 445:3209、3px線を下余白28/24pxに含める。隔離Chromium 320/375/767/768/960/1380で旧新差3px、水平overflowなし（system font、WPではない）。#523でPC/SP/中間幅の実font・複数行・editor/frontend block gap・二色線を検証。視覚PASS未宣言。
 
 - 総点検第1回: SP nav 100dvh + 100vh fallback、長文flex shrink。iOS Safari/Android Chromeでアドレスバー表示・非表示、最下部へのscroll、1079/1080/1081px、長文・開閉・focusを確認。Header/Footerの構造差は承認済みCMS/assetと照合。parts全体の視覚・操作QAは未完。配色は変更しない。
+
+- tabs: 長文・複数行・横スクロール・focus・editor/public。lightbox: mobile browser chrome表示時の画像と閉じる操作、縦横画像。静的修正のみ、#523で実機確認。
