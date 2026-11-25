@@ -171,5 +171,5 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 
 ## 2026-11-25: ボタンの視覚的整列 — 共通規約 #627/#628 を実装へ適用
 - Figma PC 344:971/344:969, SP 442:2835/442:2842 の高精細context・画像を新規sessionで確認。小ボタンは30px円、12px FA Regular、8px label gap、cap/alphabetic trim。外部SVGは13×12、大小の添付ファイルはF15B（本文のF15Cと異なる）。現行はcircleとglyphが同じpseudo、label tracking継承、externalだけ別配置、alignment classのspecificity差を発見。
-- circle ::beforeとglyph ::afterを分離、外部含め共通の中心軸とhover色、label trackingを除外、trimを独立glyphへ適用（未対応browserはline-height fallback）。alignment classで円が左端から動く競合をowner specificityで解消。大小ボタンだけF15Bへ変更、本文変数は維持。推測offsetなし、円/ラベル/リンク面/既存CMSを維持。
-- Source correctionのみ。Font Awesome ProのTTF metadata直接読取はサイズ制限で空、実機・実fontでの描画は未検証。小ボタンHuman visual defectは#523でOPENのまま。Figma/実装原寸、各glyphとhover/長文/PC/SP/中間幅で確認後に閉じる。
+- circle ::beforeとglyph ::afterを分離、外部含め共通の中心軸とhover色、label trackingを除外、独立glyphはフォントの実メトリクスに基づくline-height:1（trimなし）。alignment classで円が左端から動く競合をowner specificityで解消。大小ボタンだけF15Bへ変更、本文変数は維持。推測offsetなし、円/ラベル/リンク面/既存CMSを維持。
+- Source correctionのみ。FA6 Pro RegularのTTFはconnector直接取得のサイズ制限を既存CIのfont outline testで解決。unitsPerEm 512、hhea asc459/desc-75、capHeight431、F061 bbox [0,-7,448,391]、F1C1 [0,-64,496,448]、F15B [0,-64,384,448]。3 glyphの縦ink中心=192でhhea line centerと一致。cap/alphabetic中心215.5へ寄せると12pxで約0.55pxの差になるためFigmaのtrimを機械移植しない。実際のbrowser font metrics/描画は別途確認。簡略化したCSS・system fontによる隔離Chromium 144 probeでは320/375/768/1000pxで30px circle・15px中心・長文・alignment class・hover色の幾何確認PASS（WP/FA実描画ではない）。小ボタンHuman visual defectは#523でOPENのまま。Figma/実装原寸、各glyphとhover/長文/PC/SP/中間幅で確認後に閉じる。

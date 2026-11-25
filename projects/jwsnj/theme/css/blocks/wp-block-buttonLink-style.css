@@ -67,8 +67,8 @@
                     font-weight: 400;
                     font-style: normal;
                     letter-spacing: 0;
-                    text-box-trim: trim-both;
-                    text-box-edge: cap alphabetic;
+                    /* FA Regular ink midpoint matches the font line-box midpoint. */
+                    text-box-trim: none;
                     content: '\f061';
                     color: currentColor;
                 }
@@ -151,8 +151,9 @@
                 overflow-wrap: anywhere;
                 word-break: normal;
                 /* Reserve the circle in flow; center every glyph in its own box.
-                   Figma 344:971 / 442:2835: the glyph uses cap/alphabetic trim.
-                   Keep the label's tracking out of single-symbol alignment. */
+                   Figma 344:971 / 442:2835 uses cap/alphabetic trim in Figma;
+                   shipped FA Regular outline metrics instead align with the Web
+                   font line box. Do not trim or inherit label tracking. */
                 &::before {
                     content: '';
                     display: block;
@@ -180,8 +181,7 @@
                     line-height: 1;
                     letter-spacing: 0;
                     text-align: center;
-                    text-box-trim: trim-both;
-                    text-box-edge: cap alphabetic;
+                    text-box-trim: none;
                     pointer-events: none;
                 }
                 &[target='_blank']:where(:not([href$='.pdf'], [href$='.doc'], [href$='.docx'], [href$='.docm'], [href$='.xls'], [href$='.xlsx'], [href$='.xlsm'], [href$='.png'], [href$='.jpg'], [href$='.jpeg'], [href$='.gif'], [href$='.webp'])) {

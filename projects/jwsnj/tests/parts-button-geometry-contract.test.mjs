@@ -55,8 +55,7 @@ test('large button groups share 20px spacing and a 40px transition to small butt
 test('large button glyph metrics do not inherit label tracking; attachments use the authored plain file glyph', () => {
   const large=button.slice(0,button.indexOf('        &.small {'));
   assert.match(large,/letter-spacing:\s*0/);
-  assert.match(large,/text-box-trim:\s*trim-both/);
-  assert.match(large,/text-box-edge:\s*cap alphabetic/);
+  assert.match(large,/text-box-trim:\s*none/);
   assert.match(large,/content:\s*'\\f15b'/);
   assert.doesNotMatch(large,/content:\s*var\(--icon-file\)/);
   const textLink=readFileSync(new URL('../theme/css/blocks/wp-block-textLink-style.css',import.meta.url),'utf8');

@@ -144,4 +144,4 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 ### PAGE-PARTS — 小ボタンの矢印 optical alignment（Human FB 2026-11-25、優先修正）
 - OPEN_VISUAL_DEFECT / #523: PC 344:971 / SP 442:2835。Humanが矢印の見た目の中央ずれを指摘。Figmaの原寸30px円/12px glyphと実装スクリーンショットを比較し、実FA6 Proの描画範囲、継承letter-spacing、baseline、左右上下余白、視覚重心を測る。必要ならglyphだけ補正し円/ラベル/クリック領域を維持。通常/外部/PDF/添付、hover/focus、長文、PC/SP/中間幅。原因・補正値・修正後描画は未検証。静的PASSでcloseしない。
 
-- 2026-11-25 optical alignment source repair: circle/glyph分離、共通center、tracking隔離、text-box-trim fallback、alignment classの競合対策、大小F15B。#523 OPEN_VISUAL_DEFECT継続。実FA6 Pro/font loadと対応browserでPC/SP・中間幅、normal/external/PDF/file、hover/focus、長文、WP editorのalignment classを再描画。補正値を推測追加しない。本文F15Cは別ownerのまま。
+- 2026-11-25 optical alignment source repair: circle/glyph分離、共通center、tracking隔離、実FAのhheaとink中心が一致するためtrimなし、alignment classの競合対策、大小F15B。#523 OPEN_VISUAL_DEFECT継続。実FA6 Pro/font loadと対応browserでPC/SP・中間幅、normal/external/PDF/file、hover/focus、長文、WP editorのalignment classを再描画。補正値を推測追加しない。本文F15Cは別ownerのまま。

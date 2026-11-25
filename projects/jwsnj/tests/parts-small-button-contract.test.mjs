@@ -46,8 +46,7 @@ test('small circle and glyph are independently centered for every icon and wrap 
   assert.match(after, /top:\s*50%/);
   assert.match(after, /transform:\s*translate\(-50%, -50%\)/);
   assert.match(after, /letter-spacing:\s*0/);
-  assert.match(after, /text-box-trim:\s*trim-both/);
-  assert.match(after, /text-box-edge:\s*cap alphabetic/);
+  assert.match(after, /text-box-trim:\s*none/);
   assert.match(small, /\.wp-block-button \.wp-block-button__link\s*\{/);
   assert.match(small, /--_small-icon-color:\s*var\(--jwsnj-color-sec\)/);
 });
@@ -117,8 +116,11 @@ test('bundled FA Regular outlines retain authored arrow, PDF and plain file glyp
     const p=glyf+locate(id);
     const bounds=[i16(p+2),i16(p+4),i16(p+6),i16(p+8)];
     assert.ok(bounds[2]>bounds[0]&&bounds[3]>bounds[1]);
+    // Current bundled FA metrics: these glyphs' vertical ink midpoints equal
+    // the hhea line-box midpoint. A new font version needs alignment review.
+    assert.equal(bounds[1]+bounds[3],i16(hhea+4)+i16(hhea+6),'review icon alignment after font change');
     return {code:cp.toString(16),advance:u16(hmtx+4*Math.min(id,u16(hhea+34)-1)),bounds};
   });
   const os=tables['OS/2'];
-  console.log('FA_REGULAR_OUTLINE_EVIDENCE '+JSON.stringify({unitsPerEm:u16(head+18),ascent:i16(hhea+4),descent:i16(hhea+6),capHeight:os&&u16(os)>=2?i16(os+88):null,glyphs}));
+  console.log('FA_REGULAR_OUTLINE_EVIDENCE '+JSON.stringify({unitsPerEm:u16(head+18),ascent:i16(hhea+4),descent:i16(hhea+6),capHeight:os&&u16(os)>=2?i16(os+88):null,typoAsc:os?i16(os+68):null,typoDesc:os?i16(os+70):null,typoGap:os?i16(os+72):null,selection:os?u16(os+62):null,winAsc:os?u16(os+74):null,winDesc:os?u16(os+76):null,glyphs}));
 });
