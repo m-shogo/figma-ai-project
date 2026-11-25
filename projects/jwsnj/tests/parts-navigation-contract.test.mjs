@@ -14,3 +14,22 @@ test('large navigation keeps keyboard focus visible and reduced-motion available
   assert.match(large, /prefers-reduced-motion: reduce/);
   assert.match(large, /transition: none/);
 });
+
+test('large navigation renders the approved decorative corner and arrow only for enabled links', () => {
+  assert.match(large, /\.image\s*\{\s*position:\s*relative;\s*isolation:\s*isolate/);
+  const arrow = large.slice(large.indexOf('&:not(.is-disabled) .image'), large.indexOf('                    .content {'));
+  assert.ok(arrow.length > 0);
+  for (const value of [
+    'right: 0', 'bottom: 0', 'pointer-events: none',
+    'width: calc(48 * var(--to-rem-func))', 'height: calc(48 * var(--to-rem-func))',
+    'border-top-left-radius: calc(20 * var(--to-rem-func))',
+    'background-color: var(--jwsnj-color-white)',
+    'width: calc(32 * var(--to-rem-func))', 'height: calc(32 * var(--to-rem-func))',
+    'border-radius: 50%', 'background-color: var(--color-primary)',
+    'font-family: var(--font-awesome)', 'font-size: calc(10 * var(--to-rem-func))',
+    'z-index: 1', 'z-index: 2'
+  ]) assert.ok(arrow.includes(value), value);
+  assert.match(arrow, /content:\s*'\\f061'/);
+  assert.match(arrow, /place-items:\s*center/);
+  assert.doesNotMatch(css.slice(css.indexOf('/* MARK: 小')), /Figma PC 384:1005/);
+});

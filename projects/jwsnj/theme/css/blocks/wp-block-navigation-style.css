@@ -94,9 +94,45 @@
                         outline-offset: calc(4 * var(--to-rem-func));
                     }
                     .image {
+                        position: relative;
+                        isolation: isolate;
                         width: 100%;
                         border-radius: calc(5 * var(--to-rem-func));
                         aspect-ratio: 3 / 2;
+                    }
+                    /* Figma PC 384:1005 / SP 442:3085: decorative corner and arrow.
+                       The existing link remains the only interactive control. */
+                    &:not(.is-disabled) .image {
+                        &::before,
+                        &::after {
+                            position: absolute;
+                            right: 0;
+                            bottom: 0;
+                            pointer-events: none;
+                        }
+                        &::before {
+                            content: '';
+                            z-index: 1;
+                            width: calc(48 * var(--to-rem-func));
+                            height: calc(48 * var(--to-rem-func));
+                            background-color: var(--jwsnj-color-white);
+                            border-top-left-radius: calc(20 * var(--to-rem-func));
+                        }
+                        &::after {
+                            content: '\f061';
+                            z-index: 2;
+                            display: grid;
+                            place-items: center;
+                            width: calc(32 * var(--to-rem-func));
+                            height: calc(32 * var(--to-rem-func));
+                            border-radius: 50%;
+                            background-color: var(--color-primary);
+                            color: var(--color-secondary);
+                            font-family: var(--font-awesome);
+                            font-weight: 400;
+                            font-size: calc(10 * var(--to-rem-func));
+                            line-height: 1;
+                        }
                     }
                     .content {
                         min-width: 0;
