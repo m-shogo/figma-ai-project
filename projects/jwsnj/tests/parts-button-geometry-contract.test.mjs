@@ -45,3 +45,9 @@ test('external large button uses official SVG and excludes PDF/file glyph varian
   assert.match(external[2], /mask:\s*url\('\.\.\/\.\.\/images\/common\/ico-blank\.svg'\) center \/ contain no-repeat/);
   assert.ok(readFileSync(new URL('../theme/images/common/ico-blank.svg', import.meta.url)).length > 0);
 });
+
+test('large button groups share 20px spacing and a 40px transition to small buttons', () => {
+  assert.match(button, /flex-wrap:\s*wrap;[\s\S]*?gap:\s*calc\(20 \* var\(--to-rem-func\)\);/);
+  assert.match(button, /& \+ &\s*\{\s*margin-top:\s*calc\(20 \* var\(--to-rem-func\)\)/);
+  assert.match(button, /&:not\(\.small\) \+ &\.small\s*\{\s*margin-top:\s*calc\(40 \* var\(--to-rem-func\)\)/);
+});

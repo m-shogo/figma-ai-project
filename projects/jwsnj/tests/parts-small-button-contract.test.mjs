@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 const css=readFileSync(new URL('../theme/css/blocks/wp-block-buttonLink-style.css',import.meta.url),'utf8');
 const start=css.indexOf('        &.small {');
-const end=css.indexOf('        @media (calc(768',start);
+const end=css.indexOf('\n    }\n}\n\n.block-editor_wrap',start);
 const small=css.slice(start,end);
 test('small variant uses 30px mint leading icon, 8px gap, 16px labels',()=>{
   assert.ok(start!==-1&&end>start);
@@ -51,4 +51,10 @@ test('desktop gap media rule does not reapply large button minimum width to smal
   assert.match(small, /min-width:\s*0/);
   const desktop = css.slice(end, css.indexOf('    /* ホバー時のスタイル */'));
   assert.doesNotMatch(desktop, /min-width\s*:/);
+});
+
+test('small buttons wrap into rows on PC and flow vertically on SP', () => {
+  assert.match(small, /gap:\s*calc\(20 \* var\(--to-rem-func\)\) calc\(30 \* var\(--to-rem-func\)\)/);
+  assert.match(small, /@media \(width < calc\(768 \* \(1 \/ 16 \* 1rem\)\)\)\s*\{\s*flex-direction:\s*column;\s*align-items:\s*flex-start/);
+  assert.doesNotMatch(small, /flex-direction:\s*row/);
 });
