@@ -633,6 +633,19 @@ Relevant scopeで:
 
 を確認する。
 
+### Minimum semantics and perceivability（established fundamentals）
+
+該当する要素について、native HTMLの意味・標準動作を優先する。リンクは移動、buttonは操作。form内の非submit buttonはtypeを明示。ARIAは必要な名前/状態/関係を補うもので、roleを付けただけではkeyboard behaviorを得られない。tab順をDOMと分離する正のtabindex、focusableな要素をaria-hiddenの内側へ隠す構成、重複ID・壊れたlabel/aria参照、nested interactive controlsを避ける。
+
+- document/page title、lang、landmark、論理的なheading階層、list、data tableのcaption/header関係、リンクの目的を意味に応じ確認。見た目のサイズだけで見出しlevelを決めない。
+- 画像は目的に応じaltを決める。純装飾は空alt、情報画像は同等の情報、画像だけの操作は操作目的の名前、複雑な図は必要な説明を提供。画像ファイル名や見た目の単純列挙、隣接テキストとの無意味な読み上げ重複を避ける。意味・代替文言を不明なまま創作しない。
+- クリック/タップのhit areaと見えるアイコン寸法は別。状態・リンク・エラーを色だけに依存させず、意味のあるtext/shape/stateを維持。見えないfocusやstickyで隠れるfocusを防ぐ。
+- WCAG 2.2 AAを適用する場合は通常text 4.5:1・large text 3:1、該当UI/graphics 3:1、target size minimum 24×24 CSS pxまたは規定の例外/spacingを確認する。例外・適用条件を原文で解決し、すべてのアイコンを24pxに拡大する規則にしない。Figmaと必要な適合条件が衝突する場合は報告し、勝手にデザイン変更しない。
+- 動的な成功/エラー/件数など必要なstatus messageは適切なlive/status semanticsとfocus設計を選ぶ。hover/focusで追加contentが出る場合はWCAGのdismissible/hoverable/persistent条件を確認する。
+- 自動検査のみでWCAG適合を宣言しない。関連する手動keyboard、実機/assistive technologyの検証を行い、未実施なら区別する。
+
+根拠: [WCAG 2.2](https://www.w3.org/TR/WCAG22/), [WAI Tutorials](https://www.w3.org/WAI/tutorials/), [ARIA APG Read Me First](https://www.w3.org/WAI/ARIA/apg/practices/read-me-first/)（APGは参考パターン、WCAG/ARIAの規範そのものではない）。
+
 ### ACTIVE-018 — Resize Text / Reflow / Text Spacingを分ける
 
 - Resize Text: target要件に応じtext 200%までcontent/functionalityを失わない

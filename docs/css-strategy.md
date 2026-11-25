@@ -281,6 +281,27 @@ absolute positioningをdefaultにしない。
 
 ---
 
+## Practical diagnosis — CSS fundamentals before patches
+
+実描画で違和感を見つけたら、次の典型原因を先に切り分ける。プロパティ集の丸暗記や全局一律resetではなく、現在の要素と親のcomputed style、box/line geometry、cascade、実font、overflow/scroll、stateをDevTools等で見る。候補は原因確認後だけ適用する。
+
+| 症状 | まず調べること / 修正候補 |
+|---|---|
+| 意図しない余白・画像下の隙間 | UA styles、margin collapse（flex/grid内とは異なる）、inline imageのbaseline/line box、gap＋padding/margin、空要素。意味に応じblock/vertical-align/flow-root等を選ぶ。 |
+| 100%幅でもはみ出す | box-sizing、padding/border、scrollbar込みのvw、min-content、長いURL、flex itemの自動minimum、grid trackのminimum、画像/表。必要なownerにmin-inline-size:0、minmax(0,1fr)、適切なwrap等。 |
+| 高さ100%や均等配置が効かない | containing blockの確定寸法、percentage解決、min/max、stretch、flex-basis、auto margin。内容量で伸びる設計を優先し、無意味な固定heightを増やさない。 |
+| 矢印や文字の位置が合わない | boxとinkの中心差、baseline、inherited letter-spacing、line-height、SVG viewBox、実font、pseudo-elementの寸法/position。背景とhit areaを壊さず原因ownerを直す。 |
+| stickyやz-indexが効かない | scroll container、overflow、stacking context、containing block、transform/contain、inset、親の高さ。巨大z-indexやglobal overflow:hiddenで症状を隠さない。 |
+| CSSの変更が反映されない | stylesheet load/cache、origin/layer、importance、specificity、順序、inheritance、invalid/unsupported value、media/supports、CSS variable解決、実DOM selector、WP inline/editor styles。末尾overrideを足す前にwinning declarationを特定。 |
+| 罫線・角丸・focusが欠ける | border-box/clip、border-radiusとinner radius、stroke/viewBox、fractional geometry/DPR、overflow clipping、hover/focusでの寸法差。 |
+| 繰り返し要素の最終行や1件時だけ崩れる | collectionとitemの責務、auto-fit/auto-fillの意味、実件数、incomplete row、stretchとalign、index指定の意図、optional content。 |
+
+原因の仮説→最小修正→再描画→関連幅/状態/兄弟の回帰確認。原因未確定の一律offsetやCSS property ban、無関係なglobal reset追加はしない。
+
+参照: [MDN Box sizing](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Box_sizing), [Margin collapsing](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Box_model/Margin_collapsing), [vertical-align](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/vertical-align), [Stacking context](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Positioned_layout/Stacking_context), [Browser DevTools](https://developer.mozilla.org/en-US/docs/Learn_web_development/Howto/Tools_and_setup/What_are_browser_developer_tools).
+
+---
+
 ## Component extraction / reuse
 
 見た目が似ているだけで共通Componentへ統合しない。

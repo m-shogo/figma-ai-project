@@ -66,6 +66,8 @@ Flow / Flex / Grid / relational overlap / intentional absolute・fixed・sticky 
 
 **実務手順の参照:** browser差は `docs/device-environment-policy.md` のCross-engine practical verification、文字仕上げは `docs/frontend-font-loading-policy.md` §7.1、UIの作り込みは `docs/frontend-maintainability-qa.md` §3.1、AIの視覚self-reviewは `docs/frontend-visual-repair-learning-loop.md` §8を関連scopeで着手・受入時に使う。対応環境を確定し、見た目・操作・コード品質を別々に検証する。Figma/案件の具体値を勝手に上書きしない。
 
+**実務上の基礎知識（2026-11-25 coverage audit）:** CSSの典型的な崩れは `docs/css-strategy.md` のPractical diagnosisで原因を先に確認。native semantics・alt・contrast・target・状態通知はstandard §15とQA §11.1、操作ミス/復帰/非同期競合はruntime contract §2.1/§3.1、日本語組版はfont policy §7.2、CMS編集から公開までの検証はWordPress policyのEditorial acceptanceを該当scopeで使う。テストはQA §3.2のユーザー操作・失敗条件を確認する。業界で確立した基礎原則として最初から使い、案件固有の数値・技法や未確定仕様を発明しない。
+
 ## 4. 状態変化で箱をずらさない
 
 Figmaに「hoverで枠が付く」と書いてあっても、Webでは rest から同じ太さの枠を確保する。Company / Existing / 明示Projectが別契約ならそちらが勝つ。**Human が言わなくても** 適用する。詳細な欠落種類は `docs/agent-human-fb-weak-spots.md`。

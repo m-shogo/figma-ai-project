@@ -181,6 +181,12 @@ Font loadingのPASSだけでは文字の見た目のPASSではない。Figmaの�
 
 公式参照: [MDN text-box-trim](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/text-box-trim)、[MDN TextMetrics](https://developer.mozilla.org/en-US/docs/Web/API/TextMetrics)。
 
+### 7.2 Japanese composition fundamentals
+
+W3C JLReqを参考に、和文の禁則、句読点/括弧の行頭行末、和欧混植、数字/単位・固有名詞のまとまり、行長と行間、見出しの意味の切れ目を該当scopeで確認する。Figmaの1つの改行だけを正解として全幅に固定しない。langを正しく設定し、line-break/word-break/overflow-wrap等は文字種・対象browser・既存contractから選ぶ。全ての日本語をbreak-all/nowrapにしたり、見た目だけの全角spaceや手動brをCMS本文へ埋め込んだりしない。意図されたart-directed copyは例外として根拠を保持する。長短文、URL、日付、英数字、括弧/句読点を実描画し、行末の不自然さや欠けを確認。約物調整・新しいCSS typography機能の対応差は個別に確認する。
+
+参照: [W3C 日本語組版処理の要件 (JLReq)](https://www.w3.org/TR/jlreq/)。印刷組版の全規則をWebへ強制するものではない。
+
 ## 8. Localization / missing glyphs
 
 Localized contentではglyph coverageを確認する。

@@ -30,6 +30,22 @@ Status: ACTIVE audit map
 | Rule lifecycle CORE/ACTIVE/CANDIDATE | standard + policy |
 | Policy invariants in CI | `validate_frontend_implementation_policy.py` |
 
+## Established practical fundamentals — 2026-11-25 gap audit
+
+Established web/design principles are common defaults, not hypotheses awaiting internal replay. Individual implementations still require relevant QA. See `knowledge-promotion.md`.
+
+| Topic | Canonical owner |
+| --- | --- |
+| Optical alignment, visual hierarchy, Gestalt, typography, UI polish | implementation standard §3.1 + quick contract §3.1 + QA §3.1 |
+| Cross-engine rendering and real-device evidence | device-environment policy |
+| Japanese composition, CJK punctuation and mixed scripts | font-loading policy §7.2 |
+| CSS failure diagnosis: cascade, box model, line box, intrinsic sizes, overflow, positioning | css-strategy, Practical diagnosis |
+| Native semantics, accessible names, contrast, targets, text alternatives, status, manual testing | implementation standard §15 + QA §11.1 |
+| UX usability, recoverable errors, interaction lifecycle, history and stale responses | production runtime contract §2.1 / §3.1 |
+| WordPress authoring → save → reload → public render | wordpress-acf-policy, Editorial acceptance |
+| Behavior-based testing, deterministic state, negative tests and honest evidence | maintainability QA §3.2 |
+| Existing SEO/performance/security/deployment coverage | runtime / delivery / standard contracts; not duplicated |
+
 ## Naming / owner
 
 | Topic | Canonical owner |
