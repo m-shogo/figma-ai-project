@@ -215,3 +215,8 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 
 - 画像・タブ・見出しの旧CODIAコメントアウト宣言/空メディア・空セレクタを除去。既存アクティブなスタイル、Gutenbergの整列・タブ操作、Figma指定値はそのまま。
 - PC/SPのgallery、media-text、accordion、注釈、表はFigma高精細contextとスクリーンショットを再取得してソースと比較。未確認のslider/タブ旧ACFの動作を推測で復旧しない。実WordPressの視覚・操作・編集画面は #523 のまま。既存機能の追加・変更を伴わないコード整理に限定。
+
+## 2026-11-25 — 共通UI監査一巡の完了境界と次工程
+
+- #633〜#638のsource修正を独立PR/CIでマージ。Figma PC/SP個別ノード・最新版authority・関連テーマ/ACF/WP JSを照合。残るものは実WP/browser #523、未取得公式bytes #524、未承認Footer/CMS/slider/ページの契約であり、**静的監査が全デザイン一致を保証するものではない**。
+- 修正探索を長引かせるより次のHuman-approved工程へ移る。#515のニュースアーカイブDraftは存在するが、承認なしにmergeしていない。新規記事詳細/固定/TOP/コース下層は実装しない。

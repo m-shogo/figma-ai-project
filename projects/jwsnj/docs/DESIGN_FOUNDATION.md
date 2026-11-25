@@ -271,3 +271,19 @@ TOP PC `114:28` / SP `279:2136` から、ベクターは SVG、写真は元画�
 - 2026-11-25: galleryズーム PC 344:1079/SP 442:2973 の44px円、20px F002、PC20/SP16px insetと反転を再確認。gallery限定でborder-boxとglyphのstyle/tracking/trim隔離。光学的補正は実描画待ち。H3白文字 #fff / 水色 #6bd2ce のコントラスト不足はHuman/デザイナー判断待ち（色変更なし）。次の独立候補はgalleryの既存CMS列数の確認。#523実機未検証。
 
 - 2026-11-25: H2のFigma内側stroke3pxをpadding28/24に含める。PC 344:906 frame70 = text42+28、SP 445:3209 frame126 = text102+24。CSS局所stroke変数を差し引き、既存二色線・余白・wrapを維持。隔離Chromium geometry PASS、実機#523は未検証。gallery F002のCI outline bounds [0,-71,519,448] / advance512、units512。光学重心補正は実機待ち。galleryの未指定列数は既存ベースも固定gridでありHumanの意図確認待ち。次は承認済み範囲で実描画・残差を確認。
+
+## 2026-11-25 共通UIソース総点検 一巡結果
+
+| 範囲 | 静的結果 | 残る最終受入 |
+|---|---|---|
+| ヘッダーPC/SPとメガメニュー | #633 viewport・長文、#636 Gridトラック。PC hover / SP tap / focusの既存JS契約を維持 | #523 実機の開閉、フォント、狭幅、ブラウザ差 |
+| フッターPC/SP | #599公式画像と既存WP sitemap接続を確認。既存可変copy・footer bottom、独立のデザイン根拠なしに構造を変更しない | #523。未承認の住所・電話・SNS・privacy・CTAとSP sitemapは未決 |
+| 見出し・本文・リスト・注釈 | typography・自然折返し、H2 stroke、Figma注釈PC 344:937/SP 442:2796を再照合 | #523 editor/front 実測 |
+| 大小ボタン・矢印・テキストリンク・ページ内リンク | #629/#630 glyph精度に基づく隔離、#625添付PDF、#634 tabs長文を確認 | #523 optical alignment/hover/focus |
+| 画像・ギャラリー・media-text | Figma PC 344:1079/344:929、SP 442:2973/442:2788を再照合。3:2 crop、動的画像、caption flow、editor選択の維持を確認 | #523 実ブラウザ・Core/lightbox CSS cascade |
+| アコーディオン | Figma PC 357:938/SP 442:2908を再照合、75px `min-height`、既存PHP nested block契約、#637不活性CSS整理 | #523 native details keyboard/open |
+| タブ | #634 ラベル折返し・横scroll。#638無効コード整理。旧ACFタブJSはコメントアウトされており、core/tabsと混在している。安易に有効化しない | #523 core/edit selection、旧ACF使用の有無・所有確認 |
+| 表 | Figma SP 442:2890 / 445:3237の横スクロール、960pxテーブル、ScrollHintのオプトイン、既存focus/aria対策とテストを確認 | #523 実表のoverflow/keyboard/ScrollHint |
+| CSS/保守性・性能 | 既存import/依存・明らかな空CSSを小scopeで整理 (#637/#638)。画像のlazy/本番font/JS実行は未計測 | #523 / Vite build/lighthouse が可能な環境 |
+
+**検証境界**: Figmaから取得した現物高精細context+スクリーンショットはデザイン根拠で、WordPress表示のスクリーンショットではない。旧サンプルと未接続公式素材を無断削除・置換しない。点検可能な独立source修正の探索を無限に延ばさず、以降は承認済み新規スコープを優先する。
