@@ -137,3 +137,6 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 - DEFERRED_RUNTIME_QA (#523): PC 344:968/969 SP 442:2832/2833/2842; verify large gap20, adjacent large/small40, small PC 20/30 row/column and SP vertical flow, long labels/custom widths/alignment, icons/focus/hover. Mixed 30/20 SP small group gaps require author grouping confirmation; current uniform 20px. No runtime PASS claimed.
 
 - DEFERRED_RUNTIME_QA (#523): 注釈 PC 344:937/SP 442:2796。段落・画像・gallery・group/columns・media-text・buttons・details・表・既存ページ内リンク/Largeナビとの前後20px、連続注釈、margin相殺/非相殺、core/editorのblock-gap・編集者指定・先頭末尾・長文、PC/SP/中間幅。見出し/区切り線の独立余白は維持を確認。実機未検証。
+
+### PAGE-PARTS — inline file/PDF icon geometry (2026-11-25)
+- DEFERRED_RUNTIME_QA (#523): PC 344:1027/344:1028/357:924 and SP 442:3202. Check FA Regular 13px PDF F1C1 orange #f0813b / attachment F15C coral #ec6b61, existing external SVG, normal links and long wrapping text, hover/focus/keyboard, PC/SP/intermediate widths, actual editor/frontend. No runtime PASS claimed.
