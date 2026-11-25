@@ -59,3 +59,42 @@
     }
 }
 
+/* Figma gallery PC 344:1079 / SP 442:2973.
+   Scope to existing gallery zoom affordances; do not change external/file link variants
+   or replace WordPress's native lightbox control. */
+.wp-block-gallery {
+    .wp-block-image > a:not([target='_blank']):not([href$='.pdf']),
+    .wp-lightbox-container .lightbox_wrap {
+        width: 100%;
+        &::after {
+            right: calc(16 * var(--to-rem-func));
+            bottom: calc(16 * var(--to-rem-func));
+        }
+        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+            &::after {
+                right: calc(20 * var(--to-rem-func));
+                bottom: calc(20 * var(--to-rem-func));
+            }
+        }
+        @media (any-hover: hover) {
+            &:hover::after {
+                opacity: 1;
+                background-color: var(--color-secondary);
+                color: var(--color-primary);
+            }
+        }
+        &:focus-visible::after {
+            background-color: var(--color-secondary);
+            color: var(--color-primary);
+        }
+        @media (prefers-reduced-motion: reduce) {
+            &::after {
+                transition: none;
+            }
+        }
+    }
+    .wp-lightbox-container:focus-within .lightbox_wrap::after {
+        background-color: var(--color-secondary);
+        color: var(--color-primary);
+    }
+}

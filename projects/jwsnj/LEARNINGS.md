@@ -95,3 +95,7 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 - PC `344:936` / SP `442:2795` の高精細context・画像を取得。子bulletは親左端から24px、子本文42px。既存親liの18pxにさらに24pxを加えていたため、子ulのpaddingは6pxに修正。12/8px間隔と色、文字は維持。
 - 番号リストは既存独自counterがHTML start/reversed/valueを無視するため、暗黙のlist-item counterへ変更。番号の左揃えは実画像（1./10.とも左端）に従う。注釈と通常リストの隣接marginは既存48pxの高詳細度ルールより優先して20pxへ。注釈と他種類ブロックの余白は別実機確認。
 - 既存WordPress構造・ACF・Foundation変更なし。#523で実ブラウザの番号属性、混在入れ子、長文、隣接余白、editor/frontendを確認する。静的CIは実描画保証ではない。
+
+## 2026-11-25: ギャラリーのズーム装飾（通常Chat、PROJECT_ONLY）
+- PC `344:1079` / SP `442:2973` の高精細contextと実画像、zoom `344:1106` / `442:3063` / `442:3069` の変数を照合。44px円・FA f002 20pxは既存ownerに存在。右下0pxとopacity hoverだけが不一致のためギャラリー限定でPC20px/SP16pxの内側配置と白背景/緑文字への反転を追加。
+- 既存 .lightbox_wrap は common.js の画像ラップ処理が生成する。既存リンク/WordPress lightboxの操作・外部/PDFの装飾・他画面は変更せず、focus-visible/focus-withinとreduced-motionも装飾側に対応。実際のnative triggerとの重なり、開閉・フォーカス復帰、画像比率、キャプションへの干渉は #523 で検証する。実機PASSではない。
