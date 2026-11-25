@@ -432,7 +432,7 @@
             }
             .gnl_list-02 {
                 display: grid;
-                grid-template-columns: repeat(3, 1fr);
+                grid-template-columns: repeat(3, minmax(0, 1fr));
                 gap: calc(40 * var(--to-rem-func));
             }
             /* 3階層 end */
