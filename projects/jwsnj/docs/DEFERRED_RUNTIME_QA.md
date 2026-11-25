@@ -189,3 +189,5 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 - TOP News PC 114:542 / SP 279:2524: verify 0/1/5 posts, actual posts page URL, no self-link, long title/multiple categories, pointer/keyboard focus, marker and arrow, desktop/tablet/mobile dimensions and official flower. DEFERRED_ENV; not visual PASS.
 
 - TOP MV catchphrase: official PC/SP assets, accessible text once per viewport, 320/375/768/1079/1080/1380 widths, actual font and asset alignment/spacing, home width override and no horizontal overflow. DEFERRED_ENV; photos/CTA/motion remain separate.
+
+- TOP: confirm no CODIA event sample/empty event message or archive link; adjacent News and banner remain functional. Actual Instagram section/URL separately pending. #523 DEFERRED_ENV.

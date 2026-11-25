@@ -257,3 +257,7 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 
 ## 2026-11-26 TOP MV固定キャッチコピー
 - PC 114:29/220:7、SP 279:2142/279:2144の高精細contextと画像を取得。既存公式PC glyph 5点とSP専用SVGを接続し、後続コピーはHTML（Zen Kaku Gothic New 48/28px）。装飾だけ位置指定、可変テキストはflexで自然に折り返す。既存TOPの1280px body最小幅をhome限定で解除。PC切替1080pxは785pxコピーと既存headerの境界を踏まえた実装判断で、Figma中間幅仕様なし。画像グリッド・CTA管理・motionは既存ACFと実装指示の確認後の別READY。実機#523。
+
+
+## 2026-11-26 TOP旧イベントサンプルの除去
+- PC 114:541/SP 279:2523 News親ノードの高精細contextと画像を照合。現行はNewsとInstagramの並びであり、CODIAのイベント一覧は存在しない。CURRENT_AUTHORITYのevent/event_cat登録停止に合わせ、front-pageのサンプルイベントsectionと専用CSSのみ除去。学習用関数や投稿データ、既存ACF、バナー・MV・Newsは変更しない。InstagramのURLは未確定のため捏造しない。次のREADY: TOP Aboutの固定テキスト/公式素材の接続、CMS依存部の切り分け。実機#523。

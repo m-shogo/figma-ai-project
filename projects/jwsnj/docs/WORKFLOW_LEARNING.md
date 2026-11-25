@@ -77,3 +77,5 @@ Status: PROJECT-ONLY EVIDENCE / Human feedback: 2026-11-20
 
 ## 2026-11-26 ブラウザ引継ぎ実行
 - 開始so 1727105、正式skill取得・新規session成功。#649 TOP Newsを静的CI3/3実ログ確認後にdf29806へmerge。MVの公式素材・PC/SP根拠を並行で確認しキャッチコピーの独立実装へ継続。実WordPress QA#523、素材受入#524はOPEN。スケジュール変更なし。
+
+- #650 merged c0143aa after actual three CI job logs. Fresh News parent PC/SP context + image established sample event removal as independent work; no event CPT or SNS URL added. Next: TOP About independent approved content and CMS boundaries; #523/#524 remain OPEN.

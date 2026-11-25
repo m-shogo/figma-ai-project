@@ -37,34 +37,6 @@
 </div>
 <main id="global_contents" class="global_contents" itemscope itemprop="mainContentOfPage">
     <?php get_template_part('template-parts/_top-news'); ?>
-    <section id="top_news-02" class="top_news-02 _bg_color-gray-01">
-        <div class="global_inner">
-            <h2 class="top_title-01"><span class="title-main">タイトル</span><span class="title-sub">Sub title</span></h2>
-            <?php
-            $arg = array(
-                'posts_per_page' => 6,
-                'has_password' => false,
-                'post_type' => 'event',
-                'orderby' => 'date',
-                'order' => 'DESC'
-            );
-            $posts = get_posts($arg);
-            if ($posts): ?>
-                <?php get_template_part('template-parts/_list-card'); ?>
-            <?php else: ?>
-                <p>記事はありません。</p>
-            <?php endif; ?>
-            <div class="top_button">
-                <div class="block-editor_wrap">
-                    <div class="wp-block-buttons">
-                        <div class="wp-block-button is-style-outline">
-                            <a class="wp-block-button__link has-text-align-center" href="<?php echo get_post_type_archive_link('event'); ?>">ボタン</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
     <div id="top_banner-01" class="top_banner-01">
         <div class="global_inner">
             <?php if (have_rows('top_banner-01')): ?>
