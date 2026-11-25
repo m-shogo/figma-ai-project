@@ -72,27 +72,25 @@
             margin-top: var(--wp-block-margin-small);
         }
     }
+    /* Figma PC 344:901 / SP 442:2766 — official blossom, first-line alignment. */
     h4:is(:not([class]), .wp-block-heading) {
-        font-weight: 700;
-        font-size: calc(20 * var(--to-rem-func));
-        line-height: 1.5;
-        letter-spacing: 0.08em;
+        font-family: var(--font-jwsnj-ja);
+        font-weight: 500;
+        font-size: calc(18 * var(--to-rem-func));
+        line-height: 1.4;
+        letter-spacing: 0.05em;
         color: var(--color-primary);
-        margin-bottom: var(--wp-block-margin-small);
-        border-left: calc(4 * var(--to-rem-func)) solid var(--color-primary);
-        padding-left: calc(16 * var(--to-rem-func));
+        margin-bottom: calc(20 * var(--to-rem-func));
+        padding-left: calc(26 * var(--to-rem-func));
+        background-image: url('../../images/common/ico_blossom.svg');
+        background-repeat: no-repeat;
+        background-position: left calc(4.1 * var(--to-rem-func));
+        background-size: auto calc(17 * var(--to-rem-func));
         overflow-wrap: anywhere;
         word-break: normal;
         line-break: strict;
-        display: flex;
-        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-            margin-bottom: var(--wp-block-margin-medium);
-        }
         & + :is(h1, h2, h3, h4, h5, h6):is(:not([class]), .wp-block-heading) {
             margin-top: var(--wp-block-margin-small);
-            @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-                margin-top: var(--wp-block-margin-small);
-            }
         }
     }
     h5:is(:not([class]), .wp-block-heading) {

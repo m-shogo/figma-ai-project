@@ -1,16 +1,31 @@
 @charset "utf-8";
 /* // ------------------------------
-// 区切り線 — Figma parts PC 344:1134 / SP 442:2940
-// Approved green hairline; blossom SVG remains a separate verified asset.
- // ------------------------------ */
+// 区切り線 — Figma parts PC 344:1135 / SP 442:3204.
+// Native hr semantics; official blossom over a white center and translucent green line.
+// ------------------------------ */
 .block-editor_wrap,
 .editor-styles-wrapper {
     .wp-block-separator {
-        margin-top: var(--wp-block-margin-large);
-        margin-bottom: var(--wp-block-margin-large);
+        margin-top: calc(32 * var(--to-rem-func));
+        margin-bottom: calc(32 * var(--to-rem-func));
         border: 0;
-        border-top: calc(1 * var(--to-rem-func)) solid color-mix(in srgb, var(--color-primary) 50%, transparent);
+        height: calc(17 * var(--to-rem-func));
         width: 100%;
         max-width: 100%;
+        opacity: 1;
+        background-color: transparent;
+        background-image: url('../../images/common/ico_blossom.svg'),
+            linear-gradient(var(--jwsnj-color-white), var(--jwsnj-color-white)),
+            linear-gradient(color-mix(in srgb, var(--color-primary) 50%, transparent), color-mix(in srgb, var(--color-primary) 50%, transparent));
+        background-repeat: no-repeat;
+        background-position: center, center, center calc(50% - var(--to-rem-func));
+        background-size: auto calc(17 * var(--to-rem-func)),
+            calc(8 * var(--to-rem-func)) calc(8 * var(--to-rem-func)),
+            100% calc(1 * var(--to-rem-func));
+        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+            /* PC's 65px frame includes the flower overlapping the line's vertical padding. */
+            margin-top: calc(25 * var(--to-rem-func));
+            margin-bottom: calc(23 * var(--to-rem-func));
+        }
     }
 }
