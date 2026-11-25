@@ -148,3 +148,25 @@ test('Footer brand copy and WordPress sitemap labels remain wrappable at narrow 
   assert.match(links, /overflow-wrap:\s*anywhere;/);
   assert.doesNotMatch(links, /white-space:\s*nowrap/);
 });
+
+test('desktop sitemap top-level links use the official Figma bullet without changing the menu owner', () => {
+  const pcStart = css.indexOf('@media (calc(768 * (1 / 16 * 1rem)) <= width)');
+  assert.ok(pcStart >= 0);
+  const pc = css.slice(pcStart);
+  const marker = pc.match(/\.gfl_link-02\s*\{[^}]*background-image:[^}]*\}/);
+  assert.ok(marker, 'PC top-level link owns its decorative SVG');
+  const rule = marker[0];
+  assert.match(rule, /font-family:\s*var\(--font-jwsnj-ja\)/);
+  assert.match(rule, /font-size:\s*calc\(13 \* var\(--to-rem-func\)\)/);
+  assert.match(rule, /font-weight:\s*500/);
+  assert.match(rule, /line-height:\s*1\.4/);
+  assert.match(rule, /letter-spacing:\s*0\.05em/);
+  assert.match(rule, /padding-inline-start:\s*calc\(17\.41839 \* var\(--to-rem-func\)\)/);
+  assert.match(rule, /background-image:\s*url\('\.\.\/\.\.\/images\/common\/footer\/img_footer-bullet\.svg'\)/);
+  assert.match(rule, /background-size:\s*calc\(5\.41839 \* var\(--to-rem-func\)\) auto/);
+  assert.match(rule, /background-repeat:\s*no-repeat/);
+  assert.doesNotMatch(css.slice(0, pcStart), /img_footer-bullet\.svg/);
+  assert.doesNotMatch(rule, /white-space:\s*nowrap/);
+  assert.ok(readFileSync(new URL('../theme/images/common/footer/img_footer-bullet.svg', import.meta.url)).length > 0);
+});
+

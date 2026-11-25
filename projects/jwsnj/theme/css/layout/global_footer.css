@@ -536,8 +536,18 @@
                 display: grid;
                 gap: calc(8 * var(--to-rem-func));
             }
+            /* Figma PC sitemap 114:523. Keep the WordPress hierarchy and SP controls intact. */
             .gfl_link-02 {
-                font-weight: 700;
+                font-family: var(--font-jwsnj-ja);
+                font-size: calc(13 * var(--to-rem-func));
+                font-weight: 500;
+                line-height: 1.4;
+                letter-spacing: 0.05em;
+                padding-inline-start: calc(17.41839 * var(--to-rem-func));
+                background-image: url('../../images/common/footer/img_footer-bullet.svg');
+                background-repeat: no-repeat;
+                background-position: left calc(6.39 * var(--to-rem-func));
+                background-size: calc(5.41839 * var(--to-rem-func)) auto;
             }
             .gfl_wrapper-02 {
                 margin-top: calc(10 * var(--to-rem-func));

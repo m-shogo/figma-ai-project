@@ -221,7 +221,8 @@ TOP PC `114:28` / SP `279:2136` から、ベクターは SVG、写真は元画�
 
 ### 残っていること（ファイルは Git にあるので、どの環境でも実装できる）
 
-- 未接続の SVG をテーマへつなぐ。フッターのドット、花、`ico-blank`、`ico_school`、TOP のキャッチコピー、地図、各部紹介の装飾、手続きアイコン、Instagram イラスト、見出し下線
+- 未接続の SVG をテーマへつなぐ。`ico-blank`、`ico_school`、TOP のキャッチコピー、地図、各部紹介の装飾、手続きアイコン、Instagram イラスト、見出し下線
+- 2026-11-25: H4と区切り線の花は #603 で接続済み。PC Footer のドットも既存WordPressメニューの第1階層リンクへ接続。いずれも実描画は #523 で未検証。
 - `ico_admission` / `ico_parents` / `ico_recruit` と CTA は、遷移先 URL が承認されるまでボタンを作らない
 - TOP の WebP は既存 ACF（`top_slider`、コース、バナー、お知らせ）へ。`front-page.php` へ写真を直書きしない。交通アクセスは `img_mv-06.webp`、教育環境は `img_mv-05.webp`
 - TOP は 1 セクションずつ。コース紹介の下層は作らない

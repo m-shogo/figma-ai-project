@@ -69,3 +69,7 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 - 開始 so `36eceb51ecc9a1ff6a8334ec77f3adc6f4578538`。正式 figma-design-to-code skill、新規session、PC/SP H4 `344:901` / `442:2766` と区切り線 `344:1135` / `442:3204` の高精細context・画像を取得。既存の `ico_blossom.svg` を利用し、素材の再生成・再ダウンロード・SVG属性の書換えはしない。
 - H4 は18px/500/1.4/5%・下20px・左装飾18px枠＋8px gap。通常テキストの折返しを保つため背景装飾とpaddingを採用。区切り線はnative hrの意味を保持し、背景レイヤーで公式花、白8px、緑50%の1px線を重ねる。SP 32px余白、PC 65pxのframeをCSSの17px装飾高＋25/23px marginで表現。SVGの固有比率を保つため高さ17px、横auto（Figmaの18×17枠との差は実機要確認）。
 - 既存Gutenberg/editor ownerのみ変更。#523でPC/SP/中間幅・長文・リンク付き見出し・editor・隣接余白・SVGの実描画サイズを確認。source implementation と runtime visual PASS は別。自動スケジュールの復旧を意味しない。
+
+## 2026-11-25: PC Footer sitemap の公式ドット接続（通常Chat、PROJECT_ONLY）
+- Figma PC `114:523` / SP footer `506:1632` の高精細contextと画像を確認。PCは5.41839pxのドットと12px gap、Zen Kaku Gothic New medium 13px・5% letter spacing。SP referenceにはsitemapが見えないが、現行WordPress管理メニューと開閉機能を削除する根拠にはしない。
+- PC既存 `.gfl_link-02` のownerで公式SVGを背景装飾として接続、13px/500/1.4で長文を自然に折り返す。固定メニュー項目、URL、階層、列構成、SP表示、CMS、SVGバイトは変更しない。既存の768px PC breakpointを維持。PC全体の3列構成とSP sitemap表示有無は別のsource/runtime review。#523で実描画・keyboard・中間幅を確認。
