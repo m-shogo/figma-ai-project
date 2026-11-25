@@ -171,16 +171,21 @@
         &.--small {
             gap: calc(30 * var(--to-rem-func));
             .navigation {
+                min-width: 0;
                 a {
+                    min-width: 0;
                     align-items: flex-start;
                     gap: calc(15 * var(--to-rem-func));
                     .image {
                         border-radius: calc(4 * var(--to-rem-func));
-                        width: calc(120 * var(--to-rem-func));
+                        width: min(calc(120 * var(--to-rem-func)), 42%);
                         aspect-ratio: 1 / 1;
                         border: calc(1 * var(--to-rem-func)) solid var(--color-gray-border);
                     }
                     .content {
+                        flex: 1 1 0%;
+                        min-width: 0;
+                        overflow-wrap: anywhere;
                         .title {
                             font-size: calc(16 * var(--to-rem-func));
                             text-underline-offset: calc(4 * var(--to-rem-func));
@@ -211,7 +216,7 @@
                         gap: calc(25 * var(--to-rem-func));
                         .image {
                             border: unset;
-                            width: calc(180 * var(--to-rem-func));
+                            width: min(calc(180 * var(--to-rem-func)), 48%);
                             aspect-ratio: 18 / 15;
                         }
                         .content {

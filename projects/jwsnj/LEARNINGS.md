@@ -194,3 +194,9 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 - Header/FooterのFigmaと現行templateに構造差あり（header CTA/英字名、footer contact/SNS/privacy/copyright）。未確定CMS・URL・素材#524と既存承認を先に照合する。勝手に追加しない。配色はHuman指示で変更対象外。
 
 - 2026-11-25: tabsの57pxはコメント内の無効な旧装飾指定だった。誤検出を訂正し不要コメントを削除。既存横スクロールを保持し、単一タブの長文が表示領域を超えないようmax-inline-size/overflow-wrapを追加。lightboxは90vh fallbackと90dvhを併記。配色変更なし。実機未検証。
+
+## 2026-11-25 — 小型ACFナビの実装健全性点検
+
+- Figma `384:817` / `442:3079` の大型ナビと区別し、小型ナビは既存の画像左・文言右の構造を保ったままCMS長文で `min-width:auto` が横溢しないようflex最小幅・画像幅を限定。
+- 小型ナビの元実装はURL未設定でも `href=""`、未設定画像時にCODIAサンプル `noimage.webp` を表示し、空行を描画する可能性があった。URL無しは非遷移、完全空行はskipし、サンプル画像は使わない。画像とタイトルの二重読み上げを避けるため画像は装飾扱いに限定。
+- 小型ナビ専用のFigma高精細nodeは今回未照合。構造維持のソース健全性修正であり、正確な画面一致やブラウザ検証をPASSとはしない。
