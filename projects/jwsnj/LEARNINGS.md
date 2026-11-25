@@ -182,3 +182,8 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 ## 2026-11-25: ギャラリーの丸ズームアイコン（通常Chat、PROJECT_ONLY）
 - 新規Figma session PC 344:1079/SP 442:2973の詳細contextと画像を確認。通常/反転は44px円、1px border、FA Regular F002 20px、PC20/SP16px inset。既存gallery限定ownerにbox-sizingとglyphのstyle/tracking/trim隔離を明示。単一glyphのため本文字間は継承しない。非gallery・外部/PDFのvariant、native lightbox、画像・CMSはそのまま。非対称な虫眼鏡の視覚重心は実描画なしで補正量を決めない。既存TTFテストでF002 outlineを記録するが視覚PASSではない。
 - H3 PC 344:903/SP 445:3236の白文字/水色背景は正本と現行CSSが一致するが、WCAG contrast不足の可能性ではなく色値上の不足を確認。承認済み色を無断変更せずHuman/デザイナー判断待ち。次の候補: galleryのCMS列数（columns-1等）の既存仕様とscopeを確認。#523の実描画は未完。
+
+
+## 2026-11-25: H2の内側strokeをCSS外寸へ翻訳（通常Chat、PROJECT_ONLY）
+- 同sessionでFigma PC 344:906/344:907/344:908 とSP 445:3209/445:3207/445:3208を詳細context・画像・metadataで再照合。PC heading frame 70px = text42 + bottom28、SP 126px = text102 + bottom24。画像の3px線はその枠内。CSSは従来padding28/24にborder3を加算。stroke幅を局所変数にしpaddingから一度引くことで線込み28/24を再現する。色、16%分割、typography、後続40/32 marginと自然な複数行は維持。
+- 隔離Chromium（system font、実際のWP cascade/Zen描画ではない）で320/375/767/768/960/1380幅の長文を旧・新宣言で比較。各幅で高さ差3px、線3px、padding21/25px、水平overflowなし。#523でeditor/frontendの実font・複数行・block gapを測定して視覚受入。H3配色は変更せず、gallery未指定の列数は元CODIAも固定gridだったため新しい列数仕様を発明しない。
