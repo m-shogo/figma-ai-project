@@ -120,3 +120,6 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 
 ### PAGE-PARTS — accordion open geometry and Q/A markers (2026-11-25)
 - DEFERRED_RUNTIME_QA (#523): PC 357:938 / SP 442:2908; verify closed 24px / open 32px title inset, Q/A regular-width Roboto Medium 24px in 16px rail with 16px gap and centered on wrapped content, native summary click/Enter/Space, focus/reduced-motion, nested open/closed and _qa isolation, actual legacy render_block and editor/frontend markup. Existing nested regex rendering is a separate potential issue, not fixed or verified. No browser PASS claimed.
+
+### PAGE-PARTS — details render ownership (2026-11-25)
+- DEFERRED_RUNTIME_QA (#523): verify core/details nested rendering order, editor markup, native open/name/keyboard/focus, rich-text summary and body, predecorated and unfamiliar summary attributes; PHP CLI isolated callback tests are not full WordPress runtime. Unsupported outer summary markup is intentionally preserved. No browser PASS claimed.

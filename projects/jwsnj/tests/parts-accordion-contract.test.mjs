@@ -2,6 +2,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
 
 const css = readFileSync(new URL('../theme/css/blocks/wp-block-details-style.css', import.meta.url), 'utf8');
 
@@ -49,4 +50,40 @@ test('open accordion uses 32px title inset while Q/A markers center in a 16px ra
   assert.match(qa, /> summary\.wp-block-details__summary\s*\{\s*&::before\s*\{\s*content:\s*'Q'/);
   assert.match(qa, /> \.wp-block-details__content\s*\{\s*&::before\s*\{\s*content:\s*'A'/);
   assert.doesNotMatch(qa, /font-jwsnj-en-condensed|align-items:\s*flex-start/);
+});
+
+// Execute the real isolated PHP callback; no WordPress runtime is claimed.
+const phpSource = readFileSync(new URL('../theme/inc/field.php', import.meta.url), 'utf8');
+const callback = phpSource.slice(phpSource.indexOf('function custom_render_details_block('), phpSource.indexOf("add_filter('render_block', 'custom_render_details_block'"));
+function renderDetails(html, name = 'core/details') {
+  return execFileSync('php', ['-r', callback + '\n$input = json_decode(stream_get_contents(STDIN), true); echo custom_render_details_block($input[0], array("blockName" => $input[1]));'], {
+    input: JSON.stringify([html, name]), encoding: 'utf8'
+  });
+}
+
+test('PHP details callback decorates only its own summary and preserves inner rendered blocks', () => {
+  const child = renderDetails('<details class="wp-block-details" open><summary>Child</summary><p>Child body</p></details>');
+  const rawChild = '<details><summary>Custom HTML</summary><p>Unmodified</p></details>';
+  const body = '<p>Before</p>' + child + rawChild + '<p>After</p>';
+  const parent = '<details class="wp-block-details _qa" name="group" open id="parent"><summary>Parent <strong>title</strong></summary>' + body + '</details>';
+  const rendered = renderDetails(parent);
+  assert.ok(rendered.startsWith('<details class="wp-block-details _qa" name="group" open id="parent"><summary class="wp-block-details__summary">'));
+  assert.ok(rendered.includes('<span class="wp-block-details__title">Parent <strong>title</strong></span>'));
+  assert.ok(rendered.includes('<div class="wp-block-details__inner">' + body + '</div></div></details>'));
+  assert.equal((rendered.match(/class="wp-block-details__summary"/g) || []).length, 2);
+  assert.equal(renderDetails(rendered), rendered);
+  assert.match(rendered, /wp-block-details__button" aria-hidden="true"/);
+});
+
+test('PHP details callback preserves other blocks and unsupported outer markup', () => {
+  const plain = '<details><summary>Title</summary><p>Body</p></details>';
+  assert.equal(renderDetails(plain, 'core/html'), plain);
+  for (const html of [
+    '<details><summary class="custom">Title</summary><p>Body</p></details>',
+    '<details><summary>Title</summary><p>Missing closing tag</p>',
+    '<div>' + plain + '</div>'
+  ]) assert.equal(renderDetails(html), html);
+  const spaced = ' \n<details data-note="a > b"><summary >Title</summary>\n<p>Body</p></details>\n';
+  assert.ok(renderDetails(spaced).startsWith(' \n<details data-note="a > b"><summary class="wp-block-details__summary">'));
+  assert.ok(renderDetails(spaced).endsWith('</details>\n'));
 });
