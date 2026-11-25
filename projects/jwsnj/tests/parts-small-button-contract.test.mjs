@@ -75,3 +75,50 @@ test('small buttons wrap into rows on PC and flow vertically on SP', () => {
   assert.match(small, /@media \(width < calc\(768 \* \(1 \/ 16 \* 1rem\)\)\)\s*\{\s*flex-direction:\s*column;\s*align-items:\s*flex-start/);
   assert.doesNotMatch(small, /flex-direction:\s*row/);
 });
+
+test('bundled FA Regular outlines retain authored arrow, PDF and plain file glyphs', () => {
+  // Read the shipped TTF (not system fallback). Outline bounds are diagnostic,
+  // not proof of browser rasterization or the optical center.
+  const font = readFileSync(new URL('../theme/webfonts/fa-regular-400.ttf', import.meta.url));
+  const u16 = o => font.readUInt16BE(o), i16 = o => font.readInt16BE(o), u32 = o => font.readUInt32BE(o);
+  const tables = Object.fromEntries(Array.from({length:u16(4)}, (_, i) => {
+    const p=12+i*16;
+    return [font.toString('ascii',p,p+4),u32(p+8)];
+  }));
+  const {head,hhea,cmap,loca,glyf,hmtx}=tables;
+  assert.ok([head,hhea,cmap,loca,glyf,hmtx].every(Number.isInteger));
+  const subtables=Array.from({length:u16(cmap+2)},(_,i)=>cmap+u32(cmap+4+i*8+4));
+  const mapping=subtables.find(o=>u16(o)===12)??subtables.find(o=>u16(o)===4);
+  assert.ok(mapping);
+  const glyphId=cp=>{
+    if(u16(mapping)===12){
+      for(let i=0;i<u32(mapping+12);i++){
+        const p=mapping+16+i*12,first=u32(p),last=u32(p+4);
+        if(cp>=first&&cp<=last)return u32(p+8)+cp-first;
+      }
+    }else{
+      const n=u16(mapping+6)/2,end=mapping+14,start=end+2*n+2,delta=start+2*n,range=delta+2*n;
+      for(let i=0;i<n;i++){
+        const first=u16(start+2*i),last=u16(end+2*i);
+        if(cp<first||cp>last)continue;
+        const r=range+2*i,offset=u16(r),d=i16(delta+2*i);
+        if(!offset)return (cp+d)&0xffff;
+        const g=u16(r+offset+2*(cp-first));
+        return g?(g+d)&0xffff:0;
+      }
+    }
+    return 0;
+  };
+  const locate=id=>i16(head+50)===0?2*u16(loca+2*id):u32(loca+4*id);
+  const glyphs=[0xf061,0xf1c1,0xf15b].map(cp=>{
+    const id=glyphId(cp);
+    assert.ok(id>0,'missing FA glyph '+cp.toString(16));
+    assert.ok(locate(id+1)>locate(id),'empty FA glyph '+cp.toString(16));
+    const p=glyf+locate(id);
+    const bounds=[i16(p+2),i16(p+4),i16(p+6),i16(p+8)];
+    assert.ok(bounds[2]>bounds[0]&&bounds[3]>bounds[1]);
+    return {code:cp.toString(16),advance:u16(hmtx+4*Math.min(id,u16(hhea+34)-1)),bounds};
+  });
+  const os=tables['OS/2'];
+  console.log('FA_REGULAR_OUTLINE_EVIDENCE '+JSON.stringify({unitsPerEm:u16(head+18),ascent:i16(hhea+4),descent:i16(hhea+6),capHeight:os&&u16(os)>=2?i16(os+88):null,glyphs}));
+});
