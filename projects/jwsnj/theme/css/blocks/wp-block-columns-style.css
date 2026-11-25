@@ -15,6 +15,21 @@
                 gap: calc(32 * var(--to-rem-func));
             }
         }
+        /* Figma text-box pair; keep normal Columns and core stacking intact. */
+        &.is-layout-flex.is-style-jwsnj-background-boxes {
+            gap: calc(24 * var(--to-rem-func));
+            @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+                gap: calc(40 * var(--to-rem-func));
+            }
+            > .wp-block-column:has(> .wp-block-group.is-style-jwsnj-background-box:only-child) {
+                display: flex;
+                flex-direction: column;
+                min-width: 0;
+                > .wp-block-group.is-style-jwsnj-background-box:only-child {
+                    flex: 1 1 auto;
+                }
+            }
+        }
         .wp-block-column {
             > *:first-child {
                 margin-top: 0;

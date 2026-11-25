@@ -253,3 +253,4 @@ TOP PC `114:28` / SP `279:2136` から、ベクターは SVG、写真は元画�
 - #616 Footer brand flowはマージ済み。ページ内リンクは既存ACFの空欄除外とliteral fragment解決を修正。既存Figmaサイズを維持。次の独立候補はQAアコーディオンのopen時タイトル余白・Q/A配置、既存render_blockとの整合。#523実機検証、未承認ページは保留。
 - #617 ページ内リンクは全CI成功でマージ済み。PC 357:938/SP 442:2908 のアコーディオンopen余白とQ/A中央揃えを修正。旧render_blockのnested details変換は別レビュー、#523で実機確認。次の候補は既存承認済みパーツの余白/操作の残差確認と、未確定事項を整理すること。未承認ページは開始しない。
 - #618 マージ済み。アコーディオンの既存render_blockを親自身のsummary/終端だけに限定し、子のrender済みHTMLを維持する。PHP CLI callback検証とWordPress実機QAを区別。残りはパーツ集の差分整理、Smallナビ/スライダーの仕様確認、#523/#524。未承認ページは開始しない。
+- #619 マージ済み。テキストBoxの薄緑背景/カラムを既存Gutenberg opt-in styleで補完。次はパーツ集の全項目と既存PRの対応表整理、未確定Smallナビ/スライダー/実機に分離。#523でeditor/frontendを確認。
