@@ -51,8 +51,25 @@ test('h3 uses Figma cyan band and responsive text without fixed heights', () => 
   assert.doesNotMatch(h3, /&::after|(?:^|[;{}\n])\s*(?:min-height|max-height|height)\s*:|white-space:\s*nowrap/);
 });
 
-test('scope remains existing WordPress/editor headings and leaves SVG-dependent h4 unresolved', () => {
+test('scope remains existing WordPress/editor headings', () => {
   assert.match(css, /\.block-editor_wrap,\s*\.editor-styles-wrapper\s*\{/);
   assert.match(css, /h4:is\(:not\(\[class\]\), \.wp-block-heading\)/);
   assert.doesNotMatch(h2 + h3, /figma\.com\/api\/mcp\/asset|position:\s*absolute|white-space:\s*nowrap/);
 });
+
+const h4 = rule('h4:is(:not([class]), .wp-block-heading)');
+test('h4 follows PC/SP 18px typography and uses the existing official blossom', () => {
+  assert.match(h4, /font-family:\s*var\(--font-jwsnj-ja\)/);
+  assert.match(h4, /font-weight:\s*500/);
+  assert.match(h4, /font-size:\s*calc\(18 \* var\(--to-rem-func\)\)/);
+  assert.match(h4, /line-height:\s*1\.4/);
+  assert.match(h4, /letter-spacing:\s*0\.05em/);
+  assert.match(h4, /margin-bottom:\s*calc\(20 \* var\(--to-rem-func\)\)/);
+  assert.match(h4, /padding-left:\s*calc\(26 \* var\(--to-rem-func\)\)/);
+  assert.match(h4, /background-image:\s*url\('\.\.\/\.\.\/images\/common\/ico_blossom\.svg'\)/);
+  assert.match(h4, /background-size:\s*auto calc\(17 \* var\(--to-rem-func\)\)/);
+  assert.match(h4, /overflow-wrap:\s*anywhere/);
+  assert.doesNotMatch(h4, /border-left|display:\s*flex|white-space:\s*nowrap|figma\.com\/api\/mcp\/asset/);
+  assert.ok(readFileSync(new URL('../theme/images/common/ico_blossom.svg', import.meta.url)).length > 0);
+});
+

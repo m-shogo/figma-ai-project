@@ -64,3 +64,8 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 - Theme: iconのrotate状態は既存native detailsを維持し、reduced-motionでtransitionを停止。静的契約テストは実際のWordPress表示やkeyboard動作を証明しない。後者は#523の既存アコーディオンQAで再確認。
 - 共通化候補（未昇格）: `git fetch origin so` はFETCH_HEADを更新したが、このcheckoutのorigin/soは別SHAだった。最新branch APIとFETCH_HEADの一致を確認してから分離worktreeを作った。`gh`の認証は無効でもGitHubプラグインとSSH fetchは成功した。秘密情報の取得やGit認証設定変更は行わない。
 - scheduler: 同一chat heartbeat診断を登録。COUNT=1は「future runsなし」で拒否されたため、繰返しruleと診断後PAUSED指示を使用。自動呼出結果はまだ未観測。手動成功を自動成功として報告しない。旧ChatGPT毎時タスクは変更していない。
+
+## 2026-11-25: H4・区切り線の公式花SVG接続（通常Chat、PROJECT_ONLY）
+- 開始 so `36eceb51ecc9a1ff6a8334ec77f3adc6f4578538`。正式 figma-design-to-code skill、新規session、PC/SP H4 `344:901` / `442:2766` と区切り線 `344:1135` / `442:3204` の高精細context・画像を取得。既存の `ico_blossom.svg` を利用し、素材の再生成・再ダウンロード・SVG属性の書換えはしない。
+- H4 は18px/500/1.4/5%・下20px・左装飾18px枠＋8px gap。通常テキストの折返しを保つため背景装飾とpaddingを採用。区切り線はnative hrの意味を保持し、背景レイヤーで公式花、白8px、緑50%の1px線を重ねる。SP 32px余白、PC 65pxのframeをCSSの17px装飾高＋25/23px marginで表現。SVGの固有比率を保つため高さ17px、横auto（Figmaの18×17枠との差は実機要確認）。
+- 既存Gutenberg/editor ownerのみ変更。#523でPC/SP/中間幅・長文・リンク付き見出し・editor・隣接余白・SVGの実描画サイズを確認。source implementation と runtime visual PASS は別。自動スケジュールの復旧を意味しない。
