@@ -1,4 +1,4 @@
-// Large ACF navigation: PC 384:817 / SP 442:3079; small variant is unchanged.
+// ACF navigation: large Figma PC 384:817 / SP 442:3079; small variant has source-resilience checks.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -57,4 +57,23 @@ test('large navigation corner glyph retains its centered 10px FA Regular ink', (
   assert.match(icon,/font-style:\s*normal/);
   assert.match(icon,/text-box-trim:\s*none/);
   assert.match(icon,/line-height:\s*1;/);
+});
+
+const small = css.slice(css.indexOf('/* MARK: 小'), css.indexOf('@media (calc(768', css.indexOf('/* MARK: 小')));
+const smallTemplate = readFileSync(new URL('../theme/acf/blocks/navigationSmall.php', import.meta.url), 'utf8');
+test('small navigation long labels cannot force their flex row beyond its grid track', () => {
+  assert.match(small, /\.navigation\s*\{\s*min-width:\s*0/);
+  assert.match(small, /a\s*\{\s*min-width:\s*0/);
+  assert.match(small, /\.content\s*\{\s*flex:\s*1 1 0%;\s*min-width:\s*0;\s*overflow-wrap:\s*anywhere/);
+  assert.match(small, /width:\s*min\(calc\(120 \* var\(--to-rem-func\)\), 42%\)/);
+  assert.match(css, /width:\s*min\(calc\(180 \* var\(--to-rem-func\)\), 48%\)/);
+  assert.doesNotMatch(small, /white-space:\s*nowrap/);
+});
+test('small navigation handles absent URLs, images and empty rows without sample placeholders', () => {
+  assert.match(smallTemplate, /\$url = esc_url\(\(string\) get_sub_field\('url'\)\)/);
+  assert.match(smallTemplate, /\$has_link = \$url !== '' && \$has_text/);
+  assert.match(smallTemplate, /if \(!\$image_thumb && !\$has_text\) \{\s*continue;/);
+  assert.match(smallTemplate, /<a<\?php if \(\$has_link\) : \?> href="<\?php echo \$url; \?>".*target="_blank" rel="noopener".*class="is-disabled"/);
+  assert.doesNotMatch(smallTemplate, /noimage\.webp|href=""/);
+  assert.match(smallTemplate, /alt=""/);
 });

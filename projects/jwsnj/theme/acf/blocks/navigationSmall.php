@@ -9,20 +9,22 @@
             }
             $title = get_sub_field('title');
             $text = get_sub_field('text');
-            $url = get_sub_field('url');
+            $url = esc_url((string) get_sub_field('url'));
             $target = get_sub_field('target');
+            $has_text = trim((string) $title) !== '' || trim((string) $text) !== '';
+            if (!$image_thumb && !$has_text) {
+                continue;
+            }
+            $has_link = $url !== '' && $has_text;
             ?>
             <li class="navigation">
-                <a href="<?php echo $url ? esc_url($url) : ''; ?>" <?php echo $target ? 'target="_blank"' : ''; ?> class="<?php echo $url ? '' : 'is-disabled'; ?>">
+                <a<?php if ($has_link) : ?> href="<?php echo $url; ?>"<?php if ($target) : ?> target="_blank" rel="noopener"<?php endif; ?><?php else : ?> class="is-disabled"<?php endif; ?>>
                     <?php if ($image_thumb) : ?>
                         <div class="image">
-                            <img src="<?php echo esc_url($image_thumb); ?>" alt="<?php echo $title ? esc_attr($title) : ''; ?>" width="120" height="120">
-                        </div>
-                    <?php else : ?>
-                        <div class="image">
-                            <img src="<?php echo get_template_directory_uri(); ?>/images/common/noimage.webp" alt="<?php echo $title ? esc_attr($title) : ''; ?>" width="120" height="120">
+                            <img src="<?php echo esc_url($image_thumb); ?>" alt="" width="120" height="120">
                         </div>
                     <?php endif; ?>
+                    <?php if ($has_text) : ?>
                     <div class="content">
                         <?php if ($title) : ?>
                             <h2 class="title"><?php echo nl2br(esc_html($title)); ?></h2>
@@ -31,6 +33,7 @@
                             <div class="text"><?php echo nl2br(esc_html($text)); ?></div>
                         <?php endif; ?>
                     </div>
+                    <?php endif; ?>
                 </a>
             </li>
         <?php endwhile; ?>
