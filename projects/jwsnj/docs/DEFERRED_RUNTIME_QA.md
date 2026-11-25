@@ -149,3 +149,5 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 - 2026-11-25 同系丸矢印: ページ内リンク F063 Solid（24px円/10px）、大ナビ F061 Regular（32px円/10px）は実TTFのinkとhhea中心一致を確認しtrackingを隔離。PC/SP・中間幅、2〜3行、focus/hover、画像cropとcornerの位置、WP editor/publicで実fontの原寸描画を確認（#523 DEFERRED_ENV）。
 
 - 2026-11-25 galleryズーム: 44px外径（border込み）、20px F002 Regular、PC20/SP16px inset、通常/hover/focus、実fontの原寸重心、長いcaption、320/375/768/中間/PC幅、native lightbox keyboard、外部/PDF非対象の回帰。#523 DEFERRED_ENV。H3白/水色のcontrastはデザイン判断待ち、現行色変更なし。
+
+- 2026-11-25 H2 stroke inset: PC 344:906/SP 445:3209、3px線を下余白28/24pxに含める。隔離Chromium 320/375/767/768/960/1380で旧新差3px、水平overflowなし（system font、WPではない）。#523でPC/SP/中間幅の実font・複数行・editor/frontend block gap・二色線を検証。視覚PASS未宣言。
