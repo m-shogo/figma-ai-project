@@ -34,6 +34,8 @@
         letter-spacing: 0.05em;
         color: var(--color-text);
         border-bottom: calc(3 * var(--to-rem-func)) solid var(--color-primary);
+        /* Figma bottom stroke: both gradient stops at 16%, PC and SP. */
+        border-image: linear-gradient(to right, var(--color-primary) 16%, var(--jwsnj-color-base-lightgreen-02) 16%) 1;
         padding-bottom: calc(24 * var(--to-rem-func));
         margin-bottom: calc(32 * var(--to-rem-func));
         overflow-wrap: anywhere;

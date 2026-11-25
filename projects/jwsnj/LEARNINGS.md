@@ -73,3 +73,7 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 ## 2026-11-25: PC Footer sitemap の公式ドット接続（通常Chat、PROJECT_ONLY）
 - Figma PC `114:523` / SP footer `506:1632` の高精細contextと画像を確認。PCは5.41839pxのドットと12px gap、Zen Kaku Gothic New medium 13px・5% letter spacing。SP referenceにはsitemapが見えないが、現行WordPress管理メニューと開閉機能を削除する根拠にはしない。
 - PC既存 `.gfl_link-02` のownerで公式SVGを背景装飾として接続、13px/500/1.4で長文を自然に折り返す。固定メニュー項目、URL、階層、列構成、SP表示、CMS、SVGバイトは変更しない。既存の768px PC breakpointを維持。PC全体の3列構成とSP sitemap表示有無は別のsource/runtime review。#523で実描画・keyboard・中間幅を確認。
+
+## 2026-11-25: H2の二色下線（通常Chat、PROJECT_ONLY）
+- Figma PC `344:906` / SP `445:3209` の高精細contextと画像を取得。生成コードは単色borderと表現したが、画像は二色。正式figma-use skillを読み、読み取り専用Plugin APIで `344:907` / `445:3207` の実stroke paintを確認: 両色ともstop 0.16、横方向、bottom weight 3、main #28ac5f / base-lightgreen02 #eaffd9。
+- 既存のH2 ownerとCSS tokenを再利用し、border-imageのhard stopで既存3px borderを描画。余白、見出し文字、HTML、Foundation値、H4は変更しない。生成コードの単色化を見抜くため、画像と構造が矛盾する場合は元のpaintを取得する。#523でPC/SP/中間幅の実描画・長文・editor/frontendを比較。自動スケジュールの復旧は未証明。
