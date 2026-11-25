@@ -65,6 +65,10 @@
                     line-height: 1;
                     font-family: var(--font-awesome);
                     font-weight: 400;
+                    font-style: normal;
+                    letter-spacing: 0;
+                    /* FA Regular ink midpoint matches the font line-box midpoint. */
+                    text-box-trim: none;
                     content: '\f061';
                     color: currentColor;
                 }
@@ -101,7 +105,8 @@
                 &[href$='.gif'],
                 &[href$='.webp'] {
                     &::after {
-                        content: var(--icon-file);
+                        /* Figma button attachment is F15B; inline text links keep F15C. */
+                        content: '\f15b';
                         font-family: var(--font-awesome);
                         font-weight: 400;
                     }
@@ -128,7 +133,8 @@
                 min-width: 0;
                 max-width: 100%;
             }
-            .wp-block-button__link {
+            .wp-block-button .wp-block-button__link {
+                --_small-icon-color: var(--color-secondary);
                 display: inline-flex;
                 align-items: center;
                 justify-content: flex-start;
@@ -144,62 +150,64 @@
                 letter-spacing: 0.05em;
                 overflow-wrap: anywhere;
                 word-break: normal;
+                /* Reserve the circle in flow; center every glyph in its own box.
+                   Figma 344:971 / 442:2835 uses cap/alphabetic trim in Figma;
+                   shipped FA Regular outline metrics instead align with the Web
+                   font line box. Do not trim or inherit label tracking. */
                 &::before {
-                    content: '\f061';
-                    display: inline-flex;
-                    align-items: center;
-                    justify-content: center;
+                    content: '';
+                    display: block;
+                    box-sizing: border-box;
                     flex: 0 0 calc(30 * var(--to-rem-func));
                     width: calc(30 * var(--to-rem-func));
                     height: calc(30 * var(--to-rem-func));
                     border: calc(1 * var(--to-rem-func)) solid var(--jwsnj-color-sec);
                     border-radius: 50%;
                     background-color: var(--jwsnj-color-sec);
-                    color: var(--color-secondary);
-                    font-family: var(--font-awesome);
-                    font-weight: 400;
-                    font-size: calc(12 * var(--to-rem-func));
-                    line-height: 1;
+                    transition: background-color var(--transition-duration);
                 }
                 &::after {
-                    content: none;
+                    content: '\f061';
+                    display: block;
+                    left: calc(15 * var(--to-rem-func));
+                    right: auto;
+                    top: 50%;
+                    transform: translate(-50%, -50%);
+                    color: var(--_small-icon-color);
+                    font-family: var(--font-awesome);
+                    font-weight: 400;
+                    font-style: normal;
+                    font-size: calc(12 * var(--to-rem-func));
+                    line-height: 1;
+                    letter-spacing: 0;
+                    text-align: center;
+                    text-box-trim: none;
+                    pointer-events: none;
                 }
                 &[target='_blank']:where(:not([href$='.pdf'], [href$='.doc'], [href$='.docx'], [href$='.docm'], [href$='.xls'], [href$='.xlsx'], [href$='.xlsm'], [href$='.png'], [href$='.jpg'], [href$='.jpeg'], [href$='.gif'], [href$='.webp'])) {
-                    &::before {
-                        content: '';
-                    }
                     &::after {
                         content: '';
-                        left: calc(15 * var(--to-rem-func));
-                        right: auto;
-                        transform: translate(-50%, -50%);
                         width: calc(13 * var(--to-rem-func));
                         height: calc(12 * var(--to-rem-func));
-                        background-color: var(--color-secondary);
+                        background-color: currentColor;
                         mask: url('../../images/common/ico-blank.svg') center / contain no-repeat;
-                        pointer-events: none;
-                    }
-                    @media (any-hover: hover) {
-                        &:hover::after {
-                            background-color: var(--jwsnj-color-sec);
-                        }
                     }
                 }
-                &[href$='.pdf']::before {
+                &[href$='.pdf']::after {
                     content: var(--icon-pdf);
                 }
-                &[href$='.doc']::before,
-                &[href$='.docx']::before,
-                &[href$='.docm']::before,
-                &[href$='.xls']::before,
-                &[href$='.xlsx']::before,
-                &[href$='.xlsm']::before,
-                &[href$='.png']::before,
-                &[href$='.jpg']::before,
-                &[href$='.jpeg']::before,
-                &[href$='.gif']::before,
-                &[href$='.webp']::before {
-                    content: var(--icon-file);
+                &[href$='.doc']::after,
+                &[href$='.docx']::after,
+                &[href$='.docm']::after,
+                &[href$='.xls']::after,
+                &[href$='.xlsx']::after,
+                &[href$='.xlsm']::after,
+                &[href$='.png']::after,
+                &[href$='.jpg']::after,
+                &[href$='.jpeg']::after,
+                &[href$='.gif']::after,
+                &[href$='.webp']::after {
+                    content: '\f15b';
                 }
             }
             .wp-block-button.is-style-outline .wp-block-button__link {
@@ -207,9 +215,11 @@
                 background: none;
             }
             @media (any-hover: hover) {
-                .wp-block-button__link:hover::before {
-                    background-color: var(--color-secondary);
-                    color: var(--jwsnj-color-sec);
+                .wp-block-button .wp-block-button__link:hover {
+                    --_small-icon-color: var(--jwsnj-color-sec);
+                    &::before {
+                        background-color: var(--color-secondary);
+                    }
                 }
             }
         }

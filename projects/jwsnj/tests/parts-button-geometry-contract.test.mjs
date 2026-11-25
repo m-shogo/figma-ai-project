@@ -51,3 +51,13 @@ test('large button groups share 20px spacing and a 40px transition to small butt
   assert.match(button, /& \+ &\s*\{\s*margin-top:\s*calc\(20 \* var\(--to-rem-func\)\)/);
   assert.match(button, /&:not\(\.small\) \+ &\.small\s*\{\s*margin-top:\s*calc\(40 \* var\(--to-rem-func\)\)/);
 });
+
+test('large button glyph metrics do not inherit label tracking; attachments use the authored plain file glyph', () => {
+  const large=button.slice(0,button.indexOf('        &.small {'));
+  assert.match(large,/letter-spacing:\s*0/);
+  assert.match(large,/text-box-trim:\s*none/);
+  assert.match(large,/content:\s*'\\f15b'/);
+  assert.doesNotMatch(large,/content:\s*var\(--icon-file\)/);
+  const textLink=readFileSync(new URL('../theme/css/blocks/wp-block-textLink-style.css',import.meta.url),'utf8');
+  assert.match(textLink,/content:\s*var\(--icon-file\)/);
+});
