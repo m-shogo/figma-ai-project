@@ -40,3 +40,19 @@ test('inline external link preserves orange Figma icon and excludes existing fil
   assert.match(icon, /margin-left:\s*0\.25em/);
   assert.ok(readFileSync(new URL('../theme/images/common/ico-blank.svg', import.meta.url)).length > 0);
 });
+
+test('inline PDF and attachment glyphs match PC/SP size and distinct colors', () => {
+  const vars = readFileSync(new URL('../theme/css/global/variables.css', import.meta.url), 'utf8');
+  const pdf = css.match(/content:\s*var\(--icon-pdf\);([^}]+)/)?.[1];
+  const file = css.match(/content:\s*var\(--icon-file\);([^}]+)/)?.[1];
+  assert.ok(pdf && file);
+  for (const glyph of [pdf, file]) {
+    assert.match(glyph, /font-family:\s*var\(--font-awesome\)/);
+    assert.match(glyph, /font-weight:\s*400/);
+    assert.match(glyph, /font-size:\s*calc\(13 \* var\(--to-rem-func\)\)/);
+  }
+  assert.match(pdf, /color:\s*#f0813b/);
+  assert.match(file, /color:\s*var\(--color-accent\)/);
+  assert.ok(vars.includes("--icon-pdf: '\\f1c1'"));
+  assert.ok(vars.includes("--icon-file: '\\f15c'"));
+});

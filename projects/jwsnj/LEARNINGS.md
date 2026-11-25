@@ -158,3 +158,7 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 ## 2026-11-25: 注釈リストと通常ブロックの隣接余白（通常Chat、PROJECT_ONLY）
 - 正式skill、新規sessionでPC 344:937/SP 442:2796の高精細contextと960×118/335×199の実画像を確認。注記は内部10px・隣接20px。#609の既存リスト同士の修正を維持し、段落・画像・ギャラリー・グループ・カラム・media-text・ボタン・details・表・既存ページ内リンク/Largeナビとの隣接時に次のブロックのmargin-topを20px、前のmargin-bottomを0とする。通常flowとmargin非相殺の編集レイアウトで二重余白を抑える意図。heading/区切り線の独立したセクション余白、未確認ブロック、CMS、画像、Foundationは変更しない。
 - #523で実際のcore/editorのblock gap、インライン指定、両方向、連続注釈、最初/最後、PC/SP/中間幅・長文を検証。静的契約は実描画保証ではない。#515はdraft・mergeable=false・別scopeのため変更しない。#524のIssue本文は古い素材状態を含むためFoundation正本の#599/#600を優先する。
+
+## 2026-11-25: 本文リンクのPDF/添付アイコン（通常Chat、PROJECT_ONLY）
+- Figma PC 344:1027/344:1028/357:924 とSP 442:3202 の高精細context・実画像を照合。PDF F1C1・橙 #f0813b、添付 F15C・coral #ec6b61、双方FA Regular 13px。既存のglyph tokenを維持し、Gutenberg本文リンクの疑似要素だけ寸法・色を指定。外部SVG、リンク先・編集者設定、hover/focus、ボタンと共有moduleは変更しない。Figmaのサンプルhrefを採用しない。
+- 実機#523でPDF/添付/外部/通常リンクの隣接、折返し、keyboard/focus、FAの実フォント、PC/SP/中間幅、editor/frontを確認。共有moduleの個別デザイン根拠は未確定。

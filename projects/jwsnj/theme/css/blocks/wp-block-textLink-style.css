@@ -40,6 +40,8 @@
                     content: var(--icon-pdf);
                     font-family: var(--font-awesome);
                     font-weight: 400;
+                    font-size: calc(13 * var(--to-rem-func));
+                    color: #f0813b;
                     margin-left: 0.25em;
                 }
             }
@@ -58,6 +60,8 @@
                     content: var(--icon-file);
                     font-family: var(--font-awesome);
                     font-weight: 400;
+                    font-size: calc(13 * var(--to-rem-func));
+                    color: var(--color-accent);
                     margin-left: 0.25em;
                 }
             }
