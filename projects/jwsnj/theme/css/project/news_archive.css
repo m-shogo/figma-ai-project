@@ -1,5 +1,11 @@
 @charset "utf-8";
 /* News index/category only: Figma PC 390:669 / SP 478:3027. */
+/* CODIA's 1280px body minimum is not the responsive archive contract.
+   Keep other, unapproved templates unchanged until their layout review. */
+body.blog,
+body.category {
+    min-width: 0;
+}
 .global_contents > section.jwsnj_newsArchive {
     padding-bottom: 0;
     > .module_breadCrumb {
@@ -241,6 +247,96 @@
                 font-family: var(--font-jwsnj-ja);
                 &.is-desktop-only { display: inline-flex; }
             }
+        }
+    }
+}
+
+
+/* Archive-specific hero: PC 390:799 / SP 507:2741.
+   Photos remain the existing ACF attachment; exact desktop decorative assets
+   and lower banner require separate asset acceptance. */
+.jwsnj_newsArchive_hero {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: calc(20 * var(--to-rem-func));
+    padding: calc(32 * var(--to-rem-func)) var(--padding-SP) calc(24 * var(--to-rem-func));
+    background: var(--jwsnj-color-base-lightgreen);
+    font-family: var(--font-jwsnj-ja);
+    color: var(--color-text);
+    .jwsnj_newsArchive_heroTitle {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: calc(12 * var(--to-rem-func));
+        min-width: 0;
+        text-align: center;
+        h1 {
+            max-width: 100%;
+            font-size: calc(24 * var(--to-rem-func));
+            font-weight: 700;
+            line-height: 1.4;
+            letter-spacing: 0.05em;
+            overflow-wrap: anywhere;
+        }
+        .jwsnj_newsArchive_heroEnglish {
+            max-width: 100%;
+            min-width: calc(100 * var(--to-rem-func));
+            padding: calc(4 * var(--to-rem-func)) calc(8 * var(--to-rem-func));
+            border-radius: 999px;
+            background: var(--color-secondary);
+            color: var(--color-primary);
+            font-family: var(--font-sansSerif-en);
+            font-size: calc(13 * var(--to-rem-func));
+            font-weight: 500;
+            line-height: 1.3;
+            letter-spacing: 0.05em;
+            overflow-wrap: anywhere;
+        }
+    }
+    .jwsnj_newsArchive_heroImage {
+        position: relative;
+        overflow: hidden;
+        min-width: 0;
+        aspect-ratio: 335 / 146;
+        border-radius: calc(5 * var(--to-rem-func));
+        .jwsnj_newsArchive_heroPhoto {
+            /* Crop within the frame, never constrain the text layout. */
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 76%;
+        }
+    }
+    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+        &.has-image {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+            gap: 0;
+            min-height: calc(400 * var(--to-rem-func));
+            padding: 0;
+            background: linear-gradient(to bottom, var(--color-secondary) 50%, var(--jwsnj-color-base-lightgreen) 50%);
+            .jwsnj_newsArchive_heroTitle {
+                justify-content: flex-start;
+                padding: calc(160 * var(--to-rem-func)) clamp(var(--padding-SP), 4.35vw, var(--padding-TB)) calc(100 * var(--to-rem-func));
+            }
+        }
+        .jwsnj_newsArchive_heroTitle {
+            gap: calc(16 * var(--to-rem-func));
+            h1 { font-size: calc(32 * var(--to-rem-func)); }
+            .jwsnj_newsArchive_heroEnglish {
+                min-width: 0;
+                padding-inline: calc(32 * var(--to-rem-func));
+                font-size: calc(15 * var(--to-rem-func));
+            }
+        }
+        .jwsnj_newsArchive_heroImage {
+            aspect-ratio: auto;
+            border-radius: calc(10 * var(--to-rem-func)) 0 0 0;
+            .jwsnj_newsArchive_heroPhoto { object-position: center 70%; }
         }
     }
 }

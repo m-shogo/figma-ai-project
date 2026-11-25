@@ -61,6 +61,4 @@
         <?php endif; ?>
     </div>
 </div>
-<?php if (empty($args['defer_breadcrumb'])) : ?>
-    <?php get_template_part('template-parts/_breadCrumb'); ?>
-<?php endif; ?>
+<?php get_template_part('template-parts/_breadCrumb'); ?>
