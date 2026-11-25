@@ -125,32 +125,33 @@
 
         /* FAQタイプのスタイル */
         &._qa {
-            summary.wp-block-details__summary,
-            .wp-block-details__content {
+            > summary.wp-block-details__summary,
+            > .wp-block-details__content {
                 display: flex;
                 gap: calc(16 * var(--to-rem-func));
-                align-items: flex-start;
+                align-items: center;
                 &::before {
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    width: calc(32 * var(--to-rem-func));
-                    font-family: var(--font-jwsnj-en-condensed);
+                    width: calc(16 * var(--to-rem-func));
+                    font-family: var(--font-sansSerif-en);
                     font-size: calc(24 * var(--to-rem-func));
                     font-weight: 500;
+                    letter-spacing: 0.05em;
                     line-height: 1;
                     flex-shrink: 0;
                     margin-top: 0;
                 }
             }
 
-            summary.wp-block-details__summary {
+            > summary.wp-block-details__summary {
                 &::before {
                     content: 'Q';
                     color: var(--color-accent);
                 }
             }
-            .wp-block-details__content {
+            > .wp-block-details__content {
                 &::before {
                     content: 'A';
                     color: var(--color-accent);
@@ -168,22 +169,10 @@
 
         /* 開いたときのスタイル */
         &[open] {
-            .wp-block-details__button {
-                > span {
-                    &::after {
-                        rotate: 0deg;
-                    }
-                }
-            }
-        }
-
-        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-            &._qa {
-                summary.wp-block-details__summary,
-                .wp-block-details__content {
-                    &::before {
-                        width: calc(32 * var(--to-rem-func));
-                    }
+            > summary.wp-block-details__summary {
+                padding-inline-start: calc(32 * var(--to-rem-func));
+                > .wp-block-details__button > .wp-block-details__button-icon::after {
+                    rotate: 0deg;
                 }
             }
         }
