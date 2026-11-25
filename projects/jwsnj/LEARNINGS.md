@@ -77,3 +77,8 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 ## 2026-11-25: H2の二色下線（通常Chat、PROJECT_ONLY）
 - Figma PC `344:906` / SP `445:3209` の高精細contextと画像を取得。生成コードは単色borderと表現したが、画像は二色。正式figma-use skillを読み、読み取り専用Plugin APIで `344:907` / `445:3207` の実stroke paintを確認: 両色ともstop 0.16、横方向、bottom weight 3、main #28ac5f / base-lightgreen02 #eaffd9。
 - 既存のH2 ownerとCSS tokenを再利用し、border-imageのhard stopで既存3px borderを描画。余白、見出し文字、HTML、Foundation値、H4は変更しない。生成コードの単色化を見抜くため、画像と構造が矛盾する場合は元のpaintを取得する。#523でPC/SP/中間幅の実描画・長文・editor/frontendを比較。自動スケジュールの復旧は未証明。
+
+## 2026-11-25: 大・小ボタンの公式外部リンク SVG 接続（通常Chat、PROJECT_ONLY）
+- PC `344:968` / SP `442:2832` の新規高精細context・画像、PC小 `344:985` と各iconのvariableを確認。公式保存済み `ico-blank.svg` は白13×12、大小で14×13/13×12の枠。色の反転はSVGを書き換えずCSS mask（contain）と既存色tokenで表現する。
+- 大ボタンは既存右側pseudo、小ボタンは既存30pxの円を維持し、装飾だけ中央に重ねる。既存PDF/添付ファイル拡張子はSVG対象から明示除外しFont Awesomeを維持。target属性/URL/CMSは変更なし。PCの後段mediaが小ボタンに260px min-widthを再適用する重複を削除（大のbase指定は維持）。長文/hover/focusは既存ownerを維持。
+- #523でブラウザPC/SP/中間幅、外部と添付/PDF、outline/hover、実描画と長文を確認。静的CIだけで視覚PASSとしない。本文の外部リンクは別PRで扱う。

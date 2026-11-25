@@ -81,3 +81,6 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 
 ### PAGE-PARTS — H2 two-color bottom stroke (2026-11-25)
 - DEFERRED_RUNTIME_QA (#523): PC 344:907 / SP 445:3207; compare 3px bottom-only border, horizontal sharp 16% main/84% lightgreen stroke, natural multiline wrapping and unchanged surrounding spacing in editor/frontend at PC/SP/intermediate widths. No actual browser PASS claimed.
+
+### PAGE-PARTS — official external icon, large/small buttons (2026-11-25)
+- DEFERRED_RUNTIME_QA (#523): PC 344:968 / SP 442:2832. Compare large 14×13 right and small 13×12 centered in 30px circle, default/outline/hover/focus, PDF/file precedence for target=_blank, small fit-content desktop, long labels and narrow widths, frontend/editor. Confirm masks and colors render correctly. No real browser PASS claimed.
