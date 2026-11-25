@@ -131,3 +131,7 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 ## 2026-11-25: ページ内リンクの空欄・literal ID（通常Chat、PROJECT_ONLY）
 - Figma PC 357:1022 / SP 442:2948 の高精細context・画像を新規sessionで確認。既存ボタンの寸法/色/折り返しは維持。ACF既存repeaterのタイトル/IDの空欄を除外し、有効行だけで列数を計算。先頭#貼付は1個だけ除去、空白/#を含むIDは無効扱い、その他のIDをrawurlencodeして保持。新しいID/slug/CMS項目は作らない。
 - common.jsの既存pageScrollはjQuery selectorではなくdocument.getElementById＋decodeURIComponentで解決。存在しない/壊れたfragmentで動かないよう、初期ロードの先行scrollTop(1)も削除。既存ページトップ、header offset、reduced-motionは維持。模擬DOMで日本語・記号・無効ID・ページトップを確認する。実機の初期hash/クリック/keyboard/長文は#523。
+
+## 2026-11-25: アコーディオンのopen余白・Q/A位置（通常Chat、PROJECT_ONLY）
+- 新規Figma sessionでPC 357:938 / SP 442:2908 の高精細contextと実画像を確認。閉じた通常タイトル24px、開いたタイトル32px、Q/Aは通常幅Roboto Medium 24px・本文と中央揃え・16px間隔。既存CSSのQ/A 32px枠と上揃えを16px枠・中央揃えへ修正、既存通常Roboto tokenを再利用。開いた直接summaryだけ左32pxにする。開閉minusとQ/A装飾のselectorを直接所有要素に限定し、親open/_qaが子detailsの状態を巻き込まないようにした。
+- 既存field.phpのrender_blockがsummary/title/button/content/innerを付ける契約を確認。PHP/HTML/ACF/画像/JSは変更なし。ネストされたdetailsの旧regex変換は別の潜在問題であり、本PRでは未修正・実機未検証。#523で通常/QA、open/closed、長文、nested、keyboard/focus、PC/SP/中間幅、editor/frontと実Robotoを確認。#617はマージ済み。

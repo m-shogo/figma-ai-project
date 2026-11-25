@@ -38,3 +38,15 @@ test('accordion preserves Figma closed-title width and allows Q/A body shrinkage
 test('reduced motion disables icon transitions while preserving open state', () => {
   assert.match(css, /@media \(prefers-reduced-motion: reduce\)\s*\{\s*\.wp-block-details__button,\s*\.wp-block-details__button-icon::before,\s*\.wp-block-details__button-icon::after\s*\{\s*transition: none/);
 });
+
+test('open accordion uses 32px title inset while Q/A markers center in a 16px rail', () => {
+  assert.match(css, /&\[open\]\s*\{\s*> summary\.wp-block-details__summary\s*\{\s*padding-inline-start:\s*calc\(32 \* var\(--to-rem-func\)\)/);
+  assert.match(css, / > \.wp-block-details__button > \.wp-block-details__button-icon::after\s*\{\s*rotate:\s*0deg/);
+  const qa = css.slice(css.indexOf('&._qa {'), css.indexOf('@media (prefers-reduced-motion'));
+  assert.match(qa, /> summary\.wp-block-details__summary,\s*> \.wp-block-details__content\s*\{\s*display:\s*flex;\s*gap:\s*calc\(16 \* var\(--to-rem-func\)\);\s*align-items:\s*center/);
+  assert.match(qa, /width:\s*calc\(16 \* var\(--to-rem-func\)\);\s*font-family:\s*var\(--font-sansSerif-en\)/);
+  assert.match(qa, /font-size:\s*calc\(24 \* var\(--to-rem-func\)\);\s*font-weight:\s*500;\s*letter-spacing:\s*0\.05em/);
+  assert.match(qa, /> summary\.wp-block-details__summary\s*\{\s*&::before\s*\{\s*content:\s*'Q'/);
+  assert.match(qa, /> \.wp-block-details__content\s*\{\s*&::before\s*\{\s*content:\s*'A'/);
+  assert.doesNotMatch(qa, /font-jwsnj-en-condensed|align-items:\s*flex-start/);
+});
