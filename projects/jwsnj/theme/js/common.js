@@ -283,8 +283,7 @@ window.addEventListener('resize', setVw);
       const urlHash = location.hash;
       //ハッシュ値があればページ内スクロール
       if ('' !== urlHash) {
-        //スクロールを0に戻しておく
-        $('body,html').stop().scrollTop(1);
+        // Do not move the page before validating the CMS fragment.
         setTimeout(function () {
           //ロード時の処理を待ち、時間差でスクロール実行
           scrollToAnker(urlHash);
@@ -310,7 +309,17 @@ window.addEventListener('resize', setVw);
       // 関数：スムーススクロール
       // 指定したアンカー(#ID)へアニメーションでスクロール
       function scrollToAnker(hash) {
-        const target = $(hash);
+        // Resolve literal HTML IDs, not jQuery/CSS selectors.
+        // Percent-encoded Japanese or punctuation-bearing IDs remain valid.
+        let element = document.documentElement;
+        if (hash !== 'html') {
+          try {
+            element = document.getElementById(decodeURIComponent(hash.slice(1)));
+          } catch {
+            return;
+          }
+        }
+        const target = $(element);
         // A missing/deleted CMS anchor must not throw or move the viewport.
         if (!target.length) return;
         const $header = $('#global_header');

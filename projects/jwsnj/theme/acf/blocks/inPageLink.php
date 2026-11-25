@@ -1,25 +1,32 @@
 <?php
-// ACFフィールドがnullの場合に備えて、空配列をデフォルト値として使用
-$items = get_field('inPageLink_items') ?? [];
-$count = count($items);
-// カラムクラスの生成：4以上の場合は 4、それ以外は count[1-3] の文字列
-$column_num = '';
-if ($count > 1) {
-    $column_num = $count >= 4 ? '4' : strval($count);
+// Preserve the existing ACF repeater, but render only named, usable fragments.
+$items = array();
+if (have_rows('inPageLink_items')) {
+    while (have_rows('inPageLink_items')) {
+        the_row();
+        $title = trim((string) get_sub_field('inPageLink_title'));
+        $id = trim((string) get_sub_field('inPageLink_id'));
+        // ACF already shows a # prefix; tolerate a pasted leading # as well.
+        if (substr($id, 0, 1) === '#') {
+            $id = substr($id, 1);
+        }
+        if ($title === '' || $id === '' || preg_match('/[\\s#]/u', $id)) {
+            continue;
+        }
+        $items[] = array('title' => $title, 'id' => $id);
+    }
 }
+$count = count($items);
+$column_num = $count > 1 ? (string) min($count, 4) : '';
 ?>
-<?php if (have_rows('inPageLink_items')) : ?>
+<?php if ($count > 0) : ?>
     <ul class="module_inPageLink-01" data-column="<?php echo esc_attr($column_num); ?>">
-        <?php while (have_rows('inPageLink_items')) : the_row(); ?>
-            <?php
-            $title = get_sub_field('inPageLink_title');
-            $id = get_sub_field('inPageLink_id');
-            ?>
+        <?php foreach ($items as $item) : ?>
             <li class="inPageLink">
-                <a href="#<?php echo esc_attr($id); ?>">
-                    <div class="title"><?php echo nl2br(esc_html($title)); ?></div>
+                <a href="#<?php echo esc_attr(rawurlencode($item['id'])); ?>">
+                    <div class="title"><?php echo nl2br(esc_html($item['title'])); ?></div>
                 </a>
             </li>
-        <?php endwhile; ?>
+        <?php endforeach; ?>
     </ul>
 <?php endif; ?>
