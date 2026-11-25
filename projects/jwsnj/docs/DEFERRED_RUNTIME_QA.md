@@ -181,3 +181,5 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 - NEWS ARCHIVE semantics: 非リンク行のHTML flow content、pager 前へ/次へ のaccessible nameに装飾FA glyphが混入しないこと、先頭/末尾のdisabled幅、PC/SP/中間幅と長文・Tab/Shift+Tab。show_on_front=posts時に既存front-page.phpが優先される実経路（#643の全件リンク）を検証し、TOP変更が必要ならHuman承認待ち。#523実WP/AT未検証。
 
 - NEWS DETAIL PC 392:1279/SP 480:3566: 実WPで通常投稿・password保護・既存ACF URL/file/none、前後記事なし/片側/両側、一覧設定有無、h1一つ、Gutenberg本文、長文・PC/SP/中間幅・keyboard/hover、hero画像/装飾・バナー#524を検証。静的/PHP stubのみ。
+
+- FIXED PAGE: PC384:1046/SP445:3245、本文840/rail256、1024境界、長い見出し/メニュー、空メニュー、password、既存ACF画像の登録/未登録、親階層パンくず、sidebarの深い階層のopen/keyboard、実描画とCMS編集を確認。英語副題の管理は未確定、公式装飾/バナー#524。実WP #523。

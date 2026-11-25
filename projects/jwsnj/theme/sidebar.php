@@ -3,10 +3,8 @@
 /**
  * サイドバーナビゲーション
  */
-?>
-<nav class="local_navigation" id="local_navigation">
-    <?php
-    wp_nav_menu(array(
+$sidebar_menu = wp_nav_menu(array(
+        'echo' => false,
         'menu' => 'sidebar-nav',
         'menu_class' => 'ln_links module_menu',
         'menu_id' => 'ln_links',
@@ -26,5 +24,10 @@
         // 'items_wrap' => '<ul id="%1$s" class="%2$s">%3$s</ul
         'walker' => new Custom_Sidebar_Walker_Nav_Menu(),
     ));
-    ?>
+if (!$sidebar_menu || !preg_match('/<li\b/i', $sidebar_menu)) {
+    return;
+}
+?>
+<nav class="local_navigation" id="local_navigation" aria-label="ローカルナビゲーション">
+    <?php echo $sidebar_menu; ?>
 </nav>

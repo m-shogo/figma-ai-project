@@ -243,3 +243,6 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 
 
 - Human包括承認でページごとのgate解除。記事詳細は通常投稿のみ新partへ分岐し既存singleのredirect・非対象経路を維持。Figma PC/SPのタイトルとpagerを根拠に、既存news hero/breadcrumbとGutenbergを再利用。CMS本文を写経せず、未保存素材は#524。#523実機検証と区別。
+
+
+- 固定ページ PC 384:1046/SP 445:3245、hero 384:1400/507:2729、sidebar 476:1741、bread 384:1395/507:2812を新規session画像と高精細contextで照合。既存page_img ID・タイトル・the_content・password gate・sidebar-nav walkerを維持。共通news heroの形を再利用し画像焦点はbottom。英語副題は既存ACFにないため未設定、人物SVGとバナーは#524。PC本文840/rail256/gap75、上80下100、SP 20inset上56下64。中間幅1024未満は本文一列（SP意図を保つ実装判断）。Figma例にない旧dropdownは既定page.phpから除外、既存owner自体は保持し、必要な別ページでの接続はデザインに従う。#523実機未検証。
