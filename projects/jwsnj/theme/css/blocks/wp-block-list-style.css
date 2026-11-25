@@ -161,6 +161,28 @@
     ul.wp-block-list.annotation-list + .wp-block-list {
         margin-top: calc(20 * var(--to-rem-func));
     }
+    /* PC 344:937 / SP 442:2796: annotation clearance is 20px next to
+       ordinary content. Give the following block the single margin owner,
+       including inside non-collapsing editor layouts. Heading and separator
+       section rhythm is intentionally left to its existing owner. */
+    :is(p, .wp-block-list, .wp-block-image, .wp-block-gallery, .wp-block-group,
+        .wp-block-columns, .wp-block-media-text, .wp-block-buttons, .wp-block-details,
+        .wp-block-table, .wp-block-flexible-table-block-table, .wp-block-acf-in-page-link,
+        .wp-block-acf-navigation-large) {
+        &:has(+ ul.wp-block-list.annotation-list) {
+            margin-bottom: 0;
+        }
+        & + ul.wp-block-list.annotation-list,
+        ul.wp-block-list.annotation-list + & {
+            margin-top: calc(20 * var(--to-rem-func));
+        }
+    }
+    ul.wp-block-list.annotation-list:has(+ :is(p, .wp-block-list, .wp-block-image, .wp-block-gallery, .wp-block-group,
+        .wp-block-columns, .wp-block-media-text, .wp-block-buttons, .wp-block-details,
+        .wp-block-table, .wp-block-flexible-table-block-table, .wp-block-acf-in-page-link,
+        .wp-block-acf-navigation-large)) {
+        margin-bottom: 0;
+    }
     /* //---------- anchor-box, border-list ---------- */
     /* .anchor-box,
     .border-list {

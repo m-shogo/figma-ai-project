@@ -32,3 +32,16 @@ test('annotation blocks keep 10px internal gap and 20px external clearance', () 
 test('annotation clearance wins against the generic adjacent list selector in either order', () => {
   assert.match(annotation, /\.wp-block-list \+ ul\.wp-block-list\.annotation-list,\s*ul\.wp-block-list\.annotation-list \+ \.wp-block-list\s*\{\s*margin-top:\s*calc\(20 \* var\(--to-rem-func\)\)/);
 });
+
+test('ordinary content neighbors have one 20px margin owner without changing section headings', () => {
+  const groups = [...annotation.matchAll(/:is\((p, \.wp-block-list,[\s\S]*?\.wp-block-acf-navigation-large)\)/g)];
+  assert.equal(groups.length, 2);
+  assert.equal(groups[0][1], groups[1][1], 'the before/after neighbor sets must match');
+  for (const block of ['.wp-block-image', '.wp-block-gallery', '.wp-block-group', '.wp-block-buttons', '.wp-block-details', '.wp-block-table', '.wp-block-media-text']) {
+    assert.ok(groups[0][1].includes(block), block);
+  }
+  assert.doesNotMatch(groups[0][1], /\bh[1-6]\b|\.wp-block-separator/);
+  assert.match(annotation, /&:has\(\+ ul\.wp-block-list\.annotation-list\)\s*\{\s*margin-bottom:\s*0;/);
+  assert.match(annotation, /& \+ ul\.wp-block-list\.annotation-list,\s*ul\.wp-block-list\.annotation-list \+ &\s*\{\s*margin-top:\s*calc\(20 \* var\(--to-rem-func\)\)/);
+  assert.match(annotation, /ul\.wp-block-list\.annotation-list:has\(\+ :is\([\s\S]*?\)\)\s*\{\s*margin-bottom:\s*0;/);
+});
