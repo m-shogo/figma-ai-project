@@ -111,3 +111,6 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 
 ### FOOTER — adaptive PC sitemap and site identity row (2026-11-25)
 - DEFERRED_RUNTIME_QA (#523): PC 114:484 / 114:523 / 154:2619; verify 308/541 layout, 3 balanced columns, 80/16px gaps at reference width, 8/variable item counts and nested submenus, long labels, keyboard tab order, external f2d2 and hover/focus, SP existing disclosure retained (visibility needs Human confirmation), intermediate widths. No browser PASS claimed.
+
+### FOOTER — brand flow and wide viewport line extension (2026-11-25)
+- DEFERRED_RUNTIME_QA (#523): PC 114:422/SP 279:2632 and line variables 279:1516/279:1567. Check SP copy above two edge-aligned artworks, PC 484px center / 40px gaps / 408px art, 320/375/767/768/1079/1080/1380/1920 widths, long copy, no extra 50px top gap, 1px extension joins on wide PC, actual SVG geometry and line alignment. No browser PASS claimed.

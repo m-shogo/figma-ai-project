@@ -166,3 +166,21 @@ test('footer top-level external links use the Figma window-restore glyph and exi
   assert.match(pc, /margin-inline-start:\s*calc\(4 \* var\(--to-rem-func\)\)/);
   assert.match(css.slice(css.indexOf('/* MARK: hover */')), /color:\s*var\(--color-primary\)/);
 });
+
+test('Footer brand places copy first on SP and keeps fixed-distance artwork on wide PC', () => {
+  const brand = css.slice(css.indexOf('.gf_brandStatement {'), css.indexOf('    .gf_logo {'));
+  assert.match(brand, /grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/);
+  assert.match(brand, /\.gf_brandStatement-copy\s*\{\s*grid-column:\s*1 \/ -1;\s*grid-row:\s*1;/);
+  assert.match(brand, /\.gf_brandStatement-left\.is-sp\s*\{\s*grid-column:\s*1;\s*grid-row:\s*2;\s*justify-self:\s*start;/);
+  assert.match(brand, /\.gf_brandStatement-right\.is-sp\s*\{\s*grid-column:\s*2;\s*grid-row:\s*2;\s*justify-self:\s*end;/);
+  assert.match(brand, /grid-template-columns:\s*minmax\(0, 1fr\) minmax\(0, calc\(484 \* var\(--to-rem-func\)\)\) minmax\(0, 1fr\)/);
+  assert.match(brand, /gap:\s*calc\(40 \* var\(--to-rem-func\)\)/);
+  assert.match(brand, /\.gf_brandStatement-left\.is-pc\s*\{\s*display:\s*block;\s*grid-column:\s*1;\s*grid-row:\s*1;\s*justify-self:\s*end;/);
+  assert.match(brand, /\.gf_brandStatement-right\.is-pc\s*\{\s*display:\s*block;\s*grid-column:\s*3;\s*grid-row:\s*1;\s*justify-self:\s*start;/);
+  assert.equal((brand.match(/width: min\(calc\(408 \* var\(--to-rem-func\)\), 100%\)/g) || []).length, 2);
+  assert.match(brand, /@media \(calc\(1380 \* \(1 \/ 16 \* 1rem\)\) < width\)/);
+  assert.match(brand, /width:\s*calc\(\(100% - 1380 \* var\(--to-rem-func\)\) \/ 2 \+ 1px\)/);
+  assert.match(brand, /top:\s*calc\(50% \+ 19\.16 \* var\(--to-rem-func\)\)/);
+  assert.doesNotMatch(css, /padding-top:\s*calc\(50 \* var\(--to-rem-func\)\)/);
+  assert.doesNotMatch(brand, /white-space:\s*nowrap/);
+});
