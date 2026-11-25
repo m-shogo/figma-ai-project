@@ -53,6 +53,19 @@ Flow / Flex / Grid / relational overlap / intentional absolute・fixed・sticky 
 
 `gap` は並びの**あいだ**だけに入る。先頭の上、末尾の下、すでに padding がある辺には入らない。`justify-content` / `align-content` の余りも、Figma がその側に空きを置いていないなら配らない。空きの所有者を Figma で見てから、間は `gap`、端や片側だけは `padding` / `margin`。入れたあと、意図しない辺に空きが増えていないか実測する。Human 2026-10-01。この取り違えは多い。
 
+### 3.1 デザイン実装の基本は指摘前に自分で確認する（Human 2026-11-25）
+
+全Frontend案件の共通確認。詳細な原則・例・受入条件は `docs/frontend-implementation-standard.md` §3.1。既存案件のデザイン、Company/Project制約を上書きしない。
+
+- **Optical alignment**: box中心ではなく実際のglyph/shapeの見た目、baseline、負の空間、文字との軸。円内矢印、三角形、ロゴ、開閉記号等で必ず見る。補正量の決め打ちはしない。
+- **Hierarchy / Gestalt / rhythm**: 画面全体の優先順位、グリッド、近接・類似・まとまり、内外余白、反復間隔、隣接するsectionを読む。数値を揃えるだけでなく関係を再現する。
+- **Typography / imagery / shape**: 実font/weight/字間/行間/改行、和欧混植、iconの線・重心・サイズ、画像crop・焦点・比率、border/radius/shadow/色とcontrastを実描画で確認。
+- **Interaction / responsive / semantics**: 通常・hover・focus・open等の関連状態、クリック範囲、可変文字・件数、PC/SP/中間幅、読む順と操作順、関連するA11yを確認。既存§4・§8–18と組み合わせる。
+- 実装前にFigma画像と詳細contextから対象の意図・比較対象・変えてはいけない関係を特定。実装後は原寸の部品と周囲を見て、必要な拡大・computed evidence・兄弟比較で原因を調べる。CSSの指定値、静的CI、pixel diff scoreだけで視覚合格にしない。
+- 実装画像がない場合、SOURCE/STATICの合格とVISUAL未検証を区別。Humanが指摘した既知の見た目の欠陥は修正後の実描画を確認するまでOPEN。根拠のない調整値を入れず、安全な独立作業は既存phase/authorityの範囲で続ける。
+
+**実務手順の参照:** browser差は `docs/device-environment-policy.md` のCross-engine practical verification、文字仕上げは `docs/frontend-font-loading-policy.md` §7.1、UIの作り込みは `docs/frontend-maintainability-qa.md` §3.1、AIの視覚self-reviewは `docs/frontend-visual-repair-learning-loop.md` §8を関連scopeで着手・受入時に使う。対応環境を確定し、見た目・操作・コード品質を別々に検証する。Figma/案件の具体値を勝手に上書きしない。
+
 ## 4. 状態変化で箱をずらさない
 
 Figmaに「hoverで枠が付く」と書いてあっても、Webでは rest から同じ太さの枠を確保する。Company / Existing / 明示Projectが別契約ならそちらが勝つ。**Human が言わなくても** 適用する。詳細な欠落種類は `docs/agent-human-fb-weak-spots.md`。

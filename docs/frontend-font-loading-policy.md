@@ -168,6 +168,19 @@ Figmaとbrowserで同じfamily名でもfont versionやplatform fallbackが違う
 
 ---
 
+### 7.1 実描画タイポグラフィの仕上げ（2026-11-25）
+
+Font loadingのPASSだけでは文字の見た目のPASSではない。Figmaの実TEXT node（family/weight/size/line-height/letter-spacing/align/trim/variable axes）とブラウザの実font・glyphを照合。Figmaの行boxとCSS line box、font ascender/descender、cap height/x-height、leading、実際のink boundsを区別する。
+
+- まず正しいfont file/version・weight/style・unicode coverage・fallback・variable axisを確認。合成bold/italicが意図せず生じていないか確認し、font-synthesisの設定は必要なlanguage/weightへの影響を見て選ぶ。
+- 見出し/本文/ボタン/注釈/数字の和欧混植、句読点、禁則、line-height・letter-spacing・kerning、baseline・行間・段落間隔・underline offset/太さ・複数行の読みやすさを原寸で比較。
+- 視覚的中央揃えでは円・背景のboxとicon glyphを分離し、継承された字間・line-height、side bearings、SVG内部余白を調査。Canvas TextMetricsのactualBoundingBox等は診断候補であり、DOM描画やoptical weightを単独で証明しない。
+- text-box-trim/text-box-edge等はFigmaのtrimをWebに移す候補。対象browserで対応とfallbackを確認し、未対応時にも欠け・不自然な余白がないこと。全テキストへの一律trim/負のmargin/translateは禁止ではなく根拠のない全体適用を避ける。
+- 実装は既存typography ownerへ戻す。変えるのは原因箇所だけとし、見た目補正のためにクリック領域、本文行高、他の文字、編集者の意味構造を壊さない。font metricsの推測値や他案件の1px補正を持ち込まない。
+- 実fontでcanonical SP/PC、境界幅、長短文、通常/hover/focusと関連font profileを必要範囲で再描画。証拠がなければ未検証のまま。
+
+公式参照: [MDN text-box-trim](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/text-box-trim)、[MDN TextMetrics](https://developer.mozilla.org/en-US/docs/Web/API/TextMetrics)。
+
 ## 8. Localization / missing glyphs
 
 Localized contentではglyph coverageを確認する。

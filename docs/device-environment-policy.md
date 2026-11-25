@@ -380,6 +380,27 @@ Real device required/preferrredか、emulationでよいかもCompany Policyに�
 
 ---
 
+# Cross-engine practical verification（2026-11-25）
+
+Required profilesを先に確定し、Chromium系・Firefox/Gecko系・Safari/WebKit系を対象範囲で選ぶ。会社/案件が指定する実機・旧versionは代替しない。PlaywrightのChromium/Firefox/WebKitはengine差の先行検出に有効だが、Playwright WebKitはApple Safariそのものではなく、iOS実機のブラウザUI/keyboard/OS font/gestureを証明しない。実機未実施なら明記する。
+
+| よくある差分 | 先に疑うもの・実際に見るもの |
+|---|---|
+| 文字幅、アイコンのずれ、行高 | font file/weight/合成、baseline、font metrics、OS fallback、DPR。computed sizeと実描画を分離 |
+| Flex/Gridのはみ出し | intrinsic minimum、min-inline-size:0、minmax(0,1fr)、長文、画像/表。意図に応じて選び一律resetしない |
+| Sticky/fixed/overlay | scroll container、overflow、transform/contain、stacking context、viewport、scrollbar、scroll-lock復帰 |
+| 画像・SVG・mask・clip | intrinsic ratio、viewBox、object-fit/position、stroke、透明余白、CSS feature対応 |
+| FormとSP | native appearance、入力font、autofill、focus、IME、virtual keyboard、safe area、hover/pointer |
+| 1px線や端の欠け | fractional layout、device pixel ratio、rounding、overflow、隣接辺、border。装飾の描画差と機能的な欠けを分離 |
+
+新しいCSS/API採用前は対象versionのMDN compatibility等と実環境を確認。必要時だけ既存fallback、feature detection/CSS @supportsを用い、@supportsがtrueでも挙動の正しさを保証しない。prefixは既存build/対象browser設定から解決、UA分岐やSafari専用補正は再現した根拠がある場合のみ。
+
+QAは同一data/state/viewport/font準備条件で、各engineの代表画面と変更部品を比較。各環境固有の正常なAA差を強引にpixel-perfectへ寄せない。読み順・操作・情報・意図された整列が崩れる差は修正する。既存のPlaywright設定/実機経路を再利用し、試していないbrowserをPASSにしない。記録: browser/engine/version/OS/viewport/DPR/real-or-emulated、比較画像、観測差、修正と再確認。
+
+公式参照: [Playwright browsers](https://playwright.dev/docs/browsers)、[MDN feature queries](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Conditional_rules/Using_feature_queries)。
+
+---
+
 # Current web-platform signals to re-check
 
 Significant run/release triggerで再確認する候補:
