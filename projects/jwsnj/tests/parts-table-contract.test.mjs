@@ -26,3 +26,14 @@ test('table maintains 960px horizontal scroll on small viewports and wraps conte
   assert.match(css, /scrollbar-color:\s*var\(--jwsnj-color-sec\)/);
   assert.doesNotMatch(css, /white-space:\s*nowrap|figma\.com\/api\/mcp\/asset/);
 });
+
+test('mobile table uses existing hint assets, keeps keyboard focus visible and hides its hint on desktop', () => {
+  const php = readFileSync(new URL('../theme/inc/front.php', import.meta.url), 'utf8');
+  assert.match(php, /wp_enqueue_script\('jwsnj-scroll-hint'.*scroll-hint\.min\.js/);
+  assert.match(php, /wp_enqueue_script\('jwsnj-table-scroll-hint'.*array\('jwsnj-scroll-hint'\)/);
+  assert.match(php, /wp_enqueue_style\('jwsnj-scroll-hint'.*scroll-hint\.css/);
+  assert.match(css, /&:focus-visible\s*\{\s*outline:/);
+  assert.match(css, /&\[data-jwsnj-table-hint\] > \.scroll-hint-icon-wrap\s*\{\s*display:\s*none/);
+  assert.match(css, /&\[data-jwsnj-table-hint\]:focus-within > \.scroll-hint-icon-wrap/);
+  assert.match(css, /prefers-reduced-motion:\s*reduce/);
+});

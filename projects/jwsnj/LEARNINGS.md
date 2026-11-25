@@ -108,3 +108,8 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 ## 2026-11-25: Largeナビの未設定フィールドとリンク意味（通常Chat、PROJECT_ONLY）
 - 新規sessionのPC 384:914 / SP 442:3081 高精細context・画像とACF group/既存CSSを照合。既存 href="" は pointer-events:none でもkeyboardに残り得る。URLはesc_url後に判定し、URLなし/有効な名前なしはhref/targetなしのplaceholder anchorとする。既存is-disabledのCSS/矢印非表示を再利用。外部targetは有効リンクのみ、rel=noopenerを付ける。
 - 画像未設定時は公式代替画像の根拠がLargeナビのFigmaにないため、既存サンプルnoimage.webpを出力せず本文を保持。空rowはskip、画像のみでaltなしならリンクにしない。画像altは編集済みattachment altを利用し創作しない。ACF定義/Small/URL/画像素材は変更なし。#523で空/不正URL、画像なし、長文、tab/focus、editor/frontを確認する。
+
+## 2026-11-25: SP表の横スクロール案内（通常Chat、PROJECT_ONLY）
+- 新規sessionでPC 357:970 / SP 445:3237 の高精細context・画像を取得。SPの既存表は幅960px/横scrollだが案内表示なし。Figma内の案内はライブラリUIの画像参照でありスクリーンショット自体を本番素材には使わない。同梱MIT ScrollHint 1.2.8のCSS/JS・constructorのinline overflow/position変更を確認し、既存の手・矢印・案内表示を再利用。公式Flexible Table Blockの公開save.tsxでfigureのis-scroll-on-mobile、tableのis-stacked-on-mobileを照合（main、案件の3.9.0実機は未確認）。
+- 既存の横scroll選択かつ実overflowがあるSPだけ初期化。ライブラリのinline変更を直後に復元し、PC設定やstack/既存ヒントを上書きしない。DOM追加の案内はaria-hidden、必要なtabindexとラベルは自分で付けた場合だけ解除。既存caption/ariaを尊重。フォーカス時に案内を隠し、reduced-motionを追加。HTML/ACF/表データ/ライブラリ本体は変更しない。
+- #523で実機のプラグイン版、PC/SP/中間幅、複数表、scroll/stack設定、caption、長文・横overflow、touch/keyboard、案内位置と実描画を確認。Figmaのラスタ案内と同梱UIの完全一致は未検証。

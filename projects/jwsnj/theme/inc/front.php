@@ -141,6 +141,9 @@ function my_enqueue_scripts() {
     wp_enqueue_script('swiper-script', get_theme_file_uri('/js/swiper-bundle.min.js'), array(), '14.0.1', ['strategy' => 'defer','in_footer' => false]);
     wp_enqueue_script('modaal-script', get_theme_file_uri('/js/modaal.min.js'), array('jquery'), '0.4.4', ['strategy' => 'defer','in_footer' => false]);
     wp_enqueue_script('common-script', get_theme_file_uri('/js/common.js'), array('jquery','swiper-script','modaal-script'), filemtime(get_theme_file_path('/js/common.js')), ['strategy' => 'defer','in_footer' => false]);
+    // Existing MIT ScrollHint bundle; enhancement is limited to editor-selected mobile tables.
+    wp_enqueue_script('jwsnj-scroll-hint', get_theme_file_uri('/js/scroll-hint.min.js'), array(), '1.2.8', ['strategy' => 'defer', 'in_footer' => false]);
+    wp_enqueue_script('jwsnj-table-scroll-hint', get_theme_file_uri('/js/table-scroll-hint.js'), array('jwsnj-scroll-hint'), filemtime(get_theme_file_path('/js/table-scroll-hint.js')), ['strategy' => 'defer', 'in_footer' => false]);
 
     if(is_front_page()){
         wp_enqueue_script('home-script', get_theme_file_uri('/js/home.js'), array('common-script'), filemtime(get_theme_file_path('/js/home.js')), ['strategy' => 'defer','in_footer' => false]);
@@ -177,6 +180,7 @@ function my_enqueue_scripts() {
     // Figmaの共通アイコン用。Themeに同梱済みの正規Font Awesome Pro 6.7.2を再利用する。
     wp_enqueue_style('fontawesome-style', get_theme_file_uri('/css/all.min.css'), array(), '6.7.2', 'all');
     wp_enqueue_style('flexible-table-block'); // プラグインで登録済みのスタイルをenqueue（テンプレートでテーブルクラスを直接使用しているため必要）
+    wp_enqueue_style('jwsnj-scroll-hint', get_theme_file_uri('/css/scroll-hint.css'), array(), filemtime(get_theme_file_path('/css/scroll-hint.css')), 'all');
     wp_enqueue_style('common-style', get_theme_file_uri('/css/style.css'), array('jwsnj-google-fonts'), filemtime(get_theme_file_path('/css/style.css')), 'all');
     // new EnqueueStyle('css-style', get_stylesheet_uri(), array(), null);
     // new EnqueueStyle('swiper-style', get_theme_file_uri('/css/swiper-bundle.min.css'), array(), null, 'all');

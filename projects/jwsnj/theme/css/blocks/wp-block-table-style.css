@@ -53,10 +53,40 @@
             &.is-scroll-on-mobile {
                 overflow-x: auto;
                 overscroll-behavior-x: contain;
+                position: relative;
+                min-width: 0;
+                max-width: 100%;
+                &:focus-visible {
+                    outline: calc(2 * var(--to-rem-func)) solid var(--color-accent);
+                    outline-offset: calc(-2 * var(--to-rem-func));
+                }
+                &[data-jwsnj-table-hint] > .scroll-hint-icon-wrap {
+                    display: block;
+                    .scroll-hint-icon {
+                        top: calc(6 * var(--to-rem-func));
+                    }
+                    @media (prefers-reduced-motion: reduce) {
+                        .scroll-hint-icon,
+                        .scroll-hint-icon::before,
+                        .scroll-hint-icon::after {
+                            animation: none;
+                            transition: none;
+                        }
+                    }
+                }
+                &[data-jwsnj-table-hint]:focus-within > .scroll-hint-icon-wrap {
+                    visibility: hidden;
+                }
                 table {
                     width: max-content;
                     min-width: calc(960 * var(--to-rem-func));
                 }
+            }
+        }
+        /* Hide only our hint on desktop; preserve plugin-selected PC scrolling. */
+        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+            &[data-jwsnj-table-hint] > .scroll-hint-icon-wrap {
+                display: none;
             }
         }
         /* MARK: ストライプ スタイル */
