@@ -117,3 +117,8 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 ## 2026-11-25: Footer最下段とページトップ（通常Chat、PROJECT_ONLY）
 - 新規Figma sessionでPC 114:536 / SP 279:2805 の高精細context・画像を取得。copyrightの高さ60px、左余白PC80/SP20、Roboto Condensed 12px/5%、右60pxの四角ボタン #4dce83、FA Regular f341 16px。旧CODIAの固定丸ボタン40pxとスクロール量による表示切替を撤去し、通常フローのgridへ。既存WPサイト名/年とhref="#"、pageScrollのreduced-motion分岐は維持。hoverはSPECのmain color。長文で行高を伸ばせる。
 - プライバシーポリシーはPCデザインにあるがURL/ページ管理が未承認のため追加しない。ロゴ/住所/電話/SNS/メニューは今回変更しない。#523で実機のクリック/Enter・スクロール・focus・長いサイト名・短いページを確認。別案件publication-runtime失敗（tankoubon detail the_content owner missing）は開始soで確認し対象外。
+
+## 2026-11-25: Footerのサイトマップ配置と外部リンク（通常Chat、PROJECT_ONLY）
+- 新規sessionでPC 114:484 / 114:523 / 154:2619 とSP 506:1632の高精細context・画像を確認。PCは左サイト情報308px/右サイトマップ541px、3列、列間80px、縦16px gap。既存WPメニューは同じWalker/同じlocationで保持し、列はCSS multi-columnで可変件数に対応。固定個数/タイトル/URLによる並べ替えはしない。DOMはサイト情報→メニュー。SPは既存開閉メニューを残し、情報の後に表示（FigmaにはSP sitemapなし、非表示はHuman確認まで保留）。
+- PC最上位の外部リンクはFigmaのFA Regular f2d2 12pxと4px gapを既存tokenで復元。共通.module_textLinkは変更せず、既存file拡張子の表示は維持。Footer hover色はSPEC mainに修正。住所・電話・SNS・プライバシーURL・英語サイト名の新規固定値は未承認のため追加しない。
+- #523で実メニュー8件/増減/子階層/長文、列バランス、タブ順、SP開閉、PC/SP/中間幅を確認。実機未検証、CSS columnsの可変配置は実装判断。#614 merge済み。

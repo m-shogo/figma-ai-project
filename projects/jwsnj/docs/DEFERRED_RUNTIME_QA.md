@@ -108,3 +108,6 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 
 ### FOOTER — in-flow copyright / page-top bar (2026-11-25)
 - DEFERRED_RUNTIME_QA (#523): PC 114:536 / SP 279:2805, 60px right square and left-aligned 12px copyright, native anchor click/keyboard with existing pageScroll, reduced motion, long site names and short pages, hover/focus, no fixed overlay. PC privacy link pending approved destination. No browser PASS claimed.
+
+### FOOTER — adaptive PC sitemap and site identity row (2026-11-25)
+- DEFERRED_RUNTIME_QA (#523): PC 114:484 / 114:523 / 154:2619; verify 308/541 layout, 3 balanced columns, 80/16px gaps at reference width, 8/variable item counts and nested submenus, long labels, keyboard tab order, external f2d2 and hover/focus, SP existing disclosure retained (visibility needs Human confirmation), intermediate widths. No browser PASS claimed.

@@ -18,33 +18,33 @@
             <img class="gf_brandStatement-puzzle" src="<?php echo esc_url(get_template_directory_uri() . '/images/common/footer/img_puzzle-02.svg'); ?>" alt="" width="100" height="76" decoding="async">
         </span>
     </div>
-    <div class="gf_links-wrap">
-        <nav class="gf_menu" aria-label="フッターナビゲーション">
-            <?php
-            wp_nav_menu(array(
-                // Use the menu assigned to this location in WordPress, not a hard-coded menu name.
-                'menu_class' => 'menu gf_links-01',
-                'menu_id' => 'gf_links-01',
-                'container' => 'div',
-                'container_class' => 'gf_container-01',
-                'container_id' => 'gf_container-01',
-                'fallback_cb' => false,
-                'theme_location' => 'footer-nav',
-                // 'item_spacing' => 'preserve'
-                // 'items_wrap' => '<ul id="%1$s" class="%2$s">%3$s</ul
-                'walker' => new Custom_Footer_Walker_Nav_Menu(),
-            ));
-            ?>
-        </nav>
-    </div>
-    <div class="gf_information">
-        <div class="global_inner">
+    <div class="gf_details global_inner">
+        <div class="gf_information">
             <p class="gf_logo">
                 <a href="<?php echo esc_url(home_url('/')); ?>">
                     <img src="<?php echo esc_url(get_template_directory_uri() . '/images/common/img_njws-logo.svg'); ?>" alt="" width="51" height="48" decoding="async">
                     <span><?php echo esc_html(get_bloginfo('name')); ?></span>
                 </a>
             </p>
+        </div>
+        <div class="gf_links-wrap">
+            <nav class="gf_menu" aria-label="フッターナビゲーション">
+                <?php
+                wp_nav_menu(array(
+                    // Use the menu assigned to this location in WordPress, not a hard-coded menu name.
+                    'menu_class' => 'menu gf_links-01',
+                    'menu_id' => 'gf_links-01',
+                    'container' => 'div',
+                    'container_class' => 'gf_container-01',
+                    'container_id' => 'gf_container-01',
+                    'fallback_cb' => false,
+                    'theme_location' => 'footer-nav',
+                    // 'item_spacing' => 'preserve'
+                    // 'items_wrap' => '<ul id="%1$s" class="%2$s">%3$s</ul
+                    'walker' => new Custom_Footer_Walker_Nav_Menu(),
+                ));
+                ?>
+            </nav>
         </div>
     </div>
     <div class="gf_bottom">
