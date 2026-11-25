@@ -192,3 +192,5 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 - Fresh Figma PC menu 599:2726, SP menu 480:3954, footer 221:335 context + images; parts 339:23/433:2015 の全体contextは今回有効な出力なし。既存19 block CSSのうち15種の寸法/overflow/typography/focus関連宣言を抽出確認、残りの個別精査は未完。#629/#630の修正は再実装しない。
 - SP navの100lvhはbrowser chrome表示中の可視高さを超えるため100vh fallback + 100dvhへ変更。既存PC height:auto維持。可変ラベルのflex itemにmin-width:0を追加（既存footerと同じ）。実機のaddress bar変化、末尾到達、長文は#523で未検証。
 - Header/FooterのFigmaと現行templateに構造差あり（header CTA/英字名、footer contact/SNS/privacy/copyright）。未確定CMS・URL・素材#524と既存承認を先に照合する。勝手に追加しない。配色はHuman指示で変更対象外。
+
+- 2026-11-25: tabsの57pxはコメント内の無効な旧装飾指定だった。誤検出を訂正し不要コメントを削除。既存横スクロールを保持し、単一タブの長文が表示領域を超えないようmax-inline-size/overflow-wrapを追加。lightboxは90vh fallbackと90dvhを併記。配色変更なし。実機未検証。

@@ -6,11 +6,13 @@
     .lightbox-image-container {
         height: auto;
         max-height: 90vh;
+        max-height: 90dvh;
     }
     img {
         width: 100% !important;
         height: auto !important;
         max-height: 90vh !important;
-        object-fit: contain !important; /* 必要に応じて cover → contain に変更 */
+        max-height: 90dvh !important;
+        object-fit: contain !important;
     }
 }
