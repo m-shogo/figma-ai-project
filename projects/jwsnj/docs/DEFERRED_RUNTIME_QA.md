@@ -102,3 +102,6 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 
 ### PAGE-PARTS — Large navigation empty fields and link semantics (2026-11-25)
 - DEFERRED_RUNTIME_QA (#523): PC 384:914 / SP 442:3081. Verify empty/invalid URL is not focusable or navigable, valid external URL gets noopener, empty rows omitted, missing image has no sample placeholder or broken img, image-only named/unnamed card, title/body-only card, keyboard, editor/front parity and long text. Missing-image layout is a conservative fallback, not a Figma visual acceptance claim.
+
+### PAGE-PARTS — mobile table scroll hint (2026-11-25)
+- DEFERRED_RUNTIME_QA (#523): PC 357:970 / SP 445:3237; confirm existing Flexible Table Block 3.9.0 markup, core tables, multiple tables, 767/768px resize, explicit stack/PC scroll settings, actual overflow only, native keyboard/touch scroll, caption and labels, one hint per table, hint disappears on scroll/focus, reduced motion, actual glyph/overlay/scrollbar visual parity. No real browser PASS claimed.
