@@ -163,3 +163,7 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 - P0: Header PC/SP 320/375/767/768/1079/1080/1380pxの長文・日本語英数混在、menu open/close、PC hover/touch/focus、モバイル可視viewport、footer実SVG/lineとメニュー、アイコン実font/optical alignment。最新 `so` を用いる。
 - P1: parts PC/SPのgallery/zoom/lightbox、メディア＋テキスト、accordion通常/Q&A、core tabs +旧ACFタブの利用状況、表960px横スクロール/ScrollHint、見出し・本文・注釈・大/小ナビの折返し、Core/Editor cascade。
 - P2: プライバシー/住所/電話/SNSなど未承認管理値、スライダー挙動/ACF項目、Smallナビ専用デザインは**推測実装の対象外**。確認可能となった段階でHuman契約に合わせて別の小scopeで着手。配色変更なし。
+
+
+### NEWS ARCHIVE — #515（Human承認 2026-11-25）
+- PC 390:666 / SP 478:2615: 0/1/10+ posts、投稿一覧/index fallback、category URL・全件復帰・ページ送りとquery string、カテゴリ0/多数/長文、日付、no-link/external/file、keyboard details開閉/Tab順・focus、現在頁、PC/SP/中間幅、パンくず位置。既存共通heroは別READY。静的/isolated PHP とWP runtimeを分離。#523 DEFERRED_ENV。

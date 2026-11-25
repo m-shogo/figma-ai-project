@@ -287,3 +287,8 @@ TOP PC `114:28` / SP `279:2136` から、ベクターは SVG、写真は元画�
 | CSS/保守性・性能 | 既存import/依存・明らかな空CSSを小scopeで整理 (#637/#638)。画像のlazy/本番font/JS実行は未計測 | #523 / Vite build/lighthouse が可能な環境 |
 
 **検証境界**: Figmaから取得した現物高精細context+スクリーンショットはデザイン根拠で、WordPress表示のスクリーンショットではない。旧サンプルと未接続公式素材を無断削除・置換しない。点検可能な独立source修正の探索を無限に延ばさず、以降は承認済み新規スコープを優先する。
+
+## 記事一覧（Human承認 2026-11-25）
+- PC 390:669 / 392:1265 / 390:1178 / 392:1244、SP 478:3027 / 478:3039 / 478:3089。高精細context・画像を確認。960px内幅、PCカテゴリ240×50・20px gap、SP全幅、行PC24px/SP20px 16px inset、日付14px Roboto Condensed、pill 80px/11px、タイトル16px、pager 40px/20px gap。既存通常投稿・カテゴリとURL、記事リンク、公式花SVGを再利用。
+- #515の既存一覧構造を継続し、index.phpにも同じownerを接続。カテゴリはGETのcat=0/固定ページルーティング問題を避け、native detailsと実カテゴリURLを使用（openのデザインは未提示）。pagerはWP query/get_pagenum_link、PC最大5/SP最大3を現在頁周辺に出す。日付形式は一覧限定。パンくずは一覧下に移動。
+- 次のREADY: 一覧固有hero 390:799/SP対応node、既存ACF visual設定・公式素材の確認。下部バナーは公式素材と管理ownerの確認後。共通他ページは変更しない。実WP #523未検証。

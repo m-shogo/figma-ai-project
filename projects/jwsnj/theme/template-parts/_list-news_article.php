@@ -9,7 +9,7 @@
     <<?php echo $html_tag; ?> <?php echo $html_classes; ?> <?php echo $html_attrs; ?>>
         <div class="head">
             <p class="date">
-                <time datetime="<?php the_time('Y-m-d'); ?>"><?php the_time('Y/m/d'); ?></time>
+                <time datetime="<?php the_time('Y-m-d'); ?>"><?php the_time(($args['props'] ?? '') === 'newsArchive' ? 'm.d.Y' : 'Y/m/d'); ?></time>
             </p>
             <?php
             get_template_part('template-parts/_label-category', null, [
@@ -18,7 +18,7 @@
             ?>
         </div>
         <div class="body">
-            <?php if (is_front_page() || is_page()) : ?>
+            <?php if (($args['props'] ?? '') !== 'newsArchive' && (is_front_page() || is_page())) : ?>
                 <h3 class="title"><?php the_title(); ?></h3>
             <?php else : ?>
                 <h2 class="title"><?php the_title(); ?></h2>

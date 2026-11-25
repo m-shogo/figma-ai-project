@@ -220,3 +220,7 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 
 - #633〜#638のsource修正を独立PR/CIでマージ。Figma PC/SP個別ノード・最新版authority・関連テーマ/ACF/WP JSを照合。残るものは実WP/browser #523、未取得公式bytes #524、未承認Footer/CMS/slider/ページの契約であり、**静的監査が全デザイン一致を保証するものではない**。
 - 修正探索を長引かせるより次のHuman-approved工程へ移る。#515のニュースアーカイブDraftは存在するが、承認なしにmergeしていない。新規記事詳細/固定/TOP/コース下層は実装しない。
+
+
+## 2026-11-25 — 記事一覧の既存Draft継続
+- Human承認後、PC/SP詳細context+画像と旧#515を照合。WordPressのhomeがindex.phpにfallbackする経路とGET cat=0の不確実性を解消するため、共通一覧partと実category URLのnative disclosureを採用。固定高を避け、長いカテゴリ・複数タグ・長いタイトルを自然に折返す。SP/PC paginationは同じWP queryとリンクを使用。hero・下部バナーは別scopeで素材/管理owner確認。#523実機未検証。

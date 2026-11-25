@@ -52,6 +52,15 @@ on:
       - 'projects/jwsnj/theme/css/module/module_line-01.css'
       - 'projects/jwsnj/tests/parts-module-line-contract.test.mjs'
       - 'projects/jwsnj/tests/parts-annotation-list-contract.test.mjs'
+      - 'projects/jwsnj/theme/archive.php'
+      - 'projects/jwsnj/theme/index.php'
+      - 'projects/jwsnj/theme/template-parts/_news-archive.php'
+      - 'projects/jwsnj/theme/template-parts/_pagination-news.php'
+      - 'projects/jwsnj/theme/template-parts/_list-news*.php'
+      - 'projects/jwsnj/theme/template-parts/_visual.php'
+      - 'projects/jwsnj/theme/css/project/news_archive.css'
+      - 'projects/jwsnj/theme/css/style.css'
+      - 'projects/jwsnj/tests/news-archive-contract.test.mjs'
       - '.github/workflows/jwsnj-header-static.yml'
   push:
     branches: [so]
@@ -104,6 +113,15 @@ on:
       - 'projects/jwsnj/theme/css/module/module_line-01.css'
       - 'projects/jwsnj/tests/parts-module-line-contract.test.mjs'
       - 'projects/jwsnj/tests/parts-annotation-list-contract.test.mjs'
+      - 'projects/jwsnj/theme/archive.php'
+      - 'projects/jwsnj/theme/index.php'
+      - 'projects/jwsnj/theme/template-parts/_news-archive.php'
+      - 'projects/jwsnj/theme/template-parts/_pagination-news.php'
+      - 'projects/jwsnj/theme/template-parts/_list-news*.php'
+      - 'projects/jwsnj/theme/template-parts/_visual.php'
+      - 'projects/jwsnj/theme/css/project/news_archive.css'
+      - 'projects/jwsnj/theme/css/style.css'
+      - 'projects/jwsnj/tests/news-archive-contract.test.mjs'
       - '.github/workflows/jwsnj-header-static.yml'
   workflow_dispatch:
 
@@ -127,6 +145,8 @@ jobs:
         run: node --test projects/jwsnj/tests/official-svg-asset-contract.test.mjs
       - name: Test Figma-approved parts heading, copy and list contracts
         run: node --test projects/jwsnj/tests/parts-*.test.mjs
+      - name: Test approved news archive and isolated pagination
+        run: node --test projects/jwsnj/tests/news-archive-contract.test.mjs
       - name: Check WordPress Header and Footer PHP syntax
         run: |
           php -l projects/jwsnj/theme/template-parts/_header.php
