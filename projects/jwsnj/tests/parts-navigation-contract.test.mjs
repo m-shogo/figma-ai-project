@@ -50,7 +50,7 @@ test('large navigation skips empty rows and does not substitute sample images', 
 });
 
 test('large navigation corner glyph retains its centered 10px FA Regular ink', () => {
-  const icon = large.match(/&::after\s*\{([^}]+)\}/)?.[1];
+  const icon = large.match(/&::after\s*\{\s*content:\s*'\\f061';([^}]+)\}/)?.[1];
   assert.ok(icon);
   assert.match(icon,/box-sizing:\s*border-box/);
   assert.match(icon,/letter-spacing:\s*0/);
