@@ -313,3 +313,7 @@ TOP PC `114:28` / SP `279:2136` から、ベクターは SVG、写真は元画�
 
 ## 固定ページ shell / sidebar
 - PC 384:1046 / SP 445:3245、hero 384:1400/507:2729、sidebar 476:1741、bread 384:1395/507:2812。既存ACF page_imgとタイトル、Gutenberg、sidebar-navを利用。PC 840/256/75、SP 1列、狭いtabletでrail非表示。英語副題の管理契約・公式装飾/下部バナーは保留。次のREADY: sidebar深い階層の操作検証、TOP独立section・コース/オリジナル。#523/#524。
+
+
+## TOP 重要なお知らせ
+- PC 114:349/SP 279:2233で既存ACFの表示・繰返し・日付・本文・非表示を再利用。空行/無効日付、実リンクのみ、60pxはmin-height、PC/SPの配置とFA Solidベル。既存MVの直後。TOP他section・素材・ルーティングは別READY。#523実機未検証。

@@ -183,3 +183,5 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 - NEWS DETAIL PC 392:1279/SP 480:3566: 実WPで通常投稿・password保護・既存ACF URL/file/none、前後記事なし/片側/両側、一覧設定有無、h1一つ、Gutenberg本文、長文・PC/SP/中間幅・keyboard/hover、hero画像/装飾・バナー#524を検証。静的/PHP stubのみ。
 
 - FIXED PAGE: PC384:1046/SP445:3245、本文840/rail256、1024境界、長い見出し/メニュー、空メニュー、password、既存ACF画像の登録/未登録、親階層パンくず、sidebarの深い階層のopen/keyboard、実描画とCMS編集を確認。英語副題の管理は未確定、公式装飾/バナー#524。実WP #523。
+
+- TOP notice PC114:349/SP279:2233: ACF表示/非表示、0/1/複数行、空本文/日付/不正日付、既存リンク/長文/改行、PC/SP/中間幅、keyboard/focus/hover、実FA glyphと円の重心、MVとの間隔。#523実WP未検証。

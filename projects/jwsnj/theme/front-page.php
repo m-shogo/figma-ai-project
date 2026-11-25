@@ -32,39 +32,7 @@
         </ul>
         <div class="swiper-pagination"></div>
     </div>
-    <?php if (get_field('top_notice_select')): ?>
-        <section id="top_notice-01" class="top_notice-01">
-            <div class="global_inner">
-                <div class="notice">
-                    <div class="head">
-                        <h2 class="title">重要なお知らせ</h2>
-                    </div>
-                    <div class="body">
-                        <?php if (have_rows('top_notice-01')): ?>
-                            <ul>
-                                <?php while (have_rows('top_notice-01')): the_row(); ?>
-                                    <?php
-                                    $date = get_sub_field('date', false);
-                                    $date = new DateTime($date);
-                                    $textarea = get_sub_field('textarea');
-                                    $none = get_sub_field('none');
-                                    ?>
-                                    <?php if (!$none): ?>
-                                        <li>
-                                            <p class="date"><time datetime="<?php echo $date->format('Y-m-d'); ?>"><?php echo $date->format('Y.n.j'); ?></time></p>
-                                            <div class="text">
-                                                <?php echo $textarea; ?>
-                                            </div>
-                                        </li>
-                                    <?php endif; ?>
-                                <?php endwhile; ?>
-                            </ul>
-                        <?php endif; ?>
-                    </div>
-                </div>
-            </div>
-        </section>
-    <?php endif; ?>
+    <?php get_template_part('template-parts/_top-notice'); ?>
 </div>
 <main id="global_contents" class="global_contents" itemscope itemprop="mainContentOfPage">
     <section id="top_news-01" class="top_news-01">
