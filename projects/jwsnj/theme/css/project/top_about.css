@@ -1,7 +1,7 @@
 @charset "utf-8";
 /* TOP About introduction PC 114:180 / SP 279:2318.
    Card stack, shared background and navigation destinations remain independent. */
-.jwsnj_topAbout {
+.global_contents > .jwsnj_topAbout {
     padding-block: calc(34 * var(--to-rem-func)) calc(60 * var(--to-rem-func));
     font-family: var(--font-jwsnj-ja);
     color: var(--color-text);
