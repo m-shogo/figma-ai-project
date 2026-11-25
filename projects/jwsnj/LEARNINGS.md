@@ -151,3 +151,6 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 ## 2026-11-25: ギャラリーの連続余白と可変キャプション（通常Chat、PROJECT_ONLY）
 - 新規sessionでFigma PC 344:1079 / SP 442:2973 の高精細contextと画像を取得。連続ギャラリー間40px、画像3:2、画像-caption間20px、PC14/SP12px、カード上揃え。既存margin-large 48pxを連続galleryに限り40pxに修正。gridの上揃え、img/captionのflex伸縮抑制、captionのmax-height/overflow/text-shadowを明示して長文の自然な伸長を優先。既存CMSの画像・caption・lightbox、全カラム設定と公式素材を維持。新規サンプル写真やNoimageの固定出力は作らない。
 - #523で実際のcore/gallery CSS詳細度、1〜3行以上のcaption、画像の実寸、隣接gallery40px、PC/SP/中間幅とlightbox keyboardを確認。静的テストは実機PASSではない。
+
+## 2026-11-25: 大小ボタンのグループ間隔（通常Chat、PROJECT_ONLY）
+- 新規sessionでPC 344:968/969・SP 442:2832/2833/2842の高精細context・画像を確認。大ボタンのSP16px gapを20pxに変更し、連続大ボタン群20px、大小群の切替40pxにする。小ボタンはPC横30px/行20px、SP縦配置。既存CMSのcustom width、ラベル折返し、リンク/FA/公式外部SVG、hover/focusは維持。旧PC共通gap上書きは除去。SP例の小ボタン群は30pxと20pxが混在するが、既存CMSに同一群内の区別がないため項目番号による強制はせず20pxで統一する実装判断。#523で長文、配置、編集者指定、group分割、PC/SP/中間幅の実描画を確認。

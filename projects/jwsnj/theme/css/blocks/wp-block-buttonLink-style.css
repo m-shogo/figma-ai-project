@@ -9,9 +9,13 @@
         margin-top: var(--wp-block-margin);
         display: flex;
         flex-wrap: wrap;
-        gap: calc(16 * var(--to-rem-func));
+        /* PC 344:968 / SP 442:2842: large buttons share a 20px gap. */
+        gap: calc(20 * var(--to-rem-func));
         & + & {
-            margin-top: var(--wp-block-margin-large);
+            margin-top: calc(20 * var(--to-rem-func));
+        }
+        &:not(.small) + &.small {
+            margin-top: calc(40 * var(--to-rem-func));
         }
         .wp-block-button {
             display: block;
@@ -113,7 +117,12 @@
         /* ///////// 個別設定 /////////　*/
         /* ボタン小 */
         &.small {
-            gap: calc(20 * var(--to-rem-func));
+            /* PC 344:969: 30px horizontal, 20px between rows. */
+            gap: calc(20 * var(--to-rem-func)) calc(30 * var(--to-rem-func));
+            @media (width < calc(768 * (1 / 16 * 1rem))) {
+                flex-direction: column;
+                align-items: flex-start;
+            }
             .wp-block-button {
                 width: fit-content;
                 min-width: 0;
@@ -205,9 +214,6 @@
             }
         }
 
-        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-            gap: calc(20 * var(--to-rem-func));
-        }
     }
 }
 
