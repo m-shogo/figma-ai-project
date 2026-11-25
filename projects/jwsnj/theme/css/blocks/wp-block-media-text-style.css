@@ -10,9 +10,31 @@
         margin-top: var(--wp-block-margin);
         gap: calc(40 * var(--to-rem-func));
         min-width: 0;
-        grid-template-columns: minmax(0, 1fr);
-        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-            grid-template-columns: minmax(0, 410fr) minmax(0, 510fr);
+        grid-template-columns: minmax(0, 410fr) minmax(0, 510fr);
+        &.has-media-on-the-right {
+            grid-template-columns: minmax(0, 510fr) minmax(0, 410fr);
+        }
+        /* Preserve explicit editor alignment choices; Figma default is top-aligned. */
+        &:not(.is-vertically-aligned-center, .is-vertically-aligned-bottom) {
+            > .wp-block-media-text__media,
+            > .wp-block-media-text__content {
+                align-self: start;
+            }
+        }
+        /* Match the theme breakpoint without overriding the editor's opt-out.
+           As in core, a stacked block must override inline custom column widths. */
+        @media (width < calc(768 * (1 / 16 * 1rem))) {
+            &.is-stacked-on-mobile {
+                grid-template-columns: minmax(0, 1fr) !important;
+                > .wp-block-media-text__media {
+                    grid-column: 1;
+                    grid-row: 1;
+                }
+                > .wp-block-media-text__content {
+                    grid-column: 1;
+                    grid-row: 2;
+                }
+            }
         }
         .wp-block-media-text__media {
             min-width: 0;

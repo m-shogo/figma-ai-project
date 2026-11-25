@@ -40,3 +40,12 @@ test('media text body follows 16px regular Zen Kaku typography on both viewports
   assert.match(css,/color:\s*var\(--color-text\)/);
   assert.match(css,/\.wp-block-media-text__media\s*\{\s*width:\s*100%;\s*min-width:\s*0/);
 });
+
+test('media/text preserves editor position, custom widths and opt-in stacking at theme breakpoint', () => {
+  assert.match(css, /&\.has-media-on-the-right\s*\{\s*grid-template-columns:\s*minmax\(0, 510fr\) minmax\(0, 410fr\)/);
+  assert.match(css, /@media \(width < calc\(768 \* \(1 \/ 16 \* 1rem\)\)\)\s*\{\s*&\.is-stacked-on-mobile\s*\{\s*grid-template-columns:\s*minmax\(0, 1fr\) !important;/);
+  assert.match(css, /> \.wp-block-media-text__media\s*\{\s*grid-column:\s*1;\s*grid-row:\s*1;/);
+  assert.match(css, /> \.wp-block-media-text__content\s*\{\s*grid-column:\s*1;\s*grid-row:\s*2;/);
+  assert.equal((css.match(/!important/g) ?? []).length, 1, 'Only mobile stacking overrides editor inline width');
+  assert.match(css, /&:not\(\.is-vertically-aligned-center, \.is-vertically-aligned-bottom\)\s*\{\s*> \.wp-block-media-text__media,\s*> \.wp-block-media-text__content\s*\{\s*align-self:\s*start/);
+});

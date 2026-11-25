@@ -96,3 +96,6 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 
 ### PAGE-PARTS — gallery zoom affordance (2026-11-25)
 - DEFERRED_RUNTIME_QA (#523): PC 344:1079 / SP 442:2973. Verify existing 44px icon and 20px glyph, inset PC20/SP16, green/white reverse, actual WP lightbox button visibility (no duplicate control), mouse/tap/keyboard open-close and focus return, reduced motion, captions and external/PDF link preservation. No browser PASS claimed.
+
+### PAGE-PARTS — media/text grid and editor settings (2026-11-25)
+- DEFERRED_RUNTIME_QA (#523): PC 344:929 / SP 442:2788, compare default 410:510 top-aligned grid and 40px gap, 600/601/767/768px stacked left/right and nonstacked, editor custom widths, explicit center/bottom alignment, image-fill/link/caption and long text. Validate against installed WP version and editor/frontend. No actual browser PASS claimed.

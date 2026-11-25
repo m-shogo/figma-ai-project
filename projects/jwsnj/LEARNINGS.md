@@ -99,3 +99,8 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 ## 2026-11-25: ギャラリーのズーム装飾（通常Chat、PROJECT_ONLY）
 - PC `344:1079` / SP `442:2973` の高精細contextと実画像、zoom `344:1106` / `442:3063` / `442:3069` の変数を照合。44px円・FA f002 20pxは既存ownerに存在。右下0pxとopacity hoverだけが不一致のためギャラリー限定でPC20px/SP16pxの内側配置と白背景/緑文字への反転を追加。
 - 既存 .lightbox_wrap は common.js の画像ラップ処理が生成する。既存リンク/WordPress lightboxの操作・外部/PDFの装飾・他画面は変更せず、focus-visible/focus-withinとreduced-motionも装飾側に対応。実際のnative triggerとの重なり、開閉・フォーカス復帰、画像比率、キャプションへの干渉は #523 で検証する。実機PASSではない。
+
+## 2026-11-25: Media & Text の配置と編集設定（通常Chat、PROJECT_ONLY）
+- Figma PC `344:929` / SP `442:2788` 高精細context・画像でPC左410/右510、上揃え、SP画像→本文の縦積み、40px gapを確認。WordPress公式Gutenberg media-text style.scss と公式ブロック説明を参照し、coreが子にgrid-column/rowを指定し、通常のstackは600px、inline幅の上書きはstack時のみ、画像左右・縦位置・stackの選択が編集者設定であることを照合。参考: https://github.com/WordPress/gutenberg/blob/trunk/packages/block-library/src/media-text/style.scss / https://wordpress.org/documentation/article/media-text-block/ 。案件の実機core版は未確認。
+- 既存の無条件1列では中間幅に暗黙の2列が発生し得るため、既定410:510、右画像は510:410、768px未満かつis-stacked-on-mobileでのみ1列＋明示行にする。core同様、stack時だけ!importantでinline幅を上書きする。stack無効は横並び、既定は上揃え（center/bottom明示選択を維持）。既存画像/キャプション、HTML、ACF、Foundationは変更なし。
+- #523で実機の600/601/767/768px、右画像、stackオン/オフ、カスタム幅、垂直配置・crop・長文、editor/frontendを確認する。静的QAは実描画保証ではない。
