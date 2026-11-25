@@ -114,3 +114,6 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 
 ### FOOTER — brand flow and wide viewport line extension (2026-11-25)
 - DEFERRED_RUNTIME_QA (#523): PC 114:422/SP 279:2632 and line variables 279:1516/279:1567. Check SP copy above two edge-aligned artworks, PC 484px center / 40px gaps / 408px art, 320/375/767/768/1079/1080/1380/1920 widths, long copy, no extra 50px top gap, 1px extension joins on wide PC, actual SVG geometry and line alignment. No browser PASS claimed.
+
+### PAGE-PARTS — in-page links and literal IDs (2026-11-25)
+- DEFERRED_RUNTIME_QA (#523): PC 357:1022 / SP 442:2948. Verify empty/partial/all-empty ACF rows, pasted #, Japanese/punctuation IDs, missing/malformed fragments, deep-link load, page-top, actual header offset, keyboard and long labels at PC/SP/intermediate widths. No browser PASS claimed.

@@ -30,11 +30,49 @@ test('page links flow and wrap across SP and PC while keeping ACF destinations',
   assert.match(css, /overflow-wrap:\s*anywhere/);
   assert.doesNotMatch(css, /white-space:\s*nowrap|figma\.com\/api\/mcp\/asset/);
   assert.match(php, /get_sub_field\('inPageLink_id'\)/);
-  assert.match(php, /esc_attr\(\$id\)/);
-  assert.match(php, /esc_html\(\$title\)/);
+  assert.match(php, /esc_attr\(rawurlencode\(\$item\['id'\]\)\)/);
+  assert.match(php, /esc_html\(\$item\['title'\]\)/);
 });
 
 test('Figma mobile page links honor 304px minimum without exceeding narrower screens',()=>{
   assert.match(css,/@media \(width < calc\(768 \* \(1 \/ 16 \* 1rem\)\)\)/);
   assert.match(css,/\.inPageLink\s*\{\s*min-width:\s*min\(100%,\s*calc\(304 \* var\(--to-rem-func\)\)\)/);
+});
+
+test('page links omit incomplete repeater rows without inventing an anchor', () => {
+  assert.match(php, /if \(\$title === '' \|\| \$id === '' \|\| preg_match/);
+  assert.match(php, /substr\(\$id, 0, 1\) === '#'/);
+  assert.match(php, /\$count = count\(\$items\)/);
+  assert.match(php, /if \(\$count > 0\) :/);
+  assert.doesNotMatch(php, /href="#"|sanitize_title\(/);
+});
+
+test('literal and encoded anchors scroll safely; missing or malformed fragments do not move', () => {
+  const js = readFileSync(new URL('../theme/js/common.js', import.meta.url), 'utf8');
+  const source = js.slice(js.indexOf('function scrollToAnker(hash) {'), js.indexOf('  // SP用メニュー＆PCメガメニュー設定'));
+  const fn = source.slice(0, source.indexOf('\n    });'));
+  const calls = [];
+  const root = { top: 0 };
+  const element = { top: 500 };
+  const document = { documentElement: root, getElementById(id) {
+    calls.push(['id', id]);
+    return id === '学校:案内.1' ? element : null;
+  }};
+  const window = { matchMedia: () => ({ matches: true }) };
+  const $ = value => {
+    if (value === '#global_header') return {length: 1, innerHeight: () => 80};
+    if (value === 'body,html') return {stop: () => ({scrollTop: position => calls.push(['scroll', position])})};
+    return {length: value ? 1 : 0, offset: () => ({top: value.top})};
+  };
+  const scroll = new Function('document','window','$',fn + '\nreturn scrollToAnker;')(document,window,$);
+  scroll('#'+encodeURIComponent('学校:案内.1'));
+  assert.deepEqual(calls, [['id','学校:案内.1'],['scroll',390]]);
+  calls.length = 0;
+  scroll('#missing'); scroll('#%ZZ');
+  assert.deepEqual(calls, [['id','missing']]);
+  calls.length = 0;
+  scroll('html');
+  assert.deepEqual(calls,[['scroll',0]]);
+  const pageScroll = js.slice(js.indexOf('const pageScroll ='), js.indexOf('function scrollToAnker(hash)'));
+  assert.doesNotMatch(pageScroll,/scrollTop\(1\)/);
 });

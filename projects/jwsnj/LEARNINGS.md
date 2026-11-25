@@ -127,3 +127,7 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 - Figma PC 114:422 / SP 279:2632 高精細context・画像と線279:1516/279:1567の変数を取得。PC注記「パズルとLEARN IN～の距離をあまり広げたくない。ブラウザ拡幅時は線を伸ばす」、両線main #28ac5f。SPはコピー→左右絵の一段、現行flexはDOM順の左絵がコピー前の別段に出る。SPを2列grid、コピー1行目、絵2行目、外側余白0に修正。
 - PCは中央484px上限、gap40px、左右既存SVG各408px上限を維持し、外側の可変空間だけ1px線で延長。左+1px/右+19.16pxの中心基準はFigma座標と保存済み枠寸法から算出した実装値。1380px超の線接合、狭幅の縮小・実描画は未検証。既存SVGバイト/HTML/font tokenに変更なし。旧Footer全体の50px上余白を削除して既存コピー56/40pxの余白と二重にならないようにした。
 - #523で375/320/767/768/1079/1080/1380/1920px、長文、線の接合と公式SVGの寸法・位置を確認。#615は全CI成功でマージ済み。実機なしで視覚一致を宣言しない。
+
+## 2026-11-25: ページ内リンクの空欄・literal ID（通常Chat、PROJECT_ONLY）
+- Figma PC 357:1022 / SP 442:2948 の高精細context・画像を新規sessionで確認。既存ボタンの寸法/色/折り返しは維持。ACF既存repeaterのタイトル/IDの空欄を除外し、有効行だけで列数を計算。先頭#貼付は1個だけ除去、空白/#を含むIDは無効扱い、その他のIDをrawurlencodeして保持。新しいID/slug/CMS項目は作らない。
+- common.jsの既存pageScrollはjQuery selectorではなくdocument.getElementById＋decodeURIComponentで解決。存在しない/壊れたfragmentで動かないよう、初期ロードの先行scrollTop(1)も削除。既存ページトップ、header offset、reduced-motionは維持。模擬DOMで日本語・記号・無効ID・ページトップを確認する。実機の初期hash/クリック/keyboard/長文は#523。
