@@ -15,16 +15,17 @@ if (get_post_type() === 'post'): //通常投稿
         <p class="category <?php echo esc_attr($taxonomy); ?>">
             <?php foreach ($category as $cat) : ?>
                 <?php
-                $parent = $cat->category_parent;
+                // Reset per term; deleted/missing parents cannot leak a previous class.
+                $parent_slug = '';
+                $parent = (int) ($cat->category_parent ?? 0);
                 if ($parent) {
-                    $parent_term = get_term($parent);
-                    if (!is_wp_error($parent_term)) {
-                        $parent_slug = $parent_term->slug;
-                        $parent_slug = ' _' . $parent_slug;
+                    $parent_term = get_term($parent, 'category');
+                    if ($parent_term instanceof WP_Term) {
+                        $parent_slug = ' _' . $parent_term->slug;
                     }
                 }
                 ?>
-                <span class="label <?php echo esc_attr($cat->slug); ?><?php echo $parent ? $parent_slug : ''; ?>"><?php echo esc_html($cat->$name); ?></span>
+                <span class="label <?php echo esc_attr($cat->slug); ?><?php echo esc_attr($parent_slug); ?>"><?php echo esc_html($cat->$name); ?></span>
             <?php endforeach; ?>
         </p>
     <?php endif; ?>

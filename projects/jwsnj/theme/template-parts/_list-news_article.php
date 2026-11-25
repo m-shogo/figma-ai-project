@@ -2,9 +2,10 @@
     <?php
     // post_typeによるリンクや属性を取得
     $link_attrs = get_post_link_attributes();
-    $html_tag = $link_attrs['url'] ? 'a' : 'span';
-    $html_classes = $link_attrs['url'] ? ' class="link"' : ' class="no-link"';
-    $html_attrs = $link_attrs['url'] ? 'href="' . esc_url($link_attrs['url']) . '" ' . $link_attrs['targetAttr'] : '';
+    $link_url = esc_url((string) ($link_attrs['url'] ?? ''));
+    $html_tag = $link_url !== '' ? 'a' : 'span';
+    $html_classes = $link_url !== '' ? ' class="link"' : ' class="no-link"';
+    $html_attrs = $link_url !== '' ? 'href="' . $link_url . '" ' . $link_attrs['targetAttr'] : '';
     ?>
     <<?php echo $html_tag; ?> <?php echo $html_classes; ?> <?php echo $html_attrs; ?>>
         <div class="head">

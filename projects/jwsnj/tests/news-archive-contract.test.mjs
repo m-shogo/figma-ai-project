@@ -45,7 +45,7 @@ test('isolated PHP pager handles bounds, current page and valid generated links'
   }
 });
 test('archive templates parse in PHP CLI',()=>{
-  for(const p of ['archive.php','index.php','template-parts/_news-archive.php','template-parts/_list-news.php','template-parts/_list-news_article.php','template-parts/_visual.php','template-parts/_news-archive-visual.php','template-parts/_pagination-news.php','template-parts/_breadCrumb.php']){
+  for(const p of ['archive.php','index.php','template-parts/_news-archive.php','template-parts/_list-news.php','template-parts/_list-news_article.php','template-parts/_label-category.php','template-parts/_visual.php','template-parts/_news-archive-visual.php','template-parts/_pagination-news.php','template-parts/_breadCrumb.php']){
     execFileSync('php',['-l',new URL('../theme/'+p,import.meta.url).pathname]);
   }
 });
@@ -131,4 +131,28 @@ test('archive filter, hero and breadcrumb share only a real published posts inde
     assert.match(invalid, /"posts_page_id":0/);
     assert.match(invalid, /href="\/category\/news\/" aria-current="page"/);
   }
+});
+
+
+test('news row only renders a link when the escaped URL is usable',()=>{
+  const part=read('template-parts/_list-news_article.php');
+  const render=url=>{
+    const stub='function get_post_link_attributes(){return ["url"=>'+JSON.stringify(url)+',"targetAttr"=>" target=\"_blank\" rel=\"noreferrer external\""];} function esc_url($s){return str_starts_with($s,"javascript:")?"":htmlspecialchars($s,ENT_QUOTES);} function the_time($f){echo "2026-11-25";} function get_template_part($p,$n,$a){} function the_title(){echo "Example";} $args=["props"=>"newsArchive"]; ?>';
+    return execFileSync('php',['-r',stub+part],{encoding:'utf8'});
+  };
+  const valid=render('/news/article/?x=1&y=2');
+  assert.match(valid,/<a\s+class="link"\s+href="\/news\/article\/\?x=1&amp;y=2"/);
+  assert.match(valid,/target="_blank"/);
+  for(const url of ['', 'javascript:alert(1)']){
+    const invalid=render(url);
+    assert.match(invalid,/<span\s+class="no-link"/);
+    assert.doesNotMatch(invalid,/href=|target=|<a\s/);
+  }
+});
+test('standard post category labels isolate missing parent classes and escape attributes',()=>{
+  const part=read('template-parts/_label-category.php');
+  const stub='class WP_Term {public $slug; public $category_parent; public $cat_name; function __construct($slug,$parent,$name){$this->slug=$slug;$this->category_parent=$parent;$this->cat_name=$name;}} function get_post_type(){return "post";} function get_the_category(){return [new WP_Term("first",1,"First & one"),new WP_Term("orphan",2,"Orphan"),new WP_Term("missing",3,"Missing"),new WP_Term("root",0,"Root")];} function get_term($id,$taxonomy){return $id===1?new WP_Term("parent\"quote",0,"P"):($id===2?null:new stdClass);} function is_wp_error($v){return false;} function esc_attr($s){return htmlspecialchars($s,ENT_QUOTES);} function esc_html($s){return htmlspecialchars($s,ENT_QUOTES);} $args=["taxonomy"=>"_cat"]; set_error_handler(function($severity,$message){throw new Exception($message);}); ?>';
+  const html=execFileSync('php',['-r',stub+part],{encoding:'utf8'});
+  assert.match(html,/class="label first _parent&quot;quote">First &amp; one</);
+  for(const slug of ['orphan','missing','root']) assert.match(html,new RegExp('class="label '+slug+'">'));
 });
