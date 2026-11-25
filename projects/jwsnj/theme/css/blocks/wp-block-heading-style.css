@@ -140,26 +140,6 @@
         }
     }
 
-    /* p:is(:not([class]), .has-text-align-left, .has-text-align-right, .has-text-align-center, .block-editor-rich-text__editable, .has-background),
-    ul,
-    ol,
-    .wp-block-flexible-table-block-table,
-    .wp-block-group,
-    .wp-block-table,
-    .wp-block-image,
-    .wp-block-gallery,
-    .wp-block-columns,
-    .wp-block-details,
-    .wp-block-list,
-    .wp-block-buttons,
-    .wp-block-separator,
-    .wp-block-acf-in-page-link,
-    .wp-block-quote,
-    .wp-block-acf-tab-container,
-    .wp-block-acf-navigation-large,
-    .wp-block-acf-navigation-small,
-    .wp-block-media-text,
-    [class*='module_'] */
     * {
         & + h1:is(:not([class]), .wp-block-heading) {
             margin-top: var(--wp-block-margin-large);
