@@ -1,11 +1,11 @@
 @charset "utf-8";
 /*
- * ベース用CSS
- */
+   * ベース用CSS
+   */
 
 /* ==========================================================================
- * リセット追加
- * ========================================================================== */
+   * リセット追加
+   * ========================================================================== */
 :root {
     --vw: 1vw;
     scrollbar-gutter: stable;
@@ -15,13 +15,15 @@
     -webkit-text-size-adjust: 100%;
     -moz-osx-font-smoothing: grayscale;
     -webkit-font-smoothing: antialiased;
-    &:focus {
-        outline: none;
-    }
     &::before,
     &::after {
         box-sizing: border-box;
     }
+}
+/* Keep UA focus in older engines; enhance keyboard focus in supporting browsers. */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
 }
 main {
     display: block;
@@ -35,8 +37,8 @@ hr {
     border-top: calc(1 * var(--to-rem-func)) solid var(--color-separator);
 }
 /* :where(*:not(.block-editor_wrap *)) {
-    margin: 0;
-} */
+   margin: 0;
+   } */
 a,
 p,
 span,
@@ -59,8 +61,8 @@ button {
 }
 
 /* ==========================================================================
- * フォームリセット
- * ========================================================================== */
+   * フォームリセット
+   * ========================================================================== */
 button,
 fieldset,
 form,
@@ -72,7 +74,6 @@ textarea {
     -moz-appearance: none;
     -webkit-appearance: none;
     appearance: none;
-    outline: none;
     border-radius: 0;
     border: none;
     margin: 0;
@@ -93,13 +94,11 @@ button {
 }
 
 /* ==========================================================================
- * ベース
- * ========================================================================== */
+   * ベース
+   * ========================================================================== */
 html {
     font-size: 100%;
-}
-@media (calc(768 * (1 / 16 * 1rem)) <= width) {
-    html {
+    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
         overflow-x: auto;
     }
 }
@@ -114,9 +113,7 @@ body {
     color: var(--color-text);
     word-wrap: break-word;
     overflow-wrap: break-word;
-}
-@media (calc(768 * (1 / 16 * 1rem)) <= width) {
-    body {
+    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
         min-width: calc(1280 * var(--to-rem-func));
     }
 }
@@ -128,12 +125,12 @@ body._contentFixed {
 
 /* MARK: header_breakpoint */
 /* @media (width >= calc(768 * (1 / 16 * 1rem))) {
-  body._contentFixed {
-    position: relative;
-    width: auto;
-    height: auto;
-  }
-} */
+   body._contentFixed {
+   position: relative;
+   width: auto;
+   height: auto;
+   }
+   } */
 a {
     margin: 0;
     padding: 0;
@@ -147,13 +144,13 @@ a {
     &:active {
         text-decoration: none;
     }
-}
-@media (calc(768 * (1 / 16 * 1rem)) <= width) {
-    a[href^='tel:'] {
-        display: inline-block;
-        color: inherit;
-        text-decoration: inherit;
-        pointer-events: none;
+    &[href^='tel:'] {
+        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+            display: inline-block;
+            color: inherit;
+            text-decoration: inherit;
+            pointer-events: none;
+        }
     }
 }
 img {
@@ -199,8 +196,8 @@ sub {
 }
 
 /* ==========================================================================
- * ClearFix
- * ========================================================================== */
+   * ClearFix
+   * ========================================================================== */
 .clearFix::after {
     clear: both;
     content: '.';
@@ -210,27 +207,27 @@ sub {
 }
 
 /* ==========================================================================
- * 文字サイズ
- * ========================================================================== */
-@media (calc(768 * (1 / 16 * 1rem)) <= width) {
-    ._font-sizeS {
+   * 文字サイズ
+   * ========================================================================== */
+._font-sizeS {
+    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
         font-size: 1.2rem;
     }
 }
-@media (calc(768 * (1 / 16 * 1rem)) <= width) {
-    ._font-sizeM {
+._font-sizeM {
+    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
         font-size: 1.4rem;
     }
 }
-@media (calc(768 * (1 / 16 * 1rem)) <= width) {
-    ._font-sizeL {
+._font-sizeL {
+    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
         font-size: 1.8rem;
     }
 }
 
 /* ==========================================================================
- * 装飾クラス
- * ========================================================================== */
+   * 装飾クラス
+   * ========================================================================== */
 ._hide {
     display: none !important;
 }
@@ -278,35 +275,35 @@ sub {
 }
 
 /* ==========================================================================
- * 表示切り替え
- * ========================================================================== */
+   * 表示切り替え
+   * ========================================================================== */
 /* SP以下のみ表示（768px以上は非表示） */
-@media (calc(768 * (1 / 16 * 1rem)) <= width) {
-    ._only-SP {
+._only-SP {
+    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
         display: none !important;
     }
 }
 /* TB以下のみ表示（768px以上は非表示） */
-@media (calc(768 * (1 / 16 * 1rem)) <= width) {
-    ._under-TB {
+._under-TB {
+    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
         display: none !important;
     }
 }
 /* TB以上のみ表示（768px未満は非表示） */
-@media (width < calc(768 * (1 / 16 * 1rem))) {
-    ._over-TB {
+._over-TB {
+    @media (width < calc(768 * (1 / 16 * 1rem))) {
         display: none !important;
     }
 }
 /* TBのみ表示（768px未満は非表示、1024px以上は非表示） */
-@media (width < calc(768 * (1 / 16 * 1rem))), screen and (calc(1024 * (1 / 16 * 1rem)) <= width) {
-    ._only-TB {
+._only-TB {
+    @media (width < calc(768 * (1 / 16 * 1rem))), screen and (calc(1024 * (1 / 16 * 1rem)) <= width) {
         display: none !important;
     }
 }
 /* PC以上のみ表示（1024px未満は非表示） */
-@media (width < calc(1024 * (1 / 16 * 1rem))) {
-    ._over-PC {
+._over-PC {
+    @media (width < calc(1024 * (1 / 16 * 1rem))) {
         display: none !important;
     }
 }
