@@ -98,6 +98,9 @@ window.addEventListener('DOMContentLoaded', setVw);
 window.addEventListener('resize', setVw);
 
 (function ($) {
+  // Match the CSS layout owners; do not infer rem boundaries from innerWidth.
+  const headerDesktop = window.matchMedia('(min-width: 67.5rem)');
+  const footerDesktop = window.matchMedia('(min-width: 48rem)');
   // ==========================================================================
   // ターゲットが特定位置を過ぎたらclass付与（ヘッダー追従）https://terkel.jp/archives/2011/05/jquery-floating-widget-plugin/
   // ==========================================================================
@@ -346,13 +349,12 @@ window.addEventListener('resize', setVw);
     // グローバルナビゲーション
     const $menuButton = $('#gh_menu');
     const $globalNavigation = $('#global_navigation');
-    const headerBreakpointMin = 1080; // CSS desktop media query starts at 1080px.
     const syncMobileMenu = () => {
       const isOpen = $body.hasClass('_open-menu');
       $menuButton.attr('aria-expanded', String(isOpen));
       $menuButton.attr('aria-label', isOpen ? 'メニューを閉じる' : 'メニューを開く');
       // Move focus out before hiding the navigation on close or a desktop-to-SP resize.
-      const hiddenForMobile = !isOpen && window.innerWidth < headerBreakpointMin;
+      const hiddenForMobile = !isOpen && !headerDesktop.matches;
       const navigation = document.getElementById('global_navigation');
       if (hiddenForMobile && navigation && navigation.contains(document.activeElement)) {
         $menuButton.trigger('focus');
@@ -388,12 +390,12 @@ window.addEventListener('resize', setVw);
     // Collapsed accordion submenus must not be keyboard-focusable on SP.
     // Only the direct child wrapper belongs to this disclosure: a nested wrapper
     // may be present, but must remain controlled by its own menu item.
-    const syncSubmenuFocusability = (item, prefix, desktopMin) => {
+    const syncSubmenuFocusability = (item, prefix, desktopMedia) => {
       const wrapper = Array.from(item.children).find(child =>
         child.matches(`[class*="${prefix}_wrapper"]`)
       );
       if (!wrapper) return;
-      const collapsed = window.innerWidth < desktopMin && item.getAttribute('data-open') !== 'true';
+      const collapsed = !desktopMedia.matches && item.getAttribute('data-open') !== 'true';
       if (collapsed && wrapper.contains(document.activeElement)) {
         const trigger = item.querySelector(`[class*="${prefix}_button"]`);
         if (trigger) trigger.focus();
@@ -405,17 +407,17 @@ window.addEventListener('resize', setVw);
         const itemButton = item.querySelector('[class*="gnl_button"]');
         if (!itemButton) return;
         itemButton.setAttribute('aria-expanded', String(item.getAttribute('data-open') === 'true'));
-        syncSubmenuFocusability(item, 'gnl', headerBreakpointMin);
+        syncSubmenuFocusability(item, 'gnl', headerDesktop);
         itemButton.addEventListener('click', function () {
             const isOpen = item.getAttribute('data-open') !== 'true';
             item.setAttribute('data-open', String(isOpen));
             itemButton.setAttribute('aria-expanded', String(isOpen));
-            syncSubmenuFocusability(item, 'gnl', headerBreakpointMin);
+            syncSubmenuFocusability(item, 'gnl', headerDesktop);
         });
         // The desktop top-level submenu also opens on hover via CSS.
         if (item.classList.contains('gnl_item-02')) {
           const syncDesktopHoverState = () => {
-            if (window.innerWidth < headerBreakpointMin) return;
+            if (!headerDesktop.matches) return;
             const isOpen = item.matches(':hover') || item.matches(':focus-within') ||
               item.getAttribute('data-open') === 'true' || item.classList.contains('_touchOpen');
             itemButton.setAttribute('aria-expanded', String(isOpen));
@@ -435,12 +437,12 @@ window.addEventListener('resize', setVw);
         const itemButton = item.querySelector('[class*="gfl_button"]');
         if (!itemButton) return;
         itemButton.setAttribute('aria-expanded', String(item.getAttribute('data-open') === 'true'));
-        syncSubmenuFocusability(item, 'gfl', 768);
+        syncSubmenuFocusability(item, 'gfl', footerDesktop);
         itemButton.addEventListener('click', function () {
             const isOpen = item.getAttribute('data-open') !== 'true';
             item.setAttribute('data-open', String(isOpen));
             itemButton.setAttribute('aria-expanded', String(isOpen));
-            syncSubmenuFocusability(item, 'gfl', 768);
+            syncSubmenuFocusability(item, 'gfl', footerDesktop);
         });
     });
 
@@ -471,7 +473,7 @@ window.addEventListener('resize', setVw);
         document.documentElement.classList.add('_device-touch');
       }
 
-      const isPcLayout = () => window.innerWidth >= headerBreakpointMin; // PCレイアウトかどうかを判定
+      const isPcLayout = () => headerDesktop.matches; // PCレイアウトかどうかを判定
 
       if (!hasTouch) return; // タッチデバイスでない場合は処理しない
 
@@ -525,7 +527,7 @@ window.addEventListener('resize', setVw);
 
     // PCタッチ操作で展開したメガメニューもEscapeで閉じ、親リンクへフォーカスを戻す。
     $(document).on('keydown', function (event) {
-      if (event.key !== 'Escape' || window.innerWidth < headerBreakpointMin) return;
+      if (event.key !== 'Escape' || !headerDesktop.matches) return;
       const expanded = document.querySelector(`.global_navigation [class*="gnl_item"].${touchOpenClass}`);
       if (!expanded) return;
       const trigger = expanded.querySelector('[class*="gnl_title"] [class*="gnl_link"]');
@@ -534,12 +536,10 @@ window.addEventListener('resize', setVw);
     });
 
     // ブレークポイントを跨いだときに不要なクラスを削除
-    let lastWidthForBreakpoint = null;
-    $(window).on('load resize', function () {
-      const currentWidth = window.innerWidth;
-      const wasPcOrOver = lastWidthForBreakpoint !== null && lastWidthForBreakpoint >= headerBreakpointMin;
-      const isPcOrOver = currentWidth >= headerBreakpointMin;
-      if (lastWidthForBreakpoint !== null && wasPcOrOver !== isPcOrOver) {
+    let lastHeaderDesktop = headerDesktop.matches;
+    const syncResponsiveMenu = function () {
+      const isPcOrOver = headerDesktop.matches;
+      if (lastHeaderDesktop !== isPcOrOver) {
         closeAllTouchMenus();
         $body.removeClass('_open-menu _open-bg _contentFixed');
         syncMobileMenu();
@@ -550,10 +550,13 @@ window.addEventListener('resize', setVw);
         });
       }
       // Reconcile closed accordion focusability even on resizes within a layout.
-      globalNavItems.forEach(item => syncSubmenuFocusability(item, 'gnl', headerBreakpointMin));
-      footerNavItems.forEach(item => syncSubmenuFocusability(item, 'gfl', 768));
-      lastWidthForBreakpoint = currentWidth;
-    });
+      globalNavItems.forEach(item => syncSubmenuFocusability(item, 'gnl', headerDesktop));
+      footerNavItems.forEach(item => syncSubmenuFocusability(item, 'gfl', footerDesktop));
+      lastHeaderDesktop = isPcOrOver;
+    };
+    $(window).on('load resize', syncResponsiveMenu);
+    headerDesktop.addEventListener('change', syncResponsiveMenu);
+    footerDesktop.addEventListener('change', syncResponsiveMenu);
 
     // // グローバルメニューの動き
     // $('.global_navigation .gn_links-01 > li._hasChild').on({
@@ -776,17 +779,14 @@ window.addEventListener('resize', setVw);
     });
     // 幅のブレークポイントを跨いだとき state を false にし、固定中ならスクロール位置を戻す（toggleMenu 側のクラス削除と整合）
     // MARK: header_breakpoint
-    const headerBreakpointMin = 1080;
-    let lastWidthForContentFixedBreakpoint = null;
-    $(window).on('load resize', function () {
-      const currentWidth = window.innerWidth;
-      const wasPcOrOver = lastWidthForContentFixedBreakpoint !== null && lastWidthForContentFixedBreakpoint >= headerBreakpointMin;
-      const isPcOrOver = currentWidth >= headerBreakpointMin;
-      if (lastWidthForContentFixedBreakpoint !== null && wasPcOrOver !== isPcOrOver) {
-        releaseScrollLock();
-      }
-      lastWidthForContentFixedBreakpoint = currentWidth;
-    });
+    let lastHeaderDesktop = headerDesktop.matches;
+    const syncResponsiveLock = function () {
+      const isPcOrOver = headerDesktop.matches;
+      if (lastHeaderDesktop !== isPcOrOver) releaseScrollLock();
+      lastHeaderDesktop = isPcOrOver;
+    };
+    $(window).on('load resize', syncResponsiveLock);
+    headerDesktop.addEventListener('change', syncResponsiveLock);
   };
 
   // ==========================================================================
