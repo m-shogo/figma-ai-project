@@ -304,7 +304,7 @@ test('Header WordPress disclosure controls point to a unique direct submenu wrap
 
 
 test('Header chrome respects reduced-motion preference at hamburger and desktop widths', () => {
-  const block = headerCss.slice(headerCss.indexOf('/* Header height and hamburger icon'), headerCss.indexOf('/* MARK: hover */'));
+  const block = headerCss.slice(headerCss.indexOf('/* Header height and hamburger icon'), headerCss.indexOf('/* modifire */'));
   assert.match(block, /@media \(prefers-reduced-motion: reduce\)/);
   assert.match(block, /\.gh_menu \.icon::before/);
   assert.match(block, /\.gh_menu \.icon::after/);
@@ -354,4 +354,11 @@ test('mobile navigation uses visible viewport height with legacy fallback and pe
 
 test('desktop mega-menu tracks use shrinkable minmax to contain long CMS labels', () => {
   assert.match(navigationCss, /\.gnl_list-02\s*\{\s*display:\s*grid;\s*grid-template-columns:\s*repeat\(3, minmax\(0, 1fr\)\)/);
+});
+
+
+test('global normalize preserves keyboard focus instead of suppressing UA outlines', () => {
+    const css = readFileSync(new URL('../theme/css/base/normalize.css', import.meta.url), 'utf8');
+    assert.doesNotMatch(css, /outline:\s*none/);
+    assert.match(css, /:focus-visible\s*\{\s*outline: 2px solid currentColor/);
 });

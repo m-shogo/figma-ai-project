@@ -15,13 +15,15 @@
     -webkit-text-size-adjust: 100%;
     -moz-osx-font-smoothing: grayscale;
     -webkit-font-smoothing: antialiased;
-    &:focus {
-        outline: none;
-    }
     &::before,
     &::after {
         box-sizing: border-box;
     }
+}
+/* Keep UA focus in older engines; enhance keyboard focus in supporting browsers. */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
 }
 main {
     display: block;
@@ -72,7 +74,6 @@ textarea {
     -moz-appearance: none;
     -webkit-appearance: none;
     appearance: none;
-    outline: none;
     border-radius: 0;
     border: none;
     margin: 0;
