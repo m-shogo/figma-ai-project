@@ -211,15 +211,15 @@ add_action('enqueue_block_editor_assets', function () {
 remove_action( 'wp_enqueue_scripts', 'wp_enqueue_global_styles' );
 remove_action( 'wp_footer', 'wp_enqueue_global_styles', 5 );
 add_action('wp_footer', function() {
-	wp_dequeue_style( 'core-block-supports');
+  wp_dequeue_style( 'core-block-supports');
 }, 5);
 
 // WP 6.9.1以降、block-style-variation-styles は未登録の global-styles を依存にすると Notice になる。
 // 実体CSSは出さず、空ハンドルだけ先に登録して依存関係を満たす。
 add_action('wp_default_styles', function ($wpStyles) {
-	if (!isset($wpStyles->registered['global-styles'])) {
-		$wpStyles->add('global-styles', false);
-	}
+  if (!isset($wpStyles->registered['global-styles'])) {
+    $wpStyles->add('global-styles', false);
+  }
 });
 
 // ==========================================================================
