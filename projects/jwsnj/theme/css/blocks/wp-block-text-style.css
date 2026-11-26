@@ -96,3 +96,19 @@
         }
     }
 }
+
+/* Course introduction lead PC 534:2363; opt-in native paragraph. */
+:is(.block-editor_wrap, .editor-styles-wrapper) p.is-style-jwsnj-course-lead {
+    font-family: var(--font-jwsnj-ja);
+    font-weight: 500;
+    font-size: calc(20 * var(--to-rem-func));
+    line-height: 1.8;
+    letter-spacing: 0.05em;
+    color: var(--color-text);
+    overflow-wrap: anywhere;
+    word-break: normal;
+    line-break: strict;
+    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+        font-size: calc(24 * var(--to-rem-func));
+    }
+}

@@ -257,4 +257,12 @@ add_action('init', function () {
     'name' => 'jwsnj-course-faq',
     'label' => 'コースFAQ（Q・A）',
   ));
+  register_block_style('core/group', array(
+    'name' => 'jwsnj-course-intro-heading',
+    'label' => 'コース導入見出し（和文＋英文）',
+  ));
+  register_block_style('core/paragraph', array(
+    'name' => 'jwsnj-course-lead',
+    'label' => 'コース導入リード文',
+  ));
 });
