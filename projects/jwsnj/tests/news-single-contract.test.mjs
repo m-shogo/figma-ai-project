@@ -15,12 +15,14 @@ test('normal single reuses hero and blocks; legacy routing remains before new br
 });
 test('detail pager emits only valid existing destinations and decorative icons are hidden',()=>{
   const part=read('template-parts/_news-single-pager.php');
-  for(const [prev,next,back] of [[0,0,''],[1,0,'/news/'],[0,2,''],[1,2,'/news/']]){
+  for(const [prev,next,back] of [[0,0,''],[0,0,'/news/'],[1,0,''],[1,0,'/news/'],[0,2,''],[0,2,'/news/'],[1,2,''],[1,2,'/news/']]){
     const stub='function get_adjacent_article_post($dir){$id=$dir==="previous"?'+prev+':'+next+';return $id?(object)["ID"=>$id]:null;} function get_permalink($id){return "/post/".$id;} function esc_url($s){return $s;} $args=["posts_url"=>'+JSON.stringify(back)+']; ?>';
     const html=execFileSync('php',['-r',stub+part],{encoding:'utf8'});
     assert.equal(html.includes('class="prev"'),Boolean(prev));
     assert.equal(html.includes('class="next"'),Boolean(next));
     assert.equal(html.includes('class="back"'),Boolean(back));
+    assert.equal((html.match(/<a\s+class=/g)||[]).length,Number(Boolean(prev))+Number(Boolean(next))+Number(Boolean(back)));
+    if(!prev&&!next&&back)assert.match(html,/<nav[^>]*>\s*<a class="back"[^>]*>[\s\S]*?<\/a>\s*<\/nav>/);
     if(!prev&&!next&&!back)assert.equal(html,'');
     else assert.match(html,/aria-hidden="true"/);
   }
@@ -29,4 +31,14 @@ test('detail pager emits only valid existing destinations and decorative icons a
   assert.match(css,/overflow-wrap: anywhere/);
   assert.match(css,/:focus-visible/);
   assert.doesNotMatch(css,/white-space:\s*nowrap|(?<!min-)height:\s*calc\(50/);
+});
+
+
+test('single return link occupies the first grid row without a phantom mobile row',()=>{
+  const css=read('css/project/news_single.css');
+  assert.match(css,/\.back\s*\{\s*grid-column: 1 \/ -1;\s*grid-row: 2;[\s\S]*?&:only-child\s*\{\s*grid-row: 1;\s*\}/);
+  assert.match(css,/\.prev\s*\{\s*grid-column: 1;\s*grid-row: 1/);
+  assert.match(css,/\.next\s*\{\s*grid-column: 2;\s*grid-row: 1/);
+  assert.match(css,/\.back\s*\{\s*grid-column: 2;\s*grid-row: 1;\s*\}/);
+  assert.match(css,/gap: calc\(40 \* var\(--to-rem-func\)\) calc\(16 \* var\(--to-rem-func\)\)/);
 });
