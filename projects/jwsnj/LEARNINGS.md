@@ -265,3 +265,7 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 
 ## 2026-11-26 TOP About固定紹介文・地図装飾
 - PC 220:57/114:180、SP 279:2241/279:2318 の高精細context/画像で確認。SPECのTOP管理対象にない固定テキストをHTML化し、既存公式map/pin2点/強調点/花SVGを接続。PCは文と地図の自然なgrid、SPは装飾のみ背面配置。1080切替は既存headerに合わせた暫定中間幅判断。カード・共通背景・リンク・重なりの完成配置は別作業（CMS/リンク/素材受入を照合）。新規ACF・URLなし。実機#523。
+
+
+## 2026-11-26 TOP News / Instagram integration
+- Fresh PC 114:541/114:581 and SP 279:2523/279:2562 context + images. Fixed Instagram copy, saved official SVG and FA Brands icon; two-column PC 560/80/320 within 960, stacked SP 40 gap. 1080px column boundary is implementation choice; intermediate width remains stacked. Account URL/owner unconfirmed: omit Follow action, not a fake/disabled link. News arrow escape corrected to one CSS backslash. No new ACF/CPT or footer menu change. Actual CTA and runtime #523 remain pending.
