@@ -24,72 +24,96 @@ test('Header and Footer use CSS-equivalent media conditions rather than fixed pi
   assert.match(source, /!isOpen && !headerDesktop\.matches/);
   assert.match(source, /headerDesktop\.addEventListener\('change', syncResponsiveMenu\)/);
   assert.match(source, /footerDesktop\.addEventListener\('change', syncResponsiveMenu\)/);
-  assert.match(source, /headerDesktop\.addEventListener\('change', syncResponsiveLock\)/);
+  assert.doesNotMatch(source, /syncResponsiveLock|const contentFixed =/);
   assert.doesNotMatch(source, /headerBreakpointMin|window\.innerWidth\s*[<>]/);
 });
 
-test('closing the mobile menu releases the scroll lock on all close paths', () => {
-  // Execute the actual contentFixed implementation with a minimal jQuery event stub.
-  const match = source.match(/  const contentFixed = function \(\) \{[\s\S]*?\n  \};/);
-  assert.ok(match, 'contentFixed implementation must exist');
-
+test('one menu state owner reconciles lock, backdrop, close paths and responsive changes', () => {
+  const match = source.match(/  const toggleMenu = function \(\) \{[\s\S]*?\n  \};/);
+  assert.ok(match);
   const listeners = new Map();
   const classes = new Set();
-  const restoredScrollY = [];
-  const win = { innerWidth: 1079, scrollTo: (_x, y) => restoredScrollY.push(y) };
-  const headerDesktop = { matches: false, addEventListener: (event, handler) => listeners.set('media:' + event, handler) };
-  const doc = {};
+  const restored = [];
+  let touchOpen = null;
+  let scrollY = 133;
+  const win = { scrollTo: (_x, y) => restored.push(y) };
+  const media = name => ({ matches: false, addEventListener: (event, handler) => listeners.set(name + ':' + event, [handler]) });
+  const headerDesktop = media('header');
+  const footerDesktop = media('footer');
+  const doc = { querySelectorAll: () => [], querySelector: () => touchOpen, getElementById: () => null };
   const body = {
-    addClass(value) {
-      value.split(' ').forEach((name) => classes.add(name));
-      return this;
-    },
-    removeClass(value) {
-      value.split(' ').forEach((name) => classes.delete(name));
-      return this;
-    },
-    css() { return this; },
+    hasClass: name => classes.has(name),
+    addClass(value) { value.split(' ').forEach(name => classes.add(name)); return this; },
+    removeClass(value) { value.split(' ').forEach(name => classes.delete(name)); return this; },
+    toggleClass(name, force = !classes.has(name)) { if (force) classes.add(name); else classes.delete(name); return this; },
+    css() { return this; }
   };
-  const $ = (selector) => {
+  const $ = selector => {
     if (selector === 'body') return body;
-    if (selector === win) {
-      return {
-        scrollTop: () => 133,
-        on: (event, handler) => listeners.set('window:' + event, handler),
-      };
-    }
-    const key = selector === doc ? 'document' : selector;
-    return { on: (event, handler) => listeners.set(key + ':' + event, handler) };
+    const key = selector === doc ? 'document' : selector === win ? 'window' : selector;
+    return {
+      on(event, handler) {
+        const id = key + ':' + event;
+        listeners.set(id, [...(listeners.get(id) || []), handler]);
+      },
+      attr() {},
+      trigger() {},
+      scrollTop: () => scrollY,
+      width: () => 375
+    };
   };
   const fire = (key, event = {}) => {
-    const handler = listeners.get(key);
-    assert.ok(handler, 'missing event handler: ' + key);
-    handler(event);
+    const handlers = listeners.get(key);
+    assert.ok(handlers, 'missing event ' + key);
+    handlers.forEach(handler => handler(event));
   };
+  new Function('$', 'window', 'document', 'navigator', 'headerDesktop', 'footerDesktop', match[0] + '\ntoggleMenu();')($, win, doc, { maxTouchPoints: 0 }, headerDesktop, footerDesktop);
 
-  new Function('$', 'window', 'document', 'headerDesktop', match[0] + '\ncontentFixed();')($, win, doc, headerDesktop);
-
-  fire('#gh_menu:click');
-  assert.equal(classes.has('_contentFixed'), true);
-  fire('#gn_close, #gns_close, #overlay:click');
-  assert.equal(classes.has('_contentFixed'), false);
-  assert.equal(restoredScrollY.at(-1), 133);
-
-  fire('#gh_menu:click');
-  fire('document:keydown', { key: 'Escape' });
-  assert.equal(classes.has('_contentFixed'), false);
-
-  fire('window:load resize');
+  for (const close of [
+    () => fire('#gh_menu:click'),
+    () => fire('#gn_close:click'),
+    () => fire('#gns_close, #overlay:click'),
+    () => fire('document:keydown', { key: 'Escape' })
+  ]) {
+    fire('#gh_menu:click');
+    assert.ok(classes.has('_open-menu') && classes.has('_contentFixed') && classes.has('_open-bg'));
+    close();
+    assert.ok(!classes.has('_open-menu') && !classes.has('_contentFixed') && !classes.has('_open-bg'));
+    assert.equal(restored.at(-1), 133);
+  }
+  // A separately opened search owns the backdrop, but not the mobile scroll lock.
+  fire('#search:click');
   fire('#gh_menu:click');
   headerDesktop.matches = true;
-  fire('media:change');
-  assert.equal(classes.has('_contentFixed'), false);
-
-  // Reopening after a close must not inherit a stale lock state.
+  fire('header:change');
+  assert.ok(!classes.has('_open-menu') && !classes.has('_contentFixed'));
+  assert.ok(classes.has('_open-search') && classes.has('_open-bg'));
+  const count = restored.length;
+  fire('window:load resize');
   fire('#gh_menu:click');
-  assert.equal(classes.has('_contentFixed'), true);
-  fire('#gn_close, #gns_close, #overlay:click');
-  assert.equal(classes.has('_contentFixed'), false);
+  assert.equal(restored.length, count);
+  assert.ok(!classes.has('_open-menu') && !classes.has('_contentFixed'));
+  fire('#search:click');
+  assert.ok(!classes.has('_open-bg'));
+
+  headerDesktop.matches = false;
+  fire('header:change');
+  scrollY = 0;
+  fire('#gh_menu:click');
+  assert.ok(classes.has('_contentFixed'));
+  fire('#gh_menu:click');
+  assert.equal(restored.at(-1), 0);
+
+  // Search dismissal must not hide an independently open desktop touch flyout.
+  headerDesktop.matches = true;
+  fire('header:change');
+  touchOpen = {};
+  fire('#search:click');
+  fire('#search:click');
+  assert.ok(classes.has('_open-bg'));
+  touchOpen = null;
+  fire('#gns_close, #overlay:click');
+  assert.ok(!classes.has('_open-bg'));
 });
 
 test('Header menus use registered WordPress locations without hard-coded menu names', () => {
@@ -155,7 +179,7 @@ test('desktop mega-menu hover, focus and touch states do not leak into SP accord
 test('Header breakpoint transitions clear stale top-level hover disclosure state', () => {
   const region = source.slice(source.indexOf('let lastHeaderDesktop = headerDesktop.matches'), source.indexOf('// // グローバルメニューの動き'));
   assert.match(region, /closeAllTouchMenus\(\)/);
-  assert.match(region, /syncMobileMenu\(\)/);
+  assert.match(region, /closeMobileMenu\(\)/);
   assert.match(region, /globalNavItems\.forEach\(\(item\) => \{/);
   assert.match(region, /button\.setAttribute\('aria-expanded', String\(item\.getAttribute\('data-open'\) === 'true'\)\)/);
 });
@@ -173,7 +197,7 @@ test('desktop touch-open mega-menu closes on Escape and restores parent-link foc
 
 test('PC touch mega-menu cleanup preserves backdrop while mobile navigation or search owns it', () => {
   const closeBlock = source.slice(source.indexOf('const closeAllTouchMenus ='), source.indexOf('const touchMegaMenuSupport ='));
-  assert.match(closeBlock, /if \(!\$body\.hasClass\('_open-search'\) && !\$body\.hasClass\('_open-menu'\)\) \$body\.removeClass\('_open-bg'\)/);
+  assert.match(closeBlock, /syncBackdrop\(\)/);
   assert.match(source, /\$\('#gns_close, #overlay'\)\.on\('click'/);
 });
 
@@ -206,9 +230,9 @@ test('mobile menu open-state clip-path follows exactly the 1080px desktop breakp
 test('Header mobile close and hamburger toggle retain backdrop ownership for search and PC touch menus', () => {
   const section = source.slice(source.indexOf('const toggleMenu = function'), source.indexOf('const globalNavItems ='));
   assert.match(section, /const touchOpen = document\.querySelector\('\.global_navigation \[class\*="gnl_item"\]\._touchOpen'\)/);
-  assert.match(section, /if \(!\$body\.hasClass\('_open-search'\) && !touchOpen\) \$body\.removeClass\('_open-bg'\)/);
+  assert.match(section, /const syncBackdrop = \(\) =>/);
   assert.match(section, /\$body\.toggleClass\('_open-menu'\)/);
-  assert.match(section, /if \(\$body\.hasClass\('_open-menu'\) \|\| \$body\.hasClass\('_open-search'\)\) \$body\.addClass\('_open-bg'\)/);
+  assert.match(section, /\$body\.toggleClass\('_open-bg', \$body\.hasClass\('_open-menu'\) \|\| \$body\.hasClass\('_open-search'\) \|\| !!touchOpen\)/);
 });
 
 
@@ -286,8 +310,7 @@ test('Header search toggles independently and preserves the backdrop for other o
   const region = source.slice(source.indexOf("$('#search').on('click'"), source.indexOf("$('#gns_close, #overlay').on('click'"));
   assert.match(region, /const isOpen = !\$body\.hasClass\('_open-search'\)/);
   assert.match(region, /\$body\.toggleClass\('_open-search', isOpen\)/);
-  assert.match(region, /const touchOpen = document\.querySelector/);
-  assert.match(region, /\$body\.toggleClass\('_open-bg', isOpen \|\| \$body\.hasClass\('_open-menu'\) \|\| !!touchOpen\)/);
+  assert.match(region, /syncBackdrop\(\)/);
 });
 
 
@@ -331,7 +354,7 @@ test('Header navigation focus exits before inert is applied on mobile close or r
   const menuButton = { attr(name, value) { attrs.push(['menu', name, value]); }, trigger(name) { attrs.push(['focus', name]); doc.activeElement = this; } };
   const navigation = { attr(name, value) { attrs.push(['navigation', name, value]); } };
   const body = { hasClass: name => classes.has(name) };
-  const sync = new Function('$body', '$menuButton', '$globalNavigation', 'window', 'document', 'headerDesktop', match[0] + '\nreturn syncMobileMenu;')(body, menuButton, navigation, win, doc, headerDesktop);
+  const sync = new Function('$body', '$menuButton', '$globalNavigation', 'window', 'document', 'headerDesktop', 'syncScrollLock', 'syncBackdrop', match[0] + '\nreturn syncMobileMenu;')(body, menuButton, navigation, win, doc, headerDesktop, () => {}, () => {});
   sync();
   assert.equal(attrs.some(x => x[0] === 'focus'), false, 'desktop nav remains focusable');
   attrs.length = 0;
