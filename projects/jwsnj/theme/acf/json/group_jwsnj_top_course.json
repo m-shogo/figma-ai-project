@@ -1,0 +1,161 @@
+{
+    "key": "group_jwsnj_top_course",
+    "title": "トップ_各部紹介",
+    "fields": [
+        {
+            "key": "field_jwsnj_top_course_rows",
+            "label": "各部紹介",
+            "name": "top_course-01",
+            "aria-label": "",
+            "type": "repeater",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "collapsed": "field_jwsnj_top_course_title",
+            "min": 0,
+            "max": 0,
+            "layout": "row",
+            "button_label": "+ コースを追加",
+            "rows_per_page": 20,
+            "sub_fields": [
+                {
+                    "key": "field_jwsnj_top_course_img",
+                    "label": "画像",
+                    "name": "img",
+                    "aria-label": "",
+                    "type": "image",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "return_format": "id",
+                    "preview_size": "medium",
+                    "library": "all",
+                    "min_width": "",
+                    "min_height": "",
+                    "min_size": "",
+                    "max_width": "",
+                    "max_height": "",
+                    "max_size": "",
+                    "mime_types": "",
+                    "parent_repeater": "field_jwsnj_top_course_rows"
+                },
+                {
+                    "key": "field_jwsnj_top_course_title",
+                    "label": "タイトル",
+                    "name": "title",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "maxlength": "",
+                    "parent_repeater": "field_jwsnj_top_course_rows"
+                },
+                {
+                    "key": "field_jwsnj_top_course_text",
+                    "label": "テキスト",
+                    "name": "text",
+                    "type": "textarea",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "",
+                    "maxlength": "",
+                    "rows": 3,
+                    "new_lines": "",
+                    "parent_repeater": "field_jwsnj_top_course_rows"
+                },
+                {
+                    "key": "field_jwsnj_top_course_url",
+                    "label": "リンク先",
+                    "name": "url",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "maxlength": "",
+                    "parent_repeater": "field_jwsnj_top_course_rows"
+                },
+                {
+                    "key": "field_jwsnj_top_course_target",
+                    "label": "外部リンク",
+                    "name": "target",
+                    "aria-label": "",
+                    "type": "checkbox",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "choices": {
+                        "はい": "はい"
+                    },
+                    "allow_custom": 0,
+                    "default_value": [],
+                    "layout": "vertical",
+                    "toggle": 0,
+                    "return_format": "value",
+                    "save_custom": 0,
+                    "custom_choice_button_text": "新規選択肢を追加",
+                    "parent_repeater": "field_jwsnj_top_course_rows"
+                }
+            ]
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "page_type",
+                "operator": "==",
+                "value": "front_page"
+            }
+        ]
+    ],
+    "menu_order": 5,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "SPEC.md の各部紹介の編集項目（画像・タイトル・テキスト・リンク・外部リンク）",
+    "show_in_rest": false,
+    "display_title": ""
+}
