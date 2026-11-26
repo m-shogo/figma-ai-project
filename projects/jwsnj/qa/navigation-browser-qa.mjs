@@ -134,7 +134,7 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
       coarse: matchMedia('(any-pointer: coarse)').matches
     }));
     console.log(JSON.stringify({ engine: engineName, touchCapabilities: capabilities }));
-    if (capabilities.maxTouchPoints === 0 && engineName === 'firefox') {
+    if (capabilities.maxTouchPoints === 0 && ['firefox', 'webkit'].includes(engineName)) {
       console.log(JSON.stringify({ engine: engineName, touchMenu: 'DEFERRED_ENV', reason: 'requested hasTouch but navigator.maxTouchPoints is zero' }));
       await touch.close();
       continue;
