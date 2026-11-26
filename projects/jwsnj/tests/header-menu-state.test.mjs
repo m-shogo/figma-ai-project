@@ -450,3 +450,12 @@ test('SP open header close button follows Figma 480:4686 without changing its st
   assert.match(menu, /\.text\s*\{[^{}]*body\._open-menu &\s*\{\s*display: none;/);
   assert.doesNotMatch(headerCss, /\nbody\._open-menu\s*\{/);
 });
+
+test('PC parent links follow Figma 603:2967 without adding a second disclosure control', () => {
+  const menu = readFileSync(new URL('../theme/inc/menu.php', import.meta.url), 'utf8');
+  const global = menu.split('class Custom_Global_Walker_Nav_Menu')[1].split('class Custom_Header_Sub_Walker_Nav_Menu')[0];
+  assert.match(global, /if \(\$depth === 0\) \{\s*\$output \.= '<span class="gnl_arrow" aria-hidden="true"><\/span>';/);
+  assert.equal((global.match(/class="gnl_arrow"/g) || []).length, 1);
+  assert.match(navigationCss, /\.gnl_arrow\s*\{\s*display: none;/);
+  assert.match(navigationCss, /\.gnl_arrow::before\s*\{\s*content: '\\f106';/);
+});
