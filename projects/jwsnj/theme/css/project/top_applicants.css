@@ -1,6 +1,6 @@
 @charset "utf-8";
 /* TOP For Applicants — PC 158:2645 / SP 279:2443.
-   Topic rows are non-interactive until actual destinations are confirmed. */
+ Topic rows are non-interactive until actual destinations are confirmed. */
 .global_contents > .jwsnj_topApplicants {
     --jwsnj-applicants-heading: #2aaab5;
     --jwsnj-applicants-photo-shadow: #b9e2e0;
@@ -14,6 +14,15 @@
         display: grid;
         gap: calc(40 * var(--to-rem-func));
         padding-inline: clamp(calc(20 * var(--to-rem-func)), 8vw, calc(30 * var(--to-rem-func)));
+        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+            max-width: calc(var(--width-base-small) + var(--padding-TB) * 2);
+            padding-inline: var(--padding-TB);
+        }
+        @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+            grid-template-columns: minmax(0, 440fr) minmax(0, 430fr);
+            align-items: start;
+            gap: calc(90 * var(--to-rem-func));
+        }
     }
     .jwsnj_topApplicants_content,
     .jwsnj_topApplicants_intro {
@@ -21,13 +30,26 @@
         min-width: 0;
         overflow-wrap: anywhere;
     }
-    .jwsnj_topApplicants_content { gap: calc(32 * var(--to-rem-func)); }
+    .jwsnj_topApplicants_content {
+        gap: calc(32 * var(--to-rem-func));
+        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+            width: 100%;
+            max-width: calc(440 * var(--to-rem-func));
+            margin-inline: auto;
+        }
+        @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+            gap: calc(48 * var(--to-rem-func));
+        }
+    }
     .jwsnj_topApplicants_intro {
         gap: calc(24 * var(--to-rem-func));
         p {
             margin: 0;
             font-size: calc(16 * var(--to-rem-func));
             line-height: 1.4;
+        }
+        @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+            gap: calc(40 * var(--to-rem-func));
         }
     }
     .jwsnj_topApplicants_title {
@@ -39,6 +61,9 @@
     }
     .jwsnj_topApplicants_en {
         font: 500 calc(36 * var(--to-rem-func))/1.3 var(--font-jwsnj-en-condensed);
+        @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+            font-size: calc(46 * var(--to-rem-func));
+        }
     }
     .jwsnj_topApplicants_ja {
         display: flex;
@@ -46,6 +71,9 @@
         gap: calc(8 * var(--to-rem-func));
         font-size: calc(13 * var(--to-rem-func));
         line-height: 1.4;
+        @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+            font-size: calc(15 * var(--to-rem-func));
+        }
     }
     .jwsnj_topApplicants_blossom {
         display: block;
@@ -77,15 +105,31 @@
                 display: block;
                 width: calc(36 * var(--to-rem-func));
                 height: auto;
+                @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+                    width: calc(56 * var(--to-rem-func));
+                }
+            }
+            @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+                min-height: calc(100 * var(--to-rem-func));
+                padding-inline: calc(24 * var(--to-rem-func)) calc(20 * var(--to-rem-func));
+                font-size: calc(18 * var(--to-rem-func));
             }
         }
     }
-    .jwsnj_topApplicants_topics li:first-child { gap: calc(10 * var(--to-rem-func)); }
+    .jwsnj_topApplicants_topics li:first-child {
+        gap: calc(10 * var(--to-rem-func));
+        @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+            gap: calc(16 * var(--to-rem-func));
+        }
+    }
     .jwsnj_topApplicants_topicCopy {
         display: grid;
         justify-items: start;
         gap: calc(4 * var(--to-rem-func));
         min-width: 0;
+        @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+            gap: calc(10 * var(--to-rem-func));
+        }
     }
     .jwsnj_topApplicants_badge {
         max-width: 100%;
@@ -96,6 +140,10 @@
         font-size: calc(10 * var(--to-rem-func));
         text-align: center;
         overflow-wrap: anywhere;
+        @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+            padding-block: calc(4 * var(--to-rem-func));
+            font-size: calc(12 * var(--to-rem-func));
+        }
     }
     .jwsnj_topApplicants_photo {
         --photo-offset: 6.98%;
@@ -123,42 +171,16 @@
             background: var(--jwsnj-applicants-photo-shadow);
             border-radius: calc(3 * var(--to-rem-func));
         }
-    }
-    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-        .jwsnj_topApplicants_inner {
-            max-width: calc(var(--width-base-small) + var(--padding-TB) * 2);
-            padding-inline: var(--padding-TB);
-        }
-        .jwsnj_topApplicants_content,
-        .jwsnj_topApplicants_photo {
+        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
             width: 100%;
             max-width: calc(440 * var(--to-rem-func));
             margin-inline: auto;
         }
+        @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+            max-width: calc(430 * var(--to-rem-func));
+        }
     }
     @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
         padding-block: calc(100 * var(--to-rem-func));
-        .jwsnj_topApplicants_inner {
-            grid-template-columns: minmax(0, 440fr) minmax(0, 430fr);
-            align-items: start;
-            gap: calc(90 * var(--to-rem-func));
-        }
-        .jwsnj_topApplicants_content { gap: calc(48 * var(--to-rem-func)); }
-        .jwsnj_topApplicants_intro { gap: calc(40 * var(--to-rem-func)); }
-        .jwsnj_topApplicants_en { font-size: calc(46 * var(--to-rem-func)); }
-        .jwsnj_topApplicants_ja { font-size: calc(15 * var(--to-rem-func)); }
-        .jwsnj_topApplicants_topics li {
-            min-height: calc(100 * var(--to-rem-func));
-            padding-inline: calc(24 * var(--to-rem-func)) calc(20 * var(--to-rem-func));
-            font-size: calc(18 * var(--to-rem-func));
-            img { width: calc(56 * var(--to-rem-func)); }
-        }
-        .jwsnj_topApplicants_topics li:first-child { gap: calc(16 * var(--to-rem-func)); }
-        .jwsnj_topApplicants_topicCopy { gap: calc(10 * var(--to-rem-func)); }
-        .jwsnj_topApplicants_badge {
-            padding-block: calc(4 * var(--to-rem-func));
-            font-size: calc(12 * var(--to-rem-func));
-        }
-        .jwsnj_topApplicants_photo { max-width: calc(430 * var(--to-rem-func)); }
     }
 }

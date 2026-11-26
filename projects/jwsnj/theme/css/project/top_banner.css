@@ -51,8 +51,8 @@
             }
             @media (prefers-reduced-motion: reduce) { transition: none; }
         }
-    }
-    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-        .list { grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(220 * var(--to-rem-func))), 1fr)); }
+        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(220 * var(--to-rem-func))), 1fr));
+        }
     }
 }

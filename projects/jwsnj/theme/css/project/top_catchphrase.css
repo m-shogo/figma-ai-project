@@ -1,6 +1,6 @@
 @charset "utf-8";
 /* Fixed approved catchphrase only: PC 220:7 / SP 279:2144.
-   Photos, CTA and motion remain separate; do not re-enable sample slider CSS. */
+ Photos, CTA and motion remain separate; do not re-enable sample slider CSS. */
 body.home { min-width: 0; }
 .jwsnj_topCatchphrase {
     padding: calc(20 * var(--to-rem-func)) calc(16 * var(--to-rem-func)) calc(24 * var(--to-rem-func));
@@ -18,6 +18,13 @@ body.home { min-width: 0; }
         letter-spacing: 0.05em;
         text-align: center;
         overflow-wrap: anywhere;
+        @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+            flex-direction: row;
+            flex-wrap: wrap;
+            align-items: flex-end;
+            justify-content: center;
+            font-size: calc(48 * var(--to-rem-func));
+        }
     }
     .jwsnj_topCatchphrase_first {
         display: flex;
@@ -26,27 +33,13 @@ body.home { min-width: 0; }
         justify-content: center;
         gap: calc(3 * var(--to-rem-func));
         max-width: 100%;
-    }
-    .jwsnj_topCatchphrase_artPc { display: none; }
-    .jwsnj_topCatchphrase_artSp {
-        display: block;
-        width: auto;
-        max-width: 100%;
-        height: auto;
-        flex: none;
-    }
-    @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
-        padding-block: calc(30 * var(--to-rem-func)) calc(33 * var(--to-rem-func));
-        .jwsnj_topCatchphrase_copy {
-            flex-direction: row;
-            flex-wrap: wrap;
-            align-items: flex-end;
-            justify-content: center;
-            font-size: calc(48 * var(--to-rem-func));
+        @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+            gap: calc(11 * var(--to-rem-func));
         }
-        .jwsnj_topCatchphrase_first { gap: calc(11 * var(--to-rem-func)); }
-        .jwsnj_topCatchphrase_artSp { display: none; }
-        .jwsnj_topCatchphrase_artPc {
+    }
+    .jwsnj_topCatchphrase_artPc {
+        display: none;
+        @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
             display: block;
             position: relative;
             width: 291px;
@@ -65,5 +58,18 @@ body.home { min-width: 0; }
             .jwsnj_topCatchphrase_glyph03 { left: 161.3px; top: 23.43px; }
             .jwsnj_topCatchphrase_glyph04 { left: 229.7px; top: 29.82px; transform: rotate(-5.05deg); }
         }
+    }
+    .jwsnj_topCatchphrase_artSp {
+        display: block;
+        width: auto;
+        max-width: 100%;
+        height: auto;
+        flex: none;
+        @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+            display: none;
+        }
+    }
+    @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+        padding-block: calc(30 * var(--to-rem-func)) calc(33 * var(--to-rem-func));
     }
 }
