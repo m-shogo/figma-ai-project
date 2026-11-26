@@ -3,6 +3,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
 
 const css = readFileSync(new URL('../theme/css/blocks/wp-block-heading-style.css', import.meta.url), 'utf8');
 
