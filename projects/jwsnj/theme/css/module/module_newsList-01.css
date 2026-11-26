@@ -29,6 +29,14 @@
             color: var(--color-text);
             text-decoration: none;
             transition: var(--transition-duration);
+            @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+                padding-inline: calc(20 * var(--to-rem-func));
+            }
+            @media (any-hover: hover) {
+                &:hover .body .title {
+                    color: var(--color-link);
+                }
+            }
         }
         .link {
             &[target='_blank'] {
@@ -108,29 +116,4 @@
         }
     }
 
-    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-        .mnl-01_article {
-            .link,
-            .no-link {
-                padding-block: calc(20 * var(--to-rem-func));
-                padding-inline: calc(20 * var(--to-rem-func));
-            }
-        }
-    }
-
-    /* MARK: hover */
-    @media (any-hover: hover) {
-        .mnl-01_article {
-            .link,
-            .no-link {
-                &:hover {
-                    .body {
-                        .title {
-                            color: var(--color-link);
-                        }
-                    }
-                }
-            }
-        }
-    }
 }

@@ -120,3 +120,15 @@ test('CSS duplicate properties are removed and About owners preserve original sc
  const vars=read('css/global/variables.css');
  for(const name of ["--jwsnj-color-accent","--jwsnj-color-main","--jwsnj-color-text","--jwsnj-color-text-gray-700","--color-base--bg-blue-soft","--color-error-border","--color-gray-border-03","--color-separator--soft","--font-serif-en","--font-serif-ja","--icon-chevron-down","--width-main"]) assert.ok(!new RegExp('^\\s*'+name+':','m').test(vars),name);
 });
+
+test('legacy list and pagination responsive states are owner-local, admin focus remains visible',()=>{
+ const list=read('css/module/module_newsList-01.css'),card=read('css/module/module_newsCard-01.css');
+ assert.match(list,/\.link,\s*\.no-link\s*\{[^{}]*@media \(calc\(768/);
+ assert.match(card,/\.body\s*\{[^{}]*@media \(calc\(768/);
+ assert.match(read('css/module/module_pager-01.css'),/&:hover:not\(\.current\)/);
+ const pager=read('css/module/module_pager-02.css');
+ assert.match(pager,/&\.back\s*\{\s*order: 3;\s*@media \(calc\(768[^{}]+\{\s*order: 2;/);
+ const admin=read('css/admin-style.css');
+ assert.doesNotMatch(admin,/outline:\s*none/);
+ assert.match(admin,/&:focus-visible\s*\{\s*opacity: 1;\s*outline: 2px solid currentColor/);
+});

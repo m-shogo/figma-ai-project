@@ -20,10 +20,19 @@
     font-size: calc(13 * var(--to-rem-func));
     color: #fff;
     text-decoration: none;
-    outline: none;
     box-shadow: none;
     transition: opacity 0.5s;
+    @media (any-hover: hover) {
+        &:hover {
+            opacity: 0.3;
+        }
+    }
+    &:focus-visible {
+        opacity: 1;
+        outline: 2px solid currentColor;
+        outline-offset: -4px;
+    }
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
 }
-.admin_pageTop a:hover {
-    opacity: 0.3;
-} /*# sourceMappingURL=admin-style.css.map */
