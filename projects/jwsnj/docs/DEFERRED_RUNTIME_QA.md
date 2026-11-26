@@ -217,3 +217,5 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 - Existing TOP banner malformed attachment IDs: verify boolean/float/array/negative do not resolve another photo, valid numeric-string and title-only valid link retain output. PHP stub, actual WordPress #523; Figma photo still watermarked #524.
 
 - Course schedule `jwsnj-course-schedule`: outer Group, chronological child Groups with optional Image + Paragraph. Verify editor save/reopen, native block wrappers, 200px/4:3 image, alternating PC rows, long text, 0/1/8 entries, missing image, captions, narrow stacking and no overlap. Current Figma slots are gray placeholders, not photos; do not seed them. SP provisional. #523 actual WP/render pending.
+
+- Preschool schedule pattern: verify native pattern discovery under Text, insert into draft, no block recovery warnings, heading centered, eight chronological editable paragraphs, add media before paragraph, save/reopen, add/delete/reorder rows, no automatic page content. #523 actual WP deferred.
