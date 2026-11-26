@@ -3,21 +3,21 @@
 // サイト共通インナー
 // ========================================================================== */
 .global_inner {
-    position: relative;
-    padding-inline: var(--padding-SP);
-    width: 100%;
-    /* transition: padding-inline var(--transition-duration); */
-    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-        max-width: calc(var(--width-base) + var(--padding-TB) * 2);
-        margin-inline: auto;
-        padding-inline: var(--padding-TB);
-        &._column {
-            display: grid;
-            grid-template-columns: 1fr var(--width-side);
-            gap: calc(40 * var(--to-rem-func));
-        }
-        &._content {
-            max-width: calc(var(--width-content) + var(--padding-TB) * 2);
-        }
+  position: relative;
+  padding-inline: var(--padding-SP);
+  width: 100%;
+  /* transition: padding-inline var(--transition-duration); */
+  @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+    max-width: calc(var(--width-base) + var(--padding-TB) * 2);
+    margin-inline: auto;
+    padding-inline: var(--padding-TB);
+    &._column {
+      display: grid;
+      grid-template-columns: 1fr var(--width-side);
+      gap: calc(40 * var(--to-rem-func));
     }
+    &._content {
+      max-width: calc(var(--width-content) + var(--padding-TB) * 2);
+    }
+  }
 }

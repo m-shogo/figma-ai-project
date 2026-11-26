@@ -3,10 +3,10 @@
 // サイト共通ラッパー
 // ========================================================================== */
 .global_wrapper {
-    padding-top: var(--header-height-SP);
-    /* overflow: hidden; */
-    /* MARK: header_breakpoint */
-    @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
-        padding-top: var(--header-height-PC);
-    }
+  padding-top: var(--header-height-SP);
+  /* overflow: hidden; */
+  /* MARK: header_breakpoint */
+  @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+    padding-top: var(--header-height-PC);
+  }
 }

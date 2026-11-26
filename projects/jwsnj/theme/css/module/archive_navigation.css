@@ -3,19 +3,19 @@
 // サイト共通アーカイブナビ
 // ========================================================================== */
 .archive_navigation {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: calc(40 * var(--to-rem-func));
-    margin-bottom: calc(40 * var(--to-rem-func));
-    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-        grid-template-columns: repeat(3, 1fr);
-        direction: rtl;
-        > * {
-            direction: ltr;
-        }
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: calc(40 * var(--to-rem-func));
+  margin-bottom: calc(40 * var(--to-rem-func));
+  @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+    grid-template-columns: repeat(3, 1fr);
+    direction: rtl;
+    > * {
+      direction: ltr;
     }
+  }
 
-    /* MARK: hover */
-    @media (any-hover: hover) {
-    }
+  /* MARK: hover */
+  @media (any-hover: hover) {
+  }
 }
