@@ -1,5 +1,5 @@
 <?php
-// Existing TOP image repeater. Motion progressively enhances only the complete grid; CTA is separate.
+// Existing TOP image repeater. Swiper progressively enhances only the complete grid; CTA is separate.
 $mv_rows = function_exists('get_field') ? get_field('top_slider-01') : [];
 $mv_items = [];
 // ACF returns attachment IDs; do not coerce a negative ID, array or float into another image.
