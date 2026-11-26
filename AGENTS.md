@@ -455,6 +455,8 @@ Screenshot evidenceはviewportだけで識別しない。
 
 ## Styling
 
+- **Human確定 2026-11-26（全案件）:** 自作フロントエンドコード（CSS/SCSS、HTML、PHPテンプレート、JS/TS/JSX/TSX等）のインデントは1階層につき半角スペース2個、ハードタブなし。`.editorconfig` を正本とする。既存案件も対象範囲を整形専用commitで統一する。vendor/generated/参照正本、言語・構文上の必須例外（Python等）、文字列や表示内容の有意な空白は保持する。formatter設定と既存案件の例外を確認し、無関係な案件への一括整形はしない。
+
 既存target repoのstyle architectureを最優先する。SCSSは前提にしない。全案件のCSS品質・互換性・保守性は `docs/css-strategy.md` の CSS quality gate を着手/差分review時に確認する。Project GuardのCSS警告は理由を確認し、Stylelintは既存toolchain優先で導入・検証する（vendor/generated、Company固有契約を尊重）。
 
 新規React/Next/Vite系で既存規約が無い場合のcurrent candidate:
