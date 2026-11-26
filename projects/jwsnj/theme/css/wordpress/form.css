@@ -20,47 +20,47 @@ input[type='password'],
 select,
 textarea,
 .file label {
-    border: calc(1 * var(--to-rem-func)) solid var(--color-gray-background);
-    padding: 0.5em 1em;
-    width: 100%;
-    min-height: calc(50 * var(--to-rem-func));
-    background-color: var(--color-gray-background);
-    color: var(--color-text);
-    font-size: calc(16 * var(--to-rem-func));
-    transition: border-color var(--transition-duration), background-color var(--transition-duration);
-    &:hover {
-        border-color: var(--color-primary) !important;
-    }
-    &:focus {
-        border-color: var(--color-primary) !important;
-        background-color: var(--color-secondary);
-    }
-    &:focus-visible {
-        outline: 2px solid currentColor;
-        outline-offset: 2px;
-    }
-    &:-webkit-autofill {
-        -webkit-box-shadow: 0 0 0 1000px var(--color-secondary) inset;
-    }
-    &[readonly='readonly'],
-    &[readonly] {
-        border-color: transparent !important;
-        background-color: transparent !important;
-        color: #000;
-    }
+  border: calc(1 * var(--to-rem-func)) solid var(--color-gray-background);
+  padding: 0.5em 1em;
+  width: 100%;
+  min-height: calc(50 * var(--to-rem-func));
+  background-color: var(--color-gray-background);
+  color: var(--color-text);
+  font-size: calc(16 * var(--to-rem-func));
+  transition: border-color var(--transition-duration), background-color var(--transition-duration);
+  &:hover {
+    border-color: var(--color-primary) !important;
+  }
+  &:focus {
+    border-color: var(--color-primary) !important;
+    background-color: var(--color-secondary);
+  }
+  &:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+  &:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px var(--color-secondary) inset;
+  }
+  &[readonly='readonly'],
+  &[readonly] {
+    border-color: transparent !important;
+    background-color: transparent !important;
+    color: #000;
+  }
 }
 select {
-    padding-right: calc(50 * var(--to-rem-func));
+  padding-right: calc(50 * var(--to-rem-func));
 }
 /* // ==========================================================================
     // テキストエリア
     // ========================================================================== */
 textarea {
-    padding: 0.75em 1em;
-    width: 100%;
-    max-width: 100%;
-    min-height: 10em;
-    field-sizing: content;
+  padding: 0.75em 1em;
+  width: 100%;
+  max-width: 100%;
+  min-height: 10em;
+  field-sizing: content;
 }
 
 /* // ==========================================================================
@@ -68,387 +68,387 @@ textarea {
 // ========================================================================== */
 /* // フォームサイズ指定用 */
 .size-SS {
-    width: 5em !important;
+  width: 5em !important;
 }
 .size-S {
-    width: 8em !important;
+  width: 8em !important;
 }
 .size-M {
-    width: 15em !important;
+  width: 15em !important;
 }
 .size-L {
-    width: 100% !important;
-    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-        width: 20em !important;
-    }
+  width: 100% !important;
+  @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+    width: 20em !important;
+  }
 }
 .size-LL {
-    width: 100% !important;
+  width: 100% !important;
 }
 .size-SS,
 .size-S,
 .size-M,
 .size-L,
 .size-LL {
-    & input,
-    & select {
-        width: 100% !important;
-    }
+  & input,
+  & select {
+    width: 100% !important;
+  }
 }
 /* // 共通・リセット */
 .wpcf7-form-control-wrap {
-    display: block;
+  display: block;
 }
 .wpcf7-list-item {
-    display: block !important;
-    margin: 0 !important;
+  display: block !important;
+  margin: 0 !important;
 }
 /* // ==========================================================================
 // セレクトボックス（div.selectで囲む必要あり）
 /* // ========================================================================== */
 .select {
-    position: relative;
-    &::after {
-        content: '\f107';
-        position: absolute;
-        right: calc(20 * var(--to-rem-func));
-        top: 0.75em; /* エラーメッセージが下に挿入されるためトップからの距離で指定 */
-        font-family: var(--font-awesome);
-        font-size: calc(20 * var(--to-rem-func));
-        color: var(--color-text);
-        pointer-events: none;
+  position: relative;
+  &::after {
+    content: '\f107';
+    position: absolute;
+    right: calc(20 * var(--to-rem-func));
+    top: 0.75em; /* エラーメッセージが下に挿入されるためトップからの距離で指定 */
+    font-family: var(--font-awesome);
+    font-size: calc(20 * var(--to-rem-func));
+    color: var(--color-text);
+    pointer-events: none;
+  }
+  select {
+    padding-right: calc(40 * var(--to-rem-func)) !important;
+    &::-ms-expand {
+      display: none;
     }
-    select {
-        padding-right: calc(40 * var(--to-rem-func)) !important;
-        &::-ms-expand {
-            display: none;
-        }
-    }
+  }
 }
 /* // ==========================================================================
 // チェックボックス・ラジオボタン
 // ========================================================================== */
 .wpcf7-form-control {
-    &.wpcf7-checkbox,
-    &.wpcf7-radio {
-        .wpcf7-list-item {
-            &:not(:first-child) {
-                dd:not([class]) & {
-                    margin-top: calc(10 * var(--to-rem-func)) !important;
-                }
-            }
+  &.wpcf7-checkbox,
+  &.wpcf7-radio {
+    .wpcf7-list-item {
+      &:not(:first-child) {
+        dd:not([class]) & {
+          margin-top: calc(10 * var(--to-rem-func)) !important;
         }
+      }
     }
+  }
 }
 input {
-    /* // 共通 */
-    &[type='checkbox'],
-    &[type='radio'],
-    &[type='checkbox'] + input[type='hidden'],
-    &[type='radio'] + input[type='hidden'] {
-        display: none;
-        + span {
-            display: inline-block;
-            position: relative;
-            padding-left: calc(30 * var(--to-rem-func));
-            &::before,
-            &::after {
-                content: '';
-                display: block;
-                position: absolute;
-                left: 0;
-                top: 0.25em;
-                width: calc(20 * var(--to-rem-func));
-                height: calc(20 * var(--to-rem-func));
-                transition: var(--transition-duration);
-            }
-            &::before {
-                border: calc(1 * var(--to-rem-func)) solid var(--color-gray-border);
-            }
-            &::after {
-            }
-        }
-        &:hover {
-            + span {
-                &::before {
-                    border-color: var(--color-primary);
-                }
-            }
-        }
+  /* // 共通 */
+  &[type='checkbox'],
+  &[type='radio'],
+  &[type='checkbox'] + input[type='hidden'],
+  &[type='radio'] + input[type='hidden'] {
+    display: none;
+    + span {
+      display: inline-block;
+      position: relative;
+      padding-left: calc(30 * var(--to-rem-func));
+      &::before,
+      &::after {
+        content: '';
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 0.25em;
+        width: calc(20 * var(--to-rem-func));
+        height: calc(20 * var(--to-rem-func));
+        transition: var(--transition-duration);
+      }
+      &::before {
+        border: calc(1 * var(--to-rem-func)) solid var(--color-gray-border);
+      }
+      &::after {
+      }
     }
-    /* // 選択時のベースカラー */
-    &[type='checkbox']:checked,
-    &[type='radio']:checked,
-    &[type='checkbox']:checked + input[type='hidden'],
-    &[type='radio']:checked + input[type='hidden'] {
-        + span {
-            &::after {
-                background-color: var(--color-primary);
-            }
+    &:hover {
+      + span {
+        &::before {
+          border-color: var(--color-primary);
         }
+      }
     }
-    /* // チェックボックス */
-    &[type='checkbox'],
-    &[type='checkbox'] + input[type='hidden'] {
-        + span {
-            &::before,
-            &::after {
-            }
-            &::before {
-            }
-            &::after {
-                content: '\f00c';
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-family: var(--font-awesome);
-                color: var(--color-secondary);
-            }
-        }
+  }
+  /* // 選択時のベースカラー */
+  &[type='checkbox']:checked,
+  &[type='radio']:checked,
+  &[type='checkbox']:checked + input[type='hidden'],
+  &[type='radio']:checked + input[type='hidden'] {
+    + span {
+      &::after {
+        background-color: var(--color-primary);
+      }
     }
-    /* // ラジオボタン */
-    &[type='radio'],
-    &[type='radio'] + input[type='hidden'] {
-        + span {
-            &::before,
-            &::after {
-                border-radius: 50%;
-            }
-            &::before {
-            }
-            &::after {
-                transform: scale(0.6);
-            }
-        }
+  }
+  /* // チェックボックス */
+  &[type='checkbox'],
+  &[type='checkbox'] + input[type='hidden'] {
+    + span {
+      &::before,
+      &::after {
+      }
+      &::before {
+      }
+      &::after {
+        content: '\f00c';
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--font-awesome);
+        color: var(--color-secondary);
+      }
     }
+  }
+  /* // ラジオボタン */
+  &[type='radio'],
+  &[type='radio'] + input[type='hidden'] {
+    + span {
+      &::before,
+      &::after {
+        border-radius: 50%;
+      }
+      &::before {
+      }
+      &::after {
+        transform: scale(0.6);
+      }
+    }
+  }
 }
 /* // ==========================================================================
 // チェックボックス・ラジオボタン（ボタン型）
 // ========================================================================== */
 ._button-checkbox,
 ._button-radio {
-    .wpcf7-form-control {
-        display: flex;
-        flex-wrap: wrap;
-        /* // ボタンサイズ・余白 */
-        .wpcf7-list-item {
-            width: calc(50% - calc(5 * var(--to-rem-func)));
-            @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-                width: calc(50% - calc(10 * var(--to-rem-func)));
-            }
-            &:nth-child(2n) {
-                margin-left: calc(10 * var(--to-rem-func)) !important;
-                @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-                    margin-left: calc(20 * var(--to-rem-func)) !important;
-                }
-            }
-            &:nth-child(n + 3) {
-                margin-top: calc(10 * var(--to-rem-func)) !important;
-                @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-                    margin-top: calc(20 * var(--to-rem-func)) !important;
-                }
-            }
-            /* // ボタン共通 */
-            input {
-                &[type='radio'],
-                &[type='checkbox'] {
-                    + .wpcf7-list-item-label {
-                        display: block;
-                        position: relative;
-                        border: calc(1 * var(--to-rem-func)) solid var(--color-primary);
-                        border-radius: 3em;
-                        width: 100%;
-                        font-size: calc(16 * var(--to-rem-func));
-                        line-height: 1.3;
-                        text-align: center;
-                        text-decoration: none;
-                        transition: background-color var(--transition-duration), color var(--transition-duration);
-                        background-color: var(--color-primary);
-                        color: var(--color-secondary);
-                        padding: 0;
-                        max-width: none;
-                        span {
-                            display: block;
-                        }
-                    }
-                    &:hover {
-                        + .wpcf7-list-item-label {
-                            background-color: var(--color-primary);
-                            color: var(--color-secondary);
-                        }
-                    }
-                }
-                /* // チェックボックス */
-                &[type='checkbox'],
-                &[type='checkbox'] + input[type='hidden'] {
-                    + .wpcf7-list-item-label {
-                        &::before {
-                            content: none;
-                        }
-                        &::after {
-                            left: calc(20 * var(--to-rem-func));
-                            top: 50%;
-                            border-color: transparent;
-                            background-color: transparent;
-                            color: var(--color-secondary);
-                            transform: translateY(-50%);
-                        }
-                    }
-                }
-                /* // ラジオボタン */
-                &[type='radio'] {
-                    + .wpcf7-list-item-label {
-                        padding-right: calc(20 * var(--to-rem-func));
-                        padding-left: calc(20 * var(--to-rem-func));
-                        &::before,
-                        &::after {
-                            content: none;
-                        }
-                    }
-                }
-                /* // 確認画面用 */
-                &[type='radio']:checked,
-                &[type='checkbox']:checked,
-                &[type='hidden'] {
-                    + .wpcf7-list-item-label {
-                        border-color: var(--color-primary);
-                        background-color: var(--color-primary);
-                        color: var(--color-secondary);
-                    }
-                }
-                &[type='radio']:checked + input[type='hidden'],
-                &[type='checkbox']:checked + input[type='hidden'] {
-                    + span {
-                        &::before {
-                            content: none;
-                        }
-                    }
-                }
-                &[type='radio']:checked + input[type='hidden'] {
-                    + span {
-                        &::after {
-                            content: none;
-                        }
-                    }
-                }
-            }
+  .wpcf7-form-control {
+    display: flex;
+    flex-wrap: wrap;
+    /* // ボタンサイズ・余白 */
+    .wpcf7-list-item {
+      width: calc(50% - calc(5 * var(--to-rem-func)));
+      @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+        width: calc(50% - calc(10 * var(--to-rem-func)));
+      }
+      &:nth-child(2n) {
+        margin-left: calc(10 * var(--to-rem-func)) !important;
+        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+          margin-left: calc(20 * var(--to-rem-func)) !important;
         }
+      }
+      &:nth-child(n + 3) {
+        margin-top: calc(10 * var(--to-rem-func)) !important;
+        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+          margin-top: calc(20 * var(--to-rem-func)) !important;
+        }
+      }
+      /* // ボタン共通 */
+      input {
+        &[type='radio'],
+        &[type='checkbox'] {
+          + .wpcf7-list-item-label {
+            display: block;
+            position: relative;
+            border: calc(1 * var(--to-rem-func)) solid var(--color-primary);
+            border-radius: 3em;
+            width: 100%;
+            font-size: calc(16 * var(--to-rem-func));
+            line-height: 1.3;
+            text-align: center;
+            text-decoration: none;
+            transition: background-color var(--transition-duration), color var(--transition-duration);
+            background-color: var(--color-primary);
+            color: var(--color-secondary);
+            padding: 0;
+            max-width: none;
+            span {
+              display: block;
+            }
+          }
+          &:hover {
+            + .wpcf7-list-item-label {
+              background-color: var(--color-primary);
+              color: var(--color-secondary);
+            }
+          }
+        }
+        /* // チェックボックス */
+        &[type='checkbox'],
+        &[type='checkbox'] + input[type='hidden'] {
+          + .wpcf7-list-item-label {
+            &::before {
+              content: none;
+            }
+            &::after {
+              left: calc(20 * var(--to-rem-func));
+              top: 50%;
+              border-color: transparent;
+              background-color: transparent;
+              color: var(--color-secondary);
+              transform: translateY(-50%);
+            }
+          }
+        }
+        /* // ラジオボタン */
+        &[type='radio'] {
+          + .wpcf7-list-item-label {
+            padding-right: calc(20 * var(--to-rem-func));
+            padding-left: calc(20 * var(--to-rem-func));
+            &::before,
+            &::after {
+              content: none;
+            }
+          }
+        }
+        /* // 確認画面用 */
+        &[type='radio']:checked,
+        &[type='checkbox']:checked,
+        &[type='hidden'] {
+          + .wpcf7-list-item-label {
+            border-color: var(--color-primary);
+            background-color: var(--color-primary);
+            color: var(--color-secondary);
+          }
+        }
+        &[type='radio']:checked + input[type='hidden'],
+        &[type='checkbox']:checked + input[type='hidden'] {
+          + span {
+            &::before {
+              content: none;
+            }
+          }
+        }
+        &[type='radio']:checked + input[type='hidden'] {
+          + span {
+            &::after {
+              content: none;
+            }
+          }
+        }
+      }
     }
+  }
 }
 /* // ==========================================================================
 // ファイル
 // ========================================================================== */
 .file {
-    display: flex;
-    flex-direction: column-reverse;
+  display: flex;
+  flex-direction: column-reverse;
+  position: relative;
+  .wpcf7-form-control-wrap {
+    input {
+      display: none;
+    }
+  }
+  label {
     position: relative;
-    .wpcf7-form-control-wrap {
-        input {
-            display: none;
-        }
+    &::before {
+      content: '選択されていません';
+      top: 50%;
+      left: 1em;
+      transform: translateY(-50%);
     }
-    label {
-        position: relative;
-        &::before {
-            content: '選択されていません';
-            top: 50%;
-            left: 1em;
-            transform: translateY(-50%);
-        }
-        &._changed {
-            &::before {
-                content: '';
-            }
-            & + .clear-file {
-                display: block;
-            }
-        }
+    &._changed {
+      &::before {
+        content: '';
+      }
+      & + .clear-file {
+        display: block;
+      }
     }
-    .clear-file {
-        content: '\f00d';
-        display: none;
-        position: absolute;
-        right: 0;
-        top: 0;
-        z-index: 2;
-        width: calc(50 * var(--to-rem-func));
-        height: calc(50 * var(--to-rem-func));
-        background-color: transparent;
-        font-family: var(--font-awesome);
-        color: var(--color-text);
-    }
+  }
+  .clear-file {
+    content: '\f00d';
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 2;
+    width: calc(50 * var(--to-rem-func));
+    height: calc(50 * var(--to-rem-func));
+    background-color: transparent;
+    font-family: var(--font-awesome);
+    color: var(--color-text);
+  }
 }
 /* // ==========================================================================
 // 送信ボタン
 // ========================================================================== */
 .form_button {
-    display: flex;
-    justify-content: center;
-    margin-top: calc(50 * var(--to-rem-func));
-    /* // 確認画面なしの場合は削除 */
-    &._flex {
-        flex-wrap: wrap;
-        margin-right: calc(-10 * var(--to-rem-func));
-        margin-bottom: calc(-20 * var(--to-rem-func));
-        margin-left: calc(-10 * var(--to-rem-func));
-    }
-    /* //////////////////////// */
+  display: flex;
+  justify-content: center;
+  margin-top: calc(50 * var(--to-rem-func));
+  /* // 確認画面なしの場合は削除 */
+  &._flex {
+    flex-wrap: wrap;
+    margin-right: calc(-10 * var(--to-rem-func));
+    margin-bottom: calc(-20 * var(--to-rem-func));
+    margin-left: calc(-10 * var(--to-rem-func));
+  }
+  /* //////////////////////// */
 }
 .form_button-01 {
-    padding: 0;
-    background-color: var(--color-primary);
+  padding: 0;
+  background-color: var(--color-primary);
+  color: var(--color-secondary);
+  /* // 確認画面なしの場合は削除 */
+  .form_button._flex & {
+    margin-right: calc(10 * var(--to-rem-func));
+    margin-left: calc(10 * var(--to-rem-func));
+    margin-bottom: calc(20 * var(--to-rem-func));
+  }
+  /* //////////////////////// */
+  &:hover {
+    background-color: var(--color-secondary);
+    color: var(--color-primary);
+  }
+  /* // 承諾確認未チェック時 */
+  &._disabled {
+    border-color: var(--color-gray-border);
+    background-color: var(--color-gray-border);
     color: var(--color-secondary);
-    /* // 確認画面なしの場合は削除 */
-    .form_button._flex & {
-        margin-right: calc(10 * var(--to-rem-func));
-        margin-left: calc(10 * var(--to-rem-func));
-        margin-bottom: calc(20 * var(--to-rem-func));
-    }
-    /* //////////////////////// */
+    pointer-events: none;
+  }
+  /* // 確認画面なしの場合は削除 */
+  &._prev {
+    background-color: var(--color-secondary);
+    color: var(--color-primary);
     &:hover {
-        background-color: var(--color-secondary);
-        color: var(--color-primary);
+      background-color: var(--color-primary);
+      color: var(--color-secondary);
     }
-    /* // 承諾確認未チェック時 */
-    &._disabled {
-        border-color: var(--color-gray-border);
-        background-color: var(--color-gray-border);
-        color: var(--color-secondary);
-        pointer-events: none;
-    }
-    /* // 確認画面なしの場合は削除 */
-    &._prev {
-        background-color: var(--color-secondary);
-        color: var(--color-primary);
-        &:hover {
-            background-color: var(--color-primary);
-            color: var(--color-secondary);
-        }
-    }
-    &._next {
-    }
-    /* //////////////////////// */
-    input[type='submit'],
-    input[type='button'] {
-        position: relative;
-        z-index: 2;
-        padding-block: calc(15 * var(--to-rem-func));
-        padding-inline: calc(50 * var(--to-rem-func));
-        width: 100%;
-        height: 100%;
-        background-color: transparent;
-        color: inherit;
-    }
+  }
+  &._next {
+  }
+  /* //////////////////////// */
+  input[type='submit'],
+  input[type='button'] {
+    position: relative;
+    z-index: 2;
+    padding-block: calc(15 * var(--to-rem-func));
+    padding-inline: calc(50 * var(--to-rem-func));
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    color: inherit;
+  }
 }
 /* // ==========================================================================
 // ajaxローダー
 // ========================================================================== */
 .ajax-loader {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin: 0 !important;
-    transform: translate(-50%, -50%);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: 0 !important;
+  transform: translate(-50%, -50%);
 }
 /* // ==========================================================================
 // エラー用パーツ
@@ -457,411 +457,411 @@ input {
 input:not([type='checkbox']):not([type='radio']):not([type='file']):not([type='button']):not([type='submit']):not([type='search']),
 select,
 textarea {
-    &.wpcf7-not-valid {
-        border: calc(1 * var(--to-rem-func)) solid var(--color-error-text) !important;
-        background: var(--color-error-background) !important;
-        &.wpcf7-radio,
-        &.wpcf7-checkbox {
-            border: none !important;
-            background: none !important;
-        }
+  &.wpcf7-not-valid {
+    border: calc(1 * var(--to-rem-func)) solid var(--color-error-text) !important;
+    background: var(--color-error-background) !important;
+    &.wpcf7-radio,
+    &.wpcf7-checkbox {
+      border: none !important;
+      background: none !important;
     }
+  }
 }
 /* // テキスト */
 .wpcf7-not-valid-tip {
-    display: block;
-    color: var(--color-error-text) !important;
+  display: block;
+  color: var(--color-error-text) !important;
 }
 /* // メッセージ共通 */
 .wpcf7-response-output,
 .wpcf7-validation-errors,
 .wpcf7-mail-sent-ok {
-    margin: 3em auto;
-    padding: 1em !important;
-    font-weight: bold;
-    color: var(--color-error-text);
-    text-align: center;
+  margin: 3em auto;
+  padding: 1em !important;
+  font-weight: bold;
+  color: var(--color-error-text);
+  text-align: center;
 }
 /* // エラーメッセージ */
 .wpcf7-response-output,
 .wpcf7-validation-errors {
-    border: calc(1 * var(--to-rem-func)) solid var(--color-error-text) !important;
-    color: var(--color-error-text);
+  border: calc(1 * var(--to-rem-func)) solid var(--color-error-text) !important;
+  color: var(--color-error-text);
 }
 /* // 送信完了メッセージ */
 .wpcf7-mail-sent-ok {
-    border: calc(1 * var(--to-rem-func)) solid var(--color-primary) !important;
-    color: var(--color-primary);
+  border: calc(1 * var(--to-rem-func)) solid var(--color-primary) !important;
+  color: var(--color-primary);
 }
 /* // ==========================================================================
 // カラム
 // ========================================================================== */
 [class*='form_column-col'] {
-    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-        margin: 0 auto;
-        max-width: calc(750 * var(--to-rem-func));
+  @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+    margin: 0 auto;
+    max-width: calc(750 * var(--to-rem-func));
+  }
+  & + p {
+    margin-top: calc(50 * var(--to-rem-func));
+  }
+  > div {
+    &:not(:first-child) {
+      margin-top: calc(30 * var(--to-rem-func));
     }
-    & + p {
-        margin-top: calc(50 * var(--to-rem-func));
+    dt {
+      display: flex;
+      align-items: center;
+      .label-need,
+      .label-any {
+        margin-right: 1em;
+        padding: 0 0.5em;
+        color: var(--color-secondary);
+        font-size: calc(14 * var(--to-rem-func));
+        overflow-wrap: anywhere;
+      }
+      .label-need {
+        background-color: var(--color-error-text);
+      }
+      .label-any {
+        background-color: var(--color-primary);
+      }
+      .title {
+      }
     }
-    > div {
-        &:not(:first-child) {
-            margin-top: calc(30 * var(--to-rem-func));
+    dd {
+      margin-top: calc(10 * var(--to-rem-func));
+      /* // 横並び用 */
+      &._flex {
+        display: flex;
+        flex-wrap: wrap;
+        hr {
+          margin: calc(5 * var(--to-rem-func)) 0;
+          width: 100%;
+          border: none;
+          @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+            display: none;
+          }
         }
-        dt {
-            display: flex;
-            align-items: center;
-            .label-need,
-            .label-any {
-                margin-right: 1em;
-                padding: 0 0.5em;
-                color: var(--color-secondary);
-                font-size: calc(14 * var(--to-rem-func));
-                overflow-wrap: anywhere;
+        .select {
+          &:not(:last-of-type) {
+            .wpcf7-not-valid-tip {
+              margin-bottom: calc(8 * var(--to-rem-func));
             }
-            .label-need {
-                background-color: var(--color-error-text);
-            }
-            .label-any {
-                background-color: var(--color-primary);
-            }
-            .title {
-            }
+          }
         }
-        dd {
+      }
+      .text {
+        margin: calc(10 * var(--to-rem-func)) calc(10 * var(--to-rem-func)) 0;
+        &:first-child {
+          margin-left: 0;
+        }
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+      /* // 2カラム用 */
+      ul {
+        li {
+          display: flex;
+          align-items: flex-start;
+          & + li {
             margin-top: calc(10 * var(--to-rem-func));
-            /* // 横並び用 */
-            &._flex {
-                display: flex;
-                flex-wrap: wrap;
-                hr {
-                    margin: calc(5 * var(--to-rem-func)) 0;
-                    width: 100%;
-                    border: none;
-                    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-                        display: none;
-                    }
-                }
-                .select {
-                    &:not(:last-of-type) {
-                        .wpcf7-not-valid-tip {
-                            margin-bottom: calc(8 * var(--to-rem-func));
-                        }
-                    }
-                }
+          }
+          .title {
+            flex: none;
+            margin: calc(10 * var(--to-rem-func)) calc(10 * var(--to-rem-func)) 0;
+            width: calc(80 * var(--to-rem-func));
+            &:first-child {
+              margin-left: 0;
             }
-            .text {
-                margin: calc(10 * var(--to-rem-func)) calc(10 * var(--to-rem-func)) 0;
-                &:first-child {
-                    margin-left: 0;
-                }
-                &:last-child {
-                    margin-right: 0;
-                }
+            &:last-child {
+              margin-right: 0;
             }
-            /* // 2カラム用 */
-            ul {
-                li {
-                    display: flex;
-                    align-items: flex-start;
-                    & + li {
-                        margin-top: calc(10 * var(--to-rem-func));
-                    }
-                    .title {
-                        flex: none;
-                        margin: calc(10 * var(--to-rem-func)) calc(10 * var(--to-rem-func)) 0;
-                        width: calc(80 * var(--to-rem-func));
-                        &:first-child {
-                            margin-left: 0;
-                        }
-                        &:last-child {
-                            margin-right: 0;
-                        }
-                    }
-                }
-            }
+          }
         }
+      }
     }
+  }
 }
 .form_column-col1 {
-    > div {
-        dt {
-        }
-        dd {
-        }
+  > div {
+    dt {
     }
+    dd {
+    }
+  }
 }
 .form_column-col2 {
-    > div {
-        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-            display: flex;
-            flex-wrap: nowrap;
-        }
-        dt {
-            @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-                align-items: flex-start;
-                padding-right: calc(50 * var(--to-rem-func));
-                width: calc(300 * var(--to-rem-func));
-            }
-        }
-        dd {
-            @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-                margin-top: 0;
-                width: calc(100% - 300 * var(--to-rem-func));
-            }
-        }
+  > div {
+    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+      display: flex;
+      flex-wrap: nowrap;
     }
+    dt {
+      @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+        align-items: flex-start;
+        padding-right: calc(50 * var(--to-rem-func));
+        width: calc(300 * var(--to-rem-func));
+      }
+    }
+    dd {
+      @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+        margin-top: 0;
+        width: calc(100% - 300 * var(--to-rem-func));
+      }
+    }
+  }
 }
 /* // ==========================================================================
 // 確認画面パーツ
 // ========================================================================== */
 .form_flowList-01 {
-    display: flex;
-    overflow: hidden;
-    margin-bottom: calc(50 * var(--to-rem-func));
-    height: calc(80 * var(--to-rem-func));
-    li {
-        position: relative;
-        height: inherit;
-        width: calc(100% / 3 - calc(30 * var(--to-rem-func)) / 3);
-        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-            width: calc(100% / 3 - calc(100 * var(--to-rem-func)) / 3);
-        }
-        &::before,
-        &::after {
-            content: '';
-            display: block;
-            position: absolute;
-            top: 0;
-            width: 0;
-            height: 0;
-            border-style: solid;
-            border-width: calc(40 * var(--to-rem-func)) 0 calc(40 * var(--to-rem-func)) calc(12 * var(--to-rem-func));
-            @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-                border-width: calc(40 * var(--to-rem-func)) 0 calc(40 * var(--to-rem-func)) calc(43 * var(--to-rem-func));
-            }
-        }
-        &::before {
-            right: calc(-12 * var(--to-rem-func));
-            border-color: transparent transparent transparent var(--color-primary);
-            @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-                right: calc(-43 * var(--to-rem-func));
-            }
-        }
-        &::after {
-            right: calc(-11 * var(--to-rem-func));
-            border-color: transparent transparent transparent var(--color-secondary);
-            @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-                right: calc(-42 * var(--to-rem-func));
-            }
-        }
-        & + li {
-            margin-left: calc(15 * var(--to-rem-func));
-            @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-                margin-left: calc(50 * var(--to-rem-func));
-            }
-        }
-        &:last-child {
-            &::before,
-            &::after {
-                content: none;
-            }
-        }
-        &:not(:last-child) {
-            div {
-                padding-left: calc(5 * var(--to-rem-func));
-                @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-                    padding-left: calc(20 * var(--to-rem-func));
-                }
-            }
-        }
-        &._current {
-            &::after {
-                border-color: transparent transparent transparent var(--color-primary);
-            }
-            div {
-                background-color: var(--color-primary);
-                color: var(--color-secondary);
-            }
-        }
-        > div {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            border: calc(1 * var(--to-rem-func)) solid var(--color-primary);
-            width: 100%;
-            height: inherit;
-            background-color: var(--color-secondary);
-            color: var(--color-primary);
-            @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-                flex-direction: row;
-            }
-            .title-sub {
-                font-family: var(--font-sansSerif-en);
-                @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-                    margin-right: calc(10 * var(--to-rem-func));
-                }
-            }
-            .title-main {
-                @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-                    font-size: calc(18 * var(--to-rem-func));
-                }
-            }
-        }
+  display: flex;
+  overflow: hidden;
+  margin-bottom: calc(50 * var(--to-rem-func));
+  height: calc(80 * var(--to-rem-func));
+  li {
+    position: relative;
+    height: inherit;
+    width: calc(100% / 3 - calc(30 * var(--to-rem-func)) / 3);
+    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+      width: calc(100% / 3 - calc(100 * var(--to-rem-func)) / 3);
     }
+    &::before,
+    &::after {
+      content: '';
+      display: block;
+      position: absolute;
+      top: 0;
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: calc(40 * var(--to-rem-func)) 0 calc(40 * var(--to-rem-func)) calc(12 * var(--to-rem-func));
+      @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+        border-width: calc(40 * var(--to-rem-func)) 0 calc(40 * var(--to-rem-func)) calc(43 * var(--to-rem-func));
+      }
+    }
+    &::before {
+      right: calc(-12 * var(--to-rem-func));
+      border-color: transparent transparent transparent var(--color-primary);
+      @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+        right: calc(-43 * var(--to-rem-func));
+      }
+    }
+    &::after {
+      right: calc(-11 * var(--to-rem-func));
+      border-color: transparent transparent transparent var(--color-secondary);
+      @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+        right: calc(-42 * var(--to-rem-func));
+      }
+    }
+    & + li {
+      margin-left: calc(15 * var(--to-rem-func));
+      @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+        margin-left: calc(50 * var(--to-rem-func));
+      }
+    }
+    &:last-child {
+      &::before,
+      &::after {
+        content: none;
+      }
+    }
+    &:not(:last-child) {
+      div {
+        padding-left: calc(5 * var(--to-rem-func));
+        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+          padding-left: calc(20 * var(--to-rem-func));
+        }
+      }
+    }
+    &._current {
+      &::after {
+        border-color: transparent transparent transparent var(--color-primary);
+      }
+      div {
+        background-color: var(--color-primary);
+        color: var(--color-secondary);
+      }
+    }
+    > div {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      border: calc(1 * var(--to-rem-func)) solid var(--color-primary);
+      width: 100%;
+      height: inherit;
+      background-color: var(--color-secondary);
+      color: var(--color-primary);
+      @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+        flex-direction: row;
+      }
+      .title-sub {
+        font-family: var(--font-sansSerif-en);
+        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+          margin-right: calc(10 * var(--to-rem-func));
+        }
+      }
+      .title-main {
+        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+          font-size: calc(18 * var(--to-rem-func));
+        }
+      }
+    }
+  }
 }
 /* // ==========================================================================
 // その他
 // ========================================================================== */
 /* // 外部CSS遅延読み込み時のちらつき対策用 */
 .wpcf7c-force-hide {
-    display: none !important;
+  display: none !important;
 }
 .wpcf7-display-none {
-    display: none;
+  display: none;
 }
 
 /* // ==========================================================================
 // パーツ（formidable form）
 // ========================================================================== */
 .frm_forms {
-    h2 {
-        font-size: 2.5rem;
-        font-weight: bold;
-        border-bottom: calc(2 * var(--to-rem-func)) solid #ccc;
-        margin: calc(20 * var(--to-rem-func)) 0 calc(40 * var(--to-rem-func));
+  h2 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    border-bottom: calc(2 * var(--to-rem-func)) solid #ccc;
+    margin: calc(20 * var(--to-rem-func)) 0 calc(40 * var(--to-rem-func));
+  }
+  @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+    margin: 0 auto;
+    max-width: calc(750 * var(--to-rem-func));
+  }
+  .frm_form_field {
+    margin-bottom: calc(30 * var(--to-rem-func));
+  }
+  .frm_select {
+    position: relative;
+    cursor: pointer;
+    &::after {
+      content: '\f107';
+      position: absolute;
+      font-family: var(--font-awesome);
+      color: var(--color-text);
+      pointer-events: none;
+      font-size: calc(20 * var(--to-rem-func));
+      top: 50%;
+      right: calc(20 * var(--to-rem-func));
+      transform: translateY(-50%);
     }
-    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-        margin: 0 auto;
-        max-width: calc(750 * var(--to-rem-func));
-    }
-    .frm_form_field {
-        margin-bottom: calc(30 * var(--to-rem-func));
-    }
-    .frm_select {
+  }
+  /* Keep the plugin's semantic inputs and label text; native controls own checked state. */
+  .frm_opt_container {
+    .frm_checkbox,
+    .frm_radio {
+      margin-bottom: calc(10 * var(--to-rem-func)) !important;
+      margin-right: calc(20 * var(--to-rem-func));
+      min-width: 0;
+      label {
         position: relative;
-        cursor: pointer;
-        &::after {
-            content: '\f107';
-            position: absolute;
-            font-family: var(--font-awesome);
-            color: var(--color-text);
-            pointer-events: none;
-            font-size: calc(20 * var(--to-rem-func));
-            top: 50%;
-            right: calc(20 * var(--to-rem-func));
-            transform: translateY(-50%);
-        }
-    }
-    /* Keep the plugin's semantic inputs and label text; native controls own checked state. */
-    .frm_opt_container {
-        .frm_checkbox,
-        .frm_radio {
-            margin-bottom: calc(10 * var(--to-rem-func)) !important;
-            margin-right: calc(20 * var(--to-rem-func));
-            min-width: 0;
-            label {
-                position: relative;
-                display: flex;
-                align-items: flex-start;
-                gap: calc(8 * var(--to-rem-func));
-                padding: 0;
-                color: var(--color-text);
-                overflow-wrap: anywhere;
-                line-height: 1.3;
-                &:focus-within {
-                    outline: 2px solid currentColor;
-                    outline-offset: 2px;
-                }
-                @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-                    margin-right: calc(20 * var(--to-rem-func));
-                }
-            }
-            input:is([type='checkbox'], [type='radio']) {
-                /* Plugin styles can specify appearance and dimensions with important. */
-                appearance: auto !important;
-                accent-color: var(--color-primary);
-                display: inline-block !important;
-                position: static !important;
-                flex: 0 0 auto;
-                width: 1.25em !important;
-                min-width: 1.25em !important;
-                height: 1.25em !important;
-                margin: 0.05em 0 0 !important;
-                padding: 0;
-                &::before,
-                &::after {
-                    content: none !important;
-                }
-                &:focus-visible {
-                    outline: 2px solid currentColor;
-                    outline-offset: 2px;
-                }
-            }
-        }
-    }
-    .frm_button {
-        .frm_opt_container {
-            flex-wrap: wrap;
-            .frm_checkbox,
-            .frm_radio {
-                margin-bottom: calc(20 * var(--to-rem-func));
-                margin-right: 0;
-                label {
-                    width: min(100%, calc(150 * var(--to-rem-func)));
-                    min-height: calc(50 * var(--to-rem-func));
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    text-align: center;
-                    padding: 0.5em 0.75em;
-                    border: calc(1 * var(--to-rem-func)) solid var(--color-primary);
-                    border-radius: 3em;
-                    color: var(--color-primary);
-                    &:has(input:checked) {
-                        background-color: var(--color-primary);
-                        color: var(--color-secondary);
-                    }
-                    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-                        width: min(100%, calc(200 * var(--to-rem-func)));
-                    }
-                }
-            }
-        }
-    }
-    /* //ラベル */
-    .frm_primary_label {
-        margin-bottom: calc(10 * var(--to-rem-func));
         display: flex;
         align-items: flex-start;
-        font-weight: 700;
+        gap: calc(8 * var(--to-rem-func));
+        padding: 0;
         color: var(--color-text);
-        &::before {
-            margin-top: calc(2 * var(--to-rem-func));
-            margin-right: 1em;
-            padding: 0.1em 0.5em 0.2em;
-            color: var(--color-secondary);
-            font-size: calc(12 * var(--to-rem-func));
-            overflow-wrap: anywhere;
-            font-weight: normal;
-            display: inline;
+        overflow-wrap: anywhere;
+        line-height: 1.3;
+        &:focus-within {
+          outline: 2px solid currentColor;
+          outline-offset: 2px;
         }
-        &.any {
-            &::before {
-                content: '任意';
-                background-color: var(--color-primary);
-            }
+        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+          margin-right: calc(20 * var(--to-rem-func));
         }
-        &.required {
-            &::before {
-                content: '必須';
-                background-color: var(--color-error-text);
-            }
+      }
+      input:is([type='checkbox'], [type='radio']) {
+        /* Plugin styles can specify appearance and dimensions with important. */
+        appearance: auto !important;
+        accent-color: var(--color-primary);
+        display: inline-block !important;
+        position: static !important;
+        flex: 0 0 auto;
+        width: 1.25em !important;
+        min-width: 1.25em !important;
+        height: 1.25em !important;
+        margin: 0.05em 0 0 !important;
+        padding: 0;
+        &::before,
+        &::after {
+          content: none !important;
         }
+        &:focus-visible {
+          outline: 2px solid currentColor;
+          outline-offset: 2px;
+        }
+      }
     }
-    span.frm_required::before {
-        /* content: '必須';
+  }
+  .frm_button {
+    .frm_opt_container {
+      flex-wrap: wrap;
+      .frm_checkbox,
+      .frm_radio {
+        margin-bottom: calc(20 * var(--to-rem-func));
+        margin-right: 0;
+        label {
+          width: min(100%, calc(150 * var(--to-rem-func)));
+          min-height: calc(50 * var(--to-rem-func));
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+          padding: 0.5em 0.75em;
+          border: calc(1 * var(--to-rem-func)) solid var(--color-primary);
+          border-radius: 3em;
+          color: var(--color-primary);
+          &:has(input:checked) {
+            background-color: var(--color-primary);
+            color: var(--color-secondary);
+          }
+          @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+            width: min(100%, calc(200 * var(--to-rem-func)));
+          }
+        }
+      }
+    }
+  }
+  /* //ラベル */
+  .frm_primary_label {
+    margin-bottom: calc(10 * var(--to-rem-func));
+    display: flex;
+    align-items: flex-start;
+    font-weight: 700;
+    color: var(--color-text);
+    &::before {
+      margin-top: calc(2 * var(--to-rem-func));
+      margin-right: 1em;
+      padding: 0.1em 0.5em 0.2em;
+      color: var(--color-secondary);
+      font-size: calc(12 * var(--to-rem-func));
+      overflow-wrap: anywhere;
+      font-weight: normal;
+      display: inline;
+    }
+    &.any {
+      &::before {
+        content: '任意';
+        background-color: var(--color-primary);
+      }
+    }
+    &.required {
+      &::before {
+        content: '必須';
+        background-color: var(--color-error-text);
+      }
+    }
+  }
+  span.frm_required::before {
+    /* content: '必須';
         font-size: calc(14 * var(--to-rem-func));
         padding: 0.2em 0.5em;
         background: var(--color-error-text);
@@ -870,284 +870,284 @@ textarea {
         position: absolute;
         left: 0;
         top: 0.5em; */
+  }
+  .hyphen {
+    position: relative;
+    padding-right: calc(20 * var(--to-rem-func)) !important;
+    &::after {
+      content: '-';
+      position: absolute;
+      top: 2rem;
+      right: 0;
     }
-    .hyphen {
-        position: relative;
-        padding-right: calc(20 * var(--to-rem-func)) !important;
-        &::after {
-            content: '-';
-            position: absolute;
-            top: 2rem;
-            right: 0;
-        }
+  }
+  @media (width < calc(601 * (1 / 16 * 1rem))) {
+    .spgrid {
+      body & {
+        grid-column: span 4 / span 2 !important;
+      }
     }
-    @media (width < calc(601 * (1 / 16 * 1rem))) {
-        .spgrid {
-            body & {
-                grid-column: span 4 / span 2 !important;
-            }
-        }
+  }
+  .prefectures {
+    .frm_select {
+      width: 120%;
     }
-    .prefectures {
-        .frm_select {
-            width: 120%;
-        }
+  }
+  /* //ファイルアップロード: retain the plugin's dropzone/file ownership. */
+  input[type='file']:not(.frm_transparent) {
+    max-width: 100%;
+    &:focus-visible {
+      outline: 2px solid currentColor;
+      outline-offset: 2px;
     }
-    /* //ファイルアップロード: retain the plugin's dropzone/file ownership. */
-    input[type='file']:not(.frm_transparent) {
-        max-width: 100%;
-        &:focus-visible {
-            outline: 2px solid currentColor;
-            outline-offset: 2px;
-        }
+  }
+  .frm_dropzone {
+    &:focus-within {
+      outline: 2px solid currentColor;
+      outline-offset: 2px;
     }
-    .frm_dropzone {
-        &:focus-within {
-            outline: 2px solid currentColor;
-            outline-offset: 2px;
-        }
-        &.frm_single_upload {
-            max-width: 100% !important;
-            .dz-message {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                flex-direction: column;
-            }
-            svg {
-                max-width: calc(60 * var(--to-rem-func));
-            }
-            button {
-                font-size: calc(16 * var(--to-rem-func)) !important;
-            }
-            .dz-filename {
-                color: var(--color-primary);
-                a {
-                    color: var(--color-primary);
-                }
-            }
-            .frm_remove_link {
-                cursor: pointer;
-                svg {
-                    cursor: pointer;
-                }
-            }
-        }
-    }
-    /* //リピーター */
-    .frm_repeat_buttons {
-        a {
-            color: var(--color-primary);
-        }
-    }
-    /* //プライバシー */
-    .privacy {
-        text-align: center;
-        display: block;
-        .frm_opt_container {
-            display: flex;
-            justify-content: center;
-            .frm_checkbox {
-                margin-right: 0;
-                label {
-                    margin-right: 0;
-                }
-            }
-        }
-        .frm_primary_label {
-            display: none;
-        }
-    }
-    /* //送信ボタン */
-    .frm_submit {
+    &.frm_single_upload {
+      max-width: 100% !important;
+      .dz-message {
         display: flex;
+        align-items: center;
         justify-content: center;
-        flex-wrap: wrap;
-        flex-direction: row-reverse;
-        gap: calc(20 * var(--to-rem-func)) calc(40 * var(--to-rem-func));
-        .frm_button_submit {
-            /* @extend %module_button; */
-            display: block;
-            position: relative;
-            padding-block: calc(15 * var(--to-rem-func));
-            padding-inline: calc(50 * var(--to-rem-func));
-            border: calc(1 * var(--to-rem-func)) solid var(--color-primary);
-            border-radius: 3em;
-            max-width: min(calc(240 * var(--to-rem-func)), 80%);
-            width: 100%;
-            font-size: calc(16 * var(--to-rem-func));
-            line-height: 1.3;
-            text-align: center;
-            text-decoration: none;
-            transition: background-color var(--transition-duration), color var(--transition-duration);
-            background: var(--color-primary);
-            color: var(--color-secondary);
-            span {
-                display: block;
-            }
-            @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-                max-width: calc(260 * var(--to-rem-func));
-            }
-            &:hover {
-                background: var(--color-secondary);
-                color: var(--color-primary);
-            }
+        flex-direction: column;
+      }
+      svg {
+        max-width: calc(60 * var(--to-rem-func));
+      }
+      button {
+        font-size: calc(16 * var(--to-rem-func)) !important;
+      }
+      .dz-filename {
+        color: var(--color-primary);
+        a {
+          color: var(--color-primary);
         }
+      }
+      .frm_remove_link {
+        cursor: pointer;
+        svg {
+          cursor: pointer;
+        }
+      }
     }
-    /* // ==========================================================================
+  }
+  /* //リピーター */
+  .frm_repeat_buttons {
+    a {
+      color: var(--color-primary);
+    }
+  }
+  /* //プライバシー */
+  .privacy {
+    text-align: center;
+    display: block;
+    .frm_opt_container {
+      display: flex;
+      justify-content: center;
+      .frm_checkbox {
+        margin-right: 0;
+        label {
+          margin-right: 0;
+        }
+      }
+    }
+    .frm_primary_label {
+      display: none;
+    }
+  }
+  /* //送信ボタン */
+  .frm_submit {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    flex-direction: row-reverse;
+    gap: calc(20 * var(--to-rem-func)) calc(40 * var(--to-rem-func));
+    .frm_button_submit {
+      /* @extend %module_button; */
+      display: block;
+      position: relative;
+      padding-block: calc(15 * var(--to-rem-func));
+      padding-inline: calc(50 * var(--to-rem-func));
+      border: calc(1 * var(--to-rem-func)) solid var(--color-primary);
+      border-radius: 3em;
+      max-width: min(calc(240 * var(--to-rem-func)), 80%);
+      width: 100%;
+      font-size: calc(16 * var(--to-rem-func));
+      line-height: 1.3;
+      text-align: center;
+      text-decoration: none;
+      transition: background-color var(--transition-duration), color var(--transition-duration);
+      background: var(--color-primary);
+      color: var(--color-secondary);
+      span {
+        display: block;
+      }
+      @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+        max-width: calc(260 * var(--to-rem-func));
+      }
+      &:hover {
+        background: var(--color-secondary);
+        color: var(--color-primary);
+      }
+    }
+  }
+  /* // ==========================================================================
     // 2カラム用（ラベル位置左）
     // ========================================================================== */
-    .frm_form_field {
-        &.frm_left_container {
-            display: grid;
-            grid-template-columns: 1fr;
-            @media (calc(600 * (1 / 16 * 1rem)) <= width) {
-                grid-template-columns: 35% auto;
-            }
-            .frm_primary_label {
-                @media (calc(600 * (1 / 16 * 1rem)) <= width) {
-                    margin-right: calc(40 * var(--to-rem-func));
-                }
-            }
+  .frm_form_field {
+    &.frm_left_container {
+      display: grid;
+      grid-template-columns: 1fr;
+      @media (calc(600 * (1 / 16 * 1rem)) <= width) {
+        grid-template-columns: 35% auto;
+      }
+      .frm_primary_label {
+        @media (calc(600 * (1 / 16 * 1rem)) <= width) {
+          margin-right: calc(40 * var(--to-rem-func));
         }
+      }
     }
-    .frm_conf_field {
-        &.frm_left_container {
-            @media (calc(600 * (1 / 16 * 1rem)) <= width) {
-                grid-template-columns: 65%;
-                justify-content: flex-end;
-            }
-        }
+  }
+  .frm_conf_field {
+    &.frm_left_container {
+      @media (calc(600 * (1 / 16 * 1rem)) <= width) {
+        grid-template-columns: 65%;
+        justify-content: flex-end;
+      }
     }
-    /* // ==========================================================================
+  }
+  /* // ==========================================================================
     // エラーメッセージ
     // ========================================================================== */
-    .frm_error_style,
-    .frm_error,
-    .frm_blank_field {
-        color: var(--color-error-text) !important;
-        input[type='text'],
-        input[type='email'],
-        input[type='url'],
-        input[type='tel'],
-        input[type='number'],
-        input[type='password'],
-        textarea,
-        select {
-            border: calc(1 * var(--to-rem-func)) solid var(--color-error-text) !important;
-        }
+  .frm_error_style,
+  .frm_error,
+  .frm_blank_field {
+    color: var(--color-error-text) !important;
+    input[type='text'],
+    input[type='email'],
+    input[type='url'],
+    input[type='tel'],
+    input[type='number'],
+    input[type='password'],
+    textarea,
+    select {
+      border: calc(1 * var(--to-rem-func)) solid var(--color-error-text) !important;
     }
-    .frm_error_style {
-        padding: calc(5 * var(--to-rem-func));
-        border: calc(1 * var(--to-rem-func)) solid var(--color-error-text);
-        font-weight: bold;
-        text-align: center;
-        margin-bottom: calc(50 * var(--to-rem-func));
-    }
-    /* // ==========================================================================
+  }
+  .frm_error_style {
+    padding: calc(5 * var(--to-rem-func));
+    border: calc(1 * var(--to-rem-func)) solid var(--color-error-text);
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: calc(50 * var(--to-rem-func));
+  }
+  /* // ==========================================================================
     // 確認画面
     // ========================================================================== */
-    .frm-summary-page-wrapper {
-        .frm-child-row + tr {
-            display: none;
+  .frm-summary-page-wrapper {
+    .frm-child-row + tr {
+      display: none;
+    }
+    tr {
+      td:has(h3) {
+        background: transparent;
+        padding: 0 !important;
+        h3 {
+          font-size: calc(18 * var(--to-rem-func));
         }
-        tr {
-            td:has(h3) {
-                background: transparent;
-                padding: 0 !important;
-                h3 {
-                    font-size: calc(18 * var(--to-rem-func));
-                }
-            }
-        }
+      }
     }
-    .frm_opt_container {
-        /* display: flex !important; */
+  }
+  .frm_opt_container {
+    /* display: flex !important; */
+  }
+  .frm_required,
+  .frm-edit-page-btn {
+    display: none;
+  }
+  .frm-line-table {
+    tr {
+      display: block;
+      margin-bottom: calc(30 * var(--to-rem-func));
+      border-bottom: none;
     }
-    .frm_required,
-    .frm-edit-page-btn {
-        display: none;
+    th,
+    td {
+      display: block;
+      text-align: left;
+      width: 100% !important;
+      padding: 0 !important;
+      color: var(--color-text) !important;
     }
-    .frm-line-table {
-        tr {
-            display: block;
-            margin-bottom: calc(30 * var(--to-rem-func));
-            border-bottom: none;
-        }
-        th,
-        td {
-            display: block;
-            text-align: left;
-            width: 100% !important;
-            padding: 0 !important;
-            color: var(--color-text) !important;
-        }
-        td {
-            padding: 0.5em 1em !important;
-            background: var(--color-tertiary);
-            margin-top: calc(10 * var(--to-rem-func));
-        }
+    td {
+      padding: 0.5em 1em !important;
+      background: var(--color-tertiary);
+      margin-top: calc(10 * var(--to-rem-func));
     }
-    h3.frm_primary_label {
-        display: none;
+  }
+  h3.frm_primary_label {
+    display: none;
+  }
+  .frm_message {
+    text-align: center;
+  }
+  .frm_verify {
+    display: none;
+  }
+  .with_frm_style .frm_none_container .frm_primary_label,
+  .with_frm_style .frm_pos_none,
+  .frm_pos_none,
+  .frm_none_container .frm_primary_label {
+    display: none;
+  }
+  /* // 2カラム用 */
+  .frm_2col {
+    .frm_form_field.frm_inline_container,
+    .frm_form_field.frm_right_container,
+    .frm_form_field.frm_left_container {
+      grid-template-columns: 35% auto;
     }
-    .frm_message {
-        text-align: center;
-    }
-    .frm_verify {
-        display: none;
-    }
-    .with_frm_style .frm_none_container .frm_primary_label,
-    .with_frm_style .frm_pos_none,
-    .frm_pos_none,
-    .frm_none_container .frm_primary_label {
-        display: none;
-    }
-    /* // 2カラム用 */
-    .frm_2col {
-        .frm_form_field.frm_inline_container,
-        .frm_form_field.frm_right_container,
-        .frm_form_field.frm_left_container {
-            grid-template-columns: 35% auto;
-        }
-    }
+  }
 }
 /* //日付フィールド */
 .ui-datepicker {
-    .ui-datepicker-header,
-    .ui-widget-header {
-        background: var(--color-primary) !important;
+  .ui-datepicker-header,
+  .ui-widget-header {
+    background: var(--color-primary) !important;
+  }
+  td {
+    .ui-state-hover {
+      background: var(--color-primary) !important;
+      color: var(--color-secondary) !important;
     }
-    td {
-        .ui-state-hover {
-            background: var(--color-primary) !important;
-            color: var(--color-secondary) !important;
-        }
-        &.ui-datepicker-current-day {
-            background: var(--color-primary) !important;
-            a {
-                color: var(--color-secondary) !important;
-            }
-        }
+    &.ui-datepicker-current-day {
+      background: var(--color-primary) !important;
+      a {
+        color: var(--color-secondary) !important;
+      }
     }
-    .ui-datepicker-prev,
-    .ui-datepicker-next {
-        position: absolute;
-    }
-    table.ui-datepicker-calendar,
-    .ui-datepicker-title {
-        font-size: 1rem !important;
-    }
-    .ui-datepicker-title select.ui-datepicker-month,
-    .ui-datepicker-title select.ui-datepicker-year {
-        width: calc(50% - calc(18 * var(--to-rem-func))) !important;
-    }
+  }
+  .ui-datepicker-prev,
+  .ui-datepicker-next {
+    position: absolute;
+  }
+  table.ui-datepicker-calendar,
+  .ui-datepicker-title {
+    font-size: 1rem !important;
+  }
+  .ui-datepicker-title select.ui-datepicker-month,
+  .ui-datepicker-title select.ui-datepicker-year {
+    width: calc(50% - calc(18 * var(--to-rem-func))) !important;
+  }
 }
 .ui-datepicker-title {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: calc(100% - calc(34 * var(--to-rem-func)) * 2);
-    gap: calc(10 * var(--to-rem-func));
-    margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(100% - calc(34 * var(--to-rem-func)) * 2);
+  gap: calc(10 * var(--to-rem-func));
+  margin: 0 auto;
 }
