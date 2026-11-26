@@ -1,0 +1,63 @@
+name: JWSNJ disposable WordPress Formidable QA
+on:
+  pull_request:
+    branches: [so]
+    paths:
+      - 'projects/jwsnj/theme/css/wordpress/form.css'
+      - 'projects/jwsnj/qa/seed-css-form-qa.php'
+      - 'projects/jwsnj/qa/formidable-browser-qa.mjs'
+      - '.github/workflows/jwsnj-formidable-runtime.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+env:
+  PROJECT: jwsnj
+  COMPOSE_PROJECT_NAME: jwsnj-formidable-qa
+  WP_PORT: '28001'
+jobs:
+  wp-form:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install isolated browsers
+        run: |
+          npm install --prefix "$RUNNER_TEMP/css-qa" --ignore-scripts --no-audit --no-fund --no-package-lock playwright@1.65.1
+          "$RUNNER_TEMP/css-qa/node_modules/.bin/playwright" install --with-deps chromium firefox webkit
+      - name: Create disposable WordPress and actual free Formidable form
+        run: |
+          cd runtime/wordpress
+          source scripts/runtime-env.sh
+          docker compose up -d db wordpress
+          for i in $(seq 1 90); do
+            if docker compose exec -T wordpress test -f /var/www/html/wp-includes/version.php; then break; fi
+            sleep 1
+          done
+          docker compose run --rm cli core install --url="$WP_URL" --title="CSS QA" --admin_user="fixture-admin" --admin_password="fixture-admin-change-me" --admin_email="fixture@example.invalid" --skip-email
+          docker compose run --rm cli plugin install advanced-custom-fields formidable --activate
+          docker compose run --rm cli theme activate "$THEME_SLUG"
+          docker compose run --rm cli core version
+          docker compose run --rm cli plugin list
+          docker compose run --rm -e WP_ENVIRONMENT_TYPE=local cli eval-file /project/qa/seed-css-form-qa.php
+          page_id="$(docker compose run --rm cli option get jwsnj_css_qa_page_id)"
+          [[ "$page_id" =~ ^[0-9]+$ ]]
+          echo "FORM_QA_URL=${WP_URL}/?page_id=${page_id}" >> "$GITHUB_ENV"
+      - name: Actual plugin markup cross-engine keyboard and geometry
+        env:
+          CSS_QA_MODULE_ROOT: ${{ runner.temp }}/css-qa
+        run: node projects/jwsnj/qa/formidable-browser-qa.mjs "$FORM_QA_URL"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: jwsnj-formidable-browser
+          path: form-qa-results/
+          if-no-files-found: warn
+      - name: Cleanup only disposable runtime
+        if: always()
+        run: |
+          cd runtime/wordpress
+          source scripts/runtime-env.sh
+          docker compose down -v --remove-orphans

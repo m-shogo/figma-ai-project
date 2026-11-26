@@ -754,87 +754,49 @@ textarea {
             transform: translateY(-50%);
         }
     }
+    /* Keep the plugin's semantic inputs and label text; native controls own checked state. */
     .frm_opt_container {
-        /* display: flex;
-    flex-wrap: wrap; */
         .frm_checkbox,
         .frm_radio {
             margin-bottom: calc(10 * var(--to-rem-func)) !important;
             margin-right: calc(20 * var(--to-rem-func));
-        }
-        label {
-            position: relative;
-            padding-left: calc(25 * var(--to-rem-func));
-            color: var(--color-text);
-            display: block;
-            &:has(input:focus-visible) {
-                outline: 2px solid currentColor;
-                outline-offset: 2px;
-            }
-            @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-                margin-right: calc(20 * var(--to-rem-func));
-            }
-        }
-        input {
-            display: block;
-            height: 0;
-            position: absolute;
-            top: calc(1 * var(--to-rem-func));
-            left: 0;
-            &::before,
-            &::after {
-                display: block;
-                position: absolute;
-                top: 0.25em;
-                left: 0;
-                width: calc(20 * var(--to-rem-func));
-                height: calc(20 * var(--to-rem-func));
-                content: '';
-                transition: 0.3s;
-                cursor: pointer;
-            }
-            &::before {
-                border: calc(1 * var(--to-rem-func)) solid var(--color-gray-border);
-            }
-            &::after {
+            min-width: 0;
+            label {
+                position: relative;
                 display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-        }
-        .frm_checkbox {
-            input {
-                &:checked {
-                    &::before {
-                        border: calc(1 * var(--to-rem-func)) solid var(--color-primary);
-                        background-color: var(--color-primary);
-                    }
-                    &::after {
-                        color: var(--color-secondary);
-                    }
+                align-items: flex-start;
+                gap: calc(8 * var(--to-rem-func));
+                padding: 0;
+                color: var(--color-text);
+                overflow-wrap: anywhere;
+                line-height: 1.3;
+                &:focus-within {
+                    outline: 2px solid currentColor;
+                    outline-offset: 2px;
                 }
-                &::after {
-                    color: var(--color-secondary);
-                    font-family: var(--font-awesome);
-                    font-weight: 400;
-                    line-height: 1;
-                    content: '\f00c';
+                @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+                    margin-right: calc(20 * var(--to-rem-func));
                 }
             }
-        }
-        .frm_radio {
-            input {
+            input:is([type='checkbox'], [type='radio']) {
+                /* Plugin styles can specify appearance and dimensions with important. */
+                appearance: auto !important;
+                accent-color: var(--color-primary);
+                display: inline-block !important;
+                position: static !important;
+                flex: 0 0 auto;
+                width: 1.25em !important;
+                min-width: 1.25em !important;
+                height: 1.25em !important;
+                margin: 0.05em 0 0 !important;
+                padding: 0;
                 &::before,
                 &::after {
-                    border-radius: 50%;
+                    content: none !important;
                 }
-                &::after {
-                    transform: scale(0.6);
-                }
-                &:checked {
-                    &::after {
-                        background-color: var(--color-primary);
-                    }
+                &:focus-visible {
+                    outline: 2px solid currentColor;
+                    outline-offset: 2px;
                 }
             }
         }
@@ -846,75 +808,23 @@ textarea {
             .frm_radio {
                 margin-bottom: calc(20 * var(--to-rem-func));
                 margin-right: 0;
-            }
-            label {
-                width: calc(150 * var(--to-rem-func));
-                height: calc(50 * var(--to-rem-func));
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                text-align: center;
-                padding: 0;
-                text-indent: -1000px;
-                overflow: hidden;
-                font-size: 0;
-                @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-                    width: calc(200 * var(--to-rem-func));
-                }
-            }
-            input {
-                display: block;
-                padding-block: calc(15 * var(--to-rem-func));
-                padding-inline: calc(50 * var(--to-rem-func));
-                border: calc(1 * var(--to-rem-func)) solid var(--color-primary);
-                border-radius: 3em;
-                font-size: calc(16 * var(--to-rem-func));
-                line-height: 1.3;
-                text-align: center;
-                width: 100%;
-                height: 100%;
-                position: absolute;
-                top: 0;
-                left: 0;
-                &::before {
-                    display: none;
-                }
-                &::after {
-                    content: attr(value) '';
-                    width: 100%;
-                    height: 100%;
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    color: var(--color-primary);
+                label {
+                    width: min(100%, calc(150 * var(--to-rem-func)));
+                    min-height: calc(50 * var(--to-rem-func));
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    text-align: center;
+                    padding: 0.5em 0.75em;
+                    border: calc(1 * var(--to-rem-func)) solid var(--color-primary);
                     border-radius: 3em;
-                    font-family: var(--font-sansSerif-ja);
-                }
-                &:checked {
-                    background: var(--color-primary);
-                    &::before {
-                        content: '\f00c';
-                        display: block;
-                        position: absolute;
-                        top: 55%;
-                        left: calc(20 * var(--to-rem-func));
-                        transform: translateY(-50%);
-                        font-family: var(--font-awesome);
-                        font-weight: 400;
-                        background: none;
-                        border: none;
+                    color: var(--color-primary);
+                    &:has(input:checked) {
+                        background-color: var(--color-primary);
                         color: var(--color-secondary);
                     }
-                    &::after {
-                        color: var(--color-secondary);
-                    }
-                }
-            }
-            .frm_radio {
-                input {
-                    &::before {
-                        display: none;
+                    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+                        width: min(100%, calc(200 * var(--to-rem-func)));
                     }
                 }
             }
@@ -983,8 +893,19 @@ textarea {
             width: 120%;
         }
     }
-    /* //ファイルアップロード */
+    /* //ファイルアップロード: retain the plugin's dropzone/file ownership. */
+    input[type='file']:not(.frm_transparent) {
+        max-width: 100%;
+        &:focus-visible {
+            outline: 2px solid currentColor;
+            outline-offset: 2px;
+        }
+    }
     .frm_dropzone {
+        &:focus-within {
+            outline: 2px solid currentColor;
+            outline-offset: 2px;
+        }
         &.frm_single_upload {
             max-width: 100% !important;
             .dz-message {
