@@ -62,7 +62,6 @@
       width: var(--_button-width);
       height: 100%;
       background-color: transparent;
-      transition: var(--transition-duration);
       overflow: hidden;
     }
 
@@ -78,10 +77,13 @@
         height: calc(2 * var(--to-rem-func));
         content: '';
         background-color: var(--color-primary);
-        transition: var(--transition-duration);
       }
       &::after {
         rotate: 90deg;
+        transition: rotate var(--transition-duration);
+        @media (prefers-reduced-motion: reduce) {
+          transition: none;
+        }
       }
     }
 
@@ -145,14 +147,6 @@
           content: 'A';
           color: var(--color-accent);
         }
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .wp-block-details__button,
-      .wp-block-details__button-icon::before,
-      .wp-block-details__button-icon::after {
-        transition: none;
       }
     }
 

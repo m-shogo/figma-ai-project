@@ -118,6 +118,80 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
    report.push({name,reducedMotion,motion});
    await page.evaluate(()=>document.getElementById('motion-probe').remove());
  }
+ // Verify actual pseudo-element transitions and keyboard-operated Details.
+ for (const reducedMotion of ['no-preference', 'reduce']) {
+   await page.emulateMedia({reducedMotion});
+   await page.evaluate(() => {
+     const fixture = document.createElement('div');
+     fixture.id = 'remaining-motion-probe';
+     fixture.className = 'block-editor_wrap';
+     fixture.innerHTML = '<details class="wp-block-details"><summary class="wp-block-details__summary"><span class="wp-block-details__title">質問</span><span class="wp-block-details__button" aria-hidden="true"><span class="wp-block-details__button-icon"></span></span></summary><div class="wp-block-details__content">回答</div></details><ul class="module_searchList-01"><li><a href="#end">検索結果</a></li></ul><figure class="wp-block-image"><a href="#end"><img alt="" width="60" height="40"></a></figure><figure class="wp-block-gallery"><figure class="wp-block-image"><a href="#end"><img alt="" width="60" height="40"></a></figure></figure>';
+     document.querySelector('.global_inner').append(fixture);
+   });
+   const remaining = await page.evaluate(() => {
+     const fixture = document.getElementById('remaining-motion-probe');
+     const probes = [
+       ['.wp-block-details__button-icon', '::after'],
+       ['.module_searchList-01 a', null],
+       ['.wp-block-image > a', '::after'],
+       ['.wp-block-gallery .wp-block-image > a', '::after']
+     ];
+     return probes.map(([selector, pseudo]) => {
+       const style = getComputedStyle(fixture.querySelector(selector), pseudo);
+       return {selector, pseudo, property: style.transitionProperty, duration: style.transitionDuration};
+     });
+   });
+   const expected = [['rotate'], ['color'], ['opacity', 'background-color', 'color'], ['opacity', 'background-color', 'color']];
+   for (let i = 0; i < remaining.length; i++) {
+     if (reducedMotion === 'reduce') {
+       assert.equal(remaining[i].property, 'none', name + ' reduced ' + remaining[i].selector);
+       assert.equal(remaining[i].duration, '0s');
+     } else {
+       assert.deepEqual(remaining[i].property.split(',').map(s => s.trim()), expected[i], name + ' explicit ' + remaining[i].selector);
+     }
+   }
+   const summary = page.locator('#remaining-motion-probe summary');
+   const details = page.locator('#remaining-motion-probe details');
+   await summary.focus();
+   await page.keyboard.press('Enter');
+   assert.equal(await details.evaluate(el => el.open), true, name + ' keyboard details open');
+   await page.keyboard.press('Enter');
+   assert.equal(await details.evaluate(el => el.open), false, name + ' keyboard details close');
+   report.push({name, reducedMotion, remaining});
+   await page.evaluate(() => document.getElementById('remaining-motion-probe').remove());
+ }
+      // Actual legacy card/list and pager transition owners; heading spacing across the breakpoint.
+      for (const width of [375, 768, 1380]) {
+        await page.setViewportSize({width, height: 900});
+        for (const reducedMotion of ['no-preference', 'reduce']) {
+          await page.emulateMedia({reducedMotion});
+          const legacy = await page.evaluate(() => {
+            const fixture = document.createElement('div');
+            fixture.className = 'block-editor_wrap';
+            fixture.innerHTML = '<div class="module_newsCard-01"><article class="mnc-01_article"><a class="link" href="#end"><div class="foot"><p class="title">カード</p></div></a></article></div><div class="module_newsList-01"><article class="mnl-01_article"><a class="link" href="#end"><div class="body"><p class="title">一覧</p></div></a></article></div><div class="module_pager-01"><a class="page-numbers" href="#end">2</a></div><ul class="module_pager-02"><li class="back"><a href="#end">一覧</a></li></ul><div><h1>見出し1</h1><h2>次の見出し</h2></div><div><h5>見出し5</h5><h2>次の見出し</h2></div><div><h6>見出し6</h6><h2>次の見出し</h2></div>';
+            document.querySelector('.global_inner').append(fixture);
+            const selectors = ['.mnc-01_article .title', '.mnl-01_article .title', '.module_pager-01 a', '.module_pager-02 a'];
+            const motion = selectors.map(selector => {
+              const style = getComputedStyle(fixture.querySelector(selector));
+              return {selector, property: style.transitionProperty, duration: style.transitionDuration};
+            });
+            const headingMargins = [...fixture.querySelectorAll('h2')].map(el => parseFloat(getComputedStyle(el).marginTop));
+            fixture.remove();
+            return {motion, headingMargins};
+          });
+          const expected = [['color'], ['color'], ['color', 'background-color'], ['background-color', 'color']];
+          for (let i = 0; i < legacy.motion.length; i++) {
+            if (reducedMotion === 'reduce') {
+              assert.equal(legacy.motion[i].property, 'none', name + ' legacy motion ' + width);
+              assert.equal(legacy.motion[i].duration, '0s');
+            } else {
+              assert.deepEqual(legacy.motion[i].property.split(',').map(value => value.trim()), expected[i], name + ' legacy motion ' + width);
+            }
+          }
+          assert.deepEqual(legacy.headingMargins, [16, 16, 16], name + ' adjacent heading margin ' + width);
+          report.push({name, width, reducedMotion, legacy});
+        }
+      }
  await page.emulateMedia({reducedMotion:'reduce'});
  // Feature proof separate from production layout: actual cascade and containment.
  const mechanism=await page.evaluate(()=>{

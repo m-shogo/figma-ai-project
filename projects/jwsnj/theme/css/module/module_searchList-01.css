@@ -15,7 +15,10 @@
       padding-inline: 0 calc(40 * var(--to-rem-func));
       color: var(--color-text);
       text-decoration: none;
-      transition: var(--transition-duration);
+      transition: color var(--transition-duration);
+      @media (prefers-reduced-motion: reduce) {
+        transition: none;
+      }
       &::after {
         content: '\f105';
         display: block;
@@ -25,7 +28,6 @@
         font-family: var(--font-awesome);
         font-size: calc(20 * var(--to-rem-func));
         transform: translateY(-50%);
-        transition: var(--transition-duration);
       }
       &:hover {
         color: var(--color-link);
