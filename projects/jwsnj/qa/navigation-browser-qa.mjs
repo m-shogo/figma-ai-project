@@ -111,12 +111,19 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
     const arrow = desktopLink.locator('.gnl_arrow');
     const arrowGlyph = () => arrow.evaluate(el => getComputedStyle(el, '::before').content);
     assert.equal(await arrow.getAttribute('aria-hidden'), 'true');
+    const iconFaces = await page.evaluate(async () => (await document.fonts.load('400 14px "Font Awesome 6 Pro"', String.fromCodePoint(0xf107, 0xf106))).map(font => font.status));
+    assert.ok(iconFaces.length > 0 && iconFaces.every(status => status === 'loaded'), 'actual bundled FA Regular must load');
     assert.equal(await nav.locator('.gnl_item-02._noChild .gnl_arrow').count(), 0);
     for (const width of [1080, 1380]) {
       await page.setViewportSize({ width, height: 900 });
-      await page.mouse.move(1, 300);
+      // The legacy full-width flyout can cover the page body. Move into the header's left padding instead.
+      await page.mouse.move(1, 1);
       await page.evaluate(() => document.activeElement?.blur());
-      await page.waitForFunction(() => getComputedStyle(document.querySelector('.gnl_arrow'), '::before').content.includes(String.fromCodePoint(0xf107)));
+      await page.waitForFunction(() => {
+        const item = document.querySelector('.gnl_item-02._hasChild');
+        return !item.matches(':hover, :focus-within') &&
+          getComputedStyle(item.querySelector('.gnl_arrow'), '::before').content.includes(String.fromCodePoint(0xf107));
+      });
       const typography = await desktopLink.evaluate(el => {
         const style = getComputedStyle(el);
         const icon = el.querySelector('.gnl_arrow');
@@ -139,7 +146,8 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
       assert.ok((await arrowGlyph()).includes(String.fromCodePoint(0xf106)));
       assert.equal(await desktopLink.evaluate(el => getComputedStyle(el).color), 'rgb(40, 172, 95)');
       assert.notEqual(await wrapper.evaluate(el => getComputedStyle(el).clipPath), 'none');
-      await page.mouse.move(1, 300);
+      // The legacy full-width flyout can cover the page body. Move into the header's left padding instead.
+      await page.mouse.move(1, 1);
       await desktopLink.focus();
       assert.ok((await arrowGlyph()).includes(String.fromCodePoint(0xf106)));
       await page.screenshot({ path: 'form-qa-results/nav-' + engineName + '-' + width + '-parent.png' });

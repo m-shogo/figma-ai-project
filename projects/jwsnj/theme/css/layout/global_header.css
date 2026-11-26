@@ -11,7 +11,7 @@
   .gh_inner {
     display: flex;
     align-items: center;
-    padding-inline: var(--padding-SP);
+    padding-inline: calc(16 * var(--to-rem-func));
     height: inherit;
     gap: calc(40 * var(--to-rem-func));
     @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
@@ -28,6 +28,9 @@
       align-items: center;
       gap: calc(8 * var(--to-rem-func));
       min-width: 0;
+      @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+        gap: calc(12 * var(--to-rem-func));
+      }
       color: var(--color-text);
       text-decoration: none;
       transition: opacity var(--transition-duration);
@@ -43,22 +46,23 @@
     }
     img {
       flex-shrink: 0;
-      width: calc(38 * var(--to-rem-func));
-      height: calc(36 * var(--to-rem-func));
+      width: calc(46 * var(--to-rem-func));
+      height: auto;
       @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
         width: calc(60 * var(--to-rem-func));
-        height: calc(57 * var(--to-rem-func));
       }
     }
     .gh_logo-name {
       min-width: 0;
       overflow-wrap: anywhere;
-      font-size: calc(13 * var(--to-rem-func));
+      font-family: var(--font-jwsnj-ja);
+      font-size: calc(15 * var(--to-rem-func));
       font-weight: 500;
-      line-height: 1.3;
+      line-height: 1.4;
       letter-spacing: 0.05em;
       @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
         font-size: calc(20 * var(--to-rem-func));
+        line-height: 1.5;
       }
     }
     @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
