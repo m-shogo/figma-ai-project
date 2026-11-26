@@ -43,7 +43,7 @@ test('reduced motion disables icon transitions while preserving open state', () 
 test('open accordion uses 32px title inset while Q/A markers center in a 16px rail', () => {
   assert.match(css, /&\[open\]\s*\{\s*> summary\.wp-block-details__summary\s*\{\s*padding-inline-start:\s*calc\(32 \* var\(--to-rem-func\)\)/);
   assert.match(css, / > \.wp-block-details__button > \.wp-block-details__button-icon::after\s*\{\s*rotate:\s*0deg/);
-  const qa = css.slice(css.indexOf('&._qa {'), css.indexOf('@media (prefers-reduced-motion'));
+  const qa = css.slice(css.indexOf('&._qa,'), css.indexOf('@media (prefers-reduced-motion'));
   assert.match(qa, /> summary\.wp-block-details__summary,\s*> \.wp-block-details__content\s*\{\s*display:\s*flex;\s*gap:\s*calc\(16 \* var\(--to-rem-func\)\);\s*align-items:\s*center/);
   assert.match(qa, /width:\s*calc\(16 \* var\(--to-rem-func\)\);\s*font-family:\s*var\(--font-sansSerif-en\)/);
   assert.match(qa, /font-size:\s*calc\(24 \* var\(--to-rem-func\)\);\s*font-weight:\s*500;\s*letter-spacing:\s*0\.05em/);
@@ -96,4 +96,21 @@ test('accordion has no dead sample pseudo-elements and remains content-height dr
   const summary = css.slice(css.indexOf('summary.wp-block-details__summary {'), css.indexOf('.wp-block-details__title {'));
   assert.match(summary, /min-height:\s*calc\(75 \* var\(--to-rem-func\)\)/);
   assert.doesNotMatch(summary, /(?<!min-)height:\s*calc\(/);
+});
+
+test('course FAQ opt-in reuses native details and Q/A owner, with stable title inset on toggle',()=>{
+  assert.match(css,/&\._qa,\s*&\.is-style-jwsnj-course-faq\s*\{/);
+  const course=css.slice(css.indexOf('/* Course detail PC 612:3182'));
+  assert.match(course,/&\.is-style-jwsnj-course-faq\s*\{\s*> summary\.wp-block-details__summary\s*\{\s*padding-inline-start:\s*calc\(24 \* var\(--to-rem-func\)\)/);
+  assert.match(course,/@media \(calc\(768 \* \(1 \/ 16 \* 1rem\)\) <= width\)\s*\{\s*padding-inline-start:\s*calc\(32 \* var\(--to-rem-func\)\)/);
+  assert.doesNotMatch(course,/\[open\]|white-space:\s*nowrap|(?:^|[;{}\n])\s*height\s*:/);
+  const editor=readFileSync(new URL('../theme/inc/editor.php',import.meta.url),'utf8');
+  assert.match(editor,/register_block_style\('core\/details', array\(\s*'name' => 'jwsnj-course-faq'/);
+  for(const state of ['', ' open']){
+    const html=renderDetails('<details class="wp-block-details is-style-jwsnj-course-faq"'+state+'><summary>Long question</summary><p>Answer</p></details>');
+    assert.ok(html.startsWith('<details class="wp-block-details is-style-jwsnj-course-faq"'+state+'>'));
+    assert.match(html,/<summary class="wp-block-details__summary">/);
+    assert.match(html,/wp-block-details__button" aria-hidden="true"/);
+    assert.match(html,/<div class="wp-block-details__inner"><p>Answer<\/p><\/div>/);
+  }
 });
