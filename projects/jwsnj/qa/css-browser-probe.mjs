@@ -240,6 +240,58 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
    assert.equal(alignment.footerMedia, alignment.footerCSS, name + ' Footer CSS/JS ' + width);
    report.push({name, width, alignment});
  }
+ // Figma SP 512:2449 / 512:2454: authored row geometry, not full WP/visual parity.
+ for (const width of [320, 375, 767, 1079, 1080, 1380]) {
+   await page.setViewportSize({width, height: 900});
+   const rows = await page.evaluate(() => {
+     const fixture = document.createElement('div');
+     fixture.innerHTML = '<nav class="global_navigation"><ul class="gn_links-01"><li class="gnl_item-02 _hasChild" data-open="true"><div class="gnl_title-02"><a class="gnl_link-02" href="#end"><span>学校案内</span></a><button class="gnl_button-02" type="button" aria-label="open"></button></div><div class="gnl_wrapper-02"><div class="gnl_inner-02"><ul class="gnl_list-02"><li class="gnl_item-03"><div class="gnl_title-03"><a class="gnl_link-03" href="#end"><span>学校概要</span></a></div></li><li class="gnl_item-03"><div class="gnl_title-03"><a class="gnl_link-03" href="#end"><span>長い日本語 English mixed label for wrapping naturally on small screens</span></a></div></li></ul></div></div></li><li class="gnl_item-02 _noChild"><div class="gnl_title-02"><a class="gnl_link-02" href="#end">教育内容</a></div></li></ul></nav>';
+     document.body.append(fixture);
+     const el = selector => fixture.querySelector(selector);
+     const style = selector => getComputedStyle(el(selector));
+     const title = style('.gnl_title-02');
+     const parent = style('.gnl_link-02');
+     const child = style('.gnl_link-03');
+     const list = style('.gnl_list-02');
+     const button = style('.gnl_button-02');
+     const long = el('.gnl_item-03:last-child .gnl_link-03');
+     const range = document.createRange();
+     range.selectNodeContents(long.querySelector('span'));
+     const bounds = long.getBoundingClientRect();
+     const rects = [...range.getClientRects()];
+     const result = {
+       title: title.backgroundColor, parentSize: parent.fontSize, parentWeight: parent.fontWeight,
+       parentPad: parent.paddingBlockStart, childSize: child.fontSize, childWeight: child.fontWeight,
+       childPad: child.paddingBlockStart, listPad: list.paddingInlineStart, listBg: list.backgroundColor,
+       firstBorder: style('.gnl_item-03:first-child').borderTopWidth,
+       nextBorder: style('.gnl_item-03:last-child').borderTopWidth,
+       parentGap: style('.gnl_item-02:last-child').borderTopWidth,
+       button: button.display, buttonWidth: button.width,
+       stroke: getComputedStyle(el('.gnl_button-02'), '::before').width,
+       strokeColor: getComputedStyle(el('.gnl_button-02'), '::before').backgroundColor,
+       childLines: rects.length,
+       textFits: rects.every(rect => rect.left >= bounds.left - 1 && rect.right <= bounds.right + 1),
+       grid: list.gridTemplateColumns
+     };
+     fixture.remove();
+     return result;
+   });
+   if (width < 1080) {
+     assert.equal(rows.title, 'rgb(245, 253, 235)', name + ' SP parent background');
+     assert.deepEqual([rows.parentSize, rows.parentWeight, rows.parentPad], ['16px', '500', '20px']);
+     assert.deepEqual([rows.childSize, rows.childWeight, rows.childPad], ['14px', '500', '15px']);
+     assert.equal(rows.listPad, '20px');
+     assert.equal(rows.listBg, 'rgb(255, 255, 255)');
+     assert.deepEqual([rows.firstBorder, rows.nextBorder, rows.parentGap], ['0px', '1px', '2px']);
+     assert.deepEqual([rows.buttonWidth, rows.stroke, rows.strokeColor], ['52px', '12px', 'rgb(40, 172, 95)']);
+     if (width <= 375) assert.ok(rows.childLines >= 2 && rows.textFits, name + ' long child row ' + width);
+   } else {
+     assert.equal(rows.title, 'rgba(0, 0, 0, 0)');
+     assert.equal(rows.button, 'none');
+     assert.equal(rows.grid.split(' ').length, 3, name + ' preserve legacy desktop grid');
+   }
+   report.push({name, width, headerMenuRows: rows});
+ }
  // Legacy file presentation must not leak to a generic .file component.
  for (const width of [375, 768, 1380]) {
    await page.setViewportSize({width, height: 900});
