@@ -117,3 +117,74 @@
         font-size: calc(15 * var(--to-rem-func));
     }
 }
+
+/* Course grade row PC 539:3627 / 534:2360 / 534:2357.
+   Use an editable label paragraph and native unordered list, not fixed grade data. */
+:is(.block-editor_wrap, .editor-styles-wrapper) .wp-block-group.is-style-jwsnj-course-grades {
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: calc(12 * var(--to-rem-func)) calc(20 * var(--to-rem-func));
+    min-width: 0;
+    > .wp-block-group__inner-container {
+        display: flex;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: inherit;
+        min-width: 0;
+    }
+    > p,
+    > .wp-block-group__inner-container > p {
+        display: inline-flex;
+        align-items: center;
+        gap: calc(4 * var(--to-rem-func));
+        margin: 0;
+        padding: calc(4 * var(--to-rem-func)) calc(12 * var(--to-rem-func));
+        border-radius: calc(3 * var(--to-rem-func));
+        background: var(--color-accent);
+        color: var(--jwsnj-color-white);
+        font-family: var(--font-jwsnj-ja);
+        font-weight: 500;
+        font-size: calc(13 * var(--to-rem-func));
+        line-height: 1.5;
+        letter-spacing: 0.05em;
+        min-width: 0;
+        overflow-wrap: anywhere;
+        &::before {
+            content: '\f303' / '';
+            font-family: var(--font-awesome);
+            font-weight: 900;
+            flex-shrink: 0;
+        }
+    }
+    > ul.wp-block-list:not(.annotation-list),
+    > .wp-block-group__inner-container > ul.wp-block-list:not(.annotation-list) {
+        display: flex;
+        flex-direction: column;
+        gap: calc(8 * var(--to-rem-func));
+        margin: 0;
+        padding: 0;
+        min-width: 0;
+        list-style: none;
+        > li {
+            padding: 0;
+            font-family: var(--font-jwsnj-ja);
+            font-weight: 400;
+            font-size: calc(14 * var(--to-rem-func));
+            line-height: 1.886;
+            letter-spacing: 0.05em;
+            overflow-wrap: anywhere;
+            min-width: 0;
+            &::before { content: none; }
+        }
+        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: calc(8 * var(--to-rem-func)) calc(16 * var(--to-rem-func));
+            > li:not(:last-child) {
+                border-inline-end: calc(1 * var(--to-rem-func)) solid var(--jwsnj-color-separator);
+                padding-inline-end: calc(8 * var(--to-rem-func));
+            }
+        }
+    }
+}

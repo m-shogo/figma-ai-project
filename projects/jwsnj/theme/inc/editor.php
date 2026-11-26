@@ -265,4 +265,8 @@ add_action('init', function () {
     'name' => 'jwsnj-course-lead',
     'label' => 'コース導入リード文',
   ));
+  register_block_style('core/group', array(
+    'name' => 'jwsnj-course-grades',
+    'label' => 'コース対象学年（ラベル＋一覧）',
+  ));
 });

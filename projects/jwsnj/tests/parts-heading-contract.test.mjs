@@ -117,3 +117,21 @@ test('course introduction typography reuses bilingual layout and has an opt-in e
   assert.match(editor,/register_block_style\('core\/group', array\(\s*'name' => 'jwsnj-course-intro-heading'/);
   assert.match(editor,/register_block_style\('core\/paragraph', array\(\s*'name' => 'jwsnj-course-lead'/);
 });
+
+test('course grades opt-in native list preserves label and responsive wrapping without invented values',()=>{
+  const group=readFileSync(new URL('../theme/css/blocks/wp-block-group-style.css',import.meta.url),'utf8');
+  const s=group.slice(group.indexOf('/* Course grade row PC 539:3627'));
+  assert.match(s,/\.wp-block-group\.is-style-jwsnj-course-grades/);
+  assert.match(s,/flex-wrap:\s*wrap/);
+  assert.match(s,/background:\s*var\(--color-accent\)/);
+  assert.match(s,/content:\s*'\\f303'\s*\/\s*''/);
+  assert.match(s,/font-family:\s*var\(--font-awesome\)/);
+  assert.match(s,/font-weight:\s*900/);
+  assert.match(s,/ul\.wp-block-list:not\(\.annotation-list\)/);
+  assert.match(s,/&::before\s*\{\s*content:\s*none/);
+  assert.match(s,/font-size:\s*calc\(14 \* var\(--to-rem-func\)\)/);
+  assert.match(s,/border-inline-end:\s*calc\(1 \* var\(--to-rem-func\)\) solid var\(--jwsnj-color-separator\)/);
+  assert.doesNotMatch(s,/white-space:\s*nowrap|position:\s*absolute|(?:^|[;{}\n])\s*height\s*:|年中組|年長組/);
+  const editor=readFileSync(new URL('../theme/inc/editor.php',import.meta.url),'utf8');
+  assert.match(editor,/register_block_style\('core\/group', array\(\s*'name' => 'jwsnj-course-grades'/);
+});
