@@ -274,12 +274,12 @@ test('TOP fixed-copy rhythm follows the distinct PC/SP Figma group gaps',()=>{
   const about=read('css/project/top_about.css');
   assert.match(about,/\.jwsnj_topAbout_copy \{\s*position: relative;\s*z-index: 1;\s*display: grid;\s*gap: calc\(20 \* var\(--to-rem-func\)\)/);
   assert.match(about,/\.jwsnj_topAbout_title \{\s*display: grid;\s*gap: calc\(8 \* var\(--to-rem-func\)\);\s*margin: 0 0 calc\(4 \* var\(--to-rem-func\)\)/);
-  assert.match(about,/\.jwsnj_topAbout_copy \{ gap: calc\(24 \* var\(--to-rem-func\)\); \}/);
-  assert.match(about,/\.jwsnj_topAbout_title \{ gap: calc\(16 \* var\(--to-rem-func\)\); margin-bottom: calc\(8 \* var\(--to-rem-func\)\); \}/);
+  assert.match(about,/\.jwsnj_topAbout_copy \{[^{}]*@media \(calc\(1080 \* \(1 \/ 16 \* 1rem\)\) <= width\) \{\s*gap: calc\(24 \* var\(--to-rem-func\)\);/);
+  assert.match(about,/\.jwsnj_topAbout_title \{[^{}]*@media \(calc\(1080 \* \(1 \/ 16 \* 1rem\)\) <= width\) \{\s*gap: calc\(16 \* var\(--to-rem-func\)\);\s*margin-bottom: calc\(8 \* var\(--to-rem-func\)\);/);
   const applicants=read('css/project/top_applicants.css');
   assert.match(applicants,/padding: calc\(12 \* var\(--to-rem-func\)\) calc\(16 \* var\(--to-rem-func\)\) calc\(12 \* var\(--to-rem-func\)\) calc\(20 \* var\(--to-rem-func\)\)/);
-  assert.match(applicants,/\.jwsnj_topApplicants_topics li:first-child \{ gap: calc\(10 \* var\(--to-rem-func\)\); \}/);
-  assert.match(applicants,/\.jwsnj_topApplicants_topics li:first-child \{ gap: calc\(16 \* var\(--to-rem-func\)\); \}/);
+  assert.match(applicants,/\.jwsnj_topApplicants_topics li:first-child \{\s*gap: calc\(10 \* var\(--to-rem-func\)\);/);
+  assert.match(applicants,/\.jwsnj_topApplicants_topics li:first-child \{[^{}]*@media \(calc\(1080 \* \(1 \/ 16 \* 1rem\)\) <= width\) \{\s*gap: calc\(16 \* var\(--to-rem-func\)\);/);
   assert.match(applicants,/padding-inline: calc\(24 \* var\(--to-rem-func\)\) calc\(20 \* var\(--to-rem-func\)\)/);
   assert.doesNotMatch(read('template-parts/_top-applicants.php'),/<a\s|<button|href=/);
 });
