@@ -125,3 +125,5 @@ Header/Footer と TOP の公式 SVG / WebP は #599 / #600 でこのリポジト
 - Human「スライド系はswiperで実装して覚えて」。JWSNJのスライダー・カルーセル・連続画像ループ（TOP MV含む）は既存ThemeのSwiperを実装ownerとする。独自CSS/JSによるスライド駆動を新規採用しない。既存Swiperのバンドル・読み込みを再利用し、重複インストールしない。
 - #678の独自CSS keyframesによるMVループはこの新しい実装方針を満たさないため置換対象（READY）。Figma PC184:797/SP279:2172、右→左の等速連続ループ、既存ACF・画像sizes、停止/再開・reduced-motion・画像不足時の静止fallbackを維持してSwiperへ移行する。速度・操作位置は未確定のまま。実機で継ぎ目、resize、keyboard、画像読み込み、fallbackを検証する。通常の非スライドUIのCSS animationやtransitionは対象外。
 - 既存案件以外では会社/Theme依存の前提を先に確認し、Swiperを優先するHumanの実装方針として引き継ぐ。#664 W9、#523/#524、original 534:1706の保留は変更しない。
+
+- 実装状況更新: #680 は `so` ddf4a0d へマージ済み（Swiper版のソース実装、CI済み。実機は#523）。旧#678の置換READYは解消。保留中#664のCourseカードは旧native scroll snap案を含むため、W9解除後に最新Swiper方針と現行home.jsへの統合を確認する。承認前に#664のowner・ACF・branchを変更しない。

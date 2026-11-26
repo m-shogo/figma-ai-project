@@ -77,7 +77,10 @@
       clearResume();
       const position = swiper.getTranslate();
       swiper.autoplay.stop();
-      swiper.allowSlideNext = false;
+      // With delay: 0, Swiper may already have queued a slideNext on the
+      // next animation frame. Disable the instance to reject that call
+      // before it reaches loopFix; stop alone cannot cancel every frame.
+      swiper.disable();
       // Autoplay.stop alone does not interrupt a long in-flight transition.
       swiper.setTransition(0);
       swiper.setTranslate(position);
@@ -85,7 +88,7 @@
     const resume = function () {
       if (!swiper || reduced.matches) return;
       clearResume();
-      swiper.allowSlideNext = true;
+      swiper.enable();
       const target = -swiper.snapGrid[swiper.snapIndex];
       const distance = Math.abs(target - swiper.getTranslate());
       const step = swiper.size + Number(swiper.params.spaceBetween);
@@ -142,11 +145,18 @@
           a11y: { enabled: false },
           autoplay: { delay: 0, waitForTransition: true, disableOnInteraction: false },
           on: {
-            resize: function (instance) {
-              // Swiper may snap to the current panel on resize. Keep autoplay
-              // stopped if the user paused, and refresh the layout gap.
+            beforeResize: function (instance) {
+              // Core resize recalculates snapGrid from spaceBetween. Supply
+              // the current CSS gap before that calculation, not after it.
               instance.params.spaceBetween = parseFloat(window.getComputedStyle(grid).columnGap) || 0;
-              if (userPaused) instance.autoplay.stop();
+            },
+            resize: function (instance) {
+              // Core can internally realign the current panel on resize.
+              // Keep user-initiated autoplay stopped and public moves disabled.
+              if (userPaused) {
+                instance.autoplay.stop();
+                instance.disable();
+              }
             }
           }
         });
