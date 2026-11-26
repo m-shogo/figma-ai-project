@@ -37,6 +37,7 @@
 </div>
 <main id="global_contents" class="global_contents" itemscope itemprop="mainContentOfPage">
     <?php get_template_part('template-parts/_top-about-intro'); ?>
+    <?php get_template_part('template-parts/_top-applicants'); ?>
     <?php get_template_part('template-parts/_top-news'); ?>
     <div id="top_banner-01" class="top_banner-01">
         <div class="global_inner">

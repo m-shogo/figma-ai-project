@@ -195,3 +195,5 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 - TOP About intro: actual 320/375/768/1079/1080/1380 render, long/zoom text, map behind SP copy, dot alignment, future card overlap and shared background. #523 DEFERRED_ENV.
 
 - TOP Instagram: verify actual PC/SP/mid-width News sibling, official illustration ratio and Brands glyph, long text, absent CTA until account authority, actual button hover/focus after real URL. #523 DEFERRED_ENV.
+
+- TOP Applicants PC158:2645/SP279:2443: 320/375/768/1079/1080/1380 widths, natural row wrap, actual image crop, flower mask/color, badge and photo shadow; when destinations are confirmed, real links, arrow inversion, hover/focus and target semantics. Current topic rows are non-interactive, not final CTA PASS. #523 DEFERRED_ENV.
