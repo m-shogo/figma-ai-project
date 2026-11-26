@@ -160,3 +160,11 @@ test('head app title uses actual escaped WordPress site name, not sample text',(
   assert.match(head,/<meta name="apple-mobile-web-app-title" content="<\?php echo esc_attr\(\$site_name\); \?>"/);
   assert.doesNotMatch(head,/サンプルサイト/);
 });
+
+test('legacy numeric pager reuses the defined English font token',()=>{
+  const pager=read('css/module/module_pager-01.css');
+  const tokens=read('css/global/variables.css');
+  assert.match(pager,/font-family:\s*var\(--font-sansSerif-en\)/);
+  assert.match(tokens,/--font-sansSerif-en\s*:/);
+  assert.doesNotMatch(pager,/var\(--enText\)/);
+});
