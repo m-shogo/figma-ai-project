@@ -22,6 +22,10 @@
     display: grid;
     grid-template-columns: 1fr;
     margin-top: var(--wp-block-margin);
+    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
     & + & {
       margin-top: var(--wp-block-margin-large);
     }
@@ -31,6 +35,16 @@
         text-decoration: none;
         color: var(--color-text);
         display: flex;
+        @media (any-hover: hover) {
+          &:hover {
+            .content {
+              opacity: 0.7;
+            }
+            .image img {
+              transform: scale(1.05);
+            }
+          }
+        }
         &::after {
           content: unset;
         }
@@ -84,6 +98,9 @@
     &.--large {
       gap: calc(40 * var(--to-rem-func));
       grid-template-columns: minmax(0, 1fr);
+      @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
       .navigation {
         min-width: 0;
         a {
@@ -170,17 +187,29 @@
     /* MARK: 小 */
     &.--small {
       gap: calc(30 * var(--to-rem-func));
+      @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: calc(40 * var(--to-rem-func));
+      }
       .navigation {
         min-width: 0;
         a {
           min-width: 0;
           align-items: flex-start;
           gap: calc(15 * var(--to-rem-func));
+          @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+            gap: calc(25 * var(--to-rem-func));
+          }
           .image {
             border-radius: calc(4 * var(--to-rem-func));
             width: min(calc(120 * var(--to-rem-func)), 42%);
             aspect-ratio: 1 / 1;
             border: calc(1 * var(--to-rem-func)) solid var(--color-gray-border);
+            @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+              border: unset;
+              width: min(calc(180 * var(--to-rem-func)), 48%);
+              aspect-ratio: 18 / 15;
+            }
           }
           .content {
             flex: 1 1 0%;
@@ -189,61 +218,16 @@
             .title {
               font-size: calc(16 * var(--to-rem-func));
               text-underline-offset: calc(4 * var(--to-rem-func));
+              @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+                font-size: calc(20 * var(--to-rem-func));
+              }
             }
             .text {
               margin-top: calc(10 * var(--to-rem-func));
               font-size: calc(12 * var(--to-rem-func));
-            }
-          }
-        }
-      }
-    }
-
-    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-      flex-direction: row;
-      flex-wrap: wrap;
-      & + .module_navigation {
-        /* margin-top: calc(48 * var(--to-rem-func)); */
-      }
-      &.--large {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-      &.--small {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: calc(40 * var(--to-rem-func));
-        .navigation {
-          a {
-            gap: calc(25 * var(--to-rem-func));
-            .image {
-              border: unset;
-              width: min(calc(180 * var(--to-rem-func)), 48%);
-              aspect-ratio: 18 / 15;
-            }
-            .content {
-              .title {
-                font-size: calc(20 * var(--to-rem-func));
-              }
-              .text {
+              @media (calc(768 * (1 / 16 * 1rem)) <= width) {
                 margin-top: calc(15 * var(--to-rem-func));
                 font-size: calc(14 * var(--to-rem-func));
-              }
-            }
-          }
-        }
-      }
-    }
-
-    /* MARK: hover */
-    @media (any-hover: hover) {
-      .navigation {
-        a {
-          &:hover {
-            .content {
-              opacity: 0.7;
-            }
-            .image {
-              img {
-                transform: scale(1.05);
               }
             }
           }

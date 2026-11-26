@@ -77,12 +77,12 @@ iframe {
     label[for*='pwbox'] {
       display: block;
       margin-inline: auto;
+      @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+        max-width: calc(350 * var(--to-rem-func));
+      }
     }
     input[type='password'] {
       font-family: Consolas, 'Courier New', Courier, Monaco, monospace !important;
-      &:hover,
-      &:focus {
-      }
     }
     .mp_submit-wrap {
       display: flex;
@@ -104,6 +104,12 @@ iframe {
       background-color: var(--color-primary);
       color: var(--color-secondary);
       padding: 0;
+      @media (any-hover: hover) {
+        &:hover {
+          background-color: var(--color-secondary);
+          color: var(--color-primary);
+        }
+      }
       span {
         display: block;
       }
@@ -119,31 +125,6 @@ iframe {
     }
   }
 
-  @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-    form {
-      label[for*='pwbox'] {
-        max-width: calc(350 * var(--to-rem-func));
-      }
-      .mp_submit-wrap {
-        margin-top: calc(30 * var(--to-rem-func));
-      }
-      .mp_submit-inner {
-        padding: 0;
-      }
-    }
-  }
-
-  /* MARK: hover */
-  @media (any-hover: hover) {
-    form {
-      .mp_submit-inner {
-        &:hover {
-          background-color: var(--color-secondary);
-          color: var(--color-primary);
-        }
-      }
-    }
-  }
 }
 /* // ==========================================================================
 // ログイン時のadmin-bar高さ分固定メニューを移動

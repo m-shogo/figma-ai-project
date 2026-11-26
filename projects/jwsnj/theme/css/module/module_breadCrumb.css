@@ -7,8 +7,6 @@
   font-size: calc(12 * var(--to-rem-func));
   color: var(--color-text);
   line-height: 1.5;
-  .mb_inner {
-  }
   .module_breadCrumb-01 {
     li {
       display: inline;
@@ -29,12 +27,9 @@
         color: var(--color-text);
       }
     }
-  }
-
-  /* MARK: hover */
-  @media (any-hover: hover) {
-    .module_breadCrumb-01 {
-      a {
+    /* Keep the original descendant-link scope, not only li links. */
+    a {
+      @media (any-hover: hover) {
         &:hover {
           text-decoration: none;
         }
