@@ -107,12 +107,56 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
     await waitState(false, true);
     assert.equal(await hamburger.isVisible(), false);
     assert.equal(await wrapper.evaluate(el => el.inert), false);
-    await parent.locator('.gnl_link-02').hover();
-    await page.waitForFunction(() => document.querySelector('.gnl_button-02').getAttribute('aria-expanded') === 'true');
-    assert.notEqual(await wrapper.evaluate(el => getComputedStyle(el).clipPath), 'none');
+    const desktopLink = parent.locator('.gnl_link-02').first();
+    const arrow = desktopLink.locator('.gnl_arrow');
+    const arrowGlyph = () => arrow.evaluate(el => getComputedStyle(el, '::before').content);
+    assert.equal(await arrow.getAttribute('aria-hidden'), 'true');
+    const iconFaces = await page.evaluate(async () => (await document.fonts.load('400 14px "Font Awesome 6 Pro"', String.fromCodePoint(0xf107, 0xf106))).map(font => font.status));
+    assert.ok(iconFaces.length > 0 && iconFaces.every(status => status === 'loaded'), 'actual bundled FA Regular must load');
+    assert.equal(await nav.locator('.gnl_item-02._noChild .gnl_arrow').count(), 0);
+    for (const width of [1080, 1380]) {
+      await page.setViewportSize({ width, height: 900 });
+      // The legacy full-width flyout can cover the page body. Move into the header's left padding instead.
+      await page.mouse.move(1, 1);
+      await page.evaluate(() => document.activeElement?.blur());
+      await page.waitForFunction(() => {
+        const item = document.querySelector('.gnl_item-02._hasChild');
+        return !item.matches(':hover, :focus-within') &&
+          getComputedStyle(item.querySelector('.gnl_arrow'), '::before').content.includes(String.fromCodePoint(0xf107));
+      });
+      const typography = await desktopLink.evaluate(el => {
+        const style = getComputedStyle(el);
+        const icon = el.querySelector('.gnl_arrow');
+        const iconStyle = getComputedStyle(icon);
+        const label = el.querySelector('span');
+        return {
+          size: style.fontSize, weight: style.fontWeight, lineHeight: style.lineHeight,
+          family: style.fontFamily, gap: style.columnGap, tracking: style.letterSpacing,
+          iconSize: iconStyle.fontSize, iconWeight: iconStyle.fontWeight, iconFamily: iconStyle.fontFamily,
+          noOverlap: label.getBoundingClientRect().right <= icon.getBoundingClientRect().left + 1
+        };
+      });
+      assert.deepEqual([typography.size, typography.weight, typography.lineHeight, typography.gap], ['15px', '500', '22.5px', '8px']);
+      assert.match(typography.family, /Zen Kaku Gothic New/);
+      assert.match(typography.iconFamily, /Font Awesome 6 Pro/);
+      assert.deepEqual([typography.iconSize, typography.iconWeight], ['14px', '400']);
+      assert.equal(typography.noOverlap, true);
+      await desktopLink.hover();
+      await page.waitForFunction(() => document.querySelector('.gnl_button-02').getAttribute('aria-expanded') === 'true');
+      assert.ok((await arrowGlyph()).includes(String.fromCodePoint(0xf106)));
+      assert.equal(await desktopLink.evaluate(el => getComputedStyle(el).color), 'rgb(40, 172, 95)');
+      assert.notEqual(await wrapper.evaluate(el => getComputedStyle(el).clipPath), 'none');
+      // The legacy full-width flyout can cover the page body. Move into the header's left padding instead.
+      await page.mouse.move(1, 1);
+      await desktopLink.focus();
+      assert.ok((await arrowGlyph()).includes(String.fromCodePoint(0xf106)));
+      await page.screenshot({ path: 'form-qa-results/nav-' + engineName + '-' + width + '-parent.png' });
+      console.log(JSON.stringify({ engine: engineName, width, desktopParent: 'PASS', ...typography }));
+    }
     await page.setViewportSize({ width: 1079, height: 900 });
     await waitState(false);
     assert.equal(await hamburger.isVisible(), true);
+    assert.equal(await arrow.evaluate(el => getComputedStyle(el).display), 'none');
     await page.setViewportSize({ width: 768, height: 900 });
     assert.equal(await footerWrapper.evaluate(el => el.inert), false);
     await page.setViewportSize({ width: 767, height: 900 });

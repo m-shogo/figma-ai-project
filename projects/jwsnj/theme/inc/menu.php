@@ -133,7 +133,9 @@ class Custom_Global_Walker_Nav_Menu extends Walker_Nav_Menu
       $output .=   '<div class="' . esc_attr($title_class) . '">';
       $output .=     '<a class="' . esc_attr($link_class) . '" href="' . esc_url($item_url) . '"' . $target_attribute . '>';
       $output .=       '<span>' . esc_html($title) . '</span>';
-      // $output .=       '<span>' . esc_html($slug) . '</span>'; // スラッグを表示する場合はコメントアウトを解除
+      if ($depth === 0) {
+        $output .= '<span class="gnl_arrow" aria-hidden="true"></span>';
+      }
       $output .=     '</a>';
       $output .=     '<button class="' . esc_attr($button_class) . '" type="button" aria-expanded="false" aria-controls="' . esc_attr($submenu_id) . '" aria-label="' . esc_attr($title . 'のサブメニューを開閉') . '"><span>開閉</span></button>';
       $output .=   '</div>';
