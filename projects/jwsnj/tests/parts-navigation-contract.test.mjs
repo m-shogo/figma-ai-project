@@ -6,7 +6,7 @@ const css = readFileSync(new URL('../theme/css/blocks/wp-block-navigation-style.
 const large = css.slice(css.indexOf('/* MARK: 大'), css.indexOf('/* MARK: 小'));
 test('large navigation uses fluid Figma card proportions and text rhythm', () => {
   for (const value of ['gap: calc(40 * var(--to-rem-func))', 'gap: calc(24 * var(--to-rem-func))', 'aspect-ratio: 3 / 2', 'border-radius: calc(5 * var(--to-rem-func))', 'font-size: calc(18 * var(--to-rem-func))', 'line-height: 1.4', 'overflow-wrap: anywhere', 'min-width: 0']) assert.ok(large.includes(value), value);
-  assert.match(css, /&\.--large\s*\{\s*grid-template-columns: repeat\(3, minmax\(0, 1fr\)\)/);
+  assert.match(css, /&\.--large\s*\{[^{}]*@media \(calc\(768 \* \(1 \/ 16 \* 1rem\)\) <= width\)\s*\{\s*grid-template-columns: repeat\(3, minmax\(0, 1fr\)\)/);
   assert.doesNotMatch(large, /white-space:\s*nowrap|figma\.com\/api/);
 });
 test('large navigation keeps keyboard focus visible and reduced-motion available', () => {
@@ -17,7 +17,7 @@ test('large navigation keeps keyboard focus visible and reduced-motion available
 
 test('large navigation renders the approved decorative corner and arrow only for enabled links', () => {
   assert.match(large, /\.image\s*\{\s*position:\s*relative;\s*isolation:\s*isolate/);
-  const arrow = large.slice(large.indexOf('&:not(.is-disabled) .image'), large.indexOf('                    .content {'));
+  const arrow = large.slice(large.indexOf('&:not(.is-disabled) .image'), large.indexOf('\n          .content {', large.indexOf('&:not(.is-disabled) .image')));
   assert.ok(arrow.length > 0);
   for (const value of [
     'right: 0', 'bottom: 0', 'pointer-events: none',
@@ -59,7 +59,7 @@ test('large navigation corner glyph retains its centered 10px FA Regular ink', (
   assert.match(icon,/line-height:\s*1;/);
 });
 
-const small = css.slice(css.indexOf('/* MARK: 小'), css.indexOf('@media (calc(768', css.indexOf('/* MARK: 小')));
+const small = css.slice(css.indexOf('/* MARK: 小'));
 const smallTemplate = readFileSync(new URL('../theme/acf/blocks/navigationSmall.php', import.meta.url), 'utf8');
 test('small navigation long labels cannot force their flex row beyond its grid track', () => {
   assert.match(small, /\.navigation\s*\{\s*min-width:\s*0/);
@@ -80,5 +80,5 @@ test('small navigation handles absent URLs, images and empty rows without sample
 
 
 test('small navigation grid tracks do not inherit min-content label width at desktop', () => {
-  assert.match(css, /&\.--small\s*\{\s*grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/);
+  assert.match(css, /&\.--small\s*\{[^{}]*@media \(calc\(768 \* \(1 \/ 16 \* 1rem\)\) <= width\)\s*\{\s*grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/);
 });
