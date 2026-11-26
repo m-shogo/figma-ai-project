@@ -365,3 +365,7 @@ TOP PC `114:28` / SP `279:2136` から、ベクターは SVG、写真は元画�
 
 ## 2026-11-26 コース詳細FAQの独立実装
 - PC 612:3182 closed/612:3193 open high-fidelity context + screenshots. Both course question states left32px, unlike existing generic parts closed24/open32. Existing core/details renderer, Q/A markers, 68px icon rail, native keyboard/open behavior, focus and reduced-motion CSS stay shared. Add opt-in core/details style `jwsnj-course-faq` (editor label コースFAQ（Q・A）), stable PC32px / provisional narrow24px inset, no fixed text height, preserve normal `_qa` behavior. No FAQ content hardcoded or CMS field/URL added. SP Figma not provided; editor style selection and real keyboard/open/long text QA #523.
+
+
+## 2026-11-26 コース詳細導入のタイポグラフィ
+- Fresh PC534:2369/534:2363 high-fidelity context + screenshots; SP page 263:12 metadata confirms no course detail frame among top-level frames. Intro Japanese 36px/700 tracking10%, English 15px/500 tracking5%, gap20; lead 24px/500 line-height1.8 tracking5%. Reuse existing bilingual Group/Row rules with opt-in `jwsnj-course-intro-heading` and native paragraph `jwsnj-course-lead`; no automatic page/content creation, new ACF/CPT/URL, photos or CTA. Narrow heading24, lead20 and natural wrapping are provisional implementation decisions (not SP design). Native editor save/reopen and real layout #523. Existing section heading remains32/13 on PC.

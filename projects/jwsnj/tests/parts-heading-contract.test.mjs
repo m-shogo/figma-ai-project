@@ -98,3 +98,22 @@ test('opt-in course section heading uses existing Gutenberg group, semantic H2 a
     assert.match(readFileSync(new URL('../theme/css/'+path,import.meta.url),'utf8'),/@import '\.\/blocks\/wp-block-group-style\.css'/);
   }
 });
+
+test('course introduction typography reuses bilingual layout and has an opt-in editable lead',()=>{
+  const group=readFileSync(new URL('../theme/css/blocks/wp-block-group-style.css',import.meta.url),'utf8');
+  assert.match(group,/\.wp-block-group\.is-style-jwsnj-course-heading,\s*:is\(\.block-editor_wrap, \.editor-styles-wrapper\) \.wp-block-group\.is-style-jwsnj-course-intro-heading\s*\{/);
+  const intro=group.slice(group.indexOf('/* Course introduction title PC 534:2369'));
+  assert.match(intro,/font-size:\s*calc\(36 \* var\(--to-rem-func\)\)/);
+  assert.match(intro,/font-size:\s*calc\(15 \* var\(--to-rem-func\)\)/);
+  const textCss=readFileSync(new URL('../theme/css/blocks/wp-block-text-style.css',import.meta.url),'utf8');
+  const lead=textCss.slice(textCss.indexOf('/* Course introduction lead PC 534:2363'));
+  assert.match(lead,/p\.is-style-jwsnj-course-lead/);
+  assert.match(lead,/font-weight:\s*500/);
+  assert.match(lead,/font-size:\s*calc\(24 \* var\(--to-rem-func\)\)/);
+  assert.match(lead,/line-height:\s*1\.8/);
+  assert.match(lead,/overflow-wrap:\s*anywhere/);
+  assert.doesNotMatch(intro+lead,/white-space:\s*nowrap|position:\s*absolute|(?:^|[;{}\n])\s*height\s*:/);
+  const editor=readFileSync(new URL('../theme/inc/editor.php',import.meta.url),'utf8');
+  assert.match(editor,/register_block_style\('core\/group', array\(\s*'name' => 'jwsnj-course-intro-heading'/);
+  assert.match(editor,/register_block_style\('core\/paragraph', array\(\s*'name' => 'jwsnj-course-lead'/);
+});
