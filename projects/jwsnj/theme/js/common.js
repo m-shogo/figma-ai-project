@@ -349,6 +349,21 @@ window.addEventListener('resize', setVw);
     // グローバルナビゲーション
     const $menuButton = $('#gh_menu');
     const $globalNavigation = $('#global_navigation');
+    let scrollpos = null;
+    const syncScrollLock = (isOpen) => {
+      if (isOpen && scrollpos === null) {
+        scrollpos = $(window).scrollTop();
+        $body.addClass('_contentFixed').css({ top: -scrollpos });
+      } else if (!isOpen && scrollpos !== null) {
+        $body.removeClass('_contentFixed').css({ top: 0 });
+        window.scrollTo(0, scrollpos);
+        scrollpos = null;
+      }
+    };
+    const syncBackdrop = () => {
+      const touchOpen = document.querySelector('.global_navigation [class*="gnl_item"]._touchOpen');
+      $body.toggleClass('_open-bg', $body.hasClass('_open-menu') || $body.hasClass('_open-search') || !!touchOpen);
+    };
     const syncMobileMenu = () => {
       const isOpen = $body.hasClass('_open-menu');
       $menuButton.attr('aria-expanded', String(isOpen));
@@ -361,21 +376,18 @@ window.addEventListener('resize', setVw);
       }
       // The desktop navigation remains available even when the mobile disclosure is closed.
       $globalNavigation.attr('inert', hiddenForMobile ? '' : null);
+      syncScrollLock(isOpen && !headerDesktop.matches);
+      syncBackdrop();
     };
     const closeMobileMenu = (restoreFocus = false) => {
       const wasOpen = $body.hasClass('_open-menu');
       $body.removeClass('_open-menu');
-      // Search and the PC touch mega-menu can independently own the backdrop.
-      const touchOpen = document.querySelector('.global_navigation [class*="gnl_item"]._touchOpen');
-      if (!$body.hasClass('_open-search') && !touchOpen) $body.removeClass('_open-bg');
       syncMobileMenu();
       if (restoreFocus && wasOpen) $menuButton.trigger('focus');
     };
     $menuButton.on('click', function () {
+      if (headerDesktop.matches) return;
       $body.toggleClass('_open-menu');
-      // Closing the hamburger must not conceal a separately opened search backdrop.
-      if ($body.hasClass('_open-menu') || $body.hasClass('_open-search')) $body.addClass('_open-bg');
-      else $body.removeClass('_open-bg');
       syncMobileMenu();
     });
     $('#gn_close').on('click', function () {
@@ -451,7 +463,6 @@ window.addEventListener('resize', setVw);
     // - touchstartでpreventDefaultする
     // - 2回目タップ（メニュー表示中）は遷移許可（preventDefaultしない）
     // ==========================================================================
-    // PCレイアウトとみなす最小幅（toggleMenu / contentFixed のブレークポイント跨ぎで共通）
     // MARK: header_breakpoint
     // メガメニューのタッチ展開状態クラス（touchMegaMenuSupport とブレークポイント跨ぎ処理の両方から参照）
     const touchOpenClass = '_touchOpen';
@@ -463,8 +474,7 @@ window.addEventListener('resize', setVw);
         const button = el.querySelector('[class*="gnl_button"]');
         if (button) button.setAttribute('aria-expanded', String(el.getAttribute('data-open') === 'true'));
       });
-      // The backdrop can also be owned by an open search or mobile navigation.
-      if (!$body.hasClass('_open-search') && !$body.hasClass('_open-menu')) $body.removeClass('_open-bg');
+      syncBackdrop();
     };
 
     const touchMegaMenuSupport = function () {
@@ -506,7 +516,7 @@ window.addEventListener('resize', setVw);
             li.classList.add(touchOpenClass);
             const disclosure = li.querySelector('[class*="gnl_button"]');
             if (disclosure) disclosure.setAttribute('aria-expanded', 'true');
-            $body.addClass('_open-bg');
+            syncBackdrop();
           },
           { passive: false }
         );
@@ -541,8 +551,7 @@ window.addEventListener('resize', setVw);
       const isPcOrOver = headerDesktop.matches;
       if (lastHeaderDesktop !== isPcOrOver) {
         closeAllTouchMenus();
-        $body.removeClass('_open-menu _open-bg _contentFixed');
-        syncMobileMenu();
+        closeMobileMenu();
         // PC hover state may outlive its media query when switching to the SP layout.
         globalNavItems.forEach((item) => {
           const button = item.querySelector('[class*="gnl_button"]');
@@ -596,9 +605,7 @@ window.addEventListener('resize', setVw);
     $('#search').on('click', function () {
       const isOpen = !$body.hasClass('_open-search');
       $body.toggleClass('_open-search', isOpen);
-      // Backdrop ownership is shared with the mobile menu and PC touch flyouts.
-      const touchOpen = document.querySelector('.global_navigation [class*="gnl_item"]._touchOpen');
-      $body.toggleClass('_open-bg', isOpen || $body.hasClass('_open-menu') || !!touchOpen);
+      syncBackdrop();
     });
 
     $('#gns_close, #overlay').on('click', function () {
@@ -750,46 +757,6 @@ window.addEventListener('resize', setVw);
 //   };
 
   // ==========================================================================
-  // メニューオープン時背景のスクロール禁止
-  // ==========================================================================
-  const contentFixed = function () {
-    // メニューで背景スクロールを止めているか（#gh_menu のトグルと同期）
-    let state = false;
-    // メニューオープン直前のスクロール位置（閉じる・ブレークポイント跨ぎで復元）
-    let scrollpos;
-    // Every path that closes the menu must release the same scroll lock.
-    const releaseScrollLock = () => {
-      if (!state) return;
-      $('body').removeClass('_contentFixed').css({ top: 0 });
-      window.scrollTo(0, scrollpos);
-      state = false;
-    };
-    $('#gh_menu').on('click', function () {
-      if (!state) {
-        scrollpos = $(window).scrollTop();
-        $('body').addClass('_contentFixed').css({ top: -scrollpos });
-        state = true;
-      } else {
-        releaseScrollLock();
-      }
-    });
-    $('#gn_close, #gns_close, #overlay').on('click', releaseScrollLock);
-    $(document).on('keydown', function (event) {
-      if (event.key === 'Escape') releaseScrollLock();
-    });
-    // 幅のブレークポイントを跨いだとき state を false にし、固定中ならスクロール位置を戻す（toggleMenu 側のクラス削除と整合）
-    // MARK: header_breakpoint
-    let lastHeaderDesktop = headerDesktop.matches;
-    const syncResponsiveLock = function () {
-      const isPcOrOver = headerDesktop.matches;
-      if (lastHeaderDesktop !== isPcOrOver) releaseScrollLock();
-      lastHeaderDesktop = isPcOrOver;
-    };
-    $(window).on('load resize', syncResponsiveLock);
-    headerDesktop.addEventListener('change', syncResponsiveLock);
-  };
-
-  // ==========================================================================
   // pageTop
   // ==========================================================================
 
@@ -902,7 +869,6 @@ window.addEventListener('resize', setVw);
   initHTML();
   moduleModal();
 //   moduleAccordion();
-  contentFixed();
   // menuTextChange();
   lightboxWrap();
   // tab();
