@@ -4,152 +4,152 @@
 // ------------------------------ */
 .block-editor_wrap,
 .editor-styles-wrapper {
-    .module_newsCard-01 {
-        margin-top: var(--wp-block-margin);
-        & + & {
-            margin-top: var(--wp-block-margin-large);
-        }
+  .module_newsCard-01 {
+    margin-top: var(--wp-block-margin);
+    & + & {
+      margin-top: var(--wp-block-margin-large);
     }
+  }
 }
 .module_newsCard-01 {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: calc(32 * var(--to-rem-func)) calc(16 * var(--to-rem-func));
-    /* ニュースカード + ニュースリストと続く場合の上部余白 */
-    & + .module_newsList-01 {
-        margin-top: var(--wp-block-margin-large);
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: calc(32 * var(--to-rem-func)) calc(16 * var(--to-rem-func));
+  /* ニュースカード + ニュースリストと続く場合の上部余白 */
+  & + .module_newsList-01 {
+    margin-top: var(--wp-block-margin-large);
+  }
+  .mnc-01_article {
+    width: 100%;
+    /* // カラム */
+    .link,
+    .no-link {
+      display: block;
+      color: var(--color-text);
+      text-decoration: none;
+      transition: var(--transition-duration);
     }
-    .mnc-01_article {
-        width: 100%;
-        /* // カラム */
-        .link,
-        .no-link {
-            display: block;
-            color: var(--color-text);
-            text-decoration: none;
-            transition: var(--transition-duration);
+    .link {
+      @media (any-hover: hover) {
+        &:hover .foot .title {
+          color: var(--color-link);
         }
-        .link {
-            @media (any-hover: hover) {
-                &:hover .foot .title {
-                    color: var(--color-link);
-                }
-            }
-            &[target='_blank'] {
-                .title {
-                    &::after {
-                        content: var(--icon-blank);
-                        font-family: var(--font-awesome);
-                        font-weight: 400;
-                        margin-left: 0.25em;
-                    }
-                }
-            }
-            &[href$='.pdf'] {
-                .title {
-                    &::after {
-                        content: var(--icon-pdf);
-                        font-family: var(--font-awesome);
-                        font-weight: 400;
-                        margin-left: 0.25em;
-                    }
-                }
-            }
-            &[href$='.doc'],
-            &[href$='.docx'],
-            &[href$='.docm'],
-            &[href$='.xls'],
-            &[href$='.xlsx'],
-            &[href$='.xlsm'],
-            &[href$='.png'],
-            &[href$='.jpg'],
-            &[href$='.jpeg'],
-            &[href$='.gif'],
-            &[href$='.webp'] {
-                .title {
-                    &::after {
-                        content: var(--icon-file);
-                        font-family: var(--font-awesome);
-                        font-weight: 400;
-                        margin-left: 0.25em;
-                    }
-                }
-            }
+      }
+      &[target='_blank'] {
+        .title {
+          &::after {
+            content: var(--icon-blank);
+            font-family: var(--font-awesome);
+            font-weight: 400;
+            margin-left: 0.25em;
+          }
         }
-        .head {
-            position: relative;
-            overflow: hidden;
-            /* border-radius: calc(8 * var(--to-rem-func)); */
-            width: 100%;
-            .image {
-                &::before {
-                    content: '';
-                    display: block;
-                    position: absolute;
-                    z-index: -1;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background-color: var(--color-secondary);
-                }
-                &._noImage {
-                    &::before {
-                        background-color: var(--color-gray-background);
-                    }
-                }
-                img {
-                    aspect-ratio: 360 / 240;
-                }
-            }
+      }
+      &[href$='.pdf'] {
+        .title {
+          &::after {
+            content: var(--icon-pdf);
+            font-family: var(--font-awesome);
+            font-weight: 400;
+            margin-left: 0.25em;
+          }
         }
-        .body {
-            margin-top: calc(10 * var(--to-rem-func));
-            @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-                display: flex;
-                margin-top: calc(20 * var(--to-rem-func));
-            }
-            .date {
-                margin: 0; /* エディタでの余白を削除 */
-                width: calc(100 * var(--to-rem-func));
-            }
-            .category {
-                margin: 0; /* エディタでの余白を削除 */
-                display: flex;
-                align-items: center;
-                flex-wrap: wrap;
-                gap: calc(4 * var(--to-rem-func)) calc(10 * var(--to-rem-func));
-                margin-top: calc(10 * var(--to-rem-func));
-                @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-                    margin-top: 0;
-                }
-                .label {
-                    display: inline-block;
-                    border: calc(1 * var(--to-rem-func)) solid var(--color-primary);
-                    padding: 0 0.5em;
-                    color: var(--color-primary);
-                }
-            }
+      }
+      &[href$='.doc'],
+      &[href$='.docx'],
+      &[href$='.docm'],
+      &[href$='.xls'],
+      &[href$='.xlsx'],
+      &[href$='.xlsm'],
+      &[href$='.png'],
+      &[href$='.jpg'],
+      &[href$='.jpeg'],
+      &[href$='.gif'],
+      &[href$='.webp'] {
+        .title {
+          &::after {
+            content: var(--icon-file);
+            font-family: var(--font-awesome);
+            font-weight: 400;
+            margin-left: 0.25em;
+          }
         }
-        .foot {
-            margin-top: calc(10 * var(--to-rem-func));
-            .title {
-                margin: 0; /* エディタでの余白を削除 */
-                font-weight: 700;
-                font-size: calc(18 * var(--to-rem-func));
-                line-height: 1.5;
-                letter-spacing: 0.05em;
-                transition: color var(--transition-duration);
-                overflow-wrap: anywhere;
-                word-break: normal;
-                line-break: strict;
-            }
-        }
+      }
     }
+    .head {
+      position: relative;
+      overflow: hidden;
+      /* border-radius: calc(8 * var(--to-rem-func)); */
+      width: 100%;
+      .image {
+        &::before {
+          content: '';
+          display: block;
+          position: absolute;
+          z-index: -1;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: var(--color-secondary);
+        }
+        &._noImage {
+          &::before {
+            background-color: var(--color-gray-background);
+          }
+        }
+        img {
+          aspect-ratio: 360 / 240;
+        }
+      }
+    }
+    .body {
+      margin-top: calc(10 * var(--to-rem-func));
+      @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+        display: flex;
+        margin-top: calc(20 * var(--to-rem-func));
+      }
+      .date {
+        margin: 0; /* エディタでの余白を削除 */
+        width: calc(100 * var(--to-rem-func));
+      }
+      .category {
+        margin: 0; /* エディタでの余白を削除 */
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: calc(4 * var(--to-rem-func)) calc(10 * var(--to-rem-func));
+        margin-top: calc(10 * var(--to-rem-func));
+        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+          margin-top: 0;
+        }
+        .label {
+          display: inline-block;
+          border: calc(1 * var(--to-rem-func)) solid var(--color-primary);
+          padding: 0 0.5em;
+          color: var(--color-primary);
+        }
+      }
+    }
+    .foot {
+      margin-top: calc(10 * var(--to-rem-func));
+      .title {
+        margin: 0; /* エディタでの余白を削除 */
+        font-weight: 700;
+        font-size: calc(18 * var(--to-rem-func));
+        line-height: 1.5;
+        letter-spacing: 0.05em;
+        transition: color var(--transition-duration);
+        overflow-wrap: anywhere;
+        word-break: normal;
+        line-break: strict;
+      }
+    }
+  }
 
-    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-        grid-template-columns: repeat(3, 1fr);
-        gap: calc(72 * var(--to-rem-func)) calc(40 * var(--to-rem-func));
-    }
+  @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+    grid-template-columns: repeat(3, 1fr);
+    gap: calc(72 * var(--to-rem-func)) calc(40 * var(--to-rem-func));
+  }
 
 }

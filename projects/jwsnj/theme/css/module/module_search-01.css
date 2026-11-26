@@ -3,92 +3,92 @@
 // 検索
 // ========================================================================== */
 .module_search-01 {
-    --_search-height-SP: calc(40 * var(--to-rem-func));
-    --_button-width-SP: calc(86 * var(--to-rem-func));
-    .ms_from {
-        background-color: var(--color-primary);
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) minmax(0, var(--_button-width-SP));
+  --_search-height-SP: calc(40 * var(--to-rem-func));
+  --_button-width-SP: calc(86 * var(--to-rem-func));
+  .ms_from {
+    background-color: var(--color-primary);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, var(--_button-width-SP));
+    align-items: center;
+    .ms_input {
+      border: calc(1 * var(--to-rem-func)) solid var(--color-primary);
+      width: 100%;
+      min-width: 0;
+      min-height: var(--_search-height-SP);
+      height: auto;
+      background-color: var(--color-secondary);
+      color: var(--color-text);
+      font-size: calc(16 * var(--to-rem-func));
+      transition: border-color var(--transition-duration), background-color var(--transition-duration);
+      &:hover {
+        border-color: var(--color-primary);
+      }
+      &:focus {
+        border-color: var(--color-primary);
+        background-color: var(--color-secondary);
+      }
+      &:focus-visible {
+        outline: 2px solid currentColor;
+        outline-offset: -3px;
+      }
+      &:-webkit-autofill {
+        -webkit-box-shadow: 0 0 0 1000px var(--color-secondary) inset;
+      }
+      &[readonly='readonly'],
+      &[readonly] {
+        background-color: var(--color-secondary);
+      }
+    }
+    .ms_button {
+      min-height: var(--_search-height-SP);
+      height: auto;
+      width: 100%;
+      border: calc(1 * var(--to-rem-func)) solid var(--color-primary);
+      border-left: none;
+      background-color: var(--color-primary);
+      text-align: center;
+      min-width: 0;
+      transition: background-color var(--transition-duration);
+      &:focus-visible {
+        outline: 2px solid currentColor;
+        outline-offset: -3px;
+      }
+      &:hover,
+      &:focus {
+        background-color: var(--color-secondary);
+        span {
+          color: var(--color-primary);
+          &::after {
+            color: var(--color-primary);
+          }
+        }
+      }
+      span {
+        position: relative;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
         align-items: center;
-        .ms_input {
-            border: calc(1 * var(--to-rem-func)) solid var(--color-primary);
-            width: 100%;
-            min-width: 0;
-            min-height: var(--_search-height-SP);
-            height: auto;
-            background-color: var(--color-secondary);
-            color: var(--color-text);
-            font-size: calc(16 * var(--to-rem-func));
-            transition: border-color var(--transition-duration), background-color var(--transition-duration);
-            &:hover {
-                border-color: var(--color-primary);
-            }
-            &:focus {
-                border-color: var(--color-primary);
-                background-color: var(--color-secondary);
-            }
-            &:focus-visible {
-                outline: 2px solid currentColor;
-                outline-offset: -3px;
-            }
-            &:-webkit-autofill {
-                -webkit-box-shadow: 0 0 0 1000px var(--color-secondary) inset;
-            }
-            &[readonly='readonly'],
-            &[readonly] {
-                background-color: var(--color-secondary);
-            }
+        font-size: calc(16 * var(--to-rem-func));
+        color: var(--color-secondary);
+        transition: color var(--transition-duration);
+        &::after {
+          content: '\f002';
+          display: block;
+          margin-left: calc(7 * var(--to-rem-func));
+          font-family: var(--font-awesome);
+          font-weight: 500;
+          color: var(--color-secondary);
+          transition: color var(--transition-duration);
         }
-        .ms_button {
-            min-height: var(--_search-height-SP);
-            height: auto;
-            width: 100%;
-            border: calc(1 * var(--to-rem-func)) solid var(--color-primary);
-            border-left: none;
-            background-color: var(--color-primary);
-            text-align: center;
-            min-width: 0;
-            transition: background-color var(--transition-duration);
-            &:focus-visible {
-                outline: 2px solid currentColor;
-                outline-offset: -3px;
-            }
-            &:hover,
-            &:focus {
-                background-color: var(--color-secondary);
-                span {
-                    color: var(--color-primary);
-                    &::after {
-                        color: var(--color-primary);
-                    }
-                }
-            }
-            span {
-                position: relative;
-                display: flex;
-                flex-wrap: wrap;
-                justify-content: center;
-                align-items: center;
-                font-size: calc(16 * var(--to-rem-func));
-                color: var(--color-secondary);
-                transition: color var(--transition-duration);
-                &::after {
-                    content: '\f002';
-                    display: block;
-                    margin-left: calc(7 * var(--to-rem-func));
-                    font-family: var(--font-awesome);
-                    font-weight: 500;
-                    color: var(--color-secondary);
-                    transition: color var(--transition-duration);
-                }
-            }
-        }
+      }
     }
-    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-        &:is(body.search .gc_main *, body.error404 .gc_main *) {
-            max-width: calc(350 * var(--to-rem-func));
-            margin-block: calc(50 * var(--to-rem-func)) 0;
-            margin-inline: auto;
-        }
+  }
+  @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+    &:is(body.search .gc_main *, body.error404 .gc_main *) {
+      max-width: calc(350 * var(--to-rem-func));
+      margin-block: calc(50 * var(--to-rem-func)) 0;
+      margin-inline: auto;
     }
+  }
 }
