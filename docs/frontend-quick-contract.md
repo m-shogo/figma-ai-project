@@ -109,6 +109,8 @@ Visual修正を末尾`final-fix`へ積まず、ownerへ戻して直す。合法�
 
 ## 7. Mobile First + contextual at-ruleをownerへ同居させる
 
+CSS品質の共通追加契約（owner・semantic token・fallback・cascade・自動警告・Stylelint導入手順）は `docs/css-strategy.md` の CSS quality gate を参照。Project Guardの新規CSS警告をレビューし、案件のCompany/Theme例外を尊重する。
+
 新規/明示的に再設計するCSS authoringは**Mobile Firstをdefault**にする。
 
 - smallest supported mobile layoutを素のbase declarationとして書く
