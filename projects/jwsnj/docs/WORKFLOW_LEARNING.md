@@ -81,3 +81,5 @@ Status: PROJECT-ONLY EVIDENCE / Human feedback: 2026-11-20
 - #650 merged c0143aa after actual three CI job logs. Fresh News parent PC/SP context + image established sample event removal as independent work; no event CPT or SNS URL added. Next: TOP About independent approved content and CMS boundaries; #523/#524 remain OPEN.
 
 - #651 merged 4e8261e after three actual CI job logs; About PC/SP parent and text child high-fidelity context/image then isolated fixed copy/map. Card destinations and shared background remain separate.
+
+- New browser run start 801ddef (#652 merged), fresh skill/session. PC/SP News + Instagram panel connected without unconfirmed CTA; next READY: independent fixed For Applicants content and About background after exact asset/rights review; cards and Course CMS mapping separately.

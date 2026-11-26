@@ -1,11 +1,13 @@
 @charset "utf-8";
-/* TOP News list: PC 114:542 / SP 279:2524. Instagram is a separate owner. */
+/* TOP News list: PC 114:542 / SP 279:2524. Instagram panel uses the approved fixed copy; account URL pending. */
 .global_contents > .top_news-01 {
     padding-block: calc(60 * var(--to-rem-func));
     color: var(--color-text);
     font-family: var(--font-jwsnj-ja);
     background: var(--color-secondary);
     .jwsnj_topNews_inner {
+        display: grid;
+        gap: calc(40 * var(--to-rem-func));
         padding-inline: clamp(calc(20 * var(--to-rem-func)), 10.667vw, calc(40 * var(--to-rem-func)));
     }
     .jwsnj_topNews_panel {
@@ -62,7 +64,7 @@
         background: var(--color-primary);
         color: var(--color-secondary);
         &::before {
-            content: '\\f061';
+            content: '\f061';
             font: 400 calc(12 * var(--to-rem-func))/1 var(--font-awesome);
             letter-spacing: 0;
             text-box-trim: none;
@@ -148,13 +150,67 @@
     @media (prefers-reduced-motion: reduce) {
         .module_newsList-01 .mnl-01_article .link .title { transition: none; }
     }
+    .jwsnj_topInstagram {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: calc(20 * var(--to-rem-func));
+        min-width: 0;
+        padding: calc(32 * var(--to-rem-func)) clamp(calc(16 * var(--to-rem-func)), 10.667vw, calc(40 * var(--to-rem-func))) calc(24 * var(--to-rem-func));
+        background: var(--jwsnj-color-base-lightgreen-02);
+        border-radius: calc(3 * var(--to-rem-func));
+        text-align: center;
+        letter-spacing: 0.05em;
+        overflow-wrap: anywhere;
+    }
+    .jwsnj_topInstagram_heading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: calc(8 * var(--to-rem-func));
+        margin: 0;
+        color: var(--color-primary);
+        font: 400 calc(20 * var(--to-rem-func))/1.3 var(--font-jwsnj-en-condensed);
+    }
+    .jwsnj_topInstagram_icon::before {
+        content: '\f16d';
+        font: 400 calc(22 * var(--to-rem-func))/1 var(--font-awesomeBrands);
+        letter-spacing: 0;
+    }
+    .jwsnj_topInstagram_copy {
+        display: grid;
+        gap: calc(16 * var(--to-rem-func));
+        width: 100%;
+    }
+    .jwsnj_topInstagram_label {
+        margin: 0;
+        padding: calc(6 * var(--to-rem-func)) calc(8 * var(--to-rem-func));
+        background: var(--color-secondary);
+        border-radius: 999px;
+        font-size: calc(13 * var(--to-rem-func));
+        font-weight: 500;
+        line-height: 1.3;
+    }
+    .jwsnj_topInstagram_description {
+        margin: 0;
+        font-size: calc(14 * var(--to-rem-func));
+        line-height: 1.8;
+    }
+    .jwsnj_topInstagram_art {
+        display: block;
+        width: calc(42 * var(--to-rem-func));
+        max-width: 100%;
+        height: auto;
+    }
     @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-        padding-block: calc(100 * var(--to-rem-func)) calc(116 * var(--to-rem-func));
+        padding-block: calc(100 * var(--to-rem-func));
         .jwsnj_topNews_inner {
             max-width: calc(var(--width-base-small) + var(--padding-TB) * 2);
             padding-inline: var(--padding-TB);
         }
-        .jwsnj_topNews_panel { max-width: calc(560 * var(--to-rem-func)); }
+        .jwsnj_topNews_panel { max-width: calc(560 * var(--to-rem-func)); width: 100%; margin-inline: auto; }
+        .jwsnj_topInstagram { width: 100%; max-width: calc(560 * var(--to-rem-func)); margin-inline: auto; }
         .jwsnj_topNews_en { font-size: calc(46 * var(--to-rem-func)); }
         .jwsnj_topNews_ja { font-size: calc(15 * var(--to-rem-func)); }
         .jwsnj_topNews_more { font-size: calc(16 * var(--to-rem-func)); }
@@ -166,5 +222,20 @@
             gap: calc(40 * var(--to-rem-func));
             padding: calc(24 * var(--to-rem-func)) 0;
         }
+    }
+    @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+        .jwsnj_topNews_inner {
+            grid-template-columns: minmax(0, 560fr) minmax(0, 320fr);
+            gap: calc(80 * var(--to-rem-func));
+            align-items: stretch;
+        }
+        .jwsnj_topInstagram {
+            gap: calc(24 * var(--to-rem-func));
+            padding: calc(56 * var(--to-rem-func)) calc(40 * var(--to-rem-func)) calc(32 * var(--to-rem-func));
+        }
+        .jwsnj_topInstagram_heading { font-size: calc(22 * var(--to-rem-func)); }
+        .jwsnj_topInstagram_icon::before { font-size: calc(28 * var(--to-rem-func)); }
+        .jwsnj_topInstagram_label { font-size: calc(16 * var(--to-rem-func)); }
+        .jwsnj_topInstagram_art { width: calc(66 * var(--to-rem-func)); }
     }
 }

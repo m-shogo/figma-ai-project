@@ -39,5 +39,6 @@ $news_query = new WP_Query([
                 <p>お知らせはありません。</p>
             <?php endif; ?>
         </div>
+        <?php get_template_part('template-parts/_top-instagram'); ?>
     </div>
 </section>

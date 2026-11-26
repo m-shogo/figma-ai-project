@@ -189,3 +189,18 @@ test('TOP does not render disabled CODIA event sample or its fake archive action
   assert.match(front,/top_banner-01/);
   execFileSync('php',['-l',new URL('../theme/front-page.php',import.meta.url).pathname]);
 });
+
+test('TOP Instagram uses the official asset and responsive News sibling without invented URL',()=>{
+  const part=read('template-parts/_top-instagram.php');
+  const css=read('css/project/top_news.css');
+  assert.match(read('template-parts/_top-news.php'),/_top-instagram/);
+  assert.match(part,/補習校の日常を発信中！/);
+  assert.match(part,/images\/top\/img_instagram\.svg/);
+  assert.match(read('images/top/img_instagram.svg'),/<svg/);
+  assert.doesNotMatch(part,/<a\s|<button|href=|figma\.com/);
+  assert.match(css,/560fr\) minmax\(0, 320fr\)/);
+  assert.match(css,/content: '\\f16d'/);
+  assert.match(css,/content: '\\f061'/);
+  assert.doesNotMatch(css,/content: '\\\\f061'/);
+  execFileSync('php',['-l',new URL('../theme/template-parts/_top-instagram.php',import.meta.url).pathname]);
+});
