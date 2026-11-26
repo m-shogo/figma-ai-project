@@ -30,15 +30,10 @@
             &:hover {
                 color: var(--color-link);
             }
-        }
-    }
-
-    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-        li {
-            a {
-                padding-block: calc(20 * var(--to-rem-func));
+            @media (calc(768 * (1 / 16 * 1rem)) <= width) {
                 padding-inline: calc(20 * var(--to-rem-func)) calc(40 * var(--to-rem-func));
             }
         }
     }
+
 }

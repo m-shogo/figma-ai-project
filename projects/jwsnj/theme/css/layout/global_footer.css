@@ -19,6 +19,30 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
         align-items: center;
         text-align: center;
+        @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+            grid-template-columns: minmax(0, 1fr) minmax(0, calc(484 * var(--to-rem-func))) minmax(0, 1fr);
+            gap: calc(40 * var(--to-rem-func));
+        }
+        /* Figma 114:422: extend the outer lines, not the artwork. */
+        @media (calc(1380 * (1 / 16 * 1rem)) < width) {
+            &::before,
+            &::after {
+                content: '';
+                position: absolute;
+                width: calc((100% - 1380 * var(--to-rem-func)) / 2 + 1px);
+                height: calc(1 * var(--to-rem-func));
+                background-color: var(--color-primary);
+                pointer-events: none;
+            }
+            &::before {
+                left: 0;
+                top: calc(50% + 1 * var(--to-rem-func));
+            }
+            &::after {
+                right: 0;
+                top: calc(50% + 19.16 * var(--to-rem-func));
+            }
+        }
     }
     .gf_brandStatement-copy {
         grid-column: 1 / -1;
@@ -29,6 +53,12 @@
         align-items: center;
         gap: calc(16 * var(--to-rem-func));
         min-width: 0;
+        @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+            grid-column: 2;
+            grid-row: 1;
+            padding: calc(56 * var(--to-rem-func)) 0 calc(48 * var(--to-rem-func));
+            gap: calc(20 * var(--to-rem-func));
+        }
     }
     .gf_brandStatement-left,
     .gf_brandStatement-right {
@@ -90,6 +120,9 @@
         line-height: 1.4;
         letter-spacing: 0.05em;
         color: var(--color-text);
+        @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+            font-size: calc(46 * var(--to-rem-func));
+        }
     }
     .gf_brandStatement-ja {
         min-width: 0;
@@ -101,18 +134,11 @@
         line-height: 1.5;
         letter-spacing: 0.05em;
         color: var(--color-primary);
+        @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+            font-size: calc(15 * var(--to-rem-func));
+        }
     }
     @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
-        .gf_brandStatement {
-            grid-template-columns: minmax(0, 1fr) minmax(0, calc(484 * var(--to-rem-func))) minmax(0, 1fr);
-            gap: calc(40 * var(--to-rem-func));
-        }
-        .gf_brandStatement-copy {
-            grid-column: 2;
-            grid-row: 1;
-            padding: calc(56 * var(--to-rem-func)) 0 calc(48 * var(--to-rem-func));
-            gap: calc(20 * var(--to-rem-func));
-        }
         .gf_brandStatement-left.is-sp,
         .gf_brandStatement-right.is-sp {
             display: none;
@@ -153,37 +179,9 @@
                 height: 65.7918%;
             }
         }
-        .gf_brandStatement-en {
-            font-size: calc(46 * var(--to-rem-func));
-        }
-        .gf_brandStatement-ja {
-            font-size: calc(15 * var(--to-rem-func));
-        }
     }
 
-    /* Figma 114:422 annotation: keep the puzzle/copy distance and extend only
-       the outer lines above the 1380px reference, not the exported artwork. */
-    @media (calc(1380 * (1 / 16 * 1rem)) < width) {
-        .gf_brandStatement {
-            &::before,
-            &::after {
-                content: '';
-                position: absolute;
-                width: calc((100% - 1380 * var(--to-rem-func)) / 2 + 1px);
-                height: calc(1 * var(--to-rem-func));
-                background-color: var(--color-primary);
-                pointer-events: none;
-            }
-            &::before {
-                left: 0;
-                top: calc(50% + 1 * var(--to-rem-func));
-            }
-            &::after {
-                right: 0;
-                top: calc(50% + 19.16 * var(--to-rem-func));
-            }
-        }
-    }
+
 
     .gf_logo {
         width: auto;
@@ -216,6 +214,13 @@
         display: grid;
         gap: calc(32 * var(--to-rem-func));
         padding-block: calc(32 * var(--to-rem-func));
+        @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: calc(32 * var(--to-rem-func));
+            padding-block: 0 calc(48 * var(--to-rem-func));
+        }
     }
     .gf_information,
     .gf_links-wrap,
@@ -680,13 +685,6 @@
 }
 
     @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
-        .gf_details {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: calc(32 * var(--to-rem-func));
-            padding-block: 0 calc(48 * var(--to-rem-func));
-        }
         .gf_information {
             flex: 0 1 calc(308 * var(--to-rem-func));
             justify-content: flex-start;

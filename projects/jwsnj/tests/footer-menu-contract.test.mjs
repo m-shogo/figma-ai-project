@@ -184,3 +184,18 @@ test('Footer brand places copy first on SP and keeps fixed-distance artwork on w
   assert.doesNotMatch(css, /padding-top:\s*calc\(50 \* var\(--to-rem-func\)\)/);
   assert.doesNotMatch(brand, /white-space:\s*nowrap/);
 });
+
+test('Footer brand and details use owner-local desktop geometry without changing scope', () => {
+  for (const [owner, declaration] of [
+    ['gf_brandStatement-copy', 'grid-column: 2;'],
+    ['gf_brandStatement-en', 'font-size: calc(46 * var(--to-rem-func));'],
+    ['gf_brandStatement-ja', 'font-size: calc(15 * var(--to-rem-func));'],
+    ['gf_details', 'display: flex;'],
+  ]) {
+    const start = css.indexOf('.' + owner + ' {');
+    const end = css.indexOf('\n    }', start);
+    const rule = css.slice(start, end);
+    assert.match(rule, /@media \(calc\(1080 \* \(1 \/ 16 \* 1rem\)\) <= width\)/);
+    assert.ok(rule.includes(declaration), owner);
+  }
+});
