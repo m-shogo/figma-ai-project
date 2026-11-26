@@ -1,75 +1,57 @@
 @charset "utf-8";
-/* // ==========================================================================
-// メインビジュアル
-// ========================================================================== */
-.top_mainVisual {
-    position: relative;
-    overflow-x: hidden;
-    .tm_swiper-container {
-        .swiper-wrapper {
-            .swiper-slide {
-                .tm_background {
-                    position: relative;
-                    overflow: hidden;
-                    width: 100%;
-                    height: calc(375 * var(--to-rem-func));
-                    img {
-                        height: 100%;
-                    }
-                }
-            }
-        }
-        .tm_inner {
-            display: flex;
-            align-items: center;
-            justify-content: center;
+/* Initial still: PC 184:797 / SP 279:2172.
+   Keep images in normal grid flow. No sample full-width Swiper or invented motion. */
+.jwsnj_topMv {
+    background: var(--jwsnj-color-base-lightgreen);
+    padding-block-end: calc(11 * var(--to-rem-func));
+    .jwsnj_topMv_grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(160 * var(--to-rem-func))), 1fr));
+        gap: calc(11 * var(--to-rem-func));
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+    .jwsnj_topMv_item {
+        position: relative;
+        min-width: 0;
+        min-height: 0;
+        aspect-ratio: 3 / 2;
+        overflow: hidden;
+        border-radius: calc(3 * var(--to-rem-func));
+        picture {
             position: absolute;
-            top: 0;
-            right: 0;
-            left: 0;
+            inset: 0;
+            display: block;
+        }
+        img {
+            display: block;
             width: 100%;
             height: 100%;
-        }
-        .tm_title {
-            font-size: calc(30 * var(--to-rem-func));
-            font-weight: 700;
-            color: var(--color-secondary);
-            text-align: center;
-        }
-        .swiper-pagination {
-            display: flex;
-            justify-content: center;
-            position: absolute;
-            left: 50%;
-            top: calc(345 * var(--to-rem-func));
-            transform: translateX(-50%);
-            .swiper-pagination-bullet {
-                opacity: 1;
-                margin-inline: calc(5 * var(--to-rem-func));
-                width: calc(12 * var(--to-rem-func));
-                height: calc(12 * var(--to-rem-func));
-                background-color: var(--color-secondary);
-                transition: background-color var(--transition-duration);
-                &:hover,
-                &.swiper-pagination-bullet-active {
-                    background-color: var(--color-primary);
-                }
-            }
+            object-fit: cover;
+            object-position: center bottom;
         }
     }
-
-    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-        .tm_swiper-container {
-            .swiper-wrapper {
-                .swiper-slide {
-                    .tm_background {
-                        height: calc(600 * var(--to-rem-func));
-                    }
-                }
-            }
-            .swiper-pagination {
-                top: auto;
-                bottom: calc(20 * var(--to-rem-func));
+    .jwsnj_topMv_grid.is-complete {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-areas: "a c" "b c" "f f";
+        .jwsnj_topMv_item {
+            &:nth-child(1) { grid-area: a; border-start-start-radius: 0; border-end-start-radius: 0; }
+            &:nth-child(2) { grid-area: b; border-start-start-radius: 0; border-end-start-radius: 0; }
+            &:nth-child(3) { grid-area: c; aspect-ratio: auto; }
+            &:nth-child(4), &:nth-child(5) { display: none; }
+            &:nth-child(6) { grid-area: f; aspect-ratio: 34 / 11; border-start-end-radius: 0; border-end-end-radius: 0; }
+        }
+    }
+    @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+        padding-block-end: calc(18 * var(--to-rem-func));
+        .jwsnj_topMv_grid { gap: calc(20 * var(--to-rem-func)); }
+        .jwsnj_topMv_grid.is-complete {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            grid-template-areas: "a c d e" "b c f f";
+            .jwsnj_topMv_item {
+                &:nth-child(4) { display: block; grid-area: d; }
+                &:nth-child(5) { display: block; grid-area: e; border-start-end-radius: 0; border-end-end-radius: 0; }
             }
         }
     }

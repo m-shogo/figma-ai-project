@@ -85,3 +85,5 @@ Status: PROJECT-ONLY EVIDENCE / Human feedback: 2026-11-20
 - New browser run start 801ddef (#652 merged), fresh skill/session. PC/SP News + Instagram panel connected without unconfirmed CTA; next READY: independent fixed For Applicants content and About background after exact asset/rights review; cards and Course CMS mapping separately.
 
 - #653 merged 92581f7 after actual 3/3 CI logs. Next fixed For Applicants scope uses saved exact photos/icons without fake links, pending CTA mapping. READY next: About background (exact fills/crop), Course existing ACF mapping (do not invent field IDs); MV image structure after approved owner/motion review. #523/#524 remain OPEN.
+
+- #654 merged 3ea01ee after three final CI logs. MV initial still uses existing ACF image IDs, no schema/data rewrite. Extra rows and motion/CTA contract remain pending; no new fake links. Next READY: About card CMS/destination mapping, Course editor mapping, shared background only after correct fill/rights/geometry evidence.

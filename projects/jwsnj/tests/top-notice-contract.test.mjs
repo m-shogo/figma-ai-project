@@ -97,3 +97,31 @@ test('TOP Applicants preserves approved fixed copy and exact stored illustration
   assert.doesNotMatch(css,/white-space:\s*nowrap|(?<!min-)height:\s*calc/);
   execFileSync('php',['-l',new URL('../theme/template-parts/_top-applicants.php',import.meta.url).pathname]);
 });
+
+test('TOP MV uses existing image repeater and renders only valid initial still images',()=>{
+  const part=read('template-parts/_top-mv-grid.php');
+  function render(rows){
+    const stub='$rows=json_decode(base64_decode("'+Buffer.from(JSON.stringify(rows)).toString('base64')+'"),true); function get_field($n){global $rows;return $rows;} function absint($v){return abs((int)$v);} function wp_attachment_is_image($id){return $id>0 && $id<100;} function wp_get_attachment_image_src($id,$s){return ["/media/".$id.".webp",800,600];} function wp_get_attachment_image_srcset($id,$s){return "/media/".$id.".webp 800w";} function wp_get_attachment_image($id,$s,$icon,$attrs){$q=chr(34);return "<img src=".$q."/media/".$id.".webp".$q." fetchpriority=".$q.$attrs["fetchpriority"].$q.">";} function esc_attr($s){return htmlspecialchars($s,ENT_QUOTES);} ?>';
+    return execFileSync('php',['-r',stub+part],{encoding:'utf8'}).trim();
+  }
+  assert.equal(render([]),'');
+  assert.equal(render([{img_pc:101,img_sp:0}]),'');
+  const partial=render([{img_pc:1,img_sp:2,text:'sample'},{img_pc:0,img_sp:3}]);
+  assert.equal((partial.match(/<li class=/g)||[]).length,2);
+  assert.match(partial,/srcset="\/media\/2\.webp 800w"/);
+  assert.match(partial,/src="\/media\/3\.webp"/);
+  assert.doesNotMatch(partial,/is-complete|sample/);
+  const complete=render(Array.from({length:8},(_,i)=>({img_pc:i+1,img_sp:i+11})));
+  assert.equal((complete.match(/<li class=/g)||[]).length,6);
+  assert.match(complete,/is-complete/);
+  assert.equal((complete.match(/fetchpriority="high"/g)||[]).length,1);
+  assert.doesNotMatch(complete,/\/media\/7\.webp/);
+  assert.match(read('front-page.php'),/_top-mv-grid/);
+  assert.doesNotMatch(read('front-page.php'),/tm_swiper-container|swiper-pagination/);
+  assert.match(read('css/style.css'),/^@import '\.\/project\/top_mainVisual\.css';/m);
+  const css=read('css/project/top_mainVisual.css');
+  assert.match(css,/grid-template-areas: "a c" "b c" "f f"/);
+  assert.match(css,/grid-template-areas: "a c d e" "b c f f"/);
+  assert.doesNotMatch(read('js/home.js'),/tm_swiper-container/);
+  execFileSync('php',['-l',new URL('../theme/template-parts/_top-mv-grid.php',import.meta.url).pathname]);
+});
