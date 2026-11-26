@@ -304,7 +304,7 @@ test('Header WordPress disclosure controls point to a unique direct submenu wrap
 
 
 test('Header chrome respects reduced-motion preference at hamburger and desktop widths', () => {
-  const block = headerCss.slice(headerCss.indexOf('/* Header height and hamburger icon'), headerCss.indexOf('/* MARK: hover */'));
+  const block = headerCss.slice(headerCss.indexOf('/* Header height and hamburger icon'), headerCss.indexOf('/* modifire */'));
   assert.match(block, /@media \(prefers-reduced-motion: reduce\)/);
   assert.match(block, /\.gh_menu \.icon::before/);
   assert.match(block, /\.gh_menu \.icon::after/);
