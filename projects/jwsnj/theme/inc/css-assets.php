@@ -14,7 +14,12 @@ function jwsnj_css_import_files($entry_path) {
   if (!$matches[2] || trim(preg_replace($pattern, '', $source)) !== '') return null;
 
   $files = [];
+  $handles = [];
   foreach ($matches[2] as $relative) {
+    // Distinct relative paths can flatten to the same WordPress handle.
+    $key = str_replace(['/', '.css'], ['-', ''], $relative);
+    if (isset($handles[$key])) return null;
+    $handles[$key] = true;
     $path = dirname($entry_path) . '/' . $relative;
     if (!is_file($path) || !is_readable($path)) return null;
     $version = filemtime($path);
