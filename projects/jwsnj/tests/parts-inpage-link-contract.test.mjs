@@ -36,7 +36,7 @@ test('page links flow and wrap across SP and PC while keeping ACF destinations',
 
 test('Figma mobile page links honor 304px minimum without exceeding narrower screens',()=>{
   assert.match(css,/@media \(width < calc\(768 \* \(1 \/ 16 \* 1rem\)\)\)/);
-  assert.match(css,/\.inPageLink\s*\{\s*min-width:\s*min\(100%,\s*calc\(304 \* var\(--to-rem-func\)\)\)/);
+  assert.match(css,/\.inPageLink\s*\{[^{}]*@media \(width < calc\(768 \* \(1 \/ 16 \* 1rem\)\)\)\s*\{\s*min-width:\s*min\(100%,\s*calc\(304 \* var\(--to-rem-func\)\)\)/);
 });
 
 test('page links omit incomplete repeater rows without inventing an anchor', () => {

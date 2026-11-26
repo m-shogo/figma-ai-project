@@ -23,8 +23,8 @@
     }
     /* Match the theme breakpoint without overriding the editor's opt-out.
            As in core, a stacked block must override inline custom column widths. */
-    @media (width < calc(768 * (1 / 16 * 1rem))) {
-      &.is-stacked-on-mobile {
+    &.is-stacked-on-mobile {
+      @media (width < calc(768 * (1 / 16 * 1rem))) {
         grid-template-columns: minmax(0, 1fr) !important;
         > .wp-block-media-text__media {
           grid-column: 1;
@@ -37,6 +37,7 @@
       }
     }
     .wp-block-media-text__media {
+      width: 100%;
       min-width: 0;
       img {
         width: 100%;
@@ -48,10 +49,6 @@
     }
     /* Figma SP img+caption: 442:2787 / PC: 344:927.
            Scope captions to media-text; leave standalone images and galleries intact. */
-    .wp-block-media-text__media {
-      width: 100%;
-      min-width: 0;
-    }
     .wp-block-media-text__media .wp-element-caption,
     .wp-block-media-text__media figcaption {
       margin-top: calc(20 * var(--to-rem-func));
@@ -65,10 +62,7 @@
       color: var(--color-text);
       overflow-wrap: anywhere;
       word-break: normal;
-    }
-    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-      .wp-block-media-text__media .wp-element-caption,
-      .wp-block-media-text__media figcaption {
+      @media (calc(768 * (1 / 16 * 1rem)) <= width) {
         font-size: calc(14 * var(--to-rem-func));
         line-height: 1.5;
       }

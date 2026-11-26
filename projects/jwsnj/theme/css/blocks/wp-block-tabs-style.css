@@ -60,6 +60,12 @@
         line-height: 1.5;
         letter-spacing: 0.08em;
         transition: var(--transition-duration);
+        @media (any-hover: hover) {
+          &:not([aria-selected='true']):hover {
+            background-color: color-mix(in oklch, var(--color-primary) 70%, transparent 0%);
+            color: var(--color-secondary);
+          }
+        }
         &[aria-selected='true'] {
           background-color: var(--color-primary);
           color: var(--color-secondary);
@@ -94,18 +100,5 @@
       }
     }
 
-    /* MARK: hover */
-    @media (any-hover: hover) {
-      .wp-block-tab-list {
-        > button {
-          &:not([aria-selected='true']) {
-            &:hover {
-              background-color: color-mix(in oklch, var(--color-primary) 70%, transparent 0%);
-              color: var(--color-secondary);
-            }
-          }
-        }
-      }
-    }
   }
 }

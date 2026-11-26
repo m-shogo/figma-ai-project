@@ -10,6 +10,9 @@
     align-items: start;
     gap: calc(40 * var(--to-rem-func));
     margin-top: var(--wp-block-margin);
+    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
     & + & {
       /* Figma 344:1080 / 442:2974: consecutive galleries share the 40px gap. */
       margin-top: calc(40 * var(--to-rem-func));
@@ -50,6 +53,10 @@
           color: var(--color-text);
           overflow-wrap: anywhere;
           word-break: normal;
+          @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+            font-size: calc(14 * var(--to-rem-func));
+            line-height: 1.5;
+          }
         }
         &:has(figcaption)::before {
           content: none;
@@ -62,18 +69,11 @@
     &.columns-3 {
       grid-template-columns: repeat(2, minmax(0, 1fr));
       column-gap: calc(15 * var(--to-rem-func));
-    }
-
-    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-      &.has-nested-images figure.wp-block-image figcaption {
-        font-size: calc(14 * var(--to-rem-func));
-        line-height: 1.5;
-      }
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      &.columns-3 {
+      @media (calc(768 * (1 / 16 * 1rem)) <= width) {
         grid-template-columns: repeat(3, minmax(0, 1fr));
         column-gap: calc(40 * var(--to-rem-func));
       }
     }
+
   }
 }
