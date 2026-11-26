@@ -1,0 +1,43 @@
+name: JWSNJ CSS quality and browser probes
+on:
+  pull_request:
+    branches: [so]
+    paths:
+      - 'projects/jwsnj/theme/css/**'
+      - 'projects/jwsnj/qa/css-browser-probe.mjs'
+      - 'scripts/css-token-inventory.mjs'
+      - 'config/stylelint-native-css.mjs'
+      - '.github/workflows/jwsnj-css-quality.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  css:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install isolated pinned QA tools
+        run: npm install --prefix "$RUNNER_TEMP/css-qa" --ignore-scripts --no-audit --no-fund --no-package-lock stylelint@17.16.0 playwright@1.65.1
+      - name: Stylelint advisory full-source scan and token inventory
+        run: |
+          mkdir -p css-qa-results
+          "$RUNNER_TEMP/css-qa/node_modules/.bin/stylelint" --version
+          "$RUNNER_TEMP/css-qa/node_modules/.bin/stylelint" --config config/stylelint-native-css.mjs "projects/jwsnj/theme/css/**/*.css" --ignore-pattern "**/*.min.css" --ignore-pattern "**/scroll-hint.css" --formatter json --output-file css-qa-results/stylelint.json 2> css-qa-results/stylelint-console.log
+          node scripts/css-token-inventory.mjs jwsnj > css-qa-results/tokens.json
+          node --input-type=module -e 'import fs from "node:fs"; const a=JSON.parse(fs.readFileSync("css-qa-results/stylelint.json"));const t=JSON.parse(fs.readFileSync("css-qa-results/tokens.json"));const rules={};for(const f of a)for(const w of f.warnings??[])rules[w.rule]=(rules[w.rule]??0)+1;const actionable=a.flatMap(f=>(f.warnings??[]).filter(w=>["selector-no-unmatchable","nesting-selector-no-missing-scoping-root","declaration-block-no-duplicate-properties","property-no-unknown"].includes(w.rule)).map(w=>({file:f.source.split("/theme/css/")[1],line:w.line,rule:w.rule,text:w.text})));console.log(JSON.stringify({files:a.length,rules,scanned:t.scanned,tokens:t.tokenCount,zeroSourceCandidates:t.zeroSourceCandidates,actionable}));'
+      - name: Install browser engines
+        run: '"$RUNNER_TEMP/css-qa/node_modules/.bin/playwright" install --with-deps chromium firefox webkit'
+      - name: Probe actual CSS in isolated browser fixtures
+        env:
+          CSS_QA_MODULE_ROOT: ${{ runner.temp }}/css-qa
+        run: node projects/jwsnj/qa/css-browser-probe.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: jwsnj-css-qa
+          path: css-qa-results/
+          if-no-files-found: warn
