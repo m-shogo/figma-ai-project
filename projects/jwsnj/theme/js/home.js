@@ -183,7 +183,74 @@
     desktop.addEventListener('change', refresh);
     prepare();
   };
+
+  // TOP Course: one semantic list; Swiper enhances only the narrow layout.
+  const initCourse = function (root) {
+    const viewport = root.querySelector('[data-course-viewport]');
+    const list = root.querySelector('[data-course-list]');
+    const cards = Array.from(root.querySelectorAll('[data-course-card]'));
+    const controls = root.querySelector('[data-course-controls]');
+    if (!viewport || !list || !controls || cards.length < 2 || typeof Swiper !== 'function') return;
+    const prev = controls.querySelector('[data-course-prev]');
+    const next = controls.querySelector('[data-course-next]');
+    const dots = Array.from(controls.querySelectorAll('[data-course-dot]'));
+    if (!prev || !next || dots.length !== cards.length) return;
+    const desktop = window.matchMedia('(min-width: 67.5rem)');
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let swiper = null;
+    let active = 0;
+    const update = function (instance) {
+      active = instance.activeIndex;
+      dots.forEach((dot, i) => {
+        if (i === active) dot.setAttribute('aria-current', 'true');
+        else dot.removeAttribute('aria-current');
+      });
+      prev.setAttribute('aria-disabled', String(instance.isBeginning));
+      next.setAttribute('aria-disabled', String(instance.isEnd));
+    };
+    const reset = function () {
+      const instance = swiper || viewport.swiper;
+      if (instance && !instance.destroyed) instance.destroy(true, true);
+      swiper = null;
+      viewport.classList.remove('swiper');
+      list.classList.remove('swiper-wrapper');
+      cards.forEach(card => card.classList.remove('swiper-slide'));
+      controls.hidden = true;
+    };
+    const refresh = function () {
+      if (desktop.matches) { reset(); return; }
+      if (swiper) { swiper.params.speed = reduced.matches ? 0 : 300; return; }
+      viewport.classList.add('swiper');
+      list.classList.add('swiper-wrapper');
+      cards.forEach(card => card.classList.add('swiper-slide'));
+      try {
+        swiper = new Swiper(viewport, {
+          slidesPerView: 'auto',
+          centeredSlides: true,
+          spaceBetween: 20 * parseFloat(getComputedStyle(document.documentElement).fontSize) / 16,
+          initialSlide: active,
+          loop: false,
+          speed: reduced.matches ? 0 : 300,
+          a11y: { enabled: false },
+          on: { init: update, slideChange: update, resize: update }
+        });
+        controls.hidden = false;
+        update(swiper);
+      } catch (error) { reset(); }
+    };
+    prev.addEventListener('click', () => { if (swiper && !swiper.isBeginning) swiper.slidePrev(); });
+    next.addEventListener('click', () => { if (swiper && !swiper.isEnd) swiper.slideNext(); });
+    dots.forEach((dot, i) => dot.addEventListener('click', () => { if (swiper) swiper.slideTo(i); }));
+    list.addEventListener('focusin', event => {
+      const index = cards.indexOf(event.target.closest('[data-course-card]'));
+      if (swiper && index >= 0 && index !== swiper.activeIndex) swiper.slideTo(index, 0);
+    });
+    desktop.addEventListener('change', refresh);
+    reduced.addEventListener('change', refresh);
+    refresh();
+  };
   $(function () {
+    document.querySelectorAll('[data-course]').forEach(initCourse);
     document.querySelectorAll('.jwsnj_topMv').forEach(initMvLoop);
   });
   //newsSlider();

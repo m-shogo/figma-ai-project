@@ -243,3 +243,6 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 - MV Swiper lifecycle: verify queued zero-delay autoplay frame immediately after stop (no loopFix/movement), pause/resume during transition, same-breakpoint resize or zoom changing computed gap before snapGrid calculation; resize may internally realign paused panel. Actual bundled browser behaviour remains #523; controller fixture is not real rendering.
 
 - TOP fixed-copy rhythm: compare About PC114:180/SP279:2318 title/lead/body spacing (32/24px PC, 24/20px SP), Applicants PC158:2645/SP279:2443 first topic icon gap (16px PC,10px SP), other rows16px and horizontal inset (24/20px PC,20/16px SP). Verify ordinary and narrow widths, wrapping, official icon/photo placement and no fake controls. #523 DEFERRED_ENV; actual rendered geometry not yet measured.
+
+
+- TOP Course view / #523: pass normalized five-row fixture to `_top-course-view.php` in disposable QA only; verify PC three columns, SP centered cards/20px gaps, all five dots, prev/next bounds, long titles, keyboard focus, swipe, resize across 1080, reduced motion, 0/1/many rows, missing image/link and static fallback. Compare PC114:635/SP279:2336 at natural widths. No production fixture or ACF connection until Cursor adapter; DEFERRED_ENV.
