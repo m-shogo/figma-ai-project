@@ -168,6 +168,14 @@ PC/SPを同時に観測・比較することは禁止しない。重要なのは
 
 WCAG 2.2 AA Reflowの**320 CSS px equivalent**はProduct support floorとは別のaccessibility probeとして必要時に残す。
 
+### 8.1 CSS / JS responsive contract（Human 2026-11-26）
+
+- CSSとJSが同じlayout boundaryを扱う場合、単位・比較方向・境界の包含条件を一致させる。CSSのrem/em条件を固定pxのinnerWidth比較で置き換えない。
+- JSは既存CSSに等価な `matchMedia()` と共有された意味別query ownerを優先する。viewportの実測寸法が必要な処理（要素幅や位置の計算）は別。独立したslider設定やinput capabilityを無理に同じ閾値へ統合しない。
+- 初期表示・境界直前/直上・往復resize・ブラウザ初期font sizeが標準以外の条件を、影響する状態とともにQA。rootのCSS font-size変更だけではmedia queryの初期font size検証にならない。
+- buildなしのCSS custom propertyをmedia queryへ直接使わない。既存のbuild/設定方式がなければ意味別queryと照合テストで同期し、新規buildを強制しない。
+- 実装前にCSS/JS/PHP・CMS/プラグイン・asset/cache・テストの責務を点検。保守性と操作安定性を優先し、重大な懸念はHumanからの指摘を待たず共有する。確実な小修正は既存scopeで進め、仕様/依存変更は根拠・影響・承認を区別する。
+
 ## 9. Content riskは複数持てる
 
 `STATIC_AUTHORED / EDITOR_OWNED / LOCALIZED / EXTERNAL_DATA / USER_GENERATED`

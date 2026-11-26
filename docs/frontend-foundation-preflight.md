@@ -64,6 +64,7 @@ Canonical details: `docs/section-execution.md`（shared contract → shared foun
 - [ ] GitHub/Figma・案件Current Authority・既存Theme/実装資産・責務ownerを確認した
 - [ ] カラー、フォント、画像/SVG、アイコン、余白、breakpoint、共通部品の対応表/既存実装を照合した
 - [ ] 既存Foundationの再利用と不足分の導入方針を決めた
+- [ ] 同一layout boundaryのCSS/JS単位・条件、状態owner、旧サンプル処理、CMS/plugin依存、asset/cache責務を点検し、実装前に重大な懸念・改善順を共有した（quick-contract §8.1）
 - [ ] CSS変数/フォント/アセットの**実際の導入とQA状況**を PASS/FAIL/未検証 で区別した
 - [ ] 問題があれば小さく安全に実装し、関連する次の作業へ継続する
 - [ ] Foundation未完了のままパーツに着手する場合、依存がない理由と未検証範囲を記録した
