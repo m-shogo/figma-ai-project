@@ -154,8 +154,8 @@ test('desktop footer aligns site identity and one adaptive three-column sitemap 
   assert.match(pc, /column-gap:\s*clamp\(calc\(24 \* var\(--to-rem-func\)\), 5\.8vw, calc\(80 \* var\(--to-rem-func\)\)\)/);
   assert.match(pc, /> \.gfl_item-02\s*\{\s*break-inside:\s*avoid;\s*margin-block-end:\s*calc\(16 \* var\(--to-rem-func\)\)/);
   assert.doesNotMatch(pc, /min-width:\s*calc\(240 \* var\(--to-rem-func\)\)/);
-  assert.match(pc, /\.gf_information\s*\{\s*flex:\s*0 1 calc\(308 \* var\(--to-rem-func\)\)/);
-  assert.match(pc, /\.gf_links-wrap\s*\{\s*flex:\s*0 1 calc\(541 \* var\(--to-rem-func\)\)/);
+  assert.match(css, /\.gf_information\s*\{[^{}]*@media \(calc\(1080[^{}]+\{\s*flex:\s*0 1 calc\(308 \* var\(--to-rem-func\)\)/);
+  assert.match(css, /\.gf_links-wrap\s*\{[^{}]*@media \(calc\(1080[^{}]+\{\s*flex:\s*0 1 calc\(541 \* var\(--to-rem-func\)\)/);
   assert.match(css, /\.gf_details\s*\{\s*display:\s*grid/);
   assert.doesNotMatch(css, /white-space:\s*nowrap/);
 });
@@ -175,8 +175,8 @@ test('Footer brand places copy first on SP and keeps fixed-distance artwork on w
   assert.match(brand, /\.gf_brandStatement-right\.is-sp\s*\{\s*grid-column:\s*2;\s*grid-row:\s*2;\s*justify-self:\s*end;/);
   assert.match(brand, /grid-template-columns:\s*minmax\(0, 1fr\) minmax\(0, calc\(484 \* var\(--to-rem-func\)\)\) minmax\(0, 1fr\)/);
   assert.match(brand, /gap:\s*calc\(40 \* var\(--to-rem-func\)\)/);
-  assert.match(brand, /\.gf_brandStatement-left\.is-pc\s*\{\s*display:\s*block;\s*grid-column:\s*1;\s*grid-row:\s*1;\s*justify-self:\s*end;/);
-  assert.match(brand, /\.gf_brandStatement-right\.is-pc\s*\{\s*display:\s*block;\s*grid-column:\s*3;\s*grid-row:\s*1;\s*justify-self:\s*start;/);
+  assert.match(brand, /\.gf_brandStatement-left\.is-pc\s*\{\s*display:\s*none;\s*@media \(calc\(1080[^{}]+\{\s*display:\s*block;\s*grid-column:\s*1;\s*grid-row:\s*1;\s*justify-self:\s*end;/);
+  assert.match(brand, /\.gf_brandStatement-right\.is-pc\s*\{\s*display:\s*none;\s*@media \(calc\(1080[^{}]+\{\s*display:\s*block;\s*grid-column:\s*3;\s*grid-row:\s*1;\s*justify-self:\s*start;/);
   assert.equal((brand.match(/width: min\(calc\(408 \* var\(--to-rem-func\)\), 100%\)/g) || []).length, 2);
   assert.match(brand, /@media \(calc\(1380 \* \(1 \/ 16 \* 1rem\)\) < width\)/);
   assert.match(brand, /width:\s*calc\(\(100% - 1380 \* var\(--to-rem-func\)\) \/ 2 \+ 1px\)/);
