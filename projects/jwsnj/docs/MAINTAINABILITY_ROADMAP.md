@@ -4,13 +4,13 @@ Owner request: 2026-11-26。Gitを引継ぎ正本とする。既存の実装回�
 
 | 順 | 作業 | 状態 | 完了条件 / 根拠 |
 |---|---|---|---|
-| P0-1 | CSS/JS responsive整合 | PARTIAL (#721 merged) | common.js header 67.5rem / footer 48rem vs numeric 1080/768、html legacy flags 768/1024のconsumer調査、home.js・table-scroll-hint.js・Swiper設定等全自作JS調査。意味の同じ境界はmatchMediaへ、異なる機能は別契約。境界・往復・初期font size・focus/scroll/ARIA確認。 |
+| P0-1 | CSS/JS responsive整合 | SOURCE_DONE (#721/#727); runtime保留 | common.js header 67.5rem / footer 48rem vs numeric 1080/768、html legacy flags 768/1024のconsumer調査、home.js・table-scroll-hint.js・Swiper設定等全自作JS調査。意味の同じ境界はmatchMediaへ、異なる機能は別契約。境界・往復・初期font size・focus/scroll/ARIA確認。 |
 | P0-2 | form.js安全性 / sample plugin scope | PARTIAL (#722/#723 merged) | file.name HTML injection、jQuery value誤使用、未選択、CF7/AjaxZip3とFormidable/yubinbango責務、動的再描画と重複wrap確認。実free plugin QA、Pro/本番は#523。#717 native input修正済み。 |
-| P1-3 | JS状態owner / 初期化 | READY | common.jsのmenu/overlay/scroll lockの状態一元化、重複listener・DOM再初期化を点検。分割は既存Themeと修正頻度に合わせる。 |
-| P1-4 | asset/cache | IN_PROGRESS | CSS @import childだけ更新時のキャッシュ失効、editor/front両方の依存、既存配信環境を確認。不要buildを作らない。 |
+| P1-3 | JS状態owner / 初期化 | PARTIAL (#725 merged) | common.jsのmenu/overlay/scroll lockの状態一元化、重複listener・DOM再初期化を点検。分割は既存Themeと修正頻度に合わせる。 |
+| P1-4 | asset/cache | PARTIAL (#724/#726 merged) | CSS @import childだけ更新時のキャッシュ失効、editor/front両方の依存、既存配信環境を確認。不要buildを作らない。 |
 | P1-5 | HTML/CSS/JS命名・検索性 | READY | existing naming維持、visual vs behavior hook、同一ownerへの集約。selector renameの全consumer確認。 |
 | P1-6 | PHP/WP template責務 | READY | template-parts/data/markup、escape、hook/query、副作用、optional dataを点検。既存ACF schema維持。 |
-| P1-7 | sample/vendor/ライブラリ | READY | CF7、旧CPT、無効コード・sample文言/素材、未使用ライブラリをconsumer調査後に除去。vendor/generatedは対象外。 |
+| P1-7 | sample/vendor/ライブラリ | PARTIAL (#722/#726/#727 merged) | CF7、旧CPT、無効コード・sample文言/素材、未使用ライブラリをconsumer調査後に除去。vendor/generatedは対象外。 |
 | P1-8 | WP/plugin依存 | READY | jQuery登録解除・global styles・enqueue順・plugin shortcode二重renderの影響。会社既存方針と実WP証拠を確認し、勝手に依存更新しない。 |
 | P1-9 | CSS owner locality残り | READY | 多階層ナビ、Gutenberg group/table、form等。詳細度・カスケード・PC/SP維持。警告数は参考。#718/#719済み。 |
 | P1-10 | 人間の修正シナリオ | READY | 文章増減、画像交換、カード増減、任意リンク、WP editor、keyboard/touch/resize、ブラウザ差、cache。適切なrisk-based QA。 |
@@ -33,3 +33,20 @@ so 033a7d4: #715–#719 merged。#717 disposable WordPress/free Formidable、#71
 - #722 Form JS source + actual free Formidable fixture opened; await new head CI. Separate file CSS scope candidate: `.file` and `.file label` inherited CF7 styles can leak to other forms; preserve exact CF7 specificity with `:where(.wpcf7)` and test actual CSS. Next independent READY: legacy flags consumer audit and asset/cache dependency inventory. No new page, ACF, schedule or owner changes.
 
 - #722 merged `bc95939`: all 4 checks success; actual disposable WP/free Formidable file adapter + select replay + unrelated submit at 9 engine/width combinations, 27 native choice keyboard checks. #723 merged `e01a9d7` with 6/6 checks. Pro/AJAX/school database still separate. P1-4: CSS entry manifests preserved, each imported local child versioned in WordPress; editor residual rules moved unchanged to separate imported stylesheet. Actual editor iframe, server/CDN query-key policy and image/font binary cache remain to verify.
+
+## 2026-11-26 継続実績（今回の開始 e01a9d7、実装終了 89bab54）
+
+- Figma skill loaded, new session; PC599:2726/SP480:3954 full design contexts and inline screenshots obtained. Existing design and official assets unchanged; no final visual acceptance claimed.
+- #722 merged bc95939 (4/4 CI; real disposable WP/free Formidable 9 engine/width cases; 27 native-choice cases).
+- #725 merged 9479da4 (4/4 CI): actual toggleMenu regression tests after fixing legacy root-class stub; unified scroll lock and backdrop owners, resize/search independence, zero scroll position. No real device or full site menu QA yet.
+- #726 merged b3f2216 (4/4 CI): duplicate Font Awesome head links/dead preload example removed. Existing WordPress enqueue and active font stack retained.
+- #724 merged fef0121 (6/6 CI): first runtime failed because wp_enqueue_style alone did not register a source-free alias; explicitly wp_register_style then enqueue. 60 child links with ordered unique versioned URLs at 9 engine/width cases in actual disposable WP; existing form regression passed. CSS entrypoint retained for standalone previews. Actual editor iframe, server/CDN policy, mtime preservation on deployment and binary asset cache remain separate.
+- #727 merged 89bab54 (4/4 CI): 150 authored files inventory, zero retired width flag references at tested head. Remove unused numeric producer and disabled navigation code. Existing active matchMedia and measured geometry unchanged. External DB custom CSS/JS and initial browser font settings unverified.
+- All five implementation PRs merged, no overlapping base paths at merge. Their CI is per PR, not proof of combined final site behavior. #523/#524 OPEN, #664 untouched, ACF/534:1706/schedule unchanged.
+
+### Next independent READY (priority)
+
+1. P1-6/P1-8: inspect and fix proven PHP/WP source defects. `inc/front.php` renders `apply_filters('the_content', get_the_content())` at enqueue time to detect postal fields (potential duplicate shortcode rendering/side effects); keep YubinBango conditional and existing editor content owner, verify actual shortcode rendering and address setup. Inspect `add_page_slug_class_name` (`get_post(0)` for root page duplicates current slug, missing ancestor guard) and `my_body_id` (query object absent on certain routes). Use actual queried object, preserve existing valid IDs/classes and test no data/parent scenarios. No new CMS fields.
+2. P1-3: real disposable WP menu keyboard/resize/scroll roundtrip at current combined HEAD, then audit duplicate init/other modules. Keep source owner simple; don't split files for line count alone.
+3. P1-4: actual editor iframe link/ordering and one-child version change/fallback test; inspect deployment cache policy. No production-server access assumed.
+4. P1-5/P1-7/P1-9: continue naming/unused source and class-local CSS review with actual consumer inventory; retained disabled legacy News Swiper not an active breakpoint mismatch. P1-8 jQuery replacement and core styles require plugin compatibility evidence before changing.
