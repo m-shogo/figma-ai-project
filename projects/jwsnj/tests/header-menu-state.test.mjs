@@ -432,3 +432,11 @@ test('retired pixel-based HTML width flags have no authored theme consumers', ()
   assert.deepEqual(consumers, []);
   console.log('width flags consumer inventory: ' + paths.length + ' authored files, ' + consumers.length + ' matches');
 });
+
+test('editor DOM decoration is idempotent and preserves intentional empty content', () => {
+  assert.match(source, /!this\.attributes\.length &&/);
+  for (const owner of ['module_table-wrap','mp_submit-inner','lightbox_wrap']) {
+    assert.ok(source.includes("!$(this).parent().hasClass('" + owner + "')"));
+  }
+  assert.match(source, /\.off\('load\.jwsnjTableWrap resize\.jwsnjTableWrap'\)\.on\(/);
+});

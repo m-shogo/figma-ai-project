@@ -10,7 +10,7 @@ const {chromium,firefox,webkit}=require('playwright');
 const root=resolve('projects/jwsnj/theme');
 const out=resolve('css-qa-results');mkdirSync(out,{recursive:true});
 const html='<!doctype html><html lang="ja"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="/css/style.css"><body class="home"><main class="global_contents"><section><div class="global_inner"><a id="link" href="#end">リンク</a><button id="button">ボタン</button><input id="text" type="text" aria-label="入力"><textarea id="area" aria-label="本文">長い本文</textarea><details><summary id="summary">詳細</summary>本文</details><div id="rem" style="width:calc(100 * var(--to-rem-func));height:1px"></div><div class="module_search-01"><form class="ms_from"><input class="ms_input" type="search" aria-label="検索"><button class="ms_button" type="button"><span>検索</span></button></form></div><div id="end">終わり</div></div></section></main></body></html>';
-const types={'.css':'text/css','.svg':'image/svg+xml','.woff2':'font/woff2','.webp':'image/webp'};
+const types={'.js':'application/javascript','.css':'text/css','.svg':'image/svg+xml','.woff2':'font/woff2','.webp':'image/webp'};
 const server=createServer((req,res)=>{
  try{const pathname=new URL(req.url,'http://localhost').pathname;if(pathname==='/'){res.setHeader('Content-Type','text/html; charset=utf-8');res.end(html);return;}const p=resolve(root,'.'+decodeURIComponent(pathname));if(!p.startsWith(root+'/'))throw Error('path');res.setHeader('Content-Type',types[extname(p)]||'application/octet-stream');res.end(readFileSync(p));}catch{res.statusCode=404;res.end();}
 });
@@ -38,6 +38,36 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
  assert.notEqual(keyboard.outline,'none',name+' keyboard outline');
  assert.ok(parseFloat(keyboard.width)>0,name+' keyboard outline width');
  report.push({name,keyboard});
+ // Execute the real authored wrapper functions with bundled jQuery, without replaying unrelated global listeners.
+ const common = readFileSync(resolve(root,'js/common.js'),'utf8');
+ const init = common.match(/  const initHTML = function \(\) \{[\s\S]*?\n  \};/)[0];
+ const lightbox = common.match(/  const lightboxWrap = function \(\) \{[\s\S]*?\n  \};/)[0];
+ await page.addScriptTag({url:url+'/js/jquery-3.7.1.min.js'});
+ for (const width of [375,768,1380]) {
+   await page.setViewportSize({width,height:900});
+   const result = await page.evaluate(({init,lightbox}) => {
+     const fixture = document.createElement('div');
+     fixture.innerHTML = '<div class="gc_main"><p id="preserve-anchor">&nbsp;</p><p class="preserve-space"> </p><p> </p><p>編集者の本文</p><div style="width:120px"><table class="module_table-01" style="min-width:300px"><tr><td>Long table cell</td></tr></table></div><div class="module_password"><form><input type="submit" value="確認"></form></div><div class="block-editor_wrap"><figure class="wp-lightbox-container"><img alt="fixture"></figure></div></div>';
+     document.body.append(fixture);
+     const run = new Function('$',init+'\n'+lightbox+'\ninitHTML(); lightboxWrap();');
+     run(window.jQuery);
+     run(window.jQuery);
+     const data = {
+       table:fixture.querySelectorAll('.module_table-wrap').length,
+       password:fixture.querySelectorAll('.mp_submit-wrap').length,
+       lightbox:fixture.querySelectorAll('.lightbox_wrap').length,
+       paragraphs:fixture.querySelectorAll('p').length,
+       anchor:!!fixture.querySelector('#preserve-anchor'),
+       space:!!fixture.querySelector('.preserve-space'),
+       scroll:fixture.querySelector('.module_table-wrap').classList.contains('_scroll')
+     };
+     fixture.remove();
+     window.jQuery(window).off('load.jwsnjTableWrap resize.jwsnjTableWrap');
+     return data;
+   },{init,lightbox});
+   assert.deepEqual(result,{table:1,password:1,lightbox:1,paragraphs:3,anchor:true,space:true,scroll:true}, name+' repeated DOM enhancement '+width);
+   report.push({name,width,domReplay:result});
+ }
  // Actual theme imports: menu open/close cascade and table responsive owners.
  // Synthetic markup is isolated from WordPress and does not imply editor/site acceptance.
  for(const width of [375,768,1380]){

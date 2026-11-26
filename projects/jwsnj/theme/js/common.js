@@ -624,17 +624,20 @@ window.addEventListener('resize', setVw);
   // タグ追加・削除
   // ==========================================================================
   const initHTML = function () {
-    // 空のpタグ削除
+    // Remove only unadorned empty paragraphs; editor IDs/classes/ARIA must survive.
     $('.gc_main p').each(function () {
-      let txt = $(this);
-      if (txt.html().replace(/\s|&nbsp;/g, '').length === 0) {
-        txt.remove();
+      if (!this.attributes.length && $(this).html().replace(/\s|&nbsp;/g, '').length === 0) {
+        $(this).remove();
       }
     });
 
-    // 表にスクロール用ラッパー要素とclassを追加
-    $('.module_table-01').wrap('<div class="module_table-wrap"></div>');
-    $(window).on('load resize', function () {
+    // Wrap each table once, even when initialization is replayed.
+    $('.module_table-01').each(function () {
+      if (!$(this).parent().hasClass('module_table-wrap')) {
+        $(this).wrap('<div class="module_table-wrap"></div>');
+      }
+    });
+    const syncTableOverflow = function () {
       $('.module_table-wrap').each(function () {
         const $wrapperWidth = $(this).width();
         const $innerWidth = $(this).find('.module_table-01').width();
@@ -644,12 +647,16 @@ window.addEventListener('resize', setVw);
           $(this).removeClass('_scroll');
         }
       });
-    });
+    };
+    $(window).off('load.jwsnjTableWrap resize.jwsnjTableWrap').on('load.jwsnjTableWrap resize.jwsnjTableWrap', syncTableOverflow);
+    syncTableOverflow();
 
-    // パスワード保護フォームinputにラッパー要素追加（疑似要素追加用）
-    $('.module_password form input[type="submit"]').wrap(
-      '<span class="mp_submit-wrap"><span class="mp_submit-inner"></span></span>',
-    );
+    // Keep the existing password button decoration without nested duplicate wrappers.
+    $('.module_password form input[type="submit"]').each(function () {
+      if (!$(this).parent().hasClass('mp_submit-inner')) {
+        $(this).wrap('<span class="mp_submit-wrap"><span class="mp_submit-inner"></span></span>');
+      }
+    });
   };
 
   // ==========================================================================
@@ -711,7 +718,9 @@ window.addEventListener('resize', setVw);
   // ==========================================================================
   const lightboxWrap = function () {
     $('.block-editor_wrap figure.wp-lightbox-container img').each(function () {
-      $(this).wrap('<div class="lightbox_wrap"></div>');
+      if (!$(this).parent().hasClass('lightbox_wrap')) {
+        $(this).wrap('<div class="lightbox_wrap"></div>');
+      }
     });
   };
 
