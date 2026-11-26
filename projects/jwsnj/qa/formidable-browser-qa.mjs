@@ -21,6 +21,9 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
  assert.ok(assets.every(a => /^\d+$/.test(new URL(a.url).searchParams.get('ver') || '')));
  assert.equal(await page.locator('link#common-style-css').count(), 0, 'entrypoint must not load twice');
  console.log(JSON.stringify({engine:name,width,versionedCss:assets.length,first:assets[0].id,last:assets.at(-1).id}));
+ assert.equal(await page.locator('#qa-render-count').getAttribute('data-count'), '1');
+ assert.equal(await page.locator('script[src*="/js/yubinbango.js"]').count(), 0);
+ assert.equal(await page.locator('body').evaluate(el => [...el.classList].filter(c => c === 'css-qa-fixture').length), 1);
  const form=page.locator('.frm_forms').first();await form.waitFor();
  const checkbox=form.locator('input[type=checkbox]').first(),radio=form.locator('input[type=radio]').first();
  await checkbox.waitFor({state:'visible'});await radio.waitFor({state:'visible'});
@@ -113,5 +116,15 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
     await page.emulateMedia({reducedMotion: 'no-preference'});
     await page.screenshot({path:'form-qa-results/'+name+'-'+width+'.png',fullPage:true});
  }
+ const postalUrl = process.argv[3];
+ assert.match(postalUrl,/^http:\/\/127\.0\.0\.1:/);
+ const postalResponse = await page.goto(postalUrl,{waitUntil:'load'});
+ assert.equal(postalResponse.status(),200);
+ assert.equal(await page.locator('#qa-render-count').getAttribute('data-count'),'1');
+ assert.equal(await page.locator('script[src*="/js/yubinbango.js"]').count(),1);
+ assert.equal(await page.locator('.h-adr .p-postal-code').count(),1);
+ assert.equal(await page.evaluate(() => typeof window.YubinBango?.MicroformatDom),'function');
+ assert.equal(await page.locator('body').evaluate(el => el.classList.contains('css-qa-fixture-child') && el.classList.contains('css-qa-postal-child')),true);
+ console.log(JSON.stringify({engine:name,postalConditional:'PASS',shortcodeOnce:'PASS',childClasses:'PASS'}));
  }finally{await browser.close();}
 }

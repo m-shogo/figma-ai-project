@@ -13,7 +13,7 @@ global $post;
       <div class="global_inner _content">
         <div class="gc_main _oneColumn">
           <div class="block-editor_wrap">
-            <?php the_content(); ?>
+            <?php jwsnj_form_content(); ?>
           </div>
         </div>
       </div>

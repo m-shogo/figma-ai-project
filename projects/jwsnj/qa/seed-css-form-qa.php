@@ -21,8 +21,13 @@ foreach (['text','textarea','checkbox','radio','select'] as $i=>$type) {
     unset($field['field_options']['draft']);
     if (!FrmField::create($field)) throw new RuntimeException('field create failed '.$type);
 }
-$page=wp_insert_post(['post_type'=>'page','post_status'=>'publish','post_title'=>'CSS QA fixture','post_content'=>'[formidable id='.$id.']','page_template'=>'templates/template-form.php'],true);
+$page=wp_insert_post(['post_type'=>'page','post_status'=>'publish','post_title'=>'CSS QA fixture','post_content'=>'[jwsnj_qa_render_count][formidable id='.$id.']','page_template'=>'templates/template-form.php'],true);
 if(is_wp_error($page)) throw new RuntimeException($page->get_error_message());
 update_post_meta($page,'_wp_page_template','templates/template-form.php');
 update_option('jwsnj_css_qa_page_id',$page);
 echo "FORMIDABLE_FIXTURE_ID=$id PAGE=$page\n";
+
+$postal_page = wp_insert_post(['post_type'=>'page','post_status'=>'publish','post_title'=>'CSS QA postal child','post_name'=>'css-qa-postal-child','post_parent'=>$page,'post_content'=>'[jwsnj_qa_render_count][jwsnj_qa_postal][formidable id='.$id.']','page_template'=>'templates/template-form.php'],true);
+if(is_wp_error($postal_page)) throw new RuntimeException($postal_page->get_error_message());
+update_post_meta($postal_page,'_wp_page_template','templates/template-form.php');
+update_option('jwsnj_css_qa_postal_page_id',$postal_page);

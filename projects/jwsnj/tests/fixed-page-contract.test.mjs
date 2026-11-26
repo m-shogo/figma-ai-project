@@ -224,3 +224,17 @@ test('CSS entrypoints retain one import owner and version every child without ch
   assert.match(front, /jwsnj_enqueue_css_entry\('common-style', '\/css\/style.css'/);
   assert.match(front, /jwsnj_enqueue_css_entry\('editor-style', '\/css\/editor-style.css'/);
 });
+
+test('form rendering does not execute the content filter at enqueue time', () => {
+  const front = read('inc/front.php');
+  const form = read('inc/form.php');
+  const template = read('templates/template-form.php');
+  assert.doesNotMatch(front, /apply_filters\('the_content', get_the_content\(\)\)/);
+  assert.match(front, /wp_register_script\('yubinbango-script'/);
+  assert.match(template, /jwsnj_form_content\(\)/);
+  assert.match(form, /new WP_HTML_Tag_Processor\(\$content\)/);
+  assert.match(form, /finally\s*\{\s*remove_filter/);
+  for (const p of ['inc/front.php','inc/form.php','templates/template-form.php']) {
+    execFileSync('php',['-l',new URL('../theme/'+p,import.meta.url).pathname]);
+  }
+});
