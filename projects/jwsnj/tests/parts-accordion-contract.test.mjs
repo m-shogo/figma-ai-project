@@ -114,3 +114,34 @@ test('course FAQ opt-in reuses native details and Q/A owner, with stable title i
     assert.match(html,/<div class="wp-block-details__inner"><p>Answer<\/p><\/div>/);
   }
 });
+
+
+test('course FAQ section reuses native Details and keeps the Figma stack spacing opt-in', () => {
+  const group = readFileSync(new URL('../theme/css/blocks/wp-block-group-style.css', import.meta.url), 'utf8');
+  const section = group.slice(group.indexOf('/* Course FAQ section PC 612:3259'));
+  assert.match(section, /\.wp-block-group\.is-style-jwsnj-course-faq-section/);
+  assert.match(section, /max-width:\s*calc\(961 \* var\(--to-rem-func\)\)/);
+  assert.match(section, /gap:\s*calc\(24 \* var\(--to-rem-func\)\)/);
+  assert.match(section, /justify-content:\s*center/);
+  assert.match(section, /margin-bottom:\s*calc\(24 \* var\(--to-rem-func\)\)/);
+  assert.match(section, /> \.wp-block-details\.is-style-jwsnj-course-faq,\s*> \.wp-block-group__inner-container > \.wp-block-details\.is-style-jwsnj-course-faq\s*\{\s*margin:\s*0/);
+  assert.doesNotMatch(section, /white-space:\s*nowrap|(?:^|[;{}\n])\s*height\s*:/);
+  const editor = readFileSync(new URL('../theme/inc/editor.php', import.meta.url), 'utf8');
+  assert.match(editor, /register_block_style\('core\/group', array\(\s*'name' => 'jwsnj-course-faq-section'/);
+  const file = new URL('../theme/patterns/course-faq.php', import.meta.url);
+  const pattern = readFileSync(file, 'utf8');
+  assert.match(pattern, /Slug:\s*jwsnj\/course-faq/);
+  assert.match(pattern, /<h2 class="wp-block-heading">よくあるご質問<\/h2>/);
+  assert.match(pattern, /<p>FAQ<\/p>/);
+  assert.equal((pattern.match(/<!-- wp:details /g) || []).length, 1);
+  assert.equal((pattern.match(/<!-- \/wp:details -->/g) || []).length, 1);
+  assert.match(pattern, /<summary>日本語に不安がある場合も、入学を相談できますか？<\/summary>/);
+  assert.match(pattern, /事前にお問い合わせください。/);
+  assert.doesNotMatch(pattern, /展開するとテキスト|宿題というのは|<a\b|https?:\/\/|wp_insert_post|update_field|register_post_type|<details[^>]*\sopen(?:[=\s>])/);
+  const raw = pattern.match(/<details[\s\S]*?<\/details>/)[0].replace(/<!--[\s\S]*?-->/g, '');
+  const rendered = renderDetails(raw);
+  assert.match(rendered, /<summary class="wp-block-details__summary">/);
+  assert.match(rendered, /wp-block-details__button" aria-hidden="true"/);
+  assert.match(rendered, /wp-block-details__inner/);
+  execFileSync('php', ['-l', file.pathname]);
+});
