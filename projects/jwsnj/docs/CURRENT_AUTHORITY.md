@@ -127,3 +127,10 @@ Header/Footer と TOP の公式 SVG / WebP は #599 / #600 でこのリポジト
 - 既存案件以外では会社/Theme依存の前提を先に確認し、Swiperを優先するHumanの実装方針として引き継ぐ。#664 W9、#523/#524、original 534:1706の保留は変更しない。
 
 - 実装状況更新: #680 は `so` ddf4a0d へマージ済み（Swiper版のソース実装、CI済み。実機は#523）。旧#678の置換READYは解消。保留中#664のCourseカードは旧native scroll snap案を含むため、W9解除後に最新Swiper方針と現行home.jsへの統合を確認する。承認前に#664のowner・ACF・branchを変更しない。
+
+## 2026-11-26 Human指示 — ACFはCursorへ後回し、フロント先行
+
+- Human「ACF後回しcursorでやるからダミー画像入れてそれ以外できない？」。既承認Figma範囲では新規ACF JSON/field group/取得接続を今回のChat側実装の必須前提とせず、HTML/PHP表示構造・CSS・レスポンシブ・Swiper・hover/open/focusを先行する。新規ACF追加・変更および管理画面実機接続はCursorへ引き継ぐ。既存ACFは維持し、W9を迂回しない。
+- 表示コンポーネントとデータ取得を分離し、開発/QA専用のfixtureで表示を成立させる。既にGitに保存された正規画像を優先（Course 5枚のWebPと装飾SVGは保存済み、公式asset contractあり）。未取得素材のみ明確に識別できる置換可能なダミーを開発/QAに限定して使用。本番でのダミー自動fallback、仮URL・仮slug・短命Figma URLは禁止。未確定リンクは実リンクとして出さない。公式素材受入・実機QAは#524/#523のまま。
+- #664のACF変更自体は未承認・保留のまま。その既存PRの表示側コード/設計を参照し、最新so上で独立したACF非依存の表示コンポーネントに整理し、SPを既存Swiper方式に移行する。#664 branch/ownerは変更しない。Cursor接続時は旧PR丸ごとのmergeによる二重実装を避け、必要なACF差分とデータadapterだけを統合する。
+- Course表示、Aboutカードの見た目・前面切替、未取得素材に依存していた既承認箇所を新たな独立READY候補とする。未指定のCMSスキーマ、リンク遷移の意味、共通スライダーの操作仕様はこの指示で確定したとみなさない。オリジナルページ534:1706の実装禁止、スケジュール変更禁止を維持。
