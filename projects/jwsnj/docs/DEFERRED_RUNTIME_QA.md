@@ -223,3 +223,5 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 - Course intro pattern `jwsnj/preschool-intro`: insert manually in approved course page draft, add exact approved native Image as sibling of copy Group, verify no block recovery warning, long text/grades wrap, optional media, PC520/440 gap80 and narrow single column, actual crop, page-level hero/breadcrumb/CTA separate. No original-page use; #523 DEFERRED_ENV.
 
 - Course FAQ section/pattern: insert into draft, verify native block validity and manual edit/add/reorder/remove, 1/6/long Q/A, actual open/closed and keyboard/focus, 961px max/48px heading gap/24px rows at PC, narrow provisional 24px heading gap and generic Details unaffected. Confirm answers before publication; five sample answers not seeded. #523 DEFERRED_ENV.
+
+- Course template: choose explicitly in course draft, verify default page unchanged, actual parent breadcrumb/one H1, password form/no body, missing intro/first intro/later intro, long title and breadcrumb, 320/375/768/1079/1080/1380 widths, full background and contained later FAQ, keyboard focus; #523 DEFERRED_ENV. No SP Figma.
