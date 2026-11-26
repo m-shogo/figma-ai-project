@@ -181,7 +181,11 @@ test('TOP MV uses bundled Swiper instead of a custom animation and keeps static 
   assert.match(js,/copy\.setAttribute\('inert', ''\)/);
   assert.match(js,/await Promise\.all\(visible\.map/);
   assert.match(js,/instance\.destroy\(true, true\)/);
-  assert.match(read('js/swiper-bundle.min.js'),/Swiper 14\.0\.1/);
+  const bundled=read('js/swiper-bundle.min.js');
+  assert.match(bundled,/Swiper 14\.0\.1/);
+  assert.match(bundled,/slideNext:function\([^)]*\)\{[^;]*;if\(!r\|\|i\.destroyed\)return i/);
+  assert.match(js,/swiper\.autoplay\.stop\(\);[\s\S]*?swiper\.disable\(\);/);
+  assert.match(js,/beforeResize: function \(instance\) \{[\s\S]*?instance\.params\.spaceBetween = parseFloat/);
   assert.match(read('inc/front.php'),/wp_enqueue_script\('swiper-script'/);
   execFileSync('node',['--check',new URL('../theme/js/home.js',import.meta.url).pathname]);
 });
@@ -192,7 +196,7 @@ test('MV Swiper controller covers init, immediate stop, resume, reduced motion a
     const classes=()=>{const s=new Set();return {contains:k=>s.has(k),add:(...k)=>k.forEach(x=>s.add(x)),remove:(...k)=>k.forEach(x=>s.delete(x))};};
     const callbacks={};
     const copies=[];
-    let decoded=0, options, instance, cloneCount=0, removed=0, starts=0, stops=0, destroyed=0, position=-40, transition;
+    let decoded=0, options, instance, cloneCount=0, removed=0, starts=0, stops=0, destroyed=0, position=-40, transition, gap=11, loopMoves=0;
     const imgs=[{loading:'lazy',getClientRects:()=>[{}],decode:async()=>{decoded++;if(fail)throw Error('decode');},removeAttribute:()=>{}},{getClientRects:()=>[]}];
     const grid={classList:classes(),cloneNode:()=>{cloneCount++;const attrs={};const copy={attrs,setAttribute:(k,v)=>attrs[k]=v,removeAttribute:()=>{},querySelectorAll:()=>[],remove:()=>removed++};copies.push(copy);return copy;}};
     const track={classList:classes(),querySelector:()=>complete?grid:null,append:()=>{},querySelectorAll:()=>imgs};
@@ -208,15 +212,20 @@ test('MV Swiper controller covers init, immediate stop, resume, reduced motion a
       this.params={speed:opts.speed,spaceBetween:opts.spaceBetween};
       this.size=100;this.snapGrid=[0,111,222];this.snapIndex=1;this.activeIndex=1;
       this.autoplay={start:()=>starts++,stop:()=>stops++};
+      this.enabled=true;
+      this.disable=()=>{this.enabled=false;};
+      this.enable=()=>{this.enabled=true;};
+      // Model bundled slideNext's enabled guard before loopFix.
+      this.slideNext=()=>{if(this.enabled)loopMoves++;};
       this.getTranslate=()=>position;this.setTransition=v=>transition=v;this.setTranslate=v=>position=v;
       this.on=(n,f)=>callbacks[n]=f;this.off=n=>delete callbacks[n];
       this.slideTo=(idx,speed)=>{assert.equal(idx,1);assert.ok(speed>0);return true;};
       this.transitionEnd=()=>{};
       this.destroy=()=>{this.destroyed=true;destroyed++;};
     }
-    runInNewContext(read('js/home.js'),{jQuery:fn=>{if(typeof fn==='function')fn();},window:{matchMedia:s=>s.includes('reduced')?mq:desktop,getComputedStyle:()=>({columnGap:'11px'})},document:{querySelectorAll:()=>[root]},Swiper:available?Swiper:undefined});
+    runInNewContext(read('js/home.js'),{jQuery:fn=>{if(typeof fn==='function')fn();},window:{matchMedia:s=>s.includes('reduced')?mq:desktop,getComputedStyle:()=>({columnGap:gap+'px'})},document:{querySelectorAll:()=>[root]},Swiper:available?Swiper:undefined});
     await new Promise(resolve=>setImmediate(resolve));
-    return {root,toggle,mq,callbacks,copies,options:()=>options,instance:()=>instance,stats:()=>({cloneCount,removed,decoded,starts,stops,destroyed,position,transition})};
+    return {root,toggle,mq,callbacks,copies,options:()=>options,instance:()=>instance,setGap:v=>{gap=v;},stats:()=>({cloneCount,removed,decoded,starts,stops,destroyed,position,transition,loopMoves})};
   }
   const ready=await fixture();
   assert.equal(ready.root.classList.contains('is-swiper-ready'),true);
@@ -230,10 +239,21 @@ test('MV Swiper controller covers init, immediate stop, resume, reduced motion a
   assert.equal(ready.stats().stops,1);
   assert.equal(ready.stats().transition,0);
   assert.equal(ready.stats().position,-40);
+  assert.equal(ready.instance().enabled,false);
+  ready.instance().slideNext(); // simulate a queued zero-delay frame after stop
+  assert.equal(ready.stats().loopMoves,0);
+  ready.setGap(15);
+  ready.options().on.beforeResize(ready.instance());
+  assert.equal(ready.instance().params.spaceBetween,15);
+  ready.options().on.resize(ready.instance());
+  assert.equal(ready.instance().enabled,false);
   assert.equal(ready.toggle.textContent,'写真の動きを再開');
   ready.callbacks.click();
+  assert.equal(ready.instance().enabled,true);
   ready.callbacks.transitionEnd();
   assert.equal(ready.stats().starts,1);
+  ready.instance().slideNext();
+  assert.equal(ready.stats().loopMoves,1);
   assert.equal(ready.toggle.textContent,'写真の動きを停止');
   ready.mq.matches=true;
   ready.callbacks.reduced();
