@@ -134,3 +134,7 @@ Header/Footer と TOP の公式 SVG / WebP は #599 / #600 でこのリポジト
 - 表示コンポーネントとデータ取得を分離し、開発/QA専用のfixtureで表示を成立させる。既にGitに保存された正規画像を優先（Course 5枚のWebPと装飾SVGは保存済み、公式asset contractあり）。未取得素材のみ明確に識別できる置換可能なダミーを開発/QAに限定して使用。本番でのダミー自動fallback、仮URL・仮slug・短命Figma URLは禁止。未確定リンクは実リンクとして出さない。公式素材受入・実機QAは#524/#523のまま。
 - #664のACF変更自体は未承認・保留のまま。その既存PRの表示側コード/設計を参照し、最新so上で独立したACF非依存の表示コンポーネントに整理し、SPを既存Swiper方式に移行する。#664 branch/ownerは変更しない。Cursor接続時は旧PR丸ごとのmergeによる二重実装を避け、必要なACF差分とデータadapterだけを統合する。
 - Course表示、Aboutカードの見た目・前面切替、未取得素材に依存していた既承認箇所を新たな独立READY候補とする。未指定のCMSスキーマ、リンク遷移の意味、共通スライダーの操作仕様はこの指示で確定したとみなさない。オリジナルページ534:1706の実装禁止、スケジュール変更禁止を維持。
+
+## 2026-11-26 Human指示 — CSSはクラス単位にまとめる（全案件）
+
+- Human「全部そうしてこれからの案件もそうして欲しい」。SP/baseとPC/TBのmedia、hover/focus/state・疑似要素を対象class内にまとめ、親block末尾・stylesheet末尾に子classを再列挙しない。既存JWSNJ CSSも対象。既存breakpoint・rem計算・セレクタ詳細度・カスケード・見た目を維持し、外部ライブラリは除外。複数ownerの条件や安全な移動を証明できないものは例外として記録する。共通正本AGENTS.md / frontend-quick-contract §7。ACF後回し、#664 branch保留、original 534:1706禁止、#523/#524維持。

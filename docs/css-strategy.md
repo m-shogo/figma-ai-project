@@ -562,3 +562,7 @@ Re-test after:
 - framework changes
 - company coding-standard changes
 - repeated evidence that another style system improves fidelity/rework
+
+## Human確定 2026-11-26 — クラス単位のresponsive/state ownership（全案件）
+
+親またはstylesheet末尾にPC用子セレクタを集めず、該当する最小owner selector内にbase、media/container/supports、hover/focus/state、疑似要素を同居させる。既存CSSも同じ方針で安全に整理する。詳細・例外・カスケード保持は `docs/frontend-quick-contract.md` §7。外部/vendor/generated CSSを直接変更しない。
