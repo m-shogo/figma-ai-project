@@ -4,480 +4,480 @@
 // ------------------------------ */
 .block-editor_wrap,
 .editor-styles-wrapper {
-    .wp-block-group {
-        margin-top: var(--wp-block-margin);
-        .wp-block-group__inner-container {
-            > *:first-child {
-                margin-top: 0;
-            }
-        }
-        /* Figma parts PC 344:922 and SP 442:2782.
+  .wp-block-group {
+    margin-top: var(--wp-block-margin);
+    .wp-block-group__inner-container {
+      > *:first-child {
+        margin-top: 0;
+      }
+    }
+    /* Figma parts PC 344:922 and SP 442:2782.
            Opt-in Gutenberg group style; other groups remain unchanged. */
-        &.is-style-jwsnj-bordered-box {
-            border: calc(1 * var(--to-rem-func)) solid var(--color-primary);
-            border-radius: calc(5 * var(--to-rem-func));
-            background-color: var(--jwsnj-color-white);
-            padding: calc(32 * var(--to-rem-func));
-            min-width: 0;
-            overflow-wrap: anywhere;
-            @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-                padding: calc(40 * var(--to-rem-func));
-            }
-        }
-        /* Figma PC 344:918/920, SP 442:2776/2779. Opt-in only. */
-        &.is-style-jwsnj-background-box {
-            background-color: var(--jwsnj-color-base-lightgreen);
-            border-radius: calc(5 * var(--to-rem-func));
-            padding: calc(32 * var(--to-rem-func));
-            min-width: 0;
-            overflow-wrap: anywhere;
-            @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-                padding: calc(40 * var(--to-rem-func));
-            }
-            /* The shared H4 owner supplies blossom, typography and 20px bottom
+    &.is-style-jwsnj-bordered-box {
+      border: calc(1 * var(--to-rem-func)) solid var(--color-primary);
+      border-radius: calc(5 * var(--to-rem-func));
+      background-color: var(--jwsnj-color-white);
+      padding: calc(32 * var(--to-rem-func));
+      min-width: 0;
+      overflow-wrap: anywhere;
+      @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+        padding: calc(40 * var(--to-rem-func));
+      }
+    }
+    /* Figma PC 344:918/920, SP 442:2776/2779. Opt-in only. */
+    &.is-style-jwsnj-background-box {
+      background-color: var(--jwsnj-color-base-lightgreen);
+      border-radius: calc(5 * var(--to-rem-func));
+      padding: calc(32 * var(--to-rem-func));
+      min-width: 0;
+      overflow-wrap: anywhere;
+      @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+        padding: calc(40 * var(--to-rem-func));
+      }
+      /* The shared H4 owner supplies blossom, typography and 20px bottom
                margin. Avoid adding the generic paragraph top margin to it. */
-            > h4 + p,
-            > .wp-block-group__inner-container > h4 + p {
-                margin-top: 0;
-            }
-        }
-        /* // ==========================================================================
+      > h4 + p,
+      > .wp-block-group__inner-container > h4 + p {
+        margin-top: 0;
+      }
+    }
+    /* // ==========================================================================
         // 画像とテキストが回り込み時のブロックグループのフロート解除
         // ========================================================================== */
-        &:has(.wp-block-image figure.alignleft, .wp-block-image figure.alignright) {
-            display: flow-root;
-            .wp-block-group__inner-container {
-                > *:nth-child(2) {
-                    margin-top: 0;
-                }
-            }
+    &:has(.wp-block-image figure.alignleft, .wp-block-image figure.alignright) {
+      display: flow-root;
+      .wp-block-group__inner-container {
+        > *:nth-child(2) {
+          margin-top: 0;
         }
+      }
     }
+  }
 }
 
 /* Course section headings PC 609:3046 / 612:3095 / 612:3256.
    Opt-in core Group/Row: one native H2 and an English paragraph. */
 :is(.block-editor_wrap, .editor-styles-wrapper) .wp-block-group.is-style-jwsnj-course-heading,
 :is(.block-editor_wrap, .editor-styles-wrapper) .wp-block-group.is-style-jwsnj-course-intro-heading {
-    min-width: 0;
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: calc(8 * var(--to-rem-func)) calc(20 * var(--to-rem-func));
+  > .wp-block-group__inner-container {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: calc(8 * var(--to-rem-func)) calc(20 * var(--to-rem-func));
-    > .wp-block-group__inner-container {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: inherit;
-        justify-content: inherit;
-        min-width: 0;
+    gap: inherit;
+    justify-content: inherit;
+    min-width: 0;
+  }
+  > h2.wp-block-heading,
+  > .wp-block-group__inner-container > h2.wp-block-heading {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-image: none;
+    min-width: 0;
+    font-family: var(--font-jwsnj-ja);
+    font-size: calc(24 * var(--to-rem-func));
+    font-weight: 700;
+    line-height: 1.4;
+    letter-spacing: 0.1em;
+    color: var(--color-text);
+    overflow-wrap: anywhere;
+    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+      font-size: calc(32 * var(--to-rem-func));
     }
-    > h2.wp-block-heading,
-    > .wp-block-group__inner-container > h2.wp-block-heading {
-        margin: 0;
-        padding: 0;
-        border: 0;
-        border-image: none;
-        min-width: 0;
-        font-family: var(--font-jwsnj-ja);
-        font-size: calc(24 * var(--to-rem-func));
-        font-weight: 700;
-        line-height: 1.4;
-        letter-spacing: 0.1em;
-        color: var(--color-text);
-        overflow-wrap: anywhere;
-        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-            font-size: calc(32 * var(--to-rem-func));
-        }
-    }
-    > p,
-    > .wp-block-group__inner-container > p {
-        margin: 0;
-        min-width: 0;
-        font-family: var(--font-sansSerif-en);
-        font-size: calc(13 * var(--to-rem-func));
-        font-weight: 500;
-        line-height: 1.3;
-        letter-spacing: 0.05em;
-        color: var(--color-primary);
-        overflow-wrap: anywhere;
-    }
+  }
+  > p,
+  > .wp-block-group__inner-container > p {
+    margin: 0;
+    min-width: 0;
+    font-family: var(--font-sansSerif-en);
+    font-size: calc(13 * var(--to-rem-func));
+    font-weight: 500;
+    line-height: 1.3;
+    letter-spacing: 0.05em;
+    color: var(--color-primary);
+    overflow-wrap: anywhere;
+  }
 }
 
 /* Course introduction title PC 534:2369; shares the bilingual row layout. */
 :is(.block-editor_wrap, .editor-styles-wrapper) .wp-block-group.is-style-jwsnj-course-intro-heading {
-    > h2.wp-block-heading,
-    > .wp-block-group__inner-container > h2.wp-block-heading {
-        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-            font-size: calc(36 * var(--to-rem-func));
-        }
+  > h2.wp-block-heading,
+  > .wp-block-group__inner-container > h2.wp-block-heading {
+    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+      font-size: calc(36 * var(--to-rem-func));
     }
-    > p,
-    > .wp-block-group__inner-container > p {
-        font-size: calc(15 * var(--to-rem-func));
-    }
+  }
+  > p,
+  > .wp-block-group__inner-container > p {
+    font-size: calc(15 * var(--to-rem-func));
+  }
 }
 
 /* Course grade row PC 539:3627 / 534:2360 / 534:2357.
    Use an editable label paragraph and native unordered list, not fixed grade data. */
 :is(.block-editor_wrap, .editor-styles-wrapper) .wp-block-group.is-style-jwsnj-course-grades {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: calc(12 * var(--to-rem-func)) calc(20 * var(--to-rem-func));
+  min-width: 0;
+  > .wp-block-group__inner-container {
     display: flex;
     align-items: flex-start;
     flex-wrap: wrap;
-    gap: calc(12 * var(--to-rem-func)) calc(20 * var(--to-rem-func));
+    gap: inherit;
     min-width: 0;
-    > .wp-block-group__inner-container {
-        display: flex;
-        align-items: flex-start;
-        flex-wrap: wrap;
-        gap: inherit;
-        min-width: 0;
+  }
+  > p,
+  > .wp-block-group__inner-container > p {
+    display: inline-flex;
+    align-items: center;
+    gap: calc(4 * var(--to-rem-func));
+    margin: 0;
+    padding: calc(4 * var(--to-rem-func)) calc(12 * var(--to-rem-func));
+    border-radius: calc(3 * var(--to-rem-func));
+    background: var(--color-accent);
+    color: var(--jwsnj-color-white);
+    font-family: var(--font-jwsnj-ja);
+    font-weight: 500;
+    font-size: calc(13 * var(--to-rem-func));
+    line-height: 1.5;
+    letter-spacing: 0.05em;
+    min-width: 0;
+    overflow-wrap: anywhere;
+    &::before {
+      content: '\f303' / '';
+      font-family: var(--font-awesome);
+      font-weight: 900;
+      flex-shrink: 0;
     }
-    > p,
-    > .wp-block-group__inner-container > p {
-        display: inline-flex;
-        align-items: center;
-        gap: calc(4 * var(--to-rem-func));
-        margin: 0;
-        padding: calc(4 * var(--to-rem-func)) calc(12 * var(--to-rem-func));
-        border-radius: calc(3 * var(--to-rem-func));
-        background: var(--color-accent);
-        color: var(--jwsnj-color-white);
-        font-family: var(--font-jwsnj-ja);
-        font-weight: 500;
-        font-size: calc(13 * var(--to-rem-func));
-        line-height: 1.5;
-        letter-spacing: 0.05em;
-        min-width: 0;
-        overflow-wrap: anywhere;
-        &::before {
-            content: '\f303' / '';
-            font-family: var(--font-awesome);
-            font-weight: 900;
-            flex-shrink: 0;
-        }
+  }
+  > ul.wp-block-list:not(.annotation-list),
+  > .wp-block-group__inner-container > ul.wp-block-list:not(.annotation-list) {
+    display: flex;
+    flex-direction: column;
+    gap: calc(8 * var(--to-rem-func));
+    margin: 0;
+    padding: 0;
+    min-width: 0;
+    list-style: none;
+    > li {
+      padding: 0;
+      font-family: var(--font-jwsnj-ja);
+      font-weight: 400;
+      font-size: calc(14 * var(--to-rem-func));
+      line-height: 1.886;
+      letter-spacing: 0.05em;
+      overflow-wrap: anywhere;
+      min-width: 0;
+      &::before { content: none; }
     }
-    > ul.wp-block-list:not(.annotation-list),
-    > .wp-block-group__inner-container > ul.wp-block-list:not(.annotation-list) {
-        display: flex;
-        flex-direction: column;
-        gap: calc(8 * var(--to-rem-func));
-        margin: 0;
-        padding: 0;
-        min-width: 0;
-        list-style: none;
-        > li {
-            padding: 0;
-            font-family: var(--font-jwsnj-ja);
-            font-weight: 400;
-            font-size: calc(14 * var(--to-rem-func));
-            line-height: 1.886;
-            letter-spacing: 0.05em;
-            overflow-wrap: anywhere;
-            min-width: 0;
-            &::before { content: none; }
-        }
-        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-            flex-direction: row;
-            flex-wrap: wrap;
-            gap: calc(8 * var(--to-rem-func)) calc(16 * var(--to-rem-func));
-            > li:not(:last-child) {
-                border-inline-end: calc(1 * var(--to-rem-func)) solid var(--jwsnj-color-separator);
-                padding-inline-end: calc(8 * var(--to-rem-func));
-            }
-        }
+    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: calc(8 * var(--to-rem-func)) calc(16 * var(--to-rem-func));
+      > li:not(:last-child) {
+        border-inline-end: calc(1 * var(--to-rem-func)) solid var(--jwsnj-color-separator);
+        padding-inline-end: calc(8 * var(--to-rem-func));
+      }
     }
+  }
 }
 
 /* Course schedule title PC 612:3095 and first media slot 617:3477.
    Authored adjacent blocks, not a global heading margin. */
 :is(.block-editor_wrap, .editor-styles-wrapper) .wp-block-group.is-style-jwsnj-course-heading:has(+ .wp-block-group.is-style-jwsnj-course-schedule) {
-    justify-content: center;
-    text-align: center;
-    margin-bottom: 0;
+  justify-content: center;
+  text-align: center;
+  margin-bottom: 0;
 }
 :is(.block-editor_wrap, .editor-styles-wrapper) .wp-block-group.is-style-jwsnj-course-heading + .wp-block-group.is-style-jwsnj-course-schedule {
-    margin-top: calc(32 * var(--to-rem-func));
-    @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
-        margin-top: calc(74 * var(--to-rem-func));
-    }
+  margin-top: calc(32 * var(--to-rem-func));
+  @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+    margin-top: calc(74 * var(--to-rem-func));
+  }
 }
 
 /* Course schedule PC 608:3037–3045 / 617:3477–3486.
    Outer Group contains one ordinary Group per chronological entry:
    optional native Image followed by an editable Paragraph. */
 :is(.block-editor_wrap, .editor-styles-wrapper) .wp-block-group.is-style-jwsnj-course-schedule {
+  display: grid;
+  gap: calc(24 * var(--to-rem-func));
+  min-width: 0;
+  > .wp-block-group__inner-container {
     display: grid;
-    gap: calc(24 * var(--to-rem-func));
+    gap: inherit;
     min-width: 0;
+  }
+  > .wp-block-group,
+  > .wp-block-group__inner-container > .wp-block-group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: calc(12 * var(--to-rem-func));
+    margin: 0;
+    min-width: 0;
+    max-width: none;
     > .wp-block-group__inner-container {
-        display: grid;
-        gap: inherit;
-        min-width: 0;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: inherit;
+      min-width: 0;
+      width: 100%;
     }
-    > .wp-block-group,
-    > .wp-block-group__inner-container > .wp-block-group {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: calc(12 * var(--to-rem-func));
-        margin: 0;
-        min-width: 0;
-        max-width: none;
-        > .wp-block-group__inner-container {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: inherit;
-            min-width: 0;
-            width: 100%;
-        }
-        > p,
-        > .wp-block-group__inner-container > p {
-            flex: 1 1 calc(160 * var(--to-rem-func));
-            margin: 0;
-            min-width: 0;
-            max-width: none;
-            font-family: var(--font-jwsnj-ja);
-            font-size: calc(15 * var(--to-rem-func));
-            font-weight: 500;
-            line-height: 1.5;
-            letter-spacing: 0.05em;
-            color: var(--color-text);
-            overflow-wrap: anywhere;
-        }
-        > .wp-block-image,
-        > .wp-block-group__inner-container > .wp-block-image {
-            flex: 0 1 calc(200 * var(--to-rem-func));
-            width: min(100%, calc(200 * var(--to-rem-func)));
-            max-width: 100%;
-            min-width: 0;
-            margin: 0;
-            /* The later shared Image rule must not center a wrapped schedule slot. */
-            &:not(:has(.alignleft)):not(:has(.alignright)):not(:has(.aligncenter)) {
-                width: min(100%, calc(200 * var(--to-rem-func)));
-                margin-inline: 0;
-            }
-            img {
-                display: block;
-                width: 100%;
-                aspect-ratio: 4 / 3;
-                object-fit: cover;
-            }
-        }
-        @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
-            width: min(100%, calc(600 * var(--to-rem-func)));
-            justify-self: start;
-            gap: calc(16 * var(--to-rem-func));
-            /* The design has 200×150 media slots, but the editable pattern
-               deliberately has no placeholder photos. Keep text-only rows distinct. */
-            &:not(:has(> .wp-block-image, > .wp-block-group__inner-container > .wp-block-image)) {
-                padding-block: calc(12 * var(--to-rem-func));
-            }
-            &:nth-child(even) {
-                justify-self: end;
-                flex-direction: row-reverse;
-                > .wp-block-group__inner-container { flex-direction: row-reverse; }
-                > p,
-                > .wp-block-group__inner-container > p { text-align: end; }
-            }
-        }
+    > p,
+    > .wp-block-group__inner-container > p {
+      flex: 1 1 calc(160 * var(--to-rem-func));
+      margin: 0;
+      min-width: 0;
+      max-width: none;
+      font-family: var(--font-jwsnj-ja);
+      font-size: calc(15 * var(--to-rem-func));
+      font-weight: 500;
+      line-height: 1.5;
+      letter-spacing: 0.05em;
+      color: var(--color-text);
+      overflow-wrap: anywhere;
+    }
+    > .wp-block-image,
+    > .wp-block-group__inner-container > .wp-block-image {
+      flex: 0 1 calc(200 * var(--to-rem-func));
+      width: min(100%, calc(200 * var(--to-rem-func)));
+      max-width: 100%;
+      min-width: 0;
+      margin: 0;
+      /* The later shared Image rule must not center a wrapped schedule slot. */
+      &:not(:has(.alignleft)):not(:has(.alignright)):not(:has(.aligncenter)) {
+        width: min(100%, calc(200 * var(--to-rem-func)));
+        margin-inline: 0;
+      }
+      img {
+        display: block;
+        width: 100%;
+        aspect-ratio: 4 / 3;
+        object-fit: cover;
+      }
     }
     @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
-        gap: 0;
+      width: min(100%, calc(600 * var(--to-rem-func)));
+      justify-self: start;
+      gap: calc(16 * var(--to-rem-func));
+      /* The design has 200×150 media slots, but the editable pattern
+               deliberately has no placeholder photos. Keep text-only rows distinct. */
+      &:not(:has(> .wp-block-image, > .wp-block-group__inner-container > .wp-block-image)) {
+        padding-block: calc(12 * var(--to-rem-func));
+      }
+      &:nth-child(even) {
+        justify-self: end;
+        flex-direction: row-reverse;
+        > .wp-block-group__inner-container { flex-direction: row-reverse; }
+        > p,
+        > .wp-block-group__inner-container > p { text-align: end; }
+      }
     }
+  }
+  @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+    gap: 0;
+  }
 }
 
 /* Course PC 539:3658 / 539:3628 / 534:2350 (not original page).
    Native Group containing a copy Group and optional editor-owned Image. */
 :is(.block-editor_wrap, .editor-styles-wrapper) .wp-block-group.is-style-jwsnj-course-intro-layout {
+  display: grid;
+  gap: calc(32 * var(--to-rem-func));
+  align-items: center;
+  min-width: 0;
+  max-width: calc(1040 * var(--to-rem-func));
+  margin-inline: auto;
+  > .wp-block-group__inner-container {
     display: grid;
-    gap: calc(32 * var(--to-rem-func));
+    gap: inherit;
     align-items: center;
     min-width: 0;
-    max-width: calc(1040 * var(--to-rem-func));
-    margin-inline: auto;
+  }
+  > .wp-block-group,
+  > .wp-block-group__inner-container > .wp-block-group {
+    display: grid;
+    gap: calc(24 * var(--to-rem-func));
+    margin: 0;
+    min-width: 0;
+    max-width: none;
     > .wp-block-group__inner-container {
-        display: grid;
-        gap: inherit;
-        align-items: center;
-        min-width: 0;
+      display: grid;
+      gap: inherit;
+      min-width: 0;
     }
-    > .wp-block-group,
-    > .wp-block-group__inner-container > .wp-block-group {
-        display: grid;
-        gap: calc(24 * var(--to-rem-func));
-        margin: 0;
-        min-width: 0;
-        max-width: none;
-        > .wp-block-group__inner-container {
-            display: grid;
-            gap: inherit;
-            min-width: 0;
-        }
-        > *,
-        > .wp-block-group__inner-container > * { margin-block: 0; min-width: 0; }
-        @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
-            /* Flatten the Figma's nested copy groups without losing their
-               32 / 40 / 48px rhythm (539:3625 / 539:3626 / 539:3628). */
-            gap: 0;
-            > * + *,
-            > .wp-block-group__inner-container > * + * {
-                margin-top: calc(40 * var(--to-rem-func));
-            }
-            > .is-style-jwsnj-course-intro-heading + .is-style-jwsnj-course-lead,
-            > .wp-block-group__inner-container > .is-style-jwsnj-course-intro-heading + .is-style-jwsnj-course-lead {
-                margin-top: calc(32 * var(--to-rem-func));
-            }
-            > p + .is-style-jwsnj-course-grades,
-            > .wp-block-group__inner-container > p + .is-style-jwsnj-course-grades {
-                margin-top: calc(48 * var(--to-rem-func));
-            }
-        }
-    }
-    > .wp-block-image,
-    > .wp-block-group__inner-container > .wp-block-image {
-        width: 100%;
-        max-width: min(100%, calc(440 * var(--to-rem-func)));
-        margin: 0;
-        min-width: 0;
-        /* Override the ordinary Image owner's fit-content rule only for unaligned media. */
-        &:not(:has(.alignleft)):not(:has(.alignright)):not(:has(.aligncenter)) {
-            width: 100%;
-            margin-inline: 0;
-        }
-        img {
-            display: block;
-            width: 100%;
-            aspect-ratio: 440 / 461;
-            object-fit: cover;
-            object-position: bottom;
-            border-radius: calc(5 * var(--to-rem-func));
-        }
-    }
+    > *,
+    > .wp-block-group__inner-container > * { margin-block: 0; min-width: 0; }
     @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
-        gap: clamp(calc(32 * var(--to-rem-func)), 5.8vw, calc(80 * var(--to-rem-func)));
-        &:has(> .wp-block-group):has(> .wp-block-image),
-        > .wp-block-group__inner-container:has(> .wp-block-group):has(> .wp-block-image) {
-            grid-template-columns: minmax(0, 520fr) minmax(0, 440fr);
-        }
+      /* Flatten the Figma's nested copy groups without losing their
+               32 / 40 / 48px rhythm (539:3625 / 539:3626 / 539:3628). */
+      gap: 0;
+      > * + *,
+      > .wp-block-group__inner-container > * + * {
+        margin-top: calc(40 * var(--to-rem-func));
+      }
+      > .is-style-jwsnj-course-intro-heading + .is-style-jwsnj-course-lead,
+      > .wp-block-group__inner-container > .is-style-jwsnj-course-intro-heading + .is-style-jwsnj-course-lead {
+        margin-top: calc(32 * var(--to-rem-func));
+      }
+      > p + .is-style-jwsnj-course-grades,
+      > .wp-block-group__inner-container > p + .is-style-jwsnj-course-grades {
+        margin-top: calc(48 * var(--to-rem-func));
+      }
     }
+  }
+  > .wp-block-image,
+  > .wp-block-group__inner-container > .wp-block-image {
+    width: 100%;
+    max-width: min(100%, calc(440 * var(--to-rem-func)));
+    margin: 0;
+    min-width: 0;
+    /* Override the ordinary Image owner's fit-content rule only for unaligned media. */
+    &:not(:has(.alignleft)):not(:has(.alignright)):not(:has(.aligncenter)) {
+      width: 100%;
+      margin-inline: 0;
+    }
+    img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 440 / 461;
+      object-fit: cover;
+      object-position: bottom;
+      border-radius: calc(5 * var(--to-rem-func));
+    }
+  }
+  @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+    gap: clamp(calc(32 * var(--to-rem-func)), 5.8vw, calc(80 * var(--to-rem-func)));
+    &:has(> .wp-block-group):has(> .wp-block-image),
+    > .wp-block-group__inner-container:has(> .wp-block-group):has(> .wp-block-image) {
+      grid-template-columns: minmax(0, 520fr) minmax(0, 440fr);
+    }
+  }
 }
 
 /* Course FAQ section PC 612:3259 / 612:3255.
    Opt-in native Group: bilingual heading followed by editable Details blocks. */
 :is(.block-editor_wrap, .editor-styles-wrapper) .wp-block-group.is-style-jwsnj-course-faq-section {
+  display: grid;
+  gap: calc(24 * var(--to-rem-func));
+  width: 100%;
+  max-width: calc(961 * var(--to-rem-func));
+  min-width: 0;
+  margin-inline: auto;
+  > .wp-block-group__inner-container {
     display: grid;
-    gap: calc(24 * var(--to-rem-func));
-    width: 100%;
-    max-width: calc(961 * var(--to-rem-func));
+    gap: inherit;
     min-width: 0;
-    margin-inline: auto;
-    > .wp-block-group__inner-container {
-        display: grid;
-        gap: inherit;
-        min-width: 0;
+  }
+  > .wp-block-group.is-style-jwsnj-course-heading,
+  > .wp-block-group__inner-container > .wp-block-group.is-style-jwsnj-course-heading {
+    justify-content: center;
+    margin: 0;
+    min-width: 0;
+    text-align: center;
+    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+      margin-bottom: calc(24 * var(--to-rem-func));
     }
-    > .wp-block-group.is-style-jwsnj-course-heading,
-    > .wp-block-group__inner-container > .wp-block-group.is-style-jwsnj-course-heading {
-        justify-content: center;
-        margin: 0;
-        min-width: 0;
-        text-align: center;
-        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-            margin-bottom: calc(24 * var(--to-rem-func));
-        }
-    }
-    > .wp-block-details.is-style-jwsnj-course-faq,
-    > .wp-block-group__inner-container > .wp-block-details.is-style-jwsnj-course-faq {
-        margin: 0;
-        min-width: 0;
-        max-width: none;
-    }
+  }
+  > .wp-block-details.is-style-jwsnj-course-faq,
+  > .wp-block-group__inner-container > .wp-block-details.is-style-jwsnj-course-faq {
+    margin: 0;
+    min-width: 0;
+    max-width: none;
+  }
 }
 
 /* Course features PC 612:3074 / 609:3046 / 612:3073.
    Optional native Images use the 4:3 illustration slot, never dummy artwork. */
 :is(.block-editor_wrap, .editor-styles-wrapper) .wp-block-group.is-style-jwsnj-course-heading + .wp-block-group.is-style-jwsnj-course-features {
-    margin-top: calc(32 * var(--to-rem-func));
-    @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
-        margin-top: calc(48 * var(--to-rem-func));
-    }
+  margin-top: calc(32 * var(--to-rem-func));
+  @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+    margin-top: calc(48 * var(--to-rem-func));
+  }
 }
 :is(.block-editor_wrap, .editor-styles-wrapper) .wp-block-group.is-style-jwsnj-course-features {
+  display: grid;
+  gap: calc(32 * var(--to-rem-func));
+  min-width: 0;
+  > .wp-block-group__inner-container {
     display: grid;
-    gap: calc(32 * var(--to-rem-func));
+    gap: inherit;
     min-width: 0;
+  }
+  @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+    gap: calc(40 * var(--to-rem-func));
+    &:not(:has(> .wp-block-group__inner-container)),
     > .wp-block-group__inner-container {
-        display: grid;
-        gap: inherit;
-        min-width: 0;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      align-items: start;
     }
-    @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
-        gap: calc(40 * var(--to-rem-func));
-        &:not(:has(> .wp-block-group__inner-container)),
-        > .wp-block-group__inner-container {
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            align-items: start;
-        }
+  }
+  > .wp-block-group,
+  > .wp-block-group__inner-container > .wp-block-group {
+    display: grid;
+    gap: calc(20 * var(--to-rem-func));
+    margin: 0;
+    min-width: 0;
+    max-width: none;
+    > .wp-block-group__inner-container {
+      display: grid;
+      gap: inherit;
+      min-width: 0;
     }
-    > .wp-block-group,
-    > .wp-block-group__inner-container > .wp-block-group {
-        display: grid;
-        gap: calc(20 * var(--to-rem-func));
-        margin: 0;
-        min-width: 0;
-        max-width: none;
-        > .wp-block-group__inner-container {
-            display: grid;
-            gap: inherit;
-            min-width: 0;
-        }
-        > h3.wp-block-heading,
-        > .wp-block-group__inner-container > h3.wp-block-heading {
-            margin: 0;
-            padding: 0;
-            background: none;
-            border: 0;
-            color: var(--color-text);
-            font-family: var(--font-jwsnj-ja);
-            font-size: calc(18 * var(--to-rem-func));
-            font-weight: 500;
-            line-height: 1.5;
-            letter-spacing: normal;
-            overflow-wrap: anywhere;
-            min-width: 0;
-        }
-        > p,
-        > .wp-block-group__inner-container > p {
-            margin: 0;
-            color: var(--color-text);
-            font-family: var(--font-jwsnj-ja);
-            font-size: calc(16 * var(--to-rem-func));
-            font-weight: 400;
-            line-height: 1.6;
-            letter-spacing: 0.05em;
-            min-width: 0;
-            overflow-wrap: anywhere;
-        }
-        > .wp-block-image,
-        > .wp-block-group__inner-container > .wp-block-image {
-            margin: 0 0 calc(12 * var(--to-rem-func));
-            min-width: 0;
-            width: 100%;
-            &:not(:has(.alignleft)):not(:has(.alignright)):not(:has(.aligncenter)) {
-                width: 100%;
-                margin-inline: 0;
-            }
-            img {
-                display: block;
-                box-sizing: border-box;
-                width: 100%;
-                aspect-ratio: 4 / 3;
-                object-fit: contain;
-                border: calc(1 * var(--to-rem-func)) solid var(--color-primary);
-                border-radius: calc(5 * var(--to-rem-func));
-            }
-        }
+    > h3.wp-block-heading,
+    > .wp-block-group__inner-container > h3.wp-block-heading {
+      margin: 0;
+      padding: 0;
+      background: none;
+      border: 0;
+      color: var(--color-text);
+      font-family: var(--font-jwsnj-ja);
+      font-size: calc(18 * var(--to-rem-func));
+      font-weight: 500;
+      line-height: 1.5;
+      letter-spacing: normal;
+      overflow-wrap: anywhere;
+      min-width: 0;
     }
+    > p,
+    > .wp-block-group__inner-container > p {
+      margin: 0;
+      color: var(--color-text);
+      font-family: var(--font-jwsnj-ja);
+      font-size: calc(16 * var(--to-rem-func));
+      font-weight: 400;
+      line-height: 1.6;
+      letter-spacing: 0.05em;
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+    > .wp-block-image,
+    > .wp-block-group__inner-container > .wp-block-image {
+      margin: 0 0 calc(12 * var(--to-rem-func));
+      min-width: 0;
+      width: 100%;
+      &:not(:has(.alignleft)):not(:has(.alignright)):not(:has(.aligncenter)) {
+        width: 100%;
+        margin-inline: 0;
+      }
+      img {
+        display: block;
+        box-sizing: border-box;
+        width: 100%;
+        aspect-ratio: 4 / 3;
+        object-fit: contain;
+        border: calc(1 * var(--to-rem-func)) solid var(--color-primary);
+        border-radius: calc(5 * var(--to-rem-func));
+      }
+    }
+  }
 }

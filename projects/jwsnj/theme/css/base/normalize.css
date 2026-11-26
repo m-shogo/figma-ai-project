@@ -7,34 +7,34 @@
    * リセット追加
    * ========================================================================== */
 :root {
-    --vw: 1vw;
-    scrollbar-gutter: stable;
+  --vw: 1vw;
+  scrollbar-gutter: stable;
 }
 * {
+  box-sizing: border-box;
+  -webkit-text-size-adjust: 100%;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  &::before,
+  &::after {
     box-sizing: border-box;
-    -webkit-text-size-adjust: 100%;
-    -moz-osx-font-smoothing: grayscale;
-    -webkit-font-smoothing: antialiased;
-    &::before,
-    &::after {
-        box-sizing: border-box;
-    }
+  }
 }
 /* Keep UA focus in older engines; enhance keyboard focus in supporting browsers. */
 :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
-    outline: 2px solid currentColor;
-    outline-offset: 2px;
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
 }
 main {
-    display: block;
+  display: block;
 }
 hr {
-    display: block;
-    margin: 1em 0;
-    border: 0;
-    padding: 0;
-    height: calc(1 * var(--to-rem-func));
-    border-top: calc(1 * var(--to-rem-func)) solid var(--color-separator);
+  display: block;
+  margin: 1em 0;
+  border: 0;
+  padding: 0;
+  height: calc(1 * var(--to-rem-func));
+  border-top: calc(1 * var(--to-rem-func)) solid var(--color-separator);
 }
 /* :where(*:not(.block-editor_wrap *)) {
    margin: 0;
@@ -55,9 +55,9 @@ legend,
 label,
 fieldset,
 button {
-    overflow-wrap: anywhere;
-    word-break: normal;
-    line-break: strict;
+  overflow-wrap: anywhere;
+  word-break: normal;
+  line-break: strict;
 }
 
 /* ==========================================================================
@@ -71,56 +71,56 @@ label,
 legend,
 select,
 textarea {
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    border-radius: 0;
-    border: none;
-    margin: 0;
-    padding: 0;
-    font: inherit;
-    vertical-align: baseline;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 0;
+  border: none;
+  margin: 0;
+  padding: 0;
+  font: inherit;
+  vertical-align: baseline;
 }
 input,
 textarea {
-    max-width: 100%;
+  max-width: 100%;
 }
 input[type='button'],
 input[type='reset'],
 input[type='submit'],
 button {
-    cursor: pointer;
-    width: auto;
+  cursor: pointer;
+  width: auto;
 }
 
 /* ==========================================================================
    * ベース
    * ========================================================================== */
 html {
-    font-size: 100%;
-    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-        overflow-x: auto;
-    }
+  font-size: 100%;
+  @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+    overflow-x: auto;
+  }
 }
 body {
-    position: relative;
-    z-index: 0;
-    background: var(--color-secondary);
-    font-family: var(--font-sansSerif-ja);
-    font-weight: 400;
-    line-height: 1.8;
-    font-size: 1rem;
-    color: var(--color-text);
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-        min-width: calc(1280 * var(--to-rem-func));
-    }
+  position: relative;
+  z-index: 0;
+  background: var(--color-secondary);
+  font-family: var(--font-sansSerif-ja);
+  font-weight: 400;
+  line-height: 1.8;
+  font-size: 1rem;
+  color: var(--color-text);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+    min-width: calc(1280 * var(--to-rem-func));
+  }
 }
 body._contentFixed {
-    position: fixed;
-    width: 100%;
-    height: 100%;
+  position: fixed;
+  width: 100%;
+  height: 100%;
 }
 
 /* MARK: header_breakpoint */
@@ -132,146 +132,146 @@ body._contentFixed {
    }
    } */
 a {
-    margin: 0;
-    padding: 0;
-    background: transparent;
-    font: inherit;
-    color: var(--color-link);
-    text-decoration: underline;
-    vertical-align: baseline;
-    &:hover,
-    &:focus,
-    &:active {
-        text-decoration: none;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  font: inherit;
+  color: var(--color-link);
+  text-decoration: underline;
+  vertical-align: baseline;
+  &:hover,
+  &:focus,
+  &:active {
+    text-decoration: none;
+  }
+  &[href^='tel:'] {
+    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+      display: inline-block;
+      color: inherit;
+      text-decoration: inherit;
+      pointer-events: none;
     }
-    &[href^='tel:'] {
-        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-            display: inline-block;
-            color: inherit;
-            text-decoration: inherit;
-            pointer-events: none;
-        }
-    }
+  }
 }
 img {
-    max-width: 100%;
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-    object-position: center center;
-    vertical-align: top;
+  max-width: 100%;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  object-position: center center;
+  vertical-align: top;
 }
 sup,
 sub {
-    font-size: 78%;
+  font-size: 78%;
 }
 sup {
-    vertical-align: super;
+  vertical-align: super;
 }
 sub {
-    vertical-align: sub;
+  vertical-align: sub;
 }
 
 /* プレースホルダー色定義 */
 :placeholder-shown {
-    color: var(--color-gray-text);
+  color: var(--color-gray-text);
 }
 ::-webkit-input-placeholder {
-    color: var(--color-gray-text);
-    opacity: 1;
+  color: var(--color-gray-text);
+  opacity: 1;
 }
 :-moz-placeholder {
-    color: var(--color-gray-text);
+  color: var(--color-gray-text);
 }
 ::-moz-placeholder {
-    color: var(--color-gray-text);
-    opacity: 1;
+  color: var(--color-gray-text);
+  opacity: 1;
 }
 :-ms-input-placeholder {
-    color: var(--color-gray-text);
+  color: var(--color-gray-text);
 }
 /* ChromeやSafariで検索フォームの右側にある×ボタン削除 */
 ::-webkit-search-cancel-button {
-    -webkit-appearance: none;
+  -webkit-appearance: none;
 }
 
 /* ==========================================================================
    * ClearFix
    * ========================================================================== */
 .clearFix::after {
-    clear: both;
-    content: '.';
-    display: block;
-    height: 0;
-    visibility: hidden;
+  clear: both;
+  content: '.';
+  display: block;
+  height: 0;
+  visibility: hidden;
 }
 
 /* ==========================================================================
    * 文字サイズ
    * ========================================================================== */
 ._font-sizeS {
-    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-        font-size: 1.2rem;
-    }
+  @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+    font-size: 1.2rem;
+  }
 }
 ._font-sizeM {
-    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-        font-size: 1.4rem;
-    }
+  @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+    font-size: 1.4rem;
+  }
 }
 ._font-sizeL {
-    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-        font-size: 1.8rem;
-    }
+  @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+    font-size: 1.8rem;
+  }
 }
 
 /* ==========================================================================
    * 装飾クラス
    * ========================================================================== */
 ._hide {
-    display: none !important;
+  display: none !important;
 }
 ._align-right {
-    text-align: right !important;
+  text-align: right !important;
 }
 ._align-left {
-    text-align: left !important;
+  text-align: left !important;
 }
 ._align-center {
-    text-align: center !important;
+  text-align: center !important;
 }
 ._indent {
-    text-indent: 1rem !important;
+  text-indent: 1rem !important;
 }
 ._block-right {
-    margin-right: 0 !important;
-    margin-left: auto !important;
+  margin-right: 0 !important;
+  margin-left: auto !important;
 }
 ._block-center {
-    margin-right: auto !important;
-    margin-left: auto !important;
+  margin-right: auto !important;
+  margin-left: auto !important;
 }
 ._block-left {
-    margin-right: auto !important;
-    margin-left: 0 !important;
+  margin-right: auto !important;
+  margin-left: 0 !important;
 }
 ._font-normal {
-    font-weight: normal !important;
+  font-weight: normal !important;
 }
 ._font-bold {
-    font-weight: bold !important;
+  font-weight: bold !important;
 }
 ._text-italic {
-    font-style: italic !important;
+  font-style: italic !important;
 }
 ._text-underline {
-    text-decoration: underline !important;
+  text-decoration: underline !important;
 }
 ._text-blink {
-    text-decoration: blink !important;
+  text-decoration: blink !important;
 }
 ._text-line_through {
-    text-decoration: line-through !important;
+  text-decoration: line-through !important;
 }
 
 /* ==========================================================================
@@ -279,31 +279,31 @@ sub {
    * ========================================================================== */
 /* SP以下のみ表示（768px以上は非表示） */
 ._only-SP {
-    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-        display: none !important;
-    }
+  @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+    display: none !important;
+  }
 }
 /* TB以下のみ表示（768px以上は非表示） */
 ._under-TB {
-    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-        display: none !important;
-    }
+  @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+    display: none !important;
+  }
 }
 /* TB以上のみ表示（768px未満は非表示） */
 ._over-TB {
-    @media (width < calc(768 * (1 / 16 * 1rem))) {
-        display: none !important;
-    }
+  @media (width < calc(768 * (1 / 16 * 1rem))) {
+    display: none !important;
+  }
 }
 /* TBのみ表示（768px未満は非表示、1024px以上は非表示） */
 ._only-TB {
-    @media (width < calc(768 * (1 / 16 * 1rem))), screen and (calc(1024 * (1 / 16 * 1rem)) <= width) {
-        display: none !important;
-    }
+  @media (width < calc(768 * (1 / 16 * 1rem))), screen and (calc(1024 * (1 / 16 * 1rem)) <= width) {
+    display: none !important;
+  }
 }
 /* PC以上のみ表示（1024px未満は非表示） */
 ._over-PC {
-    @media (width < calc(1024 * (1 / 16 * 1rem))) {
-        display: none !important;
-    }
+  @media (width < calc(1024 * (1 / 16 * 1rem))) {
+    display: none !important;
+  }
 }

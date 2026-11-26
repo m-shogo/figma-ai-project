@@ -4,95 +4,95 @@
 // ------------------------------ */
 .block-editor_wrap,
 .editor-styles-wrapper {
-    .module_inPageLink-01 {
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        gap: calc(20 * var(--to-rem-func));
-        list-style: none;
-        padding: 0;
-        margin-top: var(--wp-block-margin);
-        & + & {
-            margin-top: var(--wp-block-margin-large);
-        }
-        .inPageLink {
-            width: 100%;
-            min-width: 0;
-            a {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                gap: calc(24 * var(--to-rem-func));
-                width: 100%;
-                min-height: calc(48 * var(--to-rem-func));
-                padding: calc(12 * var(--to-rem-func)) calc(16 * var(--to-rem-func));
-                background-color: var(--jwsnj-color-base-lightblue);
-                border-radius: calc(3 * var(--to-rem-func));
-                color: var(--color-text);
-                text-decoration: none;
-                font-family: var(--font-jwsnj-ja);
-                font-size: calc(15 * var(--to-rem-func));
-                font-weight: 500;
-                letter-spacing: 0.05em;
-                line-height: 1.4;
-                transition: background-color var(--transition-duration);
-                .title {
-                    flex: 1 1 auto;
-                    min-width: 0;
-                    overflow-wrap: anywhere;
-                    word-break: normal;
-                    line-break: strict;
-                }
-                &::after {
-                    content: '\f063';
-                    display: flex;
-                    box-sizing: border-box;
-                    flex: 0 0 calc(24 * var(--to-rem-func));
-                    align-items: center;
-                    justify-content: center;
-                    width: calc(24 * var(--to-rem-func));
-                    height: calc(24 * var(--to-rem-func));
-                    background-color: var(--jwsnj-color-sec);
-                    border-radius: 50%;
-                    color: var(--color-secondary);
-                    font-family: var(--font-awesome);
-                    font-weight: 900;
-                    font-style: normal;
-                    font-size: calc(10 * var(--to-rem-func));
-                    /* The shipped FA Solid F063 ink and line-box centers coincide. */
-                    line-height: 1;
-                    letter-spacing: 0;
-                    text-box-trim: none;
-                }
-                &:focus-visible {
-                    outline: calc(2 * var(--to-rem-func)) solid var(--color-primary);
-                    outline-offset: calc(3 * var(--to-rem-func));
-                }
-            }
-        }
-        /* Figma SP page link 442:2948 uses a 304px minimum where
-           viewport space permits; keep 100% width on narrow devices. */
-        @media (width < calc(768 * (1 / 16 * 1rem))) {
-            .inPageLink {
-                min-width: min(100%, calc(304 * var(--to-rem-func)));
-            }
-        }
-        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-            flex-direction: row;
-            justify-content: center;
-            align-items: stretch;
-            flex-wrap: wrap;
-            gap: calc(24 * var(--to-rem-func));
-            .inPageLink {
-                width: fit-content;
-                min-width: min(100%, calc(304 * var(--to-rem-func)));
-                max-width: 100%;
-            }
-        }
-        @media (any-hover: hover) {
-            .inPageLink a:hover {
-                background-color: color-mix(in srgb, var(--jwsnj-color-base-lightblue) 85%, var(--color-secondary));
-            }
-        }
+  .module_inPageLink-01 {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: calc(20 * var(--to-rem-func));
+    list-style: none;
+    padding: 0;
+    margin-top: var(--wp-block-margin);
+    & + & {
+      margin-top: var(--wp-block-margin-large);
     }
+    .inPageLink {
+      width: 100%;
+      min-width: 0;
+      a {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: calc(24 * var(--to-rem-func));
+        width: 100%;
+        min-height: calc(48 * var(--to-rem-func));
+        padding: calc(12 * var(--to-rem-func)) calc(16 * var(--to-rem-func));
+        background-color: var(--jwsnj-color-base-lightblue);
+        border-radius: calc(3 * var(--to-rem-func));
+        color: var(--color-text);
+        text-decoration: none;
+        font-family: var(--font-jwsnj-ja);
+        font-size: calc(15 * var(--to-rem-func));
+        font-weight: 500;
+        letter-spacing: 0.05em;
+        line-height: 1.4;
+        transition: background-color var(--transition-duration);
+        .title {
+          flex: 1 1 auto;
+          min-width: 0;
+          overflow-wrap: anywhere;
+          word-break: normal;
+          line-break: strict;
+        }
+        &::after {
+          content: '\f063';
+          display: flex;
+          box-sizing: border-box;
+          flex: 0 0 calc(24 * var(--to-rem-func));
+          align-items: center;
+          justify-content: center;
+          width: calc(24 * var(--to-rem-func));
+          height: calc(24 * var(--to-rem-func));
+          background-color: var(--jwsnj-color-sec);
+          border-radius: 50%;
+          color: var(--color-secondary);
+          font-family: var(--font-awesome);
+          font-weight: 900;
+          font-style: normal;
+          font-size: calc(10 * var(--to-rem-func));
+          /* The shipped FA Solid F063 ink and line-box centers coincide. */
+          line-height: 1;
+          letter-spacing: 0;
+          text-box-trim: none;
+        }
+        &:focus-visible {
+          outline: calc(2 * var(--to-rem-func)) solid var(--color-primary);
+          outline-offset: calc(3 * var(--to-rem-func));
+        }
+      }
+    }
+    /* Figma SP page link 442:2948 uses a 304px minimum where
+           viewport space permits; keep 100% width on narrow devices. */
+    @media (width < calc(768 * (1 / 16 * 1rem))) {
+      .inPageLink {
+        min-width: min(100%, calc(304 * var(--to-rem-func)));
+      }
+    }
+    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+      flex-direction: row;
+      justify-content: center;
+      align-items: stretch;
+      flex-wrap: wrap;
+      gap: calc(24 * var(--to-rem-func));
+      .inPageLink {
+        width: fit-content;
+        min-width: min(100%, calc(304 * var(--to-rem-func)));
+        max-width: 100%;
+      }
+    }
+    @media (any-hover: hover) {
+      .inPageLink a:hover {
+        background-color: color-mix(in srgb, var(--jwsnj-color-base-lightblue) 85%, var(--color-secondary));
+      }
+    }
+  }
 }
