@@ -192,6 +192,33 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
           report.push({name, width, reducedMotion, legacy});
         }
       }
+ // Footer owner locality: actual CSS, preserve the artwork switch and details geometry.
+ for (const width of [375, 768, 1079, 1080, 1380]) {
+   await page.setViewportSize({width, height: 900});
+   const footer = await page.evaluate(() => {
+     const fixture = document.createElement('footer');
+     fixture.className = 'global_footer';
+     fixture.innerHTML = '<div class="gf_brandStatement"><div class="gf_brandStatement-copy">copy</div><div class="gf_brandStatement-left is-sp"></div><div class="gf_brandStatement-right is-sp"><img class="gf_brandStatement-line" alt=""></div><div class="gf_brandStatement-left is-pc"></div><div class="gf_brandStatement-right is-pc"><img class="gf_brandStatement-line" alt=""></div></div><div class="gf_details"><div class="gf_information">identity</div><div class="gf_links-wrap">links</div></div>';
+     document.body.append(fixture);
+     const style = selector => getComputedStyle(fixture.querySelector(selector));
+     const variants = ['.gf_brandStatement-left.is-sp', '.gf_brandStatement-right.is-sp', '.gf_brandStatement-left.is-pc', '.gf_brandStatement-right.is-pc'].map(selector => {
+       const s = style(selector);
+       return {display: s.display, row: s.gridRowStart, column: s.gridColumnStart, ratio: s.aspectRatio};
+     });
+     const data = {variants, details: style('.gf_details').display, identity: style('.gf_information').flexBasis, links: style('.gf_links-wrap').flexBasis};
+     fixture.remove();
+     return data;
+   });
+   const desktop = width >= 1080;
+   assert.deepEqual(footer.variants.map(v => v.display), desktop ? ['none', 'none', 'block', 'block'] : ['block', 'block', 'none', 'none'], name + ' footer variants ' + width);
+   const shown = desktop ? footer.variants.slice(2) : footer.variants.slice(0, 2);
+   assert.deepEqual(shown.map(v => v.row), desktop ? ['1', '1'] : ['2', '2']);
+   assert.deepEqual(shown.map(v => v.column), desktop ? ['1', '3'] : ['1', '2']);
+   assert.equal(footer.details, desktop ? 'flex' : 'grid');
+   assert.equal(footer.identity, desktop ? '308px' : 'auto');
+   assert.equal(footer.links, desktop ? '541px' : 'auto');
+   report.push({name, width, footer});
+ }
  await page.emulateMedia({reducedMotion:'reduce'});
  // Feature proof separate from production layout: actual cascade and containment.
  const mechanism=await page.evaluate(()=>{

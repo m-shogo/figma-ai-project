@@ -65,9 +65,47 @@
     display: block;
     min-width: 0;
   }
-  .gf_brandStatement-left.is-pc,
+  .gf_brandStatement-left.is-pc {
+    display: none;
+    @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+      display: block;
+      grid-column: 1;
+      grid-row: 1;
+      justify-self: end;
+      width: min(calc(408 * var(--to-rem-func)), 100%);
+      height: auto;
+      aspect-ratio: 408 / 99.9255;
+    }
+  }
   .gf_brandStatement-right.is-pc {
     display: none;
+    @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+      display: block;
+      grid-column: 3;
+      grid-row: 1;
+      justify-self: start;
+      width: min(calc(408 * var(--to-rem-func)), 100%);
+      aspect-ratio: 408 / 115.003;
+      .gf_brandStatement-line {
+        left: 24.2647%;
+        top: 66.6591%;
+        width: 75.7353%;
+        height: calc(1 * var(--to-rem-func));
+      }
+      .gf_brandStatement-student {
+        left: 47.3039%;
+        top: 0;
+        width: 12.0098%;
+        height: 65.7918%;
+        transform: scaleX(-1);
+      }
+      .gf_brandStatement-puzzle {
+        left: 0;
+        top: 34.2083%;
+        width: 24.5098%;
+        height: 65.7918%;
+      }
+    }
   }
   .gf_brandStatement-left.is-sp {
     grid-column: 1;
@@ -76,6 +114,9 @@
     width: min(calc(155 * var(--to-rem-func)), 100%);
     height: auto;
     aspect-ratio: 155 / 81.8729;
+    @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+      display: none;
+    }
   }
   .gf_brandStatement-right {
     position: relative;
@@ -109,6 +150,9 @@
       width: 48.8564%;
       height: 67.1618%;
     }
+    @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+      display: none;
+    }
   }
   .gf_brandStatement-en {
     min-width: 0;
@@ -138,50 +182,6 @@
       font-size: calc(15 * var(--to-rem-func));
     }
   }
-  @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
-    .gf_brandStatement-left.is-sp,
-    .gf_brandStatement-right.is-sp {
-      display: none;
-    }
-    .gf_brandStatement-left.is-pc {
-      display: block;
-      grid-column: 1;
-      grid-row: 1;
-      justify-self: end;
-      width: min(calc(408 * var(--to-rem-func)), 100%);
-      height: auto;
-      aspect-ratio: 408 / 99.9255;
-    }
-    .gf_brandStatement-right.is-pc {
-      display: block;
-      grid-column: 3;
-      grid-row: 1;
-      justify-self: start;
-      width: min(calc(408 * var(--to-rem-func)), 100%);
-      aspect-ratio: 408 / 115.003;
-      .gf_brandStatement-line {
-        left: 24.2647%;
-        top: 66.6591%;
-        width: 75.7353%;
-        height: calc(1 * var(--to-rem-func));
-      }
-      .gf_brandStatement-student {
-        left: 47.3039%;
-        top: 0;
-        width: 12.0098%;
-        height: 65.7918%;
-        transform: scaleX(-1);
-      }
-      .gf_brandStatement-puzzle {
-        left: 0;
-        top: 34.2083%;
-        width: 24.5098%;
-        height: 65.7918%;
-      }
-    }
-  }
-
-
 
   .gf_logo {
     width: auto;
@@ -222,8 +222,12 @@
       padding-block: 0 calc(48 * var(--to-rem-func));
     }
   }
-  .gf_information,
-  .gf_links-wrap,
+  .gf_links-wrap {
+    min-width: 0;
+    @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+      flex: 0 1 calc(541 * var(--to-rem-func));
+    }
+  }
   .gf_menu {
     min-width: 0;
   }
@@ -432,9 +436,14 @@
     /* ステータス end */
   }
   .gf_information {
+    min-width: 0;
     display: flex;
     justify-content: center;
     align-items: center;
+    @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+      flex: 0 1 calc(308 * var(--to-rem-func));
+      justify-content: flex-start;
+    }
   }
   /* Figma PC 114:536 / SP 279:2805: in-flow copyright and page-top row. */
   .gf_bottom {
@@ -669,16 +678,6 @@
 
       /* MARK: ステータス start */
       /* ステータス end */
-    }
-  }
-
-  @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
-    .gf_information {
-      flex: 0 1 calc(308 * var(--to-rem-func));
-      justify-content: flex-start;
-    }
-    .gf_links-wrap {
-      flex: 0 1 calc(541 * var(--to-rem-func));
     }
   }
 
