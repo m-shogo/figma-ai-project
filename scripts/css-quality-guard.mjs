@@ -9,6 +9,8 @@ export function isAuthoredCssPath(file) {
 const rules = [
   ['CSS-MEDIA-VAR', /^\s*@media\b[^{};]*\bvar\s*\(/i, '通常のmedia query条件にruntime custom propertyは使えない。既存breakpoint契約を使う'],
   ['CSS-REVERSE-NEST', /(?:[>+~]\s*&|(?:^|\s)\.[\w-]+\s+&)\s*(?:[,{]|$)/, '逆向きの&は親の完全なselectorを参照する。実DOMと詳細度を確認する'],
+  ['CSS-NEST-CONCAT', /(?:^|[,\s])&[-_][\w-]*(?=[\s,{.:#\[]|$)/, 'native CSSではSassの&-suffix連結はできない。明示class selectorを使う'],
+  ['CSS-IMPLICIT-TRANSITION-ALL', /(?:^|[;{\s])transition\s*:\s*(?:var\(--[\w-]*(?:duration|time)[\w-]*\)|(?:\d+(?:\.\d+)?|\.\d+)(?:ms|s))(?:\s+(?:ease(?:-in-out|-in|-out)?|linear|step-start|step-end))?(?=\s*(?:;|}|$))/i, 'durationだけのtransition shorthandも通常all。対象propertyを明示する'],
   ['CSS-FOCUS', /(?:^|[;{\s])outline\s*:\s*(?:none|0(?:px)?)(?:\s*!important)?\s*(?:[;} ]|$)/i, 'outlineを消すなら同等以上のfocus-visibleとforced-colorsを確認する'],
   ['CSS-TRANSITION-ALL', /(?:^|[;{\s])transition(?:-property)?\s*:\s*[^;{}]*\ball\b/i, 'transition: allを避け、動かすpropertyを明示しreduced-motionを確認する'],
   ['CSS-FIXED-TEXT-HEIGHT', /(?:^|[;{\s])height\s*:\s*calc\(\s*\d+(?:\.\d+)?\s*\*\s*var\(--to-rem-func\)/i, '文字を含む箱なら固定heightではなくmin-heightと自然な伸縮。画像・装飾は別'],
