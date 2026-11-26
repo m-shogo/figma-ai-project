@@ -5,6 +5,10 @@ on:
     paths:
       - 'projects/jwsnj/theme/css/wordpress/form.css'
       - 'projects/jwsnj/theme/js/form.js'
+      - 'projects/jwsnj/theme/inc/front.php'
+      - 'projects/jwsnj/theme/inc/form.php'
+      - 'projects/jwsnj/theme/templates/template-form.php'
+      - 'projects/jwsnj/qa/form-render-shortcode.php'
       - 'projects/jwsnj/qa/seed-css-form-qa.php'
       - 'projects/jwsnj/qa/formidable-browser-qa.mjs'
       - '.github/workflows/jwsnj-formidable-runtime.yml'
@@ -42,14 +46,18 @@ jobs:
           docker compose run --rm cli theme activate "$THEME_SLUG"
           docker compose run --rm cli core version
           docker compose run --rm cli plugin list
+          docker compose exec -T wordpress cp /project/qa/form-render-shortcode.php /var/www/html/wp-content/mu-plugins/90-form-render-qa.php
           docker compose run --rm -e WP_ENVIRONMENT_TYPE=local cli eval-file /project/qa/seed-css-form-qa.php
           page_id="$(docker compose run --rm cli option get jwsnj_css_qa_page_id)"
           [[ "$page_id" =~ ^[0-9]+$ ]]
           echo "FORM_QA_URL=${WP_URL}/?page_id=${page_id}" >> "$GITHUB_ENV"
+          postal_id="$(docker compose run --rm cli option get jwsnj_css_qa_postal_page_id)"
+          [[ "$postal_id" =~ ^[0-9]+$ ]]
+          echo "POSTAL_QA_URL=${WP_URL}/?page_id=${postal_id}" >> "$GITHUB_ENV"
       - name: Actual plugin markup cross-engine keyboard and geometry
         env:
           CSS_QA_MODULE_ROOT: ${{ runner.temp }}/css-qa
-        run: node projects/jwsnj/qa/formidable-browser-qa.mjs "$FORM_QA_URL"
+        run: node projects/jwsnj/qa/formidable-browser-qa.mjs "$FORM_QA_URL" "$POSTAL_QA_URL"
       - uses: actions/upload-artifact@v4
         if: always()
         with:

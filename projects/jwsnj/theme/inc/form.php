@@ -54,3 +54,22 @@
 // EOD;
 // }
 // add_action('wp_footer', 'add_thanks_wcf7');
+// Inspect the rendered form once, not the shortcode source or a second content pass.
+function jwsnj_enqueue_postal_for_rendered_form($content)
+{
+  $tags = new WP_HTML_Tag_Processor($content);
+  if ($tags->next_tag(['class_name' => 'p-postal-code'])) {
+    wp_enqueue_script('yubinbango-script');
+  }
+  return $content;
+}
+
+function jwsnj_form_content()
+{
+  add_filter('the_content', 'jwsnj_enqueue_postal_for_rendered_form', PHP_INT_MAX);
+  try {
+    the_content();
+  } finally {
+    remove_filter('the_content', 'jwsnj_enqueue_postal_for_rendered_form', PHP_INT_MAX);
+  }
+}

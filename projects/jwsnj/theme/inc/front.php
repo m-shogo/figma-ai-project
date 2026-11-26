@@ -154,11 +154,8 @@ function my_enqueue_scripts() {
     if (is_page_template('templates/template-form.php')) {
         wp_enqueue_script('formidable-script', get_theme_file_uri('/js/form.js'), array('jquery'), filemtime(get_theme_file_path('/js/form.js')), ['strategy' => 'defer', 'in_footer' => false]);
 
-        // コンテンツ内に郵便番号フィールド（p-postal-code）がある場合のみ yubinbango を読み込む
-        $content = apply_filters('the_content', get_the_content());
-        if (str_contains($content, 'p-postal-code')) {
-            wp_enqueue_script('yubinbango-script', get_theme_file_uri('/js/yubinbango.js'), array(), null, ['strategy' => 'defer', 'in_footer' => false]);
-        }
+        // Register here; enqueue only when the template actually renders a postal field.
+        wp_register_script('yubinbango-script', get_theme_file_uri('/js/yubinbango.js'), ['formidable-script'], filemtime(get_theme_file_path('/js/yubinbango.js')), ['strategy' => 'defer', 'in_footer' => true]);
     }
     // new EnqueueScript('yubinbango-script', get_theme_file_uri('/js/yubinbango.js'), array(), null, true, 'defer', function () {
     //   return is_page_template('page-form.php');
@@ -295,20 +292,22 @@ add_action('pre_get_posts', 'not_password_output');
 // ==========================================================================
 function add_page_slug_class_name($classes)
 {
-  if (is_page()) {
-    $page      = get_post(get_the_ID());
-    $classes[] = $page->post_name;
+  if (!is_page()) return $classes;
+  $page = get_queried_object();
+  if (!($page instanceof WP_Post) || $page->post_type !== 'page') return $classes;
 
-    $parent_id = $page->post_parent;
-    if (0 == $parent_id) {
-      $classes[] = get_post($parent_id)->post_name;
-    } else {
-      $progenitor_detail = get_ancestors($page->ID, 'page', 'post_type');
-      $progenitor_id = array_pop($progenitor_detail);
-      $classes[]     = get_post($progenitor_id)->post_name . '-child';
+  $slugs = [$page->post_name];
+  if ($page->post_parent) {
+    $ancestors = get_ancestors($page->ID, 'page', 'post_type');
+    $root_id = end($ancestors);
+    $root = $root_id ? get_post($root_id) : null;
+    if ($root instanceof WP_Post && $root->post_name !== '') {
+      $slugs[] = $root->post_name . '-child';
     }
   }
-
+  foreach ($slugs as $slug) {
+    if ($slug !== '' && !in_array($slug, $classes, true)) $classes[] = $slug;
+  }
   return $classes;
 }
 add_filter('body_class', 'add_page_slug_class_name');
