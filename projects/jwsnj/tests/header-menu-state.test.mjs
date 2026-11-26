@@ -283,14 +283,13 @@ test('Header search toggles independently and preserves the backdrop for other o
 });
 
 
-test('reduced-motion backdrop override survives the open-state transition cascade', () => {
-  const open = navigationCss.indexOf('body._open-bg {');
-  const reduced = navigationCss.indexOf('/* Keep the reduced-motion override after');
-  assert.ok(reduced > open, 'reduced-motion cascade must follow open-state shorthand');
-  const block = navigationCss.slice(reduced);
-  assert.match(block, /@media \(prefers-reduced-motion: reduce\)/);
-  assert.match(block, /body\._open-bg #overlay/);
-  assert.match(block, /transition-duration: 0s/);
+test('backdrop owns visibility/background transitions and the open state cannot reset reduced motion', () => {
+  const overlay = navigationCss.slice(navigationCss.indexOf('#overlay {'), navigationCss.indexOf('/* modifier */'));
+  const open = navigationCss.slice(navigationCss.indexOf('body._open-bg {'));
+  assert.match(overlay, /transition: visibility var\(--transition-duration\), background-color var\(--transition-duration\)/);
+  assert.match(overlay, /@media \(prefers-reduced-motion: reduce\)\s*\{\s*transition-duration: 0s/);
+  assert.match(open, /#overlay\s*\{\s*visibility: visible;\s*background-color:/);
+  assert.doesNotMatch(open, /transition(?:-duration|-property)?:/);
 });
 
 
@@ -361,4 +360,11 @@ test('global normalize preserves keyboard focus instead of suppressing UA outlin
     const css = readFileSync(new URL('../theme/css/base/normalize.css', import.meta.url), 'utf8');
     assert.doesNotMatch(css, /outline:\s*none/);
     assert.match(css, /:focus-visible\s*\{\s*outline: 2px solid currentColor/);
+});
+
+
+test('hamburger animates only its background and moving strokes', () => {
+  assert.match(headerCss, /transition: background-color var\(--transition-duration\)/);
+  assert.match(headerCss, /transition: top var\(--transition-duration\), transform var\(--transition-duration\)/);
+  assert.doesNotMatch(headerCss, /transition:\s*var\(--transition-duration\)/);
 });

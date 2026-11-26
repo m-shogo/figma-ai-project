@@ -560,7 +560,10 @@
   display: block;
   background-color: transparent;
   visibility: hidden;
-  transition: var(--transition-duration);
+  transition: visibility var(--transition-duration), background-color var(--transition-duration);
+  @media (prefers-reduced-motion: reduce) {
+    transition-duration: 0s;
+  }
 }
 
 /* modifier */
@@ -580,14 +583,6 @@ body._open-bg {
   #overlay {
     visibility: visible;
     background-color: color-mix(in oklch, #000 30%, transparent);
-    transition: var(--transition-duration);
   }
 }
 
-/* Keep the reduced-motion override after the open-state transition shorthand. */
-@media (prefers-reduced-motion: reduce) {
-  #overlay,
-  body._open-bg #overlay {
-    transition-duration: 0s;
-  }
-}

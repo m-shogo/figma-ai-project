@@ -90,7 +90,7 @@
       width: calc(20 * var(--to-rem-func));
       height: calc(2 * var(--to-rem-func));
       background-color: var(--color-primary);
-      transition: var(--transition-duration);
+      transition: background-color var(--transition-duration);
       &::before,
       &::after {
         content: '';
@@ -99,7 +99,7 @@
         left: 0;
         width: 100%;
         height: calc(2 * var(--to-rem-func));
-        transition: var(--transition-duration);
+        transition: top var(--transition-duration), transform var(--transition-duration);
         background-color: var(--color-primary);
       }
       &::before {
