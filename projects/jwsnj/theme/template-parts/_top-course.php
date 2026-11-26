@@ -35,7 +35,7 @@ if (!$items) {
         </h2>
         <p>幼児部から高等部、国際学級まで、それぞれの学びや特色をご紹介します</p>
     </div>
-    <ul class="jwsnj_topCourse_list" id="jwsnj_topCourse_list" aria-label="各部紹介" data-course-list>
+    <ul class="jwsnj_topCourse_list" id="jwsnj_topCourse_list" aria-label="各部紹介" role="list" data-course-list<?php echo count($items) > 1 ? ' tabindex="0"' : ''; ?>>
         <?php foreach ($items as $item) : ?>
             <li class="jwsnj_topCourse_card" data-course-card>
                 <?php if ($item['url'] !== '') : ?>

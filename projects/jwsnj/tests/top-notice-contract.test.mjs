@@ -165,8 +165,12 @@ test('TOP Course uses only SPEC-authorized ACF fields and existing front-page lo
   assert.match(css,/focus-visible/);
   assert.match(css,/prefers-reduced-motion/);
   assert.doesNotMatch(css,/white-space:\s*nowrap/);
-  const js=read('js/home.js').split('/* TOP Course: progressive enhancement')[1];
+  const js=read('js/home.js').split('/* TOP Course: progressive enhancement')[1].split('*/')[1];
   assert.match(js,/aria-current/);
+  assert.match(js,/aria-disabled/);
+  assert.match(js,/active < cards.length - 1/);
+  assert.match(html,/role="list" data-course-list tabindex="0"/);
+  assert.doesNotMatch(js,/\.disabled\s*=/);
   assert.match(js,/prefers-reduced-motion/);
   assert.doesNotMatch(js,/setInterval|autoplay/);
   execFileSync('php',['-l',new URL('../theme/template-parts/_top-course.php',import.meta.url).pathname]);

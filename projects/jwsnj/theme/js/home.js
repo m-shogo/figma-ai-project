@@ -69,14 +69,14 @@
       if (i === active) dot.setAttribute('aria-current', 'true');
       else dot.removeAttribute('aria-current');
     });
-    prev.disabled = active === 0;
-    next.disabled = active === cards.length - 1;
+    prev.setAttribute('aria-disabled', String(active === 0));
+    next.setAttribute('aria-disabled', String(active === cards.length - 1));
   };
   const schedule = () => { if (!frame) frame = window.requestAnimationFrame(update); };
   const go = index => {
     if (desktop.matches) return;
     const target = Math.max(0, Math.min(cards.length - 1, index));
-    list.scrollTo({left: list.scrollLeft + center(cards[target]) - center(list), behavior: reducedMotion.matches ? 'instant' : 'smooth'});
+    list.scrollTo({left: list.scrollLeft + center(cards[target]) - center(list), behavior: reducedMotion.matches ? 'auto' : 'smooth'});
     schedule();
   };
   const mode = () => {
@@ -90,8 +90,8 @@
       schedule();
     }
   };
-  prev.addEventListener('click', () => go(active - 1));
-  next.addEventListener('click', () => go(active + 1));
+  prev.addEventListener('click', () => { if (active > 0) go(active - 1); });
+  next.addEventListener('click', () => { if (active < cards.length - 1) go(active + 1); });
   dots.forEach((dot, i) => dot.addEventListener('click', () => go(i)));
   list.addEventListener('scroll', schedule, {passive: true});
   desktop.addEventListener('change', mode);

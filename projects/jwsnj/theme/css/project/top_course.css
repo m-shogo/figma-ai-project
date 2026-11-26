@@ -138,7 +138,7 @@
             border: 0;
             background: none;
             &:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
-            &:disabled { opacity: 0.45; cursor: default; }
+            &[aria-disabled='true'] { opacity: 0.45; cursor: default; }
         }
         :is(.jwsnj_topCourse_prev, .jwsnj_topCourse_next) {
             display: grid;
@@ -173,6 +173,7 @@
     }
     @media (prefers-reduced-motion: reduce) {
         .jwsnj_topCourse_crop img { transition: none; }
+        .jwsnj_topCourse_list { scroll-behavior: auto; }
     }
     @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
         grid-template-areas: "head" "cards" "art";
