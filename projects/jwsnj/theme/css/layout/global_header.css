@@ -78,6 +78,13 @@
     background-color: transparent;
     color: var(--color-primary);
     touch-action: manipulation;
+    body._open-menu & {
+      background-color: var(--color-primary);
+      color: var(--color-secondary);
+      &:focus-visible {
+        outline-color: var(--color-secondary);
+      }
+    }
     /* Keep keyboard focus visible on the mobile menu control. */
     &:focus-visible {
       outline: 2px solid var(--color-primary);
@@ -108,10 +115,32 @@
       &::after {
         top: calc(6 * var(--to-rem-func));
       }
+      /* Figma SP menu open: centered 24 × 1.5px white strokes. */
+      body._open-menu & {
+        top: 0;
+        width: calc(24 * var(--to-rem-func));
+        height: calc(1.5 * var(--to-rem-func));
+        background-color: transparent;
+        &::before,
+        &::after {
+          top: 0;
+          height: 100%;
+          background-color: var(--color-secondary);
+        }
+        &::before {
+          transform: rotate(45deg);
+        }
+        &::after {
+          transform: rotate(-45deg);
+        }
+      }
     }
     .text {
       margin-top: calc(20 * var(--to-rem-func));
       font-size: calc(10 * var(--to-rem-func));
+      body._open-menu & {
+        display: none;
+      }
     }
     @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
       display: none;
@@ -144,20 +173,3 @@ body._contentFixed {
   }
 }
 
-body._open-menu {
-  .global_header {
-    .gh_menu {
-      .icon {
-        background-color: transparent;
-        &::before {
-          top: 0;
-          transform: rotate(45deg);
-        }
-        &::after {
-          top: 0;
-          transform: rotate(-45deg);
-        }
-      }
-    }
-  }
-}

@@ -49,6 +49,42 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
     await page.keyboard.press('Enter');
     await waitState(true);
     assert.equal(await overlay.evaluate(el => getComputedStyle(el).visibility), 'visible');
+    const closeGeometry = await hamburger.evaluate(el => {
+      const icon = el.querySelector('.icon');
+      const label = el.querySelector('.text');
+      const box = el.getBoundingClientRect();
+      const cross = icon.getBoundingClientRect();
+      const style = getComputedStyle(el);
+      const before = getComputedStyle(icon, '::before');
+      const after = getComputedStyle(icon, '::after');
+      const angles = [before, after].map(stroke => {
+        const matrix = new DOMMatrix(stroke.transform);
+        return Math.round(Math.atan2(matrix.b, matrix.a) * 180 / Math.PI);
+      });
+      return {
+        button: [box.width, box.height],
+        stroke: [parseFloat(before.width), parseFloat(before.height)],
+        centered: Math.abs(box.x + box.width / 2 - cross.x - cross.width / 2) <= 1 &&
+          Math.abs(box.y + box.height / 2 - cross.y - cross.height / 2) <= 1,
+        background: style.backgroundColor,
+        strokeColors: [before.backgroundColor, after.backgroundColor],
+        focus: style.outlineColor,
+        focusStyle: style.outlineStyle,
+        label: getComputedStyle(label).display,
+        angles
+      };
+    });
+    assert.ok(closeGeometry.button.every(value => Math.abs(value - 60) <= 1), JSON.stringify(closeGeometry));
+    assert.ok(Math.abs(closeGeometry.stroke[0] - 24) <= 1 && Math.abs(closeGeometry.stroke[1] - 1.5) <= 0.25);
+    assert.equal(closeGeometry.centered, true);
+    assert.equal(closeGeometry.background, 'rgb(40, 172, 95)');
+    assert.deepEqual(closeGeometry.strokeColors, ['rgb(255, 255, 255)', 'rgb(255, 255, 255)']);
+    assert.equal(closeGeometry.focus, 'rgb(255, 255, 255)');
+    assert.equal(closeGeometry.focusStyle, 'solid');
+    assert.equal(closeGeometry.label, 'none');
+    assert.deepEqual(closeGeometry.angles, [45, -45]);
+    await hamburger.screenshot({ path: 'form-qa-results/nav-' + engineName + '-close-control.png' });
+    console.log(JSON.stringify({ engine: engineName, closeControl: 'PASS', ...closeGeometry }));
     await button.focus();
     await page.keyboard.press('Space');
     assert.equal(await button.getAttribute('aria-expanded'), 'true');
@@ -58,6 +94,7 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
     await page.keyboard.press('Escape');
     await waitState(false);
     assert.equal(await hamburger.evaluate(el => document.activeElement === el), true);
+    assert.notEqual(await hamburger.locator('.text').evaluate(el => getComputedStyle(el).display), 'none');
     await page.waitForFunction(y => Math.abs(window.scrollY - y) <= 2, scroll);
     await hamburger.click();
     await waitState(true);
