@@ -227,3 +227,5 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 - Course template: choose explicitly in course draft, verify default page unchanged, actual parent breadcrumb/one H1, password form/no body, missing intro/first intro/later intro, long title and breadcrumb, 320/375/768/1079/1080/1380 widths, full background and contained later FAQ, keyboard focus; #523 DEFERRED_ENV. No SP Figma.
 
 - Course schedule media fallback: direct and inner-container native Image, mixed/no/all images, narrow wrapping, PC alternating rows, 200×150 crop, adjacent text-only rows 24px gap, long text/caption, generic Image unchanged; actual editor and browsers #523. Isolated Chromium command timed out; no browser PASS.
+
+- Course rhythm: actual PC heading→lead 32 / lead→body 40 / body→grades 48; schedule heading→first row 74; verify direct/inner-container blocks, editor-added/reordered paragraphs, long wrapping, narrow fallback 32, generic headings/groups unchanged. #523 DEFERRED_ENV; no SP reference.

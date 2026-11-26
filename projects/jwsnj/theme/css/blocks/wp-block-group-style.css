@@ -189,6 +189,20 @@
     }
 }
 
+/* Course schedule title PC 612:3095 and first media slot 617:3477.
+   Authored adjacent blocks, not a global heading margin. */
+:is(.block-editor_wrap, .editor-styles-wrapper) .wp-block-group.is-style-jwsnj-course-heading:has(+ .wp-block-group.is-style-jwsnj-course-schedule) {
+    justify-content: center;
+    text-align: center;
+    margin-bottom: 0;
+}
+:is(.block-editor_wrap, .editor-styles-wrapper) .wp-block-group.is-style-jwsnj-course-heading + .wp-block-group.is-style-jwsnj-course-schedule {
+    margin-top: calc(32 * var(--to-rem-func));
+    @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+        margin-top: calc(74 * var(--to-rem-func));
+    }
+}
+
 /* Course schedule PC 608:3037–3045 / 617:3477–3486.
    Outer Group contains one ordinary Group per chronological entry:
    optional native Image followed by an editable Paragraph. */
@@ -304,7 +318,21 @@
         > *,
         > .wp-block-group__inner-container > * { margin-block: 0; min-width: 0; }
         @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
-            gap: calc(40 * var(--to-rem-func));
+            /* Flatten the Figma's nested copy groups without losing their
+               32 / 40 / 48px rhythm (539:3625 / 539:3626 / 539:3628). */
+            gap: 0;
+            > * + *,
+            > .wp-block-group__inner-container > * + * {
+                margin-top: calc(40 * var(--to-rem-func));
+            }
+            > .is-style-jwsnj-course-intro-heading + .is-style-jwsnj-course-lead,
+            > .wp-block-group__inner-container > .is-style-jwsnj-course-intro-heading + .is-style-jwsnj-course-lead {
+                margin-top: calc(32 * var(--to-rem-func));
+            }
+            > p + .is-style-jwsnj-course-grades,
+            > .wp-block-group__inner-container > p + .is-style-jwsnj-course-grades {
+                margin-top: calc(48 * var(--to-rem-func));
+            }
         }
     }
     > .wp-block-image,

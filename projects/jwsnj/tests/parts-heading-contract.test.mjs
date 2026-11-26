@@ -214,3 +214,18 @@ test('schedule media overrides only unaligned image centering and keeps text-onl
     assert.ok(imports.indexOf('wp-block-group-style.css')<imports.indexOf('wp-block-image-style.css'));
   }
 });
+
+
+test('course introduction uses the measured desktop copy rhythm and schedule heading gap is opt-in',()=>{
+  const group=readFileSync(new URL('../theme/css/blocks/wp-block-group-style.css',import.meta.url),'utf8');
+  const intro=group.slice(group.indexOf('/* Course PC 539:3658'),group.indexOf('/* Course FAQ section'));
+  assert.match(intro,/@media \(calc\(1080 \* \(1 \/ 16 \* 1rem\)\) <= width\)[\s\S]*?gap: 0;/);
+  assert.match(intro,/> \* \+ \*,\s*> \.wp-block-group__inner-container > \* \+ \*\s*\{\s*margin-top: calc\(40 \* var\(--to-rem-func\)\)/);
+  assert.match(intro,/\.is-style-jwsnj-course-intro-heading \+ \.is-style-jwsnj-course-lead\s*\{\s*margin-top: calc\(32 \* var\(--to-rem-func\)\)/);
+  assert.match(intro,/> p \+ \.is-style-jwsnj-course-grades,\s*> \.wp-block-group__inner-container > p \+ \.is-style-jwsnj-course-grades\s*\{\s*margin-top: calc\(48 \* var\(--to-rem-func\)\)/);
+  const heading=group.slice(group.indexOf('/* Course schedule title PC'),group.indexOf('/* Course schedule PC 608:3037'));
+  assert.match(heading,/\.is-style-jwsnj-course-heading:has\(\+ \.wp-block-group\.is-style-jwsnj-course-schedule\)\s*\{\s*justify-content: center/);
+  assert.match(heading,/\.is-style-jwsnj-course-heading \+ \.wp-block-group\.is-style-jwsnj-course-schedule\s*\{\s*margin-top: calc\(32 \* var\(--to-rem-func\)\)/);
+  assert.match(heading,/@media \(calc\(1080 \* \(1 \/ 16 \* 1rem\)\) <= width\)\s*\{\s*margin-top: calc\(74 \* var\(--to-rem-func\)\)/);
+  assert.doesNotMatch(intro+heading,/white-space:\s*nowrap|(?:^|[;{}\n])\s*height\s*:/);
+});
