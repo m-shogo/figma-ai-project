@@ -209,18 +209,18 @@
         &[href$='.webp']::after {
           content: '\f15b';
         }
+        @media (any-hover: hover) {
+          &:hover {
+            --_small-icon-color: var(--jwsnj-color-sec);
+            &::before {
+              background-color: var(--color-secondary);
+            }
+          }
+        }
       }
       .wp-block-button.is-style-outline .wp-block-button__link {
         color: var(--color-text);
         background: none;
-      }
-      @media (any-hover: hover) {
-        .wp-block-button .wp-block-button__link:hover {
-          --_small-icon-color: var(--jwsnj-color-sec);
-          &::before {
-            background-color: var(--color-secondary);
-          }
-        }
       }
     }
 
@@ -229,9 +229,9 @@
 
 .block-editor_wrap {
   /* ホバー時のスタイル */
-  /* MARK: hover */
-  @media (any-hover: hover) {
-    .wp-block-button {
+  /* Frontend only: keep generic hover before small variant override. */
+  .wp-block-button {
+    @media (any-hover: hover) {
       &:has(.wp-block-button__link:hover) {
         .wp-block-button__link {
           background-color: var(--color-secondary);
@@ -245,7 +245,9 @@
         }
       }
     }
-    .wp-block-buttons.small .wp-block-button {
+  }
+  .wp-block-buttons.small .wp-block-button {
+    @media (any-hover: hover) {
       .wp-block-button__link:hover {
         background: none;
         color: var(--color-text);

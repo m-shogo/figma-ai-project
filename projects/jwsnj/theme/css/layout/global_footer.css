@@ -328,11 +328,11 @@
     .gfl_inner-06 {
       overflow: hidden;
     }
+    /* Legacy grouped owner: preserve all active matches and cascade. */
     .gfl_list-02,
     .gfl_list-03,
     .gfl_list-04,
     .gfl_list-05,
-    /* MARK: 共通 3階層以降に影響あり start */
     .gfl_item-03,
     .gfl_item-04,
     .gfl_item-05,
@@ -351,11 +351,6 @@
     .gfl_inner-03,
     .gfl_inner-04,
     .gfl_inner-05,
-    .gfl_list-03,
-    .gfl_list-04,
-    .gfl_list-05,
-    /* 3階層以降に影響あり end */
-    /* MARK: ステータス start */
     .gfl_item-02 {
       /* &.current_page_parent, */
       /* &.current-menu-ancestor, */
@@ -553,11 +548,11 @@
       .gfl_wrapper-06 {
         grid-template-rows: 1fr;
       }
+      /* Legacy grouped owner: preserve all active matches and cascade. */
       .gfl_inner-02,
       .gfl_inner-03,
       .gfl_inner-04,
       .gfl_inner-05,
-      /* MARK: 共通 3階層以降に影響あり start */
       .gfl_list-03,
       .gfl_list-04,
       .gfl_list-05,
@@ -576,13 +571,6 @@
       .gfl_wrapper-03,
       .gfl_wrapper-04,
       .gfl_wrapper-05,
-      .gfl_inner-03,
-      .gfl_inner-04,
-      .gfl_inner-05,
-      /* 3階層以降に影響あり end */
-      /* 共通 end */
-
-      /* MARK: 階層別 2階層 start */
       .gfl_list-02 {
         display: grid;
         gap: calc(8 * var(--to-rem-func));

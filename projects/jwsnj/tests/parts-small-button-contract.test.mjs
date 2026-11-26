@@ -126,3 +126,9 @@ test('bundled FA Regular outlines retain authored arrow, PDF and plain file glyp
   const os=tables['OS/2'];
   console.log('FA_REGULAR_OUTLINE_EVIDENCE '+JSON.stringify({unitsPerEm:u16(head+18),ascent:i16(hhea+4),descent:i16(hhea+6),capHeight:os&&u16(os)>=2?i16(os+88):null,typoAsc:os?i16(os+68):null,typoDesc:os?i16(os+70):null,typoGap:os?i16(os+72):null,selection:os?u16(os+62):null,winAsc:os?u16(os+74):null,winDesc:os?u16(os+76):null,glyphs}));
 });
+
+test('frontend-only generic and small button hover are owner-local and ordered', () => {
+  const hover=css.slice(css.indexOf('/* ホバー時のスタイル */'));
+  assert.match(hover,/\.wp-block-button\s*\{\s*@media \(any-hover: hover\)/);
+  assert.match(hover,/\.wp-block-buttons\.small \.wp-block-button\s*\{\s*@media \(any-hover: hover\)/);
+});
