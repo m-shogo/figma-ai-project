@@ -210,6 +210,28 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
    assert.equal(alignment.footerMedia, alignment.footerCSS, name + ' Footer CSS/JS ' + width);
    report.push({name, width, alignment});
  }
+ // Legacy file presentation must not leak to a generic .file component.
+ for (const width of [375, 768, 1380]) {
+   await page.setViewportSize({width, height: 900});
+   const fileStyles = await page.evaluate(() => {
+     const fixture = document.createElement('div');
+     fixture.innerHTML = '<div class="file"><label>ordinary</label><input type="file"></div><div class="wpcf7"><div class="file"><label>legacy</label><input type="file"></div></div>';
+     document.body.append(fixture);
+     const data = [...fixture.querySelectorAll('.file')].map(el => ({
+       display: getComputedStyle(el).display,
+       labelBefore: getComputedStyle(el.querySelector('label'), '::before').content,
+       fileDisplay: getComputedStyle(el.querySelector('input')).display
+     }));
+     fixture.remove();
+     return data;
+   });
+   assert.notEqual(fileStyles[0].display, 'flex', name + ' ordinary wrapper');
+   assert.ok(['none', 'normal'].includes(fileStyles[0].labelBefore), name + ' ordinary label pseudo');
+   assert.notEqual(fileStyles[0].fileDisplay, 'none', name + ' ordinary file');
+   assert.equal(fileStyles[1].display, 'flex', name + ' legacy wrapper');
+   assert.equal(fileStyles[1].labelBefore, '"選択されていません"', name + ' legacy label');
+   report.push({name, width, fileStyles});
+ }
  // Footer owner locality: actual CSS, preserve the artwork switch and details geometry.
  for (const width of [375, 768, 1079, 1080, 1380]) {
    await page.setViewportSize({width, height: 900});

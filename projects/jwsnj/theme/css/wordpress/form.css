@@ -19,7 +19,7 @@ input[type='search'],
 input[type='password'],
 select,
 textarea,
-.file label {
+:where(.wpcf7) .file label {
   border: calc(1 * var(--to-rem-func)) solid var(--color-gray-background);
   padding: 0.5em 1em;
   width: 100%;
@@ -348,7 +348,7 @@ input:is([type='checkbox'], [type='radio']) {
 /* // ==========================================================================
 // ファイル
 // ========================================================================== */
-.file {
+:where(.wpcf7) .file {
   display: flex;
   flex-direction: column-reverse;
   position: relative;

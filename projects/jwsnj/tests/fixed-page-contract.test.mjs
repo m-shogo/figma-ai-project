@@ -196,3 +196,10 @@ test('legacy CF7 decorative choices do not hide ordinary native controls', () =>
   assert.doesNotMatch(form, /^input\s*\{\s*\/\* \/\/ 共通 \*\//m);
   assert.match(form, /transition: border-color var\(--transition-duration\), background-color var\(--transition-duration\);\s*@media \(prefers-reduced-motion: reduce\)\s*\{\s*transition: none/);
 });
+
+test('legacy CF7 file labels and wrappers do not style unrelated files', () => {
+  const css = read('css/wordpress/form.css');
+  assert.match(css, /^:where\(\.wpcf7\) \.file label \{/m);
+  assert.match(css, /^:where\(\.wpcf7\) \.file \{/m);
+  assert.doesNotMatch(css, /^\.file(?: label)? \{/m);
+});
