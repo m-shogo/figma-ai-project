@@ -16,7 +16,10 @@
       text-decoration-skip-ink: none;
       overflow-wrap: anywhere;
       word-break: normal;
-      transition: var(--transition-duration);
+      transition: color var(--transition-duration);
+      @media (prefers-reduced-motion: reduce) {
+        transition: none;
+      }
       &:focus-visible {
         text-decoration-line: underline;
         outline: calc(2 * var(--to-rem-func)) solid var(--color-accent);

@@ -59,7 +59,10 @@
         font-size: calc(17 * var(--to-rem-func));
         line-height: 1.5;
         letter-spacing: 0.08em;
-        transition: var(--transition-duration);
+        transition: background-color var(--transition-duration), color var(--transition-duration);
+        @media (prefers-reduced-motion: reduce) {
+          transition: none;
+        }
         @media (any-hover: hover) {
           &:not([aria-selected='true']):hover {
             background-color: color-mix(in oklch, var(--color-primary) 70%, transparent 0%);

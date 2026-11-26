@@ -11,8 +11,11 @@ test('large navigation uses fluid Figma card proportions and text rhythm', () =>
 });
 test('large navigation keeps keyboard focus visible and reduced-motion available', () => {
   assert.match(large, /&:focus-visible/);
-  assert.match(large, /prefers-reduced-motion: reduce/);
-  assert.match(large, /transition: none/);
+  assert.match(css, /@media \(any-hover: hover\) and \(prefers-reduced-motion: no-preference\)/);
+  assert.match(css, /transition: transform var\(--transition-duration\)/);
+  assert.match(css, /transition: opacity var\(--transition-duration\)/);
+  assert.equal((css.match(/prefers-reduced-motion: reduce/g)||[]).length,2);
+  assert.doesNotMatch(css, /transition: var\(--transition-duration\)/);
 });
 
 test('large navigation renders the approved decorative corner and arrow only for enabled links', () => {
