@@ -1,0 +1,63 @@
+@charset "utf-8";
+/* PC course 534:1282 / intro 534:2336 / breadcrumb 539:3659.
+   Explicit page template only; SP course design not supplied. */
+body:has(.jwsnj_courseMain) { min-width: 0; }
+.global_contents > section.jwsnj_coursePage {
+    padding-bottom: calc(64 * var(--to-rem-func));
+    > .module_breadCrumb {
+        background-color: var(--jwsnj-color-base-lightgreen);
+        border-top: 0;
+        min-height: 0;
+        padding-block: calc(24 * var(--to-rem-func)) 0;
+    }
+    > .jwsnj_coursePage_title {
+        max-width: calc(1040 * var(--to-rem-func));
+        margin: calc(32 * var(--to-rem-func)) auto calc(24 * var(--to-rem-func));
+        width: calc(100% - 2 * var(--padding-SP));
+        font-family: var(--font-jwsnj-ja);
+        font-size: calc(30 * var(--to-rem-func));
+        font-weight: 700;
+        line-height: 1.4;
+        color: var(--color-text);
+        overflow-wrap: anywhere;
+    }
+    /* Retain the CMS page H1 for assistive technology when the editor
+       deliberately starts with the visible introduction pattern. */
+    &:has(> .jwsnj_coursePage_content > .wp-block-group.is-style-jwsnj-course-intro-layout:first-child) > .jwsnj_coursePage_title {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        padding: 0;
+        overflow: hidden;
+        clip-path: inset(50%);
+    }
+    > .jwsnj_coursePage_content {
+        display: grid;
+        grid-template-columns: [full-start] minmax(var(--padding-SP), 1fr) [content-start] minmax(0, calc(1040 * var(--to-rem-func))) [content-end] minmax(var(--padding-SP), 1fr) [full-end];
+        > * {
+            grid-column: content;
+            min-width: 0;
+        }
+        /* Only a first, explicitly selected intro group gets the full-width
+           background. Its existing block style owns all internal layout. */
+        > .wp-block-group.is-style-jwsnj-course-intro-layout:first-child {
+            grid-column: full;
+            box-sizing: border-box;
+            width: 100%;
+            max-width: none;
+            margin: 0;
+            background-color: var(--jwsnj-color-base-lightgreen);
+            padding-inline: max(var(--padding-SP), calc((100% - 1040 * var(--to-rem-func)) / 2));
+            padding-block: calc(32 * var(--to-rem-func)) calc(48 * var(--to-rem-func));
+        }
+    }
+    @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+        padding-bottom: calc(100 * var(--to-rem-func));
+        > .module_breadCrumb { padding-block: calc(40 * var(--to-rem-func)) 0; }
+        > .jwsnj_coursePage_title { font-size: calc(36 * var(--to-rem-func)); }
+        > .jwsnj_coursePage_content > .wp-block-group.is-style-jwsnj-course-intro-layout:first-child {
+            padding-block: calc(64 * var(--to-rem-func)) calc(80 * var(--to-rem-func));
+        }
+    }
+}
