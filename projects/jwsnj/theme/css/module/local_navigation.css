@@ -3,15 +3,15 @@
 // サイト共通ローカルナビ
 // ========================================================================== */
 .local_navigation {
-    .ln_links {
-        & + .ln_links {
-            margin-top: calc(48 * var(--to-rem-func));
-        }
+  .ln_links {
+    & + .ln_links {
+      margin-top: calc(48 * var(--to-rem-func));
     }
-    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-    }
+  }
+  @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+  }
 
-    /* MARK: hover */
-    @media (any-hover: hover) {
-    }
+  /* MARK: hover */
+  @media (any-hover: hover) {
+  }
 }

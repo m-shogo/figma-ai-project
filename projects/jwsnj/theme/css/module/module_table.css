@@ -3,18 +3,18 @@
 // 表モジュール
 // ========================================================================== */
 .module_table-wrap {
-    /* -webkit-overflow-scrolling: touch; */
-    overflow-x: auto;
-    /* // 横スクロール時に下余白追加 */
-    &._scroll {
-        padding-bottom: calc(10 * var(--to-rem-func));
-    }
+  /* -webkit-overflow-scrolling: touch; */
+  overflow-x: auto;
+  /* // 横スクロール時に下余白追加 */
+  &._scroll {
+    padding-bottom: calc(10 * var(--to-rem-func));
+  }
 
-    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-        &._scroll {
-            padding-bottom: 0;
-        }
+  @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+    &._scroll {
+      padding-bottom: 0;
     }
+  }
 }
 /* .module_table-01 {
     thead,

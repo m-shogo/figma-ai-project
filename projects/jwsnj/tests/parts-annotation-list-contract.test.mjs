@@ -5,8 +5,8 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
 const css = readFileSync(new URL('../theme/css/blocks/wp-block-list-style.css', import.meta.url), 'utf8');
-const start = css.indexOf('    ul.annotation-list {');
-const stop = css.indexOf('    /* //---------- anchor-box, border-list ---------- */', start);
+const start = css.indexOf('  ul.annotation-list {');
+const stop = css.indexOf('  /* //---------- anchor-box, border-list ---------- */', start);
 assert.ok(start >= 0 && stop > start, 'Annotation-list rule exists');
 const annotation = css.slice(start, stop);
 

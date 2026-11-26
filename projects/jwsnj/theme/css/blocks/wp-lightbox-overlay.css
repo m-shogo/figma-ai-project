@@ -3,16 +3,16 @@
 //  ブロックエディタ用モーダル
 // ========================================================================== */
 .wp-lightbox-overlay {
-    .lightbox-image-container {
-        height: auto;
-        max-height: 90vh;
-        max-height: 90dvh;
-    }
-    img {
-        width: 100% !important;
-        height: auto !important;
-        max-height: 90vh !important;
-        max-height: 90dvh !important;
-        object-fit: contain !important;
-    }
+  .lightbox-image-container {
+    height: auto;
+    max-height: 90vh;
+    max-height: 90dvh;
+  }
+  img {
+    width: 100% !important;
+    height: auto !important;
+    max-height: 90vh !important;
+    max-height: 90dvh !important;
+    object-fit: contain !important;
+  }
 }

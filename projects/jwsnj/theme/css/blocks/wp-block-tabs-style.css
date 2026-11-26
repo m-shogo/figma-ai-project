@@ -4,108 +4,108 @@
 // ------------------------------ */
 .block-editor_wrap,
 .editor-styles-wrapper {
-    .wp-block-tabs {
-        /* MARK: 基本スタイル */
-        margin-top: var(--wp-block-margin);
-        & + & {
-            margin-top: var(--wp-block-margin-large);
-        }
-        position: relative;
-        z-index: 0;
-        .wp-block-tab-list {
-            --_gap: calc(16 * var(--to-rem-func));
-            display: flex;
-            gap: var(--_gap);
-            position: relative;
-            z-index: 0;
-            overflow: auto;
-            padding-bottom: calc(10 * var(--to-rem-func));
-            /* スクロールバー色変更（webkit用） */
-            &::-webkit-scrollbar {
-                width: calc(4 * var(--to-rem-func));
-                height: calc(4 * var(--to-rem-func));
-            }
-            &::-webkit-scrollbar-track {
-                border-radius: calc(2 * var(--to-rem-func));
-                background: var(--color-gray-background);
-            }
-            &::-webkit-scrollbar-thumb {
-                border-radius: calc(2 * var(--to-rem-func));
-                background: var(--color-primary);
-            }
-            &.is-content-justification-left {
-                justify-content: flex-start;
-            }
-            &.is-content-justification-center {
-                justify-content: safe center;
-            }
-            &.is-content-justification-right {
-                justify-content: safe flex-end;
-            }
-            &.is-content-justification-space-between {
-                justify-content: space-between;
-            }
-            > button {
-                --_border-width: calc(1 * var(--to-rem-func));
-                flex-shrink: 0;
-                max-inline-size: 100%;
-                box-sizing: border-box;
-                overflow-wrap: anywhere;
-                white-space: normal;
-                border: calc(1 * var(--to-rem-func)) solid var(--color-primary);
-                border-width: var(--_border-width) var(--_border-width) 0 var(--_border-width);
-                background-color: color-mix(in oklch, var(--color-secondary), transparent 0%);
-                padding: calc(15 * var(--to-rem-func)) calc(20 * var(--to-rem-func));
-                font-size: calc(17 * var(--to-rem-func));
-                line-height: 1.5;
-                letter-spacing: 0.08em;
-                transition: var(--transition-duration);
-                &[aria-selected='true'] {
-                    background-color: var(--color-primary);
-                    color: var(--color-secondary);
-                    cursor: default;
-                }
-                &::before {
-                    content: none;
-                }
-                &::after {
-                    content: '';
-                    position: absolute;
-                    z-index: 1;
-                    bottom: 0;
-                    left: 0;
-                    width: calc(100% + var(--_gap) + var(--_border-width));
-                    height: calc(2 * var(--to-rem-func));
-                    background-color: var(--color-primary);
-                }
-                &:last-child {
-                    &::after {
-                        width: calc(100% + var(--_border-width));
-                    }
-                }
-            }
-        }
-        .wp-block-tab-panels {
-            .wp-block-tab-panel {
-                padding-block: calc(20 * var(--to-rem-func));
-                > *:first-child {
-                    margin-top: 0;
-                }
-            }
-        }
-
-        /* MARK: hover */
-        @media (any-hover: hover) {
-            .wp-block-tab-list {
-                > button {
-                    &:not([aria-selected='true']) {
-                        &:hover {
-                            background-color: color-mix(in oklch, var(--color-primary) 70%, transparent 0%);
-                            color: var(--color-secondary);
-                        }
-                    }
-                }
-            }
-        }
+  .wp-block-tabs {
+    /* MARK: 基本スタイル */
+    margin-top: var(--wp-block-margin);
+    & + & {
+      margin-top: var(--wp-block-margin-large);
     }
+    position: relative;
+    z-index: 0;
+    .wp-block-tab-list {
+      --_gap: calc(16 * var(--to-rem-func));
+      display: flex;
+      gap: var(--_gap);
+      position: relative;
+      z-index: 0;
+      overflow: auto;
+      padding-bottom: calc(10 * var(--to-rem-func));
+      /* スクロールバー色変更（webkit用） */
+      &::-webkit-scrollbar {
+        width: calc(4 * var(--to-rem-func));
+        height: calc(4 * var(--to-rem-func));
+      }
+      &::-webkit-scrollbar-track {
+        border-radius: calc(2 * var(--to-rem-func));
+        background: var(--color-gray-background);
+      }
+      &::-webkit-scrollbar-thumb {
+        border-radius: calc(2 * var(--to-rem-func));
+        background: var(--color-primary);
+      }
+      &.is-content-justification-left {
+        justify-content: flex-start;
+      }
+      &.is-content-justification-center {
+        justify-content: safe center;
+      }
+      &.is-content-justification-right {
+        justify-content: safe flex-end;
+      }
+      &.is-content-justification-space-between {
+        justify-content: space-between;
+      }
+      > button {
+        --_border-width: calc(1 * var(--to-rem-func));
+        flex-shrink: 0;
+        max-inline-size: 100%;
+        box-sizing: border-box;
+        overflow-wrap: anywhere;
+        white-space: normal;
+        border: calc(1 * var(--to-rem-func)) solid var(--color-primary);
+        border-width: var(--_border-width) var(--_border-width) 0 var(--_border-width);
+        background-color: color-mix(in oklch, var(--color-secondary), transparent 0%);
+        padding: calc(15 * var(--to-rem-func)) calc(20 * var(--to-rem-func));
+        font-size: calc(17 * var(--to-rem-func));
+        line-height: 1.5;
+        letter-spacing: 0.08em;
+        transition: var(--transition-duration);
+        &[aria-selected='true'] {
+          background-color: var(--color-primary);
+          color: var(--color-secondary);
+          cursor: default;
+        }
+        &::before {
+          content: none;
+        }
+        &::after {
+          content: '';
+          position: absolute;
+          z-index: 1;
+          bottom: 0;
+          left: 0;
+          width: calc(100% + var(--_gap) + var(--_border-width));
+          height: calc(2 * var(--to-rem-func));
+          background-color: var(--color-primary);
+        }
+        &:last-child {
+          &::after {
+            width: calc(100% + var(--_border-width));
+          }
+        }
+      }
+    }
+    .wp-block-tab-panels {
+      .wp-block-tab-panel {
+        padding-block: calc(20 * var(--to-rem-func));
+        > *:first-child {
+          margin-top: 0;
+        }
+      }
+    }
+
+    /* MARK: hover */
+    @media (any-hover: hover) {
+      .wp-block-tab-list {
+        > button {
+          &:not([aria-selected='true']) {
+            &:hover {
+              background-color: color-mix(in oklch, var(--color-primary) 70%, transparent 0%);
+              color: var(--color-secondary);
+            }
+          }
+        }
+      }
+    }
+  }
 }

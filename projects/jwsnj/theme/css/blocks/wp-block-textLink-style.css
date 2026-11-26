@@ -4,74 +4,74 @@
 // ------------------------------ */
 .block-editor_wrap,
 .editor-styles-wrapper {
-    p:is(:not([class]), .wp-block-paragraph, .has-text-align-left, .has-text-align-right, .has-text-align-center, .block-editor-rich-text__editable, .has-background),
-    .wp-block-list,
-    .wp-block-flexible-table-block-table {
-        a:is(:not([class]), .icon-blank) {
-            color: var(--color-accent);
-            text-decoration-line: none;
-            text-decoration-color: currentColor;
-            text-decoration-thickness: calc(1 * var(--to-rem-func));
-            text-underline-offset: calc(2 * var(--to-rem-func));
-            text-decoration-skip-ink: none;
-            overflow-wrap: anywhere;
-            word-break: normal;
-            transition: var(--transition-duration);
-            &:focus-visible {
-                text-decoration-line: underline;
-                outline: calc(2 * var(--to-rem-func)) solid var(--color-accent);
-                outline-offset: calc(2 * var(--to-rem-func));
-            }
-            /* Figma PC 344:1029 / SP 442:2882: orange icon, distinct from coral text. */
-            &[target='_blank']:where(:not([href$='.pdf'], [href$='.doc'], [href$='.docx'], [href$='.docm'], [href$='.xls'], [href$='.xlsx'], [href$='.xlsm'], [href$='.png'], [href$='.jpg'], [href$='.jpeg'], [href$='.gif'], [href$='.webp'])) {
-                &::after {
-                    content: '';
-                    display: inline-block;
-                    width: calc(14 * var(--to-rem-func));
-                    height: calc(13 * var(--to-rem-func));
-                    vertical-align: -0.05em;
-                    background-color: #f0813b;
-                    mask: url('../../images/common/ico-blank.svg') center / contain no-repeat;
-                    margin-left: 0.25em;
-                }
-            }
-            &[href$='.pdf'] {
-                &::after {
-                    content: var(--icon-pdf);
-                    font-family: var(--font-awesome);
-                    font-weight: 400;
-                    font-size: calc(13 * var(--to-rem-func));
-                    color: #f0813b;
-                    margin-left: 0.25em;
-                }
-            }
-            &[href$='.doc'],
-            &[href$='.docx'],
-            &[href$='.docm'],
-            &[href$='.xls'],
-            &[href$='.xlsx'],
-            &[href$='.xlsm'],
-            &[href$='.png'],
-            &[href$='.jpg'],
-            &[href$='.jpeg'],
-            &[href$='.gif'],
-            &[href$='.webp'] {
-                &::after {
-                    content: var(--icon-file);
-                    font-family: var(--font-awesome);
-                    font-weight: 400;
-                    font-size: calc(13 * var(--to-rem-func));
-                    color: var(--color-accent);
-                    margin-left: 0.25em;
-                }
-            }
-
-            /* hover */
-            @media (any-hover: hover) {
-                &:hover {
-                    text-decoration-line: underline;
-                }
-            }
+  p:is(:not([class]), .wp-block-paragraph, .has-text-align-left, .has-text-align-right, .has-text-align-center, .block-editor-rich-text__editable, .has-background),
+  .wp-block-list,
+  .wp-block-flexible-table-block-table {
+    a:is(:not([class]), .icon-blank) {
+      color: var(--color-accent);
+      text-decoration-line: none;
+      text-decoration-color: currentColor;
+      text-decoration-thickness: calc(1 * var(--to-rem-func));
+      text-underline-offset: calc(2 * var(--to-rem-func));
+      text-decoration-skip-ink: none;
+      overflow-wrap: anywhere;
+      word-break: normal;
+      transition: var(--transition-duration);
+      &:focus-visible {
+        text-decoration-line: underline;
+        outline: calc(2 * var(--to-rem-func)) solid var(--color-accent);
+        outline-offset: calc(2 * var(--to-rem-func));
+      }
+      /* Figma PC 344:1029 / SP 442:2882: orange icon, distinct from coral text. */
+      &[target='_blank']:where(:not([href$='.pdf'], [href$='.doc'], [href$='.docx'], [href$='.docm'], [href$='.xls'], [href$='.xlsx'], [href$='.xlsm'], [href$='.png'], [href$='.jpg'], [href$='.jpeg'], [href$='.gif'], [href$='.webp'])) {
+        &::after {
+          content: '';
+          display: inline-block;
+          width: calc(14 * var(--to-rem-func));
+          height: calc(13 * var(--to-rem-func));
+          vertical-align: -0.05em;
+          background-color: #f0813b;
+          mask: url('../../images/common/ico-blank.svg') center / contain no-repeat;
+          margin-left: 0.25em;
         }
+      }
+      &[href$='.pdf'] {
+        &::after {
+          content: var(--icon-pdf);
+          font-family: var(--font-awesome);
+          font-weight: 400;
+          font-size: calc(13 * var(--to-rem-func));
+          color: #f0813b;
+          margin-left: 0.25em;
+        }
+      }
+      &[href$='.doc'],
+      &[href$='.docx'],
+      &[href$='.docm'],
+      &[href$='.xls'],
+      &[href$='.xlsx'],
+      &[href$='.xlsm'],
+      &[href$='.png'],
+      &[href$='.jpg'],
+      &[href$='.jpeg'],
+      &[href$='.gif'],
+      &[href$='.webp'] {
+        &::after {
+          content: var(--icon-file);
+          font-family: var(--font-awesome);
+          font-weight: 400;
+          font-size: calc(13 * var(--to-rem-func));
+          color: var(--color-accent);
+          margin-left: 0.25em;
+        }
+      }
+
+      /* hover */
+      @media (any-hover: hover) {
+        &:hover {
+          text-decoration-line: underline;
+        }
+      }
     }
+  }
 }

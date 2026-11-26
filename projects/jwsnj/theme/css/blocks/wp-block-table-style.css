@@ -4,139 +4,139 @@
 // ------------------------------ */
 .block-editor_wrap,
 .editor-styles-wrapper {
-    .wp-block-table,
-    .wp-block-flexible-table-block-table {
-        /* MARK: 基本スタイル */
-        margin-top: var(--wp-block-margin);
-        display: flex;
-        flex-direction: column;
-        gap: calc(16 * var(--to-rem-func));
-        & + & {
-            margin-top: var(--wp-block-margin-large);
-        }
-        font-family: var(--font-jwsnj-ja);
-        font-size: calc(15 * var(--to-rem-func));
-        font-weight: 400;
-        line-height: 1.6;
-        letter-spacing: 0.05em;
-        color: var(--color-text);
-        /* MARK: ボーダー */
-        --_border-color: var(--jwsnj-color-separator);
-        --_border-color-thead: var(--jwsnj-color-separator);
-        --_border-width: calc(1 * var(--to-rem-func));
-        --_border-style: solid;
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            border-spacing: 0;
-            th,
-            td {
-                border: calc(1 * var(--to-rem-func)) solid var(--jwsnj-color-separator) !important;
-                padding-block: calc(15 * var(--to-rem-func));
-                padding-inline: calc(30 * var(--to-rem-func));
-                text-align: center;
-                font-weight: 400;
-                color: var(--color-text);
-                overflow-wrap: anywhere;
-                word-break: normal;
-            }
-            thead th {
-                background-color: var(--jwsnj-color-separator-light);
-            }
-        }
-        @media (width < calc(768 * (1 / 16 * 1rem))) {
-            table th,
-            table td {
-                padding-block: calc(12 * var(--to-rem-func));
-                padding-inline: calc(20 * var(--to-rem-func));
-            }
-            &.is-scroll-on-mobile {
-                overflow-x: auto;
-                overscroll-behavior-x: contain;
-                position: relative;
-                min-width: 0;
-                max-width: 100%;
-                &:focus-visible {
-                    outline: calc(2 * var(--to-rem-func)) solid var(--color-accent);
-                    outline-offset: calc(-2 * var(--to-rem-func));
-                }
-                &[data-jwsnj-table-hint] > .scroll-hint-icon-wrap {
-                    display: block;
-                    .scroll-hint-icon {
-                        top: calc(6 * var(--to-rem-func));
-                    }
-                    @media (prefers-reduced-motion: reduce) {
-                        .scroll-hint-icon,
-                        .scroll-hint-icon::before,
-                        .scroll-hint-icon::after {
-                            animation: none;
-                            transition: none;
-                        }
-                    }
-                }
-                &[data-jwsnj-table-hint]:focus-within > .scroll-hint-icon-wrap {
-                    visibility: hidden;
-                }
-                table {
-                    width: max-content;
-                    min-width: calc(960 * var(--to-rem-func));
-                }
-            }
-        }
-        /* Hide only our hint on desktop; preserve plugin-selected PC scrolling. */
-        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-            &[data-jwsnj-table-hint] > .scroll-hint-icon-wrap {
-                display: none;
-            }
-        }
-        /* MARK: ストライプ スタイル */
-        &.is-style-stripes {
-            --_stripe-color: var(--color-tertiary);
-            tr {
-                &:nth-child(odd) {
-                    td {
-                        background-color: var(--_stripe-color, var(--color-tertiary));
-                    }
-                }
-            }
-            @media (width < calc(768 * (1 / 16 * 1rem))) {
-                > table.is-stacked-on-mobile {
-                    tbody {
-                        tr {
-                            &:nth-child(odd) {
-                                td {
-                                    background-color: transparent;
-                                }
-                            }
-                            /* 子要素の個数が「奇数」のとき tr の奇数と偶数で td の背景色を交互にする */
-                            &:has(> *:nth-child(odd):last-child) {
-                                &:nth-child(odd) {
-                                    *:nth-child(odd) {
-                                        background-color: var(--_stripe-color, var(--color-tertiary));
-                                    }
-                                }
-                                &:nth-child(even) {
-                                    *:nth-child(even) {
-                                        background-color: var(--_stripe-color, var(--color-tertiary));
-                                    }
-                                }
-                            }
-                            /* 子要素の個数が「偶数」のとき */
-                            &:not(:has(> *:nth-child(odd):last-child)) {
-                                & {
-                                    *:nth-child(odd) {
-                                        background-color: var(--color-tertiary);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        &.is-scroll-on-mobile {
-            scrollbar-color: var(--jwsnj-color-sec) var(--jwsnj-color-separator-light);
-            scrollbar-width: thin;
-        }
+  .wp-block-table,
+  .wp-block-flexible-table-block-table {
+    /* MARK: 基本スタイル */
+    margin-top: var(--wp-block-margin);
+    display: flex;
+    flex-direction: column;
+    gap: calc(16 * var(--to-rem-func));
+    & + & {
+      margin-top: var(--wp-block-margin-large);
     }
+    font-family: var(--font-jwsnj-ja);
+    font-size: calc(15 * var(--to-rem-func));
+    font-weight: 400;
+    line-height: 1.6;
+    letter-spacing: 0.05em;
+    color: var(--color-text);
+    /* MARK: ボーダー */
+    --_border-color: var(--jwsnj-color-separator);
+    --_border-color-thead: var(--jwsnj-color-separator);
+    --_border-width: calc(1 * var(--to-rem-func));
+    --_border-style: solid;
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      border-spacing: 0;
+      th,
+      td {
+        border: calc(1 * var(--to-rem-func)) solid var(--jwsnj-color-separator) !important;
+        padding-block: calc(15 * var(--to-rem-func));
+        padding-inline: calc(30 * var(--to-rem-func));
+        text-align: center;
+        font-weight: 400;
+        color: var(--color-text);
+        overflow-wrap: anywhere;
+        word-break: normal;
+      }
+      thead th {
+        background-color: var(--jwsnj-color-separator-light);
+      }
+    }
+    @media (width < calc(768 * (1 / 16 * 1rem))) {
+      table th,
+      table td {
+        padding-block: calc(12 * var(--to-rem-func));
+        padding-inline: calc(20 * var(--to-rem-func));
+      }
+      &.is-scroll-on-mobile {
+        overflow-x: auto;
+        overscroll-behavior-x: contain;
+        position: relative;
+        min-width: 0;
+        max-width: 100%;
+        &:focus-visible {
+          outline: calc(2 * var(--to-rem-func)) solid var(--color-accent);
+          outline-offset: calc(-2 * var(--to-rem-func));
+        }
+        &[data-jwsnj-table-hint] > .scroll-hint-icon-wrap {
+          display: block;
+          .scroll-hint-icon {
+            top: calc(6 * var(--to-rem-func));
+          }
+          @media (prefers-reduced-motion: reduce) {
+            .scroll-hint-icon,
+            .scroll-hint-icon::before,
+            .scroll-hint-icon::after {
+              animation: none;
+              transition: none;
+            }
+          }
+        }
+        &[data-jwsnj-table-hint]:focus-within > .scroll-hint-icon-wrap {
+          visibility: hidden;
+        }
+        table {
+          width: max-content;
+          min-width: calc(960 * var(--to-rem-func));
+        }
+      }
+    }
+    /* Hide only our hint on desktop; preserve plugin-selected PC scrolling. */
+    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+      &[data-jwsnj-table-hint] > .scroll-hint-icon-wrap {
+        display: none;
+      }
+    }
+    /* MARK: ストライプ スタイル */
+    &.is-style-stripes {
+      --_stripe-color: var(--color-tertiary);
+      tr {
+        &:nth-child(odd) {
+          td {
+            background-color: var(--_stripe-color, var(--color-tertiary));
+          }
+        }
+      }
+      @media (width < calc(768 * (1 / 16 * 1rem))) {
+        > table.is-stacked-on-mobile {
+          tbody {
+            tr {
+              &:nth-child(odd) {
+                td {
+                  background-color: transparent;
+                }
+              }
+              /* 子要素の個数が「奇数」のとき tr の奇数と偶数で td の背景色を交互にする */
+              &:has(> *:nth-child(odd):last-child) {
+                &:nth-child(odd) {
+                  *:nth-child(odd) {
+                    background-color: var(--_stripe-color, var(--color-tertiary));
+                  }
+                }
+                &:nth-child(even) {
+                  *:nth-child(even) {
+                    background-color: var(--_stripe-color, var(--color-tertiary));
+                  }
+                }
+              }
+              /* 子要素の個数が「偶数」のとき */
+              &:not(:has(> *:nth-child(odd):last-child)) {
+                & {
+                  *:nth-child(odd) {
+                    background-color: var(--color-tertiary);
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    &.is-scroll-on-mobile {
+      scrollbar-color: var(--jwsnj-color-sec) var(--jwsnj-color-separator-light);
+      scrollbar-width: thin;
+    }
+  }
 }

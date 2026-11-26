@@ -3,44 +3,44 @@
 // タイトル
 // ========================================================================== */
 .module_titleSingle {
-    border: solid var(--color-gray-border);
-    border-width: calc(1 * var(--to-rem-func)) 0;
-    padding-block: calc(20 * var(--to-rem-func));
-    padding-inline: 0;
-    margin-bottom: calc(40 * var(--to-rem-func));
-    .thumbnail {
-        margin-bottom: calc(20 * var(--to-rem-func));
-        img {
-            aspect-ratio: 360 / 240;
-        }
+  border: solid var(--color-gray-border);
+  border-width: calc(1 * var(--to-rem-func)) 0;
+  padding-block: calc(20 * var(--to-rem-func));
+  padding-inline: 0;
+  margin-bottom: calc(40 * var(--to-rem-func));
+  .thumbnail {
+    margin-bottom: calc(20 * var(--to-rem-func));
+    img {
+      aspect-ratio: 360 / 240;
     }
-    .head {
-        display: flex;
-        align-items: center;
-        .date {
-            margin-right: calc(20 * var(--to-rem-func));
-            time {
-            }
-        }
-        .category {
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: calc(4 * var(--to-rem-func)) calc(10 * var(--to-rem-func));
-            .label {
-                display: inline-block;
-                border: calc(1 * var(--to-rem-func)) solid var(--color-primary);
-                padding: 0 0.5em;
-                color: var(--color-primary);
-            }
-        }
+  }
+  .head {
+    display: flex;
+    align-items: center;
+    .date {
+      margin-right: calc(20 * var(--to-rem-func));
+      time {
+      }
     }
-    .body {
-        margin-top: calc(20 * var(--to-rem-func));
-        .module_title-01 {
-            margin-bottom: 0;
-            font-size: calc(24 * var(--to-rem-func));
-            font-weight: 700;
-        }
+    .category {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: calc(4 * var(--to-rem-func)) calc(10 * var(--to-rem-func));
+      .label {
+        display: inline-block;
+        border: calc(1 * var(--to-rem-func)) solid var(--color-primary);
+        padding: 0 0.5em;
+        color: var(--color-primary);
+      }
     }
+  }
+  .body {
+    margin-top: calc(20 * var(--to-rem-func));
+    .module_title-01 {
+      margin-bottom: 0;
+      font-size: calc(24 * var(--to-rem-func));
+      font-weight: 700;
+    }
+  }
 }
