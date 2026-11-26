@@ -440,3 +440,13 @@ test('editor DOM decoration is idempotent and preserves intentional empty conten
   }
   assert.match(source, /\.off\('load\.jwsnjTableWrap resize\.jwsnjTableWrap'\)\.on\(/);
 });
+
+test('SP open header close button follows Figma 480:4686 without changing its state owner', () => {
+  const menu = headerCss.slice(headerCss.indexOf('  .gh_menu {'), headerCss.indexOf('  /* MARK: header_breakpoint */'));
+  assert.match(menu, /body\._open-menu &\s*\{\s*background-color: var\(--color-primary\);\s*color: var\(--color-secondary\);/);
+  assert.match(menu, /&:focus-visible\s*\{\s*outline-color: var\(--color-secondary\);/);
+  assert.match(menu, /body\._open-menu &\s*\{\s*top: 0;\s*width: calc\(24 \* var\(--to-rem-func\)\);\s*height: calc\(1\.5 \* var\(--to-rem-func\)\);/);
+  assert.match(menu, /&::before,\s*&::after\s*\{\s*top: 0;\s*height: 100%;\s*background-color: var\(--color-secondary\);/);
+  assert.match(menu, /\.text\s*\{[^{}]*body\._open-menu &\s*\{\s*display: none;/);
+  assert.doesNotMatch(headerCss, /\nbody\._open-menu\s*\{/);
+});
