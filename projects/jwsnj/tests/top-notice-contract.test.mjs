@@ -130,3 +130,49 @@ test('TOP MV uses existing image repeater and renders only valid initial still i
   assert.doesNotMatch(read('js/home.js'),/tm_swiper-container/);
   execFileSync('php',['-l',new URL('../theme/template-parts/_top-mv-grid.php',import.meta.url).pathname]);
 });
+
+test('TOP Course uses only SPEC-authorized ACF fields and existing front-page location',()=>{
+  const group=JSON.parse(read('acf/json/group_jwsnj_top_course.json'));
+  assert.equal(group.fields.length,1);
+  const field=group.fields[0];
+  assert.equal(field.name,'top_course-01');
+  assert.deepEqual(field.sub_fields.map(f=>f.name),['img','title','text','url','target']);
+  assert.equal(field.sub_fields[0].return_format,'id');
+  assert.deepEqual(group.location,[[{param:'page_type',operator:'==',value:'front_page'}]]);
+  assert.ok(field.sub_fields.every(f=>f.parent_repeater===field.key));
+  const part=read('template-parts/_top-course.php');
+  function render(rows){
+    const stub='$rows=json_decode(base64_decode("'+Buffer.from(JSON.stringify(rows)).toString('base64')+'"),true); function get_field($n){global $rows;return $rows;} function wp_attachment_is_image($id){return $id>0 && $id<100;} function wp_get_attachment_image($id,$s,$icon,$attrs){$q=chr(34);return "<img src=".$q."/media/".$id.".webp".$q.">";} function esc_url($s){return str_starts_with($s,"javascript:")?"":htmlspecialchars($s,ENT_QUOTES);} function esc_attr($s){return htmlspecialchars($s,ENT_QUOTES);} function esc_html($s){return htmlspecialchars($s,ENT_QUOTES);} function get_theme_file_uri($s){return "/theme/".$s;} ?>';
+    return execFileSync('php',['-r',stub+part],{encoding:'utf8'}).trim();
+  }
+  assert.equal(render([]),'');
+  assert.equal(render([{title:' ',img:1}]),'');
+  const html=render([{title:'<Test>',img:1,url:'/actual/',target:['はい'],text:'<script>x</script>'},{title:'Second',img:-1,url:'javascript:alert(1)'}]);
+  assert.match(html,/href="\/actual\/" target="_blank" rel="noopener noreferrer"/);
+  assert.match(html,/&lt;Test&gt;/);
+  assert.match(html,/&lt;script&gt;x&lt;\/script&gt;/);
+  assert.equal((html.match(/<a class=/g)||[]).length,1);
+  assert.equal((html.match(/\/media\/1\.webp/g)||[]).length,1);
+  assert.equal((html.match(/data-course-dot="/g)||[]).length,2);
+  assert.match(html,/data-course-controls hidden/);
+  assert.doesNotMatch(html,/javascript:|<script>|figma\.com/);
+  for(const name of ['layer','mark','math']) assert.match(read('images/top/img_course-'+name+'.svg'),/<svg/);
+  assert.match(read('front-page.php'),/_top-about-intro[\s\S]*_top-course[\s\S]*_top-applicants/);
+  assert.match(read('css/style.css'),/top_course\.css/);
+  const css=read('css/project/top_course.css');
+  assert.match(css,/scroll-snap-type: x mandatory/);
+  assert.match(css,/repeat\(3, minmax\(0, 1fr\)\)/);
+  assert.match(css,/focus-visible/);
+  assert.match(css,/prefers-reduced-motion/);
+  assert.doesNotMatch(css,/white-space:\s*nowrap/);
+  const js=read('js/home.js').split('/* TOP Course: progressive enhancement')[1].split('*/')[1];
+  assert.match(js,/aria-current/);
+  assert.match(js,/aria-disabled/);
+  assert.match(js,/active < cards.length - 1/);
+  assert.match(html,/role="list" data-course-list tabindex="0"/);
+  assert.doesNotMatch(js,/\.disabled\s*=/);
+  assert.match(js,/prefers-reduced-motion/);
+  assert.doesNotMatch(js,/setInterval|autoplay/);
+  execFileSync('php',['-l',new URL('../theme/template-parts/_top-course.php',import.meta.url).pathname]);
+  execFileSync('node',['--check',new URL('../theme/js/home.js',import.meta.url).pathname]);
+});
