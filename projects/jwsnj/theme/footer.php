@@ -4,7 +4,7 @@
 <?php
 $bodyTag_before = get_field('bodyTag_before', 'option');
 if ($bodyTag_before) {
-    echo $bodyTag_before;
+  echo $bodyTag_before;
 }
 ?>
 </body>
