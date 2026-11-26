@@ -389,6 +389,44 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
    assert.equal(footer.links, desktop ? '541px' : 'auto');
    report.push({name, width, footer});
  }
+  // Footer identity Figma 114:487 / 279:2769; existing site-name owner, exact saved mark.
+  for (const width of [320, 375, 768, 1080, 1380]) {
+    await page.setViewportSize({width, height: 900});
+    const footerLogo = await page.evaluate(async () => {
+      const fixture = document.createElement('footer');
+      fixture.className = 'global_footer';
+      fixture.innerHTML = '<div class="gf_details global_inner"><div class="gf_information"><p class="gf_logo"><a href="#end"><img src="/images/common/img_njws-logo.svg" width="51" height="48" alt=""><span>ニュージャージー補習授業校 学校案内</span></a></p></div><div class="gf_links-wrap">Menu fixture</div></div>';
+      document.body.append(fixture);
+      const img = fixture.querySelector('img');
+      await img.decode();
+      const name = fixture.querySelector('.gf_logo span');
+      const style = getComputedStyle(name);
+      const box = name.getBoundingClientRect();
+      const logo = fixture.querySelector('.gf_logo').getBoundingClientRect();
+      const parent = fixture.querySelector('.gf_information').getBoundingClientRect();
+      const mark = img.getBoundingClientRect();
+      const range = document.createRange();
+      range.selectNodeContents(name);
+      const rects = [...range.getClientRects()];
+      const data = {
+        size: style.fontSize, weight: style.fontWeight, lineHeight: style.lineHeight,
+        tracking: style.letterSpacing, family: style.fontFamily,
+        natural: [img.naturalWidth, img.naturalHeight], displayed: [mark.width, mark.height],
+        gap: box.left - mark.right, lines: rects.length,
+        fits: logo.left >= parent.left - 1 && logo.right <= parent.right + 1 &&
+          rects.every(rect => rect.left >= box.left - 1 && rect.right <= box.right + 1)
+      };
+      fixture.remove();
+      return data;
+    });
+    assert.deepEqual([footerLogo.size, footerLogo.weight, footerLogo.lineHeight], ['18px', '500', '27px']);
+    assert.match(footerLogo.family, /Zen Kaku Gothic New/);
+    assert.deepEqual(footerLogo.natural, [51, 48]);
+    assert.ok(Math.abs(footerLogo.displayed[0] - 51) <= 0.1 && Math.abs(footerLogo.displayed[1] - 48) <= 0.1);
+    assert.ok(Math.abs(footerLogo.gap - 12) <= 0.1 && footerLogo.fits, JSON.stringify(footerLogo));
+    if (width === 320) assert.ok(footerLogo.lines >= 2);
+    report.push({name, width, footerLogo});
+  }
  await page.emulateMedia({reducedMotion:'reduce'});
  // Feature proof separate from production layout: actual cascade and containment.
  const mechanism=await page.evaluate(()=>{

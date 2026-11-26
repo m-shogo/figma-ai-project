@@ -226,3 +226,9 @@ test('secondary menu file links use the actual path extension, not query or host
   const result = JSON.parse(execFileSync('php',['-r',stub,php,JSON.stringify(cases)],{encoding:'utf8'}));
   assert.deepEqual(result,[true,true,true,false,false,false,false,false,false,true,true]);
 });
+
+test('Footer identity uses the Figma 18px name while keeping WordPress ownership', () => {
+  const logo = css.slice(css.indexOf('  .gf_logo {'), css.indexOf('  /* Figma PC 114:484'));
+  assert.match(logo, /font-family: var\(--font-jwsnj-ja\);\s*font-size: calc\(18 \* var\(--to-rem-func\)\);\s*font-weight: 500;\s*line-height: 1\.5;\s*letter-spacing: 0\.05em;/);
+  assert.match(footer, /get_bloginfo\('name'\)/);
+});
