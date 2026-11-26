@@ -395,3 +395,89 @@
         max-width: none;
     }
 }
+
+/* Course features PC 612:3074 / 609:3046 / 612:3073.
+   Optional native Images use the 4:3 illustration slot, never dummy artwork. */
+:is(.block-editor_wrap, .editor-styles-wrapper) .wp-block-group.is-style-jwsnj-course-heading + .wp-block-group.is-style-jwsnj-course-features {
+    margin-top: calc(32 * var(--to-rem-func));
+    @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+        margin-top: calc(48 * var(--to-rem-func));
+    }
+}
+:is(.block-editor_wrap, .editor-styles-wrapper) .wp-block-group.is-style-jwsnj-course-features {
+    display: grid;
+    gap: calc(32 * var(--to-rem-func));
+    min-width: 0;
+    > .wp-block-group__inner-container {
+        display: grid;
+        gap: inherit;
+        min-width: 0;
+    }
+    @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+        gap: calc(40 * var(--to-rem-func));
+        &:not(:has(> .wp-block-group__inner-container)),
+        > .wp-block-group__inner-container {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            align-items: start;
+        }
+    }
+    > .wp-block-group,
+    > .wp-block-group__inner-container > .wp-block-group {
+        display: grid;
+        gap: calc(20 * var(--to-rem-func));
+        margin: 0;
+        min-width: 0;
+        max-width: none;
+        > .wp-block-group__inner-container {
+            display: grid;
+            gap: inherit;
+            min-width: 0;
+        }
+        > h3.wp-block-heading,
+        > .wp-block-group__inner-container > h3.wp-block-heading {
+            margin: 0;
+            padding: 0;
+            background: none;
+            border: 0;
+            color: var(--color-text);
+            font-family: var(--font-jwsnj-ja);
+            font-size: calc(18 * var(--to-rem-func));
+            font-weight: 500;
+            line-height: 1.5;
+            letter-spacing: normal;
+            overflow-wrap: anywhere;
+            min-width: 0;
+        }
+        > p,
+        > .wp-block-group__inner-container > p {
+            margin: 0;
+            color: var(--color-text);
+            font-family: var(--font-jwsnj-ja);
+            font-size: calc(16 * var(--to-rem-func));
+            font-weight: 400;
+            line-height: 1.6;
+            letter-spacing: 0.05em;
+            min-width: 0;
+            overflow-wrap: anywhere;
+        }
+        > .wp-block-image,
+        > .wp-block-group__inner-container > .wp-block-image {
+            margin: 0 0 calc(12 * var(--to-rem-func));
+            min-width: 0;
+            width: 100%;
+            &:not(:has(.alignleft)):not(:has(.alignright)):not(:has(.aligncenter)) {
+                width: 100%;
+                margin-inline: 0;
+            }
+            img {
+                display: block;
+                box-sizing: border-box;
+                width: 100%;
+                aspect-ratio: 4 / 3;
+                object-fit: contain;
+                border: calc(1 * var(--to-rem-func)) solid var(--color-primary);
+                border-radius: calc(5 * var(--to-rem-func));
+            }
+        }
+    }
+}

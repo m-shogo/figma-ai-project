@@ -121,7 +121,7 @@ test('course introduction typography reuses bilingual layout and has an opt-in e
 
 test('course grades opt-in native list preserves label and responsive wrapping without invented values',()=>{
   const group=readFileSync(new URL('../theme/css/blocks/wp-block-group-style.css',import.meta.url),'utf8');
-  const s=group.slice(group.indexOf('/* Course grade row PC 539:3627'));
+  const s=group.slice(group.indexOf('/* Course grade row PC 539:3627'),group.indexOf('/* Course schedule title PC'));
   assert.match(s,/\.wp-block-group\.is-style-jwsnj-course-grades/);
   assert.match(s,/flex-wrap:\s*wrap/);
   assert.match(s,/background:\s*var\(--color-accent\)/);
@@ -139,7 +139,7 @@ test('course grades opt-in native list preserves label and responsive wrapping w
 
 test('course schedule uses native editable groups and optional images, alternating at wide widths',()=>{
   const group=readFileSync(new URL('../theme/css/blocks/wp-block-group-style.css',import.meta.url),'utf8');
-  const s=group.slice(group.indexOf('/* Course schedule PC 608:3037'));
+  const s=group.slice(group.indexOf('/* Course schedule PC 608:3037'),group.indexOf('/* Course PC 539:3658'));
   assert.match(s,/\.wp-block-group\.is-style-jwsnj-course-schedule/);
   assert.match(s,/> \.wp-block-group,\s*> \.wp-block-group__inner-container > \.wp-block-group/);
   assert.match(s,/flex-wrap:\s*wrap/);
@@ -176,7 +176,7 @@ test('preschool schedule pattern offers the exact Figma eight entries without au
 
 test('course intro layout composes the existing styles with optional native media',()=>{
   const group=readFileSync(new URL('../theme/css/blocks/wp-block-group-style.css',import.meta.url),'utf8');
-  const s=group.slice(group.indexOf('/* Course PC 539:3658'));
+  const s=group.slice(group.indexOf('/* Course PC 539:3658'),group.indexOf('/* Course FAQ section'));
   assert.match(s,/\.wp-block-group\.is-style-jwsnj-course-intro-layout/);
   assert.match(s,/max-width:\s*calc\(1040 \* var\(--to-rem-func\)\)/);
   assert.match(s,/:has\(> \.wp-block-group\):has\(> \.wp-block-image\)/);
