@@ -13,6 +13,9 @@ on:
       - 'projects/jwsnj/qa/formidable-browser-qa.mjs'
       - 'projects/jwsnj/qa/seed-navigation-qa.php'
       - 'projects/jwsnj/qa/navigation-browser-qa.mjs'
+      - 'projects/jwsnj/qa/seed-fiscal-qa.php'
+      - 'projects/jwsnj/qa/fiscal-archive-qa.mjs'
+      - 'projects/jwsnj/theme/template-parts/_breadCrumb.php'
       - 'projects/jwsnj/theme/js/common.js'
       - 'projects/jwsnj/theme/inc/menu.php'
       - 'projects/jwsnj/theme/template-parts/_header.php'
@@ -78,6 +81,13 @@ jobs:
           [[ "$nav_id" =~ ^[0-9]+$ ]]
           cd ../..
           node projects/jwsnj/qa/navigation-browser-qa.mjs "${WP_URL}/?page_id=${nav_id}"
+      - name: Actual fiscal archive query and pagination
+        run: |
+          cd runtime/wordpress
+          source scripts/runtime-env.sh
+          docker compose run --rm -e WP_ENVIRONMENT_TYPE=local cli eval-file /project/qa/seed-fiscal-qa.php
+          cd ../..
+          node projects/jwsnj/qa/fiscal-archive-qa.mjs "$WP_URL"
       - uses: actions/upload-artifact@v4
         if: always()
         with:

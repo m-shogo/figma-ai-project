@@ -253,3 +253,29 @@ test('front-page routes latest-posts settings to the existing index owner and pr
   }
   execFileSync('php',['-l',new URL('../theme/front-page.php',import.meta.url).pathname]);
 });
+
+test('fiscal archive year is retained in the actual query rather than inferred from the URL', () => {
+  const front = read('inc/front.php');
+  const names = ['jwsnj_archive_year','get_archive_title','wp_custom_title_output','get_fiscal_year_post_types','custom__pre_get_posts'];
+  const php = names.map(name => {
+    const source = front.match(new RegExp('function '+name+'\\([^)]*\\)\\n\\{[\\s\\S]*?\\n\\}'));
+    assert.ok(source,name);
+    return source[0];
+  }).join('\n');
+  const stub = '$vars=json_decode($argv[1],true); function get_query_var($key){return $GLOBALS["vars"][$key]??"";} function get_post_type(){return "post";} function is_tag(){return false;} function is_home(){return false;} function is_single(){return false;} function is_category(){return false;} function is_tax(){return false;} function is_date(){return true;} function is_year(){return true;} function is_admin(){return false;} function single_term_title(...$args){return "";} function get_option($key){return 5;} function get_the_title($id){return "News";} class Query { function is_main_query(){return true;} function get($key){return get_query_var($key);} function set($key,$value){$GLOBALS["vars"][$key]=$value;} } set_error_handler(function($level,$message){throw new ErrorException($message,0,$level);}); ';
+  for (const [vars, year] of [[{year:2024},2024],[{m:'2025'},2025],[{},0]]) {
+    const code = stub + php + ' custom__pre_get_posts(new Query()); echo json_encode([jwsnj_archive_year(),get_archive_title(),wp_custom_title_output(["title"=>"Original"]),$vars]);';
+    const [actual,title,documentTitle,query] = JSON.parse(execFileSync('php',['-r',code,JSON.stringify(vars)],{encoding:'utf8'}));
+    assert.equal(actual,year);
+    assert.equal(title,year ? year+'年度' : false);
+    assert.equal(documentTitle.title,year ? 'News '+year+'年度' : 'Original');
+    if (year) {
+      assert.equal(query.jwsnj_fiscal_year,year);
+      assert.equal(query.year,'');
+      assert.equal(query.date_query[0].after,year+'-04-01');
+      assert.equal(query.date_query[0].before,(year+1)+'-03-31 23:59:59');
+      if (vars.m) assert.equal(query.m,'');
+    }
+  }
+  assert.match(read('template-parts/_breadCrumb.php'), /\$year = jwsnj_archive_year\(\)/);
+});

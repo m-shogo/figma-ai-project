@@ -361,6 +361,17 @@ function my_body_id()
 // echo get_archive_title(); 余計な文字を削除
 // https://wemo.tech/1161
 // ==========================================================================
+// Use the resolved WordPress date query, including the original fiscal year.
+function jwsnj_archive_year()
+{
+  $year = get_query_var('year') ?: get_query_var('jwsnj_fiscal_year');
+  if (!$year) {
+    $packed = (string) get_query_var('m');
+    if (preg_match('/^\d{4}(?:\d{2}){0,3}$/D', $packed)) $year = substr($packed, 0, 4);
+  }
+  return preg_match('/^[1-9]\d{3}$/D', (string) $year) ? (int) $year : 0;
+}
+
 function get_archive_title()
 {
   if (is_tag()) {
@@ -388,46 +399,12 @@ function get_archive_title()
     $is_fiscal = in_array($post_type, get_fiscal_year_post_types(), true);
     $year_suffix = $is_fiscal ? '年度' : '年';
 
-    if (is_year()) {
-      $url = $_SERVER["REQUEST_URI"];
-      $year_parts = array_filter(explode("/", $url), 'strlen');
-      if (!is_paged()) {
-        $date_name = end($year_parts) . $year_suffix . single_term_title('', false);
-      } else {
-        $year_parts = array_reverse($year_parts);
-        $date_name = $year_parts[2] . $year_suffix . single_term_title('', false);
-      }
-    } elseif (is_month()) {
-      $year_val = get_query_var('year');
-      if (!$year_val) {
-        $url_path = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
-        $segments = explode('/', $url_path);
-        foreach ($segments as $seg) {
-          if (preg_match('/^\d{4}$/', $seg)) {
-            $year_val = $seg;
-            break;
-          }
-        }
-      }
-      $date_name = $year_val . $year_suffix . get_query_var('monthnum') . '月';
-    } else {
-      $year_val = get_query_var('year');
-      if (!$year_val) {
-        $url_path = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
-        $segments = explode('/', $url_path);
-        foreach ($segments as $seg) {
-          if (preg_match('/^\d{4}$/', $seg)) {
-            $year_val = $seg;
-            break;
-          }
-        }
-      }
-      $date_name = $year_val . $year_suffix . get_query_var('monthnum') . '月' . get_query_var('day') . '日';
-    }
-    //日付アーカイブページかつ、投稿タイプアーカイブページでもある場合
-    //    if (is_post_type_archive()) {
-    //      return $date_name."".post_type_archive_title('',false);
-    //    }
+    $year = jwsnj_archive_year();
+    if (!$year) return false;
+    $date_name = $year . $year_suffix;
+    if (is_year()) return $date_name . single_term_title('', false);
+    $date_name .= get_query_var('monthnum') . '月';
+    if (!is_month()) $date_name .= get_query_var('day') . '日';
     return $date_name;
   }
   //投稿タイプのアーカイブページなら
@@ -460,19 +437,8 @@ function wp_custom_title_output($title)
       $post_type_label = get_post_type_object($post_type)->label;
     }
 
-    $year = get_query_var('year');
-    if (empty($year)) {
-      $url = $_SERVER["REQUEST_URI"];
-      $year_parts = array_filter(explode("/", $url), 'strlen');
-      if (!is_paged()) {
-        $year_val = end($year_parts);
-      } else {
-        $year_parts = array_reverse($year_parts);
-        $year_val = $year_parts[2];
-      }
-    } else {
-      $year_val = $year;
-    }
+    $year_val = jwsnj_archive_year();
+    if (!$year_val) return $title;
     $title['title'] = $post_type_label . ' ' . $year_val . $year_suffix;
   }
   return $title;
@@ -520,7 +486,12 @@ function custom__pre_get_posts($query)
     $post_type = get_query_var('post_type') ?: 'post';
 
     if (in_array($post_type, $fiscal_year_types, true)) {
-      $y = get_query_var('year');
+      $y = $query->get('year');
+      $packed = (string) $query->get('m');
+      if (!$y && preg_match('/^[1-9]\d{3}$/D', $packed)) $y = $packed;
+      if (!preg_match('/^[1-9]\d{3}$/D', (string) $y)) return $query;
+      $query->set('jwsnj_fiscal_year', (int) $y);
+      if ($packed === (string) $y) $query->set('m', '');
       $date_from = $y . '-04-01';
       $date_to = ($y + 1) . '-03-31 23:59:59';
       $query->set('date_query', array(
