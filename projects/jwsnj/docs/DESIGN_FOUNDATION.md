@@ -345,3 +345,7 @@ TOP PC `114:28` / SP `279:2136` から、ベクターは SVG、写真は元画�
 
 ## 2026-11-26 TOP MV初期静止コラージュ
 - PC 114:29/184:797、SP 279:2142/279:2172 high-fidelity context and images: four PC columns with 20 gap, six slots; SP two columns 11 gap, slots 1/2/3/6 only. SPEC specifies each image CMS-managed; existing group_top_slider.json uses top_slider-01/img_pc/img_sp attachment IDs. Keep schema and all saved rows/text untouched; initial still uses first six valid image rows in order (PC fallback to same row SP if PC invalid, SP fallback to same row PC), fewer rows natural grid without empty placeholders; extra rows reserved for future motion mapping, not deleted. This slot mapping is implementation decision, not a newly confirmed editor/motion contract. Remove obsolete sample full-screen slider markup/CSS/initialization. No production fallback photos, no CTA URL or animation invented. 1080 boundary matches prior TOP decisions; real rendering and motion reference #523 pending.
+
+
+## 2026-11-26 TOP既存バナーの異常系修正
+- PC 114:419 / SP 279:2630の高精細context・画像を確認。確定デザインは全幅の写真だが現物に透かしがあり、権利確認済み原本未受入 (#524)。既存 `group_top_banner` のrepeater（img/title/url/target）と編集者のデータを維持し、実画像なし・空タイトルのrowは出さず、WP生成画像/タイトルescape、有効で名前のあるリンクのみ、外部relとfocusを追加。長文はgrid内で自然伸縮。これは既存CMSバナーの安全修正で、確定写真の実装・視覚一致ではない。#523実機未検証。
