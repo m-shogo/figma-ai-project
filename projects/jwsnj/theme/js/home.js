@@ -1,36 +1,5 @@
 "use strict";
 (function ($) {
-  // ==========================================================================
-  // トップスライダー設定
-  // ==========================================================================
-  const topSlider = function () {
-    $(window).on('load', function () {
-      const topSliderContainer = document.querySelector('.tm_swiper-container');
-      if (!topSliderContainer) {
-        return;
-      }
-      // スライド1枚のときは loop / autoplay / pagination を無効化（Swiper 14 対応）
-      const slideCount = topSliderContainer.querySelectorAll('.swiper-slide').length;
-      const canLoop = slideCount > 1;
-      const tm_swiper = new Swiper('.tm_swiper-container', {
-        effect: 'fade',
-        fadeEffect: {
-          crossFade: true
-        },
-        loop: canLoop,
-        speed: 1000,
-        watchOverflow: true,
-        autoplay: canLoop ? {
-          delay: 3000,
-          disableOnInteraction: false
-        } : false,
-        pagination: canLoop ? {
-          el: '.tm_swiper-container .swiper-pagination',
-          clickable: true
-        } : false
-      });
-    });
-  };
   // 再有効化時: front-page.php 等に .news_swiper-container の HTML が必要
   const newsSlider = function () {
     $(window).on('load', function () {
@@ -65,7 +34,7 @@
   // ==========================================================================
   // 実行
   // ==========================================================================
-  topSlider();
+  // MV photo grid has no autoplay until its motion contract is implemented.
   //newsSlider();
 
 })(jQuery);

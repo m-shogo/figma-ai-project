@@ -197,3 +197,5 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 - TOP Instagram: verify actual PC/SP/mid-width News sibling, official illustration ratio and Brands glyph, long text, absent CTA until account authority, actual button hover/focus after real URL. #523 DEFERRED_ENV.
 
 - TOP Applicants PC158:2645/SP279:2443: 320/375/768/1079/1080/1380 widths, natural row wrap, actual image crop, flower mask/color, badge and photo shadow; when destinations are confirmed, real links, arrow inversion, hover/focus and target semantics. Current topic rows are non-interactive, not final CTA PASS. #523 DEFERRED_ENV.
+
+- TOP MV grid PC114:29/SP279:2142: 0/1/4/6/more rows, invalid IDs, PC/SP image crops and alt consistency, lazy/priority network and 320/375/768/1079/1080/1380 actual geometry, no JS errors; motion reference and CTA pending. #523 DEFERRED_ENV.

@@ -50,7 +50,7 @@
 @import './module/module_zoom-button.css';
 
 /* @import './project/top_module.css'; */
-/* @import './project/top_mainVisual.css'; */
+@import './project/top_mainVisual.css';
 @import './project/top_catchphrase.css';
 @import './project/top_about.css';
 @import './project/top_applicants.css';
