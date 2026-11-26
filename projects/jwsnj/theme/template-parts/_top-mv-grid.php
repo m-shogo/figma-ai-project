@@ -1,5 +1,5 @@
 <?php
-// The initial still uses the existing TOP image repeater. Motion and CTA are separate.
+// Existing TOP image repeater. Motion progressively enhances only the complete grid; CTA is separate.
 $mv_rows = function_exists('get_field') ? get_field('top_slider-01') : [];
 $mv_items = [];
 // ACF returns attachment IDs; do not coerce a negative ID, array or float into another image.
@@ -70,6 +70,8 @@ if ($complete) {
 }
 ?>
 <div class="jwsnj_topMv">
+    <div class="jwsnj_topMv_viewport">
+    <div class="jwsnj_topMv_track" id="jwsnj_topMv_track">
     <ul class="jwsnj_topMv_grid<?php echo $complete ? ' is-complete' : ''; ?>">
         <?php foreach ($mv_items as $item) : ?>
             <li class="jwsnj_topMv_item">
@@ -82,4 +84,9 @@ if ($complete) {
             </li>
         <?php endforeach; ?>
     </ul>
+    </div>
+    </div>
+    <?php if ($complete) : ?>
+        <button type="button" class="jwsnj_topMv_toggle" aria-controls="jwsnj_topMv_track" hidden>写真の動きを停止</button>
+    <?php endif; ?>
 </div>
