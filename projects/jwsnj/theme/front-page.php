@@ -1,4 +1,12 @@
-<?php get_header(); ?>
+<?php
+// WordPress selects front-page.php even when Reading settings show latest posts.
+// Reuse the posts-index owner rather than rendering the static TOP at that URL.
+if (is_home()) {
+    get_template_part('index');
+    return;
+}
+get_header();
+?>
 <div class="top_mainVisual">
     <?php get_template_part('template-parts/_top-catchphrase'); ?>
     <?php get_template_part('template-parts/_top-mv-grid'); ?>
