@@ -285,3 +285,7 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 
 ## 2026-11-26 投稿一覧のフロントページ経路
 - Figma PC390:666/SP478:2615 fresh context + screenshots, existing index/archive owner unchanged. WordPress front-page.php has precedence even when is_home() is true (latest-posts reading setting); delegate to existing index template before header output. Static front continues existing TOP. PHP CLI integration stub verifies one header/footer/main and no TOP on posts route. Actual WordPress Reading settings, category reset and paginated root #523 remain deferred. No new slug, data or fields.
+
+
+## 2026-11-26 TOP MV attachment validation
+- Fresh PC114:29/SP279:2142 context/images confirm same responsive photo layout. Existing ACF attachment ID owner stays unchanged; use positive integer/string validation before WP lookup instead of absint (negative, array, float or boolean can coerce to unrelated ID). Keep valid same-row fallback; no asset replacement, crop, motion, CMS schema or CTA change. Added malformed and numeric-string PHP stub cases. #523 actual WP remains deferred.

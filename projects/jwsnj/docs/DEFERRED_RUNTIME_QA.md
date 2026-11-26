@@ -203,3 +203,5 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 - TOP banner: existing ACF row 0/1/multiple, missing/invalid image, long escaped title, image-only alt/link, bad URL, external rel and keyboard focus; final full-width PC114:419/SP279:2630 photo pending licensed original #524. #523 DEFERRED_ENV.
 
 - Posts-on-front routing: verify WordPress Reading settings latest posts vs static page/assigned posts page, category reset to real index, root pagination, shared header/footer once and body classes; PHP stub now passes route selection, actual WP remains #523 DEFERRED_ENV.
+
+- TOP MV attachment validation: check imported malformed/negative/array/boolean IDs do not select unrelated image; valid numeric strings and PC/SP same-row fallback work. PHP stub, real WP #523.
