@@ -118,6 +118,48 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
    report.push({name,reducedMotion,motion});
    await page.evaluate(()=>document.getElementById('motion-probe').remove());
  }
+ // Verify actual pseudo-element transitions and keyboard-operated Details.
+ for (const reducedMotion of ['no-preference', 'reduce']) {
+   await page.emulateMedia({reducedMotion});
+   await page.evaluate(() => {
+     const fixture = document.createElement('div');
+     fixture.id = 'remaining-motion-probe';
+     fixture.className = 'block-editor_wrap';
+     fixture.innerHTML = '<details class="wp-block-details"><summary class="wp-block-details__summary"><span class="wp-block-details__title">質問</span><span class="wp-block-details__button" aria-hidden="true"><span class="wp-block-details__button-icon"></span></span></summary><div class="wp-block-details__content">回答</div></details><ul class="module_searchList-01"><li><a href="#end">検索結果</a></li></ul><figure class="wp-block-image"><a href="#end"><img alt="" width="60" height="40"></a></figure><figure class="wp-block-gallery"><figure class="wp-block-image"><a href="#end"><img alt="" width="60" height="40"></a></figure></figure>';
+     document.querySelector('.global_inner').append(fixture);
+   });
+   const remaining = await page.evaluate(() => {
+     const fixture = document.getElementById('remaining-motion-probe');
+     const probes = [
+       ['.wp-block-details__button-icon', '::after'],
+       ['.module_searchList-01 a', null],
+       ['.wp-block-image > a', '::after'],
+       ['.wp-block-gallery .wp-block-image > a', '::after']
+     ];
+     return probes.map(([selector, pseudo]) => {
+       const style = getComputedStyle(fixture.querySelector(selector), pseudo);
+       return {selector, pseudo, property: style.transitionProperty, duration: style.transitionDuration};
+     });
+   });
+   const expected = [['rotate'], ['color'], ['opacity', 'background-color', 'color'], ['opacity', 'background-color', 'color']];
+   for (let i = 0; i < remaining.length; i++) {
+     if (reducedMotion === 'reduce') {
+       assert.equal(remaining[i].property, 'none', name + ' reduced ' + remaining[i].selector);
+       assert.equal(remaining[i].duration, '0s');
+     } else {
+       assert.deepEqual(remaining[i].property.split(',').map(s => s.trim()), expected[i], name + ' explicit ' + remaining[i].selector);
+     }
+   }
+   const summary = page.locator('#remaining-motion-probe summary');
+   const details = page.locator('#remaining-motion-probe details');
+   await summary.focus();
+   await page.keyboard.press('Enter');
+   assert.equal(await details.evaluate(el => el.open), true, name + ' keyboard details open');
+   await page.keyboard.press('Enter');
+   assert.equal(await details.evaluate(el => el.open), false, name + ' keyboard details close');
+   report.push({name, reducedMotion, remaining});
+   await page.evaluate(() => document.getElementById('remaining-motion-probe').remove());
+ }
  await page.emulateMedia({reducedMotion:'reduce'});
  // Feature proof separate from production layout: actual cascade and containment.
  const mechanism=await page.evaluate(()=>{

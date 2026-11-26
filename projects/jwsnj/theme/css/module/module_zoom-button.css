@@ -25,7 +25,10 @@
     border: calc(1 * var(--to-rem-func)) solid var(--color-primary);
     color: var(--color-secondary);
     font-size: calc(20 * var(--to-rem-func));
-    transition: var(--transition-duration);
+    transition: opacity var(--transition-duration), background-color var(--transition-duration), color var(--transition-duration);
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
     font-family: var(--font-awesome);
     font-weight: 400;
     line-height: 1;
@@ -92,11 +95,6 @@
     &:focus-visible::after {
       background-color: var(--color-secondary);
       color: var(--color-primary);
-    }
-    @media (prefers-reduced-motion: reduce) {
-      &::after {
-        transition: none;
-      }
     }
   }
   .wp-lightbox-container:focus-within .lightbox_wrap::after {
