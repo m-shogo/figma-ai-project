@@ -153,3 +153,10 @@ test('inherited menu modules have no empty sample selector or empty desktop buck
     assert.match(css,/\[data-open='false'\]/);
   }
 });
+
+test('head app title uses actual escaped WordPress site name, not sample text',()=>{
+  const head=read('template-parts/_head_contents.php');
+  assert.match(head,/\$site_name = get_bloginfo\('name'\)/);
+  assert.match(head,/<meta name="apple-mobile-web-app-title" content="<\?php echo esc_attr\(\$site_name\); \?>"/);
+  assert.doesNotMatch(head,/サンプルサイト/);
+});

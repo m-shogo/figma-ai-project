@@ -287,16 +287,16 @@ function gallery_funcybox_js()
     $data = <<<EOT
 const parents = document.querySelectorAll(".wp-block-gallery");
 for (let i = 0; i < parents.length; i++) {
-	const children = parents[i].querySelectorAll("figure");
+  const children = parents[i].querySelectorAll("figure");
 
-	for (let j = 0; j < children.length; j++) {
-		children[j].children[0].setAttribute("data-fancybox", "gallery" + i );
+  for (let j = 0; j < children.length; j++) {
+    children[j].children[0].setAttribute("data-fancybox", "gallery" + i );
 
-		if( children[j].children[1] ){
-			const figcaption = children[j].children[1].textContent;
-			children[j].children[0].setAttribute("data-caption", figcaption);
-		}
-	}
+    if( children[j].children[1] ){
+      const figcaption = children[j].children[1].textContent;
+      children[j].children[0].setAttribute("data-caption", figcaption);
+    }
+  }
 }
 EOT;
     wp_add_inline_script("fancybox", $data);
@@ -311,7 +311,7 @@ function gallery_flex_grow()
   if (is_singular() || is_admin()) {
     $data = <<<EOT
 .wp-block-gallery.has-nested-images figure.wp-block-image {
-	flex-grow: 0;
+  flex-grow: 0;
 }
 EOT;
     wp_add_inline_style("wp-block-library", $data);

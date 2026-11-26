@@ -7,18 +7,18 @@
 <?php $font_base = get_template_directory_uri() . '/fonts/'; ?>
 <link rel="preload" as="font" type="font/woff2" crossorigin href="<?php echo $font_base; ?>NotoSansJP-Regular.woff2">
 <?php if (false): ?>
-    <!-- FVなどで優先的に読み込ませたいフォントがある場合はif文から外してください -->
-    <link rel="preload" as="font" type="font/woff2" crossorigin href="<?php echo $font_base; ?>NotoSansJP-Medium.woff2">
-    <link rel="preload" as="font" type="font/woff2" crossorigin href="<?php echo $font_base; ?>NotoSansJP-SemiBold.woff2">
-    <link rel="preload" as="font" type="font/woff2" crossorigin href="<?php echo $font_base; ?>NotoSansJP-Bold.woff2">
-    <link rel="preload" as="font" type="font/woff2" crossorigin href="<?php echo $font_base; ?>NotoSerifJP-Regular.woff2">
-    <link rel="preload" as="font" type="font/woff2" crossorigin href="<?php echo $font_base; ?>NotoSerifJP-Medium.woff2">
-    <link rel="preload" as="font" type="font/woff2" crossorigin href="<?php echo $font_base; ?>NotoSerifJP-SemiBold.woff2">
-    <link rel="preload" as="font" type="font/woff2" crossorigin href="<?php echo $font_base; ?>NotoSerifJP-Bold.woff2">
-    <link rel="preload" as="font" type="font/woff2" crossorigin href="<?php echo $font_base; ?>Roboto-Regular.woff2">
-    <link rel="preload" as="font" type="font/woff2" crossorigin href="<?php echo $font_base; ?>Roboto-Medium.woff2">
-    <link rel="preload" as="font" type="font/woff2" crossorigin href="<?php echo $font_base; ?>Roboto-SemiBold.woff2">
-    <link rel="preload" as="font" type="font/woff2" crossorigin href="<?php echo $font_base; ?>Roboto-Bold.woff2">
+  <!-- FVなどで優先的に読み込ませたいフォントがある場合はif文から外してください -->
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="<?php echo $font_base; ?>NotoSansJP-Medium.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="<?php echo $font_base; ?>NotoSansJP-SemiBold.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="<?php echo $font_base; ?>NotoSansJP-Bold.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="<?php echo $font_base; ?>NotoSerifJP-Regular.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="<?php echo $font_base; ?>NotoSerifJP-Medium.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="<?php echo $font_base; ?>NotoSerifJP-SemiBold.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="<?php echo $font_base; ?>NotoSerifJP-Bold.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="<?php echo $font_base; ?>Roboto-Regular.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="<?php echo $font_base; ?>Roboto-Medium.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="<?php echo $font_base; ?>Roboto-SemiBold.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="<?php echo $font_base; ?>Roboto-Bold.woff2">
 <?php endif; ?>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -39,9 +39,9 @@ $site_description_default = get_bloginfo('description');
 
 // 表示するタイトルを決定
 if (is_front_page() || is_home()) {
-    $display_title = $page_acf_title ? $page_acf_title : $site_name;
+  $display_title = $page_acf_title ? $page_acf_title : $site_name;
 } else {
-    $display_title = $page_acf_title ? $page_acf_title : $document_title_default;
+  $display_title = $page_acf_title ? $page_acf_title : $document_title_default;
 }
 
 // 表示する説明文を決定
@@ -49,14 +49,14 @@ $display_description = $page_acf_description ? $page_acf_description : $site_des
 
 // 投稿ページや固定ページの説明文の設定
 if (is_singular() && $post && !$page_acf_description) {
-    $excerpt = $post->post_excerpt ?: wp_strip_all_tags($post->post_content);
-    if (empty($excerpt)) {
-        // $excerptが空の場合、サイトの説明文を使用
-        $display_description = $site_description_default;
-    } else {
-        // 抜粋を160文字にトリミング
-        $display_description = mb_substr(str_replace(["\r\n", "\n", "\r"], ' ', $excerpt), 0, 160, 'UTF-8') . '...';
-    }
+  $excerpt = $post->post_excerpt ?: wp_strip_all_tags($post->post_content);
+  if (empty($excerpt)) {
+    // $excerptが空の場合、サイトの説明文を使用
+    $display_description = $site_description_default;
+  } else {
+    // 抜粋を160文字にトリミング
+    $display_description = mb_substr(str_replace(["\r\n", "\n", "\r"], ' ', $excerpt), 0, 160, 'UTF-8') . '...';
+  }
 }
 ?>
 <title><?php echo esc_html($display_title); ?></title>
@@ -66,42 +66,42 @@ if (is_singular() && $post && !$page_acf_description) {
 <meta itemprop="description" content="<?php echo esc_attr($display_description); ?>">
 
 <script>
-    (function() {
-        const MOBILE_BREAKPOINT = 768;
+  (function() {
+    const MOBILE_BREAKPOINT = 768;
 
-        function getOrCreateViewportMeta() {
-            let meta = document.querySelector("meta[name='viewport']");
-            if (!meta) {
-                meta = document.createElement('meta');
-                meta.setAttribute('name', 'viewport');
-                document.head.appendChild(meta);
-            }
-            return meta;
-        }
+    function getOrCreateViewportMeta() {
+      let meta = document.querySelector("meta[name='viewport']");
+      if (!meta) {
+        meta = document.createElement('meta');
+        meta.setAttribute('name', 'viewport');
+        document.head.appendChild(meta);
+      }
+      return meta;
+    }
 
-        function setViewport() {
-            const meta = getOrCreateViewportMeta();
-            if (window.innerWidth <= MOBILE_BREAKPOINT) {
-                // 小さな画面 → デバイス幅にフィット（レスポンシブ）
-                meta.setAttribute('content', 'width=device-width, initial-scale=1, viewport-fit=cover');
-            } else {
-                // 大きな画面 → 固定幅 1280px を基準に表示
-                meta.setAttribute('content', 'width=1280');
-            }
-        }
+    function setViewport() {
+      const meta = getOrCreateViewportMeta();
+      if (window.innerWidth <= MOBILE_BREAKPOINT) {
+        // 小さな画面 → デバイス幅にフィット（レスポンシブ）
+        meta.setAttribute('content', 'width=device-width, initial-scale=1, viewport-fit=cover');
+      } else {
+        // 大きな画面 → 固定幅 1280px を基準に表示
+        meta.setAttribute('content', 'width=1280');
+      }
+    }
 
-        // リサイズ連打対策（デバウンス）
-        let timer = null;
+    // リサイズ連打対策（デバウンス）
+    let timer = null;
 
-        function onResize() {
-            clearTimeout(timer);
-            timer = setTimeout(setViewport, 150);
-        }
+    function onResize() {
+      clearTimeout(timer);
+      timer = setTimeout(setViewport, 150);
+    }
 
-        window.addEventListener('DOMContentLoaded', setViewport, false);
-        window.addEventListener('resize', onResize, false);
-        window.addEventListener('orientationchange', setViewport, false);
-    })();
+    window.addEventListener('DOMContentLoaded', setViewport, false);
+    window.addEventListener('resize', onResize, false);
+    window.addEventListener('orientationchange', setViewport, false);
+  })();
 </script>
 
 <!-- OGP指定 -->
@@ -112,17 +112,17 @@ if (is_singular() && $post && !$page_acf_description) {
 <link rel="icon" type="image/svg+xml" href="<?php echo get_template_directory_uri(); ?>/images/favicon/favicon.svg">
 <link rel="shortcut icon" href="<?php echo get_template_directory_uri(); ?>/images/favicon/favicon.ico">
 <link rel="apple-touch-icon" sizes="180x180" href="<?php echo get_template_directory_uri(); ?>/images/favicon/apple-touch-icon.png">
-<meta name="apple-mobile-web-app-title" content="サンプルサイト" />
+<meta name="apple-mobile-web-app-title" content="<?php echo esc_attr($site_name); ?>" />
 <link rel="manifest" href="<?php echo get_template_directory_uri(); ?>/images/favicon/site.webmanifest">
 
 <meta name="theme-color" content="#ffffff">
 <style>
-    <?php if (is_front_page()) : ?>
-        <?php include_inline_css('/css/project/top_module.css'); ?>
-        <?php include_inline_css('/css/project/top_mainVisual.css'); ?>
-    <?php endif; ?>
-    <?php include_inline_css('/css/add.css'); ?>
+  <?php if (is_front_page()) : ?>
+    <?php include_inline_css('/css/project/top_module.css'); ?>
+    <?php include_inline_css('/css/project/top_mainVisual.css'); ?>
+  <?php endif; ?>
+  <?php include_inline_css('/css/add.css'); ?>
 </style>
 <?php if (function_exists('wp_get_environment_type') && wp_get_environment_type() === 'local') : ?>
-    <script type="module" src="http://localhost:5173/@vite/client"></script>
+  <script type="module" src="http://localhost:5173/@vite/client"></script>
 <?php endif; ?>
