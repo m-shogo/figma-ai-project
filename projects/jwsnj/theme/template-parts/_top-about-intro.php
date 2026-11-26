@@ -13,5 +13,6 @@
             <img class="jwsnj_topAbout_pin01" src="<?php echo esc_url(get_theme_file_uri('images/top/img_map-pin-01.svg')); ?>" width="78" height="95" alt="">
             <img class="jwsnj_topAbout_pin02" src="<?php echo esc_url(get_theme_file_uri('images/top/img_map-pin-02.svg')); ?>" width="77" height="102" alt="">
         </div>
+        <?php get_template_part('template-parts/_top-about-cards', null, ['items' => $args['items'] ?? []]); ?>
     </div>
 </section>

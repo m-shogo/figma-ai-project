@@ -1,6 +1,6 @@
 @charset "utf-8";
 /* TOP About introduction PC 114:180 / SP 279:2318.
- Card stack, shared background and navigation destinations remain independent. */
+ Card stack accepts supplied items; shared background and navigation remain independent. */
 .global_contents > .jwsnj_topAbout {
     padding-block: calc(34 * var(--to-rem-func)) calc(60 * var(--to-rem-func));
     font-family: var(--font-jwsnj-ja);
@@ -14,6 +14,7 @@
             grid-template-columns: minmax(0, 688fr) minmax(0, 280fr);
             align-items: start;
             gap: calc(70 * var(--to-rem-func));
+            &:has(.jwsnj_topAbout_cards) { row-gap: calc(60 * var(--to-rem-func)); }
             max-width: calc(1280 * var(--to-rem-func));
             padding-inline: calc(120 * var(--to-rem-func));
         }
@@ -104,6 +105,11 @@
             inset: auto;
             width: 100%;
             max-width: calc(280 * var(--to-rem-func));
+            .jwsnj_topAbout_inner:has(.jwsnj_topAbout_cards) > & {
+                position: absolute;
+                inset: 0 calc(120 * var(--to-rem-func)) auto auto;
+                width: min(26%, calc(280 * var(--to-rem-func)));
+            }
         }
     }
     .jwsnj_topAbout_shape { width: 100%; }
@@ -129,4 +135,109 @@
     @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
         padding-block: calc(100 * var(--to-rem-func));
     }
+}
+
+/* About cards PC220:57 / SP279:2241. The existing intro remains unchanged without rows. */
+.jwsnj_topAbout_cards {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    justify-items: center;
+    gap: calc(20 * var(--to-rem-func));
+    margin: calc(40 * var(--to-rem-func)) 0 0;
+    padding: 0;
+    list-style: none;
+    min-width: 0;
+    @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+        grid-column: 1 / -1;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        align-items: start;
+        justify-items: stretch;
+        margin: 0 calc(-60 * var(--to-rem-func));
+        gap: calc(20 * var(--to-rem-func));
+        &.is-four {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 0;
+            padding-inline: calc(20 * var(--to-rem-func));
+        }
+    }
+}
+.jwsnj_topAbout_card {
+    position: relative;
+    width: min(100%, calc(296 * var(--to-rem-func)));
+    min-width: 0;
+    &:focus-within { z-index: 6; }
+    &:has([aria-pressed="true"]) { z-index: 5; }
+    @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+        width: 100%;
+        .is-four > & {
+            width: min(114%, calc(316 * var(--to-rem-func)));
+            transform-origin: center;
+            &:nth-child(1) { transform: rotate(-5deg); }
+            &:nth-child(2) { transform: translateX(-6%); margin-block-start: calc(140 * var(--to-rem-func)); z-index: 2; }
+            &:nth-child(3) { transform: translateX(9%) rotate(10deg); z-index: 3; }
+            &:nth-child(4) { transform: translateX(-9%) rotate(7deg); margin-block-start: calc(104 * var(--to-rem-func)); z-index: 1; }
+            &:has([aria-pressed="true"]) { z-index: 5; }
+            &:focus-within { z-index: 6; }
+        }
+    }
+}
+.jwsnj_topAbout_cardButton {
+    display: grid;
+    justify-items: stretch;
+    gap: calc(16 * var(--to-rem-func));
+    width: 100%;
+    min-width: 0;
+    padding: calc(16 * var(--to-rem-func));
+    border: 2px solid var(--color-primary);
+    border-radius: calc(5 * var(--to-rem-func));
+    background: var(--color-secondary);
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+    text-align: center;
+    &:disabled { cursor: default; opacity: 1; }
+    &[aria-pressed="true"] { color: var(--color-primary); }
+    &:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; }
+    @media (any-hover: hover) {
+        &:not(:disabled):hover { color: var(--color-primary); }
+    }
+    @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+        gap: calc(20 * var(--to-rem-func));
+        border-radius: calc(10 * var(--to-rem-func));
+    }
+}
+.jwsnj_topAbout_cardPhoto {
+    display: block;
+    aspect-ratio: 260 / 186;
+    overflow: hidden;
+    border-radius: calc(3 * var(--to-rem-func));
+    img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: bottom; }
+    @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+        aspect-ratio: 280 / 351;
+        border-radius: calc(8 * var(--to-rem-func));
+    }
+}
+.jwsnj_topAbout_cardLabel {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: calc(16 * var(--to-rem-func));
+    min-width: 0;
+    overflow-wrap: anywhere;
+    font-size: calc(18 * var(--to-rem-func));
+    font-weight: 500;
+    line-height: 1.3;
+    letter-spacing: 0.05em;
+}
+.jwsnj_topAbout_cardArrow {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: calc(24 * var(--to-rem-func));
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--color-primary);
+    color: var(--color-secondary);
+    &::before { content: '\f061' / ''; font: 400 calc(10 * var(--to-rem-func))/1 var(--font-awesome); }
 }

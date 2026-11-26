@@ -369,3 +369,39 @@ test('Course Swiper stays single-owner across narrow/desktop and respects contro
   assert.equal(created,2);
   assert.equal(instance.params.speed,0);
 });
+
+
+test('About card view has exact fixture assets, no invented navigation and opt-in selection',async()=>{
+  const {runInNewContext}=await import('node:vm');
+  const path=new URL('../theme/template-parts/_top-about-cards.php',import.meta.url).pathname;
+  const fixture=new URL('./fixtures/top-about.php',import.meta.url).pathname;
+  const stub='function esc_html($s){return htmlspecialchars($s,ENT_QUOTES);} function esc_url($s){return esc_html($s);} function wp_kses_post($s){return strip_tags($s,"<img>");} function get_theme_file_uri($s){return "/theme/".$s;} ';
+  const empty=execFileSync('php',['-r',stub+' $args=["items"=>[]]; include '+JSON.stringify(path)+';'],{encoding:'utf8'}).trim();
+  assert.equal(empty,'');
+  const preview=execFileSync('php',['-r',stub+' $args=["items"=>require '+JSON.stringify(fixture)+']; include '+JSON.stringify(path)+';'],{encoding:'utf8'});
+  assert.equal((preview.match(/data-about-select/g)||[]).length,4);
+  assert.equal((preview.match(/aria-pressed="false" disabled/g)||[]).length,4);
+  assert.doesNotMatch(preview,/<a |href=/);
+  for(const name of ['img_about-overview.webp','img_mv-05.webp','img_about-education.webp','img_mv-06.webp']){
+    assert.ok(preview.includes(name));
+    assert.ok(readFileSync(new URL('../theme/images/top/'+name,import.meta.url)).length>100);
+  }
+  assert.match(read('template-parts/_top-about-intro.php'),/_top-about-cards/);
+  assert.doesNotMatch(read('template-parts/_top-about-cards.php'),/get_field|have_rows|figma[.]com|fixtures/);
+  const css=read('css/project/top_about.css');
+  assert.match(css,/aspect-ratio: 260 \/ 186/);
+  assert.match(css,/aspect-ratio: 280 \/ 351/);
+  assert.match(css,/rotate\(-5deg\)/);
+  assert.match(css,/rotate\(10deg\)/);
+  assert.match(css,/:focus-within/);
+  const buttons=Array.from({length:4},()=>({disabled:true,attrs:{},setAttribute(k,v){this.attrs[k]=v;},addEventListener(n,f){this[n]=f;}}));
+  const root={querySelectorAll:()=>buttons};
+  runInNewContext(read('js/home.js'),{jQuery:fn=>{if(typeof fn==='function')fn();},document:{querySelectorAll:s=>s==='[data-about-cards]'?[root]:[]}});
+  assert.ok(buttons.every(b=>!b.disabled));
+  buttons[1].click();
+  assert.deepEqual(buttons.map(b=>b.attrs['aria-pressed']),['false','true','false','false']);
+  buttons[3].click();
+  assert.deepEqual(buttons.map(b=>b.attrs['aria-pressed']),['false','false','false','true']);
+  execFileSync('php',['-l',path]);
+  execFileSync('php',['-l',fixture]);
+});
