@@ -337,3 +337,7 @@ TOP PC `114:28` / SP `279:2136` から、ベクターは SVG、写真は元画�
 
 ## 2026-11-26 TOP News / Instagram integration
 - Fresh PC 114:541/114:581 and SP 279:2523/279:2562 context + images. Fixed Instagram copy, saved official SVG and FA Brands icon; two-column PC 560/80/320 within 960, stacked SP 40 gap. 1080px column boundary is implementation choice; intermediate width remains stacked. Account URL/owner unconfirmed: omit Follow action, not a fake/disabled link. News arrow escape corrected to one CSS backslash. No new ACF/CPT or footer menu change. Actual CTA and runtime #523 remain pending.
+
+
+## 2026-11-26 TOP For Applicants 固定部分
+- PC 158:2645 / SP 279:2443 high-fidelity context+images, flower 506:2537. SPEC does not designate this section as CMS-editable. Connect saved official ico_flow/fee/visit and img_applicants; heading flower uses existing official blossom silhouette with the Figma cyan color as mask. PC 440/90/430, SP30 inset/64 block/40 gap, photo aspect 4:5 and 6.98% decoration; topic rows min80/100 (no fixed text height). Existing links/slug contract unconfirmed: rows are static information, no arrow/action/focus until actual destinations are provided. 1080px layout boundary is provisional. #523 actual browser and asset rendering pending.

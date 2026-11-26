@@ -83,3 +83,5 @@ Status: PROJECT-ONLY EVIDENCE / Human feedback: 2026-11-20
 - #651 merged 4e8261e after three actual CI job logs; About PC/SP parent and text child high-fidelity context/image then isolated fixed copy/map. Card destinations and shared background remain separate.
 
 - New browser run start 801ddef (#652 merged), fresh skill/session. PC/SP News + Instagram panel connected without unconfirmed CTA; next READY: independent fixed For Applicants content and About background after exact asset/rights review; cards and Course CMS mapping separately.
+
+- #653 merged 92581f7 after actual 3/3 CI logs. Next fixed For Applicants scope uses saved exact photos/icons without fake links, pending CTA mapping. READY next: About background (exact fills/crop), Course existing ACF mapping (do not invent field IDs); MV image structure after approved owner/motion review. #523/#524 remain OPEN.

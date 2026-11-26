@@ -78,3 +78,22 @@ test('TOP About fixed copy and official map are connected without CMS or dummy l
   assert.doesNotMatch(css,/white-space:\s*nowrap/);
   execFileSync('php',['-l',new URL('../theme/template-parts/_top-about-intro.php',import.meta.url).pathname]);
 });
+
+test('TOP Applicants preserves approved fixed copy and exact stored illustration/photo paths without fake links',()=>{
+  const part=read('template-parts/_top-applicants.php');
+  for(const name of ['ico_flow.svg','ico_fee.svg','ico_visit.svg','img_applicants.webp']){
+    assert.ok(part.includes('images/top/'+name));
+    assert.ok(readFileSync(new URL('../theme/images/top/'+name,import.meta.url)).length>100);
+  }
+  assert.match(part,/入学・編入手続きの流れ/);
+  assert.match(part,/学校見学のお問い合わせ/);
+  assert.doesNotMatch(part,/<a\s|<button|href=|get_field|have_rows|figma\.com/);
+  assert.match(read('front-page.php'),/_top-applicants[\s\S]*_top-news/);
+  assert.match(read('css/style.css'),/^@import '\.\/project\/top_applicants\.css';/m);
+  const css=read('css/project/top_applicants.css');
+  assert.match(css,/min-height: calc\(80/);
+  assert.match(css,/min-height: calc\(100/);
+  assert.match(css,/aspect-ratio: 4 \/ 5/);
+  assert.doesNotMatch(css,/white-space:\s*nowrap|(?<!min-)height:\s*calc/);
+  execFileSync('php',['-l',new URL('../theme/template-parts/_top-applicants.php',import.meta.url).pathname]);
+});
