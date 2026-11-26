@@ -125,7 +125,22 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
     const touch = await browser.newPage({ viewport: { width: 1380, height: 900 }, hasTouch: true, reducedMotion: 'reduce' });
     await touch.route('**/*', route => route.request().url().startsWith('http://127.0.0.1:') ? route.continue() : route.abort());
     await touch.goto(url, { waitUntil: 'load' });
-    await touch.waitForFunction(() => navigator.maxTouchPoints > 0 && document.documentElement.classList.contains('_device-touch'));
+    // Report an unavailable browser capability separately from a site failure.
+    // Never override navigator.maxTouchPoints or mark unsupported touch as PASS.
+    await touch.waitForFunction(() => window.jQuery?.isReady);
+    const capabilities = await touch.evaluate(() => ({
+      maxTouchPoints: navigator.maxTouchPoints,
+      touchEvent: 'ontouchstart' in window,
+      coarse: matchMedia('(any-pointer: coarse)').matches
+    }));
+    console.log(JSON.stringify({ engine: engineName, touchCapabilities: capabilities }));
+    if (capabilities.maxTouchPoints === 0 && engineName === 'firefox') {
+      console.log(JSON.stringify({ engine: engineName, touchMenu: 'DEFERRED_ENV', reason: 'requested hasTouch but navigator.maxTouchPoints is zero' }));
+      await touch.close();
+      continue;
+    }
+    assert.ok(capabilities.maxTouchPoints > 0, 'touch capability required in this engine');
+    await touch.waitForFunction(() => document.documentElement.classList.contains('_device-touch'));
     const parents = touch.locator('#global_navigation .gnl_item-02._hasChild');
     const first = parents.nth(0);
     const second = parents.nth(1);
