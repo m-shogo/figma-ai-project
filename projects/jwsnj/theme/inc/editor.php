@@ -273,4 +273,8 @@ add_action('init', function () {
     'name' => 'jwsnj-course-schedule',
     'label' => 'コース一日の流れ（交互配置）',
   ));
+  register_block_style('core/group', array(
+    'name' => 'jwsnj-course-intro-layout',
+    'label' => 'コース導入（文章＋写真）',
+  ));
 });
