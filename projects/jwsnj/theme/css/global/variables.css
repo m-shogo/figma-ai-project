@@ -27,191 +27,191 @@
 // MARK: フォント
 //============================*/
 @font-face {
-    font-family: 'local Noto Sans JP';
-    font-display: swap;
-    font-weight: 400;
-    font-style: normal;
-    src: local('NotoSansJP-Regular'),
-    url('../../fonts/NotoSansJP-Regular.woff2') format('woff2');
+  font-family: 'local Noto Sans JP';
+  font-display: swap;
+  font-weight: 400;
+  font-style: normal;
+  src: local('NotoSansJP-Regular'),
+  url('../../fonts/NotoSansJP-Regular.woff2') format('woff2');
 }
 @font-face {
-    font-family: 'local Noto Sans JP';
-    font-display: swap;
-    font-weight: 500;
-    font-style: normal;
-    src: local('NotoSansJP-Medium'),
-    url('../../fonts/NotoSansJP-Medium.woff2') format('woff2');
+  font-family: 'local Noto Sans JP';
+  font-display: swap;
+  font-weight: 500;
+  font-style: normal;
+  src: local('NotoSansJP-Medium'),
+  url('../../fonts/NotoSansJP-Medium.woff2') format('woff2');
 }
 @font-face {
-    font-family: 'local Noto Sans JP';
-    font-display: swap;
-    font-weight: 600;
-    font-style: normal;
-    src: local('NotoSansJP-SemiBold'),
-    url('../../fonts/NotoSansJP-SemiBold.woff2') format('woff2');
+  font-family: 'local Noto Sans JP';
+  font-display: swap;
+  font-weight: 600;
+  font-style: normal;
+  src: local('NotoSansJP-SemiBold'),
+  url('../../fonts/NotoSansJP-SemiBold.woff2') format('woff2');
 }
 @font-face {
-    font-family: 'local Noto Sans JP';
-    font-display: swap;
-    font-weight: 700;
-    font-style: normal;
-    src: local('NotoSansJP-Bold'),
-    url('../../fonts/NotoSansJP-Bold.woff2') format('woff2');
-}
-
-@font-face {
-    font-family: 'local Noto Serif JP';
-    font-display: swap;
-    font-weight: 400;
-    font-style: normal;
-    src: local('NotoSerifJP-Regular'),
-    url('../../fonts/NotoSerifJP-Regular.woff2') format('woff2');
-}
-@font-face {
-    font-family: 'local Noto Serif JP';
-    font-display: swap;
-    font-weight: 500;
-    font-style: normal;
-    src: local('NotoSerifJP-Medium'),
-    url('../../fonts/NotoSerifJP-Medium.woff2') format('woff2');
-}
-@font-face {
-    font-family: 'local Noto Serif JP';
-    font-display: swap;
-    font-weight: 600;
-    font-style: normal;
-    src: local('NotoSerifJP-SemiBold'),
-    url('../../fonts/NotoSerifJP-SemiBold.woff2') format('woff2');
-}
-@font-face {
-    font-family: 'local Noto Serif JP';
-    font-display: swap;
-    font-weight: 700;
-    font-style: normal;
-    src: local('NotoSerifJP-Bold'),
-    url('../../fonts/NotoSerifJP-Bold.woff2') format('woff2');
+  font-family: 'local Noto Sans JP';
+  font-display: swap;
+  font-weight: 700;
+  font-style: normal;
+  src: local('NotoSansJP-Bold'),
+  url('../../fonts/NotoSansJP-Bold.woff2') format('woff2');
 }
 
 @font-face {
-    font-family: 'local Roboto';
-    font-display: swap;
-    font-weight: 400;
-    font-style: normal;
-    src: local('Roboto-Regular'),
-    url('../../fonts/Roboto-Regular.woff2') format('woff2');
+  font-family: 'local Noto Serif JP';
+  font-display: swap;
+  font-weight: 400;
+  font-style: normal;
+  src: local('NotoSerifJP-Regular'),
+  url('../../fonts/NotoSerifJP-Regular.woff2') format('woff2');
 }
 @font-face {
-    font-family: 'local Roboto';
-    font-display: swap;
-    font-weight: 500;
-    font-style: normal;
-    src: local('Roboto-Medium'),
-    url('../../fonts/Roboto-Medium.woff2') format('woff2');
+  font-family: 'local Noto Serif JP';
+  font-display: swap;
+  font-weight: 500;
+  font-style: normal;
+  src: local('NotoSerifJP-Medium'),
+  url('../../fonts/NotoSerifJP-Medium.woff2') format('woff2');
 }
 @font-face {
-    font-family: 'local Roboto';
-    font-display: swap;
-    font-weight: 600;
-    font-style: normal;
-    src: local('Roboto-SemiBold'),
-    url('../../fonts/Roboto-SemiBold.woff2') format('woff2');
+  font-family: 'local Noto Serif JP';
+  font-display: swap;
+  font-weight: 600;
+  font-style: normal;
+  src: local('NotoSerifJP-SemiBold'),
+  url('../../fonts/NotoSerifJP-SemiBold.woff2') format('woff2');
 }
 @font-face {
-    font-family: 'local Roboto';
-    font-display: swap;
-    font-weight: 700;
-    font-style: normal;
-    src: local('Roboto-Bold'),
-    url('../../fonts/Roboto-Bold.woff2') format('woff2');
+  font-family: 'local Noto Serif JP';
+  font-display: swap;
+  font-weight: 700;
+  font-style: normal;
+  src: local('NotoSerifJP-Bold'),
+  url('../../fonts/NotoSerifJP-Bold.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'local Roboto';
+  font-display: swap;
+  font-weight: 400;
+  font-style: normal;
+  src: local('Roboto-Regular'),
+  url('../../fonts/Roboto-Regular.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'local Roboto';
+  font-display: swap;
+  font-weight: 500;
+  font-style: normal;
+  src: local('Roboto-Medium'),
+  url('../../fonts/Roboto-Medium.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'local Roboto';
+  font-display: swap;
+  font-weight: 600;
+  font-style: normal;
+  src: local('Roboto-SemiBold'),
+  url('../../fonts/Roboto-SemiBold.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'local Roboto';
+  font-display: swap;
+  font-weight: 700;
+  font-style: normal;
+  src: local('Roboto-Bold'),
+  url('../../fonts/Roboto-Bold.woff2') format('woff2');
 }
 
 /* ==========================================================================
  * 変数
  * ========================================================================== */
 :where(:root) {
-    /*
+  /*
      * jwsnj Figma color variables (PC TOP node 114:28).
      * Source inventory removes unreferenced sample/project aliases; retain distinct semantic roles.
      */
-    --jwsnj-color-sec: #6bd2ce;
-    --jwsnj-color-white: #ffffff;
-    --jwsnj-color-separator: #d7d4d4;
-    --jwsnj-color-separator-light: #f2f2f2;
-    --jwsnj-color-base-lightgreen: #f5fdeb;
-    --jwsnj-color-base-lightgreen-02: #eaffd9;
-    --jwsnj-color-base-lightblue: #d7f2f1;
+  --jwsnj-color-sec: #6bd2ce;
+  --jwsnj-color-white: #ffffff;
+  --jwsnj-color-separator: #d7d4d4;
+  --jwsnj-color-separator-light: #f2f2f2;
+  --jwsnj-color-base-lightgreen: #f5fdeb;
+  --jwsnj-color-base-lightgreen-02: #eaffd9;
+  --jwsnj-color-base-lightblue: #d7f2f1;
 }
 
 :where(:root) {
-    /* プライマリーカラー */
-    --color-primary: #28ac5f;
-    /* セカンダリーカラー */
-    --color-secondary: #fff;
-    --color-tertiary: #e3f2fd;
-    /* アクセントカラー */
-    --color-accent: #ec6b61;
-    /* グレー */
-    --color-gray-text: #707070;
-    --color-gray-border: #ababab;
-    --color-gray-border-02: #eaeaea;
-    --color-gray-background: #f8f8f8;
-    /* テキストカラー */
-    --color-text: #333;
-    --color-link: #008ddc;
-    /* ボーダーカラー */
-    --color-separator: #eaeaea;
-    --color-separator--blue: #86a3b5;
-    /* エラーカラー */
-    --color-error-text: #e53935;
-    --color-error-background: #ffebee;
-    /* ベース幅 */
-    --width-base: calc(1160 * var(--to-rem-func));
-    --width-base-small: calc(960 * var(--to-rem-func));
-    --width-content: calc(1000 * var(--to-rem-func));
-    --width-side: calc(260 * var(--to-rem-func));
-    /* ベース余白 */
-    --padding-SP: calc(20 * var(--to-rem-func));
-    --padding-TB: calc(60 * var(--to-rem-func));
-    /* transition */
-    --transition-duration: 0.3s;
-    /* opacity */
-    --opacity-hover: 0.7;
-    /* ヘッダー高さ */
-    --header-height-SP: calc(60 * var(--to-rem-func));
-    --header-height-PC: calc(120 * var(--to-rem-func));
-    /* ブロック間の下余白 */
-    --wp-block-margin: calc(24 * var(--to-rem-func));
-    --wp-block-margin-small: calc(16 * var(--to-rem-func));
-    --wp-block-margin-medium: calc(32 * var(--to-rem-func));
-    --wp-block-margin-large: calc(48 * var(--to-rem-func));
-    --wp-block-margin-xlarge: calc(64 * var(--to-rem-func));
-    --wp-block-margin-xxlarge: calc(80 * var(--to-rem-func));
+  /* プライマリーカラー */
+  --color-primary: #28ac5f;
+  /* セカンダリーカラー */
+  --color-secondary: #fff;
+  --color-tertiary: #e3f2fd;
+  /* アクセントカラー */
+  --color-accent: #ec6b61;
+  /* グレー */
+  --color-gray-text: #707070;
+  --color-gray-border: #ababab;
+  --color-gray-border-02: #eaeaea;
+  --color-gray-background: #f8f8f8;
+  /* テキストカラー */
+  --color-text: #333;
+  --color-link: #008ddc;
+  /* ボーダーカラー */
+  --color-separator: #eaeaea;
+  --color-separator--blue: #86a3b5;
+  /* エラーカラー */
+  --color-error-text: #e53935;
+  --color-error-background: #ffebee;
+  /* ベース幅 */
+  --width-base: calc(1160 * var(--to-rem-func));
+  --width-base-small: calc(960 * var(--to-rem-func));
+  --width-content: calc(1000 * var(--to-rem-func));
+  --width-side: calc(260 * var(--to-rem-func));
+  /* ベース余白 */
+  --padding-SP: calc(20 * var(--to-rem-func));
+  --padding-TB: calc(60 * var(--to-rem-func));
+  /* transition */
+  --transition-duration: 0.3s;
+  /* opacity */
+  --opacity-hover: 0.7;
+  /* ヘッダー高さ */
+  --header-height-SP: calc(60 * var(--to-rem-func));
+  --header-height-PC: calc(120 * var(--to-rem-func));
+  /* ブロック間の下余白 */
+  --wp-block-margin: calc(24 * var(--to-rem-func));
+  --wp-block-margin-small: calc(16 * var(--to-rem-func));
+  --wp-block-margin-medium: calc(32 * var(--to-rem-func));
+  --wp-block-margin-large: calc(48 * var(--to-rem-func));
+  --wp-block-margin-xlarge: calc(64 * var(--to-rem-func));
+  --wp-block-margin-xxlarge: calc(80 * var(--to-rem-func));
 
-    /* ==========================================================================
+  /* ==========================================================================
    * フォント
    * ========================================================================== */
-    /* Figma案件フォント（Google Fonts配信、既存ローカルfontをfallbackに使用） */
-    --font-jwsnj-ja: 'Zen Kaku Gothic New', 'local Noto Sans JP', 'Noto Sans JP', sans-serif;
-    --font-jwsnj-en-condensed: 'Roboto Condensed', 'local Roboto', 'Roboto', sans-serif;
-    /* 日本語サンセリフ体 */
-    --font-sansSerif-ja: 'local Noto Sans JP', 'Noto Sans JP', sans-serif;
-    /* 日本語セリフ体 */
-    /* 英語サンセリフ体 */
-    --font-sansSerif-en: 'local Roboto', 'Roboto', sans-serif;
-    /* 英語セリフ体 */
-    /* FontAwesome */
-    --font-awesome: 'Font Awesome 6 Pro';
-    /* FontAwesome Brands */
-    --font-awesomeBrands: 'Font Awesome 6 Brands';
+  /* Figma案件フォント（Google Fonts配信、既存ローカルfontをfallbackに使用） */
+  --font-jwsnj-ja: 'Zen Kaku Gothic New', 'local Noto Sans JP', 'Noto Sans JP', sans-serif;
+  --font-jwsnj-en-condensed: 'Roboto Condensed', 'local Roboto', 'Roboto', sans-serif;
+  /* 日本語サンセリフ体 */
+  --font-sansSerif-ja: 'local Noto Sans JP', 'Noto Sans JP', sans-serif;
+  /* 日本語セリフ体 */
+  /* 英語サンセリフ体 */
+  --font-sansSerif-en: 'local Roboto', 'Roboto', sans-serif;
+  /* 英語セリフ体 */
+  /* FontAwesome */
+  --font-awesome: 'Font Awesome 6 Pro';
+  /* FontAwesome Brands */
+  --font-awesomeBrands: 'Font Awesome 6 Brands';
 
-    /* ==========================================================================
+  /* ==========================================================================
    * アイコン定義（FontAwesomeのcontent値）
    * ========================================================================== */
-    --icon-blank: '\f2d2';
-    --icon-file: '\f15c';
-    --icon-pdf: '\f1c1';
-    --icon-zoom: '\f002';
-    --icon-chevron-right: '\f054';
+  --icon-blank: '\f2d2';
+  --icon-file: '\f15c';
+  --icon-pdf: '\f1c1';
+  --icon-zoom: '\f002';
+  --icon-chevron-right: '\f054';
 }
 
 /* ==========================================================================

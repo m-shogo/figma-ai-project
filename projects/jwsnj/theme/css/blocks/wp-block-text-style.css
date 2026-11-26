@@ -4,111 +4,111 @@
 // ------------------------------ */
 .block-editor_wrap,
 .editor-styles-wrapper {
-    em {
-        font-style: italic;
-    }
-    strong {
-        font-weight: bold;
-    }
-    /* Figma PC 344:916 / SP 442:2774 — paragraph emphasis and marker.
+  em {
+    font-style: italic;
+  }
+  strong {
+    font-weight: bold;
+  }
+  /* Figma PC 344:916 / SP 442:2774 — paragraph emphasis and marker.
        Preserve the existing underline outside paragraphs, or when the editor
        explicitly authored a background on the underlined span. */
-    p strong {
-        font-weight: 500;
-    }
-    span[style*='text-decoration: underline'] {
-        text-decoration-line: underline !important;
-        text-decoration-color: currentColor !important;
-        text-decoration-thickness: calc(1 * var(--to-rem-func)) !important;
-        text-underline-offset: calc(2 * var(--to-rem-func)) !important;
-        text-decoration-skip-ink: none !important;
-    }
-    p span[style*='text-decoration: underline']:not([style*='background']) {
-        /* WordPress emits inline underline; the approved paragraph treatment is a marker. */
-        text-decoration-line: none !important;
-        background-image: linear-gradient(#ffebb3, #ffebb3);
-        background-repeat: no-repeat;
-        background-position: left bottom;
-        background-size: 100% calc(5 * var(--to-rem-func));
-        -webkit-box-decoration-break: clone;
-        box-decoration-break: clone;
-    }
-    p.has-small-font-size {
-        font-size: 0.75rem !important;
-    }
-    p.has-medium-font-size {
-        font-size: 1rem !important;
-    }
-    p.has-large-font-size {
-        font-size: 1.25rem !important;
-    }
-    p.has-x-large-font-size {
-        font-size: 1.5rem !important;
-    }
-    p:is(:not([class]), .wp-block-paragraph, .block-editor-rich-text__editable, .has-text-align-left, .has-text-align-right, .has-text-align-center) {
-        font-family: var(--font-jwsnj-ja);
-        font-size: 1rem;
-        font-weight: 400;
-        letter-spacing: 0.05em;
-        line-height: 1.6;
-        color: var(--color-text);
-        overflow-wrap: anywhere;
-        word-break: normal;
-        line-break: strict;
-        margin-top: var(--wp-block-margin);
-        & + p:is(:not([class]), .has-text-align-left, .has-text-align-right, .has-text-align-center) {
-            margin-top: var(--wp-block-margin);
-        }
-        &:first-child {
-            margin-top: 0;
-        }
-    }
-    .wp-block-columns {
-        .has-background {
-            p:is(:not([class]), .has-text-align-left, .has-text-align-right, .has-text-align-center) {
-                /* color: initial; */
-            }
-        }
-    }
-
-    /* MARK: 特定のブロックとの余白 */
-    p:is(:not([class]), .has-background, .has-text-align-left, .has-text-align-right, .has-text-align-center),
-    ul,
-    ol,
-    .wp-block-flexible-table-block-table,
-    .wp-block-group,
-    .wp-block-details,
-    .wp-block-table,
-    .wp-block-image,
-    .wp-block-buttons {
-        & + p:is(:not([class]), .has-background, .has-text-align-left, .has-text-align-right, .has-text-align-center) {
-            margin-top: var(--wp-block-margin-small);
-        }
-    }
-
-    /* MARK: 背景色があるブロック */
-    div.wp-block-group.has-background,
-    div.wp-block-column.has-background,
-    p.has-background {
-        padding: calc(32 * var(--to-rem-func));
-        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-            padding: calc(40 * var(--to-rem-func)) calc(32 * var(--to-rem-func));
-        }
-    }
-}
-
-/* Course introduction lead PC 534:2363; opt-in native paragraph. */
-:is(.block-editor_wrap, .editor-styles-wrapper) p.is-style-jwsnj-course-lead {
-    font-family: var(--font-jwsnj-ja);
+  p strong {
     font-weight: 500;
-    font-size: calc(20 * var(--to-rem-func));
-    line-height: 1.8;
+  }
+  span[style*='text-decoration: underline'] {
+    text-decoration-line: underline !important;
+    text-decoration-color: currentColor !important;
+    text-decoration-thickness: calc(1 * var(--to-rem-func)) !important;
+    text-underline-offset: calc(2 * var(--to-rem-func)) !important;
+    text-decoration-skip-ink: none !important;
+  }
+  p span[style*='text-decoration: underline']:not([style*='background']) {
+    /* WordPress emits inline underline; the approved paragraph treatment is a marker. */
+    text-decoration-line: none !important;
+    background-image: linear-gradient(#ffebb3, #ffebb3);
+    background-repeat: no-repeat;
+    background-position: left bottom;
+    background-size: 100% calc(5 * var(--to-rem-func));
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+  p.has-small-font-size {
+    font-size: 0.75rem !important;
+  }
+  p.has-medium-font-size {
+    font-size: 1rem !important;
+  }
+  p.has-large-font-size {
+    font-size: 1.25rem !important;
+  }
+  p.has-x-large-font-size {
+    font-size: 1.5rem !important;
+  }
+  p:is(:not([class]), .wp-block-paragraph, .block-editor-rich-text__editable, .has-text-align-left, .has-text-align-right, .has-text-align-center) {
+    font-family: var(--font-jwsnj-ja);
+    font-size: 1rem;
+    font-weight: 400;
     letter-spacing: 0.05em;
+    line-height: 1.6;
     color: var(--color-text);
     overflow-wrap: anywhere;
     word-break: normal;
     line-break: strict;
-    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-        font-size: calc(24 * var(--to-rem-func));
+    margin-top: var(--wp-block-margin);
+    & + p:is(:not([class]), .has-text-align-left, .has-text-align-right, .has-text-align-center) {
+      margin-top: var(--wp-block-margin);
     }
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+  .wp-block-columns {
+    .has-background {
+      p:is(:not([class]), .has-text-align-left, .has-text-align-right, .has-text-align-center) {
+        /* color: initial; */
+      }
+    }
+  }
+
+  /* MARK: 特定のブロックとの余白 */
+  p:is(:not([class]), .has-background, .has-text-align-left, .has-text-align-right, .has-text-align-center),
+  ul,
+  ol,
+  .wp-block-flexible-table-block-table,
+  .wp-block-group,
+  .wp-block-details,
+  .wp-block-table,
+  .wp-block-image,
+  .wp-block-buttons {
+    & + p:is(:not([class]), .has-background, .has-text-align-left, .has-text-align-right, .has-text-align-center) {
+      margin-top: var(--wp-block-margin-small);
+    }
+  }
+
+  /* MARK: 背景色があるブロック */
+  div.wp-block-group.has-background,
+  div.wp-block-column.has-background,
+  p.has-background {
+    padding: calc(32 * var(--to-rem-func));
+    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+      padding: calc(40 * var(--to-rem-func)) calc(32 * var(--to-rem-func));
+    }
+  }
+}
+
+/* Course introduction lead PC 534:2363; opt-in native paragraph. */
+:is(.block-editor_wrap, .editor-styles-wrapper) p.is-style-jwsnj-course-lead {
+  font-family: var(--font-jwsnj-ja);
+  font-weight: 500;
+  font-size: calc(20 * var(--to-rem-func));
+  line-height: 1.8;
+  letter-spacing: 0.05em;
+  color: var(--color-text);
+  overflow-wrap: anywhere;
+  word-break: normal;
+  line-break: strict;
+  @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+    font-size: calc(24 * var(--to-rem-func));
+  }
 }
