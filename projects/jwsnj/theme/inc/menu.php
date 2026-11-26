@@ -25,12 +25,11 @@ function should_open_menu_link_in_new_tab($item)
     return true;
   }
   $extensions = array('pdf', 'doc', 'docx', 'docm', 'xls', 'xlsx', 'xlsm', 'png', 'jpg', 'jpeg', 'gif', 'webp');
-  foreach ($extensions as $ext) {
-    if (strpos($item_url, '.' . $ext) !== false) {
-      return true;
-    }
-  }
-  return false;
+  // Only the final path extension identifies a file, not a hostname, query or fragment.
+  $path = wp_parse_url($item_url, PHP_URL_PATH);
+  if (!is_string($path)) return false;
+  $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+  return in_array($extension, $extensions, true);
 }
 
 /**

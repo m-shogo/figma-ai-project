@@ -3,6 +3,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
 
 const footer = readFileSync(new URL('../theme/template-parts/_footer.php', import.meta.url), 'utf8');
 const menu = readFileSync(new URL('../theme/inc/menu.php', import.meta.url), 'utf8');
@@ -204,4 +205,24 @@ test('Footer brand and details use owner-local desktop geometry without changing
 test('footer disclosure animates only the rotating vertical stroke', () => {
   assert.match(css, /&::after\s*\{\s*transform: rotate\(-90deg\);\s*transition: transform var\(--transition-duration\)/);
   assert.doesNotMatch(css, /transition:\s*var\(--transition-duration\)/);
+});
+
+test('secondary menu file links use the actual path extension, not query or hostname', () => {
+  const php = new URL('../theme/inc/menu.php', import.meta.url).pathname;
+  const stub = 'function add_action(...$args){} function add_filter(...$args){} function wp_parse_url($url,$part){return parse_url($url,$part);} class Walker_Nav_Menu {} require $argv[1]; $cases=json_decode($argv[2],true); echo json_encode(array_map(fn($v)=>should_open_menu_link_in_new_tab((object)$v),$cases));';
+  const cases = [
+    {url:'https://example.invalid/file.PDF?download=1#page=2'},
+    {url:'/files/report.docx'},
+    {url:'/photos/image.webp'},
+    {url:'/normal?file=report.pdf'},
+    {url:'/normal#report.pdf'},
+    {url:'https://pdf.example.invalid/normal'},
+    {url:'https://example.pdf/normal'},
+    {url:'/report.pdf-preview'},
+    {url:'/docs.pdf/overview'},
+    {url:'/normal',target:'_blank'},
+    {url:''}
+  ];
+  const result = JSON.parse(execFileSync('php',['-r',stub,php,JSON.stringify(cases)],{encoding:'utf8'}));
+  assert.deepEqual(result,[true,true,true,false,false,false,false,false,false,true,true]);
 });
