@@ -3,7 +3,7 @@
 // No WordPress, DOM, third-party test library or external assets required.
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { Script } from 'node:vm';
 
 const source = readFileSync(new URL('../theme/js/common.js', import.meta.url), 'utf8');
@@ -178,7 +178,7 @@ test('desktop mega-menu hover, focus and touch states do not leak into SP accord
 
 
 test('Header breakpoint transitions clear stale top-level hover disclosure state', () => {
-  const region = source.slice(source.indexOf('let lastHeaderDesktop = headerDesktop.matches'), source.indexOf('// // グローバルメニューの動き'));
+  const region = source.slice(source.indexOf('let lastHeaderDesktop = headerDesktop.matches'), source.indexOf('// 検索', source.indexOf('let lastHeaderDesktop = headerDesktop.matches')));
   assert.match(region, /closeAllTouchMenus\(\)/);
   assert.match(region, /closeMobileMenu\(\)/);
   assert.match(region, /globalNavItems\.forEach\(\(item\) => \{/);
@@ -412,4 +412,23 @@ test('secondary navigation keeps PC and SP declarations on matching owners', () 
   assert.match(block, /&:nth-child\(odd\)\s*\{[^{}]*@media \(calc\(1080[^{}]+\{\s*border-right: none/);
   const desktop = navigationCss.slice(navigationCss.indexOf('/* MARK: header_breakpoint */'));
   assert.doesNotMatch(desktop, /\.gn_links-02\s*\{/);
+});
+
+test('retired pixel-based HTML width flags have no authored theme consumers', () => {
+  const root = new URL('../theme/', import.meta.url);
+  const paths = readdirSync(root, { recursive: true })
+    .filter(p => /\.(php|js|css|json|html|scss|ts)$/.test(p))
+    .filter(p => !/\.min\.|(?:^|\/)(?:yubinbango\.js|scroll-hint\.css)$/.test(p));
+  const consumers = [];
+  for (const path of paths) {
+    const text = readFileSync(new URL(path, root), 'utf8');
+    for (const [i, line] of text.split('\n').entries()) {
+      if (/(^|[^a-zA-Z0-9_-])_(?:sp|pc|tablet)(?![a-zA-Z0-9_-])/.test(line)) {
+        consumers.push(path + ':' + (i + 1));
+      }
+    }
+  }
+  assert.ok(paths.length > 100, 'scan authored PHP/CSS/JS/JSON, including read-only ACF schemas');
+  assert.deepEqual(consumers, []);
+  console.log('width flags consumer inventory: ' + paths.length + ' authored files, ' + consumers.length + ' matches');
 });

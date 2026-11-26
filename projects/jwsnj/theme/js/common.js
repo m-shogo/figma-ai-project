@@ -567,40 +567,6 @@ window.addEventListener('resize', setVw);
     headerDesktop.addEventListener('change', syncResponsiveMenu);
     footerDesktop.addEventListener('change', syncResponsiveMenu);
 
-    // // グローバルメニューの動き
-    // $('.global_navigation .gn_links-01 > li._hasChild').on({
-    //   mouseenter: function () {
-    //     const height = $(this).find('.gnl_inner').outerHeight(true);
-    //     if ($('html').hasClass('_pc')) {
-    //       $body.addClass('_open-bg');
-    //       $(this).find('.gnl_wrapper').first().css({
-    //         height: 0,
-    //         visibility: 'inherit',
-    //         opacity: '1',
-    //         'pointer-events': 'auto',
-    //       });
-    //       $(this)
-    //         .find('.gnl_wrapper')
-    //         .first()
-    //         .stop(true, true)
-    //         .animate({ height: height }, 400, 'swing');
-    //     }
-    //     //ここにはマウスを離したときの動作を記述
-    //   },
-    //   mouseleave: function () {
-    //     if ($('html').hasClass('_pc')) {
-    //       $body.removeClass('_open-bg');
-    //       $(this)
-    //         .find('.gnl_wrapper')
-    //         .animate({ height: 0 }, 400, 'swing')
-    //         .queue(function () {
-    //           $(this).removeAttr('style');
-    //           $(this).dequeue();
-    //         });
-    //     }
-    //   },
-    // });
-
     // 検索
     $('#search').on('click', function () {
       const isOpen = !$body.hasClass('_open-search');
@@ -616,46 +582,7 @@ window.addEventListener('resize', setVw);
       closeMobileMenu(true);
     });
 
-    // アーカイブ用のローカルナビゲーションを開閉式にする
-    // $('body:not(.page) #local_navigation .ln_links-01 > li > .lnl_title').on(
-    //   'click',
-    //   function () {
-    //     $(this).next().toggleClass('_open').slideToggle(400);
-    //     $(this).toggleClass('_open');
-    //     return false;
-    //   },
-    // );
-    // // アーカイブナビゲーション
-    // $('.an_links-01 > li > .anl_title').on('click', function () {
-    //   $(this).next().toggleClass('_open').slideToggle(400);
-    //   $(this).toggleClass('_open');
-    // });
-    // // アーカイブナビゲーション枠外クリック時に閉じる
-    // $(document).on('touchstart click', function (event) {
-    //   if (!$(event.target).closest('.an_links-01').length) {
-    //     $('.an_links-01 > li > .anl_title')
-    //       .removeClass('_open')
-    //       .next('.anl_wrapper')
-    //       .removeClass('_open')
-    //       .slideUp(400)
-    //       .find('.anl_button, .anl_wrapper')
-    //       .removeClass('_open')
-    //       .siblings('.anl_wrapper')
-    //       .slideUp(400);
-    //   } else {
-    //   }
-    // });
-    // ウィンドウ幅によってクラス付与
-    $(window).on('load resize', function () {
-      const w = $(window).width();
-      if (w <= 768) {
-        $('html').addClass('_sp').removeClass('_pc _tablet');
-      } else if (w < 1024) {
-        $('html').addClass('_tablet').removeClass('_pc _sp');
-      } else {
-        $('html').addClass('_pc').removeClass('_tablet _sp');
-      }
-    });
+
   };
 
   // ==========================================================================
