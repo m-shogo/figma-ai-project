@@ -223,7 +223,7 @@ test('MV Swiper controller covers init, immediate stop, resume, reduced motion a
       this.transitionEnd=()=>{};
       this.destroy=()=>{this.destroyed=true;destroyed++;};
     }
-    runInNewContext(read('js/home.js'),{jQuery:fn=>{if(typeof fn==='function')fn();},window:{matchMedia:s=>s.includes('reduced')?mq:desktop,getComputedStyle:()=>({columnGap:gap+'px'})},document:{querySelectorAll:()=>[root]},Swiper:available?Swiper:undefined});
+    runInNewContext(read('js/home.js'),{jQuery:fn=>{if(typeof fn==='function')fn();},window:{matchMedia:s=>s.includes('reduced')?mq:desktop,getComputedStyle:()=>({columnGap:gap+'px'})},document:{querySelectorAll:selector=>selector==='.jwsnj_topMv'?[root]:[]},Swiper:available?Swiper:undefined});
     await new Promise(resolve=>setImmediate(resolve));
     return {root,toggle,mq,callbacks,copies,options:()=>options,instance:()=>instance,setGap:v=>{gap=v;},stats:()=>({cloneCount,removed,decoded,starts,stops,destroyed,position,transition,loopMoves})};
   }
@@ -321,4 +321,51 @@ test('TOP Course view is ACF-independent and fixture stays outside production',(
   assert.doesNotMatch(js,/autoplay|scrollTo\(/);
   execFileSync('php',['-l',path]);
   execFileSync('php',['-l',fixture]);
+});
+
+test('Course Swiper stays single-owner across narrow/desktop and respects controls',async()=>{
+  const {runInNewContext}=await import('node:vm');
+  const classes=()=>{const s=new Set();return {contains:k=>s.has(k),add:(...k)=>k.forEach(x=>s.add(x)),remove:(...k)=>k.forEach(x=>s.delete(x))};};
+  const node=()=>({classList:classes(),attrs:{},events:{},setAttribute(k,v){this.attrs[k]=v;},removeAttribute(k){delete this.attrs[k];},addEventListener(k,fn){this.events[k]=fn;}});
+  const viewport=node(),list=node(),prev=node(),next=node(),controls=node(),cards=[node(),node(),node()],dots=cards.map(node);
+  controls.hidden=true;
+  controls.querySelector=s=>s.includes('prev')?prev:next;
+  controls.querySelectorAll=()=>dots;
+  const root={querySelector:s=>s.includes('viewport')?viewport:s.includes('list')?list:controls,querySelectorAll:()=>cards};
+  const desktop={matches:false,addEventListener(n,f){this.change=f;}};
+  const reduced={matches:false,addEventListener(n,f){this.change=f;}};
+  let instance, created=0, destroyed=0;
+  function Swiper(el,opts){
+    created++;
+    instance=this;
+    this.params={...opts};
+    this.activeIndex=opts.initialSlide;
+    this.slideTo=i=>{this.activeIndex=i;this.isBeginning=i===0;this.isEnd=i===cards.length-1;opts.on.slideChange(this);};
+    this.slideNext=()=>this.slideTo(this.activeIndex+1);
+    this.slidePrev=()=>this.slideTo(this.activeIndex-1);
+    this.destroy=()=>{destroyed++;this.destroyed=true;};
+    this.slideTo(this.activeIndex);
+    opts.on.init(this);
+  }
+  runInNewContext(read('js/home.js'),{jQuery:fn=>{if(typeof fn==='function')fn();},window:{matchMedia:s=>s.includes('reduced')?reduced:desktop},getComputedStyle:()=>({fontSize:'16px'}),document:{documentElement:{},querySelectorAll:s=>s==='[data-course]'?[root]:[]},Swiper});
+  assert.equal(created,1);
+  assert.equal(controls.hidden,false);
+  assert.equal(prev.attrs['aria-disabled'],'true');
+  next.events.click();
+  assert.equal(dots[1].attrs['aria-current'],'true');
+  dots[2].events.click();
+  assert.equal(next.attrs['aria-disabled'],'true');
+  next.events.click();
+  assert.equal(instance.activeIndex,2);
+  list.events.focusin({target:{closest:()=>cards[0]}});
+  assert.equal(instance.activeIndex,0);
+  reduced.matches=true;reduced.change();
+  assert.equal(instance.params.speed,0);
+  desktop.matches=true;desktop.change();
+  assert.equal(destroyed,1);
+  assert.equal(controls.hidden,true);
+  assert.equal(list.classList.contains('swiper-wrapper'),false);
+  desktop.matches=false;desktop.change();
+  assert.equal(created,2);
+  assert.equal(instance.params.speed,0);
 });
