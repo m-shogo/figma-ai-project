@@ -46,3 +46,35 @@ test('fixed page layout has bounded columns and no fixed text heights',()=>{
   assert.doesNotMatch(css,/white-space:\s*nowrap|(?<!min-)height:\s*calc/);
   assert.match(read('css/style.css'),/fixed_page\.css/);
 });
+
+
+test('opt-in course template uses CMS title and body, one top breadcrumb, no sidebar and password gate',()=>{
+  const p=read('templates/template-course.php');
+  execFileSync('php',['-l',new URL('../theme/templates/template-course.php',import.meta.url).pathname]);
+  assert.match(p,/Template Post Type: page/);
+  assert.doesNotMatch(p,/get_sidebar|get_field|update_post_meta|wp_insert_post|figma\.com/);
+  for(const locked of [false,true]){
+    const stub='define("ABSPATH","/"); function get_header(){echo "<!--header-->";} function get_footer(){echo "<!--footer-->";} function get_template_part($p,$n,$a){echo "<!--".$p." ".json_encode($a)."-->";} function get_the_title(){return "Course & title";} function esc_html($s){return htmlspecialchars($s,ENT_QUOTES);} function post_password_required(){return '+locked+';} function get_the_password_form(){return "<form>password</form>";} function the_content(){echo "<p>editor body</p>";} ?>';
+    const html=execFileSync('php',['-r',stub+p],{encoding:'utf8'});
+    assert.match(html,/<h1 class="jwsnj_coursePage_title">Course &amp; title<\/h1>/);
+    assert.equal((html.match(/_breadCrumb/g)||[]).length,1);
+    assert.match(html,/"jwsnj_page":true/);
+    assert.ok(html.indexOf('_breadCrumb')<html.indexOf('<h1'));
+    assert.equal(html.includes('editor body'),!locked);
+    assert.equal(html.includes('<form>password</form>'),locked);
+    assert.equal((html.match(/<!--header-->/g)||[]).length,1);
+    assert.equal((html.match(/<!--footer-->/g)||[]).length,1);
+  }
+});
+test('course shell scopes full-width first intro, bounded content, and reuses breadcrumb rules',()=>{
+  const css=read('css/project/course_page.css');
+  assert.match(read('css/style.css'),/project\/course_page\.css/);
+  assert.match(read('css/project/news_archive.css'),/section\.jwsnj_coursePage\s*\{/);
+  assert.match(css,/body:has\(\.jwsnj_courseMain\)\s*\{\s*min-width:\s*0/);
+  assert.match(css,/minmax\(0, calc\(1040 \* var\(--to-rem-func\)\)\)/);
+  assert.match(css,/\.is-style-jwsnj-course-intro-layout:first-child\s*\{\s*grid-column: full/);
+  assert.match(css,/padding-block: calc\(64 \* var\(--to-rem-func\)\) calc\(80 \* var\(--to-rem-func\)\)/);
+  assert.match(css,/overflow-wrap: anywhere/);
+  assert.match(css,/clip-path: inset\(50%\)/);
+  assert.doesNotMatch(css,/white-space:\s*nowrap|height:\s*calc|100vw|figma\.com/);
+});
