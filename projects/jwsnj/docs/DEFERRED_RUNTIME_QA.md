@@ -263,3 +263,5 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 ## Human指示による全体再点検の継続（2026-11-26）
 
 残りの独立READYがなくなった場合は、[MAINTAINABILITY_ROADMAP.md](MAINTAINABILITY_ROADMAP.md) の P2 に従い、Header → Footer → parts → 既実装ページ → 統合回帰の順にPC/SPを再確認する。従来の個別QAを再利用し、同じIssueを増やさない。各回の証拠・差分・PR・再撮影結果を既存案件文書に残す。未確認の実機・学校WP/Pro・素材はそれぞれ #523/#524 の保留を維持する。
+
+- TOP精密再点検（Human 2026-11-26）：P2-TOPの各セクション別索引と検査手順を使用。個別PC/SPスクリーンショット、全可視装飾layer/素材/callsite/実render、共通背景・隣接境界、文字・画像crop、状態遷移を照合して差分を記録。About〜Course背景は未接続・候補素材の正本照合が必要。実機・実学校WP/ACF/Proは#523、素材/権利は#524。静的CIだけで視覚PASSにしない。

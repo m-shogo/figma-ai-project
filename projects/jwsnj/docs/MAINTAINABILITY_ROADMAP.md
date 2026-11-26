@@ -88,3 +88,34 @@ Trigger: 承認済み残実装・保守改善に安全なREADYがなくなった
 - 差分は原因・修正範囲・証拠・優先度を記録。仕様不明は質問/保留、確実な不具合は小PR・CI・安全merge・修正後再比較。自然な折返しや既承認レスポンシブ方針を壊してpixel matchを強制しない。
 - 状態を NOT_STARTED / IN_PROGRESS / PASS / FAIL / DEFERRED_ENV / BLOCKED_HUMAN / BLOCKED_ASSET で管理。source/static/isolated/disposable WP/actual school WP/Figma visual acceptanceを別々に記録し、CIだけで全体PASSとしない。完了判定は確認可能な実画面と根拠に基づく。#523/#524は既存追跡先、重複Issueを作らない。
 - 一巡後は残差・変更影響を再評価し、有意な差分があるものから再検証。変化なし・全確認済みなら根拠と残保留を報告し、無意味なコード変更を作らない。
+
+### P2-TOP — セクション単位の高精度視覚監査（Human 2026-11-26）
+
+以下は既存DESIGN_FOUNDATIONとfront-page.phpから起こした探索・確認索引であり、今回新規Figma取得・render済みという意味ではない。最新Figmaで全可視子layerとセクション境界を再取得し、索引漏れがあれば追加する。全項目初期 NOT_STARTED。
+
+| 対象 | 既存PC / SP node索引 | 重点 |
+|---|---|---|
+| Header / CTA / SP固定導線 | 599:2726 / 480:3954、CTA PC134:823（SPは最新Figmaで探索） | ロゴ、正確なアイコン・矢印・配置、開閉、sticky、safe-area、重なり |
+| MVキャッチコピー | 114:29・220:7 / 279:2142・279:2144 | PC/SP専用SVG、文字・行間、装飾の相対位置 |
+| MV画像・Swiper | 184:797 / 279:2172 | 各画像の順序、比率、crop、段差、gap、連続ループと継ぎ目 |
+| 重要なお知らせ | 114:349 / 279:2233 | ベル、日付、背景、長文、余白、表示条件 |
+| About紹介文・地図 | 114:180 / 279:2318 | 地図、pin、花、ドット、文字と装飾の重なり |
+| Aboutカード | 220:57 / 279:2241 | 写真、回転、重なり順、選択時前面、SP配置、QA fixtureと本番を区別 |
+| About〜Course共通背景 | 220:56 / 279:2137 | 画像fill 114:38 / 279:2138、hidden fill除外、crop、ぼかし・白いoverlay・前後の境界、ブラウザ幅適応。既存img_about-bg-03.webpは強い候補だが出所未証明、未接続。#524保持 |
+| Course各部紹介 | 114:635 / 279:2336 | 全5カード・写真・矢印・花・背景との重なり、PC3列/SP Swiper・dots、既存QA fixture、ACFはCursor |
+| 入学検討者向け | 158:2645 / 279:2443 | 公式アイコン3点、花、写真crop、バッジ、装飾・影・hover、未確定リンク |
+| News | 114:542 / 279:2524 | 見出し・カテゴリ・日付・花・矢印・marker、長文 |
+| Instagram / News隣接 | 114:541・114:581 / 279:2523・279:2562 | 正式イラスト、Brands glyph、左右の比率・gap、PC並び/SP順、実URL未確定 |
+| 下部バナー | 114:419 / 279:2630 | 写真crop・配置・余白、透かし/権利保留#524、仮画像はQAのみ |
+| Footer / 全体のつながり | 221:335 / 506:1632 | 背景、公式SVG、ロゴ・リンク、ページトップ、前sectionとの接続 |
+
+#### AIの典型的な見落としを検出する手順（各セクション）
+
+1. 正式skill/new sessionでPC/SP個別context・高精細画像を取得。sparseは子nodeを取得し、生成コードや全体縮小画像だけで判断しない。可視layerを列挙（装飾、背景、疑似要素で表現するもの、空/hiddenを区別）。親子境界、意図的な重なり、マスク/clip、z-orderも記録。
+2. 背景は色、画像fill、gradient stop/角度、opacity、blur/effect、repeat、crop、position、size、基準box、全幅/inner、セクションを跨ぐownerを照合。実画面で上下左右端と隣接sectionまで比較し、勝手な近似や全幅不足を防ぐ。
+3. あしらい・アイコンを1点ずつFigma node→正式素材→Gitファイル→実際のcallsite→実renderへ照合。SVG viewBox/固有寸法、stroke/weight、FAのfamily/style/glyph、fill/mask、向き、影、比率、透明余白、hover時反転を確認。似たアイコン・PC/SP素材取り違え・非表示/欠落・描き直しは不可。固定装飾の位置指定と可変テキストの自然なlayoutは区別。
+4. 文字（font/weight/size/tracking/line-height/折返し）、余白（上下/左右/gap）、画像（正しい写真・比率/crop/焦点）、PC/SPの順序、各container幅を測る。Figma実幅1380/375、狭幅320、中間幅、該当breakpoint前後を確認し、長文・空データ・画像差替えでも崩れない。Figma固定heightをそのまま文字boxに適用しない。
+5. 実renderを同じ幅/状態でセクション単位に比較。スクリーンショット、測定値、差分overlay等（利用できる手段）で欠落/位置ずれ/大きさ/状態を確認。動く箇所は静止画だけではなく開始・中間・停止・resize、hover/tap/focus/keyboardも見る。fontロード・画像ロード・DPR・ブラウザとデータ条件を記録。
+6. Figmaとの差異を「実装ミス」「Human承認済み自然wrap等の意図的差」「資料/素材/環境不足」に分類。確実な修正を小PRで行いCI→再撮影→隣接sectionと共通部品の回帰を確認。未取得素材は創作せず#524、実環境不足は#523。個別sectionのPASSとページ全体PASSは別。
+
+一巡の合否は個別sectionの証拠と未解決差分の一覧で判断。全体写真が似ている、静的CIが通る、SVGがGitにあるだけでは合格にしない。必要なら複数回に分けるが、処理量や時間を理由に検査項目を省略しない。
