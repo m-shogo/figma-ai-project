@@ -6,26 +6,10 @@
 <!-- fonts -->
 <?php $font_base = get_template_directory_uri() . '/fonts/'; ?>
 <link rel="preload" as="font" type="font/woff2" crossorigin href="<?php echo $font_base; ?>NotoSansJP-Regular.woff2">
-<?php if (false): ?>
-  <!-- FVなどで優先的に読み込ませたいフォントがある場合はif文から外してください -->
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="<?php echo $font_base; ?>NotoSansJP-Medium.woff2">
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="<?php echo $font_base; ?>NotoSansJP-SemiBold.woff2">
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="<?php echo $font_base; ?>NotoSansJP-Bold.woff2">
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="<?php echo $font_base; ?>NotoSerifJP-Regular.woff2">
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="<?php echo $font_base; ?>NotoSerifJP-Medium.woff2">
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="<?php echo $font_base; ?>NotoSerifJP-SemiBold.woff2">
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="<?php echo $font_base; ?>NotoSerifJP-Bold.woff2">
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="<?php echo $font_base; ?>Roboto-Regular.woff2">
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="<?php echo $font_base; ?>Roboto-Medium.woff2">
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="<?php echo $font_base; ?>Roboto-SemiBold.woff2">
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="<?php echo $font_base; ?>Roboto-Bold.woff2">
-<?php endif; ?>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&family=Noto+Serif+JP:wght@200..900&family=Roboto:wght@100..900&display=swap" fetchpriority="high">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&family=Noto+Serif+JP:wght@200..900&family=Roboto:wght@100..900&display=swap" media="print" onload='this.media="all"'>
-<link rel="preload" as="style" href="<?php echo esc_url(get_theme_file_uri('/css/all.min.css?ver=6.7.2')); ?>" fetchpriority="high">
-<link rel="stylesheet" href="<?php echo esc_url(get_theme_file_uri('/css/all.min.css?ver=6.7.2')); ?>" media="print" onload='this.media="all"'>
 <?php
 global $post;
 // ページタイトルと説明文を取得
