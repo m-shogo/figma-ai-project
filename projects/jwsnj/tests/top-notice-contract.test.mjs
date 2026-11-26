@@ -130,3 +130,34 @@ test('TOP MV uses existing image repeater and renders only valid initial still i
   assert.doesNotMatch(read('js/home.js'),/tm_swiper-container/);
   execFileSync('php',['-l',new URL('../theme/template-parts/_top-mv-grid.php',import.meta.url).pathname]);
 });
+
+
+test('TOP MV complete-grid responsive sizes reflect PC quarter/half and SP half/full slots',()=>{
+  const part=read('template-parts/_top-mv-grid.php');
+  function render(count,processor=true){
+    const rows=Array.from({length:count},(_,i)=>({img_pc:i+1,img_sp:i+11}));
+    const encoded=Buffer.from(JSON.stringify(rows)).toString('base64');
+    // Stub the Core tag-processor contract, not its parsing implementation.
+    const tagStub=String.raw`class WP_HTML_Tag_Processor {
+      private $html;
+      function __construct($html){$this->html=$html;}
+      function next_tag($query){return $query["tag_name"]==="IMG";}
+      function get_attribute($name){return preg_match('/\b'.preg_quote($name,'/').'="([^"]*)"/',$this->html,$m)?$m[1]:null;}
+      function set_attribute($name,$value){$this->html=str_replace($name.'="'.$this->get_attribute($name).'"',$name.'="'.$value.'"',$this->html);}
+      function get_updated_html(){return $this->html;}
+    }`;
+    const stub='$rows=json_decode(base64_decode("'+encoded+'"),true); function get_field($n){global $rows;return $rows;} function wp_attachment_is_image($id){return $id>0;} function wp_get_attachment_image_src($id,$s){return ["/media/".$id.".webp",800,600];} function wp_get_attachment_image_srcset($id,$s){return "/media/".$id.".webp 800w";} function wp_get_attachment_image($id,$s,$icon,$attrs){$q=chr(34);$sizes=$id===2?"custom":($attrs["loading"]==="lazy"?"auto, ":"").$attrs["sizes"];return "<img src=".$q."/media/".$id.".webp".$q." srcset=".$q."/media/".$id.".webp 800w".$q." sizes=".$q.$sizes.$q.">";} function esc_attr($s){return htmlspecialchars($s,ENT_QUOTES);} '+(processor?tagStub:'')+' ?>';
+    return execFileSync('php',['-r',stub+part],{encoding:'utf8'});
+  }
+  const full=render(6);
+  const sources=[...full.matchAll(/<source[^>]*\ssizes="([^"]+)"/g)].map(x=>x[1]);
+  const images=[...full.matchAll(/<img[^>]*\ssizes="([^"]+)"/g)].map(x=>x[1]);
+  assert.deepEqual(sources,['50vw','50vw','50vw','50vw','50vw','100vw']);
+  assert.deepEqual(images,['(min-width: 67.5rem) 25vw, 50vw','custom','(min-width: 67.5rem) 25vw, 50vw','auto, (min-width: 67.5rem) 25vw, 50vw','auto, (min-width: 67.5rem) 25vw, 50vw','(min-width: 67.5rem) 50vw, 100vw']);
+  const partial=render(3);
+  assert.deepEqual([...partial.matchAll(/<source[^>]*\ssizes="([^"]+)"/g)].map(x=>x[1]),['100vw','100vw','100vw']);
+  assert.deepEqual([...partial.matchAll(/<img[^>]*\ssizes="([^"]+)"/g)].map(x=>x[1]),['100vw','custom','100vw']);
+  const old=render(6,false);
+  assert.deepEqual([...old.matchAll(/<img[^>]*\ssizes="([^"]+)"/g)].map(x=>x[1]),['100vw','custom','100vw','auto, 100vw','auto, 100vw','100vw']);
+  assert.doesNotMatch(part,/figma\.com|update_field|wp_insert_post/);
+});

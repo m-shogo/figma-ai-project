@@ -45,6 +45,29 @@ if (!$mv_items) {
     return;
 }
 $complete = count($mv_items) === 6;
+// Only the complete layout has known slot widths. Partial grids auto-fit,
+// so retain their conservative 100vw hint. Ignore gaps in these estimates
+// to avoid selecting an undersized candidate when theme font scaling varies.
+if ($complete) {
+    foreach ($mv_items as $index => &$item) {
+        $wide = $index === 5;
+        $item['sp_sizes'] = $wide ? '100vw' : '50vw';
+        $sizes = $wide ? '(min-width: 67.5rem) 50vw, 100vw' : '(min-width: 67.5rem) 25vw, 50vw';
+        // Preserve WordPress attachment markup, srcset, lazy auto sizing and
+        // custom plugin sizes. Older WordPress retains the original hint.
+        if (class_exists('WP_HTML_Tag_Processor')) {
+            $tag = new WP_HTML_Tag_Processor($item['image']);
+            if ($tag->next_tag(['tag_name' => 'IMG']) && $tag->get_attribute('srcset')) {
+                $original_sizes = $tag->get_attribute('sizes');
+                if ($original_sizes === '100vw' || $original_sizes === 'auto, 100vw') {
+                    $tag->set_attribute('sizes', ($original_sizes === 'auto, 100vw' ? 'auto, ' : '') . $sizes);
+                    $item['image'] = $tag->get_updated_html();
+                }
+            }
+        }
+    }
+    unset($item);
+}
 ?>
 <div class="jwsnj_topMv">
     <ul class="jwsnj_topMv_grid<?php echo $complete ? ' is-complete' : ''; ?>">
@@ -52,7 +75,7 @@ $complete = count($mv_items) === 6;
             <li class="jwsnj_topMv_item">
                 <picture>
                     <?php if ($item['sp_srcset'] !== '') : ?>
-                        <source media="(width &lt; 67.5rem)" srcset="<?php echo esc_attr($item['sp_srcset']); ?>" sizes="100vw">
+                        <source media="(width &lt; 67.5rem)" srcset="<?php echo esc_attr($item['sp_srcset']); ?>" sizes="<?php echo esc_attr($item['sp_sizes'] ?? '100vw'); ?>">
                     <?php endif; ?>
                     <?php echo $item['image']; // WordPress-generated attachment markup. ?>
                 </picture>

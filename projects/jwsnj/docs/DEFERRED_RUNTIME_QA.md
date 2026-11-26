@@ -233,3 +233,5 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 - Course title fallback: actual rendered course template with first intro heading removed, literally empty H2, intact non-empty H2, later intro group, password form and long page title. Verify visible H1 fallback and one accessible H1; CSS :empty cannot establish meaningful text when whitespace or empty nested markup remains. #523 DEFERRED_ENV.
 
 - News detail pager sparse destinations: actual WP PC/SP 0/1/2/3 links, especially only the published posts-index return link (no previous/next articles). Confirm no phantom first row / 40px gap on SP; normal SP 40px two-row gap, desktop three-slot geometry, natural text wrapping, focus/hover and DOM order retained. #523 DEFERRED_ENV.
+
+- TOP MV responsive source selection: actual WP 1–6 valid images and distinct PC/SP media, verify full-grid sizes hints (PC 25/50vw, SP 50/100vw), partial grid retains 100vw, plugin custom sizes/WordPress lazy auto prefix preserved, actual selected currentSrc/resource bytes at DPR1/2 and 375/1079/1080/1380 widths, hidden slots 4/5 and LCP; actual core tag processor and browser #523 DEFERRED_ENV. No claim of measured transfer savings.
