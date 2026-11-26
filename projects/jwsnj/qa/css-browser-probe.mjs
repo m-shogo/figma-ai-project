@@ -87,6 +87,38 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
    }
    report.push({name,width,components});
  }
+ // Verify explicit transition scope and motion preference for actual block styles.
+ await page.setViewportSize({width:1380,height:900});
+ for(const reducedMotion of ['no-preference','reduce']){
+   await page.emulateMedia({reducedMotion});
+   await page.evaluate(()=>{
+     const fixture=document.createElement('div');
+     fixture.id='motion-probe';
+     fixture.className='block-editor_wrap';
+     fixture.innerHTML='<div class="wp-block-buttons"><div class="wp-block-button"><a class="wp-block-button__link" href="#end">ボタン</a></div></div><div class="wp-block-tabs"><div class="wp-block-tab-list"><button aria-selected="false">タブ</button></div></div><ul class="module_navigation --large"><li class="navigation"><a href="#end"><div class="image"><img alt="" width="60" height="40"></div><div class="content"><span class="title">案内</span></div></a></li></ul><p><a href="#end">テキストリンク</a></p>';
+     document.querySelector('.global_inner').append(fixture);
+   });
+   const motion=await page.evaluate(()=>{
+     const fixture=document.getElementById('motion-probe');
+     const selectors=['.wp-block-button__link','.wp-block-tab-list button','.navigation img','.navigation .content','p a'];
+     return selectors.map(selector=>{
+       const s=getComputedStyle(fixture.querySelector(selector));
+       return {selector,property:s.transitionProperty,duration:s.transitionDuration};
+     });
+   });
+   const expected=[['background-color','color'],['background-color','color'],['transform'],['opacity'],['color']];
+   for(let i=0;i<motion.length;i++){
+     if(reducedMotion==='reduce'){
+       assert.equal(motion[i].property,'none',name+' reduced '+motion[i].selector);
+       assert.equal(motion[i].duration,'0s');
+     }else{
+       assert.deepEqual(motion[i].property.split(',').map(s=>s.trim()),expected[i],name+' explicit '+motion[i].selector);
+     }
+   }
+   report.push({name,reducedMotion,motion});
+   await page.evaluate(()=>document.getElementById('motion-probe').remove());
+ }
+ await page.emulateMedia({reducedMotion:'reduce'});
  // Feature proof separate from production layout: actual cascade and containment.
  const mechanism=await page.evaluate(()=>{
    const root=document.documentElement;

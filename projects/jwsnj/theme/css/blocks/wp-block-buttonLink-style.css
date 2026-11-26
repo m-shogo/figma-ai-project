@@ -45,7 +45,10 @@
         padding-block: calc(12 * var(--to-rem-func));
         padding-inline: calc(24 * var(--to-rem-func)) calc(52 * var(--to-rem-func));
         letter-spacing: 0.05em;
-        transition: var(--transition-duration);
+        transition: background-color var(--transition-duration), color var(--transition-duration);
+        @media (prefers-reduced-motion: reduce) {
+          transition: none;
+        }
         max-width: 100%;
         &.has-text-align-center {
           justify-content: center;
@@ -60,7 +63,10 @@
           right: calc(20 * var(--to-rem-func));
           top: 50%;
           transform: translateY(-50%);
-          transition: var(--transition-duration);
+          transition: color var(--transition-duration);
+          @media (prefers-reduced-motion: reduce) {
+            transition: none;
+          }
           font-size: calc(14 * var(--to-rem-func));
           line-height: 1;
           font-family: var(--font-awesome);
@@ -165,6 +171,9 @@
           border-radius: 50%;
           background-color: var(--jwsnj-color-sec);
           transition: background-color var(--transition-duration);
+          @media (prefers-reduced-motion: reduce) {
+            transition: none;
+          }
         }
         &::after {
           content: '\f061';
