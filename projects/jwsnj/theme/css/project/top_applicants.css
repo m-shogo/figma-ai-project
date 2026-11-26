@@ -116,7 +116,9 @@
             content: '';
             position: absolute;
             z-index: -1;
-            inset: var(--photo-offset) 0 0 var(--photo-offset);
+            inset: auto 0 0 auto;
+            width: calc(100% - var(--photo-offset));
+            aspect-ratio: 4 / 5;
             background: var(--jwsnj-applicants-photo-shadow);
             border-radius: calc(3 * var(--to-rem-func));
         }
