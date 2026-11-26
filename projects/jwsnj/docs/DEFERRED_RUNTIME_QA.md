@@ -246,3 +246,6 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 
 
 - TOP Course view / #523: pass normalized five-row fixture to `_top-course-view.php` in disposable QA only; verify PC three columns, SP centered cards/20px gaps, all five dots, prev/next bounds, long titles, keyboard focus, swipe, resize across 1080, reduced motion, 0/1/many rows, missing image/link and static fallback. Compare PC114:635/SP279:2336 at natural widths. No production fixture or ACF connection until Cursor adapter; DEFERRED_ENV.
+
+
+- TOP About cards / #523: use QA-only four-row fixture with `_top-about-intro.php` items; verify PC stack overlap/order/click/Tab/focus, no horizontal overflow at 1080/1280/1380, SP 320/375/767 and intermediate stacking, long labels, no-JS disabled buttons and exact photo crops vs Figma. Selection is not navigation. No new field or URL; production adapter and actual browser evidence deferred.

@@ -249,7 +249,18 @@
     reduced.addEventListener('change', refresh);
     refresh();
   };
+  // About: frontmost card is a visual selection, not an invented destination.
+  const initAboutCards = function (root) {
+    const buttons = Array.from(root.querySelectorAll('[data-about-select]'));
+    buttons.forEach(button => {
+      button.disabled = false;
+      button.addEventListener('click', () => {
+        buttons.forEach(other => other.setAttribute('aria-pressed', String(other === button)));
+      });
+    });
+  };
   $(function () {
+    document.querySelectorAll('[data-about-cards]').forEach(initAboutCards);
     document.querySelectorAll('[data-course]').forEach(initCourse);
     document.querySelectorAll('.jwsnj_topMv').forEach(initMvLoop);
   });

@@ -352,3 +352,6 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 
 
 - 2026-11-26 TOP Course: Human explicitly split frontend from ACF. Keep presentation template input separate from CMS adapter and fixtures outside deployable theme; do not copy stale W9-blocked PR or invent links. Existing bundled Swiper owns SP slide motion; desktop uses the same DOM as grid. No JS/library fallback keeps all cards available. Real render/keyboard/resize not certified by source tests.
+
+
+- 2026-11-26 About cards: distinguish confirmed frontmost visual selection from unknown navigation destination. Use one native button per card, progressively enabled, aria-pressed state plus focus z-index, and QA-only example rows. Existing intro remains unchanged without data; actual responsive crop/overlap and keyboard visibility require real browser. Do not infer missing link semantics.
