@@ -109,7 +109,7 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
           buttonLeft: toggle.getBoundingClientRect().left,
           childLines: rects.length,
           textFits: rects.every(rect => rect.left >= row.left - 1 && rect.right <= row.right + 1),
-          navFits: document.getElementById('global_navigation').scrollWidth <= width + 1
+          navFits: document.getElementById('global_navigation').scrollWidth <= window.innerWidth + 1
         };
       });
       assert.ok(geometry.parentRight <= geometry.buttonLeft + 1, 'parent/toggle overlap');
