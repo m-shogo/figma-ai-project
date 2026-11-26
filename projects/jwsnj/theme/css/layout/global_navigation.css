@@ -64,11 +64,25 @@
       border-top: calc(1 * var(--to-rem-func)) solid var(--color-gray-border);
     }
     .gnl_item-02 {
+      @media (width < calc(1080 * (1 / 16 * 1rem))) {
+        border-top: calc(2 * var(--to-rem-func)) solid var(--color-secondary);
+      }
       &:first-child {
         border-top: none;
       }
       &:last-child {
         border-bottom: calc(1 * var(--to-rem-func)) solid var(--color-gray-border);
+        @media (width < calc(1080 * (1 / 16 * 1rem))) {
+          border-bottom: none;
+        }
+      }
+    }
+    .gnl_item-03 {
+      @media (width < calc(1080 * (1 / 16 * 1rem))) {
+        border-top: calc(1 * var(--to-rem-func)) solid var(--jwsnj-color-separator);
+        &:first-child {
+          border-top: none;
+        }
       }
     }
     .gnl_title-02,
@@ -80,6 +94,11 @@
       align-items: center;
       justify-content: space-between;
       width: 100%;
+    }
+    .gnl_title-02 {
+      @media (width < calc(1080 * (1 / 16 * 1rem))) {
+        background-color: var(--jwsnj-color-base-lightgreen);
+      }
     }
     .gnl_link-02,
     .gnl_link-03,
@@ -96,6 +115,25 @@
       line-break: strict;
       &::after {
         content: none;
+      }
+    }
+    .gnl_link-02 {
+      @media (width < calc(1080 * (1 / 16 * 1rem))) {
+        font-family: var(--font-jwsnj-ja);
+        font-size: calc(16 * var(--to-rem-func));
+        font-weight: 500;
+        line-height: 1.4;
+        letter-spacing: 0.05em;
+      }
+    }
+    .gnl_link-03 {
+      @media (width < calc(1080 * (1 / 16 * 1rem))) {
+        padding-block: calc(15 * var(--to-rem-func));
+        font-family: var(--font-jwsnj-ja);
+        font-size: calc(14 * var(--to-rem-func));
+        font-weight: 500;
+        line-height: 1.4;
+        letter-spacing: 0.05em;
       }
     }
     .gnl_button-02,
@@ -138,6 +176,16 @@
         display: none;
       }
     }
+    .gnl_button-02 {
+      @media (width < calc(1080 * (1 / 16 * 1rem))) {
+        width: calc(52 * var(--to-rem-func));
+        &::before,
+        &::after {
+          width: calc(12 * var(--to-rem-func));
+          background-color: var(--color-primary);
+        }
+      }
+    }
     .gnl_wrapper-02,
     .gnl_wrapper-03,
     .gnl_wrapper-04,
@@ -153,6 +201,12 @@
     .gnl_inner-05,
     .gnl_inner-06 {
       overflow: hidden;
+    }
+    .gnl_list-02 {
+      @media (width < calc(1080 * (1 / 16 * 1rem))) {
+        padding-inline: calc(20 * var(--to-rem-func));
+        background-color: var(--color-secondary);
+      }
     }
     /* Legacy grouped owner: preserve all active matches and cascade. */
     .gnl_list-02,
