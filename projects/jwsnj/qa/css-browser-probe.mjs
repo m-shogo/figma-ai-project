@@ -192,6 +192,24 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
           report.push({name, width, reducedMotion, legacy});
         }
       }
+ // Compare actual common.js query literals with real CSS controls at each boundary.
+ const commonSource = readFileSync(resolve(root, 'js/common.js'), 'utf8');
+ const headerQuery = commonSource.match(/const headerDesktop = window\.matchMedia\('([^']+)'\)/)[1];
+ const footerQuery = commonSource.match(/const footerDesktop = window\.matchMedia\('([^']+)'\)/)[1];
+ for (const width of [375, 767, 768, 769, 1079, 1080, 1081, 1380, 1079, 767]) {
+   await page.setViewportSize({width, height: 900});
+   const alignment = await page.evaluate(({headerQuery, footerQuery}) => {
+     const fixture = document.createElement('div');
+     fixture.innerHTML = '<nav class="global_navigation"><button class="gn_close">close</button></nav><footer class="global_footer"><ul class="gf_links-01"><li><button class="gfl_button-02">open</button></li></ul></footer>';
+     document.body.append(fixture);
+     const data = {headerMedia: matchMedia(headerQuery).matches, footerMedia: matchMedia(footerQuery).matches, headerCSS: getComputedStyle(fixture.querySelector('.gn_close')).display === 'none', footerCSS: getComputedStyle(fixture.querySelector('.gfl_button-02')).display === 'none'};
+     fixture.remove();
+     return data;
+   }, {headerQuery, footerQuery});
+   assert.equal(alignment.headerMedia, alignment.headerCSS, name + ' Header CSS/JS ' + width);
+   assert.equal(alignment.footerMedia, alignment.footerCSS, name + ' Footer CSS/JS ' + width);
+   report.push({name, width, alignment});
+ }
  // Footer owner locality: actual CSS, preserve the artwork switch and details geometry.
  for (const width of [375, 768, 1079, 1080, 1380]) {
    await page.setViewportSize({width, height: 900});

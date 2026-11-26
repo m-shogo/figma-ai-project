@@ -14,13 +14,18 @@ test('Header script parses as JavaScript', () => {
   assert.doesNotThrow(() => new Script(source));
 });
 
-test('1080px is consistently desktop in CSS and JS', () => {
+test('Header and Footer use CSS-equivalent media conditions rather than fixed pixel comparisons', () => {
+  const footerCss = readFileSync(new URL('../theme/css/layout/global_footer.css', import.meta.url), 'utf8');
   assert.match(headerCss, /calc\(1080\s*\*/);
   assert.match(navigationCss, /calc\(1080\s*\*/);
-  assert.match(source, /!isOpen && window\.innerWidth < headerBreakpointMin/);
-  assert.match(source, /window\.innerWidth >= headerBreakpointMin/);
-  assert.match(source, /currentWidth >= headerBreakpointMin/);
-  assert.doesNotMatch(source, /currentWidth > headerBreakpointMin/);
+  assert.match(footerCss, /calc\(768\s*\*/);
+  assert.match(source, /const headerDesktop = window\.matchMedia\('\(min-width: 67\.5rem\)'\)/);
+  assert.match(source, /const footerDesktop = window\.matchMedia\('\(min-width: 48rem\)'\)/);
+  assert.match(source, /!isOpen && !headerDesktop\.matches/);
+  assert.match(source, /headerDesktop\.addEventListener\('change', syncResponsiveMenu\)/);
+  assert.match(source, /footerDesktop\.addEventListener\('change', syncResponsiveMenu\)/);
+  assert.match(source, /headerDesktop\.addEventListener\('change', syncResponsiveLock\)/);
+  assert.doesNotMatch(source, /headerBreakpointMin|window\.innerWidth\s*[<>]/);
 });
 
 test('closing the mobile menu releases the scroll lock on all close paths', () => {
@@ -32,6 +37,7 @@ test('closing the mobile menu releases the scroll lock on all close paths', () =
   const classes = new Set();
   const restoredScrollY = [];
   const win = { innerWidth: 1079, scrollTo: (_x, y) => restoredScrollY.push(y) };
+  const headerDesktop = { matches: false, addEventListener: (event, handler) => listeners.set('media:' + event, handler) };
   const doc = {};
   const body = {
     addClass(value) {
@@ -61,7 +67,7 @@ test('closing the mobile menu releases the scroll lock on all close paths', () =
     handler(event);
   };
 
-  new Function('$', 'window', 'document', match[0] + '\ncontentFixed();')($, win, doc);
+  new Function('$', 'window', 'document', 'headerDesktop', match[0] + '\ncontentFixed();')($, win, doc, headerDesktop);
 
   fire('#gh_menu:click');
   assert.equal(classes.has('_contentFixed'), true);
@@ -75,8 +81,8 @@ test('closing the mobile menu releases the scroll lock on all close paths', () =
 
   fire('window:load resize');
   fire('#gh_menu:click');
-  win.innerWidth = 1080;
-  fire('window:load resize');
+  headerDesktop.matches = true;
+  fire('media:change');
   assert.equal(classes.has('_contentFixed'), false);
 
   // Reopening after a close must not inherit a stale lock state.
@@ -108,7 +114,7 @@ test('mobile disclosure keeps accessibility state, focus restoration, and deskto
   assert.match(header, /id="overlay"[^>]*aria-hidden="true"/);
   assert.match(source, /\$menuButton\.attr\('aria-expanded', String\(isOpen\)\)/);
   assert.match(source, /\$menuButton\.attr\('aria-label', isOpen \? 'メニューを閉じる' : 'メニューを開く'\)/);
-  assert.match(source, /const hiddenForMobile = !isOpen && window\.innerWidth < headerBreakpointMin/);
+  assert.match(source, /const hiddenForMobile = !isOpen && !headerDesktop\.matches/);
   assert.match(source, /\$globalNavigation\.attr\('inert', hiddenForMobile \? '' : null\)/);
   assert.match(source, /if \(restoreFocus && wasOpen\) \$menuButton\.trigger\('focus'\)/);
   assert.match(source, /event\.key === 'Escape' && \$body\.hasClass\('_open-menu'\)/);
@@ -147,7 +153,7 @@ test('desktop mega-menu hover, focus and touch states do not leak into SP accord
 
 
 test('Header breakpoint transitions clear stale top-level hover disclosure state', () => {
-  const region = source.slice(source.indexOf('let lastWidthForBreakpoint = null'), source.indexOf('// // グローバルメニューの動き'));
+  const region = source.slice(source.indexOf('let lastHeaderDesktop = headerDesktop.matches'), source.indexOf('// // グローバルメニューの動き'));
   assert.match(region, /closeAllTouchMenus\(\)/);
   assert.match(region, /syncMobileMenu\(\)/);
   assert.match(region, /globalNavItems\.forEach\(\(item\) => \{/);
@@ -156,8 +162,8 @@ test('Header breakpoint transitions clear stale top-level hover disclosure state
 
 
 test('desktop touch-open mega-menu closes on Escape and restores parent-link focus', () => {
-  const region = source.slice(source.indexOf('touchMegaMenuSupport();'), source.indexOf('let lastWidthForBreakpoint = null'));
-  assert.match(region, /event\.key !== 'Escape' \|\| window\.innerWidth < headerBreakpointMin/);
+  const region = source.slice(source.indexOf('touchMegaMenuSupport();'), source.indexOf('let lastHeaderDesktop = headerDesktop.matches'));
+  assert.match(region, /event\.key !== 'Escape' \|\| !headerDesktop\.matches/);
   assert.match(region, /document\.querySelector\(`.global_navigation/);
   assert.match(region, /const trigger = expanded\.querySelector\('\[class\*="gnl_title"\] \[class\*="gnl_link"\]'\)/);
   assert.match(region, /closeAllTouchMenus\(\)/);
@@ -207,11 +213,13 @@ test('Header mobile close and hamburger toggle retain backdrop ownership for sea
 
 
 test('collapsed Header/Footer accordion links are inert only below their own desktop breakpoints', () => {
-  const match = source.match(/    const syncSubmenuFocusability = \(item, prefix, desktopMin\) => \{[\s\S]*?\n    \};/);
+  const match = source.match(/    const syncSubmenuFocusability = \(item, prefix, desktopMedia\) => \{[\s\S]*?\n    \};/);
   assert.ok(match, 'focusability helper must exist');
   const win = { innerWidth: 375 };
   const doc = { activeElement: null };
   const sync = new Function('window', 'document', match[0] + '\nreturn syncSubmenuFocusability;')(win, doc);
+  const headerDesktop = { matches: false };
+  const footerDesktop = { matches: false };
   const wrapper = { inert: false };
   let state = null;
   const item = {
@@ -219,20 +227,20 @@ test('collapsed Header/Footer accordion links are inert only below their own des
     querySelector: () => ({ focus: () => {} }),
     getAttribute: () => state,
   };
-  sync(item, 'gnl', 1080);
+  sync(item, 'gnl', headerDesktop);
   assert.equal(wrapper.inert, true, 'closed Header SP menu must block invisible links');
   state = 'true';
-  sync(item, 'gnl', 1080);
+  sync(item, 'gnl', headerDesktop);
   assert.equal(wrapper.inert, false, 'opened Header SP menu links stay usable');
   state = null;
-  win.innerWidth = 1080;
-  sync(item, 'gnl', 1080);
+  headerDesktop.matches = true;
+  sync(item, 'gnl', headerDesktop);
   assert.equal(wrapper.inert, false, 'Header PC flyout allows keyboard focus');
   win.innerWidth = 767;
-  sync(item, 'gfl', 768);
+  sync(item, 'gfl', footerDesktop);
   assert.equal(wrapper.inert, true, 'Footer collapsed mobile links stay inert');
-  win.innerWidth = 768;
-  sync(item, 'gfl', 768);
+  footerDesktop.matches = true;
+  sync(item, 'gfl', footerDesktop);
   assert.equal(wrapper.inert, false, 'Footer desktop sitemap links are always available');
   assert.match(source, /globalNavItems\.forEach\(item => syncSubmenuFocusability/);
   assert.match(source, /footerNavItems\.forEach\(item => syncSubmenuFocusability/);
@@ -240,7 +248,7 @@ test('collapsed Header/Footer accordion links are inert only below their own des
 
 
 test('accordion focusability is scoped to the direct submenu wrapper, never a nested descendant', () => {
-  const helper = source.match(/    const syncSubmenuFocusability = \(item, prefix, desktopMin\) => \{[\s\S]*?\n    \};/);
+  const helper = source.match(/    const syncSubmenuFocusability = \(item, prefix, desktopMedia\) => \{[\s\S]*?\n    \};/);
   assert.ok(helper);
   assert.match(helper[0], /Array\.from\(item\.children\)\.find/);
   assert.match(helper[0], /child\.matches/);
@@ -249,7 +257,7 @@ test('accordion focusability is scoped to the direct submenu wrapper, never a ne
 
 
 test('collapsing a focused submenu moves keyboard focus to its disclosure before inert', () => {
-  const match = source.match(/    const syncSubmenuFocusability = \(item, prefix, desktopMin\) => \{[\s\S]*?\n    \};/);
+  const match = source.match(/    const syncSubmenuFocusability = \(item, prefix, desktopMedia\) => \{[\s\S]*?\n    \};/);
   assert.ok(match);
   const win = { innerWidth: 375 };
   let focusedTrigger = false;
@@ -260,7 +268,7 @@ test('collapsing a focused submenu moves keyboard focus to its disclosure before
     getAttribute: () => 'false',
     querySelector: () => ({ focus() { focusedTrigger = true; doc.activeElement = this; } }),
   };
-  new Function('window', 'document', match[0] + '\nreturn syncSubmenuFocusability;')(win, doc)(item, 'gnl', 1080);
+  new Function('window', 'document', match[0] + '\nreturn syncSubmenuFocusability;')(win, doc)(item, 'gnl', { matches: false });
   assert.equal(focusedTrigger, true);
   assert.equal(wrapper.inert, true);
 });
@@ -315,6 +323,7 @@ test('Header navigation focus exits before inert is applied on mobile close or r
   const match = source.match(/    const syncMobileMenu = \(\) => \{[\s\S]*?\n    \};/);
   assert.ok(match);
   const win = { innerWidth: 1080 };
+  const headerDesktop = { matches: true };
   const focusedLink = {};
   const doc = { activeElement: focusedLink, getElementById: () => ({ contains: node => node === focusedLink }) };
   const classes = new Set();
@@ -322,11 +331,11 @@ test('Header navigation focus exits before inert is applied on mobile close or r
   const menuButton = { attr(name, value) { attrs.push(['menu', name, value]); }, trigger(name) { attrs.push(['focus', name]); doc.activeElement = this; } };
   const navigation = { attr(name, value) { attrs.push(['navigation', name, value]); } };
   const body = { hasClass: name => classes.has(name) };
-  const sync = new Function('$body', '$menuButton', '$globalNavigation', 'window', 'document', 'headerBreakpointMin', match[0] + '\nreturn syncMobileMenu;')(body, menuButton, navigation, win, doc, 1080);
+  const sync = new Function('$body', '$menuButton', '$globalNavigation', 'window', 'document', 'headerDesktop', match[0] + '\nreturn syncMobileMenu;')(body, menuButton, navigation, win, doc, headerDesktop);
   sync();
   assert.equal(attrs.some(x => x[0] === 'focus'), false, 'desktop nav remains focusable');
   attrs.length = 0;
-  win.innerWidth = 1079;
+  headerDesktop.matches = false;
   sync();
   const focusIndex = attrs.findIndex(x => x[0] === 'focus');
   const inertIndex = attrs.findIndex(x => x[0] === 'navigation' && x[1] === 'inert');
