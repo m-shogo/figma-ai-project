@@ -28,6 +28,9 @@
       background-color: var(--color-secondary);
       color: var(--color-primary);
       transition: color var(--transition-duration), background-color var(--transition-duration);
+      @media (prefers-reduced-motion: reduce) {
+        transition: none;
+      }
       &.current {
         border-color: var(--color-primary);
         background-color: var(--color-primary);

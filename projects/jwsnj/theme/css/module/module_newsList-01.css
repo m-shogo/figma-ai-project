@@ -28,7 +28,6 @@
       padding-inline: 0;
       color: var(--color-text);
       text-decoration: none;
-      transition: var(--transition-duration);
       @media (calc(768 * (1 / 16 * 1rem)) <= width) {
         padding-inline: calc(20 * var(--to-rem-func));
       }
@@ -109,6 +108,9 @@
         line-height: 1.5;
         letter-spacing: 0.05em;
         transition: color var(--transition-duration);
+        @media (prefers-reduced-motion: reduce) {
+          transition: none;
+        }
         overflow-wrap: anywhere;
         word-break: normal;
         line-break: strict;

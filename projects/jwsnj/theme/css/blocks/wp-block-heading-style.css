@@ -19,9 +19,6 @@
     }
     & + :is(h1, h2, h3, h4, h5, h6):is(:not([class]), .wp-block-heading) {
       margin-top: var(--wp-block-margin-small);
-      @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-        margin-top: var(--wp-block-margin-small);
-      }
     }
   }
   /* Figma parts PC 344:906/344:903, SP 445:3209/445:3236.
@@ -113,9 +110,6 @@
     }
     & + :is(h1, h2, h3, h4, h5, h6):is(:not([class]), .wp-block-heading) {
       margin-top: var(--wp-block-margin-small);
-      @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-        margin-top: var(--wp-block-margin-small);
-      }
     }
   }
   h6:is(:not([class]), .wp-block-heading) {
@@ -134,9 +128,6 @@
     }
     & + :is(h1, h2, h3, h4, h5, h6):is(:not([class]), .wp-block-heading) {
       margin-top: var(--wp-block-margin-small);
-      @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-        margin-top: var(--wp-block-margin-small);
-      }
     }
   }
 

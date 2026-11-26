@@ -27,7 +27,6 @@
       display: block;
       color: var(--color-text);
       text-decoration: none;
-      transition: var(--transition-duration);
     }
     .link {
       @media (any-hover: hover) {
@@ -140,6 +139,9 @@
         line-height: 1.5;
         letter-spacing: 0.05em;
         transition: color var(--transition-duration);
+        @media (prefers-reduced-motion: reduce) {
+          transition: none;
+        }
         overflow-wrap: anywhere;
         word-break: normal;
         line-break: strict;
