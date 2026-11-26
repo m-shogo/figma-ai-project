@@ -124,7 +124,12 @@ function inspect(diffArgs, message) {
   const themeFiles = projectFiles.filter(({ file }) => /^projects\/[^/]+\/theme\/.+\.(css|scss|php|js)$/.test(file));
   const authoredFiles = themeFiles.filter(({ file }) => !/\.min\.(css|js)$/.test(file));
   const themePaths = new Set(authoredFiles.map(({ file }) => file));
-  const cssPaths = new Set(projectFiles.map(({ file }) => file).filter(isAuthoredCssPath));
+  const cssPaths = new Set(projectFiles.map(({ file }) => file).filter(file => {
+    if (!isAuthoredCssPath(file)) return false;
+    const [, slug, rest] = file.match(PROJECT_FILE);
+    const ignore = loadGuardConfig(slug).cssQualityIgnore ?? [];
+    return !ignore.some(glob => globToRegExp(glob).test(rest));
+  }));
   const reviewPaths = [...new Set([...themePaths, ...cssPaths])];
   if (reviewPaths.length) {
     const patch = git('diff', ...diffArgs, '-U0', '-w', '--no-renames', '--', ...reviewPaths);
