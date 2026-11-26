@@ -136,6 +136,8 @@ add_action('wp_enqueue_scripts', 'replace_default_jquery');
 // new EnqueueScript('home-script', get_theme_file_uri('/js/home.js'), array('jquery'), '1.0.0', true, 'defer', function () {
     //     return is_front_page();
     // });
+require_once __DIR__ . '/css-assets.php';
+
 function my_enqueue_scripts() {
     // JavaScript
     wp_enqueue_script('swiper-script', get_theme_file_uri('/js/swiper-bundle.min.js'), array(), '14.0.1', ['strategy' => 'defer','in_footer' => false]);
@@ -181,7 +183,7 @@ function my_enqueue_scripts() {
     wp_enqueue_style('fontawesome-style', get_theme_file_uri('/css/all.min.css'), array(), '6.7.2', 'all');
     wp_enqueue_style('flexible-table-block'); // プラグインで登録済みのスタイルをenqueue（テンプレートでテーブルクラスを直接使用しているため必要）
     wp_enqueue_style('jwsnj-scroll-hint', get_theme_file_uri('/css/scroll-hint.css'), array(), filemtime(get_theme_file_path('/css/scroll-hint.css')), 'all');
-    wp_enqueue_style('common-style', get_theme_file_uri('/css/style.css'), array('jwsnj-google-fonts'), filemtime(get_theme_file_path('/css/style.css')), 'all');
+    jwsnj_enqueue_css_entry('common-style', '/css/style.css', ['jwsnj-google-fonts']);
     // new EnqueueStyle('css-style', get_stylesheet_uri(), array(), null);
     // new EnqueueStyle('swiper-style', get_theme_file_uri('/css/swiper-bundle.min.css'), array(), null, 'all');
     // new EnqueueStyle('modaal-style', get_theme_file_uri('/css/modaal.min.css'), array(), '0.4.4', 'all');
@@ -196,13 +198,7 @@ add_action('wp_enqueue_scripts', 'my_enqueue_scripts');
 // ==========================================================================
 add_action('enqueue_block_editor_assets', function () {
   // ブロックエディタ用CSSの読み込み（<link>タグとして出力）
-  wp_enqueue_style(
-    'editor-style',
-    get_theme_file_uri('/css/editor-style.css'),
-    [],
-    filemtime(get_theme_file_path('/css/editor-style.css')),
-    'all'
-  );
+  jwsnj_enqueue_css_entry('editor-style', '/css/editor-style.css');
 });
 
 // ==========================================================================

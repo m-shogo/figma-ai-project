@@ -203,3 +203,24 @@ test('legacy CF7 file labels and wrappers do not style unrelated files', () => {
   assert.match(css, /^:where\(\.wpcf7\) \.file \{/m);
   assert.doesNotMatch(css, /^\.file(?: label)? \{/m);
 });
+
+test('CSS entrypoints retain one import owner and version every child without changing order', () => {
+  const helper = new URL('../theme/inc/css-assets.php', import.meta.url).pathname;
+  const theme = new URL('../theme/', import.meta.url).pathname;
+  const code = 'require $argv[1]; foreach (["css/style.css","css/editor-style.css"] as $entry) { echo json_encode(jwsnj_css_import_files($argv[2].$entry)).PHP_EOL; }';
+  const rows = execFileSync('php', ['-r', code, helper, theme], {encoding:'utf8'}).trim().split('\n').map(JSON.parse);
+  for (const [i, entry] of ['css/style.css','css/editor-style.css'].entries()) {
+    const css = read(entry).replace(/\/\*[\s\S]*?\*\//g, '');
+    const expected = [...css.matchAll(/@import\s+['"]\.\/([^'"]+)['"];/g)].map(m => m[1]);
+    assert.ok(expected.length > 0);
+    assert.deepEqual(rows[i].map(r => r[0]), expected);
+    for (const [relative, version] of rows[i]) {
+      assert.match(version, /^\d+$/);
+      assert.doesNotMatch(read('css/'+relative).replace(/\/\*[\s\S]*?\*\//g,''), /@import\s/);
+    }
+  }
+  assert.equal(rows[1].at(-1)[0], 'editor-content.css');
+  const front = read('inc/front.php');
+  assert.match(front, /jwsnj_enqueue_css_entry\('common-style', '\/css\/style.css'/);
+  assert.match(front, /jwsnj_enqueue_css_entry\('editor-style', '\/css\/editor-style.css'/);
+});

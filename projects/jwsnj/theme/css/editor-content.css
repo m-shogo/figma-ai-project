@@ -1,0 +1,165 @@
+@charset "utf-8";
+/* ==========================================================================
+ * 管理画面ビジュアルエディタ用CSS
+ * ========================================================================== */
+/* ==========================================================================
+ * 共通（基本的に変更しない）
+ * ========================================================================== */
+/* 背景色 */
+html {
+  background-color: var(--color-secondary);
+}
+
+/* ブロック間の余白削除 */
+html :where(.wp-block) {
+  margin-top: 0;
+  margin-bottom: 0;
+  box-sizing: border-box;
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+  /* リセットCSS */
+  a,
+  p,
+  span,
+  li,
+  dd,
+  dt,
+  th,
+  td,
+  textarea,
+  input,
+  select,
+  option,
+  legend,
+  label,
+  fieldset,
+  button {
+    overflow-wrap: anywhere;
+    word-break: normal;
+    line-break: strict;
+  }
+  img {
+    max-width: 100%;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    object-position: center center;
+    vertical-align: top;
+  }
+  sup,
+  sub {
+    font-size: 78%;
+  }
+  sup {
+    vertical-align: super;
+  }
+  sub {
+    vertical-align: sub;
+  }
+}
+
+/* フォントファミリー */
+.editor-styles-wrapper {
+  font-family: var(--font-sansSerif-ja);
+  font-weight: 400;
+}
+
+/* タイトル下の余白 */
+.editor-styles-wrapper .editor-visual-editor__post-title-wrapper {
+  margin-bottom: calc(40 * var(--to-rem-func));
+}
+
+/* リンクのポインターを削除 */
+.editor-styles-wrapper [class*='module'] a {
+  pointer-events: none;
+}
+
+/* タイトルのフォントウェイトを400に */
+.editor-styles-wrapper h1.wp-block-post-title {
+  font-weight: 400;
+}
+
+/* リストスタイルをリセット */
+.editor-styles-wrapper ul {
+  list-style: none;
+  padding: 0;
+}
+
+/* テキストエリアのデザイン */
+.editor-styles-wrapper .mce-content-body {
+  display: block;
+  min-height: calc(250 * var(--to-rem-func));
+  padding: calc(25 * var(--to-rem-func));
+  border: calc(1 * var(--to-rem-func)) solid #1e1e1e;
+  background-color: var(--color-secondary);
+  font-family: var(--font-sansSerif-ja);
+  font-weight: 400;
+}
+
+/* ==========================================================================
+ * テーブルのツールチップ表示
+ * ========================================================================== */
+.editor-styles-wrapper {
+  .wp-block-flexible-table-block-table {
+    table {
+      overflow: visible !important;
+    }
+  }
+}
+
+/* ==========================================================================
+ * 詳細の見出しをわかりやすくする
+ * ========================================================================== */
+.editor-styles-wrapper {
+  .wp-block-details {
+    padding: calc(48 * var(--to-rem-func)) calc(24 * var(--to-rem-func)) calc(24 * var(--to-rem-func));
+    summary {
+      border: calc(1 * var(--to-rem-func)) solid #1e1e1e;
+      padding: calc(8 * var(--to-rem-func)) calc(40 * var(--to-rem-func)) calc(8 * var(--to-rem-func)) calc(8 * var(--to-rem-func));
+      /* margin-bottom: calc(24 * var(--to-rem-func)); */
+      position: relative;
+      z-index: 0;
+      &::marker,
+      &::-webkit-details-marker {
+        display: none;
+      }
+      &::before {
+        content: 'アコーディオン見出し';
+        position: absolute;
+        bottom: 100%;
+        left: calc(-1 * var(--to-rem-func));
+        padding: calc(3 * var(--to-rem-func)) calc(6 * var(--to-rem-func)) calc(4 * var(--to-rem-func));
+        background-color: #1e1e1e;
+        color: #fff;
+        font-size: calc(12 * var(--to-rem-func));
+        font-weight: 700;
+        line-height: 1;
+      }
+      &:after {
+        content: '+';
+        position: absolute;
+        top: 50%;
+        right: 0;
+        translate: 0 -50%;
+        width: calc(32 * var(--to-rem-func));
+        height: calc(32 * var(--to-rem-func));
+        color: #1e1e1e;
+        font-size: calc(24 * var(--to-rem-func));
+        line-height: 1;
+        text-align: center;
+        display: flex;
+        align-items: center;
+      }
+    }
+    &[open] {
+      summary {
+        &::after {
+          content: '-';
+        }
+      }
+    }
+  }
+}

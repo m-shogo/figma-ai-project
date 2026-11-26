@@ -13,6 +13,14 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
  for(const width of [375,768,1380]){
  await page.setViewportSize({width,height:900});
  const response=await page.goto(url,{waitUntil:'load'});assert.equal(response.status(),200);
+ const assets = await page.evaluate(() => [...document.querySelectorAll('link[id^="common-style-"]')].map(link => ({id: link.id, url: link.href})));
+ assert.ok(assets.length > 40, 'versioned common CSS children must load');
+ assert.equal(assets[0].id, 'common-style-base-reset-css');
+ assert.equal(assets.at(-1).id, 'common-style-wordpress-wordpress-css');
+ assert.equal(new Set(assets.map(a => a.id)).size, assets.length);
+ assert.ok(assets.every(a => /^\d+$/.test(new URL(a.url).searchParams.get('ver') || '')));
+ assert.equal(await page.locator('link#common-style-css').count(), 0, 'entrypoint must not load twice');
+ console.log(JSON.stringify({engine:name,width,versionedCss:assets.length,first:assets[0].id,last:assets.at(-1).id}));
  const form=page.locator('.frm_forms').first();await form.waitFor();
  const checkbox=form.locator('input[type=checkbox]').first(),radio=form.locator('input[type=radio]').first();
  await checkbox.waitFor({state:'visible'});await radio.waitFor({state:'visible'});

@@ -128,11 +128,11 @@ function custom_login_logo_url()
 function enqueue_admin_style_script()
 {
   // CSS
-  wp_enqueue_style('admin-style', get_template_directory_uri() . '/css/admin-style.css', array(), null, 'all');
+  wp_enqueue_style('admin-style', get_template_directory_uri() . '/css/admin-style.css', array(), filemtime(get_template_directory() . '/css/admin-style.css'), 'all');
   // font awesome
   wp_enqueue_style('fontawesome-style', get_template_directory_uri() . '/css/all.min.css', array(), '6.7.2', 'all');
   // JavaScript
-  wp_enqueue_script('admin-script', get_template_directory_uri() . '/js/admin-script.js', array(), '1.0.0', true);
+  wp_enqueue_script('admin-script', get_template_directory_uri() . '/js/admin-script.js', array(), filemtime(get_template_directory() . '/js/admin-script.js'), true);
 }
 add_action('admin_enqueue_scripts', 'enqueue_admin_style_script');
 
