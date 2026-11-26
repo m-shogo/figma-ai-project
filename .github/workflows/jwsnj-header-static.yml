@@ -66,6 +66,8 @@ on:
       - 'projects/jwsnj/tests/news-archive-contract.test.mjs'
       - 'projects/jwsnj/tests/news-single-contract.test.mjs'
       - 'projects/jwsnj/tests/fixed-page-contract.test.mjs'
+      - 'projects/jwsnj/theme/inc/css-assets.php'
+      - 'projects/jwsnj/tests/css-assets-contract.test.mjs'
       - 'projects/jwsnj/tests/top-notice-contract.test.mjs'
       - 'projects/jwsnj/theme/front-page.php'
       - 'projects/jwsnj/theme/template-parts/_top-notice.php'
@@ -143,6 +145,8 @@ on:
       - 'projects/jwsnj/tests/news-archive-contract.test.mjs'
       - 'projects/jwsnj/tests/news-single-contract.test.mjs'
       - 'projects/jwsnj/tests/fixed-page-contract.test.mjs'
+      - 'projects/jwsnj/theme/inc/css-assets.php'
+      - 'projects/jwsnj/tests/css-assets-contract.test.mjs'
       - 'projects/jwsnj/tests/top-notice-contract.test.mjs'
       - 'projects/jwsnj/theme/front-page.php'
       - 'projects/jwsnj/theme/template-parts/_top-notice.php'
@@ -179,6 +183,8 @@ jobs:
         run: node --test projects/jwsnj/tests/parts-*.test.mjs
       - name: Test approved news archive and isolated pagination
         run: node --test projects/jwsnj/tests/news-archive-contract.test.mjs projects/jwsnj/tests/news-single-contract.test.mjs projects/jwsnj/tests/fixed-page-contract.test.mjs projects/jwsnj/tests/top-notice-contract.test.mjs
+      - name: Test CSS versioning and atomic fallback
+        run: node --test projects/jwsnj/tests/css-assets-contract.test.mjs
       - name: Check WordPress Header and Footer PHP syntax
         run: |
           php -l projects/jwsnj/theme/template-parts/_header.php
