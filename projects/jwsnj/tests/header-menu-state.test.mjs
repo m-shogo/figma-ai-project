@@ -50,6 +50,7 @@ test('one menu state owner reconciles lock, backdrop, close paths and responsive
   };
   const $ = selector => {
     if (selector === 'body') return body;
+    if (selector === 'html') return { addClass() { return this; }, removeClass() { return this; } };
     const key = selector === doc ? 'document' : selector === win ? 'window' : selector;
     return {
       on(event, handler) {
