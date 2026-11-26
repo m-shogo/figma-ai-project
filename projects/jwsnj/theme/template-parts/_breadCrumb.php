@@ -299,22 +299,10 @@ function get_breadcrumb_trail($news_archive = false, $archive_context = [])
       $trail->addItem($post_type_obj->label, get_post_type_archive_link($post_type));
     }
 
-    $year = get_query_var('year');
+    $year = jwsnj_archive_year();
     $month = get_query_var('monthnum');
     $day = get_query_var('day');
     $is_fiscal_year = get_query_var('is_fiscal_year');
-
-    // 年度別アーカイブで year がクリアされている場合、URLから取得
-    if (!$year) {
-      $url_path = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
-      $segments = explode('/', $url_path);
-      foreach ($segments as $segment) {
-        if (preg_match('/^\d{4}$/', $segment)) {
-          $year = $segment;
-          break;
-        }
-      }
-    }
 
     if ($year) {
       $year_url = $post_type === 'post'
