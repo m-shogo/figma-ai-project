@@ -106,6 +106,11 @@ test('TOP MV uses existing image repeater and renders only valid initial still i
   }
   assert.equal(render([]),'');
   assert.equal(render([{img_pc:101,img_sp:0}]),'');
+  assert.equal(render([{img_pc:-1,img_sp:[2]},{img_pc:1.5,img_sp:true},{img_pc:'2bad',img_sp:'0'},{img_pc:{ID:4},img_sp:-3}]),'');
+  const validFallback=render([{img_pc:-1,img_sp:'3'},{img_pc:'4',img_sp:{ID:1}}]);
+  assert.match(validFallback,/src="\/media\/3\.webp"/);
+  assert.match(validFallback,/src="\/media\/4\.webp"/);
+  assert.doesNotMatch(validFallback,/\/media\/1\.webp/);
   const partial=render([{img_pc:1,img_sp:2,text:'sample'},{img_pc:0,img_sp:3}]);
   assert.equal((partial.match(/<li class=/g)||[]).length,2);
   assert.match(partial,/srcset="\/media\/2\.webp 800w"/);

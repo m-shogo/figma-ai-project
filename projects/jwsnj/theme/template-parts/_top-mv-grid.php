@@ -2,12 +2,19 @@
 // The initial still uses the existing TOP image repeater. Motion and CTA are separate.
 $mv_rows = function_exists('get_field') ? get_field('top_slider-01') : [];
 $mv_items = [];
+// ACF returns attachment IDs; do not coerce a negative ID, array or float into another image.
+$valid_mv_id = static function ($value) {
+    if (!is_int($value) && !is_string($value)) {
+        return 0;
+    }
+    return filter_var($value, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]) ?: 0;
+};
 foreach (is_array($mv_rows) ? $mv_rows : [] as $mv_row) {
     if (!is_array($mv_row)) {
         continue;
     }
-    $pc_id = absint($mv_row['img_pc'] ?? 0);
-    $sp_id = absint($mv_row['img_sp'] ?? 0);
+    $pc_id = $valid_mv_id($mv_row['img_pc'] ?? 0);
+    $sp_id = $valid_mv_id($mv_row['img_sp'] ?? 0);
     $pc = $pc_id && wp_attachment_is_image($pc_id) ? wp_get_attachment_image_src($pc_id, 'large') : false;
     $sp = $sp_id && wp_attachment_is_image($sp_id) ? wp_get_attachment_image_src($sp_id, 'large') : false;
     if (!$pc && !$sp) {
