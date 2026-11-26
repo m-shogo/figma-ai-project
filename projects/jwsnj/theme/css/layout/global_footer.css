@@ -303,10 +303,10 @@
         width: calc(10 * var(--to-rem-func));
         height: calc(2 * var(--to-rem-func));
         background-color: var(--color-text);
-        transition: var(--transition-duration);
       }
       &::after {
         transform: rotate(-90deg);
+        transition: transform var(--transition-duration);
       }
       span {
         display: none;

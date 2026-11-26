@@ -199,3 +199,9 @@ test('Footer brand and details use owner-local desktop geometry without changing
     assert.ok(rule.includes(declaration), owner);
   }
 });
+
+
+test('footer disclosure animates only the rotating vertical stroke', () => {
+  assert.match(css, /&::after\s*\{\s*transform: rotate\(-90deg\);\s*transition: transform var\(--transition-duration\)/);
+  assert.doesNotMatch(css, /transition:\s*var\(--transition-duration\)/);
+});
