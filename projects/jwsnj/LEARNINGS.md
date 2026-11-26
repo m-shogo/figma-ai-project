@@ -289,3 +289,7 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 
 ## 2026-11-26 TOP MV attachment validation
 - Fresh PC114:29/SP279:2142 context/images confirm same responsive photo layout. Existing ACF attachment ID owner stays unchanged; use positive integer/string validation before WP lookup instead of absint (negative, array, float or boolean can coerce to unrelated ID). Keep valid same-row fallback; no asset replacement, crop, motion, CMS schema or CTA change. Added malformed and numeric-string PHP stub cases. #523 actual WP remains deferred.
+
+
+## 2026-11-26 コース詳細：和文＋英文セクション見出し
+- Human包括承認の範囲。PC 534:1282 はsparse metadata、子609:3046/612:3095/612:3256の個別高精細context・画像を確認（534:2369は導入見出し36/15pxで別）。PC section H2 Zen Kaku Gothic New 32px/700/tracking10%、英文Roboto Medium 13px/tracking5%、gap20、green。既存core/groupのopt-in style `jwsnj-course-heading` を追加し、Row内に標準H2と英文Paragraphを編集者が置く。中央揃えはRowの既存設定で指定。新ACF/CPT/URL/固定ページ・本文の自動生成なし。SP正本未提示なので24px H2・自然wrap・縦gap8は暫定実装判断。PCの通常H2の線をこのstyle内だけ解除、その他既存見出しは不変。両CSS importと静的テスト。エディタの選択・保存・再編集・PC/SP実描画は#523。
