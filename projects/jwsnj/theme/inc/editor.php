@@ -277,4 +277,8 @@ add_action('init', function () {
     'name' => 'jwsnj-course-intro-layout',
     'label' => 'コース導入（文章＋写真）',
   ));
+  register_block_style('core/group', array(
+    'name' => 'jwsnj-course-faq-section',
+    'label' => 'コースFAQセクション',
+  ));
 });

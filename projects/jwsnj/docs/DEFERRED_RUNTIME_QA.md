@@ -221,3 +221,5 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 - Preschool schedule pattern: verify native pattern discovery under Text, insert into draft, no block recovery warnings, heading centered, eight chronological editable paragraphs, add media before paragraph, save/reopen, add/delete/reorder rows, no automatic page content. #523 actual WP deferred.
 
 - Course intro pattern `jwsnj/preschool-intro`: insert manually in approved course page draft, add exact approved native Image as sibling of copy Group, verify no block recovery warning, long text/grades wrap, optional media, PC520/440 gap80 and narrow single column, actual crop, page-level hero/breadcrumb/CTA separate. No original-page use; #523 DEFERRED_ENV.
+
+- Course FAQ section/pattern: insert into draft, verify native block validity and manual edit/add/reorder/remove, 1/6/long Q/A, actual open/closed and keyboard/focus, 961px max/48px heading gap/24px rows at PC, narrow provisional 24px heading gap and generic Details unaffected. Confirm answers before publication; five sample answers not seeded. #523 DEFERRED_ENV.

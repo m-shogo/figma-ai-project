@@ -324,3 +324,35 @@
         }
     }
 }
+
+/* Course FAQ section PC 612:3259 / 612:3255.
+   Opt-in native Group: bilingual heading followed by editable Details blocks. */
+:is(.block-editor_wrap, .editor-styles-wrapper) .wp-block-group.is-style-jwsnj-course-faq-section {
+    display: grid;
+    gap: calc(24 * var(--to-rem-func));
+    width: 100%;
+    max-width: calc(961 * var(--to-rem-func));
+    min-width: 0;
+    margin-inline: auto;
+    > .wp-block-group__inner-container {
+        display: grid;
+        gap: inherit;
+        min-width: 0;
+    }
+    > .wp-block-group.is-style-jwsnj-course-heading,
+    > .wp-block-group__inner-container > .wp-block-group.is-style-jwsnj-course-heading {
+        justify-content: center;
+        margin: 0;
+        min-width: 0;
+        text-align: center;
+        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+            margin-bottom: calc(24 * var(--to-rem-func));
+        }
+    }
+    > .wp-block-details.is-style-jwsnj-course-faq,
+    > .wp-block-group__inner-container > .wp-block-details.is-style-jwsnj-course-faq {
+        margin: 0;
+        min-width: 0;
+        max-width: none;
+    }
+}
