@@ -88,8 +88,77 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
     assert.equal(await footerButton.getAttribute('aria-expanded'), 'false');
     assert.equal(await footerWrapper.evaluate(el => el.inert), true);
     await page.screenshot({ path: 'form-qa-results/nav-' + engineName + '-767.png', fullPage: true });
+    // Mobile long text: check real text box, not only absence of a page scrollbar.
+    for (const width of [320, 375]) {
+      await page.setViewportSize({ width, height: 900 });
+      await waitState(false);
+      await hamburger.click();
+      await waitState(true);
+      if (await button.getAttribute('aria-expanded') !== 'true') await button.click();
+      const geometry = await parent.evaluate(el => {
+        const link = el.querySelector('.gnl_link-02');
+        const toggle = el.querySelector('.gnl_button-02');
+        const child = el.querySelector('.gnl_wrapper-02 li:last-child a');
+        const label = child.querySelector('span');
+        const range = document.createRange();
+        range.selectNodeContents(label);
+        const rects = Array.from(range.getClientRects());
+        const row = child.getBoundingClientRect();
+        return {
+          parentRight: link.getBoundingClientRect().right,
+          buttonLeft: toggle.getBoundingClientRect().left,
+          childLines: rects.length,
+          textFits: rects.every(rect => rect.left >= row.left - 1 && rect.right <= row.right + 1),
+          navFits: document.getElementById('global_navigation').scrollWidth <= width + 1
+        };
+      });
+      assert.ok(geometry.parentRight <= geometry.buttonLeft + 1, 'parent/toggle overlap');
+      assert.ok(geometry.childLines >= 2 && geometry.textFits && geometry.navFits, JSON.stringify(geometry));
+      await page.screenshot({ path: 'form-qa-results/nav-' + engineName + '-' + width + '-long.png' });
+      await hamburger.click();
+      await waitState(false);
+      console.log(JSON.stringify({ engine: engineName, width, longMenu: 'PASS', ...geometry }));
+    }
     assert.deepEqual(errors, [], 'uncaught JS errors');
     console.log(JSON.stringify({ engine: engineName, navigationRuntime: 'PASS', keyboard: true, scrollRestore: true, resize: [1080, 1079, 768, 767], footer: true }));
+    // Touch-enabled context, real Playwright taps, actual WP menu links.
+    const touch = await browser.newPage({ viewport: { width: 1380, height: 900 }, hasTouch: true, reducedMotion: 'reduce' });
+    await touch.route('**/*', route => route.request().url().startsWith('http://127.0.0.1:') ? route.continue() : route.abort());
+    await touch.goto(url, { waitUntil: 'load' });
+    await touch.waitForFunction(() => navigator.maxTouchPoints > 0 && document.documentElement.classList.contains('_device-touch'));
+    const parents = touch.locator('#global_navigation .gnl_item-02._hasChild');
+    const first = parents.nth(0);
+    const second = parents.nth(1);
+    const firstLink = first.locator('.gnl_link-02');
+    const secondLink = second.locator('.gnl_link-02');
+    const touchOverlay = touch.locator('#overlay');
+    let navigations = 0;
+    touch.on('framenavigated', frame => { if (frame === touch.mainFrame()) navigations++; });
+    await firstLink.tap();
+    await touch.waitForFunction(() => document.querySelector('.gnl_item-02._hasChild').classList.contains('_touchOpen'));
+    assert.equal(navigations, 0);
+    assert.equal(await touchOverlay.evaluate(el => getComputedStyle(el).visibility), 'visible');
+    await secondLink.tap();
+    assert.equal(await first.evaluate(el => el.classList.contains('_touchOpen')), false);
+    assert.equal(await second.evaluate(el => el.classList.contains('_touchOpen')), true);
+    await touch.touchscreen.tap(10, 500);
+    await touch.waitForFunction(() => !document.querySelector('._touchOpen') && !document.body.classList.contains('_open-bg'));
+    await firstLink.tap();
+    await touch.waitForFunction(() => document.body.classList.contains('_open-bg'));
+    await touch.setViewportSize({ width: 375, height: 900 });
+    await touch.waitForFunction(() => !document.querySelector('._touchOpen') && !document.body.classList.contains('_open-bg') && document.getElementById('global_navigation').inert);
+    await touch.locator('#gh_menu').tap();
+    await touch.waitForFunction(() => document.body.classList.contains('_open-menu'));
+    await touch.locator('#gh_menu').tap();
+    await touch.waitForFunction(() => !document.body.classList.contains('_open-menu'));
+    await touch.setViewportSize({ width: 1380, height: 900 });
+    await touch.waitForFunction(() => !document.getElementById('global_navigation').inert);
+    await firstLink.tap();
+    await touch.waitForFunction(() => document.body.classList.contains('_open-bg'));
+    await Promise.all([touch.waitForNavigation({ waitUntil: 'load' }), firstLink.tap()]);
+    assert.equal(navigations, 1);
+    console.log(JSON.stringify({ engine: engineName, touchMenu: 'PASS', firstTap: 'open', secondTap: 'navigate', outside: 'close', resize: 'close' }));
+    await touch.close();
   } finally {
     await browser.close();
   }
