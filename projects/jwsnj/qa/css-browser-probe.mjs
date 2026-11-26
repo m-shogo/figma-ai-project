@@ -292,6 +292,54 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
    }
    report.push({name, width, headerMenuRows: rows});
  }
+ // Header logo: the saved official 60x57 SVG retains its aspect ratio at each width.
+  for (const width of [320, 375, 767, 1079, 1080, 1380]) {
+    await page.setViewportSize({width, height: 900});
+    const logo = await page.evaluate(async () => {
+      const fixture = document.createElement('header');
+      fixture.className = 'global_header';
+      fixture.innerHTML = '<div class="gh_inner"><p class="gh_logo"><a href="#end"><img src="/images/common/img_njws-logo-header.svg" width="60" height="57" alt=""><span class="gh_logo-name">ニュージャージー補習授業校</span></a></p><button class="gh_menu" aria-label="menu">menu</button></div>';
+      document.body.append(fixture);
+      const image = fixture.querySelector('img');
+      await image.decode();
+      const name = fixture.querySelector('.gh_logo-name');
+      const measure = () => {
+        const text = name.getBoundingClientRect();
+        const header = fixture.getBoundingClientRect();
+        const button = fixture.querySelector('.gh_menu').getBoundingClientRect();
+        const img = image.getBoundingClientRect();
+        const range = document.createRange();
+        range.selectNodeContents(name);
+        const rects = [...range.getClientRects()];
+        return {
+          width: img.width, height: img.height, natural: [image.naturalWidth, image.naturalHeight],
+          padding: img.left - header.left, gap: text.left - img.right,
+          size: getComputedStyle(name).fontSize, family: getComputedStyle(name).fontFamily,
+          lineHeight: getComputedStyle(name).lineHeight, lines: rects.length,
+          fits: text.top >= header.top - 1 && text.bottom <= header.bottom + 1 &&
+            rects.every(rect => rect.left >= text.left - 1 && rect.right <= text.right + 1),
+          noOverlap: button.width === 0 || text.right <= button.left + 1
+        };
+      };
+      const normal = measure();
+      name.textContent = 'ニュージャージー補習授業校 学校案内';
+      const longer = measure();
+      fixture.remove();
+      return {normal, longer};
+    });
+    const desktop = width >= 1080;
+    assert.deepEqual(logo.normal.natural, [60, 57]);
+    assert.ok(Math.abs(logo.normal.width - (desktop ? 60 : 46)) <= 0.1, name + ' logo width ' + width);
+    assert.ok(Math.abs(logo.normal.height - logo.normal.width * 57 / 60) <= 0.15, name + ' logo aspect ' + width);
+    assert.equal(logo.normal.padding, desktop ? 40 : 16);
+    assert.ok(Math.abs(logo.normal.gap - (desktop ? 12 : 8)) <= 0.1);
+    assert.equal(logo.normal.size, desktop ? '20px' : '15px');
+    assert.match(logo.normal.family, /Zen Kaku Gothic New/);
+    assert.ok(logo.normal.fits && logo.normal.noOverlap, JSON.stringify(logo.normal));
+    assert.ok(logo.longer.fits && logo.longer.noOverlap, JSON.stringify(logo.longer));
+    if (width === 320) assert.ok(logo.longer.lines >= 2);
+    report.push({name, width, headerLogo: logo});
+  }
  // Legacy file presentation must not leak to a generic .file component.
  for (const width of [375, 768, 1380]) {
    await page.setViewportSize({width, height: 900});
