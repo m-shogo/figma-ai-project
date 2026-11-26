@@ -11,6 +11,15 @@ on:
       - 'projects/jwsnj/qa/form-render-shortcode.php'
       - 'projects/jwsnj/qa/seed-css-form-qa.php'
       - 'projects/jwsnj/qa/formidable-browser-qa.mjs'
+      - 'projects/jwsnj/qa/seed-navigation-qa.php'
+      - 'projects/jwsnj/qa/navigation-browser-qa.mjs'
+      - 'projects/jwsnj/theme/js/common.js'
+      - 'projects/jwsnj/theme/inc/menu.php'
+      - 'projects/jwsnj/theme/template-parts/_header.php'
+      - 'projects/jwsnj/theme/template-parts/_footer.php'
+      - 'projects/jwsnj/theme/css/layout/global_navigation.css'
+      - 'projects/jwsnj/theme/css/layout/global_header.css'
+      - 'projects/jwsnj/theme/css/layout/global_footer.css'
       - '.github/workflows/jwsnj-formidable-runtime.yml'
   workflow_dispatch:
 permissions:
@@ -58,6 +67,17 @@ jobs:
         env:
           CSS_QA_MODULE_ROOT: ${{ runner.temp }}/css-qa
         run: node projects/jwsnj/qa/formidable-browser-qa.mjs "$FORM_QA_URL" "$POSTAL_QA_URL"
+      - name: Seed and test registered WordPress navigation
+        env:
+          CSS_QA_MODULE_ROOT: ${{ runner.temp }}/css-qa
+        run: |
+          cd runtime/wordpress
+          source scripts/runtime-env.sh
+          docker compose run --rm -e WP_ENVIRONMENT_TYPE=local cli eval-file /project/qa/seed-navigation-qa.php
+          nav_id="$(docker compose run --rm cli option get jwsnj_navigation_qa_page_id)"
+          [[ "$nav_id" =~ ^[0-9]+$ ]]
+          cd ../..
+          node projects/jwsnj/qa/navigation-browser-qa.mjs "${WP_URL}/?page_id=${nav_id}"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
