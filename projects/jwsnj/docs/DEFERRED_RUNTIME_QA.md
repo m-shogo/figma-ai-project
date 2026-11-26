@@ -219,3 +219,5 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 - Course schedule `jwsnj-course-schedule`: outer Group, chronological child Groups with optional Image + Paragraph. Verify editor save/reopen, native block wrappers, 200px/4:3 image, alternating PC rows, long text, 0/1/8 entries, missing image, captions, narrow stacking and no overlap. Current Figma slots are gray placeholders, not photos; do not seed them. SP provisional. #523 actual WP/render pending.
 
 - Preschool schedule pattern: verify native pattern discovery under Text, insert into draft, no block recovery warnings, heading centered, eight chronological editable paragraphs, add media before paragraph, save/reopen, add/delete/reorder rows, no automatic page content. #523 actual WP deferred.
+
+- Course intro pattern `jwsnj/preschool-intro`: insert manually in approved course page draft, add exact approved native Image as sibling of copy Group, verify no block recovery warning, long text/grades wrap, optional media, PC520/440 gap80 and narrow single column, actual crop, page-level hero/breadcrumb/CTA separate. No original-page use; #523 DEFERRED_ENV.

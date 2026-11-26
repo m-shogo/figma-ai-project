@@ -173,3 +173,28 @@ test('preschool schedule pattern offers the exact Figma eight entries without au
   assert.doesNotMatch(page,/preschool-schedule/);
   execFileSync('php',['-l',file.pathname]);
 });
+
+test('course intro layout composes the existing styles with optional native media',()=>{
+  const group=readFileSync(new URL('../theme/css/blocks/wp-block-group-style.css',import.meta.url),'utf8');
+  const s=group.slice(group.indexOf('/* Course PC 539:3658'));
+  assert.match(s,/\.wp-block-group\.is-style-jwsnj-course-intro-layout/);
+  assert.match(s,/max-width:\s*calc\(1040 \* var\(--to-rem-func\)\)/);
+  assert.match(s,/:has\(> \.wp-block-group\):has\(> \.wp-block-image\)/);
+  assert.match(s,/grid-template-columns:\s*minmax\(0, 520fr\) minmax\(0, 440fr\)/);
+  assert.match(s,/aspect-ratio:\s*440 \/ 461/);
+  assert.match(s,/max-width:\s*min\(100%, calc\(440 \* var\(--to-rem-func\)\)\)/);
+  assert.match(s,/:not\(:has\(\.alignleft\)\):not\(:has\(\.alignright\)\):not\(:has\(\.aligncenter\)\)\s*\{\s*width:\s*100%/);
+  assert.match(s,/object-position:\s*bottom/);
+  assert.doesNotMatch(s,/white-space:\s*nowrap|position:\s*absolute|(?:^|[;{}\n])\s*height\s*:/);
+  const editor=readFileSync(new URL('../theme/inc/editor.php',import.meta.url),'utf8');
+  assert.match(editor,/register_block_style\('core\/group', array\(\s*'name' => 'jwsnj-course-intro-layout'/);
+  const file=new URL('../theme/patterns/preschool-intro.php',import.meta.url);
+  const pattern=readFileSync(file,'utf8');
+  for(const style of ['intro-layout','intro-heading','lead','grades']) assert.ok(pattern.includes('is-style-jwsnj-course-'+style));
+  assert.match(pattern,/<h2 class="wp-block-heading">幼児部について<\/h2>/);
+  assert.match(pattern,/<li>年中組（満4歳以上）<\/li>/);
+  assert.match(pattern,/<li>年長組（満5歳以上）<\/li>/);
+  assert.doesNotMatch(pattern,/<!-- wp:image|<img\b|<a\b|https?:\/\/|wp_insert_post|update_field|register_post_type/);
+  assert.equal((pattern.match(/<!-- wp:group /g)||[]).length,(pattern.match(/<!-- \/wp:group -->/g)||[]).length);
+  execFileSync('php',['-l',file.pathname]);
+});

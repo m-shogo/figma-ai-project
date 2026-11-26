@@ -109,3 +109,5 @@ Status: PROJECT-ONLY EVIDENCE / Human feedback: 2026-11-20
 - #666 merged d113c0e (3/3 actual CI). Follow-up native opt-in pattern reuses styles and exact eight Figma texts; no automatic page write or placeholder images. #664 W9 remains held. Next READY: native course introduction/feature layout once exact photo/illustration and CMS/page ownership confirmed. #523/#524 open.
 
 - Human 2026-11-26 narrows all-page approval: PC534:1706 オリジナルページ and descendants BLOCKED_HUMAN until explicit release. Metadata confirms course PC534:1282 is a separate frame; continue approved independent work elsewhere. #664 remains W9 blocked; no new ACF approval inferred. Start 3e04c5c, #667 merged. Authority recorded in CURRENT_AUTHORITY.md.
+
+- #668 merged 7c88bbf (2/2 CI). New authority excludes original PC534:1706 only. Fresh course PC539:3658/539:3628/534:2350 context and screenshots; compose editable intro layout/pattern from approved course design, no original-page changes. #664 remains W9; exact photo/CTA and page-level hero owner pending, #523/#524 open.
