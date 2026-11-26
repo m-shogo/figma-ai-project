@@ -163,87 +163,88 @@ test('TOP MV complete-grid responsive sizes reflect PC quarter/half and SP half/
 });
 
 
-test('TOP MV loop keeps the original responsive grid and has a no-JS static fallback',()=>{
+test('TOP MV uses bundled Swiper instead of a custom animation and keeps static fallback',()=>{
   const part=read('template-parts/_top-mv-grid.php');
   const css=read('css/project/top_mainVisual.css');
   const js=read('js/home.js');
   assert.match(part,/<div class="jwsnj_topMv_viewport">\s*<div class="jwsnj_topMv_track" id="jwsnj_topMv_track">\s*<ul/);
   assert.match(part,/<\?php if \(\$complete\) : \?>\s*<button type="button"[^>]*aria-controls="jwsnj_topMv_track" hidden>/);
-  assert.match(css,/&\.is-loop-prepared \.jwsnj_topMv_track\s*\{\s*display: flex;\s*width: 100%;\s*gap: var\(--jwsnj-mv-gap\)/);
-  assert.match(css,/flex: 0 0 100%/);
-  assert.match(css,/animation: jwsnj-mv-loop var\(--jwsnj-mv-duration\) linear infinite/);
-  assert.match(css,/to \{ transform: translateX\(calc\(-100% - var\(--jwsnj-mv-gap\)\)\); \}/);
-  assert.match(css,/animation-play-state: paused/);
-  assert.match(css,/@media \(prefers-reduced-motion: reduce\)[\s\S]*?animation: none/);
+  assert.match(css,/&\.is-swiper-prepared \.jwsnj_topMv_track\s*\{[\s\S]*?transition-timing-function: linear/);
+  assert.doesNotMatch(css,/@keyframes|animation-play-state|white-space:\s*nowrap/);
+  assert.match(css,/@media \(prefers-reduced-motion: reduce\)[\s\S]*?transition-duration: 0ms/);
   assert.match(css,/&\[hidden\] \{ display: none; \}/);
   assert.match(css,/focus-visible/);
-  assert.match(js,/grid\.cloneNode\(true\)/);
+  assert.match(js,/new Swiper\(viewport, \{/);
+  assert.match(js,/loop: true,\s*speed: desktop\.matches \? 36000 : 18000/);
+  assert.match(js,/autoplay: \{ delay: 0, waitForTransition: true, disableOnInteraction: false \}/);
   assert.match(js,/copy\.setAttribute\('aria-hidden', 'true'\)/);
   assert.match(js,/copy\.setAttribute\('inert', ''\)/);
   assert.match(js,/await Promise\.all\(visible\.map/);
-  assert.match(js,/copy\.remove\(\);\s*root\.classList\.remove\('is-loop-prepared'\)/);
-  assert.match(js,/classList\.toggle\('is-loop-paused'\)/);
-  assert.match(js,/reduced\.addEventListener\('change', prepare\)/);
-  assert.doesNotMatch(css,/white-space:\s*nowrap/);
+  assert.match(js,/instance\.destroy\(true, true\)/);
+  assert.match(read('js/swiper-bundle.min.js'),/Swiper 14\.0\.1/);
+  assert.match(read('inc/front.php'),/wp_enqueue_script\('swiper-script'/);
   execFileSync('node',['--check',new URL('../theme/js/home.js',import.meta.url).pathname]);
 });
 
-
-test('MV motion controller runs only after decode, pauses, resumes and fails static',async()=>{
+test('MV Swiper controller covers init, immediate stop, resume, reduced motion and failure fallback',async()=>{
   const {runInNewContext}=await import('node:vm');
-  const js=read('js/home.js');
-  async function fixture({complete=true,reduced=false,fail=false}={}){
-    const state=new Set();
+  async function fixture({complete=true,reduced=false,fail=false,available=true,initFail=false}={}){
+    const classes=()=>{const s=new Set();return {contains:k=>s.has(k),add:(...k)=>k.forEach(x=>s.add(x)),remove:(...k)=>k.forEach(x=>s.delete(x))};};
     const callbacks={};
-    const copyAttrs={};
-    let cloneCount=0,removed=0,decoded=0;
-    const imgs=Array.from({length:2},(_,i)=>({
-      loading:'lazy',getClientRects:()=>i===0?[{}]:[],
-      decode:async()=>{decoded++;if(fail)throw new Error('decode failed');},
-      removeAttribute:()=>{}
-    }));
-    const copy={
-      setAttribute:(k,v)=>copyAttrs[k]=v,removeAttribute:()=>{},
-      querySelectorAll:s=>s==='img'?imgs:[],
-      remove:()=>removed++
-    };
-    const grid={cloneNode:deep=>{assert.equal(deep,true);cloneCount++;return copy;}};
-    const track={querySelector:()=>complete?grid:null,append:node=>assert.equal(node,copy),querySelectorAll:()=>imgs};
-    const toggle={hidden:true,textContent:'写真の動きを停止',addEventListener:(n,fn)=>callbacks[n]=fn};
-    const root={querySelector:s=>s==='.jwsnj_topMv_track'?track:toggle,classList:{
-      contains:k=>state.has(k),add:k=>state.add(k),remove:k=>state.delete(k),
-      toggle:k=>{if(state.has(k)){state.delete(k);return false;}state.add(k);return true;}
-    }};
-    const mq={matches:reduced,addEventListener:(n,fn)=>callbacks[n]=fn};
-    runInNewContext(js,{jQuery:fn=>{if(typeof fn==='function')fn();},window:{matchMedia:()=>mq},document:{querySelectorAll:()=>[root]}});
+    const copies=[];
+    let decoded=0, options, instance, cloneCount=0, removed=0, starts=0, stops=0, destroyed=0, position=-40, transition;
+    const imgs=[{loading:'lazy',getClientRects:()=>[{}],decode:async()=>{decoded++;if(fail)throw Error('decode');},removeAttribute:()=>{}},{getClientRects:()=>[]}];
+    const grid={classList:classes(),cloneNode:()=>{cloneCount++;const attrs={};const copy={attrs,setAttribute:(k,v)=>attrs[k]=v,removeAttribute:()=>{},querySelectorAll:()=>[],remove:()=>removed++};copies.push(copy);return copy;}};
+    const track={classList:classes(),querySelector:()=>complete?grid:null,append:()=>{},querySelectorAll:()=>imgs};
+    const viewport={classList:classes()};
+    const toggle={hidden:true,textContent:'',addEventListener:(n,fn)=>callbacks[n]=fn};
+    const root={querySelector:s=>s.includes('viewport')?viewport:s.includes('track')?track:toggle,classList:classes()};
+    const mq={matches:reduced,addEventListener:(n,fn)=>callbacks.reduced=fn};
+    const desktop={matches:false,addEventListener:(n,fn)=>callbacks.desktop=fn};
+    function Swiper(el,opts){
+      if(initFail)throw Error('init');
+      assert.equal(el,viewport);options=opts;
+      instance=this;viewport.swiper=this;
+      this.params={speed:opts.speed,spaceBetween:opts.spaceBetween};
+      this.size=100;this.snapGrid=[0,111,222];this.snapIndex=1;this.activeIndex=1;
+      this.autoplay={start:()=>starts++,stop:()=>stops++};
+      this.getTranslate=()=>position;this.setTransition=v=>transition=v;this.setTranslate=v=>position=v;
+      this.on=(n,f)=>callbacks[n]=f;this.off=n=>delete callbacks[n];
+      this.slideTo=(idx,speed)=>{assert.equal(idx,1);assert.ok(speed>0);return true;};
+      this.transitionEnd=()=>{};
+      this.destroy=()=>{this.destroyed=true;destroyed++;};
+    }
+    runInNewContext(read('js/home.js'),{jQuery:fn=>{if(typeof fn==='function')fn();},window:{matchMedia:s=>s.includes('reduced')?mq:desktop,getComputedStyle:()=>({columnGap:'11px'})},document:{querySelectorAll:()=>[root]},Swiper:available?Swiper:undefined});
     await new Promise(resolve=>setImmediate(resolve));
-    return {state,callbacks,toggle,mq,copyAttrs,stats:()=>({cloneCount,removed,decoded})};
+    return {root,toggle,mq,callbacks,copies,options:()=>options,instance:()=>instance,stats:()=>({cloneCount,removed,decoded,starts,stops,destroyed,position,transition})};
   }
   const ready=await fixture();
-  assert.equal(ready.state.has('is-loop-running'),true);
+  assert.equal(ready.root.classList.contains('is-swiper-ready'),true);
   assert.equal(ready.toggle.hidden,false);
-  assert.deepEqual(ready.copyAttrs,{'aria-hidden':'true',inert:''});
-  assert.deepEqual(ready.stats(),{cloneCount:1,removed:0,decoded:1});
+  assert.equal(ready.options().loop,true);
+  assert.equal(ready.options().spaceBetween,11);
+  assert.equal(ready.options().speed,18000);
+  assert.equal(ready.stats().cloneCount,2);
+  assert.deepEqual(ready.copies[0].attrs,{'aria-hidden':'true',inert:''});
   ready.callbacks.click();
-  assert.equal(ready.state.has('is-loop-paused'),true);
+  assert.equal(ready.stats().stops,1);
+  assert.equal(ready.stats().transition,0);
+  assert.equal(ready.stats().position,-40);
   assert.equal(ready.toggle.textContent,'写真の動きを再開');
   ready.callbacks.click();
-  assert.equal(ready.state.has('is-loop-paused'),false);
+  ready.callbacks.transitionEnd();
+  assert.equal(ready.stats().starts,1);
   assert.equal(ready.toggle.textContent,'写真の動きを停止');
-  await ready.callbacks.change();
-  assert.equal(ready.stats().cloneCount,1);
-  const off=await fixture({reduced:true});
-  assert.equal(off.stats().cloneCount,0);
-  assert.equal(off.toggle.hidden,true);
-  off.mq.matches=false;
-  await off.callbacks.change();
-  assert.equal(off.state.has('is-loop-running'),true);
-  const sparse=await fixture({complete:false});
-  assert.equal(sparse.stats().cloneCount,0);
-  assert.equal(sparse.toggle.hidden,true);
-  const broken=await fixture({fail:true});
-  assert.equal(broken.stats().removed,1);
-  assert.equal(broken.state.has('is-loop-prepared'),false);
-  assert.equal(broken.state.has('is-loop-running'),false);
-  assert.equal(broken.toggle.hidden,true);
+  ready.mq.matches=true;
+  ready.callbacks.reduced();
+  assert.equal(ready.stats().destroyed,1);
+  assert.equal(ready.stats().removed,2);
+  assert.equal(ready.toggle.hidden,true);
+  assert.equal(ready.root.classList.contains('is-swiper-prepared'),false);
+  for(const opts of [{complete:false},{reduced:true},{available:false},{fail:true},{initFail:true}]){
+    const f=await fixture(opts);
+    assert.equal(f.toggle.hidden,true);
+    assert.equal(f.root.classList.contains('is-swiper-ready'),false);
+    assert.equal(f.root.classList.contains('is-swiper-prepared'),false);
+  }
 });

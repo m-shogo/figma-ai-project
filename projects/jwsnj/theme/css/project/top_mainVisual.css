@@ -3,8 +3,6 @@
    The static grid remains the no-JS / incomplete-data fallback. */
 .jwsnj_topMv {
     --jwsnj-mv-gap: calc(11 * var(--to-rem-func));
-    /* Provisional duration pending reference-site runtime comparison. */
-    --jwsnj-mv-duration: 18s;
     background: var(--jwsnj-color-base-lightgreen);
     padding-block-end: calc(11 * var(--to-rem-func));
     .jwsnj_topMv_grid {
@@ -48,7 +46,6 @@
     }
     @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
         --jwsnj-mv-gap: calc(20 * var(--to-rem-func));
-        --jwsnj-mv-duration: 36s;
         padding-block-end: calc(18 * var(--to-rem-func));
         .jwsnj_topMv_grid.is-complete {
             grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -61,24 +58,22 @@
     }
 }
 
-/* Each copy is exactly one viewport wide; the translation includes the seam
-   gap. No absolute positioning for the moving track or fixed text height. */
+/* Swiper owns translation and inter-panel spacing. The grid owns only
+   its internal geometry; adding classes progressively preserves no-JS. */
 .jwsnj_topMv {
     .jwsnj_topMv_viewport { overflow: hidden; }
     .jwsnj_topMv_track { min-width: 0; }
-    &.is-loop-prepared .jwsnj_topMv_track {
+    &.is-swiper-prepared .jwsnj_topMv_track {
         display: flex;
         width: 100%;
-        gap: var(--jwsnj-mv-gap);
+        transition-timing-function: linear;
         > .jwsnj_topMv_grid {
-            flex: 0 0 100%;
+            flex-shrink: 0;
+            width: 100%;
+            height: auto;
             min-width: 0;
         }
     }
-    &.is-loop-running .jwsnj_topMv_track {
-        animation: jwsnj-mv-loop var(--jwsnj-mv-duration) linear infinite;
-    }
-    &.is-loop-paused .jwsnj_topMv_track { animation-play-state: paused; }
     .jwsnj_topMv_toggle {
         display: block;
         margin: calc(8 * var(--to-rem-func)) var(--padding-SP) 0 auto;
@@ -98,11 +93,7 @@
         &[hidden] { display: none; }
     }
     @media (prefers-reduced-motion: reduce) {
-        &.is-loop-running .jwsnj_topMv_track { animation: none; }
+        &.is-swiper-prepared .jwsnj_topMv_track { transition-duration: 0ms !important; }
         .jwsnj_topMv_toggle { display: none; }
     }
-}
-@keyframes jwsnj-mv-loop {
-    from { transform: translateX(0); }
-    to { transform: translateX(calc(-100% - var(--jwsnj-mv-gap))); }
 }
