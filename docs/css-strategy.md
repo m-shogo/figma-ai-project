@@ -566,3 +566,23 @@ Re-test after:
 ## Human確定 2026-11-26 — クラス単位のresponsive/state ownership（全案件）
 
 親またはstylesheet末尾にPC用子セレクタを集めず、該当する最小owner selector内にbase、media/container/supports、hover/focus/state、疑似要素を同居させる。既存CSSも同じ方針で安全に整理する。詳細・例外・カスケード保持は `docs/frontend-quick-contract.md` §7。外部/vendor/generated CSSを直接変更しない。
+
+
+## CSS quality gate — portable defaults (Human 2026-11-26)
+
+Treat maintainability and visual fidelity as distinct gates. Prefer a flat, searchable owner selector, keeping related media/container/supports/pseudo/state declarations on that owner. Do not flatten a nested selector by dropping its scope or changing specificity. Native nesting `&` refers to the entire parent selector; reverse contexts require actual DOM + resolved selector evidence. Preserve source order when moving declarations; test both sides of each breakpoint. Multi-owner state rules may remain grouped if their exact cascade is documented.
+
+- Tokens: use semantic role names, keep theme/company-specific values in that owner, share only proven primitives. Audit all consumers (front, editor, PHP/JS, plugin and build outputs) before deleting aliases; coincident hex values do not establish shared intent. No universal color/spacing palette across company themes.
+- Responsive: use flow/grid/flex, minmax/min/clamp and intrinsic sizes where supported by the layout intent; retain agreed breakpoints. Container queries suit reusable components whose available inline size differs from viewport; opt in per component after verifying containment and WordPress editor geometry. Never convert every media query mechanically.
+- Cascade: new clean architecture may evaluate @layer and low-specificity :where() defaults; legacy WordPress/plugin styles can be unlayered and outrank normal layered declarations. Do not wrap only part of an existing theme in layers without computed-style regressions.
+- Compatibility: use Required Environment matrix, current browser support, @supports on a real consuming property and a working base. Custom properties accept arbitrary tokens; declaring a modern value last is not a computed-value fallback. Do not rely on a custom property inside ordinary media-query conditions. Confirm native nesting and math/typed properties with actual browser probes; avoid adding polyfills or transpilers solely for novelty.
+- Accessibility: preserve focus at foundation and component levels, keyboard and forced-colors, native affordances, reduced motion (including optional transform itself), touch/pointer capability and visible tap targets. Fixed heights for text and hidden overflow need review; image/decoration/viewport exceptions are legitimate.
+- Performance: inspect the actual delivered CSS/network and unused-code coverage across templates, logged-in/editor/plugin states before deletion. Do not impose a size/selector KPI or claim speed gains from source size alone.
+
+### Automated checks
+
+Existing Project Guard now adds advisory CSS-specific checks for new lines in authored CSS across projects (not just WordPress): media var(), reverse nesting, removed outline, transition all, fixed rem-height, viewport width and smooth scrolling. Standard generated/vendor/reference/minified paths are excluded. The pure helper has positive/negative tests that run inside existing `--range` CI. This is intentionally a line heuristic (not a full CSS parser or browser compatibility verifier). Review warnings in context; no automatic rewrite or global rule banning valid exceptions.
+
+`config/stylelint-native-css.mjs` is an optional advisory starter for a target repo using native CSS. Reuse existing approved Stylelint/toolchain when present. For a new adoption, pin and lock the dependency in the target's package manager, verify config against fixtures and actual CSS, exclude vendor/generated output, baseline existing findings and gate only agreed regressions. Example once Stylelint is installed: `pnpm exec stylelint --config config/stylelint-native-css.mjs "projects/<slug>/theme/css/**/*.css"`. Adapt path for React/CSS Modules or other frameworks. Do not enable autofix repository-wide; syntax/duplicate/specificity checks cannot establish DOM matching, actual unused variables, compatibility or visual parity. The starter is not itself an active Stylelint CI job.
+
+Sources: MDN CSS nesting/specificity, cascade layers, container queries, @property and CSS math; Stylelint official rules (no-duplicate-selectors, no-descending-specificity, selector-no-unmatchable). See https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Nesting/Nesting_and_specificity and https://stylelint.io/user-guide/rules/.

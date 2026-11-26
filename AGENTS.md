@@ -455,7 +455,7 @@ Screenshot evidenceはviewportだけで識別しない。
 
 ## Styling
 
-既存target repoのstyle architectureを最優先する。SCSSは前提にしない。
+既存target repoのstyle architectureを最優先する。SCSSは前提にしない。全案件のCSS品質・互換性・保守性は `docs/css-strategy.md` の CSS quality gate を着手/差分review時に確認する。Project GuardのCSS警告は理由を確認し、Stylelintは既存toolchain優先で導入・検証する（vendor/generated、Company固有契約を尊重）。
 
 新規React/Next/Vite系で既存規約が無い場合のcurrent candidate:
 

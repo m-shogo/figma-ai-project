@@ -8,6 +8,7 @@ import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import path from 'node:path';
+import { isAuthoredCssPath, reviewCssLine } from './css-quality-guard.mjs';
 
 const git = (...args) => execFileSync('git', args, { encoding: 'utf8', maxBuffer: 1 << 28 });
 const ROOT = git('rev-parse', '--show-toplevel').trim();
@@ -122,15 +123,21 @@ function inspect(diffArgs, message) {
 
   const themeFiles = projectFiles.filter(({ file }) => /^projects\/[^/]+\/theme\/.+\.(css|scss|php|js)$/.test(file));
   const authoredFiles = themeFiles.filter(({ file }) => !/\.min\.(css|js)$/.test(file));
-  if (authoredFiles.length) {
-    const patch = git('diff', ...diffArgs, '-U0', '-w', '--no-renames', '--', ...authoredFiles.map(({ file }) => file));
+  const themePaths = new Set(authoredFiles.map(({ file }) => file));
+  const cssPaths = new Set(projectFiles.map(({ file }) => file).filter(isAuthoredCssPath));
+  const reviewPaths = [...new Set([...themePaths, ...cssPaths])];
+  if (reviewPaths.length) {
+    const patch = git('diff', ...diffArgs, '-U0', '-w', '--no-renames', '--', ...reviewPaths);
     const hits = new Map();
     let current = '';
     for (const line of patch.split('\n')) {
       if (line.startsWith('+++ ')) current = line.slice(6);
       if (!line.startsWith('+') || line.startsWith('+++')) continue;
-      for (const [pattern, note] of WARN_PATTERNS) {
-        if (!pattern.test(line)) continue;
+      const file = current.startsWith('b/') ? current.slice(2) : current;
+      const cssNotes = cssPaths.has(file) ? reviewCssLine(line.slice(1)).map(({id,message}) => [null, `${id}: ${message}`]) : [];
+      const patterns = [...(themePaths.has(file) ? WARN_PATTERNS : []), ...cssNotes];
+      for (const [pattern, note] of patterns) {
+        if (pattern && !pattern.test(line)) continue;
         if (!hits.has(note)) hits.set(note, []);
         const code = line.slice(1).trim();
         hits.get(note).push(`${current}: ${code.length > 120 ? `${code.slice(0, 120)}…` : code}`);
@@ -161,6 +168,8 @@ function runCommitMsg(messageFile) {
 }
 
 function runRange(range) {
+  // Same test runs in the existing Project Guard CI; no new runtime dependencies.
+  execFileSync(process.execPath, ['--test', 'scripts/css-quality-guard.test.mjs'], { stdio: 'inherit' });
   const shas = git('rev-list', '--reverse', '--no-merges', range).split('\n').filter(Boolean);
   let failed = 0;
   for (const sha of shas) {
