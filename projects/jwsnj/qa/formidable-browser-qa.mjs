@@ -45,7 +45,7 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
     await clear.waitFor({state: 'attached'});
     assert.equal(await page.locator('#file-adapter-probe > .file .clear-file').count(), 0);
     assert.equal(await page.locator('#button_submit').isEnabled(), true);
-    const filename = '<b>sample</b>.txt';
+    const filename = '<b>sample.txt';
     await legacy.locator('input').setInputFiles({name: filename, mimeType: 'text/plain', buffer: Buffer.from('fixture')});
     assert.equal(await legacy.locator('label').textContent(), filename);
     assert.equal(await legacy.locator('label b').count(), 0);
