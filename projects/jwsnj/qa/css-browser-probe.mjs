@@ -38,6 +38,55 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
  assert.notEqual(keyboard.outline,'none',name+' keyboard outline');
  assert.ok(parseFloat(keyboard.width)>0,name+' keyboard outline width');
  report.push({name,keyboard});
+ // Actual theme imports: menu open/close cascade and table responsive owners.
+ // Synthetic markup is isolated from WordPress and does not imply editor/site acceptance.
+ for(const width of [375,768,1380]){
+   await page.setViewportSize({width,height:900});
+   const components=await page.evaluate(()=>{
+     const fixture=document.createElement('div');
+     fixture.className='block-editor_wrap';
+     for(const [owner,prefix] of [['module_menu','mm'],['module_dropdown','mdd']]){
+       const menu=document.createElement('div');
+       menu.className=owner;
+       menu.innerHTML='<div class="'+prefix+'_item-03" data-open="false"><div class="'+prefix+'_title-03"><a class="'+prefix+'_link-03" href="#end">リンク</a><button class="'+prefix+'_button-03">開閉</button></div><div class="'+prefix+'_wrapper-03"><div class="'+prefix+'_inner-03"><div class="'+prefix+'_list-03">子項目</div></div></div></div>';
+       fixture.append(menu);
+     }
+     fixture.insertAdjacentHTML('beforeend','<figure class="wp-block-table is-scroll-on-mobile" data-jwsnj-table-hint tabindex="0"><table><tbody><tr><td>テーブル</td></tr></tbody></table><div class="scroll-hint-icon-wrap"><div class="scroll-hint-icon"></div></div></figure>');
+     document.querySelector('.global_inner').append(fixture);
+     const menus=[];
+     for(const [owner,prefix] of [['module_menu','mm'],['module_dropdown','mdd']]){
+       const item=fixture.querySelector('.'+prefix+'_item-03');
+       const wrapper=item.querySelector('.'+prefix+'_wrapper-03');
+       wrapper.style.transition='none';
+       const closed=wrapper.getBoundingClientRect().height;
+       item.dataset.open='true';
+       const open=wrapper.getBoundingClientRect().height;
+       item.dataset.open='false';
+       const reclosed=wrapper.getBoundingClientRect().height;
+       menus.push({owner,closed,open,reclosed});
+     }
+     const table=fixture.querySelector('figure');
+     const cell=table.querySelector('td');
+     const hint=table.querySelector('.scroll-hint-icon-wrap');
+     const style=getComputedStyle(cell);
+     const result={menus,table:{paddingBlock:parseFloat(style.paddingBlockStart),paddingInline:parseFloat(style.paddingInlineStart),scroll:getComputedStyle(table).overflowX,hint:getComputedStyle(hint).display,width:table.querySelector('table').getBoundingClientRect().width}};
+     fixture.remove();
+     return result;
+   });
+   for(const menu of components.menus){
+     assert.ok(menu.closed<=1&&menu.open>1&&menu.reclosed<=1,name+' '+menu.owner+' disclosure '+width);
+   }
+   assert.ok(Math.abs(components.table.paddingBlock-(width<768?12:15))<0.2,name+' table block padding '+width);
+   assert.ok(Math.abs(components.table.paddingInline-(width<768?20:30))<0.2,name+' table inline padding '+width);
+   if(width<768){
+     assert.equal(components.table.scroll,'auto');
+     assert.equal(components.table.hint,'block');
+     assert.ok(components.table.width>=959);
+   }else{
+     assert.equal(components.table.hint,'none');
+   }
+   report.push({name,width,components});
+ }
  // Feature proof separate from production layout: actual cascade and containment.
  const mechanism=await page.evaluate(()=>{
    const root=document.documentElement;
