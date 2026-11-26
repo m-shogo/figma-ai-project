@@ -39,6 +39,6 @@ test('single return link occupies the first grid row without a phantom mobile ro
   assert.match(css,/\.back\s*\{\s*grid-column: 1 \/ -1;\s*grid-row: 2;[\s\S]*?&:only-child\s*\{\s*grid-row: 1;\s*\}/);
   assert.match(css,/\.prev\s*\{\s*grid-column: 1;\s*grid-row: 1/);
   assert.match(css,/\.next\s*\{\s*grid-column: 2;\s*grid-row: 1/);
-  assert.match(css,/\.back\s*\{\s*grid-column: 2;\s*grid-row: 1;\s*\}/);
+  assert.match(css,/\.back\s*\{[\s\S]*?@media \(calc\(768 \* \(1 \/ 16 \* 1rem\)\) <= width\)\s*\{\s*grid-column: 2;\s*grid-row: 1;\s*\}/);
   assert.match(css,/gap: calc\(40 \* var\(--to-rem-func\)\) calc\(16 \* var\(--to-rem-func\)\)/);
 });

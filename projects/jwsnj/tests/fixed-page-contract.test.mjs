@@ -40,7 +40,7 @@ test('empty sidebar emits no landmark and actual menu is reused',()=>{
 test('fixed page layout has bounded columns and no fixed text heights',()=>{
   const css=read('css/project/fixed_page.css');
   assert.match(css,/minmax\(0, 1fr\) minmax\(0, calc\(256/);
-  assert.match(css,/\.gc_sub \{ display: none/);
+  assert.match(css,/\.gc_sub\s*\{\s*display:\s*none/);
   assert.match(css,/1024 \*/);
   assert.match(css,/object-position: center bottom/);
   assert.doesNotMatch(css,/white-space:\s*nowrap|(?<!min-)height:\s*calc/);

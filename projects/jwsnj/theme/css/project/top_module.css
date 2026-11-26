@@ -1,7 +1,7 @@
 @charset "utf-8";
 /* // ==========================================================================
-// トップモジュール top_module
-// ========================================================================== */
+   // トップモジュール top_module
+   // ========================================================================== */
 .top_title-01 {
     margin-bottom: calc(30 * var(--to-rem-func));
     .title-main,
@@ -34,6 +34,11 @@
                 color: var(--color-secondary);
                 text-align: center;
             }
+            @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
         }
         .body {
             padding-block: calc(15 * var(--to-rem-func));
@@ -47,12 +52,21 @@
                     .date {
                         color: var(--color-primary);
                         time {
+
                         }
                     }
                     .text {
+
                     }
                 }
             }
+            @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+                width: 100%;
+            }
+        }
+        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+            display: grid;
+            grid-template-columns: calc(200 * var(--to-rem-func)) 1fr;
         }
     }
 
@@ -63,17 +77,5 @@
         z-index: 10;
         padding-top: 0;
         width: 100%;
-        .notice {
-            display: grid;
-            grid-template-columns: calc(200 * var(--to-rem-func)) 1fr;
-            .head {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-            .body {
-                width: 100%;
-            }
-        }
     }
 }

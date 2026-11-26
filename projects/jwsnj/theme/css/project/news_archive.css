@@ -25,6 +25,9 @@ body.category {
         .mb_inner.global_inner {
             max-width: none;
             padding-inline: var(--padding-SP);
+            @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+                padding-inline: calc(64 * var(--to-rem-func));
+            }
         }
         .module_breadCrumb-01 {
             display: flex;
@@ -57,6 +60,9 @@ body.category {
                     outline: calc(2 * var(--to-rem-func)) solid var(--color-primary);
                     outline-offset: calc(3 * var(--to-rem-func));
                 }
+                @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+                    gap: calc(8 * var(--to-rem-func));
+                }
             }
             .jwsnj_breadCrumb_homeIcon {
                 display: inline-block;
@@ -67,18 +73,16 @@ body.category {
                     letter-spacing: 0;
                     text-box-trim: none;
                 }
+                &::before {
+                    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+                        font-size: calc(12 * var(--to-rem-func));
+                    }
+                }
             }
         }
         @media (calc(768 * (1 / 16 * 1rem)) <= width) {
             min-height: calc(50 * var(--to-rem-func));
             font-size: calc(13 * var(--to-rem-func));
-            .mb_inner.global_inner { padding-inline: calc(64 * var(--to-rem-func)); }
-            .module_breadCrumb-01 {
-                a { gap: calc(8 * var(--to-rem-func)); }
-                .jwsnj_breadCrumb_homeIcon::before {
-                    font-size: calc(12 * var(--to-rem-func));
-                }
-            }
         }
     }
 }
@@ -92,6 +96,12 @@ body.category {
         align-items: stretch;
         gap: calc(20 * var(--to-rem-func));
         margin-bottom: calc(40 * var(--to-rem-func));
+        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+            flex-direction: row;
+            justify-content: flex-end;
+            align-items: flex-start;
+            margin-bottom: calc(56 * var(--to-rem-func));
+        }
     }
     .jwsnj_newsArchive_filterLabel {
         display: flex;
@@ -101,6 +111,9 @@ body.category {
         font-weight: 500;
         line-height: 1.4;
         letter-spacing: 0.12em;
+        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+            padding-block: calc(12 * var(--to-rem-func));
+        }
     }
     .jwsnj_newsArchive_blossom {
         flex: 0 0 calc(18 * var(--to-rem-func));
@@ -156,6 +169,14 @@ body.category {
             text-decoration: none;
             overflow-wrap: anywhere;
             &[aria-current='page'] { color: var(--color-primary); font-weight: 700; }
+            &:hover {
+                @media (any-hover: hover) {
+                    background: var(--jwsnj-color-base-lightgreen);
+                }
+            }
+        }
+        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+            width: calc(240 * var(--to-rem-func));
         }
     }
     .module_newsList-01 {
@@ -168,6 +189,13 @@ body.category {
                 align-items: stretch;
                 gap: calc(16 * var(--to-rem-func));
                 padding: calc(20 * var(--to-rem-func)) calc(16 * var(--to-rem-func));
+                @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+                    display: grid;
+                    grid-template-columns: minmax(0, calc(170 * var(--to-rem-func))) minmax(0, 1fr);
+                    align-items: center;
+                    gap: calc(40 * var(--to-rem-func));
+                    padding: calc(24 * var(--to-rem-func)) 0;
+                }
             }
             .head {
                 align-items: center;
@@ -211,6 +239,18 @@ body.category {
                     line-height: 1.4;
                 }
             }
+            .no-link:hover .body .title {
+                @media (any-hover: hover) {
+                    /* The inherited news module also colors non-link titles on hover. */
+                    color: var(--color-text);
+                }
+            }
+            &:last-child {
+                @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+                    /* PC ends without a separator; SP retains the final row rule. */
+                    border-bottom: 0;
+                }
+            }
         }
     }
     .jwsnj_newsArchive_pager {
@@ -245,7 +285,15 @@ body.category {
             letter-spacing: 0.05em;
             text-decoration: none;
             &.current { color: var(--color-secondary); background: var(--color-primary); }
-            &.is-desktop-only { display: none; }
+            &.is-desktop-only {
+                display: none;
+                @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+                    display: inline-flex;
+                }
+            }
+            @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+                font-family: var(--font-jwsnj-ja);
+            }
         }
         .prev, .next {
             display: inline-flex;
@@ -279,58 +327,36 @@ body.category {
                 text-box-trim: none;
             }
         }
-    }
-    :is(a, summary):focus-visible {
-        outline: calc(2 * var(--to-rem-func)) solid var(--color-primary);
-        outline-offset: calc(3 * var(--to-rem-func));
-    }
-    @media (any-hover: hover) {
-        .jwsnj_newsArchive_filterMenu a:hover { background: var(--jwsnj-color-base-lightgreen); }
-        /* The inherited news module also colors non-link titles on hover. */
-        .module_newsList-01 .mnl-01_article .no-link:hover .body .title {
-            color: var(--color-text);
-        }
-        .jwsnj_newsArchive_pager a:hover {
-            &.page-numbers { color: var(--color-secondary); background: var(--color-primary); }
-            &:is(.prev, .next) { text-decoration: underline; }
-        }
-    }
-    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-        max-width: calc(var(--width-base-small) + var(--padding-TB) * 2);
-        padding-block: calc(80 * var(--to-rem-func)) calc(100 * var(--to-rem-func));
-        .jwsnj_newsArchive_filter {
-            flex-direction: row;
-            justify-content: flex-end;
-            align-items: flex-start;
-            margin-bottom: calc(56 * var(--to-rem-func));
-        }
-        .jwsnj_newsArchive_filterLabel { padding-block: calc(12 * var(--to-rem-func)); }
-        .jwsnj_newsArchive_filterMenu { width: calc(240 * var(--to-rem-func)); }
-        .module_newsList-01 .mnl-01_article {
-            /* PC ends without a separator; SP retains the final row rule. */
-            &:last-child { border-bottom: 0; }
-            .link, .no-link {
-                display: grid;
-                grid-template-columns: minmax(0, calc(170 * var(--to-rem-func))) minmax(0, 1fr);
-                align-items: center;
-                gap: calc(40 * var(--to-rem-func));
-                padding: calc(24 * var(--to-rem-func)) 0;
+        a:hover {
+            &.page-numbers {
+                @media (any-hover: hover) {
+                    color: var(--color-secondary);
+                    background: var(--color-primary);
+                }
+            }
+            &:is(.prev, .next) {
+                @media (any-hover: hover) {
+                    text-decoration: underline;
+                }
             }
         }
-        .jwsnj_newsArchive_pager {
+        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
             gap: calc(40 * var(--to-rem-func));
             margin-top: calc(56 * var(--to-rem-func));
-            .page-numbers {
-                font-family: var(--font-jwsnj-ja);
-                &.is-desktop-only { display: inline-flex; }
-            }
         }
     }
+    :is(a, summary):focus-visible {
+        outline: calc(2 * var(--to-rem-func)) solid var(--color-primary);
+        outline-offset: calc(3 * var(--to-rem-func));
+    }
+    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+        max-width: calc(var(--width-base-small) + var(--padding-TB) * 2);
+        padding-block: calc(80 * var(--to-rem-func)) calc(100 * var(--to-rem-func));
+    }
 }
-
 
 /* Archive-specific hero: PC 390:799 / SP 507:2741.
    Photos remain the existing ACF attachment; exact desktop decorative assets
@@ -359,6 +385,9 @@ body.category {
             line-height: 1.4;
             letter-spacing: 0.05em;
             overflow-wrap: anywhere;
+            @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+                font-size: calc(32 * var(--to-rem-func));
+            }
         }
         .jwsnj_newsArchive_heroEnglish {
             max-width: 100%;
@@ -373,6 +402,14 @@ body.category {
             line-height: 1.3;
             letter-spacing: 0.05em;
             overflow-wrap: anywhere;
+            @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+                min-width: 0;
+                padding-inline: calc(32 * var(--to-rem-func));
+                font-size: calc(15 * var(--to-rem-func));
+            }
+        }
+        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+            gap: calc(16 * var(--to-rem-func));
         }
     }
     .jwsnj_newsArchive_heroImage {
@@ -389,34 +426,29 @@ body.category {
             height: 100%;
             object-fit: cover;
             object-position: center 76%;
+            @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+                object-position: center 70%;
+            }
+        }
+        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+            aspect-ratio: auto;
+            border-radius: calc(10 * var(--to-rem-func)) 0 0 0;
         }
     }
-    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-        &.has-image {
+    &.has-image {
+        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
             display: grid;
             grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
             gap: 0;
             min-height: calc(400 * var(--to-rem-func));
             padding: 0;
             background: linear-gradient(to bottom, var(--color-secondary) 50%, var(--jwsnj-color-base-lightgreen) 50%);
-            .jwsnj_newsArchive_heroTitle {
+        }
+        .jwsnj_newsArchive_heroTitle {
+            @media (calc(768 * (1 / 16 * 1rem)) <= width) {
                 justify-content: flex-start;
                 padding: calc(160 * var(--to-rem-func)) clamp(var(--padding-SP), 4.35vw, var(--padding-TB)) calc(100 * var(--to-rem-func));
             }
-        }
-        .jwsnj_newsArchive_heroTitle {
-            gap: calc(16 * var(--to-rem-func));
-            :is(h1, .jwsnj_newsArchive_sectionTitle) { font-size: calc(32 * var(--to-rem-func)); }
-            .jwsnj_newsArchive_heroEnglish {
-                min-width: 0;
-                padding-inline: calc(32 * var(--to-rem-func));
-                font-size: calc(15 * var(--to-rem-func));
-            }
-        }
-        .jwsnj_newsArchive_heroImage {
-            aspect-ratio: auto;
-            border-radius: calc(10 * var(--to-rem-func)) 0 0 0;
-            .jwsnj_newsArchive_heroPhoto { object-position: center 70%; }
         }
     }
 }
