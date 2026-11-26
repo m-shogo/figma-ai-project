@@ -198,3 +198,19 @@ test('course intro layout composes the existing styles with optional native medi
   assert.equal((pattern.match(/<!-- wp:group /g)||[]).length,(pattern.match(/<!-- \/wp:group -->/g)||[]).length);
   execFileSync('php',['-l',file.pathname]);
 });
+
+
+test('schedule media overrides only unaligned image centering and keeps text-only desktop rows distinct',()=>{
+  const group=readFileSync(new URL('../theme/css/blocks/wp-block-group-style.css',import.meta.url),'utf8');
+  const s=group.slice(group.indexOf('/* Course schedule PC'),group.indexOf('/* Course PC 539:3658'));
+  assert.match(s,/> \.wp-block-image,\s*> \.wp-block-group__inner-container > \.wp-block-image\s*\{[\s\S]*?min-width: 0/);
+  assert.match(s,/:not\(:has\(\.alignleft\)\):not\(:has\(\.alignright\)\):not\(:has\(\.aligncenter\)\)\s*\{\s*width:\s*min\(100%, calc\(200 \* var\(--to-rem-func\)\)\);\s*margin-inline:\s*0/);
+  assert.match(s,/@media \(calc\(1080 \* \(1 \/ 16 \* 1rem\)\) <= width\)[\s\S]*?&:not\(:has\(> \.wp-block-image, > \.wp-block-group__inner-container > \.wp-block-image\)\)\s*\{\s*padding-block:\s*calc\(12 \* var\(--to-rem-func\)\)/);
+  assert.doesNotMatch(s,/white-space:\s*nowrap|(?:^|[;{}\n])\s*height\s*:|url\(/);
+  const generic=readFileSync(new URL('../theme/css/blocks/wp-block-image-style.css',import.meta.url),'utf8');
+  assert.match(generic,/width:\s*fit-content;\s*margin-inline:\s*auto/);
+  for(const file of ['style.css','editor-style.css']){
+    const imports=readFileSync(new URL('../theme/css/'+file,import.meta.url),'utf8');
+    assert.ok(imports.indexOf('wp-block-group-style.css')<imports.indexOf('wp-block-image-style.css'));
+  }
+});
