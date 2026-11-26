@@ -599,3 +599,7 @@ JWSNJ #697 actual CI (run 45793289788) used Stylelint 17.16.0 (isolated npm QA i
 ### 2026-11-26 Human: two-space indentation
 
 All authored CSS and frontend source use two ASCII spaces per indentation level, no hard tabs. Keep owner-local responsive/state rules. Align EditorConfig and target formatter. Migrate existing source separately from behavior, preserve meaningful whitespace and exclude copied/vendor/generated assets. Do not rewrite unrelated projects. Python and syntax-required exceptions remain separate.
+
+### Source custom-property reference audit
+
+`css-token-inventory.mjs` also reports `referenceAudit` for authored theme CSS: declarations, @property registrations, every unresolved var() use with source line and fallback presence. This is advisory: source-wide definition presence does not establish selector scope, and a missing source definition may be supplied by WordPress/plugin/DB/JS. Resolve by actual owner and runtime evidence; never add guessed tokens or change palette solely to silence warnings. CI logs list warning hotspots by file to prioritize real maintenance costs.

@@ -2,6 +2,7 @@
 // consumers are not represented: zero source matches is not removal permission.
 import {execFileSync} from 'node:child_process';
 import {readFileSync} from 'node:fs';
+import {inventoryCssReferences} from './css-token-references.mjs';
 const slug=process.argv[2];
 if(!/^[a-z0-9][a-z0-9-]*$/.test(slug??'')) throw Error('usage: node scripts/css-token-inventory.mjs <project>');
 const project='projects/'+slug;
@@ -19,4 +20,6 @@ const result=[...tokens].sort().map(token=>{
  }
  return {token,consumers,docs};
 });
-console.log(JSON.stringify({project,scanned:paths.length,tokenCount:result.length,zeroSourceCandidates:result.filter(x=>!x.consumers.length).map(x=>x.token),tokens:result},null,2));
+const authoredCss=source.filter(([p])=>p.startsWith(project+'/theme/css/')&&/\.css$/i.test(p)&&!/(?:\.min\.css|\/scroll-hint\.css)$/i.test(p));
+const referenceAudit=inventoryCssReferences(authoredCss);
+console.log(JSON.stringify({referenceAudit,project,scanned:paths.length,tokenCount:result.length,zeroSourceCandidates:result.filter(x=>!x.consumers.length).map(x=>x.token),tokens:result},null,2));
