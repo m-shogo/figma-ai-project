@@ -168,3 +168,22 @@ test('legacy numeric pager reuses the defined English font token',()=>{
   assert.match(tokens,/--font-sansSerif-en\s*:/);
   assert.doesNotMatch(pager,/var\(--enText\)/);
 });
+
+
+test('legacy news titles and pager links localize motion reduction without animating layout', () => {
+  for (const file of ['module_newsCard-01.css', 'module_newsList-01.css']) {
+    const css = read('css/module/' + file);
+    assert.doesNotMatch(css, /transition:\s*var\(--transition-duration\)/);
+    assert.match(css, /transition: color var\(--transition-duration\);\s*@media \(prefers-reduced-motion: reduce\)\s*\{\s*transition: none/);
+  }
+  for (const file of ['module_pager-01.css', 'module_pager-02.css']) {
+    const css = read('css/module/' + file);
+    assert.match(css, /transition: (?:color|background-color) var\(--transition-duration\), (?:color|background-color) var\(--transition-duration\);\s*@media \(prefers-reduced-motion: reduce\)\s*\{\s*transition: none/);
+  }
+});
+
+test('adjacent heading spacing has no identical desktop redeclaration', () => {
+  const css = read('css/blocks/wp-block-heading-style.css');
+  assert.doesNotMatch(css, /margin-top: var\(--wp-block-margin-small\);\s*@media \([^{}]+\)\s*\{\s*margin-top: var\(--wp-block-margin-small\);/);
+  assert.equal((css.match(/margin-top: var\(--wp-block-margin-small\);/g) || []).length, 6);
+});
