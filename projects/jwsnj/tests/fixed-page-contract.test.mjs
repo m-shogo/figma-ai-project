@@ -107,7 +107,7 @@ test('search and basic form CSS use natural text heights and native selectors',(
   assert.match(base,/&:focus-visible/);
   assert.match(form,/\.label-need,\s*\.label-any\s*\{/);
   assert.doesNotMatch(form,/&-need|&-any|white-space:\s*nowrap/);
-  assert.match(form,/&:has\(input:focus-visible\)/);
+  assert.match(form,/&:focus-within/);
 });
 
 test('CSS duplicate properties are removed and About owners preserve original scope',()=>{
@@ -131,4 +131,15 @@ test('legacy list and pagination responsive states are owner-local, admin focus 
  const admin=read('css/admin-style.css');
  assert.doesNotMatch(admin,/outline:\s*none/);
  assert.match(admin,/&:focus-visible\s*\{\s*opacity: 1;\s*outline: 2px solid currentColor/);
+});
+
+test('Formidable choice controls preserve native checked state and real labels',()=>{
+ const css=read('css/wordpress/form.css');
+ const scope=css.slice(css.indexOf('.frm_forms {'),css.indexOf('/* //ラベル */',css.indexOf('.frm_forms {')));
+ assert.match(scope,/appearance: auto !important/);
+ assert.match(scope,/accent-color: var\(--color-primary\)/);
+ assert.match(scope,/&:has\(input:checked\)/);
+ assert.match(scope,/min-height: calc\(50 \* var\(--to-rem-func\)\)/);
+ assert.doesNotMatch(scope,/text-indent: -1000px|font-size: 0;|height: 0;|content: attr\(value\)/);
+ assert.match(css,/input\[type='file'\]:not\(\.frm_transparent\)/);
 });
