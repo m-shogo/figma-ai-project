@@ -430,16 +430,19 @@ function wp_custom_title_output($title)
     $is_fiscal = in_array($post_type, get_fiscal_year_post_types(), true);
     $year_suffix = $is_fiscal ? '年度' : '年';
 
-    // 投稿タイプのラベルを取得
+    // An unassigned posts page must not resolve get_the_title(0) to the first result.
+    $post_type_label = '';
     if ($post_type === 'post') {
-      $post_type_label = get_the_title(get_option('page_for_posts'));
+      $posts_page_id = (int) get_option('page_for_posts');
+      if ($posts_page_id > 0) $post_type_label = get_the_title($posts_page_id);
     } else {
-      $post_type_label = get_post_type_object($post_type)->label;
+      $post_type_object = get_post_type_object($post_type);
+      if ($post_type_object) $post_type_label = $post_type_object->label;
     }
 
     $year_val = jwsnj_archive_year();
     if (!$year_val) return $title;
-    $title['title'] = $post_type_label . ' ' . $year_val . $year_suffix;
+    $title['title'] = trim($post_type_label . ' ' . $year_val . $year_suffix);
   }
   return $title;
 }
