@@ -322,6 +322,12 @@ CSS / CSS + SVG / SVG / raster / Figma exact export
 
 Figma/Existingに正しいassetがあるなら描き直さない。pseudo-element/clip/transform/breakpoint patchがshape再現のために増殖するならmechanismを再評価する。納品形式（写真・ラスター fill → WebP、ベクター logo/icon → アウトライン SVG）は `docs/image-gradient-visual-tolerance.md`。
 
+### 20.1 長いページはsection単位で視覚監査する
+
+- 全体の縮小画像や生成コードだけでは細部の欠落・ズレを検出できない。PC/SP個別sectionと子layerの高精細情報、実renderを照合する。背景fill/crop/effect/全幅/境界、装飾のlayer/z-order/clip、アイコンのexact asset・style・向き・寸法を明示的に点検する。
+- 公式assetが存在するなら類似品/AI生成/描き直しに置換しない。各可視素材をdesign node → asset → callsite → renderで確認し、存在するだけでPASSにしない。文字は自然wrap、装飾だけの位置指定を区別。隣接sectionや共通ownerへの回帰、状態変化も確認する。
+- 実render不可・未取得/権利未確定は未検証/保留。時間や処理件数ではなく根拠のあるsection別合否を優先する。案件固有node/数値は案件文書に置く。
+
 ## 21. Visual repairはroot cause + learningへ戻す
 
 Visual差分は原則:
