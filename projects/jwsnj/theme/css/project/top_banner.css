@@ -1,58 +1,58 @@
 @charset "utf-8";
 /* Existing editor-managed TOP banners, not the pending licensed Figma photo. */
 .top_banner-01 {
-    padding-block: calc(60 * var(--to-rem-func));
-    padding-inline: 0;
-    .list {
-        display: grid;
-        gap: calc(30 * var(--to-rem-func));
-        li { min-width: 0; }
-        .jwsnj_topBanner_item {
-            display: grid;
-            min-width: 0;
-            min-height: calc(80 * var(--to-rem-func));
-            color: inherit;
-            text-decoration: none;
-        }
-        .image, .title { grid-area: 1 / 1; min-width: 0; }
-        .image {
-            aspect-ratio: 265 / 80;
-            img {
-                display: block;
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-            }
-        }
-        .title {
-            display: grid;
-            align-content: center;
-            justify-items: center;
-            margin: 0;
-            padding: calc(10 * var(--to-rem-func));
-            color: var(--color-secondary);
-            font-weight: 700;
-            line-height: 1.3;
-            text-align: center;
-            overflow-wrap: anywhere;
-        }
-        li._noImage .jwsnj_topBanner_item {
-            background-color: var(--color-gray-border);
-        }
-        a.jwsnj_topBanner_item {
-            transition: opacity var(--transition-duration);
-            &:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; }
-            &[target='_blank'] .title::after {
-                content: var(--icon-blank);
-                font-family: var(--font-awesome);
-            }
-            @media (any-hover: hover) {
-                &:hover { opacity: var(--opacity-hover); }
-            }
-            @media (prefers-reduced-motion: reduce) { transition: none; }
-        }
-        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-            grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(220 * var(--to-rem-func))), 1fr));
-        }
+  padding-block: calc(60 * var(--to-rem-func));
+  padding-inline: 0;
+  .list {
+    display: grid;
+    gap: calc(30 * var(--to-rem-func));
+    li { min-width: 0; }
+    .jwsnj_topBanner_item {
+      display: grid;
+      min-width: 0;
+      min-height: calc(80 * var(--to-rem-func));
+      color: inherit;
+      text-decoration: none;
     }
+    .image, .title { grid-area: 1 / 1; min-width: 0; }
+    .image {
+      aspect-ratio: 265 / 80;
+      img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+    .title {
+      display: grid;
+      align-content: center;
+      justify-items: center;
+      margin: 0;
+      padding: calc(10 * var(--to-rem-func));
+      color: var(--color-secondary);
+      font-weight: 700;
+      line-height: 1.3;
+      text-align: center;
+      overflow-wrap: anywhere;
+    }
+    li._noImage .jwsnj_topBanner_item {
+      background-color: var(--color-gray-border);
+    }
+    a.jwsnj_topBanner_item {
+      transition: opacity var(--transition-duration);
+      &:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; }
+      &[target='_blank'] .title::after {
+        content: var(--icon-blank);
+        font-family: var(--font-awesome);
+      }
+      @media (any-hover: hover) {
+        &:hover { opacity: var(--opacity-hover); }
+      }
+      @media (prefers-reduced-motion: reduce) { transition: none; }
+    }
+    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(220 * var(--to-rem-func))), 1fr));
+    }
+  }
 }
