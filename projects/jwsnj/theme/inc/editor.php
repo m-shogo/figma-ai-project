@@ -269,4 +269,8 @@ add_action('init', function () {
     'name' => 'jwsnj-course-grades',
     'label' => 'コース対象学年（ラベル＋一覧）',
   ));
+  register_block_style('core/group', array(
+    'name' => 'jwsnj-course-schedule',
+    'label' => 'コース一日の流れ（交互配置）',
+  ));
 });

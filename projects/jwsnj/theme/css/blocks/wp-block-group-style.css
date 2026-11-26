@@ -188,3 +188,77 @@
         }
     }
 }
+
+/* Course schedule PC 608:3037–3045 / 617:3477–3486.
+   Outer Group contains one ordinary Group per chronological entry:
+   optional native Image followed by an editable Paragraph. */
+:is(.block-editor_wrap, .editor-styles-wrapper) .wp-block-group.is-style-jwsnj-course-schedule {
+    display: grid;
+    gap: calc(24 * var(--to-rem-func));
+    min-width: 0;
+    > .wp-block-group__inner-container {
+        display: grid;
+        gap: inherit;
+        min-width: 0;
+    }
+    > .wp-block-group,
+    > .wp-block-group__inner-container > .wp-block-group {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: calc(12 * var(--to-rem-func));
+        margin: 0;
+        min-width: 0;
+        max-width: none;
+        > .wp-block-group__inner-container {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: inherit;
+            min-width: 0;
+            width: 100%;
+        }
+        > p,
+        > .wp-block-group__inner-container > p {
+            flex: 1 1 calc(160 * var(--to-rem-func));
+            margin: 0;
+            min-width: 0;
+            max-width: none;
+            font-family: var(--font-jwsnj-ja);
+            font-size: calc(15 * var(--to-rem-func));
+            font-weight: 500;
+            line-height: 1.5;
+            letter-spacing: 0.05em;
+            color: var(--color-text);
+            overflow-wrap: anywhere;
+        }
+        > .wp-block-image,
+        > .wp-block-group__inner-container > .wp-block-image {
+            flex: 0 1 calc(200 * var(--to-rem-func));
+            width: min(100%, calc(200 * var(--to-rem-func)));
+            max-width: 100%;
+            margin: 0;
+            img {
+                display: block;
+                width: 100%;
+                aspect-ratio: 4 / 3;
+                object-fit: cover;
+            }
+        }
+        @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+            width: min(100%, calc(600 * var(--to-rem-func)));
+            justify-self: start;
+            gap: calc(16 * var(--to-rem-func));
+            &:nth-child(even) {
+                justify-self: end;
+                flex-direction: row-reverse;
+                > .wp-block-group__inner-container { flex-direction: row-reverse; }
+                > p,
+                > .wp-block-group__inner-container > p { text-align: end; }
+            }
+        }
+    }
+    @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+        gap: 0;
+    }
+}
