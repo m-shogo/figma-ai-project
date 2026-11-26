@@ -28,6 +28,9 @@ textarea,
   color: var(--color-text);
   font-size: calc(16 * var(--to-rem-func));
   transition: border-color var(--transition-duration), background-color var(--transition-duration);
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
   &:hover {
     border-color: var(--color-primary) !important;
   }
@@ -140,7 +143,14 @@ textarea {
     }
   }
 }
-input {
+/* Native controls outside the legacy CF7 presentation remain visible and operable.
+   Formidable keeps its own more specific plugin integration below. */
+input:is([type='checkbox'], [type='radio']) {
+  appearance: auto;
+  accent-color: var(--color-primary);
+}
+/* Legacy CF7-only decorative controls; never hide unrelated native inputs. */
+:where(.wpcf7) input {
   /* // 共通 */
   &[type='checkbox'],
   &[type='radio'],
@@ -860,17 +870,6 @@ textarea {
       }
     }
   }
-  span.frm_required::before {
-    /* content: '必須';
-        font-size: calc(14 * var(--to-rem-func));
-        padding: 0.2em 0.5em;
-        background: var(--color-error-text);
-        color: #fff;
-        white-space: nowrap;
-        position: absolute;
-        left: 0;
-        top: 0.5em; */
-  }
   .hyphen {
     position: relative;
     padding-right: calc(20 * var(--to-rem-func)) !important;
@@ -980,6 +979,9 @@ textarea {
       text-align: center;
       text-decoration: none;
       transition: background-color var(--transition-duration), color var(--transition-duration);
+      @media (prefers-reduced-motion: reduce) {
+        transition: none;
+      }
       background: var(--color-primary);
       color: var(--color-secondary);
       span {
@@ -1060,9 +1062,6 @@ textarea {
         }
       }
     }
-  }
-  .frm_opt_container {
-    /* display: flex !important; */
   }
   .frm_required,
   .frm-edit-page-btn {

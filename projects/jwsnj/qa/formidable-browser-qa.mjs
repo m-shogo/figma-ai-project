@@ -26,7 +26,46 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
  assert.notEqual(focused.outline,'none');assert.ok(parseFloat(focused.width)>0);
  console.log(JSON.stringify({engine:name,version:browser.version(),width,type:await control.getAttribute('type'),before,focused,checked:true}));
  }
- await page.screenshot({path:'form-qa-results/'+name+'-'+width+'.png',fullPage:true});
+    // Add ordinary native controls outside the plugin; the same real theme CSS applies.
+    await page.evaluate(() => {
+      const fixture = document.createElement('div');
+      fixture.id = 'native-choice-probe';
+      fixture.innerHTML = '<label><input type="checkbox" name="qa-native-check">通常チェック</label><label><input type="radio" name="qa-native-radio">通常ラジオ</label><label><input type="checkbox" name="qa-sibling"><span>通常の隣接ラベル</span></label>';
+      document.body.append(fixture);
+    });
+    for (const control of await page.locator('#native-choice-probe input').all()) {
+      const before = await control.evaluate(el => {
+        const s = getComputedStyle(el);
+        const box = el.getBoundingClientRect();
+        return {appearance: s.appearance, display: s.display, width: box.width, height: box.height};
+      });
+      assert.notEqual(before.display, 'none');
+      assert.notEqual(before.appearance, 'none');
+      assert.ok(before.width > 0 && before.height > 0);
+      await control.focus();
+      await page.keyboard.press('Space');
+      assert.equal(await control.isChecked(), true);
+      const focus = await control.evaluate(el => {
+        const s = getComputedStyle(el);
+        return {style: s.outlineStyle, width: parseFloat(s.outlineWidth)};
+      });
+      assert.notEqual(focus.style, 'none');
+      assert.ok(focus.width > 0);
+      console.log(JSON.stringify({engine: name, width, nativeChoice: await control.getAttribute('name'), before, focus, checked: true}));
+    }
+    await page.locator('#native-choice-probe').evaluate(el => el.remove());
+    await page.emulateMedia({reducedMotion: 'reduce'});
+    const transitions = await form.locator('input[type=text], textarea, .frm_button_submit').evaluateAll(elements => elements.map(el => ({
+      property: getComputedStyle(el).transitionProperty,
+      duration: getComputedStyle(el).transitionDuration
+    })));
+    // Only text/textarea and the submit owner are under test; plugin-specific overrides must be reviewed if they win.
+    assert.ok(transitions.length >= 2);
+    for (const t of transitions) {
+      assert.ok(t.duration.split(',').every(value => parseFloat(value) === 0), JSON.stringify(t));
+    }
+    await page.emulateMedia({reducedMotion: 'no-preference'});
+    await page.screenshot({path:'form-qa-results/'+name+'-'+width+'.png',fullPage:true});
  }
  }finally{await browser.close();}
 }

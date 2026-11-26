@@ -187,3 +187,12 @@ test('adjacent heading spacing has no identical desktop redeclaration', () => {
   assert.doesNotMatch(css, /margin-top: var\(--wp-block-margin-small\);\s*@media \([^{}]+\)\s*\{\s*margin-top: var\(--wp-block-margin-small\);/);
   assert.equal((css.match(/margin-top: var\(--wp-block-margin-small\);/g) || []).length, 6);
 });
+
+
+test('legacy CF7 decorative choices do not hide ordinary native controls', () => {
+  const form = read('css/wordpress/form.css');
+  assert.match(form, /^input:is\(\[type='checkbox'\], \[type='radio'\]\)\s*\{\s*appearance: auto;\s*accent-color: var\(--color-primary\)/m);
+  assert.match(form, /^:where\(\.wpcf7\) input\s*\{/m);
+  assert.doesNotMatch(form, /^input\s*\{\s*\/\* \/\/ 共通 \*\//m);
+  assert.match(form, /transition: border-color var\(--transition-duration\), background-color var\(--transition-duration\);\s*@media \(prefers-reduced-motion: reduce\)\s*\{\s*transition: none/);
+});
