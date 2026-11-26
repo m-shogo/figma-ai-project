@@ -283,3 +283,42 @@ test('TOP fixed-copy rhythm follows the distinct PC/SP Figma group gaps',()=>{
   assert.match(applicants,/padding-inline: calc\(24 \* var\(--to-rem-func\)\) calc\(20 \* var\(--to-rem-func\)\)/);
   assert.doesNotMatch(read('template-parts/_top-applicants.php'),/<a\s|<button|href=/);
 });
+
+
+test('TOP Course view is ACF-independent and fixture stays outside production',()=>{
+  const path=new URL('../theme/template-parts/_top-course-view.php',import.meta.url).pathname;
+  const fixture=new URL('./fixtures/top-course.php',import.meta.url).pathname;
+  const stub='function esc_html($s){return htmlspecialchars($s,ENT_QUOTES);} function esc_attr($s){return esc_html($s);} function esc_url($s){return preg_match("/^javascript:/i",$s)?"":esc_html($s);} function wp_kses_post($s){return strip_tags($s,"<img>");} function get_theme_file_uri($s){return "/theme/".$s;} ';
+  const render=rows=>execFileSync('php',['-r',stub+' $args=["items"=>json_decode(base64_decode("'+Buffer.from(JSON.stringify(rows)).toString('base64')+'"),true)]; include '+JSON.stringify(path)+';'],{encoding:'utf8'}).trim();
+  assert.equal(render([]),'');
+  assert.equal(render([{title:'  '},null]),'');
+  const result=render([{title:'<Long>',text:'<script>',url:'javascript:alert(1)'},{title:'Valid',url:'/provided/',new_tab:true,image_html:'<img src="/provided.webp" alt="">'}]);
+  assert.match(result,/&lt;Long&gt;/);
+  assert.match(result,/&lt;script&gt;/);
+  assert.doesNotMatch(result,/javascript:|href="#"/);
+  assert.equal((result.match(/<a class=/g)||[]).length,1);
+  assert.match(result,/target="_blank" rel="noopener noreferrer"/);
+  const preview=execFileSync('php',['-r',stub+' $args=["items"=>require '+JSON.stringify(fixture)+']; include '+JSON.stringify(path)+';'],{encoding:'utf8'});
+  assert.equal((preview.match(/<li class="jwsnj_topCourse_card"/g)||[]).length,5);
+  assert.equal((preview.match(/data-course-dot="/g)||[]).length,5);
+  assert.doesNotMatch(preview,/<a class=/);
+  for(const name of ['preschool','elementary','junior','high','international']){
+    assert.match(preview,new RegExp('img_course-'+name+'[.]webp'));
+    assert.ok(readFileSync(new URL('../theme/images/top/img_course-'+name+'.webp',import.meta.url)).length>100);
+  }
+  const view=read('template-parts/_top-course-view.php');
+  assert.doesNotMatch(view,/get_field|have_rows|figma[.]com|fixtures/);
+  assert.match(read('front-page.php'),/_top-course-view/);
+  assert.match(read('css/style.css'),/top_course[.]css/);
+  const css=read('css/project/top_course.css');
+  assert.doesNotMatch(css,/white-space:\s*nowrap|scroll-snap/);
+  assert.match(css,/repeat\(3, minmax\(0, 1fr\)\)/);
+  const js=read('js/home.js').split('const initCourse = function')[1];
+  assert.match(js,/new Swiper\(viewport/);
+  assert.match(js,/loop: false/);
+  assert.match(js,/destroy\(true, true\)/);
+  assert.match(js,/focusin/);
+  assert.doesNotMatch(js,/autoplay|scrollTo\(/);
+  execFileSync('php',['-l',path]);
+  execFileSync('php',['-l',fixture]);
+});
