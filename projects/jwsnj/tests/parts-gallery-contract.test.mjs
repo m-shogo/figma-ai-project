@@ -38,7 +38,7 @@ test('three-column gallery variant pairs two tiles on SP and uses three tiles on
 });
 
 test('desktop three-column gallery restores Figma 40px track gap',()=>{
- const media=gallery.slice(gallery.indexOf('        @media (calc(768'));
+ const media=gallery.slice(gallery.indexOf('    @media (calc(768'));
  assert.match(media,/&\.columns-3\s*\{\s*grid-template-columns:\s*repeat\(3,\s*minmax\(0,\s*1fr\)\);\s*column-gap:\s*calc\(40 \* var\(--to-rem-func\)\)/);
 });
 

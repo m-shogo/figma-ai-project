@@ -6,7 +6,7 @@ import { readFileSync } from 'node:fs';
 
 const css = readFileSync(new URL('../theme/css/blocks/wp-block-list-style.css', import.meta.url), 'utf8');
 const from = css.indexOf('ul.wp-block-list:not(.annotation-list) {');
-const until = css.indexOf('    ol.wp-block-list:not(.annotation-list) {', from);
+const until = css.indexOf('  ol.wp-block-list:not(.annotation-list) {', from);
 assert.ok(from >= 0 && until > from, 'Unordered list CSS block must exist');
 const block = css.slice(from, until);
 

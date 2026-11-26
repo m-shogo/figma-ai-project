@@ -6,7 +6,7 @@ import { readFileSync } from 'node:fs';
 
 const source = readFileSync(new URL('../theme/css/blocks/wp-block-text-style.css', import.meta.url), 'utf8');
 const start = source.indexOf('p:is(:not([class]), .wp-block-paragraph,');
-const end = source.indexOf('    .wp-block-columns {', start);
+const end = source.indexOf('  .wp-block-columns {', start);
 assert.ok(start >= 0 && end > start, 'Existing WordPress Gutenberg paragraph rule is required');
 const paragraph = source.slice(start, end);
 
@@ -31,7 +31,7 @@ test('WordPress paragraph font presets and authored markup remain intact', () =>
 });
 
 test('paragraph marker uses Figma 5px yellow paint and preserves multiline inline flow', () => {
-  const marker = source.slice(source.indexOf("p span[style*='text-decoration: underline']:not([style*='background'])"), source.indexOf('    p.has-small-font-size'));
+  const marker = source.slice(source.indexOf("p span[style*='text-decoration: underline']:not([style*='background'])"), source.indexOf('  p.has-small-font-size'));
   assert.ok(marker.startsWith("p span[style*='text-decoration: underline']:not([style*='background'])"));
   assert.match(marker, /text-decoration-line:\s*none !important/);
   assert.match(marker, /background-image:\s*linear-gradient\(#ffebb3, #ffebb3\)/);

@@ -5,7 +5,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
 const css = readFileSync(new URL('../theme/css/blocks/wp-block-buttonLink-style.css', import.meta.url), 'utf8');
-const button = css.slice(css.indexOf('    .wp-block-buttons {'), css.indexOf('    /* ホバー時のスタイル */'));
+const button = css.slice(css.indexOf('  .wp-block-buttons {'), css.indexOf('  /* ホバー時のスタイル */'));
 assert.ok(button.length > 0, 'The existing WordPress button rules must be present');
 
 test('button minimum geometry follows approved 260px x 50px Figma PC/SP component', () => {
@@ -32,7 +32,7 @@ test('long button text wraps and icon variants keep working', () => {
 });
 
 test('external large button uses official SVG and excludes PDF/file glyph variants', () => {
-  const large = button.slice(0, button.indexOf('        &.small {'));
+  const large = button.slice(0, button.indexOf('    &.small {'));
   const external = large.match(/&\[target='_blank'\]:where\(:not\(([^)]+)\)\)\s*\{\s*&::after\s*\{([^}]+)\}/);
   assert.ok(external);
   for (const ext of ['pdf','doc','docx','docm','xls','xlsx','xlsm','png','jpg','jpeg','gif','webp']) {
@@ -53,7 +53,7 @@ test('large button groups share 20px spacing and a 40px transition to small butt
 });
 
 test('large button glyph metrics do not inherit label tracking; attachments use the authored plain file glyph', () => {
-  const large=button.slice(0,button.indexOf('        &.small {'));
+  const large=button.slice(0,button.indexOf('    &.small {'));
   assert.match(large,/letter-spacing:\s*0/);
   assert.match(large,/text-box-trim:\s*none/);
   assert.match(large,/content:\s*'\\f15b'/);

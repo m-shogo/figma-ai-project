@@ -3,8 +3,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 const css=readFileSync(new URL('../theme/css/blocks/wp-block-buttonLink-style.css',import.meta.url),'utf8');
-const start=css.indexOf('        &.small {');
-const end=css.indexOf('\n    }\n}\n\n.block-editor_wrap',start);
+const start=css.indexOf('    &.small {');
+const end=css.indexOf('\n  }\n}\n\n.block-editor_wrap',start);
 const small=css.slice(start,end);
 test('small variant uses 30px mint leading icon, 8px gap, 16px labels',()=>{
   assert.ok(start!==-1&&end>start);
@@ -27,7 +27,7 @@ test('small icons distinguish file kinds and preserve focus handling in shared l
 });
 
 test('small button hover retains dark label on transparent background after generic hover rules',()=>{
-  const hover=css.slice(css.indexOf('    /* ホバー時のスタイル */'));
+  const hover=css.slice(css.indexOf('  /* ホバー時のスタイル */'));
   assert.match(hover,/\.wp-block-buttons\.small \.wp-block-button/);
   assert.match(hover,/\.wp-block-button__link:hover\s*\{\s*background:\s*none;\s*color:\s*var\(--color-text\)/);
   assert.match(hover,/&\.is-style-outline \.wp-block-button__link:hover\s*\{\s*background:\s*none;\s*color:\s*var\(--color-text\)/);
@@ -65,7 +65,7 @@ test('small external link retains the circle and uses the same glyph center and 
 });
 test('desktop gap media rule does not reapply large button minimum width to small buttons', () => {
   assert.match(small, /min-width:\s*0/);
-  const desktop = css.slice(end, css.indexOf('    /* ホバー時のスタイル */'));
+  const desktop = css.slice(end, css.indexOf('  /* ホバー時のスタイル */'));
   assert.doesNotMatch(desktop, /min-width\s*:/);
 });
 
