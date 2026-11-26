@@ -39,5 +39,6 @@ function jwsnj_enqueue_css_entry($handle, $entry, $dependencies = []) {
     $dependencies = [$child];
   }
   // WordPress alias: preserve the public dependency handle without loading the imports twice.
-  wp_enqueue_style($handle, false, $dependencies, null, 'all');
+  wp_register_style($handle, false, $dependencies, null, 'all');
+  wp_enqueue_style($handle);
 }
