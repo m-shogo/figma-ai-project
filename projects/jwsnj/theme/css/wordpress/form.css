@@ -257,7 +257,6 @@ input {
                         position: relative;
                         border: calc(1 * var(--to-rem-func)) solid var(--color-primary);
                         border-radius: 3em;
-                        max-width: calc(240 * var(--to-rem-func));
                         width: 100%;
                         font-size: calc(16 * var(--to-rem-func));
                         line-height: 1.3;

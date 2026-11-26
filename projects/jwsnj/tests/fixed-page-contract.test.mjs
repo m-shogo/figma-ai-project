@@ -109,3 +109,14 @@ test('search and basic form CSS use natural text heights and native selectors',(
   assert.doesNotMatch(form,/&-need|&-any|white-space:\s*nowrap/);
   assert.match(form,/&:has\(input:focus-visible\)/);
 });
+
+test('CSS duplicate properties are removed and About owners preserve original scope',()=>{
+ const dropdown=read('css/module/module_dropdown.css'),menu=read('css/module/module_menu.css');
+ for(const css of [dropdown,menu]) assert.doesNotMatch(css,/position: absolute;\s*position: absolute;/);
+ const about=read('css/project/top_about.css');
+ assert.match(about,/^\.global_contents > \.jwsnj_topAbout \.jwsnj_topAbout_inner\s*\{/m);
+ assert.match(about,/^\.global_contents > \.jwsnj_topAbout \.jwsnj_topAbout_map\s*\{/m);
+ assert.match(about,/&:has\(~ \.jwsnj_topAbout_cards\)/);
+ const vars=read('css/global/variables.css');
+ for(const name of ["--jwsnj-color-accent","--jwsnj-color-main","--jwsnj-color-text","--jwsnj-color-text-gray-700","--color-base--bg-blue-soft","--color-error-border","--color-gray-border-03","--color-separator--soft","--font-serif-en","--font-serif-ja","--icon-chevron-down","--width-main"]) assert.ok(!new RegExp('^\\s*'+name+':','m').test(vars),name);
+});

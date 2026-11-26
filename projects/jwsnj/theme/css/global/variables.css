@@ -131,20 +131,15 @@
 :where(:root) {
     /*
      * jwsnj Figma color variables (PC TOP node 114:28).
-     * Reuse the existing shared tokens for Figma-verified values; remove
-     * redundant sample aliases only after checking all consumers.
+     * Source inventory removes unreferenced sample/project aliases; retain distinct semantic roles.
      */
-    --jwsnj-color-main: var(--color-primary);
     --jwsnj-color-sec: #6bd2ce;
     --jwsnj-color-white: #ffffff;
-    --jwsnj-color-text: var(--color-text);
     --jwsnj-color-separator: #d7d4d4;
     --jwsnj-color-separator-light: #f2f2f2;
-    --jwsnj-color-accent: var(--color-accent);
     --jwsnj-color-base-lightgreen: #f5fdeb;
     --jwsnj-color-base-lightgreen-02: #eaffd9;
     --jwsnj-color-base-lightblue: #d7f2f1;
-    --jwsnj-color-text-gray-700: #484848;
 }
 
 :where(:root) {
@@ -155,32 +150,24 @@
     --color-tertiary: #e3f2fd;
     /* アクセントカラー */
     --color-accent: #ec6b61;
-    /* --color-accent-yellow: #bd9620; */
-    /* --color-accent-purple: #a73073; */
     /* グレー */
     --color-gray-text: #707070;
     --color-gray-border: #ababab;
     --color-gray-border-02: #eaeaea;
-    --color-gray-border-03: #eeeeee;
     --color-gray-background: #f8f8f8;
     /* テキストカラー */
     --color-text: #333;
     --color-link: #008ddc;
     /* ボーダーカラー */
     --color-separator: #eaeaea;
-    --color-separator--soft: #e7e7e7;
     --color-separator--blue: #86a3b5;
-    /* 背景カラー */
-    --color-base--bg-blue-soft: #e8fafd;
     /* エラーカラー */
     --color-error-text: #e53935;
-    --color-error-border: #e53935;
     --color-error-background: #ffebee;
     /* ベース幅 */
     --width-base: calc(1160 * var(--to-rem-func));
     --width-base-small: calc(960 * var(--to-rem-func));
     --width-content: calc(1000 * var(--to-rem-func));
-    --width-main: calc(860 * var(--to-rem-func));
     --width-side: calc(260 * var(--to-rem-func));
     /* ベース余白 */
     --padding-SP: calc(20 * var(--to-rem-func));
@@ -189,7 +176,6 @@
     --transition-duration: 0.3s;
     /* opacity */
     --opacity-hover: 0.7;
-    /* --transition-timing-function: ease-in; */
     /* ヘッダー高さ */
     --header-height-SP: calc(60 * var(--to-rem-func));
     --header-height-PC: calc(120 * var(--to-rem-func));
@@ -210,11 +196,9 @@
     /* 日本語サンセリフ体 */
     --font-sansSerif-ja: 'local Noto Sans JP', 'Noto Sans JP', sans-serif;
     /* 日本語セリフ体 */
-    --font-serif-ja: 'local Noto Serif JP', 'Noto Serif JP', serif;
     /* 英語サンセリフ体 */
     --font-sansSerif-en: 'local Roboto', 'Roboto', sans-serif;
     /* 英語セリフ体 */
-    --font-serif-en: 'Crimson Text', serif;
     /* FontAwesome */
     --font-awesome: 'Font Awesome 6 Pro';
     /* FontAwesome Brands */
@@ -228,7 +212,6 @@
     --icon-pdf: '\f1c1';
     --icon-zoom: '\f002';
     --icon-chevron-right: '\f054';
-    --icon-chevron-down: '\f078';
 }
 
 /* ==========================================================================
