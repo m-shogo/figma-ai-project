@@ -226,3 +226,24 @@ test('existing TOP banner owner escapes title, ignores invalid rows and only lin
   assert.doesNotMatch(css,/white-space:\s*nowrap|position:\s*absolute/);
   execFileSync('php',['-l',new URL('../theme/template-parts/_top-banner.php',import.meta.url).pathname]);
 });
+
+test('front-page routes latest-posts settings to the existing index owner and preserves static TOP',()=>{
+  const front=read('front-page.php');
+  const indexPath=new URL('../theme/index.php',import.meta.url).pathname;
+  const render=home=>{
+    const stub='function is_home(){return '+(home?'true':'false')+';} function is_category(){return false;} function get_header(){echo "[header]";} function get_footer(){echo "[footer]";} function get_template_part($p){if($p==="index"){include '+JSON.stringify(indexPath)+';}else{echo "[".$p."]";}} ?>';
+    return execFileSync('php',['-r',stub+front],{encoding:'utf8'});
+  };
+  const posts=render(true);
+  assert.match(posts,/\[template-parts\/_news-archive\]/);
+  assert.doesNotMatch(posts,/_top-|top_mainVisual/);
+  const top=render(false);
+  assert.match(top,/_top-mv-grid[\s\S]*_top-news[\s\S]*_top-banner/);
+  assert.doesNotMatch(top,/_news-archive/);
+  for(const html of [posts,top]){
+    assert.equal((html.match(/\[header\]/g)||[]).length,1);
+    assert.equal((html.match(/\[footer\]/g)||[]).length,1);
+    assert.equal((html.match(/id="global_contents"/g)||[]).length,1);
+  }
+  execFileSync('php',['-l',new URL('../theme/front-page.php',import.meta.url).pathname]);
+});

@@ -281,3 +281,7 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 
 ## 2026-11-26 TOP既存バナーの異常系修正
 - PC 114:419 / SP 279:2630の高精細context・画像を確認。確定デザインは全幅の写真だが現物に透かしがあり、権利確認済み原本未受入 (#524)。既存 `group_top_banner` のrepeater（img/title/url/target）と編集者のデータを維持し、実画像なし・空タイトルのrowは出さず、WP生成画像/タイトルescape、有効で名前のあるリンクのみ、外部relとfocusを追加。長文はgrid内で自然伸縮。これは既存CMSバナーの安全修正で、確定写真の実装・視覚一致ではない。#523実機未検証。
+
+
+## 2026-11-26 投稿一覧のフロントページ経路
+- Figma PC390:666/SP478:2615 fresh context + screenshots, existing index/archive owner unchanged. WordPress front-page.php has precedence even when is_home() is true (latest-posts reading setting); delegate to existing index template before header output. Static front continues existing TOP. PHP CLI integration stub verifies one header/footer/main and no TOP on posts route. Actual WordPress Reading settings, category reset and paginated root #523 remain deferred. No new slug, data or fields.
