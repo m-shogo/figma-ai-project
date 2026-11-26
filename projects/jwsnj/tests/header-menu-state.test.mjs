@@ -368,3 +368,15 @@ test('hamburger animates only its background and moving strokes', () => {
   assert.match(headerCss, /transition: top var\(--transition-duration\), transform var\(--transition-duration\)/);
   assert.doesNotMatch(headerCss, /transition:\s*var\(--transition-duration\)/);
 });
+
+
+test('secondary navigation keeps PC and SP declarations on matching owners', () => {
+  const block = navigationCss.slice(navigationCss.indexOf('  .gn_subMenu {'), navigationCss.indexOf('  .gn_search {'));
+  assert.match(block, /\.gn_subMenu\s*\{\s*@media \(calc\(1080[^{}]+\{\s*display: flex/);
+  assert.match(block, /&\.menu\s*\{\s*display: grid;\s*grid-template-columns: repeat\(2, 1fr\);\s*@media \(calc\(1080[^{}]+\{\s*display: flex/);
+  assert.match(block, /\.menu-item\s*\{\s*border-bottom: calc\(1 \* var\(--to-rem-func\)\) solid var\(--color-gray-border\);\s*@media \(calc\(1080[^{}]+\{\s*border-bottom: none/);
+  assert.match(block, /padding-inline: calc\(20 \* var\(--to-rem-func\)\);\s*@media \(calc\(1080[^{}]+\{\s*padding-block: 0;\s*padding-inline: 0/);
+  assert.match(block, /&:nth-child\(odd\)\s*\{[^{}]*@media \(calc\(1080[^{}]+\{\s*border-right: none/);
+  const desktop = navigationCss.slice(navigationCss.indexOf('/* MARK: header_breakpoint */'));
+  assert.doesNotMatch(desktop, /\.gn_links-02\s*\{/);
+});
