@@ -33,8 +33,7 @@ test('gallery zoom affordance is inset 16px SP / 20px PC and reverses colors on 
  assert.match(gallery,/&:hover::after\s*\{\s*opacity:\s*1;\s*background-color:\s*var\(--color-secondary\);\s*color:\s*var\(--color-primary\)/);
  assert.match(gallery,/&:focus-visible::after/);
  assert.match(gallery,/\.wp-lightbox-container:focus-within \.lightbox_wrap::after/);
- assert.match(gallery,/prefers-reduced-motion:\s*reduce/);
- assert.match(gallery,/transition:\s*none/);
+ assert.match(css,/transition:\s*opacity var\(--transition-duration\), background-color var\(--transition-duration\), color var\(--transition-duration\);\s*@media \(prefers-reduced-motion: reduce\)\s*\{\s*transition:\s*none/);
  assert.doesNotMatch(gallery,/pointer-events:\s*auto|figma\.com\/api\/mcp\/asset/);
 });
 
