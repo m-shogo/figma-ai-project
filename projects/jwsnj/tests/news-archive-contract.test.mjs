@@ -258,7 +258,7 @@ test('fiscal archive year is retained in the actual query rather than inferred f
   const front = read('inc/front.php');
   const names = ['jwsnj_archive_year','get_archive_title','wp_custom_title_output','get_fiscal_year_post_types','custom__pre_get_posts'];
   const php = names.map(name => {
-    const source = front.match(new RegExp('function '+name+'\([^)]*\)\\n\\{[\\s\\S]*?\\n\\}'));
+    const source = front.match(new RegExp('function '+name+'\\([^)]*\\)\\n\\{[\\s\\S]*?\\n\\}'));
     assert.ok(source,name);
     return source[0];
   }).join('\n');
