@@ -211,3 +211,5 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 - Course FAQ opt-in `jwsnj-course-faq`: select native Details style; closed/open, keyboard focus/activation, long question/answer, nested content, reduced motion; PC title stays32px on toggle, provisional narrow24px. Editor save/reopen, actual render #523. No SP Figma supplied.
 
 - Course introduction heading/lead opt-in styles: editor Row H2 + English paragraph and native Paragraph lead; verify save/reopen, PC36/15/24 and provisional narrow24/15/20, long wrapping, normal section heading unchanged. Actual WordPress/render #523 DEFERRED_ENV.
+
+- Course grades style: Group/Row with label Paragraph and unordered List; verify editor selection/save/reopen, PC badge and FA Pro Solid pencil, grade separator, long grade strings, narrow wrapping/stack, list semantics and unchanged generic lists. SP provisional; actual render #523 DEFERRED_ENV.

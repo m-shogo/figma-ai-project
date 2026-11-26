@@ -369,3 +369,7 @@ TOP PC `114:28` / SP `279:2136` から、ベクターは SVG、写真は元画�
 
 ## 2026-11-26 コース詳細導入のタイポグラフィ
 - Fresh PC534:2369/534:2363 high-fidelity context + screenshots; SP page 263:12 metadata confirms no course detail frame among top-level frames. Intro Japanese 36px/700 tracking10%, English 15px/500 tracking5%, gap20; lead 24px/500 line-height1.8 tracking5%. Reuse existing bilingual Group/Row rules with opt-in `jwsnj-course-intro-heading` and native paragraph `jwsnj-course-lead`; no automatic page/content creation, new ACF/CPT/URL, photos or CTA. Narrow heading24, lead20 and natural wrapping are provisional implementation decisions (not SP design). Native editor save/reopen and real layout #523. Existing section heading remains32/13 on PC.
+
+
+## 2026-11-26 コース詳細の対象学年行
+- PC539:3627/534:2360/534:2357 fresh high-fidelity context and screenshots. Native Group/Row with editable Paragraph label + unordered List, opt-in `jwsnj-course-grades`. Figma coral label13px/500 with FA Pro Solid pencil f303, padding4/12 and radius3, label-list gap20; grades14px, line-height 26.4/14≈1.886, item gap16, separator and 8px end padding. Existing font/color tokens only. No grade values hardcoded, no new CMS fields or links. SP detail frame absent: narrow list stacks without separators, 8px gap provisional; actual editor/list semantics/FA glyph rendering/long text PC-SP #523 deferred. Native paragraph/list remain editable; generic lists unchanged outside opt-in group.
