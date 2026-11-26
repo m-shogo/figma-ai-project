@@ -215,3 +215,5 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 - Course grades style: Group/Row with label Paragraph and unordered List; verify editor selection/save/reopen, PC badge and FA Pro Solid pencil, grade separator, long grade strings, narrow wrapping/stack, list semantics and unchanged generic lists. SP provisional; actual render #523 DEFERRED_ENV.
 
 - Existing TOP banner malformed attachment IDs: verify boolean/float/array/negative do not resolve another photo, valid numeric-string and title-only valid link retain output. PHP stub, actual WordPress #523; Figma photo still watermarked #524.
+
+- Course schedule `jwsnj-course-schedule`: outer Group, chronological child Groups with optional Image + Paragraph. Verify editor save/reopen, native block wrappers, 200px/4:3 image, alternating PC rows, long text, 0/1/8 entries, missing image, captions, narrow stacking and no overlap. Current Figma slots are gray placeholders, not photos; do not seed them. SP provisional. #523 actual WP/render pending.

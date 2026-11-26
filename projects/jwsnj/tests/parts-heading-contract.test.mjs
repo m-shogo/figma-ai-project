@@ -135,3 +135,22 @@ test('course grades opt-in native list preserves label and responsive wrapping w
   const editor=readFileSync(new URL('../theme/inc/editor.php',import.meta.url),'utf8');
   assert.match(editor,/register_block_style\('core\/group', array\(\s*'name' => 'jwsnj-course-grades'/);
 });
+
+test('course schedule uses native editable groups and optional images, alternating at wide widths',()=>{
+  const group=readFileSync(new URL('../theme/css/blocks/wp-block-group-style.css',import.meta.url),'utf8');
+  const s=group.slice(group.indexOf('/* Course schedule PC 608:3037'));
+  assert.match(s,/\.wp-block-group\.is-style-jwsnj-course-schedule/);
+  assert.match(s,/> \.wp-block-group,\s*> \.wp-block-group__inner-container > \.wp-block-group/);
+  assert.match(s,/flex-wrap:\s*wrap/);
+  assert.match(s,/font-size:\s*calc\(15 \* var\(--to-rem-func\)\)/);
+  assert.match(s,/font-weight:\s*500/);
+  assert.match(s,/line-height:\s*1\.5/);
+  assert.match(s,/overflow-wrap:\s*anywhere/);
+  assert.match(s,/width:\s*min\(100%, calc\(200 \* var\(--to-rem-func\)\)\)/);
+  assert.match(s,/aspect-ratio:\s*4 \/ 3/);
+  assert.match(s,/object-fit:\s*cover/);
+  assert.match(s,/&:nth-child\(even\)\s*\{\s*justify-self:\s*end;\s*flex-direction:\s*row-reverse/);
+  assert.doesNotMatch(s,/white-space:\s*nowrap|position:\s*absolute|(?:^|[;{}\n])\s*height\s*:|background(?:-color)?:|url\(|8:50|9:30/);
+  const editor=readFileSync(new URL('../theme/inc/editor.php',import.meta.url),'utf8');
+  assert.match(editor,/register_block_style\('core\/group', array\(\s*'name' => 'jwsnj-course-schedule'/);
+});
