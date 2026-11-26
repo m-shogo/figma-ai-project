@@ -3,37 +3,37 @@
 // 検索結果リストモジュール
 // ========================================================================== */
 .module_searchList-01 {
-    li {
-        position: relative;
-        border-bottom: calc(1 * var(--to-rem-func)) solid var(--color-gray-border);
-        &:first-child {
-            border-top: calc(1 * var(--to-rem-func)) solid var(--color-gray-border);
-        }
-        a {
-            display: block;
-            padding-block: calc(20 * var(--to-rem-func));
-            padding-inline: 0 calc(40 * var(--to-rem-func));
-            color: var(--color-text);
-            text-decoration: none;
-            transition: var(--transition-duration);
-            &::after {
-                content: '\f105';
-                display: block;
-                position: absolute;
-                right: calc(20 * var(--to-rem-func));
-                top: 50%;
-                font-family: var(--font-awesome);
-                font-size: calc(20 * var(--to-rem-func));
-                transform: translateY(-50%);
-                transition: var(--transition-duration);
-            }
-            &:hover {
-                color: var(--color-link);
-            }
-            @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-                padding-inline: calc(20 * var(--to-rem-func)) calc(40 * var(--to-rem-func));
-            }
-        }
+  li {
+    position: relative;
+    border-bottom: calc(1 * var(--to-rem-func)) solid var(--color-gray-border);
+    &:first-child {
+      border-top: calc(1 * var(--to-rem-func)) solid var(--color-gray-border);
     }
+    a {
+      display: block;
+      padding-block: calc(20 * var(--to-rem-func));
+      padding-inline: 0 calc(40 * var(--to-rem-func));
+      color: var(--color-text);
+      text-decoration: none;
+      transition: var(--transition-duration);
+      &::after {
+        content: '\f105';
+        display: block;
+        position: absolute;
+        right: calc(20 * var(--to-rem-func));
+        top: 50%;
+        font-family: var(--font-awesome);
+        font-size: calc(20 * var(--to-rem-func));
+        transform: translateY(-50%);
+        transition: var(--transition-duration);
+      }
+      &:hover {
+        color: var(--color-link);
+      }
+      @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+        padding-inline: calc(20 * var(--to-rem-func)) calc(40 * var(--to-rem-func));
+      }
+    }
+  }
 
 }

@@ -3,722 +3,722 @@
 // サイト共通フッター
 // ========================================================================== */
 .global_footer {
-    position: relative;
-    background-color: var(--color-gray-background);
+  position: relative;
+  background-color: var(--color-gray-background);
+  color: var(--color-text);
+  a {
     color: var(--color-text);
-    a {
-        color: var(--color-text);
-        text-decoration: none;
-        transition: color var(--transition-duration);
-    }
+    text-decoration: none;
+    transition: color var(--transition-duration);
+  }
 
-    /* Figma 221:335 / 506:1632. Side art uses the exported SVGs; the line stays 1px. */
-    .gf_brandStatement {
-        position: relative;
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        align-items: center;
-        text-align: center;
-        @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
-            grid-template-columns: minmax(0, 1fr) minmax(0, calc(484 * var(--to-rem-func))) minmax(0, 1fr);
-            gap: calc(40 * var(--to-rem-func));
-        }
-        /* Figma 114:422: extend the outer lines, not the artwork. */
-        @media (calc(1380 * (1 / 16 * 1rem)) < width) {
-            &::before,
-            &::after {
-                content: '';
-                position: absolute;
-                width: calc((100% - 1380 * var(--to-rem-func)) / 2 + 1px);
-                height: calc(1 * var(--to-rem-func));
-                background-color: var(--color-primary);
-                pointer-events: none;
-            }
-            &::before {
-                left: 0;
-                top: calc(50% + 1 * var(--to-rem-func));
-            }
-            &::after {
-                right: 0;
-                top: calc(50% + 19.16 * var(--to-rem-func));
-            }
-        }
+  /* Figma 221:335 / 506:1632. Side art uses the exported SVGs; the line stays 1px. */
+  .gf_brandStatement {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: center;
+    text-align: center;
+    @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+      grid-template-columns: minmax(0, 1fr) minmax(0, calc(484 * var(--to-rem-func))) minmax(0, 1fr);
+      gap: calc(40 * var(--to-rem-func));
     }
-    .gf_brandStatement-copy {
-        grid-column: 1 / -1;
-        grid-row: 1;
-        padding: calc(40 * var(--to-rem-func)) var(--padding-SP) calc(20 * var(--to-rem-func));
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: calc(16 * var(--to-rem-func));
-        min-width: 0;
-        @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
-            grid-column: 2;
-            grid-row: 1;
-            padding: calc(56 * var(--to-rem-func)) 0 calc(48 * var(--to-rem-func));
-            gap: calc(20 * var(--to-rem-func));
-        }
+    /* Figma 114:422: extend the outer lines, not the artwork. */
+    @media (calc(1380 * (1 / 16 * 1rem)) < width) {
+      &::before,
+      &::after {
+        content: '';
+        position: absolute;
+        width: calc((100% - 1380 * var(--to-rem-func)) / 2 + 1px);
+        height: calc(1 * var(--to-rem-func));
+        background-color: var(--color-primary);
+        pointer-events: none;
+      }
+      &::before {
+        left: 0;
+        top: calc(50% + 1 * var(--to-rem-func));
+      }
+      &::after {
+        right: 0;
+        top: calc(50% + 19.16 * var(--to-rem-func));
+      }
     }
-    .gf_brandStatement-left,
-    .gf_brandStatement-right {
-        display: block;
-        min-width: 0;
+  }
+  .gf_brandStatement-copy {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    padding: calc(40 * var(--to-rem-func)) var(--padding-SP) calc(20 * var(--to-rem-func));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: calc(16 * var(--to-rem-func));
+    min-width: 0;
+    @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+      grid-column: 2;
+      grid-row: 1;
+      padding: calc(56 * var(--to-rem-func)) 0 calc(48 * var(--to-rem-func));
+      gap: calc(20 * var(--to-rem-func));
     }
-    .gf_brandStatement-left.is-pc,
-    .gf_brandStatement-right.is-pc {
-        display: none;
+  }
+  .gf_brandStatement-left,
+  .gf_brandStatement-right {
+    display: block;
+    min-width: 0;
+  }
+  .gf_brandStatement-left.is-pc,
+  .gf_brandStatement-right.is-pc {
+    display: none;
+  }
+  .gf_brandStatement-left.is-sp {
+    grid-column: 1;
+    grid-row: 2;
+    justify-self: start;
+    width: min(calc(155 * var(--to-rem-func)), 100%);
+    height: auto;
+    aspect-ratio: 155 / 81.8729;
+  }
+  .gf_brandStatement-right {
+    position: relative;
+    img {
+      position: absolute;
+      display: block;
     }
-    .gf_brandStatement-left.is-sp {
-        grid-column: 1;
-        grid-row: 2;
-        justify-self: start;
-        width: min(calc(155 * var(--to-rem-func)), 100%);
-        height: auto;
-        aspect-ratio: 155 / 81.8729;
+  }
+  .gf_brandStatement-right.is-sp {
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: end;
+    width: min(calc(163 * var(--to-rem-func)), 100%);
+    aspect-ratio: 163 / 89;
+    .gf_brandStatement-line {
+      left: 27.9387%;
+      top: 68.2809%;
+      width: 72.0613%;
+      height: calc(1 * var(--to-rem-func));
     }
-    .gf_brandStatement-right {
-        position: relative;
-        img {
-            position: absolute;
-            display: block;
-        }
+    .gf_brandStatement-student {
+      left: 56.638%;
+      top: 0;
+      width: 23.2061%;
+      height: 67.1629%;
+      transform: scaleX(-1);
     }
+    .gf_brandStatement-puzzle {
+      left: 0;
+      top: 32.8427%;
+      width: 48.8564%;
+      height: 67.1618%;
+    }
+  }
+  .gf_brandStatement-en {
+    min-width: 0;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    font-family: 'Roboto Condensed', sans-serif;
+    font-size: clamp(calc(22 * var(--to-rem-func)), 7.46vw, calc(28 * var(--to-rem-func)));
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.05em;
+    color: var(--color-text);
+    @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+      font-size: calc(46 * var(--to-rem-func));
+    }
+  }
+  .gf_brandStatement-ja {
+    min-width: 0;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    font-size: calc(13 * var(--to-rem-func));
+    font-weight: 700;
+    line-height: 1.5;
+    letter-spacing: 0.05em;
+    color: var(--color-primary);
+    @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+      font-size: calc(15 * var(--to-rem-func));
+    }
+  }
+  @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+    .gf_brandStatement-left.is-sp,
     .gf_brandStatement-right.is-sp {
-        grid-column: 2;
-        grid-row: 2;
-        justify-self: end;
-        width: min(calc(163 * var(--to-rem-func)), 100%);
-        aspect-ratio: 163 / 89;
-        .gf_brandStatement-line {
-            left: 27.9387%;
-            top: 68.2809%;
-            width: 72.0613%;
-            height: calc(1 * var(--to-rem-func));
-        }
-        .gf_brandStatement-student {
-            left: 56.638%;
-            top: 0;
-            width: 23.2061%;
-            height: 67.1629%;
-            transform: scaleX(-1);
-        }
-        .gf_brandStatement-puzzle {
-            left: 0;
-            top: 32.8427%;
-            width: 48.8564%;
-            height: 67.1618%;
-        }
+      display: none;
     }
-    .gf_brandStatement-en {
+    .gf_brandStatement-left.is-pc {
+      display: block;
+      grid-column: 1;
+      grid-row: 1;
+      justify-self: end;
+      width: min(calc(408 * var(--to-rem-func)), 100%);
+      height: auto;
+      aspect-ratio: 408 / 99.9255;
+    }
+    .gf_brandStatement-right.is-pc {
+      display: block;
+      grid-column: 3;
+      grid-row: 1;
+      justify-self: start;
+      width: min(calc(408 * var(--to-rem-func)), 100%);
+      aspect-ratio: 408 / 115.003;
+      .gf_brandStatement-line {
+        left: 24.2647%;
+        top: 66.6591%;
+        width: 75.7353%;
+        height: calc(1 * var(--to-rem-func));
+      }
+      .gf_brandStatement-student {
+        left: 47.3039%;
+        top: 0;
+        width: 12.0098%;
+        height: 65.7918%;
+        transform: scaleX(-1);
+      }
+      .gf_brandStatement-puzzle {
+        left: 0;
+        top: 34.2083%;
+        width: 24.5098%;
+        height: 65.7918%;
+      }
+    }
+  }
+
+
+
+  .gf_logo {
+    width: auto;
+    max-width: 100%;
+    a {
+      display: flex;
+      align-items: center;
+      gap: calc(12 * var(--to-rem-func));
+      min-width: 0;
+      transition: opacity var(--transition-duration);
+      &:focus-visible {
+        outline: 2px solid var(--color-primary);
+        outline-offset: 3px;
+      }
+    }
+    img {
+      flex-shrink: 0;
+      width: calc(51 * var(--to-rem-func));
+      height: calc(48 * var(--to-rem-func));
+    }
+    span {
+      min-width: 0;
+      overflow-wrap: anywhere;
+      line-height: 1.3;
+    }
+  }
+  /* Figma PC 114:484 / 114:523: identity and sitemap share a row.
+       Keep a single menu in DOM order, including the existing SP disclosure. */
+  .gf_details {
+    display: grid;
+    gap: calc(32 * var(--to-rem-func));
+    padding-block: calc(32 * var(--to-rem-func));
+    @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: calc(32 * var(--to-rem-func));
+      padding-block: 0 calc(48 * var(--to-rem-func));
+    }
+  }
+  .gf_information,
+  .gf_links-wrap,
+  .gf_menu {
+    min-width: 0;
+  }
+  .gf_links-01 {
+    display: grid;
+    pointer-events: auto;
+    /* MARK: 共通 全階層に影響あり start */
+    .gfl_item-02,
+    .gfl_item-03,
+    .gfl_item-04,
+    .gfl_item-05,
+    .gfl_item-06 {
+      border-top: calc(1 * var(--to-rem-func)) solid var(--color-gray-border);
+    }
+    .gfl_item-02 {
+      &:first-child {
+        border-top: none;
+      }
+      &:last-child {
+        border-bottom: calc(1 * var(--to-rem-func)) solid var(--color-gray-border);
+      }
+    }
+    .gfl_title-02,
+    .gfl_title-03,
+    .gfl_title-04,
+    .gfl_title-05,
+    .gfl_title-06 {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
+    .gfl_link-02,
+    .gfl_link-03,
+    .gfl_link-04,
+    .gfl_link-05,
+    .gfl_link-06 {
+      min-width: 0;
+      display: block;
+      padding-block: calc(20 * var(--to-rem-func));
+      padding-inline: calc(20 * var(--to-rem-func));
+      flex-grow: 1;
+      overflow-wrap: anywhere;
+      word-break: normal;
+      line-break: strict;
+      &::after {
+        content: none;
+      }
+    }
+    .gfl_button-02,
+    .gfl_button-03,
+    .gfl_button-04,
+    .gfl_button-05,
+    .gfl_button-06 {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      position: relative;
+      width: calc(60 * var(--to-rem-func));
+      height: calc(60 * var(--to-rem-func));
+      background-color: transparent;
+      pointer-events: all;
+      touch-action: manipulation;
+      &:focus-visible {
+        outline: 2px solid var(--color-primary);
+        outline-offset: -3px;
+      }
+      &::before,
+      &::after {
+        content: '';
+        display: block;
+        position: absolute;
+        left: calc(50% - calc(5 * var(--to-rem-func)));
+        top: calc(50% - calc(1 * var(--to-rem-func)));
+        border-radius: calc(1 * var(--to-rem-func));
+        width: calc(10 * var(--to-rem-func));
+        height: calc(2 * var(--to-rem-func));
+        background-color: var(--color-text);
+        transition: var(--transition-duration);
+      }
+      &::after {
+        transform: rotate(-90deg);
+      }
+      span {
+        display: none;
+      }
+    }
+    .gfl_wrapper-02,
+    .gfl_wrapper-03,
+    .gfl_wrapper-04,
+    .gfl_wrapper-05,
+    .gfl_wrapper-06 {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows var(--transition-duration);
+    }
+    .gfl_inner-02,
+    .gfl_inner-03,
+    .gfl_inner-04,
+    .gfl_inner-05,
+    .gfl_inner-06 {
+      overflow: hidden;
+    }
+    .gfl_list-02,
+    .gfl_list-03,
+    .gfl_list-04,
+    .gfl_list-05,
+    /* MARK: 共通 3階層以降に影響あり start */
+    .gfl_item-03,
+    .gfl_item-04,
+    .gfl_item-05,
+    .gfl_title-03,
+    .gfl_title-04,
+    .gfl_title-05,
+    .gfl_link-03,
+    .gfl_link-04,
+    .gfl_link-05,
+    .gfl_button-03,
+    .gfl_button-04,
+    .gfl_button-05,
+    .gfl_wrapper-03,
+    .gfl_wrapper-04,
+    .gfl_wrapper-05,
+    .gfl_inner-03,
+    .gfl_inner-04,
+    .gfl_inner-05,
+    .gfl_list-03,
+    .gfl_list-04,
+    .gfl_list-05,
+    /* 3階層以降に影響あり end */
+    /* MARK: ステータス start */
+    .gfl_item-02 {
+      /* &.current_page_parent, */
+      /* &.current-menu-ancestor, */
+      &.current-menu-item {
+        .gfl_link-02 {
+          color: var(--color-primary);
+        }
+      }
+    }
+    .gfl_item-03 {
+      &.current-menu-item {
+        .gfl_link-03 {
+          color: var(--color-primary);
+        }
+      }
+    }
+    .gfl_item-04 {
+      &.current-menu-item {
+        .gfl_link-04 {
+          color: var(--color-primary);
+        }
+      }
+    }
+    .gfl_item-05 {
+      &.current-menu-item {
+        .gfl_link-05 {
+          color: var(--color-primary);
+        }
+      }
+    }
+    .gfl_item-06 {
+      &.current-menu-item {
+        .gfl_link-06 {
+          color: var(--color-primary);
+        }
+      }
+    }
+    /* ステータス end */
+    /* 共通 end */
+
+    /* MARK: 階層別 3階層 start */
+    /* 3階層 end */
+
+    /* MARK: 階層別 4階層 start */
+    /* 4階層 end */
+
+    /* MARK: 階層別 5階層 start */
+    /* あれば追加 */
+    /* 5階層 end */
+
+    /* MARK: 階層別 6階層 start */
+    /* あれば追加 */
+    /* 6階層 end */
+
+    /* MARK: ステータス start */
+    .gfl_item-02,
+    .gfl_item-03,
+    .gfl_item-04,
+    .gfl_item-05,
+    .gfl_item-06 {
+      &[data-open='true'] {
+        > [class*='gfl_title'] {
+          > [class*='gfl_button'] {
+            &::after {
+              transform: rotate(0deg);
+            }
+          }
+        }
+        > [class*='gfl_wrapper'] {
+          grid-template-rows: 1fr;
+        }
+      }
+      &[data-open='false'] {
+        > [class*='gfl_wrapper'] {
+          grid-template-rows: 0fr;
+        }
+      }
+    }
+    /* ステータス end */
+  }
+  .gf_information {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  /* Figma PC 114:536 / SP 279:2805: in-flow copyright and page-top row. */
+  .gf_bottom {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) calc(60 * var(--to-rem-func));
+    background-color: var(--color-primary);
+    min-height: calc(60 * var(--to-rem-func));
+  }
+  .gf_copyright {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    margin: 0;
+    padding: calc(12 * var(--to-rem-func)) calc(20 * var(--to-rem-func));
+    font-family: var(--font-jwsnj-en-condensed);
+    font-size: calc(12 * var(--to-rem-func));
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    color: var(--color-secondary);
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+    text-align: left;
+    @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+      padding-inline-start: calc(80 * var(--to-rem-func));
+    }
+  }
+  .gf_pageTop {
+    display: flex;
+    margin: 0;
+    a {
+      display: grid;
+      place-items: center;
+      width: 100%;
+      min-height: calc(60 * var(--to-rem-func));
+      background-color: #4dce83;
+      transition: background-color var(--transition-duration);
+      &::before {
+        content: '\f341';
+        font-family: var(--font-awesome);
+        font-weight: 400;
+        font-size: calc(16 * var(--to-rem-func));
+        line-height: 1;
+        color: var(--color-secondary);
+      }
+      &:focus-visible {
+        outline: 2px solid var(--color-text);
+        outline-offset: -3px;
+      }
+      @media (any-hover: hover) {
+        &:hover {
+          background-color: var(--color-primary);
+        }
+      }
+      span {
+        display: none;
+      }
+    }
+  }
+
+  @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+    .gf_links-01 {
+      display: block;
+      columns: 3;
+      column-gap: clamp(calc(24 * var(--to-rem-func)), 5.8vw, calc(80 * var(--to-rem-func)));
+      > .gfl_item-02 {
+        break-inside: avoid;
+        margin-block-end: calc(16 * var(--to-rem-func));
+      }
+      /* MARK: 共通 全階層に影響あり start */
+      .gfl_item-02,
+      .gfl_item-03,
+      .gfl_item-04,
+      .gfl_item-05,
+      .gfl_item-06 {
+        border-top: none;
+        position: relative;
+        z-index: 0;
+      }
+      .gfl_item-02 {
         min-width: 0;
-        max-width: 100%;
-        overflow-wrap: anywhere;
-        font-family: 'Roboto Condensed', sans-serif;
-        font-size: clamp(calc(22 * var(--to-rem-func)), 7.46vw, calc(28 * var(--to-rem-func)));
+        &:last-child {
+          border-bottom: none;
+        }
+      }
+      .gfl_title-02,
+      .gfl_title-03,
+      .gfl_title-04,
+      .gfl_title-05,
+      .gfl_title-06 {
+        width: auto;
+      }
+      .gfl_link-02,
+      .gfl_link-03,
+      .gfl_link-04,
+      .gfl_link-05,
+      .gfl_link-06 {
+        padding-block: 0;
+        padding-inline: 0;
+      }
+      .gfl_button-02,
+      .gfl_button-03,
+      .gfl_button-04,
+      .gfl_button-05,
+      .gfl_button-06 {
+        display: none;
+      }
+      .gfl_wrapper-02,
+      .gfl_wrapper-03,
+      .gfl_wrapper-04,
+      .gfl_wrapper-05,
+      .gfl_wrapper-06 {
+        grid-template-rows: 1fr;
+      }
+      .gfl_inner-02,
+      .gfl_inner-03,
+      .gfl_inner-04,
+      .gfl_inner-05,
+      /* MARK: 共通 3階層以降に影響あり start */
+      .gfl_list-03,
+      .gfl_list-04,
+      .gfl_list-05,
+      .gfl_item-03,
+      .gfl_item-04,
+      .gfl_item-05,
+      .gfl_title-03,
+      .gfl_title-04,
+      .gfl_title-05,
+      .gfl_link-03,
+      .gfl_link-04,
+      .gfl_link-05,
+      .gfl_button-03,
+      .gfl_button-04,
+      .gfl_button-05,
+      .gfl_wrapper-03,
+      .gfl_wrapper-04,
+      .gfl_wrapper-05,
+      .gfl_inner-03,
+      .gfl_inner-04,
+      .gfl_inner-05,
+      /* 3階層以降に影響あり end */
+      /* 共通 end */
+
+      /* MARK: 階層別 2階層 start */
+      .gfl_list-02 {
+        display: grid;
+        gap: calc(8 * var(--to-rem-func));
+      }
+      /* Figma PC sitemap 114:523. Keep the WordPress hierarchy and SP controls intact. */
+      .gfl_link-02 {
+        font-family: var(--font-jwsnj-ja);
+        font-size: calc(13 * var(--to-rem-func));
         font-weight: 500;
         line-height: 1.4;
         letter-spacing: 0.05em;
-        color: var(--color-text);
-        @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
-            font-size: calc(46 * var(--to-rem-func));
+        padding-inline-start: calc(17.41839 * var(--to-rem-func));
+        background-image: url('../../images/common/footer/img_footer-bullet.svg');
+        background-repeat: no-repeat;
+        background-position: left calc(6.39 * var(--to-rem-func));
+        background-size: calc(5.41839 * var(--to-rem-func)) auto;
+        /* The sitemap uses FA window-restore, not the orange inline SVG. */
+        &[target='_blank']:where(:not([href$='.pdf'], [href$='.doc'], [href$='.docx'], [href$='.docm'], [href$='.xls'], [href$='.xlsx'], [href$='.xlsm'], [href$='.png'], [href$='.jpg'], [href$='.jpeg'], [href$='.gif'], [href$='.webp']))::after {
+          content: var(--icon-blank);
+          font-family: var(--font-awesome);
+          font-weight: 400;
+          font-size: calc(12 * var(--to-rem-func));
+          margin-inline-start: calc(4 * var(--to-rem-func));
         }
-    }
-    .gf_brandStatement-ja {
-        min-width: 0;
-        max-width: 100%;
-        overflow-wrap: anywhere;
-        font-family: 'Zen Kaku Gothic New', sans-serif;
-        font-size: calc(13 * var(--to-rem-func));
-        font-weight: 700;
-        line-height: 1.5;
-        letter-spacing: 0.05em;
-        color: var(--color-primary);
-        @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
-            font-size: calc(15 * var(--to-rem-func));
-        }
-    }
-    @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
-        .gf_brandStatement-left.is-sp,
-        .gf_brandStatement-right.is-sp {
-            display: none;
-        }
-        .gf_brandStatement-left.is-pc {
-            display: block;
-            grid-column: 1;
-            grid-row: 1;
-            justify-self: end;
-            width: min(calc(408 * var(--to-rem-func)), 100%);
-            height: auto;
-            aspect-ratio: 408 / 99.9255;
-        }
-        .gf_brandStatement-right.is-pc {
-            display: block;
-            grid-column: 3;
-            grid-row: 1;
-            justify-self: start;
-            width: min(calc(408 * var(--to-rem-func)), 100%);
-            aspect-ratio: 408 / 115.003;
-            .gf_brandStatement-line {
-                left: 24.2647%;
-                top: 66.6591%;
-                width: 75.7353%;
-                height: calc(1 * var(--to-rem-func));
-            }
-            .gf_brandStatement-student {
-                left: 47.3039%;
-                top: 0;
-                width: 12.0098%;
-                height: 65.7918%;
-                transform: scaleX(-1);
-            }
-            .gf_brandStatement-puzzle {
-                left: 0;
-                top: 34.2083%;
-                width: 24.5098%;
-                height: 65.7918%;
-            }
-        }
-    }
+      }
+      .gfl_wrapper-02 {
+        margin-top: calc(10 * var(--to-rem-func));
+      }
+      /* 3階層 end */
 
+      /* MARK: 階層別 3階層 start */
+      .gfl_list-03 {
+        display: grid;
+        gap: calc(10 * var(--to-rem-func));
+      }
+      .gfl_title-03 {
+        gap: calc(8 * var(--to-rem-func));
+        &::before {
+          content: var(--icon-chevron-right);
+          font-family: var(--font-awesome);
+          flex-shrink: 0;
+          pointer-events: none;
+          font-size: calc(12 * var(--to-rem-func));
+        }
+      }
+      .gfl_wrapper-03 {
+        margin-top: calc(10 * var(--to-rem-func));
+      }
+      /* 3階層 end */
 
+      /* MARK: 階層別 4階層 start */
+      .gfl_list-04 {
+        display: grid;
+        gap: calc(10 * var(--to-rem-func));
+      }
+      .gfl_title-04 {
+        padding-left: calc(24 * var(--to-rem-func));
+        position: relative;
+        z-index: 0;
+        &::before {
+          content: var(--icon-chevron-right);
+          font-family: var(--font-awesome);
+          position: absolute;
+          left: calc(12 * var(--to-rem-func));
+          top: 50%;
+          transform: translateY(-50%);
+          font-size: calc(10 * var(--to-rem-func));
+        }
+      }
+      .gfl_wrapper-04 {
+        margin-top: calc(10 * var(--to-rem-func));
+      }
+      /* 4階層 end */
 
+      /* MARK: 階層別 5階層 start */
+      .gfl_title-05 {
+        padding-left: calc(36 * var(--to-rem-func));
+        font-size: calc(14 * var(--to-rem-func));
+        position: relative;
+        z-index: 0;
+        &::before {
+          content: var(--icon-chevron-right);
+          font-family: var(--font-awesome);
+          position: absolute;
+          left: calc(24 * var(--to-rem-func));
+          top: 50%;
+          transform: translateY(-50%);
+          font-size: calc(10 * var(--to-rem-func));
+        }
+      }
+      /* 5階層 end */
+
+      /* MARK: 階層別 6階層 start */
+      /* あれば追加 */
+      /* 6階層 end */
+
+      /* MARK: ステータス start */
+      /* ステータス end */
+    }
+  }
+
+  @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+    .gf_information {
+      flex: 0 1 calc(308 * var(--to-rem-func));
+      justify-content: flex-start;
+    }
+    .gf_links-wrap {
+      flex: 0 1 calc(541 * var(--to-rem-func));
+    }
+  }
+
+  /* Accessibility: do not animate accordion changes when reduced motion is requested. */
+  @media (prefers-reduced-motion: reduce) {
+    a, .gfl_wrapper-02, .gfl_wrapper-03, .gfl_wrapper-04,
+    .gfl_wrapper-05, .gfl_wrapper-06, .gf_logo a {
+      transition-duration: 0s;
+    }
+    [class*='gfl_button']::before,
+    [class*='gfl_button']::after {
+      transition-duration: 0s;
+    }
+  }
+
+  /* MARK: hover */
+  @media (any-hover: hover) {
     .gf_logo {
-        width: auto;
-        max-width: 100%;
-        a {
-            display: flex;
-            align-items: center;
-            gap: calc(12 * var(--to-rem-func));
-            min-width: 0;
-            transition: opacity var(--transition-duration);
-            &:focus-visible {
-                outline: 2px solid var(--color-primary);
-                outline-offset: 3px;
-            }
+      a {
+        &:hover {
+          opacity: var(--opacity-hover);
         }
-        img {
-            flex-shrink: 0;
-            width: calc(51 * var(--to-rem-func));
-            height: calc(48 * var(--to-rem-func));
-        }
-        span {
-            min-width: 0;
-            overflow-wrap: anywhere;
-            line-height: 1.3;
-        }
+      }
     }
-    /* Figma PC 114:484 / 114:523: identity and sitemap share a row.
-       Keep a single menu in DOM order, including the existing SP disclosure. */
-    .gf_details {
-        display: grid;
-        gap: calc(32 * var(--to-rem-func));
-        padding-block: calc(32 * var(--to-rem-func));
-        @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: calc(32 * var(--to-rem-func));
-            padding-block: 0 calc(48 * var(--to-rem-func));
-        }
+    a {
+      &:hover {
+        color: var(--color-primary);
+      }
     }
-    .gf_information,
-    .gf_links-wrap,
-    .gf_menu {
-        min-width: 0;
-    }
-    .gf_links-01 {
-        display: grid;
-        pointer-events: auto;
-        /* MARK: 共通 全階層に影響あり start */
-        .gfl_item-02,
-        .gfl_item-03,
-        .gfl_item-04,
-        .gfl_item-05,
-        .gfl_item-06 {
-            border-top: calc(1 * var(--to-rem-func)) solid var(--color-gray-border);
-        }
-        .gfl_item-02 {
-            &:first-child {
-                border-top: none;
-            }
-            &:last-child {
-                border-bottom: calc(1 * var(--to-rem-func)) solid var(--color-gray-border);
-            }
-        }
-        .gfl_title-02,
-        .gfl_title-03,
-        .gfl_title-04,
-        .gfl_title-05,
-        .gfl_title-06 {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
-        }
-        .gfl_link-02,
-        .gfl_link-03,
-        .gfl_link-04,
-        .gfl_link-05,
-        .gfl_link-06 {
-            min-width: 0;
-            display: block;
-            padding-block: calc(20 * var(--to-rem-func));
-            padding-inline: calc(20 * var(--to-rem-func));
-            flex-grow: 1;
-            overflow-wrap: anywhere;
-            word-break: normal;
-            line-break: strict;
-            &::after {
-                content: none;
-            }
-        }
-        .gfl_button-02,
-        .gfl_button-03,
-        .gfl_button-04,
-        .gfl_button-05,
-        .gfl_button-06 {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            position: relative;
-            width: calc(60 * var(--to-rem-func));
-            height: calc(60 * var(--to-rem-func));
-            background-color: transparent;
-            pointer-events: all;
-            touch-action: manipulation;
-            &:focus-visible {
-                outline: 2px solid var(--color-primary);
-                outline-offset: -3px;
-            }
-            &::before,
-            &::after {
-                content: '';
-                display: block;
-                position: absolute;
-                left: calc(50% - calc(5 * var(--to-rem-func)));
-                top: calc(50% - calc(1 * var(--to-rem-func)));
-                border-radius: calc(1 * var(--to-rem-func));
-                width: calc(10 * var(--to-rem-func));
-                height: calc(2 * var(--to-rem-func));
-                background-color: var(--color-text);
-                transition: var(--transition-duration);
-            }
-            &::after {
-                transform: rotate(-90deg);
-            }
-            span {
-                display: none;
-            }
-        }
-        .gfl_wrapper-02,
-        .gfl_wrapper-03,
-        .gfl_wrapper-04,
-        .gfl_wrapper-05,
-        .gfl_wrapper-06 {
-            display: grid;
-            grid-template-rows: 0fr;
-            transition: grid-template-rows var(--transition-duration);
-        }
-        .gfl_inner-02,
-        .gfl_inner-03,
-        .gfl_inner-04,
-        .gfl_inner-05,
-        .gfl_inner-06 {
-            overflow: hidden;
-        }
-        .gfl_list-02,
-        .gfl_list-03,
-        .gfl_list-04,
-        .gfl_list-05,
-        /* MARK: 共通 3階層以降に影響あり start */
-        .gfl_item-03,
-        .gfl_item-04,
-        .gfl_item-05,
-        .gfl_title-03,
-        .gfl_title-04,
-        .gfl_title-05,
-        .gfl_link-03,
-        .gfl_link-04,
-        .gfl_link-05,
-        .gfl_button-03,
-        .gfl_button-04,
-        .gfl_button-05,
-        .gfl_wrapper-03,
-        .gfl_wrapper-04,
-        .gfl_wrapper-05,
-        .gfl_inner-03,
-        .gfl_inner-04,
-        .gfl_inner-05,
-        .gfl_list-03,
-        .gfl_list-04,
-        .gfl_list-05,
-        /* 3階層以降に影響あり end */
-        /* MARK: ステータス start */
-        .gfl_item-02 {
-            /* &.current_page_parent, */
-            /* &.current-menu-ancestor, */
-            &.current-menu-item {
-                .gfl_link-02 {
-                    color: var(--color-primary);
-                }
-            }
-        }
-        .gfl_item-03 {
-            &.current-menu-item {
-                .gfl_link-03 {
-                    color: var(--color-primary);
-                }
-            }
-        }
-        .gfl_item-04 {
-            &.current-menu-item {
-                .gfl_link-04 {
-                    color: var(--color-primary);
-                }
-            }
-        }
-        .gfl_item-05 {
-            &.current-menu-item {
-                .gfl_link-05 {
-                    color: var(--color-primary);
-                }
-            }
-        }
-        .gfl_item-06 {
-            &.current-menu-item {
-                .gfl_link-06 {
-                    color: var(--color-primary);
-                }
-            }
-        }
-        /* ステータス end */
-        /* 共通 end */
-
-        /* MARK: 階層別 3階層 start */
-        /* 3階層 end */
-
-        /* MARK: 階層別 4階層 start */
-        /* 4階層 end */
-
-        /* MARK: 階層別 5階層 start */
-        /* あれば追加 */
-        /* 5階層 end */
-
-        /* MARK: 階層別 6階層 start */
-        /* あれば追加 */
-        /* 6階層 end */
-
-        /* MARK: ステータス start */
-        .gfl_item-02,
-        .gfl_item-03,
-        .gfl_item-04,
-        .gfl_item-05,
-        .gfl_item-06 {
-            &[data-open='true'] {
-                > [class*='gfl_title'] {
-                    > [class*='gfl_button'] {
-                        &::after {
-                            transform: rotate(0deg);
-                        }
-                    }
-                }
-                > [class*='gfl_wrapper'] {
-                    grid-template-rows: 1fr;
-                }
-            }
-            &[data-open='false'] {
-                > [class*='gfl_wrapper'] {
-                    grid-template-rows: 0fr;
-                }
-            }
-        }
-        /* ステータス end */
-    }
-.gf_information {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    /* Figma PC 114:536 / SP 279:2805: in-flow copyright and page-top row. */
-    .gf_bottom {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) calc(60 * var(--to-rem-func));
-        background-color: var(--color-primary);
-        min-height: calc(60 * var(--to-rem-func));
-    }
-    .gf_copyright {
-        display: flex;
-        align-items: center;
-        min-width: 0;
-        margin: 0;
-        padding: calc(12 * var(--to-rem-func)) calc(20 * var(--to-rem-func));
-        font-family: var(--font-jwsnj-en-condensed);
-        font-size: calc(12 * var(--to-rem-func));
-        font-weight: 400;
-        letter-spacing: 0.05em;
-        color: var(--color-secondary);
-        line-height: 1.5;
-        overflow-wrap: anywhere;
-        text-align: left;
-        @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
-            padding-inline-start: calc(80 * var(--to-rem-func));
-        }
-    }
-    .gf_pageTop {
-        display: flex;
-        margin: 0;
-        a {
-            display: grid;
-            place-items: center;
-            width: 100%;
-            min-height: calc(60 * var(--to-rem-func));
-            background-color: #4dce83;
-            transition: background-color var(--transition-duration);
-            &::before {
-                content: '\f341';
-                font-family: var(--font-awesome);
-                font-weight: 400;
-                font-size: calc(16 * var(--to-rem-func));
-                line-height: 1;
-                color: var(--color-secondary);
-            }
-            &:focus-visible {
-                outline: 2px solid var(--color-text);
-                outline-offset: -3px;
-            }
-            @media (any-hover: hover) {
-                &:hover {
-                    background-color: var(--color-primary);
-                }
-            }
-            span {
-                display: none;
-            }
-        }
-    }
-
-    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-        .gf_links-01 {
-            display: block;
-            columns: 3;
-            column-gap: clamp(calc(24 * var(--to-rem-func)), 5.8vw, calc(80 * var(--to-rem-func)));
-            > .gfl_item-02 {
-                break-inside: avoid;
-                margin-block-end: calc(16 * var(--to-rem-func));
-            }
-            /* MARK: 共通 全階層に影響あり start */
-            .gfl_item-02,
-            .gfl_item-03,
-            .gfl_item-04,
-            .gfl_item-05,
-            .gfl_item-06 {
-                border-top: none;
-                position: relative;
-                z-index: 0;
-            }
-            .gfl_item-02 {
-                min-width: 0;
-                &:last-child {
-                    border-bottom: none;
-                }
-            }
-            .gfl_title-02,
-            .gfl_title-03,
-            .gfl_title-04,
-            .gfl_title-05,
-            .gfl_title-06 {
-                width: auto;
-            }
-            .gfl_link-02,
-            .gfl_link-03,
-            .gfl_link-04,
-            .gfl_link-05,
-            .gfl_link-06 {
-                padding-block: 0;
-                padding-inline: 0;
-            }
-            .gfl_button-02,
-            .gfl_button-03,
-            .gfl_button-04,
-            .gfl_button-05,
-            .gfl_button-06 {
-                display: none;
-            }
-            .gfl_wrapper-02,
-            .gfl_wrapper-03,
-            .gfl_wrapper-04,
-            .gfl_wrapper-05,
-            .gfl_wrapper-06 {
-                grid-template-rows: 1fr;
-            }
-            .gfl_inner-02,
-            .gfl_inner-03,
-            .gfl_inner-04,
-            .gfl_inner-05,
-            /* MARK: 共通 3階層以降に影響あり start */
-            .gfl_list-03,
-            .gfl_list-04,
-            .gfl_list-05,
-            .gfl_item-03,
-            .gfl_item-04,
-            .gfl_item-05,
-            .gfl_title-03,
-            .gfl_title-04,
-            .gfl_title-05,
-            .gfl_link-03,
-            .gfl_link-04,
-            .gfl_link-05,
-            .gfl_button-03,
-            .gfl_button-04,
-            .gfl_button-05,
-            .gfl_wrapper-03,
-            .gfl_wrapper-04,
-            .gfl_wrapper-05,
-            .gfl_inner-03,
-            .gfl_inner-04,
-            .gfl_inner-05,
-            /* 3階層以降に影響あり end */
-            /* 共通 end */
-
-            /* MARK: 階層別 2階層 start */
-            .gfl_list-02 {
-                display: grid;
-                gap: calc(8 * var(--to-rem-func));
-            }
-            /* Figma PC sitemap 114:523. Keep the WordPress hierarchy and SP controls intact. */
-            .gfl_link-02 {
-                font-family: var(--font-jwsnj-ja);
-                font-size: calc(13 * var(--to-rem-func));
-                font-weight: 500;
-                line-height: 1.4;
-                letter-spacing: 0.05em;
-                padding-inline-start: calc(17.41839 * var(--to-rem-func));
-                background-image: url('../../images/common/footer/img_footer-bullet.svg');
-                background-repeat: no-repeat;
-                background-position: left calc(6.39 * var(--to-rem-func));
-                background-size: calc(5.41839 * var(--to-rem-func)) auto;
-                /* The sitemap uses FA window-restore, not the orange inline SVG. */
-                &[target='_blank']:where(:not([href$='.pdf'], [href$='.doc'], [href$='.docx'], [href$='.docm'], [href$='.xls'], [href$='.xlsx'], [href$='.xlsm'], [href$='.png'], [href$='.jpg'], [href$='.jpeg'], [href$='.gif'], [href$='.webp']))::after {
-                    content: var(--icon-blank);
-                    font-family: var(--font-awesome);
-                    font-weight: 400;
-                    font-size: calc(12 * var(--to-rem-func));
-                    margin-inline-start: calc(4 * var(--to-rem-func));
-                }
-            }
-            .gfl_wrapper-02 {
-                margin-top: calc(10 * var(--to-rem-func));
-            }
-            /* 3階層 end */
-
-            /* MARK: 階層別 3階層 start */
-            .gfl_list-03 {
-                display: grid;
-                gap: calc(10 * var(--to-rem-func));
-            }
-            .gfl_title-03 {
-                gap: calc(8 * var(--to-rem-func));
-                &::before {
-                    content: var(--icon-chevron-right);
-                    font-family: var(--font-awesome);
-                    flex-shrink: 0;
-                    pointer-events: none;
-                    font-size: calc(12 * var(--to-rem-func));
-                }
-            }
-            .gfl_wrapper-03 {
-                margin-top: calc(10 * var(--to-rem-func));
-            }
-            /* 3階層 end */
-
-            /* MARK: 階層別 4階層 start */
-            .gfl_list-04 {
-                display: grid;
-                gap: calc(10 * var(--to-rem-func));
-            }
-            .gfl_title-04 {
-                padding-left: calc(24 * var(--to-rem-func));
-                position: relative;
-                z-index: 0;
-                &::before {
-                    content: var(--icon-chevron-right);
-                    font-family: var(--font-awesome);
-                    position: absolute;
-                    left: calc(12 * var(--to-rem-func));
-                    top: 50%;
-                    transform: translateY(-50%);
-                    font-size: calc(10 * var(--to-rem-func));
-                }
-            }
-            .gfl_wrapper-04 {
-                margin-top: calc(10 * var(--to-rem-func));
-            }
-            /* 4階層 end */
-
-            /* MARK: 階層別 5階層 start */
-            .gfl_title-05 {
-                padding-left: calc(36 * var(--to-rem-func));
-                font-size: calc(14 * var(--to-rem-func));
-                position: relative;
-                z-index: 0;
-                &::before {
-                    content: var(--icon-chevron-right);
-                    font-family: var(--font-awesome);
-                    position: absolute;
-                    left: calc(24 * var(--to-rem-func));
-                    top: 50%;
-                    transform: translateY(-50%);
-                    font-size: calc(10 * var(--to-rem-func));
-                }
-            }
-            /* 5階層 end */
-
-            /* MARK: 階層別 6階層 start */
-            /* あれば追加 */
-            /* 6階層 end */
-
-            /* MARK: ステータス start */
-            /* ステータス end */
-        }
-}
-
-    @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
-        .gf_information {
-            flex: 0 1 calc(308 * var(--to-rem-func));
-            justify-content: flex-start;
-        }
-        .gf_links-wrap {
-            flex: 0 1 calc(541 * var(--to-rem-func));
-        }
-    }
-
-    /* Accessibility: do not animate accordion changes when reduced motion is requested. */
-    @media (prefers-reduced-motion: reduce) {
-        a, .gfl_wrapper-02, .gfl_wrapper-03, .gfl_wrapper-04,
-        .gfl_wrapper-05, .gfl_wrapper-06, .gf_logo a {
-            transition-duration: 0s;
-        }
-        [class*='gfl_button']::before,
-        [class*='gfl_button']::after {
-            transition-duration: 0s;
-        }
-    }
-
-    /* MARK: hover */
-    @media (any-hover: hover) {
-        .gf_logo {
-            a {
-                &:hover {
-                    opacity: var(--opacity-hover);
-                }
-            }
-        }
-        a {
-            &:hover {
-                color: var(--color-primary);
-            }
-        }
-    }
+  }
 }
