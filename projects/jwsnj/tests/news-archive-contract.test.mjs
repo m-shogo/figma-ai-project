@@ -108,8 +108,9 @@ test('archive breadcrumb uses existing renderer with scoped Home label and safe 
 test('archive row endings follow PC/SP Figma and non-links do not mimic hoverable links',()=>{
   const rows=css.slice(css.indexOf('    .module_newsList-01 {'),css.indexOf('    .jwsnj_newsArchive_pager {'));
   assert.match(rows,/border-bottom:\s*calc\(1 \* var\(--to-rem-func\)\) solid var\(--jwsnj-color-separator\)/);
-  assert.doesNotMatch(rows,/last-child/);
-  assert.match(css,/&:last-child\s*\{\s*@media \(calc\(768 \* \(1 \/ 16 \* 1rem\)\) <= width\)\s*\{\s*\/\* PC ends[^*]*\*\/\s*border-bottom:\s*0/);
+  // The only final-row override is now local to the article, but still PC-only.
+  assert.equal((rows.match(/last-child/g)||[]).length,1);
+  assert.match(rows,/&:last-child\s*\{\s*@media \(calc\(768 \* \(1 \/ 16 \* 1rem\)\) <= width\)\s*\{\s*\/\* PC ends[^*]*\*\/\s*border-bottom:\s*0/);
   assert.match(css,/\.no-link:hover \.body \.title\s*\{\s*@media \(any-hover: hover\)\s*\{[\s\S]*?color:\s*var\(--color-text\)/);
   const pager=css.slice(css.indexOf('    .jwsnj_newsArchive_pager {'),css.indexOf('    :is(a, summary):focus-visible'));
   assert.equal((pager.match(/letter-spacing:\s*0\.05em/g)||[]).length,2);
