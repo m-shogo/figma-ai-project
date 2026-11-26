@@ -222,3 +222,13 @@ test('TOP official SVG and WebP bytes match between src and theme', () => {
     assert.equal(source.subarray(8, 12).toString('ascii'), 'WEBP', relativePath);
   }
 });
+
+test('Font Awesome stylesheet has one front-end enqueue owner', () => {
+  const head = read('theme/template-parts/_head_contents.php').toString('utf8');
+  const front = read('theme/inc/front.php').toString('utf8');
+  assert.doesNotMatch(head, /all\.min\.css|<\?php if \(false\):/);
+  assert.equal([...front.matchAll(/^\s*wp_enqueue_style\('fontawesome-style',\s*get_theme_file_uri\('\/css\/all\.min\.css'\),[^\n]+/gm)].length, 1);
+  assert.match(head, /NotoSansJP-Regular\.woff2/);
+  assert.match(head, /fonts\.googleapis\.com/);
+  assert.ok(read('theme/css/all.min.css').length > 0);
+});
