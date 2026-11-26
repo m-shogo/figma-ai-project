@@ -186,7 +186,7 @@ test('TOP does not render disabled CODIA event sample or its fake archive action
   assert.doesNotMatch(read('css/project/top_news.css'),/\.top_news-02/);
   assert.match(front,/_top-news/);
   assert.match(front,/_top-notice/);
-  assert.match(front,/top_banner-01/);
+  assert.match(front,/_top-banner/);
   execFileSync('php',['-l',new URL('../theme/front-page.php',import.meta.url).pathname]);
 });
 
@@ -203,4 +203,26 @@ test('TOP Instagram uses the official asset and responsive News sibling without 
   assert.match(css,/content: '\\f061'/);
   assert.doesNotMatch(css,/content: '\\\\f061'/);
   execFileSync('php',['-l',new URL('../theme/template-parts/_top-instagram.php',import.meta.url).pathname]);
+});
+
+test('existing TOP banner owner escapes title, ignores invalid rows and only links named content',()=>{
+  const part=read('template-parts/_top-banner.php');
+  function render(rows){
+    const stub='$rows=json_decode(base64_decode("'+Buffer.from(JSON.stringify(rows)).toString('base64')+'"),true); function get_field($n){global $rows;return $rows;} function wp_attachment_is_image($id){return $id>0 && $id<100;} function wp_get_attachment_image($id,$s,$icon,$attrs){$q=chr(34);return "<img src=".$q."/media/".$id.".webp".$q." alt=".$q.($id===1?"Photo":"").$q.">";} function get_post_meta($id,$k,$single){return $id===1?"Photo":"";} function esc_url($s){return str_starts_with($s,"javascript:")?"":htmlspecialchars($s,ENT_QUOTES);} function esc_html($s){return htmlspecialchars($s,ENT_QUOTES);} ?>';
+    return execFileSync('php',['-r',stub+part],{encoding:'utf8'}).trim();
+  }
+  assert.equal(render([]),'');
+  assert.equal(render([{img:101,url:'/unusable/'},{title:'  '},{img:0,url:'/no-content/'}]),'');
+  const html=render([{img:1,url:'/real/',target:['はい']},{img:2,url:'/unnamed/'},{title:'<script>x</script>',url:'javascript:alert(1)'},{title:'Actual title',url:'/actual/'}]);
+  assert.match(html,/href="\/real\/" target="_blank" rel="noopener noreferrer"/);
+  assert.match(html,/&lt;script&gt;x&lt;\/script&gt;/);
+  assert.match(html,/href="\/actual\/"/);
+  assert.doesNotMatch(html,/href="\/unnamed\/"|javascript:|<script>|tabindex="-1"/);
+  assert.equal((html.match(/<a class=/g)||[]).length,2);
+  assert.equal((html.match(/<div class="jwsnj_topBanner_item"/g)||[]).length,2);
+  const css=read('css/project/top_banner.css');
+  assert.match(css,/focus-visible/);
+  assert.match(css,/overflow-wrap: anywhere/);
+  assert.doesNotMatch(css,/white-space:\s*nowrap|position:\s*absolute/);
+  execFileSync('php',['-l',new URL('../theme/template-parts/_top-banner.php',import.meta.url).pathname]);
 });
