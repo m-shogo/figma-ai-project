@@ -305,6 +305,8 @@ AIが慣習値やSection固有thresholdを勝手に追加しない。
 
 Breakpointはlayout boundary。Hover/touch/pointer availabilityとは別軸。
 
+**Human確定 2026-11-26:** 同一layout boundaryをCSSとJSで異なる単位・条件にしない。JSは既存CSSと等価な `matchMedia()` を優先し、境界・初期フォント設定・状態遷移を実測する。案件固有の値を全案件へコピーしない。実装前に保守性・副作用・依存関係の懸念を自ら発見して伝え、確実な修正と未確定判断を区別する（frontend-quick-contract §8）。
+
 必要なら`PROPOSE_BREAKPOINT_EXCEPTION`。
 
 Browser supportは:

@@ -143,3 +143,7 @@ Header/Footer と TOP の公式 SVG / WebP は #599 / #600 でこのリポジト
 ## 2026-11-26 Human指示 — インデントは半角スペース2（今回・全案件）
 
 - Human「タブも半角スペース2がいい 今はスペース4？かな にしてほしい今回もこれからも」。JWSNJ自作CSS・フロントエンドコードは1階層2スペース、タブ文字なし。全案件共通AGENTS.md・.editorconfig・frontend-quick-contractへ反映。既存sourceは整形専用commitで移行、vendor/generated・文字列/HTML出力で有意な空白は変更しない。ACF保留・原ページ534:1706禁止・既存ownerは維持。
+
+## 2026-11-26 Human指示 — CSS/JS整合と保守性改善の継続
+
+- Human「よくないね 全部治すためのスケジュール？GITに入れて直していって」。改善の作業順・完了条件・残作業は [MAINTAINABILITY_ROADMAP.md](MAINTAINABILITY_ROADMAP.md) を正本とする。既存作業回で最新soとopen PRを確認し、READYの小単位を複数進め、検証・merge・進捗更新。重大な懸念は先に共有し、数字や行数の減少だけを目的にしない。新規/既存スケジュールの変更なし、ACF Cursor保留、#664 owner、534:1706禁止、#523/#524を維持。共通契約はAGENTS.md / frontend-quick-contract §8.1。
