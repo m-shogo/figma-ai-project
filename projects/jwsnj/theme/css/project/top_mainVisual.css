@@ -42,19 +42,29 @@
             &:nth-child(3) { grid-area: c; aspect-ratio: auto; }
             &:nth-child(4), &:nth-child(5) { display: none; }
             &:nth-child(6) { grid-area: f; aspect-ratio: 34 / 11; border-start-end-radius: 0; border-end-end-radius: 0; }
+            &:nth-child(4) {
+                @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+                    display: block;
+                    grid-area: d;
+                }
+            }
+            &:nth-child(5) {
+                @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+                    display: block;
+                    grid-area: e;
+                    border-start-end-radius: 0;
+                    border-end-end-radius: 0;
+                }
+            }
+        }
+        @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            grid-template-areas: "a c d e" "b c f f";
         }
     }
     @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
         --jwsnj-mv-gap: calc(20 * var(--to-rem-func));
         padding-block-end: calc(18 * var(--to-rem-func));
-        .jwsnj_topMv_grid.is-complete {
-            grid-template-columns: repeat(4, minmax(0, 1fr));
-            grid-template-areas: "a c d e" "b c f f";
-            .jwsnj_topMv_item {
-                &:nth-child(4) { display: block; grid-area: d; }
-                &:nth-child(5) { display: block; grid-area: e; border-start-end-radius: 0; border-end-end-radius: 0; }
-            }
-        }
     }
 }
 
@@ -72,6 +82,9 @@
             width: 100%;
             height: auto;
             min-width: 0;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            transition-duration: 0ms !important;
         }
     }
     .jwsnj_topMv_toggle {
@@ -91,9 +104,8 @@
         &:hover { text-decoration: underline; }
         &:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
         &[hidden] { display: none; }
-    }
-    @media (prefers-reduced-motion: reduce) {
-        &.is-swiper-prepared .jwsnj_topMv_track { transition-duration: 0ms !important; }
-        .jwsnj_topMv_toggle { display: none; }
+        @media (prefers-reduced-motion: reduce) {
+            display: none;
+        }
     }
 }

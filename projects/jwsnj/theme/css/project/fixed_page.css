@@ -8,21 +8,27 @@ body:has(.jwsnj_fixedPageMain) { min-width: 0; }
     padding-block: calc(56 * var(--to-rem-func)) calc(64 * var(--to-rem-func));
     font-family: var(--font-jwsnj-ja);
     .gc_main { min-width: 0; }
-    .gc_sub { display: none; }
+    .gc_sub {
+        display: none;
+        @media (calc(1024 * (1 / 16 * 1rem)) <= width) {
+            display: block;
+            min-width: 0;
+            margin-top: calc(5 * var(--to-rem-func));
+        }
+    }
     @media (calc(768 * (1 / 16 * 1rem)) <= width) {
         max-width: calc(1380 * var(--to-rem-func));
         padding-inline: clamp(var(--padding-SP), 7.97vw, calc(110 * var(--to-rem-func))) clamp(var(--padding-SP), 7.17vw, calc(99 * var(--to-rem-func)));
         padding-block: calc(80 * var(--to-rem-func)) calc(100 * var(--to-rem-func));
     }
     /* The Figma desktop rail needs room; narrow tablet keeps the SP one-column flow. */
-    @media (calc(1024 * (1 / 16 * 1rem)) <= width) {
-        &.has-sidebar {
+    &.has-sidebar {
+        @media (calc(1024 * (1 / 16 * 1rem)) <= width) {
             display: grid;
             grid-template-columns: minmax(0, 1fr) minmax(0, calc(256 * var(--to-rem-func)));
             align-items: start;
             gap: clamp(calc(24 * var(--to-rem-func)), 5.435vw, calc(75 * var(--to-rem-func)));
         }
-        .gc_sub { display: block; min-width: 0; margin-top: calc(5 * var(--to-rem-func)); }
     }
 }
 /* The existing sidebar walker still owns menu families and deeper-level actions. */
@@ -44,6 +50,11 @@ body:has(.jwsnj_fixedPageMain) { min-width: 0; }
         .lnl_title-03 {
             background: var(--color-secondary);
             border-bottom: calc(1 * var(--to-rem-func)) solid var(--jwsnj-color-separator);
+            &:has(.lnl_link-03:hover) {
+                @media (any-hover: hover) {
+                    background: var(--jwsnj-color-base-lightgreen-02);
+                }
+            }
         }
         .lnl_link-03 {
             min-width: 0;
@@ -69,8 +80,5 @@ body:has(.jwsnj_fixedPageMain) { min-width: 0; }
         }
         .lnl_button-03 { width: calc(40 * var(--to-rem-func)); height: auto; min-height: calc(44 * var(--to-rem-func)); align-self: stretch; background: transparent; }
         :is(a,button):focus-visible { outline: calc(2 * var(--to-rem-func)) solid var(--color-text); outline-offset: calc(-3 * var(--to-rem-func)); }
-        @media (any-hover: hover) {
-            .lnl_title-03:has(.lnl_link-03:hover) { background: var(--jwsnj-color-base-lightgreen-02); }
-        }
     }
 }

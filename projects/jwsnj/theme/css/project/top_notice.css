@@ -98,8 +98,10 @@
                 outline: calc(2 * var(--to-rem-func)) solid currentColor;
                 outline-offset: calc(2 * var(--to-rem-func));
             }
-            @media (any-hover: hover) {
-                &:hover { text-decoration: none; }
+            &:hover {
+                @media (any-hover: hover) {
+                    text-decoration: none;
+                }
             }
         }
         @media (calc(768 * (1 / 16 * 1rem)) <= width) {
@@ -110,7 +112,9 @@
     }
     @media (calc(768 * (1 / 16 * 1rem)) <= width) {
         margin-top: calc(48 * var(--to-rem-func));
-        .jwsnj_topNotice_inner {
+    }
+    .jwsnj_topNotice_inner {
+        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
             max-width: calc(var(--width-base-small) + var(--padding-TB) * 2);
         }
     }
