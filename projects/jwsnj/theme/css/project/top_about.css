@@ -105,7 +105,8 @@
             inset: auto;
             width: 100%;
             max-width: calc(280 * var(--to-rem-func));
-            .jwsnj_topAbout_inner:has(.jwsnj_topAbout_cards) > & {
+            /* Match the map itself when its following card-list sibling exists. */
+            &:has(~ .jwsnj_topAbout_cards) {
                 position: absolute;
                 inset: 0 calc(120 * var(--to-rem-func)) auto auto;
                 width: min(26%, calc(280 * var(--to-rem-func)));
@@ -156,7 +157,6 @@
         margin: 0 calc(-60 * var(--to-rem-func));
         gap: calc(20 * var(--to-rem-func));
         &.is-four {
-            grid-template-columns: repeat(4, minmax(0, 1fr));
             gap: 0;
             padding-inline: calc(20 * var(--to-rem-func));
         }
@@ -166,8 +166,8 @@
     position: relative;
     width: min(100%, calc(296 * var(--to-rem-func)));
     min-width: 0;
-    &:focus-within { z-index: 6; }
     &:has([aria-pressed="true"]) { z-index: 5; }
+    &:focus-within { z-index: 6; }
     @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
         width: 100%;
         .is-four > & {

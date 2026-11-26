@@ -17,7 +17,11 @@
   実質：　calc((1px / 16px) * 1rem)
   この計算式は、1px を rem に変換するための計算式です。
   */
-  --to-rem-func: calc(tan(atan2(1px, var(--root-font-size))) * 1rem);
+  /* Valid even when typed custom properties or trig functions are unavailable. */
+  --to-rem-func: 0.0625rem;
+  @supports (width: calc(tan(atan2(1px, 16px)) * 1rem)) {
+    --to-rem-func: calc(tan(atan2(1px, var(--root-font-size, 16px))) * 1rem);
+  }
 }
 /*============================
 // MARK: フォント

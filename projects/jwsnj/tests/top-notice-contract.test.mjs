@@ -405,3 +405,21 @@ test('About card view has exact fixture assets, no invented navigation and opt-i
   execFileSync('php',['-l',path]);
   execFileSync('php',['-l',fixture]);
 });
+
+test('About map state is owner-local and matches the actual following sibling',()=>{
+  const css=read('css/project/top_about.css');
+  const intro=read('template-parts/_top-about-intro.php');
+  assert.ok(intro.indexOf('class="jwsnj_topAbout_map"')<intro.indexOf('_top-about-cards'));
+  assert.match(read('template-parts/_top-about-cards.php'),/<ul class="jwsnj_topAbout_cards/);
+  assert.match(css,/&:has\(~ \.jwsnj_topAbout_cards\)\s*\{\s*position: absolute/);
+  assert.doesNotMatch(css,/\.jwsnj_topAbout_inner:has\([^)]*\)\s*>\s*&/);
+  assert.match(css,/&:has\(\[aria-pressed="true"\]\) \{ z-index: 5; \}\s*&:focus-within \{ z-index: 6; \}/);
+});
+
+test('rem conversion keeps a usable baseline and Course zoom respects reduced motion',()=>{
+  const tokens=read('css/global/variables.css');
+  assert.match(tokens,/--to-rem-func: 0\.0625rem;\s*@supports \(width: calc\(tan\(atan2\(1px, 16px\)\) \* 1rem\)\) \{\s*--to-rem-func: calc\(tan\(atan2\(1px, var\(--root-font-size, 16px\)\)\) \* 1rem\)/);
+  const css=read('css/project/top_course.css');
+  assert.match(css,/@media \(any-hover: hover\) and \(prefers-reduced-motion: no-preference\) \{\s*&:is\(a\):hover \.jwsnj_topCourse_crop img \{ transform: scale\(1\.08\); \}/);
+  assert.equal((css.match(/transform: scale\(1\.08\)/g)||[]).length,1);
+});

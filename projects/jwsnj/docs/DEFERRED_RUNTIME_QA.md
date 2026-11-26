@@ -251,3 +251,5 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 - TOP About cards / #523: use QA-only four-row fixture with `_top-about-intro.php` items; verify PC stack overlap/order/click/Tab/focus, no horizontal overflow at 1080/1280/1380, SP 320/375/767 and intermediate stacking, long labels, no-JS disabled buttons and exact photo crops vs Figma. Selection is not navigation. No new field or URL; production adapter and actual browser evidence deferred.
 
 - Preschool features / #523: insert optional pattern in disposable WP page; verify editor serialization, direct/inner-container Groups, 3-column at >=1080, narrow one-column, long titles/body, optional real illustration canvas/outline, heading rhythm and unchanged generic H3/Image. Plain number prefix and no artwork until #524; no SP reference or visual PASS.
+
+- CSS robustness 2026-11-26: verify rem conversion fallback vs enhanced typed/trig path in required engines and non-default root settings; About map with/without actual following list at 1079/1080/1380 and keyboard focus over selected cards; Course hover at both motion preferences. Static selectors/feature-query tests are not actual WP/visual acceptance. #523 remains OPEN.
