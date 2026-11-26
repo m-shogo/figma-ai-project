@@ -182,6 +182,8 @@ test('course intro layout composes the existing styles with optional native medi
   assert.match(s,/:has\(> \.wp-block-group\):has\(> \.wp-block-image\)/);
   assert.match(s,/grid-template-columns:\s*minmax\(0, 520fr\) minmax\(0, 440fr\)/);
   assert.match(s,/aspect-ratio:\s*440 \/ 461/);
+  assert.match(s,/max-width:\s*min\(100%, calc\(440 \* var\(--to-rem-func\)\)\)/);
+  assert.match(s,/:not\(:has\(\.alignleft\)\):not\(:has\(\.alignright\)\):not\(:has\(\.aligncenter\)\)\s*\{\s*width:\s*100%/);
   assert.match(s,/object-position:\s*bottom/);
   assert.doesNotMatch(s,/white-space:\s*nowrap|position:\s*absolute|(?:^|[;{}\n])\s*height\s*:/);
   const editor=readFileSync(new URL('../theme/inc/editor.php',import.meta.url),'utf8');
