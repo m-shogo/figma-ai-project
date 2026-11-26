@@ -154,3 +154,21 @@ test('course schedule uses native editable groups and optional images, alternati
   const editor=readFileSync(new URL('../theme/inc/editor.php',import.meta.url),'utf8');
   assert.match(editor,/register_block_style\('core\/group', array\(\s*'name' => 'jwsnj-course-schedule'/);
 });
+
+test('preschool schedule pattern offers the exact Figma eight entries without auto-insertion or placeholder images',()=>{
+  const file=new URL('../theme/patterns/preschool-schedule.php',import.meta.url);
+  const pattern=readFileSync(file,'utf8');
+  assert.match(pattern,/Slug:\s*jwsnj\/preschool-schedule/);
+  assert.match(pattern,/is-style-jwsnj-course-heading/);
+  assert.match(pattern,/is-style-jwsnj-course-schedule/);
+  assert.match(pattern,/<h2 class="wp-block-heading">幼児部の一日<\/h2>/);
+  assert.match(pattern,/<p>SCHEDULE<\/p>/);
+  assert.deepEqual([...pattern.matchAll(/<p>(\d{1,2}:\d{2}) /g)].map(m=>m[1]),['8:50','9:30','10:00','10:30','11:45','13:00','14:00','14:30']);
+  assert.match(pattern,/9:30 朝の会\(朝の歌、ダンス、お当番の紹介\)<br>絵本の貸し出し/);
+  assert.equal((pattern.match(/<!-- wp:group \{"layout":\{"type":"default"\}\} -->/g)||[]).length,8);
+  assert.equal((pattern.match(/<!-- wp:group /g)||[]).length,(pattern.match(/<!-- \/wp:group -->/g)||[]).length);
+  assert.doesNotMatch(pattern,/<!-- wp:image|<img\b|https?:\/\/|wp_insert_post|update_field|register_post_type/);
+  const page=readFileSync(new URL('../theme/page.php',import.meta.url),'utf8');
+  assert.doesNotMatch(page,/preschool-schedule/);
+  execFileSync('php',['-l',file.pathname]);
+});
