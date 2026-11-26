@@ -9,9 +9,9 @@ Owner request: 2026-11-26。Gitを引継ぎ正本とする。既存の実装回�
 | P1-3 | JS状態owner / 初期化 | PARTIAL (#725 merged) | common.jsのmenu/overlay/scroll lockの状態一元化、重複listener・DOM再初期化を点検。分割は既存Themeと修正頻度に合わせる。 |
 | P1-4 | asset/cache | PARTIAL (#724/#726 merged) | CSS @import childだけ更新時のキャッシュ失効、editor/front両方の依存、既存配信環境を確認。不要buildを作らない。 |
 | P1-5 | HTML/CSS/JS命名・検索性 | READY | existing naming維持、visual vs behavior hook、同一ownerへの集約。selector renameの全consumer確認。 |
-| P1-6 | PHP/WP template責務 | READY | template-parts/data/markup、escape、hook/query、副作用、optional dataを点検。既存ACF schema維持。 |
+| P1-6 | PHP/WP template責務 | PARTIAL (#729 merged) | template-parts/data/markup、escape、hook/query、副作用、optional dataを点検。既存ACF schema維持。 |
 | P1-7 | sample/vendor/ライブラリ | PARTIAL (#722/#726/#727 merged) | CF7、旧CPT、無効コード・sample文言/素材、未使用ライブラリをconsumer調査後に除去。vendor/generatedは対象外。 |
-| P1-8 | WP/plugin依存 | READY | jQuery登録解除・global styles・enqueue順・plugin shortcode二重renderの影響。会社既存方針と実WP証拠を確認し、勝手に依存更新しない。 |
+| P1-8 | WP/plugin依存 | PARTIAL (#729 merged) | jQuery登録解除・global styles・enqueue順・plugin shortcode二重renderの影響。会社既存方針と実WP証拠を確認し、勝手に依存更新しない。 |
 | P1-9 | CSS owner locality残り | READY | 多階層ナビ、Gutenberg group/table、form等。詳細度・カスケード・PC/SP維持。警告数は参考。#718/#719済み。 |
 | P1-10 | 人間の修正シナリオ | READY | 文章増減、画像交換、カード増減、任意リンク、WP editor、keyboard/touch/resize、ブラウザ差、cache。適切なrisk-based QA。 |
 | 全工程 | 再発防止・先回り | ACTIVE | quick-contract、foundation preflight、必要な既存テストに反映。全案件共通原則と案件固有値を分離し、未検証仮説はLEARNINGSへ。 |
@@ -50,3 +50,19 @@ so 033a7d4: #715–#719 merged。#717 disposable WordPress/free Formidable、#71
 2. P1-3: real disposable WP menu keyboard/resize/scroll roundtrip at current combined HEAD, then audit duplicate init/other modules. Keep source owner simple; don't split files for line count alone.
 3. P1-4: actual editor iframe link/ordering and one-child version change/fallback test; inspect deployment cache policy. No production-server access assumed.
 4. P1-5/P1-7/P1-9: continue naming/unused source and class-local CSS review with actual consumer inventory; retained disabled legacy News Swiper not an active breakpoint mismatch. P1-8 jQuery replacement and core styles require plugin compatibility evidence before changing.
+
+## 2026-11-26 継続実績（開始 89bab54、実装終了 46e3b39）
+
+- #728 previous handoff merged 8c4350d after 3 successful CI logs; current run implementation is #729/#730/#731, not previous run's five PRs.
+- Official figma-design-to-code skill loaded and new session; PC384:1046/SP445:3245 high-fidelity design context + inline screenshots. No Figma writes, visual CSS changes, ACF schema, held original page or schedule changes. Existing design/asset ownership retained.
+- #729 merged da1c8e5, all 5 CI success. Register YubinBango without executing content early; scoped late filter on actual form template content detects postal class with WP_HTML_Tag_Processor and enqueues footer script; remove filter even after exception. Actual disposable WP/Free Formidable fixture plus local-only shortcode counter: no-postal form renders shortcode once and no postal script; postal child renders once, script present once, expected root/child classes, all 3 engines. No real postal lookup or Pro verification. Page slug class uses queried WP_Post, validates ancestor, avoids duplicate and missing object. No change to unused legacy my_body_id or actual header body id.
+- #731 merged ad2bbbd, all 4 CI success. PHP temporary file test verifies one child mtime change only, dependency ordering, alias registration, missing/conditional/non-import/duplicate import fallback. Detect flattened handle collision before partial registration. Actual browser cache/CDN and editor iframe not proven.
+- #730 merged 46e3b39, all 5 CI success. Real bundled jQuery/extracted authored functions in isolated Chromium/Firefox/WebKit at 375/768/1380: table/password/lightbox wrap exactly once, intentional empty p attributes retained, anonymous empty p removed, overflow state retained. One namespaced table resize handler. Not full common.js replay or full WP editor acceptance.
+- All 3 implementation PRs merged after actual CI logs and disjoint base-path review. #523/#524 open; #664 unchanged.
+
+### Next READY (supersedes earlier candidates)
+
+1. P1-3/P1-10: combined disposable WordPress menu fixture with actual navigation HTML/registered WP locations and real common.js, keyboard/touch/resize/scroll round trip. No real school DB or physical device claim. Continue individual init/observer owner audit rather than globally replaying all scripts.
+2. P1-6/P1-8: audit actual consumers of unused my_body_id versus header.php's current slug id before changing anything; inspect legacy _visual.php missing attachment/false array, archive query assumptions, and output escaping. Preserve approved visible title/layout, no invented fallback image; existing sample behavior only change with proof. Avoid unverified jQuery deregistration changes; test actual free plugins and record Pro requirement.
+3. P1-4: real editor iframe link order/scope and deployment mtime/query key/CDN behavior; source one-child/fallback test done. No production access assumed.
+4. P1-5/P1-7/P1-9: continue source and class-local CSS review; avoid arbitrary rename and cascade/geometry changes. Keep #664 and original 534:1706 protected.
