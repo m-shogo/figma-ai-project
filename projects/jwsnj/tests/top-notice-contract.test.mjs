@@ -161,3 +161,29 @@ test('TOP MV complete-grid responsive sizes reflect PC quarter/half and SP half/
   assert.deepEqual([...old.matchAll(/<img[^>]*\ssizes="([^"]+)"/g)].map(x=>x[1]),['100vw','custom','100vw','auto, 100vw','auto, 100vw','100vw']);
   assert.doesNotMatch(part,/figma\.com|update_field|wp_insert_post/);
 });
+
+
+test('TOP MV loop keeps the original responsive grid and has a no-JS static fallback',()=>{
+  const part=read('template-parts/_top-mv-grid.php');
+  const css=read('css/project/top_mainVisual.css');
+  const js=read('js/home.js');
+  assert.match(part,/<div class="jwsnj_topMv_viewport">\s*<div class="jwsnj_topMv_track" id="jwsnj_topMv_track">\s*<ul/);
+  assert.match(part,/<\?php if \(\$complete\) : \?>\s*<button type="button"[^>]*aria-controls="jwsnj_topMv_track" hidden>/);
+  assert.match(css,/&\.is-loop-prepared \.jwsnj_topMv_track\s*\{\s*display: flex;\s*width: 100%;\s*gap: var\(--jwsnj-mv-gap\)/);
+  assert.match(css,/flex: 0 0 100%/);
+  assert.match(css,/animation: jwsnj-mv-loop var\(--jwsnj-mv-duration\) linear infinite/);
+  assert.match(css,/to \{ transform: translateX\(calc\(-100% - var\(--jwsnj-mv-gap\)\)\); \}/);
+  assert.match(css,/animation-play-state: paused/);
+  assert.match(css,/@media \(prefers-reduced-motion: reduce\)[\s\S]*?animation: none/);
+  assert.match(css,/&\[hidden\] \{ display: none; \}/);
+  assert.match(css,/focus-visible/);
+  assert.match(js,/grid\.cloneNode\(true\)/);
+  assert.match(js,/copy\.setAttribute\('aria-hidden', 'true'\)/);
+  assert.match(js,/copy\.setAttribute\('inert', ''\)/);
+  assert.match(js,/await Promise\.all\(visible\.map/);
+  assert.match(js,/copy\.remove\(\);\s*root\.classList\.remove\('is-loop-prepared'\)/);
+  assert.match(js,/classList\.toggle\('is-loop-paused'\)/);
+  assert.match(js,/reduced\.addEventListener\('change', prepare\)/);
+  assert.doesNotMatch(css,/white-space:\s*nowrap/);
+  execFileSync('node',['--check',new URL('../theme/js/home.js',import.meta.url).pathname]);
+});

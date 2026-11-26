@@ -34,7 +34,50 @@
   // ==========================================================================
   // 実行
   // ==========================================================================
-  // MV photo grid has no autoplay until its motion contract is implemented.
+  // Continuous marquee (Human 2026-11-26), not a slide-by-slide carousel.
+  // The original grid stays the only semantic content owner.
+  const initMvLoop = function (root) {
+    const track = root.querySelector('.jwsnj_topMv_track');
+    const grid = track?.querySelector('.jwsnj_topMv_grid.is-complete');
+    const toggle = root.querySelector('.jwsnj_topMv_toggle');
+    if (!grid || !toggle || root.classList.contains('is-loop-prepared')) return;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const prepare = async function () {
+      if (reduced.matches || root.classList.contains('is-loop-prepared')) return;
+      const copy = grid.cloneNode(true);
+      copy.setAttribute('aria-hidden', 'true');
+      copy.setAttribute('inert', '');
+      copy.removeAttribute('id');
+      copy.querySelectorAll('[id]').forEach(node => node.removeAttribute('id'));
+      copy.querySelectorAll('img').forEach(img => img.removeAttribute('fetchpriority'));
+      track.append(copy);
+      root.classList.add('is-loop-prepared');
+      try {
+        // Do not start while visible slots are still blank. Hidden SP slots
+        // remain lazy; a failed visible image leaves the original still intact.
+        const visible = [...track.querySelectorAll('img')].filter(img => img.getClientRects().length);
+        await Promise.all(visible.map(img => {
+          img.loading = 'eager';
+          return img.decode();
+        }));
+      } catch (error) {
+        copy.remove();
+        root.classList.remove('is-loop-prepared');
+        return;
+      }
+      root.classList.add('is-loop-running');
+      toggle.hidden = false;
+    };
+    toggle.addEventListener('click', function () {
+      const paused = root.classList.toggle('is-loop-paused');
+      toggle.textContent = paused ? '写真の動きを再開' : '写真の動きを停止';
+    });
+    reduced.addEventListener('change', prepare);
+    prepare();
+  };
+  $(function () {
+    document.querySelectorAll('.jwsnj_topMv').forEach(initMvLoop);
+  });
   //newsSlider();
 
 })(jQuery);
