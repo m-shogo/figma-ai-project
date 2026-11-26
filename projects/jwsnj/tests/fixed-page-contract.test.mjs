@@ -91,3 +91,21 @@ test('course title fallback is suppressed only by a non-empty heading inside the
   assert.equal((template.match(/<h1 class="jwsnj_coursePage_title">/g)||[]).length,1);
   assert.match(template,/<h1 class="jwsnj_coursePage_title"><\?php echo esc_html\(get_the_title\(\)\); \?><\/h1>/);
 });
+
+test('search and basic form CSS use natural text heights and native selectors',()=>{
+  const search=read('css/module/module_search-01.css');
+  assert.equal((search.match(/min-height: var\(--_search-height-SP\)/g)||[]).length,2);
+  assert.match(search,/minmax\(0, 1fr\) minmax\(0, var\(--_button-width-SP\)\)/);
+  assert.match(search,/&:is\(body\.search \.gc_main \*, body\.error404 \.gc_main \*\)/);
+  assert.doesNotMatch(search,/^@media|html\._browser-ie\s*&|(?<!min-)height: var\(--_search-height-SP\)|transition: var\(--transition-duration\)/m);
+  assert.equal((search.match(/&:focus-visible/g)||[]).length,2);
+  const form=read('css/wordpress/form.css').replace(/\/\*[\s\S]*?\*\//g,'');
+  const base=form.slice(0,form.indexOf('.size-SS'));
+  assert.match(base,/min-height: calc\(50 \* var\(--to-rem-func\)\)/);
+  assert.match(base,/min-height: 10em;\s*field-sizing: content/);
+  assert.doesNotMatch(base,/(?<!min-)height: (?:calc\(50|10em)/);
+  assert.match(base,/&:focus-visible/);
+  assert.match(form,/\.label-need,\s*\.label-any\s*\{/);
+  assert.doesNotMatch(form,/&-need|&-any|white-space:\s*nowrap/);
+  assert.match(form,/&:has\(input:focus-visible\)/);
+});
