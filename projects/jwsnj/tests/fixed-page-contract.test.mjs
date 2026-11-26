@@ -78,3 +78,16 @@ test('course shell scopes full-width first intro, bounded content, and reuses br
   assert.match(css,/clip-path: inset\(50%\)/);
   assert.doesNotMatch(css,/white-space:\s*nowrap|height:\s*calc|100vw|figma\.com/);
 });
+
+
+test('course title fallback is suppressed only by a non-empty heading inside the first intro group',()=>{
+  const css=read('css/project/course_page.css');
+  const rule=css.match(/&:has\([^{}\n]+\)\s*>\s*\.jwsnj_coursePage_title\s*\{[^{}]+\}/g);
+  assert.equal(rule?.length,1);
+  assert.match(rule[0],/\.jwsnj_coursePage_content > \.wp-block-group\.is-style-jwsnj-course-intro-layout:first-child \.wp-block-group\.is-style-jwsnj-course-intro-heading h2\.wp-block-heading:not\(:empty\)/);
+  assert.match(rule[0],/clip-path:\s*inset\(50%\)/);
+  assert.doesNotMatch(css,/intro-layout:first-child\)\s*>\s*\.jwsnj_coursePage_title/);
+  const template=read('templates/template-course.php');
+  assert.equal((template.match(/<h1 class="jwsnj_coursePage_title">/g)||[]).length,1);
+  assert.match(template,/<h1 class="jwsnj_coursePage_title"><\?php echo esc_html\(get_the_title\(\)\); \?><\/h1>/);
+});

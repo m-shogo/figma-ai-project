@@ -21,9 +21,10 @@ body:has(.jwsnj_courseMain) { min-width: 0; }
         color: var(--color-text);
         overflow-wrap: anywhere;
     }
-    /* Retain the CMS page H1 for assistive technology when the editor
-       deliberately starts with the visible introduction pattern. */
-    &:has(> .jwsnj_coursePage_content > .wp-block-group.is-style-jwsnj-course-intro-layout:first-child) > .jwsnj_coursePage_title {
+    /* Retain the CMS page H1 for assistive technology only when the first
+       intro Group still contains its authored heading. An empty intro shell
+       must not suppress the visible page-title fallback. */
+    &:has(> .jwsnj_coursePage_content > .wp-block-group.is-style-jwsnj-course-intro-layout:first-child .wp-block-group.is-style-jwsnj-course-intro-heading h2.wp-block-heading:not(:empty)) > .jwsnj_coursePage_title {
         position: absolute;
         width: 1px;
         height: 1px;
