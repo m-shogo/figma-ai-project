@@ -13,8 +13,18 @@
         margin-inline: auto;
         max-width: calc(255 * var(--to-rem-func));
         width: 100%;
+        @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+            width: calc(150 * var(--to-rem-func));
+            margin: 0;
+        }
         &._hidden {
             display: none;
+            @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+                display: block;
+                visibility: hidden;
+                width: calc(130 * var(--to-rem-func));
+                height: calc(50 * var(--to-rem-func));
+            }
         }
         a {
             display: block;
@@ -30,16 +40,29 @@
             transition: background-color var(--transition-duration), color var(--transition-duration);
             background-color: var(--color-primary);
             color: var(--color-secondary);
+            @media (any-hover: hover) {
+                &:hover {
+                    background-color: var(--color-secondary);
+                    color: var(--color-primary);
+                }
+            }
             span {
                 display: block;
             }
         }
         &.back {
             order: 3;
+            @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+                order: 2;
+            }
             a {
                 background-color: var(--color-secondary);
                 color: var(--color-primary);
-                span {
+                @media (any-hover: hover) {
+                    &:hover {
+                        background-color: var(--color-primary);
+                        color: var(--color-secondary);
+                    }
                 }
             }
         }
@@ -48,6 +71,9 @@
         }
         &.next {
             order: 2;
+            @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+                order: 3;
+            }
         }
     }
 
@@ -55,41 +81,6 @@
         flex-wrap: nowrap;
         flex-direction: row;
         justify-content: space-between;
-        li {
-            width: calc(150 * var(--to-rem-func));
-            margin: 0;
-            &._hidden {
-                display: block;
-                visibility: hidden;
-                width: calc(130 * var(--to-rem-func));
-                height: calc(50 * var(--to-rem-func));
-            }
-            &.back {
-                order: 2;
-            }
-            &.next {
-                order: 3;
-            }
-        }
     }
 
-    /* MARK: hover */
-    @media (any-hover: hover) {
-        li {
-            a {
-                &:hover {
-                    background-color: var(--color-secondary);
-                    color: var(--color-primary);
-                }
-            }
-            &.back {
-                a {
-                    &:hover {
-                        background-color: var(--color-primary);
-                        color: var(--color-secondary);
-                    }
-                }
-            }
-        }
-    }
 }

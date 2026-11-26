@@ -30,6 +30,11 @@
             transition: var(--transition-duration);
         }
         .link {
+            @media (any-hover: hover) {
+                &:hover .foot .title {
+                    color: var(--color-link);
+                }
+            }
             &[target='_blank'] {
                 .title {
                     &::after {
@@ -100,6 +105,10 @@
         }
         .body {
             margin-top: calc(10 * var(--to-rem-func));
+            @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+                display: flex;
+                margin-top: calc(20 * var(--to-rem-func));
+            }
             .date {
                 margin: 0; /* エディタでの余白を削除 */
                 width: calc(100 * var(--to-rem-func));
@@ -111,6 +120,9 @@
                 flex-wrap: wrap;
                 gap: calc(4 * var(--to-rem-func)) calc(10 * var(--to-rem-func));
                 margin-top: calc(10 * var(--to-rem-func));
+                @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+                    margin-top: 0;
+                }
                 .label {
                     display: inline-block;
                     border: calc(1 * var(--to-rem-func)) solid var(--color-primary);
@@ -138,29 +150,6 @@
     @media (calc(768 * (1 / 16 * 1rem)) <= width) {
         grid-template-columns: repeat(3, 1fr);
         gap: calc(72 * var(--to-rem-func)) calc(40 * var(--to-rem-func));
-        .mnc-01_article {
-            .body {
-                display: flex;
-                margin-top: calc(20 * var(--to-rem-func));
-                .category {
-                    margin-top: 0;
-                }
-            }
-        }
     }
 
-    /* MARK: hover */
-    @media (any-hover: hover) {
-        .mnc-01_article {
-            .link {
-                &:hover {
-                    .foot {
-                        .title {
-                            color: var(--color-link);
-                        }
-                    }
-                }
-            }
-        }
-    }
 }

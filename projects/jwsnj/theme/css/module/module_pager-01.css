@@ -33,6 +33,12 @@
                 background-color: var(--color-primary);
                 color: var(--color-secondary);
             }
+            @media (any-hover: hover) {
+                &:hover:not(.current) {
+                    background-color: var(--color-primary);
+                    color: var(--color-secondary);
+                }
+            }
         }
         /* 矢印ボタン */
         &.prev,
@@ -80,26 +86,6 @@
 
     @media (calc(768 * (1 / 16 * 1rem)) <= width) {
         margin-top: calc(80 * var(--to-rem-func));
-        .page-numbers {
-            &:not(.prev):not(.next):not(.dots) {
-            }
-        }
     }
 
-    /* MARK: hover */
-    @media (any-hover: hover) {
-        .page-numbers {
-            &:hover {
-                &:not(.prev):not(.next):not(.current):not(.dots) {
-                    background-color: var(--color-primary);
-                    color: var(--color-secondary);
-                }
-                &.prev,
-                &.next {
-                    & span {
-                    }
-                }
-            }
-        }
-    }
 }
