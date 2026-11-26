@@ -350,3 +350,7 @@ Visual Fidelityに加えてRelevant scopeで:
 を満たす。
 
 目標はCSS propertyを減らすことでもAIだけで100%一致させることでもなく、**Figmaを高精度に再現し、既存の優れた仕組みを積極的に使い、同じやり直しを減らしながら、未来の人間が安全かつ短時間で変更できるProduction Webを最初から作ること**。
+
+## 23. インデント（Human 2026-11-26・全案件）
+
+自作frontend codeは1階層につき半角スペース2個、ハードタブなし。`.editorconfig` / target formatterを整合させる。既存sourceの整形は機能変更から分離し、文字列・pre/textarea・テンプレート出力・vendor/generatedは保護する。Python等の言語固有規約は別。既存案件は今回対象のscopeで段階的に移行し、終了時に検証する。

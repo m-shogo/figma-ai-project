@@ -138,3 +138,8 @@ Header/Footer と TOP の公式 SVG / WebP は #599 / #600 でこのリポジト
 ## 2026-11-26 Human指示 — CSSはクラス単位にまとめる（全案件）
 
 - Human「全部そうしてこれからの案件もそうして欲しい」。SP/baseとPC/TBのmedia、hover/focus/state・疑似要素を対象class内にまとめ、親block末尾・stylesheet末尾に子classを再列挙しない。既存JWSNJ CSSも対象。既存breakpoint・rem計算・セレクタ詳細度・カスケード・見た目を維持し、外部ライブラリは除外。複数ownerの条件や安全な移動を証明できないものは例外として記録する。共通正本AGENTS.md / frontend-quick-contract §7。ACF後回し、#664 branch保留、original 534:1706禁止、#523/#524維持。
+
+
+## 2026-11-26 Human指示 — インデントは半角スペース2（今回・全案件）
+
+- Human「タブも半角スペース2がいい 今はスペース4？かな にしてほしい今回もこれからも」。JWSNJ自作CSS・フロントエンドコードは1階層2スペース、タブ文字なし。全案件共通AGENTS.md・.editorconfig・frontend-quick-contractへ反映。既存sourceは整形専用commitで移行、vendor/generated・文字列/HTML出力で有意な空白は変更しない。ACF保留・原ページ534:1706禁止・既存ownerは維持。
