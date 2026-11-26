@@ -18,6 +18,15 @@
     .inPageLink {
       width: 100%;
       min-width: 0;
+      /* Figma SP 442:2948: keep the minimum within the available width. */
+      @media (width < calc(768 * (1 / 16 * 1rem))) {
+        min-width: min(100%, calc(304 * var(--to-rem-func)));
+      }
+      @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+        width: fit-content;
+        min-width: min(100%, calc(304 * var(--to-rem-func)));
+        max-width: 100%;
+      }
       a {
         display: flex;
         align-items: center;
@@ -68,13 +77,11 @@
           outline: calc(2 * var(--to-rem-func)) solid var(--color-primary);
           outline-offset: calc(3 * var(--to-rem-func));
         }
-      }
-    }
-    /* Figma SP page link 442:2948 uses a 304px minimum where
-           viewport space permits; keep 100% width on narrow devices. */
-    @media (width < calc(768 * (1 / 16 * 1rem))) {
-      .inPageLink {
-        min-width: min(100%, calc(304 * var(--to-rem-func)));
+        @media (any-hover: hover) {
+          &:hover {
+            background-color: color-mix(in srgb, var(--jwsnj-color-base-lightblue) 85%, var(--color-secondary));
+          }
+        }
       }
     }
     @media (calc(768 * (1 / 16 * 1rem)) <= width) {
@@ -83,16 +90,6 @@
       align-items: stretch;
       flex-wrap: wrap;
       gap: calc(24 * var(--to-rem-func));
-      .inPageLink {
-        width: fit-content;
-        min-width: min(100%, calc(304 * var(--to-rem-func)));
-        max-width: 100%;
-      }
-    }
-    @media (any-hover: hover) {
-      .inPageLink a:hover {
-        background-color: color-mix(in srgb, var(--jwsnj-color-base-lightblue) 85%, var(--color-secondary));
-      }
     }
   }
 }
