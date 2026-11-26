@@ -100,9 +100,12 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
     await waitState(true);
     await page.locator('#gn_close').click();
     await waitState(false);
-    // Cross the actual CSS/JS breakpoint while open, then return to mobile.
+    // Cross the actual CSS/JS breakpoint with the SP submenu explicitly collapsed.
     await hamburger.click();
     await waitState(true);
+    if (await button.getAttribute('aria-expanded') === 'true') await button.click();
+    assert.equal(await parent.getAttribute('data-open'), 'false');
+    assert.equal(await wrapper.evaluate(el => el.inert), true);
     await page.setViewportSize({ width: 1080, height: 900 });
     await waitState(false, true);
     assert.equal(await hamburger.isVisible(), false);
@@ -146,12 +149,37 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
       assert.ok((await arrowGlyph()).includes(String.fromCodePoint(0xf106)));
       assert.equal(await desktopLink.evaluate(el => getComputedStyle(el).color), 'rgb(40, 172, 95)');
       assert.notEqual(await wrapper.evaluate(el => getComputedStyle(el).clipPath), 'none');
+      const measureOpen = () => wrapper.evaluate(el => {
+        const style = getComputedStyle(el);
+        const panel = el.getBoundingClientRect();
+        const links = [...el.querySelectorAll('a')];
+        const rects = links.flatMap(link => {
+          const range = document.createRange();
+          range.selectNodeContents(link.querySelector('span'));
+          return [...range.getClientRects()].map(rect => ({rect, link}));
+        });
+        return {
+          duration: style.transitionDuration, track: style.gridTemplateRows,
+          state: el.closest('.gnl_item-02').getAttribute('data-open'),
+          lines: rects.length, panelHeight: panel.height,
+          fullyHit: rects.length > 0 && rects.every(({rect, link}) =>
+            rect.top >= panel.top - 1 && rect.bottom <= panel.bottom + 1 &&
+            link.contains(document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2)))
+        };
+      });
+      const hovered = await measureOpen();
+      assert.equal(hovered.duration, '0s', JSON.stringify(hovered));
+      assert.equal(hovered.state, 'false');
+      assert.ok(hovered.fullyHit, JSON.stringify(hovered));
       // The legacy full-width flyout can cover the page body. Move into the header's left padding instead.
       await page.mouse.move(1, 1);
       await desktopLink.focus();
       assert.ok((await arrowGlyph()).includes(String.fromCodePoint(0xf106)));
+      const focused = await measureOpen();
+      assert.equal(focused.duration, '0s');
+      assert.ok(focused.fullyHit, JSON.stringify(focused));
       await page.screenshot({ path: 'form-qa-results/nav-' + engineName + '-' + width + '-parent.png' });
-      console.log(JSON.stringify({ engine: engineName, width, desktopParent: 'PASS', ...typography }));
+      console.log(JSON.stringify({ engine: engineName, width, desktopParent: 'PASS', ...typography, hovered, focused }));
     }
     await page.setViewportSize({ width: 1079, height: 900 });
     await waitState(false);

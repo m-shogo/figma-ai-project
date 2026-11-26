@@ -218,6 +218,9 @@
       display: grid;
       grid-template-rows: 0fr;
       transition: grid-template-rows var(--transition-duration);
+      @media (prefers-reduced-motion: reduce) {
+        transition-duration: 0s;
+      }
     }
     .gnl_inner-02,
     .gnl_inner-03,
@@ -266,12 +269,16 @@
           }
         }
         > [class*='gnl_wrapper'] {
-          grid-template-rows: 1fr;
+          @media (width < calc(1080 * (1 / 16 * 1rem))) {
+            grid-template-rows: 1fr;
+          }
         }
       }
       &[data-open='false'] {
         > [class*='gnl_wrapper'] {
-          grid-template-rows: 0fr;
+          @media (width < calc(1080 * (1 / 16 * 1rem))) {
+            grid-template-rows: 0fr;
+          }
         }
       }
     }
@@ -496,6 +503,9 @@
         background-color: var(--color-tertiary);
         clip-path: inset(0% 0 100% 0);
         transition: clip-path var(--transition-duration);
+        @media (prefers-reduced-motion: reduce) {
+          transition-duration: 0s;
+        }
       }
       .gnl_inner-02 {
         padding: calc(80 * var(--to-rem-func));
@@ -594,8 +604,7 @@
   }
   /* Reduced motion keeps the same disclosure and flyout state without animation. */
   @media (prefers-reduced-motion: reduce) {
-    &, a, .gnl_wrapper-02, .gnl_wrapper-03, .gnl_wrapper-04,
-    .gnl_wrapper-05, .gnl_wrapper-06 {
+    &, a {
       transition-duration: 0s;
     }
     [class*='gnl_button']::before,

@@ -302,8 +302,9 @@ test('collapsing a focused submenu moves keyboard focus to its disclosure before
 test('Header accordion and mega-menu transitions respect reduced-motion preference', () => {
   const block = navigationCss.slice(navigationCss.indexOf('/* Reduced motion keeps'), navigationCss.indexOf('/* Desktop mega-menu states:'));
   assert.match(block, /@media \(prefers-reduced-motion: reduce\)/);
-  assert.match(block, /\.gnl_wrapper-02/);
   assert.match(block, /transition-duration: 0s/);
+  assert.match(navigationCss, /transition: grid-template-rows var\(--transition-duration\);\s*@media \(prefers-reduced-motion: reduce\)\s*\{\s*transition-duration: 0s/);
+  assert.match(navigationCss, /transition: clip-path var\(--transition-duration\);\s*@media \(prefers-reduced-motion: reduce\)\s*\{\s*transition-duration: 0s/);
 });
 
 
@@ -458,4 +459,10 @@ test('PC parent links follow Figma 603:2967 without adding a second disclosure c
   assert.equal((global.match(/class="gnl_arrow"/g) || []).length, 1);
   assert.match(navigationCss, /\.gnl_arrow\s*\{\s*display: none;/);
   assert.match(navigationCss, /\.gnl_arrow::before\s*\{\s*content: '\\f106';/);
+});
+
+test('mobile submenu collapse cannot override the desktop grid track', () => {
+  const state = navigationCss.slice(navigationCss.indexOf('/* Legacy grouped owner:'), navigationCss.indexOf('/* ステータス end */'));
+  assert.match(state, /\[data-open='true'\][\s\S]*?> \[class\*='gnl_wrapper'\]\s*\{\s*@media \(width < calc\(1080[^{}]+\{\s*grid-template-rows: 1fr;/);
+  assert.match(state, /\[data-open='false'\][\s\S]*?> \[class\*='gnl_wrapper'\]\s*\{\s*@media \(width < calc\(1080[^{}]+\{\s*grid-template-rows: 0fr;/);
 });
