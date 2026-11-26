@@ -135,14 +135,6 @@
       }
       .wp-block-button .wp-block-button__link {
         --_small-icon-color: var(--color-secondary);
-        @media (any-hover: hover) {
-          &:hover {
-            --_small-icon-color: var(--jwsnj-color-sec);
-            &::before {
-              background-color: var(--color-secondary);
-            }
-          }
-        }
         display: inline-flex;
         align-items: center;
         justify-content: flex-start;
@@ -216,6 +208,14 @@
         &[href$='.gif']::after,
         &[href$='.webp']::after {
           content: '\f15b';
+        }
+        @media (any-hover: hover) {
+          &:hover {
+            --_small-icon-color: var(--jwsnj-color-sec);
+            &::before {
+              background-color: var(--color-secondary);
+            }
+          }
         }
       }
       .wp-block-button.is-style-outline .wp-block-button__link {
