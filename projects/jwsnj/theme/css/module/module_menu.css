@@ -97,43 +97,7 @@
   .mm_inner-06 {
     overflow: hidden;
   }
-  .mm_list-02,
-  .mm_list-03,
-  .mm_list-04,
-  .mm_list-05,
-  .mm_list-06 {
-  }
   /* MARK: 共通 3階層以降に影響あり start */
-  .mm_item-03,
-  .mm_item-04,
-  .mm_item-05,
-  .mm_item-06 {
-  }
-  .mm_title-03,
-  .mm_title-04,
-  .mm_title-05,
-  .mm_title-06 {
-  }
-  .mm_link-03,
-  .mm_link-04,
-  .mm_link-05,
-  .mm_link-06 {
-  }
-  .mm_button-03,
-  .mm_button-04,
-  .mm_button-05,
-  .mm_button-06 {
-  }
-  .mm_wrapper-03,
-  .mm_wrapper-04,
-  .mm_wrapper-05,
-  .mm_wrapper-06 {
-  }
-  .mm_inner-03,
-  .mm_inner-04,
-  .mm_inner-05,
-  .mm_inner-06 {
-  }
   .mm_list-03,
   .mm_list-04,
   .mm_list-05,
@@ -163,10 +127,6 @@
       }
     }
   }
-  .mm_title-04,
-  .mm_title-05,
-  .mm_title-06 {
-  }
   .mm_link-04,
   .mm_link-05,
   .mm_link-06 {
@@ -177,41 +137,11 @@
   .mm_button-06 {
     height: calc(40 * var(--to-rem-func));
   }
-  .mm_wrapper-04,
-  .mm_wrapper-05,
-  .mm_wrapper-06 {
-  }
-  .mm_inner-04,
-  .mm_inner-05,
-  .mm_inner-06 {
-  }
-  .mm_list-04,
-  .mm_list-05,
-  .mm_list-06 {
-  }
   /* 4階層以降に影響あり end */
   /* MARK: 共通 5階層以降に影響あり start */
-  .mm_item-05,
-  .mm_item-06 {
-  }
   .mm_title-05,
   .mm_title-06 {
     padding-left: calc(24 * var(--to-rem-func));
-  }
-  .mm_link-05,
-  .mm_link-06 {
-  }
-  .mm_button-05,
-  .mm_button-06 {
-  }
-  .mm_wrapper-05,
-  .mm_wrapper-06 {
-  }
-  .mm_inner-05,
-  .mm_inner-06 {
-  }
-  .mm_list-05,
-  .mm_list-06 {
   }
   /* 4階層以降に影響あり end */
   /* MARK: ステータス start */
@@ -257,8 +187,6 @@
   /* 共通 end */
 
   /* MARK: 階層別 2階層 start */
-  .mm_item-02 {
-  }
   .mm_title-02 {
     display: flex;
     align-items: center;
@@ -279,8 +207,6 @@
   .mm_wrapper-02 {
     grid-template-rows: 1fr;
     margin-top: calc(10 * var(--to-rem-func));
-  }
-  .mm_inner-02 {
   }
   .mm_list-02 {
     display: grid;
@@ -311,44 +237,11 @@
     background-color: var(--color-gray-border-02);
     transition: background-color var(--transition-duration);
   }
-  .mm_link-03 {
-  }
   .mm_button-03 {
     background-color: var(--color-gray-border-02);
     width: calc(45 * var(--to-rem-func));
   }
-  .mm_wrapper-03 {
-  }
-  .mm_inner-03 {
-  }
-  .mm_list-03 {
-  }
   /* 3階層 end */
-
-  /* MARK: 階層別 4階層 start */
-  .mm_item-04 {
-  }
-  .mm_title-04 {
-  }
-  .mm_link-04 {
-  }
-  .mm_button-04 {
-  }
-  .mm_wrapper-04 {
-  }
-  .mm_inner-04 {
-  }
-  .mm_list-04 {
-  }
-  /* 4階層 end */
-
-  /* MARK: 階層別 5階層 start */
-  /* あれば追加 */
-  /* 5階層 end */
-
-  /* MARK: 階層別 6階層 start */
-  /* あれば追加 */
-  /* 6階層 end */
 
   /* MARK: ステータス start */
   .mm_item-02,
@@ -375,164 +268,6 @@
     }
   }
   /* ステータス end */
-  @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-    /* MARK: 共通 全階層に影響あり start */
-    .mm_item-02,
-    .mm_item-03,
-    .mm_item-04,
-    .mm_item-05,
-    .mm_item-06 {
-    }
-    .mm_title-02,
-    .mm_title-03,
-    .mm_title-04,
-    .mm_title-05,
-    .mm_title-06 {
-    }
-    .mm_link-02,
-    .mm_link-03,
-    .mm_link-04,
-    .mm_link-05,
-    .mm_link-06 {
-    }
-    .mm_button-02,
-    .mm_button-03,
-    .mm_button-04,
-    .mm_button-05,
-    .mm_button-06 {
-    }
-    .mm_wrapper-02,
-    .mm_wrapper-03,
-    .mm_wrapper-04,
-    .mm_wrapper-05,
-    .mm_wrapper-06 {
-    }
-    .mm_inner-02,
-    .mm_inner-03,
-    .mm_inner-04,
-    .mm_inner-05,
-    .mm_inner-06 {
-    }
-    .mm_list-02,
-    .mm_list-03,
-    .mm_list-04,
-    .mm_list-05,
-    .mm_list-06 {
-    }
-    /* MARK: 共通 3階層以降に影響あり start */
-    .mm_item-03,
-    .mm_item-04,
-    .mm_item-05,
-    .mm_item-06 {
-    }
-    .mm_title-03,
-    .mm_title-04,
-    .mm_title-05,
-    .mm_title-06 {
-    }
-    .mm_link-03,
-    .mm_link-04,
-    .mm_link-05,
-    .mm_link-06 {
-    }
-    .mm_button-03,
-    .mm_button-04,
-    .mm_button-05,
-    .mm_button-06 {
-    }
-    .mm_wrapper-03,
-    .mm_wrapper-04,
-    .mm_wrapper-05,
-    .mm_wrapper-06 {
-    }
-    .mm_inner-03,
-    .mm_inner-04,
-    .mm_inner-05,
-    .mm_inner-06 {
-    }
-    .mm_list-03,
-    .mm_list-04,
-    .mm_list-05,
-    .mm_list-06 {
-    }
-    /* 3階層以降に影響あり end */
-    /* 共通 end */
-
-    /* MARK: 階層別 2階層 start */
-    .mm_item-02 {
-    }
-    .mm_title-02 {
-    }
-    .mm_link-02 {
-    }
-    .mm_button-02 {
-    }
-    .mm_wrapper-02 {
-    }
-    .mm_inner-02 {
-    }
-    .mm_list-02 {
-    }
-    /* 3階層 end */
-
-    /* MARK: 階層別 3階層 start */
-    .mm_item-03 {
-    }
-    .mm_title-03 {
-    }
-    .mm_link-03 {
-    }
-    .mm_button-03 {
-    }
-    .mm_wrapper-03 {
-    }
-    .mm_inner-03 {
-    }
-    .mm_list-03 {
-    }
-    /* 3階層 end */
-
-    /* MARK: 階層別 4階層 start */
-    .mm_item-04 {
-    }
-    .mm_title-04 {
-    }
-    .mm_link-04 {
-    }
-    .mm_button-04 {
-    }
-    .mm_wrapper-04 {
-    }
-    .mm_inner-04 {
-    }
-    .mm_list-04 {
-    }
-    /* 4階層 end */
-
-    /* MARK: 階層別 5階層 start */
-    .mm_item-05 {
-    }
-    .mm_title-05 {
-    }
-    .mm_link-05 {
-    }
-    .mm_button-05 {
-    }
-    .mm_wrapper-05 {
-    }
-    .mm_inner-05 {
-    }
-    .mm_list-05 {
-    }
-    /* 5階層 end */
-
-    /* MARK: 階層別 6階層 start */
-    /* あれば追加 */
-    /* 6階層 end */
-
-    /* MARK: ステータス start */
-    /* ステータス end */
-  }
 
   /* MARK: hover */
   @media (any-hover: hover) {

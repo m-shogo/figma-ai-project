@@ -19,7 +19,7 @@ test('table uses 15px Zen Kaku typography, pale header and visible cell borders'
 });
 
 test('table maintains 960px horizontal scroll on small viewports and wraps content', () => {
-  assert.match(css, /&\.is-scroll-on-mobile\s*\{\s*overflow-x:\s*auto/);
+  assert.match(css, /&\.is-scroll-on-mobile\s*\{[^{}]*@media \(width < calc\(768 \* \(1 \/ 16 \* 1rem\)\)\)\s*\{\s*overflow-x:\s*auto/);
   assert.match(css, /min-width:\s*calc\(960 \* var\(--to-rem-func\)\)/);
   assert.match(css, /overflow-wrap:\s*anywhere/);
   assert.match(css, /word-break:\s*normal/);

@@ -8,10 +8,7 @@
   /* // 横スクロール時に下余白追加 */
   &._scroll {
     padding-bottom: calc(10 * var(--to-rem-func));
-  }
-
-  @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-    &._scroll {
+    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
       padding-bottom: 0;
     }
   }

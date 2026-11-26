@@ -143,3 +143,13 @@ test('Formidable choice controls preserve native checked state and real labels',
  assert.doesNotMatch(scope,/text-indent: -1000px|font-size: 0;|height: 0;|content: attr\(value\)/);
  assert.match(css,/input\[type='file'\]:not\(\.frm_transparent\)/);
 });
+
+test('inherited menu modules have no empty sample selector or empty desktop bucket',()=>{
+  for(const path of ['css/module/module_menu.css','css/module/module_dropdown.css']){
+    const css=read(path);
+    assert.doesNotMatch(css,/^[ \t]+(?:\.[\w-]+,\n[ \t]+)*\.[\w-]+ \{\s*\}/m);
+    assert.doesNotMatch(css,/@media \(calc\(768/);
+    assert.match(css,/\[data-open='true'\]/);
+    assert.match(css,/\[data-open='false'\]/);
+  }
+});
