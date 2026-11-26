@@ -14,7 +14,7 @@
         position: relative;
         z-index: 1;
         display: grid;
-        gap: calc(24 * var(--to-rem-func));
+        gap: calc(20 * var(--to-rem-func));
         min-width: 0;
         overflow-wrap: anywhere;
         letter-spacing: 0.05em;
@@ -22,7 +22,7 @@
     .jwsnj_topAbout_title {
         display: grid;
         gap: calc(8 * var(--to-rem-func));
-        margin: 0;
+        margin: 0 0 calc(4 * var(--to-rem-func));
         font-weight: 500;
     }
     .jwsnj_topAbout_en {

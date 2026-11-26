@@ -68,7 +68,7 @@
             align-items: center;
             gap: calc(16 * var(--to-rem-func));
             min-height: calc(80 * var(--to-rem-func));
-            padding: calc(12 * var(--to-rem-func)) calc(20 * var(--to-rem-func));
+            padding: calc(12 * var(--to-rem-func)) calc(16 * var(--to-rem-func)) calc(12 * var(--to-rem-func)) calc(20 * var(--to-rem-func));
             background: var(--color-secondary);
             font-size: calc(16 * var(--to-rem-func));
             line-height: 1.3;
@@ -80,6 +80,7 @@
             }
         }
     }
+    .jwsnj_topApplicants_topics li:first-child { gap: calc(10 * var(--to-rem-func)); }
     .jwsnj_topApplicants_topicCopy {
         display: grid;
         justify-items: start;
@@ -152,6 +153,7 @@
             font-size: calc(18 * var(--to-rem-func));
             img { width: calc(56 * var(--to-rem-func)); }
         }
+        .jwsnj_topApplicants_topics li:first-child { gap: calc(16 * var(--to-rem-func)); }
         .jwsnj_topApplicants_topicCopy { gap: calc(10 * var(--to-rem-func)); }
         .jwsnj_topApplicants_badge {
             padding-block: calc(4 * var(--to-rem-func));
