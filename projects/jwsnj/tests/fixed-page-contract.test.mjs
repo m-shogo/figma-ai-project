@@ -238,3 +238,17 @@ test('form rendering does not execute the content filter at enqueue time', () =>
     execFileSync('php',['-l',new URL('../theme/'+p,import.meta.url).pathname]);
   }
 });
+
+test('legacy visual handles a deleted attachment without warnings or an empty image URL', () => {
+  const path = new URL('../theme/template-parts/_visual.php', import.meta.url).pathname;
+  const stub = 'error_reporting(E_ALL); set_error_handler(function($level,$message){throw new ErrorException($message,0,$level);}); function get_current_post_type(){return false;} function is_page(){return true;} function is_404(){return false;} function is_search(){return false;} function is_post_type_archive(){return false;} function is_tax(){return false;} function get_field($key,$id){return (int)$GLOBALS["argv"][2];} function get_the_ID(){return 1;} function get_template_directory_uri(){return "/theme";} function wp_get_attachment_image_src($id,$size){return $id===7?["/media/real.webp",100,50,true]:false;} function esc_url($s){return htmlspecialchars($s,ENT_QUOTES);} function the_title(){echo "Actual page title";} function get_template_part(...$args){} require $argv[1];';
+  for (const [id, expected] of [[0,'/theme/images/common/noimage_visual-01.webp'],[7,'/media/real.webp'],[99,'']]) {
+    const html = execFileSync('php',['-r',stub,path,String(id)],{encoding:'utf8'});
+    assert.match(html, /<h1 class="gm_title"><span>Actual page title<\/span><\/h1>/);
+    if (expected) assert.ok(html.includes('background-image: url('+expected+')'));
+    else {
+      assert.match(html, /<div class="gm_background"><\/div>/);
+      assert.doesNotMatch(html, /background-image: url\(\)/);
+    }
+  }
+});
