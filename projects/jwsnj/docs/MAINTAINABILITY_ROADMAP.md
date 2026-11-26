@@ -66,3 +66,25 @@ so 033a7d4: #715–#719 merged。#717 disposable WordPress/free Formidable、#71
 2. P1-6/P1-8: audit actual consumers of unused my_body_id versus header.php's current slug id before changing anything; inspect legacy _visual.php missing attachment/false array, archive query assumptions, and output escaping. Preserve approved visible title/layout, no invented fallback image; existing sample behavior only change with proof. Avoid unverified jQuery deregistration changes; test actual free plugins and record Pro requirement.
 3. P1-4: real editor iframe link order/scope and deployment mtime/query key/CDN behavior; source one-child/fallback test done. No production access assumed.
 4. P1-5/P1-7/P1-9: continue source and class-local CSS review; avoid arbitrary rename and cascade/geometry changes. Keep #664 and original 534:1706 protected.
+
+## P2 — 全体再点検（Human 2026-11-26）
+
+Trigger: 承認済み残実装・保守改善に安全なREADYがなくなったら開始。既存作業回の継続先。現在の統合QAなど先行可能な作業は妨げない。
+
+| 順 | 対象 | 初期状態 |
+|---|---|---|
+| 1 | Header：ロゴ、CTA、PCメガメニュー、SPハンバーガー、暗幕、検索、フォーカス | NOT_STARTED |
+| 2 | Footer：PC/SPロゴ・装飾・リンク・SNS・ページトップ | NOT_STARTED |
+| 3 | 共通パーツ：見出し・本文・リンク・ボタン・カード・表・アコーディオン・ナビ・フォーム・画像等。PC339:23/SP433:2015から現行実装を照合 | NOT_STARTED |
+| 4 | 実装済み記事一覧/詳細・固定ページ・サイドバー・フォーム・検索/404等（Figma/既存仕様が確定した範囲） | NOT_STARTED |
+| 5 | 実装済みTOP・各部紹介・コース等、既承認の表示部分のみ。ACF未接続箇所はQA fixtureを別記 | NOT_STARTED |
+| 6 | 全体統合：共通部品の変更による各ページの回帰、リンク/操作、残差再確認 | NOT_STARTED |
+
+### 各対象の完了条件
+
+- Figma正本のPC/SP対象nodeを最新skill/sessionで取得、画像と構造・数値を照合。Git SHA・node・スクリーンショット・browser/version/viewport・データ条件を記録。既存実装に対する確認であり未承認ページ534:1706の実装や#664/ACFへの着手ではない。
+- PC/SPは実デザイン幅（例1380/375）と中間幅、既存切替の直前/直後（例767/768、1023/1024、1079/1080は該当するownerのみ）を確認。狭幅320等は頑健性の追加候補。Chromium/Firefox/WebKitの利用可能な環境を明記し、エンジン検証と物理端末実機を区別。
+- 余白・位置・寸法・フォント・weight・line-height・折返し・画像比率/トリミング・欠落・横スクロール・重なり、hover/open/tap/keyboard/focus、長文・空データ・実CMS/fixtureを確認。色は正本と異なる実装ミスのみ報告し、Human指定の配色を勝手に変更しない。
+- 差分は原因・修正範囲・証拠・優先度を記録。仕様不明は質問/保留、確実な不具合は小PR・CI・安全merge・修正後再比較。自然な折返しや既承認レスポンシブ方針を壊してpixel matchを強制しない。
+- 状態を NOT_STARTED / IN_PROGRESS / PASS / FAIL / DEFERRED_ENV / BLOCKED_HUMAN / BLOCKED_ASSET で管理。source/static/isolated/disposable WP/actual school WP/Figma visual acceptanceを別々に記録し、CIだけで全体PASSとしない。完了判定は確認可能な実画面と根拠に基づく。#523/#524は既存追跡先、重複Issueを作らない。
+- 一巡後は残差・変更影響を再評価し、有意な差分があるものから再検証。変化なし・全確認済みなら根拠と残保留を報告し、無意味なコード変更を作らない。

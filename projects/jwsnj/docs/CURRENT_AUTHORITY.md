@@ -147,3 +147,9 @@ Header/Footer と TOP の公式 SVG / WebP は #599 / #600 でこのリポジト
 ## 2026-11-26 Human指示 — CSS/JS整合と保守性改善の継続
 
 - Human「よくないね 全部治すためのスケジュール？GITに入れて直していって」。改善の作業順・完了条件・残作業は [MAINTAINABILITY_ROADMAP.md](MAINTAINABILITY_ROADMAP.md) を正本とする。既存作業回で最新soとopen PRを確認し、READYの小単位を複数進め、検証・merge・進捗更新。重大な懸念は先に共有し、数字や行数の減少だけを目的にしない。新規/既存スケジュールの変更なし、ACF Cursor保留、#664 owner、534:1706禁止、#523/#524を維持。共通契約はAGENTS.md / frontend-quick-contract §8.1。
+
+## 2026-11-26 Human指示 — 残作業後の全体再点検
+
+- Human「やる事なくなったら最初からヘッダー、フッターから全部スマホ、pc確認していってズレや間違いないか」。承認済みの残実装・保守改善の独立READYがなくなった時点で、待機ではなくHeader → Footer → 共通パーツ → 実装済み各ページのPC/SP全体再点検へ進む。既存の作業回で実行し、新規automation/既存schedule変更なし。正本は [MAINTAINABILITY_ROADMAP.md](MAINTAINABILITY_ROADMAP.md) の全体再点検と [DEFERRED_RUNTIME_QA.md](DEFERRED_RUNTIME_QA.md) の既存QA項目。
+- 最新Figmaの正式skill/new session/高精細contextと画像、最新Git、実際にrenderした画面を照合し、余白、配置、文字、画像、操作状態のズレ・間違いを調べる。根拠のある修正は小PRでCI/差分確認/merge、変更後に再撮影して影響範囲を回帰検証。PC/SPだけでなく既存境界前後・中間幅・長文も確認。意図的なデザイン/実装差と不具合は区別。配色変更、未承認仕様の創作、ACF追加、#664変更、534:1706の実装禁止は維持。
+- 実環境が使えない場合は取得できるFigma/source/isolated browser/disposable WPの証拠を区別し、実画面・実機未確認をPASSにしない。#523/#524は未完了を維持。全体を一巡したら最新変更による回帰や未解決差分を再評価し、根拠のない変更・同条件の失敗診断の反復はしない。

@@ -259,3 +259,7 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 - CSS token cleanup: 12 tokens have zero source consumers in 285 tracked project text files (inventory run 45793160124); verify imported CMS additional CSS/DB and plugin-injected markup before production, restore only a proven external contract if needed. About flat scoped selectors preserve specificity, check actual PC/SP geometry and overlap. Stylelint warnings (nesting/duplicate selector/specificity) require cascade/context review, not autofix.
 
 - Formidable native choices: actual free plugin fixture QA uses semantic radio/checkbox inputs, native checked state, long label, keyboard and pointer. Pro file/dropzone, confirmation/repeater, actual production form schema and plugin style settings remain deferred; no actual submissions. No CMS configuration changed. Existing legacy CF7 branch separate from active Formidable scope.
+
+## Human指示による全体再点検の継続（2026-11-26）
+
+残りの独立READYがなくなった場合は、[MAINTAINABILITY_ROADMAP.md](MAINTAINABILITY_ROADMAP.md) の P2 に従い、Header → Footer → parts → 既実装ページ → 統合回帰の順にPC/SPを再確認する。従来の個別QAを再利用し、同じIssueを増やさない。各回の証拠・差分・PR・再撮影結果を既存案件文書に残す。未確認の実機・学校WP/Pro・素材はそれぞれ #523/#524 の保留を維持する。
