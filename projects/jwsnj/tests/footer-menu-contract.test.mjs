@@ -168,7 +168,7 @@ test('footer top-level external links use the Figma window-restore glyph and exi
 });
 
 test('Footer brand places copy first on SP and keeps fixed-distance artwork on wide PC', () => {
-  const brand = css.slice(css.indexOf('.gf_brandStatement {'), css.indexOf('    .gf_logo {'));
+  const brand = css.slice(css.indexOf('.gf_brandStatement {'), css.indexOf('  .gf_logo {'));
   assert.match(brand, /grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/);
   assert.match(brand, /\.gf_brandStatement-copy\s*\{\s*grid-column:\s*1 \/ -1;\s*grid-row:\s*1;/);
   assert.match(brand, /\.gf_brandStatement-left\.is-sp\s*\{\s*grid-column:\s*1;\s*grid-row:\s*2;\s*justify-self:\s*start;/);
@@ -183,4 +183,19 @@ test('Footer brand places copy first on SP and keeps fixed-distance artwork on w
   assert.match(brand, /top:\s*calc\(50% \+ 19\.16 \* var\(--to-rem-func\)\)/);
   assert.doesNotMatch(css, /padding-top:\s*calc\(50 \* var\(--to-rem-func\)\)/);
   assert.doesNotMatch(brand, /white-space:\s*nowrap/);
+});
+
+test('Footer brand and details use owner-local desktop geometry without changing scope', () => {
+  for (const [owner, declaration] of [
+    ['gf_brandStatement-copy', 'grid-column: 2;'],
+    ['gf_brandStatement-en', 'font-size: calc(46 * var(--to-rem-func));'],
+    ['gf_brandStatement-ja', 'font-size: calc(15 * var(--to-rem-func));'],
+    ['gf_details', 'display: flex;'],
+  ]) {
+    const start = css.indexOf('.' + owner + ' {');
+    const end = css.indexOf('\n  }', start);
+    const rule = css.slice(start, end);
+    assert.match(rule, /@media \(calc\(1080 \* \(1 \/ 16 \* 1rem\)\) <= width\)/);
+    assert.ok(rule.includes(declaration), owner);
+  }
 });

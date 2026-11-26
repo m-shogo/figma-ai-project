@@ -4,22 +4,22 @@
 // ------------------------------ */
 .block-editor_wrap,
 .editor-styles-wrapper {
-    /* デスクトップで非表示 */
+  /* デスクトップで非表示 */
+  .wp-block-hidden-desktop {
     @media (calc(1024 * (1 / 16 * 1rem)) <= width) {
-        .wp-block-hidden-desktop {
-            display: none !important;
-        }
+      display: none !important;
     }
-    /* タブレットで非表示 */
+  }
+  /* タブレットで非表示 */
+  .wp-block-hidden-tablet {
     @media (calc(768 * (1 / 16 * 1rem)) <= width < calc(1024 * (1 / 16 * 1rem))) {
-        .wp-block-hidden-tablet {
-            display: none !important;
-        }
+      display: none !important;
     }
-    /* モバイルで非表示 */
+  }
+  /* モバイルで非表示 */
+  .wp-block-hidden-mobile {
     @media (width < calc(768 * (1 / 16 * 1rem))) {
-        .wp-block-hidden-mobile {
-            display: none !important;
-        }
+      display: none !important;
     }
+  }
 }
