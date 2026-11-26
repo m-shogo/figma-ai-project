@@ -6,7 +6,11 @@ foreach (is_array($banner_rows) ? $banner_rows : [] as $row) {
     if (!is_array($row)) {
         continue;
     }
-    $image_id = filter_var($row['img'] ?? 0, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+    $raw_image_id = $row['img'] ?? 0;
+    // FILTER_VALIDATE_INT alone accepts boolean true as attachment 1.
+    $image_id = (is_int($raw_image_id) || is_string($raw_image_id))
+        ? filter_var($raw_image_id, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]])
+        : false;
     $title = is_string($row['title'] ?? null) ? trim($row['title']) : '';
     $url = is_string($row['url'] ?? null) ? esc_url(trim($row['url'])) : '';
     $image = $image_id && wp_attachment_is_image($image_id)

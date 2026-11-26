@@ -213,6 +213,11 @@ test('existing TOP banner owner escapes title, ignores invalid rows and only lin
   }
   assert.equal(render([]),'');
   assert.equal(render([{img:101,url:'/unusable/'},{title:'  '},{img:0,url:'/no-content/'}]),'');
+  assert.equal(render([{img:true,url:'/wrong/'},{img:1.5},{img:[1]},{img:{ID:1}},{img:-1},{img:'1bad'}]),'');
+  const titleOnly=render([{img:true,title:'Named',url:'/actual/'},{img:'1',title:'Valid numeric string'}]);
+  assert.match(titleOnly,/href="\/actual\/"/);
+  assert.equal((titleOnly.match(/\/media\/1\.webp/g)||[]).length,1);
+  assert.equal((titleOnly.match(/class="_noImage"/g)||[]).length,1);
   const html=render([{img:1,url:'/real/',target:['はい']},{img:2,url:'/unnamed/'},{title:'<script>x</script>',url:'javascript:alert(1)'},{title:'Actual title',url:'/actual/'}]);
   assert.match(html,/href="\/real\/" target="_blank" rel="noopener noreferrer"/);
   assert.match(html,/&lt;script&gt;x&lt;\/script&gt;/);

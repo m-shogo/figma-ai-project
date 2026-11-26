@@ -305,3 +305,7 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 
 ## 2026-11-26 コース詳細の対象学年行
 - PC539:3627/534:2360/534:2357 fresh high-fidelity context and screenshots. Native Group/Row with editable Paragraph label + unordered List, opt-in `jwsnj-course-grades`. Figma coral label13px/500 with FA Pro Solid pencil f303, padding4/12 and radius3, label-list gap20; grades14px, line-height 26.4/14≈1.886, item gap16, separator and 8px end padding. Existing font/color tokens only. No grade values hardcoded, no new CMS fields or links. SP detail frame absent: narrow list stacks without separators, 8px gap provisional; actual editor/list semantics/FA glyph rendering/long text PC-SP #523 deferred. Native paragraph/list remain editable; generic lists unchanged outside opt-in group.
+
+
+## 2026-11-26 TOP既存バナーの画像ID型検証
+- Fresh PC114:419/SP279:2630 high-fidelity context+screenshots reconfirm visible stock watermark; no final photo substitution. Existing editor-owned banner renderer uses FILTER_VALIDATE_INT which can coerce boolean true into unrelated attachment 1. Reject non-integer/non-string values before lookup (same invariant as MV); valid positive numeric-string remains accepted, title-only row remains valid. Existing ACF/CMS/links/layout unchanged. Added PHP stub cases, actual WP #523 deferred. #524 licensed source unchanged.

@@ -213,3 +213,5 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 - Course introduction heading/lead opt-in styles: editor Row H2 + English paragraph and native Paragraph lead; verify save/reopen, PC36/15/24 and provisional narrow24/15/20, long wrapping, normal section heading unchanged. Actual WordPress/render #523 DEFERRED_ENV.
 
 - Course grades style: Group/Row with label Paragraph and unordered List; verify editor selection/save/reopen, PC badge and FA Pro Solid pencil, grade separator, long grade strings, narrow wrapping/stack, list semantics and unchanged generic lists. SP provisional; actual render #523 DEFERRED_ENV.
+
+- Existing TOP banner malformed attachment IDs: verify boolean/float/array/negative do not resolve another photo, valid numeric-string and title-only valid link retain output. PHP stub, actual WordPress #523; Figma photo still watermarked #524.
