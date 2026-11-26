@@ -355,3 +355,5 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 
 
 - 2026-11-26 About cards: distinguish confirmed frontmost visual selection from unknown navigation destination. Use one native button per card, progressively enabled, aria-pressed state plus focus z-index, and QA-only example rows. Existing intro remains unchanged without data; actual responsive crop/overlap and keyboard visibility require real browser. Do not infer missing link semantics.
+
+- 2026-11-26 preschool features: split verified native text/layout from missing official illustration and numbered blossom; do not approximate SVG or deploy placeholder. Optional editable Group pattern and Image slot only on actual inserted media; narrow fallback provisional where no SP frame. #523/#524 remain independent. Course/About frontend inputs merged #689/#690; Cursor owns adapter and W9 remains held.

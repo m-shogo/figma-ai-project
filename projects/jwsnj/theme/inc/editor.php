@@ -278,6 +278,10 @@ add_action('init', function () {
     'label' => 'コース導入（文章＋写真）',
   ));
   register_block_style('core/group', array(
+    'name' => 'jwsnj-course-features',
+    'label' => 'コース特長（3列）',
+  ));
+  register_block_style('core/group', array(
     'name' => 'jwsnj-course-faq-section',
     'label' => 'コースFAQセクション',
   ));
