@@ -101,7 +101,7 @@ test('TOP Applicants preserves approved fixed copy and exact stored illustration
 test('TOP MV uses existing image repeater and renders only valid initial still images',()=>{
   const part=read('template-parts/_top-mv-grid.php');
   function render(rows){
-    const stub='$rows=json_decode(base64_decode("'+Buffer.from(JSON.stringify(rows)).toString('base64')+'"),true); function get_field($n){global $rows;return $rows;} function absint($v){return abs((int)$v);} function wp_attachment_is_image($id){return $id>0 && $id<100;} function wp_get_attachment_image_src($id,$s){return ["/media/".$id.".webp",800,600];} function wp_get_attachment_image_srcset($id,$s){return "/media/".$id.".webp 800w";} function wp_get_attachment_image($id,$s,$icon,$attrs){return "<img src=\"/media/".$id.".webp\" fetchpriority=\"".$attrs["fetchpriority"]."\">";} function esc_attr($s){return htmlspecialchars($s,ENT_QUOTES);} ?>';
+    const stub='$rows=json_decode(base64_decode("'+Buffer.from(JSON.stringify(rows)).toString('base64')+'"),true); function get_field($n){global $rows;return $rows;} function absint($v){return abs((int)$v);} function wp_attachment_is_image($id){return $id>0 && $id<100;} function wp_get_attachment_image_src($id,$s){return ["/media/".$id.".webp",800,600];} function wp_get_attachment_image_srcset($id,$s){return "/media/".$id.".webp 800w";} function wp_get_attachment_image($id,$s,$icon,$attrs){$q=chr(34);return "<img src=".$q."/media/".$id.".webp".$q." fetchpriority=".$q.$attrs["fetchpriority"].$q.">";} function esc_attr($s){return htmlspecialchars($s,ENT_QUOTES);} ?>';
     return execFileSync('php',['-r',stub+part],{encoding:'utf8'}).trim();
   }
   assert.equal(render([]),'');
