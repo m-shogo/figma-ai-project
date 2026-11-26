@@ -200,12 +200,16 @@
     img {
       flex-shrink: 0;
       width: calc(51 * var(--to-rem-func));
-      height: calc(48 * var(--to-rem-func));
+      height: auto;
     }
     span {
       min-width: 0;
       overflow-wrap: anywhere;
-      line-height: 1.3;
+      font-family: var(--font-jwsnj-ja);
+      font-size: calc(18 * var(--to-rem-func));
+      font-weight: 500;
+      line-height: 1.5;
+      letter-spacing: 0.05em;
     }
   }
   /* Figma PC 114:484 / 114:523: identity and sitemap share a row.
