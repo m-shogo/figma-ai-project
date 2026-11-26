@@ -205,3 +205,5 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 - Posts-on-front routing: verify WordPress Reading settings latest posts vs static page/assigned posts page, category reset to real index, root pagination, shared header/footer once and body classes; PHP stub now passes route selection, actual WP remains #523 DEFERRED_ENV.
 
 - TOP MV attachment validation: check imported malformed/negative/array/boolean IDs do not select unrelated image; valid numeric strings and PC/SP same-row fallback work. PHP stub, real WP #523.
+
+- Course heading opt-in `jwsnj-course-heading`: create Row with native H2 + paragraph; verify editor style visible, save/reopen, left/center justification, long Japanese/English wrap, PC 32/13 and provisional SP 24/13, generic H2 unchanged. #523 DEFERRED_ENV; no SP Figma supplied.

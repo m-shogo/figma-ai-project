@@ -75,3 +75,26 @@ test('h4 follows PC/SP 18px typography and uses the existing official blossom', 
   assert.ok(readFileSync(new URL('../theme/images/common/ico_blossom.svg', import.meta.url)).length > 0);
 });
 
+
+test('opt-in course section heading uses existing Gutenberg group, semantic H2 and editable English paragraph',()=>{
+  const group=readFileSync(new URL('../theme/css/blocks/wp-block-group-style.css',import.meta.url),'utf8');
+  const s=group.slice(group.indexOf(':is(.block-editor_wrap, .editor-styles-wrapper) .wp-block-group.is-style-jwsnj-course-heading'));
+  assert.ok(s.length>100);
+  assert.match(s,/flex-wrap:\s*wrap/);
+  assert.match(s,/gap:\s*calc\(8 \* var\(--to-rem-func\)\) calc\(20 \* var\(--to-rem-func\)\)/);
+  assert.match(s,/> h2\.wp-block-heading/);
+  assert.match(s,/border-image:\s*none/);
+  assert.match(s,/font-size:\s*calc\(32 \* var\(--to-rem-func\)\)/);
+  assert.match(s,/font-weight:\s*700/);
+  assert.match(s,/letter-spacing:\s*0\.1em/);
+  assert.match(s,/> p,/);
+  assert.match(s,/font-family:\s*var\(--font-sansSerif-en\)/);
+  assert.match(s,/font-size:\s*calc\(13 \* var\(--to-rem-func\)\)/);
+  assert.match(s,/color:\s*var\(--color-primary\)/);
+  assert.doesNotMatch(s,/white-space:\s*nowrap|position:\s*absolute|(?:^|[;{}\n])\s*height\s*:/);
+  const editor=readFileSync(new URL('../theme/inc/editor.php',import.meta.url),'utf8');
+  assert.match(editor,/register_block_style\('core\/group', array\(\s*'name' => 'jwsnj-course-heading'/);
+  for(const path of ['style.css','editor-style.css']){
+    assert.match(readFileSync(new URL('../theme/css/'+path,import.meta.url),'utf8'),/@import '\.\/blocks\/wp-block-group-style\.css'/);
+  }
+});

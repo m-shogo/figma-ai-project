@@ -249,4 +249,8 @@ add_action('init', function () {
     'name' => 'jwsnj-background-boxes',
     'label' => '背景付きボックスのカラム',
   ));
+  register_block_style('core/group', array(
+    'name' => 'jwsnj-course-heading',
+    'label' => 'コース見出し（和文＋英文）',
+  ));
 });
