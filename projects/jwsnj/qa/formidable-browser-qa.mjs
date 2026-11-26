@@ -65,9 +65,11 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
     await page.evaluate(() => {
       const fixture = document.createElement('div');
       fixture.id = 'native-choice-probe';
-      fixture.innerHTML = '<label><input type="checkbox" name="qa-native-check">通常チェック</label><label><input type="radio" name="qa-native-radio">通常ラジオ</label><label><input type="checkbox" name="qa-sibling"><span>通常の隣接ラベル</span></label>';
+      fixture.innerHTML = '<button type="button" id="qa-native-start">Keyboard start</button><label><input type="checkbox" name="qa-native-check">通常チェック</label><label><input type="radio" name="qa-native-radio">通常ラジオ</label><label><input type="checkbox" name="qa-sibling"><span>通常の隣接ラベル</span></label>';
       document.body.append(fixture);
     });
+    // A preceding mouse click changed Firefox's focus modality. Use actual Tab navigation.
+    await page.locator('#qa-native-start').focus();
     for (const control of await page.locator('#native-choice-probe input').all()) {
       const before = await control.evaluate(el => {
         const s = getComputedStyle(el);
@@ -77,7 +79,8 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
       assert.notEqual(before.display, 'none');
       assert.notEqual(before.appearance, 'none');
       assert.ok(before.width > 0 && before.height > 0);
-      await control.focus();
+      await page.keyboard.press('Tab');
+      assert.equal(await control.evaluate(el => document.activeElement === el), true, 'native choice keyboard target');
       await page.keyboard.press('Space');
       assert.equal(await control.isChecked(), true);
       const focus = await control.evaluate(el => {
