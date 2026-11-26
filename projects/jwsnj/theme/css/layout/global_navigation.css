@@ -154,11 +154,11 @@
     .gnl_inner-06 {
       overflow: hidden;
     }
+    /* Legacy grouped owner: preserve all active matches and cascade. */
     .gnl_list-02,
     .gnl_list-03,
     .gnl_list-04,
     .gnl_list-05,
-    /* MARK: 共通 3階層以降に影響あり start */
     .gnl_item-03,
     .gnl_item-04,
     .gnl_item-05,
@@ -177,31 +177,7 @@
     .gnl_inner-03,
     .gnl_inner-04,
     .gnl_inner-05,
-    .gnl_list-03,
-    .gnl_list-04,
-    .gnl_list-05,
-    /* 3階層以降に影響あり end */
-    /* 共通 end */
-
-    /* MARK: 階層別 3階層 start */
-    /* 3階層 end */
-
-    /* MARK: 階層別 4階層 start */
-    /* 4階層 end */
-
-    /* MARK: 階層別 5階層 start */
-    /* あれば追加 */
-    /* 5階層 end */
-
-    /* MARK: 階層別 6階層 start */
-    /* あれば追加 */
-    /* 6階層 end */
-
-    /* MARK: ステータス start */
     .gnl_item-02,
-    .gnl_item-03,
-    .gnl_item-04,
-    .gnl_item-05,
     .gnl_item-06 {
       &[data-open='true'] {
         > [class*='gnl_title'] {
@@ -348,6 +324,7 @@
       .gnl_wrapper-06 {
         grid-template-rows: 1fr;
       }
+      /* Legacy grouped owner: preserve all active matches and cascade. */
       .gnl_inner-02,
       .gnl_inner-03,
       .gnl_inner-04,
@@ -356,7 +333,6 @@
       .gnl_list-03,
       .gnl_list-04,
       .gnl_list-05,
-      /* MARK: 共通 3階層以降に影響あり start */
       .gnl_item-03,
       .gnl_item-04,
       .gnl_item-05,
@@ -372,14 +348,6 @@
       .gnl_wrapper-03,
       .gnl_wrapper-04,
       .gnl_wrapper-05,
-      .gnl_inner-03,
-      .gnl_inner-04,
-      .gnl_inner-05,
-      .gnl_list-03,
-      .gnl_list-04,
-      .gnl_list-05,
-      /* 3階層以降に影響あり end */
-      /* MARK: ステータス start */
       .gnl_item-02 {
         /* &.current_page_parent, */
         &.current-menu-ancestor,
