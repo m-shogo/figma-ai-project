@@ -1,130 +1,80 @@
-"use strict";
+'use strict';
 (function ($) {
-  // ==========================================================================
-  // input[type="date"]に翌日の日付を入力し、それ以前は選択させない
-  // ==========================================================================
-  // const inputDate = function () {
-  //   $('input[type="date"]').each(function () {
-  //     const date = new Date();
-  //     const yyyy = date.getFullYear();
-  //     const mm = ("0" + (date.getMonth() + 1)).slice(-2);
-  //     const dd = ("0" + date.getDate()).slice(-2);
-  //     // const tomorrow = ("0" + (date.getDate() + 1)).slice(-2);
-  //
-  //     document.getElementById("_today").value = yyyy + '-' + mm + '-' + dd;
-  //     $(this).attr('min', yyyy + '-' + mm + '-' + dd);
-  //   });
-  // };
-  // ==========================================================================
-  // ファイル選択装飾
-  // ==========================================================================
-  const inputFIle = function () {
-    const $file = $('input[type="file"]');
-    const $fileWrap = $('.file');
-    $file.each(function () {
-      $(this).closest($fileWrap).append('<button type="button" class="clear-file">✕</button>')
-    });
-    $file.on('change', function () {
-      let file = $(this).prop('files')[0];
-      $(this).closest($fileWrap).find('label').addClass('_changed').html(file.name);
-    });
-    $('.clear-file').on('click', function () {
-      $(this).closest($fileWrap).find($file).value = "";
-      $(this).closest($fileWrap).find('label').removeClass('_changed').html('');
-    });
-    const wpcf7Elm = document.querySelector('.wpcf7');
-    if (wpcf7Elm != null) {
-      wpcf7Elm.addEventListener('wpcf7invalid', function () {
-        $('.wpcf7-file').each(function () {
-          const $wpcf7Label = $(this).closest('.file').find('label');
-          if ($(this).hasClass('wpcf7-not-valid')) {
-            $wpcf7Label.addClass('wpcf7-not-valid');
-          } else {
-            $wpcf7Label.removeClass('wpcf7-not-valid');
-          }
-        });
-      }, false);
-    }
-  };
-  // ==========================================================================
-  // 住所自動入力
-  // ==========================================================================
-  const autoAddress = function () {
-    $(window).on('load', function () {
-      $('#zip').keyup(function () {
-        AjaxZip3.zip2addr('zip', '', 'pref', 'city', 'address-other');
+  // Legacy CF7 adapter. Formidable owns its own upload controls.
+  const initLegacyFiles = function () {
+    $('.wpcf7 .file input[type="file"]').each(function () {
+      const input = this;
+      const $input = $(input);
+      const $wrap = $input.closest('.file');
+      if ($wrap.find('input[type="file"]').length !== 1 || $input.data('jwsnjFileReady')) return;
+      const $label = $wrap.find('label').filter(function () {
+        return input.id && this.htmlFor === input.id;
       });
-    });
-  };
-  // ==========================================================================
-  // フォームの送信ボタンを無効化
-  // ==========================================================================
-  const inputClass = function () {
-    $(window).on('load', function () {
-      const $submit = $('#button_submit');
-      $submit.prop('disabled', true).closest('.form_button-01').addClass('_disabled');
-      $('#check_agree').on('change', function () {
-        if ($(this).prop('checked')) {
-          $submit.prop('disabled', false).closest('.form_button-01').removeClass('_disabled');
-        } else {
-          $submit.prop('disabled', true).closest('.form_button-01').addClass('_disabled');
-        }
+      // Only enhance the existing, separately associated plain-text label.
+      if ($label.length !== 1 || $label.children().length) return;
+      $input.data('jwsnjFileReady', true);
+      const initialText = $label.text();
+      const $clear = $('<button>', {
+        type: 'button',
+        class: 'clear-file',
+        'aria-label': '選択したファイルを取り消す',
+        text: '✕'
+      }).insertAfter($label);
+      const sync = function () {
+        const names = Array.from(input.files || [], file => file.name);
+        $label.toggleClass('_changed', names.length > 0).text(names.length ? names.join('、') : initialText);
+        $clear.prop('hidden', names.length === 0);
+      };
+      $input.on('change', sync);
+      $clear.on('click', function () {
+        $input.val('').trigger('change');
       });
+      // Keep plugin validation state on the same associated label.
+      $wrap.closest('.wpcf7').on('wpcf7invalid', function () {
+        $label.toggleClass('wpcf7-not-valid', $input.hasClass('wpcf7-not-valid'));
+      });
+      sync();
     });
   };
 
-  // ==========================================================================
-  // formidable Forms 装飾用
-  // ==========================================================================
+  // Older optional consent control: do not disable an unrelated submit button.
+  const initConsent = function () {
+    const $agree = $('#check_agree');
+    const $submit = $('#button_submit');
+    if ($agree.length !== 1 || $submit.length !== 1 || !$agree[0].form ||
+      $agree[0].form !== $submit[0].form || $agree.data('jwsnjConsentReady')) return;
+    $agree.data('jwsnjConsentReady', true);
+    const sync = function () {
+      const disabled = !$agree.prop('checked');
+      $submit.prop('disabled', disabled).closest('.form_button-01').toggleClass('_disabled', disabled);
+    };
+    $agree.on('change', sync);
+    sync();
+  };
 
-  const formidable = function () {
-    $(window).on('load', function () {
+  const initFormidable = function () {
+    $('.frm_forms .frm_form_field select').each(function () {
+      const $select = $(this);
+      if (!$select.parent().hasClass('frm_select')) $select.wrap('<div class="frm_select" />');
+    });
+    $('.frm_forms .frm_required').each(function () {
+      const required = $(this).text().includes('*');
+      $(this).parents('.frm_primary_label').toggleClass('required', required).toggleClass('any', !required);
+    });
 
-      // selectボックスに下向き矢印追加
-      const $select = $('.frm_form_field select');
-      $select.each(function () {
-        $(this).wrap('<div class="frm_select" />');
-      });
-
-      // 必須ラベル設置
-      const $needLabel = $(".frm_required");
-      $needLabel.each(function () {
-        const $status = $(this).text();
-        const $parentsLabel = $(this).parents(".frm_primary_label");
-        if ( $status.indexOf("*") != -1 ) {
-          $parentsLabel.addClass("required");
-        }
-        else{
-          $parentsLabel.addClass("any");
-        }
-      });
+    // Keep the existing editor-configured YubinBango class transfer.
+    $('.frm_forms .set-class').each(function () {
+      const $address = $(this);
+      const classes = $address.attr('class') || '';
+      const transfer = classes.slice(classes.indexOf('set-class'));
+      $address.find('input').addClass(transfer);
+      $address.removeClass(transfer);
     });
   };
 
-  // ==========================================================================
-  // formidable Forms 郵便番号自動挿入
-  // ==========================================================================
-
-  const setClass = function () {
-    $(window).on('load', function () {
-      const $address = $(".set-class");
-      $address.each(function () {
-        const $addressClass = $(this).attr("class");
-        const $setClass = $addressClass.substr($addressClass.indexOf('set-class'));
-        $(this).find("input").addClass($setClass);
-        $(this).removeClass($setClass);
-      });
-    });
-  };
-
-  // ==========================================================================
-  // 実行
-  // ==========================================================================
-  // inputDate();
-  inputFIle();
-  autoAddress();
-  inputClass();
-  formidable();
-  setClass();
-
+  $(function () {
+    initLegacyFiles();
+    initConsent();
+    initFormidable();
+  });
 })(jQuery);

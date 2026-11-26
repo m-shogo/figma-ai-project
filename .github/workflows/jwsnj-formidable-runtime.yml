@@ -4,6 +4,7 @@ on:
     branches: [so]
     paths:
       - 'projects/jwsnj/theme/css/wordpress/form.css'
+      - 'projects/jwsnj/theme/js/form.js'
       - 'projects/jwsnj/qa/seed-css-form-qa.php'
       - 'projects/jwsnj/qa/formidable-browser-qa.mjs'
       - '.github/workflows/jwsnj-formidable-runtime.yml'
