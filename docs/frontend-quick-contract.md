@@ -113,8 +113,9 @@ Visual修正を末尾`final-fix`へ積まず、ownerへ戻して直す。合法�
 
 - smallest supported mobile layoutを素のbase declarationとして書く
 - PC / tablet / wide layoutはshared breakpoint contractの `min-width` overrideを使う
-- 同じowner selectorの `@media` / `@container` / `@supports` は、authoring環境が対応する限りそのselector block内へco-locationする
-- PC用media queryをstylesheet末尾へまとめる「breakpoint bucket」方式をdefaultにしない
+- **Human確定 2026-11-26（全案件）:** 同じowner selectorの `@media` / `@container` / `@supports`、hover/focus/state、疑似要素はauthoring環境が対応する限り該当する最小のselector block内へco-locationする（原則必須）。
+- PC/TB用media queryをstylesheet末尾や親コンポーネント末尾へまとめ、子classを再列挙する「breakpoint bucket」方式を採用しない。例: `.parent { .title { base; @media (...) { PC; } } }`。既存案件の対象CSSも順次整理する。
+- 既存CSSの移動はセレクタ・詳細度・条件・宣言・カスケード順序を維持する。複数ownerに本質的にまたがる条件や移動すると優先順位が変わる箇所は安全な同等構造を確認するまで例外として理由を記録する。vendor/generated CSSは変更しない。
 - breakpoint値自体はCompany / Existing / Effective Environment Contractから解決し、AIが`768px`等を勝手に標準化しない
 - Required EnvironmentがCSS nesting非対応でtranspileも無い場合だけ、Project contractに明示した例外方式を使う
 

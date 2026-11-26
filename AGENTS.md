@@ -232,7 +232,7 @@ Frontend実装では、特定propertyを使わないこと自体を目的にし�
 - 状態変化で箱をずらさない。hover/focus で初めて `border-width` / padding / 寸法を足さない。rest から同じ太さを確保し、状態では色・塗り・`transform` を変える。
 - interactive に transition が無ければ Existing duration、無ければ `0.3s`。`::before` / `::after` も含む。
 - `l- / c- / p- / is-` + BEM系のowner/searchabilityを、Company/Existing命名が無い場合のstable contractとして扱う。
-- BEM selectorはflatをdefaultにし、Native CSS nestingはpseudo/state/condition等のco-location中心に使う。
+- **Human確定 2026-11-26（全案件）:** BEM selectorはflatをdefaultにし、SP/base・PC/TBの`@media`・hover/focus/state・疑似要素を該当する最小のowner selector blockへ同居させる。親block末尾やファイル末尾に子classのbreakpoint bucketを作らない。既存CSSも対象scopeで整理し、カスケード・詳細度・条件・見た目を維持。外部/vendor CSSと環境非対応の例外は `docs/frontend-quick-contract.md` §7 に従う。
 - 1 Block/Elementにはauthoritative base ownerを持たせ、末尾`final-fix`を積み上げない。Media/container/supports等の正当なcontextual ruleまで単純duplicate扱いしない。
 - 同じformatのcontentは将来repeatable/data-drivenになる可能性を確認するが、CMS化自体を強制しない。
 - Sectionのcontent risk factors / repeatability / interaction / performance riskから必要なMutation QAだけ選ぶ。全Fuzzを毎PR強制しない。

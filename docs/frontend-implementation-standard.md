@@ -345,6 +345,10 @@ ID stylingや長いDOM descendant chainを避ける。
 
 `!important`は禁止ではない。third-party boundary、explicit utility contract、unavoidable inline style、accessibility/environment override等では理由を持って使える。
 
+### CORE-008A — Responsive/stateは最小owner selector内へ同居（Human 2026-11-26 全案件）
+
+SP/base、TB/PCのmedia query、hover/focus/state、疑似要素は該当する最小owner selector内にまとめる。親block/stylesheet末尾の子class別breakpoint bucketを作らない。既存CSSも対象範囲で整理する。カスケード・詳細度・条件・値を変えない。非対応環境・外部生成CSS・複数ownerにまたがる不可分なルールは理由を明示し、安全な代替を選ぶ。詳細は `docs/frontend-quick-contract.md` §7。
+
 ### ACTIVE-008 — Native nestingを目的化しない
 
 Global BEMではflat selectorをdefault候補にする。
