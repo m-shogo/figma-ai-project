@@ -361,3 +361,7 @@ TOP PC `114:28` / SP `279:2136` から、ベクターは SVG、写真は元画�
 
 ## 2026-11-26 コース詳細：和文＋英文セクション見出し
 - Human包括承認の範囲。PC 534:1282 はsparse metadata、子609:3046/612:3095/612:3256の個別高精細context・画像を確認（534:2369は導入見出し36/15pxで別）。PC section H2 Zen Kaku Gothic New 32px/700/tracking10%、英文Roboto Medium 13px/tracking5%、gap20、green。既存core/groupのopt-in style `jwsnj-course-heading` を追加し、Row内に標準H2と英文Paragraphを編集者が置く。中央揃えはRowの既存設定で指定。新ACF/CPT/URL/固定ページ・本文の自動生成なし。SP正本未提示なので24px H2・自然wrap・縦gap8は暫定実装判断。PCの通常H2の線をこのstyle内だけ解除、その他既存見出しは不変。両CSS importと静的テスト。エディタの選択・保存・再編集・PC/SP実描画は#523。
+
+
+## 2026-11-26 コース詳細FAQの独立実装
+- PC 612:3182 closed/612:3193 open high-fidelity context + screenshots. Both course question states left32px, unlike existing generic parts closed24/open32. Existing core/details renderer, Q/A markers, 68px icon rail, native keyboard/open behavior, focus and reduced-motion CSS stay shared. Add opt-in core/details style `jwsnj-course-faq` (editor label コースFAQ（Q・A）), stable PC32px / provisional narrow24px inset, no fixed text height, preserve normal `_qa` behavior. No FAQ content hardcoded or CMS field/URL added. SP Figma not provided; editor style selection and real keyboard/open/long text QA #523.

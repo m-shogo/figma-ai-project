@@ -207,3 +207,5 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 - TOP MV attachment validation: check imported malformed/negative/array/boolean IDs do not select unrelated image; valid numeric strings and PC/SP same-row fallback work. PHP stub, real WP #523.
 
 - Course heading opt-in `jwsnj-course-heading`: create Row with native H2 + paragraph; verify editor style visible, save/reopen, left/center justification, long Japanese/English wrap, PC 32/13 and provisional SP 24/13, generic H2 unchanged. #523 DEFERRED_ENV; no SP Figma supplied.
+
+- Course FAQ opt-in `jwsnj-course-faq`: select native Details style; closed/open, keyboard focus/activation, long question/answer, nested content, reduced motion; PC title stays32px on toggle, provisional narrow24px. Editor save/reopen, actual render #523. No SP Figma supplied.
