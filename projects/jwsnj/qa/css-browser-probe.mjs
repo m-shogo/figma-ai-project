@@ -392,6 +392,78 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
     }
     report.push({name, width, secondary});
   }
+  // PC357:1004 / SP442:2816, PC344:947 / SP442:2806, PC344:991 / SP442:2842.
+  // Existing CSS, native list/button markup; isolated browser fixture, not editor iframe.
+  for (const width of [320, 375, 768, 1080, 1380]) {
+    await page.setViewportSize({width, height: 900});
+    const parts = await page.evaluate(() => {
+      const fixture = document.createElement('div');
+      fixture.className = 'block-editor_wrap';
+      fixture.style.cssText = 'width:min(calc(100% - 40px),960px);margin-inline:auto';
+      fixture.innerHTML = '<ul class="wp-block-list"><li><span>リスト間余白16px、ネストとの間隔12px</span><ul class="wp-block-list"><li>ネスト間隔は8px</li><li>ネストされたリスト</li></ul></li><li><span>番号なしリスト LongEditableLabelWithoutSpaces1234567890LongEditableLabelWithoutSpaces1234567890</span></li></ul><ol class="wp-block-list" start="10"><li>番号が2桁の場合</li><li value="1">番号リスト</li><li>リスト間15px</li></ol><div class="wp-block-buttons"><div class="wp-block-button"><a class="wp-block-button__link" href="#end">ボタン大</a></div><div class="wp-block-button has-custom-width" style="width:1200px"><a class="wp-block-button__link" href="#end">長いボタンのテキスト LongEditableLabelWithoutSpaces1234567890LongEditableLabelWithoutSpaces1234567890</a></div></div>';
+      document.body.append(fixture);
+      const root = fixture.querySelector('ul');
+      const first = root.children[0];
+      const second = root.children[1];
+      const nest = first.querySelector('ul');
+      const numbered = fixture.querySelector('ol');
+      const label = first.querySelector('span');
+      const rect = el => el.getBoundingClientRect();
+      const metric = (el, key, pseudo) => getComputedStyle(el, pseudo)[key];
+      const box = rect(fixture);
+      const long = second.querySelector('span');
+      const range = document.createRange();
+      range.selectNodeContents(long);
+      const lines = [...range.getClientRects()];
+      const buttons = [...fixture.querySelectorAll('.wp-block-button__link')];
+      const custom = buttons[1].parentElement;
+      const buttonRange = document.createRange();
+      buttonRange.selectNodeContents(buttons[1]);
+      const buttonLines = [...buttonRange.getClientRects()];
+      const longBox = rect(buttons[1]);
+      const result = {
+        bullet: {
+          font: metric(first, 'fontSize'), lineHeight: metric(first, 'lineHeight'),
+          gap: rect(second).top - rect(first).bottom,
+          textInset: rect(label).left - rect(root).left,
+          nestInset: rect(nest.children[0]).left - rect(root).left,
+          nestTop: rect(nest).top - rect(label).bottom,
+          nestMargin: metric(nest, 'marginTop'),
+          nestGap: rect(nest.children[1]).top - rect(nest.children[0]).bottom,
+          marker: metric(first, 'width', '::before'),
+          markerTop: metric(first, 'top', '::before'),
+          nestedBorder: metric(nest.children[0], 'borderTopWidth', '::before'),
+          lines: lines.length,
+          fits: lines.every(r => r.left >= box.left - 1 && r.right <= box.right + 1)
+        },
+        ordered: {
+          font: metric(numbered.children[0], 'fontSize'),
+          gap: rect(numbered.children[1]).top - rect(numbered.children[0]).bottom,
+          inset: metric(numbered.children[0], 'paddingLeft'),
+          markerWidth: metric(numbered.children[0], 'width', '::before')
+        },
+        button: {
+          normalWidth: rect(buttons[0]).width, normalHeight: rect(buttons[0]).height,
+          customWidth: rect(custom).width, container: box.width, longHeight: longBox.height,
+          lines: buttonLines.length,
+          fits: buttonLines.every(r => r.left >= longBox.left - 1 && r.right <= longBox.right - 50),
+          icon: metric(buttons[1], 'fontSize', '::after')
+        }
+      };
+      fixture.id = 'parts-recheck';
+      return result;
+    });
+    const near = (actual, expected) => Math.abs(actual - expected) <= 1;
+    assert.deepEqual([parts.bullet.font, parts.bullet.lineHeight, parts.bullet.marker, parts.bullet.markerTop, parts.bullet.nestedBorder], ['15px','24px','6px','9px','1px']);
+    assert.ok(near(parts.bullet.gap,16) && near(parts.bullet.textInset,18) && near(parts.bullet.nestInset,24) && near(parts.bullet.nestGap,8) && parts.bullet.nestMargin === '12px' && parts.bullet.fits, JSON.stringify(parts));
+    assert.deepEqual([parts.ordered.font, parts.ordered.inset, parts.ordered.markerWidth], ['15px','34px','24px']);
+    assert.ok(near(parts.ordered.gap,15));
+    assert.ok(near(parts.button.normalWidth,260) && near(parts.button.normalHeight,50) && parts.button.customWidth <= parts.button.container + 1 && parts.button.fits && parts.button.icon === '14px', JSON.stringify(parts));
+    if (width <= 375) assert.ok(parts.bullet.lines >= 2 && parts.button.lines >= 2 && parts.button.longHeight > 50);
+    if (width === 375 || width === 1380) await page.locator('#parts-recheck').screenshot({path:out+'/'+name+'-'+width+'-list-button.png'});
+    await page.locator('#parts-recheck').evaluate(el => el.remove());
+    report.push({name,width,partsRecheck:parts});
+  }
  // Legacy file presentation must not leak to a generic .file component.
  for (const width of [375, 768, 1380]) {
    await page.setViewportSize({width, height: 900});
