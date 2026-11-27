@@ -181,7 +181,7 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
         if (width === 1380) {
           const labels = ["これはデスクトップで非表示（タブレット、モバイルでは表示）","これはタブレットで非表示（モバイル、デスクトップでは表示）","これはモバイルで非表示（タブレット、デスクトップでは表示）","これはモバイル、タブレットで非表示（デスクトップでは表示）"];
           const hidden = [['desktop'], ['tablet'], ['mobile'], ['tablet', 'mobile']];
-          for (const probeWidth of [375, 480, 481, 767, 768, 782, 783, 1380]) {
+          for (const probeWidth of [375, 480, 481, 767, 768, 782, 783, 1023, 1024, 1380]) {
             await page.setViewportSize({ width: probeWidth, height: 900 });
             await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
             const device = probeWidth <= 480 ? 'mobile' : probeWidth <= 782 ? 'tablet' : 'desktop';
