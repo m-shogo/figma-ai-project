@@ -378,6 +378,18 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
       await page.setViewportSize({width, height: 900});
       await page.emulateMedia({ reducedMotion: 'no-preference' });
       await summary.scrollIntoViewIfNeeded();
+      const labelGeometry = await page.locator('.jwsnj_newsArchive_filterLabel').evaluate(el => {
+        const text = [...el.childNodes].find(node => node.nodeType === Node.TEXT_NODE && node.textContent.trim());
+        const range = document.createRange();
+        range.selectNodeContents(text);
+        const lines = [...range.getClientRects()].filter(r => r.width > 0);
+        const box = el.getBoundingClientRect();
+        const menu = el.nextElementSibling.getBoundingClientRect();
+        return { lines: lines.length, gap: menu.left - box.right, fits: lines.every(r => r.left >= box.left - 1 && r.right <= box.right + 1) };
+      });
+      assert.equal(labelGeometry.lines, 1, JSON.stringify(labelGeometry));
+      assert.ok(labelGeometry.fits, JSON.stringify(labelGeometry));
+      if (width >= 768) assert.ok(Math.abs(labelGeometry.gap - 20) <= 1, JSON.stringify(labelGeometry));
       const measure = () => filter.evaluate(el => ({
         top: el.closest('.jwsnj_newsArchive_filter').nextElementSibling.getBoundingClientRect().top + window.scrollY,
         height: document.documentElement.scrollHeight,
