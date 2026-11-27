@@ -36,3 +36,8 @@ Human「パーツ集のサンプル？参考覚えてGIT入れといて これ�
 - `qa/seed-native-parts-qa.php` はlocal・loopback・`JWSNJ_PARTS_QA_DISPOSABLE=1` の明示条件を要求。登録済みcore blockだけを許可し、既存の非fixtureページを上書きしない。使い捨てWPで保存・再読一致を確認する。実サイトの自動seedではない。
 - 既存disposable WordPress CIで `qa/native-parts-browser-qa.mjs` を実行。3 engine × 320/375/768/1380px、見出し/本文の実測gap、ネイティブリスト、ボタン幅、Detailsの実際のPHP描画・キーボード・フォーカス・展開後の通常flow・閉状態復元・画像を確認する。Figma Details PC357:938/SP442:2908の新規session context/画像を確認済み。
 - 設定時点では新CIの合否未確定。PHP parse/save一致はGutenbergビジュアル編集のvalidation/保存再編集を証明しない。外部フォント、実デバイス、Flexible Table Block、ギャラリー、ACF Navigation、タブ、端末別表示、全体視覚一致は別途#523。新規ACF・本番仮画像・未承認ページ・スケジュール変更なし。
+
+## 第2段階 — 実エディター / Table / Gallery（2026-11-27）
+
+- #771 merged `583e75b`。実Gutenberg core block 0 invalid、末尾段落のUI入力・保存・再編集・front反映PASS（Chromium、WP7.0.2）。案内modalを通常Closeで閉じる。再編集画像を確認したがeditor CSSの見た目はfrontと一致していないため別QA。Human原文839行は変更なし。
+- #773でFlexible Table Block3.9.0の登録済みブロック・保存再読・4列固定/可変/縦並び・結合・長文・横スクロールhint/keyboard/resizeを実WP検証。既定セル余白のspecificity修正後12ケースPASS、ただし既存motion回帰がFAILしたため再実行中。#774で実core gallery 2/3列・奇数・3:2/長文caption・native lightbox・media-textを既存媒体の隔離コピーで検証中。各PRの最新CI/画像が完了するまでmergeしない。
