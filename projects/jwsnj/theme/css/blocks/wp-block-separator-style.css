@@ -6,8 +6,13 @@
 .block-editor_wrap,
 .editor-styles-wrapper {
   .wp-block-separator {
-    margin-top: calc(32 * var(--to-rem-func));
-    margin-bottom: calc(32 * var(--to-rem-func));
+    /* The separator owns its breathing room; margins would collapse with
+       the preceding heading or following text. Keep the artwork in its content box. */
+    margin-block: 0;
+    padding-block: calc(32 * var(--to-rem-func));
+    box-sizing: content-box;
+    background-origin: content-box;
+    background-clip: content-box;
     border: 0;
     height: calc(17 * var(--to-rem-func));
     width: 100%;
@@ -24,8 +29,7 @@
     100% calc(1 * var(--to-rem-func));
     @media (calc(768 * (1 / 16 * 1rem)) <= width) {
       /* PC's 65px frame includes the flower overlapping the line's vertical padding. */
-      margin-top: calc(25 * var(--to-rem-func));
-      margin-bottom: calc(23 * var(--to-rem-func));
+      padding-block: calc(25 * var(--to-rem-func)) calc(23 * var(--to-rem-func));
     }
   }
 }
