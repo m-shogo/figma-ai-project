@@ -209,7 +209,7 @@ TOP PC `114:28` / SP `279:2136` から、ベクターは SVG、写真は元画�
 | TOP MV | #680 Swiper移行、#681 停止/resize修正済み。現行 home.js に Swiper 初期化あり。実速度・継ぎ目・実ブラウザは #523。再実装不要 |
 | TOP 固定紹介・入学案内 | front-page.php から _top-about-intro / _top-applicants を接続済み。#682 SP余白修正済み。Aboutカードのリンク/画像管理ownerと入学案内の遷移先は未確定 |
 | TOP News / Instagram / バナー | _top-news / _top-instagram / _top-banner 既存実装。InstagramのFollow URLと利用権確認済みのバナー素材は未確定。既存投稿・画像管理を維持 |
-| TOP 各部紹介 | #664 OPEN。Project Guard実ログ W9: group_jwsnj_top_course.json 変更に明示承認が必要。明示承認後に最新soへ差分を再統合、SP native scroll snap案を最新Swiper方針と整合させ、CI再実行。承認前はbranch/owner変更しない |
+| TOP 各部紹介 | #664 は未マージ。Human 2026-11-27 の明示で `group_jwsnj_top_course.json`（画像・タイトル・テキスト・リンク・外部リンク）だけをこの branch に追加。#664 の SP native scroll と重複 markup は取り込まない |
 | About〜Course共通背景 | 各カードの管理・配置確定後に実際のセクションgeometryと公式素材/効果を検証。単独で全体背景を仮実装しない |
 | コース紹介 PC534:1282 | template-course.php、導入・学年・日程・FAQの任意編集構造は実装済み。特長カード公式SVG6構成ノード・導入写真・CTA URLは #524/仕様待ち。SP正本なし。ページ自動作成・割当なし |
 | 共通パーツ スライダー | 今回 PC344:1139 / SP442:3073 の高精細contextと画像を再確認。PC画像660×439、SP335×223、caption gap20、14/12px。操作状態・画像/キャプション管理・切替条件は未提示。Swiper選定は確定済みだが新規CMS/操作仕様の承認ではない。既存編集ownerと仕様の確定後に着手 |

@@ -1,7 +1,6 @@
 <?php
 // Adapter for the SPEC course fields. Presentation stays in _top-course-view.php.
-// Field group JSON is not committed here: Project Guard W9 still needs
-// an explicit Human-Approved: acf-json trailer.
+// Field group: acf/json/group_jwsnj_top_course.json (Human-Approved: acf-json, 2026-11-27).
 $rows = function_exists('get_field') ? get_field('top_course-01') : [];
 $items = [];
 foreach (is_array($rows) ? $rows : [] as $row) {
