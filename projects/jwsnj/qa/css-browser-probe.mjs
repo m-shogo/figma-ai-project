@@ -125,12 +125,12 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
      const fixture=document.createElement('div');
      fixture.id='motion-probe';
      fixture.className='block-editor_wrap';
-     fixture.innerHTML='<div class="wp-block-buttons"><div class="wp-block-button"><a class="wp-block-button__link" href="#end">ボタン</a></div></div><div class="wp-block-tabs"><div class="wp-block-tab-list"><button aria-selected="false">タブ</button></div></div><ul class="module_navigation --large"><li class="navigation"><a href="#end"><div class="image"><img alt="" width="60" height="40"></div><div class="content"><span class="title">案内</span></div></a></li></ul><p><a href="#end">テキストリンク</a></p>';
+     fixture.innerHTML='<div class="wp-block-buttons"><div class="wp-block-button"><a class="wp-block-button__link" href="#end">ボタン</a></div></div><div class="wp-block-tabs"><div class="wp-block-tab-list"><button aria-selected="false">タブ</button></div></div><ul class="module_navigation --large"><li class="navigation"><a class="module_navigationCard" href="#end"><div class="module_navigationCard_photo"><div class="module_navigationCard_crop"><img alt="" width="60" height="40"></div><span class="module_navigationCard_arrow" aria-hidden="true"></span></div><div class="module_navigationCard_content"><span class="module_navigationCard_title">案内</span></div></a></li></ul><p><a href="#end">テキストリンク</a></p>';
      document.querySelector('.global_inner').append(fixture);
    });
    const motion=await page.evaluate(()=>{
      const fixture=document.getElementById('motion-probe');
-     const selectors=['.wp-block-button__link','.wp-block-tab-list button','.navigation img','.navigation .content','p a'];
+     const selectors=['.wp-block-button__link','.wp-block-tab-list button','.module_navigationCard_crop img','.module_navigationCard_content','p a'];
      return selectors.map(selector=>{
        const s=getComputedStyle(fixture.querySelector(selector));
        return {selector,property:s.transitionProperty,duration:s.transitionDuration};
@@ -537,6 +537,56 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
    if(width===375||width===1380) await fixture.screenshot({path:out+'/'+name+'-'+width+'-inpage-links.png'});
    await fixture.evaluate(el=>el.remove());
    report.push({name,width,inPageLinks:geometry});
+ }
+ // Large Navigation: same reusable markup, QA-only data, no production URL.
+ for (const width of [320,375,767,768,1380]) {
+   await page.setViewportSize({width,height:900});
+   await page.emulateMedia({reducedMotion:'no-preference'});
+   await page.evaluate(() => {
+     const fixture=document.createElement('div');
+     fixture.id='large-nav-parts';
+     fixture.className='block-editor_wrap';
+     fixture.style.cssText='width:min(calc(100% - 40px),960px);margin-inline:auto';
+     const items=['幼児部','長文のタイトル LongEditableLabelWithoutSpaces1234567890LongEditableLabelWithoutSpaces1234567890','中等部'];
+     const cards=items.map((title,i)=>'<li class="navigation"><a class="module_navigationCard"'+(i===0?' href="#end"':'')+'><div class="module_navigationCard_photo"><div class="module_navigationCard_crop"><img src="/images/top/img_course-preschool.webp" alt=""></div><span class="module_navigationCard_arrow" aria-hidden="true"></span></div><div class="module_navigationCard_content"><h2 class="module_navigationCard_title">'+title+'</h2><div class="module_navigationCard_text">テキストが入ります。テキストが入ります。'+(i===1?' LongEditableTextWithoutSpaces1234567890LongEditableTextWithoutSpaces1234567890':'')+'</div></div></a></li>');
+     cards.push('<li class="navigation"><a class="module_navigationCard"><div class="module_navigationCard_content"><h2 class="module_navigationCard_title">画像なし</h2></div></a></li>');
+     fixture.innerHTML='<ul class="module_navigation --large">'+cards.join('')+'</ul>';
+     document.body.append(fixture);
+   });
+   const fixture=page.locator('#large-nav-parts');
+   for(const image of await fixture.locator('img').all()) await image.evaluate(el=>el.decode());
+   const geometry=await fixture.evaluate(el=>{
+     const list=el.querySelector('ul'), box=list.getBoundingClientRect();
+     const cards=[...list.querySelectorAll('.module_navigationCard')].map(a=>{
+       const r=a.getBoundingClientRect(), photo=a.querySelector('.module_navigationCard_photo'), copy=a.querySelector('.module_navigationCard_content');
+       const text=a.querySelector('.module_navigationCard_text'),title=a.querySelector('.module_navigationCard_title');
+       const ar=a.querySelector('.module_navigationCard_arrow');
+       return {width:r.width, fits:r.left>=box.left-1&&r.right<=box.right+1&&title.scrollWidth<=title.clientWidth+1&&(!text||text.scrollWidth<=text.clientWidth+1), photo:photo?photo.getBoundingClientRect().width/photo.getBoundingClientRect().height:null, gap:photo?copy.getBoundingClientRect().top-photo.getBoundingClientRect().bottom:null, copyGap:text?text.getBoundingClientRect().top-title.getBoundingClientRect().bottom:null, arrow:ar?[ar.getBoundingClientRect().width,ar.getBoundingClientRect().height]:null, href:a.hasAttribute('href'), tab:a.tabIndex};
+     });
+     return {width:box.width,columns:getComputedStyle(list).gridTemplateColumns.split(' ').length,gap:parseFloat(getComputedStyle(list).gap),cards};
+   });
+   assert.equal(geometry.columns,width<768?1:3);
+   assert.equal(geometry.gap,40);
+   for(const card of geometry.cards){
+     assert.ok(card.fits,JSON.stringify(geometry));
+     if(card.photo!==null){
+       assert.ok(Math.abs(card.photo-1.5)<0.02&&Math.abs(card.gap-24)<1&&Math.abs(card.copyGap-20)<1,JSON.stringify(card));
+       assert.deepEqual(card.arrow,[32,32]);
+     }
+     if(!card.href)assert.equal(card.tab,-1);
+   }
+   const first=fixture.locator('a[href]').first();
+   await first.focus();
+   assert.ok(await first.evaluate(el=>el===document.activeElement&&parseFloat(getComputedStyle(el).outlineWidth)>=2));
+   await first.hover();
+   await page.waitForFunction(el=>getComputedStyle(el.querySelector('img')).transform!=='none',await first.elementHandle());
+   await page.emulateMedia({reducedMotion:'reduce'});
+   assert.equal(await first.locator('img').evaluate(el=>getComputedStyle(el).transitionDuration),'0s');
+   await page.mouse.move(0,0);
+   await first.evaluate(el=>el.blur());
+   if(width===375||width===1380)await fixture.screenshot({path:out+'/'+name+'-'+width+'-large-navigation.png'});
+   await fixture.evaluate(el=>el.remove());
+   report.push({name,width,largeNavigation:geometry});
  }
  // Legacy file presentation must not leak to a generic .file component.
  for (const width of [375, 768, 1380]) {
