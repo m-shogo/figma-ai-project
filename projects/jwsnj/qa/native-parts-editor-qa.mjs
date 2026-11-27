@@ -171,7 +171,10 @@ try {
       if (index === 0 && h.borderBottom !== '3px') differences.push('borderBottom');
       if (index === 1 && h.background !== 'rgb(107, 210, 206)') differences.push('background');
       if (index === 2 && (!h.backgroundImage.includes('ico_blossom.svg') || h.paddingLeft !== '26px')) differences.push('blossom/padding');
-      if (!h.variables['--to-rem-func'] || !h.variables['--font-jwsnj-ja']) differences.push('tokens');
+      if (Object.values(h.variables).some(value => !value)) differences.push('tokens');
+      if (!h.fontFamily.includes('Zen Kaku Gothic New')) differences.push('fontFamily');
+      if (index !== 1 && h.color !== (index === 2 ? 'rgb(40, 172, 95)' : 'rgb(51, 51, 51)')) differences.push('color');
+      if (index === 1 && h.color !== 'rgb(255, 255, 255)') differences.push('color');
       return differences.length ? [{ label: h.label, differences }] : [];
     });
     console.log(JSON.stringify({ nativeEditorCanvasEvidence: mismatches.length ? 'MISMATCH' : 'HEADING_METRICS_MATCH', shellWidth: width, mismatches, measured }));
@@ -180,6 +183,10 @@ try {
     await page.screenshot({ path: 'form-qa-results/native-parts-editor-heading-' + width + '.png' });
   }
   console.log(JSON.stringify({ nativeEditorCanvasEvidenceCollected: true, editorEvidence }));
+  // #800 reproduced missing root tokens at both shell widths. Do not let
+  // diagnostic collection alone satisfy the regression after the loader fix.
+  assert.deepEqual(editorEvidence.map(item => item.mismatchCount), [0, 0],
+    'actual editor canvas heading styles must match the approved token metrics');
   const frontend = await browser.newPage();
   try {
     assert.equal((await frontend.goto(front.href)).status(), 200);
@@ -191,6 +198,8 @@ try {
       const measured = await collectHeadings(scope);
       assert.ok(measured.headings.every(h => !h.missing));
       assert.deepEqual(measured.headings.map(h => h.fontSize), width >= 768 ? ['30px', '24px', '18px'] : ['24px', '22px', '18px']);
+      assert.ok(!measured.sheets.some(sheet => /\/css\/editor-content\.css(?:\?|$)/.test(sheet.href)),
+        'editor-only CSS must not leak onto the frontend');
       console.log(JSON.stringify({ nativeFrontendHeadingEvidence: 'PASS', width, measured }));
       await scope.locator('h2').filter({ hasText: '大見出しとテキストの検証' }).scrollIntoViewIfNeeded();
       await frontend.screenshot({ path: 'form-qa-results/native-parts-front-heading-' + width + '.png' });

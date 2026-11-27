@@ -193,8 +193,13 @@ add_action('wp_enqueue_scripts', 'my_enqueue_scripts');
 // ==========================================================================
 // ビジュアルエディタ用CSSの設定
 // ==========================================================================
-add_action('enqueue_block_editor_assets', function () {
-  // ブロックエディタ用CSSの読み込み（<link>タグとして出力）
+add_action('enqueue_block_assets', function () {
+  // コンテンツ用CSSはiframeにも渡す。管理画面のUI専用フックでは、
+  // ブロックselectorを持たない共通変数CSSがiframeから除外される。
+  // フロントは従来のcommon-styleを使い、editor-content.cssを混ぜない。
+  if (!is_admin()) {
+    return;
+  }
   jwsnj_enqueue_css_entry('editor-style', '/css/editor-style.css');
 });
 
