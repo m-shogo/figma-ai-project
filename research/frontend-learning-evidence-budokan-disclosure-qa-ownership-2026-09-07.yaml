@@ -1,0 +1,53 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: OBS-BUDOKAN-DISCLOSURE-QA-VISIBILITY-OWNERSHIP
+    summary: >-
+      Interaction stability QA must not manufacture the viewport state it is trying to measure, and DOM existence alone does not establish an interactive owner. Stage scroll/overlay state outside the measurement helper, assert the intended control is actually visible and pointer-owned, and treat responsive hidden menu families as non-interactive unless current Theme/design authority proves otherwise.
+    category: RUNTIME
+    applicability:
+      scope: PROJECT
+      conditions:
+        - Budokan interaction QA measures scroll and geometry stability across disclosure open/close/reopen cycles.
+        - A menu hierarchy may exist in WordPress-rendered DOM while responsive Theme CSS deliberately hides that menu family from the active viewport.
+        - Real WordPress plus Playwright can establish visibility, pointer hit ownership, disclosure state, scroll position and document width.
+      exclusions:
+        - Do not use force-click or helper-level scrollIntoView to make a hidden/non-owner control testable.
+        - Do not infer an interaction contract from DOM presence or ARIA state alone.
+        - Do not change production visibility or WordPress menu ownership merely to satisfy a stale QA assumption.
+        - Do not generalize this Budokan-only finding without independent evidence.
+    promotion_state: PROJECT_ONLY
+    promotion:
+      candidate: false
+      rationale: >-
+        PR #463 strengthened the existing SP Global/Footer runtime QA. The first attempt exposed that the helper self-scrolled with scrollIntoViewIfNeeded while asserting scroll stability. After removing that self-mutation, real runtime proved the Footer button itself was not visible. Current Theme CSS intentionally keeps .gf_links-wrap hidden on SP and only exposes the footer link rail from 768px, while nested footer buttons/wrappers remain non-interactive. The QA was corrected to exercise only the visible Global disclosure through pointer open-close-reopen-close and to lock Footer as non-interactive rather than force-click it. Budokan Global Footer Disclosure Runtime run 34065602640 passed disposable WordPress setup, real WordPress menu seed, semantic baseline probe, Chromium interaction QA and cleanup. PR #465 then independently reproduced the same measurement-helper flaw in the existing SP dropdown disclosure audit: auditDisclosure() self-scrolled before capturing its baseline and only exercised one pointer open-close cycle. The QA now stages the fixture outside the helper, requires the real button to already be visible and pointer-owned, exercises open-close-reopen-close, and checks scroll, geometry, document width and ARIA/data-open stability. Budokan Local Navigation Runtime run 34071266969 passed the real WordPress fixture, all pre-existing Local Navigation browser QA, the hardened dropdown Chromium step, and cleanup. Both observations remain one-project evidence, so promotion stays PROJECT_ONLY.
+      blocked_by:
+        - NEEDS_INDEPENDENT_REFERENCE_EVIDENCE_BEFORE_CROSS_PROJECT_PROMOTION
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-DISCLOSURE-QA-OWNERSHIP-20260907
+          kind: COMMIT
+          reference_id: REF-002-BUDOKAN
+          run_id: '34065602640'
+          path: experiments/wordpress-acf-runtime/scripts/budokan-global-footer-disclosure-browser-qa.mjs
+          commit: 12795b0f0890a66ef408404a5821311dc13c449b
+          note: >-
+            PR #463 is QA-only. Production Theme/CSS/PHP/ACF/Menu ownership was not changed; the runtime now verifies visible Global disclosure reopen stability and the current non-interactive SP Footer contract without forced clicks or self-scrolling inside the measurement helper.
+        - evidence_id: EV-BUDOKAN-DROPDOWN-REOPEN-QA-20260907
+          kind: COMMIT
+          reference_id: REF-002-BUDOKAN
+          run_id: '34071266969'
+          path: experiments/wordpress-acf-runtime/scripts/budokan-disclosure-interaction-browser-qa.mjs
+          commit: 05879d73db272979b68405843dbd77a0f7b4da52
+          note: >-
+            PR #465 is QA-only. The real WordPress dropdown fixture is staged before measurement; the helper itself no longer scrolls. Chromium verifies real elementFromPoint pointer ownership plus open-close-reopen-close scroll, geometry, document-width, overflow and aria-expanded/data-open stability.
+      contradicts: []
+    notes:
+      - "Promotion review disposition requested: KEEP_PROJECT_ONLY; repeated evidence is still within one Budokan project and does not justify cross-project auto-promotion."
