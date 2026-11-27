@@ -86,3 +86,7 @@ test('page-link icon isolates the FA glyph from inherited text tracking', () => 
   assert.match(icon,/text-box-trim:\s*none/);
   assert.match(icon,/line-height:\s*1;/);
 });
+
+test('page-link transition follows the shared 0.3s token and reduced motion', () => {
+  assert.match(css, /transition:\s*background-color var\(--transition-duration\);\s*@media \(prefers-reduced-motion: reduce\)\s*\{\s*transition:\s*none/);
+});
