@@ -72,8 +72,8 @@ test('Footer accordion buttons have visible focus without affecting layout', () 
 test('Footer accordion transitions respect reduced-motion preference', () => {
   const block = css.slice(css.indexOf('/* Accessibility: do not animate accordion'), css.indexOf('/* MARK: hover */'));
   assert.match(block, /@media \(prefers-reduced-motion: reduce\)/);
-  assert.match(block, /\.gfl_wrapper-02/);
   assert.match(block, /transition-duration: 0s/);
+  assert.match(css, /transition: grid-template-rows var\(--transition-duration\);\s*@media \(prefers-reduced-motion: reduce\)\s*\{\s*transition-duration: 0s/);
 });
 
 
@@ -231,4 +231,14 @@ test('Footer identity uses the Figma 18px name while keeping WordPress ownership
   const logo = css.slice(css.indexOf('  .gf_logo {'), css.indexOf('  /* Figma PC 114:484'));
   assert.match(logo, /font-family: var\(--font-jwsnj-ja\);\s*font-size: calc\(18 \* var\(--to-rem-func\)\);\s*font-weight: 500;\s*line-height: 1\.5;\s*letter-spacing: 0\.05em;/);
   assert.match(footer, /get_bloginfo\('name'\)/);
+});
+
+test('Footer mobile collapse is scoped below 768 and desktop nested controls stay hidden', () => {
+  for (const state of ['true', 'false']) {
+    const marker = "&[data-open='" + state + "']";
+    const rule = css.slice(css.indexOf(marker), css.indexOf(marker) + 450);
+    assert.match(rule, /@media \(width < calc\(768[^{}]+\{\s*grid-template-rows:/);
+  }
+  const desktop = css.slice(css.indexOf('@media (calc(768 * (1 / 16 * 1rem)) <= width)'));
+  assert.equal((desktop.match(/\.gfl_button-03,/g) || []).length, 1);
 });

@@ -328,6 +328,9 @@
       display: grid;
       grid-template-rows: 0fr;
       transition: grid-template-rows var(--transition-duration);
+      @media (prefers-reduced-motion: reduce) {
+        transition-duration: 0s;
+      }
     }
     .gfl_inner-02,
     .gfl_inner-03,
@@ -428,12 +431,16 @@
           }
         }
         > [class*='gfl_wrapper'] {
-          grid-template-rows: 1fr;
+          @media (width < calc(768 * (1 / 16 * 1rem))) {
+            grid-template-rows: 1fr;
+          }
         }
       }
       &[data-open='false'] {
         > [class*='gfl_wrapper'] {
-          grid-template-rows: 0fr;
+          @media (width < calc(768 * (1 / 16 * 1rem))) {
+            grid-template-rows: 0fr;
+          }
         }
       }
     }
@@ -578,9 +585,6 @@
       .gfl_link-03,
       .gfl_link-04,
       .gfl_link-05,
-      .gfl_button-03,
-      .gfl_button-04,
-      .gfl_button-05,
       .gfl_wrapper-03,
       .gfl_wrapper-04,
       .gfl_wrapper-05,
@@ -687,8 +691,7 @@
 
   /* Accessibility: do not animate accordion changes when reduced motion is requested. */
   @media (prefers-reduced-motion: reduce) {
-    a, .gfl_wrapper-02, .gfl_wrapper-03, .gfl_wrapper-04,
-    .gfl_wrapper-05, .gfl_wrapper-06, .gf_logo a {
+    a, .gf_logo a {
       transition-duration: 0s;
     }
     [class*='gfl_button']::before,
