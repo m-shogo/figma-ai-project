@@ -229,3 +229,9 @@ test('course introduction uses the measured desktop copy rhythm and schedule hea
   assert.match(heading,/@media \(calc\(1080 \* \(1 \/ 16 \* 1rem\)\) <= width\)\s*\{\s*margin-top: calc\(74 \* var\(--to-rem-func\)\)/);
   assert.doesNotMatch(intro+heading,/white-space:\s*nowrap|(?:^|[;{}\n])\s*height\s*:/);
 });
+
+test('Figma heading-to-paragraph spacing has a single owner in normal and non-collapsing flow', () => {
+  for (const heading of [h2, h3, h4]) {
+    assert.match(heading, /& \+ p:is\([^\n]+\) \{\s*margin-top: 0;/);
+  }
+});
