@@ -27,25 +27,27 @@
         </a>
       </p>
     </div>
-    <div class="gf_links-wrap">
-      <nav class="gf_menu" aria-label="フッターナビゲーション">
-        <?php
-        wp_nav_menu(array(
-          // Use the menu assigned to this location in WordPress, not a hard-coded menu name.
-          'menu_class' => 'menu gf_links-01',
-          'menu_id' => 'gf_links-01',
-          'container' => 'div',
-          'container_class' => 'gf_container-01',
-          'container_id' => 'gf_container-01',
-          'fallback_cb' => false,
-          'theme_location' => 'footer-nav',
-          // 'item_spacing' => 'preserve'
-          // 'items_wrap' => '<ul id="%1$s" class="%2$s">%3$s</ul
-          'walker' => new Custom_Footer_Walker_Nav_Menu(),
-        ));
-        ?>
-      </nav>
-    </div>
+    <?php
+    // An unassigned or empty menu must not reserve a blank layout row or landmark.
+    $footer_menu = wp_nav_menu(array(
+      'menu_class' => 'menu gf_links-01',
+      'menu_id' => 'gf_links-01',
+      'container' => 'div',
+      'container_class' => 'gf_container-01',
+      'container_id' => 'gf_container-01',
+      'fallback_cb' => false,
+      'theme_location' => 'footer-nav',
+      'walker' => new Custom_Footer_Walker_Nav_Menu(),
+      'echo' => false,
+    ));
+    if (is_string($footer_menu) && trim($footer_menu) !== '') :
+    ?>
+      <div class="gf_links-wrap">
+        <nav class="gf_menu" aria-label="フッターナビゲーション">
+          <?php echo $footer_menu; // WordPress generates and filters this menu markup. ?>
+        </nav>
+      </div>
+    <?php endif; ?>
   </div>
   <div class="gf_bottom">
     <p class="gf_copyright"><span>&copy; <?php echo esc_html(wp_date('Y')); ?> <?php echo esc_html(get_bloginfo('name')); ?></span></p>

@@ -242,3 +242,35 @@ test('Footer mobile collapse is scoped below 768 and desktop nested controls sta
   const desktop = css.slice(css.indexOf('@media (calc(768 * (1 / 16 * 1rem)) <= width)'));
   assert.equal((desktop.match(/\.gfl_button-03,/g) || []).length, 1);
 });
+
+
+test('Footer omits an empty menu landmark and layout wrapper without changing the assigned menu', () => {
+  assert.match(footer, /'echo'\s*=>\s*false/);
+  const stub = `
+    function get_template_directory_uri() { return '/theme'; }
+    function esc_url($value) { return $value; }
+    function esc_html($value) { return htmlspecialchars($value, ENT_QUOTES); }
+    function home_url($path) { return 'https://example.test' . $path; }
+    function get_bloginfo($key) { return 'QA site'; }
+    function wp_date($format) { return '2026'; }
+    class Custom_Footer_Walker_Nav_Menu {}
+    function wp_nav_menu($args) {
+      if ($args['theme_location'] !== 'footer-nav' || $args['echo'] !== false || $args['fallback_cb'] !== false) {
+        throw new RuntimeException('menu contract changed');
+      }
+      return json_decode($GLOBALS['argv'][2], true);
+    }
+    require $argv[1];
+  `;
+  const path = new URL('../theme/template-parts/_footer.php', import.meta.url).pathname;
+  for (const result of [false, null, '', '  ']) {
+    const html = execFileSync('php', ['-r', stub, path, JSON.stringify(result)], {encoding: 'utf8'});
+    assert.doesNotMatch(html, /class="gf_links-wrap"|class="gf_menu"/);
+    assert.match(html, /class="gf_logo"/);
+    assert.match(html, /class="gf_bottom"/);
+  }
+  const result = '<ul id="gf_links-01"><li><a href="/qa">QA link</a></li></ul>';
+  const html = execFileSync('php', ['-r', stub, path, JSON.stringify(result)], {encoding: 'utf8'});
+  assert.match(html, /<nav class="gf_menu" aria-label="フッターナビゲーション">/);
+  assert.equal(html.split(result).length - 1, 1);
+});
