@@ -43,12 +43,13 @@ try {
     for (const block of blocks) counts[block.name] = (counts[block.name] || 0) + 1;
     return {
       counts,
+      visibility: blocks.filter(block => block.attributes.metadata?.blockVisibility?.viewport).map(block => block.attributes.metadata.blockVisibility.viewport),
       invalid: blocks.filter(block => block.isValid === false || !wp.blocks.getBlockType(block.name)).map(block => block.name),
       content: wp.data.select('core/editor').getEditedPostContent()
     };
   });
   const expected = {
-    'core/heading': 3, 'core/paragraph': 7, 'core/list': 4,
+    'core/heading': 3, 'core/paragraph': 11, 'core/list': 4,
     'core/list-item': 8, 'core/buttons': 1, 'core/button': 2, 'core/details': 3
   };
   await openEditor();
@@ -68,6 +69,7 @@ try {
   const before = await inspect();
   assert.deepEqual(before.invalid, [], 'invalid/recovery blocks in editor');
   assert.deepEqual(before.counts, expected);
+  assert.deepEqual(before.visibility, [{ desktop: false }, { tablet: false }, { mobile: false }, { tablet: false, mobile: false }]);
 
   // Operate on the actual editor canvas, including the iframe variant.
   const frame = page.locator('iframe[name="editor-canvas"]');
@@ -93,6 +95,7 @@ try {
   const after = await inspect();
   assert.deepEqual(after.invalid, [], 'invalid/recovery blocks after reopening');
   assert.deepEqual(after.counts, before.counts);
+  assert.deepEqual(after.visibility, before.visibility, 'native viewport metadata persists after save/reopen');
   assert.ok(after.content.includes(target + suffix), 'edited paragraph persisted after reopening');
   await page.screenshot({ path: 'form-qa-results/native-parts-editor-reopened.png' });
   const frontend = await browser.newPage();
