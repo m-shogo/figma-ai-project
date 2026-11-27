@@ -85,7 +85,8 @@
         }
         /* Official external-link SVG, excluding the existing file-icon variants. */
         &[target='_blank']:where(:not([href$='.pdf' i], [href$='.doc' i], [href$='.docx' i], [href$='.docm' i], [href$='.xls' i], [href$='.xlsx' i], [href$='.xlsm' i], [href$='.png' i], [href$='.jpg' i], [href$='.jpeg' i], [href$='.gif' i], [href$='.webp' i])):where(:not([href*='?'], [href*='#'])),
-        &[target='_blank']:where([href*='?'], [href*='#']):where(:not([data-jwsnj-file-icon='pdf'], [data-jwsnj-file-icon='file'])) {
+        &[target='_blank']:where([href*='?'], [href*='#']):where(:not([data-jwsnj-file-icon='pdf'], [data-jwsnj-file-icon='file'])),
+        &:where(.editor-styles-wrapper [data-jwsnj-editor-link-icon='external'] *) {
           &::after {
             content: '';
             width: calc(14 * var(--to-rem-func));
@@ -95,7 +96,8 @@
           }
         }
         &[href$='.pdf' i]:where(:not([href*='?'], [href*='#'])),
-        &[data-jwsnj-file-icon='pdf'] {
+        &[data-jwsnj-file-icon='pdf'],
+        &:where(.editor-styles-wrapper [data-jwsnj-editor-link-icon='pdf'] *) {
           &::after {
             content: var(--icon-pdf);
             font-family: var(--font-awesome);
@@ -113,7 +115,8 @@
         &[href$='.jpeg' i]:where(:not([href*='?'], [href*='#'])),
         &[href$='.gif' i]:where(:not([href*='?'], [href*='#'])),
         &[href$='.webp' i]:where(:not([href*='?'], [href*='#'])),
-        &[data-jwsnj-file-icon='file'] {
+        &[data-jwsnj-file-icon='file'],
+        &:where(.editor-styles-wrapper [data-jwsnj-editor-link-icon='file'] *) {
           &::after {
             /* Figma button attachment is F15B; inline text links keep F15C. */
             content: '\f15b';
@@ -198,7 +201,8 @@
           pointer-events: none;
         }
         &[target='_blank']:where(:not([href$='.pdf' i], [href$='.doc' i], [href$='.docx' i], [href$='.docm' i], [href$='.xls' i], [href$='.xlsx' i], [href$='.xlsm' i], [href$='.png' i], [href$='.jpg' i], [href$='.jpeg' i], [href$='.gif' i], [href$='.webp' i])):where(:not([href*='?'], [href*='#'])),
-        &[target='_blank']:where([href*='?'], [href*='#']):where(:not([data-jwsnj-file-icon='pdf'], [data-jwsnj-file-icon='file'])) {
+        &[target='_blank']:where([href*='?'], [href*='#']):where(:not([data-jwsnj-file-icon='pdf'], [data-jwsnj-file-icon='file'])),
+        &:where(.editor-styles-wrapper [data-jwsnj-editor-link-icon='external'] *) {
           &::after {
             content: '';
             width: calc(13 * var(--to-rem-func));
@@ -208,7 +212,8 @@
           }
         }
         &[href$='.pdf' i]:where(:not([href*='?'], [href*='#']))::after,
-        &[data-jwsnj-file-icon='pdf']::after {
+        &[data-jwsnj-file-icon='pdf']::after,
+        &:where(.editor-styles-wrapper [data-jwsnj-editor-link-icon='pdf'] *)::after {
           content: var(--icon-pdf);
         }
         &[href$='.doc' i]:where(:not([href*='?'], [href*='#']))::after,
@@ -222,7 +227,8 @@
         &[href$='.jpeg' i]:where(:not([href*='?'], [href*='#']))::after,
         &[href$='.gif' i]:where(:not([href*='?'], [href*='#']))::after,
         &[href$='.webp' i]:where(:not([href*='?'], [href*='#']))::after,
-        &[data-jwsnj-file-icon='file']::after {
+        &[data-jwsnj-file-icon='file']::after,
+        &:where(.editor-styles-wrapper [data-jwsnj-editor-link-icon='file'] *)::after {
           content: '\f15b';
         }
         @media (any-hover: hover) {

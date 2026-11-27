@@ -6,10 +6,8 @@
 
   const classify = raw => {
     const href = raw?.trim();
-    // Ordinary suffixes retain their CSS fallback. Only URLs with a query or
-    // fragment need classification; a fragment-only or query-only link is
-    // never a file merely because it contains a file-like string.
-    if (!href || !/[?#]/.test(href) || /^[?#]/.test(href)) return '';
+    // Fragment-only and query-only URLs never describe a separate file.
+    if (!href || /^[?#]/.test(href)) return '';
     try {
       const url = new URL(href, document.baseURI);
       if (url.protocol !== 'http:' && url.protocol !== 'https:') return '';
@@ -20,8 +18,13 @@
     }
   };
 
+  // The editor wrapper adapter uses the same pathname classifier.
+  window.jwsnjClassifyFileIcon = classify;
+
   const sync = anchor => {
-    const icon = anchor.closest(scope) ? classify(anchor.getAttribute('href')) : '';
+    const href = anchor.getAttribute('href');
+    // Plain anchors keep their existing CSS fallback.
+    const icon = anchor.closest(scope) && /[?#]/.test(href || '') ? classify(href) : '';
     if (icon) {
       if (anchor.getAttribute(attribute) !== icon) anchor.setAttribute(attribute, icon);
     } else if (anchor.hasAttribute(attribute)) {

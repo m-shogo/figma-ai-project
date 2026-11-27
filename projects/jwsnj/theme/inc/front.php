@@ -217,6 +217,17 @@ add_action('enqueue_block_assets', function () {
   jwsnj_enqueue_css_entry('editor-style', '/css/editor-style.css', ['jwsnj-google-fonts', 'fontawesome-style']);
 });
 
+// Core Buttonの編集用DOMは保存時のa要素と異なる。編集側だけwrapperを装飾する。
+add_action('enqueue_block_editor_assets', function () {
+  wp_enqueue_script(
+    'jwsnj-editor-file-link-icons',
+    get_theme_file_uri('/js/editor-file-link-icons.js'),
+    ['jwsnj-file-link-icons', 'wp-hooks', 'wp-element'],
+    filemtime(get_theme_file_path('/js/editor-file-link-icons.js')),
+    false
+  );
+});
+
 // ==========================================================================
 // global-stylesのインラインCSS出力を排除する
 // ==========================================================================
