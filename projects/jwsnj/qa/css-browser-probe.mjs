@@ -750,6 +750,84 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
     if (width === 320) assert.ok(footerLogo.lines >= 2);
     report.push({name, width, footerLogo});
   }
+
+  // Figma PC344:917/SP442:2775 — use actual Theme opt-in Group/Columns rules.
+  // The isolated fixture does not load Core Columns CSS; only measure Theme
+  // padding, gap, heading, text wrapping and official blossom in both scopes.
+  for (const width of [320, 375, 767, 768, 1380]) {
+    await page.setViewportSize({ width, height: 900 });
+    const fixture = await page.evaluateHandle(() => {
+      const fixture = document.createElement('div');
+      fixture.id = 'parts-text-boxes';
+      fixture.style.cssText = 'width:min(calc(100% - 40px),960px);margin-inline:auto';
+      for (const scope of ['block-editor_wrap', 'editor-styles-wrapper']) {
+        const host = document.createElement('div');
+        host.className = scope;
+        host.innerHTML = '<div class="wp-block-columns is-layout-flex is-style-jwsnj-background-boxes"><div class="wp-block-column"><div class="wp-block-group is-style-jwsnj-background-box"><h4 class="wp-block-heading">背景付きテキストボックス</h4><p>宿題というのは、単にその日に学習したことの復習や定着、習熟等だけにねらいがあるわけではありません。</p></div></div><div class="wp-block-column"><div class="wp-block-group is-style-jwsnj-background-box"><div class="wp-block-group__inner-container"><h4 class="wp-block-heading">背景付きテキストボックス 長い見出し LongEditableLabelWithoutSpaces1234567890</h4><p>長い本文 LongEditableTextWithoutSpaces1234567890LongEditableTextWithoutSpaces1234567890</p></div></div></div></div><div class="wp-block-group is-style-jwsnj-bordered-box"><p>通常の枠付きテキスト</p></div>';
+        fixture.append(host);
+      }
+      document.body.append(fixture);
+      return fixture;
+    });
+    try {
+      await page.evaluate(() => document.fonts.ready);
+      const metrics = await fixture.evaluate(async el => {
+        const icon = new Image();
+        icon.src = '/images/common/ico_blossom.svg';
+        await icon.decode();
+        return [...el.children].map(host => {
+          const columns = host.querySelector('.wp-block-columns');
+          const boxes = [...host.querySelectorAll('.is-style-jwsnj-background-box')].map(box => {
+            const h = box.querySelector('h4');
+            const p = box.querySelector('p');
+            const b = box.getBoundingClientRect();
+            const hr = h.getBoundingClientRect();
+            const pr = p.getBoundingClientRect();
+            const s = getComputedStyle(box);
+            const hs = getComputedStyle(h);
+            return {
+              padding: s.padding, radius: s.borderRadius, background: s.backgroundColor,
+              headingFont: hs.fontSize, headingWeight: hs.fontWeight,
+              headingInset: hs.paddingLeft, blossom: hs.backgroundImage, blossomSize: hs.backgroundSize,
+              gap: pr.top - hr.bottom, height: b.height,
+              fits: hr.left >= b.left && hr.right <= b.right + 1 &&
+                pr.left >= b.left && pr.right <= b.right + 1 && p.scrollWidth <= p.clientWidth + 1 &&
+                h.scrollWidth <= h.clientWidth + 1 && pr.bottom <= b.bottom + 1
+            };
+          });
+          const border = getComputedStyle(host.querySelector('.is-style-jwsnj-bordered-box'));
+          return { scope: host.className, gap: getComputedStyle(columns).gap, boxes,
+            border: [border.padding, border.borderRadius, border.borderTopWidth],
+            icon: [icon.naturalWidth, icon.naturalHeight] };
+        });
+      });
+      for (const metric of metrics) {
+        const padding = width >= 768 ? '40px' : '32px';
+        assert.equal(metric.gap, width >= 768 ? '40px' : '24px');
+        assert.deepEqual(metric.border, [padding, '5px', '1px']);
+        assert.ok(metric.icon.every(value => value > 0));
+        for (const box of metric.boxes) {
+          assert.equal(box.padding, padding);
+          assert.equal(box.radius, '5px');
+          assert.equal(box.background, 'rgb(245, 253, 235)');
+          assert.equal(box.headingFont, '18px');
+          assert.equal(box.headingWeight, '500');
+          assert.equal(box.headingInset, '26px');
+          assert.match(box.blossom, /ico_blossom\.svg/);
+          assert.equal(box.blossomSize, 'auto 17px');
+          assert.ok(Math.abs(box.gap - 20) <= 1 && box.fits, JSON.stringify({ name, width, metric }));
+        }
+      }
+      if (width === 375 || width === 1380) {
+        await page.locator('#parts-text-boxes').screenshot({ path: out + '/text-boxes-' + name + '-' + width + '.png' });
+      }
+      report.push({ name, width, textBoxes: metrics });
+      console.log(JSON.stringify({ textBoxCSS: 'PASS', engine: name, width, metrics }));
+    } finally {
+      await fixture.evaluate(el => el.remove());
+      await fixture.dispose();
+    }
+  }
  await page.emulateMedia({reducedMotion:'reduce'});
  // Feature proof separate from production layout: actual cascade and containment.
  const mechanism=await page.evaluate(()=>{
