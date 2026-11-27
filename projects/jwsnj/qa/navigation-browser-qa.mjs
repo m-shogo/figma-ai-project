@@ -181,6 +181,46 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
       await page.screenshot({ path: 'form-qa-results/nav-' + engineName + '-' + width + '-parent.png' });
       console.log(JSON.stringify({ engine: engineName, width, desktopParent: 'PASS', ...typography, hovered, focused }));
     }
+    // Actual WordPress menu with a long label in a short desktop viewport.
+    for (const width of [1080, 1380]) {
+      await page.setViewportSize({ width, height: 240 });
+      await page.mouse.move(1, 1);
+      await desktopLink.focus();
+      const inner = wrapper.locator('.gnl_inner-02');
+      // Extend only this disposable fixture's last label to exercise overflowing CMS content.
+      const last = inner.locator('a').last();
+      const label = last.locator('span').first();
+      const original = await label.textContent();
+      await label.evaluate(el => { el.textContent = (el.textContent + ' 長いメニュー項目 Long editable menu label ').repeat(12); });
+      const size = await inner.evaluate(el => ({
+        scrollHeight: el.scrollHeight, clientHeight: el.clientHeight,
+        top: el.getBoundingClientRect().top, bottom: el.getBoundingClientRect().bottom,
+        overflow: getComputedStyle(el).overflowY
+      }));
+      assert.equal(size.overflow, 'auto');
+      assert.ok(size.scrollHeight > size.clientHeight && size.bottom <= 241, JSON.stringify(size));
+      await last.focus();
+      await inner.evaluate(el => { el.scrollTop = el.scrollHeight; });
+      const reachable = await last.evaluate(el => {
+        const panel = el.closest('.gnl_inner-02');
+        const box = panel.getBoundingClientRect();
+        const range = document.createRange();
+        range.selectNodeContents(el.querySelector('span'));
+        const rects = [...range.getClientRects()];
+        const final = rects.at(-1);
+        return {
+          scrollTop: panel.scrollTop,
+          focused: document.activeElement === el,
+          finalHit: !!final && final.bottom <= box.bottom + 1 &&
+            el.contains(document.elementFromPoint(final.left + final.width / 2, final.top + final.height / 2))
+        };
+      });
+      assert.ok(reachable.scrollTop > 0 && reachable.focused && reachable.finalHit, JSON.stringify(reachable));
+      await page.screenshot({ path: 'form-qa-results/nav-' + engineName + '-' + width + '-short-flyout.png' });
+      await label.evaluate((el, text) => { el.textContent = text; }, original);
+      await inner.evaluate(el => { el.scrollTop = 0; });
+      console.log(JSON.stringify({ engine: engineName, width, shortDesktopFlyout: 'PASS', size, reachable }));
+    }
     await page.setViewportSize({ width: 1079, height: 900 });
     await waitState(false);
     assert.equal(await hamburger.isVisible(), true);

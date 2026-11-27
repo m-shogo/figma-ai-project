@@ -475,3 +475,13 @@ test('mobile submenu collapse cannot override the desktop grid track', () => {
   assert.match(state, /\[data-open='true'\][\s\S]*?> \[class\*='gnl_wrapper'\]\s*\{\s*@media \(width < calc\(1080[^{}]+\{\s*grid-template-rows: 1fr;/);
   assert.match(state, /\[data-open='false'\][\s\S]*?> \[class\*='gnl_wrapper'\]\s*\{\s*@media \(width < calc\(1080[^{}]+\{\s*grid-template-rows: 0fr;/);
 });
+
+
+test('Desktop flyout content stays scrollable below the shared header in short viewports', () => {
+  const desktop = navigationCss.slice(navigationCss.indexOf('/* MARK: header_breakpoint */'));
+  const inner = desktop.slice(desktop.indexOf('.gnl_inner-02 {'), desktop.indexOf('.gnl_list-02 {', desktop.indexOf('.gnl_inner-02 {')));
+  assert.match(inner, /max-height: calc\(100vh - var\(--header-height-PC\)\);\s*max-height: calc\(100dvh - var\(--header-height-PC\)\);/);
+  assert.match(inner, /overflow-y: auto;/);
+  assert.match(inner, /overscroll-behavior-y: contain;/);
+  assert.doesNotMatch(inner, /(?:^|\s)height:/);
+});
