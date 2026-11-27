@@ -12,6 +12,12 @@ $image = $image_id ? wp_get_attachment_image($image_id, 'full', false, [
 <header class="jwsnj_newsArchive_hero jwsnj_fixedPage_hero<?php if ($image) : ?> has-image<?php endif; ?>">
   <div class="jwsnj_newsArchive_heroTitle">
     <h1><?php echo esc_html(get_the_title()); ?></h1>
+    <?php if ($image) : ?>
+      <div class="jwsnj_newsArchive_heroArt" aria-hidden="true">
+        <img class="jwsnj_newsArchive_heroFigure" src="<?php echo esc_url(get_theme_file_uri('images/common/img_hero-figure.svg')); ?>" width="20.0485" height="74.6642" alt="">
+        <img class="jwsnj_newsArchive_heroFigureB" src="<?php echo esc_url(get_theme_file_uri('images/common/img_hero-figure-02.svg')); ?>" width="21.6551" height="84" alt="">
+      </div>
+    <?php endif; ?>
   </div>
   <?php if ($image) : ?>
     <div class="jwsnj_newsArchive_heroImage"><?php echo $image; ?></div>

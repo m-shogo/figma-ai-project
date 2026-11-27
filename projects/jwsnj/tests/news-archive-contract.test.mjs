@@ -67,7 +67,7 @@ test('archive hero preserves CMS image ownership and no sample fallback',()=>{
   assert.match(css,/min-height:\s*calc\(400 \* var\(--to-rem-func\)\)/);
   assert.match(css,/object-fit:\s*cover/);
   const render=(imageId,title)=>{
-    const stub='function get_the_title($id){return '+JSON.stringify(title)+';} function get_field($n,$scope){return '+imageId+';} function esc_html($s){return htmlspecialchars($s,ENT_QUOTES);} function wp_get_attachment_image($id,$size,$icon,$attrs){return $id===9?"<img src=\\"/wp-media/approved.webp\\" class=\\"".$attrs["class"]."\\">":"";} $args=["posts_page_id"=>5]; ?>';
+    const stub='function get_the_title($id){return '+JSON.stringify(title)+';} function get_field($n,$scope){return '+imageId+';} function esc_html($s){return htmlspecialchars($s,ENT_QUOTES);} function esc_url($s){return htmlspecialchars($s,ENT_QUOTES);} function get_theme_file_uri($s){return "/theme/".$s;} function wp_get_attachment_image($id,$size,$icon,$attrs){return $id===9?"<img src=\\"/wp-media/approved.webp\\" class=\\"".$attrs["class"]."\\">":"";} $args=["posts_page_id"=>5]; ?>';
     return execFileSync('php',['-r',stub+hero],{encoding:'utf8'});
   };
   assert.match(render(9,'News <title>'),/has-image[\s\S]*News &lt;title&gt;[\s\S]*approved\.webp/);

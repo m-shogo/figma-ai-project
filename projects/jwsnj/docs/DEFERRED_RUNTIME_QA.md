@@ -265,3 +265,15 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 残りの独立READYがなくなった場合は、[MAINTAINABILITY_ROADMAP.md](MAINTAINABILITY_ROADMAP.md) の P2 に従い、Header → Footer → parts → 既実装ページ → 統合回帰の順にPC/SPを再確認する。従来の個別QAを再利用し、同じIssueを増やさない。各回の証拠・差分・PR・再撮影結果を既存案件文書に残す。未確認の実機・学校WP/Pro・素材はそれぞれ #523/#524 の保留を維持する。
 
 - TOP精密再点検（Human 2026-11-26）：P2-TOPの各セクション別索引と検査手順を使用。個別PC/SPスクリーンショット、全可視装飾layer/素材/callsite/実render、共通背景・隣接境界、文字・画像crop、状態遷移を照合して差分を記録。About〜Course背景は未接続・候補素材の正本照合が必要。実機・実学校WP/ACF/Proは#523、素材/権利は#524。静的CIだけで視覚PASSにしない。
+
+## Cursor local runtime（2026-11-27、tested_sha 作業開始 `fa4ab148`）
+
+環境: Windows、Docker 29.0.1、`.\wp.ps1 up jwsnj`、`http://127.0.0.1:28000` HTTP 200。WordPress 7.0.2、PHP 8.3.33、テーマ `jwsnj`、`timezone_string=Asia/Tokyo`。ACF Pro 6.8.9、Formidable 7.1.1、Formidable Pro 6.27、Flexible Table Block 3.9.0 は有効。Autoptimize 3.1.17 は導入済み無効。既存 ACF グループ 12 件は Local JSON から読込済み。`top_course` グループは未登録。
+
+| ID | status | evidence | remaining |
+|---|---|---|---|
+| ENV-01 | PASS（起動のみ） | compose `wp-jwsnj`、ポート 28000、PHP Fatal なしでフロント 200 | 全ページの console/404 総点検は未了 |
+| ENV-02 | PARTIAL | テーマ・時刻・プラグインを WP-CLI で確認。メニュー 0 件。`show_on_front=posts`、`page_on_front=0`、`page_for_posts=0`。サイト名は Sample Theme Fixture | 固定ページ割当・メニュー・学校名は Human の値がないので未設定。管理画面のログイン操作は未実施 |
+| FOUND-02 | PARTIAL | Chromium。自然幅 481 と emulation 1380。Zen Kaku Gothic New は hero h1 とロゴ名で loaded かつ computed。Roboto Condensed と Font Awesome 6 Pro（regular/light woff2）は loaded。News ピルは `--font-sansSerif-en` = local Roboto。Footer 要素の computed は local Noto Sans JP | Brands はこの画面では未使用。Firefox/WebKit と物理 iPhone は未検証。フォント未読込時のフォールバック操作は未実施 |
+| PAGE-HEADER | PARTIAL | 1380px で header 高さ 120px（Figma 603:2939 は 90px）。公式ロゴ SVG は 200。検索 UI は表示。メニュー未設定のため hover の子項目は出せない | 90px 化は検索・CTA・補助メニューの承認前にしない。SP 開閉の今回操作は emulation が次の計測で解除され未了 |
+| PAGE-TOP | DEFERRED_ENV | フロントは投稿一覧。`front-page.php` の TOP は静的フロントページ未設定のためこの URL では出ない | 静的フロントページの割当は未承認。MV の実画像ループは未計測 |
