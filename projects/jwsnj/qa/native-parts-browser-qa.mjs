@@ -185,6 +185,29 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
             await page.setViewportSize({ width: probeWidth, height: 900 });
             await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
             const device = probeWidth <= 480 ? 'mobile' : probeWidth <= 782 ? 'tablet' : 'desktop';
+            // Capture the actual native style output, CSSOM and media-query state.
+            // Do not infer the cause from a single computed display failure.
+            const visibilityDiagnostics = await page.evaluate(() => {
+              const rules = [];
+              const visit = (list, parents = []) => {
+                for (const rule of list) {
+                  if (rule.selectorText?.includes('wp-block-hidden-')) {
+                    rules.push({ selector: rule.selectorText, css: rule.cssText, parents });
+                  }
+                  if (rule.cssRules) visit(rule.cssRules, [...parents, rule.conditionText || rule.cssText.slice(0, 100)]);
+                }
+              };
+              for (const sheet of document.styleSheets) {
+                try { visit(sheet.cssRules); } catch (error) { /* cross-origin stylesheet */ }
+              }
+              return {
+                innerWidth, clientWidth: document.documentElement.clientWidth,
+                media: ['(width <= 480px)', '(480px < width <= 782px)', '(width > 782px)'].map(query => [query, matchMedia(query).matches]),
+                styles: [...document.querySelectorAll('style')].filter(el => el.textContent.includes('wp-block-hidden-')).map(el => ({ id: el.id, text: el.textContent.slice(0, 12000) })),
+                rules
+              };
+            });
+            console.log(JSON.stringify({ nativeViewportDiagnostic: true, engine: engineName, probeWidth, ...visibilityDiagnostics }));
             const observed = [];
             for (let i = 0; i < labels.length; i++) {
               const paragraph = root.getByText(labels[i], { exact: true });
