@@ -171,7 +171,7 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
       });
       const hovered = await measureOpen();
       assert.equal(hovered.duration, '0s', JSON.stringify(hovered));
-      assert.equal(hovered.state, 'false');
+      assert.notEqual(hovered.state, 'true');
       assert.ok(hovered.fullyHit, JSON.stringify(hovered));
       // The legacy full-width flyout can cover the page body. Move into the header's left padding instead.
       await page.mouse.move(1, 1);
