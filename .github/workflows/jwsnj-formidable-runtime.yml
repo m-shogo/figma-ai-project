@@ -18,6 +18,7 @@ on:
       - 'projects/jwsnj/qa/fixtures/parts-catalog-native.html'
       - 'projects/jwsnj/qa/seed-native-parts-qa.php'
       - 'projects/jwsnj/qa/native-parts-browser-qa.mjs'
+      - 'projects/jwsnj/qa/native-parts-editor-qa.mjs'
       - 'projects/jwsnj/theme/css/blocks/wp-block-heading-style.css'
       - 'projects/jwsnj/theme/css/blocks/wp-block-text-style.css'
       - 'projects/jwsnj/theme/css/blocks/wp-block-list-style.css'
@@ -109,6 +110,19 @@ jobs:
           [[ "$parts_id" =~ ^[0-9]+$ ]]
           cd ../..
           node projects/jwsnj/qa/native-parts-browser-qa.mjs "${WP_URL}/?page_id=${parts_id}"
+      - name: Actual Gutenberg editor validation and save/reopen
+        env:
+          CSS_QA_MODULE_ROOT: ${{ runner.temp }}/css-qa
+          JWSNJ_PARTS_QA_DISPOSABLE: '1'
+          QA_WP_ADMIN_USER: fixture-admin
+          QA_WP_ADMIN_PASSWORD: fixture-admin-change-me
+        run: |
+          cd runtime/wordpress
+          source scripts/runtime-env.sh
+          parts_id="$(docker compose run --rm cli option get jwsnj_native_parts_qa_page_id)"
+          [[ "$parts_id" =~ ^[0-9]+$ ]]
+          cd ../..
+          node projects/jwsnj/qa/native-parts-editor-qa.mjs "${WP_URL}/?page_id=${parts_id}"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
