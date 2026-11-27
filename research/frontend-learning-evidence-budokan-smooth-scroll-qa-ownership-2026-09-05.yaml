@@ -1,0 +1,55 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: OBS-BUDOKAN-SMOOTH-SCROLL-QA-OWNERSHIP
+    summary: >-
+      Same-page interaction QA should assert the behavior owned by the current Theme rather than silently importing
+      browser-default URL semantics. When a Theme intentionally prevents the default anchor action and owns smooth
+      scrolling itself, verify the real href, destination geometry, header clearance, scroll trajectory and overflow;
+      do not require a location-hash mutation unless project authority explicitly makes that part of the contract.
+    category: TOOLING
+    applicability:
+      scope: PROJECT
+      conditions:
+        - Browser QA exercises same-page anchors handled by the Nippon Budokan Theme smooth-scroll routine.
+        - The current handler prevents browser-default anchor navigation and delegates scrolling to Theme code.
+        - The audit is intended to catch page jumps, header overlap, reset-to-top behavior or pointer failures.
+      exclusions:
+        - Do not remove semantic href targets from links.
+        - Do not weaken destination geometry, pointer hit-testing, header-clearance or scroll-stability assertions.
+        - A future authority may explicitly require URL hash/history updates; that would be a separate contract.
+        - Same-project confirmation is not independent evidence for cross-project promotion.
+    promotion_state: PROJECT_ONLY
+    promotion:
+      candidate: false
+      rationale: >-
+        PR #422 initially failed because QA required the URL to end in #qa-anchor-target after a real click. Current
+        common.js deliberately returns false for same-page links and delegates them to a 300ms Theme-owned scroll
+        routine, so URL-hash mutation was not an established ownership requirement. After removing only that assumed
+        contract, the same real WordPress/Playwright run passed pointer, hover/focus geometry, keyboard Tab traversal,
+        destination/header clearance, no reset-to-top, horizontal overflow and SP sticky-focus clearance without any
+        production Theme change.
+      blocked_by:
+        - NEEDS_INDEPENDENT_REFERENCE_EVIDENCE_BEFORE_CROSS_PROJECT_PROMOTION
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-CONTENT-INTERACTION-QA-20260905
+          kind: COMMIT
+          reference_id: REF-002-BUDOKAN
+          run_id: '33970500764'
+          path: experiments/wordpress-acf-runtime/scripts/budokan-content-interaction-browser-qa.mjs
+          commit: f465daaf9548387477c1d8f5d086c3d17ae350ea
+          note: >-
+            PR #422 merged only after Disposable WordPress and PC/SP Playwright checks passed pointer ownership,
+            hover/focus geometry, ordered Tab traversal, Theme-owned same-page scroll behavior and SP fixed-shortcut
+            focus clearance. The correction was QA-only; production CSS/PHP/JS was unchanged.
+      contradicts: []
+    notes:
+      - "Promotion review disposition 2026-09-05: KEEP_PROJECT_ONLY; Budokan-only evidence, no auto-promotion."
