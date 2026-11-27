@@ -68,6 +68,36 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
           await page.screenshot({ path: 'form-qa-results/native-separator-' + engineName + '-' + width + '.png' });
         }
         console.log(JSON.stringify({ nativeSeparator: 'PASS', engine: engineName, width, separatorGeometry }));
+        // QA-only destinations; inspect markup and styles without opening files.
+        const inlineLinks = root.locator('#qa-parts-file-links a');
+        assert.equal(await inlineLinks.count(), 4);
+        const linkMetrics = await inlineLinks.evaluateAll(elements => elements.map(el => {
+          const style = getComputedStyle(el);
+          const icon = getComputedStyle(el, '::after');
+          return {
+            href: el.getAttribute('href'), target: el.getAttribute('target'),
+            rel: (el.getAttribute('rel') || '').split(/\s+/).filter(Boolean),
+            color: style.color, icon: icon.content, mask: icon.maskImage,
+            wrap: style.overflowWrap, duration: style.transitionDuration
+          };
+        }));
+        assert.deepEqual(linkMetrics.map(link => link.target), [null, '_blank', '_blank', '_blank']);
+        assert.ok(linkMetrics[2].rel.includes('nofollow') && linkMetrics[2].rel.includes('noreferrer') && linkMetrics[2].rel.includes('external'));
+        assert.ok(linkMetrics[3].rel.includes('noreferrer') && linkMetrics[3].rel.includes('external'));
+        assert.ok(linkMetrics.every(link => link.color === 'rgb(236, 107, 97)' && link.wrap === 'anywhere'));
+        assert.match(linkMetrics[1].mask, /ico-blank\.svg/);
+        assert.notEqual(linkMetrics[2].icon, 'none');
+        assert.notEqual(linkMetrics[3].icon, 'none');
+        assert.notEqual(linkMetrics[2].icon, linkMetrics[3].icon);
+        for (let i = 0; i < 4; i++) {
+          await inlineLinks.nth(i).focus();
+          assert.ok(await inlineLinks.nth(i).evaluate(el => el === document.activeElement));
+        }
+        if (width === 375 || width === 1380) {
+          await root.locator('#qa-parts-file-links').scrollIntoViewIfNeeded();
+          await page.screenshot({ path: 'form-qa-results/native-file-links-' + engineName + '-' + width + '.png' });
+        }
+        console.log(JSON.stringify({ nativeFileLinks: 'PASS', engine: engineName, width, linkMetrics }));
         const lists = root.locator('ul.wp-block-list, ol.wp-block-list');
         assert.equal(await lists.count(), 4);
         assert.equal(await root.locator('ol.wp-block-list').getAttribute('start'), '10');
