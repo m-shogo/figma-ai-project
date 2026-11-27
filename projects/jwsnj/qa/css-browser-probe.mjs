@@ -968,6 +968,15 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
              width: box.width, clientWidth: node.clientWidth, scrollWidth: node.scrollWidth,
              clientHeight: node.clientHeight, scrollHeight: node.scrollHeight,
              whiteSpace: style.whiteSpace, lines: lines.length,
+             overflow: [style.overflowX, style.overflowY],
+             fontFamily: style.fontFamily, letterSpacing: style.letterSpacing,
+             textBoxTrim: style.textBoxTrim, box: { left: box.left, right: box.right, top: box.top, bottom: box.bottom },
+             outside: lines.flatMap((line, index) => {
+               const delta = [box.left - line.left, line.right - box.right,
+                 box.top - line.top, line.bottom - box.bottom];
+               return delta.some(value => value > 1) ? [{ index, delta,
+                 rect: { left: line.left, right: line.right, top: line.top, bottom: line.bottom } }] : [];
+             }),
              fits: lines.every(line => line.left >= box.left - 1 &&
                line.right <= box.right + 1 && line.top >= box.top - 1 &&
                line.bottom <= box.bottom + 1)
@@ -976,6 +985,18 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
          return { width, rows, rootFont: parseFloat(getComputedStyle(document.documentElement).fontSize),
            desktop: matchMedia('(min-width: 48rem)').matches };
        });
+       // Preserve failure evidence before assertions abort the browser run.
+       if (measured.rows.some(row => !row.fits || row.scrollWidth > row.clientWidth + 1 ||
+           row.scrollHeight > row.clientHeight + 1)) {
+         console.error(JSON.stringify({ partsTextResizeFailure: true, engine: name, width, scale, measured }));
+         for (const [index, row] of measured.rows.entries()) {
+           if (!row.fits || row.scrollWidth > row.clientWidth + 1 || row.scrollHeight > row.clientHeight + 1) {
+             await fixture.locator('h2,h3,h4,p').nth(index).screenshot({
+               path: out + '/parts-text-resize-failure-' + name + '-' + width + '-' + scale + '-' + index + '.png'
+             });
+           }
+         }
+       }
        assert.equal(measured.rootFont, 16 * scale);
        const sizes = measured.desktop ? [30, 16, 24, 16, 18, 16] : [24, 16, 22, 16, 18, 16];
        assert.deepEqual(measured.rows.map(row => row.font), sizes.map(size => size * scale));
