@@ -14,8 +14,8 @@ test('native ordered-list marker preserves HTML numbering without wrapping punct
   assert.doesNotMatch(list, /counter-reset:|counter-increment:|counter\(list-item\)/);
   assert.match(list, /list-style:\s*decimal outside/);
   assert.match(list, /&::marker\s*\{/);
-  assert.match(list, /padding-left:\s*calc\(24 \* var\(--to-rem-func\)\)/);
-  assert.match(list, /padding-left:\s*calc\(10 \* var\(--to-rem-func\)\)/);
+  assert.match(list, /padding-left:\s*calc\(34 \* var\(--to-rem-func\)\)/);
+  assert.match(list, /padding-left:\s*0;/);
   assert.doesNotMatch(list, /&::before/);
   assert.match(css, /ol\.wp-block-list\s*\{\s*list-style: none;\s*padding-left: 0;/);
 });
