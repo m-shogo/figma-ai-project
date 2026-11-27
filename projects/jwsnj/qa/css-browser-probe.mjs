@@ -920,6 +920,85 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
      await fixture.evaluate(el => el.remove());
    }
  }
+ // User-required 150/200% text enlargement. Set the document root font
+ // (not CSS zoom or a claim of physical/browser accessibility zoom).
+ for (const width of [375, 768, 1380]) {
+   await page.setViewportSize({ width, height: 900 });
+   await page.emulateMedia({ reducedMotion: 'reduce' });
+   for (const scale of [1.5, 2]) {
+     const oldRoot = await page.evaluate(scale => {
+       const root = document.documentElement;
+       const previous = root.style.fontSize;
+       root.style.fontSize = (16 * scale) + 'px';
+       const fixture = document.createElement('div');
+       fixture.id = 'parts-text-resize';
+       fixture.className = 'block-editor_wrap';
+       fixture.style.cssText = 'width:min(calc(100% - 40px),960px);margin-inline:auto';
+       const long = '長い日本語の見出しを自然に折り返す LongEditableLabelWithoutSpaces1234567890LongEditableLabelWithoutSpaces1234567890';
+       for (const level of [2, 3, 4]) {
+         const heading = document.createElement('h' + level);
+         heading.className = 'wp-block-heading';
+         heading.textContent = long;
+         const paragraph = document.createElement('p');
+         paragraph.append(document.createTextNode('本文 '));
+         const link = document.createElement('a');
+         link.href = '#end';
+         link.textContent = long;
+         paragraph.append(link, document.createTextNode(' 本文'));
+         fixture.append(heading, paragraph);
+       }
+       document.body.append(fixture);
+       return previous;
+     }, scale);
+     const fixture = page.locator('#parts-text-resize');
+     try {
+       await fixture.scrollIntoViewIfNeeded();
+       await page.evaluate(() => document.fonts.ready);
+       const measured = await fixture.evaluate(el => {
+         const width = el.getBoundingClientRect().width;
+         const rows = [...el.querySelectorAll('h2,h3,h4,p')].map(node => {
+           const box = node.getBoundingClientRect();
+           const style = getComputedStyle(node);
+           const range = document.createRange();
+           range.selectNodeContents(node);
+           const lines = [...range.getClientRects()];
+           return {
+             tag: node.tagName, font: parseFloat(style.fontSize),
+             lineHeight: parseFloat(style.lineHeight), height: box.height,
+             width: box.width, clientWidth: node.clientWidth, scrollWidth: node.scrollWidth,
+             clientHeight: node.clientHeight, scrollHeight: node.scrollHeight,
+             whiteSpace: style.whiteSpace, lines: lines.length,
+             fits: lines.every(line => line.left >= box.left - 1 &&
+               line.right <= box.right + 1 && line.top >= box.top - 1 &&
+               line.bottom <= box.bottom + 1)
+           };
+         });
+         return { width, rows, rootFont: parseFloat(getComputedStyle(document.documentElement).fontSize),
+           desktop: matchMedia('(min-width: 48rem)').matches };
+       });
+       assert.equal(measured.rootFont, 16 * scale);
+       const sizes = measured.desktop ? [30, 16, 24, 16, 18, 16] : [24, 16, 22, 16, 18, 16];
+       assert.deepEqual(measured.rows.map(row => row.font), sizes.map(size => size * scale));
+       for (const row of measured.rows) {
+         assert.ok(row.whiteSpace !== 'nowrap' && row.fits && row.width <= measured.width + 1, JSON.stringify(measured));
+         assert.ok(row.scrollWidth <= row.clientWidth + 1 && row.scrollHeight <= row.clientHeight + 1, JSON.stringify(measured));
+         assert.ok(row.height >= row.lineHeight - 1, JSON.stringify(row));
+       }
+       if (width === 375) assert.ok(measured.rows.every(row => row.lines >= 2));
+       const link = fixture.locator('a').first();
+       await link.focus();
+       assert.ok(await link.evaluate(el => el === document.activeElement && getComputedStyle(el).outlineStyle !== 'none'));
+       if (scale === 2 && (width === 375 || width === 1380)) {
+         await fixture.screenshot({ path: out + '/parts-text-resize-' + name + '-' + width + '.png' });
+       }
+       console.log(JSON.stringify({ partsTextResize: 'PASS', engine: name, width, scale, measured }));
+       report.push({ name, width, scale, partsTextResize: measured });
+     } finally {
+       await fixture.evaluate(el => el.remove());
+       await page.evaluate(previous => { document.documentElement.style.fontSize = previous; }, oldRoot);
+     }
+   }
+ }
  // Legacy file presentation must not leak to a generic .file component.
  for (const width of [375, 768, 1380]) {
    await page.setViewportSize({width, height: 900});
