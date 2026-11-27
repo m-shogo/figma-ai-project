@@ -38,3 +38,37 @@ foreach (['global-nav', 'sub-nav', 'footer-nav'] as $location) {
 }
 set_theme_mod('nav_menu_locations', $locations);
 update_option('jwsnj_navigation_qa_page_id', $page);
+
+// Exercise the actual WordPress footer renderer with no assigned menu and an empty
+// assigned menu, then restore the seeded menu before the cross-engine browser tests.
+$render_footer = function () {
+  ob_start();
+  get_template_part('template-parts/_footer');
+  return ob_get_clean();
+};
+$assert_footer = function ($markup, $expected, $case) {
+  if (substr_count($markup, 'class="gf_links-wrap"') !== $expected ||
+      substr_count($markup, 'class="gf_menu"') !== $expected ||
+      substr_count($markup, 'id="gf_links-01"') !== $expected ||
+      !str_contains($markup, 'class="gf_logo"') ||
+      !str_contains($markup, 'class="gf_bottom"')) {
+    throw new RuntimeException('Footer render contract failed: ' . $case);
+  }
+  echo wp_json_encode(['footerRuntime' => 'PASS', 'case' => $case, 'landmarks' => $expected]) . PHP_EOL;
+};
+$empty_menu = wp_create_nav_menu('Navigation QA empty footer');
+if (is_wp_error($empty_menu)) throw new RuntimeException($empty_menu->get_error_message());
+try {
+  $unassigned = $locations;
+  unset($unassigned['footer-nav']);
+  set_theme_mod('nav_menu_locations', $unassigned);
+  $assert_footer($render_footer(), 0, 'unassigned');
+  $empty = $locations;
+  $empty['footer-nav'] = $empty_menu;
+  set_theme_mod('nav_menu_locations', $empty);
+  $assert_footer($render_footer(), 0, 'assigned-empty');
+} finally {
+  set_theme_mod('nav_menu_locations', $locations);
+  wp_delete_nav_menu($empty_menu);
+}
+$assert_footer($render_footer(), 1, 'assigned-populated');
