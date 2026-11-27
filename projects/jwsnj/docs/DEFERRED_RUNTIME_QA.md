@@ -323,3 +323,7 @@ CUR-04のLarge Navigationについて、共通表示PHP/CSSをChat側で先行�
 
 ### CUR-04 追加 — native tabs / viewport visibility
 Human原文839行の `wp:tabs` と `metadata.blockVisibility.viewport` を実WordPressの既存編集機能で確認する。旧ACFタブを新規登録/移植しない。#785は隔離実WPのnative tabs検証（CI未確定）、Cursorはその結果を確認して既存 /parts/ のコピーで追加・タブ名変更・入れ子内容の編集/保存再編集、端末別設定の編集/保存再編集を確認。WP標準のviewport境界480/782pxはテーマの768pxへ勝手に変更しない。Figma Sliderに対応する汎用CMSブロックは未確定のため、TOP用ACFを流用する前に既存登録とHuman仕様を確認する。
+
+
+### CUR-04 / CUR-08 補足 — 区切り線・標準タブ
+#793実WP CI3/3、区切り線12ケース・Gutenberg invalid0/保存再編集PASS済み（6ad4aa5f）。Cursorは隔離CIを再作成せず既存/parts/コピーで実canvasのCSSと正式テーマ出力のFigma差を確認する。#785はWP7.0.2でcore/tabs未登録（WP7.1+要件）。現地登録版を確認し、許可なしにWP更新・新規プラグイン・代替ACFを導入しない。#794は添付リンク属性修正のCI待ち、正式URLを創作しない。#523/#524/owner/スケジュール変更なし。
