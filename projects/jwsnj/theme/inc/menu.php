@@ -3,6 +3,7 @@ add_action('after_setup_theme', function () {
   register_nav_menus(array(
     // 例 'メニューの位置を示す固有名称' => 'このメニューの位置の名称'
     'global-nav' => 'グローバルメニュー',
+    'sp-nav' => 'SPハンバーガーメニュー',
     'sub-nav' => 'サブメニュー',
     'footer-nav' => 'フッターメニュー',
     'sidebar-nav' => 'サイドバーメニュー',
@@ -125,18 +126,26 @@ class Custom_Global_Walker_Nav_Menu extends Walker_Nav_Menu
     $wrapper_class = 'gnl_wrapper-' . $depth_number;
     $inner_class = 'gnl_inner-' . $depth_number;
 
+    $label = '<span>' . esc_html($title) . '</span>';
+    $item_classes = is_array($item->classes) ? $item->classes : array();
+    // Directory-map items with no approved URL stay visible and do not navigate.
+    $no_link = $item_url === '' || in_array('is-nolink', $item_classes, true);
+    $link_open = $no_link
+      ? '<span class="' . esc_attr($link_class) . '">'
+      : '<a class="' . esc_attr($link_class) . '" href="' . esc_url($item_url) . '"' . $target_attribute . '>';
+    $link_close = $no_link ? '</span>' : '</a>';
     if ($has_children) {
       $submenu_id = 'gnl-submenu-' . absint($item->ID);
       // 子要素あり: li._hasChild + button + a + ラッパー開始（start_lvlで続く）
       $li_classes = trim(implode(' ', $item->classes)) . ' ' . $li_class . ' _hasChild';
       $output .= '<li class="' . esc_attr($li_classes) . '">';
       $output .=   '<div class="' . esc_attr($title_class) . '">';
-      $output .=     '<a class="' . esc_attr($link_class) . '" href="' . esc_url($item_url) . '"' . $target_attribute . '>';
-      $output .=       '<span>' . esc_html($title) . '</span>';
+      $output .=     $link_open;
+      $output .=       $label;
       if ($depth === 0) {
         $output .= '<span class="gnl_arrow" aria-hidden="true"></span>';
       }
-      $output .=     '</a>';
+      $output .=     $link_close;
       $output .=     '<button class="' . esc_attr($button_class) . '" type="button" aria-expanded="false" aria-controls="' . esc_attr($submenu_id) . '" aria-label="' . esc_attr($title . 'のサブメニューを開閉') . '"><span>開閉</span></button>';
       $output .=   '</div>';
       $output .=     '<div id="' . esc_attr($submenu_id) . '" class="' . esc_attr($wrapper_class) . '">';
@@ -145,10 +154,7 @@ class Custom_Global_Walker_Nav_Menu extends Walker_Nav_Menu
       $li_classes = trim(implode(' ', $item->classes)) . ' ' . $li_class . ' _noChild';
       $output .=  '<li class="' . esc_attr($li_classes) . '">';
       $output .=   '<div class="' . esc_attr($title_class) . '">';
-      $output .=     '<a class="' . esc_attr($link_class) . '" href="' . esc_url($item_url) . '"' . $target_attribute . '>';
-      $output .=       '<span>' . esc_html($title) . '</span>';
-      // $output .=       '<span>' . esc_html($slug) . '</span>'; // スラッグを表示する場合はコメントアウトを解除
-      $output .=     '</a>';
+      $output .=     $link_open . $label . $link_close;
       $output .=   '</div>';
     }
   }

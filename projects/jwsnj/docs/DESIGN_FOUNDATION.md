@@ -209,7 +209,7 @@ TOP PC `114:28` / SP `279:2136` から、ベクターは SVG、写真は元画�
 | TOP MV | #680 Swiper移行、#681 停止/resize修正済み。現行 home.js に Swiper 初期化あり。実速度・継ぎ目・実ブラウザは #523。再実装不要 |
 | TOP 固定紹介・入学案内 | front-page.php から _top-about-intro / _top-applicants を接続済み。#682 SP余白修正済み。Aboutカードのリンク/画像管理ownerと入学案内の遷移先は未確定 |
 | TOP News / Instagram / バナー | _top-news / _top-instagram / _top-banner 既存実装。InstagramのFollow URLと利用権確認済みのバナー素材は未確定。既存投稿・画像管理を維持 |
-| TOP 各部紹介 | #664 OPEN。Project Guard実ログ W9: group_jwsnj_top_course.json 変更に明示承認が必要。明示承認後に最新soへ差分を再統合、SP native scroll snap案を最新Swiper方針と整合させ、CI再実行。承認前はbranch/owner変更しない |
+| TOP 各部紹介 | #664 は未マージ。Human 2026-11-27 の明示で `group_jwsnj_top_course.json`（画像・タイトル・テキスト・リンク・外部リンク）だけをこの branch に追加。#664 の SP native scroll と重複 markup は取り込まない |
 | About〜Course共通背景 | 各カードの管理・配置確定後に実際のセクションgeometryと公式素材/効果を検証。単独で全体背景を仮実装しない |
 | コース紹介 PC534:1282 | template-course.php、導入・学年・日程・FAQの任意編集構造は実装済み。特長カード公式SVG6構成ノード・導入写真・CTA URLは #524/仕様待ち。SP正本なし。ページ自動作成・割当なし |
 | 共通パーツ スライダー | 今回 PC344:1139 / SP442:3073 の高精細contextと画像を再確認。PC画像660×439、SP335×223、caption gap20、14/12px。操作状態・画像/キャプション管理・切替条件は未提示。Swiper選定は確定済みだが新規CMS/操作仕様の承認ではない。既存編集ownerと仕様の確定後に着手 |
@@ -428,3 +428,17 @@ TOP PC `114:28` / SP `279:2136` から、ベクターは SVG、写真は元画�
 - 2026-11-26 About cards frontend: fresh PC220:57/SP279:2241 and instruction294:852 high-fidelity context/images. Four existing photo mappings (overview, MV05 environment, education, MV06 access) from Foundation; QA-only fixture, no hardcoded production rows/URLs. Opt-in cards view accepts normalized title/image_html. PC four-card overlapping rotated grid, SP stacked 296px cards, 260:186 / 280:351 photo ratios; no fixed text height. Native disabled-by-default buttons progressively enhance to frontmost/pressed selection, keyboard focus reveals overlap; SP color selection is provisional, no navigation until link intent approved. PC map is decorative positioned only when cards present; responsive offsets are provisional until #523. Shared background source provenance remains pending #524. Cursor supplies data as appropriate, no ACF changes or original page work.
 
 - 2026-11-26 preschool features independent text/layout: fresh PC612:3073 and 609:3046 high-fidelity context/images, parent 612:3074 metadata; title→cards 48px, 320px×3, gap40px, image slot 320×240 outline/radius5, image→heading32px and heading→body20px, H3 18px/500/1.5, body16px/400/1.6/5%. Optional native Group style and editable preschool-features pattern; exact copy, plain editable numeric prefixes pending exact numbered blossom, no production placeholder art, no ACF or original534:1706 work. Narrow one-column/gaps provisional (SP reference absent). #524 official illustrations and blossom equivalence pending; add image as full 4:3 illustration canvas without duplicate outline. #523 real rendering/editor QA. TOP Course and About views merged in #689/#690; Cursor adapter pending, next independent READY requires newly verified design/assets or non-conflicting approved work.
+
+## 2026-11-27 Cursor が保存した公式 SVG
+
+取得方法: Figma MCP `download_assets`（session 後）。ページ背景を含む export ではなく、装飾そのものの vector SVG を `src/images/common/` と `theme/images/common/` へ同一バイトで保存。短命 URL はコードにもこの文書にも残していない。
+
+| ファイル | node | サイズ | SHA-256 | 使用 |
+|---|---|---|---|---|
+| `img_hero-figure.svg` | `390:803`。`384:1404` とバイト一致 | 20.0485×74.6642 | `f4e5143d510b892790a272a9f3ab16b700723806151d71839112f131e5c5f14c` | 記事・固定ページ hero。写真がある PC のみ |
+| `img_hero-figure-02.svg` | `390:832`。`384:1433` とバイト一致 | 21.6551×84 | `688163a2d7fb414cd64124daef4e236bbc11f35cb54b9dbfff42dcef8ed01741` | 同上。グループ右 |
+| `img_hero-bubble.svg` | `390:856`。`384:1457` とバイト一致 | 16×14 | `955a83c94397a152eefd77f3c5573d7c54e39c636b39d36221717db02fffb9c9` | 記事 hero の News ピル。固定ページの英語副題は未承認のため未接続 |
+| `img_flyout-shadow.svg` | `604:3024` | 222×212 | `9e72677dcc10cd7be9e91e8e4282d0ec1994d5d3c803d7568fef3827b2522361` | 保存のみ。現行 CSS フライアウトへは未接続 |
+| `img_flyout-union.svg` | `604:3025` | 216×206 | `fb3564fd71c1dd7eb47981b765a358234c5d43e7d1ce41fa855b9fc98ea9b2e8` | 保存のみ。同上 |
+
+透かし付きバナー `390:668` / `478:2756` / `384:1048` / `114:419` は取得していない。コース紹介の特長イラストと番号装飾は未取得。利用権は既存の Figma 正本と同じ範囲。実画面での人物位置は、写真付き hero がローカルに無いため未計測。

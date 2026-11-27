@@ -21,18 +21,34 @@
     </button>
     <nav id="global_navigation" class="global_navigation" aria-label="グローバルナビゲーション" itemscope itemtype="https://schema.org/SiteNavigationElement">
       <div class="gn_menu">
-        <?php
-        wp_nav_menu(array(
-          'menu_class' => 'menu gn_links-01',
-          'menu_id' => 'gn_links-01',
-          'container' => 'div',
-          'container_class' => 'gn_container-01',
-          'container_id' => 'gn_container-01',
-          'fallback_cb' => false,
-          'theme_location' => 'global-nav',
-          'walker' => new Custom_Global_Walker_Nav_Menu(),
-        ));
-        ?>
+        <div class="gn_menu-pc">
+          <?php
+          wp_nav_menu(array(
+            'menu_class' => 'menu gn_links-01',
+            'menu_id' => 'gn_links-01',
+            'container' => 'div',
+            'container_class' => 'gn_container-01',
+            'container_id' => 'gn_container-01',
+            'fallback_cb' => false,
+            'theme_location' => 'global-nav',
+            'walker' => new Custom_Global_Walker_Nav_Menu(),
+          ));
+          ?>
+        </div>
+        <div class="gn_menu-sp">
+          <?php
+          wp_nav_menu(array(
+            'menu_class' => 'menu gn_links-01',
+            'menu_id' => 'gn_links-sp',
+            'container' => 'div',
+            'container_class' => 'gn_container-01',
+            'container_id' => 'gn_container-sp',
+            'fallback_cb' => false,
+            'theme_location' => 'sp-nav',
+            'walker' => new Custom_Global_Walker_Nav_Menu(),
+          ));
+          ?>
+        </div>
       </div>
       <div class="gn_subMenu">
         <?php

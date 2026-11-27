@@ -74,6 +74,7 @@ Figmaに「hoverで枠が付く」と書いてあっても、Webでは rest か�
 
 - hover / focus / active / open で初めて `border-width`・`padding`・寸法を変えて箱をずらさない。見える枠が rest に無いなら同じ太さの `transparent` か同色 border を先に置く
 - 位置は `transform`。状態変化に transition が無ければ Existing token、無ければ `0.3s`（`::before` / `::after` 含む）
+- **Human 2026-11-27:** hover・開閉UIは初回実装から開く/閉じる両方向に自然なtransitionを付ける。原則既存tokenまたは0.3s、変化するpropertyだけを指定。reduced-motion、連打、フォーカス、閉状態の操作抑止を含める。カテゴリ選択等のoverlay disclosureはabsolute等で通常flowから分離し、背後のコンテンツの位置/高さを変えない。本文を展開するaccordionはin-flowで自然な高さに追従する。Figma/Company/機能上の例外を優先。
 - 外寸・font・gap が近くても、子の線と hover を見てから閉じる
 - ネガポジ反転は塗りと文字を反転する。rest の枠は残し、枠だけ反転したり hover で新設したりしない
 - テキストリンクの hover 当たりは Figma が全幅ヒットを示さない限り **文字幅**。親 `width: 100%` で色帯を出さない
@@ -309,6 +310,8 @@ Effective Project / Existing
 特に、upstreamが重いmechanismを既に解決している場合は**そのmechanismを自作しない**。Project固有のprovenance、authority interpretation、root-cause、repair、learning等の薄いglueだけ残す。
 
 「全部自作」も「外部toolを入れること」もKPIにしない。Human correction/reworkと重複責務を本当に減らす最小構成を選ぶ。
+
+**Human 2026-11-27:** 同じデザインの共通パーツを先に完成させてからページを組み立てる。ページ専用実装では既存パーツのHTML/CSS/JSを再利用し、Figmaで根拠のある差分だけを局所overrideする。CMS adapter/データ取得と表示を分離し、検証fixtureを本番データ源にしない。名前が似ているだけで異なるUIを無理に共通化しない。
 
 ## 20. DecorativeはCSS-onlyを成功条件にしない
 

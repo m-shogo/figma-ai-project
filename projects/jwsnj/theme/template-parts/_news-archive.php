@@ -22,7 +22,8 @@ $categories = get_categories(['hide_empty' => false]);
     <?php if ($categories && !is_wp_error($categories)) : ?>
       <div class="jwsnj_newsArchive_filter">
         <p id="jwsnj-news-category-label" class="jwsnj_newsArchive_filterLabel">
-          <span class="jwsnj_newsArchive_blossom" aria-hidden="true"></span>カテゴリー
+          <span class="jwsnj_newsArchive_blossom" aria-hidden="true"></span>
+          <span class="jwsnj_newsArchive_filterText">カテゴリー</span>
         </p>
         <details class="jwsnj_newsArchive_filterMenu">
           <summary aria-labelledby="jwsnj-news-category-label jwsnj-news-category-value">

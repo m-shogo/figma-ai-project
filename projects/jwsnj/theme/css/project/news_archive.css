@@ -104,7 +104,8 @@ body.category {
     }
   }
   .jwsnj_newsArchive_filterLabel {
-    display: flex;
+    display: grid;
+    grid-template-columns: calc(18 * var(--to-rem-func)) minmax(0, 1fr);
     align-items: center;
     gap: calc(10 * var(--to-rem-func));
     font-size: calc(18 * var(--to-rem-func));
@@ -116,10 +117,11 @@ body.category {
       flex: 0 0 auto;
       width: max-content;
       max-width: 100%;
+      grid-template-columns: calc(18 * var(--to-rem-func)) max-content;
     }
   }
   .jwsnj_newsArchive_blossom {
-    flex: 0 0 calc(18 * var(--to-rem-func));
+    width: calc(18 * var(--to-rem-func));
     height: calc(17 * var(--to-rem-func));
     background: url('../../images/common/ico_blossom.svg') center / contain no-repeat;
   }
@@ -401,8 +403,9 @@ body.category {
 }
 
 /* Archive-specific hero: PC 390:799 / SP 507:2741.
-   Photos remain the existing ACF attachment; exact desktop decorative assets
-   and lower banner require separate asset acceptance. */
+   Photos remain the existing ACF attachment. Desktop figures 390:803 / 390:832
+   and the News tail 390:856 are the saved official SVGs. The same figure bytes
+   are 384:1404 / 384:1433. Lower banners stay unconnected while watermarked. */
 .jwsnj_newsArchive_hero {
   display: flex;
   flex-direction: column;
@@ -432,6 +435,7 @@ body.category {
       }
     }
     .jwsnj_newsArchive_heroEnglish {
+      position: relative;
       max-width: 100%;
       min-width: calc(100 * var(--to-rem-func));
       padding: calc(4 * var(--to-rem-func)) calc(8 * var(--to-rem-func));
@@ -444,11 +448,17 @@ body.category {
       line-height: 1.3;
       letter-spacing: 0.05em;
       overflow-wrap: anywhere;
+      .jwsnj_newsArchive_heroBubble {
+        display: none;
+      }
       @media (calc(768 * (1 / 16 * 1rem)) <= width) {
         min-width: 0;
         padding-inline: calc(32 * var(--to-rem-func));
         font-size: calc(15 * var(--to-rem-func));
       }
+    }
+    .jwsnj_newsArchive_heroArt {
+      display: none;
     }
     @media (calc(768 * (1 / 16 * 1rem)) <= width) {
       gap: calc(16 * var(--to-rem-func));
@@ -488,8 +498,49 @@ body.category {
     }
     .jwsnj_newsArchive_heroTitle {
       @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+        position: relative;
         justify-content: flex-start;
         padding: calc(160 * var(--to-rem-func)) clamp(var(--padding-SP), 4.35vw, var(--padding-TB)) calc(100 * var(--to-rem-func));
+      }
+    }
+    .jwsnj_newsArchive_heroArt {
+      @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+        display: block;
+        position: absolute;
+        left: 50%;
+        bottom: 0;
+        width: calc(53 * var(--to-rem-func));
+        height: calc(84 * var(--to-rem-func));
+        transform: translateX(-50%);
+        pointer-events: none;
+      }
+    }
+    .jwsnj_newsArchive_heroFigure {
+      @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+        position: absolute;
+        left: 0;
+        bottom: calc(0.376 * var(--to-rem-func));
+        width: calc(20.0485 * var(--to-rem-func));
+        height: calc(74.6642 * var(--to-rem-func));
+      }
+    }
+    .jwsnj_newsArchive_heroFigureB {
+      @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        width: calc(21.6551 * var(--to-rem-func));
+        height: calc(84 * var(--to-rem-func));
+      }
+    }
+    .jwsnj_newsArchive_heroBubble {
+      @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+        display: block;
+        position: absolute;
+        left: calc(73 * var(--to-rem-func));
+        top: 100%;
+        width: calc(16 * var(--to-rem-func));
+        height: calc(14 * var(--to-rem-func));
       }
     }
   }

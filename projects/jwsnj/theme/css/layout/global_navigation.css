@@ -28,6 +28,17 @@
   > .gn_menu {
     grid-area: gn_menu;
   }
+  .gn_menu-sp {
+    display: none;
+  }
+  @media (width < calc(1080 * (1 / 16 * 1rem))) {
+    .gn_menu-pc {
+      display: none;
+    }
+    .gn_menu-sp {
+      display: block;
+    }
+  }
   > .gn_subMenu {
     grid-area: gn_subMenu;
   }

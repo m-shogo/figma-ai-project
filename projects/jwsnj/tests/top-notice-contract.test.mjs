@@ -307,8 +307,15 @@ test('TOP Course view is ACF-independent and fixture stays outside production',(
     assert.ok(readFileSync(new URL('../theme/images/top/img_course-'+name+'.webp',import.meta.url)).length>100);
   }
   const view=read('template-parts/_top-course-view.php');
+  const adapter=read('template-parts/_top-course.php');
   assert.doesNotMatch(view,/get_field|have_rows|figma[.]com|fixtures/);
-  assert.match(read('front-page.php'),/_top-course-view/);
+  assert.match(read('front-page.php'),/template-parts\/_top-course'/);
+  assert.doesNotMatch(read('front-page.php'),/_top-course-view/);
+  assert.match(adapter,/get_field\('top_course-01'\)/);
+  assert.match(adapter,/_top-course-view/);
+  assert.match(adapter,/image_html/);
+  assert.doesNotMatch(adapter,/figma[.]com|scroll-snap|top_course_extra/);
+  execFileSync('php',['-l',new URL('../theme/template-parts/_top-course.php',import.meta.url).pathname]);
   assert.match(read('css/style.css'),/top_course[.]css/);
   const css=read('css/project/top_course.css');
   assert.doesNotMatch(css,/white-space:\s*nowrap|scroll-snap/);
