@@ -112,6 +112,11 @@ body.category {
     line-height: 1.4;
     letter-spacing: 0.12em;
     margin: 0;
+    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+      flex: 0 0 auto;
+      width: max-content;
+      max-width: 100%;
+    }
   }
   .jwsnj_newsArchive_blossom {
     flex: 0 0 calc(18 * var(--to-rem-func));
