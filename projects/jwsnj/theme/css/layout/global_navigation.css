@@ -23,7 +23,8 @@
   'gn_subMenu'
   'gn_search';
   grid-template-columns: 1fr;
-  grid-template-rows: 1fr auto auto;
+  grid-template-rows: auto auto auto;
+  align-content: start;
   > .gn_menu {
     grid-area: gn_menu;
   }
@@ -285,6 +286,11 @@
     /* ステータス end */
   }
   .gn_subMenu {
+    @media (width < calc(1080 * (1 / 16 * 1rem))) {
+      min-width: 0;
+      margin-block-start: calc(40 * var(--to-rem-func));
+      padding-inline: calc(40 * var(--to-rem-func));
+    }
     @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
       display: flex;
       align-items: center;
@@ -295,7 +301,8 @@
     pointer-events: auto;
     &.menu {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: minmax(0, 1fr);
+      gap: calc(16 * var(--to-rem-func));
       @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
         display: flex;
         align-items: center;
@@ -304,23 +311,26 @@
       }
     }
     .menu-item {
-      border-bottom: calc(1 * var(--to-rem-func)) solid var(--color-gray-border);
+      min-width: 0;
+      border-bottom: calc(1 * var(--to-rem-func)) solid var(--jwsnj-color-separator);
       @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
         border-bottom: none;
       }
       a {
         display: block;
-        padding-block: calc(20 * var(--to-rem-func));
-        padding-inline: calc(20 * var(--to-rem-func));
-        @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
-          padding-block: 0;
-          padding-inline: 0;
-        }
-      }
-      &:nth-child(odd) {
-        border-right: calc(1 * var(--to-rem-func)) solid var(--color-gray-border);
-        @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
-          border-right: none;
+        overflow-wrap: anywhere;
+        @media (width < calc(1080 * (1 / 16 * 1rem))) {
+          padding-block-end: calc(16 * var(--to-rem-func));
+          font-family: var(--font-jwsnj-ja);
+          font-size: calc(13 * var(--to-rem-func));
+          font-weight: 500;
+          line-height: 1.4;
+          letter-spacing: 0.05em;
+          &[target='_blank']:where(:not([href$='.pdf'], [href$='.doc'], [href$='.docx'], [href$='.docm'], [href$='.xls'], [href$='.xlsx'], [href$='.xlsm'], [href$='.png'], [href$='.jpg'], [href$='.jpeg'], [href$='.gif'], [href$='.webp']))::after {
+            font-size: calc(12 * var(--to-rem-func));
+            margin-left: 0;
+            margin-inline-start: calc(4 * var(--to-rem-func));
+          }
         }
       }
     }
@@ -375,6 +385,7 @@
     'gn_menu gn_menu';
     grid-template-columns: 1fr calc(300 * var(--to-rem-func));
     grid-template-rows: auto 1fr;
+    align-content: normal;
     row-gap: calc(16 * var(--to-rem-func));
     justify-items: end;
     margin-top: auto;
