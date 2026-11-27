@@ -28,6 +28,9 @@ on:
       - 'projects/jwsnj/qa/seed-native-parts-qa.php'
       - 'projects/jwsnj/qa/native-parts-browser-qa.mjs'
       - 'projects/jwsnj/qa/native-parts-editor-qa.mjs'
+      - 'projects/jwsnj/qa/seed-inpage-qa.php'
+      - 'projects/jwsnj/qa/inpage-browser-qa.mjs'
+      - 'projects/jwsnj/theme/css/blocks/wp-block-inPageLink-style.css'
       - 'projects/jwsnj/qa/fixtures/parts-catalog-tables.html'
       - 'projects/jwsnj/qa/seed-parts-tables-qa.php'
       - 'projects/jwsnj/qa/parts-tables-browser-qa.mjs'
@@ -76,6 +79,7 @@ jobs:
           npm install --prefix "$RUNNER_TEMP/css-qa" --ignore-scripts --no-audit --no-fund --no-package-lock playwright@1.65.1
           "$RUNNER_TEMP/css-qa/node_modules/.bin/playwright" install --with-deps chromium firefox webkit
       - name: Create disposable WordPress and actual free Formidable form
+        id: wp_setup
         run: |
           cd runtime/wordpress
           source scripts/runtime-env.sh
@@ -164,6 +168,20 @@ jobs:
           [[ "$parts_id" =~ ^[0-9]+$ ]]
           cd ../..
           node projects/jwsnj/qa/native-parts-browser-qa.mjs "${WP_URL}/?page_id=${parts_id}"
+      # Independent coverage must report even when a previous browser check
+      # failed. Keep the job failed; do not use continue-on-error.
+      - name: In-page links in disposable WordPress
+        if: ${{ !cancelled() && steps.wp_setup.outcome == 'success' }}
+        env:
+          CSS_QA_MODULE_ROOT: ${{ runner.temp }}/css-qa
+        run: |
+          cd runtime/wordpress
+          source scripts/runtime-env.sh
+          docker compose run --rm -e WP_ENVIRONMENT_TYPE=local -e JWSNJ_PARTS_QA_DISPOSABLE=1 cli eval-file /project/qa/seed-inpage-qa.php
+          inpage_id="$(docker compose run --rm cli option get jwsnj_inpage_qa_page_id)"
+          [[ "$inpage_id" =~ ^[0-9]+$ ]]
+          cd ../..
+          node projects/jwsnj/qa/inpage-browser-qa.mjs "${WP_URL}/?page_id=${inpage_id}"
       - name: Actual Gutenberg editor validation and save/reopen
         env:
           CSS_QA_MODULE_ROOT: ${{ runner.temp }}/css-qa
