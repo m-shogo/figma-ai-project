@@ -65,7 +65,10 @@
     padding: calc(10 * var(--to-rem-func)) calc(20 * var(--to-rem-func));
     margin-bottom: calc(24 * var(--to-rem-func));
     min-width: 0;
-    max-width: 100%;
+    /* Preserve the front-end bound without overriding Gutenberg's content width. */
+    &:where(.block-editor_wrap *) {
+      max-width: 100%;
+    }
     overflow-wrap: anywhere;
     word-break: normal;
     line-break: strict;
