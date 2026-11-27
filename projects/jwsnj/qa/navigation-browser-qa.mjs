@@ -188,7 +188,8 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
     // Desktop footer is always expanded, including a previously collapsed mobile branch.
     await page.setViewportSize({ width: 767, height: 900 });
     await footerButton.scrollIntoViewIfNeeded();
-    if (await footerButton.getAttribute('aria-expanded') === 'true') await footerButton.click();
+    if (await footerButton.getAttribute('aria-expanded') !== 'true') await footerButton.click();
+    await footerButton.click();
     assert.equal(await footer.getAttribute('data-open'), 'false');
     assert.equal(await footerWrapper.evaluate(el => el.inert), true);
     assert.ok(await footerWrapper.evaluate(el => el.getBoundingClientRect().height <= 1));
