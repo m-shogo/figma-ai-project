@@ -48,3 +48,10 @@ test('gallery magnifier isolates its glyph from inherited typography and keeps t
   assert.match(icon,/text-box-trim:\s*none/);
   assert.doesNotMatch(icon,/transform:|translate:/);
 });
+
+test('gallery native zoom button is visible and replaces its decorative duplicate', () => {
+  assert.match(css, /\.wp-lightbox-container:has\(> button\.lightbox-trigger\)\s*\{\s*\.lightbox_wrap::after\s*\{\s*content:\s*none/);
+  assert.match(css, /> button\.lightbox-trigger\s*\{[\s\S]*?inset:\s*auto !important/);
+  assert.match(css, /opacity:\s*1/);
+  assert.match(css, /&::before\s*\{\s*content:\s*var\(--icon-zoom\)/);
+});

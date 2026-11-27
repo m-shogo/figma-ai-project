@@ -101,4 +101,63 @@
     background-color: var(--color-secondary);
     color: var(--color-primary);
   }
+  /* Native WordPress lightbox: the Figma circle is the real accessible
+     button. Core sets inline top/right; the image grid cell owns placement. */
+  .wp-lightbox-container:has(> button.lightbox-trigger) {
+    .lightbox_wrap::after {
+      content: none;
+    }
+    > button.lightbox-trigger {
+      --_zoom-inset: calc(16 * var(--to-rem-func));
+      position: relative;
+      inset: auto !important;
+      align-self: end;
+      justify-self: end;
+      margin: 0 var(--_zoom-inset) var(--_zoom-inset) 0;
+      box-sizing: border-box;
+      width: calc(44 * var(--to-rem-func));
+      height: calc(44 * var(--to-rem-func));
+      padding: 0;
+      display: grid;
+      place-items: center;
+      border: calc(1 * var(--to-rem-func)) solid var(--color-primary);
+      border-radius: 50%;
+      color: var(--color-secondary);
+      background-color: var(--color-primary);
+      backdrop-filter: none;
+      opacity: 1;
+      transition: background-color var(--transition-duration), color var(--transition-duration);
+      @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+        --_zoom-inset: calc(20 * var(--to-rem-func));
+      }
+      @media (prefers-reduced-motion: reduce) {
+        transition: none;
+      }
+      > svg {
+        display: none;
+      }
+      &::before {
+        content: var(--icon-zoom);
+        font-family: var(--font-awesome);
+        font-size: calc(20 * var(--to-rem-func));
+        font-weight: 400;
+        font-style: normal;
+        line-height: 1;
+        letter-spacing: 0;
+        text-box-trim: none;
+      }
+      @media (any-hover: hover) {
+        &:hover {
+          color: var(--color-primary);
+          background-color: var(--color-secondary);
+        }
+      }
+      &:focus-visible {
+        color: var(--color-primary);
+        background-color: var(--color-secondary);
+        outline: calc(2 * var(--to-rem-func)) solid var(--color-accent);
+        outline-offset: calc(3 * var(--to-rem-func));
+      }
+    }
+  }
 }

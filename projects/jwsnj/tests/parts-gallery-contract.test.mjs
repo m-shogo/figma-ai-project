@@ -49,3 +49,9 @@ test('gallery rows retain Figma 40px separation and captions grow independently 
   assert.match(gallery, /figcaption\s*\{\s*position:\s*static;\s*flex:\s*0 0 auto;\s*max-height:\s*none;\s*overflow:\s*visible;\s*margin:\s*0;\s*padding:\s*0;/);
   assert.match(gallery, /text-shadow:\s*none/);
 });
+
+test('cropped native gallery cards do not inherit core stretch and native trigger overlays the image cell', () => {
+  assert.match(gallery, /figure\.wp-block-image:not\(#individual-image\)\.wp-block-image\s*\{\s*align-self:\s*start;\s*justify-content:\s*start/);
+  assert.match(gallery, /&\.wp-lightbox-container:has\(> button\.lightbox-trigger\)/);
+  assert.match(gallery, /> button\.lightbox-trigger\s*\{\s*grid-area:\s*1 \/ 1/);
+});

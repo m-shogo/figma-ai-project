@@ -77,6 +77,12 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
         });
         assert.ok(near(buttonGeometry.width, 44) && near(buttonGeometry.height, 44) &&
           near(buttonGeometry.right, width >= 768 ? 20 : 16) && near(buttonGeometry.bottom, width >= 768 ? 20 : 16), JSON.stringify(buttonGeometry));
+        assert.ok(await button.evaluate(el => {
+          const box = el.getBoundingClientRect();
+          const hit = document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2);
+          return el.contains(hit) && getComputedStyle(el).opacity === '1';
+        }), 'visible zoom control is the real hit target');
+        if (width === 375 || width === 1380) await galleries.first().screenshot({ path: 'form-qa-results/gallery-' + engineName + '-' + width + '-zoom-control.png' });
         await button.focus();
         await page.keyboard.press('Enter');
         const overlay = page.locator('.wp-lightbox-overlay.active');
