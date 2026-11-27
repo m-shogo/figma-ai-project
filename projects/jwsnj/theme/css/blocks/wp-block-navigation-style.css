@@ -29,8 +29,8 @@
     & + & {
       margin-top: var(--wp-block-margin-large);
     }
-    /* MARK: 共通 */
-    .navigation {
+    /* MARK: 小カードの基本 */
+    &.--small .navigation {
       a {
         text-decoration: none;
         color: var(--color-text);
@@ -111,79 +111,6 @@
       }
       .navigation {
         min-width: 0;
-        a {
-          flex-direction: column;
-          gap: calc(24 * var(--to-rem-func));
-          &:focus-visible {
-            outline: calc(2 * var(--to-rem-func)) solid var(--color-accent);
-            outline-offset: calc(4 * var(--to-rem-func));
-          }
-          .image {
-            position: relative;
-            isolation: isolate;
-            width: 100%;
-            border-radius: calc(5 * var(--to-rem-func));
-            aspect-ratio: 3 / 2;
-          }
-          /* Figma PC 384:1005 / SP 442:3085: decorative corner and arrow.
-                       The existing link remains the only interactive control. */
-          &:not(.is-disabled) .image {
-            &::before,
-            &::after {
-              position: absolute;
-              right: 0;
-              bottom: 0;
-              pointer-events: none;
-            }
-            &::before {
-              content: '';
-              z-index: 1;
-              width: calc(48 * var(--to-rem-func));
-              height: calc(48 * var(--to-rem-func));
-              background-color: var(--jwsnj-color-white);
-              border-top-left-radius: calc(20 * var(--to-rem-func));
-            }
-            &::after {
-              content: '\f061';
-              z-index: 2;
-              display: grid;
-              place-items: center;
-              box-sizing: border-box;
-              width: calc(32 * var(--to-rem-func));
-              height: calc(32 * var(--to-rem-func));
-              border-radius: 50%;
-              background-color: var(--color-primary);
-              color: var(--color-secondary);
-              font-family: var(--font-awesome);
-              font-weight: 400;
-              font-style: normal;
-              font-size: calc(10 * var(--to-rem-func));
-              /* FA Regular F061 has centered ink in its untrimmed line box. */
-              line-height: 1;
-              letter-spacing: 0;
-              text-box-trim: none;
-            }
-          }
-          .content {
-            min-width: 0;
-            width: 100%;
-            font-family: var(--font-jwsnj-ja);
-            .title {
-              font-size: calc(18 * var(--to-rem-func));
-              line-height: 1.5;
-              letter-spacing: 0.05em;
-              color: var(--color-text);
-              text-decoration: none;
-            }
-            .text {
-              margin-top: calc(20 * var(--to-rem-func));
-              font-size: calc(16 * var(--to-rem-func));
-              line-height: 1.4;
-              letter-spacing: 0.05em;
-              overflow-wrap: anywhere;
-            }
-          }
-        }
       }
     }
     /* MARK: 小 */
@@ -237,4 +164,138 @@
       }
     }
   }
+}
+
+/* MARK: Large Navigation card — reusable presentation, independent of page layout. */
+.module_navigationCard {
+  --_card-gap: calc(24 * var(--to-rem-func));
+  --_card-copy-gap: calc(20 * var(--to-rem-func));
+  --_card-arrow-size: calc(32 * var(--to-rem-func));
+  --_card-arrow-right: 0px;
+  --_card-arrow-bottom: 0px;
+  --_card-hover-scale: 1.05;
+  --_card-hover-opacity: 0.7;
+  display: grid;
+  align-content: start;
+  gap: var(--_card-gap);
+  min-width: 0;
+  font-family: var(--font-jwsnj-ja);
+  color: var(--color-text);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+  &::after {
+    content: none;
+  }
+  &:not([href]) {
+    pointer-events: none;
+  }
+  &:focus-visible {
+    outline: calc(2 * var(--to-rem-func)) solid var(--color-accent);
+    outline-offset: calc(4 * var(--to-rem-func));
+  }
+  @media (any-hover: hover) {
+    &[href]:hover .module_navigationCard_content {
+      opacity: var(--_card-hover-opacity);
+    }
+  }
+  @media (any-hover: hover) and (prefers-reduced-motion: no-preference) {
+    &[href]:hover .module_navigationCard_crop img {
+      transform: scale(var(--_card-hover-scale));
+    }
+  }
+}
+.module_navigationCard_photo {
+  position: relative;
+  isolation: isolate;
+  min-width: 0;
+  &::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 0 auto;
+    width: calc(48 * var(--to-rem-func));
+    height: calc(48 * var(--to-rem-func));
+    border-top-left-radius: calc(20 * var(--to-rem-func));
+    background-color: var(--jwsnj-color-white);
+    pointer-events: none;
+  }
+}
+.module_navigationCard_crop {
+  overflow: hidden;
+  aspect-ratio: 3 / 2;
+  border-radius: calc(5 * var(--to-rem-func));
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-duration);
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+  }
+}
+.module_navigationCard_arrow {
+  position: absolute;
+  inset: auto var(--_card-arrow-right) var(--_card-arrow-bottom) auto;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: var(--_card-arrow-size);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background-color: var(--color-primary);
+  color: var(--color-secondary);
+  pointer-events: none;
+  transition: background-color var(--transition-duration), color var(--transition-duration);
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+  &::before {
+    content: '\f061' / '';
+    font-family: var(--font-awesome);
+    font-weight: 400;
+    font-style: normal;
+    font-size: calc(10 * var(--to-rem-func));
+    line-height: 1;
+    letter-spacing: 0;
+    text-box-trim: none;
+  }
+}
+.module_navigationCard_content {
+  display: grid;
+  gap: var(--_card-copy-gap);
+  min-width: 0;
+  width: 100%;
+  transition: opacity var(--transition-duration);
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+.module_navigationCard_title {
+  margin: 0;
+  font-size: calc(18 * var(--to-rem-func));
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: 0.05em;
+  color: var(--color-text);
+  text-decoration: none;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+  word-break: normal;
+  line-break: strict;
+  .module_navigationCard[target='_blank'] &::after {
+    font-family: var(--font-awesome);
+    content: var(--icon-blank);
+    margin-left: calc(10 * var(--to-rem-func));
+  }
+}
+.module_navigationCard_text {
+  margin: 0;
+  font-size: calc(16 * var(--to-rem-func));
+  line-height: 1.4;
+  letter-spacing: 0.05em;
+  color: var(--color-text);
+  white-space: pre-line;
+  overflow-wrap: anywhere;
 }

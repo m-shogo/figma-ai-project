@@ -1,68 +1,49 @@
-// ACF navigation: large Figma PC 384:817 / SP 442:3079; small variant has source-resilience checks.
+// Parts-only Large Navigation shared presentation. TOP adoption is a separate gate.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
 const css = readFileSync(new URL('../theme/css/blocks/wp-block-navigation-style.css', import.meta.url), 'utf8');
-const large = css.slice(css.indexOf('/* MARK: 大'), css.indexOf('/* MARK: 小'));
-test('large navigation uses fluid Figma card proportions and text rhythm', () => {
-  for (const value of ['gap: calc(40 * var(--to-rem-func))', 'gap: calc(24 * var(--to-rem-func))', 'aspect-ratio: 3 / 2', 'border-radius: calc(5 * var(--to-rem-func))', 'font-size: calc(18 * var(--to-rem-func))', 'line-height: 1.4', 'overflow-wrap: anywhere', 'min-width: 0']) assert.ok(large.includes(value), value);
-  assert.match(css, /&\.--large\s*\{[^{}]*@media \(calc\(768 \* \(1 \/ 16 \* 1rem\)\) <= width\)\s*\{\s*grid-template-columns: repeat\(3, minmax\(0, 1fr\)\)/);
-  assert.doesNotMatch(large, /white-space:\s*nowrap|figma\.com\/api/);
-});
-test('large navigation keeps keyboard focus visible and reduced-motion available', () => {
-  assert.match(large, /&:focus-visible/);
-  assert.match(css, /@media \(any-hover: hover\) and \(prefers-reduced-motion: no-preference\)/);
-  assert.match(css, /transition: transform var\(--transition-duration\)/);
-  assert.match(css, /transition: opacity var\(--transition-duration\)/);
-  assert.equal((css.match(/prefers-reduced-motion: reduce/g)||[]).length,2);
-  assert.doesNotMatch(css, /transition: var\(--transition-duration\)/);
-});
-
-test('large navigation renders the approved decorative corner and arrow only for enabled links', () => {
-  assert.match(large, /\.image\s*\{\s*position:\s*relative;\s*isolation:\s*isolate/);
-  const arrow = large.slice(large.indexOf('&:not(.is-disabled) .image'), large.indexOf('\n          .content {', large.indexOf('&:not(.is-disabled) .image')));
-  assert.ok(arrow.length > 0);
-  for (const value of [
-    'right: 0', 'bottom: 0', 'pointer-events: none',
-    'width: calc(48 * var(--to-rem-func))', 'height: calc(48 * var(--to-rem-func))',
-    'border-top-left-radius: calc(20 * var(--to-rem-func))',
-    'background-color: var(--jwsnj-color-white)',
-    'width: calc(32 * var(--to-rem-func))', 'height: calc(32 * var(--to-rem-func))',
-    'border-radius: 50%', 'background-color: var(--color-primary)',
-    'font-family: var(--font-awesome)', 'font-size: calc(10 * var(--to-rem-func))',
-    'z-index: 1', 'z-index: 2'
-  ]) assert.ok(arrow.includes(value), value);
-  assert.match(arrow, /content:\s*'\\f061'/);
-  assert.match(arrow, /place-items:\s*center/);
-  assert.doesNotMatch(css.slice(css.indexOf('/* MARK: 小')), /Figma PC 384:1005/);
-});
-
+const large = css.slice(css.indexOf('/* MARK: 大'), css.indexOf('/* MARK: 小 */'));
+const shared = css.slice(css.indexOf('/* MARK: Large Navigation card'));
 const template = readFileSync(new URL('../theme/acf/blocks/navigationLarge.php', import.meta.url), 'utf8');
-test('large navigation emits href and external target only for a safe named link', () => {
-  assert.match(template, /\$url = esc_url\(\(string\) get_sub_field\('url'\)\)/);
-  assert.match(template, /\$has_link = \$url !== '' && \(\$has_text \|\| \$image_alt !== ''\)/);
-  assert.match(template, /<a<\?php if \(\$has_link\) : \?> href="<\?php echo \$url; \?>".*target="_blank" rel="noopener".*class="is-disabled"/);
-  assert.doesNotMatch(template, /href="<\?php echo \$url \?/);
+const cardPath = new URL('../theme/template-parts/_navigation-large-card.php', import.meta.url).pathname;
+test('large navigation keeps the Figma layout and a standalone shared card owner', () => {
+  assert.match(template, /get_template_part\('template-parts\/_navigation-large-card'/);
+  assert.match(template, /have_rows\('navigation-large'\)/);
+  assert.match(template, /wp_get_attachment_image\(/);
+  assert.match(large, /gap: calc\(40 \* var\(--to-rem-func\)\)/);
+  assert.match(large, /repeat\(3, minmax\(0, 1fr\)\)/);
+  for (const value of ['--_card-gap: calc(24 * var(--to-rem-func))', '--_card-copy-gap: calc(20 * var(--to-rem-func))', 'aspect-ratio: 3 / 2', 'border-radius: calc(5 * var(--to-rem-func))', 'font-size: calc(18 * var(--to-rem-func))', 'line-height: 1.4', 'overflow-wrap: anywhere', 'min-width: 0', 'width: calc(48 * var(--to-rem-func))', '--_card-arrow-size: calc(32 * var(--to-rem-func))']) assert.ok(shared.includes(value), value);
+  assert.doesNotMatch(shared, /white-space:\s*nowrap|figma\.com\/api/);
 });
-test('large navigation skips empty rows and does not substitute sample images', () => {
-  assert.match(template, /if \(!\$image_thumb && !\$has_text\) \{\s*continue;/);
-  assert.match(template, /get_post_meta\(\$image, '_wp_attachment_image_alt', true\)/);
-  assert.match(template, /alt="<\?php echo esc_attr\(\$image_alt\); \?>"/);
-  assert.match(template, /if \(\$has_text\) : \?>\s*<div class="content">/);
-  assert.doesNotMatch(template, /noimage\.webp|href="#"/);
+test('shared card preserves native focus, transitions and decorative icon', () => {
+  assert.match(shared, /&:focus-visible/);
+  assert.match(shared, /@media \(any-hover: hover\) and \(prefers-reduced-motion: no-preference\)/);
+  assert.match(shared, /transition: transform var\(--transition-duration\)/);
+  assert.match(shared, /transition: opacity var\(--transition-duration\)/);
+  assert.match(shared, /transition: background-color var\(--transition-duration\), color var\(--transition-duration\)/);
+  assert.equal((shared.match(/prefers-reduced-motion: reduce/g) || []).length, 3);
+  assert.match(shared, /content: '\\f061' \/ ''/);
+  for (const value of ['box-sizing: border-box','letter-spacing: 0','text-box-trim: none','line-height: 1','pointer-events: none','font-weight: 400']) assert.ok(shared.includes(value), value);
+});
+test('actual PHP card preserves escaped content, heading levels, noninteractive visuals and safe links', () => {
+  const stub = 'function esc_html($s){return htmlspecialchars($s,ENT_QUOTES);} function esc_url($s){return preg_match("/^javascript:/i",$s)?"":esc_html($s);} function wp_kses_post($s){return strip_tags($s,"<img>");} ';
+  const render = (item,heading='h2') => execFileSync('php',['-r',stub+' $args=json_decode(base64_decode("'+Buffer.from(JSON.stringify({item,heading})).toString('base64')+'"),true); include '+JSON.stringify(cardPath)+';'],{encoding:'utf8'}).trim();
+  assert.equal(render({}), '');
+  const preview=render({title:'<title>',text:'<body>',image_html:'<img src="/fixture.webp" alt="">',url:'javascript:alert(1)'});
+  assert.match(preview, /<a class="module_navigationCard">/);
+  assert.match(preview, /class="module_navigationCard_arrow" aria-hidden="true"/);
+  assert.match(preview, /<h2 class="module_navigationCard_title">&lt;title&gt;<\/h2>/);
+  assert.match(preview, /&lt;body&gt;/);
+  assert.doesNotMatch(preview, /href=|javascript:|target=/);
+  assert.match(render({title:'Course',url:'/verified/',new_tab:true},'h3'), /<a class="module_navigationCard" href="\/verified\/" target="_blank" rel="noopener noreferrer">/);
+  assert.match(render({title:'Course'},'h3'), /<h3 class="module_navigationCard_title">Course<\/h3>/);
+  assert.doesNotMatch(render({image_html:'<img alt="">',url:'/verified/'}), /href=/);
+  assert.match(render({image_html:'<img alt="Named">',image_alt:'Named',url:'/verified/'}), /href="\/verified\/"/);
 });
 
-test('large navigation corner glyph retains its centered 10px FA Regular ink', () => {
-  const icon = large.match(/&::after\s*\{\s*content:\s*'\\f061';([^}]+)\}/)?.[1];
-  assert.ok(icon);
-  assert.match(icon,/box-sizing:\s*border-box/);
-  assert.match(icon,/letter-spacing:\s*0/);
-  assert.match(icon,/font-style:\s*normal/);
-  assert.match(icon,/text-box-trim:\s*none/);
-  assert.match(icon,/line-height:\s*1;/);
-});
-
-const small = css.slice(css.indexOf('/* MARK: 小'));
+const small = css.slice(css.indexOf('/* MARK: 小 */'), css.indexOf('/* MARK: Large Navigation card'));
 const smallTemplate = readFileSync(new URL('../theme/acf/blocks/navigationSmall.php', import.meta.url), 'utf8');
 test('small navigation long labels cannot force their flex row beyond its grid track', () => {
   assert.match(small, /\.navigation\s*\{\s*min-width:\s*0/);
