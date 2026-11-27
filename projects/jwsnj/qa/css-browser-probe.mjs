@@ -9,7 +9,7 @@ const require=createRequire(process.env.CSS_QA_MODULE_ROOT+'/package.json');
 const {chromium,firefox,webkit}=require('playwright');
 const root=resolve('projects/jwsnj/theme');
 const out=resolve('css-qa-results');mkdirSync(out,{recursive:true});
-const html='<!doctype html><html lang="ja"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="/css/style.css"><body class="home"><main class="global_contents"><section><div class="global_inner"><a id="link" href="#end">リンク</a><button id="button">ボタン</button><input id="text" type="text" aria-label="入力"><textarea id="area" aria-label="本文">長い本文</textarea><details><summary id="summary">詳細</summary>本文</details><div id="rem" style="width:calc(100 * var(--to-rem-func));height:1px"></div><div class="module_search-01"><form class="ms_from"><input class="ms_input" type="search" aria-label="検索"><button class="ms_button" type="button"><span>検索</span></button></form></div><div id="end">終わり</div></div></section></main></body></html>';
+const html='<!doctype html><html lang="ja"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="/css/all.min.css"><link rel="stylesheet" href="/css/style.css"><body class="home"><main class="global_contents"><section><div class="global_inner"><a id="link" href="#end">リンク</a><button id="button">ボタン</button><input id="text" type="text" aria-label="入力"><textarea id="area" aria-label="本文">長い本文</textarea><details><summary id="summary">詳細</summary>本文</details><div id="rem" style="width:calc(100 * var(--to-rem-func));height:1px"></div><div class="module_search-01"><form class="ms_from"><input class="ms_input" type="search" aria-label="検索"><button class="ms_button" type="button"><span>検索</span></button></form></div><div id="end">終わり</div></div></section></main></body></html>';
 const types={'.js':'application/javascript','.css':'text/css','.svg':'image/svg+xml','.woff2':'font/woff2','.webp':'image/webp'};
 const server=createServer((req,res)=>{
  try{const pathname=new URL(req.url,'http://localhost').pathname;if(pathname==='/'){res.setHeader('Content-Type','text/html; charset=utf-8');res.end(html);return;}const p=resolve(root,'.'+decodeURIComponent(pathname));if(!p.startsWith(root+'/'))throw Error('path');res.setHeader('Content-Type',types[extname(p)]||'application/octet-stream');res.end(readFileSync(p));}catch{res.statusCode=404;res.end();}
@@ -396,7 +396,7 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
   // Existing CSS, native list/button markup; isolated browser fixture, not editor iframe.
   for (const width of [320, 375, 768, 1080, 1380]) {
     await page.setViewportSize({width, height: 900});
-    const parts = await page.evaluate(() => {
+    const parts = await page.evaluate(async () => {
       const fixture = document.createElement('div');
       fixture.className = 'block-editor_wrap';
       fixture.style.cssText = 'width:min(calc(100% - 40px),960px);margin-inline:auto';
@@ -407,6 +407,7 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
       const second = root.children[1];
       const nest = first.querySelector('ul');
       const numbered = fixture.querySelector('ol');
+      const faces = await document.fonts.load('400 14px "Font Awesome 6 Pro"', String.fromCodePoint(0xf061));
       const label = first.querySelector('span');
       const rect = el => el.getBoundingClientRect();
       const metric = (el, key, pseudo) => getComputedStyle(el, pseudo)[key];
@@ -439,15 +440,19 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
         ordered: {
           font: metric(numbered.children[0], 'fontSize'),
           gap: rect(numbered.children[1]).top - rect(numbered.children[0]).bottom,
-          inset: metric(numbered.children[0], 'paddingLeft'),
-          markerWidth: metric(numbered.children[0], 'width', '::before')
+          inset: parseFloat(metric(numbered,'paddingLeft')) + parseFloat(metric(numbered.children[0],'paddingLeft')),
+          type: metric(numbered.children[0], 'listStyleType'),
+          markerContent: metric(numbered.children[0], 'content', '::marker'),
+          markerFont: metric(numbered.children[0], 'fontSize', '::marker'),
+          beforeContent: metric(numbered.children[0], 'content', '::before')
         },
         button: {
           normalWidth: rect(buttons[0]).width, normalHeight: rect(buttons[0]).height,
           customWidth: rect(custom).width, container: box.width, longHeight: longBox.height,
           lines: buttonLines.length,
           fits: buttonLines.every(r => r.left >= longBox.left - 1 && r.right <= longBox.right - 50),
-          icon: metric(buttons[1], 'fontSize', '::after')
+          icon: metric(buttons[1], 'fontSize', '::after'),
+          iconFontLoaded: faces.length > 0 && faces.every(face => face.status === 'loaded')
         }
       };
       fixture.id = 'parts-recheck';
@@ -456,9 +461,10 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
     const near = (actual, expected) => Math.abs(actual - expected) <= 1;
     assert.deepEqual([parts.bullet.font, parts.bullet.lineHeight, parts.bullet.marker, parts.bullet.markerTop, parts.bullet.nestedBorder], ['15px','24px','6px','9px','1px']);
     assert.ok(near(parts.bullet.gap,16) && near(parts.bullet.textInset,18) && near(parts.bullet.nestInset,24) && near(parts.bullet.nestGap,8) && parts.bullet.nestMargin === '12px' && parts.bullet.fits, JSON.stringify(parts));
-    assert.deepEqual([parts.ordered.font, parts.ordered.inset, parts.ordered.markerWidth], ['15px','34px','24px']);
+    assert.deepEqual([parts.ordered.font, parts.ordered.type, parts.ordered.markerFont, parts.ordered.markerContent], ['15px','decimal','16px','normal']);
+    assert.ok(near(parts.ordered.inset,34) && ['none','normal'].includes(parts.ordered.beforeContent));
     assert.ok(near(parts.ordered.gap,15));
-    assert.ok(near(parts.button.normalWidth,260) && near(parts.button.normalHeight,50) && parts.button.customWidth <= parts.button.container + 1 && parts.button.fits && parts.button.icon === '14px', JSON.stringify(parts));
+    assert.ok(near(parts.button.normalWidth,260) && near(parts.button.normalHeight,50) && parts.button.customWidth <= parts.button.container + 1 && parts.button.fits && parts.button.icon === '14px' && parts.button.iconFontLoaded, JSON.stringify(parts));
     if (width <= 375) assert.ok(parts.bullet.lines >= 2 && parts.button.lines >= 2 && parts.button.longHeight > 50);
     if (width === 375 || width === 1380) await page.locator('#parts-recheck').screenshot({path:out+'/'+name+'-'+width+'-list-button.png'});
     await page.locator('#parts-recheck').evaluate(el => el.remove());
