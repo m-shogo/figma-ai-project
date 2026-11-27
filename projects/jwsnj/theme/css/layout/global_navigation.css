@@ -350,16 +350,7 @@
     margin-top: calc(40 * var(--to-rem-func));
     padding-inline: var(--padding-SP);
     @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
-      margin-top: 0;
-      padding-inline: 0;
-      pointer-events: auto;
-      .gns_form {
-        input {
-          &[type='search'] {
-            font-size: calc(14 * var(--to-rem-func));
-          }
-        }
-      }
+      display: none;
     }
   }
   .gn_close {
@@ -392,9 +383,9 @@
     clip-path: unset;
     display: grid;
     grid-template-areas:
-    'gn_subMenu gn_search'
-    'gn_menu gn_menu';
-    grid-template-columns: 1fr calc(300 * var(--to-rem-func));
+    'gn_subMenu'
+    'gn_menu';
+    grid-template-columns: minmax(0, 1fr);
     grid-template-rows: auto 1fr;
     align-content: normal;
     row-gap: calc(16 * var(--to-rem-func));
