@@ -49,7 +49,7 @@ try {
     };
   });
   const expected = {
-    'core/heading': 3, 'core/paragraph': 11, 'core/list': 4,
+    'core/heading': 4, 'core/paragraph': 12, 'core/separator': 1, 'core/list': 4,
     'core/list-item': 8, 'core/buttons': 1, 'core/button': 2, 'core/details': 3
   };
   await openEditor();

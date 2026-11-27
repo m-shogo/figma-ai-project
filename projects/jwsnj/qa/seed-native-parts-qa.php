@@ -30,7 +30,7 @@ $check = function ($blocks) use (&$check, &$names, $registry) {
   }
 };
 $check(parse_blocks($content));
-foreach (['core/heading', 'core/paragraph', 'core/list', 'core/list-item', 'core/buttons', 'core/button', 'core/details'] as $required) {
+foreach (['core/heading', 'core/paragraph', 'core/list', 'core/list-item', 'core/buttons', 'core/button', 'core/details', 'core/separator'] as $required) {
   if (empty($names[$required])) {
     throw new RuntimeException('missing block: ' . $required);
   }
