@@ -187,6 +187,58 @@ window.addEventListener('resize', setVw);
   // ==========================================================================
   // ドロップダウンナビゲーション開閉制御
   // ==========================================================================
+  // News category overlay: keep native details as the no-JS fallback.
+  const newsCategoryDisclosure = function () {
+    document.querySelectorAll('.jwsnj_newsArchive_filterMenu').forEach(details => {
+      const summary = details.querySelector('summary');
+      const panel = details.querySelector('ul');
+      if (!summary || !panel) return;
+      let closeTimer;
+      const setOpen = open => {
+        window.clearTimeout(closeTimer);
+        if (open) {
+          details.open = true;
+          // Commit the closed visual state before starting the transition.
+          panel.getBoundingClientRect();
+          panel.inert = false;
+          details.dataset.open = 'true';
+          summary.setAttribute('aria-expanded', 'true');
+        } else {
+          if (panel.contains(document.activeElement)) summary.focus({ preventScroll: true });
+          details.dataset.open = 'false';
+          summary.setAttribute('aria-expanded', 'false');
+          panel.inert = true;
+          // Keep native details open until the closing transition has finished.
+          const duration = getComputedStyle(panel).transitionDuration.split(',')[0].trim();
+          const ms = parseFloat(duration) * (duration.endsWith('ms') ? 1 : 1000);
+          if (ms > 0 && details.open) {
+            closeTimer = window.setTimeout(() => { details.open = false; }, ms);
+          } else {
+            details.open = false;
+          }
+        }
+      };
+      details.dataset.motion = 'true';
+      details.dataset.open = String(details.open);
+      summary.setAttribute('aria-expanded', String(details.open));
+      panel.inert = !details.open;
+      summary.addEventListener('click', event => {
+        event.preventDefault();
+        setOpen(details.dataset.open !== 'true');
+      });
+      details.addEventListener('keydown', event => {
+        if (event.key === 'Escape' && details.dataset.open === 'true') {
+          event.preventDefault();
+          setOpen(false);
+          summary.focus({ preventScroll: true });
+        }
+      });
+      document.addEventListener('pointerdown', event => {
+        if (details.dataset.open === 'true' && !details.contains(event.target)) setOpen(false);
+      });
+    });
+  };
+
   const dropdownNavToggle = function () {
     const dropdownNavItems = document.querySelectorAll('[class*="mdd_item"]._hasChild');
     dropdownNavItems.forEach(item => {
@@ -799,6 +851,7 @@ window.addEventListener('resize', setVw);
 //   globalNavCurrent();
   moduleNavToggle();
   dropdownNavToggle();
+  newsCategoryDisclosure();
 //   localNavCurrent();
   pageScroll();
   toggleMenu();

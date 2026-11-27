@@ -49,12 +49,6 @@
         ?>
       </div>
       <div class="gn_search">
-        <div class="gns_form module_search-01">
-          <form class="ms_from" role="search" method="get" action="<?php echo esc_url(home_url('/')); ?>">
-            <input class="ms_input" type="search" value="<?php echo esc_attr(get_search_query()); ?>" name="s" id="header-search-input" placeholder="キーワード" aria-label="サイト内検索">
-            <button class="ms_button" type="submit"><span>検索</span></button>
-          </form>
-        </div>
         <button type="button" class="gn_close" id="gn_close" aria-label="メニューを閉じる"><span>閉じる</span></button>
       </div>
     </nav>

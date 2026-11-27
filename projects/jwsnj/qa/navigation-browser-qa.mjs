@@ -367,6 +367,53 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
       await waitState(false);
       console.log(JSON.stringify({ engine: engineName, width, longMenu: 'PASS', ...geometry }));
     }
+    // Figma category overlay, actual WordPress category route and real CSS/JS.
+    await page.goto(new URL('/?cat=1', url).href, { waitUntil: 'load' });
+    const filter = page.locator('.jwsnj_newsArchive_filterMenu');
+    const summary = filter.locator('summary');
+    const options = filter.locator('ul');
+    await page.waitForFunction(() => document.querySelector('.jwsnj_newsArchive_filterMenu')?.dataset.motion === 'true');
+    assert.equal(await page.locator('#global_navigation form[role="search"]').count(), 0);
+    for (const width of [375, 768, 1380]) {
+      await page.setViewportSize({width, height: 900});
+      await page.emulateMedia({ reducedMotion: 'no-preference' });
+      await summary.scrollIntoViewIfNeeded();
+      const measure = () => filter.evaluate(el => ({
+        top: el.closest('.jwsnj_newsArchive_filter').nextElementSibling.getBoundingClientRect().top + window.scrollY,
+        height: document.documentElement.scrollHeight,
+        width: el.getBoundingClientRect().width,
+        position: getComputedStyle(el.querySelector('ul')).position
+      }));
+      const before = await measure();
+      await summary.focus();
+      await page.keyboard.press('Enter');
+      assert.equal(await summary.getAttribute('aria-expanded'), 'true');
+      await page.waitForFunction(() => getComputedStyle(document.querySelector('.jwsnj_newsArchive_filterMenu ul')).opacity === '1');
+      const opened = await measure();
+      assert.deepEqual(opened, before);
+      assert.equal(opened.position, 'absolute');
+      assert.equal(await options.evaluate(el => getComputedStyle(el).transitionDuration), '0.3s, 0.3s');
+      await options.locator('a').first().focus();
+      await page.keyboard.press('Escape');
+      assert.equal(await summary.getAttribute('aria-expanded'), 'false');
+      assert.equal(await options.evaluate(el => el.inert), true);
+      assert.equal(await summary.evaluate(el => el === document.activeElement), true);
+      await page.waitForFunction(() => !document.querySelector('.jwsnj_newsArchive_filterMenu').open);
+      assert.deepEqual(await measure(), before);
+      await summary.click();
+      await summary.click();
+      await summary.click();
+      await page.waitForFunction(() => getComputedStyle(document.querySelector('.jwsnj_newsArchive_filterMenu ul')).opacity === '1');
+      assert.equal(await summary.getAttribute('aria-expanded'), 'true');
+      await page.screenshot({path:'form-qa-results/news-' + engineName + '-' + width + '-category.png'});
+      await page.locator('.jwsnj_newsArchive_filterLabel').click();
+      await page.waitForFunction(() => !document.querySelector('.jwsnj_newsArchive_filterMenu').open);
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await summary.click();
+      await summary.click();
+      assert.equal(await filter.evaluate(el => el.open), false);
+      console.log(JSON.stringify({engine:engineName,width,newsCategoryOverlay:'PASS',before,opened}));
+    }
     assert.deepEqual(errors, [], 'uncaught JS errors');
     console.log(JSON.stringify({ engine: engineName, navigationRuntime: 'PASS', keyboard: true, scrollRestore: true, resize: [1080, 1079, 768, 767], footer: true }));
     // Touch-enabled context, real Playwright taps, actual WP menu links.
