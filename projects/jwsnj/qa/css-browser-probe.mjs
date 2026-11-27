@@ -136,7 +136,7 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
        return {selector,property:s.transitionProperty,duration:s.transitionDuration};
      });
    });
-   const expected=[['background-color','color'],['background-color','color'],['transform'],['opacity'],['color']];
+   const expected=[['background-color','color'],['background-color','color'],['transform'],['opacity'],['color','text-decoration-color']];
    for(let i=0;i<motion.length;i++){
      if(reducedMotion==='reduce'){
        assert.equal(motion[i].property,'none',name+' reduced '+motion[i].selector);
@@ -846,6 +846,75 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
      ]), ['0s', '0s']);
      console.log(JSON.stringify({ smallButtonInteraction: 'PASS', engine: name, width, metrics, focused }));
      report.push({ name, width, smallButtonInteraction: metrics });
+   } finally {
+     await page.mouse.move(0, 0);
+     await fixture.evaluate(el => el.remove());
+   }
+ }
+ // Inline link decoration motion: preserve native text wrapping and glyphs.
+ for (const width of [320, 375, 767, 768, 1380]) {
+   await page.setViewportSize({ width, height: 900 });
+   await page.emulateMedia({ reducedMotion: 'no-preference' });
+   await page.evaluate(() => {
+     const el = document.createElement('div');
+     el.id = 'inline-link-motion';
+     el.className = 'block-editor_wrap';
+     el.style.cssText = 'width:min(calc(100% - 40px),960px);margin-inline:auto';
+     el.innerHTML = '<button type="button" data-qa-before>前の操作</button><p class="wp-block-paragraph">本文 <a href="#end">テキストリンク LongEditableLabelWithoutSpaces1234567890LongEditableLabelWithoutSpaces1234567890</a> 本文 <a href="#end" target="_blank">外部リンク</a> 本文 <a href="/qa/document.pdf">PDFファイル</a> 本文 <a href="/qa/image.webp">添付ファイル</a> 本文</p>';
+     document.body.append(el);
+   });
+   const fixture = page.locator('#inline-link-motion');
+   const links = fixture.locator('a');
+   const state = link => link.evaluate(el => {
+     const style = getComputedStyle(el);
+     const parent = el.parentElement.getBoundingClientRect();
+     const pseudo = getComputedStyle(el, '::after');
+     return {
+       decoration: style.textDecorationColor, color: style.color,
+       line: style.textDecorationLine, duration: style.transitionDuration,
+       properties: style.transitionProperty, outline: style.outlineStyle,
+       focus: el === document.activeElement,
+       rects: [...el.getClientRects()].map(r => [r.x, r.y, r.width, r.height]),
+       fits: [...el.getClientRects()].every(r => r.left >= parent.left - 1 && r.right <= parent.right + 1),
+       icon: pseudo.content, mask: pseudo.maskImage
+     };
+   });
+   try {
+     await fixture.scrollIntoViewIfNeeded();
+     await page.evaluate(() => document.fonts.ready);
+     await page.mouse.move(0, 0);
+     for (let i = 0; i < 4; i++) {
+       const link = links.nth(i);
+       const initial = await state(link);
+       assert.equal(initial.decoration, 'rgba(0, 0, 0, 0)');
+       assert.equal(initial.line, 'underline');
+       assert.equal(initial.duration, '0.3s, 0.3s');
+       assert.ok(initial.properties.includes('text-decoration-color') && initial.fits, JSON.stringify(initial));
+       // Use a concrete visible line box for multiline links rather than the
+       // bounding box midpoint, which may lie outside actual inline ink.
+       const rect = await link.evaluate(el => {
+         const r = el.getClientRects()[0];
+         return { x: r.x + Math.min(5, r.width / 2), y: r.y + r.height / 2 };
+       });
+       await page.mouse.move(rect.x, rect.y);
+       await page.waitForFunction(el => getComputedStyle(el).textDecorationColor === getComputedStyle(el).color, await link.elementHandle(), { timeout: 3000 });
+       const hovered = await state(link);
+       assert.deepEqual(hovered.rects, initial.rects);
+       assert.deepEqual([hovered.icon, hovered.mask], [initial.icon, initial.mask]);
+       if (i === 0 && (width === 375 || width === 1380)) await fixture.screenshot({ path: out + '/inline-link-hover-' + name + '-' + width + '.png' });
+       await page.mouse.move(0, 0);
+       await page.waitForFunction(el => getComputedStyle(el).textDecorationColor === 'rgba(0, 0, 0, 0)', await link.elementHandle(), { timeout: 3000 });
+     }
+     await fixture.locator('[data-qa-before]').focus();
+     await page.keyboard.press('Tab');
+     const focused = await state(links.first());
+     assert.ok(focused.focus && focused.outline !== 'none');
+     assert.equal(focused.decoration, focused.color);
+     await links.first().evaluate(el => el.blur());
+     await page.emulateMedia({ reducedMotion: 'reduce' });
+     assert.equal((await state(links.first())).duration, '0s');
+     console.log(JSON.stringify({ inlineLinkMotion: 'PASS', engine: name, width, focused }));
+     report.push({ name, width, inlineLinkMotion: focused });
    } finally {
      await page.mouse.move(0, 0);
      await fixture.evaluate(el => el.remove());
