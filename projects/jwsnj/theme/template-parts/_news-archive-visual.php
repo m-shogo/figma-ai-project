@@ -18,7 +18,13 @@ $image = $image_id ? wp_get_attachment_image($image_id, 'full', false, [
     <?php else : ?>
       <h1><?php echo esc_html($heading); ?></h1>
     <?php endif; ?>
-    <p class="jwsnj_newsArchive_heroEnglish" lang="en">News</p>
+    <p class="jwsnj_newsArchive_heroEnglish" lang="en">News<?php if ($image) : ?><img class="jwsnj_newsArchive_heroBubble" src="<?php echo esc_url(get_theme_file_uri('images/common/img_hero-bubble.svg')); ?>" width="16" height="14" alt=""><?php endif; ?></p>
+    <?php if ($image) : ?>
+      <div class="jwsnj_newsArchive_heroArt" aria-hidden="true">
+        <img class="jwsnj_newsArchive_heroFigure" src="<?php echo esc_url(get_theme_file_uri('images/common/img_hero-figure.svg')); ?>" width="20.0485" height="74.6642" alt="">
+        <img class="jwsnj_newsArchive_heroFigureB" src="<?php echo esc_url(get_theme_file_uri('images/common/img_hero-figure-02.svg')); ?>" width="21.6551" height="84" alt="">
+      </div>
+    <?php endif; ?>
   </div>
   <?php if ($image) : ?>
     <div class="jwsnj_newsArchive_heroImage">

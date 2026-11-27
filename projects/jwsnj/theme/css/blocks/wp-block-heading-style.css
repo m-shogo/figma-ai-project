@@ -45,6 +45,10 @@
       padding-bottom: calc(28 * var(--to-rem-func) - var(--_heading-stroke-width));
       margin-bottom: calc(40 * var(--to-rem-func));
     }
+    /* The heading's bottom margin owns the Figma heading-to-body gap. */
+    & + p:is(:not([class]), .wp-block-paragraph, .block-editor-rich-text__editable, .has-text-align-left, .has-text-align-right, .has-text-align-center) {
+      margin-top: 0;
+    }
     & + :is(h1, h2, h3, h4, h5, h6):is(:not([class]), .wp-block-heading) {
       margin-top: var(--wp-block-margin-small);
     }
@@ -69,6 +73,10 @@
       font-size: calc(24 * var(--to-rem-func));
       margin-bottom: calc(30 * var(--to-rem-func));
     }
+    /* The heading's bottom margin owns the Figma heading-to-body gap. */
+    & + p:is(:not([class]), .wp-block-paragraph, .block-editor-rich-text__editable, .has-text-align-left, .has-text-align-right, .has-text-align-center) {
+      margin-top: 0;
+    }
     & + :is(h1, h2, h3, h4, h5, h6):is(:not([class]), .wp-block-heading) {
       margin-top: var(--wp-block-margin-small);
     }
@@ -90,6 +98,10 @@
     overflow-wrap: anywhere;
     word-break: normal;
     line-break: strict;
+    /* The heading's bottom margin owns the Figma heading-to-body gap. */
+    & + p:is(:not([class]), .wp-block-paragraph, .block-editor-rich-text__editable, .has-text-align-left, .has-text-align-right, .has-text-align-center) {
+      margin-top: 0;
+    }
     & + :is(h1, h2, h3, h4, h5, h6):is(:not([class]), .wp-block-heading) {
       margin-top: var(--wp-block-margin-small);
     }
