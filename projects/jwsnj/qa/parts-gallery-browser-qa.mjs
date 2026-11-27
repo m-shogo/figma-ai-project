@@ -25,6 +25,15 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
       try {
         await page.route('**/*', route => new URL(route.request().url()).origin === url.origin ? route.continue() : route.abort());
         assert.equal((await page.goto(url.href, { waitUntil: 'load' })).status(), 200);
+        // No development module may run before the native WP import map.
+        const moduleOrder = await page.evaluate(() => {
+          const scripts = [...document.querySelectorAll('script[type="module"],script[type="importmap"]')];
+          return { map: scripts.findIndex(el => el.id === 'wp-importmap'),
+            firstModule: scripts.findIndex(el => el.type === 'module'),
+            vite: scripts.findIndex(el => el.src.includes('/@vite/client')) };
+        });
+        assert.ok(moduleOrder.map >= 0 && moduleOrder.firstModule > moduleOrder.map &&
+          moduleOrder.vite > moduleOrder.map, JSON.stringify(moduleOrder));
         const root = page.locator('.block-editor_wrap');
         const galleries = root.locator('.wp-block-gallery.has-nested-images');
         assert.equal(await galleries.count(), 2);

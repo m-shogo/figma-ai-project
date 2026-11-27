@@ -107,6 +107,3 @@ if (is_singular() && $post && !$page_acf_description) {
   <?php endif; ?>
   <?php include_inline_css('/css/add.css'); ?>
 </style>
-<?php if (function_exists('wp_get_environment_type') && wp_get_environment_type() === 'local') : ?>
-  <script type="module" src="http://localhost:5173/@vite/client"></script>
-<?php endif; ?>

@@ -55,3 +55,11 @@ test('cropped native gallery cards do not inherit core stretch and native trigge
   assert.match(gallery, /&\.wp-lightbox-container:has\(> button\.lightbox-trigger\)/);
   assert.match(gallery, /> button\.lightbox-trigger\s*\{\s*grid-area:\s*1 \/ 1/);
 });
+
+test('local Vite module does not precede the classic WordPress import map', () => {
+  const head = readFileSync(new URL('../theme/template-parts/_head_contents.php', import.meta.url), 'utf8');
+  const footer = readFileSync(new URL('../theme/footer.php', import.meta.url), 'utf8');
+  assert.doesNotMatch(head, /@vite\/client/);
+  assert.ok(footer.indexOf('wp_footer();') >= 0 && footer.indexOf('@vite/client') > footer.indexOf('wp_footer();'));
+  assert.match(footer, /wp_get_environment_type\(\) === 'local'/);
+});

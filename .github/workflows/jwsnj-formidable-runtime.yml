@@ -6,6 +6,8 @@ on:
       - 'projects/jwsnj/theme/css/wordpress/form.css'
       - 'projects/jwsnj/theme/js/form.js'
       - 'projects/jwsnj/theme/inc/front.php'
+      - 'projects/jwsnj/theme/template-parts/_head_contents.php'
+      - 'projects/jwsnj/theme/footer.php'
       - 'projects/jwsnj/theme/inc/form.php'
       - 'projects/jwsnj/theme/templates/template-form.php'
       - 'projects/jwsnj/qa/form-render-shortcode.php'
