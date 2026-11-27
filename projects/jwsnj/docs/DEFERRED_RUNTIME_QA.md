@@ -317,3 +317,6 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 
 ### 追加引継ぎ（2026-11-27・最新Human「いや、パーツから」）
 CUR-04のLarge Navigationについて、共通表示PHP/CSSをChat側で先行完成させる（#780検証中）。Cursorはその最新merge後に実ACF Proで追加/編集/保存再編集、画像なし/長文/hrefなし/外部リンクを確認し、表示を別実装しない。CUR-02/CUR-05のTOP組み込み・実CMS接続は共通パーツの合格後。ダミーは隔離fixtureのみ、正式データに転用しない。
+
+### CUR-04 追加 — Navigation既存ブロックとパーツ集
+#780 Large共通表示 merge 05fdc1f（3engine×5幅15/15）、#782 QA generator/原文field key/actual PHP adapter merge cbeb077。既存 `/parts/`（post109、●●パーツ集●●）を確認し、コピーまたは隔離下書きへ `qa/prepare-navigation-blocks-qa.php` の出力をコードエディターで貼り付ける。実ローカルQA画像ID2つを指定。ACF Proで表示/追加/編集/保存再編集/外部リンク/画像なし/URLなし/長文を確認。既存DBを自動上書きせず、実データや新ACF定義を作らない。#783 Small CSS QAは別。TOP組込みはパーツ先行合格後。
