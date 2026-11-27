@@ -20,14 +20,54 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
         const root = page.locator('.block-editor_wrap');
         assert.equal(await root.count(), 1);
         const headings = root.locator('h2.wp-block-heading, h3.wp-block-heading, h4.wp-block-heading');
-        assert.equal(await headings.count(), 3);
+        assert.equal(await headings.count(), 4);
         const metrics = await headings.evaluateAll(elements => elements.map(el => ({
           tag: el.tagName,
           font: getComputedStyle(el).fontSize,
           gap: el.nextElementSibling.getBoundingClientRect().top - el.getBoundingClientRect().bottom
         })));
-        assert.deepEqual(metrics.map(item => item.font), width >= 768 ? ['30px', '24px', '18px'] : ['24px', '22px', '18px']);
-        assert.deepEqual(metrics.map(item => Math.round(item.gap)), width >= 768 ? [40, 30, 20] : [32, 24, 20]);
+        assert.deepEqual(metrics.map(item => item.font), width >= 768 ? ['30px', '24px', '18px', '30px'] : ['24px', '22px', '18px', '24px']);
+        assert.deepEqual(metrics.map(item => Math.round(item.gap)), width >= 768 ? [40, 30, 20, 40] : [32, 24, 20, 32]);
+        // Actual registered Core separator with adjoining native blocks.
+        const separator = root.locator('#qa-parts-separator + hr.wp-block-separator');
+        assert.equal(await separator.count(), 1);
+        const separatorGeometry = await separator.evaluate(async el => {
+          const style = getComputedStyle(el);
+          const rect = el.getBoundingClientRect();
+          const next = el.nextElementSibling;
+          const icon = new Image();
+          // Decode the exact computed artwork, not an invented replacement.
+          const artwork = style.backgroundImage.match(/url\(["']?([^"')]+)/)?.[1];
+          if (!artwork) throw new Error('separator artwork missing');
+          icon.src = artwork;
+          await icon.decode();
+          return {
+            height: rect.height, width: rect.width,
+            headingWidth: el.previousElementSibling.getBoundingClientRect().width,
+            headingGap: rect.top - el.previousElementSibling.getBoundingClientRect().bottom,
+            nextGap: next.getBoundingClientRect().top - rect.bottom,
+            padding: [style.paddingTop, style.paddingBottom],
+            margin: [style.marginTop, style.marginBottom],
+            origin: style.backgroundOrigin, clip: style.backgroundClip,
+            artwork, icon: [icon.naturalWidth, icon.naturalHeight],
+            fits: next.scrollWidth <= next.clientWidth + 1
+          };
+        });
+        const desktop = width >= 768;
+        assert.ok(Math.abs(separatorGeometry.height - (desktop ? 65 : 81)) <= 1, JSON.stringify(separatorGeometry));
+        assert.ok(Math.abs(separatorGeometry.width - separatorGeometry.headingWidth) <= 1, JSON.stringify(separatorGeometry));
+        assert.ok(Math.abs(separatorGeometry.headingGap - (desktop ? 40 : 32)) <= 1 && separatorGeometry.nextGap >= 0, JSON.stringify(separatorGeometry));
+        assert.deepEqual(separatorGeometry.padding, desktop ? ['25px', '23px'] : ['32px', '32px']);
+        assert.deepEqual(separatorGeometry.margin, ['0px', '0px']);
+        assert.ok(separatorGeometry.origin.split(',').every(value => value.trim() === 'content-box'));
+        assert.ok(separatorGeometry.clip.split(',').every(value => value.trim() === 'content-box'));
+        assert.match(separatorGeometry.artwork, /ico_blossom\.svg/);
+        assert.ok(separatorGeometry.icon.every(value => value > 0) && separatorGeometry.fits);
+        if (width === 375 || width === 1380) {
+          await root.locator('#qa-parts-separator').scrollIntoViewIfNeeded();
+          await page.screenshot({ path: 'form-qa-results/native-separator-' + engineName + '-' + width + '.png' });
+        }
+        console.log(JSON.stringify({ nativeSeparator: 'PASS', engine: engineName, width, separatorGeometry }));
         const lists = root.locator('ul.wp-block-list, ol.wp-block-list');
         assert.equal(await lists.count(), 4);
         assert.equal(await root.locator('ol.wp-block-list').getAttribute('start'), '10');
