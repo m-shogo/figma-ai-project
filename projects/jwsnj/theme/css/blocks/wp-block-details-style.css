@@ -19,6 +19,27 @@
     --_padding-block: calc(24 * var(--to-rem-func));
     --_padding-inline: calc(24 * var(--to-rem-func));
     --_button-width: calc(68 * var(--to-rem-func));
+    /* Native disclosure remains the state owner. Grid tracks interpolate
+       intrinsic content, including the padded FAQ body, without a height cap. */
+    &[data-details-motion] {
+      @supports selector(details::details-content) and (transition-behavior: allow-discrete) {
+        &::details-content {
+          display: grid;
+          grid-template-rows: minmax(0, 0fr);
+          overflow: clip;
+          transition: grid-template-rows var(--transition-duration), content-visibility var(--transition-duration) allow-discrete;
+          @media (prefers-reduced-motion: reduce) {
+            transition: none;
+          }
+        }
+        &[open]::details-content {
+          grid-template-rows: minmax(0, 1fr);
+        }
+        &:not([open]) > .wp-block-details__content {
+          pointer-events: none;
+        }
+      }
+    }
     summary.wp-block-details__summary {
       display: block;
       list-style-type: '';

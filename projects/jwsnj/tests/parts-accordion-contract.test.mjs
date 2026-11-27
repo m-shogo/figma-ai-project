@@ -146,3 +146,18 @@ test('course FAQ section reuses native Details and keeps the Figma stack spacing
   assert.match(rendered, /wp-block-details__inner/);
   execFileSync('php', ['-l', file.pathname]);
 });
+
+test('native Details motion is progressive, intrinsic and scoped to the rendered body', () => {
+  assert.match(css, /&\[data-details-motion\]\s*\{/);
+  assert.match(css, /@supports selector\(details::details-content\) and \(transition-behavior: allow-discrete\)/);
+  assert.match(css, /grid-template-rows: minmax\(0, 0fr\)/);
+  assert.match(css, /&\[open\]::details-content\s*\{\s*grid-template-rows: minmax\(0, 1fr\)/);
+  assert.match(css, /transition: grid-template-rows var\(--transition-duration\), content-visibility var\(--transition-duration\) allow-discrete;/);
+  const js = readFileSync(new URL('../theme/js/common.js', import.meta.url), 'utf8');
+  const motion = js.slice(js.indexOf('const nativeDetailsMotion ='), js.indexOf('const dropdownNavToggle ='));
+  assert.match(motion, /details.addEventListener\('toggle'/);
+  assert.match(motion, /panel.inert = true/);
+  assert.match(motion, /if \(ownsInert\) panel.inert = false/);
+  assert.doesNotMatch(motion, /summary.addEventListener\('click'|\.style\.height|removeAttribute\('name'/);
+  assert.match(js, /\n  nativeDetailsMotion\(\);/);
+});
