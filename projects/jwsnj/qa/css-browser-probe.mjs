@@ -606,6 +606,63 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
    await fixture.evaluate(el=>el.remove());
    report.push({name,width,largeNavigation:geometry});
  }
+
+ // Small Navigation: existing ACF block layout and Human catalog cases.
+ // The parts Figma only specifies Large; preserve the Small design owner.
+ for(const width of [320,375,767,768,1380]){
+   await page.setViewportSize({width,height:900});
+   await page.emulateMedia({reducedMotion:'no-preference'});
+   await page.evaluate(()=>{
+     const fixture=document.createElement('div');
+     fixture.id='small-nav-parts';
+     fixture.className='block-editor_wrap';
+     fixture.style.cssText='width:min(calc(100% - 40px),960px);margin-inline:auto';
+     fixture.innerHTML='<ul class="module_navigation --small"><li class="navigation"><a href="#end"><div class="image"><img src="/images/top/img_course-preschool.webp" alt=""></div><div class="content"><h2 class="title">タイトルタイトル</h2><div class="text">テキスト</div></div></a></li><li class="navigation"><a href="#end" target="_blank" rel="noopener"><div class="image"><img src="/images/top/img_course-elementary.webp" alt=""></div><div class="content"><h2 class="title">長いタイトル LongEditableLabelWithoutSpaces1234567890LongEditableLabelWithoutSpaces1234567890</h2><div class="text">長い本文 LongEditableTextWithoutSpaces1234567890LongEditableTextWithoutSpaces1234567890</div></div></a></li><li class="navigation"><a href="#end"><div class="content"><h2 class="title">画像が無い場合</h2><div class="text">テキストテキストテキスト</div></div></a></li><li class="navigation"><a class="is-disabled"><div class="content"><h2 class="title">リンク未設定</h2></div></a></li></ul>';
+     document.body.append(fixture);
+   });
+   const fixture=page.locator('#small-nav-parts');
+   for(const image of await fixture.locator('img').all())await image.evaluate(el=>el.decode());
+   await page.evaluate(()=>document.fonts.ready);
+   const geometry=await fixture.evaluate(el=>{
+     const list=el.querySelector('ul'), bounds=list.getBoundingClientRect();
+     const rows=[...list.querySelectorAll('a')].map(a=>{
+       const rect=a.getBoundingClientRect(),photo=a.querySelector('.image'),copy=a.querySelector('.content');
+       const title=a.querySelector('.title'),text=a.querySelector('.text'),cs=getComputedStyle(title);
+       const pr=photo?.getBoundingClientRect(),cr=copy.getBoundingClientRect();
+       return {width:rect.width,photo:pr?[pr.width,pr.height]:null,copy:cr.width,gap:pr?cr.left-pr.right:null,font:cs.fontSize,textFont:text?getComputedStyle(text).fontSize:null,external:getComputedStyle(title,'::after').content,href:a.hasAttribute('href'),fits:rect.left>=bounds.left-1&&rect.right<=bounds.right+1&&cr.right<=rect.right+1&&title.scrollWidth<=title.clientWidth+1&&(!text||text.scrollWidth<=text.clientWidth+1)};
+     });
+     return {width:bounds.width,columns:getComputedStyle(list).gridTemplateColumns.split(' ').length,gap:parseFloat(getComputedStyle(list).gap),rows};
+   });
+   const pc=width>=768;
+   assert.equal(geometry.columns,pc?2:1);
+   assert.equal(geometry.gap,pc?40:30);
+   for(const row of geometry.rows){
+     assert.ok(row.fits,JSON.stringify(geometry));
+     assert.equal(row.font,pc?'20px':'16px');
+     if(row.textFont)assert.equal(row.textFont,pc?'14px':'12px');
+     if(row.photo){
+       assert.ok(Math.abs(row.photo[0]-Math.min(pc?180:120,row.width*(pc?0.48:0.42)))<=1,JSON.stringify(row));
+       assert.ok(Math.abs(row.photo[0]/row.photo[1]-(pc?1.2:1))<0.03,JSON.stringify(row));
+       assert.ok(Math.abs(row.gap-(pc?25:15))<=1,JSON.stringify(row));
+     }else assert.ok(Math.abs(row.copy-row.width)<=1,JSON.stringify(row));
+   }
+   assert.notEqual(geometry.rows[1].external,'none');
+   assert.equal(geometry.rows[0].external,'none');
+   const first=fixture.locator('a[href]').first();
+   await first.focus();
+   assert.ok(await first.evaluate(el=>el===document.activeElement&&parseFloat(getComputedStyle(el).outlineWidth)>=2));
+   await first.hover();
+   await page.waitForFunction(el=>getComputedStyle(el.querySelector('img')).transform!=='none',await first.elementHandle());
+   await page.emulateMedia({reducedMotion:'reduce'});
+   assert.equal(await first.locator('img').evaluate(el=>getComputedStyle(el).transitionDuration),'0s');
+   assert.equal(await first.locator('.content').evaluate(el=>getComputedStyle(el).transitionDuration),'0s');
+   assert.equal(await fixture.locator('a:not([href])').evaluate(el=>{el.focus();return el===document.activeElement;}),false);
+   await page.mouse.move(0,0);
+   await first.evaluate(el=>el.blur());
+   if(width===375||width===1380)await fixture.screenshot({path:out+'/'+name+'-'+width+'-small-navigation.png'});
+   await fixture.evaluate(el=>el.remove());
+   report.push({name,width,smallNavigation:geometry});
+ }
  // Legacy file presentation must not leak to a generic .file component.
  for (const width of [375, 768, 1380]) {
    await page.setViewportSize({width, height: 900});
