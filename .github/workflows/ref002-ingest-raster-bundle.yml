@@ -1,0 +1,105 @@
+name: REF002 Ingest Figma Raster Bundle
+
+on:
+  push:
+    branches:
+      - agent/ref002-budokan-final-assets
+    paths:
+      - 'experiments/ref002-budokan-fullcalendar-validation/.transfer/ref002-figma-raster-assets.zip'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate and materialize exact Figma crops
+        shell: bash
+        run: |
+          set -euo pipefail
+          ZIP='experiments/ref002-budokan-fullcalendar-validation/.transfer/ref002-figma-raster-assets.zip'
+          if [ ! -f "$ZIP" ]; then
+            echo 'Bundle already consumed; nothing to do.'
+            exit 0
+          fi
+
+          TMP="$(mktemp -d)"
+          unzip -q "$ZIP" -d "$TMP"
+          python3 - "$TMP" <<'PY'
+          import hashlib
+          import json
+          import struct
+          import sys
+          from pathlib import Path
+
+          root = Path(sys.argv[1])
+          expected = {
+              'hero-pc.png', 'hero-sp.png',
+              'event-01.png', 'event-02.png', 'event-03.png', 'event-04.png',
+              'purpose-01.png', 'purpose-02.png', 'purpose-03.png',
+              'about-bg-pc.png', 'about-bg-sp.png',
+              'about-01.png', 'about-02.png', 'about-03.png', 'about-04.png', 'about-05.png', 'about-06.png',
+              'instagram-01.png', 'instagram-02.png', 'instagram-03.png', 'instagram-04.png', 'instagram-05.png',
+              'banner-pc.png', 'banner-sp.png', 'footer-map.png',
+          }
+          manifest_path = root / 'manifest.json'
+          if not manifest_path.is_file():
+              raise SystemExit('bundle manifest.json missing')
+          manifest = json.loads(manifest_path.read_text())
+          rows = {row['name']: row for row in manifest}
+          if set(rows) != expected:
+              raise SystemExit(f'asset set mismatch: missing={sorted(expected-set(rows))} extra={sorted(set(rows)-expected)}')
+
+          for name in sorted(expected):
+              path = root / name
+              if not path.is_file():
+                  raise SystemExit(f'missing {name}')
+              data = path.read_bytes()
+              if len(data) < 24 or data[:8] != b'\x89PNG\r\n\x1a\n' or data[12:16] != b'IHDR':
+                  raise SystemExit(f'{name}: invalid PNG')
+              width, height = struct.unpack('>II', data[16:24])
+              row = rows[name]
+              if [width, height] != list(row['size']):
+                  raise SystemExit(f'{name}: dimensions {(width,height)} != {tuple(row["size"])}')
+              digest = hashlib.sha256(data).hexdigest()
+              if digest != row['sha256']:
+                  raise SystemExit(f'{name}: SHA mismatch')
+              if len(data) != row['bytes']:
+                  raise SystemExit(f'{name}: byte length mismatch')
+          print(f'PASS validated {len(expected)} exact Figma raster crops')
+          PY
+
+          DEST='experiments/ref002-budokan-fullcalendar-validation/assets/figma-raster'
+          rm -rf "$DEST"
+          mkdir -p "$DEST"/{hero,events,purpose,about,instagram,banner,footer}
+          cp "$TMP/hero-pc.png" "$TMP/hero-sp.png" "$DEST/hero/"
+          cp "$TMP"/event-*.png "$DEST/events/"
+          cp "$TMP"/purpose-*.png "$DEST/purpose/"
+          cp "$TMP"/about-*.png "$DEST/about/"
+          cp "$TMP"/instagram-*.png "$DEST/instagram/"
+          cp "$TMP"/banner-*.png "$DEST/banner/"
+          cp "$TMP/footer-map.png" "$DEST/footer/"
+          cp "$TMP/manifest.json" "$DEST/manifest.json"
+          rm -f "$ZIP"
+
+      - name: Commit materialized assets and consume transfer bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add experiments/ref002-budokan-fullcalendar-validation/assets/figma-raster \
+                  experiments/ref002-budokan-fullcalendar-validation/.transfer || true
+          if git diff --cached --quiet; then
+            echo 'No ingest changes to commit.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'REF-002: materialize exact Figma raster assets'
+          git push origin HEAD:agent/ref002-budokan-final-assets

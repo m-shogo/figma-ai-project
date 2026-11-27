@@ -1,0 +1,291 @@
+/* Repair Wave 2
+ * - remove SP device-chrome offset at the first wrong owner (hero wrapper)
+ * - place the same SNS semantic component differently on PC/SP
+ * - add the next real Web section: Purpose / User Guide
+ */
+
+.events-section {
+  position: relative;
+  overflow: visible;
+}
+
+.sns-strip {
+  position: absolute;
+  left: 0;
+  top: 948px;
+  width: 100%;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 60px 0;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(210,205,195,.12) 0 1px, transparent 1.2px) 0 0/9px 9px,
+    #fff;
+}
+
+.sns-link {
+  width: 280px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 0 20px;
+  border: 1px solid var(--separator);
+  border-radius: 3px;
+  background: #fff;
+  font-size: 16px;
+  letter-spacing: .04em;
+}
+
+.sns-link b {
+  width: 24px;
+  flex: 0 0 24px;
+  color: var(--red);
+  font-size: 22px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.post-events-gap { height: 200px; }
+
+.purpose-section {
+  position: relative;
+  height: 808px;
+  overflow: hidden;
+  background:
+    linear-gradient(155deg, transparent 0 69%, rgba(215,215,215,.22) 69% 100%),
+    #f4f4f3;
+}
+
+.purpose-dark {
+  height: 358px;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255,255,255,.035) 0 1px, transparent 1.3px) 0 0/8px 8px,
+    #2b2d32;
+  color: #fff;
+}
+
+.purpose-heading {
+  width: 1060px;
+  margin: 0 auto;
+  padding-top: 97px;
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 80px;
+  align-items: start;
+}
+
+.purpose-heading-title h2 {
+  margin: 0;
+  font-size: 30px;
+  line-height: 30px;
+  font-weight: 500;
+  letter-spacing: .05em;
+  white-space: nowrap;
+}
+
+.purpose-heading-title p {
+  margin: 20px 0 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #ca9957;
+  font-family: Roboto, sans-serif;
+  font-size: 14px;
+  line-height: 14px;
+  letter-spacing: .05em;
+}
+
+.purpose-heading-title i {
+  width: 10px;
+  height: 10px;
+  display: inline-block;
+  background: #ca9957;
+  clip-path: polygon(30% 0,70% 0,100% 30%,100% 70%,70% 100%,30% 100%,0 70%,0 30%);
+}
+
+.purpose-intro {
+  margin: -1px 0 0;
+  max-width: 840px;
+  font-size: 16px;
+  line-height: 1.8;
+  letter-spacing: .05em;
+}
+
+.purpose-cards {
+  position: absolute;
+  left: 50%;
+  top: 247px;
+  width: 1056px;
+  transform: translateX(-50%);
+  display: grid;
+  grid-template-columns: repeat(3, 352px);
+  align-items: start;
+}
+
+.purpose-card {
+  width: 352px;
+  background: #fff;
+}
+
+.purpose-card:not(:last-child) {
+  border-right: 1px solid #f2f2f2;
+}
+
+.purpose-photo {
+  width: 352px;
+  height: 213.389px;
+  background-size: cover;
+  background-position: center;
+}
+
+.purpose-photo--budo {
+  background: linear-gradient(145deg,#e4e0da 0 38%,#b6ada2 38% 55%,#ede9e3 55% 100%);
+}
+.purpose-photo--calligraphy {
+  background: linear-gradient(145deg,#f2f1ee 0 35%,#c49b72 35% 48%,#d7d7d4 48% 100%);
+}
+.purpose-photo--budokan {
+  background: linear-gradient(180deg,#78bffc 0 45%,#d2d5cf 45% 60%,#9aad7f 60% 100%);
+}
+
+.purpose-card-body {
+  min-height: 184px;
+  padding: 24px 32px 32px;
+}
+
+.purpose-card-body h3 {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 20px;
+  line-height: 36px;
+  font-weight: 500;
+  letter-spacing: .05em;
+}
+
+.purpose-icon {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  background: #ca9957;
+  color: #fff;
+  font-size: 12px;
+  line-height: 1;
+  clip-path: polygon(25% 0,75% 0,100% 25%,100% 75%,75% 100%,25% 100%,0 75%,0 25%);
+}
+
+.purpose-rule {
+  width: 36px;
+  height: 1px;
+  display: block;
+  margin: 20px 0;
+  background: #ca9957;
+}
+
+.purpose-card-body p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.8;
+  letter-spacing: .05em;
+}
+
+@media (max-width: 767px) {
+  /* Figma root contains a 40px device/status bar. Header already begins at runtime y=0,
+     therefore the web hero wrapper must cover y=60..578 (518px), not 558px. */
+  .hero { height: 518px; }
+
+  .sns-strip {
+    top: 1582px;
+    left: 50%;
+    width: 327px;
+    height: 252px;
+    transform: translateX(-50%);
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 16px;
+    padding: 40px 0 0;
+    border-top: 1px solid var(--separator);
+  }
+
+  .sns-link {
+    width: 280px;
+    height: 60px;
+    flex: 0 0 60px;
+  }
+
+  .post-events-gap { height: 64px; }
+
+  .purpose-section { height: 1668px; }
+
+  .purpose-dark { height: 514px; }
+
+  .purpose-heading {
+    width: 311px;
+    margin: 0 auto;
+    padding-top: 64px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    align-items: center;
+  }
+
+  .purpose-heading-title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .purpose-heading-title h2 {
+    font-size: 30px;
+    line-height: 30px;
+  }
+
+  .purpose-intro {
+    width: 311px;
+    max-width: none;
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.8;
+    letter-spacing: .05em;
+  }
+
+  .purpose-cards {
+    left: 32px;
+    top: 401px;
+    width: 311px;
+    transform: none;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .purpose-card { width: 311px; }
+  .purpose-card:not(:last-child) { border-right: 0; }
+
+  .purpose-photo {
+    width: 311px;
+    height: 189px;
+  }
+
+  .purpose-card-body {
+    min-height: 0;
+    padding: 24px 20px 32px;
+  }
+
+  .purpose-card-body h3 {
+    font-size: 18px;
+    line-height: 36px;
+  }
+
+  .purpose-rule { margin: 16px 0; }
+
+  .purpose-card-body p {
+    font-size: 15px;
+    line-height: 1.6;
+    letter-spacing: .05em;
+  }
+}

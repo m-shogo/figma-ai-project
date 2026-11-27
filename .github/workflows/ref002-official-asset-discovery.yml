@@ -1,0 +1,30 @@
+name: REF002 Official Asset Discovery
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/ref002-official-asset-discovery.yml'
+      - 'experiments/ref002-budokan-fullcalendar-validation/tools/discover-official-assets.mjs'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Discover official public assets
+        run: node experiments/ref002-budokan-fullcalendar-validation/tools/discover-official-assets.mjs experiments/ref002-budokan-fullcalendar-validation/evidence/official-assets
+      - name: Upload discovery evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: ref002-official-asset-discovery
+          path: experiments/ref002-budokan-fullcalendar-validation/evidence/official-assets
+          if-no-files-found: error
+          retention-days: 7

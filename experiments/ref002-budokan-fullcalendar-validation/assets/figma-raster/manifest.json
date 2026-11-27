@@ -1,0 +1,402 @@
+[
+  {
+    "name": "hero-pc.png",
+    "board": "board1",
+    "box": [
+      0,
+      0,
+      1040,
+      600
+    ],
+    "size": [
+      1040,
+      600
+    ],
+    "sha256": "303e1ce21becd67b631964601b6457a1d967472ad96e6044062d941cc1129146",
+    "bytes": 942135
+  },
+  {
+    "name": "hero-sp.png",
+    "board": "board1",
+    "box": [
+      0,
+      608,
+      375,
+      1091
+    ],
+    "size": [
+      375,
+      483
+    ],
+    "sha256": "2b3df6becfeae326720f18fc4b0bc8c6310508971b6e5c29c25a85ce20c30afe",
+    "bytes": 319234
+  },
+  {
+    "name": "event-01.png",
+    "board": "board1",
+    "box": [
+      0,
+      1099,
+      200,
+      1249
+    ],
+    "size": [
+      200,
+      150
+    ],
+    "sha256": "c4ed1cfddc50671dc0381bad999ddc7d51de22b3b9cbbd8a5c258f76a46c4111",
+    "bytes": 60044
+  },
+  {
+    "name": "event-02.png",
+    "board": "board1",
+    "box": [
+      0,
+      1257,
+      200,
+      1407
+    ],
+    "size": [
+      200,
+      150
+    ],
+    "sha256": "b7bd525b559999ec744c34942cabe1a93813bec550e0c4f6f08b71c8a85c5028",
+    "bytes": 67388
+  },
+  {
+    "name": "event-03.png",
+    "board": "board1",
+    "box": [
+      0,
+      1415,
+      200,
+      1565
+    ],
+    "size": [
+      200,
+      150
+    ],
+    "sha256": "f49eba199210dff9642dbac52377af31c4cffda8f6ead888cf3db2b78aedb1c9",
+    "bytes": 75652
+  },
+  {
+    "name": "event-04.png",
+    "board": "board1",
+    "box": [
+      0,
+      1573,
+      200,
+      1723
+    ],
+    "size": [
+      200,
+      150
+    ],
+    "sha256": "c4ed1cfddc50671dc0381bad999ddc7d51de22b3b9cbbd8a5c258f76a46c4111",
+    "bytes": 60044
+  },
+  {
+    "name": "purpose-01.png",
+    "board": "board2",
+    "box": [
+      0,
+      0,
+      352,
+      213
+    ],
+    "size": [
+      352,
+      213
+    ],
+    "sha256": "6a6ecac5429012c50980150687ba6dfa08c8fd20c17fef89dd0ea96999793956",
+    "bytes": 140027
+  },
+  {
+    "name": "purpose-02.png",
+    "board": "board2",
+    "box": [
+      0,
+      221,
+      352,
+      435
+    ],
+    "size": [
+      352,
+      214
+    ],
+    "sha256": "8f42527d69abadbcdf984dadc7a6a0a083d6b63587b12377f6d94321d859fc59",
+    "bytes": 97876
+  },
+  {
+    "name": "purpose-03.png",
+    "board": "board2",
+    "box": [
+      0,
+      443,
+      352,
+      656
+    ],
+    "size": [
+      352,
+      213
+    ],
+    "sha256": "060a13321f7c12a565bc2d4fe959388ed7b95519953511c2afb11b1ef1f3c9c2",
+    "bytes": 118664
+  },
+  {
+    "name": "about-bg-pc.png",
+    "board": "board2",
+    "box": [
+      0,
+      664,
+      420,
+      1365
+    ],
+    "size": [
+      420,
+      701
+    ],
+    "sha256": "bcdfcd845980e393526c0c123527c8480eeeb6b1abacb0aff85319f6a82eb52e",
+    "bytes": 584553
+  },
+  {
+    "name": "about-bg-sp.png",
+    "board": "board2",
+    "box": [
+      0,
+      1373,
+      375,
+      1795
+    ],
+    "size": [
+      375,
+      422
+    ],
+    "sha256": "a72cb50694d4d8308c96e26bfd95cae64b35b85782a7a1da61f605f460650bb3",
+    "bytes": 342423
+  },
+  {
+    "name": "about-01.png",
+    "board": "board3",
+    "box": [
+      0,
+      0,
+      360,
+      240
+    ],
+    "size": [
+      360,
+      240
+    ],
+    "sha256": "2371ea16f16477a52d3b9ec3fbccd21f9a33ecb171f34f76a71083df292f66b6",
+    "bytes": 172286
+  },
+  {
+    "name": "about-02.png",
+    "board": "board3",
+    "box": [
+      0,
+      248,
+      360,
+      488
+    ],
+    "size": [
+      360,
+      240
+    ],
+    "sha256": "5243f6e92e801129f6c25690dc90fea5b889f6530c5612275fd9cbb20542f40f",
+    "bytes": 165210
+  },
+  {
+    "name": "about-03.png",
+    "board": "board3",
+    "box": [
+      0,
+      496,
+      358,
+      736
+    ],
+    "size": [
+      358,
+      240
+    ],
+    "sha256": "8632651d3d600973c9af979bef3e0723b17d43066d658003f94194a8e6bcb58c",
+    "bytes": 194590
+  },
+  {
+    "name": "about-04.png",
+    "board": "board3",
+    "box": [
+      0,
+      744,
+      360,
+      984
+    ],
+    "size": [
+      360,
+      240
+    ],
+    "sha256": "9f30bdec35428b28535b0f619065c198cf54a55478cccded465999b7dd054fad",
+    "bytes": 179683
+  },
+  {
+    "name": "about-05.png",
+    "board": "board3",
+    "box": [
+      0,
+      992,
+      360,
+      1232
+    ],
+    "size": [
+      360,
+      240
+    ],
+    "sha256": "19089d0ed3815fdc3be26cd9a2e701e637acdde7d09a5dc134aa4cbd2eb41b6d",
+    "bytes": 150529
+  },
+  {
+    "name": "about-06.png",
+    "board": "board3",
+    "box": [
+      0,
+      1240,
+      360,
+      1480
+    ],
+    "size": [
+      360,
+      240
+    ],
+    "sha256": "ccd04688fed8892591f16d93561aecfd55c8dd3805c135d7d24d8fcef79bc523",
+    "bytes": 156832
+  },
+  {
+    "name": "instagram-01.png",
+    "board": "board4",
+    "box": [
+      0,
+      0,
+      231,
+      289
+    ],
+    "size": [
+      231,
+      289
+    ],
+    "sha256": "57c5c3acbe620ccb613cbcad9f7017807acafbef7edc4a50924ad701e87f60a6",
+    "bytes": 160363
+  },
+  {
+    "name": "instagram-02.png",
+    "board": "board4",
+    "box": [
+      0,
+      297,
+      231,
+      586
+    ],
+    "size": [
+      231,
+      289
+    ],
+    "sha256": "fdf04230fa4cd6847b2c79235ce5e77a2d5619bf90074af78792154b2d9f9378",
+    "bytes": 143313
+  },
+  {
+    "name": "instagram-03.png",
+    "board": "board4",
+    "box": [
+      0,
+      594,
+      231,
+      883
+    ],
+    "size": [
+      231,
+      289
+    ],
+    "sha256": "a9aebfc69e3ab9acf4f0a9ef2efabca249c35586b3f5dd71e7593a11fef540b1",
+    "bytes": 70566
+  },
+  {
+    "name": "instagram-04.png",
+    "board": "board4",
+    "box": [
+      0,
+      891,
+      231,
+      1180
+    ],
+    "size": [
+      231,
+      289
+    ],
+    "sha256": "bcf9c7f8ca520763b9b0633d56e80cc973eb1408c81a2f20032ba5bbb64b645b",
+    "bytes": 137429
+  },
+  {
+    "name": "instagram-05.png",
+    "board": "board4",
+    "box": [
+      0,
+      1188,
+      231,
+      1477
+    ],
+    "size": [
+      231,
+      289
+    ],
+    "sha256": "a309cad4f2b6b42c8a04e4e99b545062791435edc073ad5d4c8cce4a0e2b2949",
+    "bytes": 140849
+  },
+  {
+    "name": "banner-pc.png",
+    "board": "board5",
+    "box": [
+      0,
+      0,
+      1380,
+      160
+    ],
+    "size": [
+      1380,
+      160
+    ],
+    "sha256": "0e1670a2bf3e8c805e22b1c987ebd2409702e9277982db61e67b0b729fbf1bf1",
+    "bytes": 205715
+  },
+  {
+    "name": "banner-sp.png",
+    "board": "board5",
+    "box": [
+      0,
+      168,
+      375,
+      368
+    ],
+    "size": [
+      375,
+      200
+    ],
+    "sha256": "4a2b4a63e4f7f8e3644a37ec5f12039a96667ef000984f165c92bd795726af05",
+    "bytes": 109131
+  },
+  {
+    "name": "footer-map.png",
+    "board": "board5",
+    "box": [
+      0,
+      376,
+      600,
+      696
+    ],
+    "size": [
+      600,
+      320
+    ],
+    "sha256": "5c6a3fbb9f3835d74752567bd62762136893b538fa4ce03b0a7ba53785ecdc38",
+    "bytes": 112569
+  }
+]

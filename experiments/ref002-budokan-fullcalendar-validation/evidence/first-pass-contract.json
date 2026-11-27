@@ -1,0 +1,68 @@
+{
+  "id": "ref002-budokan-first-pass",
+  "evidenceDomain": "web-page",
+  "transferScope": {
+    "portable": [
+      "pixel-delta-observation",
+      "typography-fingerprint",
+      "render-stability",
+      "document-space-geometry",
+      "css-cascade-diagnosis"
+    ],
+    "webOnly": [
+      "responsive-section-boundaries",
+      "pc-sp-composition",
+      "header-hero-event-section-flow"
+    ],
+    "libraryScoped": [
+      "fullcalendar-v7-public-hooks",
+      "fullcalendar-v7-responsive-sizing",
+      "fullcalendar-daygrid-list-toggle"
+    ]
+  },
+  "figma": {
+    "fileKey": "RfAQQ28V1HGaeIcpgRmQq1",
+    "structured": {
+      "pc": { "nodeId": "839:4676", "width": 1380, "height": 6181 },
+      "sp": { "nodeId": "446:10020", "width": 375, "height": 8400, "deviceChromePx": 40 }
+    },
+    "visualTruth": {
+      "pc": { "nodeId": "2270:4565", "width": 1381, "height": 6181 },
+      "sp": { "nodeId": "2270:5570", "width": 375, "height": 8400 }
+    },
+    "sections": {
+      "headerPc": { "nodeId": "1086:3582", "width": 1380, "height": 100 },
+      "heroPc": { "nodeId": "839:5029", "y": 100, "width": 1380, "height": 640 },
+      "eventsPc": { "nodeId": "894:19272", "y": 740, "width": 1380, "height": 948 },
+      "eventListPc": { "nodeId": "894:19280", "width": 660, "height": 744 },
+      "calendarPc": { "nodeId": "894:19362", "width": 420, "height": 706 },
+      "headerSp": { "nodeId": "894:19040", "runtimeY": 0, "width": 375, "height": 60 },
+      "heroSp": { "nodeId": "446:10021", "runtimeY": 60, "width": 375, "height": 483 },
+      "eventsSp": { "nodeId": "1399:12408", "figmaY": 774, "runtimeY": 734, "width": 375, "height": 1678 },
+      "eventListSp": { "nodeId": "1399:11837", "width": 327, "height": 656 },
+      "calendarSp": { "nodeId": "1399:11920", "width": 327, "height": 674 }
+    }
+  },
+  "assetState": {
+    "status": "pending-materialization",
+    "rule": "No short-lived Figma MCP asset URL may be persisted. Geometry and interaction evidence may proceed, but image fidelity cannot be marked complete until approved assets are materialized with provenance."
+  },
+  "fullCalendar": {
+    "version": "7.0.2",
+    "initialView": "dayGridMonth",
+    "initialDate": "2023-08-01",
+    "firstDay": 1,
+    "fixedWeekCount": false,
+    "showNonCurrentDates": false,
+    "requiredViews": ["dayGridMonth", "listMonth"],
+    "qaContract": "public Calendar API plus documented render hooks; private FullCalendar DOM/class names are not test authority"
+  },
+  "firstPassStop": [
+    "header",
+    "hero",
+    "important-notice",
+    "event-list",
+    "fullcalendar"
+  ],
+  "promotionRule": "Do not promote library-scoped or one-project findings into global Web rules without clean replay or cross-reference evidence."
+}
