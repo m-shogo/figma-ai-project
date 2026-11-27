@@ -622,31 +622,35 @@ add_filter('the_content', 'obfuscate_emails_in_content');
 // ==========================================================================
 function add_blank_target_to_file_links($content)
 {
-  // 外部リンクとして開く拡張子の一覧
+  // Work on real anchor attributes, not matching text inside data attributes.
   $extensions = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'xlsm', 'ppt', 'pptx', 'zip', 'docm', 'png', 'jpg', 'jpeg', 'gif', 'webp', 'svg', 'avif', 'mp4', 'mp3', 'webm', 'mov', 'avi'];
   $pattern = '/\.(' . implode('|', $extensions) . ')$/i';
+  $tags = new WP_HTML_Tag_Processor($content);
 
-  return preg_replace_callback(
-    '/<a\s([^>]*)href=["\']([^"\']*)["\']([^>]*)>/i',
-    function ($matches) use ($pattern) {
-      $href = $matches[2];
-      $path = parse_url($href, PHP_URL_PATH);
+  while ($tags->next_tag(['tag_name' => 'A'])) {
+    $href = $tags->get_attribute('href');
+    if (!is_string($href) || $href === '' || $tags->get_attribute('target') !== null) {
+      continue;
+    }
+    $path = wp_parse_url($href, PHP_URL_PATH);
+    if (!is_string($path) || !preg_match($pattern, $path)) {
+      continue;
+    }
 
-      // hrefのパスが対象の拡張子に一致する場合のみ処理
-      if ($path && preg_match($pattern, $path)) {
-        $before = $matches[1];
-        $after  = $matches[3];
-
-        // 既にtargetが設定されている場合はスキップ
-        if (stripos($before . $after, 'target=') === false) {
-          $after .= ' target="_blank" rel="noreferrer external"';
-        }
-        return '<a ' . $before . 'href="' . $href . '"' . $after . '>';
+    // Keep editor-supplied rel tokens (nofollow, sponsored, etc.).
+    $rel = $tags->get_attribute('rel');
+    $tokens = is_string($rel) ? preg_split('/[\x09-\x0d\x20]+/', trim($rel), -1, PREG_SPLIT_NO_EMPTY) : [];
+    $tokens = is_array($tokens) ? $tokens : [];
+    foreach (['noreferrer', 'external'] as $token) {
+      if (!in_array($token, array_map('strtolower', $tokens), true)) {
+        $tokens[] = $token;
       }
-      return $matches[0];
-    },
-    $content
-  );
+    }
+    $tags->set_attribute('target', '_blank');
+    $tags->set_attribute('rel', implode(' ', $tokens));
+  }
+
+  return $tags->get_updated_html();
 }
 add_filter('the_content', 'add_blank_target_to_file_links');
 
