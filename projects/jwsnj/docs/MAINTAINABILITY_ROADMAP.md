@@ -173,3 +173,7 @@ Trigger: 承認済み残実装・保守改善に安全なREADYがなくなった
 - `origin/so` remained `fa4ab148` at start. Local `http://127.0.0.1:28000` is up. Chromium at 1380px measured header height 120px; Figma PC header remains 90px. Search and the two-row structure stay until CTA destinations and the search/secondary decision exist.
 - Official `604:3024` / `604:3025` vector bytes are now in Git. They are not yet the CSS flyout, because the current panel is the recently verified short-viewport menu. Swap only with a side-by-side check against that behavior.
 - Course adapter reads the five SPEC fields and renders nothing until the W9 JSON is explicitly approved. #664 is not merged.
+
+## 共通パーツ再点検 — 2026-11-27
+
+- Start e9ee9e1; #760 merged, #523/#524 unclaimed, #664 held, #516 unrelated. Fresh PC/SP numbered/unordered list and large-button context/images; no color changes or new assets. Existing list rules match reference dimensions at source; added computed browser regression, and custom-width button container cap. CI pending until verified; next READY check rendered list/button screenshots, then headings, annotation, table, disclosure and other common parts individually. Full editor iframe/actual school runtime still #523; Header/Footer remaining decisions unchanged. No TOP/course/original534:1706/ACF/schedule changes.
