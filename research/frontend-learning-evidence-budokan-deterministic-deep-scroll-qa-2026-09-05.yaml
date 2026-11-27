@@ -1,0 +1,53 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: OBS-BUDOKAN-DETERMINISTIC-DEEP-SCROLL-QA
+    summary: >-
+      When an interaction invariant specifically concerns deep-scroll stability, make the deep-scroll condition
+      deterministic inside the disposable QA fixture instead of assuming a short page plus scrollIntoViewIfNeeded
+      will produce non-zero scroll. Keep that fixture-only setup separate from production layout so a test failure
+      cannot pressure the Theme into artificial spacing or offsets.
+    category: TOOLING
+    applicability:
+      scope: PROJECT
+      conditions:
+        - Browser QA is verifying scroll preservation, pointer ownership, focus stability, or disclosure geometry away from the top of the document.
+        - The disposable fixture content can legitimately be shorter than the viewport or otherwise fail to create the intended scroll state.
+        - QA can establish the missing precondition without changing production markup, CSS, content ownership, or runtime behavior.
+      exclusions:
+        - Do not inject test-only layout into production templates or stylesheets.
+        - Do not treat a failed precondition as evidence of a production defect until the intended interaction state is actually reproduced.
+        - Same-project confirmation is not independent evidence for cross-project promotion.
+    promotion_state: PROJECT_ONLY
+    promotion:
+      candidate: false
+      rationale: >-
+        Budokan Local Navigation QA initially failed because the fixture was too short for scrollIntoViewIfNeeded
+        to guarantee non-zero scroll. The correction created a QA-only deep-scroll spacer before the component,
+        after which the same real pointer open-close-reopen assertions passed without any Theme change. This is a
+        useful Budokan testing boundary, but it is not independent cross-project evidence.
+      blocked_by:
+        - NEEDS_INDEPENDENT_REFERENCE_EVIDENCE_BEFORE_CROSS_PROJECT_PROMOTION
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-LOCAL-NAV-DEEP-SCROLL-QA-20260905
+          kind: COMMIT
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/wordpress-acf-runtime/scripts/budokan-local-nav-pointer-browser-qa.mjs
+          commit: bcab243689b011dd274c83cedeafd8fa2d2bedb6
+          note: >-
+            PR #410 added real elementFromPoint pointer ownership, scroll/geometry stability, horizontal-overflow,
+            and open-close-reopen coverage. The first run exposed a nondeterministic test precondition rather than
+            a Theme defect; the final merged QA creates deep scroll only in the browser fixture and passes against
+            unchanged production local-navigation CSS and markup.
+      contradicts: []
+    notes:
+      - "Promotion review disposition 2026-09-05: KEEP_PROJECT_ONLY; one Budokan QA correction, no independent reference evidence, no auto-promotion."
