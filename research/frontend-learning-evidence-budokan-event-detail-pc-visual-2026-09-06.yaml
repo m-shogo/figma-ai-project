@@ -1,0 +1,50 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: OBS-BUDOKAN-EVENT-DETAIL-PC-VISUAL-OWNERSHIP
+    summary: >-
+      A detail page that already appears close to Figma should still be locked with real runtime geometry before moving on. For shared WordPress
+      detail templates, assert the current consumer's proven rail, spacing and typography contracts without converting those observations into
+      new page-specific production code when the shared Theme owner already matches. Keep unproven responsive siblings out of the contract.
+    category: RUNTIME
+    applicability:
+      scope: PROJECT
+      conditions:
+        - Nippon Budokan Event detail uses the shared single.php detail shell and existing event CPT/event_cat ownership.
+        - Current PC Event detail authority FKQaJDu5TZXHoCzPsfP92E / 1632:10382 proves 220px page title, 48px detail-band padding and title-to-content rhythm, aligned 960px rails, 32px Event title, and 14px date.
+        - Disposable WordPress plus Playwright can render a real Event single through the existing CPT/taxonomy model and measure computed runtime geometry.
+      exclusions:
+        - Do not create page-specific CSS when the existing shared Theme owner already satisfies the proven PC contract.
+        - Do not infer Event SP values from News SP or from PC while a uniquely proven current Event-detail SP authority is absent.
+        - Do not introduce Event date-range fields or other ACF ownership from Figma content appearance alone.
+        - Do not generalize this project-only finding without independent evidence.
+    promotion_state: PROJECT_ONLY
+    promotion:
+      candidate: false
+      rationale: >-
+        PR #450 added a dedicated real WordPress + Playwright PC regression against current Event detail Figma without changing production Theme code.
+        The runtime passed the proven page-title, detail-band, 960px rail, 48px rhythm, title/date typography, optional label-width and horizontal-overflow
+        contracts on the first bounded production state, confirming reuse-before-build was correct. REF001 also passed on the same head before squash merge.
+      blocked_by:
+        - NEEDS_INDEPENDENT_REFERENCE_EVIDENCE_BEFORE_CROSS_PROJECT_PROMOTION
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-EVENT-DETAIL-PC-VISUAL-20260906
+          kind: COMMIT
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/wordpress-acf-runtime/scripts/budokan-event-single-pc-visual-browser-qa.mjs
+          commit: 42c74038d95d0ff2d57d2dbbdc37ac2b357381c6
+          note: >-
+            PR #450 squash-merged after the dedicated Event detail PC visual runtime and REF001 both passed. No production PHP/CSS/JS or ACF schema
+            change was required; the test records current Figma/runtime agreement while explicitly excluding unproven SP ownership.
+      contradicts: []
+    notes:
+      - "Promotion review disposition 2026-09-06: KEEP_PROJECT_ONLY; Budokan-only evidence, no auto-promotion."
