@@ -152,6 +152,38 @@ try {
       headings, sheets
     };
   });
+  // The editor iframe has a separate FontFaceSet from the admin shell.
+  // A computed font-family alone cannot establish that the glyph font loaded.
+  const collectFonts = root => root.evaluate(async el => {
+    const doc = el.ownerDocument;
+    const win = doc.defaultView;
+    const glyphs = '\uf061\uf1c1\uf15c';
+    const faces = await doc.fonts.load('400 14px "Font Awesome 6 Pro"', glyphs);
+    const links = [...doc.querySelectorAll('link[rel="stylesheet"]')].map(link => link.href);
+    const sheets = [...doc.styleSheets].map(sheet => sheet.href).filter(Boolean);
+    const icons = [...el.querySelectorAll('.wp-block-button__link, #qa-parts-file-links a')].map(node => {
+      const pseudo = win.getComputedStyle(node, '::after');
+      return { text: node.textContent, content: pseudo.content, font: pseudo.fontFamily,
+        weight: pseudo.fontWeight, mask: pseudo.maskImage };
+    });
+    return { faces: faces.map(face => ({ family: face.family, weight: face.weight, status: face.status })),
+      links, sheets, icons, ready: doc.fonts.check('400 14px "Font Awesome 6 Pro"', glyphs) };
+  });
+  const assertFontAssets = evidence => {
+    assert.ok(evidence.sheets.some(href => /\/css\/all\.min\.css(?:\?|$)/.test(href)), 'Font Awesome stylesheet missing in content document');
+    assert.ok(evidence.faces.some(face => face.status === 'loaded' && face.family.includes('Font Awesome 6 Pro')), 'actual regular icon face missing');
+    assert.ok(evidence.ready);
+    // External Google requests are deliberately blocked in editor QA.
+    // Verify the configured source is present, not a network/font success.
+    assert.ok([...evidence.links, ...evidence.sheets].some(href => {
+      const url = new URL(href);
+      return url.hostname === 'fonts.googleapis.com' &&
+        url.searchParams.getAll('family').some(family => family.startsWith('Zen Kaku Gothic New:'));
+    }), 'Google font stylesheet declaration missing');
+    assert.ok(evidence.icons.some(icon => icon.text.trim() === 'ボタン大' &&
+      icon.content === '"\uf061"' && icon.font.includes('Font Awesome 6 Pro') && icon.weight === '400'),
+    JSON.stringify(evidence.icons));
+  };
   const editorEvidence = [];
   for (const width of [1380, 1024]) {
     await page.setViewportSize({ width, height: 900 });
@@ -182,6 +214,11 @@ try {
       return differences.length ? [{ label: h.label, differences }] : [];
     });
     console.log(JSON.stringify({ nativeEditorCanvasEvidence: mismatches.length ? 'MISMATCH' : 'HEADING_METRICS_MATCH', shellWidth: width, mismatches, measured }));
+    const fonts = await collectFonts(canvas);
+    console.log(JSON.stringify({ nativeEditorFontAssets: 'MEASURED', shellWidth: width, fonts }));
+    await canvas.locator('.wp-block-button__link').first().scrollIntoViewIfNeeded();
+    await page.screenshot({ path: 'form-qa-results/native-parts-editor-fonts-' + width + '.png' });
+    assertFontAssets(fonts);
     editorEvidence.push({ width, mismatchCount: mismatches.length });
     await canvas.locator('h2').filter({ hasText: '大見出しとテキストの検証' }).scrollIntoViewIfNeeded();
     await page.screenshot({ path: 'form-qa-results/native-parts-editor-heading-' + width + '.png' });
@@ -208,6 +245,11 @@ try {
       ), JSON.stringify(measured.headings));
       assert.ok(!measured.sheets.some(sheet => /\/css\/editor-content\.css(?:\?|$)/.test(sheet.href)),
         'editor-only CSS must not leak onto the frontend');
+      const fonts = await collectFonts(scope);
+      console.log(JSON.stringify({ nativeFrontendFontAssets: 'MEASURED', width, fonts }));
+      assertFontAssets(fonts);
+      await scope.locator('.wp-block-button__link').first().scrollIntoViewIfNeeded();
+      await frontend.screenshot({ path: 'form-qa-results/native-parts-front-fonts-' + width + '.png' });
       console.log(JSON.stringify({ nativeFrontendHeadingEvidence: 'PASS', width, measured }));
       await scope.locator('h2').filter({ hasText: '大見出しとテキストの検証' }).scrollIntoViewIfNeeded();
       await frontend.screenshot({ path: 'form-qa-results/native-parts-front-heading-' + width + '.png' });
