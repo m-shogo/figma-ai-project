@@ -255,3 +255,10 @@ Trigger: 承認済み残実装・保守改善に安全なREADYがなくなった
 - 開始 so b549e3e0。正式Figma skill、新規sessionでPC344:1134/SP442:2939、PC344:1027/SP442:2880の高精細context/画像。#793 head2bfc293e CI3/3、実WP run46018109894/job140570373863でseparator12/12、Gutenberg invalid0・段落編集保存再編集/front PASS。artifact15207771083から3engine×2幅の6 PNGを確認。merge 6ad4aa5f021effa634c4045d82113b4019002b41。PC fixture本文幅1156–1171pxでFigma960pxの厳密比較とは別、学校実環境・物理機・editor視覚未受入。
 - 独立 #794 head690aa8e1: the_contentの旧正規表現がdata-target/data-hrefを誤認し既存relを重複追加し得る。既存WP_HTML_Tag_Processorを使用し、明示target・rel token・既存拡張子範囲を維持。実WP8ケース/idempotence、inlineリンク3engine×4幅・focus・保存再編集を追加。最新CI/PNG確認前は未マージ。URL query/大文字拡張子で既存CSSアイコンが判定を外す課題は別READY（front/editor両方のowner照合を先行）。
 - 次READY: #794 CI実ログ/PNG/最新so/差分→安全merge、残るリンク/小ボタン/実editor CSS比較。#785 WP7.1+ gate、CUR-04実ACF、#664旧PR、#523/#524、534:1706保留・owner・scheduleは維持。TOPへは進まない。
+
+
+## 2026-11-28 継続 — 添付リンクと大小ボタンのファイルアイコン
+- 開始so 6ad4aa5f。#795 docs CI2/2、実ログ確認→c60dc25c7f165fb7524a32cb71b720f5bdaee0c0 merge。正式Figma skill、新規sessionでPC344:1027/SP442:2880、PC357:938/SP442:2908、PC344:969/SP442:2833の高精細context/画像確認。
+- #794 initial head690aa8e1 run46021308174/job140581347195: 実WP属性8ケース・inline link11ケースはPASS、WebKit768のQA Details（index2）Escape後の同一frame中間状態待ち1秒でFAIL。原因を断定せず、Escape入力前に実ページrAF計測をarmし、高さ・open・inert・focusの同時条件を維持、失敗時に全frameの時系列と最終値を記録するテスト修正 ed96deeae8fa861199c36a12fe5c9d4ab43c8720。最新CI/画像確認前は未マージ。再発時はtraceに基づき実装/計測の原因を切り分け、条件緩和・skipはしない。
+- 独立 #796 bc3d14c1964d320a2c7e5aa02b66b6d43abbc7c1: 既存の本文・大小ボタン拡張子selectorにASCII case-insensitive flag、file種別と外部SVG除外を揃えた。front/editor CSS scope・3engine×5幅で大小文字/PDF/添付/通常新窓を比較。既存小ボタンSP gap20pxは#622のCMS区別なしの判断を維持。新素材/配色/拡張子追加なし。URL pathを正確に解析できないCSS substringでqueryを対応したとはしない。CI/PNG未確認、未マージ。
+- 次READY: #794/#796最新CI実ログ/PNG/最新soと非競合確認→安全merge。path query/fragmentのアイコン分類は通常ページのqueryに含まれる拡張子を誤認しない設計とfront/editor両方の既存ownerを調査。小ボタン長文・hover/focus/optical alignmentの実描画、CUR-04/08へ実ACF/実canvasを引継ぎ。#785 WP7.1+ gate、#664、#523/#524、534:1706、ACF・owner・スケジュール変更なし。
