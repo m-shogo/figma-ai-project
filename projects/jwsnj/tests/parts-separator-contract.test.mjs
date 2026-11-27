@@ -15,10 +15,13 @@ test('native separator uses official blossom over a 1px translucent green line',
   assert.match(css, /background-size:\s*auto calc\(17 \* var\(--to-rem-func\)\),\s*calc\(8 \* var\(--to-rem-func\)\) calc\(8 \* var\(--to-rem-func\)\),\s*100% calc\(1 \* var\(--to-rem-func\)\)/);
   assert.match(css, /background-position:\s*center, center, center/);
   assert.match(css, /background-repeat:\s*no-repeat/);
-  assert.match(css, /margin-top:\s*calc\(32 \* var\(--to-rem-func\)\)/);
-  assert.match(css, /margin-bottom:\s*calc\(32 \* var\(--to-rem-func\)\)/);
-  assert.match(css, /margin-top:\s*calc\(25 \* var\(--to-rem-func\)\)/);
-  assert.match(css, /margin-bottom:\s*calc\(23 \* var\(--to-rem-func\)\)/);
+  assert.match(css, /margin-block:\s*0;/);
+  assert.match(css, /padding-block:\s*calc\(32 \* var\(--to-rem-func\)\)/);
+  assert.match(css, /padding-block:\s*calc\(25 \* var\(--to-rem-func\)\) calc\(23 \* var\(--to-rem-func\)\)/);
+  assert.match(css, /box-sizing:\s*content-box/);
+  assert.match(css, /background-origin:\s*content-box/);
+  assert.match(css, /background-clip:\s*content-box/);
+  assert.doesNotMatch(css, /margin-(?:top|bottom):/);
   assert.doesNotMatch(css, /border-style:\s*dashed|figma\.com\/api\/mcp\/asset|white-space:\s*nowrap/);
   assert.ok(readFileSync(new URL('../theme/images/common/ico_blossom.svg', import.meta.url)).length > 0);
 });
