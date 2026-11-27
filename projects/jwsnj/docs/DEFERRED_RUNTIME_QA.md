@@ -327,3 +327,7 @@ Human原文839行の `wp:tabs` と `metadata.blockVisibility.viewport` を実Wor
 
 ### CUR-04 / CUR-08 補足 — 区切り線・標準タブ
 #793実WP CI3/3、区切り線12ケース・Gutenberg invalid0/保存再編集PASS済み（6ad4aa5f）。Cursorは隔離CIを再作成せず既存/parts/コピーで実canvasのCSSと正式テーマ出力のFigma差を確認する。#785はWP7.0.2でcore/tabs未登録（WP7.1+要件）。現地登録版を確認し、許可なしにWP更新・新規プラグイン・代替ACFを導入しない。#794は添付リンク属性修正のCI待ち、正式URLを創作しない。#523/#524/owner/スケジュール変更なし。
+
+
+### CUR-08 追加 — 実canvasの意匠差の証拠
+#794 merge756954c、actual WP editor保存/再編集機能はPASSだが artifact15216055810 の native-parts-editor-reopened.png でH2/H3/H4、本文、ボタン等のフロントとの差を目視確認。単なる未確認ではなく意匠差あり。新しいactual canvas計測（root/scope/headingのCSS変数、CSSOM、実viewport、PC/狭いshell）で原因を切り分ける。CIのdiagnostic MISMATCHを合格と扱わず、実機/ACF Proの編集差も引き続きCUR-08。既存Theme編集機能と意図的Details編集ラベルを保ち、Foundationの同時編集禁止。#799別PR、#785版gateは維持。

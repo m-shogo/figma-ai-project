@@ -98,10 +98,103 @@ try {
   assert.deepEqual(after.visibility, before.visibility, 'native viewport metadata persists after save/reopen');
   assert.ok(after.content.includes(target + suffix), 'edited paragraph persisted after reopening');
   await page.screenshot({ path: 'form-qa-results/native-parts-editor-reopened.png' });
+  // Actual canvas evidence, not an isolated .editor-styles-wrapper fixture.
+  // Record authored values alongside computed styles before deciding whether
+  // the stylesheet loader, token scope or cascade owns a mismatch.
+  const collectHeadings = root => root.evaluate(el => {
+    const doc = el.ownerDocument;
+    const win = doc.defaultView;
+    const labels = ['大見出しとテキストの検証', '中見出しとテキスト', '小見出しとテキスト'];
+    const tokens = ['--to-rem-func', '--font-jwsnj-ja', '--color-primary', '--jwsnj-color-sec', '--color-text', '--wp-block-margin'];
+    const vars = node => Object.fromEntries(tokens.map(token => [token, win.getComputedStyle(node).getPropertyValue(token).trim()]));
+    const headings = labels.map(label => {
+      const node = [...el.querySelectorAll('h2,h3,h4')].find(h => h.textContent.trim() === label);
+      if (!node) return { label, missing: true };
+      const style = win.getComputedStyle(node);
+      const rect = node.getBoundingClientRect();
+      const parent = node.parentElement;
+      return { label, tag: node.tagName, className: node.className, fontSize: style.fontSize,
+        fontFamily: style.fontFamily, fontWeight: style.fontWeight, color: style.color,
+        background: style.backgroundColor, backgroundImage: style.backgroundImage,
+        borderBottom: style.borderBottomWidth, borderImage: style.borderImageSource,
+        paddingLeft: style.paddingLeft, paddingBottom: style.paddingBottom,
+        marginBottom: style.marginBottom, width: rect.width, height: rect.height,
+        parentWidth: parent.getBoundingClientRect().width,
+        variables: vars(node) };
+    });
+    const sheets = [...doc.styleSheets].map(sheet => {
+      const href = sheet.href || sheet.ownerNode?.id || 'inline';
+      try {
+        const found = [];
+        const scan = (rules, parents = [], depth = 0) => {
+          if (!rules || depth > 8) return;
+          for (const rule of rules) {
+            if (rule.selectorText && /:root|editor-styles-wrapper|wp-block-heading/.test(rule.selectorText)) {
+              const relevant = tokens.filter(t => rule.style?.getPropertyValue(t));
+              if (relevant.length && found.length < 20) found.push({ selector: [...parents, rule.selectorText].join(' > '), tokens: relevant });
+            }
+            if (rule.styleSheet) scan(rule.styleSheet.cssRules, parents, depth + 1);
+            else if (rule.cssRules) scan(rule.cssRules, rule.selectorText ? [...parents, rule.selectorText] : parents, depth + 1);
+          }
+        };
+        scan(sheet.cssRules);
+        return { href, readable: true, tokenRules: found };
+      } catch (error) {
+        return { href, readable: false, reason: error.name };
+      }
+    });
+    return {
+      viewport: win.innerWidth,
+      rootFont: win.getComputedStyle(doc.documentElement).fontSize,
+      desktopMedia: win.matchMedia('(min-width: 48rem)').matches,
+      scope: el.className,
+      rootVars: vars(doc.documentElement), scopeVars: vars(el),
+      headings, sheets
+    };
+  });
+  const editorEvidence = [];
+  for (const width of [1380, 1024]) {
+    await page.setViewportSize({ width, height: 900 });
+    const canvas = await frame.count()
+      ? page.frameLocator('iframe[name="editor-canvas"]').locator('.editor-styles-wrapper').first()
+      : page.locator('.editor-styles-wrapper').first();
+    await canvas.waitFor({ state: 'visible' });
+    await canvas.evaluate(el => el.ownerDocument.fonts.ready);
+    const measured = await collectHeadings(canvas);
+    assert.equal(measured.headings.length, 3);
+    assert.ok(measured.headings.every(h => !h.missing && h.width > 0), JSON.stringify(measured.headings));
+    const expectedSizes = measured.desktopMedia ? ['30px', '24px', '18px'] : ['24px', '22px', '18px'];
+    const mismatches = measured.headings.flatMap((h, index) => {
+      const differences = [];
+      if (h.fontSize !== expectedSizes[index]) differences.push('fontSize');
+      if (h.fontWeight !== '500') differences.push('fontWeight');
+      if (index === 0 && h.borderBottom !== '3px') differences.push('borderBottom');
+      if (index === 1 && h.background !== 'rgb(107, 210, 206)') differences.push('background');
+      if (index === 2 && (!h.backgroundImage.includes('ico_blossom.svg') || h.paddingLeft !== '26px')) differences.push('blossom/padding');
+      if (!h.variables['--to-rem-func'] || !h.variables['--font-jwsnj-ja']) differences.push('tokens');
+      return differences.length ? [{ label: h.label, differences }] : [];
+    });
+    console.log(JSON.stringify({ nativeEditorCanvasEvidence: mismatches.length ? 'MISMATCH' : 'HEADING_METRICS_MATCH', shellWidth: width, mismatches, measured }));
+    editorEvidence.push({ width, mismatchCount: mismatches.length });
+    await canvas.locator('h2').filter({ hasText: '大見出しとテキストの検証' }).scrollIntoViewIfNeeded();
+    await page.screenshot({ path: 'form-qa-results/native-parts-editor-heading-' + width + '.png' });
+  }
+  console.log(JSON.stringify({ nativeEditorCanvasEvidenceCollected: true, editorEvidence }));
   const frontend = await browser.newPage();
   try {
     assert.equal((await frontend.goto(front.href)).status(), 200);
     assert.ok(await frontend.locator('.block-editor_wrap').getByText(target + suffix, { exact: true }).isVisible());
+    for (const width of [375, 1380]) {
+      await frontend.setViewportSize({ width, height: 900 });
+      const scope = frontend.locator('.block-editor_wrap').first();
+      await scope.evaluate(el => el.ownerDocument.fonts.ready);
+      const measured = await collectHeadings(scope);
+      assert.ok(measured.headings.every(h => !h.missing));
+      assert.deepEqual(measured.headings.map(h => h.fontSize), width >= 768 ? ['30px', '24px', '18px'] : ['24px', '22px', '18px']);
+      console.log(JSON.stringify({ nativeFrontendHeadingEvidence: 'PASS', width, measured }));
+      await scope.locator('h2').filter({ hasText: '大見出しとテキストの検証' }).scrollIntoViewIfNeeded();
+      await frontend.screenshot({ path: 'form-qa-results/native-parts-front-heading-' + width + '.png' });
+    }
   } finally {
     await frontend.close();
   }
