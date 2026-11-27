@@ -31,6 +31,12 @@ on:
       - 'projects/jwsnj/qa/fixtures/parts-catalog-tables.html'
       - 'projects/jwsnj/qa/seed-parts-tables-qa.php'
       - 'projects/jwsnj/qa/parts-tables-browser-qa.mjs'
+      - 'projects/jwsnj/qa/fixtures/parts-catalog-text-boxes.html'
+      - 'projects/jwsnj/qa/seed-parts-text-boxes-qa.php'
+      - 'projects/jwsnj/qa/parts-text-boxes-browser-qa.mjs'
+      - 'projects/jwsnj/theme/css/blocks/wp-block-columns-style.css'
+      - 'projects/jwsnj/theme/css/blocks/wp-block-group-style.css'
+      - 'projects/jwsnj/theme/css/blocks/wp-block-hidden-style.css'
       - 'projects/jwsnj/theme/css/blocks/wp-block-table-style.css'
       - 'projects/jwsnj/theme/js/table-scroll-hint.js'
       - 'projects/jwsnj/theme/css/blocks/wp-block-heading-style.css'
@@ -117,6 +123,17 @@ jobs:
           [[ "$gallery_id" =~ ^[0-9]+$ ]]
           cd ../..
           node projects/jwsnj/qa/parts-gallery-browser-qa.mjs "${WP_URL}/?page_id=${gallery_id}"
+      - name: Actual native text box Group and Columns geometry
+        env:
+          CSS_QA_MODULE_ROOT: ${{ runner.temp }}/css-qa
+        run: |
+          cd runtime/wordpress
+          source scripts/runtime-env.sh
+          docker compose run --rm -e WP_ENVIRONMENT_TYPE=local -e JWSNJ_PARTS_QA_DISPOSABLE=1 cli eval-file /project/qa/seed-parts-text-boxes-qa.php
+          boxes_id="$(docker compose run --rm cli option get jwsnj_parts_text_boxes_qa_page_id)"
+          [[ "$boxes_id" =~ ^[0-9]+$ ]]
+          cd ../..
+          node projects/jwsnj/qa/parts-text-boxes-browser-qa.mjs "${WP_URL}/?page_id=${boxes_id}"
       - name: Actual fiscal archive query and pagination
         run: |
           cd runtime/wordpress
