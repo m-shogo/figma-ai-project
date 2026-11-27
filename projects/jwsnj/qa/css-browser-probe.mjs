@@ -828,6 +828,76 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
       await fixture.dispose();
     }
   }
+
+  // Native Separator: Figma PC344:1134/SP442:2939.
+  // The isolated CSS fixture measures real adjoining blocks, not Core/editor UI.
+  for (const width of [320, 375, 767, 768, 1380]) {
+    await page.setViewportSize({ width, height: 900 });
+    const fixture = await page.evaluateHandle(() => {
+      const host = document.createElement('div');
+      host.id = 'parts-separator';
+      host.style.cssText = 'width:min(calc(100% - 40px),960px);margin-inline:auto';
+      for (const scope of ['block-editor_wrap', 'editor-styles-wrapper']) {
+        const body = document.createElement('div');
+        body.className = scope;
+        body.innerHTML = '<h2 class="wp-block-heading">区切り線</h2><hr class="wp-block-separator has-alpha-channel-opacity"><p>次の段落 LongEditableTextWithoutSpaces1234567890LongEditableTextWithoutSpaces1234567890</p>';
+        host.append(body);
+      }
+      document.body.append(host);
+      return host;
+    });
+    try {
+      await page.evaluate(() => document.fonts.ready);
+      const metrics = await fixture.evaluate(async el => {
+        const icon = new Image();
+        icon.src = '/images/common/ico_blossom.svg';
+        await icon.decode();
+        return [...el.children].map(host => {
+          const heading = host.querySelector('h2');
+          const hr = host.querySelector('hr');
+          const p = host.querySelector('p');
+          const rect = hr.getBoundingClientRect();
+          const s = getComputedStyle(hr);
+          return {
+            scope: host.className, height: rect.height, width: rect.width,
+            hostWidth: host.getBoundingClientRect().width,
+            headingGap: rect.top - heading.getBoundingClientRect().bottom,
+            nextGap: p.getBoundingClientRect().top - rect.bottom,
+            padding: [s.paddingTop, s.paddingBottom],
+            border: s.borderTopWidth, margin: [s.marginTop, s.marginBottom],
+            origin: s.backgroundOrigin, clip: s.backgroundClip,
+            art: s.backgroundImage, size: s.backgroundSize, opacity: s.opacity,
+            icon: [icon.naturalWidth, icon.naturalHeight],
+            fits: p.scrollWidth <= p.clientWidth + 1
+          };
+        });
+      });
+      const pc = width >= 768;
+      for (const m of metrics) {
+        assert.ok(Math.abs(m.height - (pc ? 65 : 81)) <= 1, JSON.stringify(m));
+        assert.ok(Math.abs(m.width - m.hostWidth) <= 1, JSON.stringify(m));
+        assert.ok(Math.abs(m.headingGap - (pc ? 40 : 32)) <= 1, JSON.stringify(m));
+        assert.ok(m.nextGap >= 0 && m.fits, JSON.stringify(m));
+        assert.deepEqual(m.padding, pc ? ['25px', '23px'] : ['32px', '32px']);
+        assert.deepEqual(m.margin, ['0px', '0px']);
+        assert.equal(m.border, '0px');
+        assert.ok(m.origin.split(',').every(v => v.trim() === 'content-box'));
+        assert.ok(m.clip.split(',').every(v => v.trim() === 'content-box'));
+        assert.match(m.art, /ico_blossom\.svg/);
+        assert.match(m.size, /auto 17px, 8px 8px, 100% 1px/);
+        assert.equal(m.opacity, '1');
+        assert.ok(m.icon.every(n => n > 0));
+      }
+      if (width === 375 || width === 1380) {
+        await page.locator('#parts-separator').screenshot({ path: out + '/separator-' + name + '-' + width + '.png' });
+      }
+      console.log(JSON.stringify({ separatorCSS: 'PASS', engine: name, width, metrics }));
+      report.push({ name, width, separator: metrics });
+    } finally {
+      await fixture.evaluate(el => el.remove());
+      await fixture.dispose();
+    }
+  }
  await page.emulateMedia({reducedMotion:'reduce'});
  // Feature proof separate from production layout: actual cascade and containment.
  const mechanism=await page.evaluate(()=>{
