@@ -20,7 +20,7 @@ test('keyboard and hover keep link distinction and existing file icon variants',
   assert.match(css, /text-decoration-line:\s*underline/);
   assert.match(css, /outline-offset:\s*calc\(2 \* var\(--to-rem-func\)\)/);
   assert.match(css, /&\[target='_blank'\]/);
-  assert.match(css, /&\[href\$='\.pdf'\]/);
+  assert.match(css, /&\[href\$='\.pdf' i\]/);
   assert.match(css, /mask:\s*url\('\.\.\/\.\.\/images\/common\/ico-blank\.svg'\) center \/ contain no-repeat/);
   assert.match(css, /content:\s*var\(--icon-pdf\)/);
 });
@@ -29,7 +29,7 @@ test('inline external link preserves orange Figma icon and excludes existing fil
   const external = css.match(/&\[target='_blank'\]:where\(:not\(([^)]+)\)\)\s*\{\s*&::after\s*\{([^}]+)\}/);
   assert.ok(external);
   for (const ext of ['pdf','doc','docx','docm','xls','xlsx','xlsm','png','jpg','jpeg','gif','webp']) {
-    assert.ok(external[1].includes("[href$='." + ext + "']"));
+    assert.ok(external[1].includes("[href$='." + ext + "' i]"));
   }
   const icon = external[2];
   assert.match(icon, /content:\s*''/);

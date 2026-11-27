@@ -26,7 +26,7 @@
         outline-offset: calc(2 * var(--to-rem-func));
       }
       /* Figma PC 344:1029 / SP 442:2882: orange icon, distinct from coral text. */
-      &[target='_blank']:where(:not([href$='.pdf'], [href$='.doc'], [href$='.docx'], [href$='.docm'], [href$='.xls'], [href$='.xlsx'], [href$='.xlsm'], [href$='.png'], [href$='.jpg'], [href$='.jpeg'], [href$='.gif'], [href$='.webp'])) {
+      &[target='_blank']:where(:not([href$='.pdf' i], [href$='.doc' i], [href$='.docx' i], [href$='.docm' i], [href$='.xls' i], [href$='.xlsx' i], [href$='.xlsm' i], [href$='.png' i], [href$='.jpg' i], [href$='.jpeg' i], [href$='.gif' i], [href$='.webp' i])) {
         &::after {
           content: '';
           display: inline-block;
@@ -38,7 +38,7 @@
           margin-left: 0.25em;
         }
       }
-      &[href$='.pdf'] {
+      &[href$='.pdf' i] {
         &::after {
           content: var(--icon-pdf);
           font-family: var(--font-awesome);
@@ -48,17 +48,17 @@
           margin-left: 0.25em;
         }
       }
-      &[href$='.doc'],
-      &[href$='.docx'],
-      &[href$='.docm'],
-      &[href$='.xls'],
-      &[href$='.xlsx'],
-      &[href$='.xlsm'],
-      &[href$='.png'],
-      &[href$='.jpg'],
-      &[href$='.jpeg'],
-      &[href$='.gif'],
-      &[href$='.webp'] {
+      &[href$='.doc' i],
+      &[href$='.docx' i],
+      &[href$='.docm' i],
+      &[href$='.xls' i],
+      &[href$='.xlsx' i],
+      &[href$='.xlsm' i],
+      &[href$='.png' i],
+      &[href$='.jpg' i],
+      &[href$='.jpeg' i],
+      &[href$='.gif' i],
+      &[href$='.webp' i] {
         &::after {
           content: var(--icon-file);
           font-family: var(--font-awesome);

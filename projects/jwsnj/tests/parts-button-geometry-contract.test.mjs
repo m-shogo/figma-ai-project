@@ -27,7 +27,7 @@ test('long button text wraps and icon variants keep working', () => {
   assert.match(button, /outline-offset:\s*calc\(3 \* var\(--to-rem-func\)\)/);
   assert.match(button, /content:\s*'\\f061'/);
   assert.match(button, /target='_blank'/);
-  assert.match(button, /href\$='\.pdf'/);
+  assert.match(button, /href\$='\.pdf' i/);
   assert.doesNotMatch(button, /white-space:\s*nowrap|figma\.com\/api\/mcp\/asset/);
 });
 
@@ -36,7 +36,7 @@ test('external large button uses official SVG and excludes PDF/file glyph varian
   const external = large.match(/&\[target='_blank'\]:where\(:not\(([^)]+)\)\)\s*\{\s*&::after\s*\{([^}]+)\}/);
   assert.ok(external);
   for (const ext of ['pdf','doc','docx','docm','xls','xlsx','xlsm','png','jpg','jpeg','gif','webp']) {
-    assert.ok(external[1].includes("[href$='." + ext + "']"), ext + ' retains its file icon');
+    assert.ok(external[1].includes("[href$='." + ext + "' i]"), ext + ' retains its file icon');
   }
   assert.match(external[2], /content:\s*''/);
   assert.match(external[2], /background-color:\s*currentColor/);

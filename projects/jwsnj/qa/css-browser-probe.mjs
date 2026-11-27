@@ -663,6 +663,88 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
    await fixture.evaluate(el=>el.remove());
    report.push({name,width,smallNavigation:geometry});
  }
+ // File icons: ASCII case-insensitive suffix matching in both existing scopes.
+ // This deliberately does not match query substrings as file extensions.
+ for (const width of [320, 375, 767, 768, 1380]) {
+   await page.setViewportSize({ width, height: 900 });
+   await page.emulateMedia({ reducedMotion: 'reduce' });
+   const fixture = await page.evaluateHandle(() => {
+     const host = document.createElement('div');
+     host.id = 'parts-file-icon-case';
+     host.style.cssText = 'width:min(calc(100% - 40px),960px);margin-inline:auto';
+     for (const scope of ['block-editor_wrap', 'editor-styles-wrapper']) {
+       const container = document.createElement('div');
+       container.className = scope;
+       const variants = [
+         ['#end', '通常リンク'],
+         ['/qa/document.pdf', 'PDF'],
+         ['/qa/document.PDF', '大文字PDF'],
+         ['/qa/image.webp', '添付'],
+         ['/qa/image.WeBp', '混在拡張子'],
+         ['/qa/page?name=document.pdf&download=1', '通常の新窓リンク']
+       ];
+       for (const kind of ['inline', 'large', 'small']) {
+         const group = document.createElement(kind === 'inline' ? 'p' : 'div');
+         if (kind !== 'inline') group.className = 'wp-block-buttons' + (kind === 'small' ? ' small' : '');
+         group.dataset.qaKind = kind;
+         for (const [index, [href, label]] of variants.entries()) {
+           const a = document.createElement('a');
+           a.href = href;
+           if (index !== 0) a.target = '_blank';
+           a.textContent = label;
+           if (kind === 'inline') {
+             group.append(a, document.createTextNode('　'));
+           } else {
+             const wrapper = document.createElement('div');
+             wrapper.className = 'wp-block-button';
+             a.className = 'wp-block-button__link';
+             wrapper.append(a);
+             group.append(wrapper);
+           }
+         }
+         container.append(group);
+       }
+       host.append(container);
+     }
+     document.body.append(host);
+     return host;
+   });
+   try {
+     await page.evaluate(() => document.fonts.ready);
+     const metrics = await fixture.evaluate(el => [...el.querySelectorAll('[data-qa-kind]')].map(group => {
+       const kind = group.dataset.qaKind;
+       const links = [...group.querySelectorAll('a')].map(a => {
+         const icon = getComputedStyle(a, '::after');
+         const circle = getComputedStyle(a, '::before');
+         const box = a.getBoundingClientRect();
+         return {
+           content: icon.content, mask: icon.maskImage,
+           font: icon.fontFamily, size: icon.fontSize,
+           circle: [circle.width, circle.height],
+           fits: box.right <= group.getBoundingClientRect().right + 1,
+           color: icon.color
+         };
+       });
+       return { kind, scope: group.parentElement.className, links };
+     }));
+     for (const { kind, links } of metrics) {
+       assert.equal(links.length, 6);
+       assert.equal(links[1].content, '"\uf1c1"');
+       assert.equal(links[2].content, links[1].content);
+       assert.equal(links[3].content, kind === 'inline' ? '"\uf15c"' : '"\uf15b"');
+       assert.equal(links[4].content, links[3].content);
+       assert.ok(links.slice(1, 5).every(link => link.mask === 'none' && link.fits));
+       assert.match(links[5].mask, /ico-blank\.svg/);
+       if (kind === 'small') assert.ok(links.every(link => link.circle.join(' ') === '30px 30px'));
+     }
+     if (width === 375 || width === 1380) await page.locator('#parts-file-icon-case').screenshot({ path: out + '/file-icon-case-' + name + '-' + width + '.png' });
+     console.log(JSON.stringify({ fileIconCase: 'PASS', engine: name, width, metrics }));
+     report.push({ name, width, fileIconCase: metrics });
+   } finally {
+     await fixture.evaluate(el => el.remove());
+     await fixture.dispose();
+   }
+ }
  // Legacy file presentation must not leak to a generic .file component.
  for (const width of [375, 768, 1380]) {
    await page.setViewportSize({width, height: 900});

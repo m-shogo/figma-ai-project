@@ -19,7 +19,7 @@ test('small variant uses 30px mint leading icon, 8px gap, 16px labels',()=>{
 });
 test('small icons distinguish file kinds and preserve focus handling in shared link',()=>{
   assert.match(small,/&\[target='_blank'\]:where\(:not\(/);
-  assert.match(small,/&\[href\$='\.pdf'\]::after/);
+  assert.match(small,/&\[href\$='\.pdf' i\]::after/);
   assert.match(small,/content:\s*'\\f15b'/);
   assert.match(small,/&::before\s*\{\s*content:\s*''/);
   assert.match(css,/&:focus-visible/);
@@ -51,9 +51,9 @@ test('small circle and glyph are independently centered for every icon and wrap 
   assert.match(small, /--_small-icon-color:\s*var\(--jwsnj-color-sec\)/);
 });
 test('small external link retains the circle and uses the same glyph center and hover color', () => {
-  const external = small.slice(small.indexOf("&[target='_blank']"), small.indexOf("&[href$='.pdf']::after"));
+  const external = small.slice(small.indexOf("&[target='_blank']"), small.indexOf("&[href$='.pdf' i]::after"));
   for (const ext of ['pdf','doc','docx','docm','xls','xlsx','xlsm','png','jpg','jpeg','gif','webp']) {
-    assert.ok(external.includes("[href$='." + ext + "']"), ext + ' retains its file icon');
+    assert.ok(external.includes("[href$='." + ext + "' i]"), ext + ' retains its file icon');
   }
   assert.match(external, /&::after\s*\{\s*content:\s*''/);
   assert.match(external, /width:\s*calc\(13 \* var\(--to-rem-func\)\)/);
