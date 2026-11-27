@@ -52,6 +52,19 @@ try {
     'core/list-item': 8, 'core/buttons': 1, 'core/button': 2, 'core/details': 3
   };
   await openEditor();
+  // A fresh WP user receives a real welcome modal that intercepts canvas clicks.
+  // Close it through the editor UI; never force a click through the overlay.
+  const welcome = page.getByRole('heading', { name: 'Welcome to the editor', exact: true });
+  const welcomeVisible = await welcome.waitFor({ state: 'visible', timeout: 5000 })
+    .then(() => true, error => {
+      if (error.name !== 'TimeoutError') throw error;
+      return false;
+    });
+  if (welcomeVisible) {
+    const dialog = page.locator('.components-modal__frame').filter({ has: welcome });
+    await dialog.getByRole('button', { name: 'Close', exact: true }).click();
+    await dialog.waitFor({ state: 'hidden' });
+  }
   const before = await inspect();
   assert.deepEqual(before.invalid, [], 'invalid/recovery blocks in editor');
   assert.deepEqual(before.counts, expected);
@@ -91,5 +104,7 @@ try {
   }
   console.log(JSON.stringify({ nativePartsEditor: 'PASS', engine: 'chromium', counts: after.counts, invalid: after.invalid.length, edited: true, saved: true, reopened: true, frontend: true }));
 } finally {
+  const activePage = browser.contexts()[0]?.pages()[0];
+  if (activePage) await activePage.screenshot({ path: 'form-qa-results/native-parts-editor-final-state.png' }).catch(() => {});
   await browser.close();
 }
