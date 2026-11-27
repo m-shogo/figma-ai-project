@@ -425,3 +425,5 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 
 - 2026-11-27 native visibility: #787の実WP初回FAIL（481px）を境界値の誤りと決めつけない。診断run46012005630/job140549610124でactual viewportとmatchMedia、出力styleとCSSOMを同時確認。Coreが付けたclassは正しく、Themeの専用CSSが旧768/1024pxで隠していた（native support CSSは出力されていない）。Core 7.0.2の480/782px契約とThemeのlayout breakpointを分離し、変更ownerを限定する。7.1以降の可変viewportはversion gate、実CI合格前に修正成功と書かない。#785でCore tabs未登録も再現：Git上のview.jsの存在ではインストール済み登録を証明しない。依存変更は承認後。
 - #788: Group/Columnsを実Theme CSSだけで測るとCore Columns CSSがないためPCでも縦積み。15ケース・6 PNGでpadding、見出し、長文と保存済みSVGを検証したが、2列配置の合格には実WPが必要。CSS computed gapのPASSを実際の列間隔やcanvasの証明にしない。PROJECT_ONLY。
+
+- 2026-11-27 区切り線：#793 実WordPress3engine×4幅12/12、実Gutenberg登録・invalid0・保存再編集/front成功、PC/SP6 PNG確認。CSS scopeのみのPASSからnative core CSS込みのPASSに更新したが、fixture本文幅とFigma960pxの差、学校実機は未受入。添付リンクの属性操作は正規表現によるHTML再構築より既存WP_HTML_Tag_Processorを優先する候補。#794で明示target/既存rel/data属性/パス判定とidempotenceを実WPで検証予定、未合格の段階で共通ルールに昇格しない。CSS拡張子判定の整合は別途。

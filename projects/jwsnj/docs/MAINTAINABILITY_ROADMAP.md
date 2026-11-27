@@ -249,3 +249,9 @@ Trigger: 承認済み残実装・保守改善に安全なREADYがなくなった
 - #788 `416dcca44d8b82e884906a49d21c7c77e1bd17a6` CI3/3、CSS run46012129173/job140550016915 3engine×5幅=15/15（各front/editor CSS scope）、artifact15204467743 PC/SP×3engine計6 PNG確認。PCの画像はCore Columns CSSを含まないため縦積みであり、Figmaの2列完成証拠ではない。余白・H4・花・長文・枠のみ合格。merge `2b41a8fe6d40b4fd06c3fb2f43a22e4b9f7fbd19`。#789 docs CI2/2、非競合確認後 `6392ef20abad9cb6ec769cbef6d27037d2c18e98` へmerge。
 - #787 diagnostics run46012005630/job140549610124: viewport481/client481、Core tablet matchMedia=true、native visibility style要素なし、実CSSOMにThemeの768/1024px旧条件のみ。所有元はfront/editor両方からimportされる `wp-block-hidden-style.css`。Core WP7.0.2の固定480/782pxを採用、Theme layout境界とglobal-styles抑制はそのまま。修正 e3c1523c、旧1023/1024も試験追加3a1d3fea、docs f8e1cd50。#787最新実WP/CSS/Guard/AuditとPNG確認まで未マージ。#785標準タブは別のバージョンgate。
 - 次READY: #787 CIログ/画像→merge、native Group/Columnsの実WP二列/積み重ね・editor保存再編集と境界を検証。Cursor CUR-04（実ACF、WP版とタブ登録）・CUR-08（実canvas）に引継ぎ。TOP/ACF/owner/534:1706/スケジュールは無変更。
+
+
+## 2026-11-27 継続 — 区切り線の実WordPress検証・添付リンク属性
+- 開始 so b549e3e0。正式Figma skill、新規sessionでPC344:1134/SP442:2939、PC344:1027/SP442:2880の高精細context/画像。#793 head2bfc293e CI3/3、実WP run46018109894/job140570373863でseparator12/12、Gutenberg invalid0・段落編集保存再編集/front PASS。artifact15207771083から3engine×2幅の6 PNGを確認。merge 6ad4aa5f021effa634c4045d82113b4019002b41。PC fixture本文幅1156–1171pxでFigma960pxの厳密比較とは別、学校実環境・物理機・editor視覚未受入。
+- 独立 #794 head690aa8e1: the_contentの旧正規表現がdata-target/data-hrefを誤認し既存relを重複追加し得る。既存WP_HTML_Tag_Processorを使用し、明示target・rel token・既存拡張子範囲を維持。実WP8ケース/idempotence、inlineリンク3engine×4幅・focus・保存再編集を追加。最新CI/PNG確認前は未マージ。URL query/大文字拡張子で既存CSSアイコンが判定を外す課題は別READY（front/editor両方のowner照合を先行）。
+- 次READY: #794 CI実ログ/PNG/最新so/差分→安全merge、残るリンク/小ボタン/実editor CSS比較。#785 WP7.1+ gate、CUR-04実ACF、#664旧PR、#523/#524、534:1706保留・owner・scheduleは維持。TOPへは進まない。
