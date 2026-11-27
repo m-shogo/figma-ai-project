@@ -25,7 +25,10 @@ foreach (['global-nav', 'sub-nav', 'footer-nav'] as $location) {
   };
   $parent = $add('検証用の長い親メニュー Navigation');
   if ($location !== 'sub-nav') {
-    $add('子メニュー Child', $parent);
+    $child = $add('子メニュー Child', $parent);
+    if ($location === 'footer-nav') {
+      $add('孫メニュー Grandchild', $child);
+    }
     $add('長い子メニューの折り返し検証 Long label with several extra words and Japanese 日本語と英語が混在する長文のメニュー', $parent);
     $other = $add('別の親メニュー');
     $add('別の親の子メニュー', $other);
