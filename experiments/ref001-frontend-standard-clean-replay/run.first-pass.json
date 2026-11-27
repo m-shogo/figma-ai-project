@@ -1,0 +1,21 @@
+{
+  "captures_sha256": "fb39c246d2b6384349a4c13609d86a05607d683cd47bc3913031e86bd038ba21",
+  "code_starting_commit": "9285c29dbf5b01d153d4c8b9c3d76ff3777b6d32",
+  "company_policy_sha256": "",
+  "experiment_id": "EXP-REF001-FRONTEND-STANDARD-CLEAN-REPLAY-20260821",
+  "first_pass_commit": "b6d6e3dfe49c488fbf5c128e6b901249abf08de5",
+  "first_pass_fidelity": {
+    "robustness": 8,
+    "structural": 14,
+    "total": 42,
+    "visual": 20
+  },
+  "frozen_at": "2026-08-21T03:19:06+00:00",
+  "implementation_profile_id": "IMPL-REF001-WORDPRESS-ACF",
+  "implementation_profile_sha256": "9fa81a28f5f81761164cde04638d29553a19d6035bf1681b648f579b271caad0",
+  "reference_manifest_sha256": "b36d81243057fa75dca15ef642f51e9c85b7ba691cb6bcf8c39612a2def85bae",
+  "required_environment_profiles": [],
+  "run_id": "RUN-REF001-FRONTEND-STANDARD-CLEAN-REPLAY-20260821-A",
+  "schema_version": 1,
+  "tooling_revision": "977f0581e3a88c8254be93c0d9389b1d09a78563"
+}
