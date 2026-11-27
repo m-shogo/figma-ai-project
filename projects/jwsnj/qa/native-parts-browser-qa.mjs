@@ -212,16 +212,43 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
           assert.equal(await item.evaluate(el => el.open), true);
           if (i === 0) await body.locator('a').focus();
           else await summary.focus();
-          await page.keyboard.press('Escape');
-          // Capture geometry, native state, inert and focus in the same frame.
-          // Separate browser round trips can sample after the transition ends.
-          await page.waitForFunction(({ el, from, to }) => {
-            const h = el.getBoundingClientRect().height;
+          // Arm the sampler before pressing Escape. A driver round trip can
+          // otherwise miss the entire 300ms transition on a busy runner.
+          const samples = await item.evaluateHandle(el => {
             const panel = el.querySelector(':scope > .wp-block-details__content');
             const summary = el.querySelector(':scope > summary');
-            return h > to + 2 && h < from - 2 && !el.open &&
-              panel.inert && summary === document.activeElement;
-          }, { el: await item.elementHandle(), from: expanded, to: closed }, { timeout: 1000 });
+            const frames = [];
+            const trace = { frames, done: false };
+            el.addEventListener('keydown', event => {
+              if (event.key !== 'Escape') return;
+              const start = performance.now();
+              const sample = () => {
+                frames.push({
+                  ms: performance.now() - start,
+                  height: el.getBoundingClientRect().height,
+                  open: el.open, inert: panel.inert,
+                  focused: summary === document.activeElement
+                });
+                if (performance.now() - start < 600) requestAnimationFrame(sample);
+                else trace.done = true;
+              };
+              requestAnimationFrame(sample);
+            }, { capture: true, once: true });
+            return trace;
+          });
+          await page.keyboard.press('Escape');
+          try {
+            await page.waitForFunction(({ trace, from, to }) => trace.frames.some(frame =>
+              frame.height > to + 2 && frame.height < from - 2 &&
+              !frame.open && frame.inert && frame.focused
+            ), { trace: samples, from: expanded, to: closed }, { timeout: 1000 });
+          } catch (error) {
+            console.error(JSON.stringify({ engineName, width, i, closed, expanded,
+              closeFrames: await samples.evaluate(trace => trace.frames), actual: await read() }));
+            throw error;
+          } finally {
+            await samples.dispose();
+          }
           if (i === 0) {
             await page.keyboard.press('Tab');
             assert.equal(await body.locator('a').evaluate(el => el === document.activeElement), false);
