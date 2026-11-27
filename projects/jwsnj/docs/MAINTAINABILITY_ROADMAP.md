@@ -177,3 +177,10 @@ Trigger: 承認済み残実装・保守改善に安全なREADYがなくなった
 ## 共通パーツ再点検 — 2026-11-27
 
 - Start e9ee9e1; #760 merged, #523/#524 unclaimed, #664 held, #516 unrelated. Fresh PC/SP numbered/unordered list and large-button context/images; no color changes or new assets. Existing list rules match reference dimensions at source; added computed browser regression, and custom-width button container cap. CI pending until verified; next READY check rendered list/button screenshots, then headings, annotation, table, disclosure and other common parts individually. Full editor iframe/actual school runtime still #523; Header/Footer remaining decisions unchanged. No TOP/course/original534:1706/ACF/schedule changes.
+
+## 継続実績 — 共通リスト・NEWS・実WPパーツ集（2026-11-27）
+
+- Start so `0f004b10c6694112d26eb1e930ce367c1160e5be`。Cursor #764既存mergeを維持。Figma正式skill、新規session、PC344:947/SP442:2806、PC390:669/SP478:3029、PC357:938/SP442:2908の高精細context/画像を再確認。
+- #761: 最新soの並行doc追記を保ったmerge commit `8f006168`、CI 4/4成功。CSS実ログ run45948647202/job140339087910、artifact15175986410のPC/SP 6 PNGを確認。2桁10.の左端欠け解消、長文ボタン/入れ子list維持。本文34px insetをolに集約し、native numberingを維持。単桁番号の右寄せはFigmaの左寄せと差が残る。実Gutenberg editorは未検証。merge `733423e112aa03ad0019af2158832129b191f347`。
+- #766: 前head `b025908f` の実WP run45948001144/job140337040400はFirefox768の固定ラベル2行でFAIL。親Flexのintrinsic幅だけでは不足。明示span + grid配置、同一行の複数text rectを区別するQAへ変更し、Cursor #764のHeader/hero/メニューQAを保ったmerge commit `577253dd`。CI 5/5、実WP run45948694890/job140339240839 3 engines×375/768/1380の9ケースPASS。absolute、0.3s、開閉時のflow不変、Escape/連打/focus復帰/reduced-motion。artifact15176092136の9 PNGを確認。merge `618530d28edc4a19fe8d8b878a8aa01ca8c8e86b`。長い編集カテゴリは折返し可、固定ラベルは1行。未確定リンクと検索窓の扱いはHuman指示の範囲。
+- #768: 原文839行を保持し、native core blockに限定した別fixture/明示的disposable seed/既存WP CIブラウザQAを追加。CI結果と実画像を確認するまで未マージ・未検証。次READYは #768の最新soとの統合/実ログ/画像、実Gutenberg編集・保存再編集、他パーツ（table/gallery/ACF navigation/tab）の適応。Large Navigation→TOP Course共通表示はCursor最新adapterと照合し、ACFを変更しない。#523/#524は未完、534:1706・#664・スケジュールは変更なし。
