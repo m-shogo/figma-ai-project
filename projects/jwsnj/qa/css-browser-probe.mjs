@@ -664,8 +664,8 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
    await fixture.evaluate(el=>el.remove());
    report.push({name,width,smallNavigation:geometry});
  }
- // File icons: ASCII case-insensitive suffix matching in both existing scopes.
- // This deliberately does not match query substrings as file extensions.
+ // File icons: plain CSS fallback plus actual shared URL path classifier.
+ await page.addScriptTag({ url: url + '/js/file-link-icons.js' });
  for (const width of [320, 375, 767, 768, 1380]) {
    await page.setViewportSize({ width, height: 900 });
    await page.emulateMedia({ reducedMotion: 'reduce' });
@@ -682,7 +682,11 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
          ['/qa/document.PDF', '大文字PDF'],
          ['/qa/image.webp', '添付'],
          ['/qa/image.WeBp', '混在拡張子'],
-         ['/qa/page?name=document.pdf&download=1', '通常の新窓リンク']
+         ['/qa/page?name=document.pdf&download=1', '通常の新窓リンク'],
+         ['/qa/document.PDF?download=1#page=2', 'クエリ付きPDF'],
+         ['/qa/image.WeBp#preview', 'フラグメント付き添付'],
+         ['/qa/page?name=document.pdf', '通常クエリ末尾'],
+         ['#document.pdf', '通常フラグメント末尾']
        ];
        for (const kind of ['inline', 'large', 'small']) {
          const group = document.createElement(kind === 'inline' ? 'p' : 'div');
@@ -712,6 +716,7 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
    });
    try {
      await page.evaluate(() => document.fonts.ready);
+     await page.waitForFunction(() => document.querySelectorAll('#parts-file-icon-case [data-jwsnj-file-icon]').length === 12);
      const metrics = await fixture.evaluate(el => [...el.querySelectorAll('[data-qa-kind]')].map(group => {
        const kind = group.dataset.qaKind;
        const links = [...group.querySelectorAll('a')].map(a => {
@@ -729,16 +734,28 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
        return { kind, scope: group.parentElement.className, links };
      }));
      for (const { kind, links } of metrics) {
-       assert.equal(links.length, 6);
+       assert.equal(links.length, 10);
        assert.equal(links[1].content, '"\uf1c1"');
        assert.equal(links[2].content, links[1].content);
        assert.equal(links[3].content, kind === 'inline' ? '"\uf15c"' : '"\uf15b"');
        assert.equal(links[4].content, links[3].content);
        assert.ok(links.slice(1, 5).every(link => link.mask === 'none' && link.fits));
        assert.match(links[5].mask, /ico-blank\.svg/);
+       assert.equal(links[6].content, links[1].content);
+       assert.equal(links[7].content, links[3].content);
+       assert.ok(links.slice(6, 8).every(link => link.mask === 'none' && link.fits));
+       assert.match(links[8].mask, /ico-blank\.svg/);
+       assert.match(links[9].mask, /ico-blank\.svg/);
        if (kind === 'small') assert.ok(links.every(link => link.circle.join(' ') === '30px 30px'));
      }
      if (width === 375 || width === 1380) await page.locator('#parts-file-icon-case').screenshot({ path: out + '/file-icon-case-' + name + '-' + width + '.png' });
+     // Simulate Gutenberg replacing a URL in-place; a previous file marker
+     // must disappear and the ordinary new-window SVG must return.
+     const edited = page.locator('#parts-file-icon-case [data-qa-kind="inline"] a').nth(6);
+     await edited.evaluate(a => a.setAttribute('href', '/qa/page?name=document.pdf'));
+     await page.waitForFunction(el => !el.hasAttribute('data-jwsnj-file-icon') && getComputedStyle(el, '::after').maskImage.includes('ico-blank.svg'), await edited.elementHandle());
+     await edited.evaluate(a => a.setAttribute('href', '/qa/image.webp#view'));
+     await page.waitForFunction(el => el.getAttribute('data-jwsnj-file-icon') === 'file' && getComputedStyle(el, '::after').maskImage === 'none', await edited.elementHandle());
      console.log(JSON.stringify({ fileIconCase: 'PASS', engine: name, width, metrics }));
      report.push({ name, width, fileIconCase: metrics });
    } finally {

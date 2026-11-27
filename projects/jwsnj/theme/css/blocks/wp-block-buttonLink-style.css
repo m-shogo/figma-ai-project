@@ -84,7 +84,8 @@
           outline-offset: calc(3 * var(--to-rem-func));
         }
         /* Official external-link SVG, excluding the existing file-icon variants. */
-        &[target='_blank']:where(:not([href$='.pdf' i], [href$='.doc' i], [href$='.docx' i], [href$='.docm' i], [href$='.xls' i], [href$='.xlsx' i], [href$='.xlsm' i], [href$='.png' i], [href$='.jpg' i], [href$='.jpeg' i], [href$='.gif' i], [href$='.webp' i])) {
+        &[target='_blank']:where(:not([href$='.pdf' i], [href$='.doc' i], [href$='.docx' i], [href$='.docm' i], [href$='.xls' i], [href$='.xlsx' i], [href$='.xlsm' i], [href$='.png' i], [href$='.jpg' i], [href$='.jpeg' i], [href$='.gif' i], [href$='.webp' i])):where(:not([href*='?'], [href*='#'])),
+        &[target='_blank']:where([href*='?'], [href*='#']):where(:not([data-jwsnj-file-icon='pdf'], [data-jwsnj-file-icon='file'])) {
           &::after {
             content: '';
             width: calc(14 * var(--to-rem-func));
@@ -93,24 +94,26 @@
             mask: url('../../images/common/ico-blank.svg') center / contain no-repeat;
           }
         }
-        &[href$='.pdf' i] {
+        &[href$='.pdf' i]:where(:not([href*='?'], [href*='#'])),
+        &[data-jwsnj-file-icon='pdf'] {
           &::after {
             content: var(--icon-pdf);
             font-family: var(--font-awesome);
             font-weight: 400;
           }
         }
-        &[href$='.doc' i],
-        &[href$='.docx' i],
-        &[href$='.docm' i],
-        &[href$='.xls' i],
-        &[href$='.xlsx' i],
-        &[href$='.xlsm' i],
-        &[href$='.png' i],
-        &[href$='.jpg' i],
-        &[href$='.jpeg' i],
-        &[href$='.gif' i],
-        &[href$='.webp' i] {
+        &[href$='.doc' i]:where(:not([href*='?'], [href*='#'])),
+        &[href$='.docx' i]:where(:not([href*='?'], [href*='#'])),
+        &[href$='.docm' i]:where(:not([href*='?'], [href*='#'])),
+        &[href$='.xls' i]:where(:not([href*='?'], [href*='#'])),
+        &[href$='.xlsx' i]:where(:not([href*='?'], [href*='#'])),
+        &[href$='.xlsm' i]:where(:not([href*='?'], [href*='#'])),
+        &[href$='.png' i]:where(:not([href*='?'], [href*='#'])),
+        &[href$='.jpg' i]:where(:not([href*='?'], [href*='#'])),
+        &[href$='.jpeg' i]:where(:not([href*='?'], [href*='#'])),
+        &[href$='.gif' i]:where(:not([href*='?'], [href*='#'])),
+        &[href$='.webp' i]:where(:not([href*='?'], [href*='#'])),
+        &[data-jwsnj-file-icon='file'] {
           &::after {
             /* Figma button attachment is F15B; inline text links keep F15C. */
             content: '\f15b';
@@ -194,7 +197,8 @@
           text-box-trim: none;
           pointer-events: none;
         }
-        &[target='_blank']:where(:not([href$='.pdf' i], [href$='.doc' i], [href$='.docx' i], [href$='.docm' i], [href$='.xls' i], [href$='.xlsx' i], [href$='.xlsm' i], [href$='.png' i], [href$='.jpg' i], [href$='.jpeg' i], [href$='.gif' i], [href$='.webp' i])) {
+        &[target='_blank']:where(:not([href$='.pdf' i], [href$='.doc' i], [href$='.docx' i], [href$='.docm' i], [href$='.xls' i], [href$='.xlsx' i], [href$='.xlsm' i], [href$='.png' i], [href$='.jpg' i], [href$='.jpeg' i], [href$='.gif' i], [href$='.webp' i])):where(:not([href*='?'], [href*='#'])),
+        &[target='_blank']:where([href*='?'], [href*='#']):where(:not([data-jwsnj-file-icon='pdf'], [data-jwsnj-file-icon='file'])) {
           &::after {
             content: '';
             width: calc(13 * var(--to-rem-func));
@@ -203,20 +207,22 @@
             mask: url('../../images/common/ico-blank.svg') center / contain no-repeat;
           }
         }
-        &[href$='.pdf' i]::after {
+        &[href$='.pdf' i]:where(:not([href*='?'], [href*='#']))::after,
+        &[data-jwsnj-file-icon='pdf']::after {
           content: var(--icon-pdf);
         }
-        &[href$='.doc' i]::after,
-        &[href$='.docx' i]::after,
-        &[href$='.docm' i]::after,
-        &[href$='.xls' i]::after,
-        &[href$='.xlsx' i]::after,
-        &[href$='.xlsm' i]::after,
-        &[href$='.png' i]::after,
-        &[href$='.jpg' i]::after,
-        &[href$='.jpeg' i]::after,
-        &[href$='.gif' i]::after,
-        &[href$='.webp' i]::after {
+        &[href$='.doc' i]:where(:not([href*='?'], [href*='#']))::after,
+        &[href$='.docx' i]:where(:not([href*='?'], [href*='#']))::after,
+        &[href$='.docm' i]:where(:not([href*='?'], [href*='#']))::after,
+        &[href$='.xls' i]:where(:not([href*='?'], [href*='#']))::after,
+        &[href$='.xlsx' i]:where(:not([href*='?'], [href*='#']))::after,
+        &[href$='.xlsm' i]:where(:not([href*='?'], [href*='#']))::after,
+        &[href$='.png' i]:where(:not([href*='?'], [href*='#']))::after,
+        &[href$='.jpg' i]:where(:not([href*='?'], [href*='#']))::after,
+        &[href$='.jpeg' i]:where(:not([href*='?'], [href*='#']))::after,
+        &[href$='.gif' i]:where(:not([href*='?'], [href*='#']))::after,
+        &[href$='.webp' i]:where(:not([href*='?'], [href*='#']))::after,
+        &[data-jwsnj-file-icon='file']::after {
           content: '\f15b';
         }
         @media (any-hover: hover) {

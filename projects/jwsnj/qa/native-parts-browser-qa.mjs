@@ -70,7 +70,8 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
         console.log(JSON.stringify({ nativeSeparator: 'PASS', engine: engineName, width, separatorGeometry }));
         // QA-only destinations; inspect markup and styles without opening files.
         const inlineLinks = root.locator('#qa-parts-file-links a');
-        assert.equal(await inlineLinks.count(), 4);
+        assert.equal(await inlineLinks.count(), 6);
+        await page.waitForFunction(() => document.querySelectorAll('#qa-parts-file-links [data-jwsnj-file-icon]').length === 2);
         const linkMetrics = await inlineLinks.evaluateAll(elements => elements.map(el => {
           const style = getComputedStyle(el);
           const icon = getComputedStyle(el, '::after');
@@ -81,15 +82,16 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
             wrap: style.overflowWrap, duration: style.transitionDuration
           };
         }));
-        assert.deepEqual(linkMetrics.map(link => link.target), [null, '_blank', '_blank', '_blank']);
+        assert.deepEqual(linkMetrics.map(link => link.target), [null, '_blank', '_blank', '_blank', '_blank', '_blank']);
         assert.ok(linkMetrics[2].rel.includes('nofollow') && linkMetrics[2].rel.includes('noreferrer') && linkMetrics[2].rel.includes('external'));
         assert.ok(linkMetrics[3].rel.includes('noreferrer') && linkMetrics[3].rel.includes('external'));
         assert.ok(linkMetrics.every(link => link.color === 'rgb(236, 107, 97)' && link.wrap === 'anywhere'));
         assert.match(linkMetrics[1].mask, /ico-blank\.svg/);
-        assert.notEqual(linkMetrics[2].icon, 'none');
-        assert.notEqual(linkMetrics[3].icon, 'none');
-        assert.notEqual(linkMetrics[2].icon, linkMetrics[3].icon);
-        for (let i = 0; i < 4; i++) {
+        assert.equal(linkMetrics[2].icon, '"\uf1c1"');
+        assert.equal(linkMetrics[3].icon, '"\uf15c"');
+        assert.ok(linkMetrics.slice(2, 4).every(link => link.mask === 'none'));
+        assert.ok(linkMetrics.slice(4).every(link => link.mask.includes('ico-blank.svg')));
+        for (let i = 0; i < 6; i++) {
           await inlineLinks.nth(i).focus();
           assert.ok(await inlineLinks.nth(i).evaluate(el => el === document.activeElement));
         }
@@ -104,6 +106,8 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
         assert.equal(await root.locator('ul.annotation-list').count(), 1);
         const buttons = root.locator('.wp-block-button__link');
         assert.equal(await buttons.count(), 2);
+        await page.waitForFunction(el => el.getAttribute('data-jwsnj-file-icon') === 'pdf', await buttons.nth(1).elementHandle());
+        assert.equal(await buttons.nth(1).evaluate(el => getComputedStyle(el, '::after').content), '"\uf1c1"');
         const fitting = await buttons.evaluateAll(elements => elements.every(el => {
           const host = el.closest('.wp-block-buttons').getBoundingClientRect();
           const rect = el.getBoundingClientRect();

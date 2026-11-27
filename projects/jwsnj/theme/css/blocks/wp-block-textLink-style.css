@@ -28,7 +28,8 @@
         outline-offset: calc(2 * var(--to-rem-func));
       }
       /* Figma PC 344:1029 / SP 442:2882: orange icon, distinct from coral text. */
-      &[target='_blank']:where(:not([href$='.pdf' i], [href$='.doc' i], [href$='.docx' i], [href$='.docm' i], [href$='.xls' i], [href$='.xlsx' i], [href$='.xlsm' i], [href$='.png' i], [href$='.jpg' i], [href$='.jpeg' i], [href$='.gif' i], [href$='.webp' i])) {
+      &[target='_blank']:where(:not([href$='.pdf' i], [href$='.doc' i], [href$='.docx' i], [href$='.docm' i], [href$='.xls' i], [href$='.xlsx' i], [href$='.xlsm' i], [href$='.png' i], [href$='.jpg' i], [href$='.jpeg' i], [href$='.gif' i], [href$='.webp' i])):where(:not([href*='?'], [href*='#'])),
+      &[target='_blank']:where([href*='?'], [href*='#']):where(:not([data-jwsnj-file-icon='pdf'], [data-jwsnj-file-icon='file'])) {
         &::after {
           content: '';
           display: inline-block;
@@ -40,7 +41,8 @@
           margin-left: 0.25em;
         }
       }
-      &[href$='.pdf' i] {
+      &[href$='.pdf' i]:where(:not([href*='?'], [href*='#'])),
+      &[data-jwsnj-file-icon='pdf'] {
         &::after {
           content: var(--icon-pdf);
           font-family: var(--font-awesome);
@@ -50,17 +52,18 @@
           margin-left: 0.25em;
         }
       }
-      &[href$='.doc' i],
-      &[href$='.docx' i],
-      &[href$='.docm' i],
-      &[href$='.xls' i],
-      &[href$='.xlsx' i],
-      &[href$='.xlsm' i],
-      &[href$='.png' i],
-      &[href$='.jpg' i],
-      &[href$='.jpeg' i],
-      &[href$='.gif' i],
-      &[href$='.webp' i] {
+      &[href$='.doc' i]:where(:not([href*='?'], [href*='#'])),
+      &[href$='.docx' i]:where(:not([href*='?'], [href*='#'])),
+      &[href$='.docm' i]:where(:not([href*='?'], [href*='#'])),
+      &[href$='.xls' i]:where(:not([href*='?'], [href*='#'])),
+      &[href$='.xlsx' i]:where(:not([href*='?'], [href*='#'])),
+      &[href$='.xlsm' i]:where(:not([href*='?'], [href*='#'])),
+      &[href$='.png' i]:where(:not([href*='?'], [href*='#'])),
+      &[href$='.jpg' i]:where(:not([href*='?'], [href*='#'])),
+      &[href$='.jpeg' i]:where(:not([href*='?'], [href*='#'])),
+      &[href$='.gif' i]:where(:not([href*='?'], [href*='#'])),
+      &[href$='.webp' i]:where(:not([href*='?'], [href*='#'])),
+      &[data-jwsnj-file-icon='file'] {
         &::after {
           content: var(--icon-file);
           font-family: var(--font-awesome);
