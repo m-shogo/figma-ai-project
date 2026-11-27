@@ -581,9 +581,19 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
    for(const disabled of await fixture.locator('a:not([href])').all()) {
      assert.equal(await disabled.evaluate(el=>{el.focus();return el===document.activeElement;}),false,'href-less card is not focusable');
    }
+   // A real button after the list avoids browser chrome/wrap differences
+   // when the fixture is the last sequential focus stop in the document.
+   await fixture.evaluate(el=>{
+     const next=document.createElement('button');
+     next.id='large-nav-next-focus';
+     next.textContent='次の操作';
+     el.after(next);
+   });
    await first.focus();
+   assert.equal(await first.evaluate(el=>el===document.activeElement),true);
    await page.keyboard.press('Tab');
-   assert.equal(await fixture.evaluate(el=>el.contains(document.activeElement)),false,'Tab skips href-less cards');
+   assert.equal(await page.evaluate(()=>document.activeElement.id),'large-nav-next-focus',name+' Tab skips href-less cards '+width);
+   await page.locator('#large-nav-next-focus').evaluate(el=>el.remove());
    await first.focus();
    assert.ok(await first.evaluate(el=>el===document.activeElement&&parseFloat(getComputedStyle(el).outlineWidth)>=2));
    await first.hover();
