@@ -1,0 +1,121 @@
+.v3-kicker {
+  display: inline-flex;
+  background: var(--v3-yellow);
+  padding: 2px 8px;
+  font-family: var(--v3-font-en);
+  font-size: 20px;
+  line-height: 1;
+  letter-spacing: 0.05em;
+}
+
+.v3-heading {
+  margin: 0;
+}
+
+.v3-heading--center {
+  text-align: center;
+}
+
+.v3-heading__title {
+  margin: 24px 0 0;
+  font-family: var(--v3-font-heading);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  font-size: 30px;
+}
+
+.v3-heading__title strong {
+  font-size: 42px;
+  font-weight: 500;
+}
+
+.v3-heading__break {
+  display: none;
+}
+
+.v3-heading__bracket {
+  font-family: var(--v3-font-en);
+  font-size: 50px;
+  font-weight: 500;
+  color: #fff;
+  -webkit-text-stroke: 1px #333;
+  margin: 0 12px;
+}
+
+.v3-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 64px;
+  min-width: 201px;
+  padding: 0 24px;
+  background: #fff;
+  text-decoration: none;
+  font-size: 16px;
+  letter-spacing: 0.05em;
+}
+
+.v3-btn__icon {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+
+.v3-btn--blue {
+  background: var(--v3-blue);
+  color: #fff;
+}
+
+.v3-btn--purple {
+  background: var(--v3-purple);
+  color: #fff;
+}
+
+.v3-brand {
+  display: flex;
+  align-items: center;
+}
+
+.v3-brand__logo {
+  position: relative;
+  width: 187px;
+  height: 47px;
+  display: block;
+  flex: none;
+}
+
+.v3-brand__piece {
+  position: absolute;
+  display: block;
+  max-width: none;
+  height: auto;
+}
+
+.v3-brand__piece--mark {
+  left: 0;
+  top: 0;
+  width: 43.3px;
+  height: 47px;
+}
+
+.v3-brand__piece--ck {
+  left: 7.3px;
+  top: 16.6px;
+  width: 27.6px;
+  height: 13.8px;
+}
+
+.v3-brand__piece--name {
+  left: 53.7px;
+  top: 9.4px;
+  width: 133.3px;
+  height: 18.8px;
+}
+
+.v3-brand__piece--en {
+  left: 92.8px;
+  top: 35.3px;
+  width: 58.4px;
+  height: 6.1px;
+}

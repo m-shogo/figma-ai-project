@@ -1,0 +1,29 @@
+<?php
+$d = v3_data()['footer'];
+?>
+<footer class="v3-footer" data-section="footer" data-figma-pc="<?php v3_e($d['figma']['pc']); ?>" data-figma-sp="<?php v3_e($d['figma']['sp']); ?>">
+  <div class="v3-footer__inner">
+    <div class="v3-footer__profile">
+      <?php v3_component('brand'); ?>
+      <p class="v3-footer__address v3-footer__address--pc"><?php echo nl2br(htmlspecialchars($d['address'], ENT_QUOTES, 'UTF-8'), false); ?></p>
+      <p class="v3-footer__address v3-footer__address--sp"><?php echo nl2br(htmlspecialchars($d['addressSp'], ENT_QUOTES, 'UTF-8'), false); ?></p>
+    </div>
+    <div class="v3-footer__aside">
+      <div class="v3-footer__related">
+        <?php foreach ($d['related'] as $i => $label): ?>
+          <?php if ($i > 0): ?><span class="v3-footer__related-sep" aria-hidden="true">/</span><?php endif; ?>
+          <span><?php v3_e($label); ?></span>
+        <?php endforeach; ?>
+      </div>
+      <nav class="v3-footer__sns" aria-label="公式SNS">
+        <?php foreach ($d['sns'] as $item): ?>
+          <a class="v3-footer__sns-link" href="<?php v3_e(v3_link($item['key'])); ?>" aria-label="<?php v3_e($item['label']); ?>" data-link-status="UNRESOLVED">
+            <?php v3_icon($item['key'], 'v3-footer__sns-icon'); ?>
+          </a>
+        <?php endforeach; ?>
+      </nav>
+    </div>
+  </div>
+  <div class="v3-footer__copyright"><?php v3_e($d['copyright']); ?></div>
+  <a class="v3-footer__pagetop" href="#top" aria-label="ページ先頭へ"><span class="v3-footer__pagetop-icon" aria-hidden="true"></span></a>
+</footer>
