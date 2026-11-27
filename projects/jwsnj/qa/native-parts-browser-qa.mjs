@@ -176,6 +176,39 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
         if (width === 375 || width === 1380) {
           await root.screenshot({ path: 'form-qa-results/native-parts-' + engineName + '-' + width + '-closed.png' });
         }
+        // Core viewport visibility is independent of the Theme's 768px breakpoint.
+        // Reuse the same live document when resizing; no synthetic CSS or reload.
+        if (width === 1380) {
+          const labels = ["これはデスクトップで非表示（タブレット、モバイルでは表示）","これはタブレットで非表示（モバイル、デスクトップでは表示）","これはモバイルで非表示（タブレット、デスクトップでは表示）","これはモバイル、タブレットで非表示（デスクトップでは表示）"];
+          const hidden = [['desktop'], ['tablet'], ['mobile'], ['tablet', 'mobile']];
+          for (const probeWidth of [375, 480, 481, 767, 768, 782, 783, 1380]) {
+            await page.setViewportSize({ width: probeWidth, height: 900 });
+            await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+            const device = probeWidth <= 480 ? 'mobile' : probeWidth <= 782 ? 'tablet' : 'desktop';
+            const observed = [];
+            for (let i = 0; i < labels.length; i++) {
+              const paragraph = root.getByText(labels[i], { exact: true });
+              assert.equal(await paragraph.count(), 1);
+              const geometry = await paragraph.evaluate(el => ({
+                classes: [...el.classList].filter(name => name.startsWith('wp-block-hidden-')).sort(),
+                display: getComputedStyle(el).display,
+                boxes: el.getClientRects().length,
+                height: el.getBoundingClientRect().height
+              }));
+              const expectedHidden = hidden[i].includes(device);
+              assert.deepEqual(geometry.classes, hidden[i].map(name => 'wp-block-hidden-' + name).sort());
+              assert.equal(geometry.display === 'none', expectedHidden, JSON.stringify({ engineName, probeWidth, i, geometry }));
+              assert.equal(geometry.boxes === 0 && geometry.height === 0, expectedHidden);
+              assert.equal(await paragraph.isVisible(), !expectedHidden);
+              observed.push({ label: i, ...geometry });
+            }
+            if (probeWidth === 375 || probeWidth === 1380) {
+              await root.getByText(labels[probeWidth === 375 ? 0 : 3], { exact: true }).scrollIntoViewIfNeeded();
+              await page.screenshot({ path: 'form-qa-results/native-visibility-' + engineName + '-' + probeWidth + '.png' });
+            }
+            console.log(JSON.stringify({ nativeViewportVisibility: 'PASS', engine: engineName, width: probeWidth, device, observed }));
+          }
+        }
         console.log(JSON.stringify({ nativePartsFrontend: 'PASS', engine: engineName, width, headings: metrics, details: states }));
       } catch (error) {
         await page.screenshot({ path: 'form-qa-results/native-parts-failure-' + engineName + '-' + width + '.png' }).catch(() => {});
