@@ -174,6 +174,21 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
           const summary = item.locator(':scope > summary');
           const body = item.locator(':scope > .wp-block-details__content');
           const height = () => item.evaluate(el => el.getBoundingClientRect().height);
+          const readMotion = () => item.evaluate(el => {
+            const summary = el.querySelector(':scope > summary');
+            const panel = el.querySelector(':scope > .wp-block-details__content');
+            return {
+              height: el.getBoundingClientRect().height,
+              open: el.open, inert: panel.inert,
+              focused: summary === document.activeElement,
+              activeTag: document.activeElement?.tagName,
+              activeInside: el.contains(document.activeElement),
+              duration: getComputedStyle(el, '::details-content').transitionDuration,
+              animations: el.getAnimations({ subtree: true }).map(a => ({
+                state: a.playState, time: a.currentTime
+              }))
+            };
+          });
           const supported = await item.evaluate(el => el.dataset.detailsMotion === 'true');
           assert.ok(supported, engineName + ' must support native motion in this CI browser');
           const durations = await item.evaluate(el => getComputedStyle(el, '::details-content').transitionDuration);
@@ -201,7 +216,7 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
               await page.waitForFunction(({ el, target }) => Math.abs(el.getBoundingClientRect().height - target) <= 1,
                 { el: await item.elementHandle(), target }, { timeout: 3000 });
             } catch (error) {
-              console.error(JSON.stringify({ engineName, width, i, target, actual: await read() }));
+              console.error(JSON.stringify({ engineName, width, i, target, actual: await readMotion() }));
               throw error;
             }
           };
@@ -218,7 +233,12 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
             const panel = el.querySelector(':scope > .wp-block-details__content');
             const summary = el.querySelector(':scope > summary');
             const frames = [];
-            const trace = { frames, done: false };
+            const trace = { frames, done: false, before: {
+              height: el.getBoundingClientRect().height, open: el.open,
+              inert: panel.inert, focused: summary === document.activeElement,
+              activeTag: document.activeElement?.tagName,
+              activeInside: el.contains(document.activeElement)
+            } };
             el.addEventListener('keydown', event => {
               if (event.key !== 'Escape') return;
               const start = performance.now();
@@ -244,7 +264,7 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
             ), { trace: samples, from: expanded, to: closed }, { timeout: 1000 });
           } catch (error) {
             console.error(JSON.stringify({ engineName, width, i, closed, expanded,
-              closeFrames: await samples.evaluate(trace => trace.frames), actual: await read() }));
+              closeTrace: await samples.evaluate(trace => ({ before: trace.before, frames: trace.frames, done: trace.done })), actual: await readMotion() }));
             throw error;
           } finally {
             await samples.dispose();
