@@ -520,6 +520,11 @@
       }
       .gnl_inner-02 {
         padding: calc(80 * var(--to-rem-func));
+        padding-block: min(calc(80 * var(--to-rem-func)), 10vh);
+        max-height: calc(100vh - var(--header-height-PC));
+        max-height: calc(100dvh - var(--header-height-PC));
+        overflow-y: auto;
+        overscroll-behavior-y: contain;
         width: 100%;
         max-width: calc(var(--width-base) + var(--padding-TB) * 2);
         margin-inline: auto;
