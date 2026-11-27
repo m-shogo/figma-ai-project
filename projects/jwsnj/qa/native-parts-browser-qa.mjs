@@ -127,10 +127,15 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
           if (i === 0) await body.locator('a').focus();
           else await summary.focus();
           await page.keyboard.press('Escape');
-          await intermediate(expanded, closed);
-          assert.equal(await item.evaluate(el => el.open), false);
-          assert.equal(await body.evaluate(el => el.inert), true);
-          assert.equal(await summary.evaluate(el => el === document.activeElement), true);
+          // Capture geometry, native state, inert and focus in the same frame.
+          // Separate browser round trips can sample after the transition ends.
+          await page.waitForFunction(({ el, from, to }) => {
+            const h = el.getBoundingClientRect().height;
+            const panel = el.querySelector(':scope > .wp-block-details__content');
+            const summary = el.querySelector(':scope > summary');
+            return h > to + 2 && h < from - 2 && !el.open &&
+              panel.inert && summary === document.activeElement;
+          }, { el: await item.elementHandle(), from: expanded, to: closed }, { timeout: 1000 });
           if (i === 0) {
             await page.keyboard.press('Tab');
             assert.equal(await body.locator('a').evaluate(el => el === document.activeElement), false);
