@@ -331,3 +331,8 @@ Human原文839行の `wp:tabs` と `metadata.blockVisibility.viewport` を実Wor
 
 ### CUR-08 追加 — 実canvasの意匠差の証拠
 #794 merge756954c、actual WP editor保存/再編集機能はPASSだが artifact15216055810 の native-parts-editor-reopened.png でH2/H3/H4、本文、ボタン等のフロントとの差を目視確認。単なる未確認ではなく意匠差あり。新しいactual canvas計測（root/scope/headingのCSS変数、CSSOM、実viewport、PC/狭いshell）で原因を切り分ける。CIのdiagnostic MISMATCHを合格と扱わず、実機/ACF Proの編集差も引き続きCUR-08。既存Theme編集機能と意図的Details編集ラベルを保ち、Foundationの同時編集禁止。#799別PR、#785版gateは維持。
+
+
+### 2026-11-28 継続 — 実ページ内リンクと既存PRの再検証
+- 開始so8a1468e5。正式Figma skill/new session PC357:995/1001 SP442:2771/2765、PC344:968/SP442:2842、ページ内リンク PC357:1022/SP442:2948 context/画像再取得。#802 c7687152 run46046708428/job140667667997 8ケースPASS後Firefox768 root24 H4 scrollHeight115/client113、range40px/line37.8pxで上下1.1px、overflow visible。artifact15223341477 failure PNG確認、文字切れなし。9a257c3cは既存derived half-leadingと実range bottomの範囲のみinteger scroll allowanceに反映し横方向/size/focus維持、全18ケースの失敗を収集して最後にstrict fail。CI未確認。#804 head9d09a48 run46046886870/job140668250685 はWebKit既存navigationのlocal stamp REST access control pageerrorでFAIL、フォント試験未到達。条件変更/エラー無視せず失敗jobを一度再実行。再発時はruntime ownerにexact request/responseを引継ぐ。両PR未マージ。
+- #776 isolated CSS15/15 と#617 literal fragment unit testは既存成果。独立したdisposable WPのQA page/fixture markupで既存common.jsの実操作を検証する追加。3engine×375/768/1380、長文/48px最低高さ/24px円、keyboard/focus、通常300ms途中状態、reduced motion、literal日本語/記号、欠落/不正fragment、初期hash、ヘッダーoffset、先頭復帰。正式ACF/schema/URL/slugは変更しない。QA fixtureは隔離環境限定、実ACF編集はCUR-04、実機・視覚最終受入は#523。workflow + new QA files only; #802/#804 changed pathsと非競合。CI/PNG前にmergeしない。
