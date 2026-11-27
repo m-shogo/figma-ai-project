@@ -220,10 +220,38 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
               throw error;
             }
           };
+          // A near-end height is not a settled transition: WebKit can reverse
+          // content-visibility while the opening transition is still running.
+          // Record the real opening input time and require the authored duration
+          // plus stable frames before exercising the ordinary closing contract.
+          await item.evaluate(el => {
+            el.addEventListener('keydown', () => {
+              el.dataset.qaMotionStart = String(performance.now());
+            }, { capture: true, once: true });
+          });
           await summary.focus();
           await page.keyboard.press('Enter');
           await intermediate(closed, expanded);
           await settled(expanded);
+          await item.evaluate(el => new Promise(resolve => {
+            const start = Number(el.dataset.qaMotionStart);
+            const duration = Math.max(...getComputedStyle(el, '::details-content').transitionDuration.split(',').map(value => {
+              const v = value.trim();
+              return parseFloat(v) * (v.endsWith('ms') ? 1 : 1000);
+            }));
+            let stable = 0;
+            let last = NaN;
+            const frame = now => {
+              const height = el.getBoundingClientRect().height;
+              stable = Math.abs(last - height) < 0.1 ? stable + 1 : 0;
+              last = height;
+              if (now - start >= duration && stable >= 2) {
+                delete el.dataset.qaMotionStart;
+                resolve();
+              } else requestAnimationFrame(frame);
+            };
+            requestAnimationFrame(frame);
+          }));
           assert.equal(await item.evaluate(el => el.open), true);
           if (i === 0) await body.locator('a').focus();
           else await summary.focus();
@@ -275,10 +303,17 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
           }
           await settled(closed);
           await page.waitForFunction(el => !el.inert, await body.elementHandle());
-          // Reverse while in flight; no stale closing timer may close/re-disable it.
+          // Reverse while in flight; separately verify the real closed state
+          // (the previous same-task double click could coalesce native toggles).
+          // Keep the ordinary closing intermediate-height assertion above.
+
           await summary.evaluate(el => el.click());
           await intermediate(closed, expanded);
-          await summary.evaluate(el => { el.click(); el.click(); });
+          await summary.evaluate(el => el.click());
+          await page.waitForFunction(el => !el.open, await item.elementHandle());
+          const reversed = await readMotion();
+          console.log(JSON.stringify({ nativeDetailsReverseTrace: true, engineName, width, i, reversed }));
+          await summary.evaluate(el => el.click());
           await settled(expanded);
           assert.equal(await item.evaluate(el => el.open), true);
           assert.equal(await body.evaluate(el => el.inert), false);
