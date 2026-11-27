@@ -138,6 +138,20 @@ add_action('wp_enqueue_scripts', 'replace_default_jquery');
     // });
 require_once __DIR__ . '/css-assets.php';
 
+// Shared font asset registration; preserve existing handles and sources.
+function jwsnj_enqueue_content_fonts() {
+  // Figmaで使用しているGoogle Fonts。必要weightだけを読み込み、既存ローカルfontをfallbackとして保持する。
+  wp_enqueue_style(
+      'jwsnj-google-fonts',
+      'https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap',
+      array(),
+      null,
+      'all'
+  );
+  // Figmaの共通アイコン用。Themeに同梱済みの正規Font Awesome Pro 6.7.2を再利用する。
+  wp_enqueue_style('fontawesome-style', get_theme_file_uri('/css/all.min.css'), array(), '6.7.2', 'all');
+}
+
 function my_enqueue_scripts() {
     // JavaScript
     wp_enqueue_script('swiper-script', get_theme_file_uri('/js/swiper-bundle.min.js'), array(), '14.0.1', ['strategy' => 'defer','in_footer' => false]);
@@ -168,16 +182,7 @@ function my_enqueue_scripts() {
     wp_enqueue_style('css-style', get_stylesheet_uri(), array(), null);
     wp_enqueue_style('swiper-style', get_theme_file_uri('/css/swiper-bundle.min.css'), array(), '14.0.1', 'all');
     wp_enqueue_style('modaal-style', get_theme_file_uri('/css/modaal.min.css'), array(), '0.4.4', 'all');
-    // Figmaで使用しているGoogle Fonts。必要weightだけを読み込み、既存ローカルfontをfallbackとして保持する。
-    wp_enqueue_style(
-        'jwsnj-google-fonts',
-        'https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap',
-        array(),
-        null,
-        'all'
-    );
-    // Figmaの共通アイコン用。Themeに同梱済みの正規Font Awesome Pro 6.7.2を再利用する。
-    wp_enqueue_style('fontawesome-style', get_theme_file_uri('/css/all.min.css'), array(), '6.7.2', 'all');
+    jwsnj_enqueue_content_fonts();
     wp_enqueue_style('flexible-table-block'); // プラグインで登録済みのスタイルをenqueue（テンプレートでテーブルクラスを直接使用しているため必要）
     wp_enqueue_style('jwsnj-scroll-hint', get_theme_file_uri('/css/scroll-hint.css'), array(), filemtime(get_theme_file_path('/css/scroll-hint.css')), 'all');
     jwsnj_enqueue_css_entry('common-style', '/css/style.css', ['jwsnj-google-fonts']);
@@ -200,7 +205,8 @@ add_action('enqueue_block_assets', function () {
   if (!is_admin()) {
     return;
   }
-  jwsnj_enqueue_css_entry('editor-style', '/css/editor-style.css');
+  jwsnj_enqueue_content_fonts();
+  jwsnj_enqueue_css_entry('editor-style', '/css/editor-style.css', ['jwsnj-google-fonts', 'fontawesome-style']);
 });
 
 // ==========================================================================
