@@ -27,7 +27,7 @@ test('keyboard and hover keep link distinction and existing file icon variants',
 });
 
 test('inline external link preserves orange Figma icon and excludes existing file types', () => {
-  const external = css.match(/&\[target='_blank'\]:where\(:not\(([^)]+)\)\)\s*\{\s*&::after\s*\{([^}]+)\}/);
+  const external = css.match(/&\[target='_blank'\]:where\(:not\(([^)]+)\)\)[^{]+\{\s*&::after\s*\{([^}]+)\}/);
   assert.ok(external);
   for (const ext of ['pdf','doc','docx','docm','xls','xlsx','xlsm','png','jpg','jpeg','gif','webp']) {
     assert.ok(external[1].includes("[href$='." + ext + "' i]"));
@@ -64,4 +64,11 @@ test('inline hover fades decoration color without changing geometry; focus is im
   assert.match(css, /&:focus-visible\s*\{\s*text-decoration-color:\s*currentColor;\s*transition:\s*none;/);
   assert.match(css, /@media \(any-hover: hover\)\s*\{\s*&:hover\s*\{\s*text-decoration-color:\s*currentColor;/);
   assert.match(css, /@media \(prefers-reduced-motion: reduce\)\s*\{\s*transition:\s*none;/);
+});
+
+
+test('query/fragment file icons use a resolved path marker and never a raw suffix alone', () => {
+  assert.ok(css.includes("[data-jwsnj-file-icon='pdf']"));
+  assert.ok(css.includes("[data-jwsnj-file-icon='file']"));
+  assert.ok(css.includes(":where(:not([href*='?'], [href*='#']))"));
 });

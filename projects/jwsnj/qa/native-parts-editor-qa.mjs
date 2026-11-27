@@ -184,6 +184,67 @@ try {
       icon.content === '"\uf061"' && icon.font.includes('Font Awesome 6 Pro') && icon.weight === '400'),
     JSON.stringify(evidence.icons));
   };
+  const assertPathIcons = async (scope, isEditor = false) => {
+    const file = scope.locator('a[href="/qa-fixture/document.PDF?download=1#page=2"]');
+    const attachment = scope.locator('a[href="/qa-fixture/image.WeBp#preview"]');
+    await file.first().waitFor({ state: 'visible' });
+    assert.equal(await file.count(), isEditor ? 1 : 2);
+    const waitForMarker = async (link, marker) => {
+      await link.locator('xpath=self::*[@data-jwsnj-file-icon="' + marker + '"]').waitFor({ state: 'attached' });
+      return link.evaluate(el => {
+        const icon = el.ownerDocument.defaultView.getComputedStyle(el, '::after');
+        return { content: icon.content, mask: icon.maskImage };
+      });
+    };
+    for (const link of isEditor ? [file.first()] : [file.first(), file.nth(1)]) {
+      assert.deepEqual(await waitForMarker(link, 'pdf'), { content: '"\uf1c1"', mask: 'none' });
+    }
+    if (isEditor) {
+      const button = scope.locator('[data-type="core/button"]').filter({ hasText: '長いボタンのテキスト' });
+      assert.equal(await button.count(), 1);
+      const marker = () => button.getAttribute('data-jwsnj-editor-link-icon');
+      const icon = () => button.locator('.wp-block-button__link').evaluate(el => {
+        const style = el.ownerDocument.defaultView.getComputedStyle(el, '::after');
+        return { content: style.content, mask: style.maskImage };
+      });
+      const clientId = await button.getAttribute('data-block');
+      const original = await page.evaluate(id => wp.data.select('core/block-editor').getBlockAttributes(id).url, clientId);
+      assert.equal(original, '/qa-fixture/document.PDF?download=1#page=2');
+      const waitKind = async kind => {
+        await button.locator('xpath=self::*[@data-jwsnj-editor-link-icon="' + kind + '"]').waitFor({ state: 'attached' });
+        assert.equal(await marker(), kind);
+      };
+      await waitKind('pdf');
+      assert.deepEqual(await icon(), { content: '"\uf1c1"', mask: 'none' });
+      // Update the genuine block state (not the DOM or serialized HTML).
+      const setUrl = url => page.evaluate(({ id, url }) =>
+        wp.data.dispatch('core/block-editor').updateBlockAttributes(id, { url }), { id: clientId, url });
+      try {
+        await setUrl('/qa-fixture/image.webp#preview');
+        await waitKind('file');
+        assert.deepEqual(await icon(), { content: '"\uf15b"', mask: 'none' });
+        await setUrl('/qa-fixture/page?name=document.pdf');
+        await button.locator('xpath=self::*[not(@data-jwsnj-editor-link-icon)]').waitFor({ state: 'attached' });
+        assert.deepEqual(await icon(), { content: '"\uf061"', mask: 'none' });
+      } finally {
+        await setUrl(original);
+      }
+      await waitKind('pdf');
+      assert.ok(!(await inspect()).content.includes('data-jwsnj-editor-link-icon'), 'editor wrapper marker must not serialize');
+    }
+    assert.deepEqual(await waitForMarker(attachment, 'file'), { content: '"\uf15c"', mask: 'none' });
+    for (const href of ['/qa-fixture/page?name=document.pdf', '#document.pdf']) {
+      const ordinary = scope.locator('a[href="' + href + '"]');
+      const icon = await ordinary.evaluate(el => ({
+        marker: el.getAttribute('data-jwsnj-file-icon'),
+        mask: el.ownerDocument.defaultView.getComputedStyle(el, '::after').maskImage
+      }));
+      assert.equal(icon.marker, null);
+      assert.match(icon.mask, /ico-blank\.svg/);
+    }
+    await scope.locator('a[href="/qa-fixture/image.WeBp#preview"]').scrollIntoViewIfNeeded();
+  };
+  assert.ok(!after.content.includes('data-jwsnj-file-icon') && !after.content.includes('data-jwsnj-editor-link-icon'), 'presentation markers must not be saved in block content');
   const editorEvidence = [];
   for (const width of [1380, 1024]) {
     await page.setViewportSize({ width, height: 900 });
@@ -219,6 +280,9 @@ try {
     await canvas.locator('.wp-block-button__link').first().scrollIntoViewIfNeeded();
     await page.screenshot({ path: 'form-qa-results/native-parts-editor-fonts-' + width + '.png' });
     assertFontAssets(fonts);
+    await assertPathIcons(canvas, true);
+    await page.screenshot({ path: 'form-qa-results/native-editor-path-icons-' + width + '.png' });
+    console.log(JSON.stringify({ nativeEditorPathIcons: 'PASS', shellWidth: width }));
     editorEvidence.push({ width, mismatchCount: mismatches.length });
     await canvas.locator('h2').filter({ hasText: '大見出しとテキストの検証' }).scrollIntoViewIfNeeded();
     await page.screenshot({ path: 'form-qa-results/native-parts-editor-heading-' + width + '.png' });
@@ -248,6 +312,9 @@ try {
       const fonts = await collectFonts(scope);
       console.log(JSON.stringify({ nativeFrontendFontAssets: 'MEASURED', width, fonts }));
       assertFontAssets(fonts);
+      await assertPathIcons(scope);
+      await frontend.screenshot({ path: 'form-qa-results/native-front-path-icons-' + width + '.png' });
+      console.log(JSON.stringify({ nativeFrontendPathIcons: 'PASS', width }));
       await scope.locator('.wp-block-button__link').first().scrollIntoViewIfNeeded();
       await frontend.screenshot({ path: 'form-qa-results/native-parts-front-fonts-' + width + '.png' });
       console.log(JSON.stringify({ nativeFrontendHeadingEvidence: 'PASS', width, measured }));

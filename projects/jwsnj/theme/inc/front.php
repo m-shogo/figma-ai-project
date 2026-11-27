@@ -199,6 +199,14 @@ add_action('wp_enqueue_scripts', 'my_enqueue_scripts');
 // ビジュアルエディタ用CSSの設定
 // ==========================================================================
 add_action('enqueue_block_assets', function () {
+  // 本文と編集キャンバスで同じURLパス判定を使う（保存内容は変更しない）。
+  wp_enqueue_script(
+    'jwsnj-file-link-icons',
+    get_theme_file_uri('/js/file-link-icons.js'),
+    [],
+    filemtime(get_theme_file_path('/js/file-link-icons.js')),
+    ['strategy' => 'defer', 'in_footer' => false]
+  );
   // コンテンツ用CSSはiframeにも渡す。管理画面のUI専用フックでは、
   // ブロックselectorを持たない共通変数CSSがiframeから除外される。
   // フロントは従来のcommon-styleを使い、editor-content.cssを混ぜない。
@@ -207,6 +215,17 @@ add_action('enqueue_block_assets', function () {
   }
   jwsnj_enqueue_content_fonts();
   jwsnj_enqueue_css_entry('editor-style', '/css/editor-style.css', ['jwsnj-google-fonts', 'fontawesome-style']);
+});
+
+// Core Buttonの編集用DOMは保存時のa要素と異なる。編集側だけwrapperを装飾する。
+add_action('enqueue_block_editor_assets', function () {
+  wp_enqueue_script(
+    'jwsnj-editor-file-link-icons',
+    get_theme_file_uri('/js/editor-file-link-icons.js'),
+    ['jwsnj-file-link-icons', 'wp-hooks', 'wp-element'],
+    filemtime(get_theme_file_path('/js/editor-file-link-icons.js')),
+    false
+  );
 });
 
 // ==========================================================================

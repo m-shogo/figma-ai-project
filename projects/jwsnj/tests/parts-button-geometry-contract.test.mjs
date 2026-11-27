@@ -33,7 +33,7 @@ test('long button text wraps and icon variants keep working', () => {
 
 test('external large button uses official SVG and excludes PDF/file glyph variants', () => {
   const large = button.slice(0, button.indexOf('    &.small {'));
-  const external = large.match(/&\[target='_blank'\]:where\(:not\(([^)]+)\)\)\s*\{\s*&::after\s*\{([^}]+)\}/);
+  const external = large.match(/&\[target='_blank'\]:where\(:not\(([^)]+)\)\)[^{]+\{\s*&::after\s*\{([^}]+)\}/);
   assert.ok(external);
   for (const ext of ['pdf','doc','docx','docm','xls','xlsx','xlsm','png','jpg','jpeg','gif','webp']) {
     assert.ok(external[1].includes("[href$='." + ext + "' i]"), ext + ' retains its file icon');
@@ -64,4 +64,11 @@ test('large button glyph metrics do not inherit label tracking; attachments use 
 
 test('editor custom-width buttons also respect their containing width', () => {
   assert.match(button, /\.wp-block-button\s*\{\s*display: block;\s*min-width: 0;\s*max-width: 100%;\s*&:not\(\.has-custom-width\)/);
+});
+
+
+test('query/fragment file icons use a resolved path marker and never a raw suffix alone', () => {
+  assert.ok(css.includes("[data-jwsnj-file-icon='pdf']"));
+  assert.ok(css.includes("[data-jwsnj-file-icon='file']"));
+  assert.ok(css.includes(":where(:not([href*='?'], [href*='#']))"));
 });

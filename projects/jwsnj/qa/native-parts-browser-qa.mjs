@@ -70,7 +70,8 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
         console.log(JSON.stringify({ nativeSeparator: 'PASS', engine: engineName, width, separatorGeometry }));
         // QA-only destinations; inspect markup and styles without opening files.
         const inlineLinks = root.locator('#qa-parts-file-links a');
-        assert.equal(await inlineLinks.count(), 4);
+        assert.equal(await inlineLinks.count(), 6);
+        await page.waitForFunction(() => document.querySelectorAll('#qa-parts-file-links [data-jwsnj-file-icon]').length === 2);
         const linkMetrics = await inlineLinks.evaluateAll(elements => elements.map(el => {
           const style = getComputedStyle(el);
           const icon = getComputedStyle(el, '::after');
@@ -81,15 +82,16 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
             wrap: style.overflowWrap, duration: style.transitionDuration
           };
         }));
-        assert.deepEqual(linkMetrics.map(link => link.target), [null, '_blank', '_blank', '_blank']);
+        assert.deepEqual(linkMetrics.map(link => link.target), [null, '_blank', '_blank', '_blank', '_blank', '_blank']);
         assert.ok(linkMetrics[2].rel.includes('nofollow') && linkMetrics[2].rel.includes('noreferrer') && linkMetrics[2].rel.includes('external'));
         assert.ok(linkMetrics[3].rel.includes('noreferrer') && linkMetrics[3].rel.includes('external'));
         assert.ok(linkMetrics.every(link => link.color === 'rgb(236, 107, 97)' && link.wrap === 'anywhere'));
         assert.match(linkMetrics[1].mask, /ico-blank\.svg/);
-        assert.notEqual(linkMetrics[2].icon, 'none');
-        assert.notEqual(linkMetrics[3].icon, 'none');
-        assert.notEqual(linkMetrics[2].icon, linkMetrics[3].icon);
-        for (let i = 0; i < 4; i++) {
+        assert.equal(linkMetrics[2].icon, '"\uf1c1"');
+        assert.equal(linkMetrics[3].icon, '"\uf15c"');
+        assert.ok(linkMetrics.slice(2, 4).every(link => link.mask === 'none'));
+        assert.ok(linkMetrics.slice(4).every(link => link.mask.includes('ico-blank.svg')));
+        for (let i = 0; i < 6; i++) {
           await inlineLinks.nth(i).focus();
           assert.ok(await inlineLinks.nth(i).evaluate(el => el === document.activeElement));
         }
@@ -104,6 +106,8 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
         assert.equal(await root.locator('ul.annotation-list').count(), 1);
         const buttons = root.locator('.wp-block-button__link');
         assert.equal(await buttons.count(), 2);
+        await page.waitForFunction(el => el.getAttribute('data-jwsnj-file-icon') === 'pdf', await buttons.nth(1).elementHandle());
+        assert.equal(await buttons.nth(1).evaluate(el => getComputedStyle(el, '::after').content), '"\uf1c1"');
         const fitting = await buttons.evaluateAll(elements => elements.every(el => {
           const host = el.closest('.wp-block-buttons').getBoundingClientRect();
           const rect = el.getBoundingClientRect();
@@ -261,7 +265,26 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
             const panel = el.querySelector(':scope > .wp-block-details__content');
             const summary = el.querySelector(':scope > summary');
             const frames = [];
-            const trace = { frames, done: false, before: {
+            const events = [];
+            const styleSnapshot = () => {
+              const pseudo = getComputedStyle(el, '::details-content');
+              return {
+                visibility: pseudo.contentVisibility,
+                display: pseudo.display,
+                grid: pseudo.gridTemplateRows,
+                transition: pseudo.transitionProperty,
+                duration: pseudo.transitionDuration,
+                behavior: pseudo.transitionBehavior,
+                panelHeight: panel.getBoundingClientRect().height,
+                animations: el.getAnimations({ subtree: true }).map(a => ({
+                  property: a.transitionProperty || a.animationName || '',
+                  state: a.playState, time: a.currentTime,
+                  target: a.effect?.target?.nodeName || null
+                }))
+              };
+            };
+            const trace = { frames, events, done: false, before: {
+              style: styleSnapshot(),
               height: el.getBoundingClientRect().height, open: el.open,
               inert: panel.inert, focused: summary === document.activeElement,
               activeTag: document.activeElement?.tagName,
@@ -270,15 +293,27 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
             el.addEventListener('keydown', event => {
               if (event.key !== 'Escape') return;
               const start = performance.now();
+              const types = ['transitionrun', 'transitionstart', 'transitionend', 'transitioncancel', 'toggle'];
+              const listener = e => events.push({
+                ms: performance.now() - start, type: e.type,
+                property: e.propertyName || '', pseudo: e.pseudoElement || '',
+                elapsed: e.elapsedTime ?? null, target: e.target.nodeName,
+                oldState: e.oldState || '', newState: e.newState || ''
+              });
+              for (const type of types) el.addEventListener(type, listener, true);
               const sample = () => {
                 frames.push({
                   ms: performance.now() - start,
                   height: el.getBoundingClientRect().height,
                   open: el.open, inert: panel.inert,
-                  focused: summary === document.activeElement
+                  focused: summary === document.activeElement,
+                  style: styleSnapshot()
                 });
                 if (performance.now() - start < 600) requestAnimationFrame(sample);
-                else trace.done = true;
+                else {
+                  for (const type of types) el.removeEventListener(type, listener, true);
+                  trace.done = true;
+                }
               };
               requestAnimationFrame(sample);
             }, { capture: true, once: true });
@@ -292,7 +327,7 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
             ), { trace: samples, from: expanded, to: closed }, { timeout: 1000 });
           } catch (error) {
             console.error(JSON.stringify({ engineName, width, i, closed, expanded,
-              closeTrace: await samples.evaluate(trace => ({ before: trace.before, frames: trace.frames, done: trace.done })), actual: await readMotion() }));
+              closeTrace: await samples.evaluate(trace => ({ before: trace.before, frames: trace.frames, events: trace.events, done: trace.done })), actual: await readMotion() }));
             throw error;
           } finally {
             await samples.dispose();
