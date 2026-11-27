@@ -26,6 +26,11 @@ on:
       - 'projects/jwsnj/qa/seed-native-parts-qa.php'
       - 'projects/jwsnj/qa/native-parts-browser-qa.mjs'
       - 'projects/jwsnj/qa/native-parts-editor-qa.mjs'
+      - 'projects/jwsnj/qa/fixtures/parts-catalog-tables.html'
+      - 'projects/jwsnj/qa/seed-parts-tables-qa.php'
+      - 'projects/jwsnj/qa/parts-tables-browser-qa.mjs'
+      - 'projects/jwsnj/theme/css/blocks/wp-block-table-style.css'
+      - 'projects/jwsnj/theme/js/table-scroll-hint.js'
       - 'projects/jwsnj/theme/css/blocks/wp-block-heading-style.css'
       - 'projects/jwsnj/theme/css/blocks/wp-block-text-style.css'
       - 'projects/jwsnj/theme/css/blocks/wp-block-list-style.css'
@@ -117,6 +122,18 @@ jobs:
           docker compose run --rm -e WP_ENVIRONMENT_TYPE=local cli eval-file /project/qa/seed-fiscal-qa.php
           cd ../..
           node projects/jwsnj/qa/fiscal-archive-qa.mjs "$WP_URL"
+      - name: Actual Flexible Table Block and responsive parts checks
+        env:
+          CSS_QA_MODULE_ROOT: ${{ runner.temp }}/css-qa
+        run: |
+          cd runtime/wordpress
+          source scripts/runtime-env.sh
+          docker compose run --rm cli plugin install flexible-table-block --version=3.9.0 --activate
+          docker compose run --rm -e WP_ENVIRONMENT_TYPE=local -e JWSNJ_PARTS_QA_DISPOSABLE=1 cli eval-file /project/qa/seed-parts-tables-qa.php
+          table_id="$(docker compose run --rm cli option get jwsnj_parts_tables_qa_page_id)"
+          [[ "$table_id" =~ ^[0-9]+$ ]]
+          cd ../..
+          node projects/jwsnj/qa/parts-tables-browser-qa.mjs "${WP_URL}/?page_id=${table_id}"
       - name: Native Gutenberg parts fixture and browser checks
         env:
           CSS_QA_MODULE_ROOT: ${{ runner.temp }}/css-qa

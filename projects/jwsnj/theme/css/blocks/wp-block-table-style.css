@@ -4,8 +4,10 @@
 // ------------------------------ */
 .block-editor_wrap,
 .editor-styles-wrapper {
+  /* Flexible Table Block 3.9 emits duplicate-class default rules. Match
+     their specificity with the theme context; preserve explicit inline cell styles. */
   .wp-block-table,
-  .wp-block-flexible-table-block-table {
+  .wp-block-flexible-table-block-table.wp-block-flexible-table-block-table {
     /* MARK: 基本スタイル */
     margin-top: var(--wp-block-margin);
     display: flex;

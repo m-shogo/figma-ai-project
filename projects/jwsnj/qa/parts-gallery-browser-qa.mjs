@@ -14,6 +14,14 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
   try {
     for (const width of [320, 375, 768, 1380]) {
       const page = await browser.newPage({ viewport: { width, height: 900 }, reducedMotion: 'reduce' });
+      const runtimeErrors = [];
+      page.on('pageerror', error => runtimeErrors.push({ type: 'pageerror', message: error.message }));
+      page.on('console', message => {
+        if (message.type() === 'error') runtimeErrors.push({ type: 'console', message: message.text() });
+      });
+      page.on('requestfailed', request => {
+        if (new URL(request.url()).origin === url.origin) runtimeErrors.push({ type: 'requestfailed', url: request.url(), error: request.failure()?.errorText });
+      });
       try {
         await page.route('**/*', route => new URL(route.request().url()).origin === url.origin ? route.continue() : route.abort());
         assert.equal((await page.goto(url.href, { waitUntil: 'load' })).status(), 200);
@@ -83,7 +91,11 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
           return el.contains(hit) && getComputedStyle(el).opacity === '1';
         }), 'visible zoom control is the real hit target');
         if (width === 375 || width === 1380) await galleries.first().screenshot({ path: 'form-qa-results/gallery-' + engineName + '-' + width + '-zoom-control.png' });
+        // The core Interactivity API adds the accessible label when it hydrates.
+        // A rendered button is not proof that the module has attached handlers.
+        await page.waitForFunction(el => !!el.getAttribute('aria-label')?.trim(), await button.elementHandle(), { timeout: 10000 });
         await button.focus();
+        assert.equal(await button.evaluate(el => el === document.activeElement), true);
         await page.keyboard.press('Enter');
         const overlay = page.locator('.wp-lightbox-overlay.active');
         await overlay.waitFor({ state: 'visible' });
@@ -112,7 +124,12 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
         if (width === 375 || width === 1380) await media.screenshot({ path: 'form-qa-results/media-text-' + engineName + '-' + width + '.png' });
         console.log(JSON.stringify({ partsGalleryFrontend: 'PASS', engine: engineName, width, results, buttonGeometry, geometry }));
       } catch (error) {
-        console.error(JSON.stringify(await page.evaluate(() => ({ active: document.activeElement?.outerHTML.slice(0, 400), dialog: document.querySelector('.wp-lightbox-overlay')?.className }))));
+        console.error(JSON.stringify({ engineName, width, runtimeErrors, state: await page.evaluate(() => ({
+          active: document.activeElement?.outerHTML.slice(0, 600),
+          trigger: document.querySelector('button.lightbox-trigger')?.outerHTML.slice(0, 600),
+          dialog: document.querySelector('.wp-lightbox-overlay')?.className,
+          modules: [...document.querySelectorAll('script[type="module"],script[type="importmap"]')].map(el => ({ id: el.id, src: el.src, imports: el.type === 'importmap' ? el.textContent.slice(0, 2000) : undefined }))
+        })) }));
         await page.screenshot({ path: 'form-qa-results/gallery-failure-' + engineName + '-' + width + '.png' }).catch(() => {});
         throw error;
       } finally {

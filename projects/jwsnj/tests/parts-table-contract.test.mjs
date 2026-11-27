@@ -37,3 +37,8 @@ test('mobile table uses existing hint assets, keeps keyboard focus visible and h
   assert.match(css, /&\[data-jwsnj-table-hint\]:focus-within > \.scroll-hint-icon-wrap/);
   assert.match(css, /prefers-reduced-motion:\s*reduce/);
 });
+
+test('theme defaults outrank Flexible Table Block duplicated-class rules without important padding', () => {
+  assert.match(css, /\.wp-block-flexible-table-block-table\.wp-block-flexible-table-block-table\s*\{/);
+  assert.doesNotMatch(css, /padding-(?:block|inline):[^;]*!important/);
+});
