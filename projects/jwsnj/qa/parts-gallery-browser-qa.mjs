@@ -205,7 +205,18 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
         assert.equal(await cards.first().locator('img').evaluate(el => getComputedStyle(el).transitionDuration), '0s');
         await page.mouse.move(0, 0);
         await navigation.scrollIntoViewIfNeeded();
-        if (width === 375 || width === 1380) await navigation.screenshot({ path: 'form-qa-results/large-navigation-wp-' + engineName + '-' + width + '.png' });
+        if (width === 375 || width === 1380) {
+          const path = 'form-qa-results/large-navigation-wp-' + engineName + '-' + width;
+          // Keep unmodified evidence of the real page. Also capture the
+          // component without the unrelated sticky header obscuring pixels.
+          // Playwright's screenshot style applies ONLY during the capture.
+          // All interaction and geometry checks above use the intact page.
+          await navigation.screenshot({ path: path + '.png' });
+          await navigation.screenshot({
+            path: path + '-component-only.png',
+            style: '#global_header { visibility: hidden !important; }'
+          });
+        }
         console.log(JSON.stringify({ largeNavigationWordPress: 'PASS', engine: engineName, width, nav }));
 
         console.log(JSON.stringify({ partsGalleryFrontend: 'PASS', engine: engineName, width, results, buttonGeometry, geometry }));

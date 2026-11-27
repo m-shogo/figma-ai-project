@@ -62,10 +62,18 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
           assert.ok(Math.abs(await height() - closed) <= 1);
           await page.keyboard.press('Tab');
           assert.equal(await link.evaluate(el => el === document.activeElement), false);
+          // Verify the final icon state separately from immediate native
+          // keyboard behavior. The CSS icon can still animate in fallback.
+          const waitIcon = expected => page.waitForFunction(({ selector, expected }) => {
+            const icon = document.querySelector(selector);
+            return icon && Math.abs(parseFloat(getComputedStyle(icon, '::after').rotate) - expected) < 0.1;
+          }, { selector: '.block-editor_wrap details.wp-block-details .wp-block-details__button-icon', expected });
+          await waitIcon(90);
           if (width === 375 || width === 1380) {
             await summary.focus();
             await page.keyboard.press('Enter');
             await open();
+            await waitIcon(0);
             await item.screenshot({ path: 'form-qa-results/details-fallback-' + engineName + '-' + width + '-' + mode + '.png' });
           }
           console.log(JSON.stringify({ nativeDetailsFallback: 'PASS', engine: engineName, width, mode, closed, expanded }));
