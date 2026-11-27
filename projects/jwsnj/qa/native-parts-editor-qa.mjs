@@ -118,7 +118,7 @@ try {
         background: style.backgroundColor, backgroundImage: style.backgroundImage,
         borderBottom: style.borderBottomWidth, borderImage: style.borderImageSource,
         paddingLeft: style.paddingLeft, paddingBottom: style.paddingBottom,
-        marginBottom: style.marginBottom, width: rect.width, height: rect.height,
+        marginBottom: style.marginBottom, left: rect.left, width: rect.width, height: rect.height,
         parentWidth: parent.getBoundingClientRect().width,
         variables: vars(node) };
     });
@@ -175,6 +175,10 @@ try {
       if (!h.fontFamily.includes('Zen Kaku Gothic New')) differences.push('fontFamily');
       if (index !== 1 && h.color !== (index === 2 ? 'rgb(40, 172, 95)' : 'rgb(51, 51, 51)')) differences.push('color');
       if (index === 1 && h.color !== 'rgb(255, 255, 255)') differences.push('color');
+      // These three ordinary sibling headings share the native canvas content
+      // width; a theme max-width must not override only H3's editor alignment.
+      const first = measured.headings[0];
+      if (Math.abs(h.width - first.width) > 1 || Math.abs(h.left - first.left) > 1) differences.push('contentWidth/alignment');
       return differences.length ? [{ label: h.label, differences }] : [];
     });
     console.log(JSON.stringify({ nativeEditorCanvasEvidence: mismatches.length ? 'MISMATCH' : 'HEADING_METRICS_MATCH', shellWidth: width, mismatches, measured }));
@@ -198,6 +202,10 @@ try {
       const measured = await collectHeadings(scope);
       assert.ok(measured.headings.every(h => !h.missing));
       assert.deepEqual(measured.headings.map(h => h.fontSize), width >= 768 ? ['30px', '24px', '18px'] : ['24px', '22px', '18px']);
+      assert.ok(measured.headings.every(h =>
+        Math.abs(h.width - measured.headings[0].width) <= 1 &&
+        Math.abs(h.left - measured.headings[0].left) <= 1
+      ), JSON.stringify(measured.headings));
       assert.ok(!measured.sheets.some(sheet => /\/css\/editor-content\.css(?:\?|$)/.test(sheet.href)),
         'editor-only CSS must not leak onto the frontend');
       console.log(JSON.stringify({ nativeFrontendHeadingEvidence: 'PASS', width, measured }));
