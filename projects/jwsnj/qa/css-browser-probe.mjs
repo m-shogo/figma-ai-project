@@ -340,6 +340,58 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
     if (width === 320) assert.ok(logo.longer.lines >= 2);
     report.push({name, width, headerLogo: logo});
   }
+  // SP secondary links, actual authored CSS, including a long editor-supplied label.
+  for (const width of [320, 375, 767, 1079, 1080, 1380]) {
+    await page.setViewportSize({width, height: 900});
+    const secondary = await page.evaluate(() => {
+      const fixture = document.createElement('nav');
+      fixture.className = 'global_navigation';
+      fixture.innerHTML = '<div class="gn_menu">Primary</div><div class="gn_subMenu"><div class="gn_container-02"><ul class="menu gn_links-02"><li class="menu-item"><a class="module_textLink" href="#end">お問い合わせ</a></li><li class="menu-item"><a class="module_textLink" href="#end" target="_blank" rel="noopener noreferrer">寄付のお願い</a></li><li class="menu-item"><a class="module_textLink" href="#end">長い補助メニュー項目 Extraordinarily long text for natural wrapping without overflow</a></li></ul></div></div><div class="gn_search">Search</div>';
+      document.body.append(fixture);
+      const menu = fixture.querySelector('.gn_links-02');
+      const sub = fixture.querySelector('.gn_subMenu');
+      const rows = [...menu.children];
+      const link = rows[0].querySelector('a');
+      const style = getComputedStyle(link);
+      const external = getComputedStyle(rows[1].querySelector('a'), '::after');
+      const last = rows[2].querySelector('a');
+      const range = document.createRange();
+      range.selectNodeContents(last);
+      const rects = [...range.getClientRects()];
+      const box = last.getBoundingClientRect();
+      const result = {
+        display: getComputedStyle(menu).display,
+        gap: getComputedStyle(menu).gap,
+        inset: menu.getBoundingClientRect().left - fixture.getBoundingClientRect().left,
+        topGap: sub.getBoundingClientRect().top - fixture.querySelector('.gn_menu').getBoundingClientRect().bottom,
+        size: style.fontSize, weight: style.fontWeight, lineHeight: style.lineHeight,
+        padding: style.paddingBottom,
+        border: getComputedStyle(rows[0]).borderBottomColor,
+        borderWidth: getComputedStyle(rows[0]).borderBottomWidth,
+        iconSize: external.fontSize, iconGap: external.marginInlineStart,
+        sameColumn: rows.every(row => Math.abs(row.getBoundingClientRect().left - rows[0].getBoundingClientRect().left) < 1),
+        lines: rects.length,
+        fits: rects.every(rect => rect.left >= box.left - 1 && rect.right <= box.right + 1)
+      };
+      fixture.remove();
+      return result;
+    });
+    if (width < 1080) {
+      assert.deepEqual([secondary.display, secondary.gap, secondary.size, secondary.weight, secondary.padding], ['grid', '16px', '13px', '500', '16px']);
+      assert.equal(secondary.inset, 40);
+      assert.equal(secondary.topGap, 40);
+      assert.equal(secondary.border, 'rgb(215, 212, 212)');
+      assert.equal(secondary.borderWidth, '1px');
+      assert.deepEqual([secondary.iconSize, secondary.iconGap], ['12px', '4px']);
+      assert.ok(secondary.sameColumn && secondary.fits, JSON.stringify(secondary));
+      if (width <= 375) assert.ok(secondary.lines >= 2);
+    } else {
+      assert.equal(secondary.display, 'flex');
+      assert.equal(secondary.gap, '20px');
+      assert.equal(secondary.borderWidth, '0px');
+    }
+    report.push({name, width, secondary});
+  }
  // Legacy file presentation must not leak to a generic .file component.
  for (const width of [375, 768, 1380]) {
    await page.setViewportSize({width, height: 900});
