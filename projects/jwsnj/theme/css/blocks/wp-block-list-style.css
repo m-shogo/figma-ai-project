@@ -74,10 +74,12 @@
   }
   /* Numbered lists — Figma PC 344:947 / SP 442:2806.
        Native outside marker preserves HTML start/reversed/value, without wrapping punctuation.
-       Reserve 24px for numbering and 10px for the text gap (34px total inset). */
+       Put the complete 34px inset on the list: outside markers sit before the
+       li padding box, so splitting the inset moves two-digit markers outside
+       the content boundary. Preserve native start/reversed/value semantics. */
   ol.wp-block-list:not(.annotation-list) {
     list-style: decimal outside;
-    padding-left: calc(24 * var(--to-rem-func));
+    padding-left: calc(34 * var(--to-rem-func));
     gap: calc(15 * var(--to-rem-func));
     > li {
       font-family: var(--font-jwsnj-ja);
@@ -85,7 +87,7 @@
       font-size: calc(15 * var(--to-rem-func));
       line-height: 1.5;
       letter-spacing: 0.08em;
-      padding-left: calc(10 * var(--to-rem-func));
+      padding-left: 0;
       overflow-wrap: anywhere;
       word-break: normal;
       &::marker {
