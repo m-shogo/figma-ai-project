@@ -265,7 +265,26 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
             const panel = el.querySelector(':scope > .wp-block-details__content');
             const summary = el.querySelector(':scope > summary');
             const frames = [];
-            const trace = { frames, done: false, before: {
+            const events = [];
+            const styleSnapshot = () => {
+              const pseudo = getComputedStyle(el, '::details-content');
+              return {
+                visibility: pseudo.contentVisibility,
+                display: pseudo.display,
+                grid: pseudo.gridTemplateRows,
+                transition: pseudo.transitionProperty,
+                duration: pseudo.transitionDuration,
+                behavior: pseudo.transitionBehavior,
+                panelHeight: panel.getBoundingClientRect().height,
+                animations: el.getAnimations({ subtree: true }).map(a => ({
+                  property: a.transitionProperty || a.animationName || '',
+                  state: a.playState, time: a.currentTime,
+                  target: a.effect?.target?.nodeName || null
+                }))
+              };
+            };
+            const trace = { frames, events, done: false, before: {
+              style: styleSnapshot(),
               height: el.getBoundingClientRect().height, open: el.open,
               inert: panel.inert, focused: summary === document.activeElement,
               activeTag: document.activeElement?.tagName,
@@ -274,15 +293,27 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
             el.addEventListener('keydown', event => {
               if (event.key !== 'Escape') return;
               const start = performance.now();
+              const types = ['transitionrun', 'transitionstart', 'transitionend', 'transitioncancel', 'toggle'];
+              const listener = e => events.push({
+                ms: performance.now() - start, type: e.type,
+                property: e.propertyName || '', pseudo: e.pseudoElement || '',
+                elapsed: e.elapsedTime ?? null, target: e.target.nodeName,
+                oldState: e.oldState || '', newState: e.newState || ''
+              });
+              for (const type of types) el.addEventListener(type, listener, true);
               const sample = () => {
                 frames.push({
                   ms: performance.now() - start,
                   height: el.getBoundingClientRect().height,
                   open: el.open, inert: panel.inert,
-                  focused: summary === document.activeElement
+                  focused: summary === document.activeElement,
+                  style: styleSnapshot()
                 });
                 if (performance.now() - start < 600) requestAnimationFrame(sample);
-                else trace.done = true;
+                else {
+                  for (const type of types) el.removeEventListener(type, listener, true);
+                  trace.done = true;
+                }
               };
               requestAnimationFrame(sample);
             }, { capture: true, once: true });
@@ -296,7 +327,7 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
             ), { trace: samples, from: expanded, to: closed }, { timeout: 1000 });
           } catch (error) {
             console.error(JSON.stringify({ engineName, width, i, closed, expanded,
-              closeTrace: await samples.evaluate(trace => ({ before: trace.before, frames: trace.frames, done: trace.done })), actual: await readMotion() }));
+              closeTrace: await samples.evaluate(trace => ({ before: trace.before, frames: trace.frames, events: trace.events, done: trace.done })), actual: await readMotion() }));
             throw error;
           } finally {
             await samples.dispose();

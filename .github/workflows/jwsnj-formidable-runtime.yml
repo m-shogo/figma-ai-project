@@ -5,6 +5,7 @@ on:
     paths:
       - 'projects/jwsnj/theme/css/wordpress/form.css'
       - 'projects/jwsnj/theme/js/form.js'
+      - 'projects/jwsnj/theme/js/file-link-icons.js'
       - 'projects/jwsnj/theme/inc/front.php'
       - 'projects/jwsnj/theme/template-parts/_head_contents.php'
       - 'projects/jwsnj/theme/footer.php'
@@ -158,6 +159,7 @@ jobs:
           cd ../..
           node projects/jwsnj/qa/parts-tables-browser-qa.mjs "${WP_URL}/?page_id=${table_id}"
       - name: Native Gutenberg parts fixture and browser checks
+        id: native_parts
         env:
           CSS_QA_MODULE_ROOT: ${{ runner.temp }}/css-qa
         run: |
@@ -167,6 +169,7 @@ jobs:
           parts_id="$(docker compose run --rm cli option get jwsnj_native_parts_qa_page_id)"
           [[ "$parts_id" =~ ^[0-9]+$ ]]
           cd ../..
+          echo "seeded=true" >> "$GITHUB_OUTPUT"
           node projects/jwsnj/qa/native-parts-browser-qa.mjs "${WP_URL}/?page_id=${parts_id}"
       # Independent coverage must report even when a previous browser check
       # failed. Keep the job failed; do not use continue-on-error.
@@ -182,7 +185,10 @@ jobs:
           [[ "$inpage_id" =~ ^[0-9]+$ ]]
           cd ../..
           node projects/jwsnj/qa/inpage-browser-qa.mjs "${WP_URL}/?page_id=${inpage_id}"
+      # Editor evidence remains independent of earlier frontend test failures.
+      # The prior failing step still fails the job.
       - name: Actual Gutenberg editor validation and save/reopen
+        if: ${{ !cancelled() && steps.wp_setup.outcome == 'success' && steps.native_parts.outputs.seeded == 'true' }}
         env:
           CSS_QA_MODULE_ROOT: ${{ runner.temp }}/css-qa
           JWSNJ_PARTS_QA_DISPOSABLE: '1'

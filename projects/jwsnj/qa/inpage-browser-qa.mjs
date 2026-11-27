@@ -17,6 +17,18 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
       try {
         await page.route('**/*', route => route.request().url().startsWith('http://127.0.0.1:') ? route.continue() : route.abort());
         const pageErrors = [];
+        const stampTrace = [];
+        const isStamp = request => request.url().includes('/figma-ai-local/v1/stamp');
+        page.on('request', request => {
+          if (isStamp(request)) stampTrace.push({ type: 'request', url: request.url(), method: request.method(), page: page.url() });
+        });
+        page.on('response', response => {
+          if (isStamp(response.request())) stampTrace.push({ type: 'response', url: response.url(), status: response.status(),
+            allowOrigin: response.headers()['access-control-allow-origin'] || null, page: page.url() });
+        });
+        page.on('requestfailed', request => {
+          if (isStamp(request)) stampTrace.push({ type: 'failed', url: request.url(), failure: request.failure()?.errorText, page: page.url() });
+        });
         page.on('pageerror', error => pageErrors.push(error.message));
         assert.equal((await page.goto(url, { waitUntil: 'load' })).status(), 200);
         await page.waitForFunction(() => window.jQuery?.isReady);
@@ -102,6 +114,7 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
         await links.nth(4).focus();
         await page.keyboard.press('Enter');
         await page.waitForFunction(() => Math.abs(window.scrollY) <= 2);
+        if (pageErrors.length) console.error(JSON.stringify({ localStampEvidence: true, engineName, width, stampTrace, pageErrors }));
         assert.deepEqual(pageErrors, [], 'uncaught JS errors');
         console.log(JSON.stringify({ inPageRuntime: 'PASS', engine: engineName, width, geometry, first, second, deep }));
       } catch (error) {
