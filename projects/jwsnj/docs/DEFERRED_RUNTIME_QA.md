@@ -314,3 +314,6 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 | CUR-09 / 高（統合後） | 実デバイス・フォント・全ページ最終受入 | iPhone Safari/Android Chrome/PC主要3engine、150/200%文字拡大、タップ/keyboard/hover/focus/開閉/長文/横スクロール、フォント・FA Brands・404/console、Autoptimize有効時は承認された検証環境のみ。PC/SP高精細Figmaと実画像の差を記録し、CI-onlyで完了扱いしない。 |
 
 各行に tested_sha、実行日時、PASS/PARTIAL/BLOCKED、実画像/ログ、変更パス、commit/PR、残件を追記。#664の処置やCursorの同時編集を勝手に行わない。現時点で #523/#524 OPEN、534:1706 は実装保留、スケジュール変更なし。ユーザーが一括指示を求めた時はこの表の未完行だけを統合して渡す。
+
+### 追加引継ぎ（2026-11-27・最新Human「いや、パーツから」）
+CUR-04のLarge Navigationについて、共通表示PHP/CSSをChat側で先行完成させる（#780検証中）。Cursorはその最新merge後に実ACF Proで追加/編集/保存再編集、画像なし/長文/hrefなし/外部リンクを確認し、表示を別実装しない。CUR-02/CUR-05のTOP組み込み・実CMS接続は共通パーツの合格後。ダミーは隔離fixtureのみ、正式データに転用しない。
