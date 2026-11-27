@@ -277,3 +277,14 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 | FOUND-02 | PARTIAL | Chromium。自然幅 481 と emulation 1380。Zen Kaku Gothic New は hero h1 とロゴ名で loaded かつ computed。Roboto Condensed と Font Awesome 6 Pro（regular/light woff2）は loaded。News ピルは `--font-sansSerif-en` = local Roboto。Footer 要素の computed は local Noto Sans JP | Brands はこの画面では未使用。Firefox/WebKit と物理 iPhone は未検証。フォント未読込時のフォールバック操作は未実施 |
 | PAGE-HEADER | PARTIAL | 1380px で header 高さ 120px（Figma 603:2939 は 90px）。公式ロゴ SVG は 200。検索 UI は表示。メニュー未設定のため hover の子項目は出せない | 90px 化は検索・CTA・補助メニューの承認前にしない。SP 開閉の今回操作は emulation が次の計測で解除され未了 |
 | PAGE-TOP | DEFERRED_ENV | フロントは投稿一覧。`front-page.php` の TOP は静的フロントページ未設定のためこの URL では出ない | 静的フロントページの割当は未承認。MV の実画像ループは未計測 |
+
+## 追記（2026-11-27 午後、TOP は対象外）
+
+上表の ENV-02 / PAGE-HEADER / PAGE-TOP は作業開始時点の記録。午後のローカル DB と管理画面で次を確認した。TOP の見た目・MV・各部紹介の視覚照合は未実施。
+
+- 表示設定: ホームページ = HOME（固定ページ ID 5）、投稿ページ = お知らせ（ID 6）。`/` は `front-page.php`。サイト名は Sample Theme Fixture のまま。
+- メニュー: PC 4、SP ハンバーガー、フッター 8、ヘッダー右上 3。教育方針はリンクなし。寄付と Instagram は URL 未定のため未登録。テーマ側の PC/SP 分割は未コミット。
+- 管理画面: fixture-admin で `wp-admin` にログイン。テーマ `jwsnj`。ブロックエディターが下書き「ローカル表確認」（ID 106、非公開）を開き、本文は `flexible-table-block/table`。登録済み: Flexible Table、Formidable Forms、ページ内リンク、ナビゲーション（大）（小）、投稿の出力。
+- Formidable: 初回は `wp_frm_forms` が無く、`FrmMigrate::upgrade()` でテーブルを作成。プラグイン同梱の Contact Us が1件。メール通知は draft。ローカル入力1件（entry 1、`example.invalid`）を保存。公開の `/contact/` には接続していない。管理画面は Pro のライセンス未入力を表示する。
+- 画像: 3倍の再書き出しは中止。表示サイズの2倍を足りる基準とし、既存 WebP は置換していない。SVG は倍率の対象外。
+- コース ACF JSON は Human の明示（2026-11-27）で `group_jwsnj_top_course.json` を追加。項目は画像・タイトル・テキスト・リンク・外部リンク。TOP の見た目照合は未実施。
