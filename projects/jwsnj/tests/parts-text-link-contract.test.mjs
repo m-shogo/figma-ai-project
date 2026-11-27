@@ -8,7 +8,8 @@ const css = readFileSync(new URL('../theme/css/blocks/wp-block-textLink-style.cs
 
 test('inline text links use approved coral accent and preserve surrounding text flow', () => {
   assert.match(css, /color:\s*var\(--color-accent\)/);
-  assert.match(css, /text-decoration-line:\s*none/);
+  assert.match(css, /text-decoration-line:\s*underline/);
+  assert.match(css, /text-decoration-color:\s*transparent/);
   assert.match(css, /overflow-wrap:\s*anywhere/);
   assert.match(css, /word-break:\s*normal/);
   assert.doesNotMatch(css, /white-space:\s*nowrap|figma\.com\/api\/mcp\/asset/);
@@ -55,4 +56,12 @@ test('inline PDF and attachment glyphs match PC/SP size and distinct colors', ()
   assert.match(file, /color:\s*var\(--color-accent\)/);
   assert.ok(vars.includes("--icon-pdf: '\\f1c1'"));
   assert.ok(vars.includes("--icon-file: '\\f15c'"));
+});
+
+
+test('inline hover fades decoration color without changing geometry; focus is immediate', () => {
+  assert.match(css, /transition:\s*color var\(--transition-duration\), text-decoration-color var\(--transition-duration\)/);
+  assert.match(css, /&:focus-visible\s*\{\s*text-decoration-color:\s*currentColor;\s*transition:\s*none;/);
+  assert.match(css, /@media \(any-hover: hover\)\s*\{\s*&:hover\s*\{\s*text-decoration-color:\s*currentColor;/);
+  assert.match(css, /@media \(prefers-reduced-motion: reduce\)\s*\{\s*transition:\s*none;/);
 });

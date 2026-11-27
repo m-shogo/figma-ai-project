@@ -9,19 +9,21 @@
   .wp-block-flexible-table-block-table {
     a:is(:not([class]), .icon-blank) {
       color: var(--color-accent);
-      text-decoration-line: none;
-      text-decoration-color: currentColor;
+      /* Keep decoration geometry stable; only its color fades on hover. */
+      text-decoration-line: underline;
+      text-decoration-color: transparent;
       text-decoration-thickness: calc(1 * var(--to-rem-func));
       text-underline-offset: calc(2 * var(--to-rem-func));
       text-decoration-skip-ink: none;
       overflow-wrap: anywhere;
       word-break: normal;
-      transition: color var(--transition-duration);
+      transition: color var(--transition-duration), text-decoration-color var(--transition-duration);
       @media (prefers-reduced-motion: reduce) {
         transition: none;
       }
       &:focus-visible {
-        text-decoration-line: underline;
+        text-decoration-color: currentColor;
+        transition: none;
         outline: calc(2 * var(--to-rem-func)) solid var(--color-accent);
         outline-offset: calc(2 * var(--to-rem-func));
       }
@@ -72,7 +74,7 @@
       /* hover */
       @media (any-hover: hover) {
         &:hover {
-          text-decoration-line: underline;
+          text-decoration-color: currentColor;
         }
       }
     }
