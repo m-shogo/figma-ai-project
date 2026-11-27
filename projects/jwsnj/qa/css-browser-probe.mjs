@@ -573,9 +573,17 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
        assert.ok(Math.abs(card.photo-1.5)<0.02&&Math.abs(card.gap-24)<1&&Math.abs(card.copyGap-20)<1,JSON.stringify(card));
        assert.deepEqual(card.arrow,[32,32]);
      }
-     if(!card.href)assert.equal(card.tab,-1);
    }
+   // Native anchors without href may report tabIndex=0 in Chromium even
+   // though they are not sequential keyboard stops. Test actual focus.
    const first=fixture.locator('a[href]').first();
+   await first.focus();
+   for(const disabled of await fixture.locator('a:not([href])').all()) {
+     assert.equal(await disabled.evaluate(el=>{el.focus();return el===document.activeElement;}),false,'href-less card is not focusable');
+   }
+   await first.focus();
+   await page.keyboard.press('Tab');
+   assert.equal(await fixture.evaluate(el=>el.contains(document.activeElement)),false,'Tab skips href-less cards');
    await first.focus();
    assert.ok(await first.evaluate(el=>el===document.activeElement&&parseFloat(getComputedStyle(el).outlineWidth)>=2));
    await first.hover();
