@@ -41,3 +41,10 @@ Human「パーツ集のサンプル？参考覚えてGIT入れといて これ�
 
 - #771 merged `583e75b`。実Gutenberg core block 0 invalid、末尾段落のUI入力・保存・再編集・front反映PASS（Chromium、WP7.0.2）。案内modalを通常Closeで閉じる。再編集画像を確認したがeditor CSSの見た目はfrontと一致していないため別QA。Human原文839行は変更なし。
 - #773でFlexible Table Block3.9.0の登録済みブロック・保存再読・4列固定/可変/縦並び・結合・長文・横スクロールhint/keyboard/resizeを実WP検証。既定セル余白のspecificity修正後12ケースPASS、ただし既存motion回帰がFAILしたため再実行中。#774で実core gallery 2/3列・奇数・3:2/長文caption・native lightbox・media-textを既存媒体の隔離コピーで検証中。各PRの最新CI/画像が完了するまでmergeしない。
+
+## Navigation — 既存ACFブロックを正本として使う（2026-11-27）
+Human提供839行の `acf/navigation-large` 2行・`acf/navigation-small` 3行のブロックコメントと現行ACF JSONを照合。repeater keyと全5 subfield keyは一致。画像ID・title・text・URL・target（checkbox「はい」）の既存契約を維持。旧添付IDと旧URLは使わない。
+
+- `tests/parts-navigation-acf-reference.test.mjs` は原文から毎回データを抽出し、現行field keyと実PHP adapterを検証。PHP API stubであり実ACF Proではない。
+- `qa/prepare-navigation-blocks-qa.php` は明示されたlocal loopback環境だけで、実登録済みACFブロック・field key・選択した2つのQA用添付IDを照合して、コードエディターへ貼れる適応済みブロックコメントをstdoutへ出す。DB更新なし。既存ローカル `/parts/`（post109、●●パーツ集●●）のコピーまたは別下書きで使用。既存ページを自動上書きしない。
+- 実行例（CursorのローカルWP CLI、実際のQA画像IDを指定する）：`JWSNJ_PARTS_QA_DISPOSABLE=1 wp eval-file /path/to/project/qa/prepare-navigation-blocks-qa.php <QA画像ID1> <QA画像ID2>`。Dockerでは環境変数をコンテナへ渡す。出力はQA専用、実サイトへ登録しない。実ACF Proでの追加/編集/保存/再編集/表示、外部リンク・未設定URL・画像なし・長文をCUR-04で検証。TOPはパーツ合格後。

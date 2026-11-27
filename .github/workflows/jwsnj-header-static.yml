@@ -37,6 +37,12 @@ on:
       - 'projects/jwsnj/tests/parts-table-contract.test.mjs'
       - 'projects/jwsnj/theme/css/blocks/wp-block-navigation-style.css'
       - 'projects/jwsnj/tests/parts-navigation-contract.test.mjs'
+      - 'projects/jwsnj/tests/parts-navigation-acf-reference.test.mjs'
+      - 'projects/jwsnj/theme/acf/blocks/navigation*.php'
+      - 'projects/jwsnj/theme/acf/json/group_custom_block_navigation_*.json'
+      - 'projects/jwsnj/theme/template-parts/_navigation-large-card.php'
+      - 'projects/jwsnj/qa/fixtures/parts-catalog-owner-reference.html'
+      - 'projects/jwsnj/qa/prepare-navigation-blocks-qa.php'
       - 'projects/jwsnj/theme/css/blocks/wp-block-details-style.css'
       - 'projects/jwsnj/tests/parts-accordion-contract.test.mjs'
       - 'projects/jwsnj/theme/css/blocks/wp-block-gallery-style.css'
@@ -116,6 +122,12 @@ on:
       - 'projects/jwsnj/tests/parts-table-contract.test.mjs'
       - 'projects/jwsnj/theme/css/blocks/wp-block-navigation-style.css'
       - 'projects/jwsnj/tests/parts-navigation-contract.test.mjs'
+      - 'projects/jwsnj/tests/parts-navigation-acf-reference.test.mjs'
+      - 'projects/jwsnj/theme/acf/blocks/navigation*.php'
+      - 'projects/jwsnj/theme/acf/json/group_custom_block_navigation_*.json'
+      - 'projects/jwsnj/theme/template-parts/_navigation-large-card.php'
+      - 'projects/jwsnj/qa/fixtures/parts-catalog-owner-reference.html'
+      - 'projects/jwsnj/qa/prepare-navigation-blocks-qa.php'
       - 'projects/jwsnj/theme/css/blocks/wp-block-details-style.css'
       - 'projects/jwsnj/tests/parts-accordion-contract.test.mjs'
       - 'projects/jwsnj/theme/css/blocks/wp-block-gallery-style.css'
@@ -173,6 +185,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Test Human ACF navigation block reference and PHP renderers
+        run: |
+          php -l projects/jwsnj/qa/prepare-navigation-blocks-qa.php
+          node --test projects/jwsnj/tests/parts-navigation-acf-reference.test.mjs
       - name: Test header breakpoint and menu close regressions
         run: node --test projects/jwsnj/tests/header-menu-state.test.mjs
       - name: Test Footer WordPress menu contract
