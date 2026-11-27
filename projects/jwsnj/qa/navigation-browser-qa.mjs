@@ -181,6 +181,37 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
       await page.screenshot({ path: 'form-qa-results/nav-' + engineName + '-' + width + '-parent.png' });
       console.log(JSON.stringify({ engine: engineName, width, desktopParent: 'PASS', ...typography, hovered, focused }));
     }
+    // Figma PC344:900/SP442:2764: actual theme CSS on native heading/paragraph markup.
+    for (const width of [375, 768, 1380]) {
+      await page.setViewportSize({ width, height: 900 });
+      const headingSpacing = await page.evaluate(() => {
+        const fixture = document.createElement('div');
+        fixture.className = 'block-editor_wrap';
+        fixture.style.cssText = 'width:min(calc(100% - 40px),960px);margin-inline:auto';
+        document.body.append(fixture);
+        const data = [];
+        for (const display of ['flow-root', 'flex']) {
+          const group = document.createElement('div');
+          group.style.cssText = 'display:' + display + ';flex-direction:column';
+          group.innerHTML = '<h2 class="wp-block-heading">長い大見出し 長い大見出し Long editable heading</h2><p class="wp-block-paragraph">本文</p><h3 class="wp-block-heading">中見出し</h3><p>本文</p><h4 class="wp-block-heading">小見出し</h4><p class="wp-block-paragraph">本文</p>';
+          fixture.append(group);
+          for (const heading of group.querySelectorAll('h2,h3,h4')) {
+            const p = heading.nextElementSibling;
+            data.push({display, tag:heading.tagName, gap:p.getBoundingClientRect().top - heading.getBoundingClientRect().bottom, font:getComputedStyle(heading).fontSize, paragraphTop:getComputedStyle(p).marginTop});
+          }
+        }
+        fixture.id = 'heading-spacing-qa';
+        return data;
+      });
+      const expected = width < 768 ? {H2:32,H3:24,H4:20} : {H2:40,H3:30,H4:20};
+      for (const item of headingSpacing) {
+        assert.ok(Math.abs(item.gap - expected[item.tag]) <= 1, JSON.stringify(item));
+        assert.equal(item.paragraphTop, '0px');
+      }
+      if (width !== 768) await page.locator('#heading-spacing-qa').screenshot({path:'form-qa-results/nav-' + engineName + '-' + width + '-heading-spacing.png'});
+      await page.locator('#heading-spacing-qa').evaluate(el => el.remove());
+      console.log(JSON.stringify({engine:engineName,width,headingSpacing:'PASS',data:headingSpacing}));
+    }
     // Actual WordPress menu with a long label in a short desktop viewport.
     for (const width of [1080, 1380]) {
       await page.setViewportSize({ width, height: 240 });
