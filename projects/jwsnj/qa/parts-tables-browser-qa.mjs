@@ -77,6 +77,7 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
           assert.equal(await hint.count(), 0);
           if (width === 1380) await scroll.screenshot({ path: 'form-qa-results/table-' + engineName + '-1380.png' });
         }
+        assert.equal(await figures.nth(1).locator('td[style*="padding:18px"]').evaluate(el => getComputedStyle(el).paddingBlockStart), '18px', 'explicit cell padding is preserved');
         for (const index of [1, 2]) {
           const variant = figures.nth(index);
           const info = await variant.evaluate(el => {
@@ -97,6 +98,9 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
           if (width === 375 || width === 1380) await variant.screenshot({ path: 'form-qa-results/table-' + engineName + '-' + width + '-variant-' + index + '.png' });
         }
         console.log(JSON.stringify({ partsTablesFrontend: 'PASS', engine: engineName, width, scroll: m }));
+      } catch (error) {
+        await page.screenshot({ path: 'form-qa-results/table-failure-' + engineName + '-' + width + '.png' }).catch(() => {});
+        throw error;
       } finally {
         await page.close();
       }
