@@ -1,0 +1,54 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: OBS-BUDOKAN-NATIVE-HASH-STICKY-CLEARANCE
+    summary: >-
+      When a sticky-header Theme intercepts ordinary same-page links with custom scroll logic but direct URL fragments initially use
+      browser-native scrolling, a later JavaScript offset correction can create a second visible page movement. Preserve the existing
+      scroll owner and make native fragment landing share the same authoritative sticky-header clearance, then test final clearance
+      and second-movement stability as separate runtime properties on PC and SP.
+    category: TOOLING
+    applicability:
+      scope: PROJECT
+      conditions:
+        - Nippon Budokan uses a sticky global header with authoritative SP/PC height tokens.
+        - common.js owns ordinary same-page click scrolling and uses header height plus 30px clearance.
+        - Direct URL fragments can be exercised against actual disposable WordPress output in a real browser runtime.
+      exclusions:
+        - Do not add fixed offsets when the Theme does not have an authoritative header-clearance contract.
+        - Do not replace the existing click-scroll state or add a second JavaScript scroll owner merely to hide the symptom.
+        - Do not infer that final anchor clearance proves motion stability; measure the initial browser landing and settled position separately.
+        - Same-project recurrence is not independent evidence for cross-project promotion.
+    promotion_state: PROJECT_ONLY
+    promotion:
+      candidate: false
+      rationale: >-
+        PR #435 reproduced an SP-only second movement on actual disposable WordPress output before repair. PC initial fragments and PC/SP
+        ordinary same-page anchor clicks were already stable, isolating the defect to native SP fragment landing followed by the Theme's
+        delayed correction. The bounded repair aligned native fragment scroll-padding with the existing header-height-plus-30px contract,
+        after which all dedicated PC/SP fragment scenarios and the existing pointer, focus, Tab, same-page anchor and SP sticky-clearance
+        regression suite passed before squash merge.
+      blocked_by:
+        - NEEDS_INDEPENDENT_REFERENCE_EVIDENCE_BEFORE_CROSS_PROJECT_PROMOTION
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-NATIVE-HASH-STICKY-CLEARANCE-20260906
+          kind: COMMIT
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/style.css
+          commit: 61946cdfba6094cafdf0ad2ff7f943bf5e7fa110
+          note: >-
+            PR #435 squash-merged after QA-first reproduction and root-cause isolation. The production change only aligned browser-native
+            fragment landing with existing Theme header tokens and the established 30px clearance; WordPress Menu ownership, ACF schema,
+            parts.php, Form/Formidable and TOP Calendar/FullCalendar logic were unchanged.
+      contradicts: []
+    notes:
+      - "Promotion review disposition 2026-09-06: KEEP_PROJECT_ONLY; Budokan-only evidence, no auto-promotion."
