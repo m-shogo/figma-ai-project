@@ -1,0 +1,55 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: OBS-BUDOKAN-CORE-DETAILS-CLOSED-FLOW-QA
+    summary: >-
+      Native closed details descendants can expose DOM geometry even when they are suppressed from visible disclosure flow.
+      QA should prove the user-visible contract through Details open state, container growth, expanded-body containment,
+      following-content displacement and close/reopen restoration rather than interpreting a child rect as visibility.
+    category: TOOLING
+    applicability:
+      scope: PROJECT
+      conditions:
+        - Browser QA measures native WordPress Core Details expansion and collapse.
+        - A closed Details descendant exposes geometry through DOM APIs.
+        - The intended invariant is visible normal-flow expansion, containment, non-overlap, and restoration.
+      exclusions:
+        - Do not weaken real pointer hit-testing.
+        - Do not use forced clicks.
+        - Do not change production CSS merely to satisfy a raw descendant-rect assumption.
+        - Same-project confirmation is not independent cross-project evidence.
+    promotion_state: PROJECT_ONLY
+    promotion:
+      candidate: false
+      rationale: >-
+        PR #470's first QA attempt treated a closed native Details child's geometry as proof of visibility and failed
+        before testing the actual user-visible flow. The corrected QA kept production unchanged and, on real Disposable
+        WordPress plus Chromium SP375 and PC1380, proved container growth, body containment, following-flow displacement,
+        scroll stability, close restoration and reopen stability. This is Budokan-only evidence.
+      blocked_by:
+        - NEEDS_INDEPENDENT_REFERENCE_EVIDENCE_BEFORE_CROSS_PROJECT_PROMOTION
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-CORE-DETAILS-CONTENT-FLOW-QA-20260907
+          kind: COMMIT
+          reference_id: REF-002-BUDOKAN
+          run_id: '34085405302'
+          path: .github/workflows/budokan-core-details-runtime.yml
+          commit: cf3627eac6cb296681df6a52d1f4ae1af5f29948
+          note: >-
+            PR #470 corrected the QA-only visibility assumption. Its current-so merge-ref runtime passed existing
+            Core Details pointer, keyboard, deep-scroll checks plus SP375 and PC1380 expanded-body containment,
+            following-flow displacement and restoration, open-close-reopen, scroll stability and horizontal overflow.
+            The cited workflow path already exists on the base branch and is the runtime owner extended by PR #470;
+            the new browser QA script itself remains unmerged in PR #470. Artifact upload remained blocked by repository
+            Actions storage quota. No Theme PHP, CSS, JS, WordPress Menu ownership, or ACF schema changed.
+      contradicts: []
+    notes:
+      - "Promotion review disposition 2026-09-07: KEEP_PROJECT_ONLY; Budokan-only evidence, no auto-promotion."
