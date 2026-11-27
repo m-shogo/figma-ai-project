@@ -13,6 +13,12 @@ on:
       - 'projects/jwsnj/qa/formidable-browser-qa.mjs'
       - 'projects/jwsnj/qa/seed-navigation-qa.php'
       - 'projects/jwsnj/qa/navigation-browser-qa.mjs'
+      - 'projects/jwsnj/qa/seed-parts-gallery-qa.php'
+      - 'projects/jwsnj/qa/parts-gallery-browser-qa.mjs'
+      - 'projects/jwsnj/theme/css/blocks/wp-block-gallery-style.css'
+      - 'projects/jwsnj/theme/css/blocks/wp-block-image-style.css'
+      - 'projects/jwsnj/theme/css/blocks/wp-block-media-text-style.css'
+      - 'projects/jwsnj/theme/css/blocks/wp-lightbox-overlay.css'
       - 'projects/jwsnj/qa/seed-fiscal-qa.php'
       - 'projects/jwsnj/qa/fiscal-archive-qa.mjs'
       - 'projects/jwsnj/qa/fixtures/parts-catalog-native.html'
@@ -91,6 +97,17 @@ jobs:
           [[ "$nav_id" =~ ^[0-9]+$ ]]
           cd ../..
           node projects/jwsnj/qa/navigation-browser-qa.mjs "${WP_URL}/?page_id=${nav_id}"
+      - name: Actual native gallery and lightbox parts checks
+        env:
+          CSS_QA_MODULE_ROOT: ${{ runner.temp }}/css-qa
+        run: |
+          cd runtime/wordpress
+          source scripts/runtime-env.sh
+          docker compose run --rm -e WP_ENVIRONMENT_TYPE=local -e JWSNJ_PARTS_QA_DISPOSABLE=1 cli eval-file /project/qa/seed-parts-gallery-qa.php
+          gallery_id="$(docker compose run --rm cli option get jwsnj_parts_gallery_qa_page_id)"
+          [[ "$gallery_id" =~ ^[0-9]+$ ]]
+          cd ../..
+          node projects/jwsnj/qa/parts-gallery-browser-qa.mjs "${WP_URL}/?page_id=${gallery_id}"
       - name: Actual fiscal archive query and pagination
         run: |
           cd runtime/wordpress
