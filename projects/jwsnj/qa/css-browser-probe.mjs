@@ -745,6 +745,112 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
      await fixture.dispose();
    }
  }
+ // Small buttons: Figma PC344:969 / SP442:2833. Actual CSS scope,
+ // not a Gutenberg iframe or a claim of optical raster equivalence.
+ for (const width of [320, 375, 767, 768, 1380]) {
+   await page.setViewportSize({ width, height: 900 });
+   await page.emulateMedia({ reducedMotion: 'no-preference' });
+   await page.evaluate(() => {
+     const fixture = document.createElement('div');
+     fixture.id = 'small-button-interaction';
+     fixture.className = 'block-editor_wrap';
+     fixture.style.cssText = 'width:min(calc(100% - 40px),960px);margin-inline:auto';
+     fixture.innerHTML = '<button type="button" data-qa-before>前の操作</button><div class="wp-block-buttons small"><div class="wp-block-button"><a class="wp-block-button__link" href="#end">ボタン小</a></div><div class="wp-block-button"><a class="wp-block-button__link" href="#end">テキストが長い時 LongEditableLabelWithoutSpaces1234567890LongEditableLabelWithoutSpaces1234567890</a></div><div class="wp-block-button is-style-outline"><a class="wp-block-button__link" href="#end" target="_blank">外部リンク</a></div><div class="wp-block-button"><a class="wp-block-button__link" href="/qa/document.pdf">PDFファイル</a></div><div class="wp-block-button"><a class="wp-block-button__link" href="/qa/image.webp">添付ファイル</a></div></div>';
+     document.body.append(fixture);
+   });
+   const fixture = page.locator('#small-button-interaction');
+   const links = fixture.locator('a');
+   try {
+     await page.evaluate(() => document.fonts.ready);
+     await page.mouse.move(0, 0);
+     const metrics = await fixture.evaluate(el => {
+       const group = el.querySelector('.wp-block-buttons');
+       const rect = group.getBoundingClientRect();
+       const groupStyle = getComputedStyle(group);
+       return {
+         direction: groupStyle.flexDirection,
+         rowGap: groupStyle.rowGap,
+         columnGap: groupStyle.columnGap,
+         rows: [...group.querySelectorAll('a')].map(a => {
+           const box = a.getBoundingClientRect();
+           const before = getComputedStyle(a, '::before');
+           const after = getComputedStyle(a, '::after');
+           const range = document.createRange();
+           range.selectNodeContents(a);
+           const lines = [...range.getClientRects()];
+           return {
+             height: box.height,
+             font: getComputedStyle(a).fontSize,
+             gap: getComputedStyle(a).gap,
+             circle: [before.width, before.height],
+             center: [after.left, after.top, after.transform],
+             duration: [before.transitionDuration, after.transitionDuration],
+             lines: lines.length,
+             fits: box.right <= rect.right + 1 && lines.every(line =>
+               line.left >= box.left + 37 && line.right <= box.right + 1)
+           };
+         })
+       };
+     });
+     assert.equal(metrics.direction, width >= 768 ? 'row' : 'column');
+     assert.deepEqual([metrics.rowGap, metrics.columnGap], ['20px', '30px']);
+     for (const row of metrics.rows) {
+       assert.ok(row.fits, JSON.stringify(metrics));
+       assert.equal(row.font, '16px');
+       assert.equal(row.gap, '8px');
+       assert.deepEqual(row.circle, ['30px', '30px']);
+       assert.equal(row.center[0], '15px');
+       assert.equal(row.duration[0], '0.3s');
+       assert.equal(row.duration[1], '0.3s');
+     }
+     if (width <= 375) assert.ok(metrics.rows[1].lines >= 2 && metrics.rows[1].height > 30);
+     const state = link => link.evaluate(el => {
+       const a = getComputedStyle(el);
+       const circle = getComputedStyle(el, '::before');
+       const glyph = getComputedStyle(el, '::after');
+       return { label: a.color, background: a.backgroundColor,
+         circle: circle.backgroundColor, glyph: glyph.color,
+         focus: el === document.activeElement, outline: a.outlineStyle,
+         outlineWidth: parseFloat(a.outlineWidth) };
+     });
+     await fixture.locator('[data-qa-before]').focus();
+     await page.keyboard.press('Tab');
+     const focused = await state(links.first());
+     assert.ok(focused.focus && focused.outline !== 'none' && focused.outlineWidth >= 2, JSON.stringify(focused));
+     await links.first().evaluate(el => el.blur());
+     for (const index of [0, 2, 3, 4]) {
+       const link = links.nth(index);
+       const initial = await state(link);
+       await link.hover();
+       await page.waitForFunction(({ el, initial }) => {
+         const circle = getComputedStyle(el, '::before').backgroundColor;
+         const glyph = getComputedStyle(el, '::after').color;
+         return circle === initial.glyph && glyph === initial.circle;
+       }, { el: await link.elementHandle(), initial }, { timeout: 3000 });
+       const hovered = await state(link);
+       assert.equal(hovered.label, initial.label);
+       assert.equal(hovered.background, initial.background);
+       if (index === 0 && (width === 375 || width === 1380)) {
+         await fixture.screenshot({ path: out + '/small-button-hover-' + name + '-' + width + '.png' });
+       }
+       await page.mouse.move(0, 0);
+       await page.waitForFunction(({ el, initial }) =>
+         getComputedStyle(el, '::before').backgroundColor === initial.circle &&
+         getComputedStyle(el, '::after').color === initial.glyph,
+       { el: await link.elementHandle(), initial }, { timeout: 3000 });
+     }
+     await page.emulateMedia({ reducedMotion: 'reduce' });
+     assert.deepEqual(await links.first().evaluate(el => [
+       getComputedStyle(el, '::before').transitionDuration,
+       getComputedStyle(el, '::after').transitionDuration
+     ]), ['0s', '0s']);
+     console.log(JSON.stringify({ smallButtonInteraction: 'PASS', engine: name, width, metrics, focused }));
+     report.push({ name, width, smallButtonInteraction: metrics });
+   } finally {
+     await page.mouse.move(0, 0);
+     await fixture.evaluate(el => el.remove());
+   }
+ }
  // Legacy file presentation must not leak to a generic .file component.
  for (const width of [375, 768, 1380]) {
    await page.setViewportSize({width, height: 900});

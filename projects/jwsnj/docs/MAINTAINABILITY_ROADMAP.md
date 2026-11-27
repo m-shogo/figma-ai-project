@@ -262,3 +262,9 @@ Trigger: 承認済み残実装・保守改善に安全なREADYがなくなった
 - #794 initial head690aa8e1 run46021308174/job140581347195: 実WP属性8ケース・inline link11ケースはPASS、WebKit768のQA Details（index2）Escape後の同一frame中間状態待ち1秒でFAIL。原因を断定せず、Escape入力前に実ページrAF計測をarmし、高さ・open・inert・focusの同時条件を維持、失敗時に全frameの時系列と最終値を記録するテスト修正 ed96deeae8fa861199c36a12fe5c9d4ab43c8720。最新CI/画像確認前は未マージ。再発時はtraceに基づき実装/計測の原因を切り分け、条件緩和・skipはしない。
 - 独立 #796 bc3d14c1964d320a2c7e5aa02b66b6d43abbc7c1: 既存の本文・大小ボタン拡張子selectorにASCII case-insensitive flag、file種別と外部SVG除外を揃えた。front/editor CSS scope・3engine×5幅で大小文字/PDF/添付/通常新窓を比較。既存小ボタンSP gap20pxは#622のCMS区別なしの判断を維持。新素材/配色/拡張子追加なし。URL pathを正確に解析できないCSS substringでqueryを対応したとはしない。CI/PNG未確認、未マージ。
 - 次READY: #794/#796最新CI実ログ/PNG/最新soと非競合確認→安全merge。path query/fragmentのアイコン分類は通常ページのqueryに含まれる拡張子を誤認しない設計とfront/editor両方の既存ownerを調査。小ボタン長文・hover/focus/optical alignmentの実描画、CUR-04/08へ実ACF/実canvasを引継ぎ。#785 WP7.1+ gate、#664、#523/#524、534:1706、ACF・owner・スケジュール変更なし。
+
+
+## 2026-11-28 継続 — 拡張子アイコンのmergeと小ボタンの操作QA
+- 開始so c60dc25c。#796 head bc3d14c1 CI5/5、CSS run46024235475/job140591376048で15/15（front/editor CSS scope）、実WP run46024235433/job140591376036 Details36/36・editor invalid0/save/reopen/frontend PASS。artifact15211601525からPC/SP×3engineの6 PNG確認。merge dd71c19cbf34b4edf285f2c19a71569b54d812eb。#797 docs CI2/2→8c5b25de56754d9006e101ce46becf3ef4465ff1。公式Figma skill/sessionでPC344:1027/SP442:2880とPC344:969/SP442:2833のcontext/画像再取得。実canvas・物理端末未受入。
+- #794 head ed96deea: run46024071055/job140590794609 属性8/inline11/Details30 PASS後WebKit768で失敗。診断catch内read()が別loopのscopeでReferenceErrorになりtrace出力不能。ef739bcdでreadMotion()と入力前状態・frame traceを修正し同じ受入条件を維持。根本原因は未確定、最新CI確認前にmergeしない。
+- 次の独立QAは小ボタンの実CSS long text、30px円/8px gap、keyboard focus、hover色の両方向復帰、0.3s/reduced-motionを3engine×5幅で検証しPC/SP PNGを記録。既存SP gap20pxの#622判断は維持。本番CSS変更なし。query/fragmentの正確なpath分類は#794のfront.php ownerが解決してからfront/editor両scopeを設計。#785 WP7.1+ gate、#664、#523/#524、534:1706、ACF・owner・scheduleは維持。

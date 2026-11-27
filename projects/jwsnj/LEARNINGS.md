@@ -429,3 +429,5 @@ W は `docs/agent-human-fb-weak-spots.md` の W1–W10。
 - 2026-11-27 区切り線：#793 実WordPress3engine×4幅12/12、実Gutenberg登録・invalid0・保存再編集/front成功、PC/SP6 PNG確認。CSS scopeのみのPASSからnative core CSS込みのPASSに更新したが、fixture本文幅とFigma960pxの差、学校実機は未受入。添付リンクの属性操作は正規表現によるHTML再構築より既存WP_HTML_Tag_Processorを優先する候補。#794で明示target/既存rel/data属性/パス判定とidempotenceを実WPで検証予定、未合格の段階で共通ルールに昇格しない。CSS拡張子判定の整合は別途。
 
 - 2026-11-28: #794 初回実WP属性8/inline11はPASSだがWebKit768 Details Escape中間状態の計測タイムアウトで全体CI FAIL。前回の同一frame条件を維持したまま、keyboard送信前にrAF観測を用意して失敗時のframe traceを残す。サンプリング欠落を根本原因と断定しない。#796 CSSのhref suffixはASCII case-insensitive flagでPHP側のcase-insensitive判定と整合する候補。query/fragmentのpath判定には別の正確な分類が必要で、単純な部分一致を採用しない。両PR最新CI/画像未確認。小ボタンの意匠gapは既存#622決定を維持。
+
+- 2026-11-28: #796 ASCII case-insensitive suffix selectorは実CSS15/15・6 PNG・既存実WP回帰PASS、merge dd71c19。URL query/fragmentは未解決。#794診断catchで別loop内のread()を参照しReferenceErrorとなり本来の失敗を隠した。診断関数も同じscopeで定義し、失敗時ログが元エラーを覆わないようにする。修正ef739bcd未検証。小ボタンhover/解除の実CSS QAを独立追加、実canvas/実機とは区別する。
