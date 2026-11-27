@@ -60,3 +60,8 @@ Human提供839行の `acf/navigation-large` 2行・`acf/navigation-small` 3行�
 ## 2026-11-27 区切り線・リンクの実WP確認
 - #793 merge 6ad4aa5f、CI3/3・実WP separator12/12（320/375/768/1380px、3engine）、Gutenberg core/separator登録・invalid0・保存再編集・front PASS。artifact15207771083 PC/SP6 PNG確認。実測はPC65/SP81px、直前見出しgap40/32、後段落24、公式花SVG decode成功。fixtureのPC幅はFigma960pxと異なるので厳密視覚受入は別。
 - #794 は添付リンクの明示target/既存rel/path拡張子を維持する修正とQA。既存参照の旧URLは使用せず隔離fixtureの未遷移リンクを検証する。CI未確認。WP7.0.2標準タブ未登録の#785は承認されたバージョン/依存変更まで保留。既存本番データと原文は変更しない。
+
+
+## 2026-11-28 添付リンクの合格・実エディター意匠の差分
+- #794 head325af07f CI3/3、実WP run46033426367/job140622715384 checkout f716b00 (so8f9f19f1とのmerge ref)、属性8/8、inline12/12、Details motion36/36、Gutenberg invalid0/save/reopen/front PASS、artifact15216055810 PC/SP6 PNG確認。merge756954c00669908db1d1dfc6e4ce8a8b96800e2a。通常closeと反転を分けた試験で合格、以前のWebKit早期collapseの原因断定・物理端末保証はしない。
+- 同artifact native-parts-editor-reopened.png はH2/H3/H4・ボタン・本文リンクがフロント意匠と大きく異なる（見出し16px程度の視覚・H3背景なし・本文serif風、実測前の目視）。実editorの保存機能とCSS parityを区別。新規session公式Figma PC357:995/998/1001、SP442:2771/2768/2765 context/画像、PC H2/H3/H4 30/24/18、SP24/22/18、H2 3px stroke、H3 mint、H4公式花。既存editor PHP/CSSを照合し、実canvasでroot/scope/heading token、CSSOMのrule/読み込み、actual viewport・heading computed・PCと狭いshellのPNG、front375/1380を記録する検証追加。診断結果のMISMATCHは合格を意味しない。Foundation変数や読込ownerは原因確定まで編集しない。#799 CIの旧transition期待値FAILは6c2a274bで契約更新し再CI待ち。#523/#524/#785/#664/held 534:1706/ACF/owner/schedule維持。
