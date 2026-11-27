@@ -26,6 +26,10 @@ on:
       - 'projects/jwsnj/qa/fiscal-archive-qa.mjs'
       - 'projects/jwsnj/qa/fixtures/parts-catalog-native.html'
       - 'projects/jwsnj/qa/seed-native-parts-qa.php'
+      - 'projects/jwsnj/qa/seed-parts-tabs-qa.php'
+      - 'projects/jwsnj/qa/parts-tabs-browser-qa.mjs'
+      - 'projects/jwsnj/qa/fixtures/parts-catalog-owner-reference.html'
+      - 'projects/jwsnj/theme/css/blocks/wp-block-tabs-style.css'
       - 'projects/jwsnj/qa/native-parts-browser-qa.mjs'
       - 'projects/jwsnj/qa/native-parts-editor-qa.mjs'
       - 'projects/jwsnj/qa/fixtures/parts-catalog-tables.html'
@@ -136,6 +140,17 @@ jobs:
           [[ "$table_id" =~ ^[0-9]+$ ]]
           cd ../..
           node projects/jwsnj/qa/parts-tables-browser-qa.mjs "${WP_URL}/?page_id=${table_id}"
+      - name: Native WordPress tabs and nested catalog content
+        env:
+          CSS_QA_MODULE_ROOT: ${{ runner.temp }}/css-qa
+        run: |
+          cd runtime/wordpress
+          source scripts/runtime-env.sh
+          docker compose run --rm -e WP_ENVIRONMENT_TYPE=local -e JWSNJ_PARTS_QA_DISPOSABLE=1 cli eval-file /project/qa/seed-parts-tabs-qa.php
+          tabs_id="$(docker compose run --rm cli option get jwsnj_parts_tabs_qa_page_id)"
+          [[ "$tabs_id" =~ ^[0-9]+$ ]]
+          cd ../..
+          node projects/jwsnj/qa/parts-tabs-browser-qa.mjs "${WP_URL}/?page_id=${tabs_id}"
       - name: Native Gutenberg parts fixture and browser checks
         env:
           CSS_QA_MODULE_ROOT: ${{ runner.temp }}/css-qa
