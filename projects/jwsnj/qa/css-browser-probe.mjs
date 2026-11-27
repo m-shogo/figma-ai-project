@@ -962,6 +962,14 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
            const range = document.createRange();
            range.selectNodeContents(node);
            const lines = [...range.getClientRects()];
+           // Range rects describe font metrics, not painted ink or CSS line
+           // boxes. Chromium at 48px reports a 70px font rect on a 67.2px
+           // line box. Permit only the derived half-leading excess in the
+           // vertical axis when the block does not clip; horizontal bounds
+           // and scroll/client checks remain strict.
+           const lineHeight = parseFloat(style.lineHeight);
+           const verticalAllowance = line =>
+             style.overflowY === 'visible' ? Math.max(0, (line.height - lineHeight) / 2) : 0;
            return {
              tag: node.tagName, font: parseFloat(style.fontSize),
              lineHeight: parseFloat(style.lineHeight), height: box.height,
@@ -977,9 +985,11 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
                return delta.some(value => value > 1) ? [{ index, delta,
                  rect: { left: line.left, right: line.right, top: line.top, bottom: line.bottom } }] : [];
              }),
+             fontMetricAllowance: lines.map(verticalAllowance),
              fits: lines.every(line => line.left >= box.left - 1 &&
-               line.right <= box.right + 1 && line.top >= box.top - 1 &&
-               line.bottom <= box.bottom + 1)
+               line.right <= box.right + 1 &&
+               line.top >= box.top - verticalAllowance(line) - 1 &&
+               line.bottom <= box.bottom + verticalAllowance(line) + 1)
            };
          });
          return { width, rows, rootFont: parseFloat(getComputedStyle(document.documentElement).fontSize),
