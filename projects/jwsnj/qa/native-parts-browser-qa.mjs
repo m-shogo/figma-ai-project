@@ -16,6 +16,7 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
       try {
         await page.route('**/*', route => new URL(route.request().url()).origin === url.origin ? route.continue() : route.abort());
         assert.equal((await page.goto(url.href, { waitUntil: 'load' })).status(), 200);
+        await page.evaluate(() => document.fonts.ready);
         const root = page.locator('.block-editor_wrap');
         assert.equal(await root.count(), 1);
         const headings = root.locator('h2.wp-block-heading, h3.wp-block-heading, h4.wp-block-heading');
@@ -107,8 +108,18 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
           assert.ok(supported, engineName + ' must support native motion in this CI browser');
           const durations = await item.evaluate(el => getComputedStyle(el, '::details-content').transitionDuration);
           assert.equal(durations, '0.3s, 0.3s');
+          // Re-measure intrinsic endpoints immediately before each motion run.
+          // Font/layout and scrollbars may have changed since the initial sweep.
+          await page.emulateMedia({ reducedMotion: 'reduce' });
           const closed = await height();
-          const expanded = states[i].opened;
+          await summary.evaluate(el => el.click());
+          await page.waitForFunction(el => el.open, await item.elementHandle());
+          const expanded = await height();
+          assert.ok(expanded > closed + 4, JSON.stringify({ engineName, width, i, closed, expanded }));
+          await summary.evaluate(el => el.click());
+          await page.waitForFunction(el => !el.open, await item.elementHandle());
+          await page.emulateMedia({ reducedMotion: 'no-preference' });
+          await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
           const intermediate = async (from, to) => {
             await page.waitForFunction(({ el, from, to }) => {
               const h = el.getBoundingClientRect().height;
@@ -116,8 +127,13 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
             }, { el: await item.elementHandle(), from, to }, { timeout: 1000 });
           };
           const settled = async target => {
-            await page.waitForFunction(({ el, target }) => Math.abs(el.getBoundingClientRect().height - target) <= 1,
-              { el: await item.elementHandle(), target });
+            try {
+              await page.waitForFunction(({ el, target }) => Math.abs(el.getBoundingClientRect().height - target) <= 1,
+                { el: await item.elementHandle(), target }, { timeout: 3000 });
+            } catch (error) {
+              console.error(JSON.stringify({ engineName, width, i, target, actual: await read() }));
+              throw error;
+            }
           };
           await summary.focus();
           await page.keyboard.press('Enter');
@@ -161,6 +177,9 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
           await root.screenshot({ path: 'form-qa-results/native-parts-' + engineName + '-' + width + '-closed.png' });
         }
         console.log(JSON.stringify({ nativePartsFrontend: 'PASS', engine: engineName, width, headings: metrics, details: states }));
+      } catch (error) {
+        await page.screenshot({ path: 'form-qa-results/native-parts-failure-' + engineName + '-' + width + '.png' }).catch(() => {});
+        throw error;
       } finally {
         await page.close();
       }
