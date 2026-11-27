@@ -320,3 +320,6 @@ CUR-04のLarge Navigationについて、共通表示PHP/CSSをChat側で先行�
 
 ### CUR-04 追加 — Navigation既存ブロックとパーツ集
 #780 Large共通表示 merge 05fdc1f（3engine×5幅15/15）、#782 QA generator/原文field key/actual PHP adapter merge cbeb077。既存 `/parts/`（post109、●●パーツ集●●）を確認し、コピーまたは隔離下書きへ `qa/prepare-navigation-blocks-qa.php` の出力をコードエディターで貼り付ける。実ローカルQA画像ID2つを指定。ACF Proで表示/追加/編集/保存再編集/外部リンク/画像なし/URLなし/長文を確認。既存DBを自動上書きせず、実データや新ACF定義を作らない。#783 Small CSS QAは別。TOP組込みはパーツ先行合格後。
+
+### CUR-04 追加 — native tabs / viewport visibility
+Human原文839行の `wp:tabs` と `metadata.blockVisibility.viewport` を実WordPressの既存編集機能で確認する。旧ACFタブを新規登録/移植しない。#785は隔離実WPのnative tabs検証（CI未確定）、Cursorはその結果を確認して既存 /parts/ のコピーで追加・タブ名変更・入れ子内容の編集/保存再編集、端末別設定の編集/保存再編集を確認。WP標準のviewport境界480/782pxはテーマの768pxへ勝手に変更しない。Figma Sliderに対応する汎用CMSブロックは未確定のため、TOP用ACFを流用する前に既存登録とHuman仕様を確認する。
