@@ -470,6 +470,74 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
     await page.locator('#parts-recheck').evaluate(el => el.remove());
     report.push({name,width,partsRecheck:parts});
   }
+ // In-page-link markup mirrors the existing ACF render; no ACF runtime claim.
+ for (const width of [320, 375, 767, 768, 1380]) {
+   await page.setViewportSize({width, height: 900});
+   await page.emulateMedia({reducedMotion: 'no-preference'});
+   await page.evaluate(() => {
+     const fixture = document.createElement('div');
+     fixture.id = 'inpage-link-recheck';
+     fixture.className = 'block-editor_wrap';
+     fixture.style.cssText = 'width:min(calc(100% - 40px),960px);margin-inline:auto';
+     const labels = ['ページ内リンク 最小幅304px', 'ページ内リンクページ内リンクページ内リンク', 'ページ内リンク', 'ページ内リンク', 'ページ内リンク', '長文 LongEditableLabelWithoutSpaces1234567890LongEditableLabelWithoutSpaces1234567890LongEditableLabelWithoutSpaces1234567890'];
+     const list = document.createElement('ul');
+     list.className = 'module_inPageLink-01';
+     for (const label of labels) {
+       const item = document.createElement('li');
+       item.className = 'inPageLink';
+       const link = document.createElement('a');
+       link.href = '#end';
+       const title = document.createElement('div');
+       title.className = 'title';
+       title.textContent = label;
+       link.append(title);
+       item.append(link);
+       list.append(item);
+     }
+     fixture.append(list);
+     document.body.append(fixture);
+   });
+   const fixture = page.locator('#inpage-link-recheck');
+   const first = fixture.locator('a').first();
+   await first.scrollIntoViewIfNeeded();
+   await page.evaluate(() => document.fonts.ready);
+   const geometry = await fixture.evaluate(el => {
+     const bounds = el.getBoundingClientRect();
+     const list = el.querySelector('ul');
+     const items = [...list.querySelectorAll('a')].map(link => {
+       const rect = link.getBoundingClientRect();
+       const label = link.querySelector('.title');
+       const text = label.getBoundingClientRect();
+       const style = getComputedStyle(link);
+       const icon = getComputedStyle(link, '::after');
+       return {
+         width: rect.width, height: rect.height, left: rect.left, right: rect.right, top: rect.top, bottom: rect.bottom,
+         font: style.fontSize, weight: style.fontWeight, padding: style.paddingInlineStart, duration: style.transitionDuration,
+         icon: [icon.width, icon.height, icon.fontSize, icon.fontWeight, icon.content],
+         fits: rect.left >= bounds.left - 1 && rect.right <= bounds.right + 1 && label.scrollWidth <= label.clientWidth + 1 &&
+           text.right <= rect.right - 16 - 24 + 1
+       };
+     });
+     return { width: bounds.width, gap: parseFloat(getComputedStyle(list).gap), items };
+   });
+   assert.equal(geometry.gap, width < 768 ? 20 : 24);
+   for (const item of geometry.items) {
+     assert.ok(item.fits && item.height >= 47.9 && item.width >= Math.min(304,geometry.width) - 1, JSON.stringify(geometry));
+     assert.deepEqual([item.font,item.weight,item.padding,item.duration], ['15px','500','16px','0.3s']);
+     assert.deepEqual(item.icon.slice(0,4), ['24px','24px','10px','900']);
+     assert.ok(item.icon[4].includes('\uf063'), JSON.stringify(item.icon));
+     if (width < 768) assert.ok(Math.abs(item.width - geometry.width) <= 1);
+   }
+   if (width < 768) for(let i=1;i<geometry.items.length;i++) assert.ok(Math.abs(geometry.items[i].top - geometry.items[i-1].bottom - 20)<=1);
+   assert.ok(geometry.items.at(-1).height > 48 || width >= 768, JSON.stringify(geometry));
+   await first.focus();
+   assert.ok(await first.evaluate(el => el === document.activeElement && parseFloat(getComputedStyle(el).outlineWidth) >= 2));
+   await page.emulateMedia({reducedMotion:'reduce'});
+   assert.equal(await first.evaluate(el => getComputedStyle(el).transitionDuration), '0s');
+   if(width===375||width===1380) await fixture.screenshot({path:out+'/'+name+'-'+width+'-inpage-links.png'});
+   await fixture.evaluate(el=>el.remove());
+   report.push({name,width,inPageLinks:geometry});
+ }
  // Legacy file presentation must not leak to a generic .file component.
  for (const width of [375, 768, 1380]) {
    await page.setViewportSize({width, height: 900});

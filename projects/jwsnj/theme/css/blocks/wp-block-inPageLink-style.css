@@ -45,6 +45,9 @@
         letter-spacing: 0.05em;
         line-height: 1.4;
         transition: background-color var(--transition-duration);
+        @media (prefers-reduced-motion: reduce) {
+          transition: none;
+        }
         .title {
           flex: 1 1 auto;
           min-width: 0;
