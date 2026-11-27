@@ -17,6 +17,7 @@ const server=createServer((req,res)=>{
 await new Promise(r=>server.listen(0,'127.0.0.1',r));
 const url='http://127.0.0.1:'+server.address().port;
 const report=[];
+const resizeFailures=[];
 try{
 for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
  const browser=await engine.launch();
@@ -920,6 +921,125 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
      await fixture.evaluate(el => el.remove());
    }
  }
+ // User-required 150/200% text enlargement. Set the document root font
+ // (not CSS zoom or a claim of physical/browser accessibility zoom).
+ for (const width of [375, 768, 1380]) {
+   await page.setViewportSize({ width, height: 900 });
+   await page.emulateMedia({ reducedMotion: 'reduce' });
+   for (const scale of [1.5, 2]) {
+     const oldRoot = await page.evaluate(scale => {
+       const root = document.documentElement;
+       const previous = root.style.fontSize;
+       root.style.fontSize = (16 * scale) + 'px';
+       const fixture = document.createElement('div');
+       fixture.id = 'parts-text-resize';
+       fixture.className = 'block-editor_wrap';
+       fixture.style.cssText = 'width:min(calc(100% - 40px),960px);margin-inline:auto';
+       const long = '長い日本語の見出しを自然に折り返す LongEditableLabelWithoutSpaces1234567890LongEditableLabelWithoutSpaces1234567890';
+       for (const level of [2, 3, 4]) {
+         const heading = document.createElement('h' + level);
+         heading.className = 'wp-block-heading';
+         heading.textContent = long;
+         const paragraph = document.createElement('p');
+         paragraph.append(document.createTextNode('本文 '));
+         const link = document.createElement('a');
+         link.href = '#end';
+         link.textContent = long;
+         paragraph.append(link, document.createTextNode(' 本文'));
+         fixture.append(heading, paragraph);
+       }
+       document.body.append(fixture);
+       return previous;
+     }, scale);
+     const fixture = page.locator('#parts-text-resize');
+     try {
+       await fixture.scrollIntoViewIfNeeded();
+       await page.evaluate(() => document.fonts.ready);
+       const measured = await fixture.evaluate(el => {
+         const width = el.getBoundingClientRect().width;
+         const rows = [...el.querySelectorAll('h2,h3,h4,p')].map(node => {
+           const box = node.getBoundingClientRect();
+           const style = getComputedStyle(node);
+           const range = document.createRange();
+           range.selectNodeContents(node);
+           const lines = [...range.getClientRects()];
+           // Range rects describe font metrics, not painted ink or CSS line
+           // boxes. Chromium at 48px reports a 70px font rect on a 67.2px
+           // line box. Permit only the derived half-leading excess in the
+           // vertical axis when the block does not clip; horizontal bounds
+           // checks remain strict; vertical scroll extent can also include
+           // the same font metrics rounded to integer CSS pixels.
+           const lineHeight = parseFloat(style.lineHeight);
+           const verticalAllowance = line =>
+             style.overflowY === 'visible' ? Math.max(0, (line.height - lineHeight) / 2) : 0;
+           return {
+             tag: node.tagName, font: parseFloat(style.fontSize),
+             lineHeight: parseFloat(style.lineHeight), height: box.height,
+             width: box.width, clientWidth: node.clientWidth, scrollWidth: node.scrollWidth,
+             clientHeight: node.clientHeight, scrollHeight: node.scrollHeight,
+             whiteSpace: style.whiteSpace, lines: lines.length,
+             overflow: [style.overflowX, style.overflowY],
+             fontFamily: style.fontFamily, letterSpacing: style.letterSpacing,
+             textBoxTrim: style.textBoxTrim, box: { left: box.left, right: box.right, top: box.top, bottom: box.bottom },
+             outside: lines.flatMap((line, index) => {
+               const delta = [box.left - line.left, line.right - box.right,
+                 box.top - line.top, line.bottom - box.bottom];
+               return delta.some(value => value > 1) ? [{ index, delta,
+                 rect: { left: line.left, right: line.right, top: line.top, bottom: line.bottom } }] : [];
+             }),
+             fontMetricAllowance: lines.map(verticalAllowance),
+             scrollHeightAllowance: Math.max(1, Math.ceil(Math.max(0, ...lines.map(line =>
+               Math.min(verticalAllowance(line), Math.max(0, line.bottom - box.bottom))
+             )))),
+             fits: lines.every(line => line.left >= box.left - 1 &&
+               line.right <= box.right + 1 &&
+               line.top >= box.top - verticalAllowance(line) - 1 &&
+               line.bottom <= box.bottom + verticalAllowance(line) + 1)
+           };
+         });
+         return { width, rows, rootFont: parseFloat(getComputedStyle(document.documentElement).fontSize),
+           desktop: matchMedia('(min-width: 48rem)').matches };
+       });
+       // Retain every resize case even when a measurement fails.
+       if (measured.rows.some(row => !row.fits || row.scrollWidth > row.clientWidth + 1 ||
+           row.scrollHeight > row.clientHeight + row.scrollHeightAllowance)) {
+         console.error(JSON.stringify({ partsTextResizeFailure: true, engine: name, width, scale, measured }));
+         for (const [index, row] of measured.rows.entries()) {
+           if (!row.fits || row.scrollWidth > row.clientWidth + 1 || row.scrollHeight > row.clientHeight + row.scrollHeightAllowance) {
+             await fixture.locator('h2,h3,h4,p').nth(index).screenshot({
+               path: out + '/parts-text-resize-failure-' + name + '-' + width + '-' + scale + '-' + index + '.png'
+             });
+           }
+         }
+       }
+       assert.equal(measured.rootFont, 16 * scale);
+       const sizes = measured.desktop ? [30, 16, 24, 16, 18, 16] : [24, 16, 22, 16, 18, 16];
+       assert.deepEqual(measured.rows.map(row => row.font), sizes.map(size => size * scale));
+       for (const row of measured.rows) {
+         assert.ok(row.whiteSpace !== 'nowrap' && row.fits && row.width <= measured.width + 1, JSON.stringify(measured));
+         assert.ok(row.scrollWidth <= row.clientWidth + 1 && row.scrollHeight <= row.clientHeight + row.scrollHeightAllowance, JSON.stringify(measured));
+         assert.ok(row.height >= row.lineHeight - 1, JSON.stringify(row));
+       }
+       if (width === 375) assert.ok(measured.rows.every(row => row.lines >= 2));
+       const link = fixture.locator('a').first();
+       await link.focus();
+       assert.ok(await link.evaluate(el => el === document.activeElement && getComputedStyle(el).outlineStyle !== 'none'));
+       if (scale === 2 && (width === 375 || width === 1380)) {
+         await fixture.screenshot({ path: out + '/parts-text-resize-' + name + '-' + width + '.png' });
+       }
+       console.log(JSON.stringify({ partsTextResize: 'PASS', engine: name, width, scale, measured }));
+       report.push({ name, width, scale, partsTextResize: measured });
+     } catch (error) {
+       const failure = { engine: name, width, scale, error: String(error) };
+       resizeFailures.push(failure);
+       report.push({ name, width, scale, partsTextResizeFailure: failure });
+       console.error(JSON.stringify(failure));
+     } finally {
+       await fixture.evaluate(el => el.remove());
+       await page.evaluate(previous => { document.documentElement.style.fontSize = previous; }, oldRoot);
+     }
+   }
+ }
  // Legacy file presentation must not leak to a generic .file component.
  for (const width of [375, 768, 1380]) {
    await page.setViewportSize({width, height: 900});
@@ -1184,4 +1304,5 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
  report.push({name,mechanism});
  }finally{await browser.close();}
 }
+assert.deepEqual(resizeFailures, [], 'all text enlargement cases must pass');
 }finally{writeFileSync(out+'/browser.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report));await new Promise(r=>server.close(r));}
