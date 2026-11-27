@@ -2,23 +2,25 @@
 /* // ------------------------------
 // 非表示設定
 // ------------------------------ */
+/* WordPress 7.0 viewport metadata: Core device boundaries, not Theme layout.
+   Keep the existing scoped CSS while the classic Theme suppresses Core support styles. */
 .block-editor_wrap,
 .editor-styles-wrapper {
   /* デスクトップで非表示 */
   .wp-block-hidden-desktop {
-    @media (calc(1024 * (1 / 16 * 1rem)) <= width) {
+    @media (width > 782px) {
       display: none !important;
     }
   }
   /* タブレットで非表示 */
   .wp-block-hidden-tablet {
-    @media (calc(768 * (1 / 16 * 1rem)) <= width < calc(1024 * (1 / 16 * 1rem))) {
+    @media (480px < width <= 782px) {
       display: none !important;
     }
   }
   /* モバイルで非表示 */
   .wp-block-hidden-mobile {
-    @media (width < calc(768 * (1 / 16 * 1rem))) {
+    @media (width <= 480px) {
       display: none !important;
     }
   }
