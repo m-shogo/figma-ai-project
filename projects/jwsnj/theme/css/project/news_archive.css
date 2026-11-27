@@ -99,28 +99,34 @@ body.category {
     @media (calc(768 * (1 / 16 * 1rem)) <= width) {
       flex-direction: row;
       justify-content: flex-end;
-      align-items: flex-start;
+      align-items: center;
       margin-bottom: calc(56 * var(--to-rem-func));
     }
   }
   .jwsnj_newsArchive_filterLabel {
-    display: flex;
+    display: grid;
+    grid-template-columns: calc(18 * var(--to-rem-func)) minmax(0, 1fr);
     align-items: center;
     gap: calc(10 * var(--to-rem-func));
     font-size: calc(18 * var(--to-rem-func));
     font-weight: 500;
     line-height: 1.4;
     letter-spacing: 0.12em;
+    margin: 0;
     @media (calc(768 * (1 / 16 * 1rem)) <= width) {
-      padding-block: calc(12 * var(--to-rem-func));
+      flex: 0 0 auto;
+      width: max-content;
+      max-width: 100%;
+      grid-template-columns: calc(18 * var(--to-rem-func)) max-content;
     }
   }
   .jwsnj_newsArchive_blossom {
-    flex: 0 0 calc(18 * var(--to-rem-func));
+    width: calc(18 * var(--to-rem-func));
     height: calc(17 * var(--to-rem-func));
     background: url('../../images/common/ico_blossom.svg') center / contain no-repeat;
   }
   .jwsnj_newsArchive_filterMenu {
+    position: relative;
     min-width: 0;
     summary {
       display: flex;
@@ -155,12 +161,44 @@ body.category {
         letter-spacing: 0;
         text-box-trim: none;
         transform: rotate(90deg);
+        transition: transform var(--transition-duration);
+        @media (prefers-reduced-motion: reduce) {
+          transition: none;
+        }
       }
     }
-    &[open] .jwsnj_newsArchive_filterArrow::before { transform: rotate(-90deg); }
+    &[open]:not([data-motion]) .jwsnj_newsArchive_filterArrow::before,
+    &[data-open='true'] .jwsnj_newsArchive_filterArrow::before {
+      transform: rotate(-90deg);
+    }
     ul {
+      position: absolute;
+      inset: 100% 0 auto;
+      z-index: 10;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      max-height: min(50vh, calc(320 * var(--to-rem-func)));
+      max-height: min(50dvh, calc(320 * var(--to-rem-func)));
+      overflow-y: auto;
+      overscroll-behavior-y: contain;
+      background: var(--color-secondary);
       border: calc(1 * var(--to-rem-func)) solid var(--color-primary);
       border-top: 0;
+    }
+    &[data-motion] ul {
+      opacity: 0;
+      transform: translateY(calc(-6 * var(--to-rem-func)));
+      transition: opacity var(--transition-duration), transform var(--transition-duration);
+      pointer-events: none;
+      @media (prefers-reduced-motion: reduce) {
+        transition: none;
+      }
+    }
+    &[data-open='true'] ul {
+      opacity: 1;
+      transform: none;
+      pointer-events: auto;
     }
     a {
       display: block;
@@ -168,6 +206,10 @@ body.category {
       color: var(--color-text);
       text-decoration: none;
       overflow-wrap: anywhere;
+      transition: background-color var(--transition-duration);
+      @media (prefers-reduced-motion: reduce) {
+        transition: none;
+      }
       &[aria-current='page'] { color: var(--color-primary); font-weight: 700; }
       &:hover {
         @media (any-hover: hover) {
@@ -198,14 +240,16 @@ body.category {
         }
       }
       .head {
+        display: grid;
+        grid-template-columns: max-content minmax(0, 1fr);
         align-items: center;
-        flex-wrap: wrap;
         min-width: 0;
         gap: calc(20 * var(--to-rem-func));
         .date {
           width: auto;
           flex: none;
           font-family: var(--font-jwsnj-en-condensed);
+          font-variant-numeric: tabular-nums;
           font-size: calc(14 * var(--to-rem-func));
           font-weight: 400;
           line-height: 1.3;
@@ -217,7 +261,7 @@ body.category {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            min-width: calc(80 * var(--to-rem-func));
+            min-width: min(100%, calc(80 * var(--to-rem-func)));
             max-width: 100%;
             padding: calc(3 * var(--to-rem-func)) calc(8 * var(--to-rem-func));
             border-radius: 999px;

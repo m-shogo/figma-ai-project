@@ -73,8 +73,13 @@
     }
   }
   /* Numbered lists — Figma PC 344:947 / SP 442:2806.
-       Native list-item counter preserves editor start/reversed/value attributes. */
+       Native outside marker preserves HTML start/reversed/value, without wrapping punctuation.
+       Put the complete 34px inset on the list: outside markers sit before the
+       li padding box, so splitting the inset moves two-digit markers outside
+       the content boundary. Preserve native start/reversed/value semantics. */
   ol.wp-block-list:not(.annotation-list) {
+    list-style: decimal outside;
+    padding-left: calc(34 * var(--to-rem-func));
     gap: calc(15 * var(--to-rem-func));
     > li {
       font-family: var(--font-jwsnj-ja);
@@ -82,23 +87,16 @@
       font-size: calc(15 * var(--to-rem-func));
       line-height: 1.5;
       letter-spacing: 0.08em;
-      padding-left: calc(34 * var(--to-rem-func));
+      padding-left: 0;
       overflow-wrap: anywhere;
       word-break: normal;
-      &::before {
-        content: counter(list-item) '.';
-        display: block;
-        width: calc(24 * var(--to-rem-func));
-        text-align: left;
-        left: 0;
-        top: 0;
+      &::marker {
         color: var(--color-text);
         font-family: var(--font-jwsnj-ja);
         font-size: calc(16 * var(--to-rem-func));
         font-weight: 500;
         line-height: 1.5;
         letter-spacing: 0.1em;
-        translate: none;
       }
     }
   }
@@ -128,6 +126,8 @@
       }
       ul.wp-block-list,
       ol.wp-block-list {
+        list-style: none;
+        padding-left: 0;
         margin-top: var(--wp-block-margin-small);
         gap: calc(10 * var(--to-rem-func));
         li {

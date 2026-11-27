@@ -57,7 +57,8 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
             const text = title.getBoundingClientRect();
             const body = el.querySelector('.wp-block-details__content').getBoundingClientRect();
             return {
-              open: el.open, height: box.height, following: next.top + window.scrollY,
+              open: el.open, height: box.height, following: next.top - box.top,
+              followingGap: next.top - box.bottom, scrollY: window.scrollY,
               titleFits: text.left >= box.left - 1 && text.right <= rail.left + 1,
               bodyFits: body.left >= box.left - 1 && body.right <= box.right + 1 && body.bottom <= box.bottom + 1,
               summaryHeight: summary.getBoundingClientRect().height,
@@ -74,6 +75,7 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
           const opened = await read();
           assert.ok(opened.open && opened.focus && opened.titleFits && opened.bodyFits, JSON.stringify(opened));
           assert.ok(opened.height > closed.height && opened.following > closed.following, 'expanded body remains in normal flow');
+          assert.ok(Math.abs(opened.followingGap - closed.followingGap) <= 1, JSON.stringify({ closed, opened }));
           if (i === 0) {
             await page.keyboard.press('Tab');
             assert.equal(await body.locator('a').evaluate(el => el === document.activeElement), true, 'expanded link is keyboard reachable');

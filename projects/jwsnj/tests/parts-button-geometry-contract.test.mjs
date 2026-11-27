@@ -61,3 +61,7 @@ test('large button glyph metrics do not inherit label tracking; attachments use 
   const textLink=readFileSync(new URL('../theme/css/blocks/wp-block-textLink-style.css',import.meta.url),'utf8');
   assert.match(textLink,/content:\s*var\(--icon-file\)/);
 });
+
+test('editor custom-width buttons also respect their containing width', () => {
+  assert.match(button, /\.wp-block-button\s*\{\s*display: block;\s*min-width: 0;\s*max-width: 100%;\s*&:not\(\.has-custom-width\)/);
+});

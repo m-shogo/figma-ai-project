@@ -10,12 +10,14 @@ const end = css.indexOf('  ul.annotation-list {', start);
 assert.ok(start >= 0 && end > start, 'numbered list rule exists before annotations');
 const list = css.slice(start, end);
 
-test('native ordered-list counters allow one- and two-digit numbers', () => {
-  assert.doesNotMatch(list, /counter-reset:|counter-increment:/);
-  assert.match(list, /content:\s*counter\(list-item\) '\.'/);
-  assert.match(list, /width:\s*calc\(24 \* var\(--to-rem-func\)\)/);
-  assert.match(list, /text-align:\s*left/);
+test('native ordered-list marker preserves HTML numbering without wrapping punctuation', () => {
+  assert.doesNotMatch(list, /counter-reset:|counter-increment:|counter\(list-item\)/);
+  assert.match(list, /list-style:\s*decimal outside/);
+  assert.match(list, /&::marker\s*\{/);
   assert.match(list, /padding-left:\s*calc\(34 \* var\(--to-rem-func\)\)/);
+  assert.match(list, /padding-left:\s*0;/);
+  assert.doesNotMatch(list, /&::before/);
+  assert.match(css, /ol\.wp-block-list\s*\{\s*list-style: none;\s*padding-left: 0;/);
 });
 
 test('PC and SP list typography and spacing follow Figma', () => {
