@@ -1,0 +1,54 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: OBS-BUDOKAN-GLOBAL-FOOTER-EXPANDED-SEMANTICS
+    summary: >-
+      Visually functional disclosure controls can still expose stale or absent semantic state. For WordPress Menu-owned
+      navigation, reproduce the issue on real Walker output and synchronize aria-expanded from the existing open-state owner
+      instead of introducing a parallel interaction model. Keep distinct touch/mega-menu state owners out of a bounded fix
+      until they have independent runtime evidence.
+    category: TOOLING
+    applicability:
+      scope: PROJECT
+      conditions:
+        - WordPress Theme Location menus render native disclosure buttons through authoritative Walkers.
+        - Existing data-open state controls Global or Footer child disclosure visibility.
+        - Runtime QA can exercise real pointer hit-testing, pointer open/close/reopen, Enter/Space, focus and geometry stability.
+      exclusions:
+        - Do not infer PC mega-menu touch _touchOpen semantics from SP Global/Footer data-open evidence.
+        - Do not replace Human-editable WordPress Menu/Walker ownership with hard-coded navigation markup.
+        - Do not add a second open-state model solely for ARIA synchronization.
+        - Same-project recurrence is not independent evidence for cross-project promotion.
+    promotion_state: PROJECT_ONLY
+    promotion:
+      candidate: false
+      rationale: >-
+        PR #431 reproduced missing aria-expanded on real WordPress global-nav and footer-nav child disclosure buttons before
+        repair. The bounded production fix kept data-open as the single owner and synchronized aria-expanded on initialization
+        and after each existing toggle. URLs, Menu/Walker ownership, CSS geometry, animation, ACF ownership, Form and TOP Calendar
+        remained unchanged. The dedicated runtime plus Local Navigation, Modal, Tab, Content Interaction, TOP Body Interaction,
+        TOP FV and REF001 blast-radius checks passed before squash merge.
+      blocked_by:
+        - NEEDS_INDEPENDENT_REFERENCE_EVIDENCE_BEFORE_CROSS_PROJECT_PROMOTION
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-GLOBAL-FOOTER-EXPANDED-SEMANTICS-20260906
+          kind: COMMIT
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/common.js
+          commit: a268c0e30c9a1458414d5273972f28f3600c7b2b
+          note: >-
+            PR #431 squash-merged after QA-first reproduction on actual WordPress Global/Footer Walker output and all triggered
+            shared common.js runtime checks passed. The production change only synchronized aria-expanded from existing data-open
+            state and deliberately left PC touch mega-menu _touchOpen as a separate, unproven state owner.
+      contradicts: []
+    notes:
+      - "Promotion review disposition 2026-09-06: KEEP_PROJECT_ONLY; Budokan-only evidence, no auto-promotion."
