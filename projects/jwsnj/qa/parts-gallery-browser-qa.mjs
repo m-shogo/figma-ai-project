@@ -131,6 +131,83 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
           assert.ok(near(geometry.img, geometry.width) && near(geometry.copy, geometry.width) && near(geometry.verticalGap, 40), JSON.stringify(geometry));
         }
         if (width === 375 || width === 1380) await media.screenshot({ path: 'form-qa-results/media-text-' + engineName + '-' + width + '.png' });
+
+        // Actual shared PHP view from the disposable media page; no ACF stubs
+        // or synthetic HTML injected by the browser.
+        const navigation = root.locator('#qa-large-navigation');
+        const cards = navigation.locator('.module_navigationCard');
+        assert.equal(await cards.count(), 4);
+        for (const image of await cards.locator('img').all()) {
+          await image.scrollIntoViewIfNeeded();
+          await image.evaluate(img => img.decode());
+        }
+        const nav = await navigation.evaluate(list => {
+          const box = list.getBoundingClientRect();
+          const style = getComputedStyle(list);
+          return {
+            columns: style.gridTemplateColumns.split(' ').length,
+            gap: parseFloat(style.columnGap), rowGap: parseFloat(style.rowGap),
+            cards: [...list.querySelectorAll('.module_navigationCard')].map(a => {
+              const r = a.getBoundingClientRect();
+              const photo = a.querySelector('.module_navigationCard_photo');
+              const image = a.querySelector('img');
+              const copy = a.querySelector('.module_navigationCard_content');
+              const title = a.querySelector('.module_navigationCard_title');
+              const text = a.querySelector('.module_navigationCard_text');
+              const arrow = a.querySelector('.module_navigationCard_arrow');
+              const p = photo?.getBoundingClientRect();
+              const ar = arrow?.getBoundingClientRect();
+              return {
+                href: a.getAttribute('href'), target: a.getAttribute('target'), rel: a.getAttribute('rel'),
+                fits: r.left >= box.left - 1 && r.right <= box.right + 1 &&
+                  title.scrollWidth <= title.clientWidth + 1 && (!text || text.scrollWidth <= text.clientWidth + 1),
+                titleFont: getComputedStyle(title).fontSize,
+                titleBorder: getComputedStyle(title).borderBottomWidth,
+                ratio: p ? p.width / p.height : null,
+                cropRadius: image ? getComputedStyle(image.parentElement).borderRadius : null,
+                imageNatural: image?.naturalWidth || 0,
+                imageFit: image ? getComputedStyle(image).objectFit : null,
+                gap: p ? copy.getBoundingClientRect().top - p.bottom : null,
+                copyGap: text ? text.getBoundingClientRect().top - title.getBoundingClientRect().bottom : null,
+                arrow: ar ? [ar.width, ar.height, p.right - ar.right, p.bottom - ar.bottom] : null,
+                arrowHidden: arrow?.getAttribute('aria-hidden') || null
+              };
+            })
+          };
+        });
+        assert.equal(nav.columns, width >= 768 ? 3 : 1);
+        assert.equal(nav.gap, 40);
+        assert.equal(nav.rowGap, 40);
+        assert.deepEqual(nav.cards.map(card => card.href), ['#qa-navigation-end', null, '#qa-navigation-end', null]);
+        assert.equal(nav.cards[2].target, '_blank');
+        assert.ok(nav.cards[2].rel.includes('noopener') && nav.cards[2].rel.includes('noreferrer'));
+        for (const card of nav.cards) {
+          assert.ok(card.fits && card.titleFont === '18px' && card.titleBorder === '0px', JSON.stringify(nav));
+          if (card.ratio !== null) {
+            assert.ok(near(card.ratio, 1.5, 0.02) && near(card.gap, 24) && near(card.copyGap, 20), JSON.stringify(card));
+            assert.ok(card.imageNatural > 0 && card.imageFit === 'cover' && card.cropRadius === '5px');
+            assert.ok(card.arrow.every((v, i) => near(v, [32, 32, 0, 0][i])) && card.arrowHidden === 'true');
+          }
+        }
+        assert.equal(nav.cards[3].ratio, null);
+        await cards.first().focus();
+        assert.ok(await cards.first().evaluate(el => el === document.activeElement && parseFloat(getComputedStyle(el).outlineWidth) >= 2));
+        await page.keyboard.press('Tab');
+        assert.ok(await cards.nth(2).evaluate(el => el === document.activeElement), 'skip first empty URL');
+        await page.keyboard.press('Tab');
+        assert.equal(await page.evaluate(() => document.activeElement.id), 'qa-navigation-next');
+        await page.emulateMedia({ reducedMotion: 'no-preference' });
+        await cards.first().hover();
+        await page.waitForFunction(el => getComputedStyle(el.querySelector('img')).transform !== 'none' &&
+          Math.abs(parseFloat(getComputedStyle(el.querySelector('.module_navigationCard_content')).opacity) - 0.7) < 0.02,
+          await cards.first().elementHandle());
+        await page.emulateMedia({ reducedMotion: 'reduce' });
+        assert.equal(await cards.first().locator('img').evaluate(el => getComputedStyle(el).transitionDuration), '0s');
+        await page.mouse.move(0, 0);
+        await navigation.scrollIntoViewIfNeeded();
+        if (width === 375 || width === 1380) await navigation.screenshot({ path: 'form-qa-results/large-navigation-wp-' + engineName + '-' + width + '.png' });
+        console.log(JSON.stringify({ largeNavigationWordPress: 'PASS', engine: engineName, width, nav }));
+
         console.log(JSON.stringify({ partsGalleryFrontend: 'PASS', engine: engineName, width, results, buttonGeometry, geometry }));
       } catch (error) {
         console.error(JSON.stringify({ engineName, width, runtimeErrors, state: await page.evaluate(() => ({

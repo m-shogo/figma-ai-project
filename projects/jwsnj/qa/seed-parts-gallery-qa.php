@@ -84,6 +84,38 @@ $mediaText = '<!-- wp:media-text ' . wp_json_encode($mediaTextAttrs) . ' -->' . 
 $content = '<!-- wp:heading --><h2 class="wp-block-heading">画像ギャラリー</h2><!-- /wp:heading -->' . "\n\n"
   . $gallery(2, array_slice($media, 0, 2), true) . "\n\n" . $gallery(3, $media, false) . "\n\n"
   . '<!-- wp:heading --><h2 class="wp-block-heading">テキスト＋画像</h2><!-- /wp:heading -->' . "\n\n" . $mediaText . "\n";
+
+// Real shared navigation view, using only disposable gallery attachments.
+// This is a presentation fixture, not an ACF block or a production data source.
+$navigation = [
+  ['title' => '幼児部', 'text' => 'テキストが入ります。テキストが入ります。テキストが入ります。', 'image_index' => 0, 'url' => '#qa-navigation-end'],
+  ['title' => '長文のタイトル LongEditableLabelWithoutSpaces1234567890LongEditableLabelWithoutSpaces1234567890', 'text' => '長文の説明 LongEditableTextWithoutSpaces1234567890LongEditableTextWithoutSpaces1234567890', 'image_index' => 1],
+  ['title' => '中等部', 'text' => 'テキストが入ります。テキストが入ります。', 'image_index' => 2, 'url' => '#qa-navigation-end', 'new_tab' => true],
+  ['title' => '画像なし'],
+];
+ob_start();
+?>
+<ul id="qa-large-navigation" class="module_navigation --large">
+  <?php foreach ($navigation as $item) : ?>
+    <?php
+    if (isset($item['image_index'])) {
+      $item['image_html'] = wp_get_attachment_image($media[$item['image_index']]['id'], 'full', false, ['alt' => '']);
+    }
+    ?>
+    <li class="navigation">
+      <?php get_template_part('template-parts/_navigation-large-card', null, ['heading' => 'h2', 'item' => $item]); ?>
+    </li>
+  <?php endforeach; ?>
+</ul>
+<p id="qa-navigation-end"><a id="qa-navigation-next" href="#qa-navigation-end">次の操作</a></p>
+<?php
+$nav_html = ob_get_clean();
+if (substr_count($nav_html, 'class="module_navigationCard"') !== 4) {
+  throw new RuntimeException('shared card output missing');
+}
+$content .= "\n\n<!-- wp:heading --><h2 class=\"wp-block-heading\">ナビゲーション</h2><!-- /wp:heading -->\n\n"
+  . "<!-- wp:html -->\n" . $nav_html . "\n<!-- /wp:html -->\n";
+
 $data = ['post_type' => 'page', 'post_status' => 'publish', 'post_title' => 'JWSNJ Gallery QA', 'post_content' => wp_slash($content)];
 if ($id) {
   $data['ID'] = $id;
