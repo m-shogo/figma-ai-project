@@ -242,14 +242,23 @@ window.addEventListener('resize', setVw);
   // Keep native details semantics (including name groups and script toggles).
   // During the discrete closing transition the UA may still expose body links.
   const nativeDetailsMotion = function () {
-    if (!window.CSS?.supports('selector(details::details-content)') ||
-        !CSS.supports('transition-behavior: allow-discrete') ||
-        !('inert' in HTMLElement.prototype)) return;
+    const supportsMotion = window.CSS?.supports('selector(details::details-content)') &&
+      CSS.supports('transition-behavior: allow-discrete') &&
+      'inert' in HTMLElement.prototype;
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     document.querySelectorAll('.block-editor_wrap details.wp-block-details').forEach(details => {
       const summary = details.querySelector(':scope > summary.wp-block-details__summary');
       const panel = details.querySelector(':scope > .wp-block-details__content');
       if (!summary || !panel) return;
+      // Keyboard dismissal remains available without motion enhancement.
+      details.addEventListener('keydown', event => {
+        if (event.defaultPrevented || event.key !== 'Escape' || !details.open ||
+            event.target.closest('details') !== details) return;
+        event.preventDefault();
+        summary.focus({ preventScroll: true });
+        details.open = false;
+      });
+      if (!supportsMotion) return;
       let closeTimer;
       let ownsInert = false;
       const release = () => {
@@ -276,13 +285,6 @@ window.addEventListener('resize', setVw);
         else release();
       });
       reducedMotion.addEventListener('change', release);
-      details.addEventListener('keydown', event => {
-        if (event.defaultPrevented || event.key !== 'Escape' || !details.open ||
-            event.target.closest('details') !== details) return;
-        event.preventDefault();
-        summary.focus({ preventScroll: true });
-        details.open = false;
-      });
     });
   };
 
