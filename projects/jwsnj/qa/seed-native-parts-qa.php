@@ -8,6 +8,31 @@ if (
   throw new RuntimeException('disposable parts fixture only');
 }
 
+// Exercise the registered production filter through real WordPress HTML parsing.
+$linkCases = [
+  ['<a href="/qa/document.PDF?download=1#page=2" rel="nofollow">PDF</a>', '_blank', 'nofollow noreferrer external'],
+  ['<a href="/qa/image.webp" rel="NoReFeRrEr external">Image</a>', '_blank', 'NoReFeRrEr external'],
+  ['<a href="/qa/document.pdf" target = "_self" rel="nofollow">Self</a>', '_self', 'nofollow'],
+  ['<a data-target="_self" href="/qa/document.pdf">Data target</a>', '_blank', 'noreferrer external'],
+  ['<a data-href="/qa/document.pdf" href="/qa/page">Ordinary</a>', null, null],
+  ['<a href="/qa/page?name=document.pdf">Query</a>', null, null],
+  ['<a href="#document.pdf">Fragment</a>', null, null],
+  ['<a>Missing URL</a>', null, null],
+];
+foreach ($linkCases as [$html, $expected_target, $expected_rel]) {
+  $rendered = add_blank_target_to_file_links($html);
+  $tag = new WP_HTML_Tag_Processor($rendered);
+  if (
+    !$tag->next_tag(['tag_name' => 'A']) ||
+    $tag->get_attribute('target') !== $expected_target ||
+    $tag->get_attribute('rel') !== $expected_rel ||
+    add_blank_target_to_file_links($rendered) !== $rendered
+  ) {
+    throw new RuntimeException('file link contract failed: ' . $rendered);
+  }
+}
+echo wp_json_encode(['nativeFileLinkAttributes' => 'PASS', 'cases' => count($linkCases)]) . PHP_EOL;
+
 $content = file_get_contents(__DIR__ . '/fixtures/parts-catalog-native.html');
 if ($content === false || trim($content) === '') {
   throw new RuntimeException('parts fixture missing');

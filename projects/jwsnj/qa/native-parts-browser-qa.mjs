@@ -68,6 +68,36 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
           await page.screenshot({ path: 'form-qa-results/native-separator-' + engineName + '-' + width + '.png' });
         }
         console.log(JSON.stringify({ nativeSeparator: 'PASS', engine: engineName, width, separatorGeometry }));
+        // QA-only destinations; inspect markup and styles without opening files.
+        const inlineLinks = root.locator('#qa-parts-file-links a');
+        assert.equal(await inlineLinks.count(), 4);
+        const linkMetrics = await inlineLinks.evaluateAll(elements => elements.map(el => {
+          const style = getComputedStyle(el);
+          const icon = getComputedStyle(el, '::after');
+          return {
+            href: el.getAttribute('href'), target: el.getAttribute('target'),
+            rel: (el.getAttribute('rel') || '').split(/\s+/).filter(Boolean),
+            color: style.color, icon: icon.content, mask: icon.maskImage,
+            wrap: style.overflowWrap, duration: style.transitionDuration
+          };
+        }));
+        assert.deepEqual(linkMetrics.map(link => link.target), [null, '_blank', '_blank', '_blank']);
+        assert.ok(linkMetrics[2].rel.includes('nofollow') && linkMetrics[2].rel.includes('noreferrer') && linkMetrics[2].rel.includes('external'));
+        assert.ok(linkMetrics[3].rel.includes('noreferrer') && linkMetrics[3].rel.includes('external'));
+        assert.ok(linkMetrics.every(link => link.color === 'rgb(236, 107, 97)' && link.wrap === 'anywhere'));
+        assert.match(linkMetrics[1].mask, /ico-blank\.svg/);
+        assert.notEqual(linkMetrics[2].icon, 'none');
+        assert.notEqual(linkMetrics[3].icon, 'none');
+        assert.notEqual(linkMetrics[2].icon, linkMetrics[3].icon);
+        for (let i = 0; i < 4; i++) {
+          await inlineLinks.nth(i).focus();
+          assert.ok(await inlineLinks.nth(i).evaluate(el => el === document.activeElement));
+        }
+        if (width === 375 || width === 1380) {
+          await root.locator('#qa-parts-file-links').scrollIntoViewIfNeeded();
+          await page.screenshot({ path: 'form-qa-results/native-file-links-' + engineName + '-' + width + '.png' });
+        }
+        console.log(JSON.stringify({ nativeFileLinks: 'PASS', engine: engineName, width, linkMetrics }));
         const lists = root.locator('ul.wp-block-list, ol.wp-block-list');
         assert.equal(await lists.count(), 4);
         assert.equal(await root.locator('ol.wp-block-list').getAttribute('start'), '10');
@@ -144,6 +174,21 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
           const summary = item.locator(':scope > summary');
           const body = item.locator(':scope > .wp-block-details__content');
           const height = () => item.evaluate(el => el.getBoundingClientRect().height);
+          const readMotion = () => item.evaluate(el => {
+            const summary = el.querySelector(':scope > summary');
+            const panel = el.querySelector(':scope > .wp-block-details__content');
+            return {
+              height: el.getBoundingClientRect().height,
+              open: el.open, inert: panel.inert,
+              focused: summary === document.activeElement,
+              activeTag: document.activeElement?.tagName,
+              activeInside: el.contains(document.activeElement),
+              duration: getComputedStyle(el, '::details-content').transitionDuration,
+              animations: el.getAnimations({ subtree: true }).map(a => ({
+                state: a.playState, time: a.currentTime
+              }))
+            };
+          });
           const supported = await item.evaluate(el => el.dataset.detailsMotion === 'true');
           assert.ok(supported, engineName + ' must support native motion in this CI browser');
           const durations = await item.evaluate(el => getComputedStyle(el, '::details-content').transitionDuration);
@@ -171,37 +216,104 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
               await page.waitForFunction(({ el, target }) => Math.abs(el.getBoundingClientRect().height - target) <= 1,
                 { el: await item.elementHandle(), target }, { timeout: 3000 });
             } catch (error) {
-              console.error(JSON.stringify({ engineName, width, i, target, actual: await read() }));
+              console.error(JSON.stringify({ engineName, width, i, target, actual: await readMotion() }));
               throw error;
             }
           };
+          // A near-end height is not a settled transition: WebKit can reverse
+          // content-visibility while the opening transition is still running.
+          // Record the real opening input time and require the authored duration
+          // plus stable frames before exercising the ordinary closing contract.
+          await item.evaluate(el => {
+            el.addEventListener('keydown', () => {
+              el.dataset.qaMotionStart = String(performance.now());
+            }, { capture: true, once: true });
+          });
           await summary.focus();
           await page.keyboard.press('Enter');
           await intermediate(closed, expanded);
           await settled(expanded);
+          await item.evaluate(el => new Promise(resolve => {
+            const start = Number(el.dataset.qaMotionStart);
+            const duration = Math.max(...getComputedStyle(el, '::details-content').transitionDuration.split(',').map(value => {
+              const v = value.trim();
+              return parseFloat(v) * (v.endsWith('ms') ? 1 : 1000);
+            }));
+            let stable = 0;
+            let last = NaN;
+            const frame = now => {
+              const height = el.getBoundingClientRect().height;
+              stable = Math.abs(last - height) < 0.1 ? stable + 1 : 0;
+              last = height;
+              if (now - start >= duration && stable >= 2) {
+                delete el.dataset.qaMotionStart;
+                resolve();
+              } else requestAnimationFrame(frame);
+            };
+            requestAnimationFrame(frame);
+          }));
           assert.equal(await item.evaluate(el => el.open), true);
           if (i === 0) await body.locator('a').focus();
           else await summary.focus();
-          await page.keyboard.press('Escape');
-          // Capture geometry, native state, inert and focus in the same frame.
-          // Separate browser round trips can sample after the transition ends.
-          await page.waitForFunction(({ el, from, to }) => {
-            const h = el.getBoundingClientRect().height;
+          // Arm the sampler before pressing Escape. A driver round trip can
+          // otherwise miss the entire 300ms transition on a busy runner.
+          const samples = await item.evaluateHandle(el => {
             const panel = el.querySelector(':scope > .wp-block-details__content');
             const summary = el.querySelector(':scope > summary');
-            return h > to + 2 && h < from - 2 && !el.open &&
-              panel.inert && summary === document.activeElement;
-          }, { el: await item.elementHandle(), from: expanded, to: closed }, { timeout: 1000 });
+            const frames = [];
+            const trace = { frames, done: false, before: {
+              height: el.getBoundingClientRect().height, open: el.open,
+              inert: panel.inert, focused: summary === document.activeElement,
+              activeTag: document.activeElement?.tagName,
+              activeInside: el.contains(document.activeElement)
+            } };
+            el.addEventListener('keydown', event => {
+              if (event.key !== 'Escape') return;
+              const start = performance.now();
+              const sample = () => {
+                frames.push({
+                  ms: performance.now() - start,
+                  height: el.getBoundingClientRect().height,
+                  open: el.open, inert: panel.inert,
+                  focused: summary === document.activeElement
+                });
+                if (performance.now() - start < 600) requestAnimationFrame(sample);
+                else trace.done = true;
+              };
+              requestAnimationFrame(sample);
+            }, { capture: true, once: true });
+            return trace;
+          });
+          await page.keyboard.press('Escape');
+          try {
+            await page.waitForFunction(({ trace, from, to }) => trace.frames.some(frame =>
+              frame.height > to + 2 && frame.height < from - 2 &&
+              !frame.open && frame.inert && frame.focused
+            ), { trace: samples, from: expanded, to: closed }, { timeout: 1000 });
+          } catch (error) {
+            console.error(JSON.stringify({ engineName, width, i, closed, expanded,
+              closeTrace: await samples.evaluate(trace => ({ before: trace.before, frames: trace.frames, done: trace.done })), actual: await readMotion() }));
+            throw error;
+          } finally {
+            await samples.dispose();
+          }
           if (i === 0) {
             await page.keyboard.press('Tab');
             assert.equal(await body.locator('a').evaluate(el => el === document.activeElement), false);
           }
           await settled(closed);
           await page.waitForFunction(el => !el.inert, await body.elementHandle());
-          // Reverse while in flight; no stale closing timer may close/re-disable it.
+          // Reverse while in flight; separately verify the real closed state
+          // (the previous same-task double click could coalesce native toggles).
+          // Keep the ordinary closing intermediate-height assertion above.
+
           await summary.evaluate(el => el.click());
           await intermediate(closed, expanded);
-          await summary.evaluate(el => { el.click(); el.click(); });
+          await summary.evaluate(el => el.click());
+          await page.waitForFunction(el => !el.open, await item.elementHandle());
+          const reversed = await readMotion();
+          console.log(JSON.stringify({ nativeDetailsReverseTrace: true, engineName, width, i, reversed }));
+          await summary.evaluate(el => el.click());
           await settled(expanded);
           assert.equal(await item.evaluate(el => el.open), true);
           assert.equal(await body.evaluate(el => el.inert), false);
