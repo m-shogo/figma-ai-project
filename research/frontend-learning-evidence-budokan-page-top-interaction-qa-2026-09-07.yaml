@@ -1,0 +1,54 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: OBS-BUDOKAN-PAGE-TOP-INTERACTION-QA
+    summary: >-
+      A footer Page Top control should be tested as an actual long-page interaction rather than only as a visible footer element.
+      Browser QA should stage document-end scroll before measurement, prove real pointer ownership, repeat activation, monotonic
+      movement toward the top, focus continuity, and stable horizontal document/body geometry throughout the transition.
+    category: TOOLING
+    applicability:
+      scope: PROJECT
+      conditions:
+        - A Theme-owned Page Top control performs animated document scrolling.
+        - The control is reachable from the real footer at deep scroll on both desktop and mobile layouts.
+        - The intended UX is a calm vertical return without pointer interception, horizontal movement, or document-width changes.
+      exclusions:
+        - Do not force-click a control that is visually intercepted.
+        - Do not treat the Page Top control as a fixed overlay when the current design owns it inside the footer flow.
+        - Do not add production offsets or z-index changes when real runtime already satisfies the interaction contract.
+        - Same-project confirmation is not independent cross-project evidence.
+    promotion_state: PROJECT_ONLY
+    promotion:
+      candidate: false
+      rationale: >-
+        PR #472 added QA-only coverage for the existing Budokan footer Page Top interaction. Disposable WordPress plus Chromium
+        passed PC1395 and SP390 real-pointer activation from document end twice per viewport, monotonic upward scrolling, focus
+        continuity, stable scrollX/clientWidth/body geometry, and no horizontal overflow. Production Theme PHP/CSS/JS remained
+        unchanged, so the finding is currently a Budokan project-specific QA boundary rather than cross-project guidance.
+      blocked_by:
+        - NEEDS_INDEPENDENT_REFERENCE_EVIDENCE_BEFORE_CROSS_PROJECT_PROMOTION
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-PAGE-TOP-INTERACTION-QA-20260907
+          kind: COMMIT
+          reference_id: REF-002-BUDOKAN
+          run_id: '34109160645'
+          path: .github/workflows/budokan-content-interaction-runtime.yml
+          commit: 5c07799ea28eb8c9ba887ec5687136f09caea13c
+          note: >-
+            PR #472 extended the existing content interaction runtime with Page Top browser QA. The current-so run passed the
+            disposable WordPress setup and all pre-existing pointer, Tab, anchor and SP sticky-focus audits, then passed the new
+            Page Top repeat-activation audit on PC1395 and SP390. REF001 built, validated and verified its audit evidence but the
+            final upload step remained red under the repository-wide upload blocker. No Theme PHP, CSS, JS, WordPress Menu
+            ownership, ACF schema, parts.php, Form/Formidable, or TOP Calendar logic changed.
+      contradicts: []
+    notes:
+      - "Promotion review disposition 2026-09-07: KEEP_PROJECT_ONLY; Budokan-only evidence, no auto-promotion."
