@@ -87,9 +87,12 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
         await page.keyboard.press('Enter');
         const overlay = page.locator('.wp-lightbox-overlay.active');
         await overlay.waitFor({ state: 'visible' });
+        // Core's setOverlayFocus and hideLightbox callbacks are asynchronous.
+        // Require actual dialog focus, never move focus ourselves to make Escape pass.
+        await page.waitForFunction(() => document.querySelector('.wp-lightbox-overlay.active')?.contains(document.activeElement), null, { timeout: 5000 });
         await page.keyboard.press('Escape');
         await overlay.waitFor({ state: 'hidden' });
-        assert.equal(await button.evaluate(el => el === document.activeElement), true, 'lightbox restores trigger focus');
+        await page.waitForFunction(el => el === document.activeElement, await button.elementHandle(), { timeout: 5000 });
 
         const media = root.locator('.wp-block-media-text');
         const mediaImage = media.locator('.wp-block-media-text__media img');
@@ -109,6 +112,7 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
         if (width === 375 || width === 1380) await media.screenshot({ path: 'form-qa-results/media-text-' + engineName + '-' + width + '.png' });
         console.log(JSON.stringify({ partsGalleryFrontend: 'PASS', engine: engineName, width, results, buttonGeometry, geometry }));
       } catch (error) {
+        console.error(JSON.stringify(await page.evaluate(() => ({ active: document.activeElement?.outerHTML.slice(0, 400), dialog: document.querySelector('.wp-lightbox-overlay')?.className }))));
         await page.screenshot({ path: 'form-qa-results/gallery-failure-' + engineName + '-' + width + '.png' }).catch(() => {});
         throw error;
       } finally {
