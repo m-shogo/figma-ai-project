@@ -185,8 +185,36 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
     await waitState(false);
     assert.equal(await hamburger.isVisible(), true);
     assert.equal(await arrow.evaluate(el => getComputedStyle(el).display), 'none');
-    await page.setViewportSize({ width: 768, height: 900 });
-    assert.equal(await footerWrapper.evaluate(el => el.inert), false);
+    // Desktop footer is always expanded, including a previously collapsed mobile branch.
+    await page.setViewportSize({ width: 767, height: 900 });
+    await footerButton.scrollIntoViewIfNeeded();
+    if (await footerButton.getAttribute('aria-expanded') === 'true') await footerButton.click();
+    assert.equal(await footer.getAttribute('data-open'), 'false');
+    assert.equal(await footerWrapper.evaluate(el => el.inert), true);
+    assert.ok(await footerWrapper.evaluate(el => el.getBoundingClientRect().height <= 1));
+    for (const width of [768, 1080, 1380]) {
+      await page.setViewportSize({ width, height: 900 });
+      await page.waitForFunction(() => !document.querySelector('.gfl_wrapper-02').inert);
+      const geometry = await footer.evaluate(el => {
+        const wrapper = el.querySelector('.gfl_wrapper-02');
+        const panel = wrapper.getBoundingClientRect();
+        const links = [...wrapper.querySelectorAll('a')];
+        const buttons = [...el.querySelectorAll('button')];
+        return {
+          height: panel.height,
+          duration: getComputedStyle(wrapper).transitionDuration,
+          links: links.length,
+          allInside: links.every(link => {
+            const box = link.getBoundingClientRect();
+            return box.height > 0 && box.top >= panel.top - 1 && box.bottom <= panel.bottom + 1;
+          }),
+          buttonsHidden: buttons.every(button => getComputedStyle(button).display === 'none')
+        };
+      });
+      assert.ok(geometry.height > 0 && geometry.links > 0 && geometry.allInside && geometry.buttonsHidden, JSON.stringify(geometry));
+      assert.equal(geometry.duration, '0s');
+      console.log(JSON.stringify({engine: engineName, width, footerDesktop: 'PASS', ...geometry}));
+    }
     await page.setViewportSize({ width: 767, height: 900 });
     await page.waitForFunction(() => document.querySelector('.gfl_wrapper-02').inert);
     await footerButton.focus();
