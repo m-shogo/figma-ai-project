@@ -1,0 +1,50 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: OBS-BUDOKAN-TAB-SEMANTIC-PROJECTION
+    summary: >-
+      When an existing interactive component already owns visual selection state and panel visibility, repair missing accessibility semantics by projecting
+      that proven state into ARIA and roving focus rather than replacing the interaction owner. Verify the projection at deep scroll so keyboard support
+      cannot silently introduce scroll or geometry movement.
+    category: RUNTIME
+    applicability:
+      scope: PROJECT
+      conditions:
+        - The Budokan Tab block already has a tablist container and common.js is the existing active-class and panel-visibility owner.
+        - Generated tab buttons lacked tab role, selected/control relationships and roving tabindex while panels lacked reciprocal tabpanel labelling.
+        - The dedicated disposable WordPress/Playwright runtime can exercise pointer and keyboard state on both SP and PC at non-zero scroll positions.
+      exclusions:
+        - Do not replace an existing Human-editable ACF or WordPress content owner merely to add semantics.
+        - Do not infer a new visual interaction model from ARIA guidance; preserve current Figma/layout unless a separate visual defect is proven.
+        - Do not generalize this project-only finding without independent evidence.
+    promotion_state: PROJECT_ONLY
+    promotion:
+      candidate: false
+      rationale: >-
+        PR #457 preserves common.js as the existing display owner and adds a bounded semantic projection layer. Budokan Tab Runtime run 34034397086
+        passed real WordPress + Playwright checks on SP 375 and PC 1380, including reciprocal ARIA relationships, roving tabindex, Arrow/Home/End keyboard
+        movement, pointer ownership, focus continuity, scroll stability, geometry stability and horizontal-overflow checks. REF001 remained blocked only by
+        repository artifact storage quota, so the implementation PR was intentionally not merged in this run.
+      blocked_by:
+        - NEEDS_INDEPENDENT_REFERENCE_EVIDENCE_BEFORE_CROSS_PROJECT_PROMOTION
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-TAB-SEMANTIC-PROJECTION-20260906
+          kind: COMMIT
+          reference_id: REF-002-BUDOKAN
+          run_id: '34034397086'
+          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/js/common.js
+          commit: 9e41ae9f5b0a7c36f4c024e852843390c94eff86
+          note: >-
+            common.js is the existing visual selection/panel-visibility owner retained by PR #457. The new tab-semantics.js projection layer remains on
+            that unmerged implementation PR while REF001 artifact upload is quota-blocked; dedicated Tab runtime and observed shared consumers are green.
+      contradicts: []
+    notes:
+      - "Promotion review disposition requested: KEEP_PROJECT_ONLY; Budokan-only runtime evidence, no auto-promotion."
