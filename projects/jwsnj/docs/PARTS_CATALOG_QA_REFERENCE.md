@@ -29,3 +29,10 @@ Human「パーツ集のサンプル？参考覚えてGIT入れといて これ�
 
 ## 現状
 原文保存とチェック観点の整理のみ。WPへの投入・ブロック登録/復旧・実際の描画・操作・Figma照合は未実施。#523/#524、ACF W9/#664、オリジナル534:1706の保留を解除しない。既存theme/スケジュール変更なし。
+
+## 第1段階 — native Gutenberg 検証fixture（2026-11-27）
+
+- 原文839行はそのまま維持。`qa/fixtures/parts-catalog-native.html` は現Themeの見出しH2–H4・段落・入れ子リスト・番号付きリスト・注釈・標準/長文ボタン・通常/長文/QA Detailsに絞った別fixture。外部画像、旧投稿ID、ACF、CPT、旧patternName、旧数値付きラベルは取り込まない。
+- `qa/seed-native-parts-qa.php` はlocal・loopback・`JWSNJ_PARTS_QA_DISPOSABLE=1` の明示条件を要求。登録済みcore blockだけを許可し、既存の非fixtureページを上書きしない。使い捨てWPで保存・再読一致を確認する。実サイトの自動seedではない。
+- 既存disposable WordPress CIで `qa/native-parts-browser-qa.mjs` を実行。3 engine × 320/375/768/1380px、見出し/本文の実測gap、ネイティブリスト、ボタン幅、Detailsの実際のPHP描画・キーボード・フォーカス・展開後の通常flow・閉状態復元・画像を確認する。Figma Details PC357:938/SP442:2908の新規session context/画像を確認済み。
+- 設定時点では新CIの合否未確定。PHP parse/save一致はGutenbergビジュアル編集のvalidation/保存再編集を証明しない。外部フォント、実デバイス、Flexible Table Block、ギャラリー、ACF Navigation、タブ、端末別表示、全体視覚一致は別途#523。新規ACF・本番仮画像・未承認ページ・スケジュール変更なし。
