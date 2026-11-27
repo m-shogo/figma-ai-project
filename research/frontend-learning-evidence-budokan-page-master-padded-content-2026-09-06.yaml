@@ -1,0 +1,54 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: OBS-BUDOKAN-PAGE-MASTER-PADDED-CONTENT-GEOMETRY
+    summary: >-
+      When a Figma frame describes the authored content area but the Theme wraps that area in a shared padded container, comparing the
+      Figma width to the wrapper border box can create a false visual defect. Measure the effective content box after shared padding and
+      verify the actual child geometry before changing a shared width token. A QA-first failure is evidence to refine the measurement
+      model when the runtime owner already encodes the intended inner width.
+    category: RUNTIME
+    applicability:
+      scope: PROJECT
+      conditions:
+        - Nippon Budokan normal-page desktop uses .global_inner._content with --width-content and shared tablet/desktop padding.
+        - Current Figma normal-page authority 1203:4865 exposes a 960px authored content frame.
+        - Real disposable WordPress output can be measured with Playwright before any shared layout token is changed.
+      exclusions:
+        - Do not assume every Figma frame maps to a CSS border box; inspect padding and the rendered child geometry first.
+        - Do not shrink a shared wrapper merely to make its outer getBoundingClientRect width equal a Figma content-area width.
+        - Do not weaken a failing QA assertion unless runtime ownership and child geometry prove the assertion modeled the wrong box.
+        - Do not generalize this project-only wrapper contract to unrelated projects without independent evidence.
+    promotion_state: PROJECT_ONLY
+    promotion:
+      candidate: false
+      rationale: >-
+        PR #441 first failed on real WordPress because the QA compared Figma's 960px authored area to a 1080px padded wrapper border box.
+        Inspection of global_inner.css and variables.css proved that --width-content is 960px and the outer wrapper intentionally adds
+        60px shared padding on each side. The QA was corrected to measure wrapper width minus computed padding and to verify that the
+        one-column main fills that 960px authored area. The corrected disposable WordPress/Playwright runtime, existing Local Navigation
+        interaction suite, disclosure suite and REF001 audit all passed before squash merge. No production layout token was changed.
+      blocked_by:
+        - NEEDS_INDEPENDENT_REFERENCE_EVIDENCE_BEFORE_CROSS_PROJECT_PROMOTION
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-PAGE-MASTER-PADDED-CONTENT-20260906
+          kind: COMMIT
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/wordpress-acf-runtime/scripts/budokan-page-master-browser-qa.mjs
+          commit: 806304685409de41970f98e4d16d891c1d5875d2
+          note: >-
+            PR #441 squash-merged after QA-first failure and correction. The final runtime verifies the current Figma 220px page visual,
+            effective 960px centered authored content area, one-column main alignment, full-width Local Navigation, breadcrumb ordering,
+            footer ordering and horizontal-overflow safety on actual disposable WordPress output.
+      contradicts: []
+    notes:
+      - "Promotion review disposition 2026-09-06: KEEP_PROJECT_ONLY; Budokan-only evidence, no auto-promotion."
