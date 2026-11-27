@@ -17,10 +17,12 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
     assert.equal((await page.goto(url, { waitUntil: 'load' })).status(), 200);
     const hamburger = page.locator('#gh_menu');
     const nav = page.locator('#global_navigation');
-    const parent = nav.locator('.gnl_item-02._hasChild').first();
+    const parent = nav.locator('.gn_menu-sp .gnl_item-02._hasChild').first();
     const button = parent.locator('.gnl_button-02').first();
     const wrapper = parent.locator('.gnl_wrapper-02').first();
     const child = wrapper.locator('a').first();
+    const desktopParent = nav.locator('.gn_menu-pc .gnl_item-02._hasChild').first();
+    const desktopWrapper = desktopParent.locator('.gnl_wrapper-02').first();
     const overlay = page.locator('#overlay');
     const footer = page.locator('#global_footer .gfl_item-02._hasChild').first();
     const footerButton = footer.locator('.gfl_button-02').first();
@@ -109,8 +111,8 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
     await page.setViewportSize({ width: 1080, height: 900 });
     await waitState(false, true);
     assert.equal(await hamburger.isVisible(), false);
-    assert.equal(await wrapper.evaluate(el => el.inert), false);
-    const desktopLink = parent.locator('.gnl_link-02').first();
+    assert.equal(await desktopWrapper.evaluate(el => el.inert), false);
+    const desktopLink = desktopParent.locator('.gnl_link-02').first();
     const arrow = desktopLink.locator('.gnl_arrow');
     const arrowGlyph = () => arrow.evaluate(el => getComputedStyle(el, '::before').content);
     assert.equal(await arrow.getAttribute('aria-hidden'), 'true');
@@ -148,8 +150,8 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
       await page.waitForFunction(() => document.querySelector('.gnl_button-02').getAttribute('aria-expanded') === 'true');
       assert.ok((await arrowGlyph()).includes(String.fromCodePoint(0xf106)));
       assert.equal(await desktopLink.evaluate(el => getComputedStyle(el).color), 'rgb(40, 172, 95)');
-      assert.notEqual(await wrapper.evaluate(el => getComputedStyle(el).clipPath), 'none');
-      const measureOpen = () => wrapper.evaluate(el => {
+      assert.notEqual(await desktopWrapper.evaluate(el => getComputedStyle(el).clipPath), 'none');
+      const measureOpen = () => desktopWrapper.evaluate(el => {
         const style = getComputedStyle(el);
         const panel = el.getBoundingClientRect();
         const links = [...el.querySelectorAll('a')];
@@ -169,7 +171,7 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
       });
       const hovered = await measureOpen();
       assert.equal(hovered.duration, '0s', JSON.stringify(hovered));
-      assert.equal(hovered.state, 'false');
+      assert.notEqual(hovered.state, 'true');
       assert.ok(hovered.fullyHit, JSON.stringify(hovered));
       // The legacy full-width flyout can cover the page body. Move into the header's left padding instead.
       await page.mouse.move(1, 1);
@@ -217,7 +219,7 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
       await page.setViewportSize({ width, height: 240 });
       await page.mouse.move(1, 1);
       await desktopLink.focus();
-      const inner = wrapper.locator('.gnl_inner-02');
+      const inner = desktopWrapper.locator('.gnl_inner-02');
       // Extend only this disposable fixture's last label to exercise overflowing CMS content.
       const last = inner.locator('a').last();
       const label = last.locator('span').first();

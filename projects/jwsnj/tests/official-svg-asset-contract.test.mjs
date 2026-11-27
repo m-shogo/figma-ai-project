@@ -118,6 +118,36 @@ const assets = {
     height: '37',
     source: '599:3205 ico_school',
   },
+  'src/images/common/img_hero-figure.svg': {
+    sha256: 'f4e5143d510b892790a272a9f3ab16b700723806151d71839112f131e5c5f14c',
+    width: '20.0485',
+    height: '74.6642',
+    source: '390:803 and identical 384:1404',
+  },
+  'src/images/common/img_hero-figure-02.svg': {
+    sha256: '688163a2d7fb414cd64124daef4e236bbc11f35cb54b9dbfff42dcef8ed01741',
+    width: '21.6551',
+    height: '84',
+    source: '390:832 and identical 384:1433',
+  },
+  'src/images/common/img_hero-bubble.svg': {
+    sha256: '955a83c94397a152eefd77f3c5573d7c54e39c636b39d36221717db02fffb9c9',
+    width: '16',
+    height: '14',
+    source: '390:856 and identical 384:1457',
+  },
+  'src/images/common/img_flyout-shadow.svg': {
+    sha256: '9e72677dcc10cd7be9e91e8e4282d0ec1994d5d3c803d7568fef3827b2522361',
+    width: '222',
+    height: '212',
+    source: '604:3024 shadow union',
+  },
+  'src/images/common/img_flyout-union.svg': {
+    sha256: 'fb3564fd71c1dd7eb47981b765a358234c5d43e7d1ce41fa855b9fc98ea9b2e8',
+    width: '216',
+    height: '206',
+    source: '604:3025 white union',
+  },
 };
 
 const header = read('theme/template-parts/_header.php').toString('utf8');
@@ -142,6 +172,18 @@ test('sample wordmark logo.svg is not the official njws mark', () => {
   assert.notEqual(sample, assets['src/images/common/img_njws-logo.svg'].sha256);
   assert.notEqual(sample, assets['src/images/common/img_njws-logo-header.svg'].sha256);
   assert.equal(sha256(read('theme/images/common/logo.svg')), sample);
+});
+
+test('hero decorations use the saved official figures and bubble', () => {
+  const archive = read('theme/template-parts/_news-archive-visual.php').toString('utf8');
+  const page = read('theme/template-parts/_fixed-page-visual.php').toString('utf8');
+  for (const file of [archive, page]) {
+    assert.match(file, /images\/common\/img_hero-figure\.svg/);
+    assert.match(file, /images\/common\/img_hero-figure-02\.svg/);
+    assert.doesNotMatch(file, /figma\.com\/api\/mcp\/asset/);
+  }
+  assert.match(archive, /images\/common\/img_hero-bubble\.svg/);
+  assert.doesNotMatch(page, /img_hero-bubble\.svg|About us/);
 });
 
 test('header and footer call the official mark and footer art, not temporary Figma URLs', () => {

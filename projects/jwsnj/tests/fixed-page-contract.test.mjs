@@ -22,7 +22,7 @@ test('fixed page preserves CMS body, password gate and existing sidebar ownershi
 test('fixed page visual renders only the actual title and attachment',()=>{
   const v=read('template-parts/_fixed-page-visual.php');
   for(const id of [0,7]){
-    const stub='function get_the_ID(){return 5;} function get_field($a,$b){return '+id+';} function wp_get_attachment_image($id,$size,$icon,$attrs){return "<img src=\\\"/media/page.webp\\\">";} function get_the_title(){return "A & B";} function esc_html($s){return htmlspecialchars($s,ENT_QUOTES);} ?>';
+    const stub='function get_the_ID(){return 5;} function get_field($a,$b){return '+id+';} function wp_get_attachment_image($id,$size,$icon,$attrs){return "<img src=\\\"/media/page.webp\\\">";} function get_the_title(){return "A & B";} function esc_html($s){return htmlspecialchars($s,ENT_QUOTES);} function esc_url($s){return htmlspecialchars($s,ENT_QUOTES);} function get_theme_file_uri($s){return "/theme/".$s;} ?>';
     const html=execFileSync('php',['-r',stub+v],{encoding:'utf8'});
     assert.match(html,/<h1>A &amp; B<\/h1>/);
     assert.equal(html.includes('has-image'),!!id);

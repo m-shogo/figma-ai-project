@@ -14,7 +14,7 @@ get_header();
 </div>
 <main id="global_contents" class="global_contents" itemscope itemprop="mainContentOfPage">
   <?php get_template_part('template-parts/_top-about-intro'); ?>
-  <?php get_template_part('template-parts/_top-course-view'); // Cursor supplies approved normalized items here. ?>
+  <?php get_template_part('template-parts/_top-course'); ?>
   <?php get_template_part('template-parts/_top-applicants'); ?>
   <?php get_template_part('template-parts/_top-news'); ?>
   <?php get_template_part('template-parts/_top-banner'); ?>

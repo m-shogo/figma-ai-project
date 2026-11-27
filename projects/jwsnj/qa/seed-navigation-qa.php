@@ -9,7 +9,7 @@ $page = wp_insert_post([
 ], true);
 if (is_wp_error($page) || !$page) throw new RuntimeException('fixture page failed');
 $locations = get_theme_mod('nav_menu_locations', []);
-foreach (['global-nav', 'sub-nav', 'footer-nav'] as $location) {
+foreach (['global-nav', 'sp-nav', 'sub-nav', 'footer-nav'] as $location) {
   $menu = wp_create_nav_menu('Navigation QA ' . $location);
   if (is_wp_error($menu)) throw new RuntimeException($menu->get_error_message());
   $add = function ($title, $parent = 0) use ($menu, $page) {
