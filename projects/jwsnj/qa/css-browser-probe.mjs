@@ -136,7 +136,7 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
        return {selector,property:s.transitionProperty,duration:s.transitionDuration};
      });
    });
-   const expected=[['background-color','color'],['background-color','color'],['transform'],['opacity'],['color']];
+   const expected=[['background-color','color'],['background-color','color'],['transform'],['opacity'],['color','text-decoration-color']];
    for(let i=0;i<motion.length;i++){
      if(reducedMotion==='reduce'){
        assert.equal(motion[i].property,'none',name+' reduced '+motion[i].selector);
