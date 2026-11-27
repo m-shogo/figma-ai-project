@@ -95,6 +95,63 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
           }
           states.push({ index: i, closed: closed.height, opened: opened.height, restored: restored.height });
         }
+        // Native details state changes immediately, the intrinsic body must
+        // occupy intermediate heights before either transition completes.
+        await page.emulateMedia({ reducedMotion: 'no-preference' });
+        for (let i = 0; i < 3; i++) {
+          const item = details.nth(i);
+          const summary = item.locator(':scope > summary');
+          const body = item.locator(':scope > .wp-block-details__content');
+          const height = () => item.evaluate(el => el.getBoundingClientRect().height);
+          const supported = await item.evaluate(el => el.dataset.detailsMotion === 'true');
+          assert.ok(supported, engineName + ' must support native motion in this CI browser');
+          const durations = await item.evaluate(el => getComputedStyle(el, '::details-content').transitionDuration);
+          assert.equal(durations, '0.3s, 0.3s');
+          const closed = await height();
+          const expanded = states[i].opened;
+          const intermediate = async (from, to) => {
+            await page.waitForFunction(({ el, from, to }) => {
+              const h = el.getBoundingClientRect().height;
+              return h > Math.min(from, to) + 2 && h < Math.max(from, to) - 2;
+            }, { el: await item.elementHandle(), from, to }, { timeout: 1000 });
+          };
+          const settled = async target => {
+            await page.waitForFunction(({ el, target }) => Math.abs(el.getBoundingClientRect().height - target) <= 1,
+              { el: await item.elementHandle(), target });
+          };
+          await summary.focus();
+          await page.keyboard.press('Enter');
+          await intermediate(closed, expanded);
+          await settled(expanded);
+          assert.equal(await item.evaluate(el => el.open), true);
+          if (i === 0) await body.locator('a').focus();
+          else await summary.focus();
+          await page.keyboard.press('Escape');
+          await intermediate(expanded, closed);
+          assert.equal(await item.evaluate(el => el.open), false);
+          assert.equal(await body.evaluate(el => el.inert), true);
+          assert.equal(await summary.evaluate(el => el === document.activeElement), true);
+          if (i === 0) {
+            await page.keyboard.press('Tab');
+            assert.equal(await body.locator('a').evaluate(el => el === document.activeElement), false);
+          }
+          await settled(closed);
+          await page.waitForFunction(el => !el.inert, await body.elementHandle());
+          // Reverse while in flight; no stale closing timer may close/re-disable it.
+          await summary.evaluate(el => el.click());
+          await intermediate(closed, expanded);
+          await summary.evaluate(el => { el.click(); el.click(); });
+          await settled(expanded);
+          assert.equal(await item.evaluate(el => el.open), true);
+          assert.equal(await body.evaluate(el => el.inert), false);
+          await page.emulateMedia({ reducedMotion: 'reduce' });
+          await summary.evaluate(el => el.click());
+          await settled(closed);
+          assert.equal(await item.evaluate(el => el.open), false);
+          assert.equal(await item.evaluate(el => getComputedStyle(el, '::details-content').transitionDuration), '0s');
+          await page.emulateMedia({ reducedMotion: 'no-preference' });
+          console.log(JSON.stringify({ nativeDetailsMotion: 'PASS', engine: engineName, width, index: i, closed, expanded }));
+        }
         if (width === 375 || width === 1380) {
           await root.screenshot({ path: 'form-qa-results/native-parts-' + engineName + '-' + width + '-closed.png' });
         }
