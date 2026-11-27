@@ -18,7 +18,11 @@
       margin-top: calc(40 * var(--to-rem-func));
     }
     &.has-nested-images {
-      figure.wp-block-image {
+      /* Core cropped galleries use :not(#individual-image), including ID
+         specificity. Match its exclusion and keep each card content-height driven. */
+      figure.wp-block-image:not(#individual-image).wp-block-image {
+        align-self: start;
+        justify-content: start;
         min-width: 0;
         width: 100% !important;
         margin: 0;
@@ -34,6 +38,26 @@
           flex: 0 0 auto;
           object-fit: cover;
           border-radius: calc(5 * var(--to-rem-func));
+        }
+        > .lightbox_wrap,
+        > a {
+          width: 100%;
+          min-width: 0;
+          flex: 0 0 auto;
+        }
+        /* Put the native zoom trigger on the image's grid cell, not on
+           the entire caption-height figure. Keep the native DOM/actions. */
+        &.wp-lightbox-container:has(> button.lightbox-trigger) {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr);
+          > img,
+          > .lightbox_wrap,
+          > button.lightbox-trigger {
+            grid-area: 1 / 1;
+          }
+          > figcaption {
+            grid-column: 1;
+          }
         }
         figcaption {
           position: static;
