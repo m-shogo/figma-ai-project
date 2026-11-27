@@ -1,0 +1,55 @@
+schema_version: 1
+policy:
+  auto_promotion: false
+  evidence_retention: APPEND_OR_SUPERSEDE_WITH_TRACE
+  contradictions_are_preserved: true
+  lifecycle_doc: docs/frontend-visual-repair-learning-loop.md
+  cross_reference_evidence_required_for_active: true
+
+records:
+  - learning_id: OBS-BUDOKAN-EVENT-ARCHIVE-RHYTHM-OWNERSHIP
+    summary: >-
+      Shared archive mechanics do not imply identical outer section rhythm. When two WordPress archive families reuse the same tabs, cards
+      and pager, measure the current consumer frame in real runtime before changing a shared owner. Preserve the shared mechanics and scope
+      a family-specific spacing correction to the consumer modifier when current Figma proves a different rhythm. Visual controls whose
+      required CMS ownership is absent remain fail-closed rather than being recreated from screenshot appearance alone.
+    category: RUNTIME
+    applicability:
+      scope: PROJECT
+      conditions:
+        - Nippon Budokan News and Event archives reuse .news_archive, taxonomy tabs, card/pager mechanics, and the same module_newsList-01 CSS owner.
+        - Current Event archive authority FKQaJDu5TZXHoCzPsfP92E / 1619:9554 owns a 64px PC section rhythm while the current News archive owner remains 56px.
+        - Disposable WordPress can seed the existing event CPT and event_cat taxonomy and Playwright can measure the real /event/ archive at 1380px.
+      exclusions:
+        - Do not change the shared News archive rhythm merely because Event reuses its mechanics.
+        - Do not infer or implement Event SP rhythm until a current matching SP authority is proven.
+        - Do not invent Event date-range, year/month selector, or calendar data ownership from Figma controls when the authoritative WordPress/ACF model does not establish that data.
+        - Do not generalize this project-only ownership boundary without independent evidence.
+    promotion_state: PROJECT_ONLY
+    promotion:
+      candidate: false
+      rationale: >-
+        PR #448 first ran a QA-only real WordPress/Event archive probe. The browser assertion failed against the unchanged Theme with
+        "PC Event archive section gap expected 64px, got 56", independently proving that Event inherited News' 56px outer rhythm.
+        The smallest correction added only a PC .event_archive 64px gap while leaving shared News mechanics and SP behavior unchanged.
+        Event runtime, News archive blast-radius runtime and REF001 all passed on the final PR head before squash merge. The current Figma
+        also shows date-oriented controls, but existing project authority does not establish their CMS data owner, so those controls remain
+        fail-closed rather than creating a new data model.
+      blocked_by:
+        - NEEDS_INDEPENDENT_REFERENCE_EVIDENCE_BEFORE_CROSS_PROJECT_PROMOTION
+      contradiction_review: ''
+    evidence:
+      supports:
+        - evidence_id: EV-BUDOKAN-EVENT-ARCHIVE-RHYTHM-20260906
+          kind: COMMIT
+          reference_id: REF-002-BUDOKAN
+          run_id: ''
+          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/css/module/module_newsList-01.css
+          commit: 5211e083eaf1580682eb7781a5a027ca7b8c2430
+          note: >-
+            PR #448 squash-merged after a QA-only real Event archive probe reproduced the inherited 56px gap, and the final disposable
+            WordPress/Playwright Event runtime passed with an Event-only 64px PC gap. The existing News archive runtime also passed on the
+            same final head, proving the shared News consumer was preserved.
+      contradicts: []
+    notes:
+      - "Promotion review disposition 2026-09-06: KEEP_PROJECT_ONLY; Budokan-only evidence, no auto-promotion."
