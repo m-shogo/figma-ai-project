@@ -5,6 +5,46 @@ Scope: **CROSS-PROJECT / REUSABLE METHOD** — 新しい Figma → Web / WordPre
 
 Canonical details: `docs/section-execution.md`（shared contract → shared foundation → verification → section implementation）、`docs/frontend-quick-contract.md`、`docs/css-strategy.md`、`docs/frontend-font-loading-policy.md`。本書は既存正本の**開始時チェックへのルーティング**であり、新たなCSS/フレームワーク統一を強制しない。
 
+## Pre-Implementation Baseline Gate（Human-approved cross-project rule）
+
+Human確定（2026-11-21）: **実装を始めてからFoundation不足を直す進め方をdefaultにしない。戻りが増えるため、対象PHASEの実装前に必要なベースを先に固める。**
+
+新規案件・新規PHASEでは、画面/コンポーネント実装へ入る前に、少なくとも次を対象scopeについて確認する。
+
+1. Figma/仕様の正本、PC/SP、必要なstate/node
+2. Existing Theme / Design System / WordPress構造、責務、読み込み順、命名
+3. color/token、font family/weight/source/license/fallback
+4. logo/image/SVG/iconの正規asset、export形式、保存・参照経路
+5. container/gutter/spacing/breakpoint/responsiveの基準
+6. 共通component/patternと案件固有部分の境界
+7. hover/tap/focus/open-close等のinteraction contract
+8. CMS/ACF/CPT/固定文言のownershipと未承認値の境界
+9. static/CI/runtime/visual QAの実行経路と、実行不能時の未検証管理
+
+このBaseline Gateは **fail-closed**。対象実装が依存する項目に未確定・重大な未検証・ライセンス不明がある場合、その依存を推測で埋めて画面実装へ進まない。まずFoundation/依存解除を行う。既にVERIFIEDな項目は再調査しない。
+
+調査・Foundation導入・asset整理など、Gateを閉じるための作業は進めてよい。**Gateが閉じていることを理由に下流画面へ逃げない。** 新しいPHASEへ移る時も、そのPHASEに追加で必要なFoundation差分を先に確認してから実装する。
+
+目的はFoundation文書を増やすことではなく、**後続のHTML/PHP/CSS/JSを一度で正しい前提に乗せ、共通基盤のやり直しによる大規模手戻りを減らすこと**。
+
+
+## Pre-Implementation 10-point Risk Review
+
+Human-approved operating intent（2026-11-21）: **後から気づいて大きく戻す項目を、実装前にAgent側で先回りして確認する。** これは案件固有値ではなく、Frontend案件のpreflight観点。
+
+1. **Authority / Version** — Figma正本node・対象state、repo/base SHA、Theme/Design Systemの正本、owner、open PRを確定。古い画面・古いbranchを混ぜない。
+2. **Theme / CMS Ownership** — Header/Footer/共通UI/各fieldについて、Theme固定・WordPress管理・Menu・ACF/CPT・外部データの責務を先に決める。未承認schema/slugを作らない。
+3. **Typography Contract** — family/weight/source/license/fallback/line-height/letter-spacingを確認。Google Fonts等の正規Web fontか、固定表示ならoutline SVGかを実装前に決める。
+4. **Asset Contract** — Figma node → 正規asset → 保存先 → format（SVG/WebP等）→ crop/ratio → license → 使用箇所を対応付け、仮素材や短命URLを本番へ持ち込まない。
+5. **Layout / Responsive / Environment** — container/gutter/spacing/breakpointだけでなく、中間幅、長文、入力能力、対象browser/device、safe-area等の必要条件を確認する。
+6. **Interaction State Matrix** — default / hover / focus-visible / active / current / open-close / disabled 等、対象部品に必要なstateをPC/SPで先に列挙。静止画1枚だけで完成判定しない。
+7. **Accessibility / Semantics** — heading階層、landmark、button/linkの役割、alt/accessible name、keyboard/focus order、menu disclosure等を実装前に決める。SVG文字も内容用途なら代替テキストを設計する。
+8. **Performance / Loading / External Dependency** — above-the-fold画像、lazy load、font weight数、外部CDN/Google Fonts、CSP/privacy、fallback、画像formatを確認。Figma一致のために無制限に重いasset/fontを増やさない。
+9. **Regression / Blast Radius** — 共通token/font/header/footer/componentを変える場合、依存ページと代表画面を先に列挙し、merge前QA対象を決める。parallel laneのwrite scope重複も確認する。
+10. **Phase Exit Evidence** — 次工程へ進む直前に、Figma参照、対象code SHA、実装差分、static/CI、runtime/visual、未検証/BLOCKED、Reviewer/Auditor判定を揃える。証拠が無いPASSでGateを開けない。
+
+この10項目のうち対象scopeにmaterialなものが未確認なら、実装を急がず先に解消する。N/Aにする場合も理由を持つ。チェック項目を増やすこと自体が目的ではなく、**高コストな手戻りを実装前に潰すための最小リスクレビュー**として使う。
+
 ## 初回にAgentから先回りして行う判断
 
 **個別のHeader/TOP/Sectionの見た目合わせを始める前に**、デザインの共通Foundationが「既に確立・検証済みか」「不明か」「不足しているか」を判定する。既に確立済みならやり直さず利用する。未確認や不足なら、**カラー・フォント・画像・SVG・アイコン・基本余白・breakpoint・共通部品の確認と導入を先に進める**。これがニュージャージー案件（2026-11-20）でHumanが追加した実装順の一般化された教訓。
@@ -46,7 +86,7 @@ Canonical details: `docs/section-execution.md`（shared contract → shared foun
 
 **判定の段階は混同しない:** `SOURCE_CONFIRMED`（Figma・既存の根拠を取得）→ `IMPLEMENTED`（コードとアセット配置）→ `STATIC_VERIFIED`（構文/build/CI等）→ `RUNTIME_VISUAL_VERIFIED`（必要な環境で描画・操作確認）。最後ができない実行環境なら `UNVERIFIED_RUNTIME` のまま保持し、レビュー可能な証拠と次の確認手順を残す。案件・会社の既存status taxonomyがあればそれを優先する。
 
-**重要:** Foundation全体が未検証でも、依存がない次の単位（正確なAsset整理、メニュー構造設計、独立した部品）を進めてよい。ただし未検証の基盤を完成扱いして展開しない。1つの作業単位で複数領域を安全に進めることも可能。
+**重要:** Foundation Gateが未達の間に進めてよいのは、Gateを閉じるための調査・asset整理・Foundation導入・検証・依存解除。対象PHASEの画面/コンポーネント実装は、依存するBaselineがPASSするまで開始しない。独立して見える下流実装へ先行すると後で共通基盤変更の影響を受けやすいため、工程順を守る。
 
 ## 次の案件に引き継ぐもの / 引き継がないもの
 
@@ -67,7 +107,7 @@ Canonical details: `docs/section-execution.md`（shared contract → shared foun
 - [ ] 同一layout boundaryのCSS/JS単位・条件、状態owner、旧サンプル処理、CMS/plugin依存、asset/cache責務を点検し、実装前に重大な懸念・改善順を共有した（quick-contract §8.1）
 - [ ] CSS変数/フォント/アセットの**実際の導入とQA状況**を PASS/FAIL/未検証 で区別した
 - [ ] 問題があれば小さく安全に実装し、関連する次の作業へ継続する
-- [ ] Foundation未完了のままパーツに着手する場合、依存がない理由と未検証範囲を記録した
+- [ ] 対象PHASEに必要なBaseline GateがPASSしてから画面/パーツ実装へ進む。未達ならFoundation/依存解除をREADYにした
 
 ## 事例と共通ルールを混同しない
 
@@ -75,3 +115,14 @@ Canonical details: `docs/section-execution.md`（shared contract → shared foun
 - **新しい失敗を見つけたらまず案件のLEARNINGSとチェックシートに記録**し、次の案件でそのルールが妥当か検証。案件特有の対応をそのまま全案件の禁止事項にしない。
 - Humanが「この方法を次案件にも活かして」と希望しても、**一件の実績だけで共通の標準手順には昇格しない**。まず案件の実例と次案件での検証候補を記録し、複数run・異なる画面/案件での有効性、例外、手戻り削減効果、既存規約との重複を `docs/knowledge-promotion.md` に従いレビューする。既存の確定した共通契約を勝手に覆さず、証拠が不足する間は案件限定/候補のままにする。
 - 元になった案件の実際の導入状況や変更履歴は `projects/jwsnj/docs/DESIGN_FOUNDATION.md` と `projects/jwsnj/docs/WORKFLOW_LEARNING.md` を参照する。**本書の内容だけでその案件の実装が完了したとは扱わない**。
+
+
+## Human default: Fonts / fixed display typography
+
+Human-approved default（2026-11-21）。個別案件のFigma・仕様・Theme・Company Policyに別指定があればそちらを優先する。
+
+- Webフォントは **Google Fontsを第一候補**にする。利用可能なfamily/weightとライセンス、既存Themeとの読み込み方式を確認して採用する。
+- メインビジュアル、装飾キャッチ、ロゴ的見出しなど、**内容がほぼ固定される表示文字**はFigma忠実性を優先し、必要に応じてアウトライン化したSVGを採用できる。
+- 本文、ナビゲーション、CMS管理文言、更新される見出し、検索・SEO・アクセシビリティ上テキストとして扱うべき内容はHTMLテキストを維持し、Webフォントで再現する。
+- アウトラインSVGは万能化しない。内容を伝える要素なら適切な代替テキスト/accessible nameを設計し、フォントのライセンス条件も確認する。
+- 「Google FontsかSVGか」は固定度・運用責任・アクセシビリティ・SEO・Figma fidelityで判断し、Humanの案件別指示があれば上書きする。
