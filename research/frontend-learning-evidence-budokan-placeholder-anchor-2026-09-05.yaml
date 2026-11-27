@@ -28,12 +28,10 @@ records:
     promotion:
       candidate: false
       rationale: >-
-        Budokan reproduced one concrete interaction defect: unresolved TOP FV guide fallbacks were
-        authored as href="#", and the Theme's shared pageScroll handler treated them as same-page
-        navigation, allowing a click to move the background page upward. The bounded correction
-        removes navigation semantics only for unresolved fallbacks while preserving the authored SP
-        purpose shortcut to #top_guide-01. Keep this as Budokan/reference evidence until an
-        independent implementation reproduces the same delegated-anchor placeholder failure class.
+        Budokan first reproduced the defect in unresolved TOP FV guide fallbacks and later found the
+        same unresolved href="#" pattern in six global-chrome SNS affordances across the header overlay
+        and footer. Both observations are still from the same project/reference, so they strengthen the
+        Budokan-local evidence without satisfying the independent cross-project promotion boundary.
       blocked_by:
         - Independent project or reference reproducing a placeholder fragment intercepted by shared anchor-navigation behavior.
         - Cross-project evidence that fail-closed unresolved affordances preserve ownership without hiding valid authored navigation.
@@ -70,9 +68,34 @@ records:
           note: >-
             Existing Theme pageScroll ownership handles same-page fragment navigation globally, so
             unresolved content destinations must not masquerade as synthetic fragment targets.
+        - evidence_id: EV-BUDOKAN-GLOBAL-SNS-PLACEHOLDER-FIX-20260905
+          kind: COMMIT
+          reference_id: BUDOKAN-WORDPRESS
+          run_id: '33931453781'
+          path: experiments/wordpress-acf-runtime/theme-dropin/nipponbudokan/template-parts/_header.php
+          commit: 27d7f1f6c70d0b7c7483a7301b72092efcd2e781
+          note: >-
+            The whole-site interaction sweep found the same unresolved href="#" pattern in YouTube,
+            Instagram, and X affordances in both the header overlay and footer. Six synthetic links were
+            converted to non-link aria-disabled visual owners without guessing URLs, changing menu
+            Theme Locations, or inventing ACF ownership. Disposable WordPress + Playwright kept TOP FV,
+            overlay, header-state, footer SP/PC geometry, TOP Guide, and REF001 checks green.
+        - evidence_id: EV-BUDOKAN-FOOTER-QA-OWNER-CORRECTION-20260905
+          kind: COMMIT
+          reference_id: BUDOKAN-WORDPRESS
+          run_id: '33931453781'
+          path: experiments/wordpress-acf-runtime/scripts/budokan-footer-browser-qa.mjs
+          commit: 27d7f1f6c70d0b7c7483a7301b72092efcd2e781
+          note: >-
+            Activating the previously dormant Footer browser QA in the shared TOP runtime produced a
+            false RED because its old assertion expected the PC .gf_links-wrap owner to be display:flex.
+            Current authoritative global_footer.css defines display:block at the PC breakpoint. The QA
+            assumption was corrected to the current CSS owner instead of changing production layout to
+            satisfy stale test expectations.
       contradicts: []
     notes:
       - Do not invent destination URLs from visual labels when WordPress/Figma/current content authority does not establish them.
-      - Do not disable real authored anchors; the SP purpose shortcut remains a verified link to #top_guide-01.
+      - Do not disable real authored anchors; the SP purpose shortcut remains a verified link to #top_guide-01 and Footer Page Top remains an authored page-top control.
       - Prefer removing false navigation semantics over adding special-case scroll-handler exclusions for each placeholder.
       - Runtime QA should pointer-test from a meaningful scrolled position and compare scrollY before and after activation.
+      - When bringing dormant browser QA into a current runtime path, verify its layout assertions against the current CSS or component owner before treating a new RED as a production regression.
