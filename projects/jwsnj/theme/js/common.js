@@ -349,15 +349,16 @@ window.addEventListener('resize', setVw);
     // グローバルナビゲーション
     const $menuButton = $('#gh_menu');
     const $globalNavigation = $('#global_navigation');
-    let scrollpos = null;
+    let scrollPosition = null;
     const syncScrollLock = (isOpen) => {
-      if (isOpen && scrollpos === null) {
-        scrollpos = $(window).scrollTop();
-        $body.addClass('_contentFixed').css({ top: -scrollpos });
-      } else if (!isOpen && scrollpos !== null) {
-        $body.removeClass('_contentFixed').css({ top: 0 });
-        window.scrollTo(0, scrollpos);
-        scrollpos = null;
+      if (isOpen && scrollPosition === null) {
+        // The legacy tablet layout can scroll horizontally as well as vertically.
+        scrollPosition = { x: window.scrollX, y: window.scrollY };
+        $body.addClass('_contentFixed').css({ left: -scrollPosition.x, top: -scrollPosition.y });
+      } else if (!isOpen && scrollPosition !== null) {
+        $body.removeClass('_contentFixed').css({ left: '', top: '' });
+        window.scrollTo(scrollPosition.x, scrollPosition.y);
+        scrollPosition = null;
       }
     };
     const syncBackdrop = () => {

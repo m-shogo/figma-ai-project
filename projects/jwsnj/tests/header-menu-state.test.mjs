@@ -36,7 +36,13 @@ test('one menu state owner reconciles lock, backdrop, close paths and responsive
   const restored = [];
   let touchOpen = null;
   let scrollY = 133;
-  const win = { scrollTo: (_x, y) => restored.push(y) };
+  let scrollX = 117;
+  const offsets = [];
+  const win = {
+    get scrollX() { return scrollX; },
+    get scrollY() { return scrollY; },
+    scrollTo: (x, y) => restored.push({ x, y })
+  };
   const media = name => ({ matches: false, addEventListener: (event, handler) => listeners.set(name + ':' + event, [handler]) });
   const headerDesktop = media('header');
   const footerDesktop = media('footer');
@@ -46,7 +52,7 @@ test('one menu state owner reconciles lock, backdrop, close paths and responsive
     addClass(value) { value.split(' ').forEach(name => classes.add(name)); return this; },
     removeClass(value) { value.split(' ').forEach(name => classes.delete(name)); return this; },
     toggleClass(name, force = !classes.has(name)) { if (force) classes.add(name); else classes.delete(name); return this; },
-    css() { return this; }
+    css(value) { offsets.push(value); return this; }
   };
   const $ = selector => {
     if (selector === 'body') return body;
@@ -78,9 +84,11 @@ test('one menu state owner reconciles lock, backdrop, close paths and responsive
   ]) {
     fire('#gh_menu:click');
     assert.ok(classes.has('_open-menu') && classes.has('_contentFixed') && classes.has('_open-bg'));
+    assert.deepEqual(offsets.at(-1), { left: -117, top: -133 });
     close();
     assert.ok(!classes.has('_open-menu') && !classes.has('_contentFixed') && !classes.has('_open-bg'));
-    assert.equal(restored.at(-1), 133);
+    assert.deepEqual(restored.at(-1), { x: 117, y: 133 });
+    assert.deepEqual(offsets.at(-1), { left: '', top: '' });
   }
   // A separately opened search owns the backdrop, but not the mobile scroll lock.
   fire('#search:click');
@@ -99,11 +107,12 @@ test('one menu state owner reconciles lock, backdrop, close paths and responsive
 
   headerDesktop.matches = false;
   fire('header:change');
+  scrollX = 0;
   scrollY = 0;
   fire('#gh_menu:click');
   assert.ok(classes.has('_contentFixed'));
   fire('#gh_menu:click');
-  assert.equal(restored.at(-1), 0);
+  assert.deepEqual(restored.at(-1), { x: 0, y: 0 });
 
   // Search dismissal must not hide an independently open desktop touch flyout.
   headerDesktop.matches = true;
