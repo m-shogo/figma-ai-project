@@ -288,3 +288,29 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 - Formidable: 初回は `wp_frm_forms` が無く、`FrmMigrate::upgrade()` でテーブルを作成。プラグイン同梱の Contact Us が1件。メール通知は draft。ローカル入力1件（entry 1、`example.invalid`）を保存。公開の `/contact/` には接続していない。管理画面は Pro のライセンス未入力を表示する。
 - 画像: 3倍の再書き出しは中止。表示サイズの2倍を足りる基準とし、既存 WebP は置換していない。SVG は倍率の対象外。
 - コース ACF JSON は Human の明示（2026-11-27）で `group_jwsnj_top_course.json` を追加。項目は画像・タイトル・テキスト・リンク・外部リンク。TOP の見た目照合は未実施。
+
+## Cursor 次回まとめ依頼 — 2026-11-27 Human「またやってもらいたい事溜めてね」
+
+この表を既存 #523/#524 の **Cursor候補キュー** として使う。次回のChat作業でも追加・完了証拠の照合・重複除去を行う。新しい並行タスクやIssueを作らない。Cursorへの実行依頼/claimは次回Humanが行う。既存ownerを変更しない。開始時に最新so・開いているPR・作業中ownerを確認し、実行する行だけ担当を明確化。Chatは表示パーツ・隔離fixture・共通CSS/JS・CIを進め、Cursorは正式CMS接続・ローカル実WP/Pro・公式素材取得/物理実機に集中する。QA専用ダミーは本番データ源にしない。
+
+### 完了済み（再実装不要）
+
+- Cursor #764 は `0f004b10` にmerge済み。公式SVG5点保存（人物2、吹き出し、flyout shadow/union）、人物装飾接続、Course adapter、Human承認済みCourse ACF JSONが最新soに存在する。JSON/adapterの作り直しは不要。実CMSでの登録・編集・表示は別gate。
+- Windows Docker/PHP8.3.33/WP7.0.2、ACF Pro6.8.9、Formidable7.1.1/Pro6.27、Flexible Table3.9.0を起動確認。午後の記録ではHOME/お知らせ割当と一部メニュー登録・管理画面ログイン・ローカル表編集画面まで確認。実施時点のローカル証拠であり、現在も同環境が同じ状態とは断定しない。
+- Formidableのmigration・同梱サンプルフォーム・ローカル入力1件保存は済み。正式フォーム接続/Proライセンス/通知は未完。Git上のQAでcore parts編集保存（#771）、表12ケース/Details36ケース（#773）、ページ内リンク実CSS15ケース（#776）は済み。Cursorで同じ隔離CIを一から作らない。
+
+### 次回の一括依頼候補（実行・合格判定は未了）
+
+| ID / 優先 | 作業 | 受入証拠・注意 |
+|---|---|---|
+| CUR-01 / 高 | 最新soを安全に同期し、実WP/DB/プラグインを起動 | dirty treeや別ownerの変更を保護。tested_sha、環境版、HTTP/console/404、実際のHOME/投稿ページ/管理画面を記録。過去の起動だけで完了扱いしない。 |
+| CUR-02 / 高 | TOP各部紹介の実ACF編集・表示 | 現行group_jwsnj_top_course.jsonと_top-course.phpを使用。5項目・0/1/複数・並べ替え・空/削除画像/空リンク/外部リンクを保存再編集→frontで確認。#664は旧PRで競合、最新との差分で不要部分を明示、丸ごとmergeや同一JSON再作成は禁止。 |
+| CUR-03 / 高 | WordPress PC/SPメニュー正式接続 | ローカル記録のPC/SP分割未コミットを最新menu.php/Walkerと照合。承認済み位置/階層・親子孫・メガメニュー/ハンバーガーの編集→保存→表示。未確定href・実データは創作しない。既存DBの割当を無断で置換しない。 |
+| CUR-04 / 高 | 既存ACFパーツ集の管理画面受入 | inPageLink/navigationLarge/navigationSmall/post outputなど登録済み実ブロックの追加、編集、保存再編集、削除、実リンク、空行。現行field IDを照合し旧参考839行をそのまま投入しない。ACF schema追加は承認待ち。 |
+| CUR-05 / 高 | TOPの正式CMSデータ接続・全セクション表示 | MV/重要なお知らせ/News/About/Course/CTA等、既存の承認済み取得ownerを使う。Chatの共通表示完成を取り込み、実データまたは隔離された非公開QA経路でPC/SPの各section・画像crop・背景/装飾・隣接境界・操作を比較。未設定の本番データや未承認ページを勝手に作らない。 |
+| CUR-06 / 高 | Formidable Proの実フォーム受入 | ライセンス/正式フォーム定義/通知先はHuman提供・承認が必要。検証用入力・確認画面/エラー/必須/郵便番号/条件分岐/添付/完了を実操作、メール送信・本番登録は無断実行禁止。 |
+| CUR-07 / 高 | #524残公式素材の取得・照合 | 保存済み5 SVGは再取得不要。flyout union/shadowの既存保存素材とcallsiteの同一性、承認済みページheroの実attachment、コースfeature/blossomの正式exportは保留範囲を除いて確認。バナー透かしは除去せず、利用許諾済み原本が必要な公開条件をHumanへ記録。node/hash/src-theme/geometry。 |
+| CUR-08 / 中 | 実Gutenberg canvasの表示とPro/プラグイン編集 | #771の機能PASSを再実装せず、実iframe/非iframeの見出し、リスト、ボタン、Details、表、Gallery、ACFブロックの編集スタイル差、無効block、保存再編集を画像付きで確認。 |
+| CUR-09 / 高（統合後） | 実デバイス・フォント・全ページ最終受入 | iPhone Safari/Android Chrome/PC主要3engine、150/200%文字拡大、タップ/keyboard/hover/focus/開閉/長文/横スクロール、フォント・FA Brands・404/console、Autoptimize有効時は承認された検証環境のみ。PC/SP高精細Figmaと実画像の差を記録し、CI-onlyで完了扱いしない。 |
+
+各行に tested_sha、実行日時、PASS/PARTIAL/BLOCKED、実画像/ログ、変更パス、commit/PR、残件を追記。#664の処置やCursorの同時編集を勝手に行わない。現時点で #523/#524 OPEN、534:1706 は実装保留、スケジュール変更なし。ユーザーが一括指示を求めた時はこの表の未完行だけを統合して渡す。
