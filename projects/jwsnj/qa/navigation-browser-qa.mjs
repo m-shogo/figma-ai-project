@@ -185,11 +185,15 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
     await waitState(false);
     assert.equal(await hamburger.isVisible(), true);
     assert.equal(await arrow.evaluate(el => getComputedStyle(el).display), 'none');
-    // The existing intermediate-width page can scroll on both axes.
-    // Opening/closing its mobile menu must not reset the horizontal reading position.
-    for (const width of [375, 900, 1079]) {
+    // Check the responsive WP page first; explicitly reproduce the remaining legacy
+    // body min-width policy on this disposable fixture for the horizontal-scroll cases.
+    for (const [width, legacyWidth] of [[375, false], [900, false], [1079, false], [900, true], [1079, true]]) {
       await page.setViewportSize({ width, height: 900 });
       await waitState(false);
+      await page.evaluate(legacy => {
+        if (legacy) document.body.style.minWidth = '1280px';
+        else document.body.style.removeProperty('min-width');
+      }, legacyWidth);
       const geometry = () => page.evaluate(() => {
         const header = document.getElementById('global_header').getBoundingClientRect();
         const body = document.body.getBoundingClientRect();
@@ -204,7 +208,7 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
       await page.evaluate(() => window.scrollTo(120, 400));
       await page.waitForFunction(() => window.scrollY > 100);
       const before = await geometry();
-      if (width >= 768) assert.ok(before.x > 0, JSON.stringify(before));
+      if (legacyWidth) assert.ok(before.x > 0, JSON.stringify(before));
       await hamburger.evaluate(el => el.focus({ preventScroll: true }));
       await page.keyboard.press('Enter');
       await waitState(true);
@@ -217,8 +221,9 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
       await page.waitForFunction(({x,y}) => Math.abs(window.scrollX - x) <= 2 && Math.abs(window.scrollY - y) <= 2, before);
       const after = await geometry();
       assert.ok(Math.abs(after.bodyLeft - before.bodyLeft) <= 2 && Math.abs(after.bodyWidth - before.bodyWidth) <= 2);
-      console.log(JSON.stringify({engine: engineName, width, scrollLockGeometry: 'PASS', before, opened, after}));
+      console.log(JSON.stringify({engine: engineName, width, legacyWidth, scrollLockGeometry: 'PASS', before, opened, after}));
     }
+    await page.evaluate(() => { document.body.style.removeProperty('min-width'); window.scrollTo(0, 400); });
     // Desktop footer is always expanded, including a previously collapsed mobile branch.
     await page.setViewportSize({ width: 767, height: 900 });
     await footerButton.scrollIntoViewIfNeeded();
