@@ -626,7 +626,26 @@ try {
       assert.ok(evidence.table, 'registered table must render in actual editor');
       assert.equal(evidence.headers.length, 4);
       assert.equal(evidence.merged.length, 2);
+      // Plugin 3.9 edit() intentionally omits the responsive output classes
+      // that save() emits. Keep all cells editable; validate front scroll and
+      // stacking in parts-tables-browser-qa, not by forcing its CSS here.
+      const expectedPadding = evidence.viewport >= 768 ? ['15px', '30px'] : ['12px', '20px'];
+      const near = (a, b) => Math.abs(a - b) <= 2;
+      assert.ok(near(evidence.table.width, evidence.block.width), JSON.stringify(evidence));
+      assert.ok(evidence.cells.length === 6);
+      for (const [i, cell] of [...evidence.headers, ...evidence.cells].entries()) {
+        assert.deepEqual([cell.font, cell.weight, cell.lineHeight, cell.border, cell.align],
+          ['15px', '400', '24px', '1px', 'center'], JSON.stringify(cell));
+        assert.deepEqual(cell.padding, index === 1 && i === 7 ? ['18px', '18px'] : expectedPadding, JSON.stringify(cell));
+        assert.ok(cell.scroll <= cell.client + 1, JSON.stringify(cell));
+      }
+      assert.ok(evidence.headers.every(cell => cell.background === 'rgb(242, 242, 242)'), JSON.stringify(evidence.headers));
+      if (index !== 1) {
+        assert.ok(evidence.headers.every(cell => near(cell.width, evidence.headers[0].width)), JSON.stringify(evidence.headers));
+      }
+      assert.ok(evidence.merged.every(cell => near(cell.width, evidence.headers[1].width + evidence.headers[2].width)), JSON.stringify(evidence));
       await block.screenshot({ path: 'form-qa-results/table-editor-' + width + '-' + index + '.png' });
+      console.log(JSON.stringify({ tableEditorLayout: 'PASS', shellWidth: width, index, viewport: evidence.viewport }));
     }
   }
   await page.setViewportSize({ width: 1380, height: 900 });
