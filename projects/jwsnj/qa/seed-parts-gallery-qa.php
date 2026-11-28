@@ -147,6 +147,43 @@ ob_start();
 <?php
 $content .= "\n\n<!-- wp:html -->\n" . ob_get_clean() . "\n<!-- /wp:html -->\n";
 
+
+// Native Group/Columns opt-in styles; disposable fixture only.
+$content .= "\n\n" . <<<'HTML'
+<!-- wp:group {"className":"is-style-jwsnj-bordered-box","layout":{"type":"default"}} -->
+<div class="wp-block-group is-style-jwsnj-bordered-box"><!-- wp:paragraph -->
+<p>枠線付きテキストボックスの長文確認。LongEditableBoxWithoutSpaces1234567890LongEditableBoxWithoutSpaces1234567890</p>
+<!-- /wp:paragraph --></div>
+<!-- /wp:group -->
+
+<!-- wp:columns {"className":"is-style-jwsnj-background-boxes"} -->
+<div class="wp-block-columns is-style-jwsnj-background-boxes"><!-- wp:column -->
+<div class="wp-block-column"><!-- wp:group {"className":"is-style-jwsnj-background-box","layout":{"type":"default"}} -->
+<div class="wp-block-group is-style-jwsnj-background-box"><!-- wp:heading {"level":4} -->
+<h4 class="wp-block-heading">背景付きテキストボックス</h4>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>短い本文を編集できます。</p>
+<!-- /wp:paragraph --></div>
+<!-- /wp:group --></div>
+<!-- /wp:column -->
+
+<!-- wp:column -->
+<div class="wp-block-column"><!-- wp:group {"className":"is-style-jwsnj-background-box","layout":{"type":"default"}} -->
+<div class="wp-block-group is-style-jwsnj-background-box"><!-- wp:heading {"level":4} -->
+<h4 class="wp-block-heading">背景付きテキストボックス</h4>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>長い本文を含む編集可能なテキストボックスです。LongEditableBoxWithoutSpaces1234567890LongEditableBoxWithoutSpaces1234567890 長さの異なる本文でカラムの高さを確認します。</p>
+<!-- /wp:paragraph --></div>
+<!-- /wp:group --></div>
+<!-- /wp:column --></div>
+<!-- /wp:columns -->
+HTML;
+$content .= "\n";
+
 $data = ['post_type' => 'page', 'post_status' => 'publish', 'post_title' => 'JWSNJ Gallery QA', 'post_content' => wp_slash($content)];
 if ($id) {
   $data['ID'] = $id;
