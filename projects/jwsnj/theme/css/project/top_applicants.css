@@ -199,12 +199,12 @@
     --photo-offset: 6.98%;
     position: relative;
     isolation: isolate;
-    padding-inline-end: var(--photo-offset);
-    padding-block-end: var(--photo-offset);
+    display: flow-root;
     min-width: 0;
     img {
       display: block;
-      width: 100%;
+      width: calc(100% - var(--photo-offset));
+      margin-block-end: var(--photo-offset);
       height: auto;
       aspect-ratio: 4 / 5;
       object-fit: cover;
