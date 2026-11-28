@@ -102,16 +102,17 @@
   }
 }
 
-/* The editor's native layout supplies an 8px default gap. Keep this
-   override local to the registered gallery, with explicit column-gap
-   for the narrow three-column variant. Inline editor choices still win. */
+/* The editor generates a per-gallery gap declaration using this default.
+   In the narrow grid variant supply both axes to the gap shorthand at
+   its source; a later native custom blockGap can still replace it.
+   Theme grid cards already own their width (100%), not core flex math. */
 .editor-styles-wrapper {
   .wp-block-gallery.has-nested-images.block-editor-block-list__layout {
     --wp--style--gallery-gap-default: calc(40 * var(--to-rem-func));
     gap: var(--wp--style--gallery-gap-default);
     &.columns-3 {
       @media (width < calc(768 * (1 / 16 * 1rem))) {
-        column-gap: calc(15 * var(--to-rem-func));
+        --wp--style--gallery-gap-default: calc(40 * var(--to-rem-func)) calc(15 * var(--to-rem-func));
       }
     }
   }
