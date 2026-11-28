@@ -325,6 +325,123 @@ try {
     await frontend.close();
   }
   console.log(JSON.stringify({ nativePartsEditor: 'PASS', engine: 'chromium', counts: after.counts, invalid: after.invalid.length, edited: true, saved: true, reopened: true, frontend: true }));
+  // Use the already seeded disposable gallery page, never a production post.
+  // This exercises the registered Gutenberg blocks and the real editor canvas,
+  // independently of the anonymous frontend gallery/lightbox tests.
+  const galleryPages = await page.evaluate(() => wp.apiFetch({
+    path: '/wp/v2/pages?search=JWSNJ%20Gallery%20QA&status=publish&per_page=20&_fields=id,title'
+  }));
+  const matches = galleryPages.filter(post => post.title.rendered === 'JWSNJ Gallery QA');
+  assert.equal(matches.length, 1, 'expected one disposable gallery QA page');
+  const galleryId = Number(matches[0].id);
+  assert.ok(Number.isSafeInteger(galleryId) && galleryId > 0 && galleryId !== id);
+  const galleryEditorUrl = new URL(editorUrl);
+  galleryEditorUrl.searchParams.set('post', String(galleryId));
+  const openGallery = async () => {
+    await page.goto(galleryEditorUrl.href, { waitUntil: 'load' });
+    await page.waitForFunction(galleryId => {
+      const editor = wp.data.select('core/editor');
+      const blocks = wp.data.select('core/block-editor').getBlocks();
+      return Number(editor?.getCurrentPostId()) === galleryId &&
+        blocks.some(block => block.name === 'core/gallery');
+    }, galleryId, { timeout: 60000 });
+    assert.equal(await page.evaluate(() => wp.data.select('core/editor').getEditedPostAttribute('title')), 'JWSNJ Gallery QA');
+  };
+  await page.setViewportSize({ width: 1380, height: 900 });
+  await openGallery();
+  const galleryBefore = await inspect();
+  console.log(JSON.stringify({ galleryEditorBefore: 'MEASURED', counts: galleryBefore.counts, invalid: galleryBefore.invalid }));
+  assert.deepEqual(galleryBefore.invalid, []);
+  assert.equal(galleryBefore.counts['core/gallery'], 2);
+  assert.equal(galleryBefore.counts['core/image'], 5);
+  assert.equal(galleryBefore.counts['core/media-text'], 1);
+  assert.ok(galleryBefore.content.includes('qa-large-navigation-reference') &&
+    galleryBefore.content.includes('qa-navigation-end'), 'not the seeded gallery fixture');
+  const galleryCanvas = async () => await frame.count()
+    ? page.frameLocator('iframe[name="editor-canvas"]').locator('.editor-styles-wrapper').first()
+    : page.locator('.editor-styles-wrapper').first();
+  const captionLabel = '画像との間隔20px。中央揃え。';
+  const captionSuffix = '・画像保存QA';
+  const firstGallery = (await galleryCanvas()).locator('[data-type="core/gallery"]').first();
+  const caption = firstGallery.locator('figcaption[contenteditable="true"]').filter({ hasText: captionLabel });
+  await caption.waitFor({ state: 'visible' });
+  assert.equal(await caption.count(), 1);
+  await caption.click();
+  await caption.press('End');
+  await page.keyboard.insertText(captionSuffix);
+  await page.waitForFunction(value => wp.data.select('core/editor').getEditedPostContent().includes(value), captionLabel + captionSuffix);
+  await page.evaluate(async () => { await wp.data.dispatch('core/editor').savePost(); });
+  await page.waitForFunction(() => {
+    const editor = wp.data.select('core/editor');
+    return !editor.isSavingPost() && editor.didPostSaveRequestSucceed();
+  }, null, { timeout: 30000 });
+  await openGallery();
+  const galleryAfter = await inspect();
+  assert.deepEqual(galleryAfter.invalid, []);
+  assert.deepEqual(galleryAfter.counts, galleryBefore.counts);
+  assert.ok(galleryAfter.content.includes(captionLabel + captionSuffix));
+  // Capture the actual content document; editor shell width is not its viewport.
+  // Record style differences explicitly. Editor-native control wrappers can
+  // differ from front markup, so diagnose before changing theme CSS.
+  for (const width of [1380, 1024]) {
+    await page.setViewportSize({ width, height: 900 });
+    const canvas = await galleryCanvas();
+    await canvas.waitFor({ state: 'visible' });
+    await canvas.evaluate(el => el.ownerDocument.fonts.ready);
+    const galleries = canvas.locator('[data-type="core/gallery"]');
+    assert.equal(await galleries.count(), 2);
+    const media = canvas.locator('[data-type="core/media-text"]');
+    assert.equal(await media.count(), 1);
+    const evidence = await canvas.evaluate(el => {
+      const win = el.ownerDocument.defaultView;
+      const measure = node => {
+        if (!node) return null;
+        const s = win.getComputedStyle(node);
+        const r = node.getBoundingClientRect();
+        return { tag: node.tagName, className: node.className, width: r.width, height: r.height,
+          display: s.display, gap: s.gap, columns: s.gridTemplateColumns, fontSize: s.fontSize,
+          fontFamily: s.fontFamily, lineHeight: s.lineHeight, color: s.color,
+          radius: s.borderRadius, ratio: s.aspectRatio, fit: s.objectFit,
+          overflow: s.overflow, textAlign: s.textAlign };
+      };
+      return {
+        viewport: win.innerWidth, desktopMedia: win.matchMedia('(min-width: 48rem)').matches,
+        galleries: [...el.querySelectorAll('[data-type="core/gallery"]')].map(g => ({
+          block: measure(g), images: [...g.querySelectorAll('img')].map(measure),
+          captions: [...g.querySelectorAll('figcaption')].map(measure)
+        })),
+        media: [...el.querySelectorAll('[data-type="core/media-text"]')].map(m => ({
+          block: measure(m), image: measure(m.querySelector('img')),
+          copy: measure(m.querySelector('.wp-block-media-text__content'))
+        }))
+      };
+    });
+    console.log(JSON.stringify({ galleryEditorCanvas: 'MEASURED_NOT_VISUAL_ACCEPTANCE', shellWidth: width, evidence }));
+    assert.deepEqual(evidence.galleries.map(g => g.images.length), [2, 3]);
+    assert.deepEqual(evidence.galleries.map(g => g.captions.length), [2, 3]);
+    assert.ok(evidence.media[0]?.image && evidence.media[0]?.copy);
+    for (const [index, gallery] of (await galleries.all()).entries()) {
+      await gallery.scrollIntoViewIfNeeded();
+      await gallery.screenshot({ path: 'form-qa-results/gallery-editor-' + width + '-' + index + '.png' });
+    }
+    await media.scrollIntoViewIfNeeded();
+    await media.screenshot({ path: 'form-qa-results/media-text-editor-' + width + '.png' });
+  }
+  const galleryFront = await browser.newPage();
+  try {
+    const galleryUrl = new URL(front);
+    galleryUrl.searchParams.set('page_id', String(galleryId));
+    assert.equal((await galleryFront.goto(galleryUrl.href)).status(), 200);
+    const scope = galleryFront.locator('.block-editor_wrap');
+    const galleries = scope.locator('.wp-block-gallery.has-nested-images');
+    assert.equal(await galleries.count(), 2);
+    assert.ok(await galleries.first().getByText(captionLabel + captionSuffix, { exact: true }).isVisible());
+    assert.equal(await galleries.locator('figure.wp-block-image img').count(), 5);
+    assert.equal(await scope.locator('.wp-block-media-text').count(), 1);
+  } finally {
+    await galleryFront.close();
+  }
+  console.log(JSON.stringify({ galleryEditorPersistence: 'PASS', invalid: galleryAfter.invalid.length, edited: true, saved: true, reopened: true, frontend: true }));
 } finally {
   const activePage = browser.contexts()[0]?.pages()[0];
   if (activePage) await activePage.screenshot({ path: 'form-qa-results/native-parts-editor-final-state.png' }).catch(() => {});
