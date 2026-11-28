@@ -186,6 +186,16 @@ HTML;
 $content .= "\n\n" . $annotation('背景ボックスカラム直後の注釈QA') . "\n\n"
   . '<!-- wp:paragraph --><p>カラム注釈直後の本文QA</p><!-- /wp:paragraph -->' . "\n";
 
+// Separate native Group: adjacent annotation blocks and the first/last
+// child boundaries, without changing the existing four top-level cases.
+$content .= "\n\n" . '<!-- wp:group {"className":"is-style-jwsnj-background-box qa-annotation-edges","layout":{"type":"default"}} -->' . "\n"
+  . '<div class="wp-block-group is-style-jwsnj-background-box qa-annotation-edges">'
+  . $annotation('グループ先頭の注釈QA') . "\n\n"
+  . $annotation('連続する注釈QA') . "\n\n"
+  . '<!-- wp:paragraph --><p>注釈に挟まれた本文QA</p><!-- /wp:paragraph -->' . "\n\n"
+  . $annotation('グループ末尾の注釈QA')
+  . '</div>' . "\n" . '<!-- /wp:group -->' . "\n";
+
 $data = ['post_type' => 'page', 'post_status' => 'publish', 'post_title' => 'JWSNJ Gallery QA', 'post_content' => wp_slash($content)];
 if ($id) {
   $data['ID'] = $id;
