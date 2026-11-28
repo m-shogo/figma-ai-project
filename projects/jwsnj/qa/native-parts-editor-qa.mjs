@@ -463,6 +463,44 @@ try {
       await media.locator('xpath=self::*[contains(@style, "50%")]').waitFor({ state: 'attached' });
       assert.ok(near(await media.locator('img').evaluate(el => el.getBoundingClientRect().width), expectedMediaWidth));
     }
+    // Inspect the native spacing support and exercise a real block attribute
+    // rather than manufacturing an inline style on the DOM.
+    const customGallery = galleries.nth(1);
+    const galleryClientId = await customGallery.getAttribute('data-block');
+    const nativeSpacing = await page.evaluate(id => ({
+      support: wp.blocks.getBlockType('core/gallery').supports?.spacing?.blockGap,
+      style: wp.data.select('core/block-editor').getBlockAttributes(id).style
+    }), galleryClientId);
+    console.log(JSON.stringify({ galleryEditorSpacingSupport: 'MEASURED', shellWidth: width, nativeSpacing }));
+    if (nativeSpacing.support) {
+      const setStyle = style => page.evaluate(({ id, style }) =>
+        wp.data.dispatch('core/block-editor').updateBlockAttributes(id, { style }), { id: galleryClientId, style });
+      const original = nativeSpacing.style;
+      try {
+        await setStyle({ ...original, spacing: { ...original?.spacing, blockGap: '24px' } });
+        const result = await customGallery.evaluate(el => {
+          const read = () => {
+            const s = el.ownerDocument.defaultView.getComputedStyle(el);
+            return { row: s.rowGap, column: s.columnGap, inline: el.getAttribute('style'),
+              coreGap: s.getPropertyValue('--wp--style--unstable-gallery-gap') };
+          };
+          return new Promise(resolve => {
+            let remaining = 120;
+            const sample = () => {
+              const result = read();
+              if ((result.row === '24px' && result.column === '24px') || --remaining === 0) resolve(result);
+              else el.ownerDocument.defaultView.requestAnimationFrame(sample);
+            };
+            sample();
+          });
+        });
+        console.log(JSON.stringify({ galleryEditorCustomGap: 'MEASURED', shellWidth: width, result }));
+        assert.equal(result.row, '24px', JSON.stringify(result));
+        assert.equal(result.column, '24px', JSON.stringify(result));
+      } finally {
+        await setStyle(original ?? {});
+      }
+    }
     console.log(JSON.stringify({ galleryEditorLayout: 'PASS', shellWidth: width, canvasWidth: evidence.viewport }));
 
   }
