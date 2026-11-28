@@ -116,6 +116,25 @@ if (substr_count($nav_html, 'class="module_navigationCard"') !== 4) {
 $content .= "\n\n<!-- wp:heading --><h2 class=\"wp-block-heading\">ナビゲーション</h2><!-- /wp:heading -->\n\n"
   . "<!-- wp:html -->\n" . $nav_html . "\n<!-- /wp:html -->\n";
 
+// QA-only Figma-proportion sample, separate from long-text stress cases.
+// Stored preschool media is representative, not hash-verified to this node.
+ob_start();
+?>
+<ul id="qa-large-navigation-reference" class="module_navigation --large" style="max-width: 960px; margin-inline: auto;">
+  <?php foreach (['幼児部', '初等部', '中等部'] as $title) : ?>
+    <li class="navigation">
+      <?php get_template_part('template-parts/_navigation-large-card', null, ['heading' => 'h2', 'item' => [
+        'title' => $title,
+        'text' => 'テキストが入ります。テキストが入ります。テキストが入ります。',
+        'image_html' => wp_get_attachment_image($first['id'], 'full', false, ['alt' => '']),
+        'url' => '#qa-navigation-end',
+      ]]); ?>
+    </li>
+  <?php endforeach; ?>
+</ul>
+<?php
+$content .= "\n\n<!-- wp:html -->\n" . ob_get_clean() . "\n<!-- /wp:html -->\n";
+
 $data = ['post_type' => 'page', 'post_status' => 'publish', 'post_title' => 'JWSNJ Gallery QA', 'post_content' => wp_slash($content)];
 if ($id) {
   $data['ID'] = $id;
