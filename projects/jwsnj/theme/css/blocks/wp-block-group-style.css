@@ -41,6 +41,19 @@
         margin-top: 0;
       }
     }
+    /* Opt-in text boxes own their edge padding. Annotation clearance is
+       between content blocks, not an extra inset at the box edges.
+       Support both core/group render structures without changing other Groups. */
+    &:is(.is-style-jwsnj-bordered-box, .is-style-jwsnj-background-box) {
+      > ul.wp-block-list.annotation-list:first-child,
+      > .wp-block-group__inner-container > ul.wp-block-list.annotation-list:first-child {
+        margin-top: 0;
+      }
+      > ul.wp-block-list.annotation-list:last-child,
+      > .wp-block-group__inner-container > ul.wp-block-list.annotation-list:last-child {
+        margin-bottom: 0;
+      }
+    }
     /* // ==========================================================================
         // 画像とテキストが回り込み時のブロックグループのフロート解除
         // ========================================================================== */

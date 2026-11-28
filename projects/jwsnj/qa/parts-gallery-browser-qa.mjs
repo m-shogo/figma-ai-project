@@ -284,7 +284,7 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
 
         // Verify the same annotation rhythm around actual registered media
         // blocks. Existing image/lightbox/navigation checks remain unchanged.
-        const notes = root.locator('ul.wp-block-list.annotation-list');
+        const notes = root.locator(':scope > ul.wp-block-list.annotation-list');
         assert.equal(await notes.count(), 4);
         const boundaries = await notes.evaluateAll(elements => elements.map(el => {
           const box = el.getBoundingClientRect();
@@ -330,6 +330,53 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
         }
         console.log(JSON.stringify({ annotationMediaBoundaries: 'PASS', engine: engineName, width, boundaries }));
         console.log(JSON.stringify({ annotationGroupBoundaries: 'PASS', engine: engineName, width, boundaries: boundaries.slice(2) }));
+
+        // Independent native group, with notes as its first/last children.
+        // Figma's opt-in box owns edge padding; measure content gaps and
+        // insets independently. Do not apply this contract to all Groups.
+        const edgeGroup = root.locator('.wp-block-group.qa-annotation-edges');
+        assert.equal(await edgeGroup.count(), 1);
+        const edges = await edgeGroup.evaluate(el => {
+          // WP may render core/group with a native inner container.
+          // Measure actual content children, but keep the outer padding box.
+          const inner = el.querySelector(':scope > .wp-block-group__inner-container');
+          const content = inner ?? el;
+          const children = [...content.children];
+          const s = getComputedStyle(el);
+          const outer = el.getBoundingClientRect();
+          const metrics = children.map(child => {
+            const r = child.getBoundingClientRect();
+            const cs = getComputedStyle(child);
+            return { tag: child.tagName, className: child.className, y: r.top, bottom: r.bottom,
+              topMargin: cs.marginTop, bottomMargin: cs.marginBottom, gap: cs.rowGap,
+              fits: child.scrollWidth <= child.clientWidth + 1,
+              items: [...child.children].map(li => ({ font: getComputedStyle(li).fontSize,
+                inset: getComputedStyle(li).paddingLeft, fits: li.scrollWidth <= li.clientWidth + 1 })) };
+          });
+          return { wrapper: content.className, children: metrics, padding: [s.paddingTop, s.paddingBottom],
+            topInset: metrics[0].y - outer.top, bottomInset: outer.bottom - metrics.at(-1).bottom,
+            gaps: metrics.slice(1).map((item, i) => item.y - metrics[i].bottom) };
+        });
+        console.log(JSON.stringify({ annotationGroupEdges: 'MEASURED', engine: engineName, width, edges }));
+        assert.deepEqual(edges.children.map(child => child.tag), ['UL', 'UL', 'P', 'UL']);
+        assert.ok(edges.gaps.every(gap => near(gap, 20)), JSON.stringify(edges));
+        assert.deepEqual(edges.padding, Array(2).fill(width >= 768 ? '40px' : '32px'));
+        assert.ok(near(edges.topInset, parseFloat(edges.padding[0])) &&
+          near(edges.bottomInset, parseFloat(edges.padding[1])), JSON.stringify(edges));
+        for (const note of edges.children.filter(child => child.tag === 'UL')) {
+          assert.match(note.className, /annotation-list/);
+          assert.equal(note.gap, '10px');
+          assert.equal(note.items.length, 2);
+          assert.ok(note.fits && note.items.every(item => item.font === '14px' && item.inset === '31px' && item.fits), JSON.stringify(note));
+        }
+        // The approved box owns its padding; annotation gaps apply between
+        // content siblings, not in addition to the box's edge padding.
+        if (width === 375 || width === 1380) {
+          await edgeGroup.screenshot({ path: 'form-qa-results/annotation-group-edges-' + engineName + '-' + width + '.png',
+            style: '#global_header { visibility: hidden !important; }' });
+        }
+        console.log(JSON.stringify({ annotationGroupConsecutive: 'PASS', engine: engineName, width, edges }));
+
 
         // Figma PC344:922/917 and SP442:2782/2775. Native registered
         // opt-in styles, using ordinary editable blocks, not synthetic DOM.
