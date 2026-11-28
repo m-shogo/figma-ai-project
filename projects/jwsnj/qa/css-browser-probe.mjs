@@ -1425,9 +1425,9 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
        const spArt = c.querySelector('.jwsnj_topCatchphrase_artSp');
        const visible = el => el.getClientRects().length > 0;
        return {
-         viewport: {inner:innerWidth,client:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth},
+         viewport: {inner:innerWidth,client:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth,body:rect(document.body).width,main:rect(app.parentElement).width},
          docFits: document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1,
-         applicants: { inner:rect(inner),content:rect(content),intro:rect(intro),topics:rect(topics),photo:rect(photo),
+         applicants: { section:rect(app),inner:rect(inner),content:rect(content),intro:rect(intro),topics:rect(topics),photo:rect(photo),
            image:rect(image),badge:rect(badge),flower:rect(flower),mask:getComputedStyle(flower).maskImage,
            shadow:[parseFloat(shadow.width),parseFloat(shadow.height),shadow.backgroundColor],
            padding:parseFloat(getComputedStyle(app).paddingTop),gap:parseFloat(getComputedStyle(inner).columnGap),
@@ -1456,6 +1456,9 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
      assert.equal(a.imageSrc,'/images/top/img_applicants.webp');
      assert.ok(near(a.image.width/a.image.height,0.8,0.02),JSON.stringify(a));
      assert.ok(near(a.shadow[0],a.image.width) && near(a.shadow[1],a.image.height),JSON.stringify(a));
+     const expectedOffset = a.photo.width * 0.0698;
+     assert.ok(near(a.photo.right-a.image.right,expectedOffset)&&near(a.photo.bottom-a.image.bottom,expectedOffset),JSON.stringify(a));
+     assert.ok(near(a.image.x,a.photo.x)&&near(a.image.y,a.photo.y)&&near(a.image.width,a.photo.width*0.9302),JSON.stringify(a));
      assert.ok(near(a.flower.width,12)&&near(a.flower.height,12)&&a.mask.includes('ico_blossom.svg'),JSON.stringify(a));
      assert.equal(a.padding,pc?100:64);
      assert.equal(a.gap,pc?90:40);
@@ -1467,10 +1470,10 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
      if(width===1380) {
        assert.ok(near(a.content.width,440)&&near(a.photo.width,430)&&near(a.image.width,400)&&near(a.image.height,500),JSON.stringify(a));
      } else if(width===375) {
-       // A classic scrollbar consumes inline space; the design's 375px canvas
-       // does not include it. Keep the 30px insets and 6.98% photo offset.
-       const available = result.viewport.client - 60;
-       assert.ok(near(a.inner.width,result.viewport.client)&&near(a.content.x-a.inner.x,30)&&
+       // A reserved scrollbar gutter can narrow the layout even when the root
+       // clientWidth reports the full viewport. Check the actual main owner.
+       const available = result.viewport.main - 60;
+       assert.ok(near(a.section.width,result.viewport.main)&&near(a.inner.width,result.viewport.main)&&near(a.content.x-a.inner.x,30)&&
          near(a.inner.right-a.content.right,30)&&near(a.content.width,available)&&
          near(a.photo.width,available)&&near(a.image.width,available*0.9302)&&
          near(a.image.height,available*0.9302/0.8),JSON.stringify(result));
@@ -1486,6 +1489,8 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
          console.log(JSON.stringify({topFixedSectionsStress:'MEASURED',engine:name,width,scale,stress}));
          assert.ok(stress.docFits&&stress.applicants.fits&&stress.catchphrase.fits,JSON.stringify(stress));
          assert.ok(stress.applicants.rows.every(row=>row.fits&&row.label.right<=row.arrow.x+1),JSON.stringify(stress));
+         const photo=stress.applicants.photo, image=stress.applicants.image;
+         assert.ok(near(photo.right-image.right,photo.width*0.0698)&&near(photo.bottom-image.bottom,photo.width*0.0698),JSON.stringify(stress));
        }
      }
      console.log(JSON.stringify({topFixedSections:'PASS',engine:name,width}));
