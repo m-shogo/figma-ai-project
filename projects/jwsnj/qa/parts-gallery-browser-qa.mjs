@@ -326,6 +326,90 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
         }
         console.log(JSON.stringify({ annotationMediaBoundaries: 'PASS', engine: engineName, width, boundaries }));
 
+        // Figma PC344:922/917 and SP442:2782/2775. Native registered
+        // opt-in styles, using ordinary editable blocks, not synthetic DOM.
+        const bordered = root.locator('.wp-block-group.is-style-jwsnj-bordered-box');
+        const pair = root.locator('.wp-block-columns.is-style-jwsnj-background-boxes');
+        assert.equal(await bordered.count(), 1);
+        assert.equal(await pair.count(), 1);
+        const boxGeometry = await bordered.evaluate(el => {
+          const r = el.getBoundingClientRect();
+          const s = getComputedStyle(el);
+          const p = el.querySelector('p');
+          const t = getComputedStyle(p);
+          return { width: r.width, padding: [s.paddingTop, s.paddingLeft, s.paddingBottom, s.paddingRight],
+            border: [s.borderTopWidth, s.borderTopColor, s.borderRadius],
+            background: s.backgroundColor, text: [t.fontSize, t.fontWeight, t.lineHeight, t.letterSpacing],
+            fits: el.scrollWidth <= el.clientWidth + 1 && p.scrollWidth <= p.clientWidth + 1 };
+        });
+        const pairGeometry = await pair.evaluate(async el => {
+          const r = el.getBoundingClientRect();
+          const s = getComputedStyle(el);
+          const boxes = [];
+          for (const box of el.querySelectorAll('.wp-block-group.is-style-jwsnj-background-box')) {
+            const b = box.getBoundingClientRect();
+            const bs = getComputedStyle(box);
+            const h = box.querySelector('h4');
+            const p = box.querySelector('p');
+            const hs = getComputedStyle(h);
+            const ps = getComputedStyle(p);
+            const source = hs.backgroundImage.match(/url\(["']?([^"')]+)/)?.[1];
+            const image = new Image();
+            if (!source) throw new Error('existing shared H4 artwork missing');
+            image.src = source;
+            await image.decode();
+            boxes.push({ x: b.left - r.left, y: b.top - r.top, width: b.width, height: b.height,
+              padding: [bs.paddingTop, bs.paddingLeft, bs.paddingBottom, bs.paddingRight],
+              radius: bs.borderRadius, background: bs.backgroundColor,
+              title: [hs.fontSize, hs.fontWeight, hs.paddingLeft, hs.backgroundSize],
+              art: source, intrinsic: [image.naturalWidth, image.naturalHeight],
+              text: [ps.fontSize, ps.fontWeight, ps.lineHeight, ps.letterSpacing],
+              headingGap: p.getBoundingClientRect().top - h.getBoundingClientRect().bottom,
+              fits: box.scrollWidth <= box.clientWidth + 1 && h.scrollWidth <= h.clientWidth + 1 &&
+                p.scrollWidth <= p.clientWidth + 1 && b.left >= r.left - 1 && b.right <= r.right + 1 });
+          }
+          return { width: r.width, gap: [s.rowGap, s.columnGap], boxes };
+        });
+        console.log(JSON.stringify({ nativeTextBoxes: 'MEASURED', engine: engineName, width, boxGeometry, pairGeometry }));
+        const padding = Array(4).fill(width >= 768 ? '40px' : '32px');
+        const textMetrics = ['16px', '400', '25.6px', '0.8px'];
+        assert.deepEqual(boxGeometry.padding, padding);
+        assert.deepEqual(boxGeometry.border, ['1px', 'rgb(40, 172, 95)', '5px']);
+        assert.equal(boxGeometry.background, 'rgb(255, 255, 255)');
+        assert.deepEqual(boxGeometry.text, textMetrics);
+        assert.ok(boxGeometry.fits);
+        assert.deepEqual(pairGeometry.gap, Array(2).fill(width >= 768 ? '40px' : '24px'));
+        assert.equal(pairGeometry.boxes.length, 2);
+        for (const box of pairGeometry.boxes) {
+          assert.deepEqual(box.padding, padding);
+          assert.equal(box.radius, '5px');
+          assert.equal(box.background, 'rgb(245, 253, 235)');
+          assert.deepEqual(box.title, ['18px', '500', '26px', 'auto 17px']);
+          assert.match(box.art, /ico_blossom\.svg/);
+          assert.ok(box.intrinsic.every(n => n > 0));
+          assert.deepEqual(box.text, textMetrics);
+          assert.ok(near(box.headingGap, 20) && box.fits, JSON.stringify(box));
+        }
+        const [left, right] = pairGeometry.boxes;
+        if (width >= 783) {
+          assert.ok(near(left.width, right.width) && near(left.height, right.height) &&
+            near(left.y, right.y) && near(right.x - left.x - left.width, 40), JSON.stringify(pairGeometry));
+        } else if (width < 768) {
+          assert.ok(near(left.width, pairGeometry.width) && near(right.width, pairGeometry.width) &&
+            near(left.x, right.x) && near(right.y - left.y - left.height, 24), JSON.stringify(pairGeometry));
+        } else {
+          // Preserve WordPress's separate native stacking threshold;
+          // middle-width geometry is recorded without forcing a new layout.
+          assert.ok(right.y >= left.y, JSON.stringify(pairGeometry));
+        }
+        if (width === 375 || width === 1380) {
+          for (const [name, block] of [['bordered', bordered], ['pair', pair]]) {
+            await block.screenshot({ path: 'form-qa-results/native-text-box-' + name + '-' + engineName + '-' + width + '.png',
+              style: '#global_header { visibility: hidden !important; }' });
+          }
+        }
+        console.log(JSON.stringify({ nativeTextBoxes: 'PASS', engine: engineName, width }));
+
         console.log(JSON.stringify({ partsGalleryFrontend: 'PASS', engine: engineName, width, results, buttonGeometry, geometry }));
       } catch (error) {
         console.error(JSON.stringify({ engineName, width, runtimeErrors, state: await page.evaluate(() => ({
