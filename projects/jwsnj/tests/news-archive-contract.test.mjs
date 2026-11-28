@@ -175,7 +175,11 @@ test('TOP news uses standard posts and a real assigned posts-page link',()=>{
   assert.match(read('front-page.php'), /_top-news/);
   const css=read('css/project/top_news.css');
   assert.match(css, /max-width: calc\(560/);
-  assert.match(css, /minmax\(0, calc\(170/);
+  // TOP News now uses the accepted intrinsic date column and 80px category.
+  // Archive layout retains its separate 170px contract above.
+  assert.match(css, /\.module_newsList-01 \.mnl-01_article \{[\s\S]*?grid-template-columns: max-content minmax\(0, 1fr\)/);
+  assert.match(css, /\.category \{[\s\S]*?width: calc\(80 \* var\(--to-rem-func\)\)/);
+  assert.match(css, /min-width: min\(100%, calc\(80 \* var\(--to-rem-func\)\)\)/);
   assert.match(css, /focus-visible/);
   assert.doesNotMatch(css, /white-space:\s*nowrap/);
   execFileSync('php',['-l',new URL('../theme/template-parts/_top-news.php',import.meta.url).pathname]);

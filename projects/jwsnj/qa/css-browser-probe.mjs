@@ -1728,8 +1728,8 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
          const rect=node=>{const r=node.getBoundingClientRect();return {x:r.left,y:r.top,right:r.right,bottom:r.bottom,width:r.width,height:r.height};};
          const fits=node=>node.scrollWidth<=node.clientWidth+1;
          const box=el.querySelector('.jwsnj_topNotice_box'),title=box.querySelector('h2'),bell=title.firstElementChild,list=box.querySelector('ul');
-         const bs=getComputedStyle(box),glyph=getComputedStyle(bell,'::before');
-         return {box:rect(box),title:rect(title),bell:rect(bell),list:rect(list),direction:bs.flexDirection,gap:parseFloat(bs.gap),
+         const bs=getComputedStyle(box),glyph=getComputedStyle(bell,'::before'),label=title.querySelector('.jwsnj_topNotice_label');
+         return {box:rect(box),title:rect(title),bell:rect(bell),label:rect(label),labelLineHeight:parseFloat(getComputedStyle(label).lineHeight),labelFits:fits(label),list:rect(list),direction:bs.flexDirection,gap:parseFloat(bs.gap),
            padding:[bs.paddingTop,bs.paddingRight,bs.paddingBottom,bs.paddingLeft].map(parseFloat),
            titleSize:getComputedStyle(title).fontSize,titleGap:parseFloat(getComputedStyle(title).columnGap),
            bellGlyph:glyph.content,bellSize:glyph.fontSize,bellWeight:glyph.fontWeight,bellFamily:glyph.fontFamily,
@@ -1749,6 +1749,7 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
        assert.equal(data.margin,wide?48:24);
        assert.equal(data.titleSize,'15px');
        assert.equal(data.titleGap,10);
+       assert.ok(data.labelFits&&near(data.label.x-data.bell.right,10)&&near(data.label.height,data.labelLineHeight),JSON.stringify(data));
        assert.ok(near(data.bell.width,20)&&near(data.bell.height,20),JSON.stringify(data.bell));
        assert.ok(data.bellGlyph.includes('\uf0f3')&&data.bellSize==='10px'&&data.bellWeight==='900'&&/awesome/i.test(data.bellFamily));
        assert.equal(data.rows.length,multiple?3:1);
@@ -1789,7 +1790,7 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
            await page.evaluate(scale=>{document.documentElement.style.fontSize=(16*scale)+'px';},scale);
            const stress=await measure();
            console.log(JSON.stringify({topNoticeStress:'MEASURED',engine:name,width,multiple,scale,stress}));
-           assert.ok(stress.fits&&stress.docFits,JSON.stringify(stress));
+           assert.ok(stress.fits&&stress.docFits&&stress.labelFits&&stress.label.x>=stress.bell.right,JSON.stringify(stress));
          }
        }
        console.log(JSON.stringify({topNotice:'PASS',engine:name,width,multiple}));
