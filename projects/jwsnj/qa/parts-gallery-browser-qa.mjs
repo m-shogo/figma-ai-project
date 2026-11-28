@@ -285,7 +285,7 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
         // Verify the same annotation rhythm around actual registered media
         // blocks. Existing image/lightbox/navigation checks remain unchanged.
         const notes = root.locator('ul.wp-block-list.annotation-list');
-        assert.equal(await notes.count(), 2);
+        assert.equal(await notes.count(), 4);
         const boundaries = await notes.evaluateAll(elements => elements.map(el => {
           const box = el.getBoundingClientRect();
           const before = el.previousElementSibling;
@@ -308,6 +308,10 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
         assert.match(boundaries[0].afterClass, /wp-block-gallery/);
         assert.match(boundaries[1].beforeClass, /wp-block-media-text/);
         assert.equal(boundaries[1].afterTag, 'P');
+        assert.match(boundaries[2].beforeClass, /is-style-jwsnj-bordered-box/);
+        assert.match(boundaries[2].afterClass, /is-style-jwsnj-background-boxes/);
+        assert.match(boundaries[3].beforeClass, /is-style-jwsnj-background-boxes/);
+        assert.equal(boundaries[3].afterTag, 'P');
         for (const boundary of boundaries) {
           assert.ok(near(boundary.before, 20) && near(boundary.after, 20), JSON.stringify(boundary));
           assert.equal(boundary.gap, '10px');
@@ -325,6 +329,7 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
           }
         }
         console.log(JSON.stringify({ annotationMediaBoundaries: 'PASS', engine: engineName, width, boundaries }));
+        console.log(JSON.stringify({ annotationGroupBoundaries: 'PASS', engine: engineName, width, boundaries: boundaries.slice(2) }));
 
         // Figma PC344:922/917 and SP442:2782/2775. Native registered
         // opt-in styles, using ordinary editable blocks, not synthetic DOM.
