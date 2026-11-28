@@ -15,9 +15,10 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
     for (const width of [375, 768, 1380]) {
       const page = await browser.newPage({ viewport: { width, height: 900 }, reducedMotion: 'no-preference' });
       let deepPage;
+      let reloadPage;
+      const pageErrors = [];
+      const stampTrace = [];
       try {
-        const pageErrors = [];
-        const stampTrace = [];
         const isStamp = request => request.url().includes('/figma-ai-local/v1/stamp');
         const instrument = async (target, phase) => {
           await target.route('**/*', route => route.request().url().startsWith('http://127.0.0.1:') ? route.continue() : route.abort());
@@ -163,13 +164,42 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
         await topLink.focus();
         await deepPage.keyboard.press('Enter');
         await deepPage.waitForFunction(() => Math.abs(window.scrollY) <= 2);
+        // Test an actual reload separately from direct entry and page-top.
+        reloadPage = await browser.newPage({ viewport: { width, height: 900 }, reducedMotion: 'reduce' });
+        await instrument(reloadPage, 'reload');
+        assert.equal((await reloadPage.goto(url + '#' + encodeURIComponent(literal), { waitUntil: 'load' })).status(), 200);
+        await reloadPage.waitForFunction(() => window.jQuery?.isReady);
+        await reloadPage.evaluate(() => document.fonts.ready);
+        const beforeReload = await arrival(literal, await expected(literal, reloadPage), reloadPage);
+        const hash = await reloadPage.evaluate(() => location.hash);
+        assert.equal(decodeURIComponent(hash.slice(1)), literal);
+        // Wait beyond the initial hash handler's 300ms delay and ensure
+        // its scroll has settled before beginning the next navigation.
+        await reloadPage.waitForTimeout(350);
+        await arrival(literal, await expected(literal, reloadPage), reloadPage);
+        assert.equal((await reloadPage.reload({ waitUntil: 'load' })).status(), 200);
+        await reloadPage.waitForFunction(() => window.jQuery?.isReady);
+        await reloadPage.evaluate(() => document.fonts.ready);
+        assert.equal(await reloadPage.evaluate(() => performance.getEntriesByType('navigation')[0]?.type), 'reload');
+        assert.equal(await reloadPage.evaluate(() => location.hash), hash);
+        await arrival(literal, await expected(literal, reloadPage), reloadPage);
+        // Confirm clearance after the delayed hash handler, not merely
+        // the browser's initial history scroll restoration.
+        await reloadPage.waitForTimeout(350);
+        const afterReload = await arrival(literal, await expected(literal, reloadPage), reloadPage);
+        if (width === 375 || width === 1380) {
+          await reloadPage.screenshot({ path: 'form-qa-results/inpage-reload-' + engineName + '-' + width + '.png' });
+        }
+        console.log(JSON.stringify({ inPageReload: 'PASS', engine: engineName, width, beforeReload, afterReload, hash }));
         if (pageErrors.length) console.error(JSON.stringify({ localStampEvidence: true, engineName, width, stampTrace, pageErrors }));
         assert.deepEqual(pageErrors, [], 'uncaught JS errors');
         console.log(JSON.stringify({ inPageRuntime: 'PASS', engine: engineName, width, geometry, first, second, deep }));
       } catch (error) {
         errors.push({ engineName, width, message: String(error) });
-        await (deepPage ?? page).screenshot({ path: 'form-qa-results/inpage-failure-' + engineName + '-' + width + '.png' }).catch(() => {});
+        console.error(JSON.stringify({ inPageFailure: true, engineName, width, stampTrace, pageErrors }));
+        await (reloadPage ?? deepPage ?? page).screenshot({ path: 'form-qa-results/inpage-failure-' + engineName + '-' + width + '.png' }).catch(() => {});
       } finally {
+        if (reloadPage) await reloadPage.close();
         if (deepPage) await deepPage.close();
         await page.close();
       }
