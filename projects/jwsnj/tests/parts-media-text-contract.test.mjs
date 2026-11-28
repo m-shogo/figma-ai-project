@@ -9,7 +9,9 @@ test('dynamic WordPress media/text layout follows PC/SP Figma geometry', () => {
   assert.match(css, /\.wp-block-media-text\s*\{/);
   assert.match(css, /gap:\s*calc\(40 \* var\(--to-rem-func\)\)/);
   assert.match(css, /grid-template-columns:\s*minmax\(0, 1fr\)/);
-  assert.match(css, /grid-template-columns:\s*minmax\(0, 410fr\) minmax\(0, 510fr\)/);
+  assert.match(css, /--_media-track:\s*minmax\(0, 410fr\)/);
+  assert.match(css, /--_copy-track:\s*minmax\(0, 510fr\)/);
+  assert.match(css, /grid-template-columns:\s*var\(--_media-track\) var\(--_copy-track\)/);
   assert.match(css, /min-width:\s*0/);
 });
 test('media assets remain CMS-driven and use proportional Figma crop', () => {
@@ -42,10 +44,14 @@ test('media text body follows 16px regular Zen Kaku typography on both viewports
 });
 
 test('media/text preserves editor position, custom widths and opt-in stacking at theme breakpoint', () => {
-  assert.match(css, /&\.has-media-on-the-right\s*\{\s*grid-template-columns:\s*minmax\(0, 510fr\) minmax\(0, 410fr\)/);
+  assert.match(css, /&\.has-media-on-the-right\s*\{\s*grid-template-columns:\s*var\(--_copy-track\) var\(--_media-track\)/);
   assert.match(css, /&\.is-stacked-on-mobile\s*\{\s*@media \(width < calc\(768 \* \(1 \/ 16 \* 1rem\)\)\)\s*\{\s*grid-template-columns:\s*minmax\(0, 1fr\) !important;/);
   assert.match(css, /> \.wp-block-media-text__media\s*\{\s*grid-column:\s*1;\s*grid-row:\s*1;/);
   assert.match(css, /> \.wp-block-media-text__content\s*\{\s*grid-column:\s*1;\s*grid-row:\s*2;/);
-  assert.equal((css.match(/!important/g) ?? []).length, 1, 'Only mobile stacking overrides editor inline width');
+  assert.equal((css.match(/!important/g) ?? []).length, 3, 'Only stacking and two editor default-width selectors override inline width');
+  const editor = css.slice(css.lastIndexOf('.editor-styles-wrapper {'));
+  assert.match(editor, /@media \(calc\(768 \* \(1 \/ 16 \* 1rem\)\) <= width\)/);
+  assert.match(editor, /&:not\(\.has-media-on-the-right\):is\(\[style\*="grid-template-columns: 50% 1fr"\], \[style\*="grid-template-columns: 50% auto"\]\)\s*\{\s*grid-template-columns:\s*var\(--_media-track\) var\(--_copy-track\) !important/);
+  assert.match(editor, /&\.has-media-on-the-right:is\(\[style\*="grid-template-columns: 1fr 50%"\], \[style\*="grid-template-columns: auto 50%"\]\)\s*\{\s*grid-template-columns:\s*var\(--_copy-track\) var\(--_media-track\) !important/);
   assert.match(css, /&:not\(\.is-vertically-aligned-center, \.is-vertically-aligned-bottom\)\s*\{\s*> \.wp-block-media-text__media,\s*> \.wp-block-media-text__content\s*\{\s*align-self:\s*start/);
 });
