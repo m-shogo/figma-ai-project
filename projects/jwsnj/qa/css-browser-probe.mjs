@@ -26,6 +26,7 @@ const fixedTopMarkup = ['_top-catchphrase.php', '_top-applicants.php'].map(file 
 }).join('\n');
 const report=[];
 const resizeFailures=[];
+const fixedTopFailures=[];
 try{
 for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
  const browser=await engine.launch();
@@ -1424,7 +1425,8 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
        const spArt = c.querySelector('.jwsnj_topCatchphrase_artSp');
        const visible = el => el.getClientRects().length > 0;
        return {
-         docFits: document.documentElement.scrollWidth <= innerWidth + 1,
+         viewport: {inner:innerWidth,client:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth},
+         docFits: document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1,
          applicants: { inner:rect(inner),content:rect(content),intro:rect(intro),topics:rect(topics),photo:rect(photo),
            image:rect(image),badge:rect(badge),flower:rect(flower),mask:getComputedStyle(flower).maskImage,
            shadow:[parseFloat(shadow.width),parseFloat(shadow.height),shadow.backgroundColor],
@@ -1446,6 +1448,10 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
      const near = (a,b,tolerance=1.5)=>Math.abs(a-b)<=tolerance;
      const pc = width >= 1080;
      const a = result.applicants, c = result.catchphrase;
+     if(width===375||width===1380) {
+       await applicants.screenshot({path:out+'/applicants-full-'+name+'-'+width+'.png'});
+       await catchphrase.screenshot({path:out+'/catchphrase-full-'+name+'-'+width+'.png'});
+     }
      assert.ok(result.docFits && a.fits && c.fits && a.loaded && c.loaded,JSON.stringify(result));
      assert.equal(a.imageSrc,'/images/top/img_applicants.webp');
      assert.ok(near(a.image.width/a.image.height,0.8,0.02),JSON.stringify(a));
@@ -1461,14 +1467,18 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
      if(width===1380) {
        assert.ok(near(a.content.width,440)&&near(a.photo.width,430)&&near(a.image.width,400)&&near(a.image.height,500),JSON.stringify(a));
      } else if(width===375) {
-       assert.ok(near(a.content.width,315)&&near(a.image.width,293)&&near(a.image.height,366.25),JSON.stringify(a));
+       // A classic scrollbar consumes inline space; the design's 375px canvas
+       // does not include it. Keep the 30px insets and 6.98% photo offset.
+       const available = result.viewport.client - 60;
+       assert.ok(near(a.inner.width,result.viewport.client)&&near(a.content.x-a.inner.x,30)&&
+         near(a.inner.right-a.content.right,30)&&near(a.content.width,available)&&
+         near(a.photo.width,available)&&near(a.image.width,available*0.9302)&&
+         near(a.image.height,available*0.9302/0.8),JSON.stringify(result));
      }
      assert.equal(c.pc,pc);assert.equal(c.sp,!pc);
      assert.equal(c.font,pc?48:28);
      assert.ok(pc?near(c.pcArt.width,291)&&near(c.pcArt.height,105):near(c.spArt.width,192)&&near(c.spArt.height,64),JSON.stringify(c));
      if(width===375||width===1380) {
-       await applicants.screenshot({path:out+'/applicants-full-'+name+'-'+width+'.png'});
-       await catchphrase.screenshot({path:out+'/catchphrase-full-'+name+'-'+width+'.png'});
        // Root text enlargement stress without forcing one-line copy or fixed row height.
        for(const scale of [1.5,2]) {
          await page.evaluate(scale=>{document.documentElement.style.fontSize=(16*scale)+'px';},scale);
@@ -1480,6 +1490,11 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
      }
      console.log(JSON.stringify({topFixedSections:'PASS',engine:name,width}));
      report.push({name,width,topFixedSections:result});
+   } catch(error) {
+     fixedTopFailures.push({engine:name,width,message:String(error)});
+     console.error(JSON.stringify({topFixedSections:'FAIL',engine:name,width,message:String(error)}));
+     await applicants.screenshot({path:out+'/applicants-failure-'+name+'-'+width+'.png'}).catch(()=>{});
+     await catchphrase.screenshot({path:out+'/catchphrase-failure-'+name+'-'+width+'.png'}).catch(()=>{});
    } finally {
      await page.evaluate(()=>document.documentElement.style.removeProperty('font-size'));
      await fixture.evaluate(nodes=>nodes.forEach(node=>node.remove()));
@@ -1514,4 +1529,5 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
  }finally{await browser.close();}
 }
 assert.deepEqual(resizeFailures, [], 'all text enlargement cases must pass');
+assert.deepEqual(fixedTopFailures, [], 'all fixed TOP section cases must pass');
 }finally{writeFileSync(out+'/browser.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report));await new Promise(r=>server.close(r));}
