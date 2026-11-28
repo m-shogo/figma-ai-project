@@ -24,9 +24,18 @@ const fixedTopMarkup = ['_top-catchphrase.php', '_top-applicants.php'].map(file 
   const stub = 'function get_theme_file_uri($path) { return "/" . ltrim($path, "/"); } function esc_url($url) { return htmlspecialchars($url, ENT_QUOTES, "UTF-8"); } ';
   return execFileSync('php', ['-r', stub + 'include ' + JSON.stringify(path) + ';'], {encoding: 'utf8'});
 }).join('\n');
+// Exercise the already-approved About fixture through the real views; URL and
+// escaping helpers are the only substitutes for WordPress in this isolated probe.
+const aboutStub = 'function get_theme_file_uri($path) { return "/" . ltrim($path, "/"); } function esc_url($url) { return htmlspecialchars($url, ENT_QUOTES, "UTF-8"); } function esc_html($text) { return htmlspecialchars($text, ENT_QUOTES, "UTF-8"); } function wp_kses_post($html) { return $html; } function get_template_part($path, $name = null, $args = []) { include ' + JSON.stringify(root + '/') + ' . $path . ".php"; } ';
+const aboutFixturePath = resolve(root, '../tests/fixtures/top-about.php');
+const aboutIntroPath = resolve(root, 'template-parts/_top-about-intro.php');
+const renderAbout = withCards => execFileSync('php', ['-r', aboutStub +
+  '$args = ["items" => ' + (withCards ? 'require ' + JSON.stringify(aboutFixturePath) : '[]') + ']; include ' + JSON.stringify(aboutIntroPath) + ';'], {encoding:'utf8'});
+const aboutMarkup = [renderAbout(false), renderAbout(true)];
 const report=[];
 const resizeFailures=[];
 const fixedTopFailures=[];
+const aboutFailures=[];
 try{
 for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
  const browser=await engine.launch();
@@ -1506,6 +1515,186 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
      await fixture.dispose();
    }
  }
+ // About cards are presentation-only until CMS and destinations are accepted.
+ const homeSource = readFileSync(resolve(root,'js/home.js'),'utf8');
+ const aboutInit = homeSource.match(/  const initAboutCards = function \(root\) \{[\s\S]*?\n  \};/)?.[0];
+ assert.ok(aboutInit, 'production About initializer must be found');
+ for (const width of [320,375,768,1079,1080,1280,1380]) {
+   await page.setViewportSize({width,height:900});
+   for (const withCards of [false,true]) {
+     const fixture = await page.evaluateHandle(markup => {
+       const main = document.querySelector('main.global_contents');
+       const range = document.createRange();
+       range.selectNodeContents(main);
+       const fragment = range.createContextualFragment(markup);
+       const section = fragment.firstElementChild;
+       main.append(fragment);
+       return section;
+     },aboutMarkup[Number(withCards)]);
+     const section = page.locator('.jwsnj_topAbout');
+     const buttons = section.locator('[data-about-select]');
+     const near = (a,b,tolerance=1.5)=>Math.abs(a-b)<=tolerance;
+     try {
+       await section.locator('img').evaluateAll(images=>Promise.all(images.map(img=>{img.loading='eager';return img.decode();})));
+       const measure = () => section.evaluate(el=>{
+         const rect = node=>{const r=node.getBoundingClientRect();return {x:r.left,y:r.top,width:r.width,height:r.height,right:r.right,bottom:r.bottom};};
+         const fits = node=>node.scrollWidth<=node.clientWidth+1;
+         const map=el.querySelector('.jwsnj_topAbout_map'), shape=map.querySelector('.jwsnj_topAbout_shape');
+         const list=el.querySelector('[data-about-cards]'), copy=el.querySelector('.jwsnj_topAbout_copy');
+         return {
+           viewport:rect(el.parentElement),section:rect(el),copy:rect(copy),map:rect(map),
+           mapPosition:getComputedStyle(map).position,shape:rect(shape),
+           pins:[...map.querySelectorAll('img:not(.jwsnj_topAbout_shape)')].map(rect),
+           icon:rect(copy.querySelector('.jwsnj_topAbout_ja img')),
+           gap:parseFloat(getComputedStyle(copy).rowGap),
+           leadFont:parseFloat(getComputedStyle(copy.querySelector('.jwsnj_topAbout_lead')).fontSize),
+           docFits:document.documentElement.scrollWidth<=document.documentElement.clientWidth+1,
+           copyFits:fits(copy),loaded:[...el.querySelectorAll('img')].every(img=>img.complete&&img.naturalWidth>0),
+           cards:list?[...list.children].map(li=>{
+             const b=li.querySelector('button'),photo=b.querySelector('.jwsnj_topAbout_cardPhoto'),label=b.querySelector('.jwsnj_topAbout_cardLabel');
+             const img=photo.querySelector('img'), imageStyle=getComputedStyle(img), photoStyle=getComputedStyle(photo);
+             return {box:rect(li),width:li.offsetWidth,photoRatio:photo.clientWidth/photo.clientHeight,
+               crop:{width:parseFloat(imageStyle.width),height:parseFloat(imageStyle.height),x:parseFloat(imageStyle.left),y:parseFloat(imageStyle.top),
+                 boxWidth:parseFloat(photoStyle.width),boxHeight:parseFloat(photoStyle.height),fit:imageStyle.objectFit,overflow:photoStyle.overflow},
+               image:photo.querySelector('img').getAttribute('src'),
+               natural:[photo.querySelector('img').naturalWidth,photo.querySelector('img').naturalHeight],
+               title:label.firstElementChild.textContent,
+               arrowWidth:label.lastElementChild.offsetWidth,transform:getComputedStyle(li).transform,
+               z:getComputedStyle(li).zIndex,disabled:b.disabled,pressed:b.getAttribute('aria-pressed'),
+               fits:[b,label].every(fits)};
+           }):[]
+         };
+       });
+       const initial=await measure();
+       console.log(JSON.stringify({topAbout:'MEASURED',engine:name,width,withCards,initial}));
+       assert.ok(initial.docFits&&initial.copyFits&&initial.loaded,JSON.stringify(initial));
+       assert.ok(near(initial.icon.width,12)&&near(initial.icon.height,12));
+       const pc=width>=1080;
+       assert.equal(initial.gap,pc?24:20);
+       assert.equal(initial.leadFont,pc?32:28);
+       assert.equal(initial.mapPosition,pc&&!withCards?'relative':'absolute');
+       assert.ok(near(initial.shape.width/initial.shape.height,280/534,0.015));
+       assert.equal(initial.cards.length,withCards?4:0);
+       if (withCards) {
+         assert.deepEqual(initial.cards.map(c=>c.title),['学校概要','教育環境','教育内容','交通アクセス']);
+         assert.deepEqual(initial.cards.map(c=>c.image),['img_about-overview.webp','img_mv-05.webp','img_about-education.webp','img_mv-06.webp'].map(n=>'/images/top/'+n));
+         // Independent Figma source rectangles (normalized image coordinates).
+         const expectedCrops = [{"file":"img_about-overview.webp","sp":[0.341071874,0.356105953,0.205410421,0.213987723],"pc":[0.341071874,0.624965966,0.205630675,0.213899478],"natural":[1080,720]},{"file":"img_mv-05.webp","sp":[0.401275873,0.418963701,0.208340928,0.331894428],"pc":[0.401275873,0.735281289,0.208340928,0.132034898],"natural":[2149,1399]},{"file":"img_about-education.webp","sp":[0.426490813,0.445290148,0.173350468,0.435207635],"pc":[0.3,0.549707592,0.256000042,0.252384633],"natural":[1080,810]},{"file":"img_mv-06.webp","sp":[0.505867004,0.528165102,0.121582814,0.161367178],"pc":[0.401275873,0.735281289,0.056264307,0],"natural":[1280,960]}];
+         for(const [i,card] of initial.cards.entries()) {
+           const expected=expectedCrops[i], [w,h,x,y]=pc?expected.pc:expected.sp;
+           assert.deepEqual(card.natural,expected.natural);
+           const crop=card.crop;
+           assert.equal(crop.fit,'fill');
+           assert.equal(crop.overflow,'hidden');
+           assert.ok(near(crop.width,crop.boxWidth/w,2)&&near(crop.height,crop.boxHeight/h,2)&&
+             near(crop.x,-crop.boxWidth*x/w,2)&&near(crop.y,-crop.boxHeight*y/h,2),JSON.stringify({i,crop,expected}));
+           assert.ok(card.disabled&&card.pressed==='false'&&card.fits,JSON.stringify(card));
+           assert.ok(near(card.arrowWidth,24)&&near(card.photoRatio,pc?280/351:260/186,0.02),JSON.stringify(card));
+           assert.ok(card.box.x>=initial.viewport.x-1.5&&card.box.right<=initial.viewport.right+1.5,JSON.stringify(card));
+         }
+         if (!pc) {
+           for(let i=1;i<4;i++) assert.ok(near(initial.cards[i].box.y-initial.cards[i-1].box.bottom,20));
+         } else {
+           assert.ok(initial.cards[0].transform!=='none'&&initial.cards[2].transform!=='none');
+           assert.ok(initial.cards[0].box.right>initial.cards[1].box.x&&initial.cards[2].box.right>initial.cards[3].box.x);
+         }
+         if(width===375||width===1380) {
+           await section.screenshot({path:out+'/about-full-'+name+'-'+width+'.png'});
+           // A different supplied photo is not assigned a design crop by card order.
+           const image=buttons.first().locator('.jwsnj_topAbout_cardPhoto img');
+           const original=await image.getAttribute('src');
+           try {
+             await image.evaluate(async img=>{img.src='/images/top/img_applicants.webp';await img.decode();});
+             const generic=(await measure()).cards[0].crop;
+             assert.equal(generic.fit,'cover');
+             assert.ok(near(generic.width,generic.boxWidth)&&near(generic.height,generic.boxHeight)&&near(generic.x,0)&&near(generic.y,0),JSON.stringify(generic));
+           } finally {
+             await image.evaluate(async (img,src)=>{img.src=src;await img.decode();},original);
+           }
+         }
+         await section.locator('[data-about-cards]').evaluate((root,source)=>new Function('root',source+'\ninitAboutCards(root);')(root),aboutInit);
+         assert.equal(await buttons.evaluateAll(bs=>bs.filter(b=>b.disabled).length),0);
+         // Actual mouse hit testing: never use force or programmatic clicks.
+         const wasReduced = await page.evaluate(()=>matchMedia('(prefers-reduced-motion: reduce)').matches);
+         try {
+           await page.emulateMedia({reducedMotion:'no-preference'});
+           const first = buttons.first();
+           const neutral = await first.evaluate(b=>getComputedStyle(b).color);
+           assert.equal(await first.evaluate(b=>getComputedStyle(b).transitionDuration),'0.3s');
+           const hitPoint = async button => {
+             await button.scrollIntoViewIfNeeded();
+             return button.evaluate(b=>{
+               const r=b.getBoundingClientRect();
+               for(const fy of [0.5,0.3,0.7,0.15,0.85]) {
+                 for(const fx of [0.5,0.3,0.7,0.15,0.85]) {
+                   const x=r.left+r.width*fx,y=r.top+r.height*fy;
+                   if(document.elementFromPoint(x,y)?.closest('button')===b) return {x,y};
+                 }
+               }
+               return null;
+             });
+           };
+           const point = await hitPoint(first);
+           assert.ok(point,'first card has no visible mouse target');
+           await page.mouse.move(point.x,point.y);
+           await page.waitForFunction(()=>getComputedStyle(document.querySelector('[data-about-select]')).color==='rgb(40, 172, 95)');
+           await page.mouse.move(0,0);
+           await page.waitForFunction(color=>getComputedStyle(document.querySelector('[data-about-select]')).color===color,neutral);
+           await page.emulateMedia({reducedMotion:'reduce'});
+           assert.equal(await first.evaluate(b=>getComputedStyle(b).transitionDuration),'0s');
+           await page.emulateMedia({reducedMotion:'no-preference'});
+           for(let i=0;i<4;i++) {
+             const button=buttons.nth(i);
+             const target=await hitPoint(button);
+             assert.ok(target,'card '+i+' has no exposed mouse target');
+             await page.mouse.click(target.x,target.y);
+             assert.deepEqual(await buttons.evaluateAll(bs=>bs.map(b=>b.getAttribute('aria-pressed'))),[0,1,2,3].map(n=>String(n===i)));
+             await button.evaluate(b=>b.blur());
+             assert.equal(await button.evaluate(b=>getComputedStyle(b.closest('li')).zIndex),'5');
+           }
+           console.log(JSON.stringify({topAboutMouse:'PASS',engine:name,width}));
+         } finally {
+           await page.mouse.move(0,0);
+           await page.emulateMedia({reducedMotion:wasReduced?'reduce':'no-preference'});
+         }
+         for(let i=0;i<4;i++) {
+           const button=buttons.nth(i);
+           await button.focus();
+           assert.equal(await button.evaluate(b=>document.activeElement===b),true);
+           if(pc) assert.equal(await button.evaluate(b=>getComputedStyle(b.closest('li')).zIndex),'6');
+           await button.press(i%2===0?'Enter':'Space');
+           assert.deepEqual(await buttons.evaluateAll(bs=>bs.map(b=>b.getAttribute('aria-pressed'))),[0,1,2,3].map(n=>String(n===i)));
+           assert.equal(await button.evaluate(b=>getComputedStyle(b.closest('li')).zIndex),'6');
+         }
+         await buttons.nth(0).focus();
+         await page.keyboard.press('Tab');
+         assert.equal(await buttons.nth(1).evaluate(b=>document.activeElement===b),true);
+         await buttons.nth(1).press('Enter');
+         if(width===375||width===1380) await section.screenshot({path:out+'/about-selected-'+name+'-'+width+'.png'});
+         // Stress the real labels at large text sizes, not the production copy.
+         if(width===375||width===1380) {
+           await buttons.nth(1).locator('.jwsnj_topAbout_cardLabel > span').first().evaluate(el=>{el.append(' 長い教育環境の説明LongEditableLabel1234567890');});
+           for(const scale of [1.5,2]) {
+             await page.evaluate(scale=>{document.documentElement.style.fontSize=(16*scale)+'px';},scale);
+             const stress=await measure();
+             console.log(JSON.stringify({topAboutStress:'MEASURED',engine:name,width,scale,stress}));
+             assert.ok(stress.docFits&&stress.copyFits&&stress.cards.every(c=>c.fits),JSON.stringify(stress));
+           }
+         }
+       }
+       console.log(JSON.stringify({topAbout:'PASS',engine:name,width,withCards}));
+       report.push({name,width,withCards,topAbout:initial});
+     } catch(error) {
+       aboutFailures.push({engine:name,width,withCards,message:String(error)});
+       console.error(JSON.stringify({topAbout:'FAIL',engine:name,width,withCards,message:String(error)}));
+       await section.screenshot({path:out+'/about-failure-'+name+'-'+width+'-'+Number(withCards)+'.png'}).catch(()=>{});
+     } finally {
+       await page.evaluate(()=>document.documentElement.style.removeProperty('font-size'));
+       await fixture.evaluate(el=>el.remove());
+       await fixture.dispose();
+     }
+   }
+ }
  const mechanism=await page.evaluate(()=>{
    const root=document.documentElement;
    root.style.fontSize='20px';
@@ -1535,4 +1724,5 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
 }
 assert.deepEqual(resizeFailures, [], 'all text enlargement cases must pass');
 assert.deepEqual(fixedTopFailures, [], 'all fixed TOP section cases must pass');
+assert.deepEqual(aboutFailures, [], 'all TOP About cases must pass');
 }finally{writeFileSync(out+'/browser.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report));await new Promise(r=>server.close(r));}

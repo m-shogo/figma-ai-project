@@ -202,6 +202,10 @@
   color: inherit;
   cursor: pointer;
   text-align: center;
+  transition: color var(--transition-duration);
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
   &:disabled { cursor: default; opacity: 1; }
   &[aria-pressed="true"] { color: var(--color-primary); }
   &:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; }
@@ -215,10 +219,76 @@
 }
 .jwsnj_topAbout_cardPhoto {
   display: block;
+  position: relative;
   aspect-ratio: 260 / 186;
   overflow: hidden;
   border-radius: calc(3 * var(--to-rem-func));
-  img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: bottom; }
+  img {
+    display: block;
+    position: absolute;
+    width: calc(100% / var(--jwsnj-about-crop-width, 1));
+    height: calc(100% / var(--jwsnj-about-crop-height, 1));
+    max-width: none;
+    max-height: none;
+    left: calc(-100% * var(--jwsnj-about-crop-x, 0) / var(--jwsnj-about-crop-width, 1));
+    top: calc(-100% * var(--jwsnj-about-crop-y, 0) / var(--jwsnj-about-crop-height, 1));
+    object-fit: var(--jwsnj-about-crop-fit, cover);
+    object-position: bottom;
+    /* Figma CROP matrices apply to these exact bundled source paths only.
+       Arbitrary CMS photos keep the original cover/bottom behavior. */
+    &[src$="/images/top/img_about-overview.webp"] {
+      --jwsnj-about-crop-fit: fill;
+      --jwsnj-about-crop-width: 0.341071874;
+      --jwsnj-about-crop-height: 0.356105953;
+      --jwsnj-about-crop-x: 0.205410421;
+      --jwsnj-about-crop-y: 0.213987723;
+      @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+        --jwsnj-about-crop-width: 0.341071874;
+        --jwsnj-about-crop-height: 0.624965966;
+        --jwsnj-about-crop-x: 0.205630675;
+        --jwsnj-about-crop-y: 0.213899478;
+      }
+    }
+    &[src$="/images/top/img_mv-05.webp"] {
+      --jwsnj-about-crop-fit: fill;
+      --jwsnj-about-crop-width: 0.401275873;
+      --jwsnj-about-crop-height: 0.418963701;
+      --jwsnj-about-crop-x: 0.208340928;
+      --jwsnj-about-crop-y: 0.331894428;
+      @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+        --jwsnj-about-crop-width: 0.401275873;
+        --jwsnj-about-crop-height: 0.735281289;
+        --jwsnj-about-crop-x: 0.208340928;
+        --jwsnj-about-crop-y: 0.132034898;
+      }
+    }
+    &[src$="/images/top/img_about-education.webp"] {
+      --jwsnj-about-crop-fit: fill;
+      --jwsnj-about-crop-width: 0.426490813;
+      --jwsnj-about-crop-height: 0.445290148;
+      --jwsnj-about-crop-x: 0.173350468;
+      --jwsnj-about-crop-y: 0.435207635;
+      @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+        --jwsnj-about-crop-width: 0.3;
+        --jwsnj-about-crop-height: 0.549707592;
+        --jwsnj-about-crop-x: 0.256000042;
+        --jwsnj-about-crop-y: 0.252384633;
+      }
+    }
+    &[src$="/images/top/img_mv-06.webp"] {
+      --jwsnj-about-crop-fit: fill;
+      --jwsnj-about-crop-width: 0.505867004;
+      --jwsnj-about-crop-height: 0.528165102;
+      --jwsnj-about-crop-x: 0.121582814;
+      --jwsnj-about-crop-y: 0.161367178;
+      @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
+        --jwsnj-about-crop-width: 0.401275873;
+        --jwsnj-about-crop-height: 0.735281289;
+        --jwsnj-about-crop-x: 0.056264307;
+        --jwsnj-about-crop-y: 0;
+      }
+    }
+  }
   @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
     aspect-ratio: 280 / 351;
     border-radius: calc(8 * var(--to-rem-func));
