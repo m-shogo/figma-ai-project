@@ -75,6 +75,7 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
         assert.deepEqual(data.sizes, wide ? ['46px', '15px', '16px'] : ['36px', '13px', '15px']);
         assert.ok(near(data.arrow.width, 32) && near(data.arrow.height, 32));
         assert.ok(data.blossom[0] && data.blossom[1] > 0 && data.blossom[2] > 0);
+        assert.ok(near(data.blossom[3].width, 12) && near(data.blossom[3].height, 12), JSON.stringify(data.blossom));
         assert.ok(data.panelFits && data.sectionFits && data.documentFits, JSON.stringify(data));
         for (const [i, row] of data.rows.entries()) {
           assert.ok(row.fits, JSON.stringify(row));
@@ -107,6 +108,8 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
         const arrow = more.locator('.jwsnj_topNews_arrow');
         await page.waitForFunction(() => getComputedStyle(document.querySelector('.jwsnj_topNews_arrow')).color === 'rgb(40, 172, 95)');
         assert.equal(await arrow.evaluate(el => getComputedStyle(el, '::before').fontSize), '12px');
+        await page.mouse.move(0, 0);
+        await page.locator('body').evaluate(el => document.activeElement?.blur());
         if (width === 375 || width === 1380) {
           await panel.screenshot({ path: 'form-qa-results/top-news-' + engineName + '-' + width + '.png',
             style: '#global_header { visibility: hidden !important; }' });
