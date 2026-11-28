@@ -332,12 +332,16 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
         console.log(JSON.stringify({ annotationGroupBoundaries: 'PASS', engine: engineName, width, boundaries: boundaries.slice(2) }));
 
         // Independent native group, with notes as its first/last children.
-        // Figma defines inter-content clearance, not an extra edge inset:
-        // record actual edge margins separately from the required gaps.
+        // Figma's opt-in box owns edge padding; measure content gaps and
+        // insets independently. Do not apply this contract to all Groups.
         const edgeGroup = root.locator('.wp-block-group.qa-annotation-edges');
         assert.equal(await edgeGroup.count(), 1);
         const edges = await edgeGroup.evaluate(el => {
-          const children = [...el.children];
+          // WP may render core/group with a native inner container.
+          // Measure actual content children, but keep the outer padding box.
+          const inner = el.querySelector(':scope > .wp-block-group__inner-container');
+          const content = inner ?? el;
+          const children = [...content.children];
           const s = getComputedStyle(el);
           const outer = el.getBoundingClientRect();
           const metrics = children.map(child => {
@@ -349,7 +353,7 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
               items: [...child.children].map(li => ({ font: getComputedStyle(li).fontSize,
                 inset: getComputedStyle(li).paddingLeft, fits: li.scrollWidth <= li.clientWidth + 1 })) };
           });
-          return { children: metrics, padding: [s.paddingTop, s.paddingBottom],
+          return { wrapper: content.className, children: metrics, padding: [s.paddingTop, s.paddingBottom],
             topInset: metrics[0].y - outer.top, bottomInset: outer.bottom - metrics.at(-1).bottom,
             gaps: metrics.slice(1).map((item, i) => item.y - metrics[i].bottom) };
         });
@@ -357,14 +361,16 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
         assert.deepEqual(edges.children.map(child => child.tag), ['UL', 'UL', 'P', 'UL']);
         assert.ok(edges.gaps.every(gap => near(gap, 20)), JSON.stringify(edges));
         assert.deepEqual(edges.padding, Array(2).fill(width >= 768 ? '40px' : '32px'));
+        assert.ok(near(edges.topInset, parseFloat(edges.padding[0])) &&
+          near(edges.bottomInset, parseFloat(edges.padding[1])), JSON.stringify(edges));
         for (const note of edges.children.filter(child => child.tag === 'UL')) {
           assert.match(note.className, /annotation-list/);
           assert.equal(note.gap, '10px');
           assert.equal(note.items.length, 2);
           assert.ok(note.fits && note.items.every(item => item.font === '14px' && item.inset === '31px' && item.fits), JSON.stringify(note));
         }
-        // Edge values are evidence only until the wrapper rhythm is compared
-        // with its approved ownership; do not infer an extra 20px requirement.
+        // The approved box owns its padding; annotation gaps apply between
+        // content siblings, not in addition to the box's edge padding.
         if (width === 375 || width === 1380) {
           await edgeGroup.screenshot({ path: 'form-qa-results/annotation-group-edges-' + engineName + '-' + width + '.png',
             style: '#global_header { visibility: hidden !important; }' });
