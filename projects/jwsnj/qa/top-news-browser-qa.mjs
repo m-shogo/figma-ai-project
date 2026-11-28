@@ -10,6 +10,7 @@ const archiveId = Number(process.argv[3]);
 assert.ok(Number.isSafeInteger(archiveId) && archiveId > 0);
 mkdirSync('form-qa-results', { recursive: true });
 const near = (a, b, tolerance = 1) => Math.abs(a - b) <= tolerance;
+const failures = [];
 
 for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })) {
   const browser = await engine.launch();
@@ -76,6 +77,29 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
         assert.ok(near(data.arrow.width, 32) && near(data.arrow.height, 32));
         assert.ok(data.blossom[0] && data.blossom[1] > 0 && data.blossom[2] > 0);
         assert.ok(near(data.blossom[3].width, 12) && near(data.blossom[3].height, 12), JSON.stringify(data.blossom));
+        if (!data.documentFits) {
+          const overflow = await page.evaluate(() => {
+            const root = document.documentElement;
+            const body = document.body;
+            const nodes = [];
+            for (const node of body.querySelectorAll('*')) {
+              const r = node.getBoundingClientRect();
+              if (!r.width || !r.height || (r.right <= innerWidth + 1 && r.left >= -1)) continue;
+              const clips = [];
+              for (let parent = node.parentElement; parent && parent !== root; parent = parent.parentElement) {
+                const style = getComputedStyle(parent);
+                if (['hidden', 'clip', 'auto', 'scroll'].includes(style.overflowX)) {
+                  clips.push({ tag: parent.tagName, className: parent.getAttribute('class'), overflowX: style.overflowX });
+                }
+              }
+              nodes.push({ tag: node.tagName, className: node.getAttribute('class'), id: node.id,
+                left: r.left, right: r.right, width: r.width, scrollWidth: node.scrollWidth, clientWidth: node.clientWidth, clips });
+            }
+            return { innerWidth, rootClientWidth: root.clientWidth, rootScrollWidth: root.scrollWidth,
+              bodyScrollWidth: body.scrollWidth, nodes: nodes.sort((a, b) => b.right - a.right).slice(0, 30) };
+          });
+          console.log(JSON.stringify({ topNews: 'DOCUMENT_OVERFLOW', engine: engineName, width, overflow }));
+        }
         assert.ok(data.panelFits && data.sectionFits && data.documentFits, JSON.stringify(data));
         for (const [i, row] of data.rows.entries()) {
           assert.ok(row.fits, JSON.stringify(row));
@@ -117,7 +141,8 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
         console.log(JSON.stringify({ topNews: 'PASS', engine: engineName, width }));
       } catch (error) {
         await page.screenshot({ path: 'form-qa-results/top-news-failure-' + engineName + '-' + width + '.png' }).catch(() => {});
-        throw error;
+        failures.push({ engine: engineName, width, message: String(error) });
+        console.error(JSON.stringify({ topNews: 'FAIL', engine: engineName, width, message: String(error) }));
       } finally {
         await page.close();
       }
@@ -126,3 +151,4 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
     await browser.close();
   }
 }
+assert.equal(failures.length, 0, JSON.stringify(failures));

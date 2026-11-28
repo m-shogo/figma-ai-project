@@ -1294,6 +1294,88 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
   }
  await page.emulateMedia({reducedMotion:'reduce'});
  // Feature proof separate from production layout: actual cascade and containment.
+ // Approved Applicants link visuals: actual theme CSS, isolated fixture.
+ for (const width of [320, 375, 768, 1080, 1380]) {
+   await page.setViewportSize({width,height:900});
+   await page.evaluate(() => {
+     const section = document.createElement('section');
+     section.className = 'jwsnj_topApplicants';
+     section.innerHTML = '<div class="global_inner jwsnj_topApplicants_inner"><div class="jwsnj_topApplicants_content"><ul class="jwsnj_topApplicants_topics">' +
+       ['入学・編入手続きの流れ','学費','学校見学のお問い合わせ LongEditableTitleWithoutSpaces1234567890'].map((title,i) =>
+         '<li><a class="jwsnj_topApplicants_link"><img src="/images/top/'+['ico_flow.svg','ico_fee.svg','ico_visit.svg'][i]+'" alt=""><span>'+title+'</span><span class="jwsnj_topApplicants_arrow" aria-hidden="true"></span></a></li>').join('') +
+       '</ul></div></div>';
+     document.querySelector('main.global_contents').append(section);
+   });
+   const section = page.locator('.jwsnj_topApplicants');
+   const links = section.locator('.jwsnj_topApplicants_link');
+   for (const img of await section.locator('img').all()) await img.evaluate(el => el.decode());
+   const metrics = await links.evaluateAll(elements => elements.map(el => {
+     const r = el.getBoundingClientRect(), icon = el.firstElementChild, label = el.children[1], arrow = el.lastElementChild;
+     const a = arrow.getBoundingClientRect(), t = label.getBoundingClientRect(), s = getComputedStyle(el);
+     return { height:r.height, icon:icon.getBoundingClientRect().width, arrow:[a.width,a.height],
+       right:r.right-a.right, vertical:a.top+a.height/2-r.top-r.height/2,
+       glyph:getComputedStyle(arrow,'::before').content, color:getComputedStyle(arrow).backgroundColor,
+       gap:s.columnGap, fits:el.scrollWidth<=el.clientWidth+1 && label.scrollWidth<=label.clientWidth+1 && t.right<=a.left+1 };
+   }));
+   for (const [i,m] of metrics.entries()) {
+     assert.ok(m.fits && m.height >= (width>=1080?100:80),JSON.stringify(m));
+     assert.ok(Math.abs(m.arrow[0]-24)<1 && Math.abs(m.arrow[1]-24)<1 && Math.abs(m.vertical)<1,JSON.stringify(m));
+     assert.ok(Math.abs(m.right-(width>=1080?20:16))<1,JSON.stringify(m));
+     assert.ok(Math.abs(m.icon-(width>=1080?56:36))<1,JSON.stringify(m));
+     assert.equal(m.color,'rgb(64, 179, 189)');
+     assert.ok(m.glyph.includes('\uf061'),JSON.stringify(m));
+   }
+   await links.first().focus();
+   assert.equal(await links.first().evaluate(el=>document.activeElement===el),false);
+   await links.first().evaluate(el=>el.setAttribute('href','#end'));
+   await page.emulateMedia({reducedMotion:'no-preference'});
+   await links.first().hover();
+   const arrow = links.first().locator('.jwsnj_topApplicants_arrow');
+   await page.waitForFunction(()=>getComputedStyle(document.querySelector('.jwsnj_topApplicants_arrow')).backgroundColor==='rgb(255, 255, 255)');
+   assert.ok((await arrow.evaluate(el=>getComputedStyle(el).transitionDuration)).split(', ').every(v=>v==='0.3s'));
+   await page.emulateMedia({reducedMotion:'reduce'});
+   assert.ok((await arrow.evaluate(el=>getComputedStyle(el).transitionDuration)).split(', ').every(v=>v==='0s'));
+   await links.first().evaluate(el=>el.removeAttribute('href'));
+   await page.mouse.move(0,0);
+   if(width===375||width===1380) await section.screenshot({path:out+'/applicants-'+name+'-'+width+'.png'});
+   console.log(JSON.stringify({applicantsArrow:'PASS',engine:name,width,metrics}));
+   await section.evaluate(el=>el.remove());
+   report.push({name,width,applicantsArrow:metrics});
+ }
+ // Actual TOP About heading markup structure; prevent global image sizing
+ // from overriding the 12px official decorative SVG inside the flex subtitle.
+ for (const width of [320,375,768,1080,1380]) {
+   await page.setViewportSize({width,height:900});
+   const fixture = await page.evaluateHandle(() => {
+     const section = document.createElement('section');
+     section.className = 'jwsnj_topAbout';
+     section.innerHTML = '<div class="global_inner jwsnj_topAbout_inner"><div class="jwsnj_topAbout_copy"><h2 class="jwsnj_topAbout_title"><span class="jwsnj_topAbout_en" lang="en">About us</span><span class="jwsnj_topAbout_ja"><img src="/images/common/ico_blossom.svg" width="12" height="12" alt="">ニュージャージー補習授業校とは</span></h2></div></div>';
+     document.querySelector('main.global_contents').append(section);
+     return section;
+   });
+   try {
+     const subtitle = page.locator('.jwsnj_topAbout_ja');
+     await subtitle.locator('img').evaluate(img=>img.decode());
+     for (const long of [false,true]) {
+       if (long) await subtitle.evaluate(el=>el.append(' 長い日本語とLongEditableHeadingWithoutSpaces1234567890'));
+       const metrics = await subtitle.evaluate(el=>{
+         const image=el.querySelector('img'), r=image.getBoundingClientRect(), style=getComputedStyle(el);
+         return {size:[r.width,r.height],natural:[image.naturalWidth,image.naturalHeight],gap:style.columnGap,
+           fits:el.scrollWidth<=el.clientWidth+1, documentFits:document.documentElement.scrollWidth<=innerWidth+1};
+       });
+       assert.ok(metrics.natural.every(n=>n>0),JSON.stringify(metrics));
+       assert.ok(metrics.size.every(n=>Math.abs(n-12)<0.5),JSON.stringify(metrics));
+       assert.equal(metrics.gap,'8px');
+       assert.ok(metrics.fits && metrics.documentFits,JSON.stringify(metrics));
+       if (!long && (width===375||width===1380)) await page.locator('.jwsnj_topAbout_title').screenshot({path:out+'/about-heading-'+name+'-'+width+'.png'});
+       console.log(JSON.stringify({aboutHeadingBlossom:'PASS',engine:name,width,long,metrics}));
+       report.push({name,width,long,aboutHeadingBlossom:metrics});
+     }
+   } finally {
+     await fixture.evaluate(el=>el.remove());
+     await fixture.dispose();
+   }
+ }
  const mechanism=await page.evaluate(()=>{
    const root=document.documentElement;
    root.style.fontSize='20px';

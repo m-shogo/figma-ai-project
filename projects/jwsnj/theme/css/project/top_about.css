@@ -59,7 +59,12 @@
   color: var(--color-primary);
   font-size: calc(13 * var(--to-rem-func));
   line-height: 1.4;
-  img { flex: none; }
+  img {
+    flex: 0 0 calc(12 * var(--to-rem-func));
+    width: calc(12 * var(--to-rem-func));
+    height: auto;
+    aspect-ratio: 1;
+  }
   @media (calc(1080 * (1 / 16 * 1rem)) <= width) {
     font-size: calc(15 * var(--to-rem-func));
   }
