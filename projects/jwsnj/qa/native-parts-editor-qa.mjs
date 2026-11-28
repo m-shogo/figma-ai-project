@@ -566,6 +566,106 @@ try {
     await galleryFront.close();
   }
   console.log(JSON.stringify({ galleryEditorPersistence: 'PASS', invalid: galleryAfter.invalid.length, edited: true, saved: true, reopened: true, frontend: true }));
+  // Flexible Table Block uses its own registered editor, not core/table.
+  // Reuse the previously seeded, explicitly disposable page only.
+  const tablePages = await page.evaluate(() => wp.apiFetch({
+    path: '/wp/v2/pages?search=JWSNJ%20Tables%20QA&status=publish&per_page=20&_fields=id,title'
+  }));
+  const tableMatches = tablePages.filter(post => post.title.rendered === 'JWSNJ Tables QA');
+  assert.equal(tableMatches.length, 1);
+  const tableId = Number(tableMatches[0].id);
+  assert.ok(Number.isSafeInteger(tableId) && tableId > 0 && tableId !== id && tableId !== galleryId);
+  const tableEditorUrl = new URL(editorUrl);
+  tableEditorUrl.searchParams.set('post', String(tableId));
+  const openTables = async () => {
+    await page.goto(tableEditorUrl.href, { waitUntil: 'load' });
+    await page.waitForFunction(tableId => {
+      const editor = window.wp?.data?.select('core/editor');
+      const blocks = window.wp?.data?.select('core/block-editor')?.getBlocks();
+      return Number(editor?.getCurrentPostId()) === tableId &&
+        blocks?.filter(b => b.name === 'flexible-table-block/table').length === 3;
+    }, tableId, { timeout: 60000 });
+    assert.equal(await page.evaluate(() => wp.data.select('core/editor').getEditedPostAttribute('title')), 'JWSNJ Tables QA');
+  };
+  await page.setViewportSize({ width: 1380, height: 900 });
+  await openTables();
+  const tableBefore = await inspect();
+  assert.deepEqual(tableBefore.invalid, []);
+  assert.deepEqual(tableBefore.counts, { 'core/heading': 3, 'flexible-table-block/table': 3 });
+  assert.ok(tableBefore.content.includes('is-scroll-on-mobile') &&
+    tableBefore.content.includes('is-stacked-on-mobile') &&
+    tableBefore.content.includes('padding:18px') &&
+    tableBefore.content.includes('LongEditableCellWithoutSpaces'), 'wrong table fixture');
+  const editorTables = async () => (await galleryCanvas()).locator('[data-type="flexible-table-block/table"]');
+  for (const width of [1380, 1024]) {
+    await page.setViewportSize({ width, height: 900 });
+    const blocks = await editorTables();
+    assert.equal(await blocks.count(), 3);
+    for (const [index, block] of (await blocks.all()).entries()) {
+      await block.scrollIntoViewIfNeeded();
+      const evidence = await block.evaluate(el => {
+        const win = el.ownerDocument.defaultView;
+        const measure = node => {
+          const r = node.getBoundingClientRect();
+          const s = win.getComputedStyle(node);
+          return { width: r.width, height: r.height, client: node.clientWidth, scroll: node.scrollWidth,
+            display: s.display, overflow: s.overflowX, font: s.fontSize, weight: s.fontWeight,
+            lineHeight: s.lineHeight, padding: [s.paddingBlockStart, s.paddingInlineStart],
+            border: s.borderTopWidth, background: s.backgroundColor, align: s.textAlign };
+        };
+        const t = el.querySelector('table');
+        if (!t) return { viewport: win.innerWidth, table: null };
+        return { viewport: win.innerWidth, block: measure(el), table: measure(t),
+          headers: [...t.querySelectorAll('thead th')].map(measure),
+          merged: [...t.querySelectorAll('td[colspan="2"]')].map(measure),
+          cells: [...t.querySelectorAll('tbody td')].map(measure),
+          explicitPadding: t.querySelector('td[style*="padding:18px"]') ?
+            measure(t.querySelector('td[style*="padding:18px"]')) : null };
+      });
+      console.log(JSON.stringify({ tableEditorCanvas: 'MEASURED_NOT_VISUAL_ACCEPTANCE', shellWidth: width, index, evidence }));
+      assert.ok(evidence.table, 'registered table must render in actual editor');
+      assert.equal(evidence.headers.length, 4);
+      assert.equal(evidence.merged.length, 2);
+      await block.screenshot({ path: 'form-qa-results/table-editor-' + width + '-' + index + '.png' });
+    }
+  }
+  await page.setViewportSize({ width: 1380, height: 900 });
+  const firstTable = (await editorTables()).first();
+  const firstHeader = firstTable.locator('thead th').first();
+  await firstHeader.click();
+  const cellEditor = firstHeader.locator('[contenteditable="true"]').or(firstHeader.locator('xpath=self::*[@contenteditable="true"]'));
+  await cellEditor.waitFor({ state: 'visible' });
+  assert.equal(await cellEditor.count(), 1, 'expected the native cell rich text editor');
+  const cellSuffix = '・セル保存QA';
+  await cellEditor.click();
+  await cellEditor.press('End');
+  await page.keyboard.insertText(cellSuffix);
+  await page.waitForFunction(value => wp.data.select('core/editor').getEditedPostContent().includes(value), 'ヘッダーセル' + cellSuffix);
+  await page.evaluate(async () => { await wp.data.dispatch('core/editor').savePost(); });
+  await page.waitForFunction(() => {
+    const editor = wp.data.select('core/editor');
+    return !editor.isSavingPost() && editor.didPostSaveRequestSucceed();
+  }, null, { timeout: 30000 });
+  await openTables();
+  const tableAfter = await inspect();
+  assert.deepEqual(tableAfter.invalid, []);
+  assert.deepEqual(tableAfter.counts, tableBefore.counts);
+  assert.ok(tableAfter.content.includes('ヘッダーセル' + cellSuffix));
+  const tableFront = await browser.newPage();
+  try {
+    const url = new URL(front);
+    url.searchParams.set('page_id', String(tableId));
+    assert.equal((await tableFront.goto(url.href)).status(), 200);
+    const tables = tableFront.locator('.block-editor_wrap figure.wp-block-flexible-table-block-table');
+    assert.equal(await tables.count(), 3);
+    assert.equal(await tables.first().locator('thead th').first().innerText(), 'ヘッダーセル' + cellSuffix);
+    assert.equal(await tables.first().locator('td[colspan="2"]').count(), 2);
+    assert.equal(await tables.nth(1).locator('td[style*="padding:18px"]').count(), 1);
+    assert.equal(await tables.nth(2).locator('table.is-stacked-on-mobile').count(), 1);
+  } finally {
+    await tableFront.close();
+  }
+  console.log(JSON.stringify({ tableEditorPersistence: 'PASS', invalid: tableAfter.invalid.length, edited: true, saved: true, reopened: true, frontend: true }));
 } finally {
   const activePage = browser.contexts()[0]?.pages()[0];
   if (activePage) await activePage.screenshot({ path: 'form-qa-results/native-parts-editor-final-state.png' }).catch(() => {});
