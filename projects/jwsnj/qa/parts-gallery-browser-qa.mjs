@@ -282,6 +282,50 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
         }
         console.log(JSON.stringify({ largeNavigationReference: 'PASS', engine: engineName, width, design }));
 
+        // Verify the same annotation rhythm around actual registered media
+        // blocks. Existing image/lightbox/navigation checks remain unchanged.
+        const notes = root.locator('ul.wp-block-list.annotation-list');
+        assert.equal(await notes.count(), 2);
+        const boundaries = await notes.evaluateAll(elements => elements.map(el => {
+          const box = el.getBoundingClientRect();
+          const before = el.previousElementSibling;
+          const after = el.nextElementSibling;
+          return {
+            label: el.firstElementChild.textContent.trim(),
+            beforeClass: before.className, afterClass: after.className, afterTag: after.tagName,
+            before: box.top - before.getBoundingClientRect().bottom,
+            after: after.getBoundingClientRect().top - box.bottom,
+            gap: getComputedStyle(el).rowGap,
+            items: [...el.children].map(li => ({
+              font: getComputedStyle(li).fontSize, inset: getComputedStyle(li).paddingLeft,
+              wrap: getComputedStyle(li).overflowWrap, height: li.getBoundingClientRect().height,
+              fits: li.scrollWidth <= li.clientWidth + 1
+            }))
+          };
+        }));
+        console.log(JSON.stringify({ annotationMediaBoundaries: 'MEASURED', engine: engineName, width, boundaries }));
+        assert.match(boundaries[0].beforeClass, /wp-block-gallery/);
+        assert.match(boundaries[0].afterClass, /wp-block-gallery/);
+        assert.match(boundaries[1].beforeClass, /wp-block-media-text/);
+        assert.equal(boundaries[1].afterTag, 'P');
+        for (const boundary of boundaries) {
+          assert.ok(near(boundary.before, 20) && near(boundary.after, 20), JSON.stringify(boundary));
+          assert.equal(boundary.gap, '10px');
+          assert.equal(boundary.items.length, 2);
+          assert.ok(boundary.items.every(item => item.font === '14px' && item.inset === '31px' &&
+            item.wrap === 'anywhere' && item.fits), JSON.stringify(boundary));
+          if (width < 768) assert.ok(boundary.items[1].height > boundary.items[0].height, JSON.stringify(boundary));
+        }
+        if (width === 375 || width === 1380) {
+          for (const [i, note] of (await notes.all()).entries()) {
+            await note.screenshot({
+              path: 'form-qa-results/annotation-media-' + engineName + '-' + width + '-' + i + '.png',
+              style: '#global_header { visibility: hidden !important; }'
+            });
+          }
+        }
+        console.log(JSON.stringify({ annotationMediaBoundaries: 'PASS', engine: engineName, width, boundaries }));
+
         console.log(JSON.stringify({ partsGalleryFrontend: 'PASS', engine: engineName, width, results, buttonGeometry, geometry }));
       } catch (error) {
         console.error(JSON.stringify({ engineName, width, runtimeErrors, state: await page.evaluate(() => ({
