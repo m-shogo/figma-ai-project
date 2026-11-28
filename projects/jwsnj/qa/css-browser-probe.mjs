@@ -1,6 +1,7 @@
 // Real browser engines, actual checked-in CSS imports, isolated HTML only.
 // Not WordPress or Figma visual acceptance.
 import {createServer} from 'node:http';
+import {execFileSync} from 'node:child_process';
 import {readFileSync,mkdirSync,writeFileSync} from 'node:fs';
 import {resolve,extname} from 'node:path';
 import {createRequire} from 'node:module';
@@ -16,6 +17,13 @@ const server=createServer((req,res)=>{
 });
 await new Promise(r=>server.listen(0,'127.0.0.1',r));
 const url='http://127.0.0.1:'+server.address().port;
+// Render the actual fixed-content PHP views with only the two URL helpers stubbed.
+// This is a CSS/markup integration check, not a WordPress runtime or ACF test.
+const fixedTopMarkup = ['_top-catchphrase.php', '_top-applicants.php'].map(file => {
+  const path = resolve(root, 'template-parts', file);
+  const stub = 'function get_theme_file_uri($path) { return "/" . ltrim($path, "/"); } function esc_url($url) { return htmlspecialchars($url, ENT_QUOTES, "UTF-8"); } ';
+  return execFileSync('php', ['-r', stub + 'include ' + JSON.stringify(path) + ';'], {encoding: 'utf8'});
+}).join('\n');
 const report=[];
 const resizeFailures=[];
 try{
@@ -1373,6 +1381,108 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
      }
    } finally {
      await fixture.evaluate(el=>el.remove());
+     await fixture.dispose();
+   }
+ }
+ // Full fixed TOP sections from production PHP: heading, badge, photo/shadow,
+ // responsive catch artwork and actual accessible names, not handwritten clones.
+ for (const width of [320, 375, 768, 1079, 1080, 1380]) {
+   await page.setViewportSize({width,height:900});
+   const fixture = await page.evaluateHandle(markup => {
+     const range = document.createRange();
+     const main = document.querySelector('main.global_contents');
+     range.selectNodeContents(main);
+     const fragment = range.createContextualFragment(markup);
+     const nodes = [...fragment.children];
+     main.append(fragment);
+     return nodes;
+   }, fixedTopMarkup);
+   const applicants = page.locator('.jwsnj_topApplicants');
+   const catchphrase = page.locator('.jwsnj_topCatchphrase');
+   try {
+     await page.locator('.jwsnj_topApplicants img, .jwsnj_topCatchphrase img:visible').evaluateAll(images =>
+       Promise.all(images.map(img => { img.loading = 'eager'; return img.decode(); })));
+     await page.evaluate(() => document.fonts.ready);
+     const measure = () => page.evaluate(() => {
+       const rect = node => {
+         const r = node.getBoundingClientRect();
+         return { x:r.left, y:r.top, width:r.width, height:r.height, right:r.right, bottom:r.bottom };
+       };
+       const fits = node => node.scrollWidth <= node.clientWidth + 1;
+       const app = document.querySelector('.jwsnj_topApplicants');
+       const inner = app.querySelector('.jwsnj_topApplicants_inner');
+       const content = app.querySelector('.jwsnj_topApplicants_content');
+       const intro = app.querySelector('.jwsnj_topApplicants_intro');
+       const topics = app.querySelector('.jwsnj_topApplicants_topics');
+       const photo = app.querySelector('.jwsnj_topApplicants_photo');
+       const image = photo.querySelector('img');
+       const badge = app.querySelector('.jwsnj_topApplicants_badge');
+       const flower = app.querySelector('.jwsnj_topApplicants_blossom');
+       const shadow = getComputedStyle(photo, '::before');
+       const c = document.querySelector('.jwsnj_topCatchphrase');
+       const pcArt = c.querySelector('.jwsnj_topCatchphrase_artPc');
+       const spArt = c.querySelector('.jwsnj_topCatchphrase_artSp');
+       const visible = el => el.getClientRects().length > 0;
+       return {
+         docFits: document.documentElement.scrollWidth <= innerWidth + 1,
+         applicants: { inner:rect(inner),content:rect(content),intro:rect(intro),topics:rect(topics),photo:rect(photo),
+           image:rect(image),badge:rect(badge),flower:rect(flower),mask:getComputedStyle(flower).maskImage,
+           shadow:[parseFloat(shadow.width),parseFloat(shadow.height),shadow.backgroundColor],
+           padding:parseFloat(getComputedStyle(app).paddingTop),gap:parseFloat(getComputedStyle(inner).columnGap),
+           loaded:[...app.querySelectorAll('img')].every(img=>img.complete&&img.naturalWidth>0),
+           fits:[app,inner,content,topics,badge,photo].every(fits),
+           rows:[...topics.querySelectorAll('a')].map(a=>({href:a.hasAttribute('href'),fits:fits(a),
+             arrow:rect(a.lastElementChild), label:rect(a.children[1])})),
+           badgeText:badge.textContent.trim(),imageSrc:image.getAttribute('src'),
+           badgeGap:parseFloat(getComputedStyle(badge.parentElement).rowGap) },
+         catchphrase: { box:rect(c),pc:visible(pcArt),sp:visible(spArt),pcArt:rect(pcArt),spArt:rect(spArt),
+           font:parseFloat(getComputedStyle(c.querySelector('p')).fontSize),
+           loaded:[...c.querySelectorAll('img')].filter(visible).every(img=>img.complete&&img.naturalWidth>0),
+           fits:[c,c.querySelector('p'),c.querySelector('.jwsnj_topCatchphrase_first')].every(fits) }
+       };
+     });
+     const result = await measure();
+     console.log(JSON.stringify({topFixedSections:'MEASURED',engine:name,width,result}));
+     const near = (a,b,tolerance=1.5)=>Math.abs(a-b)<=tolerance;
+     const pc = width >= 1080;
+     const a = result.applicants, c = result.catchphrase;
+     assert.ok(result.docFits && a.fits && c.fits && a.loaded && c.loaded,JSON.stringify(result));
+     assert.equal(a.imageSrc,'/images/top/img_applicants.webp');
+     assert.ok(near(a.image.width/a.image.height,0.8,0.02),JSON.stringify(a));
+     assert.ok(near(a.shadow[0],a.image.width) && near(a.shadow[1],a.image.height),JSON.stringify(a));
+     assert.ok(near(a.flower.width,12)&&near(a.flower.height,12)&&a.mask.includes('ico_blossom.svg'),JSON.stringify(a));
+     assert.equal(a.padding,pc?100:64);
+     assert.equal(a.gap,pc?90:40);
+     assert.equal(a.badgeGap,pc?10:4);
+     assert.equal(a.badgeText,'お気軽にお問い合わせください');
+     assert.equal(a.rows.length,3);
+     for(const row of a.rows) assert.ok(!row.href&&row.fits&&near(row.arrow.width,24)&&near(row.arrow.height,24)&&row.label.right<=row.arrow.x+1,JSON.stringify(row));
+     assert.ok(pc?near(a.photo.x-a.content.right,90)&&near(a.photo.y,a.content.y):near(a.photo.y-a.content.bottom,40),JSON.stringify(a));
+     if(width===1380) {
+       assert.ok(near(a.content.width,440)&&near(a.photo.width,430)&&near(a.image.width,400)&&near(a.image.height,500),JSON.stringify(a));
+     } else if(width===375) {
+       assert.ok(near(a.content.width,315)&&near(a.image.width,293)&&near(a.image.height,366.25),JSON.stringify(a));
+     }
+     assert.equal(c.pc,pc);assert.equal(c.sp,!pc);
+     assert.equal(c.font,pc?48:28);
+     assert.ok(pc?near(c.pcArt.width,291)&&near(c.pcArt.height,105):near(c.spArt.width,192)&&near(c.spArt.height,64),JSON.stringify(c));
+     if(width===375||width===1380) {
+       await applicants.screenshot({path:out+'/applicants-full-'+name+'-'+width+'.png'});
+       await catchphrase.screenshot({path:out+'/catchphrase-full-'+name+'-'+width+'.png'});
+       // Root text enlargement stress without forcing one-line copy or fixed row height.
+       for(const scale of [1.5,2]) {
+         await page.evaluate(scale=>{document.documentElement.style.fontSize=(16*scale)+'px';},scale);
+         const stress=await measure();
+         console.log(JSON.stringify({topFixedSectionsStress:'MEASURED',engine:name,width,scale,stress}));
+         assert.ok(stress.docFits&&stress.applicants.fits&&stress.catchphrase.fits,JSON.stringify(stress));
+         assert.ok(stress.applicants.rows.every(row=>row.fits&&row.label.right<=row.arrow.x+1),JSON.stringify(stress));
+       }
+     }
+     console.log(JSON.stringify({topFixedSections:'PASS',engine:name,width}));
+     report.push({name,width,topFixedSections:result});
+   } finally {
+     await page.evaluate(()=>document.documentElement.style.removeProperty('font-size'));
+     await fixture.evaluate(nodes=>nodes.forEach(node=>node.remove()));
      await fixture.dispose();
    }
  }
