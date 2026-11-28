@@ -62,10 +62,28 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
           assert.ok(Math.abs(await height() - closed) <= 1);
           await page.keyboard.press('Tab');
           assert.equal(await link.evaluate(el => el === document.activeElement), false);
+          // Verify the final icon state separately from immediate native
+          // keyboard behavior. The CSS icon can still animate in fallback.
+          // Poll from Node rather than scheduling a page-side animation frame:
+          // the no-js browser context deliberately disables page scripts.
+          const icon = summary.locator('.wp-block-details__button-icon');
+          assert.equal(await icon.count(), 1);
+          const waitIcon = async expected => {
+            const deadline = Date.now() + 3000;
+            let actual;
+            do {
+              actual = await icon.evaluate(el => getComputedStyle(el, '::after').rotate);
+              if (Math.abs(parseFloat(actual) - expected) < 0.1) return;
+              await new Promise(resolve => setTimeout(resolve, 50));
+            } while (Date.now() < deadline);
+            assert.fail('Details icon did not settle: expected ' + expected + 'deg, got ' + actual);
+          };
+          await waitIcon(90);
           if (width === 375 || width === 1380) {
             await summary.focus();
             await page.keyboard.press('Enter');
             await open();
+            await waitIcon(0);
             await item.screenshot({ path: 'form-qa-results/details-fallback-' + engineName + '-' + width + '-' + mode + '.png' });
           }
           console.log(JSON.stringify({ nativeDetailsFallback: 'PASS', engine: engineName, width, mode, closed, expanded }));

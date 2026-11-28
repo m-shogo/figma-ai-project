@@ -97,11 +97,51 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
 
         for (const index of [2, 3]) {
           const link = links.nth(index);
+          // Focus can scroll an offscreen anchor into view asynchronously.
+          // Measure that separately from the subsequent keyboard activation.
           await link.focus();
-          const before = await page.evaluate(() => window.scrollY);
+          const focusTrace = await link.evaluate(el => new Promise((resolve, reject) => {
+            const start = performance.now();
+            let stableSince = start;
+            let last = window.scrollY;
+            const frames = [];
+            const sample = () => {
+              const now = performance.now();
+              const y = window.scrollY;
+              frames.push({ t: Math.round(now - start), y });
+              if (y !== last) stableSince = now;
+              last = y;
+              if (document.activeElement !== el) return reject(new Error('invalid fragment lost focus before activation'));
+              if (now - stableSince >= 150) return resolve(frames);
+              if (now - start >= 2000) return reject(new Error('focus scroll did not settle: ' + JSON.stringify(frames)));
+              requestAnimationFrame(sample);
+            };
+            requestAnimationFrame(sample);
+          }));
+          const before = await link.evaluate(el => {
+            window.__qaInvalidFragment = { href: el.getAttribute('href'), hash: location.hash, click: null, frames: [] };
+            el.addEventListener('click', event => {
+              const evidence = window.__qaInvalidFragment;
+              const start = performance.now();
+              evidence.click = { y: window.scrollY, trusted: event.isTrusted, hash: location.hash };
+              const sample = () => {
+                evidence.frames.push({ t: Math.round(performance.now() - start), y: window.scrollY });
+                if (performance.now() - start < 350) requestAnimationFrame(sample);
+              };
+              requestAnimationFrame(sample);
+            }, { capture: true, once: true });
+            return window.scrollY;
+          });
           await page.keyboard.press('Enter');
-          await page.waitForTimeout(350); // exceed the authored scroll duration
-          assert.ok(Math.abs(await page.evaluate(() => window.scrollY) - before) <= 2, 'invalid fragment moved viewport');
+          await page.waitForTimeout(400); // exceed the authored scroll duration
+          const after = await page.evaluate(() => ({
+            y: window.scrollY, hash: location.hash, trace: window.__qaInvalidFragment
+          }));
+          const evidence = JSON.stringify({ index, before, after, focusTrace });
+          assert.ok(after.trace.click?.trusted, 'invalid fragment keyboard activation missing: ' + evidence);
+          assert.equal(after.hash, after.trace.hash, 'invalid fragment changed URL: ' + evidence);
+          assert.ok(Math.abs(after.y - before) <= 2, 'invalid fragment moved viewport: ' + evidence);
+          assert.ok(after.trace.frames.every(frame => Math.abs(frame.y - before) <= 2), 'invalid fragment moved during activation: ' + evidence);
         }
         // The initial URL hash must also account for the header.
         await page.goto(url, { waitUntil: 'load' });
