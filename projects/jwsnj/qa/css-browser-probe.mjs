@@ -1552,7 +1552,10 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
            copyFits:fits(copy),loaded:[...el.querySelectorAll('img')].every(img=>img.complete&&img.naturalWidth>0),
            cards:list?[...list.children].map(li=>{
              const b=li.querySelector('button'),photo=b.querySelector('.jwsnj_topAbout_cardPhoto'),label=b.querySelector('.jwsnj_topAbout_cardLabel');
+             const img=photo.querySelector('img'), imageStyle=getComputedStyle(img), photoStyle=getComputedStyle(photo);
              return {box:rect(li),width:li.offsetWidth,photoRatio:photo.clientWidth/photo.clientHeight,
+               crop:{width:parseFloat(imageStyle.width),height:parseFloat(imageStyle.height),x:parseFloat(imageStyle.left),y:parseFloat(imageStyle.top),
+                 boxWidth:parseFloat(photoStyle.width),boxHeight:parseFloat(photoStyle.height),fit:imageStyle.objectFit,overflow:photoStyle.overflow},
                image:photo.querySelector('img').getAttribute('src'),
                natural:[photo.querySelector('img').naturalWidth,photo.querySelector('img').naturalHeight],
                title:label.firstElementChild.textContent,
@@ -1575,7 +1578,16 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
        if (withCards) {
          assert.deepEqual(initial.cards.map(c=>c.title),['学校概要','教育環境','教育内容','交通アクセス']);
          assert.deepEqual(initial.cards.map(c=>c.image),['img_about-overview.webp','img_mv-05.webp','img_about-education.webp','img_mv-06.webp'].map(n=>'/images/top/'+n));
-         for(const card of initial.cards) {
+         // Independent Figma source rectangles (normalized image coordinates).
+         const expectedCrops = [{"file":"img_about-overview.webp","sp":[0.341071874,0.356105953,0.205410421,0.213987723],"pc":[0.341071874,0.624965966,0.205630675,0.213899478],"natural":[1080,720]},{"file":"img_mv-05.webp","sp":[0.401275873,0.418963701,0.208340928,0.331894428],"pc":[0.401275873,0.735281289,0.208340928,0.132034898],"natural":[2149,1399]},{"file":"img_about-education.webp","sp":[0.426490813,0.445290148,0.173350468,0.435207635],"pc":[0.3,0.549707592,0.256000042,0.252384633],"natural":[1080,810]},{"file":"img_mv-06.webp","sp":[0.505867004,0.528165102,0.121582814,0.161367178],"pc":[0.401275873,0.735281289,0.056264307,0],"natural":[1280,960]}];
+         for(const [i,card] of initial.cards.entries()) {
+           const expected=expectedCrops[i], [w,h,x,y]=pc?expected.pc:expected.sp;
+           assert.deepEqual(card.natural,expected.natural);
+           const crop=card.crop;
+           assert.equal(crop.fit,'fill');
+           assert.equal(crop.overflow,'hidden');
+           assert.ok(near(crop.width,crop.boxWidth/w,2)&&near(crop.height,crop.boxHeight/h,2)&&
+             near(crop.x,-crop.boxWidth*x/w,2)&&near(crop.y,-crop.boxHeight*y/h,2),JSON.stringify({i,crop,expected}));
            assert.ok(card.disabled&&card.pressed==='false'&&card.fits,JSON.stringify(card));
            assert.ok(near(card.arrowWidth,24)&&near(card.photoRatio,pc?280/351:260/186,0.02),JSON.stringify(card));
            assert.ok(card.box.x>=initial.viewport.x-1.5&&card.box.right<=initial.viewport.right+1.5,JSON.stringify(card));
@@ -1586,7 +1598,20 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
            assert.ok(initial.cards[0].transform!=='none'&&initial.cards[2].transform!=='none');
            assert.ok(initial.cards[0].box.right>initial.cards[1].box.x&&initial.cards[2].box.right>initial.cards[3].box.x);
          }
-         if(width===375||width===1380) await section.screenshot({path:out+'/about-full-'+name+'-'+width+'.png'});
+         if(width===375||width===1380) {
+           await section.screenshot({path:out+'/about-full-'+name+'-'+width+'.png'});
+           // A different supplied photo is not assigned a design crop by card order.
+           const image=buttons.first().locator('.jwsnj_topAbout_cardPhoto img');
+           const original=await image.getAttribute('src');
+           try {
+             await image.evaluate(async img=>{img.src='/images/top/img_applicants.webp';await img.decode();});
+             const generic=(await measure()).cards[0].crop;
+             assert.equal(generic.fit,'cover');
+             assert.ok(near(generic.width,generic.boxWidth)&&near(generic.height,generic.boxHeight)&&near(generic.x,0)&&near(generic.y,0),JSON.stringify(generic));
+           } finally {
+             await image.evaluate(async (img,src)=>{img.src=src;await img.decode();},original);
+           }
+         }
          await section.locator('[data-about-cards]').evaluate((root,source)=>new Function('root',source+'\ninitAboutCards(root);')(root),aboutInit);
          assert.equal(await buttons.evaluateAll(bs=>bs.filter(b=>b.disabled).length),0);
          // Actual mouse hit testing: never use force or programmatic clicks.
