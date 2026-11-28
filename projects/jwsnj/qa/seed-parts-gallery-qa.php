@@ -13,7 +13,7 @@ require_once ABSPATH . 'wp-admin/includes/media.php';
 require_once ABSPATH . 'wp-admin/includes/image.php';
 
 $registry = WP_Block_Type_Registry::get_instance();
-foreach (['core/heading', 'core/gallery', 'core/image', 'core/media-text', 'core/paragraph'] as $name) {
+foreach (['core/heading', 'core/gallery', 'core/image', 'core/media-text', 'core/paragraph', 'core/list', 'core/list-item'] as $name) {
   if (!$registry->is_registered($name)) {
     throw new RuntimeException('missing registered block: ' . $name);
   }
@@ -81,9 +81,21 @@ $mediaText = '<!-- wp:media-text ' . wp_json_encode($mediaTextAttrs) . ' -->' . 
   . '<div class="wp-block-media-text is-stacked-on-mobile is-vertically-aligned-top"><figure class="wp-block-media-text__media"><img src="' . esc_url($first['url']) . '" alt="QA画像" class="wp-image-' . (int) $first['id'] . ' size-large"/></figure><div class="wp-block-media-text__content">'
   . '<!-- wp:paragraph --><p>テキストと画像の検証用文章です。LongEditableTextWithoutSpaces1234567890LongEditableTextWithoutSpaces1234567890</p><!-- /wp:paragraph -->'
   . '</div></div>' . "\n<!-- /wp:media-text -->";
+// Actual native annotation blocks, not DOM-injected style samples.
+// Verify adjoining media without adding extra gallery/image blocks.
+$annotation = static function ($label) {
+  return '<!-- wp:list {"className":"annotation-list"} -->' . "\n"
+    . '<ul class="wp-block-list annotation-list"><!-- wp:list-item -->'
+    . '<li>' . esc_html($label) . '</li><!-- /wp:list-item -->'
+    . '<!-- wp:list-item --><li>長い注釈の折り返しを確認します。LongEditableNoteWithoutSpaces1234567890LongEditableNoteWithoutSpaces1234567890</li><!-- /wp:list-item --></ul>' . "\n"
+    . '<!-- /wp:list -->';
+};
 $content = '<!-- wp:heading --><h2 class="wp-block-heading">画像ギャラリー</h2><!-- /wp:heading -->' . "\n\n"
-  . $gallery(2, array_slice($media, 0, 2), true) . "\n\n" . $gallery(3, $media, false) . "\n\n"
-  . '<!-- wp:heading --><h2 class="wp-block-heading">テキスト＋画像</h2><!-- /wp:heading -->' . "\n\n" . $mediaText . "\n";
+  . $gallery(2, array_slice($media, 0, 2), true) . "\n\n"
+  . $annotation('画像ギャラリー間の注釈QA') . "\n\n" . $gallery(3, $media, false) . "\n\n"
+  . '<!-- wp:heading --><h2 class="wp-block-heading">テキスト＋画像</h2><!-- /wp:heading -->' . "\n\n"
+  . $mediaText . "\n\n" . $annotation('メディアとテキスト直後の注釈QA') . "\n\n"
+  . '<!-- wp:paragraph --><p>注釈直後の本文QA</p><!-- /wp:paragraph -->' . "\n";
 
 // Real shared navigation view, using only disposable gallery attachments.
 // This is a presentation fixture, not an ACF block or a production data source.
