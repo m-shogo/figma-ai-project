@@ -10,9 +10,11 @@
     margin-top: var(--wp-block-margin);
     gap: calc(40 * var(--to-rem-func));
     min-width: 0;
-    grid-template-columns: minmax(0, 410fr) minmax(0, 510fr);
+    --_media-track: minmax(0, 410fr);
+    --_copy-track: minmax(0, 510fr);
+    grid-template-columns: var(--_media-track) var(--_copy-track);
     &.has-media-on-the-right {
-      grid-template-columns: minmax(0, 510fr) minmax(0, 410fr);
+      grid-template-columns: var(--_copy-track) var(--_media-track);
     }
     /* Preserve explicit editor alignment choices; Figma default is top-aligned. */
     &:not(.is-vertically-aligned-center, .is-vertically-aligned-bottom) {
@@ -79,6 +81,22 @@
       overflow-wrap: anywhere;
       > *:first-child {
         margin-top: 0;
+      }
+    }
+  }
+}
+
+/* Gutenberg edit() supplies an inline 50% track even for the native default
+   which save() omits. Only normalize that default in the editor; explicit
+   non-default media widths and the narrow stacked layout retain ownership. */
+.editor-styles-wrapper {
+  .wp-block-media-text {
+    @media (calc(768 * (1 / 16 * 1rem)) <= width) {
+      &:not(.has-media-on-the-right):is([style*="grid-template-columns: 50% 1fr"], [style*="grid-template-columns: 50% auto"]) {
+        grid-template-columns: var(--_media-track) var(--_copy-track) !important;
+      }
+      &.has-media-on-the-right:is([style*="grid-template-columns: 1fr 50%"], [style*="grid-template-columns: auto 50%"]) {
+        grid-template-columns: var(--_copy-track) var(--_media-track) !important;
       }
     }
   }

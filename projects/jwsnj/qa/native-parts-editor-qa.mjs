@@ -399,7 +399,7 @@ try {
         const s = win.getComputedStyle(node);
         const r = node.getBoundingClientRect();
         return { tag: node.tagName, className: node.className, width: r.width, height: r.height,
-          display: s.display, gap: s.gap, columns: s.gridTemplateColumns, fontSize: s.fontSize,
+          display: s.display, gap: s.gap, rowGap: s.rowGap, columnGap: s.columnGap, columns: s.gridTemplateColumns, inlineStyle: node.getAttribute('style'), fontSize: s.fontSize,
           fontFamily: s.fontFamily, lineHeight: s.lineHeight, color: s.color,
           radius: s.borderRadius, ratio: s.aspectRatio, fit: s.objectFit,
           overflow: s.overflow, textAlign: s.textAlign };
@@ -426,6 +426,130 @@ try {
     }
     await media.scrollIntoViewIfNeeded();
     await media.screenshot({ path: 'form-qa-results/media-text-editor-' + width + '.png' });
+    // Inspect the actual canvas cascade, including generated per-block CSS.
+    // Keep this evidence even if the strict layout assertions below fail.
+    const gapCascade = await galleries.nth(1).evaluate(el => {
+      const doc = el.ownerDocument;
+      const win = doc.defaultView;
+      const style = win.getComputedStyle(el);
+      const names = ['gap', 'row-gap', 'column-gap', '--wp--style--gallery-gap-default',
+        '--wp--style--unstable-gallery-gap'];
+      const matches = [];
+      const visit = (rules, source, conditions = []) => {
+        for (const rule of rules) {
+          if (rule.selectorText && rule.style) {
+            try {
+              if (!el.matches(rule.selectorText)) continue;
+            } catch { continue; }
+            const declarations = Object.fromEntries(names.flatMap(name => {
+              const value = rule.style.getPropertyValue(name);
+              return value ? [[name, value + (rule.style.getPropertyPriority(name) ? ' !important' : '')]] : [];
+            }));
+            if (Object.keys(declarations).length) matches.push({ source, conditions, selector: rule.selectorText, declarations });
+          } else if (rule.cssRules) {
+            if (rule.type === win.CSSRule.MEDIA_RULE && !win.matchMedia(rule.conditionText).matches) continue;
+            if (rule.type === win.CSSRule.SUPPORTS_RULE && !win.CSS.supports(rule.conditionText)) continue;
+            visit(rule.cssRules, source, [...conditions, rule.conditionText || rule.name || rule.constructor.name]);
+          }
+        }
+      };
+      for (const sheet of doc.styleSheets) {
+        try { visit(sheet.cssRules, sheet.href || sheet.ownerNode?.id || 'inline'); } catch { /* inaccessible CSSOM */ }
+      }
+      return { viewport: win.innerWidth, computed: Object.fromEntries(names.map(name => [name, style.getPropertyValue(name)])), matches };
+    });
+    console.log(JSON.stringify({ galleryEditorGapCascade: 'MEASURED', shellWidth: width, gapCascade }));
+    const near = (a, b) => Math.abs(a - b) <= 1;
+    for (const [index, g] of evidence.galleries.entries()) {
+      const expectedColumns = evidence.desktopMedia ? index + 2 : index + 1;
+      const expectedColumnGap = !evidence.desktopMedia && index === 1 ? 15 : 40;
+      assert.equal(g.block.columns.split(' ').length, expectedColumns, JSON.stringify(g));
+      assert.ok(near(parseFloat(g.block.rowGap), 40) && near(parseFloat(g.block.columnGap), expectedColumnGap), JSON.stringify(g));
+      const expectedImageWidth = (g.block.width - (expectedColumns - 1) * expectedColumnGap) / expectedColumns;
+      assert.ok(g.images.every(img => near(img.width, expectedImageWidth) && near(img.height, img.width * 2 / 3)), JSON.stringify(g));
+      assert.ok(g.captions.every(cap => cap.fontSize === (evidence.desktopMedia ? '14px' : '12px') && cap.textAlign === 'center'), JSON.stringify(g));
+    }
+    const m = evidence.media[0];
+    const expectedMediaWidth = evidence.desktopMedia ? (m.block.width - 40) * 410 / 920 : m.block.width;
+    const expectedCopyWidth = evidence.desktopMedia ? (m.block.width - 40) * 510 / 920 : m.block.width;
+    assert.ok(near(m.image.width, expectedMediaWidth) && near(m.copy.width, expectedCopyWidth), JSON.stringify(m));
+    // Exercise a real non-default native width; do not suppress editor-owned resizing.
+    if (evidence.desktopMedia) {
+      const clientId = await media.getAttribute('data-block');
+      const readAttrs = () => page.evaluate(id => wp.data.select('core/block-editor').getBlockAttributes(id), clientId);
+      const original = await readAttrs();
+      assert.equal(original.mediaWidth, 50);
+      const setWidth = value => page.evaluate(({ id, value }) => wp.data.dispatch('core/block-editor').updateBlockAttributes(id, { mediaWidth: value }), { id: clientId, value });
+      try {
+        await setWidth(60);
+        await media.locator('xpath=self::*[contains(@style, "60%")]').waitFor({ state: 'attached' });
+        const custom = await media.evaluate(el => {
+          const win = el.ownerDocument.defaultView;
+          return { width: el.getBoundingClientRect().width, image: el.querySelector('img').getBoundingClientRect().width,
+            tracks: win.getComputedStyle(el).gridTemplateColumns };
+        });
+        assert.ok(near(custom.image, custom.width * 0.6), JSON.stringify(custom));
+        assert.equal((await readAttrs()).mediaWidth, 60);
+      } finally {
+        await setWidth(original.mediaWidth);
+      }
+      await media.locator('xpath=self::*[contains(@style, "50%")]').waitFor({ state: 'attached' });
+      assert.ok(near(await media.locator('img').evaluate(el => el.getBoundingClientRect().width), expectedMediaWidth));
+    }
+    // Inspect the native spacing support and exercise a real block attribute
+    // rather than manufacturing an inline style on the DOM.
+    const customGallery = galleries.nth(1);
+    const galleryClientId = await customGallery.getAttribute('data-block');
+    const nativeSpacing = await page.evaluate(id => ({
+      support: wp.blocks.getBlockType('core/gallery').supports?.spacing?.blockGap,
+      style: wp.data.select('core/block-editor').getBlockAttributes(id).style
+    }), galleryClientId);
+    console.log(JSON.stringify({ galleryEditorSpacingSupport: 'MEASURED', shellWidth: width, nativeSpacing }));
+    if (nativeSpacing.support) {
+      const setStyle = style => page.evaluate(({ id, style }) =>
+        wp.data.dispatch('core/block-editor').updateBlockAttributes(id, { style }), { id: galleryClientId, style });
+      const original = nativeSpacing.style;
+      try {
+        await setStyle({ ...original, spacing: { ...original?.spacing, blockGap: '24px' } });
+        const result = await customGallery.evaluate(el => {
+          const read = () => {
+            const s = el.ownerDocument.defaultView.getComputedStyle(el);
+            return { row: s.rowGap, column: s.columnGap, inline: el.getAttribute('style'),
+              coreGap: s.getPropertyValue('--wp--style--unstable-gallery-gap') };
+          };
+          return new Promise(resolve => {
+            let remaining = 120;
+            const sample = () => {
+              const result = read();
+              if ((result.row === '24px' && result.column === '24px') || --remaining === 0) resolve(result);
+              else el.ownerDocument.defaultView.requestAnimationFrame(sample);
+            };
+            sample();
+          });
+        });
+        console.log(JSON.stringify({ galleryEditorCustomGap: 'MEASURED', shellWidth: width, result }));
+        assert.equal(result.row, '24px', JSON.stringify(result));
+        assert.equal(result.column, '24px', JSON.stringify(result));
+      } finally {
+        await setStyle(original ?? {});
+      }
+      const restored = await customGallery.evaluate(el => new Promise(resolve => {
+        const win = el.ownerDocument.defaultView;
+        const expectedColumn = win.matchMedia('(min-width: 48rem)').matches ? '40px' : '15px';
+        let remaining = 120;
+        const sample = () => {
+          const s = win.getComputedStyle(el);
+          const result = { row: s.rowGap, column: s.columnGap };
+          if ((result.row === '40px' && result.column === expectedColumn) || --remaining === 0) resolve(result);
+          else win.requestAnimationFrame(sample);
+        };
+        sample();
+      }));
+      assert.deepEqual(restored, { row: '40px', column: evidence.desktopMedia ? '40px' : '15px' });
+      console.log(JSON.stringify({ galleryEditorGapRestored: 'PASS', shellWidth: width, restored }));
+    }
+    console.log(JSON.stringify({ galleryEditorLayout: 'PASS', shellWidth: width, canvasWidth: evidence.viewport }));
+
   }
   const galleryFront = await browser.newPage();
   try {
