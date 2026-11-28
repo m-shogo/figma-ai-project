@@ -32,10 +32,24 @@ const aboutIntroPath = resolve(root, 'template-parts/_top-about-intro.php');
 const renderAbout = withCards => execFileSync('php', ['-r', aboutStub +
   '$args = ["items" => ' + (withCards ? 'require ' + JSON.stringify(aboutFixturePath) : '[]') + ']; include ' + JSON.stringify(aboutIntroPath) + ';'], {encoding:'utf8'});
 const aboutMarkup = [renderAbout(false), renderAbout(true)];
+// Render the existing Notice PHP with isolated ACF/WordPress helper doubles.
+ // The rows below exist only in this test; actual ACF editing and sanitation
+ // are covered separately and are not claimed by this presentation probe.
+const noticePath=resolve(root,'template-parts/_top-notice.php');
+const noticeSample={date:'20260127',textarea:'<a href="#end">急募！現在教員の欠員に伴い、担任をしていただける方を募集します</a>'};
+const noticeRows=[noticeSample,{date:'20260231',textarea:'長いお知らせ LongEditableNoticeWithoutSpaces1234567890LongEditableNoticeWithoutSpaces1234567890<br>次の行'},{date:'',textarea:'日付のないお知らせ'},{...noticeSample,none:['_hide'],textarea:'Hidden row'},{textarea:'<br>'}];
+const renderNotice=(enabled,rows)=>{
+  const encoded=Buffer.from(JSON.stringify(rows)).toString('base64');
+  const stub='$rows=json_decode(base64_decode("'+encoded+'"),true); $i=-1; function get_field($n){return '+(enabled?'true':'false')+';} function have_rows($n){global $rows,$i;return $i+1<count($rows);} function the_row(){global $i;$i++;} function get_sub_field($n,$format=true){global $rows,$i;return $rows[$i][$n]??null;} function wp_kses_post($s){return strip_tags($s,"<a><br><p>");} function wp_strip_all_tags($s){return strip_tags($s);} function esc_attr($s){return htmlspecialchars($s,ENT_QUOTES);} function esc_html($s){return htmlspecialchars($s,ENT_QUOTES);} ';
+  return execFileSync('php',['-r',stub+'include '+JSON.stringify(noticePath)+';'],{encoding:'utf8'}).trim();
+};
+for(const [enabled,rows] of [[false,[noticeSample]],[true,[]],[true,[{...noticeSample,none:['_hide']},{textarea:'<br>'}]]]) assert.equal(renderNotice(enabled,rows),'');
+const noticeMarkup=[renderNotice(true,[noticeSample]),renderNotice(true,noticeRows)];
 const report=[];
 const resizeFailures=[];
 const fixedTopFailures=[];
 const aboutFailures=[];
+const noticeFailures=[];
 try{
 for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
  const browser=await engine.launch();
@@ -1695,6 +1709,102 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
      }
    }
  }
+ // Notice single and multiple rows with the real template and stylesheet.
+ for(const width of [320,375,768,1079,1080,1380]) {
+   await page.setViewportSize({width,height:900});
+   for(const multiple of [false,true]) {
+     const fixture=await page.evaluateHandle(markup=>{
+       const wrapper=document.createElement('div');
+       wrapper.className='top_mainVisual';
+       wrapper.innerHTML=markup;
+       document.querySelector('main.global_contents').before(wrapper);
+       return wrapper;
+     },noticeMarkup[Number(multiple)]);
+     const notice=page.locator('#top_notice-01');
+     const link=notice.locator('a');
+     try {
+       await page.evaluate(()=>document.fonts.ready);
+       const measure=()=>notice.evaluate(el=>{
+         const rect=node=>{const r=node.getBoundingClientRect();return {x:r.left,y:r.top,right:r.right,bottom:r.bottom,width:r.width,height:r.height};};
+         const fits=node=>node.scrollWidth<=node.clientWidth+1;
+         const box=el.querySelector('.jwsnj_topNotice_box'),title=box.querySelector('h2'),bell=title.firstElementChild,list=box.querySelector('ul');
+         const bs=getComputedStyle(box),glyph=getComputedStyle(bell,'::before');
+         return {box:rect(box),title:rect(title),bell:rect(bell),list:rect(list),direction:bs.flexDirection,gap:parseFloat(bs.gap),
+           padding:[bs.paddingTop,bs.paddingRight,bs.paddingBottom,bs.paddingLeft].map(parseFloat),
+           titleSize:getComputedStyle(title).fontSize,titleGap:parseFloat(getComputedStyle(title).columnGap),
+           bellGlyph:glyph.content,bellSize:glyph.fontSize,bellWeight:glyph.fontWeight,bellFamily:glyph.fontFamily,
+           margin:parseFloat(getComputedStyle(el).marginTop),
+           fits:[el,box,title,list,...list.querySelectorAll('li,.jwsnj_topNotice_text')].every(fits),
+           docFits:document.documentElement.scrollWidth<=innerWidth+1,
+           rows:[...list.children].map(li=>{const t=li.querySelector('time'),body=li.querySelector('.jwsnj_topNotice_text'),style=getComputedStyle(li);
+             return {rect:rect(li),date:t?rect(t):null,datetime:t?.dateTime??null,dateFont:t?getComputedStyle(t).fontSize:null,body:rect(body),font:getComputedStyle(body).fontSize,gap:parseFloat(style.gap),text:body.textContent};})};
+       });
+       const data=await measure(),wide=width>=768;
+       console.log(JSON.stringify({topNotice:'MEASURED',engine:name,width,multiple,data}));
+       const near=(a,b,tolerance=1.5)=>Math.abs(a-b)<=tolerance;
+       assert.ok(data.fits&&data.docFits,JSON.stringify(data));
+       assert.equal(data.direction,wide?'row':'column');
+       assert.equal(data.gap,wide?32:16);
+       assert.deepEqual(data.padding,wide?[12,31,12,23]:[19,19,19,19]);
+       assert.equal(data.margin,wide?48:24);
+       assert.equal(data.titleSize,'15px');
+       assert.equal(data.titleGap,10);
+       assert.ok(near(data.bell.width,20)&&near(data.bell.height,20),JSON.stringify(data.bell));
+       assert.ok(data.bellGlyph.includes('\uf0f3')&&data.bellSize==='10px'&&data.bellWeight==='900'&&/awesome/i.test(data.bellFamily));
+       assert.equal(data.rows.length,multiple?3:1);
+       assert.equal(data.rows[0].datetime,'2026-01-27');
+       assert.equal(data.rows[0].dateFont,wide?'14px':'13px');
+       assert.equal(await link.count(),1);
+       assert.equal(await link.getAttribute('href'),'#end');
+       assert.ok(data.rows.every(r=>r.font===(wide?'15px':'14px')&&r.gap===(wide?16:10)));
+       if(multiple) assert.ok(data.rows.slice(1).every(r=>r.date===null)&&!data.rows.some(r=>r.text.includes('Hidden row')));
+       if(wide) assert.ok(near(data.list.x-data.title.right,32)&&data.box.height>=60);
+       else assert.ok(near(data.list.y-data.title.bottom,16)&&near(data.rows[0].body.y-data.rows[0].date.bottom,10));
+       const wasReduced=await page.evaluate(()=>matchMedia('(prefers-reduced-motion: reduce)').matches);
+       try {
+         await page.emulateMedia({reducedMotion:'no-preference'});
+         await page.mouse.move(0,0);
+         await link.evaluate(el=>el.blur());
+         const neutral=await link.evaluate(el=>getComputedStyle(el).textDecorationColor);
+         assert.equal(await link.evaluate(el=>getComputedStyle(el).transitionDuration),'0.3s');
+         await link.hover();
+         await page.waitForFunction(()=>getComputedStyle(document.querySelector('#top_notice-01 a')).textDecorationColor==='rgba(0, 0, 0, 0)');
+         assert.equal(await link.evaluate(el=>getComputedStyle(el).textDecorationLine),'underline');
+         await page.mouse.move(0,0);
+         await page.waitForFunction(color=>getComputedStyle(document.querySelector('#top_notice-01 a')).textDecorationColor===color,neutral);
+         await link.focus();
+         await page.keyboard.press('Tab');
+         await page.keyboard.press('Shift+Tab');
+         assert.ok(await link.evaluate(el=>document.activeElement===el&&el.matches(':focus-visible')&&getComputedStyle(el).outlineStyle==='solid'));
+         await page.emulateMedia({reducedMotion:'reduce'});
+         assert.equal(await link.evaluate(el=>getComputedStyle(el).transitionDuration),'0s');
+       } finally {
+         await link.evaluate(el=>el.blur());
+         await page.mouse.move(0,0);
+         await page.emulateMedia({reducedMotion:wasReduced?'reduce':'no-preference'});
+       }
+       if(width===375||width===1380) {
+         await notice.screenshot({path:out+'/notice-'+name+'-'+width+'-'+Number(multiple)+'.png'});
+         for(const scale of [1.5,2]) {
+           await page.evaluate(scale=>{document.documentElement.style.fontSize=(16*scale)+'px';},scale);
+           const stress=await measure();
+           console.log(JSON.stringify({topNoticeStress:'MEASURED',engine:name,width,multiple,scale,stress}));
+           assert.ok(stress.fits&&stress.docFits,JSON.stringify(stress));
+         }
+       }
+       console.log(JSON.stringify({topNotice:'PASS',engine:name,width,multiple}));
+       report.push({name,width,multiple,topNotice:data});
+     } catch(error) {
+       noticeFailures.push({engine:name,width,multiple,message:String(error)});
+       console.error(JSON.stringify({topNotice:'FAIL',engine:name,width,multiple,message:String(error)}));
+       await notice.screenshot({path:out+'/notice-failure-'+name+'-'+width+'-'+Number(multiple)+'.png'}).catch(()=>{});
+     } finally {
+       await page.evaluate(()=>document.documentElement.style.removeProperty('font-size'));
+       await fixture.evaluate(el=>el.remove());
+       await fixture.dispose();
+     }
+   }
+ }
  const mechanism=await page.evaluate(()=>{
    const root=document.documentElement;
    root.style.fontSize='20px';
@@ -1725,4 +1835,5 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
 assert.deepEqual(resizeFailures, [], 'all text enlargement cases must pass');
 assert.deepEqual(fixedTopFailures, [], 'all fixed TOP section cases must pass');
 assert.deepEqual(aboutFailures, [], 'all TOP About cases must pass');
+assert.deepEqual(noticeFailures, [], 'all TOP Notice cases must pass');
 }finally{writeFileSync(out+'/browser.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report));await new Promise(r=>server.close(r));}

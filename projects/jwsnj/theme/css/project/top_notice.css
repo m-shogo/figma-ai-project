@@ -94,13 +94,18 @@
       text-decoration: underline;
       text-decoration-thickness: 0.07em;
       text-decoration-skip-ink: none;
+      text-decoration-color: currentColor;
+      transition: text-decoration-color var(--transition-duration);
+      @media (prefers-reduced-motion: reduce) {
+        transition: none;
+      }
       &:focus-visible {
         outline: calc(2 * var(--to-rem-func)) solid currentColor;
         outline-offset: calc(2 * var(--to-rem-func));
       }
-      &:hover {
+      &:hover:not(:focus-visible) {
         @media (any-hover: hover) {
-          text-decoration: none;
+          text-decoration-color: transparent;
         }
       }
     }
