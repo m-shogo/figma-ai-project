@@ -284,7 +284,7 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
 
         // Verify the same annotation rhythm around actual registered media
         // blocks. Existing image/lightbox/navigation checks remain unchanged.
-        const notes = root.locator('ul.wp-block-list.annotation-list');
+        const notes = root.locator(':scope > ul.wp-block-list.annotation-list');
         assert.equal(await notes.count(), 4);
         const boundaries = await notes.evaluateAll(elements => elements.map(el => {
           const box = el.getBoundingClientRect();
@@ -330,6 +330,47 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
         }
         console.log(JSON.stringify({ annotationMediaBoundaries: 'PASS', engine: engineName, width, boundaries }));
         console.log(JSON.stringify({ annotationGroupBoundaries: 'PASS', engine: engineName, width, boundaries: boundaries.slice(2) }));
+
+        // Independent native group, with notes as its first/last children.
+        // Figma defines inter-content clearance, not an extra edge inset:
+        // record actual edge margins separately from the required gaps.
+        const edgeGroup = root.locator('.wp-block-group.qa-annotation-edges');
+        assert.equal(await edgeGroup.count(), 1);
+        const edges = await edgeGroup.evaluate(el => {
+          const children = [...el.children];
+          const s = getComputedStyle(el);
+          const outer = el.getBoundingClientRect();
+          const metrics = children.map(child => {
+            const r = child.getBoundingClientRect();
+            const cs = getComputedStyle(child);
+            return { tag: child.tagName, className: child.className, y: r.top, bottom: r.bottom,
+              topMargin: cs.marginTop, bottomMargin: cs.marginBottom, gap: cs.rowGap,
+              fits: child.scrollWidth <= child.clientWidth + 1,
+              items: [...child.children].map(li => ({ font: getComputedStyle(li).fontSize,
+                inset: getComputedStyle(li).paddingLeft, fits: li.scrollWidth <= li.clientWidth + 1 })) };
+          });
+          return { children: metrics, padding: [s.paddingTop, s.paddingBottom],
+            topInset: metrics[0].y - outer.top, bottomInset: outer.bottom - metrics.at(-1).bottom,
+            gaps: metrics.slice(1).map((item, i) => item.y - metrics[i].bottom) };
+        });
+        console.log(JSON.stringify({ annotationGroupEdges: 'MEASURED', engine: engineName, width, edges }));
+        assert.deepEqual(edges.children.map(child => child.tag), ['UL', 'UL', 'P', 'UL']);
+        assert.ok(edges.gaps.every(gap => near(gap, 20)), JSON.stringify(edges));
+        assert.deepEqual(edges.padding, Array(2).fill(width >= 768 ? '40px' : '32px'));
+        for (const note of edges.children.filter(child => child.tag === 'UL')) {
+          assert.match(note.className, /annotation-list/);
+          assert.equal(note.gap, '10px');
+          assert.equal(note.items.length, 2);
+          assert.ok(note.fits && note.items.every(item => item.font === '14px' && item.inset === '31px' && item.fits), JSON.stringify(note));
+        }
+        // Edge values are evidence only until the wrapper rhythm is compared
+        // with its approved ownership; do not infer an extra 20px requirement.
+        if (width === 375 || width === 1380) {
+          await edgeGroup.screenshot({ path: 'form-qa-results/annotation-group-edges-' + engineName + '-' + width + '.png',
+            style: '#global_header { visibility: hidden !important; }' });
+        }
+        console.log(JSON.stringify({ annotationGroupConsecutive: 'PASS', engine: engineName, width, edges }));
+
 
         // Figma PC344:922/917 and SP442:2782/2775. Native registered
         // opt-in styles, using ordinary editable blocks, not synthetic DOM.
