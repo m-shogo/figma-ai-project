@@ -285,7 +285,7 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
         // Verify the same annotation rhythm around actual registered media
         // blocks. Existing image/lightbox/navigation checks remain unchanged.
         const notes = root.locator(':scope > ul.wp-block-list.annotation-list');
-        assert.equal(await notes.count(), 4);
+        assert.equal(await notes.count(), 6);
         const boundaries = await notes.evaluateAll(elements => elements.map(el => {
           const box = el.getBoundingClientRect();
           const before = el.previousElementSibling;
@@ -312,6 +312,9 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
         assert.match(boundaries[2].afterClass, /is-style-jwsnj-background-boxes/);
         assert.match(boundaries[3].beforeClass, /is-style-jwsnj-background-boxes/);
         assert.equal(boundaries[3].afterTag, 'P');
+        assert.match(boundaries[4].afterClass, /qa-annotation-details/);
+        assert.match(boundaries[5].beforeClass, /qa-annotation-details/);
+        assert.equal(boundaries[5].afterTag, 'P');
         for (const boundary of boundaries) {
           assert.ok(near(boundary.before, 20) && near(boundary.after, 20), JSON.stringify(boundary));
           assert.equal(boundary.gap, '10px');
@@ -329,7 +332,61 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
           }
         }
         console.log(JSON.stringify({ annotationMediaBoundaries: 'PASS', engine: engineName, width, boundaries }));
-        console.log(JSON.stringify({ annotationGroupBoundaries: 'PASS', engine: engineName, width, boundaries: boundaries.slice(2) }));
+        console.log(JSON.stringify({ annotationGroupBoundaries: 'PASS', engine: engineName, width, boundaries: boundaries.slice(2, 4) }));
+
+        // Annotation clearance must survive actual native disclosure changes.
+        const details = root.locator('details.qa-annotation-details');
+        assert.equal(await details.count(), 1);
+        const summary = details.locator(':scope > summary');
+        const measureDetails = () => details.evaluate(el => {
+          const box = el.getBoundingClientRect();
+          const before = el.previousElementSibling.getBoundingClientRect();
+          const after = el.nextElementSibling.getBoundingClientRect();
+          const body = el.querySelector('.wp-block-details__content');
+          return {
+            open: el.open, height: box.height, before: box.top - before.bottom,
+            after: after.top - box.bottom, flow: after.top - before.bottom,
+            beforeGap: getComputedStyle(el.previousElementSibling).rowGap,
+            afterGap: getComputedStyle(el.nextElementSibling).rowGap,
+            focus: document.activeElement === el.querySelector('summary'),
+            fits: el.scrollWidth <= el.clientWidth + 1,
+            bodyFits: body && body.scrollWidth <= body.clientWidth + 1
+          };
+        });
+        const settled = () => page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+        const checkDetails = (value, open) => {
+          assert.equal(value.open, open);
+          assert.ok(near(value.before, 20) && near(value.after, 20), JSON.stringify(value));
+          assert.deepEqual([value.beforeGap, value.afterGap], ['10px', '10px']);
+          assert.ok(value.fits && (!open || value.bodyFits), JSON.stringify(value));
+        };
+        const closed = await measureDetails();
+        checkDetails(closed, false);
+        await summary.scrollIntoViewIfNeeded();
+        await summary.focus();
+        await summary.press('Enter');
+        await page.waitForFunction(() => document.querySelector('details.qa-annotation-details').open);
+        await settled();
+        const expanded = await measureDetails();
+        checkDetails(expanded, true);
+        assert.ok(expanded.focus && expanded.height > closed.height &&
+          near(expanded.flow - closed.flow, expanded.height - closed.height), JSON.stringify({ closed, expanded }));
+        if (width === 375 || width === 1380) {
+          await details.screenshot({ path: 'form-qa-results/annotation-details-open-' + engineName + '-' + width + '.png',
+            style: '#global_header { visibility: hidden !important; }' });
+        }
+        await summary.press('Space');
+        await page.waitForFunction(() => !document.querySelector('details.qa-annotation-details').open);
+        await settled();
+        const restored = await measureDetails();
+        checkDetails(restored, false);
+        assert.ok(restored.focus && near(restored.height, closed.height) &&
+          near(restored.flow, closed.flow), JSON.stringify({ closed, restored }));
+        if (width === 375 || width === 1380) {
+          await details.screenshot({ path: 'form-qa-results/annotation-details-closed-' + engineName + '-' + width + '.png',
+            style: '#global_header { visibility: hidden !important; }' });
+        }
+        console.log(JSON.stringify({ annotationDetailsBoundaries: 'PASS', engine: engineName, width, closed, expanded, restored }));
 
         // Independent native group, with notes as its first/last children.
         // Figma's opt-in box owns edge padding; measure content gaps and

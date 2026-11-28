@@ -13,7 +13,7 @@ require_once ABSPATH . 'wp-admin/includes/media.php';
 require_once ABSPATH . 'wp-admin/includes/image.php';
 
 $registry = WP_Block_Type_Registry::get_instance();
-foreach (['core/heading', 'core/gallery', 'core/image', 'core/media-text', 'core/paragraph', 'core/list', 'core/list-item', 'core/group', 'core/columns', 'core/column'] as $name) {
+foreach (['core/heading', 'core/gallery', 'core/image', 'core/media-text', 'core/paragraph', 'core/list', 'core/list-item', 'core/group', 'core/columns', 'core/column', 'core/details'] as $name) {
   if (!$registry->is_registered($name)) {
     throw new RuntimeException('missing registered block: ' . $name);
   }
@@ -197,6 +197,19 @@ foreach (['is-style-jwsnj-background-box', 'is-style-jwsnj-bordered-box'] as $bo
     . $annotation('グループ末尾の注釈QA')
     . '</div>' . "\n" . '<!-- /wp:group -->' . "\n";
 }
+
+// Native Details between notes, separate from the opt-in box fixtures.
+$content .= "\n\n" . '<!-- wp:paragraph --><p>アコーディオン前の本文QA</p><!-- /wp:paragraph -->' . "\n\n"
+  . $annotation('アコーディオン直前の注釈QA') . "\n\n"
+  . <<<'HTML'
+<!-- wp:details {"className":"qa-annotation-details"} -->
+<details class="wp-block-details qa-annotation-details"><summary>通常アコーディオン。長いタイトルの折り返しを確認します。</summary><!-- wp:paragraph -->
+<p>展開後の編集可能な本文。長文でも前後の注釈との間隔を維持します。LongEditableTextWithoutSpaces1234567890LongEditableTextWithoutSpaces1234567890</p>
+<!-- /wp:paragraph --></details>
+<!-- /wp:details -->
+HTML;
+$content .= "\n\n" . $annotation('アコーディオン直後の注釈QA') . "\n\n"
+  . '<!-- wp:paragraph --><p>アコーディオン後の本文QA</p><!-- /wp:paragraph -->' . "\n";
 
 $data = ['post_type' => 'page', 'post_status' => 'publish', 'post_title' => 'JWSNJ Gallery QA', 'post_content' => wp_slash($content)];
 if ($id) {
