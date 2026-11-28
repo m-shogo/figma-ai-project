@@ -104,6 +104,80 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
         assert.equal(await lists.count(), 4);
         assert.equal(await root.locator('ol.wp-block-list').getAttribute('start'), '10');
         assert.equal(await root.locator('ul.annotation-list').count(), 1);
+        // Native ul/ol typography and marker geometry (Figma PC357:1004,
+        // SP442:2816, PC344:947/SP442:2806). Preserve real HTML numbering.
+        const unordered = root.locator(':scope > ul.wp-block-list:not(.annotation-list)');
+        const ordered = root.locator(':scope > ol.wp-block-list');
+        assert.equal(await unordered.count(), 1);
+        assert.equal(await ordered.count(), 1);
+        const listGeometry = await unordered.evaluate(el => {
+          const rect = el.getBoundingClientRect();
+          const children = [...el.children];
+          const nested = children[0].querySelector(':scope > ul.wp-block-list');
+          const measure = li => {
+            const r = li.getBoundingClientRect();
+            const s = getComputedStyle(li);
+            const p = getComputedStyle(li, '::before');
+            return { x: r.left - rect.left, y: r.top, bottom: r.bottom, height: r.height,
+              font: s.fontSize, weight: s.fontWeight, line: s.lineHeight, inset: s.paddingLeft,
+              tracking: s.letterSpacing, wrap: s.overflowWrap, fits: li.scrollWidth <= li.clientWidth + 1,
+              bullet: [p.width, p.height, p.top, p.backgroundColor, p.borderTopWidth, p.borderTopColor] };
+          };
+          return { gap: getComputedStyle(el).rowGap, items: children.map(measure),
+            nestedGap: getComputedStyle(nested).rowGap, nestedMargin: getComputedStyle(nested).marginTop,
+            nested: [...nested.children].map(measure) };
+        });
+        const numberedGeometry = await ordered.evaluate(el => ({
+          start: el.start, type: getComputedStyle(el).listStyleType,
+          position: getComputedStyle(el).listStylePosition, gap: getComputedStyle(el).rowGap,
+          inset: getComputedStyle(el).paddingLeft,
+          items: [...el.children].map(li => {
+            const s = getComputedStyle(li);
+            const p = getComputedStyle(li, '::marker');
+            const r = li.getBoundingClientRect();
+            return { y: r.top, bottom: r.bottom, font: s.fontSize, weight: s.fontWeight,
+              line: s.lineHeight, tracking: s.letterSpacing, wrap: s.overflowWrap,
+              fits: li.scrollWidth <= li.clientWidth + 1, marker: [p.fontSize, p.fontWeight, p.letterSpacing] };
+          })
+        }));
+        console.log(JSON.stringify({ nativeListGeometry: 'MEASURED', engine: engineName, width, listGeometry, numberedGeometry }));
+        const listNear = (a, b) => Math.abs(a - b) <= 1;
+        assert.deepEqual([listGeometry.gap, listGeometry.nestedGap, listGeometry.nestedMargin], ['16px', '8px', '12px']);
+        assert.equal(listGeometry.items.length, 2);
+        assert.equal(listGeometry.nested.length, 2);
+        for (const item of [...listGeometry.items, ...listGeometry.nested]) {
+          assert.deepEqual([item.font, item.weight, item.line, item.inset, item.tracking, item.wrap],
+            ['15px', '400', '24px', '18px', '0.75px', 'anywhere']);
+          assert.deepEqual(item.bullet.slice(0, 3), ['6px', '6px', '9px']);
+          assert.ok(item.fits, JSON.stringify(item));
+        }
+        assert.ok(listGeometry.items.every(item => listNear(item.x, 0)));
+        assert.ok(listGeometry.nested.every(item => listNear(item.x, 24)));
+        assert.ok(listGeometry.items.every(item => item.bullet[3] === 'rgb(236, 107, 97)'));
+        assert.ok(listGeometry.nested.every(item => item.bullet[3] === 'rgba(0, 0, 0, 0)' &&
+          item.bullet[4] === '1px' && item.bullet[5] === 'rgb(236, 107, 97)'));
+        assert.ok(listNear(listGeometry.items[1].y - listGeometry.items[0].bottom, 16));
+        assert.ok(listNear(listGeometry.nested[1].y - listGeometry.nested[0].bottom, 8));
+        if (width < 768) assert.ok(listGeometry.nested[1].height > listGeometry.nested[0].height);
+        assert.deepEqual([numberedGeometry.start, numberedGeometry.type, numberedGeometry.position,
+          numberedGeometry.gap, numberedGeometry.inset], [10, 'decimal', 'outside', '15px', '34px']);
+        assert.equal(numberedGeometry.items.length, 2);
+        for (const item of numberedGeometry.items) {
+          assert.deepEqual([item.font, item.weight, item.line, item.tracking, item.wrap],
+            ['15px', '400', '22.5px', '1.2px', 'anywhere']);
+          assert.deepEqual(item.marker, ['16px', '500', '1.6px']);
+          assert.ok(item.fits, JSON.stringify(item));
+        }
+        assert.ok(listNear(numberedGeometry.items[1].y - numberedGeometry.items[0].bottom, 15));
+        if (width === 375 || width === 1380) {
+          for (const [type, list] of [['ul', unordered], ['ol', ordered]]) {
+            await list.screenshot({
+              path: 'form-qa-results/native-list-' + type + '-' + engineName + '-' + width + '.png',
+              style: '#global_header { visibility: hidden !important; }'
+            });
+          }
+        }
+        console.log(JSON.stringify({ nativeListGeometry: 'PASS', engine: engineName, width }));
         // Figma PC344:937 / SP442:2796: actual native list between
         // an ordered list and buttons. Check layout, not just its existence.
         const annotation = root.locator('ul.wp-block-list.annotation-list');
