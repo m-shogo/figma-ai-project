@@ -162,10 +162,40 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
         assert.deepEqual([numberedGeometry.start, numberedGeometry.type, numberedGeometry.position,
           numberedGeometry.gap, numberedGeometry.inset], [10, 'decimal', 'outside', '15px', '34px']);
         assert.equal(numberedGeometry.items.length, 2);
+        // CSS Lists limits the properties that apply to ::marker.
+        // Firefox inherits 1.2px from li instead of applying the explicit
+        // 1.6px. Measure support independently of the theme to ensure
+        // an engine supporting the declaration still requires 1.6px.
+        // https://bugzilla.mozilla.org/show_bug.cgi?id=1668270
+        const markerTracking = await page.evaluate(() => {
+          const host = document.createElement('div');
+          host.style.cssText = 'position:fixed;left:0;top:0;visibility:hidden;pointer-events:none';
+          const shadow = host.attachShadow({ mode: 'open' });
+          const style = document.createElement('style');
+          style.textContent = 'li { font-size:15px; letter-spacing:1.2px; } li::marker { font-size:16px; letter-spacing:1.6px; }';
+          const list = document.createElement('ol');
+          const item = document.createElement('li');
+          item.textContent = 'Marker capability probe';
+          list.append(item);
+          shadow.append(style, list);
+          document.body.append(host);
+          try {
+            return { inherited: getComputedStyle(item).letterSpacing,
+              applied: getComputedStyle(item, '::marker').letterSpacing };
+          } finally {
+            host.remove();
+          }
+        });
+        assert.equal(markerTracking.inherited, '1.2px');
+        assert.ok(['1.2px', '1.6px'].includes(markerTracking.applied), JSON.stringify(markerTracking));
+        console.log(JSON.stringify({ nativeMarkerTracking: 'MEASURED', engine: engineName, width,
+          design: '1.6px', capability: markerTracking,
+          nativeFallback: markerTracking.applied !== '1.6px' }));
+
         for (const item of numberedGeometry.items) {
           assert.deepEqual([item.font, item.weight, item.line, item.tracking, item.wrap],
             ['15px', '400', '22.5px', '1.2px', 'anywhere']);
-          assert.deepEqual(item.marker, ['16px', '500', '1.6px']);
+          assert.deepEqual(item.marker, ['16px', '500', markerTracking.applied], JSON.stringify(item));
           assert.ok(item.fits, JSON.stringify(item));
         }
         assert.ok(listNear(numberedGeometry.items[1].y - numberedGeometry.items[0].bottom, 15));
