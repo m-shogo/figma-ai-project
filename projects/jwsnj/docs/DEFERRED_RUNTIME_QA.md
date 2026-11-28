@@ -56,6 +56,12 @@ Scope: **ニュージャージー補習授業校だけ**。詳細の技術仕様
 | PAGE-TOP | P1 | NOT_READY_IMPLEMENTATION | TOP `114:28` / `279:2136`、実装指示 `294:852`。MV、CTA、Notice、Course、各hover、空欄/非表示、ACF編集、画像比率・動き。コース紹介**下層**はHuman指示まで実装しない。公式 SVG / WebP は #600 で `images/top/` に保存済みだが `front-page.php` 未接続。接続と表示確認が残作業。詳細は `DESIGN_FOUNDATION.md` の「残作業」 |
 | PAGE-SHARED | P1 | NOT_READY_IMPLEMENTATION | 共有Header/Footer変更後の全実装済み画面（PC/SP）でレイアウト・動作回帰。固定要素・オーバーレイ・スクロールロック、横幅境界 |
 
+### PAGE-TOP — 2026-11-28 TOP integration checkpoint (Human #523 comment7236856796)
+
+- Start so c0b33380dfe979548f5db5e9c40211de248d8e7b. Official Figma skill and fresh session 7cd155c6-1c7b-49bd-ac2a-75edfa4e262e; News PC114:542/SP279:2524 and Applicants PC158:2645/SP279:2443 high-fidelity context/images reviewed. #824 e3b8172fc53bec9347efa5d91109db61bb30c187 Guard/Audit passed; actual WP run46128281366 pending TOP step at last check. Do not claim News acceptance before logs/images.
+- Independent #825 205a5fd2a2a0b908094d8975857c6026be5a29a1 restores three missing Figma cyan24px arrows, right inset20/16, FA Regular10px, href-less anchors with no invented destination, natural grid rows/min-height, hover/focus only for future real href and reduced motion. Stored icons/photo unchanged. Static QA and Guard succeeded on code SHA; isolated browser probe run46128694232 in progress. The synthetic fixture uses a long title and QA-only href; it is not actual WordPress or complete photo/section visual acceptance. #664 held Course hunks are distinct, no schema/owner/production dummy/schedule change.
+- Next READY: #824 actual TOP News result and images, correct proven failures; #825 browser logs and images then merge if safe, add real static TOP Applicants geometry/asset/focus verification to existing disposable TOP runner after both PRs settle. Course shared view reuse remains subject to owner/path coordination; #785 native tabs version gate, #814 editor owner, #523/#524 and 534:1706 remain unchanged. Do not block TOP on minor parts QA. Human still needs actual destinations/ACF and physical device/font/asset acceptance.
+
 ## 3. 実行結果を残すときの形式
 
 各項目を以下の形式で更新（仮のPASS禁止）:
