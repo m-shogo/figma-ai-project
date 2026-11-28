@@ -28,6 +28,58 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
         })));
         assert.deepEqual(metrics.map(item => item.font), width >= 768 ? ['30px', '24px', '18px', '30px'] : ['24px', '22px', '18px', '24px']);
         assert.deepEqual(metrics.map(item => Math.round(item.gap)), width >= 768 ? [40, 30, 20, 40] : [32, 24, 20, 32]);
+        // Figma PC344:916/SP442:2774, marker442:2784. Use native
+        // saved paragraph markup, including an editor-owned background.
+        const paragraph = root.locator('#qa-parts-start + p');
+        assert.equal(await paragraph.count(), 1);
+        const paragraphEvidence = await paragraph.evaluate(el => {
+          const s = getComputedStyle(el);
+          const marks = [...el.querySelectorAll('span[style*="text-decoration: underline"]')];
+          return {
+            font: s.fontSize, weight: s.fontWeight, line: s.lineHeight, tracking: s.letterSpacing,
+            wrap: s.overflowWrap, fits: el.scrollWidth <= el.clientWidth + 1,
+            strong: getComputedStyle(el.querySelector('strong')).fontWeight,
+            marks: marks.map(mark => {
+              const style = getComputedStyle(mark);
+              const range = document.createRange();
+              range.selectNodeContents(mark);
+              const box = el.getBoundingClientRect();
+              const rects = [...range.getClientRects()].filter(r => r.width > 0);
+              return {
+                text: mark.textContent, decoration: style.textDecorationLine,
+                background: style.backgroundColor, image: style.backgroundImage,
+                size: style.backgroundSize, position: style.backgroundPosition,
+                clone: style.boxDecorationBreak || style.webkitBoxDecorationBreak,
+                lines: new Set(rects.map(r => Math.round(r.top))).size,
+                fits: rects.every(r => r.left >= box.left - 1 && r.right <= box.right + 1)
+              };
+            })
+          };
+        });
+        console.log(JSON.stringify({ nativeParagraphMarker: 'MEASURED', engine: engineName, width, paragraphEvidence }));
+        assert.deepEqual([paragraphEvidence.font, paragraphEvidence.weight, paragraphEvidence.tracking,
+          paragraphEvidence.wrap, paragraphEvidence.strong], ['16px', '400', '0.8px', 'anywhere', '500']);
+        assert.ok(Math.abs(parseFloat(paragraphEvidence.line) - 25.6) < 0.1 && paragraphEvidence.fits);
+        assert.equal(paragraphEvidence.marks.length, 3);
+        for (const marker of paragraphEvidence.marks.slice(0, 2)) {
+          assert.equal(marker.decoration, 'none');
+          assert.match(marker.image, /linear-gradient\(rgb\(255, 235, 179\), rgb\(255, 235, 179\)\)/);
+          assert.equal(marker.size, '100% 5px');
+          assert.equal(marker.clone, 'clone');
+          assert.ok(marker.fits, JSON.stringify(marker));
+        }
+        if (width < 768) assert.ok(paragraphEvidence.marks[1].lines > 1);
+        const authoredBackground = paragraphEvidence.marks[2];
+        assert.equal(authoredBackground.background, 'rgb(201, 232, 255)');
+        assert.equal(authoredBackground.decoration, 'underline');
+        assert.equal(authoredBackground.image, 'none');
+        if (width === 375 || width === 1380) {
+          await paragraph.screenshot({
+            path: 'form-qa-results/native-paragraph-marker-' + engineName + '-' + width + '.png',
+            style: '#global_header { visibility: hidden !important; }'
+          });
+        }
+        console.log(JSON.stringify({ nativeParagraphMarker: 'PASS', engine: engineName, width }));
         // Actual registered Core separator with adjoining native blocks.
         const separator = root.locator('#qa-parts-separator + hr.wp-block-separator');
         assert.equal(await separator.count(), 1);
