@@ -13,7 +13,7 @@ require_once ABSPATH . 'wp-admin/includes/media.php';
 require_once ABSPATH . 'wp-admin/includes/image.php';
 
 $registry = WP_Block_Type_Registry::get_instance();
-foreach (['core/heading', 'core/gallery', 'core/image', 'core/media-text', 'core/paragraph', 'core/list', 'core/list-item'] as $name) {
+foreach (['core/heading', 'core/gallery', 'core/image', 'core/media-text', 'core/paragraph', 'core/list', 'core/list-item', 'core/group', 'core/columns', 'core/column'] as $name) {
   if (!$registry->is_registered($name)) {
     throw new RuntimeException('missing registered block: ' . $name);
   }
@@ -155,7 +155,8 @@ $content .= "\n\n" . <<<'HTML'
 <p>枠線付きテキストボックスの長文確認。LongEditableBoxWithoutSpaces1234567890LongEditableBoxWithoutSpaces1234567890</p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group -->
-
+HTML;
+$content .= "\n\n" . $annotation('枠線ボックスとカラム間の注釈QA') . "\n\n" . <<<'HTML'
 <!-- wp:columns {"className":"is-style-jwsnj-background-boxes"} -->
 <div class="wp-block-columns is-style-jwsnj-background-boxes"><!-- wp:column -->
 <div class="wp-block-column"><!-- wp:group {"className":"is-style-jwsnj-background-box","layout":{"type":"default"}} -->
@@ -182,7 +183,8 @@ $content .= "\n\n" . <<<'HTML'
 <!-- /wp:column --></div>
 <!-- /wp:columns -->
 HTML;
-$content .= "\n";
+$content .= "\n\n" . $annotation('背景ボックスカラム直後の注釈QA') . "\n\n"
+  . '<!-- wp:paragraph --><p>カラム注釈直後の本文QA</p><!-- /wp:paragraph -->' . "\n";
 
 $data = ['post_type' => 'page', 'post_status' => 'publish', 'post_title' => 'JWSNJ Gallery QA', 'post_content' => wp_slash($content)];
 if ($id) {
