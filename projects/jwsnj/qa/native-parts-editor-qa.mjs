@@ -426,6 +426,39 @@ try {
     }
     await media.scrollIntoViewIfNeeded();
     await media.screenshot({ path: 'form-qa-results/media-text-editor-' + width + '.png' });
+    // Inspect the actual canvas cascade, including generated per-block CSS.
+    // Keep this evidence even if the strict layout assertions below fail.
+    const gapCascade = await galleries.nth(1).evaluate(el => {
+      const doc = el.ownerDocument;
+      const win = doc.defaultView;
+      const style = win.getComputedStyle(el);
+      const names = ['gap', 'row-gap', 'column-gap', '--wp--style--gallery-gap-default',
+        '--wp--style--unstable-gallery-gap'];
+      const matches = [];
+      const visit = (rules, source, conditions = []) => {
+        for (const rule of rules) {
+          if (rule.selectorText && rule.style) {
+            try {
+              if (!el.matches(rule.selectorText)) continue;
+            } catch { continue; }
+            const declarations = Object.fromEntries(names.flatMap(name => {
+              const value = rule.style.getPropertyValue(name);
+              return value ? [[name, value + (rule.style.getPropertyPriority(name) ? ' !important' : '')]] : [];
+            }));
+            if (Object.keys(declarations).length) matches.push({ source, conditions, selector: rule.selectorText, declarations });
+          } else if (rule.cssRules) {
+            if (rule.type === win.CSSRule.MEDIA_RULE && !win.matchMedia(rule.conditionText).matches) continue;
+            if (rule.type === win.CSSRule.SUPPORTS_RULE && !win.CSS.supports(rule.conditionText)) continue;
+            visit(rule.cssRules, source, [...conditions, rule.conditionText || rule.name || rule.constructor.name]);
+          }
+        }
+      };
+      for (const sheet of doc.styleSheets) {
+        try { visit(sheet.cssRules, sheet.href || sheet.ownerNode?.id || 'inline'); } catch { /* inaccessible CSSOM */ }
+      }
+      return { viewport: win.innerWidth, computed: Object.fromEntries(names.map(name => [name, style.getPropertyValue(name)])), matches };
+    });
+    console.log(JSON.stringify({ galleryEditorGapCascade: 'MEASURED', shellWidth: width, gapCascade }));
     const near = (a, b) => Math.abs(a - b) <= 1;
     for (const [index, g] of evidence.galleries.entries()) {
       const expectedColumns = evidence.desktopMedia ? index + 2 : index + 1;
@@ -500,6 +533,20 @@ try {
       } finally {
         await setStyle(original ?? {});
       }
+      const restored = await customGallery.evaluate(el => new Promise(resolve => {
+        const win = el.ownerDocument.defaultView;
+        const expectedColumn = win.matchMedia('(min-width: 48rem)').matches ? '40px' : '15px';
+        let remaining = 120;
+        const sample = () => {
+          const s = win.getComputedStyle(el);
+          const result = { row: s.rowGap, column: s.columnGap };
+          if ((result.row === '40px' && result.column === expectedColumn) || --remaining === 0) resolve(result);
+          else win.requestAnimationFrame(sample);
+        };
+        sample();
+      }));
+      assert.deepEqual(restored, { row: '40px', column: evidence.desktopMedia ? '40px' : '15px' });
+      console.log(JSON.stringify({ galleryEditorGapRestored: 'PASS', shellWidth: width, restored }));
     }
     console.log(JSON.stringify({ galleryEditorLayout: 'PASS', shellWidth: width, canvasWidth: evidence.viewport }));
 
