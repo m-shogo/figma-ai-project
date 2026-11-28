@@ -399,7 +399,7 @@ try {
         const s = win.getComputedStyle(node);
         const r = node.getBoundingClientRect();
         return { tag: node.tagName, className: node.className, width: r.width, height: r.height,
-          display: s.display, gap: s.gap, columns: s.gridTemplateColumns, fontSize: s.fontSize,
+          display: s.display, gap: s.gap, rowGap: s.rowGap, columnGap: s.columnGap, columns: s.gridTemplateColumns, inlineStyle: node.getAttribute('style'), fontSize: s.fontSize,
           fontFamily: s.fontFamily, lineHeight: s.lineHeight, color: s.color,
           radius: s.borderRadius, ratio: s.aspectRatio, fit: s.objectFit,
           overflow: s.overflow, textAlign: s.textAlign };
@@ -426,6 +426,45 @@ try {
     }
     await media.scrollIntoViewIfNeeded();
     await media.screenshot({ path: 'form-qa-results/media-text-editor-' + width + '.png' });
+    const near = (a, b) => Math.abs(a - b) <= 1;
+    for (const [index, g] of evidence.galleries.entries()) {
+      const expectedColumns = evidence.desktopMedia ? index + 2 : index + 1;
+      const expectedColumnGap = !evidence.desktopMedia && index === 1 ? 15 : 40;
+      assert.equal(g.block.columns.split(' ').length, expectedColumns, JSON.stringify(g));
+      assert.ok(near(parseFloat(g.block.rowGap), 40) && near(parseFloat(g.block.columnGap), expectedColumnGap), JSON.stringify(g));
+      const expectedImageWidth = (g.block.width - (expectedColumns - 1) * expectedColumnGap) / expectedColumns;
+      assert.ok(g.images.every(img => near(img.width, expectedImageWidth) && near(img.height, img.width * 2 / 3)), JSON.stringify(g));
+      assert.ok(g.captions.every(cap => cap.fontSize === (evidence.desktopMedia ? '14px' : '12px') && cap.textAlign === 'center'), JSON.stringify(g));
+    }
+    const m = evidence.media[0];
+    const expectedMediaWidth = evidence.desktopMedia ? (m.block.width - 40) * 410 / 920 : m.block.width;
+    const expectedCopyWidth = evidence.desktopMedia ? (m.block.width - 40) * 510 / 920 : m.block.width;
+    assert.ok(near(m.image.width, expectedMediaWidth) && near(m.copy.width, expectedCopyWidth), JSON.stringify(m));
+    // Exercise a real non-default native width; do not suppress editor-owned resizing.
+    if (evidence.desktopMedia) {
+      const clientId = await media.getAttribute('data-block');
+      const readAttrs = () => page.evaluate(id => wp.data.select('core/block-editor').getBlockAttributes(id), clientId);
+      const original = await readAttrs();
+      assert.equal(original.mediaWidth, 50);
+      const setWidth = value => page.evaluate(({ id, value }) => wp.data.dispatch('core/block-editor').updateBlockAttributes(id, { mediaWidth: value }), { id: clientId, value });
+      try {
+        await setWidth(60);
+        await media.locator('xpath=self::*[contains(@style, "60%")]').waitFor({ state: 'attached' });
+        const custom = await media.evaluate(el => {
+          const win = el.ownerDocument.defaultView;
+          return { width: el.getBoundingClientRect().width, image: el.querySelector('img').getBoundingClientRect().width,
+            tracks: win.getComputedStyle(el).gridTemplateColumns };
+        });
+        assert.ok(near(custom.image, custom.width * 0.6), JSON.stringify(custom));
+        assert.equal((await readAttrs()).mediaWidth, 60);
+      } finally {
+        await setWidth(original.mediaWidth);
+      }
+      await media.locator('xpath=self::*[contains(@style, "50%")]').waitFor({ state: 'attached' });
+      assert.ok(near(await media.locator('img').evaluate(el => el.getBoundingClientRect().width), expectedMediaWidth));
+    }
+    console.log(JSON.stringify({ galleryEditorLayout: 'PASS', shellWidth: width, canvasWidth: evidence.viewport }));
+
   }
   const galleryFront = await browser.newPage();
   try {
