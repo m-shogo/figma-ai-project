@@ -28,6 +28,58 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
         })));
         assert.deepEqual(metrics.map(item => item.font), width >= 768 ? ['30px', '24px', '18px', '30px'] : ['24px', '22px', '18px', '24px']);
         assert.deepEqual(metrics.map(item => Math.round(item.gap)), width >= 768 ? [40, 30, 20, 40] : [32, 24, 20, 32]);
+        // Figma PC344:916/SP442:2774, marker442:2784. Use native
+        // saved paragraph markup, including an editor-owned background.
+        const paragraph = root.locator('#qa-parts-start + p');
+        assert.equal(await paragraph.count(), 1);
+        const paragraphEvidence = await paragraph.evaluate(el => {
+          const s = getComputedStyle(el);
+          const marks = [...el.querySelectorAll('span[style*="text-decoration: underline"]')];
+          return {
+            font: s.fontSize, weight: s.fontWeight, line: s.lineHeight, tracking: s.letterSpacing,
+            wrap: s.overflowWrap, fits: el.scrollWidth <= el.clientWidth + 1,
+            strong: getComputedStyle(el.querySelector('strong')).fontWeight,
+            marks: marks.map(mark => {
+              const style = getComputedStyle(mark);
+              const range = document.createRange();
+              range.selectNodeContents(mark);
+              const box = el.getBoundingClientRect();
+              const rects = [...range.getClientRects()].filter(r => r.width > 0);
+              return {
+                text: mark.textContent, decoration: style.textDecorationLine,
+                background: style.backgroundColor, image: style.backgroundImage,
+                size: style.backgroundSize, position: style.backgroundPosition,
+                clone: style.boxDecorationBreak || style.webkitBoxDecorationBreak,
+                lines: new Set(rects.map(r => Math.round(r.top))).size,
+                fits: rects.every(r => r.left >= box.left - 1 && r.right <= box.right + 1)
+              };
+            })
+          };
+        });
+        console.log(JSON.stringify({ nativeParagraphMarker: 'MEASURED', engine: engineName, width, paragraphEvidence }));
+        assert.deepEqual([paragraphEvidence.font, paragraphEvidence.weight, paragraphEvidence.tracking,
+          paragraphEvidence.wrap, paragraphEvidence.strong], ['16px', '400', '0.8px', 'anywhere', '500']);
+        assert.ok(Math.abs(parseFloat(paragraphEvidence.line) - 25.6) < 0.1 && paragraphEvidence.fits);
+        assert.equal(paragraphEvidence.marks.length, 3);
+        for (const marker of paragraphEvidence.marks.slice(0, 2)) {
+          assert.equal(marker.decoration, 'none');
+          assert.match(marker.image, /linear-gradient\(rgb\(255, 235, 179\), rgb\(255, 235, 179\)\)/);
+          assert.equal(marker.size, '100% 5px');
+          assert.equal(marker.clone, 'clone');
+          assert.ok(marker.fits, JSON.stringify(marker));
+        }
+        if (width < 768) assert.ok(paragraphEvidence.marks[1].lines > 1);
+        const authoredBackground = paragraphEvidence.marks[2];
+        assert.equal(authoredBackground.background, 'rgb(201, 232, 255)');
+        assert.equal(authoredBackground.decoration, 'underline');
+        assert.equal(authoredBackground.image, 'none');
+        if (width === 375 || width === 1380) {
+          await paragraph.screenshot({
+            path: 'form-qa-results/native-paragraph-marker-' + engineName + '-' + width + '.png',
+            style: '#global_header { visibility: hidden !important; }'
+          });
+        }
+        console.log(JSON.stringify({ nativeParagraphMarker: 'PASS', engine: engineName, width }));
         // Actual registered Core separator with adjoining native blocks.
         const separator = root.locator('#qa-parts-separator + hr.wp-block-separator');
         assert.equal(await separator.count(), 1);
@@ -104,6 +156,156 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
         assert.equal(await lists.count(), 4);
         assert.equal(await root.locator('ol.wp-block-list').getAttribute('start'), '10');
         assert.equal(await root.locator('ul.annotation-list').count(), 1);
+        // Native ul/ol typography and marker geometry (Figma PC357:1004,
+        // SP442:2816, PC344:947/SP442:2806). Preserve real HTML numbering.
+        const unordered = root.locator(':scope > ul.wp-block-list:not(.annotation-list)');
+        const ordered = root.locator(':scope > ol.wp-block-list');
+        assert.equal(await unordered.count(), 1);
+        assert.equal(await ordered.count(), 1);
+        const listGeometry = await unordered.evaluate(el => {
+          const rect = el.getBoundingClientRect();
+          const children = [...el.children];
+          const nested = children[0].querySelector(':scope > ul.wp-block-list');
+          const measure = li => {
+            const r = li.getBoundingClientRect();
+            const s = getComputedStyle(li);
+            const p = getComputedStyle(li, '::before');
+            return { x: r.left - rect.left, y: r.top, bottom: r.bottom, height: r.height,
+              font: s.fontSize, weight: s.fontWeight, line: s.lineHeight, inset: s.paddingLeft,
+              tracking: s.letterSpacing, wrap: s.overflowWrap, fits: li.scrollWidth <= li.clientWidth + 1,
+              bullet: [p.width, p.height, p.top, p.backgroundColor, p.borderTopWidth, p.borderTopColor] };
+          };
+          return { gap: getComputedStyle(el).rowGap, items: children.map(measure),
+            nestedGap: getComputedStyle(nested).rowGap, nestedMargin: getComputedStyle(nested).marginTop,
+            nested: [...nested.children].map(measure) };
+        });
+        const numberedGeometry = await ordered.evaluate(el => ({
+          start: el.start, type: getComputedStyle(el).listStyleType,
+          position: getComputedStyle(el).listStylePosition, gap: getComputedStyle(el).rowGap,
+          inset: getComputedStyle(el).paddingLeft,
+          items: [...el.children].map(li => {
+            const s = getComputedStyle(li);
+            const p = getComputedStyle(li, '::marker');
+            const r = li.getBoundingClientRect();
+            return { y: r.top, bottom: r.bottom, font: s.fontSize, weight: s.fontWeight,
+              line: s.lineHeight, tracking: s.letterSpacing, wrap: s.overflowWrap,
+              fits: li.scrollWidth <= li.clientWidth + 1, marker: [p.fontSize, p.fontWeight, p.letterSpacing] };
+          })
+        }));
+        console.log(JSON.stringify({ nativeListGeometry: 'MEASURED', engine: engineName, width, listGeometry, numberedGeometry }));
+        const listNear = (a, b) => Math.abs(a - b) <= 1;
+        assert.deepEqual([listGeometry.gap, listGeometry.nestedGap, listGeometry.nestedMargin], ['16px', '8px', '12px']);
+        assert.equal(listGeometry.items.length, 2);
+        assert.equal(listGeometry.nested.length, 2);
+        for (const item of [...listGeometry.items, ...listGeometry.nested]) {
+          assert.deepEqual([item.font, item.weight, item.line, item.inset, item.tracking, item.wrap],
+            ['15px', '400', '24px', '18px', '0.75px', 'anywhere']);
+          assert.deepEqual(item.bullet.slice(0, 3), ['6px', '6px', '9px']);
+          assert.ok(item.fits, JSON.stringify(item));
+        }
+        assert.ok(listGeometry.items.every(item => listNear(item.x, 0)));
+        assert.ok(listGeometry.nested.every(item => listNear(item.x, 24)));
+        assert.ok(listGeometry.items.every(item => item.bullet[3] === 'rgb(236, 107, 97)'));
+        assert.ok(listGeometry.nested.every(item => item.bullet[3] === 'rgba(0, 0, 0, 0)' &&
+          item.bullet[4] === '1px' && item.bullet[5] === 'rgb(236, 107, 97)'));
+        assert.ok(listNear(listGeometry.items[1].y - listGeometry.items[0].bottom, 16));
+        assert.ok(listNear(listGeometry.nested[1].y - listGeometry.nested[0].bottom, 8));
+        if (width < 768) assert.ok(listGeometry.nested[1].height > listGeometry.nested[0].height);
+        assert.deepEqual([numberedGeometry.start, numberedGeometry.type, numberedGeometry.position,
+          numberedGeometry.gap, numberedGeometry.inset], [10, 'decimal', 'outside', '15px', '34px']);
+        assert.equal(numberedGeometry.items.length, 2);
+        // CSS Lists limits the properties that apply to ::marker.
+        // Firefox inherits 1.2px from li instead of applying the explicit
+        // 1.6px. Measure support independently of the theme to ensure
+        // an engine supporting the declaration still requires 1.6px.
+        // https://bugzilla.mozilla.org/show_bug.cgi?id=1668270
+        const markerTracking = await page.evaluate(() => {
+          const host = document.createElement('div');
+          host.style.cssText = 'position:fixed;left:0;top:0;visibility:hidden;pointer-events:none';
+          const shadow = host.attachShadow({ mode: 'open' });
+          const style = document.createElement('style');
+          style.textContent = 'li { font-size:15px; letter-spacing:1.2px; } li::marker { font-size:16px; letter-spacing:1.6px; }';
+          const list = document.createElement('ol');
+          const item = document.createElement('li');
+          item.textContent = 'Marker capability probe';
+          list.append(item);
+          shadow.append(style, list);
+          document.body.append(host);
+          try {
+            return { inherited: getComputedStyle(item).letterSpacing,
+              applied: getComputedStyle(item, '::marker').letterSpacing };
+          } finally {
+            host.remove();
+          }
+        });
+        assert.equal(markerTracking.inherited, '1.2px');
+        assert.ok(['1.2px', '1.6px'].includes(markerTracking.applied), JSON.stringify(markerTracking));
+        console.log(JSON.stringify({ nativeMarkerTracking: 'MEASURED', engine: engineName, width,
+          design: '1.6px', capability: markerTracking,
+          nativeFallback: markerTracking.applied !== '1.6px' }));
+
+        for (const item of numberedGeometry.items) {
+          assert.deepEqual([item.font, item.weight, item.line, item.tracking, item.wrap],
+            ['15px', '400', '22.5px', '1.2px', 'anywhere']);
+          assert.deepEqual(item.marker, ['16px', '500', markerTracking.applied], JSON.stringify(item));
+          assert.ok(item.fits, JSON.stringify(item));
+        }
+        assert.ok(listNear(numberedGeometry.items[1].y - numberedGeometry.items[0].bottom, 15));
+        if (width === 375 || width === 1380) {
+          for (const [type, list] of [['ul', unordered], ['ol', ordered]]) {
+            await list.screenshot({
+              path: 'form-qa-results/native-list-' + type + '-' + engineName + '-' + width + '.png',
+              style: '#global_header { visibility: hidden !important; }'
+            });
+          }
+        }
+        console.log(JSON.stringify({ nativeListGeometry: 'PASS', engine: engineName, width }));
+        // Figma PC344:937 / SP442:2796: actual native list between
+        // an ordered list and buttons. Check layout, not just its existence.
+        const annotation = root.locator('ul.wp-block-list.annotation-list');
+        const annotationGeometry = await annotation.evaluate(el => {
+          const box = el.getBoundingClientRect();
+          const style = getComputedStyle(el);
+          return {
+            gap: style.rowGap,
+            before: box.top - el.previousElementSibling.getBoundingClientRect().bottom,
+            after: el.nextElementSibling.getBoundingClientRect().top - box.bottom,
+            items: [...el.children].map(li => {
+              const rect = li.getBoundingClientRect();
+              const s = getComputedStyle(li);
+              const marker = getComputedStyle(li, '::before');
+              return {
+                font: s.fontSize, weight: s.fontWeight, line: s.lineHeight,
+                inset: s.paddingLeft, wrap: s.overflowWrap,
+                fits: rect.left >= box.left - 1 && rect.right <= box.right + 1 &&
+                  li.scrollWidth <= li.clientWidth + 1,
+                height: rect.height, y: rect.top,
+                marker: [marker.content, marker.fontSize, marker.color]
+              };
+            })
+          };
+        });
+        const closeTo = (a, b) => Math.abs(a - b) <= 1;
+        assert.equal(annotationGeometry.gap, '10px');
+        assert.ok(closeTo(annotationGeometry.before, 20) && closeTo(annotationGeometry.after, 20), JSON.stringify(annotationGeometry));
+        assert.equal(annotationGeometry.items.length, 2);
+        for (const item of annotationGeometry.items) {
+          assert.deepEqual([item.font, item.weight, item.line, item.inset, item.wrap],
+            ['14px', '500', '21px', '31px', 'anywhere'], JSON.stringify(item));
+          assert.deepEqual(item.marker, ['"※"', '16px', 'rgb(213, 11, 11)']);
+          assert.ok(item.fits, JSON.stringify(item));
+        }
+        const [firstNote, secondNote] = annotationGeometry.items;
+        assert.ok(closeTo(secondNote.y - firstNote.y - firstNote.height, 10), JSON.stringify(annotationGeometry));
+        if (width < 768) assert.ok(secondNote.height > firstNote.height, JSON.stringify(annotationGeometry));
+        if (width === 375 || width === 1380) {
+          await annotation.screenshot({
+            path: 'form-qa-results/native-annotation-' + engineName + '-' + width + '.png',
+            style: '#global_header { visibility: hidden !important; }'
+          });
+        }
+        console.log(JSON.stringify({ nativeAnnotationLayout: 'PASS', engine: engineName, width, annotationGeometry }));
+
         const buttons = root.locator('.wp-block-button__link');
         assert.equal(await buttons.count(), 2);
         await page.waitForFunction(el => el.getAttribute('data-jwsnj-file-icon') === 'pdf', await buttons.nth(1).elementHandle());

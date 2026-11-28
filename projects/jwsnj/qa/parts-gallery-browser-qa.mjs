@@ -282,6 +282,248 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
         }
         console.log(JSON.stringify({ largeNavigationReference: 'PASS', engine: engineName, width, design }));
 
+        // Verify the same annotation rhythm around actual registered media
+        // blocks. Existing image/lightbox/navigation checks remain unchanged.
+        const notes = root.locator(':scope > ul.wp-block-list.annotation-list');
+        assert.equal(await notes.count(), 6);
+        const boundaries = await notes.evaluateAll(elements => elements.map(el => {
+          const box = el.getBoundingClientRect();
+          const before = el.previousElementSibling;
+          const after = el.nextElementSibling;
+          return {
+            label: el.firstElementChild.textContent.trim(),
+            beforeClass: before.className, afterClass: after.className, afterTag: after.tagName,
+            before: box.top - before.getBoundingClientRect().bottom,
+            after: after.getBoundingClientRect().top - box.bottom,
+            gap: getComputedStyle(el).rowGap,
+            items: [...el.children].map(li => ({
+              font: getComputedStyle(li).fontSize, inset: getComputedStyle(li).paddingLeft,
+              wrap: getComputedStyle(li).overflowWrap, height: li.getBoundingClientRect().height,
+              fits: li.scrollWidth <= li.clientWidth + 1
+            }))
+          };
+        }));
+        console.log(JSON.stringify({ annotationMediaBoundaries: 'MEASURED', engine: engineName, width, boundaries }));
+        assert.match(boundaries[0].beforeClass, /wp-block-gallery/);
+        assert.match(boundaries[0].afterClass, /wp-block-gallery/);
+        assert.match(boundaries[1].beforeClass, /wp-block-media-text/);
+        assert.equal(boundaries[1].afterTag, 'P');
+        assert.match(boundaries[2].beforeClass, /is-style-jwsnj-bordered-box/);
+        assert.match(boundaries[2].afterClass, /is-style-jwsnj-background-boxes/);
+        assert.match(boundaries[3].beforeClass, /is-style-jwsnj-background-boxes/);
+        assert.equal(boundaries[3].afterTag, 'P');
+        assert.match(boundaries[4].afterClass, /qa-annotation-details/);
+        assert.match(boundaries[5].beforeClass, /qa-annotation-details/);
+        assert.equal(boundaries[5].afterTag, 'P');
+        for (const boundary of boundaries) {
+          assert.ok(near(boundary.before, 20) && near(boundary.after, 20), JSON.stringify(boundary));
+          assert.equal(boundary.gap, '10px');
+          assert.equal(boundary.items.length, 2);
+          assert.ok(boundary.items.every(item => item.font === '14px' && item.inset === '31px' &&
+            item.wrap === 'anywhere' && item.fits), JSON.stringify(boundary));
+          if (width < 768) assert.ok(boundary.items[1].height > boundary.items[0].height, JSON.stringify(boundary));
+        }
+        if (width === 375 || width === 1380) {
+          for (const [i, note] of (await notes.all()).entries()) {
+            await note.screenshot({
+              path: 'form-qa-results/annotation-media-' + engineName + '-' + width + '-' + i + '.png',
+              style: '#global_header { visibility: hidden !important; }'
+            });
+          }
+        }
+        console.log(JSON.stringify({ annotationMediaBoundaries: 'PASS', engine: engineName, width, boundaries }));
+        console.log(JSON.stringify({ annotationGroupBoundaries: 'PASS', engine: engineName, width, boundaries: boundaries.slice(2, 4) }));
+
+        // Annotation clearance must survive actual native disclosure changes.
+        const details = root.locator('details.qa-annotation-details');
+        assert.equal(await details.count(), 1);
+        const summary = details.locator(':scope > summary');
+        const measureDetails = () => details.evaluate(el => {
+          const box = el.getBoundingClientRect();
+          const before = el.previousElementSibling.getBoundingClientRect();
+          const after = el.nextElementSibling.getBoundingClientRect();
+          const body = el.querySelector('.wp-block-details__content');
+          return {
+            open: el.open, height: box.height, before: box.top - before.bottom,
+            after: after.top - box.bottom, flow: after.top - before.bottom,
+            beforeGap: getComputedStyle(el.previousElementSibling).rowGap,
+            afterGap: getComputedStyle(el.nextElementSibling).rowGap,
+            focus: document.activeElement === el.querySelector('summary'),
+            fits: el.scrollWidth <= el.clientWidth + 1,
+            bodyFits: body && body.scrollWidth <= body.clientWidth + 1
+          };
+        });
+        const settled = () => page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+        const checkDetails = (value, open) => {
+          assert.equal(value.open, open);
+          assert.ok(near(value.before, 20) && near(value.after, 20), JSON.stringify(value));
+          assert.deepEqual([value.beforeGap, value.afterGap], ['10px', '10px']);
+          assert.ok(value.fits && (!open || value.bodyFits), JSON.stringify(value));
+        };
+        const closed = await measureDetails();
+        checkDetails(closed, false);
+        await summary.scrollIntoViewIfNeeded();
+        await summary.focus();
+        await summary.press('Enter');
+        await page.waitForFunction(() => document.querySelector('details.qa-annotation-details').open);
+        await settled();
+        const expanded = await measureDetails();
+        checkDetails(expanded, true);
+        assert.ok(expanded.focus && expanded.height > closed.height &&
+          near(expanded.flow - closed.flow, expanded.height - closed.height), JSON.stringify({ closed, expanded }));
+        if (width === 375 || width === 1380) {
+          await details.screenshot({ path: 'form-qa-results/annotation-details-open-' + engineName + '-' + width + '.png',
+            style: '#global_header { visibility: hidden !important; }' });
+        }
+        await summary.press('Space');
+        await page.waitForFunction(() => !document.querySelector('details.qa-annotation-details').open);
+        await settled();
+        const restored = await measureDetails();
+        checkDetails(restored, false);
+        assert.ok(restored.focus && near(restored.height, closed.height) &&
+          near(restored.flow, closed.flow), JSON.stringify({ closed, restored }));
+        if (width === 375 || width === 1380) {
+          await details.screenshot({ path: 'form-qa-results/annotation-details-closed-' + engineName + '-' + width + '.png',
+            style: '#global_header { visibility: hidden !important; }' });
+        }
+        console.log(JSON.stringify({ annotationDetailsBoundaries: 'PASS', engine: engineName, width, closed, expanded, restored }));
+
+        // Independent native group, with notes as its first/last children.
+        // Figma's opt-in box owns edge padding; measure content gaps and
+        // insets independently. Do not apply this contract to all Groups.
+        const edgeGroups = root.locator('.wp-block-group.qa-annotation-edges');
+        assert.equal(await edgeGroups.count(), 2);
+        for (const variant of ['background', 'bordered']) {
+          const edgeGroup = edgeGroups.and(root.locator('.is-style-jwsnj-' + variant + '-box'));
+          assert.equal(await edgeGroup.count(), 1);
+          const edges = await edgeGroup.evaluate(el => {
+            // WP may render core/group with a native inner container.
+            // Measure actual content children, but keep the outer padding box.
+            const inner = el.querySelector(':scope > .wp-block-group__inner-container');
+            const content = inner ?? el;
+            const children = [...content.children];
+            const s = getComputedStyle(el);
+            const outer = el.getBoundingClientRect();
+            const metrics = children.map(child => {
+              const r = child.getBoundingClientRect();
+              const cs = getComputedStyle(child);
+              return { tag: child.tagName, className: child.className, y: r.top, bottom: r.bottom,
+                topMargin: cs.marginTop, bottomMargin: cs.marginBottom, gap: cs.rowGap,
+                fits: child.scrollWidth <= child.clientWidth + 1,
+                items: [...child.children].map(li => ({ font: getComputedStyle(li).fontSize,
+                  inset: getComputedStyle(li).paddingLeft, fits: li.scrollWidth <= li.clientWidth + 1 })) };
+            });
+            return { wrapper: content.className, children: metrics, padding: [s.paddingTop, s.paddingBottom],
+              border: [s.borderTopWidth, s.borderBottomWidth],
+              topInset: metrics[0].y - outer.top, bottomInset: outer.bottom - metrics.at(-1).bottom,
+              gaps: metrics.slice(1).map((item, i) => item.y - metrics[i].bottom) };
+          });
+          console.log(JSON.stringify({ annotationGroupEdges: 'MEASURED', engine: engineName, width, variant, edges }));
+          assert.deepEqual(edges.children.map(child => child.tag), ['UL', 'UL', 'P', 'UL']);
+          assert.ok(edges.gaps.every(gap => near(gap, 20)), JSON.stringify(edges));
+          assert.deepEqual(edges.padding, Array(2).fill(width >= 768 ? '40px' : '32px'));
+          assert.deepEqual(edges.border, Array(2).fill(variant === 'bordered' ? '1px' : '0px'));
+          assert.ok(near(edges.topInset, parseFloat(edges.padding[0]) + parseFloat(edges.border[0])) &&
+            near(edges.bottomInset, parseFloat(edges.padding[1]) + parseFloat(edges.border[1])), JSON.stringify(edges));
+          for (const note of edges.children.filter(child => child.tag === 'UL')) {
+            assert.match(note.className, /annotation-list/);
+            assert.equal(note.gap, '10px');
+            assert.equal(note.items.length, 2);
+            assert.ok(note.fits && note.items.every(item => item.font === '14px' && item.inset === '31px' && item.fits), JSON.stringify(note));
+          }
+          // The approved box owns its padding; annotation gaps apply between
+          // content siblings, not in addition to the box's edge padding.
+          if (width === 375 || width === 1380) {
+            await edgeGroup.screenshot({ path: 'form-qa-results/annotation-group-edges-' + variant + '-' + engineName + '-' + width + '.png',
+              style: '#global_header { visibility: hidden !important; }' });
+          }
+          console.log(JSON.stringify({ annotationGroupConsecutive: 'PASS', engine: engineName, width, variant, edges }));
+        }
+
+        // Figma PC344:922/917 and SP442:2782/2775. Native registered
+        // opt-in styles, using ordinary editable blocks, not synthetic DOM.
+        const bordered = root.locator('.wp-block-group.is-style-jwsnj-bordered-box:not(.qa-annotation-edges)');
+        const pair = root.locator('.wp-block-columns.is-style-jwsnj-background-boxes');
+        assert.equal(await bordered.count(), 1);
+        assert.equal(await pair.count(), 1);
+        const boxGeometry = await bordered.evaluate(el => {
+          const r = el.getBoundingClientRect();
+          const s = getComputedStyle(el);
+          const p = el.querySelector('p');
+          const t = getComputedStyle(p);
+          return { width: r.width, padding: [s.paddingTop, s.paddingLeft, s.paddingBottom, s.paddingRight],
+            border: [s.borderTopWidth, s.borderTopColor, s.borderRadius],
+            background: s.backgroundColor, text: [t.fontSize, t.fontWeight, t.lineHeight, t.letterSpacing],
+            fits: el.scrollWidth <= el.clientWidth + 1 && p.scrollWidth <= p.clientWidth + 1 };
+        });
+        const pairGeometry = await pair.evaluate(async el => {
+          const r = el.getBoundingClientRect();
+          const s = getComputedStyle(el);
+          const boxes = [];
+          for (const box of el.querySelectorAll('.wp-block-group.is-style-jwsnj-background-box')) {
+            const b = box.getBoundingClientRect();
+            const bs = getComputedStyle(box);
+            const h = box.querySelector('h4');
+            const p = box.querySelector('p');
+            const hs = getComputedStyle(h);
+            const ps = getComputedStyle(p);
+            const source = hs.backgroundImage.match(/url\(["']?([^"')]+)/)?.[1];
+            const image = new Image();
+            if (!source) throw new Error('existing shared H4 artwork missing');
+            image.src = source;
+            await image.decode();
+            boxes.push({ x: b.left - r.left, y: b.top - r.top, width: b.width, height: b.height,
+              padding: [bs.paddingTop, bs.paddingLeft, bs.paddingBottom, bs.paddingRight],
+              radius: bs.borderRadius, background: bs.backgroundColor,
+              title: [hs.fontSize, hs.fontWeight, hs.paddingLeft, hs.backgroundSize],
+              art: source, intrinsic: [image.naturalWidth, image.naturalHeight],
+              text: [ps.fontSize, ps.fontWeight, ps.lineHeight, ps.letterSpacing],
+              headingGap: p.getBoundingClientRect().top - h.getBoundingClientRect().bottom,
+              fits: box.scrollWidth <= box.clientWidth + 1 && h.scrollWidth <= h.clientWidth + 1 &&
+                p.scrollWidth <= p.clientWidth + 1 && b.left >= r.left - 1 && b.right <= r.right + 1 });
+          }
+          return { width: r.width, gap: [s.rowGap, s.columnGap], boxes };
+        });
+        console.log(JSON.stringify({ nativeTextBoxes: 'MEASURED', engine: engineName, width, boxGeometry, pairGeometry }));
+        const padding = Array(4).fill(width >= 768 ? '40px' : '32px');
+        const textMetrics = ['16px', '400', '25.6px', '0.8px'];
+        assert.deepEqual(boxGeometry.padding, padding);
+        assert.deepEqual(boxGeometry.border, ['1px', 'rgb(40, 172, 95)', '5px']);
+        assert.equal(boxGeometry.background, 'rgb(255, 255, 255)');
+        assert.deepEqual(boxGeometry.text, textMetrics);
+        assert.ok(boxGeometry.fits);
+        assert.deepEqual(pairGeometry.gap, Array(2).fill(width >= 768 ? '40px' : '24px'));
+        assert.equal(pairGeometry.boxes.length, 2);
+        for (const box of pairGeometry.boxes) {
+          assert.deepEqual(box.padding, padding);
+          assert.equal(box.radius, '5px');
+          assert.equal(box.background, 'rgb(245, 253, 235)');
+          assert.deepEqual(box.title, ['18px', '500', '26px', 'auto 17px']);
+          assert.match(box.art, /ico_blossom\.svg/);
+          assert.ok(box.intrinsic.every(n => n > 0));
+          assert.deepEqual(box.text, textMetrics);
+          assert.ok(near(box.headingGap, 20) && box.fits, JSON.stringify(box));
+        }
+        const [left, right] = pairGeometry.boxes;
+        if (width >= 783) {
+          assert.ok(near(left.width, right.width) && near(left.height, right.height) &&
+            near(left.y, right.y) && near(right.x - left.x - left.width, 40), JSON.stringify(pairGeometry));
+        } else if (width < 768) {
+          assert.ok(near(left.width, pairGeometry.width) && near(right.width, pairGeometry.width) &&
+            near(left.x, right.x) && near(right.y - left.y - left.height, 24), JSON.stringify(pairGeometry));
+        } else {
+          // Preserve WordPress's separate native stacking threshold;
+          // middle-width geometry is recorded without forcing a new layout.
+          assert.ok(right.y >= left.y, JSON.stringify(pairGeometry));
+        }
+        if (width === 375 || width === 1380) {
+          for (const [name, block] of [['bordered', bordered], ['pair', pair]]) {
+            await block.screenshot({ path: 'form-qa-results/native-text-box-' + name + '-' + engineName + '-' + width + '.png',
+              style: '#global_header { visibility: hidden !important; }' });
+          }
+        }
+        console.log(JSON.stringify({ nativeTextBoxes: 'PASS', engine: engineName, width }));
+
         console.log(JSON.stringify({ partsGalleryFrontend: 'PASS', engine: engineName, width, results, buttonGeometry, geometry }));
       } catch (error) {
         console.error(JSON.stringify({ engineName, width, runtimeErrors, state: await page.evaluate(() => ({

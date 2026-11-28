@@ -24,7 +24,7 @@ $news_query = new WP_Query([
           <span class="jwsnj_topNews_en" lang="en">News</span>
           <span class="jwsnj_topNews_ja"><img src="<?php echo esc_url(get_theme_file_uri('images/common/ico_blossom.svg')); ?>" width="12" height="12" alt="">お知らせ</span>
         </h2>
-        <a class="jwsnj_topNews_more"<?php if ($news_url !== '') : ?> href="<?php echo $news_url; ?>"<?php endif; ?>>お知らせ一覧<span class="jwsnj_topNews_arrow" aria-hidden="true"></span></a>
+        <a class="jwsnj_topNews_more"<?php if ($news_url !== '') : ?> href="<?php echo $news_url; ?>"<?php endif; ?>><span class="jwsnj_topNews_moreLabel">お知らせ一覧</span><span class="jwsnj_topNews_arrow" aria-hidden="true"></span></a>
       </div>
       <?php if ($news_query->have_posts()) : ?>
         <div class="module_newsList-01">

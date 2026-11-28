@@ -1,6 +1,7 @@
 // Real browser engines, actual checked-in CSS imports, isolated HTML only.
 // Not WordPress or Figma visual acceptance.
 import {createServer} from 'node:http';
+import {execFileSync} from 'node:child_process';
 import {readFileSync,mkdirSync,writeFileSync} from 'node:fs';
 import {resolve,extname} from 'node:path';
 import {createRequire} from 'node:module';
@@ -16,8 +17,39 @@ const server=createServer((req,res)=>{
 });
 await new Promise(r=>server.listen(0,'127.0.0.1',r));
 const url='http://127.0.0.1:'+server.address().port;
+// Render the actual fixed-content PHP views with only the two URL helpers stubbed.
+// This is a CSS/markup integration check, not a WordPress runtime or ACF test.
+const fixedTopMarkup = ['_top-catchphrase.php', '_top-applicants.php'].map(file => {
+  const path = resolve(root, 'template-parts', file);
+  const stub = 'function get_theme_file_uri($path) { return "/" . ltrim($path, "/"); } function esc_url($url) { return htmlspecialchars($url, ENT_QUOTES, "UTF-8"); } ';
+  return execFileSync('php', ['-r', stub + 'include ' + JSON.stringify(path) + ';'], {encoding: 'utf8'});
+}).join('\n');
+// Exercise the already-approved About fixture through the real views; URL and
+// escaping helpers are the only substitutes for WordPress in this isolated probe.
+const aboutStub = 'function get_theme_file_uri($path) { return "/" . ltrim($path, "/"); } function esc_url($url) { return htmlspecialchars($url, ENT_QUOTES, "UTF-8"); } function esc_html($text) { return htmlspecialchars($text, ENT_QUOTES, "UTF-8"); } function wp_kses_post($html) { return $html; } function get_template_part($path, $name = null, $args = []) { include ' + JSON.stringify(root + '/') + ' . $path . ".php"; } ';
+const aboutFixturePath = resolve(root, '../tests/fixtures/top-about.php');
+const aboutIntroPath = resolve(root, 'template-parts/_top-about-intro.php');
+const renderAbout = withCards => execFileSync('php', ['-r', aboutStub +
+  '$args = ["items" => ' + (withCards ? 'require ' + JSON.stringify(aboutFixturePath) : '[]') + ']; include ' + JSON.stringify(aboutIntroPath) + ';'], {encoding:'utf8'});
+const aboutMarkup = [renderAbout(false), renderAbout(true)];
+// Render the existing Notice PHP with isolated ACF/WordPress helper doubles.
+ // The rows below exist only in this test; actual ACF editing and sanitation
+ // are covered separately and are not claimed by this presentation probe.
+const noticePath=resolve(root,'template-parts/_top-notice.php');
+const noticeSample={date:'20260127',textarea:'<a href="#end">急募！現在教員の欠員に伴い、担任をしていただける方を募集します</a>'};
+const noticeRows=[noticeSample,{date:'20260231',textarea:'長いお知らせ LongEditableNoticeWithoutSpaces1234567890LongEditableNoticeWithoutSpaces1234567890<br>次の行'},{date:'',textarea:'日付のないお知らせ'},{...noticeSample,none:['_hide'],textarea:'Hidden row'},{textarea:'<br>'}];
+const renderNotice=(enabled,rows)=>{
+  const encoded=Buffer.from(JSON.stringify(rows)).toString('base64');
+  const stub='$rows=json_decode(base64_decode("'+encoded+'"),true); $i=-1; function get_field($n){return '+(enabled?'true':'false')+';} function have_rows($n){global $rows,$i;return $i+1<count($rows);} function the_row(){global $i;$i++;} function get_sub_field($n,$format=true){global $rows,$i;return $rows[$i][$n]??null;} function wp_kses_post($s){return strip_tags($s,"<a><br><p>");} function wp_strip_all_tags($s){return strip_tags($s);} function esc_attr($s){return htmlspecialchars($s,ENT_QUOTES);} function esc_html($s){return htmlspecialchars($s,ENT_QUOTES);} ';
+  return execFileSync('php',['-r',stub+'include '+JSON.stringify(noticePath)+';'],{encoding:'utf8'}).trim();
+};
+for(const [enabled,rows] of [[false,[noticeSample]],[true,[]],[true,[{...noticeSample,none:['_hide']},{textarea:'<br>'}]]]) assert.equal(renderNotice(enabled,rows),'');
+const noticeMarkup=[renderNotice(true,[noticeSample]),renderNotice(true,noticeRows)];
 const report=[];
 const resizeFailures=[];
+const fixedTopFailures=[];
+const aboutFailures=[];
+const noticeFailures=[];
 try{
 for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
  const browser=await engine.launch();
@@ -1294,6 +1326,486 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
   }
  await page.emulateMedia({reducedMotion:'reduce'});
  // Feature proof separate from production layout: actual cascade and containment.
+ // Approved Applicants link visuals: actual theme CSS, isolated fixture.
+ for (const width of [320, 375, 768, 1080, 1380]) {
+   await page.setViewportSize({width,height:900});
+   await page.evaluate(() => {
+     const section = document.createElement('section');
+     section.className = 'jwsnj_topApplicants';
+     section.innerHTML = '<div class="global_inner jwsnj_topApplicants_inner"><div class="jwsnj_topApplicants_content"><ul class="jwsnj_topApplicants_topics">' +
+       ['入学・編入手続きの流れ','学費','学校見学のお問い合わせ LongEditableTitleWithoutSpaces1234567890'].map((title,i) =>
+         '<li><a class="jwsnj_topApplicants_link"><img src="/images/top/'+['ico_flow.svg','ico_fee.svg','ico_visit.svg'][i]+'" alt=""><span>'+title+'</span><span class="jwsnj_topApplicants_arrow" aria-hidden="true"></span></a></li>').join('') +
+       '</ul></div></div>';
+     document.querySelector('main.global_contents').append(section);
+   });
+   const section = page.locator('.jwsnj_topApplicants');
+   const links = section.locator('.jwsnj_topApplicants_link');
+   for (const img of await section.locator('img').all()) await img.evaluate(el => el.decode());
+   const metrics = await links.evaluateAll(elements => elements.map(el => {
+     const r = el.getBoundingClientRect(), icon = el.firstElementChild, label = el.children[1], arrow = el.lastElementChild;
+     const a = arrow.getBoundingClientRect(), t = label.getBoundingClientRect(), s = getComputedStyle(el);
+     return { height:r.height, icon:icon.getBoundingClientRect().width, arrow:[a.width,a.height],
+       right:r.right-a.right, vertical:a.top+a.height/2-r.top-r.height/2,
+       glyph:getComputedStyle(arrow,'::before').content, color:getComputedStyle(arrow).backgroundColor,
+       gap:s.columnGap, fits:el.scrollWidth<=el.clientWidth+1 && label.scrollWidth<=label.clientWidth+1 && t.right<=a.left+1 };
+   }));
+   for (const [i,m] of metrics.entries()) {
+     assert.ok(m.fits && m.height >= (width>=1080?100:80),JSON.stringify(m));
+     assert.ok(Math.abs(m.arrow[0]-24)<1 && Math.abs(m.arrow[1]-24)<1 && Math.abs(m.vertical)<1,JSON.stringify(m));
+     assert.ok(Math.abs(m.right-(width>=1080?20:16))<1,JSON.stringify(m));
+     assert.ok(Math.abs(m.icon-(width>=1080?56:36))<1,JSON.stringify(m));
+     assert.equal(m.color,'rgb(64, 179, 189)');
+     assert.ok(m.glyph.includes('\uf061'),JSON.stringify(m));
+   }
+   await links.first().focus();
+   assert.equal(await links.first().evaluate(el=>document.activeElement===el),false);
+   await links.first().evaluate(el=>el.setAttribute('href','#end'));
+   await page.emulateMedia({reducedMotion:'no-preference'});
+   await links.first().hover();
+   const arrow = links.first().locator('.jwsnj_topApplicants_arrow');
+   await page.waitForFunction(()=>getComputedStyle(document.querySelector('.jwsnj_topApplicants_arrow')).backgroundColor==='rgb(255, 255, 255)');
+   assert.ok((await arrow.evaluate(el=>getComputedStyle(el).transitionDuration)).split(', ').every(v=>v==='0.3s'));
+   await page.emulateMedia({reducedMotion:'reduce'});
+   assert.ok((await arrow.evaluate(el=>getComputedStyle(el).transitionDuration)).split(', ').every(v=>v==='0s'));
+   await links.first().evaluate(el=>el.removeAttribute('href'));
+   await page.mouse.move(0,0);
+   if(width===375||width===1380) await section.screenshot({path:out+'/applicants-'+name+'-'+width+'.png'});
+   console.log(JSON.stringify({applicantsArrow:'PASS',engine:name,width,metrics}));
+   await section.evaluate(el=>el.remove());
+   report.push({name,width,applicantsArrow:metrics});
+ }
+ // Actual TOP About heading markup structure; prevent global image sizing
+ // from overriding the 12px official decorative SVG inside the flex subtitle.
+ for (const width of [320,375,768,1080,1380]) {
+   await page.setViewportSize({width,height:900});
+   const fixture = await page.evaluateHandle(() => {
+     const section = document.createElement('section');
+     section.className = 'jwsnj_topAbout';
+     section.innerHTML = '<div class="global_inner jwsnj_topAbout_inner"><div class="jwsnj_topAbout_copy"><h2 class="jwsnj_topAbout_title"><span class="jwsnj_topAbout_en" lang="en">About us</span><span class="jwsnj_topAbout_ja"><img src="/images/common/ico_blossom.svg" width="12" height="12" alt="">ニュージャージー補習授業校とは</span></h2></div></div>';
+     document.querySelector('main.global_contents').append(section);
+     return section;
+   });
+   try {
+     const subtitle = page.locator('.jwsnj_topAbout_ja');
+     await subtitle.locator('img').evaluate(img=>img.decode());
+     for (const long of [false,true]) {
+       if (long) await subtitle.evaluate(el=>el.append(' 長い日本語とLongEditableHeadingWithoutSpaces1234567890'));
+       const metrics = await subtitle.evaluate(el=>{
+         const image=el.querySelector('img'), r=image.getBoundingClientRect(), style=getComputedStyle(el);
+         return {size:[r.width,r.height],natural:[image.naturalWidth,image.naturalHeight],gap:style.columnGap,
+           fits:el.scrollWidth<=el.clientWidth+1, documentFits:document.documentElement.scrollWidth<=innerWidth+1};
+       });
+       assert.ok(metrics.natural.every(n=>n>0),JSON.stringify(metrics));
+       assert.ok(metrics.size.every(n=>Math.abs(n-12)<0.5),JSON.stringify(metrics));
+       assert.equal(metrics.gap,'8px');
+       assert.ok(metrics.fits && metrics.documentFits,JSON.stringify(metrics));
+       if (!long && (width===375||width===1380)) await page.locator('.jwsnj_topAbout_title').screenshot({path:out+'/about-heading-'+name+'-'+width+'.png'});
+       console.log(JSON.stringify({aboutHeadingBlossom:'PASS',engine:name,width,long,metrics}));
+       report.push({name,width,long,aboutHeadingBlossom:metrics});
+     }
+   } finally {
+     await fixture.evaluate(el=>el.remove());
+     await fixture.dispose();
+   }
+ }
+ // Full fixed TOP sections from production PHP: heading, badge, photo/shadow,
+ // responsive catch artwork and actual accessible names, not handwritten clones.
+ for (const width of [320, 375, 768, 1079, 1080, 1380]) {
+   await page.setViewportSize({width,height:900});
+   const fixture = await page.evaluateHandle(markup => {
+     const range = document.createRange();
+     const main = document.querySelector('main.global_contents');
+     range.selectNodeContents(main);
+     const fragment = range.createContextualFragment(markup);
+     const nodes = [...fragment.children];
+     main.append(fragment);
+     return nodes;
+   }, fixedTopMarkup);
+   const applicants = page.locator('.jwsnj_topApplicants');
+   const catchphrase = page.locator('.jwsnj_topCatchphrase');
+   try {
+     await page.locator('.jwsnj_topApplicants img, .jwsnj_topCatchphrase img:visible').evaluateAll(images =>
+       Promise.all(images.map(img => { img.loading = 'eager'; return img.decode(); })));
+     await page.evaluate(() => document.fonts.ready);
+     const measure = () => page.evaluate(() => {
+       const rect = node => {
+         const r = node.getBoundingClientRect();
+         return { x:r.left, y:r.top, width:r.width, height:r.height, right:r.right, bottom:r.bottom };
+       };
+       const fits = node => node.scrollWidth <= node.clientWidth + 1;
+       const app = document.querySelector('.jwsnj_topApplicants');
+       const inner = app.querySelector('.jwsnj_topApplicants_inner');
+       const content = app.querySelector('.jwsnj_topApplicants_content');
+       const intro = app.querySelector('.jwsnj_topApplicants_intro');
+       const topics = app.querySelector('.jwsnj_topApplicants_topics');
+       const photo = app.querySelector('.jwsnj_topApplicants_photo');
+       const image = photo.querySelector('img');
+       const badge = app.querySelector('.jwsnj_topApplicants_badge');
+       const flower = app.querySelector('.jwsnj_topApplicants_blossom');
+       const shadow = getComputedStyle(photo, '::before');
+       const c = document.querySelector('.jwsnj_topCatchphrase');
+       const pcArt = c.querySelector('.jwsnj_topCatchphrase_artPc');
+       const spArt = c.querySelector('.jwsnj_topCatchphrase_artSp');
+       const visible = el => el.getClientRects().length > 0;
+       return {
+         viewport: {inner:innerWidth,client:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth,body:rect(document.body).width,main:rect(app.parentElement).width},
+         docFits: document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1,
+         applicants: { section:rect(app),inner:rect(inner),content:rect(content),intro:rect(intro),topics:rect(topics),photo:rect(photo),
+           image:rect(image),badge:rect(badge),flower:rect(flower),mask:getComputedStyle(flower).maskImage,
+           shadow:[parseFloat(shadow.width),parseFloat(shadow.height),shadow.backgroundColor],
+           padding:parseFloat(getComputedStyle(app).paddingTop),gap:parseFloat(getComputedStyle(inner).columnGap),
+           loaded:[...app.querySelectorAll('img')].every(img=>img.complete&&img.naturalWidth>0),
+           fits:[app,inner,content,topics,badge,photo].every(fits),
+           rows:[...topics.querySelectorAll('a')].map(a=>({href:a.hasAttribute('href'),fits:fits(a),
+             arrow:rect(a.lastElementChild), label:rect(a.children[1])})),
+           badgeText:badge.textContent.trim(),imageSrc:image.getAttribute('src'),
+           badgeGap:parseFloat(getComputedStyle(badge.parentElement).rowGap) },
+         catchphrase: { box:rect(c),pc:visible(pcArt),sp:visible(spArt),pcArt:rect(pcArt),spArt:rect(spArt),
+           font:parseFloat(getComputedStyle(c.querySelector('p')).fontSize),
+           loaded:[...c.querySelectorAll('img')].filter(visible).every(img=>img.complete&&img.naturalWidth>0),
+           fits:[c,c.querySelector('p'),c.querySelector('.jwsnj_topCatchphrase_first')].every(fits) }
+       };
+     });
+     const result = await measure();
+     console.log(JSON.stringify({topFixedSections:'MEASURED',engine:name,width,result}));
+     const near = (a,b,tolerance=1.5)=>Math.abs(a-b)<=tolerance;
+     const pc = width >= 1080;
+     const a = result.applicants, c = result.catchphrase;
+     if(width===375||width===1380) {
+       await applicants.screenshot({path:out+'/applicants-full-'+name+'-'+width+'.png'});
+       await catchphrase.screenshot({path:out+'/catchphrase-full-'+name+'-'+width+'.png'});
+     }
+     assert.ok(result.docFits && a.fits && c.fits && a.loaded && c.loaded,JSON.stringify(result));
+     assert.equal(a.imageSrc,'/images/top/img_applicants.webp');
+     assert.ok(near(a.image.width/a.image.height,0.8,0.02),JSON.stringify(a));
+     assert.ok(near(a.shadow[0],a.image.width) && near(a.shadow[1],a.image.height),JSON.stringify(a));
+     const expectedOffset = a.photo.width * 0.0698;
+     assert.ok(near(a.photo.right-a.image.right,expectedOffset)&&near(a.photo.bottom-a.image.bottom,expectedOffset),JSON.stringify(a));
+     assert.ok(near(a.image.x,a.photo.x)&&near(a.image.y,a.photo.y)&&near(a.image.width,a.photo.width*0.9302),JSON.stringify(a));
+     assert.ok(near(a.flower.width,12)&&near(a.flower.height,12)&&a.mask.includes('ico_blossom.svg'),JSON.stringify(a));
+     assert.equal(a.padding,pc?100:64);
+     assert.equal(a.gap,pc?90:40);
+     assert.equal(a.badgeGap,pc?10:4);
+     assert.equal(a.badgeText,'お気軽にお問い合わせください');
+     assert.equal(a.rows.length,3);
+     for(const row of a.rows) assert.ok(!row.href&&row.fits&&near(row.arrow.width,24)&&near(row.arrow.height,24)&&row.label.right<=row.arrow.x+1,JSON.stringify(row));
+     assert.ok(pc?near(a.photo.x-a.content.right,90)&&near(a.photo.y,a.content.y):near(a.photo.y-a.content.bottom,40),JSON.stringify(a));
+     if(width===1380) {
+       assert.ok(near(a.content.width,440)&&near(a.photo.width,430)&&near(a.image.width,400)&&near(a.image.height,500),JSON.stringify(a));
+     } else if(width===375) {
+       // A reserved scrollbar gutter can narrow the layout even when the root
+       // clientWidth reports the full viewport. Check the actual main owner.
+       const available = result.viewport.main - 60;
+       assert.ok(near(a.section.width,result.viewport.main)&&near(a.inner.width,result.viewport.main)&&near(a.content.x-a.inner.x,30)&&
+         near(a.inner.right-a.content.right,30)&&near(a.content.width,available)&&
+         near(a.photo.width,available)&&near(a.image.width,available*0.9302)&&
+         near(a.image.height,available*0.9302/0.8),JSON.stringify(result));
+     }
+     assert.equal(c.pc,pc);assert.equal(c.sp,!pc);
+     assert.equal(c.font,pc?48:28);
+     assert.ok(pc?near(c.pcArt.width,291)&&near(c.pcArt.height,105):near(c.spArt.width,192)&&near(c.spArt.height,64),JSON.stringify(c));
+     if(width===375||width===1380) {
+       // Root text enlargement stress without forcing one-line copy or fixed row height.
+       for(const scale of [1.5,2]) {
+         await page.evaluate(scale=>{document.documentElement.style.fontSize=(16*scale)+'px';},scale);
+         const stress=await measure();
+         console.log(JSON.stringify({topFixedSectionsStress:'MEASURED',engine:name,width,scale,stress}));
+         assert.ok(stress.docFits&&stress.applicants.fits&&stress.catchphrase.fits,JSON.stringify(stress));
+         assert.ok(stress.applicants.rows.every(row=>row.fits&&row.label.right<=row.arrow.x+1),JSON.stringify(stress));
+         const photo=stress.applicants.photo, image=stress.applicants.image;
+         assert.ok(near(photo.right-image.right,photo.width*0.0698)&&near(photo.bottom-image.bottom,photo.width*0.0698),JSON.stringify(stress));
+       }
+     }
+     console.log(JSON.stringify({topFixedSections:'PASS',engine:name,width}));
+     report.push({name,width,topFixedSections:result});
+   } catch(error) {
+     fixedTopFailures.push({engine:name,width,message:String(error)});
+     console.error(JSON.stringify({topFixedSections:'FAIL',engine:name,width,message:String(error)}));
+     await applicants.screenshot({path:out+'/applicants-failure-'+name+'-'+width+'.png'}).catch(()=>{});
+     await catchphrase.screenshot({path:out+'/catchphrase-failure-'+name+'-'+width+'.png'}).catch(()=>{});
+   } finally {
+     await page.evaluate(()=>document.documentElement.style.removeProperty('font-size'));
+     await fixture.evaluate(nodes=>nodes.forEach(node=>node.remove()));
+     await fixture.dispose();
+   }
+ }
+ // About cards are presentation-only until CMS and destinations are accepted.
+ const homeSource = readFileSync(resolve(root,'js/home.js'),'utf8');
+ const aboutInit = homeSource.match(/  const initAboutCards = function \(root\) \{[\s\S]*?\n  \};/)?.[0];
+ assert.ok(aboutInit, 'production About initializer must be found');
+ for (const width of [320,375,768,1079,1080,1280,1380]) {
+   await page.setViewportSize({width,height:900});
+   for (const withCards of [false,true]) {
+     const fixture = await page.evaluateHandle(markup => {
+       const main = document.querySelector('main.global_contents');
+       const range = document.createRange();
+       range.selectNodeContents(main);
+       const fragment = range.createContextualFragment(markup);
+       const section = fragment.firstElementChild;
+       main.append(fragment);
+       return section;
+     },aboutMarkup[Number(withCards)]);
+     const section = page.locator('.jwsnj_topAbout');
+     const buttons = section.locator('[data-about-select]');
+     const near = (a,b,tolerance=1.5)=>Math.abs(a-b)<=tolerance;
+     try {
+       await section.locator('img').evaluateAll(images=>Promise.all(images.map(img=>{img.loading='eager';return img.decode();})));
+       const measure = () => section.evaluate(el=>{
+         const rect = node=>{const r=node.getBoundingClientRect();return {x:r.left,y:r.top,width:r.width,height:r.height,right:r.right,bottom:r.bottom};};
+         const fits = node=>node.scrollWidth<=node.clientWidth+1;
+         const map=el.querySelector('.jwsnj_topAbout_map'), shape=map.querySelector('.jwsnj_topAbout_shape');
+         const list=el.querySelector('[data-about-cards]'), copy=el.querySelector('.jwsnj_topAbout_copy');
+         return {
+           viewport:rect(el.parentElement),section:rect(el),copy:rect(copy),map:rect(map),
+           mapPosition:getComputedStyle(map).position,shape:rect(shape),
+           pins:[...map.querySelectorAll('img:not(.jwsnj_topAbout_shape)')].map(rect),
+           icon:rect(copy.querySelector('.jwsnj_topAbout_ja img')),
+           gap:parseFloat(getComputedStyle(copy).rowGap),
+           leadFont:parseFloat(getComputedStyle(copy.querySelector('.jwsnj_topAbout_lead')).fontSize),
+           docFits:document.documentElement.scrollWidth<=document.documentElement.clientWidth+1,
+           copyFits:fits(copy),loaded:[...el.querySelectorAll('img')].every(img=>img.complete&&img.naturalWidth>0),
+           cards:list?[...list.children].map(li=>{
+             const b=li.querySelector('button'),photo=b.querySelector('.jwsnj_topAbout_cardPhoto'),label=b.querySelector('.jwsnj_topAbout_cardLabel');
+             const img=photo.querySelector('img'), imageStyle=getComputedStyle(img), photoStyle=getComputedStyle(photo);
+             return {box:rect(li),width:li.offsetWidth,photoRatio:photo.clientWidth/photo.clientHeight,
+               crop:{width:parseFloat(imageStyle.width),height:parseFloat(imageStyle.height),x:parseFloat(imageStyle.left),y:parseFloat(imageStyle.top),
+                 boxWidth:parseFloat(photoStyle.width),boxHeight:parseFloat(photoStyle.height),fit:imageStyle.objectFit,overflow:photoStyle.overflow},
+               image:photo.querySelector('img').getAttribute('src'),
+               natural:[photo.querySelector('img').naturalWidth,photo.querySelector('img').naturalHeight],
+               title:label.firstElementChild.textContent,
+               arrowWidth:label.lastElementChild.offsetWidth,transform:getComputedStyle(li).transform,
+               z:getComputedStyle(li).zIndex,disabled:b.disabled,pressed:b.getAttribute('aria-pressed'),
+               fits:[b,label].every(fits)};
+           }):[]
+         };
+       });
+       const initial=await measure();
+       console.log(JSON.stringify({topAbout:'MEASURED',engine:name,width,withCards,initial}));
+       assert.ok(initial.docFits&&initial.copyFits&&initial.loaded,JSON.stringify(initial));
+       assert.ok(near(initial.icon.width,12)&&near(initial.icon.height,12));
+       const pc=width>=1080;
+       assert.equal(initial.gap,pc?24:20);
+       assert.equal(initial.leadFont,pc?32:28);
+       assert.equal(initial.mapPosition,pc&&!withCards?'relative':'absolute');
+       assert.ok(near(initial.shape.width/initial.shape.height,280/534,0.015));
+       assert.equal(initial.cards.length,withCards?4:0);
+       if (withCards) {
+         assert.deepEqual(initial.cards.map(c=>c.title),['学校概要','教育環境','教育内容','交通アクセス']);
+         assert.deepEqual(initial.cards.map(c=>c.image),['img_about-overview.webp','img_mv-05.webp','img_about-education.webp','img_mv-06.webp'].map(n=>'/images/top/'+n));
+         // Independent Figma source rectangles (normalized image coordinates).
+         const expectedCrops = [{"file":"img_about-overview.webp","sp":[0.341071874,0.356105953,0.205410421,0.213987723],"pc":[0.341071874,0.624965966,0.205630675,0.213899478],"natural":[1080,720]},{"file":"img_mv-05.webp","sp":[0.401275873,0.418963701,0.208340928,0.331894428],"pc":[0.401275873,0.735281289,0.208340928,0.132034898],"natural":[2149,1399]},{"file":"img_about-education.webp","sp":[0.426490813,0.445290148,0.173350468,0.435207635],"pc":[0.3,0.549707592,0.256000042,0.252384633],"natural":[1080,810]},{"file":"img_mv-06.webp","sp":[0.505867004,0.528165102,0.121582814,0.161367178],"pc":[0.401275873,0.735281289,0.056264307,0],"natural":[1280,960]}];
+         for(const [i,card] of initial.cards.entries()) {
+           const expected=expectedCrops[i], [w,h,x,y]=pc?expected.pc:expected.sp;
+           assert.deepEqual(card.natural,expected.natural);
+           const crop=card.crop;
+           assert.equal(crop.fit,'fill');
+           assert.equal(crop.overflow,'hidden');
+           assert.ok(near(crop.width,crop.boxWidth/w,2)&&near(crop.height,crop.boxHeight/h,2)&&
+             near(crop.x,-crop.boxWidth*x/w,2)&&near(crop.y,-crop.boxHeight*y/h,2),JSON.stringify({i,crop,expected}));
+           assert.ok(card.disabled&&card.pressed==='false'&&card.fits,JSON.stringify(card));
+           assert.ok(near(card.arrowWidth,24)&&near(card.photoRatio,pc?280/351:260/186,0.02),JSON.stringify(card));
+           assert.ok(card.box.x>=initial.viewport.x-1.5&&card.box.right<=initial.viewport.right+1.5,JSON.stringify(card));
+         }
+         if (!pc) {
+           for(let i=1;i<4;i++) assert.ok(near(initial.cards[i].box.y-initial.cards[i-1].box.bottom,20));
+         } else {
+           assert.ok(initial.cards[0].transform!=='none'&&initial.cards[2].transform!=='none');
+           assert.ok(initial.cards[0].box.right>initial.cards[1].box.x&&initial.cards[2].box.right>initial.cards[3].box.x);
+         }
+         if(width===375||width===1380) {
+           await section.screenshot({path:out+'/about-full-'+name+'-'+width+'.png'});
+           // A different supplied photo is not assigned a design crop by card order.
+           const image=buttons.first().locator('.jwsnj_topAbout_cardPhoto img');
+           const original=await image.getAttribute('src');
+           try {
+             await image.evaluate(async img=>{img.src='/images/top/img_applicants.webp';await img.decode();});
+             const generic=(await measure()).cards[0].crop;
+             assert.equal(generic.fit,'cover');
+             assert.ok(near(generic.width,generic.boxWidth)&&near(generic.height,generic.boxHeight)&&near(generic.x,0)&&near(generic.y,0),JSON.stringify(generic));
+           } finally {
+             await image.evaluate(async (img,src)=>{img.src=src;await img.decode();},original);
+           }
+         }
+         await section.locator('[data-about-cards]').evaluate((root,source)=>new Function('root',source+'\ninitAboutCards(root);')(root),aboutInit);
+         assert.equal(await buttons.evaluateAll(bs=>bs.filter(b=>b.disabled).length),0);
+         // Actual mouse hit testing: never use force or programmatic clicks.
+         const wasReduced = await page.evaluate(()=>matchMedia('(prefers-reduced-motion: reduce)').matches);
+         try {
+           await page.emulateMedia({reducedMotion:'no-preference'});
+           const first = buttons.first();
+           const neutral = await first.evaluate(b=>getComputedStyle(b).color);
+           assert.equal(await first.evaluate(b=>getComputedStyle(b).transitionDuration),'0.3s');
+           const hitPoint = async button => {
+             await button.scrollIntoViewIfNeeded();
+             return button.evaluate(b=>{
+               const r=b.getBoundingClientRect();
+               for(const fy of [0.5,0.3,0.7,0.15,0.85]) {
+                 for(const fx of [0.5,0.3,0.7,0.15,0.85]) {
+                   const x=r.left+r.width*fx,y=r.top+r.height*fy;
+                   if(document.elementFromPoint(x,y)?.closest('button')===b) return {x,y};
+                 }
+               }
+               return null;
+             });
+           };
+           const point = await hitPoint(first);
+           assert.ok(point,'first card has no visible mouse target');
+           await page.mouse.move(point.x,point.y);
+           await page.waitForFunction(()=>getComputedStyle(document.querySelector('[data-about-select]')).color==='rgb(40, 172, 95)');
+           await page.mouse.move(0,0);
+           await page.waitForFunction(color=>getComputedStyle(document.querySelector('[data-about-select]')).color===color,neutral);
+           await page.emulateMedia({reducedMotion:'reduce'});
+           assert.equal(await first.evaluate(b=>getComputedStyle(b).transitionDuration),'0s');
+           await page.emulateMedia({reducedMotion:'no-preference'});
+           for(let i=0;i<4;i++) {
+             const button=buttons.nth(i);
+             const target=await hitPoint(button);
+             assert.ok(target,'card '+i+' has no exposed mouse target');
+             await page.mouse.click(target.x,target.y);
+             assert.deepEqual(await buttons.evaluateAll(bs=>bs.map(b=>b.getAttribute('aria-pressed'))),[0,1,2,3].map(n=>String(n===i)));
+             await button.evaluate(b=>b.blur());
+             assert.equal(await button.evaluate(b=>getComputedStyle(b.closest('li')).zIndex),'5');
+           }
+           console.log(JSON.stringify({topAboutMouse:'PASS',engine:name,width}));
+         } finally {
+           await page.mouse.move(0,0);
+           await page.emulateMedia({reducedMotion:wasReduced?'reduce':'no-preference'});
+         }
+         for(let i=0;i<4;i++) {
+           const button=buttons.nth(i);
+           await button.focus();
+           assert.equal(await button.evaluate(b=>document.activeElement===b),true);
+           if(pc) assert.equal(await button.evaluate(b=>getComputedStyle(b.closest('li')).zIndex),'6');
+           await button.press(i%2===0?'Enter':'Space');
+           assert.deepEqual(await buttons.evaluateAll(bs=>bs.map(b=>b.getAttribute('aria-pressed'))),[0,1,2,3].map(n=>String(n===i)));
+           assert.equal(await button.evaluate(b=>getComputedStyle(b.closest('li')).zIndex),'6');
+         }
+         await buttons.nth(0).focus();
+         await page.keyboard.press('Tab');
+         assert.equal(await buttons.nth(1).evaluate(b=>document.activeElement===b),true);
+         await buttons.nth(1).press('Enter');
+         if(width===375||width===1380) await section.screenshot({path:out+'/about-selected-'+name+'-'+width+'.png'});
+         // Stress the real labels at large text sizes, not the production copy.
+         if(width===375||width===1380) {
+           await buttons.nth(1).locator('.jwsnj_topAbout_cardLabel > span').first().evaluate(el=>{el.append(' 長い教育環境の説明LongEditableLabel1234567890');});
+           for(const scale of [1.5,2]) {
+             await page.evaluate(scale=>{document.documentElement.style.fontSize=(16*scale)+'px';},scale);
+             const stress=await measure();
+             console.log(JSON.stringify({topAboutStress:'MEASURED',engine:name,width,scale,stress}));
+             assert.ok(stress.docFits&&stress.copyFits&&stress.cards.every(c=>c.fits),JSON.stringify(stress));
+           }
+         }
+       }
+       console.log(JSON.stringify({topAbout:'PASS',engine:name,width,withCards}));
+       report.push({name,width,withCards,topAbout:initial});
+     } catch(error) {
+       aboutFailures.push({engine:name,width,withCards,message:String(error)});
+       console.error(JSON.stringify({topAbout:'FAIL',engine:name,width,withCards,message:String(error)}));
+       await section.screenshot({path:out+'/about-failure-'+name+'-'+width+'-'+Number(withCards)+'.png'}).catch(()=>{});
+     } finally {
+       await page.evaluate(()=>document.documentElement.style.removeProperty('font-size'));
+       await fixture.evaluate(el=>el.remove());
+       await fixture.dispose();
+     }
+   }
+ }
+ // Notice single and multiple rows with the real template and stylesheet.
+ for(const width of [320,375,768,1079,1080,1380]) {
+   await page.setViewportSize({width,height:900});
+   for(const multiple of [false,true]) {
+     const fixture=await page.evaluateHandle(markup=>{
+       const wrapper=document.createElement('div');
+       wrapper.className='top_mainVisual';
+       wrapper.innerHTML=markup;
+       document.querySelector('main.global_contents').before(wrapper);
+       return wrapper;
+     },noticeMarkup[Number(multiple)]);
+     const notice=page.locator('#top_notice-01');
+     const link=notice.locator('a');
+     try {
+       await page.evaluate(()=>document.fonts.ready);
+       const measure=()=>notice.evaluate(el=>{
+         const rect=node=>{const r=node.getBoundingClientRect();return {x:r.left,y:r.top,right:r.right,bottom:r.bottom,width:r.width,height:r.height};};
+         const fits=node=>node.scrollWidth<=node.clientWidth+1;
+         const box=el.querySelector('.jwsnj_topNotice_box'),title=box.querySelector('h2'),bell=title.firstElementChild,list=box.querySelector('ul');
+         const bs=getComputedStyle(box),glyph=getComputedStyle(bell,'::before'),label=title.querySelector('.jwsnj_topNotice_label');
+         return {box:rect(box),title:rect(title),bell:rect(bell),label:rect(label),labelLineHeight:parseFloat(getComputedStyle(label).lineHeight),labelFits:fits(label),list:rect(list),direction:bs.flexDirection,gap:parseFloat(bs.gap),
+           padding:[bs.paddingTop,bs.paddingRight,bs.paddingBottom,bs.paddingLeft].map(parseFloat),
+           titleSize:getComputedStyle(title).fontSize,titleGap:parseFloat(getComputedStyle(title).columnGap),
+           bellGlyph:glyph.content,bellSize:glyph.fontSize,bellWeight:glyph.fontWeight,bellFamily:glyph.fontFamily,
+           margin:parseFloat(getComputedStyle(el).marginTop),
+           fits:[el,box,title,list,...list.querySelectorAll('li,.jwsnj_topNotice_text')].every(fits),
+           docFits:document.documentElement.scrollWidth<=innerWidth+1,
+           rows:[...list.children].map(li=>{const t=li.querySelector('time'),body=li.querySelector('.jwsnj_topNotice_text'),style=getComputedStyle(li);
+             return {rect:rect(li),date:t?rect(t):null,datetime:t?.dateTime??null,dateFont:t?getComputedStyle(t).fontSize:null,body:rect(body),font:getComputedStyle(body).fontSize,gap:parseFloat(style.gap),text:body.textContent};})};
+       });
+       const data=await measure(),wide=width>=768;
+       console.log(JSON.stringify({topNotice:'MEASURED',engine:name,width,multiple,data}));
+       const near=(a,b,tolerance=1.5)=>Math.abs(a-b)<=tolerance;
+       assert.ok(data.fits&&data.docFits,JSON.stringify(data));
+       assert.equal(data.direction,wide?'row':'column');
+       assert.equal(data.gap,wide?32:16);
+       assert.deepEqual(data.padding,wide?[12,31,12,23]:[19,19,19,19]);
+       assert.equal(data.margin,wide?48:24);
+       assert.equal(data.titleSize,'15px');
+       assert.equal(data.titleGap,10);
+       assert.ok(data.labelFits&&near(data.label.x-data.bell.right,10)&&near(data.label.height,data.labelLineHeight),JSON.stringify(data));
+       assert.ok(near(data.bell.width,20)&&near(data.bell.height,20),JSON.stringify(data.bell));
+       assert.ok(data.bellGlyph.includes('\uf0f3')&&data.bellSize==='10px'&&data.bellWeight==='900'&&/awesome/i.test(data.bellFamily));
+       assert.equal(data.rows.length,multiple?3:1);
+       assert.equal(data.rows[0].datetime,'2026-01-27');
+       assert.equal(data.rows[0].dateFont,wide?'14px':'13px');
+       assert.equal(await link.count(),1);
+       assert.equal(await link.getAttribute('href'),'#end');
+       assert.ok(data.rows.every(r=>r.font===(wide?'15px':'14px')&&r.gap===(wide?16:10)));
+       if(multiple) assert.ok(data.rows.slice(1).every(r=>r.date===null)&&!data.rows.some(r=>r.text.includes('Hidden row')));
+       if(wide) assert.ok(near(data.list.x-data.title.right,32)&&data.box.height>=60);
+       else assert.ok(near(data.list.y-data.title.bottom,16)&&near(data.rows[0].body.y-data.rows[0].date.bottom,10));
+       const wasReduced=await page.evaluate(()=>matchMedia('(prefers-reduced-motion: reduce)').matches);
+       try {
+         await page.emulateMedia({reducedMotion:'no-preference'});
+         await page.mouse.move(0,0);
+         await link.evaluate(el=>el.blur());
+         const neutral=await link.evaluate(el=>getComputedStyle(el).textDecorationColor);
+         assert.equal(await link.evaluate(el=>getComputedStyle(el).transitionDuration),'0.3s');
+         await link.hover();
+         await page.waitForFunction(()=>getComputedStyle(document.querySelector('#top_notice-01 a')).textDecorationColor==='rgba(0, 0, 0, 0)');
+         assert.equal(await link.evaluate(el=>getComputedStyle(el).textDecorationLine),'underline');
+         await page.mouse.move(0,0);
+         await page.waitForFunction(color=>getComputedStyle(document.querySelector('#top_notice-01 a')).textDecorationColor===color,neutral);
+         await link.focus();
+         await page.keyboard.press('Tab');
+         await page.keyboard.press('Shift+Tab');
+         assert.ok(await link.evaluate(el=>document.activeElement===el&&el.matches(':focus-visible')&&getComputedStyle(el).outlineStyle==='solid'));
+         await page.emulateMedia({reducedMotion:'reduce'});
+         assert.equal(await link.evaluate(el=>getComputedStyle(el).transitionDuration),'0s');
+       } finally {
+         await link.evaluate(el=>el.blur());
+         await page.mouse.move(0,0);
+         await page.emulateMedia({reducedMotion:wasReduced?'reduce':'no-preference'});
+       }
+       if(width===375||width===1380) {
+         await notice.screenshot({path:out+'/notice-'+name+'-'+width+'-'+Number(multiple)+'.png'});
+         for(const scale of [1.5,2]) {
+           await page.evaluate(scale=>{document.documentElement.style.fontSize=(16*scale)+'px';},scale);
+           const stress=await measure();
+           console.log(JSON.stringify({topNoticeStress:'MEASURED',engine:name,width,multiple,scale,stress}));
+           assert.ok(stress.fits&&stress.docFits&&stress.labelFits&&stress.label.x>=stress.bell.right,JSON.stringify(stress));
+         }
+       }
+       console.log(JSON.stringify({topNotice:'PASS',engine:name,width,multiple}));
+       report.push({name,width,multiple,topNotice:data});
+     } catch(error) {
+       noticeFailures.push({engine:name,width,multiple,message:String(error)});
+       console.error(JSON.stringify({topNotice:'FAIL',engine:name,width,multiple,message:String(error)}));
+       await notice.screenshot({path:out+'/notice-failure-'+name+'-'+width+'-'+Number(multiple)+'.png'}).catch(()=>{});
+     } finally {
+       await page.evaluate(()=>document.documentElement.style.removeProperty('font-size'));
+       await fixture.evaluate(el=>el.remove());
+       await fixture.dispose();
+     }
+   }
+ }
  const mechanism=await page.evaluate(()=>{
    const root=document.documentElement;
    root.style.fontSize='20px';
@@ -1322,4 +1834,7 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
  }finally{await browser.close();}
 }
 assert.deepEqual(resizeFailures, [], 'all text enlargement cases must pass');
+assert.deepEqual(fixedTopFailures, [], 'all fixed TOP section cases must pass');
+assert.deepEqual(aboutFailures, [], 'all TOP About cases must pass');
+assert.deepEqual(noticeFailures, [], 'all TOP Notice cases must pass');
 }finally{writeFileSync(out+'/browser.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report));await new Promise(r=>server.close(r));}

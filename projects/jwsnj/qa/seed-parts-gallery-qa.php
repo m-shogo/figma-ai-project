@@ -13,7 +13,7 @@ require_once ABSPATH . 'wp-admin/includes/media.php';
 require_once ABSPATH . 'wp-admin/includes/image.php';
 
 $registry = WP_Block_Type_Registry::get_instance();
-foreach (['core/heading', 'core/gallery', 'core/image', 'core/media-text', 'core/paragraph'] as $name) {
+foreach (['core/heading', 'core/gallery', 'core/image', 'core/media-text', 'core/paragraph', 'core/list', 'core/list-item', 'core/group', 'core/columns', 'core/column', 'core/details'] as $name) {
   if (!$registry->is_registered($name)) {
     throw new RuntimeException('missing registered block: ' . $name);
   }
@@ -81,9 +81,21 @@ $mediaText = '<!-- wp:media-text ' . wp_json_encode($mediaTextAttrs) . ' -->' . 
   . '<div class="wp-block-media-text is-stacked-on-mobile is-vertically-aligned-top"><figure class="wp-block-media-text__media"><img src="' . esc_url($first['url']) . '" alt="QA画像" class="wp-image-' . (int) $first['id'] . ' size-large"/></figure><div class="wp-block-media-text__content">'
   . '<!-- wp:paragraph --><p>テキストと画像の検証用文章です。LongEditableTextWithoutSpaces1234567890LongEditableTextWithoutSpaces1234567890</p><!-- /wp:paragraph -->'
   . '</div></div>' . "\n<!-- /wp:media-text -->";
+// Actual native annotation blocks, not DOM-injected style samples.
+// Verify adjoining media without adding extra gallery/image blocks.
+$annotation = static function ($label) {
+  return '<!-- wp:list {"className":"annotation-list"} -->' . "\n"
+    . '<ul class="wp-block-list annotation-list"><!-- wp:list-item -->'
+    . '<li>' . esc_html($label) . '</li><!-- /wp:list-item -->'
+    . '<!-- wp:list-item --><li>長い注釈の折り返しを確認します。LongEditableNoteWithoutSpaces1234567890LongEditableNoteWithoutSpaces1234567890</li><!-- /wp:list-item --></ul>' . "\n"
+    . '<!-- /wp:list -->';
+};
 $content = '<!-- wp:heading --><h2 class="wp-block-heading">画像ギャラリー</h2><!-- /wp:heading -->' . "\n\n"
-  . $gallery(2, array_slice($media, 0, 2), true) . "\n\n" . $gallery(3, $media, false) . "\n\n"
-  . '<!-- wp:heading --><h2 class="wp-block-heading">テキスト＋画像</h2><!-- /wp:heading -->' . "\n\n" . $mediaText . "\n";
+  . $gallery(2, array_slice($media, 0, 2), true) . "\n\n"
+  . $annotation('画像ギャラリー間の注釈QA') . "\n\n" . $gallery(3, $media, false) . "\n\n"
+  . '<!-- wp:heading --><h2 class="wp-block-heading">テキスト＋画像</h2><!-- /wp:heading -->' . "\n\n"
+  . $mediaText . "\n\n" . $annotation('メディアとテキスト直後の注釈QA') . "\n\n"
+  . '<!-- wp:paragraph --><p>注釈直後の本文QA</p><!-- /wp:paragraph -->' . "\n";
 
 // Real shared navigation view, using only disposable gallery attachments.
 // This is a presentation fixture, not an ACF block or a production data source.
@@ -134,6 +146,70 @@ ob_start();
 </ul>
 <?php
 $content .= "\n\n<!-- wp:html -->\n" . ob_get_clean() . "\n<!-- /wp:html -->\n";
+
+
+// Native Group/Columns opt-in styles; disposable fixture only.
+$content .= "\n\n" . <<<'HTML'
+<!-- wp:group {"className":"is-style-jwsnj-bordered-box","layout":{"type":"default"}} -->
+<div class="wp-block-group is-style-jwsnj-bordered-box"><!-- wp:paragraph -->
+<p>枠線付きテキストボックスの長文確認。LongEditableBoxWithoutSpaces1234567890LongEditableBoxWithoutSpaces1234567890</p>
+<!-- /wp:paragraph --></div>
+<!-- /wp:group -->
+HTML;
+$content .= "\n\n" . $annotation('枠線ボックスとカラム間の注釈QA') . "\n\n" . <<<'HTML'
+<!-- wp:columns {"className":"is-style-jwsnj-background-boxes"} -->
+<div class="wp-block-columns is-style-jwsnj-background-boxes"><!-- wp:column -->
+<div class="wp-block-column"><!-- wp:group {"className":"is-style-jwsnj-background-box","layout":{"type":"default"}} -->
+<div class="wp-block-group is-style-jwsnj-background-box"><!-- wp:heading {"level":4} -->
+<h4 class="wp-block-heading">背景付きテキストボックス</h4>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>短い本文を編集できます。</p>
+<!-- /wp:paragraph --></div>
+<!-- /wp:group --></div>
+<!-- /wp:column -->
+
+<!-- wp:column -->
+<div class="wp-block-column"><!-- wp:group {"className":"is-style-jwsnj-background-box","layout":{"type":"default"}} -->
+<div class="wp-block-group is-style-jwsnj-background-box"><!-- wp:heading {"level":4} -->
+<h4 class="wp-block-heading">背景付きテキストボックス</h4>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>長い本文を含む編集可能なテキストボックスです。LongEditableBoxWithoutSpaces1234567890LongEditableBoxWithoutSpaces1234567890 長さの異なる本文でカラムの高さを確認します。</p>
+<!-- /wp:paragraph --></div>
+<!-- /wp:group --></div>
+<!-- /wp:column --></div>
+<!-- /wp:columns -->
+HTML;
+$content .= "\n\n" . $annotation('背景ボックスカラム直後の注釈QA') . "\n\n"
+  . '<!-- wp:paragraph --><p>カラム注釈直後の本文QA</p><!-- /wp:paragraph -->' . "\n";
+
+// Exercise both opt-in box styles using identical editable children.
+foreach (['is-style-jwsnj-background-box', 'is-style-jwsnj-bordered-box'] as $box_style) {
+  $classes = $box_style . ' qa-annotation-edges';
+  $content .= "\n\n" . '<!-- wp:group ' . wp_json_encode(['className' => $classes, 'layout' => ['type' => 'default']]) . ' -->' . "\n"
+    . '<div class="wp-block-group ' . esc_attr($classes) . '">'
+    . $annotation('グループ先頭の注釈QA') . "\n\n"
+    . $annotation('連続する注釈QA') . "\n\n"
+    . '<!-- wp:paragraph --><p>注釈に挟まれた本文QA</p><!-- /wp:paragraph -->' . "\n\n"
+    . $annotation('グループ末尾の注釈QA')
+    . '</div>' . "\n" . '<!-- /wp:group -->' . "\n";
+}
+
+// Native Details between notes, separate from the opt-in box fixtures.
+$content .= "\n\n" . '<!-- wp:paragraph --><p>アコーディオン前の本文QA</p><!-- /wp:paragraph -->' . "\n\n"
+  . $annotation('アコーディオン直前の注釈QA') . "\n\n"
+  . <<<'HTML'
+<!-- wp:details {"className":"qa-annotation-details"} -->
+<details class="wp-block-details qa-annotation-details"><summary>通常アコーディオン。長いタイトルの折り返しを確認します。</summary><!-- wp:paragraph -->
+<p>展開後の編集可能な本文。長文でも前後の注釈との間隔を維持します。LongEditableTextWithoutSpaces1234567890LongEditableTextWithoutSpaces1234567890</p>
+<!-- /wp:paragraph --></details>
+<!-- /wp:details -->
+HTML;
+$content .= "\n\n" . $annotation('アコーディオン直後の注釈QA') . "\n\n"
+  . '<!-- wp:paragraph --><p>アコーディオン後の本文QA</p><!-- /wp:paragraph -->' . "\n";
 
 $data = ['post_type' => 'page', 'post_status' => 'publish', 'post_title' => 'JWSNJ Gallery QA', 'post_content' => wp_slash($content)];
 if ($id) {

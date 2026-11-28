@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-27T12:28:06+00:00",
+  "updated_at": "2026-11-28T11:51:38+00:00",
   "fingerprints": {
     "figma-release-notes": "d07457af2dd399464fc060ead3b963d34cea1634255ad5cc2c8fe37f684e224b",
     "figma-auto-layout-current": "6aa0c637a9f86321a1db061e49edaf386a18cde066f037caaf1dabcf5482eb6e",
@@ -14,7 +14,7 @@
     "figma-mcp-tools": "eb825998272ecc424ea803c31a196200a197900ae2cb6daa5d462410c1c961d1",
     "figma-code-connect-releases": "0ade1b6829a5bc085b646db579732c7a162fb28e6c28907be0f9d7bfe011adb2",
     "mcp-spec-releases": "98a021f7b460f9a3980efeb31c5af68395d6c2beaa5c809f0bd640ab3c83d210",
-    "mcp-spec-latest": "66d88cfe9a99b8028975a8ee7cf0dd988772ffff3b23059057d9e0a8c4549a96",
+    "mcp-spec-latest": "57ae4917b58dcae8eb1345a435a37d8330d66775ae1e15dbfb8471063057817a",
     "openai-product-release-notes": "16246c055eb8ce5177b555ce489d0a31f8e5bd735faf71346e66ff783d81efba",
     "openai-codex-changelog": "123138a2b81dcff45315fd620ab5cb465d7d5cbdb0d7c149fc46535e6e890554",
     "claude-code-releases": "c1bd1f16d56e309a3c9fa50d122b11997172b54645e31cce6155951c4f273458",
@@ -28,7 +28,7 @@
     "lighthouse-ci-releases": "6fbcfbd827298df1b1c6d35939bb6a2fc3bcb710ea638c9006bcb5950e218ed0",
     "svgo-releases": "84d12299ec1df40268307327551bbaff33fb8dd51151020ed55ab3515d82ec86",
     "web-features-releases": "97137e437b8cb8cbb2d4993b3f2d029b77f9d90a09c4831110e63c7d9d2217d5",
-    "mdn-browser-compat-data-releases": "be3a35e887799d6ac2a510ca20ea385c6b12edff954a5a0f7ce58736cf51fbc1",
+    "mdn-browser-compat-data-releases": "dfd86ecbb197ff6b319a49296167f5b0f22e237b1162f45c037ac0d3527f5ac3",
     "w3c-wai-news": "ebda564a5756b4d17148271d767de67827a842182d682a97cedb5a36eca5f846",
     "design-tokens-spec": "e7526f9a4360fd590555d5b3a1107042f18a6ace66a09cbbfd266f86621266fb",
     "style-dictionary-releases": "09ebef4613ffb4bb887a5d6c2959e0bde56b986932f7ad5c5e859737dbfa601b",

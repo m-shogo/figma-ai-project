@@ -28,7 +28,7 @@ if (!$notices) {
 <section id="top_notice-01" class="top_notice-01" aria-labelledby="top-notice-heading">
   <div class="global_inner jwsnj_topNotice_inner">
     <div class="jwsnj_topNotice_box">
-      <h2 id="top-notice-heading" class="jwsnj_topNotice_title"><span class="jwsnj_topNotice_bell" aria-hidden="true"></span>重要なお知らせ</h2>
+      <h2 id="top-notice-heading" class="jwsnj_topNotice_title"><span class="jwsnj_topNotice_bell" aria-hidden="true"></span><span class="jwsnj_topNotice_label">重要なお知らせ</span></h2>
       <ul class="jwsnj_topNotice_list">
         <?php foreach ($notices as $notice) : ?>
           <li>
