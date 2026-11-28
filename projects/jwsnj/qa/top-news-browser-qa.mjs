@@ -148,6 +148,75 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
             style: '#global_header { visibility: hidden !important; }' });
         }
         console.log(JSON.stringify({ topNews: 'PASS', engine: engineName, width }));
+
+        // Verify the actual adjacent Instagram view without changing the
+        // approved News row owner or fabricating the pending account URL.
+        const instagram = section.locator('.jwsnj_topInstagram');
+        assert.equal(await instagram.count(), 1);
+        assert.equal(await instagram.locator('h2').textContent(), 'Instagram');
+        assert.equal(await instagram.locator('a[href],button,[tabindex]').count(), 0);
+        await instagram.locator('img').evaluate(async img => { img.loading = 'eager'; await img.decode(); });
+        const measureInstagram = () => instagram.evaluate(el => {
+          const rect = node => {
+            const r = node.getBoundingClientRect();
+            return { x:r.left, y:r.top, right:r.right, bottom:r.bottom, width:r.width, height:r.height };
+          };
+          const fits = node => node.scrollWidth <= node.clientWidth + 1;
+          const parent = el.parentElement;
+          const news = parent.querySelector('.jwsnj_topNews_panel');
+          const heading = el.querySelector('.jwsnj_topInstagram_heading');
+          const icon = el.querySelector('.jwsnj_topInstagram_icon');
+          const copy = el.querySelector('.jwsnj_topInstagram_copy');
+          const label = copy.querySelector('.jwsnj_topInstagram_label');
+          const description = copy.querySelector('.jwsnj_topInstagram_description');
+          const art = el.querySelector('.jwsnj_topInstagram_art');
+          const style = getComputedStyle(el);
+          const glyph = getComputedStyle(icon, '::before');
+          return { panel:rect(el),news:rect(news),heading:rect(heading),icon:rect(icon),copy:rect(copy),
+            label:rect(label),description:rect(description),art:rect(art),
+            gap:parseFloat(style.rowGap),copyGap:parseFloat(getComputedStyle(copy).rowGap),
+            padding:[style.paddingTop,style.paddingBottom,style.paddingLeft,style.paddingRight].map(parseFloat),
+            font:[heading,label,description].map(n=>getComputedStyle(n).fontSize),
+            iconFont:glyph.fontSize,iconFamily:glyph.fontFamily,iconContent:glyph.content,
+            src:new URL(art.currentSrc).pathname,natural:[art.naturalWidth,art.naturalHeight],
+            fits:[el,heading,copy,label,description].every(fits),
+            docFits:document.documentElement.scrollWidth<=innerWidth+1 };
+        });
+        const ig = await measureInstagram();
+        console.log(JSON.stringify({ topInstagram:'MEASURED', engine:engineName,width,ig }));
+        const desktop = width >= 1080;
+        assert.ok(ig.fits && ig.docFits, JSON.stringify(ig));
+        assert.deepEqual(ig.font,desktop?['22px','16px','14px']:['20px','13px','14px']);
+        assert.equal(ig.iconFont,desktop?'28px':'22px');
+        assert.ok(ig.iconContent.includes('\uf16d') && /brands/i.test(ig.iconFamily),JSON.stringify(ig));
+        assert.equal(ig.gap,desktop?24:20);
+        assert.equal(ig.copyGap,16);
+        assert.deepEqual(ig.padding.slice(0,2),desktop?[56,32]:[32,24]);
+        assert.ok(ig.src.endsWith('/images/top/img_instagram.svg') && ig.natural.every(n=>n>0));
+        assert.ok(near(ig.art.width,desktop?66:42) && near(ig.art.height,ig.art.width*155/66,2),JSON.stringify(ig));
+        assert.ok(near(ig.copy.x-ig.panel.x,ig.padding[2])&&near(ig.panel.right-ig.copy.right,ig.padding[3]),JSON.stringify(ig));
+        assert.ok(near((ig.art.x+ig.art.right)/2,(ig.panel.x+ig.panel.right)/2),JSON.stringify(ig));
+        if(desktop) {
+          assert.ok(near(ig.panel.x-ig.news.right,80)&&near(ig.panel.y,ig.news.y)&&near(ig.panel.height,ig.news.height),JSON.stringify(ig));
+        } else {
+          assert.ok(near(ig.panel.y-ig.news.bottom,40)&&near(ig.panel.width,ig.news.width),JSON.stringify(ig));
+        }
+        if(width===375||width===1380) {
+          await section.screenshot({path:'form-qa-results/top-news-instagram-'+engineName+'-'+width+'.png',
+            style:'#global_header { visibility: hidden !important; }'});
+          await instagram.locator('.jwsnj_topInstagram_label').evaluate(el=>{el.append(' 長い編集用の検証文言 LongEditableLabel1234567890');});
+          try {
+            for(const scale of [1.5,2]) {
+              await page.evaluate(scale=>{document.documentElement.style.fontSize=(16*scale)+'px';},scale);
+              const stress=await measureInstagram();
+              console.log(JSON.stringify({topInstagramStress:'MEASURED',engine:engineName,width,scale,stress}));
+              assert.ok(stress.fits&&stress.docFits,JSON.stringify(stress));
+            }
+          } finally {
+            await page.evaluate(()=>document.documentElement.style.removeProperty('font-size'));
+          }
+        }
+        console.log(JSON.stringify({topInstagram:'PASS',engine:engineName,width}));
       } catch (error) {
         await page.screenshot({ path: 'form-qa-results/top-news-failure-' + engineName + '-' + width + '.png' }).catch(() => {});
         failures.push({ engine: engineName, width, message: String(error) });
