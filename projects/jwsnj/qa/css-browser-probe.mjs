@@ -1553,7 +1553,9 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
            cards:list?[...list.children].map(li=>{
              const b=li.querySelector('button'),photo=b.querySelector('.jwsnj_topAbout_cardPhoto'),label=b.querySelector('.jwsnj_topAbout_cardLabel');
              return {box:rect(li),width:li.offsetWidth,photoRatio:photo.clientWidth/photo.clientHeight,
-               image:photo.querySelector('img').getAttribute('src'),title:label.firstElementChild.textContent,
+               image:photo.querySelector('img').getAttribute('src'),
+               natural:[photo.querySelector('img').naturalWidth,photo.querySelector('img').naturalHeight],
+               title:label.firstElementChild.textContent,
                arrowWidth:label.lastElementChild.offsetWidth,transform:getComputedStyle(li).transform,
                z:getComputedStyle(li).zIndex,disabled:b.disabled,pressed:b.getAttribute('aria-pressed'),
                fits:[b,label].every(fits)};
@@ -1587,6 +1589,49 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
          if(width===375||width===1380) await section.screenshot({path:out+'/about-full-'+name+'-'+width+'.png'});
          await section.locator('[data-about-cards]').evaluate((root,source)=>new Function('root',source+'\ninitAboutCards(root);')(root),aboutInit);
          assert.equal(await buttons.evaluateAll(bs=>bs.filter(b=>b.disabled).length),0);
+         // Actual mouse hit testing: never use force or programmatic clicks.
+         const wasReduced = await page.evaluate(()=>matchMedia('(prefers-reduced-motion: reduce)').matches);
+         try {
+           await page.emulateMedia({reducedMotion:'no-preference'});
+           const first = buttons.first();
+           const neutral = await first.evaluate(b=>getComputedStyle(b).color);
+           assert.equal(await first.evaluate(b=>getComputedStyle(b).transitionDuration),'0.3s');
+           const hitPoint = async button => {
+             await button.scrollIntoViewIfNeeded();
+             return button.evaluate(b=>{
+               const r=b.getBoundingClientRect();
+               for(const fy of [0.5,0.3,0.7,0.15,0.85]) {
+                 for(const fx of [0.5,0.3,0.7,0.15,0.85]) {
+                   const x=r.left+r.width*fx,y=r.top+r.height*fy;
+                   if(document.elementFromPoint(x,y)?.closest('button')===b) return {x,y};
+                 }
+               }
+               return null;
+             });
+           };
+           const point = await hitPoint(first);
+           assert.ok(point,'first card has no visible mouse target');
+           await page.mouse.move(point.x,point.y);
+           await page.waitForFunction(()=>getComputedStyle(document.querySelector('[data-about-select]')).color==='rgb(40, 172, 95)');
+           await page.mouse.move(0,0);
+           await page.waitForFunction(color=>getComputedStyle(document.querySelector('[data-about-select]')).color===color,neutral);
+           await page.emulateMedia({reducedMotion:'reduce'});
+           assert.equal(await first.evaluate(b=>getComputedStyle(b).transitionDuration),'0s');
+           await page.emulateMedia({reducedMotion:'no-preference'});
+           for(let i=0;i<4;i++) {
+             const button=buttons.nth(i);
+             const target=await hitPoint(button);
+             assert.ok(target,'card '+i+' has no exposed mouse target');
+             await page.mouse.click(target.x,target.y);
+             assert.deepEqual(await buttons.evaluateAll(bs=>bs.map(b=>b.getAttribute('aria-pressed'))),[0,1,2,3].map(n=>String(n===i)));
+             await button.evaluate(b=>b.blur());
+             assert.equal(await button.evaluate(b=>getComputedStyle(b.closest('li')).zIndex),'5');
+           }
+           console.log(JSON.stringify({topAboutMouse:'PASS',engine:name,width}));
+         } finally {
+           await page.mouse.move(0,0);
+           await page.emulateMedia({reducedMotion:wasReduced?'reduce':'no-preference'});
+         }
          for(let i=0;i<4;i++) {
            const button=buttons.nth(i);
            await button.focus();

@@ -202,6 +202,10 @@
   color: inherit;
   cursor: pointer;
   text-align: center;
+  transition: color var(--transition-duration);
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
   &:disabled { cursor: default; opacity: 1; }
   &[aria-pressed="true"] { color: var(--color-primary); }
   &:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; }
