@@ -46,11 +46,13 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
           const blossom = heading.querySelector('img');
           const section = el.closest('.top_news-01');
           const arrow = heading.querySelector('.jwsnj_topNews_arrow');
+          const moreLabel = heading.querySelector('.jwsnj_topNews_moreLabel');
           const en = heading.querySelector('.jwsnj_topNews_en');
           const ja = heading.querySelector('.jwsnj_topNews_ja');
           return {
             panel: rect(el), header: rect(heading), list: rect(list), gap: getComputedStyle(el).rowGap,
             sizes: [getComputedStyle(en).fontSize, getComputedStyle(ja).fontSize, getComputedStyle(heading.querySelector('a')).fontSize],
+            moreLabel: { rect: rect(moreLabel), lineHeight: parseFloat(getComputedStyle(moreLabel).lineHeight), fits: fits(moreLabel), gap: arrow.getBoundingClientRect().left - moreLabel.getBoundingClientRect().right },
             arrow: rect(arrow), blossom: [blossom.complete, blossom.naturalWidth, blossom.naturalHeight, rect(blossom)],
             panelFits: fits(el), sectionFits: fits(section), documentFits: document.documentElement.scrollWidth <= innerWidth + 1,
             rows: [...list.children].map(row => {
@@ -75,6 +77,8 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
         assert.equal(data.gap, '32px');
         assert.deepEqual(data.sizes, wide ? ['46px', '15px', '16px'] : ['36px', '13px', '15px']);
         assert.ok(near(data.arrow.width, 32) && near(data.arrow.height, 32));
+        assert.ok(data.moreLabel.fits && near(data.moreLabel.gap, 16), JSON.stringify(data.moreLabel));
+        if (width === 375 || width >= 768) assert.ok(near(data.moreLabel.rect.height, data.moreLabel.lineHeight), JSON.stringify(data.moreLabel));
         assert.ok(data.blossom[0] && data.blossom[1] > 0 && data.blossom[2] > 0);
         assert.ok(near(data.blossom[3].width, 12) && near(data.blossom[3].height, 12), JSON.stringify(data.blossom));
         if (!data.documentFits) {
@@ -134,6 +138,11 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
         assert.equal(await arrow.evaluate(el => getComputedStyle(el, '::before').fontSize), '12px');
         await page.mouse.move(0, 0);
         await page.locator('body').evaluate(el => document.activeElement?.blur());
+        await page.waitForFunction(() => {
+          const arrow = document.querySelector('.jwsnj_topNews_arrow');
+          const title = document.querySelector('.top_news-01 .mnl-01_article .title');
+          return getComputedStyle(arrow).backgroundColor === 'rgb(40, 172, 95)' && parseFloat(getComputedStyle(title).backgroundSize) === 0;
+        });
         if (width === 375 || width === 1380) {
           await panel.screenshot({ path: 'form-qa-results/top-news-' + engineName + '-' + width + '.png',
             style: '#global_header { visibility: hidden !important; }' });

@@ -69,7 +69,11 @@
     }
   }
   .jwsnj_topNews_more {
-    display: inline-flex;
+    display: inline-grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    width: max-content;
+    max-width: 100%;
+    min-width: 0;
     align-items: center;
     gap: calc(16 * var(--to-rem-func));
     color: inherit;
@@ -88,10 +92,14 @@
       font-size: calc(16 * var(--to-rem-func));
     }
   }
+  .jwsnj_topNews_moreLabel {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
   .jwsnj_topNews_arrow {
     display: grid;
     place-items: center;
-    flex: 0 0 calc(32 * var(--to-rem-func));
+    width: calc(32 * var(--to-rem-func));
     aspect-ratio: 1;
     border-radius: 50%;
     border: 1px solid var(--color-primary);
