@@ -219,6 +219,69 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
         }
         console.log(JSON.stringify({ largeNavigationWordPress: 'PASS', engine: engineName, width, nav }));
 
+        // Figma proportions, separate from the long-text/empty-data fixture.
+        const reference = root.locator('#qa-large-navigation-reference');
+        assert.equal(await reference.locator('.module_navigationCard').count(), 3);
+        for (const image of await reference.locator('img').all()) {
+          await image.scrollIntoViewIfNeeded();
+          await image.evaluate(img => img.decode());
+        }
+        const design = await reference.evaluate(list => {
+          const box = list.getBoundingClientRect();
+          return {
+            width: box.width, columns: getComputedStyle(list).gridTemplateColumns.split(' ').length,
+            cards: [...list.querySelectorAll('.module_navigationCard')].map(card => {
+              const r = card.getBoundingClientRect();
+              const photo = card.querySelector('.module_navigationCard_photo');
+              const p = photo.getBoundingClientRect();
+              const notch = getComputedStyle(photo, '::after');
+              const title = card.querySelector('.module_navigationCard_title');
+              const copy = card.querySelector('.module_navigationCard_text');
+              const arrow = card.querySelector('.module_navigationCard_arrow');
+              const glyph = getComputedStyle(arrow, '::before');
+              return {
+                x: r.left - box.left, y: r.top - box.top, bottom: r.bottom - box.top,
+                width: r.width, photoHeight: p.height,
+                title: title.textContent.trim(), titleSize: getComputedStyle(title).fontSize,
+                titleWeight: getComputedStyle(title).fontWeight,
+                copySize: getComputedStyle(copy).fontSize, copyWeight: getComputedStyle(copy).fontWeight,
+                copyLine: parseFloat(getComputedStyle(copy).lineHeight),
+                notch: [notch.width, notch.height, notch.borderTopLeftRadius, notch.backgroundColor],
+                arrow: [arrow.getBoundingClientRect().width, getComputedStyle(arrow).backgroundColor],
+                glyph: [glyph.content, glyph.fontSize, glyph.fontWeight],
+                fits: title.scrollWidth <= title.clientWidth + 1 && copy.scrollWidth <= copy.clientWidth + 1
+              };
+            })
+          };
+        });
+        assert.equal(design.columns, width >= 768 ? 3 : 1);
+        if (width === 1380) assert.ok(near(design.width, 960), JSON.stringify(design));
+        const expectedWidth = (design.width - (design.columns - 1) * 40) / design.columns;
+        assert.deepEqual(design.cards.map(card => card.title), ['幼児部', '初等部', '中等部']);
+        for (const card of design.cards) {
+          assert.ok(card.fits && near(card.width, expectedWidth) &&
+            near(card.photoHeight, expectedWidth * 2 / 3), JSON.stringify(design));
+          assert.deepEqual([card.titleSize, card.titleWeight, card.copySize, card.copyWeight], ['18px', '500', '16px', '400']);
+          assert.ok(near(card.copyLine, 22.4, 0.2), JSON.stringify(card));
+          assert.deepEqual(card.notch, ['48px', '48px', '20px', 'rgb(255, 255, 255)']);
+          assert.deepEqual(card.arrow, [32, 'rgb(40, 172, 95)']);
+          assert.ok(card.glyph[0].includes('\uf061'), JSON.stringify(card));
+          assert.deepEqual(card.glyph.slice(1), ['10px', '400']);
+        }
+        if (design.columns === 3) {
+          assert.ok(design.cards.every((card, i) => near(card.x, i * (expectedWidth + 40)) && near(card.y, 0)), JSON.stringify(design));
+        } else {
+          assert.ok(design.cards.every((card, i) => near(card.x, 0) &&
+            (i === 0 || near(card.y - design.cards[i - 1].bottom, 40))), JSON.stringify(design));
+        }
+        if (width === 375 || width === 1380) {
+          await reference.screenshot({
+            path: 'form-qa-results/large-navigation-reference-' + engineName + '-' + width + '.png',
+            style: '#global_header { visibility: hidden !important; }'
+          });
+        }
+        console.log(JSON.stringify({ largeNavigationReference: 'PASS', engine: engineName, width, design }));
+
         console.log(JSON.stringify({ partsGalleryFrontend: 'PASS', engine: engineName, width, results, buttonGeometry, geometry }));
       } catch (error) {
         console.error(JSON.stringify({ engineName, width, runtimeErrors, state: await page.evaluate(() => ({
