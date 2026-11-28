@@ -8,9 +8,7 @@
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     align-items: start;
-    --_gallery-row-gap: calc(40 * var(--to-rem-func));
-    --_gallery-column-gap: var(--_gallery-row-gap);
-    gap: var(--_gallery-row-gap) var(--_gallery-column-gap);
+    gap: calc(40 * var(--to-rem-func));
     margin-top: var(--wp-block-margin);
     @media (calc(768 * (1 / 16 * 1rem)) <= width) {
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -94,21 +92,27 @@
            three-column gallery variant at a 335px content width. */
     &.columns-3 {
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      --_gallery-column-gap: calc(15 * var(--to-rem-func));
+      column-gap: calc(15 * var(--to-rem-func));
       @media (calc(768 * (1 / 16 * 1rem)) <= width) {
         grid-template-columns: repeat(3, minmax(0, 1fr));
-        --_gallery-column-gap: var(--_gallery-row-gap);
+        column-gap: calc(40 * var(--to-rem-func));
       }
     }
 
   }
 }
 
-/* Core's editor layout supplies its own default block gap. Match the
-   registered nested-gallery layout, without changing saved block content. */
+/* The editor's native layout supplies an 8px default gap. Keep this
+   override local to the registered gallery, with explicit column-gap
+   for the narrow three-column variant. Inline editor choices still win. */
 .editor-styles-wrapper {
   .wp-block-gallery.has-nested-images.block-editor-block-list__layout {
-    --wp--style--gallery-gap-default: var(--_gallery-row-gap);
-    gap: var(--_gallery-row-gap) var(--_gallery-column-gap);
+    --wp--style--gallery-gap-default: calc(40 * var(--to-rem-func));
+    gap: var(--wp--style--gallery-gap-default);
+    &.columns-3 {
+      @media (width < calc(768 * (1 / 16 * 1rem))) {
+        column-gap: calc(15 * var(--to-rem-func));
+      }
+    }
   }
 }
