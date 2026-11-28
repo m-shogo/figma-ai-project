@@ -87,7 +87,9 @@ test('TOP Applicants preserves approved fixed copy and exact stored illustration
   }
   assert.match(part,/入学・編入手続きの流れ/);
   assert.match(part,/学校見学のお問い合わせ/);
-  assert.doesNotMatch(part,/<a\s|<button|href=|get_field|have_rows|figma\.com/);
+  assert.doesNotMatch(part,/<button|href=|get_field|have_rows|figma\.com/);
+  assert.equal((part.match(/<a class="jwsnj_topApplicants_link">/g)||[]).length,3);
+  assert.equal((part.match(/class="jwsnj_topApplicants_arrow" aria-hidden="true"/g)||[]).length,3);
   assert.match(read('front-page.php'),/_top-applicants[\s\S]*_top-news/);
   assert.match(read('css/style.css'),/^@import '\.\/project\/top_applicants\.css';/m);
   const css=read('css/project/top_applicants.css');
@@ -278,10 +280,10 @@ test('TOP fixed-copy rhythm follows the distinct PC/SP Figma group gaps',()=>{
   assert.match(about,/\.jwsnj_topAbout_title \{[^{}]*@media \(calc\(1080 \* \(1 \/ 16 \* 1rem\)\) <= width\) \{\s*gap: calc\(16 \* var\(--to-rem-func\)\);\s*margin-bottom: calc\(8 \* var\(--to-rem-func\)\);/);
   const applicants=read('css/project/top_applicants.css');
   assert.match(applicants,/padding: calc\(12 \* var\(--to-rem-func\)\) calc\(16 \* var\(--to-rem-func\)\) calc\(12 \* var\(--to-rem-func\)\) calc\(20 \* var\(--to-rem-func\)\)/);
-  assert.match(applicants,/\.jwsnj_topApplicants_topics li:first-child \{\s*gap: calc\(10 \* var\(--to-rem-func\)\);/);
-  assert.match(applicants,/\.jwsnj_topApplicants_topics li:first-child \{[^{}]*@media \(calc\(1080 \* \(1 \/ 16 \* 1rem\)\) <= width\) \{\s*gap: calc\(16 \* var\(--to-rem-func\)\);/);
+  assert.match(applicants,/\.jwsnj_topApplicants_topics li:first-child \.jwsnj_topApplicants_link \{\s*gap: calc\(10 \* var\(--to-rem-func\)\);/);
+  assert.match(applicants,/\.jwsnj_topApplicants_topics li:first-child \.jwsnj_topApplicants_link \{[^{}]*@media \(calc\(1080 \* \(1 \/ 16 \* 1rem\)\) <= width\) \{\s*gap: calc\(16 \* var\(--to-rem-func\)\);/);
   assert.match(applicants,/padding-inline: calc\(24 \* var\(--to-rem-func\)\) calc\(20 \* var\(--to-rem-func\)\)/);
-  assert.doesNotMatch(read('template-parts/_top-applicants.php'),/<a\s|<button|href=/);
+  assert.doesNotMatch(read('template-parts/_top-applicants.php'),/<button|href=/);
 });
 
 

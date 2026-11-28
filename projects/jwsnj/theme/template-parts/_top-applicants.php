@@ -8,11 +8,32 @@
         </h2>
         <p>入学までの流れや、お手続きについてご案内しています。</p>
       </div>
-      <?php // These are information topics, not controls. Add links only when the actual destinations are confirmed. ?>
+      <?php // Keep the approved visual link treatment without inventing destinations. ?>
       <ul class="jwsnj_topApplicants_topics">
-        <li><img src="<?php echo esc_url(get_theme_file_uri('images/top/ico_flow.svg')); ?>" width="56" height="56" alt=""><span>入学・編入手続きの流れ</span></li>
-        <li><img src="<?php echo esc_url(get_theme_file_uri('images/top/ico_fee.svg')); ?>" width="56" height="51" alt=""><span>学費</span></li>
-        <li><img src="<?php echo esc_url(get_theme_file_uri('images/top/ico_visit.svg')); ?>" width="56" height="52" alt=""><span class="jwsnj_topApplicants_topicCopy"><span class="jwsnj_topApplicants_badge">お気軽にお問い合わせください</span><span>学校見学のお問い合わせ</span></span></li>
+        <li>
+          <a class="jwsnj_topApplicants_link">
+            <img src="<?php echo esc_url(get_theme_file_uri('images/top/ico_flow.svg')); ?>" width="56" height="56" alt="">
+            <span>入学・編入手続きの流れ</span>
+            <span class="jwsnj_topApplicants_arrow" aria-hidden="true"></span>
+          </a>
+        </li>
+        <li>
+          <a class="jwsnj_topApplicants_link">
+            <img src="<?php echo esc_url(get_theme_file_uri('images/top/ico_fee.svg')); ?>" width="56" height="51" alt="">
+            <span>学費</span>
+            <span class="jwsnj_topApplicants_arrow" aria-hidden="true"></span>
+          </a>
+        </li>
+        <li>
+          <a class="jwsnj_topApplicants_link">
+            <img src="<?php echo esc_url(get_theme_file_uri('images/top/ico_visit.svg')); ?>" width="56" height="52" alt="">
+            <span class="jwsnj_topApplicants_topicCopy">
+              <span class="jwsnj_topApplicants_badge">お気軽にお問い合わせください</span>
+              <span>学校見学のお問い合わせ</span>
+            </span>
+            <span class="jwsnj_topApplicants_arrow" aria-hidden="true"></span>
+          </a>
+        </li>
       </ul>
     </div>
     <div class="jwsnj_topApplicants_photo">
