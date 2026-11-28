@@ -1342,6 +1342,40 @@ for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
    await section.evaluate(el=>el.remove());
    report.push({name,width,applicantsArrow:metrics});
  }
+ // Actual TOP About heading markup structure; prevent global image sizing
+ // from overriding the 12px official decorative SVG inside the flex subtitle.
+ for (const width of [320,375,768,1080,1380]) {
+   await page.setViewportSize({width,height:900});
+   const fixture = await page.evaluateHandle(() => {
+     const section = document.createElement('section');
+     section.className = 'jwsnj_topAbout';
+     section.innerHTML = '<div class="global_inner jwsnj_topAbout_inner"><div class="jwsnj_topAbout_copy"><h2 class="jwsnj_topAbout_title"><span class="jwsnj_topAbout_en" lang="en">About us</span><span class="jwsnj_topAbout_ja"><img src="/images/common/ico_blossom.svg" width="12" height="12" alt="">ニュージャージー補習授業校とは</span></h2></div></div>';
+     document.querySelector('main.global_contents').append(section);
+     return section;
+   });
+   try {
+     const subtitle = page.locator('.jwsnj_topAbout_ja');
+     await subtitle.locator('img').evaluate(img=>img.decode());
+     for (const long of [false,true]) {
+       if (long) await subtitle.evaluate(el=>el.append(' 長い日本語とLongEditableHeadingWithoutSpaces1234567890'));
+       const metrics = await subtitle.evaluate(el=>{
+         const image=el.querySelector('img'), r=image.getBoundingClientRect(), style=getComputedStyle(el);
+         return {size:[r.width,r.height],natural:[image.naturalWidth,image.naturalHeight],gap:style.columnGap,
+           fits:el.scrollWidth<=el.clientWidth+1, documentFits:document.documentElement.scrollWidth<=innerWidth+1};
+       });
+       assert.ok(metrics.natural.every(n=>n>0),JSON.stringify(metrics));
+       assert.ok(metrics.size.every(n=>Math.abs(n-12)<0.5),JSON.stringify(metrics));
+       assert.equal(metrics.gap,'8px');
+       assert.ok(metrics.fits && metrics.documentFits,JSON.stringify(metrics));
+       if (!long && (width===375||width===1380)) await page.locator('.jwsnj_topAbout_title').screenshot({path:out+'/about-heading-'+name+'-'+width+'.png'});
+       console.log(JSON.stringify({aboutHeadingBlossom:'PASS',engine:name,width,long,metrics}));
+       report.push({name,width,long,aboutHeadingBlossom:metrics});
+     }
+   } finally {
+     await fixture.evaluate(el=>el.remove());
+     await fixture.dispose();
+   }
+ }
  const mechanism=await page.evaluate(()=>{
    const root=document.documentElement;
    root.style.fontSize='20px';
