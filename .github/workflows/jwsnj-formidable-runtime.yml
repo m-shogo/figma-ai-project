@@ -3,6 +3,13 @@ on:
   pull_request:
     branches: [so]
     paths:
+      - 'projects/jwsnj/qa/seed-top-news-qa.php'
+      - 'projects/jwsnj/qa/top-news-browser-qa.mjs'
+      - 'projects/jwsnj/theme/template-parts/_top-news.php'
+      - 'projects/jwsnj/theme/template-parts/_list-news_article.php'
+      - 'projects/jwsnj/theme/template-parts/_label-category.php'
+      - 'projects/jwsnj/theme/css/project/top_news.css'
+      - 'projects/jwsnj/theme/css/module/module_newsList-01.css'
       - 'projects/jwsnj/theme/css/wordpress/form.css'
       - 'projects/jwsnj/theme/js/form.js'
       - 'projects/jwsnj/theme/js/file-link-icons.js'
@@ -214,6 +221,19 @@ jobs:
           [[ "$parts_id" =~ ^[0-9]+$ ]]
           cd ../..
           node projects/jwsnj/qa/native-parts-editor-qa.mjs "${WP_URL}/?page_id=${parts_id}"
+      # TOP changes Reading assignments only after the other disposable tests.
+      - name: Actual static TOP News and shared post rows
+        if: ${{ !cancelled() && steps.wp_setup.outcome == 'success' }}
+        env:
+          CSS_QA_MODULE_ROOT: ${{ runner.temp }}/css-qa
+        run: |
+          cd runtime/wordpress
+          source scripts/runtime-env.sh
+          docker compose run --rm -e WP_ENVIRONMENT_TYPE=local -e JWSNJ_TOP_QA_DISPOSABLE=1 cli eval-file /project/qa/seed-top-news-qa.php
+          archive_id="$(docker compose run --rm cli option get jwsnj_top_news_qa_archive)"
+          [[ "$archive_id" =~ ^[0-9]+$ ]]
+          cd ../..
+          node projects/jwsnj/qa/top-news-browser-qa.mjs "$WP_URL" "$archive_id"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
