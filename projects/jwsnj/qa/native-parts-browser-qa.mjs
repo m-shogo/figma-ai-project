@@ -104,6 +104,52 @@ for (const [engineName, engine] of Object.entries({ chromium, firefox, webkit })
         assert.equal(await lists.count(), 4);
         assert.equal(await root.locator('ol.wp-block-list').getAttribute('start'), '10');
         assert.equal(await root.locator('ul.annotation-list').count(), 1);
+        // Figma PC344:937 / SP442:2796: actual native list between
+        // an ordered list and buttons. Check layout, not just its existence.
+        const annotation = root.locator('ul.wp-block-list.annotation-list');
+        const annotationGeometry = await annotation.evaluate(el => {
+          const box = el.getBoundingClientRect();
+          const style = getComputedStyle(el);
+          return {
+            gap: style.rowGap,
+            before: box.top - el.previousElementSibling.getBoundingClientRect().bottom,
+            after: el.nextElementSibling.getBoundingClientRect().top - box.bottom,
+            items: [...el.children].map(li => {
+              const rect = li.getBoundingClientRect();
+              const s = getComputedStyle(li);
+              const marker = getComputedStyle(li, '::before');
+              return {
+                font: s.fontSize, weight: s.fontWeight, line: s.lineHeight,
+                inset: s.paddingLeft, wrap: s.overflowWrap,
+                fits: rect.left >= box.left - 1 && rect.right <= box.right + 1 &&
+                  li.scrollWidth <= li.clientWidth + 1,
+                height: rect.height, y: rect.top,
+                marker: [marker.content, marker.fontSize, marker.color]
+              };
+            })
+          };
+        });
+        const closeTo = (a, b) => Math.abs(a - b) <= 1;
+        assert.equal(annotationGeometry.gap, '10px');
+        assert.ok(closeTo(annotationGeometry.before, 20) && closeTo(annotationGeometry.after, 20), JSON.stringify(annotationGeometry));
+        assert.equal(annotationGeometry.items.length, 2);
+        for (const item of annotationGeometry.items) {
+          assert.deepEqual([item.font, item.weight, item.line, item.inset, item.wrap],
+            ['14px', '500', '21px', '31px', 'anywhere'], JSON.stringify(item));
+          assert.deepEqual(item.marker, ['"※"', '16px', 'rgb(213, 11, 11)']);
+          assert.ok(item.fits, JSON.stringify(item));
+        }
+        const [firstNote, secondNote] = annotationGeometry.items;
+        assert.ok(closeTo(secondNote.y - firstNote.y - firstNote.height, 10), JSON.stringify(annotationGeometry));
+        if (width < 768) assert.ok(secondNote.height > firstNote.height, JSON.stringify(annotationGeometry));
+        if (width === 375 || width === 1380) {
+          await annotation.screenshot({
+            path: 'form-qa-results/native-annotation-' + engineName + '-' + width + '.png',
+            style: '#global_header { visibility: hidden !important; }'
+          });
+        }
+        console.log(JSON.stringify({ nativeAnnotationLayout: 'PASS', engine: engineName, width, annotationGeometry }));
+
         const buttons = root.locator('.wp-block-button__link');
         assert.equal(await buttons.count(), 2);
         await page.waitForFunction(el => el.getAttribute('data-jwsnj-file-icon') === 'pdf', await buttons.nth(1).elementHandle());
